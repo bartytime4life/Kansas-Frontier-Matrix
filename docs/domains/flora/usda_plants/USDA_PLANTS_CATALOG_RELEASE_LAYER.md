@@ -1,18 +1,3 @@
----
-kfm_meta:
-  version: 2
-  status: draft
-  domain: flora
-  layer: usda_plants_catalog_release_candidate_ui_map_contract
-  rights: public
-  promotion_state: not_promoted
-  publication_state: not_published
-  network: disabled
-  sensitivity: public
-  source_id: usda_plants
-  source_uri: https://plants.sc.egov.usda.gov/downloads
----
-
 ## 1. Purpose
 Fixture-backed USDA PLANTS catalog closure, evidence-linking, and release-candidate artifacts.
 ## 2. Lifecycle placement
