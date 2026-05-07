@@ -10,7 +10,7 @@ updated: 2026-05-07
 policy_label: TODO(verify-public-or-restricted)
 related: [README.md, SOURCE_ROLES.md, CONTROL_PLANE.md, GEOPRIVACY.md, VALIDATION.md, ../../../data/registry/fauna/README.md, ../../../configs/fauna/ebird/README.md, ../../../policy/fauna/ebird.rego, ../../runbooks/fauna/EBIRD_OPERATIONS.md, sources/ebird/EBIRD_CONTRACTS.md, sources/ebird/EBIRD_FEDERATION.md, sources/ebird/EBIRD_REDTEAM.md]
 tags: [kfm, fauna, ebird, ingest, occurrence, geoprivacy, public-aggregate, evidence]
-notes: [Revises the existing Layer 10 eBird ingest note into a repo-ready governed ingestion README; doc_id, owners, created date, and policy label require registry/steward verification.]
+notes: [Revises the existing Layer 10 eBird ingest note into a repo-ready governed ingestion README; badge URLs use simple Shields.io static badge syntax; doc_id, owners, created date, and policy label require registry/steward verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -20,12 +20,12 @@ notes: [Revises the existing Layer 10 eBird ingest note into a repo-ready govern
 Governed ingestion, aggregation, validation, and release guidance for `kfm-ebird` bird-occurrence support in the KFM fauna lane.
 
 <p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-orange">
-  <img alt="Owners: TODO" src="https://img.shields.io/badge/owners-TODO-lightgrey">
-  <img alt="Source role: occurrence support" src="https://img.shields.io/badge/source_role-occurrence_support-blue">
-  <img alt="Exact points: restricted" src="https://img.shields.io/badge/exact_points-restricted-red">
-  <img alt="Suppression: n >= 10" src="https://img.shields.io/badge/suppression-n%20%E2%89%A5%2010-b60205">
-  <img alt="Network posture: no live fetch by default" src="https://img.shields.io/badge/network-no_live_fetch_by_default-lightgrey">
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-orange?style=flat-square">
+  <img alt="Owners: TODO" src="https://img.shields.io/badge/owners-TODO-lightgrey?style=flat-square">
+  <img alt="Source role: occurrence support" src="https://img.shields.io/badge/source%20role-occurrence%20support-blue?style=flat-square">
+  <img alt="Exact points: restricted" src="https://img.shields.io/badge/exact%20points-restricted-red?style=flat-square">
+  <img alt="Suppression: n >= 10" src="https://img.shields.io/badge/suppression-n%20%3E%3D%2010-b60205?style=flat-square">
+  <img alt="Network: no live fetch by default" src="https://img.shields.io/badge/network-no%20live%20fetch%20by%20default-lightgrey?style=flat-square">
 </p>
 
 > [!IMPORTANT]
@@ -33,14 +33,14 @@ Governed ingestion, aggregation, validation, and release guidance for `kfm-ebird
 >
 > | Field | Value |
 > |---|---|
-> | Status | `draft` documentation over an existing eBird file and adjacent repo surfaces |
+> | Status | `draft` documentation over an existing eBird ingest/productization note |
 > | Owners | `TODO(fauna-source-stewards)` |
 > | Target path | `docs/domains/fauna/INGEST_EBIRD.md` |
-> | Primary role | Source-specific ingress/productization hub for eBird aggregate occurrence support |
-> | Source role | `occurrence_source` / `occurrence_aggregator` support only; not legal-status authority |
+> | Primary role | Source-specific ingress, aggregation, public-view, conformance, and release handoff hub |
+> | Source role | Occurrence support only; not legal-status authority |
 > | Public geometry posture | No public exact coordinates; public outputs are aggregate/generalized only |
-> | Local acceptance posture | No eBird downloads, no credentials, no network calls, no real sensitive rows in smoke/docs |
-> | Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Ingest flow](#ingest-flow) · [Governed filter](#governed-filter) · [Contracts](#contracts) · [Policy gates](#policy-gates) · [Commands](#commands) · [Layer map](#layer-map) · [Review checklist](#review-checklist) · [Open verification](#open-verification) |
+> | Local acceptance posture | No eBird downloads, credentials, network calls, or real sensitive rows in smoke/docs |
+> | Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Ingest flow](#ingest-flow) · [Governed filter](#governed-filter) · [Contracts](#contracts) · [Policy gates](#policy-gates) · [Commands](#commands) · [Usage patterns](#usage-patterns) · [Layer map](#layer-map) · [Runtime and UI](#runtime-and-ui-contract) · [Review checklist](#review-checklist) · [FAQ](#faq) · [Open verification](#open-verification) |
 
 ---
 
@@ -48,14 +48,15 @@ Governed ingestion, aggregation, validation, and release guidance for `kfm-ebird
 
 This file documents the governed eBird lane for KFM fauna ingestion and public-safe productization.
 
-It replaces the thin Layer 10 note with a fuller maintainer-facing README that keeps the original requirements visible:
+It keeps the original Layer 10 requirements visible while making the file usable as a GitHub-facing source README:
 
 - no eBird downloads, credentials, or network calls in local documentation/smoke paths;
 - no public exact coordinates;
-- governed checklist filter before aggregation;
+- governed checklist filtering before aggregation;
 - deterministic contract-hash behavior;
 - command families for ingest, aggregate, promote, public-view build, pipeline execution, release operations, observability, doctoring, and conformance;
-- downstream federation/export, portal/downloads, red-team, audit, quality, and maintenance docs under `sources/ebird/`.
+- downstream federation/export, portal/downloads, red-team, audit, quality, and maintenance docs under `sources/ebird/`;
+- release discipline: validation, policy, catalog/proof closure, promotion receipts, and rollback.
 
 ### What this document governs
 
@@ -68,7 +69,7 @@ It replaces the thin Layer 10 note with a fuller maintainer-facing README that k
 | Contract hash | Canonical JSON `sha256`, excluding volatile fields such as `generated_at` and `contract_hash`. |
 | Release handoff | Public artifacts must pass validation, policy, catalog/proof closure, release manifest, and rollback expectations. |
 | Evidence use | EvidenceRefs must resolve to EvidenceBundles before public claims or Focus Mode answers. |
-| Correction path | Public artifacts must remain correctable and rollback-aware. |
+| Correction path | Public artifacts must remain correctable, reviewable, and rollback-aware. |
 
 ### What this document does not govern
 
@@ -92,26 +93,6 @@ It replaces the thin Layer 10 note with a fuller maintainer-facing README that k
 
 `INGEST_EBIRD.md` is a source-specific README-like doc under the fauna domain documentation root.
 
-```text
-docs/domains/fauna/
-├── INGEST_EBIRD.md                  # this file
-├── README.md                        # fauna domain overview
-├── SOURCE_ROLES.md                  # source-role compatibility rules
-├── GEOPRIVACY.md                    # public geometry and sensitivity posture
-├── VALIDATION.md                    # validator and release gate expectations
-├── runbooks/
-└── sources/
-    └── ebird/
-        ├── EBIRD_ARCHITECTURE.md
-        ├── EBIRD_CONTRACTS.md
-        ├── EBIRD_FEDERATION.md
-        ├── EBIRD_REDTEAM.md
-        ├── EBIRD_QUALITY_AND_TRIAGE.md
-        ├── EBIRD_PORTAL.md
-        ├── EBIRD_MAINTENANCE.md
-        └── ...
-```
-
 ### Owning root
 
 | Root | Responsibility |
@@ -124,6 +105,21 @@ docs/domains/fauna/
 | `tests/` | Fixture, connector, policy, and pipeline proof. |
 | `data/` | Lifecycle storage for RAW, WORK, QUARANTINE, PROCESSED, CATALOG, receipts, proofs, and PUBLISHED artifacts. |
 | `release/` | Promotion decisions, release manifests, rollback cards, corrections, and withdrawal records when admitted. |
+
+### Upstream and downstream links
+
+| Relationship | Path | Role |
+|---|---|---|
+| Domain overview | [README.md](README.md) | Fauna lane purpose, lifecycle, object families, source roles, and public-safety posture. |
+| Source-role doctrine | [SOURCE_ROLES.md](SOURCE_ROLES.md) | Claim compatibility and source-role taxonomy. |
+| Registry doctrine | [../../../data/registry/fauna/README.md](../../../data/registry/fauna/README.md) | SourceDescriptor, source-role, rights, sensitivity, and verification backlog posture. |
+| eBird config | [../../../configs/fauna/ebird/README.md](../../../configs/fauna/ebird/README.md) | Non-secret source configuration guidance. |
+| eBird policy | [../../../policy/fauna/ebird.rego](../../../policy/fauna/ebird.rego) | Public aggregate and release denial rules. |
+| Operations runbook | [../../runbooks/fauna/EBIRD_OPERATIONS.md](../../runbooks/fauna/EBIRD_OPERATIONS.md) | Scan, trend, attest, evidence-pack, and incident workflows. |
+| Source docs | [sources/ebird/](sources/ebird/) | Extended eBird source-family documentation. |
+| Connector tests | `tests/connectors/fauna/test_kfm_ebird_layer10.py` | Layer 10 CLI smoke and deterministic hash checks. |
+| Pipeline tests | `tests/fauna/test_ebird_pipeline.py` | Fixture pipeline plan/execute validation. |
+| Policy tests | `tests/policy/fauna/ebird_test.rego` | Policy denial/allowance tests when available. |
 
 > [!NOTE]
 > Domain material belongs under responsibility roots. Do not create a root-level `ebird/` or `fauna/` folder for convenience.
@@ -138,15 +134,15 @@ docs/domains/fauna/
 
 | Input | Accepted here? | Notes |
 |---|---:|---|
-| Source-specific ingestion rules | ✅ | Must remain human-readable and link to executable code/policy. |
-| Smoke commands | ✅ | Must be local, non-destructive, and no-network unless clearly marked otherwise. |
-| Public aggregate constraints | ✅ | Suppression, field allowlist, geometry restrictions, and policy labels belong here. |
-| Contract-hash recipe | ✅ | Document the stable recipe; implementation lives in code. |
-| Layer/productization map | ✅ | Help maintainers find related source docs and validators. |
-| Negative-path expectations | ✅ | DENY, ABSTAIN, HOLD, QUARANTINE, and ERROR behavior should be visible. |
-| Live eBird credentials or tokens | ❌ | Never commit credentials. |
-| Raw eBird files or API captures | ❌ | Store through governed lifecycle roots only. |
-| Exact restricted coordinates | ❌ | Never publish in docs, examples, screenshots, public artifacts, search indexes, or Focus context. |
+| Source-specific ingestion rules | Yes | Must remain human-readable and link to executable code/policy. |
+| Smoke commands | Yes | Must be local, non-destructive, and no-network unless clearly marked otherwise. |
+| Public aggregate constraints | Yes | Suppression, field allowlist, geometry restrictions, and policy labels belong here. |
+| Contract-hash recipe | Yes | Document the stable recipe; implementation lives in code. |
+| Layer/productization map | Yes | Help maintainers find related source docs and validators. |
+| Negative-path expectations | Yes | DENY, ABSTAIN, HOLD, QUARANTINE, and ERROR behavior should be visible. |
+| Live eBird credentials or tokens | No | Never commit credentials. |
+| Raw eBird files or API captures | No | Store through governed lifecycle roots only. |
+| Exact restricted coordinates | No | Never publish in docs, examples, screenshots, public artifacts, search indexes, or Focus context. |
 
 ### Accepted source classes
 
@@ -176,6 +172,70 @@ docs/domains/fauna/
 | Policy rules | `policy/fauna/ebird.rego` | Policy must remain executable. |
 | Validator code | `tools/validators/fauna/...` | Code should be testable and versioned outside docs. |
 | AI-generated explanations as evidence | Nowhere as evidence | AI can summarize released evidence; it cannot create proof. |
+
+[Back to top](#top)
+
+---
+
+## Directory tree
+
+```text
+docs/domains/fauna/
+├── INGEST_EBIRD.md
+├── README.md
+├── SOURCE_ROLES.md
+├── GEOPRIVACY.md
+├── VALIDATION.md
+├── runbooks/
+└── sources/
+    └── ebird/
+        ├── EBIRD_ARCHITECTURE.md
+        ├── EBIRD_CONTRACTS.md
+        ├── EBIRD_CONFORMANCE.md
+        ├── EBIRD_FEDERATION.md
+        ├── EBIRD_REDTEAM.md
+        ├── EBIRD_QUALITY_AND_TRIAGE.md
+        ├── EBIRD_PORTAL.md
+        ├── EBIRD_MAINTENANCE.md
+        ├── EBIRD_AUDIT_RESPONSE.md
+        ├── EBIRD_REMEDIATION.md
+        └── ...
+```
+
+### Operational companion tree
+
+```text
+configs/fauna/ebird/
+├── README.md
+├── local_cost_budgets.json
+├── local_cost_rates.json
+└── preservation_retention_policy.json
+
+policy/fauna/
+└── ebird.rego
+
+tools/connectors/fauna/kfm-ebird-ingest/
+├── kfm-ebird-doctor
+├── kfm-ebird-conformance
+├── kfm-ebird-run-pipeline
+└── ...
+
+tools/validators/fauna/
+├── validate_ebird_triage.ts
+├── validate_ebird_quality.ts
+├── validate_ebird_redteam.ts
+├── validate_ebird_audit_intake.ts
+├── validate_ebird_audit_response.ts
+├── validate_ebird_fixity.ts
+├── validate_ebird_preservation.ts
+└── validate_ebird_root_of_trust.ts
+
+tests/
+├── connectors/fauna/test_kfm_ebird_layer10.py
+├── fauna/test_ebird_pipeline.py
+├── policy/fauna/ebird_test.rego
+└── ...
+```
 
 [Back to top](#top)
 
@@ -397,6 +457,39 @@ kfm-ebird-observe \
 
 ---
 
+## Usage patterns
+
+### Add or revise an eBird source descriptor
+
+1. Confirm eBird is being admitted as occurrence support.
+2. Record rights, access method, allowed use, citation posture, and review date.
+3. Record sensitivity/geoprivacy behavior and default public precision.
+4. Link source descriptor to validator and policy expectations.
+5. Keep live fetch disabled until the source descriptor and rights review pass.
+
+### Add a public aggregate artifact
+
+1. Start from fixture or reviewed source input.
+2. Apply the governed filter.
+3. Aggregate only to approved public-safe units such as `county` or `huc12`.
+4. Enforce `suppression_min_n >= 10`.
+5. Remove exact coordinate and geometry fields.
+6. Emit validation report, catalog/proof closure, and promotion receipt.
+7. Attach rollback target before publication.
+
+### Add Focus Mode support
+
+1. Consume released public aggregate payloads only.
+2. Resolve EvidenceBundle before answering.
+3. Preserve source role and limitations.
+4. Return `ABSTAIN` for unsupported claims.
+5. Return `DENY` for exact-coordinate, restricted, rights-conflicted, or unreleased requests.
+6. Never use eBird as legal-status authority without separate legal/status evidence.
+
+[Back to top](#top)
+
+---
+
 ## Layer map
 
 The current eBird documentation family is layered. Use this file as the ingest/productization hub and the `sources/ebird/` docs for deeper source-specific operations.
@@ -516,6 +609,36 @@ Before changing this file, eBird policy, eBird commands, or eBird public artifac
 
 ---
 
+## FAQ
+
+### Is eBird a legal-status authority?
+
+No. In this lane, eBird is occurrence support. Legal, conservation, threatened/endangered, regulatory, or protected-status claims require separate compatible authority evidence.
+
+### Can public eBird outputs show exact points?
+
+No by default. Public eBird products must use aggregate/generalized outputs and deny exact coordinate/geometry fields unless a future reviewed source descriptor, rights posture, sensitivity policy, and release gate explicitly allow a narrower case.
+
+### Does passing the governed filter make a row publishable?
+
+No. The governed filter is only one quality/effort gate. Public release also requires rights, source-role compatibility, sensitivity/geoprivacy checks, suppression, catalog/proof closure, policy decision, review, release manifest, and rollback.
+
+### Can Focus Mode answer “where was this bird seen?”
+
+Only at the released public-safe aggregate level. It must not expose exact coordinates or infer private/sensitive locations from aggregate artifacts.
+
+### Can a missing public aggregate signal prove absence?
+
+No. A public aggregate is occurrence support with limitations. Lack of a released public signal is not proof of absence.
+
+### Can the API fetch eBird live during a public request?
+
+No for normal public runtime. Live fetches, if ever approved, belong in governed source jobs with source descriptors, receipts, policy gates, and review. Public clients consume released artifacts through governed APIs.
+
+[Back to top](#top)
+
+---
+
 ## Open verification
 
 | Item | Status | Needed proof |
@@ -602,6 +725,32 @@ Update this document when any of the following changes:
 - Focus Mode eBird behavior;
 - release manifest or rollback conventions;
 - source terms, citation requirements, or approved use scope.
+
+</details>
+
+<details>
+<summary>Pre-publish checklist</summary>
+
+- [x] KFM Meta Block V2 included.
+- [x] One H1 only.
+- [x] One-line purpose directly below title.
+- [x] Compact Shields.io badges fixed with simple encoded URLs.
+- [x] Impact block included.
+- [x] Quick jump links included.
+- [x] Repo fit included with upstream/downstream links.
+- [x] Accepted inputs included.
+- [x] Exclusions included.
+- [x] Directory tree included.
+- [x] Mermaid diagram included.
+- [x] Quickstart/command snippets included with language-tagged fences.
+- [x] Usage patterns included.
+- [x] Policy gate tables included.
+- [x] Review checklist included.
+- [x] FAQ included.
+- [x] Long appendix wrapped in `<details>`.
+- [x] Back-to-top links included.
+- [x] No secrets, credentials, exact sensitive coordinates, or live-fetch instructions presented as safe default.
+- [x] Remaining unknowns left as TODO / NEEDS VERIFICATION rather than guessed.
 
 </details>
 
