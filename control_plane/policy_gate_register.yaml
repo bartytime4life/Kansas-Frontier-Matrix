@@ -1,0 +1,3 @@
+# Policy gate register
+# Lists every gate (connector_gate, promotion_gate, deny tests, etc.).
+entries: []

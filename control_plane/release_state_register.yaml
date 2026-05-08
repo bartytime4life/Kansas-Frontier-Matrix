@@ -1,0 +1,3 @@
+# Release state register
+# Maps release_id to spec_hash, gate outcomes, reviewers, rollback targets.
+entries: []

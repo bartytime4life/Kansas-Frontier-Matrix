@@ -1,0 +1,2 @@
+# Cross-register crosswalks (e.g., source -> domain, object -> gate).
+crosswalks: []

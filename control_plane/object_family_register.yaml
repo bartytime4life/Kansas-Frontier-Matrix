@@ -1,0 +1,3 @@
+# Object family register
+# Lists every contract object family and its homes (contract/schema/policy/fixture/test/emit).
+entries: []
