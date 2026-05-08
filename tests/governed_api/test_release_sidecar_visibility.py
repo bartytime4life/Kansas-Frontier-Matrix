@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from apps.governed_api.server import app
+from apps.api.server import app
 from tests.governed_api.test_ecology_api import seed_public_safe_artifacts
 
 
@@ -14,7 +14,7 @@ def artifact_root(tmp_path, monkeypatch):
 
     monkeypatch.setenv("KFM_ECOLOGY_ARTIFACT_ROOT", str(root))
 
-    import apps.governed_api.server as server
+    import apps.api.server as server
 
     monkeypatch.setattr(server, "DEFAULT_ARTIFACT_ROOT", root)
     return root

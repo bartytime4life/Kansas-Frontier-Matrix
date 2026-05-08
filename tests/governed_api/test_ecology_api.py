@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from apps.governed_api.server import app
+from apps.api.server import app
 
 
 EVIDENCE_BUNDLE_REF = "kfm://evidence/ecology/example-pass-timeslice"
@@ -24,7 +24,7 @@ def artifact_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setenv("KFM_ECOLOGY_ARTIFACT_ROOT", str(root))
 
     # server.py reads env at import time, so patch module global too.
-    import apps.governed_api.server as server
+    import apps.api.server as server
 
     monkeypatch.setattr(server, "DEFAULT_ARTIFACT_ROOT", root)
 
