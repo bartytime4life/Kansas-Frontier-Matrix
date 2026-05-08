@@ -1,0 +1,3 @@
+# habitat :: biotopes
+
+Greenfield placeholder.

@@ -1,0 +1,3 @@
+# habitat — SOURCE_REGISTRY.md
+
+Greenfield placeholder.
