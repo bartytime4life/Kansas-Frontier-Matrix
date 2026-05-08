@@ -1,9 +1,0 @@
-name: kfm-policy-catalog
-version: 0.1.0
-entrypoints:
-  - kfm.catalog.matrix
-  - kfm.catalog.rights
-  - kfm.catalog.visibility
-  - kfm.catalog.correction
-  - kfm.catalog.dcat
-  - kfm.catalog.stac

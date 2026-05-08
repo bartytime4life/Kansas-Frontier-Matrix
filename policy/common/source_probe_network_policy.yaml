@@ -1,2 +1,0 @@
-network_default: DISABLED
-required_env: [KFM_ALLOW_NETWORK, KFM_SOURCE_PROBE, KFM_PROBE_KIND]
