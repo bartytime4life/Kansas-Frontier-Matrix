@@ -1,0 +1,4 @@
+# packages/domains/soil pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-soil"
+version = "0.0.0"

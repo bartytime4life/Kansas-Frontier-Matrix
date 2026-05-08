@@ -1,0 +1,4 @@
+# packages/domains/habitat pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-habitat"
+version = "0.0.0"

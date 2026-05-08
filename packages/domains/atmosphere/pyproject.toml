@@ -1,0 +1,4 @@
+# packages/domains/atmosphere pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-atmosphere"
+version = "0.0.0"

@@ -1,0 +1,4 @@
+# packages/domains/hydrology pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-hydrology"
+version = "0.0.0"
