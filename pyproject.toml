@@ -9,8 +9,11 @@ description = "KFM ecology/hydrology governed-ingestion starter kit with an even
 requires-python = ">=3.11"
 dependencies = [
   "fastapi>=0.115",
+  "httpx>=0.27",
   "jsonschema>=4.21",
+  "pydantic>=2.7",
   "PyYAML>=6.0",
+  "requests>=2.32",
 ]
 
 [project.optional-dependencies]
