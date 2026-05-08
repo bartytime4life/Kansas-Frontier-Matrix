@@ -160,7 +160,7 @@ Connector search returned many Flora-specific tool paths, especially for USDA PL
 | Quality / geometry | `tools/quality/flora/usda_plants_column_contract_builder.py`, `tools/geometry/flora/usda_plants_county_geometry_validator.py`, `tools/geometry/flora/usda_plants_publish_county_presence_geojson.py` | **SEARCH-VISIBLE** | Need validation run and fixture evidence before public geometry claims. |
 | Evidence / review | `tools/evidence/flora/usda_plants_evidence_link_builder.py`, `tools/review/flora/usda_plants_review_decision_builder.py`, `tools/review/flora/usda_plants_review_audit_ledger_builder.py` | **SEARCH-VISIBLE** | Suggests governance intent; not proof of complete review workflow. |
 | Release / publication / deployment | `tools/release/flora/usda_plants_release_candidate_builder.py`, `tools/publication/flora/usda_plants_publication_request_builder.py`, `tools/deploy/flora/usda_plants_deployment_receipt_builder.py` | **SEARCH-VISIBLE** | Names release/publication concepts; actual release state remains unknown. |
-| Archive / tiles | `tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py`, `tools/archives/flora/usda_plants_tile_archive_publication_approval_builder.py` | **SEARCH-VISIBLE** | Archive packaging plans are not proof of published tile artifacts. |
+| Archive / tiles | `tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py`, `tools/archive/flora/usda_plants_tile_archive_publication_approval_builder.py` | **SEARCH-VISIBLE** | Archive packaging plans are not proof of published tile artifacts. |
 
 [Back to top](#top)
 

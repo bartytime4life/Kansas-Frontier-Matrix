@@ -1,1 +1,0 @@
-from .run_manual_evidence_verification import run_manual_evidence_verification

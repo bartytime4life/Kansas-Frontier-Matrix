@@ -8,7 +8,7 @@ owners: NEEDS_VERIFICATION-flora-steward
 created: NEEDS_VERIFICATION
 updated: 2026-05-08
 policy_label: NEEDS_VERIFICATION-public
-related: [./README.md, ./USDA_PLANTS_PUBLICATION_LAYER.md, ./USDA_PLANTS_COUNTY_GEOMETRY_PUBLICATION_LAYER.md, ./USDA_PLANTS_EXTERNAL_CDN_DEPLOYMENT_LAYER.md, ./USDA_PLANTS_CATALOG_RELEASE_LAYER.md, ../../../../policy/flora/usda_plants_tile_archives.rego, ../../../../policy/flora/usda_plants_tile_archives_test.rego, ../../../../schemas/flora/usda_plants_tile_archive_source.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_publication_request.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_publication_approval.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_packaging_plan.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_publication_audit_ledger.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_rollback_plan.schema.json, ../../../../tools/archives/flora/usda_plants_tile_archive_source_builder.py, ../../../../tools/archives/flora/usda_plants_tile_archive_publication_request_builder.py, ../../../../tools/archives/flora/usda_plants_tile_archive_publication_approval_builder.py, ../../../../tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py, ../../../../tools/archives/flora/usda_plants_publish_tile_archives.py, ../../../../tools/archives/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py, ../../../../tools/archives/flora/usda_plants_tile_archive_rollback_plan_builder.py]
+related: [./README.md, ./USDA_PLANTS_PUBLICATION_LAYER.md, ./USDA_PLANTS_COUNTY_GEOMETRY_PUBLICATION_LAYER.md, ./USDA_PLANTS_EXTERNAL_CDN_DEPLOYMENT_LAYER.md, ./USDA_PLANTS_CATALOG_RELEASE_LAYER.md, ../../../../policy/flora/usda_plants_tile_archives.rego, ../../../../policy/flora/usda_plants_tile_archives_test.rego, ../../../../schemas/flora/usda_plants_tile_archive_source.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_publication_request.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_publication_approval.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_packaging_plan.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_publication_audit_ledger.schema.json, ../../../../schemas/flora/usda_plants_tile_archive_rollback_plan.schema.json, ../../../../tools/archive/flora/usda_plants_tile_archive_source_builder.py, ../../../../tools/archive/flora/usda_plants_tile_archive_publication_request_builder.py, ../../../../tools/archive/flora/usda_plants_tile_archive_publication_approval_builder.py, ../../../../tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py, ../../../../tools/archive/flora/usda_plants_publish_tile_archives.py, ../../../../tools/archive/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py, ../../../../tools/archive/flora/usda_plants_tile_archive_rollback_plan_builder.py]
 tags: [kfm, flora, usda-plants, tile-archive, pmtiles, mbtiles, maplibre, publication, public-safe, rollback]
 notes: [doc_id, owner, created date, and final policy label require steward verification. This document replaces a thin three-line stub with a governed tile-archive publication guide. It documents confirmed repository surfaces where inspected, but it does not prove CI enforcement, branch protection, deployed runtime behavior, external CDN deployment, or public release maturity.]
 [/KFM_META_BLOCK_V2] -->
@@ -91,15 +91,15 @@ It exists to keep one boundary bright:
 | External CDN layer | [`./USDA_PLANTS_EXTERNAL_CDN_DEPLOYMENT_LAYER.md`](./USDA_PLANTS_EXTERNAL_CDN_DEPLOYMENT_LAYER.md) | Optional guarded deployment after static artifacts already exist | **CONFIRMED path** |
 | Tile archive policy | [`../../../../policy/flora/usda_plants_tile_archives.rego`](../../../../policy/flora/usda_plants_tile_archives.rego) | Denies missing approval, non-human approval, and deployment claims | **CONFIRMED path** |
 | Tile archive policy test | [`../../../../policy/flora/usda_plants_tile_archives_test.rego`](../../../../policy/flora/usda_plants_tile_archives_test.rego) | Minimal clean-input policy test | **CONFIRMED path** |
-| Archive source builder | [`../../../../tools/archives/flora/usda_plants_tile_archive_source_builder.py`](../../../../tools/archives/flora/usda_plants_tile_archive_source_builder.py) | Registers published vector tile package as archive source | **CONFIRMED path** |
-| Archive request builder | [`../../../../tools/archives/flora/usda_plants_tile_archive_publication_request_builder.py`](../../../../tools/archives/flora/usda_plants_tile_archive_publication_request_builder.py) | Builds human-only archive publication request | **CONFIRMED path** |
-| Archive approval builder | [`../../../../tools/archives/flora/usda_plants_tile_archive_publication_approval_builder.py`](../../../../tools/archives/flora/usda_plants_tile_archive_publication_approval_builder.py) | Builds human archive publication approval | **CONFIRMED path** |
-| Packaging plan builder | [`../../../../tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py`](../../../../tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py) | Builds PMTiles/MBTiles packaging plan with guarded archive engine selection | **CONFIRMED path** |
-| Archive publisher | [`../../../../tools/archives/flora/usda_plants_publish_tile_archives.py`](../../../../tools/archives/flora/usda_plants_publish_tile_archives.py) | Materializes archive artifacts, static host handoff, cache integrity manifest, and receipt | **CONFIRMED path** |
-| Audit ledger builder | [`../../../../tools/archives/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py`](../../../../tools/archives/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py) | Hashes archive source, request, approval, plan, artifacts, receipt, and rollback | **CONFIRMED path** |
-| Rollback plan builder | [`../../../../tools/archives/flora/usda_plants_tile_archive_rollback_plan_builder.py`](../../../../tools/archives/flora/usda_plants_tile_archive_rollback_plan_builder.py) | Builds human-approved supersession plan for archive artifacts | **CONFIRMED path** |
+| Archive source builder | [`../../../../tools/archive/flora/usda_plants_tile_archive_source_builder.py`](../../../../tools/archive/flora/usda_plants_tile_archive_source_builder.py) | Registers published vector tile package as archive source | **CONFIRMED path** |
+| Archive request builder | [`../../../../tools/archive/flora/usda_plants_tile_archive_publication_request_builder.py`](../../../../tools/archive/flora/usda_plants_tile_archive_publication_request_builder.py) | Builds human-only archive publication request | **CONFIRMED path** |
+| Archive approval builder | [`../../../../tools/archive/flora/usda_plants_tile_archive_publication_approval_builder.py`](../../../../tools/archive/flora/usda_plants_tile_archive_publication_approval_builder.py) | Builds human archive publication approval | **CONFIRMED path** |
+| Packaging plan builder | [`../../../../tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py`](../../../../tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py) | Builds PMTiles/MBTiles packaging plan with guarded archive engine selection | **CONFIRMED path** |
+| Archive publisher | [`../../../../tools/archive/flora/usda_plants_publish_tile_archives.py`](../../../../tools/archive/flora/usda_plants_publish_tile_archives.py) | Materializes archive artifacts, static host handoff, cache integrity manifest, and receipt | **CONFIRMED path** |
+| Audit ledger builder | [`../../../../tools/archive/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py`](../../../../tools/archive/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py) | Hashes archive source, request, approval, plan, artifacts, receipt, and rollback | **CONFIRMED path** |
+| Rollback plan builder | [`../../../../tools/archive/flora/usda_plants_tile_archive_rollback_plan_builder.py`](../../../../tools/archive/flora/usda_plants_tile_archive_rollback_plan_builder.py) | Builds human-approved supersession plan for archive artifacts | **CONFIRMED path** |
 | Packaging plan schema | [`../../../../schemas/flora/usda_plants_tile_archive_packaging_plan.schema.json`](../../../../schemas/flora/usda_plants_tile_archive_packaging_plan.schema.json) | Machine shape for archive packaging plans | **CONFIRMED path** |
-| Archive test files | `../../../../tests/tools/archives/flora/usda_plants_tile_archive*.py` | Test-facing copies or test fixtures for archive tooling | **SEARCH-VISIBLE / NEEDS VERIFICATION** |
+| Archive test files | `../../../../tests/tools/archive/flora/usda_plants_tile_archive*.py` | Test-facing copies or test fixtures for archive tooling | **SEARCH-VISIBLE / NEEDS VERIFICATION** |
 
 > [!NOTE]
 > Directory Rules treat `docs/`, `tools/`, `schemas/`, `policy/`, `tests/`, and `data/` as responsibility roots. This document links across those roots instead of creating a new `flora/` or `usda_plants/` root.
@@ -377,7 +377,7 @@ FIXTURE_MBTILES="${OUT_ROOT}/fixtures/flora/usda_plants/county_presence.mbtiles"
 ### 1. Register the archive source
 
 ```bash
-python tools/archives/flora/usda_plants_tile_archive_source_builder.py \
+python tools/archive/flora/usda_plants_tile_archive_source_builder.py \
   --vector-tile-package-manifest "${VECTOR_TILE_PACKAGE_MANIFEST}" \
   --vector-tile-publication-receipt "${VECTOR_TILE_PUBLICATION_RECEIPT}" \
   --vector-tile-publication-audit-ledger "${VECTOR_TILE_PUBLICATION_AUDIT_LEDGER}" \
@@ -389,7 +389,7 @@ python tools/archives/flora/usda_plants_tile_archive_source_builder.py \
 ### 2. Build a human-only archive publication request
 
 ```bash
-python tools/archives/flora/usda_plants_tile_archive_publication_request_builder.py \
+python tools/archive/flora/usda_plants_tile_archive_publication_request_builder.py \
   --archive-source "${ARCHIVE_ROOT}/tile_archive_source.json" \
   --vector-tile-package-manifest "${VECTOR_TILE_PACKAGE_MANIFEST}" \
   --requester-id "REPLACE_WITH_HUMAN_REQUESTER_ID" \
@@ -402,7 +402,7 @@ python tools/archives/flora/usda_plants_tile_archive_publication_request_builder
 ### 3. Build a separate human approval
 
 ```bash
-python tools/archives/flora/usda_plants_tile_archive_publication_approval_builder.py \
+python tools/archive/flora/usda_plants_tile_archive_publication_approval_builder.py \
   --archive-publication-request "${ARCHIVE_ROOT}/tile_archive_publication_request.json" \
   --approver-id "REPLACE_WITH_HUMAN_APPROVER_ID" \
   --approver-type "human" \
@@ -417,7 +417,7 @@ python tools/archives/flora/usda_plants_tile_archive_publication_approval_builde
 Use `fixture_pmtiles` for no-network deterministic validation.
 
 ```bash
-python tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py \
+python tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py \
   --archive-source "${ARCHIVE_ROOT}/tile_archive_source.json" \
   --archive-publication-approval "${ARCHIVE_ROOT}/tile_archive_publication_approval.json" \
   --input-tile-package-manifest "${VECTOR_TILE_PACKAGE_MANIFEST}" \
@@ -431,7 +431,7 @@ python tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py \
 Use `pmtiles_cli` only after the active repo environment confirms the CLI is installed and accepted for this lane.
 
 ```bash
-python tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py \
+python tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py \
   --archive-source "${ARCHIVE_ROOT}/tile_archive_source.json" \
   --archive-publication-approval "${ARCHIVE_ROOT}/tile_archive_publication_approval.json" \
   --input-tile-package-manifest "${VECTOR_TILE_PACKAGE_MANIFEST}" \
@@ -445,7 +445,7 @@ python tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py \
 ### 5. Publish the archive package
 
 ```bash
-python tools/archives/flora/usda_plants_publish_tile_archives.py \
+python tools/archive/flora/usda_plants_publish_tile_archives.py \
   --packaging-plan "${ARCHIVE_ROOT}/tile_archive_packaging_plan.json" \
   --fixture-pmtiles "${FIXTURE_PMTILES}" \
   --out-root "${OUT_ROOT}" \
@@ -456,7 +456,7 @@ python tools/archives/flora/usda_plants_publish_tile_archives.py \
 Optional MBTiles fixture, if the lane and tests explicitly admit it:
 
 ```bash
-python tools/archives/flora/usda_plants_publish_tile_archives.py \
+python tools/archive/flora/usda_plants_publish_tile_archives.py \
   --packaging-plan "${ARCHIVE_ROOT}/tile_archive_packaging_plan.json" \
   --fixture-pmtiles "${FIXTURE_PMTILES}" \
   --fixture-mbtiles "${FIXTURE_MBTILES}" \
@@ -468,7 +468,7 @@ python tools/archives/flora/usda_plants_publish_tile_archives.py \
 ### 6. Build the rollback plan
 
 ```bash
-python tools/archives/flora/usda_plants_tile_archive_rollback_plan_builder.py \
+python tools/archive/flora/usda_plants_tile_archive_rollback_plan_builder.py \
   --pmtiles-package-manifest "${PUBLISHED_ARCHIVE_ROOT}/pmtiles_package_manifest.json" \
   --static-host-handoff "${HOSTING_ROOT}/static_host_handoff.json" \
   --snapshot-date "${SNAPSHOT_DATE}" \
@@ -479,7 +479,7 @@ python tools/archives/flora/usda_plants_tile_archive_rollback_plan_builder.py \
 ### 7. Build the audit ledger
 
 ```bash
-python tools/archives/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py \
+python tools/archive/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py \
   --archive-source "${ARCHIVE_ROOT}/tile_archive_source.json" \
   --archive-publication-request "${ARCHIVE_ROOT}/tile_archive_publication_request.json" \
   --archive-publication-approval "${ARCHIVE_ROOT}/tile_archive_publication_approval.json" \
@@ -511,13 +511,13 @@ Run only after the active checkout confirms the repo-native Python test runner a
 
 ```bash
 python -m pytest \
-  tests/tools/archives/flora/usda_plants_tile_archive_source_builder.py \
-  tests/tools/archives/flora/usda_plants_tile_archive_publication_request_builder.py \
-  tests/tools/archives/flora/usda_plants_tile_archive_publication_approval_builder.py \
-  tests/tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py \
-  tests/tools/archives/flora/usda_plants_publish_tile_archives.py \
-  tests/tools/archives/flora/usda_plants_tile_archive_rollback_plan_builder.py \
-  tests/tools/archives/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py
+  tests/tools/archive/flora/usda_plants_tile_archive_source_builder.py \
+  tests/tools/archive/flora/usda_plants_tile_archive_publication_request_builder.py \
+  tests/tools/archive/flora/usda_plants_tile_archive_publication_approval_builder.py \
+  tests/tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py \
+  tests/tools/archive/flora/usda_plants_publish_tile_archives.py \
+  tests/tools/archive/flora/usda_plants_tile_archive_rollback_plan_builder.py \
+  tests/tools/archive/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py
 ```
 
 > [!NOTE]
@@ -779,13 +779,13 @@ This layer can be tested locally and in CI, but no CI claim should be made from 
 | Check | Command or evidence | Status |
 |---|---|---:|
 | Archive policy | `opa test policy/flora/usda_plants_tile_archives.rego policy/flora/usda_plants_tile_archives_test.rego` | **NEEDS VERIFICATION** |
-| Archive source builder | `python -m pytest tests/tools/archives/flora/usda_plants_tile_archive_source_builder.py` | **NEEDS VERIFICATION** |
-| Archive request builder | `python -m pytest tests/tools/archives/flora/usda_plants_tile_archive_publication_request_builder.py` | **NEEDS VERIFICATION** |
-| Archive approval builder | `python -m pytest tests/tools/archives/flora/usda_plants_tile_archive_publication_approval_builder.py` | **NEEDS VERIFICATION** |
-| Packaging plan builder | `python -m pytest tests/tools/archives/flora/usda_plants_tile_archive_packaging_plan_builder.py` | **NEEDS VERIFICATION** |
-| Archive publisher | `python -m pytest tests/tools/archives/flora/usda_plants_publish_tile_archives.py` | **NEEDS VERIFICATION** |
-| Rollback plan builder | `python -m pytest tests/tools/archives/flora/usda_plants_tile_archive_rollback_plan_builder.py` | **NEEDS VERIFICATION** |
-| Audit ledger builder | `python -m pytest tests/tools/archives/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py` | **NEEDS VERIFICATION** |
+| Archive source builder | `python -m pytest tests/tools/archive/flora/usda_plants_tile_archive_source_builder.py` | **NEEDS VERIFICATION** |
+| Archive request builder | `python -m pytest tests/tools/archive/flora/usda_plants_tile_archive_publication_request_builder.py` | **NEEDS VERIFICATION** |
+| Archive approval builder | `python -m pytest tests/tools/archive/flora/usda_plants_tile_archive_publication_approval_builder.py` | **NEEDS VERIFICATION** |
+| Packaging plan builder | `python -m pytest tests/tools/archive/flora/usda_plants_tile_archive_packaging_plan_builder.py` | **NEEDS VERIFICATION** |
+| Archive publisher | `python -m pytest tests/tools/archive/flora/usda_plants_publish_tile_archives.py` | **NEEDS VERIFICATION** |
+| Rollback plan builder | `python -m pytest tests/tools/archive/flora/usda_plants_tile_archive_rollback_plan_builder.py` | **NEEDS VERIFICATION** |
+| Audit ledger builder | `python -m pytest tests/tools/archive/flora/usda_plants_tile_archive_publication_audit_ledger_builder.py` | **NEEDS VERIFICATION** |
 | PMTiles CLI availability | `command -v pmtiles` when `pmtiles_cli` is selected | **NEEDS VERIFICATION** |
 | No source fetch | inspect builder commands and workflow triggers | **NEEDS VERIFICATION** |
 | No external deploy | inspect static handoff, policy, and deployment workflows | **NEEDS VERIFICATION** |

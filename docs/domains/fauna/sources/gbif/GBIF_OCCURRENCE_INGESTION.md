@@ -8,7 +8,7 @@ owners: TODO-fauna-data-governance-owner
 created: 2026-05-01
 updated: 2026-05-01
 policy_label: TODO-public-or-restricted
-related: [docs/domains/fauna/README.md, tools/normalizers/fauna/kfm_gbif_normalize.py, tools/validators/fauna/gbif_evidencebundle_validator.py, policy/fauna/gbif_publication.rego, tests/fixtures/fauna/gbif/]
+related: [docs/domains/fauna/README.md, tools/normalize/fauna/kfm_gbif_normalize.py, tools/validators/fauna/gbif_evidencebundle_validator.py, policy/fauna/gbif_publication.rego, tests/fixtures/fauna/gbif/]
 tags: [kfm, fauna, gbif, occurrence, evidencebundle, geoprivacy]
 notes: [doc_id owner policy_label and final schema-home convention need repository/steward verification]
 [/KFM_META_BLOCK_V2] -->
@@ -79,7 +79,7 @@ The mounted repository was not available in this session, so path existence, adj
 |---|---|---:|
 | `tests/fixtures/fauna/gbif/valid/simple_occurrences.csv` | RAW input fixture | Request-confirmed path; file existence NEEDS VERIFICATION |
 | `tests/fixtures/fauna/gbif/query_predicate.json` | Query context fixture | Request-confirmed path; file existence NEEDS VERIFICATION |
-| `tools/normalizers/fauna/kfm_gbif_normalize.py` | Normalization CLI | Request-confirmed path; file existence NEEDS VERIFICATION |
+| `tools/normalize/fauna/kfm_gbif_normalize.py` | Normalization CLI | Request-confirmed path; file existence NEEDS VERIFICATION |
 | `tools/validators/fauna/gbif_evidencebundle_validator.py` | EvidenceBundle schema validation | Request-confirmed path; file existence NEEDS VERIFICATION |
 | `policy/fauna/gbif_publication.rego` | Public-publication policy gate | Request-confirmed path; file existence NEEDS VERIFICATION |
 | `docs/adr/ADR-fauna-schema-home.md` | Schema-home decision record | PROPOSED because schema-home convention remains unresolved |
@@ -205,7 +205,7 @@ A valid normalized output should be inspectable before any public release decisi
 The request-confirmed CLI example is:
 
 ```bash
-python tools/normalizers/fauna/kfm_gbif_normalize.py \
+python tools/normalize/fauna/kfm_gbif_normalize.py \
   --input tests/fixtures/fauna/gbif/valid/simple_occurrences.csv \
   --query-predicate tests/fixtures/fauna/gbif/query_predicate.json \
   --download-key TEST_DOWNLOAD_KEY \
