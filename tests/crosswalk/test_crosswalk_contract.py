@@ -1,3 +1,6 @@
+import pytest
+pytest.importorskip("jsonschema", reason="jsonschema dependency unavailable in this environment")
+
 import json
 import subprocess
 from pathlib import Path

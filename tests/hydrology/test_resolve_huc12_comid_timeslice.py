@@ -1,3 +1,6 @@
+import pytest
+pytest.importorskip("jsonschema", reason="jsonschema dependency unavailable in this environment")
+
 from pathlib import Path
 from tools.resolvers.hydrology.resolve_huc12_comid_timeslice import resolve
 R=Path('tests/fixtures/hydrology/huc12_comid_release')

@@ -1,3 +1,6 @@
+import pytest
+pytest.importorskip("jsonschema", reason="jsonschema dependency unavailable in this environment")
+
 from pathlib import Path
 
 from tools.ingest.soil.soilgrids_wcs_ingest import fetch_soilgrids_wcs
