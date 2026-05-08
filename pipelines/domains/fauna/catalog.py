@@ -1,0 +1,1 @@
+# fauna :: catalog — greenfield placeholder
