@@ -1,18 +1,3 @@
----
-kfm_meta:
-  version: 2
-  status: draft
-  domain: flora
-  layer: usda_plants_scheduled_observer
-  rights: public
-  promotion_state: not_promoted
-  publication_state: not_published
-  network: scheduled_observe_only
-  ci_network: disabled_for_pytest
-  sensitivity: public
-  source_id: usda_plants
-  source_uri: https://plants.sc.egov.usda.gov/downloads
----
 # USDA PLANTS Scheduled Observer Layer
 ## Purpose
 Observe-only scheduled checks that emit review artifacts only.
