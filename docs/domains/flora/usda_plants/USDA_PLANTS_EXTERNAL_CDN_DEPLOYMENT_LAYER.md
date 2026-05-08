@@ -1,19 +1,3 @@
----
-kfm_meta:
-  version: 2
-  status: draft
-  domain: flora
-  layer: usda_plants_external_cdn_deployment
-  rights: public
-  deployment_state: external_deploy_guarded
-  network: disabled_for_tests
-  deploys: guarded_optional
-  sensitivity: public_static_site_only
-  source_id: usda_plants
-  geometry_authority: us_census_cartographic_boundary
-  source_uri: https://plants.sc.egov.usda.gov/downloads
----
-
 # USDA PLANTS External CDN Deployment Layer
 
 ## 1. Purpose
