@@ -1,0 +1,4 @@
+# packages/temporal pyproject — greenfield placeholder
+[project]
+name = "kfm-temporal"
+version = "0.0.0"

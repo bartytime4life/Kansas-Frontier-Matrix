@@ -1,0 +1,4 @@
+# packages/hashing pyproject — greenfield placeholder
+[project]
+name = "kfm-hashing"
+version = "0.0.0"

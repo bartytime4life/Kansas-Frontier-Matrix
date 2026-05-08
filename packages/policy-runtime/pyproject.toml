@@ -1,0 +1,4 @@
+# packages/policy-runtime pyproject — greenfield placeholder
+[project]
+name = "kfm-policy-runtime"
+version = "0.0.0"

@@ -1,0 +1,4 @@
+# packages/schema-registry pyproject — greenfield placeholder
+[project]
+name = "kfm-schema-registry"
+version = "0.0.0"

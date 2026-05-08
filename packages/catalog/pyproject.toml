@@ -1,0 +1,4 @@
+# packages/catalog pyproject — greenfield placeholder
+[project]
+name = "kfm-catalog"
+version = "0.0.0"

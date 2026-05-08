@@ -1,0 +1,4 @@
+# packages/identity pyproject — greenfield placeholder
+[project]
+name = "kfm-identity"
+version = "0.0.0"

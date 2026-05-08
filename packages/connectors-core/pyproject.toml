@@ -1,0 +1,4 @@
+# packages/connectors-core pyproject — greenfield placeholder
+[project]
+name = "kfm-connectors-core"
+version = "0.0.0"

@@ -1,0 +1,1 @@
+# envelopes core — greenfield placeholder

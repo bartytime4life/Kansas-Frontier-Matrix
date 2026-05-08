@@ -1,0 +1,4 @@
+# packages/envelopes pyproject — greenfield placeholder
+[project]
+name = "kfm-envelopes"
+version = "0.0.0"

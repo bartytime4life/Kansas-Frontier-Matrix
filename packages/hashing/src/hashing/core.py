@@ -1,0 +1,1 @@
+# hashing core — greenfield placeholder

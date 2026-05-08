@@ -1,0 +1,4 @@
+# packages/release pyproject — greenfield placeholder
+[project]
+name = "kfm-release"
+version = "0.0.0"
