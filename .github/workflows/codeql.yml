@@ -1,0 +1,15 @@
+# KFM CI workflow stub: codeql
+# Status: PROPOSED greenfield scaffold.
+name: codeql
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  codeql-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO codeql-scan'

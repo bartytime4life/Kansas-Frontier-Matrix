@@ -1,0 +1,20 @@
+# KFM CI workflow stub: evidence-resolver
+# Status: PROPOSED greenfield scaffold.
+name: evidence-resolver
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  resolve-bundles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO resolve-bundles'
+  denied-bundles-fail-closed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO denied-bundles-fail-closed'

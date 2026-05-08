@@ -1,0 +1,20 @@
+# KFM CI workflow stub: focus-mock-test
+# Status: PROPOSED greenfield scaffold.
+name: focus-mock-test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  mock-focus-flows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO mock-focus-flows'
+  finite-envelope-shape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO finite-envelope-shape'

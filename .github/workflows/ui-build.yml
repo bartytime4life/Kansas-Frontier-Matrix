@@ -1,0 +1,20 @@
+# KFM CI workflow stub: ui-build
+# Status: PROPOSED greenfield scaffold.
+name: ui-build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-explorer-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO build-explorer-web'
+  test-explorer-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO test-explorer-web'

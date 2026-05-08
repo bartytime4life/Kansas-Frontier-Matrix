@@ -1,0 +1,20 @@
+# KFM CI workflow stub: citation-validation
+# Status: PROPOSED greenfield scaffold.
+name: citation-validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  citation-resolves:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO citation-resolves'
+  abstain-on-missing-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO abstain-on-missing-evidence'

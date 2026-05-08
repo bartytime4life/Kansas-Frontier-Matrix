@@ -1,0 +1,20 @@
+# KFM CI workflow stub: promotion-gate
+# Status: PROPOSED greenfield scaffold.
+name: promotion-gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  promotion-prerequisites:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO promotion-prerequisites'
+  review-records-present:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO review-records-present'

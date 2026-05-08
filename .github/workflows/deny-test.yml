@@ -1,0 +1,25 @@
+# KFM CI workflow stub: deny-test
+# Status: PROPOSED greenfield scaffold.
+name: deny-test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  public-boundary-deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO public-boundary-deny'
+  raw-leak-deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO raw-leak-deny'
+  model-runtime-deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO model-runtime-deny'

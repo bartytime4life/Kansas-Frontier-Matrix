@@ -1,0 +1,20 @@
+# KFM CI workflow stub: dependency-scan
+# Status: PROPOSED greenfield scaffold.
+name: dependency-scan
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO pip-audit'
+  npm-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO npm-audit'

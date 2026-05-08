@@ -1,0 +1,15 @@
+# KFM CI workflow stub: schema-validation
+# Status: PROPOSED greenfield scaffold.
+name: schema-validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-fixtures-against-schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO validate-fixtures-against-schemas'

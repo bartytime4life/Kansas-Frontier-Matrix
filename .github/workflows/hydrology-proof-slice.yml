@@ -1,0 +1,25 @@
+# KFM CI workflow stub: hydrology-proof-slice
+# Status: PROPOSED greenfield scaffold.
+name: hydrology-proof-slice
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-proof-slice:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO build-proof-slice'
+  verify-evidence-bundle-closure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO verify-evidence-bundle-closure'
+  verify-catalog-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO verify-catalog-matrix'

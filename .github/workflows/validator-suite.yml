@@ -1,0 +1,20 @@
+# KFM CI workflow stub: validator-suite
+# Status: PROPOSED greenfield scaffold.
+name: validator-suite
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  run-validators:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO run-validators'
+  ensure-fail-closed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO ensure-fail-closed'

@@ -1,0 +1,25 @@
+# KFM CI workflow stub: domain-agriculture
+# Status: PROPOSED greenfield scaffold.
+name: domain-agriculture
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-agriculture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO validate-agriculture'
+  build-proof-agriculture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO build-proof-agriculture'
+  publish-dry-run-agriculture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO publish-dry-run-agriculture'

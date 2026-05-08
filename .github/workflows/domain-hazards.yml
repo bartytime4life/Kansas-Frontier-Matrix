@@ -1,0 +1,25 @@
+# KFM CI workflow stub: domain-hazards
+# Status: PROPOSED greenfield scaffold.
+name: domain-hazards
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-hazards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO validate-hazards'
+  build-proof-hazards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO build-proof-hazards'
+  publish-dry-run-hazards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO publish-dry-run-hazards'

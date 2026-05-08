@@ -1,0 +1,13 @@
+# KFM CODEOWNERS — greenfield placeholder.
+# Add domain stewards as the project staffs up.
+*                       @kfm/maintainers
+/docs/doctrine/         @kfm/doctrine-stewards
+/contracts/             @kfm/contract-stewards
+/schemas/               @kfm/schema-stewards
+/policy/                @kfm/policy-stewards
+/release/               @kfm/release-stewards
+/data/published/        @kfm/release-stewards
+/apps/governed-api/     @kfm/api-stewards
+/apps/review-console/   @kfm/governance-stewards
+/docs/domains/hydrology/         @kfm/hydrology-stewards
+/docs/domains/people-dna-land/   @kfm/sensitivity-stewards

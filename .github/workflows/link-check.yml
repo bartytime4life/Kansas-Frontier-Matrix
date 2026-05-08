@@ -1,0 +1,15 @@
+# KFM CI workflow stub: link-check
+# Status: PROPOSED greenfield scaffold.
+name: link-check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  docs-link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO docs-link-check'

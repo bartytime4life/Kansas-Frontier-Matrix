@@ -1,0 +1,20 @@
+# KFM CI workflow stub: docs-control-plane
+# Status: PROPOSED greenfield scaffold.
+name: docs-control-plane
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-control-plane-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO validate-control-plane-yaml'
+  registers-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO registers-schema'

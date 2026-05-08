@@ -1,0 +1,25 @@
+# KFM CI workflow stub: telemetry-policy
+# Status: PROPOSED greenfield scaffold.
+name: telemetry-policy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  no-raw-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO no-raw-evidence'
+  no-prompts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO no-prompts'
+  no-restricted-coords:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO no-restricted-coords'

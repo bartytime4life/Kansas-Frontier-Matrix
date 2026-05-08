@@ -1,0 +1,25 @@
+# KFM CI workflow stub: release-dry-run
+# Status: PROPOSED greenfield scaffold.
+name: release-dry-run
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  assemble-candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO assemble-candidate'
+  promotion-gate-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO promotion-gate-check'
+  rollback-card-presence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO rollback-card-presence'

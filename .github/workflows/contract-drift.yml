@@ -1,0 +1,15 @@
+# KFM CI workflow stub: contract-drift
+# Status: PROPOSED greenfield scaffold.
+name: contract-drift
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  detect-contract-vs-schema-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO detect-contract-vs-schema-drift'

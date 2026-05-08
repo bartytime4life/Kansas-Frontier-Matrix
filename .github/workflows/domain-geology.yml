@@ -1,0 +1,25 @@
+# KFM CI workflow stub: domain-geology
+# Status: PROPOSED greenfield scaffold.
+name: domain-geology
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-geology:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO validate-geology'
+  build-proof-geology:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO build-proof-geology'
+  publish-dry-run-geology:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO publish-dry-run-geology'

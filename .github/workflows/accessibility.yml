@@ -1,0 +1,20 @@
+# KFM CI workflow stub: accessibility
+# Status: PROPOSED greenfield scaffold.
+name: accessibility
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  axe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO axe'
+  keyboard-navigation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO keyboard-navigation'

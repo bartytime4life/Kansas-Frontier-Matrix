@@ -1,0 +1,20 @@
+# KFM CI workflow stub: source-descriptor-validate
+# Status: PROPOSED greenfield scaffold.
+name: source-descriptor-validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-descriptors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO validate-descriptors'
+  rights-presence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO rights-presence'

@@ -1,0 +1,20 @@
+# KFM CI workflow stub: policy-test
+# Status: PROPOSED greenfield scaffold.
+name: policy-test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  opa-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO opa-test'
+  policy-fixture-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: 'echo TODO policy-fixture-coverage'
