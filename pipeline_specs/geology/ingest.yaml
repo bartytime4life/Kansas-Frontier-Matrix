@@ -1,0 +1,4 @@
+# pipeline_specs :: geology :: ingest
+name: geology-ingest
+version: 1
+stages: []

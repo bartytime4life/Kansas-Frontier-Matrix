@@ -1,0 +1,4 @@
+# pipeline_specs :: hazards :: publish
+name: hazards-publish
+version: 1
+stages: []

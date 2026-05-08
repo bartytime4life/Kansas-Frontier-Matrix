@@ -1,0 +1,4 @@
+# pipeline_specs :: flora :: catalog
+name: flora-catalog
+version: 1
+stages: []

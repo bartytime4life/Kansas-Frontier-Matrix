@@ -1,0 +1,4 @@
+# pipeline_specs :: settlements-infrastructure :: normalize
+name: settlements-infrastructure-normalize
+version: 1
+stages: []

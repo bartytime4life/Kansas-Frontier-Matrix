@@ -1,0 +1,4 @@
+# pipeline_specs :: archaeology :: ingest
+name: archaeology-ingest
+version: 1
+stages: []

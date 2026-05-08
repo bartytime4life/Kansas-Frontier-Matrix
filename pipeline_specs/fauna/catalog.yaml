@@ -1,0 +1,4 @@
+# pipeline_specs :: fauna :: catalog
+name: fauna-catalog
+version: 1
+stages: []

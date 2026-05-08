@@ -1,0 +1,4 @@
+# pipeline_specs :: flora :: validate
+name: flora-validate
+version: 1
+stages: []

@@ -1,0 +1,4 @@
+# pipeline_specs :: habitat :: normalize
+name: habitat-normalize
+version: 1
+stages: []

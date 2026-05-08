@@ -1,0 +1,4 @@
+# pipeline_specs :: habitat :: ingest
+name: habitat-ingest
+version: 1
+stages: []

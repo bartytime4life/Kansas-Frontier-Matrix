@@ -1,0 +1,4 @@
+# pipeline_specs :: hydrology :: normalize
+name: hydrology-normalize
+version: 1
+stages: []

@@ -1,0 +1,4 @@
+# pipeline_specs :: agriculture :: publish
+name: agriculture-publish
+version: 1
+stages: []

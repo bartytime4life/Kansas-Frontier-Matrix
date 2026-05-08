@@ -1,0 +1,4 @@
+# pipeline_specs :: hydrology :: validate
+name: hydrology-validate
+version: 1
+stages: []

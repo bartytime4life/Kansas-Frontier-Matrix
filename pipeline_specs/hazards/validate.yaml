@@ -1,0 +1,4 @@
+# pipeline_specs :: hazards :: validate
+name: hazards-validate
+version: 1
+stages: []

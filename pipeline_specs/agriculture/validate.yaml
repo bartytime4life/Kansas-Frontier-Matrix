@@ -1,0 +1,4 @@
+# pipeline_specs :: agriculture :: validate
+name: agriculture-validate
+version: 1
+stages: []

@@ -1,0 +1,4 @@
+# pipeline_specs :: people-dna-land :: catalog
+name: people-dna-land-catalog
+version: 1
+stages: []

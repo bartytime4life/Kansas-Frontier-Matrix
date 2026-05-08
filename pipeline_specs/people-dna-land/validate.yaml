@@ -1,0 +1,4 @@
+# pipeline_specs :: people-dna-land :: validate
+name: people-dna-land-validate
+version: 1
+stages: []

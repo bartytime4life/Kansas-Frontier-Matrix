@@ -1,0 +1,4 @@
+# pipeline_specs :: settlements-infrastructure :: catalog
+name: settlements-infrastructure-catalog
+version: 1
+stages: []

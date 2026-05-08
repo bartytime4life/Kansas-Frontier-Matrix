@@ -1,0 +1,4 @@
+# pipeline_specs :: geology :: catalog
+name: geology-catalog
+version: 1
+stages: []

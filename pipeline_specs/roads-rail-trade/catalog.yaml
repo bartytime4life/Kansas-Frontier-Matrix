@@ -1,0 +1,4 @@
+# pipeline_specs :: roads-rail-trade :: catalog
+name: roads-rail-trade-catalog
+version: 1
+stages: []

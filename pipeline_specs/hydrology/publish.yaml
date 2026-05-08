@@ -1,0 +1,4 @@
+# pipeline_specs :: hydrology :: publish
+name: hydrology-publish
+version: 1
+stages: []

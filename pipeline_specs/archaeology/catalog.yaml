@@ -1,0 +1,4 @@
+# pipeline_specs :: archaeology :: catalog
+name: archaeology-catalog
+version: 1
+stages: []

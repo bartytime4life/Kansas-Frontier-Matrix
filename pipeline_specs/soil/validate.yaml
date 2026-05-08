@@ -1,0 +1,4 @@
+# pipeline_specs :: soil :: validate
+name: soil-validate
+version: 1
+stages: []

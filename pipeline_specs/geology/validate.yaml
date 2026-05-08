@@ -1,0 +1,4 @@
+# pipeline_specs :: geology :: validate
+name: geology-validate
+version: 1
+stages: []

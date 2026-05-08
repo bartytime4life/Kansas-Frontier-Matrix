@@ -1,0 +1,4 @@
+# pipeline_specs :: habitat :: publish
+name: habitat-publish
+version: 1
+stages: []
