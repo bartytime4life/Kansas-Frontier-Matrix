@@ -1,0 +1,3 @@
+# validators :: geology
+
+Greenfield stubs.

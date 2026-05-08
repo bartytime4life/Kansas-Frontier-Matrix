@@ -1,0 +1,3 @@
+# tools/diff
+
+Greenfield stub.

@@ -1,0 +1,3 @@
+# validators :: atmosphere
+
+Greenfield stubs.

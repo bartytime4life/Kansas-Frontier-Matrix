@@ -1,0 +1,3 @@
+# tools/generators
+
+Greenfield stub.

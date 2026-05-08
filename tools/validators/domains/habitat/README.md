@@ -1,0 +1,3 @@
+# validators :: habitat
+
+Greenfield stubs.

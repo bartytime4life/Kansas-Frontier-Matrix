@@ -1,0 +1,3 @@
+# tools/qa
+
+Greenfield stub.

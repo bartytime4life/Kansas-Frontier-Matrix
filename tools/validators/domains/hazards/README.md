@@ -1,0 +1,3 @@
+# validators :: hazards
+
+Greenfield stubs.

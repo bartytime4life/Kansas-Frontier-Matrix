@@ -1,0 +1,3 @@
+# validators :: agriculture
+
+Greenfield stubs.

@@ -1,0 +1,3 @@
+# validators :: fauna
+
+Greenfield stubs.
