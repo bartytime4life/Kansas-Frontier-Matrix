@@ -15,11 +15,10 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["tools*"]
+include = ["tools*", "apps*", "packages*", "runtime*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
 addopts = "--import-mode=importlib"
 
 [tool.ruff]

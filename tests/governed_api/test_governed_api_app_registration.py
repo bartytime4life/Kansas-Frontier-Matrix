@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from apps.governed_api.server import app
+from apps.api.server import app
 
 
 def test_governed_api_routes_registered() -> None:

@@ -2,7 +2,7 @@ from __future__ import annotations
 import json, subprocess, sys
 from pathlib import Path
 
-SCRIPT = "tools/normalizers/fauna/kfm_gbif_normalize.py"
+SCRIPT = "tools/normalize/fauna/kfm_gbif_normalize.py"
 FIX = Path("tests/fixtures/fauna/gbif")
 
 def run_cli(*args: str):
@@ -31,7 +31,7 @@ def test_spec_hash_stable_when_created_at_changes(tmp_path: Path) -> None:
     r = run_cli("--input", str(FIX / "valid/simple_occurrences.csv"), "--query-predicate", str(FIX / "query_predicate.json"), "--download-key", "TEST", "--output", str(out))
     assert r.returncode == 0
     doc = json.loads(out.read_text())
-    from tools.normalizers.fauna.kfm_gbif_normalize import compute_spec_hash
+    from tools.normalize.fauna.kfm_gbif_normalize import compute_spec_hash
     h1 = compute_spec_hash(doc)
     doc["created_at"] = "2099-01-01T00:00:00Z"
     h2 = compute_spec_hash(doc)

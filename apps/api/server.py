@@ -21,7 +21,7 @@ Default artifact root:
   data/published/ecology/dry-run
 
 Run:
-  uvicorn apps.governed_api.server:app --reload
+  uvicorn apps.api.server:app --reload
 
 Governance posture:
   - Public endpoints fail closed on unresolved evidence, unknown rights,

@@ -106,7 +106,7 @@ def require_public_safe_layer(layer_manifest: dict[str, Any]) -> None:
 
 @router.get("/ecology/layers/{id}")
 def get_ecology_layer(id: str) -> dict[str, Any]:
-    from apps.governed_api import server
+    from apps.api import server
 
     layer_manifest = load_json(
         Path(server.DEFAULT_ARTIFACT_ROOT) / "layer_manifest.json"

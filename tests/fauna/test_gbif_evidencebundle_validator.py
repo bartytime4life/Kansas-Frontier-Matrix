@@ -2,7 +2,7 @@ from __future__ import annotations
 import subprocess, sys
 from pathlib import Path
 
-NORMALIZER = "tools/normalizers/fauna/kfm_gbif_normalize.py"
+NORMALIZER = "tools/normalize/fauna/kfm_gbif_normalize.py"
 VALIDATOR = "tools/validators/fauna/gbif_evidencebundle_validator.py"
 FIX = Path("tests/fixtures/fauna/gbif")
 

@@ -2,7 +2,7 @@ import json, subprocess, sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 AUD=ROOT/'tools/auditors/air/replay_air_lineage.py'
-MON=ROOT/'tools/monitors/air/build_air_public_ops_health.py'
+MON=ROOT/'tools/monitoring/air/build_air_public_ops_health.py'
 RET=ROOT/'tools/retractions/air/prepare_air_retraction.py'
 
 def run(script,*args): return subprocess.run([sys.executable,str(script),*args],cwd=ROOT,capture_output=True,text=True)
