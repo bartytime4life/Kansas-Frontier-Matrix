@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import pytest
 
-from soilgrids_release_publish import load_publish_inputs, publish_approved_bundle, compute_release_id, compute_publish_spec_hash, PublishError
+from tools.soilgrids.soilgrids_release_publish import load_publish_inputs, publish_approved_bundle, compute_release_id, compute_publish_spec_hash, PublishError
 
 
 def _write(p: Path, obj):

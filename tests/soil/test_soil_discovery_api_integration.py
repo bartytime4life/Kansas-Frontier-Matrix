@@ -1,4 +1,4 @@
-from test_soil_discovery_builder import prep,run,DISC
+from tests.soil.test_soil_discovery_builder import prep,run,DISC
 from pathlib import Path
 import json, subprocess, sys, time, urllib.request
 SVC=Path(__file__).resolve().parents[2]/'tools/serve/soil/public_api.py'

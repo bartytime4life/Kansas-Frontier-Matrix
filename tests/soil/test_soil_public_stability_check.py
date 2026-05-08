@@ -1,4 +1,4 @@
-from test_soil_public_stability_builder import test_build,ROOT
+from tests.soil.test_soil_public_stability_builder import test_build,ROOT
 import subprocess,sys
 
 def test_check(tmp_path):

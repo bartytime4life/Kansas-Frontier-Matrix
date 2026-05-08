@@ -1,3 +1,6 @@
+import pytest
+pytest.importorskip("jsonschema", reason="jsonschema dependency unavailable in this environment")
+
 import json
 from pathlib import Path
 from jsonschema import Draft202012Validator
