@@ -1,0 +1,15 @@
+{
+  "name": "kfm-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "KFM web/UI monorepo root.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "echo 'TODO: pnpm -r lint'",
+    "test": "echo 'TODO: pnpm -r test'",
+    "build": "echo 'TODO: pnpm -r build'"
+  }
+}
