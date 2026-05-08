@@ -7,11 +7,17 @@ name = "kfm-governed-ingestion-starter"
 version = "0.1.0"
 description = "KFM ecology/hydrology governed-ingestion starter kit with an evented source watcher and batched micro-runner for cosign-signed EvidenceBundles"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+  "fastapi>=0.115",
+  "jsonschema>=4.21",
+  "PyYAML>=6.0",
+]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8",
+  "pytest-asyncio>=0.23",
+  "pytest-timeout>=2.3",
 ]
 
 [tool.setuptools.packages.find]
