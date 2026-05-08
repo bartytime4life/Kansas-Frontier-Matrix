@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/agriculture/decision_envelope.schema.json",
+  "title": "decision_envelope",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for decision_envelope. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/agriculture/decision_envelope.md",
+    "fixtures_root": "fixtures/domains/agriculture/decision_envelope/",
+    "validator": "tools/validators/domains/agriculture/validate_decision_envelope.py",
+    "policy": "policy/domains/agriculture/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}
