@@ -4,7 +4,7 @@ title: Flora — Rollback and Correction
 type: standard
 version: v0.1
 status: draft
-owners: <flora-steward> · <release-steward> · <policy-steward>  <!-- TODO: assign CODEOWNERS -->
+owners: <flora-steward> · <release-steward> · <policy-steward>   # TODO: assign CODEOWNERS
 created: 2026-05-08
 updated: 2026-05-08
 policy_label: public
@@ -24,7 +24,7 @@ related:
   - contracts/flora/flora_review_record.schema.json
 tags: [kfm, flora, governance, rollback, correction, supersession, release]
 notes:
-  - "Path placement (governance/) is PROPOSED — see Section 2 of accompanying notes; the Flora Blueprint Appendix B places rollback procedure under runbooks/flora-rollback.md."
+  - "Path placement (governance/) is PROPOSED — see notes; Flora Blueprint Appendix B places rollback procedure under runbooks/flora-rollback.md."
   - "All rollback artifacts and reason codes are PROPOSED until validators, fixtures, and CI exist."
 [/KFM_META_BLOCK_V2] -->
 
