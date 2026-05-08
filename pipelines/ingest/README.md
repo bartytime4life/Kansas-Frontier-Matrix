@@ -1,0 +1,3 @@
+# pipelines/ingest
+
+Greenfield stub.

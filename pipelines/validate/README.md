@@ -1,0 +1,3 @@
+# pipelines/validate
+
+Greenfield stub.

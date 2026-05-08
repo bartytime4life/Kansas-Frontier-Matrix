@@ -1,0 +1,3 @@
+# pipelines/rollback
+
+Greenfield stub.

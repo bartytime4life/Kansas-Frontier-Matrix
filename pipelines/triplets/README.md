@@ -1,0 +1,3 @@
+# pipelines/triplets
+
+Greenfield stub.

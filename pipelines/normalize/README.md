@@ -1,0 +1,3 @@
+# pipelines/normalize
+
+Greenfield stub.

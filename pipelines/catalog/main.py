@@ -1,0 +1,1 @@
+# catalog stage — greenfield placeholder

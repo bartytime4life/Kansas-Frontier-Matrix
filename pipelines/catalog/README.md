@@ -1,0 +1,3 @@
+# pipelines/catalog
+
+Greenfield stub.
