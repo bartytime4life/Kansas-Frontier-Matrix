@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/ui/ui_event.schema.json",
+  "title": "ui_event",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for ui_event. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/ui/ui_event.md",
+    "fixtures_root": "fixtures/ui/ui_event/",
+    "validator": "tools/validators/ui/validate_ui_event.py",
+    "policy": "policy/ui/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

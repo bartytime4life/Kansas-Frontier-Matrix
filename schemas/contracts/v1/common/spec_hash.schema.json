@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/spec_hash.schema.json",
+  "title": "spec_hash",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for spec_hash. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/common/spec_hash.md",
+    "fixtures_root": "fixtures/common/spec_hash/",
+    "validator": "tools/validators/common/validate_spec_hash.py",
+    "policy": "policy/common/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

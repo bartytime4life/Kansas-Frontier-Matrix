@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/ingest_receipt.schema.json",
+  "title": "ingest_receipt",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for ingest_receipt. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/source/ingest_receipt.md",
+    "fixtures_root": "fixtures/source/ingest_receipt/",
+    "validator": "tools/validators/source/validate_ingest_receipt.py",
+    "policy": "policy/source/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

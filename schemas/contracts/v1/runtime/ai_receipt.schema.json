@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/ai_receipt.schema.json",
+  "title": "ai_receipt",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for ai_receipt. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/runtime/ai_receipt.md",
+    "fixtures_root": "fixtures/runtime/ai_receipt/",
+    "validator": "tools/validators/runtime/validate_ai_receipt.py",
+    "policy": "policy/runtime/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/dataset_version.schema.json",
+  "title": "dataset_version",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for dataset_version. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/data/dataset_version.md",
+    "fixtures_root": "fixtures/data/dataset_version/",
+    "validator": "tools/validators/data/validate_dataset_version.py",
+    "policy": "policy/data/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

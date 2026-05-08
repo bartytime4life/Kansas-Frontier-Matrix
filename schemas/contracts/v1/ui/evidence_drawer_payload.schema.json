@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/ui/evidence_drawer_payload.schema.json",
+  "title": "evidence_drawer_payload",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for evidence_drawer_payload. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/ui/evidence_drawer_payload.md",
+    "fixtures_root": "fixtures/ui/evidence_drawer_payload/",
+    "validator": "tools/validators/ui/validate_evidence_drawer_payload.py",
+    "policy": "policy/ui/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}
