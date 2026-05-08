@@ -1,7 +1,7 @@
 # KFM Makefile — greenfield scaffold.
 # Commands should be repo-native; replace placeholders as packages land.
 
-.PHONY: help validate test schemas policy fixtures release-dry-run             proof-slice catalog publish-check deny-test ui-build api-run
+.PHONY: help validate test schemas policy fixtures release-dry-run             proof-slice catalog publish-check deny-test ui-build api-run governed-api-dev governed-api-smoke
 
 help:
 	@echo "KFM make targets (greenfield):"
@@ -49,3 +49,10 @@ ui-build:
 
 api-run:
 	@echo "TODO: uvicorn apps.governed_api.main:app"
+
+
+governed-api-dev:
+	uvicorn governed_api.main:app --app-dir apps/governed-api/src --reload
+
+governed-api-smoke:
+	python -m pytest apps/governed-api/tests -q
