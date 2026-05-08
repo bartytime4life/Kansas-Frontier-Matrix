@@ -2,7 +2,7 @@ import json, hashlib, subprocess, sys
 from pathlib import Path
 import pytest
 
-from soilgrids_disclosure_packet import compute_disclosure_spec_hash, validate_disclosure_spec
+from tools.soilgrids.soilgrids_disclosure_packet import compute_disclosure_spec_hash, validate_disclosure_spec
 
 
 def _mk_pack(root: Path):
@@ -25,7 +25,7 @@ def _mk_spec(path: Path):
 
 
 def test_rejects_missing_disclosure_spec(tmp_path):
-    p = subprocess.run([sys.executable, "soilgrids_disclosure_packet.py", "--output-root", str(tmp_path / "o"), "--mode", "auditor-full", "--disclosure-spec", str(tmp_path / "none.json"), "--assurance-pack-root", str(tmp_path / "pack")], capture_output=True, text=True)
+    p = subprocess.run([sys.executable, "tools/soilgrids/soilgrids_disclosure_packet.py", "--output-root", str(tmp_path / "o"), "--mode", "auditor-full", "--disclosure-spec", str(tmp_path / "none.json"), "--assurance-pack-root", str(tmp_path / "pack")], capture_output=True, text=True)
     assert p.returncode != 0
 
 
@@ -43,7 +43,7 @@ def test_validates_source_assurance_checksums(tmp_path):
     pack = tmp_path / "pack"; _mk_pack(pack)
     spec = tmp_path / "spec.json"; _mk_spec(spec)
     out = tmp_path / "out"
-    p = subprocess.run([sys.executable, "soilgrids_disclosure_packet.py", "--disclosure-spec", str(spec), "--assurance-pack-root", str(pack), "--output-root", str(out), "--mode", "auditor-full"], capture_output=True, text=True)
+    p = subprocess.run([sys.executable, "tools/soilgrids/soilgrids_disclosure_packet.py", "--disclosure-spec", str(spec), "--assurance-pack-root", str(pack), "--output-root", str(out), "--mode", "auditor-full"], capture_output=True, text=True)
     assert p.returncode == 0
     r = Path(p.stdout.strip())
     assert r.exists()
@@ -53,5 +53,5 @@ def test_rejects_source_checksum_mismatch(tmp_path):
     pack = tmp_path / "pack"; _mk_pack(pack)
     (pack / "assessment/assurance_gate_report.json").write_text("{}")
     spec = tmp_path / "spec.json"; _mk_spec(spec)
-    p = subprocess.run([sys.executable, "soilgrids_disclosure_packet.py", "--disclosure-spec", str(spec), "--assurance-pack-root", str(pack), "--output-root", str(tmp_path / "out"), "--mode", "auditor-full"], capture_output=True, text=True)
+    p = subprocess.run([sys.executable, "tools/soilgrids/soilgrids_disclosure_packet.py", "--disclosure-spec", str(spec), "--assurance-pack-root", str(pack), "--output-root", str(tmp_path / "out"), "--mode", "auditor-full"], capture_output=True, text=True)
     assert p.returncode == 40

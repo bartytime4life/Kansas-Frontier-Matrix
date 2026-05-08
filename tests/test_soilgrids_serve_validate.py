@@ -5,10 +5,10 @@ from pathlib import Path
 
 import pytest
 
-from soilgrids_serve_validate import validate_content_type
+from tools.soilgrids.soilgrids_serve_validate import validate_content_type
 
 ROOT = Path(__file__).parent / "fixtures" / "serve" / "release"
-SCRIPT = Path(__file__).resolve().parents[1] / "soilgrids_serve_validate.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "tools/soilgrids/soilgrids_serve_validate.py"
 
 
 def run_cli(*extra):

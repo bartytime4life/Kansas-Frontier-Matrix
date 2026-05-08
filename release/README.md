@@ -576,7 +576,7 @@ release/corrections/<correction_id>.notice.ref.json
 CLI:
 
 ```bash
-python soilgrids_release_publish.py \
+python tools/soilgrids/soilgrids_release_publish.py \
   --decision-envelope promotion/reports/decision_envelope.json \
   --validation-report promotion/reports/validation_report.json \
   --run-receipt raw/wcs/run_receipt.json \
