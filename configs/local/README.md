@@ -1,0 +1,3 @@
+# configs/local
+
+Greenfield stub.

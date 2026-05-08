@@ -1,0 +1,3 @@
+# configs/templates
+
+Greenfield stub.

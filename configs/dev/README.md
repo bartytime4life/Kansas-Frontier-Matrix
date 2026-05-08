@@ -1,0 +1,3 @@
+# configs/dev
+
+Greenfield stub.
