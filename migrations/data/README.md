@@ -1,0 +1,3 @@
+# migrations/data
+
+Greenfield stub.

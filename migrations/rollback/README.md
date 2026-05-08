@@ -1,0 +1,3 @@
+# migrations/rollback
+
+Greenfield stub.
