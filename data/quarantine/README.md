@@ -1,0 +1,3 @@
+# data/quarantine
+
+Greenfield stub.

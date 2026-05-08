@@ -1,0 +1,3 @@
+# data/processed
+
+Greenfield stub.
