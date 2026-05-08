@@ -1,0 +1,3 @@
+# tests/schemas
+
+Greenfield stub.
