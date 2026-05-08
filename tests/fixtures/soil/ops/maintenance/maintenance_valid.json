@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","maintenance_type":"scheduled","status":"scheduled","affected_release_id":"soil-test-release","starts_at":"2026-01-01T00:00:00+00:00","ends_at":"2026-01-01T01:00:00+00:00","public_message":"Scheduled maintenance window.","public_access_allowed":true,"steward_review":{"required":true,"decision":"approved"}}

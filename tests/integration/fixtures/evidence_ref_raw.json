@@ -1,7 +1,0 @@
-{
-  "evidence_ref_id": "kfm:evidence:hydrology:huc12:102600080305",
-  "domain": "hydrology",
-  "ref": "data/raw/hydrology/huc12/102600080305.json",
-  "release_state": "RAW",
-  "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-}

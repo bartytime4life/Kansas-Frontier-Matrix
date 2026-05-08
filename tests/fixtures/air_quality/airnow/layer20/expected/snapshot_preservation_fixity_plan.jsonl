@@ -1,9 +1,0 @@
-{"algorithm":"sha256","baseline_sha256":"54e7e63378214733881834307e9150a88ac7ff18f5d925aca5ecaa50c06e2142","fixity_id":"05464fc55515ef930e9c5a7a","input_id":"snapshot_decision_ledger"}
-{"algorithm":"sha256","baseline_sha256":"6a8ba5fae4736a47707e3d6018bede948872768653af783d129f1c8d3464e0c3","fixity_id":"3ab1230c45197397fe4dc875","input_id":"snapshot_policy_ledger"}
-{"algorithm":"sha256","baseline_sha256":"4ab9590fab4b7030630b79c77aca583101b08437bb49d575dca8ba059c9dbd9b","fixity_id":"3f3fee600f3162cee6cf3794","input_id":"snapshot_receipt_ledger"}
-{"algorithm":"sha256","baseline_sha256":"ec487d053bc927a0a094e1cc83fe99512736b8aef755b94d097304853e1602b2","fixity_id":"61291af80af81038114adeb0","input_id":"snapshot_audit_receipt"}
-{"algorithm":"sha256","baseline_sha256":"e4f3d69b76a777865964f844a5ebc2ab1bef813f842e05e2c850ebc42f9e8c97","fixity_id":"8be11439ffd52ccbb3c2fe2d","input_id":"snapshot_audit_input_inventory"}
-{"algorithm":"sha256","baseline_sha256":"c4a8dc739cc8edbf0837b2097a95ef36c19da761ef51b4f261e263362fc71a3e","fixity_id":"a5970d5784a90cfa64d187c0","input_id":"snapshot_non_execution_ledger"}
-{"algorithm":"sha256","baseline_sha256":"18445597a0239c780c8de657dba5916dd3ba3f8915004e787d35808e852d0d3a","fixity_id":"b615c9997fb817256237b589","input_id":"snapshot_caveat_registry"}
-{"algorithm":"sha256","baseline_sha256":"ed1ce50764439058c5aeba51a3d67935e7e2a8b31b543826ac932a3a0b509742","fixity_id":"cdfa11e45d380cdd5d039106","input_id":"snapshot_hash_chain"}
-{"algorithm":"sha256","baseline_sha256":"ffc468ac74f6a872f3db4b0ed6490a142bc1cdf01c0f68d1fc39f475d29fa6f7","fixity_id":"dfb5a10756b86dbe16330c2f","input_id":"snapshot_final_internal_summary"}

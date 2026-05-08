@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","object_type":"SoilAssuranceExceptionRequest","domain":"soil","exception_type":"security","severity":"high","status":"open","blocking":true,"summary":"s","public_message":"block","evidence_refs":[],"steward_review":{"required":true,"decision":"approved"}}

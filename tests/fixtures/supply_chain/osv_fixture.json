@@ -1,1 +1,0 @@
-{"vulns":[{"id":"OSV-TEST-1","package":"requests","version":"2.32.0","severity":"critical","fixed_versions":["2.32.1"]}]}

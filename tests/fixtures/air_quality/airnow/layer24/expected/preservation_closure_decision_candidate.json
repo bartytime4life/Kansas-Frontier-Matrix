@@ -1,7 +1,0 @@
-{
-  "closure_execution": false,
-  "created_at": "2026-01-01T00:00:00Z",
-  "decision_candidate": "INTERNAL_REVIEW_ONLY",
-  "object_type": "AirNowPreservationClosureDecisionCandidate",
-  "schema_version": "v1"
-}

@@ -1,1 +1,0 @@
-{"schema":"TrustDecisionPolicy.v1","status_decision_map":{"active":"allow","under_review":"review","suspended":"bad","revoked":"block","superseded":"warn","quarantined":"block","expired":"block","unknown":"block"}}

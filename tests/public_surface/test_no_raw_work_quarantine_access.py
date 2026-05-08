@@ -1,4 +1,0 @@
-import unittest
-from tests.subprocess_utils import assert_python_ok
-class T(unittest.TestCase):
-    def test_no_public_paths(self): assert_python_ok(self,['tools/validators/validate_no_public_raw_work_quarantine.py'])

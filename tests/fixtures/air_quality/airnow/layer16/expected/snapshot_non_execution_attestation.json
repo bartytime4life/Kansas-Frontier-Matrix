@@ -1,7 +1,0 @@
-{
-  "commands_executed": false,
-  "created_at": "2026-01-01T00:00:00Z",
-  "object_type": "AirNowSnapshotNonExecutionAttestation",
-  "schema_version": "v1",
-  "snapshot_export_executed": false
-}

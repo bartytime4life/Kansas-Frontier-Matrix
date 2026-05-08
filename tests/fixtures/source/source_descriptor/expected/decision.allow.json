@@ -1,9 +1,0 @@
-{
-  "expected_outcome": "ALLOW",
-  "fixture": "descriptor.minimal_public_safe.valid.json",
-  "reasons": [
-    "source identity present",
-    "access mode documented",
-    "rights posture present"
-  ]
-}

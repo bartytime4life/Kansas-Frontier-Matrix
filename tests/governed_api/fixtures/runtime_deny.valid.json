@@ -1,8 +1,0 @@
-{
-  "schema_version": "v1",
-  "object_type": "RuntimeResponseEnvelope",
-  "outcome": "DENY",
-  "request_id": "req-deny-001",
-  "policy_ref": "policy/ecology/publication.rego",
-  "reasons": ["restricted_sensitivity"]
-}

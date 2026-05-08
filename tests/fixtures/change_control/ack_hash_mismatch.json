@@ -1,6 +1,0 @@
-{
-  "schema": "AcknowledgmentRecord.v1",
-  "ack_id": "a1",
-  "recipient_hash": "rh",
-  "ack_hash": "bad"
-}

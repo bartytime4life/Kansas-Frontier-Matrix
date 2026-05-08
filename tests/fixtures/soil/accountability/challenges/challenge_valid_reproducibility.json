@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","object_type":"SoilReproducibilityChallengeSubmission","domain":"soil","challenge_type":"reproducibility","severity":"low","claim":"cannot reproduce","public_message":"steps diverge","affected_bundle_id":"b1","steward_review":{"required":true,"decision":"accepted_for_review"}}

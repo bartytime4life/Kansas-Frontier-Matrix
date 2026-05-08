@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","object_type":"SoilPublicApiAccessLogEntry","created":"","method":"GET","route_template":"/soil/records","status":200,"release_id":"soil-test-release","response_bytes":123,"request_id":"abc"}

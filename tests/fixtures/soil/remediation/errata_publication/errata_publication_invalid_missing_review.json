@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","object_type":"SoilErrataPublicationConfirmationRequest","domain":"soil","errata_id":"e1","publication_channel":"governance_only","public_url":"https://example.invalid/kfm/soil/errata/e1","public_message":"msg","evidence_refs":["e"],"steward_review":{"required":true,"decision":"approved"}}

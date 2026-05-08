@@ -1,1 +1,0 @@
-{"answer_id":"a1","query":{"taxon_key":"tx-1","geography_id":"county-001","aggregation_unit":"county"},"answer_posture":"cited_answer","summary":"x","claims":[{"claim_id":"c1","claim_text":"GBIF-reported public occurrence aggregate","presence_posture":"reported_occurrence_not_confirmed_presence","citations":[]}],"limitations":[],"abstain_reason":null}

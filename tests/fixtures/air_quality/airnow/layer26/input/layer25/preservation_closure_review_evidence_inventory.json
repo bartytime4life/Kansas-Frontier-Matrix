@@ -1,9 +1,0 @@
-{
-  "object_type": "AirNowPreservationClosureReviewEvidenceInventory",
-  "schema_version": "v1",
-  "records": [
-    {
-      "id": "ev1"
-    }
-  ]
-}

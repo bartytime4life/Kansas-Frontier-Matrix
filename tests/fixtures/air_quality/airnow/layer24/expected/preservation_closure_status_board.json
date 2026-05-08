@@ -1,6 +1,0 @@
-{
-  "board_status": "PRESERVATION_CLOSURE_READY_INTERNAL_ONLY",
-  "created_at": "2026-01-01T00:00:00Z",
-  "object_type": "AirNowPreservationClosureStatusBoard",
-  "schema_version": "v1"
-}
