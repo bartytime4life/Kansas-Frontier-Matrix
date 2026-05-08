@@ -1,18 +1,3 @@
----
-kfm_meta:
-  version: 2
-  status: draft
-  domain: flora
-  layer: usda_plants_live_source_readiness
-  rights: public
-  promotion_state: not_promoted
-  publication_state: not_published
-  network: disabled_by_default
-  sensitivity: public
-  source_id: usda_plants
-  source_uri: https://plants.sc.egov.usda.gov/downloads
----
-
 # USDA PLANTS Live Source Readiness Layer
 
 ## Purpose
