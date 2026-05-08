@@ -1,6 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "closure_archive_non_execution_attestation.airnow.v1.schema.json",
-  "type": "object",
-  "additionalProperties": true
-}

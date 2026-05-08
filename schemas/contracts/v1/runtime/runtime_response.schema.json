@@ -1,8 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://kfm/schemas/contracts/v1/runtime/runtime_response.schema.json",
-  "title": "RuntimeResponse",
-  "allOf": [
-    {"$ref": "runtime_response_envelope.schema.json"}
-  ]
-}

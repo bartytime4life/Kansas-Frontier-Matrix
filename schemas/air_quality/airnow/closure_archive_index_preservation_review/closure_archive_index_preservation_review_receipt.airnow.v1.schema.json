@@ -1,1 +1,0 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["object_type","workflow_runner","validation_outcome"],"properties":{"object_type":{"const":"AirNowClosureArchiveIndexPreservationReviewReceipt"},"workflow_runner":{"const":"airnow_layer33_closure_archive_index_preservation_review"},"validation_outcome":{"enum":["PASS","FAIL"]}}}

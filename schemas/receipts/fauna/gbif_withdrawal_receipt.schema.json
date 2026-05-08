@@ -1,1 +1,0 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["withdrawal_receipt_id","publication_package_id","public_use_allowed","kfm:spec_hash"]}
