@@ -1,0 +1,4 @@
+# connectors/ksu_research_extension pyproject — greenfield placeholder
+[project]
+name = "kfm-connector-ksu_research_extension"
+version = "0.0.0"

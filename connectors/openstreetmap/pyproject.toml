@@ -1,0 +1,4 @@
+# connectors/openstreetmap pyproject — greenfield placeholder
+[project]
+name = "kfm-connector-openstreetmap"
+version = "0.0.0"
