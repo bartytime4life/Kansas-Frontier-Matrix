@@ -1,0 +1,16 @@
+# source descriptor: santa_fe_trail
+# domain: roads-rail-trade
+# status: PROPOSED — greenfield template
+id: santa_fe_trail
+domain: roads-rail-trade
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/roads-rail-trade/santa_fe_trail/<run_id>.json"

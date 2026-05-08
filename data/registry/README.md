@@ -1,1 +1,3 @@
+# data/registry
 
+Greenfield stub.

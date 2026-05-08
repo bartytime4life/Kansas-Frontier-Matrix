@@ -1,0 +1,16 @@
+# source descriptor: ksu_soil_moisture
+# domain: soil
+# status: PROPOSED — greenfield template
+id: ksu_soil_moisture
+domain: soil
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/soil/ksu_soil_moisture/<run_id>.json"
