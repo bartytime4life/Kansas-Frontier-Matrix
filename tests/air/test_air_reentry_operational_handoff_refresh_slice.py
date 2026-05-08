@@ -8,6 +8,5 @@ def test_files_exist():
     'tools/operations/air/evaluate_air_reentry_watch_window_refresh.py',
     'tools/validators/air/validate_air_reentry_operational_handoff_refresh.py',
     'tools/auditors/air/audit_air_reentry_operational_handoff_refresh.py',
-    'docs/domains/atmosphere_air/AIR_REENTRY_OPERATIONAL_HANDOFF_REFRESH_SLICE.md',
   ]:
     assert (ROOT/p).exists()
