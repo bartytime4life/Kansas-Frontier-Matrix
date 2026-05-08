@@ -1,1 +1,0 @@
-"""Receipt tool tests package."""
