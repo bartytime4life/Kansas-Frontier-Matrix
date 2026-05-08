@@ -1,5 +1,0 @@
-import json
-from pathlib import Path
-def loadj(p): return json.loads(Path(p).read_text())
-def wj(p,o): Path(p).write_text(json.dumps(o,indent=2,sort_keys=True)+'\n')
-def wjl(p,rows): Path(p).write_text('\n'.join(json.dumps(r,sort_keys=True) for r in rows)+'\n')
