@@ -1,0 +1,3 @@
+# data/reports
+
+Greenfield stub.

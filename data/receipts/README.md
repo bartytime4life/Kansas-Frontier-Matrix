@@ -1,0 +1,3 @@
+# data/receipts
+
+Greenfield stub.
