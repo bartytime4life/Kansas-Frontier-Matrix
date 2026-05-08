@@ -1,0 +1,4 @@
+# connectors/epa pyproject — greenfield placeholder
+[project]
+name = "kfm-connector-epa"
+version = "0.0.0"
