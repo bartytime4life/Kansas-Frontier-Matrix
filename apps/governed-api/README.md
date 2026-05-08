@@ -5,7 +5,7 @@ ABSTAIN-only trust membrane stub for KFM.
 ## Run locally
 
 ```bash
-uvicorn governed_api.main:app --app-dir apps/governed-api/src --reload
+python -m governed_api.main
 ```
 
 Or with make:

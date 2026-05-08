@@ -52,7 +52,7 @@ api-run:
 
 
 governed-api-dev:
-	uvicorn governed_api.main:app --app-dir apps/governed-api/src --reload
+	PYTHONPATH=apps/governed-api/src python -m governed_api.main
 
 governed-api-smoke:
 	python -m pytest apps/governed-api/tests -q
