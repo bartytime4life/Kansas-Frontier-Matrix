@@ -1,0 +1,3 @@
+# geology :: bedrock
+
+Greenfield placeholder.
