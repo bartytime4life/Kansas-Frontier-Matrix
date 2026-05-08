@@ -1,18 +1,3 @@
----
-kfm_meta:
-  version: 2
-  status: draft
-  domain: flora
-  layer: usda_plants_controlled_publication
-  rights: public
-  promotion_state: promoted_package_required
-  publication_state: controlled_publication
-  network: disabled
-  sensitivity: public
-  source_id: usda_plants
-  source_uri: https://plants.sc.egov.usda.gov/downloads
----
-
 # USDA PLANTS Controlled Publication Layer
 
 ## Purpose
