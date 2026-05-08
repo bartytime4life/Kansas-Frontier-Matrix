@@ -1,0 +1,3 @@
+# data/catalog
+
+Greenfield stub.

@@ -1,0 +1,3 @@
+# data/manifests
+
+Greenfield stub.
