@@ -1,0 +1,16 @@
+# source descriptor: ksu_extension_ag
+# domain: agriculture
+# status: PROPOSED — greenfield template
+id: ksu_extension_ag
+domain: agriculture
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/agriculture/ksu_extension_ag/<run_id>.json"
