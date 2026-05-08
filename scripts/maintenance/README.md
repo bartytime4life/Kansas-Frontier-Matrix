@@ -1,0 +1,3 @@
+# scripts/maintenance
+
+Greenfield stub.

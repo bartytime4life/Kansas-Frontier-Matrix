@@ -1,0 +1,3 @@
+# scripts/dev
+
+Greenfield stub.
