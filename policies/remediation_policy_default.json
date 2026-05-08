@@ -1,9 +1,0 @@
-{
-  "schema": "RemediationPolicy.v1",
-  "policy_id": "soilgrids-remediation-default",
-  "mode": "strict",
-  "approval_required_for": ["rollback_latest_pointer", "roll_forward_to_distribution", "disable_viewer_pointer", "quarantine"],
-  "auto_plan_allowed": true,
-  "auto_execute_allowed": false,
-  "allowed_actions": ["no_action", "acknowledge", "quarantine", "rollback_latest_pointer", "roll_forward_to_distribution", "disable_viewer_pointer", "request_manual_approval", "open_incident_only"]
-}
