@@ -1,24 +1,3 @@
----
-doc_id: kfm://doc/flora/usda-plants-ingestion
-title: USDA PLANTS Ingestion Slice
-description: Fixture-backed, no-network validation slice for USDA PLANTS-shaped Flora records.
-status: draft
-owners: ["@bartytime4life"]
-created: 2026-04-30
-updated: 2026-04-30
-domain: flora
-layer: ingestion
-source_family: usda_plants
-kfm_meta_block: v2
-tags:
-  - flora
-  - ingestion
-  - usda-plants
-  - no-network
-  - fixtures
-  - validation
----
-
 # USDA PLANTS Ingestion
 
 > [!IMPORTANT]
