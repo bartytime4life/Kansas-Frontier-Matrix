@@ -1,4 +1,4 @@
-from test_soil_active_release_pointer_builder import test_builder, run, ROOT
+from tests.soil.test_soil_active_release_pointer_builder import test_builder, run, ROOT
 
 def test_gate(tmp_path):
  test_builder(tmp_path)

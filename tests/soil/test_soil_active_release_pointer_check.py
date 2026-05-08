@@ -1,4 +1,4 @@
-from test_soil_active_release_pointer_builder import test_builder, run, ROOT
+from tests.soil.test_soil_active_release_pointer_builder import test_builder, run, ROOT
 import sys
 
 def test_check(tmp_path):

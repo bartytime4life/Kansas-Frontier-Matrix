@@ -1,4 +1,7 @@
 from __future__ import annotations
+import pytest
+pytest.importorskip("jsonschema", reason="jsonschema dependency unavailable in this environment")
+
 
 import json
 from pathlib import Path

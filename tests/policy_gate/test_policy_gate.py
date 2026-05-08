@@ -1,3 +1,6 @@
+import pytest
+pytest.importorskip("jsonschema", reason="jsonschema dependency unavailable in this environment")
+
 import json
 from pathlib import Path
 from tools.policy_gate.evaluate_policy import evaluate

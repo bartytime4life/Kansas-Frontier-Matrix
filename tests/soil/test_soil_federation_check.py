@@ -1,4 +1,4 @@
-from test_soil_federation_builder import prep,run,FED,ROOT
+from tests.soil.test_soil_federation_builder import prep,run,FED,ROOT
 import json
 CHK=ROOT/'tools/validators/soil/federation_check.py'
 def test_check_ok(tmp_path):
