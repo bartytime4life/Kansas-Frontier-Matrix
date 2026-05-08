@@ -1,0 +1,3 @@
+# artifacts/qa
+
+Greenfield stub.

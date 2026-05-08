@@ -1,0 +1,3 @@
+# artifacts/build
+
+Greenfield stub.

@@ -1,0 +1,3 @@
+# artifacts/temporary
+
+Greenfield stub.

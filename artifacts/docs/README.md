@@ -1,0 +1,3 @@
+# artifacts/docs
+
+Greenfield stub.
