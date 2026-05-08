@@ -1,0 +1,3 @@
+# fixtures/synthetic
+
+Greenfield stub.

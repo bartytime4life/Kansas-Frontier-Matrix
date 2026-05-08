@@ -1,0 +1,3 @@
+# fixtures/golden
+
+Greenfield stub.

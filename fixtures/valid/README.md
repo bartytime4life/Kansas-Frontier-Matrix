@@ -1,0 +1,3 @@
+# fixtures/valid
+
+Greenfield stub.
