@@ -1,0 +1,3 @@
+# infra/firewall
+
+Greenfield stub.

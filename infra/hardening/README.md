@@ -1,0 +1,3 @@
+# infra/hardening
+
+Greenfield stub.

@@ -1,0 +1,3 @@
+# infra/terraform
+
+Greenfield stub.

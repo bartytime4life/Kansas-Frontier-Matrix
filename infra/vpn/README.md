@@ -1,0 +1,3 @@
+# infra/vpn
+
+Greenfield stub.

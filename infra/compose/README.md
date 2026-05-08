@@ -1,0 +1,3 @@
+# infra/compose
+
+Greenfield stub.
