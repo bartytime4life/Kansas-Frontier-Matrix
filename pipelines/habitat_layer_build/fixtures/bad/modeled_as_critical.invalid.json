@@ -1,7 +1,0 @@
-{
-  "layer_id": "ks-habitat-candidate",
-  "source_id": "ks-habitat-fixture",
-  "source_role": "modeled_as_critical",
-  "support_resolution_m": 30,
-  "crs": "EPSG:4326"
-}

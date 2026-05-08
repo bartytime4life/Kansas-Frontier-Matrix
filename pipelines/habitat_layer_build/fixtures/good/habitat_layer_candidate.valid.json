@@ -1,8 +1,0 @@
-{
-  "layer_id": "ks-habitat-candidate",
-  "source_id": "ks-habitat-fixture",
-  "source_role": "habitat_reference",
-  "support_resolution_m": 30,
-  "crs": "EPSG:4326",
-  "temporal_scope": "2020-01-01/2025-12-31"
-}
