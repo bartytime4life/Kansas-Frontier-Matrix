@@ -1,0 +1,16 @@
+# source descriptor: ecoregions_omernik
+# domain: habitat
+# status: PROPOSED — greenfield template
+id: ecoregions_omernik
+domain: habitat
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/habitat/ecoregions_omernik/<run_id>.json"
