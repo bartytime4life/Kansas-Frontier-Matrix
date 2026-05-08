@@ -1,4 +1,4 @@
-# ADR-0009-local-exposure-security
+# ADR-0024-catalog-proof-release-separation
 
 - **Status:** proposed
 - **Decision Date:** 2026-05-08
@@ -9,7 +9,7 @@
 This ADR was created from the April–May 2026 backlog normalization request to ensure a canonical decision record exists in `docs/adr/`.
 
 ## Decision
-Local/home-hosted security posture: VPN, proxy, firewall, auth, audit, and no direct model exposure.
+Separation of receipts, proofs, catalogs, releases, reviews, corrections, and rollback objects.
 
 ## Consequences
 - Governs future implementation and validation work for this decision area.

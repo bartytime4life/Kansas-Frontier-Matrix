@@ -8,7 +8,7 @@ owners: NEEDS_VERIFICATION
 created: NEEDS_VERIFICATION
 updated: 2026-04-27
 policy_label: NEEDS_VERIFICATION
-related: [docs/runbooks/foundation-strategy.md, docs/README.md, docs/registers/AUTHORITY_LADDER.md, docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, docs/intake/IDEA_INTAKE.md, docs/adr/ADR-0001-schema-home.md, docs/adr/ADR-0002-source-ledger-authority.md, docs/architecture/pipeline-lifecycle.md, schemas/contracts/v1/source_descriptor.schema.json, schemas/contracts/v1/evidence_bundle.schema.json, schemas/contracts/v1/runtime_response_envelope.schema.json, policy/publication.rego]
+related: [docs/runbooks/foundation-strategy.md, docs/README.md, docs/registers/AUTHORITY_LADDER.md, docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, docs/intake/IDEA_INTAKE.md, docs/adr/ADR-0001-schema-home.md, docs/adr/ADR-0203-source-ledger-authority.md, docs/architecture/pipeline-lifecycle.md, schemas/contracts/v1/source_descriptor.schema.json, schemas/contracts/v1/evidence_bundle.schema.json, schemas/contracts/v1/runtime_response_envelope.schema.json, policy/publication.rego]
 tags: [kfm, runbook, foundation, strategy, governance, evidence, policy, thin-slice]
 notes: [Generated from attached KFM doctrine and current-session workspace evidence. Target file existence, owner, created date, policy label, and adjacent repo paths remain NEEDS VERIFICATION because no mounted KFM Git repository was available.]
 [/KFM_META_BLOCK_V2] -->
@@ -100,7 +100,7 @@ Do **not** use it as a domain-specific data model. Hydrology, soils, fauna, arch
 |---:|---|---|---|
 | 0 | Inspect the real checkout | repo inventory, branch state, package manager, docs/schema/policy/test/workflow map | No implementation claim without direct evidence. |
 | 1 | Create documentation control plane | authority ladder, canon/lineage/exploratory register, idea intake, docs landing links | Source authority is visible and linked. |
-| 2 | Resolve schema and source authority | `ADR-0001-schema-home`, `ADR-0002-source-ledger-authority`, source ledger skeleton | No dual schema authority drift. |
+| 2 | Resolve schema and source authority | `ADR-0001-schema-home`, `ADR-0203-source-ledger-authority`, source ledger skeleton | No dual schema authority drift. |
 | 3 | Establish shared object contracts | SourceDescriptor, EvidenceBundle, PolicyDecision, RuntimeResponseEnvelope, RunReceipt, ReleaseManifest, LayerManifest | Valid and invalid fixtures exist. |
 | 4 | Make validators and policy executable | schema validators, evidence validator, source registry validator, deny-by-default policy stubs | Valid fixtures pass; invalid fixtures fail. |
 | 5 | Prove one no-network public-safe slice | hydrology HUC12 fixture, EvidenceBundle fixture, no-network validation path | No live fetch, no secrets, no public release. |
@@ -127,7 +127,7 @@ The preferred first PR is intentionally small:
 | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | **PROPOSED** | Stop corpus, lineage, and exploratory materials from competing as peers. |
 | `docs/intake/IDEA_INTAKE.md` | **PROPOSED** | Give future “New Ideas” a controlled lane. |
 | `docs/adr/ADR-0001-schema-home.md` | **PROPOSED** | Resolve `contracts/` versus `schemas/` authority before schema-bearing files spread. |
-| `docs/adr/ADR-0002-source-ledger-authority.md` | **PROPOSED** | Define where source records, authority levels, and promotion decisions live. |
+| `docs/adr/ADR-0203-source-ledger-authority.md` | **PROPOSED** | Define where source records, authority levels, and promotion decisions live. |
 | `docs/architecture/pipeline-lifecycle.md` | **PROPOSED** | Explain truth-path stages and promotion boundaries in repo-native form. |
 | `schemas/contracts/v1/source_descriptor.schema.json` | **PROPOSED** | Source identity, role, rights, cadence, scope, and validation posture. |
 | `schemas/contracts/v1/evidence_bundle.schema.json` | **PROPOSED** | Inspectable support unit for visible claims. |
@@ -235,7 +235,7 @@ flowchart LR
 | Canon register | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | Separates canon, lineage, exploratory, deprecated, and superseded materials. | Human-facing | New corpus batch or supersession. |
 | Idea intake | `docs/intake/IDEA_INTAKE.md` | Converts idea packets into triaged candidates, not automatic canon. | Human-facing | New idea packet or promoted item. |
 | Schema-home ADR | `docs/adr/ADR-0001-schema-home.md` | Prevents `contracts/` and `schemas/` drift. | Human-facing | Machine contract location changes. |
-| Source-ledger ADR | `docs/adr/ADR-0002-source-ledger-authority.md` | Defines source registry authority and update obligations. | Human-facing | Source ledger or registry placement change. |
+| Source-ledger ADR | `docs/adr/ADR-0203-source-ledger-authority.md` | Defines source registry authority and update obligations. | Human-facing | Source ledger or registry placement change. |
 | Pipeline lifecycle | `docs/architecture/pipeline-lifecycle.md` | Explains lifecycle states and promotion seams. | Human-facing | Lifecycle, promotion, or release-state change. |
 | Source contract | `schemas/contracts/v1/source_descriptor.schema.json` | Defines source admission shape. | Machine-readable | New source class or source role. |
 | Evidence contract | `schemas/contracts/v1/evidence_bundle.schema.json` | Defines inspectable support bundle. | Machine-readable | EvidenceRef/EvidenceBundle resolver changes. |

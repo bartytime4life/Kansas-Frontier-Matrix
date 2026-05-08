@@ -1,4 +1,4 @@
-# ADR-0005-maplibre-layer-manifest
+# ADR-0022-maplibre-layer-manifest
 
 - **Status:** proposed
 - **Decision Date:** 2026-05-08

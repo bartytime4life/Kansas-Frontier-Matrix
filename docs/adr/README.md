@@ -225,7 +225,7 @@ Run these steps before adding, editing, accepting, or superseding an ADR.
 | `ADR-0201-policy-home.md` | Policy home | `SURFACED / NEEDS VERIFICATION` | Renumbered to restore sequence before ADR-0202; verify status and supersession links are current. |
 | `ADR-0009-sensitive-location-policy.md` | Sensitive location policy | `SURFACED / NEEDS VERIFICATION` | High-risk public exposure decision; verify policy and domain links. |
 | `ADR-0010-local-exposure-security.md` | Local exposure security | `SURFACED / NEEDS VERIFICATION` | Verify runtime, security docs, and enforcement evidence. |
-| `ADR-0013-policy-home-authority.md` | Policy-home authority | `SURFACED / NEEDS VERIFICATION` | Verify relationship to `ADR-0201-policy-home.md`. |
+| `ADR-0019-query-save-recompile-loop.md` | Query-save-recompile loop | `SURFACED / NEEDS VERIFICATION` | Verify whether this loop is still active or superseded by newer pipeline governance. |
 | `ADR-0427-consent-vc-and-revocation-delta.md` | Consent, VC, revocation delta | `SURFACED / NEEDS VERIFICATION` | Sensitive governance area; verify owners and policy label before public use. |
 
 ### UI, map, runtime, and governed AI

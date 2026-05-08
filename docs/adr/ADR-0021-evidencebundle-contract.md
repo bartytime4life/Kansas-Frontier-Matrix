@@ -1,4 +1,4 @@
-# ADR-0003-evidencebundle-contract
+# ADR-0021-evidencebundle-contract
 
 - **Status:** proposed
 - **Decision Date:** 2026-05-08

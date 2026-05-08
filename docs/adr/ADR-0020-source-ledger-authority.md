@@ -1,4 +1,4 @@
-# ADR-0002-source-ledger-authority
+# ADR-0020-source-ledger-authority
 
 - **Status:** proposed
 - **Decision Date:** 2026-05-08
