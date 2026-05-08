@@ -1,18 +1,3 @@
----
-doc_id: kfm://doc/flora/usda-plants-next-layer
-title: USDA PLANTS Next Layer (Fixture Loader + Receipts + Proofs + Policy)
-status: draft
-domain: flora
-layer: usda_plants_fixture_loader_receipts_proofs_policy
-rights: public
-promotion_state: not_promoted
-network: disabled
-sensitivity: public
-kfm_meta_block: v2
-created: 2026-04-30
-updated: 2026-04-30
----
-
 # USDA PLANTS Next Layer
 
 ## 1. Purpose
