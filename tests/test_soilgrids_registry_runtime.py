@@ -1,6 +1,6 @@
 import json, sqlite3
 from pathlib import Path
-from soilgrids_registry_runtime import enforce_readonly_sql, open_sqlite_readonly_immutable, build_dashboard_bundle
+from tools.soilgrids.soilgrids_registry_runtime import enforce_readonly_sql, open_sqlite_readonly_immutable, build_dashboard_bundle
 
 
 def _mk(tmp):
