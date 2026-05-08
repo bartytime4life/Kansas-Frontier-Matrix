@@ -1,0 +1,1 @@
+# hazards :: triplets — greenfield placeholder

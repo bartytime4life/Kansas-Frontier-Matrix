@@ -1,0 +1,1 @@
+# habitat :: validate — greenfield placeholder

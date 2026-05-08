@@ -1,0 +1,1 @@
+# habitat :: catalog — greenfield placeholder
