@@ -1,8 +1,0 @@
-{
-  "id": "SAD-HYD-003",
-  "knowledge_character": "SYNTHETIC_TEST",
-  "source_id": "SRC-HYD-SYNTHETIC-INTERNAL",
-  "decision": "ALLOW",
-  "source_activation_state": "ACTIVE_INTERNAL_ONLY",
-  "synthetic_test": true
-}

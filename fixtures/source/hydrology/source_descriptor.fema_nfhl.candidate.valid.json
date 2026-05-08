@@ -1,9 +1,0 @@
-{
-  "id": "SRC-HYD-FEMA_NFHL-CANDIDATE",
-  "knowledge_character": "SYNTHETIC_TEST",
-  "source_role": "REGULATORY_CONTEXT",
-  "authority_scope": "Kansas hydrology context",
-  "public_release_allowed": false,
-  "verification_status": "NEEDS_VERIFICATION",
-  "rights_status": "UNKNOWN"
-}

@@ -1,9 +1,0 @@
-{
-  "id": "SCM-HYD-001",
-  "knowledge_character": "SYNTHETIC_TEST",
-  "source_id": "SRC-HYD-USGS-WATERDATA-CANDIDATE",
-  "capabilities": [
-    "metadata_landing",
-    "ogc_capabilities"
-  ]
-}

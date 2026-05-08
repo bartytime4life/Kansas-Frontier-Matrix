@@ -1,8 +1,0 @@
-{
-  "runtime_response_envelope": {"id": "rre-002", "outcome": "MAYBE", "reason": "INVALID"},
-  "policy_decision": {"id": "pd-002", "decision": "PERMIT", "reason": "INVALID"},
-  "promotion_decision": {"id": "prd-002", "decision": "GO", "reason": "INVALID"},
-  "validation_report": {"id": "vr-002", "status": "MYSTERY", "summary": "invalid"},
-  "rollback_reference": {"id": "rr-002", "rollback_target": "release-0002", "decision": "UNDO"},
-  "evidence_bundle_ref": "schemas/contracts/v1/shared/evidence_bundle.schema.json"
-}
