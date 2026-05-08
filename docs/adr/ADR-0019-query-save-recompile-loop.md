@@ -1,4 +1,4 @@
-# ADR-0005-maplibre-layer-manifest
+# ADR-0019-query-save-recompile-loop
 
 - **Status:** proposed
 - **Decision Date:** 2026-05-08
@@ -9,7 +9,7 @@
 This ADR was created from the April–May 2026 backlog normalization request to ensure a canonical decision record exists in `docs/adr/`.
 
 ## Decision
-Public-safe LayerManifest rules, source refs, stale/restricted/generalized states, and Evidence Drawer coupling.
+Governed incremental loop: query→save→validate→compile→review→promote→recompile; no autonomous publishing.
 
 ## Consequences
 - Governs future implementation and validation work for this decision area.
