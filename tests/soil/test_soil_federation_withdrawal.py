@@ -1,4 +1,4 @@
-from test_soil_federation_builder import prep,run,FED,ROOT
+from tests.soil.test_soil_federation_builder import prep,run,FED,ROOT
 import json
 W=ROOT/'tools/federation/soil/build_withdrawal.py'
 def test_withdrawal(tmp_path):

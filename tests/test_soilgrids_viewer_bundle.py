@@ -1,7 +1,7 @@
 import json, subprocess, sys
 from pathlib import Path
 import pytest
-from soilgrids_viewer_bundle import parse_args, build_viewer_bundle, ViewerError, compute_viewer_spec_hash
+from tools.soilgrids.soilgrids_viewer_bundle import parse_args, build_viewer_bundle, ViewerError, compute_viewer_spec_hash
 
 
 def wj(p,o): p.parent.mkdir(parents=True, exist_ok=True); p.write_text(json.dumps(o), encoding='utf-8')
