@@ -1,18 +1,3 @@
----
-kfm_meta:
-  version: 2
-  status: draft
-  domain: flora
-  layer: usda_plants_guarded_live_watcher
-  rights: public
-  promotion_state: not_promoted
-  publication_state: not_published
-  network: manual_guarded
-  ci_network: disabled
-  sensitivity: public
-  source_id: usda_plants
-  source_uri: https://plants.sc.egov.usda.gov/downloads
----
 
 # USDA PLANTS Guarded Live Watcher Layer
 
