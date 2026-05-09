@@ -57,7 +57,6 @@ governed-api-dev:
 governed-api-smoke:
 	python -m pytest apps/governed-api/tests -q
 
-
 governed-api-verify:
 	python -m pytest apps/governed-api/tests -q
 	git grep -E "^(import|from) (maplibre|cesium|ollama)" apps/governed-api/ || true

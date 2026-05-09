@@ -50,7 +50,6 @@ Unknown route example:
 }
 ```
 
-
 Non-GET requests to scaffolded routes return:
 
 ```json
