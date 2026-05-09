@@ -1,0 +1,40 @@
+# KFM .gitignore — greenfield baseline.
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+dist/
+.turbo/
+
+# Data lifecycle — never commit these
+data/raw/**
+data/work/**
+data/quarantine/**
+data/processed/**
+data/published/**
+!data/**/README.md
+!data/**/.gitkeep
+
+# Receipts and proofs are governed — write only via tooling
+data/receipts/**/*.json
+data/proofs/**/*.json
+!data/receipts/README.md
+!data/proofs/README.md
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+configs/local/*
+!configs/local/README.md
+
+# OS
+.DS_Store
+Thumbs.db
