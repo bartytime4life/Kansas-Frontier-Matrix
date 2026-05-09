@@ -13,7 +13,8 @@
   },
   "properties": {
     "review_id": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
     },
     "subject_ref": {
       "type": "string"

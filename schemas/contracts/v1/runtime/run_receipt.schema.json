@@ -13,7 +13,8 @@
   },
   "properties": {
     "run_id": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
     },
     "stage": {
       "type": "string"
