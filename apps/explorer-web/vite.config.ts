@@ -1,0 +1,2 @@
+// Greenfield placeholder
+export default {};

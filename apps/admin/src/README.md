@@ -1,0 +1,3 @@
+# admin/src
+
+Greenfield stub.
