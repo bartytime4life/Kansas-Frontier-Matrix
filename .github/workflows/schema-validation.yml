@@ -1,5 +1,3 @@
-# KFM CI workflow stub: schema-validation
-# Status: PROPOSED greenfield scaffold.
 name: schema-validation
 
 on:
@@ -11,5 +9,9 @@ jobs:
   validate-fixtures-against-schemas:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: 'echo TODO validate-fixtures-against-schemas'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e .
+      - run: make schemas
