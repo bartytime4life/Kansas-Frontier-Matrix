@@ -49,3 +49,10 @@ Unknown route example:
   "detail": "Not Found"
 }
 ```
+Non-GET requests to scaffolded routes return:
+
+```json
+{
+  "detail": "Method Not Allowed"
+}
+```

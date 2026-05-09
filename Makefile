@@ -1,7 +1,7 @@
 # KFM Makefile — greenfield scaffold.
 # Commands should be repo-native; replace placeholders as packages land.
 
-.PHONY: help validate test schemas policy fixtures release-dry-run             proof-slice catalog publish-check deny-test ui-build api-run governed-api-dev governed-api-smoke
+.PHONY: help validate test schemas policy fixtures release-dry-run             proof-slice catalog publish-check deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify
 
 help:
 	@echo "KFM make targets (greenfield):"
@@ -56,3 +56,6 @@ governed-api-dev:
 
 governed-api-smoke:
 	python -m pytest apps/governed-api/tests -q
+governed-api-verify:
+	python -m pytest apps/governed-api/tests -q
+	git grep -E "^(import|from) (maplibre|cesium|ollama)" apps/governed-api/ || true
