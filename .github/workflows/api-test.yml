@@ -1,5 +1,5 @@
-# KFM CI workflow stub: api-test
-# Status: PROPOSED greenfield scaffold.
+# KFM CI workflow: api-test
+# Status: PROPOSED trust-membrane CI wiring.
 name: api-test
 
 on:
@@ -11,10 +11,19 @@ jobs:
   governed-api-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: 'echo TODO governed-api-tests'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e .
+      - run: make governed-api-smoke
+
   envelope-shape-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: 'echo TODO envelope-shape-tests'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e .
+      - run: pytest apps/governed-api/tests/test_abstain_routes.py

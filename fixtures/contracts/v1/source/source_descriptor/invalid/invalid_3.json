@@ -9,6 +9,6 @@
   },
   "sensitivity_floor": "public",
   "update_cadence": "daily",
-  "access_posture": "open",
+  "access_posture": "semi_open",
   "citation_template": "USGS {{id}}"
 }

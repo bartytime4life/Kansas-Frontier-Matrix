@@ -11,10 +11,10 @@
     "policy": "policy/domains/hydrology/",
     "status": "PROPOSED"
   },
-  "additionalProperties": false,
   "allOf": [
     {
       "$ref": "https://schemas.kfm.local/contracts/v1/runtime/run_receipt.schema.json"
     }
-  ]
+  ],
+  "unevaluatedProperties": false
 }
