@@ -220,20 +220,20 @@ The rule is not a documentation aspiration; it is enforced at every surface wher
 
 ```mermaid
 flowchart TD
-    A[Request: ingest / promote / publish / serve / focus_answer / export] --> B[ScopeResolver<br/>access_role, requested_action]
-    B --> C[PolicyPrecheck<br/>source_role, rights, sensitivity, release_state]
-    C --> D{sensitivity class<br/>in {DNA, rare_species,<br/>archaeology, critical_infra}?}
-    D -- no --> E[Standard governed path]
-    D -- yes --> F{All §5 preconditions<br/>satisfied?}
-    F -- no, missing rights/review --> G[DecisionEnvelope: DENY<br/>reason: rights / review / sensitivity]
-    F -- no, evidence unresolved --> H[DecisionEnvelope: ABSTAIN<br/>reason: evidence.unresolved]
-    F -- engine unavailable --> I[DecisionEnvelope: ERROR<br/>fail closed]
-    F -- yes, exact geometry requested --> J{Generalized product<br/>permitted by class default?}
-    J -- no --> G
-    J -- yes --> K[Apply transform<br/>emit RedactionReceipt]
-    K --> L[PolicyPostcheck<br/>citations, no-leak, obligations]
-    L --> M[DecisionEnvelope: ANSWER<br/>generalized geometry only]
-    M --> N[RuntimeResponseEnvelope<br/>+ RunReceipt + ReleaseManifest ref]
+    A["Request: ingest / promote / publish / serve / focus_answer / export"] --> B["ScopeResolver<br/>access_role, requested_action"]
+    B --> C["PolicyPrecheck<br/>source_role, rights, sensitivity, release_state"]
+    C --> D{"sensitivity class in:<br/>DNA, rare_species,<br/>archaeology, critical_infra?"}
+    D -->|no| E["Standard governed path"]
+    D -->|yes| F{"All ADR-0010 §5<br/>preconditions satisfied?"}
+    F -->|"no — rights or review missing"| G["DecisionEnvelope: DENY<br/>reason: rights / review / sensitivity"]
+    F -->|"no — evidence unresolved"| H["DecisionEnvelope: ABSTAIN<br/>reason: evidence.unresolved"]
+    F -->|"engine unavailable"| I["DecisionEnvelope: ERROR<br/>fail closed"]
+    F -->|"yes — exact geometry requested"| J{"Generalized product<br/>permitted by class default?"}
+    J -->|no| G
+    J -->|yes| K["Apply transform<br/>emit RedactionReceipt"]
+    K --> L["PolicyPostcheck<br/>citations, no-leak, obligations"]
+    L --> M["DecisionEnvelope: ANSWER<br/>generalized geometry only"]
+    M --> N["RuntimeResponseEnvelope<br/>+ RunReceipt + ReleaseManifest ref"]
     G --> N
     H --> N
     I --> N
