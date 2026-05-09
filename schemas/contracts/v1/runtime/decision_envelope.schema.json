@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/runtime/decision_envelope.schema.json",
   "title": "decision_envelope",
   "type": "object",
-  "description": "KFM v1 contract schema stub for decision_envelope. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for decision_envelope.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/decision_envelope.md",
     "fixtures_root": "fixtures/runtime/decision_envelope/",
@@ -12,21 +12,84 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+    "decision_id": {
+      "type": "string"
     },
     "id": {
+      "type": "string"
+    },
+    "outcome": {
       "type": "string",
-      "description": "Canonical identifier."
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "policy_family": {
+      "type": "string",
+      "enum": [
+        "promotion",
+        "access",
+        "render",
+        "capability",
+        "consent",
+        "sensitivity"
+      ]
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "spec_hash": {
+      "type": "string"
     },
     "version": {
+      "type": "string"
+    },
+    "issued_at": {
       "type": "string",
-      "description": "Contract or object version."
+      "format": "date-time"
     }
   },
   "required": [
-    "id"
+    "decision_id",
+    "outcome",
+    "policy_family",
+    "reasons",
+    "obligations",
+    "evaluated_at"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

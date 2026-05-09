@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/source/source_descriptor.schema.json",
   "title": "source_descriptor",
   "type": "object",
-  "description": "KFM v1 contract schema stub for source_descriptor. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for source_descriptor.",
   "x-kfm": {
     "contract_doc": "contracts/source/source_descriptor.md",
     "fixtures_root": "fixtures/source/source_descriptor/",
@@ -12,21 +12,75 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
     "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+      "type": "string"
     },
-    "version": {
+    "domain": {
+      "type": "string"
+    },
+    "role": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "primary",
+        "corroborating",
+        "context",
+        "restricted"
+      ]
+    },
+    "authority": {
+      "type": "string"
+    },
+    "rights": {
+      "type": "object",
+      "required": [
+        "license",
+        "attribution_required"
+      ],
+      "properties": {
+        "license": {
+          "type": "string"
+        },
+        "attribution_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sensitivity_floor": {
+      "type": "string",
+      "enum": [
+        "public",
+        "generalized",
+        "restricted",
+        "quarantine"
+      ]
+    },
+    "update_cadence": {
+      "type": "string"
+    },
+    "access_posture": {
+      "type": "string",
+      "enum": [
+        "open",
+        "credentialed",
+        "restricted",
+        "closed"
+      ]
+    },
+    "citation_template": {
+      "type": "string"
     }
   },
   "required": [
-    "id"
+    "id",
+    "domain",
+    "role",
+    "authority",
+    "rights",
+    "sensitivity_floor",
+    "update_cadence",
+    "access_posture",
+    "citation_template"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

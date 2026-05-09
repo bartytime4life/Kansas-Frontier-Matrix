@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/governance/review_record.schema.json",
   "title": "review_record",
   "type": "object",
-  "description": "KFM v1 contract schema stub for review_record. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for review_record.",
   "x-kfm": {
     "contract_doc": "contracts/governance/review_record.md",
     "fixtures_root": "fixtures/governance/review_record/",
@@ -12,21 +12,53 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+    "review_id": {
+      "type": "string"
     },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+    "subject_ref": {
+      "type": "string"
     },
-    "version": {
+    "reviewer_role": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "steward",
+        "reviewer",
+        "auditor"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "reject",
+        "request_changes"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [
-    "id"
+    "review_id",
+    "subject_ref",
+    "reviewer_role",
+    "decision",
+    "reasons",
+    "obligations",
+    "reviewed_at"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/common/temporal_window.schema.json",
   "title": "temporal_window",
   "type": "object",
-  "description": "KFM v1 contract schema stub for temporal_window. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for temporal_window.",
   "x-kfm": {
     "contract_doc": "contracts/common/temporal_window.md",
     "fixtures_root": "fixtures/common/temporal_window/",
@@ -12,21 +12,30 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
+    "start": {
       "type": "string",
-      "description": "Deterministic content hash."
+      "format": "date-time"
     },
-    "id": {
+    "end": {
       "type": "string",
-      "description": "Canonical identifier."
+      "format": "date-time"
     },
-    "version": {
+    "time_kind": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "observed",
+        "published",
+        "ingested",
+        "effective",
+        "corrected",
+        "superseded"
+      ]
     }
   },
   "required": [
-    "id"
+    "start",
+    "end",
+    "time_kind"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

@@ -1,0 +1,19 @@
+{
+  "run_id": "BAD",
+  "stage": "ingest",
+  "inputs": [
+    "in1"
+  ],
+  "outputs": [
+    "out1"
+  ],
+  "code_ref": "git:abc",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_descriptor_refs": [
+    "src1"
+  ],
+  "validation_refs": [
+    "val1"
+  ],
+  "outcome": "SUCCESS"
+}

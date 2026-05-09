@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/policy/policy_decision.schema.json",
   "title": "policy_decision",
   "type": "object",
-  "description": "KFM v1 contract schema stub for policy_decision. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for policy_decision.",
   "x-kfm": {
     "contract_doc": "contracts/policy/policy_decision.md",
     "fixtures_root": "fixtures/policy/policy_decision/",
@@ -12,21 +12,53 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+    "decision_id": {
+      "type": "string"
     },
-    "id": {
+    "outcome": {
       "type": "string",
-      "description": "Canonical identifier."
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
     },
-    "version": {
+    "policy_family": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "promotion",
+        "access",
+        "render",
+        "capability",
+        "consent",
+        "sensitivity"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [
-    "id"
+    "decision_id",
+    "outcome",
+    "policy_family",
+    "reasons",
+    "obligations",
+    "evaluated_at"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

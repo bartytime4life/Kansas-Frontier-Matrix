@@ -1,0 +1,14 @@
+{
+  "id": "BAD",
+  "domain": "hydrology",
+  "role": "primary",
+  "authority": "USGS",
+  "rights": {
+    "license": "CC-BY-4.0",
+    "attribution_required": true
+  },
+  "sensitivity_floor": "public",
+  "update_cadence": "daily",
+  "access_posture": "open",
+  "citation_template": "USGS {{id}}"
+}
