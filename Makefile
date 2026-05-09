@@ -18,10 +18,10 @@ help:
 	@echo "  api-run          Start apps/governed-api locally"
 
 validate:
-	@echo "TODO: invoke tools/validators/*"
+	$(MAKE) schemas test
 
 schemas:
-	@echo "TODO: jsonschema validate fixtures/ against schemas/"
+	python tools/validators/_common/run_all.py
 
 policy:
 	@echo "TODO: opa test policy/ -v"
@@ -30,7 +30,7 @@ fixtures:
 	@echo "TODO: regenerate deterministic fixtures"
 
 test:
-	@echo "TODO: pytest tests/"
+	python -m pytest tests/schemas tests/contracts -q
 
 proof-slice:
 	@echo "TODO: pipelines/hydrology proof slice"

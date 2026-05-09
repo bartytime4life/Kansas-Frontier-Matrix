@@ -1,5 +1,3 @@
-# KFM CI workflow stub: validator-suite
-# Status: PROPOSED greenfield scaffold.
 name: validator-suite
 
 on:
@@ -11,10 +9,24 @@ jobs:
   run-validators:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: 'echo TODO run-validators'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e .
+      - run: make schemas
+
   ensure-fail-closed:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - run: 'echo TODO ensure-fail-closed'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e .
+      - run: |
+          if python tools/validators/validate_evidence_bundle.py fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json; then
+            echo 'Expected invalid fixture to fail'; exit 1;
+          else
+            echo 'Fail-closed behavior confirmed';
+          fi
