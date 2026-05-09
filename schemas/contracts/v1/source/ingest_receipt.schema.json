@@ -13,7 +13,8 @@
   },
   "properties": {
     "id": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
     },
     "source_id": {
       "type": "string"

@@ -1,0 +1,14 @@
+{
+  "id": "wbd_huc12",
+  "domain": "hydrology",
+  "role": "primary",
+  "authority": "U.S. Geological Survey (USGS) National Geospatial Program",
+  "rights": {
+    "license": "Public Domain (17 USC \u00a7 105)",
+    "attribution_required": false
+  },
+  "sensitivity_floor": "public",
+  "update_cadence": "steward-reviewed",
+  "access_posture": "open",
+  "citation_template": "USGS Watershed Boundary Dataset (WBD) HUC12, source_id={id}, accessed_at={accessed_at}, url=https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+}

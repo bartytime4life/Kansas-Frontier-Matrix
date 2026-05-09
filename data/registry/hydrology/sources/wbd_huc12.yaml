@@ -1,16 +1,16 @@
 # source descriptor: wbd_huc12
 # domain: hydrology
-# status: PROPOSED — greenfield template
+# status: PROPOSED — seeded in PR-003
 id: wbd_huc12
 domain: hydrology
-role: TBD            # primary | corroborating | context | restricted
-authority: TBD
+role: primary
+authority: U.S. Geological Survey (USGS) National Geospatial Program
 rights:
-  license: TBD
-  attribution_required: true
-  redistribution: TBD
-sensitivity_floor: TBD
-update_cadence: TBD
-access_posture: TBD   # public | api_key | steward_only
-citation_template: "TBD"
+  license: Public Domain (17 USC § 105)
+  attribution_required: false
+  redistribution: unrestricted
+sensitivity_floor: public
+update_cadence: steward-reviewed
+access_posture: open
+citation_template: "USGS Watershed Boundary Dataset (WBD) HUC12, source_id={id}, accessed_at={accessed_at}, url=https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
 ingest_receipt_template: "data/receipts/ingest/hydrology/wbd_huc12/<run_id>.json"
