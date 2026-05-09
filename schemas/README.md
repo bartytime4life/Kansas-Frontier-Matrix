@@ -29,3 +29,6 @@ Maintainer review; steward review for trust-bearing changes.
 
 ## Status
 PROPOSED
+
+## Domain alias schemas
+When a domain alias schema wraps a shared runtime contract via `allOf` + `$ref`, enforce strictness with `unevaluatedProperties: false` (not wrapper-level `additionalProperties: false`) so inherited properties are recognized under JSON Schema 2020-12. This preserves alias strictness without false rejections; see Directory Rules schema-home guidance (§7.4).
