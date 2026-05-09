@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/evidence/evidence_bundle.schema.json",
   "title": "evidence_bundle",
   "type": "object",
-  "description": "KFM v1 contract schema stub for evidence_bundle. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for evidence_bundle.",
   "x-kfm": {
     "contract_doc": "contracts/evidence/evidence_bundle.md",
     "fixtures_root": "fixtures/evidence/evidence_bundle/",
@@ -12,21 +12,77 @@
     "status": "PROPOSED"
   },
   "properties": {
+    "bundle_id": {
+      "type": "string"
+    },
+    "claim_scope": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_ref.schema.json"
+      },
+      "minItems": 1
+    },
+    "source_records": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "rights": {
+      "type": "object",
+      "required": [
+        "license"
+      ],
+      "properties": {
+        "license": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sensitivity": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/policy/sensitivity_label.schema.json"
+    },
+    "transforms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "checksums": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[a-f0-9]{64}$"
+      }
+    },
     "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
-    },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
+      "$ref": "https://schemas.kfm.local/contracts/v1/common/spec_hash.schema.json"
     }
   },
   "required": [
-    "id"
+    "bundle_id",
+    "claim_scope",
+    "evidence_refs",
+    "source_records",
+    "citations",
+    "rights",
+    "sensitivity",
+    "transforms",
+    "checksums",
+    "spec_hash"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

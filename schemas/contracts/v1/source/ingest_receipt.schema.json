@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/source/ingest_receipt.schema.json",
   "title": "ingest_receipt",
   "type": "object",
-  "description": "KFM v1 contract schema stub for ingest_receipt. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for ingest_receipt.",
   "x-kfm": {
     "contract_doc": "contracts/source/ingest_receipt.md",
     "fixtures_root": "fixtures/source/ingest_receipt/",
@@ -12,21 +12,53 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
     "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+      "type": "string"
     },
-    "version": {
+    "source_id": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "started_at": {
       "type": "string",
-      "description": "Contract or object version."
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "PARTIAL",
+        "FAIL"
+      ]
+    },
+    "bytes_in": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "digests": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[a-f0-9]{64}$"
+      }
     }
   },
   "required": [
-    "id"
+    "id",
+    "source_id",
+    "run_id",
+    "started_at",
+    "finished_at",
+    "outcome",
+    "bytes_in",
+    "digests"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

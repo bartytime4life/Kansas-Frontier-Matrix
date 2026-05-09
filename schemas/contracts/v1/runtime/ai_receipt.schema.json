@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/runtime/ai_receipt.schema.json",
   "title": "ai_receipt",
   "type": "object",
-  "description": "KFM v1 contract schema stub for ai_receipt. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for ai_receipt.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/ai_receipt.md",
     "fixtures_root": "fixtures/runtime/ai_receipt/",
@@ -12,21 +12,52 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
     "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+      "type": "string"
     },
-    "version": {
+    "run_id": {
+      "type": "string"
+    },
+    "adapter": {
+      "type": "string"
+    },
+    "model_ref": {
+      "type": "string"
+    },
+    "inputs_digest": {
       "type": "string",
-      "description": "Contract or object version."
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "outputs_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "policy_decision_ref": {
+      "type": "string"
+    },
+    "citation_validation_ref": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
     }
   },
   "required": [
-    "id"
+    "id",
+    "run_id",
+    "adapter",
+    "model_ref",
+    "inputs_digest",
+    "outputs_digest",
+    "policy_decision_ref",
+    "citation_validation_ref",
+    "outcome"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

@@ -1,0 +1,16 @@
+name: contracts-validate
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install jsonschema pytest
+      - run: python tools/validators/validate_runtime_response_envelope.py --fixtures
+      - run: python tools/validators/validate_decision_envelope.py --fixtures
+      - run: python tools/validators/validate_run_receipt.py --fixtures
+      - run: python tools/validators/validate_evidence_bundle.py --fixtures
+      - run: python tools/validators/validate_source_descriptor.py --fixtures

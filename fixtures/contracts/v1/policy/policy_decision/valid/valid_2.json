@@ -1,0 +1,12 @@
+{
+  "decision_id": "pd2",
+  "outcome": "DENY",
+  "policy_family": "sensitivity",
+  "reasons": [
+    "restricted"
+  ],
+  "obligations": [
+    "notify"
+  ],
+  "evaluated_at": "2026-05-09T00:00:00Z"
+}

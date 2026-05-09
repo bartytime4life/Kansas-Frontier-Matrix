@@ -1,0 +1,13 @@
+{
+  "decision_id": "dec2",
+  "outcome": "ANSWER",
+  "policy_family": "access",
+  "reasons": [
+    "allowed"
+  ],
+  "obligations": [
+    "log"
+  ],
+  "evaluated_at": "2026-05-09T00:00:00Z",
+  "decision": "ANSWER"
+}

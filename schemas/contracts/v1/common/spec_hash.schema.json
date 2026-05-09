@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/common/spec_hash.schema.json",
   "title": "spec_hash",
   "type": "object",
-  "description": "KFM v1 contract schema stub for spec_hash. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for spec_hash.",
   "x-kfm": {
     "contract_doc": "contracts/common/spec_hash.md",
     "fixtures_root": "fixtures/common/spec_hash/",
@@ -12,21 +12,13 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
+    "value": {
       "type": "string",
-      "description": "Deterministic content hash."
-    },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
-    },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
+      "pattern": "^sha256:[a-f0-9]{64}$"
     }
   },
   "required": [
-    "id"
+    "value"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

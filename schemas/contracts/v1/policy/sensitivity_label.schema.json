@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/policy/sensitivity_label.schema.json",
   "title": "sensitivity_label",
   "type": "object",
-  "description": "KFM v1 contract schema stub for sensitivity_label. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for sensitivity_label.",
   "x-kfm": {
     "contract_doc": "contracts/policy/sensitivity_label.md",
     "fixtures_root": "fixtures/policy/sensitivity_label/",
@@ -12,21 +12,27 @@
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
+    "level": {
       "type": "string",
-      "description": "Deterministic content hash."
+      "enum": [
+        "public",
+        "generalized",
+        "restricted",
+        "quarantine"
+      ]
     },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+    "reason": {
+      "type": "string"
     },
-    "version": {
+    "applied_at": {
       "type": "string",
-      "description": "Contract or object version."
+      "format": "date-time"
     }
   },
   "required": [
-    "id"
+    "level",
+    "reason",
+    "applied_at"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }
