@@ -11,6 +11,7 @@ Schema paths, fixture file paths, and repo root path for local `$id` registry co
 
 ## Outputs
 Validator instances, deterministic pass/fail exit codes, and per-file validation status lines.
+`run_all.py` currently executes the five top-level validators wired to the shared runner.
 
 ## Validation
 Run `python tools/validators/validate_evidence_bundle.py --fixtures`, `make schemas`, and `make test`.
