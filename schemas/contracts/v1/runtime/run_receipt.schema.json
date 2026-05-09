@@ -3,30 +3,71 @@
   "$id": "https://schemas.kfm.local/contracts/v1/runtime/run_receipt.schema.json",
   "title": "run_receipt",
   "type": "object",
-  "description": "KFM v1 contract schema stub for run_receipt. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for run_receipt.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/run_receipt.md",
-    "fixtures_root": "fixtures/runtime/run_receipt/",
-    "validator": "tools/validators/runtime/validate_run_receipt.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/run_receipt/",
+    "validator": "tools/validators/validate_run_receipt.py",
     "policy": "policy/runtime/",
     "status": "PROPOSED"
   },
   "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "stage": {
+      "type": "string"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "code_ref": {
+      "type": "string"
+    },
     "spec_hash": {
       "type": "string",
-      "description": "Deterministic content hash."
+      "pattern": "^sha256:[a-f0-9]{64}$"
     },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+    "source_descriptor_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
-    "version": {
+    "validation_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outcome": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "SUCCESS",
+        "PARTIAL",
+        "FAIL"
+      ]
     }
   },
   "required": [
-    "id"
+    "run_id",
+    "stage",
+    "inputs",
+    "outputs",
+    "code_ref",
+    "spec_hash",
+    "source_descriptor_refs",
+    "validation_refs",
+    "outcome"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

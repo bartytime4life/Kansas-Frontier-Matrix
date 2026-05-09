@@ -1,3 +1,13 @@
-# v1 schema set
+# Contracts v1 schema status
 
-Family folders mirror `contracts/`.
+## Real-shape families (PROPOSED)
+- common
+- source
+- evidence
+- runtime
+- policy
+- governance
+
+## Remaining stubs
+- domains/* (all domain lane schemas)
+- ui/* and other families not listed above

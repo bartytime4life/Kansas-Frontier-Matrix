@@ -1,0 +1,14 @@
+{
+  "id": "src2",
+  "domain": "soil",
+  "role": "context",
+  "authority": "KGS",
+  "rights": {
+    "license": "ODC-BY",
+    "attribution_required": false
+  },
+  "sensitivity_floor": "generalized",
+  "update_cadence": "monthly",
+  "access_posture": "credentialed",
+  "citation_template": "KGS {{id}}"
+}
