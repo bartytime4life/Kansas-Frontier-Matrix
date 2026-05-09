@@ -1,1 +1,0 @@
-# Route: telemetry — greenfield placeholder
