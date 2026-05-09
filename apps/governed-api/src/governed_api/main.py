@@ -1,13 +1,7 @@
 import json
 from wsgiref.simple_server import make_server
 
-from governed_api.routes import bootstrap, evidence, layers
-
-ROUTES = {
-    bootstrap.PATH: bootstrap.bootstrap,
-    layers.PATH: layers.layers,
-    evidence.PATH: evidence.evidence,
-}
+from governed_api.routes.registry import ROUTES
 
 
 def app(environ, start_response):

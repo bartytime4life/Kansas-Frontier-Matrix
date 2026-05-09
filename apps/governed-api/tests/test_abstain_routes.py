@@ -1,11 +1,9 @@
-import importlib
 import json
-import pkgutil
 from pathlib import Path
 from wsgiref.util import setup_testing_defaults
 
 from governed_api.main import app
-import governed_api.routes as routes_pkg
+from governed_api.routes.registry import ROUTES
 
 SCHEMA_PATH = (
     Path(__file__).resolve().parents[3]
@@ -15,18 +13,6 @@ SCHEMA_PATH = (
     / "runtime"
     / "decision_envelope.schema.json"
 )
-
-
-def _discover_scaffolded_routes() -> list[str]:
-    routes: list[str] = []
-    for module_info in pkgutil.iter_modules(routes_pkg.__path__):
-        if module_info.name.startswith("_"):
-            continue
-        mod = importlib.import_module(f"{routes_pkg.__name__}.{module_info.name}")
-        path = getattr(mod, "PATH", None)
-        if path:
-            routes.append(path)
-    return sorted(routes)
 
 
 def _call_app(path: str):
@@ -56,10 +42,9 @@ def _validate_against_schema(payload: dict, schema: dict) -> None:
 def test_all_scaffolded_routes_abstain_and_validate() -> None:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
-    routes = _discover_scaffolded_routes()
-    assert routes, "Expected at least one scaffolded route module in governed_api.routes"
+    assert ROUTES, "Expected at least one scaffolded route in routes.registry.ROUTES"
 
-    for route in routes:
+    for route in sorted(ROUTES):
         status, payload = _call_app(route)
         assert status == "200 OK"
         assert payload["decision"] == "ABSTAIN"
