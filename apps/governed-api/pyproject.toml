@@ -1,0 +1,4 @@
+# apps/governed-api pyproject — greenfield placeholder
+[project]
+name = "kfm-governed-api"
+version = "0.0.0"
