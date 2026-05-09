@@ -51,7 +51,7 @@ def test_all_scaffolded_routes_abstain_and_validate() -> None:
             assert payload["decision"] == "ABSTAIN"
             assert payload["reason_code"] == "NOT_IMPLEMENTED"
             assert payload["evidence_refs"] == []
-            assert payload["spec_hash"] == "stub:abstain"
+            assert payload["spec_hash"].startswith("sha256:")
             assert payload["id"] == f"stub:{route.removeprefix('/')}"
             assert payload["version"] == "v1-stub"
             assert payload["issued_at"] == fixed_time

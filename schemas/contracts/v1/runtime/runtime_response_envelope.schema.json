@@ -3,30 +3,68 @@
   "$id": "https://schemas.kfm.local/contracts/v1/runtime/runtime_response_envelope.schema.json",
   "title": "runtime_response_envelope",
   "type": "object",
-  "description": "KFM v1 contract schema stub for runtime_response_envelope. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for runtime_response_envelope.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/runtime_response_envelope.md",
-    "fixtures_root": "fixtures/runtime/runtime_response_envelope/",
-    "validator": "tools/validators/runtime/validate_runtime_response_envelope.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/runtime_response_envelope/",
+    "validator": "tools/validators/validate_runtime_response_envelope.py",
     "policy": "policy/runtime/",
     "status": "PROPOSED"
   },
   "properties": {
+    "id": {
+      "type": "string"
+    },
     "spec_hash": {
       "type": "string",
-      "description": "Deterministic content hash."
-    },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+      "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "version": {
+      "type": "string"
+    },
+    "issued_at": {
       "type": "string",
-      "description": "Contract or object version."
+      "format": "date-time"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_ref.schema.json"
+      }
+    },
+    "policy_state": {
+      "type": "string"
+    },
+    "freshness": {
+      "type": "string"
+    },
+    "correction_state": {
+      "type": "string"
     }
   },
   "required": [
-    "id"
+    "id",
+    "spec_hash",
+    "version",
+    "issued_at",
+    "outcome",
+    "reason_code",
+    "evidence_refs",
+    "policy_state",
+    "freshness",
+    "correction_state"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

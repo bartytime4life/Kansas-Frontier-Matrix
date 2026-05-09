@@ -1,0 +1,32 @@
+{
+  "claim_scope": "hydrology feature",
+  "evidence_refs": [
+    {
+      "ref": "obs:1",
+      "kind": "measurement"
+    }
+  ],
+  "source_records": [
+    "src:hydro"
+  ],
+  "citations": [
+    "cite:hydro"
+  ],
+  "rights": {
+    "license": "CC-BY-4.0"
+  },
+  "sensitivity": {
+    "level": "public",
+    "reason": "safe",
+    "applied_at": "2026-05-09T00:00:00Z"
+  },
+  "transforms": [
+    "snap"
+  ],
+  "checksums": {
+    "artifact": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "spec_hash": {
+    "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  }
+}

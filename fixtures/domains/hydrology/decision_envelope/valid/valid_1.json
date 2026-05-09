@@ -1,0 +1,10 @@
+{
+  "decision_id": "hdec1",
+  "outcome": "ABSTAIN",
+  "policy_family": "capability",
+  "reasons": [
+    "no signal"
+  ],
+  "obligations": [],
+  "evaluated_at": "2026-05-09T00:00:00Z"
+}

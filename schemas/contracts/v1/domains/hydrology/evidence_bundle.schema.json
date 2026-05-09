@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/evidence_bundle.schema.json",
   "title": "evidence_bundle",
   "type": "object",
-  "description": "KFM v1 contract schema stub for evidence_bundle. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "Hydrology domain alias of common evidence_bundle contract.",
   "x-kfm": {
     "contract_doc": "contracts/domains/hydrology/evidence_bundle.md",
     "fixtures_root": "fixtures/domains/hydrology/evidence_bundle/",
@@ -11,22 +11,10 @@
     "policy": "policy/domains/hydrology/",
     "status": "PROPOSED"
   },
-  "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
-    },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_bundle.schema.json"
     }
-  },
-  "required": [
-    "id"
-  ],
-  "additionalProperties": true
+  ]
 }

@@ -1,3 +1,1 @@
-# fixtures/golden
-
-Greenfield stub.
+Contract fixture lane for deterministic validation.
