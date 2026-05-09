@@ -6,8 +6,8 @@
   "description": "KFM contract for decision_envelope.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/decision_envelope.md",
-    "fixtures_root": "fixtures/runtime/decision_envelope/",
-    "validator": "tools/validators/runtime/validate_decision_envelope.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/decision_envelope/",
+    "validator": "tools/validators/validate_decision_envelope.py",
     "policy": "policy/runtime/",
     "status": "PROPOSED"
   },

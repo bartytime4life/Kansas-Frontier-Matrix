@@ -6,8 +6,8 @@
   "description": "KFM contract for runtime_response_envelope.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/runtime_response_envelope.md",
-    "fixtures_root": "fixtures/runtime/runtime_response_envelope/",
-    "validator": "tools/validators/runtime/validate_runtime_response_envelope.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/runtime_response_envelope/",
+    "validator": "tools/validators/validate_runtime_response_envelope.py",
     "policy": "policy/runtime/",
     "status": "PROPOSED"
   },

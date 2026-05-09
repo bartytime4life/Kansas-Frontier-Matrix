@@ -6,8 +6,8 @@
   "description": "KFM contract for source_descriptor.",
   "x-kfm": {
     "contract_doc": "contracts/source/source_descriptor.md",
-    "fixtures_root": "fixtures/source/source_descriptor/",
-    "validator": "tools/validators/source/validate_source_descriptor.py",
+    "fixtures_root": "fixtures/contracts/v1/source/source_descriptor/",
+    "validator": "tools/validators/validate_source_descriptor.py",
     "policy": "policy/source/",
     "status": "PROPOSED"
   },

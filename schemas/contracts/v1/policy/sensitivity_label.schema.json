@@ -6,8 +6,8 @@
   "description": "KFM contract for sensitivity_label.",
   "x-kfm": {
     "contract_doc": "contracts/policy/sensitivity_label.md",
-    "fixtures_root": "fixtures/policy/sensitivity_label/",
-    "validator": "tools/validators/policy/validate_sensitivity_label.py",
+    "fixtures_root": "fixtures/contracts/v1/policy/sensitivity_label/",
+    "validator": "tools/validators/validate_sensitivity_label.py",
     "policy": "policy/policy/",
     "status": "PROPOSED"
   },

@@ -6,8 +6,8 @@
   "description": "KFM contract for spec_hash.",
   "x-kfm": {
     "contract_doc": "contracts/common/spec_hash.md",
-    "fixtures_root": "fixtures/common/spec_hash/",
-    "validator": "tools/validators/common/validate_spec_hash.py",
+    "fixtures_root": "fixtures/contracts/v1/common/spec_hash/",
+    "validator": "tools/validators/validate_spec_hash.py",
     "policy": "policy/common/",
     "status": "PROPOSED"
   },

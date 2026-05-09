@@ -6,8 +6,8 @@
   "description": "KFM contract for identity_token.",
   "x-kfm": {
     "contract_doc": "contracts/common/identity_token.md",
-    "fixtures_root": "fixtures/common/identity_token/",
-    "validator": "tools/validators/common/validate_identity_token.py",
+    "fixtures_root": "fixtures/contracts/v1/common/identity_token/",
+    "validator": "tools/validators/validate_identity_token.py",
     "policy": "policy/common/",
     "status": "PROPOSED"
   },

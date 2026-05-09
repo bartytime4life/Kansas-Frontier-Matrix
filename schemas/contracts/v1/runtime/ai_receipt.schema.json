@@ -6,8 +6,8 @@
   "description": "KFM contract for ai_receipt.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/ai_receipt.md",
-    "fixtures_root": "fixtures/runtime/ai_receipt/",
-    "validator": "tools/validators/runtime/validate_ai_receipt.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/ai_receipt/",
+    "validator": "tools/validators/validate_ai_receipt.py",
     "policy": "policy/runtime/",
     "status": "PROPOSED"
   },

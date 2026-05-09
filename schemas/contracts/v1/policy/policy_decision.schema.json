@@ -6,8 +6,8 @@
   "description": "KFM contract for policy_decision.",
   "x-kfm": {
     "contract_doc": "contracts/policy/policy_decision.md",
-    "fixtures_root": "fixtures/policy/policy_decision/",
-    "validator": "tools/validators/policy/validate_policy_decision.py",
+    "fixtures_root": "fixtures/contracts/v1/policy/policy_decision/",
+    "validator": "tools/validators/validate_policy_decision.py",
     "policy": "policy/policy/",
     "status": "PROPOSED"
   },

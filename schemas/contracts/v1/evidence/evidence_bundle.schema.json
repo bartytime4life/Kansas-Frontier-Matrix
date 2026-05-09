@@ -6,8 +6,8 @@
   "description": "KFM contract for evidence_bundle.",
   "x-kfm": {
     "contract_doc": "contracts/evidence/evidence_bundle.md",
-    "fixtures_root": "fixtures/evidence/evidence_bundle/",
-    "validator": "tools/validators/evidence/validate_evidence_bundle.py",
+    "fixtures_root": "fixtures/contracts/v1/evidence/evidence_bundle/",
+    "validator": "tools/validators/validate_evidence_bundle.py",
     "policy": "policy/evidence/",
     "status": "PROPOSED"
   },

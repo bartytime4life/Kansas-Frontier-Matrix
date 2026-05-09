@@ -6,8 +6,8 @@
   "description": "KFM contract for ingest_receipt.",
   "x-kfm": {
     "contract_doc": "contracts/source/ingest_receipt.md",
-    "fixtures_root": "fixtures/source/ingest_receipt/",
-    "validator": "tools/validators/source/validate_ingest_receipt.py",
+    "fixtures_root": "fixtures/contracts/v1/source/ingest_receipt/",
+    "validator": "tools/validators/validate_ingest_receipt.py",
     "policy": "policy/source/",
     "status": "PROPOSED"
   },

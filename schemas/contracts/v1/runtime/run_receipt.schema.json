@@ -6,8 +6,8 @@
   "description": "KFM contract for run_receipt.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/run_receipt.md",
-    "fixtures_root": "fixtures/runtime/run_receipt/",
-    "validator": "tools/validators/runtime/validate_run_receipt.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/run_receipt/",
+    "validator": "tools/validators/validate_run_receipt.py",
     "policy": "policy/runtime/",
     "status": "PROPOSED"
   },

@@ -6,8 +6,8 @@
   "description": "KFM contract for spatial_geometry.",
   "x-kfm": {
     "contract_doc": "contracts/common/spatial_geometry.md",
-    "fixtures_root": "fixtures/common/spatial_geometry/",
-    "validator": "tools/validators/common/validate_spatial_geometry.py",
+    "fixtures_root": "fixtures/contracts/v1/common/spatial_geometry/",
+    "validator": "tools/validators/validate_spatial_geometry.py",
     "policy": "policy/common/",
     "status": "PROPOSED"
   },

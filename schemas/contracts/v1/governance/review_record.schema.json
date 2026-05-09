@@ -6,8 +6,8 @@
   "description": "KFM contract for review_record.",
   "x-kfm": {
     "contract_doc": "contracts/governance/review_record.md",
-    "fixtures_root": "fixtures/governance/review_record/",
-    "validator": "tools/validators/governance/validate_review_record.py",
+    "fixtures_root": "fixtures/contracts/v1/governance/review_record/",
+    "validator": "tools/validators/validate_review_record.py",
     "policy": "policy/governance/",
     "status": "PROPOSED"
   },

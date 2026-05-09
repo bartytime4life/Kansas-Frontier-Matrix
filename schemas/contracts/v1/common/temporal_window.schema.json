@@ -6,8 +6,8 @@
   "description": "KFM contract for temporal_window.",
   "x-kfm": {
     "contract_doc": "contracts/common/temporal_window.md",
-    "fixtures_root": "fixtures/common/temporal_window/",
-    "validator": "tools/validators/common/validate_temporal_window.py",
+    "fixtures_root": "fixtures/contracts/v1/common/temporal_window/",
+    "validator": "tools/validators/validate_temporal_window.py",
     "policy": "policy/common/",
     "status": "PROPOSED"
   },
