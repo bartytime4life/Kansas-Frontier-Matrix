@@ -3,30 +3,47 @@
   "$id": "https://schemas.kfm.local/contracts/v1/common/spatial_geometry.schema.json",
   "title": "spatial_geometry",
   "type": "object",
-  "description": "KFM v1 contract schema stub for spatial_geometry. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for spatial_geometry.",
   "x-kfm": {
     "contract_doc": "contracts/common/spatial_geometry.md",
-    "fixtures_root": "fixtures/common/spatial_geometry/",
-    "validator": "tools/validators/common/validate_spatial_geometry.py",
+    "fixtures_root": "fixtures/contracts/v1/common/spatial_geometry/",
+    "validator": "tools/validators/validate_spatial_geometry.py",
     "policy": "policy/common/",
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+    "geometry": {
+      "type": "object",
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "coordinates": {}
+      },
+      "additionalProperties": true
     },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+    "crs": {
+      "type": "string"
     },
-    "version": {
+    "precision_bucket": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "survey",
+        "parcel",
+        "community",
+        "region",
+        "coarse"
+      ]
     }
   },
   "required": [
-    "id"
+    "geometry",
+    "crs",
+    "precision_bucket"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }

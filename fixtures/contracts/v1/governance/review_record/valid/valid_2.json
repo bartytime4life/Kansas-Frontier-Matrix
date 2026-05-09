@@ -1,0 +1,13 @@
+{
+  "review_id": "rev2",
+  "subject_ref": "bundle:2",
+  "reviewer_role": "auditor",
+  "decision": "request_changes",
+  "reasons": [
+    "fix"
+  ],
+  "obligations": [
+    "rerun"
+  ],
+  "reviewed_at": "2026-05-09T00:00:00Z"
+}

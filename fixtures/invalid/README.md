@@ -1,3 +1,1 @@
-# fixtures/invalid
-
-Greenfield stub.
+Contract fixture lane for deterministic validation.

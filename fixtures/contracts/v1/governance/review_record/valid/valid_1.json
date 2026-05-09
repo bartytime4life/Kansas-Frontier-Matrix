@@ -1,0 +1,11 @@
+{
+  "review_id": "rev1",
+  "subject_ref": "bundle:1",
+  "reviewer_role": "steward",
+  "decision": "approve",
+  "reasons": [
+    "ok"
+  ],
+  "obligations": [],
+  "reviewed_at": "2026-05-09T00:00:00Z"
+}

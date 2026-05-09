@@ -1,27 +1,26 @@
-# Contract: evidence_bundle
+# evidence_bundle
 
-**Family:** `evidence`
-**Schema:** `schemas/contracts/v1/evidence/evidence_bundle.schema.json`
-**Status:** PROPOSED (greenfield scaffold)
+Schema: `https://schemas.kfm.local/contracts/v1/evidence/evidence_bundle.schema.json`
 
 ## Meaning
-What this object means in the KFM trust model. Define the semantic role:
-what claim does it support, what audience consumes it, what does it
-*not* assert.
+Defines the governed semantics for `evidence_bundle` in KFM.
 
 ## Fields
-Field-by-field semantics live here. Schema enforces shape; this
-document enforces meaning.
+- See schema properties; each field carries provenance-safe, policy-evaluable meaning.
 
 ## Invariants
-Cross-field rules, lifecycle rules, references that must resolve.
+- Required fields must exist.
+- Enumerated values remain finite where specified.
+- No undeclared fields unless explicitly allowed.
 
 ## Lifecycle
-Where this object is created, transformed, validated, released,
-superseded, and rolled back.
+- Created in RAW/WORK processing.
+- Validated before promotion decisions.
+- Released through governed interfaces.
+- Superseded by newer versioned records.
 
 ## Related contracts
-Upstream dependencies and downstream consumers.
+- Neighbor contracts in the same family and runtime policy decisions.
 
 ## Open questions
-Anything still UNKNOWN or NEEDS VERIFICATION.
+- NEEDS VERIFICATION: additional domain-specific constraints may be added in follow-up PRs.

@@ -3,30 +3,41 @@
   "$id": "https://schemas.kfm.local/contracts/v1/common/identity_token.schema.json",
   "title": "identity_token",
   "type": "object",
-  "description": "KFM v1 contract schema stub for identity_token. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "description": "KFM contract for identity_token.",
   "x-kfm": {
     "contract_doc": "contracts/common/identity_token.md",
-    "fixtures_root": "fixtures/common/identity_token/",
-    "validator": "tools/validators/common/validate_identity_token.py",
+    "fixtures_root": "fixtures/contracts/v1/common/identity_token/",
+    "validator": "tools/validators/validate_identity_token.py",
     "policy": "policy/common/",
     "status": "PROPOSED"
   },
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
     "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+      "type": "string"
     },
-    "version": {
+    "kind": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "run",
+        "source",
+        "decision",
+        "review",
+        "bundle",
+        "actor"
+      ]
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "issuer": {
+      "type": "string"
     }
   },
   "required": [
-    "id"
+    "id",
+    "kind",
+    "issued_at"
   ],
-  "additionalProperties": true
+  "additionalProperties": false
 }
