@@ -32,11 +32,7 @@ def _call_app(path: str):
     return status_holder["status"], json.loads(body.decode("utf-8"))
 
 
-def _validate_against_schema(payload: dict, schema: dict) -> None:
-    assert schema.get("type") == "object"
-    assert isinstance(payload, dict)
-    for field in schema.get("required", []):
-        assert field in payload
+from schema_assert import assert_jsonschema_subset
 
 
 def test_all_scaffolded_routes_abstain_and_validate() -> None:
@@ -54,4 +50,4 @@ def test_all_scaffolded_routes_abstain_and_validate() -> None:
         assert payload["id"] == f"stub:{route.removeprefix('/')}"
         assert payload["version"] == "v1-stub"
         assert isinstance(payload["issued_at"], str) and payload["issued_at"]
-        _validate_against_schema(payload, schema)
+        assert_jsonschema_subset(payload, schema)

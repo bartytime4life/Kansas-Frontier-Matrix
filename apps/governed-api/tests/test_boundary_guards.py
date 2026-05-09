@@ -36,6 +36,7 @@ def test_non_get_methods_rejected_for_scaffolded_routes() -> None:
             assert status == "405 Method Not Allowed"
             assert payload == {"detail": "Method Not Allowed"}
 
+
 def test_forbidden_runtime_imports_absent() -> None:
     root = Path(__file__).resolve().parents[1]
     bad_prefixes = (

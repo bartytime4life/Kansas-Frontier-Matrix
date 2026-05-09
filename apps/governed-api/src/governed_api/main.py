@@ -12,6 +12,7 @@ def app(environ, start_response):
         body = b'{"detail":"Method Not Allowed"}'
         start_response("405 Method Not Allowed", [("Content-Type", "application/json"), ("Content-Length", str(len(body)))])
         return [body]
+
     if method == "GET" and path in ROUTES:
         payload = ROUTES[path]()
         body = json.dumps(payload).encode("utf-8")
