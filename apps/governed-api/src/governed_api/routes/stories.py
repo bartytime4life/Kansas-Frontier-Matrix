@@ -1,1 +1,0 @@
-# Route: stories — greenfield placeholder

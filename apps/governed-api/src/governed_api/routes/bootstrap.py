@@ -1,1 +1,0 @@
-# Route: bootstrap — greenfield placeholder
