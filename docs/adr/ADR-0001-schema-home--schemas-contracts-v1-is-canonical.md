@@ -1,457 +1,551 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://adr/0001-schema-home
-title: ADR-0001 — Schema Home: `schemas/contracts/v1/` is Canonical
-type: adr
+doc_id: kfm://doc/adr-0001-schema-home
+title: "ADR-0001 — Schema Home: schemas/contracts/v1/ is Canonical"
+type: standard
+subtype: adr
 adr_id: ADR-0001
-adr_status: accepted
 version: v1
-status: published
-owners: Architecture Steward · Schema Steward · Docs Steward
-created: 2026-04-21
-updated: 2026-05-09
+status: proposed
+owners: ["Docs steward", "Contract/Schema steward"]
+reviewers_required: ["Docs steward", "Contract/Schema steward", "≥1 subsystem owner per affected domain"]
+created: 2026-05-10
+updated: 2026-05-10
 policy_label: public
+supersedes: []
+superseded_by: null
 related:
   - docs/doctrine/directory-rules.md
   - docs/architecture/contract-schema-policy-split.md
+  - docs/registers/SCHEMA_REGISTRY_INDEX.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
   - control_plane/object_family_register.yaml
   - control_plane/deprecation_register.yaml
-tags: [kfm, adr, governance, schemas, contracts, directory-rules]
+  - migrations/schema/
+tags: [kfm, adr, governance, schemas, contracts, schema-home, validator-parity]
 notes:
-  - Live-repo enforcement state is NEEDS VERIFICATION per Directory Rules §18.
-  - Domain schema-home ADRs (archaeology, fauna, flora, habitat, geology, atmosphere, hydrology, settlements, infrastructure, hazards, agriculture, people-dna-land) descend from this decision.
+  - "Formalizes the rule already cited by directory-rules.md §0 and §6.4."
+  - "All per-domain schema-home ADRs defer to this ADR unless explicitly amending it."
+  - "Companion to a future spec-normalization ADR (canonicalization, hashing, $id derivation)."
 [/KFM_META_BLOCK_V2] -->
 
 # ADR-0001 — Schema Home: `schemas/contracts/v1/` is Canonical
 
-> The default home for **machine-checkable schemas** in KFM is `schemas/contracts/v1/<family>/...`. `contracts/` retains **semantic Markdown** only. Two homes for the same authority is the single most expensive drift in the repository, and this ADR closes that question.
+> **Decision in one line.** The default home for machine-checkable schemas in the Kansas Frontier Matrix repository is **`schemas/contracts/v1/<family>/...`**. `contracts/` retains object **meaning** in Markdown; `schemas/` owns **shape**. Divergent schema definitions across both roots are forbidden.
 
-<p>
-  <img alt="ADR" src="https://img.shields.io/badge/ADR-0001-1f6feb?style=flat-square">
-  <img alt="Status: Accepted" src="https://img.shields.io/badge/status-accepted-2ea043?style=flat-square">
-  <img alt="Authority: Canonical" src="https://img.shields.io/badge/authority-canonical-8957e5?style=flat-square">
-  <img alt="Schema home: schemas/contracts/v1" src="https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1-0969da?style=flat-square">
-  <img alt="Enforcement: NEEDS VERIFICATION" src="https://img.shields.io/badge/enforcement-NEEDS%20VERIFICATION-d29922?style=flat-square">
-  <img alt="Last reviewed: 2026-05-09" src="https://img.shields.io/badge/reviewed-2026--05--09-6e7681?style=flat-square">
-</p>
+![status](https://img.shields.io/badge/status-proposed-yellow) ![type](https://img.shields.io/badge/type-ADR-blue) ![scope](https://img.shields.io/badge/scope-repo--wide-informational) ![policy](https://img.shields.io/badge/policy_label-public-success) ![supersedes](https://img.shields.io/badge/supersedes-none-lightgrey) <!-- TODO: replace placeholder Shields when a CI/last-updated badge endpoint is provisioned -->
 
 | Field | Value |
 |---|---|
-| **ADR ID** | ADR-0001 |
+| **ADR ID** | `ADR-0001` |
 | **Title** | Schema Home: `schemas/contracts/v1/` is Canonical |
-| **Status** | `accepted` |
-| **Date proposed** | 2026-04-21 *(approximate; backfill — see §10)* |
-| **Date accepted** | 2026-04-21 *(retroactive; corpus-attested anchor)* |
-| **Date last reviewed** | 2026-05-09 |
-| **Supersedes** | None |
-| **Superseded by** | None |
-| **Authoritative for** | All `*.schema.json`, `*.schema.yaml`, JSON-LD context, and equivalent machine-validation artifacts |
-| **Owner** | Architecture Steward |
-| **Reviewers required to amend** | Architecture Steward + Schema Steward + Docs Steward + at least one subsystem owner |
-| **Conformance** | RFC 2119-style `MUST` / `MUST NOT` apply to §3 (Decision) |
-
-**Quick jump:** [1. Context](#1-context) · [2. Forces](#2-forces) · [3. Decision](#3-decision) · [4. Consequences](#4-consequences) · [5. Alternatives](#5-alternatives-considered) · [6. Migration](#6-migration-plan) · [7. Rollback](#7-rollback-plan) · [8. Validation](#8-validation-and-enforcement) · [9. Related](#9-related-doctrine-and-adrs) · [10. Open](#10-open-questions-and-needs-verification) · [11. Appendix](#11-appendix)
+| **Status** | `proposed` — awaiting Docs-steward + Contract/Schema-steward sign-off |
+| **Date** | 2026-05-10 |
+| **Owners** | Docs steward · Contract/Schema steward |
+| **Reviewers required** | Docs steward · Contract/Schema steward · ≥1 affected subsystem owner |
+| **Supersedes** | none |
+| **Superseded by** | none |
+| **Authority of this decision** | CONFIRMED by `docs/doctrine/directory-rules.md` §0 and §6.4 (which already cite this ADR as the schema-home rule). |
+| **Authority of any per-domain ADR** | PROPOSED until reviewed; subordinate to this ADR unless explicitly amending. |
 
 ---
 
-## 1. Context
+## Table of Contents
 
-KFM separates four cooperating governance layers — **meaning** (`contracts/`), **shape** (`schemas/`), **admissibility** (`policy/`), and **proof** (`tests/`, `fixtures/`). These layers are non-collapsible by doctrine: collapsing any two is one of the named drift modes the project tries to prevent.
+- [1. Status and Scope](#1-status-and-scope)
+- [2. Context](#2-context)
+- [3. Decision](#3-decision)
+- [4. Consequences](#4-consequences)
+- [5. Alternatives Considered](#5-alternatives-considered)
+- [6. Migration Plan](#6-migration-plan)
+- [7. Rollback and Reversal](#7-rollback-and-reversal)
+- [8. Validation and Enforcement](#8-validation-and-enforcement)
+- [9. Open Questions and NEEDS VERIFICATION](#9-open-questions-and-needs-verification)
+- [10. Related Documents](#10-related-documents)
+- [Appendix A — Family Inventory](#appendix-a--family-inventory-non-exhaustive)
+- [Appendix B — Migration Manifest Skeleton](#appendix-b--migration-manifest-skeleton)
 
-Across the dossier corpus, a recurring ambiguity emerged whenever a new domain — hydrology, soil, fauna, flora, habitat, geology, atmosphere, archaeology, settlements/infrastructure, hazards, agriculture, people/DNA/land — needed a place to commit its first JSON Schema:
+---
 
-- **Option A.** Under `contracts/<domain>/<x>.schema.json`, alongside the meaning Markdown.
-- **Option B.** Under `schemas/contracts/v1/<domain>/<x>.schema.json`, in a single versioned schema authority root.
-- **Option C.** Under a topic-named root such as `schemas/<domain>/...` (`schemas/occurrence_evidence/`, `schemas/soil_moisture/`, `schemas/hazards/`, etc.).
-
-Domain blueprints repeatedly noted both Option A and Option B as `PROPOSED / CONFLICTED path | Authority level: machine contract authority pending ADR | Dependencies: ADR-0001 resolves schema home`, which is the marker this ADR is here to retire.
+## 1. Status and Scope
 
 > [!IMPORTANT]
-> Without a single answer, validators, CI, integration tests, the governed API, and downstream consumers each pick a path independently. Once two homes both look authoritative, the cost to undo grows quadratically: every test, every fixture, every reference, every CI job, every receipt that hashes a schema `$id` carries the choice forward.
+> This ADR governs **where** machine-checkable schemas live in the repository. It does **not** define field-level shape, canonicalization rules, hashing algorithms, or `$id` derivation — those belong to a separate spec-normalization ADR (see §9 and [Related Documents](#10-related-documents)).
 
-## 2. Forces
+**In scope:**
 
-The forces below shape the decision; each is grounded in repeated corpus statements rather than convenience.
+- The canonical root for `*.schema.json`, `*.schema.yaml`, JSON-LD `@context` files, and equivalent machine artifacts.
+- The relationship between `contracts/` (meaning) and `schemas/` (shape).
+- Per-domain placement (`<family>/` and `domains/<domain>/`).
+- Migration discipline for legacy `contracts/<domain>/*.schema.json` paths.
 
-| Force | What it requires |
-|---|---|
-| **Validator parity** | A single root that the structural validator (e.g. `scripts/validate_schemas.py`) can treat as *the* contract surface, so coverage is uniform across families. |
-| **Versioned shape** | Schemas need an explicit version segment so breaking changes ship as `v2/` without mutating `v1/`. |
-| **Layer separation** | `contracts/` documents *meaning*; `schemas/` mechanizes *shape*. If `.schema.json` files live in `contracts/`, the meaning/shape boundary blurs and Markdown directories become validator targets. |
-| **Domain placement law** | Per Directory Rules §12, a domain `MUST NOT` become a root folder. Schemas for domain `X` belong in `schemas/contracts/v1/<X>/`, not `<X>/schemas/`. |
-| **Cross-cutting reuse** | Common, runtime, evidence, release, correction, and policy schemas must share an authority root with domain schemas so cross-references (`$ref`) are stable and namespaced. |
-| **Auditability** | The schema authority root is referenced by hashes, receipts, and proof packs; relocating it later requires a structural migration, not a routine move. |
-| **Lineage tolerance** | Pre-existing `contracts/<domain>/<x>.schema.json` files exist as *lineage*; the rule must absorb them via migration without invalidating prior receipts. |
+**Out of scope:**
+
+- Canonicalization (RFC 8785 / JCS), hashing (SHA-256 vs BLAKE3), `spec_hash` derivation, and `$id` URI shape — deferred to the spec-normalization ADR.
+- Admissibility and policy logic (see `policy/`).
+- Lifecycle phases (see `docs/doctrine/lifecycle-law.md`).
+
+---
+
+## 2. Context
+
+### 2.1 The problem
+
+The KFM repository carries two governance-bearing roots that touch object definitions:
+
+- **`contracts/`** — object meaning, lifecycle semantics, invariants, compatibility notes. Files are typically Markdown.
+- **`schemas/`** — machine-checkable shape (JSON Schema, JSON-LD context, etc.).
+
+Across domain blueprints in the project corpus, both placements appeared for the same machine artifact — for example, `schemas/contracts/v1/habitat/habitat_community.schema.json` **OR** `contracts/habitat/habitat_community.schema.json` for the same object, with the truth label `PROPOSED / CONFLICTED path` and the explicit note *"Dependencies: ADR-0001 resolves schema home. … Do not maintain divergent definitions in both homes."*
+
+Without a single canonical home:
+
+1. Validators have to be taught two paths and may silently disagree.
+2. CI cannot enforce coverage without first picking a home.
+3. The `contracts/` directory becomes an archeological record of design changes rather than a source of truth.
+4. Schema drift compounds quickly and is expensive to undo.
+
+### 2.2 Forces at work
+
+```mermaid
+flowchart LR
+    subgraph "Pressure to use contracts/"
+      A["Object family<br/>folders already exist<br/>under contracts/"]
+      B["Semantic .md files<br/>live next to schemas<br/>in some blueprints"]
+    end
+    subgraph "Pressure to use schemas/contracts/v1/"
+      C["Versioned v1 layer<br/>already in place"]
+      D["Validators reference<br/>schemas/contracts/v1/...<br/>as the contract surface"]
+      E["Cross-family parity<br/>(runtime, policy, evidence,<br/>release, correction)"]
+      F["Domain subgroups<br/>(hydrology, soil, fauna, ...)<br/>already nest here"]
+    end
+    A -. blocks .-> X((Decision))
+    B -. blocks .-> X
+    C ==> X
+    D ==> X
+    E ==> X
+    F ==> X
+    X --> R[("schemas/contracts/v1/<br/>is canonical")]
+```
+
+### 2.3 Why now
+
+This is a P0 backlog item: the KFM Build Companion lists `docs/adr/ADR-0001-schema-home.md` as the first ADR to land, and `directory-rules.md` already cites *"ADR-0001"* as the rule that the rest of the doctrine depends on. Per-domain blueprints (Habitat, Fauna, Archaeology, People/DNA/Land, Settlements/Infrastructure, Hazards, Agriculture, Atmosphere/Air, and others) explicitly defer to this ADR before landing their schemas.
+
+> [!NOTE]
+> A small number of in-flight blueprints draft schemas under `schemas/<domain>/...` (e.g., `schemas/occurrence_evidence/`, `schemas/soil_moisture/`, `schemas/hazards/`). The KFM corpus flags these as *PROPOSED scratch surfaces* that must consolidate into `schemas/contracts/v1/<family>/` once stable. This ADR closes that ambiguity.
+
+[⤴ Back to top](#table-of-contents)
+
+---
 
 ## 3. Decision
 
+### 3.1 The rule (MUST / MUST NOT)
+
 > [!IMPORTANT]
-> **Canonical machine-schema home: `schemas/contracts/v1/<family>/...`** (RFC 2119: `MUST`).
-> **`contracts/` retains semantic Markdown only** — never `.schema.json`, `.schema.yaml`, or equivalent (RFC 2119: `MUST NOT`).
-> **Divergent definitions in both `schemas/` and `contracts/` are prohibited** (RFC 2119: `MUST NOT`).
+> **MUST.** All new machine-checkable schemas land under **`schemas/contracts/v1/<family>/...`**.
+>
+> **MUST.** Existing schemas found under `contracts/<domain>/*.schema.json` are **lineage / CONFLICTED** and MUST be migrated under this ADR before any new schema lands in the same family.
+>
+> **MUST NOT.** Maintain divergent definitions in both `schemas/` and `contracts/`.
+>
+> **MUST NOT.** Create a new top-level `schemas/<topic>/` subtree as a permanent home for any contract family. Permanent homes are `schemas/contracts/v1/<family>/` only.
+>
+> **MAY.** Use `schemas/<topic>/` as a clearly labeled, time-bounded scratch surface during early drafting, with a tracked migration target in `docs/registers/DRIFT_REGISTER.md`.
 
-### 3.1 Canonical layout
+### 3.2 The four-layer split
 
-```
-schemas/
-├── README.md
-├── contracts/
-│   └── v1/
-│       ├── common/
-│       ├── source/         # source_descriptor, ingest_receipt
-│       ├── evidence/       # evidence_ref, evidence_bundle, promotion_receipt
-│       ├── data/           # dataset_version, validation_report
-│       ├── runtime/        # runtime_response_envelope, decision_envelope, run_receipt, ai_receipt
-│       ├── policy/
-│       ├── release/        # release_manifest, promotion_decision, rollback_card
-│       ├── correction/     # correction_notice
-│       └── domains/
-│           ├── hydrology/   soil/   fauna/   flora/   habitat/
-│           ├── geology/     atmosphere/   roads-rail-trade/
-│           ├── settlements-infrastructure/   archaeology/
-│           ├── hazards/     agriculture/    people-dna-land/
-└── tests/
-    ├── valid/
-    └── invalid/
-```
+`contracts/` and `schemas/` are **two layers of the same governance function** and MUST NOT collapse into each other. The clean split per `directory-rules.md` §6.4:
 
-### 3.2 Layer responsibilities
-
-| Layer | Path | Owns | Forbidden in this layer |
+| Layer | Owns | File types | Forbidden to own |
 |---|---|---|---|
-| **Meaning** | `contracts/` | Markdown describing object families, fields, invariants | `*.schema.json`, `*.schema.yaml`, executable validation |
-| **Shape** | `schemas/contracts/v1/...` | JSON Schema 2020-12 (or repo-native equivalent) with `$id`, `version`, required fields, examples | Admissibility logic, sensitivity decisions, narrative explanation |
-| **Admissibility** | `policy/` | Allow / deny / restrict / abstain decisions (Rego/OPA bundles or equivalents) | Schema definitions, object meaning text |
-| **Proof** | `tests/`, `fixtures/` | Pass/fail fixtures and tests that prove the rules are enforceable | Schema authorship, policy authorship |
+| `contracts/` | Object **meaning**, field intent, invariants, lifecycle semantics, compatibility notes. | `.md` (primarily). | Executable validation as the only truth. |
+| `schemas/contracts/v1/` | Machine-checkable **shape**, type constraints, versioned schema IDs, reusable fragments. | `.schema.json`, `.schema.yaml`, JSON-LD `@context`, equivalent machine artifacts. | Semantic explanation as the only meaning. |
+| `policy/` | **Admissibility** — allow / deny / restrict / abstain, rights, sensitivity, release obligations. | `.rego` and equivalents. | General object semantics. |
+| `tests/fixtures/` | **Proof** the rules are enforceable — small valid / invalid examples. | `.json`, `.yaml`. | Production data or doctrine. |
 
-### 3.3 Family naming and `$id`
+A trust-bearing object is **ready** only when all of the following exist and cross-link cleanly: semantic contract (`contracts/`), machine schema (`schemas/contracts/v1/`), valid fixture, invalid fixture, validator output (`ValidationReport`), and at least one policy or evidence-closure test where applicable.
 
-A schema's `$id` `MUST` reflect the canonical path so that `$ref` resolution, registry tooling, and hash provenance remain stable across mirrors and clones. Recommended pattern:
+### 3.3 Subtree shape
 
-```jsonc
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schema/contracts/v1/<family>/<object>.schema.json",
-  "title": "<ObjectName>",
-  "type": "object",
-  "version": "1.0.0",
-  "required": ["..."],
-  "properties": { "...": {} },
-  "examples": [ { "...": "..." } ]
-}
+```mermaid
+flowchart TB
+    R["schemas/"]
+    R --> C["contracts/"]
+    C --> V["v1/"]
+    V --> CMN["common/"]
+    V --> SRC["source/"]
+    V --> EVD["evidence/"]
+    V --> DAT["data/"]
+    V --> RTM["runtime/"]
+    V --> POL["policy/"]
+    V --> REL["release/"]
+    V --> COR["correction/"]
+    V --> GOV["governance/"]
+    V --> DOM["domains/"]
+    DOM --> H["hydrology/"]
+    DOM --> S["soil/"]
+    DOM --> F["fauna/"]
+    DOM --> FL["flora/"]
+    DOM --> HB["habitat/"]
+    DOM --> AR["archaeology/"]
+    DOM --> HZ["hazards/"]
+    DOM --> PDL["people-dna-land/"]
+    DOM --> ETC["…/"]
+    R --> T["tests/"]
+    T --> TV["valid/"]
+    T --> TI["invalid/"]
 ```
 
-> [!NOTE]
-> The `$id` URL scheme above is illustrative. The exact resolver (e.g. `https://schemas.kfm.example/...` vs `kfm://schema/...`) is not fixed by this ADR; it is `NEEDS VERIFICATION` and tracked in §10.
+CONFIRMED layout from `docs/doctrine/directory-rules.md` §6.4. Domain subgroups MUST nest under `domains/`; cross-cutting families (`common`, `source`, `evidence`, `data`, `runtime`, `policy`, `release`, `correction`, `governance`) are siblings of `domains/` inside `v1/`.
 
-### 3.4 Cross-domain and shared schemas
+### 3.4 Naming and `$id` conventions
 
-When a schema spans domains, it lives at the lowest common responsibility node *without* a domain segment — for example:
+The following are PROPOSED here and will be **pinned** by the spec-normalization ADR:
 
-- `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` (cross-domain runtime envelope)
-- `schemas/contracts/v1/evidence/evidence_bundle.schema.json` (cross-domain evidence)
-- `schemas/contracts/v1/<topic>/...` for shared cross-cutting families (e.g. `events/`, `ui/`)
+| Aspect | Default | Status |
+|---|---|---|
+| Filename | `<object>.schema.json` (snake_case object name) | PROPOSED |
+| Spec dialect | JSON Schema 2020-12 or repo-native equivalent | PROPOSED |
+| Required fields in every schema | `$id`, `$schema`, `title`, `version`, `required`, examples | PROPOSED |
+| `$id` shape | reflects canonical path under `schemas/contracts/v1/` | NEEDS VERIFICATION |
+| Versioning of `v1/` | Schema version bumps follow the spec-normalization ADR conventions; breaking changes create `v2/` and a `RollbackRef` | PROPOSED |
+| Compatibility | `v1/` is preserved when `v2/` is created; both are validatable until deprecation closes per `control_plane/deprecation_register.yaml` | PROPOSED |
 
-This mirrors Directory Rules §12: cross-domain files do not pick one domain to live under.
+> [!TIP]
+> Until the spec-normalization ADR lands, treat the `$id` and canonicalization conventions as PROPOSED. Do not assert "the repo enforces canonical JSON" without ADR-level coverage.
 
-### 3.5 What does **not** belong under `schemas/contracts/v1/`
+[⤴ Back to top](#table-of-contents)
 
-- Receipts, proofs, release manifests as data → `data/receipts/`, `data/proofs/`, `release/`, `data/published/`.
-- Source descriptors, dataset registries, sensitivity policies as data → `data/registry/<domain>/`.
-- Validators (executable code) → `tools/validators/<topic>/...`.
-- Object meaning (Markdown) → `contracts/<family>/`.
-- Admissibility rules → `policy/<family>/`.
+---
 
 ## 4. Consequences
 
 ### 4.1 Positive
 
-- **One authority surface.** Validators (e.g. `scripts/validate_schemas.py`), CI workflows, integration tests, and the governed API can target a single, versioned root.
-- **Versioning is explicit.** Breaking shape changes ship as a sibling `v2/` tree without mutating `v1/`. Old receipts referencing `v1/` `$id`s remain resolvable.
-- **Layer hygiene.** The meaning/shape/admissibility/proof split stops collapsing. `contracts/` Markdown stops accumulating `.schema.json` siblings.
-- **Cross-cutting families consolidate.** Emerging families (`events/`, `ui/`, `correction/`, `policy/`, `release/`, `runtime/`, `evidence/`, `common/`, `source/`, plus `domains/<X>/`) share one validator-parity discipline.
-- **Domain ADR template stabilizes.** Per-domain schema-home ADRs (archaeology, fauna, flora, habitat, geology, atmosphere, hydrology, settlements/infrastructure, hazards, agriculture, people/DNA/land) descend from this ADR rather than re-litigating it.
+- **Single schema authority root.** Validators, CI, and consumers know exactly where to look.
+- **Validator parity.** A shared validator architecture (e.g., per-domain `tools/validators/<domain>/validate_schemas.py`) can assume `schemas/contracts/v1/<family>/` as its required contract surface without per-domain forks.
+- **Cross-family parity.** `common`, `source`, `evidence`, `data`, `runtime`, `policy`, `release`, `correction`, and `governance` share one root and one versioning posture.
+- **Clean responsibility split.** `contracts/` reads as a doctrine-and-meaning library; `schemas/contracts/v1/` reads as a typed shape library; neither is forced to do the other's job.
+- **Cheaper migrations.** Schema home changes happen once, here; downstream renames are confined to one subtree.
 
-### 4.2 Negative / costs
+### 4.2 Negative / tradeoffs
 
-- **Longer paths.** `schemas/contracts/v1/domains/<domain>/<object>.schema.json` is verbose. Mitigation: consistent path conventions, IDE workspace shortcuts.
-- **Migration debt.** Any pre-existing `contracts/<domain>/<x>.schema.json` files become *lineage / CONFLICTED* and require migration to canonical (see §6).
-- **Mirror discipline.** Where downstream consumers depend on `jsonschema/` or other mirrored paths for IDE convenience, those mirrors must be marked `mirror` and not allowed to evolve independently (Directory Rules §8).
-- **Hash sensitivity.** `$id` strings are part of receipt provenance. The hash of a schema (and the receipts that reference it) changes if `$id` is altered post-hoc, so the canonical path must be set deliberately on first commit, not retro-renamed.
+- **Migration cost.** Legacy `contracts/<domain>/*.schema.json` files must be moved (see §6).
+- **Temporary mirrors.** Downstream consumers depending on legacy paths require a mirror window with a sunset date — additional bookkeeping in `control_plane/deprecation_register.yaml`.
+- **Drift risk during transition.** Until mirrors are removed, the rule "do not edit the mirror directly" must be enforced socially and via CI.
+- **Doc churn.** Existing Markdown that references `contracts/<domain>/<x>.schema.json` requires link updates.
 
-### 4.3 Risks if violated
+### 4.3 Affected roots and files
 
-| Drift mode | Concrete failure |
-|---|---|
-| Two homes both authoritative | Validator coverage forks; CI passes one home and silently ignores the other; receipts hash whichever `$id` was nearest. |
-| `.schema.json` lands in `contracts/` | Markdown directory becomes a validation target; future refactors require touching twice as many files. |
-| Topic-named root (`schemas/<topic>/`) hardens | A scratch surface graduates to a permanent home without ADR review; cross-domain `$ref` resolution drifts. |
-| Schema mirror diverges | `schemas/` and `contracts/` evolve different field sets; published artifacts validate locally but fail downstream. |
+| Affected target | Effect | Status |
+|---|---|---|
+| `schemas/contracts/v1/**` | Confirmed as canonical home. | CONFIRMED by directory-rules.md §6.4 |
+| `contracts/<domain>/*.schema.json` | Lineage / CONFLICTED; migration required. | CONFIRMED rule; per-file inventory PROPOSED |
+| `schemas/<topic>/*.schema.json` (flat top-level) | Scratch only; not a permanent home. | CONFIRMED rule |
+| `jsonschema/` (compatibility root) | Mirror or deprecated; never divergent. | CONFIRMED per directory-rules.md §8.1 |
+| `tools/validators/**/validate_schemas.py` | MAY assume `schemas/contracts/v1/<family>/` as the required contract surface. | PROPOSED |
+| `scripts/validate_schemas.py` (referenced in corpus) | Treated as already aligned with `schemas/contracts/v1/`. | NEEDS VERIFICATION against mounted repo |
+| `control_plane/object_family_register.yaml` | Each object family pins its schema home to `schemas/contracts/v1/<family>/`. | PROPOSED |
+| `docs/registers/SCHEMA_REGISTRY_INDEX.md` | The machine schema registry index. | PROPOSED |
+| Per-domain schema-home ADRs (e.g., `ADR-archaeology-schema-home.md`) | Defer to ADR-0001 unless explicitly amending. | PROPOSED |
+
+[⤴ Back to top](#table-of-contents)
+
+---
 
 ## 5. Alternatives Considered
 
-### Alternative A — `contracts/<family>/<x>.schema.json` is canonical
+<details>
+<summary><strong>5.1 Alternative — <code>contracts/</code> as the schema authority</strong></summary>
 
-**Description.** Treat `contracts/` as the unified home for both meaning and shape; co-locate `.md` and `.schema.json`.
+**Shape.** Place `*.schema.json` next to `*.md` semantic notes under `contracts/<family>/`. Drop the `schemas/` root or demote it to compatibility.
 
-**Why rejected.**
-- Collapses the meaning ↔ shape boundary that Directory Rules §6.3–6.4 explicitly enforces.
-- Puts executable validators against a directory dominated by Markdown, raising path-discovery cost.
-- Documented operational pattern (e.g. `scripts/validate_schemas.py` per Pass 13 corpus) already treats `schemas/contracts/v1/...` as the contract surface; flipping authority would invalidate that signal.
-
-### Alternative B — Topic-named roots: `schemas/occurrence_evidence/`, `schemas/soil_moisture/`, `schemas/hazards/`, …
-
-**Description.** Allow each emerging family to claim its own top-level `schemas/<topic>/` subtree.
+**Why considered.** Some domain blueprints draft schemas under `contracts/<domain>/`. It keeps "meaning" and "shape" co-located.
 
 **Why rejected.**
-- Fractures validator parity: each new topic invents its own discovery convention.
-- Violates the "responsibility, not topic" principle (Directory Rules §3): topic does not justify a root.
-- Such subtrees are corpus-attested as *PROPOSED scratch surfaces*; the corpus's own preferred reading is that they consolidate into `schemas/contracts/v1/<family>/` once the contract stabilizes.
+- Forces validators to assume mixed file types per directory.
+- Loses the clean *meaning vs. shape* layering.
+- Conflicts with corpus evidence that `scripts/validate_schemas.py` (referenced in the project corpus; NEEDS VERIFICATION against mounted repo) already treats `schemas/contracts/v1/...` as the required contract surface.
+- The `contracts/` tree is best as a Markdown-only doctrine library; mixing in JSON Schema dilutes its purpose.
 
-### Alternative C — Unversioned `schemas/contracts/`
+**Status.** REJECTED for repo-wide authority. `contracts/` retains semantic Markdown.
+</details>
 
-**Description.** Drop the `v1/` segment; rely on per-schema `version` field only.
+<details>
+<summary><strong>5.2 Alternative — flat <code>schemas/&lt;topic&gt;/</code> as permanent home</strong></summary>
 
-**Why rejected.**
-- Forces in-place mutation for breaking changes, which corrupts hash-based receipts.
-- Removes the structural signal that lets a `v2/` tree coexist with `v1/` during migration windows.
-- Conflicts with Directory Rules §14.3 (renames that change identity require schema version bump per ADR-0001 conventions) — without `vN/`, the bump has no structural expression.
+**Shape.** Allow `schemas/occurrence_evidence/`, `schemas/soil_moisture/`, `schemas/hazards/`, etc., as permanent top-level homes alongside `schemas/contracts/v1/`.
 
-### Alternative D — `jsonschema/` as canonical, `schemas/` as mirror
-
-**Description.** Promote `jsonschema/` to canonical and demote `schemas/` to compatibility.
+**Why considered.** Several in-flight blueprints already use this shape during drafting.
 
 **Why rejected.**
-- Inverts the existing compatibility table (Directory Rules §8.1: `jsonschema/` → canonical home `schemas/contracts/v1/...`, class default `mirror` or `deprecated`).
-- `jsonschema/` is widely used elsewhere as an IDE convenience root; promoting it would surprise both internal and external consumers.
+- Fragments the schema authority root.
+- Breaks cross-family parity with `runtime`, `policy`, `evidence`, `correction`, and `common`, which all live under `schemas/contracts/v1/`.
+- Creates an N+1 authority problem (one per topic) that compounds with every new domain.
+- Schema-home drift is identified by the corpus as one of the small set of decisions that, if drift sets in, can quietly fracture validator parity, break CI, and turn the contracts directory into an archeological record.
+
+**Status.** REJECTED for permanent homes; MAY be used as time-bounded scratch with a tracked migration target.
+</details>
+
+<details>
+<summary><strong>5.3 Alternative — dual-home (both <code>schemas/</code> and <code>contracts/</code>)</strong></summary>
+
+**Shape.** Allow the same schema in both `schemas/contracts/v1/<family>/` and `contracts/<family>/`, generated or hand-maintained.
+
+**Why considered.** Eases backwards-compatibility for consumers that hard-coded either path.
+
+**Why rejected.**
+- `directory-rules.md` §6.4 explicitly forbids it: *"MUST NOT maintain divergent definitions in both `schemas/` and `contracts/`."*
+- Identified in the anti-patterns table (§13.5) as **Schema mirror divergence** — one of the named drift symptoms.
+- Validators have to be taught two paths and may silently disagree.
+
+**Status.** REJECTED. A short-lived **mirror** is permitted during migration only; the mirror MUST NOT evolve independently, and a sunset date is required in `control_plane/deprecation_register.yaml`.
+</details>
+
+<details>
+<summary><strong>5.4 Alternative — version above family (<code>schemas/v1/contracts/&lt;family&gt;/</code>)</strong></summary>
+
+**Shape.** Move `v1/` above `contracts/` rather than below it.
+
+**Why considered.** Symmetric with how some APIs version their URL space.
+
+**Why rejected.**
+- `directory-rules.md` §6.4 already specifies the inverse shape (`schemas/contracts/v1/...`).
+- Breaking the existing convention would force a repo-wide migration with no functional gain.
+
+**Status.** REJECTED.
+</details>
+
+[⤴ Back to top](#table-of-contents)
+
+---
 
 ## 6. Migration Plan
 
-This is a **structural move** in the sense of Directory Rules §14.2. It applies whenever any `contracts/<domain>/<x>.schema.json`, `schemas/<topic>/<x>.schema.json`, `jsonschema/<...>` file (or equivalent) exists in conflict with §3.
+Per `directory-rules.md` §14.2 (structural moves), schema-home migration MUST follow the discipline below.
+
+### 6.1 For new schemas (after this ADR is accepted)
+
+```mermaid
+flowchart LR
+    A[New schema needed] --> B{Identify family}
+    B --> C["Place under<br/>schemas/contracts/v1/&lt;family&gt;/"]
+    C --> D["Pair with contract<br/>under contracts/&lt;family&gt;/"]
+    D --> E["Add valid/invalid fixtures<br/>under tests/fixtures/"]
+    E --> F["Add validator under<br/>tools/validators/&lt;domain&gt;/"]
+    F --> G["Register in<br/>control_plane/object_family_register.yaml"]
+    G --> H["Cite ADR-0001<br/>in PR description"]
+```
+
+### 6.2 For legacy schemas under `contracts/<domain>/*.schema.json`
+
+1. **Identify** every legacy schema via repo scan (PROPOSED command: `find contracts -name "*.schema.json"`).
+2. **Open a migration manifest** under `migrations/schema/ADR-0001/` per `directory-rules.md` §14.2 with the skeleton in [Appendix B](#appendix-b--migration-manifest-skeleton).
+3. **Move under `git mv`** so history is preserved.
+4. **Update references** in code, docs, schemas, fixtures, tests, workflows.
+5. **Mirror temporarily** at the legacy path if downstream consumers depend on it. The mirror MUST be marked `mirror` in its containing README per §8 of Directory Rules.
+6. **Add a deprecation entry** in `control_plane/deprecation_register.yaml` with a sunset date.
+7. **Verify rollback** with a dry-run rollback card.
+8. **Add a drift entry** in `docs/registers/DRIFT_REGISTER.md` for the duration of the migration.
+9. **Close the migration** by removing the mirror only after the verification window passes.
+
+> [!CAUTION]
+> A rename that changes what an object **means** is a content change, not a placement change. It requires its own ADR, a schema version bump per the spec-normalization ADR, a compatibility map for old fixtures, old-fixture parity tests, and correction notices for any released artifacts that referenced the old identity (`directory-rules.md` §14.3).
+
+### 6.3 For in-flight blueprints drafting under `schemas/<topic>/`
+
+| Blueprint draft path (examples, PROPOSED) | Target canonical home | Action |
+|---|---|---|
+| `schemas/occurrence_evidence/` | `schemas/contracts/v1/evidence/` or `schemas/contracts/v1/domains/fauna/` | Consolidate before first stable commit. |
+| `schemas/soil_moisture/` | `schemas/contracts/v1/domains/soil/` | Consolidate before first stable commit. |
+| `schemas/hazards/` | `schemas/contracts/v1/domains/hazards/` | Consolidate before first stable commit. |
+
+> [!NOTE]
+> Whether transient scratch surfaces under `schemas/<topic>/` are acceptable until first commit, or whether they must consolidate from day one, is **NEEDS VERIFICATION** (see §9). The corpus is conservative; this ADR defers to a per-domain ADR or to a follow-up amendment.
+
+### 6.4 Mirror discipline (CRITICAL)
 
 > [!WARNING]
-> Do not edit a non-canonical schema in place to "fix it." Migrate it first; edit in the canonical location only.
+> Two homes for the same authority is the most common drift in KFM. If both exist during migration, the **compatibility root MUST NOT evolve independently**. New rules, fields, and policy updates land in canonical first; mirrors regenerate or migrate. See `directory-rules.md` §8.3 and §13.5 (*Schema mirror divergence*).
 
-### 6.1 Per-conflict migration steps
+[⤴ Back to top](#table-of-contents)
 
-1. **Identify the lineage path.** Mark it `PROPOSED / CONFLICTED` in `docs/registers/DRIFT_REGISTER.md` and (if in scope) `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md`.
-2. **Open or attach to a per-domain ADR** (e.g. `docs/adr/ADR-<domain>-schema-home.md`) that descends from this ADR.
-3. **Move under git** with `git mv` from lineage path → canonical path under `schemas/contracts/v1/<family>/`.
-4. **Update `$id`** to reflect the canonical path. Bump `version` only if the field set or semantics changed; otherwise preserve to keep receipts resolvable via the lineage `$id` mirror.
-5. **Add a migration manifest entry** under `migrations/schema/` listing `old_path`, `new_path`, `git_sha_before`, `git_sha_after`, `id_before`, `id_after`.
-6. **Mirror temporarily** at the lineage path with a top-of-file note declaring `mirror` class (Directory Rules §8); generate, never hand-edit.
-7. **Add a deprecation entry** in `control_plane/deprecation_register.yaml` with a sunset date.
-8. **Update references**: `contracts/<family>/*.md` cross-links, validator registrations, fixtures, tests, workflows, governed-API client generators, OpenAPI/JSON-LD context.
-9. **Run the validator suite** and confirm no new entries opened in `DRIFT_REGISTER.md`.
-10. **Close the migration** by removing the mirror only after the verification window passes.
+---
 
-### 6.2 First-commit rule for new domains
+## 7. Rollback and Reversal
 
-For any domain landing its first schema today: place it directly under `schemas/contracts/v1/<domain>/` on first commit. **Do not** stage it under `contracts/<domain>/` first and migrate later.
-
-### 6.3 Existing per-domain ADRs descended from this ADR
-
-The following per-domain schema-home ADRs are PROPOSED in the corpus and inherit ADR-0001's normative answer; they exist to record domain-specific consequences (sensitivity overlays, source roles, geometry transforms), not to re-decide the home.
-
-<details>
-<summary>Per-domain schema-home ADRs (PROPOSED — paths NEEDS VERIFICATION)</summary>
-
-- `docs/adr/ADR-archaeology-schema-home.md`
-- `docs/adr/ADR-fauna-schema-home.md`
-- `docs/adr/ADR-flora-schema-home.md`
-- `docs/adr/ADR-habitat-schema-home.md` (a/k/a `docs/architecture/habitat/ADR-0001-habitat-schema-home.md` per the Habitat blueprint)
-- `docs/adr/ADR-geology-schema-home.md`
-- `docs/adr/ADR-atmosphere-schema-home.md`
-- `docs/adr/ADR-hydrology-schema-home.md`
-- `docs/adr/ADR-settlements-infrastructure-schema-home.md`
-- `docs/adr/ADR-hazards-schema-home.md`
-- `docs/adr/ADR-agriculture-schema-home.md`
-- `docs/adr/ADR-people-dna-land-schema-placement.md`
-- `docs/adr/ADR-roads-rail-trade-schema-home.md`
-
-Each is `PROPOSED` until repo-mounted inspection confirms its presence. None overrides ADR-0001's default answer.
-
-</details>
-
-## 7. Rollback Plan
-
-A rollback of this ADR — that is, a reversal naming a different canonical home — would itself be a structural move requiring a superseding ADR.
-
-| Step | Action |
+| Scenario | Reversal action |
 |---|---|
-| 1 | Open ADR-000N labelled "Supersedes ADR-0001"; status `proposed` until accepted. |
-| 2 | Add a supersession notice to this ADR (`Superseded by`) and flip status to `superseded`. **Do not delete this file** (Directory Rules §17). |
-| 3 | Author a reverse migration manifest under `migrations/schema/<reverse-id>/` mapping every `schemas/contracts/v1/...` path back to the new canonical root. |
-| 4 | Stage the new root in mirror mode first; flip canonicality only after a full validator + receipt-resolution dry run. |
-| 5 | Add a drift-register entry recording the reversal and the rationale. |
-| 6 | Update `docs/doctrine/directory-rules.md` §0, §6.4, §13.1, §14.3, §18 to reference the new ADR. |
+| ADR rejected before any migration begins | Mark this file `status: rejected`; remove citations of "ADR-0001" from `directory-rules.md` §0 and §6.4; open a replacement ADR. |
+| ADR accepted, but a specific domain migration fails | Roll back the per-domain migration via its dry-run rollback card; keep ADR-0001 in force; open a per-domain ADR documenting the exception. |
+| ADR superseded by a later ADR (e.g., `v2/` migration, root rename) | Mark `status: superseded`; add `superseded_by` link; retain this file unchanged for lineage per `directory-rules.md` §2.4. |
+| Discovery that a more authoritative ADR already occupied this slot | Re-number this ADR (e.g., ADR-00NN) and update all citations; file a drift entry; coordinate with the conflicting ADR's owner. |
 
-Per-schema rollback within the canonical home (e.g. an individual schema is reverted to a prior version) follows the standard schema-supersession pattern, not this ADR's rollback path.
+> [!IMPORTANT]
+> Superseded ADRs MUST be retained with `status: superseded` and a forward link to the replacing ADR (`directory-rules.md` §2.4).
+
+[⤴ Back to top](#table-of-contents)
+
+---
 
 ## 8. Validation and Enforcement
 
+### 8.1 PR-time checks (PROPOSED)
+
+| Check | What it asserts | Status |
+|---|---|---|
+| Path-policy validator | No new `contracts/<domain>/*.schema.json` lands; every new `*.schema.json` is under `schemas/contracts/v1/<family>/`. | PROPOSED |
+| Schema/contract crosswalk test | Every schema has a contract link; every contract that claims machine validation points to a schema. | PROPOSED (per Build Companion §5.3) |
+| `tools/validators/<domain>/validate_schemas.py` | Validates all schemas under `schemas/contracts/v1/<domain>/` against fixtures and emits a `ValidationReport`. | PROPOSED |
+| Drift-register check | If a schema lives in a non-canonical home, a matching entry exists in `docs/registers/DRIFT_REGISTER.md` with a target. | PROPOSED |
+| `$id` consistency | `$id` reflects the canonical path. | PROPOSED; depends on spec-normalization ADR. |
+
+### 8.2 Runtime / CI checks (PROPOSED)
+
+```text
+# Illustrative — actual command shape depends on repo conventions; NEEDS VERIFICATION
+python tools/validators/<domain>/validate_schemas.py \
+    --schema-root schemas/contracts/v1/<domain> \
+    --fixture-root tests/fixtures/<domain>
+```
+
 > [!NOTE]
-> The bullets below describe the **target enforcement contract**. Whether each check is presently wired in the live repository is `NEEDS VERIFICATION` and tracked in §10.
+> The exact invocation, output shape, and CI workflow names are **NEEDS VERIFICATION** against the mounted repo. Several domain blueprints (Atmosphere/Air, Habitat, Fauna, Settlements/Infrastructure) reference `tools/validators/<domain>/validate_schemas.py` or `pytest tests/<domain>/test_*schema*.py` patterns; the canonical shape is not yet pinned in directory-rules.md.
 
-### 8.1 Static checks
+[⤴ Back to top](#table-of-contents)
 
-- A structural validator (`scripts/validate_schemas.py` or its successor) `MUST` treat `schemas/contracts/v1/**/*.schema.json` as the contract surface.
-- A drift check `SHOULD` flag any `contracts/**/*.schema.json` (or `contracts/**/*.schema.yaml`) as a violation, with a non-zero exit on CI.
-- A `$id`-vs-path consistency check `SHOULD` confirm the schema's `$id` matches its canonical path (or its declared mirror policy).
+---
 
-### 8.2 Test-level checks
+## 9. Open Questions and NEEDS VERIFICATION
 
-- Every schema under `schemas/contracts/v1/` `MUST` have at least one valid fixture under `schemas/tests/valid/` (or `tests/fixtures/.../valid/`) and at least one invalid fixture under `tests/invalid/`.
-- The fixture suite `MUST` exercise the schema's required fields, evidence references, and any sensitivity-significant attributes.
-
-### 8.3 PR-time checks
-
-- A PR adding `*.schema.json` outside `schemas/contracts/v1/` `MUST` either include an ADR amendment or be rejected by review.
-- A PR editing a `mirror`-class file directly (rather than regenerating it) `MUST` be rejected; the canonical source is edited instead.
-- A PR touching this ADR `MUST` cite the change type per Directory Rules §17.
-
-### 8.4 Receipt-level checks
-
-- `RunReceipt`, `ValidationReport`, and `PromotionReceipt` artifacts `SHOULD` record the canonical schema `$id`s they resolved against, so divergence becomes evidentially detectable downstream.
-
-## 9. Related Doctrine and ADRs
-
-| Reference | Relationship |
-|---|---|
-| `docs/doctrine/directory-rules.md` §0, §2.4(3), §6.3, §6.4, §13.1, §14.2, §14.3, §17, §18 | Names this ADR as the binding decision and treats divergent dual-home setups as drift. |
-| `docs/architecture/contract-schema-policy-split.md` | Architectural framing of the meaning/shape/admissibility/proof split this ADR depends on. |
-| `docs/registers/DRIFT_REGISTER.md` | Where `PROPOSED / CONFLICTED` schema-home cases are logged. |
-| `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | Where lineage paths and their canonical successors are recorded. |
-| `docs/registers/VERIFICATION_BACKLOG.md` | Tracks the live-repo enforcement check (Directory Rules §18). |
-| `control_plane/object_family_register.yaml` | Authoritative index of object families that must each have exactly one schema home. |
-| `control_plane/deprecation_register.yaml` | Records the sunset of any lineage / mirror schema paths. |
-| Per-domain `docs/adr/ADR-<domain>-schema-home.md` | Inherits ADR-0001's answer; records domain-specific consequences. |
+| # | Question / item | Status | Disposition |
+|---|---|---|---|
+| 1 | Whether the mounted repo currently has `contracts/<domain>/*.schema.json` files that need migration. | NEEDS VERIFICATION | Run a repo scan; populate [Appendix B](#appendix-b--migration-manifest-skeleton). |
+| 2 | Whether `scripts/validate_schemas.py` (cited in the corpus) actually exists and treats `schemas/contracts/v1/...` as the required surface. | NEEDS VERIFICATION | Inspect mounted repo when available. |
+| 3 | The exact `$id` URI shape (versioning embedded? hash-pinned?). | UNKNOWN | Deferred to spec-normalization ADR. |
+| 4 | Whether transient drafts under `schemas/<topic>/` are acceptable until first commit, or whether they must consolidate from day one. | OPEN | Resolve via a §14.1 routine PR amendment to this ADR, or via per-domain ADR. |
+| 5 | JSON Schema dialect pin (2020-12 vs draft-07 vs repo-native). | NEEDS VERIFICATION | Multiple corpus references say *"JSON Schema 2020-12 or repo-native equivalent"*. Pin via spec-normalization ADR. |
+| 6 | Whether `schemas/contracts/v1/governance/` is a sibling of `domains/` or a re-mapping of `runtime`/`policy`/`release`/`correction`. | NEEDS VERIFICATION | Corpus uses both phrasings; align with directory-rules.md §6.4 (sibling). |
+| 7 | A corpus tension: Pass 12 *also* proposes "ADR-0001 spec normalization" for this slot. | SURFACED, not smoothed | This ADR takes the schema-home slot per `directory-rules.md` (which is authoritative). Spec normalization becomes a separate, later ADR. See [Section 2 of the Notes](#) if revising. |
 
 > [!TIP]
-> Future starter ADRs proposed in the corpus — e.g. spec-normalization (canonicalization, hashing, ID derivation), finite decision outcomes, watcher-as-non-publisher, STAC profile, ReleaseManifest envelope — are independent of this ADR but assume it. References to schemas anywhere in those ADRs should resolve via `schemas/contracts/v1/...`.
+> Track every NEEDS VERIFICATION item in `docs/registers/VERIFICATION_BACKLOG.md` and every detected drift in `docs/registers/DRIFT_REGISTER.md`.
 
-## 10. Open Questions and NEEDS VERIFICATION
+[⤴ Back to top](#table-of-contents)
 
-The decision is `accepted`; the items below are *implementation* questions that an in-repo session must resolve without changing the answer.
+---
 
-- **NEEDS VERIFICATION.** Whether the live mounted repo presently uses `schemas/contracts/v1/` as the canonical home (per Directory Rules §18). Default: yes. Resolve by `git ls-tree`-equivalent inspection.
-- **NEEDS VERIFICATION.** Whether any `contracts/<domain>/*.schema.json` files exist today; if so, each is `PROPOSED / CONFLICTED` and enters the §6.1 migration.
-- **NEEDS VERIFICATION.** Whether a structural validator (`scripts/validate_schemas.py` or successor) actually targets `schemas/contracts/v1/**`, with a CI job wired to fail on violations. Corpus signal: the operational pattern is attested; live wiring is unconfirmed.
-- **NEEDS VERIFICATION.** Whether `jsonschema/` (compatibility) is currently a `mirror`, `legacy`, or `deprecated` class in this repo, and whether it generates from the canonical home or has drifted.
-- **PROPOSED.** Final `$id` URL scheme (`kfm://schema/...` vs an HTTPS resolver). Records resolution policy for cross-repo `$ref` and registry tooling.
-- **OPEN.** Whether the validator suite registers schemas explicitly (registry file) or by directory convention. Both paths are corpus-discussed; a follow-up ADR or per-root README will pin it.
-- **OPEN.** Whether `domains/<domain>/` should be the universal segment, or whether a small set of domains (e.g. `people-dna-land/`) sit at the family level alongside `runtime/`, `evidence/`, etc. Corpus shows both shapes; resolution does not affect this ADR's answer.
-- **OPEN.** Backfill date / acceptance date metadata at the top of this file. The dates currently shown are `approximate; backfill` placeholders; the ADR is doctrinally accepted regardless of the exact date the file was first written.
+## 10. Related Documents
 
-## 11. Appendix
-
-### 11.1 Layer topology (canonical view)
-
-```mermaid
-flowchart LR
-  subgraph CONTRACTS["contracts/<br/><i>meaning · Markdown only</i>"]
-    M1["object family<br/>READMEs (.md)"]
-  end
-  subgraph SCHEMAS["schemas/contracts/v1/<br/><b>canonical machine-schema home</b>"]
-    S1["common/ · source/<br/>evidence/ · data/"]
-    S2["runtime/ · policy/<br/>release/ · correction/"]
-    S3["domains/&lt;domain&gt;/"]
-  end
-  subgraph POLICY["policy/<br/><i>admissibility</i>"]
-    P1["bundles/ · runtime/<br/>promotion/ · sensitivity/"]
-  end
-  subgraph PROOF["tests/ · fixtures/<br/><i>proof</i>"]
-    T1["valid/ · invalid/"]
-  end
-
-  M1 -. "describes meaning of" .-> S1
-  M1 -. "describes meaning of" .-> S2
-  M1 -. "describes meaning of" .-> S3
-  S1 ---|"$ref"| S2
-  S2 ---|"$ref"| S3
-  S1 -- "validated by" --> T1
-  S2 -- "validated by" --> T1
-  S3 -- "validated by" --> T1
-  P1 -- "applies to" --> S2
-  P1 -- "applies to" --> S3
-
-  classDef canonical fill:#0969da,stroke:#0a3069,color:#ffffff;
-  classDef secondary fill:#f6f8fa,stroke:#d0d7de,color:#1f2328;
-  class SCHEMAS canonical;
-  class CONTRACTS,POLICY,PROOF secondary;
-```
-
-> The diagram is structural. It reflects the `contracts/` ↔ `schemas/contracts/v1/` ↔ `policy/` ↔ `tests/`/`fixtures/` split documented across Directory Rules §6.3–6.5 and the dossier's repeated four-layer formulation. It is not a deployment or runtime topology.
-
-### 11.2 Conflict drift example (contracts/ vs schemas/contracts/v1/)
-
-```mermaid
-flowchart LR
-  A["contracts/hydrology/<br/>huc12.schema.json<br/><span style='color:#cf222e;'>lineage / CONFLICTED</span>"] -->|migrate per §6.1| B["schemas/contracts/v1/domains/<br/>hydrology/huc12.schema.json<br/><span style='color:#1a7f37;'>canonical</span>"]
-  A -.->|"temporary mirror<br/>(Directory Rules §8)"| B
-  B --> C["validators · CI · receipts<br/>resolve $id from canonical"]
-
-  classDef conflicted fill:#ffebe9,stroke:#cf222e,color:#1f2328;
-  classDef canonical  fill:#dafbe1,stroke:#1a7f37,color:#1f2328;
-  class A conflicted;
-  class B canonical;
-```
-
-### 11.3 Minimal canonical schema example *(illustrative)*
-
-```jsonc
-// schemas/contracts/v1/domains/hydrology/huc12.schema.json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schema/contracts/v1/domains/hydrology/huc12.schema.json",
-  "title": "HUC12",
-  "type": "object",
-  "version": "1.0.0",
-  "required": ["huc12_id", "geometry_ref", "evidence_refs", "source_refs"],
-  "properties": {
-    "huc12_id":      { "type": "string", "pattern": "^[0-9]{12}$" },
-    "geometry_ref":  { "type": "string" },
-    "evidence_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-    "source_refs":   { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-    "rights":        { "type": "object" },
-    "sensitivity":   { "type": "object" },
-    "review_state":  { "type": "string" }
-  },
-  "examples": [
-    {
-      "huc12_id": "102701040303",
-      "geometry_ref": "kfm://geometry/...",
-      "evidence_refs": ["kfm://evidence/..."],
-      "source_refs": ["kfm://source/..."]
-    }
-  ]
-}
-```
-
-> The fields, identifiers, and `kfm://` URIs above are illustrative — they show the *shape* of a canonical schema, not a verified live contract.
-
-### 11.4 PR checklist for any schema-touching change
-
-- [ ] File lives under `schemas/contracts/v1/<family>/` (or, for a documented mirror, declares `class: mirror` and is regenerated, not edited).
-- [ ] `$id` matches the canonical path; `version` reflects the change type (additive vs breaking).
-- [ ] At least one valid and one invalid fixture exist; both pass the validator suite.
-- [ ] If migrating a lineage path, a migration-manifest entry exists under `migrations/schema/`.
-- [ ] If changing the schema's *meaning* (not just shape), the corresponding `contracts/<family>/<x>.md` is updated in the same PR.
-- [ ] No `.schema.json` was added under `contracts/`, a topic-named root, or any compatibility root.
-- [ ] PR description cites the Directory Rules section(s) that justify the placement and references this ADR if the touch is non-routine.
-
-### 11.5 Document change discipline
-
-Per Directory Rules §17, this ADR's authority is non-trivial. Changes follow:
-
-| Change type | What's required |
+| Document | Relationship |
 |---|---|
-| Typo, clarification, dead-link fix | Routine PR. |
-| Adding a new family under `schemas/contracts/v1/` (e.g. `events/`, `ui/`) | PR + reviewer sign-off; record in `control_plane/object_family_register.yaml`; **no new ADR required** — this ADR already covers it. |
-| Adding a domain under `domains/<domain>/` | PR + per-domain schema-home ADR descending from this ADR; **no amendment to ADR-0001 required**. |
-| Changing `$id` URL scheme, version segment shape, or canonical-vs-mirror semantics | **Amendment ADR required**; this ADR retains status `accepted` until accepted; superseded only on acceptance of the amendment. |
-| Reversing the canonical home | **Superseding ADR required**; rollback plan §7 applies. |
+| `docs/doctrine/directory-rules.md` (§0, §6.3–6.4, §8.1, §13.5, §14.2, §17, §18) | Cites this ADR as the schema-home rule; this ADR formalizes that citation. |
+| `docs/architecture/contract-schema-policy-split.md` | Architectural narrative for the four-layer split. PROPOSED. |
+| `docs/registers/SCHEMA_REGISTRY_INDEX.md` | Machine schema registry; entries pin home to `schemas/contracts/v1/<family>/`. PROPOSED. |
+| `docs/registers/DRIFT_REGISTER.md` | Records active schema-home drift entries. PROPOSED. |
+| `docs/registers/VERIFICATION_BACKLOG.md` | Tracks NEEDS VERIFICATION items in §9. PROPOSED. |
+| `control_plane/object_family_register.yaml` | Each family pins schema home. PROPOSED. |
+| `control_plane/deprecation_register.yaml` | Sunset dates for migration mirrors. PROPOSED. |
+| `migrations/schema/ADR-0001/` | Migration manifests for legacy paths. PROPOSED. |
+| Future **ADR-0002** (spec normalization) | Pins canonicalization (RFC 8785 / JCS), hashing (SHA-256 / BLAKE3), `$id` derivation. Cited but not authored here. |
+| Per-domain schema-home ADRs (e.g., `ADR-archaeology-schema-home.md`, `ADR-fauna-schema-home.md`, `ADR-people-dna-land-schema-placement.md`) | Defer to ADR-0001 unless explicitly amending. |
 
-[Back to top ↑](#adr-0001--schema-home-schemascontractsv1-is-canonical)
+[⤴ Back to top](#table-of-contents)
+
+---
+
+## Appendix A — Family Inventory (non-exhaustive)
+
+Cross-cutting families that MUST live as siblings of `domains/` inside `schemas/contracts/v1/`:
+
+| Family | Path |
+|---|---|
+| Common types | `schemas/contracts/v1/common/` |
+| Source | `schemas/contracts/v1/source/` |
+| Evidence | `schemas/contracts/v1/evidence/` |
+| Data | `schemas/contracts/v1/data/` |
+| Runtime | `schemas/contracts/v1/runtime/` |
+| Policy | `schemas/contracts/v1/policy/` |
+| Release | `schemas/contracts/v1/release/` |
+| Correction | `schemas/contracts/v1/correction/` |
+| Governance | `schemas/contracts/v1/governance/` |
+
+Domain subgroups (representative; PROPOSED until per-domain ADRs land):
+
+| Domain | Path |
+|---|---|
+| Hydrology | `schemas/contracts/v1/domains/hydrology/` |
+| Soil | `schemas/contracts/v1/domains/soil/` |
+| Fauna | `schemas/contracts/v1/domains/fauna/` |
+| Flora | `schemas/contracts/v1/domains/flora/` |
+| Habitat | `schemas/contracts/v1/domains/habitat/` |
+| Geology | `schemas/contracts/v1/domains/geology/` |
+| Atmosphere / Air | `schemas/contracts/v1/domains/atmosphere/` |
+| Roads / Rail / Trade | `schemas/contracts/v1/domains/roads-rail-trade/` |
+| Settlements / Infrastructure | `schemas/contracts/v1/domains/settlements-infrastructure/` |
+| Archaeology | `schemas/contracts/v1/domains/archaeology/` |
+| Hazards | `schemas/contracts/v1/domains/hazards/` |
+| Agriculture | `schemas/contracts/v1/domains/agriculture/` |
+| People / DNA / Land | `schemas/contracts/v1/domains/people-dna-land/` |
+
+> [!NOTE]
+> Exact subdirectory names (snake_case vs kebab-case) and exact subgroup placements (e.g., `governance/` vs `domains/people-dna-land/governance/`) are **NEEDS VERIFICATION** against the mounted repo. The shape above is CONFIRMED by `directory-rules.md` §6.4 at the family-and-domain level.
+
+[⤴ Back to top](#table-of-contents)
+
+---
+
+## Appendix B — Migration Manifest Skeleton
+
+Place under `migrations/schema/ADR-0001/manifest.yaml` (PROPOSED path).
+
+```yaml
+# migrations/schema/ADR-0001/manifest.yaml
+adr: ADR-0001
+migration_name: schema-home-consolidation
+opened: 2026-05-10
+status: proposed
+owner: contract-schema-steward
+moves:
+  - from: contracts/<domain>/<object>.schema.json
+    to:   schemas/contracts/v1/<family>/<object>.schema.json
+    git_sha_before: <fill at migration time>
+    git_sha_after:  <fill at migration time>
+    mirror_until:   <YYYY-MM-DD>
+    rollback_card:  release/rollback_cards/ADR-0001-<object>.yaml
+    references_to_update:
+      - docs/...           # docs that link the schema
+      - tests/fixtures/... # fixture paths
+      - tools/validators/... # validator command-line refs
+      - control_plane/object_family_register.yaml
+notes:
+  - Mirror MUST NOT evolve independently (directory-rules.md §8.3, §13.5).
+  - Add deprecation entry in control_plane/deprecation_register.yaml before opening mirror.
+```
+
+[⤴ Back to top](#table-of-contents)
+
+---
+
+## Change Log
+
+| Version | Date | Change | Author |
+|---|---|---|---|
+| v1 / draft | 2026-05-10 | Initial draft formalizing the schema-home rule already referenced in `directory-rules.md`. | Docs steward (PROPOSED) |
+
+---
+
+### Related docs
+
+- [docs/doctrine/directory-rules.md](../doctrine/directory-rules.md) — citing authority
+- [docs/architecture/contract-schema-policy-split.md](../architecture/contract-schema-policy-split.md) — PROPOSED narrative
+- [docs/registers/SCHEMA_REGISTRY_INDEX.md](../registers/SCHEMA_REGISTRY_INDEX.md) — PROPOSED
+- [docs/registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md) — PROPOSED
+- [docs/registers/VERIFICATION_BACKLOG.md](../registers/VERIFICATION_BACKLOG.md) — PROPOSED
+- [control_plane/object_family_register.yaml](../../control_plane/object_family_register.yaml) — PROPOSED
+
+**Last updated:** 2026-05-10
+&nbsp;&nbsp;·&nbsp;&nbsp; **Status:** `proposed`
+&nbsp;&nbsp;·&nbsp;&nbsp; [⤴ Back to top](#adr-0001--schema-home-schemascontractsv1-is-canonical)
