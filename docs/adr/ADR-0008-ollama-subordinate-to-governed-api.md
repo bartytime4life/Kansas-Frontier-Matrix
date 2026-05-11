@@ -4,7 +4,7 @@ title: ADR-0008 — Ollama and Local AI Runtimes Are Subordinate to the Governed
 type: standard
 version: v1
 status: draft
-owners: <Runtime steward> + <Governance steward>   <!-- TODO: confirm CODEOWNERS -->
+owners: <Runtime steward> + <Governance steward>   # TODO: confirm CODEOWNERS
 created: 2026-05-10
 updated: 2026-05-10
 policy_label: public
@@ -30,7 +30,6 @@ notes:
 ![lane: runtime/governed-api](https://img.shields.io/badge/lane-runtime%20%C2%B7%20governed--api-1f6feb)
 ![supersedes: none](https://img.shields.io/badge/supersedes-none-lightgrey)
 ![depends-on: ADR--0001](https://img.shields.io/badge/depends--on-ADR--0001-9cf)
-<!-- TODO: replace with repo-internal badge service if/when Shields targets are repo-resolved -->
 
 **Quick jump:** [Status](#1-status--authority) · [Context](#2-context) · [Decision](#3-decision) · [Architecture](#4-architecture-diagram) · [Affected paths](#5-affected-paths) · [Consequences](#6-consequences) · [Alternatives](#7-alternatives-considered) · [Migration](#8-migration-plan) · [Rollback](#9-rollback-plan) · [Validation](#10-validation-and-enforcement) · [Related](#11-related-adrs-and-docs) · [Open questions](#12-open-questions--needs-verification) · [Glossary](#13-glossary)
 
@@ -44,7 +43,7 @@ notes:
 | **Title** | Ollama and Local AI Runtimes Are Subordinate to the Governed API |
 | **Status** | `proposed` |
 | **Date** | 2026-05-10 |
-| **Authors** | <Runtime steward>, <Governance steward> &nbsp;<!-- TODO --> |
+| **Authors** | TODO — Runtime steward · Governance steward |
 | **Reviewers required** | Runtime steward + Governance steward + at least one Release/Policy reviewer |
 | **Supersedes** | None |
 | **Superseded by** | None |
