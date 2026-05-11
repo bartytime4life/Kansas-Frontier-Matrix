@@ -204,7 +204,7 @@ sequenceDiagram
     Reviewer->>Release: Sign and mark status=accepted
     Release->>Data: Atomic alias swap, current resolves to release_id_to
     Release->>Receipt: Emit alias-revert receipt referencing card_id
-    Note over API: Reload pointer; subsequent reads resolve to release_id_to
+    Note over API: Reload pointer, subsequent reads resolve to release_id_to
 ```
 
 **Participant legend**
