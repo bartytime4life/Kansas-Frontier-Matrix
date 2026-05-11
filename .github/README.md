@@ -184,52 +184,52 @@ How `.github/` connects to the rest of the repo. Arrows point in the direction o
 ```mermaid
 flowchart LR
     subgraph GH[".github/"]
-        WF[workflows/]
-        TPL[ISSUE_TEMPLATE/<br/>PULL_REQUEST_TEMPLATE.md]
-        OWN[CODEOWNERS]
+        WF["workflows/"]
+        TPL["ISSUE_TEMPLATE/<br/>PULL_REQUEST_TEMPLATE.md"]
+        OWN["CODEOWNERS"]
     end
 
     subgraph CANON["Canonical authorities"]
-        DOC[docs/doctrine/<br/>docs/adr/]
-        CP[control_plane/]
-        CON[contracts/]
-        SCH[schemas/]
-        POL[policy/]
-        TST[tests/ + fixtures/]
-        TOOL[tools/validators/<br/>tools/generators/]
-        REL[release/]
+        DOC["docs/doctrine/<br/>docs/adr/"]
+        CP["control_plane/"]
+        CON["contracts/"]
+        SCH["schemas/"]
+        POL["policy/"]
+        TST["tests/ + fixtures/"]
+        TOOL["tools/validators/<br/>tools/generators/"]
+        REL["release/"]
     end
 
     subgraph LIFE["Lifecycle / proofs"]
-        DATA[data/raw → work → processed →<br/>catalog → published]
-        RECEIPTS[data/receipts/]
-        PROOFS[data/proofs/]
+        DATA["data/raw -&gt; work -&gt; processed -&gt;<br/>catalog -&gt; published"]
+        RECEIPTS["data/receipts/"]
+        PROOFS["data/proofs/"]
     end
 
-    WF -- "invokes" --> TOOL
-    WF -- "invokes" --> POL
-    WF -- "runs" --> TST
-    WF -- "validates shape" --> SCH
-    WF -- "cross-checks meaning" --> CON
-    WF -- "exercises decision flow" --> REL
-    WF -- "writes process memory" --> RECEIPTS
-    WF -- "never writes to" -.-> DATA
-    WF -- "never authors" -.-> DOC
+    WF -->|invokes| TOOL
+    WF -->|invokes| POL
+    WF -->|runs| TST
+    WF -->|validates shape| SCH
+    WF -->|cross-checks meaning| CON
+    WF -->|exercises decision flow| REL
+    WF -->|writes process memory| RECEIPTS
+    WF -.->|never writes to| DATA
+    WF -.->|never authors| DOC
 
-    TPL -- "routes intake into" --> REL
-    TPL -- "routes intake into" --> POL
-    TPL -- "routes intake into" --> CP
+    TPL -->|routes intake into| REL
+    TPL -->|routes intake into| POL
+    TPL -->|routes intake into| CP
 
-    OWN -- "routes review burden to" --> DOC
-    OWN -- "routes review burden to" --> POL
-    OWN -- "routes review burden to" --> REL
+    OWN -->|routes review burden to| DOC
+    OWN -->|routes review burden to| POL
+    OWN -->|routes review burden to| REL
 
     classDef gh fill:#e7f1ff,stroke:#1f6feb,color:#0b1f3a;
     classDef canon fill:#eafbe7,stroke:#3fb950,color:#0b1f3a;
     classDef life fill:#fff4e5,stroke:#d29922,color:#0b1f3a;
-    class GH,WF,TPL,OWN gh
-    class CANON,DOC,CP,CON,SCH,POL,TST,TOOL,REL canon
-    class LIFE,DATA,RECEIPTS,PROOFS life
+    class WF,TPL,OWN gh;
+    class DOC,CP,CON,SCH,POL,TST,TOOL,REL canon;
+    class DATA,RECEIPTS,PROOFS life;
 ```
 
 [Back to top ↑](#github--repository-governance-hooks)
