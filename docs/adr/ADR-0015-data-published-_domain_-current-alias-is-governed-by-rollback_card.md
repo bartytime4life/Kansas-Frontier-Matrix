@@ -188,24 +188,36 @@ data/
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Author as "Author / Release engineer"
-    participant Reviewer as "Reviewer(s)"
-    participant CI as "CI / Gates A–G"
-    participant Release as "release/rollback_cards/"
-    participant Data as "data/published/&lt;domain&gt;/"
-    participant Receipt as "data/rollback/&lt;domain&gt;/"
-    participant API as "apps/governed-api/"
+    participant Author
+    participant Reviewer
+    participant CI
+    participant Release
+    participant Data
+    participant Receipt
+    participant API
 
     Author->>Release: Draft RollbackCard (from, to, reason, evidence_refs)
-    Author->>Reviewer: Open PR — touches release/ and data/published/&lt;domain&gt;/current
-    Reviewer->>CI: Request gates
-    CI->>CI: Validate manifests, evidence resolution, sensitivity, signatures
-    CI-->>Reviewer: PASS / FAIL
-    Reviewer->>Release: Sign, mark status=accepted
-    Release->>Data: Atomic alias swap — current resolves to release_id_to
+    Author->>Reviewer: Open PR touches release/ and data/published/[domain]/current
+    Reviewer->>CI: Request gates A-G
+    CI->>CI: Validate manifests, evidence, sensitivity, signatures
+    CI-->>Reviewer: PASS or FAIL
+    Reviewer->>Release: Sign and mark status=accepted
+    Release->>Data: Atomic alias swap, current resolves to release_id_to
     Release->>Receipt: Emit alias-revert receipt referencing card_id
     Note over API: Reload pointer; subsequent reads resolve to release_id_to
 ```
+
+**Participant legend**
+
+| Participant | Canonical home |
+|---|---|
+| `Author` | Author / release engineer |
+| `Reviewer` | Reviewer(s) — see `CODEOWNERS` (`NEEDS VERIFICATION`) |
+| `CI` | Repo CI workflows / Gates A–G |
+| `Release` | `release/rollback_cards/` |
+| `Data` | `data/published/<domain>/` |
+| `Receipt` | `data/rollback/<domain>/` |
+| `API` | `apps/governed-api/` |
 
 ---
 
