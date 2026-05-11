@@ -188,23 +188,23 @@ data/
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Author as Author / Release engineer
-    participant Reviewer as Reviewer(s)
-    participant CI as CI / Gates A–G
-    participant Release as release/rollback_cards/
-    participant Data as data/published/&lt;domain&gt;/
-    participant Receipt as data/rollback/&lt;domain&gt;/
-    participant API as apps/governed-api/
+    participant Author as "Author / Release engineer"
+    participant Reviewer as "Reviewer(s)"
+    participant CI as "CI / Gates A–G"
+    participant Release as "release/rollback_cards/"
+    participant Data as "data/published/&lt;domain&gt;/"
+    participant Receipt as "data/rollback/&lt;domain&gt;/"
+    participant API as "apps/governed-api/"
 
     Author->>Release: Draft RollbackCard (from, to, reason, evidence_refs)
-    Author->>Reviewer: Open PR — touches release/ + data/published/<domain>/current
+    Author->>Reviewer: Open PR — touches release/ and data/published/&lt;domain&gt;/current
     Reviewer->>CI: Request gates
     CI->>CI: Validate manifests, evidence resolution, sensitivity, signatures
     CI-->>Reviewer: PASS / FAIL
     Reviewer->>Release: Sign, mark status=accepted
-    Release->>Data: Atomic alias swap current → <release_id_to>
+    Release->>Data: Atomic alias swap — current resolves to release_id_to
     Release->>Receipt: Emit alias-revert receipt referencing card_id
-    Note over API: Reload pointer; subsequent reads resolve to <release_id_to>
+    Note over API: Reload pointer; subsequent reads resolve to release_id_to
 ```
 
 ---
