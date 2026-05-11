@@ -1,451 +1,443 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr-0002
+doc_id: kfm://doc/adr-0002-contracts-vs-schemas-split
 title: ADR-0002 — Contracts vs Schemas Split
 type: standard
 version: v1
 status: draft
-owners: <docs steward + architecture owner — TODO confirm in CODEOWNERS>
-created: 2026-05-09
-updated: 2026-05-09
+owners: <TODO: architecture steward + docs steward per Directory Rules §0>
+created: 2026-05-10
+updated: 2026-05-10
 policy_label: public
 related:
   - docs/adr/ADR-0001-schema-home.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/contract-schema-policy-split.md
-  - contracts/README.md
-  - schemas/README.md
-  - policy/README.md
-  - tools/validators/README.md
-tags: [kfm, adr, contracts, schemas, governance, trust-membrane]
+  - control_plane/object_family_register.yaml
+tags: [kfm, adr, governance, contracts, schemas, policy, division-of-labor]
 notes:
-  - Formalizes the contracts↔schemas division of labor pinned by Directory Rules §6.3–§6.4 and Build Companion §5.
-  - Companion to ADR-0001 (schema home); does not relocate any path — names what each surface owns.
-  - Repo-presence of the surfaces below is PROPOSED until verified against a mounted repo.
+  - "Status `proposed`. Ratification requires architecture-steward sign-off per Directory Rules §2.4."
+  - "ADR-0002 number assignment is PROPOSED. Verify no conflicting reservation in docs/adr/README.md before merge."
+  - "All quoted repo paths are PROPOSED until verified against mounted-repo evidence (Directory Rules §0)."
 [/KFM_META_BLOCK_V2] -->
 
 # ADR-0002 — Contracts vs Schemas Split
 
-> **Object _meaning_ lives in `contracts/`. Machine-checkable _shape_ lives in `schemas/`. Neither may silently absorb the other, and neither stands alone as truth.**
+> Codify the working division of labor between **`contracts/`** (object meaning), **`schemas/`** (machine-checkable shape), **`policy/`** (admissibility), and the supporting **fixtures / tests / validators** — so every trust-bearing object has a visible, six-surface split rather than one ambiguous home.
 
-[![Status: proposed](https://img.shields.io/badge/status-proposed-orange)](#status)
-[![Type: ADR](https://img.shields.io/badge/type-ADR-blue)](#status)
-[![Authority: doctrine](https://img.shields.io/badge/authority-doctrine-success)](#status)
-[![Companion: ADR--0001](https://img.shields.io/badge/companion-ADR--0001-lightgrey)](./ADR-0001-schema-home.md)
-[![Doctrine: Directory_Rules_§6.3–§6.4](https://img.shields.io/badge/doctrine-Directory_Rules_%C2%A76.3%E2%80%93%C2%A76.4-informational)](../doctrine/directory-rules.md)
+[![Status: Proposed](https://img.shields.io/badge/status-proposed-yellow)](#1-context)
+[![ADR-0002](https://img.shields.io/badge/ADR-0002-blue)](#)
+[![Pairs with: ADR-0001](https://img.shields.io/badge/pairs--with-ADR--0001-informational)](./ADR-0001-schema-home.md)
+[![Supersedes: none](https://img.shields.io/badge/supersedes-none-lightgrey)](#9-compatibility-supersession-and-rollback)
+[![Policy label: public](https://img.shields.io/badge/policy_label-public-green)](#)
+[![Last updated: 2026-05-10](https://img.shields.io/badge/updated-2026--05--10-lightblue)](#)
 
-**Quick links** ·
-[Status](#status) · [Context](#1-context) · [Decision](#2-decision) ·
-[Diagram](#3-surface-map) · [Consequences](#4-consequences) ·
-[Alternatives](#5-alternatives-considered) · [Compliance](#6-compliance-and-validation) ·
-[Migration](#7-migration-and-rollback) · [Open Questions](#8-open-questions)
+| Field | Value |
+|---|---|
+| **ADR id** | `ADR-0002` _(PROPOSED slot — see [§10](#10-open-questions-and-needs-verification))_ |
+| **Status** | `proposed` |
+| **Date** | 2026-05-10 |
+| **Owners** | _TODO: architecture steward + docs steward_ |
+| **Pairs with** | [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) — the *home* of machine schemas |
+| **Authority class** | Architecture decision — labor division across canonical roots |
+| **Decision class (per Directory Rules §2.4)** | Items 3 (schema-home rule) and 5 (parallel-home creation) |
+| **Supersedes** | _None._ |
+| **Superseded by** | _None._ |
 
 ---
 
-## Status
+## 📑 Contents
 
-| Field | Value |
-| :--- | :--- |
-| **ID** | `ADR-0002` |
-| **Title** | Contracts vs Schemas Split |
-| **Status** | `proposed` |
-| **Date** | `2026-05-09` |
-| **Authors** | _TODO confirm — docs steward + architecture owner_ |
-| **Reviewers required** | Docs steward · Schema/validator owner · Policy owner · Tests owner · One subsystem owner |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Companion ADR** | [ADR-0001 — Schema Home](./ADR-0001-schema-home.md) |
-| **Related doctrine** | [Directory Rules §6.3–§6.4](../doctrine/directory-rules.md) · [Build Companion §5](../../kfm_build_companion.pdf) (working split) |
-| **Authority of the rule** | **CONFIRMED** doctrinally — drawn from Directory Rules and Build Companion |
-| **Authority of the repo presence claims** | **NEEDS VERIFICATION** — no mounted repo in this session; per-surface presence is PROPOSED until inspected |
-
-> [!IMPORTANT]
-> This ADR **clarifies division of labor**; it does **not** move any file. The schema home is pinned by [ADR-0001](./ADR-0001-schema-home.md). Any relocation triggered by this ADR follows [Directory Rules §14](../doctrine/directory-rules.md) (Migration Discipline).
+1. [Context](#1-context)
+2. [Decision](#2-decision)
+3. [The working split — canonical surfaces](#3-the-working-split--canonical-surfaces)
+4. [How the surfaces interlock (diagram)](#4-how-the-surfaces-interlock-diagram)
+5. [The minimum coupling rule — when an object family is *ready*](#5-the-minimum-coupling-rule--when-an-object-family-is-ready)
+6. [Consequences](#6-consequences)
+7. [Alternatives considered](#7-alternatives-considered)
+8. [Compliance, enforcement, and drift tests](#8-compliance-enforcement-and-drift-tests)
+9. [Compatibility, supersession, and rollback](#9-compatibility-supersession-and-rollback)
+10. [Open questions and NEEDS VERIFICATION](#10-open-questions-and-needs-verification)
+11. [References (evidence basis)](#11-references-evidence-basis)
+12. [Related docs](#related-docs)
 
 ---
 
 ## 1. Context
 
-The Kansas Frontier Matrix carries trust-bearing objects — source descriptors, evidence bundles, dataset versions, runtime envelopes, release manifests, correction notices, and per-domain object families. Each object needs four properties to be governable:
+KFM is a governed, evidence-first knowledge system. Its core architectural commitments — cite-or-abstain truth posture, fail-safe policy defaults, the `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` lifecycle invariant, and a governed trust membrane — all depend on **trust-bearing objects** (`SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `DecisionEnvelope`, `RuntimeResponseEnvelope`, `ReleaseManifest`, `RollbackCard`, `CorrectionNotice`, `ValidationReport`, run/AI/policy receipts, and domain objects) carrying a clean, inspectable shape. **CONFIRMED** doctrine.
 
-1. A **human-readable meaning** that reviewers, stewards, and downstream consumers can read.
-2. A **machine-checkable shape** that validators can enforce.
-3. An **admissibility posture** that policy can decide.
-4. A **proof surface** that demonstrates the rules are enforceable.
+That commitment cannot survive without an explicit division of labor across the canonical roots that hold those objects. KFM doctrine repeatedly identifies the failure mode bluntly:
 
-If any one surface silently absorbs another, the trust spine fails in a specific, recurring way:
+> "KFM must not collapse contracts, schemas, policies, tests, fixtures, receipts, and proofs into one ambiguous surface."
+> — *KFM Build Companion §5* **CONFIRMED**
 
-| Failure mode | What it looks like | Why it bites |
-| :--- | :--- | :--- |
-| **Meaning collapses into schema** | A JSON Schema is treated as the only definition of an object. | Reviewers can't audit *intent*. Field renames look like type changes. Compatibility notes vanish. |
-| **Shape collapses into prose** | A Markdown contract is treated as the only check. | Validators have nothing to enforce. CI cannot fail on shape drift. |
-| **Admissibility collapses into shape** | A schema's `enum` becomes the de-facto rights/sensitivity rule. | Policy is invisible to reviewers and ungated by `policy/`. |
-| **Proof collapses into either** | Validation logic lives only inside a test file or only inside a doc. | No re-runnable artifact. ValidationReports cannot be emitted to receipts. |
+[`ADR-0001`](./ADR-0001-schema-home.md) resolves a narrower question: **where** machine schemas live (the canonical home is `schemas/contracts/v1/<…>`). It does *not*, by itself, fully answer two adjacent questions:
 
-Directory Rules §6.3–§6.4 and Build Companion §5 already name the division. Field reports across the domain blueprints (hydrology, fauna, archaeology, atmosphere, settlements/infrastructure, people/DNA/land, habitat, transport) repeatedly draft schemas with text like _"`schemas/contracts/v1/<domain>/<x>.schema.json` OR `contracts/<domain>/<x>.schema.json` … pending ADR-0001"_, indicating that authors are reaching for both surfaces simultaneously and need an explicit, ratified rule about who owns what.
+1. **What each canonical root owns** — and what each root **MUST NOT silently own**.
+2. **When a trust-bearing object family is considered “ready”** — the minimum set of artifacts that must coexist before a contract surface is admissible into the trust membrane.
 
-[ADR-0001](./ADR-0001-schema-home.md) resolves *where* machine schemas live (`schemas/contracts/v1/...`). This ADR resolves *what each surface owns and what crosswalks must hold*. The two together are the contracts↔schemas authority pair.
+Without an ADR codifying those two questions, three observed drift patterns recur across domain blueprints:
 
-> [!NOTE]
-> **Truth posture for this section.** The doctrine quoted above is **CONFIRMED** from Directory Rules and Build Companion. The current repo's compliance with that doctrine is **NEEDS VERIFICATION** in this session.
+> [!WARNING]
+> **Observed drift patterns** (Directory Rules §13.1, §13.5; doctrine corpus).
+>
+> - **Parallel authority.** Both `contracts/<domain>/<x>.schema.json` *and* `schemas/contracts/v1/domains/<domain>/<x>.schema.json` exist and diverge. **CONFIRMED** as a recurring pattern in domain blueprints (e.g., habitat, hydrology, archaeology dossiers reference `OR`-pathed schema homes pending ADR resolution).
+> - **Schema-as-meaning.** A JSON Schema becomes the *only* documented record of what an object means, so semantic intent drifts silently when schemas evolve.
+> - **Contract-as-validation.** A `contracts/` Markdown file is treated as if it enforced validation, with no `schemas/` counterpart and no validator coverage.
 
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
+The corpus's response is a six-surface split, repeatedly stated across Directory Rules §6.3–6.5, the KFM Build Companion §5, and the canonical-root authority table (Directory Rules §5). This ADR ratifies that split as a binding architecture decision and pins its enforcement contract.
+
+[↑ Back to top](#-contents)
 
 ---
 
 ## 2. Decision
 
-KFM adopts a strict, named division of labor across four trust surfaces. Each owns one thing, and **MUST NOT** silently own another.
+KFM **MUST** maintain a six-surface working split for every trust-bearing object family. Each surface is canonical for one responsibility and **MUST NOT** silently absorb the responsibilities of any other.
 
-### 2.1 Division of labor (normative)
+| # | Surface | Owns | Authority |
+|---|---|---|---|
+| 1 | **`contracts/`** | Object **meaning**: field intent, invariants, lifecycle semantics, compatibility notes. Usually Markdown. | Canonical (per Directory Rules §5) |
+| 2 | **`schemas/`** | Machine-checkable **shape**: type constraints, versioned `$id`, reusable fragments. Canonical home: **`schemas/contracts/v1/<…>`** per [ADR-0001](./ADR-0001-schema-home.md). | Canonical |
+| 3 | **`policy/`** | **Admissibility** and release: rights, sensitivity, source-role admissibility, allow / deny / restrict / abstain behavior, release obligations. Singular form is canonical; `policies/` is a compatibility mirror only. | Canonical (singular) |
+| 4 | **`tests/fixtures/`** *(and root `fixtures/` if present)* | Valid and invalid **examples** for schemas, policies, evidence closure, UI payloads, and release candidates. | Canonical |
+| 5 | **`tests/`** | Runnable **proof** that contracts, schemas, policies, APIs, and tools behave as expected. | Canonical |
+| 6 | **`tools/validators/`** | Executable **checks** that emit `ValidationReport` objects. | Canonical |
 
-| Surface | Owns (MUST) | Must NOT silently own | Format | Review type |
-| :--- | :--- | :--- | :--- | :--- |
-| **`contracts/`** | Object **meaning**: field intent, invariants, lifecycle semantics, compatibility notes, narrative crosswalks. | Executable validation as the *only* truth; rights/sensitivity decisions. | Markdown (`.md`) | Contract / domain review |
-| **`schemas/`** | Machine-checkable **shape**: types, required fields, ranges, regexes, versioned `$id`, reusable fragments. | Semantic explanation as the *only* meaning; admissibility logic. | JSON Schema (per [ADR-0001](./ADR-0001-schema-home.md), default home `schemas/contracts/v1/...`) | Schema / validator review |
-| **`policy/`** | Admissibility and release: rights, sensitivity, source-role, `ALLOW`/`DENY`/`RESTRICT`/`ABSTAIN`, reason codes. | General object semantics; field-level shape. | Rego/OPA bundles or repo-native equivalents | Policy / steward / security review |
-| **`tests/` + `fixtures/`** | Enforceability **proof**: valid/invalid examples, validator outputs, policy reason-code stability, evidence closure. | Production data; doctrine. | Test code + fixture data | Test / CI review |
+Three further canonical roots interact with the split and are governed by it:
 
-Validators (`tools/validators/`) emit `ValidationReport` objects against schemas; they **MUST NOT** be the storage home for emitted proofs (those go to `data/receipts/` and `data/proofs/`, see [Directory Rules §13](../doctrine/directory-rules.md)).
+| Surface | Owns | Relationship |
+|---|---|---|
+| **`data/receipts/`** | Process memory: intake, transform, run, AI, policy, validation, release receipts. | Receives emitted artifacts; **MUST NOT** carry normative definitions. |
+| **`data/proofs/`** and **`release/`** | Release-grade proof packs, manifests, rollback cards, corrections. | Receives release-grade outputs; **MUST NOT** carry source-native raw data. |
+| **`control_plane/`** | Machine-readable governance maps (object-family register, drift register, etc.) cross-linking the six surfaces. | Indexes the split; does not own definitions. |
 
-### 2.2 Crosswalks (MUST hold)
+> [!IMPORTANT]
+> **Pair this decision with [ADR-0001](./ADR-0001-schema-home.md).**
+> ADR-0001 resolves **where** machine schemas live (`schemas/contracts/v1/…`); ADR-0002 (this ADR) resolves **what each canonical root owns** and **how the surfaces are kept coupled but distinct**. Both are required for a stable, drift-resistant authority graph.
 
-For every trust-bearing object family:
-
-- **C1 — Contract ↔ Schema link.** Every JSON Schema **MUST** link to its contract Markdown (e.g., `$comment` or `description` field with `kfm://contract/...` URI, or sibling-doc reference). Every contract that claims machine validation **MUST** link to its schema by `$id`.
-- **C2 — Fixture coverage.** Every schema **MUST** have at least one valid fixture and one invalid fixture. Every required field **MUST** appear in at least one valid fixture; every required-field omission **MUST** appear in at least one invalid fixture.
-- **C3 — Policy reason codes.** Every `DENY` and `ABSTAIN` path that the object can reach **MUST** carry a stable reason code suitable for UI display and audit.
-- **C4 — ValidationReport emission.** Every validator that runs on this object **MUST** emit a `ValidationReport` per the validation contract; tests **MUST** assert against the report, not against side-channel state.
-
-### 2.3 "Object family ready" — the minimum coupling rule
-
-A trust-bearing object family is **not ready** when its schema exists. It is ready when **all eight** of the following hold:
-
-```yaml
-contract_exists:               true   # contracts/<family>/<x>.md
-schema_exists:                 true   # schemas/contracts/v1/<family>/<x>.schema.json
-valid_fixture_exists:          true   # fixtures/ or tests/fixtures/valid/
-invalid_fixture_exists:        true   # fixtures/ or tests/fixtures/invalid/
-validator_emits_validation_report: true
-policy_or_closure_test_exists: true   # admissibility or evidence-closure proof
-docs_link_contract_schema_fixture_policy: true
-rollback_or_supersession_note_exists: true
-```
-
-The eight-point check is the minimum bar before an object family can back any released artifact, governed-API route, or UI surface.
-
-### 2.4 Conformance language
-
-Following [Directory Rules §2.2](../doctrine/directory-rules.md) (RFC 2119-style):
-
-- **MUST / MUST NOT** — non-negotiable. PRs that violate these are not merged absent an approved superseding ADR.
-- **SHOULD / SHOULD NOT** — strong default. Deviation requires brief justification in the PR body.
-- **MAY** — permitted; stay consistent within the family.
-
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
+[↑ Back to top](#-contents)
 
 ---
 
-## 3. Surface Map
+## 3. The working split — canonical surfaces
 
-The diagram below is **structural**, not implementational — it shows what each surface owns and the crosswalks this ADR enforces.
+The canonical division-of-labor table below is **normative**. It is the long form of the summary in [§2](#2-decision) and is the table to cite in PR descriptions, per-root READMEs, and review records when a placement is challenged. **CONFIRMED** against *KFM Build Companion §5.1* and *Directory Rules §6.3–6.5*.
+
+| Surface | Owns (canonical responsibility) | Must **not** silently own | Review class |
+|---|---|---|---|
+| `contracts/` | Human-readable meaning, field intent, invariants, lifecycle semantics, compatibility notes. | Executable validation **as the only source of truth**. | Contract / domain review |
+| `schemas/` | Machine-checkable shape, type constraints, versioned schema IDs, reusable fragments. | Semantic explanation **as the only meaning**. | Schema / validator review |
+| `policy/` | Rights, sensitivity, source-role admissibility, release obligations, deny / abstain behavior. | General object semantics. | Policy / steward / security review |
+| `fixtures/` *(or `tests/fixtures/`)* | Small valid / invalid examples for schemas, policies, evidence closure, UI payloads, release candidates. | Production data or doctrine. | Test review |
+| `tests/` | Runnable proof that contracts, schemas, policies, APIs, and tools behave as expected. | Untestable claims or one-off scripts. | CI / test review |
+| `tools/validators/` | Executable checks that produce `ValidationReport` objects. | Permanent storage of emitted proofs. | Developer / QA review |
+| `data/receipts/` | Process memory: intake, transform, run, AI, policy, validation, release receipts. | Normative definitions. | Ops / audit review |
+| `data/proofs/`, `release/` | Release-grade proof packs, manifests, rollback cards, corrections. | Source-native raw data. | Release / governance review |
+
+### 3.1 Clarifying corollaries (CONFIRMED from doctrine)
+
+- **`contracts/` files are usually Markdown.** Executable validation lives in `schemas/` (shape) and `policy/` (admissibility) and `tests/` (proof). — *Directory Rules §6.3*
+- **`schemas/contracts/v1/…` is the default machine-schema home** per [ADR-0001](./ADR-0001-schema-home.md). Divergent definitions in both `schemas/` and `contracts/` are forbidden. — *Directory Rules §6.4, §13.1*
+- **`policy/` (singular)** is canonical. If `policies/` exists, treat it as a compatibility mirror until ADR resolves. — *Directory Rules §6.5, §5 per-root authority table*
+- **Cross-domain artifacts** (e.g., a habitat × fauna × hydrology validator) place under the lowest common responsibility root **without** a domain segment — `tools/validators/<topic>/…`, `schemas/contracts/v1/<topic>/…`, `docs/architecture/<topic>.md`. — *Directory Rules §12*
+
+### 3.2 What this ADR does *not* decide
+
+This ADR is deliberately narrow. It does **not** decide:
+
+- The numbered version of any specific schema (handled per object family).
+- The internal layout *within* `schemas/contracts/v1/…` (handled by [ADR-0001](./ADR-0001-schema-home.md) and per-family READMEs).
+- Identity / hashing rules (PROPOSED for a separate ADR — see *KFM Pass 12 Part 2 §J.3* and *Build Companion §6*).
+- Finite decision outcome shapes (PROPOSED separately; see [§10](#10-open-questions-and-needs-verification) for the numbering conflict).
+- Where domain lanes physically live (handled by Directory Rules §12 — Domain Placement Law).
+
+[↑ Back to top](#-contents)
+
+---
+
+## 4. How the surfaces interlock (diagram)
 
 ```mermaid
 flowchart LR
-    subgraph Trust["Trust-bearing object family"]
-        direction TB
-        C["<b>contracts/</b><br/>meaning · intent<br/>invariants · lifecycle<br/>(.md)"]
-        S["<b>schemas/</b><br/>shape · types<br/>required · $id<br/>(JSON Schema)"]
-        P["<b>policy/</b><br/>admissibility<br/>ALLOW/DENY/<br/>RESTRICT/ABSTAIN"]
-        F["<b>fixtures/ + tests/</b><br/>valid · invalid<br/>policy reason-codes<br/>closure proofs"]
+    subgraph DEFINE["📝 Define"]
+        C["contracts/<br/>(meaning · Markdown)"]
+        S["schemas/contracts/v1/…<br/>(shape · JSON Schema)<br/><i>per ADR-0001</i>"]
+        P["policy/<br/>(admissibility · OPA/Rego)"]
     end
 
-    V["<b>tools/validators/</b><br/>emits<br/>ValidationReport"]
-    R["<b>data/receipts/</b><br/>+ <b>data/proofs/</b><br/>(stored proof)"]
-    REL["<b>release/</b><br/>manifests · rollback<br/>correction notices"]
+    subgraph PROVE["🧪 Prove"]
+        F["fixtures/ · tests/fixtures/<br/>(valid + invalid examples)"]
+        T["tests/<br/>(runnable proof)"]
+        V["tools/validators/<br/>(executable checks)"]
+    end
 
-    C  ---|"C1: links by $id"| S
-    S  -->|"validates"| V
-    V  -->|"emits"| R
-    F  -->|"exercises"| S
-    F  -->|"exercises"| P
-    P  -->|"reason codes (C3)"| F
-    R  -->|"feeds"| REL
-    C  -.->|"narrative refs"| P
+    subgraph EMIT["📦 Emit"]
+        R["data/receipts/<br/>(process memory)"]
+        PR["data/proofs/ · release/<br/>(release-grade artifacts)"]
+    end
 
-    classDef can fill:#eef7ff,stroke:#1f6feb,stroke-width:1px
-    classDef proof fill:#f0fdf4,stroke:#15803d,stroke-width:1px
-    classDef rel fill:#fef9c3,stroke:#a16207,stroke-width:1px
-    class C,S,P can
-    class F,V,R proof
-    class REL rel
+    subgraph INDEX["🗂 Index"]
+        CP["control_plane/<br/>(object-family register,<br/>drift register)"]
+    end
+
+    C -- "cross-links" --> S
+    S -- "validates" --> F
+    P -- "decides on" --> F
+    F -- "feeds" --> T
+    V -- "emits" --> R
+    T -- "asserts" --> V
+    V -- "consumes" --> S
+    V -- "consumes" --> P
+    R -- "promoted to" --> PR
+    CP -. "indexes" .-> C
+    CP -. "indexes" .-> S
+    CP -. "indexes" .-> P
+    CP -. "indexes" .-> V
+
+    classDef def fill:#e3f2fd,stroke:#1565c0,stroke-width:1px;
+    classDef proof fill:#e8f5e9,stroke:#2e7d32,stroke-width:1px;
+    classDef emit fill:#fff3e0,stroke:#ef6c00,stroke-width:1px;
+    classDef idx fill:#f3e5f5,stroke:#6a1b9a,stroke-width:1px;
+    class C,S,P def;
+    class F,T,V proof;
+    class R,PR emit;
+    class CP idx;
 ```
-
-> [!TIP]
-> Read the diagram as a contract: **every arrow is checkable**. C1 is a crosswalk validator. The `F → S` and `F → P` arrows are fixture coverage tests. The `V → R` arrow is the ValidationReport emission contract. Missing arrows are drift.
-
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
-
----
-
-## 4. Consequences
-
-### 4.1 Positive
-
-- **Reviewer clarity.** A contract PR goes to domain reviewers; a schema PR goes to schema/validator reviewers; a policy PR goes to stewards. No PR conflates three review types.
-- **Drift becomes visible.** Crosswalk validators (C1–C4) make silent collapse into a single CI failure rather than a diffuse design smell.
-- **Onboarding is shorter.** A new contributor reading `contracts/<family>/<x>.md` learns *what the object means*; reading `schemas/contracts/v1/<family>/<x>.schema.json` learns *its exact shape*. The two are not redundant.
-- **Compatibility notes have a home.** Field renames, version bumps, and deprecations land in the contract; the schema's `$id` versioning carries the machine signal.
-- **Cite-or-abstain is enforceable.** Public-facing claims can resolve `EvidenceRef → EvidenceBundle` against schemas, with policy admissibility and contract semantics each independently checkable.
-- **Audit trail is complete.** `ValidationReport` (from validators) + receipts (in `data/receipts/`) + release manifests (in `release/`) form a chain whose links each point at a contract.
-
-### 4.2 Negative / Costs
-
-- **More files per object family.** Eight artifacts (contract, schema, valid+invalid fixtures, validator wiring, policy or closure test, doc cross-links, rollback note) is real overhead.
-- **Crosswalk validator must exist.** Without C1–C4 in CI, the discipline becomes lint-by-review and silently rots.
-- **Cross-cutting renames become coordinated.** Renaming a field touches contract, schema, fixtures, validator, and possibly policy. ADR-driven (see [Directory Rules §14.3](../doctrine/directory-rules.md)).
-- **Existing dual-home drafts must be reconciled.** Domain blueprints currently draft schemas under both `schemas/contracts/v1/<domain>/` and `contracts/<domain>/`. This ADR + ADR-0001 force a one-way reconciliation. **PROPOSED**: scope and timeline tracked in `migrations/schema/` per [Directory Rules §14.2](../doctrine/directory-rules.md).
-- **Policy/runtime coupling tightened.** Reason codes referenced from contracts must remain stable across schema versions. Reason-code stability is now a release-relevant invariant.
-
-### 4.3 Anti-pattern register (for reviewers)
-
-Each row is a known failure mode this ADR rejects.
-
-| Anti-pattern | Symptom | Fix |
-| :--- | :--- | :--- |
-| **Schema as sole truth** | Object has a `.schema.json` but no contract `.md`. | Author the contract; link via C1; PR cannot merge until both exist. |
-| **Contract as sole truth** | Object has a `.md` but no machine schema; validators rely on prose. | Author the schema under `schemas/contracts/v1/...`; add fixtures (C2). |
-| **Mirror divergence** | `schemas/` and `contracts/` carry divergent definitions. | Per [ADR-0001](./ADR-0001-schema-home.md), `schemas/contracts/v1/...` is canonical; the other is `mirror` or `legacy`. |
-| **Test-only validator** | Validation logic lives inside a test file only. | Extract into `tools/validators/`; tests call into it. |
-| **Policy-in-schema** | Rights/sensitivity hidden as a schema `enum`. | Move admissibility into `policy/`; schema retains the field's *shape* only. |
-| **No invalid fixture** | Schema has only valid examples. | Add at least one invalid fixture per required-field rule. |
-| **Unstable reason codes** | Policy `DENY`/`ABSTAIN` codes change across releases. | Treat reason codes as a versioned compatibility surface; release-relevant. |
-
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
-
----
-
-## 5. Alternatives Considered
-
-### 5.1 Single combined home (`contracts/` only, with embedded JSON Schema fences)
-
-**Considered:** keep one root, embed JSON Schema in fenced code blocks inside Markdown.
-**Rejected because:**
-- Validator parity becomes a parsing exercise: `scripts/validate_schemas.py` and CI need a clean shape root, not Markdown extraction.
-- Reviewers cannot easily diff machine shape across versions.
-- IDE schema awareness, language-server hints, and external schema registries expect `.schema.json` files.
-
-### 5.2 Single combined home (`schemas/` only, with `description` carrying all semantics)
-
-**Considered:** push everything into JSON Schema's `description` field.
-**Rejected because:**
-- Compatibility notes, lifecycle semantics, and domain narrative bloat the schema beyond reviewability.
-- Schema reviewers and domain reviewers have different scopes; collapsing the file collapses the review.
-- Contracts that reference *multiple* schemas (e.g., an envelope containing several object families) have no clean home.
-
-### 5.3 Per-domain dual home (`contracts/<domain>/<x>.schema.json` *and* `schemas/...`)
-
-**Considered:** allow each domain to keep machine schemas under `contracts/<domain>/` for proximity to its narrative.
-**Rejected because:**
-- Per the Components Pass 13 dossier (A.4), `scripts/validate_schemas.py` already treats `schemas/contracts/v1/...` as the required contract surface; a parallel home fractures validator parity.
-- Schema-home drift compounds quickly and is hard to undo without breaking validators, CI, and integration tests.
-- This is what [ADR-0001](./ADR-0001-schema-home.md) was created to prevent; this ADR reinforces that decision.
-
-### 5.4 Allow `schemas/<domain>/` as a top-level scratch surface
-
-**Considered:** permit `schemas/occurrence_evidence/`, `schemas/soil_moisture/`, `schemas/hazards/` as transient draft homes that consolidate later.
-**Rejected as a permanent option; permitted only as a `transitional` compatibility class** under [Directory Rules §8](../doctrine/directory-rules.md), provided:
-- A migration note pins the consolidation target under `schemas/contracts/v1/<family>/`.
-- The transitional folder carries a README declaring `class: transitional` and a sunset date.
-- No new top-level `schemas/<domain>/` may be created without an explicit migration note.
-
-### 5.5 Skip the contract surface entirely; use ADRs and READMEs for meaning
-
-**Considered:** treat the `contracts/` root as redundant once ADRs and per-folder READMEs exist.
-**Rejected because:**
-- ADRs are decisions, not object definitions; READMEs are orientation, not field-level invariants.
-- Without `contracts/`, field intent and invariants leak into schema `description` (see 5.2) or into runbooks (which are operational).
-- The eight-point readiness rule (§2.3) collapses without a contract anchor.
-
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
-
----
-
-## 6. Compliance and Validation
-
-### 6.1 Required validators
-
-The following crosswalk validators **MUST** exist before this ADR moves from `proposed` to `accepted`. Each is **PROPOSED** until verified in a mounted repo.
-
-| ID | Validator | Lives at | Enforces |
-| :--- | :--- | :--- | :--- |
-| `V-CS-01` | Contract↔schema crosswalk | `tools/validators/contract_schema_crosswalk/` | C1 — every schema links to a contract; every contract that claims machine validation links to a schema. |
-| `V-CS-02` | Fixture coverage | `tools/validators/fixture_coverage/` | C2 — every required field is exercised by at least one valid and one invalid fixture. |
-| `V-CS-03` | Policy reason-code stability | `tools/validators/policy_reason_codes/` | C3 — `DENY`/`ABSTAIN` codes are stable across the release window. |
-| `V-CS-04` | ValidationReport emission | `tools/validators/validation_report_emission/` | C4 — validators emit a `ValidationReport` of the documented shape. |
-| `V-CS-05` | No-divergent-definition guard | `tools/validators/schema_home_guard/` | Co-enforces [ADR-0001](./ADR-0001-schema-home.md): no `.schema.json` outside `schemas/contracts/v1/...` (modulo the transitional exemption in §5.4). |
-
-### 6.2 CI gates
-
-> [!IMPORTANT]
-> Gate paths and workflow names below are **PROPOSED**. Until repo-mounted verification, treat them as illustrative. The CI surface itself is governed by [Directory Rules §16](../doctrine/directory-rules.md) (Path-Validation Checklist).
-
-```yaml
-# Illustrative — NEEDS VERIFICATION against actual .github/workflows/
-adr_0002_compliance:
-  triggers: [pull_request]
-  jobs:
-    - V-CS-01_contract_schema_crosswalk
-    - V-CS-02_fixture_coverage
-    - V-CS-03_policy_reason_codes
-    - V-CS-04_validation_report_emission
-    - V-CS-05_schema_home_guard
-  block_merge_on_failure: true
-```
-
-### 6.3 Per-PR checklist
-
-Reviewers of any PR that touches a trust-bearing object family **SHOULD** confirm:
-
-- [ ] Contract Markdown exists and links to the schema by `$id`.
-- [ ] Schema lives under `schemas/contracts/v1/...` (per [ADR-0001](./ADR-0001-schema-home.md)).
-- [ ] Valid fixture(s) exercise every required field.
-- [ ] Invalid fixture(s) cover at least one boundary or required-field omission.
-- [ ] Validator (in `tools/validators/`) emits `ValidationReport`.
-- [ ] If the object touches admissibility: policy file exists with stable reason codes.
-- [ ] Doc cross-links present (contract ↔ schema ↔ fixture ↔ policy).
-- [ ] Rollback or supersession note recorded (CHANGELOG, ADR, or `control_plane/deprecation_register.yaml`).
-
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
-
----
-
-## 7. Migration and Rollback
-
-### 7.1 Migration
-
-This ADR does not move files by itself. It establishes the rule that future and existing surfaces **MUST** comply with. Migration follows [Directory Rules §14.2](../doctrine/directory-rules.md) (structural moves).
-
-**PROPOSED migration phases** (timing tied to ADR acceptance, not this document):
-
-| Phase | Action | Owner | Exit criterion |
-| :--- | :--- | :--- | :--- |
-| **P0** | Inventory current contract/schema dual-draft pairs from domain blueprints (hydrology, fauna, archaeology, atmosphere, settlements/infrastructure, people/DNA/land, habitat, transport). | _TODO confirm_ | Inventory file in `migrations/schema/ADR-0002-inventory.md`. |
-| **P1** | Stand up validators V-CS-01 through V-CS-05 in `tools/validators/`. | _TODO confirm_ | All five validators present, with self-tests in `tests/`. |
-| **P2** | Fix existing object families that fail any crosswalk; one PR per family. | Domain owners | Per-family PR closes; CI green. |
-| **P3** | Wire validators into CI as blocking. | CI owner | `block_merge_on_failure: true` in workflow. |
-| **P4** | Promote this ADR to `accepted`; update [Directory Rules §0](../doctrine/directory-rules.md) `related doctrine` block. | Docs steward | ADR index reflects `accepted` status. |
-
-### 7.2 Rollback
-
-If this ADR is later rejected or superseded:
-
-1. **Mark status `superseded`** with a forward link to the replacing ADR (per [Directory Rules §2.4](../doctrine/directory-rules.md)).
-2. **Disable validators V-CS-01..05** rather than delete them (preserves audit history).
-3. **Keep the file**; do not remove. Superseded ADRs **MUST** be retained (per [Directory Rules §2.4](../doctrine/directory-rules.md)).
-4. **Issue correction notices** under `release/correction_notices/` for any released artifact whose validity claim depended on this ADR's discipline.
-5. **Re-open the open questions** below in `docs/registers/VERIFICATION_BACKLOG.md`.
-
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
-
----
-
-## 8. Open Questions
-
-These items are **explicitly not resolved** by this ADR and **SHOULD** be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
-
-- **NEEDS VERIFICATION** — Whether the live repo currently honors `schemas/contracts/v1/...` as the only machine-schema home, or whether legacy `contracts/<domain>/<x>.schema.json` paths still exist. (Resolves jointly with [ADR-0001](./ADR-0001-schema-home.md).)
-- **NEEDS VERIFICATION** — Whether `tools/validators/` exists in the current repo and at what maturity (validator suite, ValidationReport schema, CI wiring).
-- **OPEN** — How long the `transitional` exemption (§5.4) for `schemas/<domain>/` scratch homes should remain. **PROPOSED:** sunset within one release window after this ADR is accepted.
-- **OPEN** — Whether the contract↔schema link (C1) uses a `$comment`, `description`, or sidecar `kfm://contract/...` URI. The validator (V-CS-01) must accept whichever form the repo standardizes on; the form itself is **NEEDS VERIFICATION**.
-- **OPEN** — Whether reason-code stability (C3) is enforced per release window or per-major-version. **PROPOSED:** per release window, with a stability table maintained alongside `policy/runtime/`.
-- **OPEN** — Coordination with the `control_plane/object_family_register.yaml` so that "object family ready" (§2.3) is machine-verifiable, not only PR-verifiable.
-
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
-
----
-
-## 9. References
-
-- [ADR-0001 — Schema Home](./ADR-0001-schema-home.md) — *companion ADR; pins `schemas/contracts/v1/...`.*
-- [Directory Rules §6.3 (`contracts/`)](../doctrine/directory-rules.md) — *object meaning.*
-- [Directory Rules §6.4 (`schemas/`)](../doctrine/directory-rules.md) — *machine-checkable shape.*
-- [Directory Rules §13.1 — Schema mirror divergence](../doctrine/directory-rules.md)
-- [Directory Rules §14 — Migration Discipline](../doctrine/directory-rules.md)
-- KFM Build Companion §5 — *the working split (contracts, schemas, policies, fixtures, tests, validators).*
-- KFM Components Pass 13, A.4 — *Schema Home and Family Consolidation.*
-- KFM Encyclopedia Appendix J/K — *Schema authority NEEDS VERIFICATION; ADR backlog.*
-
----
-
-## Appendix A — Worked example (illustrative, not authoritative)
-
-<details>
-<summary><b>Click to expand: <code>SourceDescriptor</code> object family laid out under this ADR</b></summary>
 
 > [!NOTE]
-> Paths below are **illustrative**. The `SourceDescriptor` family is repeatedly referenced in the corpus (Build Companion §29 backlog item P0; Directory Rules §19 glossary). Actual filenames are **NEEDS VERIFICATION** against a mounted repo.
+> **Diagram status:** the responsibility flow is **CONFIRMED** from *Directory Rules §6.3–6.5*, *Build Companion §5.1*, and the canonical-root authority table (*Directory Rules §5*). The specific path labels are CONFIRMED as **doctrine**; their presence in any given mounted repo is **NEEDS VERIFICATION** until inspected.
 
-```text
-contracts/source/source_descriptor.md                            # meaning, intent, invariants
-schemas/contracts/v1/source/source_descriptor.schema.json        # machine shape (per ADR-0001)
-fixtures/source/valid/source_descriptor__minimal.json            # valid fixture (C2)
-fixtures/source/valid/source_descriptor__full.json               # valid fixture (C2)
-fixtures/source/invalid/source_descriptor__missing_rights.json   # invalid fixture (C2)
-fixtures/source/invalid/source_descriptor__bad_cadence.json      # invalid fixture (C2)
-policy/sensitivity/source_descriptor_admission.rego              # admissibility (per family)
-tools/validators/source_descriptor/validator.py                  # emits ValidationReport (C4)
-tests/source/test_source_descriptor.py                           # asserts against report
-```
-
-The eight-point readiness check (§2.3) for this family resolves to all-true once each file is present, linked, and CI-green.
-
-</details>
+[↑ Back to top](#-contents)
 
 ---
 
-## Appendix B — How this ADR relates to the trust spine (illustrative)
+## 5. The minimum coupling rule — when an object family is *ready*
+
+A trust-bearing object family is **not** ready when its schema exists alone. It is ready only when **all** the surfaces below coexist and cross-link. This is the *minimum coupling rule* — **CONFIRMED** from *KFM Build Companion §5.2*.
+
+> [!IMPORTANT]
+> **Definition — “object family ready.”** An object family `X` is admissible to the trust membrane only when *every* checkbox below is true.
+
+```yaml
+# Object-family readiness gate (illustrative; CONFIRMED shape from Build Companion §5.2)
+contract_exists: true                       # contracts/<…>/X.md
+schema_exists: true                         # schemas/contracts/v1/<…>/X.schema.json  (ADR-0001)
+valid_fixture_exists: true                  # tests/fixtures/<…>/valid/X.json
+invalid_fixture_exists: true                # tests/fixtures/<…>/invalid/X.json
+validator_emits_validation_report: true     # tools/validators/<…>/X_validator.*
+policy_or_closure_test_exists: true         # tests/policy/<…> or evidence-closure test
+docs_link_contract_schema_fixture_policy: true   # cross-references resolve
+rollback_or_supersession_note_exists: true  # migrations/, deprecation_register.yaml, or in-contract note
+```
+
+### 5.1 Readiness checklist (operational)
+
+| # | Artifact | Required path family (PROPOSED) | Verifies |
+|---|---|---|---|
+| 1 | Semantic contract | `contracts/<family>/<X>.md` | Meaning, invariants, lifecycle semantics |
+| 2 | Machine schema | `schemas/contracts/v1/<family>/<X>.schema.json` | Shape (per [ADR-0001](./ADR-0001-schema-home.md)) |
+| 3 | Valid fixture | `tests/fixtures/<family>/valid/<x>.json` | Shape-positive example |
+| 4 | Invalid fixture | `tests/fixtures/<family>/invalid/<x>.json` | Shape-negative example |
+| 5 | Validator output | `tools/validators/<family>/<x>_validator.*` | Emits `ValidationReport` |
+| 6 | Policy or closure test | `tests/policy/<…>` or `tests/evidence_closure/<…>` | Admissibility / EvidenceRef → EvidenceBundle |
+| 7 | Cross-reference | Contract ↔ schema ↔ fixture ↔ policy links resolve | Drift surface |
+| 8 | Rollback / supersession note | `migrations/<…>` or `control_plane/deprecation_register.yaml` | Reversibility |
+
+> [!CAUTION]
+> **The minimum coupling rule is a gate, not a guideline.** Promoting an object family to PROCESSED, CATALOG, or PUBLISHED before all eight surfaces exist creates an *uninspectable* trust object — the precise failure mode the trust membrane is designed to prevent. Treat partial coupling as `quarantine`-equivalent until closed.
+
+[↑ Back to top](#-contents)
+
+---
+
+## 6. Consequences
+
+### 6.1 Positive (intended)
+
+- **Authority visibility.** Every file's location encodes its responsibility, lifecycle phase, and review class. Reviewers can name the rule (Directory Rules §16 path-validation checklist).
+- **Drift becomes recognizable.** Two diverging homes for the same authority surface a Directory-Rules §13.1 anti-pattern, not a silent failure.
+- **Validator parity.** A single canonical schema home plus a single validator surface keeps CI and integration tests aligned with declared meaning. The corpus warns explicitly that schema-home drift "can quietly fracture validator parity, break CI, and turn the contracts directory into an archeological record of design changes rather than a source of truth" (*KFM Components Pass 13 Part 2 §A.4* — **CONFIRMED**).
+- **Reversibility.** With contracts and schemas separated, a schema can be re-versioned (additive v1 or breaking v2) without disturbing the contract's lifecycle semantics; a contract can be re-worded without changing field shapes.
+- **AI subordination.** Generated text never substitutes for any of the six surfaces. `EvidenceBundle` outranks generated language (KFM core invariant — **CONFIRMED**).
+
+### 6.2 Negative (accepted tradeoffs)
+
+- **Authoring overhead.** Every trust-bearing object requires *six* surfaces, not one. The minimum coupling rule (§5) is intentionally strict.
+- **Cross-link maintenance.** Contract ↔ schema ↔ fixture ↔ policy ↔ validator links must be kept current. A drift test ([§8](#8-compliance-enforcement-and-drift-tests)) is required.
+- **Migration friction for legacy lineage.** Domain blueprints that drafted schemas under `contracts/<domain>/…` must migrate to `schemas/contracts/v1/<domain>/…` per [ADR-0001](./ADR-0001-schema-home.md). The hazards, habitat, archaeology, hydrology, geology, and roads-rail-trade dossiers each currently carry "PROPOSED / CONFLICTED path" entries pending migration (**CONFIRMED** as a doctrinal note across blueprints).
+- **No fast path for scratch work.** Top-level surfaces like `schemas/occurrence_evidence/`, `schemas/soil_moisture/`, `schemas/hazards/` are explicitly identified as PROPOSED scratch surfaces and must consolidate into `schemas/contracts/v1/<family>/` once stable (*KFM Components Pass 13 Part 2 §A.4* — **CONFIRMED**). This ADR does not soften that requirement.
+
+[↑ Back to top](#-contents)
+
+---
+
+## 7. Alternatives considered
+
+| Alternative | Brief | Why rejected |
+|---|---|---|
+| **A. Single combined surface (`contracts/` only)** — schemas as inline blocks, policy as YAML inside contract Markdown. | One folder, one file per object. | Collapses meaning, shape, admissibility, and proof into one ambiguous surface. Directly contradicts the doctrinal "MUST NOT collapse" rule (*Build Companion §5*). Validator parity becomes impossible. |
+| **B. Two-surface split (`contracts/` + `schemas/` only)** — fold policy and tests into contract docs and schema sub-paths. | Reduces surface count from six to two. | Loses canonical authority for admissibility (`policy/`) and proof (`tests/`, `tools/validators/`). Policy fixtures and policy tests have explicit canonical homes in Directory Rules §6.5; folding them into contracts erases that. |
+| **C. Per-domain authority** — each domain owns its own `<domain>/contracts/`, `<domain>/schemas/`, `<domain>/policy/`. | Co-locates everything for a domain. | Violates Domain Placement Law (Directory Rules §12): "A domain MUST NOT become a root folder." Fragments lifecycle, prevents cross-domain object reuse (e.g., `SourceDescriptor`, `EvidenceBundle`). |
+| **D. Schema authority in `contracts/` (inverse of ADR-0001)** — keep schemas under `contracts/<domain>/<x>.schema.json` and use `schemas/` only as a mirror. | Aligns with some current domain blueprint draft paths. | Conflicts with the visible repository pattern: the corpus notes that `scripts/validate_schemas.py` already treats `schemas/contracts/v1/…` as the required contract surface (*Pass 13 Part 2 §A.4* — **CONFIRMED**). Inverting this requires breaking validators, CI, and integration tests. |
+| **E. Defer the decision** — let each domain choose its split. | Maximum flexibility. | Guarantees the exact drift this ADR exists to prevent. Multiple domain dossiers currently carry "PROPOSED / CONFLICTED path — dependency: ADR-0001 resolves schema home" entries; without explicit ratification of both the home (ADR-0001) and the labor split (this ADR), every domain lane fights the same battle. |
+
+**Selected**: the six-surface split (this ADR), pairing with ADR-0001 on schema home.
+
+[↑ Back to top](#-contents)
+
+---
+
+## 8. Compliance, enforcement, and drift tests
+
+### 8.1 Drift tests (required, per *Build Companion §5.3*)
+
+Three drift tests **MUST** exist before this ADR is moved from `proposed` to `accepted`. **PROPOSED** test homes shown.
+
+| # | Test | Purpose | PROPOSED home |
+|---|---|---|---|
+| 1 | **Contract ↔ schema crosswalk** | Every schema has a contract link; every contract claiming machine validation points to a schema. | `tests/governance/test_contract_schema_crosswalk.*` |
+| 2 | **Fixture coverage** | Every required field appears in ≥1 valid fixture; ≥1 invalid fixture tests a boundary or missing required field. | `tests/governance/test_fixture_coverage.*` |
+| 3 | **Policy reason-code stability** | Every `DENY` / `ABSTAIN` path emits reason codes stable enough for UI display and audit. | `tests/policy/test_reason_code_stability.*` |
+
+### 8.2 Reviewer checklist additions
+
+The Directory Rules §16 path-validation checklist already requires "No parallel authority" and "Trust content placement." This ADR adds two reviewer questions:
+
+- [ ] **Six-surface coupling.** Does this PR introduce or modify a trust-bearing object? If yes, do all eight readiness artifacts ([§5.1](#51-readiness-checklist-operational)) exist or have a tracked exception?
+- [ ] **Owner labels by surface.** Does each surface's review class ([§3](#3-the-working-split--canonical-surfaces)) have a clear reviewer in CODEOWNERS?
+
+### 8.3 CI gates (PROPOSED)
+
+> [!NOTE]
+> CI gate enforcement is **PROPOSED**. None of the workflows below is **CONFIRMED** present in any mounted repo; verify before claiming enforcement maturity.
+
+- `kfm-governance.yml` — runs the three drift tests on every PR touching `contracts/`, `schemas/`, `policy/`, `tests/fixtures/`, or `tools/validators/`.
+- `kfm-readiness.yml` — runs the minimum-coupling gate (§5) for any object family marked `release_state: ready` in `control_plane/object_family_register.yaml`.
+- Migration discipline (Directory Rules §14) applies to any move that touches schema-home or contract-home paths.
+
+[↑ Back to top](#-contents)
+
+---
+
+## 9. Compatibility, supersession, and rollback
+
+### 9.1 Supersession of lineage
+
+Domain blueprints that currently draft schemas under `contracts/<domain>/<x>.schema.json` are **lineage / CONFLICTED** per *Directory Rules §13.1* and **MUST** migrate to `schemas/contracts/v1/<domain>/<x>.schema.json` per [ADR-0001](./ADR-0001-schema-home.md) before any new schema lands. **MUST NOT** maintain divergent definitions in both homes.
+
+### 9.2 Compatibility roots
+
+The following are explicitly **compatibility-class** and **MUST NOT** evolve independently of their canonical home (Directory Rules §8):
+
+| Compatibility root | Canonical home | Class default |
+|---|---|---|
+| `policies/` | `policy/` | `mirror` or `legacy` |
+| `jsonschema/` | `schemas/contracts/v1/…` | `mirror` or `deprecated` |
+| `schemas/<domain>/…` (top-level, e.g., `schemas/hazards/`, `schemas/soil_moisture/`) | `schemas/contracts/v1/<domain>/…` | `transitional` — consolidate per *Pass 13 Part 2 §A.4* |
+
+### 9.3 Rollback
+
+If this ADR is later superseded, the rollback discipline is:
+
+1. The replacing ADR **MUST** carry `status: superseded` for ADR-0002 with a forward link.
+2. Affected per-root READMEs (`contracts/README.md`, `schemas/README.md`, `policy/README.md`, `tests/README.md`, `fixtures/README.md`, `tools/validators/README.md`) **MUST** be updated in the same PR or in a tracked migration.
+3. A rollback card under `release/rollback/governance/` records the transition.
+4. The `control_plane/deprecation_register.yaml` carries a sunset date for any rule withdrawn by the supersession.
+
+### 9.4 Versioning
+
+This ADR is `v1`. Additive clarifications (new corollaries, new drift tests) MAY be made by minor edit. Material decision changes (adding or removing a canonical surface; promoting a compatibility root to canonical) require an explicit supersession ADR.
+
+[↑ Back to top](#-contents)
+
+---
+
+## 10. Open questions and NEEDS VERIFICATION
+
+> [!WARNING]
+> The items below are **explicitly unresolved** by this ADR and **MUST** be tracked in `docs/registers/VERIFICATION_BACKLOG.md` and addressed via a follow-up ADR or reviewer sign-off before this ADR moves to `accepted`.
+
+- **NEEDS VERIFICATION — ADR number reservation.** The slot `ADR-0002` is **PROPOSED**. The doctrine corpus also proposes "ADR-0002 finite decision outcomes" as a separate ADR candidate (*KFM Pass 12 Part 2 §J.3*). Confirm no conflicting reservation in `docs/adr/README.md` and the `control_plane/` ADR index before merge. If a clash exists, renumber this ADR and update all inbound references.
+- **NEEDS VERIFICATION — mounted repo state.** All quoted paths (`contracts/`, `schemas/contracts/v1/…`, `policy/`, `tools/validators/`, `tests/fixtures/`, `control_plane/`) are **PROPOSED** until verified against `git ls-tree`-equivalent inspection. Per-root presence and per-root README conformance (Directory Rules §15) are not asserted here.
+- **NEEDS VERIFICATION — `policies/` vs `policy/`.** Default is `policy/` (singular). Resolve which form is live by repo inspection (Directory Rules §18).
+- **NEEDS VERIFICATION — CI workflows.** Drift-test and readiness workflows ([§8.3](#83-ci-gates-proposed)) are **PROPOSED** names; whether equivalent workflows exist or are run is not asserted.
+- **OPEN — exception process.** Should a trust-bearing object family ever be admitted without all eight readiness artifacts (§5.1)? If yes, what review path is required? Propose handling via `control_plane/verification_backlog.yaml` entries with an `expires_on` field.
+- **OPEN — scratch-surface acceptance window.** *Pass 13 Part 2 §A.4* notes that top-level `schemas/<domain>/` subtrees may be acceptable as transient scratch homes, "or whether they must move on first commit is unresolved." This ADR does not resolve that timing question; defer to a follow-up migration note.
+- **OPEN — generated mirrors.** Whether `jsonschema/` is generated from `schemas/contracts/v1/…` by tooling (auto-mirror) or maintained by hand. Recommendation: auto-mirror with a build receipt under `data/receipts/build/`.
+
+[↑ Back to top](#-contents)
+
+---
+
+## 11. References (evidence basis)
+
+All references below are **CONFIRMED** in-session from supplied KFM doctrine. Specific repo paths quoted in those sources remain **PROPOSED** until verified against a mounted checkout.
+
+| Source | Section | What it supports |
+|---|---|---|
+| `directory-rules.md` | §0 Status & Authority | Schema-home convention per ADR-0001; ADR template fields. |
+| `directory-rules.md` | §2.4 | Changes requiring ADR — items 3 (schema-home), 5 (parallel-home creation). |
+| `directory-rules.md` | §5 (per-root authority table) | Canonical class of `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `tools/`. |
+| `directory-rules.md` | §6.3, §6.4, §6.5 | Canonical responsibility of `contracts/`, `schemas/`, `policy/`; the four-line clean split. |
+| `directory-rules.md` | §8 | Compatibility roots; `policies/`, `jsonschema/`. |
+| `directory-rules.md` | §12 | Domain Placement Law (no domain at root). |
+| `directory-rules.md` | §13.1, §13.5 | Anti-pattern: parallel `contracts/` + `schemas/` authority; schema-mirror divergence. |
+| `directory-rules.md` | §14, §15, §16 | Migration discipline; required README contract; reviewer path-validation checklist. |
+| `directory-rules.md` | §18 | NEEDS VERIFICATION items for live machine-schema authority and `policies/` vs `policy/`. |
+| `kfm_build_companion.pdf` | §5.1 | Division-of-labor canonical table (transcribed in [§3](#3-the-working-split--canonical-surfaces)). |
+| `kfm_build_companion.pdf` | §5.2 | Minimum coupling rule and object-family-ready definition ([§5](#5-the-minimum-coupling-rule--when-an-object-family-is-ready)). |
+| `kfm_build_companion.pdf` | §5.3 | Three drift tests ([§8.1](#81-drift-tests-required-per-build-companion-53)). |
+| `kfm_build_companion.pdf` | §29 (backlog P0) | "Schema-home ADR — Resolve contracts-vs-schemas split and document versioned schema home" listed as P0 backlog item. |
+| `KFM_Components_Pass_13_Part_2_…pdf` | §A.4 | Schema-home authority consolidation; validator parity argument; `validate_schemas.py` already treats `schemas/contracts/v1/…` as the required contract surface. |
+| `KFM_Pass_12_Part_2_…pdf` | §J.3 | ADR template fields and the alternative ADR-0002 proposal (finite decision outcomes) — surfaced as a numbering conflict in [§10](#10-open-questions-and-needs-verification). |
+| `KFM_Pass_15_Part_2_…pdf` | §6.3 CON | "Canonical Schemas and Contracts" — CON is the typed contract surface; not the validator (VAL), not the runtime envelope (RUN); reinforces labor division. |
+| `KFM_Governed_AI_…pdf` | §12 | Contract/schema wave; reference paths for `SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `DecisionEnvelope`, `RuntimeResponseEnvelope` under `schemas/contracts/v1/…`. |
+| Domain blueprints (habitat, hydrology, archaeology, geology, transport, atmosphere, flora, soil, settlements/infrastructure) | "PROPOSED / CONFLICTED path" entries | Doctrinal note that domain schemas currently carry dual-path proposals pending ADR-0001 + ADR-0002 ratification. |
+
+[↑ Back to top](#-contents)
+
+---
 
 <details>
-<summary><b>Click to expand</b></summary>
+<summary><strong>Appendix A — Anti-pattern reference (from Directory Rules §13)</strong></summary>
 
-```mermaid
-flowchart TB
-    subgraph Doctrine["Doctrine layer"]
-        DR["Directory Rules<br/>§6.3 · §6.4 · §13.1 · §14"]
-        BC["Build Companion §5<br/>working split"]
-    end
+| Anti-pattern | Symptom | Fix |
+|---|---|---|
+| **`contracts/` and `schemas/` both claiming the same authority** | Both `contracts/<domain>/<x>.schema.json` and `schemas/contracts/v1/domains/<domain>/<x>.schema.json` exist and diverge. | Per [ADR-0001](./ADR-0001-schema-home.md), `schemas/contracts/v1/…` is canonical. Migrate, freeze old paths to mirror, add a drift entry. `contracts/` retains semantic Markdown only. |
+| **Schema mirror divergence** | `schemas/` and `contracts/` (or `policies/` and `policy/`) evolve separately. | One canonical, the other a generated mirror or frozen legacy. ADR if unclear. |
+| **Documentation as truth** | A `docs/` page is cited as the source of canonical decision. | Promote to ADR or `control_plane/` register. `docs/` explains; it doesn't decide alone. |
+| **Test-only validator** | A validator lives only in a test file, not in `tools/validators/`. | Extract validator to `tools/`; tests call into it. |
+| **Fixture sprawl** | Fixtures duplicated in `tests/fixtures/`, `fixtures/`, and per-domain folders. | Choose one authority; document the rule in both READMEs. |
 
-    subgraph ADRs["ADR layer"]
-        A1["<b>ADR-0001</b><br/>Schema Home<br/>(where schemas live)"]
-        A2["<b>ADR-0002 — this</b><br/>Contracts vs Schemas Split<br/>(who owns what)"]
-    end
+</details>
 
-    subgraph Operational["Operational layer"]
-        Val["tools/validators/<br/>V-CS-01 .. V-CS-05"]
-        OFR["control_plane/<br/>object_family_register.yaml"]
-        DRIFT["docs/registers/<br/>DRIFT_REGISTER.md"]
-    end
+<details>
+<summary><strong>Appendix B — PROPOSED per-root README cross-links</strong></summary>
 
-    DR --> A1
-    DR --> A2
-    BC --> A2
-    A1 --> Val
-    A2 --> Val
-    A2 --> OFR
-    Val --> DRIFT
+The following per-root README cross-references **SHOULD** exist once this ADR is `accepted`. All paths PROPOSED until verified.
 
-    classDef d fill:#eef7ff,stroke:#1f6feb
-    classDef a fill:#fef9c3,stroke:#a16207
-    classDef o fill:#f0fdf4,stroke:#15803d
-    class DR,BC d
-    class A1,A2 a
-    class Val,OFR,DRIFT o
-```
+- `contracts/README.md` → links to `schemas/README.md`, `policy/README.md`, this ADR, ADR-0001.
+- `schemas/README.md` → links to `contracts/README.md`, `policy/README.md`, this ADR, ADR-0001.
+- `policy/README.md` → links to `contracts/README.md`, `schemas/README.md`, `tests/policy/README.md`, this ADR.
+- `tests/README.md` → links to `tests/fixtures/README.md`, `tools/validators/README.md`, this ADR.
+- `fixtures/README.md` *(or `tests/fixtures/README.md`)* → links to `schemas/README.md`, `policy/README.md`, this ADR.
+- `tools/validators/README.md` → links to `schemas/README.md`, `policy/README.md`, `tests/README.md`, this ADR.
+- `control_plane/README.md` → links to all of the above; carries `object_family_register.yaml` index entries that reference this ADR.
 
 </details>
 
 ---
 
-<sub>This ADR is governance content. Changes follow [Directory Rules §17 — Document Change Discipline](../doctrine/directory-rules.md).</sub>
+### Related docs
 
-[Back to top ↑](#adr-0002--contracts-vs-schemas-split)
+- [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) — paired ADR fixing the canonical machine-schema home.
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — root-folder authority, §6.3–6.5 clean split, §13.1 anti-pattern. **PROPOSED canonical path**, per Directory Rules §0.
+- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — architecture-level explainer of this same split (referenced from Directory Rules §0). **PROPOSED** — verify presence.
+- `control_plane/object_family_register.yaml` — machine-readable index of object families, homes, schemas, fixtures, tests, status. **PROPOSED** — verify presence.
+- `docs/registers/DRIFT_REGISTER.md` — open drift entries arising from the parallel-authority anti-pattern.
+- `docs/registers/VERIFICATION_BACKLOG.md` — tracks the [§10](#10-open-questions-and-needs-verification) items.
+
+---
+
+_Last updated 2026-05-10 · Status: `proposed` · Pairs with [ADR-0001](./ADR-0001-schema-home.md) · [↑ Back to top](#adr-0002--contracts-vs-schemas-split)_
