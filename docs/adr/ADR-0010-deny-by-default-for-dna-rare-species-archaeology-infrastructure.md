@@ -1,243 +1,283 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr-0010-deny-by-default-sensitive-classes
-title: ADR-0010 — Deny-by-default for DNA, rare species, archaeology, and critical infrastructure
+doc_id: kfm://doc/adr-0010-deny-by-default-dna-rare-species-archaeology-infrastructure
+title: ADR-0010 — Deny-by-Default for DNA, Rare Species, Archaeology, and Critical Infrastructure
 type: standard
 version: v1
 status: draft
-owners: <governance-steward>, <policy-steward>, <docs-steward>
-created: 2026-05-09
-updated: 2026-05-09
+owners: TODO — Policy steward; Governance steward; Domain stewards (people-dna-land, fauna, flora, archaeology, settlements-infrastructure)
+created: 2026-05-11
+updated: 2026-05-11
 policy_label: public
-related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/adr/ADR-0001-schema-home.md
-  - kfm://contract/runtime/runtime_response_envelope
-  - kfm://contract/governance/decision_envelope
-  - kfm://contract/correction/correction_notice
-tags: [kfm, adr, policy, sensitivity, governance, deny-by-default]
-notes:
-  - Repository is not mounted in this session; all file paths are PROPOSED until verified against the live repo.
-  - Numbering ADR-0010 reflects the requested filename; predecessor ADRs 0002–0009 are NEEDS VERIFICATION.
-  - Closely related classes (living persons, sacred sites, private landowner-sensitive data) share this ADR's mechanics; their domain-specific ADRs may layer additional obligations.
+related: [
+  "docs/doctrine/directory-rules.md",
+  "docs/doctrine/truth-posture.md",
+  "docs/doctrine/trust-membrane.md",
+  "docs/doctrine/lifecycle-law.md",
+  "docs/adr/ADR-0001-schema-home.md",
+  "docs/adr/ADR-0004-promotion-gate.md",
+  "docs/adr/ADR-0006-governed-ai-runtime-envelope.md",
+  "docs/adr/ADR-0008-sensitive-location-policy.md",
+  "policy/sensitivity/",
+  "data/registry/*/sensitivity_policies.yaml",
+  "schemas/contracts/v1/policy/policy_decision.schema.json"
+]
+tags: [kfm, adr, governance, sensitivity, deny-by-default, dna, rare-species, archaeology, critical-infrastructure, policy-gate]
+notes: [
+  "ADR number 0010 conflicts with PROPOSED ADR-0010-catalog-proof-release-separation in the Pipeline Manual v0.3 register.",
+  "Topic substantially overlaps with PROPOSED ADR-0008-sensitive-location-policy. Resolution path: renumber, supersede ADR-0008, or merge — see §10 below.",
+  "All path references are PROPOSED until verified against mounted-repo evidence."
+]
 [/KFM_META_BLOCK_V2] -->
 
 # ADR-0010 — Deny-by-Default for DNA, Rare Species, Archaeology, and Critical Infrastructure
 
-> **In one line.** When a public release would expose DNA / genomic data, exact rare-species locations, exact archaeological sites, or exact critical-infrastructure geometry — and the supporting evidence, rights, sensitivity, review, or release controls are unresolved — the system **denies**, not allows-with-warning. The fail-closed posture applies in code (policy gates), in catalogs (no public artifact), in runtime (`RuntimeResponseEnvelope.outcome = DENY`), and in correction lineage.
+> **Fail-closed treatment of four sensitivity classes whose exact-location or identifying release is structurally irreversible. Public exposure is denied by default at every governed surface; allow requires explicit, evidenced, reviewed, receipted, and rollback-supported approval.**
 
----
-
-## Status
+![Status: Proposed](https://img.shields.io/badge/status-proposed-yellow)
+![Policy: Deny-by-Default](https://img.shields.io/badge/policy-deny--by--default-red)
+![Scope: Cross-Domain](https://img.shields.io/badge/scope-cross--domain-purple)
+![Doctrine: KFM Core](https://img.shields.io/badge/doctrine-KFM%20core-blue)
+![Sensitivity Classes: 4](https://img.shields.io/badge/sensitivity%20classes-4-orange)
+![Last Updated](https://img.shields.io/badge/last%20updated-2026--05--11-lightgrey)
 
 | Field | Value |
 |---|---|
-| **ADR id** | `ADR-0010` |
-| **Title** | Deny-by-default for DNA, rare species, archaeology, and critical infrastructure |
+| **ADR ID** | `ADR-0010` *(PROPOSED — see §10 for number conflict with prior register)* |
+| **Title** | Deny-by-Default for DNA, Rare Species, Archaeology, and Critical Infrastructure |
 | **Status** | `proposed` |
-| **Date** | 2026-05-09 |
-| **Deciders** | Governance steward · Policy steward · Domain stewards (people-dna-land, fauna, flora, archaeology, settlements-infrastructure) · Release steward |
-| **Supersedes** | _none_ |
-| **Superseded by** | _none_ |
-| **Authority of this ADR** | **CONFIRMED** doctrine alignment; **PROPOSED** repo placement until mounted-repo verification |
-| **Authority of paths quoted here** | **PROPOSED** until checked against mounted-repo evidence (see Directory Rules §0) |
-
-> [!IMPORTANT]
-> This ADR pins a **fail-closed default**, not a permanent prohibition. Public release of any artifact in the four classes is possible only when every precondition in §5 is satisfied **and** a `ReleaseManifest` records the policy chain that authorized it.
+| **Date** | 2026-05-11 |
+| **Authority** | Governance doctrine — fail-closed policy gate |
+| **Scope** | Cross-domain (people/DNA/land · fauna · flora · archaeology · settlements/infrastructure · transport) |
+| **Owners** | TODO — Policy steward · Governance steward · Domain stewards |
+| **Supersedes** | None *(may supersede or merge with PROPOSED ADR-0008-sensitive-location-policy — see §10)* |
+| **Superseded by** | — |
+| **Depends on** | `ADR-0001-schema-home`, `ADR-0004-promotion-gate`, `ADR-0006-governed-ai-runtime-envelope` (all PROPOSED in prior register) |
 
 ---
 
-## Table of contents
+## Quick Navigation
 
 - [1. Context](#1-context)
 - [2. Decision](#2-decision)
-- [3. Scope](#3-scope)
-- [4. Sensitivity classes and default outcomes](#4-sensitivity-classes-and-default-outcomes)
-- [5. Public-release preconditions](#5-public-release-preconditions)
-- [6. Architecture surfaces (where the rule executes)](#6-architecture-surfaces-where-the-rule-executes)
-- [7. Decision flow](#7-decision-flow)
+- [3. Sensitivity Classes & Default Postures](#3-sensitivity-classes--default-postures)
+- [4. Policy Gate Surface](#4-policy-gate-surface)
+- [5. Decision Flow](#5-decision-flow)
+- [6. Reason Codes & Obligations](#6-reason-codes--obligations)
+- [7. Allow Path — What "Explicit Approval" Requires](#7-allow-path--what-explicit-approval-requires)
 - [8. Consequences](#8-consequences)
-- [9. Alternatives considered](#9-alternatives-considered)
-- [10. Implementation plan and verification](#10-implementation-plan-and-verification)
-- [11. Rollback, correction, and supersession](#11-rollback-correction-and-supersession)
-- [12. Open questions and NEEDS VERIFICATION](#12-open-questions-and-needs-verification)
-- [13. Related doctrine and ADRs](#13-related-doctrine-and-adrs)
-- [14. Glossary](#14-glossary)
+- [9. Alternatives Considered](#9-alternatives-considered)
+- [10. Open Issues — Number & Topic Conflicts](#10-open-issues--number--topic-conflicts)
+- [11. Migration & Rollback](#11-migration--rollback)
+- [12. Verification Plan](#12-verification-plan)
+- [Related Docs](#related-docs)
 
 ---
 
 ## 1. Context
 
-Kansas Frontier Matrix (KFM) is a governed, evidence-first, map-first, time-aware spatial knowledge system. Its public surfaces — STAC/DCAT catalogs, the map shell, the governed API, the Evidence Drawer, AI Focus Mode answers — sit downstream of a **trust membrane** whose central rule is *cite-or-abstain*. Several data classes carry harms whose costs cannot be undone by retraction:
+KFM publishes a **map-first, evidence-first, time-aware** view across many domains. Four classes of content carry **structurally irreversible** harm if exposed at exact precision or in identifying form:
 
-- **DNA / genomic data.** Re-identifies living people; reveals relatives, health risk, and ancestry without their knowledge or consent. Public exposure cannot be unwound.
-- **Rare-species exact locations.** Nest, den, hibernacula, roost, and spawning sites are routinely exploited by collectors and poachers when published at coordinate precision.
-- **Archaeology exact locations.** Site coordinates, burial places, and sacred / culturally sensitive materials face looting, vandalism, and irreversible cultural harm when located precisely on a public map.
-- **Critical infrastructure.** Exact facility geometry, dependencies, and condition observations carry physical-security and life-safety risk; condition data is sensitive to operator and operator-customer relationships.
+- **DNA / genomic data** — once a public link or kit/match identifier is exposed, downstream re-identification of living relatives cannot be recalled. **CONFIRMED** doctrine: *"DNA/genomics … DENY by default; restricted steward/research only with policy approval; separate restricted store; no public AI inference."* (KFM Domain & Capability Encyclopedia, §13 Sensitive / Deny-by-Default Register.)
+- **Rare species exact locations** — exact occurrence/nest/den/roost/spawning sites are exploitable for poaching, collection, or habitat destruction. **CONFIRMED** doctrine: *"DENY public exact location; generalized public products only; geoprivacy transform receipt; steward review."* (Encyclopedia §13; Fauna Architecture §12 Sensitivity and Geoprivacy Plan; Flora Architecture §12.)
+- **Archaeology** — exact site coordinates, burial sites, sacred or culturally sensitive materials enable looting, desecration, and cultural harm. **CONFIRMED** doctrine: *"DENY exact public location by default; cultural/steward review; suppression/generalization."* (Encyclopedia §13; Archaeology Architecture §25 Security and sensitivity posture.)
+- **Critical infrastructure** — exact facilities, dependencies, and condition observations are security-relevant. **CONFIRMED** doctrine: *"RESTRICT/DENY public precision; public-safe aggregation; role-based access."* (Encyclopedia §13; Settlements/Infrastructure Plan, "Infrastructure sensitivity defaults.")
 
-The KFM corpus repeatedly identifies these as fail-closed areas. The *Sensitive / Deny-by-Default Register* in the encyclopedia, the *Policy gates* section of the Build Companion, the People/Genealogy/DNA/Land Architecture Blueprint, the Archaeology Architecture Plan, and the Settlements & Infrastructure Plan all converge on the same posture: **public-precision in these classes is denied unless explicit controls are satisfied**.
+These four classes share two structural properties:
 
-Today the doctrine is asserted in many places but not pinned in one architectural decision. That diffuses three things reviewers actually need:
+1. **Reversibility is impossible.** A wrongful publication cannot be retracted; copies, screenshots, archives, and search-engine caches persist.
+2. **Default-allow is unsafe.** A policy that allows by default and denies on exception will leak through any gap — schema oversight, source-role confusion, AI generation, screenshot, tile aggregation, graph projection, embedding.
 
-1. A single canonical reference for "what *exactly* is denied by default, and why."
-2. A single canonical mapping from sensitivity class to runtime outcome and obligations.
-3. A single canonical list of preconditions that must all hold before a public release is permitted.
+The doctrinal response is **fail-closed**: every governed surface — ingest, validation, catalog, publish, runtime API, UI layer, Focus Mode answer, export, AI receipt — defaults to **deny** for these classes and requires affirmative, evidenced, reviewed approval to allow.
 
-This ADR consolidates them.
-
-### Forces
-
-- **Irreversibility of harm** — once published, sensitive precision cannot be recalled.
-- **Cite-or-abstain truth posture** — the system prefers honest abstention over plausible-but-uncited disclosure.
-- **Watcher-as-non-publisher invariant** — workers emit candidates and receipts; they do not publish.
-- **Lifecycle invariant** — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Promotion is a governed state transition.
-- **Operational reality** — useful public products still need to exist (generalized rare-species maps, public archaeology summaries, infrastructure context layers). Deny-by-default is a *default*, not a blanket ban.
-- **AI exposure** — generated language must never become a backdoor that re-precise-ifies data the catalog already generalized.
+> [!IMPORTANT]
+> This ADR does **not** decide *whether* sensitive content may ever be released. It decides that the **default posture is deny** for the four classes and that any allow path must traverse explicit policy, evidence, review, receipt, and rollback machinery — never silently and never as a side effect.
 
 ---
 
 ## 2. Decision
 
-KFM adopts **deny-by-default** as the canonical posture for the four sensitivity classes named in this ADR. The decision has six binding parts.
+**Adopt deny-by-default as the unconditional baseline** for the four sensitivity classes named in §3, enforced at every governed surface listed in §4, with the allow path described in §7.
 
-1. **Default outcome is DENY.** For any public, semi-public, AI-mediated, or third-party-export action whose subject is classified `dna`, `rare_species`, `archaeology`, or `critical_infrastructure` at exact precision, the policy default is `DENY`. Unknown sensitivity for a candidate in any of these classes also resolves to `DENY` (fail-closed on unknown).
-2. **Allow is conditional and recorded.** A public-release decision in any of the four classes is permitted only when every precondition in §5 is satisfied. The authorizing chain — policy bundle, decision id, evidence bundle, review record, transform receipt, rights status, release manifest — is recorded and citable.
-3. **Public products are generalized or restricted, not raw.** Where a public product is appropriate, it uses suppression, generalization, aggregation, or staged access. The transform that produced it emits a `RedactionReceipt` carrying method, parameters, reason, source-geometry hash, public-geometry hash, and policy version.
-4. **Restricted surfaces are role-gated and audited.** Internal exact data lives in restricted stores or work/quarantine lifecycle phases. Access is deny-by-default, role-scoped, and audited; admin shortcuts are not the normal public path.
-5. **AI receives only released, policy-safe context.** Generated answers concerning these classes return `ANSWER` only when an `EvidenceBundle` resolves over policy-safe, released material. Exact-location requests return `DENY`. Insufficient evidence returns `ABSTAIN`.
-6. **Decisions are envelope-shaped.** Every gate evaluation emits a `DecisionEnvelope` with finite outcome (`ANSWER | ABSTAIN | DENY | ERROR`), reason codes, obligations, and audit refs. The envelope is what catalogs, releases, runtime responses, and corrections cite.
+### 2.1 Normative statements (RFC 2119 conformance)
+
+1. **MUST** — Public release of exact-location or identifying records in the four classes (DNA, rare species, archaeology, critical infrastructure) MUST default to `deny` in `PolicyDecision.result` when `sensitivity_posture ∈ {DNA, rare_species, archaeology, critical_infrastructure, exact_location_sensitive}` and any allow precondition is absent.
+2. **MUST** — Every `deny` MUST carry a structured `reason_codes` array (see §6) and, where applicable, `obligations` (e.g., `generalize_geometry`, `hide_exact_coordinates`).
+3. **MUST** — The policy gate set described in §4 MUST fail closed (`deny` or `abstain`, never silent allow) on any of: unknown sensitivity class, unresolved `EvidenceRef`, unresolved rights, missing review record, missing release manifest, missing rollback target.
+4. **MUST** — AI and Focus Mode surfaces MUST never produce exact-location or identifying output in these classes regardless of EvidenceBundle content. AI output is **interpretive**, not authoritative; EvidenceBundle outranks generated language.
+5. **MUST NOT** — Public clients MUST NOT read canonical or restricted stores directly. The trust membrane (governed API) is the only public path.
+6. **MUST NOT** — Connectors, watchers, or pipelines MUST NOT write to `data/published/` for these classes without traversing the full promotion gate, including sensitivity-class review.
+7. **SHOULD** — `restricted_precise` content for these classes SHOULD live in an access-controlled store with role-based access, audit logging, and separation from public-safe derivatives.
+8. **SHOULD** — When sensitivity status is `unknown`, the gate SHOULD fail closed (treat as restricted) and route to steward review.
+
+### 2.2 What is unchanged
+
+- This ADR does not change **identity rules, schema homes, source-role taxonomy, or lifecycle phase definitions**. Those remain governed by `ADR-0001`, `ADR-0007`, and the canonical lifecycle invariant (`RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`).
+- This ADR does not list the **specific taxa, regulatory designations, or infrastructure asset classes** that trigger sensitivity. Those live in `data/registry/<lane>/sensitivity_policies.yaml` (PROPOSED home) and are versioned independently.
+
+---
+
+## 3. Sensitivity Classes & Default Postures
+
+The table below normalizes postures from the **Sensitive / Deny-by-Default Register** (Encyclopedia §13) and the **Sensitivity Escalation Matrix** (Build Companion §11.3).
+
+| Class | Examples | Default Public Posture | Allow Precondition | Source Basis |
+|---|---|---|---|---|
+| **DNA / genomic** | DNA matches, segments, vendor/kit IDs, living-relative inference | `DENY` public; restricted store only; no public AI inference | Explicit policy + consent + access control + audit + no public inference path | `SRC-PEOPLE`; People/DNA/Land Blueprint §21 |
+| **Rare species exact location** | Exact occurrence; nest/den/hibernacula/roost/spawning sites | `DENY` exact; public-safe generalized only (county/grid/buffered) | Generalization/redaction transform receipt + steward review + source terms + release manifest | `SRC-FAUNA`, `SRC-FLORA`; Fauna §12; Flora §12 |
+| **Archaeology** | Site coordinates; burial; human remains; sacred/culturally sensitive; collection storage/security | `DENY` exact; suppress or generalize | Cultural/steward review + public-safe geometry + looting-risk assessment | `SRC-ARCH`; Archaeology §25 |
+| **Critical infrastructure** | Exact facilities; dependencies; condition/inspection observations; security details | `RESTRICT` / `DENY` public precision | Security review + public-safe transform + access-role gate | `SRC-SET`; Settlements/Infrastructure Plan |
 
 > [!NOTE]
-> This ADR is the **canonical** statement of the deny-by-default register for the four classes. Domain ADRs (e.g., archaeology location-sensitivity, fauna sensitive-location policy, people-dna-land DNA publication) **layer obligations** on top of it; they do not relax it.
+> Three additional sensitivity classes — **living persons**, **sacred/culturally sensitive places** (oral history, cultural routes), and **source-rights-limited records** — also default to deny in the parent doctrine. They are governed by adjacent ADRs (proposed) and by source-rights policy. This ADR's four classes are the ones whose harm-on-leak is most structurally irreversible at exact precision.
 
----
+### 3.1 Mapping to lifecycle phases
 
-## 3. Scope
-
-### 3.1 In scope (the four classes)
-
-| Class | What it covers |
-|---|---|
-| **DNA / genomic data** | Raw or derived genomic data; vendor kit IDs; vendor match IDs; segment coordinates; segment groups; named living-person relationship inferences derived from DNA. |
-| **Rare species** | Exact taxa occurrence, nest, den, hibernacula, roost, spawning, and life-stage location for taxa flagged restricted by federal, state, NatureServe, source-policy, or steward registry. |
-| **Archaeology** | Site coordinates; burials and human remains; sacred / culturally sensitive materials; LiDAR/geophysical anomalies treated as candidate features; collection storage and security details. |
-| **Critical infrastructure** | Exact facility geometry; operator dependencies; condition observations; physical-security-relevant attributes for bridges, utilities, water/wastewater, communications, energy, transport, and other operational assets. |
-
-### 3.2 Closely related classes (governed elsewhere; share this ADR's mechanics)
-
-- Living persons (governed by the People/DNA/Land architecture; living-person residential exposure DENY rule mirrors DNA controls).
-- Sacred / culturally sensitive places (often co-resident with archaeology; consultation discipline is additional, not optional).
-- Private landowner-sensitive data (field boundaries, owner identity).
-- Source-rights-limited records (license/redistribution unresolved).
-
-These classes follow the same envelope/receipt mechanics. Their domain-specific obligations live in their own ADRs and `policy/domains/...` modules.
-
-### 3.3 Out of scope
-
-- Generic privacy law conformance (GDPR, HIPAA, etc.). This ADR is a **system-level invariant**; legal compliance is layered on top per-source and per-jurisdiction.
-- Internal-only research workflows that do not cross the public trust membrane (those follow restricted-access discipline, not this ADR's public-release gate).
-- Emergency / life-safety alerting. KFM is **not** an emergency alert system; that doctrine lives separately.
-
----
-
-## 4. Sensitivity classes and default outcomes
-
-The encyclopedia's *Sensitive / Deny-by-Default Register* is the doctrinal source of these defaults. This ADR pins the four-class subset as a single decision.
-
-| Class | Default public posture | Default `DecisionEnvelope.outcome` | Default obligations on any allowed product |
-|---|---|---|---|
-| **DNA / genomic** | Restricted / DENY public by default. No raw kit IDs, raw vendor match IDs, public segment coordinates, or public segment visibility. No public DNA-derived inference. | `DENY` for public exact / identifying output. `ANSWER` only at strictly aggregate or research-context level when permitted. | Tokenization (HMAC) of vendor IDs, kit IDs, person IDs; consent grant + non-revocation check; restricted store; audit; no-public-AI-inference. |
-| **Rare species** | DENY exact public location; **generalized** public products only. | `DENY` exact geometry; `ANSWER` allowed at generalized geometry (county / HUC / hex / buffered centroid) when policy and source guidance permit. | Geoprivacy transform receipt; steward review; source geoprivacy flags honored; minimum-separation / k-anonymity-style aggregation; no reverse-engineering through tile pyramids or related-attribute joins. |
-| **Archaeology** | DENY exact public location; **generalized / suppressed** public products only. Burial, human remains, sacred / culturally sensitive sites: DENY at default, no exceptions without consultation. | `DENY` exact geometry; `ANSWER` allowed at generalized geometry or summary level after cultural / steward review. | Cultural / steward review record; suppression or generalization receipt; looting-risk assessment; no candidate (model-predicted) feature treated as a confirmed site; collection storage details out of any public payload. |
-| **Critical infrastructure** | RESTRICT / DENY public **precision**; aggregated / public-safe products only. | `DENY` exact geometry and condition where security review has not authorized release; `ANSWER` allowed for aggregated or public-safe products. | Security review; public-safe transform; role-based access for non-public products; no condition observation in public payload without authorization; access logs. |
-
-### 4.1 Resolution rule for unknown sensitivity
-
-Unknown sensitivity in any of these four classes resolves to `DENY` (fail-closed). This mirrors the source registry rule that an unknown `sensitivity_class` blocks activation, and the runtime rule that `EVIDENCE_POLICY_BLOCKED` and `SENSITIVE_LOCATION_REDACTED` are first-class outcomes.
-
-### 4.2 Most-restrictive-input propagation
-
-When an artifact has multiple inputs of different sensitivities, the artifact inherits the **most restrictive** input's class. A derived product mixing public-safe inputs with one restricted input is restricted.
-
-> [!CAUTION]
-> Aggregation does **not** automatically de-classify. Aggregations that re-precise-ify a sensitive location (e.g., a 1-cell hex on a sparse grid) remain restricted. The transform is what is judged, not the apparent geometry.
-
----
-
-## 5. Public-release preconditions
-
-A public-release decision in any of the four classes requires **all** of the following, recorded in the chain that the gate cites:
-
-1. **Identity.** `subject_ref` deterministic; `spec_hash` stable.
-2. **Source role.** Source descriptor present, role known (not `unknown`), authority adequate for the claim type.
-3. **Rights / terms.** `rights_status` known; license and redistribution terms resolved; attribution obligations rendered.
-4. **Sensitivity class.** Pinned (not `unknown`) and propagated through derivation.
-5. **Evidence closure.** `EvidenceRef` resolves to a published / cataloged `EvidenceBundle`. No reference to RAW / WORK / QUARANTINE / restricted store appears in the public payload.
-6. **Validation.** Schema, source-role, geometry, temporal, and sensitivity validators all `PASS`.
-7. **Transform receipt.** If geometry was generalized / aggregated / suppressed: a `RedactionReceipt` records method, parameters, reason, `source_geometry_hash`, `public_geometry_hash`, policy version.
-8. **Review.** A `ReviewRecord` with the required reviewer roles for the class:
-   - DNA: privacy reviewer + consent reviewer.
-   - Rare species: source steward + domain steward.
-   - Archaeology: cultural reviewer + steward; sacred/burial cases: consultation record.
-   - Critical infrastructure: security reviewer + domain steward.
-9. **Release state.** A `ReleaseManifest` referencing the inputs, decisions, proof bundle, catalog matrix, rollback target, and (where applicable) consent receipt.
-10. **Correction & rollback.** A correction path and a tested `RollbackCard` exist for the released artifact.
-11. **Separation of duties.** For policy-significant releases, the reviewer / approver is not the same actor as the authoring / promoting actor.
-
-If any precondition is unmet, the decision is `DENY` (or `ABSTAIN` where the failure mode is "insufficient evidence" rather than "policy violation"). `POLICY_ENGINE_UNAVAILABLE` resolves to `ERROR`, never to `ALLOW`.
-
----
-
-## 6. Architecture surfaces (where the rule executes)
-
-The rule is not a documentation aspiration; it is enforced at every surface where a sensitive class can leak.
-
-| Surface | Enforcement | PROPOSED location |
+| Phase | Allowed for these classes | Forbidden |
 |---|---|---|
-| **Connector admission** | Source descriptor must declare `sensitivity_class`; unknown → quarantine. | `connectors/<source>/`, output to `data/raw/<domain>/...` or `data/quarantine/<domain>/...` |
-| **Pipeline / workers** | Watcher-as-non-publisher: workers emit candidates + receipts only. | `pipelines/<phase>/`, `apps/workers/` |
-| **Schema** | Sensitivity is a required field in the affected object families; geometry-precision constraints encoded. | `schemas/contracts/v1/common/sensitivity.schema.json`; per-domain schemas under `schemas/contracts/v1/domains/<domain>/` |
-| **Policy bundles (cross-cutting)** | Sensitivity class enum, propagation rule, public-DTO gate, deny-by-default module. | `policy/sensitivity/`, `policy/runtime/`, `policy/promotion/`, `policy/release/` |
-| **Policy bundles (per-domain)** | Domain-specific obligations layered on top of the cross-cutting rule. | `policy/domains/people-dna-land/`, `policy/domains/fauna/`, `policy/domains/flora/`, `policy/domains/archaeology/`, `policy/domains/settlements-infrastructure/` |
-| **Public-DTO gate** | Promotion is denied when the candidate public DTO contains any restricted-precise field. | `policy/release/public_dto.rego` (PROPOSED) |
-| **Catalog (STAC/DCAT/PROV)** | `sensitivity == restricted` AND `release_state == released` is a hard deny. | `policy/release/publication.rego` (PROPOSED) |
-| **Governed API** | Returns `RuntimeResponseEnvelope { outcome: DENY, reasons[], obligations[] }` for in-scope requests that fail the gate. | `apps/governed-api/` |
-| **AI runtime / Focus Mode** | Pre/post checks; AI never sees RAW / WORK / QUARANTINE / restricted store; outputs validated against citations and policy. | `apps/governed-api/` runtime adapter; `policy/ai/` |
-| **Evidence Drawer / UI** | Renders the envelope verbatim (denial visible, reason readable); does not silently swallow `DENY`. | `apps/explorer-web/`, `packages/ui/` |
-| **Tests** | Sensitivity-aware policy deny tests; no-leak tests; redaction-receipt parity tests; runtime finite-outcome tests. | `tests/policy/`, `tests/runtime_proof/`, `tests/domains/<domain>/` with `fixtures/...` companions |
-| **Receipts / proofs** | `RedactionReceipt`, `RunReceipt`, `AIReceipt`, `EvidenceBundle`, `CatalogMatrix`, `ReleaseManifest`. | `data/receipts/<domain>/`, `data/proofs/<domain>/` |
-| **Registry** | `data/registry/<domain>/sensitivity_policies.yaml` and `data/registry/sensitivity/` for cross-cutting classes. | `data/registry/sensitivity/`, `data/registry/<domain>/` |
-
-> All paths above are **PROPOSED** until verified against the mounted repo. Where the repo proves a different home (e.g., `contracts/<domain>/<x>.schema.json` rather than `schemas/contracts/v1/...`), the names persist and the move is governed by ADR-0001 (schema home).
+| `data/raw/` | Immutable source captures (steward-only access) | Public read; raw kit IDs in logs |
+| `data/work/` | Parsed/normalized intermediates; restricted exact geometry | Publication; public-safe derivatives at this phase |
+| `data/quarantine/` | Failed, rights-unknown, sensitivity-unresolved records | Promotion without review disposition |
+| `data/processed/` | Validated normalized records; restricted by default | Public exact geometry; raw DNA IDs |
+| `data/catalog/` (STAC/DCAT/PROV) | Metadata for **released public-safe** assets only | Restricted exact geometry in public STAC entries |
+| `data/triplets/` | Graph deltas without restricted geometry leakage | Restricted relations exposed publicly |
+| `data/published/` | Only promoted public-safe artifacts + aliases | RAW/WORK/QUARANTINE refs; restricted exact coordinates |
+| `data/receipts/` | Transform, run, redaction, revocation receipts | Raw sensitive IDs; restricted segment values |
+| `data/proofs/` | EvidenceBundles, release manifests, rollback cards | Raw source data; private DNA |
 
 ---
 
-## 7. Decision flow
+## 4. Policy Gate Surface
+
+Deny-by-default is enforced at **every** surface in the trust spine, not only at publish. (Policy Gate Index, Encyclopedia Appendix I.)
+
+| Gate | Role for these four classes | Default on uncertainty |
+|---|---|---|
+| `source_role_gate` | Rejects unknown or inappropriate source role for sensitive claims | `deny` |
+| `rights_gate` | Rejects public release when license/terms/redistribution unclear | `deny` |
+| `sensitivity_gate` | **Primary gate** — restricts or denies sensitive locations, people/DNA, archaeology, infrastructure | `deny` |
+| `evidence_closure_gate` | Requires `EvidenceRef → EvidenceBundle` resolution before claim-bearing release | `abstain` |
+| `geometry_gate` | Checks CRS, validity, precision, uncertainty, support, generalization | `deny` on insufficient generalization |
+| `citation_gate` | Rejects generated or public claims without validated citations | `abstain` |
+| `review_gate` | Requires steward/reviewer decision for promotion and sensitive releases | `deny` until review record present |
+| `release_gate` | Requires ReleaseManifest + proof + correction path + rollback target | `deny` |
+| `rollback_gate` | Requires tested rollback card and release lineage | `deny` |
+
+### 4.1 Runtime surfaces
+
+| Surface | Behavior on sensitive request |
+|---|---|
+| Governed API (`apps/governed-api/`) | Returns `RuntimeResponseEnvelope` with `status ∈ {ABSTAIN, DENY, ERROR}` and reason codes |
+| MapLibre layer manifest | Public layer never contains restricted exact geometry; `LayerManifest.sensitivity_transform` records the public-safe transform receipt |
+| Focus Mode (governed AI) | `DENY` direct sensitive coordinate disclosure; `ABSTAIN` on insufficient evidence; cite EvidenceBundle or refuse |
+| AI receipts | `AIReceipt` records refusal/abstention reason; no embedding store may surface restricted text |
+| Search / vector index | Restricted records excluded by default; index built only from released or review-authorized evidence |
+| Graph / triplet projection | Restricted geometries and identities never enter public graph; no-leak validator runs pre-publication |
+| Exports | Public exports use public-safe geometry and DTO profile; restricted exports require role + audit |
+| Tiles (PMTiles/MVT) | Public tiles built from `data/published/` only; restricted tiles, if any, served behind auth with audit |
+
+---
+
+## 5. Decision Flow
 
 ```mermaid
 flowchart TD
-    A["Request: ingest / promote / publish / serve / focus_answer / export"] --> B["ScopeResolver<br/>access_role, requested_action"]
-    B --> C["PolicyPrecheck<br/>source_role, rights, sensitivity, release_state"]
-    C --> D{"sensitivity class in:<br/>DNA, rare_species,<br/>archaeology, critical_infra?"}
-    D -->|no| E["Standard governed path"]
-    D -->|yes| F{"All ADR-0010 §5<br/>preconditions satisfied?"}
-    F -->|"no — rights or review missing"| G["DecisionEnvelope: DENY<br/>reason: rights / review / sensitivity"]
-    F -->|"no — evidence unresolved"| H["DecisionEnvelope: ABSTAIN<br/>reason: evidence.unresolved"]
-    F -->|"engine unavailable"| I["DecisionEnvelope: ERROR<br/>fail closed"]
-    F -->|"yes — exact geometry requested"| J{"Generalized product<br/>permitted by class default?"}
-    J -->|no| G
-    J -->|yes| K["Apply transform<br/>emit RedactionReceipt"]
-    K --> L["PolicyPostcheck<br/>citations, no-leak, obligations"]
-    L --> M["DecisionEnvelope: ANSWER<br/>generalized geometry only"]
-    M --> N["RuntimeResponseEnvelope<br/>+ RunReceipt + ReleaseManifest ref"]
-    G --> N
-    H --> N
-    I --> N
+    A[Incoming request<br/>ingest · transform · publish · serve · focus answer] --> B{Classify subject}
+    B -->|class = DNA / rare_species / archaeology / critical_infrastructure| C[Sensitivity gate]
+    B -->|class = other| Z[Normal policy chain]
+
+    C --> D{Sensitivity class known?}
+    D -->|no / unknown| K[DENY — fail closed]
+    D -->|yes| E{Allow precondition present?<br/>policy · consent · review · transform · manifest · rollback}
+
+    E -->|no| K
+    E -->|yes| F[Evidence closure gate]
+    F --> G{EvidenceRef resolves<br/>to EvidenceBundle?}
+    G -->|no| L[ABSTAIN]
+    G -->|yes| H[Rights · review · geometry · citation gates]
+    H --> I{All gates PASS?}
+    I -->|no| K
+    I -->|yes| J[ALLOW with obligations<br/>generalize_geometry · hide_exact_coordinates · attribution]
+
+    K --> M[Emit PolicyDecision<br/>result=deny · reason_codes · audit_ref]
+    L --> M
+    J --> N[Emit PolicyDecision<br/>result=allow · obligations · audit_ref]
+    M --> O[(decision_log)]
+    N --> O
 ```
+
+> [!NOTE]
+> The diagram describes the **doctrinal** flow. The exact gate ordering, validator names, and `decision_log` path are PROPOSED until verified against mounted-repo policy code and `tests/policy/`. NEEDS VERIFICATION.
+
+---
+
+## 6. Reason Codes & Obligations
+
+`PolicyDecision.result` is finite (`allow | deny | restrict | abstain | review_needed | error`) — see Build Companion §11.2. The codes below are the **minimum** reason-code surface this ADR commits to; lane-specific extensions live in `policy/<lane>/`.
+
+### 6.1 Deny / restrict reason codes
+
+| Reason Code | Trigger |
+|---|---|
+| `SENSITIVE_LOCATION_BLOCKED` | Precise sensitive location cannot be released (rare species, archaeology, infrastructure) |
+| `precise_sensitive_location_denied` | Lane-specific variant for sensitive exact geometry |
+| `dna_public_inference_blocked` | DNA-based relationship inference requested on public surface |
+| `dna_raw_identifier_blocked` | Raw kit ID, vendor match ID, or segment coordinate requested on public surface |
+| `cultural_sensitivity_unresolved` | Tribal/cultural sensitivity status unresolved; no public release |
+| `looting_risk_exposure` | Public exposure would create looting/poaching risk |
+| `critical_infrastructure_exact_blocked` | Exact facility geometry or condition observation blocked |
+| `geoprivacy_required` | Source geoprivacy or KFM sensitivity policy requires generalization |
+| `public_geometry_not_generalized` | Public payload contains insufficiently generalized geometry |
+| `public_payload_exposes_internal_ref` | Public payload references RAW/WORK/QUARANTINE store |
+| `RAW_CONTEXT_FORBIDDEN` | AI attempted to use raw/work/quarantine context |
+| `RIGHTS_UNKNOWN` | Rights/license/citation obligations not resolved |
+| `EVIDENCE_NOT_PUBLISHED` | Evidence exists but has not passed promotion gates |
+| `review_required` / `steward_review_missing` | Required steward/cultural review absent |
+
+### 6.2 Allow obligations
+
+When the allow path is taken, the `PolicyDecision.obligations` array MUST carry at least the applicable obligations below; downstream renderers and APIs MUST honor them.
+
+| Obligation | Effect |
+|---|---|
+| `generalize_geometry` | Public payload carries generalized/buffered/grid/county geometry only |
+| `hide_exact_coordinates` | Exact coordinates suppressed in all public surfaces, drawer, tiles, exports |
+| `show_attribution` | Required attribution text emitted with response |
+| `steward_review_recorded` | `ReviewRecord` ref must be present in EvidenceBundle |
+| `transform_receipt_present` | Geoprivacy/redaction transform receipt must accompany the artifact |
+| `restricted_access_only` | Response served only to authenticated, audited roles |
+| `audit_logged` | Decision recorded to `decision_log` with `audit_ref` |
+
+---
+
+## 7. Allow Path — What "Explicit Approval" Requires
+
+The allow path is **narrow and evidenced**. The following minimum bundle is required for every promotion that exposes any portion of a record in these classes to a public or semi-public surface:
+
+<details>
+<summary><strong>Allow precondition bundle (click to expand)</strong></summary>
+
+1. **SourceDescriptor** — `source_id`, `source_role`, `rights_status` ∈ `{known_public, restricted}`, `sensitivity_class`, `activation_state ∈ {active_fixture_only, active_live}`.
+2. **EvidenceBundle** — resolved `EvidenceRef`, scope, source-role visibility, uncertainty, review state, release state, correction lineage, policy posture.
+3. **ReviewRecord** — appropriate reviewer (steward, cultural reviewer where applicable, security reviewer for infrastructure, policy admin for DNA), decision, effective period.
+4. **GeoprivacyTransformReceipt** — for rare species, archaeology, infrastructure: method, precision bucket (grid/region/county/withheld), input digest, output digest, reason code, policy version. (Schema: `schemas/contracts/v1/<lane>/geoprivacy_transform_receipt.schema.json` — PROPOSED.)
+5. **ConsentGrant + RevocationReceipt path** — for DNA: unrevoked, unexpired, scoped consent with documented revocation path.
+6. **ReleaseManifest** — released artifacts, hashes, inputs, policy decisions, proof pack references, expiration/stale rules, rollback target.
+7. **RollbackCard** — tested rollback target (`from_release_id`, `to_release_id`, prior manifest verified, prior catalog verified, prior EvidenceBundle verified).
+8. **CatalogMatrix** — STAC/DCAT/PROV closure (no restricted exact geometry leaks into public STAC).
+9. **AIReceipt** (if AI is on the path) — provider/model, prompt template hash, evidence_bundle_refs, policy pre/post checks, citation validation, outcome, refusal/abstention reasons.
+10. **No-leak validator pass** — `assert_no_restricted_geometry_in_public_payload` must return PASS.
+
+</details>
+
+> [!WARNING]
+> Absent any one of items 1–10, the gate MUST return `deny` (or `abstain` for evidence-closure failures). There is no shortcut, admin override, or "expedited release" path for these four classes that bypasses the bundle. Admin shortcuts, if they exist, must be justified, constrained, documented, audited, and kept out of the normal public path (Directory Rules §11).
+
+### 7.1 What allow does **not** authorize
+
+- It does **not** authorize publishing exact coordinates as a permanent public artifact; allow typically authorizes a **public-safe derivative** (generalized geometry, withheld geometry, aggregate).
+- It does **not** authorize AI to fabricate or interpolate exact location; AI remains interpretive and bounded to EvidenceBundle.
+- It does **not** authorize bulk re-export of restricted data even to authenticated users without role + audit.
+- It does **not** authorize a connector or watcher to write to `data/published/`; promotion is a governed state transition (Directory Rules §3).
 
 ---
 
@@ -245,140 +285,161 @@ flowchart TD
 
 ### 8.1 Positive
 
-- **Irreversible-harm prevention.** The four highest-risk classes acquire a single, named, testable default that fails closed.
-- **Auditable enforcement.** Every denial is a `DecisionEnvelope` with reason codes; every allowed product carries a `RedactionReceipt`; every release is a `ReleaseManifest` citing the policy chain.
-- **Public-product feasibility.** Generalization, aggregation, and staged access remain available — the rule deletes *exact precision*, not *the lane*.
-- **AI alignment.** Generated answers cannot re-precise-ify sensitive data, because AI sees only released, policy-safe context and emits a `RuntimeResponseEnvelope` whose `DENY` is first-class.
-- **Reviewer ergonomics.** Reviewers scan deny reasons, not free-text justifications.
-- **Drift recognition.** A sibling rule that accidentally allows precision is detectable as a regression by the no-leak tests.
+- **Irreversibility risk reduced.** The most consequential class of governance failure (silent exposure of exact sensitive location or identifying DNA data) becomes structurally hard rather than procedurally hard.
+- **Reason codes are auditable.** Every denial carries a structured reason; reviewers and downstream dashboards can analyze denial-rate by source, lane, and class.
+- **Trust membrane reinforced.** The public path is unambiguously through the governed API; canonical and restricted stores remain inaccessible to public clients.
+- **AI remains subordinate to evidence.** Focus Mode and AI receipts cannot drift into sovereign truth; EvidenceBundle and PolicyDecision outrank generated language.
+- **Per-lane consistency without per-lane policy forks.** A shared sensitivity surface lets each domain lane (fauna, flora, archaeology, infrastructure, people/DNA) carry lane-specific rules through `data/registry/<lane>/sensitivity_policies.yaml` without inventing a parallel governance home.
 
-### 8.2 Negative / costs
+### 8.2 Negative / Costs
 
-- **Latency.** Every release in these classes runs more validators and review steps. Acceptable: irreversibility justifies the cost.
-- **Authoring burden.** Domain stewards must classify sensitivity at ingest. Some sources will be slow to onboard. Acceptable; mitigated by registry templates and staged activation.
-- **Friction with collaborators.** Some downstream consumers expect exact rare-species or infrastructure data. Collaboration moves to restricted, role-gated channels — not public download.
-- **Operational complexity.** The cross-cutting policy bundles plus per-domain bundles require disciplined separation. Mitigated by ADR-0001's contract / schema / policy split.
-- **False denies on borderline cases.** Acceptable side effect of a fail-closed posture; correction path exists.
+- **Operator friction.** Stewards must populate review records, transform receipts, and rollback cards before a sensitive release can move. This is intentional but real.
+- **False denies.** A fail-closed posture will produce some incorrect denials. The reason-code surface is the mitigation — operators can see why and unblock by adding missing evidence.
+- **Generalization loss.** Public users will see county/grid/buffered geometry for rare species and archaeology where source data has exact coordinates; some user expectations will not be met.
+- **Performance.** DTO validation, policy evaluation, and no-leak validators add request-time cost. Caching of validated responses is permitted but must not bypass policy evaluation for sensitivity-bearing requests.
+- **Rego learning curve.** Sensitivity policy expressed in Rego (where `policy/` uses OPA/Conftest — PROPOSED, NEEDS VERIFICATION) has a learning curve and requires test coverage.
 
-### 8.3 Neutral
+### 8.3 Risks
 
-- **Existing public products are unaffected** if they already use generalized geometry and carry transform receipts. Where they do not, this ADR triggers re-evaluation against §5.
-- **Numbering.** This ADR depends on Directory Rules §0 and Directory Rules §2.4 (ADR template fields). It does not require Directory Rules to change.
+| Risk | Mitigation |
+|---|---|
+| Policy bypassed via direct DB / store access | Trust membrane: no public client reads canonical or restricted stores; governed API only |
+| AI hallucinates exact coordinates | EvidenceBundle outranks AI; citation_gate + no-leak validator on AI output |
+| Connector publishes directly to PUBLISHED | Connector role limited to `data/raw/` and `data/quarantine/`; promotion is a governed state transition |
+| Tile aggregation reveals restricted points | Tile build runs against `data/published/` only; no restricted tiles on public alias |
+| Embedding store leaks restricted text | Index built only from released or review-authorized evidence |
+| Reviewer fatigue causes rubber-stamping | Decision logs auditable; denial-rate dashboards surface anomalies |
 
 ---
 
-## 9. Alternatives considered
+## 9. Alternatives Considered
 
 | Alternative | Why rejected |
 |---|---|
-| **A. Allow-by-default with reviewer override** | Inverts the irreversibility logic. A leaked exact rare-species nest cannot be un-leaked because a reviewer later objected. |
-| **B. Domain-by-domain ADRs only, no cross-cutting decision** | Rejected for *uniformity*: the four classes share the same mechanics (envelope, receipt, evidence, manifest), and a single anchor reduces drift. Domain ADRs still exist, layered on top. |
-| **C. Single global "sensitive content" toggle** | Rejected for *granularity*: the four classes have different reviewers, different transforms, different receipts. A single toggle would either over-restrict (locking down legitimate generalized products) or under-restrict (allowing accidental precision). |
-| **D. Documentation-only doctrine, no Rego enforcement** | Rejected. Doctrine that can't be enforced in CI becomes a guideline; sensitivity enforcement is a hard gate, not a guideline. |
-| **E. Rely on source-side sensitivity flags alone (e.g., GBIF generalize)** | Rejected. Source flags are *one* input. Local stewardship, regulatory listing, and policy may be more restrictive than the source. KFM owns the final classification. |
-| **F. AI-only mitigation (post-hoc redaction in generated text)** | Rejected. Post-hoc redaction in generated language is brittle, cannot inspect the catalog directly, and would create a path-of-last-resort that competes with the gate. The fix is upstream — AI sees only policy-safe, released context. |
-| **G. Restrict everything, including generalized products** | Rejected. KFM has a public mission. Generalized public products are valuable; the rule is to delete *exact precision*, not the lane. |
+| **Default-allow with deny exceptions** | Inverts the failure mode: any gap in the rule set leaks exact sensitive location. Irreversibility makes this unsafe. |
+| **Per-domain policy with no cross-lane invariant** | Encourages lane forks, divergent vocabulary, and inconsistent reason codes. Cross-lane sensitivity classes (DNA crossing into archaeology via human remains; infrastructure crossing into archaeology via historic structures) require a shared surface. |
+| **AI judgment as the gate** | AI is interpretive, not the root truth source; fluent generation cannot stand in for evidence, policy, review, source authority, or release state (Governed AI Rule). |
+| **Quarantine-only without explicit deny semantics** | Quarantine handles unresolved cases; it does not communicate to runtime that exposure is denied. The runtime needs `deny` with reason codes for the API/UI/Focus envelope. |
+| **Static redaction at publish only, no upstream gating** | Late redaction is fragile and breaks when an upstream artifact (a tile, a graph projection, a vector index) is built from canonical data. Sensitivity must be visible at every governed phase. |
+| **Treat all sensitive content equally as "restricted"** | Loses signal: DNA, rare species, archaeology, and infrastructure have different review paths, different stewards, and different public-safe derivative profiles. A flat tier loses the per-class obligations. |
 
 ---
 
-## 10. Implementation plan and verification
+## 10. Open Issues — Number & Topic Conflicts
 
-### 10.1 Smallest useful, reversible change
+> [!IMPORTANT]
+> The filename used for this ADR (`ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md`) creates two reconcilable issues with the existing PROPOSED ADR register. This section documents the conflicts and the resolution paths so that whichever number/title is chosen, the ledger remains coherent.
 
-1. **Pin the cross-cutting class enum and propagation rule** in `policy/sensitivity/` (PROPOSED) and the matching schema in `schemas/contracts/v1/common/sensitivity.schema.json` (PROPOSED).
-2. **Wire the public-DTO gate** so promotion fails on any restricted-precise field landing in a public DTO.
-3. **Add the four per-domain policy bundles** with deny tests and positive (allowed-product) tests:
-   - `policy/domains/people-dna-land/dna_publication.rego` *(PROPOSED)*
-   - `policy/domains/fauna/sensitive_location.rego` *(PROPOSED)*
-   - `policy/domains/flora/rare_plant_location.rego` *(PROPOSED)*
-   - `policy/domains/archaeology/location_security.rego` *(PROPOSED)*
-   - `policy/domains/settlements-infrastructure/critical_infra.rego` *(PROPOSED)*
-4. **Wire the runtime gate** so `RuntimeResponseEnvelope { outcome: DENY }` is returned with a populated `reasons[]` and `obligations[]`.
-5. **Add fixtures** under `fixtures/domains/<domain>/` for: valid generalized product, invalid exact-precision attempt, invalid unknown-sensitivity, valid restricted-internal, invalid post-hoc declassification.
-6. **Update `data/registry/sensitivity/` and `data/registry/<domain>/sensitivity_policies.yaml`** with the class enum and per-domain defaults.
-7. **Add control-plane register entries** in `control_plane/policy_gate_register.yaml` and `control_plane/release_state_register.yaml`.
+### 10.1 Number conflict (`ADR-0010`)
 
-### 10.2 Verification (definition of done)
+The **Pipeline Living Implementation Manual v0.3** carries a PROPOSED ADR register that already assigns:
 
-- [ ] Cross-cutting policy module exists and emits `DecisionEnvelope` with finite outcomes.
-- [ ] Per-domain policy modules exist for the four classes with deny + allow fixtures.
-- [ ] Public-DTO gate fails the test that injects an exact restricted field into a public DTO.
-- [ ] Catalog gate denies any artifact with `sensitivity == restricted` AND `release_state == released`.
-- [ ] Runtime gate returns `DENY` for an exact-location request in any of the four classes; returns `ANSWER` for a generalized request when preconditions hold.
-- [ ] AI runtime returns `ABSTAIN` when evidence is unresolved; `DENY` when sensitivity blocks; never silently `ANSWER`.
-- [ ] `RedactionReceipt`, `EvidenceBundle`, `ReleaseManifest`, `RollbackCard` exist for the first allowed product per class.
-- [ ] No-leak tests pass: tile pyramids, related-attribute joins, and AI summaries cannot reconstruct exact restricted geometry.
-- [ ] Reviewer documentation in `docs/runbooks/<domain>/promotion.md` updated to cite this ADR.
-- [ ] `docs/registers/DRIFT_REGISTER.md` is consulted; any drift entries the ADR resolves are closed; any it surfaces are opened.
+| ID | Status | Topic |
+|---|---|---|
+| `ADR-0010-catalog-proof-release-separation` | `proposed` | Separate receipts, proofs, catalogs, releases, reviews, corrections |
 
-### 10.3 Migration
+That ADR is **structurally different** from this one. Resolution options:
 
-- Existing public products in the four classes are re-evaluated against §5. Products without a transform receipt or evidence closure are **withdrawn or re-released** as generalized products with a `CorrectionNotice`.
-- Source descriptors with `sensitivity_class: unknown` in any of the four classes are quarantined until classified.
-- Old fixtures that demonstrate exact-precision public output are moved to `fixtures/.../invalid/` so they remain regression tests for the deny path.
+1. **Renumber this ADR** to the next free number (PROPOSED next-free: `ADR-0011`, after a sweep against the actual `docs/adr/` directory once mounted).
+2. **Reassign the catalog-proof-release-separation topic** to a different free number; this is administratively cheaper than renumbering the present ADR if it has already been linked from other documents.
+3. **Defer numbering** until the mounted-repo `docs/adr/` directory is inspected and a definitive next-free number is identified.
+
+### 10.2 Topic overlap (`ADR-0008-sensitive-location-policy`)
+
+The same register lists:
+
+| ID | Status | Topic |
+|---|---|---|
+| `ADR-0008-sensitive-location-policy` | `proposed` | Fail-closed treatment for sensitive exact locations |
+
+This present ADR is a **narrower, more specific articulation** of the same doctrinal area. Resolution options:
+
+1. **Merge** — replace `ADR-0008` with this ADR (which is more specific) and mark `ADR-0008` `superseded` with a forward link.
+2. **Layer** — keep `ADR-0008` as the umbrella "sensitive locations" policy and let this ADR carve out the four classes with class-specific obligations. The two would reference each other; this ADR would cite `ADR-0008` in `Depends on`.
+3. **Promote this ADR to the umbrella** — let this ADR cover the sensitive-location domain in full, expanding §3 to include the other classes from the Sensitive / Deny-by-Default Register (living persons, sacred places, source-rights-limited records, emergency-warning misuse). `ADR-0008` would then be superseded.
+
+### 10.3 Recommendation
+
+> [!NOTE]
+> Defer the number/title decision until the mounted `docs/adr/` directory is inspected. In the interim, treat the filename as **PROPOSED / CONFLICTED**. Open a drift entry in `docs/registers/DRIFT_REGISTER.md` once the repo is mounted and resolve via the **next ADR meta-step**, not by silent renumbering.
 
 ---
 
-## 11. Rollback, correction, and supersession
+## 11. Migration & Rollback
 
-| Concern | Action |
+### 11.1 Migration plan
+
+| Step | Action | Validation |
+|---|---|---|
+| 1 | Inventory existing `policy/` and `policy/sensitivity/` modules in the mounted repo | `git ls-tree` + module diff |
+| 2 | Confirm or create `data/registry/<lane>/sensitivity_policies.yaml` for each affected lane | Schema validator + fixture pass |
+| 3 | Confirm or create `schemas/contracts/v1/policy/policy_decision.schema.json` carrying `result`, `reason_codes`, `obligations`, `review_required`, `valid_until`, `policy_bundle_ref`, `policy_hash` | JSON Schema 2020-12 + fixture |
+| 4 | Confirm or create the **sensitivity_gate** policy module(s) and the **no-leak validator** under `tools/validators/` | Policy fixtures pass/fail |
+| 5 | Wire gates into the **promotion gate** (`ADR-0004`) and the **governed AI runtime envelope** (`ADR-0006`) | End-to-end fixture: candidate → gate → envelope |
+| 6 | Update affected per-root READMEs (`policy/`, `data/registry/`, `apps/governed-api/`) | README contract §15 of Directory Rules |
+| 7 | Add reason-code documentation to `docs/runbooks/<lane>/` for stewards | Markdown lint + steward review |
+| 8 | Add `decision_log` retention/archival policy | Decision-log schema + archival cron |
+
+### 11.2 Rollback plan
+
+If this ADR is later determined to be wrong or insufficient, rollback is a **governed action**, not a silent revert.
+
+| Action | Required behavior |
 |---|---|
-| **Policy bundle defect** | Revert the bundle by PR; freeze promotion in the affected class; preserve denied receipts. CI fails closed if the bundle cannot run. |
-| **False positive (legitimate product denied)** | Author a `CorrectionNotice`; record the corrected `DecisionEnvelope`; ship the allowed product through the standard review path; do not weaken the default. |
-| **Inadvertent public exposure of restricted precision** | Issue a `CorrectionNotice` and `WithdrawalNotice`; invalidate downstream caches; rebuild catalog/triplet from last valid `EvidenceBundle` set; emit `RevocationReceipt` (DNA/consent classes); follow the `RollbackCard`. |
-| **Class definition drift** (e.g., a new sensitive subtype emerges) | Layer a per-domain ADR; do not redefine this ADR's enum without supersession. |
-| **Supersession** | A future ADR may supersede this one; this file remains with `status: superseded` and a forward link. Old denied receipts and old `ReleaseManifest`s remain valid history. |
+| **Rollback card** | `data/proofs/governance/{release}/rollback_card.json` referencing prior policy bundle digest, prior gate behavior, reviewer/steward signoff, audit refs |
+| **Correction notice** | `CorrectionNotice` instance with superseded and corrected claims, public-safe explanation, EvidenceBundle ref, timestamp |
+| **Supersession** | Mark this ADR `superseded` with forward link to replacing ADR; do not delete |
+| **Policy revert** | Revert policy bundle digest; emit new `decision_log` capturing the change-of-rule |
+| **Re-validate downstream** | Re-run promotion-gate fixtures; verify no public artifact silently changed posture |
+
+### 11.3 Backward compatibility
+
+- Existing PROPOSED policy modules (`policy/archaeology/`, `policy/fauna/sensitivity/`, etc.) align with this ADR's deny-by-default posture. No incompatible change is expected at the doctrinal level.
+- Reason-code names introduced in §6 are additive; existing fixtures using older codes can be mapped via a `reason_code_alias` table in `policy/sensitivity/aliases.yaml` (PROPOSED).
+- The schema-home decision (`schemas/contracts/v1/` vs `contracts/`) is governed by `ADR-0001`; this ADR adopts the prevailing decision and does not fork.
 
 ---
 
-## 12. Open questions and NEEDS VERIFICATION
+## 12. Verification Plan
 
-- **NEEDS VERIFICATION** — Whether ADR numbers 0002–0009 already exist in the mounted repo. ADR-0010 numbering is requested and reasonable, but predecessor presence is unverified in this session.
-- **NEEDS VERIFICATION** — Whether the canonical schema home is `schemas/contracts/v1/common/sensitivity.schema.json` or `contracts/common/sensitivity.schema.json`. ADR-0001 default is `schemas/`; this ADR follows that default.
-- **NEEDS VERIFICATION** — Whether the canonical policy root is `policy/` or `policies/`. Directory Rules pin canonical singular `policy/`; live repo state is to be confirmed.
-- **NEEDS VERIFICATION** — Whether `apps/governed-api/` is the current public trust path or is in the process of replacing `apps/api/`.
-- **NEEDS VERIFICATION** — Whether the `Critical infrastructure` lane in this ADR uses `policy/domains/settlements-infrastructure/` or a different domain segment in the live repo.
-- **OPEN** — Should aggregations below a k-anonymity threshold (e.g., k < 5 cells) auto-deny even when the cell value is itself coarse? Default expectation is yes; requires a propagation rule in `policy/sensitivity/propagation.rego`.
-- **OPEN** — Should the public-DTO gate also check derived statistics (which can leak precision through aggregation patterns)? Default expectation is yes via differential-privacy-style budgets; not pinned by this ADR.
-- **OPEN** — Multi-party DNA consent shape (one DNA record implicates relatives). Likely requires extension to the consent stack rather than this ADR.
-- **OPEN** — Per-class permanent-retention policy (some restricted records — e.g., named living-person DNA — are *never* exposable). Currently folded into `restricted`; future split possible.
-- **OPEN** — Auto-classification heuristics. This ADR specifies enforcement, not classification. Ingest-time classification (federal/state/NatureServe/local registry) is governed elsewhere; if it changes, propagation rules apply.
+> [!CAUTION]
+> Every claim about repo state, file paths, policy modules, validator names, and runtime behavior below is **PROPOSED / NEEDS VERIFICATION** until the mounted repo is inspected. This ADR does not assert that any of these files currently exist.
 
----
+| Verification item | Method | Status |
+|---|---|---|
+| `docs/adr/` is the canonical ADR home | Confirmed in `directory-rules.md` §5 (canonical roots) | **CONFIRMED** (doctrine) |
+| Existing ADR numbers in `docs/adr/` | `git ls-tree docs/adr/` once mounted | **NEEDS VERIFICATION** |
+| `policy/` vs `policies/` canonical home | Confirmed `policy/` (singular) is canonical per Directory Rules; verify in repo | **NEEDS VERIFICATION** |
+| `policy/sensitivity/` exists and houses the four-class rules | Repo inspection | **NEEDS VERIFICATION** |
+| `schemas/contracts/v1/policy/policy_decision.schema.json` exists | Repo inspection | **NEEDS VERIFICATION** |
+| `data/registry/<lane>/sensitivity_policies.yaml` exists per lane | Repo inspection | **NEEDS VERIFICATION** |
+| Promotion-gate fixtures cover the four classes | `tests/policy/` inspection | **NEEDS VERIFICATION** |
+| Governed-AI runtime envelope honors reason codes | `apps/governed-api/` + Focus Mode adapter inspection | **NEEDS VERIFICATION** |
+| Decision-log retention policy | Repo or runbook inspection | **NEEDS VERIFICATION** |
+| Steward role names and review SLAs | Governance manifest / `CODEOWNERS` | **NEEDS VERIFICATION** |
+| OPA / Conftest version (if used) | CI workflow inspection | **NEEDS VERIFICATION** |
+| Tile-build pipeline reads from `data/published/` only | `pipelines/` inspection | **NEEDS VERIFICATION** |
 
-## 13. Related doctrine and ADRs
-
-| Document | Relationship |
-|---|---|
-| `docs/doctrine/directory-rules.md` | Path placement governance. This ADR's paths follow §6 (governance roots), §9 (data/release roots), and §11–§12 (domain placement). |
-| `docs/doctrine/truth-posture.md` *(PROPOSED)* | Cite-or-abstain. This ADR is the operational expression of cite-or-abstain in the four highest-risk classes. |
-| `docs/doctrine/trust-membrane.md` *(PROPOSED)* | The trust membrane is the boundary this ADR reinforces; `apps/governed-api/` is its executable form. |
-| `docs/doctrine/lifecycle-law.md` *(PROPOSED)* | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. This ADR pins fail-closed behavior at every promotion. |
-| `docs/architecture/governed-api.md` *(PROPOSED)* | Runtime placement of the rule. |
-| `docs/architecture/contract-schema-policy-split.md` *(PROPOSED)* | Why the rule lives in `policy/`, the shape lives in `schemas/`, and the meaning lives in `contracts/`. |
-| `docs/adr/ADR-0001-schema-home.md` | Schema home rule. This ADR follows ADR-0001 for any schema this ADR introduces. |
-| Per-domain ADRs *(PROPOSED, layered on top)* | `ADR-archaeology-location-sensitivity`, `ADR-archaeology-public-vs-restricted-geometry`, `ADR-fauna-sensitive-location-policy`, `ADR-people-dna-land-publication`, `ADR-settlements-infrastructure-critical-infra-policy`. |
-
-> [!TIP]
-> When a domain ADR layers on top of this ADR, it should cite `ADR-0010` in its `related[]` and state explicitly which obligations it tightens (it MUST NOT relax them).
+[Back to top](#adr-0010--deny-by-default-for-dna-rare-species-archaeology-and-critical-infrastructure)
 
 ---
 
-## 14. Glossary
+## Related Docs
 
-| Term | Working definition for this ADR |
-|---|---|
-| **Deny-by-default** | The policy default is `DENY` until every precondition holds. Unknown resolves to `DENY`. |
-| **Sensitivity class** | A pinned classification (`public_safe`, `generalized_only`, `restricted`, `steward_review`) with the most-restrictive-input propagation rule. |
-| **DecisionEnvelope** | Finite-outcome policy output: `{ outcome ∈ {ANSWER, ABSTAIN, DENY, ERROR}, reasons[], obligations[], audit_ref, ... }`. |
-| **RuntimeResponseEnvelope** | Public API/UI/AI runtime envelope carrying the same finite outcomes plus citations, evidence refs, freshness, correction state. |
-| **EvidenceBundle / EvidenceRef** | Resolved support package for claims; lives in `data/proofs/`. References resolve via `packages/evidence-resolver/`. |
-| **RedactionReceipt** | Receipt for a generalization / suppression / aggregation transform; records method, parameters, reason, source-geometry hash, public-geometry hash, policy version. |
-| **ReleaseManifest** | Release decision artifact; in `release/manifests/`. |
-| **CorrectionNotice / WithdrawalNotice / RollbackCard** | Public correction, withdrawal, and rollback artifacts in `release/correction_notices/`, `release/withdrawal_notices/`, `release/rollback_cards/`. |
-| **Watcher-as-non-publisher** | Workers emit candidates and receipts; they do not publish or mutate canonical truth. |
-| **Public-DTO gate** | Promotion gate that fails when the public DTO contains any restricted-precise field. |
+- `docs/doctrine/directory-rules.md` — root-folder authority, canonical/compatibility roots, ADR-change triggers
+- `docs/doctrine/truth-posture.md` — cite-or-abstain default; deny on irreversibility
+- `docs/doctrine/trust-membrane.md` — governed-API as the only public path
+- `docs/doctrine/lifecycle-law.md` — RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED
+- `docs/adr/ADR-0001-schema-home.md` *(PROPOSED)* — schemas/contracts/v1 authority
+- `docs/adr/ADR-0004-promotion-gate.md` *(PROPOSED)* — promotion as governed state transition
+- `docs/adr/ADR-0006-governed-ai-runtime-envelope.md` *(PROPOSED)* — finite answer/abstain/deny/error envelope
+- `docs/adr/ADR-0008-sensitive-location-policy.md` *(PROPOSED — see §10 for relationship to this ADR)*
+- `docs/registers/POLICY_REGISTRY.md` *(PROPOSED)* — registry of policy modules and outcome mappings
+- `docs/registers/VERIFICATION_BACKLOG.md` *(PROPOSED)* — open verification items
+- `docs/registers/DRIFT_REGISTER.md` *(PROPOSED)* — drift entries (number/topic conflicts surfaced in §10)
 
 ---
+
+<sub>**Last updated:** 2026-05-11 · **Status:** `proposed` · **Owners:** TODO — Policy steward · Governance steward · Domain stewards</sub>
 
 [Back to top](#adr-0010--deny-by-default-for-dna-rare-species-archaeology-and-critical-infrastructure)
