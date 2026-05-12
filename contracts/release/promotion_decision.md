@@ -2,26 +2,28 @@
 
 **Family:** `release`
 **Schema:** `schemas/contracts/v1/release/promotion_decision.schema.json`
-**Status:** PROPOSED (greenfield scaffold)
+**Status:** PROPOSED
 
 ## Meaning
-What this object means in the KFM trust model. Define the semantic role:
-what claim does it support, what audience consumes it, what does it
-*not* assert.
+A `promotion_decision` records a governed transition decision for a specific domain run.
+The decision must cite evidence, the policy bundle used, and an explicit rollback target.
 
 ## Fields
-Field-by-field semantics live here. Schema enforces shape; this
-document enforces meaning.
+- `id`: deterministic decision id.
+- `domain`: lane being promoted (e.g., `hydrology`).
+- `run_id`: pipeline execution id being evaluated.
+- `decision`: one of `APPROVE`, `DENY`, `ABSTAIN`.
+- `evidence_ref` and `evidence_bundle_uri`: citation closure.
+- `rollback_card_uri`: rollback target for the promoted unit.
+- `review`: reviewer and ticket binding for auditable oversight.
 
 ## Invariants
-Cross-field rules, lifecycle rules, references that must resolve.
+- Promotion is a state transition decision, not a file move.
+- `decision=APPROVE` requires non-empty evidence and rollback references.
+- Review metadata is mandatory.
 
 ## Lifecycle
-Where this object is created, transformed, validated, released,
-superseded, and rolled back.
+Created by promotion gate evaluation, validated by schema+policy tests, and stored under `release/promotion_decisions/<domain>/`.
 
 ## Related contracts
-Upstream dependencies and downstream consumers.
-
-## Open questions
-Anything still UNKNOWN or NEEDS VERIFICATION.
+`release_manifest`, `rollback_card`, domain evidence bundle contracts.
