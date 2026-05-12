@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+
+def run_cmd(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+
+
+def main() -> int:
+    root = Path(__file__).resolve().parents[2]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--registry", type=Path, default=root / "control_plane" / "document_registry_doctrine_required.yaml")
+    parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
+    parser.add_argument("--output-dir", type=Path, default=root / "receipts" / "doctrine_artifacts")
+    args = parser.parse_args()
+
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    check_receipt = args.output_dir / "check_required_doctrine_artifacts.json"
+
+    check_cmd = [
+        sys.executable,
+        str(root / "scripts" / "maintenance" / "check_required_doctrine_artifacts.py"),
+        "--registry",
+        str(args.registry),
+        "--artifacts-dir",
+        str(args.artifacts_dir),
+        "--output",
+        str(check_receipt),
+    ]
+    check_res = run_cmd(check_cmd, root)
+
+    render_cmd = [
+        sys.executable,
+        str(root / "scripts" / "maintenance" / "render_doctrine_presence_input.py"),
+        str(check_receipt),
+    ]
+    render_res = run_cmd(render_cmd, root)
+
+    summary = {
+        "check_returncode": check_res.returncode,
+        "render_returncode": render_res.returncode,
+        "check_receipt": str(check_receipt),
+        "presence_input": json.loads(render_res.stdout) if render_res.returncode == 0 else None,
+    }
+    print(json.dumps(summary, indent=2, sort_keys=True))
+
+    return 0 if check_res.returncode in (0, 1) and render_res.returncode == 0 else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
