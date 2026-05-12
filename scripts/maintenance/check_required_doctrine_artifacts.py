@@ -5,26 +5,10 @@ import argparse
 import json
 from pathlib import Path
 
-
-def _extract_required_entries(registry_text: str) -> list[dict[str, str]]:
-    entries: list[dict[str, str]] = []
-    current: dict[str, str] | None = None
-    for raw in registry_text.splitlines():
-        line = raw.strip()
-        if line.startswith("- filename:"):
-            if current:
-                entries.append(current)
-            current = {"filename": line.split(":", 1)[1].strip()}
-        elif line.startswith("status:") and current is not None:
-            current["status"] = line.split(":", 1)[1].strip()
-    if current:
-        entries.append(current)
-    return entries
-
+from _doctrine_registry import parse_required_entries
 
 def run(registry_path: Path, artifacts_dir: Path, output_path: Path | None = None) -> int:
-    reg_text = registry_path.read_text(encoding="utf-8")
-    entries = _extract_required_entries(reg_text)
+    entries = parse_required_entries(registry_path)
     required = [entry["filename"] for entry in entries]
     expected_status = {entry["filename"]: entry.get("status", "unknown") for entry in entries}
     present = {f: (artifacts_dir / f).exists() for f in required}

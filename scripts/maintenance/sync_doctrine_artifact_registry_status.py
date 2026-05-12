@@ -5,8 +5,12 @@ import argparse
 import json
 from pathlib import Path
 
+from _doctrine_registry import parse_required_entries
+
 
 def sync(registry: Path, artifacts_dir: Path, output: Path | None = None) -> int:
+    # Validate duplicate filenames / invalid status values before mutation.
+    parse_required_entries(registry)
     lines = registry.read_text(encoding="utf-8").splitlines()
     updated: list[str] = []
     current_filename: str | None = None
