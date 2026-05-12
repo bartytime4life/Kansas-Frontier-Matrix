@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Iterable
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = ROOT / "schemas" / "contracts" / "v1" / "source" / "doctrine_artifact_descriptor.schema.json"
@@ -31,7 +31,7 @@ def _expected_error_path(invalid_fixture_path: Path) -> Path:
 
 def run_fixtures() -> int:
     schema = _load_json(SCHEMA_PATH)
-    validator = Draft202012Validator(schema)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
     failures: list[str] = []
 
     for path in sorted((FIXTURE_ROOT / "valid").glob("*.json")):
@@ -53,9 +53,7 @@ def run_fixtures() -> int:
             ]
             joined_errors = "\n".join(_errors_to_lines(errors))
             for snippet in expected_snippets:
-                normalized = snippet.strip().lower()
-                special_64_hex = normalized == "64 hex chars" and "{64}" in joined_errors and "does not match" in joined_errors
-                if snippet not in joined_errors and not special_64_hex:
+                if snippet not in joined_errors:
                     failures.append(f"missing expected error snippet for {path}: {snippet}")
 
     if failures:
