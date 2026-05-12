@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/doctrine_artifact_descriptor.schema.json",
+  "title": "doctrine_artifact_descriptor",
+  "type": "object",
+  "x-kfm": {
+    "contract_doc": "contracts/source/doctrine_artifact_descriptor.md",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "doc_id": {"type": "string"},
+    "filename": {"type": "string"},
+    "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "provenance": {"type": "string"},
+    "authority_status": {"type": "string", "enum": ["CONFIRMED", "NEEDS_VERIFICATION", "PROPOSED"]},
+    "admitted_at": {"type": "string", "format": "date-time"},
+    "steward_signoff_ref": {"type": "string"}
+  },
+  "required": ["doc_id", "filename", "sha256", "provenance", "authority_status", "admitted_at", "steward_signoff_ref"],
+  "additionalProperties": false
+}
