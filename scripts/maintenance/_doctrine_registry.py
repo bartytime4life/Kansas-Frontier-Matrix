@@ -17,6 +17,8 @@ def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
             current = {"filename": line.split(":", 1)[1].strip()}
         elif line.startswith("status:") and current is not None:
             current["status"] = line.split(":", 1)[1].strip()
+        elif line.startswith("doc_id:") and current is not None:
+            current["doc_id"] = line.split(":", 1)[1].strip()
 
     if current:
         entries.append(current)
@@ -33,4 +35,7 @@ def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
             raise ValueError(f"invalid status for {name}: {status}")
         entry["status"] = status
 
+        doc_id = entry.get("doc_id", "")
+        if not doc_id:
+            raise ValueError(f"missing doc_id for {name}")
     return entries
