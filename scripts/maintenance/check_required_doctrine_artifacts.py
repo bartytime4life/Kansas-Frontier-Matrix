@@ -17,7 +17,8 @@ def _extract_required_filenames(registry_text: str) -> list[str]:
 def run(registry_path: Path, artifacts_dir: Path, output_path: Path | None = None) -> int:
     reg_text = registry_path.read_text(encoding="utf-8")
     required = _extract_required_filenames(reg_text)
-    missing = [f for f in required if not (artifacts_dir / f).exists()]
+    present = {f: (artifacts_dir / f).exists() for f in required}
+    missing = [f for f, ok in present.items() if not ok]
 
     result = {
         "check": "required_doctrine_artifacts",
@@ -26,6 +27,7 @@ def run(registry_path: Path, artifacts_dir: Path, output_path: Path | None = Non
         "required_count": len(required),
         "missing_count": len(missing),
         "missing": missing,
+        "present": present,
         "result": "pass" if not missing else "fail",
     }
 
