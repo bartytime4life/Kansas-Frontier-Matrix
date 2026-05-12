@@ -1,2 +1,2 @@
-- 'sha256' must match ^[a-fA-F0-9]{64}$
-- required property 'steward_signoff_ref' missing
+sha256: '1234' does not match '^[a-fA-F0-9]{64}$'
+$: 'steward_signoff_ref' is a required property
