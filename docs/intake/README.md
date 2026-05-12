@@ -1,462 +1,480 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-intake-readme
-title: docs/intake/ — Idea Intake Lane
+title: Documentation Intake — README
 type: standard
 version: v1
 status: draft
-owners: Docs steward (PLACEHOLDER — confirm against CODEOWNERS)
-created: 2026-05-09
-updated: 2026-05-09
+owners: <docs steward> (PROPOSED placeholder — confirm via CODEOWNERS)
+created: 2026-05-12
+updated: 2026-05-12
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/truth-posture.md
+  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
   - docs/registers/DRIFT_REGISTER.md
-  - docs/archive/exploratory/
-  - docs/adr/
-tags: [kfm, docs, intake, governance, ideas, doctrine-onramp]
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/archive/README.md
+  - docs/adr/README.md
+tags: [kfm, docs, intake, governance, exploratory, idea-admission]
 notes:
-  - "Lane purpose: indexing incoming working notebooks (New_Ideas_<date>.pdf) before they mature into ADRs, doctrine, schemas, or runbooks."
-  - "This README is doctrinal orientation; it does not decide promotion."
+  - Path docs/intake/ is CONFIRMED per Directory Rules §6.1
+  - Contained files IDEA_INTAKE.md and NEW_IDEAS_INDEX.md are PROPOSED
+  - Owners, CODEOWNERS path, and badge targets are placeholders pending repo inspection
 [/KFM_META_BLOCK_V2] -->
 
-# `docs/intake/` — Idea Intake Lane
+# 📥 Documentation Intake — `docs/intake/`
 
-> **The on-ramp where incoming idea corpora are indexed, normalized, and triaged — before anything they contain becomes doctrine, decision, or shape.**
+> The human-facing **front door for ideas, proposals, exploratory packets, and external research notes** that have not yet earned a canonical home in KFM. Its single job is to **preserve evidence and exploration without letting either be cited as canon.**
 
-<!-- Badges: replace PLACEHOLDER targets when CI / governance hooks are wired. -->
-[![Lane status: active](https://img.shields.io/badge/lane-active-2ea44f?style=flat-square)](#status)
-[![Authority: canonical](https://img.shields.io/badge/authority-canonical-1f6feb?style=flat-square)](#authority-level)
-[![Doctrine: directory--rules](https://img.shields.io/badge/doctrine-directory--rules-555?style=flat-square)](../doctrine/directory-rules.md)
-[![Truth posture: cite--or--abstain](https://img.shields.io/badge/truth%20posture-cite--or--abstain-8a3ffc?style=flat-square)](../doctrine/truth-posture.md)
-[![Last reviewed: 2026-05-09](https://img.shields.io/badge/last%20reviewed-2026--05--09-lightgrey?style=flat-square)](#last-reviewed)
+<!-- Badge row — TODO targets, replace once CI, CODEOWNERS, and license endpoints are confirmed -->
+![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)
+![Authority: exploratory](https://img.shields.io/badge/authority-exploratory-blue)
+![Lifecycle: intake](https://img.shields.io/badge/lifecycle-intake-yellow)
+![Truth posture: cite--or--abstain](https://img.shields.io/badge/truth-cite--or--abstain-success)
+![Last updated: 2026--05--12](https://img.shields.io/badge/updated-2026--05--12-informational)
+![License: TBD](https://img.shields.io/badge/license-TODO-orange)
 
-> [!IMPORTANT]
-> **Intake is pre-doctrine.** Nothing in this lane is normative until it is **promoted** — to an ADR (`docs/adr/`), doctrine (`docs/doctrine/`), a contract (`contracts/`), a schema (`schemas/`), a policy (`policy/`), or a runbook (`docs/runbooks/`). Treat material here as **proposed thinking**, not decisions.
-
-**Quick jumps:**
-[Purpose](#purpose) ·
-[Authority](#authority-level) ·
-[Status](#status) ·
-[What belongs here](#what-belongs-here) ·
-[What does **not** belong here](#what-does-not-belong-here) ·
-[Lifecycle diagram](#lifecycle-diagram) ·
-[Quickstart](#quickstart) ·
-[Related folders](#related-folders) ·
-[FAQ](#faq) ·
-[Last reviewed](#last-reviewed)
+| Field | Value |
+|---|---|
+| **Status** | `draft` (PROPOSED) |
+| **Authority level** | `exploratory` |
+| **Owners** | Docs steward + subsystem owner *(PROPOSED placeholder; confirm via `CODEOWNERS`)* |
+| **Last reviewed** | 2026-05-12 |
+| **Supersedes** | None |
+| **Related doctrine** | [Directory Rules](../doctrine/directory-rules.md) · [Authority Ladder](../doctrine/authority-ladder.md) · [Truth Posture](../doctrine/truth-posture.md) |
 
 ---
 
-## Purpose
+## 🧭 Quick jump
 
-`docs/intake/` is the human-facing **idea intake lane**. It owns two responsibilities:
+- [1. Scope](#1-scope)
+- [2. Repo fit](#2-repo-fit)
+- [3. Authority and status labels](#3-authority-and-status-labels)
+- [4. What belongs here (inputs)](#4-what-belongs-here-inputs)
+- [5. What does NOT belong here (exclusions)](#5-what-does-not-belong-here-exclusions)
+- [6. Directory tree](#6-directory-tree)
+- [7. The intake → promotion path](#7-the-intake--promotion-path)
+- [8. Working with intake (usage)](#8-working-with-intake-usage)
+- [9. Idea lifecycle states](#9-idea-lifecycle-states)
+- [10. Validation, review, and rollback](#10-validation-review-and-rollback)
+- [11. FAQ](#11-faq)
+- [12. Related docs and folders](#12-related-docs-and-folders)
+- [13. Appendix — templates and references](#13-appendix--templates-and-references)
 
-1. **Receive** incoming working corpora — typically `New_Ideas_<YYYY-MM-DD>.pdf` notebooks, brainstorms, pattern recipes, candidate doctrine — without prematurely promoting them.
-2. **Index, normalize, and develop** the ideas they contain into durable, inspectable, evidence-first reference dossiers (the *Pass-N — Idea Index, Category Atlas, and Expansion Dossier* line of work) so the rest of the project can navigate, debate, and selectively promote them.
+---
+
+## 1. Scope
+
+`docs/intake/` is the **idea-admission lane** of the KFM documentation control plane. It exists because KFM is an evidence-first, governance-aware system where *anything cited as canon must earn that status* through truth labels, evidence resolution, and reviewable promotion.
+
+The intake lane keeps that earning visible. It is where:
+
+- New design proposals are first written down without claiming repo or doctrine status.
+- Exploratory packets — informal notes, brainstorms, external readings, prior-pass dossiers — are filed so they remain inspectable but cannot accidentally become authority.
+- Candidate ideas are indexed (`NEW_IDEAS_INDEX.md`) before being either **promoted** to a canonical lane (via ADR or routing) or **archived** as lineage/deprecated.
+
+> [!IMPORTANT]
+> **Intake is not canon.** Material in `docs/intake/` is treated as `PROPOSED` or `EXPLORATORY` by default. Citing an intake file as authority — in code, in a contract, in a release, or in another doc — is a drift event and should be opened in [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md).
+
+[↥ Back to top](#-documentation-intake--docsintake)
+
+---
+
+## 2. Repo fit
+
+`docs/intake/` is one of the named sub-areas of the `docs/` canonical root in the KFM **Directory Rules**. Its placement is CONFIRMED doctrine; its specific contents are PROPOSED.
+
+```text
+docs/                       # human-facing control plane (CANONICAL)
+├── doctrine/               # ← authority that intake must respect
+├── architecture/           # ← target lane for promoted system designs
+├── adr/                    # ← required gate when intake promotes a structural decision
+├── registers/              # ← CANONICAL_LINEAGE_EXPLORATORY, DRIFT_REGISTER, VERIFICATION_BACKLOG
+├── intake/   ◀── you are here
+├── archive/                # ← downstream home for retired/lineage ideas
+├── domains/   sources/   standards/   runbooks/   security/   governance/
+└── reports/   brand/
+```
+
+| Direction | Connects to | Purpose |
+|---|---|---|
+| **Upstream (authority)** | `docs/doctrine/`, `docs/registers/AUTHORITY_LADDER.md` | Doctrine that intake must not silently override |
+| **Sibling** | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | Register that classifies which intake items have been promoted, archived, or remain exploratory |
+| **Downstream (promotion)** | `docs/adr/`, `docs/architecture/`, `contracts/`, `schemas/`, `policy/` | Where intake ideas land when they earn a canonical home |
+| **Downstream (demotion)** | `docs/archive/exploratory/`, `docs/archive/deprecated/` | Where intake ideas land when they are superseded or retired |
+
+[↥ Back to top](#-documentation-intake--docsintake)
+
+---
+
+## 3. Authority and status labels
+
+Following the KFM **README Contract** (Directory Rules §15) and the **truth label** discipline:
+
+| Aspect | Value | Basis |
+|---|---|---|
+| **Authority level** | `exploratory` | Directory Rules per-root README contract |
+| **Folder status** | `PROPOSED` until a mounted-repo inspection verifies presence | Path quoted in doctrine ≠ path verified in repo |
+| **Default item label** | `PROPOSED`, `EXPLORATORY`, or `UNKNOWN` | Items only earn `CONFIRMED` by promotion out of intake |
+| **Promotion gate** | ADR (for structural decisions) or routing into a canonical lane | Directory Rules §2.4 |
+| **Demotion gate** | Archival entry in `docs/archive/` with reason | Directory Rules §14 (migration discipline) |
 
 > [!NOTE]
-> Intake is to **ideas** what `data/raw/` and `data/quarantine/` are to **data**: a controlled, non-public on-ramp where incoming material is captured, examined, and held until governance decides where (or whether) it should advance. **Promotion is a governed state transition, not a file move.**
+> Truth labels used throughout this lane: **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, **NEEDS VERIFICATION**, **EXTERNAL** (for content sourced under the external-research carve-out). Memory is not evidence; recollection, guessed paths, likely behavior, and generic best practice are not facts.
+
+[↥ Back to top](#-documentation-intake--docsintake)
 
 ---
 
-## Authority level
+## 4. What belongs here (inputs)
 
-**Canonical (sub-lane of `docs/`).**
+The intake lane accepts material that is **not yet earned canon** but is worth keeping inspectable. Each accepted item must be filed with a clear label and a route to either promotion or archival.
 
-| Aspect | Value | Status |
+| Accepted artifact | Typical filename | Notes |
 |---|---|---|
-| Lane class | Canonical sub-folder of `docs/` | **CONFIRMED** by [Directory Rules §6.1](../doctrine/directory-rules.md) |
-| Decisional authority | None — intake is pre-decision | **CONFIRMED** by intake's role as on-ramp |
-| Object-meaning authority | None — see [`contracts/`](../../contracts/) | **CONFIRMED** by [Directory Rules §6.3](../doctrine/directory-rules.md) |
-| Schema authority | None — see [`schemas/`](../../schemas/) | **CONFIRMED** by ADR-0001 schema-home rule |
-| Policy authority | None — see [`policy/`](../../policy/) | **CONFIRMED** by [Directory Rules §6.5](../doctrine/directory-rules.md) |
-
-> Intake **explains** what is incoming and **organizes** it for review. It does not bind the project to any of it.
-
----
-
-## Status
-
-- **Lane state:** active — accepting and indexing new-ideas corpora.
-- **README state:** `draft` — first published version of this orientation document.
-- **Repo-presence of this folder:** **NEEDS VERIFICATION** — the canonical tree in [Directory Rules §6.1](../doctrine/directory-rules.md) lists `docs/intake/` with `IDEA_INTAKE` and `NEW_IDEAS_INDEX`; whether the folder is materialized in the current mounted repo is unconfirmed in this session.
-- **Owners:** **PLACEHOLDER — confirm** against `CODEOWNERS` (or `.github/CODEOWNERS`). Tentative: Docs steward + at least one doctrine owner. See [Review burden](#review-burden).
-
----
-
-## Repo fit
-
-```
-Kansas-Frontier-Matrix/
-└── docs/
-    ├── doctrine/        ← invariants and rules (intake feeds candidate doctrine here)
-    ├── adr/             ← decisions (intake feeds candidate ADRs here)
-    ├── architecture/    ← architectural texts (may be informed by intake)
-    ├── domains/         ← per-domain pages (may absorb domain-specific intake outcomes)
-    ├── runbooks/        ← procedures (intake patterns can mature into runbooks)
-    ├── standards/       ← external standards alignment notes
-    ├── registers/       ← persistent governance state
-    ├── intake/          ← THIS LANE — incoming idea corpora, indexed
-    └── archive/         ← retired / exploratory material (intake outflow when not promoted)
-```
-
-**Upstream of intake** (where ideas come from):
-
-- Working notebooks dropped by maintainers (`New_Ideas_<date>.pdf`)
-- External-research write-ups requesting consideration
-- Cross-domain patterns surfaced during implementation
-- Issues, discussions, and PR comments raising new patterns
-
-**Downstream of intake** (where indexed ideas can go):
-
-- `docs/adr/` — when a decision is needed
-- `docs/doctrine/` — when an invariant is added or refined
-- `docs/architecture/` — when a structural design results
-- `contracts/`, `schemas/`, `policy/` — when an object family, shape, or admissibility rule emerges
-- `docs/runbooks/` — when an operational procedure falls out
-- `docs/registers/` — when the outcome is governance state (drift, deprecation, verification)
-- `docs/archive/exploratory/` — when an idea is not chosen but worth keeping for lineage
-
----
-
-## What belongs here
-
-The Directory Rules name two long-lived inhabitants of this lane:
-
-| Document family | Role | Format | Status |
-|---|---|---|---|
-| **`IDEA_INTAKE`** | Active log of incoming new-ideas corpora — what arrived, when, who submitted, current disposition. The "intake desk." | Markdown table or YAML manifest | **PROPOSED** filename and shape |
-| **`NEW_IDEAS_INDEX`** | Rolling, append-only index of every indexed corpus and the synthesis pass(es) that covered it. The "library catalog." | Markdown index | **PROPOSED** filename and shape |
-| **Pass-N — Idea Index, Category Atlas, and Expansion Dossier** | The synthesis output: an evidence-first dossier extracting, normalizing, and developing ideas from one or more `New_Ideas_<date>.pdf` corpora. | Markdown (long-form) | **CONFIRMED** as a recurring document family — see Pass 10, 11 Part 2, 12 Part 2, 13 Part 2 in the project corpus |
-| **Triage notes / Pass scopes** | Short notes scoping what a pending pass will index and why. | Markdown | **PROPOSED** |
+| **Idea card** (single proposal, normalized) | `IDEA_INTAKE.md` (or per-idea card under `intake/cards/`) | Required fields: id, title, status, normalized statement, sources, related ideas, dependencies, tensions, expansion directions, open questions |
+| **Master idea index** | `NEW_IDEAS_INDEX.md` | Tabular index of every intake item with id, status, category, related, and expansion-direction columns |
+| **Exploratory packet** | `intake/exploratory/<topic>.md` | Brainstorms, draft system sketches, external-reading notes that aren't yet design |
+| **Carry-forward note** | `intake/carry-forward/<source>.md` | Material extracted from a prior pass/dossier that needs a future home but isn't yet placed |
+| **Promotion request** | `intake/promotions/<id>.md` | Short note pointing to the ADR or canonical lane the idea is being routed to |
+| **Source-of-record links** | Inline citations to attached PDFs, prior reports, or evidence bundles | All claims must cite sources or carry a `NEEDS VERIFICATION` label |
 
 > [!TIP]
-> **Pass-N dossiers are first-class.** They preserve the texture of the source — including tensions, contradictions, and gaps — rather than smoothing the corpus into thin notes. They earn their place by being usable as a foundation for ADRs, doctrine refinements, and schema work.
+> A good intake entry **earns its space** by naming (1) the problem, (2) the proposed direction, (3) the evidence behind it, (4) the open questions, and (5) the canonical lane it might eventually target. An entry that does none of those is a candidate for archival, not promotion.
 
-**Accepted file types in this lane:**
-
-- Markdown (`.md`) for indexes, dossiers, and pass scopes
-- YAML (`.yaml`/`.yml`) for machine-readable intake manifests, if used
-- Vendored copies of incoming corpora **only** when retention rules require it; otherwise reference them by path or hash
+[↥ Back to top](#-documentation-intake--docsintake)
 
 ---
 
-## What does NOT belong here
+## 5. What does NOT belong here (exclusions)
 
 > [!WARNING]
-> Intake is **not** doctrine. Intake is **not** decisions. Intake is **not** machine-checkable shape. Intake is **not** policy.
+> The intake lane is the most common place for governance drift in a docs-first repo, because intake material *looks like* documentation and is *adjacent to* canon. Strict exclusions matter.
 
-- **ADRs** → `docs/adr/`
-- **Doctrine / invariants** → `docs/doctrine/`
-- **Object meaning** → `contracts/`
-- **Machine-checkable schemas** → `schemas/contracts/v1/...` (per ADR-0001 schema-home)
-- **Admissibility / allow-deny / sensitivity / rights / release policy** → `policy/`
-- **Persistent governance registers** (authority, drift, deprecation, verification, contradiction) → `docs/registers/` and `control_plane/`
-- **Per-domain reference pages** → `docs/domains/<domain>/`
-- **External standards conformance notes** → `docs/standards/`
-- **Operational runbooks** → `docs/runbooks/`
-- **Retired or deprecated material** → `docs/archive/deprecated/`
-- **Exploratory thinking that has been examined and parked** → `docs/archive/exploratory/`
-- **Source data, raw fetches, RAW receipts, ingest receipts** → `data/raw/`, `data/quarantine/`, `data/receipts/intake/` — these are **source intake**, a different concept entirely (see [FAQ](#faq))
-- **Build outputs, tiles, generated artifacts** → `data/published/`, `release/manifests/`, or — for non-trust-bearing build/QA-only output — `artifacts/`
-- **Receipts, proofs, release manifests, rollback cards, correction notices** → `data/receipts/`, `data/proofs/`, `release/`
+| ❌ Does **not** belong in `docs/intake/` | ✅ Belongs in |
+|---|---|
+| Doctrine, invariants, or governance law | `docs/doctrine/` |
+| Architecture decisions or system designs the project actually relies on | `docs/architecture/` (with an ADR in `docs/adr/`) |
+| Object-family **meaning** (contracts) | `contracts/` |
+| Machine-checkable object **shape** (schemas) | `schemas/contracts/v1/<…>/` |
+| Allow/deny/restrict/abstain rules | `policy/` |
+| Source descriptor standards | `docs/sources/` |
+| Source intake records / `SourceDescriptor` instances | `data/registry/sources/` (per Directory Rules §9.1) |
+| Pre-RAW data-admission event schemas | `schemas/contracts/v1/events/` (PROPOSED) |
+| Operational runbooks | `docs/runbooks/` |
+| Authority/lineage/drift/verification registers | `docs/registers/` |
+| Retired or superseded ideas | `docs/archive/exploratory/` or `docs/archive/deprecated/` |
+| Receipts, proofs, manifests, release decisions | `data/receipts/`, `data/proofs/`, `release/` |
+| Tests, fixtures, or validators | `tests/`, `fixtures/`, `tools/validators/` |
+| Marketing copy, brand assets, or visual identity | `docs/brand/` or `packages/ui/` |
 
-If a file in this lane wants to act like any of the items above, that is a **drift signal** — open an entry in `docs/registers/DRIFT_REGISTER.md`.
+> [!CAUTION]
+> Two anti-patterns specific to intake:
+>
+> 1. **Intake-as-canon.** Citing an intake file as the source of truth in code, contracts, or release decisions. *Fix:* open a drift entry and either promote the idea (ADR + canonical home) or stop citing it.
+> 2. **Intake-as-archive.** Letting stale exploratory packets accumulate without movement. *Fix:* the index reviewer routes anything older than the review cadence to `docs/archive/` with a one-line reason.
 
----
-
-## Inputs
-
-| Input | Origin | Form | Where it lands here |
-|---|---|---|---|
-| New-ideas working notebook | Maintainer drop | `New_Ideas_<YYYY-MM-DD>.pdf` (or markdown equivalent) | Logged in `IDEA_INTAKE`; copy/reference path retained |
-| External research write-up | Reviewer or contributor | Markdown / PDF | Logged in `IDEA_INTAKE` with rights and source notes |
-| Cross-domain pattern surfaced in PRs | Implementation work | Issue/PR text | Triaged into a pass scope; later folded into a Pass-N dossier |
-| Doctrine pressure flagged during implementation | Domain owner | Note in PR or issue | Indexed as a candidate doctrine update; routed forward |
-
-**Input handling rules:**
-
-- Honor **source boundary**: every Pass-N dossier names the controlling corpus and treats other docs as corroborating context only.
-- Apply **cite-or-abstain**: if a claim cannot be tied to the controlling corpus or a named doctrine document, abstain or mark `UNKNOWN`/`NEEDS VERIFICATION`.
-- Apply **truth labels** at the entry level: `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`. Do not upgrade uncertainty through tone.
-- **Do not publish** any contents of this lane through public surfaces — intake is internal-facing.
+[↥ Back to top](#-documentation-intake--docsintake)
 
 ---
 
-## Outputs
+## 6. Directory tree
 
-What this lane emits — and where each output lands.
+> Status: **PROPOSED** layout. The folder `docs/intake/` itself is CONFIRMED in Directory Rules §6.1; the internal subdivision below is a working proposal until adopted in repo and ratified by a per-root README addendum or ADR.
 
-| Output | Form | Destination |
-|---|---|---|
-| **Pass-N — Idea Index, Category Atlas, and Expansion Dossier** | Long-form Markdown | Stays in `docs/intake/` |
-| **Updated `NEW_IDEAS_INDEX` entry** | Markdown row / index update | Stays in `docs/intake/` |
-| **Candidate ADR draft** | Markdown stub linking the originating intake entry | `docs/adr/` (draft) |
-| **Doctrine refinement proposal** | Markdown patch or new section | `docs/doctrine/` |
-| **Candidate object family** | Markdown definition + links | `contracts/<family>/` |
-| **Candidate schema** | JSON Schema draft | `schemas/contracts/v1/...` (per ADR-0001) |
-| **Candidate policy bundle** | OPA/Rego draft + tests | `policy/` |
-| **Candidate runbook** | Markdown procedure | `docs/runbooks/` |
-| **Drift / verification entry** | Register row | `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md` |
-| **Archived idea (not chosen)** | Original entry + disposition note | `docs/archive/exploratory/` |
-
-> [!IMPORTANT]
-> No output of this lane silently becomes truth. Every promotion requires the **review and approval discipline of the destination lane** — ADR for decisions, doctrine ownership for invariants, ADR-0001 path for schemas, and so on.
-
----
-
-## Directory tree
-
-> Status: **PROPOSED** layout consistent with [Directory Rules §6.1](../doctrine/directory-rules.md). **NEEDS VERIFICATION** against the mounted repo.
-
-```
+```text
 docs/intake/
-├── README.md                           # this file
-├── IDEA_INTAKE.md                      # active intake log (PROPOSED filename)
-├── NEW_IDEAS_INDEX.md                  # rolling index of indexed corpora (PROPOSED filename)
-├── passes/
-│   ├── pass-10-idea-index.md           # corresponds to KFM_Components_Pass_10_Idea_Index_*  (PROPOSED filename)
-│   ├── pass-11-part-2-idea-index.md    # corresponds to KFM_Components_Pass_11_Part_2_*       (PROPOSED filename)
-│   ├── pass-12-part-2-idea-index.md    # corresponds to KFM_Pass_12_Part_2_*                  (PROPOSED filename)
-│   └── pass-13-part-2-idea-index.md    # corresponds to KFM_Components_Pass_13_Part_2_*       (PROPOSED filename)
-└── scopes/
-    └── pass-NN-scope.md                # short scope/triage note for a pending pass (PROPOSED)
+├── README.md                       # this file
+├── IDEA_INTAKE.md                  # PROPOSED — idea card template + active card surface
+├── NEW_IDEAS_INDEX.md              # PROPOSED — master index of intake items
+├── cards/                          # PROPOSED — one Markdown file per idea, stable id
+│   └── <KFM-IDX-…>.md
+├── exploratory/                    # PROPOSED — brainstorms, sketches, reading notes
+│   └── <topic>.md
+├── carry-forward/                  # PROPOSED — material extracted from prior passes/dossiers
+│   └── <source>.md
+└── promotions/                     # PROPOSED — short notes pointing to ADRs/canonical lanes
+    └── <id>.md
 ```
 
-> Filenames above are **conventions to consider**, not facts. Adjust to match whatever repo-local convention is in force; if a documented convention disagrees with this layout, the local convention wins and this README should be updated.
+> [!NOTE]
+> The `cards/`, `exploratory/`, `carry-forward/`, and `promotions/` subfolders are a **PROPOSED** organization. Until the repo confirms or revises them, they should be treated as a target structure, not as a current fact. If the mounted repo adopts a different shape, raise it as a `DRIFT_REGISTER` entry, not a silent rename.
+
+[↥ Back to top](#-documentation-intake--docsintake)
 
 ---
 
-## Lifecycle diagram
+## 7. The intake → promotion path
 
-How an incoming idea moves through intake and either promotes outward or archives.
+The flow below makes the intake lane's role in the wider KFM governance fabric explicit: an idea enters `docs/intake/`, gets a label, and then either **earns** a canonical home or is **retired** with reasons preserved.
 
 ```mermaid
 flowchart LR
-    A["New ideas corpus<br/><i>New_Ideas_&lt;date&gt;.pdf</i><br/>or equivalent"]:::raw
-    B["IDEA_INTAKE<br/><i>active log</i>"]:::intake
-    C["Pass-N synthesis<br/><i>Idea Index · Category Atlas ·<br/>Expansion Dossier</i>"]:::intake
-    D["NEW_IDEAS_INDEX<br/><i>rolling catalog</i>"]:::intake
+  A["New idea / proposal /<br/>exploratory note"] --> B["docs/intake/<br/>(filed with truth label)"]
+  B --> C["NEW_IDEAS_INDEX.md<br/>(indexed)"]
+  C --> D{"Has evidence,<br/>scope, and a<br/>target lane?"}
+  D -- "Yes (structural)" --> E["docs/adr/<br/>(ADR drafted)"]
+  D -- "Yes (non-structural)" --> F["Canonical lane<br/>(architecture / contracts /<br/>schemas / policy / runbooks)"]
+  D -- "Needs more work" --> G["Stays in intake<br/>(label refined)"]
+  D -- "Superseded or<br/>retired" --> H["docs/archive/<br/>exploratory/ | deprecated/"]
+  E --> F
+  F --> I["CANONICAL_LINEAGE_<br/>EXPLORATORY.md<br/>(promotion recorded)"]
+  H --> I
+  G --> C
 
-    P1["docs/adr/<br/><i>decision needed</i>"]:::promote
-    P2["docs/doctrine/<br/><i>invariant refined</i>"]:::promote
-    P3["contracts/ · schemas/ · policy/<br/><i>object · shape · admissibility</i>"]:::promote
-    P4["docs/runbooks/<br/><i>operational procedure</i>"]:::promote
-    P5["docs/registers/<br/><i>drift · verification · deprecation</i>"]:::promote
-
-    Z["docs/archive/exploratory/<br/><i>parked, not promoted</i>"]:::archive
-
-    A --> B --> C --> D
-    D -.->|promote| P1
-    D -.->|promote| P2
-    D -.->|promote| P3
-    D -.->|promote| P4
-    D -.->|promote| P5
-    D -.->|archive| Z
-
-    classDef raw fill:#fff7e6,stroke:#c97a00,color:#5b3000,stroke-width:1px
-    classDef intake fill:#e8f1ff,stroke:#1f6feb,color:#0b3d91,stroke-width:1px
-    classDef promote fill:#e6f7ec,stroke:#2ea44f,color:#0b5026,stroke-width:1px
-    classDef archive fill:#f3f0ff,stroke:#6f42c1,color:#3b1f7a,stroke-width:1px
+  classDef intake fill:#fff7d6,stroke:#a98300,color:#000;
+  classDef canon  fill:#d6eaff,stroke:#1f4f8a,color:#000;
+  classDef archive fill:#eee,stroke:#666,color:#000;
+  class B,C,G intake;
+  class E,F,I canon;
+  class H archive;
 ```
 
 > [!NOTE]
-> The dashed arrows represent **governed state transitions**, not file moves. A Pass-N dossier may seed multiple downstream promotions, or none at all.
+> The diagram reflects intake **doctrine** as expressed in Directory Rules §6.1, the README Contract §15, the migration discipline §14, and the *Whole-UI / Governed-AI Expansion Report*'s "Intake / growth governance" row. It is **NEEDS VERIFICATION** as a description of any currently mounted repo workflow.
 
-[Back to top](#docsintake--idea-intake-lane)
+[↥ Back to top](#-documentation-intake--docsintake)
 
 ---
 
-## Quickstart
+## 8. Working with intake (usage)
 
-How to add a new idea corpus to intake and run a synthesis pass.
+### 8.1 Filing a new idea
 
-### 1. Receive the corpus
+1. Open `docs/intake/NEW_IDEAS_INDEX.md` and append a row with a **stable id** (e.g., `KFM-IDX-<CAT>-<NNN>`), title, category, status (`PROPOSED`), and a one-sentence essence.
+2. Create the corresponding card in `docs/intake/cards/<id>.md` using the template in [§13](#13-appendix--templates-and-references). Cite sources inline.
+3. Apply truth labels to **every material claim**: `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`, or `EXTERNAL`. Do not upgrade uncertainty through tone.
+4. Identify the **target canonical lane** the idea would land in if promoted (e.g., `docs/architecture/ui/`, `contracts/`, `policy/`).
+5. Submit a PR. Reviewers apply [§10](#10-validation-review-and-rollback).
 
-Place the incoming notebook at a stable, citable location (project drop, attached PDF, or vendored copy). Record its identity (filename, hash if available, submitter, date received).
+### 8.2 Promoting an idea out of intake
 
-### 2. Log it in `IDEA_INTAKE`
+Promotion is **a governed transition, not a file move.** It mirrors the data lifecycle invariant *RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED* at the documentation level.
 
-Add a row capturing — at minimum — the fields below.
+```mermaid
+flowchart TD
+  raw["Intake card<br/>(PROPOSED)"] --> work["Refined card<br/>+ sources + scope"]
+  work --> gate{"Structural<br/>impact?"}
+  gate -- "Yes" --> adr["Draft ADR in docs/adr/"]
+  gate -- "No"  --> route["Route content to<br/>canonical lane"]
+  adr --> accept{"ADR accepted?"}
+  accept -- "Yes" --> route
+  accept -- "No / superseded" --> arc["docs/archive/<br/>exploratory/"]
+  route --> lineage["Record in CANONICAL_<br/>LINEAGE_EXPLORATORY.md"]
+  lineage --> retire["Intake card status →<br/>'promoted' (kept as lineage)"]
 
-<details>
-<summary><b>Example <code>IDEA_INTAKE</code> entry (PROPOSED shape — adjust to local convention)</b></summary>
-
-```markdown
-| intake_id | corpus | received | submitter | sensitivity | disposition | pass_ref |
-|---|---|---|---|---|---|---|
-| INTAKE-2026-05-09-A | New_Ideas_2026-05-08.pdf | 2026-05-09 | maintainer:<handle> | none / restricted / sensitive | pending | — |
+  classDef gate fill:#fff7d6,stroke:#a98300,color:#000;
+  class gate,accept gate;
 ```
 
-Fields:
+| Step | Action | Required artifact |
+|---|---|---|
+| Structural decision? | If the idea adds/renames a root, splits a phase, creates parallel authority, or bends an invariant | **ADR required** (Directory Rules §2.4) |
+| Path-bearing decision? | New, moved, or renamed file or folder | Cite Directory Rules section in PR description |
+| Schema/contract/policy decision? | New object family, field, or rule | Land content in `contracts/`, `schemas/`, `policy/` — not in intake |
+| All other decisions | Routine content addition | Land content in the appropriate `docs/` lane and update `CANONICAL_LINEAGE_EXPLORATORY.md` |
 
-- `intake_id` — stable, dated identifier; never reused.
-- `corpus` — citable filename or path to the controlling corpus.
-- `received` — ISO date the corpus arrived.
-- `submitter` — accountable submitter handle.
-- `sensitivity` — coarse class; defer to `policy/sensitivity/` for binding rules.
-- `disposition` — `pending` → `indexing` → `indexed` → `promoted` / `archived` / `withdrawn`.
-- `pass_ref` — link to the Pass-N dossier once produced.
+### 8.3 Retiring an idea
+
+If an idea is superseded, irrelevant, duplicated by a stronger entry, or simply will not be acted on:
+
+1. Set its status to `DEPRECATED` or `SUPERSEDED` in `NEW_IDEAS_INDEX.md`.
+2. Move the card to `docs/archive/exploratory/` (if the idea was speculative) or `docs/archive/deprecated/` (if it was once active).
+3. Add a one-line reason and, where applicable, a pointer to the superseding idea or ADR.
+4. Record the move in `CANONICAL_LINEAGE_EXPLORATORY.md`.
+
+> [!IMPORTANT]
+> Retired intake items are **not deleted.** They remain as lineage so reviewers can trace why a direction was considered and rejected. This mirrors the tombstone discipline used for released data in `release/` and `data/proofs/`.
+
+[↥ Back to top](#-documentation-intake--docsintake)
+
+---
+
+## 9. Idea lifecycle states
+
+Each item in the intake lane carries a status. The set below is the **PROPOSED** vocabulary, intended to be aligned with the truth-label discipline used elsewhere in KFM doctrine.
+
+| Status | Meaning | Allowed transitions |
+|---|---|---|
+| `PROPOSED` | Filed; not yet reviewed | → `REFINING`, `DEPRECATED`, `SUPERSEDED` |
+| `REFINING` | Under active discussion; evidence and scope being gathered | → `PROMOTION_PENDING`, `PROPOSED`, `DEPRECATED` |
+| `PROMOTION_PENDING` | ADR drafted or canonical-lane PR open | → `PROMOTED`, `REFINING`, `DEPRECATED` |
+| `PROMOTED` | Now lives in a canonical lane; intake card kept as lineage | (terminal in intake; lives on as lineage) |
+| `DEPRECATED` | Will not be acted on; reason recorded | (terminal; routed to `docs/archive/deprecated/`) |
+| `SUPERSEDED` | Replaced by a stronger idea; supersession pointer recorded | (terminal; routed to `docs/archive/exploratory/`) |
+| `UNKNOWN` | Cannot be resolved without more evidence | → any other state once evidence arrives |
+
+> [!NOTE]
+> `UNKNOWN` is a legitimate, stable state. Forcing premature classification — promoting an unverified idea, or retiring one whose scope is genuinely unclear — is itself drift. Per KFM doctrine, prefer honest incompleteness over persuasive overclaiming.
+
+[↥ Back to top](#-documentation-intake--docsintake)
+
+---
+
+## 10. Validation, review, and rollback
+
+| Concern | Check | Owner |
+|---|---|---|
+| **Truth labels present** | Every material claim in an intake card carries a label (`CONFIRMED`, `PROPOSED`, …) | PR reviewer |
+| **Sources cited** | Inline citations to attached evidence, prior passes, or external sources (under the external-research carve-out); `NEEDS VERIFICATION` otherwise | PR reviewer |
+| **Target lane named** | Card identifies the canonical lane it would target if promoted | Docs steward |
+| **No intake-as-canon citations** | No code, schema, contract, policy, or release references an intake file as authority | Repo-wide linter / reviewer *(NEEDS VERIFICATION — validator not yet present in repo)* |
+| **Index drift** | Every card has a matching row in `NEW_IDEAS_INDEX.md`, and vice versa | Docs steward |
+| **Aging** | Cards older than the review cadence get re-labeled, promoted, or retired | Docs steward |
+| **Archival entry** | When a card moves to `docs/archive/`, the move is recorded in `CANONICAL_LINEAGE_EXPLORATORY.md` | PR author + docs steward |
+
+**Rollback path.** Because intake is non-canonical by construction, the rollback story is unusually simple:
+
+- A *misfiled* intake card → move via `git mv` to the correct lane; note in `CANONICAL_LINEAGE_EXPLORATORY.md`.
+- A *premature promotion* → revert the promoting PR, restore the card to intake with status `REFINING`, and open a `DRIFT_REGISTER` entry.
+- An *intake-as-canon* citation → fix the citation, open a `DRIFT_REGISTER` entry, and either promote the idea properly or stop citing it.
+
+[↥ Back to top](#-documentation-intake--docsintake)
+
+---
+
+## 11. FAQ
+
+**Q. Is `docs/intake/` the same as source intake?**
+No. `docs/intake/` is for **idea/proposal intake** — documentation governance. *Source intake* (registering a `SourceDescriptor`, capturing source-native input, evaluating rights and source role) is a data-lifecycle concern that lives under `data/registry/sources/`, with its standards described in [`docs/sources/`](../sources/). The two lanes do not share files.
+
+**Q. How is `docs/intake/` different from `docs/archive/`?**
+Intake is the **entry** for not-yet-canon ideas; archive is the **resting place** for retired, superseded, or lineage material. Items move from intake to archive when they will not be promoted, and they move from intake to a canonical lane (with optional ADR) when they are promoted.
+
+**Q. Can an intake card be cited as a source for an architecture decision?**
+Only as **lineage** or **evidence of prior thinking**, never as authority. If the idea is being relied on, it should be promoted (with an ADR if structural) so the canonical form is the citation target.
+
+**Q. Where does an external research note belong?**
+If it informs a generic standard, tool behavior, or external spec, it can be filed under `docs/intake/exploratory/` with the `EXTERNAL` label and an inline citation. It must not be used to make KFM-specific repo or doctrine claims; those need project evidence.
+
+**Q. What if the mounted repo doesn't have `docs/intake/` yet?**
+Then the folder is a `PROPOSED` creation: add it under git with this README, an empty `NEW_IDEAS_INDEX.md`, and a single seed card. Cite Directory Rules §6.1 in the PR. No ADR is required to *create* the folder because it is named in canonical doctrine; an ADR is required if the structure deviates from what doctrine names.
+
+[↥ Back to top](#-documentation-intake--docsintake)
+
+---
+
+## 12. Related docs and folders
+
+| Path | Relationship |
+|---|---|
+| [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Governs where intake material may live and what counts as drift |
+| [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) | Ranks doctrine, repo, source, and runtime evidence (intake is below all of these) |
+| [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) | Cite-or-abstain rules that intake cards must follow |
+| [`docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../registers/CANONICAL_LINEAGE_EXPLORATORY.md) | The cross-lane register that classifies canon vs lineage vs exploratory |
+| [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) | Where intake-as-canon citations and other drifts are recorded |
+| [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | Where intake items with unresolved `NEEDS VERIFICATION` checks accumulate |
+| [`docs/adr/`](../adr/) | Required when promotion is structural (Directory Rules §2.4) |
+| [`docs/architecture/`](../architecture/) | A frequent promotion target for system-design ideas |
+| [`docs/archive/`](../archive/) | Downstream home for retired/lineage intake items |
+| [`docs/sources/`](../sources/) | **Different lane** — source descriptor standards (data, not docs) |
+
+[↥ Back to top](#-documentation-intake--docsintake)
+
+---
+
+## 13. Appendix — templates and references
+
+<details>
+<summary><strong>📝 Idea card template (PROPOSED)</strong></summary>
+
+```markdown
+# <id> — <Title>
+
+## Metadata
+- **Stable ID:** KFM-IDX-<CAT>-<NNN>
+- **Status:** PROPOSED | REFINING | PROMOTION_PENDING | PROMOTED | DEPRECATED | SUPERSEDED | UNKNOWN
+- **Category:** <e.g., UI, GAI, EVD, POL, ARCH, OPS, …>
+- **Source support label:** CONFIRMED | INFERRED | PROPOSED | UNKNOWN | NEEDS VERIFICATION | EXTERNAL
+- **Implementation maturity:** UNKNOWN — no mounted-repo proof unless explicitly checked
+- **Source IDs:** <list of cited sources>
+- **Target lane (if promoted):** <e.g., docs/architecture/ui/, contracts/, schemas/contracts/v1/…>
+
+## Normalized statement
+One-paragraph, source-anchored statement of the idea, using truth labels for each claim.
+
+## Detailed explanation
+- CONFIRMED: <evidence-backed claim>
+- PROPOSED: <design recommendation>
+- UNKNOWN / NEEDS VERIFICATION: <what would need checking to upgrade the label>
+
+## Why it matters
+What governance, evidence, validation, publication, correction, or rollback property this would improve.
+
+## Related ideas
+- <id> — <relationship>
+
+## Dependencies
+- <prerequisite ideas, ADRs, schemas, policies>
+
+## Tensions and limitations
+- <costs, conflicts, edge cases>
+
+## Expansion directions
+- <how this could be extended once admitted>
+
+## Open questions
+- NEEDS VERIFICATION: <specific checkable items>
+
+## Source attribution
+- <citation>; pages; basis; role
+```
+
 </details>
 
-### 3. Run a synthesis pass
+<details>
+<summary><strong>📑 Index row template (PROPOSED)</strong></summary>
 
-Produce a *Pass-N — Idea Index, Category Atlas, and Expansion Dossier* in `docs/intake/passes/`. Required posture, derived from the existing Pass-10 / 11 / 12 / 13 dossiers in the project corpus:
+```markdown
+| ID | Title | Cat | Status | Essence | Related | Target lane |
+|---|---|---|---|---|---|---|
+| KFM-IDX-UI-001 | … | UI | PROPOSED | … | KFM-IDX-GAI-003 | docs/architecture/ui/ |
+```
 
-- **Source boundary** — name the controlling corpus; treat other docs as corroborating only.
-- **Truth posture key** — `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`.
-- **Implementation maturity is bounded** — no claim that any specific repo file, branch state, test result, or runtime behavior has been verified unless it actually has been.
-- **Convergence and pressure** — note where new ideas converge with existing doctrine and where they pressure it.
-- **Duplicates** — merge near-duplicates into a single normalized formulation; treat repeats as corroboration.
+</details>
 
-### 4. Index it in `NEW_IDEAS_INDEX`
+<details>
+<summary><strong>🧷 Truth-label cheat sheet</strong></summary>
 
-Append a row referencing the pass dossier, the controlling corpus, and the disposition.
-
-### 5. Triage outward
-
-Walk the dossier with the relevant owners. For each idea worth advancing, open the appropriate downstream artifact: ADR draft, doctrine PR, contract sketch, schema draft, policy bundle, runbook, or register entry. For each idea not chosen, route to `docs/archive/exploratory/` with a brief disposition note.
-
-> [!CAUTION]
-> Do not edit doctrine, contracts, schemas, or policy directly from intake. Promotion is a **separate, reviewed change** in the destination lane, citing the intake entry as input.
-
-[Back to top](#docsintake--idea-intake-lane)
-
----
-
-## Validation
-
-What is checked, and how.
-
-| Check | Mechanism | Status |
-|---|---|---|
-| Every Pass-N dossier names a **controlling corpus** | Reviewer checklist + light lint | **PROPOSED** |
-| Every entry carries a **truth label** (`CONFIRMED` / `PROPOSED` / `UNKNOWN` / `NEEDS VERIFICATION`) | Reviewer checklist + grep-style lint | **PROPOSED** |
-| Pass-N dossiers do **not** claim repo state without evidence | Reviewer checklist | **PROPOSED** |
-| `IDEA_INTAKE` and `NEW_IDEAS_INDEX` row shapes are stable | Schema for the row, if YAML; lint, if Markdown | **PROPOSED** |
-| No file in `docs/intake/` acts as **doctrine, ADR, schema, or policy** | Reviewer checklist + path-validation script | **PROPOSED** |
-| Promotions are not silent | PR template requires linking the originating intake entry when an ADR / doctrine / schema / policy / runbook PR cites intake material | **PROPOSED** |
-
-> Validators and linters are **PROPOSED** until materialized in `tools/validators/` (per [Directory Rules §7.3](../doctrine/directory-rules.md)). When implemented, they should evaluate fixtures in `fixtures/` (or `tests/fixtures/`) and run in CI under `.github/workflows/`.
-
----
-
-## Review burden
-
-| Change type | Required reviewers |
+| Label | Use when |
 |---|---|
-| New entry in `IDEA_INTAKE` | Docs steward (or designate) |
-| New Pass-N dossier | Docs steward + at least one domain or governance owner relevant to the corpus |
-| Update to `NEW_IDEAS_INDEX` | Docs steward |
-| Edits to this `README.md` | Docs steward + one doctrine owner |
-| Promotion **out** of intake | Discipline of the destination lane (ADR review for `docs/adr/`, doctrine review for `docs/doctrine/`, ADR-0001 path for `schemas/`, etc.) — not enforced from this lane |
+| `CONFIRMED` | Verified this session from attached docs, workspace evidence, tests, logs, or artifacts |
+| `INFERRED` | Reasonably derivable from visible evidence but not directly stated |
+| `PROPOSED` | Design, path, placement, or recommendation not yet verified in implementation |
+| `UNKNOWN` | Not resolvable without more evidence |
+| `NEEDS VERIFICATION` | Checkable, but not yet checked strongly enough to act as fact |
+| `EXTERNAL` | Sourced from authoritative external research under the external-research carve-out; never used for KFM-specific repo or doctrine claims |
 
-> Confirm the canonical owner list against `CODEOWNERS` (or `.github/CODEOWNERS`). Ownership above is **PROPOSED** until that file is checked.
+Memory is not evidence.
 
----
+</details>
 
-## Related folders
+<details>
+<summary><strong>🔗 Cross-references in KFM doctrine</strong></summary>
 
-| Folder | Relationship |
-|---|---|
-| [`docs/doctrine/`](../doctrine/) | Destination for promoted invariants. Holds `directory-rules.md`, `truth-posture.md`, `trust-membrane.md`, `lifecycle-law.md`, `authority-ladder.md`. |
-| [`docs/adr/`](../adr/) | Destination for promoted decisions. ADR-0001 governs schema-home placement. |
-| [`docs/architecture/`](../architecture/) | Destination for architectural texts informed by intake. |
-| [`docs/domains/`](../domains/) | Per-domain reference; intake outcomes that are domain-specific land here as content (not as new root folders). |
-| [`docs/runbooks/`](../runbooks/) | Destination for operational procedures matured out of intake. |
-| [`docs/standards/`](../standards/) | External standards (STAC, DCAT, PROV, etc.) that intake material may align with. |
-| [`docs/registers/`](../registers/) | Persistent governance state — `DRIFT_REGISTER.md`, `VERIFICATION_BACKLOG.md`, `AUTHORITY_LADDER.md`, `CANONICAL_LINEAGE_EXPLORATORY.md`, `OBJECT_FAMILY_MAP.md`. |
-| [`docs/archive/`](../archive/) | Outflow for parked exploratory material that intake reviewed but did not promote. |
-| [`control_plane/`](../../control_plane/) | Machine-readable governance maps. Receives nothing directly from intake; receives entries via promoted policy/release/deprecation decisions. |
-| [`contracts/`](../../contracts/), [`schemas/`](../../schemas/), [`policy/`](../../policy/) | Destinations for promoted object meaning, machine shape, and admissibility rules. |
+- Directory Rules §6.1 — names `docs/intake/` and lists `IDEA_INTAKE`, `NEW_IDEAS_INDEX` as its contents
+- Directory Rules §15 — required README contract used by this file
+- Directory Rules §2.4 — when an ADR is required (intake promotion path)
+- Directory Rules §14 — migration discipline (move/rename of intake material)
+- *Whole-UI / Governed-AI Expansion Report*, "Intake / growth governance" — purpose statement *"Prevent exploratory packets from becoming accidental canon"*
+- *Unified Implementation Architecture Build Manual* — confirms lifecycle invariant *RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED* that the intake-to-canon analogy mirrors
+
+</details>
+
+[↥ Back to top](#-documentation-intake--docsintake)
 
 ---
 
 ## ADRs
 
-| ADR | Relevance to this lane |
-|---|---|
-| `docs/adr/ADR-0001-schema-home.md` | Indirect — when intake promotes a candidate schema, ADR-0001 governs **where** it lands (`schemas/contracts/v1/...`). |
-| Lane-specific ADR | **None known.** If `docs/intake/` shape needs to be frozen (filenames, row schemas, pass-naming convention), open an ADR per [Directory Rules §17](../doctrine/directory-rules.md). |
-
-> If a future change to this lane meets [Directory Rules §2.4](../doctrine/directory-rules.md) (new compatibility root, new sibling under `data/`, schema-home change, etc.), an ADR is **required** before merging.
+| ADR | Subject | Status |
+|---|---|---|
+| *(none yet)* | The intake lane itself is named in Directory Rules; no ADR is required to create it. ADRs are recorded here when intake structure or promotion rules change. | — |
 
 ---
 
-## FAQ
+**Last reviewed:** 2026-05-12 · **Owners:** Docs steward + subsystem owner *(PROPOSED placeholder)* · **Authority level:** `exploratory` · **Lifecycle:** intake
 
-<details>
-<summary><b>Is <code>docs/intake/</code> the same as "source intake"?</b></summary>
-
-**No.** They share a word but cover different domains.
-
-- **`docs/intake/`** (this lane) is for **ideas** — working notebooks, candidate doctrine, pattern recipes — landing in human-facing documentation.
-- **Source intake** is a *capability* for registering **data sources** — `SourceDescriptor`, `SourceIntakeRecord`, `SourceAuthorityRegister` — and lives in [`connectors/`](../../connectors/), [`data/raw/`](../../data/raw/), [`data/quarantine/`](../../data/quarantine/), and [`data/receipts/intake/`](../../data/receipts/) (per the Encyclopedia capability taxonomy and [Greenfield Building Plan v1.1](#related-folders) updates referencing `data/receipts/intake/`).
-
-The conflation is a known drift risk. If a file in `docs/intake/` starts looking like a `SourceIntakeRecord`, that is a **misplacement** — it belongs under `data/registry/sources/` or `connectors/`, not here.
-</details>
-
-<details>
-<summary><b>Why a separate lane? Why not just open ADRs?</b></summary>
-
-Because most incoming ideas are not yet decisions. Forcing every brainstorm directly into the ADR lane would either flood it with proposals that do not deserve a decision, or bottleneck the project on premature decision-making. Intake provides a **non-coercive surface** to think in public, normalize vocabulary, surface duplicates, and discover which ideas actually warrant ADRs, doctrine refinements, or schema work — and which should be archived without further commitment.
-</details>
-
-<details>
-<summary><b>Can I cite a Pass-N dossier as authority?</b></summary>
-
-**No, not on its own.** A Pass-N dossier is a *synthesis*, not a *decision*. Citing it as authority would collapse the trust membrane between "what was thought" and "what was decided." If you need binding authority, cite the ADR, doctrine document, contract, schema, or policy that the intake material was promoted into. If no such promoted artifact exists yet, the underlying claim is **`PROPOSED`**.
-</details>
-
-<details>
-<summary><b>What if a Pass-N dossier surfaces a contradiction with existing doctrine?</b></summary>
-
-Name the contradiction explicitly in the dossier. Then route it to one of:
-
-1. **`docs/registers/DRIFT_REGISTER.md`** — if the contradiction is between doctrine and the current repo state.
-2. **`docs/registers/VERIFICATION_BACKLOG.md`** — if the contradiction depends on an unverified claim.
-3. **`docs/adr/`** — if the contradiction needs a binding decision to resolve.
-
-Do **not** silently smooth over the contradiction inside the dossier.
-</details>
-
-<details>
-<summary><b>How do incoming PDFs / corpora get retained?</b></summary>
-
-**PROPOSED policy** — confirm against `policy/rights/` and `policy/sensitivity/`:
-
-- Corpora with clear rights and no sensitivity may be vendored alongside their intake entry.
-- Corpora with unclear rights, third-party content, or sensitive material should be **referenced** (path, hash, citation) without vendoring; if vendored, they belong in `data/raw/` or `data/quarantine/` under the source-intake capability — not under `docs/intake/`.
-- Apply **fail-closed**: when in doubt, reference rather than vendor.
-</details>
-
-<details>
-<summary><b>What does promotion out of intake actually look like?</b></summary>
-
-A separate PR in the destination lane that:
-
-1. Cites the originating `IDEA_INTAKE` row by `intake_id` and the relevant Pass-N dossier section.
-2. Follows the destination lane's own review discipline.
-3. Updates the `disposition` field of the originating intake row to `promoted` and links the resulting artifact.
-
-For schemas this means landing under `schemas/contracts/v1/...` per ADR-0001. For doctrine, under `docs/doctrine/`. For decisions, an ADR. For policy, an OPA/Rego bundle plus tests under `policy/`. Promotion **never** happens by editing intake material in place.
-</details>
-
-<details>
-<summary><b>Is this lane public?</b></summary>
-
-`docs/` as a whole is the human-facing control plane and is generally readable. **However**, intake material is **not authoritative** and should not be exposed through public client surfaces (the governed API, viewer, search index, evidence drawer, etc.) as if it were. Public surfaces consume **promoted, governed** artifacts — not pre-doctrine notes.
-</details>
-
-[Back to top](#docsintake--idea-intake-lane)
-
----
-
-## Last reviewed
-
-`2026-05-09` — initial publication of this README. Re-review cadence: **6 months** or whenever a structural change to intake (filenames, row shapes, pass conventions) is proposed, whichever comes first. If older than 6 months on review, this lane SHOULD appear as a candidate row in `docs/registers/DRIFT_REGISTER.md`.
-
----
-
-<sub>This README is doctrinal orientation for `docs/intake/`. It does not decide promotion, bind doctrine, or carry release authority. See [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) §0, §6.1, §15 for the governing rules.</sub>
+[↥ Back to top](#-documentation-intake--docsintake)
