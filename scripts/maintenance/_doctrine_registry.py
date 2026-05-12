@@ -38,4 +38,5 @@ def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
         doc_id = entry.get("doc_id", "")
         if not doc_id:
             raise ValueError(f"missing doc_id for {name}")
+
     return entries

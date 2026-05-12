@@ -57,7 +57,11 @@ def main() -> int:
     parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
-    return sync(args.registry, args.artifacts_dir, args.output)
+    try:
+        return sync(args.registry, args.artifacts_dir, args.output)
+    except ValueError as exc:
+        print(json.dumps({"check": "sync_doctrine_artifact_registry_status", "result": "error", "error": str(exc)}))
+        return 2
 
 
 if __name__ == "__main__":

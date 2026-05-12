@@ -64,7 +64,11 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    return run(args.registry, args.artifacts_dir, args.output)
+    try:
+        return run(args.registry, args.artifacts_dir, args.output)
+    except ValueError as exc:
+        print(json.dumps({"check": "required_doctrine_artifacts", "result": "error", "error": str(exc)}))
+        return 2
 
 
 if __name__ == "__main__":
