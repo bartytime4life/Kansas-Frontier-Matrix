@@ -5,6 +5,7 @@ import argparse
 import json
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -19,6 +20,11 @@ def main() -> int:
     parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
     parser.add_argument("--output-dir", type=Path, default=root / "receipts" / "doctrine_artifacts")
     parser.add_argument(
+        "--stable-filenames",
+        action="store_true",
+        help="Use stable receipt filename instead of UTC timestamp suffix",
+    )
+    parser.add_argument(
         "--strict",
         action="store_true",
         help="Return non-zero when required doctrine artifacts are missing (check returncode 1)",
@@ -26,7 +32,8 @@ def main() -> int:
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    check_receipt = args.output_dir / "check_required_doctrine_artifacts.json"
+    suffix = "" if args.stable_filenames else f".{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
+    check_receipt = args.output_dir / f"check_required_doctrine_artifacts{suffix}.json"
 
     check_cmd = [
         sys.executable,
