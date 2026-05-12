@@ -1,3 +1,8 @@
 # Document registry
 # Lists every authoritative doc, its authority level, owner, status.
-entries: []
+entries:
+  - doc_id: kfm://doc/doctrine/required-artifact-index
+    kind: doctrine_required_artifact_index
+    path: control_plane/document_registry_doctrine_required.yaml
+    authority: CONFIRMED
+    status: active

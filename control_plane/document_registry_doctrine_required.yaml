@@ -1,0 +1,10 @@
+required_doctrine_artifacts:
+  - filename: KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf
+    doc_id: kfm://doc/doctrine/pass-18-idea-index-category-atlas-expansion-dossier
+    status: missing
+  - filename: Master_MapLibre_Components-Functions-Features.pdf
+    doc_id: kfm://doc/doctrine/master-maplibre-components-functions-features
+    status: missing
+  - filename: Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf
+    doc_id: kfm://doc/doctrine/definitive-greenfield-building-plan-v1-1
+    status: missing
