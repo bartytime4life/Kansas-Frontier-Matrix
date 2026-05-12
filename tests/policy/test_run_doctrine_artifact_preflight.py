@@ -34,8 +34,6 @@ def test_preflight_runner_produces_presence_input_with_missing_artifacts(tmp_pat
     assert payload["render_returncode"] == 0
     assert payload["presence_input"] == {"present": {"a.pdf": False, "b.pdf": False}}
     assert (outdir / "check_required_doctrine_artifacts.json").exists()
-
-
 def test_preflight_runner_strict_mode_fails_when_artifacts_missing(tmp_path: Path):
     registry = tmp_path / "registry.yaml"
     artifacts = tmp_path / "artifacts"
