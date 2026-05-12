@@ -21,6 +21,7 @@ def test_required_doctrine_artifact_check_fails_until_artifacts_admitted():
     assert payload["check"] == "required_doctrine_artifacts"
     assert payload["missing_count"] >= 1
     assert payload["result"] == "fail"
+    assert isinstance(payload["present"], dict)
 
 
 def test_required_doctrine_artifact_check_writes_receipt(tmp_path: Path):
@@ -36,3 +37,4 @@ def test_required_doctrine_artifact_check_writes_receipt(tmp_path: Path):
     written = json.loads(out.read_text(encoding="utf-8"))
     assert written["check"] == "required_doctrine_artifacts"
     assert written["result"] == "fail"
+    assert isinstance(written["present"], dict)
