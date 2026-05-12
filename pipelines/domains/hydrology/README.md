@@ -29,3 +29,8 @@ See parallel domain folders under docs/, contracts/, schemas/, policy/, tests/, 
 
 ## Status
 PROPOSED (greenfield scaffold)
+
+
+## Promotion gate slice
+- `promote.py` emits a hydrology promotion decision stub to `release/promotion_decisions/hydrology/`.
+- Validate fixtures with `python tools/validators/release/validate_promotion_decision.py --fixtures`.

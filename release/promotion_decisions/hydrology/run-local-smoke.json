@@ -1,0 +1,16 @@
+{
+  "id": "promo:hydrology:run-local-smoke",
+  "version": "v1",
+  "domain": "hydrology",
+  "run_id": "run-local-smoke",
+  "decision": "APPROVE",
+  "evidence_ref": "evidence:hydrology:bundle:run-local-smoke",
+  "evidence_bundle_uri": "data/proofs/hydrology/run-local-smoke.promotion_proof.json",
+  "rollback_card_uri": "release/rollback_cards/hydrology/run-local-smoke.md",
+  "policy_bundle": "policy/promotion/hydrology@v1",
+  "decided_at": "2026-05-12T19:43:24.530590+00:00",
+  "review": {
+    "reviewer": "automation-smoke",
+    "ticket": "REL-SMOKE"
+  }
+}

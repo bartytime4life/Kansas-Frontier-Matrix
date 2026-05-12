@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: 'echo TODO promotion-prerequisites'
+      - run: python tools/validators/release/validate_promotion_decision.py --fixtures
   review-records-present:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: 'echo TODO review-records-present'
+      - run: python pipelines/domains/hydrology/promote.py
