@@ -1,316 +1,202 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/github-root-readme
-title: .github/ — Repository Governance Hooks
+doc_id: kfm://doc/github-folder-readme
+title: .github — GitHub Platform Governance Hooks
 type: standard
 version: v1
 status: draft
-owners: Docs steward + Release / CI owners (TBD — see CODEOWNERS)
-created: 2026-05-10
-updated: 2026-05-10
+owners: <repo stewards · governance reviewers · CI maintainers — placeholder, confirm via CODEOWNERS>
+created: 2026-05-11
+updated: 2026-05-11
 policy_label: public
 related:
-  - ../README.md
-  - ../docs/doctrine/directory-rules.md
-  - ../docs/doctrine/trust-membrane.md
-  - ../docs/governance/
-  - ../docs/runbooks/
-  - ../control_plane/
-  - ../release/
-tags: [kfm, governance, ci, github]
+  - ../directory-rules.md
+  - ../docs/registers/AUTHORITY_LADDER.md
+  - ../docs/registers/DRIFT_REGISTER.md
+  - ../docs/registers/VERIFICATION_BACKLOG.md
+  - ../CODEOWNERS
+  - ../policy/
+  - ../tools/validators/
+tags: [kfm, governance, ci, github, infra]
 notes:
-  - Repository not mounted in authoring session; concrete file presence marked PROPOSED / NEEDS VERIFICATION.
-  - Replaces any prior ad-hoc landing notes for .github/.
+  - "Folder presence and contents are PROPOSED until verified against a mounted repo."
+  - "Workflow filenames inside are sourced from KFM design reports (Whole-UI Expansion, Pass 10 C14-01) and from Unified Manual §25 CI/CD lanes; they may not yet exist on disk."
 [/KFM_META_BLOCK_V2] -->
 
-# `.github/` — Repository Governance Hooks
+# `.github/` — GitHub Platform Governance Hooks
 
-> GitHub-side glue for KFM: workflows, templates, CODEOWNERS, and policy hooks that make the governed, evidence-first, lifecycle-aware repo enforceable on every PR.
+> Workflows, templates, and platform hooks that turn KFM governance doctrine into enforceable, observable signals on every push, pull request, and release dry-run.
 
-<p align="left">
-  <a href="../README.md"><img alt="Project: Kansas Frontier Matrix" src="https://img.shields.io/badge/project-Kansas%20Frontier%20Matrix-1f6feb"></a>
-  <a href="../docs/doctrine/directory-rules.md"><img alt="Doctrine: Directory Rules" src="https://img.shields.io/badge/doctrine-directory--rules-3fb950"></a>
-  <a href="#status"><img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow"></a>
-  <a href="#review-burden"><img alt="Authority: canonical root" src="https://img.shields.io/badge/authority-canonical-blueviolet"></a>
-  <!-- TODO: replace once workflow names + branch are NEEDS VERIFICATION-cleared -->
-  <a href="#"><img alt="CI: TODO" src="https://img.shields.io/badge/CI-TODO-lightgrey"></a>
-  <a href="#"><img alt="CodeQL: TODO" src="https://img.shields.io/badge/CodeQL-TODO-lightgrey"></a>
-  <a href="../LICENSE"><img alt="License" src="https://img.shields.io/badge/license-see%20LICENSE-informational"></a>
-</p>
+![Authority](https://img.shields.io/badge/authority-canonical%20root-1f4f8f)
+![Status](https://img.shields.io/badge/status-proposed%20contents-orange)
+![Doctrine](https://img.shields.io/badge/doctrine-Directory%20Rules%20%C2%A75%2C%20%C2%A720-2b6cb0)
+![CI](https://img.shields.io/badge/CI-fail--closed-2f855a)
+![Policy parity](https://img.shields.io/badge/CI%20%3D%20Runtime-policy%20parity-805ad5)
+![Last reviewed](https://img.shields.io/badge/last%20reviewed-2026--05--11-lightgrey)
 
-**Quick jump:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Directory tree](#directory-tree) · [Diagram](#diagram) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Open verification](#open-verification) · [Last reviewed](#last-reviewed)
+**Status:** PROPOSED — the folder's *role* as a canonical root is **CONFIRMED**; the specific files, workflow names, branch-protection coupling, and CODEOWNERS contents inside are **PROPOSED / NEEDS VERIFICATION** until inspected against a mounted repository.
+**Owners:** `<repo stewards · governance reviewers · CI maintainers — placeholder, confirm via CODEOWNERS>`
+**Last updated:** 2026-05-11
+
+---
+
+## Quick jump
+
+- [Purpose](#purpose)
+- [Authority level](#authority-level)
+- [Status](#status)
+- [What belongs here](#what-belongs-here)
+- [What does NOT belong here](#what-does-not-belong-here)
+- [Inputs](#inputs)
+- [Outputs](#outputs)
+- [Validation](#validation)
+- [Review burden](#review-burden)
+- [Related folders](#related-folders)
+- [ADRs](#adrs)
+- [Last reviewed](#last-reviewed)
+- [Directory tree (PROPOSED)](#directory-tree-proposed)
+- [How `.github/` sits in the canonical tree](#how-github-sits-in-the-canonical-tree)
+- [Responsibility map](#responsibility-map)
+- [Workflow catalog (PROPOSED)](#workflow-catalog-proposed)
+- [CI gate map (A–G)](#ci-gate-map-ag)
+- [Anti-patterns specific to `.github/`](#anti-patterns-specific-to-github)
+- [FAQ](#faq)
+- [Open questions / NEEDS VERIFICATION](#open-questions--needs-verification)
 
 ---
 
 ## Purpose
 
-`.github/` is the **GitHub-side enforcement surface** for KFM doctrine. It carries the workflows, issue/PR templates, CODEOWNERS routing, and policy hooks that turn governance rules — lifecycle invariant, trust membrane, cite-or-abstain, schema-home, separation of release duties — into checks GitHub actually runs on every push and PR.
+`.github/` is the **canonical home for GitHub-platform-specific governance hooks** in the Kansas Frontier Matrix repository. It is the operational seam that wires KFM doctrine — Directory Rules, the gate matrix, policy-as-code, evidence-first promotion — into the day-to-day signals contributors see: workflows, required checks, code ownership, issue and pull-request templates, and dependency-intake configuration.
 
-It does not store doctrine, decisions, or trust-bearing artifacts. Those live in [`docs/`](../docs/), [`control_plane/`](../control_plane/), [`policy/`](../policy/), and [`release/`](../release/). `.github/` exists to make those layers **operationally visible** at the platform boundary.
+This folder **invokes** validators, policies, and tools that live elsewhere. It does **not** own their logic, schemas, or decisions. Workflows are glue; the trust membrane lives in `policy/`, `tools/validators/`, `schemas/`, and `contracts/`.
 
-[Back to top ↑](#github--repository-governance-hooks)
+> [!IMPORTANT]
+> `.github/` is **infrastructure for governance**, not governance itself. A workflow that disagrees with `policy/` is drift — fix the policy or fix the workflow; do not let CI invent rules that doctrine has not authored.
 
 ---
 
 ## Authority level
 
-**Canonical root.** Per [Directory Rules §5](../docs/doctrine/directory-rules.md), `.github/` is listed in the canonical root tree alongside `docs/`, `contracts/`, `schemas/`, `policy/`, `tests/`, `release/`, and the rest. Its responsibility — "workflows, issue/PR templates, governance hooks" — is recognized by GitHub and cannot be relocated.
+**Canonical.** Listed in `directory-rules.md` §5 and §20 as a canonical root. The folder is governance-bearing in role (it operationalizes gates) but *compatibility-shaped* in convention: its directory layout is dictated by GitHub, not by KFM.
 
-`.github/` is **implementation-bearing**: its files run code (Actions) and route review burden (CODEOWNERS, templates). It is **not** the authority for what *should* be enforced — that comes from `docs/doctrine/`, `policy/`, and `contracts/`. `.github/` is where those rules are *wired up*.
-
-| Aspect | Position |
+| Field | Value |
 |---|---|
-| Root status | Canonical (Directory Rules §5) |
-| Authority kind | Implementation-bearing (executes; does not decide) |
-| Lifecycle phase | N/A — operates across phases via validators and gates |
-| Trust posture | Public-readable; protected from unreviewed self-modification |
-| Mirrors / aliases | None permitted |
-
-[Back to top ↑](#github--repository-governance-hooks)
+| Authority class | **Canonical** |
+| Sub-class | **implementation-bearing** — workflows execute; they do not author truth |
+| Governs | CI orchestration, code ownership, issue/PR intake, platform-level governance hooks |
+| Does not govern | Policy decisions, schema shape, contract meaning, validator logic, release decisions, lifecycle data |
 
 ---
 
 ## Status
 
-**Draft.** This README documents the *intended* structure and contract for `.github/`. Concrete file presence (specific workflow names, CODEOWNERS entries, configured branch protections, template inventory) is **NEEDS VERIFICATION** until inspected against the live repository — see [Open verification](#open-verification).
+**CONFIRMED** as a canonical root by `directory-rules.md`.
+**PROPOSED** for everything inside it in this session — file presence, workflow names, CODEOWNERS contents, branch-protection coupling, and any specific check name. No mounted repository was inspected, so the actual contents of `.github/` are **UNKNOWN / NEEDS VERIFICATION**.
 
-Doctrinal claims (what belongs, what doesn't, who reviews) are CONFIRMED against [Directory Rules](../docs/doctrine/directory-rules.md). Implementation depth claims are bounded accordingly.
-
-[Back to top ↑](#github--repository-governance-hooks)
+| Claim | Truth label |
+|---|---|
+| `.github/` is a canonical root | **CONFIRMED** (Directory Rules §5, §20) |
+| `CODEOWNERS` may live at `.github/CODEOWNERS` *or* repo root | **CONFIRMED** (Directory Rules §5) |
+| The seven-gate matrix (A–G) is doctrine | **CONFIRMED** (C5-01) |
+| Workflow files named below exist on disk | **UNKNOWN / NEEDS VERIFICATION** |
+| Branch protection currently enforces the gates listed here | **NEEDS VERIFICATION** |
+| The seven-gate matrix is enforced today in this repo | **PROPOSED** — doctrine confirmed; enforcement not verified |
 
 ---
 
 ## What belongs here
 
-Files in `.github/` MUST serve one of these roles. The list is **closed** — additions require an entry under `docs/registers/DRIFT_REGISTER.md` or an ADR.
-
-| Family | Examples (PROPOSED layout) | Role |
+| Class | Path pattern | Role |
 |---|---|---|
-| **CI / validation workflows** | `workflows/ci.yml`, `workflows/schema-validate.yml`, `workflows/policy-check.yml`, `workflows/link-check.yml` | Run validators from [`tools/`](../tools/) and [`policy/`](../policy/) on PR. Block merges that violate doctrine. |
-| **Release / signing workflows** | `workflows/release-dry-run.yml`, `workflows/release-publish.yml`, `workflows/sign-artifacts.yml` | Drive the release decision flow from [`release/`](../release/). Sign artifacts (DSSE / Sigstore) per `release/signatures/`. |
-| **Security workflows** | `workflows/codeql.yml`, `workflows/dependency-review.yml`, `workflows/secret-scan.yml` | Static analysis, dependency review, secret scanning. |
-| **Maintenance workflows** | `workflows/stale.yml`, `workflows/auto-label.yml`, `workflows/lock-threads.yml` | Repo hygiene. Non-trust-bearing. |
-| **Reusable workflows** | `workflows/_validate.yml`, `workflows/_evidence-gate.yml` | Composed by other workflows; clearly prefixed and documented. |
-| **Issue templates** | `ISSUE_TEMPLATE/bug.yml`, `ISSUE_TEMPLATE/data-correction.yml`, `ISSUE_TEMPLATE/sensitivity-report.yml`, `ISSUE_TEMPLATE/source-proposal.yml`, `ISSUE_TEMPLATE/config.yml` | Route incoming reports into the correction / sensitivity / source-admission paths. |
-| **PR template** | `PULL_REQUEST_TEMPLATE.md` | Enforce the §4 placement protocol — every PR cites the Directory Rules section that justifies new/moved paths. |
-| **Discussion templates** | `DISCUSSION_TEMPLATE/` | Optional. Same hygiene as issue templates. |
-| **Routing & policy hooks** | `CODEOWNERS`, `dependabot.yml`, `labeler.yml`, `release-drafter.yml`, `auto_assign.yml` | Code ownership, dependency cadence, automatic labels. Owners listed here MUST be real and reviewable. |
-| **Funding / community** | `FUNDING.yml` (optional) | If KFM accepts funding/sponsorship; otherwise omit. |
+| GitHub Actions workflows | `.github/workflows/*.yml` | CI invocations of validators, policies, gates, and release dry-runs. |
+| Composite / reusable actions | `.github/actions/<name>/action.yml` | Repo-local action definitions reused by multiple workflows. |
+| Code ownership | `.github/CODEOWNERS` *(or repo-root `CODEOWNERS`)* | Path-to-reviewer map enforced at PR review time. |
+| Issue templates | `.github/ISSUE_TEMPLATE/*.yml` or `*.md` | Structured intake for bugs, drift entries, ADR proposals, verification-backlog items. |
+| Pull request template | `.github/pull_request_template.md` *(or `PULL_REQUEST_TEMPLATE/`)* | Required PR description scaffold: cited Directory Rules section, gate impact, rollback target. |
+| Dependency-intake config | `.github/dependabot.yml` | Pinned-toolchain dependency updates as reviewable PRs. |
+| Funding metadata | `.github/FUNDING.yml` | Optional; community/funding pointers. |
+| Discussion templates | `.github/DISCUSSION_TEMPLATE/*.yml` | Optional; community discussion intake. |
+| Folder README | `.github/README.md` | **This file.** Required by Directory Rules §15. |
 
-> [!IMPORTANT]
-> Every workflow that gates a merge MUST call a validator from [`tools/`](../tools/) or a policy bundle from [`policy/`](../policy/). Workflows MUST NOT inline KFM doctrine, define schemas, or re-express policy. They invoke; they do not author.
-
-[Back to top ↑](#github--repository-governance-hooks)
+> [!NOTE]
+> `CODEOWNERS` MAY live at `.github/CODEOWNERS` or at repo root. The canonical tree in Directory Rules §5 shows both options. Choose one home, document the choice here, and do **not** maintain two copies.
 
 ---
 
 ## What does NOT belong here
 
-These are common drift attractors. The "do not put X here" list is as load-bearing as the inclusion list — see [Directory Rules §15](../docs/doctrine/directory-rules.md).
-
-| Do NOT place here | Belongs in | Why |
+| Misplacement | Belongs in | Why |
 |---|---|---|
-| Doctrine, policy doctrine, or ADRs | [`docs/doctrine/`](../docs/), [`docs/adr/`](../docs/) | Workflows enforce; doctrine decides. Collapsing them hides authority. |
-| Schemas (JSON Schema, JSON-LD context) | [`schemas/contracts/v1/`](../schemas/) | Schema-home rule (ADR-0001). |
-| Contract definitions (object meaning) | [`contracts/`](../contracts/) | Meaning is authored, not CI-side. |
-| Policy bundles (Rego/OPA, allow/deny logic) | [`policy/`](../policy/) | Policy is canonical; `.github/` only *invokes* it. |
-| Validators, generators, builders | [`tools/`](../tools/) | Long-lived, trust-bearing logic. Workflows call them; do not embed them. |
-| Receipts, proofs, evidence bundles | [`data/receipts/`](../data/), [`data/proofs/`](../data/) | Trust artifacts belong on the lifecycle plane, not the CI plane. |
-| Release manifests, promotion decisions, rollback cards | [`release/`](../release/) | Release decisions are governed objects, not workflow outputs. |
-| Secrets, tokens, real credentials | GitHub Actions secrets / external secret store | Never in repo files. See [Directory Rules §10.3](../docs/doctrine/directory-rules.md). |
-| Site / explorer UI assets | [`apps/explorer-web/`](../apps/), [`packages/ui/`](../packages/) | UI is its own canonical lane. |
-| Lifecycle data of any kind | [`data/`](../data/) | `.github/` never holds RAW / WORK / PROCESSED / PUBLISHED bytes. |
-| Generated reports for human reading | [`docs/reports/`](../docs/) or [`artifacts/qa/`](../artifacts/) | CI may *emit* into those; the report itself does not live under `.github/`. |
-| Parallel CODEOWNERS, parallel templates | Root `CODEOWNERS` *or* `.github/CODEOWNERS` — pick one | Two homes = drift. See [Directory Rules §5](../docs/doctrine/directory-rules.md) note on CODEOWNERS placement. |
+| Validator logic (Python/Node code) | `tools/validators/` | Workflows invoke validators; they do not contain them. |
+| Policy bundles (Rego, JSON policy) | `policy/` (with `policies/` only as compatibility mirror) | Policy is authored, versioned, and reviewed in `policy/`; CI references it by digest. |
+| Schemas | `schemas/contracts/v1/...` per ADR-0001 default | Schema authority is `schemas/`. |
+| Contracts (object meaning) | `contracts/` | Semantic Markdown belongs there. |
+| Release manifests, decisions, rollback cards | `release/` | Trust-bearing release artifacts. |
+| Run receipts, proofs, evidence bundles | `data/receipts/`, `data/proofs/` | Lifecycle data and emitted proof. |
+| Deployment manifests, infra config | `infra/` | Hosting, network, exposure posture. |
+| Executable pipeline logic / declarative pipeline specs | `pipelines/` and `pipeline_specs/` | Workflows may *trigger* pipelines; they do not *contain* pipeline logic. |
+| Documentation prose / ADRs / runbooks | `docs/` | Human-facing control plane. |
+| `SECURITY.md` (the public security policy) | Repo root | Directory Rules §5 places `SECURITY.md` at root. A `.github/SECURITY.md` mirror is permitted only with explicit justification. |
+| Test fixtures | `fixtures/` or `tests/fixtures/` | Workflows reference fixtures; they do not store them. |
 
-> [!CAUTION]
-> A workflow that writes to `data/processed/`, `data/catalog/`, `data/published/`, or `release/` outside an approved promotion or release flow violates the **watcher-as-non-publisher** invariant. CI can *propose* — it does not *publish*.
-
-[Back to top ↑](#github--repository-governance-hooks)
-
----
-
-## Directory tree
-
-The tree below is **PROPOSED** — it expresses the doctrinally-correct shape for `.github/` under KFM. The current repository's actual contents are **NEEDS VERIFICATION**; treat divergence as a [`docs/registers/DRIFT_REGISTER.md`](../docs/) entry, not as new authority.
-
-```text
-.github/
-├── README.md                       # this file
-├── CODEOWNERS                      # OR at repo root; never both
-├── PULL_REQUEST_TEMPLATE.md
-├── FUNDING.yml                     # optional
-├── dependabot.yml
-├── labeler.yml                     # optional
-├── release-drafter.yml             # optional
-│
-├── ISSUE_TEMPLATE/
-│   ├── config.yml                  # disables blank issues; routes to discussions
-│   ├── bug.yml
-│   ├── data-correction.yml         # public correction path (CorrectionNotice intake)
-│   ├── sensitivity-report.yml     # rights / sovereignty / sensitivity intake
-│   ├── source-proposal.yml         # new source admission request
-│   └── doc-fix.yml
-│
-├── DISCUSSION_TEMPLATE/            # optional
-│
-└── workflows/
-    ├── ci.yml                      # build + lint + unit tests
-    ├── schema-validate.yml         # validates schemas/ and fixtures/
-    ├── contract-check.yml          # cross-checks contracts/ ↔ schemas/
-    ├── policy-check.yml            # runs policy/ bundles + fixtures
-    ├── directory-rules-check.yml   # enforces placement protocol on changed paths
-    ├── link-check.yml              # doc link health
-    ├── codeql.yml                  # static analysis
-    ├── dependency-review.yml
-    ├── secret-scan.yml
-    ├── release-dry-run.yml         # exercises release/ decision flow
-    ├── release-publish.yml         # gated; signs artifacts; updates release/
-    ├── sign-artifacts.yml          # DSSE / Sigstore signing
-    ├── stale.yml
-    └── _validate.yml               # reusable composite
-```
-
-> [!NOTE]
-> Filenames above are **illustrative** and follow common GitHub Actions conventions. They are not guaranteed to match the live repo. Reconcile via the validator described in [Validation](#validation).
-
-[Back to top ↑](#github--repository-governance-hooks)
-
----
-
-## Diagram
-
-How `.github/` connects to the rest of the repo. Arrows point in the direction of *invocation* (left side **calls into** right side); `.github/` is a thin wiring layer over canonical authorities.
-
-```mermaid
-flowchart LR
-    subgraph GH[".github/"]
-        WF["workflows/"]
-        TPL["ISSUE_TEMPLATE/<br/>PULL_REQUEST_TEMPLATE.md"]
-        OWN["CODEOWNERS"]
-    end
-
-    subgraph CANON["Canonical authorities"]
-        DOC["docs/doctrine/<br/>docs/adr/"]
-        CP["control_plane/"]
-        CON["contracts/"]
-        SCH["schemas/"]
-        POL["policy/"]
-        TST["tests/ + fixtures/"]
-        TOOL["tools/validators/<br/>tools/generators/"]
-        REL["release/"]
-    end
-
-    subgraph LIFE["Lifecycle / proofs"]
-        DATA["data/raw -&gt; work -&gt; processed -&gt;<br/>catalog -&gt; published"]
-        RECEIPTS["data/receipts/"]
-        PROOFS["data/proofs/"]
-    end
-
-    WF -->|invokes| TOOL
-    WF -->|invokes| POL
-    WF -->|runs| TST
-    WF -->|validates shape| SCH
-    WF -->|cross-checks meaning| CON
-    WF -->|exercises decision flow| REL
-    WF -->|writes process memory| RECEIPTS
-    WF -.->|never writes to| DATA
-    WF -.->|never authors| DOC
-
-    TPL -->|routes intake into| REL
-    TPL -->|routes intake into| POL
-    TPL -->|routes intake into| CP
-
-    OWN -->|routes review burden to| DOC
-    OWN -->|routes review burden to| POL
-    OWN -->|routes review burden to| REL
-
-    classDef gh fill:#e7f1ff,stroke:#1f6feb,color:#0b1f3a;
-    classDef canon fill:#eafbe7,stroke:#3fb950,color:#0b1f3a;
-    classDef life fill:#fff4e5,stroke:#d29922,color:#0b1f3a;
-    class WF,TPL,OWN gh;
-    class DOC,CP,CON,SCH,POL,TST,TOOL,REL canon;
-    class DATA,RECEIPTS,PROOFS life;
-```
-
-[Back to top ↑](#github--repository-governance-hooks)
+> [!WARNING]
+> A workflow that embeds policy logic inline — Rego, allow/deny lists, license allowlists, sensitivity rules — is **drift**. The workflow MUST load these from `policy/` so that **CI parity (gate C, C5-03)** holds: CI and runtime MUST evaluate the same policy bundle digest.
 
 ---
 
 ## Inputs
 
-What feeds `.github/`:
+Files in `.github/` are authored by stewards and reviewed by CODEOWNERS. They reference:
 
-- **Doctrine changes** in [`docs/doctrine/`](../docs/) — when an invariant changes, a workflow or template here usually changes too.
-- **New / updated validators** in [`tools/validators/`](../tools/) — workflows wrap them.
-- **Policy bundles** in [`policy/bundles/`](../policy/) and fixtures in [`policy/fixtures/`](../policy/) — invoked from `policy-check.yml`.
-- **Schema changes** in [`schemas/contracts/v1/`](../schemas/) and fixtures in [`fixtures/`](../fixtures/) — invoked from `schema-validate.yml`.
-- **Release flow changes** in [`release/`](../release/) — invoked from `release-dry-run.yml` and `release-publish.yml`.
-- **CODEOWNERS routing intent** from [`docs/governance/`](../docs/) — separation-of-duties rules become `CODEOWNERS` lines.
-
-[Back to top ↑](#github--repository-governance-hooks)
+- **`tools/validators/`** — workflows shell out to repo-wide validators (schema, evidence, lifecycle, source, sensitivity, citation, geometry, geo manifest). *PROPOSED inventory.*
+- **`policy/`** — Conftest/OPA decisions, license allowlists, sensitivity gates, promotion rules.
+- **`schemas/contracts/v1/...`** — for schema-validation jobs.
+- **`fixtures/`** and **`tests/fixtures/`** — for validator and policy fixture suites (positive and negative).
+- **`tests/`** — unit, contract, end-to-end, accessibility, and finite-outcome tests.
+- **`docs/registers/`** — drift, verification, lineage, and authority registers referenced from PR templates and CODEOWNERS comments.
+- **`release/`** — release dry-run and rollback workflows reference release manifests and rollback cards.
 
 ---
 
 ## Outputs
 
-What `.github/` emits:
+`.github/` emits **signals**, not trust-bearing artifacts:
 
-- **Check runs and statuses** on PRs (blocking and informational).
-- **Generated artifacts uploaded to Actions** (logs, test reports, validator outputs) — kept in CI, *not* persisted into the repo as trust content. Trust-bearing receipts land in `data/receipts/` via the relevant pipeline, not via the Actions UI.
-- **Release flow signals** that drive entries in [`release/`](../release/) (manifests, promotion decisions, rollback cards, signatures). The decisions themselves are authored elsewhere; `.github/` runs the gates that let them land.
-- **Labels and routing** on issues/PRs.
-- **Review assignment** via CODEOWNERS.
+- **Check Runs and status checks** on PRs and pushes (consumed by branch protection).
+- **Workflow logs and annotations** — advisory; the source of truth remains the validator/receipt/policy output, not the log line.
+- **PR comments** from bot workflows (drift summaries, gate rollups, AI-patch reviews).
+- **Triggered downstream jobs** — `repository_dispatch`, `workflow_dispatch`, or reusable workflow calls into `tools/` and `pipelines/`.
+
+Workflows MUST NOT emit release decisions, receipts, proofs, or catalog updates as their **sole** output. Those belong in `data/receipts/`, `data/proofs/`, `release/`, and `data/catalog/` — written by the tools the workflow invoked, not by the workflow file itself. This preserves the **watcher-as-non-publisher** invariant.
 
 > [!IMPORTANT]
-> A green CI run is **not** proof of release-readiness. Release readiness is a `release/promotion_decisions/` artifact governed by [Directory Rules §9.2](../docs/doctrine/directory-rules.md). CI proves enforceability of constraints; it does not author release state.
-
-[Back to top ↑](#github--repository-governance-hooks)
+> The CI signal is *evidence that the gate ran*. The CI signal is **not** the gate. Auditors must be able to recompute the same result on a clean local checkout via a `verify.sh`-style script (C14-01).
 
 ---
 
 ## Validation
 
-How `.github/` is itself checked:
+The contents of `.github/` are themselves checked:
 
-| Check | Mechanism | Status |
-|---|---|---|
-| Workflow syntax & schema | `actionlint` (or equivalent) invoked from `ci.yml` | PROPOSED |
-| Reusable-workflow contract | Lint that `_*.yml` files declare `workflow_call` and inputs | PROPOSED |
-| CODEOWNERS validity | GitHub's built-in validator + a check that every path pattern has a real owner | PROPOSED |
-| No duplicate CODEOWNERS homes | Validator: root `CODEOWNERS` XOR `.github/CODEOWNERS` (not both) | PROPOSED |
-| Template completeness | Lint that every `ISSUE_TEMPLATE/*.yml` carries a `labels:` block and an owner | PROPOSED |
-| Placement protocol | `directory-rules-check.yml` runs the §4 placement protocol on every changed path; PR description MUST cite the rule | PROPOSED |
-| Pinned action SHAs | Lint that third-party actions are pinned to a commit SHA, not a floating tag | PROPOSED |
-| No secrets in repo | `secret-scan.yml` (and pre-commit, where present) | PROPOSED |
-| Drift detection | Missing-README scan opens entries in [`docs/registers/DRIFT_REGISTER.md`](../docs/) | PROPOSED |
-
-> [!WARNING]
-> Until the rows above are confirmed against the live repo, do not cite "CI enforces X" as fact. Cite the doctrine that *requires* X, and mark the wiring NEEDS VERIFICATION.
-
-[Back to top ↑](#github--repository-governance-hooks)
+1. **Workflow lint** — `actionlint` (or equivalent) over `.github/workflows/*.yml`. *PROPOSED.*
+2. **CODEOWNERS lint** — GitHub validates CODEOWNERS on push; CI MAY run a coverage check that fails when canonical roots lack owners.
+3. **Path / drift scan** — repo-wide Directory Rules check (§16 reviewer checklist, mechanized). *PROPOSED — depends on `tools/validators/path_role/` once it exists.*
+4. **Pinned action digests** — every `uses:` MUST pin a commit SHA, not a floating tag. Aligns with C13 tool-pinning.
+5. **Policy parity check** — verify the OPA bundle digest referenced in any workflow matches the bundle digest referenced in `infra/` deployment manifests (C5-03).
+6. **Branch-protection coupling** — required-check names MUST match the names branch protection requires. **NEEDS VERIFICATION** against current repository settings.
 
 ---
 
 ## Review burden
 
-Changes inside `.github/` are policy-significant. Default routing:
+Changes under `.github/` require review by:
 
-| Change | Required reviewers |
-|---|---|
-| New or modified merge-gating workflow | Docs steward + CI/Release owner + owner of the invoked validator/policy |
-| `CODEOWNERS` change | Docs steward + at least one affected subsystem owner |
-| New issue template touching corrections, sensitivity, or source admission | Docs steward + Policy owner + Release owner |
-| `PULL_REQUEST_TEMPLATE.md` change | Docs steward (because it encodes the §4 placement protocol) |
-| Release workflow change (`release-*.yml`, `sign-artifacts.yml`) | Release owner + Security owner + Docs steward (separation of duties per [Directory Rules §0](../docs/doctrine/directory-rules.md)) |
-| Security workflow change (`codeql.yml`, `secret-scan.yml`, `dependency-review.yml`) | Security owner + Docs steward |
-| Routine maintenance (`stale.yml`, labels) | Single reviewer acceptable |
+- **The owner(s) named in `CODEOWNERS`** for the affected path.
+- **CI maintainers** for any new workflow, action, or branch-protection-relevant rename.
+- **Governance reviewers** when the change affects required checks, CODEOWNERS coverage, PR-template gating, issue-intake routing, or any gate in the A–G matrix.
+- **Subsystem owners** when a workflow's job affects their subsystem (UI, governed AI, contracts, schemas, policy, release, infra).
 
-Owners are routed via [`CODEOWNERS`](./CODEOWNERS). The current list is **NEEDS VERIFICATION** — see [Open verification](#open-verification).
-
-> [!IMPORTANT]
-> **Separation of duties.** A single reviewer MUST NOT approve a change that simultaneously (a) authors a workflow gate and (b) publishes the artifact that workflow would gate. This is the GitHub-side expression of the release-duties separation called out in [Directory Rules §0](../docs/doctrine/directory-rules.md).
-
-[Back to top ↑](#github--repository-governance-hooks)
+A workflow rename or check-name change that breaks branch protection MUST land with a coordinated update to repository settings; otherwise required checks become unmatchable and merges silently block.
 
 ---
 
@@ -318,62 +204,280 @@ Owners are routed via [`CODEOWNERS`](./CODEOWNERS). The current list is **NEEDS 
 
 | Folder | Relationship |
 |---|---|
-| [`../docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | Authority for what `.github/` exists to enforce. |
-| [`../docs/doctrine/`](../docs/) | Source of all invariants the workflows wrap. |
-| [`../docs/adr/`](../docs/) | ADRs that change what `.github/` must enforce (e.g., schema-home rule). |
-| [`../docs/governance/`](../docs/) | Roles, review burden, separation of duties — sourced into CODEOWNERS. |
-| [`../docs/runbooks/`](../docs/) | Incident response procedures for failed releases, leaked secrets, broken gates. |
-| [`../control_plane/`](../control_plane/) | Machine-readable registers that workflows may read (e.g., `deprecation_register.yaml`). |
-| [`../contracts/`](../contracts/) | Object meaning — checked by `contract-check.yml`. |
-| [`../schemas/`](../schemas/) | Object shape — validated by `schema-validate.yml`. |
-| [`../policy/`](../policy/) | Allow/deny/restrict/abstain bundles — invoked by `policy-check.yml`. |
-| [`../tools/`](../tools/), [`../tools/validators/`](../tools/) | Long-lived validators — wrapped by workflows. |
-| [`../tests/`](../tests/), [`../fixtures/`](../fixtures/) | Enforceability proof — run by `ci.yml`. |
-| [`../release/`](../release/) | Release decisions — exercised by `release-dry-run.yml`, gated by `release-publish.yml`. |
-| [`../data/receipts/`](../data/) | Where pipelines write process memory — `.github/` does not write here directly. |
-
-[Back to top ↑](#github--repository-governance-hooks)
+| [`../policy/`](../policy/) | Source of truth for allow / deny / restrict / abstain decisions. Workflows reference policy by digest. |
+| [`../tools/validators/`](../tools/validators/) | Validator logic invoked by workflows. |
+| [`../schemas/`](../schemas/) | Schema authority (`schemas/contracts/v1/...` per ADR-0001 default). |
+| [`../contracts/`](../contracts/) | Object-family meaning (semantic Markdown). |
+| [`../tests/`](../tests/) | Test suites invoked by CI. |
+| [`../fixtures/`](../fixtures/) | Fixture inputs to validator and policy suites. |
+| [`../release/`](../release/) | Release decisions; dry-run workflows reference manifests here. |
+| [`../infra/`](../infra/) | Deployment manifests; policy-parity coupling lives here. |
+| [`../docs/registers/AUTHORITY_LADDER.md`](../docs/registers/AUTHORITY_LADDER.md) | Authority order CI helps enforce. |
+| [`../docs/registers/DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) | Where drift between workflows and doctrine is recorded. |
+| [`../docs/registers/VERIFICATION_BACKLOG.md`](../docs/registers/VERIFICATION_BACKLOG.md) | NEEDS-VERIFICATION items, including branch-protection coupling. |
+| [`../directory-rules.md`](../directory-rules.md) | The doctrine this folder operationalizes. |
+| [`../CODEOWNERS`](../CODEOWNERS) *or* [`./CODEOWNERS`](./CODEOWNERS) | Path-to-reviewer map. Confirm the chosen home. |
 
 ---
 
 ## ADRs
 
-ADRs that materially shape what `.github/` enforces:
+The ADRs relevant to this folder are listed below. **All listed ADR IDs except ADR-0001 are PROPOSED placeholders** until a mounted `docs/adr/` confirms them.
 
-| ADR | What it requires of `.github/` |
-|---|---|
-| **ADR-0001 — Schema home** ([Directory Rules §6.4](../docs/doctrine/directory-rules.md)) | `schema-validate.yml` MUST validate `schemas/contracts/v1/...`. If both `contracts/<domain>/<x>.schema.json` and the canonical home are populated, the workflow MUST fail with a drift-register pointer. |
-| **ADR for any §2.4 change** ([Directory Rules §2.4](../docs/doctrine/directory-rules.md)) | Adding/renaming a canonical root, splitting a lifecycle phase, or creating a parallel home triggers a corresponding update to `directory-rules-check.yml`. |
-| **Future ADRs** | Listed here as they land. Each ADR that changes invariants MUST include a checklist item: "Does this require a `.github/` workflow or template change? If yes, link the PR." |
+| ADR | Topic | Why it touches `.github/` |
+|---|---|---|
+| **ADR-0001** *(referenced in Directory Rules)* | Schema home — default `schemas/contracts/v1/...` | Schema-validation workflows MUST target the canonical home. |
+| **ADR-CI-PARITY** *(PROPOSED)* | Policy parity — CI bundle digest equals runtime bundle digest | C5-03 enforcement; coupling between this folder and `infra/`. |
+| **ADR-REQUIRED-CHECKS** *(PROPOSED)* | Pinning required-check names to branch protection | Prevents silent-block drift between workflow renames and protection rules. |
+| **ADR-STARTER-PACK** *(PROPOSED)* | Five-file governance starter pack + `integrity.yml` | C14-01 minimum viable governance posture. |
 
 > [!NOTE]
-> A complete ADR inventory lives in [`../docs/adr/`](../docs/). This table is the subset whose enforcement surface intersects `.github/`.
-
-[Back to top ↑](#github--repository-governance-hooks)
-
----
-
-## Open verification
-
-Items to resolve against the live repository. Track in [`docs/registers/VERIFICATION_BACKLOG.md`](../docs/) and close with PRs that update this README.
-
-- [ ] **NEEDS VERIFICATION** — Inventory of files actually present under `.github/` (workflows, templates, CODEOWNERS, dependabot, FUNDING).
-- [ ] **NEEDS VERIFICATION** — Whether `CODEOWNERS` lives at repo root, under `.github/`, or both. If both, open a drift entry.
-- [ ] **NEEDS VERIFICATION** — Which workflows are configured as **required** in branch protection on the default branch.
-- [ ] **NEEDS VERIFICATION** — Whether `directory-rules-check.yml` (or equivalent) exists; if not, it is **PROPOSED**.
-- [ ] **NEEDS VERIFICATION** — Whether third-party actions are pinned to commit SHAs.
-- [ ] **NEEDS VERIFICATION** — Real owner names for the badges and review table above (currently placeholders).
-- [ ] **NEEDS VERIFICATION** — Whether `release-publish.yml` actually invokes the `release/` decision flow and signs artifacts via Sigstore/DSSE.
-- [ ] **NEEDS VERIFICATION** — Whether `ISSUE_TEMPLATE/sensitivity-report.yml` (or equivalent) exists; if not, **PROPOSED** as the intake path for rights / sovereignty / sensitivity reports.
-- [ ] **PROPOSED** — Adopt the workflow naming scheme in [Directory tree](#directory-tree); if the repo uses different names, update either the repo or this README and pick one.
-- [ ] **PROPOSED** — Adopt a `_validate.yml` reusable-workflow pattern so individual gates compose instead of duplicating setup.
-
-[Back to top ↑](#github--repository-governance-hooks)
+> No ADR has been verified in this session. Mounted-repo inspection is required to confirm ADR numbers, acceptance state, and supersession links.
 
 ---
 
 ## Last reviewed
 
-`2026-05-10` — initial draft against [Directory Rules](../docs/doctrine/directory-rules.md). Re-review trigger: any §2.4 change in Directory Rules, any new workflow added, or 6 months elapsed — whichever comes first.
+**2026-05-11.** Older than six months from this date → flag for review per Directory Rules §15.
 
-<sub>This README satisfies the canonical-root README contract in <a href="../docs/doctrine/directory-rules.md">Directory Rules §15</a>. Sections marked PROPOSED / NEEDS VERIFICATION must be closed before this document moves from <code>draft</code> to <code>published</code>.</sub>
+[Back to top](#github--github-platform-governance-hooks)
+
+---
+
+## Directory tree (PROPOSED)
+
+> [!CAUTION]
+> The tree below is **PROPOSED**. It synthesizes the canonical-root role from `directory-rules.md` with workflow names that appear in KFM design reports (Whole-UI + Governed-AI Expansion §29–§30; Pass 10 idea C14-01) and CI lanes from the Unified Implementation Manual §25. It does **not** describe the current state of any mounted repository.
+
+```text
+.github/
+├── README.md                                # this file (Directory Rules §15)
+├── CODEOWNERS                                # OR at repo root — choose one
+├── pull_request_template.md                  # PROPOSED — must cite Directory Rules section
+├── dependabot.yml                            # PROPOSED — pinned-toolchain intake
+├── FUNDING.yml                               # OPTIONAL
+├── ISSUE_TEMPLATE/
+│   ├── bug_report.yml                        # PROPOSED
+│   ├── drift_entry.yml                       # PROPOSED — feeds docs/registers/DRIFT_REGISTER.md
+│   ├── verification_item.yml                 # PROPOSED — feeds docs/registers/VERIFICATION_BACKLOG.md
+│   ├── adr_proposal.yml                      # PROPOSED — initiates docs/adr/ flow
+│   └── config.yml                            # PROPOSED — intake routing
+├── DISCUSSION_TEMPLATE/                      # OPTIONAL
+├── actions/                                  # PROPOSED — composite / reusable actions
+│   └── <action-name>/action.yml
+└── workflows/
+    ├── integrity.yml                         # PROPOSED — C14-01 starter-pack workflow
+    ├── path-and-drift.yml                    # PROPOSED — Directory Rules §16 mechanized
+    ├── contracts-ui-ai.yml                   # PROPOSED — schema + fixture + policy validation
+    ├── ui-governed.yml                       # PROPOSED — PR-safe UI validation
+    ├── policy-parity.yml                     # PROPOSED — C5-03 CI = runtime digest check
+    ├── promotion-dry-run.yml                 # PROPOSED — release gate dry-run, no public effect
+    ├── catalog-closure.yml                   # PROPOSED — PROV / STAC / DCAT closure check
+    ├── signing-integrity.yml                 # PROPOSED — RunReceipt / spec_hash / digest verify
+    └── rollback-drill.yml                    # PROPOSED — rollback card replay
+```
+
+---
+
+## How `.github/` sits in the canonical tree
+
+```mermaid
+flowchart LR
+    classDef canon fill:#e6f0fb,stroke:#1f4f8f,color:#0b2545,stroke-width:1.2px;
+    classDef hook fill:#fff5e6,stroke:#b25900,color:#5a3500,stroke-width:1.4px;
+    classDef result fill:#f3eaf9,stroke:#6b21a8,color:#3b1361,stroke-width:1.2px;
+    classDef reg fill:#eef7ee,stroke:#2f7d32,color:#1b3b1c,stroke-width:1.2px;
+
+    GH[".github/<br/>workflows · templates · CODEOWNERS"]:::hook
+
+    POL["policy/<br/>OPA bundle (digest-pinned)"]:::canon
+    TLS["tools/validators/<br/>schema · evidence · source · sensitivity · geometry"]:::canon
+    SCH["schemas/contracts/v1/<br/>machine shape"]:::canon
+    FIX["fixtures/ &amp; tests/fixtures/<br/>positive + negative"]:::canon
+    REL["release/<br/>manifests · rollback · correction"]:::canon
+    INF["infra/<br/>deployment manifests"]:::canon
+
+    DAT["data/receipts/ · data/proofs/<br/>(written by tools, not by workflows)"]:::result
+    CHK["Check Runs<br/>required by branch protection"]:::result
+    REG["docs/registers/<br/>DRIFT · VERIFICATION · LINEAGE"]:::reg
+
+    POL -- "digest" --> GH
+    TLS -- "invoked by" --> GH
+    SCH -- "validated against" --> GH
+    FIX -- "fed into" --> GH
+    REL -- "dry-run target" --> GH
+    INF -- "must match policy digest" --> GH
+
+    GH --> CHK
+    GH -- "triggers validators that emit" --> DAT
+    GH -- "intake templates feed" --> REG
+```
+
+[Back to top](#github--github-platform-governance-hooks)
+
+---
+
+## Responsibility map
+
+| Responsibility | Lives in | `.github/` role |
+|---|---|---|
+| Decide allow / deny / restrict / abstain | `policy/` | **Reference** the bundle by digest; never inline rules. |
+| Define object meaning | `contracts/` | **Validate** that PRs touching contracts pair with schema and fixture changes. |
+| Define machine shape | `schemas/` | **Invoke** schema-validation jobs over `schemas/contracts/v1/` + fixtures. |
+| Prove a rule is enforceable | `tests/` | **Run** unit / contract / e2e / accessibility / finite-outcome suites. |
+| Repo-wide validator logic | `tools/validators/` | **Shell out** to validators; never duplicate logic in YAML. |
+| Release decisions | `release/` | **Dry-run** release gates; never publish from CI alone. |
+| Receipts, proofs, manifests | `data/receipts/`, `data/proofs/`, `release/manifests/` | **Written by tools** the workflow invokes, not by the workflow file. |
+| Deployment posture | `infra/` | **Parity check** — CI and infra reference the same bundle digest. |
+| Human explanation | `docs/` | **Linked** from PR templates, issue templates, CODEOWNERS comments. |
+
+---
+
+## Workflow catalog (PROPOSED)
+
+> [!NOTE]
+> Every row below is **PROPOSED**. Two filenames — `ui-governed.yml` and `contracts-ui-ai.yml` — are explicitly named in the Whole-UI + Governed-AI Expansion report as CREATE-PROPOSED. `integrity.yml` is named in Pass 10 idea C14-01. The remaining filenames are author-chosen names that map one-to-one onto the CI/CD lanes listed in Unified Manual §25; an ADR or working-group decision SHOULD freeze final names before they enter branch protection.
+
+| Workflow | Trigger | Purpose | Gate(s) | Source for the filename / lane |
+|---|---|---|---|---|
+| `integrity.yml` | push, pull_request | Run `verify.sh`; same checks locally and in CI | A, B, C, F | C14-01 (filename CONFIRMED in source) |
+| `path-and-drift.yml` | pull_request | Mechanize Directory Rules §16 reviewer checklist; flag root creation, schema-home drift, trust-content placement | A | Unified Manual §25 lane "Path and drift scan" (filename author-chosen) |
+| `contracts-ui-ai.yml` | pull_request | Schema, fixture, and policy validation for UI + governed-AI surfaces | B, C | Whole-UI Expansion §30 (filename CONFIRMED in source) |
+| `ui-governed.yml` | pull_request | PR-safe UI validation: schema / component / e2e / a11y | B, C, G | Whole-UI Expansion §30 (filename CONFIRMED in source) |
+| `policy-parity.yml` | pull_request | C5-03 check — CI bundle digest equals runtime bundle digest | C | C5-03 (filename author-chosen) |
+| `promotion-dry-run.yml` | pull_request, workflow_dispatch | Run promotion gates without public effect | A–F | Unified Manual §25 lane "Promotion dry-run" (filename author-chosen) |
+| `catalog-closure.yml` | pull_request | Validate PROV / STAC / DCAT-style closure | F | Unified Manual §25 lane "Catalog closure" (filename author-chosen) |
+| `signing-integrity.yml` | pull_request, push | Verify RunReceipt, spec_hash, digest, Merkle patterns | F | Unified Manual §25 lane "Signing / integrity" + C1-02 (filename author-chosen) |
+| `rollback-drill.yml` | workflow_dispatch, schedule | Replay rollback card against a dry-run release | F, G | Encyclopedia §14 PR-10 (filename author-chosen) |
+
+**Cross-cutting requirements (all workflows):**
+
+- **No-network default** for the first PR pipeline. Live connectors, external endpoints, package-version probes, and runtime smoke tests are **opt-in, source-activated** jobs. *(Unified Manual §25.)*
+- **Fail-closed.** Absent evidence blocks promotion. *(C5-02.)*
+- **Pinned actions.** Every `uses:` references a commit SHA, never a floating tag.
+- **Watcher-as-non-publisher.** Workflows MUST NOT write canonical truth, mutate catalogs, or publish directly. They emit candidate decisions and receipts only.
+
+---
+
+## CI gate map (A–G)
+
+The seven-gate matrix is **CONFIRMED doctrine** (C5-01). Its **current enforcement** in this repo is **PROPOSED / NEEDS VERIFICATION** until branch protection and workflow inventory are inspected.
+
+| Gate | Intent | Required evidence | CI surface |
+|---|---|---|---|
+| **A** Structure & Metadata | MetaBlock presence, zone correctness, path-role validity | Path/drift scan + MetaBlock check | `path-and-drift.yml` *(PROPOSED)* |
+| **B** Schemas & Contracts | Object conforms to schema + contract vocabulary | jsonschema/ajv over `schemas/contracts/v1/` and fixtures | `contracts-ui-ai.yml`, `ui-governed.yml` *(PROPOSED)* |
+| **C** Policy Parity | CI and runtime decide on the same OPA bundle digest | Conftest/OPA against pinned bundle | `policy-parity.yml`, `integrity.yml` *(PROPOSED)* |
+| **D** Security & Sensitivity | Rights, sensitivity, license allowlist, secret hygiene | SPDX allowlist + sensitivity classifier + secret scan | *(integrated in `integrity.yml`; PROPOSED)* |
+| **E** Data Quality | DQ profilers, assertions, threshold pass | DQ check outputs with `status: pass` | *(integrated in `promotion-dry-run.yml`; PROPOSED)* |
+| **F** Provenance & Lineage | RunReceipt, spec_hash, signed bundle, catalog closure | Receipt verification + closure check | `signing-integrity.yml`, `catalog-closure.yml` *(PROPOSED)* |
+| **G** Reviewability | CODEOWNERS + two-key approval + policy approval | GitHub review + policy decision | branch protection + `CODEOWNERS` + policy webhook *(NEEDS VERIFICATION)* |
+
+> [!IMPORTANT]
+> **Required-check names** in branch protection MUST exactly match the workflow job names listed here. A rename without a coordinated protection update results in **silent merge blocks**. This coupling is **NEEDS VERIFICATION** against current GitHub repository settings.
+
+[Back to top](#github--github-platform-governance-hooks)
+
+---
+
+## Anti-patterns specific to `.github/`
+
+Beyond the placement anti-patterns in Directory Rules §13, these failure modes are specific to this folder:
+
+| Anti-pattern | Symptom | Fix |
+|---|---|---|
+| **Policy inlined in YAML** | `allowlist:`, `deny:`, license lists embedded directly in workflow steps | Move to `policy/`; workflow references by digest. Restores C5-03 parity. |
+| **Floating action tags** | `uses: actions/checkout@v4` instead of a pinned SHA | Pin to commit SHA; updates land as reviewable PRs. |
+| **Required-check drift** | Workflow renamed; branch protection still requires the old name | Rename and update protection in the same PR; ADR if the rename is structural. |
+| **Workflow as publisher** | A workflow `git push`-es to `data/published/`, `data/catalog/`, or `release/` | Watcher-as-non-publisher invariant broken. Workflows emit receipts and candidate decisions; promotion is governed. |
+| **CI-only validator** | Validator logic lives only inside a workflow `run:` block | Extract to `tools/validators/`; CI calls into it. Restores local reproducibility (C14-01 `verify.sh`). |
+| **CODEOWNERS without coverage** | A new canonical root lands without a CODEOWNERS line | CODEOWNERS-coverage check fails; block merge. |
+| **Schema job pointing at a compatibility root** | Workflow validates `jsonschema/` instead of `schemas/contracts/v1/` | Compatibility roots are mirrors; canonical home is `schemas/`. |
+| **PR template smoothing over governance** | PR template omits "Directory Rules section cited" or "rollback target" fields | Restore required fields; reviewers cannot waive them. |
+| **Two CODEOWNERS files** | One at `.github/CODEOWNERS`, one at repo root | Pick one home; delete the other; note the choice here. |
+| **Secret-bearing workflow on PRs from forks** | Workflow with elevated permissions triggered by `pull_request` from forks | Use `pull_request_target` only with care; default to least-privilege tokens. |
+
+---
+
+## FAQ
+
+<details>
+<summary><strong>Why does <code>.github/</code> count as a canonical root if its layout is dictated by GitHub?</strong></summary>
+
+Because **role** decides root membership, not naming flexibility. The folder carries repo-wide responsibility for CI orchestration, code ownership, and platform-level governance hooks — that is a canonical responsibility per Directory Rules §3. GitHub's naming conventions inside the folder are operational details, not authority questions.
+
+</details>
+
+<details>
+<summary><strong>Where does <code>CODEOWNERS</code> belong — here or at repo root?</strong></summary>
+
+Either is permitted by Directory Rules §5 ("may live in `.github/CODEOWNERS` instead"). Choose one home, document the choice in this README, and ensure tooling (CI, GitHub settings) points at the chosen path. Maintaining two copies is the anti-pattern.
+
+</details>
+
+<details>
+<summary><strong>Why not put validators or policy bundles in <code>.github/</code>?</strong></summary>
+
+Because they have canonical homes — `tools/validators/` and `policy/` respectively — and because **policy parity (C5-03)** requires CI and runtime to evaluate the same bundle. If the bundle lived in `.github/`, runtime could not reference it without `.github/` becoming a parallel authority, which violates the "no parallel authority" rule in Directory Rules §13.
+
+</details>
+
+<details>
+<summary><strong>Can a workflow publish a release?</strong></summary>
+
+No, not autonomously. A workflow MAY *trigger* a release pipeline whose output is a `ReleaseManifest` under `release/manifests/`, but the release decision is governed: it requires receipts, proof closure, source-activation evidence, policy approval, and (gate G) reviewer approval. The **watcher-as-non-publisher** invariant means workflows emit candidate decisions and receipts; humans (or reviewed gates) promote.
+
+</details>
+
+<details>
+<summary><strong>What happens if branch protection requires a check that no workflow produces?</strong></summary>
+
+PRs become unmergeable until either (a) the missing check is produced or (b) branch protection is updated. Either change is a governance event — record it in `docs/registers/DRIFT_REGISTER.md` and resolve via PR + reviewer sign-off. An ADR is needed only if the gate matrix itself changes.
+
+</details>
+
+<details>
+<summary><strong>How does this folder relate to the five-file governance starter pack (C14-01)?</strong></summary>
+
+C14-01 names a minimum viable governance posture: `CODEOWNERS`, `tool-versions.yaml`, `policy-bundle.json`, `sbom.yaml`, `run_receipt.schema.json`, plus `integrity.yml` and `verify.sh`. Of those:
+
+- `CODEOWNERS` lives here *or* at repo root.
+- `integrity.yml` lives in `.github/workflows/`.
+- `verify.sh` lives in `scripts/dev/` (or under `tools/`) so developers can reproduce CI locally.
+- `tool-versions.yaml`, `policy-bundle.json`, `sbom.yaml`, `run_receipt.schema.json` live in their canonical homes (`configs/` or `infra/`, `policy/`, `release/` or root, `schemas/contracts/v1/receipts/`) — **not** in `.github/`.
+
+</details>
+
+<details>
+<summary><strong>How do PR templates and issue templates contribute to governance?</strong></summary>
+
+PR templates require contributors to cite the Directory Rules section justifying any path change (§4 Step 5), name affected gates, and identify a rollback target. Issue templates route intake into the right register: bug reports, drift entries, ADR proposals, and verification-backlog items each have their own form so reviewers see structured input, not free-form prose.
+
+</details>
+
+---
+
+## Open questions / NEEDS VERIFICATION
+
+These items SHOULD be tracked in `docs/registers/VERIFICATION_BACKLOG.md`:
+
+- **NEEDS VERIFICATION** — Whether `.github/` exists in the current mounted repo and which of the workflows listed above are present.
+- **NEEDS VERIFICATION** — Whether `CODEOWNERS` lives at `.github/CODEOWNERS` or repo root in the current repo. Doctrine permits either; the repo MUST pick one.
+- **NEEDS VERIFICATION** — Current branch-protection rules: which check names are required, on which branches, for which event types.
+- **NEEDS VERIFICATION** — Whether the OPA bundle digest is pinned identically in CI workflows and `infra/` deployment manifests (C5-03 parity).
+- **NEEDS VERIFICATION** — Whether action SHA-pinning is enforced (a `path-and-drift.yml` rule or `actionlint` policy).
+- **OPEN** — Should `dependabot.yml` and Renovate co-exist, or is one canonical?
+- **OPEN** — Should `SECURITY.md` live at repo root only, or also be mirrored at `.github/SECURITY.md`? Doctrine places it at root; GitHub renders either.
+- **OPEN** — Which OIDC issuers belong on the cosign verifier's allowlist for KFM — GitHub Actions OIDC, an in-house issuer, or both? *(C1-03.)*
+- **OPEN** — Should the starter-pack files be vendored per repo, centrally generated, or remote-included? *(C14-01.)*
+- **OPEN** — Final workflow filenames for the author-chosen names in the [Workflow catalog](#workflow-catalog-proposed); freeze via ADR-REQUIRED-CHECKS before they enter branch protection.
+
+---
+
+> **Conformance note.** This README is governance content. Material changes to its mandatory sections (Directory Rules §15) follow the change discipline in Directory Rules §17. Adding or renaming a canonical workflow whose check is required by branch protection requires a coordinated update; see [Open questions](#open-questions--needs-verification).
+
+**Related docs:** [`directory-rules.md`](../directory-rules.md) · [`docs/registers/AUTHORITY_LADDER.md`](../docs/registers/AUTHORITY_LADDER.md) · [`docs/registers/DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../docs/registers/VERIFICATION_BACKLOG.md) · [`policy/README.md`](../policy/README.md) · [`tools/validators/README.md`](../tools/validators/README.md) · [`release/README.md`](../release/README.md)
+
+**Last updated:** 2026-05-11 · **Status:** draft · **Version:** v1
+
+[Back to top ↑](#github--github-platform-governance-hooks)
