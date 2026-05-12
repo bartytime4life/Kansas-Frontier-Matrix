@@ -1,0 +1,36 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+ALLOWED_STATUSES = {"missing", "present"}
+
+
+def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
+    entries: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+
+    for raw in registry_path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if line.startswith("- filename:"):
+            if current:
+                entries.append(current)
+            current = {"filename": line.split(":", 1)[1].strip()}
+        elif line.startswith("status:") and current is not None:
+            current["status"] = line.split(":", 1)[1].strip()
+
+    if current:
+        entries.append(current)
+
+    seen: set[str] = set()
+    for entry in entries:
+        name = entry["filename"]
+        if name in seen:
+            raise ValueError(f"duplicate filename in registry: {name}")
+        seen.add(name)
+
+        status = entry.get("status", "missing")
+        if status not in ALLOWED_STATUSES:
+            raise ValueError(f"invalid status for {name}: {status}")
+        entry["status"] = status
+
+    return entries
