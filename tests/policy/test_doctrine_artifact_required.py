@@ -1,3 +1,4 @@
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -16,4 +17,22 @@ def test_required_doctrine_artifact_check_fails_until_artifacts_admitted():
     cmd = [sys.executable, str(ROOT / "scripts" / "maintenance" / "check_required_doctrine_artifacts.py")]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     assert res.returncode == 1
-    assert "missing_count" in res.stdout
+    payload = json.loads(res.stdout)
+    assert payload["check"] == "required_doctrine_artifacts"
+    assert payload["missing_count"] >= 1
+    assert payload["result"] == "fail"
+
+
+def test_required_doctrine_artifact_check_writes_receipt(tmp_path: Path):
+    out = tmp_path / "doctrine_artifact_check.json"
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "check_required_doctrine_artifacts.py"),
+        "--output",
+        str(out),
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 1
+    written = json.loads(out.read_text(encoding="utf-8"))
+    assert written["check"] == "required_doctrine_artifacts"
+    assert written["result"] == "fail"
