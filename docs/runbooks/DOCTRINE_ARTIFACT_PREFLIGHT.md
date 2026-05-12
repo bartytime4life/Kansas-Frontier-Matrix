@@ -13,6 +13,11 @@ Run the composed preflight:
 python scripts/maintenance/run_doctrine_artifact_preflight.py
 ```
 
+For CI that must fail when artifacts are missing, use strict mode:
+
+```bash
+python scripts/maintenance/run_doctrine_artifact_preflight.py --strict
+```
 Expected behavior:
 - Exit `0` when the preflight executes correctly and rendering succeeds.
 - `check_returncode` in output indicates artifact state:

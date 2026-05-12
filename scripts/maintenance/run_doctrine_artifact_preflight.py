@@ -18,6 +18,11 @@ def main() -> int:
     parser.add_argument("--registry", type=Path, default=root / "control_plane" / "document_registry_doctrine_required.yaml")
     parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
     parser.add_argument("--output-dir", type=Path, default=root / "receipts" / "doctrine_artifacts")
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Return non-zero when required doctrine artifacts are missing (check returncode 1)",
+    )
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -50,7 +55,11 @@ def main() -> int:
     }
     print(json.dumps(summary, indent=2, sort_keys=True))
 
-    return 0 if check_res.returncode in (0, 1) and render_res.returncode == 0 else 2
+    if render_res.returncode != 0 or check_res.returncode == 2:
+        return 2
+    if args.strict and check_res.returncode == 1:
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
