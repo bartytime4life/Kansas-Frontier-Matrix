@@ -58,8 +58,10 @@ while [[ "$current_date" < "$END_DATE" || "$current_date" == "$END_DATE" ]]; do
 
   for ((n = 1; n <= commits_today; n++)); do
     hour=$((9 + RANDOM % 13))
+    minute=$((RANDOM % 60))
+    second=$((RANDOM % 60))
 
-    commit_ts="$(date -d "$current_date ${hour}:00:00" '+%Y-%m-%dT%H:%M:%S%z')"
+    commit_ts="$(date -d "$current_date $hour:$minute:$second" '+%Y-%m-%dT%H:%M:%S%z')"
 
     GIT_AUTHOR_DATE="$commit_ts" \
     GIT_COMMITTER_DATE="$commit_ts" \
@@ -78,7 +80,7 @@ repo_name="contrib-paint-$(date +%Y%m%d)"
 echo "Created $total_commits commits for $START_DATE through $END_DATE."
 echo ""
 echo "Next commands (not executed):"
-echo "  gh repo create \"$repo_name\" --public"
+echo "  gh repo create \"$repo_name\" --public --source=. --remote=origin"
 echo "  git remote add origin \"git@github.com:<YOUR_GITHUB_USERNAME>/$repo_name.git\""
 echo "  git branch -M main"
 echo "  git push -u origin main"

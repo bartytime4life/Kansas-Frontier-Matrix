@@ -15,5 +15,3 @@ Optional environment variables:
 - `MAX_COMMITS` (default: `4`)
 
 The script is idempotent for the computed date window. After a successful run, it writes a `.painted` marker file with the exact start/end range and exits early on repeat runs for the same range.
-
-Commit timestamps are set at random whole hours between `09:00:00` and `21:00:00` local time for each generated commit.
