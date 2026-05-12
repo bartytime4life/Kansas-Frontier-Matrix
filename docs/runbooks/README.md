@@ -1,454 +1,559 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-runbooks-readme
-title: Runbooks (`docs/runbooks/`)
+title: docs/runbooks — Operational Runbooks Index
 type: standard
 version: v1
 status: draft
-owners: [Ops steward, Release steward, Docs steward]
-created: 2026-05-09
-updated: 2026-05-09
+owners: docs-steward; subsystem-owners (per-runbook)
+created: 2026-05-12
+updated: 2026-05-12
 policy_label: public
-related: [
-  "docs/doctrine/directory-rules.md",
-  "docs/doctrine/lifecycle-law.md",
-  "docs/doctrine/trust-membrane.md",
-  "docs/doctrine/truth-posture.md",
-  "docs/doctrine/authority-ladder.md",
-  "docs/architecture/contract-schema-policy-split.md",
-  "docs/registers/VERIFICATION_BACKLOG.md",
-  "docs/registers/DRIFT_REGISTER.md"
-]
-tags: [kfm, runbooks, operations, promotion, rollback, governance]
-notes: [
-  "README-like landing page for the docs/runbooks/ subtree.",
-  "Path home is CONFIRMED per directory-rules.md §6.1.",
-  "Sibling file presence is PROPOSED until repo is mounted."
-]
+related:
+  - docs/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/architecture/README.md
+  - docs/architecture/ui/README.md
+  - docs/architecture/governed-ai/README.md
+  - docs/security/README.md
+  - docs/adr/README.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - data/receipts/README.md
+  - data/proofs/README.md
+  - release/README.md
+  - migrations/rollback/README.md
+tags: [kfm, runbooks, operations, validation, rollback, correction, governance]
+notes:
+  - Canonical-root child README per directory-rules.md §15 README Contract.
+  - Per-runbook PROPOSED file list sourced from the KFM Whole-UI + Governed AI Expansion Report (Appendix B).
+  - Implementation maturity of named runbooks is PROPOSED until verified against the mounted repository.
 [/KFM_META_BLOCK_V2] -->
 
-# Runbooks · `docs/runbooks/`
+<a id="top"></a>
 
-> **Step-by-step procedures for running, gating, recovering, and reviewing KFM lifecycle work — operational, evidence-bearing, and reversible.**
+# `docs/runbooks/` — Operational Runbooks Index
 
-[![Status](https://img.shields.io/badge/status-draft-lightgrey)](#0-status--authority)
-[![Type](https://img.shields.io/badge/doc-README--like-informational)](#1-purpose)
-[![Truth](https://img.shields.io/badge/truth-receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication-purple)](#7-trust-class-discipline)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%2FQUARANTINE%E2%86%92PROCESSED%E2%86%92CATALOG%2FTRIPLET%E2%86%92PUBLISHED-blue)](#5-relationship-to-the-lifecycle-invariant)
-[![Policy](https://img.shields.io/badge/policy-fail--closed-orange)](#6-promotion-gates-arrowg)
-[![Authority](https://img.shields.io/badge/authority-canonical-green)](#0-status--authority)
+> The canonical home for KFM operational procedures: **local development setup, validation runs, rollback drills, kill-switch procedures, correction flows, and incident response.** Runbooks turn governance doctrine into repeatable, reviewable, reversible action.
 
-> [!NOTE]
-> Badges above are visual indicators of governance posture for this doc. Their target URLs are placeholders until a repo-native badge generator (or static badge service) is wired up. See [§13 Open Questions](#13-open-questions).
-
-**Quick jump:** [Status](#0-status--authority) · [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [What belongs](#3-accepted-inputs) · [What does not](#4-exclusions) · [Lifecycle](#5-relationship-to-the-lifecycle-invariant) · [Gates](#6-promotion-gates-arrowg) · [Trust classes](#7-trust-class-discipline) · [Layout](#8-directory-layout) · [Naming](#9-naming-conventions) · [Required minimums](#10-required-minimums-per-runbook) · [Runbook taxonomy](#11-runbook-taxonomy) · [How to add one](#12-how-to-add-or-revise-a-runbook) · [Open Questions](#13-open-questions) · [Authorities](#14-authorities)
-
----
-
-## 0. Status & Authority
+<!-- Badges: targets are placeholders pending CI workflow / policy verification. -->
+![Status](https://img.shields.io/badge/status-draft-blue?style=flat-square)
+![Authority](https://img.shields.io/badge/authority-canonical-success?style=flat-square)
+![Policy](https://img.shields.io/badge/policy_label-public-lightgrey?style=flat-square)
+![CI](https://img.shields.io/badge/ci-TODO_verify_workflow-orange?style=flat-square)
+![Last reviewed](https://img.shields.io/badge/last_reviewed-2026--05--12-informational?style=flat-square)
+![ADR](https://img.shields.io/badge/ADR-pending-yellow?style=flat-square)
 
 | Field | Value |
 |---|---|
-| **Document type** | README-like / standard doc (directory landing page) |
-| **Authority of this README** | CONFIRMED — landing page for `docs/runbooks/` |
-| **Authority of the `docs/runbooks/` path** | CONFIRMED — per [`directory-rules.md` §6.1](../doctrine/directory-rules.md), `docs/runbooks/` is a canonical subtree of `docs/` ("ops procedures, rollback drills, validation runs") |
-| **Authority of any specific runbook file referenced below** | PROPOSED until verified against mounted-repo evidence |
-| **Owner** | Ops steward (lead) · Release steward · Docs steward |
-| **Reviewers required for change** | Ops steward + Docs steward; Release steward additionally for any change touching promotion or rollback runbooks |
-| **Supersedes** | None |
-| **Related doctrine** | [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md), [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md), [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-| **Truth posture** | Cite-or-abstain. A runbook is a procedure document; it does not authorize bypass of contracts, schemas, or policy. |
+| **Status** | draft (PROPOSED — pending repo verification) |
+| **Authority level** | Canonical (`docs/` is the human-facing control plane) |
+| **Owners** | Docs steward · per-subsystem owner (UI, Governed AI, Story, Review, Map, Release) |
+| **Policy label** | public |
+| **Last reviewed** | 2026-05-12 |
+
+> [!IMPORTANT]
+> Runbooks **describe** governed procedures; they do not **authorize** them. A runbook never overrides policy, review state, or release state. If a runbook step appears to bypass the trust membrane (`RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`), stop and open a `docs/registers/DRIFT_REGISTER.md` entry instead of proceeding.
+
+---
+
+## Quick jump
+
+- [1. Purpose](#1-purpose)
+- [2. Authority level](#2-authority-level)
+- [3. Status](#3-status)
+- [4. What belongs here](#4-what-belongs-here)
+- [5. What does NOT belong here](#5-what-does-not-belong-here)
+- [6. Runbook index (PROPOSED)](#6-runbook-index-proposed)
+- [7. Runbook structure (required sections)](#7-runbook-structure-required-sections)
+- [8. Inputs](#8-inputs)
+- [9. Outputs](#9-outputs)
+- [10. Diagram — runbooks across the KFM lifecycle](#10-diagram--runbooks-across-the-kfm-lifecycle)
+- [11. Validation](#11-validation)
+- [12. Review burden](#12-review-burden)
+- [13. Lifecycle integration matrix](#13-lifecycle-integration-matrix)
+- [14. Correction and rollback model](#14-correction-and-rollback-model)
+- [15. Related folders](#15-related-folders)
+- [16. ADRs](#16-adrs)
+- [17. Open questions / NEEDS VERIFICATION](#17-open-questions--needs-verification)
+- [Appendix A — Runbook authoring template](#appendix-a--runbook-authoring-template)
+- [Appendix B — Reviewer checklist](#appendix-b--reviewer-checklist)
 
 ---
 
 ## 1. Purpose
 
-A KFM **runbook** is a step-by-step operational procedure for performing — or recovering from — a governed lifecycle action. Runbooks turn doctrine into something a human (or a CI job) can execute, observe, and audit. They are the operational counterpart to the schemas that describe shape, the contracts that describe meaning, and the policy that decides allow / deny / restrict / abstain.
+**CONFIRMED.** `docs/runbooks/` owns the **executable-by-humans** procedures that KFM operators, subsystem owners, and stewards follow to bring up, validate, correct, and roll back governed surfaces. It is the action layer of the human-facing control plane: doctrine (`docs/doctrine/`) says *what must be true*, registers (`docs/registers/`) say *what governs what*, ADRs (`docs/adr/`) say *why a choice was made*, and runbooks here say **how to actually do the thing without breaking governance**.
 
-Runbooks in KFM exist to:
+Runbooks are read by people during real operations — first-time setup, a pre-release validation pass, a paged incident, a deprecation drill. They must be unambiguous, copy-paste-friendly where appropriate, and **explicit about what they cannot do** (publish, approve, mutate canonical stores, bypass policy).
 
-1. **Make procedures repeatable.** Anyone with the right role and access can run them and produce comparable results.
-2. **Make procedures auditable.** Every step that matters emits a receipt, decision, validation report, or other evidence object.
-3. **Make procedures reversible.** Every promotion runbook has a paired rollback path; every published change is undoable without erasing history.
-4. **Make procedures fail-closed.** A step that cannot prove what it claims is treated as failure, not as soft success.
-
-Runbooks are **operational**: they walk the steward through the *how*. They are not where decisions originate. The decision to allow a release lives in `policy/` and `release/`; the decision to admit a source lives in `data/registry/` and `policy/`; the meaning of objects lives in `contracts/`; their machine shape lives in `schemas/`. Runbooks reference all of these, but do not replace any of them.
-
-> [!IMPORTANT]
-> A runbook does not authorize an action. It documents how to perform an action that is already authorized by contracts, schemas, policy, registry records, and review. A runbook step that bypasses a gate is not "shortcut documentation" — it is an **incident**, and should be reported via [`docs/security/`](../security/) and recorded in [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md).
+[Back to top ↑](#top)
 
 ---
 
-## 2. Repo fit
+## 2. Authority level
 
-Runbooks live inside the `docs/` canonical authority root. `docs/` is the **human-facing control plane** — the surface where doctrine, decisions, registers, and procedures are explained, indexed, and made navigable. Adjacent siblings inside `docs/` cover related responsibilities; runbooks reference them but do not duplicate them.
+**CONFIRMED:** Canonical, per `docs/doctrine/directory-rules.md` §5 ("Per-root authority status" — `docs/` is canonical for doctrine, registers, runbooks, ADRs) and §6.1 (`runbooks/` is the listed child of `docs/` for "ops procedures, rollback drills, validation runs").
 
-**Upstream sources** (what a runbook is built against):
+Runbooks are **implementation-bearing documentation**: they encode steps a human (or a constrained automation harness) executes. They are **not** themselves policy, schema, or release decisions. If a runbook step needs to *authorize* something, the authority lives elsewhere (`policy/`, `release/`, an ADR, a `ReleaseManifest`, a `ReviewRecord`).
 
-- [`docs/doctrine/`](../doctrine/) — the rules that runbooks must respect (lifecycle law, trust membrane, truth posture, authority ladder, directory rules).
-- [`docs/architecture/`](../architecture/) — system context, the governed API, the trust-membrane diagram, and the contract / schema / policy split.
-- [`docs/adr/`](../adr/) — accepted architecture decisions that change *how* a runbook is written (e.g., schema home, public-safe geometry, source role enum).
-- [`docs/domains/<domain>/`](../domains/) — per-domain canonical docs (`ARCHITECTURE.md`, `DATA_LIFECYCLE.md`, `SOURCE_REGISTRY.md`, `VALIDATION_AND_GATES.md`) that name the objects, sources, and gates a domain runbook walks.
-- [`contracts/`](../../contracts/), [`schemas/`](../../schemas/), [`policy/`](../../policy/) — the machine surfaces a runbook validates against.
-- [`tools/validators/`](../../tools/), [`tests/`](../../tests/), [`fixtures/`](../../fixtures/) — the executable surface a runbook calls into.
-
-**Downstream consumers** (what reads or runs a runbook):
-
-- Stewards (source, data, release, ops, governance, docs) executing real or fixture runs.
-- CI jobs that exercise the runbook's commands against fixtures (no-network proof).
-- Reviewers tracing what was approved, by whom, with what evidence.
-- Auditors reconstructing release lineage from receipts, proofs, catalog records, and rollback cards.
-
-> [!TIP]
-> If you are looking for the **decisions** that govern a procedure (gate definitions, policy bundles, source roles, signing requirements), follow the runbook's `## Authorities` section — runbooks point to those documents rather than restating them.
+[Back to top ↑](#top)
 
 ---
 
-## 3. Accepted inputs
+## 3. Status
 
-The following kinds of documents belong under `docs/runbooks/`:
-
-| Runbook kind | Purpose | Typical paired evidence |
-|---|---|---|
-| **Promotion runbook** | Walks a candidate from PROCESSED through Gates A–G to PUBLISHED. | `PromotionDecision`, gate decision logs, `ReleaseManifest`, `ProofPack`. |
-| **Rollback runbook** | Reverses or repoints a published release without deleting history. | `RollbackCard`, rollback receipt, supersession entry, correction lineage. |
-| **Source refresh / ingest runbook** | Refreshes a source descriptor and ingests new material into RAW or QUARANTINE. | `IngestReceipt`, source-descriptor update, quarantine reason if blocked. |
-| **Correction / supersession drill** | Issues a `CorrectionNotice` and rebuilds derived layers without erasing prior evidence. | `CorrectionNotice`, updated `ReleaseManifest`, derived-rebuild receipts. |
-| **Quarantine review runbook** | Steward review of quarantined material with explicit decisions and reasons. | Review record, decision envelope, sensitivity classification. |
-| **No-network / fixture runbook** | Runs validators, gates, and a release dry-run with checked-in fixtures only. | `ValidationReport`, dry-run `RunReceipt`, no public artifacts. |
-| **Validation commands runbook** | Repo-native commands to run validators, schema checks, and policy fixtures. | Command transcripts, validator receipts, fixture references. |
-| **Incident / refresh runbook** | Operational response to source drift, signature failure, policy drift, or runtime failure. | Incident record, drift entry, validator receipt, rollback target if needed. |
-| **Local AI runtime runbook** | Hardening, operator controls, and bounded-Focus debug for the local AI surface. | AI run receipt, decision envelope, citation validation result. |
-| **Mock adapter / debug runbook** | Deterministic harnesses for testing AI/Focus and connector adapters. | Mock receipts, golden fixtures, regression diffs. |
-| **Source-ledger maintenance** | Ledger update, alias resolution, unresolved-reference closure. | Ledger receipt, supersession note, ADR reference if applicable. |
-
-A runbook in this directory **MUST**:
-
-1. Cite at least one **doctrine** doc (lifecycle law, trust membrane, truth posture, authority ladder, or directory rules).
-2. Reference at least one **machine surface** (schema, contract, policy bundle, validator, or fixture path) it operates against.
-3. Define a **success criterion** that is observable as evidence (receipt, proof, catalog record, validation report, decision log).
-4. Define a **failure path** (what is emitted on failure, where the candidate goes, what the reviewer reads).
-5. Define a **rollback or recovery path** (or explicitly state that this runbook is non-mutating).
-
----
-
-## 4. Exclusions
-
-The following do **not** belong under `docs/runbooks/`. If you find one here, treat it as drift and open a [`DRIFT_REGISTER`](../registers/DRIFT_REGISTER.md) entry.
-
-| If the file is… | …it belongs in |
+| Item | Status |
 |---|---|
-| A doctrinal rule (lifecycle, trust membrane, truth posture, directory rules) | [`docs/doctrine/`](../doctrine/) |
-| An accepted or proposed architecture decision | [`docs/adr/`](../adr/) |
-| A system / deployment / API architecture explainer | [`docs/architecture/`](../architecture/) |
-| A per-domain canonical doc (`ARCHITECTURE.md`, `DATA_LIFECYCLE.md`, `SOURCE_REGISTRY.md`, etc.) | [`docs/domains/<domain>/`](../domains/) |
-| Object meaning (`source_descriptor`, `evidence_bundle`, `release_manifest`, …) | [`contracts/`](../../contracts/) |
-| Object machine shape (JSON Schema, OpenAPI) | [`schemas/`](../../schemas/) |
-| Allow / deny / restrict / abstain rules | [`policy/`](../../policy/) |
-| Source identity, rights, sensitivity registries | [`data/registry/`](../../data/registry/) |
-| A release decision, manifest, rollback card, or correction notice (the **artifacts**) | [`release/`](../../release/) and [`data/proofs/`](../../data/proofs/), [`data/receipts/`](../../data/receipts/) |
-| Generated review or release **reports** | [`docs/reports/`](../reports/) (read-only) or [`data/reports/`](../../data/reports/) |
-| Threat model, exposure posture, incident-response **policy** | [`docs/security/`](../security/) |
-| Roles, review burden, separation-of-duties policy | [`docs/governance/`](../governance/) |
-| Real secrets (any kind) | A secret store. **Never** in the repo. |
+| `docs/runbooks/` as canonical home | **CONFIRMED** (directory-rules.md §6.1) |
+| README contract sections below | **CONFIRMED** doctrine (directory-rules.md §15) |
+| Specific runbook files listed in §6 | **PROPOSED** (Whole-UI + Governed AI Expansion Report, Appendix B) |
+| Per-runbook owner assignments | **PROPOSED** — role-typed placeholders pending CODEOWNERS confirmation |
+| Mounted-repo presence of the listed runbook files | **UNKNOWN** — not verified in this session |
+| CI workflow names referenced in badges | **NEEDS VERIFICATION** — placeholders only |
 
-> [!CAUTION]
-> Runbooks must not contain real secrets, real API tokens, real connection strings, or real personal data. If a real secret lands in a runbook (or anywhere in the repo), treat it as a security incident: rotate the credential, audit access, and record the incident in [`docs/runbooks/`](./) under an incident runbook and in [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md). This rule is from [`directory-rules.md` §11 (configs)](../doctrine/directory-rules.md) and applies repo-wide.
+[Back to top ↑](#top)
 
 ---
 
-## 5. Relationship to the lifecycle invariant
+## 4. What belongs here
 
-Every runbook in this subtree operates somewhere on the KFM lifecycle. The lifecycle is the spine; runbooks are the verbs that move objects along it. Promotion is a **governed state transition**, not a file move — every transition emits evidence, and a transition that bypasses validators, policy gates, evidence-bundle creation, catalog closure, or release-decision recording is a violation of the invariant regardless of which directory the bytes ended up in.
+Runbooks that meet **all** of the following:
 
-```mermaid
-flowchart LR
-    SRC[Source] -->|ingest runbook| RAW[(data/raw)]
-    RAW -->|transform runbook| WORK[(data/work)]
-    RAW -.->|policy DENY / quality block| QTN[(data/quarantine)]
-    WORK -->|validate runbook| PROC[(data/processed)]
-    PROC -->|catalog runbook| CAT[(data/catalog · data/triplets)]
-    CAT -->|promotion runbook · Gates A→G| PUB[(data/published)]
-    PUB -->|rollback runbook| RVK[/release/<id>/<br/>state: REVOKED/]
-    PUB -->|correction runbook| SUP[/release/<id>/<br/>state: SUPERSEDED/]
-    QTN -->|quarantine review runbook| WORK
-    classDef quarantine fill:#fff7e6,stroke:#d97706,color:#92400e;
-    classDef published fill:#e6fffa,stroke:#0d9488,color:#134e4a;
-    classDef revoked fill:#fef2f2,stroke:#dc2626,color:#7f1d1d;
-    class QTN quarantine
-    class PUB published
-    class RVK,SUP revoked
-```
+- **Human-executable.** A reader can follow the steps; an automation harness may also execute them, but the document is written for humans.
+- **Operationally repeatable.** The same procedure produces the same governed outcome on repeat runs.
+- **Lifecycle- or governance-bound.** The procedure crosses a lifecycle phase (`RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`), a governance boundary (policy, review, release), or an operational state (local dev, validation, rollback, kill switch, correction, incident).
+- **Subsystem-scoped or governance-scoped.** Either a named subsystem (UI, Governed AI, Story, Review, Map, Pipelines) or a cross-cutting governance procedure (rollback drill, deprecation drill, secret-leak incident, drift triage).
+- **Cite-or-abstain compliant.** Where a step relies on evidence, it points to an `EvidenceBundle`, a register entry, an ADR, a schema, a policy module, or a test/fixture — not to memory or to "we usually do X."
+- **Reversible by design.** Every runbook that touches a public surface names its rollback target.
 
-| Phase | Runbook coverage (PROPOSED) |
-|---|---|
-| **RAW** | source-refresh, ingest, no-network ingest fixture |
-| **WORK / QUARANTINE** | transform, quarantine review, redaction / generalization drill |
-| **PROCESSED** | validation commands, fixture-only validation, schema/policy regression |
-| **CATALOG / TRIPLET** | catalog closure verification, STAC / DCAT / PROV emission check |
-| **PUBLISHED** | promotion (Gates A–G), publish-only no-side-effect drill |
-| **Post-publication** | rollback, correction / supersession, incident response, refresh |
+**File-naming convention (PROPOSED, per Whole-UI + Governed AI Expansion Report Appendix B):**
 
-> Lifecycle source: [`directory-rules.md` §0 / §9](../doctrine/directory-rules.md). Run-mode breakdown (`fixture`, `dry_run`, `ingest`, `transform`, `validate`, `catalog`, `promote`, `publish`, `correct`) is consistent with KFM's pipeline-mechanics doctrine; per-domain runbook contents are PROPOSED until each domain runbook is authored and verified.
+````text
+<subsystem>_<LIFECYCLE_STAGE>.md
+````
+
+Examples: `ui_LOCAL_DEV.md`, `ui_VALIDATION.md`, `ui_ROLLBACK.md`, `governed_ai_LOCAL_DEV.md`, `governed_ai_VALIDATION.md`, `governed_ai_ROLLBACK.md`. The `LIFECYCLE_STAGE` slug is upper-snake (`LOCAL_DEV`, `VALIDATION`, `ROLLBACK`, `INCIDENT`, `CORRECTION`, `DEPRECATION`, `KILL_SWITCH`). The subsystem slug is lower-snake (`ui`, `governed_ai`, `story`, `review`, `map`, `pipelines`, `release`).
+
+[Back to top ↑](#top)
 
 ---
 
-## 6. Promotion Gates A→G
-
-KFM's promotion path is structured as a sequence of fail-closed gates. A promotion runbook walks the gate sequence; a rollback runbook walks the reverse, and a correction runbook walks the supersession path. The canonical gate enumeration in the corpus is **A–G**, with a separate Merkle-integrity concern sometimes labeled Gate H.
-
-| Gate | Concern | Common evidence consumed | Common evidence emitted |
-|---|---|---|---|
-| **A** | Schema valid · structure / metadata | Object payload, JSON Schema, MetaBlock | `decision_gate_A.json`, schema validator receipt |
-| **B** | License / rights / source role | License map, source descriptor | `decision_gate_B.json`, license verdict |
-| **C** | Provenance complete · evidence bundle resolves | `EvidenceBundle`, `RunReceipt`, supersedes / rollback target | `decision_gate_C.json` |
-| **D** | Spatial integrity / policy evaluation | Geometry, OPA / Conftest policy bundle | `decision_gate_D.json`, geometry validator output |
-| **E** | Temporal consistency · attestation | Time fields, DSSE envelope, signing key bundle | `decision_gate_E.json`, attestation reference |
-| **F** | Deduplication · steward review | Cross-source keys, review record | `decision_gate_F.json`, review handoff event |
-| **G** | Reviewability / Evidence Drawer renders · publish | Two-key approval, runtime payload | `decision_gate_G.json`, `PromotionDecision`, `ReleaseManifest` |
-
-> [!NOTE]
-> Different KFM dossiers describe the gates with slightly different role labels (e.g., "Identity & Integrity → License & Provenance → Schema + Model QA → Policy → Attestation → Review → Publish" versus "Structure / Schemas / Policy parity / Security & sensitivity / Data quality / Provenance / Reviewability"). The **A–G shape and the fail-closed sequence are CONFIRMED**; the precise per-gate label set is **PROPOSED** and is expected to be pinned by an ADR. Each promotion runbook MUST cite the ADR or doctrine doc whose label set it follows.
-
----
-
-## 7. Trust class discipline
-
-KFM separates four trust classes and treats their conflation as the single most consequential failure mode of evidence systems. Every runbook MUST be explicit about which class it operates on.
-
-| Class | What it is | What it is NOT |
-|---|---|---|
-| **Receipt** | A record that a run happened (`RunReceipt`, `IngestReceipt`, `TransformReceipt`, `AIReceipt`, …). | Proof of correctness. Proof of release. Authorization. |
-| **Proof** | A signature / attestation bound to a receipt or to an artifact's checksum (DSSE envelope, cosign / Sigstore reference, `EvidenceBundle`, `ProofPack`). | A catalog entry. A publication. A claim. |
-| **Catalog** | A discoverable record (STAC, DCAT, PROV) that resolves the artifact and closes the cross-link matrix. | A publication. Authorization to consume. |
-| **Publication** | The outward governed surface — `data/published/`, the governed API envelope, the public layer. | A receipt. A proof. A catalog entry. |
-
-> The badge string `truth=receipt≠proof≠catalog≠publication` (the `≠` URL-encoded as `%E2%89%A0`) is a literal rendering of this rule.
-
-> [!IMPORTANT]
-> A runbook step that emits a receipt does **not** advance the artifact past the publication gate. A runbook step that closes a catalog matrix does **not** publish the artifact. Each transition is its own gate, and each gate is enforced by `policy/` — not by the runbook's prose.
-
----
-
-## 8. Directory layout
-
-The structure below is **PROPOSED** beyond `docs/runbooks/` itself; the parent path is CONFIRMED per Directory Rules. Two layout patterns appear in the upstream domain dossiers and are surfaced together below; see [§9 Naming conventions](#9-naming-conventions) for the recommendation and the open ADR question.
-
-```
-docs/runbooks/
-├── README.md                                 # this file
-├── _template/                                # PROPOSED · runbook scaffolds and shared snippets
-│   ├── PROMOTION_RUNBOOK.template.md
-│   ├── ROLLBACK_RUNBOOK.template.md
-│   ├── SOURCE_REFRESH_RUNBOOK.template.md
-│   ├── QUARANTINE_REVIEW_RUNBOOK.template.md
-│   ├── NO_NETWORK_TEST_RUNBOOK.template.md
-│   └── VALIDATION_COMMANDS.template.md
-│
-├── <domain>/                                 # PROPOSED layout A: per-domain subfolder
-│   ├── PROMOTION_RUNBOOK.md
-│   ├── ROLLBACK_RUNBOOK.md
-│   ├── SOURCE_REFRESH_RUNBOOK.md
-│   ├── QUARANTINE_REVIEW_RUNBOOK.md
-│   ├── NO_NETWORK_TEST_RUNBOOK.md
-│   └── VALIDATION_COMMANDS.md
-│
-├── <domain>-<purpose>.md                     # PROPOSED layout B: flat per-domain file
-│
-└── <cross-cutting>.md                        # cross-cutting (no domain) procedures
-    ├── local-ai-runtime.md
-    ├── focus-mode-debug.md
-    ├── mock-adapter.md
-    ├── ai-rollback.md
-    └── source-ledger-maintenance.md
-```
+## 5. What does NOT belong here
 
 > [!WARNING]
-> The above is a **PROPOSED** layout drawn from upstream domain dossiers. The actual `docs/runbooks/` contents are **NEEDS VERIFICATION** until the repo is mounted and inspected. Do not infer that any specific runbook file exists from the tree above; treat the tree as the target shape, not as a manifest of present files.
+> **A runbook never substitutes for a governed control surface.** If a piece of content actually *decides* something, it belongs in `policy/`, `release/`, `contracts/`, `schemas/`, or `control_plane/` — not here.
+
+Do not place the following in `docs/runbooks/`:
+
+- **Architecture overviews** — those belong in `docs/architecture/<subsystem>/README.md`.
+- **Schemas, contracts, or DTOs** — `schemas/contracts/v1/...` and `contracts/` are the homes (per directory-rules.md §5 and ADR-0001).
+- **Policy rules or Rego** — belongs in `policy/<subsystem>/`.
+- **Release manifests, rollback cards, correction notices** as authoritative artifacts — those are emitted instances and live in `release/`, `data/receipts/`, `data/proofs/`. A runbook may *reference* and *produce* them but does not *store* them.
+- **ADR text** — decisions go in `docs/adr/`. A runbook may cite the ADR but does not replace it.
+- **Secrets, credentials, or environment-specific tokens** — never. If real secrets ever appear in `configs/`, write a runbook entry here and treat it as an incident (per directory-rules.md §10.3).
+- **Source-of-truth tables** — registers under `docs/registers/` and `control_plane/` own those.
+- **Generic third-party tool tutorials** — link out instead of re-hosting.
+- **One-off shell commands with no governance context** — those belong in `scripts/` or a developer's local notes.
+
+[Back to top ↑](#top)
 
 ---
 
-## 9. Naming conventions
-
-Two file-naming patterns appear in upstream KFM domain dossiers. Both are documented in the corpus; the choice between them is an **open ADR question** (see [§13 Open Questions](#13-open-questions)).
-
-| Pattern | Example | Where it appears | Notes |
-|---|---|---|---|
-| **A. Per-domain subfolder, uppercase file** | `docs/runbooks/hydrology/PROMOTION_RUNBOOK.md` | hydrology, geology, transport, people-dna-land dossiers | Mirrors `docs/domains/<domain>/` style; scales for many runbooks per domain. |
-| **B. Flat file, hyphenated** | `docs/runbooks/fauna-promotion.md`, `docs/runbooks/hazards-refresh.md` | fauna, hazards dossiers | Cheaper for domains with one or two runbooks; harder to navigate at scale. |
-| **C. Cross-cutting, hyphenated** | `docs/runbooks/local-ai-runtime.md`, `docs/runbooks/ai-rollback.md` | governed-AI source ledger | Used for procedures with no domain owner. |
-
-**Recommendation (PROPOSED):** Standardize on **Pattern A** for domain-scoped runbooks (`docs/runbooks/<domain>/<RUNBOOK_NAME>.md`) and **Pattern C** for cross-cutting runbooks (`docs/runbooks/<purpose>.md`). Pattern B is acceptable as a transition state but should not be created new without justification. **This recommendation requires an ADR before it becomes binding** — see [§13](#13-open-questions).
-
-**File-name shape (PROPOSED):**
-
-- Subfolder name: lowercase domain id (e.g., `hydrology`, `fauna`, `roads-rail-trade`, `people-dna-land`).
-- Uppercase file name: `PROMOTION_RUNBOOK.md`, `ROLLBACK_RUNBOOK.md`, `SOURCE_REFRESH_RUNBOOK.md`, `QUARANTINE_REVIEW_RUNBOOK.md`, `NO_NETWORK_TEST_RUNBOOK.md`, `VALIDATION_COMMANDS.md`, `CORRECTION_DRILL.md`, `INCIDENT_RESPONSE.md`.
-- Cross-cutting file name: `<lowercase-purpose>.md` (e.g., `local-ai-runtime.md`, `mock-adapter.md`, `source-ledger-maintenance.md`).
-
----
-
-## 10. Required minimums per runbook
-
-Every runbook in this directory MUST contain the following sections, in this order. Sections may be omitted only if explicitly justified at the top of the file.
-
-1. **KFM Meta Block v2** at the top (`doc_id`, `title`, `type`, `version`, `status`, `owners`, `created`, `updated`, `policy_label`, `related[]`, `tags[]`, `notes[]`).
-2. **Title and tagline** — one-line purpose.
-3. **Status & Authority** — status, owner(s), reviewers, related doctrine, reversibility note.
-4. **Scope and Audience** — which lifecycle phase, which domain(s), which steward role(s).
-5. **Preconditions** — environment, role, access, fixtures, ADR references, machine surfaces required (schemas, policy bundles, validators).
-6. **Inputs** — explicit list of artifacts and their expected shape (with schema references).
-7. **Steps** — numbered, executable, each with:
-   - the command or action,
-   - the expected emission (receipt / proof / catalog record / decision log),
-   - the success criterion (observable as evidence),
-   - the failure mode and where the candidate goes on failure.
-8. **Gate sequence** (for promotion or rollback runbooks) — explicit Gate A → G mapping.
-9. **Outputs and trust class** — what is emitted, and which of the four trust classes (receipt / proof / catalog / publication) it advances.
-10. **Failure paths** — DENY / ABSTAIN / ERROR responses, quarantine routing, incident registration.
-11. **Rollback / recovery** — the paired procedure, or an explicit "non-mutating" note.
-12. **Validation** — commands or harness that exercise the runbook (fixture-first, no-network where possible).
-13. **Open Questions** — mandatory; a runbook that claims none is suspect.
-14. **Authorities** — links to the doctrine, ADRs, contracts, schemas, and policy this runbook depends on.
-15. **Change history** — append-only entries with dates and PR references.
-
-> [!TIP]
-> Use the templates under `docs/runbooks/_template/` as the starting point — they include the required minimums, the KFM Meta Block v2, and a default GitHub-Flavored callout pattern (`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`).
-
----
-
-## 11. Runbook taxonomy
-
-The taxonomy below summarizes the **kinds** of runbook expected in `docs/runbooks/`, the lifecycle phase they serve, the trust class they primarily emit, and the typical paired evidence. The taxonomy is **PROPOSED** as a planning surface; per-domain ownership is settled in each domain's `docs/domains/<domain>/` README.
-
-| Runbook | Lifecycle phase | Trust class emitted | Typical paired evidence |
-|---|---|---|---|
-| Source refresh / ingest | RAW | receipt | `IngestReceipt`, source-descriptor update |
-| Quarantine review | QUARANTINE → WORK or DENY | receipt | Review record, decision envelope |
-| Transform / normalize | WORK → PROCESSED | receipt | `TransformReceipt`, validation report |
-| Validation commands | PROCESSED | receipt | `ValidationReport`, schema / policy fixture results |
-| Catalog closure | PROCESSED → CATALOG | catalog | STAC item, DCAT distribution, PROV graph, catalog matrix |
-| No-network test | (any) | receipt | Dry-run `RunReceipt`, no public artifacts |
-| Promotion | CATALOG → PUBLISHED | proof + publication | `PromotionDecision`, gate decision logs A–G, `ReleaseManifest`, `ProofPack` |
-| Rollback | PUBLISHED → REVOKED | proof | `RollbackCard`, rollback receipt, repointed alias |
-| Correction / supersession | PUBLISHED → SUPERSEDED | proof | `CorrectionNotice`, updated `ReleaseManifest`, derived-rebuild receipts |
-| Incident response | (any) | receipt | Incident record, drift entry, rotation evidence |
-| Local AI runtime | runtime | receipt | `AIReceipt`, decision envelope, citation validation |
-| Mock adapter / debug | runtime | receipt | Mock receipts, golden fixtures, regression diffs |
-| Source-ledger maintenance | governance / catalog | catalog | Ledger update receipt, supersession note |
-
----
-
-## 12. How to add or revise a runbook
-
-A runbook is a path-bearing change. Follow the [Directory Rules placement protocol](../doctrine/directory-rules.md#4-where-does-this-file-go--placement-protocol) and the per-runbook minimums in [§10](#10-required-minimums-per-runbook).
-
-```text
-[ ] 1. Identify the responsibility
-       - Which lifecycle phase? Which domain (or cross-cutting)?
-       - Which trust class does this runbook advance?
-       - Which steward role owns it?
-
-[ ] 2. Pick the path
-       - Domain-scoped:  docs/runbooks/<domain>/<RUNBOOK_NAME>.md   (Pattern A)
-       - Cross-cutting:  docs/runbooks/<purpose>.md                 (Pattern C)
-       - Cite directory-rules.md §6.1 in the PR description.
-
-[ ] 3. Start from a template
-       - Copy from docs/runbooks/_template/<KIND>.template.md (PROPOSED).
-       - Fill the KFM Meta Block v2.
-
-[ ] 4. Fill the required minimums
-       - §10 above. Sections 1-15. Open Questions is mandatory.
-
-[ ] 5. Wire to evidence
-       - Each step names the receipt / proof / catalog record / decision log it emits.
-       - Each gate references the policy bundle it consults.
-       - Each input / output references its schema or contract.
-
-[ ] 6. Validate the runbook itself
-       - Markdown lint passes.
-       - Internal links resolve.
-       - Code fences are language-tagged.
-       - Commands are repo-native (or marked illustrative).
-
-[ ] 7. Exercise the runbook against fixtures
-       - No-network fixture pass.
-       - Failure-path fixture pass (DENY / ABSTAIN / quarantine).
-       - Receipts emit and validate.
-
-[ ] 8. Definition of done
-       - PR cites directory-rules.md §6.1 (and §9 if a new domain folder).
-       - Domain README links to the runbook.
-       - VERIFICATION_BACKLOG entry closed (or new one opened).
-       - Reviewer sign-off: ops steward + docs steward (+ release steward if promotion/rollback).
-```
+## 6. Runbook index (PROPOSED)
 
 > [!NOTE]
-> Adding a **new domain folder** under `docs/runbooks/` does not require an ADR by itself — it is a domain segment inside a canonical root, not a new root. Adding a **new top-level subdirectory** under `docs/` (e.g., a sibling to `docs/runbooks/`) **does** require an ADR per [`directory-rules.md` §2.4](../doctrine/directory-rules.md).
+> The runbooks listed below are **PROPOSED** per the Whole-UI + Governed AI Expansion Report (Appendix B). Their **presence in the mounted repository is UNKNOWN** in this session. Mark each row CONFIRMED only after the file exists, is linked, and has been reviewed.
+
+### 6.1 UI subsystem
+
+| Path (PROPOSED) | Action | Truth label | Purpose | Owner |
+|---|---|---|---|---|
+| [`ui_LOCAL_DEV.md`](./ui_LOCAL_DEV.md) | CREATE | PROPOSED | Local UI setup, mock fixture wiring, feature-flag-off bring-up. | Docs steward + UI owner |
+| [`ui_VALIDATION.md`](./ui_VALIDATION.md) | CREATE | PROPOSED | UI contract validation, accessibility checks, e2e smoke. | Docs steward + UI owner |
+| [`ui_ROLLBACK.md`](./ui_ROLLBACK.md) | CREATE | PROPOSED | UI rollback, feature-flag disablement, schema deprecation steps. | Docs steward + UI owner |
+
+### 6.2 Governed AI subsystem
+
+| Path (PROPOSED) | Action | Truth label | Purpose | Owner |
+|---|---|---|---|---|
+| [`governed_ai_LOCAL_DEV.md`](./governed_ai_LOCAL_DEV.md) | CREATE | PROPOSED | `MockAdapter` and provider-adapter local dev bring-up. | Docs steward + Governed AI owner |
+| [`governed_ai_VALIDATION.md`](./governed_ai_VALIDATION.md) | CREATE | PROPOSED | Focus Mode evidence resolution, citation validation, policy gate checks. | Docs steward + Governed AI owner |
+| [`governed_ai_ROLLBACK.md`](./governed_ai_ROLLBACK.md) | CREATE | PROPOSED | AI adapter rollback, kill switch, response-envelope withdrawal. | Docs steward + Governed AI owner |
+
+### 6.3 Cross-cutting (PROPOSED — not yet enumerated in source reports)
+
+These are reasonable additions implied by directory-rules.md §10–§14 (incident response, migrations with rollback, drift triage). They are **PROPOSED** placeholders pending owner agreement; do **not** assume they exist.
+
+| Path (PROPOSED) | Truth label | Purpose | Owner |
+|---|---|---|---|
+| `secret_leak_INCIDENT.md` | PROPOSED | Real secret found in `configs/` → rotate, audit, write entry (per directory-rules.md §10.3). | Security owner + docs steward |
+| `migration_ROLLBACK.md` | PROPOSED | Migration rollback drill referencing `migrations/rollback/` (per directory-rules.md §10.4 and §14). | Migration owner + docs steward |
+| `drift_TRIAGE.md` | PROPOSED | Triage flow for entries added to `docs/registers/DRIFT_REGISTER.md`. | Docs steward + subsystem owner |
+| `release_DEPRECATION.md` | PROPOSED | Deprecation drill referencing `control_plane/deprecation_register.yaml`. | Release owner + docs steward |
+| `kill_switch_DRILL.md` | PROPOSED | Periodic kill-switch verification (fail-closed publish gate). | Release owner + security owner |
+
+[Back to top ↑](#top)
 
 ---
 
-## 13. Open Questions
+## 7. Runbook structure (required sections)
 
-These items are **NEEDS VERIFICATION** or **OPEN**. They should be tracked in [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) and resolved by ADR or by direct evidence from the mounted repo.
+Every runbook in this folder **MUST** include the sections below, in order. Sections may be expanded or sub-divided; none may be silently omitted. Where a section does not apply, write "Not applicable — \<reason\>" rather than removing the heading.
 
-- **NEEDS VERIFICATION:** Whether `docs/runbooks/` currently exists in the mounted repo, and which child files / subfolders it already contains. The path itself is CONFIRMED as canonical by Directory Rules; **presence and contents are unverified** in this session.
-- **OPEN:** Pattern A (per-domain subfolder, uppercase file) vs Pattern B (flat hyphenated) vs Pattern C (cross-cutting hyphenated). Both A and B are in active use across upstream domain dossiers. **Recommendation: ADR pinning Pattern A for domain-scoped runbooks and Pattern C for cross-cutting.**
-- **OPEN:** Whether `docs/runbooks/_template/` is the right home for runbook scaffolds, or whether scaffolds belong under `examples/runbooks/`. The corpus does not commit either way.
-- **OPEN:** Promotion-gate label set. The **A–G shape and fail-closed sequence are CONFIRMED**; the precise per-gate label set varies between dossiers (e.g., "Identity / License / Schema+QA / Policy / Attestation / Review / Publish" vs "Structure / Schemas / Policy parity / Security / DQ / Provenance / Reviewability"). An ADR should pin the canonical label set and resolve the optional Gate H (Merkle integrity).
-- **OPEN:** Whether runbook badges should be SVG-embedded (offline-readable) or IMG-fetched (network-fetched). Corpus convention defaults to IMG via Shields.io; SVG is a valid offline alternative.
-- **NEEDS VERIFICATION:** Whether the documentation linter that enforces section-order conventions (mandatory `Open Questions`, fixed top-level section order in lane READMEs) is active in CI. The convention is CONFIRMED; **enforcement is unverified** in this session.
-- **NEEDS VERIFICATION:** Whether `docs/runbooks/` currently has a sibling `docs/runbooks/_index.md` or registry. None is referenced in the corpus, but if one exists in the repo it should supersede portions of this README's [§11 taxonomy](#11-runbook-taxonomy).
+1. **Header / meta block** — KFM Meta Block v2 (per `docs/doctrine/` standard doc rules).
+2. **Purpose** — one paragraph; who runs this, when, why.
+3. **Scope** — subsystem(s), lifecycle phase(s), and policy surface(s) touched.
+4. **Preconditions** — required state, flags, fixtures, branches, access, receipts.
+5. **Inputs** — files, manifests, fixtures, envelopes, configs (paths + types).
+6. **Procedure** — numbered steps; commands in fenced code blocks with explicit language tags; destructive steps clearly flagged.
+7. **Expected outputs** — receipts, validation reports, manifests, UI states, log lines.
+8. **Failure modes** — common failure paths with reason codes (e.g., `MISSING_RECEIPT`, `SCHEMA_MISMATCH`, `RIGHTS_UNKNOWN`) per the Decision Outcome reason-code catalog.
+9. **Rollback target** — explicit prior-safe state or `RollbackCard` reference. **Required.**
+10. **Correction path** — when to issue a `CorrectionNotice` instead of (or in addition to) rolling back.
+11. **Evidence references** — `EvidenceBundle`, `EvidenceRef`, ADR, schema, policy, fixture, test paths.
+12. **Validation hooks** — which workflows / validators / tests confirm a successful run.
+13. **Review burden** — who must sign off; whether release-duty separation applies.
+14. **Last reviewed** — ISO date.
+
+> [!TIP]
+> A runbook that lacks a **rollback target** is a drift candidate. Open an entry in `docs/registers/DRIFT_REGISTER.md` rather than merging the runbook.
+
+[Back to top ↑](#top)
 
 ---
 
-## 14. Authorities
+## 8. Inputs
 
-| Authority | Document |
+What feeds into the runbooks in this folder:
+
+- **Doctrine** — `docs/doctrine/directory-rules.md`, `docs/doctrine/lifecycle-law.md`, `docs/doctrine/trust-membrane.md`, `docs/doctrine/truth-posture.md`.
+- **Architecture** — `docs/architecture/<subsystem>/README.md`, `BOUNDARIES.md`, `ROUTE_MAP.md`, `STATE_OWNERSHIP.md`, `CONTINUITY_NOTES.md`.
+- **Object families** — `contracts/OBJECT_MAP.md` and named contracts (`EvidenceBundle`, `EvidenceRef`, `RunReceipt`, `ReviewRecord`, `ReleaseManifest`, `CorrectionNotice`, `RollbackCard`, `PolicyDecision`, response envelopes).
+- **Schemas** — `schemas/contracts/v1/<subsystem>/...`.
+- **Policy** — `policy/<subsystem>/`.
+- **Fixtures and tests** — `tests/fixtures/<subsystem>/`, `tests/e2e/`, `tests/accessibility/`.
+- **Registers** — `docs/registers/DRIFT_REGISTER.md`, `docs/registers/VERIFICATION_BACKLOG.md`, `control_plane/policy_gate_register.yaml`, `control_plane/release_state_register.yaml`.
+- **Generated artifacts** — `data/receipts/`, `data/proofs/`, `data/manifests/`, `release/`.
+
+[Back to top ↑](#top)
+
+---
+
+## 9. Outputs
+
+What runbook execution produces (none of which are stored *here* — runbooks reference them):
+
+- **Generated artifacts** under `data/receipts/`, `data/proofs/`, `data/manifests/`, `release/`.
+- **Validation reports** consumed by CI summary jobs (e.g., the proposed `tools/ci/render_ui_validation_summary.py` path).
+- **`CorrectionNotice` / `RollbackCard` records** in `release/` when correction/rollback runbooks fire.
+- **Drift entries** in `docs/registers/DRIFT_REGISTER.md` when a runbook surfaces an unresolved issue.
+- **Verification-backlog tickets** in `docs/registers/VERIFICATION_BACKLOG.md` when a step cannot be checked in the current session.
+
+[Back to top ↑](#top)
+
+---
+
+## 10. Diagram — runbooks across the KFM lifecycle
+
+This diagram is illustrative of the **PROPOSED** mapping of runbook stages onto the canonical KFM lifecycle. Exact runbook-to-phase bindings should be confirmed against mounted-repo workflows.
+
+````mermaid
+flowchart LR
+  subgraph LIFECYCLE["KFM Lifecycle (CONFIRMED doctrine)"]
+    R[RAW] --> WQ["WORK / QUARANTINE"]
+    WQ --> P[PROCESSED]
+    P --> CT["CATALOG / TRIPLET"]
+    CT --> PUB[PUBLISHED]
+  end
+
+  subgraph RUNBOOKS["docs/runbooks/ (PROPOSED)"]
+    LD["*_LOCAL_DEV"]
+    VAL["*_VALIDATION"]
+    RB["*_ROLLBACK"]
+    KS["kill_switch_DRILL"]
+    INC["secret_leak_INCIDENT"]
+    DEP["release_DEPRECATION"]
+    DRF["drift_TRIAGE"]
+  end
+
+  LD -.bring up locally with mock fixtures.-> WQ
+  VAL -.gate promotion with receipts and policy.-> P
+  VAL -.gate catalog and triplet closure.-> CT
+  KS -.fail-closed publish gate.-> PUB
+  RB -.restore prior digest-pinned release.-> PUB
+  INC -.rotate, audit, contain.-> R
+  DEP -.sunset and remove mirror.-> CT
+  DRF -.feed registers when drift observed.-> WQ
+
+  classDef phase fill:#eef6ff,stroke:#2b6cb0,color:#1a365d
+  classDef book fill:#fef3c7,stroke:#a16207,color:#713f12
+  class R,WQ,P,CT,PUB phase
+  class LD,VAL,RB,KS,INC,DEP,DRF book
+````
+
+> [!NOTE]
+> **NEEDS VERIFICATION.** The arrows above describe the **doctrinal** binding of runbook stages to lifecycle phases. Whether a specific runbook actually fires at the indicated transition depends on workflow wiring that has not been inspected here.
+
+[Back to top ↑](#top)
+
+---
+
+## 11. Validation
+
+How runbooks themselves are validated (separate from the validation procedures they describe):
+
+- **Link integrity** — every relative link in a runbook resolves; absolute links are reviewed for stability.
+- **Schema-reference integrity** — every `schemas/contracts/v1/...` path cited exists.
+- **Contract-reference integrity** — every contract / object family named (`EvidenceBundle`, `RunReceipt`, etc.) is listed in `contracts/OBJECT_MAP.md`.
+- **Rollback-target presence** — automated check that every runbook contains a non-empty rollback section.
+- **Reviewer sign-off** — per directory-rules.md §15, runbook PRs require the docs steward plus the relevant subsystem owner.
+- **CI surfacing** — the proposed `.github/workflows/ui-governed.yml` and `.github/workflows/contracts-ui-ai.yml` are intended to surface runbook-relevant validation summaries. **NEEDS VERIFICATION** that these workflow names are the live ones in the mounted repo.
+
+<details>
+<summary>Suggested local validation pass (PROPOSED — adjust to repo conventions)</summary>
+
+````bash
+# Markdown link check (replace with the repo's actual tool)
+# CONFIRMED need: link integrity. Tool choice: NEEDS VERIFICATION.
+markdown-link-check docs/runbooks/*.md
+
+# Schema-path existence sweep (illustrative)
+grep -hoE 'schemas/contracts/v1/[A-Za-z0-9_/.-]+\.schema\.json' docs/runbooks/*.md \
+  | sort -u \
+  | while read p; do test -e "$p" || echo "MISSING: $p"; done
+
+# Rollback-target presence (illustrative)
+for f in docs/runbooks/*.md; do
+  grep -q -i '^## .*rollback' "$f" || echo "NO ROLLBACK SECTION: $f"
+done
+````
+
+These commands are **illustrative** and intentionally minimal. Replace with the repo's validator tools once verified.
+
+</details>
+
+[Back to top ↑](#top)
+
+---
+
+## 12. Review burden
+
+| Change to a runbook | Required reviewers |
 |---|---|
-| Path home (`docs/runbooks/`) | [`docs/doctrine/directory-rules.md` §6.1](../doctrine/directory-rules.md) |
-| Lifecycle invariant | [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) · `directory-rules.md` §0 / §9 |
-| Trust-class discipline (receipt ≠ proof ≠ catalog ≠ publication) | [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) |
-| Truth posture (cite-or-abstain) | [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) |
-| Authority ladder | [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) |
-| Contract / schema / policy split | [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) |
-| Schema home | [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) |
-| Drift handling | [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) |
-| Open verification queue | [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) |
-| Per-domain runbook ownership | [`docs/domains/<domain>/README.md`](../domains/) |
+| Typo, link fix, clarification | Docs steward |
+| Step addition or removal (non-policy) | Docs steward + subsystem owner |
+| Step that touches policy, release, or rollback semantics | Docs steward + subsystem owner + release/policy owner |
+| New runbook (new file in `docs/runbooks/`) | Docs steward + subsystem owner; cite directory-rules.md §15 in the PR |
+| Runbook that bends a doctrinal invariant | ADR required (per directory-rules.md §17); reviewed by doctrine owner |
+
+Reviewer authority and CODEOWNERS mapping are **NEEDS VERIFICATION** until the repo's `CODEOWNERS` (or `.github/CODEOWNERS`) is inspected.
+
+[Back to top ↑](#top)
 
 ---
 
+## 13. Lifecycle integration matrix
+
+How runbook families bind to KFM control objects. **CONFIRMED** doctrine for the object families; **PROPOSED** for the specific runbook-to-object mappings (sourced from the Whole-UI + Governed AI Expansion Report §24 "Update-propagation matrix").
+
+| Runbook family | Owns / drives | Reads | Emits | Rollback path |
+|---|---|---|---|---|
+| `*_LOCAL_DEV` | Local bring-up; mock fixtures; feature-flag-off mode | `tests/fixtures/<subsystem>/`, `runtime/mock/` | Local logs only (no `RunReceipt` in CATALOG/PUBLISHED) | Re-clone; feature flags off |
+| `*_VALIDATION` | Contract, accessibility, policy, e2e smoke | Schemas, fixtures, policy modules, `EvidenceBundle` | `ValidationReport`, `PolicyDecision`, drift entries if needed | Block promotion; do not advance phase |
+| `*_ROLLBACK` | Withdraw or supersede published surface | `ReleaseManifest`, `EvidenceBundle`, `data/receipts/` | `RollbackCard`, optional `CorrectionNotice` | Restore prior digest-pinned release |
+| `kill_switch_DRILL` | Verify fail-closed publish gate | Workflow check rollups, branch protection | Test-only fail receipts | Re-arm; revert kill-switch fixture |
+| `secret_leak_INCIDENT` | Containment, rotation, audit | `configs/`, secret-store references | Incident record, rotation log, drift entry | Rotate again if compromise persists |
+| `*_CORRECTION` | Defect classification, supersession | `EvidenceBundle`, prior `ReleaseManifest` | `CorrectionNotice`, superseding `ReleaseManifest` | Roll back to prior release if correction infeasible |
+| `*_DEPRECATION` | Sunset and remove mirror | `control_plane/deprecation_register.yaml` | Deprecation record, drift entry on missed sunset | Re-mirror temporarily |
+
+[Back to top ↑](#top)
+
+---
+
+## 14. Correction and rollback model
+
+**CONFIRMED doctrine** (from `KFM_Unified_Implementation_Architecture_Build_Manual` correction-and-rollback model): correction and rollback are **publication requirements, not afterthoughts**. A released claim, layer, catalog record, artifact, or AI answer must have a visible correction path and rollback target before it is treated as safely publishable.
+
+**PROPOSED** runbook posture by defect class:
+
+| Defect class | Correction posture | Rollback posture |
+|---|---|---|
+| Evidence gap | ABSTAIN or withdraw unsupported claim | Restore prior evidence-supported release |
+| Rights defect | DENY public use; quarantine source/artifact | Withdraw affected artifacts |
+| Sensitivity leak | Redact/generalize and notify stewards | Immediate public disablement |
+| Geometry defect | Rebuild derivative layer and `EvidenceBundle` | Restore previous digest-pinned artifact |
+| Temporal defect | Correct valid/source/retrieval/release time | Mark stale until rebuilt |
+| Policy defect | Re-run policy and decision envelope | Disable route/layer if gate failed |
+| AI answer defect | Invalidate `AIReceipt` and response envelope | Remove answer; preserve `EvidenceBundle` |
+| Catalog defect | Re-emit catalog closure after proof repair | Restore previous catalog state |
+
+> [!CAUTION]
+> A rollback is **never** a hidden file copy. It is a governed state transition that emits a `RollbackCard`, updates the relevant `ReleaseManifest`, preserves audit receipts, and is reviewable. If a runbook step ever silently mutates a published artifact, treat it as a doctrine violation and open an ADR or drift entry.
+
+[Back to top ↑](#top)
+
+---
+
+## 15. Related folders
+
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law, README contract.
+- [`docs/architecture/`](../architecture/) — subsystem boundaries, route maps, state ownership.
+- [`docs/adr/`](../adr/) — file-home and trust-boundary decisions runbooks must respect.
+- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — opened by runbooks when drift is observed.
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — opened when a runbook step cannot be checked.
+- [`docs/security/`](../security/) — incident-response posture; pairs with secret-leak and kill-switch runbooks.
+- [`policy/`](../../policy/) — gate logic invoked by validation runbooks.
+- [`tests/`](../../tests/) and [`fixtures/`](../../fixtures/) — what validation runbooks exercise.
+- [`data/receipts/`](../../data/receipts/), [`data/proofs/`](../../data/proofs/), [`data/manifests/`](../../data/manifests/) — emitted artifacts referenced by runbooks.
+- [`release/`](../../release/) — `ReleaseManifest`, `RollbackCard`, `CorrectionNotice` homes.
+- [`migrations/rollback/`](../../migrations/rollback/) — every migration must have a rollback runbook entry.
+- [`runtime/mock/`](../../runtime/mock/) — `MockAdapter` used by local-dev runbooks.
+
+> [!NOTE]
+> All paths above are **PROPOSED** as link targets per directory-rules.md and the Whole-UI + Governed AI Expansion Report. Their **presence in the mounted repository is UNKNOWN** in this session.
+
+[Back to top ↑](#top)
+
+---
+
+## 16. ADRs
+
+Runbooks must remain consistent with active ADRs. The following are **PROPOSED** and relevant to runbook authors; they are not confirmed present in the mounted repo:
+
+- `ADR-0001-schema-home.md` — schemas home (`schemas/contracts/v1/...`).
+- `ADR-ui-schema-home.md` — UI schema home decision.
+- `ADR-maplibre-adapter-boundary.md` — MapLibre adapter and renderer containment.
+- `ADR-focus-model-adapter-boundary.md` — no direct browser-to-model path.
+- `ADR-story-node-3d-boundary.md` — Story Node and 3D boundary.
+
+When a runbook step appears to contradict an ADR, **stop** and open a PR amending the ADR (or the runbook) rather than diverging silently.
+
+[Back to top ↑](#top)
+
+---
+
+## 17. Open questions / NEEDS VERIFICATION
+
+Tracked here for the docs steward; mirror in `docs/registers/VERIFICATION_BACKLOG.md` once that register exists.
+
+- **NEEDS VERIFICATION** — Whether the runbook files listed in §6 already exist in the mounted repository, and if so, what their current contents and review state are.
+- **NEEDS VERIFICATION** — Whether the proposed file-naming convention (`<subsystem>_<LIFECYCLE_STAGE>.md`) is the convention actually in use, or whether the repo uses an alternative casing/separator.
+- **NEEDS VERIFICATION** — Which CI workflow(s) surface runbook-validation summaries. Badge targets above are placeholders.
+- **NEEDS VERIFICATION** — `CODEOWNERS` mapping for `docs/runbooks/`. Owner names in §6 are role-typed placeholders.
+- **OPEN** — Whether kill-switch, secret-leak, deprecation, drift-triage, and migration-rollback runbooks should live here as a separate "cross-cutting" sub-folder (`docs/runbooks/cross/`) or remain flat. Recommend keeping flat until ≥ ~12 files exist.
+- **OPEN** — Whether runbooks should carry a per-file machine-readable manifest (front-matter or sibling `*.runbook.yaml`) for automated index generation. Defer to ADR if it becomes useful.
+
+[Back to top ↑](#top)
+
+---
+
+## Last reviewed
+
+`2026-05-12` — initial draft. ISO date; re-review when any of the following changes: directory rules §6.1 / §15, the Whole-UI + Governed AI Expansion Report Appendix B, or the listed runbook files.
+
+---
+
+## Appendix A — Runbook authoring template
+
+A new runbook should start from this skeleton. Copy, then fill. Do **not** remove sections silently.
+
 <details>
-<summary><strong>Appendix A · Conformance language (RFC 2119-style)</strong></summary>
+<summary>Click to expand the runbook template</summary>
 
-This README and every runbook beneath it use RFC 2119-style conformance language consistent with [`directory-rules.md` §2.2](../doctrine/directory-rules.md):
+````markdown
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/runbook-<subsystem>-<stage>
+title: <Subsystem> — <Stage> Runbook
+type: standard
+version: v1
+status: draft
+owners: <docs-steward>; <subsystem-owner>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public
+related:
+  - docs/architecture/<subsystem>/README.md
+  - contracts/OBJECT_MAP.md
+  - policy/<subsystem>/README.md
+tags: [kfm, runbook, <subsystem>, <stage>]
+notes:
+  - PROPOSED until verified against mounted repo.
+[/KFM_META_BLOCK_V2] -->
 
-- **MUST / MUST NOT** — non-negotiable; PRs that violate MUST are not merged absent an approved ADR.
-- **SHOULD / SHOULD NOT** — strong default; deviation requires brief justification in the PR body or in the affected runbook.
-- **MAY** — permitted; no justification required, but stay consistent within the runbook family.
+<a id="top"></a>
+
+# <Subsystem> — <Stage> Runbook
+
+> One-line purpose. Who runs this, when, why.
+
+## 1. Scope
+Subsystem, lifecycle phase, policy surface.
+
+## 2. Preconditions
+Required state, flags, fixtures, branches, access, receipts.
+
+## 3. Inputs
+Files, manifests, fixtures, envelopes (paths + types).
+
+## 4. Procedure
+1. Step …
+2. Step …
+3. Step (mark destructive steps clearly).
+
+## 5. Expected outputs
+Receipts, validation reports, manifests, UI states.
+
+## 6. Failure modes
+Reason codes (e.g., MISSING_RECEIPT, SCHEMA_MISMATCH, RIGHTS_UNKNOWN) and the recovery path.
+
+## 7. Rollback target
+Explicit prior-safe state or `RollbackCard` reference. **Required.**
+
+## 8. Correction path
+When to issue a `CorrectionNotice` instead of (or in addition to) rolling back.
+
+## 9. Evidence references
+EvidenceBundle / EvidenceRef / ADR / schema / policy / fixture / test paths.
+
+## 10. Validation hooks
+Which workflows / validators / tests confirm a successful run.
+
+## 11. Review burden
+Who must sign off; release-duty separation if applicable.
+
+## Last reviewed
+YYYY-MM-DD
+````
 
 </details>
 
-<details>
-<summary><strong>Appendix B · Runbook self-check (for reviewers)</strong></summary>
+[Back to top ↑](#top)
 
-A reviewer reading a runbook should be able to tick every applicable box:
+---
 
-- [ ] KFM Meta Block v2 present and accurate.
-- [ ] Status, owners, reviewers, related doctrine populated.
-- [ ] Scope, audience, lifecycle phase, and trust class are explicit.
-- [ ] Preconditions name the role, environment, and machine surfaces required.
-- [ ] Each step names its emission (receipt / proof / catalog / decision log).
-- [ ] Each step has an observable success criterion and a failure path.
-- [ ] Gate sequence (if applicable) maps explicitly to A–G with policy bundle references.
-- [ ] Rollback or recovery path is named (or non-mutating is declared).
-- [ ] Open Questions section is present and non-empty.
-- [ ] Authorities section links to the doctrine, ADRs, contracts, schemas, and policy.
-- [ ] Validation has been exercised against fixtures (no-network where possible).
-- [ ] No real secrets, real tokens, or real personal data anywhere in the file.
+## Appendix B — Reviewer checklist
 
-</details>
+Use this when reviewing a PR that adds or edits a runbook. Pairs with the path-validation checklist in directory-rules.md §16.
 
-[Back to top ↑](#runbooks--docsrunbooks)
+- [ ] **Right home.** The file is a runbook (human-executable, lifecycle/governance-bound) and not actually a policy, schema, contract, ADR, or release decision.
+- [ ] **Naming.** Filename matches `<subsystem>_<LIFECYCLE_STAGE>.md` (PROPOSED convention).
+- [ ] **Header.** KFM Meta Block v2 present; `doc_id`, `owners`, `status`, `policy_label` filled.
+- [ ] **Purpose paragraph.** Clearly states who runs it, when, why.
+- [ ] **Preconditions explicit.** Required state, flags, fixtures listed.
+- [ ] **Steps are reproducible.** Commands have language-tagged fences; destructive steps flagged with a callout.
+- [ ] **Cite-or-abstain.** Every evidence-bearing step references an `EvidenceBundle`, ADR, schema, fixture, or test path.
+- [ ] **Rollback target.** Section present and non-empty.
+- [ ] **Correction path.** Section present; defect class addressed.
+- [ ] **Failure modes.** Reason codes named and mapped to recovery.
+- [ ] **Trust membrane respected.** No step reaches `RAW`, `WORK`, `QUARANTINE`, canonical stores, vector indexes, model runtimes, credentials, or internal service handles from a public surface.
+- [ ] **No secret in `configs/` or runbook text.** Triggers the secret-leak incident runbook.
+- [ ] **Links validate.** Relative links resolve; cited schemas/contracts exist.
+- [ ] **Last reviewed date updated.**
+
+[Back to top ↑](#top)
+
+---
+
+> **Related docs:** [`docs/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) · [`docs/architecture/README.md`](../architecture/README.md) · [`docs/adr/README.md`](../adr/README.md) · [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) · [`docs/security/README.md`](../security/README.md)
+>
+> **Last updated:** 2026-05-12 · **Authority:** Canonical (per `docs/doctrine/directory-rules.md` §6.1) · [Back to top ↑](#top)
