@@ -1,0 +1,15 @@
+{
+  "artifacts_dir": "/tmp/pytest-of-runner/pytest-2/test_preflight_runner_strict_m0/artifacts",
+  "check": "required_doctrine_artifacts",
+  "missing": [
+    "a.pdf"
+  ],
+  "missing_count": 1,
+  "present": {
+    "a.pdf": false
+  },
+  "registry": "/tmp/pytest-of-runner/pytest-2/test_preflight_runner_strict_m0/registry.yaml",
+  "required_count": 1,
+  "result": "fail",
+  "status_mismatches": []
+}
