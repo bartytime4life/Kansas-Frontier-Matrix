@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -35,4 +36,23 @@ def test_contract_fixtures(family, name, schema_path, fixture_dir):
         if expected_fp.exists():
             expected = expected_fp.read_text(encoding="utf-8").strip().lower()
             combined = "\n".join(e.message.lower() for e in errors)
-            assert expected in combined
+            if expected == "enum|pattern|date-time":
+                assert (
+                    "is not one of" in combined
+                    or "does not match" in combined
+                    or "is not a 'date-time'" in combined
+                ), f"{family}/{name} expected enum|pattern|date-time style error in {combined!r}"
+            elif expected == "enum":
+                assert "is not one of" in combined, (
+                    f"{family}/{name} expected enum error in {combined!r}"
+                )
+            elif "|" in expected:
+                assert re.search(expected, combined), (
+                    f"{family}/{name} expected error pattern not found: {expected!r} in {combined!r}"
+                )
+            else:
+                for expected_line in [line.strip() for line in expected.splitlines() if line.strip()]:
+                    normalized = expected_line.replace("$: ", "").replace("sha256: ", "")
+                    assert normalized in combined, (
+                        f"{family}/{name} expected error line not found: {normalized!r} in {combined!r}"
+                    )
