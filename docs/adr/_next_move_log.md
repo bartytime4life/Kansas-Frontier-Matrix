@@ -54,7 +54,6 @@ Each run appends one block in this exact shape:
 - Slice shape: removed placeholder doctrine PDFs, reset required artifact statuses to `missing`, and restored fail-until-admitted test expectations.
 - Deferred to future runs:
   - Admit canonical doctrine artifacts with provenance/integrity evidence
-
 ### Run 2026-05-13 — Add canonical-source provenance registry gate for required doctrine artifacts
 - Status: landed
 - PR: n/a
@@ -70,7 +69,6 @@ Each run appends one block in this exact shape:
 - Slice shape: tightened provenance checker to fail on placeholder hosts (`example.org`, `example.com`, `localhost`) and updated tests to reflect blocked state until real links are supplied.
 - Deferred to future runs:
   - replace placeholder source URLs with authoritative URLs and transition check to pass
-
 ### Run 2026-05-13 — Add provenance status sync command for artifact admission lifecycle
 - Status: landed
 - PR: n/a
@@ -78,11 +76,10 @@ Each run appends one block in this exact shape:
 - Slice shape: added sync command and tests to detect admitted artifact files and (optionally) persist provenance status transitions with timestamp evidence.
 - Deferred to future runs:
   - wire sync command into doctrine preflight orchestrator and CI receipts
-
 ### Run 2026-05-13 — Integrate provenance checks into preflight summary orchestrator
 - Status: landed
 - PR: n/a
 - Doctrine basis: doctrine preflight must report both artifact-file checks and canonical-link provenance gate state in one receipt surface.
 - Slice shape: extended preflight runner and summary schema to include provenance check + provenance sync return codes and stderr fields.
 - Deferred to future runs:
-  - decide strict-mode policy for provenance gate outside placeholder state
+- decide strict-mode policy for provenance gate outside placeholder state
