@@ -110,7 +110,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added fixture snapshots and tests that assert key JSON payload fields for placeholder-url failure and provenance-sync no-change results.
 - Deferred to future runs:
   - add verified-state snapshot once authoritative URLs and artifact bytes are admitted
-
 ### Run 2026-05-13 — Add verified-transition snapshot coverage for provenance sync
 - Status: landed
 - PR: n/a
