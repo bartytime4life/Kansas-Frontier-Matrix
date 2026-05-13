@@ -4,7 +4,7 @@ title: Geology & Natural Resources — No-Network Test Runbook
 type: standard
 version: v0.1
 status: draft
-owners: <Geology lane subsystem owner> + <Docs steward> + <QA owner>   <!-- PROPOSED: fill in from CODEOWNERS once verified -->
+owners: <Geology lane subsystem owner> + <Docs steward> + <QA owner> (PROPOSED: fill in from CODEOWNERS once verified)
 created: 2026-05-12
 updated: 2026-05-12
 policy_label: public
