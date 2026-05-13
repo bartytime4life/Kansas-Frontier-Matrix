@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/doctrine_artifact_preflight_summary.schema.json",
+  "title": "doctrine_artifact_preflight_summary",
+  "type": "object",
+  "required": [
+    "check_returncode",
+    "render_returncode",
+    "check_receipt",
+    "presence_input"
+  ],
+  "properties": {
+    "check_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "render_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        2
+      ]
+    },
+    "check_stderr": {
+      "type": "string"
+    },
+    "render_stderr": {
+      "type": "string"
+    },
+    "check_receipt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "presence_input": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "present"
+          ],
+          "properties": {
+            "present": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "boolean"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "presence_output": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
