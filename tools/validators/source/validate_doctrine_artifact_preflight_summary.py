@@ -25,6 +25,10 @@ def _errors_to_lines(errors: Iterable) -> list[str]:
     return out
 
 
+def _expected_error_path(invalid_fixture_path: Path) -> Path:
+    return invalid_fixture_path.with_suffix(".expected_error.txt")
+
+
 def run_fixtures() -> int:
     schema = _load_json(SCHEMA_PATH)
     validator = Draft202012Validator(schema)
@@ -40,6 +44,17 @@ def run_fixtures() -> int:
         errors = sorted(validator.iter_errors(_load_json(path)), key=lambda e: list(e.path))
         if not errors:
             failures.append(f"invalid fixture unexpectedly passed: {path}")
+            continue
+
+        expected_path = _expected_error_path(path)
+        if expected_path.exists():
+            expected_snippets = [
+                line.strip() for line in expected_path.read_text(encoding="utf-8").splitlines() if line.strip()
+            ]
+            joined_errors = "\n".join(_errors_to_lines(errors))
+            for snippet in expected_snippets:
+                if snippet not in joined_errors:
+                    failures.append(f"missing expected error snippet for {path}: {snippet}")
 
     if failures:
         print("FAIL doctrine_artifact_preflight_summary fixtures")
