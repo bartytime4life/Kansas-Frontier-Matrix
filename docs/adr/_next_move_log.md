@@ -21,3 +21,12 @@ Each run appends one block in this exact shape:
 - Slice shape: define a canonical doctrine-artifact preflight gate (descriptors + validator checks) so future runs can verify prerequisites before doctrine extraction
 - Deferred to future runs:
   - Full doctrine-vs-implementation gap extraction after primary doctrine artifacts are present
+
+
+### Run 2026-05-12 — Admit canonical doctrine artifacts and close prerequisite gate
+- Status: proposed
+- PR: n/a
+- Doctrine basis: prerequisite doctrine artifacts are still absent while registry+policy gate is already staged; blocker remains explicit in `docs/registers/DRIFT_REGISTER.md`.
+- Slice shape: land the three required doctrine PDFs under canonical doctrine artifacts home with descriptor records, registry status updates, and passing prerequisite checks to unblock doctrine-vs-implementation extraction.
+- Deferred to future runs:
+  - Full doctrine expectation extraction and anti-circling candidate selection after artifact admission is CONFIRMED
