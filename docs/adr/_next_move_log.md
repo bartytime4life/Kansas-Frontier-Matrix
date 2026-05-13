@@ -150,7 +150,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added `provenance_payload` object to summary output/schema and asserted its presence in preflight runner tests.
 - Deferred to future runs:
   - add sync payload embedding with optional stable receipt pointer
-
 ### Run 2026-05-13 — Embed provenance-sync payload body in preflight summary receipt
 - Status: landed
 - PR: n/a
