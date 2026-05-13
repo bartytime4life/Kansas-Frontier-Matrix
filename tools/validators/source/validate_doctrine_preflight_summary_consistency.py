@@ -34,7 +34,6 @@ def validate(summary: dict, require_normalized_only: bool = False) -> list[str]:
         present_legacy = [f for f in legacy_fields if f in summary]
         if present_legacy:
             errors.append("legacy fields present in normalized-only mode: " + ",".join(sorted(present_legacy)))
-
     return errors
 
 
