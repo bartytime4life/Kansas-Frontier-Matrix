@@ -54,3 +54,10 @@ Each run appends one block in this exact shape:
 - Slice shape: removed placeholder doctrine PDFs, reset required artifact statuses to `missing`, and restored fail-until-admitted test expectations.
 - Deferred to future runs:
   - Admit canonical doctrine artifacts with provenance/integrity evidence
+### Run 2026-05-13 — Add canonical-source provenance registry gate for required doctrine artifacts
+- Status: landed
+- PR: n/a
+- Doctrine basis: blocker allows canonical artifacts OR approved canonical links with provenance; provenance links need their own governed shape check.
+- Slice shape: added provenance registry + validator + tests so canonical-link admission path has an auditable prerequisite gate before artifact bytes land.
+- Deferred to future runs:
+  - populate verified URLs/hashes and transition provenance statuses from `pending` to `verified`
