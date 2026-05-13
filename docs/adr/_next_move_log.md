@@ -126,3 +126,11 @@ Each run appends one block in this exact shape:
 - Slice shape: added alignment checker + tests and wired the checker into the doctrine artifact regression bundle.
 - Deferred to future runs:
   - include alignment result in orchestrated preflight summary payload
+
+### Run 2026-05-13 — Surface registry-alignment gate in preflight summary
+- Status: landed
+- PR: n/a
+- Doctrine basis: preflight summary must expose full doctrine-admission gate state, including required-vs-provenance registry alignment.
+- Slice shape: orchestrator now runs alignment check and emits `alignment_returncode`/`alignment_stderr`; strict-provenance mode now treats alignment failures as strict failures.
+- Deferred to future runs:
+  - include alignment payload body in summary receipt for richer diagnostics

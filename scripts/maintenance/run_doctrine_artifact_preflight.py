@@ -75,6 +75,16 @@ def main() -> int:
     ]
     provenance_sync_res = run_cmd(provenance_sync_cmd, root)
 
+    alignment_cmd = [
+        sys.executable,
+        str(root / "scripts" / "maintenance" / "check_doctrine_registry_alignment.py"),
+        "--required-registry",
+        str(args.registry),
+        "--provenance-registry",
+        str(args.provenance_registry),
+    ]
+    alignment_res = run_cmd(alignment_cmd, root)
+
     if check_res.returncode == 2:
         render_res = subprocess.CompletedProcess(args=[], returncode=2, stdout="", stderr="skipped_due_to_check_error")
     else:
@@ -96,6 +106,8 @@ def main() -> int:
         "provenance_stderr": provenance_res.stderr.strip(),
         "provenance_sync_returncode": provenance_sync_res.returncode,
         "provenance_sync_stderr": provenance_sync_res.stderr.strip(),
+        "alignment_returncode": alignment_res.returncode,
+        "alignment_stderr": alignment_res.stderr.strip(),
     }
 
     if args.presence_output and summary["presence_input"] is not None:
@@ -114,11 +126,11 @@ def main() -> int:
 
     print(json.dumps(summary, indent=2, sort_keys=True))
 
-    if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2:
+    if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2 or alignment_res.returncode == 2:
         return 2
     if args.strict and (check_res.returncode == 1 or provenance_res.returncode == 1):
         return 1
-    if args.strict_provenance and provenance_res.returncode == 1:
+    if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
     return 0
 

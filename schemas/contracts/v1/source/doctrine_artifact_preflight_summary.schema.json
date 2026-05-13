@@ -81,6 +81,17 @@
     },
     "provenance_sync_stderr": {
       "type": "string"
+    },
+    "alignment_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "alignment_stderr": {
+      "type": "string"
     }
   },
   "additionalProperties": false
