@@ -116,7 +116,13 @@ def main() -> int:
 
     if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2:
         return 2
-    if args.strict and check_res.returncode == 1:
+    if args.strict and (check_res.returncode == 1 or provenance_res.returncode == 1):
+        return 1
+    if args.strict_provenance and provenance_res.returncode == 1:
+        return 1
+    if args.strict_provenance and provenance_res.returncode == 1:
+        return 1
+    if args.strict_provenance and provenance_res.returncode == 1:
         return 1
     if args.strict_provenance and provenance_res.returncode == 1:
         return 1
