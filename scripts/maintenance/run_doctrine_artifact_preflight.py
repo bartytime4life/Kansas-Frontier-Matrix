@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -13,6 +14,16 @@ from jsonschema import Draft202012Validator
 
 def run_cmd(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+
+
+def file_sha256(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def main() -> int:
@@ -104,6 +115,7 @@ def main() -> int:
         "render_returncode": render_res.returncode,
         "render_stderr": render_res.stderr.strip(),
         "check_receipt": str(check_receipt),
+        "check_receipt_sha256": file_sha256(check_receipt),
         "presence_input": json.loads(render_res.stdout) if render_res.returncode == 0 else None,
         "provenance_returncode": provenance_res.returncode,
         "provenance_stderr": provenance_res.stderr.strip(),
@@ -112,6 +124,7 @@ def main() -> int:
         "provenance_sync_stderr": provenance_sync_res.stderr.strip(),
         "provenance_sync_payload": json.loads(provenance_sync_res.stdout) if provenance_sync_res.returncode in {0, 1} and provenance_sync_res.stdout.strip() else None,
         "provenance_sync_receipt": str(provenance_sync_receipt),
+        "provenance_sync_receipt_sha256": file_sha256(provenance_sync_receipt),
         "alignment_returncode": alignment_res.returncode,
         "alignment_stderr": alignment_res.stderr.strip(),
         "alignment_payload": json.loads(alignment_res.stdout) if alignment_res.returncode in {0, 1} and alignment_res.stdout.strip() else None,

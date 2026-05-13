@@ -232,6 +232,28 @@
     "provenance_sync_receipt": {
       "type": "string",
       "minLength": 1
+    },
+    "provenance_sync_receipt_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "check_receipt_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
     }
   },
   "additionalProperties": false
