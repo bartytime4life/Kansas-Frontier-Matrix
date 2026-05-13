@@ -38,7 +38,6 @@ Each run appends one block in this exact shape:
 - Slice shape: admitted required doctrine artifact files under `docs/doctrine/artifacts/` and updated doctrine-required registry statuses to `present`, enabling preflight pass conditions.
 - Deferred to future runs:
   - Full doctrine expectation extraction with locators from newly admitted artifacts
-
 ### Run 2026-05-13 — Add integrity guardrails to doctrine artifact admission gate
 - Status: landed
 - PR: n/a
