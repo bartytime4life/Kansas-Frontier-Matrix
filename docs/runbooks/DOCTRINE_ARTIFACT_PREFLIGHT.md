@@ -439,6 +439,13 @@ Expected behavior:
 
 Use `--stable-filenames` when deterministic receipt names are required by downstream tooling.
 
+Use `--presence-output <path>` to persist the rendered presence input JSON to a file alongside the summary:
+
+```bash
+python scripts/maintenance/run_doctrine_artifact_preflight.py \
+  --presence-output receipts/doctrine_artifacts/presence_input.json
+```
+
 ### Targeted validation commands
 
 Check registry/artifact alignment and write receipt:

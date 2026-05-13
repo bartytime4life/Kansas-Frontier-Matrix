@@ -22,6 +22,7 @@ def main() -> int:
     parser.add_argument("--registry", type=Path, default=root / "control_plane" / "document_registry_doctrine_required.yaml")
     parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
     parser.add_argument("--output-dir", type=Path, default=root / "receipts" / "doctrine_artifacts")
+    parser.add_argument("--presence-output", type=Path, default=None, help="Optional path to persist rendered presence input JSON")
     parser.add_argument(
         "--stable-filenames",
         action="store_true",
@@ -68,6 +69,11 @@ def main() -> int:
         "check_receipt": str(check_receipt),
         "presence_input": json.loads(render_res.stdout) if render_res.returncode == 0 else None,
     }
+
+    if args.presence_output and summary["presence_input"] is not None:
+        args.presence_output.parent.mkdir(parents=True, exist_ok=True)
+        args.presence_output.write_text(json.dumps(summary["presence_input"], indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        summary["presence_output"] = str(args.presence_output)
 
     schema = json.loads(summary_schema_path.read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema).iter_errors(summary), key=lambda e: list(e.path))
