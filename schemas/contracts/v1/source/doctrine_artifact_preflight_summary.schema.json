@@ -228,6 +228,10 @@
           "additionalProperties": true
         }
       ]
+    },
+    "provenance_sync_receipt": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "additionalProperties": false

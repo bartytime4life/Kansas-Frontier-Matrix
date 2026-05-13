@@ -65,6 +65,7 @@ def main() -> int:
     ]
     provenance_res = run_cmd(provenance_cmd, root)
 
+    provenance_sync_receipt = args.output_dir / f"sync_doctrine_artifact_provenance_status{suffix}.json"
     provenance_sync_cmd = [
         sys.executable,
         str(root / "scripts" / "maintenance" / "sync_doctrine_artifact_provenance_status.py"),
@@ -72,6 +73,8 @@ def main() -> int:
         str(args.provenance_registry),
         "--artifacts-dir",
         str(args.artifacts_dir),
+        "--output",
+        str(provenance_sync_receipt),
     ]
     provenance_sync_res = run_cmd(provenance_sync_cmd, root)
 
@@ -108,6 +111,7 @@ def main() -> int:
         "provenance_sync_returncode": provenance_sync_res.returncode,
         "provenance_sync_stderr": provenance_sync_res.stderr.strip(),
         "provenance_sync_payload": json.loads(provenance_sync_res.stdout) if provenance_sync_res.returncode in {0, 1} and provenance_sync_res.stdout.strip() else None,
+        "provenance_sync_receipt": str(provenance_sync_receipt),
         "alignment_returncode": alignment_res.returncode,
         "alignment_stderr": alignment_res.stderr.strip(),
         "alignment_payload": json.loads(alignment_res.stdout) if alignment_res.returncode in {0, 1} and alignment_res.stdout.strip() else None,

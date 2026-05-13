@@ -157,3 +157,10 @@ Each run appends one block in this exact shape:
 - Slice shape: added `provenance_sync_payload` field to preflight output/schema and asserted expected check identity in runner tests.
 - Deferred to future runs:
   - emit stable pointer to persisted sync receipt artifact path when write-mode is enabled
+### Run 2026-05-13 — Add stable sync-receipt pointer in preflight summary
+- Status: landed
+- PR: n/a
+- Doctrine basis: provenance lifecycle audits require a durable receipt pointer, not only inline payloads.
+- Slice shape: sync command now supports `--output`; preflight orchestrator writes sync receipt artifacts and emits `provenance_sync_receipt` path in summary.
+- Deferred to future runs:
+  - add checksum of referenced sync receipt in summary for tamper-evidence

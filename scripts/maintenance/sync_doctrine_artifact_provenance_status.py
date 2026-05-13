@@ -21,7 +21,7 @@ def _render(entries: list[dict[str, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def run(registry_path: Path, artifacts_dir: Path, write: bool = False) -> int:
+def run(registry_path: Path, artifacts_dir: Path, write: bool = False, output: Path | None = None) -> int:
     entries = parse_entries(registry_path)
     changed = []
     for e in entries:
@@ -40,7 +40,12 @@ def run(registry_path: Path, artifacts_dir: Path, write: bool = False) -> int:
         "result": "changed" if changed else "no_change",
         "write": write,
     }
-    print(json.dumps(payload, indent=2, sort_keys=True))
+    rendered = json.dumps(payload, indent=2, sort_keys=True)
+    print(rendered)
+
+    if output:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered + "\n", encoding="utf-8")
 
     if write and changed:
         registry_path.write_text(_render(entries), encoding="utf-8")
@@ -54,8 +59,9 @@ def main() -> int:
     parser.add_argument("--registry", type=Path, default=root / "control_plane" / "doctrine_artifact_provenance_sources.yaml")
     parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
     parser.add_argument("--write", action="store_true")
+    parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
-    return run(args.registry, args.artifacts_dir, args.write)
+    return run(args.registry, args.artifacts_dir, args.write, args.output)
 
 
 if __name__ == "__main__":
