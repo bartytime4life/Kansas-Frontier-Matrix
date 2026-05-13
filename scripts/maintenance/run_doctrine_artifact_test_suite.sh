@@ -5,6 +5,10 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$repo_root"
 
 python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
+shadow_summary="$(mktemp)"
+python scripts/maintenance/run_doctrine_artifact_preflight.py --stable-filenames --emit-normalized-only > "$shadow_summary"
+python tools/validators/source/validate_doctrine_preflight_summary_consistency.py --require-normalized-only "$shadow_summary"
+rm -f "$shadow_summary"
 pytest \
   tests/policy/test_doctrine_artifact_required.py \
   tests/policy/test_doctrine_artifact_registry_validation.py \

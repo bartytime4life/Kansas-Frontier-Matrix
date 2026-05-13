@@ -230,3 +230,10 @@ Each run appends one block in this exact shape:
 - Slice shape: added `--emit-normalized-only` to preflight runner, plus tests and validator pass-case coverage for normalized-only payloads.
 - Deferred to future runs:
   - switch CI to run normalized-only summaries in shadow mode before default cutover
+### Run 2026-05-13 — Enable normalized-only summary shadow validation in regression bundle
+- Status: landed
+- PR: n/a
+- Doctrine basis: migration readiness needs continuous proof that normalized-only outputs remain valid before default cutover.
+- Slice shape: test bundle now generates a normalized-only preflight summary and validates it with `--require-normalized-only` consistency checks.
+- Deferred to future runs:
+  - promote normalized-only mode from shadow validation to default preflight output
