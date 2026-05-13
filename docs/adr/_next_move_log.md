@@ -94,3 +94,11 @@ Each run appends one block in this exact shape:
 - Slice shape: added `--strict-provenance` to preflight runner so provenance failures can be enforced independently from artifact-missing strict mode.
 - Deferred to future runs:
   - enable strict-provenance by default once authoritative URLs are populated
+
+### Run 2026-05-13 — Include provenance policy tests in doctrine artifact regression bundle
+- Status: landed
+- PR: n/a
+- Doctrine basis: new provenance gates must be enforced by the same one-command regression bundle used by CI/operators.
+- Slice shape: updated `run_doctrine_artifact_test_suite.sh` to execute provenance validation and provenance-sync tests alongside existing doctrine preflight tests.
+- Deferred to future runs:
+  - add negative-case fixture snapshots for provenance checker payloads
