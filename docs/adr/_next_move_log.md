@@ -76,3 +76,10 @@ Each run appends one block in this exact shape:
 - Slice shape: added sync command and tests to detect admitted artifact files and (optionally) persist provenance status transitions with timestamp evidence.
 - Deferred to future runs:
   - wire sync command into doctrine preflight orchestrator and CI receipts
+### Run 2026-05-13 — Integrate provenance checks into preflight summary orchestrator
+- Status: landed
+- PR: n/a
+- Doctrine basis: doctrine preflight must report both artifact-file checks and canonical-link provenance gate state in one receipt surface.
+- Slice shape: extended preflight runner and summary schema to include provenance check + provenance sync return codes and stderr fields.
+- Deferred to future runs:
+- decide strict-mode policy for provenance gate outside placeholder state
