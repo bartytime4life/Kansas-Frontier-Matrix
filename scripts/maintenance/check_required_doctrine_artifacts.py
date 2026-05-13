@@ -5,19 +5,19 @@ import argparse
 import json
 from pathlib import Path
 
-
-def _extract_required_filenames(registry_text: str) -> list[str]:
-    return [
-        line.split(":", 1)[1].strip()
-        for line in registry_text.splitlines()
-        if line.strip().startswith("- filename:")
-    ]
-
+from _doctrine_registry import parse_required_entries
 
 def run(registry_path: Path, artifacts_dir: Path, output_path: Path | None = None) -> int:
-    reg_text = registry_path.read_text(encoding="utf-8")
-    required = _extract_required_filenames(reg_text)
-    missing = [f for f in required if not (artifacts_dir / f).exists()]
+    entries = parse_required_entries(registry_path)
+    required = [entry["filename"] for entry in entries]
+    expected_status = {entry["filename"]: entry.get("status", "unknown") for entry in entries}
+    present = {f: (artifacts_dir / f).exists() for f in required}
+    missing = [f for f, ok in present.items() if not ok]
+    status_mismatches = [
+        f
+        for f in required
+        if (expected_status[f] == "missing" and present[f]) or (expected_status[f] == "present" and not present[f])
+    ]
 
     result = {
         "check": "required_doctrine_artifacts",
@@ -26,7 +26,9 @@ def run(registry_path: Path, artifacts_dir: Path, output_path: Path | None = Non
         "required_count": len(required),
         "missing_count": len(missing),
         "missing": missing,
-        "result": "pass" if not missing else "fail",
+        "present": present,
+        "status_mismatches": status_mismatches,
+        "result": "pass" if not missing and not status_mismatches else "fail",
     }
 
     payload = json.dumps(result, indent=2, sort_keys=True)
@@ -36,7 +38,7 @@ def run(registry_path: Path, artifacts_dir: Path, output_path: Path | None = Non
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(payload + "\n", encoding="utf-8")
 
-    return 0 if not missing else 1
+    return 0 if not missing and not status_mismatches else 1
 
 
 def main() -> int:
@@ -62,7 +64,11 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    return run(args.registry, args.artifacts_dir, args.output)
+    try:
+        return run(args.registry, args.artifacts_dir, args.output)
+    except (ValueError, OSError) as exc:
+        print(json.dumps({"check": "required_doctrine_artifacts", "result": "error", "error": str(exc)}))
+        return 2
 
 
 if __name__ == "__main__":
