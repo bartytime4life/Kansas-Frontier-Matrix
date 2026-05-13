@@ -8,6 +8,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 
 def run_cmd(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
@@ -15,6 +17,7 @@ def run_cmd(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
 
 def main() -> int:
     root = Path(__file__).resolve().parents[2]
+    summary_schema_path = root / "schemas" / "contracts" / "v1" / "source" / "doctrine_artifact_preflight_summary.schema.json"
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", type=Path, default=root / "control_plane" / "document_registry_doctrine_required.yaml")
     parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
@@ -65,9 +68,19 @@ def main() -> int:
         "check_receipt": str(check_receipt),
         "presence_input": json.loads(render_res.stdout) if render_res.returncode == 0 else None,
     }
+
+    schema = json.loads(summary_schema_path.read_text(encoding="utf-8"))
+    errors = sorted(Draft202012Validator(schema).iter_errors(summary), key=lambda e: list(e.path))
+    schema_failed = False
+    if errors:
+        schema_failed = True
+        summary["schema_validation_error"] = errors[0].message
+        summary["render_returncode"] = 2
+        summary["render_stderr"] = "summary_schema_validation_failed"
+
     print(json.dumps(summary, indent=2, sort_keys=True))
 
-    if render_res.returncode != 0 or check_res.returncode == 2:
+    if schema_failed or render_res.returncode != 0 or check_res.returncode == 2:
         return 2
     if args.strict and check_res.returncode == 1:
         return 1
