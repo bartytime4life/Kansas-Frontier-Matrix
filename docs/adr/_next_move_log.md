@@ -102,3 +102,11 @@ Each run appends one block in this exact shape:
 - Slice shape: updated `run_doctrine_artifact_test_suite.sh` to execute provenance validation and provenance-sync tests alongside existing doctrine preflight tests.
 - Deferred to future runs:
   - add negative-case fixture snapshots for provenance checker payloads
+
+### Run 2026-05-13 — Add provenance gate snapshot fixtures to regression suite
+- Status: landed
+- PR: n/a
+- Doctrine basis: provenance checker outputs are governance artifacts and should have stable regression snapshots for fail/no-change states.
+- Slice shape: added fixture snapshots and tests that assert key JSON payload fields for placeholder-url failure and provenance-sync no-change results.
+- Deferred to future runs:
+  - add verified-state snapshot once authoritative URLs and artifact bytes are admitted
