@@ -150,7 +150,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added `provenance_payload` object to summary output/schema and asserted its presence in preflight runner tests.
 - Deferred to future runs:
   - add sync payload embedding with optional stable receipt pointer
-
 ### Run 2026-05-13 — Embed provenance-sync payload body in preflight summary receipt
 - Status: landed
 - PR: n/a
@@ -158,7 +157,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added `provenance_sync_payload` field to preflight output/schema and asserted expected check identity in runner tests.
 - Deferred to future runs:
   - emit stable pointer to persisted sync receipt artifact path when write-mode is enabled
-
 ### Run 2026-05-13 — Add stable sync-receipt pointer in preflight summary
 - Status: landed
 - PR: n/a
@@ -166,7 +164,6 @@ Each run appends one block in this exact shape:
 - Slice shape: sync command now supports `--output`; preflight orchestrator writes sync receipt artifacts and emits `provenance_sync_receipt` path in summary.
 - Deferred to future runs:
   - add checksum of referenced sync receipt in summary for tamper-evidence
-
 ### Run 2026-05-13 — Add sync-receipt SHA256 to preflight summary
 - Status: landed
 - PR: n/a
@@ -182,7 +179,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added `check_receipt_sha256` computed from required-artifact checker receipt and validated via schema/tests.
 - Deferred to future runs:
   - add digest for optional `presence_output` when emitted
-
 ### Run 2026-05-13 — Add presence-output SHA256 to preflight summary
 - Status: landed
 - PR: n/a
