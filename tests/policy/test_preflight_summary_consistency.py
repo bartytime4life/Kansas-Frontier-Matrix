@@ -99,3 +99,29 @@ def test_preflight_summary_consistency_normalized_only_mode_passes_without_legac
     assert res.returncode == 0
     payload = json.loads(res.stdout)
     assert payload["result"] == "pass"
+
+
+def test_normalized_only_preflight_output_passes_normalized_only_validator(tmp_path: Path):
+    summary_path = tmp_path / "summary.json"
+    run_cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "run_doctrine_artifact_preflight.py"),
+        "--stable-filenames",
+        "--emit-normalized-only",
+        "--output-dir",
+        str(tmp_path / "receipts"),
+    ]
+    run = subprocess.run(run_cmd, cwd=ROOT, capture_output=True, text=True)
+    assert run.returncode == 0
+    summary_path.write_text(run.stdout, encoding="utf-8")
+
+    cmd = [
+        sys.executable,
+        str(ROOT / "tools" / "validators" / "source" / "validate_doctrine_preflight_summary_consistency.py"),
+        str(summary_path),
+        "--require-normalized-only",
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert payload["result"] == "pass"

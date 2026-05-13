@@ -26,3 +26,15 @@ Detailed operator flow: `docs/runbooks/DOCTRINE_ARTIFACT_PREFLIGHT.md`.
 ```bash
 ./scripts/maintenance/run_doctrine_artifact_test_suite.sh
 ```
+
+
+## Normalized summary migration
+
+- **Current compatibility mode**: preflight emits both standalone fields and normalized maps (`artifact_paths`, `artifact_digests`).
+- **Shadow validation mode**: run preflight with `--emit-normalized-only` and validate with:
+
+```bash
+python tools/validators/source/validate_doctrine_preflight_summary_consistency.py <summary.json> --require-normalized-only
+```
+
+- **Cutover gate**: only enable normalized-only by default after all consumers read from normalized maps and CI shadow checks are green over time.
