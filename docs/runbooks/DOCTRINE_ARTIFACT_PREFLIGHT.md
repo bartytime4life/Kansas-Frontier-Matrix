@@ -59,11 +59,12 @@ notes:
 - [8. Decision outcomes](#8-decision-outcomes)
 - [9. Anti-patterns to deny on sight](#9-anti-patterns-to-deny-on-sight)
 - [10. Preflight receipt and lineage](#10-preflight-receipt-and-lineage)
-- [11. Quickstart — five-minute pass](#11-quickstart--five-minute-pass)
-- [12. Task list — pin-to-PR checklist](#12-task-list--pin-to-pr-checklist)
-- [13. FAQ](#13-faq)
-- [14. Related docs](#14-related-docs)
-- [15. Appendix](#15-appendix)
+- [11. Maintenance CLI commands](#11-maintenance-cli-commands)
+- [12. Quickstart — five-minute pass](#12-quickstart--five-minute-pass)
+- [13. Task list — pin-to-PR checklist](#13-task-list--pin-to-pr-checklist)
+- [14. FAQ](#14-faq)
+- [15. Related docs](#15-related-docs)
+- [16. Appendix](#16-appendix)
 
 ---
 
@@ -413,7 +414,70 @@ Every preflight run SHOULD emit a **DoctrineArtifactPreflightReceipt** (PROPOSED
 
 ---
 
-## 11. Quickstart — five-minute pass
+## 11. Maintenance CLI commands
+
+The following commands are provided by `scripts/maintenance/` for CI and operator use.
+
+### Single-command preflight
+
+```bash
+python scripts/maintenance/run_doctrine_artifact_preflight.py
+```
+
+For CI that must fail when artifacts are missing, use strict mode:
+
+```bash
+python scripts/maintenance/run_doctrine_artifact_preflight.py --strict
+```
+
+Use `--stable-filenames` when deterministic receipt names are required by downstream tooling.
+
+### Targeted validation commands
+
+Check registry/artifact alignment and write receipt:
+
+```bash
+python scripts/maintenance/check_required_doctrine_artifacts.py \
+  --registry control_plane/document_registry_doctrine_required.yaml \
+  --artifacts-dir docs/doctrine/artifacts \
+  --output receipts/doctrine_artifacts/check_required_doctrine_artifacts.json
+```
+
+Render policy input from receipt:
+
+```bash
+python scripts/maintenance/render_doctrine_presence_input.py \
+  receipts/doctrine_artifacts/check_required_doctrine_artifacts.json
+```
+
+Sync registry `status:` fields with disk state:
+
+```bash
+python scripts/maintenance/sync_doctrine_artifact_registry_status.py \
+  --registry control_plane/document_registry_doctrine_required.yaml \
+  --artifacts-dir docs/doctrine/artifacts \
+  --output receipts/doctrine_artifacts/sync_doctrine_artifact_registry_status.json
+```
+
+CI drift-check mode (no mutation, fail if registry drift exists):
+
+```bash
+python scripts/maintenance/sync_doctrine_artifact_registry_status.py \
+  --registry control_plane/document_registry_doctrine_required.yaml \
+  --artifacts-dir docs/doctrine/artifacts \
+  --dry-run --fail-on-change
+```
+
+### Failure interpretation
+
+- `result: "error"` means malformed registry (e.g., duplicate filename, invalid status, missing `doc_id`).
+- `result: "fail"` means registry is structurally valid but required artifacts are not yet in compliant state.
+
+[⬆ Back to top](#-quick-jump)
+
+---
+
+## 12. Quickstart — five-minute pass
 
 This is the fast path for an experienced reviewer. It is **not a substitute** for the full eleven steps; it is a triage pass that surfaces obvious denials early.
 
@@ -458,7 +522,7 @@ COSIGN_EXPERIMENTAL=1 cosign sign-blob --yes doctrine.linearized.pdf \
 
 ---
 
-## 12. Task list — pin-to-PR checklist
+## 13. Task list — pin-to-PR checklist
 
 Copy this block into the PR description that proposes, revises, or supersedes a doctrine artifact.
 
@@ -484,7 +548,7 @@ Copy this block into the PR description that proposes, revises, or supersedes a 
 
 ---
 
-## 13. FAQ
+## 14. FAQ
 
 **Is this runbook itself a doctrine artifact?**
 Yes. It is intended to pass its own preflight. Its current `status:` is `draft`, its repo-state claims are labeled, its placement is PROPOSED, and the receipt object it proposes is itself PROPOSED. Promoting it to canonical will require ADR-S-15 to be accepted and the corresponding ADR for receipt-class home to be resolved.
@@ -513,7 +577,7 @@ No. Preflight is the **machine-checkable + reviewer-glance** layer. **Review** i
 
 ---
 
-## 14. Related docs
+## 15. Related docs
 
 - `docs/doctrine/directory-rules.md` — placement authority, §§2.4, 3, 5, 13–16.
 - `docs/doctrine/authority-ladder.md` — authority class taxonomy (PROPOSED home).
@@ -540,7 +604,7 @@ No. Preflight is the **machine-checkable + reviewer-glance** layer. **Review** i
 
 ---
 
-## 15. Appendix
+## 16. Appendix
 
 <details>
 <summary><strong>A. C13 reproducible-documentation chain — at a glance</strong></summary>
