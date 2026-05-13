@@ -6,3 +6,5 @@
 
 - 2026-05-12: CONFIRMED remediation staged: added governance gate scaffolding for required doctrine artifacts (`control_plane/document_registry_doctrine_required.yaml`, `policy/source/doctrine_artifact_required.rego`, schema+fixtures+tests+validator script). Blocking status remains until artifacts themselves are admitted.
 - 2026-05-13: CONFIRMED blocker resolved: required doctrine artifact filenames now exist under `docs/doctrine/artifacts/` and `control_plane/document_registry_doctrine_required.yaml` statuses have been updated to `present`; doctrine prerequisite gate can now be executed in pass mode.
+- 2026-05-13: CONFIRMED integrity drift: admitted doctrine artifacts currently fail minimum-integrity checks (tiny files and duplicate hashes), so doctrine extraction remains blocked until canonical artifacts or canonical linked provenance records are supplied.
+- 2026-05-13: CONFIRMED correction: placeholder doctrine PDFs were removed and registry statuses reset to `missing`; doctrine gate remains blocked pending canonical artifact admission or approved canonical-link provenance records.

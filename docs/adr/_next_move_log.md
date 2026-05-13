@@ -39,3 +39,18 @@ Each run appends one block in this exact shape:
 - Deferred to future runs:
   - Full doctrine expectation extraction with locators from newly admitted artifacts
 
+### Run 2026-05-13 — Add integrity guardrails to doctrine artifact admission gate
+- Status: landed
+- PR: n/a
+- Doctrine basis: placeholder presence alone is insufficient for evidence-first doctrine extraction; artifacts must satisfy minimal integrity checks.
+- Slice shape: extended `check_required_doctrine_artifacts.py` and tests to fail when required artifacts are suspiciously small or hash-identical, preventing false-positive admission.
+- Deferred to future runs:
+  - Replace placeholders with canonical source artifacts or approved canonical-link provenance bundle
+
+### Run 2026-05-13 — Revert placeholder doctrine artifact admission and restore truthful blocker state
+- Status: landed
+- PR: n/a
+- Doctrine basis: placeholder bytes cannot satisfy evidence-first doctrine requirements; registry must reflect true admission state.
+- Slice shape: removed placeholder doctrine PDFs, reset required artifact statuses to `missing`, and restored fail-until-admitted test expectations.
+- Deferred to future runs:
+  - Admit canonical doctrine artifacts with provenance/integrity evidence
