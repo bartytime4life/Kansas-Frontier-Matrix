@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$repo_root"
+
+python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
+pytest \
+  tests/policy/test_doctrine_artifact_required.py \
+  tests/policy/test_doctrine_artifact_registry_validation.py \
+  tests/policy/test_doctrine_artifact_registry_status_alignment.py \
+  tests/policy/test_doctrine_artifact_presence_input.py \
+  tests/policy/test_run_doctrine_artifact_preflight.py \
+  tests/policy/test_preflight_summary_schema_contract.py \
+  tests/policy/test_sync_doctrine_artifact_registry_status.py \
+  tests/source/test_doctrine_artifact_preflight_summary_schema.py -q

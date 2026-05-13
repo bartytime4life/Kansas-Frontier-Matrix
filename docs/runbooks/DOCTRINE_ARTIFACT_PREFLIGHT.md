@@ -486,6 +486,12 @@ python scripts/maintenance/sync_doctrine_artifact_registry_status.py \
 - `result: "error"` means malformed registry (e.g., duplicate filename, invalid status, missing `doc_id`).
 - `result: "fail"` means registry is structurally valid but required artifacts are not yet in compliant state.
 
+### Regression test bundle
+
+```bash
+./scripts/maintenance/run_doctrine_artifact_test_suite.sh
+```
+
 [⬆ Back to top](#-quick-jump)
 
 ---
