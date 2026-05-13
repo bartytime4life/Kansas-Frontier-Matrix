@@ -265,6 +265,50 @@
           "pattern": "^[0-9a-f]{64}$"
         }
       ]
+    },
+    "artifact_digests": {
+      "type": "object",
+      "required": [
+        "check_receipt",
+        "provenance_sync_receipt",
+        "presence_output"
+      ],
+      "properties": {
+        "check_receipt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          ]
+        },
+        "provenance_sync_receipt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          ]
+        },
+        "presence_output": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

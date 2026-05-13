@@ -41,6 +41,8 @@ def test_preflight_runner_produces_presence_input_with_missing_artifacts(tmp_pat
     assert payload["provenance_sync_payload"]["check"] == "sync_doctrine_artifact_provenance_status"
     assert payload["provenance_sync_receipt"].endswith(".json")
     assert len(payload["provenance_sync_receipt_sha256"]) == 64
+    assert payload["artifact_digests"]["check_receipt"] == payload["check_receipt_sha256"]
+    assert payload["artifact_digests"]["provenance_sync_receipt"] == payload["provenance_sync_receipt_sha256"]
     assert "alignment_returncode" in payload
     assert payload["alignment_payload"]["check"] == "doctrine_registry_alignment"
     assert Path(payload["check_receipt"]).name.startswith("check_required_doctrine_artifacts")
@@ -146,6 +148,7 @@ def test_preflight_writes_presence_output_when_requested(tmp_path: Path):
     payload = json.loads(res.stdout)
     assert payload["presence_output"] == str(presence_out)
     assert len(payload["presence_output_sha256"]) == 64
+    assert payload["artifact_digests"]["presence_output"] == payload["presence_output_sha256"]
     assert presence_out.exists()
 
 

@@ -139,6 +139,13 @@ def main() -> int:
     if "presence_output_sha256" not in summary:
         summary["presence_output_sha256"] = None
 
+    artifact_digests = {
+        "check_receipt": summary["check_receipt_sha256"],
+        "provenance_sync_receipt": summary["provenance_sync_receipt_sha256"],
+        "presence_output": summary["presence_output_sha256"],
+    }
+    summary["artifact_digests"] = artifact_digests
+
     schema = json.loads(summary_schema_path.read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema).iter_errors(summary), key=lambda e: list(e.path))
     schema_failed = False
@@ -153,8 +160,6 @@ def main() -> int:
     if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2 or alignment_res.returncode == 2:
         return 2
     if args.strict and (check_res.returncode == 1 or provenance_res.returncode == 1):
-        return 1
-    if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
     if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
