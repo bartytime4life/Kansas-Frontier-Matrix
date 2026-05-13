@@ -69,3 +69,10 @@ Each run appends one block in this exact shape:
 - Slice shape: tightened provenance checker to fail on placeholder hosts (`example.org`, `example.com`, `localhost`) and updated tests to reflect blocked state until real links are supplied.
 - Deferred to future runs:
   - replace placeholder source URLs with authoritative URLs and transition check to pass
+### Run 2026-05-13 — Add provenance status sync command for artifact admission lifecycle
+- Status: landed
+- PR: n/a
+- Doctrine basis: canonical-link provenance needs a governed transition path from `pending` to `verified` once artifact bytes are present.
+- Slice shape: added sync command and tests to detect admitted artifact files and (optionally) persist provenance status transitions with timestamp evidence.
+- Deferred to future runs:
+  - wire sync command into doctrine preflight orchestrator and CI receipts
