@@ -6,11 +6,21 @@ ALLOWED_STATUSES = {"missing", "present"}
 
 
 def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
+    in_required_block = False
     entries: list[dict[str, str]] = []
     current: dict[str, str] | None = None
 
     for raw in registry_path.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
+        if line.startswith("required_doctrine_artifacts:"):
+            in_required_block = True
+            continue
+        if not in_required_block:
+            continue
+        if line and not line.startswith("-") and not line.startswith("doc_id:") and not line.startswith("status:"):
+            # End of required block when another top-level key appears.
+            if not raw.startswith(" "):
+                break
         if line.startswith("- filename:"):
             if current:
                 entries.append(current)
@@ -22,6 +32,9 @@ def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
 
     if current:
         entries.append(current)
+
+    if not in_required_block:
+        raise ValueError("missing required_doctrine_artifacts block")
 
     seen: set[str] = set()
     for entry in entries:

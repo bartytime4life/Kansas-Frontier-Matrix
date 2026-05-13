@@ -73,3 +73,23 @@ def test_checker_fails_on_missing_doc_id(tmp_path: Path):
     payload = json.loads(res.stdout)
     assert payload["result"] == "error"
     assert "missing doc_id" in payload["error"]
+
+
+def test_checker_fails_when_required_block_missing(tmp_path: Path):
+    registry = tmp_path / "registry.yaml"
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    registry.write_text("other_block:\n  - filename: a.pdf\n", encoding="utf-8")
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "check_required_doctrine_artifacts.py"),
+        "--registry",
+        str(registry),
+        "--artifacts-dir",
+        str(artifacts),
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 2
+    payload = json.loads(res.stdout)
+    assert payload["result"] == "error"
+    assert "required_doctrine_artifacts block" in payload["error"]
