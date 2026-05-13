@@ -4,20 +4,20 @@ title: No-Network Test Runbook — Settlements / Infrastructure
 type: standard
 version: v0.1
 status: draft
-owners: Docs steward + Settlements/Infrastructure subsystem owner + QA steward  <!-- PLACEHOLDER: confirm CODEOWNERS -->
+owners: Docs steward + Settlements/Infrastructure subsystem owner + QA steward (PLACEHOLDER, confirm CODEOWNERS)
 created: 2026-05-12
 updated: 2026-05-12
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - docs/domains/settlements-infrastructure/README.md   <!-- PROPOSED: NEEDS VERIFICATION -->
-  - schemas/contracts/v1/domains/settlements-infrastructure/                <!-- PROPOSED per ADR-0001 -->
-  - tests/domains/settlements-infrastructure/                               <!-- PROPOSED -->
-  - fixtures/domains/settlements-infrastructure/                            <!-- PROPOSED -->
-  - policy/domains/settlements-infrastructure/                              <!-- PROPOSED -->
-  - pipelines/domains/settlements-infrastructure/                           <!-- PROPOSED -->
-  - tools/validators/                                                       <!-- PROPOSED -->
-  - docs/runbooks/README.md                                                 <!-- PROPOSED: NEEDS VERIFICATION -->
+  - docs/domains/settlements-infrastructure/README.md (PROPOSED, NEEDS VERIFICATION)
+  - schemas/contracts/v1/domains/settlements-infrastructure/ (PROPOSED per ADR-0001)
+  - tests/domains/settlements-infrastructure/ (PROPOSED)
+  - fixtures/domains/settlements-infrastructure/ (PROPOSED)
+  - policy/domains/settlements-infrastructure/ (PROPOSED)
+  - pipelines/domains/settlements-infrastructure/ (PROPOSED)
+  - tools/validators/ (PROPOSED)
+  - docs/runbooks/README.md (PROPOSED, NEEDS VERIFICATION)
 tags: [kfm, runbook, settlements, infrastructure, no-network, fail-closed, fixtures]
 notes:
   - Path is PROPOSED per Directory Rules §12 (Domain Placement Law); confirm against mounted repo before merge.
@@ -29,7 +29,6 @@ notes:
 
 Run the **Settlements / Infrastructure** validators, fixtures, and proof-pack drills with **all network egress blocked** so that the lane's first-slice gates (schema, source-role, evidence closure, sensitivity, policy deny, release closure) are exercised deterministically, offline, and fail-closed — before any live source is activated.
 
-<!-- BADGES — placeholders; replace with verified Shields.io endpoints after repo wiring -->
 ![status: draft](https://img.shields.io/badge/status-draft-yellow)
 ![lane: settlements--infrastructure](https://img.shields.io/badge/lane-settlements--infrastructure-blue)
 ![posture: fail--closed](https://img.shields.io/badge/posture-fail--closed-critical)
@@ -41,14 +40,14 @@ Run the **Settlements / Infrastructure** validators, fixtures, and proof-pack dr
 |---|---|
 | **Document type** | Runbook (operational) |
 | **Status** | Draft — `NEEDS VERIFICATION` against mounted repo |
-| **Owners** | Docs steward + Settlements/Infrastructure subsystem owner + QA steward `<!-- PLACEHOLDER -->` |
+| **Owners** | Docs steward + Settlements/Infrastructure subsystem owner + QA steward (PLACEHOLDER) |
 | **Last updated** | 2026-05-12 |
 | **Authority of doctrine cited** | `CONFIRMED` |
 | **Authority of any concrete path / command** | `PROPOSED` until verified against mounted-repo evidence |
 | **Lifecycle covered** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` (offline fixtures only) |
 
 > [!IMPORTANT]
-> No-network execution is a **safety property**, not a convenience. If any step in this runbook reaches the network — DNS, HTTPS, package index, model endpoint, telemetry — that is a **runbook failure**, not a test failure, and must be filed in `docs/registers/DRIFT_REGISTER.md`. <!-- PROPOSED path -->
+> No-network execution is a **safety property**, not a convenience. If any step in this runbook reaches the network — DNS, HTTPS, package index, model endpoint, telemetry — that is a **runbook failure**, not a test failure, and must be filed in `docs/registers/DRIFT_REGISTER.md` (PROPOSED path).
 
 ---
 
@@ -90,7 +89,7 @@ It covers:
 It does **not** cover:
 
 - Live-source ingestion, watcher activation, or any test that requires real authoritative APIs (KDOT, FEMA NFHL, USGS, Census TIGER, state municipal registries, utility operators, etc.). Those belong in a separate live-source runbook gated behind this one.
-- Cesium / 3D rendering, MapLibre adapter component tests, or browser e2e. Map-shell tests live in `docs/runbooks/ui_VALIDATION.md`. <!-- PROPOSED path; NEEDS VERIFICATION -->
+- Cesium / 3D rendering, MapLibre adapter component tests, or browser e2e. Map-shell tests live in `docs/runbooks/ui_VALIDATION.md` (PROPOSED path, NEEDS VERIFICATION).
 - Authority-laden release decisions. Releases are governed by `release/` and the release runbook; this runbook only proves the fixtures pass the gates.
 
 [Back to top](#no-network-test-runbook--settlements--infrastructure)
@@ -135,7 +134,7 @@ You need all of the following true before starting. If any item is `UNKNOWN`, st
 | 5 | Fixture home present (`fixtures/domains/settlements-infrastructure/`) | `ls fixtures/domains/settlements-infrastructure/` | `PROPOSED` |
 | 6 | Policy home present (`policy/domains/settlements-infrastructure/`) | `ls policy/domains/settlements-infrastructure/` | `PROPOSED` |
 | 7 | Validator tools installed (no-network) | `tools/validators/...` is invokable from a clean shell | `PROPOSED` |
-| 8 | No real secrets in `configs/test/` | `grep -R` for token patterns | **security incident** if found — escalate per `docs/runbooks/` <!-- PROPOSED --> |
+| 8 | No real secrets in `configs/test/` | `grep -R` for token patterns | **security incident** if found — escalate per `docs/runbooks/` (PROPOSED) |
 | 9 | Network kill-switch active | see §4 below | hard stop |
 
 > [!CAUTION]
@@ -241,7 +240,7 @@ fixtures/domains/settlements-infrastructure/                  # PROPOSED root
 
 `CONFIRMED` doctrine / `PROPOSED` placement.
 
-The following families are required for this lane. Each row is paired with the doctrine source. Place each family under `tests/domains/settlements-infrastructure/<family>/`. <!-- PROPOSED -->
+The following families are required for this lane. Each row is paired with the doctrine source. Place each family under `tests/domains/settlements-infrastructure/<family>/` (PROPOSED).
 
 | # | Test family | What it asserts | Sample fixture(s) | Pass outcome |
 |---|---|---|---|---|
@@ -261,7 +260,7 @@ The following families are required for this lane. Each row is paired with the d
 | T-14 | **Release manifest validation** | Missing rollback target denies. | `release/release_manifest.missing_rollback.invalid.json` | `DENY` |
 | T-15 | **Rollback drill** | Restoring a prior `ReleaseManifest` is exercised end-to-end against fixtures. | `objects/*/rollback_prior_lineage.json` | `ANSWER` |
 | T-16 | **Non-regression** | Prior lineage / scaffold semantics are preserved; renamed or deprecated objects keep working aliases. | `objects/*/rollback_prior_lineage.json` | `ANSWER` |
-| T-17 | **AI boundary (`MockAdapter`)** | The Focus runtime cannot answer without admissible evidence; uses `MockAdapter` only, no live model. | `runtime/decision_envelope.{answer,abstain,deny,error}.valid.json` | `ANSWER` / `ABSTAIN` / `DENY` |
+| T-17 | **AI boundary (`MockAdapter`)** | The Focus runtime cannot answer without admissible evidence; uses `MockAdapter` only, no live model. | `runtime/decision_envelope.{answer,abstain,deny,error}.valid.json` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
 
 ### Finite outcomes (recap)
 
@@ -300,7 +299,7 @@ Before isolating the network, capture the run identity so the receipt is reconst
 
 ```bash
 # PROPOSED — adapt to the repo's actual receipt helper.
-mkdir -p data/receipts/runs/settlements-infrastructure/   # PROPOSED
+mkdir -p data/receipts/runs/settlements-infrastructure/
 cat > data/receipts/runs/settlements-infrastructure/run_header.json <<'EOF'
 {
   "lane": "settlements-infrastructure",
@@ -330,8 +329,8 @@ docker run --rm -it \
 
 # Option B — host shell behind an egress firewall
 # PROPOSED — the firewall recipe lives in infra/firewall/ per Directory Rules §10.2.
-sudo /usr/local/bin/kfm-egress-deny    # PROPOSED
-trap 'sudo /usr/local/bin/kfm-egress-restore' EXIT   # PROPOSED
+sudo /usr/local/bin/kfm-egress-deny
+trap 'sudo /usr/local/bin/kfm-egress-restore' EXIT
 ```
 
 ### Step 2 — Sanity-check that the network really is down
@@ -393,7 +392,7 @@ pytest tests/domains/settlements-infrastructure/evidence/ \
 # T-04 / T-11 / T-12
 conftest test \
   -p policy/domains/settlements-infrastructure/ \
-  --data data/registry/sensitivity/ \                # PROPOSED
+  --data data/registry/sensitivity/ \
   --fixtures fixtures/domains/settlements-infrastructure/policy/ \
   --output json \
   > data/receipts/runs/settlements-infrastructure/policy.json
@@ -467,7 +466,7 @@ Use the table below as the canonical reading. **Do not** promote a suite verdict
 
 1. Identify the call site (stack trace, audit log).
 2. Quarantine the offending test until refactored to use a local fixture.
-3. File a drift entry in `docs/registers/DRIFT_REGISTER.md`. <!-- PROPOSED -->
+3. File a drift entry in `docs/registers/DRIFT_REGISTER.md` (PROPOSED).
 4. Do **not** count this run as a passing no-network suite.
 
 </details>
@@ -534,7 +533,7 @@ Use the table below as the canonical reading. **Do not** promote a suite verdict
 `PROPOSED`. Wire the suite into CI as a **required check** for any PR touching `schemas/contracts/v1/domains/settlements-infrastructure/`, `policy/domains/settlements-infrastructure/`, `fixtures/domains/settlements-infrastructure/`, `pipelines/domains/settlements-infrastructure/`, or `release/candidates/settlements-infrastructure/`.
 
 ```yaml
-# .github/workflows/settlements-infrastructure-no-network.yml   # PROPOSED
+# .github/workflows/settlements-infrastructure-no-network.yml   (PROPOSED)
 name: settlements-infrastructure / no-network
 on:
   pull_request:
