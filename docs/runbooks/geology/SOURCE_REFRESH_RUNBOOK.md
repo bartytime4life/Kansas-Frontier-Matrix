@@ -4,7 +4,7 @@ title: Geology Source Refresh Runbook
 type: standard
 version: v1
 status: draft
-owners: <Geology domain steward + Source-watcher steward + Docs steward>  # NEEDS VERIFICATION
+
 created: 2026-05-12
 updated: 2026-05-12
 policy_label: public
@@ -36,7 +36,7 @@ notes:
 | **Audience** | Domain stewards, source-watcher operators, release reviewers, on-call docs steward |
 | **Status** | draft (doctrine CONFIRMED; implementation PROPOSED) |
 | **Lifecycle invariant** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
-| **Proposed path** | `docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md` <!-- PROPOSED — see companion notes for alternate `docs/runbooks/geology_SOURCE_REFRESH.md` convention --> |
+
 | **Last reviewed** | 2026-05-12 |
 
 ---
