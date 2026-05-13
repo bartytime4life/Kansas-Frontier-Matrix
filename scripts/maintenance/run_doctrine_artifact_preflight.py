@@ -107,6 +107,7 @@ def main() -> int:
         "provenance_payload": json.loads(provenance_res.stdout) if provenance_res.returncode in {0, 1} and provenance_res.stdout.strip() else None,
         "provenance_sync_returncode": provenance_sync_res.returncode,
         "provenance_sync_stderr": provenance_sync_res.stderr.strip(),
+        "provenance_sync_payload": json.loads(provenance_sync_res.stdout) if provenance_sync_res.returncode in {0, 1} and provenance_sync_res.stdout.strip() else None,
         "alignment_returncode": alignment_res.returncode,
         "alignment_stderr": alignment_res.stderr.strip(),
         "alignment_payload": json.loads(alignment_res.stdout) if alignment_res.returncode in {0, 1} and alignment_res.stdout.strip() else None,

@@ -184,6 +184,50 @@
           "additionalProperties": true
         }
       ]
+    },
+    "provenance_sync_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "changed",
+            "changed_count",
+            "write"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "sync_doctrine_artifact_provenance_status"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "changed",
+                "no_change"
+              ]
+            },
+            "changed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "changed_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "write": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
     }
   },
   "additionalProperties": false

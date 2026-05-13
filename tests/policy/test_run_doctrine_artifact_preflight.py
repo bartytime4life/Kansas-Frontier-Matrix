@@ -37,6 +37,7 @@ def test_preflight_runner_produces_presence_input_with_missing_artifacts(tmp_pat
     assert "provenance_returncode" in payload
     assert payload["provenance_payload"]["check"] == "required_doctrine_artifact_provenance"
     assert "provenance_sync_returncode" in payload
+    assert payload["provenance_sync_payload"]["check"] == "sync_doctrine_artifact_provenance_status"
     assert "alignment_returncode" in payload
     assert payload["alignment_payload"]["check"] == "doctrine_registry_alignment"
     assert Path(payload["check_receipt"]).name.startswith("check_required_doctrine_artifacts")
