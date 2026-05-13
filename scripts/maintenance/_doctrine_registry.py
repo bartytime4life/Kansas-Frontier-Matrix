@@ -12,6 +12,8 @@ def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
 
     for raw in registry_path.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
         if line.startswith("required_doctrine_artifacts:"):
             in_required_block = True
             continue
@@ -35,6 +37,8 @@ def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
 
     if not in_required_block:
         raise ValueError("missing required_doctrine_artifacts block")
+    if not entries:
+        raise ValueError("required_doctrine_artifacts block has no entries")
 
     seen: set[str] = set()
     for entry in entries:
