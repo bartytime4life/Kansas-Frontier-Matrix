@@ -246,3 +246,10 @@ Each run appends one block in this exact shape:
 - Slice shape: documented migration phases in maintenance README and added an end-to-end test that runs normalized-only preflight output through `--require-normalized-only` validation.
 - Deferred to future runs:
   - collect downstream consumer readiness checklist linked from this playbook
+### Run 2026-05-13 — Publish normalized-summary consumer readiness checklist
+- Status: landed
+- PR: n/a
+- Doctrine basis: default cutover requires explicit consumer-level readiness evidence, not only global shadow-pass signals.
+- Slice shape: added checklist artifact and linked it from maintenance migration guidance.
+- Deferred to future runs:
+  - populate checklist entries per downstream consumer with CI evidence

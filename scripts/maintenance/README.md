@@ -38,3 +38,4 @@ python tools/validators/source/validate_doctrine_preflight_summary_consistency.p
 ```
 
 - **Cutover gate**: only enable normalized-only by default after all consumers read from normalized maps and CI shadow checks are green over time.
+- **Readiness checklist**: `docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md`
