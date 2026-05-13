@@ -5,6 +5,7 @@ import argparse
 import json
 from pathlib import Path
 
+from _cli_errors import emit_structured_error
 from _doctrine_registry import parse_required_entries
 
 def run(registry_path: Path, artifacts_dir: Path, output_path: Path | None = None) -> int:
@@ -67,8 +68,7 @@ def main() -> int:
     try:
         return run(args.registry, args.artifacts_dir, args.output)
     except (ValueError, OSError) as exc:
-        print(json.dumps({"check": "required_doctrine_artifacts", "result": "error", "error": str(exc)}))
-        return 2
+        return emit_structured_error("required_doctrine_artifacts", exc)
 
 
 if __name__ == "__main__":
