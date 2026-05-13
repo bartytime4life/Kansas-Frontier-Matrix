@@ -10,6 +10,10 @@ pytest \
   tests/policy/test_doctrine_artifact_registry_validation.py \
   tests/policy/test_doctrine_artifact_registry_status_alignment.py \
   tests/policy/test_doctrine_artifact_presence_input.py \
+  tests/policy/test_doctrine_artifact_provenance.py \
+  tests/policy/test_doctrine_registry_alignment.py \
+  tests/policy/test_sync_doctrine_artifact_provenance_status.py \
+  tests/policy/test_doctrine_artifact_provenance_snapshots.py \
   tests/policy/test_run_doctrine_artifact_preflight.py \
   tests/policy/test_preflight_summary_schema_contract.py \
   tests/policy/test_sync_doctrine_artifact_registry_status.py \
