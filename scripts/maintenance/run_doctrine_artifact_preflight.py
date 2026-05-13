@@ -134,6 +134,10 @@ def main() -> int:
         args.presence_output.parent.mkdir(parents=True, exist_ok=True)
         args.presence_output.write_text(json.dumps(summary["presence_input"], indent=2, sort_keys=True) + "\n", encoding="utf-8")
         summary["presence_output"] = str(args.presence_output)
+        summary["presence_output_sha256"] = file_sha256(args.presence_output)
+
+    if "presence_output_sha256" not in summary:
+        summary["presence_output_sha256"] = None
 
     schema = json.loads(summary_schema_path.read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema).iter_errors(summary), key=lambda e: list(e.path))
@@ -149,6 +153,8 @@ def main() -> int:
     if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2 or alignment_res.returncode == 2:
         return 2
     if args.strict and (check_res.returncode == 1 or provenance_res.returncode == 1):
+        return 1
+    if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
     if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1

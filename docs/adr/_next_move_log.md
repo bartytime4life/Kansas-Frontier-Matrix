@@ -164,8 +164,6 @@ Each run appends one block in this exact shape:
 - Slice shape: sync command now supports `--output`; preflight orchestrator writes sync receipt artifacts and emits `provenance_sync_receipt` path in summary.
 - Deferred to future runs:
   - add checksum of referenced sync receipt in summary for tamper-evidence
-<<<<<<< HEAD
-
 ### Run 2026-05-13 — Add sync-receipt SHA256 to preflight summary
 - Status: landed
 - PR: n/a
@@ -181,3 +179,10 @@ Each run appends one block in this exact shape:
 - Slice shape: added `check_receipt_sha256` computed from required-artifact checker receipt and validated via schema/tests.
 - Deferred to future runs:
   - add digest for optional `presence_output` when emitted
+### Run 2026-05-13 — Add presence-output SHA256 to preflight summary
+- Status: landed
+- PR: n/a
+- Doctrine basis: optional emitted artifacts should carry digest metadata equivalent to mandatory receipt pointers.
+- Slice shape: preflight summary now emits `presence_output_sha256` when `--presence-output` is used (null otherwise), with schema and tests updated.
+- Deferred to future runs:
+  - unify digest-field naming conventions across all summary artifact pointers

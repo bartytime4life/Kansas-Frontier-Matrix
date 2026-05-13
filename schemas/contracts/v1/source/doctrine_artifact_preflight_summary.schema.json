@@ -254,6 +254,17 @@
           "pattern": "^[0-9a-f]{64}$"
         }
       ]
+    },
+    "presence_output_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
     }
   },
   "additionalProperties": false

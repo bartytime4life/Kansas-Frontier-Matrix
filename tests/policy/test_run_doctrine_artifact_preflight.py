@@ -145,6 +145,7 @@ def test_preflight_writes_presence_output_when_requested(tmp_path: Path):
     assert res.returncode == 0
     payload = json.loads(res.stdout)
     assert payload["presence_output"] == str(presence_out)
+    assert len(payload["presence_output_sha256"]) == 64
     assert presence_out.exists()
 
 
