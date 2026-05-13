@@ -122,6 +122,8 @@ def main() -> int:
         return 1
     if args.strict_provenance and provenance_res.returncode == 1:
         return 1
+    if args.strict_provenance and provenance_res.returncode == 1:
+        return 1
     return 0
 
 
