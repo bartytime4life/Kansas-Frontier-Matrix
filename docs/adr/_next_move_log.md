@@ -54,7 +54,6 @@ Each run appends one block in this exact shape:
 - Slice shape: removed placeholder doctrine PDFs, reset required artifact statuses to `missing`, and restored fail-until-admitted test expectations.
 - Deferred to future runs:
   - Admit canonical doctrine artifacts with provenance/integrity evidence
-
 ### Run 2026-05-13 — Add canonical-source provenance registry gate for required doctrine artifacts
 - Status: landed
 - PR: n/a
@@ -70,7 +69,6 @@ Each run appends one block in this exact shape:
 - Slice shape: tightened provenance checker to fail on placeholder hosts (`example.org`, `example.com`, `localhost`) and updated tests to reflect blocked state until real links are supplied.
 - Deferred to future runs:
   - replace placeholder source URLs with authoritative URLs and transition check to pass
-
 ### Run 2026-05-13 — Add provenance status sync command for artifact admission lifecycle
 - Status: landed
 - PR: n/a
