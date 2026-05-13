@@ -309,6 +309,36 @@
         }
       },
       "additionalProperties": false
+    },
+    "artifact_paths": {
+      "type": "object",
+      "required": [
+        "check_receipt",
+        "provenance_sync_receipt",
+        "presence_output"
+      ],
+      "properties": {
+        "check_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance_sync_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "presence_output": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

@@ -139,6 +139,12 @@ def main() -> int:
     if "presence_output_sha256" not in summary:
         summary["presence_output_sha256"] = None
 
+    artifact_paths = {
+        "check_receipt": summary["check_receipt"],
+        "provenance_sync_receipt": summary["provenance_sync_receipt"],
+        "presence_output": summary.get("presence_output"),
+    }
+    summary["artifact_paths"] = artifact_paths
     artifact_digests = {
         "check_receipt": summary["check_receipt_sha256"],
         "provenance_sync_receipt": summary["provenance_sync_receipt_sha256"],
@@ -160,6 +166,8 @@ def main() -> int:
     if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2 or alignment_res.returncode == 2:
         return 2
     if args.strict and (check_res.returncode == 1 or provenance_res.returncode == 1):
+        return 1
+    if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
     if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
