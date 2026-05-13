@@ -77,7 +77,6 @@ def main() -> int:
     provenance_res = run_cmd(provenance_cmd, root)
 
     provenance_sync_receipt = args.output_dir / f"sync_doctrine_artifact_provenance_status{suffix}.json"
-
     provenance_sync_cmd = [
         sys.executable,
         str(root / "scripts" / "maintenance" / "sync_doctrine_artifact_provenance_status.py"),
@@ -146,7 +145,6 @@ def main() -> int:
         "presence_output": summary.get("presence_output"),
     }
     summary["artifact_paths"] = artifact_paths
-
     artifact_digests = {
         "check_receipt": summary["check_receipt_sha256"],
         "provenance_sync_receipt": summary["provenance_sync_receipt_sha256"],
@@ -167,7 +165,9 @@ def main() -> int:
 
     if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2 or alignment_res.returncode == 2:
         return 2
-    if args.strict and check_res.returncode == 1:
+    if args.strict and (check_res.returncode == 1 or provenance_res.returncode == 1):
+        return 1
+    if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
     if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1

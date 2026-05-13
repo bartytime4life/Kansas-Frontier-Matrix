@@ -198,7 +198,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added `artifact_digests` map (`check_receipt`, `provenance_sync_receipt`, `presence_output`) and schema/tests that bind map values to existing digest fields.
 - Deferred to future runs:
   - deprecate legacy standalone digest fields after downstream consumers migrate
-
 ### Run 2026-05-13 — Add normalized artifact path map to preflight summary
 - Status: landed
 - PR: n/a
