@@ -176,3 +176,30 @@ def test_preflight_runner_strict_provenance_mode_fails_when_provenance_gate_fail
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     assert res.returncode == 1
+
+
+def test_preflight_runner_emit_normalized_only_drops_legacy_fields(tmp_path: Path):
+    registry = tmp_path / "registry.yaml"
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    registry.write_text(
+        """required_doctrine_artifacts:\n  - filename: a.pdf\n    doc_id: kfm://doc/a\n    status: missing\n""",
+        encoding="utf-8",
+    )
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "run_doctrine_artifact_preflight.py"),
+        "--registry",
+        str(registry),
+        "--artifacts-dir",
+        str(artifacts),
+        "--emit-normalized-only",
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert "artifact_paths" in payload and "artifact_digests" in payload
+    assert "check_receipt" not in payload
+    assert "check_receipt_sha256" not in payload
+    assert "provenance_sync_receipt" not in payload
+    assert "provenance_sync_receipt_sha256" not in payload

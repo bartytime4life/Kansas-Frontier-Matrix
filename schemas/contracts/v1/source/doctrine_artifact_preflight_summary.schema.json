@@ -6,7 +6,6 @@
   "required": [
     "check_returncode",
     "render_returncode",
-    "check_receipt",
     "presence_input"
   ],
   "properties": {

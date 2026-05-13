@@ -17,6 +17,8 @@ def validate(summary: dict, require_normalized_only: bool = False) -> list[str]:
         ("presence_output", "presence_output", "presence_output_sha256"),
     ]
     for map_key, path_key, digest_key in pairs:
+        if require_normalized_only:
+            continue
         if paths.get(map_key) != summary.get(path_key):
             errors.append(f"artifact_paths mismatch for {map_key}")
         if digests.get(map_key) != summary.get(digest_key):
@@ -34,6 +36,7 @@ def validate(summary: dict, require_normalized_only: bool = False) -> list[str]:
         present_legacy = [f for f in legacy_fields if f in summary]
         if present_legacy:
             errors.append("legacy fields present in normalized-only mode: " + ",".join(sorted(present_legacy)))
+
     return errors
 
 

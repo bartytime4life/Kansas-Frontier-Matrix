@@ -80,3 +80,22 @@ def test_preflight_summary_consistency_normalized_only_mode_fails_with_legacy_fi
     payload = json.loads(res.stdout)
     assert payload["result"] == "fail"
     assert any("legacy fields present" in e for e in payload["errors"])
+
+
+def test_preflight_summary_consistency_normalized_only_mode_passes_without_legacy_fields(tmp_path: Path):
+    summary_path = tmp_path / "summary.json"
+    summary = {
+        "artifact_paths": {"check_receipt": "a", "provenance_sync_receipt": "b", "presence_output": None},
+        "artifact_digests": {"check_receipt": "1", "provenance_sync_receipt": "2", "presence_output": None},
+    }
+    summary_path.write_text(json.dumps(summary), encoding="utf-8")
+    cmd = [
+        sys.executable,
+        str(ROOT / "tools" / "validators" / "source" / "validate_doctrine_preflight_summary_consistency.py"),
+        str(summary_path),
+        "--require-normalized-only",
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert payload["result"] == "pass"

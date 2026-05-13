@@ -198,6 +198,7 @@ Each run appends one block in this exact shape:
 - Slice shape: added `artifact_digests` map (`check_receipt`, `provenance_sync_receipt`, `presence_output`) and schema/tests that bind map values to existing digest fields.
 - Deferred to future runs:
   - deprecate legacy standalone digest fields after downstream consumers migrate
+
 ### Run 2026-05-13 — Add normalized artifact path map to preflight summary
 - Status: landed
 - PR: n/a
@@ -205,6 +206,7 @@ Each run appends one block in this exact shape:
 - Slice shape: added `artifact_paths` map mirroring receipt/presence output pointers and bound tests/schema to map+field consistency.
 - Deferred to future runs:
   - publish consumer migration note and begin standalone field deprecation window
+
 ### Run 2026-05-13 — Add summary consistency validator for normalized artifact maps
 - Status: landed
 - PR: n/a
@@ -212,6 +214,7 @@ Each run appends one block in this exact shape:
 - Slice shape: added `validate_doctrine_preflight_summary_consistency.py` plus tests and bundle integration to enforce map↔standalone parity.
 - Deferred to future runs:
   - flip validator to require only normalized maps once standalone fields are deprecated
+
 ### Run 2026-05-13 — Add normalized-only mode to preflight summary consistency validator
 - Status: landed
 - PR: n/a
@@ -219,3 +222,11 @@ Each run appends one block in this exact shape:
 - Slice shape: added `--require-normalized-only` option to consistency validator and tests that fail when legacy standalone fields are still present.
 - Deferred to future runs:
   - enable normalized-only mode in CI after downstream consumers complete migration
+
+### Run 2026-05-13 — Add normalized-only emission mode for preflight summary
+- Status: landed
+- PR: n/a
+- Doctrine basis: migration from standalone fields to normalized maps needs an executable output mode to validate downstream readiness before hard deprecation.
+- Slice shape: added `--emit-normalized-only` to preflight runner, plus tests and validator pass-case coverage for normalized-only payloads.
+- Deferred to future runs:
+  - switch CI to run normalized-only summaries in shadow mode before default cutover

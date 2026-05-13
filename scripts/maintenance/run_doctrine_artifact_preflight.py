@@ -50,6 +50,11 @@ def main() -> int:
         action="store_true",
         help="Return non-zero when provenance checker returns fail (returncode 1)",
     )
+    parser.add_argument(
+        "--emit-normalized-only",
+        action="store_true",
+        help="Emit only normalized artifact path/digest maps (drop legacy standalone path/digest fields)",
+    )
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -77,6 +82,7 @@ def main() -> int:
     provenance_res = run_cmd(provenance_cmd, root)
 
     provenance_sync_receipt = args.output_dir / f"sync_doctrine_artifact_provenance_status{suffix}.json"
+
     provenance_sync_cmd = [
         sys.executable,
         str(root / "scripts" / "maintenance" / "sync_doctrine_artifact_provenance_status.py"),
@@ -145,12 +151,24 @@ def main() -> int:
         "presence_output": summary.get("presence_output"),
     }
     summary["artifact_paths"] = artifact_paths
+
     artifact_digests = {
         "check_receipt": summary["check_receipt_sha256"],
         "provenance_sync_receipt": summary["provenance_sync_receipt_sha256"],
         "presence_output": summary["presence_output_sha256"],
     }
     summary["artifact_digests"] = artifact_digests
+
+    if args.emit_normalized_only:
+        for key in (
+            "check_receipt",
+            "check_receipt_sha256",
+            "provenance_sync_receipt",
+            "provenance_sync_receipt_sha256",
+            "presence_output",
+            "presence_output_sha256",
+        ):
+            summary.pop(key, None)
 
     schema = json.loads(summary_schema_path.read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema).iter_errors(summary), key=lambda e: list(e.path))
