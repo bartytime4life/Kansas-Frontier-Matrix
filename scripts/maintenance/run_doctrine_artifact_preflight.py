@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -15,11 +16,22 @@ def run_cmd(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
 
 
+def file_sha256(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[2]
     summary_schema_path = root / "schemas" / "contracts" / "v1" / "source" / "doctrine_artifact_preflight_summary.schema.json"
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", type=Path, default=root / "control_plane" / "document_registry_doctrine_required.yaml")
+    parser.add_argument("--provenance-registry", type=Path, default=root / "control_plane" / "doctrine_artifact_provenance_sources.yaml")
     parser.add_argument("--artifacts-dir", type=Path, default=root / "docs" / "doctrine" / "artifacts")
     parser.add_argument("--output-dir", type=Path, default=root / "receipts" / "doctrine_artifacts")
     parser.add_argument("--presence-output", type=Path, default=None, help="Optional path to persist rendered presence input JSON")
@@ -32,6 +44,11 @@ def main() -> int:
         "--strict",
         action="store_true",
         help="Return non-zero when required doctrine artifacts are missing (check returncode 1)",
+    )
+    parser.add_argument(
+        "--strict-provenance",
+        action="store_true",
+        help="Return non-zero when provenance checker returns fail (returncode 1)",
     )
     args = parser.parse_args()
 
@@ -51,6 +68,38 @@ def main() -> int:
     ]
     check_res = run_cmd(check_cmd, root)
 
+    provenance_cmd = [
+        sys.executable,
+        str(root / "scripts" / "maintenance" / "check_doctrine_artifact_provenance.py"),
+        "--registry",
+        str(args.provenance_registry),
+    ]
+    provenance_res = run_cmd(provenance_cmd, root)
+
+    provenance_sync_receipt = args.output_dir / f"sync_doctrine_artifact_provenance_status{suffix}.json"
+
+    provenance_sync_cmd = [
+        sys.executable,
+        str(root / "scripts" / "maintenance" / "sync_doctrine_artifact_provenance_status.py"),
+        "--registry",
+        str(args.provenance_registry),
+        "--artifacts-dir",
+        str(args.artifacts_dir),
+        "--output",
+        str(provenance_sync_receipt),
+    ]
+    provenance_sync_res = run_cmd(provenance_sync_cmd, root)
+
+    alignment_cmd = [
+        sys.executable,
+        str(root / "scripts" / "maintenance" / "check_doctrine_registry_alignment.py"),
+        "--required-registry",
+        str(args.registry),
+        "--provenance-registry",
+        str(args.provenance_registry),
+    ]
+    alignment_res = run_cmd(alignment_cmd, root)
+
     if check_res.returncode == 2:
         render_res = subprocess.CompletedProcess(args=[], returncode=2, stdout="", stderr="skipped_due_to_check_error")
     else:
@@ -67,7 +116,19 @@ def main() -> int:
         "render_returncode": render_res.returncode,
         "render_stderr": render_res.stderr.strip(),
         "check_receipt": str(check_receipt),
+        "check_receipt_sha256": file_sha256(check_receipt),
         "presence_input": json.loads(render_res.stdout) if render_res.returncode == 0 else None,
+        "provenance_returncode": provenance_res.returncode,
+        "provenance_stderr": provenance_res.stderr.strip(),
+        "provenance_payload": json.loads(provenance_res.stdout) if provenance_res.returncode in {0, 1} and provenance_res.stdout.strip() else None,
+        "provenance_sync_returncode": provenance_sync_res.returncode,
+        "provenance_sync_stderr": provenance_sync_res.stderr.strip(),
+        "provenance_sync_payload": json.loads(provenance_sync_res.stdout) if provenance_sync_res.returncode in {0, 1} and provenance_sync_res.stdout.strip() else None,
+        "provenance_sync_receipt": str(provenance_sync_receipt),
+        "provenance_sync_receipt_sha256": file_sha256(provenance_sync_receipt),
+        "alignment_returncode": alignment_res.returncode,
+        "alignment_stderr": alignment_res.stderr.strip(),
+        "alignment_payload": json.loads(alignment_res.stdout) if alignment_res.returncode in {0, 1} and alignment_res.stdout.strip() else None,
     }
 
     if args.presence_output and summary["presence_input"] is not None:
@@ -86,9 +147,11 @@ def main() -> int:
 
     print(json.dumps(summary, indent=2, sort_keys=True))
 
-    if schema_failed or render_res.returncode != 0 or check_res.returncode == 2:
+    if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2 or alignment_res.returncode == 2:
         return 2
     if args.strict and check_res.returncode == 1:
+        return 1
+    if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
         return 1
     return 0
 
