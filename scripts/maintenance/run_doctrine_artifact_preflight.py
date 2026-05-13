@@ -104,6 +104,7 @@ def main() -> int:
         "presence_input": json.loads(render_res.stdout) if render_res.returncode == 0 else None,
         "provenance_returncode": provenance_res.returncode,
         "provenance_stderr": provenance_res.stderr.strip(),
+        "provenance_payload": json.loads(provenance_res.stdout) if provenance_res.returncode in {0, 1} and provenance_res.stdout.strip() else None,
         "provenance_sync_returncode": provenance_sync_res.returncode,
         "provenance_sync_stderr": provenance_sync_res.stderr.strip(),
         "alignment_returncode": alignment_res.returncode,

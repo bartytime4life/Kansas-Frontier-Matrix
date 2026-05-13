@@ -142,3 +142,11 @@ Each run appends one block in this exact shape:
 - Slice shape: added `alignment_payload` object to preflight output/schema and asserted it in preflight tests.
 - Deferred to future runs:
   - add equivalent payload embedding for provenance checker with schema shape
+
+### Run 2026-05-13 — Embed provenance payload body in preflight summary receipt
+- Status: landed
+- PR: n/a
+- Doctrine basis: provenance gate diagnostics should be directly inspectable in orchestrated receipts, not inferred only from return codes.
+- Slice shape: added `provenance_payload` object to summary output/schema and asserted its presence in preflight runner tests.
+- Deferred to future runs:
+  - add sync payload embedding with optional stable receipt pointer

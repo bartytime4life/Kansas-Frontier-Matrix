@@ -134,6 +134,56 @@
           "additionalProperties": true
         }
       ]
+    },
+    "provenance_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "invalid_urls",
+            "placeholder_urls",
+            "invalid_status",
+            "missing_fields"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "required_doctrine_artifact_provenance"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail"
+              ]
+            },
+            "invalid_urls": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "placeholder_urls": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalid_status": {
+              "type": "array"
+            },
+            "missing_fields": {
+              "type": "array"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
     }
   },
   "additionalProperties": false
