@@ -60,6 +60,38 @@
     "presence_output": {
       "type": "string",
       "minLength": 1
+    },
+    "provenance_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "provenance_stderr": {
+      "type": "string"
+    },
+    "provenance_sync_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        2
+      ]
+    },
+    "provenance_sync_stderr": {
+      "type": "string"
+    },
+    "alignment_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "alignment_stderr": {
+      "type": "string"
     }
   },
   "additionalProperties": false
