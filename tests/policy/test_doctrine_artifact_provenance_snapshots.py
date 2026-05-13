@@ -46,6 +46,7 @@ def test_provenance_sync_no_change_snapshot_matches_fixture():
     payload = json.loads(res.stdout)
     for k, v in expected.items():
         assert payload[k] == v
+
 def test_provenance_sync_changed_snapshot_matches_fixture(tmp_path: Path):
     expected = _load(
         ROOT

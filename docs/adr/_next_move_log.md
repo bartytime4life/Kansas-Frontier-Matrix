@@ -110,6 +110,7 @@ Each run appends one block in this exact shape:
 - Slice shape: added fixture snapshots and tests that assert key JSON payload fields for placeholder-url failure and provenance-sync no-change results.
 - Deferred to future runs:
   - add verified-state snapshot once authoritative URLs and artifact bytes are admitted
+
 ### Run 2026-05-13 — Add verified-transition snapshot coverage for provenance sync
 - Status: landed
 - PR: n/a
@@ -117,3 +118,11 @@ Each run appends one block in this exact shape:
 - Slice shape: added a sync-changed fixture and snapshot test that validates emitted payload keys and persisted `verified_at`/`status: verified` rewrite.
 - Deferred to future runs:
   - replace synthetic temp-registry snapshot with canonical artifact admission snapshot once real assets are available
+
+### Run 2026-05-13 — Add required-vs-provenance registry alignment gate
+- Status: landed
+- PR: n/a
+- Doctrine basis: canonical-link provenance registry must track exactly the required doctrine artifact set to avoid silent scope drift.
+- Slice shape: added alignment checker + tests and wired the checker into the doctrine artifact regression bundle.
+- Deferred to future runs:
+  - include alignment result in orchestrated preflight summary payload
