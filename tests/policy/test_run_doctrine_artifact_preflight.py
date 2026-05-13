@@ -86,3 +86,25 @@ def test_preflight_runner_stable_filename_mode(tmp_path: Path):
     assert res.returncode == 0
     payload = json.loads(res.stdout)
     assert Path(payload["check_receipt"]).name == "check_required_doctrine_artifacts.json"
+
+
+def test_preflight_skips_render_when_check_has_registry_error(tmp_path: Path):
+    registry = tmp_path / "registry.yaml"
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    registry.write_text("required_doctrine_artifacts:\n", encoding="utf-8")
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "run_doctrine_artifact_preflight.py"),
+        "--registry",
+        str(registry),
+        "--artifacts-dir",
+        str(artifacts),
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 2
+    payload = json.loads(res.stdout)
+    assert payload["check_returncode"] == 2
+    assert payload["render_returncode"] == 2
+    assert payload["render_stderr"] == "skipped_due_to_check_error"
+    assert payload["presence_input"] is None

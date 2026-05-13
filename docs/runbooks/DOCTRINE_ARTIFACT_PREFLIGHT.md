@@ -430,6 +430,13 @@ For CI that must fail when artifacts are missing, use strict mode:
 python scripts/maintenance/run_doctrine_artifact_preflight.py --strict
 ```
 
+Expected behavior:
+- Exit `0` when the preflight executes correctly and rendering succeeds.
+- `check_returncode` in output indicates artifact state:
+  - `0`: all required artifacts present and aligned.
+  - `1`: one or more required artifacts missing and/or status mismatches.
+- Exit `2` indicates malformed registry input or runner-level execution failure.
+
 Use `--stable-filenames` when deterministic receipt names are required by downstream tooling.
 
 ### Targeted validation commands
@@ -469,7 +476,6 @@ python scripts/maintenance/sync_doctrine_artifact_registry_status.py \
 ```
 
 ### Failure interpretation
-
 - `result: "error"` means malformed registry (e.g., duplicate filename, invalid status, missing `doc_id`).
 - `result: "fail"` means registry is structurally valid but required artifacts are not yet in compliant state.
 

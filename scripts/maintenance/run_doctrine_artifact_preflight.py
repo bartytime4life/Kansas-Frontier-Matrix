@@ -47,16 +47,21 @@ def main() -> int:
     ]
     check_res = run_cmd(check_cmd, root)
 
-    render_cmd = [
-        sys.executable,
-        str(root / "scripts" / "maintenance" / "render_doctrine_presence_input.py"),
-        str(check_receipt),
-    ]
-    render_res = run_cmd(render_cmd, root)
+    if check_res.returncode == 2:
+        render_res = subprocess.CompletedProcess(args=[], returncode=2, stdout="", stderr="skipped_due_to_check_error")
+    else:
+        render_cmd = [
+            sys.executable,
+            str(root / "scripts" / "maintenance" / "render_doctrine_presence_input.py"),
+            str(check_receipt),
+        ]
+        render_res = run_cmd(render_cmd, root)
 
     summary = {
         "check_returncode": check_res.returncode,
+        "check_stderr": check_res.stderr.strip(),
         "render_returncode": render_res.returncode,
+        "render_stderr": render_res.stderr.strip(),
         "check_receipt": str(check_receipt),
         "presence_input": json.loads(render_res.stdout) if render_res.returncode == 0 else None,
     }
