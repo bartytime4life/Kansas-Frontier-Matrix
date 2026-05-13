@@ -1,0 +1,12 @@
+{
+  "check_returncode": 1,
+  "render_returncode": 0,
+  "check_stderr": "",
+  "render_stderr": "",
+  "check_receipt": "receipts/doctrine_artifacts/check_required_doctrine_artifacts.20260513T000000Z.json",
+  "presence_input": {
+    "present": {
+      "a.pdf": false
+    }
+  }
+}
