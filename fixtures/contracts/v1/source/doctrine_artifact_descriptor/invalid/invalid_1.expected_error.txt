@@ -1,1 +1,1 @@
-sha256: '123' does not match '^[a-fA-F0-9]{64}$'
+'123' does not match '^[a-fA-F0-9]{64}$'
