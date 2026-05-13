@@ -246,7 +246,6 @@ Each run appends one block in this exact shape:
 - Slice shape: documented migration phases in maintenance README and added an end-to-end test that runs normalized-only preflight output through `--require-normalized-only` validation.
 - Deferred to future runs:
   - collect downstream consumer readiness checklist linked from this playbook
-
 ### Run 2026-05-13 — Publish normalized-summary consumer readiness checklist
 - Status: landed
 - PR: n/a
