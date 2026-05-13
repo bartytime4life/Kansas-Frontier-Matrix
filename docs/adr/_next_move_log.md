@@ -212,3 +212,10 @@ Each run appends one block in this exact shape:
 - Slice shape: added `validate_doctrine_preflight_summary_consistency.py` plus tests and bundle integration to enforce map↔standalone parity.
 - Deferred to future runs:
   - flip validator to require only normalized maps once standalone fields are deprecated
+### Run 2026-05-13 — Add normalized-only mode to preflight summary consistency validator
+- Status: landed
+- PR: n/a
+- Doctrine basis: deprecation of standalone summary fields requires an enforceable migration switch before hard cutoff.
+- Slice shape: added `--require-normalized-only` option to consistency validator and tests that fail when legacy standalone fields are still present.
+- Deferred to future runs:
+  - enable normalized-only mode in CI after downstream consumers complete migration

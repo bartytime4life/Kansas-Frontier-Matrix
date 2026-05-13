@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 
-def validate(summary: dict) -> list[str]:
+def validate(summary: dict, require_normalized_only: bool = False) -> list[str]:
     errors: list[str] = []
     paths = summary.get("artifact_paths") or {}
     digests = summary.get("artifact_digests") or {}
@@ -21,16 +21,30 @@ def validate(summary: dict) -> list[str]:
             errors.append(f"artifact_paths mismatch for {map_key}")
         if digests.get(map_key) != summary.get(digest_key):
             errors.append(f"artifact_digests mismatch for {map_key}")
+
+    if require_normalized_only:
+        legacy_fields = [
+            "check_receipt",
+            "provenance_sync_receipt",
+            "presence_output",
+            "check_receipt_sha256",
+            "provenance_sync_receipt_sha256",
+            "presence_output_sha256",
+        ]
+        present_legacy = [f for f in legacy_fields if f in summary]
+        if present_legacy:
+            errors.append("legacy fields present in normalized-only mode: " + ",".join(sorted(present_legacy)))
     return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("summary", type=Path)
+    parser.add_argument("--require-normalized-only", action="store_true")
     args = parser.parse_args()
 
     summary = json.loads(args.summary.read_text(encoding="utf-8"))
-    errors = validate(summary)
+    errors = validate(summary, args.require_normalized_only)
     payload = {
         "check": "doctrine_preflight_summary_consistency",
         "summary": str(args.summary),
