@@ -17,9 +17,17 @@ dependencies = [
     "jsonschema>=4.22.0,<5",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=8,<9",
+]
+
 [tool.kfm]
 invariant = "RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED"
 schema_version = "v1"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kfm"]

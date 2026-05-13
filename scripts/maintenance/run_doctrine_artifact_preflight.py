@@ -77,7 +77,6 @@ def main() -> int:
     provenance_res = run_cmd(provenance_cmd, root)
 
     provenance_sync_receipt = args.output_dir / f"sync_doctrine_artifact_provenance_status{suffix}.json"
-
     provenance_sync_cmd = [
         sys.executable,
         str(root / "scripts" / "maintenance" / "sync_doctrine_artifact_provenance_status.py"),
@@ -146,7 +145,6 @@ def main() -> int:
         "presence_output": summary.get("presence_output"),
     }
     summary["artifact_paths"] = artifact_paths
-
     artifact_digests = {
         "check_receipt": summary["check_receipt_sha256"],
         "provenance_sync_receipt": summary["provenance_sync_receipt_sha256"],
