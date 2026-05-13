@@ -139,3 +139,26 @@ def test_preflight_writes_presence_output_when_requested(tmp_path: Path):
     payload = json.loads(res.stdout)
     assert payload["presence_output"] == str(presence_out)
     assert presence_out.exists()
+
+
+def test_preflight_runner_strict_provenance_mode_fails_when_provenance_gate_fails(tmp_path: Path):
+    registry = tmp_path / "registry.yaml"
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+
+    registry.write_text(
+        """required_doctrine_artifacts:\n  - filename: a.pdf\n    doc_id: kfm://doc/a\n    status: missing\n""",
+        encoding="utf-8",
+    )
+
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "run_doctrine_artifact_preflight.py"),
+        "--registry",
+        str(registry),
+        "--artifacts-dir",
+        str(artifacts),
+        "--strict-provenance",
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 1

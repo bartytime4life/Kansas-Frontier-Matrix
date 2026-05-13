@@ -34,6 +34,11 @@ def main() -> int:
         action="store_true",
         help="Return non-zero when required doctrine artifacts are missing (check returncode 1)",
     )
+    parser.add_argument(
+        "--strict-provenance",
+        action="store_true",
+        help="Return non-zero when provenance checker returns fail (returncode 1)",
+    )
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -112,6 +117,8 @@ def main() -> int:
     if schema_failed or render_res.returncode != 0 or check_res.returncode == 2 or provenance_sync_res.returncode == 2:
         return 2
     if args.strict and (check_res.returncode == 1 or provenance_res.returncode == 1):
+        return 1
+    if args.strict_provenance and provenance_res.returncode == 1:
         return 1
     return 0
 
