@@ -13,14 +13,14 @@ def test_doctrine_artifact_policy_exists_and_is_non_empty():
     assert "deny" in text
 
 
-def test_required_doctrine_artifact_check_fails_until_artifacts_admitted():
+def test_required_doctrine_artifact_check_passes_when_artifacts_admitted():
     cmd = [sys.executable, str(ROOT / "scripts" / "maintenance" / "check_required_doctrine_artifacts.py")]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-    assert res.returncode == 1
+    assert res.returncode == 0
     payload = json.loads(res.stdout)
     assert payload["check"] == "required_doctrine_artifacts"
-    assert payload["missing_count"] >= 1
-    assert payload["result"] == "fail"
+    assert payload["missing_count"] == 0
+    assert payload["result"] == "pass"
     assert isinstance(payload["present"], dict)
     assert payload["status_mismatches"] == []
 
@@ -34,9 +34,9 @@ def test_required_doctrine_artifact_check_writes_receipt(tmp_path: Path):
         str(out),
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-    assert res.returncode == 1
+    assert res.returncode == 0
     written = json.loads(out.read_text(encoding="utf-8"))
     assert written["check"] == "required_doctrine_artifacts"
-    assert written["result"] == "fail"
+    assert written["result"] == "pass"
     assert isinstance(written["present"], dict)
     assert isinstance(written["status_mismatches"], list)

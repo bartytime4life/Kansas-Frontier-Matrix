@@ -30,3 +30,11 @@ Each run appends one block in this exact shape:
 - Slice shape: land the three required doctrine PDFs under canonical doctrine artifacts home with descriptor records, registry status updates, and passing prerequisite checks to unblock doctrine-vs-implementation extraction.
 - Deferred to future runs:
   - Full doctrine expectation extraction and anti-circling candidate selection after artifact admission is CONFIRMED
+
+### Run 2026-05-13 — Admit canonical doctrine artifacts and close prerequisite gate
+- Status: landed
+- PR: n/a
+- Doctrine basis: blocker recorded in `docs/registers/DRIFT_REGISTER.md` requiring admission of three required doctrine artifacts before doctrine-vs-implementation extraction.
+- Slice shape: admitted required doctrine artifact files under `docs/doctrine/artifacts/` and updated doctrine-required registry statuses to `present`, enabling preflight pass conditions.
+- Deferred to future runs:
+  - Full doctrine expectation extraction with locators from newly admitted artifacts
