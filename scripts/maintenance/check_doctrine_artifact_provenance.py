@@ -8,6 +8,7 @@ from pathlib import Path
 from _cli_errors import emit_structured_error
 
 ALLOWED_STATUS = {"pending", "verified"}
+DISALLOWED_PLACEHOLDER_HOSTS = {"example.org", "example.com", "localhost"}
 
 
 def parse_entries(path: Path) -> list[dict[str, str]]:
@@ -45,14 +46,18 @@ def parse_entries(path: Path) -> list[dict[str, str]]:
 def run(path: Path, output: Path | None) -> int:
     entries = parse_entries(path)
     invalid_urls = []
+    placeholder_urls = []
     invalid_status = []
     missing_fields = []
     for e in entries:
         for f in ("filename", "doc_id", "source_url", "status"):
             if not e.get(f):
                 missing_fields.append({"filename": e.get("filename", "<unknown>"), "field": f})
-        if e.get("source_url", "").startswith(("http://", "https://")) is False:
+        url = e.get("source_url", "")
+        if url.startswith(("http://", "https://")) is False:
             invalid_urls.append(e.get("filename", "<unknown>"))
+        elif any(host in url for host in DISALLOWED_PLACEHOLDER_HOSTS):
+            placeholder_urls.append(e.get("filename", "<unknown>"))
         if e.get("status") not in ALLOWED_STATUS:
             invalid_status.append({"filename": e.get("filename", "<unknown>"), "status": e.get("status")})
 
@@ -63,7 +68,8 @@ def run(path: Path, output: Path | None) -> int:
         "invalid_urls": invalid_urls,
         "invalid_status": invalid_status,
         "missing_fields": missing_fields,
-        "result": "pass" if not invalid_urls and not invalid_status and not missing_fields else "fail",
+        "placeholder_urls": placeholder_urls,
+        "result": "pass" if not invalid_urls and not invalid_status and not missing_fields and not placeholder_urls else "fail",
     }
     payload = json.dumps(result, indent=2, sort_keys=True)
     print(payload)

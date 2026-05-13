@@ -61,3 +61,11 @@ Each run appends one block in this exact shape:
 - Slice shape: added provenance registry + validator + tests so canonical-link admission path has an auditable prerequisite gate before artifact bytes land.
 - Deferred to future runs:
   - populate verified URLs/hashes and transition provenance statuses from `pending` to `verified`
+
+### Run 2026-05-13 — Enforce non-placeholder provenance URLs for doctrine artifact link admission
+- Status: landed
+- PR: n/a
+- Doctrine basis: canonical-link path requires real authoritative provenance, not placeholder hosts.
+- Slice shape: tightened provenance checker to fail on placeholder hosts (`example.org`, `example.com`, `localhost`) and updated tests to reflect blocked state until real links are supplied.
+- Deferred to future runs:
+  - replace placeholder source URLs with authoritative URLs and transition check to pass
