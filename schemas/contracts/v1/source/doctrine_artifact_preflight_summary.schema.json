@@ -92,6 +92,48 @@
     },
     "alignment_stderr": {
       "type": "string"
+    },
+    "alignment_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "missing_in_provenance",
+            "extra_in_provenance"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "doctrine_registry_alignment"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail"
+              ]
+            },
+            "missing_in_provenance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "extra_in_provenance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
     }
   },
   "additionalProperties": false

@@ -108,6 +108,7 @@ def main() -> int:
         "provenance_sync_stderr": provenance_sync_res.stderr.strip(),
         "alignment_returncode": alignment_res.returncode,
         "alignment_stderr": alignment_res.stderr.strip(),
+        "alignment_payload": json.loads(alignment_res.stdout) if alignment_res.returncode in {0, 1} and alignment_res.stdout.strip() else None,
     }
 
     if args.presence_output and summary["presence_input"] is not None:

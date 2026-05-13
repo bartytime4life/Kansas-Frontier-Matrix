@@ -134,3 +134,11 @@ Each run appends one block in this exact shape:
 - Slice shape: orchestrator now runs alignment check and emits `alignment_returncode`/`alignment_stderr`; strict-provenance mode now treats alignment failures as strict failures.
 - Deferred to future runs:
   - include alignment payload body in summary receipt for richer diagnostics
+
+### Run 2026-05-13 — Embed alignment payload body in preflight summary receipt
+- Status: landed
+- PR: n/a
+- Doctrine basis: return codes alone are insufficient for operator triage; summary receipts should carry gate-level diagnostic body where schema-governable.
+- Slice shape: added `alignment_payload` object to preflight output/schema and asserted it in preflight tests.
+- Deferred to future runs:
+  - add equivalent payload embedding for provenance checker with schema shape
