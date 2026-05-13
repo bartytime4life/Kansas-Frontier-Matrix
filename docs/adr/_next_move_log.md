@@ -54,7 +54,6 @@ Each run appends one block in this exact shape:
 - Slice shape: removed placeholder doctrine PDFs, reset required artifact statuses to `missing`, and restored fail-until-admitted test expectations.
 - Deferred to future runs:
   - Admit canonical doctrine artifacts with provenance/integrity evidence
-
 ### Run 2026-05-13 — Add canonical-source provenance registry gate for required doctrine artifacts
 - Status: landed
 - PR: n/a
