@@ -66,7 +66,7 @@ def main() -> int:
 
     try:
         return run(args.registry, args.artifacts_dir, args.output)
-    except ValueError as exc:
+    except (ValueError, OSError) as exc:
         print(json.dumps({"check": "required_doctrine_artifacts", "result": "error", "error": str(exc)}))
         return 2
 

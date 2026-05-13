@@ -71,7 +71,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         return sync(args.registry, args.artifacts_dir, args.output, dry_run=args.dry_run, fail_on_change=args.fail_on_change)
-    except ValueError as exc:
+    except (ValueError, OSError) as exc:
         print(json.dumps({"check": "sync_doctrine_artifact_registry_status", "result": "error", "error": str(exc)}))
         return 2
 

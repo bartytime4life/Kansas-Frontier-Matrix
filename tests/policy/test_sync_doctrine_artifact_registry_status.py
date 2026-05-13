@@ -85,3 +85,21 @@ def test_sync_fail_on_change_returns_one(tmp_path: Path):
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     assert res.returncode == 1
+
+
+def test_sync_handles_missing_registry_file_as_structured_error(tmp_path: Path):
+    artifacts_dir = tmp_path / "artifacts"
+    artifacts_dir.mkdir()
+    missing_registry = tmp_path / "nope.yaml"
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "sync_doctrine_artifact_registry_status.py"),
+        "--registry",
+        str(missing_registry),
+        "--artifacts-dir",
+        str(artifacts_dir),
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 2
+    payload = json.loads(res.stdout)
+    assert payload["result"] == "error"

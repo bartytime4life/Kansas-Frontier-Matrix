@@ -135,3 +135,21 @@ def test_checker_accepts_comments_and_blank_lines(tmp_path: Path):
     assert res.returncode == 1
     payload = json.loads(res.stdout)
     assert payload["result"] == "fail"
+
+
+def test_checker_handles_missing_registry_file_as_structured_error(tmp_path: Path):
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    missing_registry = tmp_path / "nope.yaml"
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "check_required_doctrine_artifacts.py"),
+        "--registry",
+        str(missing_registry),
+        "--artifacts-dir",
+        str(artifacts),
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 2
+    payload = json.loads(res.stdout)
+    assert payload["result"] == "error"
