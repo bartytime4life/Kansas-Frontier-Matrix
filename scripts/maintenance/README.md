@@ -19,7 +19,6 @@ python scripts/maintenance/run_doctrine_artifact_preflight.py
 
 Detailed operator flow: `docs/runbooks/DOCTRINE_ARTIFACT_PREFLIGHT.md`.
 
-
 ## Test bundle
 
 ```bash
