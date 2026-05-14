@@ -4,7 +4,7 @@ title: KFM Redaction Profiles — Standard
 type: standard
 version: v1
 status: draft
-owners: TBD (sensitivity-and-redaction stewards) <!-- PLACEHOLDER: confirm via CODEOWNERS -->
+owners: TBD   # PLACEHOLDER — confirm via CODEOWNERS (sensitivity-and-redaction stewards)
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
@@ -34,7 +34,7 @@ notes:
 ![truth-posture](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%2F%20PROPOSED%20paths-orange)
 ![last-reviewed](https://img.shields.io/badge/last_reviewed-2026--05--14-lightgrey)
 
-**Status:** draft &nbsp;·&nbsp; **Authority:** standard (governs `policy/redaction/`) &nbsp;·&nbsp; **Owners:** sensitivity-and-redaction stewards *(PLACEHOLDER — confirm via CODEOWNERS)* &nbsp;·&nbsp; **Last updated:** 2026-05-14
+**Status:** draft &nbsp;·&nbsp; **Authority:** standard (governs `policy/redaction/`) &nbsp;·&nbsp; **Owners:** _TBD — sensitivity-and-redaction stewards (confirm via CODEOWNERS)_ &nbsp;·&nbsp; **Last updated:** 2026-05-14
 
 ---
 
