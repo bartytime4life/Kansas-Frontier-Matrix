@@ -22,3 +22,13 @@ pytest -q \
 ```
 
 CI coverage is provided by `.github/workflows/policy-boundary-guards.yml`.
+
+## CI report artifact
+
+For local parity with CI report output:
+
+```bash
+make boundary-guards-ci
+```
+
+This writes `artifacts/qa/policy-boundary-guards.xml` (ignored by `.gitignore`) for report consumption.
