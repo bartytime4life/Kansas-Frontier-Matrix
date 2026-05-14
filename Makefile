@@ -17,6 +17,7 @@ help:
 	@echo "  ui-build         Build apps/explorer-web"
 	@echo "  api-run          Start apps/governed-api locally"
 	@echo "  boundary-guards  Run boundary policy + governed-api guard tests"
+	@echo "  boundary-guards-ci  Run boundary suite with JUnit output"
 
 validate:
 	$(MAKE) schemas test
