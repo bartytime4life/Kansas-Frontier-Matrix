@@ -1,3 +1,9 @@
-# Deprecation register
-# Deprecated paths, replacement, sunset date.
+meta:
+  status: PROPOSED
+  owner: docs steward
+  description: Deprecated paths, replacement, sunset date.
+  last_reviewed: 2026-05-14
+  related_doctrine:
+    - docs/architecture/DIRECTORY_RULES.md
+
 entries: []
