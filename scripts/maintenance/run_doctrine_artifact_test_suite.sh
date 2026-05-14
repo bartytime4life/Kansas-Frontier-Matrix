@@ -6,10 +6,14 @@ cd "$repo_root"
 
 python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
 shadow_summary="$(mktemp)"
+cleanup() {
+  rm -f "$shadow_summary"
+}
+trap cleanup EXIT
+
 python scripts/maintenance/run_doctrine_artifact_preflight.py --stable-filenames --emit-normalized-only > "$shadow_summary"
 python tools/validators/source/validate_doctrine_preflight_summary_consistency.py --require-normalized-only "$shadow_summary"
 python scripts/maintenance/check_normalized_summary_consumer_readiness.py --require-all-validated
-rm -f "$shadow_summary"
 pytest \
   tests/policy/test_doctrine_artifact_required.py \
   tests/policy/test_doctrine_artifact_registry_validation.py \
