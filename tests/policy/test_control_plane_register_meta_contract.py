@@ -54,3 +54,12 @@ def test_control_plane_register_last_reviewed_not_future_date() -> None:
         ].split(":", 1)[1].strip()
         reviewed = date.fromisoformat(value)
         assert reviewed <= today, f"{rel_path} has future last_reviewed: {reviewed}"
+def test_control_plane_related_doctrine_paths_exist() -> None:
+    for rel_path in REQUIRED_FILES:
+        content = Path(rel_path).read_text(encoding="utf-8")
+        lines = content.splitlines()[:25]
+        doctrine_lines = [ln.strip() for ln in lines if ln.strip().startswith("- ")]
+        doctrine_paths = [ln[2:] for ln in doctrine_lines if ln[2:].startswith("docs/")]
+        assert doctrine_paths, f"{rel_path} missing related_doctrine entries"
+        for doctrine_path in doctrine_paths:
+            assert Path(doctrine_path).exists(), f"{rel_path} references missing doctrine path: {doctrine_path}"
