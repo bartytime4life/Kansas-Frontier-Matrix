@@ -262,7 +262,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added readiness registry + validator + tests and wired readiness validation into regression bundle.
 - Deferred to future runs:
   - expand registry to all external consumer integrations before default normalized-only cutover
-
 ### Run 2026-05-14 — Enforce all-consumers-validated mode for normalized-summary readiness gate
 - Status: landed
 - PR: n/a
@@ -278,7 +277,6 @@ Each run appends one block in this exact shape:
 - Slice shape: preflight now runs readiness checker, emits readiness payload/returncode, and supports `--require-consumer-readiness` strict failure behavior.
 - Deferred to future runs:
   - hook require-consumer-readiness into release/promotion policy automation
-
 ### Run 2026-05-14 — Add strict preflight enforcement wrapper for release/promotion automation
 - Status: landed
 - PR: n/a
