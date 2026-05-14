@@ -1,6 +1,3 @@
-SECTION 1 — GITHUB MARKDOWN
-
-````markdown
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards/consent-tokens
 title: Consent Tokens
