@@ -1,66 +1,6 @@
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/directory-rules
-title: Directory Rules
-type: standard
-version: v1
-status: published
-owners: Docs steward
-created: 2025-01-01
-updated: 2026-05-11
-policy_label: public
-related:
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/adr/ADR-0001-schema-home.md
-tags: [kfm, doctrine, governance, repository, placement]
-notes:
-  - "Authority of these rules: CONFIRMED."
-  - "Authority of specific paths quoted here: PROPOSED until verified against mounted-repo evidence."
-  - "ADR required for §2.4 changes."
-[/KFM_META_BLOCK_V2] -->
-
 # Directory Rules
 
 > **Where a file lives encodes who owns it, what governance it answers to, and what lifecycle it belongs to. Topic does not justify a root folder; responsibility does.**
-
-<!-- Badges: placeholders until repo-resolved targets are confirmed. Replace TODO with real Shields.io endpoints when known. -->
-![Document type](https://img.shields.io/badge/type-governance--doctrine-1f6feb)
-![Authority](https://img.shields.io/badge/authority-CONFIRMED-2ea44f)
-![Paths](https://img.shields.io/badge/paths-PROPOSED--until--verified-orange)
-![Schema home](https://img.shields.io/badge/schema--home-ADR--0001-blueviolet)
-![License](https://img.shields.io/badge/license-TODO-lightgrey)
-![Last updated](https://img.shields.io/badge/updated-2026--05--11-informational)
-
-**Status:** Published · **Owner:** Docs steward · **Reviewers:** Docs steward + ≥1 subsystem owner (ADR required for §2.4 changes) · **Updated:** 2026-05-11
-
----
-
-## Quick jump
-
-- [§0 Status & Authority](#0-status--authority)
-- [§1 Purpose](#1-purpose)
-- [§2 Authority, Conformance, Conflict Resolution](#2-authority-conformance-and-conflict-resolution)
-- [§3 The Deeper Rule](#3-the-deeper-rule)
-- [§4 Placement Protocol](#4-where-does-this-file-go--placement-protocol)
-- [§5 Canonical Root Tree](#5-canonical-root-tree)
-- [§6 Governance & Authority Roots](#6-governance-and-authority-roots)
-- [§7 Implementation Roots](#7-implementation-roots)
-- [§8 Compatibility Roots](#8-compatibility-roots)
-- [§9 Data & Release Roots](#9-data-and-release-roots)
-- [§10 Runtime, Infra, Configs, Migrations](#10-runtime-infrastructure-and-configuration-roots)
-- [§11 UI and Map Roots](#11-ui-and-map-roots)
-- [§12 Domain Placement Law](#12-domain-placement-law)
-- [§13 Anti-Patterns & Drift Prevention](#13-anti-patterns-and-drift-prevention)
-- [§14 Migration Discipline](#14-migration-discipline)
-- [§15 Required README Contract](#15-required-readme-contract)
-- [§16 Path-Validation Checklist](#16-path-validation-checklist-for-reviewers)
-- [§17 Document Change Discipline](#17-document-change-discipline)
-- [§18 Open Questions & NEEDS VERIFICATION](#18-open-questions-and-needs-verification)
-- [§19 Glossary](#19-glossary)
-- [§20 Practical Final Recommendation](#20-practical-final-recommendation)
 
 ---
 
@@ -78,9 +18,6 @@ notes:
 | **Related doctrine** | `docs/doctrine/authority-ladder.md`, `docs/doctrine/truth-posture.md`, `docs/doctrine/trust-membrane.md`, `docs/doctrine/lifecycle-law.md`, `docs/architecture/contract-schema-policy-split.md` |
 | **Schema-home convention** | `schemas/contracts/v1/<…>` as default per ADR-0001 (schema home). See §7.4. |
 | **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Promotion is a **governed state transition, not a file move.** |
-
-> [!IMPORTANT]
-> The **rules** in this document are CONFIRMED. Any **specific repo path** quoted inside the rules remains PROPOSED until checked against mounted-repo evidence. Do not cite this document as proof that a path currently exists.
 
 ---
 
@@ -148,11 +85,6 @@ If the mounted repo shows a structure that contradicts the Rules:
 3. **Propose a resolution** — ADR amending the Rules, or migration plan bringing the repo into conformance.
 4. **Until resolved,** mark affected paths `PROPOSED / CONFLICTED` and avoid creating divergent siblings.
 
-> [!NOTE]
-> Repo convention that conflicts with these Rules is **drift to record**, not automatic new canon. The DRIFT_REGISTER is how the gap gets surfaced; an ADR is how it gets closed.
-
-[⤴ Back to top](#directory-rules)
-
 ---
 
 ## 3. The Deeper Rule
@@ -174,91 +106,6 @@ A folder MUST NOT appear at repo root if it is:
 - A **single file's parent** — if exactly one file lives in it, the file probably belongs in a sibling.
 
 When in doubt, the **responsibility root wins over the topic name**.
-
-### Responsibility-root map (at a glance)
-
-```mermaid
-flowchart TB
-    subgraph Govern["1 · Governs truth, evidence, release, policy"]
-      D[docs/]
-      CP[control_plane/]
-      CN[contracts/]
-      SC[schemas/]
-      PO[policy/]
-      RE[release/]
-    end
-
-    subgraph Build["2 · Deployable systems & shared packages"]
-      AP[apps/]
-      PK[packages/]
-      CO[connectors/]
-      PI[pipelines/]
-      PS[pipeline_specs/]
-      TL[tools/]
-      SR[scripts/]
-    end
-
-    subgraph Data["3 · Lifecycle data & proof objects"]
-      DT[data/]
-    end
-
-    subgraph Support["4 · Validation, infra, runtime"]
-      TS[tests/]
-      FX[fixtures/]
-      RT[runtime/]
-      IF[infra/]
-      CF[configs/]
-      MG[migrations/]
-      EX[examples/]
-    end
-
-    subgraph Compat["Compatibility roots (declared class)"]
-      AR[artifacts/]
-      JS[jsonschema/]
-      POL[policies/]
-      UI[ui/]
-      WB[web/]
-      ST[styles/]
-      VT[viewer_templates/]
-    end
-
-    subgraph Lifecycle["data/ lifecycle invariant"]
-      direction LR
-      RAW[raw/] --> WK[work/]
-      RAW --> QR[quarantine/]
-      WK --> PR[processed/]
-      QR -. remediated .-> WK
-      PR --> CAT[catalog/]
-      PR --> TR[triplets/]
-      CAT --> PUB[published/]
-      TR --> PUB
-    end
-
-    DT --- Lifecycle
-    AP -. trust membrane: apps/governed-api/ .- DT
-    CO -. emits to .- RAW
-    PI -. promotes .- Lifecycle
-    RE -. decides on .- PUB
-
-    classDef govern fill:#eef6ff,stroke:#1f6feb,color:#0b3a85;
-    classDef build fill:#f3fff3,stroke:#2ea44f,color:#114b1a;
-    classDef data fill:#fff7e6,stroke:#bf8700,color:#5a3a00;
-    classDef support fill:#f7f0ff,stroke:#8250df,color:#3a1d6e;
-    classDef compat fill:#fff0f0,stroke:#cf222e,color:#6e1116,stroke-dasharray: 5 3;
-    classDef life fill:#ffffff,stroke:#57606a,color:#24292f;
-
-    class D,CP,CN,SC,PO,RE govern;
-    class AP,PK,CO,PI,PS,TL,SR build;
-    class DT data;
-    class TS,FX,RT,IF,CF,MG,EX support;
-    class AR,JS,POL,UI,WB,ST,VT compat;
-    class RAW,WK,QR,PR,CAT,TR,PUB life;
-```
-
-> [!NOTE]
-> The diagram is a navigational aid, not a topology. Edges indicate **responsibility relationships** (e.g., connectors emit to `data/raw/`; `apps/governed-api/` mediates trust to `data/`); they are not deployment wires. Status of specific root presence in any given repo is **PROPOSED until verified**.
-
-[⤴ Back to top](#directory-rules)
 
 ---
 
@@ -302,7 +149,7 @@ For files under `data/`, name the phase explicitly: **raw, work, quarantine, pro
 
 If the file is domain-specific, the domain appears as a **segment** inside the responsibility root, never as a **root itself**:
 
-```text
+```
 docs/domains/<domain>/
 contracts/domains/<domain>/
 schemas/contracts/v1/domains/<domain>/
@@ -327,10 +174,7 @@ The owning root MUST already exist, or be created in the same change with a per-
 
 In the PR description, name the Rules section that justifies the placement. If no section justifies it, mark the path **PROPOSED** or **NEEDS VERIFICATION** and open an entry in `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md`.
 
-> [!TIP]
 > **Reviewer's one-line check:** *"Does the path encode the right responsibility, the right lifecycle phase (if data), and the right domain segment — and does this PR cite a rule for it?"*
-
-[⤴ Back to top](#directory-rules)
 
 ---
 
@@ -339,7 +183,7 @@ In the PR description, name the Rules section that justifies the placement. If n
 Status of the **rules below**: CONFIRMED.
 Status of any **specific repo's presence** of these roots: PROPOSED until verified.
 
-```text
+```
 Kansas-Frontier-Matrix/
 ├── README.md
 ├── CHANGELOG.md
@@ -404,7 +248,7 @@ Kansas-Frontier-Matrix/
 
 ### 6.1 `docs/` — the human-facing control plane
 
-```text
+```
 docs/
 ├── README.md
 ├── doctrine/
@@ -446,7 +290,7 @@ docs/
 
 ### 6.2 `control_plane/` — machine-readable governance maps
 
-```text
+```
 control_plane/
 ├── README.md
 ├── document_registry.yaml
@@ -464,7 +308,7 @@ control_plane/
 
 ### 6.3 `contracts/` — object meaning
 
-```text
+```
 contracts/
 ├── README.md
 ├── source/             # source_descriptor, ingest_receipt
@@ -482,7 +326,7 @@ contracts/
 
 ### 6.4 `schemas/` — machine-checkable shape
 
-```text
+```
 schemas/
 ├── README.md
 ├── contracts/
@@ -496,8 +340,7 @@ schemas/
     └── invalid/
 ```
 
-> [!IMPORTANT]
-> **Schema-home rule (ADR-0001):** the default machine-schema home is `schemas/contracts/v1/...`. If a domain blueprint shows `contracts/<domain>/<x>.schema.json`, that is **lineage / CONFLICTED** and MUST be migrated under ADR-0001 before any new schema lands. **MUST NOT** maintain divergent definitions in both `schemas/` and `contracts/`.
+**Schema-home rule (ADR-0001):** the default machine-schema home is `schemas/contracts/v1/...`. If a domain blueprint shows `contracts/<domain>/<x>.schema.json`, that is **lineage / CONFLICTED** and MUST be migrated under ADR-0001 before any new schema lands. **MUST NOT** maintain divergent definitions in both `schemas/` and `contracts/`.
 
 The clean split is:
 
@@ -508,7 +351,7 @@ The clean split is:
 
 ### 6.5 `policy/` — admissibility and release
 
-```text
+```
 policy/
 ├── README.md
 ├── bundles/         # Rego/OPA bundles or equivalents
@@ -527,7 +370,7 @@ policy/
 
 ### 6.6 `tests/` and `fixtures/`
 
-```text
+```
 tests/
 ├── README.md
 ├── contracts/      schemas/        policy/         validators/
@@ -545,15 +388,13 @@ fixtures/
 
 You MAY keep fixtures under `tests/fixtures/` instead of root `fixtures/`. You MUST NOT have two competing fixture homes unless the README states the difference (e.g., `tests/fixtures/` for unit-test-scoped, `fixtures/` for cross-cutting golden/synthetic data).
 
-[⤴ Back to top](#directory-rules)
-
 ---
 
 ## 7. Implementation Roots
 
 ### 7.1 `apps/` — deployable applications
 
-```text
+```
 apps/
 ├── README.md
 ├── governed-api/     # main trust membrane; public clients land here
@@ -569,7 +410,7 @@ Suggested role table:
 | App | Role |
 |---|---|
 | `apps/governed-api/` | Trust membrane in executable form. Returns `RuntimeResponseEnvelope` with finite outcomes (ANSWER, ABSTAIN, DENY, ERROR). MUST be the public trust path. |
-| `apps/explorer-web/` | Map-first public UI. Reads via `governed-api/`; never directly from `data/raw\|work\|quarantine`. |
+| `apps/explorer-web/` | Map-first public UI. Reads via `governed-api/`; never directly from `data/raw|work|quarantine`. |
 | `apps/review-console/` | Steward / reviewer surface. Role-gated and audited. |
 | `apps/cli/` | Operator CLI. Validation, release dry-runs, reports. |
 | `apps/workers/` | Background pipeline workers. Watcher-as-non-publisher applies: workers emit receipts and candidate decisions, **never** publish or rewrite catalog. |
@@ -579,7 +420,7 @@ If both `apps/api/` and `apps/governed-api/` exist, the canonical boundary MUST 
 
 ### 7.2 `packages/` — shared libraries
 
-```text
+```
 packages/
 ├── README.md
 ├── evidence-resolver/      policy-runtime/        schema-registry/
@@ -594,7 +435,7 @@ A package MUST be reusable. If it runs once as a workflow step, it belongs in `t
 
 ### 7.3 `connectors/` — source-specific fetch and admission
 
-```text
+```
 connectors/
 ├── README.md
 ├── usgs/    fema/    noaa/    nrcs/    kansas/
@@ -606,7 +447,7 @@ Connector output MUST go to `data/raw/<domain>/<source_id>/<run_id>/` or `data/q
 
 ### 7.4 `pipelines/` and `pipeline_specs/`
 
-```text
+```
 pipelines/
 ├── README.md
 ├── ingest/    normalize/    validate/    catalog/
@@ -622,7 +463,7 @@ Split: `pipeline_specs/` says **what** should run (declarative); `pipelines/` sa
 
 ### 7.5 `tools/` and `scripts/`
 
-```text
+```
 tools/
 ├── README.md
 ├── validators/
@@ -638,8 +479,6 @@ scripts/
 ```
 
 Long-lived, trust-bearing scripts MUST graduate to `tools/`, `pipelines/`, or `packages/`. `scripts/one_off/` is a holding pen, not a permanent home.
-
-[⤴ Back to top](#directory-rules)
 
 ---
 
@@ -671,7 +510,7 @@ Each compatibility root MUST have a `README.md` that declares its class:
 
 `artifacts/` MAY exist, but MUST be tightly scoped. Recommended substructure:
 
-```text
+```
 artifacts/
 ├── README.md       # declares class and what does NOT belong
 ├── build/          # compiled outputs, distributables
@@ -680,14 +519,11 @@ artifacts/
 └── temporary/      # ephemeral; gitignored or pruned regularly
 ```
 
-> [!WARNING]
-> `artifacts/` MUST NOT be the canonical home for: receipts, proofs, evidence bundles, release manifests, promotion decisions, rollback cards, correction notices, catalog records, published layers. Those belong in `data/receipts/`, `data/proofs/`, `release/`, `data/catalog/`, and `data/published/`. Mixing build output with trust-bearing records collapses provenance and is one of the four named drift patterns (§13.2).
+`artifacts/` MUST NOT be the canonical home for: receipts, proofs, evidence bundles, release manifests, promotion decisions, rollback cards, correction notices, catalog records, published layers. Those belong in `data/receipts/`, `data/proofs/`, `release/`, `data/catalog/`, and `data/published/`.
 
 ### 8.3 Compatibility roots are not parallel authority
 
 Two homes for the same authority is the most common drift in KFM. If both exist, the compatibility root MUST NOT evolve independently. New rules, fields, and policy updates land in canonical first; mirrors regenerate or migrate.
-
-[⤴ Back to top](#directory-rules)
 
 ---
 
@@ -695,7 +531,7 @@ Two homes for the same authority is the most common drift in KFM. If both exist,
 
 ### 9.1 `data/` — the lifecycle invariant
 
-```text
+```
 data/
 ├── README.md
 ├── raw/
@@ -750,7 +586,7 @@ Promotion is a **governed state transition**, not a file move. A path-level move
 
 ### 9.2 `release/` — release decisions
 
-```text
+```
 release/
 ├── README.md
 ├── candidates/           # release candidate dossiers
@@ -770,10 +606,7 @@ release/
 | `data/published/` | Released **artifacts** — public-safe outputs consumers read. |
 | `release/` | Release **decisions** — the manifest, proof closure, rollback/correction path, signatures. |
 
-> [!CAUTION]
-> Mixing `data/published/` (artifacts) with `release/` (decisions) is one of the four named drift patterns. A release manifest does not live in `data/published/`; a published PMTiles file does not live in `release/`.
-
-[⤴ Back to top](#directory-rules)
+Mixing these is one of the four drift patterns in §10. A release manifest does not live in `data/published/`; a published PMTiles file does not live in `release/`.
 
 ---
 
@@ -781,7 +614,7 @@ release/
 
 ### 10.1 `runtime/`
 
-```text
+```
 runtime/
 ├── README.md
 ├── local/             # local runtime wiring
@@ -796,7 +629,7 @@ Local AI runtimes (Ollama, etc.) MUST stay **behind the governed API** and MUST 
 
 ### 10.2 `infra/`
 
-```text
+```
 infra/
 ├── README.md
 ├── docker/    compose/        reverse_proxy/
@@ -804,12 +637,11 @@ infra/
 ├── kubernetes/   terraform/   hardening/
 ```
 
-> [!WARNING]
-> For a local system exposed through a home firewall, reverse proxy, or VPN, this folder MUST be explicit about: **deny-by-default, least privilege, no direct model endpoint exposure, no raw data exposure, audit logs.** Admin shortcuts MUST be justified, constrained, documented, and kept out of the normal public path.
+For a local system exposed through a home firewall, reverse proxy, or VPN, this folder MUST be explicit about: **deny-by-default, least privilege, no direct model endpoint exposure, no raw data exposure, audit logs.** Admin shortcuts MUST be justified, constrained, documented, and kept out of the normal public path.
 
 ### 10.3 `configs/`
 
-```text
+```
 configs/
 ├── README.md
 ├── dev/   test/   local/
@@ -817,12 +649,11 @@ configs/
 └── examples/
 ```
 
-> [!CAUTION]
-> `configs/` MUST NOT store real secrets — ever, even for "test" or "local". Real secrets live in environment-specific secret stores referenced by name. If a real secret lands here, treat it as a **security incident**: rotate, audit, and write a runbook entry in `docs/runbooks/`.
+`configs/` MUST NOT store real secrets — ever, even for "test" or "local". Real secrets live in environment-specific secret stores referenced by name. If a real secret lands here, treat it as a security incident: rotate, audit, and write a runbook entry in `docs/runbooks/`.
 
 ### 10.4 `migrations/`
 
-```text
+```
 migrations/
 ├── README.md
 ├── database/    schema/   data/   graph/
@@ -831,15 +662,13 @@ migrations/
 
 Every migration MUST have a corresponding entry under `rollback/`, even if the rollback is "not safe to roll back; forward fix only" with reason.
 
-[⤴ Back to top](#directory-rules)
-
 ---
 
 ## 11. UI and Map Roots
 
 The clean modern layout is:
 
-```text
+```
 apps/explorer-web/
 packages/ui/
 packages/maplibre/
@@ -858,14 +687,14 @@ Avoid making root `ui/` and `web/` long-term canonical homes. The recommendation
 
 A domain MUST NOT become a root folder. Hydrology should not look like:
 
-```text
+```
 hydrology/
 ├── data/    schemas/   policy/   docs/
 ```
 
 It MUST look like the lane pattern:
 
-```text
+```
 docs/domains/hydrology/
 contracts/domains/hydrology/
 schemas/contracts/v1/domains/hydrology/
@@ -896,8 +725,6 @@ When a file legitimately spans domains (e.g., a habitat × fauna × hydrology va
 - Shared validator → `tools/validators/<topic>/...`, not `tools/validators/domains/<picked-one>/...`
 - Cross-domain schema → `schemas/contracts/v1/<topic>/...`, not under a single domain folder.
 - Cross-domain doctrine → `docs/architecture/<topic>.md`, not under `docs/domains/<picked-one>/`.
-
-[⤴ Back to top](#directory-rules)
 
 ---
 
@@ -945,8 +772,6 @@ The original four drift patterns, retained, with concrete fixes.
 | **Test-only validator** | A validator lives only in a test file, not in `tools/validators/` | Extract validator to `tools/`; tests call into it. |
 | **Fixture sprawl** | Fixtures duplicated in `tests/fixtures/`, `fixtures/`, and per-domain folders | Choose one authority (root `fixtures/` or `tests/fixtures/`); document the rule in both READMEs. |
 
-[⤴ Back to top](#directory-rules)
-
 ---
 
 ## 14. Migration Discipline
@@ -984,10 +809,7 @@ A rename that changes what an object *means* is a content change, not a placemen
 
 ## 15. Required README Contract
 
-Every canonical root and every compatibility root MUST have a `README.md` with these sections, in this order.
-
-<details>
-<summary><strong>📋 Per-root README template — click to expand</strong></summary>
+Every canonical root and every compatibility root MUST have a `README.md` with these sections, in this order:
 
 ```markdown
 # <folder-name>
@@ -1030,12 +852,7 @@ Any ADRs that govern this folder.
 ISO date of last review. Older than 6 months → flag for review.
 ```
 
-</details>
-
-> [!NOTE]
-> A folder without a README that meets this contract is a drift candidate. The drift register MAY auto-populate from a missing-README scan.
-
-[⤴ Back to top](#directory-rules)
+A folder without a README that meets this contract is a drift candidate. The drift register MAY auto-populate from a missing-README scan.
 
 ---
 
@@ -1073,8 +890,6 @@ This document itself is governance. Changes follow the same discipline it impose
 | Major restructure | ADR + migration plan in `migrations/` + transition window. |
 
 Every PR touching this file MUST update §0's "Last reviewed" / version metadata if you add one, and MUST cite the ADR if §2.4 applies.
-
-[⤴ Back to top](#directory-rules)
 
 ---
 
@@ -1115,8 +930,6 @@ Terms used throughout this document, defined here for placement disambiguation. 
 | **RuntimeResponseEnvelope** | Finite-outcome wrapper (ANSWER, ABSTAIN, DENY, ERROR) returned by the governed API; schema in `schemas/contracts/v1/runtime/`. |
 | **Watcher-as-non-publisher** | The invariant that workers emit receipts and candidates only — they do not publish, mutate canonical records, or bypass review. |
 
-[⤴ Back to top](#directory-rules)
-
 ---
 
 ## 20. Practical Final Recommendation
@@ -1125,7 +938,7 @@ Use this as the normalized root policy.
 
 **Canonical roots:**
 
-```text
+```
 .github/   docs/   control_plane/   contracts/   schemas/   policy/
 tests/     fixtures/    tools/   scripts/    apps/    packages/
 connectors/   pipelines/   pipeline_specs/   data/    release/
@@ -1134,7 +947,7 @@ runtime/   infra/    configs/    migrations/    examples/
 
 **Compatibility roots needing README + class declaration:**
 
-```text
+```
 artifacts/   jsonschema/   policies/   ui/   web/   styles/   viewer_templates/
 ```
 
@@ -1145,26 +958,4 @@ The four drifts to prevent (§13.1–13.4):
 3. `ui/`, `web/`, `apps/explorer-web/`, and `packages/ui/` becoming competing shell homes.
 4. Domain folders becoming root folders and fragmenting the lifecycle.
 
-> [!IMPORTANT]
-> **KFM's root MUST be boring, stable, and governed. The complexity belongs inside the lanes — registries, contracts, schemas, policies, tests, release objects — not scattered across root-level topic folders.**
-
----
-
-## Related docs
-
-- `docs/doctrine/authority-ladder.md` — how doctrine, ADRs, per-root READMEs, dossiers, and repo state are ranked
-- `docs/doctrine/truth-posture.md` — cite-or-abstain default and finite-outcome envelopes
-- `docs/doctrine/trust-membrane.md` — public path through `apps/governed-api/`
-- `docs/doctrine/lifecycle-law.md` — RAW → … → PUBLISHED in detail
-- `docs/architecture/contract-schema-policy-split.md` — meaning vs shape vs admissibility
-- `docs/adr/ADR-0001-schema-home.md` — `schemas/contracts/v1/<…>` as the default machine-schema home
-- `docs/registers/DRIFT_REGISTER.md` *(PROPOSED)* — recording mounted-repo deviations
-- `docs/registers/VERIFICATION_BACKLOG.md` *(PROPOSED)* — outstanding NEEDS VERIFICATION items
-- `docs/registers/AUTHORITY_LADDER.md` *(PROPOSED)* — canonical authority order
-- `control_plane/deprecation_register.yaml` *(PROPOSED)* — sunset entries for migrated paths
-
----
-
-*Last updated: 2026-05-11 · Document type: Governance doctrine · Authority of rules: CONFIRMED · Authority of specific paths: PROPOSED until verified against mounted-repo evidence.*
-
-[⤴ Back to top](#directory-rules)
+**KFM's root MUST be boring, stable, and governed. The complexity belongs inside the lanes — registries, contracts, schemas, policies, tests, release objects — not scattered across root-level topic folders.**
