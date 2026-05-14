@@ -24,4 +24,5 @@ pytest \
   tests/policy/test_sync_doctrine_artifact_registry_status.py \
   tests/source/test_doctrine_artifact_preflight_summary_schema.py \
   tests/policy/test_preflight_summary_consistency.py \
-  tests/policy/test_normalized_summary_consumer_readiness.py -q
+  tests/policy/test_normalized_summary_consumer_readiness.py \
+  tests/policy/test_enforce_doctrine_preflight_gates.py -q

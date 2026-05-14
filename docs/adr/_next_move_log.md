@@ -277,3 +277,10 @@ Each run appends one block in this exact shape:
 - Slice shape: preflight now runs readiness checker, emits readiness payload/returncode, and supports `--require-consumer-readiness` strict failure behavior.
 - Deferred to future runs:
   - hook require-consumer-readiness into release/promotion policy automation
+### Run 2026-05-14 — Add strict preflight enforcement wrapper for release/promotion automation
+- Status: landed
+- PR: n/a
+- Doctrine basis: promotion/release automation needs a single executable that applies all strict doctrine preflight gates consistently.
+- Slice shape: added `enforce_doctrine_preflight_gates.sh` wrapper and test coverage asserting non-zero exit on current provenance gate failure.
+- Deferred to future runs:
+  - wire wrapper invocation into release pipeline entrypoint(s)
