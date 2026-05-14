@@ -32,6 +32,8 @@ def test_normalized_summary_consumer_readiness_detects_invalid_entry(tmp_path: P
     payload = json.loads(res.stdout)
     assert payload["result"] == "fail"
     assert payload["errors"]
+
+
 def test_normalized_summary_consumer_readiness_require_all_validated_fails(tmp_path: Path):
     reg = tmp_path / "readiness.yaml"
     reg.write_text(
