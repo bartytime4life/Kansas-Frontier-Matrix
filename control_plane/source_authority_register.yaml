@@ -1,3 +1,9 @@
-# Source authority register
-# Lists sources, their authority roles, rights posture, sensitivity floor.
+meta:
+  status: PROPOSED
+  owner: docs steward
+  description: Lists sources, their authority roles, rights posture, sensitivity floor.
+  last_reviewed: 2026-05-14
+  related_doctrine:
+    - docs/architecture/DIRECTORY_RULES.md
+
 entries: []
