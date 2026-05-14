@@ -46,3 +46,10 @@ def test_enforce_doctrine_preflight_gates_passes_required_flags_and_user_args(tm
     assert "--require-consumer-readiness" in argv
     for arg in user_args:
         assert arg in argv
+    strict_ix = argv.index("--strict")
+    strict_prov_ix = argv.index("--strict-provenance")
+    readiness_ix = argv.index("--require-consumer-readiness")
+    first_user_ix = min(argv.index(arg) for arg in user_args)
+    assert strict_ix < first_user_ix
+    assert strict_prov_ix < first_user_ix
+    assert readiness_ix < first_user_ix
