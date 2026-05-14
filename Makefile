@@ -1,7 +1,7 @@
 # KFM Makefile — greenfield scaffold.
 # Commands should be repo-native; replace placeholders as packages land.
 
-.PHONY: help validate test schemas policy fixtures release-dry-run             proof-slice catalog publish-check deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards
+.PHONY: help validate test schemas policy fixtures release-dry-run             proof-slice catalog publish-check deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci
 
 help:
 	@echo "KFM make targets (greenfield):"
@@ -65,3 +65,8 @@ governed-api-verify:
 
 boundary-guards:
 	python -m pytest -q tests/policy/test_control_plane_register_meta_contract.py tests/policy/test_explorer_web_adapter_boundary.py tests/policy/test_pipeline_connector_non_publisher.py apps/governed-api/tests/test_boundary_guards.py
+
+
+boundary-guards-ci:
+	mkdir -p artifacts/qa
+	python -m pytest -q --junitxml=artifacts/qa/policy-boundary-guards.xml tests/policy/test_control_plane_register_meta_contract.py tests/policy/test_explorer_web_adapter_boundary.py tests/policy/test_pipeline_connector_non_publisher.py apps/governed-api/tests/test_boundary_guards.py
