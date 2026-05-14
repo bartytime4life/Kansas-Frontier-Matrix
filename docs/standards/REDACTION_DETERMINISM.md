@@ -193,18 +193,18 @@ The 32 bytes of `seed_digest` are the canonical PRNG key. Implementations MUST N
 
 ```mermaid
 flowchart LR
-    A[profile_id@version] --> Z[Concat with 0x1F separator]
-    B[spec_hash &#40jcs:sha256:hex&#41] --> Z
-    C[occurrence_id &#40NFC, lowercased&#41] --> Z
-    D[salt &#40hex, optional&#41] --> Z
-    Z --> H["SHA-256<br/>(32 bytes)"]
-    H --> K[PRNG key]
-    K --> P["ChaCha20 keystream<br/>(deterministic bytes)"]
-    P --> U[Uniform draws u1, u2, …]
-    U --> G[Geometry transform]
-    G --> R[(RedactionReceipt)]
-    G --> O[Published geometry]
-    R -. replay .-> P
+    A["profile_id@version"] --> Z["Concat with 0x1F separator"]
+    B["spec_hash (jcs:sha256:hex)"] --> Z
+    C["occurrence_id (NFC, lowercased)"] --> Z
+    D["salt (hex, optional)"] --> Z
+    Z --> H["SHA-256 (32 bytes)"]
+    H --> K["PRNG key"]
+    K --> P["ChaCha20 keystream (deterministic bytes)"]
+    P --> U["Uniform draws u1, u2, …"]
+    U --> G["Geometry transform"]
+    G --> R[("RedactionReceipt")]
+    G --> O["Published geometry"]
+    R -. "replay" .-> P
 ```
 
 [Back to top](#top)
