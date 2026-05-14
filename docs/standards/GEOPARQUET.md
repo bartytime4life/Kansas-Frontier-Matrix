@@ -2,13 +2,14 @@
 
 > Conformance posture, profile requirements, and governance shape for **GeoParquet 1.1.0** as the canonical vector artifact format inside the Kansas Frontier Matrix.
 
-<!-- [KFM_META_BLOCK_V2]
+<!--
+[KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards-geoparquet
 title: GeoParquet — KFM Standards Reference
 type: standard
 version: v1
 status: draft
-owners: docs-steward, data-platform-steward, geospatial-steward   <!-- PLACEHOLDER -->
+owners: docs-steward, data-platform-steward, geospatial-steward   # PLACEHOLDER until CODEOWNERS verified
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
@@ -27,7 +28,8 @@ tags: [kfm, standards, geoparquet, vector, processed-tier, catalog]
 notes:
   - All KFM-internal paths in this doc are PROPOSED until verified against mounted-repo evidence.
   - This document is doctrine and external-standard reference; it is not a directory README.
-[/KFM_META_BLOCK_V2] -->
+[/KFM_META_BLOCK_V2]
+-->
 
 ![status: draft](https://img.shields.io/badge/status-draft-yellow)
 ![authority: standards-reference](https://img.shields.io/badge/authority-standards--reference-blue)
@@ -35,7 +37,6 @@ notes:
 ![lifecycle role: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-purple)
 ![governance: trust--membrane](https://img.shields.io/badge/governance-trust--membrane-critical)
 ![last reviewed: 2026-05-14](https://img.shields.io/badge/last%20reviewed-2026--05--14-lightgrey)
-<!-- Badge endpoints are illustrative; replace with real CI / release shields once wired. -->
 
 | Field | Value |
 |---|---|
@@ -48,7 +49,7 @@ notes:
 | **KFM role** | **Canonical vector artifact** — processed vector source of truth for derived tiles |
 | **Lifecycle phase** | `PROCESSED` (admitted as the deterministic vector surface from which PMTiles/COG/derivatives are built) |
 | **Schema-home convention** | `schemas/contracts/v1/data/` per ADR-0001 (PROPOSED for `GeoParquetAssetManifest`) |
-| **Owner** | Docs steward + Geospatial/Data Platform stewards <!-- PLACEHOLDER --> |
+| **Owner** | Docs steward + Geospatial/Data Platform stewards *(placeholder until CODEOWNERS verified)* |
 | **Reviewers required for change** | Docs steward + Geospatial steward; ADR required for any change to the **canonical-vector role** of GeoParquet |
 | **Related doctrine** | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md), [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) |
 | **Lifecycle invariant** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
@@ -469,9 +470,9 @@ These belong in `docs/registers/VERIFICATION_BACKLOG.md` and `docs/adr/` once tr
 ### KFM doctrine and architecture (in-repo)
 
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — §6.1 names `docs/standards/` as the home for external-standard docs; §6.3, §6.4, §6.5 define the contract/schema/policy split.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) <!-- PROPOSED --> — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`.
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) <!-- PROPOSED --> — public path is `apps/governed-api/`, never canonical stores.
-- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) <!-- PROPOSED -->.
+- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. *(PROPOSED neighbor)*
+- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — public path is `apps/governed-api/`, never canonical stores. *(PROPOSED neighbor)*
+- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) *(PROPOSED neighbor)*
 - [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home default of `schemas/contracts/v1/...`.
 
 ### Adjacent KFM standards docs (PROPOSED neighbors)
@@ -503,7 +504,7 @@ These belong in `docs/registers/VERIFICATION_BACKLOG.md` and `docs/adr/` once tr
 
 <sub>
 <b>Last reviewed:</b> 2026-05-14 &nbsp;·&nbsp;
-<b>Owners:</b> docs-steward, data-platform-steward, geospatial-steward (PLACEHOLDER) &nbsp;·&nbsp;
+<b>Owners:</b> docs-steward, data-platform-steward, geospatial-steward (placeholder) &nbsp;·&nbsp;
 <b>External baseline:</b> GeoParquet 1.1.0 &nbsp;·&nbsp;
 <b>Status:</b> draft — implementation maturity for paths and contracts is PROPOSED / NEEDS VERIFICATION.
 </sub>
