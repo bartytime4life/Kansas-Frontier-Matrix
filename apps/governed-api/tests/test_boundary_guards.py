@@ -4,6 +4,7 @@ import json
 
 from governed_api.main import app
 from governed_api.routes.registry import ROUTES
+from tests.policy.boundary_constants import FORBIDDEN_INTERNAL_STORE_PATHS
 
 
 def _call_app(path: str, method: str = "GET"):
@@ -53,6 +54,16 @@ def test_forbidden_runtime_imports_absent() -> None:
         for line in text.splitlines():
             stripped = line.strip()
             assert not stripped.startswith(bad_prefixes), f"Forbidden import in {py_file}: {line}"
+
+
 def test_api_surface_manifest() -> None:
     expected_routes = {"/bootstrap", "/layers", "/evidence"}
     assert set(ROUTES.keys()) == expected_routes
+
+
+def test_no_internal_data_store_path_literals_in_api_code() -> None:
+    root = Path(__file__).resolve().parents[1] / "src"
+    for py_file in root.rglob("*.py"):
+        text = py_file.read_text(encoding="utf-8")
+        for marker in FORBIDDEN_INTERNAL_STORE_PATHS:
+            assert marker not in text, f"Forbidden internal-store reference in {py_file}: {marker}"

@@ -1,5 +1,11 @@
-# Document registry
-# Lists every authoritative doc, its authority level, owner, status.
+meta:
+  status: PROPOSED
+  owner: docs steward
+  description: Lists every authoritative doc, its authority level, owner, status.
+  last_reviewed: 2026-05-14
+  related_doctrine:
+    - docs/architecture/DIRECTORY_RULES.md
+
 entries:
   - doc_id: kfm://doc/doctrine/required-artifact-index
     kind: doctrine_required_artifact_index
