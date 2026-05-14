@@ -13,6 +13,8 @@ def test_enforce_doctrine_preflight_gates_returns_nonzero_when_provenance_fails(
     assert '"provenance_returncode": 1' in res.stdout
 
 
+
+
 def test_enforce_doctrine_preflight_gates_invokes_strict_gate_flags():
     script = SCRIPT.read_text(encoding="utf-8")
     assert "--strict" in script
