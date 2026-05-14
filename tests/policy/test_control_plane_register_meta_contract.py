@@ -37,7 +37,9 @@ def test_control_plane_register_last_reviewed_is_iso_date() -> None:
         header = "\n".join(content.splitlines()[:20])
         marker = "last_reviewed:"
         assert marker in header, f"{rel_path} missing {marker}"
-        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":",1)[1].strip()
+        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][
+            0
+        ].split(":", 1)[1].strip()
         date.fromisoformat(value)
 
 
@@ -47,6 +49,8 @@ def test_control_plane_register_last_reviewed_not_future_date() -> None:
         content = Path(rel_path).read_text(encoding="utf-8")
         header = "\n".join(content.splitlines()[:20])
         marker = "last_reviewed:"
-        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":",1)[1].strip()
+        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][
+            0
+        ].split(":", 1)[1].strip()
         reviewed = date.fromisoformat(value)
         assert reviewed <= today, f"{rel_path} has future last_reviewed: {reviewed}"
