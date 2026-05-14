@@ -13,6 +13,14 @@ def test_enforce_doctrine_preflight_gates_returns_nonzero_when_provenance_fails(
     assert '"provenance_returncode": 1' in res.stdout
 
 
+def test_enforce_doctrine_preflight_gates_invokes_strict_gate_flags():
+    script = SCRIPT.read_text(encoding="utf-8")
+    assert "--strict" in script
+    assert "--strict-provenance" in script
+    assert "--require-consumer-readiness" in script
+    assert '"$@"' in script
+
+
 def test_enforce_doctrine_preflight_gates_passes_required_flags_and_user_args(tmp_path: Path):
     argv_log = tmp_path / "argv.log"
     fake_python = tmp_path / "python"
