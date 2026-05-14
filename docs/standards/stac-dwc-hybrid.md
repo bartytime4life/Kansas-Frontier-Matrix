@@ -4,7 +4,7 @@ title: STAC × Darwin Core Hybrid Profile (kfm-stac-dwc-v1)
 type: standard
 version: v1
 status: draft
-owners: <docs steward + biodiversity-domain steward> <!-- PLACEHOLDER -->
+owners: TBD — docs steward + biodiversity-domain steward   # placeholder, update before publish
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
@@ -13,13 +13,13 @@ related:
   - docs/standards/sensitivity-rubric.md           # PROPOSED, not yet authored
   - docs/standards/redaction-determinism.md        # PROPOSED, not yet authored
   - docs/architecture/contract-schema-policy-split.md
-  - schemas/contracts/v1/domains/fauna/             # PROPOSED home
-  - schemas/contracts/v1/domains/flora/             # PROPOSED home
+  - schemas/contracts/v1/domains/fauna/            # PROPOSED home
+  - schemas/contracts/v1/domains/flora/            # PROPOSED home
 tags: [kfm, standards, stac, darwin-core, biodiversity, profile]
 notes:
   - Codifies C4-03 (CONFIRMED doctrine) as a named KFM profile.
   - All path-specific claims are PROPOSED until verified against mounted-repo evidence.
-  - Profile id `kfm-stac-dwc-v1` is PROPOSED; freeze before first release.
+  - Profile id kfm-stac-dwc-v1 is PROPOSED; freeze before first release.
 [/KFM_META_BLOCK_V2] -->
 
 # STAC × Darwin Core Hybrid Profile (`kfm-stac-dwc-v1`)
@@ -31,7 +31,7 @@ notes:
   <img alt="Doctrine: CONFIRMED" src="https://img.shields.io/badge/doctrine-CONFIRMED-2ea44f?style=flat-square" />
   <img alt="Implementation: PROPOSED" src="https://img.shields.io/badge/implementation-PROPOSED-9d8df1?style=flat-square" />
   <img alt="Profile: kfm-stac-dwc-v1" src="https://img.shields.io/badge/profile-kfm--stac--dwc--v1-informational?style=flat-square" />
-  <img alt="Lifecycle: PUBLISHED-track" src="https://img.shields.io/badge/lifecycle-CATALOG%20%E2%86%92%20PUBLISHED-blue?style=flat-square" />
+  <img alt="Lifecycle: CATALOG to PUBLISHED" src="https://img.shields.io/badge/lifecycle-CATALOG%20%E2%86%92%20PUBLISHED-blue?style=flat-square" />
   <img alt="Policy: public" src="https://img.shields.io/badge/policy-public-success?style=flat-square" />
 </p>
 
@@ -40,7 +40,7 @@ notes:
 | **Status** | draft |
 | **Doctrine authority** | CONFIRMED — pattern recorded in the KFM corpus (C4-03) |
 | **Profile id** | `kfm-stac-dwc-v1` *(PROPOSED — freeze on first cut)* |
-| **Owners** | `<docs steward + biodiversity-domain steward>` *(placeholder)* |
+| **Owners** | TBD — docs steward + biodiversity-domain steward *(placeholder)* |
 | **Last reviewed** | `2026-05-14` |
 
 ---
@@ -269,7 +269,7 @@ Every KFM biodiversity Item carries the standard `kfm:provenance` block defined 
   },
 
   "kfm:evidence_ref":      "kfm://evidence/<sha256>",
-  "kfm:source_role":       "observation",          // observation | authority | context | model
+  "kfm:source_role":       "observation",
   "kfm:rights_status":     "controlled",
   "kfm:sensitivity":       "review_required",
   "kfm:redaction_profile": "profile:sinc-obscure-10km",
@@ -305,7 +305,7 @@ Each entry under `assets` MUST carry per-asset integrity:
     "href": "https://cdn.kfm.org/.../evidence.json",
     "type": "application/json",
     "roles": ["data"],
-    "file:checksum": "1220<hex-sha256>"   // multihash
+    "file:checksum": "1220<hex-sha256>"
   }
 }
 ```
@@ -448,7 +448,7 @@ A KDWP species-in-need-of-conservation occurrence. The **published** geometry is
     "https://kfm.org/stac/kfm-stac-dwc-v1/schema.json"
   ],
   "id": "kfm-occ-kdwp-2025-08-03-000042",
-  "geometry": { "type": "Point", "coordinates": [-98.50, 38.90] },  // hex centroid
+  "geometry": { "type": "Point", "coordinates": [-98.50, 38.90] },
   "bbox": [-98.55, 38.85, -98.45, 38.95],
   "properties": {
     "datetime": "2025-08-03T00:00:00Z",
@@ -487,7 +487,7 @@ A KDWP species-in-need-of-conservation occurrence. The **published** geometry is
 }
 ```
 
-> Notes on this example: the **exact** geometry, the **un-redacted** taxon name, and any precise breeding-site context live in the EvidenceBundle and are not published. The redaction profile name and version (`@v1`) are both required so that the transform can be replayed from the receipt.
+Notes on this example: the **exact** geometry, the **un-redacted** taxon name, and any precise breeding-site context live in the EvidenceBundle and are not published. The redaction profile name and version (`@v1`) are both required so that the transform can be replayed from the receipt.
 
 </details>
 
@@ -520,7 +520,7 @@ A breeding-bird survey route encoded as an Event with linked MeasurementOrFact r
         { "taxon": "Tyrannus tyrannus",  "count": 0, "detected": false, "itis_tsn": "178311" }
       ]
     },
-    "kfm:provenance":   { /* …as in Example A */ },
+    "kfm:provenance":   { "spec_hash": "<sha256>", "evidence_bundle_ref": "kfm://entity-bundle/<sha256>", "run_record_ref": "kfm://run/<run_id>", "audit_ref": "kfm://audit/<entry>", "policy_digest": "<sha256>" },
     "kfm:evidence_ref": "kfm://evidence/<sha256>",
     "kfm:source_role":  "observation",
     "kfm:sensitivity":  "public",
@@ -613,12 +613,12 @@ For DwC-A export and ingest, the canonical mapping is:
 
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law; this profile lives under `docs/standards/` per §6.1.
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — `contracts/` defines meaning; `schemas/` defines shape; `policy/` decides admissibility.
-- `docs/standards/sensitivity-rubric.md` — the 0–5 rubric (**PROPOSED**, not yet authored). <!-- TODO: link when authored -->
-- `docs/standards/redaction-determinism.md` — seed concatenation rules and deterministic jitter (**PROPOSED**). <!-- TODO -->
-- `docs/standards/kfm-stac-profile.md` — base KFM STAC profile (**PROPOSED**, parent profile). <!-- TODO -->
-- `docs/domains/fauna/README.md` — Fauna domain dossier (occurrence object families). <!-- TODO -->
-- `docs/domains/flora/README.md` — Flora domain dossier (specimen / herbarium occurrences). <!-- TODO -->
-- `docs/runbooks/revocation.md` — tombstones and revocation propagation (**PROPOSED**). <!-- TODO -->
+- `docs/standards/sensitivity-rubric.md` — the 0–5 rubric (**PROPOSED**, not yet authored).
+- `docs/standards/redaction-determinism.md` — seed concatenation rules and deterministic jitter (**PROPOSED**).
+- `docs/standards/kfm-stac-profile.md` — base KFM STAC profile (**PROPOSED**, parent profile).
+- `docs/domains/fauna/README.md` — Fauna domain dossier (occurrence object families).
+- `docs/domains/flora/README.md` — Flora domain dossier (specimen / herbarium occurrences).
+- `docs/runbooks/revocation.md` — tombstones and revocation propagation (**PROPOSED**).
 
 ---
 
