@@ -1,3 +1,8 @@
-# Domain lane register
-# Lists every domain lane, its readiness, gates, owners.
+meta:
+  status: PROPOSED
+  owner: docs steward
+  last_reviewed: 2026-05-14
+  related_doctrine:
+    - docs/architecture/DIRECTORY_RULES.md
+
 entries: []
