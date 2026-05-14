@@ -1,0 +1,31 @@
+name: policy-boundary-guards
+
+on:
+  pull_request:
+    paths:
+      - 'tests/policy/**'
+      - 'apps/governed-api/tests/**'
+      - 'apps/governed-api/src/**'
+      - 'apps/explorer-web/src/**'
+      - 'connectors/**'
+      - 'pipelines/**'
+      - 'control_plane/**'
+  workflow_dispatch:
+
+jobs:
+  boundary-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run boundary policy tests
+        run: make boundary-guards
