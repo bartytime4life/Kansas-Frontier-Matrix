@@ -4,7 +4,7 @@ title: Source Descriptor Standard
 type: standard
 version: v1
 status: draft
-owners: <!-- TODO: Docs steward + Source/Catalog subsystem owner -->
+owners: TBD — Docs steward + Source/Catalog subsystem owner
 created: 2026-05-13
 updated: 2026-05-13
 policy_label: public
@@ -45,7 +45,7 @@ notes:
 
 | Status  | Owners | Last reviewed |
 |---|---|---|
-| `draft` | <!-- TODO: Docs steward + Source/Catalog subsystem owner --> | 2026-05-13 |
+| `draft` | TBD — Docs steward + Source/Catalog subsystem owner | 2026-05-13 |
 
 > [!IMPORTANT]
 > **A source's role, rights, and sensitivity are fixed at admission, not at publication.** Promotion never upgrades a `modeled` reading into an `observed` one, an `aggregate` into a per-place truth, or a `candidate` into a verified record. Each of those is a separate governed transition with its own evidence and review requirements.
@@ -546,9 +546,9 @@ The fixtures below are the **minimum** negative set. Each MUST fail closed with 
 - `docs/doctrine/truth-posture.md` — cite-or-abstain default.
 - `docs/doctrine/lifecycle-law.md` — RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED.
 - `docs/doctrine/trust-membrane.md` — public-surface discipline.
-- `docs/sources/README.md` — scope of `docs/sources/` (folder README, separate from this standard). <!-- TODO: confirm presence -->
-- `contracts/source/source_descriptor.md` — object meaning (Markdown contract). <!-- TODO: confirm presence -->
-- `schemas/contracts/v1/source/source_descriptor.schema.json` — machine shape. <!-- TODO: confirm presence -->
+- `docs/sources/README.md` — scope of `docs/sources/` (folder README, separate from this standard). *(TODO: confirm presence)*
+- `contracts/source/source_descriptor.md` — object meaning (Markdown contract). *(TODO: confirm presence)*
+- `schemas/contracts/v1/source/source_descriptor.schema.json` — machine shape. *(TODO: confirm presence)*
 - `control_plane/source_authority_register.yaml` — admission decisions and active source register.
 - `policy/rights/` and `policy/sensitivity/` — admissibility policies that gate descriptor use.
 - `docs/domains/<lane>/` — per-domain source dossiers (DOM-HYD, DOM-AIR, DOM-PEOPLE, DOM-ARCH, …).
