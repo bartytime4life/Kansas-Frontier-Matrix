@@ -11,7 +11,7 @@ cleanup() {
     rm -f "$shadow_summary"
   fi
 }
-trap cleanup EXIT
+trap cleanup EXIT INT TERM
 
 python scripts/maintenance/run_doctrine_artifact_preflight.py --stable-filenames --emit-normalized-only > "$shadow_summary"
 python tools/validators/source/validate_doctrine_preflight_summary_consistency.py --require-normalized-only "$shadow_summary"
