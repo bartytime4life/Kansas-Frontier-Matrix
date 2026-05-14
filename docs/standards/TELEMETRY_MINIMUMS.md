@@ -4,7 +4,7 @@ title: Telemetry Minimums
 type: standard
 version: v0.1
 status: draft
-owners: [observability-stewards, release-managers]  <!-- PLACEHOLDER — confirm against control_plane/document_registry.yaml -->
+owners: [observability-stewards, release-managers]   # PLACEHOLDER — confirm against control_plane/document_registry.yaml
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
@@ -20,9 +20,9 @@ related:
   - schemas/contracts/v1/receipts/
 tags: [kfm, observability, telemetry, opentelemetry, openlineage, slo, policy-as-code, governance]
 notes:
-  - Doctrinal anchor: C5-06 "Observability as Code via OPA" (Pass 10 Idea Index).
-  - Implementation maturity claims are bounded; repo not mounted in this session.
-  - Thresholds in this document are PROPOSED defaults pending ADR.
+  - Doctrinal anchor C5-06 (Pass 10 Idea Index)
+  - Implementation maturity claims bounded; repo not mounted in session
+  - Thresholds are PROPOSED defaults pending ADR
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
