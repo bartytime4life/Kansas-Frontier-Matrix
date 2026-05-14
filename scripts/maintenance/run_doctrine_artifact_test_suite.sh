@@ -2,6 +2,7 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+readonly repo_root
 cd "$repo_root"
 
 python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
