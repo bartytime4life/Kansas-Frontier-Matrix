@@ -26,5 +26,3 @@ def test_connectors_and_pipelines_do_not_write_to_publish_targets() -> None:
                     assert target not in window, (
                         f"Forbidden publish-target write context in {file_path}:{idx} -> {target}"
                     )
-
-

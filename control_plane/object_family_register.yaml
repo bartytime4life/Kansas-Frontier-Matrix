@@ -4,6 +4,6 @@ meta:
   description: Lists every contract object family and its homes (contract/schema/policy/fixture/test/emit).
   last_reviewed: 2026-05-14
   related_doctrine:
-    - docs/architecture/DIRECTORY_RULES.md
+    - docs/directory-rules.md
 
 entries: []
