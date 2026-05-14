@@ -53,6 +53,8 @@ def test_forbidden_runtime_imports_absent() -> None:
         for line in text.splitlines():
             stripped = line.strip()
             assert not stripped.startswith(bad_prefixes), f"Forbidden import in {py_file}: {line}"
+
+
 def test_api_surface_manifest() -> None:
     expected_routes = {"/bootstrap", "/layers", "/evidence"}
     assert set(ROUTES.keys()) == expected_routes
