@@ -1,0 +1,11 @@
+# STAC_KFM_PROFILE
+
+Status: PROPOSED
+
+This placeholder was created to satisfy in-repo references to `docs/standards/STAC_KFM_PROFILE.md`.
+
+## Next steps
+- Replace this stub with a full conformance/profile document.
+- Add links to related schema, policy, validator, and fixtures.
+
+Last reviewed: 2026-05-14
