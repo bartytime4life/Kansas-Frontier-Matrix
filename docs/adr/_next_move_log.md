@@ -262,7 +262,6 @@ Each run appends one block in this exact shape:
 - Slice shape: added readiness registry + validator + tests and wired readiness validation into regression bundle.
 - Deferred to future runs:
   - expand registry to all external consumer integrations before default normalized-only cutover
-
 ### Run 2026-05-14 — Enforce all-consumers-validated mode for normalized-summary readiness gate
 - Status: landed
 - PR: n/a
