@@ -33,7 +33,7 @@ def test_enforce_doctrine_preflight_gates_passes_required_flags_and_user_args(tm
     fake_python.chmod(0o755)
 
     env = dict(os.environ)
-    env["PATH"] = f"{tmp_path}:{env['PATH']}"
+    env["PATH"] = f"{tmp_path}:{env.get('PATH', os.defpath)}"
 
     user_arg = "--stable-filenames"
     res = subprocess.run([str(SCRIPT), user_arg], cwd=ROOT, env=env, capture_output=True, text=True)
