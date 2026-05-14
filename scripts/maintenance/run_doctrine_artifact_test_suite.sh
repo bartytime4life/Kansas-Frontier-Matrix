@@ -6,6 +6,7 @@ cd "$repo_root"
 
 python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
 shadow_summary="$(mktemp -t doctrine_preflight_summary.XXXXXX)"
+readonly shadow_summary
 cleanup() {
   if [[ -n "${shadow_summary:-}" ]]; then
     rm -f "$shadow_summary"
