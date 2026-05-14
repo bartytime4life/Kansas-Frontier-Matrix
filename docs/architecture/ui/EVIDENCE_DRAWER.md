@@ -4,7 +4,7 @@ title: Evidence Drawer — UI Trust Panel Architecture
 type: standard
 version: v1
 status: draft
-owners: [UI subsystem owner, Docs steward, Governance steward]   <!-- placeholder; verify in CODEOWNERS -->
+owners: [UI subsystem owner, Docs steward, Governance steward]   # placeholder; verify in CODEOWNERS
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
