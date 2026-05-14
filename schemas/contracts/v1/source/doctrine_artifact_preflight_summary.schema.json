@@ -6,7 +6,6 @@
   "required": [
     "check_returncode",
     "render_returncode",
-    "check_receipt",
     "presence_input"
   ],
   "properties": {
@@ -60,6 +59,333 @@
     "presence_output": {
       "type": "string",
       "minLength": 1
+    },
+    "provenance_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "provenance_stderr": {
+      "type": "string"
+    },
+    "provenance_sync_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        2
+      ]
+    },
+    "provenance_sync_stderr": {
+      "type": "string"
+    },
+    "alignment_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "alignment_stderr": {
+      "type": "string"
+    },
+    "alignment_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "missing_in_provenance",
+            "extra_in_provenance"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "doctrine_registry_alignment"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail"
+              ]
+            },
+            "missing_in_provenance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "extra_in_provenance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "provenance_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "invalid_urls",
+            "placeholder_urls",
+            "invalid_status",
+            "missing_fields"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "required_doctrine_artifact_provenance"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail"
+              ]
+            },
+            "invalid_urls": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "placeholder_urls": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalid_status": {
+              "type": "array"
+            },
+            "missing_fields": {
+              "type": "array"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "provenance_sync_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "changed",
+            "changed_count",
+            "write"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "sync_doctrine_artifact_provenance_status"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "changed",
+                "no_change"
+              ]
+            },
+            "changed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "changed_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "write": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "provenance_sync_receipt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance_sync_receipt_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "check_receipt_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "presence_output_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "artifact_digests": {
+      "type": "object",
+      "required": [
+        "check_receipt",
+        "provenance_sync_receipt",
+        "presence_output"
+      ],
+      "properties": {
+        "check_receipt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          ]
+        },
+        "provenance_sync_receipt": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          ]
+        },
+        "presence_output": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifact_paths": {
+      "type": "object",
+      "required": [
+        "check_receipt",
+        "provenance_sync_receipt",
+        "presence_output"
+      ],
+      "properties": {
+        "check_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance_sync_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "presence_output": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "readiness_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "readiness_stderr": {
+      "type": "string"
+    },
+    "readiness_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "consumer_count",
+            "errors"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "normalized_summary_consumer_readiness"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail"
+              ]
+            },
+            "consumer_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "errors": {
+              "type": "array"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
     }
   },
   "additionalProperties": false
