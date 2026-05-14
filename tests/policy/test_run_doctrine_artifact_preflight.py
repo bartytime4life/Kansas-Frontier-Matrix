@@ -204,8 +204,6 @@ def test_preflight_runner_emit_normalized_only_drops_legacy_fields(tmp_path: Pat
     assert "check_receipt_sha256" not in payload
     assert "provenance_sync_receipt" not in payload
     assert "provenance_sync_receipt_sha256" not in payload
-
-
 def test_preflight_runner_require_consumer_readiness_flag(tmp_path: Path):
     registry = tmp_path / "registry.yaml"
     artifacts = tmp_path / "artifacts"
