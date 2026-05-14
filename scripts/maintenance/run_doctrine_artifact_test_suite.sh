@@ -2,15 +2,35 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+readonly repo_root
 cd "$repo_root"
 
 python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
-pytest \
+shadow_summary="$(mktemp -t doctrine_preflight_summary.XXXXXX)"
+readonly shadow_summary
+cleanup() {
+  if [[ -n "${shadow_summary:-}" ]]; then
+    rm -f "$shadow_summary"
+  fi
+}
+trap cleanup EXIT INT TERM
+
+python scripts/maintenance/run_doctrine_artifact_preflight.py --stable-filenames --emit-normalized-only > "$shadow_summary"
+python tools/validators/source/validate_doctrine_preflight_summary_consistency.py --require-normalized-only "$shadow_summary"
+python scripts/maintenance/check_normalized_summary_consumer_readiness.py --require-all-validated
+python -m pytest \
   tests/policy/test_doctrine_artifact_required.py \
   tests/policy/test_doctrine_artifact_registry_validation.py \
   tests/policy/test_doctrine_artifact_registry_status_alignment.py \
   tests/policy/test_doctrine_artifact_presence_input.py \
+  tests/policy/test_doctrine_artifact_provenance.py \
+  tests/policy/test_doctrine_registry_alignment.py \
+  tests/policy/test_sync_doctrine_artifact_provenance_status.py \
+  tests/policy/test_doctrine_artifact_provenance_snapshots.py \
   tests/policy/test_run_doctrine_artifact_preflight.py \
   tests/policy/test_preflight_summary_schema_contract.py \
   tests/policy/test_sync_doctrine_artifact_registry_status.py \
-  tests/source/test_doctrine_artifact_preflight_summary_schema.py -q
+  tests/source/test_doctrine_artifact_preflight_summary_schema.py \
+  tests/policy/test_preflight_summary_consistency.py \
+  tests/policy/test_normalized_summary_consumer_readiness.py \
+  tests/policy/test_enforce_doctrine_preflight_gates.py -q
