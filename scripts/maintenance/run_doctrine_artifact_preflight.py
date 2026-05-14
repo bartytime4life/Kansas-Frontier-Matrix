@@ -117,6 +117,7 @@ def main() -> int:
     if args.require_consumer_readiness:
         readiness_cmd.append("--require-all-validated")
     readiness_res = run_cmd(readiness_cmd, root)
+
     if check_res.returncode == 2:
         render_res = subprocess.CompletedProcess(args=[], returncode=2, stdout="", stderr="skipped_due_to_check_error")
     else:

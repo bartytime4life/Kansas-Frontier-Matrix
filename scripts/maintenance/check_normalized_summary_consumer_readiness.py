@@ -55,6 +55,7 @@ def run(path: Path, require_all_validated: bool = False) -> int:
         non_validated = [e.get("consumer", "<unknown>") for e in entries if e.get("status") != "validated"]
         if non_validated:
             errors.append("non-validated consumers present: " + ",".join(sorted(non_validated)))
+
     payload = {
         "check": "normalized_summary_consumer_readiness",
         "registry": str(path),

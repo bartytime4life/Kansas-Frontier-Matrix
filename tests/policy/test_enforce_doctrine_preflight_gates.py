@@ -35,8 +35,8 @@ def test_enforce_doctrine_preflight_gates_passes_required_flags_and_user_args(tm
     env = dict(os.environ)
     env["PATH"] = f"{tmp_path}:{env.get('PATH', os.defpath)}"
 
-    user_arg = "--stable-filenames"
-    res = subprocess.run([str(SCRIPT), user_arg], cwd=ROOT, env=env, capture_output=True, text=True)
+    user_args = ["--stable-filenames", "--emit-normalized-only"]
+    res = subprocess.run([str(SCRIPT), *user_args], cwd=ROOT, env=env, capture_output=True, text=True)
     assert res.returncode == 0
 
     argv = argv_log.read_text(encoding="utf-8").splitlines()
@@ -44,4 +44,5 @@ def test_enforce_doctrine_preflight_gates_passes_required_flags_and_user_args(tm
     assert "--strict" in argv
     assert "--strict-provenance" in argv
     assert "--require-consumer-readiness" in argv
-    assert user_arg in argv
+    for arg in user_args:
+        assert arg in argv
