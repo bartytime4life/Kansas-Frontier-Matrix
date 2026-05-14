@@ -269,3 +269,11 @@ Each run appends one block in this exact shape:
 - Slice shape: readiness checker now supports `--require-all-validated`; regression bundle runs this strict mode, and tests cover failing non-validated consumer cases.
 - Deferred to future runs:
   - wire this strict readiness flag into release/promotion guardrail policy checks
+
+### Run 2026-05-14 — Integrate consumer-readiness gate into preflight summary and strict mode
+- Status: landed
+- PR: n/a
+- Doctrine basis: normalized-only cutover gating must be visible in preflight receipts and optionally enforceable by runner flags.
+- Slice shape: preflight now runs readiness checker, emits readiness payload/returncode, and supports `--require-consumer-readiness` strict failure behavior.
+- Deferred to future runs:
+  - hook require-consumer-readiness into release/promotion policy automation

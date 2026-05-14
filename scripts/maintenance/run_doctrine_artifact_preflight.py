@@ -55,6 +55,11 @@ def main() -> int:
         action="store_true",
         help="Emit only normalized artifact path/digest maps (drop legacy standalone path/digest fields)",
     )
+    parser.add_argument(
+        "--require-consumer-readiness",
+        action="store_true",
+        help="Fail when normalized-summary consumer readiness check is not fully validated",
+    )
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -105,6 +110,13 @@ def main() -> int:
     ]
     alignment_res = run_cmd(alignment_cmd, root)
 
+    readiness_cmd = [
+        sys.executable,
+        str(root / "scripts" / "maintenance" / "check_normalized_summary_consumer_readiness.py"),
+    ]
+    if args.require_consumer_readiness:
+        readiness_cmd.append("--require-all-validated")
+    readiness_res = run_cmd(readiness_cmd, root)
     if check_res.returncode == 2:
         render_res = subprocess.CompletedProcess(args=[], returncode=2, stdout="", stderr="skipped_due_to_check_error")
     else:
@@ -134,6 +146,9 @@ def main() -> int:
         "alignment_returncode": alignment_res.returncode,
         "alignment_stderr": alignment_res.stderr.strip(),
         "alignment_payload": json.loads(alignment_res.stdout) if alignment_res.returncode in {0, 1} and alignment_res.stdout.strip() else None,
+        "readiness_returncode": readiness_res.returncode,
+        "readiness_stderr": readiness_res.stderr.strip(),
+        "readiness_payload": json.loads(readiness_res.stdout) if readiness_res.returncode in {0, 1} and readiness_res.stdout.strip() else None,
     }
 
     if args.presence_output and summary["presence_input"] is not None:
@@ -186,6 +201,8 @@ def main() -> int:
     if args.strict and check_res.returncode == 1:
         return 1
     if args.strict_provenance and (provenance_res.returncode == 1 or alignment_res.returncode == 1):
+        return 1
+    if args.require_consumer_readiness and readiness_res.returncode == 1:
         return 1
     return 0
 

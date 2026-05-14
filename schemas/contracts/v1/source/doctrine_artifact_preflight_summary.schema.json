@@ -338,6 +338,54 @@
         }
       },
       "additionalProperties": false
+    },
+    "readiness_returncode": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "readiness_stderr": {
+      "type": "string"
+    },
+    "readiness_payload": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "check",
+            "result",
+            "consumer_count",
+            "errors"
+          ],
+          "properties": {
+            "check": {
+              "type": "string",
+              "const": "normalized_summary_consumer_readiness"
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail"
+              ]
+            },
+            "consumer_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "errors": {
+              "type": "array"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
     }
   },
   "additionalProperties": false

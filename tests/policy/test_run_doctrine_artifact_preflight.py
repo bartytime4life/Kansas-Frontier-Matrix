@@ -46,6 +46,7 @@ def test_preflight_runner_produces_presence_input_with_missing_artifacts(tmp_pat
     assert payload["artifact_digests"]["check_receipt"] == payload["check_receipt_sha256"]
     assert payload["artifact_digests"]["provenance_sync_receipt"] == payload["provenance_sync_receipt_sha256"]
     assert "alignment_returncode" in payload
+    assert payload["readiness_payload"]["check"] == "normalized_summary_consumer_readiness"
     assert payload["alignment_payload"]["check"] == "doctrine_registry_alignment"
     assert Path(payload["check_receipt"]).name.startswith("check_required_doctrine_artifacts")
     assert Path(payload["check_receipt"]).exists()
@@ -203,3 +204,24 @@ def test_preflight_runner_emit_normalized_only_drops_legacy_fields(tmp_path: Pat
     assert "check_receipt_sha256" not in payload
     assert "provenance_sync_receipt" not in payload
     assert "provenance_sync_receipt_sha256" not in payload
+def test_preflight_runner_require_consumer_readiness_flag(tmp_path: Path):
+    registry = tmp_path / "registry.yaml"
+    artifacts = tmp_path / "artifacts"
+    artifacts.mkdir()
+    registry.write_text(
+        """required_doctrine_artifacts:\n  - filename: a.pdf\n    doc_id: kfm://doc/a\n    status: missing\n""",
+        encoding="utf-8",
+    )
+    cmd = [
+        sys.executable,
+        str(ROOT / "scripts" / "maintenance" / "run_doctrine_artifact_preflight.py"),
+        "--registry",
+        str(registry),
+        "--artifacts-dir",
+        str(artifacts),
+        "--require-consumer-readiness",
+    ]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert payload["readiness_returncode"] == 0
