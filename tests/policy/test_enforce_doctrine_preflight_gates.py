@@ -27,7 +27,7 @@ def test_enforce_doctrine_preflight_gates_passes_required_flags_and_user_args(tm
     fake_python.write_text(
         "#!/usr/bin/env bash\n"
         f"printf '%s\\n' \"$@\" > {argv_log}\n"
-        "exit 0\n",
+        "exit 7\n",
         encoding="utf-8",
     )
     fake_python.chmod(0o755)
@@ -37,7 +37,7 @@ def test_enforce_doctrine_preflight_gates_passes_required_flags_and_user_args(tm
 
     user_args = ["--stable-filenames", "--emit-normalized-only"]
     res = subprocess.run([str(SCRIPT), *user_args], cwd=ROOT, env=env, capture_output=True, text=True)
-    assert res.returncode == 0
+    assert res.returncode == 7
 
     argv = argv_log.read_text(encoding="utf-8").splitlines()
     assert "scripts/maintenance/run_doctrine_artifact_preflight.py" in argv
