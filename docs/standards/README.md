@@ -1,479 +1,517 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-standards-readme
-title: docs/standards/ — External Standards KFM Conforms To
+title: docs/standards — External Standards KFM Conforms To
 type: standard
 version: v1
 status: draft
-owners: TBD — Docs steward + Standards reviewer (placeholder)
-created: 2026-05-09
-updated: 2026-05-09
+owners: TODO — Standards steward (placeholder); see CODEOWNERS
+created: 2026-05-14
+updated: 2026-05-14
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/sources/README.md
-  - docs/adr/README.md
+  - docs/adr/ADR-0001-schema-home.md
   - contracts/README.md
   - schemas/README.md
   - policy/README.md
-tags: [kfm, standards, stac, dcat, prov, dsse, sigstore, slsa, opa, nist-ai-rmf]
+  - docs/sources/README.md
+tags: [kfm, standards, conformance, governance, docs]
 notes:
-  - "PROPOSED: subdirectory organization shown below has not been verified against a mounted repo."
-  - "Several specific files referenced here (TRUST_CLASSES, PROOF_FORMAT, AI_RMF_ALIGNMENT, etc.) are corpus-named suggested future work, not yet authored."
+  - Folder path is CONFIRMED per Directory Rules §6.1.
+  - All child-file path references are PROPOSED until verified against mounted-repo state.
 [/KFM_META_BLOCK_V2] -->
 
-# `docs/standards/` — External Standards KFM Conforms To
+# docs/standards
 
-> Anchor index for the external, third-party standards Kansas Frontier Matrix conforms to, extends, or borrows from — and the rules by which KFM stays a faithful, traceable downstream consumer of them.
+> External standards KFM conforms to — and the conformance posture, profiles, version pins, and gates that make that conformance auditable.
 
-<!-- BADGES — placeholders. Replace `<owner>/<repo>` and `<branch>` once repo coordinates are confirmed. -->
-[![Status: draft](https://img.shields.io/badge/status-draft-yellow)](#0-status--authority)
-[![Authority: canonical sub-folder](https://img.shields.io/badge/authority-canonical%20sub--folder-blue)](#0-status--authority)
-[![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-7a3eff)](../doctrine/truth-posture.md)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%2FQUARANTINE%E2%86%92PROCESSED%E2%86%92CATALOG%2FTRIPLET%E2%86%92PUBLISHED-1f6feb)](../doctrine/lifecycle-law.md)
-[![Docs lint](https://img.shields.io/badge/docs--lint-TBD-lightgrey)](#11-validation)
-[![Link check](https://img.shields.io/badge/link--check-TBD-lightgrey)](#11-validation)
+[![Authority](https://img.shields.io/badge/authority-canonical-blue)](../doctrine/directory-rules.md)
+[![Status](https://img.shields.io/badge/status-active-brightgreen)](#status)
+[![Doctrine](https://img.shields.io/badge/doctrine-Directory_Rules_%C2%A715-informational)](../doctrine/directory-rules.md)
+[![Schema home](https://img.shields.io/badge/schema_home-ADR--0001-orange)](../adr/ADR-0001-schema-home.md)
+[![Last reviewed](https://img.shields.io/badge/last_reviewed-2026--05--14-lightgrey)](#last-reviewed)
+[![License](https://img.shields.io/badge/license-TODO-lightgrey)](#)
+
+**Status:** active · **Authority level:** canonical (docs subfolder) · **Owners:** Standards steward _(TODO)_ · **Last reviewed:** 2026-05-14
 
 > [!IMPORTANT]
-> **Standards are anchors, not authority.** STAC, DCAT, PROV, DSSE, SLSA, NIST AI RMF and similar specifications give KFM a shared vocabulary with the outside world. They do **not** by themselves prove KFM promotion state, license admissibility, sensitivity clearance, or release readiness. Those are decided by `contracts/`, `schemas/`, `policy/`, `tests/`, `release/`, and stewards — not by an external spec.
-
-**Quick jump:**
-[Status & Authority](#0-status--authority) ·
-[Repo Fit](#1-repo-fit) ·
-[What Belongs Here](#2-what-belongs-here) ·
-[What Does Not Belong Here](#3-what-does-not-belong-here) ·
-[Layout](#4-layout-proposed) ·
-[Standards Inventory](#5-standards-inventory) ·
-[How Standards Anchor KFM](#6-how-standards-anchor-kfm) ·
-[KFM Extensions](#7-kfm-extensions-to-external-standards) ·
-[Conformance Discipline](#8-conformance-discipline) ·
-[Inputs](#9-inputs) ·
-[Outputs](#10-outputs) ·
-[Validation](#11-validation) ·
-[Review Burden](#12-review-burden) ·
-[Related Folders](#13-related-folders) ·
-[ADRs](#14-adrs) ·
-[Open Questions](#15-open-questions--needs-verification) ·
-[Last Reviewed](#16-last-reviewed)
+> This folder **documents conformance**; it does not host machine schemas, policy bundles, or contracts. Machine validation lives in `schemas/`, admissibility lives in `policy/`, semantic meaning lives in `contracts/`. Documents here explain how each external standard is profiled, scoped, version-pinned, gated, and rolled back — and they pin KFM's interpretation of ambiguous spec choices so that downstream stewards, validators, and partners read the same answer.
 
 ---
 
-## 0. Status & Authority
+## Quick jump
 
-| Field | Value |
-|---|---|
-| **Document type** | README for `docs/standards/` (directory landing page) |
-| **Authority class** | Canonical sub-folder of canonical `docs/` (per Directory Rules §6.1) |
-| **What this folder is** | Human-facing reference index of **external standards** KFM conforms to or extends |
-| **What this folder is not** | A schema home, a policy home, a contract home, a release home, a fixture home, or a source-descriptor home |
-| **Status** | **PROPOSED** — folder layout below is doctrine-grounded; specific sibling files are not yet verified to exist in a mounted repo |
-| **Owner (placeholder)** | Docs steward + Standards reviewer (TBD) |
-| **Reviewers required for change** | Docs steward + at least one subsystem owner whose lane the changed standard touches |
-| **Supersedes** | — |
-| **Related doctrine** | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md), [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md), [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) |
-| **Repo evidence** | UNKNOWN — no mounted repository was inspected for this README. Path and sibling claims are **PROPOSED** until verified. |
+- [Purpose](#purpose)
+- [Authority level](#authority-level)
+- [Status](#status)
+- [Standards registry](#standards-registry)
+- [What belongs here](#what-belongs-here)
+- [What does NOT belong here](#what-does-not-belong-here)
+- [Repo fit](#repo-fit)
+- [Inputs](#inputs)
+- [Outputs](#outputs)
+- [Proposed directory layout](#proposed-directory-layout)
+- [Validation](#validation)
+- [Review burden](#review-burden)
+- [Related folders](#related-folders)
+- [ADRs](#adrs)
+- [Open questions & NEEDS VERIFICATION](#open-questions--needs-verification)
+- [Anti-patterns](#anti-patterns)
+- [Appendix](#appendix)
+- [Last reviewed](#last-reviewed)
 
 ---
 
-## 1. Repo Fit
+## Purpose
 
-`docs/standards/` is a sub-folder of canonical `docs/` and follows the rule that **`docs/` explains; `control_plane/` indexes; `contracts/` defines meaning; `schemas/` defines shape; `policy/` decides admissibility** (Directory Rules §6.1). This folder is the **explanation layer** for KFM's conformance to external specifications.
+`docs/standards/` is the human-readable home for **how KFM conforms to external standards** — STAC, DCAT, PROV-O, Darwin Core, CIDOC-CRM, Schema.org, JSON-LD canonicalization, OpenLineage, SLSA, FAIR + CARE, and others. Each standard receives a profile or posture document that pins KFM's interpretation, names the namespaced extensions, lists required and optional fields, links to the machine schemas that enforce them, and records the gates that fail-closed when conformance breaks.
 
-**Upstream of this folder** *(producers / inputs):*
-
-- External standards bodies: OGC, W3C, IETF, CNCF/Sigstore, OpenSSF/SLSA, NIST.
-- KFM doctrine in [`docs/doctrine/`](../doctrine/) and architecture in [`docs/architecture/`](../architecture/).
-- ADRs in [`docs/adr/`](../adr/) that pin specific versions or extension namespaces.
-- Source-descriptor work in [`docs/sources/`](../sources/) — which uses, but does not own, the catalog vocabularies described here.
-
-**Downstream of this folder** *(consumers):*
-
-- Schema definitions under `schemas/contracts/v1/...` (PROPOSED — per ADR-0001).
-- Object-meaning docs in `contracts/`.
-- Policy bundles in `policy/`, including license / access-rights / sensitivity gates that enumerate values from these standards.
-- Validators and generators in `tools/validators/` and `tools/generators/`.
-- The catalog emitters (STAC / DCAT / PROV / `CatalogMatrix`) inside `pipelines/catalog/` and `tools/catalog_builders/`.
-- Release decisions in `release/manifests/` (which embed proof references that point at DSSE envelopes).
+The folder exists because external standards do not, by themselves, decide what KFM publishes. They define **interoperable shapes**; KFM still requires its own evidence, source authority, sensitivity, review-state, and release-state posture *on top of* those shapes before any artifact crosses the trust membrane. This folder documents that pairing in language partners can cite.
 
 > [!NOTE]
-> Standards documents in this folder are **prose anchors** for the schemas, contracts, policies, and validators that actually enforce conformance. If a standards note here disagrees with the executable artifact downstream, the executable artifact wins until reconciled by ADR.
+> **`docs/` explains; `control_plane/` indexes; `contracts/` defines meaning; `schemas/` defines shape.** A standards profile here is documentation, not enforcement. The corresponding JSON Schema or policy bundle is what actually fails the gate.
 
 ---
 
-## 2. What Belongs Here
+## Authority level
 
-A file belongs in `docs/standards/` if **all** of the following are true:
+**Canonical (docs subfolder)** under `docs/`, per Directory Rules §6.1. Documents here:
 
-1. It documents an **external, third-party standard, specification, or framework** (or a KFM extension to one).
-2. Its primary job is to **explain** — not to define machine shape, encode meaning, or decide allow/deny.
-3. It names which **version, profile, or subset** of the standard KFM conforms to, and where conformance is enforced.
-4. It is **stable enough** that a reader can rely on it across releases (drafts and exploratory notes belong in [`docs/intake/`](../intake/) or [`docs/archive/exploratory/`](../archive/exploratory/) until promoted).
-
-Accepted file types and object families:
-
-| Object family | Example | Typical filename |
-|---|---|---|
-| Standards conformance note | KFM's STAC profile and required extension fields | `catalog/stac.md` |
-| Vocabulary alignment note | DCAT distribution shape; controlled license/access-rights vocabulary | `catalog/dcat.md` |
-| Provenance vocabulary note | PROV-O classes, relations, and KFM usage | `catalog/prov.md` |
-| Cross-vocabulary linkage note | STAC ↔ DCAT ↔ PROV closure rules | `catalog/catalog-closure.md` |
-| Identity / canonicalization note | JCS vs URDNA2015 decision matrix | `identity/CANONICALIZATION.md` |
-| Proof-format note | DSSE payload types, signing algorithms | `proof/PROOF_FORMAT.md` |
-| Signing note | cosign keyless + key-rotation policy | `proof/SIGNING.md` |
-| Supply-chain provenance note | SLSA / in-toto predicate fields | `proof/PROVENANCE.md` |
-| Trust-classes doctrine note | Receipt ≠ Proof ≠ Catalog ≠ Publication | `trust/TRUST_CLASSES.md` |
-| AI risk-management alignment | NIST AI RMF 1.0 subcategory mapping; GenAI Profile | `ai/AI_RMF_ALIGNMENT.md` |
-| KFM extension registration | The `kfm:` STAC extension namespace | `catalog/kfm-stac-extension.md` |
-| Tile-stack / format note | PMTiles v3, COG, GeoParquet, MapLibre Style | `tile-stack/*.md` |
-| Policy-as-code framework note | OPA / Conftest / Rego usage patterns | `policy-as-code/opa-conftest.md` |
-| Offline-development note | Local DSSE signing without network | `offline/OFFLINE_DEVELOPMENT.md` |
-
----
-
-## 3. What Does Not Belong Here
+- Are **doctrine-bearing for KFM's interpretation** of each external standard.
+- Are **not the standards themselves** — they reference the upstream specification by version and scope KFM's deviations.
+- May be cited by ADRs, READMEs, runbooks, validators, and policy bundles as the canonical KFM profile for a given standard.
+- **Do not enforce** anything on their own. Enforcement lives in `schemas/`, `policy/`, `tools/validators/`, and `tests/`.
 
 > [!WARNING]
-> The most common drift in `docs/standards/` is to let it become a parallel home for things the project already has canonical homes for. Keep it boring.
-
-| Do **not** put here | Put it here instead | Why |
-|---|---|---|
-| JSON Schema files (`*.schema.json`) | `schemas/contracts/v1/...` | Schemas are machine shape, not human prose (ADR-0001). |
-| KFM contract Markdown (object meaning) | `contracts/` | Contracts own KFM-specific object meaning, not external-standard prose. |
-| Policy bundles / Rego rules | `policy/` | `policy/` decides allow/deny/restrict/abstain. |
-| Policy fixtures or schema fixtures | `policy/fixtures/`, `tests/fixtures/`, or `fixtures/` | Fixtures live with their tests. |
-| Source descriptors (per-source families) | `docs/sources/` and `data/registry/sources/` | Source identity, not standards conformance. |
-| KFM doctrine (lifecycle, trust membrane, etc.) | `docs/doctrine/` | Doctrine is internal first principles, not external standards. |
-| ADRs that adopt a standard or pin a version | `docs/adr/` | ADRs are decisions; this folder is reference. |
-| Architecture diagrams that span subsystems | `docs/architecture/` | Architecture explains how KFM is built; standards explain what KFM aligns to. |
-| Domain dossiers (hydrology, fauna, etc.) | `docs/domains/<domain>/` | Domain knowledge, not standards. |
-| Generated catalog records (STAC items, DCAT distributions) | `data/catalog/` | These are emitted, lifecycle data — not human-authored standards docs. |
-| Release manifests, evidence bundles, receipts | `release/manifests/`, `data/proofs/`, `data/receipts/` | Trust content has its own canonical homes. |
-| Marketing or external-export copy | `docs/brand/` or out-of-tree | Standards docs are reference, not promotional material. |
-
-If a file's primary responsibility is more than one of the above, **split it** before placing.
+> A standards profile that drifts from its matching schema, policy bundle, or validator is a **drift candidate** under Directory Rules §13. Open an entry in `docs/registers/DRIFT_REGISTER.md` rather than silently letting one source diverge.
 
 ---
 
-## 4. Layout (PROPOSED)
+## Status
+
+**PROPOSED** for the folder's internal structure and file list. **CONFIRMED** for the doctrine (which standards apply, in what role, to what artifact families).
+
+| Item | Status | Source of truth |
+|---|---|---|
+| Folder location (`docs/standards/`) | **CONFIRMED** as the canonical home | Directory Rules §6.1 |
+| Standards list and roles | **CONFIRMED** (doctrine) | KFM corpus — Pass 10 §C4, §C8, §C15; MapLibre v1.8–1.9; Pass 18 |
+| Individual profile files (e.g. `STAC_KFM_PROFILE.md`, `PROVENANCE.md`) | **PROPOSED** | Not yet verified in mounted repo |
+| `kfm:` vs `ks-kfm:` STAC namespace | **OPEN QUESTION** | Pass 10 §C4-01 |
+| STAC ↔ DCAT canonical split for spatiotemporal data | **OPEN QUESTION** | Pass 10 §C4-05 |
+| FGDC CSDGM / ISO 19115 mandatory-field disposition | **NEEDS VERIFICATION** | Pass 18 SRC-P18-010 |
+
+---
+
+## Standards registry
+
+The tables below catalogue the external standards KFM commits to and the role each plays in the trust spine. Each row points to a **PROPOSED** profile file under this folder; *a row's existence here does not mean the profile file exists yet.*
+
+[⬆ Back to top](#docsstandards)
+
+### Encoding & catalog standards
+
+| Standard | KFM role | Status | Profile (PROPOSED) |
+|---|---|---|---|
+| **STAC** 1.0 (Catalog, Collection, Item) | Spatiotemporal asset catalog with `kfm:provenance` namespace block | CONFIRMED doctrine | `STAC_KFM_PROFILE.md` |
+| **STAC extensions** (Processing, Projection, Raster, Datacube, EO, File, Checksum) | Carry CRS, raster metadata, file integrity, derivation lineage | CONFIRMED doctrine | inside `STAC_KFM_PROFILE.md` |
+| **DCAT** | Dataset / Distribution metadata for non-spatiotemporal data | CONFIRMED doctrine | `DCAT_KFM_PROFILE.md` |
+| **GeoJSON** (RFC 7946) | Runtime feature transport; never proof | CONFIRMED doctrine | `GEOJSON_USAGE.md` |
+| **JSON Schema** (Draft 2020-12) | Machine-checkable shape; default home `schemas/contracts/v1/` per ADR-0001 | CONFIRMED doctrine | `JSON_SCHEMA_USAGE.md` |
+| **JSON-LD** + JCS (RFC 8785) / URDNA2015 | Canonicalization for content-addressed evidence bundles | CONFIRMED doctrine | `JSON_LD_CANONICALIZATION.md` |
+| **GeoParquet / COG / PMTiles** | Spatial artifact formats with STAC asset roles | CONFIRMED doctrine | inside `STAC_KFM_PROFILE.md` |
+| **OGC WMS / WMTS** | External map services; governed by SourceDescriptor and `tileProtocol` enum | CONFIRMED doctrine | `OGC_SERVICES.md` |
+
+### Provenance, lineage & supply-chain
+
+| Standard | KFM role | Status | Profile (PROPOSED) |
+|---|---|---|---|
+| **W3C PROV-O + PAV** | Claim-level provenance; `prov:wasGeneratedBy` required for every graph claim | CONFIRMED doctrine | `PROVENANCE.md` |
+| **OpenLineage** | Operational event layer (START / COMPLETE facets); translated to PROV-O for permanence | CONFIRMED doctrine | `OPENLINEAGE.md` |
+| **SLSA** | Build / run attestations; target level pending ADR | CONFIRMED doctrine (level OPEN) | inside `PROVENANCE.md` |
+| **DSSE / Cosign** | Signing run receipts, release manifests, and content-addressed artifacts | CONFIRMED doctrine | inside `PROVENANCE.md` |
+
+### Vocabulary & semantic standards
+
+| Standard | KFM role | Status | Profile (PROPOSED) |
+|---|---|---|---|
+| **CIDOC-CRM** (ISO 21127) | Cultural-heritage graph backbone (E5, E7, E21, E53, E55, E74) | CONFIRMED doctrine | `CIDOC_CRM.md` |
+| **Schema.org** | Web-discoverable surface projection; version pinned via policy | CONFIRMED doctrine | `SCHEMA_ORG.md` |
+| **Darwin Core (DwC)** | Biodiversity terms inside STAC `properties.taxon` (hybrid pattern) | CONFIRMED doctrine | `DARWIN_CORE.md` |
+
+### Domain-specific exchange formats
+
+| Standard | KFM role | Status | Profile (PROPOSED) |
+|---|---|---|---|
+| **GTFS / GTFS-Realtime** | Transit static and real-time feeds; staleness gates required | CONFIRMED doctrine | `GTFS.md` |
+| **WZDx** | Work-zone data exchange GeoJSON | CONFIRMED doctrine | `WZDX.md` |
+| **GEDCOM 5.5 / GEDCOM-X** | Genealogical interchange | CONFIRMED doctrine | `GEDCOM.md` |
+| **GA4GH AAI / Passports / DUO** | Consent and access tokens for sensitive (genomic / DTC) data | CONFIRMED doctrine | `GA4GH.md` |
+
+### Metadata-completeness & publication ethics
+
+| Standard | KFM role | Status | Profile (PROPOSED) |
+|---|---|---|---|
+| **FGDC CSDGM / ISO 19115** | Catalog-record completeness reporting per artifact family | NEEDS VERIFICATION | `METADATA_STANDARDS.md` |
+| **FAIR + CARE** | Operational publication ethics; CARE labels in MetaBlock v2 (`public` / `generalized` / `restricted`) | CONFIRMED doctrine | `FAIR_CARE.md` |
+
+### Identifier authorities — *documented elsewhere*
+
+External identifier authorities (Wikidata QID, LCNAF, VIAF, ISNI, ITIS TSN, GBIF Backbone, USGS GNIS, Getty ULAN/TGN, SNAC/EAC-CPF, KSHS, KHRI, KU NHM, KBS NHI, KDWP SINC) are documented in `docs/sources/` under the source-authority register, **not here**. This folder profiles encoding and vocabulary standards; `docs/sources/` profiles upstream data authorities.
+
+[⬆ Back to top](#docsstandards)
+
+---
+
+## What belongs here
+
+- **Profile documents** — KFM-specific conformance posture for an external standard (e.g. `STAC_KFM_PROFILE.md`).
+- **Posture documents** — non-profile narrative about how a standard is *used*, *bounded*, or *gated* in KFM (e.g. `OPENLINEAGE.md`, `FAIR_CARE.md`).
+- **Crosswalks** — mappings between standards (e.g. `STAC_X_DCAT.md`, `OPENLINEAGE_TO_PROV_O.md`, `DWC_X_STAC.md`).
+- **Illustrative examples** — short JSON / JSON-LD fragments demonstrating the profile. Long examples and golden fixtures live under `tests/fixtures/`.
+- **Conformance checklists** — prose "definition of done" per standard. The machine version lives in `tools/validators/` and `policy/`.
+- **Version pin notes** — which spec version of each standard KFM is committed to (e.g. STAC 1.0; Schema.org version pin via ADR).
+- **Extension governance** — when KFM ships a vendor extension under the `kfm:*` namespace, its design rationale and field reference.
+
+## What does NOT belong here
+
+- **JSON Schemas** → `schemas/contracts/v1/...` (default per ADR-0001). A profile may *link* to schemas but MUST NOT host them.
+- **Policy bundles or Rego / OPA rules** → `policy/bundles/`. A profile may *describe* gate behavior but MUST NOT host the bundle.
+- **Validator source code** → `tools/validators/`. A profile may *name* the validator but MUST NOT contain executable logic.
+- **Fixtures** → `tests/fixtures/` (or `schemas/tests/valid|invalid/` for schema test vectors). Inline illustrative snippets only here.
+- **Source-authority registers** → `docs/sources/` and `control_plane/source_authority_register.yaml`. STAC is not a data source; Wikidata is not a JSON encoding.
+- **Object meaning** → `contracts/`. Profiles here describe *the external standard's* shape; KFM object semantics live in `contracts/`.
+- **Release decisions** → `release/`. Conformance is an *input* to a release decision, not the decision itself.
+- **Generated reports** → `docs/reports/` (read-only) or `data/receipts/` / `data/proofs/` (machine output).
 
 > [!CAUTION]
-> The subdirectory layout below is a **PROPOSED** organization grounded in standards groupings repeatedly named across the KFM corpus. It has **not** been verified against a mounted repository. Specific filenames marked *(planned)* appear in the corpus as "suggested future work" and are not yet authored. Treat every path here as **PROPOSED / NEEDS VERIFICATION** until inspected against actual repo state.
+> A profile document that starts to look like a schema, a Rego rule, or a fixture set has crossed the boundary. Move the runnable parts to their canonical homes and keep this folder explanatory.
 
-```text
-docs/standards/
-├── README.md                                  # this file
-├── catalog/                                   # spatiotemporal & dataset catalog vocabularies
-│   ├── stac.md                                # STAC v1 profile + required KFM extension fields  (planned)
-│   ├── dcat.md                                # DCAT v3 distribution shape; license/accessRights (planned)
-│   ├── prov.md                                # PROV-O classes & relations; KFM usage           (planned)
-│   ├── catalog-closure.md                     # STAC ↔ DCAT ↔ PROV linkage rules                (planned)
-│   └── kfm-stac-extension.md                  # the `kfm:` STAC extension namespace             (planned)
-├── identity/
-│   └── CANONICALIZATION.md                    # JCS (default) vs URDNA2015; spec_hash policy    (planned)
-├── proof/
-│   ├── PROOF_FORMAT.md                        # DSSE payload types & signing algorithms         (planned)
-│   ├── SIGNING.md                             # cosign keyless + offline / KMS fallback         (planned)
-│   └── PROVENANCE.md                          # SLSA / in-toto predicate fields                 (planned)
-├── trust/
-│   └── TRUST_CLASSES.md                       # Receipt ≠ Proof ≠ Catalog ≠ Publication         (planned)
-├── ai/
-│   └── AI_RMF_ALIGNMENT.md                    # NIST AI RMF 1.0 + GenAI Profile mapping         (planned)
-├── tile-stack/
-│   ├── pmtiles.md                             # PMTiles v3 + KFM metadata block                 (planned)
-│   ├── cog.md                                 # COG with internal tiling 256/512                (planned)
-│   ├── geoparquet.md                          # GeoParquet 1.1.0 usage in KFM                   (planned)
-│   └── maplibre-style.md                      # MapLibre Style Spec + plugin allowlist          (planned)
-├── policy-as-code/
-│   └── opa-conftest.md                        # OPA / Conftest / Rego usage patterns            (planned)
-└── offline/
-    └── OFFLINE_DEVELOPMENT.md                 # Local DSSE signing without network              (planned)
-```
-
-The grouping reflects the four functions standards play in KFM:
-
-- **Catalog closure** — how published artifacts are described to the outside world.
-- **Identity & proof** — how artifacts are hashed, signed, and attested.
-- **Trust posture & AI** — how KFM's invariants map to industry frameworks.
-- **Implementation surface** — tile/format/policy frameworks the platform leans on.
-
-[Back to top ↑](#docsstandards--external-standards-kfm-conforms-to)
+[⬆ Back to top](#docsstandards)
 
 ---
 
-## 5. Standards Inventory
-
-The set below is **CONFIRMED** as the catalog of external specifications KFM conforms to or borrows from, drawn from KFM's own architecture corpus. Each row's **Spec note** column points at the planned standards file for KFM-specific guidance. Names in the **Source** column are the publishing organizations.
-
-> Compatibility status legend: **CONFIRMED** = adopted by KFM doctrine; **PROPOSED** = corpus commits but adoption details are still settling; **TRACKING** = identified as forward-looking, not yet adopted.
-
-### 5.1 Catalog vocabularies
-
-| Standard | Source | Version / profile | KFM status | Spec note (planned) |
-|---|---|---|---|---|
-| **STAC** (SpatioTemporal Asset Catalog) | OGC | v1 + KFM extension | CONFIRMED | [`catalog/stac.md`](./catalog/stac.md) |
-| **DCAT** (Data Catalog Vocabulary) | W3C | v3 | CONFIRMED | [`catalog/dcat.md`](./catalog/dcat.md) |
-| **PROV-O** (Provenance Ontology) | W3C | PROV-O Recommendation | CONFIRMED | [`catalog/prov.md`](./catalog/prov.md) |
-| **JSON-LD** | W3C | 1.1 | CONFIRMED (PROV-JSON-LD recommended) | covered in `catalog/prov.md` |
-| **kfm:** STAC extension | KFM | v1 (planned registration) | PROPOSED | [`catalog/kfm-stac-extension.md`](./catalog/kfm-stac-extension.md) |
-| **SPDX** license vocabulary | Linux Foundation / SPDX | DCAT-aligned subset | CONFIRMED (with Kansas-specific gaps noted) | covered in `catalog/dcat.md` |
-
-### 5.2 Identity, canonicalization, and proof
-
-| Standard | Source | Version / profile | KFM status | Spec note (planned) |
-|---|---|---|---|---|
-| **JCS** (JSON Canonicalization Scheme) | IETF | RFC 8785 | CONFIRMED (default for `spec_hash`) | [`identity/CANONICALIZATION.md`](./identity/CANONICALIZATION.md) |
-| **URDNA2015** | W3C | RDF Dataset Canonicalization | CONFIRMED (RDF-only fallback) | covered in `identity/CANONICALIZATION.md` |
-| **SHA-256** | NIST FIPS 180-4 | — | CONFIRMED (default content hash) | covered in `identity/CANONICALIZATION.md` |
-| **DSSE** (Dead Simple Signing Envelope) | in-toto / SLSA | current | CONFIRMED (canonical proof format) | [`proof/PROOF_FORMAT.md`](./proof/PROOF_FORMAT.md) |
-| **Sigstore / cosign** (Fulcio + Rekor) | OpenSSF / Sigstore | current | CONFIRMED (keyless OIDC default; offline KMS fallback) | [`proof/SIGNING.md`](./proof/SIGNING.md) |
-| **SLSA / in-toto provenance** | OpenSSF / in-toto | SLSA 1.x | CONFIRMED (target level: open question) | [`proof/PROVENANCE.md`](./proof/PROVENANCE.md) |
-
-### 5.3 Spatial formats and rendering
-
-| Standard | Source | Version / profile | KFM status | Spec note (planned) |
-|---|---|---|---|---|
-| **PMTiles** | Protomaps | v3 (Hilbert-curve tile IDs) | CONFIRMED (canonical vector tile format) | [`tile-stack/pmtiles.md`](./tile-stack/pmtiles.md) |
-| **COG** (Cloud-Optimized GeoTIFF) | OGC / community | with internal tiling 256 / 512 | CONFIRMED (canonical raster format) | [`tile-stack/cog.md`](./tile-stack/cog.md) |
-| **GeoParquet** | community spec | 1.1.0 | CONFIRMED (vector tabular delivery) | [`tile-stack/geoparquet.md`](./tile-stack/geoparquet.md) |
-| **MapLibre Style Specification** | MapLibre | current | CONFIRMED (canonical 2D client) | [`tile-stack/maplibre-style.md`](./tile-stack/maplibre-style.md) |
-| **MLT** (MapLibre Tile) | community | pre-1.0 | TRACKING (forward-looking only) | covered in `tile-stack/pmtiles.md` |
-
-### 5.4 Policy, AI risk, and operational frameworks
-
-| Standard | Source | Version / profile | KFM status | Spec note (planned) |
-|---|---|---|---|---|
-| **OPA** (Open Policy Agent) + **Conftest** | OpenSSF / community | current | CONFIRMED (policy-as-code engine) | [`policy-as-code/opa-conftest.md`](./policy-as-code/opa-conftest.md) |
-| **NIST AI RMF 1.0** | NIST | 1.0 (Govern / Map / Measure / Manage) | CONFIRMED (descriptive alignment) | [`ai/AI_RMF_ALIGNMENT.md`](./ai/AI_RMF_ALIGNMENT.md) |
-| **NIST AI 600-1 GenAI Profile** | NIST | current | CONFIRMED (GenAI-specific overlay) | covered in `ai/AI_RMF_ALIGNMENT.md` |
-| **JSON Schema** | IETF / community | draft 2020-12 (presumed) | NEEDS VERIFICATION | covered in `schemas/README.md` |
-
-### 5.5 KFM-internal "standards" notes (not external, but co-located here)
-
-| Note | Purpose | KFM status |
-|---|---|---|
-| `trust/TRUST_CLASSES.md` *(planned)* | The four-class doctrine: *receipt ≠ proof ≠ catalog ≠ publication* | CONFIRMED in doctrine; document not yet authored |
-| `offline/OFFLINE_DEVELOPMENT.md` *(planned)* | End-to-end offline signing, local DSSE flow | PROPOSED |
-
-These are KFM-authored notes that interpret external standards rather than introduce new external dependencies. They live here because they describe **how KFM applies a standards-grade discipline** — not because they are themselves external.
-
-[Back to top ↑](#docsstandards--external-standards-kfm-conforms-to)
-
----
-
-## 6. How Standards Anchor KFM
-
-Standards do not replace KFM governance; they give every KFM artifact a vocabulary the outside world can read. The diagram below shows where each family of standards attaches to the KFM lifecycle. **Promotion is still a governed state transition**, not a file move (Directory Rules §9.1, lifecycle invariant).
+## Repo fit
 
 ```mermaid
 flowchart LR
-    RAW["RAW<br/>(connectors)"] --> WORK["WORK / QUARANTINE"]
-    WORK --> PROCESSED["PROCESSED<br/>(canonical record)"]
-    PROCESSED --> CATALOG["CATALOG / TRIPLET"]
-    CATALOG --> PUBLISHED["PUBLISHED<br/>(public-safe artifact)"]
+  subgraph Doc["docs/standards/ — conformance docs"]
+    P1["STAC_KFM_PROFILE.md"]
+    P2["DCAT_KFM_PROFILE.md"]
+    P3["PROVENANCE.md"]
+    P4["JSON_LD_CANONICALIZATION.md"]
+    P5["FAIR_CARE.md"]
+    P6["… per standard"]
+  end
 
-    subgraph IDENTITY["Identity & proof"]
-        JCS["RFC 8785 JCS"]
-        SHA["SHA-256"]
-        DSSE["DSSE envelope"]
-        COSIGN["Sigstore / cosign"]
-        SLSA["SLSA / in-toto"]
-    end
+  Doc -->|cites| Contracts["contracts/<br/>object meaning"]
+  Doc -->|pins shape for| Schemas["schemas/contracts/v1/<br/>JSON Schema"]
+  Doc -->|pins admissibility for| Policy["policy/<br/>OPA / Conftest"]
+  Doc -->|illustrated by| Tests["tests/fixtures/<br/>valid + negative"]
+  Doc -->|amended by| ADR["docs/adr/<br/>ADRs"]
+  Doc -->|indexed by| CP["control_plane/<br/>registers"]
+  Doc -. references .-> Sources["docs/sources/<br/>source authorities"]
 
-    subgraph CATALOG_CLOSURE["Catalog closure"]
-        STAC["STAC v1 + kfm: ext"]
-        DCAT["DCAT v3 + SPDX"]
-        PROV["PROV-O JSON-LD"]
-    end
+  Schemas --> CI["CI gates"]
+  Policy --> CI
+  Tests --> CI
+  CI -->|fail-closed| Release["release/<br/>publication"]
 
-    subgraph FORMATS["Spatial formats"]
-        PMT["PMTiles v3"]
-        COG["COG"]
-        GPQ["GeoParquet 1.1.0"]
-        MLS["MapLibre Style"]
-    end
-
-    subgraph GOVERNANCE["Policy & AI risk"]
-        OPA["OPA / Conftest"]
-        AIRMF["NIST AI RMF 1.0"]
-    end
-
-    PROCESSED -.spec_hash.- JCS
-    PROCESSED -.spec_hash.- SHA
-    PROCESSED -.signed via.- DSSE
-    DSSE -.attested via.- COSIGN
-    COSIGN -.augments.- SLSA
-
-    CATALOG -.STAC item.- STAC
-    CATALOG -.DCAT distribution.- DCAT
-    CATALOG -.PROV record.- PROV
-
-    PUBLISHED -.vector tiles.- PMT
-    PUBLISHED -.raster.- COG
-    PUBLISHED -.tabular vector.- GPQ
-    PUBLISHED -.styled by.- MLS
-
-    WORK -.gated by.- OPA
-    PROCESSED -.gated by.- OPA
-    CATALOG -.gated by.- OPA
-    PUBLISHED -.gated by.- OPA
-
-    GOVERNANCE -.descriptive alignment.- AIRMF
+  classDef doc fill:#eef,stroke:#558
+  classDef canon fill:#efe,stroke:#585
+  classDef gate fill:#fee,stroke:#855
+  class Doc doc
+  class Contracts,Schemas,Policy,Tests,ADR,CP,Sources canon
+  class CI,Release gate
 ```
 
-A few rules of inference flow from the diagram:
+> [!NOTE]
+> Diagram is **NEEDS VERIFICATION** against current repo topology. Arrows reflect doctrine per Directory Rules §6 and Pass 10 §C4 / §C8; precise wiring is **PROPOSED** until mounted-repo inspection confirms which adjacent files exist.
 
-- A **`spec_hash`** is a SHA-256 over the JCS-canonicalized JSON of the canonical artifact. URDNA2015 is invoked **only** when RDF-semantic equivalence is the relevant invariant.
-- A **published artifact** without a DSSE proof and without a closed catalog triple (STAC ↔ DCAT ↔ PROV) is, by the four-class trust rule, *not* a publication — it is at most a candidate.
-- An **AI-assisted run** that cannot quote an envelope-anchored receipt is treated as a draft, not a measurement, regardless of how well it reads. (See `ai/AI_RMF_ALIGNMENT.md` once authored.)
+[⬆ Back to top](#docsstandards)
 
 ---
 
-## 7. KFM Extensions to External Standards
+## Inputs
 
-KFM extends a small number of external vocabularies with a **named, namespaced** set of additional fields. The extensions are conservative: they exist where the external spec leaves a gap KFM cannot fill with its own internal-only fields.
+Documents here are authored from:
 
-| Extension | Anchored in | Required fields (CONFIRMED) | Optional / proposed fields |
-|---|---|---|---|
-| `kfm:` STAC extension | STAC v1 | `kfm:spec_hash`, `kfm:run_receipt_url`, `processing:software`, `processing:version`, `processing:datetime` | `kfm:dcat_dataset`, `kfm:proof_ref`, `kfm:trust_class`, `kfm:source_role`, `kfm:domain`, `kfm:publication_class`, `kfm:sensitivity_summary`, `kfm:source_ids`, `kfm:rights_status`, `kfm:policy_labels`, `kfm:evidence_bundle_ref` |
-| DCAT distribution carry-over | DCAT v3 | `dct:license` (SPDX-aligned controlled vocabulary), `dct:accessRights` (controlled enumeration: `public` \| `public-derived` \| `restricted-aggregate` \| `restricted-precise` \| `internal` \| `embargoed`), `prov:wasGeneratedBy` | back-reference to STAC item; `kfm:source_role`; `kfm:trust_class` |
-| PROV-O usage | PROV-O | PROV-O classes used: `prov:Entity`, `prov:Activity`, `prov:Agent`. Required relations: `prov:used`, `prov:wasGeneratedBy`, `prov:wasDerivedFrom`, `prov:wasAttributedTo` | upstream sources referenced by canonical identifier (not URL alone); attestation links via STAC `assets.attestation` or `rel:attestation` |
-| DSSE payload types | DSSE | `payloadType: application/vnd.kfm.run_receipt+json` (CONFIRMED); per-artifact-class payload types (PROPOSED) | OCI annotations: `org.kfm.spec_hash`, `org.kfm.decision_id`, `org.kfm.target_zone` |
+- **The upstream specification** for each standard (STAC, DCAT, PROV-O, etc.), referenced by version and URL.
+- **KFM doctrine** — particularly Pass 10 §C4 (catalogs), §C8 (graph vocabulary), §C15 (FAIR + CARE), Pass 18 metadata-completeness, and the MapLibre Master report (v1.8 / v1.9 catalog-binding rules).
+- **ADRs** pinning a specific interpretation (e.g. ADR-0001 schema home; future ADRs for namespace choice, version pins, profile versioning, SLSA level).
+- **Drift reports** from `docs/registers/DRIFT_REGISTER.md` when a profile, schema, and policy bundle disagree.
+- **Verification backlog** items from `docs/registers/VERIFICATION_BACKLOG.md` that demand profile clarification.
+
+## Outputs
+
+Documents here are consumed by:
+
+- **`contracts/`** — semantic-meaning docs cite the profile when an object family is shaped by an external standard.
+- **`schemas/contracts/v1/`** — JSON Schemas reference the profile in `$comment` or accompanying READMEs.
+- **`policy/bundles/`** — Rego rules reference the profile for the conformance condition they enforce.
+- **`tools/validators/`** — validator READMEs cite the profile for required and optional fields.
+- **`tests/fixtures/`** — fixture READMEs cite the profile for what valid and negative samples demonstrate.
+- **`apps/governed-api/`** — release surfaces reference the profile in their public conformance statement.
+- **External catalogs and partners** — when KFM publishes into open-data catalogs (e.g. data.gov, regional clearinghouses), the profile is the citable conformance statement.
+
+[⬆ Back to top](#docsstandards)
+
+---
+
+## Proposed directory layout
+
+```text
+docs/standards/
+├── README.md                              # this file
+├── STAC_KFM_PROFILE.md                    # PROPOSED — STAC 1.0 + kfm: namespace
+├── DCAT_KFM_PROFILE.md                    # PROPOSED — DCAT Dataset/Distribution
+├── DARWIN_CORE.md                         # PROPOSED — STAC × DwC hybrid
+├── GEOJSON_USAGE.md                       # PROPOSED — RFC 7946 + identity rules
+├── JSON_SCHEMA_USAGE.md                   # PROPOSED — Draft 2020-12 + $id conventions
+├── JSON_LD_CANONICALIZATION.md            # PROPOSED — JCS vs URDNA2015
+├── PROVENANCE.md                          # PROPOSED — PROV-O + PAV + SLSA + DSSE
+├── OPENLINEAGE.md                         # PROPOSED — facet vocabulary + receipt linkage
+├── CIDOC_CRM.md                           # PROPOSED — graph-backbone application profile
+├── SCHEMA_ORG.md                          # PROPOSED — web surface + version pin
+├── METADATA_STANDARDS.md                  # PROPOSED — FGDC / ISO 19115 conformance
+├── FAIR_CARE.md                           # PROPOSED — FAIR + CARE reconciliation
+├── OGC_SERVICES.md                        # PROPOSED — WMS / WMTS / tileProtocol enum
+├── GTFS.md                                # PROPOSED — transit feeds
+├── WZDX.md                                # PROPOSED — work-zone exchange
+├── GEDCOM.md                              # PROPOSED — genealogy interchange
+├── GA4GH.md                               # PROPOSED — passports, DUO, consent tokens
+└── crosswalks/                            # PROPOSED — standard-to-standard mappings
+    ├── STAC_X_DCAT.md                     # PROPOSED
+    ├── OPENLINEAGE_TO_PROV_O.md           # PROPOSED
+    └── DWC_X_STAC.md                      # PROPOSED
+```
 
 > [!NOTE]
-> **Registration posture.** Whether the `kfm:` STAC extension is published as a stand-alone extension on `stac-extensions.github.io` or remains an internal KFM convention is an **OPEN** question; the corpus is silent. See `catalog/kfm-stac-extension.md` (planned) for the resolution.
+> Every path above is **PROPOSED** per Directory Rules §0. No mounted-repo inspection has confirmed any of these files exist. File naming uses `UPPER_SNAKE.md` for profile / posture documents to match the `SOURCE_DESCRIPTOR_STANDARD.md` convention referenced under `docs/sources/` in Directory Rules §6.1; this convention is itself **NEEDS VERIFICATION** until repo evidence confirms it.
+
+[⬆ Back to top](#docsstandards)
 
 ---
 
-## 8. Conformance Discipline
+## Validation
 
-Because standards are anchors, not authority, KFM enforces conformance with the same discipline it applies to its own contracts.
+A document in this folder is "valid" when:
 
-1. **Pin the version.** Every standards note in this folder MUST name the exact version, profile, or subset KFM conforms to. "STAC" alone is not a version; "STAC v1 + `kfm:` extension v1" is.
-2. **Name the enforcement point.** Every note MUST link to where conformance is *executed* — the JSON Schema in `schemas/contracts/v1/...`, the OPA bundle in `policy/`, the validator in `tools/validators/`, the test in `tests/`. A standard that nobody enforces is decoration.
-3. **Distinguish prose from contract.** Standards prose lives here. Object meaning lives in `contracts/`. Machine shape lives in `schemas/`. Admissibility lives in `policy/`. These four layers MUST NOT collapse.
-4. **Mark KFM extensions explicitly.** Anywhere KFM adds fields to an external vocabulary, the addition MUST appear in §7 of this README and in the relevant note, with a status label (CONFIRMED / PROPOSED / TRACKING).
-5. **Track version changes via ADR.** Bumping a major version of a standard KFM relies on (e.g., DCAT v3 → v4) is an ADR-class decision. Recorded in `docs/adr/`.
-6. **Do not re-author the standard.** This folder cites and applies external specs; it does not paraphrase them at length. Link to the authoritative source.
+1. It names the **upstream spec version** it conforms to and links to the official spec.
+2. It pins the **KFM-specific deviations** (extension namespaces, required-vs-optional disposition, default values) and cites the ADR or doctrine that justifies each.
+3. It links to the **machine artifact(s)** that enforce conformance: `schemas/contracts/v1/<...>.schema.json`, `policy/bundles/<...>.rego`, and `tools/validators/<...>`.
+4. It links to **fixtures** under `tests/fixtures/<...>` for at least one valid example and at least one negative example.
+5. It declares its **status** (CONFIRMED / PROPOSED / NEEDS VERIFICATION) and a `Last reviewed` ISO date.
+6. It surfaces **open questions** rather than smoothing over unsettled choices.
 
----
+### Proposed conformance gates
 
-## 9. Inputs
-
-Files in `docs/standards/` are produced by:
-
-- Human authors — the docs steward and standards reviewer, working from the original specifications (OGC, W3C, IETF, NIST, OpenSSF, etc.).
-- KFM doctrine documents in `docs/doctrine/` and architecture documents in `docs/architecture/`, which establish the rules these notes operationalize.
-- ADRs in `docs/adr/` — when a standard or version is adopted, the ADR may motivate or supersede a note here.
-- Generated cross-references: a future docs linter MAY auto-insert links from these notes to schema/policy/validator locations.
-
-This folder is **not** a destination for pipeline output, generated catalogs, signed proofs, or release manifests.
-
----
-
-## 10. Outputs
-
-This folder emits no runtime artifacts. It supports:
-
-- Authors of `schemas/contracts/v1/...` who need to know the controlled vocabulary or required fields.
-- Authors of `policy/` bundles enumerating license codes, access-rights values, sensitivity classes.
-- Authors of `tools/validators/` enforcing STAC / DCAT / PROV / DSSE / SLSA conformance.
-- External consumers (granting agencies, partner pipelines, federation peers) who need a stable reference to KFM's standards posture.
-
----
-
-## 11. Validation
-
-The validation surface for `docs/standards/` is **PROPOSED** in this README and remains **NEEDS VERIFICATION** against an actual mounted repo. The corpus calls for:
-
-- A **documentation linter** that checks the meta block, badge family, section structure, and link integrity (`KFM-IDX-DOC-004`). Names of validators are referenced as planned, not as currently wired.
-- A **STAC linter** to verify required `kfm:` extension fields and asset-roles convention.
-- A **DCAT validator** to verify `dct:license` is in the controlled SPDX-aligned vocabulary and `dct:accessRights` is in the controlled enumeration.
-- A **PROV-O validator** to verify class usage and required relations.
-- A **catalog-integrity validator** (`catalog_integrity_validate.py` in the corpus) to verify STAC ↔ DCAT ↔ PROV closure.
-- A **link checker** in CI to keep external URLs and internal cross-references alive.
+| Gate | What it checks | Outcome on failure | Status |
+|---|---|---|---|
+| STAC schema validation | Item / Collection validates against STAC 1.0 + listed `stac_extensions` | DENY | PROPOSED |
+| `kfm-stac-profile-v*` validation | KFM namespace fields present and consistent | DENY | PROPOSED |
+| DCAT distribution conformance | `conformsTo` URI present; `mediaType` valid | DENY | PROPOSED |
+| PROV-O coverage | Every published claim has `prov:wasGeneratedBy` → run receipt | DENY | PROPOSED |
+| OpenLineage event presence | START + COMPLETE events emitted with required facets | ABSTAIN | PROPOSED |
+| JSON-LD canonicalization | JCS (default) or URDNA2015 (for RDF-semantic equivalence) applied | ERROR | PROPOSED |
+| Metadata-standard completeness | FGDC / ISO 19115 mandatory fields populated | ABSTAIN with missing-field report | PROPOSED |
+| CARE label parity | CARE label consistent across STAC asset, DCAT distribution, and PROV activity | DENY | PROPOSED |
+| Mutable-tag identity | OCI release identity does NOT rely on mutable tags | DENY | PROPOSED |
 
 > [!IMPORTANT]
-> Until a mounted-repo inspection confirms otherwise, every validator named here is **PROPOSED** and the absence of a passing CI job for it is **expected**, not a bug. Track real status in `docs/registers/VERIFICATION_BACKLOG.md`.
+> **Negative-state coverage is required.** Per KFM unified architecture doctrine, validators MUST exercise DENY, ABSTAIN, ERROR, quarantine, stale, restricted, and review-needed paths — not only successful publication. A profile that lists only the happy path is incomplete.
+
+[⬆ Back to top](#docsstandards)
 
 ---
 
-## 12. Review Burden
+## Review burden
 
-| Change type | Reviewers required |
-|---|---|
-| Typo, link fix, clarification | Docs steward (single reviewer). |
-| New standards note, or major rewrite of an existing note | Docs steward + at least one subsystem owner whose lane the standard touches (e.g., catalog → catalog/release owner; AI RMF → AI / governance owner; signing → security owner). |
-| Adoption of a new external standard | ADR required in `docs/adr/`. Reviewers per ADR template. |
-| Version bump of an adopted standard (major) | ADR required. Schema / policy / validator co-changes flagged. |
-| Change to a `kfm:` extension namespace | ADR required. Drift register entry until downstream consumers migrate. |
-| Removal / deprecation of a standards note | ADR required. Move file to `docs/archive/deprecated/` with a forward-link. |
+Changes to documents in this folder require review from:
 
-CODEOWNERS reference: TBD — placeholder until verified against `.github/CODEOWNERS` or root `CODEOWNERS`.
+- **Standards steward** — owns this folder's coherence and the upstream-spec pinning.
+- **Contracts / schemas steward** — verifies the profile matches the JSON Schema under `schemas/contracts/v1/`.
+- **Policy steward** — verifies the profile matches the policy bundle under `policy/`.
+- **Subsystem owner** for any domain the profile touches (e.g. biodiversity owner for Darwin Core changes; archives owner for CIDOC-CRM changes).
+- **Docs steward** — verifies adherence to Directory Rules §15 and this README contract.
+
+A `CODEOWNERS` entry SHOULD route changes to the appropriate stewards. **CODEOWNERS placement and content are PROPOSED** — no `CODEOWNERS` file has been verified in the mounted repo.
 
 ---
 
-## 13. Related Folders
+## Related folders
 
 | Folder | Relationship |
 |---|---|
-| [`docs/doctrine/`](../doctrine/) | First-principles doctrine — `truth-posture.md`, `trust-membrane.md`, `lifecycle-law.md`, `directory-rules.md`. Standards conform to doctrine, not the other way around. |
-| [`docs/architecture/`](../architecture/) | Where the standards land in concrete architecture (`governed-api.md`, `map-shell.md`, `contract-schema-policy-split.md`). |
-| [`docs/adr/`](../adr/) | Decisions to adopt, version, or extend a standard live here. |
-| [`docs/sources/`](../sources/) | Source-descriptor standards (per-source families). Distinct from external interoperability standards. |
-| [`docs/domains/`](../domains/) | Domain-specific application of these standards (e.g., fauna catalog plan in PROV terms). |
-| `contracts/` | Object meaning. The KFM-side of every standards conformance note. |
-| `schemas/` | Machine shape. Where standards conformance is structurally enforced (per ADR-0001 the home is `schemas/contracts/v1/...`). |
-| `policy/` | Admissibility. Where controlled vocabularies become allow/deny rules. |
-| `tools/validators/` | Where standards conformance is checked at build / promotion time. |
-| `data/catalog/` | Where STAC / DCAT / PROV records actually live as artifacts. (NB: the records are **emitted**, not human-authored.) |
-| `release/` | Release decisions reference DSSE proofs and SLSA attestations described here. |
+| [`../doctrine/`](../doctrine/) | Authority ladder, truth posture, trust membrane, lifecycle law, directory rules. |
+| [`../adr/`](../adr/) | ADRs pinning standards decisions (schema home, namespace choice, version pins, SLSA level). |
+| [`../sources/`](../sources/) | Upstream data-source authorities (Wikidata, ITIS, GBIF, etc.) — distinct from encoding standards. |
+| [`../../contracts/`](../../contracts/) | Object meaning. Cites profiles here when an object family is shaped by an external standard. |
+| [`../../schemas/`](../../schemas/) | Machine shape. Default home `schemas/contracts/v1/...` per ADR-0001. |
+| [`../../policy/`](../../policy/) | Admissibility bundles that fail-closed when conformance breaks. |
+| [`../../tests/`](../../tests/) | Valid and negative fixtures proving each gate. |
+| [`../../tools/`](../../tools/) | Validator implementations. |
+| [`../../control_plane/`](../../control_plane/) | Machine-readable registers (object families, source authorities, policy gates, deprecations). |
+| [`../registers/`](../registers/) | Drift register, verification backlog, canonical lineage / exploratory ledger. |
+
+> [!NOTE]
+> Relative paths above assume the canonical tree in Directory Rules §6.1. Links are **PROPOSED** until mounted-repo inspection confirms target files exist.
+
+[⬆ Back to top](#docsstandards)
 
 ---
 
-## 14. ADRs
+## ADRs
 
-ADRs that govern this folder will be listed here once authored. None confirmed in this session.
-
-| ADR | Title | Status | Affects |
+| ADR | Title | Status | Relevance to this folder |
 |---|---|---|---|
-| `ADR-0001` | Schema home (`schemas/contracts/v1/...` is canonical) | accepted (per Directory Rules §6.4) | Indirectly: every standards note that points at a schema location. |
-| `ADR-TBD` | `kfm:` STAC extension registration posture | PROPOSED | `catalog/kfm-stac-extension.md` |
-| `ADR-TBD` | DSSE payload-type registry | PROPOSED | `proof/PROOF_FORMAT.md` |
-| `ADR-TBD` | SLSA target level for KFM data runs | PROPOSED | `proof/PROVENANCE.md` |
-| `ADR-TBD` | Cosign keyless OIDC issuer allowlist | PROPOSED | `proof/SIGNING.md` |
-| `ADR-TBD` | JCS vs URDNA2015 default for graph documents | PROPOSED | `identity/CANONICALIZATION.md` |
+| **ADR-0001** | Schema home (`schemas/contracts/v1/`) | CONFIRMED (per Directory Rules §0) | Every profile here links to schemas under this default path. |
+| ADR-TBD | KFM provenance namespace (`kfm:` vs `ks-kfm:`) | **OPEN** | Pass 10 §C4-01 leaves the choice unresolved; profile language is portable until pinned. |
+| ADR-TBD | Schema.org version pin | **PROPOSED** | Pass 10 §C8-02 recommends rotating a pinned version via policy. |
+| ADR-TBD | JSON-LD canonicalization default (JCS vs URDNA2015) | **PROPOSED** | Pass 10 §C8-05 names JCS as JSON-layer default, URDNA2015 for RDF-semantic equivalence. |
+| ADR-TBD | SLSA target level for KFM data runs | **OPEN** | Pass 10 §C1-04 leaves level 1 / 2 / 3 unresolved. |
+| ADR-TBD | STAC ↔ DCAT canonical split for spatiotemporal data | **OPEN** | Pass 10 §C4-05 flags the overlap; a dual-registration bridge is suggested but unspecified. |
+| ADR-TBD | OpenLineage backend tier (Marquez vs DataHub vs custom) | **OPEN** | Pass 10 §8.5 names this as a corpus gap. |
 
 ---
 
-## 15. Open Questions / NEEDS VERIFICATION
-
-These are tracked in the spirit of [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md). Each is healthy — the kind of question an ADR resolves.
+## Open questions & NEEDS VERIFICATION
 
 <details>
-<summary>Click to expand the full open-questions list</summary>
+<summary><strong>Click to expand the verification backlog for this folder</strong></summary>
 
-- **NEEDS VERIFICATION:** Whether the `docs/standards/` folder, this README, and any of the planned sibling files exist in the current mounted repo. All paths in §4 are PROPOSED.
-- **NEEDS VERIFICATION:** Whether `docs/standards/` already contains files this README has not enumerated. A mounted-repo `ls` is required before this README can claim coverage.
-- **OPEN:** Should the `kfm:` STAC extension be published as a stand-alone extension at `stac-extensions.github.io`, or kept as an internal KFM convention? (Corpus is silent.)
-- **OPEN:** Which SLSA level is the target for KFM data runs (1, 2, or 3)? Level 3 is meaningfully more expensive.
-- **OPEN:** Which OIDC issuers should appear on the cosign verifier's allowlist for production signing (GitHub Actions OIDC, an in-house issuer, both)?
-- **OPEN:** Which DCAT-v3 controlled-vocabulary terms cover Kansas-specific licenses (state-agency licenses, tribal data agreements) that SPDX does not enumerate? Placeholder vocabulary or extension required.
-- **OPEN:** Whether the docs linter for this folder enforces "no marketing language" rules in addition to structural checks.
-- **OPEN:** Whether `restricted-precise` distributions should appear in public DCAT at all, or only as metadata-only placeholder distributions (corpus suggests the latter, policy not finalized).
-- **OPEN:** Whether the catalog-integrity validator (`catalog_integrity_validate.py`) is wired to CI as a hard gate or as a non-blocking report (corpus suggests both, deploy as the hard gate).
-- **OPEN:** Whether MLT (MapLibre Tile) is tracked as a future replacement for the MVT payload inside PMTiles, and on what timeline.
-- **OPEN:** Whether the runtime envelope carries a `trust_class` field that names which of the four trust classes the response was based on (`TRUST_CLASSES.md` will resolve).
-- **OPEN:** Pinned tool versions — JCS, URDNA2015, cosign, OPA, Conftest, GDAL — must be captured in `infra/tool-versions.yaml`. UNKNOWN whether that file currently exists.
+- **NEEDS VERIFICATION:** Whether any of the PROPOSED profile files (`STAC_KFM_PROFILE.md`, `PROVENANCE.md`, etc.) already exist in the mounted repo. The corpus references several by name (Pass 10 §C1-04: "document the predicate fields in `docs/standards/PROVENANCE.md`"; Pass 10 §C4-01: "Author `docs/standards/STAC_KFM_PROFILE.md`") but file presence is unconfirmed.
+- **NEEDS VERIFICATION:** Whether Pass 18 idea SRC-P18-010 (catalog metadata-standard conformance reporting) has produced a `catalog_metadata_conformance_report` schema or validator.
+- **OPEN:** `kfm:` versus `ks-kfm:` STAC namespace (Pass 10 §C4-01). Working default: `kfm:`. Pin via ADR before any external publication.
+- **OPEN:** STAC ↔ DCAT canonical disposition for spatiotemporal data (Pass 10 §C4-05). Working default: STAC canonical for spatiotemporal; DCAT mirror for cross-catalog discovery.
+- **OPEN:** Schema.org version pin (Pass 10 §C8-02). Pin in the policy bundle; rotate via ADR.
+- **OPEN:** SLSA target level (Pass 10 §C1-04). Suggested baseline: Level 1 universally; Level 2 pilot on the most sensitive datasets.
+- **OPEN:** OpenLineage backend tier (Marquez, DataHub, custom) — Pass 10 §8.5 names this as a corpus gap.
+- **OPEN:** PROV-O vs CIDOC-CRM E13 dividing line for scholarly attribution (Pass 10 §8.7). Preference: PROV-O for claim provenance, E13 for scholarly attribution; the dividing line is not codified.
+- **OPEN:** DwC-Archive round-trip — whether KFM round-trips biodiversity occurrences through DwC-A or treats the STAC × DwC hybrid as canonical (Pass 10 §C4-03).
+- **OPEN:** Whether `crosswalks/` is a subfolder of `docs/standards/` or a peer under `docs/`. Default: subfolder, as shown above.
+
+Mirror unresolved items into `docs/registers/VERIFICATION_BACKLOG.md` per Directory Rules §18.
 
 </details>
 
+[⬆ Back to top](#docsstandards)
+
 ---
 
-## 16. Last Reviewed
+## Anti-patterns
 
-`2026-05-09` — initial draft (this file). Older than 6 months from this date → flag for review.
+> [!WARNING]
+> The patterns below frequently corrupt standards conformance posture. They are **forbidden by default** unless an ADR explicitly justifies an exception.
 
-[Back to top ↑](#docsstandards--external-standards-kfm-conforms-to)
+- **Inventing free-form top-level STAC properties** without an extension. Clients drop them and validators flag them. Use `stac_extensions[]` and namespaced fields.
+- **Treating a passing STAC validator as proof of publication readiness.** STAC validation is necessary, not sufficient. Rights, sensitivity, CARE labels, EvidenceBundle resolution, review state, and release state must all also pass.
+- **Maintaining a profile here and its matching schema in `schemas/` independently.** A drift candidate: the schema MUST be the executable mirror of the profile. Profile, schema, and policy must agree, or the gate fails closed.
+- **Hosting JSON Schema files under `docs/standards/`.** Schemas live in `schemas/contracts/v1/`. Profiles link to schemas; they do not host them.
+- **Letting Schema.org evolve without a pinned version.** Schema.org has historically introduced breaking changes; pin a version per ADR and rotate deliberately.
+- **Treating OpenLineage events as permanent provenance.** OpenLineage is the operational event layer; translate to PROV-O (per MapLibre ML-061-081) for the permanent semantic record.
+- **Using mutable OCI tags as artifact identity in release manifests.** Tags can move; release identity MUST reference immutable digests (per MapLibre ML-063-030).
+- **Treating FAIR / CARE badges as release authority** without an underlying `EvidenceBundle`, `PolicyDecision`, and `PromotionDecision`.
+- **Renaming W3C PROV predicates.** `prov:used`, `prov:wasGeneratedBy`, `prov:wasDerivedFrom`, `prov:wasAssociatedWith`, and `prov:wasAttributedTo` retain their semantic meaning by name (per MapLibre ML-061-083).
+
+[⬆ Back to top](#docsstandards)
+
+---
+
+## Appendix
+
+<details>
+<summary><strong>A. Minimal KFM-flavored STAC Item sketch (illustrative)</strong></summary>
+
+The fragment below is **illustrative**, not a normative example. The normative profile lives in `STAC_KFM_PROFILE.md` (PROPOSED) and the executable schema lives at `schemas/contracts/v1/catalog/stac_item.schema.json` (PROPOSED).
+
+```json
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/checksum/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
+  ],
+  "id": "kfm-<dataset>-<datetime>-<id>",
+  "geometry": { "type": "Polygon", "coordinates": [[]] },
+  "bbox": [],
+  "properties": {
+    "datetime": "YYYY-MM-DDTHH:MM:SSZ",
+    "kfm:evidence_ref": "kfm://evidence/<hash>",
+    "kfm:evidence_bundle": "kfm://bundle/<hash>",
+    "kfm:run_receipt": "kfm://run/<id>",
+    "kfm:spec_hash": "<sha256>",
+    "kfm:source_role": "observation|derived|interpretive",
+    "kfm:rights_status": "public|controlled|restricted",
+    "kfm:sensitivity": "0|1|2|3|4|5",
+    "kfm:review_state": "draft|in_review|approved|rejected",
+    "kfm:release_state": "unreleased|candidate|released|withdrawn"
+  },
+  "assets": {},
+  "links": [
+    { "rel": "collection", "href": "../collection.json" },
+    { "rel": "derived_from", "href": "kfm://run/<id>", "type": "application/json" },
+    { "rel": "prov", "href": "kfm://bundle/<hash>", "type": "application/json" }
+  ]
+}
+```
+
+Namespace `kfm:` shown as the working default per Pass 10 §C4-01; final choice pending ADR.
+
+</details>
+
+<details>
+<summary><strong>B. Conformance "definition of done" checklist (per artifact family)</strong></summary>
+
+- [ ] Item / Collection / Distribution validates against the upstream spec at the pinned version.
+- [ ] Validates against the KFM profile (`kfm-stac-profile-v*`, DCAT profile URI, etc.).
+- [ ] Each asset has integrity (`checksum:` or `file:checksum`) and a resolvable canonical URI.
+- [ ] `EvidenceRef` / `EvidenceBundle` is present and resolvable.
+- [ ] `run_receipt` and (where required) SLSA attestation are linked and signed (DSSE / Cosign).
+- [ ] Rights, sensitivity, CARE, review state, and release state are populated.
+- [ ] PROV-O coverage: every claim resolves to a `prov:wasGeneratedBy` activity.
+- [ ] Temporal coverage is correct at the item and asset levels.
+- [ ] Negative fixtures exist for each DENY / ABSTAIN / ERROR condition the profile names.
+- [ ] CI gate fails closed on any missing or forbidden field.
+
+</details>
+
+<details>
+<summary><strong>C. Why "conform" and not "comply"</strong></summary>
+
+KFM uses **conform** deliberately. Compliance language implies an external authority that audits KFM. Conformance language reflects KFM's posture: the upstream specification defines the shape, KFM commits to that shape, and KFM additionally requires its own evidence and trust posture *on top of* the shape. A document that says "STAC compliant" promises something narrower than what KFM actually publishes; a document that says "STAC-conforming with KFM provenance profile" tells partners exactly what they are getting and exactly what KFM has added.
+
+</details>
+
+<details>
+<summary><strong>D. Doctrine anchor — the one-sentence golden rule</strong></summary>
+
+> **STAC is the interoperable discovery envelope. EvidenceBundle is the reconstructable truth object. Policy decides publication admissibility. Release state governs exposure. Corrections never erase lineage.**
+
+This sentence is recorded as a doctrinal anchor for any profile written under this folder. PROPOSED for promotion to ADR-worthy doctrine.
+
+</details>
+
+[⬆ Back to top](#docsstandards)
+
+---
+
+## Last reviewed
+
+**2026-05-14** — initial scaffold. Owners: Standards steward _(TODO)_. Flag for review after **2026-11-14** (six-month freshness window per Directory Rules §15).
+
+---
+
+### Related docs
+
+- [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) — Directory Rules §6.1, §15
+- [`../adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — Schema home decision _(PROPOSED link)_
+- [`../sources/`](../sources/) — Source descriptors and source authorities
+- [`../../contracts/README.md`](../../contracts/README.md) — Object meaning _(PROPOSED link)_
+- [`../../schemas/README.md`](../../schemas/README.md) — Machine shape _(PROPOSED link)_
+- [`../../policy/README.md`](../../policy/README.md) — Admissibility _(PROPOSED link)_
+- [`../registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — Verification backlog _(PROPOSED link)_
+- [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — Drift register _(PROPOSED link)_
+
+[⬆ Back to top](#docsstandards)
