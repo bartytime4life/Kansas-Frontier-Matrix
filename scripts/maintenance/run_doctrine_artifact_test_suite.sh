@@ -7,7 +7,9 @@ cd "$repo_root"
 python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
 shadow_summary="$(mktemp)"
 cleanup() {
-  rm -f "$shadow_summary"
+  if [[ -n "${shadow_summary:-}" ]]; then
+    rm -f "$shadow_summary"
+  fi
 }
 trap cleanup EXIT
 
