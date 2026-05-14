@@ -36,7 +36,7 @@ def parse_entries(path: Path) -> list[dict[str, str]]:
     return entries
 
 
-def run(path: Path) -> int:
+def run(path: Path, require_all_validated: bool = False) -> int:
     entries = parse_entries(path)
     errors: list[str] = []
     seen: set[str] = set()
@@ -51,12 +51,17 @@ def run(path: Path) -> int:
         if e.get("status") not in ALLOWED_STATUS:
             errors.append(f"invalid status {e.get('status')} for consumer {c}")
 
+    if require_all_validated:
+        non_validated = [e.get("consumer", "<unknown>") for e in entries if e.get("status") != "validated"]
+        if non_validated:
+            errors.append("non-validated consumers present: " + ",".join(sorted(non_validated)))
     payload = {
         "check": "normalized_summary_consumer_readiness",
         "registry": str(path),
         "consumer_count": len(entries),
         "result": "pass" if not errors else "fail",
         "errors": errors,
+        "require_all_validated": require_all_validated,
     }
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0 if not errors else 1
@@ -66,8 +71,9 @@ def main() -> int:
     root = Path(__file__).resolve().parents[2]
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", type=Path, default=root / "control_plane" / "normalized_summary_consumer_readiness.yaml")
+    parser.add_argument("--require-all-validated", action="store_true")
     args = parser.parse_args()
-    return run(args.registry)
+    return run(args.registry, args.require_all_validated)
 
 
 if __name__ == "__main__":
