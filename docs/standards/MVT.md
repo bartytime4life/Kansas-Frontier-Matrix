@@ -4,7 +4,7 @@ title: Mapbox Vector Tiles (MVT) — KFM Conformance Standard
 type: standard
 version: v1
 status: draft
-owners: <Map / Tile steward> + <Docs steward>   <!-- PLACEHOLDER — confirm via CODEOWNERS -->
+owners: <Map / Tile steward> + <Docs steward>   # PLACEHOLDER — confirm via CODEOWNERS
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
