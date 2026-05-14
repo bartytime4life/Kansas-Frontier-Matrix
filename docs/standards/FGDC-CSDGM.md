@@ -217,17 +217,17 @@ The following crosswalk binds CSDGM compound elements to the KFM governance fiel
 
 ```mermaid
 flowchart TB
-    A[Catalog record<br/>STAC + KFM profile] --> B{Run CSDGM conformance?}
-    B -- "policy says yes" --> C[CSDGMConformanceCheck]
-    B -- "policy says no" --> Z[Skip; record skipped]
-    C --> D{Required CSDGM<br/>elements present?}
-    D -- yes --> E[catalog_metadata_conformance_report:<br/>profile=CSDGM<br/>missing_required_fields=[]<br/>warnings=[…]<br/>decision=ALLOW]
-    D -- no --> F[catalog_metadata_conformance_report:<br/>profile=CSDGM<br/>missing_required_fields=[…]<br/>decision=ABSTAIN or DENY<br/>per policy]
-    E --> G[Release gate reads report<br/>+ EvidenceBundle + policy]
+    A["Catalog record<br/>STAC + KFM profile"] --> B{"Run CSDGM conformance?"}
+    B -- "policy says yes" --> C["CSDGMConformanceCheck"]
+    B -- "policy says no" --> Z["Skip; record skipped"]
+    C --> D{"Required CSDGM<br/>elements present?"}
+    D -- yes --> E["catalog_metadata_conformance_report:<br/>profile=CSDGM<br/>missing_required_fields=[]<br/>warnings=[…]<br/>decision=ALLOW"]
+    D -- no --> F["catalog_metadata_conformance_report:<br/>profile=CSDGM<br/>missing_required_fields=[…]<br/>decision=ABSTAIN or DENY<br/>per policy"]
+    E --> G["Release gate reads report<br/>+ EvidenceBundle + policy"]
     F --> G
-    G --> H{Promotion allowed?}
-    H -- ALLOW --> I[PromotionDecision → PUBLISHED]
-    H -- DENY/ABSTAIN --> J[Quarantine path<br/>+ correction notice if released]
+    G --> H{"Promotion allowed?"}
+    H -- ALLOW --> I["PromotionDecision → PUBLISHED"]
+    H -- "DENY/ABSTAIN" --> J["Quarantine path<br/>+ correction notice if released"]
 ```
 
 The proposed `catalog_metadata_conformance_report` shape is informed by `KFM-P18-INV-242` expansion fields:
