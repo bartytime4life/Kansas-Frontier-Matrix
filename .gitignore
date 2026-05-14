@@ -39,3 +39,6 @@ configs/local/*
 .DS_Store
 Thumbs.db
 receipts/
+
+# Local/CI test artifacts
+artifacts/qa/*.xml
