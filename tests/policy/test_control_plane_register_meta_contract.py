@@ -86,3 +86,14 @@ def test_control_plane_register_owner_present_and_nonempty() -> None:
         assert marker in header, f"{rel_path} missing {marker}"
         value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":", 1)[1].strip()
         assert value, f"{rel_path} has empty owner value"
+
+
+def test_control_plane_register_related_doctrine_present_and_nonempty() -> None:
+    for rel_path in REQUIRED_FILES:
+        content = Path(rel_path).read_text(encoding="utf-8")
+        header_lines = content.splitlines()[:25]
+        assert any(ln.strip().startswith("related_doctrine:") for ln in header_lines), (
+            f"{rel_path} missing related_doctrine section"
+        )
+        doctrine_entries = [ln.strip() for ln in header_lines if ln.strip().startswith("- ")]
+        assert doctrine_entries, f"{rel_path} has empty related_doctrine entries"
