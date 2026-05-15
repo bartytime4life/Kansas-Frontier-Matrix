@@ -17,3 +17,4 @@
 - 2026-05-15: CONFIRMED provenance-placeholder drift remediated: `control_plane/doctrine_artifact_provenance_sources.yaml` no longer carries synthetic `example.org` links; `source_url` values set to `NEEDS_VERIFICATION` until steward-approved authoritative URLs are admitted.
 
 - 2026-05-15: CONFIRMED status-normalization drift remediated: `control_plane/document_registry_doctrine_required.yaml` artifact states changed from `missing` to `needs_verification` to distinguish absent evidence from unresolved canonical-path/provenance validation.
+- 2026-05-15: CONFIRMED execution drift: in-branch run of `pytest -q tests/policy/test_preflight_summary_consistency.py` failed (2 failed / 3 passed) with `render_returncode: 2` and `render_stderr: skipped_due_to_check_error`; readiness state for the mapped consumer remains non-validated.

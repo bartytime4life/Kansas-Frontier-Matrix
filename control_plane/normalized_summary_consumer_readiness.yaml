@@ -8,13 +8,13 @@ meta:
 normalized_summary_consumers:
   - consumer: scripts/maintenance/run_doctrine_artifact_test_suite.sh
     owner: platform-governance
-    status: needs_verification
-    validated_utc: UNKNOWN
-    evidence: NEEDS_VERIFICATION
-    notes: Uses normalized-only shadow validation and consistency validator.
+    status: passing
+    validated_utc: 2026-05-15
+    evidence: scripts/maintenance/run_doctrine_artifact_test_suite.sh
+    notes: Executed in-branch and returned OK doctrine_artifact_preflight_summary fixtures.
   - consumer: tests/policy/test_preflight_summary_consistency.py
     owner: platform-governance
-    status: needs_verification
-    validated_utc: UNKNOWN
-    evidence: NEEDS_VERIFICATION
-    notes: Contains normalized-only pass/fail assertions.
+    status: failing
+    validated_utc: 2026-05-15
+    evidence: pytest -q tests/policy/test_preflight_summary_consistency.py
+    notes: Executed in-branch; suite reported 2 failures with `render_returncode: 2` and `render_stderr: skipped_due_to_check_error`.
