@@ -37,7 +37,9 @@ def test_control_plane_register_last_reviewed_is_iso_date() -> None:
         header = "\n".join(content.splitlines()[:20])
         marker = "last_reviewed:"
         assert marker in header, f"{rel_path} missing {marker}"
-        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":",1)[1].strip()
+        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][
+            0
+        ].split(":", 1)[1].strip()
         date.fromisoformat(value)
 
 
@@ -47,7 +49,9 @@ def test_control_plane_register_last_reviewed_not_future_date() -> None:
         content = Path(rel_path).read_text(encoding="utf-8")
         header = "\n".join(content.splitlines()[:20])
         marker = "last_reviewed:"
-        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":",1)[1].strip()
+        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][
+            0
+        ].split(":", 1)[1].strip()
         reviewed = date.fromisoformat(value)
         assert reviewed <= today, f"{rel_path} has future last_reviewed: {reviewed}"
 
@@ -57,7 +61,7 @@ def test_control_plane_related_doctrine_paths_exist() -> None:
         content = Path(rel_path).read_text(encoding="utf-8")
         lines = content.splitlines()[:25]
         doctrine_lines = [ln.strip() for ln in lines if ln.strip().startswith("- ")]
-        doctrine_paths = [ln[2:] for ln in doctrine_lines if "DIRECTORY_RULES" in ln or ln.startswith("docs/")]
+        doctrine_paths = [ln[2:] for ln in doctrine_lines if ln[2:].startswith("docs/")]
         assert doctrine_paths, f"{rel_path} missing related_doctrine entries"
         for doctrine_path in doctrine_paths:
             assert Path(doctrine_path).exists(), f"{rel_path} references missing doctrine path: {doctrine_path}"
@@ -70,5 +74,5 @@ def test_control_plane_register_status_value_allowed() -> None:
         header = "\n".join(content.splitlines()[:20])
         marker = "status:"
         assert marker in header, f"{rel_path} missing {marker}"
-        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":",1)[1].strip()
+        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":", 1)[1].strip()
         assert value in allowed, f"{rel_path} has unsupported status value: {value}"
