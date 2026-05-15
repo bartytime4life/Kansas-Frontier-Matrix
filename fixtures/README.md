@@ -1,31 +1,45 @@
-# fixtures
+# Runtime Fixtures
+
+This directory contains runtime/benchmark fixture corpora used by renderer smoke tests and performance governance.
 
 ## Purpose
-No-network, deterministic test data. Valid, invalid, golden, synthetic, per-domain.
 
-## Authority level
-canonical
+`fixtures/` is for operational rendering inputs, not validator-only test data.
 
-## What belongs here
-Small data files (JSON, CSV, GeoJSON, parquet metadata stubs) used by tests and validators.
+Use this lane for:
 
-## What does not belong here
-Live data, secrets, or anything pulled at test time.
+- PMTiles benchmark datasets
+- MLT benchmark datasets
+- MapLibre runtime fixtures
+- Cesium runtime fixtures
+- public-safe generalized geospatial corpora
+- slim/heavy renderer stress scenarios
 
-## Inputs
-See related folders.
+## Boundary
 
-## Outputs
-See related folders.
+| Path | Purpose |
+|---|---|
+| `fixtures/` | runtime benchmark inputs |
+| `tests/fixtures/` | deterministic test-only fixtures |
+| `artifacts/` | generated CI outputs |
+| `data/` | governed data lifecycle lanes |
 
-## Validation
-See `tests/` and `tools/validators/`.
+## Rules
 
-## Review burden
-Maintainer review; steward review for trust-bearing changes.
+- Do not place RAW, WORK, or QUARANTINE data here.
+- Do not place sensitive exact geometry here.
+- Do not treat fixture corpora as canonical truth.
+- Prefer small, public-safe, reproducible datasets.
+- Large fixture corpora should use external storage or Git LFS only by explicit repo decision.
+- Every corpus should eventually have a source note, rights note, and generation receipt.
 
-## Related folders
-—
+## Suggested layout
 
-## Status
-PROPOSED
+```text
+fixtures/
+├── slim/
+├── heavy/
+├── ecology/
+├── hydrology/
+├── archaeology-public-safe/
+└── infrastructure-generalized/
