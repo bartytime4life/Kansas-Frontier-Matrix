@@ -15,3 +15,5 @@
 - 2026-05-15: CONFIRMED evidence-claim drift: `control_plane/normalized_summary_consumer_readiness.yaml` previously marked consumer checks as `validated` with specific evidence labels; this run demoted those entries to `needs_verification`/`UNKNOWN` pending executable proof in current branch context.
 
 - 2026-05-15: CONFIRMED provenance-placeholder drift remediated: `control_plane/doctrine_artifact_provenance_sources.yaml` no longer carries synthetic `example.org` links; `source_url` values set to `NEEDS_VERIFICATION` until steward-approved authoritative URLs are admitted.
+
+- 2026-05-15: CONFIRMED status-normalization drift remediated: `control_plane/document_registry_doctrine_required.yaml` artifact states changed from `missing` to `needs_verification` to distinguish absent evidence from unresolved canonical-path/provenance validation.

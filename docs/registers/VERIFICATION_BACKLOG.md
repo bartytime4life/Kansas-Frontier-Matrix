@@ -14,3 +14,5 @@ Indexes the corresponding `control_plane/*.yaml` register.
 - 2026-05-15 — OPEN: Re-run and attach branch-local evidence for doctrine artifact test suite and policy preflight consistency checks before restoring `validated` readiness in `control_plane/normalized_summary_consumer_readiness.yaml`.
 
 - 2026-05-15 — OPEN: Populate steward-approved authoritative `source_url` values in `control_plane/doctrine_artifact_provenance_sources.yaml` for each required doctrine artifact before provenance status may be promoted.
+
+- 2026-05-15 — OPEN: Resolve canonical filename/path mapping for required doctrine artifacts and promote `control_plane/document_registry_doctrine_required.yaml` entries from `needs_verification` only after steward-approved path + provenance evidence is attached.
