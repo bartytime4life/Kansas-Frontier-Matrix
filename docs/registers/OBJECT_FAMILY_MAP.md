@@ -22,7 +22,6 @@ Wave 1 governance placeholder for the register name referenced by Directory Rule
 - Existing machine-readable register is `control_plane/object_family_register.yaml`.
 - This file records naming parity drift and remains PROPOSED pending steward decision.
 
-
 ## Evidence refs
 
 - `docs/directory-rules.md` §6.1 (register naming list)

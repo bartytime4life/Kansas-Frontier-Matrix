@@ -2,11 +2,11 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: Architecture steward, Docs steward
 created: 2026-05-09
-updated: 2026-05-09
+updated: 2026-05-15
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
@@ -19,8 +19,9 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, governance, adr, doctrine]
 notes:
-  - Repository was not mounted when this README was authored; every per-ADR presence claim is PROPOSED / NEEDS VERIFICATION.
-  - ADR-0001 (schema home) is pinned by directory-rules.md authority order; its actual authored state must be verified against the mounted repo.
+  - Repository was not mounted when this README was authored or revised; every per-ADR presence claim is PROPOSED / NEEDS VERIFICATION until repo inspection.
+  - ADR-0001 (schema home) is referenced by directory-rules.md as the schema-home convention; its actual authored state and acceptance status must be verified against the mounted repo.
+  - 2026-05-15 revision strengthened README contract, verification, and index-refresh guidance without claiming implementation state.
 [/KFM_META_BLOCK_V2] -->
 
 # `docs/adr/` — Architecture Decision Records
@@ -29,22 +30,24 @@ notes:
 
 ![authority](https://img.shields.io/badge/authority-canonical-1f6feb)
 ![class](https://img.shields.io/badge/class-governance-6f42c1)
-![status](https://img.shields.io/badge/status-active-2da44e)
+![status](https://img.shields.io/badge/status-draft-d4a72c)
 ![review](https://img.shields.io/badge/review-NEEDS%20VERIFICATION-d4a72c)
+![repo](https://img.shields.io/badge/repo-unverified-6e7781)
 ![supersession](https://img.shields.io/badge/policy-never%20delete-cf222e)
 
-**Owners:** Architecture steward · Docs steward
-**Reviewers required:** Architecture steward + at least one subsystem owner
-**Last reviewed:** `<TODO: YYYY-MM-DD on first PR>`
+**Owners:** Architecture steward · Docs steward  
+**Reviewers required:** Architecture steward + at least one subsystem owner  
+**Target path:** `docs/adr/README.md`  
+**Last reviewed:** `<TODO: YYYY-MM-DD on first repo-verified PR>`
 
 > [!IMPORTANT]
-> This README is doctrine-grounded but **not** repo-verified. The KFM repository was not mounted during authoring. Every claim about which ADRs currently exist on disk is **PROPOSED / NEEDS VERIFICATION** until checked against `git ls-tree`-equivalent inspection. The placement rules themselves are CONFIRMED by `docs/doctrine/directory-rules.md`.
+> This README is doctrine-grounded but **not** repo-verified. The KFM repository was not mounted during authoring or this revision. Every claim about which ADRs currently exist on disk is **PROPOSED / NEEDS VERIFICATION** until checked against repo evidence such as `git ls-tree`, file contents, ADR metadata, and validator output. The placement rule for `docs/adr/` is CONFIRMED by Directory Rules doctrine; individual file presence is not.
 
 ---
 
 ## Quick jump
 
-[Purpose](#purpose) · [Authority](#authority-level) · [Lifecycle](#adr-lifecycle) · [What belongs here](#what-belongs-here) · [What does not](#what-does-not-belong-here) · [Naming](#naming-convention) · [Template](#adr-template) · [Authoring quickstart](#authoring-quickstart) · [Status & supersession](#status--supersession) · [Index](#index-of-adrs) · [Validation](#validation) · [Review burden](#review-burden) · [Related](#related-folders--doctrine) · [FAQ](#faq)
+[Purpose](#purpose) · [README contract](#readme-contract) · [Authority](#authority-level) · [Lifecycle](#adr-lifecycle) · [What belongs here](#what-belongs-here) · [What does not](#what-does-not-belong-here) · [Inputs & outputs](#inputs--outputs) · [Naming](#naming-convention) · [Template](#adr-template) · [Authoring quickstart](#authoring-quickstart) · [Status & supersession](#status--supersession) · [Index](#index-of-adrs) · [Validation](#validation) · [Repo refresh](#first-repo-verification-pass) · [Review burden](#review-burden) · [Related](#related-folders--doctrine) · [Maintenance](#maintenance-checklist) · [FAQ](#faq)
 
 ---
 
@@ -59,18 +62,36 @@ ADRs are **not** designed to *make* decisions inside their own files. A merged A
 
 ---
 
+## README contract
+
+| Item | Value |
+|---|---|
+| **Owning root** | `docs/` — canonical documentation and governance memory |
+| **Target path** | `docs/adr/README.md` |
+| **Document role** | Directory README and operating standard for Architecture Decision Records |
+| **Audience** | Architecture steward, docs steward, subsystem owners, reviewers, implementation agents |
+| **Primary inputs** | Proposed ADRs, drift-register escalations, doctrine amendments, backfill decisions, repo-inspection findings |
+| **Primary outputs** | ADR files, index updates, supersession links, downstream references to schemas/contracts/policy/tests/release artifacts |
+| **Truth posture** | CONFIRMED doctrine / PROPOSED file inventory / UNKNOWN implementation depth until mounted-repo evidence is inspected |
+| **Public-safety posture** | Public doc; never place sensitive source details, secrets, private data, or restricted exact-location decisions here |
+
+This README is a **routing and governance surface**. It tells maintainers where ADRs belong, how to author them, how to keep them append-only, and how to verify the index. It does not turn the starter ADR list into current repo truth.
+
+---
+
 ## Authority level
 
 | Property | Value |
 |---|---|
-| **Authority class** | Canonical — governance-bearing |
-| **Status of these placement rules** | CONFIRMED via `docs/doctrine/directory-rules.md` |
+| **Authority class** | Canonical — governance-bearing README for the ADR root |
+| **Status of this README** | Draft / NEEDS REPO VERIFICATION |
+| **Status of `docs/adr/` as a home** | CONFIRMED doctrine via Directory Rules |
 | **Status of any specific ADR file's presence** | PROPOSED / NEEDS VERIFICATION (repo not mounted) |
-| **Authority order** | Accepted ADRs that explicitly amend Directory Rules outrank Directory Rules. See [authority order](../doctrine/directory-rules.md#21-authority-order). |
-| **Append-only** | Yes — superseded ADRs are retained with `status: superseded` and a forward link. ADRs are **never deleted**. |
-| **Change discipline** | An ADR is required for §2.4-class changes (canonical roots, schema-home rule, lifecycle phase changes, parallel-home creation, invariant-bending). |
+| **Authority order** | Core invariants and accepted ADRs that explicitly amend Directory Rules outrank Directory Rules. This README refines the ADR root and cannot contradict doctrine. |
+| **Append-only** | Yes — accepted ADR bodies are stable; superseded and rejected ADRs are retained with links. ADRs are **never deleted**. |
+| **Change discipline** | An ADR is required for §2.4-class changes: canonical roots, schema-home rule, lifecycle phase changes, parallel-home creation, or invariant-bending. |
 
-ADRs sit **above** per-root READMEs and **above** Directory Rules in the conflict-resolution order — but only when an accepted ADR explicitly amends a higher rule. A draft or proposed ADR carries argument, not authority.
+A draft or proposed ADR carries argument, not authority. An accepted ADR carries authority only for the decision it actually records, and only to the extent it does not silently weaken KFM core invariants.
 
 ---
 
@@ -93,12 +114,12 @@ flowchart LR
     classDef accepted fill:#dafbe1,stroke:#2da44e,color:#1a7f37
     classDef proposed fill:#fff8c5,stroke:#bf8700,color:#7d4e00
     classDef rejected fill:#ffebe9,stroke:#cf222e,color:#82071e
-    classDef superseded fill:#ddf4ff,stroke:#0969da,color:#0550ae
+    classDef review fill:#ddf4ff,stroke:#0969da,color:#0550ae
 
     class D,I accepted
     class B,G proposed
     class E rejected
-    class F,H superseded
+    class F,H review
 ````
 
 **Statuses (per [Directory Rules §2.4](../doctrine/directory-rules.md#24-changes-that-require-an-adr)):** `proposed` · `accepted` · `superseded` · `rejected`. Superseded and rejected ADRs MUST be retained — they are part of the audit trail.
@@ -142,7 +163,9 @@ ADRs **MUST NOT** be used as a substitute for any of the above. An ADR can *cite
 
 ---
 
-## Inputs
+## Inputs & outputs
+
+### Inputs
 
 ADRs are produced from:
 
@@ -152,7 +175,7 @@ ADRs are produced from:
 - **Open questions** from `docs/registers/VERIFICATION_BACKLOG.md` and per-domain `OPEN_QUESTIONS.md` that mature into decisions.
 - **Doctrine evolution** — when `docs/doctrine/*.md` is amended in ways that demand a recorded rationale.
 
-## Outputs
+### Outputs
 
 Merging an ADR can trigger downstream changes (which are tracked, but live elsewhere):
 
@@ -179,7 +202,7 @@ ADR-NNNN-<kebab-case-slug>.md
 > [!TIP]
 > Reserve the next number at the start of authoring so two PRs do not collide on `0007`. The drift-register or a `RESERVATIONS.md` register is a reasonable parking lot if collisions become frequent. **NEEDS VERIFICATION** whether KFM has adopted such a register.
 
-**Examples** (the seed numbers are doctrinally pinned for the cross-cutting series; the rest are PROPOSED — see [Index](#index-of-adrs)):
+**Examples** (starter cross-cutting examples only; file presence and acceptance status remain NEEDS VERIFICATION — see [Index](#index-of-adrs)):
 
 ````
 ADR-0001-schema-home.md
@@ -232,6 +255,10 @@ notes: []
 
 The forces in play. The problem statement. The constraints. What evidence motivated revisiting this. What KFM invariants are touched. What is currently confusing, conflicting, or unenforced.
 
+## Evidence basis
+
+List the repo files, doctrine sections, schemas, contracts, policies, tests, source descriptors, release artifacts, drift entries, or external standards that support the decision. Mark any implementation-dependent claim as `NEEDS VERIFICATION` unless checked in the mounted repo.
+
 ## Decision
 
 The choice made. State it as an imperative single sentence first, then expand. Pin concrete details (paths, names, versions, parameters, thresholds) rather than gesturing at them.
@@ -241,6 +268,7 @@ The choice made. State it as an imperative single sentence first, then expand. P
 - **Positive:** what this enables, simplifies, or removes ambiguity from.
 - **Negative / costs:** what this constrains, breaks, requires migration for, or makes harder.
 - **Operational:** validators, CI, fixtures, runbooks, dashboards, or release-gate changes implied.
+- **Policy / sensitivity:** rights, sensitivity, public-access, source-role, or release-state consequences. Write `n/a` only when genuinely irrelevant.
 
 ## Alternatives considered
 
@@ -258,7 +286,7 @@ Things this ADR does not resolve and should be tracked elsewhere (link to `docs/
 
 ## References
 
-Links to: doctrine sections, prior ADRs, schemas, contracts, policies, tests, dossiers, external standards, drift entries.
+Links to: doctrine sections, prior ADRs, schemas, contracts, policies, tests, dossiers, external standards, drift entries, release/correction artifacts, and verification backlog entries.
 ````
 
 ---
@@ -266,13 +294,13 @@ Links to: doctrine sections, prior ADRs, schemas, contracts, policies, tests, do
 ## Authoring quickstart
 
 1. **Confirm an ADR is needed.** If the change matches [Directory Rules §2.4](../doctrine/directory-rules.md#24-changes-that-require-an-adr), it is. If it affects more than one component or is non-obvious from code, it almost certainly is. When in doubt, open one — it is cheaper than re-litigating later.
-2. **Reserve a number.** Look at the index in this README and the file listing in `docs/adr/`. Take the next free `NNNN`. Note any companion domain ADR you also need (`docs/domains/<domain>/ADR-…`).
+2. **Reserve a number.** Look at the index in this README, the file listing in `docs/adr/`, and any repo-approved reservation register if one exists. Take the next free `NNNN`. Note any companion domain ADR you also need (`docs/domains/<domain>/ADR-…`).
 3. **Copy the [template](#adr-template)** into `docs/adr/ADR-NNNN-<slug>.md`. Fill the meta block. Do not skip fields.
 4. **Draft with `status: proposed`.** Cite evidence — schemas, contracts, prior ADRs, dossiers, drift entries. Do not draft as a fait accompli; the alternatives section is doctrinally required.
 5. **Open a PR.** Title format: `ADR-NNNN: <short title> [proposed]`. Tag the architecture steward and the affected subsystem owners.
 6. **Run validation locally** if validators exist (see [Validation](#validation)). **NEEDS VERIFICATION** which validators are wired.
 7. **Iterate through review.** If reviewers ask for fundamental changes, those edits stay in the same file while status remains `proposed`. The ADR is rewritable until it is merged.
-8. **On merge, set `status: accepted`** in the meta block and the table — and freeze the file. Subsequent changes happen via a successor ADR, not via edits.
+8. **On merge, set `status: accepted`** in the meta block and the index table — and freeze the file body. Substantive changes happen via a successor ADR, not by rewriting accepted history.
 9. **If superseding a prior ADR:** add `Supersedes: adr-MMMM` to the new ADR, and in the same PR update the old ADR's `status` to `superseded` plus its `Superseded by:` field. Both files ship together.
 10. **Link forward and back.** Update [the index in this README](#index-of-adrs) and any per-root README that referenced the prior decision.
 
@@ -302,13 +330,13 @@ Links to: doctrine sections, prior ADRs, schemas, contracts, policies, tests, do
 ## Index of ADRs
 
 > [!NOTE]
-> The list below is the **PROPOSED starter set** drawn from the project corpus (see [References](#references)). The repository was not mounted during authoring, so each row's *file presence* is **NEEDS VERIFICATION**. ADR-0001 is doctrinally pinned by `directory-rules.md` (it is referenced by name throughout); whether it has been authored on disk is a separate question.
+> The list below is the **PROPOSED starter set** drawn from the project corpus (see [References](#references)). The repository was not mounted during authoring, so each row's *file presence* is **NEEDS VERIFICATION**. ADR-0001 is referenced by Directory Rules as the schema-home convention; whether it exists on disk and whether it is accepted remain separate repo-verification questions.
 >
 > When this README is next updated against a mounted repo, mark each row's status accurately, replace **NEEDS VERIFICATION** with **CONFIRMED** where appropriate, and add any ADRs not in this starter set.
 
 | ID | Title | Topic | Status (file) | Status (decision) |
 |---|---|---|---|---|
-| `ADR-0001` | [`schema-home`](./ADR-0001-schema-home.md) | Resolve `schemas/contracts/v1/` vs `contracts/` as machine-schema authority | NEEDS VERIFICATION | PROPOSED — referenced as canonical by Directory Rules §6.4 |
+| `ADR-0001` | [`schema-home`](./ADR-0001-schema-home.md) | Resolve `schemas/contracts/v1/` vs `contracts/` as machine-schema authority | NEEDS VERIFICATION | PROPOSED / NEEDS VERIFICATION — referenced by Directory Rules as the schema-home convention |
 | `ADR-0002` | `source-ledger-authority` | Source ledger update, supersession, and append-only rules | NEEDS VERIFICATION | PROPOSED |
 | `ADR-0003` | `evidencebundle-contract` | `EvidenceRef` → `EvidenceBundle` resolution and closure contract | NEEDS VERIFICATION | PROPOSED |
 | `ADR-0004` | `promotion-gate` | Promotion as governed state transition (not a file move) | NEEDS VERIFICATION | PROPOSED |
@@ -328,7 +356,7 @@ Links to: doctrine sections, prior ADRs, schemas, contracts, policies, tests, do
 - `docs/adr/ADR-habitat-fauna-schema-home.md` and two siblings
 
 > [!CAUTION]
-> Two competing starter lists appear in the corpus — one in *Pipeline Living Implementation Manual v0.3* (`schema-home`, `source-ledger`, `evidencebundle`, `promotion-gate`, `maplibre-layer-manifest`, `governed-ai-runtime-envelope`, …) and one in *Pass 12 Idea Index* (`spec-normalization`, `finite-decision-outcomes`, `watcher-non-publisher`, `stac-profile`, `releasemanifest`, `crypto-stack`). The first list is used in this index because it is the one referenced by `directory-rules.md`'s authority order (which pins ADR-0001 = schema home). **NEEDS VERIFICATION** whether the second list's topics are folded into later ADR numbers, written as separate ADRs, or absorbed into doctrine. An early housekeeping ADR to reconcile the two is recommended.
+> Two competing starter lists appear in the corpus — one in *Pipeline Living Implementation Manual v0.3* (`schema-home`, `source-ledger`, `evidencebundle`, `promotion-gate`, `maplibre-layer-manifest`, `governed-ai-runtime-envelope`, …) and one in *Pass 12 Idea Index* (`spec-normalization`, `finite-decision-outcomes`, `watcher-non-publisher`, `stac-profile`, `releasemanifest`, `crypto-stack`). The first list is used in this index because it aligns with Directory Rules' schema-home reference and the pipeline-manual starter set. **NEEDS VERIFICATION** whether the second list's topics are folded into later ADR numbers, written as separate ADRs, or absorbed into doctrine. An early housekeeping ADR to reconcile the two is recommended.
 
 ---
 
@@ -355,6 +383,36 @@ PROPOSED tooling homes:
 - `tests/governance/adr/` (validator tests + golden ADRs)
 
 These paths are PROPOSED. Confirmation against the mounted repo is required before any of them is treated as canonical.
+
+---
+
+## First repo verification pass
+
+Run this pass before promoting this README from `draft` or replacing `NEEDS VERIFICATION` in the ADR index.
+
+> [!CAUTION]
+> These commands are read-only discovery commands. They should be run from the mounted KFM checkout, not from an artifact workspace.
+
+```bash
+pwd
+git status --short
+git branch --show-current
+git ls-tree -r --name-only HEAD docs/adr docs/doctrine docs/registers schemas contracts policy release data/receipts data/proofs 2>/dev/null | sort
+find docs/adr -maxdepth 1 -type f -name 'ADR-*.md' | sort
+```
+
+Verification outcomes to record in the PR:
+
+- [ ] `docs/adr/README.md` exists at the expected path or is created there.
+- [ ] Every ADR file in `docs/adr/` appears in the index above.
+- [ ] Every index row with a linked file resolves to an actual file or remains `NEEDS VERIFICATION`.
+- [ ] Every ADR meta block has `status` in `proposed | accepted | superseded | rejected`.
+- [ ] Every `superseded` ADR has a forward link and every successor has a back link.
+- [ ] Directory Rules links resolve, especially authority order and §2.4 ADR triggers.
+- [ ] Any domain-scoped ADR location conflict is entered in `docs/registers/DRIFT_REGISTER.md` or resolved by an ADR.
+- [ ] Validation tooling homes are confirmed or left explicitly `PROPOSED`.
+
+Do not use a green validation run to imply the listed starter ADRs exist. File presence, decision status, and enforcement status are separate facts.
 
 ---
 
@@ -398,6 +456,20 @@ These paths are PROPOSED. Confirmation against the mounted repo is required befo
 
 - `deprecation_register.yaml` — receives entries when an ADR deprecates a path or rule
 - `contradiction_register.yaml` — surfaces conflicts that may need an ADR
+
+---
+
+## Maintenance checklist
+
+Use this checklist when editing this README or reviewing an ADR PR.
+
+- [ ] Preserve this README's H1, meta block `doc_id`, and existing section anchors unless a migration note explains the break.
+- [ ] Update `updated:` in the meta block and `Last reviewed` when a repo-verified review occurs.
+- [ ] Keep implementation claims labeled: `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
+- [ ] Update the ADR index and supersession links in the same PR that adds, accepts, rejects, or supersedes an ADR.
+- [ ] Keep ADRs out of schemas, policies, release manifests, receipts, proof packs, and runbooks; route those artifacts to their responsibility roots.
+- [ ] Add or update drift/backlog entries when repo reality and this README disagree.
+- [ ] Avoid broad rewrites of accepted ADR bodies. Use successor ADRs for material changes.
 
 ---
 
@@ -459,13 +531,13 @@ An ADR can establish the *framework* for these decisions (e.g., ADR-0008 sets th
 
 ## Last reviewed
 
-`<TODO: YYYY-MM-DD on first PR>` — flag for review if older than six months, per [Directory Rules §15](../doctrine/directory-rules.md#15-required-readme-contract).
+`<TODO: YYYY-MM-DD on first repo-verified PR>` — flag for review if older than six months, per [Directory Rules §15](../doctrine/directory-rules.md#15-required-readme-contract).
 
 ---
 
 ### References
 
-- `docs/doctrine/directory-rules.md` — §0 Authority, §2.1 Authority order, §2.4 Changes that require an ADR, §6.1 `docs/`, §15 Required README contract.
+- `docs/doctrine/directory-rules.md` — §0 Authority, §2.1 Authority order, §2.4 Changes that require an ADR, §6.1 `docs/`, §7.4 schema-home convention, §15 Required README contract.
 - *Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3* — §28 Decision register / ADR index (PROPOSED starter set ADR-0001 through ADR-0010).
 - *KFM Pass 12 Part 2 — Idea Index, Category Atlas, and Expansion Dossier* — J.3 ADR pattern; §9.2 alternative starter set.
 - *KFM Components Pass 11 — Idea Index, Category Atlas, and Expansion Dossier* — J.4.1 ADRs for every consequential architectural choice.
