@@ -8,13 +8,13 @@ meta:
 normalized_summary_consumers:
   - consumer: scripts/maintenance/run_doctrine_artifact_test_suite.sh
     owner: platform-governance
-    status: validated
-    validated_utc: 2026-05-13
-    evidence: local-ci-bundle
+    status: needs_verification
+    validated_utc: UNKNOWN
+    evidence: NEEDS_VERIFICATION
     notes: Uses normalized-only shadow validation and consistency validator.
   - consumer: tests/policy/test_preflight_summary_consistency.py
     owner: platform-governance
-    status: validated
-    validated_utc: 2026-05-13
-    evidence: pytest-policy-suite
+    status: needs_verification
+    validated_utc: UNKNOWN
+    evidence: NEEDS_VERIFICATION
     notes: Contains normalized-only pass/fail assertions.
