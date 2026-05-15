@@ -1,1 +1,18 @@
-
+{
+  "object_type": "PerfEnvelope",
+  "schema_version": "v1",
+  "domain": "maplibre",
+  "policy_posture": "public_safe",
+  "thresholds": {
+    "avg_frame_ms": 22,
+    "p95_frame_ms": 40,
+    "idle_ms": 3000,
+    "load_ms": 4000,
+    "render_pixel_delta_ratio": 0.01
+  },
+  "notes": [
+    "Initial governed MapLibre smoke-test envelope.",
+    "Thresholds should tighten incrementally through reviewed governance updates.",
+    "Renderer publication is blocked when thresholds fail."
+  ]
+}
