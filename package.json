@@ -33,5 +33,10 @@
     "maplibre:perf:full": "npm run maplibre:perf && npm run maplibre:render-diff && npm run maplibre:attest && npm run maplibre:manifest && npm run maplibre:govern && npm run maplibre:proof && npm run maplibre:proof:validate",
 
     "maplibre:clean": "rm -rf artifacts/perf"
+  },
+  "devDependencies": {
+    "pixelmatch": "^7.1.0",
+    "playwright": "^1.56.0",
+    "pngjs": "^7.0.0"
   }
 }
