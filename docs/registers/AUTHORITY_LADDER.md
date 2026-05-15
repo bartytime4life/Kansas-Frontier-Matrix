@@ -22,7 +22,6 @@ Wave 1 governance placeholder for the register name referenced by Directory Rule
 - This Markdown file exists only as governance-visible index parity and naming alignment work item.
 - No authority is transferred by this scaffold.
 
-
 ## Evidence refs
 
 - `docs/directory-rules.md` §6.1 (register naming list)
