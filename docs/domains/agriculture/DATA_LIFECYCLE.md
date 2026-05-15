@@ -4,7 +4,7 @@ title: Agriculture — Data Lifecycle
 type: standard
 version: v1
 status: draft
-owners: <agriculture-domain-steward> <pipeline-steward>   <!-- PROPOSED placeholders; confirm via CODEOWNERS -->
+owners: agriculture-domain-steward, pipeline-steward   # PROPOSED placeholders; confirm via CODEOWNERS
 created: 2026-05-15
 updated: 2026-05-15
 policy_label: public
