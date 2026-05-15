@@ -260,29 +260,17 @@ sequenceDiagram
     participant Receipt
     participant API
 
-    Author->>Release: Draft RollbackCard (from_release_id, to_release_id, reason, evidence_refs)
+    Author->>Release: Draft RollbackCard with from_release_id, to_release_id, reason, and evidence_refs
     Author->>Reviewer: Open PR touching release/ and data/published/[domain]/current.json
     Reviewer->>CI: Request gates A-G and alias-specific checks
     CI->>CI: Validate schema, manifests, evidence, policy, sensitivity, signatures, retention
     CI-->>Reviewer: PASS or FAIL
     Reviewer->>Release: Accept and sign RollbackCard
-    Release->>Data: Atomic alias swap; current.json resolves to to_release_id
+    Release->>Data: Atomic alias swap
+    Release->>Data: current pointer resolves to to_release_id
     Release->>Receipt: Emit alias-revert receipt referencing card_id
     API->>Release: Verify card_ref, signature, manifest, policy, and receipt
-    API->>Data: Serve release_id_to as current when checks pass
-```
-
-**Participant legend**
-
-| Participant | Canonical / proposed home |
-|---|---|
-| `Author` | Author / release engineer |
-| `Reviewer` | Reviewer(s) — see `CODEOWNERS` (`NEEDS VERIFICATION`) |
-| `CI` | Repo CI workflows / Gates A–G (`NEEDS VERIFICATION`) |
-| `Release` | `release/rollback_cards/`, `release/manifests/`, `release/promotion_decisions/`, `release/signatures/` |
-| `Data` | `data/published/<domain>/` *(literal path form NEEDS VERIFICATION)* |
-| `Receipt` | `data/rollback/<domain>/` |
-| `API` | `apps/governed-api/` or repo-equivalent governed API path (`NEEDS VERIFICATION`) |
+    API->>Data: Serve to_release_id as current when checks pass
 
 ---
 
