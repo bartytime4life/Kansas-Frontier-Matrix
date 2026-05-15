@@ -1,3 +1,9 @@
-# Policy gate register
-# Lists every gate (connector_gate, promotion_gate, deny tests, etc.).
+meta:
+  status: PROPOSED
+  owner: docs steward
+  description: Lists every gate (connector_gate, promotion_gate, deny tests, etc.).
+  last_reviewed: 2026-05-14
+  related_doctrine:
+    - docs/architecture/DIRECTORY_RULES.md
+
 entries: []
