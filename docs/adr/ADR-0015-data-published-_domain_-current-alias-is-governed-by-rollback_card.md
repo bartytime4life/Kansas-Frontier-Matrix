@@ -271,7 +271,6 @@ sequenceDiagram
     Release->>Receipt: Emit alias-revert receipt referencing card_id
     API->>Release: Verify card_ref, signature, manifest, policy, and receipt
     API->>Data: Serve to_release_id as current when checks pass
-
 ---
 
 ## 4. RollbackCard contract for alias changes
