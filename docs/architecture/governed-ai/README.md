@@ -1,426 +1,824 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/architecture/governed-ai/readme
-title: Governed AI Subsystem
+doc_id: kfm://doc/architecture-governed-ai-readme
+title: Governed AI Subsystem — Architecture README
 type: standard
 version: v1
 status: draft
-owners: Docs steward + governed-AI subsystem owner
-created: 2026-05-09
-updated: 2026-05-09
+owners: Docs steward + Governed AI subsystem owner (TODO: confirm via CODEOWNERS)
+created: 2026-05-15
+updated: 2026-05-15
 policy_label: public
 related:
   - docs/architecture/README.md
+  - docs/architecture/ui/README.md
+  - docs/architecture/ui/EVIDENCE_DRAWER.md
   - docs/architecture/governed-ai/STATE_OWNERSHIP.md
   - docs/architecture/governed-ai/ROUTE_MAP.md
   - docs/architecture/governed-ai/BOUNDARIES.md
   - docs/architecture/governed-ai/FOCUS_FLOW.md
   - docs/architecture/governed-ai/CONTINUITY_NOTES.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/evidence-flow.md
-  - docs/architecture/focus-mode.md
-  - docs/architecture/evidence-drawer-ai-implications.md
-  - docs/governance/cite-or-abstain.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
+  - docs/runbooks/governed_ai_LOCAL_DEV.md
+  - docs/runbooks/governed_ai_VALIDATION.md
+  - docs/runbooks/governed_ai_ROLLBACK.md
+  - docs/adr/ADR-focus-model-adapter-boundary.md
+  - docs/adr/ADR-ui-schema-home.md
+  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
   - contracts/OBJECT_MAP.md
-tags: [kfm, architecture, governed-ai, focus-mode, evidence]
+  - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - schemas/contracts/v1/focus/focus_request.schema.json
+  - schemas/contracts/v1/focus/focus_response.schema.json
+  - schemas/contracts/v1/runtime/ai_receipt.schema.json
+  - schemas/contracts/v1/runtime/decision_envelope.schema.json
+  - tests/fixtures/focus/README.md
+  - tests/fixtures/runtime/README.md
+  - policy/runtime/README.md
+  - policy/focus/README.md
+  - runtime/model_adapters/README.md
+  - runtime/mock/README.md
+  - runtime/ollama/README.md
+tags: [kfm, architecture, governed-ai, focus-mode, ai-receipt, runtime-envelope, citation-validation, policy, model-adapter, mockadapter, ollama, trust-membrane]
 notes:
-  - Repository unmounted in authoring session; every repo-shape claim is PROPOSED until verified.
-  - Folder placement justified by Directory Rules §6.1 (docs/architecture/) and the Whole-UI + Governed AI Expansion Report Appendix A.
+  - All implementation-layer paths are PROPOSED until verified against mounted-repo evidence (Directory Rules §0).
+  - This README is doctrine-bearing; specific schema files, route names, and adapter homes are placement proposals.
+  - Reconciliation note: provider-neutral MockAdapter-first posture (UIAI-GAI) precedes admitting Ollama as a replaceable runtime (UIAI-OLLAMA).
 [/KFM_META_BLOCK_V2] -->
 
-# Governed AI Subsystem
+# Governed AI Subsystem — Architecture README
 
-> **Adapter-first, evidence-subordinate, finite-outcome AI runtime behind a governed API.**
-> Models are interpretive. **EvidenceBundle and policy outrank generated language.**
+> **AI is interpretive, not authoritative.** The Governed AI subsystem is the bounded runtime slice where evidence-subordinate language can be produced — behind the governed API, after policy precheck and EvidenceBundle resolution, with citation validation, finite outcomes, and an AIReceipt. Fluent generation never substitutes for evidence, policy, review state, release state, or source authority.
 
-[![Status](https://img.shields.io/badge/status-PROPOSED-orange)](#11-implementation-status)
-[![Truth class](https://img.shields.io/badge/truth-receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication-blueviolet)](../../doctrine/truth-posture.md)
-[![Posture](https://img.shields.io/badge/posture-cite--or--abstain-success)](../../governance/cite-or-abstain.md)
-[![Outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-informational)](#7-finite-outcomes)
-[![Adapter](https://img.shields.io/badge/adapter-MockAdapter--first-yellow)](#8-provider-neutral-adapter-ladder)
-[![Public path](https://img.shields.io/badge/public%20path-governed%20API%20only-critical)](#10-trust-boundaries-summary)
-[![Repo evidence](https://img.shields.io/badge/repo-unmounted%20in%20authoring%20session-lightgrey)](#11-implementation-status)
+![status](https://img.shields.io/badge/status-draft-yellow)
+![authority](https://img.shields.io/badge/authority-implementation--bearing-blueviolet)
+![repo-state](https://img.shields.io/badge/repo--state-PROPOSED-orange)
+![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-brightgreen)
+![lineage](https://img.shields.io/badge/lineage-UIAI--GAI%20%2B%20UIAI--OLLAMA%20%2B%20IMPL--PIPE%20%C2%A720-informational)
+![outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-purple)
+![policy](https://img.shields.io/badge/policy-public-brightgreen)
+![directory-rules](https://img.shields.io/badge/Directory%20Rules-%C2%A715%20contract-blue)
+
+**Status:** `draft` · **Authority level:** implementation-bearing · **Owners:** Docs steward + Governed AI subsystem owner *(TODO — assign in CODEOWNERS)* · **Last reviewed:** `2026-05-15` · **Repo-state truth label:** PROPOSED
+
+---
+
+## Mini-TOC
+
+1. [Purpose](#1--purpose)
+2. [Authority level](#2--authority-level)
+3. [What belongs here](#3--what-belongs-here)
+4. [What does NOT belong here](#4--what-does-not-belong-here)
+5. [Repo fit](#5--repo-fit)
+6. [Proposed directory tree](#6--proposed-directory-tree)
+7. [Inputs](#7--inputs)
+8. [Outputs](#8--outputs)
+9. [Core doctrine](#9--core-doctrine)
+10. [Object families and homes](#10--object-families-and-homes)
+11. [Finite outcomes — the trust grammar](#11--finite-outcomes--the-trust-grammar)
+12. [The governed AI request flow](#12--the-governed-ai-request-flow)
+13. [Adapter boundary](#13--adapter-boundary)
+14. [Citation validation](#14--citation-validation)
+15. [Policy precheck and postcheck](#15--policy-precheck-and-postcheck)
+16. [AIReceipt and replay discipline](#16--aireceipt-and-replay-discipline)
+17. [Trust membrane and exposure controls](#17--trust-membrane-and-exposure-controls)
+18. [Validation](#18--validation)
+19. [Sibling docs in this folder](#19--sibling-docs-in-this-folder)
+20. [Anti-patterns](#20--anti-patterns)
+21. [Update propagation](#21--update-propagation)
+22. [Rollback](#22--rollback)
+23. [Review burden](#23--review-burden)
+24. [ADRs](#24--adrs)
+25. [Open questions and verification backlog](#25--open-questions-and-verification-backlog)
+26. [Related folders](#26--related-folders)
+27. [Last reviewed](#27--last-reviewed)
+
+---
+
+## 1 · Purpose
+
+The Governed AI subsystem is **the only path** by which KFM may produce model-mediated language for any user, agent, or downstream surface. It exists to:
+
+- Subordinate generative output to **EvidenceBundle**, **PolicyDecision**, **ReviewRecord**, **ReleaseManifest**, and **CitationValidationReport** — never the other way around.
+- Enforce a **finite outcome grammar** at every governed AI surface: `ANSWER` · `ABSTAIN` · `DENY` · `ERROR`.
+- Keep model runtimes (`MockAdapter`, eventually Ollama or another provider) **behind the governed API**, never on the public client path.
+- Emit an **AIReceipt** for every call — provider, model identity, evidence refs, policy decisions, citation report, and finite outcome — so each answer is replayable, auditable, and rollback-aware.
+- Refuse to publish or expose model output that bypasses evidence resolution, citation validation, policy gates, release state, correction lineage, or rollback discipline.
+
+This folder owns the **doctrine, contracts, and boundaries** of that runtime slice. It does not own model weights, provider credentials, or live runtime configuration — those live behind `runtime/`, `infra/`, and `configs/` per Directory Rules §10.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 2 · Authority level
 
 | Field | Value |
 |---|---|
-| **Folder** | `docs/architecture/governed-ai/` |
-| **Authority level** | Implementation-bearing (doctrinal); **PROPOSED** until cross-checked against mounted-repo evidence |
-| **Owner** | Docs steward + governed-AI subsystem owner |
-| **Reviewers** | Docs steward + at least one subsystem owner; ADR required to change adapter boundary or schema home |
-| **Doctrinal basis** | Governed AI Extended Pro Source Ledger Report; Whole-UI + Governed AI Expansion Report; Build Companion §16; KFM Encyclopedia §8.C |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Promotion is a **governed state transition, not a file move.** |
+| **Authority class** | Implementation-bearing (`docs/architecture/<subsystem>/` per Directory Rules §6.1) |
+| **Doctrine status** | CONFIRMED — evidence-subordinate AI, finite outcomes, no direct public model client, citation validation required |
+| **Implementation status** | PROPOSED — adapters, route names, schema files, and CI workflows are not verified against a mounted repo in this session |
+| **Schema home** | `schemas/contracts/v1/runtime/…` and `schemas/contracts/v1/focus/…` (per ADR-0001; PROPOSED) |
+| **Reviewers** | Docs steward + Governed AI subsystem owner + Security steward for boundary changes |
+| **Supersedes** | Prior UIAI-GAI and UIAI-OLLAMA PDF reports — those documents remain doctrinal lineage; this README is the operational architecture statement |
+| **Related doctrine** | `docs/doctrine/trust-membrane.md`, `docs/doctrine/truth-posture.md`, `docs/doctrine/authority-ladder.md`, `docs/doctrine/directory-rules.md` |
 
-**Quick jump:**
-[Scope](#1-scope--purpose) ·
-[Repo fit](#2-repo-fit) ·
-[Inputs](#3-what-belongs-here-inputs) ·
-[Exclusions](#4-what-does-not-belong-here-exclusions) ·
-[Tree](#5-directory-tree) ·
-[Runtime](#6-runtime-flow) ·
-[Outcomes](#7-finite-outcomes) ·
-[Adapters](#8-provider-neutral-adapter-ladder) ·
-[Objects](#9-object-families--homes) ·
-[Boundaries](#10-trust-boundaries-summary) ·
-[Status](#11-implementation-status) ·
-[Gates](#12-readiness-gates--task-list) ·
-[Failures](#13-failure-state-reference) ·
-[Continuity](#14-continuity--lineage-notes) ·
-[Open questions](#15-open-questions) ·
-[Related](#16-related-documents)
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 1. Scope & Purpose
+## 3 · What belongs here
 
-This folder is the **doctrinal home for the governed-AI subsystem**: how Focus Mode, the evidence resolver, the model adapter, the citation validator, and the runtime response envelope fit together behind the public trust membrane.
+This folder contains **architecture documentation** for the Governed AI runtime slice. Accepted contents:
 
-The subsystem exists to give KFM users **bounded, cited, evidence-subordinate** answers — and to make abstention, denial, and error first-class outcomes rather than failure modes that get smoothed over by fluent text.
+- `README.md` — this overview.
+- `STATE_OWNERSHIP.md` — focus request lifecycle, evidence retrieval ownership, adapter ownership, citation validator ownership, response envelope ownership.
+- `ROUTE_MAP.md` — Focus and AI-adjacent governed API surfaces.
+- `BOUNDARIES.md` — what the subsystem MUST NOT touch (no direct model browser call, no RAW/WORK/QUARANTINE read, no prompt telemetry leakage).
+- `FOCUS_FLOW.md` — the end-to-end Focus Mode flow with envelope and receipt linkage.
+- `CONTINUITY_NOTES.md` — carries prior UIAI-GAI / UIAI-OLLAMA report content forward into the operating architecture.
+- Topic-specific Markdown that genuinely belongs to **subsystem doctrine** (e.g., `STRUCTURED_OUTPUT.md`, `MOCK_ADAPTER_CONTRACT.md`) when warranted.
 
-Three commitments anchor everything below:
-
-1. **Evidence outranks generation.** `EvidenceRef` resolves to `EvidenceBundle` *before* any model call, and citations are validated *against* the bundle *after* the call.
-2. **Provider-neutral adapter.** A small `ModelAdapter` interface — `MockAdapter` first — fixes the contract before any provider (Ollama, OpenAI-compatible, future runtimes) is wired.
-3. **Finite outcomes.** Every Focus call resolves to **`ANSWER` | `ABSTAIN` | `DENY` | `ERROR`** with reason codes. No fluent fallback ever substitutes for a missing or denied bundle.
-
-> [!IMPORTANT]
-> Documentation is part of the working system, but it does not decide. Schemas (`schemas/`), contracts (`contracts/`), policy (`policy/`), and tests (`tests/`) decide. This folder explains.
-
----
-
-## 2. Repo Fit
-
-`docs/architecture/governed-ai/` sits alongside its peer subsystems under `docs/architecture/`, refines (but does not contradict) `docs/architecture/governed-api.md`, and is governed by `docs/doctrine/directory-rules.md`.
-
-```
-docs/
-├── README.md
-├── doctrine/
-│   ├── directory-rules.md            # placement authority
-│   ├── truth-posture.md
-│   └── trust-membrane.md
-├── architecture/
-│   ├── README.md                     # subsystem map
-│   ├── governed-api.md               # public boundary
-│   ├── evidence-flow.md              # EvidenceRef → EvidenceBundle
-│   ├── focus-mode.md                 # Focus surface specifics
-│   ├── evidence-drawer-ai-implications.md
-│   ├── ui/                           # peer subsystem
-│   ├── governed-ai/                  # ◀ this folder
-│   ├── story/                        # peer subsystem
-│   └── review/                       # peer subsystem
-├── governance/cite-or-abstain.md
-└── registers/                        # AUTHORITY_LADDER, DRIFT_REGISTER, VERIFICATION_BACKLOG
-```
-
-**Upstream docs (govern this folder):**
-[`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) ·
-[`docs/architecture/README.md`](../README.md) ·
-[`docs/architecture/governed-api.md`](../governed-api.md)
-
-**Downstream docs (refined by this folder):**
-[`docs/architecture/focus-mode.md`](../focus-mode.md) ·
-[`docs/architecture/evidence-flow.md`](../evidence-flow.md) ·
-[`docs/architecture/evidence-drawer-ai-implications.md`](../evidence-drawer-ai-implications.md)
-
-**Machine-checkable peers (homes referenced from here):**
-`contracts/OBJECT_MAP.md` · `schemas/contracts/v1/ai/` · `schemas/contracts/v1/focus/` · `schemas/contracts/v1/runtime/` · `policy/ai/` · `policy/focus/` · `tests/fixtures/ai/` · `tests/fixtures/focus/` *(all PROPOSED)*
-
-> [!NOTE]
-> **Directory Rules basis.** This subsystem folder follows the §3 deeper rule (a docs subdirectory carries a repo-wide responsibility — *explaining a governance subsystem*) and the §6.1 sub-tree pattern. The peer set (`ui/`, `governed-ai/`, `story/`, `review/`) is taken from the Whole-UI + Governed AI Expansion Report Appendix A and is **PROPOSED** until reconciled with the mounted repo.
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 3. What Belongs Here (Inputs)
+## 4 · What does NOT belong here
 
-This folder MUST hold only **human-facing doctrinal Markdown** about the governed-AI subsystem. Concretely:
-
-- Subsystem **README** (this file).
-- **State ownership** — which component owns Focus request, evidence retrieval, adapter call, citation validation, and response envelope state.
-- **Route map** — which API surfaces are governed-AI-bearing.
-- **Boundaries** — what the browser, the API, and the model runtime are forbidden to do.
-- **Focus flow** — request lifecycle, including failure transitions.
-- **Continuity notes** — how prior governed-AI reports map forward, what is preserved/extended/superseded/deferred.
-
-Files MUST cite their source basis (Project Source Ledger entries, ADRs, schemas, or upstream doctrine) and MUST mark every implementation claim with a truth label: **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
-
----
-
-## 4. What Does Not Belong Here (Exclusions)
-
-The following SHALL live elsewhere. Drift entries open in `docs/registers/DRIFT_REGISTER.md` if any of these appear here.
-
-| Not here | Goes here instead | Why |
-|---|---|---|
-| Executable JSON Schemas | `schemas/contracts/v1/ai/`, `schemas/contracts/v1/focus/`, `schemas/contracts/v1/runtime/` | Shape lives in `schemas/`, per ADR-0001. |
-| Object-meaning definitions | `contracts/` (with `contracts/OBJECT_MAP.md` crosswalk) | `docs/` explains; `contracts/` defines meaning. |
-| OPA / policy bundles | `policy/ai/`, `policy/focus/`, `policy/export/` | Admissibility lives in `policy/`. |
-| Runtime adapter source | `apps/governed-api/src/ai/`, `runtime/` | Code, not docs. |
-| Test fixtures | `tests/fixtures/ai/`, `tests/fixtures/focus/` | Proof, not prose. |
-| Validators | `tools/validators/ai/`, `tools/validators/focus/` | Repo-wide validation lives in `tools/`. |
-| Receipts / proofs / manifests | `data/receipts/`, `data/proofs/`, `release/` | Trust-bearing artifacts are not docs. |
-| Provider-specific operational guides (Ollama, OpenAI-compatible) | `docs/runbooks/governed_ai_LOCAL_DEV.md`, `docs/runbooks/governed_ai_VALIDATION.md`, `docs/runbooks/governed_ai_ROLLBACK.md` | Operations live in runbooks, not architecture docs. |
-| Domain-specific source rules (archaeology, hazards, fauna) | `docs/domains/<domain>/` | Domain segments under their lane, not here. |
-| Architecture Decision Records | `docs/adr/` | ADRs are first-class governance objects. |
-
-> [!WARNING]
-> **No raw model output, no provider-specific behavior coupling, and no RAW/WORK/QUARANTINE references** belong in any document under this folder. If an explanation requires those, it belongs in a steward-facing runbook or an ADR with sensitivity gating.
-
----
-
-## 5. Directory Tree
-
-PROPOSED layout per the Whole-UI + Governed AI Expansion Report (Appendix A). Files are CREATE-PROPOSED unless mounted-repo evidence says otherwise.
-
-```
-docs/architecture/governed-ai/
-├── README.md             # this file — overview & adapter-first runtime boundary
-├── STATE_OWNERSHIP.md    # who owns Focus, evidence, adapter, citation, envelope state
-├── ROUTE_MAP.md          # Focus + AI-adjacent API surfaces and shapes
-├── BOUNDARIES.md         # no-direct-model-call, no RAW/WORK/QUARANTINE, no prompt telemetry
-├── FOCUS_FLOW.md         # request lifecycle and failure-state transitions
-└── CONTINUITY_NOTES.md   # carries prior governed-AI reports forward
-```
-
----
-
-## 6. Runtime Flow
-
-The diagram below traces a single Focus request from scope intake to receipt emission. Every arrow is **fail-closed**: any unsatisfied step short-circuits to `ABSTAIN`, `DENY`, or `ERROR` — never to fluent guessing.
-
-```mermaid
-flowchart TD
-    A[FocusQueryRequest] --> B[ScopeResolver]
-    B --> C{PolicyPrecheck}
-    C -- pass --> D[EvidenceResolver]
-    C -- block --> X1[DENY / ERROR]
-    D --> E{EvidenceBundle ready?}
-    E -- no --> X2[ABSTAIN / DENY]
-    E -- yes --> F[ModelAdapter<br/>Mock · Null · Ollama · OpenAI-compatible]
-    F --> G{ModelAdapterResponse}
-    G -- model unavailable --> X3[ERROR]
-    G -- ok --> H[CitationValidator]
-    H -- invalid --> X4[ABSTAIN / ERROR]
-    H -- valid --> I{PolicyPostcheck}
-    I -- block --> X5[DENY]
-    I -- pass --> J[RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR]
-    J --> K[AIReceipt + RunReceipt]
-    K --> L[(receipts append-only;<br/>no chain-of-thought stored)]
-```
-
-Key invariants visible in the flow:
-
-- **EvidenceRef → EvidenceBundle resolves before the model call.** No model ever sees a pointer it cannot prove.
-- **Policy runs twice.** Precheck guards inputs (rights, sensitivity, release state, source authority, ledger presence). Postcheck guards outputs (citations, obligations, leakage).
-- **Citation validation is non-optional.** Claims must trace to the bundle and the Project Source Ledger.
-- **Receipts are process memory, not evidence.** Receipts log adapter, context hash, prompt/template hash, output hash, and validation result — never private chain-of-thought.
-
----
-
-## 7. Finite Outcomes
-
-Every Focus response is exactly one of four outcomes. Negative states are **first-class** and the API contract MUST surface them with reason codes.
-
-| Outcome | Meaning | Public surface |
-|---|---|---|
-| **`ANSWER`** | Released, policy-safe evidence exists; citations validate; obligations satisfied. | Cited prose + `evidence_bundle_refs` + obligations. |
-| **`ABSTAIN`** | Evidence insufficient, conflicting, stale, unresolved, or out of scope. | `reason_code` + bounded explanation; never a fluent fallback. |
-| **`DENY`** | Policy, rights, sensitivity, sovereignty, or sovereignty-adjacent concern blocks the response. | `reason_code` + (where allowed) generalized derivative. |
-| **`ERROR`** | System or validator failure (model unavailable, policy engine down, schema invalid). | `reason_code`; **never** substituted with generated text. |
+| Forbidden content | Where it goes |
+|---|---|
+| Executable schema files (`*.schema.json`) | `schemas/contracts/v1/runtime/…`, `schemas/contracts/v1/focus/…` |
+| Object-meaning contracts | `contracts/runtime/…`, `contracts/focus/…` (canonical meaning lives there per Directory Rules §6) |
+| Policy gate logic (Rego, conftest) | `policy/runtime/…`, `policy/focus/…` |
+| Provider-neutral adapter interfaces | `runtime/model_adapters/` |
+| Local model runtime (Ollama) | `runtime/ollama/` (never a public surface) |
+| Deterministic test adapter | `runtime/mock/` |
+| Backend AI route handlers | `apps/governed-api/src/ai/…` *(PROPOSED — verify framework before placement)* |
+| Test fixtures | `tests/fixtures/focus/`, `tests/fixtures/runtime/` |
+| Emitted AIReceipt instances | `data/receipts/ai/`, `data/receipts/runtime/` |
+| Reverse-proxy / VPN / CORS posture | `infra/reverse_proxy/`, `infra/vpn/`, `infra/firewall/` |
+| Operational runbooks | `docs/runbooks/governed_ai_*.md` |
+| ADR records | `docs/adr/ADR-*.md` |
+| Source-rights / sensitivity policy | `policy/sensitivity/`, `data/registry/sources/` |
 
 > [!CAUTION]
-> Adding a fifth outcome is a **schema-significant change**. It requires an ADR amending the runtime contract, a schema version bump, fixture parity, and a correction notice path for any released artifact citing the old enum.
+> Provider credentials, model weights, prompt templates with embedded secrets, real source endpoints, and tokens **never** belong in this folder — not even in examples. `configs/` MUST NOT store real secrets per Directory Rules §10.3.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 8. Provider-Neutral Adapter Ladder
+## 5 · Repo fit
 
-The `ModelAdapter` contract is fixed **before** any provider is wired. `MockAdapter` is first so CI can validate envelopes, citation validation, policy gates, and receipt behavior **without** network or model nondeterminism.
+The Governed AI subsystem sits at the boundary between the **evidence/catalog/proof plane** (upstream) and the **user interaction plane** (downstream). It is **never a sovereign source of truth.**
 
-| Adapter | Purpose | Allowed scope | First-slice status |
-|---|---|---|---|
-| **MockAdapter** | Deterministic test adapter returning fixture-controlled structured outputs. | Local fixtures only; no network/model. | First implementation (PROPOSED). |
-| **NullAdapter** | Explicit non-answer adapter for safety, offline, or disabled runtime. | Returns `ERROR`/`ABSTAIN` with reason. | Implement alongside MockAdapter (PROPOSED). |
-| **OllamaAdapter** | Local/private runtime behind governed API only. | Released, policy-safe `EvidenceBundle` context; localhost/private network; no browser direct calls. | Deferred until contracts/tests pass. |
-| **OpenAICompatibleAdapter** | Provider/API-compatible behind governed API only. | Same `ModelAdapter` contract; no provider-specific public behavior. | Deferred until contracts/tests pass and external product facts re-checked. |
+```mermaid
+flowchart LR
+  subgraph EVID["Evidence / Catalog / Proof plane"]
+    EB["EvidenceBundle"]
+    PD["PolicyDecision"]
+    RM["ReleaseManifest"]
+    RR["ReviewRecord"]
+  end
 
-**Adapter methods (PROPOSED):** `generate_structured()`, `embed()`, `health()`, `model_info()`.
-**Provider choice is internal** after the contract is fixed; public behavior MUST NOT couple to Ollama, OpenAI, Anthropic, GGUF, or any specific runtime.
+  subgraph GAI["docs/architecture/governed-ai/ (this folder)"]
+    direction TB
+    PRE["Policy precheck"]
+    RES["EvidenceRef resolver"]
+    ADP["ModelAdapterPort"]
+    CV["CitationValidator"]
+    POST["Policy postcheck"]
+    AR["AIReceipt + RuntimeResponseEnvelope"]
+    PRE --> RES --> ADP --> CV --> POST --> AR
+  end
+
+  subgraph UI["User interaction plane"]
+    FP["Focus Panel"]
+    ED["Evidence Drawer"]
+    OR["OutcomeRenderer"]
+  end
+
+  EB --> RES
+  PD --> PRE
+  PD --> POST
+  RM --> RES
+  RR --> RES
+
+  AR --> FP
+  AR --> ED
+  AR --> OR
+
+  classDef upstream fill:#e8f4ff,stroke:#2563eb,color:#0b3a8a;
+  classDef gai fill:#fff4e6,stroke:#d97706,color:#7c2d12;
+  classDef downstream fill:#ecfdf5,stroke:#059669,color:#064e3b;
+  class EVID,EB,PD,RM,RR upstream;
+  class GAI,PRE,RES,ADP,CV,POST,AR gai;
+  class UI,FP,ED,OR downstream;
+```
+
+**Upstream dependency:** the Governed AI subsystem cannot operate without resolved EvidenceBundles, an evaluated PolicyDecision, and a current ReleaseManifest. Missing any of these MUST produce `ABSTAIN`, `DENY`, or `ERROR` — never a fluent guess.
+
+**Downstream consumer:** the UI subsystem (`docs/architecture/ui/`) renders Governed AI output through `EvidenceDrawer`, `FocusPanel`, and `OutcomeRenderer`. UI components MUST NOT bypass the governed API and call a model adapter directly.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 9. Object Families & Homes
-
-These are the families this subsystem touches. Schema/policy/test/validator paths are PROPOSED per the Governed AI Extended Pro Source Ledger Report.
-
-| Family | Truth role | Schema home (PROPOSED) | Policy home (PROPOSED) |
-|---|---|---|---|
-| `FocusQueryRequest` | Inbound user/UI scope | `schemas/contracts/v1/focus/focus_request.schema.json` | `policy/focus/` |
-| `EvidenceRef` | Pointer to evidence | `schemas/contracts/v1/evidence/evidence_ref.schema.json` | `policy/evidence/` |
-| `EvidenceBundle` | Release-grade evidence support | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | `policy/evidence/` |
-| `ModelAdapterRequest` | Provider-neutral input post-resolution | `schemas/contracts/v1/ai/model_adapter_request.schema.json` | `policy/ai/` |
-| `ModelAdapterResponse` | Provider-neutral output pre-validation | `schemas/contracts/v1/ai/model_adapter_response.schema.json` | `policy/ai/` |
-| `CitationValidationReport` | Claim-vs-evidence validator output | `schemas/contracts/v1/ai/citation_validation_report.schema.json` | `policy/ai/` |
-| `DecisionEnvelope` | Normalized policy outcome | `schemas/contracts/v1/runtime/decision_envelope.schema.json` | `policy/runtime/` |
-| `RuntimeResponseEnvelope` | Finite public envelope | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | `policy/runtime/` |
-| `AIReceipt` | Append-only AI-call process memory | `schemas/contracts/v1/runtime/ai_receipt.schema.json` | `policy/runtime/` |
-| `RunReceipt` | Append-only non-AI run process memory | `schemas/contracts/v1/runtime/run_receipt.schema.json` | `policy/runtime/` |
-
-> [!NOTE]
-> The subsystem **does not own** these object meanings. `contracts/` owns meaning; `schemas/` owns shape; `policy/` owns admissibility; this folder explains the *role each plays in the governed-AI flow*.
-
----
-
-## 10. Trust Boundaries (Summary)
-
-Full detail in [`BOUNDARIES.md`](BOUNDARIES.md). The headline rules:
+## 6 · Proposed directory tree
 
 > [!IMPORTANT]
-> **Browser MUST NOT** call Ollama, OpenAI, a local model runtime, a vector database, a graph store, or an object store directly.
-> **Public API MUST NOT** read RAW, WORK, QUARANTINE, canonical stores, or unpublished candidates.
-> **Receipts MUST NOT** store chain-of-thought; they store input/output hashes, validation result, and citations.
-> **Source content** (Markdown, YAML, JSON, map labels, transcripts) is **data, not instructions** — strip or isolate any embedded tool directives before model context.
-> **Citations MUST resolve to `EvidenceBundle` items**, not to model output itself.
+> This tree is **PROPOSED** — paths, filenames, and existence are unverified against a mounted KFM repository. Per Directory Rules §0 and §2.5, do not silently treat this as repo state. If repo evidence diverges, open a drift entry in `docs/registers/DRIFT_REGISTER.md`.
+
+```text
+docs/architecture/governed-ai/
+├── README.md                    # this file — doctrine, object map, sibling index
+├── STATE_OWNERSHIP.md           # focus request lifecycle, adapter / validator / envelope ownership
+├── ROUTE_MAP.md                 # governed API surfaces for Focus and AI-adjacent endpoints
+├── BOUNDARIES.md                # forbidden paths, leakage rules, exposure controls
+├── FOCUS_FLOW.md                # detailed Focus Mode flow with envelope and receipt linkage
+├── CONTINUITY_NOTES.md          # UIAI-GAI / UIAI-OLLAMA lineage carry-forward
+├── STRUCTURED_OUTPUT.md         # (OPTIONAL) structured-output validation rules
+└── MOCK_ADAPTER_CONTRACT.md     # (OPTIONAL) deterministic-fixture adapter contract
+```
+
+Related sibling lanes referenced from this folder:
+
+```text
+contracts/runtime/                       # object-meaning contracts (Markdown)
+contracts/focus/                         # FocusRequest / FocusResponse semantic contracts
+schemas/contracts/v1/runtime/            # executable DTO schemas
+schemas/contracts/v1/focus/              # Focus request/response schemas
+policy/runtime/                          # runtime policy bundle
+policy/focus/                            # Focus-specific policy bundle
+runtime/model_adapters/                  # ModelAdapterPort interface (provider-agnostic)
+runtime/mock/                            # MockAdapter (deterministic tests)
+runtime/ollama/                          # Ollama adapter (replaceable local runtime)
+runtime/envelopes/                       # finite-outcome envelope helpers
+apps/governed-api/src/ai/                # backend AI route handlers (PROPOSED path; NEEDS VERIFICATION)
+tests/fixtures/focus/                    # ANSWER / ABSTAIN / DENY / ERROR fixtures
+tests/fixtures/runtime/                  # RuntimeResponseEnvelope fixtures
+data/receipts/ai/                        # emitted AIReceipt instances
+data/receipts/runtime/                   # emitted RuntimeResponseEnvelope receipts
+```
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 11. Implementation Status
+## 7 · Inputs
 
-| Surface | Doctrine | Repo evidence (this session) |
+The Governed AI subsystem accepts the following as **admissible inputs only**:
+
+| Input | Source | Required? |
 |---|---|---|
-| Subsystem doctrine (this folder) | **CONFIRMED** anchor in source corpus. | **PROPOSED** — no mounted repo to confirm files exist. |
-| `ModelAdapter` contract | **PROPOSED** doctrine; MockAdapter-first. | **UNKNOWN** — no source code visible. |
-| `EvidenceRef` → `EvidenceBundle` resolver | **PROPOSED** doctrine. | **UNKNOWN** — `apps/governed-api/src/evidence/evidenceResolver.*` not verified. |
-| Citation validator | **PROPOSED** doctrine. | **UNKNOWN** — `tools/validators/ai/` not verified. |
-| Policy precheck/postcheck | **PROPOSED** doctrine. | **UNKNOWN** — `policy/ai/` not verified. |
-| `RuntimeResponseEnvelope` schema | **PROPOSED** shape. | **UNKNOWN** — `schemas/contracts/v1/runtime/` not verified. |
-| Focus route binding | **PROPOSED** route. | **UNKNOWN** — `apps/governed-api/openapi/ai.openapi.yaml` not verified. |
-| OpenAPI surface | **PROPOSED**. | **UNKNOWN** — framework/route convention not verified. |
-| End-to-end runtime proof fixtures | **PROPOSED**. | **UNKNOWN** — `tests/e2e/runtime_proof/ai/*` not verified. |
+| `FocusRequest` (question, scope, role, requested transform) | UI Focus panel via governed API | Required |
+| `MapContextEnvelope` (camera, time, layer IDs, feature IDs, release refs, selected evidence refs) | UI map subsystem | Required when scope is map-bound |
+| `EvidenceRef` list | Resolved upstream of model call | Required |
+| `EvidenceBundle` | Result of `EvidenceRef` → `EvidenceBundle` resolution | Required |
+| `PolicyDecision` (precheck) | `policy/runtime/`, `policy/focus/` bundles | Required |
+| `ReleaseManifest` reference | `release/manifests/` | Required for `ANSWER` |
+| `ReviewRecord` | `data/receipts/review/` | Required where review-gated |
+| User role / purpose | Authenticated session context | Required |
+
+Inputs the subsystem **rejects**:
+
+- RAW, WORK, or QUARANTINE bytes.
+- Unpublished candidate data.
+- Direct canonical-store reads (vector index, graph store, object store).
+- Source credentials or internal service handles.
+- Unresolved `EvidenceRef` (resolution must complete before model call).
+- Sensitive exact-location material unless a policy-allowed internal workflow explicitly permits bounded review use.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 8 · Outputs
+
+Every Governed AI call MUST emit, in this exact pairing:
+
+| Output | Role | Required fields (CONFIRMED doctrine; PROPOSED shape) |
+|---|---|---|
+| `RuntimeResponseEnvelope` | Finite-outcome wrapper carried to the UI | `outcome` ∈ {ANSWER, ABSTAIN, DENY, ERROR}, `evidence_refs[]`, `citations[]`, `policy_decision_ref`, `confidence` (where applicable), `limitations`, `obligations`, `release_refs[]`, `receipt_ref` |
+| `AIReceipt` | Auditable, replayable record | `provider`, `model_id`, `model_bin_hash`, `prompt_hash`, `schema_hash`, `runtime_params` (temperature, top_p, max_tokens, seed), `evidence_refs[]`, `policy_decision_ref`, `policy_bundle_hash`, `citation_validation_report_ref`, `output_digest`, `outcome`, `timestamp` |
+| `CitationValidationReport` | Citation closure object | `claim_ids[]`, `citation_ids[]`, `resolved_evidence_bundle_ids[]`, `missing_evidence[]`, `unsupported_claims[]`, `pass`/`fail`, `source_coverage` |
+| `RunReceipt` (where structurally a pipeline run) | Process memory | `run_id`, `tool_versions`, `inputs`, `outputs`, `hashes`, `commit`, `attestations` |
 
 > [!NOTE]
-> Until the repository is mounted and inspected, every "this exists" claim about implementation belongs in [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md), not in prose here.
+> Private chain-of-thought is **never** persisted as truth. The AIReceipt records hashes and outcome metadata, not the model's internal reasoning trace. Telemetry is safe by construction: no raw evidence, no prompt text, no restricted geometry, no secrets, no full EvidenceBundle copies.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 12. Readiness Gates / Task List
+## 9 · Core doctrine
 
-Definition-of-done for the governed-AI thin slice. Items are **gates**, not nice-to-haves — each blocks the next.
+The following statements are **CONFIRMED doctrine** across attached KFM project materials (UIAI-GAI §§1–4, UIAI-OLLAMA §§1–16, UIAI-WHOLE §§18–25, IMPL-PIPE §20, BLD-GREEN §15, ENCY Cross-Domain Systems Chapter C). Implementation maturity behind each item is PROPOSED unless mounted-repo evidence verifies it.
 
-- [ ] **Contract gate** — `ModelAdapter` interface frozen with `generate_structured()`, `embed()`, `health()`, `model_info()`; ADR recorded.
-- [ ] **Schema gate** — Focus, evidence, AI, runtime, and receipt schemas land under `schemas/contracts/v1/` with `additionalProperties: false` where appropriate; positive + negative fixtures parity-checked.
-- [ ] **Resolver gate** — `EvidenceRef` → `EvidenceBundle` resolver passes its full test matrix (valid public, missing target, unknown rights, sensitive exact location, stale, conflicting sources, model layer cited as evidence, supersession).
-- [ ] **MockAdapter gate** — deterministic outputs drive `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` end-to-end without network.
-- [ ] **Citation validator gate** — every claim traces to the bundle and the Project Source Ledger; uncited claims yield `ABSTAIN` or `ERROR`.
-- [ ] **Policy gate** — precheck and postcheck fail-closed when policy or ledger unavailable; obligations carried in `DecisionEnvelope`.
-- [ ] **Envelope gate** — finite outcomes enforced; no fluent fallback path exists in code review.
-- [ ] **Receipt gate** — `AIReceipt` and `RunReceipt` append-only, no chain-of-thought stored, hashes verifiable.
-- [ ] **Boundary gate** — no direct browser-to-model traffic; no RAW/WORK/QUARANTINE reads from the public path; CI test denies any such call.
-- [ ] **Documentation propagation gate** — `STATE_OWNERSHIP.md`, `ROUTE_MAP.md`, `BOUNDARIES.md`, `FOCUS_FLOW.md`, and `CONTINUITY_NOTES.md` are updated alongside any material behavior change.
-- [ ] **Rollback gate** — feature flag, route disable, and revert PR rehearsed; fixtures retained as lineage.
+1. **AI is interpretive, not authoritative.** AI may synthesize over admissible evidence, draft bounded explanations, support retrieval acceleration, or help evaluate candidate deltas. `EvidenceBundle`, source authority, `PolicyDecision`, review state, release state, and citation validation **outrank** generated language.
+2. **No public direct-model path.** Browsers, public clients, and normal UI surfaces never call Ollama, OpenAI, a local model runtime, a vector database, a graph store, or an object store directly. Every AI call traverses the governed API.
+3. **Finite outcomes are mandatory.** Every governed AI surface, validator, policy gate, and Focus Mode answer returns one of: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. There is no fluent fallback, no "best guess," no popup substitute.
+4. **MockAdapter first.** The first implementation slice is provider-neutral: `MockAdapter`, policy precheck, citation validation, finite `RuntimeResponseEnvelope`, `AIReceipt`, `RunReceipt`, and source-coverage checks. Only after adapter contracts, evidence gates, finite envelopes, citation validation, and receipts are in place does Ollama (or another provider) get admitted behind the same governed interface.
+5. **Failure boundary.** Model output MUST NOT read RAW, WORK, QUARANTINE, unpublished candidate data, direct canonical stores, or sensitive exact-location material unless a governed, policy-allowed internal workflow explicitly permits bounded review use. Public answers MUST NOT bypass evidence resolution, citation validation, policy gates, release state, correction lineage, or rollback discipline.
+6. **Receipt closure.** Every call emits an `AIReceipt`. Promotion, rollback, and audit paths reference the receipt, not the model's free text.
+7. **No private chain-of-thought as truth.** Reasoning traces are not persisted as proof. Receipts record hashes, outcome metadata, citation closure, and policy decisions.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 13. Failure-State Reference
+## 10 · Object families and homes
 
-<details>
-<summary><strong>Failure state → outcome mapping (Governed AI Extended Pro §13.1)</strong></summary>
+This table is the **canonical placement map** for objects this subsystem owns or composes. All implementation-layer paths are PROPOSED until repo evidence verifies them.
 
-| Failure state | Outcome | Note |
+| Object family | Doctrine | Semantic home | Schema home (executable) | Fixture home | Policy home | Emitted-instance home |
+|---|---|---|---|---|---|---|
+| `RuntimeResponseEnvelope` | CONFIRMED / PROPOSED impl. | `contracts/runtime/RUNTIME_RESPONSE_ENVELOPE.md` | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | `tests/fixtures/runtime/` | `policy/runtime/` | `data/receipts/runtime/` |
+| `DecisionEnvelope` | CONFIRMED / PROPOSED impl. | `contracts/runtime/DECISION_ENVELOPE.md` | `schemas/contracts/v1/runtime/decision_envelope.schema.json` | `tests/fixtures/runtime/` | `policy/runtime/` | `data/receipts/runtime/` |
+| `FocusRequest` | CONFIRMED doctrine | `contracts/focus/FOCUS_REQUEST.md` | `schemas/contracts/v1/focus/focus_request.schema.json` | `tests/fixtures/focus/` | `policy/focus/` | — |
+| `FocusResponse` | CONFIRMED doctrine | `contracts/focus/FOCUS_RESPONSE.md` | `schemas/contracts/v1/focus/focus_response.schema.json` | `tests/fixtures/focus/` | `policy/focus/` | `data/receipts/ai/` |
+| `AIReceipt` | CONFIRMED / PROPOSED impl. | `contracts/runtime/AI_RECEIPT.md` | `schemas/contracts/v1/runtime/ai_receipt.schema.json` | `tests/fixtures/runtime/` | `policy/runtime/` | `data/receipts/ai/` |
+| `CitationValidationReport` | CONFIRMED doctrine | `contracts/runtime/CITATION_VALIDATION_REPORT.md` | `schemas/contracts/v1/runtime/citation_validation_report.schema.json` | `tests/fixtures/runtime/` | `policy/runtime/` | `data/receipts/ai/` |
+| `MapContextEnvelope` *(input — owned by UI subsystem)* | CONFIRMED doctrine | `docs/architecture/ui/CONTEXT_ENVELOPE.md` *(PROPOSED)* | `schemas/contracts/v1/ui/map_context_envelope.schema.json` | `tests/fixtures/ui/` | `policy/ui/` | — |
+| `EvidenceBundle` *(consumed — owned by evidence subsystem)* | CONFIRMED doctrine | `contracts/evidence/EVIDENCE_BUNDLE.md` *(PROPOSED)* | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | `tests/fixtures/evidence/` | `policy/evidence/` | `data/proofs/` |
+| `PolicyDecision` *(consumed — owned by policy subsystem)* | CONFIRMED doctrine | `contracts/policy/POLICY_DECISION.md` *(PROPOSED)* | `schemas/contracts/v1/policy/policy_decision.schema.json` | `tests/fixtures/policy/` | `policy/` | `data/receipts/policy/` |
+| `ModelAdapterPort` | PROPOSED interface | `docs/architecture/governed-ai/STATE_OWNERSHIP.md` | — *(TypeScript / Python interface; framework NEEDS VERIFICATION)* | `tests/adapters/` | — | — |
+| `MockAdapter` | PROPOSED implementation | `docs/architecture/governed-ai/MOCK_ADAPTER_CONTRACT.md` | — | `runtime/mock/__fixtures__/` | — | — |
+| `Ollama` adapter | DEFERRED implementation | `runtime/ollama/README.md` | — | `runtime/ollama/__fixtures__/` | — | — |
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 11 · Finite outcomes — the trust grammar
+
+Every Governed AI response collapses to **one of four outcomes**. There is no fifth, no "soft fail," and no fluent narration that hides which outcome was reached.
+
+| Outcome | When (CONFIRMED doctrine) | Required artifacts | Public surface effect |
+|---|---|---|---|
+| **ANSWER** | Evidence resolves, policy allows, citations validate, release state applies, review state (if required) is recorded. | `EvidenceBundle` resolved; `PolicyDecision = allow`; `ReleaseManifest` applies; `CitationValidationReport.pass = true`. | Substantive answer with Evidence Drawer payload and inline citations. |
+| **ABSTAIN** | Evidence insufficient, unresolved, or stale; or the AI surface cannot cite; or no released alternative exists. | `AIReceipt` with reason; no claim emitted; `CitationValidationReport` may indicate `missing_evidence`. | Non-substantive note with reason. Never invents. Never silently downgrades to a guess. |
+| **DENY** | Policy, rights, sensitivity, or release state forbids the answer. Sensitive lanes default here. | `PolicyDecision = deny` + `reason_code`; `AIReceipt` records denial. | Denial reason; offer non-restricted alternative surface where possible. |
+| **ERROR** | Governed API cannot evaluate — missing schema, malformed query, contract violation, infrastructure failure. | Error envelope with diagnostic code; no claim leakage. | Finite, actionable error. Never silently falls through to a different lane. |
+
+> [!WARNING]
+> Sensitive domains (archaeology exact coordinates, living-person / DNA-derived material, rare-species occurrence geometry, culturally sensitive route or site information, critical infrastructure detail, high-risk hazards context) **default to `DENY`**. Fail-closed is the posture; style filters and prompt instructions are insufficient.
+
+Surface × outcome mapping for this subsystem:
+
+| Surface | Outcomes returned | Forbidden behavior |
 |---|---|---|
-| `NO_EVIDENCE` | `ABSTAIN` | No released evidence in scope. |
-| `EVIDENCE_NOT_PUBLISHED` | `DENY` | Candidate or unpublished evidence is not runtime context. |
-| `EVIDENCE_POLICY_BLOCKED` | `DENY` | Rights/sensitivity/policy block. |
-| `EVIDENCE_STALE` | `ABSTAIN` | Freshness below threshold unless stale answer is explicitly allowed. |
-| `EVIDENCE_CONFLICTED` | `ABSTAIN` | Conflicting evidence needs review. |
-| `SCOPE_TOO_BROAD` | `ABSTAIN` | Ask for narrower map/time/source scope. |
-| `SENSITIVE_LOCATION_REDACTED` | `ANSWER` (generalized) or `DENY` | Answer only at generalized scope if policy allows. |
-| `POLICY_ENGINE_UNAVAILABLE` | `ERROR` | Fail closed. |
-| `CITATION_INVALID` | `ABSTAIN` or `ERROR` | Invalid claims cannot be released. |
-| `MODEL_UNAVAILABLE` | `ERROR` | No fluent fallback. |
-| `SOURCE_UNRESOLVED` | `ABSTAIN` | Source ID or `EvidenceRef` cannot resolve. |
-| `SOURCE_AUTHORITY_CONFLICT` | `ABSTAIN` | Review needed. |
-| `SOURCE_LEDGER_MISSING` | `ERROR` | Source governance absent. |
-| `PROJECT_SOURCE_NOT_ACCESSIBLE` | `ABSTAIN` | Preserve unresolved reference; do not cite as verified. |
+| Focus Mode answer | ANSWER / ABSTAIN / DENY / ERROR | Returning rendered feature properties as claims; uncited authoritative language |
+| Map-click evidence resolution | ANSWER / ABSTAIN / DENY / ERROR | Returning quarantined source as ANSWER; exposing internal store identifiers |
+| Export with model-drafted summary | ANSWER / DENY / ERROR | Returning an export without citation closure; releasing a sensitivity-tagged figure |
+| Internal review summary | ANSWER / ABSTAIN / DENY / ERROR | Internal answers leaking to a public route; admin shortcut on the public path |
 
-</details>
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 14. Continuity & Lineage Notes
+## 12 · The governed AI request flow
 
-Full lineage in [`CONTINUITY_NOTES.md`](CONTINUITY_NOTES.md). Headlines:
+The end-to-end Focus Mode flow is **scope → policy precheck → evidence retrieval → EvidenceRef resolution → bounded adapter call → citation validation → policy postcheck → envelope + receipt**. The browser never short-circuits any stage.
 
-- The current Governed AI Extended Pro Source Ledger Report **supersedes** prior governed-AI PDF reports (`KFM-AI-EXT-PRO-2/3/6/7/8/FINAL`, `KFM-AI-EXT-PRO-BASE`, `KFM-AI-EXPANSION`). Prior reports are retained as **lineage**, not as independent implementation evidence.
-- Convergent themes across the lineage — provider-neutral adapter, MockAdapter-first, `EvidenceBundle`-before-model, citation validation, policy gates, Focus/Evidence-Drawer separation — are **continuity signals**, not proof.
-- Every prior file home named in this folder is **PROPOSED** until reconciled with the mounted repo. Reconciliation events are tracked in [`docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) and [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md).
+```mermaid
+sequenceDiagram
+  autonumber
+  participant UI as UI (FocusPanel)
+  participant API as Governed API
+  participant POL as policyClient (pre)
+  participant EV as evidenceResolver
+  participant ADP as ModelAdapterPort
+  participant CV as CitationValidator
+  participant POL2 as policyClient (post)
+  participant ENV as RuntimeResponseEnvelope
+  participant REC as AIReceipt
+
+  UI->>API: FocusRequest(question, scope, role, MapContextEnvelope)
+  API->>POL: precheck(role, scope, sensitivity, release_class)
+  alt precheck DENY
+    POL-->>API: PolicyDecision(deny, reason)
+    API-->>UI: RuntimeResponseEnvelope(DENY) + AIReceipt
+  else precheck allow
+    POL-->>API: PolicyDecision(allow)
+    API->>EV: retrieve admissible released evidence
+    EV->>EV: resolve EvidenceRef → EvidenceBundle
+    alt no admissible evidence
+      EV-->>API: empty bundle set
+      API-->>UI: RuntimeResponseEnvelope(ABSTAIN) + AIReceipt
+    else evidence resolved
+      EV-->>API: EvidenceBundle[]
+      API->>ADP: generate(structured_output_schema, context)
+      ADP-->>API: model output (structured)
+      API->>CV: validate(citations, evidence_refs)
+      alt citations fail
+        CV-->>API: CitationValidationReport(fail)
+        API-->>UI: RuntimeResponseEnvelope(ABSTAIN) + AIReceipt
+      else citations pass
+        CV-->>API: CitationValidationReport(pass)
+        API->>POL2: postcheck(output, citations, policy_state)
+        alt postcheck DENY
+          POL2-->>API: PolicyDecision(deny, reason)
+          API-->>UI: RuntimeResponseEnvelope(DENY) + AIReceipt
+        else postcheck allow
+          POL2-->>API: PolicyDecision(allow)
+          API->>ENV: pack(ANSWER, citations, obligations, refs)
+          API->>REC: emit(provider, hashes, decisions, outcome)
+          API-->>UI: RuntimeResponseEnvelope(ANSWER) + AIReceipt
+        end
+      end
+    end
+  end
+```
+
+Any failure in evidence resolution, adapter availability, or schema validation surfaces as `ERROR` with a diagnostic code — never a silent retry on a different lane.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 13 · Adapter boundary
+
+The adapter boundary is the single seam between provider-specific model machinery and the rest of KFM. It is **the only place** where provider APIs are imported.
+
+| Component | Role | Status |
+|---|---|---|
+| `ModelAdapterPort` | Provider-neutral interface (request schema, structured-output contract, finite-outcome envelope) | PROPOSED interface; framework NEEDS VERIFICATION |
+| `MockAdapter` | Deterministic adapter for tests and local fixtures; consumes fixed inputs and returns fixed structured output | PROPOSED first implementation |
+| `OllamaAdapter` | Replaceable local or privately hosted runtime behind the governed boundary | DEFERRED — admitted only after MockAdapter contract, security review, and policy-bundle hashing are verified |
+| `OpenAIAdapter` (or similar) | Cloud-hosted runtime, behind the same governed interface | DEFERRED — same admission rules |
+
+> [!IMPORTANT]
+> **Reconciliation note** (CONFIRMED doctrine, PROPOSED resolution): UIAI-GAI says the first implementation slice MUST NOT start with Ollama, OpenAI, a browser chat panel, or UI polish. UIAI-OLLAMA explains how Ollama can be used as a replaceable local runtime behind the governed API. **Resolution:** fix adapter contracts, evidence gates, finite envelopes, citation validation, and receipts **first**; only then admit Ollama or another provider behind the same governed interface.
+
+Adapter responsibilities:
+
+- Accept a bounded context (admissible `EvidenceBundle`s, scope, role, structured-output schema).
+- Produce structured output that matches the requested schema.
+- Return runtime metadata (provider, model id, model hash, runtime params, seed) for the `AIReceipt`.
+- **Never** read RAW, WORK, QUARANTINE, canonical stores, vector index, graph store, source credentials.
+- **Never** be imported by UI component code. Component code speaks to the governed API client, not to provider SDKs.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 15. Open Questions
+## 14 · Citation validation
 
-> [!TIP]
-> A subsystem README without open questions is suspect. These are tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+Citation validation is the **gate that converts model output into evidence-bounded language**. A model answer without a passing `CitationValidationReport` cannot reach `ANSWER`.
 
-- **NEEDS VERIFICATION:** Whether `apps/governed-api/` (kebab) or `apps/governed_api/` (snake) is the live convention. Doctrine sources show both spellings.
-- **NEEDS VERIFICATION:** Whether `schemas/contracts/v1/ai/`, `schemas/contracts/v1/focus/`, and `schemas/contracts/v1/runtime/` exist as separate trees or are merged.
-- **OPEN:** How `DecisionEnvelope` obligations (e.g., `redact_geometry`, `steward_review`) compose with `RuntimeResponseEnvelope` — strictly advisory, or capable of forcing a downstream gate?
-- **OPEN:** Replay-verification cadence — `same evidence + prompt + model + seed → same receipt hash` is doctrine; tooling and storage of replay caches are unspecified.
-- **OPEN:** Prompt-contract registry shape — versioned, hashed `system + input + output schema + model-pin` per AI use case, but no schema home is yet ADR-fixed.
-- **NEEDS VERIFICATION:** Whether `AIReceipt` and `RunReceipt` share a base envelope or are sibling top-level schemas.
+| Check | Required behavior |
+|---|---|
+| Every cited `evidence_id` resolves to an `EvidenceBundle` reachable from the call's bounded context. | Pass / fail; failure → `ABSTAIN`. |
+| Every emitted claim is backed by at least one citation. | Uncited claims → `ABSTAIN`. |
+| Citations do not reference RAW, WORK, QUARANTINE, unpublished candidate, or restricted evidence. | Forbidden references → `DENY`. |
+| Citation set covers the requested scope (per source-coverage rule). | Insufficient coverage → `ABSTAIN`. |
+| Exact sensitive coordinates are not leaked through citation context. | Sensitive leakage → `DENY`. |
+
+The validator is the only authority on whether an answer is "evidence-bounded." UI code MUST NOT recompute citation closure on the client.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 15 · Policy precheck and postcheck
+
+Policy runs **twice** around the model call:
+
+| Stage | Decides | Outputs |
+|---|---|---|
+| **Precheck** | Whether the request is admissible at all — role, purpose, scope sensitivity, release class, source-rights posture. | `PolicyDecision` (`allow` / `deny` / `restrict` / `abstain` / `error`) with reason codes and obligations. |
+| **Postcheck** | Whether the produced output is admissible to expose — generalization required, redaction required, denial required given the output's actual content. | `PolicyDecision` with reason codes and obligations; may attach `RedactionReceipt` reference. |
+
+Both decisions are recorded in the `AIReceipt`. Both feed into the `RuntimeResponseEnvelope`'s `obligations` field.
+
+The policy bundle hash (`policy.policy_bundle_hash`) is captured in the `AIReceipt` because the same model output under a different policy is, by definition, a different outcome.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
 
-## 16. Related Documents
+## 16 · AIReceipt and replay discipline
 
-**Doctrine (upstream):**
-[`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) ·
-[`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) ·
-[`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) ·
-[`docs/governance/cite-or-abstain.md`](../../governance/cite-or-abstain.md)
+Every governed AI call emits an `AIReceipt`. The receipt is **process memory**, not a claim — it records what happened, not what is true.
 
-**Architecture peers:**
-[`docs/architecture/README.md`](../README.md) ·
-[`docs/architecture/governed-api.md`](../governed-api.md) ·
-[`docs/architecture/evidence-flow.md`](../evidence-flow.md) ·
-[`docs/architecture/focus-mode.md`](../focus-mode.md) ·
-[`docs/architecture/evidence-drawer-ai-implications.md`](../evidence-drawer-ai-implications.md) ·
-[`docs/architecture/source-ledger.md`](../source-ledger.md)
+```json
+{
+  "object_type": "AIReceipt",
+  "schema_version": "v1",
+  "outcome": "ANSWER",
+  "model": {
+    "id": "PLACEHOLDER",
+    "provider": "mock",
+    "model_bin_hash": "sha256:PLACEHOLDER"
+  },
+  "runtime": {
+    "temperature": 0,
+    "top_p": 1,
+    "max_tokens": 256,
+    "seed": 42
+  },
+  "prompt": {
+    "prompt_hash": "blake3:PLACEHOLDER",
+    "schema_hash": "sha256:PLACEHOLDER"
+  },
+  "evidence_refs": ["evidence://PLACEHOLDER"],
+  "policy": {
+    "policy_bundle_hash": "sha256:PLACEHOLDER",
+    "precheck_decision_ref": "decision://PLACEHOLDER",
+    "postcheck_decision_ref": "decision://PLACEHOLDER"
+  },
+  "citation_validation_report_ref": "report://PLACEHOLDER",
+  "artifacts": {
+    "output_digest": "blake3:PLACEHOLDER"
+  },
+  "release_refs": ["release://PLACEHOLDER"],
+  "timestamp": "2026-05-15T00:00:00Z"
+}
+```
 
-**Subsystem siblings (this folder):**
-[`STATE_OWNERSHIP.md`](STATE_OWNERSHIP.md) ·
-[`ROUTE_MAP.md`](ROUTE_MAP.md) ·
-[`BOUNDARIES.md`](BOUNDARIES.md) ·
-[`FOCUS_FLOW.md`](FOCUS_FLOW.md) ·
-[`CONTINUITY_NOTES.md`](CONTINUITY_NOTES.md)
+> [!NOTE]
+> The above JSON is **illustrative** and PROPOSED in shape. The executable schema lives at `schemas/contracts/v1/runtime/ai_receipt.schema.json` (PROPOSED path).
 
-**Runbooks (operations):**
-[`docs/runbooks/governed_ai_LOCAL_DEV.md`](../../runbooks/governed_ai_LOCAL_DEV.md) ·
-[`docs/runbooks/governed_ai_VALIDATION.md`](../../runbooks/governed_ai_VALIDATION.md) ·
-[`docs/runbooks/governed_ai_ROLLBACK.md`](../../runbooks/governed_ai_ROLLBACK.md)
+**Replay invariant** *(PROPOSED, per `New Ideas 5-8-26.pdf` ai-replay design):*
 
-**Crosswalks:**
-[`contracts/OBJECT_MAP.md`](../../../contracts/OBJECT_MAP.md) ·
-[`docs/registers/AUTHORITY_LADDER.md`](../../registers/AUTHORITY_LADDER.md) ·
-[`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) ·
-[`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md)
+> Same evidence + same prompt + same model + same seed + same policy bundle MUST produce the same receipt hash.
 
-**ADRs (file-home and trust-boundary decisions, PROPOSED):**
-`docs/adr/ADR-0001-schema-home.md` ·
-`docs/adr/ADR-focus-model-adapter-boundary.md`
+This invariant is what makes promotion gates, rollback audits, publication admissibility, and provenance verification possible. It is **the** reason the receipt records hashes rather than free text. CI command pattern (PROPOSED): `make ai-replay-check`.
+
+DSSE signing (PROPOSED): emitted receipts SHOULD be signed via `cosign sign-blob` or a full DSSE envelope before they participate in promotion or release gates.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
 
 ---
+
+## 17 · Trust membrane and exposure controls
+
+The Governed AI subsystem is **inside** the trust membrane. It exists to keep generative output subordinate to evidence, policy, and release state.
+
+| Rule | Enforcement |
+|---|---|
+| Deny by default | Public UI and normal clients use governed APIs and released payloads only. |
+| No browser direct access | RAW, WORK, QUARANTINE, canonical stores, graph stores, object stores, vector indexes, model runtimes, unpublished candidates, credentials, and internal service handles are unreachable from the client. |
+| Backend pre/postcheck | Focus Mode uses backend policy precheck and postcheck, EvidenceBundle resolution, adapter contract, citation validation, and finite `RuntimeResponseEnvelope`. |
+| Safe-by-construction telemetry | No raw evidence, no prompt text, no restricted geometry, no secrets, no full EvidenceBundle copies leave the boundary. |
+| Governed exports | Rights / sensitivity checks, proof references, release state, and correction lineage travel with the export or the export is denied. |
+| No admin shortcut on public path | Admin or steward shortcuts must be justified, constrained, documented, and kept out of the normal public route. |
+
+> [!WARNING]
+> **NEEDS VERIFICATION operational facts:** package CVEs, dependency licenses, host hardening, model runtime settings, reverse-proxy rules, branch protections, signing key custody, storage bucket policy, source credentials, SSO/role mapping, audit retention, and backup/restore behavior are NOT established by the doctrine attached to this subsystem. They are verified in `infra/`, `docs/runbooks/`, and a security review — not here.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 18 · Validation
+
+How this subsystem is checked (PROPOSED test families; CI workflow names NEEDS VERIFICATION).
+
+| Test family | Minimum check | Status |
+|---|---|---|
+| **Schema validation** | `RuntimeResponseEnvelope`, `DecisionEnvelope`, `FocusRequest`, `FocusResponse`, `AIReceipt`, `CitationValidationReport`, `PolicyDecision` schemas validate; valid fixtures pass, invalid fail. | PROPOSED |
+| **Finite outcome coverage** | At least one fixture per outcome (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`) for each governed AI surface. | PROPOSED |
+| **Citation validation** | Cited-answer fixture passes; uncited fixture abstains; references-restricted fixture denies. | PROPOSED |
+| **Sensitive-geometry deny** | Exact-coordinate fixture for archaeology / fauna / flora / people-DNA / infrastructure returns `DENY` or generalized; style filter insufficient. | PROPOSED |
+| **Stale-source ABSTAIN** | Evidence past its stale threshold without released alternative returns `ABSTAIN`. | PROPOSED |
+| **No direct model client** | E2E test asserts that browser code cannot reach Ollama / OpenAI / model runtime / vector index / graph store / object store. | PROPOSED |
+| **Replay determinism** | Same evidence + prompt + model + seed + policy bundle → same receipt hash. | PROPOSED |
+| **Policy bundle hashing** | Receipt records `policy_bundle_hash`; stale-policy-hash fixture fails. | PROPOSED |
+| **Structured-output validation** | Model output is validated against the request's structured-output schema before citation validation runs. | PROPOSED |
+| **No prompt leakage in telemetry** | Telemetry pipeline asserts no prompt text, raw evidence, or restricted geometry appears in events. | PROPOSED |
+| **Accessibility smoke** | UI-side: `FocusPanel` outcomes (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`) render with proper roles, focus management, and screen-reader-readable reasons. | PROPOSED (lives in UI test suite; cross-referenced here) |
+
+Negative-path fixtures *(PROPOSED, from `New Ideas 5-8-26.pdf`)*:
+
+| Fixture | Expected outcome |
+|---|---|
+| `prose_outside_json` | DENY |
+| `missing_decision` | DENY |
+| `confidence_nan` | DENY |
+| `missing_seed` | DENY |
+| `prompt_hash_mismatch` | DENY |
+| `temperature_nonzero` *(where determinism is required)* | DENY |
+| `unknown_decision_enum` | DENY |
+| `duplicate_item_ids` | DENY |
+| `malformed_utf8` | DENY |
+| `hallucinated_fields` | DENY |
+| `missing_rights` | DENY |
+| `unresolved_source` | ABSTAIN / DENY (depends on policy) |
+| `sensitive_exact_geometry` | DENY |
+| `stale_evidence` | ABSTAIN |
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 19 · Sibling docs in this folder
+
+| Doc | Purpose | Status |
+|---|---|---|
+| [`STATE_OWNERSHIP.md`](./STATE_OWNERSHIP.md) | Focus request lifecycle, evidence retrieval, adapter, citation validation, response envelope state ownership | PROPOSED |
+| [`ROUTE_MAP.md`](./ROUTE_MAP.md) | Focus and AI-adjacent governed API surfaces | PROPOSED |
+| [`BOUNDARIES.md`](./BOUNDARIES.md) | No direct model browser call; no RAW/WORK/QUARANTINE; no prompt telemetry leakage | PROPOSED |
+| [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) | Detailed Focus Mode end-to-end flow | PROPOSED |
+| [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) | Carry-forward of UIAI-GAI / UIAI-OLLAMA lineage | PROPOSED |
+| [`STRUCTURED_OUTPUT.md`](./STRUCTURED_OUTPUT.md) *(optional)* | Structured-output validation rules and schema discipline | OPTIONAL — create when adapter contract solidifies |
+| [`MOCK_ADAPTER_CONTRACT.md`](./MOCK_ADAPTER_CONTRACT.md) *(optional)* | Deterministic-fixture adapter contract | OPTIONAL |
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 20 · Anti-patterns
+
+Surface these in PR review; they are the most common ways the trust membrane gets bypassed:
+
+| Anti-pattern | What goes wrong | DENY / refuse path |
+|---|---|---|
+| Browser calls Ollama / OpenAI / local model runtime directly | Trust membrane bypassed; AI becomes its own truth source. | Governed API; Focus Mode steward. |
+| AI returns uncited language | Generated text substitutes for evidence; cite-or-abstain broken. | `CitationValidator` → `ABSTAIN`. |
+| AI answers from RAW / WORK / QUARANTINE | Pre-release content treated as truth. | `evidenceResolver` filters; precheck denies. |
+| Free-text prose escapes the structured-output schema | Schema discipline broken; downstream cannot validate. | Structured-output validator → `ERROR` / `DENY`. |
+| Receipt missing `policy_bundle_hash`, `seed`, or `model_bin_hash` | Replay invariant broken; promotion not auditable. | Receipt validator → `DENY`. |
+| Private chain-of-thought persisted as truth | Reasoning trace cited as evidence. | Receipt schema rejects; review steward denies. |
+| Admin shortcut routes AI generation around precheck | Admin bypass becomes a normal-path public route. | Trust-membrane audit; infra. |
+| Public model output exported without citation closure | Cite-or-abstain broken downstream of the call. | Export gate denies; rollback. |
+| Sensitive geometry rendered into Focus answer | Geoprivacy / CARE / sovereignty failure. | Sensitivity precheck → `DENY`; postcheck `DENY` if leaked. |
+| Treating `ANSWER` as canonical truth | AI surface promoted above EvidenceBundle authority. | Authority ladder; promotion gates. |
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 21 · Update propagation
+
+When something changes in this subsystem, update the matrix below (mirrors §24 of UIAI-WHOLE):
+
+| Material change | Owning README | Object map | Fixtures / tests | Runbooks | Continuity notes | Rollback notes | Verification backlog |
+|---|---|---|---|---|---|---|---|
+| `FocusResponse` envelope shape | `docs/architecture/governed-ai/README.md` | `contracts/OBJECT_MAP.md` | `tests/fixtures/focus/` | `docs/runbooks/governed_ai_VALIDATION.md` | `docs/architecture/governed-ai/CONTINUITY_NOTES.md` | `docs/runbooks/governed_ai_ROLLBACK.md` | Track adapter and citation gaps |
+| `AIReceipt` schema | this README | `contracts/OBJECT_MAP.md` | `tests/fixtures/runtime/` | `docs/runbooks/governed_ai_VALIDATION.md` | `CONTINUITY_NOTES.md` | `docs/runbooks/governed_ai_ROLLBACK.md` | Track DSSE signing |
+| Adapter port interface | this README | `contracts/OBJECT_MAP.md` | adapter contract tests | `docs/runbooks/governed_ai_LOCAL_DEV.md` | `CONTINUITY_NOTES.md` | Feature flag off | Verify framework / package |
+| Policy precheck / postcheck logic | `policy/runtime/README.md` | `contracts/OBJECT_MAP.md` | policy bundle tests + negative fixtures | `docs/runbooks/governed_ai_VALIDATION.md` | `docs/registers/DRIFT_REGISTER.md` | Revert policy bundle; fail closed | Tool version |
+| Citation validation rules | this README + `contracts/runtime/CITATION_VALIDATION_REPORT.md` | `contracts/OBJECT_MAP.md` | `tests/fixtures/runtime/` | `docs/runbooks/governed_ai_VALIDATION.md` | `CONTINUITY_NOTES.md` | Disable Focus route | Track structured-output drift |
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 22 · Rollback
+
+Per UIAI-WHOLE §26, the Governed AI rollback strategy is **feature-flag-first**, schema-deprecation-second:
+
+- **Focus route rollback** — disable the Focus route / client feature flag. Evidence Drawer and layer browsing remain intact. `MockAdapter` continues to serve tests.
+- **Adapter rollback** — if a provider adapter (Ollama, OpenAI) misbehaves, swap the runtime back to `MockAdapter` (tests-only) or a frozen prior adapter. The `ModelAdapterPort` interface is the rollback boundary.
+- **Schema rollback** — if `RuntimeResponseEnvelope`, `AIReceipt`, `FocusRequest`, or `FocusResponse` schemas are released and depended on, do not delete: version-bump and deprecate per ADR-0001 conventions. Add a migration note.
+- **Policy rollback** — revert the policy bundle; fail closed while policy is ambiguous. Update `docs/registers/DRIFT_REGISTER.md`.
+- **Receipt rollback** — receipts are append-only process memory. A "rollback" of a bad release that used model output triggers a `CorrectionNotice` and an updated `ReleaseManifest`; receipts themselves are never silently deleted.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 23 · Review burden
+
+Changes to this subsystem require review by:
+
+- **Docs steward** — doctrine, terminology, structure, anchor stability.
+- **Governed AI subsystem owner** — adapter contract, envelope shape, receipt fields, citation validation rules.
+- **Security steward** — exposure controls, trust-membrane boundaries, telemetry safety, credential handling.
+- **API owner** — route names, request/response framing, governed API contract.
+- **Policy steward** — policy precheck / postcheck contract, policy bundle hashing, sensitive-domain default-deny.
+
+CODEOWNERS reference: *(PROPOSED — assign in `.github/CODEOWNERS` once owners are confirmed)*.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 24 · ADRs
+
+ADRs that govern (or should govern) this subsystem:
+
+| ADR | Status | Purpose |
+|---|---|---|
+| `ADR-0001` schema home | CONFIRMED (per `directory-rules.md`) | `schemas/contracts/v1/<…>` is the canonical schema home |
+| `ADR-focus-model-adapter-boundary` | PROPOSED | Records the adapter contract, MockAdapter-first posture, Ollama admission criteria |
+| `ADR-ui-schema-home` | PROPOSED | Resolves UI vs runtime schema partitioning where envelopes are shared |
+| `ADR-ai-replay-determinism` | PROPOSED | Records the replay invariant, required receipt fields, deterministic settings |
+| `ADR-ai-public-output-gate` | PROPOSED | Records the "no raw model output in public" rule and the citation-closure gate |
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 25 · Open questions and verification backlog
+
+Track in `docs/registers/VERIFICATION_BACKLOG.md`:
+
+- **NEEDS VERIFICATION** — backend framework and route convention (drives `apps/governed-api/src/ai/*` paths).
+- **NEEDS VERIFICATION** — language / runtime of `ModelAdapterPort` (TypeScript vs Python vs both via gRPC).
+- **NEEDS VERIFICATION** — actual home of `MockAdapter` (`runtime/mock/` vs `apps/governed-api/src/ai/MockAdapter.ts`).
+- **NEEDS VERIFICATION** — whether `policy/` or `policies/` is canonical (Directory Rules §18 open question).
+- **NEEDS VERIFICATION** — current state of `schemas/contracts/v1/{runtime,focus}/`.
+- **NEEDS VERIFICATION** — CI workflow names (`contracts-ui-ai.yml` vs `governed-ai.yml`).
+- **NEEDS VERIFICATION** — policy engine choice (OPA / Rego / Conftest) and version.
+- **NEEDS VERIFICATION** — DSSE signing tool (`cosign` / Sigstore) and key custody.
+- **NEEDS VERIFICATION** — Ollama version and runtime settings (`num_ctx`, model file location) for the eventual local-runtime PR.
+- **NEEDS VERIFICATION** — signing key custody, branch protections, secret store integration for `infra/` posture.
+- **OPEN** — whether `RuntimeResponseEnvelope` and `DecisionEnvelope` are one schema or two (Focus, promotion, review, map-click all consume it; consolidation deferred to `ADR-focus-model-adapter-boundary`).
+- **OPEN** — anchor stability for siblings if they are renamed during repo inspection.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 26 · Related folders
 
 <details>
-<summary><strong>Appendix A — Glossary (collapsed)</strong></summary>
+<summary><strong>Architecture lanes</strong> — siblings and upstream/downstream subsystems</summary>
 
-- **EvidenceRef** — small typed pointer (`ref_id`, `target{spec_hash, expected_bundle_digest}`, `resolution{strategy, environment}`, `policy{require_signatures, require_checks_pass, fail_closed}`) the runtime resolves to an `EvidenceBundle` before any claim is rendered.
-- **EvidenceBundle** — release-grade support object containing identity, scope, evidence items, source posture, review/release state, limitations, and correction lineage.
-- **DecisionEnvelope** — normalized policy output: `{decision_id, outcome ∈ {ANSWER, ABSTAIN, DENY, ERROR}, policy_family, reasons[], obligations[], evaluated_at}`.
-- **RuntimeResponseEnvelope** — finite public envelope returned by Focus and AI-adjacent surfaces; carries citations, evidence refs, policy refs, release/review/correction state, reason codes, limitations.
-- **AIReceipt** — append-only AI-call process memory: model adapter, context hash, prompt/template hash, output hash, validation result. **No** chain-of-thought.
-- **Cite-or-abstain** — KFM truth posture. A consequential claim either cites resolvable evidence or abstains; fluent fallback is forbidden.
-- **Trust membrane** — the boundary between public clients and canonical/internal stores; the public path runs through governed APIs and released artifacts only.
+| Lane | Path | Role |
+|---|---|---|
+| Architecture index | `docs/architecture/README.md` | Parent index |
+| UI subsystem | `docs/architecture/ui/README.md` | Downstream consumer; Focus panel, Evidence Drawer, Outcome renderer |
+| Story subsystem | `docs/architecture/story/README.md` | Adjacent consumer; story-bound Focus answers |
+| Review subsystem | `docs/architecture/review/README.md` | Adjacent consumer; review-bound AI summaries |
+| Contract / schema / policy split | `docs/architecture/contract-schema-policy-split.md` | Three-layer object-definition discipline |
+| Map shell | `docs/architecture/map-shell.md` | MapLibre renderer doctrine; provides `MapContextEnvelope` |
 
 </details>
 
-[↑ Back to top](#governed-ai-subsystem)
+<details>
+<summary><strong>Doctrine</strong> — what this README inherits from</summary>
+
+| Doctrine | Path | Why it matters here |
+|---|---|---|
+| Trust membrane | `docs/doctrine/trust-membrane.md` | Defines public-client vs governed-API split |
+| Truth posture | `docs/doctrine/truth-posture.md` | Cite-or-abstain |
+| Authority ladder | `docs/doctrine/authority-ladder.md` | AI sits below evidence, policy, and release |
+| Lifecycle law | `docs/doctrine/lifecycle-law.md` | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED; AI reads only what release admits |
+| Directory Rules | `docs/doctrine/directory-rules.md` | §15 README contract; §6.1 architecture home; §10.1 `runtime/` doctrine |
+
+</details>
+
+<details>
+<summary><strong>Contracts, schemas, policy, fixtures</strong> — paired homes</summary>
+
+| Family | Path |
+|---|---|
+| Object-family map (semantic) | `contracts/OBJECT_MAP.md` |
+| Runtime contracts | `contracts/runtime/` |
+| Focus contracts | `contracts/focus/` |
+| Runtime schemas | `schemas/contracts/v1/runtime/` |
+| Focus schemas | `schemas/contracts/v1/focus/` |
+| Runtime policy | `policy/runtime/` |
+| Focus policy | `policy/focus/` |
+| Runtime fixtures | `tests/fixtures/runtime/` |
+| Focus fixtures | `tests/fixtures/focus/` |
+| Model adapters | `runtime/model_adapters/` |
+| Mock adapter | `runtime/mock/` |
+| Ollama adapter | `runtime/ollama/` |
+| Envelope helpers | `runtime/envelopes/` |
+| Emitted AI receipts | `data/receipts/ai/` |
+| Emitted runtime receipts | `data/receipts/runtime/` |
+
+</details>
+
+<details>
+<summary><strong>Runbooks</strong> — operational counterparts</summary>
+
+| Runbook | Path |
+|---|---|
+| Local dev | `docs/runbooks/governed_ai_LOCAL_DEV.md` |
+| Validation | `docs/runbooks/governed_ai_VALIDATION.md` |
+| Rollback | `docs/runbooks/governed_ai_ROLLBACK.md` |
+
+</details>
+
+> [!NOTE]
+> Per Directory Rules §2.5, if a mounted repo shows a structure that contradicts the related paths above, do **not** silently conform. Open a drift entry in `docs/registers/DRIFT_REGISTER.md`, propose an ADR or migration plan, and mark affected paths `PROPOSED / CONFLICTED` until resolved.
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
+
+---
+
+## 27 · Last reviewed
+
+**Last reviewed:** `2026-05-15` *(initial draft — update on every material change; ≥ 6 months without review flags this file for re-review per Directory Rules §15)*
+
+**Truth label of this document:** PROPOSED (doctrine confirmed; concrete paths, schema files, adapter homes, route names, and CI workflow names unverified against a mounted KFM repository in this session).
+
+---
+
+<!-- FOOTER -->
+
+**Related docs (quick links):**
+[Architecture index](../README.md) · [UI README](../ui/README.md) · [Story README](../story/README.md) · [Review README](../review/README.md) · [State ownership](./STATE_OWNERSHIP.md) · [Route map](./ROUTE_MAP.md) · [Boundaries](./BOUNDARIES.md) · [Focus flow](./FOCUS_FLOW.md) · [Continuity notes](./CONTINUITY_NOTES.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Trust membrane](../../doctrine/trust-membrane.md) · [Truth posture](../../doctrine/truth-posture.md) · [Authority ladder](../../doctrine/authority-ladder.md)
+
+[Back to top](#governed-ai-subsystem--architecture-readme)
