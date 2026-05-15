@@ -1,0 +1,165 @@
+name: MapLibre Perf Governance
+
+on:
+  pull_request:
+    paths:
+      - "apps/web/**"
+      - "scripts/*maplibre*"
+      - "schemas/maplibre/**"
+      - "tools/validators/maplibre/**"
+      - "config/maplibre/**"
+      - "tests/fixtures/maplibre/**"
+      - ".github/workflows/maplibre-perf-governance.yml"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/web/**"
+      - "scripts/*maplibre*"
+      - "schemas/maplibre/**"
+      - "tools/validators/maplibre/**"
+      - "config/maplibre/**"
+      - "tests/fixtures/maplibre/**"
+      - ".github/workflows/maplibre-perf-governance.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
+jobs:
+  maplibre-perf-governance:
+    name: MapLibre perf governance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      CI: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Node dependencies
+        run: |
+          npm ci
+
+      - name: Install Playwright Chromium
+        run: |
+          npx playwright install --with-deps chromium
+
+      - name: Install Python validator dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install jsonschema pytest
+
+      - name: Validate MapLibre perf envelope
+        run: |
+          python3 tools/validators/maplibre/validate_perf_envelope.py \
+            config/maplibre/perf-envelope.v1.json
+
+      - name: Start fixture server
+        run: |
+          python3 -m http.server 8080 &
+          echo $! > /tmp/kfm-maplibre-fixture-server.pid
+
+      - name: Run MapLibre smoke perf
+        run: |
+          node scripts/maplibre-smoke-perf.mjs
+
+      - name: Build MapLibre render diff report
+        run: |
+          node scripts/build-maplibre-render-diff.mjs
+
+      - name: Validate MapLibre render diff report
+        run: |
+          python3 tools/validators/maplibre/validate_render_diff_report.py \
+            artifacts/perf/render-diff/render-diff-report.json
+
+      - name: Attest MapLibre perf receipt
+        run: |
+          node scripts/attest-maplibre-perf.mjs
+
+      - name: Build MapLibre perf release manifest
+        run: |
+          node scripts/build-maplibre-perf-release-manifest.mjs
+
+      - name: Validate MapLibre perf governance
+        run: |
+          python3 tools/validators/maplibre/validate_perf_governance.py
+
+      - name: Build MapLibre perf ProofPack
+        run: |
+          node scripts/build-maplibre-perf-proof-pack.mjs
+
+      - name: Validate MapLibre perf ProofPack
+        run: |
+          python3 tools/validators/maplibre/validate_perf_proof_pack.py \
+            artifacts/perf/proof-pack.maplibre-perf.json
+
+      - name: Rebuild MapLibre perf release manifest with ProofPack
+        run: |
+          node scripts/build-maplibre-perf-release-manifest.mjs
+
+      - name: Final validate MapLibre perf governance
+        run: |
+          python3 tools/validators/maplibre/validate_perf_governance.py
+
+      - name: Build correction and rollback artifacts on failure
+        if: failure()
+        run: |
+          node scripts/build-maplibre-perf-correction-and-rollback.mjs || true
+
+      - name: Build failure bundle on failure
+        if: failure()
+        run: |
+          node scripts/build-maplibre-perf-failure-bundle.mjs || true
+
+      - name: Validate failure bundle on failure
+        if: failure()
+        run: |
+          python3 tools/validators/maplibre/validate_perf_failure_bundle.py \
+            artifacts/perf/failure-bundle.maplibre-perf.json || true
+
+      - name: Upload MapLibre perf ProofPack artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maplibre-perf-proofpack
+          path: |
+            artifacts/perf/
+            config/maplibre/perf-envelope.v1.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload MapLibre perf failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maplibre-perf-failure-bundle
+          path: |
+            artifacts/perf/
+            config/maplibre/perf-envelope.v1.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Stop fixture server
+        if: always()
+        run: |
+          if [ -f /tmp/kfm-maplibre-fixture-server.pid ]; then
+            kill "$(cat /tmp/kfm-maplibre-fixture-server.pid)" || true
+          fi
