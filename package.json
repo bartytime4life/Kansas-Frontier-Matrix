@@ -10,6 +10,28 @@
   "scripts": {
     "lint": "echo 'TODO: pnpm -r lint'",
     "test": "echo 'TODO: pnpm -r test'",
-    "build": "echo 'TODO: pnpm -r build'"
+    "build": "echo 'TODO: pnpm -r build'",
+
+    "maplibre:perf": "node scripts/maplibre-smoke-perf.mjs",
+
+    "maplibre:render-diff": "node scripts/build-maplibre-render-diff.mjs",
+
+    "maplibre:attest": "node scripts/attest-maplibre-perf.mjs",
+
+    "maplibre:manifest": "node scripts/build-maplibre-perf-release-manifest.mjs",
+
+    "maplibre:proof": "node scripts/build-maplibre-perf-proof-pack.mjs",
+
+    "maplibre:govern": "python3 tools/validators/maplibre/validate_perf_governance.py",
+
+    "maplibre:proof:validate": "python3 tools/validators/maplibre/validate_perf_proof_pack.py artifacts/perf/proof-pack.maplibre-perf.json",
+
+    "maplibre:failure-bundle": "node scripts/build-maplibre-perf-failure-bundle.mjs",
+
+    "maplibre:correction": "node scripts/build-maplibre-perf-correction-and-rollback.mjs",
+
+    "maplibre:perf:full": "npm run maplibre:perf && npm run maplibre:render-diff && npm run maplibre:attest && npm run maplibre:manifest && npm run maplibre:govern && npm run maplibre:proof && npm run maplibre:proof:validate",
+
+    "maplibre:clean": "rm -rf artifacts/perf"
   }
 }
