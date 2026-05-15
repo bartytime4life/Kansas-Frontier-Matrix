@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid-contradiction-handling>
+doc_id: kfm://doc/NEEDS-VERIFICATION/contradiction-handling
 title: Contradiction Handling
 type: standard
 version: v1
 status: draft
-owners: <TODO: Governance Steward + Doctrine Working Group + Release Authority>
+owners: "TODO(owner): confirm Governance Steward + Doctrine Working Group + Release Authority in role register"
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-05-15
 policy_label: public
 related:
   - docs/doctrine/truth-posture.md
@@ -19,6 +19,7 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/time-aware.md
   - docs/doctrine/trust-membrane.md
+  - docs/doctrine/directory-rules.md
   - docs/adr/
   - docs/runbooks/RB-CORRECTION-ROUTINE.md
   - docs/runbooks/RB-ROLLBACK-EXECUTION.md
@@ -26,13 +27,16 @@ related:
   - schemas/contracts/v1/supersession_record.schema.json
   - schemas/contracts/v1/quarantine_receipt.schema.json
   - schemas/contracts/v1/validation_report.schema.json
+  - schemas/contracts/v1/rollback_plan.schema.json
+  - schemas/contracts/v1/ai_receipt.schema.json
   - control_plane/policy_gate_register.yaml
 tags: [kfm, governance, doctrine, contradiction, conflict, evidence, audit, trust]
 notes:
   - Codifies how KFM detects, classifies, surfaces, and routes contradictions across sources, repository evidence, doctrine, external standards, and AI-assisted output.
   - Operationalizes the "Conflict surfacing" rule from docs/doctrine/truth-posture.md and the override-routing rules from docs/doctrine/authority-ladder.md.
-  - Placement under docs/governance/ may need reconciliation with the sibling doctrine track under docs/doctrine/. See authoring notes.
-  - All schema field names, route paths, CI workflow names, reason codes, and runbook references are PROPOSED until verified against repository state.
+  - Placement under docs/governance/ remains CONFLICTED / NEEDS VERIFICATION with the sibling doctrine track under docs/doctrine/. Confirm against Directory Rules and mounted-repo evidence before moving or linking.
+  - All schema field names, route paths, CI workflow names, reason codes, role-register paths, and runbook references are PROPOSED until verified against repository state.
+  - 2026-05-15 update tightened evidence-boundary language, quick triage, path placeholders, runtime outcome notes, and adoption checks without changing the core doctrine.
 [/KFM_META_BLOCK_V2] -->
 
 # Contradiction Handling
@@ -44,16 +48,41 @@ notes:
 [![Posture: Surface, Don't Smooth](https://img.shields.io/badge/posture-surface%20don't%20smooth-critical?style=flat-square)](#)
 [![Policy: Public](https://img.shields.io/badge/policy-public-2E7D32?style=flat-square)](#)
 [![Version: v1](https://img.shields.io/badge/version-v1-lightgrey?style=flat-square)](#)
-[![Last Updated: TODO](https://img.shields.io/badge/last%20updated-TODO-lightgrey?style=flat-square)](#)
+[![Last Updated: 2026-05-15](https://img.shields.io/badge/last%20updated-2026--05--15-lightgrey?style=flat-square)](#)
+[![Placement: Needs Verification](https://img.shields.io/badge/placement-needs%20verification-yellow?style=flat-square)](#)
 
-**Status:** Draft &middot; **Owners:** *TODO — Governance Steward + Doctrine Working Group + Release Authority* &middot; **Last updated:** *TODO — confirm at next governance review*
+**Status:** Draft &middot; **Owners:** `TODO(owner): confirm Governance Steward + Doctrine Working Group + Release Authority in role register` &middot; **Last updated:** 2026-05-15 &middot; **Path:** `PATH_TBD_AFTER_REPO_INSPECTION`
 
 > [!IMPORTANT]
 > This document is **normative**. It governs how every KFM contributor — human or AI — must behave when they encounter disagreement between sources, between code and doctrine, between standards and project terminology, or between an AI draft and its citations. Deviation is not a stylistic choice; it requires explicit governance review and a recorded justification (typically an ADR).
 
+> [!NOTE]
+> **Evidence boundary for this revision:** the attached Markdown was inspected as the working baseline. No mounted repository, live schemas, tests, workflows, role register, policy-gate register, runbooks, dashboards, or runtime logs were inspected in this session. This document states doctrine and proposed operating machinery; exact paths, owners, reason codes, schema fields, and runtime wiring remain `NEEDS VERIFICATION` until repository evidence confirms them.
+
+---
+
+## Quick triage card
+
+Use this card when a reviewer, steward, validator, or AI assistant first encounters a possible contradiction. It is a navigation aid; the numbered sections below remain authoritative.
+
+| First question | If yes | If no |
+|---|---|---|
+| Are two or more claims incompatible about the same fact, geometry, date, source role, release state, or policy posture? | Classify as a contradiction and continue. | Treat as uncertainty or missing evidence; see [§3](#3-definitions--contradiction-vs-uncertainty-vs-missing-evidence). |
+| Is either side already public, semi-public, or used by a released artifact? | Start at C6 and consider S4/S5 escalation. | Start at C1–C5 according to source of the conflict. |
+| Does the contradiction cross rights, sensitivity, cultural, archaeological, ecological, living-person, DNA, title, infrastructure, or security boundaries? | Prefer `DENY`, quarantine, redaction, generalization, or steward review until support is clear. | Continue normal classification and provenance recording. |
+| Is the contradiction between doctrine and current repository evidence? | Mark `PROPOSED CORRECTION`; route through ADR. | Use the ordinary category/severity matrix. |
+| Did AI generate, summarize, or smooth the disputed claim? | Reject or re-ground the draft and record an `AIReceipt` when C5 applies. | Record the contradiction through the non-AI receipt path. |
+
+> [!CAUTION]
+> The triage card must not become a shortcut for picking a winner. Its job is to get the contradiction into the right queue with enough evidence to audit later.
+
+[⬆ Back to top](#contradiction-handling)
+
 ---
 
 ## Contents
+
+- [Quick triage card](#quick-triage-card)
 
 1. [Purpose &amp; scope](#1-purpose--scope)
 2. [The doctrine in one paragraph](#2-the-doctrine-in-one-paragraph)
@@ -72,6 +101,7 @@ notes:
 15. [Worked examples](#15-worked-examples)
 16. [FAQ](#16-faq)
 17. [Related docs](#17-related-docs)
+18. [Adoption & verification checklist](#18-adoption--verification-checklist)
 
 ---
 
@@ -79,7 +109,7 @@ notes:
 
 Kansas Frontier Matrix integrates heterogeneous, frequently contested historical, archival, geospatial, and scientific evidence. Disagreement is the default state of the input. The integrity of every downstream artifact — datasets, catalogs, maps, narratives, models, documentation — depends on the discipline with which **contradictions are detected, named, and routed** rather than smoothed away by the author or the pipeline.
 
-This document operationalizes the **"Conflict surfacing"** rule from [`truth-posture`](../doctrine/truth-posture.md) and the **override-routing rules** from [`authority-ladder`](../doctrine/authority-ladder.md). It defines the categories, severity ladder, routing mechanisms, audit obligations, and forbidden actions that together comprise KFM's contradiction posture.
+This document operationalizes the **"Conflict surfacing"** rule from [`truth-posture`](../doctrine/truth-posture.md) and the **override-routing rules** from [`authority-ladder`](../doctrine/authority-ladder.md). It defines the categories, severity ladder, routing mechanisms, audit obligations, and forbidden actions that together comprise KFM's contradiction posture. It does **not** prove current repository implementation, schema availability, runbook existence, or runtime behavior; those remain `UNKNOWN` until inspected.
 
 **In scope**
 
@@ -144,7 +174,7 @@ Six categories cover the contradictions KFM encounters. Each has a typical detec
 | C3 | **Doctrine vs repository evidence** | Tier 2 (code, tests, configs) reveals doctrine is wrong or has drifted. | Authoring / review / audit. | `PROPOSED CORRECTION` in the doc + ADR per [`authority-ladder`](../doctrine/authority-ladder.md). |
 | C4 | **External vs internal terminology or standard** | A Tier 3 external standard or vendor doc conflicts with KFM terminology, casing, or doctrine. | Authoring / review. | Surface the relationship inline (`EXTERNAL` label); never adopt the external term in place of the KFM term. |
 | C5 | **AI synthesis vs citation** | An AI-generated draft makes a claim its cited evidence does not support, or omits a contradiction visible in the cited evidence. | AI-assisted authoring / review. | Reject the draft; require re-grounding. Record an `AIReceipt` indicating the synthesis was retracted. |
-| C6 | **Published artifact vs later evidence** | A new source surfaces after publication and contradicts a published claim, geometry, date, or geometry. | Post-publication. | `CorrectionNotice` + `SupersessionRecord` (+ `RollbackPlan` if severity ≥ S5). |
+| C6 | **Published artifact vs later evidence** | A new source surfaces after publication and contradicts a published claim, geometry, date, attribution, release state, or policy classification. | Post-publication. | `CorrectionNotice` + `SupersessionRecord` (+ `RollbackPlan` if severity ≥ S5). |
 
 > [!NOTE]
 > The categories are exhaustive **by intent**, not by enumeration. A contradiction that does not cleanly fit one of C1–C6 should be classified into the nearest category and the misfit noted as a `PROPOSED CORRECTION` to this taxonomy. Do not invent new categories silently.
@@ -174,7 +204,7 @@ Severity governs **response urgency and ceiling of disposition**. Severity is de
 
 ## 6. Routing flow
 
-The diagram below is the canonical routing for any detected contradiction. Begin at the top; the categorization step (`C1`–`C6`) determines the lane; severity (`S1`–`S5`) determines the ceiling.
+The diagram below is the doctrinal routing model for any detected contradiction. Begin at the top; the categorization step (`C1`–`C6`) determines the lane; severity (`S1`–`S5`) determines the ceiling.
 
 ```mermaid
 flowchart TD
@@ -223,7 +253,7 @@ flowchart TD
 The dashed reading of the diagram: **classification chooses the lane; severity chooses the ceiling**. Every path terminates in a provenance receipt — there is no path where the contradiction simply disappears.
 
 > [!NOTE]
-> Diagram is **CONFIRMED** in its category/severity vocabulary (drawn from existing KFM doctrine), but the precise routing edges are **PROPOSED** until verified against active runbooks (`RB-CORRECTION-ROUTINE.md`, `RB-ROLLBACK-EXECUTION.md`) and the policy-gate register.
+> Diagram vocabulary is **CONFIRMED** as this document's category/severity taxonomy. The precise routing edges are **PROPOSED** implementation guidance until verified against active runbooks (`RB-CORRECTION-ROUTINE.md`, `RB-ROLLBACK-EXECUTION.md`) and the policy-gate register.
 
 [⬆ Back to top](#contradiction-handling)
 
@@ -307,6 +337,8 @@ Contradictions affect the runtime decision envelope. The mapping below ties each
 
 > [!NOTE]
 > The `evidence.conflicting` reason code is **PROPOSED**. Existing reason codes (`policy.sensitivity`, `policy.rights_unclear`, `system.integrity_failure`, `freshness.window_lapsed`, `evidence.missing`) are drawn from existing KFM doctrine. The naming of any new reason code requires alignment with [`policy-aware`](../doctrine/policy-aware.md) and the `policy_gate_register.yaml` register before adoption.
+>
+> `STALE` is treated here as a trust-visible runtime state. If the active runtime contract admits only `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, map a stale contradiction to `ABSTAIN` or `ERROR` with `freshness.window_lapsed`, rather than inventing a new final outcome silently.
 
 [⬆ Back to top](#contradiction-handling)
 
@@ -398,6 +430,7 @@ Reviewers and authors should run this checklist before merging any PR that touch
 - [ ] Where disposition required an ADR, the ADR is linked or the contradiction is marked **`PROPOSED CORRECTION`** awaiting ADR.
 - [ ] Where the contradiction touched published material, a `CorrectionNotice` is open or in flight.
 - [ ] The audit trail required by [§12](#12-audit--provenance-requirements) is complete for every contradiction I introduced or discovered.
+- [ ] If I touched placement, schema-home, reason-code, role-register, or runbook assumptions, they are either verified or marked `NEEDS VERIFICATION` / `PROPOSED`.
 - [ ] I have not silently reconciled.
 
 [⬆ Back to top](#contradiction-handling)
@@ -413,7 +446,7 @@ The examples below are **illustrative** — they are not direct transcripts of i
 
 **Situation.** Source A (a state archive transcript) records a treaty signing as `1854-09-12`. Source B (a contemporary newspaper) records it as `1854-09-15`. Both are credible. The KFM event node currently in `WORK` cites Source A.
 
-**Classification.** C1 (cross-source data conflict), S1–S2 depending on downstream usage. Treat as **S2** here because the gauge layer surfaces this date in the public timeline.
+**Classification.** C1 (cross-source data conflict), S1–S2 depending on downstream usage. Treat as **S2** here because the date is surfaced in a public timeline.
 
 **Disposition.**
 - Encode the disagreement using the `time_uncertainty: conflicting_sources` vocabulary from [`time-aware`](../doctrine/time-aware.md).
@@ -478,6 +511,22 @@ The examples below are **illustrative** — they are not direct transcripts of i
 
 </details>
 
+<details>
+<summary><strong>Example 5 — External standard uses terminology that conflicts with a KFM term</strong></summary>
+
+**Situation.** A contributor cites an external standard that uses the phrase "provenance bundle" for a concept that overlaps partly, but not exactly, with KFM's `EvidenceBundle`. The draft replaces `EvidenceBundle` with the external term throughout the KFM doc to sound more standard.
+
+**Classification.** C4 (external vs internal terminology or standard), severity **S1–S3** depending on whether the substitution changes doctrine or only wording.
+
+**Disposition.**
+- Preserve the KFM term `EvidenceBundle`.
+- Add an inline note: `EXTERNAL: <standard> uses "provenance bundle"; KFM uses EvidenceBundle for the governed evidence-resolution object.`
+- If the external standard shows that KFM terminology or structure is wrong, open a `PROPOSED CORRECTION` and ADR rather than silently renaming.
+
+**Forbidden.** Replacing the KFM term everywhere without recording the relationship. External familiarity is not authority to erase KFM semantics.
+
+</details>
+
 [⬆ Back to top](#contradiction-handling)
 
 ---
@@ -533,27 +582,50 @@ Yes — but the rule applies at the *shape* of detection, not at human-eyeballs 
 ## 17. Related docs
 
 > [!NOTE]
-> Paths below are **PROPOSED** placeholders inferred from the established `docs/doctrine/` track. The placement of this document under `docs/governance/` may or may not be the canonical split between operational governance docs and foundational doctrine; verify the placement convention before relying on the links. Each target path needs verification against the live repository.
+> Paths below preserve the existing relative-link assumptions of the baseline document. Because this session did not inspect a mounted repository, every concrete path remains `NEEDS VERIFICATION` unless separately confirmed by repository evidence. Directory placement should follow Directory Rules: responsibility root first, no parallel schema/contract/policy homes without an ADR, and `schemas/contracts/v1/<…>` as the default schema-home convention where applicable.
 
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — Truth labels, source hierarchy, evidence-gathering, and the headline "Conflict surfacing" rule this document operationalizes. **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — Primary / Secondary / Tertiary tiers and the `PROPOSED CORRECTION` mechanism this document inherits. **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/evidence-first.md`](../doctrine/evidence-first.md) — `InspectableClaim` → `EvidenceRef` → `EvidenceBundle` → `SourceDescriptor`; the `ABSTAIN` rule that applies when contradictions cannot be defensibly resolved. **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`; the stages where contradictions are caught and quarantined. **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md) — `CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`; the immutable-append-only correction machinery referenced throughout. **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/derived-stays-derived.md`](../doctrine/derived-stays-derived.md) — Manual edits are derivations; the doctrine that governs how source corrections are recorded. **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/ai-as-assistant.md`](../doctrine/ai-as-assistant.md) — Bounds AI use; `AIReceipt`; chain-of-thought non-persistence. **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — `DecisionEnvelope`, sensitivity classification, `DENY` reason codes referenced in [§10](#10-runtime-impact--outcome-mapping). **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — Runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `STALE`); the canonical outcome vocabulary mapped in [§10](#10-runtime-impact--outcome-mapping). **CONFIRMED sibling doctrine.**
-- [`docs/doctrine/time-aware.md`](../doctrine/time-aware.md) — `time_uncertainty` vocabulary including `conflicting_sources`. **CONFIRMED sibling doctrine.**
-- [`docs/adr/`](../adr/) — ADR home for C3 dispositions and severity-rubric revisions. **PROPOSED path.**
+- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — Truth labels, source hierarchy, evidence-gathering, and the headline "Conflict surfacing" rule this document operationalizes. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — Primary / Secondary / Tertiary tiers and the `PROPOSED CORRECTION` mechanism this document inherits. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/evidence-first.md`](../doctrine/evidence-first.md) — `InspectableClaim` → `EvidenceRef` → `EvidenceBundle` → `SourceDescriptor`; the `ABSTAIN` rule that applies when contradictions cannot be defensibly resolved. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`; the stages where contradictions are caught and quarantined. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md) — `CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`; the immutable-append-only correction machinery referenced throughout. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/derived-stays-derived.md`](../doctrine/derived-stays-derived.md) — Manual edits are derivations; the doctrine that governs how source corrections are recorded. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/ai-as-assistant.md`](../doctrine/ai-as-assistant.md) — Bounds AI use; `AIReceipt`; chain-of-thought non-persistence. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — `DecisionEnvelope`, sensitivity classification, `DENY` reason codes referenced in [§10](#10-runtime-impact--outcome-mapping). **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — Runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `STALE`); the canonical outcome vocabulary mapped in [§10](#10-runtime-impact--outcome-mapping). **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/time-aware.md`](../doctrine/time-aware.md) — `time_uncertainty` vocabulary including `conflicting_sources`. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — Placement, responsibility-root, and schema-home rules to verify before moving this standard or creating contradiction-related schemas. **CONFIRMED directory doctrine; path NEEDS VERIFICATION.**
+- [`docs/adr/`](../adr/) — ADR home for C3 dispositions, schema-home conflicts, placement decisions, and severity-rubric revisions. **PROPOSED path.**
 - [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction procedure. **PROPOSED path.**
 - [`docs/runbooks/RB-ROLLBACK-EXECUTION.md`](../runbooks/RB-ROLLBACK-EXECUTION.md) — Day-2 rollback procedure for S5 events. **PROPOSED path.**
-- `schemas/contracts/v1/` — Receipt and record schemas listed in [§12](#12-audit--provenance-requirements). **PROPOSED paths.**
+- `schemas/contracts/v1/` — Default schema-home convention for receipt and record schemas listed in [§12](#12-audit--provenance-requirements), subject to ADR/repo verification. **PROPOSED file names; directory convention from Directory Rules.**
 - `control_plane/policy_gate_register.yaml` — Reason-code register referenced in [§10](#10-runtime-impact--outcome-mapping). **NEEDS VERIFICATION — exact path.**
 - [`CONTRIBUTING.md`](../../CONTRIBUTING.md) — Pre-merge checklist surface; PR template references. **NEEDS VERIFICATION.**
 
 ---
 
-<sub>**Last updated:** 2026-05-12 · **Version:** v1 (draft) · **Doctrine track:** `docs/governance/` (placement under review — see §17)</sub>
+## 18. Adoption & verification checklist
+
+Use this checklist before treating this standard as implemented or wiring it into validators, runbooks, policy gates, APIs, UI surfaces, or AI review workflows.
+
+- [ ] Confirm the canonical target path for this file (`docs/doctrine/`, `docs/governance/`, or another documented home) against Directory Rules, current repo structure, and any accepted ADR.
+- [ ] Confirm owners in the role register; replace `TODO(owner)` only with verified role/team names.
+- [ ] Confirm every sibling doctrine link in [§17](#17-related-docs) resolves from the final target path.
+- [ ] Confirm `C1`–`C6` and `S1`–`S5` are accepted taxonomy, or open an ADR for changes.
+- [ ] Confirm contradiction-related schemas exist or create them under the ADR-approved schema home.
+- [ ] Confirm `policy_gate_register.yaml` (or successor) contains the reason codes used in [§10](#10-runtime-impact--outcome-mapping).
+- [ ] Confirm runbooks for correction and rollback exist and match the routing model in [§6](#6-routing-flow).
+- [ ] Confirm runtime contracts either support `STALE` directly or map stale conditions to finite outcomes without silent vocabulary drift.
+- [ ] Confirm UI surfaces, especially Evidence Drawer and Focus Mode, expose contradictions instead of smoothing them.
+- [ ] Confirm PR templates or contributor guidance include the pre-merge checklist in [§14](#14-pre-merge-contradiction-checklist).
+
+> [!IMPORTANT]
+> Until these checks pass, this file can govern authoring posture and review expectations, but exact implementation wiring remains `UNKNOWN` / `NEEDS VERIFICATION`.
+
+[⬆ Back to top](#contradiction-handling)
+
+---
+
+<sub>**Last updated:** 2026-05-15 · **Version:** v1 (draft) · **Placement:** `PATH_TBD_AFTER_REPO_INSPECTION` — current relative links preserve the baseline assumption pending repo verification</sub>
 
 [⬆ Back to top](#contradiction-handling)
