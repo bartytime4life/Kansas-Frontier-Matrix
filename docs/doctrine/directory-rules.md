@@ -24,3 +24,9 @@ Current authoritative source text remains at `docs/directory-rules.md` until ste
 
 - NEEDS VERIFICATION: whether `docs/doctrine/directory-rules.md` should become the authoritative text or a controlled mirror.
 - Until resolved, treat this file as a governance pointer, not replacement authority.
+
+## Evidence refs
+
+- `docs/directory-rules.md` §1.2 (proposed canonical home table)
+- `docs/directory-rules.md` §2.1 (authority order)
+- `docs/directory-rules.md` §2.5 (drift handling)
