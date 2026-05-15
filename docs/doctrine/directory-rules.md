@@ -16,9 +16,9 @@ created_at: 2026-05-15T20:59:04Z
 
 # Directory Rules canonical-home stub
 
-This file is a Wave 1 governance scaffold to reserve the canonical doctrine path described in `docs/directory-rules.md` (Proposed canonical home table).
+This file is a Wave 1 governance scaffold to reserve the canonical doctrine path described in `docs/directory-rules.md` (Proposed canonical home table; see `docs/directory-rules.md`, section 1.2 table).
 
-Current authoritative source text remains at `docs/directory-rules.md` until steward review confirms relocation or mirroring policy.
+Current authoritative source text remains at `docs/directory-rules.md` until steward review confirms relocation or mirroring policy (authority-order and drift handling: `docs/directory-rules.md` §2.1, §2.5).
 
 ## Verification notes
 
