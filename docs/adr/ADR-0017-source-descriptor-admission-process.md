@@ -24,10 +24,26 @@ tags: ["adr", "source", "admission", "governance", "lifecycle"]
 notes: "v1.1 strengthens Directory Rules alignment, repo-evidence boundaries, activation-decision fields, validation gates, and pilot acceptance criteria. Status remains proposed until reviewed by source and governance stewards and reconciled against mounted-repo state."
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+
 # ADR-0017 — Source Descriptor Admission Process
 
 > The gate at which **the world** becomes **KFM-admissible evidence**.
 > No source enters the lifecycle without an admitted descriptor; no descriptor is admitted without a record-level admission contract.
+
+> [!IMPORTANT]
+> **Status:** `proposed`  
+> **Owner:** `@kfm-source-stewards` · `@kfm-governance-stewards`  
+> **Target path:** `docs/adr/ADR-0017-source-descriptor-admission-process.md` — **PROPOSED** until mounted-repo inspection confirms ADR naming convention  
+> **Truth posture:** CONFIRMED doctrine where supported by attached corpus; PROPOSED implementation/file homes; UNKNOWN current repo depth
+
+| Label | Meaning in this ADR |
+|---|---|
+| **CONFIRMED** | Supported by attached KFM doctrine or the existing ADR baseline. |
+| **PROPOSED** | Recommended design, path, contract, validator, policy, or workflow not verified in the mounted repo. |
+| **UNKNOWN** | Not verified because repo files, tests, workflows, dashboards, logs, or emitted artifacts were not inspected. |
+| **NEEDS VERIFICATION** | Checkable before acceptance or implementation, but not checked strongly enough here. |
+| **OPEN** | A design choice this ADR intentionally leaves for pilot evidence or successor decision. |
 
 | Field | Value |
 |---|---|
@@ -98,6 +114,8 @@ Both threads describe the same machinery from different sides. This ADR consolid
 
 [^build-co-8]: KFM Build Companion, §8 — *Source activation and authority: the repo needs an admission office* — including §8.1 activation flow, §8.2 minimum descriptor fields, §8.3 source-role examples by domain. Preserved from baseline; attached corpus support is doctrinal, not mounted-repo proof.
 [^pass13-srcB]: KFM Components Pass 13 Part 2, §5.B Chapter B — *Source Descriptors and Source-Role Doctrine*, KFM-IDX-SRC-001 through KFM-IDX-SRC-006. iNaturalist and eBird descriptors are the most fully developed prototypes.
+
+<sub>[⬆ Back to top](#top)</sub>
 
 ---
 
@@ -246,6 +264,25 @@ A fail-closed trigger MUST cause `DENY` (for an outward decision) or `ABSTAIN` (
 
 To make the validator's branches map one-to-one to descriptor lines, each descriptor SHOULD ship a co-located `admission_rules.json` (or equivalent) that mirrors the prose lists. The validator loads it at startup. This is **PROPOSED** per the Pass 13 expansion direction (KFM-IDX-SRC-005, *"Suggested future work"*).
 
+> [!TIP]
+> The following example is illustrative. Field names and path placement remain **PROPOSED** until the mounted repo confirms the schema convention.
+
+```json
+{
+  "source_id": "SOURCE_ID_TBD",
+  "minimum_bar": [
+    { "id": "prov.provider_record_id", "required": true },
+    { "id": "rights.license", "required": true },
+    { "id": "geom.public_safe_geometry", "required": true }
+  ],
+  "fail_closed_triggers": [
+    { "id": "rights.unresolved_license", "outcome": "DENY" },
+    { "id": "sens.exact_location_public_risk", "outcome": "DENY" },
+    { "id": "prov.unreconstructible_source_uri", "outcome": "ABSTAIN" }
+  ]
+}
+```
+
 > [!NOTE]
 > Whether `admission_rules.*` is embedded inside `KFM_META_BLOCK_V2` or lives as a sibling file is **OPEN** in the corpus and tracked in §7. Default in this ADR: sibling file.
 
@@ -285,6 +322,8 @@ This pattern aligns with the Master Action Matrix in `kfm_encyclopedia.pdf` §10
 
 Directory Rules govern placement by responsibility root: `contracts/` owns object meaning, `schemas/` owns machine-checkable shape, `policy/` owns admissibility/release decisions, `control_plane/` owns structured governance maps, `tests/` and `fixtures/` prove enforceability, and `data/` owns lifecycle data and registries.[^dir-rules]
 
+#### 2.9.1 Descriptor and schema artifacts
+
 | Artifact | Proposed path | Authority class | Status of path |
 |---|---|---|---|
 | Descriptor (Markdown) | `contracts/source/<source>_source_descriptor.md` | Object meaning | **PROPOSED** filename pattern; responsibility-root basis **CONFIRMED** by Directory Rules; mounted-repo presence **NEEDS VERIFICATION** |
@@ -293,10 +332,20 @@ Directory Rules govern placement by responsibility root: `contracts/` owns objec
 | Machine schema | `schemas/contracts/v1/sources/source_descriptor.schema.json` | Machine shape | **PROPOSED**; verify ADR-0001 and singular/plural `source(s)` convention |
 | Per-source admission-rules schema | `schemas/contracts/v1/sources/source_admission_rules.schema.json` | Machine shape | **PROPOSED** |
 | Per-source admission rules | `contracts/source/<source>_admission_rules.json` _(co-located with descriptor)_ | Semantic mirror of record-level rule lists | **PROPOSED**; if JSON is treated as schema-shaped data in the repo, migrate under the confirmed schema/data convention by ADR |
+
+#### 2.9.2 Validation, policy, and test artifacts
+
+| Artifact | Proposed path | Authority class | Status of path |
+|---|---|---|---|
 | Validator | `tools/validators/sources/source_descriptor_validator.*` | Repo-wide validator | **PROPOSED** |
 | Policy bundle | `policy/sources/source_descriptor.rego` | Admissibility / deny-abstain rules | **PROPOSED** |
 | Tests | `tests/sources/test_source_descriptor.*` | Enforceability proof | **PROPOSED** |
 | Fixtures | `fixtures/sources/valid/` and `fixtures/sources/invalid/` | Golden / negative inputs | **PROPOSED** |
+
+#### 2.9.3 Registry and decision artifacts
+
+| Artifact | Proposed path | Authority class | Status of path |
+|---|---|---|---|
 | Per-domain registry | `data/registry/<domain>/sources.yaml` or `data/registry/sources/<domain>.yaml` | Source registry | **PROPOSED**; choose one after mounted repo inspection; do not maintain both without ADR |
 | Authority register | `control_plane/source_authority_register.yaml` | Governance map | **PROPOSED** filename; responsibility-root basis **CONFIRMED** by Directory Rules; append-only behavior **NEEDS VERIFICATION** |
 | Activation decision | recorded inside `control_plane/source_authority_register.yaml` or a confirmed sibling register | Governance map | **PROPOSED** placement; see §2.10 |
@@ -332,19 +381,49 @@ Every `SourceActivationDecision` MUST be inspectable, append-only, and reversibl
 
 Fields MAY be implemented as YAML, JSON, or another repo-native structured form, but the semantics above MUST be preserved.
 
+> [!TIP]
+> The example below is illustrative, not a claim that this exact YAML file exists. It shows the minimum shape reviewers should be able to inspect.
+
+```yaml
+decision_id: SOURCE-ACTIVATION-DECISION-ID-TBD
+source_id: SOURCE_ID_TBD
+descriptor_ref: contracts/source/SOURCE_ID_TBD_source_descriptor.md
+descriptor_digest: sha256:DESCRIPTOR_DIGEST_TBD
+activation_status: draft
+allowed_roles: []
+denied_roles: []
+rights_summary: NEEDS VERIFICATION
+sensitivity_summary: NEEDS VERIFICATION
+obligations:
+  - re_review_required
+reviewers:
+  source_steward: OWNER_TBD
+  governance_steward: OWNER_TBD
+  rights_sensitivity_reviewer: OWNER_TBD
+decision_date: 2026-05-15
+effective_date: 2026-05-15
+re_review_date: DATE_TBD_AFTER_REVIEW
+decision_receipt_ref: kfm://receipt/NEEDS-VERIFICATION
+supersedes_decision_id: null
+rollback_target: ROLLBACK_TARGET_TBD
+reason_codes: []
+```
+
 ### 2.11 Pilot acceptance package
 
 Before this ADR is accepted, the project SHOULD run a two-source pilot. The baseline names iNaturalist and eBird because their descriptor prototypes exercise different risks: observation-level rights, geoprivacy, taxonomy, community-science semantics, checklist semantics, and runtime overstatement.
 
 The pilot SHOULD produce:
 
-1. two Markdown source descriptors following §2.4;
-2. two `admission_rules` mirrors or a documented reason for omitting mirrors;
-3. valid and invalid no-network fixtures;
-4. a descriptor validator dry run;
-5. `SourceActivationDecision` rows in the proposed authority register;
-6. a short review note showing which claims remain `PROPOSED`, `OPEN`, or `NEEDS VERIFICATION`;
-7. no public release unless downstream release gates independently pass.
+- [ ] two Markdown source descriptors following §2.4;
+- [ ] two `admission_rules` mirrors or a documented reason for omitting mirrors;
+- [ ] valid and invalid no-network fixtures;
+- [ ] a descriptor validator dry run;
+- [ ] `SourceActivationDecision` rows in the proposed authority register;
+- [ ] a short review note showing which claims remain `PROPOSED`, `OPEN`, or `NEEDS VERIFICATION`;
+- [ ] no public release unless downstream release gates independently pass.
+
+<sub>[⬆ Back to top](#top)</sub>
 
 ---
 
@@ -450,6 +529,8 @@ This ADR does **not**:
 - allow source descriptors to replace `EvidenceBundle`, `PromotionDecision`, `ReleaseManifest`, or rollback objects;
 - allow public surfaces to read RAW, WORK, QUARANTINE, candidate, canonical/internal stores, or direct model output.
 
+<sub>[⬆ Back to top](#top)</sub>
+
 ---
 
 ## 6. Rollback and supersession
@@ -460,23 +541,34 @@ This ADR does **not**:
 - Rollback target for validator or policy changes: revert the validator / policy bundle to the prior passing revision and re-run descriptor fixture tests.
 - Rollback target for the ADR itself: revert to no formal admission contract and route source intake decisions through ad-hoc review. **Strongly discouraged**; record the reason in the deprecation register.
 
+<sub>[⬆ Back to top](#top)</sub>
+
 ---
 
 ## 7. Open questions and NEEDS VERIFICATION
 
+### 7.1 Path and authority checks
+
 | Item | Status | Resolution path |
 |---|---|---|
-| Whether `admission_rules.*` belongs inside `KFM_META_BLOCK_V2` or as a sibling JSON | **OPEN** | Pilot both on iNaturalist and eBird; choose by validator-ergonomics evidence; record decision in a successor ADR or amendment |
 | Whether `contracts/source/` is the live home in the mounted repo, or whether an alternate path is in use | **NEEDS VERIFICATION** | Inspect mounted repo; if drifted, open `docs/registers/DRIFT_REGISTER.md` entry per Directory Rules §2.5 |
 | Whether `schemas/contracts/v1/sources/` or `schemas/contracts/v1/source/` is the live machine-schema home | **NEEDS VERIFICATION** | Verify ADR-0001 acceptance state and mounted-repo `schemas/contracts/v1/` presence; do not maintain divergent definitions |
 | Whether `control_plane/source_authority_register.yaml` exists and is append-only | **NEEDS VERIFICATION** | Inspect mounted repo; if absent, create per Directory Rules §6.2 or confirm alternate register home |
+| Whether prior ADRs in `docs/adr/` actually exist as referenced (e.g., ADR-0001) | **NEEDS VERIFICATION** | The corpus references ADR-0001 as the schema-home decision; presence in the mounted repo MUST be confirmed before this ADR is accepted |
+| Whether per-domain source registries use `data/registry/<domain>/sources.yaml` or `data/registry/sources/<domain>.yaml` | **NEEDS VERIFICATION** | Inspect mounted repo; choose one by Directory Rules / ADR; add drift entry if both exist without authority |
+
+### 7.2 Design and process questions
+
+| Item | Status | Resolution path |
+|---|---|---|
+| Whether `admission_rules.*` belongs inside `KFM_META_BLOCK_V2` or as a sibling JSON | **OPEN** | Pilot both on iNaturalist and eBird; choose by validator-ergonomics evidence; record decision in a successor ADR or amendment |
 | Whether descriptor sections that do not apply to a given source remain as empty headings or are omitted | **OPEN** (per Pass 13, KFM-IDX-SRC-001 open question) | Default in this ADR: keep heading, write a one-line justification (e.g., "Source-global rights — no observation-level variance") |
 | Should source descriptors be enforced via a CI block that DENIES PRs touching `connectors/<source>/` without a corresponding descriptor? | **OPEN** | Default in this ADR: advisory; promote to hard block once two pilot descriptors are accepted |
 | Whether a `schemas/contracts/v1/common/source_role.schema.json` should be authored so all descriptors and evidence objects can `$ref` it | **OPEN** (per Pass 13, KFM-IDX-SRC-002 expansion direction) | Track as follow-up ADR |
-| Whether prior ADRs in `docs/adr/` actually exist as referenced (e.g., ADR-0001) | **NEEDS VERIFICATION** | The corpus references ADR-0001 as the schema-home decision; presence in the mounted repo MUST be confirmed before this ADR is accepted |
 | Whether the source-health dashboard exists or is only proposed | **NEEDS VERIFICATION** | Inspect apps, reports, dashboards, or release artifacts; until proven, describe dashboard use as PROPOSED |
-| Whether per-domain source registries use `data/registry/<domain>/sources.yaml` or `data/registry/sources/<domain>.yaml` | **NEEDS VERIFICATION** | Inspect mounted repo; choose one by Directory Rules / ADR; add drift entry if both exist without authority |
 | Whether `SourceActivationDecision` is a row inside the authority register or a separate object with a register reference | **OPEN** | Pilot with two descriptors; choose the smallest auditable representation; preserve §2.10 fields either way |
+
+<sub>[⬆ Back to top](#top)</sub>
 
 ---
 
@@ -484,12 +576,17 @@ This ADR does **not**:
 
 ### 8.1 Project sources (attached or referenced in this session)
 
+<details>
+<summary>Show project-source ledger</summary>
+
 - `kfm_build_companion.pdf` — §8 *Source activation and authority: the repo needs an admission office* (§8.1 activation flow; §8.2 minimum descriptor fields; §8.3 source-role examples by domain). Sketches: Appendix C.1 SourceDescriptor sketch. **Status:** baseline reference preserved; not mounted-repo proof.
 - `KFM_Components_Pass_13_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` — §5.B *Chapter B — Source Descriptors and Source-Role Doctrine*; idea entries KFM-IDX-SRC-001 through KFM-IDX-SRC-006.
 - `KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_20260421.pdf` — §12.3 *Source onboarding mechanics* (the 6-step shape replicated across domains).
 - `KFM_Governed_AI_Extended_Pro_Source_Ledger_PDF_Only_Architecture_Report_20260420.pdf` — §7 *Required object-family map* (`SourceDescriptor`, `SourceAliasMap`, `UnresolvedSourceReference`, `SourceIntakeRecord`).
 - `Directory Rules.pdf` / `docs/doctrine/directory-rules.md` — §0 (status, schema-home convention, lifecycle invariant), §2.4 (changes that require ADR), §4 (placement protocol), §6.2 (`control_plane/`), §6.3 (`contracts/`), §6.4 (`schemas/`), §6.5 (`policy/`).
 - `kfm_encyclopedia.pdf` — §10 *Master Action Matrix* (separation of duties for source activation, policy result, promotion).
+
+</details>
 
 ### 8.2 Per-domain corroboration
 
@@ -505,4 +602,4 @@ The 6-step onboarding pattern recurs in: KFM Atmosphere/Air; Archaeology; Fauna;
 
 ---
 
-<sub>[⬆ Back to top](#adr-0017--source-descriptor-admission-process)</sub>
+<sub>[⬆ Back to top](#top)</sub>
