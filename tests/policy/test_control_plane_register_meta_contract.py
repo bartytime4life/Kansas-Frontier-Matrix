@@ -54,6 +54,8 @@ def test_control_plane_register_last_reviewed_not_future_date() -> None:
         ].split(":", 1)[1].strip()
         reviewed = date.fromisoformat(value)
         assert reviewed <= today, f"{rel_path} has future last_reviewed: {reviewed}"
+
+
 def test_control_plane_related_doctrine_paths_exist() -> None:
     for rel_path in REQUIRED_FILES:
         content = Path(rel_path).read_text(encoding="utf-8")
@@ -63,3 +65,14 @@ def test_control_plane_related_doctrine_paths_exist() -> None:
         assert doctrine_paths, f"{rel_path} missing related_doctrine entries"
         for doctrine_path in doctrine_paths:
             assert Path(doctrine_path).exists(), f"{rel_path} references missing doctrine path: {doctrine_path}"
+
+
+def test_control_plane_register_status_value_allowed() -> None:
+    allowed = {"PROPOSED", "CONFIRMED"}
+    for rel_path in REQUIRED_FILES:
+        content = Path(rel_path).read_text(encoding="utf-8")
+        header = "\n".join(content.splitlines()[:20])
+        marker = "status:"
+        assert marker in header, f"{rel_path} missing {marker}"
+        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":", 1)[1].strip()
+        assert value in allowed, f"{rel_path} has unsupported status value: {value}"
