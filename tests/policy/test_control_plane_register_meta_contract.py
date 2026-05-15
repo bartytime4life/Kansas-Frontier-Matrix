@@ -76,3 +76,13 @@ def test_control_plane_register_status_value_allowed() -> None:
         assert marker in header, f"{rel_path} missing {marker}"
         value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":", 1)[1].strip()
         assert value in allowed, f"{rel_path} has unsupported status value: {value}"
+
+
+def test_control_plane_register_owner_present_and_nonempty() -> None:
+    for rel_path in REQUIRED_FILES:
+        content = Path(rel_path).read_text(encoding="utf-8")
+        header = "\n".join(content.splitlines()[:20])
+        marker = "owner:"
+        assert marker in header, f"{rel_path} missing {marker}"
+        value = [ln for ln in header.splitlines() if ln.strip().startswith(marker)][0].split(":", 1)[1].strip()
+        assert value, f"{rel_path} has empty owner value"
