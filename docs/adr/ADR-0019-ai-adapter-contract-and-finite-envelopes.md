@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-0019-ai-adapter-contract-and-finite-envelopes
 title: ADR-0019 — AI Adapter Contract and Finite Envelopes
 type: standard
-version: v1.1
+version: v1.1.1
 status: draft
 owners: <architecture-steward>, <ai-runtime-steward>
 created: 2026-05-09
@@ -20,6 +20,7 @@ notes:
   - "ADR number `0019` is PROPOSED; verify next available index against `docs/adr/` before merge."
   - "ADR status remains `proposed`; MetaBlock status remains `draft` until reviewer acceptance."
   - "v1.1 clarifies evidence boundaries, Directory Rules path posture, finite-outcome mapping, merge gates, and rollback triggers."
+  - "v1.1.1 is a formatting repair pass: GitHub-ready document control, compact navigation, split tables, and QA checklist; no implementation status is upgraded."
 [/KFM_META_BLOCK_V2] -->
 
 # ADR-0019 — AI Adapter Contract and Finite Envelopes
@@ -29,22 +30,51 @@ notes:
 > sovereign truth, and so that public surfaces only ever see four outcomes:
 > **ANSWER · ABSTAIN · DENY · ERROR**.
 
+`status: proposed` · `document: draft` · `version: v1.1.1` · `repo depth: UNKNOWN` · `path: PROPOSED`
+
+> [!IMPORTANT]
+> **Merge posture:** This ADR is formatted for GitHub review, but it is not accepted authority.
+> It requires reviewer acceptance and mounted-repo verification before merge.
+>
+> **Target path:** `docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md`
+> *(PROPOSED — verify ADR number and path against the mounted repository).*  
+> **Truth posture:** Doctrine **CONFIRMED** from attached KFM corpus · Implementation
+> **PROPOSED** · current repo state **UNKNOWN / NEEDS VERIFICATION**.
+
+---
+
+## 0. Document Control
+
+### 0.1 Identity
+
 | Field | Value |
 |---|---|
 | **ADR id** | `ADR-0019` *(PROPOSED — confirm next free index in `docs/adr/`)* |
 | **Title** | AI Adapter Contract and Finite Envelopes |
 | **ADR status** | `proposed` |
 | **Document status** | `draft` |
+| **Version** | `v1.1.1` *(formatting repair over v1.1; no implementation status upgrade)* |
 | **Date** | 2026-05-09 |
 | **Last revised** | 2026-05-15 |
-| **Proposed target path** | `docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md` *(PROPOSED — verify against mounted repo)* |
+| **Policy label** | `public` |
+
+### 0.2 Ownership and review
+
+| Field | Value |
+|---|---|
 | **Owners** | `<architecture-steward>` · `<ai-runtime-steward>` |
-| **Reviewers required** | Architecture steward + AI runtime steward + Policy steward |
+| **Reviewers required** | Architecture steward · AI runtime steward · Policy steward |
 | **Supersedes** | — |
 | **Superseded by** | — |
-| **Related ADRs** | `ADR-0001-schema-home.md` *(CONFIRMED reference, acceptance state NEEDS VERIFICATION at merge)*; `ADR-finite-decision-outcomes-vocabulary` *(PROPOSED, sibling)*; `ADR-trust-membrane` *(PROPOSED)* |
-| **Affects roots** | `schemas/`, `contracts/`, `policy/`, `apps/` *(governed API integration — exact path NEEDS VERIFICATION)*, `packages/` *(adapter package — exact path NEEDS VERIFICATION)*, `tests/`, `docs/` |
-| **Truth posture** | Doctrine **CONFIRMED** in attached corpus · Implementation **PROPOSED** · Repo state **UNKNOWN / NEEDS VERIFICATION** |
+| **Proposed target path** | `docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md` *(PROPOSED — verify against mounted repo)* |
+
+### 0.3 Related authority and affected roots
+
+| Area | Values |
+|---|---|
+| **Related ADRs** | `ADR-0001-schema-home.md` *(CONFIRMED reference; acceptance state NEEDS VERIFICATION at merge)*<br>`ADR-finite-decision-outcomes-vocabulary` *(PROPOSED sibling)*<br>`ADR-trust-membrane` *(PROPOSED)* |
+| **Affects roots** | `schemas/` · `contracts/` · `policy/` · `tests/` · `docs/`<br>`apps/` *(governed API integration — exact path NEEDS VERIFICATION)*<br>`packages/` *(adapter package — exact path NEEDS VERIFICATION)* |
+| **Directory Rules basis** | Responsibility-root placement only; no new root folders; schema-home changes require ADR-backed review. |
 
 > [!NOTE]
 > This ADR states KFM doctrine and proposed contracts where supported by attached project sources.
@@ -56,11 +86,9 @@ notes:
 
 ## Quick Jump
 
-[Context](#1-context) · [Decision](#2-decision) · [Adapter contract](#3-the-adapter-contract)
-· [Finite envelopes](#4-finite-envelopes-and-trust-state) · [Runtime pipeline](#5-runtime-pipeline)
-· [Schemas & policy](#6-affected-schemas-policies-and-tests) · [Consequences](#7-consequences)
-· [Alternatives](#8-alternatives-considered) · [Migration & rollback](#9-migration-and-rollback)
-· [Open questions](#10-open-questions) · [References](#11-references)
+| Orientation | Contract surface | Governance and release |
+|---|---|---|
+| [Context](#1-context)<br>[Decision](#2-decision)<br>[Alternatives](#8-alternatives-considered) | [Adapter contract](#3-the-adapter-contract)<br>[Finite envelopes](#4-finite-envelopes-and-trust-state)<br>[Runtime pipeline](#5-runtime-pipeline) | [Schemas, policies, and tests](#6-affected-schemas-policies-and-tests)<br>[Consequences](#7-consequences)<br>[Migration and rollback](#9-migration-and-rollback)<br>[Open questions](#10-open-questions)<br>[References](#11-references) |
 
 ---
 
@@ -577,6 +605,24 @@ Rollback or feature-disable this ADR's implementation if any of the following oc
 | `[P12]` | `KFM_Pass_12_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` | **LINEAGE / NEEDS VERIFICATION** | Referenced by baseline ADR but not confirmed as an attached file in this revision pass |
 
 [gai]: ../doctrine/governed-ai.md "Governed-AI doctrine — PROPOSED path; verify relative link from target ADR path"
+
+---
+
+<details>
+<summary><strong>Formatting QA note</strong></summary>
+
+This `v1.1.1` repair pass keeps the ADR substance intact and improves the GitHub rendering surface:
+
+- one H1;
+- visible document-control section;
+- compact navigation table;
+- split metadata tables instead of one wide header table;
+- language-tagged code fences;
+- critical governance callouts visible;
+- long object-path matrix kept inside `<details>`;
+- no implementation claim upgraded beyond available evidence.
+
+</details>
 
 ---
 
