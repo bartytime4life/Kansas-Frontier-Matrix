@@ -2,40 +2,43 @@
 doc_id: kfm://doc/adr-0009-hydrology-first-proof-bearing-lane
 title: ADR-0009 — Hydrology Is the First Proof-Bearing Lane
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: TBD (Architecture steward + Hydrology lane steward)
 created: 2026-05-09
-updated: 2026-05-09
+updated: 2026-05-15
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0001-schema-home.md
   - docs/adr/ADR-0003-evidencebundle-contract.md
   - docs/adr/ADR-0004-promotion-gate.md
+  - docs/adr/ADR-0005-maplibre-layer-manifest.md
   - docs/adr/ADR-0006-governed-ai-runtime-envelope.md
   - docs/adr/ADR-0007-domain-lane-template.md
   - docs/domains/hydrology/README.md
+  - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, adr, hydrology, proof-lane, governance]
 notes:
-  - "ADR number 0009 NEEDS VERIFICATION against the active ADR register; the Pipeline Living Implementation Manual v0.3 lists a tentative ADR-0009 on local-exposure-security."
-  - "All file paths cited inside this ADR are PROPOSED until confirmed against the mounted repo."
+  - "Revised 2026-05-15 to tighten proposed-vs-accepted wording, surface ADR number conflict, preserve hydrology-first doctrine, and add acceptance/verification clarity."
+  - "ADR number 0009 NEEDS VERIFICATION against the active ADR register; the Pipeline Living Implementation Manual v0.3 lists ADR-0009-local-exposure-security."
+  - "All file paths cited inside this ADR remain PROPOSED until confirmed against the mounted repo and Directory Rules."
 [/KFM_META_BLOCK_V2] -->
 
 # ADR-0009 — Hydrology Is the First Proof-Bearing Lane
 
-> **Decision in one line.** Kansas Frontier Matrix (KFM) commits to **hydrology** as the first end-to-end proof-bearing domain lane — the lane whose thin slice must traverse the full trust path from `SourceDescriptor` to a public-safe `RuntimeResponseEnvelope` before any other domain ships an equivalent slice.
+> **Decision in one line.** This ADR proposes that Kansas Frontier Matrix (KFM) treat **hydrology** as the first end-to-end proof-bearing domain lane — the lane whose thin slice must traverse the full trust path from `SourceDescriptor` to a public-safe `RuntimeResponseEnvelope` before any other domain ships an equivalent first proof slice.
 
 <p>
   <img alt="Status: proposed" src="https://img.shields.io/badge/status-proposed-orange" />
   <img alt="Type: ADR" src="https://img.shields.io/badge/type-ADR-blue" />
-  <img alt="Number: 0009" src="https://img.shields.io/badge/number-0009-lightgrey" />
+  <img alt="Number: 0009 needs verification" src="https://img.shields.io/badge/ADR--ID-0009%20needs%20verification-yellow" />
   <img alt="Lane: hydrology" src="https://img.shields.io/badge/lane-hydrology-1f6feb" />
   <img alt="Posture: cite-or-abstain" src="https://img.shields.io/badge/posture-cite--or--abstain-success" />
-  <img alt="Supersedes: none" src="https://img.shields.io/badge/supersedes-none-lightgrey" />
+  <img alt="Repo depth: unknown" src="https://img.shields.io/badge/repo%20depth-unknown-lightgrey" />
 </p>
 
-**Quick jump:** [Status](#status) · [Context](#context) · [Decision](#decision) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Acceptance gates](#acceptance-gates) · [Risk ledger](#risk-ledger) · [Out of scope](#out-of-scope) · [Migration & rollback](#migration--rollback) · [Open questions](#open-questions)
+**Quick jump:** [Status](#status) · [Evidence boundary](#evidence-boundary) · [Context](#context) · [Decision](#decision) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Acceptance gates](#acceptance-gates) · [Risk ledger](#risk-ledger) · [Out of scope](#out-of-scope) · [Migration & rollback](#migration--rollback) · [Open questions](#open-questions)
 
 ---
 
@@ -43,96 +46,118 @@ notes:
 
 | Field | Value |
 |---|---|
-| **ADR ID** | `ADR-0009` *(NEEDS VERIFICATION — see [Open questions](#open-questions))* |
+| **ADR ID** | `ADR-0009` *(NEEDS VERIFICATION — possible collision with `ADR-0009-local-exposure-security`; see [Open questions](#open-questions))* |
 | **Title** | Hydrology Is the First Proof-Bearing Lane |
-| **Status** | `proposed` |
-| **Date** | 2026-05-09 |
-| **Deciders** | Architecture steward, Hydrology lane steward, Governance steward *(roster placeholders — TBD)* |
+| **ADR status** | `proposed` |
+| **Document status** | `draft` |
+| **Date opened** | 2026-05-09 |
+| **Last revised** | 2026-05-15 |
+| **Deciders** | Architecture steward, Hydrology lane steward, Governance steward *(roster placeholders — OWNER_TBD)* |
 | **Supersedes** | None |
 | **Superseded by** | — |
-| **Authority class** | Decision record (§Directory-Rules 2.4 / 17). Immutable once accepted; supersession requires a successor ADR citing stronger evidence. |
-| **Scope** | KFM monorepo `bartytime4life/Kansas-Frontier-Matrix` *(repository state PROPOSED until inspected this session)* |
+| **Authority class** | Proposed decision record. Once accepted, supersession requires a successor ADR with stronger evidence and an explicit transition plan. |
+| **Scope** | KFM monorepo `bartytime4life/Kansas-Frontier-Matrix` *(repo implementation state remains UNKNOWN unless inspected in a mounted checkout)* |
+| **Directory Rules basis** | ADRs belong under the documentation responsibility root. Machine schemas, source registries, policy, receipts, proofs, release objects, and lifecycle data remain in their own responsibility roots. |
 
 > [!IMPORTANT]
-> This ADR **records and codifies** a recurring doctrinal choice already present across the KFM corpus; it does **not** invent it. The intent is to lift "hydrology-first" from implicit doctrine into an inspectable decision with explicit acceptance gates, alternatives, and a rollback path.
+> This ADR **codifies** a hydrology-first doctrine already recurring across the KFM corpus. It does **not** claim that hydrology schemas, validators, fixtures, routes, UI components, workflows, receipts, proof packs, or release artifacts already exist in the active repository.
+
+---
+
+## Evidence boundary
+
+This document states a **proposed decision** using supplied KFM doctrine and lineage. It deliberately separates doctrine from implementation evidence.
+
+| Claim class | Status in this ADR | How to read it |
+|---|---|---|
+| Hydrology-first sequencing | **CONFIRMED doctrine / PROPOSED decision** | Repeated across hydrology, pipeline, encyclopedia, and implementation-reference materials. |
+| Hydrology fixture shape | **PROPOSED implementation** | HUC12, NHDPlus HR identity/crosswalk, USGS Water observation, and NFHL regulatory context are recommended first-slice objects. |
+| Repo paths | **PROPOSED / NEEDS VERIFICATION** | Paths are placement proposals until a mounted repo confirms actual conventions and Directory Rules compatibility. |
+| Runtime behavior | **UNKNOWN** | No current API, UI, workflow, CI, dashboard, log, or emitted artifact behavior is proven by this ADR. |
+| ADR number | **CONFLICTED / NEEDS VERIFICATION** | The Pipeline Living Implementation Manual v0.3 lists `ADR-0009-local-exposure-security`; this ADR may need renumbering. |
 
 ---
 
 ## Context
 
-KFM is a governed, evidence-first, map-first, time-aware spatial knowledge system. Before any domain claims maturity, **one** lane must demonstrate the entire trust path end-to-end:
+KFM is a governed, evidence-first, map-first, time-aware spatial knowledge and publication system. Before any domain claims proof-bearing maturity, **one** lane must demonstrate the entire trust path end-to-end:
 
-```
+```text
 SourceDescriptor → Fixture → Identity → EvidenceRef → EvidenceBundle
-        → PolicyDecision → CatalogRecord/LayerManifest
+        → PolicyDecision → CatalogRecord / LayerManifest
         → ReleaseManifest (dry-run) → RuntimeResponseEnvelope (API)
         → Evidence Drawer (UI) → CorrectionNotice / RollbackCard
 ```
 
-Choosing the **wrong** first lane is operationally expensive: if the lane is too sensitive, sensitivity controls dominate the proof and obscure trust-path mechanics; if it is too source-thin, evidence closure is shallow; if it is too symbolic (frontier panels, narrative geography), the proof becomes more about modelling choices than about admissible evidence. The first lane must therefore be **public-relevant, spatially rich, time-aware, and source-authority-heavy** without starting in the most sensitive domains.
+Choosing the wrong first lane is operationally expensive. If the lane is too sensitive, sensitivity controls dominate the proof and obscure trust-path mechanics. If it is too source-thin, evidence closure is shallow. If it is too symbolic or interpretive, the proof becomes more about modeling choices than admissible evidence. The first lane must therefore be **public-relevant, spatially rich, time-aware, source-authority-heavy, and fixture-tractable** without beginning in the most sensitive KFM domains.
 
 ### Forces
 
 | Force | Implication for lane choice |
 |---|---|
-| **Trust-path completeness** | Lane must exercise SourceDescriptor → API/UI without skipping phases. |
-| **Public-safe by default** | Lane must be releasable without per-feature steward review for the *first* slice. |
-| **Source-authority depth** | Lane must rest on a recognized public authority with stable, citable artifacts. |
-| **Spatiotemporal richness** | Lane must exercise CRS, geometry hashing, time-of-source vs time-of-release, freshness/stale-state. |
-| **Evidence drill-through** | A user clicking a feature must reach citable evidence with non-trivial structure. |
-| **Bounded sensitivity** | Lane must not require fail-closed denial as the *normal* posture. |
-| **Fixture tractability** | At least one shape (e.g., a single HUC12 polygon) must be small enough to ship as a deterministic no-network fixture with valid + invalid examples. |
-| **Renderability without becoming truth** | Lane must work inside the trust-membrane invariant: tiles are not proof; the API resolves evidence. |
+| **Trust-path completeness** | Lane must exercise `SourceDescriptor → API/UI` without skipping phases. |
+| **Public-safe by default** | The first slice must be releasable in dry-run form without making sensitive-location, living-person, sovereignty, title, archaeology, or rare-species exposure the normal case. |
+| **Source-authority depth** | Lane must rest on recognized public authorities with stable, citable artifacts. |
+| **Spatiotemporal richness** | Lane must exercise CRS, geometry hashing, time-of-source, time-of-retrieval, time-of-release, freshness, stale-state, and correction semantics. |
+| **Evidence drill-through** | A clicked feature must resolve to citable evidence with non-trivial structure, not just a tile attribute or popup label. |
+| **Bounded sensitivity** | Lane must not require fail-closed denial as the normal posture for the first proof slice. |
+| **Fixture tractability** | At least one HUC12 boundary and one observation sample must be small enough to ship as deterministic, no-network fixtures with valid and invalid examples. |
+| **Renderability without becoming truth** | Tiles, map layers, hydrographs, search projections, and AI summaries remain downstream carriers. The governed API resolves evidence. |
 
 ### What the corpus already says
 
-Multiple project sources converge on hydrology:
+| Source family | Status | Hydrology-first signal |
+|---|---|---|
+| Hydrology Extended Pro Reference Report | **CONFIRMED lineage / PROPOSED plan** | Treats hydrology-first sequencing as the strongest repeated lane-sequencing rule; preserves HUC12, NHDPlus HR identity/crosswalk, USGS Water observations, source descriptors, and Evidence Drawer payloads as the first hydrology proof surface. |
+| Domain & Capability Encyclopedia | **CONFIRMED doctrine / PROPOSED implementation** | Describes hydrology’s first credible thin slice as Kansas HUC12 + one USGS gauge fixture + one NHDPlus identity crosswalk + NFHL contextual overlay + hydrograph panel + EvidenceBundle closure + ABSTAIN on ambiguous reach identity. |
+| Pipeline Living Implementation Manual v0.3 | **CONFIRMED doctrine / PROPOSED implementation** | Preserves the hydrology-first proof-bearing slice as the safest early integration path, while also surfacing the `ADR-0009` number collision. |
+| Implementation Reference | **LINEAGE / NEEDS VERIFICATION** | States that hydrology and ecology are safest first proof lanes, with hydrology the more mature surface in that earlier review context. |
+| Hazards Blueprint | **LINEAGE / PROPOSED plan** | Positions hazards as a high-value second lane after hydrology, not the first proof lane. |
+| MapLibre / UI doctrine | **CONFIRMED doctrine / PROPOSED implementation** | Requires public map interaction to flow through released artifacts, governed APIs, EvidenceBundle resolution, Evidence Drawer, and finite Focus Mode outcomes. |
+| Build Companion references in the baseline ADR | **LINEAGE / NEEDS VERIFICATION in this revision** | The baseline ADR cited Build Companion §§8.3, 19.1, and 20. Those references are preserved as lineage, but the source was not independently rechecked in this revision pass. |
 
-- The **Build Companion** treats hydrology as the first proof-bearing lane explicitly because it is *"public-relevant, spatially rich, time-aware, and source-authority-heavy without starting in the most sensitive domains,"* and lays out an acceptance-criteria table and risk ledger for a hydrology thin slice. *(Build Companion §20)*
-- The **Hydrology Extended Pro Reference Report** records hydrology-first sequencing as the strongest repeated lane-sequencing rule and prescribes a HUC12/NHDPlus HR/USGS Water Data fixture wave with WBD and FEMA NFHL as supporting source families. *(Hydrology Extended Pro §6, §8)*
-- The **Implementation Reference** identifies hydrology and ecology as the two safest first proof lanes, and notes hydrology is the more mature surface today. *(Implementation Reference, Executive Summary)*
-- The **Domain & Capability Encyclopedia** describes a "first credible thin slice" for hydrology as *"Kansas HUC12 + one USGS gauge fixture + one NHDPlus identity crosswalk + NFHL contextual overlay + hydrograph panel + EvidenceBundle closure + ABSTAIN on ambiguous reach identity."* *(Encyclopedia §5)*
-- The **Hazards** report explicitly positions itself as a *"high-value second lane after hydrology."* *(Hazards Blueprint §1.1)*
-
-This ADR makes that consensus auditable.
+This ADR makes the consensus inspectable: it records the decision, alternatives, acceptance gates, risk controls, rollback posture, and verification backlog.
 
 ---
 
 ## Decision
 
-KFM **adopts hydrology as the first proof-bearing lane**. The first end-to-end thin slice covers, at minimum, **one public-safe HUC12/WBD layer** and **one USGS NWIS observation** stitched through an `EvidenceBundle` to a governed API/UI response. No other domain (soil, habitat/fauna, flora, hazards, archaeology, people/DNA/land, agriculture, atmosphere, geology, roads, settlements) ships an equivalent end-to-end thin slice **before** the hydrology slice meets the [acceptance gates](#acceptance-gates) below.
+**Decision upon acceptance:** KFM adopts hydrology as the first proof-bearing lane. The first end-to-end thin slice covers, at minimum, **one public-safe HUC12/WBD layer** and **one USGS Water observation fixture** stitched through `EvidenceBundle` closure to a governed API/UI response. No other domain ships an equivalent first proof slice before the hydrology slice meets the [acceptance gates](#acceptance-gates).
 
 ### What this decision is
 
-- A **lane-sequencing rule**: hydrology before all other domain proof slices, regardless of subjective domain readiness.
-- A **commitment to fixture-first, no-network proof**: live source connectors are deferred behind activation decisions until the fixture-based slice passes.
-- A **commitment to source-role separation inside hydrology**: WBD/HUC, NHDPlus HR identity, USGS Water observations, FEMA NFHL regulatory flood context, and observed flood evidence are distinct source roles with distinct contracts and policies.
+- A **lane-sequencing rule**: hydrology precedes other domain first proof slices, regardless of subjective readiness elsewhere.
+- A **fixture-first rule**: no-network fixtures prove the lane before live connectors, source watchers, or production source activation.
+- A **source-role separation rule** inside hydrology: WBD/HUC boundaries, NHDPlus HR identity/network context, USGS Water observations, FEMA NFHL regulatory flood context, terrain-derived hydrology, and observed-flood event evidence are distinct source roles with distinct contracts and policies.
+- A **public-surface rule**: the map may render candidates, but consequential answers resolve through governed APIs, `EvidenceBundle`, policy, release state, and citation validation.
 
-### What this decision is *not*
+### What this decision is not
 
-- It is **not** a claim that hydrology contracts, schemas, validators, fixtures, runbooks, or routes already exist in the active repo. *(All such paths are PROPOSED until inspected.)*
-- It is **not** a license to bypass `ADR-0001-schema-home.md` or any other accepted ADR.
-- It is **not** a permanent ranking of domains; it is the **sequencing** rule for the *first* proof slice.
-- It is **not** a release authorization for any specific public layer; release still requires its own gates per `ADR-0004-promotion-gate.md`.
+- It is **not** a claim that hydrology contracts, schemas, validators, fixtures, runbooks, routes, UI components, receipts, or workflows already exist in the active repo.
+- It is **not** a license to bypass `ADR-0001-schema-home.md`, Directory Rules, or the active ADR register.
+- It is **not** a permanent domain ranking. It is the sequencing rule for the **first** proof-bearing slice.
+- It is **not** a public-release authorization for any layer. Public or semi-public release still requires source, rights, sensitivity, validation, provenance, integrity, proof, review, release, correction, and rollback support appropriate to significance.
+- It is **not** an emergency flood-warning system, a hydrologic simulation authorization, or a flood-claim shortcut.
 
 ### Domain-lane order after hydrology
 
-Subsequent lane order is **suggested**, not fixed by this ADR. Each lane's first slice is a separate decision recorded in its own lane README and (where structurally significant) its own ADR.
+Subsequent lane order remains **suggested**, not fixed by this ADR. Each lane’s first slice requires its own lane README update and, where structurally significant, its own ADR.
 
 ```mermaid
 flowchart LR
-    A[ADR-0009<br/>Hydrology proof slice]:::accepted
-    A --> B[Hazards<br/>second lane]
-    A --> C[Soil / Habitat<br/>parallel after hydrology]
+    A[ADR-0009? Hydrology proof slice<br/>ID NEEDS VERIFICATION]:::proposed
+    A --> B[Hazards<br/>candidate second lane]
+    A --> C[Soil / Habitat<br/>candidate parallel lanes]
     B --> D[Atmosphere · Roads · Settlements]
     C --> D
-    D --> E[Sensitive lanes:<br/>archaeology · people · flora]:::sensitive
-    classDef accepted fill:#dff5e1,stroke:#1f6feb,color:#1f1f1f;
+    D --> E[Sensitive lanes:<br/>archaeology · people/DNA/land · rare-species flora]:::sensitive
+
+    classDef proposed fill:#fff4d6,stroke:#c27d00,color:#1f1f1f;
     classDef sensitive fill:#fde2e1,stroke:#a80000,color:#1f1f1f;
 ```
 
 > [!NOTE]
-> Sensitive lanes (archaeology, people/DNA/land, rare-species flora) follow the proof-lane discipline established by hydrology but apply additional fail-closed defaults. They are deliberately scheduled last for *first* slices, not for *all* slices.
+> Sensitive lanes follow the proof-lane discipline established by hydrology but apply stronger fail-closed controls. They are deliberately scheduled later for **first proof slices**, not permanently deprioritized.
 
 ---
 
@@ -140,22 +165,23 @@ flowchart LR
 
 ### Positive
 
-- **Trust spine first.** The first end-to-end slice exercises every governance object (`SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `PolicyDecision`, `CatalogMatrix`, `LayerManifest`, `ReleaseManifest`, `RuntimeResponseEnvelope`, `CorrectionNotice`, `RollbackCard`) on a domain whose source authority is mature and public.
-- **Fixture portability.** A pinned Kansas HUC12 polygon and a small USGS NWIS observation slice are tractable as no-network fixtures with both valid and invalid cases.
-- **Source-role pedagogy.** Forcing the lane to distinguish WBD vs NHDPlus HR vs USGS Water vs FEMA NFHL vs observed-flood evidence trains the rest of the system on `source_role` discipline before easier lanes can paper it over.
-- **Evidence Drawer realism.** Click-to-evidence on a hydrograph or HUC boundary produces non-trivial drawer payloads (citation, freshness, qualifier, approval/provisional state, limitations), better than a static summary panel.
-- **Reusable harness.** The contracts, validators, and runbooks built for hydrology become the **template** other lanes (`ADR-0007-domain-lane-template`) instantiate.
+- **Trust spine first.** The first proof slice exercises `SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `PolicyDecision`, `CatalogRecord`, `LayerManifest`, `ReleaseManifest`, `RuntimeResponseEnvelope`, `CorrectionNotice`, and `RollbackCard` on a domain with mature public source families.
+- **Fixture portability.** A pinned Kansas HUC12 boundary and a small USGS Water observation sample are tractable as no-network fixtures with valid and invalid cases.
+- **Source-role pedagogy.** The lane forces KFM to distinguish WBD, NHDPlus HR, USGS Water, FEMA NFHL, terrain derivatives, and observed-flood evidence before easier lanes can blur source roles.
+- **Evidence Drawer realism.** Click-to-evidence on a watershed, reach, gauge, or hydrograph produces meaningful payloads: citation, freshness, qualifier/provisional state, source role, limitations, review state, release state, and correction lineage.
+- **Reusable harness.** The contracts, validators, no-network fixtures, negative fixtures, and runbooks built for hydrology become the template that `ADR-0007-domain-lane-template` and later lanes can instantiate.
 
 ### Negative / costs
 
-- **Hydrology-specific complexity.** NHD legacy vs NHDPlus HR vs 3DHP terminology, COMID-vs-Permanent-Identifier crosswalks, and IV-vs-DV observation cadences add domain learning load to a slice whose primary purpose is governance proof.
-- **Risk of regulatory-vs-observed flood confusion.** FEMA NFHL is a regulatory hazard product, not observed inundation; a careless first slice could entrench wrong terminology repo-wide. *(Mitigated below.)*
-- **Source freshness exposure.** Live USGS Water Data endpoints can change; a first slice that depends on live behavior is brittle. *(Mitigated by no-network-first.)*
-- **Domain stakeholders deferred.** Lanes whose stewards are ready (e.g., archaeology stewards with rich datasets) may feel their work is back-of-line. This is by design — sensitivity gates need the trust path proven first.
+- **Hydrology terminology load.** NHD legacy, NHDPlus HR, 3DHP, COMID, Permanent Identifier, reachcode, HUC hierarchy, and observation parameter-code handling add domain complexity to a governance proof.
+- **Regulatory-vs-observed flood risk.** FEMA NFHL is regulatory flood context, not observed inundation. A careless first slice could entrench the wrong language across KFM.
+- **Freshness pressure.** USGS Water observations and related source services are time-sensitive. The first slice must prove stale-state and source-head behavior without making live endpoints a CI dependency.
+- **Deferred eager lanes.** Other stewards may have strong datasets ready. This ADR still prioritizes proving the trust path first, so sensitive or heavier lanes may wait for the hydrology harness.
 
 ### Neutral
 
-- The choice is **reversible** by a successor ADR that cites stronger evidence (for example, a credible argument for ecology or hazards as a better first lane). The reversal does not invalidate work already shipped under this ADR; it re-points subsequent lanes.
+- The decision is **reversible** by a successor ADR that cites stronger evidence for another first proof lane or a structural reason to change sequencing.
+- Reversal does not erase hydrology work. Existing hydrology artifacts remain lineage and proceed or terminate under the successor ADR’s transition plan.
 
 ---
 
@@ -163,49 +189,48 @@ flowchart LR
 
 | Alternative | Why considered | Why not chosen |
 |---|---|---|
-| **Ecology / habitat first** | Implementation Reference flags ecology and hydrology as the two safest first proof lanes. Public-safe occurrence data is available. | GBIF / eBird / iNaturalist live connectors and sensitive-occurrence geoprivacy add gating that obscures pure trust-path mechanics on the first slice. *(Build Companion §19.1)* |
-| **Soil first (SSURGO snapshot)** | Static, well-bounded, low-sensitivity. | Insufficient time-axis exercise; observation freshness and stale-state semantics are weaker than for streamflow. |
-| **Frontier county-year panel first** | A more "Kansas-distinctive" demonstrator. | Combines several derived observation kinds and definitional disagreements (`FrontierDefinition`, `GeographyVersion`); too much modelling for a first proof lane. *(Implementation Reference)* |
-| **Synthetic AI-only fixture (governed-AI thin slice)** | Useful for proving the AI envelope. | Doesn't exercise source authority, geometry, freshness, or release at domain depth. The Governed-AI Source-Ledger report itself uses a synthetic *hydrology* fixture for its slice. *(Governed AI §10)* |
-| **Hazards first** | Public-relevant and source-rich. | Hazards combine warnings, declarations, regulatory zones, modelled derivatives, and life-safety implications; first-slice life-safety risk is too high. The Hazards Blueprint itself positions hazards as a *second* lane. *(Hazards Blueprint §1.1)* |
-| **Archaeology / people-DNA / rare-flora first** | Stewards may have deep datasets. | Fail-closed sensitivity and DENY-by-default postures must dominate; trust-path mechanics get masked. Sensitive lanes ride the proof harness hydrology builds, not the other way around. *(Build Companion §8.3, §19.1)* |
-| **No first lane; build all simultaneously** | Egalitarian. | Diffuses validation pressure; every lane reinvents fixtures, validators, source-role rules. Loses the template effect that justifies investment in `ADR-0007-domain-lane-template`. |
+| **Ecology / habitat first** | Often listed with hydrology as a safe proof-lane candidate; public occurrence and land-cover data exist. | Sensitive-occurrence geoprivacy, occurrence-aggregator source roles, and steward review can dominate the first proof slice. Hydrology better isolates core trust-path mechanics. |
+| **Soil first (SSURGO/gSSURGO snapshot)** | Static, well-bounded, low-sensitivity, and strong source authority. | Weaker live freshness and stale-state exercise than streamflow; less immediate hydrograph/time-series proof pressure. |
+| **Frontier county-year panel first** | More distinctive to KFM’s “frontier matrix” identity. | Too many modeling and definition seams (`FrontierDefinition`, `GeographyVersion`, population/economic/agriculture/access observations) for a first trust-path proof. |
+| **Synthetic AI-only fixture** | Useful for proving the governed AI envelope. | Does not exercise source authority, geometry, hydrologic identity, observation freshness, or public map release at domain depth. |
+| **Hazards first** | Public-relevant and source-rich. | Hazards mix operational warnings, historical events, declarations, model derivatives, regulatory zones, and life-safety implications. First-slice life-safety risk is too high; hazards is better as the second lane. |
+| **Archaeology / people-DNA-land / rare-flora first** | Deep steward datasets may exist. | Sensitive, sovereignty, cultural, living-person, DNA, title, or rare-location controls would dominate. These lanes should ride an already-proven trust harness. |
+| **No first lane; build all lanes simultaneously** | Egalitarian and tempting during early expansion. | Diffuses validation pressure; every lane reinvents fixtures, validators, source-role rules, and proof objects. It weakens the template effect. |
 
 ---
 
 ## Acceptance Gates
 
-These gates **operationalize** the decision. The hydrology slice is "proven" only when **every applicable** row reaches the listed signal. Until then, this ADR remains `proposed`.
+The hydrology slice is “proof-bearing” only when **every applicable** gate reaches the listed signal. Until then, this ADR remains `proposed`.
 
-> Gates below are adapted from the Build Companion's hydrology acceptance table *(§20.2)*. Object names follow the canonical KFM trust vocabulary (see `directory-rules.md` §19 Glossary).
+> [!IMPORTANT]
+> These gates are conjunctive for promotion from `proposed` to `accepted`. A partial slice can be an internal milestone; it cannot unlock another domain’s equivalent first proof slice.
 
-| Gate | Hydrology acceptance signal |
-|---|---|
-| **Source** | A WBD, USGS Water Data, and (where applicable) FEMA NFHL `SourceDescriptor` declares `source_role`, rights posture, freshness, and caveats. *PROPOSED home: `data/registry/hydrology/sources.yaml`.* |
-| **Fixture** | A no-network HUC12 fixture and a no-network USGS observation fixture exist, each with valid and invalid examples. *PROPOSED home: `fixtures/domains/hydrology/`.* |
-| **Identity** | HUC IDs, NHDPlus HR Permanent Identifiers (with COMID as compatibility key), and feature-geometry hashes are deterministic and carry CRS / precision assumptions. ABSTAIN on unresolved legacy identity (`split`, `merge`, `ambiguous`). |
-| **Evidence** | `EvidenceRef` resolves to an `EvidenceBundle` containing source, retrieval receipt, dataset version, spatial/temporal support, citation text, and limitations. |
-| **Policy** | Unknown `source_role`, stale source, and unresolved evidence each produce `DENY` or `ABSTAIN` fixtures with reason codes. |
-| **Catalog** | `CatalogRecord` and `LayerManifest` point at a release candidate and a proof pack; STAC/DCAT/PROV closure validates. |
-| **Release (dry-run)** | A `ReleaseManifest` and `RollbackCard` are produced **in dry-run** — no public publication. |
-| **API** | A feature-explain endpoint returns a `RuntimeResponseEnvelope` whose outcome is `ANSWER` for valid fixtures and `ABSTAIN` / `DENY` for invalid ones. No raw / work / quarantine paths leak through the envelope. |
-| **UI** | The Evidence Drawer renders `source_role`, release state, stale state, and limitations; tiles include public IDs only and the API resolves evidence. |
-| **Correction** | A fixture correction supersedes the original without deleting prior lineage; a `CorrectionNotice` is produced. |
+| Gate | Required hydrology acceptance signal | Required negative proof |
+|---|---|---|
+| **Source** | WBD/HUC, USGS Water, NHDPlus HR/crosswalk, FEMA NFHL where applicable, and terrain inputs each have a `SourceDescriptor` with `source_role`, rights posture, cadence/freshness, citation text, sensitivity, and caveats. | Unknown `source_role`, unknown rights, or missing citation text produces `DENY` / `ABSTAIN`. |
+| **Fixture** | No-network HUC12 and USGS observation fixtures exist with valid and invalid examples. | Live endpoint dependency in CI is rejected for first proof. |
+| **Identity** | HUC IDs, NHDPlus HR Permanent Identifiers, COMID compatibility keys, and geometry/content hashes are deterministic and carry CRS/precision assumptions. | Ambiguous, split, merge, retired, or unknown identity emits `ABSTAIN`, not silent resolution. |
+| **Evidence** | `EvidenceRef` resolves to `EvidenceBundle` containing source, retrieval/run receipt, dataset version or source head, spatial/temporal support, citation text, limitations, and policy context. | Unresolved `EvidenceRef` emits `ABSTAIN` / `ERROR`; generated language cannot fill the gap. |
+| **Policy** | Unknown source role, stale source, unresolved evidence, unclear rights, and forbidden sensitivity each have deterministic finite outcomes. | Policy-negative fixtures produce `DENY`, `ABSTAIN`, or `ERROR` with reason codes. |
+| **Catalog** | `CatalogRecord` / `CatalogMatrix`, `LayerManifest`, and proof-pack references close across STAC/DCAT/PROV-style metadata where used. | Catalog records without proof/evidence closure fail promotion. |
+| **Release dry-run** | `ReleaseManifest` and `RollbackCard` are produced in dry-run. No public publication is required for acceptance. | Missing rollback target blocks acceptance. |
+| **API** | A feature-explain endpoint or equivalent governed route returns `RuntimeResponseEnvelope` with `ANSWER` for valid fixtures and `ABSTAIN` / `DENY` / `ERROR` for invalid cases. | No `RAW`, `WORK`, `QUARANTINE`, candidate, direct source, or canonical/internal path leaks through the envelope. |
+| **UI** | Evidence Drawer renders source role, evidence, citations, freshness/stale state, release state, limitations, corrections, and rollback lineage. Map tiles/layers carry public IDs only; API resolves evidence. | Popup-only claims, uncited exports, and Focus Mode answers from rendered features alone fail. |
+| **Correction** | A fixture correction supersedes the original without deleting prior lineage; `CorrectionNotice` is produced. | Silent overwrite or lineage deletion fails. |
+| **Rollback** | Dry-run rollback returns to the prior release manifest/root hash or designated rollback target and records the action. | Rollback without visible target or receipt fails. |
 
-> [!TIP]
-> Gates are **conjunctive** for promoting this ADR's status to `accepted`. A partial slice may still ship as an internal milestone; what it cannot do is unlock a second domain's first proof slice.
-
-### Trust path (reference diagram)
+### Trust path reference diagram
 
 ```mermaid
 flowchart TB
-    SD[SourceDescriptor<br/>WBD · USGS Water · NFHL]
-    FX[No-network fixture<br/>HUC12 · NWIS sample]
-    ID[Identity layer<br/>Permanent Identifier · COMID adapter]
+    SD[SourceDescriptor<br/>WBD · NHDPlus HR · USGS Water · NFHL]
+    FX[No-network fixtures<br/>HUC12 · NWIS/USGS sample]
+    ID[Identity layer<br/>HUC · Permanent Identifier · COMID adapter]
     ER[EvidenceRef]
     EB[EvidenceBundle<br/>source · receipt · citation · limits]
     PD[PolicyDecision<br/>ALLOW · DENY · ABSTAIN]
-    CM[CatalogRecord<br/>+ LayerManifest]
+    CM[CatalogRecord / CatalogMatrix<br/>+ LayerManifest]
     RM[ReleaseManifest<br/>dry-run]
     RB[RollbackCard]
     API[Governed API<br/>RuntimeResponseEnvelope]
@@ -220,26 +245,27 @@ flowchart TB
 
     classDef gate fill:#eef4ff,stroke:#1f6feb,color:#1f1f1f;
     classDef rollback fill:#fff5e6,stroke:#a05a00,color:#1f1f1f;
-    class SD,FX,ID,ER,EB,PD,CM,RM,API,UI gate
-    class RB,CN rollback
+    class SD,FX,ID,ER,EB,PD,CM,RM,API,UI gate;
+    class RB,CN rollback;
 ```
 
 ---
 
 ## Risk Ledger
 
-Adapted from the Build Companion's hydrology risk ledger *(§20.3)* and the Hydrology Extended Pro continuity matrix *(§7)*.
-
 | Risk | Mitigation |
 |---|---|
-| Regulatory flood data (FEMA NFHL) mistaken for observed inundation. | Source-role registry distinguishes `regulatory_context` from `observed_event`; map layer naming uses `flood_context`, never `observed_flood`. |
-| NHD legacy vs NHDPlus HR vs 3DHP terminology drift. | Schemas require an explicit `source_family` field; validators reject unspecified or mixed families. |
-| COMID-vs-Permanent-Identifier crosswalk ambiguity. | Crosswalk relationship classes (`exact`, `split`, `merge`, `retired`, `no_legacy`, `ambiguous`, `unknown`); ABSTAIN on many-to-many. |
-| Time of source vs retrieval vs release confused. | Time vocabulary fields enforced; Evidence Drawer surfaces `retrieved_at`, `valid_for`, `released_at`, and stale-state. |
-| Tiles treated as proof. | Tile features carry public IDs only; the governed API resolves evidence. Public clients never read canonical stores. |
-| Live endpoint instability collapses CI. | No-network fixture first; live connectors live behind activation decisions and lane-internal feature flags. |
-| HUC12 `LoadDate` / `lastEditDate` mistaken for content-change proof. | Use normalized geometry/content fingerprints; metadata dates are signals, not authority. *(Hydrology Extended Pro §7)* |
-| Hydrologic simulation treated as observation. | Simulation lane deferred as experimental until model cards, calibration, uncertainty, and tests exist. |
+| ADR number collision with `ADR-0009-local-exposure-security`. | Verify active ADR register before merge. If collision is real, renumber this ADR or the local-exposure ADR through the register, not ad hoc. |
+| Regulatory flood data (FEMA NFHL) mistaken for observed inundation. | Source-role registry distinguishes `regulatory_context` from `observed_event`; map layer naming uses `flood_context`, never `observed_flood`, unless observed evidence exists. |
+| NHD legacy vs NHDPlus HR vs 3DHP terminology drift. | Schemas require explicit `source_family`; validators reject unspecified or mixed families. |
+| COMID-vs-Permanent-Identifier crosswalk ambiguity. | Relationship classes such as `exact`, `split`, `merge`, `retired`, `no_legacy`, `ambiguous`, and `unknown`; `ABSTAIN` on unresolved many-to-many mappings. |
+| Time of source, retrieval, observation, validity, release, and correction are confused. | Evidence and drawer payloads expose `observed_time`, `valid_time`, `source_time`, `retrieved_at`, `released_at`, stale state, and correction lineage where material. |
+| Tiles treated as proof. | Tile features carry public IDs only; governed API resolves evidence; tiles and layer toggles are not publication. |
+| Live endpoint instability collapses CI. | No-network fixtures first; live connectors require later activation decisions, source descriptors, and explicit source-watch policy. |
+| HUC12 `LoadDate` / `lastEditDate` mistaken for content-change proof. | Use normalized geometry/content fingerprints; metadata dates are signals, not authority. |
+| Hydrologic simulation treated as observation. | Defer simulation as experimental until model cards, calibration, uncertainty, validation, and review gates exist. |
+| Prior hydrology ideas silently lost. | Preservation/supersession matrix and continuity checks must be required before replacing hydrology lineage. |
+| Schema-home conflict creates parallel authority. | Defer to active `ADR-0001-schema-home.md`; if unresolved, raise `CONFLICTED / NEEDS VERIFICATION` and avoid divergent siblings. |
 
 ---
 
@@ -247,11 +273,13 @@ Adapted from the Build Companion's hydrology risk ledger *(§20.3)* and the Hydr
 
 This ADR does **not** decide:
 
-- Whether `schemas/contracts/v1/hydrology/` or `contracts/hydrology/` is the live machine-schema home. *Defer to `ADR-0001-schema-home.md`; default per `directory-rules.md` §7.4 is `schemas/contracts/v1/`.*
-- The shape of any specific schema (`huc12.schema.json`, `hydro_observation.schema.json`, etc.). *Those are recorded in lane-internal schema PRs; this ADR records only the lane-sequencing decision.*
-- Live source activation, source credentials, or rate-limit posture for USGS Water Data, WBD, or FEMA NFHL endpoints. *Activation is a separate governed decision per the source-onboarding runbook.*
-- The boundary between the Hydrology lane and adjacent lanes (Soil moisture, Drought, Water quality, Wetlands, Terrain, Agriculture). *Adjacent-lane source-role rules are recorded in each adjacent lane's own ADR/README.*
-- The MapLibre layer registry, Evidence Drawer DTO shape, or Focus Mode prompt contracts. *Recorded under `ADR-0005-maplibre-layer-manifest.md`, `ADR-0006-governed-ai-runtime-envelope.md`, and the Whole-UI Governed AI Expansion plan.*
+- Whether `schemas/contracts/v1/hydrology/` or `contracts/hydrology/` is the active machine-schema home. Defer to `ADR-0001-schema-home.md`, Directory Rules, and mounted repo evidence.
+- The full shape of specific schemas such as `huc12.schema.json`, `hydro_observation.schema.json`, `run_receipt.schema.json`, or `evidence_drawer_payload.schema.json`.
+- Live source activation, credentials, quota strategy, service probes, or rate-limit posture for USGS Water Data, WBD, NHDPlus HR, FEMA NFHL, or 3DEP.
+- The boundary between hydrology and adjacent lanes such as soil moisture, drought, water quality, wetlands, terrain, agriculture, hazards, or infrastructure.
+- Hydrologic simulation, DEM conditioning, flood modeling, emergency warnings, or life-safety advice.
+- MapLibre layer registry final shape, Evidence Drawer DTO final shape, Focus Mode prompt contracts, or app route names.
+- Public release of any layer or dataset. Release requires separate promotion gates.
 
 ---
 
@@ -259,51 +287,59 @@ This ADR does **not** decide:
 
 ### Migration
 
-Because this ADR codifies a doctrinal choice already present across the corpus, no path moves are required by adoption alone. Adoption obligates the following downstream work, sequenced through ordinary PRs:
+Adoption alone requires no file moves. Adoption obligates downstream work through ordinary PRs:
 
-1. Per-lane README in `docs/domains/hydrology/README.md` cites this ADR in its meta block `related[]`.
-2. The lane-template ADR (`ADR-0007-domain-lane-template`) inherits the gate vocabulary above.
-3. Subsequent domain lanes (hazards, soil, habitat/fauna, …) each cite this ADR's sequencing rule in their first proof-slice plan.
-4. Verification backlog (`docs/registers/VERIFICATION_BACKLOG.md`) opens entries for every gate row that cannot yet be verified against the mounted repo.
+1. Hydrology lane documentation cites this ADR in its meta block `related[]` after ADR number is verified.
+2. `ADR-0007-domain-lane-template` or equivalent lane-template documentation inherits the gate vocabulary above.
+3. Subsequent first-slice plans for hazards, soil, habitat/fauna, flora, agriculture, atmosphere, geology, settlements, roads, archaeology, and people/DNA/land reference this sequencing rule where relevant.
+4. `docs/registers/VERIFICATION_BACKLOG.md` or the active verification register records every unresolved gate row.
+5. The active ADR register resolves the `ADR-0009` collision before this document is accepted.
 
 ### Rollback
 
-This ADR is reversible. Rollback consists of:
+Rollback consists of:
 
-1. A successor ADR (`ADR-NNNN-...`) marked `status: accepted` whose Decision section explicitly **supersedes** ADR-0009 and cites the stronger evidence basis (e.g., a more credible first-lane candidate, or a structural reason to skip the hydrology slice).
-2. This ADR's `status` field flips to `superseded` with a forward link to the successor; the body is **retained verbatim**.
-3. Any in-flight hydrology PRs continue or terminate per the successor's transition section; no published artifacts are silently retracted — corrections follow `CorrectionNotice` discipline.
+1. A successor ADR marked `accepted` that explicitly supersedes this ADR and cites stronger evidence or a structural reason to change first-lane sequencing.
+2. This ADR’s status changes to `superseded` with a forward link to the successor; the body is retained for history.
+3. In-flight hydrology PRs continue, pause, or terminate according to the successor’s transition section.
+4. No published artifacts are silently retracted. Corrections, withdrawals, and supersessions follow `CorrectionNotice`, `ReleaseManifest`, and `RollbackCard` discipline.
 
 > [!CAUTION]
-> Rollback **does not** retroactively change the trust posture of artifacts already published under hydrology gates. Public corrections, withdrawals, and supersessions remain visible and auditable per the lifecycle invariant.
+> Rollback does **not** retroactively change the trust posture of artifacts already published or reviewed under hydrology gates. Public corrections, withdrawals, and supersessions remain visible and auditable.
 
 ---
 
 ## Open Questions
 
-These items are explicitly **NEEDS VERIFICATION** and tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+These items are **NEEDS VERIFICATION** unless explicitly marked `OPEN`.
 
-- **NEEDS VERIFICATION (ADR number):** The Pipeline Living Implementation Manual v0.3 lists a tentative `ADR-0009-local-exposure-security`. Confirm the active ADR register and either (a) renumber this ADR, (b) renumber the local-exposure ADR, or (c) confirm both numbers' assignments before merging.
-- **NEEDS VERIFICATION (repo state):** Whether `docs/adr/`, `docs/domains/hydrology/`, `schemas/contracts/v1/hydrology/`, `policy/hydrology/`, `fixtures/domains/hydrology/`, and `data/registry/hydrology/` exist in the mounted repo at all, and at what entrenchment level.
-- **NEEDS VERIFICATION (schema home):** Whether `schemas/contracts/v1/` or `contracts/` is the live schema authority. Defer to `ADR-0001-schema-home.md`.
-- **NEEDS VERIFICATION (source authority versions):** Current USGS Water Data API version (legacy WaterServices vs OGC API), WBD MapServer endpoint stability, and FEMA NFHL distribution policy at the time of slice acceptance.
-- **OPEN:** Whether the first slice covers **both** a HUC12 boundary fixture *and* a USGS observation fixture, or whether boundary-only is sufficient for `proposed → accepted` promotion of this ADR. Default position: both.
-- **OPEN:** Whether terrain-derived hydrology (DEM conditioning, flow accumulation) belongs in the **first** slice or is deferred to a second hydrology release. Default position: deferred.
-- **OPEN:** Steward roster for hydrology, separation-of-duties matrix, and reviewer escalation.
+- **NEEDS VERIFICATION — ADR number:** The Pipeline Living Implementation Manual v0.3 lists `ADR-0009-local-exposure-security`. Confirm the active ADR register and either renumber this ADR, renumber the local-exposure ADR, or confirm the register’s assignment before merge.
+- **NEEDS VERIFICATION — target path:** Confirm whether this file belongs at `docs/adr/ADR-0009-hydrology-first-proof-bearing-lane.md`, another ADR filename, or a renumbered successor path.
+- **NEEDS VERIFICATION — repo state:** Confirm whether `docs/adr/`, `docs/domains/hydrology/`, `schemas/contracts/v1/hydrology/`, `contracts/hydrology/`, `policy/hydrology/`, `fixtures/domains/hydrology/`, `data/registry/hydrology/`, and hydrology lifecycle homes exist.
+- **NEEDS VERIFICATION — schema home:** Confirm whether `schemas/contracts/v1/`, `contracts/`, or another convention is active, and whether `ADR-0001-schema-home.md` has been accepted.
+- **NEEDS VERIFICATION — source authority versions:** Confirm current USGS Water Data API/service posture, WBD endpoint stability, NHDPlus HR / 3DHP source-family posture, and FEMA NFHL terms at acceptance time.
+- **NEEDS VERIFICATION — UI/API names:** Confirm governed API route names, Evidence Drawer payload schema, Focus Mode envelope, and MapLibre layer registry homes before writing implementation-shaped paths.
+- **OPEN — fixture minimum:** Decide whether `proposed → accepted` requires both a HUC12 boundary fixture and a USGS observation fixture. Default position: **both**.
+- **OPEN — terrain timing:** Decide whether terrain-derived hydrology belongs in the first proof slice or a second hydrology release. Default position: **deferred**.
+- **OPEN — steward roster:** Identify hydrology steward, architecture steward, governance reviewer, source reviewer, and escalation path.
+- **OPEN — acceptance owner:** Decide who can mark the gates complete and promote this ADR to `accepted`.
 
 ---
 
 ## References
 
-Source basis from the attached KFM corpus *(corpus-internal references; PDF page numbers cited where the reasoning is concentrated)*:
+These references are corpus-internal or lineage references. They support doctrine, planning, or source realism; they do **not** prove current mounted implementation unless a mounted repo, tests, logs, emitted artifacts, or workflows are later inspected.
 
-- **Build Companion** — §20 *Hydrology as the first proof-bearing lane* (objective, acceptance criteria, risk ledger); §19.1 *Lane readiness matrix*; §8.3 *Source-role examples by domain*.
-- **KFM Hydrology Extended Pro Reference Report (2026-04-21)** — §6 *Continuity inventory*; §7 *Preservation / supersession matrix*; §8 *Hydrology domain lane map*; file/folder register and PR-ready plan.
-- **KFM Domain & Capability Encyclopedia (v0.1)** — §4 *Operating Law*; §5 *Master Domain Atlas* (hydrology row, "first credible thin slice").
-- **Kansas Frontier Matrix Implementation Reference** — Executive Summary (hydrology / ecology as safest first proof lanes); Phase D thin-slice estimate.
-- **Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3** — §28 *Decision register / ADR index* (ADR-0001…ADR-0010 tentative slate; see Open questions).
-- **KFM Hazards Architecture — Extended Pro Blueprint** — §1.1 (positions hazards as the *second* lane after hydrology).
-- **KFM Governed AI Extended Pro Source Ledger Architecture Report** — §10 *Thin-slice-first plan* (hydrology used as synthetic-fixture choice).
-- **Directory Rules** — §2.4 *Changes that require an ADR*; §17 *Document Change Discipline*; §19 *Glossary*.
+| Reference | Status in this ADR | Supports | Does not prove |
+|---|---|---|---|
+| **Directory Rules** | CONFIRMED supplied doctrine | Responsibility-root placement, schema-home default, ADR-required changes, lifecycle invariant. | Current repo topology or active accepted ADR state. |
+| **KFM Hydrology Extended Pro Reference Report (2026-04-21)** | CONFIRMED lineage / PROPOSED plan | Hydrology-first sequencing, HUC12/NHDPlus HR/USGS Water/NFHL fixture plan, source-role separation, no-repo boundary, negative fixtures. | Current repo files, tests, routes, dashboards, source descriptors, or emitted proof objects. |
+| **KFM Domain & Capability Encyclopedia (v0.1)** | CONFIRMED doctrine / PROPOSED implementation | Hydrology domain boundary, first credible thin slice, source families, map/viewing products, finite outcomes. | Current implementation maturity. |
+| **Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3** | CONFIRMED doctrine / PROPOSED implementation | Lifecycle law, source ledger posture, hydrology as early proof lane, active ADR-index collision risk. | Current repo implementation or accepted ADR register. |
+| **Kansas Frontier Matrix Implementation Reference** | LINEAGE / NEEDS VERIFICATION | Prior connector-based repo summary, staged implementation path, hydrology/ecology maturity signal. | Current repo state in this session. |
+| **KFM Hazards Architecture — Extended Pro Blueprint** | LINEAGE / PROPOSED plan | Hazards as high-value second lane and not-for-life-safety posture. | Hydrology implementation. |
+| **MapLibre / UI / governed interaction materials** | CONFIRMED doctrine / PROPOSED implementation | Renderer boundary, governed API, Evidence Drawer, Focus Mode, no public RAW path, no direct model client. | Current UI/app implementation. |
+| **KFM Governed AI Extended Pro Source Ledger Architecture Report** | LINEAGE / PROPOSED design | AI as evidence-subordinate, finite runtime envelopes, citation validation, receipts. | Current runtime or model integration. |
+| **Build Companion references from baseline ADR** | LINEAGE / NEEDS VERIFICATION | Baseline ADR cited it for hydrology-first acceptance criteria and risk language. | Not independently rechecked in this revision pass. |
 
 [Back to top](#adr-0009--hydrology-is-the-first-proof-bearing-lane)
