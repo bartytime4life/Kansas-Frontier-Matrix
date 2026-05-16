@@ -20,3 +20,4 @@ Indexes the corresponding `control_plane/*.yaml` register.
 - 2026-05-15 — OPEN: Investigate and remediate `run_doctrine_artifact_preflight.py` check failure (`render_returncode: 2`, `skipped_due_to_check_error`) so `tests/policy/test_preflight_summary_consistency.py` can pass and readiness can be promoted.
 
 - 2026-05-15 — OPEN: After fixing preflight check error, rerun `pytest -q tests/policy/test_preflight_summary_consistency.py` and only then promote consumer status from `failing` to `passing` with updated evidence date.
+- 2026-05-16 — RESOLVED: `tests/policy/test_preflight_summary_consistency.py` rerun passed (5 passed) after doctrine registry status parser was updated for `needs_verification`; consumer readiness restored to `validated`.
