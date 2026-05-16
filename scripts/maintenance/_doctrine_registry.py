@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-ALLOWED_STATUSES = {"missing", "present"}
+ALLOWED_STATUSES = {"missing", "present", "needs_verification"}
 
 
 def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
@@ -47,7 +47,7 @@ def parse_required_entries(registry_path: Path) -> list[dict[str, str]]:
             raise ValueError(f"duplicate filename in registry: {name}")
         seen.add(name)
 
-        status = entry.get("status", "missing")
+        status = entry.get("status", "needs_verification")
         if status not in ALLOWED_STATUSES:
             raise ValueError(f"invalid status for {name}: {status}")
         entry["status"] = status
