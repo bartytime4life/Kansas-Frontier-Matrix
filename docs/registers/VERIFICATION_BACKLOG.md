@@ -20,5 +20,3 @@ Indexes the corresponding `control_plane/*.yaml` register.
 - 2026-05-15 — RESOLVED: Remediated parser compatibility for `needs_verification` status; `run_doctrine_artifact_preflight.py` no longer trips the prior check path and downstream consistency tests now pass.
 
 - 2026-05-15 — RESOLVED: Reran `pytest -q tests/policy/test_preflight_summary_consistency.py` (5 passed) and promoted consumer readiness to `validated` with 2026-05-16 evidence timestamp.
-
-- 2026-05-16 — RESOLVED: `tests/policy/test_preflight_summary_consistency.py` rerun passed (5 passed) after doctrine registry status parser was updated for `needs_verification`; consumer readiness restored to `validated`.
