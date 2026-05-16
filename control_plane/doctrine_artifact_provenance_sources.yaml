@@ -1,13 +1,20 @@
+meta:
+  status: PROPOSED
+  owner: docs steward
+  last_reviewed: 2026-05-15
+  related_doctrine:
+    - docs/directory-rules.md
+
 required_doctrine_artifact_provenance:
   - filename: KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf
     doc_id: kfm://doc/doctrine/pass-18-idea-index-category-atlas-expansion-dossier
-    source_url: https://example.org/kfm/KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf
-    status: pending
+    source_url: NEEDS_VERIFICATION
+    status: needs_verification
   - filename: Master_MapLibre_Components-Functions-Features.pdf
     doc_id: kfm://doc/doctrine/master-maplibre-components-functions-features
-    source_url: https://example.org/kfm/Master_MapLibre_Components-Functions-Features.pdf
-    status: pending
+    source_url: NEEDS_VERIFICATION
+    status: needs_verification
   - filename: Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf
     doc_id: kfm://doc/doctrine/definitive-greenfield-building-plan-v1-1
-    source_url: https://example.org/kfm/Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf
-    status: pending
+    source_url: NEEDS_VERIFICATION
+    status: needs_verification

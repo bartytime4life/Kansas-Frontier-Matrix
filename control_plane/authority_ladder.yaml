@@ -1,2 +1,8 @@
-# Authority ladder snapshot — mirrors docs/doctrine/authority-ladder.md.
+meta:
+  status: PROPOSED
+  owner: docs steward
+  last_reviewed: 2026-05-15
+  related_doctrine:
+    - docs/directory-rules.md
+
 rungs: []
