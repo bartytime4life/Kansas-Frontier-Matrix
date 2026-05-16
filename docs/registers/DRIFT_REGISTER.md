@@ -21,5 +21,4 @@
 - 2026-05-15: CONFIRMED execution drift: in-branch run of `pytest -q tests/policy/test_preflight_summary_consistency.py` failed (2 failed / 3 passed) with `render_returncode: 2` and `render_stderr: skipped_due_to_check_error`; readiness state for the mapped consumer remains non-validated.
 
 - 2026-05-15: CONFIRMED readiness-state reconciliation: `control_plane/normalized_summary_consumer_readiness.yaml` now reflects branch-local outcomes (`passing` for doctrine artifact suite, `failing` for policy preflight consistency) instead of blanket `needs_verification` placeholders.
-
 - 2026-05-16: CONFIRMED parser-compatibility drift remediated: `scripts/maintenance/_doctrine_registry.py` now accepts `needs_verification` in `required_doctrine_artifacts` statuses, unblocking preflight summary generation and downstream policy consistency tests.

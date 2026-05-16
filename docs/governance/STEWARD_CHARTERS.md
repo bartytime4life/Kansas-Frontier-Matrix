@@ -2,15 +2,15 @@
 doc_id: kfm://doc/governance/steward-charters
 title: Steward Charters
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: Docs steward (PROPOSED)
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-05-16
 policy_label: public
 related: [docs/doctrine/directory-rules.md, docs/doctrine/authority-ladder.md, docs/doctrine/trust-membrane.md, docs/doctrine/lifecycle-law.md, docs/governance/REVIEW_BURDEN.md, docs/governance/SEPARATION_OF_DUTIES.md, docs/adr/README.md, docs/registers/DRIFT_REGISTER.md, control_plane/policy_gate_register.yaml]
 tags: [kfm, governance, stewards, separation-of-duties, charters]
-notes: [PROPOSED consolidation per Domains Culmination Atlas v1.1 §24.7; pending ADR-S-09 (reviewer separation tooling threshold)]
+notes: [PROPOSED consolidation per Domains Culmination Atlas v1.1 §24.7; pending ADR-S-09 (reviewer separation tooling threshold); v0.2 clarifies evidence boundary, materiality triggers, source key map, verification checklist, and rollback posture]
 [/KFM_META_BLOCK_V2] -->
 
 # Steward Charters
@@ -21,9 +21,14 @@ notes: [PROPOSED consolidation per Domains Culmination Atlas v1.1 §24.7; pendin
 [![Status](https://img.shields.io/badge/status-draft-orange)]()
 [![Charter maturity](https://img.shields.io/badge/charter--maturity-PROPOSED-yellow)]()
 [![Pending ADR](https://img.shields.io/badge/ADR--S--09-open-lightgrey)]()
-[![Last updated](https://img.shields.io/badge/updated-2026--05--12-informational)]()
+[![Last updated](https://img.shields.io/badge/updated-2026--05--16-informational)]()
 
-**Status:** draft · **Owners:** Docs steward (PROPOSED) · **Last updated:** 2026-05-12
+**Status:** draft · **Owners:** Docs steward (PROPOSED) · **Last updated:** 2026-05-16
+
+> [!IMPORTANT]
+> **Target home (PROPOSED):** `docs/governance/steward-charters.md`  
+> **Truth posture:** CONFIRMED doctrine / PROPOSED charter scopes / UNKNOWN staffing and tooling  
+> **Evidence boundary:** This document governs role separation at the doctrine layer. It does not claim that roles are staffed, queues exist, or tooling enforces separation until mounted-repo evidence proves those facts.
 
 ---
 
@@ -47,6 +52,7 @@ notes: [PROPOSED consolidation per Domains Culmination Atlas v1.1 §24.7; pendin
 16. [Open Questions and ADR Linkage](#16-open-questions-and-adr-linkage)
 17. [Glossary](#17-glossary)
 18. [Related Docs](#18-related-docs)
+19. [Verification and Rollback](#19-verification-and-rollback)
 
 ---
 
@@ -54,7 +60,7 @@ notes: [PROPOSED consolidation per Domains Culmination Atlas v1.1 §24.7; pendin
 
 This document names the **named-role charters** that make KFM's separation of duties operational. Each charter defines: who the steward is, what they own, what artifacts they sign, what they cannot do alone, and when a co-signer is required.
 
-The charters exist because KFM is a governed, evidence-first system. Once a claim crosses the trust membrane into `PUBLISHED`, multiple downstream readers act on it. **A trust membrane without named owners is a membrane no-one can defend.** The charters fix that gap. [ENCY] [DIRRULES]
+The charters exist because KFM is a governed, evidence-first system. Once a claim crosses the trust membrane into `PUBLISHED`, multiple downstream readers act on it. **A trust membrane without named owners is a membrane no one can defend.** The charters fix that gap. [ENCY] [DIRRULES]
 
 ### 1.1 What this doc does
 
@@ -73,6 +79,18 @@ The charters exist because KFM is a governed, evidence-first system. Once a clai
 > [!NOTE]
 > The role consolidation in this document is **PROPOSED** per *Domains Culmination Atlas v1.1* §24.7. The doctrine of separation of policy-significant duties is **CONFIRMED**. Specific role scopes are proposals pending ADR-S-09 (reviewer separation tooling threshold). [ENCY] [DIRRULES]
 
+### 1.3 How to use this charter
+
+Use this file as a **routing aid**, not as an automatic approval engine:
+
+1. Identify the lifecycle transition or governance action.
+2. Find the candidate steward in §3 and the detailed charter in §§5–12.
+3. Apply the materiality rules in §§13–14.
+4. Require the co-signers named in the matrix before release, tier upgrade, AI policy binding, sensitive-lane publication, or derivative-affecting rollback.
+5. Emit or attach the appropriate `ReviewRecord`, receipt, correction, rollback, or release artifact. If the artifact family or queue is missing, label the action **NEEDS VERIFICATION** instead of treating the charter as enforcement.
+
+This sequence is **PROPOSED** operational guidance. It does not bypass policy gates, `ReleaseManifest` issuance, ADRs, or the trust membrane.
+
 [↑ Back to top](#contents)
 
 ---
@@ -87,7 +105,7 @@ The charters exist because KFM is a governed, evidence-first system. Once a clai
 | Doctrine — placement | Directory Rules §6.1 confirms `docs/governance/` is the home for "roles, review burden, separation of duties." | **CONFIRMED** [DIRRULES] |
 | Reference — consolidation | Atlas v1.1 §24.7 *Reviewer Role and Separation-of-Duties Matrix*. | **PROPOSED** reference for ADR discussion [ENCY] |
 | Open ADR | ADR-S-09 — reviewer separation enforced by tooling vs. custom; threshold to specify. | **OPEN** [ENCY] |
-| This document | Per-role charters, scopes, and co-signer requirements. | **PROPOSED v0.1** |
+| This document | Per-role charters, scopes, and co-signer requirements. | **PROPOSED v0.2** |
 
 ### 2.2 What outranks this doc
 
@@ -111,6 +129,15 @@ This file uses the standard KFM truth labels [ENCY]:
 
 > [!IMPORTANT]
 > **Memory is not evidence.** No charter in this document claims that a role is staffed, that a tool enforces separation, or that a repo path is present in production. Those claims are **UNKNOWN** until verified against mounted-repo evidence.
+
+### 2.4 Evidence boundary and repo-depth limits
+
+| Question | Label | Handling rule |
+|---|---|---|
+| Does KFM require separation of policy-significant duties when maturity justifies it? | **CONFIRMED doctrine** | Treat as governing law for release-significant surfaces. |
+| Are the eight steward names and role families usable as a consolidated charter roster? | **PROPOSED / doctrine-derived** | Use for routing and review design while ADR-S-09 remains open. |
+| Are named people, teams, queues, CI gates, or runtime enforcers already present? | **UNKNOWN** | Verify in mounted-repo evidence before claiming enforcement. |
+| Are path references in this file authoritative current repo paths? | **PROPOSED unless verified** | If the mounted repo conflicts with Directory Rules, open a drift entry rather than silently normalizing. |
 
 [↑ Back to top](#contents)
 
@@ -175,6 +202,14 @@ Each individual charter (§§5–12) uses this fixed shape so they read in paral
 | **Review cadence** | Proposed review window for the steward's own actions and the audit sample. |
 | **Onboarding minimum** | Proposed minimum context a new occupant must hold. |
 | **Citation** | Atlas / Encyclopedia / Directory Rules cites. |
+
+### 4.1 Field semantics
+
+The charter fields describe **responsibility**, not current implementation. For example:
+
+- `Owned artifacts` means the steward is responsible for that artifact family when it exists; it does **not** prove the schema or file is present in the mounted repo.
+- `Gate authority` means the steward is the doctrine owner or co-owner for that transition; it does **not** prove a queue, workflow, or CI gate enforces it.
+- `Review cadence` and `Onboarding minimum` are **PROPOSED** unless a mounted repo, accepted ADR, or staffed roster confirms them.
 
 [↑ Back to top](#contents)
 
@@ -374,6 +409,19 @@ The canonical separation matrix is **Atlas v1.1 §24.7.2**. This table re-presen
 > [!NOTE]
 > This is a reflection of the canonical matrix, not a replacement. Where this file and Atlas v1.1 §24.7.2 disagree, **Atlas v1.1 wins**; treat the disagreement as a `DRIFT_REGISTER` entry. [DIRRULES]
 
+### 13.1 Materiality triggers (PROPOSED)
+
+Materiality is the point where self-approval stops being safe. Until ADR-S-09 is accepted, use this conservative trigger list:
+
+| Trigger | Minimum separation response |
+|---|---|
+| Sensitivity tier is T1+ or may become public. | Author **≠** sole approver; involve Sensitivity reviewer and Release authority. |
+| Rights, sovereignty, cultural heritage, living-person, DNA, land/title, rare-species, archaeology, or critical-infrastructure exposure is unclear. | Fail closed; involve Rights-holder representative and Sensitivity reviewer where applicable. |
+| A source-role change, upcast, or authority reinterpretation is proposed. | Require Source steward + Domain steward + correction / descriptor update path. |
+| A cross-domain join, aggregation, graph edge, tile, story, export, or AI answer will carry a public claim. | Require EvidenceBundle closure and release-state review before public exposure. |
+| A rollback or correction invalidates derivatives. | Require Correction reviewer + Release authority and derivative invalidation list. |
+| A policy binding, Focus Mode template, or model-surface behavior changes. | Require AI surface steward + Docs steward; release authority joins for public surfaces. |
+
 [↑ Back to top](#contents)
 
 ---
@@ -404,6 +452,18 @@ These remain DENY cases regardless of M-level [ENCY] Atlas v1.1 §24.9:
 - Promotion that "upgrades" a source role (e.g., `modeled → observed`).
 - Re-publishing a corrected claim without invalidating derivatives.
 - AI generation routed through an admin shortcut as a normal-path public route.
+
+### 14.2 Evidence needed to claim M2 or M3
+
+Do not promote a maturity label by prose. To claim M2 or M3, attach current evidence such as:
+
+- accepted ADR-S-09 or successor ADR;
+- required `ReviewRecord` / `ReleaseManifest` fields in schemas;
+- CI or policy-gate output showing author ≠ approver on material gates;
+- CODEOWNERS, release queue, or workflow rules that enforce separation;
+- rollback and correction fixtures proving derivative invalidation.
+
+Without those artifacts, maturity remains **UNKNOWN** even if the doctrine is clear.
 
 [↑ Back to top](#contents)
 
@@ -502,10 +562,50 @@ Other open questions (PROPOSED for this charter file):
 - **ADRs** — `docs/adr/README.md`; open ADRs: ADR-S-09, ADR-S-13, ADR-S-15 (Atlas v1.1 §24.12).
 - **Control plane** — `control_plane/policy_gate_register.yaml`, `control_plane/release_state_register.yaml`.
 - **Contracts** — `contracts/governance/review_record/`, `contracts/release/release_manifest/`, `contracts/correction/correction_notice/`.
+- **Schemas** — `schemas/contracts/v1/governance/`, `schemas/contracts/v1/release/`, `schemas/contracts/v1/correction/`, `schemas/contracts/v1/source/` (PROPOSED homes; confirm against ADR-0001 and mounted repo).
+
+### 18.1 Source key map
+
+| Key | Source family | Use in this file |
+|---|---|---|
+| `[DIRRULES]` | Directory Rules / placement doctrine. | Responsibility roots, schema-home convention, lifecycle placement, drift handling. |
+| `[ENCY]` | KFM encyclopedia / Atlas-derived operating-law references. | Steward roster, materiality, sensitivity tiers, ADR backlog, anti-patterns. |
+| `[GAI]` | Governed AI architecture and source-ledger reports. | AI surface steward, `AIReceipt`, cite-or-abstain, finite outcomes. |
+| `[UIAI]` | Whole-UI + Governed AI expansion report. | Evidence Drawer, Focus Mode, trust-visible UI posture. |
+| `[DOM-ARCH]` | Archaeology architecture reports. | Cultural sensitivity, exact-location denial, steward / rights review posture. |
+| `[DOM-FAUNA]` / `[DOM-FLORA]` | Fauna and Flora architecture reports. | Rare-species / biodiversity geoprivacy, sensitivity review, public-safe derivatives. |
+| `[DOM-PEOPLE]` | People, Genealogy-DNA, and Land Ownership blueprint. | Living-person, DNA, consent, land/title caution. |
+| `[DDD]` | Domain-Driven Design reference. | Bounded contexts, domain steward vocabulary, domain-language discipline. |
 
 > [!NOTE]
 > Link targets are **PROPOSED** per Directory Rules and may resolve differently in the mounted repo. The Docs steward is responsible for keeping these targets accurate as the doctrinal tree settles into the repo. [DIRRULES]
 
+[↑ Back to top](#contents)
+
 ---
 
-**Last updated:** 2026-05-12 · **Version:** v0.1 (PROPOSED) · **Status:** draft · [↑ Back to top](#contents)
+## 19. Verification and Rollback
+
+### 19.1 Verification checklist
+
+Before this charter is treated as active governance rather than draft doctrine, verify:
+
+- [ ] Target path and neighboring docs in the mounted repo.
+- [ ] Accepted ADR status for ADR-S-09, ADR-S-13, and ADR-S-15 or their successors.
+- [ ] Whether the eight steward roles are staffed in a repo-private roster.
+- [ ] Whether `ReviewRecord`, `ReleaseManifest`, `CorrectionNotice`, `RollbackCard`, `RedactionReceipt`, `AIReceipt`, and `SourceDescriptor` schemas exist at the cited homes.
+- [ ] Whether CI, CODEOWNERS, release queues, or policy gates enforce author ≠ approver where materiality applies.
+- [ ] Whether the Docs steward audit cadence and drift-register cadence are recorded in an accepted ADR or runbook.
+- [ ] Whether public UI / API surfaces consume governed release and evidence envelopes rather than canonical/internal stores.
+
+### 19.2 Rollback posture
+
+Rollback is required if an edit to this charter weakens separation of duties, silently promotes a proposed role scope to confirmed staffing, creates parallel schema/contract authority, obscures sensitivity or rights review, or implies that tooling exists without evidence.
+
+**Rollback target:** the last accepted version of `kfm://doc/governance/steward-charters` in the mounted repo. If no mounted repo version is available, use the v0.1 baseline attached to this update as the review baseline and mark the action **NEEDS VERIFICATION**.
+
+[↑ Back to top](#contents)
+
+---
+
+**Last updated:** 2026-05-16 · **Version:** v0.2 (PROPOSED) · **Status:** draft · [↑ Back to top](#contents)
