@@ -1,2 +1,8 @@
-# Cross-register crosswalks (e.g., source -> domain, object -> gate).
+meta:
+  status: PROPOSED
+  owner: docs steward
+  last_reviewed: 2026-05-15
+  related_doctrine:
+    - docs/directory-rules.md
+
 crosswalks: []
