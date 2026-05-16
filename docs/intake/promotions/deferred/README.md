@@ -1,5 +1,14 @@
 # Deferred Promotion Packets
 
-This folder stores promotion packets in the **deferred** state for `docs/intake/promotions/`.
+This folder stores promotion packets paused in the **deferred** state pending evidence, ownership, policy clarification, or directory-authority decisions.
 
-Use a `<topic-or-source-family>.<short-purpose>.promotion.md` filename and keep packet metadata aligned with `docs/intake/promotions/README.md`.
+## What belongs here
+- Packets waiting on verification tasks, steward assignment, rights/sensitivity review, or ADR resolution.
+- Packets that may re-enter candidate review after missing prerequisites are closed.
+
+## Naming
+Use:
+
+`<topic-or-source-family>.<short-purpose>.promotion.md`
+
+Keep packet metadata and workflow posture aligned with `docs/intake/promotions/README.md`.

@@ -1,5 +1,14 @@
-# Candidates Promotion Packets
+# Candidate Promotion Packets
 
-This folder stores promotion packets in the **candidates** state for `docs/intake/promotions/`.
+This folder stores active promotion packets in the **candidate-for-promotion** state while review is in progress.
 
-Use a `<topic-or-source-family>.<short-purpose>.promotion.md` filename and keep packet metadata aligned with `docs/intake/promotions/README.md`.
+## What belongs here
+- Packets that passed intake triage and are being evaluated for placement in an owning authority path.
+- Packet drafts with source references, proposed target path, reviewer/steward, and rollback target.
+
+## Naming
+Use:
+
+`<topic-or-source-family>.<short-purpose>.promotion.md`
+
+Keep packet metadata and workflow posture aligned with `docs/intake/promotions/README.md`.
