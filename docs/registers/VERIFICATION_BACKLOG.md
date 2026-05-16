@@ -20,3 +20,4 @@ Indexes the corresponding `control_plane/*.yaml` register.
 - 2026-05-15 — RESOLVED: Remediated parser compatibility for `needs_verification` status; `run_doctrine_artifact_preflight.py` no longer trips the prior check path and downstream consistency tests now pass.
 
 - 2026-05-15 — RESOLVED: Reran `pytest -q tests/policy/test_preflight_summary_consistency.py` (5 passed) and promoted consumer readiness to `validated` with 2026-05-16 evidence timestamp.
+- 2026-05-16 — OPEN: Admit or map required doctrine artifacts `KFM_Domains_Culmination_Atlas_v1_1.pdf`, `New_Ideas_5-8-26.pdf`, and `DomainDriven_Design_Reference.pdf` to canonical paths with steward-approved provenance so full evidence-index corroboration beyond `directory-rules.md` can be completed.
