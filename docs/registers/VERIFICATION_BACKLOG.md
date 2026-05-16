@@ -16,4 +16,7 @@ Indexes the corresponding `control_plane/*.yaml` register.
 - 2026-05-15 — OPEN: Populate steward-approved authoritative `source_url` values in `control_plane/doctrine_artifact_provenance_sources.yaml` for each required doctrine artifact before provenance status may be promoted.
 
 - 2026-05-15 — OPEN: Resolve canonical filename/path mapping for required doctrine artifacts and promote `control_plane/document_registry_doctrine_required.yaml` entries from `needs_verification` only after steward-approved path + provenance evidence is attached.
+
 - 2026-05-15 — OPEN: Investigate and remediate `run_doctrine_artifact_preflight.py` check failure (`render_returncode: 2`, `skipped_due_to_check_error`) so `tests/policy/test_preflight_summary_consistency.py` can pass and readiness can be promoted.
+
+- 2026-05-15 — OPEN: After fixing preflight check error, rerun `pytest -q tests/policy/test_preflight_summary_consistency.py` and only then promote consumer status from `failing` to `passing` with updated evidence date.
