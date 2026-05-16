@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: New Ideas Index
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-16
 updated: 2026-05-16
 policy_label: public
-related: [docs/doctrine/directory-rules.md NEEDS VERIFICATION, docs/intake/new-ideas-register.md PROPOSED, docs/registers/DRIFT_REGISTER.md NEEDS VERIFICATION]
+related: [docs/doctrine/directory-rules.md NEEDS VERIFICATION, docs/intake/README.md PROPOSED, docs/intake/new-ideas-register.md PROPOSED, docs/registers/DRIFT_REGISTER.md NEEDS VERIFICATION, docs/registers/VERIFICATION_BACKLOG.md NEEDS VERIFICATION]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Repo implementation depth UNKNOWN; path supplied by user; source packets remain EXPLORATORY until triaged and promoted.]
+notes: [Substantial clarity pass; repo implementation depth UNKNOWN; path supplied by user; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -23,17 +23,23 @@ A governed intake index for dated KFM “New Ideas” packets, preserving useful
 > **Owner:** `OWNER_TBD`  
 > **Truth posture:** CONFIRMED doctrine / EXPLORATORY packet content / UNKNOWN repo implementation depth
 
+> [!NOTE]
+> This file is an intake control surface. It records packet presence, themes, routing pressure, blockers, and next verification moves. It does **not** prove that proposed paths, tools, schemas, policies, workflows, or services exist in the repository.
+
 ## Quick navigation
 
 - [Purpose](#purpose)
 - [Repo fit](#repo-fit)
 - [Operating law](#operating-law)
+- [Intake record requirements](#intake-record-requirements)
 - [Current packet register](#current-packet-register)
 - [Intake taxonomy](#intake-taxonomy)
+- [Intake statuses](#intake-statuses)
 - [Promotion criteria](#promotion-criteria)
 - [Maintenance workflow](#maintenance-workflow)
 - [Verification checklist](#verification-checklist)
 - [Rollback](#rollback)
+- [Appendix: triage record template](#appendix-triage-record-template)
 - [Appendix: packet cards](#appendix-packet-cards)
 
 ## Purpose
@@ -50,11 +56,28 @@ This file does **not** make any packet authoritative. It does **not** prove that
 | --- | --- |
 | Intended home | `docs/intake/NEW_IDEAS_INDEX.md` |
 | Placement status | PROPOSED because mounted repo topology was not verified in this session. |
-| Responsibility root | `docs/` — documentation control and governance navigation. |
+| Responsibility root | `docs/` — documentation control, human-readable intake navigation, and governance orientation. |
+| Directory Rules basis | A human-readable intake index belongs under `docs/`; downstream implementation artifacts stay under their owning roots. Domain names appear as segments inside responsibility roots, not as new repo roots. |
 | Intake lane role | Capture and classify exploratory packets before promotion. |
 | Upstream doctrine | Directory Rules, documentation architecture passes, KFM truth posture, trust membrane, lifecycle law. |
-| Downstream destinations | `docs/doctrine/`, `docs/sources/`, `docs/domains/`, `docs/architecture/`, `schemas/contracts/v1/`, `contracts/`, `policy/`, `pipelines/`, `tools/`, `tests/`, `release/`, or archive/lineage destinations after triage. |
 | Known placement conflict | Prior documentation architecture sources propose `docs/intake/new-ideas-register.md`; the user supplied `docs/intake/NEW_IDEAS_INDEX.md`. Treat this file as an index/landing page until repo convention and sibling register names are verified. |
+
+### Candidate downstream homes
+
+Use destination roots by responsibility, not by topic convenience.
+
+| Candidate output | Owning root | Placement rule |
+| --- | --- | --- |
+| Doctrine or governance wording | `docs/doctrine/` | Human-readable doctrine; path remains PROPOSED until repo inspection. |
+| Source notes and source authority summaries | `docs/sources/` and `data/registry/` | Docs explain source posture; registry records source identity, rights, roles, and access constraints. |
+| Domain narrative and lane architecture | `docs/domains/<domain>/` | Domain belongs as a segment inside `docs/`, not as a new root. |
+| Object meaning | `contracts/` | Use for semantic contract language when verified. |
+| Machine shape | `schemas/contracts/v1/` | Use for JSON Schema / machine-readable shape after schema-home verification. |
+| Allow / deny / restrict / abstain logic | `policy/` | Policy rules must not live in this index. |
+| Pipeline logic and watcher flow | `pipelines/` or `pipeline_specs/` | Executable logic and declarative specs remain separate. |
+| Validators, probes, generators, builders | `tools/` | Repo-wide tooling belongs under tools after convention checks. |
+| Tests and fixtures | `tests/`, `fixtures/` | Proof of enforceability and sample data are not intake notes. |
+| Release decisions, manifests, rollback, corrections | `release/` | Publication remains a governed state transition. |
 
 ### Accepted inputs
 
@@ -105,13 +128,43 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 Publication remains a governed state transition. Map tiles, PMTiles, COGs, graph projections, vector indexes, generated summaries, Focus Mode answers, screenshots, and Story Nodes remain downstream carriers, not sovereign truth.
 
+### Non-authority rule
+
+A row in this file means:
+
+```text
+packet observed -> theme captured -> routing pressure recorded -> blockers named
+```
+
+It does **not** mean:
+
+```text
+implementation exists -> policy is active -> schema is canonical -> public release is allowed
+```
+
+## Intake record requirements
+
+Each packet should be tracked with enough information to support later review without forcing a promotion decision.
+
+| Required field | Why it matters | Placeholder when unknown |
+| --- | --- | --- |
+| Intake ID | Keeps packet identity stable across triage passes. | `NIP-YYYY-MM-DD[-suffix]` |
+| Source packet | Allows retrieval of the original packet. | `SOURCE_PACKET_TBD` |
+| Date signal | Distinguishes filename dates, creation dates, and content dates. | `DATE_SIGNAL_TBD` |
+| Source ID / hash | Supports deduplication and source ledger linkage. | `SOURCE_ID_TBD`; `HASH_TBD` |
+| Current status | Prevents exploratory content from masquerading as canon. | `CAPTURED / EXPLORATORY` |
+| Main themes | Preserves design pressure without copying full packet contents. | `THEMES_TBD` |
+| Candidate destinations | Identifies routing pressure while keeping paths PROPOSED. | `PATH_TBD_AFTER_REPO_INSPECTION` |
+| Blocking checks | Makes rights, sensitivity, source-role, owner, and repo gaps visible. | `NEEDS VERIFICATION: <specific check>` |
+| Decision record | Links later promotion, rejection, or archive action. | `DECISION_RECORD_TBD` |
+
 ## Current packet register
 
 This table records only the packet sources visible or directly retrieved in this session. It is not a complete historical inventory.
 
 | Intake ID | Source packet | Date signal | Current status | Main themes | Candidate destinations | Blocking checks |
 | --- | --- | --- | --- | --- | --- | --- |
-| `NIP-2026-05-08` | `New Ideas 5-8-26.pdf` | Filename date | CAPTURED / EXPLORATORY | Ecology tile gating; MAIAC AOD, FIRMS, SMAP, AirNow, Mesonet; watcher DecisionEnvelope; RunReceipt; PMTiles sidecars; MapLibre/Cesium verification; no-network proof slice; DSSE/cosign; policy hooks. | `docs/domains/ecology/`, `docs/sources/`, `policy/ecology/`, `schemas/contracts/v1/governance/`, `tools/ci/probes/`, `tools/smoke/`, `release/` after verification. | Verify source rights, API/key requirements, external product facts, Mesonet consent posture, thresholds as policy not science absolutes, and repo path conventions. |
+| `NIP-2026-05-08` | `New Ideas 5-8-26.pdf` | Filename date | CAPTURED / EXPLORATORY | Ecology tile gating; MAIAC AOD, FIRMS, SMAP, AirNow, Mesonet; watcher `DecisionEnvelope`; `RunReceipt`; PMTiles sidecars; MapLibre/Cesium verification; no-network proof slice; DSSE/cosign; policy hooks. | `docs/domains/ecology/`, `docs/sources/`, `policy/ecology/`, `schemas/contracts/v1/governance/`, `tools/ci/probes/`, `tools/smoke/`, `release/` after verification. | Verify source rights, API/key requirements, external product facts, Mesonet consent posture, thresholds as policy not science absolutes, and repo path conventions. |
 | `NIP-2026-05-10` | `New Ideas 5-10-26.pdf` | Filename date | CAPTURED / EXPLORATORY | PMTiles operational hardening; versioned artifacts; sidecar + Bao/BLAKE3 proofs; DSSE/cosign/Rekor; OCI/ORAS publication; fail-closed CI gate; MapLibre performance testing; automation starter pack; promotion/rollback rehearsal. | `tools/attest/`, `tools/validators/`, `schemas/contracts/v1/artifacts/`, `.github/workflows/`, `release/`, `docs/architecture/map/`, `docs/runbooks/` after repo verification. | Verify current tool versions and licenses, package availability, OCI/referrer support, schema-home authority, workflow conventions, public-safe artifact exposure, and rollback evidence. |
 
 ### Known lineage backlog to inventory
@@ -132,9 +185,9 @@ Use the narrowest truthful category. A packet can produce multiple extracted ide
 | --- | --- | --- | --- |
 | Doctrine candidate | Refines governing law, terminology, or truth posture. | Better cite-or-abstain wording; authority rule refinement. | `docs/doctrine/` |
 | Source refresh | Adds or updates current source/service knowledge. | New official source endpoint; API behavior; licensing change. | `docs/sources/` + source registry |
-| Schema / contract proposal | Crystallizes an object family or lifecycle seam. | `RunReceipt`, `EvidenceBundle`, `DecisionEnvelope`, PMTiles sidecar. | `contracts/` + `schemas/contracts/v1/` + fixtures after ADR checks. |
+| Schema / contract proposal | Crystallizes an object family or lifecycle seam. | `RunReceipt`, `EvidenceBundle`, `DecisionEnvelope`, PMTiles sidecar. | `contracts/` for meaning + `schemas/contracts/v1/` for shape after ADR and repo checks. |
 | Policy / gate proposal | Refines allow/deny/abstain or release logic. | Promotion gate; AI citation rule; sensitive geometry deny rule. | `policy/` + runbook + tests |
-| Workflow / automation proposal | Proposes a governed process change. | Watcher flow; CI gate; artifact signing lane; packaging flow. | `pipelines/`, `tools/`, runbooks |
+| Workflow / automation proposal | Proposes a governed process change. | Watcher flow; CI gate; artifact signing lane; packaging flow. | `pipelines/`, `pipeline_specs/`, `tools/`, runbooks |
 | UI / shell proposal | Refines Evidence Drawer, shell state, Focus Mode, or map interaction. | Drawer payloads; trust badges; route grouping; preview renderer. | `docs/architecture/`, UI docs, component README after repo verification. |
 | Data / domain expansion | Expands a lane or sequencing burden. | Hydrology watcher; soils lane; biodiversity extension; hazards context. | `docs/domains/` + source descriptors |
 | Implementation note | Narrow operational detail. | Normalization rule; naming rule; sharding convention. | Local package README or runbook |
@@ -153,6 +206,14 @@ Use the narrowest truthful category. A packet can produce multiple extracted ide
 | DEFERRED | Useful later, but depends on upstream proof. | Keep on backlog. |
 | ARCHIVED EXPLORATORY | Preserved but not active. | Archive and link forward. |
 | REJECTED | Contradicts doctrine, exposes unacceptable risk, or overclaims without value. | Archive with rationale. |
+
+### Status transition guardrails
+
+- Do not move directly from `CAPTURED` to `CANDIDATE CANONICAL` without triage.
+- Do not mark a packet `CANDIDATE CANONICAL` unless it has one clear owning destination or an ADR-backed split.
+- Do not mark a packet `REJECTED` without a rationale that can be reviewed later.
+- Do not treat `CORROBORATIVE` duplicates as independent authority votes.
+- Do not treat `ARCHIVED EXPLORATORY` as deletion; keep lineage visible enough to audit.
 
 ## Promotion criteria
 
@@ -183,11 +244,13 @@ An idea may be promoted only when all of the following are true:
 - [ ] Confirm the real repository contains or should create `docs/intake/`.
 - [ ] Confirm whether repo naming prefers `NEW_IDEAS_INDEX.md`, `new-ideas-index.md`, or `new-ideas-register.md`.
 - [ ] Check for an existing `docs/intake/new-ideas-register.md` before creating a sibling register.
+- [ ] Decide whether this file is the landing page, the register, or a companion to `docs/intake/new-ideas-register.md`.
 - [ ] Assign `OWNER_TBD` to a real docs steward or intake owner.
 - [ ] Add stable source IDs and hashes for every packet.
 - [ ] Verify whether earlier February–April packets are present, duplicated, superseded, or already promoted.
 - [ ] Recheck all version-sensitive external claims before source activation or implementation.
 - [ ] Confirm no sensitive exact locations, credentials, unpublished policy state, or restricted EvidenceBundle contents are copied into public docs.
+- [ ] Confirm candidate paths against Directory Rules and mounted repo evidence before using them in PRs.
 - [ ] Add tests or lint checks if this index becomes machine-read or CI-gated.
 
 ## Rollback
@@ -201,6 +264,44 @@ Rollback is required if this index:
 - claims implementation depth that was not verified.
 
 Rollback target: restore the previous committed version of `docs/intake/NEW_IDEAS_INDEX.md`, then add a drift or correction entry explaining the reverted claim.
+
+## Appendix: triage record template
+
+Use this template when a packet is ready for more detailed triage. Keep examples illustrative; do not fill unknown fields by guessing.
+
+```markdown
+### NIP-YYYY-MM-DD[-slug]
+
+| Field | Value |
+| --- | --- |
+| Intake ID | `NIP-YYYY-MM-DD[-slug]` |
+| Source packet | `SOURCE_PACKET_TBD` |
+| Source ID / hash | `SOURCE_ID_TBD`; `HASH_TBD` |
+| Date signal | `DATE_SIGNAL_TBD` |
+| Current status | `CAPTURED / EXPLORATORY` |
+| Owner / steward | `OWNER_TBD` |
+| Candidate destination | `PATH_TBD_AFTER_REPO_INSPECTION` |
+| Decision record | `DECISION_RECORD_TBD` |
+
+#### Captured themes
+
+- Theme 1.
+- Theme 2.
+
+#### Blocking checks
+
+- NEEDS VERIFICATION: source rights and access terms.
+- NEEDS VERIFICATION: repo path convention and adjacent docs.
+- NEEDS VERIFICATION: schema-home, policy-home, and test-home authority.
+
+#### Proposed disposition
+
+`TRIAGED | CANDIDATE CANONICAL | CORROBORATIVE | DEFERRED | ARCHIVED EXPLORATORY | REJECTED`
+
+#### Review note
+
+Explain why the disposition is safe, reversible, and bounded.
+```
 
 ## Appendix: packet cards
 
