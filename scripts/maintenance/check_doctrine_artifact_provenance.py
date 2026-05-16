@@ -7,7 +7,7 @@ from pathlib import Path
 
 from _cli_errors import emit_structured_error
 
-ALLOWED_STATUS = {"pending", "verified"}
+ALLOWED_STATUS = {"pending", "verified", "needs_verification"}
 DISALLOWED_PLACEHOLDER_HOSTS = {"example.org", "example.com", "localhost"}
 
 
@@ -54,7 +54,9 @@ def run(path: Path, output: Path | None) -> int:
             if not e.get(f):
                 missing_fields.append({"filename": e.get("filename", "<unknown>"), "field": f})
         url = e.get("source_url", "")
-        if url.startswith(("http://", "https://")) is False:
+        if url == "NEEDS_VERIFICATION":
+            placeholder_urls.append(e.get("filename", "<unknown>"))
+        elif url.startswith(("http://", "https://")) is False:
             invalid_urls.append(e.get("filename", "<unknown>"))
         elif any(host in url for host in DISALLOWED_PLACEHOLDER_HOSTS):
             placeholder_urls.append(e.get("filename", "<unknown>"))

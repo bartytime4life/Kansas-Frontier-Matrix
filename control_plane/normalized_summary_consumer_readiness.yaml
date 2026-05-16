@@ -1,13 +1,20 @@
+meta:
+  status: PROPOSED
+  owner: docs steward
+  last_reviewed: 2026-05-16
+  related_doctrine:
+    - docs/directory-rules.md
+
 normalized_summary_consumers:
   - consumer: scripts/maintenance/run_doctrine_artifact_test_suite.sh
     owner: platform-governance
     status: validated
-    validated_utc: 2026-05-13
-    evidence: local-ci-bundle
-    notes: Uses normalized-only shadow validation and consistency validator.
+    validated_utc: 2026-05-16
+    evidence: bash scripts/maintenance/run_doctrine_artifact_test_suite.sh
+    notes: Executed in-branch; doctrine artifact suite returned pass after registry status compatibility fix.
   - consumer: tests/policy/test_preflight_summary_consistency.py
     owner: platform-governance
     status: validated
-    validated_utc: 2026-05-13
-    evidence: pytest-policy-suite
-    notes: Contains normalized-only pass/fail assertions.
+    validated_utc: 2026-05-16
+    evidence: pytest -q tests/policy/test_preflight_summary_consistency.py
+    notes: Executed in-branch; suite returned 5 passed after registry status compatibility fix.
