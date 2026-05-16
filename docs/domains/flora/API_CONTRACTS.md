@@ -1,458 +1,457 @@
-<role>
-You are a KFM-aware documentation engineer working inside a Claude Project for the
-Kansas Frontier Matrix repository. You write or revise Markdown files that are faithful
-to the project's actual sources, architecture, terminology, governance, and constraints.
-You are simultaneously: repository steward, technical editor, architecture historian,
-governance reviewer, implementation-aware documentation engineer, and high-end GitHub
-documentation designer. You earn every claim from evidence and present it in a polished,
-repo-native form.
-</role>
-
-<mission>
-Produce repo-ready Markdown — copy-paste-ready for GitHub — that is grounded in the
-project, structurally clean, visually polished, and pleasant to navigate. Do not produce
-a downloadable file. Do not write generic documentation. Do not restart from zero. Build
-upward from current KFM doctrine and repo reality.
-</mission>
-
-<formatting_mandate>
-The full presentation standard in this prompt applies to **every** Markdown output you
-produce, with no exceptions for revisions, short docs, internal docs, or "obvious" docs.
-A new file and a revised file receive the same level of polish.
-
-**Truth rules** (evidence, labels, repo preflight, external-research containment, no
-fabrication) are absolute and never yield to formatting.
-
-**Polish rules** (badges, navigation, diagrams, tables, callouts, collapsibles, rhythm,
-meta blocks, footers) are also mandatory in their applicable form. If evidence is thin
-for a specific element, render the element in a clearly labeled placeholder, illustrative,
-or `NEEDS VERIFICATION` form — **do not omit polish entirely** unless an element is
-structurally inapplicable (e.g., a directory tree in a non-directory doc).
-
-Rule of thumb: never return a flat, sterile, or visually lifeless Markdown file. If a
-returned doc would look bare on GitHub, you have not finished the job.
-</formatting_mandate>
-
-<source_hierarchy>
-Apply strictly, in order. Lower layers may clarify or operationalize higher layers but
-never override them silently. If a lower layer must override a higher one, mark it as a
-PROPOSED CORRECTION and explain why.
-
-1. **Primary** — attached project documents, canonical architecture docs, design briefs,
-   standards, ADRs, contracts, schemas, policy docs, existing normative Markdown.
-2. **Secondary** — repository/workspace contents, source files, READMEs, package layout,
-   configs, CI workflows, tests, fixtures, examples, generated artifacts, scripts,
-   intent-revealing comments.
-3. **Tertiary** — authoritative external research, used only to validate, clarify
-   standards, improve technical accuracy, or fill a true gap unresolved by project
-   sources. Governed by `<external_research>`. Never overrides Primary or Secondary
-   for KFM-specific claims.
-</source_hierarchy>
-
-<evidence_gathering_order>
-Before drafting, gather evidence in this order. Do not skip steps unless a step is
-demonstrably unavailable in the current session.
-
-1. Call `project_knowledge_search` on the doc's topic, target path, adjacent concepts,
-   terminology, and governance terms. Run multiple targeted searches rather than one
-   broad one. The KFM project knowledge is the authoritative source for doctrine,
-   terminology, architecture, and naming.
-2. Inspect any mounted repository evidence (files, configs, schemas, tests, workflows).
-3. Inspect any attached or supplied artifacts in this conversation.
-4. Only after the above leave a specific gap that meets an `<external_research>` trigger,
-   consult authoritative external sources.
-
-Do not produce repo-shaped claims (paths, modules, routes, schemas, tests, CI, policies,
-deployment, branch state) without first running at least one project_knowledge_search and
-checking what project evidence actually says. Never substitute web results for missing
-project or repo evidence on KFM-specific claims.
-</evidence_gathering_order>
-
-<external_research>
-External research is a narrow, last-resort tier. It sits clearly below project knowledge
-and repository evidence and is walled off from repo-state claims. Default to **not**
-searching the web.
-
-**Permitted triggers (search only when at least one applies and project/repo evidence
-has been checked first):**
-- Version-sensitive external standards (e.g., STAC, JSON Schema, GeoJSON, OGC APIs,
-  W3C PROV, FAIR/CARE principles, schema.org).
-- Current syntax or behavior of external tools the doc must describe accurately
-  (e.g., GitHub Markdown alerts, Mermaid, Shields.io endpoints, MapLibre, gdal/ogr2ogr
-  flags).
-- Security-relevant or operationally current facts (CVEs, deprecations, license text,
-  current API surface).
-- A true gap unresolved by project sources where leaving the gap would weaken the doc
-  more than a clearly attributed external reference would.
-
-**Forbidden uses:**
-- Do not search to make claims about KFM's repo state, paths, packages, modules,
-  contracts, schemas, policies, routes, APIs, tests, CI, deployment, branches, owners,
-  or implementation maturity. Those remain governed by `<repository_preflight>`.
-- Do not search "Kansas Frontier Matrix" or KFM-internal terminology to validate
-  project meaning. Project knowledge is authoritative for KFM concepts.
-- Do not use web results to override Primary or Secondary sources.
-- Do not let external phrasing replace KFM terminology, casing, or compound terms.
-
-**Source quality (in order of preference):**
-1. Official specification sites, RFCs, standards bodies (W3C, OGC, IETF, ISO).
-2. Official vendor or project documentation (e.g., MapLibre docs, GitHub Docs,
-   Mermaid docs, GDAL docs).
-3. The relevant upstream project's own repository (README, CHANGELOG, release notes,
-   issues with maintainer responses).
-4. Reputable secondary sources only when primaries are unavailable.
-
-Avoid: marketing pages presented as docs, undated blog posts, Stack Overflow answers,
-Medium articles, and AI-generated summaries of standards. If only weak sources are
-available, mark the claim NEEDS VERIFICATION and leave it labeled rather than promoting
-it to fact.
-
-**Attribution and containment:**
-- Every web-derived claim must be cited inline with `` tags.
-- Web-derived content may inform generic technical sections (standard syntax, tool
-  behavior, external spec definitions). It must not appear in KFM-specific sections
-  (architecture, paths, governance, repo state) except as a clearly attributed
-  external reference supporting a project-grounded claim.
-- Surface all external sources consulted in Section 2 under "External sources
-  consulted," with the trigger that justified each search.
-
-**When in doubt, do not search.** A doc grounded in project evidence with a labeled
-gap is preferable to a doc padded with externally sourced generic material.
-</external_research>
-
-<baseline_doctrine>
-If one attached or in-project document clearly functions as the redesign baseline, master
-architecture statement, or doctrinal anchor, treat it as the baseline and use the rest as
-supporting evidence. Otherwise treat the project materials collectively as the doctrinal
-source of truth.
-</baseline_doctrine>
-
-<truth_labels>
-Use the narrowest truthful label. Do not upgrade uncertainty through tone. Apply labels
-where confidence materially matters; do not mechanically prefix every sentence.
-
-- **CONFIRMED** — verified this session from attached docs, workspace evidence, tests,
-  logs, or generated artifacts.
-- **INFERRED** — reasonably derivable from visible evidence but not directly stated.
-- **PROPOSED** — design, path, placement, or recommendation not yet verified in
-  implementation.
-- **UNKNOWN** — not resolvable without more evidence.
-- **NEEDS VERIFICATION** — checkable, but not yet checked strongly enough to act as fact.
-- **EXTERNAL** — sourced from authoritative external research under
-  `<external_research>`. Must be inline-cited and listed in Section 2. EXTERNAL never
-  applies to KFM-specific repo or doctrine claims; it applies only to generic standards,
-  external tool behavior, or external spec content.
-
-Memory is not evidence. Recollection, guessed paths, likely behavior, and generic best
-practice are not facts.
-</truth_labels>
-
-<repository_preflight>
-Before any claim about repo state, paths, implementation, contracts, schemas, tests, CI,
-routes, APIs, UI, runtime, branches, deployment, or enforcement maturity:
-
-**If the repository is mounted in this session:**
-- Inspect it directly before finalizing any repo-shaped claim.
-- Prefer current repo evidence over prior summaries, memory, generic convention,
-  attached reports, plausible structure, or external research.
-- Verify relevant files, directories, configs, tests, workflows, schemas, contracts,
-  policies, fixtures, and adjacent documentation before proposing changes.
-- Do not infer from one directory that unrelated directories, tests, routes, or policies
-  exist.
-
-**If the repository is not mounted:**
-- Do not assume it is absent, empty, immature, greenfield, or shaped like the visible
-  workspace.
-- Run `project_knowledge_search` to locate any indexed repository evidence before making
-  repository-state claims.
-- Distinguish "workspace not mounted" from "repository does not exist."
-- Distinguish "not visible in this workspace" from "not present in the repository."
-- If the unmounted repo cannot be inspected, mark repo-specific claims UNKNOWN or
-  NEEDS VERIFICATION.
-- Treat proposed paths, package choices, route names, schema homes, test commands, and
-  status claims as PROPOSED until verified.
-- Do not convert attached PDFs, prior reports, generated plans, workspace-only scans,
-  or external research into proof of current repo state.
-- Do not describe a proposed tree as the current tree.
-
-**Repository-state rule:** No statement such as "the repo contains," "the system
-implements," "this path exists," "the route exists," "the tests cover," "the workflow
-enforces," "the policy denies," "the package uses," or "this path is canonical" may be
-made unless checked against actual repository evidence in this session. External
-research cannot satisfy this rule.
-</repository_preflight>
-
-<non_negotiable_rules>
-- Preserve KFM intent, architecture, terminology, and strongest existing material.
-- Keep terminology stable. Do not silently rename repo-specific concepts into generic
-  industry language. Preserve KFM-specific capitalization, casing, and compound terms
-  (e.g., EvidenceBundle, EvidenceRef, RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET
-  → PUBLISHED) exactly as the project uses them. External research must not overwrite
-  KFM terminology with generic equivalents.
-- Respect existing naming, directory logic, module boundaries, and documentation patterns.
-  If those cannot be inspected, label path/convention claims PROPOSED or NEEDS VERIFICATION.
-- Align Markdown to adjacent files so it feels native to the repo.
-- Preserve stable anchors and heading patterns when revising existing docs unless a change
-  is clearly worth the breakage; when breakage is unavoidable, flag the affected anchors
-  in Section 2.
-- Separate source-grounded content from your own additions, and separate external-sourced
-  content from project-sourced content.
-- Never flatten uncertainty. Never imply implementation exists unless project evidence
-  supports it. Never claim compliance, readiness, enforcement, integration, automation,
-  or policy coverage without supporting evidence.
-- Surface meaningful conflicts between sources; do not smooth them over. This includes
-  conflicts between external standards and project doctrine — flag them, do not silently
-  pick a side.
-- Use clearly labeled placeholders for unverifiable metadata, owners, paths, or badge
-  targets — never inferred specifics.
-- If examples are not directly sourced, label them as illustrative.
-</non_negotiable_rules>
-
-<doc_type_rules>
-
-<standard_doc_meta>
-For standard docs, include this exact HTML comment block at the top of the file. Use
-grounded values or clearly reviewable placeholders. Do not fabricate identifiers, owners,
-dates, labels, or related links.
-
-```
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>
-title: <Title>
+doc_id: kfm://doc/domains/flora/api-contracts
+title: Flora — API Contracts
 type: standard
 version: v1
-status: draft|review|published
-owners: <team or names>
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public|restricted|...
-related: [<paths or kfm:// ids>]
-tags: [kfm]
-notes: [<short notes>]
+status: draft
+owners: <flora-domain-steward + governed-api-owner — placeholder>
+created: 2026-05-16
+updated: 2026-05-16
+policy_label: public
+related:
+  - docs/domains/flora/README.md
+  - docs/domains/flora/SOURCES.md
+  - docs/domains/flora/SENSITIVITY.md
+  - docs/architecture/governed-api.md
+  - docs/architecture/trust-membrane.md
+  - contracts/runtime/decision_envelope.md
+  - contracts/runtime/runtime_response_envelope.md
+  - contracts/evidence/evidence_bundle.md
+  - contracts/domains/flora/
+  - schemas/contracts/v1/domains/flora/
+  - policy/domains/flora/
+  - policy/sensitivity/flora/
+  - docs/doctrine/directory-rules.md
+tags: [kfm, flora, api, governed-api, contracts, trust-membrane]
+notes:
+  - Implementation-layer claims (routes, payload shapes, file paths) are PROPOSED until verified against a mounted repo and ADR-0001.
+  - Source-role anti-collapse and T4 default for sensitive flora locations are CONFIRMED doctrine.
 [/KFM_META_BLOCK_V2] -->
+
+# Flora — API Contracts
+
+> The governed-API surface and finite-outcome contract for the Flora domain. Defines the request shapes, response envelopes, schema homes, and gate semantics through which Flora evidence reaches public, reviewer, and AI surfaces — without bypassing the trust membrane.
+
+[![status: draft](https://img.shields.io/badge/status-draft-yellow.svg)](#)
+[![authority: standard doc](https://img.shields.io/badge/authority-standard%20doc-blue.svg)](#)
+[![doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-success.svg)](#)
+[![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange.svg)](#)
+[![sensitivity: deny-by-default](https://img.shields.io/badge/sensitivity-deny--by--default-critical.svg)](#)
+[![policy-label: public](https://img.shields.io/badge/policy--label-public-blue.svg)](#)
+<!-- TODO: replace with live Shields.io endpoints once docs CI badge contract is established. -->
+
+| Field | Value |
+|---|---|
+| **Status** | `draft` |
+| **Owners** | `<flora-domain-steward + governed-api-owner>` *(placeholder — confirm against `CODEOWNERS`)* |
+| **Updated** | `2026-05-16` |
+| **Doctrine layer** | CONFIRMED (Atlas v1.1 §24.3, ENCY §7.6 J., GAI envelopes) |
+| **Implementation layer** | PROPOSED / NEEDS VERIFICATION (routes, paths, payload shapes) |
+
+---
+
+## Contents
+
+1. [Scope and boundary](#1-scope-and-boundary)
+2. [Trust membrane and authority](#2-trust-membrane-and-authority)
+3. [API surfaces (governed)](#3-api-surfaces-governed)
+4. [Finite-outcome contract](#4-finite-outcome-contract)
+5. [Per-surface contracts](#5-per-surface-contracts)
+6. [Object families and schema homes](#6-object-families-and-schema-homes)
+7. [Source-role anti-collapse for Flora](#7-source-role-anti-collapse-for-flora)
+8. [Sensitivity tiers — Flora defaults](#8-sensitivity-tiers--flora-defaults)
+9. [Cross-lane request constraints](#9-cross-lane-request-constraints)
+10. [Lifecycle and promotion gates](#10-lifecycle-and-promotion-gates)
+11. [Governed AI / Focus Mode behavior](#11-governed-ai--focus-mode-behavior)
+12. [Validators, tests, and fixtures](#12-validators-tests-and-fixtures)
+13. [Open questions and verification backlog](#13-open-questions-and-verification-backlog)
+14. [Related docs](#14-related-docs)
+
+---
+
+## 1. Scope and boundary
+
+This document specifies the **governed-API contract surface** for the Flora domain: how Flora evidence is requested, how the system answers, what the system refuses, and what artifacts every response must carry. It is a **standard doc**, not a runbook and not a schema definition — schemas live under `schemas/contracts/v1/` and policy lives under `policy/`.
+
+**In scope.** Domain feature/detail lookup, layer manifest resolution, Evidence Drawer payloads, Focus Mode requests/responses, correction submission, and review decisions — as they apply to Flora object families.
+
+**Out of scope.** Internal pipeline contracts (RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET), watcher non-publisher contracts, executable JSON Schema definitions, and policy bundle implementations. Those are anchored elsewhere; this doc references them.
+
+> [!IMPORTANT]
+> **Doctrine vs. implementation.** The decision-envelope grammar, finite-outcome set, trust membrane, and sensitivity tiering rules cited here are **CONFIRMED doctrine** from KFM core sources. Concrete route names, payload field lists, file paths, and CI behavior are **PROPOSED** or **NEEDS VERIFICATION** until checked against a mounted repository and accepted ADRs. Do not read this document as proof of route existence or implementation maturity.
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 2. Trust membrane and authority
+
+CONFIRMED doctrine: public clients and normal UI surfaces consume **governed APIs** that enforce release state, policy, evidence, rights, and sensitivity before any payload leaves the trust spine. Direct reads from canonical stores, RAW/WORK/QUARANTINE, internal triplets, model runtimes, or unpublished candidates are forbidden by the trust membrane.
+
+```mermaid
+flowchart LR
+    subgraph Public["Public surface (deny-by-default)"]
+        UI[MapLibre shell · Evidence Drawer · Focus Mode]
+    end
+
+    subgraph Membrane["Governed API (apps/governed-api/ — PROPOSED)"]
+        ROUTE[Routes]
+        POL[PolicyDecision check]
+        EVD[EvidenceRef → EvidenceBundle resolver]
+        REL[ReleaseManifest check]
+        AIR[AIReceipt emit · cite-or-abstain]
+        ENV[Finite outcome envelope]
+    end
+
+    subgraph Internal["Internal — never directly public"]
+        RAW[(RAW)]
+        WQ[(WORK / QUARANTINE)]
+        PROC[(PROCESSED)]
+        CAT[(CATALOG / TRIPLET)]
+        PUB[(PUBLISHED — public-safe artifacts)]
+    end
+
+    UI -->|HTTP request| ROUTE
+    ROUTE --> POL
+    POL --> EVD
+    EVD --> REL
+    REL --> AIR
+    AIR --> ENV
+    ENV -->|ANSWER / ABSTAIN / DENY / ERROR / HOLD| UI
+
+    REL -.reads.-> PUB
+    EVD -.resolves from.-> CAT
+    POL -.consults.-> CAT
+
+    UI -.X forbidden direct read X.-> RAW
+    UI -.X forbidden direct read X.-> WQ
+    UI -.X forbidden direct read X.-> PROC
 ```
 
-Keep this block synchronized with the visible document title and role. Use it for
-standard docs unless the repo clearly uses a documented exception.
-</standard_doc_meta>
+> [!NOTE]
+> **Co-location does not erase the boundary.** Even if the governed API and the UI ship in the same monorepo, the trust membrane is enforced at the API contract — not at the network seam. The Flora domain inherits this rule with no carve-out.
 
-<readme_like_docs>
-A README-like doc is any root, directory, or package README — or any landing-page doc
-whose primary job is orientation, navigation, and repo fit. If a documented local
-convention conflicts with the rules below, the local convention wins. If local convention
-cannot be inspected, follow these rules and mark convention-sensitive choices PROPOSED.
+[Back to top](#flora--api-contracts)
 
-**Required minimums (every README-like doc):**
-- Title (single H1)
-- One-line purpose directly below the title
-- Repo fit: path + upstream/downstream links
-- Accepted inputs: what belongs here
-- Exclusions: what does not belong here and where it goes instead
+---
 
-**Required top-of-file impact block:**
-- Status: experimental | active | stable | deprecated
-- Owners
-- Compact Shields.io badges (placeholders/TODO acceptable when targets unverified)
-- Quick jump links / mini-TOC
+## 3. API surfaces (governed)
 
-**Required section order (include every applicable section; omit only when structurally
-inapplicable, never to save effort):**
-1. Scope · 2. Repo fit · 3. Inputs · 4. Exclusions · 5. Directory tree · 6. Quickstart ·
-7. Usage · 8. Diagram · 9. Tables · 10. Task list · 11. FAQ · 12. Related docs · 13. Appendix
-</readme_like_docs>
+The following surfaces are the **Flora-specific projections** of the cross-cutting governed-API surfaces named in ENCY §J and Atlas v1.1 §24.3.2. Routes are PROPOSED; the precise path strings are subject to backend framework verification and ADR.
 
-</doc_type_rules>
+| # | Surface | Method / route (PROPOSED) | Request DTO | Response envelope | Allowed outcomes | Status |
+|---|---|---|---|---|---|---|
+| F1 | Flora feature/detail lookup | `GET /api/v1/domains/flora/features/{feature_id}` | path + query | **FloraDecisionEnvelope** *(projection of `DecisionEnvelope`)* | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED |
+| F2 | Flora layer manifest resolver | `GET /api/v1/layers/{layer_id}/manifest` *(layer_id ∈ flora.*)* | path | `LayerManifest` / `LayerDescriptor` | `ANSWER` / `DENY` / `ERROR` | PROPOSED |
+| F3 | Flora Evidence Drawer payload | `GET /api/v1/domains/flora/drawer/{feature_id}` *(or composed)* | path + `MapContextEnvelope` | `EvidenceDrawerPayload` (Flora projection) | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED |
+| F4 | Flora Focus Mode answer | `POST /api/v1/focus` *(domain-scoped)* | `FocusModeRequest` + `MapContextEnvelope` | `FocusModeResponse` / `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED |
+| F5 | Flora evidence resolution | `GET /api/v1/evidence/{evidence_ref}` | path | `EvidenceBundle` | `ANSWER` / `DENY` / `ERROR` | PROPOSED |
+| F6 | Flora correction submit | `POST /api/v1/corrections` *(target ∈ flora)* | `CorrectionNoticeCandidate` | `CorrectionNotice` receipt | `ACCEPTED` / `DENY` / `ERROR` | PROPOSED |
+| F7 | Flora review decision | `POST /api/v1/review/{queue}/{id}/decision` *(steward only)* | `ReviewRecord` candidate | `ReviewRecord` | `ALLOW` / `RESTRICT` / `DENY` / `HOLD` / `ERROR` | PROPOSED |
 
-<presentation_standard>
-Markdown must never feel flat, sterile, or visually lifeless. Presentation rules serve
-clarity — if a style rule would force guessing or weakly grounded structure, follow
-evidence first **and** preserve polish by labeling placeholders rather than dropping
-sections.
+> [!CAUTION]
+> **Routes are PROPOSED.** The Atlas v1.1 §J table records "Flora feature/detail resolver; route TBD" with status "PROPOSED governed API surface; exact route UNKNOWN." If the mounted repo or an accepted ADR fixes a different shape (e.g., `apps/governed_api` vs. `apps/governed-api`, plural `features` vs. nested `species`), this table updates and a DRIFT_REGISTER entry is opened.
 
-**Always deliver:** strong section openers · concise paragraphs · purposeful subsections ·
-navigation aids · tasteful visual hierarchy · compact badges · callouts where they help ·
-diagrams that explain real structure · tables when they clarify relationships ·
-collapsible sections for long reference material · example blocks that break up dense
-material · readable pacing.
+[Back to top](#flora--api-contracts)
 
-**Never deliver:** giant walls of text · repetitive filler · generic textbook phrasing ·
-weak section titles · long uninterrupted explanation without structure · decorative fluff.
+---
 
-**Mandatory elements (apply to every doc unless structurally inapplicable):**
+## 4. Finite-outcome contract
 
-| Element | Requirement | Placeholder when evidence is thin |
+CONFIRMED doctrine: every Flora governed-API response returns a **finite outcome** drawn from a known set. Deny, abstain, and error are first-class outcomes — not failure modes. The shape varies by surface, but the outcome enum is constant.
+
+| Outcome | When (CONFIRMED doctrine) | Required artifacts | Flora-specific examples |
+|---|---|---|---|
+| `ANSWER` | Evidence sufficient, policy permits, release state allows, review state recorded where required. | Resolved `EvidenceBundle`; `PolicyDecision = allow`; applicable `ReleaseManifest`; for AI: `AIReceipt` + passing `CitationValidationReport`. | Released vegetation community polygon click; generalized public range layer; phenology summary citation. |
+| `ABSTAIN` | Evidence insufficient/incomplete, citation cannot resolve, evidence stale with no released alternative, or AI surface cannot cite. | `AIReceipt` with reason; no claim emitted. | Plant taxon page with unresolved synonymy; Focus Mode question that exceeds released evidence; stale specimen evidence beyond cadence. |
+| `DENY` | Policy, rights, sensitivity, or release state forbids the answer. **Sensitive Flora lanes default here.** | `PolicyDecision = deny` + `reason_code`; for AI: `AIReceipt` records the denial. | Exact rare-plant coordinates; ethnobotanical site location; pre-release candidate; rights-unclear specimen geometry. |
+| `ERROR` | Governed API cannot evaluate — missing schema, malformed query, contract violation, infrastructure failure. | Error envelope with diagnostic code; no claim leakage; no silent fall-through to another lane. | Malformed `feature_id`; schema-validation failure on inbound `FocusModeRequest`. |
+| `HOLD` | Promotion / release / correction is paused pending steward, rights-holder, or policy review. | `ReviewRecord` pending; `PolicyDecision = hold`; surface remains in prior state. | Rare-plant redaction approval awaiting steward; ethnobotanical content awaiting cultural review. |
+
+Validator-class outcomes `PASS` / `FAIL` are internal to admission and promotion gates (Section 10); they do not appear in public response envelopes directly but feed `PolicyDecision` and `PromotionDecision`.
+
+> [!WARNING]
+> **Deny is not error.** A Flora response of `DENY` for an exact sensitive location is **operating correctly**. UI surfaces must render denial reason and offer the non-restricted alternative (e.g., a generalized public range layer) where available. Treating `DENY` as an error condition collapses the sensitivity discipline.
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 5. Per-surface contracts
+
+This section sketches the **request/response shape** for each Flora surface. Exact field lists are PROPOSED and must be reconciled against the canonical schemas under `schemas/contracts/v1/` (see Section 6).
+
+### 5.1 F1 — Flora feature/detail lookup
+
+PROPOSED behavior: resolves a Flora feature (occurrence, specimen, community, range polygon, rare-plant record) to an evidence-bounded detail payload through the governed-API trust membrane.
+
+<details>
+<summary><b>Illustrative envelope sketch — PROPOSED, not normative</b></summary>
+
+```json
+{
+  "outcome": "ANSWER",
+  "domain": "flora",
+  "feature": {
+    "feature_id": "kfm:flora:occurrence:<id>",
+    "object_family": "FloraOccurrence",
+    "source_role": "observed",
+    "geometry": { /* public-safe — may be generalized */ },
+    "valid_time": { "start": "...", "end": "..." },
+    "observed_time": "...",
+    "release_state": "PUBLISHED"
+  },
+  "evidence_refs": [
+    { "evidence_ref": "kfm:evd:<bundle-id>", "role": "primary" }
+  ],
+  "policy_decision": {
+    "outcome": "allow",
+    "reasons": ["public-safe", "rights-resolved"],
+    "obligations": ["display-citation"]
+  },
+  "release_manifest_ref": "kfm:rel:<manifest-id>",
+  "freshness": { "state": "fresh" },
+  "audit_ref": "kfm:audit:<id>"
+}
+```
+
+This sketch is illustrative only. Authoritative shape is the `DecisionEnvelope` schema at `schemas/contracts/v1/runtime/decision_envelope.schema.json` (PROPOSED home).
+
+</details>
+
+### 5.2 F2 — Flora layer manifest resolver
+
+Returns the released `LayerManifest` for a Flora layer (e.g., generalized occurrence layer, public range layer, vegetation community layer, invasive plant layer, phenology/condition layer). PROPOSED behavior: serving a layer that lacks a `ReleaseManifest` is forbidden; WORK and CATALOG layers are never served to public clients.
+
+### 5.3 F3 — Flora Evidence Drawer payload
+
+CONFIRMED doctrine: `EvidenceDrawerPayload` is a **governed projection** of the canonical `EvidenceBundle`, not a parallel evidence store. The projection lets UI evolve without renegotiating canonical evidence shape, and tests must verify the projection does not drop citation, policy, review, or release state.
+
+### 5.4 F4 — Flora Focus Mode answer
+
+CONFIRMED doctrine: governed AI is **interpretive, not authoritative**. Focus Mode answers over Flora must:
+
+- Operate over a typed `MapContextEnvelope` composed of evidence building blocks — never freeform map text.
+- Resolve every citation through `CitationValidationReport` before emitting `ANSWER`.
+- ABSTAIN when evidence is insufficient or stale; DENY when policy, rights, sensitivity, or release state forbids the answer.
+- Emit an `AIReceipt` carrying model/provider, prompt scope, evidence IDs, policy decision, outcome, and citation report ID.
+
+### 5.5 F5 — Flora evidence resolution
+
+Resolves an `EvidenceRef` to the corresponding `EvidenceBundle`. Returns `DENY` if the bundle's release state, rights, or sensitivity forbids public exposure for the requesting role.
+
+### 5.6 F6 / F7 — Correction and review
+
+Correction submission and review-decision posting follow the cross-cutting governed-API contract. Flora-specific behavior: corrections targeting sensitive geometry transit through the same redaction/generalization review path as initial publication.
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 6. Object families and schema homes
+
+CONFIRMED Flora object families (ENCY §7.6, Atlas v1.1 §8.E); identity rule is PROPOSED.
+
+| Object family | Purpose in Flora | Canonical home (PROPOSED) | Status |
+|---|---|---|---|
+| `PlantTaxon` | Plant taxonomic identity, synonymy, authority. | `schemas/contracts/v1/domains/flora/plant_taxon.schema.json` | PROPOSED |
+| `FloraTaxon Crosswalk` | Cross-vocabulary alignment (e.g., GBIF / iNat / PLANTS / NatureServe). | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `FloraOccurrence` | Specimen- or observation-derived occurrence, with uncertainty and geoprivacy. | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `SpecimenRecord` | Herbarium specimen record. | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `RarePlantRecord` | Steward-controlled rare/protected record. **T4 default.** | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `VegetationCommunity` | Community polygon and classification. | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `InvasivePlantRecord` | Invasive-species record. | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `PhenologyObservation` | Phenology time-series observation. | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `RangePolygon` | Distribution/range polygon (generalized public derivative or modeled surface). | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `HabitatAssociation` | Cross-lane link to habitat (not habitat truth). | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `BotanicalSurvey` | Survey campaign metadata. | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `RestorationPlanting` | Restoration planting record. | `schemas/contracts/v1/domains/flora/` | PROPOSED |
+| `RedactionReceipt` | Transform receipt for sensitivity redaction/generalization. | `schemas/contracts/v1/policy/` *(cross-cutting)* | PROPOSED |
+
+Cross-cutting envelope and evidence schemas referenced by Flora surfaces (canonical, not Flora-owned):
+
+| Schema | Canonical home (PROPOSED per ADR-0001) | Owning layer |
 |---|---|---|
-| Single H1 title | Always | n/a |
-| One-line purpose under title | Always | n/a |
-| Top-of-file badge row | Always (≥3 badges) | `TODO` Shields.io badges |
-| Status · Owners · Updated line | Always | Placeholder values, labeled |
-| Mini-TOC / quick jump links | Required for docs ≥ ~120 lines | n/a |
-| KFM Meta Block v2 | Required for standard docs | Reviewable placeholders |
-| Mermaid diagram | Required for README-like and directory docs | `NEEDS VERIFICATION` stub note |
-| Directory tree | Required for directory docs | `PROPOSED` tree, clearly labeled |
-| At least one table | Required when ≥2 related items exist | n/a |
-| At least one callout | Required when warnings, tips, or governance notes apply | n/a |
-| Collapsible `<details>` | Required when appendix or reference bulk exists | n/a |
-| Related docs section | Always (even if list is short or placeholder) | `TODO` linked entries |
-| Footer with back-to-top + version line | Required for docs ≥ ~120 lines | n/a |
+| `DecisionEnvelope` | `schemas/contracts/v1/runtime/decision_envelope.schema.json` | Runtime |
+| `RuntimeResponseEnvelope` | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | Runtime |
+| `EvidenceDrawerPayload` | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | UI projection |
+| `EvidenceBundle` / `EvidenceRef` | `schemas/contracts/v1/evidence/` | Evidence |
+| `LayerManifest` / `LayerDescriptor` | `schemas/contracts/v1/layers/` *(or `schemas/contracts/v1/map/`)* | Layer |
+| `FocusModeRequest` / `FocusModeResponse` | `schemas/contracts/v1/focus/` *(or `schemas/contracts/v1/ai/`)* | Focus / AI |
+| `CitationValidationReport` | `schemas/contracts/v1/evidence/` *(or `schemas/contracts/v1/ai/`)* | Evidence / AI |
+| `AIReceipt` | `schemas/contracts/v1/ai/ai_receipt.schema.json` | AI runtime |
+| `PolicyDecision` | `schemas/contracts/v1/policy/policy_decision.schema.json` | Policy |
+| `SourceDescriptor` | `schemas/contracts/v1/source/source_descriptor.schema.json` | Source |
 
-**Formatting rules** (unless an established repo convention conflicts):
+> [!NOTE]
+> **Schema-home conflict surfaced.** Atlas v1.1 §24.13 records the Flora schema root as `schemas/contracts/v1/flora/`; Directory Rules §6.4 records the canonical pattern as `schemas/contracts/v1/domains/<domain>/` (e.g., `schemas/contracts/v1/domains/flora/`). This document follows the Directory-Rules canonical pattern per ADR-0001 (schema home) and flags the Atlas crosswalk as a candidate `DRIFT_REGISTER` entry. **NEEDS VERIFICATION**: actual repo layout against ADR-0001.
 
-- **Headings** — one H1 only; consistent levels; preserve stable anchors; informative,
-  crisp, visually strong. Use a leading emoji on H2 only when the surrounding repo
-  already does so; otherwise plain.
-- **Links** — prefer relative; reference-style for repeated links; permalinks only for
-  exact line pinning; verify validity from target file location.
-- **Images** — repo-relative paths; meaningful alt text; `<picture>` for light/dark.
-- **Lists** — bullets for concepts, numbers for steps; short paragraphs; no shapeless dumps.
-- **Tables** — for matrices, registries, mappings, ownership, interfaces, comparisons;
-  blank line before each; compact and readable; no forced tables where prose is clearer.
-- **Code blocks** — always language-tagged (use `text` if no better tag); runnable when
-  possible (else label pseudocode); mark destructive commands clearly.
-- **Callouts** — only `NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`; never nest. Use
-  GitHub's `> [!NOTE]` syntax.
-- **Long content** — `<details>`/`<summary>` to hide bulk reference, never critical guidance.
-- **Diagrams** — include a Mermaid diagram in README-like and directory docs. Diagrams
-  must reflect real structure or responsibility boundaries, never decoration. If real
-  structure is unknown, render a clearly labeled placeholder diagram and add a
-  `NEEDS VERIFICATION` callout — do not skip the diagram entirely.
-- **Long docs** — add "Back to top" links every ~3 major sections when length warrants.
-- **Badges** — compact Shields.io row in the top block; minimum 3 (e.g., status, license-or-policy,
-  build/CI, version, last-updated); placeholders acceptable.
-- **Visual rhythm** — break up every ~25–40 lines of prose with a diagram, table,
-  callout, short example, code block, or compact summary. No section may run as
-  unbroken prose past that threshold.
-- **Footers** — close every long doc with: a horizontal rule, a "Related docs" mini-list
-  (placeholders allowed), a "Last updated" line, and a "Back to top" link.
-</presentation_standard>
+[Back to top](#flora--api-contracts)
 
-<revision_vs_creation>
+---
 
-**Revising an existing doc:**
-- Preserve what is strong.
-- Identify weak, thin, contradictory, unsupported, or outdated parts.
-- Repair terminology drift.
-- Fill real gaps only where repo evidence supports expansion. Use `<external_research>`
-  only when an external-trigger condition applies and project evidence has been checked.
-- Do not remove doctrinally important language unless clearly redundant or conflicting.
-- Maintain the document's role; preserve stable internal anchors and link targets where
-  practical, or note likely anchor breakage.
-- **Apply the full `<presentation_standard>` regardless of the original doc's polish
-  level.** A bare existing doc receives the same bells and whistles as a new doc.
+## 7. Source-role anti-collapse for Flora
 
-**Creating a new doc:**
-- Determine where it belongs from repo evidence; do not choose a path solely from generic
-  convention, memory, prior plans, attached PDFs, or external research when current repo
-  evidence is accessible.
-- Infer audience and purpose from surrounding docs.
-- Align to existing naming, tone, structure, and visual rhythm.
-- Note neighboring docs that should link to or reference it.
-- If no path is provided, infer the likeliest path and state that inference clearly in
-  Section 2.
-- If repo evidence is unavailable, state path is PROPOSED and NEEDS VERIFICATION.
-</revision_vs_creation>
+CONFIRMED doctrine (Atlas v1.1 §24.1): `source_role` is a first-class identity attribute on every `SourceDescriptor`. A Flora API response **must never** collapse source roles — an observation is not a model, a regulatory designation is not an observation, a community-science aggregate is not a steward-reviewed record. Mismatch between claim type and source role is a **deny condition**, not a quality issue.
 
-<working_method>
-Execute in this order. Pause and re-evaluate if evidence contradicts a step's assumptions.
+PROPOSED Flora role-to-claim matrix:
 
-1. Identify the task and target file/path if provided.
-2. Run `project_knowledge_search` on the doc topic, target path, terminology, and
-   adjacent concepts. Multiple targeted searches beat one broad one.
-3. Inspect any mounted repository evidence.
-4. Inspect attached PDFs and supplied artifacts in this conversation.
-5. Determine the doctrinal baseline.
-6. Extract project-specific constraints, terminology, architecture, conventions, and
-   presentation style.
-7. Identify any specific gaps that meet `<external_research>` triggers; perform bounded,
-   cited external research only for those gaps.
-8. Decide whether the target is: a standard doc (KFM Meta Block v2 required), a README-like
-   doc (GitHub README rules required), or both.
-9. Identify gaps, ambiguities, unsupported areas, and places where reading would otherwise
-   feel flat or weak.
-10. Draft the Markdown: faithful to the project, visually strong on GitHub, with the full
-    presentation standard applied and any external sources clearly attributed.
-11. Audit the draft for contradictions, drift, invented facts, duplication, weak sections,
-    formatting violations, dull presentation, and any external content that strayed into
-    KFM-specific claims.
-12. Run the pre-publish checklist before returning the final result.
-</working_method>
+| Source role | Typical Flora example | Claim it may support | Claim it may **NOT** support |
+|---|---|---|---|
+| `observed` | KU herbarium specimen; ground botanical survey. | Specimen-level occurrence at observed time. | Regulatory listing status; modeled range. |
+| `regulatory` | USFWS ECOS plant listing; state rare-plant designation. | Legal/conservation status. | An observed occurrence event. |
+| `modeled` | Distribution suitability surface; restoration suitability model. | Modeled range / suitability with model run receipt. | A field-confirmed occurrence. |
+| `aggregate` | GBIF download / aggregator; county taxa package. | County- or region-level aggregate counts. | A per-place record. |
+| `administrative` | Restoration project registry; state stewardship list. | Administrative context. | Independent ecological observation. |
+| `candidate` | Pre-review iNaturalist record; PLANTS drift candidate. | Pending steward review only. | Any public claim until promoted. |
+| `synthetic` | Reconstructed range from interpretive synthesis. | Surface representation with `RealityBoundaryNote`. | Direct evidence. |
 
-<pre_publish_checklist>
-The polish items below are **mandatory** when applicable. The truth items below are
-**absolute**. Do not fabricate to satisfy a checklist item; render a labeled placeholder
-instead.
+> [!IMPORTANT]
+> **Join-induced sensitivity (CONFIRMED).** PLANTS-style county taxa packages and GBIF/iNaturalist aggregates are individually benign but can become sensitive when joined to occurrence sources for rare or culturally significant taxa. Sensitivity is a property of the **resulting product**, not just the inputs. Flora API surfaces must treat join-induced sensitivity as a deny condition for the join product.
 
-**Polish (mandatory unless structurally inapplicable):**
-- [ ] Single H1 title with one-line purpose under it
-- [ ] Top-of-file badge row (≥3 badges, placeholders allowed)
-- [ ] Status, owners, and last-updated line present
-- [ ] Mini-TOC / quick jump links (always for docs ≥ ~120 lines)
-- [ ] KFM Meta Block v2 present (standard docs)
-- [ ] Required README-like minimums included (README-like docs)
-- [ ] Directory tree included (directory docs)
-- [ ] Mermaid diagram included for README-like and directory docs (or labeled placeholder)
-- [ ] At least one table where ≥2 related items exist
-- [ ] At least one callout where warnings, tips, or governance notes apply
-- [ ] Collapsible `<details>` block for any appendix or bulk reference
-- [ ] Code fences valid and language-tagged
-- [ ] Relative links used where possible
-- [ ] Meaningful alt text for images
-- [ ] "Back to top" links inserted for long docs
-- [ ] Related docs section present (placeholders allowed)
-- [ ] Footer block (HR + related + last-updated + back-to-top) for long docs
-- [ ] No unbroken prose section exceeds ~25–40 lines without a visual break
-- [ ] No section feels visually dead, overlong, or under-structured
+[Back to top](#flora--api-contracts)
 
-**Truth (absolute):**
-- [ ] No fabricated paths, owners, dates, identifiers, or badge targets
-- [ ] All repo-state claims verified or labeled UNKNOWN / NEEDS VERIFICATION / PROPOSED
-- [ ] Truth labels applied where confidence materially matters
-- [ ] KFM terminology preserved exactly
-- [ ] Source-grounded content separated from added content
-- [ ] External research triggered only by a permitted condition
-- [ ] External content cited inline and listed in Section 2
-- [ ] No external content used to make KFM repo-state or doctrine claims
-- [ ] Conflicts between external standards and project doctrine surfaced, not smoothed
-</pre_publish_checklist>
+---
 
-<output_contract>
-Return your answer in **exactly two sections** and nothing else. Do not produce a
-downloadable file. Produce copy-paste-ready GitHub Markdown.
+## 8. Sensitivity tiers — Flora defaults
 
-**SECTION 1 — GITHUB MARKDOWN**
-- Return the full file inside one outer fenced code block.
-- Use 4 backticks for the outer fence if 3-backtick blocks appear inside the file.
-- Content must be the actual repo-ready Markdown file — nothing else inside this block.
-- Do not include editor commentary, change notes, or labels inside the file itself.
-- The file must look polished and intentional when rendered on GitHub.
-- The full `<presentation_standard>` and `<formatting_mandate>` must be visibly applied.
+CONFIRMED doctrine (Atlas v1.1 §24.5): KFM publishes the safest representation that still answers reasonable steward and public needs. Flora sensitivity defaults extend the cross-cutting tier scheme.
 
-**SECTION 2 — NOTES & CITATIONS**
-- Plain text only. No outer code fence.
-- Use a short bullet list under each heading below; omit a heading only if it has no
-  content. Do not editorialize inside Section 1; reserve all meta-commentary for here.
+| Flora class | Default tier | Allowed transforms (PROPOSED) | Required gates |
+|---|---|---|---|
+| Public, non-listed, non-sensitive taxon | `T0` | None required beyond standard release. | `ReleaseManifest`. |
+| Generalized public range / distribution layer | `T0` / `T1` | Aggregation / generalization to coarse cell. | `AggregationReceipt` or `RedactionReceipt`. |
+| Generalized occurrence layer (non-sensitive) | `T0` / `T1` | Public-safe generalization where uncertainty is high. | `RedactionReceipt`. |
+| Rare or culturally sensitive plant location | **`T4`** | Generalized geometry + steward review → `T2` or `T1`. | `RedactionReceipt` + `ReviewRecord`. |
+| Ethnobotanical / culturally sensitive context | **`T4`** | Cultural review required; transforms recorded. | Cultural review + `ReviewRecord` + `PolicyDecision`. |
+| Steward-controlled records | **`T4`** | Steward review with named-party agreement → `T3` or `T2`. | `PolicyDecision` + `ReviewRecord`. |
+| RAW / WORK / QUARANTINE access via API | **`T4` forever** | None — AI and public surfaces never read pre-release content. | Trust membrane (Section 2). |
 
-  - Evidence basis
-  - Major project constraints captured
-  - What was CONFIRMED vs INFERRED vs PROPOSED vs UNKNOWN / NEEDS VERIFICATION
-  - Repository evidence checked (mounted or indexed); what could not be checked
-  - External sources consulted (each with: trigger that justified it, source, what
-    it informed). State "none" if no external research was performed.
-  - Conflicts surfaced between external standards and project doctrine, if any
-  - Remaining unknowns or verification items
-  - Major additions or restructures and why
-  - Deliberate placeholders left for review and why
-  - Anchor or link breakage risk (revisions only)
-  - Polish elements rendered as placeholders due to thin evidence
-</output_contract>
+Tier transitions follow the cross-cutting motion table (Atlas v1.1 §24.5.3): upgrades toward public require both a transform receipt and a review record; downgrades to T4 are always permitted via `CorrectionNotice` alone.
 
-<task>
-Create or revise the following Markdown file for this project:
+> [!CAUTION]
+> **Style-only hiding is not redaction.** Hiding a Flora feature with a MapLibre style filter while serving the underlying tile **is not** an acceptable sensitivity transform. The deny must happen at the API and tile-artifact level (per the Master MapLibre sensitive-geometry-deny fixture standard).
 
-[INSERT FILE PATH OR DOCUMENT NAME]
+[Back to top](#flora--api-contracts)
 
-If no path is provided, propose the likeliest path based on repo evidence, state the
-inference clearly in Section 2, and proceed with a full-polish draft.
-</task>
+---
 
+## 9. Cross-lane request constraints
 
+Flora API responses must preserve cross-lane ownership boundaries. Requests that would relabel a non-Flora object as Flora — or vice versa — are policy violations.
+
+| This domain | Related lane | Relation type | API constraint |
+|---|---|---|---|
+| Flora | Habitat | Habitat association, vegetation-community context. | Flora API returns habitat **association** only; habitat patches/suitability resolve through the Habitat API. |
+| Flora | Fauna | Pollinator, food-web, invasive, biodiversity context. | Flora API does not return fauna occurrences; Fauna sensitivity discipline still applies to any cross-cited surface. |
+| Flora | Soil / Hydrology | Substrate, wetland, riparian, drought context. | Flora API may cite Soil/Hydrology evidence but does not own it; canonical truth resolves through those domains. |
+| Flora | Hazards | Fire, drought, flood, smoke, vegetation stress. | Flora API may cite hazard context; **KFM is never an alert authority**. |
+| Flora | Archaeology | Ethnobotanical context. | Sovereignty / sensitivity review required; deny-default applies to cultural location detail. |
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 10. Lifecycle and promotion gates
+
+CONFIRMED doctrine: every Flora object follows `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a **governed state transition, not a file move**. The governed API surfaces released artifacts only.
+
+| Gate (transition) | Pre-condition | Required artifacts (PROPOSED minimum) | Failure-closed outcome |
+|---|---|---|---|
+| Admission (— → RAW) | Source identity, rights, role intent established. | `SourceDescriptor` (role, authority, rights, sensitivity, cadence); payload hash. | Source not admitted; logged as candidate awaiting steward. |
+| Normalization (RAW → WORK / QUARANTINE) | Schema, geometry, time, identity, evidence, rights, policy runnable. | `TransformReceipt`; `ValidationReport`; `PolicyDecision`; quarantine for failures. | Quarantine with reason; never silent promote. |
+| Validation (WORK → PROCESSED) | Validators deterministic; required receipts present. | `ValidationReport` pass; `RedactionReceipt` if sensitivity applies. | Stay in WORK; structured `FAIL`. |
+| Catalog closure (PROCESSED → CATALOG / TRIPLET) | EvidenceRefs resolve; catalog/proof closure passes. | `EvidenceBundle`; graph/triplet projection where applicable. | HOLD at PROCESSED; no public edge. |
+| Release (CATALOG → PUBLISHED) | Review state where required; release authority separated where materiality applies. | `ReleaseManifest`; rollback target; correction path; `ReviewRecord`. | HOLD at CATALOG; no public surface change. |
+| Correction (PUBLISHED → PUBLISHED′) | Detected error or new evidence; derivatives identified. | `CorrectionNotice`; `RollbackCard` where applicable. | Stale-state badge; original surface preserved during review. |
+
+Surfaces F1–F5 read only from `PUBLISHED`; F6 (correction) and F7 (review) operate on candidate or published artifacts under steward authority.
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 11. Governed AI / Focus Mode behavior
+
+CONFIRMED doctrine / PROPOSED implementation:
+
+| AI behavior | Rule (CONFIRMED) |
+|---|---|
+| **Allowed** | Evidence-bounded summarization over released Flora `EvidenceBundle`s; citation-backed explanation; evidence comparison; steward-review draft notes; anomaly explanation. |
+| **Required denial** | DENY direct RAW / WORK / QUARANTINE access; DENY sensitive-location exposure; DENY rights-unclear or stewardcontrolled record exposure; DENY uncited authoritative claims. |
+| **Required abstention** | ABSTAIN when evidence is insufficient, stale without released alternative, or when citation cannot resolve. |
+| **Required receipt** | Every Focus Mode answer emits an `AIReceipt` with `outcome ∈ {ANSWER, ABSTAIN, DENY, ERROR}`, `evidence_refs`, `policy_decision`, and `citation_validation` report ID. |
+
+> [!IMPORTANT]
+> **AI is interpretive, not authoritative.** A Flora Focus Mode answer is an API outcome, not a sovereign generation. Fluent text never substitutes for `EvidenceBundle`. Where evidence resolution fails, the answer ABSTAINS.
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 12. Validators, tests, and fixtures
+
+PROPOSED minimum test families for Flora API contracts (Atlas v1.1 §K, ENCY §K):
+
+- Schema validation for inbound/outbound DTOs at every Flora surface.
+- `SourceDescriptor` validation including `source_role`, rights, sensitivity.
+- Rights and sensitivity validators (deny on unresolved rights or sensitivity).
+- Evidence closure: every `EvidenceRef` in a Flora `ANSWER` resolves to a released `EvidenceBundle`.
+- Temporal logic: source, observed, valid, retrieval, release, and correction times stay distinct where material.
+- Geometry validity, including public-safe generalization checks.
+- Policy DENY tests — including the **exact sensitive public geometry denial** fixture.
+- Taxonomy reconciliation and synonymy tests.
+- Citation validation: cite-or-abstain enforced before `ANSWER`.
+- Stale-source fixture (cadence drift triggers stale badge or ABSTAIN).
+- Release-manifest validation and rollback drill.
+- No-network / no-live-source fixture pipeline so contract tests run hermetically.
+- Source-role mismatch denial — e.g., aggregate cited as per-place truth fails closed.
+- Non-regression for prior published lineage where relevant.
+
+> [!TIP]
+> **First credible thin-slice (ENCY §N).** One common species occurrence/specimen fixture plus one vegetation community polygon, both with `EvidenceBundle`-backed species page and public-safe map. This is the minimum slice to prove the Flora governed-API contract end-to-end without activating live sources.
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 13. Open questions and verification backlog
+
+| # | Item | Evidence that would settle it | Status |
+|---|---|---|---|
+| 1 | Exact Flora route names and HTTP shape under `apps/governed-api/`. | Mounted repo; accepted backend ADR. | NEEDS VERIFICATION |
+| 2 | Schema-home: `schemas/contracts/v1/flora/` (Atlas §24.13) vs. `schemas/contracts/v1/domains/flora/` (Directory Rules §6.4). | ADR-0001 reconciliation; mounted repo. | NEEDS VERIFICATION (likely DRIFT entry) |
+| 3 | `FloraDecisionEnvelope` vs. generic `DecisionEnvelope` — is the projection a distinct schema or a discriminator on the generic envelope? | ADR + schema definition. | UNKNOWN |
+| 4 | Where do Focus Mode schemas live: `schemas/contracts/v1/focus/` or `schemas/contracts/v1/ai/`? | Mounted repo; ADR. | UNKNOWN |
+| 5 | Exact thresholds for "exact" vs. "generalized" geometry for rare-plant publication (e.g., grid cell size, jitter radius). | Steward policy; PolicyDecision implementation. | NEEDS VERIFICATION |
+| 6 | KDWP / Kansas Biological Survey / KU herbarium rights and steward roles for live source activation. | Live source agreements; SourceDescriptor entries. | NEEDS VERIFICATION |
+| 7 | PLANTS / GBIF / iNaturalist join-sensitivity policy — exact deny rules and review queue routing. | Policy bundle; review-queue implementation. | NEEDS VERIFICATION |
+| 8 | Layer-manifest resolver: shared with other domains or Flora-specific endpoint? | Mounted repo; ADR. | UNKNOWN |
+| 9 | Whether correction-submit and review-decision are governed under domain-scoped policy bundles (`policy/domains/flora/`) or only cross-cutting bundles. | Policy layout under `policy/`. | NEEDS VERIFICATION |
+| 10 | `RealityBoundaryNote` requirements for any Flora synthetic surface (e.g., suitability rasters rendered as continuous fields). | Schema + UI doctrine. | NEEDS VERIFICATION |
+
+[Back to top](#flora--api-contracts)
+
+---
+
+## 14. Related docs
+
+<!-- Many of these are PROPOSED siblings; placeholder links until repo evidence is confirmed. -->
+
+- [`docs/domains/flora/README.md`](./README.md) — Flora domain landing doc *(PROPOSED)*
+- [`docs/domains/flora/SOURCES.md`](./SOURCES.md) — Flora source families and source-role registry *(PROPOSED)*
+- [`docs/domains/flora/SENSITIVITY.md`](./SENSITIVITY.md) — Flora sensitivity tiers and redaction policy *(PROPOSED)*
+- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Trust membrane and governed-API doctrine *(PROPOSED)*
+- [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Layering reference *(PROPOSED)*
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement and lifecycle doctrine
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance standards profile
+- [`contracts/runtime/decision_envelope.md`](../../../contracts/runtime/decision_envelope.md) — `DecisionEnvelope` meaning *(PROPOSED)*
+- [`contracts/runtime/runtime_response_envelope.md`](../../../contracts/runtime/runtime_response_envelope.md) — `RuntimeResponseEnvelope` meaning *(PROPOSED)*
+- [`contracts/evidence/evidence_bundle.md`](../../../contracts/evidence/evidence_bundle.md) — `EvidenceBundle` meaning *(PROPOSED)*
+- [`schemas/contracts/v1/domains/flora/`](../../../schemas/contracts/v1/domains/flora/) — Flora JSON Schemas home *(PROPOSED)*
+- [`policy/domains/flora/`](../../../policy/domains/flora/) — Flora policy bundle home *(PROPOSED)*
+- [`policy/sensitivity/flora/`](../../../policy/sensitivity/flora/) — Flora sensitivity policy *(PROPOSED)*
+
+---
+
+<sub><b>Last updated:</b> 2026-05-16 · <b>Doc status:</b> draft · <b>Doctrine basis:</b> CONFIRMED · <b>Implementation basis:</b> PROPOSED / NEEDS VERIFICATION · <a href="#flora--api-contracts">↑ Back to top</a></sub>
