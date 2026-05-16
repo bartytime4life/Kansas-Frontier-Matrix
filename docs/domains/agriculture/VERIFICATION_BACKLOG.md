@@ -1,3 +1,411 @@
-# agriculture — VERIFICATION_BACKLOG.md
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/docs-domains-agriculture-verification-backlog
+title: Agriculture Domain — Verification Backlog
+type: standard
+version: v1
+status: draft
+owners: <TODO: agriculture-steward; docs-steward>
+created: 2026-05-15
+updated: 2026-05-15
+policy_label: public
+related:
+  - docs/domains/agriculture/README.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/README.md
+tags: [kfm, register, agriculture, verification, governance]
+notes:
+  - Domain-scoped projection of docs/registers/VERIFICATION_BACKLOG.md.
+  - Canonical content is Atlas v1.0 Chapter 9 §N (NEEDS VERIFICATION items).
+  - Atlas v1.1 Chapter 24 is navigational; v1.0 retains authority on conflict.
+[/KFM_META_BLOCK_V2] -->
 
-Greenfield placeholder.
+# Agriculture Domain — Verification Backlog
+
+> Domain-scoped open-evidence register tracking what remains **NEEDS VERIFICATION** before Agriculture surfaces can be treated as implemented, enforced, or released.
+
+<p align="left">
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
+  <img alt="Domain: agriculture" src="https://img.shields.io/badge/domain-agriculture-2e7d32">
+  <img alt="Authority: register" src="https://img.shields.io/badge/authority-register-blue">
+  <img alt="Items open: 4" src="https://img.shields.io/badge/items%20open-4-orange">
+  <img alt="Confidence: PROPOSED implementation" src="https://img.shields.io/badge/implementation-PROPOSED-yellow">
+  <!-- TODO: replace with live Shields.io endpoints (CI status, last-updated, owners, ADR coverage) once verified against repo. -->
+</p>
+
+**Status:** draft · **Owners:** _TODO: agriculture-steward; docs-steward_ · **Last updated:** 2026-05-15
+
+> [!IMPORTANT]
+> This file is a **register**, not a doctrine source. The canonical statement of Agriculture's open verification items is **Atlas v1.0 Chapter 9 Section N**. Atlas v1.1 Chapter 24 is navigational and does not override v1.0. Conflicts between this file and v1.0 are filed to `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5.
+
+---
+
+## Contents
+
+1. [Purpose and scope](#1-purpose-and-scope)
+2. [Source authority](#2-source-authority)
+3. [Verification posture](#3-verification-posture)
+4. [Where verification gates the pipeline](#4-where-verification-gates-the-pipeline)
+5. [Open verification items](#5-open-verification-items)
+6. [Per-item evidence checklists](#6-per-item-evidence-checklists)
+7. [Cross-lane verification touchpoints](#7-cross-lane-verification-touchpoints)
+8. [Sensitivity-tier obligations](#8-sensitivity-tier-obligations)
+9. [Related ADR-class questions](#9-related-adr-class-questions)
+10. [Related validators and tests](#10-related-validators-and-tests-proposed)
+11. [Resolution workflow](#11-resolution-workflow)
+12. [Drift handling](#12-drift-handling)
+13. [Related docs](#13-related-docs)
+
+---
+
+## 1. Purpose and scope
+
+The Agriculture domain Verification Backlog tracks the **four CONFIRMED open verification items** named in Atlas v1.0 Ch. 9 §N. These are the questions that prevent any Agriculture surface from being treated as implemented, enforced, automated, or released until evidence supports the change of status.
+
+### What this register tracks
+
+- The four canonical items from Atlas v1.0 Ch. 9 §N (status: **NEEDS VERIFICATION**).
+- For each item: the **evidence that would settle it**, the **pipeline gates** it governs, the **cross-lane touchpoints** it affects, and the **ADR-class questions** it is entangled with.
+- The **resolution workflow** that moves an item from `NEEDS VERIFICATION` toward `CONFIRMED`.
+
+### What this register does **not** track
+
+| Out of scope | Lives in |
+|---|---|
+| Object-family meaning (`CropObservation`, `FieldCandidate`, etc.) | `contracts/` (PROPOSED) |
+| Machine schema shape | `schemas/contracts/v1/...` (PROPOSED, per ADR-0001) |
+| Sensitivity / rights tier policy text | `policy/domains/agriculture/...` (PROPOSED) |
+| Source rights and cadence per dataset | `docs/sources/` + `data/registry/sources/` (PROPOSED) |
+| Cross-domain rollups for *all* domains | `docs/registers/VERIFICATION_BACKLOG.md` (canonical roll-up) |
+| Mounted-repo path inventory | `git`-side inspection, not this file |
+
+> [!NOTE]
+> This file is a **domain-scoped projection** of `docs/registers/VERIFICATION_BACKLOG.md`. If a per-domain register pattern is later promoted to canonical, it is ADR-class per Directory Rules §2.4(5) (parallel register home). Until then, treat this file as a working subset, not as a new authority. — **PROPOSED placement.**
+
+[↑ Back to top](#contents)
+
+---
+
+## 2. Source authority
+
+CONFIRMED authority ladder for this register:
+
+1. **Atlas v1.0 Ch. 9 §N — Verification backlog and open questions** is the canonical statement of Agriculture's open items. It is reproduced verbatim in §5 of this file.
+2. **Atlas v1.1 Ch. 24.12 — Master Open-ADR Backlog** is navigational. It consolidates v1.0 §N items into ADR-class questions but does not override v1.0.
+3. **Directory Rules §§2.4–2.5, §6, §15** govern how this register relates to ADRs, drift, and per-root README contracts.
+
+> [!CAUTION]
+> Per Atlas v1.1 conflict rule: where Chapter 24 and v1.0 §N appear to disagree, **v1.0 retains authority** and the conflict is filed to `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5.
+
+External sources consulted: **none**. All claims here are KFM-internal; no external research was required or performed.
+
+[↑ Back to top](#contents)
+
+---
+
+## 3. Verification posture
+
+The KFM truth posture for this register is **cite-or-abstain** (CONFIRMED doctrine, Atlas Operating Law).
+
+- `NEEDS VERIFICATION` means **checkable** but **not yet checked strongly enough** to act as fact in this session.
+- The session does **not** mount the repository. No statement of the form _"the repo contains X"_, _"the path exists"_, _"the workflow enforces Y"_ is made here.
+- Until each item is settled by **admissible evidence** — mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests — Agriculture implementation maturity remains **PROPOSED**.
+- Promotion of an item to `CONFIRMED` requires the evidence pointer to resolve to a real artifact and a recorded `ReviewRecord` where materiality applies (per Atlas Ch. 24.6 Validation and Catalog-closure gates).
+
+> [!TIP]
+> The shortest path from `NEEDS VERIFICATION` to `CONFIRMED` for any Agriculture item is: mount the repo → inspect the named artifacts → record the finding in this file → record the lineage entry in `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` → open an ADR only if §2.4 applies.
+
+[↑ Back to top](#contents)
+
+---
+
+## 4. Where verification gates the pipeline
+
+PROPOSED mapping of each open item to the lifecycle gate it most directly governs. The lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** is CONFIRMED doctrine; the gate-to-item mapping below is PROPOSED.
+
+```mermaid
+flowchart LR
+    A[Sources<br/>NASS · Mesonet<br/>SMAP · HLS] -->|SourceDescriptor| RAW
+    RAW[RAW<br/>immutable capture] -->|Admission gate| WORK
+    WORK[WORK / QUARANTINE<br/>normalize · validate · policy] -->|Validation gate| PROC
+    PROC[PROCESSED<br/>EvidenceRef · ValidationReport] -->|Catalog closure| CAT
+    CAT[CATALOG / TRIPLET<br/>EvidenceBundle · graph projection] -->|Release gate| PUB
+    PUB[PUBLISHED<br/>governed API · LayerManifest]
+
+    V1{{"AG-VB-01<br/>NASS / Crop Progress<br/>activation"}}:::needs
+    V2{{"AG-VB-02<br/>Mesonet · HLS / SMAP<br/>product terms"}}:::needs
+    V3{{"AG-VB-03<br/>Farm / operator<br/>sensitivity rules"}}:::needs
+    V4{{"AG-VB-04<br/>Agriculture API<br/>and layer registry"}}:::needs
+
+    V1 -.gates.-> RAW
+    V2 -.gates.-> RAW
+    V2 -.gates.-> WORK
+    V3 -.gates.-> WORK
+    V3 -.gates.-> PUB
+    V4 -.gates.-> PUB
+
+    classDef needs fill:#fff3e0,stroke:#e65100,stroke-width:1px,color:#000;
+```
+
+> [!NOTE]
+> The diagram is **illustrative**. Stage-to-item mapping is **PROPOSED** based on Atlas v1.0 Ch. 9 §§D–N and the Master Pipeline Gate Reference (Atlas v1.1 §24.6). Exact gate placement may shift after mounted-repo inspection or after an ADR resolves any of the items in §9.
+
+[↑ Back to top](#contents)
+
+---
+
+## 5. Open verification items
+
+CONFIRMED list (Atlas v1.0 Ch. 9 §N). All four items are **NEEDS VERIFICATION**.
+
+| ID | Item to verify | Evidence that would settle it (CONFIRMED) | Status (CONFIRMED) | Likely owner (PROPOSED) |
+|---|---|---|---|---|
+| **AG-VB-01** | Verify NASS / QuickStats and Crop Progress activation. | Mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests. | NEEDS VERIFICATION | _TODO: agriculture-steward + connector owner_ |
+| **AG-VB-02** | Verify Mesonet and HLS / SMAP product terms. | Mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests. | NEEDS VERIFICATION | _TODO: agriculture-steward + source steward_ |
+| **AG-VB-03** | Verify public release sensitivity rules for farm / operator joins. | Mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests. | NEEDS VERIFICATION | _TODO: agriculture-steward + policy steward + people-land steward_ |
+| **AG-VB-04** | Verify Agriculture API and layer registry. | Mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests. | NEEDS VERIFICATION | _TODO: agriculture-steward + governed-API owner_ |
+
+> [!WARNING]
+> Item identifiers (`AG-VB-01`…`AG-VB-04`) are **PROPOSED** local handles for this register. The canonical statement of the items lives in Atlas v1.0 Ch. 9 §N and does **not** use these handles. If a domain-scoped identifier scheme is adopted, the canonical scheme should be recorded via ADR.
+
+[↑ Back to top](#contents)
+
+---
+
+## 6. Per-item evidence checklists
+
+PROPOSED checklists. Each list names the artifacts whose presence (or absence) would move the item toward `CONFIRMED` or surface a definite gap. No checklist asserts that any path or artifact exists in the current repo.
+
+<details>
+<summary><strong>AG-VB-01 — NASS / QuickStats and Crop Progress activation</strong></summary>
+
+Source families covered (Atlas Ch. 9 §D, CONFIRMED): **USDA NASS QuickStats / Crop Progress** (Cropland Data Layer is referenced in [DOM-AG]; not always grouped under "QuickStats").
+
+Artifacts whose presence would settle this item (PROPOSED):
+
+- `data/registry/sources/agriculture/nass_quickstats.yaml` — SourceDescriptor with role, authority, rights, sensitivity, cadence.
+- `data/registry/sources/agriculture/nass_crop_progress.yaml` — SourceDescriptor.
+- `connectors/usda/nass/` or `connectors/nrcs/...` — connector code or spec (NEEDS VERIFICATION of canonical home; connectors emit to `data/raw/` only).
+- `pipeline_specs/agriculture/nass_quickstats.yaml` — declarative pipeline spec.
+- `schemas/contracts/v1/domains/agriculture/crop_observation.schema.json` — schema with NASS-sourced field coverage.
+- `fixtures/domains/agriculture/no_network/nass/` — no-network fixture.
+- `tests/domains/agriculture/test_nass_aggregate_only.py` — test enforcing aggregate-only release (mirrors Atlas §K "crop progress aggregate-only tests").
+- `.github/workflows/agriculture-validate.yml` — CI workflow exercising the validators.
+- A representative `RunReceipt` and `ValidationReport` under `data/receipts/` and `data/proofs/`.
+
+Failure-closed outcome until settled: connector is **not admitted**; SourceDescriptor candidate logged but no RAW capture treated as authoritative (per Atlas §24.6 Admission gate).
+
+</details>
+
+<details>
+<summary><strong>AG-VB-02 — Mesonet and HLS / SMAP product terms</strong></summary>
+
+Source families covered (Atlas Ch. 9 §D, CONFIRMED): **Kansas Mesonet**, **NASA SMAP**, **NASA HLS / HLS-VI**, with adjacent sources **NRCS SCAN** and **NOAA USCRN**.
+
+Artifacts whose presence would settle this item (PROPOSED):
+
+- `data/registry/sources/agriculture/ks_mesonet.yaml` — SourceDescriptor capturing **rights, redistribution terms, cadence, endpoint, product variants** (REST CSV; soil moisture at 5/10/20/50 cm; station metadata).
+- `data/registry/sources/agriculture/nasa_smap.yaml` — SourceDescriptor (Earthdata credentials posture; product version pin).
+- `data/registry/sources/agriculture/nasa_hls.yaml` — SourceDescriptor (HLS vs HLS-VI distinction; cloud-mask handling).
+- `policy/sources/rights/nasa.rego` and `policy/sources/rights/mesonet.rego` — rights validators with deterministic outcomes.
+- `tests/domains/agriculture/test_soil_moisture_units_depths.py` — soil-moisture unit/depth/QC tests (mirrors Atlas §K).
+- `tests/domains/agriculture/test_vegetation_index_mask_time.py` — vegetation-index mask/time tests (mirrors Atlas §K).
+- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` reference applied to each.
+
+Failure-closed outcome until settled: WORK / QUARANTINE stops at policy gate when rights or product-term fields are absent or stale (per Atlas §24.6 Normalization and Validation gates).
+
+</details>
+
+<details>
+<summary><strong>AG-VB-03 — Public release sensitivity rules for farm / operator joins</strong></summary>
+
+Doctrinal anchor (CONFIRMED, Atlas Ch. 9 §I): _"Aggregate statistics and satellite products must not become field/operator truth; farm/operator private data, proprietary yield, pesticide records, and private-sensitive joins fail closed."_
+
+This item also intersects the **Agriculture × People/Land** cross-lane relation (Atlas Ch. 9 §F) and the Master Sensitivity / Rights Tier Reference (Atlas Ch. 24.5).
+
+Artifacts whose presence would settle this item (PROPOSED):
+
+- `policy/sensitivity/agriculture/farm_operator_join.rego` — denial rule for unreviewed `FieldCandidate × PersonAssertion / LandParcel` joins.
+- `policy/sensitivity/agriculture/aggregation_thresholds.yaml` — minimum-cell suppression thresholds (county / HUC / grid).
+- `schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json` — `AggregationReceipt` schema covering threshold, transform, and review reference.
+- `tests/domains/agriculture/test_policy_denial_field_level_nass.py` — policy denial for field-level NASS claims (mirrors Atlas §K).
+- `tests/domains/agriculture/test_farm_operator_join_deny.py` — deny-by-default behavior on cross-lane joins.
+- A representative `RedactionReceipt` and `ReviewRecord` under `data/receipts/` for any T1 release derived from a T4 default.
+- Default-tier assignment table consistent with Atlas Ch. 24.5: **CropObservation / YieldObservation = T0 (aggregate) / T1 (field candidate)**; **farm/operator private joins fail closed (T4-class)**.
+
+Failure-closed outcome until settled: **DENY by default** at the PUBLISHED gate; Focus Mode and Evidence Drawer suppress field-level fields; layer manifest resolver returns `DENY` for unauthorized layers.
+
+</details>
+
+<details>
+<summary><strong>AG-VB-04 — Agriculture API and layer registry</strong></summary>
+
+Doctrinal anchor (Atlas Ch. 9 §J): four governed-API surfaces are PROPOSED with **route TBD** and **exact route UNKNOWN**.
+
+| Surface (Atlas §J) | Artifact | Outcome envelope |
+|---|---|---|
+| Agriculture feature/detail resolver | `AgricultureDecisionEnvelope` | ANSWER / ABSTAIN / DENY / ERROR |
+| Agriculture layer manifest resolver | `LayerManifest` / domain layer descriptor | ANSWER / DENY / ERROR |
+| Agriculture Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | ANSWER / ABSTAIN / DENY / ERROR |
+| Agriculture Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | ANSWER / ABSTAIN / DENY / ERROR |
+
+Artifacts whose presence would settle this item (PROPOSED):
+
+- `apps/governed-api/src/routes/agriculture/*` — route handlers behind the trust membrane (per Directory Rules §7.1; public client MUST go through `apps/governed-api/`, not `data/processed/` or `data/published/` directly).
+- `schemas/contracts/v1/domains/agriculture/decision_envelope.schema.json`.
+- `schemas/contracts/v1/layers/layer_manifest.schema.json` instances under `data/published/layers/agriculture/`.
+- `control_plane/domain_lane_register.yaml` row for `agriculture` confirming route map and layer registry handles.
+- `tests/e2e/agriculture/` — end-to-end tests verifying the Evidence Drawer / Focus Mode flow with an `AIReceipt`.
+- `tests/domains/agriculture/test_catalog_closure.py` — catalog closure tests (mirrors Atlas §K).
+
+Failure-closed outcome until settled: any Agriculture public surface is treated as **non-existent**; AI Focus Mode answers ABSTAIN; layer manifest resolver returns `DENY`; no public client may bypass the governed API to reach canonical stores.
+
+</details>
+
+[↑ Back to top](#contents)
+
+---
+
+## 7. Cross-lane verification touchpoints
+
+CONFIRMED relations (Atlas Ch. 9 §F) plus PROPOSED sensitivity defaults (Atlas Ch. 24.5). A verification finding in Agriculture may also satisfy or weaken evidence in a neighboring lane; the cross-lane impact must be tracked.
+
+| Related lane | Relation type (CONFIRMED) | Items touched | Constraint (CONFIRMED) | Sensitivity default (PROPOSED) |
+|---|---|---|---|---|
+| **Soil** | MUKEY joins and `SoilCropSuitability` support | AG-VB-02, AG-VB-04 | Must preserve ownership, source role, sensitivity, and EvidenceBundle support. | T0 (`SoilMapUnit` / `SoilComponent`) |
+| **Hydrology** | Irrigation, drought, water-use context | AG-VB-02 | Same. | T0 (`GaugeSite` / `FlowObservation`, `HUC`) |
+| **Atmosphere / Air** | Weather, heat, smoke, vegetation stress | AG-VB-02 | Same. | T0 (`WeatherObservation` / `ClimateNormal`) |
+| **People / Land** | Farm / operator and parcel-sensitive contexts remain restricted | **AG-VB-03** (primary) | Same — and **farm/operator private joins fail closed**. | T4 default (`LandParcel` private join detail); T0 only on aggregate. |
+
+> [!IMPORTANT]
+> The **Agriculture × People/Land** relation is the highest-risk cross-lane edge for this register. A verification step that loosens AG-VB-03 must trigger a parallel review in `docs/domains/people-dna-land/VERIFICATION_BACKLOG.md` (or its equivalent) and may surface ADR-S-14 (Cross-lane join policy).
+
+[↑ Back to top](#contents)
+
+---
+
+## 8. Sensitivity-tier obligations
+
+PROPOSED tier mapping, drawn from Atlas Ch. 24.5 (Master Sensitivity / Rights Tier Reference) and Atlas Ch. 9 §I. Adoption of T0–T4 as canonical is itself an ADR-class question (**ADR-S-05**).
+
+| Agriculture object / surface | Default tier (PROPOSED) | Allowed transforms (PROPOSED) | Required gates |
+|---|---|---|---|
+| `CropObservation` / `YieldObservation` — aggregate (county / HUC / grid) | **T0** | None required beyond standard release. | `ReleaseManifest`, `EvidenceBundle`, rollback target. |
+| `CropObservation` / `YieldObservation` — field-candidate scope | **T1** | Aggregation / generalization with `AggregationReceipt`. | `AggregationReceipt` + `ReviewRecord`. |
+| `FieldCandidate` (field-level geometry / attributes) | **T1** at best; often higher | Generalization to county / HUC; suppression below minimum-cell threshold. | `RedactionReceipt` or `AggregationReceipt` + `ReviewRecord`. |
+| Farm / operator private join (e.g., field × parcel × operator) | **T4 — Denied** | None permit T0 / T1 release without policy + steward review; T3 only under named agreement. | `PolicyDecision` + `ReviewRecord` + named agreement (T3). |
+| Proprietary yield, pesticide, or rights-limited records | **T4 — Denied** | Per source rights; default deny. | Source-rights review + steward review. |
+
+> [!CAUTION]
+> Aggregate statistics and satellite products **must not** become field / operator truth. AI Focus Mode answers and Evidence Drawer payloads that paraphrase aggregate observations as per-field facts are a **source-role upgrade** failure mode (Atlas Ch. 24.10 risk register) and DENY-class behavior.
+
+[↑ Back to top](#contents)
+
+---
+
+## 9. Related ADR-class questions
+
+PROPOSED. Five of the fifteen ADR-S items in the Master Open-ADR Backlog (Atlas Ch. 24.12) materially intersect Agriculture verification. None is currently ADR-resolved.
+
+| ADR-S | Question / decision needed | Intersection with this register |
+|---|---|---|
+| **ADR-S-01** | Where is the canonical schema home? Confirm `schemas/contracts/v1/…` by ADR-0001 or amend. | AG-VB-04 (schemas for envelopes, layer manifests, aggregation receipts). |
+| **ADR-S-04** | Source-role enum — canonical vocabulary, evolution rule. | AG-VB-01, AG-VB-02 (NASS / Mesonet / SMAP / HLS source roles). |
+| **ADR-S-05** | Sensitivity tier scheme (T0–T4) — adopt as canonical or revise. | AG-VB-03 (farm/operator deny default); §8 of this file. |
+| **ADR-S-12** | Connector cadence and quarantine recovery policy. | AG-VB-01, AG-VB-02 (connector behavior for NASS, Mesonet, SMAP, HLS). |
+| **ADR-S-14** | Cross-lane join policy: which joins require steward review, which are denied, which are open. | AG-VB-03 (Agriculture × People/Land farm-operator joins). |
+
+> [!NOTE]
+> Movement on any of these ADR-S items can change the evidence threshold for one or more Agriculture verification items. When an ADR is opened, link it back to this register so the dependency is visible.
+
+[↑ Back to top](#contents)
+
+---
+
+## 10. Related validators and tests (PROPOSED)
+
+CONFIRMED list of PROPOSED validators from Atlas Ch. 9 §K. Each is currently **PROPOSED**, not implemented:
+
+- SSURGO / SDA lineage tests.
+- Soil-moisture unit / depth / QC tests.
+- Crop-progress aggregate-only tests.
+- Vegetation-index mask / time tests.
+- Policy denial for field-level NASS claims.
+- Catalog-closure tests.
+
+> [!TIP]
+> Each validator above maps to one or more of AG-VB-01…AG-VB-04. Building any of these validators against a no-network fixture is the lowest-friction way to flip a single sub-claim from `NEEDS VERIFICATION` to `CONFIRMED` without taking on a network-dependent integration.
+
+[↑ Back to top](#contents)
+
+---
+
+## 11. Resolution workflow
+
+PROPOSED workflow for moving an item out of `NEEDS VERIFICATION`. Step numbering does not imply atomicity; multiple items may share a step.
+
+1. **Inspect.** Mount the repo and check the artifacts listed in the item's §6 checklist. Record what is present, what is absent, what is divergent.
+2. **Label.** Record per-artifact findings as `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` in this file's §5 table. Do not collapse multiple findings into a single label.
+3. **Drift?** If the repo contradicts doctrine, file an entry in `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5. Do **not** silently conform to drifted repo state.
+4. **ADR?** If the finding meets any §2.4 trigger (new root, schema-home change, lifecycle phase split, parallel home for schemas / contracts / policy / sources / registries / releases / proofs / receipts, invariant bend), open an ADR. Link the ADR back to this register.
+5. **Receipt.** Record any state change in `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` per the lineage-by-extension rule (Atlas Appendix E).
+6. **Review.** When an item flips to `CONFIRMED`, attach a `ReviewRecord` reference. When an item is released to a public surface (a derivative depends on the change), attach a `ReleaseManifest` reference and a rollback target.
+7. **Update.** Bump the document `updated:` date in the meta block and the "Last updated" footer line. Note material changes in a short changelog (see §13).
+
+> [!IMPORTANT]
+> Promotion of an item from `NEEDS VERIFICATION` to `CONFIRMED` is a **governed state transition**, not a file edit. The artifact pointer must resolve. A label change without an evidence pointer is drift.
+
+[↑ Back to top](#contents)
+
+---
+
+## 12. Drift handling
+
+CONFIRMED rule (Atlas v1.1 conflict rule + Directory Rules §2.5): if this file disagrees with **Atlas v1.0 Ch. 9 §N** or the **canonical `docs/registers/VERIFICATION_BACKLOG.md`**:
+
+1. **Atlas v1.0 wins** for the item statement and the evidence-that-would-settle text.
+2. **`docs/registers/VERIFICATION_BACKLOG.md` wins** as the cross-domain roll-up.
+3. **This file** captures only the domain-scoped projection plus PROPOSED enrichments (item IDs, owners, checklists, ADR links).
+4. **Conflicts go to `docs/registers/DRIFT_REGISTER.md`** with the affected paths named, and are resolved by ADR or correction.
+
+Anti-patterns to avoid (Directory Rules §13.5):
+
+| Anti-pattern | Why it matters here |
+|---|---|
+| Treating this file as the authority for item text | Atlas v1.0 §N is canonical; this file is a projection. |
+| Adding a new item to this file without recording it in the cross-domain register | Creates parallel authority; ADR-class per §2.4(5). |
+| Marking an item `CONFIRMED` without an artifact pointer | Memory is not evidence (Operating Law §3). |
+| Quoting Atlas v1.1 Ch. 24 as if it overrides v1.0 | v1.1 is navigational; conflict goes to drift register. |
+
+[↑ Back to top](#contents)
+
+---
+
+## 13. Related docs
+
+PROPOSED links. All paths are PROPOSED until verified against a mounted repo.
+
+- [`docs/domains/agriculture/README.md`](./README.md) — _TODO_ — domain README per Directory Rules §15.
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — _TODO_ — canonical cross-domain register.
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — _TODO_ — drift entries between this file and authority sources.
+- [`docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) — _TODO_ — lineage of state changes recorded by this register.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — _TODO_ — placement, ADR triggers, README contract.
+- [`docs/adr/README.md`](../../adr/README.md) — _TODO_ — ADR index; link AG-VB items to ADR-S-01, ADR-S-04, ADR-S-05, ADR-S-12, ADR-S-14 as they open.
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — _TODO_ — source-descriptor standard applied to NASS, Mesonet, SMAP, HLS.
+
+<details>
+<summary><strong>Changelog</strong></summary>
+
+| Date | Author | Change |
+|---|---|---|
+| 2026-05-15 | _TODO_ | Initial draft. Items copied verbatim from Atlas v1.0 Ch. 9 §N. PROPOSED item IDs `AG-VB-01`…`AG-VB-04` introduced for local reference only. |
+
+</details>
+
+---
+
+> [!NOTE]
+> **Last updated:** 2026-05-15 · **Edition:** draft v1 · **Authority:** Atlas v1.0 Ch. 9 §N (canonical) + Atlas v1.1 Ch. 24.5 / §24.6 / §24.12 (navigational).
+
+[↑ Back to top](#contents)

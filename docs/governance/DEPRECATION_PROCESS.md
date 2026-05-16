@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: <TODO: Release Authority + Governance Steward + Engineering Lead + Security Lead>
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-05-15
 policy_label: public
 related:
   - docs/governance/CONTRADICTION_HANDLING.md
@@ -38,7 +38,7 @@ tags: [kfm, governance, deprecation, sunset, retirement, lifecycle, release, tru
 notes:
   - Codifies how KFM deprecates any governed surface — schemas, routes, layers, datasets, connectors, fixtures, runbooks, validators, AI adapters, doctrine docs — without violating evidence-first, lifecycle-law, or corrections-first-class doctrine.
   - Distinguishes deprecation (planned future removal) from withdrawal, supersession, rollback, and correction.
-  - Preserves the CONFIRMED 90-day minimum window and the RFC 8594 / RFC 9745 header posture verbatim from the project versioning policy. RFC numbers retain the NEEDS VERIFICATION marker that doctrine already attached.
+  - Preserves the CONFIRMED 90-day minimum window and the RFC 9745 / RFC 8594 header posture from the project versioning policy. RFC syntax was externally checked against RFC Editor pages on 2026-05-15; implementation wiring still remains NEEDS VERIFICATION.
   - Schema names, file paths, route paths, workflow filenames, control_plane keys, and runbook IDs are PROPOSED until verified against the live repository.
   - Sibling-doc placement: lives in docs/governance/ alongside CONTRADICTION_HANDLING.md; cross-links the doctrine track in docs/doctrine/.
 [/KFM_META_BLOCK_V2] -->
@@ -53,12 +53,15 @@ notes:
 [![Window: 90-day minimum](https://img.shields.io/badge/window-90--day%20minimum-2E7D32?style=flat-square)](#)
 [![Policy: Public](https://img.shields.io/badge/policy-public-2E7D32?style=flat-square)](#)
 [![Version: v1](https://img.shields.io/badge/version-v1-lightgrey?style=flat-square)](#)
-[![Last Updated: 2026-05-12](https://img.shields.io/badge/last%20updated-2026--05--12-lightgrey?style=flat-square)](#)
+[![Last Updated: 2026-05-15](https://img.shields.io/badge/last%20updated-2026--05--15-lightgrey?style=flat-square)](#)
 
-**Status:** Draft &middot; **Owners:** *TODO — Release Authority + Governance Steward + Engineering Lead + Security Lead* <sub>NEEDS VERIFICATION</sub> &middot; **Last updated:** 2026-05-12
+**Status:** Draft &middot; **Owners:** *TODO — Release Authority + Governance Steward + Engineering Lead + Security Lead* <sub>NEEDS VERIFICATION</sub> &middot; **Last updated:** 2026-05-15
 
 > [!IMPORTANT]
 > This document is **normative**. It governs every planned retirement of a governed surface in KFM. Deprecation **never** means silent removal, surprise sunset, or "we'll figure it out at the deadline." A deprecation that violates any rule below is a **build-stop defect**, equivalent in severity to a silent correction (see [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md) §**I-3**).
+
+> [!NOTE]
+> **Evidence boundary.** This revision verifies the external RFC numbers and header syntax from RFC Editor sources as of 2026-05-15. It does **not** verify live repository routes, schemas, workflows, owner assignments, middleware behavior, or emitted proof objects; those remain `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` where marked.
 
 ---
 
@@ -107,7 +110,7 @@ This document codifies that obligation. It governs **every planned retirement of
 
 > **Every retirement of a governed KFM surface is announced, scheduled, named, paired with a successor (where one exists), surfaced in machine-discoverable form, recorded in append-only audit, and held for a minimum 90-day window before the sunset effective time — unless an emergency review explicitly shortens the window and records why. A retirement that violates any of those clauses is a defect, not a deprecation.**
 
-`[CONFIRMED — derived verbatim from the project's versioning policy: "Minimum 90 days for non-emergency deprecation. Public routes get a `Deprecation` and `Sunset` header per RFC 8594 / RFC 9745."]`
+`[CONFIRMED — derived from the project versioning policy: "Minimum 90 days for non-emergency deprecation. Public routes get a `Deprecation` header per RFC 9745 and a `Sunset` header per RFC 8594."]`
 
 Everything else in this document is operational shape for that single sentence. Where a lower-layer design appears to conflict with this doctrine, this doctrine wins until the design is amended through an [ADR](../adr/) <sub>PROPOSED path</sub>.
 
@@ -136,7 +139,7 @@ KFM uses five distinct terms for "this artifact is changing in a way that affect
 
 ## 4. The deprecation surface — what is deprecable
 
-A **deprecable surface** is any governed KFM artifact whose identity or contract has been crossed the trust membrane and made visible to downstream consumers (humans, agents, or other systems). The taxonomy below names every category KFM currently anticipates.
+A **deprecable surface** is any governed KFM artifact whose identity or contract has crossed the trust membrane and made visible to downstream consumers (humans, agents, or other systems). The taxonomy below names every category KFM currently anticipates.
 
 | Category | Examples | Identity field | Successor pattern | Notice channel |
 |---|---|---|---|---|
@@ -170,11 +173,11 @@ Severity drives the review gate and the minimum window. Every deprecation MUST b
 
 | Class | Trigger | Minimum window | Review gate | Public communication |
 |---|---|---|---|---|
-| **D-routine** | Additive contract change, internal tool retirement, no public-surface impact. | **90 days** | Engineering Lead | `CHANGELOG.md` entry + headers if applicable |
+| **D-routine** | Additive contract change, internal tool retirement, no public-surface impact. | **90 days** | Engineering Lead + Release Authority | `CHANGELOG.md` entry + headers if applicable |
 | **D-significant** | Breaking schema change, route version retirement, layer identity change, connector rewrite. | **90 days** (consider longer per consumer base) | Engineering Lead + Release Authority | `CHANGELOG.md` + headers + public notice + steward email |
 | **D-major** | Cross-cutting contract change, AI adapter swap, policy rego replacement, multiple downstream releases affected. | **180 days recommended** <sub>PROPOSED</sub> | Engineering Lead + Release Authority + Governance Steward + ADR | full notice path + ADR + at least two reminder cycles |
 | **D-emergency** | Rights revocation requiring sunset *and* downstream successor work; security vulnerability requiring controlled phase-out. | **Less than 90 days, recorded justification required.** Must be co-signed Governance Steward + Security Lead; if rights-immediate, use **withdrawal** path instead. | Governance Steward + Security Lead + Release Authority; ADR within 14 days post-event. | accelerated notice + headers + steward alert |
-| **D-doctrine** | Retirement of a doctrine doc, an authority-ladder tier definition, or a governance process. | **90 days minimum; ADR required.** | Doctrine Working Group + Governance Steward | governance index + ADR + sibling-doc cross-link updates |
+| **D-doctrine** | Retirement of a doctrine doc, an authority-ladder tier definition, or a governance process. | **90 days minimum; ADR required.** | Doctrine Working Group + Governance Steward + Release Authority + ADR | governance index + ADR + sibling-doc cross-link updates |
 
 > [!CAUTION]
 > **D-emergency is not a license to shortcut.** It compresses the *window*; it does not relax the **public notice**, **successor recording**, **audit retention**, or **headers** obligations. A "we'll skip the notice this once" disposition for emergency deprecation is a forbidden anti-pattern (see [§14](#14-the-cardinal-rules--what-is-forbidden)).
@@ -185,7 +188,7 @@ Severity drives the review gate and the minimum window. Every deprecation MUST b
 
 ## 6. The 90-day window and the emergency exception
 
-`[CONFIRMED — verbatim from the project versioning policy: "Minimum 90 days for non-emergency deprecation. Public routes get a `Deprecation` and `Sunset` header per RFC 8594 / RFC 9745 (NEEDS VERIFICATION at impl time)."]`
+`[CONFIRMED — from the project versioning policy: "Minimum 90 days for non-emergency deprecation. Public routes get a `Deprecation` header per RFC 9745 and a `Sunset` header per RFC 8594." Header syntax is externally checked as of 2026-05-15; implementation remains NEEDS VERIFICATION.]`
 
 The **90-day floor** is doctrinal, not advisory. It exists for three reasons:
 
@@ -230,10 +233,12 @@ The window MAY be compressed below 90 days only when **all** of the following ho
 flowchart TD
   A[Proposal: someone identifies a surface to retire] --> B{Severity<br/>classification}
   B -- D-routine / D-significant --> C[Review:<br/>Engineering Lead + Release Authority]
-  B -- D-major / D-doctrine --> D[Review:<br/>Engineering Lead + Release Authority + Governance Steward + ADR]
+  B -- D-major --> D[Review:<br/>Engineering Lead + Release Authority + Governance Steward + ADR]
+  B -- D-doctrine --> DD[Review:<br/>Doctrine Working Group + Governance Steward + Release Authority + ADR]
   B -- D-emergency --> E[Review:<br/>Governance Steward + Security Lead + Release Authority<br/>Co-signature required]
   C --> F[DeprecationNotice published<br/>at T-0]
   D --> F
+  DD --> F
   E --> F
   F --> G[Headers active:<br/>Deprecation + Sunset]
   G --> H[T-30 reminder:<br/>second notice + CI internal-call check fails]
@@ -250,7 +255,7 @@ flowchart TD
   classDef sunset fill:#FBE9E7,stroke:#B71C1C,color:#000;
   classDef audit fill:#F3E5F5,stroke:#4A148C,color:#000;
   class A proposal;
-  class B,C,D,E review;
+  class B,C,D,DD,E review;
   class F,G,H live;
   class I,J,K,L sunset;
   class M audit;
@@ -309,7 +314,7 @@ After sunset, **all artifacts referenced in the deprecation chain remain in audi
 
 ## 8. The `DeprecationNotice` artifact
 
-The `DeprecationNotice` is the public, machine-readable, append-only record of a deprecation. Every deprecation in KFM emits exactly one. Field names below are `PROPOSED`; doctrinal *shape* (identity, scope, schedule, successor, audit) is `CONFIRMED`.
+The `DeprecationNotice` is the public, machine-readable, append-only record of a deprecation. Every active deprecation chain begins with one. Follow-up notices use `replaces_notice`; the original remains in audit. Field names below are `PROPOSED`; doctrinal *shape* (identity, scope, schedule, successor, audit) is `CONFIRMED`.
 
 ### 8.1 Required fields
 
@@ -320,15 +325,15 @@ The `DeprecationNotice` is the public, machine-readable, append-only record of a
 | `surface_id` | string | ✓ | Identity field appropriate to `surface_type` (route path, schema `$id`, `LayerManifest.layer_id`, etc.). |
 | `severity_class` | enum | ✓ | `D-routine` / `D-significant` / `D-major` / `D-emergency` / `D-doctrine`. |
 | `announcement_date` | date | ✓ | T-0. ISO 8601. |
-| `sunset_date` | date | ✓ | Effective time of the final disposition. ISO 8601. |
-| `window_days` | integer | ✓ | `sunset_date − announcement_date`, in calendar days. MUST be ≥ 90 unless `severity_class == D-emergency`. |
+| `sunset_date` | date \| `null` | ✓ | Effective time of the final disposition. ISO 8601. MUST be non-null for active deprecations; MUST be `null` only for cancellation notices. |
+| `window_days` | integer \| `null` | conditional | Required for active deprecations: `sunset_date − announcement_date`, in calendar days. MUST be ≥ 90 unless `severity_class == D-emergency`. MUST be `null` for cancellation notices. |
 | `compression_rationale` | string | conditional | Required iff `window_days < 90`. Must name the risk and reference the co-signing roles. |
-| `reason` | enum + string | ✓ | Reason code (e.g., `version_supersession`, `connector_replacement`, `schema_rewrite`, `security_phaseout`, `rights_phaseout`, `redundancy`, `policy_realignment`). |
+| `reason` | enum + string | ✓ | Reason code (e.g., `version_supersession`, `connector_replacement`, `schema_rewrite`, `security_phaseout`, `rights_phaseout`, `redundancy`, `policy_realignment`, `cancellation`). |
 | `successor` | object \| `null` | ✓ | If non-null, contains successor identity (`successor_id`, `successor_url`, `successor_type`). Explicit `null` signals "no successor planned" and requires a `no_successor_rationale`. |
 | `no_successor_rationale` | string | conditional | Required iff `successor == null`. |
 | `affected_releases` | array of `ReleaseManifest` ids | ✓ | The releases that currently reference the deprecated surface. |
 | `notice_channels` | array | ✓ | Where the notice is reachable (e.g., `/api/notices/deprecations/<notice_id>`, `CHANGELOG.md` heading anchor, steward email subject). |
-| `headers_active_from` | timestamp | ✓ | When `Deprecation` and `Sunset` headers begin appearing on the surface (typically equal to `announcement_date`). |
+| `headers_active_from` | timestamp \| `null` | conditional | Required for active HTTP-addressable deprecations; when `Deprecation` and `Sunset` headers begin appearing on the surface (typically equal to `announcement_date`). MUST be `null` for cancellation notices. |
 | `co_signed_by` | array of roles | ✓ | Named roles per [§13](#13-roles--responsibilities). Validates against `control_plane/role_register.yaml` <sub>PROPOSED path</sub>. |
 | `evidence_refs` | array of `EvidenceRef` | conditional | Required when the reason cites external evidence (e.g., a security advisory, a rights revocation). Each `EvidenceRef` MUST resolve to a published `EvidenceBundle` per [`evidence-first.md`](../doctrine/evidence-first.md). |
 | `adr_ref` | string | conditional | Required for `D-major`, `D-doctrine`, and post-event for `D-emergency`. |
@@ -354,16 +359,19 @@ A complete deprecation produces up to three additional append-only records, depe
 
 ## 9. HTTP headers and machine-discoverable signals
 
-`[CONFIRMED policy + EXTERNAL standards; CONFIRMED RFC numbers carry NEEDS VERIFICATION at implementation time per existing project doctrine.]`
+`[CONFIRMED policy + EXTERNAL standards; RFC numbers and syntax checked against RFC Editor pages on 2026-05-15. Repo/framework implementation remains NEEDS VERIFICATION.]`
 
 For deprecated HTTP-addressable surfaces (public API, steward API, admin API, tile services), KFM emits the following headers from `headers_active_from` through `sunset_date`:
 
 | Header | Source | Value |
 |---|---|---|
-| `Deprecation` | RFC 9745 <sub>NEEDS VERIFICATION at impl time</sub> | a date-time per the RFC; equal to `DeprecationNotice.announcement_date`. |
-| `Sunset` | RFC 8594 <sub>NEEDS VERIFICATION at impl time</sub> | a date-time per the RFC; equal to `DeprecationNotice.sunset_date`. |
-| `Link: <notice-url>; rel="deprecation"` | RFC 8288 conventions | resolves to the public `DeprecationNotice`. |
-| `Link: <successor-url>; rel="successor-version"` | RFC 5829 conventions | present iff `successor != null`. |
+| `Deprecation` | [RFC 9745](https://www.rfc-editor.org/rfc/rfc9745.html) | Structured Field Date, e.g. `@1778544000`; equal to `DeprecationNotice.announcement_date` when the notice is time-normalized. |
+| `Sunset` | [RFC 8594](https://www.rfc-editor.org/rfc/rfc8594.html) | HTTP-date, e.g. `Sat, 12 Sep 2026 00:00:00 GMT`; equal to `DeprecationNotice.sunset_date` when the notice is time-normalized. |
+| `Link: <notice-url>; rel="deprecation"` | [RFC 9745](https://www.rfc-editor.org/rfc/rfc9745.html) + [RFC 8288](https://www.rfc-editor.org/rfc/rfc8288.html) conventions | resolves to the public `DeprecationNotice`. |
+| `Link: <successor-url>; rel="successor-version"` | [RFC 5829](https://www.rfc-editor.org/rfc/rfc5829.html) + RFC 8288 conventions | present iff `successor != null`. |
+
+> [!IMPORTANT]
+> **Header syntax is standards-bound; KFM semantics are doctrine-bound.** `Deprecation` is a Structured Field Date, while `Sunset` is an HTTP-date. KFM still owns the governance semantics: notice identity, successor binding, release linkage, EvidenceBundle resolution, and audit retention.
 
 > [!NOTE]
 > **Why headers and notices both.** Headers are for machines; notices are for humans and for audit. Either alone is insufficient. A surface that emits headers without a resolvable notice is opaque; a surface that publishes a notice without emitting headers is invisible to automation. Both MUST be present from `headers_active_from` onward.
@@ -502,6 +510,7 @@ Before announcing a deprecation, every signer MUST be able to answer **yes** to 
 - [ ] The `DeprecationNotice` artifact validates against the `PROPOSED` schema (see [§8.1](#81-required-fields)).
 - [ ] The `ReleaseManifest` for the announcement release lists the `notice_id`.
 - [ ] The affected HTTP surfaces emit `Deprecation` and `Sunset` headers starting at `headers_active_from`.
+- [ ] The `Deprecation` header serializes as an RFC 9745 Structured Field Date and the `Sunset` header serializes as an RFC 8594 HTTP-date.
 - [ ] The non-HTTP surfaces emit their equivalent machine-discoverable signal per [§9.1](#91-non-http-surfaces).
 - [ ] The notice is reachable from at least three channels per [§10](#10-public-visibility-requirements).
 - [ ] Internal callers of the deprecated surface are inventoried and migration tickets are filed.
@@ -635,7 +644,7 @@ Set `successor: null` and populate `no_successor_rationale` with a clear stateme
 <details>
 <summary><b>Can a deprecation be cancelled?</b></summary>
 
-Yes — but not by editing the notice. Publish a new `DeprecationNotice` with `reason: cancellation`, `successor: null`, `sunset_date: null`, and `replaces_notice: <original_notice_id>`. The original notice remains in audit, marked superseded. The headers stop. CI internal-call checks revert. The append-only invariant (A-2) holds.
+Yes — but not by editing the notice. Publish a new `DeprecationNotice` with `reason.code: cancellation`, `successor: null`, `sunset_date: null`, `window_days: null`, `headers_active_from: null`, and `replaces_notice: <original_notice_id>`. The original notice remains in audit, marked superseded. The headers stop. CI internal-call checks revert. The append-only invariant (A-2) holds.
 
 </details>
 
@@ -668,9 +677,9 @@ A deprecated surface is **not** `STALE` by virtue of being deprecated. `STALE` i
 </details>
 
 <details>
-<summary><b>Does external documentation of RFC 8594 / RFC 9745 override KFM's header conventions?</b></summary>
+<summary><b>Does external documentation of RFC 9745 / RFC 8594 override KFM's header conventions?</b></summary>
 
-Where the RFCs constrain syntax, the RFCs win — KFM emits the headers in the form the RFCs specify. Where the RFCs leave choices to the implementer (e.g., how to format `Link` rel values, where to host the notice URL), KFM doctrine wins. The `NEEDS VERIFICATION at impl time` marker on the RFC numbers exists precisely to ensure the project re-checks the spec text at implementation rather than relying on a recollection of it.
+Where the RFCs constrain syntax, the RFCs win — KFM emits the headers in the form the RFCs specify. As of the 2026-05-15 external standards check, RFC 9745 defines `Deprecation` as a Structured Field Date and RFC 8594 defines `Sunset` as an HTTP-date. Where the RFCs leave choices to the implementer (e.g., where to host the notice URL, how KFM binds successors, how the register resolves), KFM doctrine wins. Implementation remains `NEEDS VERIFICATION` because framework serializers, middleware, route scope, and clock normalization must be checked in the live repo.
 
 </details>
 
@@ -701,7 +710,7 @@ Where the RFCs constrain syntax, the RFCs win — KFM emits the headers in the f
 - `control_plane/policy_gate_register.yaml` — Canonical fail-closed mappings. `[PROPOSED path.]`
 - `.github/workflows/deprecation-window-check.yml` — CI internal-call check workflow. `[PROPOSED path.]`
 - ADR — *Deprecation window: 90-day floor and emergency compression rule*. `[TODO — ADR not yet authored.]`
-- ADR — *Header conventions: RFC 8594 / RFC 9745 adoption*. `[TODO — ADR not yet authored.]`
+- ADR — *Header conventions: RFC 9745 / RFC 8594 adoption*. `[TODO — ADR not yet authored.]`
 
 [⬆ Back to top](#deprecation-process)
 
@@ -755,7 +764,7 @@ Where the RFCs constrain syntax, the RFCs win — KFM emits the headers in the f
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
-Deprecation: Tue, 12 May 2026 00:00:00 GMT
+Deprecation: @1778544000
 Sunset: Sat, 12 Sep 2026 00:00:00 GMT
 Link: <https://example.invalid/api/notices/deprecations/dn-api-claims-2026-05-12-001>; rel="deprecation"
 Link: <https://example.invalid/api/v2/claims>; rel="successor-version"
@@ -763,7 +772,7 @@ Link: <https://example.invalid/api/v2/claims>; rel="successor-version"
 { "outcome": "ANSWER", "claims": [ ... ] }
 ```
 
-> Illustrative only. Header date-time formats follow the RFCs cited in [§9](#9-http-headers-and-machine-discoverable-signals); `NEEDS VERIFICATION at impl time` per project versioning policy.
+> Illustrative only. `Deprecation` uses the RFC 9745 Structured Field Date form; `Sunset` uses the RFC 8594 HTTP-date form. Middleware/framework implementation remains `NEEDS VERIFICATION`.
 
 </details>
 
@@ -823,6 +832,6 @@ Link: <https://example.invalid/api/v2/claims>; rel="successor-version"
 
 ---
 
-<sub>**Last updated:** 2026-05-12 · **Version:** v1 (draft) · **Governance track:** `docs/governance/` · **Owners:** _TODO — Release Authority + Governance Steward + Engineering Lead + Security Lead_</sub>
+<sub>**Last updated:** 2026-05-15 · **Version:** v1 (draft) · **Governance track:** `docs/governance/` · **Owners:** _TODO — Release Authority + Governance Steward + Engineering Lead + Security Lead_</sub>
 
 [⬆ Back to top](#deprecation-process)
