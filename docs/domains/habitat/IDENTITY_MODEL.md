@@ -4,7 +4,7 @@ title: Habitat — Identity Model
 type: standard
 version: v1
 status: draft
-owners: <habitat-domain-stewards>  <!-- placeholder; confirm via control_plane/object_family_register.yaml -->
+owners: TODO-habitat-domain-stewards
 created: 2026-05-17
 updated: 2026-05-17
 policy_label: public
@@ -20,9 +20,11 @@ related:
   - schemas/contracts/v1/domains/habitat/
 tags: [kfm, habitat, identity, evidence, ddd, spec_hash]
 notes:
-  - All habitat-object identity rules are PROPOSED until verified against a mounted repo.
-  - Schema home (schemas/contracts/v1/domains/habitat/) is the PROPOSED default per ADR-0001.
+  - "owners is a placeholder; confirm via control_plane/object_family_register.yaml"
+  - "All habitat-object identity rules are PROPOSED until verified against a mounted repo."
+  - "Schema home schemas/contracts/v1/domains/habitat/ is the PROPOSED default per ADR-0001."
 [/KFM_META_BLOCK_V2] -->
+
 
 # 🧬 Habitat — Identity Model
 
