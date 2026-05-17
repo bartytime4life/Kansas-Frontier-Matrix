@@ -20,3 +20,6 @@ Indexes the corresponding `control_plane/*.yaml` register.
 - 2026-05-15 — RESOLVED: Remediated parser compatibility for `needs_verification` status; `run_doctrine_artifact_preflight.py` no longer trips the prior check path and downstream consistency tests now pass.
 
 - 2026-05-15 — RESOLVED: Reran `pytest -q tests/policy/test_preflight_summary_consistency.py` (5 passed) and promoted consumer readiness to `validated` with 2026-05-16 evidence timestamp.
+- 2026-05-16 — OPEN (superseded by 2026-05-17 action split): Finalize canonical path + provenance mapping for doctrine inputs (atlas canonical form + naming decisions for `New Ideas 5-8-26` and `DomainDriven Design Reference`).
+- 2026-05-17 — OPEN (superseded by steward-signoff action below): Canonicalization action set with three tracked decisions (atlas canonical form, plus authoritative naming decisions for `New Ideas 5-8-26` and `DomainDriven Design Reference`).
+- 2026-05-17 — OPEN: Produce steward sign-off record that maps each current path variant to one canonical target name (`KFM_Domains_Culmination_Atlas_v1_1.pdf`, `New_Ideas_5-8-26.pdf`, `DomainDriven_Design_Reference.pdf`) and updates register/provenance entries atomically in the same change set.
