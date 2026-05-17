@@ -1,3 +1,1585 @@
+# KFM Components Pass 20 — Unified Idea Index, Category Atlas, and Expansion Dossier
+
+*A combined edition of two KFM Pass 20 syntheses, presented as Part I and Part II.*
+
+---
+
+## Reader's Note: This Is a Combined Edition
+
+This document is a unified concatenation of two distinct Pass 20 synthesis runs. It is **not** a fresh synthesis pass that flattens them into a single category system. Each run was bounded to a different source corpus and reached a different normalization; preserving that distinction is a deliberate KFM truth-posture decision (cite-or-abstain, no silent merging of distinct evidence bases).
+
+**Status of this wrapper:** **PROPOSED** (combined-edition structure only). The two parts carry their own internal truth labels per KFM convention; this wrapper does not retroactively change them.
+
+### Source provenance of the two parts
+
+| Part | Original document title | Source corpus boundary | Category system | Idea ID scheme |
+|---|---|---|---|---|
+| **Part I** | *KFM Components Pass 20 — Idea Index, Category Atlas, and Expansion Dossier* | 39 readable PDFs in `/mnt/data` (Phase 1 corpus) | **9** dependency-ordered categories — `GOV` · `SRC` · `EVD` · `MOD` · `POL` · `VAL` · `MAP` · `INT` · `APP` — a compression of Pass 18's 14-category surface | `KFM-IDX-<CAT>-NNN`, 72 seeded IDs (8 per category) |
+| **Part II** | *KFM Components Pass 20 Part 2 — Idea Index, Category Atlas, and Expansion Dossier* | Pass 18 PDF + Pass 19 PDF (bounded two-source corpus) | **14** dependency-ordered categories — `DOC` · `REP` · `SRC` · `MOD` · `EVD` · `POL` · `VAL` · `ANA` · `FIE` · `REL` · `API` · `MAP` · `UIX` · `PLN` — retained intact from Pass 18 / Pass 19 lineage | `KFM-IDX-<CAT>-NNN` with `P19-XXX-NNN` lineage, 64+ ideas plus indexed appendix |
+
+Both parts were prepared **2026-05-16** and both record the same operating posture: **evidence-first · map-first · time-aware · cite-or-abstain · fail-closed · policy-aware · auditable · reversible**. Both record the same current-session evidence boundary: no mounted live KFM repository, runtime, CI, dashboard, branch state, package version, or external source-currentness check was inspected, so implementation maturity, route names, DTO shapes, deployment claims, and test results remain **UNKNOWN** unless carried as doctrine.
+
+### Why the parts are not merged at the section level
+
+The two passes reached different but internally coherent normalization decisions over different corpora:
+
+- **Part I compresses** Pass 18's 14-category surface into 9 categories for a master-dossier scope cap, treating prior categories as subcategories within the 9-category system.
+- **Part II preserves** the 14-category dependency map intact because the bounded Pass 18 + Pass 19 corpus does not justify recompression.
+
+Silently fusing these into a single category vocabulary would itself be a fresh synthesis act — appropriate for a later pass (and probably an ADR-bearing one), not for a "combine" operation. Reconciliation between the 9-category and 14-category views, if pursued, belongs in a future ADR that records the tradeoff explicitly.
+
+### Reading guidance
+
+- For broader corpus coverage with operational expansion proposals (watcher events, PMTiles attestation, sidecars, byte-range proofs, environmental probes) drawn from 39 PDFs, read **Part I**.
+- For cumulative Pass 18 → Pass 19 idea normalization with an explicit `EXP-001`…`EXP-015` expansion agenda and Pass 19 → Pass 20 delta accounting, read **Part II**.
+- Both parts share the same outer section skeleton: Title Page · Executive Determination · Source Synthesis Report · Structural Rationale · Master Category Map · Detailed Idea Chapters by Category · Cross-Cutting Themes · Overlaps/Contradictions/Gaps · Weakly Supported Material · Expansion Agenda · Open Questions · Appendices A/B/C. Section numbers within each part are preserved as authored.
+- Idea IDs use the `KFM-IDX-<CAT>-NNN` pattern in both parts, but the `<CAT>` vocabularies differ. When citing an idea across the combined document, qualify with the part: e.g., *Part I `KFM-IDX-GOV-001`* vs. *Part II `KFM-IDX-DOC-001`*. Within a single part, the original unqualified form is sufficient.
+
+### Shared truth label key
+
+| Label | Meaning |
+|---|---|
+| **CONFIRMED** | Directly supported in the relevant pass by attached documents, working-file extraction, generated artifacts, or current-session file evidence. |
+| **PROPOSED** | A synthesis, organizing interpretation, implementation direction, path, artifact, or future work item consistent with the corpus but not proven as implemented. |
+| **NEEDS VERIFICATION** | Checkable before implementation, source activation, publication, or operational use, but not checked strongly enough in the pass that produced the statement. |
+| **UNKNOWN** | Not supported strongly enough by the corpus or current-session evidence to be treated as established. |
+| **DENY / ABSTAIN / ERROR** | Finite system outcomes or policy/runtime labels used in KFM doctrine; they are not rhetorical emphasis. |
+
+### Open editorial questions (combined edition)
+
+These are wrapper-level open questions, separate from each part's own Open Questions register:
+
+1. **Category reconciliation.** Should a future pass produce a crosswalk table between Part I's 9 categories and Part II's 14 categories, or should the next pass pick one and ADR the choice? **NEEDS VERIFICATION** against current KFM ADRs.
+2. **ID-namespace collision policy.** When the combined document is referenced externally, should `KFM-IDX-MOD-001 (Part I)` and `KFM-IDX-MOD-001 (Part II)` be promoted to distinct global IDs, or should one part's IDs be re-namespaced (e.g., `KFM-IDX-P1-MOD-001` / `KFM-IDX-P2-MOD-001`)? **PROPOSED** for ADR.
+3. **Canonical write target.** Part I's title page references `/mnt/user-data/outputs/KFM_Pass_15_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` as its canonical Markdown write target (an older pass-name convention). This combined edition's write target should be recorded in the next ADR alongside the part-naming reconciliation. **NEEDS VERIFICATION**.
+4. **Source-boundary union vs. intersection.** Part I's 39-PDF corpus is a superset of Part II's 2-PDF corpus (Pass 18 + Pass 19 appear in both). Any future merged synthesis must decide whether to treat shared sources as corroboration or as a single citation; this wrapper makes no such decision.
+
+---
+
+
+# KFM Components Pass 20 — Idea Index, Category Atlas, and Expansion Dossier
+
+**Subtitle:** A detailed evidence-first synthesis of the attached source corpus.
+
+
+## 1. Title Page
+
+**Title:** KFM Components Pass 20 — Idea Index, Category Atlas, and Expansion Dossier
+
+**Subtitle:** A detailed evidence-first synthesis of the attached source corpus.
+
+**Document type:** PDF-ready master reference document, idea index, category atlas, and expansion dossier.
+
+**Prepared:** 2026-05-16 UTC.
+
+**Prepared for:** Kansas Frontier Matrix maintainers, source stewards, architecture reviewers, domain-lane leads, implementation planners, research editors, validation reviewers, and evidence-governance reviewers.
+
+**Canonical Markdown write target:** `/mnt/user-data/outputs/KFM_Pass_15_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md`. The requested final filename carries an older pass-name convention, but the internal title, source boundary, and working files identify this as **KFM Components Pass 20**.
+
+**Working-state boundary:** Notes, category decisions, ID registry, and progress markers are persisted under `/mnt/user-data/outputs/_kfm_work/`. This master document is written incrementally from those working files rather than regenerated from the raw PDFs in a single pass.
+
+**Source boundary statement:** This pass is bounded to the 39 readable PDF attachments visible in `/mnt/data` during Phase 1. The requested `/mnt/user-data/uploads` location was absent or empty in this environment, so the current-session attachments under `/mnt/data` became the Phase 1 corpus. Phase 1 found 39 PDFs, all readable, and no unreadable or quarantined PDF sources. Phase 2 compacted those sources into `_notes.md`; Phase 3 derived the category tree and seeded `_ids.tsv`; Phase 4 created this scaffold.
+
+**Purpose statement:** This document extracts, normalizes, and develops the major ideas in the attached corpus so later KFM work can proceed from a durable idea index rather than from scattered doctrine, domain plans, pass lineage, and operational packets. It is a synthesis and expansion dossier, not a claim of current repository implementation, public release, or source activation.
+
+**Truth posture key:**
+
+| Label | Meaning in this document |
+|---|---|
+| **CONFIRMED** | Directly supported in this pass by attached documents, working-file extraction, generated artifacts, or current-session file evidence. |
+| **PROPOSED** | A synthesis, organizing interpretation, implementation direction, path, artifact, or future work item consistent with the corpus but not proven as implemented. |
+| **NEEDS VERIFICATION** | Checkable before implementation, source activation, publication, or operational use, but not checked strongly enough in this pass. |
+| **UNKNOWN** | Not supported strongly enough by the corpus or current-session evidence, usually because no live repo, tests, runtime, logs, dashboards, branch state, source terms, or external currentness check was performed. |
+| **DENY / ABSTAIN / ERROR** | Finite system outcomes or policy/runtime labels used in KFM doctrine; they are not rhetorical emphasis. |
+
+**Citation convention:** Source support is shown through Phase 1 short tags in square brackets, for example `[Directory Rules]`, `[Greenfield Building Plan]`, and `[Pass 19]`. Working-file evidence is referenced as Phase 1, Phase 2, Phase 3, or Phase 4 state when the claim concerns this run rather than a corpus source.
+
+**Core operating posture:** Evidence first; map first; time aware; cite or abstain; fail closed where risk matters; policy aware; auditable; reversible. Maps, tiles, graphs, AI answers, summaries, scenes, dashboards, indexes, and planning views are downstream carriers of evidence, not sovereign truth [Greenfield Building Plan] [MapLibre Operating Manual] [Pass 19].
+
+**Current-session limitation:** No mounted live KFM repository, current CI workflow, runtime log, deployment setting, dashboard, branch protection, current external-source status, package-version check, or source-rights review was inspected during this pass. Current implementation maturity therefore remains **UNKNOWN** unless a source is clearly being used only as doctrine, lineage, or proposal.
+
+## 2. Executive Determination
+
+**CONFIRMED:** The corpus is about Kansas Frontier Matrix as a governed spatial evidence and publication system. Its center of gravity is not a map alone, not an AI assistant alone, not a domain-data warehouse, and not a set of disconnected implementation plans. Across the doctrine, domain blueprints, technical references, cumulative passes, and operational packets, the repeated pattern is a trust membrane: source admission, evidence resolution, policy and sensitivity review, validation, catalog/proof/receipt closure, governed release, API and map delivery, Evidence Drawer explanation, Focus Mode interpretation, correction, and rollback [Directory Rules] [Greenfield Building Plan] [Pipeline Manual] [MapLibre Operating Manual] [Pass 19].
+
+**CONFIRMED:** The immediate lineage is cumulative. Pass 18 records a large prior idea-card synthesis and a 14-category expansion surface; Pass 19 keeps that structure while emphasizing source drift detection, environmental probes, material-change watchers, PMTiles attestation, byte-range proofs, and fail-closed publication gates [Pass 18] [Pass 19]. Pass 20 therefore does not restart the atlas from zero. It normalizes the corpus into a smaller dependency-ordered category system and develops the strongest corpus-derived ideas in prose.
+
+**PROPOSED:** The strongest Pass 20 synthesis is that KFM's architecture should be understood as a sequence of governed transformations rather than as a set of products. Sources are admitted or refused; evidence is bundled and cited; policy allows, denies, redacts, delays, or stages exposure; validators fail closed; release manifests and proof objects make publication reversible; APIs and maps carry released truth; AI and planning support interpret rather than authorize. This is the only reading that reconciles the Directory Rules, greenfield build doctrine, pipeline loop, MapLibre operating manual, governed-AI reports, domain-lane blueprints, and operational New Ideas packets [Directory Rules] [Greenfield Building Plan] [Pipeline Manual] [Governed AI Ledger] [Master MapLibre Atlas].
+
+**CONFIRMED / PROPOSED:** Phase 3 derived 9 top-level categories from `_notes.md`: GOV, SRC, EVD, MOD, POL, VAL, MAP, INT, and APP. This is a deliberate normalization of the broader Pass 18/Pass 19 category vocabulary, not a rejection of it. Pass 18's more granular representation, API, analysis, field, release, map, UI, and planning categories remain present inside the 9-category system as subcategories and idea entries [Pass 18] [Pass 19].
+
+**CONFIRMED:** The corpus repeatedly warns against overclaiming implementation. Many domain-lane PDFs report no mounted repository in their own run contexts and frame their outputs as PDF-only plans, blueprints, lineage, or PR-ready proposals rather than executed patches [Hydrology] [Fauna] [Flora] [Hazards] [Archaeology Plan] [Settlements Infrastructure]. One implementation reference reports earlier connector-observed public-repo surfaces, while the Greenfield Building Plan assumes an empty start [Implementation Reference] [Greenfield Building Plan]. Pass 20 preserves that tension rather than flattening it. Current repository reality is **UNKNOWN** in this pass.
+
+**PROPOSED:** The main actionable expansion pressure comes from three places. First, operational watchers and material-change sidecars make source change and source health testable [New Ideas 5-8] [New Ideas 5-15]. Second, PMTiles sidecars, root hashes, byte-range manifests, Bao-style proofs, and signed attestations make map artifacts more inspectable and rollback-ready [New Ideas 5-10] [Master MapLibre Atlas]. Third, repeated domain-lane reports show that hydrology, habitat/fauna, soil/agriculture/landcover, atmosphere/hazards, roads/settlements/infrastructure, archaeology, people/DNA/land, and geology can share one governed domain-lane packet while preserving domain-specific policy controls [Hydrology] [Habitat Fauna Thin Slice] [Soil] [Agriculture] [People DNA Land].
+
+**UNKNOWN:** This pass does not know whether proposed schemas, policies, routes, layer manifests, source descriptors, validators, PMTiles attestations, CI jobs, Evidence Drawer payloads, Focus Mode envelopes, or domain-lane fixtures currently exist in the live KFM repository. Any future claim that a given path or feature is implemented must be verified against mounted repo evidence, current tests, generated receipts, release manifests, logs, dashboards, or reviewed artifacts.
+
+**Standing assumptions for this master document:**
+
+1. The Phase 2 notes are the compact working memory for the writing phase; the raw PDFs remain the source boundary, but the writing phase reads from `_notes.md`, `_categories.md`, and `_ids.tsv` to avoid context pressure and accidental regeneration.
+2. Duplicate and near-duplicate source patterns are treated as corroboration, not as independent implementation proof.
+3. Current external facts embedded in PDFs, especially source status, package versions, endpoint behavior, data cadence, and license posture, remain **NEEDS VERIFICATION** unless this pass explicitly checked them, which it did not.
+4. Directory and file-path proposals remain **PROPOSED** until checked against Directory Rules, accepted ADRs, and current mounted-repo evidence [Directory Rules].
+5. The document may recommend expansion paths, but public or semi-public release remains outside this writing pass and requires rights, sensitivity, validation, provenance, review, release, correction, and rollback support.
+
+### 2.1 Executive determination table
+
+| Determination area | Status | Result |
+|---|---|---|
+| Corpus center of gravity | CONFIRMED | Governed, evidence-first, map-first, time-aware spatial evidence and publication architecture. |
+| Public unit of value | CONFIRMED | The inspectable claim, not a tile, graph edge, AI response, dashboard, or map layer [Greenfield Building Plan] [KFM Encyclopedia]. |
+| Category system | CONFIRMED / PROPOSED | 9 dependency-ordered categories derived from Phase 2 notes and Phase 3 normalization. |
+| Implementation maturity | UNKNOWN | No live repo/runtime/CI inspection in this pass. Prior repo summaries remain lineage and verification prompts. |
+| Strongest near-term expansion | PROPOSED | Source watchers, PMTiles attestation, proof-bearing domain thin slices, and trust-visible API/map/UI envelopes. |
+| Strongest caution | CONFIRMED | Do not treat fluent summaries, maps, raw model output, source packets, or PDF-only path plans as implementation proof. |
+
+## 3. Source Synthesis Report
+
+The corpus contains five major source families. The first family is the KFM doctrine and control-plane family: Directory Rules, the Greenfield Building Plan, the Pipeline Manual, the KFM Encyclopedia, the Implementation Reference, the MapLibre Operating Manual, the Whole-UI/Governed-AI report, the Governed AI Ledger, and the Ollama/Ubuntu guide. These sources govern the synthesis because they define truth posture, lifecycle law, directory placement, AI boundaries, UI trust surfaces, and publication discipline [Directory Rules] [Greenfield Building Plan] [Pipeline Manual] [KFM Encyclopedia] [MapLibre Operating Manual] [Ollama Ubuntu].
+
+The second family is the cumulative synthesis and atlas family: Pass 18, Pass 19, and the Master MapLibre Atlas. These are not ordinary topical sources. They are prior indexing systems, baseline syntheses, and specialized idea atlases. They carry continuity, category lineage, prior idea density, and map/tile/UI object-family pressure, but they do not independently prove current implementation [Pass 18] [Pass 19] [Master MapLibre Atlas].
+
+The third family is the domain-lane blueprint family. It covers hydrology, habitat, habitat/fauna, fauna, flora, soil, agriculture, geology/natural resources, atmosphere/air, hazards, roads/rail/trade routes, settlements/infrastructure, archaeology, and people/genealogy/DNA/land ownership. These sources are high-value because they repeat the same governed-lane skeleton while adding domain-specific risks: rare species geoprivacy, exact archaeology-site denial, living-person and DNA restrictions, infrastructure exposure, hazards that must not become emergency alerts, hydrologic source-role distinctions, and land/people assertions that must not become unsupported map labels [Hydrology] [Fauna] [Flora] [People DNA Land] [Archaeology Plan] [Hazards].
+
+The fourth family is the technical reference family: GIS/cartography, environmental GIS, urban planning GIS, archaeological 3D GIS, advanced SQL, temporal databases, domain-driven design, Web APIs, AI/Python, and web scraping. These sources supply vocabulary, methods, and caution. Their concepts become KFM ideas only after they are normalized through KFM doctrine. A GIS tutorial, SQL concept, web API pattern, or AI model workflow is therefore not automatically a KFM implementation requirement; it becomes a **PROPOSED** KFM adaptation unless the KFM corpus already incorporates it [GIS Primer] [Temporal SQL] [DDD Reference] [Web APIs] [AI Python].
+
+The fifth family is the Pass 20 delta-packet family: New Ideas 5-8, New Ideas 5-10, and New Ideas 5-15. These packets introduce operationally specific proposals around environmental source-health probes, tile-health thresholds, PMTiles artifact attestation, byte-range verification, and material-change watchers for CDL/PLANTS-like source packages [New Ideas 5-8] [New Ideas 5-10] [New Ideas 5-15]. Their operational specificity is valuable, but current source status, endpoint behavior, package versions, and rights details remain **NEEDS VERIFICATION** before implementation.
+
+The recurrent ideas are consistent across the corpus. Evidence outranks generated language. Public clients use governed interfaces. Source roles matter. Maps are downstream representations. Temporal state must be explicit. Publication is a governed transition, not a file move. Sensitive exact locations fail closed. AI is interpretive, structured, bounded, and citation-validated. Domain lanes should reuse shared governance objects rather than invent parallel schema, policy, source, proof, release, or receipt homes [Directory Rules] [Greenfield Building Plan] [Governed AI Ledger] [MapLibre Operating Manual].
+
+The corpus is strongest where it describes doctrine, responsibility boundaries, source-role separation, evidence and publication object families, map/renderer boundaries, UI trust states, local AI governance, and repeated domain-lane caution. It is thinner where it implies current operational facts: external service currentness, source rights, package versions, CDN behavior, exact public repo maturity, CI enforcement, branch protections, and runtime behavior. Those thin areas are routed to Sections 8 through 11 and to the Expansion Agenda rather than upgraded into confident claims.
+
+Duplicate handling is important. Pass 18, Pass 19, the KFM Encyclopedia, and the Master MapLibre Atlas are cumulative and partially overlapping. Domain reports repeat no-repo caveats, schema-home ambiguity, source-registry patterns, validator-first plans, and public-safe outputs. New Ideas 5-8 and 5-10 overlap around PMTiles, sidecars, receipts, and environmental operations. Pass 20 treats those overlaps as convergence signals. They strengthen the priority of a pattern but do not multiply proof of implementation.
+
+### 3.1 Source Inventory Notes
+
+**CONFIRMED:** Phase 1 found 39 readable PDFs, 0 unreadable PDFs, and 39 successful first-page render checks. The table below records how each source is used in this synthesis. Length signal is page count from Phase 1, not a measure of authority.
+
+| Short tag | Source family | Length signal | Role in Pass 20 synthesis |
+|---|---|---:|---|
+| [Implementation Reference] | Implementation lineage / repo-summary source | 20 | Public-repo and implementation-surface signal; treated as lineage and verification prompt, not current proof. |
+| [GIS Primer] | Technical GIS/cartography reference | 321 | Representation, cartography, scale, CRS, projections, data models, map communication, and GIS analysis vocabulary. |
+| [Advanced SQL] | Technical SQL reference | 112 | Analytical SQL, joins, recursive queries, windows, aggregation, and query caution for later data modeling. |
+| [AI Python] | Technical AI/ML reference | 435 | AI workflow, data, supervised/unsupervised learning, model limitations, and derivative-output caution. |
+| [Archaeological 3D GIS] | Technical 3D/archaeology reference | 177 | 3D GIS, field capture, surface/subsurface analysis, 2.5D versus 3D distinctions, archaeological interpretation caution. |
+| [Web APIs] | Technical API reference | 45 | API-as-contract, resource ontology, HTTP lifecycle, design-first API process, and developer-facing interface discipline. |
+| [Temporal SQL] | Technical temporal-database reference | 528 | Valid time, transaction time, bitemporal tables, temporal design, and time-oriented state modeling. |
+| [Directory Rules] | Governing doctrine | 22 | Canonical placement rules, responsibility roots, lifecycle law, schema-home default, ADR and drift discipline. |
+| [DDD Reference] | Technical domain-modeling reference | 59 | Bounded context, ubiquitous language, aggregates, repositories, domain events, context mapping, published language. |
+| [ArcGIS Environmental] | Technical/environmental GIS reference | 141 | Floods, hurricanes, wildfire, vulnerability, field data, water, climate, hazards, and environmental GIS workflows. |
+| [Urban GIS] | Technical/planning GIS reference | 365 | Sustainable, inclusive, resilient planning; indicators; collaborative planning; VGI; scenario and equity support. |
+| [Web Scraping Java] | Technical acquisition reference | 72 | Scraper brittleness, redirects, forms, Ajax, rate limits, persistence, tests, and connector caution. |
+| [Greenfield Building Plan] | Governing build doctrine | 28 | Inspectable claim, greenfield assumption, trust spine, pre-RAW events, receipts, promotion gates, catalog closure. |
+| [Pipeline Manual] | Governing pipeline manual | 30 | Lifecycle, query-save-validate-compile-review-promote-recompile loop, loop records, source-ledger discipline. |
+| [Agriculture] | Domain-lane blueprint | 48 | Agriculture lane, source registries, CDL/landcover adjacency, validators, catalog closure, proof and rollback patterns. |
+| [Archaeology Plan] | Domain-lane blueprint | 51 | Archaeology domain, exact-location denial, cultural/steward review, candidate evidence caution, public-safe outputs. |
+| [Atmosphere Air] | Domain-lane blueprint | 52 | Air, smoke, climate, EO, observed/model/regulatory distinction, source-role and knowledge-character labels. |
+| [Pass 19] | Immediate prior pass | 54 | Direct baseline for Pass 20; source drift, PMTiles attestation, watchers, fail-closed operational gates. |
+| [KFM Encyclopedia] | Capability encyclopedia | 82 | Broad domain/capability atlas; inspectable claim and cross-domain capability vocabulary. |
+| [Fauna] | Domain-lane blueprint | 37 | Taxon/occurrence/range/habitat lane, rare-species sensitivity, public-safe derivatives, source-role constraints. |
+| [Flora] | Domain-lane blueprint | 36 | Flora lane, rare-plant controls, occurrence redaction, source-role distinctions, public-safe publication. |
+| [Geology Resources] | Domain-lane blueprint | 42 | Geology/resource lane, public-safe geometry, geology versus legal/resource administration distinction. |
+| [Governed AI Ledger] | Governed AI architecture | 36 | AI as provider-neutral, evidence-subordinate runtime; mock adapter, citation validation, finite runtime envelopes. |
+| [Habitat] | Domain-lane blueprint | 28 | Habitat patches/suitability/connectivity, schema-home uncertainty, source registry, habitat proof-lane patterns. |
+| [Habitat Fauna Thin Slice] | Thin-slice blueprint | 20 | Habitat/fauna public-safe occurrence assignment proof slice; controlled fixture-first domain implementation. |
+| [Hazards] | Domain-lane blueprint | 26 | Hazards lane, life-safety boundary, official alerts, historical/regulatory/operational/context source separation. |
+| [Hydrology] | Domain-lane blueprint | 43 | Hydrology proof lane, HUC12, NHDPlus HR, USGS Water Data, NFHL, source descriptors, catalog/proof closure. |
+| [MapLibre Operating Manual] | Map/UI operating doctrine | 22 | MapLibre as downstream 2D renderer, governed shell, Evidence Drawer, Focus Mode, map artifact boundaries. |
+| [Pass 18] | Cumulative prior pass | 509 | 500-card baseline, 14-category lineage, representation/API/analysis/field/release/map/UI/planning expansion. |
+| [People DNA Land] | Domain-lane blueprint | 30 | People, genealogy, DNA, land-ownership assertion-first model, living-person/DNA restrictions, temporal land assertions. |
+| [Roads Rail Trade] | Domain-lane blueprint | 35 | Roads, rail, trade routes, graph projections, Indigenous/cultural mobility caution, infrastructure exposure controls. |
+| [Settlements Infrastructure] | Domain-lane blueprint | 43 | Settlements/infrastructure domain, legal city/infrastructure distinctions, critical infrastructure public-safety controls. |
+| [Soil] | Domain-lane blueprint | 25 | Soil lane, SSURGO/SDA/Kansas Mesonet adjacency, soil/agriculture/hydrology connections, material-change concepts. |
+| [Whole UI AI] | UI and governed-AI plan | 23 | Persistent shell, Evidence Drawer, Focus Mode, review console, mock governed API, finite UI outcomes. |
+| [Master MapLibre Atlas] | Specialized cumulative atlas | 554 | MapLibre/tile/style/UI/Evidence Drawer/release architecture, PMTiles/COG/GeoParquet and source-watch details. |
+| [New Ideas 5-10] | Operational delta packet | 319 | PMTiles sidecars, BLAKE3/Bao, DSSE/cosign, byte-range manifests, delta-aware artifacts, validators. |
+| [New Ideas 5-15] | Operational delta packet | 220 | CDL/PLANTS material-change watchers, sidecars, thresholds, proposed work records, Gate A-C validation. |
+| [New Ideas 5-8] | Operational delta packet | 321 | Environmental source-health and tile-health probes, MAIAC/FIRMS/SMAP/AirNow/Mesonet gates, run receipts. |
+| [Ollama Ubuntu] | Local model runtime guide | 66 | Ollama behind governed API, provider-neutral runtime, structured outputs, evidence-bounded synthesis, finite outcomes. |
+
+**Source-use determination:** Doctrine/control-plane sources govern adaptation. Technical references supply method vocabulary. Domain blueprints supply applied lane patterns. Prior passes supply continuity. New Ideas packets supply operational proposals. None of these source families alone proves current implementation.
+
+## 4. Structural Rationale
+
+The category structure follows dependency order rather than file order. This is necessary because the corpus is not a linear textbook collection. It is a mixture of governing doctrine, cumulative passes, technical references, domain-lane plans, and operational proposal packets. File order would overemphasize chronology and understate the trust dependencies that make KFM coherent.
+
+The first category, **GOV**, comes first because all other ideas depend on truth posture, source authority, directory responsibility, and implementation-evidence boundaries. Without GOV, a reader could mistake a PDF-only blueprint for a repository patch, a map artifact for a truth object, or a convenient domain folder for an approved responsibility root [Directory Rules] [Pass 18] [Pass 19].
+
+**SRC** comes next because source admission is the first operational edge. Before evidence can be bundled, mapped, analyzed, or published, sources must be identified, classified, role-labeled, checked for rights and currentness, and routed through RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, or PUBLISHED states. The New Ideas packets sharpen this into watcher events, ETag and Last-Modified checks, source-head probes, sidecars, and material-change thresholds [Pipeline Manual] [New Ideas 5-8] [New Ideas 5-15].
+
+**EVD** follows SRC because admitted material must become inspectable evidence before it becomes a claim. EvidenceRef-to-EvidenceBundle resolution, source ledgers, RunReceipts, PromotionReceipts, AIReceipts, spec_hash, artifact hashes, catalog records, proof objects, and signed attestations are the machinery that keeps KFM from turning summaries, tiles, or generated text into root truth [Greenfield Building Plan] [Governed AI Ledger] [New Ideas 5-10].
+
+**MOD** comes after evidence because KFM must know what kind of thing it is representing. The GIS, temporal database, domain-driven design, SQL, and 3D GIS references all show that representation is not neutral. Scale, projection, temporal semantics, valid time, source time, transaction time, 2.5D versus 3D, domain bounded contexts, and analytical rollups all affect what a public claim can honestly mean [GIS Primer] [Temporal SQL] [DDD Reference] [Archaeological 3D GIS].
+
+**POL** is placed before validation and publication because public consequence changes the required burden of proof. Rights, sensitivity, living-person data, DNA, rare species, archaeology, infrastructure, hazards, and cultural or steward review can require denial, redaction, generalization, staged access, delayed publication, or abstention even where data and models are otherwise technically valid [People DNA Land] [Archaeology Plan] [Fauna] [Flora] [Hazards].
+
+**VAL** then converts claims, artifacts, source changes, and proposed releases into executable decisions. It is intentionally later than MOD and POL because validation must know what the object is and what exposure policy applies. It is intentionally earlier than MAP, INT, and APP because public APIs, map layers, AI answers, planning dashboards, and domain pilots should not become ordinary outputs until validators, policy gates, receipts, release manifests, and rollback targets exist [Greenfield Building Plan] [Pipeline Manual] [New Ideas 5-10].
+
+**MAP** is placed late even though KFM is map-first. This is a deliberate distinction between operating surface and truth authority. The map is central to use, but downstream in governance. MapLibre, PMTiles, COGs, MVT/MLT, LayerManifest, StyleManifest, TileArtifactManifest, MapReleaseManifest, Evidence Drawer, Story Nodes, and review UI must consume released artifacts and governed envelopes; they must not reach back into RAW, WORK, QUARANTINE, canonical stores, or direct model output [MapLibre Operating Manual] [Master MapLibre Atlas] [Whole UI AI].
+
+**INT** follows MAP because interpretation depends on the same trust membrane. Spatial analysis, machine learning, local AI, Focus Mode, indicators, and planning support can be valuable only when they remain bounded, cited, and visibly uncertain. Their assumptions, weights, source roles, and scenario status must be inspectable, especially in planning contexts where indicators can imply policy preferences [AI Python] [Urban GIS] [Ollama Ubuntu].
+
+**APP** comes last because the domain lanes are where the shared system is applied. Hydrology, habitat/fauna, soil/agriculture, atmosphere/hazards, roads/settlements, geology, archaeology, and people/DNA/land do not need separate root-level governance systems. They need domain-specific source roles, schemas, policies, fixtures, validators, public-safe derivatives, and proof slices under the shared KFM trust structure [Hydrology] [Habitat Fauna Thin Slice] [Soil] [Agriculture] [People DNA Land].
+
+This order also resolves a structural tension inherited from prior passes. Pass 18 used 14 categories to capture a wide expansion surface [Pass 18]. Pass 19 retained that structure as a delta baseline [Pass 19]. Pass 20 compresses the surface into 9 top-level categories to satisfy the master dossier scope cap and to make dependency order easier to inspect. The compression is not loss: API, map, UI, release, analytics, field capture, and planning remain present as subcategories and idea entries.
+
+### 4.1 Dependency-order map
+
+| Stage | Category | Why it appears here |
+|---:|---|---|
+| 1 | GOV | Establishes what counts as evidence, authority, placement, and truthful implementation language. |
+| 2 | SRC | Controls what may enter the system and how source change becomes proposed work. |
+| 3 | EVD | Converts admitted material into inspectable evidence, receipts, proofs, and attestations. |
+| 4 | MOD | Defines representation, temporal structure, domain semantics, and analytical meaning. |
+| 5 | POL | Applies rights, sensitivity, public-safety, cultural, and access constraints before exposure. |
+| 6 | VAL | Tests, gates, records, denies, quarantines, promotes, corrects, rolls back, and recompiles. |
+| 7 | MAP | Carries released evidence through governed APIs, map artifacts, UI, and renderer surfaces. |
+| 8 | INT | Supports bounded analysis, AI, indicators, Focus Mode, and planning interpretation. |
+| 9 | APP | Applies the shared system to domain lanes and proof-bearing pilots. |
+
+## 5. Master Category Map
+
+Phase 3 seeded 72 unique Idea IDs across 9 categories, 8 ideas per category. Status distribution in `_ids.tsv` is 51 **CONFIRMED**, 19 **PROPOSED**, and 2 **NEEDS VERIFICATION**. The category map below records the main body structure that Section 6 will develop in prose.
+
+| Order | Code | Category | Role in the dossier | Subcategories | Seeded ideas | Status mix |
+|---:|---|---|---|---|---:|---|
+| 1 | GOV | Doctrine, Authority, and Responsibility Boundaries | Establishes truth posture, authority order, directory responsibility, implementation-evidence limits, and reversible change discipline. | Truth posture and finite labels; authority ladder and source-family weight; Directory responsibility roots and drift discipline; implementation boundary and repo-evidence caution; change discipline, ADRs, and reversibility. | 8 | 7 CONFIRMED; 1 PROPOSED |
+| 2 | SRC | Source Intake, Lifecycle, and Material-Change Governance | Governs source admission, source roles, pre-RAW controls, watchers, material-change detection, lifecycle movement, and no-autopublish posture. | SourceDescriptor and source-role registry; connector and scraper admission; watcher events and no-autopublish posture; material-change sidecars and proposed work records; environmental/ecology probes; endpoint/license/version verification backlog. | 8 | 5 CONFIRMED; 2 PROPOSED; 1 NEEDS VERIFICATION |
+| 3 | EVD | Evidence, Provenance, Receipts, Identity, and Attestation | Defines inspectable evidence objects, receipts, hashes, catalog/proof/release separation, and artifact attestation. | EvidenceRef-to-EvidenceBundle resolution; receipts and process memory; deterministic identity and hashable specifications; artifact attestation and byte-range proofs; catalog closure; citation validation and explanation payloads. | 8 | 6 CONFIRMED; 2 PROPOSED |
+| 4 | MOD | Representation, Spatial-Temporal Modeling, and Domain Semantics | Normalizes how KFM represents place, time, domain objects, uncertainty, and analytical meaning. | Cartographic representation; scale/CRS/projection/precision; spatial data models and topology; temporal semantics; bounded contexts and published language; analytical structures for panels, crosswalks, hierarchies, and rollups. | 8 | 6 CONFIRMED; 2 PROPOSED |
+| 5 | POL | Policy, Rights, Sensitivity, and Public Safety | Keeps rights, source terms, sensitive locations, living-person data, DNA, archaeology, infrastructure, hazards, and public-safety constraints visible. | Rights/licensing/consent; sensitive locations; living-person/genealogy/DNA/land restrictions; hazards and life-safety limits; redaction/generalization/delayed publication/staged access; PolicyDecision and finite DENY/ABSTAIN/ERROR outcomes. | 8 | 7 CONFIRMED; 1 PROPOSED |
+| 6 | VAL | Validation, QA, Observability, and Release Discipline | Converts proposed claims and artifacts into validated, quarantined, denied, corrected, rolled back, or released states. | Schema/contract/fixture validation; policy-as-code and promotion gates; artifact validators; temporal/spatial/source-role integrity; observability and finite negative outcomes; release manifests, correction, rollback, non-regression, and recompile discipline. | 8 | 4 CONFIRMED; 3 PROPOSED; 1 NEEDS VERIFICATION |
+| 7 | MAP | Governed API, Map Artifacts, UI, and Renderer Boundaries | Places governed APIs, MapLibre, tiles, layer/style/release manifests, Evidence Drawer, Story Nodes, and review surfaces behind the trust membrane. | Governed API and resource contracts; MapLibre renderer boundary and shell; tile/raster/vector artifacts; layer/style/tile/release manifests; Evidence Drawer/Story Nodes/review surfaces; runtime/CDN/client parity/accessibility/performance budgets. | 8 | 5 CONFIRMED; 3 PROPOSED |
+| 8 | INT | Analysis, AI, Interpretation, and Planning Support | Treats spatial analysis, AI, ML, indicators, Focus Mode, scenarios, and planning support as bounded interpretation, not root truth. | Spatial analysis and indicators; ML/anomaly detection/classification/clustering; governed AI adapters and structured synthesis; Focus Mode answers and abstentions; scenario/participatory/equity/resilience planning; uncertainty, bias, and model-risk controls. | 8 | 8 CONFIRMED |
+| 9 | APP | Domain Lanes, Field Capture, and Applied Knowledge Families | Consolidates domain blueprints and field/remote/3D capture patterns into applied lanes and expansion targets. | Shared domain-lane packet; water/land/ecology/environmental domains; physical and built-environment domains; human/historical/cultural/sensitive domains; field/remote-sensing/3D observation carriers; thin slices, pilots, and applied expansion pathways. | 8 | 3 CONFIRMED; 5 PROPOSED |
+
+### 5.1 Category roles by source family
+
+| Category | Dominant source support | Main evidence use |
+|---|---|---|
+| GOV | [Directory Rules], [Greenfield Building Plan], [Pipeline Manual], [Implementation Reference], [Pass 18], [Pass 19] | Governing doctrine and implementation-boundary control. |
+| SRC | [Pipeline Manual], [New Ideas 5-8], [New Ideas 5-15], [Hydrology], [Agriculture], [Soil], [Atmosphere Air] | Source admission, watchers, source roles, lifecycle state, and proposed work records. |
+| EVD | [Greenfield Building Plan], [Governed AI Ledger], [Ollama Ubuntu], [Master MapLibre Atlas], [New Ideas 5-10], [Pass 19] | Evidence objects, receipts, signatures, hashes, sidecars, and provenance closure. |
+| MOD | [GIS Primer], [Temporal SQL], [DDD Reference], [Advanced SQL], [Archaeological 3D GIS], [Urban GIS] | Representation, temporal structure, domain semantics, analytical patterns. |
+| POL | [Fauna], [Flora], [Archaeology Plan], [People DNA Land], [Hazards], [Roads Rail Trade], [Settlements Infrastructure] | Rights, sensitivity, public safety, geoprivacy, living-person/DNA, cultural and steward review. |
+| VAL | [Pipeline Manual], [Greenfield Building Plan], [New Ideas 5-8], [New Ideas 5-10], [New Ideas 5-15], domain blueprints | Validator-first readiness, CI probes, release gates, observability, correction, rollback. |
+| MAP | [Web APIs], [MapLibre Operating Manual], [Master MapLibre Atlas], [Whole UI AI], [Pass 18], [Pass 19] | Governed API, renderer boundaries, tile artifacts, manifests, trust-visible UI. |
+| INT | [AI Python], [Advanced SQL], [ArcGIS Environmental], [Urban GIS], [Ollama Ubuntu], [Governed AI Ledger] | Bounded analysis, AI, ML, indicators, scenarios, Focus Mode, planning support. |
+| APP | [Hydrology], [Habitat], [Habitat Fauna Thin Slice], [Fauna], [Flora], [Soil], [Agriculture], [Geology Resources], [Hazards], [People DNA Land] | Domain-lane synthesis, applied proof slices, field/remote/3D expansion families. |
+
+### 5.2 Main-body allocation rule
+
+Each category has 8 seeded Idea IDs, which fits the requested 6–12 ideas per category. Section 6 will develop these as prose entries. Secondary ideas, endpoint-specific checks, package-version claims, repeated lane variants, and implementation paths that require repo inspection are routed to Section 10 or Appendix A rather than expanding the main body beyond the cap.
+
+## 6. Detailed Idea Chapters by Category
+
+This section develops the seeded Idea IDs from `_ids.tsv` into prose entries. Each chapter is written from the Phase 2 notes and Phase 3 category tree, with the ID registry treated as the stability source for ID, title, category, status, and short-tag attribution. The main body keeps to the requested cap of eight entries per category. More granular source-specific variants, endpoint checks, package-version claims, and implementation-path proposals are routed later to the Expansion Agenda, Open Questions, or appendices rather than expanding the category chapters beyond their target size.
+
+Status labels inside each entry follow the document truth posture. A CONFIRMED idea is confirmed as doctrine, source content, repeated warning, method, or synthesis basis in the attached corpus. It is not a claim that corresponding code, schema, policy, route, validator, dashboard, or runtime behavior is implemented in a live repository unless live implementation evidence is cited. PROPOSED entries identify synthesis or implementation directions supported by the corpus but not settled as implementation fact. NEEDS VERIFICATION entries identify checkable operational claims that must be verified before use.
+
+### 6.1 GOV — Doctrine, Authority, and Responsibility Boundaries
+
+#### 6.1.1 Category Overview
+
+GOV is a central category. It is central not because it contains the most implementation tasks, but because it decides how all other tasks remain trustworthy. The attached corpus repeatedly shows that KFM can fail before it ever ingests a source or renders a map if it lets fluent prose, prior-pass lineage, domain enthusiasm, or proposed file paths masquerade as proof. GOV therefore establishes the working constitution for the rest of the dossier: truth labels, cite-or-abstain, responsibility-root directory rules, implementation-evidence boundaries, schema-home discipline, public trust membranes, and documentation as a control plane.
+
+The category is CONFIRMED as a corpus-derived center of gravity. It is supported most directly by the explicit doctrine in `[Directory Rules]`, `[Greenfield Building Plan]`, and `[Pipeline Manual]`, and reinforced by the source-boundary caution in `[Pass 18]`, `[Pass 19]`, `[Governed AI Ledger]`, and `[Whole UI AI]`. It also governs how the other source families are used. A technical reference may teach a useful method, but GOV decides that KFM adoption requires evidence, policy, validation, release state, and bounded claims. A domain blueprint may propose a path, schema, or lane package, but GOV decides that current repo evidence and Directory Rules must be checked before implementation. A map or AI answer may be useful, but GOV decides that it stays downstream of evidence and review.
+
+#### 6.1.2 Subcategories
+
+The first GOV subcategory is truth posture and finite labels: CONFIRMED, PROPOSED, NEEDS VERIFICATION, UNKNOWN, DENY, ABSTAIN, and ERROR. These labels are not decoration; they control whether a statement can be treated as evidence, recommendation, backlog, or failure state. The second subcategory is authority and source-boundary discipline, which prevents prior pass summaries, no-repo reports, public-repo summaries, and technical references from being flattened into one undifferentiated authority. The third is responsibility-root directory governance, which treats file placement as a governance act rather than a convenience decision. The fourth is schema-home and ADR discipline, especially where `contracts/`, `schemas/`, and `schemas/contracts/v1` might otherwise drift into parallel authority. The fifth is public trust membrane doctrine: public clients, maps, UI surfaces, and model runtimes stay behind governed APIs and released artifacts. The sixth is living documentation control, where docs, registries, ADRs, source ledgers, drift registers, and progress files are part of the system's auditability.
+
+#### 6.1.3 Individual Idea Entries
+
+##### KFM-IDX-GOV-001 — Inspectable Claim as the Durable Public Unit
+
+**Status and category.** CONFIRMED. Category: GOV / truth posture and public value. Source attribution: [Greenfield Building Plan] [KFM Encyclopedia] [Pass 19]. Related ideas include KFM-IDX-EVD-001, KFM-IDX-EVD-002, KFM-IDX-MAP-006, and KFM-IDX-INT-007.
+
+**Normalized statement.** KFM's durable public unit of value is the inspectable claim: a statement whose evidence, source role, spatial and temporal scope, policy posture, review state, release state, and correction lineage can be inspected.
+
+**Detailed explanation and why it matters.** This idea is the first GOV entry because it prevents KFM from being mistaken for a map gallery, a dashboard suite, a chatbot, a domain database, or a pile of PDFs. The corpus repeatedly says that maps, tiles, graphs, scenes, summaries, AI answers, vector indexes, and dashboards are carriers of evidence rather than sovereign truth. The inspectable claim is the object that gives those carriers meaning. A floodplain layer, a habitat assignment, a historic road corridor, a soil property map, or a Focus Mode answer is only KFM-grade when a user or reviewer can trace what is being claimed, what evidence supports it, what source role that evidence has, what policy and review controls were applied, and how the claim can be corrected or rolled back.
+
+**Dependencies, tensions, and limits.** This idea depends on EVD evidence resolution, SRC source-role discipline, MOD spatial-temporal semantics, POL exposure controls, VAL validation and release gates, and MAP/UI surfaces that can show trust state. Its main tension is usability: ordinary users may want a simple map answer, while KFM requires enough inspectability to keep the answer honest. That tension should be handled by UI design and Evidence Drawer layering, not by removing the evidence boundary.
+
+**Expansion directions and future work.** Future work should define a concise `InspectableClaim` acceptance checklist that can be used across domain lanes without creating a new sovereign object that duplicates EvidenceBundle or DecisionEnvelope. Open questions include whether inspectable claims should be explicit stored records, derived views over evidence and release objects, or both depending on publication significance.
+
+##### KFM-IDX-GOV-002 — Truth Labels and Cite-or-Abstain as Operating Posture
+
+**Status and category.** CONFIRMED. Category: GOV / truth posture. Source attribution: [Directory Rules] [Greenfield Building Plan] [Pass 18] [Pass 19]. Related ideas include KFM-IDX-EVD-003, KFM-IDX-VAL-007, KFM-IDX-POL-008, and KFM-IDX-INT-007.
+
+**Normalized statement.** KFM should label claims by evidence strength and should cite support or abstain when support is missing, weak, inaccessible, or not appropriate for the requested exposure.
+
+**Detailed explanation and why it matters.** Truth labels are a recurring corpus device for avoiding persuasive overclaiming. They separate direct evidence from synthesis, checkable but unverified claims, and unknowns. In this dossier, the same posture governs every idea entry: CONFIRMED means supported by the attached corpus or current working artifacts, not necessarily implemented in a live repo. PROPOSED means a synthesis or future direction consistent with the corpus. NEEDS VERIFICATION means a concrete check is required before operational use. UNKNOWN means the pass cannot establish the claim. Cite-or-abstain gives the posture teeth. A KFM answer that cannot resolve evidence should not fill the gap with model fluency, map intuition, or domain plausibility.
+
+**Dependencies, tensions, and limits.** This idea depends on source ledgers, EvidenceBundle resolution, citation validation, finite outcome envelopes, and UI surfaces that can display abstention without making it look like failure. It also depends on editorial discipline: labels must not be used as rhetorical emphasis or ignored when inconvenient. The limitation is that truth labels require careful maintenance. A claim that was NEEDS VERIFICATION yesterday may become CONFIRMED after a source check, and a claim that was CONFIRMED in one run may be stale in another if it depends on external versions or endpoint status.
+
+**Expansion directions and future work.** The strongest expansion path is a truth-label lint or review checklist for major docs, API payloads, and Focus Mode outputs. Suggested future work is to define when claim-level labels, section-level labels, and object-level finite outcomes are required, so the system remains readable without losing auditability.
+
+##### KFM-IDX-GOV-003 — Responsibility-Root Directory Governance
+
+**Status and category.** CONFIRMED. Category: GOV / directory authority and responsibility roots. Source attribution: [Directory Rules]. Related ideas include KFM-IDX-GOV-005, KFM-IDX-VAL-006, KFM-IDX-APP-006, and KFM-IDX-MAP-005.
+
+**Normalized statement.** File location in KFM encodes ownership, governance, and lifecycle responsibility; topic alone does not justify a root folder.
+
+**Detailed explanation and why it matters.** Directory governance appears mundane, but in KFM it is a trust control. The corpus repeatedly proposes domain lanes, schemas, validators, source registries, policies, runbooks, release artifacts, proofs, receipts, and UI surfaces. Without placement doctrine, those proposals could easily become parallel roots, duplicate schema homes, duplicate policy stores, or domain-specific authority islands. `[Directory Rules]` makes the deeper rule explicit: repo-root folders should exist only for repo-wide responsibilities such as truth, evidence, release, policy, deployable systems, lifecycle data, tests, infrastructure, runtime, or genuinely cross-domain concerns. Domain depth belongs inside lanes and responsibility roots, not in convenience buckets.
+
+**Dependencies, tensions, and limits.** This idea depends on accepted ADRs, per-root README files, drift registers, and current repo inspection before implementation. Its major tension is that domain work often feels easier when a domain gets a new top-level folder. That convenience is exactly the drift risk KFM is trying to avoid. The limitation in this pass is that no current repo tree was inspected, so all concrete placement recommendations remain PROPOSED unless directly supported by Directory Rules as doctrine.
+
+**Expansion directions and future work.** The next useful artifact is a path-proposal checklist for implementation agents: identify owning root, lifecycle phase, governance authority, compatibility roots, affected ADRs, and rollback/migration path before creating files. Open questions include how strictly to enforce older compatibility roots such as `ui`, `web`, `jsonschema`, `policies`, `styles`, `viewer_templates`, and `artifacts` when future repo evidence shows they exist.
+
+##### KFM-IDX-GOV-004 — Implementation Evidence Boundary and No-Overclaim Rule
+
+**Status and category.** CONFIRMED. Category: GOV / implementation-boundary discipline. Source attribution: [Pass 18] [Pass 19] [Governed AI Ledger] [Whole UI AI]. Related ideas include KFM-IDX-GOV-008, KFM-IDX-VAL-008, KFM-IDX-SRC-008, and KFM-IDX-MAP-001.
+
+**Normalized statement.** KFM must distinguish doctrine, lineage, proposed architecture, generated artifacts, and current implementation proof; it must not claim repo files, runtime behavior, CI enforcement, routes, schemas, or deployment maturity without current evidence.
+
+**Detailed explanation and why it matters.** Many attached PDFs are excellent architecture and implementation-grade planning artifacts, but many were produced in no-mounted-repo contexts. They record useful source roles, file matrices, policies, validators, fixtures, proof plans, and rollback patterns. They do not prove that those files exist in a current repository. Pass 18 and Pass 19 carry the same caution at cumulative scale. The Governed AI and Whole UI reports also bound their proposed paths and contracts because no live repo was mounted in those runs. This idea keeps KFM from converting ambition into false maturity.
+
+**Dependencies, tensions, and limits.** The idea depends on Phase 1 inventory discipline, source-family weighting, progress logs, and a refusal to let repeated proposals count as independent implementation proof. The tension is that implementation-ready plans often use exact paths and object names so future work can proceed efficiently. Exactness can be useful and still remain PROPOSED. The limitation is that implementation evidence can exist outside this pass; the dossier should mark it UNKNOWN rather than deny it unless the current pass has inspected it.
+
+**Expansion directions and future work.** A future implementation-verification pass should mount or inspect the target repo, record branch and dirty state, check ADRs, scan schemas/contracts/policy/tests/workflows, and emit a bounded current-state report. That report could upgrade specific GOV-adjacent claims from UNKNOWN to CONFIRMED without weakening the no-overclaim rule.
+
+##### KFM-IDX-GOV-005 — Schema-Home and ADR Discipline
+
+**Status and category.** CONFIRMED. Category: GOV / schema authority and change governance. Source attribution: [Directory Rules] [Implementation Reference] [Pass 19]. Related ideas include KFM-IDX-MOD-005, KFM-IDX-VAL-006, KFM-IDX-MAP-002, and KFM-IDX-APP-001.
+
+**Normalized statement.** KFM must settle schema-home authority through Directory Rules and accepted ADRs, and must avoid parallel homes for schemas, contracts, policies, sources, registries, releases, proofs, or receipts.
+
+**Detailed explanation and why it matters.** The corpus contains a repeated schema-home tension: some prior reports refer to `contracts/`, others to `schemas/`, and Directory Rules now state `schemas/contracts/v1/<...>` as the default convention while still requiring path verification against mounted repo evidence and accepted ADRs. This matters because schemas and contracts are not cosmetic. They define machine-readable truth surfaces, API payloads, validators, release gates, and review expectations. Parallel schema homes create quiet divergence: two files may appear to define the same object while validators, docs, and APIs disagree about which one is authoritative.
+
+**Dependencies, tensions, and limits.** This idea depends on the directory authority order, accepted ADRs, current repo evidence, and validation gates that detect drift. It also depends on documentation discipline: ADRs must be retained when superseded, not erased. The tension is backward compatibility. If a live repo already has both `contracts/` and `schemas/`, a migration plan may be safer than abrupt deletion. The limitation is that Pass 20 cannot resolve current repo authority without live evidence.
+
+**Expansion directions and future work.** The strongest future artifact is a schema-home verification and migration note that maps existing schema, contract, JSON Schema, OpenAPI, policy, and validator files to the accepted authority model. Suggested future work is an automated drift detector that flags duplicate definitions and requires ADR references for root or schema-home changes.
+
+##### KFM-IDX-GOV-006 — Public Clients Stay Behind the Trust Membrane
+
+**Status and category.** CONFIRMED. Category: GOV / public trust membrane. Source attribution: [MapLibre Operating Manual] [Whole UI AI] [Ollama Ubuntu]. Related ideas include KFM-IDX-MAP-001, KFM-IDX-MAP-006, KFM-IDX-EVD-002, KFM-IDX-POL-002, and KFM-IDX-INT-007.
+
+**Normalized statement.** Public clients, ordinary UI surfaces, MapLibre shells, Focus Mode, and model runtimes should consume governed APIs, released artifacts, catalog records, tile services, and EvidenceBundle-backed envelopes, not canonical stores, RAW/WORK/QUARANTINE data, or direct model output.
+
+**Detailed explanation and why it matters.** KFM is map-first and increasingly AI-aware, but the corpus insists that maps and AI remain downstream. The MapLibre manual states that MapLibre is a disciplined 2D renderer and interaction runtime, not a truth store, source registry, policy engine, citation authority, review authority, publication authority, or AI authority. The Whole UI plan and Ollama guide extend the same rule into UI and local model runtime: the public surface should receive bounded, released, policy-safe context through governed APIs and finite response envelopes. This protects the system from the most tempting shortcut: letting a convenient UI, tile URL, vector store, or local model read internal truth directly.
+
+**Dependencies, tensions, and limits.** The idea depends on MAP resource contracts, EVD evidence resolution, POL exposure gates, VAL release checks, and finite negative outcomes such as ABSTAIN, DENY, and ERROR. Its tension is performance and developer ergonomics: direct access is often easier and faster during experiments. KFM can support internal tools and dry runs, but those cannot become the normal public path. The limitation is that exact API routes and UI components remain UNKNOWN in this pass.
+
+**Expansion directions and future work.** Future work should define a trust-membrane acceptance test: no public client should import or fetch RAW/WORK/QUARANTINE, unpublished candidates, canonical stores, direct model endpoints, or unreviewed layer sources. A small fixture-backed governed API slice can prove the rule without requiring a full production system.
+
+##### KFM-IDX-GOV-007 — Documentation as a Living Control Plane
+
+**Status and category.** CONFIRMED. Category: GOV / documentation control. Source attribution: [Pipeline Manual] [Directory Rules] [KFM Encyclopedia]. Related ideas include KFM-IDX-GOV-002, KFM-IDX-SRC-001, KFM-IDX-EVD-003, KFM-IDX-VAL-006, and KFM-IDX-APP-008.
+
+**Normalized statement.** KFM documentation is part of the governed system: it records authority, source ledgers, ADRs, registries, drift, validation posture, progress, open questions, corrections, and release decisions rather than merely explaining code after the fact.
+
+**Detailed explanation and why it matters.** The corpus uses documents as active control surfaces. Directory Rules define placement authority. The Pipeline Manual defines lifecycle and loop doctrine. The KFM Encyclopedia maps domains, capabilities, actions, views, validation needs, and sensitive registers. Domain-lane PDFs preserve continuity, unknowns, and proposed implementation plans. In Pass 20 itself, `_inventory.md`, `_notes.md`, `_categories.md`, `_ids.tsv`, `_progress.md`, and the master Markdown file are working memory and audit artifacts. This approach makes documentation part of governance and recoverability, not a substitute for implementation proof.
+
+**Dependencies, tensions, and limits.** The idea depends on source ledgers, progress markers, ADRs, drift registers, and truth labels. It also depends on editors not treating polished prose as evidence. The tension is document sprawl: KFM has many reports, and without ledgers and supersession discipline, documentation can become another source of ambiguity. The limitation is that docs must be tied to behavior, validators, receipts, or review state when behavior changes materially.
+
+**Expansion directions and future work.** Suggested future work is a documentation control-plane index that records each doctrine file, domain report, pass, registry, ADR, and manual with status, authority, supersession, owner, and verification needs. This would help later writers and implementers preserve continuity without letting old PDFs silently outrank current evidence.
+
+##### KFM-IDX-GOV-008 — Greenfield, No-Repo, and Public-Repo Sources Stay Source-Bounded
+
+**Status and category.** PROPOSED. Category: GOV / source-boundary reconciliation. Source attribution: [Greenfield Building Plan] [Implementation Reference] [Pass 19]. Related ideas include KFM-IDX-GOV-004, KFM-IDX-VAL-008, KFM-IDX-SRC-008, and KFM-IDX-APP-008.
+
+**Normalized statement.** KFM should reconcile greenfield plans, no-mounted-repo PDF reports, and connector-era public-repo summaries by preserving their source boundaries instead of forcing them into one false current-state narrative.
+
+**Detailed explanation and why it matters.** This idea is PROPOSED because it is an organizing interpretation of the corpus rather than a single doctrine sentence. The Greenfield Building Plan assumes a zero-start condition so it can define a clean build strategy. Many domain reports record no mounted repo in their runs and therefore produce PDF-only implementation blueprints. `[Implementation Reference]` reports a connector-reviewed public repository with meaningful surface area. Pass 19 preserves implementation uncertainty. These can coexist if each source is read within its boundary. The greenfield plan is useful doctrine for how to build from zero. No-repo reports are useful planning and caution evidence. The public-repo summary is useful lineage and a verification prompt. None should be silently converted into current Pass 20 implementation fact.
+
+**Dependencies, tensions, and limits.** This idea depends on GOV truth labels, EVD source ledgers, and VAL verification backlog discipline. The tension is editorial simplicity: a single maturity statement would be easier to read, but it would be less truthful. The limitation is that source-boundary reconciliation does not answer the current implementation question; it only prevents premature answers.
+
+**Expansion directions and future work.** The next step is a dedicated implementation-evidence reconciliation pass after live repo inspection. It should compare the Greenfield plan, Directory Rules, Pass 19, Implementation Reference, and current repo tree; classify each claimed surface as present, absent, drifted, superseded, or needs migration; and emit an ADR/drift/update backlog rather than rewriting history.
+
+### 6.2 SRC — Source Intake, Lifecycle, and Material-Change Governance
+
+#### 6.2.1 Category Overview
+
+SRC is a central supporting category. It governs the admission edge: how external material, source feeds, archived documents, environmental products, domain datasets, scraper outputs, and watcher observations become KFM work without becoming public truth prematurely. The corpus repeatedly describes source intake as a governed process rather than a fetch operation. A source must be identified, assigned a role, checked for rights and sensitivity, routed through lifecycle states, and converted into evidence-bearing artifacts only after validation and policy gates have something concrete to inspect [Pipeline Manual] [Greenfield Building Plan] [Hydrology].
+
+This category is especially important because many KFM domains depend on external systems whose status, formats, terms, and update cadences can change. Hydrology may depend on USGS and FEMA sources; ecology may depend on GBIF, eBird, FIRMS, MAIAC, SMAP, Mesonet, CDL, or PLANTS; roads and settlements may depend on official or open geospatial feeds; archaeology and people/land sources may require steward review and access restrictions. SRC therefore defines the difference between observing a source, proposing work, admitting material, quarantining material, processing material, cataloging material, and publishing material [New Ideas 5-8] [New Ideas 5-15].
+
+The main tension is speed versus governance. Watchers and source-health probes make KFM more responsive, but the corpus is clear that watchers must not become publishers. They may emit events, receipts, sidecars, and proposed work records. They may not bypass evidence, rights, sensitivity, validation, review, catalog closure, or release state.
+
+#### 6.2.2 Subcategories
+
+The first SRC subcategory is canonical lifecycle discipline: RAW -> WORK or QUARANTINE -> PROCESSED -> CATALOG or TRIPLET -> PUBLISHED. The second is source identity and source-role governance, where each source is allowed to support only certain kinds of claims. The third is connector and watcher admission, including pre-RAW events, no-autopublish posture, and source-head checks. The fourth is material-change governance: sidecars, stable `spec_hash`, thresholds, histograms, and PROPOSED_WORK_RECORD outboxes. The fifth is operational source-health monitoring for environmental and tile-health probes. The sixth is source currentness, endpoint, rights, license, consent, and version verification before any source or artifact can be treated as operationally safe.
+
+#### 6.2.3 Individual Idea Entries
+
+##### KFM-IDX-SRC-001 — Canonical Lifecycle from RAW to PUBLISHED
+
+**Status and category.** CONFIRMED. Category: SRC / canonical lifecycle discipline. Source attribution: [Directory Rules] [Greenfield Building Plan] [Pipeline Manual] [Hydrology]. Related ideas include KFM-IDX-GOV-003, KFM-IDX-SRC-004, KFM-IDX-EVD-008, KFM-IDX-VAL-002, and KFM-IDX-MAP-001.
+
+**Normalized statement.** KFM source material should move through a governed lifecycle - RAW to WORK or QUARANTINE to PROCESSED to CATALOG or TRIPLET to PUBLISHED - and public exposure should occur only after release gates, not by moving or copying files.
+
+**Detailed explanation and why it matters.** The lifecycle is one of the most repeated invariants in the corpus. It prevents a source file, API payload, tile archive, domain fixture, or observed feed from becoming public truth simply because it exists. RAW preserves intake material. WORK allows processing and normalization. QUARANTINE isolates material with rights, schema, sensitivity, integrity, or source-role problems. PROCESSED records transformed outputs. CATALOG and TRIPLET provide governed metadata and graph representations. PUBLISHED is a release state, not a directory shortcut. The lifecycle creates a place for evidence, validation, policy, receipts, and rollback at each step.
+
+**Dependencies, tensions, and limits.** This idea depends on Directory Rules, source descriptors, data lifecycle folders, validators, release manifests, and policy gates. Its tension is that external sources often arrive in formats that tempt direct publication, especially when they already look like map layers. KFM must resist that shortcut. The limitation is that actual lifecycle directories, policies, and workflows remain UNKNOWN in this pass unless supported by a specific attached document.
+
+**Expansion directions and future work.** Future work should define lifecycle transition receipts and minimal requirements for each state. A useful first test is a fixture that enters RAW, fails one gate into QUARANTINE, then passes a corrected path into PROCESSED and CATALOG without ever becoming public until a release manifest exists. Open questions include how to handle temporary previews and whether preview layers need a separate non-public lifecycle state.
+
+##### KFM-IDX-SRC-002 — Source Descriptor and Source-Role Registry
+
+**Status and category.** CONFIRMED. Category: SRC / source identity and role governance. Source attribution: [Hydrology] [Fauna] [Flora] [Roads Rail Trade] [Pass 19]. Related ideas include KFM-IDX-EVD-003, KFM-IDX-MOD-008, KFM-IDX-POL-002, KFM-IDX-APP-001, and KFM-IDX-APP-006.
+
+**Normalized statement.** Each KFM source should have an explicit descriptor and source-role registry entry that defines identity, authority, rights, update cadence, permitted claim roles, limitations, and release constraints.
+
+**Detailed explanation and why it matters.** The domain blueprints converge on source-role discipline. A source that is useful for occurrence evidence is not necessarily a legal-status authority. A regulatory flood layer is not an observed flood event. A community-science record is not the same as a steward-reviewed sensitive occurrence. A road geometry feed is not automatically an operator, restriction, or historical corridor authority. SourceDescriptor and source-role registry concepts prevent these collapses by recording what a source is allowed to support. This is a central KFM adaptation of ordinary data cataloging: the system needs not just where a source came from, but what kind of truth it may carry.
+
+**Dependencies, tensions, and limits.** The idea depends on SRC lifecycle, EVD source ledgers, MOD knowledge-character labels, POL rights and sensitivity gates, and VAL validators that deny unsupported source-role use. The tension is that one source may have multiple roles in different contexts. The limitation is that precise source descriptors for each live source require current rights, endpoint, and steward verification.
+
+**Expansion directions and future work.** A strong future artifact is a registry schema that requires `source_id`, `source_role`, `authority_scope`, `rights_state`, `sensitivity_state`, `update_cadence`, `retrieval_method`, `permitted_claims`, and `not_authoritative_for`. Open questions include how to version role decisions and how to handle sources whose authority changes over time. Suggested future work is a source-role denial test: a validator should reject a claim when the cited source lacks the required role.
+
+##### KFM-IDX-SRC-003 — Pre-RAW Events and Watcher Non-Publisher Posture
+
+**Status and category.** CONFIRMED. Category: SRC / pre-RAW and watcher discipline. Source attribution: [Greenfield Building Plan] [Pipeline Manual] [New Ideas 5-8]. Related ideas include KFM-IDX-SRC-006, KFM-IDX-SRC-007, KFM-IDX-VAL-003, KFM-IDX-EVD-004, and KFM-IDX-GOV-006.
+
+**Normalized statement.** Watchers and pre-RAW event handlers may observe, record, and propose work, but they must not publish or admit material into public truth without governed review, validation, and promotion.
+
+**Detailed explanation and why it matters.** The Greenfield plan adds a pre-RAW event family, and the Pipeline Manual extends KFM through query-save-validate-compile-review-promote-recompile loops. New Ideas 5-8 makes the pattern operational by describing environmental probes for source heads, AOD, fire detections, SMAP recency, AirNow API access, and Mesonet consent. These mechanisms are valuable because they make KFM responsive to source drift and environmental change. They are risky if misunderstood. A watcher event is not an accepted source, not evidence closure, not policy approval, and not a publication decision. It is an observation that may trigger a governed process.
+
+**Dependencies, tensions, and limits.** This idea depends on finite event envelopes, run receipts, policy denial defaults, and validators that separate observation from publication. The tension is operational pressure: a watcher may detect something that looks important, such as fire, poor air quality, or source outage. KFM still must not become an emergency alerting system or public source of unreviewed claims. The limitation is that live watcher endpoints and current data cadence were not verified in this pass.
+
+**Expansion directions and future work.** Future work should define `WatcherEvent`, `PrefilterOutput`, and `ProposedWorkRecord` contracts with explicit `may_publish: false` posture unless promotion later approves exposure. Open questions include how quickly urgent source-health events should surface to internal reviewers. A safe first slice is a no-network fixture watcher that emits one source-head change, one ABSTAIN, and one quarantine recommendation.
+
+##### KFM-IDX-SRC-004 — Promotion as Governed State Transition
+
+**Status and category.** CONFIRMED. Category: SRC / promotion and lifecycle state. Source attribution: [Directory Rules] [Greenfield Building Plan] [Pipeline Manual]. Related ideas include KFM-IDX-SRC-001, KFM-IDX-EVD-004, KFM-IDX-EVD-008, KFM-IDX-VAL-002, and KFM-IDX-VAL-007.
+
+**Normalized statement.** Promotion is a governed state transition supported by validation, policy, evidence, review, release manifest, correction path, and rollback target; it is not a file move.
+
+**Detailed explanation and why it matters.** The corpus repeats this idea because it is easy to violate. Without governed promotion, `PUBLISHED` becomes a directory name rather than a release status. A file could be copied into a public location while source rights, sensitivity, schema validity, proof closure, catalog records, and rollback targets remain unresolved. KFM's promotion idea instead requires a state transition with evidence and process memory. It should be possible to inspect why a source artifact moved forward, which gates passed, which policy applied, who or what reviewed it, which manifest identifies the release set, and where rollback would return the system.
+
+**Dependencies, tensions, and limits.** The idea depends on EVD receipts and proof separation, POL policy outcomes, VAL promotion gates, and MAP release manifests for public artifacts. The tension is that some data systems treat publication as deployment or file synchronization. KFM treats it as governance. The limitation is that the exact implementation of PromotionDecision, PromotionReceipt, or gates is not verified in this pass.
+
+**Expansion directions and future work.** A first implementation target should define a promotion dry run that cannot write to public surfaces but can emit a PromotionReceipt-like record. Open questions include how to represent partial promotion, withdrawal, and supersession. Suggested future work is to create a promotion-state test matrix covering PASS, DENY, ABSTAIN, ERROR, rollback, and correction.
+
+##### KFM-IDX-SRC-005 — Catalog Closure Before Public Release
+
+**Status and category.** CONFIRMED. Category: SRC / catalog and publication readiness. Source attribution: [Hydrology] [Greenfield Building Plan] [Master MapLibre Atlas]. Related ideas include KFM-IDX-EVD-008, KFM-IDX-MAP-005, KFM-IDX-VAL-002, KFM-IDX-MAP-004, and KFM-IDX-APP-001.
+
+**Normalized statement.** Public release should require catalog closure: source, evidence, provenance, artifact, policy, release, and rollback metadata must be sufficiently complete before public exposure.
+
+**Detailed explanation and why it matters.** Domain blueprints and MapLibre materials repeatedly describe catalog, proof, receipt, and release objects as separate but coordinated. Hydrology uses catalog closure to keep water-source descriptors, observations, map layers, and proof objects aligned. The Greenfield plan frames STAC, DCAT, PROV, release manifests, and proof packs as publication prerequisites. The Master MapLibre Atlas extends the idea to tile and artifact manifests. Catalog closure ensures that public users do not receive an orphaned tile, API payload, or layer whose source identity, rights posture, digest, provenance, or rollback path is unclear.
+
+**Dependencies, tensions, and limits.** This idea depends on EVD proof/citation objects, SRC source descriptors, VAL validators, MAP artifact manifests, and POL exposure checks. The tension is that catalog closure can look like extra paperwork when a layer appears to render correctly. But visual correctness is not release readiness. The limitation is that exact catalog profiles and release schemas remain proposed unless verified in a mounted implementation.
+
+**Expansion directions and future work.** Future work should define a minimal catalog closure checklist for one pilot lane, ideally hydrology or PMTiles attestation. Open questions include how much catalog completeness is required for internal previews versus public release. Suggested future work is to validate a PMTiles or GeoParquet artifact against STAC/DCAT/PROV, a release manifest, and a rollback reference before making it available to MapLibre.
+
+##### KFM-IDX-SRC-006 — Material-Change Sidecars and PROPOSED_WORK_RECORD Outbox
+
+**Status and category.** PROPOSED. Category: SRC / material-change governance. Source attribution: [New Ideas 5-15]. Related ideas include KFM-IDX-VAL-004, KFM-IDX-EVD-005, KFM-IDX-APP-004, KFM-IDX-SRC-003, and KFM-IDX-SRC-008.
+
+**Normalized statement.** Material-change watchers should use stable sidecars, source heads, thresholds, and proposed-work outboxes so KFM acts on meaningful source changes rather than noisy updates.
+
+**Detailed explanation and why it matters.** New Ideas 5-15 gives a concrete pattern for USDA Cropland Data Layer and PLANTS county packages. A sidecar records source URL, ETag, Last-Modified, year, county FIPS, class histograms, classmap version, thresholds, and a stable `spec_hash`. A watcher compares sidecars and emits a PROPOSED_WORK_RECORD only when a material threshold is crossed, such as a reclassification above a relative percentage or an absolute area change. This is a strong KFM idea because it separates change detection from publication. It also prevents wasteful reprocessing when source bits change but the public or analytical claim would not materially change.
+
+**Dependencies, tensions, and limits.** The idea depends on deterministic canonicalization, sidecar schemas, source-head collection, materiality thresholds, and outbox processing that cannot publish directly. The tension is threshold design: thresholds are policy and operational choices, not universal science. The limitation is that the watcher code in the packet is proposal material and uses stubs; it needs real data paths, rights verification, and fixtures.
+
+**Expansion directions and future work.** A first implementation slice should use fixture counties and synthetic histograms, not live CDL. Open questions include how to tune thresholds by county size, crop class, or domain significance. Suggested future work is a validator that recomputes `spec_hash`, checks ETag/Last-Modified presence, verifies histogram units, and denies publication when a material-change record has not passed review.
+
+##### KFM-IDX-SRC-007 — Ecology Source-Health and Tile-Health Watchers
+
+**Status and category.** PROPOSED. Category: SRC / operational source-health probes. Source attribution: [New Ideas 5-8] [Pass 19]. Related ideas include KFM-IDX-VAL-003, KFM-IDX-APP-003, KFM-IDX-POL-002, KFM-IDX-MOD-008, and KFM-IDX-MAP-005.
+
+**Normalized statement.** KFM can use ecology and environmental probes to watch source health and tile health, but the watcher outputs should remain policy-bound, receipt-emitting, and non-publishing.
+
+**Detailed explanation and why it matters.** New Ideas 5-8 proposes a compact operational gating spec for environmental signals: MAIAC AOD thresholds, FIRMS fire proximity and Fire Radiative Power, SMAP recency checks, AirNow API-key status, and Mesonet license enforcement. The packet also describes recording source URL, dataset/version, request headers, ETag, Last-Modified, spatial/temporal window, derivation metrics, finite decisions, and signed run receipts. Pass 19 interprets these ideas as a source-drift and artifact-readiness delta. The normalized KFM idea is that environmental source monitoring can improve reliability and public safety posture, but it must be bounded by source roles, rights, policy, and review.
+
+**Dependencies, tensions, and limits.** The idea depends on source descriptors, knowledge-character labels, policy profiles, run receipts, and fail-closed validators. The tension is that terms like QUARANTINE, ESCALATE, or TILE_DEGRADED may sound operationally urgent. KFM must not turn them into emergency warnings or unsupported public hazard claims. The limitation is that the current status of the referenced feeds and thresholds was not independently verified in this pass.
+
+**Expansion directions and future work.** Future work should build a no-network probe fixture suite with canned ETag, Last-Modified, AOD, FRP, and consent cases. Open questions include whether thresholds should be per-domain policy, per-layer policy, or source-specific profiles. Suggested future work is a watcher decision envelope with explicit `not_for_life_safety` and `no_publication` fields.
+
+##### KFM-IDX-SRC-008 — Currentness, Endpoint, Rights, and Version Reverification
+
+**Status and category.** NEEDS VERIFICATION. Category: SRC / external and operational verification. Source attribution: [New Ideas 5-8] [New Ideas 5-10] [Pass 19]. Related ideas include KFM-IDX-GOV-004, KFM-IDX-POL-002, KFM-IDX-VAL-008, KFM-IDX-MAP-008, and KFM-IDX-APP-003.
+
+**Normalized statement.** Any source activation, package pin, endpoint assumption, rights claim, tool-version claim, or operational watcher threshold must be reverified before operational use.
+
+**Detailed explanation and why it matters.** The New Ideas packets contain operationally useful source and tooling observations, but many of those observations are version-sensitive. Feed status, API behavior, product cadence, license terms, package versions, PMTiles tool support, HTTP Range behavior, CDN caching, DSSE/cosign setup, and external documentation can change. Pass 19 explicitly preserves this as a limitation: current repository/runtime status and current external facts require verification. This idea is categorized as NEEDS VERIFICATION because its substance is not a design preference; it is a standing check required before KFM can safely rely on operational source behavior.
+
+**Dependencies, tensions, and limits.** The idea depends on source descriptors, rights review, package/version lock files, CI probes, and source-ledger updates. The tension is that KFM needs current source facts to operate, but this dossier is based on PDFs and does not perform live external verification. The limitation is inherent: a static source-corpus synthesis cannot certify current external behavior after its boundary.
+
+**Expansion directions and future work.** Future work should create a source-currentness verification backlog with owner, source URL, expected cadence, rights state, last verified date, failure behavior, and release impact. Open questions include how often high-risk sources should be rechecked and how to handle stale source descriptors. Suggested first artifact is a `SourceCurrentnessReport` fixture and validator that can fail closed when rights, version, endpoint, or source-head evidence is missing.
+
+
+### 6.3 EVD — Evidence, Provenance, Receipts, Identity, and Attestation
+
+#### 6.3.1 Category Overview
+
+EVD is a central category. It is the machinery that lets KFM's truth posture survive contact with maps, APIs, AI, catalogs, domain lanes, and public release. The corpus repeatedly insists that evidence is not a decorative appendix. EvidenceBundle, source ledgers, receipts, proof objects, deterministic hashes, signed attestations, catalog records, release manifests, and citation validation are the structures that make an inspectable claim more than a fluent assertion or a nice-looking layer. EVD therefore sits immediately after source intake in the dependency order: after material enters the governed lifecycle, KFM must be able to say what evidence supports it, how it was transformed, who or what reviewed it, which artifact was released, and how a later correction or rollback can be anchored.
+
+The category is CONFIRMED as a corpus-derived center of gravity. It is strongly supported by [Greenfield Building Plan], [Pipeline Manual], [Governed AI Ledger], [Ollama Ubuntu], [Pass 19], [Master MapLibre Atlas], and [New Ideas 5-10]. The newer operational packets make the evidence problem more concrete by proposing signed PMTiles sidecars, BLAKE3 roots, byte-range manifests, Bao proofs, DSSE/cosign attestations, OCI/ORAS artifact publication, and run receipts. Those implementation mechanisms remain PROPOSED unless verified in a mounted repository, but the underlying doctrine is clear: every consequential public claim needs evidence resolution, and every released artifact needs provenance strong enough to inspect, validate, correct, and roll back.
+
+#### 6.3.2 Subcategories
+
+The first EVD subcategory is EvidenceRef-to-EvidenceBundle resolution: a claim should resolve from reference to bundled source support before API, map, UI, export, or Focus Mode language is released. The second is source-ledger control, where the ledger is an active authority and status surface rather than a bibliography. The third is process memory: RunReceipt, PromotionReceipt, AIReceipt, validation reports, policy decisions, and rollback references explain what happened during intake, transformation, release, and interpretation. The fourth is deterministic identity, including `spec_hash`, source-head data, canonical JSON, content digests, and stable record or artifact IDs. The fifth is artifact attestation, especially for PMTiles, COGs, GeoParquet, and other public map artifacts that require root hashes, sidecars, signatures, and proof references. The sixth is separation discipline: evidence, receipts, proofs, catalogs, releases, and public claims are related objects, not interchangeable names for one file.
+
+#### 6.3.3 Individual Idea Entries
+
+##### KFM-IDX-EVD-001 — EvidenceBundle Outranks Generated Language and Rendered Artifacts
+
+**Status and category.** CONFIRMED. Category: EVD / evidence authority. Source attribution: [Greenfield Building Plan] [Governed AI Ledger] [Ollama Ubuntu] [Pass 19]. Related ideas include KFM-IDX-GOV-001, KFM-IDX-GOV-006, KFM-IDX-MAP-006, and KFM-IDX-INT-007.
+
+**Normalized statement.** EvidenceBundle is the controlling support object for consequential KFM claims; generated language, rendered maps, tiles, graphs, scenes, vector indexes, summaries, and dashboards remain derivative carriers.
+
+**Detailed explanation and why it matters.** This idea is the evidentiary center of the KFM corpus. A map can imply certainty through color and geometry. A dashboard can imply authority through layout. A model answer can imply comprehension through fluent prose. KFM rejects all of those as root truth. EvidenceBundle is the object family that allows a claim to be inspected through source role, source identity, cited support, spatial scope, temporal scope, policy posture, review state, release state, and correction lineage. In that structure, the map and the model answer can be useful, but they must point back to evidence rather than becoming evidence by looking polished.
+
+**Dependencies, tensions, and limits.** This idea depends on GOV truth labels, SRC source descriptors, POL exposure checks, VAL citation and release gates, and MAP/UI surfaces that can show evidence state. The main tension is that users often experience the map or answer first and the evidence second. KFM should resolve that through trust-visible design, not by weakening evidence requirements. The limit in this pass is implementation maturity: the corpus supports the doctrine, but no live EvidenceBundle resolution service or runtime evidence was inspected.
+
+**Expansion directions and future work.** The strongest next artifact is a small EvidenceBundle fixture that can support one public-safe claim across an API payload, an Evidence Drawer display, and a Focus Mode answer. Open questions include whether EvidenceBundle should always be materialized as a stored object or sometimes generated from catalog, proof, and source records at request time.
+
+##### KFM-IDX-EVD-002 — EvidenceRef to EvidenceBundle Resolution
+
+**Status and category.** CONFIRMED. Category: EVD / evidence resolution. Source attribution: [Hydrology] [Hazards] [MapLibre Operating Manual] [Ollama Ubuntu]. Related ideas include KFM-IDX-GOV-006, KFM-IDX-MAP-001, KFM-IDX-MAP-006, KFM-IDX-VAL-007, and KFM-IDX-POL-007.
+
+**Normalized statement.** A consequential KFM response should resolve EvidenceRef to EvidenceBundle before it reaches governed API output, map popups, Evidence Drawer explanations, Focus Mode synthesis, exports, or review surfaces.
+
+**Detailed explanation and why it matters.** EvidenceRef is the pointer; EvidenceBundle is the resolved support. The distinction prevents KFM from treating a reference string, feature ID, URL, tile coordinate, or source name as sufficient evidence. Hydrology, hazards, MapLibre, and Ollama materials all converge on the same flow: a user selects or requests something, the system resolves the relevant evidence, policy and release state are checked, and only then does the public surface answer, abstain, deny, or show bounded context. This matters because the public claim surface is often several steps downstream from canonical data. A clicked feature may be a derived tile; a Focus Mode answer may summarize multiple sources; a hazard popup may involve regulatory, observed, and modeled data. Evidence resolution keeps those carriers from floating free.
+
+**Dependencies, tensions, and limits.** The idea depends on stable feature identity, source role registry, catalog closure, policy decisions, citation validation, and UI payload contracts. Its tension is latency and complexity: resolving evidence at interaction time may be more expensive than rendering a layer. KFM should solve that with cached released EvidenceBundles or carefully scoped bundles, not by bypassing the resolution step. The limitation is that exact DTOs, endpoints, and implementation paths are UNKNOWN here.
+
+**Expansion directions and future work.** Suggested future work is an EvidenceResolutionRecord schema and a no-network fixture showing PASS, ABSTAIN, DENY, and ERROR outcomes. Open questions include how much evidence should be bundled into a lightweight map popup versus a full Evidence Drawer record.
+
+##### KFM-IDX-EVD-003 — Source Ledger as Active Control Surface
+
+**Status and category.** CONFIRMED. Category: EVD / source authority and provenance. Source attribution: [Governed AI Ledger] [Pipeline Manual] [Master MapLibre Atlas]. Related ideas include KFM-IDX-GOV-002, KFM-IDX-SRC-002, KFM-IDX-SRC-008, KFM-IDX-VAL-008, and KFM-IDX-APP-003.
+
+**Normalized statement.** KFM source ledgers should function as active control surfaces that record source identity, authority, status, limitations, and permitted use, not merely as bibliographies.
+
+**Detailed explanation and why it matters.** The corpus repeatedly uses source ledgers to stop authority collapse. A document can be doctrine, lineage, exploratory input, technical reference, operational observation, source candidate, prior-pass baseline, or current-session evidence. Those roles matter. A technical reference may support a method but not prove KFM implementation. A prior no-repo report may preserve a proposed architecture but not prove current files. A New Ideas packet may propose useful watcher thresholds but not verify current endpoint behavior. A source ledger that records these distinctions becomes part of the governance membrane. It tells maintainers what a source can support, what it cannot prove, and what needs verification before use.
+
+**Dependencies, tensions, and limits.** This idea depends on GOV truth labels, SRC source-role registries, POL rights checks, and VAL currentness verification. Its tension is maintenance overhead: ledgers must be updated as sources are accepted, superseded, deprecated, or restricted. The limitation is that ledgers in the PDF corpus may themselves be historical; current external source state still requires fresh verification.
+
+**Expansion directions and future work.** Future work should define a minimal SourceLedgerRecord with authority role, source family, rights state, sensitivity posture, last verification date, verification owner, and current use status. Open questions include how to reconcile document-level source ledgers with machine source descriptors and how to represent sources that support doctrine but not implementation.
+
+##### KFM-IDX-EVD-004 — RunReceipt, PromotionReceipt, and AIReceipt as Process Memory
+
+**Status and category.** CONFIRMED. Category: EVD / receipts and process memory. Source attribution: [Greenfield Building Plan] [Pipeline Manual] [Governed AI Ledger]. Related ideas include KFM-IDX-SRC-004, KFM-IDX-VAL-003, KFM-IDX-VAL-007, KFM-IDX-INT-007, and KFM-IDX-MAP-006.
+
+**Normalized statement.** KFM receipts should record the process by which evidence, artifacts, promotions, and AI responses were produced, checked, denied, released, or rolled back.
+
+**Detailed explanation and why it matters.** Receipts are not the evidence itself; they are process memory. RunReceipt records what a run did, with what inputs, configuration, source heads, hashes, and outcomes. PromotionReceipt records whether a candidate release passed the required gates and what rollback target exists. AIReceipt records model-runtime participation, evidence scope, citation validation, and finite outcome without making model output authoritative. The corpus treats these receipts as necessary because KFM is not only concerned with the final claim. It must be possible to inspect how the claim or artifact came to exist, which controls were applied, and which failure state was chosen when controls failed.
+
+**Dependencies, tensions, and limits.** This idea depends on deterministic identity, validation gates, policy decisions, release manifests, and no-direct-model-client behavior. Its tension is conceptual separation: a receipt can prove that a process ran and what it reported, but it does not by itself prove that the underlying claim is true or safe to publish. The limitation is that specific receipt schemas, signing recipes, and CI jobs remain proposed unless verified in a real checkout.
+
+**Expansion directions and future work.** A first receipt implementation should be deliberately small: a no-network run receipt for a fixture validator, a promotion dry-run receipt, and an AI mock-response receipt. Open questions include how receipts are retained, whether they are public, and which receipts must be signed or included in release proof packs.
+
+##### KFM-IDX-EVD-005 — Deterministic Identity and spec_hash
+
+**Status and category.** CONFIRMED. Category: EVD / deterministic identity. Source attribution: [Greenfield Building Plan] [Pipeline Manual] [New Ideas 5-15]. Related ideas include KFM-IDX-SRC-006, KFM-IDX-VAL-004, KFM-IDX-MAP-004, KFM-IDX-MAP-008, and KFM-IDX-MOD-003.
+
+**Normalized statement.** KFM should use deterministic identity, canonicalized specifications, and stable hashes such as `spec_hash` to make source changes, transformations, validation, and release artifacts reproducible.
+
+**Detailed explanation and why it matters.** Deterministic identity is what lets KFM recognize whether a change is meaningful, reproducible, or safely comparable. The corpus uses `spec_hash` as a control point for watcher events, loop records, PMTiles sidecars, source sidecars, and run receipts. New Ideas 5-15 gives a concrete example: canonical JSON for a county CDL sidecar is hashed after excluding the prior hash value, and that stable hash anchors whether a sidecar state has changed. The broader idea applies across KFM: source descriptors, tile artifacts, release manifests, evidence bundles, and validation reports should not depend on incidental formatting, unordered fields, mutable tags, or unstated tool flags.
+
+**Dependencies, tensions, and limits.** This idea depends on canonicalization rules, field ordering, unit normalization, source-head recording, and stable version identifiers. Its tension is granularity: too coarse a hash hides meaningful change; too fine a hash triggers churn over irrelevant differences. The limitation is that hashing methods vary across proposed packets, with SHA256, BLAKE3, root hashes, and Merkle-style manifests all appearing as candidate mechanisms. Implementation must choose deliberately.
+
+**Expansion directions and future work.** Suggested future work is a canonicalization and hashing profile that distinguishes specification hash, source-head hash, artifact digest, feature identity hash, and receipt hash. Open questions include when canonical JSON is sufficient, when content-addressed artifact storage is needed, and when cryptographic signing is required.
+
+##### KFM-IDX-EVD-006 — Signed Attestations and Provenance References
+
+**Status and category.** PROPOSED. Category: EVD / attestation and provenance. Source attribution: [Greenfield Building Plan] [New Ideas 5-10] [Master MapLibre Atlas]. Related ideas include KFM-IDX-EVD-004, KFM-IDX-EVD-007, KFM-IDX-VAL-005, KFM-IDX-MAP-008, and KFM-IDX-SRC-005.
+
+**Normalized statement.** KFM public artifacts should be accompanied, where significance justifies it, by signed attestations and provenance references that identify what was built, from what inputs, by what process, under what policy, and with what digest.
+
+**Detailed explanation and why it matters.** The Greenfield plan and MapLibre atlas both push KFM toward proof-bearing publication. New Ideas 5-10 turns that pressure into an operational pattern: sidecar predicates, DSSE/cosign signatures, provenance references, run receipt references, tool/license notes, and artifact hashes. The normalized idea is not that every internal draft needs heavy signing. It is that released or consequential artifacts should carry enough attestation for downstream clients, reviewers, and rollback systems to verify that the artifact is the one KFM intended to publish. For map artifacts, this is especially important because a tile archive can be visually persuasive while detached from source evidence.
+
+**Dependencies, tensions, and limits.** This idea depends on artifact digests, source ledger references, receipt references, signature key management, validation gates, and release manifests. The tension is proportionality: overly complex attestation can slow early pilots, while weak attestation undermines auditability. The limitation is that tool choices, signature infrastructure, key trust chains, and library licenses are all NEEDS VERIFICATION before implementation.
+
+**Expansion directions and future work.** A sensible first artifact is a signed predicate for a synthetic PMTiles or GeoParquet fixture, not a production artifact. Open questions include which artifact classes require signatures, how keys are governed, how expired or compromised keys are handled, and whether clients verify signatures directly or rely on server-side release validation.
+
+##### KFM-IDX-EVD-007 — PMTiles Sidecar and Byte-Range Proof Evidence Carrier
+
+**Status and category.** PROPOSED. Category: EVD / artifact proof and map delivery. Source attribution: [New Ideas 5-10] [Master MapLibre Atlas]. Related ideas include KFM-IDX-MAP-004, KFM-IDX-MAP-008, KFM-IDX-VAL-005, KFM-IDX-EVD-006, and KFM-IDX-SRC-005.
+
+**Normalized statement.** PMTiles archives can become verifiable map artifacts when paired with sidecars that record root hashes, target spec hashes, byte-range manifests, range hashes, proof references, provenance, and signatures.
+
+**Detailed explanation and why it matters.** PMTiles are attractive because they allow efficient single-file, HTTP-range-optimized map delivery. The corpus also identifies operational risks: in-place overwrites, cache and Range quirks, native versus web client differences, lack of native atomic patch semantics, and the danger of treating a rendered tile as proof. New Ideas 5-10 proposes a KFM answer: each `.pmtiles` file receives a sidecar with schema version, filename, `spec_hash`, `root_hash`, size, patch/base hash when applicable, byte-range manifest, range hashes, Bao proof references, and build/provenance references. The map artifact becomes not just a file to serve, but a verifiable carrier connected to receipts and release controls.
+
+**Dependencies, tensions, and limits.** This idea depends on deterministic PMTiles builds, byte-range indexing, BLAKE3 or chosen root hashing, Bao or equivalent proof tooling, DSSE/cosign or equivalent signing, and validation gates. Its tension is cost: full byte-range proof coverage may be too much for early work, while sample-only coverage may not support strong client verification. The limitation is that the packet's code and schema are proposed and tool/license facts need verification.
+
+**Expansion directions and future work.** The first implementation should cover a tiny fixture PMTiles archive with a few manifest entries and invalid-case tests. Open questions include whether proof verification belongs in the client, the governed API, CI only, or all three for different release classes.
+
+##### KFM-IDX-EVD-008 — Evidence, Receipts, Proofs, Catalogs, and Claims Stay Separate
+
+**Status and category.** CONFIRMED. Category: EVD / object-family separation. Source attribution: [Greenfield Building Plan] [Pipeline Manual] [Pass 19]. Related ideas include KFM-IDX-GOV-001, KFM-IDX-SRC-005, KFM-IDX-MAP-005, KFM-IDX-VAL-002, and KFM-IDX-POL-008.
+
+**Normalized statement.** KFM must keep evidence, receipts, proof objects, catalog records, release manifests, policy decisions, and public claims as related but distinct object families.
+
+**Detailed explanation and why it matters.** The corpus repeatedly warns against collapsing carriers and controls. Evidence supports a claim. A receipt records process. A proof object verifies integrity or provenance. A catalog record describes assets and distributions. A release manifest identifies a published set. A policy decision controls exposure. A public claim states something to a user. These objects should be linked, but they must not be treated as aliases. If a receipt becomes evidence, process success can be mistaken for truth. If a catalog record becomes a release decision, metadata completeness can be mistaken for publication approval. If a tile becomes a claim, rendering can be mistaken for authority.
+
+**Dependencies, tensions, and limits.** This idea depends on a clear object model, contracts or schemas, validators, and review practices. Its main tension is simplicity: combining objects can look efficient during prototyping. KFM doctrine favors inspectability and reversibility over convenient collapse. The limitation is that the exact implementation structure remains unknown, and object boundaries must be adapted to actual repo conventions when available.
+
+**Expansion directions and future work.** Suggested future work is an object-family map showing which objects can reference each other and which cannot substitute for each other. Open questions include how to expose this separation to users without overwhelming them, and how to prevent implementation shortcuts from merging proof, catalog, and release authority.
+
+### 6.4 MOD — Representation, Spatial-Temporal Modeling, and Domain Semantics
+
+#### 6.4.1 Category Overview
+
+MOD is a central-supporting category. It is central because KFM is map-first and time-aware; it is supporting because representation and modeling decisions must serve evidence, policy, validation, and publication rather than becoming independent authority. The technical references in the corpus make one point with unusual consistency: geographic information, maps, temporal databases, 3D GIS, domain models, and analytical SQL are constructed forms of representation. They help people understand the world, but they also simplify, omit, transform, classify, symbolize, aggregate, and interpret. KFM therefore cannot treat a layer, geometry, date column, parcel, taxon, route, indicator, model output, or 3D scene as self-explanatory.
+
+The category is supported by [GIS Primer], [Temporal SQL], [DDD Reference], [Advanced SQL], [Archaeological 3D GIS], [ArcGIS Environmental], [Urban GIS], and the KFM domain blueprints. MOD normalizes the semantic commitments that evidence and public claims depend on: scale, CRS, projection, precision, raster/vector/network/field model, temporal meaning, valid versus transaction time, bounded context, source role, assertion type, observed/modelled/regulatory/interpretive knowledge character, and 2.5D versus full 3D representation. Its practical purpose is to keep KFM from publishing flattened labels where assertion-bound, time-aware, source-role-aware objects are required.
+
+#### 6.4.2 Subcategories
+
+The first MOD subcategory is cartographic and geographic representation: maps and GIS layers are purpose-built representations, not the world itself. The second is scale, CRS, projection, symbol, precision, and fitness-for-use. The third is spatial model choice: raster, vector, network, field, topology, remote-sensing surface, 2.5D model, and 3D model. The fourth is temporal modeling: valid time, observed time, source time, retrieval time, release time, correction time, transaction time, and bitemporal views. The fifth is domain semantics and bounded context, using published language so hydrology, fauna, land ownership, archaeology, hazards, and infrastructure do not collapse into generic features. The sixth is assertion discipline: records should state what is claimed and from which source role, not silently convert evidence, hypotheses, labels, and interpretations into canonical truth.
+
+#### 6.4.3 Individual Idea Entries
+
+##### KFM-IDX-MOD-001 — Maps and GIS Layers as Representations Rather Than the World
+
+**Status and category.** CONFIRMED. Category: MOD / geographic representation. Source attribution: [GIS Primer] [Pass 18]. Related ideas include KFM-IDX-GOV-001, KFM-IDX-EVD-001, KFM-IDX-MAP-003, KFM-IDX-INT-001, and KFM-IDX-POL-001.
+
+**Normalized statement.** KFM should treat maps and GIS layers as representations that make choices, omissions, simplifications, exaggerations, and conventions visible enough for users to understand what a layer can and cannot claim.
+
+**Detailed explanation and why it matters.** The GIS reference corpus is explicit that a map is not a window onto the world. It is a constructed communication surface that selects features, chooses symbols, imposes scale, transforms locations, and communicates a purpose. Pass 18 translates this into KFM doctrine by treating representation as a governed claim surface. This matters because KFM's public users will often encounter a claim visually: a flood zone, a corridor, a habitat patch, a rare-species generalization, a geologic unit, or a historic overlay. If the layer hides representational choices, users may over-read its precision or authority.
+
+**Dependencies, tensions, and limits.** This idea depends on source attribution, EvidenceBundle resolution, layer manifests, fit-for-use metadata, and UI states that can show uncertainty and limitations. The tension is that map clarity often requires simplification, while evidence integrity requires acknowledging what was simplified. The limit is that KFM cannot make every representational choice visible in the main map view; it needs layered disclosure through legends, Evidence Drawer content, and review metadata.
+
+**Expansion directions and future work.** Future work should define a representation metadata profile for public layers: purpose, audience, scale range, source role, geometry type, symbol meaning, precision, temporal scope, and limitations. Open questions include how to prevent visually simple maps from implying more certainty than the evidence supports.
+
+##### KFM-IDX-MOD-002 — Scale, CRS, Projection, Symbol, and Fitness-for-Use Decisions
+
+**Status and category.** CONFIRMED. Category: MOD / spatial reference and map fitness. Source attribution: [GIS Primer] [MapLibre Operating Manual]. Related ideas include KFM-IDX-MAP-003, KFM-IDX-MAP-005, KFM-IDX-VAL-006, KFM-IDX-EVD-005, and KFM-IDX-INT-001.
+
+**Normalized statement.** KFM should treat scale, coordinate reference systems, projections, symbols, precision, and fitness-for-use as explicit metadata and validation concerns rather than hidden renderer assumptions.
+
+**Detailed explanation and why it matters.** The GIS Primer emphasizes that coordinate systems, projections, symbols, color, and scale affect communication and analysis. The MapLibre operating materials reinforce that the renderer is downstream of trust and should not silently become the place where meaning is invented. In KFM, a geometry's apparent precision can exceed its evidence. A symbol may imply a categorical certainty that is only a model classification. A projected or simplified geometry may be suitable for statewide visualization but not parcel-scale interpretation. Fitness-for-use language is the bridge between a useful map and an honest claim.
+
+**Dependencies, tensions, and limits.** This idea depends on layer manifests, source descriptors, catalog metadata, geometry simplification records, scale-dependent styling, and validation checks for CRS and precision. Its tension is that users often ask practical questions without knowing what scale or projection they are depending on. KFM should expose constraints at the point of use without making maps unreadable. The limitation is that technical details can become overwhelming unless organized into clear layer metadata and Evidence Drawer sections.
+
+**Expansion directions and future work.** Suggested future work is a fitness-for-use acceptance checklist for each public layer class. Open questions include whether KFM should deny certain operations, such as fine-scale measurement or parcel-like interpretation, when a layer's source scale or geometry generalization does not support them.
+
+##### KFM-IDX-MOD-003 — Valid, Source, Retrieval, Release, and Correction Time Separation
+
+**Status and category.** CONFIRMED. Category: MOD / temporal semantics. Source attribution: [Temporal SQL] [Greenfield Building Plan] [Pipeline Manual]. Related ideas include KFM-IDX-EVD-004, KFM-IDX-SRC-006, KFM-IDX-VAL-003, KFM-IDX-MAP-005, and KFM-IDX-APP-004.
+
+**Normalized statement.** KFM should keep materially different temporal dimensions distinct, including valid time, observed time, source time, retrieval time, release time, correction time, and where needed transaction time.
+
+**Detailed explanation and why it matters.** Temporal SQL materials warn that time-varying data are not handled safely by adding an ordinary date column. KFM's corpus extends that warning across source intake, publication, correction, rollback, and public interpretation. A soil observation's observed time is not the same as the time the source was retrieved. A hazard warning's issue time is not the same as its expiry or KFM release time. A historic land assertion's valid time may differ from the archive record date. A correction time records when KFM changed a prior claim, not when the underlying event occurred. If these are collapsed, reports can become inconsistent, stale data can look current, and rollback can become ambiguous.
+
+**Dependencies, tensions, and limits.** This idea depends on schemas that name temporal fields precisely, validators for missing or conflicting time values, source descriptors with update cadence, and UI labels for stale or corrected material. The tension is complexity: multiple time fields can feel heavy for simple records. The limitation is that not every domain requires every temporal dimension, but KFM should define which dimensions are material per lane.
+
+**Expansion directions and future work.** Future work should create a temporal-support matrix by domain and object family. Open questions include which public payloads must show release time, source time, and correction time, and when internal transaction time is sufficient for audit but not public display.
+
+##### KFM-IDX-MOD-004 — Bitemporal and Time-Oriented State Modeling
+
+**Status and category.** CONFIRMED. Category: MOD / time-oriented database design. Source attribution: [Temporal SQL] [Implementation Reference]. Related ideas include KFM-IDX-MOD-003, KFM-IDX-APP-008, KFM-IDX-VAL-006, KFM-IDX-SRC-004, and KFM-IDX-EVD-008.
+
+**Normalized statement.** KFM should use time-oriented and, where necessary, bitemporal modeling for observations, releases, corrections, geography versions, crosswalks, and historical analytical panels.
+
+**Detailed explanation and why it matters.** The Temporal SQL reference describes valid-time, transaction-time, and bitemporal tables, along with the complications they introduce for keys, constraints, queries, modifications, and reporting. The Implementation Reference translates this into KFM's frontier-demography and economy direction: county-year panels, geography versions, population observations, economic observations, agriculture observations, access observations, stable crosswalks, and uncertainty classes. A bitemporal posture matters because KFM often needs to ask two questions at once: what was true or claimed for a historical period, and what did KFM know, publish, correct, or supersede at a later time?
+
+**Dependencies, tensions, and limits.** This idea depends on temporal keys, non-overlap constraints, versioned geography, release manifests, and correction lineage. The tension is that bitemporal design can be heavier than early pilots need. KFM should apply it where consequences justify it, especially public release, historical reconstruction, and corrected claims. The limitation is that this pass does not inspect actual database schema or migration files.
+
+**Expansion directions and future work.** A practical first artifact is a small temporal fixture for a county-year frontier panel or hydrology observation history, with examples of current-state, prior-state, and corrected-state queries. Open questions include how to represent uncertain historical periods and how to align geometry versioning with observation validity.
+
+##### KFM-IDX-MOD-005 — Bounded Contexts and Ubiquitous Language for Domain Lanes
+
+**Status and category.** PROPOSED. Category: MOD / domain semantics. Source attribution: [DDD Reference] [Implementation Reference]. Related ideas include KFM-IDX-GOV-003, KFM-IDX-SRC-002, KFM-IDX-POL-008, KFM-IDX-APP-006, and KFM-IDX-APP-007.
+
+**Normalized statement.** KFM domain lanes should be modeled as bounded contexts with explicit published language, source-role registries, and anticorruption boundaries for external sources.
+
+**Detailed explanation and why it matters.** The DDD reference provides a vocabulary for keeping domain meaning stable: domain, model, ubiquitous language, bounded context, published language, context map, anticorruption layer, responsibility layers, and knowledge level. KFM needs this because its domain lanes use words that can be deceptively similar across sources. A settlement, census place, municipality, townsite, mission, fort, and infrastructure node are not interchangeable. A rail alignment is not an operator. An assessor row is not title truth. A taxonomic occurrence is not legal conservation status. A regulatory flood zone is not observed inundation. Bounded contexts help KFM preserve these distinctions and publish language that reviewers, implementers, and users can inspect.
+
+**Dependencies, tensions, and limits.** This idea depends on source-role registries, schema names, domain documentation, API resource modeling, and review practices. The tension is that domain boundaries can fragment the system if they are too isolated. KFM should use shared governance objects while keeping domain semantics precise. The limitation is that applying DDD to KFM is a synthesis direction, not a confirmed implementation.
+
+**Expansion directions and future work.** Future work should produce a context map for the major domain lanes and shared governance objects. Open questions include which terms should be globally shared and which should remain lane-specific published language.
+
+##### KFM-IDX-MOD-006 — Assertion-First Domain Records Over Flattened Labels
+
+**Status and category.** PROPOSED. Category: MOD / assertion modeling. Source attribution: [People DNA Land] [Archaeology Plan] [Implementation Reference]. Related ideas include KFM-IDX-POL-003, KFM-IDX-POL-004, KFM-IDX-APP-007, KFM-IDX-EVD-002, and KFM-IDX-GOV-001.
+
+**Normalized statement.** Sensitive and historically complex KFM domains should model assertions with evidence, source role, temporal scope, confidence, and review state rather than flattening them into labels on maps or canonical records.
+
+**Detailed explanation and why it matters.** The People/Genealogy-DNA/Land blueprint is explicit: person assertions stay separate from canonical person records; relationship hypotheses remain hypotheses; assessor and tax records are not title truth; parcel geometry is not title boundary proof. The Archaeology plan similarly warns that remote-sensing anomalies, 3D models, and interpreted features are not confirmed sites without review. The Implementation Reference extends the same principle to frontier analytical records. The normalized idea is assertion-first modeling. A record should say what is being asserted, by whom or by which source, under what evidence and temporal scope, with what confidence and policy posture.
+
+**Dependencies, tensions, and limits.** This idea depends on EvidenceBundle links, source-role registries, policy profiles, temporal modeling, and review surfaces. Its tension is user expectation: public users may want simple labels such as owner, site, road, or settlement. KFM should provide clear summaries only after preserving assertion structure internally. The limitation is that exact assertion schema shapes remain proposed.
+
+**Expansion directions and future work.** Suggested future work is a generic AssertionRecord pattern tested in one sensitive lane and one non-sensitive lane. Open questions include how to express confidence without overstating probability and how to display competing assertions in the Evidence Drawer.
+
+##### KFM-IDX-MOD-007 — Raster, Vector, Network, Field, 2.5D, and 3D Distinctions
+
+**Status and category.** CONFIRMED. Category: MOD / spatial data models and dimensionality. Source attribution: [GIS Primer] [Archaeological 3D GIS] [ArcGIS Environmental]. Related ideas include KFM-IDX-MAP-004, KFM-IDX-INT-004, KFM-IDX-INT-005, KFM-IDX-POL-004, and KFM-IDX-APP-005.
+
+**Normalized statement.** KFM should distinguish raster, vector, network, field, remote-sensing surface, 2.5D, full 3D, and volumetric representations because they support different claims and different risks.
+
+**Detailed explanation and why it matters.** The GIS Primer covers core spatial data models and transformations. ArcGIS environmental materials demonstrate practical uses across hazards, social vulnerability, field data, water resources, and climate scenarios. Archaeological 3D GIS adds an especially important distinction: 2.5D and full 3D are not interchangeable. A 2.5D surface may not represent vertical faces or multiple elevations at the same x/y position; a full 3D model can support visibility, volume, stratigraphic, or excavation questions that a 2D or 2.5D layer cannot. In KFM, these choices affect evidence claims, public safety, sensitivity, storage, rendering, and validation.
+
+**Dependencies, tensions, and limits.** This idea depends on source descriptors, acquisition metadata, model type labels, accuracy and scale statements, rendering boundaries, and policy controls. The tension is that 3D or high-resolution remote sensing can look more authoritative than it is. KFM must label acquisition-derived geometry, interpreted reconstruction, modeled surface, and public-safe generalized output separately. The limitation is that 3D runtime and storage choices are conditional and not verified in this pass.
+
+**Expansion directions and future work.** Future work should define model-type metadata for 2D, 2.5D, 3D, and volumetric artifacts. Open questions include when 3D evidence should be public, restricted, generalized, or withheld because of archaeology, infrastructure, or sensitive-resource risk.
+
+##### KFM-IDX-MOD-008 — Knowledge-Character Labels for Observed, Modeled, Regulatory, and Interpretive Data
+
+**Status and category.** CONFIRMED. Category: MOD / epistemic labeling. Source attribution: [Atmosphere Air] [Hazards] [Pass 19]. Related ideas include KFM-IDX-POL-007, KFM-IDX-INT-001, KFM-IDX-APP-005, KFM-IDX-VAL-002, and KFM-IDX-MAP-006.
+
+**Normalized statement.** KFM should label the knowledge character of each layer, record, indicator, or claim, distinguishing observed, modeled, regulatory, administrative, operational, derived, candidate, and interpretive material.
+
+**Detailed explanation and why it matters.** Atmosphere and hazards materials make this idea especially clear. Air observations, public AQI reports, regulatory archives, model fields, smoke masks, anomaly surfaces, remote-sensing detections, disaster declarations, regulatory flood areas, operational warnings, and resilience summaries are not epistemically interchangeable. Pass 19 preserves this as a corpus-wide control. A regulatory flood zone can support a regulatory-context claim but not an observed-flood claim. A remote-sensing fire detection can support a candidate operational-context claim but not a field-confirmed event by itself. A modeled air-quality surface can support modeled context but not official health guidance unless the source role and policy allow it.
+
+**Dependencies, tensions, and limits.** This idea depends on source roles, domain models, policy profiles, Evidence Drawer labels, and validators that prevent unsupported role substitution. The tension is that public maps often blend observed and modeled layers for usability. KFM should allow overlays but keep knowledge character visible and enforceable. The limitation is that each domain needs its own controlled label set.
+
+**Expansion directions and future work.** Future work should define a cross-domain knowledge-character vocabulary with domain-specific extensions. Open questions include how to display mixed-character claims and how to route ambiguous material into ABSTAIN, DENY, or candidate review states.
+
+### 6.5 POL — Policy, Rights, Sensitivity, and Public Safety
+
+#### 6.5.1 Category Overview
+
+POL is a central constraint category. It decides when evidence may be exposed, generalized, delayed, restricted, denied, or routed for steward review. The corpus is unusually consistent on this point: KFM is not merely an evidence system; it is a policy-aware evidence and publication system. A claim can be well sourced and still unsafe or inappropriate for public release. A location can be accurate and still require redaction. A source can be useful and still carry terms, consent limits, cultural review requirements, or living-person restrictions. A hazard layer can be informative and still not be an emergency alert system [Directory Rules] [Archaeology Plan] [Fauna] [People DNA Land] [Hazards].
+
+POL is CONFIRMED as corpus-derived because nearly every domain lane contains a form of fail-closed exposure control. Archaeology denies exact site locations by default. Fauna and flora reports protect sensitive species locations and require geoprivacy transforms. People/genealogy/DNA/land materials restrict living-person and DNA-derived outputs. Settlements and roads reports highlight critical infrastructure and mobility-corridor exposure risks. Agriculture, atmosphere, soil, hydrology, and New Ideas packets emphasize source rights, consent, API keys, usage terms, and currentness checks. Hazards doctrine sharply separates KFM resilience and context support from life-safety alerting [New Ideas 5-8] [Settlements Infrastructure] [Roads Rail Trade].
+
+The governing tension is that public value often comes from specificity, but public harm can also come from specificity. KFM therefore treats public exposure as a governed state, not an automatic reward for data quality. When rights, sovereignty, cultural sensitivity, living-person data, DNA/genomic data, rare species, archaeology, critical infrastructure, or precise risk locations are unclear, the corpus favors quarantine, redaction, generalization, staged access, delayed publication, denial, or abstention.
+
+#### 6.5.2 Subcategories
+
+The first POL subcategory is rights, license, source terms, attribution, API-key, and consent review. The second is sensitive exact-location control for archaeology, rare species, cultural sites, infrastructure, and other public-safety contexts. The third is living-person, genealogy, DNA, genomics, and land-ownership restriction posture. The fourth is cultural, Indigenous, steward, landowner, and archaeological review. The fifth is geoprivacy, redaction, generalization, delayed release, transform receipts, and public-safe derivatives. The sixth is hazards and life-safety boundary control. The seventh is domain policy profiles and finite access outcomes: ALLOW, DENY, ABSTAIN, ERROR, staged access, and role-limited exposure.
+
+#### 6.5.3 Individual Idea Entries
+
+##### KFM-IDX-POL-001 — Deny-by-Default for Sensitive Exact Locations
+
+**Status and category.** CONFIRMED. Category: POL / sensitive exact-location controls. Source attribution: [Archaeology Plan] [Fauna] [Flora] [Directory Rules]. Related ideas include KFM-IDX-GOV-006, KFM-IDX-MOD-002, KFM-IDX-POL-004, KFM-IDX-POL-005, and KFM-IDX-MAP-005.
+
+**Normalized statement.** KFM should deny public exact-location exposure by default for sensitive archaeological, biological, cultural, infrastructure, and other high-risk location classes unless evidence, rights, policy, review, and release controls explicitly allow a public-safe form.
+
+**Detailed explanation and why it matters.** Exact coordinates can be a harm vector. The archaeology lane treats public exact site locations as denied by default because of looting risk, cultural sensitivity, private landowner privacy, burial or sacred-site concerns, and steward permissions. Fauna and flora lanes treat sensitive occurrence geometry similarly because nests, dens, roosts, hibernacula, rare plants, and protected species can be harmed by exposure. Infrastructure and transport lanes add another class of risk where exact facility, restriction, or dependency mapping may require staged access. This idea is not anti-map; it is a rule that the public map must be safe for the consequence of the domain.
+
+**Dependencies, tensions, and limits.** The idea depends on sensitivity classifiers, source roles, steward review, policy decisions, geoprivacy transforms, release manifests, and Evidence Drawer payloads that can explain redaction without leaking the withheld location. The tension is that exactness is often valuable for researchers and reviewers. KFM can support restricted access, generalized displays, or steward-only review, but those are separate from ordinary public exposure. The limitation is that sensitivity rules can change by jurisdiction, source terms, species, site type, or steward agreement.
+
+**Expansion directions and future work.** Future work should define a sensitive-location policy profile with required fields for sensitivity basis, public geometry class, allowed access role, transform receipt, review state, and rollback target. A first validation fixture should prove that an exact sensitive point is denied while a generalized or suppressed public-safe derivative can proceed after review.
+
+##### KFM-IDX-POL-002 — Rights and License Verification Gate
+
+**Status and category.** CONFIRMED. Category: POL / rights, source terms, license, and consent. Source attribution: [Directory Rules] [Agriculture] [Atmosphere Air] [New Ideas 5-8]. Related ideas include KFM-IDX-SRC-002, KFM-IDX-SRC-008, KFM-IDX-EVD-003, KFM-IDX-VAL-008, and KFM-IDX-APP-003.
+
+**Normalized statement.** KFM should fail closed when source rights, license terms, usage restrictions, attribution duties, API-key conditions, or consent requirements are unclear or missing.
+
+**Detailed explanation and why it matters.** The corpus repeatedly warns that availability is not permission. A dataset may be downloadable but still require attribution, written consent, API-key terms, rate limits, redistribution limits, or special release treatment. New Ideas 5-8 explicitly treats AirNow as API-key gated and Mesonet ingest as requiring posted usage-policy awareness and written consent before ingestion. Agriculture and atmosphere materials emphasize source terms, current rights, quotas, endpoint behavior, and public-release posture. Directory doctrine reinforces that source identity, rights, sensitivity, and admissibility belong to registry and policy control, not to ad hoc data use.
+
+**Dependencies, tensions, and limits.** This idea depends on SourceDescriptor fields, rights registries, source currentness checks, policy gates, source-ledger caveats, and release validators. The tension is operational convenience: source watchers and proof slices are easier to build if rights are treated as a note rather than a gate. KFM rejects that shortcut. The limitation is that static PDFs cannot certify current rights or endpoint terms, so many source-specific rights claims remain NEEDS VERIFICATION before activation.
+
+**Expansion directions and future work.** Future work should create a `RightsReviewRecord` or rights section within SourceDescriptor with license text or reference, attribution requirement, redistribution status, API/key condition, consent state, last verified date, and public-release effect. A validator should deny promotion when public release is requested with `rights_status` UNKNOWN or NOASSERTION.
+
+##### KFM-IDX-POL-003 — Living-Person, DNA, and Genomic Restriction Posture
+
+**Status and category.** CONFIRMED. Category: POL / living-person and DNA restrictions. Source attribution: [People DNA Land]. Related ideas include KFM-IDX-MOD-006, KFM-IDX-POL-002, KFM-IDX-POL-004, KFM-IDX-APP-007, and KFM-IDX-INT-007.
+
+**Normalized statement.** KFM should restrict living-person, DNA, genomic, and DNA-derived relationship or identity outputs by default, treating them as high-sensitivity assertions rather than ordinary public knowledge.
+
+**Detailed explanation and why it matters.** The people/genealogy/DNA/land lane is one of the clearest examples of evidence being insufficient for publication by itself. A relationship hypothesis, DNA match, lineage inference, person assertion, or land-ownership statement can affect privacy, family identity, living persons, legal interests, and cultural sensitivity. The corpus therefore proposes assertion-first handling, separate person assertions from canonical person records, DNA restricted by default, and evidence-bound relationship hypotheses. It also warns that assessor or tax records are not title truth and parcel geometry is not title boundary proof unless the source role and evidence support that claim.
+
+**Dependencies, tensions, and limits.** This idea depends on identity resolution controls, person/living-status treatment, consent posture, evidence-role classification, policy profiles, review state, and abstention rules. The tension is that genealogy and land history are valuable public research domains, but DNA and living-person information have higher consequence than ordinary historical place names. KFM should support historical research where evidence and release controls allow it while denying or restricting living-person and DNA-derived outputs. The limitation is that this pass does not define jurisdiction-specific privacy law or production policy; those require later legal and steward review.
+
+**Expansion directions and future work.** Future work should define a policy profile for person assertions with fields for living-person risk, DNA/genomic derivation, consent, relationship confidence, source role, public exposure class, and review authority. A first fixture should show ABSTAIN or DENY when a Focus Mode prompt asks for living-person DNA-derived identity or relationship assertions without authorized evidence and access.
+
+##### KFM-IDX-POL-004 — Cultural, Archaeological, and Steward Review Controls
+
+**Status and category.** CONFIRMED. Category: POL / cultural and steward review. Source attribution: [Archaeology Plan] [Roads Rail Trade] [People DNA Land]. Related ideas include KFM-IDX-POL-001, KFM-IDX-POL-003, KFM-IDX-MOD-006, KFM-IDX-APP-006, and KFM-IDX-APP-007.
+
+**Normalized statement.** KFM should require cultural, archaeological, Indigenous, steward, or landowner review where source material, geometry, names, routes, sites, or assertions carry cultural sensitivity or controlled-access obligations.
+
+**Detailed explanation and why it matters.** The corpus does not treat cultural sensitivity as a cosmetic disclaimer. Archaeological site data, burial or sacred-site information, oral history, treaty context, Indigenous mobility corridors, culturally significant routes, land histories, private landowner contexts, and person/genealogy assertions may require review by appropriate stewards before public exposure. Roads/rail/trade materials warn against converting oral-history, treaty, cultural, or interpretive evidence into falsely precise public geometry. Archaeology materials deny exact public locations by default and treat remote-sensing anomalies as candidate features until evidence and review support a stronger claim. People/DNA/land materials add privacy and land-interest sensitivity.
+
+**Dependencies, tensions, and limits.** This idea depends on steward registries, review records, access roles, sensitivity labels, transform receipts, and release gates. The tension is that steward review can slow publication, but bypassing it would undermine KFM's trust posture and can create real harm. The limitation is that the attached corpus does not identify actual steward agreements, tribal review protocols, or landowner permissions; those remain UNKNOWN and must be verified before operational release.
+
+**Expansion directions and future work.** Future work should define a `StewardReviewRecord` with reviewer role, review scope, allowed public geometry class, allowed narrative scope, expiry or revisit date, and correction path. Another useful artifact is a route/site geometry generalization rule that preserves interpretive value while preventing false precision and sensitive disclosure.
+
+##### KFM-IDX-POL-005 — Rare Species Geoprivacy and Transform Receipts
+
+**Status and category.** CONFIRMED. Category: POL / geoprivacy and public-safe biological derivatives. Source attribution: [Fauna] [Flora] [Habitat Fauna Thin Slice]. Related ideas include KFM-IDX-POL-001, KFM-IDX-EVD-004, KFM-IDX-VAL-002, KFM-IDX-APP-002, and KFM-IDX-MAP-005.
+
+**Normalized statement.** KFM should protect rare species and sensitive biological occurrences through geoprivacy transforms, public-safe derivatives, and transform receipts before public map or API exposure.
+
+**Detailed explanation and why it matters.** Fauna and flora reports converge on a public-safety rule: exact occurrence geometry for sensitive taxa can expose protected species and habitats to harm. Public value can still be delivered through generalized range maps, habitat summaries, suitability surfaces, redacted occurrence-derived products, or public-safe assignment explanations. The habitat-fauna thin slice is especially important because it aims to prove one published fauna occurrence habitat assignment while preserving evidence, policy, release manifest, layer manifest, Evidence Drawer payload, and Focus Mode behavior. The transform receipt is the object that records how sensitive source geometry became a public-safe representation.
+
+**Dependencies, tensions, and limits.** This idea depends on taxonomic identity, legal/conservation status, occurrence evidence, sensitivity classification, transform rules, release manifests, and policy validators. The tension is that scientific detail can require precision while public release may require generalization or suppression. KFM should not erase precision inside governed review contexts, but it should not expose that precision publicly when risk is high. The limitation is that species sensitivity and legal status require current verification and steward input.
+
+**Expansion directions and future work.** Future work should define geoprivacy transform types such as suppress, generalize to grid, generalize to watershed or county, buffer, jitter only with constraints, delayed publication, or steward-only exact access. Each transform should emit a receipt stating input class, output class, reason, policy, reviewer, and residual risk.
+
+##### KFM-IDX-POL-006 — Critical Infrastructure and Public-Safety Exposure Controls
+
+**Status and category.** CONFIRMED. Category: POL / infrastructure and public-safety controls. Source attribution: [Settlements Infrastructure] [Roads Rail Trade] [Hazards]. Related ideas include KFM-IDX-POL-001, KFM-IDX-POL-007, KFM-IDX-MOD-008, KFM-IDX-APP-006, and KFM-IDX-MAP-003.
+
+**Normalized statement.** KFM should restrict, generalize, or stage exposure of critical infrastructure, transport facilities, dependencies, restrictions, and public-safety-sensitive details when precise release could create risk.
+
+**Detailed explanation and why it matters.** Built-environment and mobility lanes expand KFM beyond environmental and historical data into systems with operational consequence. Roads, rail, depots, yards, crossings, bridges, facilities, infrastructure dependencies, service areas, condition observations, and restrictions may be important for resilience and planning, but not every precise detail belongs on a public map. Hazards materials add another public-safety boundary: KFM can support analysis, history, regulatory context, operational context, and resilience review, but it must not become an emergency alert system or expose sensitive operational details without review. Settlements/infrastructure materials similarly separate assets, networks, facilities, operators, conditions, and public-safe representations.
+
+**Dependencies, tensions, and limits.** This idea depends on infrastructure sensitivity labels, source roles, access profiles, review states, and public-safe layer manifests. The tension is that infrastructure transparency can support planning and accountability, while excessive precision can create security or misuse risk. KFM should aim for staged access and appropriate generalization rather than blanket invisibility. The limitation is that critical-infrastructure policy must be refined with actual sources, legal requirements, and steward review.
+
+**Expansion directions and future work.** Future work should define infrastructure exposure classes: public generalized, public exact allowed, restricted exact, steward-only, and denied. A first validator should deny public publication when a layer marks infrastructure sensitivity but lacks exposure class, reviewer, and transform receipt.
+
+##### KFM-IDX-POL-007 — Hazards Boundary: KFM Is Not an Emergency Alert System
+
+**Status and category.** CONFIRMED. Category: POL / hazards and life-safety limits. Source attribution: [Hazards] [ArcGIS Environmental]. Related ideas include KFM-IDX-MOD-008, KFM-IDX-SRC-006, KFM-IDX-VAL-007, KFM-IDX-INT-008, and KFM-IDX-APP-005.
+
+**Normalized statement.** KFM may provide hazard history, regulatory context, observations, resilience analysis, and evidence-backed summaries, but it must not operate as an emergency alert or life-safety instruction system.
+
+**Detailed explanation and why it matters.** The hazards lane is high value precisely because hazards are consequential. The ArcGIS environmental reference demonstrates how GIS can analyze flood hazard areas, hurricanes, wildfires, vulnerability, volcanic hazards, and climate scenarios. KFM can adapt such methods for evidence-backed historical and planning support. The Hazards blueprint, however, defines a firm boundary: operational warning feeds are contextual, freshness-bound, and not-for-life-safety. KFM should point users to official alert systems and guidance when they seek emergency action. It should not imply that a KFM map, Focus Mode answer, or watcher decision is an authoritative warning or instruction.
+
+**Dependencies, tensions, and limits.** This idea depends on hazard source-role labels, freshness status, expiry times, disclaimers, EvidenceBundle resolution, finite outcomes, and UI warnings. The tension is that users may ask urgent hazard questions, and KFM may have relevant context. KFM can answer with bounded evidence and direct users to official sources, or it can abstain or deny life-safety guidance. The limitation is that operational feeds and official alert source behavior are version-sensitive and require current verification before use.
+
+**Expansion directions and future work.** Future work should define a hazards response envelope that includes `not_emergency_alert_system`, source freshness, official-source referral, and finite outcome. A validation fixture should reject hazard outputs that omit expiry, freshness, source, and the life-safety boundary when operational context is involved.
+
+##### KFM-IDX-POL-008 — Domain Policy Profiles and Access Roles
+
+**Status and category.** PROPOSED. Category: POL / domain policy profiles and access control. Source attribution: [Directory Rules] [Hydrology] [Soil] [Agriculture]. Related ideas include KFM-IDX-POL-001, KFM-IDX-POL-002, KFM-IDX-VAL-002, KFM-IDX-MAP-001, and KFM-IDX-APP-001.
+
+**Normalized statement.** KFM should define domain policy profiles and access roles that translate general doctrine into domain-specific release, redaction, review, and denial behavior.
+
+**Detailed explanation and why it matters.** The corpus supplies shared policy doctrine, but each domain needs specific controls. Hydrology has regulatory flood context, observed water data, terrain-derived context, and public safety implications. Soil and agriculture have source terms, landcover change, Mesonet consent, crop/field-level sensitivity, and material-change watchers. Habitat, fauna, flora, archaeology, people/DNA/land, roads, settlements, hazards, and atmosphere each carry different combinations of source authority, sensitivity, rights, public consequence, and review needs. A domain policy profile would keep KFM from writing one vague policy for all domains or reinventing policies inconsistently in every lane.
+
+**Dependencies, tensions, and limits.** This idea depends on source descriptors, knowledge-character labels, sensitivity classes, access roles, review states, and validators. The tension is standardization versus domain specificity. Too much standardization hides real differences; too much domain-specific policy creates drift. The limitation is that the corpus supports the need for profiles but does not settle the final policy language, access roles, or enforcement stack.
+
+**Expansion directions and future work.** Future work should create a profile template with domain, source roles, knowledge characters, public-safe classes, restricted classes, required reviews, required receipts, denial conditions, and rollback expectations. Suggested pilot profiles are hydrology proof lane, habitat-fauna, archaeology, people/DNA/land, hazards, and agriculture/CDL/PLANTS watchers.
+
+
+### 6.6 VAL — Validation, QA, Observability, and Release Discipline
+
+#### 6.6.1 Category Overview
+
+VAL is the category that keeps the corpus from becoming only doctrine and design language. It asks how KFM knows that a source descriptor parses, a sidecar recomputes, a rights gate fails closed, a PMTiles artifact has the expected digest, a watcher event is only proposing work, a model output has citations, a schema path has not drifted, and a public release has a rollback target. The corpus repeatedly treats validation as part of truth rather than a late engineering step. Validation is not merely test coverage; it is the operational expression of KFM's evidence-first, fail-closed, policy-aware posture.
+
+The category is CONFIRMED as a corpus-derived implementation pressure. It is supported by the Greenfield plan's validation and CI gates, the Pipeline manual's query-save-validate-compile-review-promote-recompile loop, the domain blueprints' fixture-first PR sequences, New Ideas 5-8's source-health probes, New Ideas 5-10's PMTiles attestation validator concept, and New Ideas 5-15's material-change watcher gates. VAL also carries the repeated no-mounted-repo boundary: until current repo files, tests, workflows, dashboards, logs, and receipts are inspected, implementation maturity remains UNKNOWN.
+
+VAL sits after GOV, SRC, EVD, MOD, and POL in dependency order. It validates the objects those categories define. It also protects MAP, INT, and APP from premature public exposure. In KFM, a successful validator does not make a claim true by itself, but a failed validator should block release, force quarantine, deny output, or create a verification backlog item. That asymmetry is deliberate.
+
+#### 6.6.2 Subcategories
+
+The first VAL subcategory is no-network fixture-first validation, which proves schema, policy, and receipt behavior before live connectors. The second is fail-closed validator behavior across schema, policy, rights, sensitivity, evidence, catalog, and release gates. The third is CI probes and source-head recording for operational sources. The fourth is material-change validation for sidecars and proposed work records. The fifth is map artifact attestation validation, especially PMTiles sidecars. The sixth is drift detection across schemas, contracts, policies, directories, and documentation. The seventh is finite outcomes and observability records. The eighth is currentness and rights reverification backlog management.
+
+#### 6.6.3 Individual Idea Entries
+
+##### KFM-IDX-VAL-001 — No-Network Fixture-First Validation
+
+**Status and category.** CONFIRMED. Category: VAL / fixture-first proof. Source attribution: [Hydrology] [Pass 19] [Habitat Fauna Thin Slice]. Related ideas include KFM-IDX-SRC-001, KFM-IDX-EVD-002, KFM-IDX-APP-001, and KFM-IDX-APP-002.
+
+**Normalized statement.** KFM should prove new lanes and trust objects with no-network fixtures before activating live connectors, public release, UI binding, or model interpretation.
+
+**Detailed explanation and why it matters.** Many domain reports converge on the same implementation sequence: begin with source registries, schemas, validators, fixtures, policy gates, receipts, and dry-run promotion rather than live harvesting. Hydrology is repeatedly identified as a good proof lane because it can model source roles, observations, regulatory layers, catalog closure, and map delivery without immediately touching the highest sensitivity domains. The habitat-fauna thin slice similarly asks for one controlled public-safe occurrence assignment rather than broad biodiversity ingestion. No-network fixtures let KFM test trust behavior deterministically. They also prevent early source outages, credentials, rights confusion, or endpoint drift from hiding schema and policy defects.
+
+**Dependencies, tensions, and limits.** This idea depends on representative fixture design, schema validators, policy fixtures, and receipt examples. Its tension is realism: fixtures are safe but can be too narrow. KFM should therefore design fixtures to cover positive, negative, denied, abstained, and ambiguous cases. The limitation is that passing fixture tests does not prove operational source behavior.
+
+**Expansion directions and future work.** Future work should define a fixture taxonomy for each thin slice: valid fixture, rights-denied fixture, sensitivity-denied fixture, stale-source fixture, unresolved-EvidenceRef fixture, and rollback fixture. Suggested first artifact is a cross-lane no-network test pack for hydrology, habitat-fauna, PMTiles attestation, and governed AI.
+
+##### KFM-IDX-VAL-002 — Validators Fail Closed on Schema, Policy, Rights, Sensitivity, and Release Violations
+
+**Status and category.** CONFIRMED. Category: VAL / fail-closed gates. Source attribution: [Greenfield Building Plan] [New Ideas 5-10] [Archaeology Plan] [Fauna]. Related ideas include KFM-IDX-POL-001, KFM-IDX-POL-002, KFM-IDX-EVD-008, and KFM-IDX-MAP-008.
+
+**Normalized statement.** KFM validators should fail closed when required schema fields, policy decisions, rights evidence, sensitivity posture, proof objects, or release state are missing or invalid.
+
+**Detailed explanation and why it matters.** The fail-closed posture appears across doctrine and domain reports. Archaeology and fauna deny exact sensitive locations by default. New Ideas 5-10 denies publication when PMTiles sidecars, signatures, root hashes, patch base hashes, or proof references are missing. The Greenfield plan treats publication as a gated state transition. A validator that merely warns while letting public release continue would contradict this posture. Fail-closed validation turns uncertainty into controlled denial, quarantine, abstention, or error rather than public exposure.
+
+**Dependencies, tensions, and limits.** This idea depends on explicit required fields and finite failure outcomes. It also depends on implementers resisting the temptation to bypass gates for convenience. The tension is operational productivity: fail-closed systems can block work when evidence is incomplete. KFM should make failure reasons precise and remediable rather than weakening the gates.
+
+**Expansion directions and future work.** Future work should create a shared `ValidationReport` shape with status, failed gates, reasons, evidence references, remediation hints, and release impact. A useful first artifact is a validator matrix showing which missing fields cause ABSTAIN, DENY, ERROR, QUARANTINE, or NEEDS VERIFICATION.
+
+##### KFM-IDX-VAL-003 — CI Probes with Source Heads and Run Receipts
+
+**Status and category.** PROPOSED. Category: VAL / operational probes and observability. Source attribution: [New Ideas 5-8] [Pipeline Manual]. Related ideas include KFM-IDX-SRC-007, KFM-IDX-EVD-004, KFM-IDX-APP-003, and KFM-IDX-VAL-008.
+
+**Normalized statement.** KFM should use CI probes that record source heads, source response metadata, run receipts, finite decisions, and policy outcomes for operationally watched feeds.
+
+**Detailed explanation and why it matters.** New Ideas 5-8 translates source monitoring into an auditable pattern: HEAD/If-None-Match checks, ETag and Last-Modified capture, recency windows, source-specific probes, policy IDs, source license or contact evidence, and signed run receipts. The Pipeline manual supplies the broader loop architecture. CI probes are not merely uptime checks. They are evidence-producing checks that help determine whether a source has changed, gone stale, violated expectations, or requires proposed work. For KFM, the important point is that source health and tile health become recorded events rather than informal observations.
+
+**Dependencies, tensions, and limits.** This idea depends on source descriptors, rights state, expected cadence, threshold policy, receipts, and CI configuration. It is PROPOSED because the corpus provides the pattern but this pass does not verify any live CI implementation. The tension is that operational probes can themselves become brittle if external services change. KFM should keep probe failures as evidence of a condition to review, not automatic public truth.
+
+**Expansion directions and future work.** Future work should build a no-network mock probe harness before live source checks. The first artifact could be a `SourceProbeReceipt` fixture with SMAP, MAIAC, FIRMS, AirNow, and Mesonet examples marked as simulated, not live.
+
+##### KFM-IDX-VAL-004 — Material-Change Watcher Validation
+
+**Status and category.** PROPOSED. Category: VAL / material-change gates. Source attribution: [New Ideas 5-15] [Agriculture]. Related ideas include KFM-IDX-SRC-006, KFM-IDX-EVD-005, KFM-IDX-APP-004, and KFM-IDX-POL-002.
+
+**Normalized statement.** Material-change watchers should validate sidecars, source heads, thresholds, class histograms, spec_hash recomputation, and outbox records before proposing reprocessing.
+
+**Detailed explanation and why it matters.** New Ideas 5-15 provides a concrete watcher pattern for USDA CDL and PLANTS county packages. The watcher should compare ETag and Last-Modified values, recompute a stable spec_hash from canonical JSON, compare county class histograms, apply relative and absolute materiality thresholds, and emit a PROPOSED work record only when the change matters. Agriculture and soil reports provide the domain motivation: landcover, crop, plant, and soil layers can change, but KFM should avoid noisy reruns and should not publish automatically.
+
+**Dependencies, tensions, and limits.** This idea depends on sidecar schemas, threshold policy, county geometry area, classmap versioning, source rights, and safe outbox handling. It is PROPOSED because implementation and live source checks remain unverified. The tension is threshold choice: a threshold that is too sensitive creates churn; a threshold that is too coarse hides material change. KFM should document thresholds as policy choices, not scientific absolutes.
+
+**Expansion directions and future work.** Future work should create material-change validator fixtures with unchanged, nonmaterial, material, missing-source-head, and bad-spec_hash cases. A first artifact could be a CDL county sidecar schema and a proposed-work-record schema with denial of direct publication.
+
+##### KFM-IDX-VAL-005 — PMTiles Attestation Validator
+
+**Status and category.** PROPOSED. Category: VAL / map artifact integrity validation. Source attribution: [New Ideas 5-10] [Master MapLibre Atlas]. Related ideas include KFM-IDX-EVD-007, KFM-IDX-MAP-004, KFM-IDX-MAP-008, and KFM-IDX-EVD-006.
+
+**Normalized statement.** KFM should validate PMTiles sidecars, root hashes, spec hashes, byte-range manifests, proof references, patch base hashes, signatures, and release references before exposing PMTiles artifacts publicly.
+
+**Detailed explanation and why it matters.** PMTiles gives KFM a practical static map artifact format, but static delivery is not automatically governed delivery. New Ideas 5-10 identifies why validation matters: in-place overwrites, cache and Range quirks, client differences, and missing delta semantics can produce stale or unsafe public maps. A PMTiles attestation validator would check sidecar schema, full-file root hash, range hashes, Bao proof references where present, patch metadata, provenance references, signature state, and whether the artifact appears in release/cataloig records. The Master MapLibre atlas generalizes this into map artifact proof and manifest discipline.
+
+**Dependencies, tensions, and limits.** This idea depends on deterministic PMTiles builds, sidecar generation, proof strategy, validator tooling, release manifests, and client verification expectations. It is PROPOSED because no current validator is confirmed. The tension is implementation depth: exhaustive range proof validation may be heavy for a first pass. KFM can start with schema, root hash, selected range, and release-reference checks.
+
+**Expansion directions and future work.** The first artifact should be a tiny PMTiles sidecar validator with valid and invalid fixtures. Later work can add Bao proof validation, DSSE/cosign verification, OCI referrer checks, and client-side verification examples.
+
+##### KFM-IDX-VAL-006 — Schema, Contract, Policy, and Directory Drift Detection
+
+**Status and category.** CONFIRMED. Category: VAL / drift detection and governance conformance. Source attribution: [Directory Rules] [Pipeline Manual] [Pass 19]. Related ideas include KFM-IDX-GOV-003, KFM-IDX-GOV-005, KFM-IDX-EVD-003, and KFM-IDX-MAP-005.
+
+**Normalized statement.** KFM should detect and record drift across schema homes, contract homes, policy homes, directory placement, source registries, release artifacts, and documentation authority.
+
+**Detailed explanation and why it matters.** Directory Rules states that when the mounted repo conflicts with placement doctrine, the conflict should be recorded in a drift register rather than silently treated as canon. The Pipeline manual and Pass 19 echo the same risk in broader terms: as KFM grows, authority collisions can emerge between docs, contracts, schemas, policies, source registries, proofs, and release objects. Drift detection is therefore a validation category, not only a documentation habit. A repo can pass ordinary tests while still creating a parallel schema home or policy home that weakens governance.
+
+**Dependencies, tensions, and limits.** This idea depends on canonical roots, ADRs, per-root README files, source registries, and current repo scans. Its tension is that actual repo state may legitimately differ from earlier doctrine. KFM should handle that through ADRs and migration notes rather than pretending the conflict does not exist. The limitation is that this pass did not inspect a live repo.
+
+**Expansion directions and future work.** Future work should create a drift-detection checklist that can be run during implementation planning: roots present, schema home, policy home, source registry, proof/receipt/release separation, lifecycle folders, docs authority, and compatibility roots. The first artifact could be a `DRIFT_REGISTER` example entry for schema-home ambiguity.
+
+##### KFM-IDX-VAL-007 — Finite Failure Outcomes and Observability Records
+
+**Status and category.** CONFIRMED. Category: VAL / finite outcomes and observability. Source attribution: [Ollama Ubuntu] [Governed AI Ledger] [New Ideas 5-8]. Related ideas include KFM-IDX-GOV-002, KFM-IDX-EVD-004, KFM-IDX-INT-007, and KFM-IDX-MAP-006.
+
+**Normalized statement.** KFM should use finite outcomes such as ANSWER, ABSTAIN, DENY, and ERROR, with observability records that explain the reason and evidence boundary.
+
+**Detailed explanation and why it matters.** The Ollama and governed-AI reports make finite outcomes central to model integration, but the pattern applies beyond AI. A source probe can fail, a policy can deny, an EvidenceRef can be unresolved, a validator can error, a rights gate can block release, and a public request can abstain. Finite outcomes keep negative states from becoming ambiguous. They also protect the UI: a map popup, Focus Mode response, Evidence Drawer, or review console should show whether a system declined because evidence was missing, policy denied exposure, validation failed, or an internal error occurred.
+
+**Dependencies, tensions, and limits.** This idea depends on structured runtime envelopes, validation reports, receipts, and UI state design. The tension is user experience: negative outcomes can feel frustrating. KFM should treat them as trust-visible safety states rather than hiding them or replacing them with generic text. The limitation is that finite labels must be accompanied by reasons; labels without reason fields become opaque.
+
+**Expansion directions and future work.** Future work should define a shared `OutcomeEnvelope` or align existing envelopes so API, Focus Mode, validators, and watchers use consistent negative states. Suggested first artifact is a set of examples where similar user-facing requests produce ANSWER, ABSTAIN, DENY, and ERROR for different evidence and policy reasons.
+
+##### KFM-IDX-VAL-008 — External Source Currentness and Rights Reverification Backlog
+
+**Status and category.** NEEDS VERIFICATION. Category: VAL / verification backlog. Source attribution: [New Ideas 5-8] [New Ideas 5-10] [New Ideas 5-15] [Pass 19]. Related ideas include KFM-IDX-SRC-008, KFM-IDX-POL-002, KFM-IDX-EVD-003, and KFM-IDX-APP-003.
+
+**Normalized statement.** KFM needs a maintained backlog for rechecking external source currentness, package versions, endpoint behavior, rights, source terms, tool status, and operational assumptions.
+
+**Detailed explanation and why it matters.** The New Ideas packets are rich with operational proposals, but they also show why a static dossier cannot certify current facts. Data platforms, PMTiles tooling, feed status, Earth observation products, MapLibre releases, AirNow keys, Mesonet policy, CDL packages, PLANTS package behavior, and source endpoint metadata can change. Pass 19 explicitly marks implementation and current external facts as unresolved without current checks. A verification backlog turns that uncertainty into managed work rather than hidden risk.
+
+**Dependencies, tensions, and limits.** This idea depends on source ledgers, owner assignments, review cadence, release impact labels, and fail-closed behavior when verification is stale. It is labeled NEEDS VERIFICATION because the backlog items are checkable but not checked in this pass. The tension is workload: currentness checking can become endless. KFM should prioritize by release consequence and source volatility.
+
+**Expansion directions and future work.** Future work should create a `VerificationBacklog` table with item, source, risk, last verified, required evidence, owner, release impact, and next action. The first artifact could focus on five high-signal items: Mesonet consent, PMTiles toolchain version, MapLibre target version, CDL source package status, and AirNow API access terms.
+
+
+### 6.7 MAP — Governed API, Map Artifacts, UI, and Renderer Boundaries
+
+#### 6.7.1 Category Overview
+
+MAP is a central delivery category. It is where KFM becomes usable as a map-first system, but only after the trust path has already constrained what can be rendered, queried, explained, or interpreted. The category joins four source families: Web API design, MapLibre operating doctrine, Master MapLibre atlas artifact governance, and whole-UI/governed-AI planning. The result is a disciplined boundary: public clients and normal UI surfaces use governed APIs, released artifacts, catalog records, tile services, EvidenceBundle resolution, and release manifests. They do not read RAW, WORK, QUARANTINE, canonical stores, unpublished candidates, direct model output, or unreviewed source feeds.
+
+MAP is CONFIRMED as a corpus-derived category, but many of its implementation details remain PROPOSED or UNKNOWN. The corpus confirms MapLibre's role as a disciplined 2D renderer and interaction runtime, not a truth store. It confirms the importance of Evidence Drawer and Focus Mode as trust-visible surfaces. It confirms that API design should use contracts, resource ontology, HTTP semantics, and developer-readable documentation. It also proposes deeper artifact governance through LayerManifest, StyleManifest, TileArtifactManifest, MapReleaseManifest, PMTiles attestation, STAC/DCAT/PROV mappings, and client-side verification. This chapter normalizes those ideas without claiming that current repo routes or UI components exist.
+
+The key MAP rule is that rendering is downstream of trust. A beautiful map can still be wrong, unsafe, stale, or unsupported. A governed map is not merely a layer stack; it is a claim surface with evidence, policy, validation, release, correction, and rollback state visible enough to support responsible use.
+
+#### 6.7.2 Subcategories
+
+The first MAP subcategory is governed API as trust membrane. The second is resource ontology and HTTP contract design. The third is renderer boundary, with MapLibre as downstream 2D shell. The fourth is map artifact family: PMTiles, COGs, GeoParquet, MVT/MLT, TileJSON, styles, and derived public products. The fifth is manifest discipline: layer, style, tile artifact, and map release manifests. The sixth is Evidence Drawer and Focus Mode as trust-visible UI. The seventh is Story Nodes and review surfaces. The eighth is client or CI verification of released map artifacts.
+
+#### 6.7.3 Individual Idea Entries
+
+##### KFM-IDX-MAP-001 — Governed API as Trust Membrane
+
+**Status and category.** CONFIRMED. Category: MAP / API boundary and trust membrane. Source attribution: [Web APIs] [Whole UI AI] [Governed AI Ledger] [MapLibre Operating Manual]. Related ideas include KFM-IDX-GOV-006, KFM-IDX-EVD-002, KFM-IDX-POL-008, and KFM-IDX-INT-007.
+
+**Normalized statement.** KFM's governed API should act as the trust membrane between public clients and evidence, policy, release, model, map, and catalog systems.
+
+**Detailed explanation and why it matters.** The Web APIs reference frames APIs as contracts between software and developers. KFM extends that concept into governance. The governed API is not merely a data access layer; it is where EvidenceRef resolution, policy posture, release state, review state, finite outcomes, and citation validation can be enforced before a public UI or model surface responds. The Whole UI/AI and MapLibre manuals repeatedly reject direct public access to canonical stores, unpublished candidate data, raw model output, or internal lifecycle directories. A governed API lets KFM provide useful public behavior while preserving the trust membrane.
+
+**Dependencies, tensions, and limits.** This idea depends on contracts, DTOs, evidence resolution, policy checks, release manifests, and negative outcomes. The tension is developer convenience: direct data access is often faster to build. KFM should favor governed interfaces even in early slices, using fixtures and mock APIs when necessary. The limitation is that this pass does not verify current route names, frameworks, or implementation maturity.
+
+**Expansion directions and future work.** Future work should define the smallest governed API fixture for a clicked map feature resolving to EvidenceBundle, Evidence Drawer payload, and finite Focus Mode outcome. Suggested first artifact is a mock governed API contract with no direct source or model access.
+
+##### KFM-IDX-MAP-002 — Resource Ontology and HTTP Contract Discipline
+
+**Status and category.** CONFIRMED. Category: MAP / API design and resource contracts. Source attribution: [Web APIs] [Pass 18]. Related ideas include KFM-IDX-MAP-001, KFM-IDX-MOD-005, KFM-IDX-VAL-006, and KFM-IDX-EVD-008.
+
+**Normalized statement.** KFM APIs should be designed around explicit resources, lifecycles, relationships, HTTP semantics, response codes, documentation, and prototypes rather than ad hoc endpoints.
+
+**Detailed explanation and why it matters.** The Web APIs reference emphasizes design-first API work: resource ontology, URLs through relationships, HTTP verbs mapped to lifecycle actions, response codes, documentation, prototyping, and developer experience. Pass 18 integrates API design into KFM's governed architecture. For KFM, resource ontology is a trust issue because resources such as SourceDescriptor, EvidenceBundle, DecisionEnvelope, ReleaseManifest, LayerManifest, Claim, Review, Correction, and Receipt have different roles. If an API flattens them into generic layer or answer endpoints, users and developers lose the distinctions that make KFM auditable.
+
+**Dependencies, tensions, and limits.** This idea depends on MOD bounded contexts and EVD object-family separation. The tension is that KFM has many object families, and not all need public resources. The API should expose governed public resources and review resources without making internal lifecycle stores public. The limitation is current implementation evidence: route names and DTOs remain UNKNOWN until repo inspection.
+
+**Expansion directions and future work.** Future work should create a resource ontology map showing public, restricted, internal, and derived resources. A suggested first artifact is an OpenAPI-like contract for evidence resolution, layer metadata, and finite Focus Mode responses.
+
+##### KFM-IDX-MAP-003 — MapLibre as Downstream 2D Renderer
+
+**Status and category.** CONFIRMED. Category: MAP / renderer boundary. Source attribution: [MapLibre Operating Manual] [Master MapLibre Atlas]. Related ideas include KFM-IDX-GOV-006, KFM-IDX-MOD-001, KFM-IDX-EVD-001, and KFM-IDX-INT-001.
+
+**Normalized statement.** MapLibre should serve as KFM's disciplined downstream 2D renderer and interaction runtime, not as a canonical store, policy authority, citation authority, release authority, or AI authority.
+
+**Detailed explanation and why it matters.** The MapLibre operating manual states the rule directly: the renderer is downstream of trust, never upstream of it. The Master MapLibre atlas extends the same rule across tiles, styles, PMTiles, MVT/MLT, COGs, popups, Story Nodes, 3D scenes, graph projections, and AI answers. MapLibre can render released artifacts, manage camera and interaction state, let users select features, and return context to governed services. It cannot decide what is true, safe, current, reviewed, or publishable. This distinction is essential because map libraries are powerful enough to make any layer look authoritative.
+
+**Dependencies, tensions, and limits.** This idea depends on governed APIs, layer manifests, public-safe artifact generation, Evidence Drawer integration, and release state. The tension is that MapLibre UI implementation may be the most visible part of KFM, while the trust machinery is less visible. The system should make trust state visible in the map shell without letting the shell become the truth source.
+
+**Expansion directions and future work.** Future work should define MapLibre adapter boundaries: what data the renderer may receive, what events it may emit, what it must never fetch, and how it displays stale, denied, restricted, or unresolved states. A first artifact could be a layer-click proof where MapLibre only sends a feature candidate to the governed API.
+
+##### KFM-IDX-MAP-004 — Tiles, PMTiles, COGs, GeoParquet, and MVT/MLT as Rebuildable Artifacts
+
+**Status and category.** CONFIRMED. Category: MAP / map artifact family. Source attribution: [Master MapLibre Atlas] [MapLibre Operating Manual] [New Ideas 5-10]. Related ideas include KFM-IDX-EVD-007, KFM-IDX-VAL-005, KFM-IDX-MOD-007, and KFM-IDX-MAP-008.
+
+**Normalized statement.** Tiles, PMTiles, COGs, GeoParquet files, MVT/MLT tiles, style JSON, and related map products should be treated as rebuildable artifacts rather than canonical truth.
+
+**Detailed explanation and why it matters.** The Master MapLibre atlas repeatedly identifies map artifacts as downstream carriers. New Ideas 5-10 adds operational detail for PMTiles: single-file HTTP Range archives are efficient, but they need versioned filenames, sidecars, root hashes, range proofs, and cache-aware release behavior. The MapLibre manual separates renderer, style, tile strategy, delivery, evidence, and AI. Together, these sources make a durable point: KFM can use modern map artifact formats aggressively, but those artifacts must remain reproducible derivatives of evidence, catalog, policy, and release decisions.
+
+**Dependencies, tensions, and limits.** This idea depends on deterministic build inputs, artifact manifests, catalog records, receipts, and validators. The tension is performance: static artifacts are appealing because they are fast and scalable, but performance does not confer authority. The limitation is that different artifact formats need different validation and metadata.
+
+**Expansion directions and future work.** Future work should create an artifact registry that lists each format, allowed use, required provenance, required validation, cache behavior, and release class. A first artifact could be a PMTiles plus STAC/DCAT/PROV fixture tied to a MapReleaseManifest.
+
+##### KFM-IDX-MAP-005 — Layer, Style, TileArtifact, and MapRelease Manifests
+
+**Status and category.** PROPOSED. Category: MAP / manifest discipline. Source attribution: [Master MapLibre Atlas] [MapLibre Operating Manual]. Related ideas include KFM-IDX-EVD-008, KFM-IDX-VAL-006, KFM-IDX-MAP-004, and KFM-IDX-MAP-008.
+
+**Normalized statement.** KFM should use manifests for layers, styles, tile artifacts, and map releases so map delivery is traceable, validated, and reversible.
+
+**Detailed explanation and why it matters.** The MapLibre atlas contains a repeated object vocabulary around LayerManifest, StyleManifest, TileArtifactManifest, and MapReleaseManifest. The MapLibre manual also calls for contract surfaces and object-family mapping. Manifests are useful because they prevent a public map from being assembled out of undocumented URLs, hand-coded style snippets, or stale layer assumptions. A layer manifest can record source role, evidence reference, geometry type, policy label, allowed zoom, freshness, and limitations. A tile artifact manifest can record input digest, build tool, version, flags, output hash, and catalog references. A map release manifest can tie together the public map state and rollback target.
+
+**Dependencies, tensions, and limits.** This idea depends on stable schemas, validators, release discipline, and UI integration. It is PROPOSED because the corpus supplies the pattern but not current implementation proof. The tension is manifest sprawl. KFM should keep manifests distinct but linked, with minimum required fields per release class.
+
+**Expansion directions and future work.** Future work should create a minimal manifest wave for one proof lane. Suggested first artifact is a hydrology LayerManifest, TileArtifactManifest, and MapReleaseManifest with validation fixtures and a rollback example.
+
+##### KFM-IDX-MAP-006 — Evidence Drawer and Focus Mode as Trust-Visible Surfaces
+
+**Status and category.** CONFIRMED. Category: MAP / trust-visible UI. Source attribution: [MapLibre Operating Manual] [Whole UI AI] [Ollama Ubuntu]. Related ideas include KFM-IDX-EVD-001, KFM-IDX-EVD-002, KFM-IDX-INT-007, and KFM-IDX-VAL-007.
+
+**Normalized statement.** Evidence Drawer and Focus Mode should expose evidence, policy, review, release, citation, and finite-outcome state rather than acting as ordinary popups or unconstrained chat.
+
+**Detailed explanation and why it matters.** The MapLibre and Whole UI/AI reports treat the UI as part of KFM's trust model. Evidence Drawer is the surface where users inspect support, source role, policy posture, limitations, and release state. Focus Mode is an interpretive surface that can synthesize only over admissible released evidence and should return finite outcomes such as ANSWER, ABSTAIN, DENY, or ERROR. The Ollama guide reinforces that local or private model runtimes belong behind governed APIs after evidence and policy checks. These surfaces make KFM usable without hiding the evidence chain.
+
+**Dependencies, tensions, and limits.** This idea depends on EvidenceBundle resolution, runtime envelopes, citation validation, policy decisions, and UI state design. The tension is that users may expect a simple chatbot or popup. KFM should make the trust controls natural rather than optional. The limitation is that exact component names and app paths remain UNKNOWN without repo inspection.
+
+**Expansion directions and future work.** Future work should define a shared Evidence Drawer payload contract and Focus Mode response envelope. The first artifact could be a mock layer click that opens a drawer and produces an abstaining Focus Mode answer when evidence is insufficient.
+
+##### KFM-IDX-MAP-007 — Story Nodes and Review Surfaces
+
+**Status and category.** PROPOSED. Category: MAP / narrative and review UI. Source attribution: [Whole UI AI] [Master MapLibre Atlas]. Related ideas include KFM-IDX-MAP-006, KFM-IDX-POL-004, KFM-IDX-INT-008, and KFM-IDX-APP-007.
+
+**Normalized statement.** Story Nodes and review surfaces should present narrative, map, evidence, sensitivity, and correction context through governed payloads rather than unreviewed storytelling or direct source access.
+
+**Detailed explanation and why it matters.** KFM's corpus includes public-facing ambitions: map-first exploration, story panels, review consoles, planning support, and evidence-rich explanation. The Whole UI/AI report proposes StoryManifest, review console, and persistent shell concepts. The MapLibre atlas adds Story Node governance and historic overlay ideas. These are valuable because not all KFM users will inspect raw evidence objects; some will learn through guided narratives. But narrative is risky if it outruns evidence, hides uncertainty, or exposes sensitive material. Story Nodes should therefore be release-aware, evidence-bound, policy-filtered, and correction-friendly.
+
+**Dependencies, tensions, and limits.** This idea depends on EvidenceBundle resolution, release manifests, UI contracts, sensitivity rules, and review workflows. It is PROPOSED because the corpus does not verify implemented Story Node or review surfaces. The tension is editorial: a story may want coherence while evidence may be partial or contested. KFM should preserve tensions rather than flatten them.
+
+**Expansion directions and future work.** Future work should create a Story Node fixture with map viewport, layer references, evidence references, narrative text, policy labels, review state, and correction link. Good pilots include historic corridors, public-safe archaeology, hydrology proof, or habitat-fauna assignment.
+
+##### KFM-IDX-MAP-008 — Client Verification of Released Map Artifacts
+
+**Status and category.** PROPOSED. Category: MAP / artifact verification at consumption boundary. Source attribution: [New Ideas 5-10] [Master MapLibre Atlas]. Related ideas include KFM-IDX-EVD-006, KFM-IDX-EVD-007, KFM-IDX-VAL-005, and KFM-IDX-MAP-004.
+
+**Normalized statement.** KFM should support client or prefetch verification of released map artifacts using manifests, hashes, signatures, sidecars, and proof references where the release class justifies it.
+
+**Detailed explanation and why it matters.** New Ideas 5-10 proposes a client verification flow for PMTiles: fetch the sidecar, verify its signature, locate the byte range for a tile, fetch tile bytes and proof, verify against root_hash, then decode. The Master MapLibre atlas generalizes this into a broader artifact verification posture. KFM does not need every public user to understand these mechanics, but the system benefits when CI, prefetchers, clients, or review tools can detect stale, swapped, unsigned, or mismatched artifacts. This becomes especially important when static artifacts are served through CDNs or object storage.
+
+**Dependencies, tensions, and limits.** This idea depends on sidecar schemas, proof generation, release manifests, trusted keys, hosting behavior, and performance budgets. It is PROPOSED because implementation is unverified. The tension is cost: client-side verification can add latency and complexity. KFM should allow graduated verification: CI-only at first, prefetch verification for review, and client verification for high-risk release classes.
+
+**Expansion directions and future work.** Future work should define verification modes by release class: no public artifact, CI digest only, prefetch digest, signed sidecar, selected byte-range proof, and full byte-range proof. A first artifact is a small PMTiles fixture with a documented verification script.
+
+
+### 6.8 INT — Analysis, AI, Interpretation, and Planning Support
+
+#### 6.8.1 Category Overview
+
+INT is a supporting and interpretive category. It gathers analysis, machine learning, AI synthesis, field and remote-sensing interpretation, planning scenarios, indicators, and decision-support methods. The corpus does not reject analysis. It rejects unbounded interpretation presented as truth. Spatial analysis can reveal patterns, indicators can support planning, models can classify or predict, remote sensing can identify candidates, and AI can help synthesize evidence. In KFM, however, all of those outputs remain downstream of source roles, evidence resolution, representation choices, policy, validation, release state, and correction paths.
+
+The category is CONFIRMED as corpus-derived. The GIS primer frames analysis as a way of understanding the world through geographic representation. The environmental ArcGIS text demonstrates applied hazard, vulnerability, climate, water, wildfire, field, and environmental workflows. The urban GIS text emphasizes planning support, collaborative planning, quality-of-life indicators, transport scenarios, social learning, equity, and resilience. The AI Python reference supplies AI/ML concepts and warnings about data, workflow, algorithms, and limitations. The Ollama and governed-AI reports turn those ideas into KFM-specific constraints: the model is a replaceable interpretive runtime behind governed APIs, not a truth source. Archaeological 3D GIS shows that field and 3D capture require interpretive humility.
+
+INT is also where KFM prevents the most seductive failure mode: a sophisticated analysis, visually persuasive map, or fluent AI answer can feel more certain than its evidence permits. This category therefore keeps assumptions, uncertainty, data lineage, model limits, and citation validation in view.
+
+#### 6.8.2 Subcategories
+
+The first INT subcategory is spatial analysis as bounded interpretation. The second is indicators, statistics, and planning support, where assumptions and stakeholder context must be declared. The third is AI and machine learning, including model workflows, training data, evaluation, derivative outputs, and AI receipts. The fourth is field capture and remote sensing, which can produce candidate evidence but not automatically confirmed claims. The fifth is dimensional interpretation, especially 2.5D versus 3D. The sixth is web scraping and feed acquisition as drift-prone interpretation work. The seventh is bounded RAG and Focus Mode synthesis with citation validation. The eighth is participatory, equity, resilience, and scenario decision support.
+
+#### 6.8.3 Individual Idea Entries
+
+##### KFM-IDX-INT-001 — Spatial Analysis as Interpretation, Not Root Truth
+
+**Status and category.** CONFIRMED. Category: INT / spatial analysis. Source attribution: [GIS Primer] [ArcGIS Environmental] [Pass 18]. Related ideas include KFM-IDX-MOD-001, KFM-IDX-MOD-002, KFM-IDX-EVD-001, and KFM-IDX-MAP-003.
+
+**Normalized statement.** Spatial analysis in KFM should be treated as interpretation over represented evidence, not as root truth or self-validating output.
+
+**Detailed explanation and why it matters.** GIS analysis can answer important questions about hazard exposure, environmental conditions, resource context, spatial relationships, vulnerability, landcover, movement, and settlement patterns. The environmental ArcGIS exercises demonstrate useful workflows such as flood hazard analysis, hurricane impacts, wildfire extent, social vulnerability, volcanic hazards, water resources, climate scenarios, and field data collection. KFM can adapt these patterns, but it must keep the analytical result tied to source roles, data model, assumptions, scale, time, and evidence. A buffer, overlay, enrichment, classification, zonal statistic, or hotspot result is not a new sovereign fact; it is an interpretation produced under assumptions.
+
+**Dependencies, tensions, and limits.** This idea depends on MOD representation rules, EVD evidence objects, VAL validation, and MAP trust-visible outputs. The tension is that analysis is often the reason users come to KFM. The system should not bury analysis under bureaucracy, but it should prevent unsupported interpretations from looking authoritative. The limitation is that general GIS methods from textbooks require KFM-specific acceptance criteria before publication.
+
+**Expansion directions and future work.** Future work should define an `AnalysisResult` profile with source inputs, method, assumptions, spatial/temporal scope, uncertainty, validation result, and release state. A first artifact could be an environmental hazard or habitat overlay that displays both result and methodological limitations in Evidence Drawer.
+
+##### KFM-IDX-INT-002 — Indicators and Planning Support Need Declared Assumptions
+
+**Status and category.** CONFIRMED. Category: INT / indicators and planning support. Source attribution: [Urban GIS] [Pass 18]. Related ideas include KFM-IDX-INT-008, KFM-IDX-MOD-008, KFM-IDX-APP-008, and KFM-IDX-EVD-002.
+
+**Normalized statement.** KFM indicators and planning-support outputs should declare assumptions, source choices, weighting, scale, uncertainty, equity relevance, and decision context.
+
+**Detailed explanation and why it matters.** The urban planning GIS source is rich with planning support: scenario analysis for low-carbon transport, collaborative planning, environmental quality under multiple deprivation, walking and built environment, social learning, public-space interaction, urban quality of life, travel perception, qualitative GIS, street quality, growth modeling, multiple-criteria cycle-route design, resettlement dynamics, transit-oriented development, water-supply preferences, flood-risk growth impacts, VGI for evacuation shelters, and equitable resettlement. These are not simple data lookups. They are decision-support structures that depend on social, political, methodological, and spatial assumptions. KFM should preserve those assumptions rather than presenting an index or scenario as objective truth.
+
+**Dependencies, tensions, and limits.** This idea depends on source ledgers, MOD scale/representation, POL equity and public-safety considerations, VAL methodology checks, and UI explanation surfaces. The tension is that indicators are useful because they compress complexity, while compression can hide normative choices. The limitation is that KFM cannot automatically settle planning values; it can expose assumptions and evidence.
+
+**Expansion directions and future work.** Future work should define an `IndicatorDefinition` or `ScenarioDefinition` template with inputs, weights, assumptions, stakeholders, intended use, prohibited use, update cadence, and uncertainty notes. A first artifact could be a county-year frontier or resilience indicator fixture with declared assumptions.
+
+##### KFM-IDX-INT-003 — Machine Learning Outputs Remain Derivative
+
+**Status and category.** CONFIRMED. Category: INT / AI and machine learning. Source attribution: [AI Python] [Governed AI Ledger] [Pass 18]. Related ideas include KFM-IDX-EVD-001, KFM-IDX-VAL-007, KFM-IDX-MOD-008, and KFM-IDX-MAP-006.
+
+**Normalized statement.** Machine learning outputs in KFM should remain derivative interpretations tied to data, model, version, evaluation, receipts, policy, and evidence, not promoted to root truth.
+
+**Detailed explanation and why it matters.** The AI Python reference introduces AI/ML concepts, data lifecycle, supervised and unsupervised learning, algorithms, challenges, and ethical considerations. KFM doctrine narrows those generic possibilities into a governed posture. ML can classify, cluster, predict, rank, detect anomalies, or support retrieval, but it should not become the authority for a claim without evidence and validation. A model-detected archaeological feature is a candidate. A habitat suitability prediction is a model output. A vulnerability score is an indicator. A generated explanation is a synthesis. Each needs input provenance, training or method description, evaluation, uncertainty, policy state, and citation or abstention behavior.
+
+**Dependencies, tensions, and limits.** The idea depends on data lineage, model cards or receipts, validation reports, policy checks, and EvidenceBundle resolution. The tension is that ML outputs can scale analysis rapidly and may appear statistically authoritative. KFM must use them without letting model confidence replace source authority. The limitation is that this pass does not evaluate any specific model.
+
+**Expansion directions and future work.** Future work should define a model-output governance profile: input evidence, model version, training data boundary, evaluation metrics, intended use, failure modes, bias/sensitivity review, and release class. A first artifact could be a synthetic classification output that is allowed as candidate evidence but denied as a confirmed claim.
+
+##### KFM-IDX-INT-004 — Field Capture and Remote Sensing as Candidate Evidence
+
+**Status and category.** CONFIRMED. Category: INT / field and remote-sensing interpretation. Source attribution: [ArcGIS Environmental] [Archaeological 3D GIS] [New Ideas 5-8]. Related ideas include KFM-IDX-MOD-007, KFM-IDX-MOD-008, KFM-IDX-POL-004, and KFM-IDX-APP-005.
+
+**Normalized statement.** Field capture and remote sensing should be admitted as evidence or candidate evidence according to source role, method, accuracy, temporal scope, review state, and policy controls.
+
+**Detailed explanation and why it matters.** Environmental GIS exercises include field data collection and remote-sensing-supported hazard and climate workflows. Archaeological 3D GIS shows how field capture, image-based modeling, laser scanning, CT, 3D GIS, and georeferenced models can transform archaeological documentation. New Ideas 5-8 brings operational environmental remote-sensing signals such as MAIAC AOD, FIRMS, and SMAP into watcher patterns. The KFM normalization is that capture does not equal confirmation. A field observation, satellite detection, smoke mask, LiDAR feature, or 3D model can support claims only when its source role, accuracy, processing, temporal state, and review are clear.
+
+**Dependencies, tensions, and limits.** This idea depends on source descriptors, MOD representation types, EVD provenance, POL sensitivity controls, and VAL validation. The tension is that field and remote-sensing products may be among the strongest available evidence in some domains, while still being incomplete or ambiguous. The limitation is that source-specific accuracy and rights require verification.
+
+**Expansion directions and future work.** Future work should define capture-method metadata and candidate-evidence rules for remote sensing, field notes, 3D capture, and citizen science. A first artifact could be a field-capture fixture with redaction receipt, source role, review state, and public-safe derived map artifact.
+
+##### KFM-IDX-INT-005 — 2.5D and Full 3D Are Not Interchangeable
+
+**Status and category.** CONFIRMED. Category: INT / 3D interpretation. Source attribution: [Archaeological 3D GIS]. Related ideas include KFM-IDX-MOD-007, KFM-IDX-MAP-004, KFM-IDX-POL-004, and KFM-IDX-APP-007.
+
+**Normalized statement.** KFM should not treat 2.5D surfaces, full 3D models, volumetric data, reconstructions, and 3D scenes as interchangeable evidence or visualization forms.
+
+**Detailed explanation and why it matters.** Archaeological 3D GIS provides a direct warning for KFM. A 2.5D representation can drape imagery or elevation onto a surface, but it cannot represent multiple elevation values for the same horizontal coordinate. Full 3D models, point clouds, volumetric CT data, and interpretive reconstructions support different questions and have different evidentiary status. This matters in archaeology, terrain, geology, infrastructure, settlement history, and potential future 3D/globe contexts. KFM should not adopt 3D simply because it looks impressive, and it should not flatten 3D evidence into 2D when vertical or volumetric relationships are central to the claim.
+
+**Dependencies, tensions, and limits.** The idea depends on MOD representation metadata, MAP renderer boundaries, EVD evidence records, and POL sensitivity controls. The tension is operational: 2D MapLibre is the recommended primary renderer, while some evidence may require 3D. KFM should keep 2D as default and admit 3D conditionally when evidence burden justifies it. The limitation is that 3D tooling, performance, rights, and viewer parity remain verification needs.
+
+**Expansion directions and future work.** Future work should define a 3D admission profile: evidence need, data type, capture method, georeferencing, uncertainty, review state, public-safe transformation, and renderer requirements. A first artifact could compare a 2.5D terrain layer and a full 3D archaeological model with prohibited inferences for each.
+
+##### KFM-IDX-INT-006 — Web Scraping and External Feed Acquisition Need Drift Control
+
+**Status and category.** CONFIRMED. Category: INT / acquisition and drift control. Source attribution: [Web Scraping Java] [New Ideas 5-8]. Related ideas include KFM-IDX-SRC-002, KFM-IDX-SRC-008, KFM-IDX-VAL-003, and KFM-IDX-POL-002.
+
+**Normalized statement.** Web scraping and external feed acquisition should be treated as governed source-intake experiments with drift control, rights checks, rate limits, receipts, and quarantine defaults.
+
+**Detailed explanation and why it matters.** The web-scraping reference describes practical scraping concerns such as redirects, missing code, broken links, Ajax pages, forms, errors, scalability, persistence, and tests. In KFM, these are not merely engineering issues. They are source-governance risks. A scraper can silently break, harvest unauthorized material, misread changed markup, miss rate limits, or produce output that looks authoritative because it is automated. New Ideas 5-8 shows a safer pattern for external feeds: source-head probes, ETag/Last-Modified capture, metrics, policy IDs, and signed run receipts. KFM should treat scraping as source admission, not a shortcut around source descriptors.
+
+**Dependencies, tensions, and limits.** This idea depends on source descriptors, rights verification, robots and terms checks, fixture tests, error receipts, and quarantine workflows. The tension is that many useful sources may not have ideal APIs. KFM can use scraping where appropriate, but only with explicit governance. The limitation is that current source rights and endpoint behavior remain NEEDS VERIFICATION.
+
+**Expansion directions and future work.** Future work should define a connector/scraper intake checklist covering source authority, rights, terms, robots/rate posture, drift detection, parser tests, failure receipts, and quarantine behavior. A first artifact could be a simulated HTML drift fixture that forces ABSTAIN or QUARANTINE rather than silently changing output.
+
+##### KFM-IDX-INT-007 — Bounded AI/RAG Synthesis with Citation Validation
+
+**Status and category.** CONFIRMED. Category: INT / governed AI and RAG. Source attribution: [Ollama Ubuntu] [Governed AI Ledger]. Related ideas include KFM-IDX-EVD-001, KFM-IDX-EVD-002, KFM-IDX-MAP-006, and KFM-IDX-VAL-007.
+
+**Normalized statement.** AI and RAG synthesis in KFM should operate only over admissible, policy-safe, released evidence, behind a governed API, with citation validation and finite outcomes.
+
+**Detailed explanation and why it matters.** The Ollama guide and Governed AI Ledger converge strongly: a model runtime may summarize, explain, or embed, but it must remain provider-neutral, replaceable, and subordinate to evidence and policy. It should not read RAW, WORK, QUARANTINE, canonical stores, or unpublished candidate data directly. It should not receive direct client traffic or publish raw model output. It should accept bounded context, produce structured responses, validate citations, emit runtime envelopes, and return ANSWER, ABSTAIN, DENY, or ERROR. This makes AI useful without turning generated language into evidence.
+
+**Dependencies, tensions, and limits.** The idea depends on EvidenceBundle resolution, policy precheck/postcheck, citation validation, AIReceipt, runtime envelope, no-direct-model-client tests, and UI negative states. The tension is that AI is most attractive when it feels conversational and flexible. KFM must preserve usefulness while constraining context and output. The limitation is that this pass does not verify a live adapter or model runtime.
+
+**Expansion directions and future work.** Future work should implement a MockAdapter proof before any real model. A first artifact should test cited answer, citation failure abstention, policy denial, missing evidence abstention, and runtime error, all using a public-safe EvidenceBundle fixture.
+
+##### KFM-IDX-INT-008 — Participatory, Equity, and Scenario Decision Support
+
+**Status and category.** CONFIRMED. Category: INT / planning and participation. Source attribution: [Urban GIS] [ArcGIS Environmental] [Hazards]. Related ideas include KFM-IDX-INT-002, KFM-IDX-POL-007, KFM-IDX-APP-008, and KFM-IDX-MAP-007.
+
+**Normalized statement.** KFM planning support should include participatory, equity, resilience, and scenario context rather than presenting maps or indicators as neutral decisions.
+
+**Detailed explanation and why it matters.** Urban GIS shows that planning support is social as well as technical. Collaborative planning, social learning, quality of life, environmental health inequalities, transport scenarios, resettlement, cycle routes, TOD, urban water supply, flood shelters, and resilience all depend on stakeholder context and normative choices. Environmental and hazards sources add risk and vulnerability contexts. KFM can be valuable as a decision-support atlas, but it must not turn indicators into decisions or maps into policy. It should expose assumptions, alternatives, equity implications, uncertainty, and evidence.
+
+**Dependencies, tensions, and limits.** This idea depends on indicator definitions, scenario manifests, EvidenceBundle support, UI story/review surfaces, and policy disclaimers. The tension is that decision support should be actionable, but KFM must avoid overstepping into unreviewed recommendations or life-safety instructions. The limitation is that participatory processes and steward roles require real governance outside the document corpus.
+
+**Expansion directions and future work.** Future work should define scenario and participation metadata for planning-oriented outputs: stakeholder group, assumption set, equity lens, source evidence, model method, decision status, and public limitations. A first artifact could be a resilience scenario story node that compares alternatives without declaring an unsupported policy conclusion.
+
+### 6.9 APP — Domain Lanes, Field Capture, and Applied Knowledge Families
+
+#### 6.9.1 Category Overview
+
+APP is the applied-domain category. It gathers the domain lanes, field-capture patterns, and proof-slice candidates that make KFM more than a doctrine stack. The corpus contains detailed domain blueprints for hydrology, habitat, fauna, flora, soil, agriculture, geology, atmosphere, hazards, roads/rail/trade, settlements/infrastructure, archaeology, people/genealogy/DNA/land ownership, and habitat-fauna thin slicing. It also contains an implementation reference that raises a frontier-demography/economy county-year panel as a future substantive product. APP normalizes these into applied knowledge families and expansion paths.
+
+The category is mixed-status by design. Some domain boundary ideas are CONFIRMED as repeated doctrine and source content. Specific implementation lanes remain PROPOSED unless live repo evidence, tests, receipts, manifests, or release artifacts prove them. Domain reports repeatedly state no-mounted-repo conditions, proposed file homes, and unknown runtime maturity. APP therefore preserves domain value without upgrading plans into implementation claims.
+
+APP also prevents domain sprawl. It routes many detailed domain variants into expansion agenda items rather than expanding Section 6 beyond the main-body cap. The strongest applied pattern is not "build every lane now." It is to select proof-bearing thin slices that exercise the trust path: source descriptor, lifecycle, evidence, policy, validation, catalog closure, release manifest, map artifact, Evidence Drawer, bounded interpretation, correction, and rollback.
+
+#### 6.9.2 Subcategories
+
+The first APP subcategory is proof lanes, with hydrology and habitat-fauna as leading candidates. The second is ecology and environmental source watchers. The third is soil, agriculture, landcover, CDL, PLANTS, and material-change monitoring. The fourth is atmosphere and hazards, which require knowledge-character and public-safety boundaries. The fifth is transport, settlements, infrastructure, and geology, which require boundary discipline and public-safe geometry. The sixth is people, genealogy, DNA, land, and archaeology, where assertion-first modeling and sensitivity controls dominate. The seventh is field, remote, 3D, and applied capture methods. The eighth is frontier-demography and economy, a later analytic product requiring temporal, geographic, and source governance.
+
+#### 6.9.3 Individual Idea Entries
+
+##### KFM-IDX-APP-001 — Hydrology Proof Lane
+
+**Status and category.** PROPOSED. Category: APP / proof lane. Source attribution: [Hydrology] [Implementation Reference] [Pass 19]. Related ideas include KFM-IDX-SRC-001, KFM-IDX-SRC-005, KFM-IDX-EVD-002, KFM-IDX-VAL-001, and KFM-IDX-MAP-005.
+
+**Normalized statement.** Hydrology is the strongest early proof lane candidate because it can exercise KFM's lifecycle, evidence, catalog, map, API, validation, and rollback machinery with relatively clear public-source patterns.
+
+**Detailed explanation and why it matters.** The hydrology report proposes HUC12/WBD, NHDPlus HR identity and crosswalks, USGS Water Data observation normalization, NFHL regulatory flood context, 3DEP terrain-derived context, catalog/proof closure, MapLibre layer manifests, Evidence Drawer payloads, policies, and rollback. The Implementation Reference and Pass 19 both identify hydrology or ecology as safer early proof lanes compared with high-sensitivity domains. Hydrology is valuable because it touches KFM's core identity: map-first, time-aware, evidence-first, public-claim-oriented. It can demonstrate the difference between observed water conditions, hydrologic units, regulatory flood layers, terrain context, and release artifacts.
+
+**Dependencies, tensions, and limits.** This idea depends on source descriptors, no-network fixtures, identity crosswalks, temporal modeling, catalog closure, and public-safe layer manifests. The tension is that water data can still be operationally current or safety-relevant. KFM must avoid implying emergency status or live authority without current verification. The limitation is that implementation is PROPOSED; current connectors, tests, or release artifacts are not verified here.
+
+**Expansion directions and future work.** A first hydrology slice should use fixtures: one HUC12, one normalized observation, one regulatory context record, one EvidenceBundle, one layer manifest, one drawer payload, and one release dry-run. Future work can add live source verification only after rights, endpoint, cadence, and policy checks are complete.
+
+##### KFM-IDX-APP-002 — Habitat-Fauna Public-Safe Occurrence Assignment Thin Slice
+
+**Status and category.** PROPOSED. Category: APP / ecology proof lane. Source attribution: [Habitat Fauna Thin Slice] [Habitat] [Fauna]. Related ideas include KFM-IDX-POL-005, KFM-IDX-EVD-002, KFM-IDX-VAL-001, KFM-IDX-MAP-006, and KFM-IDX-INT-004.
+
+**Normalized statement.** A habitat-fauna thin slice should prove one public-safe occurrence-to-habitat assignment with evidence, sensitivity, release, map, drawer, and interpretation controls.
+
+**Detailed explanation and why it matters.** The habitat-fauna thin-slice blueprint asks a precise proof question: can KFM prove one published fauna occurrence habitat assignment? Its proposed answer is a fixture-first lane using controlled public-safe occurrence data, habitat context, source role, sensitivity checks, EvidenceBundle, release manifest, layer manifest, MapLibre rendering, Evidence Drawer payload, Focus Mode outcome, and rollback. This is a strong applied idea because it combines ecological value with KFM's most important governance constraints. It also tests geoprivacy, source authority, occurrence evidence, habitat model support, and UI trust surfaces.
+
+**Dependencies, tensions, and limits.** The idea depends on taxonomic identity, occurrence source roles, habitat classification, public-safe geometry, geoprivacy transform receipts, and validation. The tension is precision: ecological analysis often benefits from exact locations, while public maps may require generalization or suppression. The limitation is that the thin slice is PROPOSED and must not activate live GBIF, eBird, iNaturalist, KDWP, NatureServe, or similar sources without source-role and rights review.
+
+**Expansion directions and future work.** Suggested first artifact is a synthetic fixture set with one non-sensitive occurrence and one sensitive occurrence. The non-sensitive case can produce a public-safe assignment; the sensitive case should deny exact geometry and show withheld precision in Evidence Drawer.
+
+##### KFM-IDX-APP-003 — Ecology Source-Watcher Operational Slice
+
+**Status and category.** PROPOSED. Category: APP / watcher proof lane. Source attribution: [New Ideas 5-8] [Pass 19]. Related ideas include KFM-IDX-SRC-007, KFM-IDX-VAL-003, KFM-IDX-EVD-004, and KFM-IDX-POL-002.
+
+**Normalized statement.** An ecology source-watcher slice can operationalize source-head, tile-health, rights, and run-receipt discipline without publishing source-derived claims.
+
+**Detailed explanation and why it matters.** New Ideas 5-8 proposes probes for MAIAC AOD, FIRMS fire detections, SMAP L4 soil moisture, AirNow, and Kansas Mesonet. Pass 19 treats this as one of the strongest operational deltas because it moves KFM from static doctrine toward source-drift and artifact-readiness proof. The applied idea is not that these thresholds become KFM science absolutes. It is that KFM can test source observation, source-head recording, rights/consent enforcement, finite outcomes, and receipts in a no-publication mode. That makes it a good operational slice.
+
+**Dependencies, tensions, and limits.** The idea depends on source descriptors, fixture probes, source-head fields, DecisionEnvelope, RunReceipt, policy IDs, and explicit no-publication behavior. The tension is currentness: the packet discusses live feeds, but this dossier did not reverify them. The limitation is therefore substantial; all endpoints, terms, and thresholds remain verification items before use.
+
+**Expansion directions and future work.** The first artifact should be no-network probe fixtures: fresh/stale source heads, missing Mesonet consent, AirNow key absent, AOD threshold breach, FIRMS threshold breach, and normal state. The output should be a proposed work or quarantine decision, never public release.
+
+##### KFM-IDX-APP-004 — Soil, Agriculture, CDL, PLANTS, and Landcover Material-Change Lane
+
+**Status and category.** PROPOSED. Category: APP / landcover and agricultural monitoring. Source attribution: [Soil] [Agriculture] [New Ideas 5-15]. Related ideas include KFM-IDX-SRC-006, KFM-IDX-VAL-004, KFM-IDX-EVD-005, and KFM-IDX-POL-002.
+
+**Normalized statement.** KFM should develop soil, agriculture, CDL, PLANTS, and landcover monitoring as a material-change lane that proposes work only when source changes matter enough to reprocess.
+
+**Detailed explanation and why it matters.** Soil and agriculture reports propose source registries, contracts, validators, policies, tests, catalog closure, proof/receipt separation, API/UI trust payloads, and rollback controls. New Ideas 5-15 adds an efficient watcher pattern for USDA CDL and PLANTS county packages. It records source URL, ETag, Last-Modified, class histograms, classmap version, thresholds, species IDs, and stable `spec_hash`, then emits a PROPOSED_WORK_RECORD only when material thresholds are crossed. This is a strong applied lane because it reduces noisy re-runs while preserving auditability and rights checks.
+
+**Dependencies, tensions, and limits.** The idea depends on county geometry, raster histogram calculation, PLANTS package parsing, thresholds, sidecar validation, and source rights review. The tension is that agricultural and ecological change may be important even when simple area thresholds are not crossed. The limitation is that the proposed code includes stubs and example paths; live implementation needs data paths, rights checks, and fixtures.
+
+**Expansion directions and future work.** A first artifact should validate sidecar integrity and materiality against synthetic county histograms. Future work can add STAC item emitters, PMTiles manifests, change heatmap vector tiles, drought overlays, NDVI/CDL correlation, and crop-rotation analysis after the basic watcher is governed.
+
+##### KFM-IDX-APP-005 — Atmosphere and Hazards Knowledge-Character Separation
+
+**Status and category.** CONFIRMED. Category: APP / atmosphere and hazards boundary. Source attribution: [Atmosphere Air] [Hazards]. Related ideas include KFM-IDX-MOD-008, KFM-IDX-POL-007, KFM-IDX-INT-004, and KFM-IDX-VAL-007.
+
+**Normalized statement.** Atmosphere and hazards lanes require strict separation among observations, regulatory archives, public reports, model fields, remote-sensing detections, operational context, and resilience summaries.
+
+**Detailed explanation and why it matters.** The atmosphere/air report states that air, climate, smoke, and Earth-observation layers require strict source-role and knowledge-character labeling because observations, public AQI reports, regulatory archives, model fields, smoke masks, anomaly surfaces, and fusion products are not interchangeable. The hazards blueprint adds that KFM hazards should support analysis, history, regulatory context, operational context, resilience review, map rendering, Evidence Drawer explanation, and governed AI summaries without becoming an emergency alert system. This applied family is high value but high risk because public users may treat hazard or air layers as current instructions.
+
+**Dependencies, tensions, and limits.** The idea depends on knowledge-character labels, temporal freshness, source authority, policy disclaimers, no-life-safety posture, and Evidence Drawer explanations. The tension is that current atmospheric and hazard context can be useful for public understanding, but KFM must direct urgent life-safety needs to official sources. The limitation is that live source status and operational source rights were not verified in this pass.
+
+**Expansion directions and future work.** Future work should create a hazards/atmosphere fixture that includes an observation, a model product, a regulatory layer, and an operational advisory, each with different public behavior. Suggested first artifact is a `not_for_life_safety` DecisionEnvelope fixture.
+
+##### KFM-IDX-APP-006 — Roads, Rail, Trade, Settlements, Infrastructure, and Geology Boundary Discipline
+
+**Status and category.** CONFIRMED. Category: APP / infrastructure, transport, and geology lanes. Source attribution: [Roads Rail Trade] [Settlements Infrastructure] [Geology Resources]. Related ideas include KFM-IDX-POL-006, KFM-IDX-MOD-005, KFM-IDX-MAP-003, and KFM-IDX-EVD-008.
+
+**Normalized statement.** Transport, settlements, infrastructure, and geology/resource lanes should keep physical features, administrative status, operators, historical interpretation, restrictions, public-safe geometry, and derived graph projections distinct.
+
+**Detailed explanation and why it matters.** The roads/rail/trade plan separates modern roads, historic roads, rail corridors, facilities, restrictions, freight corridors, Indigenous trade and mobility corridors, and graph projections. Settlements/infrastructure separates legal municipalities, census places, historic townsites, ghost towns, infrastructure assets, networks, facilities, operators, service areas, condition observations, and dependencies. Geology/resources separates bedrock, surficial geology, stratigraphy, lithology, structures, geomorphology, boreholes, geophysics, geochemistry, mineral occurrences, extraction sites, and public-safe resource layers. Across all three, the shared warning is anti-collapse: a line, label, operator, resource estimate, facility, or graph edge is not automatically a public truth claim.
+
+**Dependencies, tensions, and limits.** The idea depends on bounded contexts, source-role registries, public-safe geometry, policy profiles, evidence resolution, and release manifests. The tension is that these domains are visually compelling and useful for historical and planning maps. KFM must preserve usability while preventing false precision, sensitive exposure, and administrative/physical confusion. The limitation is that domain reports are implementation-grade plans but not current repo proof.
+
+**Expansion directions and future work.** Future work should define boundary matrices for each lane: physical object, legal/administrative status, operator, source authority, temporal scope, public geometry precision, and derived artifact status. A first artifact could be a transport corridor fixture with generalized public geometry and evidence-bound historical uncertainty.
+
+##### KFM-IDX-APP-007 — People, Genealogy, DNA, Land, and Archaeology Sensitive Assertion Lanes
+
+**Status and category.** CONFIRMED. Category: APP / sensitive assertion lanes. Source attribution: [People DNA Land] [Archaeology Plan]. Related ideas include KFM-IDX-POL-003, KFM-IDX-POL-004, KFM-IDX-MOD-006, and KFM-IDX-EVD-002.
+
+**Normalized statement.** People, genealogy, DNA, land ownership, and archaeology lanes should be assertion-first, evidence-bound, privacy-aware, culturally sensitive, and denied or restricted by default where exact public release would create harm.
+
+**Detailed explanation and why it matters.** The People/Genealogy/DNA/Land blueprint and Archaeology Plan define some of the strongest restrictions in the corpus. Person assertions are separate from canonical person records; DNA is restricted by default; relationship hypotheses remain hypotheses; assessor or tax records are not title truth; parcel geometry is not title boundary proof by itself; archaeological exact locations are denied by default; LiDAR, aerial, satellite, geophysical, or remote-sensing anomalies are candidate features until evidence and review support stronger claims. These lanes are high value for history and land knowledge, but they carry privacy, cultural, sovereignty, and physical-site risks.
+
+**Dependencies, tensions, and limits.** The idea depends on assertion-first modeling, living-person classification, DNA restrictions, steward review, source roles, exact-location denial, and correction lineage. The tension is historical richness versus harm prevention. KFM can support research and public education, but not by publishing sensitive claims at unsupported precision. The limitation is that actual steward permissions, source rights, and legal review are outside this pass.
+
+**Expansion directions and future work.** Future work should build synthetic assertion fixtures before any real sensitive data. A first artifact could show a historic land assertion, a living-person denial, a DNA-derived hypothesis denial, and an archaeological candidate feature generalized for public display.
+
+##### KFM-IDX-APP-008 — Frontier-Demography and Economy County-Year Panel Concept
+
+**Status and category.** PROPOSED. Category: APP / frontier-demography and analytical product. Source attribution: [Implementation Reference]. Related ideas include KFM-IDX-MOD-003, KFM-IDX-MOD-004, KFM-IDX-INT-002, and KFM-IDX-VAL-008.
+
+**Normalized statement.** A future KFM frontier-demography/economy product should be built as a versioned county-year analytical panel with explicit frontier definitions, geography versions, observations, crosswalks, uncertainty, release manifests, and rollback cards.
+
+**Detailed explanation and why it matters.** The Implementation Reference identifies the frontier-demography/economy lane as less mature than hydrology, ecology, and documentation-control surfaces, then proposes a substantive product: a versioned county-year frontier panel backed by FrontierDefinition, GeographyVersion, PopulationObservation, EconomicObservation, AgricultureObservation, and AccessObservation objects. This is an important applied direction because it connects KFM's name and historical frontier purpose to a buildable analytical layer. It also stresses why KFM should not be a flat spreadsheet. Frontier status depends on definitions, geography versions, time, population, economy, agriculture, access, crosswalks, uncertainty, source roles, and release state.
+
+**Dependencies, tensions, and limits.** The idea depends on temporal modeling, versioned geography, source ledgers, reproducible joins, uncertainty classes, indicator assumptions, and release/rollback discipline. The tension is that a county-year panel looks simple to users but is semantically dense. The limitation is that the Implementation Reference is lineage and prior connector evidence; current repo maturity and live source availability are not verified here.
+
+**Expansion directions and future work.** Future work should start with definitions, not data harvesting. A first artifact should be a `FrontierDefinition` draft and a synthetic county-year panel fixture that demonstrates geography versioning, observation source roles, and uncertainty before any public analytical claim is made.
+
+
+## 7. Cross-Cutting Themes
+
+The strongest cross-cutting theme is that KFM is a publication and evidence-governance system before it is a map, model, dashboard, or domain database. The corpus repeatedly assigns value to inspectable claims, EvidenceBundles, source roles, receipts, release manifests, policy decisions, correction paths, and rollback targets. That vocabulary appears in prior passes, domain blueprints, MapLibre manuals, governed-AI reports, and New Ideas packets. The repeated pattern is not accidental. It shows that KFM's core design pressure is trust under growth: as more sources, lanes, maps, artifacts, and interpretive tools appear, the system must preserve traceability rather than letting convenience become authority.
+
+A second theme is that representation is itself a claim surface. GIS, cartography, 3D GIS, environmental workflows, and urban planning references all show that maps and analyses are constructed through choices of scale, projection, classification, simplification, resolution, symbolization, data model, and scenario logic. KFM doctrine turns that technical fact into governance doctrine. A layer is not only a visual object; it is a claim carrier whose fitness, source role, temporal scope, and limitations must be inspectable where material.
+
+A third theme is temporal discipline. The corpus repeatedly distinguishes observed time, valid time, source time, retrieval time, transaction or record time, release time, and correction time. This matters for hydrology observations, hazard advisories, land ownership assertions, county-year frontier panels, source watchers, material-change records, and public releases. KFM cannot safely answer "what is true now" unless it knows which time dimension the question invokes.
+
+A fourth theme is that public delivery surfaces are trust membranes. Governed APIs, MapLibre, Evidence Drawer, Focus Mode, Story Nodes, map artifacts, and review consoles should be downstream of source admission, evidence resolution, policy checks, validation, and release. The UI is not decoration, but it is also not sovereign truth. Its task is to make trust state visible and usable.
+
+A fifth theme is source humility. The corpus contains official-style domain blueprints, technical textbooks, prior cumulative passes, New Ideas packets, public-repo summaries, and no-repo planning reports. The correct synthesis is not to flatten them. Doctrine governs; technical references supply methods; domain reports supply lane patterns; New Ideas packets create expansion pressure; prior passes preserve continuity; and current implementation claims require current repo, tests, logs, receipts, workflows, or generated artifact evidence.
+
+A sixth theme is deny-by-default exposure where harm is plausible. Archaeology, rare species, living-person data, DNA/genomic material, cultural corridors, infrastructure, hazards, and source-rights uncertainty all require stronger controls than ordinary public educational layers. The corpus does not reject public knowledge. It insists that public release be appropriate to significance and risk.
+
+A seventh theme is fixture-first proof. The best early KFM work is not broad live ingestion or polished UI. It is small, reversible, no-network proof: schemas, fixtures, validators, policies, receipts, catalog closure, release manifests, rollback references, and one public-safe explanation path. This theme appears in hydrology, habitat-fauna, governed AI, PMTiles attestation, and material-change watcher proposals.
+
+An eighth theme is that AI and analysis are interpretive derivatives. The corpus allows bounded AI, machine learning, indicators, scenarios, spatial analysis, and planning support, but only when evidence, policy, validation, and citation controls remain in charge. Fluent generation, model output, vector search, graph projections, and summaries are useful carriers; they are never root truth.
+
+
+## 8. Overlaps, Contradictions, and Gaps
+
+The most important overlap is between source admission and evidence receipts. SRC governs how sources enter the lifecycle and how watchers propose work; EVD records what evidence and processes support later claims. These overlap because source-head metadata, ETag and Last-Modified values, source rights, spec_hash values, and run receipts can appear at the admission edge and again inside proof or release objects. The overlap is healthy if the objects remain distinct. It becomes a problem only if a source probe receipt is treated as proof that a claim is true.
+
+A second overlap is between temporal modeling and release/correction discipline. MOD separates valid, observed, source, retrieval, release, and correction time; VAL and EVD use receipts and manifests to prove when processes ran and what release state existed. The same event may therefore appear in a domain record, a receipt, a release manifest, and a correction record. KFM needs this overlap because time-aware publication requires it, but it should avoid one generic `date` field that collapses all meanings.
+
+A third overlap is between policy and representation. Public-safe generalization, sensitive exact-location denial, rare species geoprivacy, archaeological suppression, and infrastructure exposure controls are policy decisions expressed through representation choices. The map artifact and the policy decision must both be inspectable. The gap is that the corpus proposes many policy profiles but does not yet provide one verified cross-domain policy implementation.
+
+A fourth overlap is between MapLibre artifact governance and API contract design. Some map surfaces can be static artifacts, while others need governed API mediation. PMTiles, COGs, GeoParquet, MVT/MLT, STAC/DCAT/PROV records, layer manifests, and Evidence Drawer payloads all sit near this boundary. The design tension is performance versus governance. Static artifacts are desirable, but only after release, integrity, and policy controls are recorded.
+
+A fifth overlap is between analysis, AI, and planning. Spatial analysis, indicators, machine learning, Focus Mode, and scenario tools can all produce public-facing conclusions. The corpus's consistent answer is that all such outputs remain interpretive derivatives. The gap is that KFM still needs explicit acceptance criteria for when an analytical output is evidence-supported enough to publish, when it should be review-only, and when it should abstain.
+
+The principal contradiction is not inside doctrine but between greenfield assumptions and implementation-reference lineage. The Greenfield Building Plan assumes an empty starting point, while the Implementation Reference reports prior connector-based public repository surface. This pass resolves the contradiction by source-bounding both: greenfield doctrine is useful for clean architecture; implementation-reference claims are lineage and verification prompts unless current repo evidence is inspected. Neither should be used to overclaim current implementation.
+
+Another tension is between domain breadth and proof discipline. The corpus covers many domain lanes, but the strongest implementation advice is narrow: hydrology proof lane, habitat-fauna fixture, ecology watcher, PMTiles attestation, and governed AI mock slice. The gap is prioritization. The Expansion Agenda addresses that by routing breadth into backlog while preserving a small number of first artifacts.
+
+The largest evidence gap remains current implementation maturity. This pass did not inspect a mounted live repo, run tests, check CI, verify current endpoints, validate source terms, or confirm runtime behavior. Therefore route names, package versions, actual schema homes, policy engine behavior, dashboards, branch protections, and deployed services remain UNKNOWN or NEEDS VERIFICATION.
+
+
+## 9. Weakly Supported, Ambiguous, or Excluded Material
+
+The first weakly supported class is current operational status. New Ideas 5-8 reports a steady operational picture across several biodiversity, observation, Earth observation, weather, and mapping feeds, but those statements are time-sensitive. They are useful as a prompt for source-currentness verification, not as durable truth in this dossier. Any operational use must recheck source status, endpoint behavior, rights, cadence, API keys, and product versions.
+
+The second weak class is package and tool version status. MapLibre releases, PMTiles tooling, PMTiles readers, freestiler, tipmtiles, MLT support, DSSE/cosign setup, Bao proof tooling, and dependency licenses may change. This document preserves the architectural value of attestation, deterministic builds, and client verification, but it does not pin versions or certify current package state.
+
+The third ambiguous class is repo path placement. Directory Rules provide the governing doctrine for responsibility roots and schema-home discipline, but many domain reports and New Ideas packets include proposed paths. Those paths remain PROPOSED unless checked against Directory Rules, current repo evidence, and ADRs. This dossier intentionally does not turn proposed paths into facts.
+
+The fourth weak class is implementation maturity. Many domain PDFs are PDF-only plans created in no-mounted-repo contexts. They are valuable for lane architecture, source-role discipline, and validation planning, but they do not prove that schemas, validators, policies, APIs, UI components, workflows, tests, or dashboards exist in the current repo.
+
+The fifth ambiguous class is external rights and redistribution. Some sources may be public, open, official, or documented; that does not settle redistribution, attribution, API-key, quota, consent, or public-release posture. KFM should deny or quarantine when rights are unclear and route such cases to SourceRightsDecision or verification backlog.
+
+The sixth excluded class is emergency instruction. Hazards, wildfire, flood, air-quality, and operational advisory materials can support analysis and context, but KFM should not publish life-safety instructions as if it were an emergency alerting system. User-facing outputs should point to official alerting and response authorities where life-safety action is requested.
+
+The seventh excluded class is unreviewed sensitive exact geometry. Rare species occurrences, archaeological sites, culturally sensitive corridors, living-person locations, DNA/genomic data, and critical infrastructure details should not be exposed as exact public geometry unless explicit policy, review, rights, sensitivity, and release gates permit it.
+
+The eighth weak class is one-size-fits-all AI. The corpus supports bounded model use behind governed APIs, but not free-form public chat over arbitrary stores. Local model runtimes, embeddings, vector indexes, and RAG outputs remain derivative and must be evidence-bounded, policy-checked, citation-validated, and receipt-emitting.
+
+
+## 10. Expansion Agenda
+
+### 10.1 Research
+
+**Hydrology source and identity research.** Priority: High. Why: Hydrology remains the strongest proof lane and needs clear source roles for WBD/HUCs, NHDPlus HR, USGS Water Data, NFHL, and terrain-derived context. Dependencies: source descriptors, rights verification, HUC fixture, temporal fields. Next step: verify current source terms and choose a minimal fixture. First artifact: Hydrology SourceRole and EvidenceBundle fixture pack.
+
+**Source-currentness and rights research.** Priority: High. Why: multiple New Ideas packets depend on operational source and tool facts that are time-sensitive. Dependencies: source ledger, owner assignments, verification cadence. Next step: build a verification backlog covering Mesonet, AirNow, CDL, PLANTS, PMTiles tooling, and MapLibre target version. First artifact: SourceCurrentnessReport table.
+
+**Frontier county-year source research.** Priority: Medium. Why: the frontier-demography/economy panel is a likely flagship but needs evidence and geography-version discipline before design hardens. Dependencies: geography versions, population/economy/agriculture/access source candidates, temporal modeling. Next step: identify candidate sources and uncertainty classes. First artifact: FrontierPanelSourceMemo.
+
+### 10.2 Writing
+
+**Object-family explanation note.** Priority: High. Why: KFM's trust depends on separating EvidenceBundle, receipts, proofs, catalogs, release manifests, policy decisions, and claims. Dependencies: EVD category entries and Directory Rules. Next step: draft a concise explanation with examples. First artifact: Trust Object Family Map.
+
+**Public-safe map explanation guide.** Priority: Medium. Why: users need to understand why some layers are generalized, stale, denied, or evidence-bounded. Dependencies: MAP, POL, and VAL entries. Next step: write Evidence Drawer prose patterns for withheld precision, stale data, and abstention. First artifact: Evidence Drawer Language Guide.
+
+**Domain published-language glossary.** Priority: Medium. Why: terms such as source, status, occurrence, site, model, event, and release shift meaning by domain. Dependencies: DDD-derived bounded context decisions. Next step: draft shared terms and domain-specific overrides. First artifact: PublishedLanguage seed glossary.
+
+### 10.3 Architecture and Design
+
+**Schema-home and responsibility-root reconciliation.** Priority: High. Why: Directory Rules require path decisions to be checked against ADRs and current repo evidence. Dependencies: repo inspection, Directory Rules, ADR review. Next step: inspect actual repo schema and contract homes. First artifact: SchemaHomeDecision or drift-register entry.
+
+**Governed API minimal contract.** Priority: High. Why: public map, drawer, Focus Mode, and review surfaces need a governed interface before UI polish. Dependencies: EvidenceRef resolution, finite outcomes, source-policy checks. Next step: draft a no-network OpenAPI-like contract. First artifact: Mock governed API contract and fixtures.
+
+**Map artifact manifest wave.** Priority: Medium. Why: PMTiles, COGs, GeoParquet, and styles need traceability and release linkage. Dependencies: EVD attestation, VAL validators, MAP manifest entries. Next step: define minimum fields for LayerManifest, TileArtifactManifest, and MapReleaseManifest. First artifact: manifest schema bundle with examples.
+
+### 10.4 Implementation
+
+**No-network hydrology proof slice.** Priority: High. Why: it proves lifecycle, evidence, catalog, release, map, and drawer behavior without broad sensitive exposure. Dependencies: source roles, fixtures, validators, policy gates, release manifest. Next step: build synthetic or public-safe fixtures. First artifact: HUC12 + observation + NFHL-context fixture pack.
+
+**PMTiles attestation validator.** Priority: High. Why: static map artifacts are likely central to public delivery and need integrity checks. Dependencies: sidecar schema, root_hash/spec_hash, proof strategy, release gate. Next step: implement schema-only validator with negative fixtures. First artifact: pmtiles_sidecar.schema.json and validation report fixtures.
+
+**Governed AI MockAdapter proof.** Priority: Medium. Why: model runtime should not be introduced before evidence and citation validation contracts are stable. Dependencies: EvidenceBundle fixture, citation validator, finite response envelope. Next step: create no-network MockAdapter tests. First artifact: runtime_response_envelope fixture set.
+
+### 10.5 Domain Deepening
+
+**Habitat-fauna public-safe occurrence assignment.** Priority: High. Why: it tests biodiversity sensitivity, geoprivacy, habitat evidence, map explanation, and Focus Mode abstention. Dependencies: synthetic occurrence, habitat evidence, transform receipt, policy profile. Next step: define one fixture record and drawer payload. First artifact: public-safe occurrence assignment proof pack.
+
+**Soil/agriculture material-change lane.** Priority: Medium. Why: CDL and PLANTS watchers can prevent noisy reruns and prove proposed-work routing. Dependencies: sidecar schema, thresholds, county geometry, rights verification. Next step: create sidecar fixtures and materiality tests. First artifact: CDL sidecar and PROPOSED_WORK_RECORD fixture.
+
+**Hazards/atmosphere knowledge-character lane.** Priority: Medium. Why: it exercises observed/modeled/regulatory/operational distinctions and the no-emergency-alert boundary. Dependencies: source role vocabulary, freshness state, hazard payload rules. Next step: build a mixed knowledge-character fixture set. First artifact: hazards Evidence Drawer example pack.
+
+### 10.6 Verification Needs
+
+**Mounted repo evidence pass.** Priority: High. Why: current implementation maturity, paths, tests, workflows, and package managers remain UNKNOWN. Dependencies: access to repo checkout or connector evidence. Next step: inspect root folders, ADRs, workflows, schema homes, policies, tests, and release objects. First artifact: RepoEvidenceReport.
+
+**External-source rights and cadence pass.** Priority: High. Why: source activation must fail closed without rights, cadence, and endpoint facts. Dependencies: source-currentness backlog. Next step: verify priority sources and record evidence date. First artifact: SourceRightsDecision matrix.
+
+**Package/version verification pass.** Priority: Medium. Why: map, PMTiles, AI, and attestation tooling facts are unstable. Dependencies: package manager and implementation plan. Next step: verify official versions and dependency licenses. First artifact: VersionPinReview note.
+
+### 10.7 Missing Evidence
+
+**Actual CI and validator behavior.** Priority: High. Why: the corpus proposes many gates but this pass did not run them. Dependencies: mounted repo and test runner. Next step: run existing baseline tests and inspect validation reports. First artifact: ValidationRunReceipt.
+
+**Current release and rollback objects.** Priority: High. Why: publication truth requires release manifests and rollback targets. Dependencies: repo evidence. Next step: inspect release/proof/receipt/catalog folders or their equivalents. First artifact: ReleaseObjectInventory.
+
+**Steward and reviewer assignments.** Priority: Medium. Why: sensitive domains need real review roles. Dependencies: policy profile definitions and organizational decisions. Next step: record role placeholders and unknowns. First artifact: StewardReviewBacklog.
+
+### 10.8 Thin-Slice and Pilot Opportunities
+
+**First pilot: hydrology Evidence Drawer proof.** Priority: High. Why: demonstrates source role, temporal observation, regulatory context, and map explanation. Dependencies: no-network fixtures, governed API contract. Next step: create click-to-drawer mock flow. First artifact: HydrologyDrawerFixture.
+
+**Second pilot: PMTiles proof gate.** Priority: High. Why: map artifact integrity is central and testable without live sources. Dependencies: sidecar schema and validator. Next step: validate one good and three bad sidecars. First artifact: PMTilesAttestationTestPack.
+
+**Third pilot: habitat-fauna sensitive release.** Priority: Medium. Why: shows public-safe biodiversity publication without exact sensitive geometry. Dependencies: geoprivacy policy and transform receipt. Next step: create a redacted occurrence assignment fixture. First artifact: HabitatFaunaPublicSafeReleaseFixture.
+
+**Fourth pilot: governed AI abstention.** Priority: Medium. Why: proves that Focus Mode can refuse unsupported or policy-denied answers. Dependencies: MockAdapter and citation validator. Next step: implement answer/abstain/deny/error examples. First artifact: FocusModeFiniteOutcomeFixtures.
+
+
+## 11. Open Questions and Verification Backlog
+
+### 11.1 Evidence Questions
+
+What minimum fields make an EvidenceBundle sufficient for ordinary public claims, sensitive-domain claims, and high-consequence releases? How should EvidenceRef resolution behave when a referenced bundle exists but is stale, restricted, superseded, or only partially supports a requested claim? Which source families require source-role subtypes beyond the current shorthand in the corpus? How should conflicting evidence bundles be represented without collapsing them into one consensus claim? What counts as enough evidence for a public map popup versus a Focus Mode answer versus a formal published claim?
+
+### 11.2 Design Questions
+
+Where should KFM draw the final boundary among contracts, schemas, jsonschema, policies, and compatibility roots in a live repository? Which trust-bearing objects should be stored as canonical records, and which should be derived views over evidence and release state? How should layer manifests, tile artifact manifests, release manifests, STAC/DCAT/PROV records, and Evidence Drawer payloads reference one another without becoming duplicative? Should policy profiles be domain-specific, release-class-specific, or a small shared set with domain overrides? How much evidence and limitation text should be visible by default in public UI versus available through progressive disclosure?
+
+### 11.3 Implementation-Proof Questions
+
+Does the current KFM repository contain the roots, ADRs, schemas, contracts, policies, tests, apps, workflows, release objects, catalog records, or proof/receipt directories described in the corpus? Which parts are implemented, draft, deprecated, or absent? Which package manager and test runner govern the web/API/validator stack? Are there existing MapLibre, PMTiles, Evidence Drawer, Focus Mode, hydrology, habitat, or governed-AI components that should be preserved rather than replaced? What baseline tests pass today, and which trust gates are actually enforced rather than documented?
+
+### 11.4 Source-Expansion Questions
+
+Which hydrology, ecology, agriculture, atmosphere, hazards, and frontier-demography sources can be activated under verified rights and source-role decisions? What are the current terms, cadence, version, endpoint behavior, and attribution requirements for priority sources such as WBD/HUC data, USGS water services, NFHL, CDL, PLANTS, AirNow, Mesonet, MAIAC, FIRMS, SMAP, and biodiversity occurrence sources? Which sources require written consent, API keys, steward review, delayed publication, or restricted redistribution? How often should each source be reverified, and what release impact should stale verification have?
+
+## 12. Appendix A — Master Idea Index Table
+
+This appendix is built from `_ids.tsv`. It preserves the stable ID, title, category, status, and source-tag registry while adding a one-sentence essence, related idea cluster, and expansion direction for later planning.
+
+| Idea ID | Title | Category | Status | One-sentence essence | Related ideas | Expansion direction |
+|---|---|---|---|---|---|---|
+| KFM-IDX-GOV-001 | Inspectable Claim as the Durable Public Unit | GOV — Doctrine and authority | CONFIRMED | Establishes a governance rule for inspectable claim as the durable public unit within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-GOV-002 | Truth Labels and Cite-or-Abstain as Operating Posture | GOV — Doctrine and authority | CONFIRMED | Establishes a governance rule for truth labels and cite-or-abstain as operating posture within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-GOV-003 | Responsibility-Root Directory Governance | GOV — Doctrine and authority | CONFIRMED | Establishes a governance rule for responsibility-root directory governance within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-GOV-004 | Implementation Evidence Boundary and No-Overclaim Rule | GOV — Doctrine and authority | CONFIRMED | Establishes a governance rule for implementation evidence boundary and no-overclaim rule within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-GOV-005 | Schema-Home and ADR Discipline | GOV — Doctrine and authority | CONFIRMED | Establishes a governance rule for schema-home and adr discipline within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-GOV-006 | Public Clients Stay Behind the Trust Membrane | GOV — Doctrine and authority | CONFIRMED | Establishes a governance rule for public clients stay behind the trust membrane within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-GOV-007 | Documentation as a Living Control Plane | GOV — Doctrine and authority | CONFIRMED | Establishes a governance rule for documentation as a living control plane within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-GOV-008 | Greenfield, No-Repo, and Public-Repo Sources Stay Source-Bounded | GOV — Doctrine and authority | PROPOSED | Establishes a governance rule for greenfield, no-repo, and public-repo sources stay source-bounded within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-SRC-001; KFM-IDX-VAL-006 | Use as review doctrine for every later file, claim, and path decision. |
+| KFM-IDX-SRC-001 | Canonical Lifecycle from RAW to PUBLISHED | SRC — Source lifecycle | CONFIRMED | Defines a lifecycle or source-admission rule for canonical lifecycle from raw to published within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-SRC-002 | Source Descriptor and Source-Role Registry | SRC — Source lifecycle | CONFIRMED | Defines a lifecycle or source-admission rule for source descriptor and source-role registry within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-SRC-003 | Pre-RAW Events and Watcher Non-Publisher Posture | SRC — Source lifecycle | CONFIRMED | Defines a lifecycle or source-admission rule for pre-raw events and watcher non-publisher posture within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-SRC-004 | Promotion as Governed State Transition | SRC — Source lifecycle | CONFIRMED | Defines a lifecycle or source-admission rule for promotion as governed state transition within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-SRC-005 | Catalog Closure Before Public Release | SRC — Source lifecycle | CONFIRMED | Defines a lifecycle or source-admission rule for catalog closure before public release within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-SRC-006 | Material-Change Sidecars and PROPOSED_WORK_RECORD Outbox | SRC — Source lifecycle | PROPOSED | Defines a lifecycle or source-admission rule for material-change sidecars and proposed_work_record outbox within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-SRC-007 | Ecology Source-Health and Tile-Health Watchers | SRC — Source lifecycle | PROPOSED | Defines a lifecycle or source-admission rule for ecology source-health and tile-health watchers within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-SRC-008 | Currentness, Endpoint, Rights, and Version Reverification | SRC — Source lifecycle | NEEDS VERIFICATION | Defines a lifecycle or source-admission rule for currentness, endpoint, rights, and version reverification within KFM's evidence-first architecture. | KFM-IDX-EVD-004; KFM-IDX-VAL-003; KFM-IDX-POL-002 | Convert into source descriptors, watcher fixtures, and source-currentness checks. |
+| KFM-IDX-EVD-001 | EvidenceBundle Outranks Generated Language and Rendered Artifacts | EVD — Evidence and provenance | CONFIRMED | Defines an evidence/provenance mechanism for evidencebundle outranks generated language and rendered artifacts within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-EVD-002 | EvidenceRef to EvidenceBundle Resolution | EVD — Evidence and provenance | CONFIRMED | Defines an evidence/provenance mechanism for evidenceref to evidencebundle resolution within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-EVD-003 | Source Ledger as Active Control Surface | EVD — Evidence and provenance | CONFIRMED | Defines an evidence/provenance mechanism for source ledger as active control surface within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-EVD-004 | RunReceipt, PromotionReceipt, and AIReceipt as Process Memory | EVD — Evidence and provenance | CONFIRMED | Defines an evidence/provenance mechanism for runreceipt, promotionreceipt, and aireceipt as process memory within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-EVD-005 | Deterministic Identity and spec_hash | EVD — Evidence and provenance | CONFIRMED | Defines an evidence/provenance mechanism for deterministic identity and spec_hash within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-EVD-006 | Signed Attestations and Provenance References | EVD — Evidence and provenance | PROPOSED | Defines an evidence/provenance mechanism for signed attestations and provenance references within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-EVD-007 | PMTiles Sidecar and Byte-Range Proof Evidence Carrier | EVD — Evidence and provenance | PROPOSED | Defines an evidence/provenance mechanism for pmtiles sidecar and byte-range proof evidence carrier within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-EVD-008 | Evidence, Receipts, Proofs, Catalogs, and Claims Stay Separate | EVD — Evidence and provenance | CONFIRMED | Defines an evidence/provenance mechanism for evidence, receipts, proofs, catalogs, and claims stay separate within KFM's evidence-first architecture. | KFM-IDX-GOV-001; KFM-IDX-VAL-002; KFM-IDX-MAP-006 | Convert into EvidenceBundle, receipt, sidecar, proof, and manifest schemas. |
+| KFM-IDX-MOD-001 | Maps and GIS Layers as Representations Rather Than the World | MOD — Representation and semantics | CONFIRMED | Defines a representation or modeling rule for maps and gis layers as representations rather than the world within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-MOD-002 | Scale, CRS, Projection, Symbol, and Fitness-for-Use Decisions | MOD — Representation and semantics | CONFIRMED | Defines a representation or modeling rule for scale, crs, projection, symbol, and fitness-for-use decisions within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-MOD-003 | Valid, Source, Retrieval, Release, and Correction Time Separation | MOD — Representation and semantics | CONFIRMED | Defines a representation or modeling rule for valid, source, retrieval, release, and correction time separation within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-MOD-004 | Bitemporal and Time-Oriented State Modeling | MOD — Representation and semantics | CONFIRMED | Defines a representation or modeling rule for bitemporal and time-oriented state modeling within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-MOD-005 | Bounded Contexts and Ubiquitous Language for Domain Lanes | MOD — Representation and semantics | PROPOSED | Defines a representation or modeling rule for bounded contexts and ubiquitous language for domain lanes within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-MOD-006 | Assertion-First Domain Records Over Flattened Labels | MOD — Representation and semantics | PROPOSED | Defines a representation or modeling rule for assertion-first domain records over flattened labels within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-MOD-007 | Raster, Vector, Network, Field, 2.5D, and 3D Distinctions | MOD — Representation and semantics | CONFIRMED | Defines a representation or modeling rule for raster, vector, network, field, 2.5d, and 3d distinctions within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-MOD-008 | Knowledge-Character Labels for Observed, Modeled, Regulatory, and Interpretive Data | MOD — Representation and semantics | CONFIRMED | Defines a representation or modeling rule for knowledge-character labels for observed, modeled, regulatory, and interpretive data within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-003; KFM-IDX-INT-001 | Convert into domain vocabularies, temporal fields, and representation metadata. |
+| KFM-IDX-POL-001 | Deny-by-Default for Sensitive Exact Locations | POL — Policy and sensitivity | CONFIRMED | Defines a policy or exposure-control rule for deny-by-default for sensitive exact locations within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-POL-002 | Rights and License Verification Gate | POL — Policy and sensitivity | CONFIRMED | Defines a policy or exposure-control rule for rights and license verification gate within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-POL-003 | Living-Person, DNA, and Genomic Restriction Posture | POL — Policy and sensitivity | CONFIRMED | Defines a policy or exposure-control rule for living-person, dna, and genomic restriction posture within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-POL-004 | Cultural, Archaeological, and Steward Review Controls | POL — Policy and sensitivity | CONFIRMED | Defines a policy or exposure-control rule for cultural, archaeological, and steward review controls within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-POL-005 | Rare Species Geoprivacy and Transform Receipts | POL — Policy and sensitivity | CONFIRMED | Defines a policy or exposure-control rule for rare species geoprivacy and transform receipts within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-POL-006 | Critical Infrastructure and Public-Safety Exposure Controls | POL — Policy and sensitivity | CONFIRMED | Defines a policy or exposure-control rule for critical infrastructure and public-safety exposure controls within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-POL-007 | Hazards Boundary: KFM Is Not an Emergency Alert System | POL — Policy and sensitivity | CONFIRMED | Defines a policy or exposure-control rule for hazards boundary: kfm is not an emergency alert system within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-POL-008 | Domain Policy Profiles and Access Roles | POL — Policy and sensitivity | PROPOSED | Defines a policy or exposure-control rule for domain policy profiles and access roles within KFM's evidence-first architecture. | KFM-IDX-VAL-002; KFM-IDX-EVD-004; KFM-IDX-APP-007 | Convert into policy profiles, access roles, denials, and transform receipts. |
+| KFM-IDX-VAL-001 | No-Network Fixture-First Validation | VAL — Validation and release | CONFIRMED | Defines a validation or release-control rule for no-network fixture-first validation within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-VAL-002 | Validators Fail Closed on Schema, Policy, Rights, Sensitivity, and Release Violations | VAL — Validation and release | CONFIRMED | Defines a validation or release-control rule for validators fail closed on schema, policy, rights, sensitivity, and release violations within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-VAL-003 | CI Probes with Source Heads and Run Receipts | VAL — Validation and release | PROPOSED | Defines a validation or release-control rule for ci probes with source heads and run receipts within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-VAL-004 | Material-Change Watcher Validation | VAL — Validation and release | PROPOSED | Defines a validation or release-control rule for material-change watcher validation within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-VAL-005 | PMTiles Attestation Validator | VAL — Validation and release | PROPOSED | Defines a validation or release-control rule for pmtiles attestation validator within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-VAL-006 | Schema, Contract, Policy, and Directory Drift Detection | VAL — Validation and release | CONFIRMED | Defines a validation or release-control rule for schema, contract, policy, and directory drift detection within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-VAL-007 | Finite Failure Outcomes and Observability Records | VAL — Validation and release | CONFIRMED | Defines a validation or release-control rule for finite failure outcomes and observability records within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-VAL-008 | External Source Currentness and Rights Reverification Backlog | VAL — Validation and release | NEEDS VERIFICATION | Defines a validation or release-control rule for external source currentness and rights reverification backlog within KFM's evidence-first architecture. | KFM-IDX-SRC-008; KFM-IDX-EVD-004; KFM-IDX-POL-002 | Convert into no-network tests, validators, CI probes, and failure envelopes. |
+| KFM-IDX-MAP-001 | Governed API as Trust Membrane | MAP — API/map/UI delivery | CONFIRMED | Defines a governed delivery or map-surface rule for governed api as trust membrane within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-MAP-002 | Resource Ontology and HTTP Contract Discipline | MAP — API/map/UI delivery | CONFIRMED | Defines a governed delivery or map-surface rule for resource ontology and http contract discipline within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-MAP-003 | MapLibre as Downstream 2D Renderer | MAP — API/map/UI delivery | CONFIRMED | Defines a governed delivery or map-surface rule for maplibre as downstream 2d renderer within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-MAP-004 | Tiles, PMTiles, COGs, GeoParquet, and MVT/MLT as Rebuildable Artifacts | MAP — API/map/UI delivery | CONFIRMED | Defines a governed delivery or map-surface rule for tiles, pmtiles, cogs, geoparquet, and mvt/mlt as rebuildable artifacts within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-MAP-005 | Layer, Style, TileArtifact, and MapRelease Manifests | MAP — API/map/UI delivery | PROPOSED | Defines a governed delivery or map-surface rule for layer, style, tileartifact, and maprelease manifests within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-MAP-006 | Evidence Drawer and Focus Mode as Trust-Visible Surfaces | MAP — API/map/UI delivery | CONFIRMED | Defines a governed delivery or map-surface rule for evidence drawer and focus mode as trust-visible surfaces within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-MAP-007 | Story Nodes and Review Surfaces | MAP — API/map/UI delivery | PROPOSED | Defines a governed delivery or map-surface rule for story nodes and review surfaces within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-MAP-008 | Client Verification of Released Map Artifacts | MAP — API/map/UI delivery | PROPOSED | Defines a governed delivery or map-surface rule for client verification of released map artifacts within KFM's evidence-first architecture. | KFM-IDX-GOV-006; KFM-IDX-EVD-002; KFM-IDX-VAL-005 | Convert into governed API contracts, manifests, drawer payloads, and map proof gates. |
+| KFM-IDX-INT-001 | Spatial Analysis as Interpretation, Not Root Truth | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for spatial analysis as interpretation, not root truth within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-INT-002 | Indicators and Planning Support Need Declared Assumptions | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for indicators and planning support need declared assumptions within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-INT-003 | Machine Learning Outputs Remain Derivative | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for machine learning outputs remain derivative within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-INT-004 | Field Capture and Remote Sensing as Candidate Evidence | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for field capture and remote sensing as candidate evidence within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-INT-005 | 2.5D and Full 3D Are Not Interchangeable | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for 2.5d and full 3d are not interchangeable within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-INT-006 | Web Scraping and External Feed Acquisition Need Drift Control | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for web scraping and external feed acquisition need drift control within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-INT-007 | Bounded AI/RAG Synthesis with Citation Validation | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for bounded ai/rag synthesis with citation validation within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-INT-008 | Participatory, Equity, and Scenario Decision Support | INT — Interpretation and planning | CONFIRMED | Defines an interpretive-use rule for participatory, equity, and scenario decision support within KFM's evidence-first architecture. | KFM-IDX-EVD-001; KFM-IDX-MAP-006; KFM-IDX-VAL-007 | Convert into bounded analysis, AI, indicator, and scenario acceptance criteria. |
+| KFM-IDX-APP-001 | Hydrology Proof Lane | APP — Applied domain lanes | PROPOSED | Identifies an applied KFM lane or pilot for hydrology proof lane within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+| KFM-IDX-APP-002 | Habitat-Fauna Public-Safe Occurrence Assignment Thin Slice | APP — Applied domain lanes | PROPOSED | Identifies an applied KFM lane or pilot for habitat-fauna public-safe occurrence assignment thin slice within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+| KFM-IDX-APP-003 | Ecology Source-Watcher Operational Slice | APP — Applied domain lanes | PROPOSED | Identifies an applied KFM lane or pilot for ecology source-watcher operational slice within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+| KFM-IDX-APP-004 | Soil, Agriculture, CDL, PLANTS, and Landcover Material-Change Lane | APP — Applied domain lanes | PROPOSED | Identifies an applied KFM lane or pilot for soil, agriculture, cdl, plants, and landcover material-change lane within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+| KFM-IDX-APP-005 | Atmosphere and Hazards Knowledge-Character Separation | APP — Applied domain lanes | CONFIRMED | Identifies an applied KFM lane or pilot for atmosphere and hazards knowledge-character separation within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+| KFM-IDX-APP-006 | Roads, Rail, Trade, Settlements, Infrastructure, and Geology Boundary Discipline | APP — Applied domain lanes | CONFIRMED | Identifies an applied KFM lane or pilot for roads, rail, trade, settlements, infrastructure, and geology boundary discipline within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+| KFM-IDX-APP-007 | People, Genealogy, DNA, Land, and Archaeology Sensitive Assertion Lanes | APP — Applied domain lanes | CONFIRMED | Identifies an applied KFM lane or pilot for people, genealogy, dna, land, and archaeology sensitive assertion lanes within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+| KFM-IDX-APP-008 | Frontier-Demography and Economy County-Year Panel Concept | APP — Applied domain lanes | PROPOSED | Identifies an applied KFM lane or pilot for frontier-demography and economy county-year panel concept within KFM's evidence-first architecture. | KFM-IDX-SRC-001; KFM-IDX-EVD-002; KFM-IDX-VAL-001 | Convert into small proof lanes and prioritized domain pilots. |
+
+## 13. Appendix B — Source Contribution Matrix and Filename-to-Short-Tag Mapping
+
+This appendix records the Phase 1 short tags used throughout the dossier. The contribution column summarizes how the source was used in synthesis; the limitation column prevents source flattening.
+
+| Short tag | Filename | Status / length signal | Contribution | Limitation |
+|---|---|---|---|---|
+| [Implementation Reference] | `# Kansas Frontier Matrix Implementation Reference.pdf` | READABLE; 20 pages | Source contribution recorded in Phase 1 and synthesized in Phase 2. | Does not by itself prove current live repository behavior. |
+| [GIS Primer] | `a-primer-of-gis-fundamental-geographic-and-cartographic-concepts.pdf` | READABLE; 321 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Advanced SQL] | `Advanced-SQL-Concepts.pdf` | READABLE; 112 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [AI Python] | `AI_Concepts_Using_Python.pdf` | READABLE; 435 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Archaeological 3D GIS] | `Archaeological 3D GIS.pdf` | READABLE; 177 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Web APIs] | `Designing Great Web APIs.pdf` | READABLE; 45 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Temporal SQL] | `developing-time-oriented-database-applications-in-sql.pdf` | READABLE; 528 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Directory Rules] | `Directory Rules.pdf` | READABLE; 22 pages | Governing doctrine, build posture, lifecycle law, or control-plane vocabulary. | Does not by itself prove current live repository behavior. |
+| [DDD Reference] | `Domain-Driven Design Reference.pdf` | READABLE; 59 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [ArcGIS Environmental] | `Earth, Space, and Environmental Science Explorations with ArcGIS Pro ed2.pdf` | READABLE; 141 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Urban GIS] | `GIS in Sustainable Urban Planning and Management.pdf` | READABLE; 365 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Web Scraping Java] | `instant-web-scraping-with-java.pdf` | READABLE; 72 pages | Technical vocabulary and method support; KFM adoption remains governed synthesis. | Does not prove KFM implementation; adaptation requires KFM contracts and validation. |
+| [Greenfield Building Plan] | `Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf` | READABLE; 28 pages | Governing doctrine, build posture, lifecycle law, or control-plane vocabulary. | Does not by itself prove current live repository behavior. |
+| [Pipeline Manual] | `Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf` | READABLE; 30 pages | Governing doctrine, build posture, lifecycle law, or control-plane vocabulary. | Does not by itself prove current live repository behavior. |
+| [Agriculture] | `KFM_Agriculture_Domain_Implementation_Dossier_REVISED_2026-04-21.pdf` | READABLE; 48 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Archaeology Plan] | `KFM_Archaeology_Architecture_Plan_PDF_Only.pdf` | READABLE; 51 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Atmosphere Air] | `KFM_Atmosphere_Air_PDF_Only_Architecture_Report_2026-04-21.pdf` | READABLE; 52 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Pass 19] | `KFM_Components_Pass_19_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` | READABLE; 54 pages | Prior cumulative synthesis and continuity baseline; used as lineage and corroboration. | Continuity source; does not outrank original evidence or current repo proof. |
+| [KFM Encyclopedia] | `kfm_encyclopedia.pdf` | READABLE; 82 pages | Governing doctrine, build posture, lifecycle law, or control-plane vocabulary. | Does not by itself prove current live repository behavior. |
+| [Fauna] | `KFM_Fauna_Architecture_PDF_Only_Report.pdf` | READABLE; 37 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Flora] | `KFM_Flora_Architecture_PDF_Only_Implementation_Blueprint.pdf` | READABLE; 36 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Geology Resources] | `KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf` | READABLE; 42 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Governed AI Ledger] | `KFM_Governed_AI_Extended_Pro_Source_Ledger_PDF_Only_Architecture_Report_2026-04-20.pdf` | READABLE; 36 pages | Governed AI, runtime, Focus Mode, and evidence-bound response posture. | Does not by itself prove current live repository behavior. |
+| [Habitat] | `kfm_habitat_architecture_pdf_only_blueprint_2026-04-21.pdf` | READABLE; 28 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Habitat Fauna Thin Slice] | `KFM_Habitat_Fauna_Thin_Slice_Extended_Pro_Blueprint.pdf` | READABLE; 20 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Hazards] | `kfm_hazards_extended_pro_pdf_only_blueprint.pdf` | READABLE; 26 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Hydrology] | `KFM_Hydrology_Extended_Pro_PDF_Only_Reference_Report_2026-04-21.pdf` | READABLE; 43 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [MapLibre Operating Manual] | `KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf` | READABLE; 22 pages | Source contribution recorded in Phase 1 and synthesized in Phase 2. | Does not by itself prove current live repository behavior. |
+| [Pass 18] | `KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` | READABLE; 509 pages | Prior cumulative synthesis and continuity baseline; used as lineage and corroboration. | Continuity source; does not outrank original evidence or current repo proof. |
+| [People DNA Land] | `KFM_People_Genealogy_DNA_Land_Ownership_Architecture_Blueprint.pdf` | READABLE; 30 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Roads Rail Trade] | `KFM_Roads_Rail_Trade_Routes_PDF_Only_Architecture_Plan_2026-04-21.pdf` | READABLE; 35 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Settlements Infrastructure] | `kfm_settlements_infrastructure_extended_pro_plan_2026-04-21.pdf` | READABLE; 43 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Soil] | `kfm_soil_architecture_extended_pro_pdf_only_report.pdf` | READABLE; 25 pages | Domain-lane architecture, sensitivity posture, source-role patterns, and proof-slice candidates. | Planning lineage only unless current repo evidence confirms files, tests, and runtime. |
+| [Whole UI AI] | `KFM_Whole_UI_Governed_AI_Expansion_Report.pdf` | READABLE; 23 pages | Governed AI, runtime, Focus Mode, and evidence-bound response posture. | Does not by itself prove current live repository behavior. |
+| [Master MapLibre Atlas] | `Master MapLibre Components-Functions-Features.pdf` | READABLE; 554 pages | Prior cumulative synthesis and continuity baseline; used as lineage and corroboration. | Continuity source; does not outrank original evidence or current repo proof. |
+| [New Ideas 5-10] | `New Ideas 5-10-26.pdf` | READABLE; 319 pages | Operational expansion pressure, watchers, attestation, or material-change proposals. | Version-sensitive and operationally current facts require reverification. |
+| [New Ideas 5-15] | `New Ideas 5-15-26.pdf` | READABLE; 220 pages | Operational expansion pressure, watchers, attestation, or material-change proposals. | Version-sensitive and operationally current facts require reverification. |
+| [New Ideas 5-8] | `New Ideas 5-8-26.pdf` | READABLE; 321 pages | Operational expansion pressure, watchers, attestation, or material-change proposals. | Version-sensitive and operationally current facts require reverification. |
+| [Ollama Ubuntu] | `Ollama & Ubuntu Information.pdf` | READABLE; 66 pages | Governed AI, runtime, Focus Mode, and evidence-bound response posture. | Does not by itself prove current live repository behavior. |
+
+
+## 14. Appendix C — Expansion Backlog by Priority
+
+| Priority | Backlog item | Primary category | First artifact | Verification / rollback note |
+|---|---|---|---|---|
+| High | Mounted repo evidence pass | GOV / VAL | RepoEvidenceReport | Do not promote implementation claims until repo, tests, workflows, and artifacts are inspected. |
+| High | Schema-home and Directory Rules reconciliation | GOV / VAL | SchemaHomeDecision or drift-register entry | If repo conflicts with doctrine, record drift or create ADR before adding files. |
+| High | Hydrology proof lane | APP / SRC / EVD / MAP | HUC12 + observation + regulatory-context fixture pack | Keep no-network until source rights and endpoints are verified. |
+| High | Source-currentness and rights backlog | SRC / POL / VAL | SourceCurrentnessReport | Deny activation when rights, cadence, or endpoint behavior is stale or unknown. |
+| High | PMTiles attestation validator | EVD / MAP / VAL | PMTiles sidecar schema and validator fixtures | Start with schema/root-hash checks; add signatures and byte-range proofs later. |
+| High | Object-family map | EVD / GOV | Trust Object Family Map | Prevent receipts, proofs, catalogs, releases, and claims from collapsing. |
+| High | Habitat-fauna public-safe occurrence assignment | APP / POL | Redacted occurrence assignment fixture | Public exact geometry remains denied unless policy and review allow. |
+| Medium | Governed API mock contract | MAP / INT | EvidenceRef-to-drawer mock API contract | No direct model, RAW, WORK, QUARANTINE, or canonical store access. |
+| Medium | Governed AI MockAdapter proof | INT / EVD / VAL | Finite outcome and citation-validation fixtures | Keep local/Ollama or other model runtime out until adapter contract is proven. |
+| Medium | CDL/PLANTS material-change watcher | SRC / APP / VAL | CDL sidecar and PROPOSED_WORK_RECORD fixtures | Watchers propose work only; publication remains gated. |
+| Medium | Hazards/atmosphere knowledge-character fixture | MOD / POL / APP | Mixed observed/modeled/regulatory/operational payload pack | Include not-emergency-alert boundary and freshness states. |
+| Medium | Evidence Drawer language guide | MAP / POL | Public-safe explanation patterns | Explain abstention, denial, generalized geometry, stale state, and withheld evidence. |
+| Medium | Published-language glossary | MOD | Domain terms seed glossary | Use shared governance terms with domain-specific meanings where needed. |
+| Medium | Frontier county-year panel concept note | APP / MOD / INT | FrontierPanelSourceMemo | Do not build flagship panel before source and geography-version proof. |
+| Low | Story Node pilot | MAP / INT / POL | StoryManifest fixture | Use only governed payloads and preserve uncertainty and correction links. |
+| Low | 3D / terrain admission checklist | MOD / INT / POL | 2.5D versus 3D comparison fixture | Use 3D only where evidence burden justifies it and sensitivity is handled. |
+| Low | Package/version review | VAL / MAP | VersionPinReview note | Recheck official versions and licenses before pins or publication. |
+| Low | Steward review backlog | POL / APP | StewardReviewBacklog | Required before culturally sensitive, archaeological, or sovereignty-relevant release. |
+
+
+---
+
 # KFM Components Pass 20 Part 2 — Idea Index, Category Atlas, and Expansion Dossier
 
 *A detailed evidence-first synthesis of the attached source corpus.*
