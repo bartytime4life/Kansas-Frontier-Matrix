@@ -4,7 +4,7 @@ title: Habitat Domain — Expansion Backlog
 type: standard
 version: v1
 status: draft
-owners: [habitat-domain-steward, docs-steward] <!-- PROPOSED placeholders -->
+owners: [habitat-domain-steward, docs-steward]   # PROPOSED placeholders
 created: 2026-05-17
 updated: 2026-05-17
 policy_label: public
@@ -23,7 +23,6 @@ notes:
   - Anchors the Atlas v1.0 §6.N habitat verification backlog into PR-shaped work.
 [/KFM_META_BLOCK_V2] -->
 
-<a id="top"></a>
 
 # 🌿 Habitat Domain — Expansion Backlog
 
