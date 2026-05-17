@@ -4,7 +4,7 @@ title: Hazards — Map and UI Contracts
 type: standard
 version: v1
 status: draft
-owners: <Hazards domain steward> + <Map shell steward> + <Governed API steward>  <!-- placeholder; resolve before publish -->
+owners: <Hazards domain steward> + <Map shell steward> + <Governed API steward>   # placeholder; resolve before publish
 created: 2026-05-17
 updated: 2026-05-17
 policy_label: public
