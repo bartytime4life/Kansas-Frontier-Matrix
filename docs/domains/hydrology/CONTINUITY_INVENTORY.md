@@ -4,7 +4,7 @@ title: Hydrology — Continuity Inventory
 type: standard
 version: v1
 status: draft
-owners: <hydrology-stewards>  <!-- NEEDS VERIFICATION: confirm CODEOWNERS entry for docs/domains/hydrology/ -->
+owners: hydrology-stewards   # NEEDS VERIFICATION: confirm CODEOWNERS entry for docs/domains/hydrology/
 created: 2026-05-17
 updated: 2026-05-17
 policy_label: public
@@ -30,8 +30,6 @@ notes:
   - "Lineage classification only; not an implementation claim."
   - "All path-bearing claims governed by Directory Rules §3, §4, §12."
 [/KFM_META_BLOCK_V2] -->
-
-<a id="top"></a>
 
 # Hydrology — Continuity Inventory
 
