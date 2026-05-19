@@ -4853,1961 +4853,1232 @@ PROPOSED: New Ideas 4-14-26 and New Ideas 4-15-26 candidate material is folded i
 
 Read each card by stable ID first. The normalized statement carries the controlling truth label. Pass 1 through Pass 22 cards are UNCHANGED, EXPANDED, or QUARANTINED. Pass 23 source entries appear as addenda when they safely refine prior ideas. New active cards use KFM-P23-IDEA/FEAT/PROG identifiers. Quarantined cards are retained for review and not adopted. Source IDs resolve in the Source Attribution Table.
 
-### 5. Machine-Readable Index
+### 5. Machine-Readable Index — Pass 23
 
-```
-stable_id | class | category | carry_forward_state | status | pass_introduced | pass_last_touched | source_ids | spec_hash | atlas_section | page_hint
-KFM-P1-IDEA-0061 | idea | ANA | UNCHANGED | active | 1 | 15 | SRC-P23-001,SRC-P23-002 | sha256:db79d625627e8be34... | 8.1.1 | 34
-KFM-P1-IDEA-0064 | idea | ANA | UNCHANGED | active | 1 | 15 | SRC-P23-001,SRC-P23-002 | sha256:d04ffe533236e2116... | 8.1.2 | 35
-```
+> **`CONFIRMED`** Pass 23 stable-ID inventory: **1,058** cards across **13** categories. Reorganized from a PDF-page-broken pipe-delimited dump into per-category tables. Card metadata is unchanged; no stable IDs were added, removed, or renumbered. The canonical machine surface remains the co-versioned `manifest-pass-23.jsonl` sidecar.
 
-<!-- page: 190 -->
+#### 5.1 Column Legend & Defaults
 
-```
-KFM-P1-IDEA-0073 | idea | ANA | UNCHANGED | active | 1 | 15 | SRC-P23-001,SRC-P23-002 | sha256:708e299b5ebb9da56... | 8.1.3 | 36
-KFM-P1-PROG-0062 | programming | ANA | UNCHANGED | active | 1 | 15 | SRC-P23-001,SRC-P23-002 | sha256:4e94a7c429755497e... | 8.1.4 | 37
-KFM-P1-PROG-0063 | programming | ANA | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6818765c56dc8e6ee... | 8.1.5 | 38
-KFM-P10-PROG-0009 | programming | ANA | UNCHANGED | active | 10 | 14 | SRC-P23-001,SRC-P23-002 | sha256:f2961fb6d85573bbd... | 8.1.6 | 39
-KFM-P10-PROG-0016 | programming | ANA | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:7ee82a4229aa52e68... | 8.1.7 | 40
-KFM-P10-PROG-0017 | programming | ANA | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:8680984fbd2381526... | 8.1.8 | 41
-KFM-P10-PROG-0018 | programming | ANA | UNCHANGED | active | 10 | 20 | SRC-P23-001,SRC-P23-002 | sha256:6fe42fb3f42b56f06... | 8.1.9 | 42
-KFM-P11-FEAT-0002 | feature | ANA | UNCHANGED | active | 11 | 15 | SRC-P23-001,SRC-P23-002 | sha256:466b3b13793a073fe... | 8.1.10 | 43
-KFM-P11-PROG-0001 | programming | ANA | UNCHANGED | active | 11 | 11 | SRC-P23-001,SRC-P23-002 | sha256:fc9900e5b95465455... | 8.1.11 | 44
-KFM-P11-PROG-0002 | programming | ANA | UNCHANGED | active | 11 | 11 | SRC-P23-001,SRC-P23-002 | sha256:c87091ef67e751309... | 8.1.12 | 45
-KFM-P11-PROG-0005 | programming | ANA | UNCHANGED | active | 11 | 11 | SRC-P23-001,SRC-P23-002 | sha256:ba398aa0472783d61... | 8.1.13 | 46
-KFM-P11-PROG-0012 | programming | ANA | EXPANDED | active | 11 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 | sha256:b9b92d7cc09921c3b... | 8.1.14 | 47
-KFM-P11-PROG-0020 | programming | ANA | UNCHANGED | active | 11 | 15 | SRC-P23-001,SRC-P23-002 | sha256:1dc9c038942c8d452... | 8.1.15 | 48
-KFM-P12-IDEA-0001 | idea | ANA | UNCHANGED | active | 12 | 14 | SRC-P23-001,SRC-P23-002 | sha256:ce604b33dacc5f798... | 8.1.16 | 49
-KFM-P12-PROG-0003 | programming | ANA | UNCHANGED | active | 12 | 15 | SRC-P23-001,SRC-P23-002 | sha256:c0b528827c2cca6d9... | 8.1.17 | 50
-KFM-P12-PROG-0022 | programming | ANA | UNCHANGED | active | 12 | 15 | SRC-P23-001,SRC-P23-002 | sha256:4fb332a7ab7015c8d... | 8.1.18 | 51
-KFM-P12-PROG-0028 | programming | ANA | UNCHANGED | active | 12 | 15 | SRC-P23-001,SRC-P23-002 | sha256:4cb06f73635f7c675... | 8.1.19 | 52
-KFM-P13-PROG-0006 | programming | ANA | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:82bad1bef5f099754... | 8.1.20 | 53
-KFM-P13-PROG-0015 | programming | ANA | UNCHANGED | active | 13 | 14 | SRC-P23-001,SRC-P23-002 | sha256:5b7f20a7be9005995... | 8.1.21 | 54
-KFM-P14-PROG-0013 | programming | ANA | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:5135e205858d87b04... | 8.1.22 | 55
-KFM-P14-PROG-0020 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:b4880b0424d11b916... | 8.1.23 | 56
-KFM-P14-PROG-0022 | programming | ANA | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:a4cbc8a60b9fbd746... | 8.1.24 | 57
-KFM-P14-PROG-0026 | programming | ANA | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 | sha256:78b4aa7351c490422... | 8.1.25 | 58
-KFM-P14-PROG-0035 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:9717dfc6a82a60256... | 8.1.26 | 59
-KFM-P14-PROG-0036 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:61cab5f4875acf858... | 8.1.27 | 60
-KFM-P14-PROG-0037 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:20bc68976e9834f9c... | 8.1.28 | 61
-KFM-P15-PROG-0009 | programming | ANA | EXPANDED | active | 15 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 | sha256:df41508c070dd2350... | 8.1.29 | 62
-KFM-P15-PROG-0010 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:b6c0fa90348f08250... | 8.1.30 | 63
-KFM-P15-PROG-0011 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:e8b430d2fffc82203... | 8.1.31 | 64
-KFM-P15-PROG-0012 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:8ab15faf92047d363... | 8.1.32 | 65
-KFM-P15-PROG-0024 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:e470eb9f60c0bc571... | 8.1.33 | 66
-KFM-P15-PROG-0036 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:34dec0bc17ddc47a7... | 8.1.34 | 67
-KFM-P16-IDEA-0002 | idea | ANA | UNCHANGED | active | 16 | 19 | SRC-P23-001,SRC-P23-002 | sha256:3241be040dd70f80e... | 8.1.35 | 68
-KFM-P17-PROG-0013 | programming | ANA | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:618647bb751d774e0... | 8.1.36 | 69
-KFM-P17-PROG-0015 | programming | ANA | UNCHANGED | active | 17 | 18 | SRC-P23-001,SRC-P23-002 | sha256:ba92dc7cb254335d9... | 8.1.37 | 70
-KFM-P17-PROG-0021 | programming | ANA | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:39a511df270fce6bd... | 8.1.38 | 71
-KFM-P17-PROG-0034 | programming | ANA | EXPANDED | active | 17 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 | sha256:704058e248e4e9572... | 8.1.39 | 72
-KFM-P18-IDEA-0008 | idea | ANA | UNCHANGED | active | 18 | 20 | SRC-P23-001,SRC-P23-002 | sha256:03c55131864a07801... | 8.1.40 | 73
-KFM-P18-PROG-0015 | programming | ANA | UNCHANGED | active | 18 | 19 | SRC-P23-001,SRC-P23-002 | sha256:322da0c762385f718... | 8.1.41 | 74
+| Column | Meaning | Default (omitted in rows) |
+|---|---|---|
+| `Stable ID` | Permanent card identifier (`KFM-P{pass}-{class3}-{ordinal}`); never reused | — |
+| `Class` | `feature`, `idea`, or `programming` | — |
+| `Carry` | `UNCHANGED`, `EXPANDED`, `NEW`, `SUPERSEDED`, `QUARANTINED`, `WITHDRAWN_ON_EVIDENCE` | — |
+| `Status` | `active` or `quarantine` | `active` (omitted when default) |
+| `Passes` | `pass_introduced → pass_last_touched` | — |
+| `Sources` | Pass-scoped source attribution IDs | `SRC-P23-001,SRC-P23-002` (835 of 1,058 rows; shown as `—` when default) |
+| `Spec hash` | SHA-256 prefix of canonicalized card body (first 17 chars) | — |
+| `§` | Atlas section number (e.g. `8.1.1`) | — |
+| `Page` | Page hint within the Pass 23 source PDF | — |
 
-5. Machine-Readable Index (continued)
-KFM-P18-PROG-0018 | programming | ANA | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:9dd09113ab7cf66db... | 8.1.42 | 75
-KFM-P18-PROG-0035 | programming | ANA | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 | sha256:5b620936be7167669... | 8.1.43 | 76
-KFM-P19-IDEA-0008 | idea | ANA | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:e8580d00d38ec16f5... | 8.1.44 | 77
-KFM-P19-PROG-0016 | programming | ANA | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:924e087b69c3e32b3... | 8.1.45 | 78
-KFM-P20-FEAT-0007 | feature | ANA | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:5b0b00dd29d966bfe... | 8.1.46 | 79
-KFM-P20-IDEA-0002 | idea | ANA | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:8244778ef02094ceb... | 8.1.47 | 80
-KFM-P20-IDEA-0010 | idea | ANA | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:8e62cd9d48a8fb502... | 8.1.48 | 81
-KFM-P20-PROG-0034 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:4000da7007c4d1cb4... | 8.1.49 | 82
-KFM-P20-PROG-0035 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:42ab62701399be8ef... | 8.1.50 | 83
-KFM-P20-PROG-0039 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:cfcc2b9f96a8b1be9... | 8.1.51 | 84
-KFM-P20-PROG-0041 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:a127060e09b8be613... | 8.1.52 | 85
-KFM-P21-PROG-0007 | programming | ANA | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 | sha256:9854059d51180bcde... | 8.1.53 | 86
-KFM-P21-PROG-0013 | programming | ANA | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:643968ef7ec935da5... | 8.1.54 | 87
-```
+#### 5.2 Summary by Category
 
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 11: pages 191–193 -->
+| Category | Cards | feature | idea | programming | UNCHANGED | EXPANDED | NEW | quarantine |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| **ANA** — Analysis, Indicators, Statistics, ML, Model Interpretation | 120 | 24 | 30 | 66 | 114 | 6 | — | — |
+| **CAT** — Catalog, Discovery, Registration | 49 | 4 | 10 | 35 | 38 | 9 | 2 | — |
+| **DAT** — Data Lifecycle, Provenance, Receipts | 83 | 1 | 23 | 59 | 69 | 10 | 4 | — |
+| **DOC** — Documentation, Doctrine, Reader Surfaces | 38 | 4 | 8 | 26 | 31 | 1 | 1 | 5 |
+| **EVD** — Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain | 75 | 2 | 16 | 57 | 60 | 10 | 5 | — |
+| **MAP** — Map Surface, MapLibre, Tiles, Styling | 96 | 23 | 20 | 53 | 87 | 6 | 3 | — |
+| **MDP** — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV) | 42 | — | 5 | 37 | 31 | 8 | 3 | — |
+| **MOD** — Data Modeling, Domain Semantics, Temporal Structure, SQL | 70 | — | 13 | 57 | 59 | 3 | 5 | 3 |
+| **PIP** — Pipelines, Pipeline Specs, Validators | 191 | — | 12 | 179 | 113 | 58 | 19 | 1 |
+| **POL** — Policy-as-Code, Sensitivity, Rights, Sovereignty | 83 | 2 | 20 | 61 | 61 | 16 | 6 | — |
+| **REL** — Catalog Closure, Publication, Release, Rollback, Recompile | 63 | 3 | 17 | 43 | 45 | 13 | 5 | — |
+| **SEC** — Security, Auditability, Signatures, Attestation | 87 | 3 | 6 | 78 | 70 | 13 | 4 | — |
+| **UIX** — UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | 61 | 40 | 2 | 19 | 49 | 9 | 3 | — |
+| **Total** | **1,058** | 106 | 182 | 770 | 827 | 162 | 60 | 9 |
 
-<!-- page: 191 -->
+#### 5.3 ANA — Analysis, Indicators, Statistics, ML, Model Interpretation
 
-```text
-KFM-P3-IDEA-0002 | idea | ANA | UNCHANGED | active | 3 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a479899b4ef3feccd... | 8.1.55 | 88
-KFM-P4-IDEA-0001 | idea | ANA | UNCHANGED | active | 4 | 14 | SRC-P23-001,SRC-P23-002 | sha256:f883e6e3f63bd13c4... | 8.1.56 | 89
-KFM-P8-IDEA-0003 | idea | ANA | UNCHANGED | active | 8 | 9 | SRC-P23-001,SRC-P23-002 | sha256:3d5c12ce906673266... | 8.1.57 | 90
-KFM-P8-PROG-0022 | programming | ANA | UNCHANGED | active | 8 | 10 | SRC-P23-001,SRC-P23-002 | sha256:d7d858fbdf39e44fd... | 8.1.58 |
-91
-KFM-P9-FEAT-0005 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:8ee8d1a12892c0670... | 8.1.59 | 92
-KFM-P9-FEAT-0006 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:30a83f43fcc29a4ad... | 8.1.60 | 93
-KFM-P9-FEAT-0007 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:86173261044738580... | 8.1.61 | 94
-KFM-P9-FEAT-0008 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6d395f2266864a116... | 8.1.62 | 95
-KFM-P9-FEAT-0009 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:bab61d3a39dda36af... | 8.1.63 | 96
-KFM-P9-FEAT-0010 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:4468507b7d0ee46af... | 8.1.64 | 97
-KFM-P9-FEAT-0017 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a1fb66f465fd853c0... | 8.1.65 | 98
-KFM-P9-FEAT-0018 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:c1389def38f9bed05... | 8.1.66 | 99
-KFM-P9-FEAT-0019 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:130e0564f4b7b8baf... | 8.1.67 | 100
-KFM-P9-FEAT-0020 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:cea42a876479ab2f6... | 8.1.68 | 101
-KFM-P9-FEAT-0021 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:1badd2c1d0720c35f... | 8.1.69 | 102
-KFM-P9-FEAT-0022 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:146388c7a823feb52... | 8.1.70 | 103
-KFM-P9-FEAT-0023 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:d28aa81c8b3dc18b0... | 8.1.71 | 104
-KFM-P9-FEAT-0024 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:54a7e0d208502cfaf... | 8.1.72 | 105
-KFM-P9-FEAT-0025 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:f2592daafd5f20b0d... | 8.1.73 | 106
-KFM-P9-FEAT-0026 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:cd5b076ad2403409b... | 8.1.74 | 107
-KFM-P9-FEAT-0027 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:be5626c2971cd9f56... | 8.1.75 | 108
-KFM-P9-FEAT-0028 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:3b4c5e9a074c11a3c... | 8.1.76 | 109
-KFM-P9-FEAT-0029 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:f137dbeadaf6fd1f5... | 8.1.77 | 110
-KFM-P9-FEAT-0030 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:30cf5a66b0c05b467... | 8.1.78 | 111
-KFM-P9-FEAT-0031 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:fcb3f6bda28b17dd0... | 8.1.79 | 112
-KFM-P9-FEAT-0032 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:22ecc6e05c126abfd... | 8.1.80 | 113
-KFM-P9-IDEA-0021 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:8b454874a0a567252... | 8.1.81 | 114
-KFM-P9-IDEA-0022 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:cca5d5b2c8635bf58... | 8.1.82 | 115
-KFM-P9-IDEA-0023 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:9d5494937366db638... | 8.1.83 | 116
-5. Machine-Readable Index (continued)
-KFM-P9-IDEA-0024 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:0990438608ee0004a... | 8.1.84 | 117
-KFM-P9-IDEA-0025 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:707fa88f4b3f13cb6... | 8.1.85 | 118
-KFM-P9-IDEA-0026 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:d05086c0463975f1a... | 8.1.86 | 119
-KFM-P9-IDEA-0027 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a22300b5922995ab2... | 8.1.87 | 120
-KFM-P9-IDEA-0028 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:743ed52d8993b41cd... | 8.1.88 | 121
-KFM-P9-IDEA-0029 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:9d9b1e7b211373668... | 8.1.89 | 122
-KFM-P9-IDEA-0030 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:13d8f6c7ffffc00d8... | 8.1.90 | 123
-KFM-P9-IDEA-0031 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:7e939b62450c3ee45... | 8.1.91 | 124
-KFM-P9-IDEA-0032 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:7cf68fb011ee43fdf... | 8.1.92 | 125
-KFM-P9-IDEA-0033 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:1ce113071f34d2248... | 8.1.93 | 126
-KFM-P9-IDEA-0034 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:e3351f41aa499297e... | 8.1.94 | 127
-KFM-P9-IDEA-0035 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:28d19072d0f1ec568... | 8.1.95 | 128
-KFM-P9-IDEA-0036 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:fea952e816e581a37... | 8.1.96 | 129
-KFM-P9-IDEA-0037 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:ad9ca68ea4f5cb7ce... | 8.1.97 | 130
-KFM-P9-IDEA-0038 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:c54f3f2db7ebcd83c... | 8.1.98 | 131
-KFM-P9-PROG-0029 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:08d5af834b666a1f8... | 8.1.99 |
-132
-KFM-P9-PROG-0030 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:5da9da63fc94bb651... | 8.1.100 |
-133
-KFM-P9-PROG-0031 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:7766d7b0bdcdc1394... | 8.1.101 |
-134
-KFM-P9-PROG-0032 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:cfcbb5405ddb9fb85... | 8.1.102 |
-135
-KFM-P9-PROG-0033 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:45e7a30712dfa1b4e... | 8.1.103 |
-136
-KFM-P9-PROG-0034 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:3ff6f062296180a66... | 8.1.104 |
-137
-KFM-P9-PROG-0035 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:f45755fcdb58be474... | 8.1.105 |
-138
-KFM-P9-PROG-0036 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:63ef70b975ac5152c... | 8.1.106 |
-139
-KFM-P9-PROG-0037 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:542aa62035c1ae4dc... | 8.1.107 |
-140
-KFM-P9-PROG-0038 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a65ecfba65bf15ffd... | 8.1.108 |
-141
-KFM-P9-PROG-0039 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6fc6407dcde36cff7... | 8.1.109 |
-142
-KFM-P9-PROG-0040 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:66b8160a4500bfc46... | 8.1.110 |
-143
-KFM-P9-PROG-0041 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:190db19860a46ffde... | 8.1.111 |
-144
-KFM-P9-PROG-0042 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:684ad907fae34cbe9... | 8.1.112 |
-145
-KFM-P9-PROG-0043 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:181de5b88b871d4d3... | 8.1.113 |
-146
-KFM-P9-PROG-0044 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6fe96bff3fac61a53... | 8.1.114 |
-147
-KFM-P9-PROG-0045 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:389594da93ff36e66... | 8.1.115 |
-148
-KFM-P9-PROG-0046 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:e7f3043e61ed5c7a9... | 8.1.116 |
-149
-KFM-P9-PROG-0047 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:f9bbf9fa81e972909... | 8.1.117 |
-150
-KFM-P9-PROG-0080 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:547ed5f1865a4c8c7... | 8.1.118 |
-151
-KFM-P9-PROG-0081 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:98eee3b778816140e... | 8.1.119 |
-152
-KFM-P9-PROG-0082 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:e39457c2f16db43f0... | 8.1.120 |
-153
-KFM-P1-IDEA-0020 | idea | CAT | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:95923e823c5913292... | 8.2.1 | 155
-KFM-P1-IDEA-0069 | idea | CAT | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:0e3fb7042bdb68125... | 8.2.2 | 156
-KFM-P1-IDEA-0070 | idea | CAT | UNCHANGED | active | 1 | 6 | SRC-P23-001,SRC-P23-002 | sha256:10c27f6198662a345... | 8.2.3 | 157
-```
+<details>
+<summary><strong>120 cards</strong> — click to expand</summary>
 
-<!-- page: 192 -->
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P11-FEAT-0002` | feature | UNCHANGED | — | 11 → 15 | — | `466b3b13793a073fe` | 8.1.10 | 43 |
+| `KFM-P20-FEAT-0007` | feature | UNCHANGED | — | 20 → 20 | — | `5b0b00dd29d966bfe` | 8.1.46 | 79 |
+| `KFM-P9-FEAT-0005` | feature | UNCHANGED | — | 9 → 9 | — | `8ee8d1a12892c0670` | 8.1.59 | 92 |
+| `KFM-P9-FEAT-0006` | feature | UNCHANGED | — | 9 → 9 | — | `30a83f43fcc29a4ad` | 8.1.60 | 93 |
+| `KFM-P9-FEAT-0007` | feature | UNCHANGED | — | 9 → 9 | — | `86173261044738580` | 8.1.61 | 94 |
+| `KFM-P9-FEAT-0008` | feature | UNCHANGED | — | 9 → 9 | — | `6d395f2266864a116` | 8.1.62 | 95 |
+| `KFM-P9-FEAT-0009` | feature | UNCHANGED | — | 9 → 9 | — | `bab61d3a39dda36af` | 8.1.63 | 96 |
+| `KFM-P9-FEAT-0010` | feature | UNCHANGED | — | 9 → 9 | — | `4468507b7d0ee46af` | 8.1.64 | 97 |
+| `KFM-P9-FEAT-0017` | feature | UNCHANGED | — | 9 → 9 | — | `a1fb66f465fd853c0` | 8.1.65 | 98 |
+| `KFM-P9-FEAT-0018` | feature | UNCHANGED | — | 9 → 9 | — | `c1389def38f9bed05` | 8.1.66 | 99 |
+| `KFM-P9-FEAT-0019` | feature | UNCHANGED | — | 9 → 9 | — | `130e0564f4b7b8baf` | 8.1.67 | 100 |
+| `KFM-P9-FEAT-0020` | feature | UNCHANGED | — | 9 → 9 | — | `cea42a876479ab2f6` | 8.1.68 | 101 |
+| `KFM-P9-FEAT-0021` | feature | UNCHANGED | — | 9 → 9 | — | `1badd2c1d0720c35f` | 8.1.69 | 102 |
+| `KFM-P9-FEAT-0022` | feature | UNCHANGED | — | 9 → 9 | — | `146388c7a823feb52` | 8.1.70 | 103 |
+| `KFM-P9-FEAT-0023` | feature | UNCHANGED | — | 9 → 9 | — | `d28aa81c8b3dc18b0` | 8.1.71 | 104 |
+| `KFM-P9-FEAT-0024` | feature | UNCHANGED | — | 9 → 9 | — | `54a7e0d208502cfaf` | 8.1.72 | 105 |
+| `KFM-P9-FEAT-0025` | feature | UNCHANGED | — | 9 → 9 | — | `f2592daafd5f20b0d` | 8.1.73 | 106 |
+| `KFM-P9-FEAT-0026` | feature | UNCHANGED | — | 9 → 9 | — | `cd5b076ad2403409b` | 8.1.74 | 107 |
+| `KFM-P9-FEAT-0027` | feature | UNCHANGED | — | 9 → 9 | — | `be5626c2971cd9f56` | 8.1.75 | 108 |
+| `KFM-P9-FEAT-0028` | feature | UNCHANGED | — | 9 → 9 | — | `3b4c5e9a074c11a3c` | 8.1.76 | 109 |
+| `KFM-P9-FEAT-0029` | feature | UNCHANGED | — | 9 → 9 | — | `f137dbeadaf6fd1f5` | 8.1.77 | 110 |
+| `KFM-P9-FEAT-0030` | feature | UNCHANGED | — | 9 → 9 | — | `30cf5a66b0c05b467` | 8.1.78 | 111 |
+| `KFM-P9-FEAT-0031` | feature | UNCHANGED | — | 9 → 9 | — | `fcb3f6bda28b17dd0` | 8.1.79 | 112 |
+| `KFM-P9-FEAT-0032` | feature | UNCHANGED | — | 9 → 9 | — | `22ecc6e05c126abfd` | 8.1.80 | 113 |
+| `KFM-P1-IDEA-0061` | idea | UNCHANGED | — | 1 → 15 | — | `db79d625627e8be34` | 8.1.1 | 34 |
+| `KFM-P1-IDEA-0064` | idea | UNCHANGED | — | 1 → 15 | — | `d04ffe533236e2116` | 8.1.2 | 35 |
+| `KFM-P1-IDEA-0073` | idea | UNCHANGED | — | 1 → 15 | — | `708e299b5ebb9da56` | 8.1.3 | 36 |
+| `KFM-P12-IDEA-0001` | idea | UNCHANGED | — | 12 → 14 | — | `ce604b33dacc5f798` | 8.1.16 | 49 |
+| `KFM-P16-IDEA-0002` | idea | UNCHANGED | — | 16 → 19 | — | `3241be040dd70f80e` | 8.1.35 | 68 |
+| `KFM-P18-IDEA-0008` | idea | UNCHANGED | — | 18 → 20 | — | `03c55131864a07801` | 8.1.40 | 73 |
+| `KFM-P19-IDEA-0008` | idea | UNCHANGED | — | 19 → 19 | — | `e8580d00d38ec16f5` | 8.1.44 | 77 |
+| `KFM-P20-IDEA-0002` | idea | UNCHANGED | — | 20 → 20 | — | `8244778ef02094ceb` | 8.1.47 | 80 |
+| `KFM-P20-IDEA-0010` | idea | UNCHANGED | — | 20 → 20 | — | `8e62cd9d48a8fb502` | 8.1.48 | 81 |
+| `KFM-P3-IDEA-0002` | idea | UNCHANGED | — | 3 → 9 | — | `a479899b4ef3feccd` | 8.1.55 | 88 |
+| `KFM-P4-IDEA-0001` | idea | UNCHANGED | — | 4 → 14 | — | `f883e6e3f63bd13c4` | 8.1.56 | 89 |
+| `KFM-P8-IDEA-0003` | idea | UNCHANGED | — | 8 → 9 | — | `3d5c12ce906673266` | 8.1.57 | 90 |
+| `KFM-P9-IDEA-0021` | idea | UNCHANGED | — | 9 → 9 | — | `8b454874a0a567252` | 8.1.81 | 114 |
+| `KFM-P9-IDEA-0022` | idea | UNCHANGED | — | 9 → 9 | — | `cca5d5b2c8635bf58` | 8.1.82 | 115 |
+| `KFM-P9-IDEA-0023` | idea | UNCHANGED | — | 9 → 9 | — | `9d5494937366db638` | 8.1.83 | 116 |
+| `KFM-P9-IDEA-0024` | idea | UNCHANGED | — | 9 → 9 | — | `0990438608ee0004a` | 8.1.84 | 117 |
+| `KFM-P9-IDEA-0025` | idea | UNCHANGED | — | 9 → 9 | — | `707fa88f4b3f13cb6` | 8.1.85 | 118 |
+| `KFM-P9-IDEA-0026` | idea | UNCHANGED | — | 9 → 9 | — | `d05086c0463975f1a` | 8.1.86 | 119 |
+| `KFM-P9-IDEA-0027` | idea | UNCHANGED | — | 9 → 9 | — | `a22300b5922995ab2` | 8.1.87 | 120 |
+| `KFM-P9-IDEA-0028` | idea | UNCHANGED | — | 9 → 9 | — | `743ed52d8993b41cd` | 8.1.88 | 121 |
+| `KFM-P9-IDEA-0029` | idea | UNCHANGED | — | 9 → 9 | — | `9d9b1e7b211373668` | 8.1.89 | 122 |
+| `KFM-P9-IDEA-0030` | idea | UNCHANGED | — | 9 → 9 | — | `13d8f6c7ffffc00d8` | 8.1.90 | 123 |
+| `KFM-P9-IDEA-0031` | idea | UNCHANGED | — | 9 → 9 | — | `7e939b62450c3ee45` | 8.1.91 | 124 |
+| `KFM-P9-IDEA-0032` | idea | UNCHANGED | — | 9 → 9 | — | `7cf68fb011ee43fdf` | 8.1.92 | 125 |
+| `KFM-P9-IDEA-0033` | idea | UNCHANGED | — | 9 → 9 | — | `1ce113071f34d2248` | 8.1.93 | 126 |
+| `KFM-P9-IDEA-0034` | idea | UNCHANGED | — | 9 → 9 | — | `e3351f41aa499297e` | 8.1.94 | 127 |
+| `KFM-P9-IDEA-0035` | idea | UNCHANGED | — | 9 → 9 | — | `28d19072d0f1ec568` | 8.1.95 | 128 |
+| `KFM-P9-IDEA-0036` | idea | UNCHANGED | — | 9 → 9 | — | `fea952e816e581a37` | 8.1.96 | 129 |
+| `KFM-P9-IDEA-0037` | idea | UNCHANGED | — | 9 → 9 | — | `ad9ca68ea4f5cb7ce` | 8.1.97 | 130 |
+| `KFM-P9-IDEA-0038` | idea | UNCHANGED | — | 9 → 9 | — | `c54f3f2db7ebcd83c` | 8.1.98 | 131 |
+| `KFM-P1-PROG-0062` | programming | UNCHANGED | — | 1 → 15 | — | `4e94a7c429755497e` | 8.1.4 | 37 |
+| `KFM-P1-PROG-0063` | programming | UNCHANGED | — | 1 → 9 | — | `6818765c56dc8e6ee` | 8.1.5 | 38 |
+| `KFM-P10-PROG-0009` | programming | UNCHANGED | — | 10 → 14 | — | `f2961fb6d85573bbd` | 8.1.6 | 39 |
+| `KFM-P10-PROG-0016` | programming | UNCHANGED | — | 10 → 10 | — | `7ee82a4229aa52e68` | 8.1.7 | 40 |
+| `KFM-P10-PROG-0017` | programming | UNCHANGED | — | 10 → 10 | — | `8680984fbd2381526` | 8.1.8 | 41 |
+| `KFM-P10-PROG-0018` | programming | UNCHANGED | — | 10 → 20 | — | `6fe42fb3f42b56f06` | 8.1.9 | 42 |
+| `KFM-P11-PROG-0001` | programming | UNCHANGED | — | 11 → 11 | — | `fc9900e5b95465455` | 8.1.11 | 44 |
+| `KFM-P11-PROG-0002` | programming | UNCHANGED | — | 11 → 11 | — | `c87091ef67e751309` | 8.1.12 | 45 |
+| `KFM-P11-PROG-0005` | programming | UNCHANGED | — | 11 → 11 | — | `ba398aa0472783d61` | 8.1.13 | 46 |
+| `KFM-P11-PROG-0012` | programming | EXPANDED | — | 11 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b9b92d7cc09921c3b` | 8.1.14 | 47 |
+| `KFM-P11-PROG-0020` | programming | UNCHANGED | — | 11 → 15 | — | `1dc9c038942c8d452` | 8.1.15 | 48 |
+| `KFM-P12-PROG-0003` | programming | UNCHANGED | — | 12 → 15 | — | `c0b528827c2cca6d9` | 8.1.17 | 50 |
+| `KFM-P12-PROG-0022` | programming | UNCHANGED | — | 12 → 15 | — | `4fb332a7ab7015c8d` | 8.1.18 | 51 |
+| `KFM-P12-PROG-0028` | programming | UNCHANGED | — | 12 → 15 | — | `4cb06f73635f7c675` | 8.1.19 | 52 |
+| `KFM-P13-PROG-0006` | programming | UNCHANGED | — | 13 → 13 | — | `82bad1bef5f099754` | 8.1.20 | 53 |
+| `KFM-P13-PROG-0015` | programming | UNCHANGED | — | 13 → 14 | — | `5b7f20a7be9005995` | 8.1.21 | 54 |
+| `KFM-P14-PROG-0013` | programming | UNCHANGED | — | 14 → 14 | — | `5135e205858d87b04` | 8.1.22 | 55 |
+| `KFM-P14-PROG-0020` | programming | UNCHANGED | — | 14 → 15 | — | `b4880b0424d11b916` | 8.1.23 | 56 |
+| `KFM-P14-PROG-0022` | programming | UNCHANGED | — | 14 → 14 | — | `a4cbc8a60b9fbd746` | 8.1.24 | 57 |
+| `KFM-P14-PROG-0026` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `78b4aa7351c490422` | 8.1.25 | 58 |
+| `KFM-P14-PROG-0035` | programming | UNCHANGED | — | 14 → 15 | — | `9717dfc6a82a60256` | 8.1.26 | 59 |
+| `KFM-P14-PROG-0036` | programming | UNCHANGED | — | 14 → 15 | — | `61cab5f4875acf858` | 8.1.27 | 60 |
+| `KFM-P14-PROG-0037` | programming | UNCHANGED | — | 14 → 15 | — | `20bc68976e9834f9c` | 8.1.28 | 61 |
+| `KFM-P15-PROG-0009` | programming | EXPANDED | — | 15 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `df41508c070dd2350` | 8.1.29 | 62 |
+| `KFM-P15-PROG-0010` | programming | UNCHANGED | — | 15 → 15 | — | `b6c0fa90348f08250` | 8.1.30 | 63 |
+| `KFM-P15-PROG-0011` | programming | UNCHANGED | — | 15 → 15 | — | `e8b430d2fffc82203` | 8.1.31 | 64 |
+| `KFM-P15-PROG-0012` | programming | UNCHANGED | — | 15 → 15 | — | `8ab15faf92047d363` | 8.1.32 | 65 |
+| `KFM-P15-PROG-0024` | programming | UNCHANGED | — | 15 → 15 | — | `e470eb9f60c0bc571` | 8.1.33 | 66 |
+| `KFM-P15-PROG-0036` | programming | UNCHANGED | — | 15 → 15 | — | `34dec0bc17ddc47a7` | 8.1.34 | 67 |
+| `KFM-P17-PROG-0013` | programming | UNCHANGED | — | 17 → 17 | — | `618647bb751d774e0` | 8.1.36 | 69 |
+| `KFM-P17-PROG-0015` | programming | UNCHANGED | — | 17 → 18 | — | `ba92dc7cb254335d9` | 8.1.37 | 70 |
+| `KFM-P17-PROG-0021` | programming | UNCHANGED | — | 17 → 17 | — | `39a511df270fce6bd` | 8.1.38 | 71 |
+| `KFM-P17-PROG-0034` | programming | EXPANDED | — | 17 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `704058e248e4e9572` | 8.1.39 | 72 |
+| `KFM-P18-PROG-0015` | programming | UNCHANGED | — | 18 → 19 | — | `322da0c762385f718` | 8.1.41 | 74 |
+| `KFM-P18-PROG-0018` | programming | UNCHANGED | — | 18 → 18 | — | `9dd09113ab7cf66db` | 8.1.42 | 75 |
+| `KFM-P18-PROG-0035` | programming | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `5b620936be7167669` | 8.1.43 | 76 |
+| `KFM-P19-PROG-0016` | programming | UNCHANGED | — | 19 → 19 | — | `924e087b69c3e32b3` | 8.1.45 | 78 |
+| `KFM-P20-PROG-0034` | programming | UNCHANGED | — | 20 → 20 | — | `4000da7007c4d1cb4` | 8.1.49 | 82 |
+| `KFM-P20-PROG-0035` | programming | UNCHANGED | — | 20 → 20 | — | `42ab62701399be8ef` | 8.1.50 | 83 |
+| `KFM-P20-PROG-0039` | programming | UNCHANGED | — | 20 → 20 | — | `cfcc2b9f96a8b1be9` | 8.1.51 | 84 |
+| `KFM-P20-PROG-0041` | programming | UNCHANGED | — | 20 → 20 | — | `a127060e09b8be613` | 8.1.52 | 85 |
+| `KFM-P21-PROG-0007` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9854059d51180bcde` | 8.1.53 | 86 |
+| `KFM-P21-PROG-0013` | programming | UNCHANGED | — | 21 → 21 | — | `643968ef7ec935da5` | 8.1.54 | 87 |
+| `KFM-P8-PROG-0022` | programming | UNCHANGED | — | 8 → 10 | — | `d7d858fbdf39e44fd` | 8.1.58 | 91 |
+| `KFM-P9-PROG-0029` | programming | UNCHANGED | — | 9 → 9 | — | `08d5af834b666a1f8` | 8.1.99 | 132 |
+| `KFM-P9-PROG-0030` | programming | UNCHANGED | — | 9 → 9 | — | `5da9da63fc94bb651` | 8.1.100 | 133 |
+| `KFM-P9-PROG-0031` | programming | UNCHANGED | — | 9 → 9 | — | `7766d7b0bdcdc1394` | 8.1.101 | 134 |
+| `KFM-P9-PROG-0032` | programming | UNCHANGED | — | 9 → 9 | — | `cfcbb5405ddb9fb85` | 8.1.102 | 135 |
+| `KFM-P9-PROG-0033` | programming | UNCHANGED | — | 9 → 9 | — | `45e7a30712dfa1b4e` | 8.1.103 | 136 |
+| `KFM-P9-PROG-0034` | programming | UNCHANGED | — | 9 → 9 | — | `3ff6f062296180a66` | 8.1.104 | 137 |
+| `KFM-P9-PROG-0035` | programming | UNCHANGED | — | 9 → 9 | — | `f45755fcdb58be474` | 8.1.105 | 138 |
+| `KFM-P9-PROG-0036` | programming | UNCHANGED | — | 9 → 9 | — | `63ef70b975ac5152c` | 8.1.106 | 139 |
+| `KFM-P9-PROG-0037` | programming | UNCHANGED | — | 9 → 9 | — | `542aa62035c1ae4dc` | 8.1.107 | 140 |
+| `KFM-P9-PROG-0038` | programming | UNCHANGED | — | 9 → 9 | — | `a65ecfba65bf15ffd` | 8.1.108 | 141 |
+| `KFM-P9-PROG-0039` | programming | UNCHANGED | — | 9 → 9 | — | `6fc6407dcde36cff7` | 8.1.109 | 142 |
+| `KFM-P9-PROG-0040` | programming | UNCHANGED | — | 9 → 9 | — | `66b8160a4500bfc46` | 8.1.110 | 143 |
+| `KFM-P9-PROG-0041` | programming | UNCHANGED | — | 9 → 9 | — | `190db19860a46ffde` | 8.1.111 | 144 |
+| `KFM-P9-PROG-0042` | programming | UNCHANGED | — | 9 → 9 | — | `684ad907fae34cbe9` | 8.1.112 | 145 |
+| `KFM-P9-PROG-0043` | programming | UNCHANGED | — | 9 → 9 | — | `181de5b88b871d4d3` | 8.1.113 | 146 |
+| `KFM-P9-PROG-0044` | programming | UNCHANGED | — | 9 → 9 | — | `6fe96bff3fac61a53` | 8.1.114 | 147 |
+| `KFM-P9-PROG-0045` | programming | UNCHANGED | — | 9 → 9 | — | `389594da93ff36e66` | 8.1.115 | 148 |
+| `KFM-P9-PROG-0046` | programming | UNCHANGED | — | 9 → 9 | — | `e7f3043e61ed5c7a9` | 8.1.116 | 149 |
+| `KFM-P9-PROG-0047` | programming | UNCHANGED | — | 9 → 9 | — | `f9bbf9fa81e972909` | 8.1.117 | 150 |
+| `KFM-P9-PROG-0080` | programming | UNCHANGED | — | 9 → 9 | — | `547ed5f1865a4c8c7` | 8.1.118 | 151 |
+| `KFM-P9-PROG-0081` | programming | UNCHANGED | — | 9 → 9 | — | `98eee3b778816140e` | 8.1.119 | 152 |
+| `KFM-P9-PROG-0082` | programming | UNCHANGED | — | 9 → 9 | — | `e39457c2f16db43f0` | 8.1.120 | 153 |
 
-```text
-KFM-P1-IDEA-0071 | idea | CAT | UNCHANGED | active | 1 | 6 | SRC-P23-001,SRC-P23-002 | sha256:96d2bc9b20e552300... | 8.2.4 | 158
-KFM-P10-FEAT-0003 | feature | CAT | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:f3c8a0d9825a80ebc... | 8.2.5 | 159
-5. Machine-Readable Index (continued)
-KFM-P11-PROG-0011 | programming | CAT | EXPANDED | active | 11 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:daf3c0c84409dfda5... | 8.2.6 | 160
-KFM-P11-PROG-0013 | programming | CAT | UNCHANGED | active | 11 | 18 | SRC-P23-001,SRC-P23-002 | sha256:13a208e50782c6b42... | 8.2.7 |
-161
-KFM-P11-PROG-0014 | programming | CAT | EXPANDED | active | 11 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:f16439f6967d4dd2e... | 8.2.8 | 162
-KFM-P12-PROG-0007 | programming | CAT | UNCHANGED | active | 12 | 15 | SRC-P23-001,SRC-P23-002 | sha256:c3033bcc5b2fe7f23... | 8.2.9 |
-163
-KFM-P12-PROG-0012 | programming | CAT | UNCHANGED | active | 12 | 14 | SRC-P23-001,SRC-P23-002 | sha256:7c3e301f69827246c... | 8.2.10
-| 164  
-KFM-P12-PROG-0020 | programming | CAT | UNCHANGED | active | 12 | 13 | SRC-P23-001,SRC-P23-002 | sha256:344463feb3d19d2c5... | 8.2.11
-| 165  
-KFM-P13-PROG-0027 | programming | CAT | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:1b638bd3d2abc9513... | 8.2.12
-| 166  
-KFM-P14-PROG-0007 | programming | CAT | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:25e20249a45221d18... | 8.2.13 | 167
-KFM-P14-PROG-0009 | programming | CAT | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:70099c7fa89c38137... | 8.2.14
-| 168  
-KFM-P14-PROG-0029 | programming | CAT | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:2cbede87e5dd8f01e... | 8.2.15
-| 169  
-KFM-P15-PROG-0026 | programming | CAT | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:83df91e2f0bf2aaf9... | 8.2.16
-| 170  
-KFM-P15-PROG-0027 | programming | CAT | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:78f5805a66613cc8a... | 8.2.17
-| 171  
-KFM-P15-PROG-0033 | programming | CAT | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:7ef08dcdae415c813... | 8.2.18
-| 172  
-KFM-P16-PROG-0028 | programming | CAT | UNCHANGED | active | 16 | 18 | SRC-P23-001,SRC-P23-002 | sha256:9b01a20cc0fe3cde3... | 8.2.19
-| 173  
-KFM-P17-FEAT-0004 | feature | CAT | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:c54e2640f21ac0a51... | 8.2.20 |
-174
-KFM-P17-IDEA-0007 | idea | CAT | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:0a43c229a170de699... | 8.2.21 | 175
-KFM-P17-PROG-0026 | programming | CAT | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:df3c324b504e856f7... | 8.2.22
-| 176  
-KFM-P17-PROG-0041 | programming | CAT | UNCHANGED | active | 17 | 20 | SRC-P23-001,SRC-P23-002 | sha256:41e4c3b0dd8f46c3b... | 8.2.23
-| 177  
-KFM-P17-PROG-0042 | programming | CAT | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:a1c00571605e7858e... | 8.2.24
-| 178  
-KFM-P18-FEAT-0007 | feature | CAT | UNCHANGED | active | 18 | 20 | SRC-P23-001,SRC-P23-002 | sha256:dc0bed57ec91d2ea1... | 8.2.25 |
-179
-KFM-P18-IDEA-0006 | idea | CAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:409fd12a0c2a7ca73... | 8.2.26 | 180
-KFM-P18-PROG-0023 | programming | CAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:76dc700ccd095033a... | 8.2.27
-| 181  
-KFM-P18-PROG-0031 | programming | CAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:68fd8ed18fce99ca6... | 8.2.28
-| 182  
-KFM-P18-PROG-0032 | programming | CAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:f46ca61fb004580b5... | 8.2.29
-| 183  
-KFM-P18-PROG-0033 | programming | CAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:5c14c6bc44ae788c2... | 8.2.30
-| 184  
-KFM-P18-PROG-0034 | programming | CAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:c257d6d5ab6f052ab... | 8.2.31
-| 185  
-KFM-P19-FEAT-0005 | feature | CAT | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:4148b530ad689ec3c... | 8.2.32 |
-186
-KFM-P19-IDEA-0005 | idea | CAT | UNCHANGED | active | 19 | 20 | SRC-P23-001,SRC-P23-002 | sha256:2791f6c3c2935cb4f... | 8.2.33 | 187
-KFM-P19-PROG-0012 | programming | CAT | UNCHANGED | active | 19 | 20 | SRC-P23-001,SRC-P23-002 | sha256:729b07665dec6909b... | 8.2.34
-| 188  
-KFM-P20-IDEA-0001 | idea | CAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:7876c9efd905bb5f5... | 8.2.35 | 189
-KFM-P20-IDEA-0009 | idea | CAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:2e4fea0456a99c329... | 8.2.36 | 190
-KFM-P20-PROG-0001 | programming | CAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:5d3e9b3921148d1b9... | 8.2.37
-| 191  
-KFM-P20-PROG-0014 | programming | CAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:08779a4d9a5058acf... | 8.2.38
-| 192  
-KFM-P20-PROG-0031 | programming | CAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:b6d7870f50563c9e5... | 8.2.39
-| 193  
-KFM-P21-PROG-0014 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5db7591fcb1c3300c... | 8.2.40
-| 194  
-KFM-P21-PROG-0024 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:6d58fc52668d88959... | 8.2.41
-| 195  
-KFM-P21-PROG-0031 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:568d1e654f9d795ea... | 8.2.42
-| 196  
-KFM-P22-IDEA-0003 | idea | CAT | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:cfeca26af979231fb... | 8.2.43 | 197
-KFM-P22-PROG-0005 | programming | CAT | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:67a0e27c8e45a1847... | 8.2.44 | 198
-KFM-P22-PROG-0030 | programming | CAT | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:526a5fe884afc6f44... | 8.2.45
-| 199  
-KFM-P23-PROG-0009 | programming | CAT | NEW | active | 23 | 23 | SRC-P23-003 | sha256:a9551867a32b5e8ba... | 8.2.46 | 200
-KFM-P23-PROG-0029 | programming | CAT | NEW | active | 23 | 23 | SRC-P23-004 | sha256:f473f438d225ad654... | 8.2.47 | 201
-5. Machine-Readable Index (continued)
-KFM-P6-PROG-0014 | programming | CAT | EXPANDED | active | 6 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:d12c4c2aeaf5df0c3... | 8.2.48 | 202
-KFM-P8-PROG-0006 | programming | CAT | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:8b69a0f0450e22ca8... | 8.2.49 |
-203
-KFM-P1-IDEA-0006 | idea | DAT | UNCHANGED | active | 1 | 13 | SRC-P23-001,SRC-P23-002 | sha256:8bc9a912e2926ae32... | 8.3.1 | 205
-KFM-P1-IDEA-0011 | idea | DAT | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:3b418eab035dbf7c7... | 8.3.2 | 206
-KFM-P1-PROG-0007 | programming | DAT | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:2e9ad120b4e1c2feb... | 8.3.3 |
-207
-KFM-P1-PROG-0008 | programming | DAT | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:4a7f1e668d1eb2835... | 8.3.4 |
-208
-KFM-P1-PROG-0009 | programming | DAT | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:196a387a0902651dd... | 8.3.5 |
-209
-KFM-P1-PROG-0010 | programming | DAT | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:4800aa179b2fcaefd... | 8.3.6 |
-```
+</details>
 
-<!-- page: 193 -->
+#### 5.4 CAT — Catalog, Discovery, Registration
 
-```text
-210
-KFM-P10-IDEA-0002 | idea | DAT | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:b1c699dff3d948596... | 8.3.7 | 211
-KFM-P10-PROG-0021 | programming | DAT | UNCHANGED | active | 10 | 11 | SRC-P23-001,SRC-P23-002 | sha256:d26471f78b8d507e4... | 8.3.8 |
-212
-KFM-P10-PROG-0022 | programming | DAT | UNCHANGED | active | 10 | 11 | SRC-P23-001,SRC-P23-002 | sha256:2b5ee4d98d3978cf1... | 8.3.9 |
-213
-KFM-P11-PROG-0006 | programming | DAT | UNCHANGED | active | 11 | 17 | SRC-P23-001,SRC-P23-002 | sha256:c96943c5a202925f8... | 8.3.10
-| 214  
-KFM-P11-PROG-0007 | programming | DAT | UNCHANGED | active | 11 | 11 | SRC-P23-001,SRC-P23-002 | sha256:eba0ed537c7138f83... | 8.3.11
-| 215  
-KFM-P11-PROG-0021 | programming | DAT | UNCHANGED | active | 11 | 18 | SRC-P23-001,SRC-P23-002 | sha256:cc2dd3bb173cd7b2c... | 8.3.12
-| 216  
-KFM-P13-IDEA-0004 | idea | DAT | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b59d2a25fb6851a9c... | 8.3.13 | 217
-KFM-P13-PROG-0005 | programming | DAT | UNCHANGED | active | 13 | 15 | SRC-P23-001,SRC-P23-002 | sha256:69bc50ea5b619ffbb... | 8.3.14
-| 218  
-KFM-P13-PROG-0022 | programming | DAT | UNCHANGED | active | 13 | 14 | SRC-P23-001,SRC-P23-002 | sha256:516cdbd319410dfe0... | 8.3.15
-| 219  
-KFM-P14-IDEA-0001 | idea | DAT | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:c5cd6c47772b3a8b9... | 8.3.16 | 220
-KFM-P14-PROG-0017 | programming | DAT | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:8846bbe43623a2c59... | 8.3.17 | 221
-KFM-P14-PROG-0025 | programming | DAT | UNCHANGED | active | 14 | 20 | SRC-P23-001,SRC-P23-002 | sha256:a7cdd71f7627f78f5... | 8.3.18
-| 222  
-KFM-P15-PROG-0006 | programming | DAT | UNCHANGED | active | 15 | 17 | SRC-P23-001,SRC-P23-002 | sha256:b353627eabba7ac89... | 8.3.19
-| 223  
-KFM-P15-PROG-0018 | programming | DAT | EXPANDED | active | 15 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:0113b5cd1cc93a29d... | 8.3.20 | 224
-KFM-P16-IDEA-0003 | idea | DAT | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:79ab18479f507f007... | 8.3.21 | 225
-KFM-P16-PROG-0001 | programming | DAT | UNCHANGED | active | 16 | 18 | SRC-P23-001,SRC-P23-002 | sha256:53c38fbec3fe1c6a3... | 8.3.22
-| 226  
-KFM-P16-PROG-0007 | programming | DAT | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:1450dd7342389362d... | 8.3.23
-| 227  
-KFM-P16-PROG-0010 | programming | DAT | UNCHANGED | active | 16 | 20 | SRC-P23-001,SRC-P23-002 | sha256:50c84e13a1e5352da... | 8.3.24
-| 228  
-KFM-P16-PROG-0013 | programming | DAT | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:a8fa1be61807557fe... | 8.3.25
-| 229  
-KFM-P16-PROG-0015 | programming | DAT | UNCHANGED | active | 16 | 20 | SRC-P23-001,SRC-P23-002 | sha256:7b49636270dd09309... | 8.3.26
-| 230  
-KFM-P17-PROG-0003 | programming | DAT | UNCHANGED | active | 17 | 20 | SRC-P23-001,SRC-P23-002 | sha256:cd10f862f8d383606... | 8.3.27
-| 231  
-KFM-P17-PROG-0008 | programming | DAT | UNCHANGED | active | 17 | 20 | SRC-P23-001,SRC-P23-002 | sha256:3e6b536fea11dffd6... | 8.3.28
-| 232  
-KFM-P17-PROG-0030 | programming | DAT | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:0d179a201dcf82716... | 8.3.29
-| 233  
-KFM-P18-IDEA-0003 | idea | DAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:8b44760be3369db97... | 8.3.30 | 234
-KFM-P18-PROG-0010 | programming | DAT | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:54ddf35f451f3ae61... | 8.3.31 | 235
-KFM-P18-PROG-0011 | programming | DAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:8f1335b7ee1a2be41... | 8.3.32
-| 236  
-KFM-P18-PROG-0036 | programming | DAT | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:a3c88b023d6c95f80... | 8.3.33
-| 237  
-KFM-P19-PROG-0003 | programming | DAT | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:1356573200f2efa6e... | 8.3.34
-| 238  
-KFM-P19-PROG-0037 | programming | DAT | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:f846415c95fa30ee7... | 8.3.35
-| 239  
-KFM-P2-IDEA-0018 | idea | DAT | UNCHANGED | active | 2 | 20 | SRC-P23-001,SRC-P23-002 | sha256:c3c25a6ca4f2ddffb... | 8.3.36 | 240
-KFM-P2-IDEA-0019 | idea | DAT | UNCHANGED | active | 2 | 7 | SRC-P23-001,SRC-P23-002 | sha256:5034efaca88d40bb2... | 8.3.37 | 241
-KFM-P2-IDEA-0020 | idea | DAT | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:d0d731e220d2dd02e... | 8.3.38 | 242
-KFM-P2-IDEA-0021 | idea | DAT | UNCHANGED | active | 2 | 11 | SRC-P23-001,SRC-P23-002 | sha256:9b630d53aad491ea8... | 8.3.39 | 243
-KFM-P2-IDEA-0022 | idea | DAT | UNCHANGED | active | 2 | 11 | SRC-P23-001,SRC-P23-002 | sha256:60258478d524af757... | 8.3.40 | 244
-5. Machine-Readable Index (continued)
-KFM-P2-IDEA-0023 | idea | DAT | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:fd8306f0d7ce7ae11... | 8.3.41 | 245
-KFM-P2-IDEA-0024 | idea | DAT | UNCHANGED | active | 2 | 5 | SRC-P23-001,SRC-P23-002 | sha256:3748b78066fbb6ef2... | 8.3.42 | 246
-KFM-P2-IDEA-0025 | idea | DAT | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:baa4358206cd4b3bc... | 8.3.43 | 247
-KFM-P2-IDEA-0026 | idea | DAT | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:f8d625fe3025c4937... | 8.3.44 | 248
-KFM-P2-IDEA-0027 | idea | DAT | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:95dc772c5c8a7287f... | 8.3.45 | 249
-KFM-P2-IDEA-0028 | idea | DAT | UNCHANGED | active | 2 | 5 | SRC-P23-001,SRC-P23-002 | sha256:ba28e5095a1c29033... | 8.3.46 | 250
-KFM-P2-IDEA-0029 | idea | DAT | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:5293e7d93deb219e9... | 8.3.47 | 251
-KFM-P20-IDEA-0006 | idea | DAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:23d9a446e19f10fd7... | 8.3.48 | 252
-KFM-P20-PROG-0008 | programming | DAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:26617bd0597d72840... | 8.3.49
-| 253  
-KFM-P20-PROG-0023 | programming | DAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:40d87b0764d7e7912... | 8.3.50
-| 254  
-KFM-P20-PROG-0029 | programming | DAT | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:0659235b133f37b51... | 8.3.51
-| 255  
-KFM-P21-PROG-0002 | programming | DAT | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9f87b77b7f139efa3... | 8.3.52 | 256
-KFM-P21-PROG-0016 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:bfb738665fd86966b... | 8.3.53
-| 257  
-KFM-P21-PROG-0020 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cbc1af36a0e100c56... | 8.3.54
-| 258  
-KFM-P21-PROG-0025 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:e0d128e957c9acf8a... | 8.3.55
-| 259  
-KFM-P21-PROG-0028 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:e014002977dc9bf7e... | 8.3.56
-| 260  
-KFM-P21-PROG-0048 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:661fe169391cc8782... | 8.3.57
-| 261  
-KFM-P22-PROG-0014 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:a5bb729f5ed41ff45... | 8.3.58
-| 262  
-KFM-P22-PROG-0020 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:64d46b68881ed80b4... | 8.3.59
-| 263  
-KFM-P22-PROG-0026 | programming | DAT | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:595a3b526ac475662... | 8.3.60 | 264
-```
+<details>
+<summary><strong>49 cards</strong> — click to expand</summary>
 
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 12: pages 194–196 -->
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P10-FEAT-0003` | feature | EXPANDED | — | 10 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `f3c8a0d9825a80ebc` | 8.2.5 | 159 |
+| `KFM-P17-FEAT-0004` | feature | UNCHANGED | — | 17 → 17 | — | `c54e2640f21ac0a51` | 8.2.20 | 174 |
+| `KFM-P18-FEAT-0007` | feature | UNCHANGED | — | 18 → 20 | — | `dc0bed57ec91d2ea1` | 8.2.25 | 179 |
+| `KFM-P19-FEAT-0005` | feature | UNCHANGED | — | 19 → 19 | — | `4148b530ad689ec3c` | 8.2.32 | 186 |
+| `KFM-P1-IDEA-0020` | idea | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `95923e823c5913292` | 8.2.1 | 155 |
+| `KFM-P1-IDEA-0069` | idea | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `0e3fb7042bdb68125` | 8.2.2 | 156 |
+| `KFM-P1-IDEA-0070` | idea | UNCHANGED | — | 1 → 6 | — | `10c27f6198662a345` | 8.2.3 | 157 |
+| `KFM-P1-IDEA-0071` | idea | UNCHANGED | — | 1 → 6 | — | `96d2bc9b20e552300` | 8.2.4 | 158 |
+| `KFM-P17-IDEA-0007` | idea | UNCHANGED | — | 17 → 17 | — | `0a43c229a170de699` | 8.2.21 | 175 |
+| `KFM-P18-IDEA-0006` | idea | UNCHANGED | — | 18 → 18 | — | `409fd12a0c2a7ca73` | 8.2.26 | 180 |
+| `KFM-P19-IDEA-0005` | idea | UNCHANGED | — | 19 → 20 | — | `2791f6c3c2935cb4f` | 8.2.33 | 187 |
+| `KFM-P20-IDEA-0001` | idea | UNCHANGED | — | 20 → 20 | — | `7876c9efd905bb5f5` | 8.2.35 | 189 |
+| `KFM-P20-IDEA-0009` | idea | UNCHANGED | — | 20 → 20 | — | `2e4fea0456a99c329` | 8.2.36 | 190 |
+| `KFM-P22-IDEA-0003` | idea | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `cfeca26af979231fb` | 8.2.43 | 197 |
+| `KFM-P11-PROG-0011` | programming | EXPANDED | — | 11 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `daf3c0c84409dfda5` | 8.2.6 | 160 |
+| `KFM-P11-PROG-0013` | programming | UNCHANGED | — | 11 → 18 | — | `13a208e50782c6b42` | 8.2.7 | 161 |
+| `KFM-P11-PROG-0014` | programming | EXPANDED | — | 11 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `f16439f6967d4dd2e` | 8.2.8 | 162 |
+| `KFM-P12-PROG-0007` | programming | UNCHANGED | — | 12 → 15 | — | `c3033bcc5b2fe7f23` | 8.2.9 | 163 |
+| `KFM-P12-PROG-0012` | programming | UNCHANGED | — | 12 → 14 | — | `7c3e301f69827246c` | 8.2.10 | 164 |
+| `KFM-P12-PROG-0020` | programming | UNCHANGED | — | 12 → 13 | — | `344463feb3d19d2c5` | 8.2.11 | 165 |
+| `KFM-P13-PROG-0027` | programming | UNCHANGED | — | 13 → 13 | — | `1b638bd3d2abc9513` | 8.2.12 | 166 |
+| `KFM-P14-PROG-0007` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `25e20249a45221d18` | 8.2.13 | 167 |
+| `KFM-P14-PROG-0009` | programming | UNCHANGED | — | 14 → 14 | — | `70099c7fa89c38137` | 8.2.14 | 168 |
+| `KFM-P14-PROG-0029` | programming | UNCHANGED | — | 14 → 15 | — | `2cbede87e5dd8f01e` | 8.2.15 | 169 |
+| `KFM-P15-PROG-0026` | programming | UNCHANGED | — | 15 → 15 | — | `83df91e2f0bf2aaf9` | 8.2.16 | 170 |
+| `KFM-P15-PROG-0027` | programming | UNCHANGED | — | 15 → 15 | — | `78f5805a66613cc8a` | 8.2.17 | 171 |
+| `KFM-P15-PROG-0033` | programming | UNCHANGED | — | 15 → 15 | — | `7ef08dcdae415c813` | 8.2.18 | 172 |
+| `KFM-P16-PROG-0028` | programming | UNCHANGED | — | 16 → 18 | — | `9b01a20cc0fe3cde3` | 8.2.19 | 173 |
+| `KFM-P17-PROG-0026` | programming | UNCHANGED | — | 17 → 17 | — | `df3c324b504e856f7` | 8.2.22 | 176 |
+| `KFM-P17-PROG-0041` | programming | UNCHANGED | — | 17 → 20 | — | `41e4c3b0dd8f46c3b` | 8.2.23 | 177 |
+| `KFM-P17-PROG-0042` | programming | UNCHANGED | — | 17 → 17 | — | `a1c00571605e7858e` | 8.2.24 | 178 |
+| `KFM-P18-PROG-0023` | programming | UNCHANGED | — | 18 → 18 | — | `76dc700ccd095033a` | 8.2.27 | 181 |
+| `KFM-P18-PROG-0031` | programming | UNCHANGED | — | 18 → 18 | — | `68fd8ed18fce99ca6` | 8.2.28 | 182 |
+| `KFM-P18-PROG-0032` | programming | UNCHANGED | — | 18 → 18 | — | `f46ca61fb004580b5` | 8.2.29 | 183 |
+| `KFM-P18-PROG-0033` | programming | UNCHANGED | — | 18 → 18 | — | `5c14c6bc44ae788c2` | 8.2.30 | 184 |
+| `KFM-P18-PROG-0034` | programming | UNCHANGED | — | 18 → 18 | — | `c257d6d5ab6f052ab` | 8.2.31 | 185 |
+| `KFM-P19-PROG-0012` | programming | UNCHANGED | — | 19 → 20 | — | `729b07665dec6909b` | 8.2.34 | 188 |
+| `KFM-P20-PROG-0001` | programming | UNCHANGED | — | 20 → 20 | — | `5d3e9b3921148d1b9` | 8.2.37 | 191 |
+| `KFM-P20-PROG-0014` | programming | UNCHANGED | — | 20 → 20 | — | `08779a4d9a5058acf` | 8.2.38 | 192 |
+| `KFM-P20-PROG-0031` | programming | UNCHANGED | — | 20 → 20 | — | `b6d7870f50563c9e5` | 8.2.39 | 193 |
+| `KFM-P21-PROG-0014` | programming | UNCHANGED | — | 21 → 21 | — | `5db7591fcb1c3300c` | 8.2.40 | 194 |
+| `KFM-P21-PROG-0024` | programming | UNCHANGED | — | 21 → 21 | — | `6d58fc52668d88959` | 8.2.41 | 195 |
+| `KFM-P21-PROG-0031` | programming | UNCHANGED | — | 21 → 21 | — | `568d1e654f9d795ea` | 8.2.42 | 196 |
+| `KFM-P22-PROG-0005` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `67a0e27c8e45a1847` | 8.2.44 | 198 |
+| `KFM-P22-PROG-0030` | programming | UNCHANGED | — | 22 → 22 | — | `526a5fe884afc6f44` | 8.2.45 | 199 |
+| `KFM-P23-PROG-0009` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `a9551867a32b5e8ba` | 8.2.46 | 200 |
+| `KFM-P23-PROG-0029` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `f473f438d225ad654` | 8.2.47 | 201 |
+| `KFM-P6-PROG-0014` | programming | EXPANDED | — | 6 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `d12c4c2aeaf5df0c3` | 8.2.48 | 202 |
+| `KFM-P8-PROG-0006` | programming | UNCHANGED | — | 8 → 8 | — | `8b69a0f0450e22ca8` | 8.2.49 | 203 |
 
-<!-- page: 194 -->
+</details>
 
-```text
-KFM-P22-PROG-0034 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:b316051d9089630c7... | 8.3.61
-| 265  
-KFM-P22-PROG-0045 | programming | DAT | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:21ef1da7a4469dba7... | 8.3.62 | 266
-KFM-P22-PROG-0046 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:06375bbfddbd3b124... | 8.3.63
-| 267  
-KFM-P22-PROG-0049 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d8a140cab719455d5... | 8.3.64
-| 268  
-KFM-P23-PROG-0005 | programming | DAT | NEW | active | 23 | 23 | SRC-P23-003 | sha256:452be52ef8373bb6c... | 8.3.65 | 269
-KFM-P23-PROG-0020 | programming | DAT | NEW | active | 23 | 23 | SRC-P23-003 | sha256:ae8ddcdd7266a14fe... | 8.3.66 | 270
-KFM-P23-PROG-0033 | programming | DAT | NEW | active | 23 | 23 | SRC-P23-004 | sha256:4ba9c0e6f18a8b01d... | 8.3.67 | 271
-KFM-P23-PROG-0034 | programming | DAT | NEW | active | 23 | 23 | SRC-P23-004 | sha256:2cb668f7698b10ff7... | 8.3.68 | 272
-KFM-P4-PROG-0001 | programming | DAT | EXPANDED | active | 4 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:8e039b685cbe553f4... | 8.3.69 | 273
-KFM-P4-PROG-0004 | programming | DAT | UNCHANGED | active | 4 | 8 | SRC-P23-001,SRC-P23-002 | sha256:18606f251c951ddf3... | 8.3.70 |
-274
-KFM-P6-PROG-0001 | programming | DAT | UNCHANGED | active | 6 | 6 | SRC-P23-001,SRC-P23-002 | sha256:c871c8a895c855791... | 8.3.71 |
-275
-KFM-P6-PROG-0015 | programming | DAT | UNCHANGED | active | 6 | 20 | SRC-P23-001,SRC-P23-002 | sha256:9524beb3ef9ba5b35... | 8.3.72 |
-276
-KFM-P9-FEAT-0002 | feature | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:182b656d4a16f71bb... | 8.3.73 | 277
-KFM-P9-IDEA-0008 | idea | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:ebadca7e15cb4bf70... | 8.3.74 | 278
-KFM-P9-IDEA-0009 | idea | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:2c417764cca26e9ba... | 8.3.75 | 279
-KFM-P9-IDEA-0010 | idea | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:717a9a4280a81ac5c... | 8.3.76 | 280
-KFM-P9-PROG-0003 | programming | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:da7f2da63b35e635b... | 8.3.77 |
-281
-KFM-P9-PROG-0004 | programming | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:1b7112f60e7a858f5... | 8.3.78 |
-282
-KFM-P9-PROG-0005 | programming | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:125e78124590de9b7... | 8.3.79 |
-283
-KFM-P9-PROG-0006 | programming | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:31ced22562297e992... | 8.3.80 |
-284
-KFM-P9-PROG-0007 | programming | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:734fcbc8b4b7681c1... | 8.3.81 |
-285
-KFM-P9-PROG-0008 | programming | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:41d956435e3f7b212... | 8.3.82 |
-286
-5. Machine-Readable Index (continued)
-KFM-P9-PROG-0009 | programming | DAT | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b3ca8b776e9873d5e... | 8.3.83 |
-287
-KFM-P1-IDEA-0001 | idea | DOC | UNCHANGED | active | 1 | 11 | SRC-P23-001,SRC-P23-002 | sha256:548ffcdb5dea1a3d3... | 8.4.1 | 289
-KFM-P1-IDEA-0002 | idea | DOC | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6bc7fb19c69da9cce... | 8.4.2 | 290
-KFM-P1-IDEA-0003 | idea | DOC | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:4bf24a5b83967575f... | 8.4.3 | 291
-KFM-P1-IDEA-0004 | idea | DOC | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:48de1260c059af678... | 8.4.4 | 292
-KFM-P1-IDEA-0005 | idea | DOC | UNCHANGED | active | 1 | 3 | SRC-P23-001,SRC-P23-002 | sha256:a571a5414bbaef6fb... | 8.4.5 | 293
-KFM-P12-IDEA-0002 | idea | DOC | UNCHANGED | active | 12 | 12 | SRC-P23-001,SRC-P23-002 | sha256:7c4e2986d951c9a75... | 8.4.6 | 294
-KFM-P12-PROG-0018 | programming | DOC | UNCHANGED | active | 12 | 13 | SRC-P23-001,SRC-P23-002 | sha256:3649110564212acc3... | 8.4.7 |
-295
-KFM-P13-PROG-0009 | programming | DOC | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:e0e77e0120789f2ee... | 8.4.8 |
-296
-KFM-P15-PROG-0041 | programming | DOC | QUARANTINED | quarantine | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:5938e5dee97566cf3... |
-8.4.9 | 297
-KFM-P17-FEAT-0005 | feature | DOC | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:9337c9383d0252ee3... | 8.4.10 |
-298
-KFM-P17-IDEA-0002 | idea | DOC | UNCHANGED | active | 17 | 18 | SRC-P23-001,SRC-P23-002 | sha256:d7aef203ece9d223d... | 8.4.11 | 299
-KFM-P17-PROG-0024 | programming | DOC | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:5fe8e521da8836b9d... | 8.4.12
-| 300  
-KFM-P17-PROG-0045 | programming | DOC | QUARANTINED | quarantine | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:4de7aa93605a69a81... |
-8.4.13 | 301
-KFM-P18-FEAT-0002 | feature | DOC | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:cd868b4b8a838f23d... | 8.4.14 |
-302
-KFM-P18-PROG-0019 | programming | DOC | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:133b1a4c7777b1359... | 8.4.15
-| 303  
-KFM-P19-FEAT-0008 | feature | DOC | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:65bf2c1cb54dd6401... | 8.4.16 |
-304
-KFM-P19-PROG-0039 | programming | DOC | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:667e1dee72023d952... | 8.4.17
-| 305  
-KFM-P2-PROG-0030 | programming | DOC | UNCHANGED | active | 2 | 13 | SRC-P23-001,SRC-P23-002 | sha256:beba8030303b7c902... | 8.4.18 |
-306
-KFM-P2-PROG-0031 | programming | DOC | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:0d95f44652136261b... | 8.4.19 |
-307
-KFM-P20-PROG-0042 | programming | DOC | QUARANTINED | quarantine | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:d050978d4ee993ce1... |
-8.4.20 | 308
-KFM-P21-PROG-0027 | programming | DOC | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:1bb90b13bb14a1545... | 8.4.21
-| 309  
-KFM-P21-PROG-0044 | programming | DOC | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:ab19975135ed7ea2e... | 8.4.22
-| 310  
-KFM-P22-PROG-0017 | programming | DOC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:8747f0ff13878bffb... | 8.4.23
-| 311  
-KFM-P22-PROG-0018 | programming | DOC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:8fd856173f7a89d9b... | 8.4.24
-| 312  
-KFM-P23-PROG-0052 | programming | DOC | NEW | active | 23 | 23 | SRC-P23-004 | sha256:23b26241124d389af... | 8.4.25 | 313
-KFM-P23-PROG-0053 | programming | DOC | QUARANTINED | quarantine | 23 | 23 | SRC-P23-004,SRC-P23-005 | sha256:69eee013c8868d830... |
-8.4.26 | 314
-KFM-P3-FEAT-0005 | feature | DOC | UNCHANGED | active | 3 | 13 | SRC-P23-001,SRC-P23-002 | sha256:62bf4eaf94e72d99c... | 8.4.27 | 315
-KFM-P7-PROG-0007 | programming | DOC | UNCHANGED | active | 7 | 7 | SRC-P23-001,SRC-P23-002 | sha256:4b5fa820e8972ea06... | 8.4.28 |
-316
-KFM-P7-PROG-0008 | programming | DOC | UNCHANGED | active | 7 | 7 | SRC-P23-001,SRC-P23-002 | sha256:787687cae22263195... | 8.4.29 |
-317
-KFM-P8-PROG-0020 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:105e9e7977f7aa3ec... | 8.4.30 |
-318
-KFM-P8-PROG-0028 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:2a48fd9c321e2156d... | 8.4.31 |
-319
-KFM-P8-PROG-0029 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:0f67c8778c1eb7cd3... | 8.4.32 |
-320
-KFM-P8-PROG-0030 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:d1b44954063a94936... | 8.4.33 |
-```
+#### 5.5 DAT — Data Lifecycle, Provenance, Receipts
 
-<!-- page: 195 -->
+<details>
+<summary><strong>83 cards</strong> — click to expand</summary>
 
-```text
-321
-KFM-P8-PROG-0031 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:5f17dea215b083cb1... | 8.4.34 |
-322
-KFM-P8-PROG-0032 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:527e668464a9a97c7... | 8.4.35 |
-323
-KFM-P8-PROG-0033 | programming | DOC | QUARANTINED | quarantine | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:48da8fe8fa0e4103f... |
-8.4.36 | 324
-KFM-P9-IDEA-0001 | idea | DOC | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b5520bd40c7829835... | 8.4.37 | 325
-KFM-P9-PROG-0001 | programming | DOC | EXPANDED | active | 9 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b025bdf3439c58283... | 8.4.38 | 326
-KFM-P1-IDEA-0012 | idea | EVD | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:f6aa517dff78082b4... | 8.5.1 | 328
-KFM-P1-IDEA-0014 | idea | EVD | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:f52c45982b13eb2f4... | 8.5.2 | 329
-KFM-P1-IDEA-0019 | idea | EVD | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:ac7493f43e61c322a... | 8.5.3 | 330
-5. Machine-Readable Index (continued)
-KFM-P1-PROG-0013 | programming | EVD | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:5e5d63e8e43808ced... | 8.5.4 |
-331
-KFM-P1-PROG-0015 | programming | EVD | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:66b41a27e5824d082... | 8.5.5 | 332
-KFM-P1-PROG-0016 | programming | EVD | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:5f3e83c822f67f8f1... | 8.5.6 |
-333
-KFM-P1-PROG-0018 | programming | EVD | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:286431575c725cdd5... | 8.5.7 |
-334
-KFM-P10-PROG-0003 | programming | EVD | UNCHANGED | active | 10 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3d1192eebacb3e418... | 8.5.8 |
-335
-KFM-P10-PROG-0024 | programming | EVD | UNCHANGED | active | 10 | 22 | SRC-P23-001,SRC-P23-002 | sha256:6d722d611a1db4c18... | 8.5.9 |
-336
-KFM-P11-FEAT-0001 | feature | EVD | UNCHANGED | active | 11 | 22 | SRC-P23-001,SRC-P23-002 | sha256:5980ddb78c9666796... | 8.5.10 |
-337
-KFM-P11-PROG-0010 | programming | EVD | UNCHANGED | active | 11 | 22 | SRC-P23-001,SRC-P23-002 | sha256:292ebbcf720546724... | 8.5.11
-| 338  
-KFM-P11-PROG-0017 | programming | EVD | UNCHANGED | active | 11 | 22 | SRC-P23-001,SRC-P23-002 | sha256:5562fa40d6b95487c... | 8.5.12
-| 339  
-KFM-P11-PROG-0029 | programming | EVD | UNCHANGED | active | 11 | 22 | SRC-P23-001,SRC-P23-002 | sha256:bf12cfb181287a131... | 8.5.13
-| 340  
-KFM-P12-PROG-0030 | programming | EVD | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1b6fe4fb5a2bc99a7... | 8.5.14 | 341
-KFM-P13-PROG-0008 | programming | EVD | UNCHANGED | active | 13 | 22 | SRC-P23-001,SRC-P23-002 | sha256:85a324f13410631ab... | 8.5.15
-| 342  
-KFM-P13-PROG-0010 | programming | EVD | UNCHANGED | active | 13 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c841c032ffdf133e8... | 8.5.16
-| 343  
-KFM-P14-PROG-0015 | programming | EVD | UNCHANGED | active | 14 | 22 | SRC-P23-001,SRC-P23-002 | sha256:36084d57c36a50520... | 8.5.17
-| 344  
-KFM-P14-PROG-0016 | programming | EVD | UNCHANGED | active | 14 | 22 | SRC-P23-001,SRC-P23-002 | sha256:fcbb6dd4f9e04b8a4... | 8.5.18
-| 345  
-KFM-P14-PROG-0032 | programming | EVD | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:999d2dd4a0d279869... | 8.5.19 | 346
-KFM-P15-PROG-0002 | programming | EVD | UNCHANGED | active | 15 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3cca2a1ce2d22dd26... | 8.5.20
-| 347  
-KFM-P15-PROG-0030 | programming | EVD | UNCHANGED | active | 15 | 22 | SRC-P23-001,SRC-P23-002 | sha256:2dad28794794e98b0... | 8.5.21
-| 348  
-KFM-P15-PROG-0038 | programming | EVD | UNCHANGED | active | 15 | 22 | SRC-P23-001,SRC-P23-002 | sha256:9a0222b64b2565f46... | 8.5.22
-| 349  
-KFM-P16-PROG-0032 | programming | EVD | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:7538adf5a07cbeef0... | 8.5.23
-| 350  
-KFM-P17-IDEA-0004 | idea | EVD | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:6b8e54d44fff359d9... | 8.5.24 | 351
-KFM-P17-PROG-0001 | programming | EVD | UNCHANGED | active | 17 | 20 | SRC-P23-001,SRC-P23-002 | sha256:9a27d953f7f2d3c36... | 8.5.25
-| 352  
-KFM-P17-PROG-0006 | programming | EVD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:2eef67a63a9cd55c3... | 8.5.26
-| 353  
-KFM-P17-PROG-0011 | programming | EVD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:290101d96f663b741... | 8.5.27
-| 354  
-KFM-P17-PROG-0012 | programming | EVD | UNCHANGED | active | 17 | 19 | SRC-P23-001,SRC-P23-002 | sha256:bfb9266e44fede0fc... | 8.5.28
-| 355  
-KFM-P17-PROG-0028 | programming | EVD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:7ae89ff3153c68789... | 8.5.29
-| 356  
-KFM-P17-PROG-0039 | programming | EVD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:5ff944edf86cf11b9... | 8.5.30
-| 357  
-KFM-P18-IDEA-0002 | idea | EVD | UNCHANGED | active | 18 | 20 | SRC-P23-001,SRC-P23-002 | sha256:b2efb4f4d0487282b... | 8.5.31 | 358
-KFM-P18-PROG-0006 | programming | EVD | UNCHANGED | active | 18 | 20 | SRC-P23-001,SRC-P23-002 | sha256:d988d32c5aa76175b... | 8.5.32
-| 359  
-KFM-P18-PROG-0017 | programming | EVD | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:9f979bb2371108a2d... | 8.5.33
-| 360  
-KFM-P18-PROG-0040 | programming | EVD | UNCHANGED | active | 18 | 20 | SRC-P23-001,SRC-P23-002 | sha256:771f3a3e2ce86df90... | 8.5.34
-| 361  
-KFM-P19-IDEA-0001 | idea | EVD | UNCHANGED | active | 19 | 20 | SRC-P23-001,SRC-P23-002 | sha256:48c6c8ceed1a12e10... | 8.5.35 | 362
-KFM-P19-PROG-0005 | programming | EVD | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:296e72d44fe29df8f... | 8.5.36 | 363
-KFM-P19-PROG-0008 | programming | EVD | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:85284a91d96ac6e50... | 8.5.37 | 364
-KFM-P19-PROG-0031 | programming | EVD | UNCHANGED | active | 19 | 20 | SRC-P23-001,SRC-P23-002 | sha256:9c8c8dd0d6f2b40da... | 8.5.38
-| 365  
-KFM-P19-PROG-0032 | programming | EVD | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:ac9201094d87ba717... | 8.5.39 | 366
-KFM-P20-IDEA-0007 | idea | EVD | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:ddc5e402dab5f0e9d... | 8.5.40 | 367
-KFM-P20-PROG-0015 | programming | EVD | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e2019480a288913ed... | 8.5.41 | 368
-KFM-P20-PROG-0024 | programming | EVD | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:86f96b85a691f8282... | 8.5.42
-| 369  
-KFM-P21-IDEA-0002 | idea | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:92fb86be5268d8bb3... | 8.5.43 | 370
-KFM-P21-PROG-0011 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:a1798e28f3289eebe... | 8.5.44
-| 371  
-KFM-P21-PROG-0021 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:3be5a999f579dbc7e... | 8.5.45
-| 372  
-5. Machine-Readable Index (continued)
-```
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P9-FEAT-0002` | feature | UNCHANGED | — | 9 → 9 | — | `182b656d4a16f71bb` | 8.3.73 | 277 |
+| `KFM-P1-IDEA-0006` | idea | UNCHANGED | — | 1 → 13 | — | `8bc9a912e2926ae32` | 8.3.1 | 205 |
+| `KFM-P1-IDEA-0011` | idea | UNCHANGED | — | 1 → 9 | — | `3b418eab035dbf7c7` | 8.3.2 | 206 |
+| `KFM-P10-IDEA-0002` | idea | UNCHANGED | — | 10 → 10 | — | `b1c699dff3d948596` | 8.3.7 | 211 |
+| `KFM-P13-IDEA-0004` | idea | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b59d2a25fb6851a9c` | 8.3.13 | 217 |
+| `KFM-P14-IDEA-0001` | idea | UNCHANGED | — | 14 → 14 | — | `c5cd6c47772b3a8b9` | 8.3.16 | 220 |
+| `KFM-P16-IDEA-0003` | idea | UNCHANGED | — | 16 → 16 | — | `79ab18479f507f007` | 8.3.21 | 225 |
+| `KFM-P18-IDEA-0003` | idea | UNCHANGED | — | 18 → 18 | — | `8b44760be3369db97` | 8.3.30 | 234 |
+| `KFM-P2-IDEA-0018` | idea | UNCHANGED | — | 2 → 20 | — | `c3c25a6ca4f2ddffb` | 8.3.36 | 240 |
+| `KFM-P2-IDEA-0019` | idea | UNCHANGED | — | 2 → 7 | — | `5034efaca88d40bb2` | 8.3.37 | 241 |
+| `KFM-P2-IDEA-0020` | idea | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `d0d731e220d2dd02e` | 8.3.38 | 242 |
+| `KFM-P2-IDEA-0021` | idea | UNCHANGED | — | 2 → 11 | — | `9b630d53aad491ea8` | 8.3.39 | 243 |
+| `KFM-P2-IDEA-0022` | idea | UNCHANGED | — | 2 → 11 | — | `60258478d524af757` | 8.3.40 | 244 |
+| `KFM-P2-IDEA-0023` | idea | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `fd8306f0d7ce7ae11` | 8.3.41 | 245 |
+| `KFM-P2-IDEA-0024` | idea | UNCHANGED | — | 2 → 5 | — | `3748b78066fbb6ef2` | 8.3.42 | 246 |
+| `KFM-P2-IDEA-0025` | idea | UNCHANGED | — | 2 → 2 | — | `baa4358206cd4b3bc` | 8.3.43 | 247 |
+| `KFM-P2-IDEA-0026` | idea | UNCHANGED | — | 2 → 2 | — | `f8d625fe3025c4937` | 8.3.44 | 248 |
+| `KFM-P2-IDEA-0027` | idea | UNCHANGED | — | 2 → 2 | — | `95dc772c5c8a7287f` | 8.3.45 | 249 |
+| `KFM-P2-IDEA-0028` | idea | UNCHANGED | — | 2 → 5 | — | `ba28e5095a1c29033` | 8.3.46 | 250 |
+| `KFM-P2-IDEA-0029` | idea | UNCHANGED | — | 2 → 2 | — | `5293e7d93deb219e9` | 8.3.47 | 251 |
+| `KFM-P20-IDEA-0006` | idea | UNCHANGED | — | 20 → 20 | — | `23d9a446e19f10fd7` | 8.3.48 | 252 |
+| `KFM-P9-IDEA-0008` | idea | UNCHANGED | — | 9 → 9 | — | `ebadca7e15cb4bf70` | 8.3.74 | 278 |
+| `KFM-P9-IDEA-0009` | idea | UNCHANGED | — | 9 → 9 | — | `2c417764cca26e9ba` | 8.3.75 | 279 |
+| `KFM-P9-IDEA-0010` | idea | UNCHANGED | — | 9 → 9 | — | `717a9a4280a81ac5c` | 8.3.76 | 280 |
+| `KFM-P1-PROG-0007` | programming | UNCHANGED | — | 1 → 9 | — | `2e9ad120b4e1c2feb` | 8.3.3 | 207 |
+| `KFM-P1-PROG-0008` | programming | UNCHANGED | — | 1 → 17 | — | `4a7f1e668d1eb2835` | 8.3.4 | 208 |
+| `KFM-P1-PROG-0009` | programming | UNCHANGED | — | 1 → 17 | — | `196a387a0902651dd` | 8.3.5 | 209 |
+| `KFM-P1-PROG-0010` | programming | UNCHANGED | — | 1 → 17 | — | `4800aa179b2fcaefd` | 8.3.6 | 210 |
+| `KFM-P10-PROG-0021` | programming | UNCHANGED | — | 10 → 11 | — | `d26471f78b8d507e4` | 8.3.8 | 212 |
+| `KFM-P10-PROG-0022` | programming | UNCHANGED | — | 10 → 11 | — | `2b5ee4d98d3978cf1` | 8.3.9 | 213 |
+| `KFM-P11-PROG-0006` | programming | UNCHANGED | — | 11 → 17 | — | `c96943c5a202925f8` | 8.3.10 | 214 |
+| `KFM-P11-PROG-0007` | programming | UNCHANGED | — | 11 → 11 | — | `eba0ed537c7138f83` | 8.3.11 | 215 |
+| `KFM-P11-PROG-0021` | programming | UNCHANGED | — | 11 → 18 | — | `cc2dd3bb173cd7b2c` | 8.3.12 | 216 |
+| `KFM-P13-PROG-0005` | programming | UNCHANGED | — | 13 → 15 | — | `69bc50ea5b619ffbb` | 8.3.14 | 218 |
+| `KFM-P13-PROG-0022` | programming | UNCHANGED | — | 13 → 14 | — | `516cdbd319410dfe0` | 8.3.15 | 219 |
+| `KFM-P14-PROG-0017` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `8846bbe43623a2c59` | 8.3.17 | 221 |
+| `KFM-P14-PROG-0025` | programming | UNCHANGED | — | 14 → 20 | — | `a7cdd71f7627f78f5` | 8.3.18 | 222 |
+| `KFM-P15-PROG-0006` | programming | UNCHANGED | — | 15 → 17 | — | `b353627eabba7ac89` | 8.3.19 | 223 |
+| `KFM-P15-PROG-0018` | programming | EXPANDED | — | 15 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `0113b5cd1cc93a29d` | 8.3.20 | 224 |
+| `KFM-P16-PROG-0001` | programming | UNCHANGED | — | 16 → 18 | — | `53c38fbec3fe1c6a3` | 8.3.22 | 226 |
+| `KFM-P16-PROG-0007` | programming | UNCHANGED | — | 16 → 16 | — | `1450dd7342389362d` | 8.3.23 | 227 |
+| `KFM-P16-PROG-0010` | programming | UNCHANGED | — | 16 → 20 | — | `50c84e13a1e5352da` | 8.3.24 | 228 |
+| `KFM-P16-PROG-0013` | programming | UNCHANGED | — | 16 → 16 | — | `a8fa1be61807557fe` | 8.3.25 | 229 |
+| `KFM-P16-PROG-0015` | programming | UNCHANGED | — | 16 → 20 | — | `7b49636270dd09309` | 8.3.26 | 230 |
+| `KFM-P17-PROG-0003` | programming | UNCHANGED | — | 17 → 20 | — | `cd10f862f8d383606` | 8.3.27 | 231 |
+| `KFM-P17-PROG-0008` | programming | UNCHANGED | — | 17 → 20 | — | `3e6b536fea11dffd6` | 8.3.28 | 232 |
+| `KFM-P17-PROG-0030` | programming | UNCHANGED | — | 17 → 17 | — | `0d179a201dcf82716` | 8.3.29 | 233 |
+| `KFM-P18-PROG-0010` | programming | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `54ddf35f451f3ae61` | 8.3.31 | 235 |
+| `KFM-P18-PROG-0011` | programming | UNCHANGED | — | 18 → 18 | — | `8f1335b7ee1a2be41` | 8.3.32 | 236 |
+| `KFM-P18-PROG-0036` | programming | UNCHANGED | — | 18 → 18 | — | `a3c88b023d6c95f80` | 8.3.33 | 237 |
+| `KFM-P19-PROG-0003` | programming | UNCHANGED | — | 19 → 19 | — | `1356573200f2efa6e` | 8.3.34 | 238 |
+| `KFM-P19-PROG-0037` | programming | UNCHANGED | — | 19 → 19 | — | `f846415c95fa30ee7` | 8.3.35 | 239 |
+| `KFM-P20-PROG-0008` | programming | UNCHANGED | — | 20 → 20 | — | `26617bd0597d72840` | 8.3.49 | 253 |
+| `KFM-P20-PROG-0023` | programming | UNCHANGED | — | 20 → 20 | — | `40d87b0764d7e7912` | 8.3.50 | 254 |
+| `KFM-P20-PROG-0029` | programming | UNCHANGED | — | 20 → 20 | — | `0659235b133f37b51` | 8.3.51 | 255 |
+| `KFM-P21-PROG-0002` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9f87b77b7f139efa3` | 8.3.52 | 256 |
+| `KFM-P21-PROG-0016` | programming | UNCHANGED | — | 21 → 21 | — | `bfb738665fd86966b` | 8.3.53 | 257 |
+| `KFM-P21-PROG-0020` | programming | UNCHANGED | — | 21 → 21 | — | `cbc1af36a0e100c56` | 8.3.54 | 258 |
+| `KFM-P21-PROG-0025` | programming | UNCHANGED | — | 21 → 21 | — | `e0d128e957c9acf8a` | 8.3.55 | 259 |
+| `KFM-P21-PROG-0028` | programming | UNCHANGED | — | 21 → 21 | — | `e014002977dc9bf7e` | 8.3.56 | 260 |
+| `KFM-P21-PROG-0048` | programming | UNCHANGED | — | 21 → 21 | — | `661fe169391cc8782` | 8.3.57 | 261 |
+| `KFM-P22-PROG-0014` | programming | UNCHANGED | — | 22 → 22 | — | `a5bb729f5ed41ff45` | 8.3.58 | 262 |
+| `KFM-P22-PROG-0020` | programming | UNCHANGED | — | 22 → 22 | — | `64d46b68881ed80b4` | 8.3.59 | 263 |
+| `KFM-P22-PROG-0026` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `595a3b526ac475662` | 8.3.60 | 264 |
+| `KFM-P22-PROG-0034` | programming | UNCHANGED | — | 22 → 22 | — | `b316051d9089630c7` | 8.3.61 | 265 |
+| `KFM-P22-PROG-0045` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `21ef1da7a4469dba7` | 8.3.62 | 266 |
+| `KFM-P22-PROG-0046` | programming | UNCHANGED | — | 22 → 22 | — | `06375bbfddbd3b124` | 8.3.63 | 267 |
+| `KFM-P22-PROG-0049` | programming | UNCHANGED | — | 22 → 22 | — | `d8a140cab719455d5` | 8.3.64 | 268 |
+| `KFM-P23-PROG-0005` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `452be52ef8373bb6c` | 8.3.65 | 269 |
+| `KFM-P23-PROG-0020` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `ae8ddcdd7266a14fe` | 8.3.66 | 270 |
+| `KFM-P23-PROG-0033` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `4ba9c0e6f18a8b01d` | 8.3.67 | 271 |
+| `KFM-P23-PROG-0034` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `2cb668f7698b10ff7` | 8.3.68 | 272 |
+| `KFM-P4-PROG-0001` | programming | EXPANDED | — | 4 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `8e039b685cbe553f4` | 8.3.69 | 273 |
+| `KFM-P4-PROG-0004` | programming | UNCHANGED | — | 4 → 8 | — | `18606f251c951ddf3` | 8.3.70 | 274 |
+| `KFM-P6-PROG-0001` | programming | UNCHANGED | — | 6 → 6 | — | `c871c8a895c855791` | 8.3.71 | 275 |
+| `KFM-P6-PROG-0015` | programming | UNCHANGED | — | 6 → 20 | — | `9524beb3ef9ba5b35` | 8.3.72 | 276 |
+| `KFM-P9-PROG-0003` | programming | UNCHANGED | — | 9 → 9 | — | `da7f2da63b35e635b` | 8.3.77 | 281 |
+| `KFM-P9-PROG-0004` | programming | UNCHANGED | — | 9 → 9 | — | `1b7112f60e7a858f5` | 8.3.78 | 282 |
+| `KFM-P9-PROG-0005` | programming | UNCHANGED | — | 9 → 9 | — | `125e78124590de9b7` | 8.3.79 | 283 |
+| `KFM-P9-PROG-0006` | programming | UNCHANGED | — | 9 → 9 | — | `31ced22562297e992` | 8.3.80 | 284 |
+| `KFM-P9-PROG-0007` | programming | UNCHANGED | — | 9 → 9 | — | `734fcbc8b4b7681c1` | 8.3.81 | 285 |
+| `KFM-P9-PROG-0008` | programming | UNCHANGED | — | 9 → 9 | — | `41d956435e3f7b212` | 8.3.82 | 286 |
+| `KFM-P9-PROG-0009` | programming | UNCHANGED | — | 9 → 9 | — | `b3ca8b776e9873d5e` | 8.3.83 | 287 |
 
-<!-- page: 196 -->
+</details>
 
-```text
-KFM-P21-PROG-0022 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:83498c46eab7aeba0... | 8.5.46
-| 373  
-KFM-P21-PROG-0023 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:29ff7ded7b74c745a... | 8.5.47
-| 374  
-KFM-P21-PROG-0039 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:511e787487a68d909... | 8.5.48
-| 375  
-KFM-P21-PROG-0042 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:01bbe68408d252b16... | 8.5.49
-| 376  
-KFM-P21-PROG-0051 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:95eff52dc9bb379d4... | 8.5.50
-| 377  
-KFM-P22-IDEA-0002 | idea | EVD | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:7605a624adeb82c5f... | 8.5.51 | 378
-KFM-P22-PROG-0003 | programming | EVD | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:2db5f213c816463f4... | 8.5.52 | 379
-KFM-P22-PROG-0036 | programming | EVD | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:33bf65e714fd7103f... | 8.5.53
-| 380  
-KFM-P22-PROG-0050 | programming | EVD | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:fe808fa3801065cec... | 8.5.54
-| 381  
-KFM-P23-IDEA-0005 | idea | EVD | NEW | active | 23 | 23 | SRC-P23-003 | sha256:d34ee1f1e5ea625e1... | 8.5.55 | 382
-KFM-P23-PROG-0016 | programming | EVD | NEW | active | 23 | 23 | SRC-P23-003 | sha256:38e9a71ecbf6a11d4... | 8.5.56 | 383
-KFM-P23-PROG-0023 | programming | EVD | NEW | active | 23 | 23 | SRC-P23-003 | sha256:f0d443a6ebcd5e70c... | 8.5.57 | 384
-KFM-P23-PROG-0025 | programming | EVD | NEW | active | 23 | 23 | SRC-P23-003 | sha256:39296881e960b62d5... | 8.5.58 | 385
-KFM-P23-PROG-0047 | programming | EVD | NEW | active | 23 | 23 | SRC-P23-004 | sha256:4718e74a15fdede11... | 8.5.59 | 386
-KFM-P3-PROG-0001 | programming | EVD | UNCHANGED | active | 3 | 20 | SRC-P23-001,SRC-P23-002 | sha256:e8cbeff8f80227a76... | 8.5.60 |
-387
-KFM-P6-PROG-0009 | programming | EVD | UNCHANGED | active | 6 | 7 | SRC-P23-001,SRC-P23-002 | sha256:d31f2a533535bdd04... | 8.5.61 |
-388
-KFM-P7-IDEA-0001 | idea | EVD | UNCHANGED | active | 7 | 7 | SRC-P23-001,SRC-P23-002 | sha256:e01b6c7574d0de0c5... | 8.5.62 | 389
-KFM-P8-IDEA-0001 | idea | EVD | EXPANDED | active | 8 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:2728b4f1497a7761e... | 8.5.63 | 390
-KFM-P8-PROG-0019 | programming | EVD | UNCHANGED | active | 8 | 10 | SRC-P23-001,SRC-P23-002 | sha256:2ff46f6fc2cb7ca1c... | 8.5.64 |
-391
-KFM-P9-FEAT-0003 | feature | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:7219aa9887f1d5d15... | 8.5.65 | 392
-KFM-P9-IDEA-0012 | idea | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a25c9d63d4d20656e... | 8.5.66 | 393
-KFM-P9-IDEA-0013 | idea | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b433b3c2c915f7cb1... | 8.5.67 | 394
-KFM-P9-IDEA-0014 | idea | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:f649974c2bc265d42... | 8.5.68 | 395
-KFM-P9-IDEA-0015 | idea | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:ebe613c02cb2cf5ab... | 8.5.69 | 396
-KFM-P9-PROG-0019 | programming | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6708e4341689103ad... | 8.5.70 |
-397
-KFM-P9-PROG-0020 | programming | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:f317696440433924d... | 8.5.71 |
-398
-KFM-P9-PROG-0021 | programming | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:0b65acb20206d6ee1... | 8.5.72 |
-399
-KFM-P9-PROG-0022 | programming | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:90181576b47bf2620... | 8.5.73 |
-400
-KFM-P9-PROG-0023 | programming | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:d72204338675e5abc... | 8.5.74 |
-401
-KFM-P9-PROG-0024 | programming | EVD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:55e17cc0b2f0b3f73... | 8.5.75 |
-402
-KFM-P1-FEAT-0038 | feature | MAP | UNCHANGED | active | 1 | 11 | SRC-P23-001,SRC-P23-002 | sha256:a39472998550fc33f... | 8.6.1 | 404
-KFM-P1-FEAT-0039 | feature | MAP | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:62eb6281a7e915657... | 8.6.2 | 405
-KFM-P1-FEAT-0042 | feature | MAP | UNCHANGED | active | 1 | 16 | SRC-P23-001,SRC-P23-002 | sha256:0add61e9795cf8a26... | 8.6.3 | 406
-KFM-P1-FEAT-0044 | feature | MAP | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:4b719ccfaaad887e6... | 8.6.4 | 407
-KFM-P1-IDEA-0040 | idea | MAP | UNCHANGED | active | 1 | 19 | SRC-P23-001,SRC-P23-002 | sha256:ae35caaafbbf3d8e6... | 8.6.5 | 408
-KFM-P1-PROG-0041 | programming | MAP | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:1cd9ebaedb558e1a1... | 8.6.6 |
-409
-KFM-P1-PROG-0043 | programming | MAP | UNCHANGED | active | 1 | 16 | SRC-P23-001,SRC-P23-002 | sha256:322166e497bb8ba90... | 8.6.7 |
-410
-KFM-P10-FEAT-0001 | feature | MAP | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:62655568bfe08145d... | 8.6.8 | 411
-KFM-P11-PROG-0004 | programming | MAP | UNCHANGED | active | 11 | 11 | SRC-P23-001,SRC-P23-002 | sha256:4538d2b16984d7db4... | 8.6.9 |
-412
-KFM-P12-PROG-0021 | programming | MAP | UNCHANGED | active | 12 | 13 | SRC-P23-001,SRC-P23-002 | sha256:4e71ce25825621667... | 8.6.10
-| 413  
-KFM-P13-PROG-0001 | programming | MAP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:8097c22c1c3ae31ce... | 8.6.11 | 414
-KFM-P13-PROG-0014 | programming | MAP | UNCHANGED | active | 13 | 20 | SRC-P23-001,SRC-P23-002 | sha256:2d99dc36dfb444d52... | 8.6.12
-| 415  
-5. Machine-Readable Index (continued)
-KFM-P13-PROG-0016 | programming | MAP | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:4a410eb0385adbfb8... | 8.6.13
-| 416  
-KFM-P13-PROG-0017 | programming | MAP | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:82b5f71ebc0b1881e... | 8.6.14
-| 417  
-KFM-P13-PROG-0023 | programming | MAP | UNCHANGED | active | 13 | 19 | SRC-P23-001,SRC-P23-002 | sha256:8112309f2e87dde77... | 8.6.15
-| 418  
-KFM-P13-PROG-0024 | programming | MAP | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:b89cb08bb033a4956... | 8.6.16
-| 419  
-KFM-P14-PROG-0011 | programming | MAP | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:270bf152e5c88c1ff... | 8.6.17
-| 420  
-KFM-P15-PROG-0013 | programming | MAP | EXPANDED | active | 15 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9fd562e1ef4c00fc9... | 8.6.18 | 421
-KFM-P15-PROG-0014 | programming | MAP | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:50abc11f1a39ec863... | 8.6.19
-| 422  
-KFM-P15-PROG-0028 | programming | MAP | UNCHANGED | active | 15 | 20 | SRC-P23-001,SRC-P23-002 | sha256:aac15b22acad15614... | 8.6.20
-| 423  
-KFM-P15-PROG-0029 | programming | MAP | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:7671fe40e59c3b4a4... | 8.6.21
-| 424  
-KFM-P16-IDEA-0006 | idea | MAP | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:31ad2120df781c658... | 8.6.22 | 425
-KFM-P16-PROG-0022 | programming | MAP | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:0589b013b32fec550... | 8.6.23
-| 426  
-KFM-P16-PROG-0031 | programming | MAP | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:fe6fd90327a0a48dd... | 8.6.24
-| 427  
-KFM-P17-PROG-0019 | programming | MAP | UNCHANGED | active | 17 | 20 | SRC-P23-001,SRC-P23-002 | sha256:45247fcd76e16328f... | 8.6.25
-| 428  
-KFM-P17-PROG-0033 | programming | MAP | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:dc1bc0b71577fcf52... | 8.6.26
-| 429  
-KFM-P19-FEAT-0003 | feature | MAP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:6e7db065e0ec9fcbf... | 8.6.27 |
-```
+#### 5.6 DOC — Documentation, Doctrine, Reader Surfaces
 
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 13: pages 197–199 -->
+<details>
+<summary><strong>38 cards</strong> — click to expand</summary>
 
-<!-- page: 197 -->
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P17-FEAT-0005` | feature | UNCHANGED | — | 17 → 17 | — | `9337c9383d0252ee3` | 8.4.10 | 298 |
+| `KFM-P18-FEAT-0002` | feature | UNCHANGED | — | 18 → 18 | — | `cd868b4b8a838f23d` | 8.4.14 | 302 |
+| `KFM-P19-FEAT-0008` | feature | UNCHANGED | — | 19 → 19 | — | `65bf2c1cb54dd6401` | 8.4.16 | 304 |
+| `KFM-P3-FEAT-0005` | feature | UNCHANGED | — | 3 → 13 | — | `62bf4eaf94e72d99c` | 8.4.27 | 315 |
+| `KFM-P1-IDEA-0001` | idea | UNCHANGED | — | 1 → 11 | — | `548ffcdb5dea1a3d3` | 8.4.1 | 289 |
+| `KFM-P1-IDEA-0002` | idea | UNCHANGED | — | 1 → 9 | — | `6bc7fb19c69da9cce` | 8.4.2 | 290 |
+| `KFM-P1-IDEA-0003` | idea | UNCHANGED | — | 1 → 9 | — | `4bf24a5b83967575f` | 8.4.3 | 291 |
+| `KFM-P1-IDEA-0004` | idea | UNCHANGED | — | 1 → 9 | — | `48de1260c059af678` | 8.4.4 | 292 |
+| `KFM-P1-IDEA-0005` | idea | UNCHANGED | — | 1 → 3 | — | `a571a5414bbaef6fb` | 8.4.5 | 293 |
+| `KFM-P12-IDEA-0002` | idea | UNCHANGED | — | 12 → 12 | — | `7c4e2986d951c9a75` | 8.4.6 | 294 |
+| `KFM-P17-IDEA-0002` | idea | UNCHANGED | — | 17 → 18 | — | `d7aef203ece9d223d` | 8.4.11 | 299 |
+| `KFM-P9-IDEA-0001` | idea | UNCHANGED | — | 9 → 9 | — | `b5520bd40c7829835` | 8.4.37 | 325 |
+| `KFM-P12-PROG-0018` | programming | UNCHANGED | — | 12 → 13 | — | `3649110564212acc3` | 8.4.7 | 295 |
+| `KFM-P13-PROG-0009` | programming | UNCHANGED | — | 13 → 13 | — | `e0e77e0120789f2ee` | 8.4.8 | 296 |
+| `KFM-P15-PROG-0041` | programming | QUARANTINED | quarantine | 15 → 15 | — | `5938e5dee97566cf3` | 8.4.9 | 297 |
+| `KFM-P17-PROG-0024` | programming | UNCHANGED | — | 17 → 17 | — | `5fe8e521da8836b9d` | 8.4.12 | 300 |
+| `KFM-P17-PROG-0045` | programming | QUARANTINED | quarantine | 17 → 17 | — | `4de7aa93605a69a81` | 8.4.13 | 301 |
+| `KFM-P18-PROG-0019` | programming | UNCHANGED | — | 18 → 18 | — | `133b1a4c7777b1359` | 8.4.15 | 303 |
+| `KFM-P19-PROG-0039` | programming | UNCHANGED | — | 19 → 19 | — | `667e1dee72023d952` | 8.4.17 | 305 |
+| `KFM-P2-PROG-0030` | programming | UNCHANGED | — | 2 → 13 | — | `beba8030303b7c902` | 8.4.18 | 306 |
+| `KFM-P2-PROG-0031` | programming | UNCHANGED | — | 2 → 2 | — | `0d95f44652136261b` | 8.4.19 | 307 |
+| `KFM-P20-PROG-0042` | programming | QUARANTINED | quarantine | 20 → 20 | — | `d050978d4ee993ce1` | 8.4.20 | 308 |
+| `KFM-P21-PROG-0027` | programming | UNCHANGED | — | 21 → 21 | — | `1bb90b13bb14a1545` | 8.4.21 | 309 |
+| `KFM-P21-PROG-0044` | programming | UNCHANGED | — | 21 → 21 | — | `ab19975135ed7ea2e` | 8.4.22 | 310 |
+| `KFM-P22-PROG-0017` | programming | UNCHANGED | — | 22 → 22 | — | `8747f0ff13878bffb` | 8.4.23 | 311 |
+| `KFM-P22-PROG-0018` | programming | UNCHANGED | — | 22 → 22 | — | `8fd856173f7a89d9b` | 8.4.24 | 312 |
+| `KFM-P23-PROG-0052` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `23b26241124d389af` | 8.4.25 | 313 |
+| `KFM-P23-PROG-0053` | programming | QUARANTINED | quarantine | 23 → 23 | `SRC-P23-004,SRC-P23-005` | `69eee013c8868d830` | 8.4.26 | 314 |
+| `KFM-P7-PROG-0007` | programming | UNCHANGED | — | 7 → 7 | — | `4b5fa820e8972ea06` | 8.4.28 | 316 |
+| `KFM-P7-PROG-0008` | programming | UNCHANGED | — | 7 → 7 | — | `787687cae22263195` | 8.4.29 | 317 |
+| `KFM-P8-PROG-0020` | programming | UNCHANGED | — | 8 → 8 | — | `105e9e7977f7aa3ec` | 8.4.30 | 318 |
+| `KFM-P8-PROG-0028` | programming | UNCHANGED | — | 8 → 8 | — | `2a48fd9c321e2156d` | 8.4.31 | 319 |
+| `KFM-P8-PROG-0029` | programming | UNCHANGED | — | 8 → 8 | — | `0f67c8778c1eb7cd3` | 8.4.32 | 320 |
+| `KFM-P8-PROG-0030` | programming | UNCHANGED | — | 8 → 8 | — | `d1b44954063a94936` | 8.4.33 | 321 |
+| `KFM-P8-PROG-0031` | programming | UNCHANGED | — | 8 → 8 | — | `5f17dea215b083cb1` | 8.4.34 | 322 |
+| `KFM-P8-PROG-0032` | programming | UNCHANGED | — | 8 → 8 | — | `527e668464a9a97c7` | 8.4.35 | 323 |
+| `KFM-P8-PROG-0033` | programming | QUARANTINED | quarantine | 8 → 8 | — | `48da8fe8fa0e4103f` | 8.4.36 | 324 |
+| `KFM-P9-PROG-0001` | programming | EXPANDED | — | 9 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b025bdf3439c58283` | 8.4.38 | 326 |
 
-```text
-430
-KFM-P19-FEAT-0006 | feature | MAP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:d6f59b4c6c2bda9cb... | 8.6.28 |
-431
-KFM-P19-PROG-0021 | programming | MAP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:67c8b5f6d1b86dbf9... | 8.6.29
-| 432  
-KFM-P2-FEAT-0012 | feature | MAP | UNCHANGED | active | 2 | 9 | SRC-P23-001,SRC-P23-002 | sha256:c4864c87284d559c0... | 8.6.30 | 433
-KFM-P2-FEAT-0013 | feature | MAP | UNCHANGED | active | 2 | 9 | SRC-P23-001,SRC-P23-002 | sha256:2cd80baca8cebcd50... | 8.6.31 | 434
-KFM-P2-FEAT-0032 | feature | MAP | UNCHANGED | active | 2 | 9 | SRC-P23-001,SRC-P23-002 | sha256:d615b50f88813691a... | 8.6.32 | 435
-KFM-P2-FEAT-0035 | feature | MAP | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:f2fed095ed4361d32... | 8.6.33 | 436
-KFM-P2-FEAT-0036 | feature | MAP | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:10c401b9e916a049d... | 8.6.34 | 437
-KFM-P2-IDEA-0014 | idea | MAP | UNCHANGED | active | 2 | 9 | SRC-P23-001,SRC-P23-002 | sha256:8f0c8aa4c1ed5cfab... | 8.6.35 | 438
-KFM-P2-IDEA-0033 | idea | MAP | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:b2674548dc3c6d846... | 8.6.36 | 439
-KFM-P2-IDEA-0034 | idea | MAP | UNCHANGED | active | 2 | 9 | SRC-P23-001,SRC-P23-002 | sha256:d7b763737b20384b8... | 8.6.37 | 440
-KFM-P20-FEAT-0003 | feature | MAP | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1f267ce890ac3fe11... | 8.6.38 | 441
-KFM-P20-FEAT-0005 | feature | MAP | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:c668d9a225fa8eedd... | 8.6.39 |
-442
-KFM-P20-PROG-0013 | programming | MAP | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:5f5d054ea99fa2028... | 8.6.40
-| 443  
-KFM-P20-PROG-0038 | programming | MAP | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:5bc40ce7b10396953... | 8.6.41
-| 444  
-KFM-P21-FEAT-0002 | feature | MAP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:90213b94fd3929c9f... | 8.6.42 |
-445
-KFM-P21-PROG-0008 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:e7d787b64bbfe2c41... | 8.6.43
-| 446  
-KFM-P21-PROG-0018 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:1c88ec4559bfe44d3... | 8.6.44
-| 447  
-KFM-P21-PROG-0034 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:696892e791c98dc9a... | 8.6.45
-| 448  
-KFM-P21-PROG-0035 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:f1abdd4ea0ef2f5d5... | 8.6.46
-| 449  
-KFM-P22-PROG-0011 | programming | MAP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:f27b927debc1e1099... | 8.6.47
-| 450  
-KFM-P22-PROG-0041 | programming | MAP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:eb01d13edf483692d... | 8.6.48
-| 451  
-KFM-P22-PROG-0042 | programming | MAP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:75e13fd6c04c2ec86... | 8.6.49
-| 452  
-KFM-P23-IDEA-0004 | idea | MAP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:629063c0026c61ebd... | 8.6.50 | 453
-KFM-P23-PROG-0036 | programming | MAP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:6be938af5ab684485... | 8.6.51 | 454
-KFM-P23-PROG-0037 | programming | MAP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:a0648cd0e91efc5d5... | 8.6.52 | 455
-KFM-P4-PROG-0002 | programming | MAP | EXPANDED | active | 4 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:7231dbfab7829a976... | 8.6.53 | 456
-KFM-P5-PROG-0003 | programming | MAP | UNCHANGED | active | 5 | 20 | SRC-P23-001,SRC-P23-002 | sha256:bb8cc63a759e36c58... | 8.6.54 |
-457
-5. Machine-Readable Index (continued)
-KFM-P5-PROG-0004 | programming | MAP | UNCHANGED | active | 5 | 20 | SRC-P23-001,SRC-P23-002 | sha256:e157b1e56ec8c53a2... | 8.6.55 |
-458
-KFM-P5-PROG-0012 | programming | MAP | EXPANDED | active | 5 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:aa0a5141998e3a882... | 8.6.56 | 459
-KFM-P7-FEAT-0001 | feature | MAP | UNCHANGED | active | 7 | 7 | SRC-P23-001,SRC-P23-002 | sha256:d4f7c5528e1ce0290... | 8.6.57 | 460
-KFM-P7-PROG-0006 | programming | MAP | UNCHANGED | active | 7 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6854f50804c190ce1... | 8.6.58 |
-461
-KFM-P9-FEAT-0001 | feature | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:1d4ba4a36b3736a59... | 8.6.59 | 462
-KFM-P9-FEAT-0011 | feature | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:1f60d76726d3b3645... | 8.6.60 | 463
-KFM-P9-FEAT-0012 | feature | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:eb669e450cfbc4d17... | 8.6.61 | 464
-KFM-P9-FEAT-0013 | feature | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:2966adbb33525c49e... | 8.6.62 | 465
-KFM-P9-FEAT-0014 | feature | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b1483cdf127140289... | 8.6.63 | 466
-KFM-P9-FEAT-0015 | feature | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:88abdf37faac92919... | 8.6.64 | 467
-KFM-P9-FEAT-0016 | feature | MAP | UNCHANGED | active | 9 | 15 | SRC-P23-001,SRC-P23-002 | sha256:d9d2cf2eea589fccd... | 8.6.65 | 468
-KFM-P9-IDEA-0002 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:83c1c6aa899fd162d... | 8.6.66 | 469
-KFM-P9-IDEA-0003 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:bc01001827fec82f5... | 8.6.67 | 470
-KFM-P9-IDEA-0004 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:321e5ef76014b463e... | 8.6.68 | 471
-KFM-P9-IDEA-0005 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:cd8b5cdc1b05c8438... | 8.6.69 | 472
-KFM-P9-IDEA-0006 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a60cdc20b0441d9e6... | 8.6.70 | 473
-KFM-P9-IDEA-0007 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a756cb3150b71827f... | 8.6.71 | 474
-KFM-P9-IDEA-0039 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:952783734dd51ef16... | 8.6.72 | 475
-KFM-P9-IDEA-0040 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:38b339c3f7759e787... | 8.6.73 | 476
-KFM-P9-IDEA-0041 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:548bbcc1b014817cf... | 8.6.74 | 477
-KFM-P9-IDEA-0042 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:decaa1a8663c5af99... | 8.6.75 | 478
-KFM-P9-IDEA-0043 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:2cbd17febe4cfaf5e... | 8.6.76 | 479
-KFM-P9-IDEA-0044 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:f8ab6c2c569c04eb1... | 8.6.77 | 480
-KFM-P9-IDEA-0045 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:1354abacc06f79c8c... | 8.6.78 | 481
-KFM-P9-IDEA-0049 | idea | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:4c20b24c21b9a5c93... | 8.6.79 | 482
-KFM-P9-PROG-0002 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:e22bb203225179dce... | 8.6.80 |
-483
-KFM-P9-PROG-0048 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:74333fc833c7943c1... | 8.6.81 |
-484
-KFM-P9-PROG-0049 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:03854ab81a602465b... | 8.6.82 |
-485
-KFM-P9-PROG-0050 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b5cbd93eeef5dd554... | 8.6.83 |
-486
-KFM-P9-PROG-0051 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:ebf5db1556e13a4f2... | 8.6.84 |
-487
-KFM-P9-PROG-0052 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:2559336a6944fd34d... | 8.6.85 |
-488
-KFM-P9-PROG-0053 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:ce79d5f896e5be025... | 8.6.86 |
-489
-KFM-P9-PROG-0054 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:479ae6885248f59e1... | 8.6.87 |
-490
-KFM-P9-PROG-0055 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b32e998ea8a7084a9... | 8.6.88 |
-491
-KFM-P9-PROG-0056 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:21552cd3db01a7299... | 8.6.89 |
-492
-KFM-P9-PROG-0057 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:46dd0bdb800ff8d7a... | 8.6.90 |
-```
+</details>
 
-<!-- page: 198 -->
+#### 5.7 EVD — Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain
 
-```text
-493
-KFM-P9-PROG-0058 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b19093415384fb3a9... | 8.6.91 |
-494
-KFM-P9-PROG-0071 | programming | MAP | UNCHANGED | active | 9 | 15 | SRC-P23-001,SRC-P23-002 | sha256:4bc9ab4bf90ab419b... | 8.6.92 |
-495
-KFM-P9-PROG-0072 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:6864c79958466ff35... | 8.6.93 |
-496
-KFM-P9-PROG-0073 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:29c65d110a1df39c9... | 8.6.94 |
-497
-KFM-P9-PROG-0074 | programming | MAP | UNCHANGED | active | 9 | 15 | SRC-P23-001,SRC-P23-002 | sha256:fc95471baa538b97e... | 8.6.95 |
-498
-KFM-P9-PROG-0075 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:aa244db28f38ece3a... | 8.6.96 |
-499
-5. Machine-Readable Index (continued)
-KFM-P1-PROG-0021 | programming | MDP | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e2d53306c1a8e79c5... | 8.7.1 | 501
-KFM-P1-PROG-0022 | programming | MDP | UNCHANGED | active | 1 | 20 | SRC-P23-001,SRC-P23-002 | sha256:849a809f3c331809f... | 8.7.2 |
-502
-KFM-P1-PROG-0023 | programming | MDP | UNCHANGED | active | 1 | 11 | SRC-P23-001,SRC-P23-002 | sha256:d90f987872e5f08c1... | 8.7.3 |
-503
-KFM-P10-PROG-0002 | programming | MDP | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:5e23e5f71af638e73... | 8.7.4 |
-504
-KFM-P10-PROG-0007 | programming | MDP | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:f435ff0672865210a... | 8.7.5 | 505
-KFM-P10-PROG-0020 | programming | MDP | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:99d2b75d27862271c... | 8.7.6 |
-506
-KFM-P11-PROG-0016 | programming | MDP | UNCHANGED | active | 11 | 12 | SRC-P23-001,SRC-P23-002 | sha256:7bd767bd535c46d6f... | 8.7.7 |
-507
-KFM-P12-IDEA-0003 | idea | MDP | UNCHANGED | active | 12 | 12 | SRC-P23-001,SRC-P23-002 | sha256:83ad3da84adc2725c... | 8.7.8 | 508
-KFM-P12-PROG-0029 | programming | MDP | UNCHANGED | active | 12 | 14 | SRC-P23-001,SRC-P23-002 | sha256:e3e633c86ff544053... | 8.7.9 |
-509
-KFM-P13-IDEA-0003 | idea | MDP | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:f08e9af002984432d... | 8.7.10 | 510
-KFM-P13-PROG-0012 | programming | MDP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:0ba309d632683b93c... | 8.7.11 | 511
-KFM-P13-PROG-0026 | programming | MDP | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:bc77cff2be4af836b... | 8.7.12
-| 512  
-KFM-P13-PROG-0030 | programming | MDP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:6056cf7ed2f3ea772... | 8.7.13 | 513
-KFM-P13-PROG-0032 | programming | MDP | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:f9960fefe2698c95f... | 8.7.14
-| 514  
-KFM-P14-IDEA-0002 | idea | MDP | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:53592d82983d04032... | 8.7.15 | 515
-KFM-P14-PROG-0008 | programming | MDP | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:e9623d2469b45d315... | 8.7.16
-| 516  
-KFM-P14-PROG-0014 | programming | MDP | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:4bab86bf59b53651f... | 8.7.17
-| 517  
-KFM-P14-PROG-0021 | programming | MDP | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:6428f3f538c260d3c... | 8.7.18
-| 518  
-KFM-P15-PROG-0035 | programming | MDP | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:d496b84338b597374... | 8.7.19
-| 519  
-KFM-P16-PROG-0023 | programming | MDP | UNCHANGED | active | 16 | 20 | SRC-P23-001,SRC-P23-002 | sha256:5c49c2373b36b4829... | 8.7.20
-| 520  
-KFM-P16-PROG-0024 | programming | MDP | UNCHANGED | active | 16 | 19 | SRC-P23-001,SRC-P23-002 | sha256:163f11af72528bb21... | 8.7.21
-| 521  
-KFM-P18-PROG-0022 | programming | MDP | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:44fecb82a5b93edfe... | 8.7.22
-| 522  
-KFM-P18-PROG-0027 | programming | MDP | UNCHANGED | active | 18 | 20 | SRC-P23-001,SRC-P23-002 | sha256:e6e168d13471679e5... | 8.7.23
-| 523  
-KFM-P19-IDEA-0006 | idea | MDP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:9ec60c5d4435b42fa... | 8.7.24 | 524
-KFM-P19-PROG-0014 | programming | MDP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:bfdf5ba45f257e68d... | 8.7.25
-| 525  
-KFM-P19-PROG-0018 | programming | MDP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:f8d52ae9880d62936... | 8.7.26
-| 526  
-KFM-P19-PROG-0023 | programming | MDP | UNCHANGED | active | 19 | 20 | SRC-P23-001,SRC-P23-002 | sha256:1634685110eda6d5f... | 8.7.27
-| 527  
-KFM-P19-PROG-0034 | programming | MDP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:2adbb859c2c812019... | 8.7.28
-| 528  
-KFM-P20-PROG-0003 | programming | MDP | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:731e18806f528233b... | 8.7.29
-| 529  
-KFM-P21-PROG-0005 | programming | MDP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:ac2d8065c513d4a1c... | 8.7.30
-| 530  
-KFM-P21-PROG-0030 | programming | MDP | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e24de3c8714a424e3... | 8.7.31 | 531
-KFM-P22-PROG-0002 | programming | MDP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c3f7519a6d8f6a7c7... | 8.7.32
-| 532  
-KFM-P22-PROG-0016 | programming | MDP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3b353524a9d124c9c... | 8.7.33
-| 533  
-KFM-P22-PROG-0037 | programming | MDP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:046d750ae82f12970... | 8.7.34
-| 534  
-KFM-P22-PROG-0038 | programming | MDP | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1a04ac72e76bcb1c2... | 8.7.35 | 535
-KFM-P22-PROG-0039 | programming | MDP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:b523bbb3497a5f86c... | 8.7.36
-| 536  
-KFM-P23-PROG-0013 | programming | MDP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:c03d52e72a94c166a... | 8.7.37 | 537
-KFM-P23-PROG-0019 | programming | MDP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:db6e89de61be54248... | 8.7.38 | 538
-KFM-P23-PROG-0030 | programming | MDP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:8f1c46a6a93b2f280... | 8.7.39 | 539
-KFM-P3-IDEA-0004 | idea | MDP | EXPANDED | active | 3 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:a038ce15b14b2a727... | 8.7.40 | 540
-KFM-P6-PROG-0003 | programming | MDP | UNCHANGED | active | 6 | 20 | SRC-P23-001,SRC-P23-002 | sha256:e5c9d7aa07f620e50... | 8.7.41 |
-541
-KFM-P7-PROG-0001 | programming | MDP | EXPANDED | active | 7 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:68e69b3a75f7744b2... | 8.7.42 | 542
-5. Machine-Readable Index (continued)
-KFM-P1-IDEA-0045 | idea | MOD | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:3a6b74867852874ea... | 8.8.1 | 544
-KFM-P1-IDEA-0046 | idea | MOD | UNCHANGED | active | 1 | 11 | SRC-P23-001,SRC-P23-002 | sha256:9c5420a6b27e600db... | 8.8.2 | 545
-KFM-P1-IDEA-0047 | idea | MOD | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23-002 | sha256:51fbc83e72de60e6c... | 8.8.3 | 546
-```
+<details>
+<summary><strong>75 cards</strong> — click to expand</summary>
 
-<!-- page: 199 -->
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P11-FEAT-0001` | feature | UNCHANGED | — | 11 → 22 | — | `5980ddb78c9666796` | 8.5.10 | 337 |
+| `KFM-P9-FEAT-0003` | feature | UNCHANGED | — | 9 → 9 | — | `7219aa9887f1d5d15` | 8.5.65 | 392 |
+| `KFM-P1-IDEA-0012` | idea | UNCHANGED | — | 1 → 22 | — | `f6aa517dff78082b4` | 8.5.1 | 328 |
+| `KFM-P1-IDEA-0014` | idea | UNCHANGED | — | 1 → 22 | — | `f52c45982b13eb2f4` | 8.5.2 | 329 |
+| `KFM-P1-IDEA-0019` | idea | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `ac7493f43e61c322a` | 8.5.3 | 330 |
+| `KFM-P17-IDEA-0004` | idea | UNCHANGED | — | 17 → 22 | — | `6b8e54d44fff359d9` | 8.5.24 | 351 |
+| `KFM-P18-IDEA-0002` | idea | UNCHANGED | — | 18 → 20 | — | `b2efb4f4d0487282b` | 8.5.31 | 358 |
+| `KFM-P19-IDEA-0001` | idea | UNCHANGED | — | 19 → 20 | — | `48c6c8ceed1a12e10` | 8.5.35 | 362 |
+| `KFM-P20-IDEA-0007` | idea | UNCHANGED | — | 20 → 20 | — | `ddc5e402dab5f0e9d` | 8.5.40 | 367 |
+| `KFM-P21-IDEA-0002` | idea | UNCHANGED | — | 21 → 21 | — | `92fb86be5268d8bb3` | 8.5.43 | 370 |
+| `KFM-P22-IDEA-0002` | idea | UNCHANGED | — | 22 → 22 | — | `7605a624adeb82c5f` | 8.5.51 | 378 |
+| `KFM-P23-IDEA-0005` | idea | NEW | — | 23 → 23 | `SRC-P23-003` | `d34ee1f1e5ea625e1` | 8.5.55 | 382 |
+| `KFM-P7-IDEA-0001` | idea | UNCHANGED | — | 7 → 7 | — | `e01b6c7574d0de0c5` | 8.5.62 | 389 |
+| `KFM-P8-IDEA-0001` | idea | EXPANDED | — | 8 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `2728b4f1497a7761e` | 8.5.63 | 390 |
+| `KFM-P9-IDEA-0012` | idea | UNCHANGED | — | 9 → 9 | — | `a25c9d63d4d20656e` | 8.5.66 | 393 |
+| `KFM-P9-IDEA-0013` | idea | UNCHANGED | — | 9 → 9 | — | `b433b3c2c915f7cb1` | 8.5.67 | 394 |
+| `KFM-P9-IDEA-0014` | idea | UNCHANGED | — | 9 → 9 | — | `f649974c2bc265d42` | 8.5.68 | 395 |
+| `KFM-P9-IDEA-0015` | idea | UNCHANGED | — | 9 → 9 | — | `ebe613c02cb2cf5ab` | 8.5.69 | 396 |
+| `KFM-P1-PROG-0013` | programming | UNCHANGED | — | 1 → 22 | — | `5e5d63e8e43808ced` | 8.5.4 | 331 |
+| `KFM-P1-PROG-0015` | programming | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `66b41a27e5824d082` | 8.5.5 | 332 |
+| `KFM-P1-PROG-0016` | programming | UNCHANGED | — | 1 → 22 | — | `5f3e83c822f67f8f1` | 8.5.6 | 333 |
+| `KFM-P1-PROG-0018` | programming | UNCHANGED | — | 1 → 22 | — | `286431575c725cdd5` | 8.5.7 | 334 |
+| `KFM-P10-PROG-0003` | programming | UNCHANGED | — | 10 → 22 | — | `3d1192eebacb3e418` | 8.5.8 | 335 |
+| `KFM-P10-PROG-0024` | programming | UNCHANGED | — | 10 → 22 | — | `6d722d611a1db4c18` | 8.5.9 | 336 |
+| `KFM-P11-PROG-0010` | programming | UNCHANGED | — | 11 → 22 | — | `292ebbcf720546724` | 8.5.11 | 338 |
+| `KFM-P11-PROG-0017` | programming | UNCHANGED | — | 11 → 22 | — | `5562fa40d6b95487c` | 8.5.12 | 339 |
+| `KFM-P11-PROG-0029` | programming | UNCHANGED | — | 11 → 22 | — | `bf12cfb181287a131` | 8.5.13 | 340 |
+| `KFM-P12-PROG-0030` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1b6fe4fb5a2bc99a7` | 8.5.14 | 341 |
+| `KFM-P13-PROG-0008` | programming | UNCHANGED | — | 13 → 22 | — | `85a324f13410631ab` | 8.5.15 | 342 |
+| `KFM-P13-PROG-0010` | programming | UNCHANGED | — | 13 → 22 | — | `c841c032ffdf133e8` | 8.5.16 | 343 |
+| `KFM-P14-PROG-0015` | programming | UNCHANGED | — | 14 → 22 | — | `36084d57c36a50520` | 8.5.17 | 344 |
+| `KFM-P14-PROG-0016` | programming | UNCHANGED | — | 14 → 22 | — | `fcbb6dd4f9e04b8a4` | 8.5.18 | 345 |
+| `KFM-P14-PROG-0032` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `999d2dd4a0d279869` | 8.5.19 | 346 |
+| `KFM-P15-PROG-0002` | programming | UNCHANGED | — | 15 → 22 | — | `3cca2a1ce2d22dd26` | 8.5.20 | 347 |
+| `KFM-P15-PROG-0030` | programming | UNCHANGED | — | 15 → 22 | — | `2dad28794794e98b0` | 8.5.21 | 348 |
+| `KFM-P15-PROG-0038` | programming | UNCHANGED | — | 15 → 22 | — | `9a0222b64b2565f46` | 8.5.22 | 349 |
+| `KFM-P16-PROG-0032` | programming | UNCHANGED | — | 16 → 22 | — | `7538adf5a07cbeef0` | 8.5.23 | 350 |
+| `KFM-P17-PROG-0001` | programming | UNCHANGED | — | 17 → 20 | — | `9a27d953f7f2d3c36` | 8.5.25 | 352 |
+| `KFM-P17-PROG-0006` | programming | UNCHANGED | — | 17 → 17 | — | `2eef67a63a9cd55c3` | 8.5.26 | 353 |
+| `KFM-P17-PROG-0011` | programming | UNCHANGED | — | 17 → 17 | — | `290101d96f663b741` | 8.5.27 | 354 |
+| `KFM-P17-PROG-0012` | programming | UNCHANGED | — | 17 → 19 | — | `bfb9266e44fede0fc` | 8.5.28 | 355 |
+| `KFM-P17-PROG-0028` | programming | UNCHANGED | — | 17 → 17 | — | `7ae89ff3153c68789` | 8.5.29 | 356 |
+| `KFM-P17-PROG-0039` | programming | UNCHANGED | — | 17 → 17 | — | `5ff944edf86cf11b9` | 8.5.30 | 357 |
+| `KFM-P18-PROG-0006` | programming | UNCHANGED | — | 18 → 20 | — | `d988d32c5aa76175b` | 8.5.32 | 359 |
+| `KFM-P18-PROG-0017` | programming | UNCHANGED | — | 18 → 18 | — | `9f979bb2371108a2d` | 8.5.33 | 360 |
+| `KFM-P18-PROG-0040` | programming | UNCHANGED | — | 18 → 20 | — | `771f3a3e2ce86df90` | 8.5.34 | 361 |
+| `KFM-P19-PROG-0005` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `296e72d44fe29df8f` | 8.5.36 | 363 |
+| `KFM-P19-PROG-0008` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `85284a91d96ac6e50` | 8.5.37 | 364 |
+| `KFM-P19-PROG-0031` | programming | UNCHANGED | — | 19 → 20 | — | `9c8c8dd0d6f2b40da` | 8.5.38 | 365 |
+| `KFM-P19-PROG-0032` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `ac9201094d87ba717` | 8.5.39 | 366 |
+| `KFM-P20-PROG-0015` | programming | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e2019480a288913ed` | 8.5.41 | 368 |
+| `KFM-P20-PROG-0024` | programming | UNCHANGED | — | 20 → 20 | — | `86f96b85a691f8282` | 8.5.42 | 369 |
+| `KFM-P21-PROG-0011` | programming | UNCHANGED | — | 21 → 21 | — | `a1798e28f3289eebe` | 8.5.44 | 371 |
+| `KFM-P21-PROG-0021` | programming | UNCHANGED | — | 21 → 21 | — | `3be5a999f579dbc7e` | 8.5.45 | 372 |
+| `KFM-P21-PROG-0022` | programming | UNCHANGED | — | 21 → 21 | — | `83498c46eab7aeba0` | 8.5.46 | 373 |
+| `KFM-P21-PROG-0023` | programming | UNCHANGED | — | 21 → 21 | — | `29ff7ded7b74c745a` | 8.5.47 | 374 |
+| `KFM-P21-PROG-0039` | programming | UNCHANGED | — | 21 → 21 | — | `511e787487a68d909` | 8.5.48 | 375 |
+| `KFM-P21-PROG-0042` | programming | UNCHANGED | — | 21 → 21 | — | `01bbe68408d252b16` | 8.5.49 | 376 |
+| `KFM-P21-PROG-0051` | programming | UNCHANGED | — | 21 → 21 | — | `95eff52dc9bb379d4` | 8.5.50 | 377 |
+| `KFM-P22-PROG-0003` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `2db5f213c816463f4` | 8.5.52 | 379 |
+| `KFM-P22-PROG-0036` | programming | UNCHANGED | — | 22 → 22 | — | `33bf65e714fd7103f` | 8.5.53 | 380 |
+| `KFM-P22-PROG-0050` | programming | UNCHANGED | — | 22 → 22 | — | `fe808fa3801065cec` | 8.5.54 | 381 |
+| `KFM-P23-PROG-0016` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `38e9a71ecbf6a11d4` | 8.5.56 | 383 |
+| `KFM-P23-PROG-0023` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `f0d443a6ebcd5e70c` | 8.5.57 | 384 |
+| `KFM-P23-PROG-0025` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `39296881e960b62d5` | 8.5.58 | 385 |
+| `KFM-P23-PROG-0047` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `4718e74a15fdede11` | 8.5.59 | 386 |
+| `KFM-P3-PROG-0001` | programming | UNCHANGED | — | 3 → 20 | — | `e8cbeff8f80227a76` | 8.5.60 | 387 |
+| `KFM-P6-PROG-0009` | programming | UNCHANGED | — | 6 → 7 | — | `d31f2a533535bdd04` | 8.5.61 | 388 |
+| `KFM-P8-PROG-0019` | programming | UNCHANGED | — | 8 → 10 | — | `2ff46f6fc2cb7ca1c` | 8.5.64 | 391 |
+| `KFM-P9-PROG-0019` | programming | UNCHANGED | — | 9 → 9 | — | `6708e4341689103ad` | 8.5.70 | 397 |
+| `KFM-P9-PROG-0020` | programming | UNCHANGED | — | 9 → 9 | — | `f317696440433924d` | 8.5.71 | 398 |
+| `KFM-P9-PROG-0021` | programming | UNCHANGED | — | 9 → 9 | — | `0b65acb20206d6ee1` | 8.5.72 | 399 |
+| `KFM-P9-PROG-0022` | programming | UNCHANGED | — | 9 → 9 | — | `90181576b47bf2620` | 8.5.73 | 400 |
+| `KFM-P9-PROG-0023` | programming | UNCHANGED | — | 9 → 9 | — | `d72204338675e5abc` | 8.5.74 | 401 |
+| `KFM-P9-PROG-0024` | programming | UNCHANGED | — | 9 → 9 | — | `55e17cc0b2f0b3f73` | 8.5.75 | 402 |
 
-```text
-KFM-P1-IDEA-0049 | idea | MOD | UNCHANGED | active | 1 | 11 | SRC-P23-001,SRC-P23-002 | sha256:78cbd551917b02051... | 8.8.4 | 547
-KFM-P1-IDEA-0050 | idea | MOD | UNCHANGED | active | 1 | 18 | SRC-P23-001,SRC-P23-002 | sha256:86958955d85e826c1... | 8.8.5 | 548
-KFM-P1-IDEA-0051 | idea | MOD | UNCHANGED | active | 1 | 4 | SRC-P23-001,SRC-P23-002 | sha256:4d86a346ed506c40c... | 8.8.6 | 549
-KFM-P1-IDEA-0072 | idea | MOD | UNCHANGED | active | 1 | 4 | SRC-P23-001,SRC-P23-002 | sha256:83a858f7c655a977f... | 8.8.7 | 550
-KFM-P1-PROG-0048 | programming | MOD | UNCHANGED | active | 1 | 16 | SRC-P23-001,SRC-P23-002 | sha256:0490954eee450ab0e... | 8.8.8 |
-551
-KFM-P1-PROG-0052 | programming | MOD | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:2b42f97d27fcc4130... | 8.8.9 |
-552
-KFM-P10-PROG-0013 | programming | MOD | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:bbfa58b99889ded96... | 8.8.10
-| 553  
-KFM-P12-PROG-0002 | programming | MOD | UNCHANGED | active | 12 | 12 | SRC-P23-001,SRC-P23-002 | sha256:72596c35f6342fcf6... | 8.8.11
-| 554  
-KFM-P12-PROG-0006 | programming | MOD | UNCHANGED | active | 12 | 13 | SRC-P23-001,SRC-P23-002 | sha256:ba3ab835f2a806bc2... | 8.8.12
-| 555  
-KFM-P12-PROG-0026 | programming | MOD | UNCHANGED | active | 12 | 13 | SRC-P23-001,SRC-P23-002 | sha256:63aad1fde433691ba... | 8.8.13
-| 556  
-KFM-P13-PROG-0007 | programming | MOD | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:9a09014a6b13f77f6... | 8.8.14
-| 557  
-KFM-P13-PROG-0025 | programming | MOD | UNCHANGED | active | 13 | 15 | SRC-P23-001,SRC-P23-002 | sha256:761e31c97981d4336... | 8.8.15
-| 558  
-KFM-P14-PROG-0023 | programming | MOD | UNCHANGED | active | 14 | 15 | SRC-P23-001,SRC-P23-002 | sha256:d49e3867d71e9c0c2... | 8.8.16
-| 559  
-KFM-P14-PROG-0027 | programming | MOD | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:d7057b4b54ab2f7f0... | 8.8.17 | 560
-KFM-P14-PROG-0028 | programming | MOD | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:72c4cd20ebd0b81fa... | 8.8.18 | 561
-KFM-P15-PROG-0015 | programming | MOD | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:adfd159fa06351053... | 8.8.19
-| 562  
-KFM-P15-PROG-0016 | programming | MOD | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:ff27f30b6985dc908... | 8.8.20
-| 563  
-KFM-P15-PROG-0022 | programming | MOD | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:69ca8199026d832d6... | 8.8.21
-| 564  
-KFM-P15-PROG-0037 | programming | MOD | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:0c21a8a6a501bba71... | 8.8.22
-| 565  
-KFM-P16-PROG-0017 | programming | MOD | UNCHANGED | active | 16 | 17 | SRC-P23-001,SRC-P23-002 | sha256:2e7ee31f73206d12a... | 8.8.23
-| 566  
-KFM-P16-PROG-0018 | programming | MOD | UNCHANGED | active | 16 | 20 | SRC-P23-001,SRC-P23-002 | sha256:0def9b5855d78b6bb... | 8.8.24
-| 567  
-KFM-P16-PROG-0025 | programming | MOD | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:31b7b9014af255dca... | 8.8.25
-| 568  
-KFM-P16-PROG-0030 | programming | MOD | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:090ea323062f73f21... | 8.8.26
-| 569  
-KFM-P16-PROG-0035 | programming | MOD | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:6d61a810ec42f7ed8... | 8.8.27
-| 570  
-KFM-P17-IDEA-0005 | idea | MOD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:afff281528b001ebc... | 8.8.28 | 571
-KFM-P17-PROG-0007 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:1e0f69fdf6a286d57... | 8.8.29
-| 572  
-KFM-P17-PROG-0009 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:5fa7c9e3e91a8dd9e... | 8.8.30
-| 573  
-KFM-P17-PROG-0014 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:7564c4a5c056348bc... | 8.8.31
-| 574  
-KFM-P17-PROG-0031 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:ead25283874a257a5... | 8.8.32
-| 575  
-KFM-P17-PROG-0043 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:089794e8070cd18ef... | 8.8.33
-| 576  
-KFM-P17-PROG-0044 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:39ffeb4b529a1c39d... | 8.8.34
-| 577  
-KFM-P18-PROG-0003 | programming | MOD | UNCHANGED | active | 18 | 19 | SRC-P23-001,SRC-P23-002 | sha256:d781fd7b892fd947b... | 8.8.35
-| 578  
-KFM-P18-PROG-0016 | programming | MOD | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:6b46edbe94d32128e... | 8.8.36
-| 579  
-KFM-P18-PROG-0020 | programming | MOD | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:7340146cee86fd2ff... | 8.8.37
-| 580  
-KFM-P18-PROG-0021 | programming | MOD | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:f8ee8a63012539c6e... | 8.8.38
-| 581  
-KFM-P18-PROG-0042 | programming | MOD | QUARANTINED | quarantine | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:356e67a513caedbaa... |
-8.8.39 | 582
-KFM-P19-PROG-0027 | programming | MOD | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:766280d76c2528a31... | 8.8.40
-| 583  
-KFM-P19-PROG-0042 | programming | MOD | QUARANTINED | quarantine | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:228a3cadeff994a92... |
-8.8.41 | 584
-KFM-P2-IDEA-0016 | idea | MOD | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:d196db58a0cd08ea8... | 8.8.42 | 585
-5. Machine-Readable Index (continued)
-KFM-P2-PROG-0017 | programming | MOD | UNCHANGED | active | 2 | 11 | SRC-P23-001,SRC-P23-002 | sha256:e59c9ae79e8b507ac... | 8.8.43 |
-586
-KFM-P20-IDEA-0003 | idea | MOD | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:773c74f3f595f5c13... | 8.8.44 | 587
-KFM-P20-PROG-0011 | programming | MOD | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:af474dca841e35667... | 8.8.45
-| 588  
-KFM-P21-PROG-0015 | programming | MOD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5a4e5245fb82b7786... | 8.8.46
-| 589  
-KFM-P22-IDEA-0005 | idea | MOD | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:242530afd9c097742... | 8.8.47 | 590
-KFM-P22-PROG-0051 | programming | MOD | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3f04ebe6ded35aed1... | 8.8.48
-| 591  
-KFM-P22-PROG-0053 | programming | MOD | QUARANTINED | quarantine | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:4530db9750f582dcc... |
-8.8.49 | 592
-KFM-P23-IDEA-0003 | idea | MOD | NEW | active | 23 | 23 | SRC-P23-004 | sha256:ccb56eb831900a95e... | 8.8.50 | 593
-KFM-P23-PROG-0018 | programming | MOD | NEW | active | 23 | 23 | SRC-P23-003 | sha256:ce8f285347d16840a... | 8.8.51 | 594
-KFM-P23-PROG-0031 | programming | MOD | NEW | active | 23 | 23 | SRC-P23-004 | sha256:48dd398ad93161de7... | 8.8.52 | 595
-KFM-P23-PROG-0032 | programming | MOD | NEW | active | 23 | 23 | SRC-P23-004 | sha256:0b7d4ef7d1eb9b0d8... | 8.8.53 | 596
-KFM-P23-PROG-0035 | programming | MOD | NEW | active | 23 | 23 | SRC-P23-004 | sha256:21f7869c287722594... | 8.8.54 | 597
-KFM-P4-PROG-0005 | programming | MOD | UNCHANGED | active | 4 | 9 | SRC-P23-001,SRC-P23-002 | sha256:78ed282697a8cb3eb... | 8.8.55 |
-598
-KFM-P4-PROG-0006 | programming | MOD | UNCHANGED | active | 4 | 4 | SRC-P23-001,SRC-P23-002 | sha256:cbda4308449ef0a75... | 8.8.56 |
-599
-KFM-P4-PROG-0007 | programming | MOD | UNCHANGED | active | 4 | 4 | SRC-P23-001,SRC-P23-002 | sha256:4ccb3f4271cbacef6... | 8.8.57 |
-```
+</details>
 
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 14: pages 200–202 -->
+#### 5.8 MAP — Map Surface, MapLibre, Tiles, Styling
 
-<!-- page: 200 -->
+<details>
+<summary><strong>96 cards</strong> — click to expand</summary>
 
-```text
-600
-KFM-P5-PROG-0008 | programming | MOD | EXPANDED | active | 5 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1e979e1e2c4a5a89e... | 8.8.58 | 601
-KFM-P6-PROG-0002 | programming | MOD | UNCHANGED | active | 6 | 6 | SRC-P23-001,SRC-P23-002 | sha256:a83978b921d6cac49... | 8.8.59 |
-602
-KFM-P8-PROG-0024 | programming | MOD | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:d8eeb97ac0f4e335f... | 8.8.60 |
-603
-KFM-P9-IDEA-0011 | idea | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:792bd5d37c83c83c2... | 8.8.61 | 604
-KFM-P9-PROG-0010 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:042008ecc7365e32c... | 8.8.62 |
-605
-KFM-P9-PROG-0011 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:88f121e61d7046b5b... | 8.8.63 |
-606
-KFM-P9-PROG-0012 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:540b951560522995a... | 8.8.64 |
-607
-KFM-P9-PROG-0013 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b6a7c6772609b446a... | 8.8.65 |
-608
-KFM-P9-PROG-0014 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:815d20a43ec03931f... | 8.8.66 |
-609
-KFM-P9-PROG-0015 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:fb5f4586313f559d9... | 8.8.67 |
-610
-KFM-P9-PROG-0016 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:519cd68e51a50e122... | 8.8.68 |
-611
-KFM-P9-PROG-0017 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:e55b3e83b4eab8b14... | 8.8.69 |
-612
-KFM-P9-PROG-0018 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:3734eb00c12ba5051... | 8.8.70 |
-613
-KFM-P1-PROG-0024 | programming | PIP | UNCHANGED | active | 1 | 21 | SRC-P23-001,SRC-P23-002 | sha256:77256ae2914953f2f... | 8.9.1 |
-615
-KFM-P1-PROG-0025 | programming | PIP | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:a5ec1d771c83ea98d... | 8.9.2 | 616
-KFM-P1-PROG-0026 | programming | PIP | UNCHANGED | active | 1 | 21 | SRC-P23-001,SRC-P23-002 | sha256:2742f35d1a2bb5cc6... | 8.9.3 |
-617
-KFM-P1-PROG-0027 | programming | PIP | UNCHANGED | active | 1 | 21 | SRC-P23-001,SRC-P23-002 | sha256:9de84729ce97af32f... | 8.9.4 |
-618
-KFM-P1-PROG-0028 | programming | PIP | UNCHANGED | active | 1 | 21 | SRC-P23-001,SRC-P23-002 | sha256:d8d44752fc5037fe4... | 8.9.5 |
-619
-KFM-P1-PROG-0029 | programming | PIP | UNCHANGED | active | 1 | 21 | SRC-P23-001,SRC-P23-002 | sha256:1650a89a120fca20d... | 8.9.6 |
-620
-KFM-P1-PROG-0030 | programming | PIP | UNCHANGED | active | 1 | 21 | SRC-P23-001,SRC-P23-002 | sha256:59d9428f2e8be1d9f... | 8.9.7 |
-621
-KFM-P10-PROG-0001 | programming | PIP | UNCHANGED | active | 10 | 21 | SRC-P23-001,SRC-P23-002 | sha256:3c40df5bb2218602f... | 8.9.8 |
-622
-KFM-P10-PROG-0004 | programming | PIP | UNCHANGED | active | 10 | 21 | SRC-P23-001,SRC-P23-002 | sha256:6794836f3cb203b15... | 8.9.9 |
-623
-KFM-P10-PROG-0008 | programming | PIP | UNCHANGED | active | 10 | 21 | SRC-P23-001,SRC-P23-002 | sha256:52c57558f90807e5f... | 8.9.10
-| 624  
-KFM-P10-PROG-0010 | programming | PIP | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:c57b52c3a22c730eb... | 8.9.11 | 625
-KFM-P10-PROG-0011 | programming | PIP | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:975ea134bb02e019d... | 8.9.12 | 626
-KFM-P10-PROG-0012 | programming | PIP | UNCHANGED | active | 10 | 21 | SRC-P23-001,SRC-P23-002 | sha256:8e58c20901dc246cc... | 8.9.13
-| 627  
-KFM-P10-PROG-0015 | programming | PIP | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:8b5d1a4be948cb443... | 8.9.14 | 628
-5. Machine-Readable Index (continued)
-KFM-P10-PROG-0019 | programming | PIP | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:8a177906ce075281f... | 8.9.15 | 629
-KFM-P10-PROG-0023 | programming | PIP | UNCHANGED | active | 10 | 21 | SRC-P23-001,SRC-P23-002 | sha256:033c0d11d99ae7422... | 8.9.16
-| 630  
-KFM-P11-PROG-0009 | programming | PIP | EXPANDED | active | 11 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:6b9db863f48b6b2ef... | 8.9.17 | 631
-KFM-P11-PROG-0015 | programming | PIP | UNCHANGED | active | 11 | 21 | SRC-P23-001,SRC-P23-002 | sha256:0bad5e0a10ec57ca6... | 8.9.18
-| 632  
-KFM-P11-PROG-0018 | programming | PIP | UNCHANGED | active | 11 | 21 | SRC-P23-001,SRC-P23-002 | sha256:3e16041b7d30eea8d... | 8.9.19
-| 633  
-KFM-P11-PROG-0019 | programming | PIP | UNCHANGED | active | 11 | 21 | SRC-P23-001,SRC-P23-002 | sha256:3141826c53c118462... | 8.9.20
-| 634  
-KFM-P11-PROG-0026 | programming | PIP | UNCHANGED | active | 11 | 21 | SRC-P23-001,SRC-P23-002 | sha256:251dc120d380f9271... | 8.9.21
-| 635  
-KFM-P12-PROG-0001 | programming | PIP | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:f6a07455ea3c5720e... | 8.9.22 | 636
-KFM-P12-PROG-0004 | programming | PIP | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:823aa24f81aec84cf... | 8.9.23 | 637
-KFM-P12-PROG-0005 | programming | PIP | UNCHANGED | active | 12 | 21 | SRC-P23-001,SRC-P23-002 | sha256:13d9d297427adc344... | 8.9.24
-| 638  
-KFM-P12-PROG-0010 | programming | PIP | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:c24a893b125a7996f... | 8.9.25 | 639
-KFM-P12-PROG-0011 | programming | PIP | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:76a8f2ed8dfef922c... | 8.9.26 | 640
-KFM-P12-PROG-0013 | programming | PIP | UNCHANGED | active | 12 | 21 | SRC-P23-001,SRC-P23-002 | sha256:8fac20dcabad0e288... | 8.9.27
-| 641  
-KFM-P12-PROG-0015 | programming | PIP | UNCHANGED | active | 12 | 21 | SRC-P23-001,SRC-P23-002 | sha256:301c0da33efd5bbc1... | 8.9.28
-| 642  
-KFM-P12-PROG-0023 | programming | PIP | UNCHANGED | active | 12 | 21 | SRC-P23-001,SRC-P23-002 | sha256:d9b6f0bac6dc55e20... | 8.9.29
-| 643  
-KFM-P12-PROG-0027 | programming | PIP | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:96c311c9ff7bfe09a... | 8.9.30 | 644
-KFM-P13-IDEA-0002 | idea | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1e49f4ea51fa8674c... | 8.9.31 | 645
-KFM-P13-IDEA-0005 | idea | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:adc2ffc66823d2890... | 8.9.32 | 646
-KFM-P13-PROG-0004 | programming | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b418b43a1a77e8a41... | 8.9.33 | 647
-KFM-P13-PROG-0013 | programming | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:96f5d574eaaaac9c5... | 8.9.34 | 648
-```
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P1-FEAT-0038` | feature | UNCHANGED | — | 1 → 11 | — | `a39472998550fc33f` | 8.6.1 | 404 |
+| `KFM-P1-FEAT-0039` | feature | UNCHANGED | — | 1 → 17 | — | `62eb6281a7e915657` | 8.6.2 | 405 |
+| `KFM-P1-FEAT-0042` | feature | UNCHANGED | — | 1 → 16 | — | `0add61e9795cf8a26` | 8.6.3 | 406 |
+| `KFM-P1-FEAT-0044` | feature | UNCHANGED | — | 1 → 9 | — | `4b719ccfaaad887e6` | 8.6.4 | 407 |
+| `KFM-P10-FEAT-0001` | feature | UNCHANGED | — | 10 → 10 | — | `62655568bfe08145d` | 8.6.8 | 411 |
+| `KFM-P19-FEAT-0003` | feature | UNCHANGED | — | 19 → 19 | — | `6e7db065e0ec9fcbf` | 8.6.27 | 430 |
+| `KFM-P19-FEAT-0006` | feature | UNCHANGED | — | 19 → 19 | — | `d6f59b4c6c2bda9cb` | 8.6.28 | 431 |
+| `KFM-P2-FEAT-0012` | feature | UNCHANGED | — | 2 → 9 | — | `c4864c87284d559c0` | 8.6.30 | 433 |
+| `KFM-P2-FEAT-0013` | feature | UNCHANGED | — | 2 → 9 | — | `2cd80baca8cebcd50` | 8.6.31 | 434 |
+| `KFM-P2-FEAT-0032` | feature | UNCHANGED | — | 2 → 9 | — | `d615b50f88813691a` | 8.6.32 | 435 |
+| `KFM-P2-FEAT-0035` | feature | UNCHANGED | — | 2 → 2 | — | `f2fed095ed4361d32` | 8.6.33 | 436 |
+| `KFM-P2-FEAT-0036` | feature | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `10c401b9e916a049d` | 8.6.34 | 437 |
+| `KFM-P20-FEAT-0003` | feature | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1f267ce890ac3fe11` | 8.6.38 | 441 |
+| `KFM-P20-FEAT-0005` | feature | UNCHANGED | — | 20 → 20 | — | `c668d9a225fa8eedd` | 8.6.39 | 442 |
+| `KFM-P21-FEAT-0002` | feature | UNCHANGED | — | 21 → 21 | — | `90213b94fd3929c9f` | 8.6.42 | 445 |
+| `KFM-P7-FEAT-0001` | feature | UNCHANGED | — | 7 → 7 | — | `d4f7c5528e1ce0290` | 8.6.57 | 460 |
+| `KFM-P9-FEAT-0001` | feature | UNCHANGED | — | 9 → 9 | — | `1d4ba4a36b3736a59` | 8.6.59 | 462 |
+| `KFM-P9-FEAT-0011` | feature | UNCHANGED | — | 9 → 9 | — | `1f60d76726d3b3645` | 8.6.60 | 463 |
+| `KFM-P9-FEAT-0012` | feature | UNCHANGED | — | 9 → 9 | — | `eb669e450cfbc4d17` | 8.6.61 | 464 |
+| `KFM-P9-FEAT-0013` | feature | UNCHANGED | — | 9 → 9 | — | `2966adbb33525c49e` | 8.6.62 | 465 |
+| `KFM-P9-FEAT-0014` | feature | UNCHANGED | — | 9 → 9 | — | `b1483cdf127140289` | 8.6.63 | 466 |
+| `KFM-P9-FEAT-0015` | feature | UNCHANGED | — | 9 → 9 | — | `88abdf37faac92919` | 8.6.64 | 467 |
+| `KFM-P9-FEAT-0016` | feature | UNCHANGED | — | 9 → 15 | — | `d9d2cf2eea589fccd` | 8.6.65 | 468 |
+| `KFM-P1-IDEA-0040` | idea | UNCHANGED | — | 1 → 19 | — | `ae35caaafbbf3d8e6` | 8.6.5 | 408 |
+| `KFM-P16-IDEA-0006` | idea | UNCHANGED | — | 16 → 16 | — | `31ad2120df781c658` | 8.6.22 | 425 |
+| `KFM-P2-IDEA-0014` | idea | UNCHANGED | — | 2 → 9 | — | `8f0c8aa4c1ed5cfab` | 8.6.35 | 438 |
+| `KFM-P2-IDEA-0033` | idea | UNCHANGED | — | 2 → 2 | — | `b2674548dc3c6d846` | 8.6.36 | 439 |
+| `KFM-P2-IDEA-0034` | idea | UNCHANGED | — | 2 → 9 | — | `d7b763737b20384b8` | 8.6.37 | 440 |
+| `KFM-P23-IDEA-0004` | idea | NEW | — | 23 → 23 | `SRC-P23-004` | `629063c0026c61ebd` | 8.6.50 | 453 |
+| `KFM-P9-IDEA-0002` | idea | UNCHANGED | — | 9 → 9 | — | `83c1c6aa899fd162d` | 8.6.66 | 469 |
+| `KFM-P9-IDEA-0003` | idea | UNCHANGED | — | 9 → 9 | — | `bc01001827fec82f5` | 8.6.67 | 470 |
+| `KFM-P9-IDEA-0004` | idea | UNCHANGED | — | 9 → 9 | — | `321e5ef76014b463e` | 8.6.68 | 471 |
+| `KFM-P9-IDEA-0005` | idea | UNCHANGED | — | 9 → 9 | — | `cd8b5cdc1b05c8438` | 8.6.69 | 472 |
+| `KFM-P9-IDEA-0006` | idea | UNCHANGED | — | 9 → 9 | — | `a60cdc20b0441d9e6` | 8.6.70 | 473 |
+| `KFM-P9-IDEA-0007` | idea | UNCHANGED | — | 9 → 9 | — | `a756cb3150b71827f` | 8.6.71 | 474 |
+| `KFM-P9-IDEA-0039` | idea | UNCHANGED | — | 9 → 9 | — | `952783734dd51ef16` | 8.6.72 | 475 |
+| `KFM-P9-IDEA-0040` | idea | UNCHANGED | — | 9 → 9 | — | `38b339c3f7759e787` | 8.6.73 | 476 |
+| `KFM-P9-IDEA-0041` | idea | UNCHANGED | — | 9 → 9 | — | `548bbcc1b014817cf` | 8.6.74 | 477 |
+| `KFM-P9-IDEA-0042` | idea | UNCHANGED | — | 9 → 9 | — | `decaa1a8663c5af99` | 8.6.75 | 478 |
+| `KFM-P9-IDEA-0043` | idea | UNCHANGED | — | 9 → 9 | — | `2cbd17febe4cfaf5e` | 8.6.76 | 479 |
+| `KFM-P9-IDEA-0044` | idea | UNCHANGED | — | 9 → 9 | — | `f8ab6c2c569c04eb1` | 8.6.77 | 480 |
+| `KFM-P9-IDEA-0045` | idea | UNCHANGED | — | 9 → 9 | — | `1354abacc06f79c8c` | 8.6.78 | 481 |
+| `KFM-P9-IDEA-0049` | idea | UNCHANGED | — | 9 → 9 | — | `4c20b24c21b9a5c93` | 8.6.79 | 482 |
+| `KFM-P1-PROG-0041` | programming | UNCHANGED | — | 1 → 17 | — | `1cd9ebaedb558e1a1` | 8.6.6 | 409 |
+| `KFM-P1-PROG-0043` | programming | UNCHANGED | — | 1 → 16 | — | `322166e497bb8ba90` | 8.6.7 | 410 |
+| `KFM-P11-PROG-0004` | programming | UNCHANGED | — | 11 → 11 | — | `4538d2b16984d7db4` | 8.6.9 | 412 |
+| `KFM-P12-PROG-0021` | programming | UNCHANGED | — | 12 → 13 | — | `4e71ce25825621667` | 8.6.10 | 413 |
+| `KFM-P13-PROG-0001` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `8097c22c1c3ae31ce` | 8.6.11 | 414 |
+| `KFM-P13-PROG-0014` | programming | UNCHANGED | — | 13 → 20 | — | `2d99dc36dfb444d52` | 8.6.12 | 415 |
+| `KFM-P13-PROG-0016` | programming | UNCHANGED | — | 13 → 13 | — | `4a410eb0385adbfb8` | 8.6.13 | 416 |
+| `KFM-P13-PROG-0017` | programming | UNCHANGED | — | 13 → 13 | — | `82b5f71ebc0b1881e` | 8.6.14 | 417 |
+| `KFM-P13-PROG-0023` | programming | UNCHANGED | — | 13 → 19 | — | `8112309f2e87dde77` | 8.6.15 | 418 |
+| `KFM-P13-PROG-0024` | programming | UNCHANGED | — | 13 → 13 | — | `b89cb08bb033a4956` | 8.6.16 | 419 |
+| `KFM-P14-PROG-0011` | programming | UNCHANGED | — | 14 → 14 | — | `270bf152e5c88c1ff` | 8.6.17 | 420 |
+| `KFM-P15-PROG-0013` | programming | EXPANDED | — | 15 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9fd562e1ef4c00fc9` | 8.6.18 | 421 |
+| `KFM-P15-PROG-0014` | programming | UNCHANGED | — | 15 → 15 | — | `50abc11f1a39ec863` | 8.6.19 | 422 |
+| `KFM-P15-PROG-0028` | programming | UNCHANGED | — | 15 → 20 | — | `aac15b22acad15614` | 8.6.20 | 423 |
+| `KFM-P15-PROG-0029` | programming | UNCHANGED | — | 15 → 15 | — | `7671fe40e59c3b4a4` | 8.6.21 | 424 |
+| `KFM-P16-PROG-0022` | programming | UNCHANGED | — | 16 → 16 | — | `0589b013b32fec550` | 8.6.23 | 426 |
+| `KFM-P16-PROG-0031` | programming | UNCHANGED | — | 16 → 16 | — | `fe6fd90327a0a48dd` | 8.6.24 | 427 |
+| `KFM-P17-PROG-0019` | programming | UNCHANGED | — | 17 → 20 | — | `45247fcd76e16328f` | 8.6.25 | 428 |
+| `KFM-P17-PROG-0033` | programming | UNCHANGED | — | 17 → 17 | — | `dc1bc0b71577fcf52` | 8.6.26 | 429 |
+| `KFM-P19-PROG-0021` | programming | UNCHANGED | — | 19 → 19 | — | `67c8b5f6d1b86dbf9` | 8.6.29 | 432 |
+| `KFM-P20-PROG-0013` | programming | UNCHANGED | — | 20 → 20 | — | `5f5d054ea99fa2028` | 8.6.40 | 443 |
+| `KFM-P20-PROG-0038` | programming | UNCHANGED | — | 20 → 20 | — | `5bc40ce7b10396953` | 8.6.41 | 444 |
+| `KFM-P21-PROG-0008` | programming | UNCHANGED | — | 21 → 21 | — | `e7d787b64bbfe2c41` | 8.6.43 | 446 |
+| `KFM-P21-PROG-0018` | programming | UNCHANGED | — | 21 → 21 | — | `1c88ec4559bfe44d3` | 8.6.44 | 447 |
+| `KFM-P21-PROG-0034` | programming | UNCHANGED | — | 21 → 21 | — | `696892e791c98dc9a` | 8.6.45 | 448 |
+| `KFM-P21-PROG-0035` | programming | UNCHANGED | — | 21 → 21 | — | `f1abdd4ea0ef2f5d5` | 8.6.46 | 449 |
+| `KFM-P22-PROG-0011` | programming | UNCHANGED | — | 22 → 22 | — | `f27b927debc1e1099` | 8.6.47 | 450 |
+| `KFM-P22-PROG-0041` | programming | UNCHANGED | — | 22 → 22 | — | `eb01d13edf483692d` | 8.6.48 | 451 |
+| `KFM-P22-PROG-0042` | programming | UNCHANGED | — | 22 → 22 | — | `75e13fd6c04c2ec86` | 8.6.49 | 452 |
+| `KFM-P23-PROG-0036` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `6be938af5ab684485` | 8.6.51 | 454 |
+| `KFM-P23-PROG-0037` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `a0648cd0e91efc5d5` | 8.6.52 | 455 |
+| `KFM-P4-PROG-0002` | programming | EXPANDED | — | 4 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `7231dbfab7829a976` | 8.6.53 | 456 |
+| `KFM-P5-PROG-0003` | programming | UNCHANGED | — | 5 → 20 | — | `bb8cc63a759e36c58` | 8.6.54 | 457 |
+| `KFM-P5-PROG-0004` | programming | UNCHANGED | — | 5 → 20 | — | `e157b1e56ec8c53a2` | 8.6.55 | 458 |
+| `KFM-P5-PROG-0012` | programming | EXPANDED | — | 5 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `aa0a5141998e3a882` | 8.6.56 | 459 |
+| `KFM-P7-PROG-0006` | programming | UNCHANGED | — | 7 → 9 | — | `6854f50804c190ce1` | 8.6.58 | 461 |
+| `KFM-P9-PROG-0002` | programming | UNCHANGED | — | 9 → 9 | — | `e22bb203225179dce` | 8.6.80 | 483 |
+| `KFM-P9-PROG-0048` | programming | UNCHANGED | — | 9 → 9 | — | `74333fc833c7943c1` | 8.6.81 | 484 |
+| `KFM-P9-PROG-0049` | programming | UNCHANGED | — | 9 → 9 | — | `03854ab81a602465b` | 8.6.82 | 485 |
+| `KFM-P9-PROG-0050` | programming | UNCHANGED | — | 9 → 9 | — | `b5cbd93eeef5dd554` | 8.6.83 | 486 |
+| `KFM-P9-PROG-0051` | programming | UNCHANGED | — | 9 → 9 | — | `ebf5db1556e13a4f2` | 8.6.84 | 487 |
+| `KFM-P9-PROG-0052` | programming | UNCHANGED | — | 9 → 9 | — | `2559336a6944fd34d` | 8.6.85 | 488 |
+| `KFM-P9-PROG-0053` | programming | UNCHANGED | — | 9 → 9 | — | `ce79d5f896e5be025` | 8.6.86 | 489 |
+| `KFM-P9-PROG-0054` | programming | UNCHANGED | — | 9 → 9 | — | `479ae6885248f59e1` | 8.6.87 | 490 |
+| `KFM-P9-PROG-0055` | programming | UNCHANGED | — | 9 → 9 | — | `b32e998ea8a7084a9` | 8.6.88 | 491 |
+| `KFM-P9-PROG-0056` | programming | UNCHANGED | — | 9 → 9 | — | `21552cd3db01a7299` | 8.6.89 | 492 |
+| `KFM-P9-PROG-0057` | programming | UNCHANGED | — | 9 → 9 | — | `46dd0bdb800ff8d7a` | 8.6.90 | 493 |
+| `KFM-P9-PROG-0058` | programming | UNCHANGED | — | 9 → 9 | — | `b19093415384fb3a9` | 8.6.91 | 494 |
+| `KFM-P9-PROG-0071` | programming | UNCHANGED | — | 9 → 15 | — | `4bc9ab4bf90ab419b` | 8.6.92 | 495 |
+| `KFM-P9-PROG-0072` | programming | UNCHANGED | — | 9 → 9 | — | `6864c79958466ff35` | 8.6.93 | 496 |
+| `KFM-P9-PROG-0073` | programming | UNCHANGED | — | 9 → 9 | — | `29c65d110a1df39c9` | 8.6.94 | 497 |
+| `KFM-P9-PROG-0074` | programming | UNCHANGED | — | 9 → 15 | — | `fc95471baa538b97e` | 8.6.95 | 498 |
+| `KFM-P9-PROG-0075` | programming | UNCHANGED | — | 9 → 9 | — | `aa244db28f38ece3a` | 8.6.96 | 499 |
 
-<!-- page: 201 -->
+</details>
 
-```text
-KFM-P13-PROG-0021 | programming | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:c70a1d143155c0a20... | 8.9.35 | 649
-KFM-P13-PROG-0029 | programming | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e885bfa20afb9b37e... | 8.9.36 | 650
-KFM-P14-PROG-0002 | programming | PIP | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:05cc074f7e28f48fb... | 8.9.37 | 651
-KFM-P14-PROG-0003 | programming | PIP | UNCHANGED | active | 14 | 21 | SRC-P23-001,SRC-P23-002 | sha256:eacf79906f0865252... | 8.9.38
-| 652  
-KFM-P14-PROG-0004 | programming | PIP | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e4d7b4e81da42b176... | 8.9.39 | 653
-KFM-P14-PROG-0005 | programming | PIP | UNCHANGED | active | 14 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5c7b343e660b5741e... | 8.9.40
-| 654  
-KFM-P14-PROG-0010 | programming | PIP | UNCHANGED | active | 14 | 21 | SRC-P23-001,SRC-P23-002 | sha256:4671af34a2a97997a... | 8.9.41
-| 655  
-KFM-P14-PROG-0012 | programming | PIP | UNCHANGED | active | 14 | 21 | SRC-P23-001,SRC-P23-002 | sha256:b224e5e126f9ff414... | 8.9.42
-| 656  
-KFM-P14-PROG-0024 | programming | PIP | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1e693922a298ce8b5... | 8.9.43 | 657
-KFM-P14-PROG-0034 | programming | PIP | UNCHANGED | active | 14 | 21 | SRC-P23-001,SRC-P23-002 | sha256:ffdfce313e4c93351... | 8.9.44
-| 658  
-KFM-P15-PROG-0001 | programming | PIP | UNCHANGED | active | 15 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cd533aaff9760dd90... | 8.9.45
-| 659  
-KFM-P15-PROG-0003 | programming | PIP | UNCHANGED | active | 15 | 21 | SRC-P23-001,SRC-P23-002 | sha256:20386231b125f8f4c... | 8.9.46
-| 660  
-KFM-P15-PROG-0005 | programming | PIP | UNCHANGED | active | 15 | 21 | SRC-P23-001,SRC-P23-002 | sha256:506d6ba4d0fc2d5b5... | 8.9.47
-| 661  
-KFM-P15-PROG-0007 | programming | PIP | UNCHANGED | active | 15 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cda11903e59b812c0... | 8.9.48
-| 662  
-KFM-P15-PROG-0019 | programming | PIP | EXPANDED | active | 15 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:7aff31636070585c1... | 8.9.49 | 663
-KFM-P15-PROG-0020 | programming | PIP | UNCHANGED | active | 15 | 21 | SRC-P23-001,SRC-P23-002 | sha256:23c3cf44514fe72eb... | 8.9.50
-| 664  
-KFM-P15-PROG-0021 | programming | PIP | EXPANDED | active | 15 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:137174cf887345490... | 8.9.51 | 665
-KFM-P15-PROG-0023 | programming | PIP | UNCHANGED | active | 15 | 21 | SRC-P23-001,SRC-P23-002 | sha256:1d4e8678c8c81e2bf... | 8.9.52
-| 666  
-KFM-P15-PROG-0040 | programming | PIP | UNCHANGED | active | 15 | 21 | SRC-P23-001,SRC-P23-002 | sha256:0820f85f71ec1999e... | 8.9.53
-| 667  
-KFM-P16-PROG-0003 | programming | PIP | UNCHANGED | active | 16 | 21 | SRC-P23-001,SRC-P23-002 | sha256:831914ce4b3b12231... | 8.9.54
-| 668  
-KFM-P16-PROG-0006 | programming | PIP | UNCHANGED | active | 16 | 21 | SRC-P23-001,SRC-P23-002 | sha256:88668da18b37c0ecf... | 8.9.55
-| 669  
-KFM-P16-PROG-0008 | programming | PIP | UNCHANGED | active | 16 | 21 | SRC-P23-001,SRC-P23-002 | sha256:f300081851f36c071... | 8.9.56
-| 670  
-5. Machine-Readable Index (continued)
-KFM-P16-PROG-0012 | programming | PIP | UNCHANGED | active | 16 | 21 | SRC-P23-001,SRC-P23-002 | sha256:98632647cf9ee5727... | 8.9.57
-| 671  
-KFM-P16-PROG-0019 | programming | PIP | UNCHANGED | active | 16 | 21 | SRC-P23-001,SRC-P23-002 | sha256:1ce79e5d915f0fc3c... | 8.9.58
-| 672  
-KFM-P16-PROG-0020 | programming | PIP | UNCHANGED | active | 16 | 21 | SRC-P23-001,SRC-P23-002 | sha256:9701533280b731766... | 8.9.59
-| 673  
-KFM-P16-PROG-0027 | programming | PIP | UNCHANGED | active | 16 | 21 | SRC-P23-001,SRC-P23-002 | sha256:9d5bd2319aaa124a4... | 8.9.60
-| 674  
-KFM-P16-PROG-0029 | programming | PIP | EXPANDED | active | 16 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:7540ce8f9159e8b51... | 8.9.61 | 675
-KFM-P17-IDEA-0003 | idea | PIP | EXPANDED | active | 17 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e895d2dfc43003f9f... | 8.9.62 | 676
-KFM-P17-IDEA-0008 | idea | PIP | EXPANDED | active | 17 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e584926108555d846... | 8.9.63 | 677
-KFM-P17-PROG-0010 | programming | PIP | UNCHANGED | active | 17 | 21 | SRC-P23-001,SRC-P23-002 | sha256:d65d95f1100e6d06a... | 8.9.64
-| 678  
-KFM-P17-PROG-0023 | programming | PIP | UNCHANGED | active | 17 | 21 | SRC-P23-001,SRC-P23-002 | sha256:c2950f6faf55494c7... | 8.9.65
-| 679  
-KFM-P17-PROG-0029 | programming | PIP | UNCHANGED | active | 17 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cd2d71825f2252c02... | 8.9.66
-| 680  
-KFM-P17-PROG-0035 | programming | PIP | UNCHANGED | active | 17 | 21 | SRC-P23-001,SRC-P23-002 | sha256:baa0fbfd9d9b83179... | 8.9.67
-| 681  
-KFM-P17-PROG-0036 | programming | PIP | UNCHANGED | active | 17 | 21 | SRC-P23-001,SRC-P23-002 | sha256:6cb9a01c56c6e1465... | 8.9.68
-| 682  
-KFM-P17-PROG-0038 | programming | PIP | UNCHANGED | active | 17 | 21 | SRC-P23-001,SRC-P23-002 | sha256:43bf27e3c7a369a5c... | 8.9.69
-| 683  
-KFM-P18-IDEA-0001 | idea | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:33d8e68162a5b7e7c... | 8.9.70 | 684
-KFM-P18-PROG-0001 | programming | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:b1bafa900a1b06103... | 8.9.71
-| 685  
-KFM-P18-PROG-0004 | programming | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5f00888defcd131c0... | 8.9.72
-| 686  
-KFM-P18-PROG-0007 | programming | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:f1bf3dcb5bb1778eb... | 8.9.73
-| 687  
-KFM-P18-PROG-0009 | programming | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:2cb2410835fc58bb4... | 8.9.74
-| 688  
-KFM-P18-PROG-0013 | programming | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:484b10c9fe47747e0... | 8.9.75
-| 689  
-KFM-P18-PROG-0014 | programming | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:c8290221f6ab024e3... | 8.9.76
-| 690  
-KFM-P18-PROG-0037 | programming | PIP | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:306358418718f2a87... | 8.9.77 | 691
-KFM-P18-PROG-0039 | programming | PIP | UNCHANGED | active | 18 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5d305b62bbd387c81... | 8.9.78
-| 692  
-KFM-P19-IDEA-0007 | idea | PIP | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:605649e551656b48e... | 8.9.79 | 693
-KFM-P19-PROG-0001 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:adbd145dd7569ab8e... | 8.9.80
-| 694  
-KFM-P19-PROG-0004 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:8bee6b9496b8efff6... | 8.9.81
-| 695  
-KFM-P19-PROG-0015 | programming | PIP | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-```
+#### 5.9 MDP — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV)
 
-<!-- page: 202 -->
+<details>
+<summary><strong>42 cards</strong> — click to expand</summary>
 
-```text
-sha256:31bbf6db8ecc124ea... | 8.9.82 | 696
-KFM-P19-PROG-0017 | programming | PIP | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:5c756e36a820c8b33... | 8.9.83 | 697
-KFM-P19-PROG-0019 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:2f20e14076e1bfa03... | 8.9.84
-| 698  
-KFM-P19-PROG-0020 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:44b458f4c5cd2bba0... | 8.9.85
-| 699  
-KFM-P19-PROG-0022 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:29e4fb0d9d7de689a... | 8.9.86
-| 700  
-KFM-P19-PROG-0028 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:66dc5b42131262f43... | 8.9.87
-| 701  
-KFM-P19-PROG-0029 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:1e8deaed7af0ca54e... | 8.9.88
-| 702  
-KFM-P19-PROG-0033 | programming | PIP | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:c3e4dbe5149980f55... | 8.9.89 | 703
-KFM-P19-PROG-0035 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cbf9494a4a0b96e5d... | 8.9.90
-| 704  
-KFM-P19-PROG-0036 | programming | PIP | UNCHANGED | active | 19 | 21 | SRC-P23-001,SRC-P23-002 | sha256:b639f40426aeaf9b1... | 8.9.91
-| 705  
-KFM-P19-PROG-0040 | programming | PIP | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:ec10d9c296d297aa0... | 8.9.92 | 706
-KFM-P2-PROG-0001 | programming | PIP | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e114f7809141b73b6... | 8.9.93 | 707
-KFM-P2-PROG-0002 | programming | PIP | UNCHANGED | active | 2 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cb125e65b6c97930e... | 8.9.94 |
-708
-KFM-P2-PROG-0003 | programming | PIP | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:443cd614eee873da7... | 8.9.95 | 709
-KFM-P2-PROG-0004 | programming | PIP | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:64eb0f6401a4ea887... | 8.9.96 | 710
-KFM-P2-PROG-0005 | programming | PIP | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:3b29a76e2a7e2684f... | 8.9.97 | 711
-KFM-P2-PROG-0006 | programming | PIP | UNCHANGED | active | 2 | 21 | SRC-P23-001,SRC-P23-002 | sha256:4c0ff9018856fb17b... | 8.9.98 |
-712
-5. Machine-Readable Index (continued)
-KFM-P2-PROG-0007 | programming | PIP | UNCHANGED | active | 2 | 21 | SRC-P23-001,SRC-P23-002 | sha256:618bd9d0344249f8b... | 8.9.99 |
-713
-KFM-P2-PROG-0008 | programming | PIP | EXPANDED | active | 2 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:3c5348a5ca21c35e1... | 8.9.100 | 714
-KFM-P2-PROG-0009 | programming | PIP | UNCHANGED | active | 2 | 21 | SRC-P23-001,SRC-P23-002 | sha256:0fb437d6e1b7fb924... | 8.9.101 |
-715
-KFM-P2-PROG-0010 | programming | PIP | UNCHANGED | active | 2 | 21 | SRC-P23-001,SRC-P23-002 | sha256:321e6cba54f355d03... | 8.9.102 |
-716
-KFM-P2-PROG-0011 | programming | PIP | UNCHANGED | active | 2 | 21 | SRC-P23-001,SRC-P23-002 | sha256:a88e3fd970daffc17... | 8.9.103 |
-717
-KFM-P20-IDEA-0005 | idea | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:078cf8c59c0d15848... | 8.9.104 | 718
-KFM-P20-IDEA-0008 | idea | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:0ca9684516a4a2867... | 8.9.105 | 719
-KFM-P20-PROG-0002 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:b9e7da1ed623887c4... | 8.9.106
-| 720  
-KFM-P20-PROG-0004 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:f236e231d9c942156... | 8.9.107
-| 721  
-KFM-P20-PROG-0005 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:9d9cd8eb4bab17fc5... | 8.9.108
-| 722  
-KFM-P20-PROG-0006 | programming | PIP | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:a17a38ba3af9e639e... | 8.9.109 | 723
-KFM-P20-PROG-0007 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:d423a0410a8748376... | 8.9.110
-| 724  
-KFM-P20-PROG-0009 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:0b2f23b91e3699d44... | 8.9.111
-| 725  
-KFM-P20-PROG-0010 | programming | PIP | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:ad3979a025b183ceb... | 8.9.112 | 726
-KFM-P20-PROG-0012 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:a92e53fcc7450f193... | 8.9.113
-| 727  
-KFM-P20-PROG-0019 | programming | PIP | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:85dee375d9bd43a26... | 8.9.114 | 728
-KFM-P20-PROG-0020 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cae8b43e7c16341da... | 8.9.115
-| 729  
-KFM-P20-PROG-0025 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:23d420fa893615f49... | 8.9.116
-| 730  
-KFM-P20-PROG-0026 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:af509e3c33e606274... | 8.9.117
-| 731  
-KFM-P20-PROG-0028 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:7eb86945c0e90924c... | 8.9.118
-| 732  
-KFM-P20-PROG-0030 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5848a640ed9d4dad6... | 8.9.119
-| 733  
-KFM-P20-PROG-0032 | programming | PIP | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:f85b2d1b975590f7b... | 8.9.120 | 734
-KFM-P20-PROG-0036 | programming | PIP | UNCHANGED | active | 20 | 21 | SRC-P23-001,SRC-P23-002 | sha256:906fdbe1dbbecd003... | 8.9.121
-| 735  
-KFM-P20-PROG-0037 | programming | PIP | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9d40671d585f8eb44... | 8.9.122 | 736
-KFM-P21-IDEA-0001 | idea | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:73dfdea4e4097693d... | 8.9.123 | 737
-KFM-P21-IDEA-0005 | idea | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:1830a1061625a4986... | 8.9.124 | 738
-KFM-P21-PROG-0001 | programming | PIP | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:a57b09c4519b42f5f... | 8.9.125 | 739
-KFM-P21-PROG-0003 | programming | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:44eb56a6cde252b62... | 8.9.126
-| 740  
-KFM-P21-PROG-0006 | programming | PIP | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:4905a278e0f258484... | 8.9.127 | 741
-KFM-P21-PROG-0010 | programming | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:08f8189f6efa22f3b... | 8.9.128
-| 742  
-KFM-P21-PROG-0017 | programming | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:88b40c10b82ed95ab... | 8.9.129
-| 743  
-KFM-P21-PROG-0019 | programming | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:f8918c2050903bc65... | 8.9.130
-| 744  
-KFM-P21-PROG-0032 | programming | PIP | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-```
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P12-IDEA-0003` | idea | UNCHANGED | — | 12 → 12 | — | `83ad3da84adc2725c` | 8.7.8 | 508 |
+| `KFM-P13-IDEA-0003` | idea | UNCHANGED | — | 13 → 13 | — | `f08e9af002984432d` | 8.7.10 | 510 |
+| `KFM-P14-IDEA-0002` | idea | UNCHANGED | — | 14 → 14 | — | `53592d82983d04032` | 8.7.15 | 515 |
+| `KFM-P19-IDEA-0006` | idea | UNCHANGED | — | 19 → 19 | — | `9ec60c5d4435b42fa` | 8.7.24 | 524 |
+| `KFM-P3-IDEA-0004` | idea | EXPANDED | — | 3 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `a038ce15b14b2a727` | 8.7.40 | 540 |
+| `KFM-P1-PROG-0021` | programming | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e2d53306c1a8e79c5` | 8.7.1 | 501 |
+| `KFM-P1-PROG-0022` | programming | UNCHANGED | — | 1 → 20 | — | `849a809f3c331809f` | 8.7.2 | 502 |
+| `KFM-P1-PROG-0023` | programming | UNCHANGED | — | 1 → 11 | — | `d90f987872e5f08c1` | 8.7.3 | 503 |
+| `KFM-P10-PROG-0002` | programming | UNCHANGED | — | 10 → 10 | — | `5e23e5f71af638e73` | 8.7.4 | 504 |
+| `KFM-P10-PROG-0007` | programming | EXPANDED | — | 10 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `f435ff0672865210a` | 8.7.5 | 505 |
+| `KFM-P10-PROG-0020` | programming | UNCHANGED | — | 10 → 10 | — | `99d2b75d27862271c` | 8.7.6 | 506 |
+| `KFM-P11-PROG-0016` | programming | UNCHANGED | — | 11 → 12 | — | `7bd767bd535c46d6f` | 8.7.7 | 507 |
+| `KFM-P12-PROG-0029` | programming | UNCHANGED | — | 12 → 14 | — | `e3e633c86ff544053` | 8.7.9 | 509 |
+| `KFM-P13-PROG-0012` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `0ba309d632683b93c` | 8.7.11 | 511 |
+| `KFM-P13-PROG-0026` | programming | UNCHANGED | — | 13 → 13 | — | `bc77cff2be4af836b` | 8.7.12 | 512 |
+| `KFM-P13-PROG-0030` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `6056cf7ed2f3ea772` | 8.7.13 | 513 |
+| `KFM-P13-PROG-0032` | programming | UNCHANGED | — | 13 → 13 | — | `f9960fefe2698c95f` | 8.7.14 | 514 |
+| `KFM-P14-PROG-0008` | programming | UNCHANGED | — | 14 → 14 | — | `e9623d2469b45d315` | 8.7.16 | 516 |
+| `KFM-P14-PROG-0014` | programming | UNCHANGED | — | 14 → 15 | — | `4bab86bf59b53651f` | 8.7.17 | 517 |
+| `KFM-P14-PROG-0021` | programming | UNCHANGED | — | 14 → 15 | — | `6428f3f538c260d3c` | 8.7.18 | 518 |
+| `KFM-P15-PROG-0035` | programming | UNCHANGED | — | 15 → 15 | — | `d496b84338b597374` | 8.7.19 | 519 |
+| `KFM-P16-PROG-0023` | programming | UNCHANGED | — | 16 → 20 | — | `5c49c2373b36b4829` | 8.7.20 | 520 |
+| `KFM-P16-PROG-0024` | programming | UNCHANGED | — | 16 → 19 | — | `163f11af72528bb21` | 8.7.21 | 521 |
+| `KFM-P18-PROG-0022` | programming | UNCHANGED | — | 18 → 18 | — | `44fecb82a5b93edfe` | 8.7.22 | 522 |
+| `KFM-P18-PROG-0027` | programming | UNCHANGED | — | 18 → 20 | — | `e6e168d13471679e5` | 8.7.23 | 523 |
+| `KFM-P19-PROG-0014` | programming | UNCHANGED | — | 19 → 19 | — | `bfdf5ba45f257e68d` | 8.7.25 | 525 |
+| `KFM-P19-PROG-0018` | programming | UNCHANGED | — | 19 → 19 | — | `f8d52ae9880d62936` | 8.7.26 | 526 |
+| `KFM-P19-PROG-0023` | programming | UNCHANGED | — | 19 → 20 | — | `1634685110eda6d5f` | 8.7.27 | 527 |
+| `KFM-P19-PROG-0034` | programming | UNCHANGED | — | 19 → 19 | — | `2adbb859c2c812019` | 8.7.28 | 528 |
+| `KFM-P20-PROG-0003` | programming | UNCHANGED | — | 20 → 20 | — | `731e18806f528233b` | 8.7.29 | 529 |
+| `KFM-P21-PROG-0005` | programming | UNCHANGED | — | 21 → 21 | — | `ac2d8065c513d4a1c` | 8.7.30 | 530 |
+| `KFM-P21-PROG-0030` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e24de3c8714a424e3` | 8.7.31 | 531 |
+| `KFM-P22-PROG-0002` | programming | UNCHANGED | — | 22 → 22 | — | `c3f7519a6d8f6a7c7` | 8.7.32 | 532 |
+| `KFM-P22-PROG-0016` | programming | UNCHANGED | — | 22 → 22 | — | `3b353524a9d124c9c` | 8.7.33 | 533 |
+| `KFM-P22-PROG-0037` | programming | UNCHANGED | — | 22 → 22 | — | `046d750ae82f12970` | 8.7.34 | 534 |
+| `KFM-P22-PROG-0038` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1a04ac72e76bcb1c2` | 8.7.35 | 535 |
+| `KFM-P22-PROG-0039` | programming | UNCHANGED | — | 22 → 22 | — | `b523bbb3497a5f86c` | 8.7.36 | 536 |
+| `KFM-P23-PROG-0013` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `c03d52e72a94c166a` | 8.7.37 | 537 |
+| `KFM-P23-PROG-0019` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `db6e89de61be54248` | 8.7.38 | 538 |
+| `KFM-P23-PROG-0030` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `8f1c46a6a93b2f280` | 8.7.39 | 539 |
+| `KFM-P6-PROG-0003` | programming | UNCHANGED | — | 6 → 20 | — | `e5c9d7aa07f620e50` | 8.7.41 | 541 |
+| `KFM-P7-PROG-0001` | programming | EXPANDED | — | 7 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `68e69b3a75f7744b2` | 8.7.42 | 542 |
 
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 15: pages 203–205 -->
+</details>
 
-<!-- page: 203 -->
+#### 5.10 MOD — Data Modeling, Domain Semantics, Temporal Structure, SQL
 
-```text
-sha256:4a834e24161f15a82... | 8.9.131 | 745
-KFM-P21-PROG-0047 | programming | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:93a561f8087e5f82f... | 8.9.132
-| 746  
-KFM-P21-PROG-0052 | programming | PIP | QUARANTINED | quarantine | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:3c3df6f1e6959077a... |
-8.9.133 | 747
-KFM-P22-PROG-0001 | programming | PIP | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:16feaea7c62323256... | 8.9.134 | 748
-KFM-P22-PROG-0006 | programming | PIP | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9be7cb39057399f72... | 8.9.135 | 749
-KFM-P22-PROG-0008 | programming | PIP | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e3106764c9012924e... | 8.9.136 | 750
-KFM-P22-PROG-0010 | programming | PIP | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1affe9928e0aba4bc... | 8.9.137 | 751
-KFM-P22-PROG-0022 | programming | PIP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:cc45e25cf33b1f7f6... | 8.9.138
-| 752  
-KFM-P22-PROG-0031 | programming | PIP | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9be73cdb2d5e73b61... | 8.9.139 | 753
-KFM-P22-PROG-0035 | programming | PIP | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:372d00212418e0a1e... | 8.9.140 | 754
-5. Machine-Readable Index (continued)
-KFM-P22-PROG-0043 | programming | PIP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d123cd8c452d7b239... | 8.9.141
-| 755  
-KFM-P22-PROG-0044 | programming | PIP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:27213d008328b17de... | 8.9.142
-| 756  
-KFM-P22-PROG-0047 | programming | PIP | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:e7b5b58a3d1b47505... | 8.9.143
-| 757  
-KFM-P23-IDEA-0001 | idea | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:f983a138a3aa6cb80... | 8.9.144 | 758
-KFM-P23-PROG-0001 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:d89c07e0997ae22e1... | 8.9.145 | 759
-KFM-P23-PROG-0003 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:5d0e3ecc0bd359f4e... | 8.9.146 | 760
-KFM-P23-PROG-0004 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:4878c84f13484bbfd... | 8.9.147 | 761
-KFM-P23-PROG-0012 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:36eda3f8f30be1aff... | 8.9.148 | 762
-KFM-P23-PROG-0015 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:034a3790185f9177a... | 8.9.149 | 763
-KFM-P23-PROG-0021 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:d1c0734dad70bcef7... | 8.9.150 | 764
-KFM-P23-PROG-0022 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:8d35685c803b77a58... | 8.9.151 | 765
-KFM-P23-PROG-0026 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-003 | sha256:0b1f44ab739d7e9b4... | 8.9.152 | 766
-KFM-P23-PROG-0039 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:9e2c42d0044ff8ec3... | 8.9.153 | 767
-KFM-P23-PROG-0040 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:48d1f98bc52b31afc... | 8.9.154 | 768
-KFM-P23-PROG-0041 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:d84bbdf4b8bbd96fc... | 8.9.155 | 769
-KFM-P23-PROG-0042 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:7aea9acfa6a83f20e... | 8.9.156 | 770
-KFM-P23-PROG-0043 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:44934b8d61ac505de... | 8.9.157 | 771
-KFM-P23-PROG-0045 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:b169822e45b75f4a0... | 8.9.158 | 772
-KFM-P23-PROG-0046 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:3b04db5e5d4a04a63... | 8.9.159 | 773
-KFM-P23-PROG-0048 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:3e4e989e12d7876cb... | 8.9.160 | 774
-KFM-P23-PROG-0050 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:880aa179f7176d01f... | 8.9.161 | 775
-KFM-P23-PROG-0051 | programming | PIP | NEW | active | 23 | 23 | SRC-P23-004 | sha256:2d097c0fa203cad84... | 8.9.162 | 776
-KFM-P5-PROG-0009 | programming | PIP | EXPANDED | active | 5 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:6e98f43dab6aa57d2... | 8.9.163 | 777
-KFM-P6-IDEA-0001 | idea | PIP | EXPANDED | active | 6 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:61f9d8d62cf47563d... | 8.9.164 | 778
-KFM-P6-PROG-0004 | programming | PIP | EXPANDED | active | 6 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:62b8854dac61f8604... | 8.9.165 | 779
-KFM-P6-PROG-0005 | programming | PIP | UNCHANGED | active | 6 | 21 | SRC-P23-001,SRC-P23-002 | sha256:fc244461bb27f773c... | 8.9.166 |
-780
-KFM-P6-PROG-0006 | programming | PIP | UNCHANGED | active | 6 | 21 | SRC-P23-001,SRC-P23-002 | sha256:02f0279e449275ef5... | 8.9.167 |
-781
-KFM-P6-PROG-0011 | programming | PIP | UNCHANGED | active | 6 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5dad984dc09e64cac... | 8.9.168 |
-782
-KFM-P6-PROG-0013 | programming | PIP | UNCHANGED | active | 6 | 21 | SRC-P23-001,SRC-P23-002 | sha256:964a66efb5234d8bb... | 8.9.169 |
-783
-KFM-P7-PROG-0002 | programming | PIP | EXPANDED | active | 7 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:0d11ebde1e3d3630f... | 8.9.170 | 784
-KFM-P7-PROG-0009 | programming | PIP | UNCHANGED | active | 7 | 21 | SRC-P23-001,SRC-P23-002 | sha256:bb0efa0b177128bd7... | 8.9.171 |
-785
-KFM-P8-PROG-0001 | programming | PIP | UNCHANGED | active | 8 | 21 | SRC-P23-001,SRC-P23-002 | sha256:6e14cc847ba137c91... | 8.9.172 |
-786
-KFM-P8-PROG-0002 | programming | PIP | UNCHANGED | active | 8 | 21 | SRC-P23-001,SRC-P23-002 | sha256:4bddaf5987655a047... | 8.9.173 |
-787
-KFM-P8-PROG-0003 | programming | PIP | UNCHANGED | active | 8 | 21 | SRC-P23-001,SRC-P23-002 | sha256:4918a391133cee619... | 8.9.174 |
-788
-KFM-P8-PROG-0004 | programming | PIP | UNCHANGED | active | 8 | 21 | SRC-P23-001,SRC-P23-002 | sha256:208ca9fd1763926cb... | 8.9.175 |
-789
-KFM-P8-PROG-0005 | programming | PIP | UNCHANGED | active | 8 | 21 | SRC-P23-001,SRC-P23-002 | sha256:3ec39762fbd9257c5... | 8.9.176 |
-790
-KFM-P8-PROG-0023 | programming | PIP | EXPANDED | active | 8 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:96eccc1cfe5e57e78... | 8.9.177 | 791
-KFM-P8-PROG-0025 | programming | PIP | EXPANDED | active | 8 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:55637d7e08e4fde97... | 8.9.178 | 792
-KFM-P9-PROG-0025 | programming | PIP | UNCHANGED | active | 9 | 21 | SRC-P23-001,SRC-P23-002 | sha256:6e09c33f05efda8b4... | 8.9.179 |
-793
-KFM-P9-PROG-0026 | programming | PIP | UNCHANGED | active | 9 | 21 | SRC-P23-001,SRC-P23-002 | sha256:0d0539e6e775d1092... | 8.9.180 |
-794
-KFM-P9-PROG-0027 | programming | PIP | UNCHANGED | active | 9 | 21 | SRC-P23-001,SRC-P23-002 | sha256:7744ea8869808fbbc... | 8.9.181 |
-795
-KFM-P9-PROG-0028 | programming | PIP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:18fe354f6281e6d06... | 8.9.182 |
-796
-5. Machine-Readable Index (continued)
-KFM-P9-PROG-0062 | programming | PIP | UNCHANGED | active | 9 | 12 | SRC-P23-001,SRC-P23-002 | sha256:b3f49f124ba57b13c... | 8.9.183 |
-797
-KFM-P9-PROG-0063 | programming | PIP | EXPANDED | active | 9 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:f09cee75103b004bd... | 8.9.184 | 798
-KFM-P9-PROG-0064 | programming | PIP | UNCHANGED | active | 9 | 12 | SRC-P23-001,SRC-P23-002 | sha256:21fcb6a90dfa650cd... | 8.9.185 |
-799
-KFM-P9-PROG-0065 | programming | PIP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:46cb70f18ab8f0230... | 8.9.186 |
-800
-KFM-P9-PROG-0066 | programming | PIP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:79806f2bc602b1958... | 8.9.187 |
-```
+<details>
+<summary><strong>70 cards</strong> — click to expand</summary>
 
-<!-- page: 204 -->
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P1-IDEA-0045` | idea | UNCHANGED | — | 1 → 9 | — | `3a6b74867852874ea` | 8.8.1 | 544 |
+| `KFM-P1-IDEA-0046` | idea | UNCHANGED | — | 1 → 11 | — | `9c5420a6b27e600db` | 8.8.2 | 545 |
+| `KFM-P1-IDEA-0047` | idea | UNCHANGED | — | 1 → 9 | — | `51fbc83e72de60e6c` | 8.8.3 | 546 |
+| `KFM-P1-IDEA-0049` | idea | UNCHANGED | — | 1 → 11 | — | `78cbd551917b02051` | 8.8.4 | 547 |
+| `KFM-P1-IDEA-0050` | idea | UNCHANGED | — | 1 → 18 | — | `86958955d85e826c1` | 8.8.5 | 548 |
+| `KFM-P1-IDEA-0051` | idea | UNCHANGED | — | 1 → 4 | — | `4d86a346ed506c40c` | 8.8.6 | 549 |
+| `KFM-P1-IDEA-0072` | idea | UNCHANGED | — | 1 → 4 | — | `83a858f7c655a977f` | 8.8.7 | 550 |
+| `KFM-P17-IDEA-0005` | idea | UNCHANGED | — | 17 → 17 | — | `afff281528b001ebc` | 8.8.28 | 571 |
+| `KFM-P2-IDEA-0016` | idea | UNCHANGED | — | 2 → 2 | — | `d196db58a0cd08ea8` | 8.8.42 | 585 |
+| `KFM-P20-IDEA-0003` | idea | UNCHANGED | — | 20 → 20 | — | `773c74f3f595f5c13` | 8.8.44 | 587 |
+| `KFM-P22-IDEA-0005` | idea | UNCHANGED | — | 22 → 22 | — | `242530afd9c097742` | 8.8.47 | 590 |
+| `KFM-P23-IDEA-0003` | idea | NEW | — | 23 → 23 | `SRC-P23-004` | `ccb56eb831900a95e` | 8.8.50 | 593 |
+| `KFM-P9-IDEA-0011` | idea | UNCHANGED | — | 9 → 9 | — | `792bd5d37c83c83c2` | 8.8.61 | 604 |
+| `KFM-P1-PROG-0048` | programming | UNCHANGED | — | 1 → 16 | — | `0490954eee450ab0e` | 8.8.8 | 551 |
+| `KFM-P1-PROG-0052` | programming | UNCHANGED | — | 1 → 17 | — | `2b42f97d27fcc4130` | 8.8.9 | 552 |
+| `KFM-P10-PROG-0013` | programming | UNCHANGED | — | 10 → 10 | — | `bbfa58b99889ded96` | 8.8.10 | 553 |
+| `KFM-P12-PROG-0002` | programming | UNCHANGED | — | 12 → 12 | — | `72596c35f6342fcf6` | 8.8.11 | 554 |
+| `KFM-P12-PROG-0006` | programming | UNCHANGED | — | 12 → 13 | — | `ba3ab835f2a806bc2` | 8.8.12 | 555 |
+| `KFM-P12-PROG-0026` | programming | UNCHANGED | — | 12 → 13 | — | `63aad1fde433691ba` | 8.8.13 | 556 |
+| `KFM-P13-PROG-0007` | programming | UNCHANGED | — | 13 → 13 | — | `9a09014a6b13f77f6` | 8.8.14 | 557 |
+| `KFM-P13-PROG-0025` | programming | UNCHANGED | — | 13 → 15 | — | `761e31c97981d4336` | 8.8.15 | 558 |
+| `KFM-P14-PROG-0023` | programming | UNCHANGED | — | 14 → 15 | — | `d49e3867d71e9c0c2` | 8.8.16 | 559 |
+| `KFM-P14-PROG-0027` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `d7057b4b54ab2f7f0` | 8.8.17 | 560 |
+| `KFM-P14-PROG-0028` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `72c4cd20ebd0b81fa` | 8.8.18 | 561 |
+| `KFM-P15-PROG-0015` | programming | UNCHANGED | — | 15 → 15 | — | `adfd159fa06351053` | 8.8.19 | 562 |
+| `KFM-P15-PROG-0016` | programming | UNCHANGED | — | 15 → 15 | — | `ff27f30b6985dc908` | 8.8.20 | 563 |
+| `KFM-P15-PROG-0022` | programming | UNCHANGED | — | 15 → 15 | — | `69ca8199026d832d6` | 8.8.21 | 564 |
+| `KFM-P15-PROG-0037` | programming | UNCHANGED | — | 15 → 15 | — | `0c21a8a6a501bba71` | 8.8.22 | 565 |
+| `KFM-P16-PROG-0017` | programming | UNCHANGED | — | 16 → 17 | — | `2e7ee31f73206d12a` | 8.8.23 | 566 |
+| `KFM-P16-PROG-0018` | programming | UNCHANGED | — | 16 → 20 | — | `0def9b5855d78b6bb` | 8.8.24 | 567 |
+| `KFM-P16-PROG-0025` | programming | UNCHANGED | — | 16 → 16 | — | `31b7b9014af255dca` | 8.8.25 | 568 |
+| `KFM-P16-PROG-0030` | programming | UNCHANGED | — | 16 → 16 | — | `090ea323062f73f21` | 8.8.26 | 569 |
+| `KFM-P16-PROG-0035` | programming | UNCHANGED | — | 16 → 16 | — | `6d61a810ec42f7ed8` | 8.8.27 | 570 |
+| `KFM-P17-PROG-0007` | programming | UNCHANGED | — | 17 → 17 | — | `1e0f69fdf6a286d57` | 8.8.29 | 572 |
+| `KFM-P17-PROG-0009` | programming | UNCHANGED | — | 17 → 17 | — | `5fa7c9e3e91a8dd9e` | 8.8.30 | 573 |
+| `KFM-P17-PROG-0014` | programming | UNCHANGED | — | 17 → 17 | — | `7564c4a5c056348bc` | 8.8.31 | 574 |
+| `KFM-P17-PROG-0031` | programming | UNCHANGED | — | 17 → 17 | — | `ead25283874a257a5` | 8.8.32 | 575 |
+| `KFM-P17-PROG-0043` | programming | UNCHANGED | — | 17 → 17 | — | `089794e8070cd18ef` | 8.8.33 | 576 |
+| `KFM-P17-PROG-0044` | programming | UNCHANGED | — | 17 → 17 | — | `39ffeb4b529a1c39d` | 8.8.34 | 577 |
+| `KFM-P18-PROG-0003` | programming | UNCHANGED | — | 18 → 19 | — | `d781fd7b892fd947b` | 8.8.35 | 578 |
+| `KFM-P18-PROG-0016` | programming | UNCHANGED | — | 18 → 18 | — | `6b46edbe94d32128e` | 8.8.36 | 579 |
+| `KFM-P18-PROG-0020` | programming | UNCHANGED | — | 18 → 18 | — | `7340146cee86fd2ff` | 8.8.37 | 580 |
+| `KFM-P18-PROG-0021` | programming | UNCHANGED | — | 18 → 18 | — | `f8ee8a63012539c6e` | 8.8.38 | 581 |
+| `KFM-P18-PROG-0042` | programming | QUARANTINED | quarantine | 18 → 18 | — | `356e67a513caedbaa` | 8.8.39 | 582 |
+| `KFM-P19-PROG-0027` | programming | UNCHANGED | — | 19 → 19 | — | `766280d76c2528a31` | 8.8.40 | 583 |
+| `KFM-P19-PROG-0042` | programming | QUARANTINED | quarantine | 19 → 19 | — | `228a3cadeff994a92` | 8.8.41 | 584 |
+| `KFM-P2-PROG-0017` | programming | UNCHANGED | — | 2 → 11 | — | `e59c9ae79e8b507ac` | 8.8.43 | 586 |
+| `KFM-P20-PROG-0011` | programming | UNCHANGED | — | 20 → 20 | — | `af474dca841e35667` | 8.8.45 | 588 |
+| `KFM-P21-PROG-0015` | programming | UNCHANGED | — | 21 → 21 | — | `5a4e5245fb82b7786` | 8.8.46 | 589 |
+| `KFM-P22-PROG-0051` | programming | UNCHANGED | — | 22 → 22 | — | `3f04ebe6ded35aed1` | 8.8.48 | 591 |
+| `KFM-P22-PROG-0053` | programming | QUARANTINED | quarantine | 22 → 22 | — | `4530db9750f582dcc` | 8.8.49 | 592 |
+| `KFM-P23-PROG-0018` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `ce8f285347d16840a` | 8.8.51 | 594 |
+| `KFM-P23-PROG-0031` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `48dd398ad93161de7` | 8.8.52 | 595 |
+| `KFM-P23-PROG-0032` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `0b7d4ef7d1eb9b0d8` | 8.8.53 | 596 |
+| `KFM-P23-PROG-0035` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `21f7869c287722594` | 8.8.54 | 597 |
+| `KFM-P4-PROG-0005` | programming | UNCHANGED | — | 4 → 9 | — | `78ed282697a8cb3eb` | 8.8.55 | 598 |
+| `KFM-P4-PROG-0006` | programming | UNCHANGED | — | 4 → 4 | — | `cbda4308449ef0a75` | 8.8.56 | 599 |
+| `KFM-P4-PROG-0007` | programming | UNCHANGED | — | 4 → 4 | — | `4ccb3f4271cbacef6` | 8.8.57 | 600 |
+| `KFM-P5-PROG-0008` | programming | EXPANDED | — | 5 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1e979e1e2c4a5a89e` | 8.8.58 | 601 |
+| `KFM-P6-PROG-0002` | programming | UNCHANGED | — | 6 → 6 | — | `a83978b921d6cac49` | 8.8.59 | 602 |
+| `KFM-P8-PROG-0024` | programming | UNCHANGED | — | 8 → 8 | — | `d8eeb97ac0f4e335f` | 8.8.60 | 603 |
+| `KFM-P9-PROG-0010` | programming | UNCHANGED | — | 9 → 9 | — | `042008ecc7365e32c` | 8.8.62 | 605 |
+| `KFM-P9-PROG-0011` | programming | UNCHANGED | — | 9 → 9 | — | `88f121e61d7046b5b` | 8.8.63 | 606 |
+| `KFM-P9-PROG-0012` | programming | UNCHANGED | — | 9 → 9 | — | `540b951560522995a` | 8.8.64 | 607 |
+| `KFM-P9-PROG-0013` | programming | UNCHANGED | — | 9 → 9 | — | `b6a7c6772609b446a` | 8.8.65 | 608 |
+| `KFM-P9-PROG-0014` | programming | UNCHANGED | — | 9 → 9 | — | `815d20a43ec03931f` | 8.8.66 | 609 |
+| `KFM-P9-PROG-0015` | programming | UNCHANGED | — | 9 → 9 | — | `fb5f4586313f559d9` | 8.8.67 | 610 |
+| `KFM-P9-PROG-0016` | programming | UNCHANGED | — | 9 → 9 | — | `519cd68e51a50e122` | 8.8.68 | 611 |
+| `KFM-P9-PROG-0017` | programming | UNCHANGED | — | 9 → 9 | — | `e55b3e83b4eab8b14` | 8.8.69 | 612 |
+| `KFM-P9-PROG-0018` | programming | UNCHANGED | — | 9 → 9 | — | `3734eb00c12ba5051` | 8.8.70 | 613 |
 
-```text
-801
-KFM-P9-PROG-0067 | programming | PIP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:69f9e3cf677860a06... | 8.9.188 |
-802
-KFM-P9-PROG-0068 | programming | PIP | EXPANDED | active | 9 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:7f572d70645defc02... | 8.9.189 | 803
-KFM-P9-PROG-0069 | programming | PIP | UNCHANGED | active | 9 | 12 | SRC-P23-001,SRC-P23-002 | sha256:e4dbd2799392ba118... | 8.9.190 |
-804
-KFM-P9-PROG-0070 | programming | PIP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:287ef5908d3e01e36... | 8.9.191 |
-805
-KFM-P1-IDEA-0031 | idea | POL | UNCHANGED | active | 1 | 12 | SRC-P23-001,SRC-P23-002 | sha256:f061921012c5a9275... | 8.10.1 | 807
-KFM-P1-IDEA-0033 | idea | POL | UNCHANGED | active | 1 | 7 | SRC-P23-001,SRC-P23-002 | sha256:3566465aa303e5470... | 8.10.2 | 808
-KFM-P1-IDEA-0034 | idea | POL | UNCHANGED | active | 1 | 1 | SRC-P23-001,SRC-P23-002 | sha256:815c762afdf95be36... | 8.10.3 | 809
-KFM-P1-IDEA-0036 | idea | POL | UNCHANGED | active | 1 | 12 | SRC-P23-001,SRC-P23-002 | sha256:722da0b62be6de1cd... | 8.10.4 | 810
-KFM-P1-IDEA-0037 | idea | POL | UNCHANGED | active | 1 | 12 | SRC-P23-001,SRC-P23-002 | sha256:aea8d668b7e7d6c1a... | 8.10.5 | 811
-KFM-P1-PROG-0032 | programming | POL | UNCHANGED | active | 1 | 12 | SRC-P23-001,SRC-P23-002 | sha256:99c642d06eba2f1d2... | 8.10.6 |
-812
-KFM-P1-PROG-0035 | programming | POL | UNCHANGED | active | 1 | 19 | SRC-P23-001,SRC-P23-002 | sha256:87b0f74bd4397f392... | 8.10.7 |
-813
-KFM-P10-IDEA-0001 | idea | POL | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:151107d11c014b370... | 8.10.8 | 814
-KFM-P10-PROG-0014 | programming | POL | UNCHANGED | active | 10 | 12 | SRC-P23-001,SRC-P23-002 | sha256:1cb199b2cd3f50d21... | 8.10.9
-| 815  
-KFM-P11-PROG-0024 | programming | POL | UNCHANGED | active | 11 | 12 | SRC-P23-001,SRC-P23-002 | sha256:4524aba783dc90ee6... | 8.10.10
-| 816  
-KFM-P11-PROG-0025 | programming | POL | UNCHANGED | active | 11 | 12 | SRC-P23-001,SRC-P23-002 | sha256:987dc608ab6e059c7... | 8.10.11
-| 817  
-KFM-P12-PROG-0019 | programming | POL | UNCHANGED | active | 12 | 20 | SRC-P23-001,SRC-P23-002 | sha256:8a65a1d99f46341c9... | 8.10.12
-| 818  
-KFM-P12-PROG-0025 | programming | POL | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:130afefe7bfdc5f4b... | 8.10.13 | 819
-KFM-P13-PROG-0018 | programming | POL | UNCHANGED | active | 13 | 20 | SRC-P23-001,SRC-P23-002 | sha256:262bfce965931f62e... | 8.10.14
-| 820  
-KFM-P13-PROG-0019 | programming | POL | UNCHANGED | active | 13 | 14 | SRC-P23-001,SRC-P23-002 | sha256:fb1dc32d3b6e6aae7... | 8.10.15
-| 821  
-KFM-P14-FEAT-0002 | feature | POL | UNCHANGED | active | 14 | 14 | SRC-P23-001,SRC-P23-002 | sha256:11d41303da96a4502... | 8.10.16 |
-822
-KFM-P14-PROG-0001 | programming | POL | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:323a839b50f5c4bd1... | 8.10.17 | 823
-KFM-P14-PROG-0038 | programming | POL | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:165dea2aa243c83ad... | 8.10.18 | 824
-KFM-P14-PROG-0039 | programming | POL | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:34867d101f20c3994... | 8.10.19 | 825
-KFM-P15-PROG-0025 | programming | POL | UNCHANGED | active | 15 | 20 | SRC-P23-001,SRC-P23-002 | sha256:102f6e09dc11ec871... | 8.10.20
-| 826  
-KFM-P15-PROG-0034 | programming | POL | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:60213b7b245356ad8... | 8.10.21
-| 827  
-KFM-P16-IDEA-0004 | idea | POL | EXPANDED | active | 16 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e31bfb22ec5435662... | 8.10.22 | 828
-KFM-P16-PROG-0009 | programming | POL | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:f89895601744ed768... | 8.10.23
-| 829  
-KFM-P16-PROG-0011 | programming | POL | EXPANDED | active | 16 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:565d792ad7ddc0dd5... | 8.10.24 | 830
-KFM-P16-PROG-0016 | programming | POL | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:9c34fd3d144fa3f1b... | 8.10.25
-| 831  
-KFM-P16-PROG-0026 | programming | POL | EXPANDED | active | 16 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:d431c59ec2ceb686a... | 8.10.26 | 832
-KFM-P16-PROG-0033 | programming | POL | EXPANDED | active | 16 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:0f6c07aab62939180... | 8.10.27 | 833
-KFM-P16-PROG-0037 | programming | POL | UNCHANGED | active | 16 | 20 | SRC-P23-001,SRC-P23-002 | sha256:f2ee8fcd4d9102f87... | 8.10.28
-| 834  
-KFM-P17-IDEA-0006 | idea | POL | UNCHANGED | active | 17 | 19 | SRC-P23-001,SRC-P23-002 | sha256:f19b6f6836b33f62a... | 8.10.29 | 835
-KFM-P17-PROG-0002 | programming | POL | UNCHANGED | active | 17 | 19 | SRC-P23-001,SRC-P23-002 | sha256:bf219a22f2953c80a... | 8.10.30
-| 836  
-KFM-P17-PROG-0017 | programming | POL | UNCHANGED | active | 17 | 18 | SRC-P23-001,SRC-P23-002 | sha256:cff0c408de7a27fe0... | 8.10.31
-| 837  
-KFM-P17-PROG-0018 | programming | POL | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:e6e878c776f3b1431... | 8.10.32
-| 838  
-KFM-P17-PROG-0022 | programming | POL | UNCHANGED | active | 17 | 18 | SRC-P23-001,SRC-P23-002 | sha256:62bad56608a887ce1... | 8.10.33
-| 839  
-5. Machine-Readable Index (continued)
-KFM-P17-PROG-0025 | programming | POL | UNCHANGED | active | 17 | 18 | SRC-P23-001,SRC-P23-002 | sha256:d854e24d70c1e8211... | 8.10.34
-| 840  
-KFM-P17-PROG-0027 | programming | POL | UNCHANGED | active | 17 | 19 | SRC-P23-001,SRC-P23-002 | sha256:ff8ce2c6089a0a63d... | 8.10.35
-| 841  
-KFM-P17-PROG-0032 | programming | POL | UNCHANGED | active | 17 | 20 | SRC-P23-001,SRC-P23-002 | sha256:4f9c504c6b11a6540... | 8.10.36
-| 842  
-KFM-P17-PROG-0040 | programming | POL | UNCHANGED | active | 17 | 18 | SRC-P23-001,SRC-P23-002 | sha256:63f65e446fcde1c88... | 8.10.37
-| 843  
-KFM-P18-IDEA-0005 | idea | POL | UNCHANGED | active | 18 | 19 | SRC-P23-001,SRC-P23-002 | sha256:a5e7e0692a8dbe555... | 8.10.38 | 844
-KFM-P18-PROG-0005 | programming | POL | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:02004c5e865de9697... | 8.10.39 | 845
-KFM-P18-PROG-0024 | programming | POL | UNCHANGED | active | 18 | 19 | SRC-P23-001,SRC-P23-002 | sha256:f00730170f364f068... | 8.10.40
-| 846  
-KFM-P18-PROG-0025 | programming | POL | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:6052f8e4fe5ca41bf... | 8.10.41
-| 847  
-KFM-P18-PROG-0028 | programming | POL | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:681eec2fe714d4e86... | 8.10.42 | 848
-KFM-P19-IDEA-0003 | idea | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:b5b2b687274d37864... | 8.10.43 | 849
-KFM-P19-IDEA-0004 | idea | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:a6f10821e36b45588... | 8.10.44 | 850
-KFM-P19-IDEA-0009 | idea | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:e87901692bed52417... | 8.10.45 | 851
-KFM-P19-PROG-0006 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:460539d5fe40c5284... | 8.10.46
-| 852  
-KFM-P19-PROG-0009 | programming | POL | UNCHANGED | active | 19 | 20 | SRC-P23-001,SRC-P23-002 | sha256:a28b3f0c7bb9b35a5... | 8.10.47
-| 853  
-KFM-P19-PROG-0010 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:b320850c52377b689... | 8.10.48
-| 854  
-```
+</details>
 
-<!-- page: 205 -->
+#### 5.11 PIP — Pipelines, Pipeline Specs, Validators
 
-```text
-KFM-P19-PROG-0013 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:ec7cfbd7e64854b3c... | 8.10.49
-| 855  
-KFM-P19-PROG-0025 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:c36b212be9835fcae... | 8.10.50
-| 856  
-KFM-P19-PROG-0030 | programming | POL | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b7b474016f23f2ae6... | 8.10.51 | 857
-KFM-P2-IDEA-0015 | idea | POL | UNCHANGED | active | 2 | 2 | SRC-P23-001,SRC-P23-002 | sha256:8d8948c09ea8d1409... | 8.10.52 | 858
-KFM-P20-PROG-0016 | programming | POL | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:87fb6b8ef70012763... | 8.10.53
-| 859  
-KFM-P20-PROG-0017 | programming | POL | EXPANDED | active | 20 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:d2027c4c7f6b76a42... | 8.10.54 | 860
-KFM-P20-PROG-0022 | programming | POL | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:f60734f67c351b1e0... | 8.10.55
-| 861  
-KFM-P20-PROG-0033 | programming | POL | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:04facb8ed6fd52322... | 8.10.56
-| 862  
-KFM-P21-IDEA-0003 | idea | POL | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:87ea45567b80e767c... | 8.10.57 | 863
-KFM-P21-PROG-0009 | programming | POL | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:8a1effe69ac57a832... | 8.10.58
-| 864  
-KFM-P21-PROG-0012 | programming | POL | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:52027fd31e9d11492... | 8.10.59
-| 865  
-KFM-P21-PROG-0049 | programming | POL | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:cf8f4df3eac435b71... | 8.10.60
-| 866  
-KFM-P22-PROG-0007 | programming | POL | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:639d037dd80ead91a... | 8.10.61 | 867
-KFM-P22-PROG-0015 | programming | POL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:aa89e5f6c16396c7b... | 8.10.62
-| 868  
-KFM-P22-PROG-0021 | programming | POL | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9e15186c246e51080... | 8.10.63 | 869
-KFM-P22-PROG-0032 | programming | POL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c821ab6ecd41539a6... | 8.10.64
-| 870  
-KFM-P22-PROG-0048 | programming | POL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3d433bfdcc15ce103... | 8.10.65
-| 871  
-KFM-P23-PROG-0002 | programming | POL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:cd10384a80303758c... | 8.10.66 | 872
-KFM-P23-PROG-0010 | programming | POL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:f63e0ce0a4d52eaec... | 8.10.67 | 873
-KFM-P23-PROG-0011 | programming | POL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:c592a5be5674f16c8... | 8.10.68 | 874
-KFM-P23-PROG-0014 | programming | POL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:d77feb2ad5f3c3a9c... | 8.10.69 | 875
-KFM-P23-PROG-0024 | programming | POL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:381999dadce97b27e... | 8.10.70 | 876
-KFM-P23-PROG-0044 | programming | POL | NEW | active | 23 | 23 | SRC-P23-004 | sha256:12e925143c4688988... | 8.10.71 | 877
-KFM-P3-IDEA-0003 | idea | POL | UNCHANGED | active | 3 | 14 | SRC-P23-001,SRC-P23-002 | sha256:3b6535eaccccd2e40... | 8.10.72 | 878
-KFM-P5-PROG-0001 | programming | POL | EXPANDED | active | 5 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:c38ca1efdabed0bfe... | 8.10.73 | 879
-KFM-P5-PROG-0005 | programming | POL | UNCHANGED | active | 5 | 20 | SRC-P23-001,SRC-P23-002 | sha256:f0d19a76e76fc6dc1... | 8.10.74 |
-880
-KFM-P5-PROG-0006 | programming | POL | UNCHANGED | active | 5 | 7 | SRC-P23-001,SRC-P23-002 | sha256:62a64da20573b17e7... | 8.10.75 |
-881
-5. Machine-Readable Index (continued)
-KFM-P5-PROG-0007 | programming | POL | EXPANDED | active | 5 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:217787ba724356088... | 8.10.76 | 882
-KFM-P7-PROG-0004 | programming | POL | UNCHANGED | active | 7 | 7 | SRC-P23-001,SRC-P23-002 | sha256:4ff39808e108d6b2a... | 8.10.77 |
-883
-KFM-P9-FEAT-0004 | feature | POL | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:ee4c9a5899a2945f0... | 8.10.78 | 884
-KFM-P9-IDEA-0016 | idea | POL | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:9597503b328f94aee... | 8.10.79 | 885
-KFM-P9-IDEA-0017 | idea | POL | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:cc2dd3c4c1fc9228a... | 8.10.80 | 886
-KFM-P9-IDEA-0018 | idea | POL | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:d4aee151d2c21ef49... | 8.10.81 | 887
-KFM-P9-IDEA-0019 | idea | POL | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:e2ba1b7400d494f91... | 8.10.82 | 888
-KFM-P9-IDEA-0020 | idea | POL | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:95149732e00b424e6... | 8.10.83 | 889
-KFM-P1-IDEA-0056 | idea | REL | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:947ffb8e9fbdaf81d... | 8.11.1 | 891
-KFM-P1-IDEA-0059 | idea | REL | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:e47352802492a211d... | 8.11.2 | 892
-KFM-P1-PROG-0057 | programming | REL | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9e38eb46529b49aee... | 8.11.3 | 893
-KFM-P1-PROG-0058 | programming | REL | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:7f07f076198ce92d9... | 8.11.4 |
-894
-KFM-P1-PROG-0060 | programming | REL | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:f2406148ffe6ce40b... | 8.11.5 |
-895
-KFM-P11-PROG-0027 | programming | REL | EXPANDED | active | 11 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:189fbffc1dc98a562... | 8.11.6 | 896
-KFM-P12-IDEA-0004 | idea | REL | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1c8f2f0541b60d6ca... | 8.11.7 | 897
-KFM-P12-PROG-0008 | programming | REL | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:e30c14cfe16a55e4c... | 8.11.8 | 898
-KFM-P12-PROG-0014 | programming | REL | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:c7660ff54208d1936... | 8.11.9 | 899
-KFM-P13-IDEA-0001 | idea | REL | UNCHANGED | active | 13 | 22 | SRC-P23-001,SRC-P23-002 | sha256:70f200dd1f393f295... | 8.11.10 | 900
-KFM-P13-PROG-0002 | programming | REL | UNCHANGED | active | 13 | 22 | SRC-P23-001,SRC-P23-002 | sha256:0739444ce360f3389... | 8.11.11
-| 901  
-KFM-P13-PROG-0003 | programming | REL | UNCHANGED | active | 13 | 22 | SRC-P23-001,SRC-P23-002 | sha256:a00edd28ea309757a... | 8.11.12
-| 902  
-KFM-P13-PROG-0020 | programming | REL | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:3b0d7aa7c7365166c... | 8.11.13 | 903
-KFM-P13-PROG-0028 | programming | REL | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:20f9825582d8f504f... | 8.11.14 | 904
-KFM-P14-PROG-0031 | programming | REL | UNCHANGED | active | 14 | 22 | SRC-P23-001,SRC-P23-002 | sha256:69201f2c7b456b07f... | 8.11.15
-| 905  
-KFM-P14-PROG-0033 | programming | REL | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1403d67ce4ffb2d95... | 8.11.16 | 906
-KFM-P15-PROG-0032 | programming | REL | EXPANDED | active | 15 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:038a58607136e55bc... | 8.11.17 | 907
-KFM-P16-FEAT-0001 | feature | REL | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:b36df507ac1fcb86e... | 8.11.18 |
-908
-KFM-P16-IDEA-0001 | idea | REL | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:7e016704f681270b7... | 8.11.19 | 909
-KFM-P16-IDEA-0005 | idea | REL | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:344ac0e1559e3d9c9... | 8.11.20 | 910
-KFM-P16-PROG-0021 | programming | REL | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d86c00a96d8ce42bc... | 8.11.21
-| 911  
-KFM-P16-PROG-0036 | programming | REL | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:97e7a49c1cc1d2305... | 8.11.22
-| 912  
-```
+<details>
+<summary><strong>191 cards</strong> — click to expand</summary>
 
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 16: pages 206–208 -->
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P13-IDEA-0002` | idea | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1e49f4ea51fa8674c` | 8.9.31 | 645 |
+| `KFM-P13-IDEA-0005` | idea | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `adc2ffc66823d2890` | 8.9.32 | 646 |
+| `KFM-P17-IDEA-0003` | idea | EXPANDED | — | 17 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e895d2dfc43003f9f` | 8.9.62 | 676 |
+| `KFM-P17-IDEA-0008` | idea | EXPANDED | — | 17 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e584926108555d846` | 8.9.63 | 677 |
+| `KFM-P18-IDEA-0001` | idea | UNCHANGED | — | 18 → 21 | — | `33d8e68162a5b7e7c` | 8.9.70 | 684 |
+| `KFM-P19-IDEA-0007` | idea | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `605649e551656b48e` | 8.9.79 | 693 |
+| `KFM-P20-IDEA-0005` | idea | UNCHANGED | — | 20 → 21 | — | `078cf8c59c0d15848` | 8.9.104 | 718 |
+| `KFM-P20-IDEA-0008` | idea | UNCHANGED | — | 20 → 21 | — | `0ca9684516a4a2867` | 8.9.105 | 719 |
+| `KFM-P21-IDEA-0001` | idea | UNCHANGED | — | 21 → 21 | — | `73dfdea4e4097693d` | 8.9.123 | 737 |
+| `KFM-P21-IDEA-0005` | idea | UNCHANGED | — | 21 → 21 | — | `1830a1061625a4986` | 8.9.124 | 738 |
+| `KFM-P23-IDEA-0001` | idea | NEW | — | 23 → 23 | `SRC-P23-003` | `f983a138a3aa6cb80` | 8.9.144 | 758 |
+| `KFM-P6-IDEA-0001` | idea | EXPANDED | — | 6 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `61f9d8d62cf47563d` | 8.9.164 | 778 |
+| `KFM-P1-PROG-0024` | programming | UNCHANGED | — | 1 → 21 | — | `77256ae2914953f2f` | 8.9.1 | 615 |
+| `KFM-P1-PROG-0025` | programming | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `a5ec1d771c83ea98d` | 8.9.2 | 616 |
+| `KFM-P1-PROG-0026` | programming | UNCHANGED | — | 1 → 21 | — | `2742f35d1a2bb5cc6` | 8.9.3 | 617 |
+| `KFM-P1-PROG-0027` | programming | UNCHANGED | — | 1 → 21 | — | `9de84729ce97af32f` | 8.9.4 | 618 |
+| `KFM-P1-PROG-0028` | programming | UNCHANGED | — | 1 → 21 | — | `d8d44752fc5037fe4` | 8.9.5 | 619 |
+| `KFM-P1-PROG-0029` | programming | UNCHANGED | — | 1 → 21 | — | `1650a89a120fca20d` | 8.9.6 | 620 |
+| `KFM-P1-PROG-0030` | programming | UNCHANGED | — | 1 → 21 | — | `59d9428f2e8be1d9f` | 8.9.7 | 621 |
+| `KFM-P10-PROG-0001` | programming | UNCHANGED | — | 10 → 21 | — | `3c40df5bb2218602f` | 8.9.8 | 622 |
+| `KFM-P10-PROG-0004` | programming | UNCHANGED | — | 10 → 21 | — | `6794836f3cb203b15` | 8.9.9 | 623 |
+| `KFM-P10-PROG-0008` | programming | UNCHANGED | — | 10 → 21 | — | `52c57558f90807e5f` | 8.9.10 | 624 |
+| `KFM-P10-PROG-0010` | programming | EXPANDED | — | 10 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `c57b52c3a22c730eb` | 8.9.11 | 625 |
+| `KFM-P10-PROG-0011` | programming | EXPANDED | — | 10 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `975ea134bb02e019d` | 8.9.12 | 626 |
+| `KFM-P10-PROG-0012` | programming | UNCHANGED | — | 10 → 21 | — | `8e58c20901dc246cc` | 8.9.13 | 627 |
+| `KFM-P10-PROG-0015` | programming | EXPANDED | — | 10 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `8b5d1a4be948cb443` | 8.9.14 | 628 |
+| `KFM-P10-PROG-0019` | programming | EXPANDED | — | 10 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `8a177906ce075281f` | 8.9.15 | 629 |
+| `KFM-P10-PROG-0023` | programming | UNCHANGED | — | 10 → 21 | — | `033c0d11d99ae7422` | 8.9.16 | 630 |
+| `KFM-P11-PROG-0009` | programming | EXPANDED | — | 11 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `6b9db863f48b6b2ef` | 8.9.17 | 631 |
+| `KFM-P11-PROG-0015` | programming | UNCHANGED | — | 11 → 21 | — | `0bad5e0a10ec57ca6` | 8.9.18 | 632 |
+| `KFM-P11-PROG-0018` | programming | UNCHANGED | — | 11 → 21 | — | `3e16041b7d30eea8d` | 8.9.19 | 633 |
+| `KFM-P11-PROG-0019` | programming | UNCHANGED | — | 11 → 21 | — | `3141826c53c118462` | 8.9.20 | 634 |
+| `KFM-P11-PROG-0026` | programming | UNCHANGED | — | 11 → 21 | — | `251dc120d380f9271` | 8.9.21 | 635 |
+| `KFM-P12-PROG-0001` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `f6a07455ea3c5720e` | 8.9.22 | 636 |
+| `KFM-P12-PROG-0004` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `823aa24f81aec84cf` | 8.9.23 | 637 |
+| `KFM-P12-PROG-0005` | programming | UNCHANGED | — | 12 → 21 | — | `13d9d297427adc344` | 8.9.24 | 638 |
+| `KFM-P12-PROG-0010` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `c24a893b125a7996f` | 8.9.25 | 639 |
+| `KFM-P12-PROG-0011` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `76a8f2ed8dfef922c` | 8.9.26 | 640 |
+| `KFM-P12-PROG-0013` | programming | UNCHANGED | — | 12 → 21 | — | `8fac20dcabad0e288` | 8.9.27 | 641 |
+| `KFM-P12-PROG-0015` | programming | UNCHANGED | — | 12 → 21 | — | `301c0da33efd5bbc1` | 8.9.28 | 642 |
+| `KFM-P12-PROG-0023` | programming | UNCHANGED | — | 12 → 21 | — | `d9b6f0bac6dc55e20` | 8.9.29 | 643 |
+| `KFM-P12-PROG-0027` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `96c311c9ff7bfe09a` | 8.9.30 | 644 |
+| `KFM-P13-PROG-0004` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b418b43a1a77e8a41` | 8.9.33 | 647 |
+| `KFM-P13-PROG-0013` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `96f5d574eaaaac9c5` | 8.9.34 | 648 |
+| `KFM-P13-PROG-0021` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `c70a1d143155c0a20` | 8.9.35 | 649 |
+| `KFM-P13-PROG-0029` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e885bfa20afb9b37e` | 8.9.36 | 650 |
+| `KFM-P14-PROG-0002` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `05cc074f7e28f48fb` | 8.9.37 | 651 |
+| `KFM-P14-PROG-0003` | programming | UNCHANGED | — | 14 → 21 | — | `eacf79906f0865252` | 8.9.38 | 652 |
+| `KFM-P14-PROG-0004` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e4d7b4e81da42b176` | 8.9.39 | 653 |
+| `KFM-P14-PROG-0005` | programming | UNCHANGED | — | 14 → 21 | — | `5c7b343e660b5741e` | 8.9.40 | 654 |
+| `KFM-P14-PROG-0010` | programming | UNCHANGED | — | 14 → 21 | — | `4671af34a2a97997a` | 8.9.41 | 655 |
+| `KFM-P14-PROG-0012` | programming | UNCHANGED | — | 14 → 21 | — | `b224e5e126f9ff414` | 8.9.42 | 656 |
+| `KFM-P14-PROG-0024` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1e693922a298ce8b5` | 8.9.43 | 657 |
+| `KFM-P14-PROG-0034` | programming | UNCHANGED | — | 14 → 21 | — | `ffdfce313e4c93351` | 8.9.44 | 658 |
+| `KFM-P15-PROG-0001` | programming | UNCHANGED | — | 15 → 21 | — | `cd533aaff9760dd90` | 8.9.45 | 659 |
+| `KFM-P15-PROG-0003` | programming | UNCHANGED | — | 15 → 21 | — | `20386231b125f8f4c` | 8.9.46 | 660 |
+| `KFM-P15-PROG-0005` | programming | UNCHANGED | — | 15 → 21 | — | `506d6ba4d0fc2d5b5` | 8.9.47 | 661 |
+| `KFM-P15-PROG-0007` | programming | UNCHANGED | — | 15 → 21 | — | `cda11903e59b812c0` | 8.9.48 | 662 |
+| `KFM-P15-PROG-0019` | programming | EXPANDED | — | 15 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `7aff31636070585c1` | 8.9.49 | 663 |
+| `KFM-P15-PROG-0020` | programming | UNCHANGED | — | 15 → 21 | — | `23c3cf44514fe72eb` | 8.9.50 | 664 |
+| `KFM-P15-PROG-0021` | programming | EXPANDED | — | 15 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `137174cf887345490` | 8.9.51 | 665 |
+| `KFM-P15-PROG-0023` | programming | UNCHANGED | — | 15 → 21 | — | `1d4e8678c8c81e2bf` | 8.9.52 | 666 |
+| `KFM-P15-PROG-0040` | programming | UNCHANGED | — | 15 → 21 | — | `0820f85f71ec1999e` | 8.9.53 | 667 |
+| `KFM-P16-PROG-0003` | programming | UNCHANGED | — | 16 → 21 | — | `831914ce4b3b12231` | 8.9.54 | 668 |
+| `KFM-P16-PROG-0006` | programming | UNCHANGED | — | 16 → 21 | — | `88668da18b37c0ecf` | 8.9.55 | 669 |
+| `KFM-P16-PROG-0008` | programming | UNCHANGED | — | 16 → 21 | — | `f300081851f36c071` | 8.9.56 | 670 |
+| `KFM-P16-PROG-0012` | programming | UNCHANGED | — | 16 → 21 | — | `98632647cf9ee5727` | 8.9.57 | 671 |
+| `KFM-P16-PROG-0019` | programming | UNCHANGED | — | 16 → 21 | — | `1ce79e5d915f0fc3c` | 8.9.58 | 672 |
+| `KFM-P16-PROG-0020` | programming | UNCHANGED | — | 16 → 21 | — | `9701533280b731766` | 8.9.59 | 673 |
+| `KFM-P16-PROG-0027` | programming | UNCHANGED | — | 16 → 21 | — | `9d5bd2319aaa124a4` | 8.9.60 | 674 |
+| `KFM-P16-PROG-0029` | programming | EXPANDED | — | 16 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `7540ce8f9159e8b51` | 8.9.61 | 675 |
+| `KFM-P17-PROG-0010` | programming | UNCHANGED | — | 17 → 21 | — | `d65d95f1100e6d06a` | 8.9.64 | 678 |
+| `KFM-P17-PROG-0023` | programming | UNCHANGED | — | 17 → 21 | — | `c2950f6faf55494c7` | 8.9.65 | 679 |
+| `KFM-P17-PROG-0029` | programming | UNCHANGED | — | 17 → 21 | — | `cd2d71825f2252c02` | 8.9.66 | 680 |
+| `KFM-P17-PROG-0035` | programming | UNCHANGED | — | 17 → 21 | — | `baa0fbfd9d9b83179` | 8.9.67 | 681 |
+| `KFM-P17-PROG-0036` | programming | UNCHANGED | — | 17 → 21 | — | `6cb9a01c56c6e1465` | 8.9.68 | 682 |
+| `KFM-P17-PROG-0038` | programming | UNCHANGED | — | 17 → 21 | — | `43bf27e3c7a369a5c` | 8.9.69 | 683 |
+| `KFM-P18-PROG-0001` | programming | UNCHANGED | — | 18 → 21 | — | `b1bafa900a1b06103` | 8.9.71 | 685 |
+| `KFM-P18-PROG-0004` | programming | UNCHANGED | — | 18 → 21 | — | `5f00888defcd131c0` | 8.9.72 | 686 |
+| `KFM-P18-PROG-0007` | programming | UNCHANGED | — | 18 → 21 | — | `f1bf3dcb5bb1778eb` | 8.9.73 | 687 |
+| `KFM-P18-PROG-0009` | programming | UNCHANGED | — | 18 → 21 | — | `2cb2410835fc58bb4` | 8.9.74 | 688 |
+| `KFM-P18-PROG-0013` | programming | UNCHANGED | — | 18 → 21 | — | `484b10c9fe47747e0` | 8.9.75 | 689 |
+| `KFM-P18-PROG-0014` | programming | UNCHANGED | — | 18 → 21 | — | `c8290221f6ab024e3` | 8.9.76 | 690 |
+| `KFM-P18-PROG-0037` | programming | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `306358418718f2a87` | 8.9.77 | 691 |
+| `KFM-P18-PROG-0039` | programming | UNCHANGED | — | 18 → 21 | — | `5d305b62bbd387c81` | 8.9.78 | 692 |
+| `KFM-P19-PROG-0001` | programming | UNCHANGED | — | 19 → 21 | — | `adbd145dd7569ab8e` | 8.9.80 | 694 |
+| `KFM-P19-PROG-0004` | programming | UNCHANGED | — | 19 → 21 | — | `8bee6b9496b8efff6` | 8.9.81 | 695 |
+| `KFM-P19-PROG-0015` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `31bbf6db8ecc124ea` | 8.9.82 | 696 |
+| `KFM-P19-PROG-0017` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `5c756e36a820c8b33` | 8.9.83 | 697 |
+| `KFM-P19-PROG-0019` | programming | UNCHANGED | — | 19 → 21 | — | `2f20e14076e1bfa03` | 8.9.84 | 698 |
+| `KFM-P19-PROG-0020` | programming | UNCHANGED | — | 19 → 21 | — | `44b458f4c5cd2bba0` | 8.9.85 | 699 |
+| `KFM-P19-PROG-0022` | programming | UNCHANGED | — | 19 → 21 | — | `29e4fb0d9d7de689a` | 8.9.86 | 700 |
+| `KFM-P19-PROG-0028` | programming | UNCHANGED | — | 19 → 21 | — | `66dc5b42131262f43` | 8.9.87 | 701 |
+| `KFM-P19-PROG-0029` | programming | UNCHANGED | — | 19 → 21 | — | `1e8deaed7af0ca54e` | 8.9.88 | 702 |
+| `KFM-P19-PROG-0033` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `c3e4dbe5149980f55` | 8.9.89 | 703 |
+| `KFM-P19-PROG-0035` | programming | UNCHANGED | — | 19 → 21 | — | `cbf9494a4a0b96e5d` | 8.9.90 | 704 |
+| `KFM-P19-PROG-0036` | programming | UNCHANGED | — | 19 → 21 | — | `b639f40426aeaf9b1` | 8.9.91 | 705 |
+| `KFM-P19-PROG-0040` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `ec10d9c296d297aa0` | 8.9.92 | 706 |
+| `KFM-P2-PROG-0001` | programming | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e114f7809141b73b6` | 8.9.93 | 707 |
+| `KFM-P2-PROG-0002` | programming | UNCHANGED | — | 2 → 21 | — | `cb125e65b6c97930e` | 8.9.94 | 708 |
+| `KFM-P2-PROG-0003` | programming | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `443cd614eee873da7` | 8.9.95 | 709 |
+| `KFM-P2-PROG-0004` | programming | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `64eb0f6401a4ea887` | 8.9.96 | 710 |
+| `KFM-P2-PROG-0005` | programming | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `3b29a76e2a7e2684f` | 8.9.97 | 711 |
+| `KFM-P2-PROG-0006` | programming | UNCHANGED | — | 2 → 21 | — | `4c0ff9018856fb17b` | 8.9.98 | 712 |
+| `KFM-P2-PROG-0007` | programming | UNCHANGED | — | 2 → 21 | — | `618bd9d0344249f8b` | 8.9.99 | 713 |
+| `KFM-P2-PROG-0008` | programming | EXPANDED | — | 2 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `3c5348a5ca21c35e1` | 8.9.100 | 714 |
+| `KFM-P2-PROG-0009` | programming | UNCHANGED | — | 2 → 21 | — | `0fb437d6e1b7fb924` | 8.9.101 | 715 |
+| `KFM-P2-PROG-0010` | programming | UNCHANGED | — | 2 → 21 | — | `321e6cba54f355d03` | 8.9.102 | 716 |
+| `KFM-P2-PROG-0011` | programming | UNCHANGED | — | 2 → 21 | — | `a88e3fd970daffc17` | 8.9.103 | 717 |
+| `KFM-P20-PROG-0002` | programming | UNCHANGED | — | 20 → 21 | — | `b9e7da1ed623887c4` | 8.9.106 | 720 |
+| `KFM-P20-PROG-0004` | programming | UNCHANGED | — | 20 → 21 | — | `f236e231d9c942156` | 8.9.107 | 721 |
+| `KFM-P20-PROG-0005` | programming | UNCHANGED | — | 20 → 21 | — | `9d9cd8eb4bab17fc5` | 8.9.108 | 722 |
+| `KFM-P20-PROG-0006` | programming | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `a17a38ba3af9e639e` | 8.9.109 | 723 |
+| `KFM-P20-PROG-0007` | programming | UNCHANGED | — | 20 → 21 | — | `d423a0410a8748376` | 8.9.110 | 724 |
+| `KFM-P20-PROG-0009` | programming | UNCHANGED | — | 20 → 21 | — | `0b2f23b91e3699d44` | 8.9.111 | 725 |
+| `KFM-P20-PROG-0010` | programming | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `ad3979a025b183ceb` | 8.9.112 | 726 |
+| `KFM-P20-PROG-0012` | programming | UNCHANGED | — | 20 → 21 | — | `a92e53fcc7450f193` | 8.9.113 | 727 |
+| `KFM-P20-PROG-0019` | programming | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `85dee375d9bd43a26` | 8.9.114 | 728 |
+| `KFM-P20-PROG-0020` | programming | UNCHANGED | — | 20 → 21 | — | `cae8b43e7c16341da` | 8.9.115 | 729 |
+| `KFM-P20-PROG-0025` | programming | UNCHANGED | — | 20 → 21 | — | `23d420fa893615f49` | 8.9.116 | 730 |
+| `KFM-P20-PROG-0026` | programming | UNCHANGED | — | 20 → 21 | — | `af509e3c33e606274` | 8.9.117 | 731 |
+| `KFM-P20-PROG-0028` | programming | UNCHANGED | — | 20 → 21 | — | `7eb86945c0e90924c` | 8.9.118 | 732 |
+| `KFM-P20-PROG-0030` | programming | UNCHANGED | — | 20 → 21 | — | `5848a640ed9d4dad6` | 8.9.119 | 733 |
+| `KFM-P20-PROG-0032` | programming | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `f85b2d1b975590f7b` | 8.9.120 | 734 |
+| `KFM-P20-PROG-0036` | programming | UNCHANGED | — | 20 → 21 | — | `906fdbe1dbbecd003` | 8.9.121 | 735 |
+| `KFM-P20-PROG-0037` | programming | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9d40671d585f8eb44` | 8.9.122 | 736 |
+| `KFM-P21-PROG-0001` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `a57b09c4519b42f5f` | 8.9.125 | 739 |
+| `KFM-P21-PROG-0003` | programming | UNCHANGED | — | 21 → 21 | — | `44eb56a6cde252b62` | 8.9.126 | 740 |
+| `KFM-P21-PROG-0006` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `4905a278e0f258484` | 8.9.127 | 741 |
+| `KFM-P21-PROG-0010` | programming | UNCHANGED | — | 21 → 21 | — | `08f8189f6efa22f3b` | 8.9.128 | 742 |
+| `KFM-P21-PROG-0017` | programming | UNCHANGED | — | 21 → 21 | — | `88b40c10b82ed95ab` | 8.9.129 | 743 |
+| `KFM-P21-PROG-0019` | programming | UNCHANGED | — | 21 → 21 | — | `f8918c2050903bc65` | 8.9.130 | 744 |
+| `KFM-P21-PROG-0032` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `4a834e24161f15a82` | 8.9.131 | 745 |
+| `KFM-P21-PROG-0047` | programming | UNCHANGED | — | 21 → 21 | — | `93a561f8087e5f82f` | 8.9.132 | 746 |
+| `KFM-P21-PROG-0052` | programming | QUARANTINED | quarantine | 21 → 21 | — | `3c3df6f1e6959077a` | 8.9.133 | 747 |
+| `KFM-P22-PROG-0001` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `16feaea7c62323256` | 8.9.134 | 748 |
+| `KFM-P22-PROG-0006` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9be7cb39057399f72` | 8.9.135 | 749 |
+| `KFM-P22-PROG-0008` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e3106764c9012924e` | 8.9.136 | 750 |
+| `KFM-P22-PROG-0010` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1affe9928e0aba4bc` | 8.9.137 | 751 |
+| `KFM-P22-PROG-0022` | programming | UNCHANGED | — | 22 → 22 | — | `cc45e25cf33b1f7f6` | 8.9.138 | 752 |
+| `KFM-P22-PROG-0031` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9be73cdb2d5e73b61` | 8.9.139 | 753 |
+| `KFM-P22-PROG-0035` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `372d00212418e0a1e` | 8.9.140 | 754 |
+| `KFM-P22-PROG-0043` | programming | UNCHANGED | — | 22 → 22 | — | `d123cd8c452d7b239` | 8.9.141 | 755 |
+| `KFM-P22-PROG-0044` | programming | UNCHANGED | — | 22 → 22 | — | `27213d008328b17de` | 8.9.142 | 756 |
+| `KFM-P22-PROG-0047` | programming | UNCHANGED | — | 22 → 22 | — | `e7b5b58a3d1b47505` | 8.9.143 | 757 |
+| `KFM-P23-PROG-0001` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `d89c07e0997ae22e1` | 8.9.145 | 759 |
+| `KFM-P23-PROG-0003` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `5d0e3ecc0bd359f4e` | 8.9.146 | 760 |
+| `KFM-P23-PROG-0004` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `4878c84f13484bbfd` | 8.9.147 | 761 |
+| `KFM-P23-PROG-0012` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `36eda3f8f30be1aff` | 8.9.148 | 762 |
+| `KFM-P23-PROG-0015` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `034a3790185f9177a` | 8.9.149 | 763 |
+| `KFM-P23-PROG-0021` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `d1c0734dad70bcef7` | 8.9.150 | 764 |
+| `KFM-P23-PROG-0022` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `8d35685c803b77a58` | 8.9.151 | 765 |
+| `KFM-P23-PROG-0026` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `0b1f44ab739d7e9b4` | 8.9.152 | 766 |
+| `KFM-P23-PROG-0039` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `9e2c42d0044ff8ec3` | 8.9.153 | 767 |
+| `KFM-P23-PROG-0040` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `48d1f98bc52b31afc` | 8.9.154 | 768 |
+| `KFM-P23-PROG-0041` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `d84bbdf4b8bbd96fc` | 8.9.155 | 769 |
+| `KFM-P23-PROG-0042` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `7aea9acfa6a83f20e` | 8.9.156 | 770 |
+| `KFM-P23-PROG-0043` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `44934b8d61ac505de` | 8.9.157 | 771 |
+| `KFM-P23-PROG-0045` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `b169822e45b75f4a0` | 8.9.158 | 772 |
+| `KFM-P23-PROG-0046` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `3b04db5e5d4a04a63` | 8.9.159 | 773 |
+| `KFM-P23-PROG-0048` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `3e4e989e12d7876cb` | 8.9.160 | 774 |
+| `KFM-P23-PROG-0050` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `880aa179f7176d01f` | 8.9.161 | 775 |
+| `KFM-P23-PROG-0051` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `2d097c0fa203cad84` | 8.9.162 | 776 |
+| `KFM-P5-PROG-0009` | programming | EXPANDED | — | 5 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `6e98f43dab6aa57d2` | 8.9.163 | 777 |
+| `KFM-P6-PROG-0004` | programming | EXPANDED | — | 6 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `62b8854dac61f8604` | 8.9.165 | 779 |
+| `KFM-P6-PROG-0005` | programming | UNCHANGED | — | 6 → 21 | — | `fc244461bb27f773c` | 8.9.166 | 780 |
+| `KFM-P6-PROG-0006` | programming | UNCHANGED | — | 6 → 21 | — | `02f0279e449275ef5` | 8.9.167 | 781 |
+| `KFM-P6-PROG-0011` | programming | UNCHANGED | — | 6 → 21 | — | `5dad984dc09e64cac` | 8.9.168 | 782 |
+| `KFM-P6-PROG-0013` | programming | UNCHANGED | — | 6 → 21 | — | `964a66efb5234d8bb` | 8.9.169 | 783 |
+| `KFM-P7-PROG-0002` | programming | EXPANDED | — | 7 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `0d11ebde1e3d3630f` | 8.9.170 | 784 |
+| `KFM-P7-PROG-0009` | programming | UNCHANGED | — | 7 → 21 | — | `bb0efa0b177128bd7` | 8.9.171 | 785 |
+| `KFM-P8-PROG-0001` | programming | UNCHANGED | — | 8 → 21 | — | `6e14cc847ba137c91` | 8.9.172 | 786 |
+| `KFM-P8-PROG-0002` | programming | UNCHANGED | — | 8 → 21 | — | `4bddaf5987655a047` | 8.9.173 | 787 |
+| `KFM-P8-PROG-0003` | programming | UNCHANGED | — | 8 → 21 | — | `4918a391133cee619` | 8.9.174 | 788 |
+| `KFM-P8-PROG-0004` | programming | UNCHANGED | — | 8 → 21 | — | `208ca9fd1763926cb` | 8.9.175 | 789 |
+| `KFM-P8-PROG-0005` | programming | UNCHANGED | — | 8 → 21 | — | `3ec39762fbd9257c5` | 8.9.176 | 790 |
+| `KFM-P8-PROG-0023` | programming | EXPANDED | — | 8 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `96eccc1cfe5e57e78` | 8.9.177 | 791 |
+| `KFM-P8-PROG-0025` | programming | EXPANDED | — | 8 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `55637d7e08e4fde97` | 8.9.178 | 792 |
+| `KFM-P9-PROG-0025` | programming | UNCHANGED | — | 9 → 21 | — | `6e09c33f05efda8b4` | 8.9.179 | 793 |
+| `KFM-P9-PROG-0026` | programming | UNCHANGED | — | 9 → 21 | — | `0d0539e6e775d1092` | 8.9.180 | 794 |
+| `KFM-P9-PROG-0027` | programming | UNCHANGED | — | 9 → 21 | — | `7744ea8869808fbbc` | 8.9.181 | 795 |
+| `KFM-P9-PROG-0028` | programming | UNCHANGED | — | 9 → 9 | — | `18fe354f6281e6d06` | 8.9.182 | 796 |
+| `KFM-P9-PROG-0062` | programming | UNCHANGED | — | 9 → 12 | — | `b3f49f124ba57b13c` | 8.9.183 | 797 |
+| `KFM-P9-PROG-0063` | programming | EXPANDED | — | 9 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `f09cee75103b004bd` | 8.9.184 | 798 |
+| `KFM-P9-PROG-0064` | programming | UNCHANGED | — | 9 → 12 | — | `21fcb6a90dfa650cd` | 8.9.185 | 799 |
+| `KFM-P9-PROG-0065` | programming | UNCHANGED | — | 9 → 9 | — | `46cb70f18ab8f0230` | 8.9.186 | 800 |
+| `KFM-P9-PROG-0066` | programming | UNCHANGED | — | 9 → 9 | — | `79806f2bc602b1958` | 8.9.187 | 801 |
+| `KFM-P9-PROG-0067` | programming | UNCHANGED | — | 9 → 9 | — | `69f9e3cf677860a06` | 8.9.188 | 802 |
+| `KFM-P9-PROG-0068` | programming | EXPANDED | — | 9 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `7f572d70645defc02` | 8.9.189 | 803 |
+| `KFM-P9-PROG-0069` | programming | UNCHANGED | — | 9 → 12 | — | `e4dbd2799392ba118` | 8.9.190 | 804 |
+| `KFM-P9-PROG-0070` | programming | UNCHANGED | — | 9 → 9 | — | `287ef5908d3e01e36` | 8.9.191 | 805 |
 
-<!-- page: 206 -->
+</details>
 
-```text
-KFM-P17-FEAT-0001 | feature | REL | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:26ba6e31b24f4fbb8... | 8.11.23 |
-913
-KFM-P17-IDEA-0001 | idea | REL | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:8c664d599c5cebc70... | 8.11.24 | 914
-KFM-P17-PROG-0004 | programming | REL | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d69247f3ae11f1957... | 8.11.25
-| 915  
-KFM-P18-FEAT-0008 | feature | REL | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:9493e36f8e63095a0... | 8.11.26 |
-916
-KFM-P18-IDEA-0004 | idea | REL | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:5253e49587fa6494c... | 8.11.27 | 917
-KFM-P18-PROG-0008 | programming | REL | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:07a07505e2c7aec46... | 8.11.28
-| 918  
-KFM-P18-PROG-0012 | programming | REL | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:ba50ee64ae3bd15bb... | 8.11.29 | 919
-KFM-P18-PROG-0038 | programming | REL | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:ff2b061c0cd267423... | 8.11.30
-| 920  
-KFM-P18-PROG-0041 | programming | REL | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:222c379b25a11c6f9... | 8.11.31
-| 921  
-KFM-P19-IDEA-0010 | idea | REL | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:3b8cff9feccc6cca4... | 8.11.32 | 922
-KFM-P19-PROG-0007 | programming | REL | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:6e74fc99f9ce4a78e... | 8.11.33
-| 923  
-KFM-P19-PROG-0041 | programming | REL | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:1e4114e48ee96c319... | 8.11.34
-| 924  
-5. Machine-Readable Index (continued)
-KFM-P20-IDEA-0004 | idea | REL | UNCHANGED | active | 20 | 22 | SRC-P23-001,SRC-P23-002 | sha256:de972780ad92b3572... | 8.11.35 | 925
-KFM-P20-PROG-0018 | programming | REL | UNCHANGED | active | 20 | 22 | SRC-P23-001,SRC-P23-002 | sha256:1ca9601c1b4113c98... | 8.11.36
-| 926  
-KFM-P20-PROG-0021 | programming | REL | UNCHANGED | active | 20 | 22 | SRC-P23-001,SRC-P23-002 | sha256:41c1c152dd2b4395d... | 8.11.37
-| 927  
-KFM-P21-IDEA-0006 | idea | REL | UNCHANGED | active | 21 | 22 | SRC-P23-001,SRC-P23-002 | sha256:49badfdfcc6277656... | 8.11.38 | 928
-KFM-P21-PROG-0029 | programming | REL | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:d3a8c7f2dcaac0ff9... | 8.11.39 | 929
-KFM-P21-PROG-0033 | programming | REL | UNCHANGED | active | 21 | 22 | SRC-P23-001,SRC-P23-002 | sha256:4636030fd04686134... | 8.11.40
-| 930  
-KFM-P21-PROG-0036 | programming | REL | UNCHANGED | active | 21 | 22 | SRC-P23-001,SRC-P23-002 | sha256:4ad5d611f63b24ccc... | 8.11.41
-| 931  
-KFM-P21-PROG-0040 | programming | REL | UNCHANGED | active | 21 | 22 | SRC-P23-001,SRC-P23-002 | sha256:78dce8feb6717885a... | 8.11.42
-| 932  
-KFM-P22-IDEA-0004 | idea | REL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c3a655361f4de7a80... | 8.11.43 | 933
-KFM-P22-PROG-0012 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:2a10275a5cd1cf402... | 8.11.44
-| 934  
-KFM-P22-PROG-0025 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:a0d5687baee72acbb... | 8.11.45
-| 935  
-KFM-P22-PROG-0027 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:e12acd3289fbef655... | 8.11.46
-| 936  
-KFM-P22-PROG-0040 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:dd46c75f8c0e8a6b5... | 8.11.47
-| 937  
-KFM-P23-IDEA-0006 | idea | REL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:c078c06680b79cd5c... | 8.11.48 | 938
-KFM-P23-PROG-0017 | programming | REL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:db06ef9c7c81b37f9... | 8.11.49 | 939
-KFM-P23-PROG-0027 | programming | REL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:a89ccf3d482ab81dd... | 8.11.50 | 940
-KFM-P23-PROG-0028 | programming | REL | NEW | active | 23 | 23 | SRC-P23-003 | sha256:f99e628cb45baf7d5... | 8.11.51 | 941
-KFM-P23-PROG-0038 | programming | REL | NEW | active | 23 | 23 | SRC-P23-004 | sha256:187f23153d331a4c2... | 8.11.52 | 942
-KFM-P4-IDEA-0002 | idea | REL | UNCHANGED | active | 4 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c4dbf495029b4d97a... | 8.11.53 | 943
-KFM-P6-PROG-0007 | programming | REL | UNCHANGED | active | 6 | 22 | SRC-P23-001,SRC-P23-002 | sha256:96aa06bda52e2b51c... | 8.11.54 |
-944
-KFM-P6-PROG-0008 | programming | REL | EXPANDED | active | 6 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:2ee4cc1e539041087... | 8.11.55 | 945
-KFM-P6-PROG-0012 | programming | REL | UNCHANGED | active | 6 | 22 | SRC-P23-001,SRC-P23-002 | sha256:79c5a580b4c8a5afc... | 8.11.56 |
-946
-KFM-P7-PROG-0003 | programming | REL | UNCHANGED | active | 7 | 22 | SRC-P23-001,SRC-P23-002 | sha256:a2b2c9342bceb3311... | 8.11.57 |
-947
-KFM-P9-IDEA-0046 | idea | REL | UNCHANGED | active | 9 | 22 | SRC-P23-001,SRC-P23-002 | sha256:0b3ccf29c662020b4... | 8.11.58 | 948
-KFM-P9-IDEA-0047 | idea | REL | UNCHANGED | active | 9 | 22 | SRC-P23-001,SRC-P23-002 | sha256:87313775bb6f195de... | 8.11.59 | 949
-KFM-P9-IDEA-0048 | idea | REL | UNCHANGED | active | 9 | 22 | SRC-P23-001,SRC-P23-002 | sha256:492741c9cc5291ffd... | 8.11.60 | 950
-KFM-P9-PROG-0059 | programming | REL | UNCHANGED | active | 9 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d0c49845f8216669c... | 8.11.61 |
-951
-KFM-P9-PROG-0060 | programming | REL | UNCHANGED | active | 9 | 22 | SRC-P23-001,SRC-P23-002 | sha256:5f4b1d6f1728be892... | 8.11.62 |
-952
-KFM-P9-PROG-0061 | programming | REL | UNCHANGED | active | 9 | 22 | SRC-P23-001,SRC-P23-002 | sha256:557c027a2b59a3102... | 8.11.63 |
-953
-KFM-P1-PROG-0017 | programming | SEC | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:b7082f217c1a8fcc2... | 8.12.1 |
-955
-KFM-P1-PROG-0053 | programming | SEC | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:cfae300a3ef5add60... | 8.12.2 | 956
-KFM-P1-PROG-0054 | programming | SEC | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:9e1438a79d9cd38e3... | 8.12.3 |
-957
-KFM-P1-PROG-0055 | programming | SEC | UNCHANGED | active | 1 | 22 | SRC-P23-001,SRC-P23-002 | sha256:6a6664f31ca3e4a2f... | 8.12.4 |
-958
-KFM-P10-PROG-0005 | programming | SEC | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:a87409d3b6c984de9... | 8.12.5 | 959
-KFM-P10-PROG-0006 | programming | SEC | UNCHANGED | active | 10 | 22 | SRC-P23-001,SRC-P23-002 | sha256:97bdfdcb5c82dd90a... | 8.12.6
-| 960  
-KFM-P11-PROG-0008 | programming | SEC | UNCHANGED | active | 11 | 22 | SRC-P23-001,SRC-P23-002 | sha256:21085df545e2ef3b8... | 8.12.7
-| 961  
-KFM-P11-PROG-0023 | programming | SEC | UNCHANGED | active | 11 | 22 | SRC-P23-001,SRC-P23-002 | sha256:6224d2f7586e6b9f4... | 8.12.8
-| 962  
-KFM-P11-PROG-0028 | programming | SEC | EXPANDED | active | 11 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:3ca20e91764d447dc... | 8.12.9 | 963
-KFM-P12-PROG-0009 | programming | SEC | UNCHANGED | active | 12 | 22 | SRC-P23-001,SRC-P23-002 | sha256:0fd7639d9e6b64e29... | 8.12.10
-| 964  
-KFM-P12-PROG-0016 | programming | SEC | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1d04213f137bb574f... | 8.12.11 | 965
-KFM-P12-PROG-0017 | programming | SEC | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:04e031fdc0f1dfe5d... | 8.12.12 | 966
-KFM-P12-PROG-0024 | programming | SEC | UNCHANGED | active | 12 | 22 | SRC-P23-001,SRC-P23-002 | sha256:dc3ef553010e0782d... | 8.12.13
-| 967  
-```
+#### 5.12 POL — Policy-as-Code, Sensitivity, Rights, Sovereignty
 
-<!-- page: 207 -->
+<details>
+<summary><strong>83 cards</strong> — click to expand</summary>
 
-```text
-5. Machine-Readable Index (continued)
-KFM-P12-PROG-0031 | programming | SEC | UNCHANGED | active | 12 | 22 | SRC-P23-001,SRC-P23-002 | sha256:50ea4805d1a71738c... | 8.12.14
-| 968  
-KFM-P13-PROG-0011 | programming | SEC | UNCHANGED | active | 13 | 22 | SRC-P23-001,SRC-P23-002 | sha256:dc0c11e11434059a8... | 8.12.15
-| 969  
-KFM-P13-PROG-0031 | programming | SEC | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:726e553912108965d... | 8.12.16 | 970
-KFM-P14-IDEA-0003 | idea | SEC | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b461412600d36c615... | 8.12.17 | 971
-KFM-P14-PROG-0006 | programming | SEC | UNCHANGED | active | 14 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c9eddcfcbe014d78c... | 8.12.18
-| 972  
-KFM-P14-PROG-0018 | programming | SEC | UNCHANGED | active | 14 | 22 | SRC-P23-001,SRC-P23-002 | sha256:47e2687a7c8d98c83... | 8.12.19
-| 973  
-KFM-P14-PROG-0019 | programming | SEC | UNCHANGED | active | 14 | 22 | SRC-P23-001,SRC-P23-002 | sha256:5d4b58ee682a2bf74... | 8.12.20
-| 974  
-KFM-P14-PROG-0030 | programming | SEC | UNCHANGED | active | 14 | 22 | SRC-P23-001,SRC-P23-002 | sha256:0f2c3143416a8171c... | 8.12.21
-| 975  
-KFM-P15-PROG-0004 | programming | SEC | UNCHANGED | active | 15 | 22 | SRC-P23-001,SRC-P23-002 | sha256:2474b50c74c3c6769... | 8.12.22
-| 976  
-KFM-P15-PROG-0017 | programming | SEC | UNCHANGED | active | 15 | 22 | SRC-P23-001,SRC-P23-002 | sha256:6948b1b50e816bd86... | 8.12.23
-| 977  
-KFM-P15-PROG-0031 | programming | SEC | UNCHANGED | active | 15 | 22 | SRC-P23-001,SRC-P23-002 | sha256:28414b75a0485a5df... | 8.12.24
-| 978  
-KFM-P15-PROG-0039 | programming | SEC | UNCHANGED | active | 15 | 22 | SRC-P23-001,SRC-P23-002 | sha256:e87ef474ea68559e6... | 8.12.25
-| 979  
-KFM-P16-PROG-0002 | programming | SEC | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c2c5fadb1fae61790... | 8.12.26
-| 980  
-KFM-P16-PROG-0004 | programming | SEC | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d52df5f06eb3a22c7... | 8.12.27
-| 981  
-KFM-P16-PROG-0005 | programming | SEC | EXPANDED | active | 16 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:810f332d4de805820... | 8.12.28 | 982
-KFM-P16-PROG-0014 | programming | SEC | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:4068fa6ab9a0a2aec... | 8.12.29
-| 983  
-KFM-P16-PROG-0034 | programming | SEC | UNCHANGED | active | 16 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c5f334ff882185945... | 8.12.30
-| 984  
-KFM-P17-PROG-0005 | programming | SEC | EXPANDED | active | 17 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:1e028434c094dc453... | 8.12.31 | 985
-KFM-P17-PROG-0016 | programming | SEC | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:37b7f0a3a3daae0df... | 8.12.32
-| 986  
-KFM-P17-PROG-0020 | programming | SEC | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:934243f4317cb4107... | 8.12.33
-| 987  
-KFM-P17-PROG-0037 | programming | SEC | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:9e2e2f5c4adb18933... | 8.12.34
-| 988  
-KFM-P18-FEAT-0006 | feature | SEC | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:09a3e0dccefcd0fe8... | 8.12.35 |
-989
-KFM-P18-IDEA-0007 | idea | SEC | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b3c28b65e5b35a863... | 8.12.36 | 990
-KFM-P18-PROG-0002 | programming | SEC | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:62274d5e71122d9c7... | 8.12.37
-| 991  
-KFM-P18-PROG-0026 | programming | SEC | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3113d13b9ef7fee16... | 8.12.38
-| 992  
-KFM-P18-PROG-0029 | programming | SEC | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:30d5d8a987ae410a4... | 8.12.39
-| 993  
-KFM-P18-PROG-0030 | programming | SEC | UNCHANGED | active | 18 | 22 | SRC-P23-001,SRC-P23-002 | sha256:e49771eb1aab8a3f1... | 8.12.40
-| 994  
-KFM-P19-FEAT-0007 | feature | SEC | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:75e6b4c1db8b648d1... | 8.12.41 |
-995
-KFM-P19-IDEA-0002 | idea | SEC | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:ea4647bb113948775... | 8.12.42 | 996
-KFM-P19-PROG-0002 | programming | SEC | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d21d67c78eedfeb26... | 8.12.43
-| 997  
-KFM-P19-PROG-0011 | programming | SEC | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:561240c9f79e1f2a6... | 8.12.44
-| 998  
-KFM-P19-PROG-0024 | programming | SEC | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:2523bf8adfcd08e9e... | 8.12.45
-| 999  
-KFM-P19-PROG-0026 | programming | SEC | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:948817a2ddd1e5310... | 8.12.46
-| 1000  
-KFM-P19-PROG-0038 | programming | SEC | UNCHANGED | active | 19 | 22 | SRC-P23-001,SRC-P23-002 | sha256:2fd592eebd8816af9... | 8.12.47
-| 1001  
-KFM-P20-PROG-0027 | programming | SEC | UNCHANGED | active | 20 | 22 | SRC-P23-001,SRC-P23-002 | sha256:bd5713005beaeb215... | 8.12.48
-| 1002  
-KFM-P21-PROG-0004 | programming | SEC | EXPANDED | active | 21 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:161ac42334fc04a4f... | 8.12.49 | 1003
-KFM-P21-PROG-0037 | programming | SEC | UNCHANGED | active | 21 | 22 | SRC-P23-001,SRC-P23-002 | sha256:ba12f9bcd5bbfd5b2... | 8.12.50
-| 1004  
-KFM-P22-IDEA-0001 | idea | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:646a1d10ed0e3495e... | 8.12.51 | 1005
-KFM-P22-PROG-0004 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:d41aa2ca046c88277... | 8.12.52
-| 1006  
-KFM-P22-PROG-0009 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:2f892c5e7b9765f96... | 8.12.53
-| 1007  
-KFM-P22-PROG-0019 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c8a1a164fd0c2f486... | 8.12.54
-| 1008  
-KFM-P22-PROG-0023 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:65a1c98a9c137c43b... | 8.12.55
-| 1009  
-5. Machine-Readable Index (continued)
-KFM-P22-PROG-0024 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:e3e1b4a222b95bbe6... | 8.12.56
-| 1010  
-KFM-P22-PROG-0028 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:1594bfb8d90eddf0d... | 8.12.57
-| 1011  
-KFM-P22-PROG-0029 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3479bfcea6fa95a17... | 8.12.58
-| 1012  
-KFM-P22-PROG-0033 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:80ddb37fb7d657715... | 8.12.59
-| 1013  
-KFM-P22-PROG-0052 | programming | SEC | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:8c441e0a2fda2b382... | 8.12.60
-| 1014  
-KFM-P23-IDEA-0002 | idea | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:e95fd2ac507fb8253... | 8.12.61 | 1015
-```
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P14-FEAT-0002` | feature | UNCHANGED | — | 14 → 14 | — | `11d41303da96a4502` | 8.10.16 | 822 |
+| `KFM-P9-FEAT-0004` | feature | UNCHANGED | — | 9 → 9 | — | `ee4c9a5899a2945f0` | 8.10.78 | 884 |
+| `KFM-P1-IDEA-0031` | idea | UNCHANGED | — | 1 → 12 | — | `f061921012c5a9275` | 8.10.1 | 807 |
+| `KFM-P1-IDEA-0033` | idea | UNCHANGED | — | 1 → 7 | — | `3566465aa303e5470` | 8.10.2 | 808 |
+| `KFM-P1-IDEA-0034` | idea | UNCHANGED | — | 1 → 1 | — | `815c762afdf95be36` | 8.10.3 | 809 |
+| `KFM-P1-IDEA-0036` | idea | UNCHANGED | — | 1 → 12 | — | `722da0b62be6de1cd` | 8.10.4 | 810 |
+| `KFM-P1-IDEA-0037` | idea | UNCHANGED | — | 1 → 12 | — | `aea8d668b7e7d6c1a` | 8.10.5 | 811 |
+| `KFM-P10-IDEA-0001` | idea | UNCHANGED | — | 10 → 10 | — | `151107d11c014b370` | 8.10.8 | 814 |
+| `KFM-P16-IDEA-0004` | idea | EXPANDED | — | 16 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e31bfb22ec5435662` | 8.10.22 | 828 |
+| `KFM-P17-IDEA-0006` | idea | UNCHANGED | — | 17 → 19 | — | `f19b6f6836b33f62a` | 8.10.29 | 835 |
+| `KFM-P18-IDEA-0005` | idea | UNCHANGED | — | 18 → 19 | — | `a5e7e0692a8dbe555` | 8.10.38 | 844 |
+| `KFM-P19-IDEA-0003` | idea | UNCHANGED | — | 19 → 19 | — | `b5b2b687274d37864` | 8.10.43 | 849 |
+| `KFM-P19-IDEA-0004` | idea | UNCHANGED | — | 19 → 19 | — | `a6f10821e36b45588` | 8.10.44 | 850 |
+| `KFM-P19-IDEA-0009` | idea | UNCHANGED | — | 19 → 19 | — | `e87901692bed52417` | 8.10.45 | 851 |
+| `KFM-P2-IDEA-0015` | idea | UNCHANGED | — | 2 → 2 | — | `8d8948c09ea8d1409` | 8.10.52 | 858 |
+| `KFM-P21-IDEA-0003` | idea | UNCHANGED | — | 21 → 21 | — | `87ea45567b80e767c` | 8.10.57 | 863 |
+| `KFM-P3-IDEA-0003` | idea | UNCHANGED | — | 3 → 14 | — | `3b6535eaccccd2e40` | 8.10.72 | 878 |
+| `KFM-P9-IDEA-0016` | idea | UNCHANGED | — | 9 → 9 | — | `9597503b328f94aee` | 8.10.79 | 885 |
+| `KFM-P9-IDEA-0017` | idea | UNCHANGED | — | 9 → 9 | — | `cc2dd3c4c1fc9228a` | 8.10.80 | 886 |
+| `KFM-P9-IDEA-0018` | idea | UNCHANGED | — | 9 → 9 | — | `d4aee151d2c21ef49` | 8.10.81 | 887 |
+| `KFM-P9-IDEA-0019` | idea | UNCHANGED | — | 9 → 9 | — | `e2ba1b7400d494f91` | 8.10.82 | 888 |
+| `KFM-P9-IDEA-0020` | idea | UNCHANGED | — | 9 → 9 | — | `95149732e00b424e6` | 8.10.83 | 889 |
+| `KFM-P1-PROG-0032` | programming | UNCHANGED | — | 1 → 12 | — | `99c642d06eba2f1d2` | 8.10.6 | 812 |
+| `KFM-P1-PROG-0035` | programming | UNCHANGED | — | 1 → 19 | — | `87b0f74bd4397f392` | 8.10.7 | 813 |
+| `KFM-P10-PROG-0014` | programming | UNCHANGED | — | 10 → 12 | — | `1cb199b2cd3f50d21` | 8.10.9 | 815 |
+| `KFM-P11-PROG-0024` | programming | UNCHANGED | — | 11 → 12 | — | `4524aba783dc90ee6` | 8.10.10 | 816 |
+| `KFM-P11-PROG-0025` | programming | UNCHANGED | — | 11 → 12 | — | `987dc608ab6e059c7` | 8.10.11 | 817 |
+| `KFM-P12-PROG-0019` | programming | UNCHANGED | — | 12 → 20 | — | `8a65a1d99f46341c9` | 8.10.12 | 818 |
+| `KFM-P12-PROG-0025` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `130afefe7bfdc5f4b` | 8.10.13 | 819 |
+| `KFM-P13-PROG-0018` | programming | UNCHANGED | — | 13 → 20 | — | `262bfce965931f62e` | 8.10.14 | 820 |
+| `KFM-P13-PROG-0019` | programming | UNCHANGED | — | 13 → 14 | — | `fb1dc32d3b6e6aae7` | 8.10.15 | 821 |
+| `KFM-P14-PROG-0001` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `323a839b50f5c4bd1` | 8.10.17 | 823 |
+| `KFM-P14-PROG-0038` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `165dea2aa243c83ad` | 8.10.18 | 824 |
+| `KFM-P14-PROG-0039` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `34867d101f20c3994` | 8.10.19 | 825 |
+| `KFM-P15-PROG-0025` | programming | UNCHANGED | — | 15 → 20 | — | `102f6e09dc11ec871` | 8.10.20 | 826 |
+| `KFM-P15-PROG-0034` | programming | UNCHANGED | — | 15 → 15 | — | `60213b7b245356ad8` | 8.10.21 | 827 |
+| `KFM-P16-PROG-0009` | programming | UNCHANGED | — | 16 → 16 | — | `f89895601744ed768` | 8.10.23 | 829 |
+| `KFM-P16-PROG-0011` | programming | EXPANDED | — | 16 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `565d792ad7ddc0dd5` | 8.10.24 | 830 |
+| `KFM-P16-PROG-0016` | programming | UNCHANGED | — | 16 → 16 | — | `9c34fd3d144fa3f1b` | 8.10.25 | 831 |
+| `KFM-P16-PROG-0026` | programming | EXPANDED | — | 16 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `d431c59ec2ceb686a` | 8.10.26 | 832 |
+| `KFM-P16-PROG-0033` | programming | EXPANDED | — | 16 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `0f6c07aab62939180` | 8.10.27 | 833 |
+| `KFM-P16-PROG-0037` | programming | UNCHANGED | — | 16 → 20 | — | `f2ee8fcd4d9102f87` | 8.10.28 | 834 |
+| `KFM-P17-PROG-0002` | programming | UNCHANGED | — | 17 → 19 | — | `bf219a22f2953c80a` | 8.10.30 | 836 |
+| `KFM-P17-PROG-0017` | programming | UNCHANGED | — | 17 → 18 | — | `cff0c408de7a27fe0` | 8.10.31 | 837 |
+| `KFM-P17-PROG-0018` | programming | UNCHANGED | — | 17 → 17 | — | `e6e878c776f3b1431` | 8.10.32 | 838 |
+| `KFM-P17-PROG-0022` | programming | UNCHANGED | — | 17 → 18 | — | `62bad56608a887ce1` | 8.10.33 | 839 |
+| `KFM-P17-PROG-0025` | programming | UNCHANGED | — | 17 → 18 | — | `d854e24d70c1e8211` | 8.10.34 | 840 |
+| `KFM-P17-PROG-0027` | programming | UNCHANGED | — | 17 → 19 | — | `ff8ce2c6089a0a63d` | 8.10.35 | 841 |
+| `KFM-P17-PROG-0032` | programming | UNCHANGED | — | 17 → 20 | — | `4f9c504c6b11a6540` | 8.10.36 | 842 |
+| `KFM-P17-PROG-0040` | programming | UNCHANGED | — | 17 → 18 | — | `63f65e446fcde1c88` | 8.10.37 | 843 |
+| `KFM-P18-PROG-0005` | programming | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `02004c5e865de9697` | 8.10.39 | 845 |
+| `KFM-P18-PROG-0024` | programming | UNCHANGED | — | 18 → 19 | — | `f00730170f364f068` | 8.10.40 | 846 |
+| `KFM-P18-PROG-0025` | programming | UNCHANGED | — | 18 → 18 | — | `6052f8e4fe5ca41bf` | 8.10.41 | 847 |
+| `KFM-P18-PROG-0028` | programming | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `681eec2fe714d4e86` | 8.10.42 | 848 |
+| `KFM-P19-PROG-0006` | programming | UNCHANGED | — | 19 → 19 | — | `460539d5fe40c5284` | 8.10.46 | 852 |
+| `KFM-P19-PROG-0009` | programming | UNCHANGED | — | 19 → 20 | — | `a28b3f0c7bb9b35a5` | 8.10.47 | 853 |
+| `KFM-P19-PROG-0010` | programming | UNCHANGED | — | 19 → 19 | — | `b320850c52377b689` | 8.10.48 | 854 |
+| `KFM-P19-PROG-0013` | programming | UNCHANGED | — | 19 → 19 | — | `ec7cfbd7e64854b3c` | 8.10.49 | 855 |
+| `KFM-P19-PROG-0025` | programming | UNCHANGED | — | 19 → 19 | — | `c36b212be9835fcae` | 8.10.50 | 856 |
+| `KFM-P19-PROG-0030` | programming | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b7b474016f23f2ae6` | 8.10.51 | 857 |
+| `KFM-P20-PROG-0016` | programming | UNCHANGED | — | 20 → 20 | — | `87fb6b8ef70012763` | 8.10.53 | 859 |
+| `KFM-P20-PROG-0017` | programming | EXPANDED | — | 20 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `d2027c4c7f6b76a42` | 8.10.54 | 860 |
+| `KFM-P20-PROG-0022` | programming | UNCHANGED | — | 20 → 20 | — | `f60734f67c351b1e0` | 8.10.55 | 861 |
+| `KFM-P20-PROG-0033` | programming | UNCHANGED | — | 20 → 20 | — | `04facb8ed6fd52322` | 8.10.56 | 862 |
+| `KFM-P21-PROG-0009` | programming | UNCHANGED | — | 21 → 21 | — | `8a1effe69ac57a832` | 8.10.58 | 864 |
+| `KFM-P21-PROG-0012` | programming | UNCHANGED | — | 21 → 21 | — | `52027fd31e9d11492` | 8.10.59 | 865 |
+| `KFM-P21-PROG-0049` | programming | UNCHANGED | — | 21 → 21 | — | `cf8f4df3eac435b71` | 8.10.60 | 866 |
+| `KFM-P22-PROG-0007` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `639d037dd80ead91a` | 8.10.61 | 867 |
+| `KFM-P22-PROG-0015` | programming | UNCHANGED | — | 22 → 22 | — | `aa89e5f6c16396c7b` | 8.10.62 | 868 |
+| `KFM-P22-PROG-0021` | programming | EXPANDED | — | 22 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9e15186c246e51080` | 8.10.63 | 869 |
+| `KFM-P22-PROG-0032` | programming | UNCHANGED | — | 22 → 22 | — | `c821ab6ecd41539a6` | 8.10.64 | 870 |
+| `KFM-P22-PROG-0048` | programming | UNCHANGED | — | 22 → 22 | — | `3d433bfdcc15ce103` | 8.10.65 | 871 |
+| `KFM-P23-PROG-0002` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `cd10384a80303758c` | 8.10.66 | 872 |
+| `KFM-P23-PROG-0010` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `f63e0ce0a4d52eaec` | 8.10.67 | 873 |
+| `KFM-P23-PROG-0011` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `c592a5be5674f16c8` | 8.10.68 | 874 |
+| `KFM-P23-PROG-0014` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `d77feb2ad5f3c3a9c` | 8.10.69 | 875 |
+| `KFM-P23-PROG-0024` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `381999dadce97b27e` | 8.10.70 | 876 |
+| `KFM-P23-PROG-0044` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `12e925143c4688988` | 8.10.71 | 877 |
+| `KFM-P5-PROG-0001` | programming | EXPANDED | — | 5 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `c38ca1efdabed0bfe` | 8.10.73 | 879 |
+| `KFM-P5-PROG-0005` | programming | UNCHANGED | — | 5 → 20 | — | `f0d19a76e76fc6dc1` | 8.10.74 | 880 |
+| `KFM-P5-PROG-0006` | programming | UNCHANGED | — | 5 → 7 | — | `62a64da20573b17e7` | 8.10.75 | 881 |
+| `KFM-P5-PROG-0007` | programming | EXPANDED | — | 5 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `217787ba724356088` | 8.10.76 | 882 |
+| `KFM-P7-PROG-0004` | programming | UNCHANGED | — | 7 → 7 | — | `4ff39808e108d6b2a` | 8.10.77 | 883 |
 
-<!-- page: 208 -->
+</details>
 
-```text
-KFM-P23-PROG-0006 | programming | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:9f7a954a08f38ee12... | 8.12.62 | 1016
-KFM-P23-PROG-0007 | programming | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:f282ff21a1f2cb88b... | 8.12.63 | 1017
-KFM-P23-PROG-0008 | programming | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:7df9763371bc14470... | 8.12.64 | 1018
-KFM-P4-PROG-0003 | programming | SEC | UNCHANGED | active | 4 | 22 | SRC-P23-001,SRC-P23-002 | sha256:31a587ad44dd49972... | 8.12.65 |
-1019
-KFM-P5-FEAT-0001 | feature | SEC | EXPANDED | active | 5 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:15c6fac51b0bcc372... | 8.12.66 | 1020
-KFM-P5-PROG-0002 | programming | SEC | UNCHANGED | active | 5 | 22 | SRC-P23-001,SRC-P23-002 | sha256:6fd910db6e78c0612... | 8.12.67 |
-1021
-KFM-P5-PROG-0010 | programming | SEC | UNCHANGED | active | 5 | 22 | SRC-P23-001,SRC-P23-002 | sha256:a8f3a10d0c3ccbc7a... | 8.12.68 |
-1022
-KFM-P5-PROG-0013 | programming | SEC | UNCHANGED | active | 5 | 22 | SRC-P23-001,SRC-P23-002 | sha256:ffb1c698246a0afbc... | 8.12.69 |
-1023
-KFM-P6-PROG-0010 | programming | SEC | EXPANDED | active | 6 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:6d4d0f4ce581e8a47... | 8.12.70 | 1024
-KFM-P7-PROG-0005 | programming | SEC | UNCHANGED | active | 7 | 22 | SRC-P23-001,SRC-P23-002 | sha256:4bf2b76564a9dc020... | 8.12.71 |
-1025
-KFM-P8-IDEA-0002 | idea | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:fb920c9e79fc060df... | 8.12.72 | 1026
-KFM-P8-PROG-0007 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c27c18093bdfdc5c7... | 8.12.73 |
-1027
-KFM-P8-PROG-0008 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:9b7369cd62e6a8ed1... | 8.12.74 |
-1028
-KFM-P8-PROG-0009 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:7c6fd1da11744ad58... | 8.12.75 |
-1029
-KFM-P8-PROG-0010 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:7dbc2017c026973c9... | 8.12.76 |
-1030
-KFM-P8-PROG-0011 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c6ae06a1317e0ab86... | 8.12.77 |
-1031
-KFM-P8-PROG-0012 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3956e11dfa0226920... | 8.12.78 |
-1032
-KFM-P8-PROG-0013 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:8c40e4f9cfcc22fa8... | 8.12.79 |
-1033
-KFM-P8-PROG-0014 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:90266fed9225aab36... | 8.12.80 |
-1034
-KFM-P8-PROG-0015 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:bf33b1d5597fd0533... | 8.12.81 |
-1035
-KFM-P8-PROG-0016 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:632790a7ac6756683... | 8.12.82 |
-1036
-KFM-P8-PROG-0017 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:15994064023fc8564... | 8.12.83 |
-1037
-KFM-P8-PROG-0018 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:3c6fd3a181110f7e6... | 8.12.84 |
-1038
-KFM-P8-PROG-0021 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:ea85e2f6a864e0861... | 8.12.85 |
-1039
-KFM-P8-PROG-0026 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:e1fb1bcb48d085810... | 8.12.86 |
-1040
-KFM-P8-PROG-0027 | programming | SEC | UNCHANGED | active | 8 | 22 | SRC-P23-001,SRC-P23-002 | sha256:34327b26d8c675aca... | 8.12.87 |
-1041
-KFM-P1-FEAT-0065 | feature | UIX | UNCHANGED | active | 1 | 13 | SRC-P23-001,SRC-P23-002 | sha256:b862976ed5d936d4d... | 8.13.1 | 1043
-KFM-P1-FEAT-0066 | feature | UIX | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:794b5dea68a9b9a87... | 8.13.2 | 1044
-KFM-P1-FEAT-0067 | feature | UIX | EXPANDED | active | 1 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:89b57eb97081b6d6e... | 8.13.3 | 1045
-KFM-P1-FEAT-0068 | feature | UIX | UNCHANGED | active | 1 | 14 | SRC-P23-001,SRC-P23-002 | sha256:b706f34af221f8677... | 8.13.4 | 1046
-KFM-P1-FEAT-0074 | feature | UIX | UNCHANGED | active | 1 | 17 | SRC-P23-001,SRC-P23-002 | sha256:a11be012dfcf60a4b... | 8.13.5 | 1047
-KFM-P10-FEAT-0002 | feature | UIX | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:039ff18adf5c3c858... | 8.13.6 |
-1048
-KFM-P11-PROG-0003 | programming | UIX | UNCHANGED | active | 11 | 11 | SRC-P23-001,SRC-P23-002 | sha256:45cde69ae20d5d434... | 8.13.7
-| 1049  
-KFM-P11-PROG-0022 | programming | UIX | UNCHANGED | active | 11 | 15 | SRC-P23-001,SRC-P23-002 | sha256:710bb28cc4d4f36ef... | 8.13.8
-| 1050  
-KFM-P12-FEAT-0001 | feature | UIX | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:f305e8a79bdfbdaae... | 8.13.9 | 1051
-KFM-P12-FEAT-0002 | feature | UIX | EXPANDED | active | 12 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b0f6f716d70315c56... | 8.13.10 | 1052
-5. Machine-Readable Index (continued)
-KFM-P13-FEAT-0001 | feature | UIX | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:5acb9adf122a51992... | 8.13.11 |
-1053
-KFM-P13-FEAT-0002 | feature | UIX | UNCHANGED | active | 13 | 13 | SRC-P23-001,SRC-P23-002 | sha256:abe7c12bb79a9e666... | 8.13.12 |
-1054
-KFM-P13-FEAT-0003 | feature | UIX | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:71a78d7e1a2d5ebe5... | 8.13.13 | 1055
-KFM-P14-FEAT-0001 | feature | UIX | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:c3100b2a7b0ad25d7... | 8.13.14 | 1056
-KFM-P14-PROG-0040 | programming | UIX | EXPANDED | active | 14 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:fdec229654a0e0e64... | 8.13.15 | 1057
-KFM-P15-FEAT-0001 | feature | UIX | UNCHANGED | active | 15 | 17 | SRC-P23-001,SRC-P23-002 | sha256:571723837516e820d... | 8.13.16 |
-1058
-KFM-P15-FEAT-0002 | feature | UIX | UNCHANGED | active | 15 | 16 | SRC-P23-001,SRC-P23-002 | sha256:11dcdde2ce1ded9e6... | 8.13.17 |
-1059
-KFM-P15-PROG-0008 | programming | UIX | UNCHANGED | active | 15 | 15 | SRC-P23-001,SRC-P23-002 | sha256:ce88d1b9cd02c975d... | 8.13.18
-| 1060  
-KFM-P16-FEAT-0002 | feature | UIX | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:ffdcf5f2bbaccbd02... | 8.13.19 |
-1061
-KFM-P16-FEAT-0003 | feature | UIX | UNCHANGED | active | 16 | 16 | SRC-P23-001,SRC-P23-002 | sha256:77bc209f632dc4cca... | 8.13.20 |
-1062
-KFM-P17-FEAT-0002 | feature | UIX | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:f439fc1078464853f... | 8.13.21 |
-1063
-KFM-P17-FEAT-0003 | feature | UIX | UNCHANGED | active | 17 | 17 | SRC-P23-001,SRC-P23-002 | sha256:23517d3617f7d2778... | 8.13.22 |
-1064
-KFM-P18-FEAT-0001 | feature | UIX | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:deff15273f68641d6... | 8.13.23 |
-1065
-KFM-P18-FEAT-0003 | feature | UIX | UNCHANGED | active | 18 | 18 | SRC-P23-001,SRC-P23-002 | sha256:aa216a70a33bca97b... | 8.13.24 |
-1066
-KFM-P18-FEAT-0004 | feature | UIX | EXPANDED | active | 18 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:9f8afd37f30ef34d6... | 8.13.25 | 1067
-```
+#### 5.13 REL — Catalog Closure, Publication, Release, Rollback, Recompile
 
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 17: pages 209–211 -->
+<details>
+<summary><strong>63 cards</strong> — click to expand</summary>
 
-<!-- page: 209 -->
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P16-FEAT-0001` | feature | UNCHANGED | — | 16 → 22 | — | `b36df507ac1fcb86e` | 8.11.18 | 908 |
+| `KFM-P17-FEAT-0001` | feature | UNCHANGED | — | 17 → 22 | — | `26ba6e31b24f4fbb8` | 8.11.23 | 913 |
+| `KFM-P18-FEAT-0008` | feature | UNCHANGED | — | 18 → 22 | — | `9493e36f8e63095a0` | 8.11.26 | 916 |
+| `KFM-P1-IDEA-0056` | idea | UNCHANGED | — | 1 → 22 | — | `947ffb8e9fbdaf81d` | 8.11.1 | 891 |
+| `KFM-P1-IDEA-0059` | idea | UNCHANGED | — | 1 → 22 | — | `e47352802492a211d` | 8.11.2 | 892 |
+| `KFM-P12-IDEA-0004` | idea | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1c8f2f0541b60d6ca` | 8.11.7 | 897 |
+| `KFM-P13-IDEA-0001` | idea | UNCHANGED | — | 13 → 22 | — | `70f200dd1f393f295` | 8.11.10 | 900 |
+| `KFM-P16-IDEA-0001` | idea | UNCHANGED | — | 16 → 22 | — | `7e016704f681270b7` | 8.11.19 | 909 |
+| `KFM-P16-IDEA-0005` | idea | UNCHANGED | — | 16 → 22 | — | `344ac0e1559e3d9c9` | 8.11.20 | 910 |
+| `KFM-P17-IDEA-0001` | idea | UNCHANGED | — | 17 → 22 | — | `8c664d599c5cebc70` | 8.11.24 | 914 |
+| `KFM-P18-IDEA-0004` | idea | UNCHANGED | — | 18 → 22 | — | `5253e49587fa6494c` | 8.11.27 | 917 |
+| `KFM-P19-IDEA-0010` | idea | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `3b8cff9feccc6cca4` | 8.11.32 | 922 |
+| `KFM-P20-IDEA-0004` | idea | UNCHANGED | — | 20 → 22 | — | `de972780ad92b3572` | 8.11.35 | 925 |
+| `KFM-P21-IDEA-0006` | idea | UNCHANGED | — | 21 → 22 | — | `49badfdfcc6277656` | 8.11.38 | 928 |
+| `KFM-P22-IDEA-0004` | idea | UNCHANGED | — | 22 → 22 | — | `c3a655361f4de7a80` | 8.11.43 | 933 |
+| `KFM-P23-IDEA-0006` | idea | NEW | — | 23 → 23 | `SRC-P23-003` | `c078c06680b79cd5c` | 8.11.48 | 938 |
+| `KFM-P4-IDEA-0002` | idea | UNCHANGED | — | 4 → 22 | — | `c4dbf495029b4d97a` | 8.11.53 | 943 |
+| `KFM-P9-IDEA-0046` | idea | UNCHANGED | — | 9 → 22 | — | `0b3ccf29c662020b4` | 8.11.58 | 948 |
+| `KFM-P9-IDEA-0047` | idea | UNCHANGED | — | 9 → 22 | — | `87313775bb6f195de` | 8.11.59 | 949 |
+| `KFM-P9-IDEA-0048` | idea | UNCHANGED | — | 9 → 22 | — | `492741c9cc5291ffd` | 8.11.60 | 950 |
+| `KFM-P1-PROG-0057` | programming | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9e38eb46529b49aee` | 8.11.3 | 893 |
+| `KFM-P1-PROG-0058` | programming | UNCHANGED | — | 1 → 22 | — | `7f07f076198ce92d9` | 8.11.4 | 894 |
+| `KFM-P1-PROG-0060` | programming | UNCHANGED | — | 1 → 22 | — | `f2406148ffe6ce40b` | 8.11.5 | 895 |
+| `KFM-P11-PROG-0027` | programming | EXPANDED | — | 11 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `189fbffc1dc98a562` | 8.11.6 | 896 |
+| `KFM-P12-PROG-0008` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `e30c14cfe16a55e4c` | 8.11.8 | 898 |
+| `KFM-P12-PROG-0014` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `c7660ff54208d1936` | 8.11.9 | 899 |
+| `KFM-P13-PROG-0002` | programming | UNCHANGED | — | 13 → 22 | — | `0739444ce360f3389` | 8.11.11 | 901 |
+| `KFM-P13-PROG-0003` | programming | UNCHANGED | — | 13 → 22 | — | `a00edd28ea309757a` | 8.11.12 | 902 |
+| `KFM-P13-PROG-0020` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `3b0d7aa7c7365166c` | 8.11.13 | 903 |
+| `KFM-P13-PROG-0028` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `20f9825582d8f504f` | 8.11.14 | 904 |
+| `KFM-P14-PROG-0031` | programming | UNCHANGED | — | 14 → 22 | — | `69201f2c7b456b07f` | 8.11.15 | 905 |
+| `KFM-P14-PROG-0033` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1403d67ce4ffb2d95` | 8.11.16 | 906 |
+| `KFM-P15-PROG-0032` | programming | EXPANDED | — | 15 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `038a58607136e55bc` | 8.11.17 | 907 |
+| `KFM-P16-PROG-0021` | programming | UNCHANGED | — | 16 → 22 | — | `d86c00a96d8ce42bc` | 8.11.21 | 911 |
+| `KFM-P16-PROG-0036` | programming | UNCHANGED | — | 16 → 22 | — | `97e7a49c1cc1d2305` | 8.11.22 | 912 |
+| `KFM-P17-PROG-0004` | programming | UNCHANGED | — | 17 → 22 | — | `d69247f3ae11f1957` | 8.11.25 | 915 |
+| `KFM-P18-PROG-0008` | programming | UNCHANGED | — | 18 → 22 | — | `07a07505e2c7aec46` | 8.11.28 | 918 |
+| `KFM-P18-PROG-0012` | programming | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `ba50ee64ae3bd15bb` | 8.11.29 | 919 |
+| `KFM-P18-PROG-0038` | programming | UNCHANGED | — | 18 → 22 | — | `ff2b061c0cd267423` | 8.11.30 | 920 |
+| `KFM-P18-PROG-0041` | programming | UNCHANGED | — | 18 → 22 | — | `222c379b25a11c6f9` | 8.11.31 | 921 |
+| `KFM-P19-PROG-0007` | programming | UNCHANGED | — | 19 → 22 | — | `6e74fc99f9ce4a78e` | 8.11.33 | 923 |
+| `KFM-P19-PROG-0041` | programming | UNCHANGED | — | 19 → 22 | — | `1e4114e48ee96c319` | 8.11.34 | 924 |
+| `KFM-P20-PROG-0018` | programming | UNCHANGED | — | 20 → 22 | — | `1ca9601c1b4113c98` | 8.11.36 | 926 |
+| `KFM-P20-PROG-0021` | programming | UNCHANGED | — | 20 → 22 | — | `41c1c152dd2b4395d` | 8.11.37 | 927 |
+| `KFM-P21-PROG-0029` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `d3a8c7f2dcaac0ff9` | 8.11.39 | 929 |
+| `KFM-P21-PROG-0033` | programming | UNCHANGED | — | 21 → 22 | — | `4636030fd04686134` | 8.11.40 | 930 |
+| `KFM-P21-PROG-0036` | programming | UNCHANGED | — | 21 → 22 | — | `4ad5d611f63b24ccc` | 8.11.41 | 931 |
+| `KFM-P21-PROG-0040` | programming | UNCHANGED | — | 21 → 22 | — | `78dce8feb6717885a` | 8.11.42 | 932 |
+| `KFM-P22-PROG-0012` | programming | UNCHANGED | — | 22 → 22 | — | `2a10275a5cd1cf402` | 8.11.44 | 934 |
+| `KFM-P22-PROG-0025` | programming | UNCHANGED | — | 22 → 22 | — | `a0d5687baee72acbb` | 8.11.45 | 935 |
+| `KFM-P22-PROG-0027` | programming | UNCHANGED | — | 22 → 22 | — | `e12acd3289fbef655` | 8.11.46 | 936 |
+| `KFM-P22-PROG-0040` | programming | UNCHANGED | — | 22 → 22 | — | `dd46c75f8c0e8a6b5` | 8.11.47 | 937 |
+| `KFM-P23-PROG-0017` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `db06ef9c7c81b37f9` | 8.11.49 | 939 |
+| `KFM-P23-PROG-0027` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `a89ccf3d482ab81dd` | 8.11.50 | 940 |
+| `KFM-P23-PROG-0028` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `f99e628cb45baf7d5` | 8.11.51 | 941 |
+| `KFM-P23-PROG-0038` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `187f23153d331a4c2` | 8.11.52 | 942 |
+| `KFM-P6-PROG-0007` | programming | UNCHANGED | — | 6 → 22 | — | `96aa06bda52e2b51c` | 8.11.54 | 944 |
+| `KFM-P6-PROG-0008` | programming | EXPANDED | — | 6 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `2ee4cc1e539041087` | 8.11.55 | 945 |
+| `KFM-P6-PROG-0012` | programming | UNCHANGED | — | 6 → 22 | — | `79c5a580b4c8a5afc` | 8.11.56 | 946 |
+| `KFM-P7-PROG-0003` | programming | UNCHANGED | — | 7 → 22 | — | `a2b2c9342bceb3311` | 8.11.57 | 947 |
+| `KFM-P9-PROG-0059` | programming | UNCHANGED | — | 9 → 22 | — | `d0c49845f8216669c` | 8.11.61 | 951 |
+| `KFM-P9-PROG-0060` | programming | UNCHANGED | — | 9 → 22 | — | `5f4b1d6f1728be892` | 8.11.62 | 952 |
+| `KFM-P9-PROG-0061` | programming | UNCHANGED | — | 9 → 22 | — | `557c027a2b59a3102` | 8.11.63 | 953 |
 
-```text
-KFM-P18-FEAT-0005 | feature | UIX | UNCHANGED | active | 18 | 19 | SRC-P23-001,SRC-P23-002 | sha256:5bbb027125728a6cf... | 8.13.26 |
-1068
-KFM-P19-FEAT-0001 | feature | UIX | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:392a8465dfeaebceb... | 8.13.27 | 1069
-KFM-P19-FEAT-0002 | feature | UIX | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:719efafd838515209... | 8.13.28 |
-1070
-KFM-P19-FEAT-0004 | feature | UIX | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
-sha256:b60ae552f2f60808d... | 8.13.29 | 1071
-KFM-P20-FEAT-0001 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:0f56bca2818f863d0... | 8.13.30 |
-1072
-KFM-P20-FEAT-0002 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:eda0cddd864a5d588... | 8.13.31 |
-1073
-KFM-P20-FEAT-0004 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:17de33360e5d33a76... | 8.13.32 |
-1074
-KFM-P20-FEAT-0006 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:28a938c43479b7e63... | 8.13.33 |
-1075
-KFM-P20-FEAT-0008 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:f0f2eafa9d2fe62dd... | 8.13.34 |
-1076
-KFM-P20-PROG-0040 | programming | UIX | UNCHANGED | active | 20 | 20 | SRC-P23-001,SRC-P23-002 | sha256:6f1720db45d279a50... | 8.13.35
-| 1077  
-KFM-P21-FEAT-0001 | feature | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:4f318e530dd110293... | 8.13.36 |
-1078
-KFM-P21-IDEA-0004 | idea | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:af32cce2273200893... | 8.13.37 | 1079
-KFM-P21-PROG-0026 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:8a5cfca8dc4534e57... | 8.13.38
-| 1080  
-KFM-P21-PROG-0038 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:9660546dcdcfc5373... | 8.13.39
-| 1081  
-KFM-P21-PROG-0041 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:5eb78b4445b412539... | 8.13.40
-| 1082  
-KFM-P21-PROG-0043 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:f79099d9985174e5f... | 8.13.41
-| 1083  
-KFM-P21-PROG-0045 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:58a136b6b04da5a13... | 8.13.42
-| 1084  
-KFM-P21-PROG-0046 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:6a8b35c2b28c36b76... | 8.13.43
-| 1085  
-KFM-P21-PROG-0050 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:56ff5895a38bc7016... | 8.13.44
-| 1086  
-KFM-P22-FEAT-0001 | feature | UIX | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:fbfc574ef61dd6e51... | 8.13.45 |
-1087
-KFM-P22-FEAT-0002 | feature | UIX | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:c2c7ef336f0ae3233... | 8.13.46 |
-1088
-KFM-P22-IDEA-0006 | idea | UIX | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:62b2735f81c6d0bb7... | 8.13.47 | 1089
-KFM-P22-PROG-0013 | programming | UIX | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:dfbe4a1140eb2b165... | 8.13.48
-| 1090  
-KFM-P23-FEAT-0001 | feature | UIX | NEW | active | 23 | 23 | SRC-P23-003 | sha256:7b9f69d2cb8d87475... | 8.13.49 | 1091
-KFM-P23-FEAT-0002 | feature | UIX | NEW | active | 23 | 23 | SRC-P23-004 | sha256:a62bf8b819b9518eb... | 8.13.50 | 1092
-KFM-P23-PROG-0049 | programming | UIX | NEW | active | 23 | 23 | SRC-P23-004 | sha256:c779587b6a67b2564... | 8.13.51 | 1093
-KFM-P4-FEAT-0001 | feature | UIX | UNCHANGED | active | 4 | 12 | SRC-P23-001,SRC-P23-002 | sha256:4ea2479413c3368ee... | 8.13.52 |
-1094
-5. Machine-Readable Index (continued)
-KFM-P5-PROG-0011 | programming | UIX | UNCHANGED | active | 5 | 17 | SRC-P23-001,SRC-P23-002 | sha256:0094466b51ae70716... | 8.13.53 |
-1095
-KFM-P6-FEAT-0001 | feature | UIX | UNCHANGED | active | 6 | 6 | SRC-P23-001,SRC-P23-002 | sha256:b6035b6ad47e16bbe... | 8.13.54 | 1096
-KFM-P6-FEAT-0002 | feature | UIX | UNCHANGED | active | 6 | 6 | SRC-P23-001,SRC-P23-002 | sha256:649e1981ae4817830... | 8.13.55 | 1097
-KFM-P6-FEAT-0003 | feature | UIX | UNCHANGED | active | 6 | 7 | SRC-P23-001,SRC-P23-002 | sha256:6d8bad4369292773c... | 8.13.56 | 1098
-KFM-P7-FEAT-0002 | feature | UIX | UNCHANGED | active | 7 | 7 | SRC-P23-001,SRC-P23-002 | sha256:6fe62a0d7becbfc28... | 8.13.57 | 1099
-KFM-P9-PROG-0076 | programming | UIX | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:5123dd9dc5dd3f1ea... | 8.13.58 |
-1100
-KFM-P9-PROG-0077 | programming | UIX | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:d3f1a12062c1aa495... | 8.13.59 |
-1101
-KFM-P9-PROG-0078 | programming | UIX | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:c504755e916bfd72c... | 8.13.60 |
-1102
-KFM-P9-PROG-0079 | programming | UIX | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:98c6353a9e8652018... | 8.13.61 |
-1103
+</details>
+
+#### 5.14 SEC — Security, Auditability, Signatures, Attestation
+
+<details>
+<summary><strong>87 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P18-FEAT-0006` | feature | UNCHANGED | — | 18 → 22 | — | `09a3e0dccefcd0fe8` | 8.12.35 | 989 |
+| `KFM-P19-FEAT-0007` | feature | UNCHANGED | — | 19 → 22 | — | `75e6b4c1db8b648d1` | 8.12.41 | 995 |
+| `KFM-P5-FEAT-0001` | feature | EXPANDED | — | 5 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `15c6fac51b0bcc372` | 8.12.66 | 1020 |
+| `KFM-P14-IDEA-0003` | idea | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b461412600d36c615` | 8.12.17 | 971 |
+| `KFM-P18-IDEA-0007` | idea | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b3c28b65e5b35a863` | 8.12.36 | 990 |
+| `KFM-P19-IDEA-0002` | idea | UNCHANGED | — | 19 → 22 | — | `ea4647bb113948775` | 8.12.42 | 996 |
+| `KFM-P22-IDEA-0001` | idea | UNCHANGED | — | 22 → 22 | — | `646a1d10ed0e3495e` | 8.12.51 | 1005 |
+| `KFM-P23-IDEA-0002` | idea | NEW | — | 23 → 23 | `SRC-P23-003` | `e95fd2ac507fb8253` | 8.12.61 | 1015 |
+| `KFM-P8-IDEA-0002` | idea | UNCHANGED | — | 8 → 22 | — | `fb920c9e79fc060df` | 8.12.72 | 1026 |
+| `KFM-P1-PROG-0017` | programming | UNCHANGED | — | 1 → 22 | — | `b7082f217c1a8fcc2` | 8.12.1 | 955 |
+| `KFM-P1-PROG-0053` | programming | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `cfae300a3ef5add60` | 8.12.2 | 956 |
+| `KFM-P1-PROG-0054` | programming | UNCHANGED | — | 1 → 22 | — | `9e1438a79d9cd38e3` | 8.12.3 | 957 |
+| `KFM-P1-PROG-0055` | programming | UNCHANGED | — | 1 → 22 | — | `6a6664f31ca3e4a2f` | 8.12.4 | 958 |
+| `KFM-P10-PROG-0005` | programming | EXPANDED | — | 10 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `a87409d3b6c984de9` | 8.12.5 | 959 |
+| `KFM-P10-PROG-0006` | programming | UNCHANGED | — | 10 → 22 | — | `97bdfdcb5c82dd90a` | 8.12.6 | 960 |
+| `KFM-P11-PROG-0008` | programming | UNCHANGED | — | 11 → 22 | — | `21085df545e2ef3b8` | 8.12.7 | 961 |
+| `KFM-P11-PROG-0023` | programming | UNCHANGED | — | 11 → 22 | — | `6224d2f7586e6b9f4` | 8.12.8 | 962 |
+| `KFM-P11-PROG-0028` | programming | EXPANDED | — | 11 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `3ca20e91764d447dc` | 8.12.9 | 963 |
+| `KFM-P12-PROG-0009` | programming | UNCHANGED | — | 12 → 22 | — | `0fd7639d9e6b64e29` | 8.12.10 | 964 |
+| `KFM-P12-PROG-0016` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1d04213f137bb574f` | 8.12.11 | 965 |
+| `KFM-P12-PROG-0017` | programming | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `04e031fdc0f1dfe5d` | 8.12.12 | 966 |
+| `KFM-P12-PROG-0024` | programming | UNCHANGED | — | 12 → 22 | — | `dc3ef553010e0782d` | 8.12.13 | 967 |
+| `KFM-P12-PROG-0031` | programming | UNCHANGED | — | 12 → 22 | — | `50ea4805d1a71738c` | 8.12.14 | 968 |
+| `KFM-P13-PROG-0011` | programming | UNCHANGED | — | 13 → 22 | — | `dc0c11e11434059a8` | 8.12.15 | 969 |
+| `KFM-P13-PROG-0031` | programming | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `726e553912108965d` | 8.12.16 | 970 |
+| `KFM-P14-PROG-0006` | programming | UNCHANGED | — | 14 → 22 | — | `c9eddcfcbe014d78c` | 8.12.18 | 972 |
+| `KFM-P14-PROG-0018` | programming | UNCHANGED | — | 14 → 22 | — | `47e2687a7c8d98c83` | 8.12.19 | 973 |
+| `KFM-P14-PROG-0019` | programming | UNCHANGED | — | 14 → 22 | — | `5d4b58ee682a2bf74` | 8.12.20 | 974 |
+| `KFM-P14-PROG-0030` | programming | UNCHANGED | — | 14 → 22 | — | `0f2c3143416a8171c` | 8.12.21 | 975 |
+| `KFM-P15-PROG-0004` | programming | UNCHANGED | — | 15 → 22 | — | `2474b50c74c3c6769` | 8.12.22 | 976 |
+| `KFM-P15-PROG-0017` | programming | UNCHANGED | — | 15 → 22 | — | `6948b1b50e816bd86` | 8.12.23 | 977 |
+| `KFM-P15-PROG-0031` | programming | UNCHANGED | — | 15 → 22 | — | `28414b75a0485a5df` | 8.12.24 | 978 |
+| `KFM-P15-PROG-0039` | programming | UNCHANGED | — | 15 → 22 | — | `e87ef474ea68559e6` | 8.12.25 | 979 |
+| `KFM-P16-PROG-0002` | programming | UNCHANGED | — | 16 → 22 | — | `c2c5fadb1fae61790` | 8.12.26 | 980 |
+| `KFM-P16-PROG-0004` | programming | UNCHANGED | — | 16 → 22 | — | `d52df5f06eb3a22c7` | 8.12.27 | 981 |
+| `KFM-P16-PROG-0005` | programming | EXPANDED | — | 16 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `810f332d4de805820` | 8.12.28 | 982 |
+| `KFM-P16-PROG-0014` | programming | UNCHANGED | — | 16 → 22 | — | `4068fa6ab9a0a2aec` | 8.12.29 | 983 |
+| `KFM-P16-PROG-0034` | programming | UNCHANGED | — | 16 → 22 | — | `c5f334ff882185945` | 8.12.30 | 984 |
+| `KFM-P17-PROG-0005` | programming | EXPANDED | — | 17 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `1e028434c094dc453` | 8.12.31 | 985 |
+| `KFM-P17-PROG-0016` | programming | UNCHANGED | — | 17 → 22 | — | `37b7f0a3a3daae0df` | 8.12.32 | 986 |
+| `KFM-P17-PROG-0020` | programming | UNCHANGED | — | 17 → 22 | — | `934243f4317cb4107` | 8.12.33 | 987 |
+| `KFM-P17-PROG-0037` | programming | UNCHANGED | — | 17 → 22 | — | `9e2e2f5c4adb18933` | 8.12.34 | 988 |
+| `KFM-P18-PROG-0002` | programming | UNCHANGED | — | 18 → 22 | — | `62274d5e71122d9c7` | 8.12.37 | 991 |
+| `KFM-P18-PROG-0026` | programming | UNCHANGED | — | 18 → 22 | — | `3113d13b9ef7fee16` | 8.12.38 | 992 |
+| `KFM-P18-PROG-0029` | programming | UNCHANGED | — | 18 → 22 | — | `30d5d8a987ae410a4` | 8.12.39 | 993 |
+| `KFM-P18-PROG-0030` | programming | UNCHANGED | — | 18 → 22 | — | `e49771eb1aab8a3f1` | 8.12.40 | 994 |
+| `KFM-P19-PROG-0002` | programming | UNCHANGED | — | 19 → 22 | — | `d21d67c78eedfeb26` | 8.12.43 | 997 |
+| `KFM-P19-PROG-0011` | programming | UNCHANGED | — | 19 → 22 | — | `561240c9f79e1f2a6` | 8.12.44 | 998 |
+| `KFM-P19-PROG-0024` | programming | UNCHANGED | — | 19 → 22 | — | `2523bf8adfcd08e9e` | 8.12.45 | 999 |
+| `KFM-P19-PROG-0026` | programming | UNCHANGED | — | 19 → 22 | — | `948817a2ddd1e5310` | 8.12.46 | 1000 |
+| `KFM-P19-PROG-0038` | programming | UNCHANGED | — | 19 → 22 | — | `2fd592eebd8816af9` | 8.12.47 | 1001 |
+| `KFM-P20-PROG-0027` | programming | UNCHANGED | — | 20 → 22 | — | `bd5713005beaeb215` | 8.12.48 | 1002 |
+| `KFM-P21-PROG-0004` | programming | EXPANDED | — | 21 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `161ac42334fc04a4f` | 8.12.49 | 1003 |
+| `KFM-P21-PROG-0037` | programming | UNCHANGED | — | 21 → 22 | — | `ba12f9bcd5bbfd5b2` | 8.12.50 | 1004 |
+| `KFM-P22-PROG-0004` | programming | UNCHANGED | — | 22 → 22 | — | `d41aa2ca046c88277` | 8.12.52 | 1006 |
+| `KFM-P22-PROG-0009` | programming | UNCHANGED | — | 22 → 22 | — | `2f892c5e7b9765f96` | 8.12.53 | 1007 |
+| `KFM-P22-PROG-0019` | programming | UNCHANGED | — | 22 → 22 | — | `c8a1a164fd0c2f486` | 8.12.54 | 1008 |
+| `KFM-P22-PROG-0023` | programming | UNCHANGED | — | 22 → 22 | — | `65a1c98a9c137c43b` | 8.12.55 | 1009 |
+| `KFM-P22-PROG-0024` | programming | UNCHANGED | — | 22 → 22 | — | `e3e1b4a222b95bbe6` | 8.12.56 | 1010 |
+| `KFM-P22-PROG-0028` | programming | UNCHANGED | — | 22 → 22 | — | `1594bfb8d90eddf0d` | 8.12.57 | 1011 |
+| `KFM-P22-PROG-0029` | programming | UNCHANGED | — | 22 → 22 | — | `3479bfcea6fa95a17` | 8.12.58 | 1012 |
+| `KFM-P22-PROG-0033` | programming | UNCHANGED | — | 22 → 22 | — | `80ddb37fb7d657715` | 8.12.59 | 1013 |
+| `KFM-P22-PROG-0052` | programming | UNCHANGED | — | 22 → 22 | — | `8c441e0a2fda2b382` | 8.12.60 | 1014 |
+| `KFM-P23-PROG-0006` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `9f7a954a08f38ee12` | 8.12.62 | 1016 |
+| `KFM-P23-PROG-0007` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `f282ff21a1f2cb88b` | 8.12.63 | 1017 |
+| `KFM-P23-PROG-0008` | programming | NEW | — | 23 → 23 | `SRC-P23-003` | `7df9763371bc14470` | 8.12.64 | 1018 |
+| `KFM-P4-PROG-0003` | programming | UNCHANGED | — | 4 → 22 | — | `31a587ad44dd49972` | 8.12.65 | 1019 |
+| `KFM-P5-PROG-0002` | programming | UNCHANGED | — | 5 → 22 | — | `6fd910db6e78c0612` | 8.12.67 | 1021 |
+| `KFM-P5-PROG-0010` | programming | UNCHANGED | — | 5 → 22 | — | `a8f3a10d0c3ccbc7a` | 8.12.68 | 1022 |
+| `KFM-P5-PROG-0013` | programming | UNCHANGED | — | 5 → 22 | — | `ffb1c698246a0afbc` | 8.12.69 | 1023 |
+| `KFM-P6-PROG-0010` | programming | EXPANDED | — | 6 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `6d4d0f4ce581e8a47` | 8.12.70 | 1024 |
+| `KFM-P7-PROG-0005` | programming | UNCHANGED | — | 7 → 22 | — | `4bf2b76564a9dc020` | 8.12.71 | 1025 |
+| `KFM-P8-PROG-0007` | programming | UNCHANGED | — | 8 → 22 | — | `c27c18093bdfdc5c7` | 8.12.73 | 1027 |
+| `KFM-P8-PROG-0008` | programming | UNCHANGED | — | 8 → 22 | — | `9b7369cd62e6a8ed1` | 8.12.74 | 1028 |
+| `KFM-P8-PROG-0009` | programming | UNCHANGED | — | 8 → 22 | — | `7c6fd1da11744ad58` | 8.12.75 | 1029 |
+| `KFM-P8-PROG-0010` | programming | UNCHANGED | — | 8 → 22 | — | `7dbc2017c026973c9` | 8.12.76 | 1030 |
+| `KFM-P8-PROG-0011` | programming | UNCHANGED | — | 8 → 22 | — | `c6ae06a1317e0ab86` | 8.12.77 | 1031 |
+| `KFM-P8-PROG-0012` | programming | UNCHANGED | — | 8 → 22 | — | `3956e11dfa0226920` | 8.12.78 | 1032 |
+| `KFM-P8-PROG-0013` | programming | UNCHANGED | — | 8 → 22 | — | `8c40e4f9cfcc22fa8` | 8.12.79 | 1033 |
+| `KFM-P8-PROG-0014` | programming | UNCHANGED | — | 8 → 22 | — | `90266fed9225aab36` | 8.12.80 | 1034 |
+| `KFM-P8-PROG-0015` | programming | UNCHANGED | — | 8 → 22 | — | `bf33b1d5597fd0533` | 8.12.81 | 1035 |
+| `KFM-P8-PROG-0016` | programming | UNCHANGED | — | 8 → 22 | — | `632790a7ac6756683` | 8.12.82 | 1036 |
+| `KFM-P8-PROG-0017` | programming | UNCHANGED | — | 8 → 22 | — | `15994064023fc8564` | 8.12.83 | 1037 |
+| `KFM-P8-PROG-0018` | programming | UNCHANGED | — | 8 → 22 | — | `3c6fd3a181110f7e6` | 8.12.84 | 1038 |
+| `KFM-P8-PROG-0021` | programming | UNCHANGED | — | 8 → 22 | — | `ea85e2f6a864e0861` | 8.12.85 | 1039 |
+| `KFM-P8-PROG-0026` | programming | UNCHANGED | — | 8 → 22 | — | `e1fb1bcb48d085810` | 8.12.86 | 1040 |
+| `KFM-P8-PROG-0027` | programming | UNCHANGED | — | 8 → 22 | — | `34327b26d8c675aca` | 8.12.87 | 1041 |
+
+</details>
+
+#### 5.15 UIX — UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer
+
+<details>
+<summary><strong>61 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P1-FEAT-0065` | feature | UNCHANGED | — | 1 → 13 | — | `b862976ed5d936d4d` | 8.13.1 | 1043 |
+| `KFM-P1-FEAT-0066` | feature | UNCHANGED | — | 1 → 17 | — | `794b5dea68a9b9a87` | 8.13.2 | 1044 |
+| `KFM-P1-FEAT-0067` | feature | EXPANDED | — | 1 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `89b57eb97081b6d6e` | 8.13.3 | 1045 |
+| `KFM-P1-FEAT-0068` | feature | UNCHANGED | — | 1 → 14 | — | `b706f34af221f8677` | 8.13.4 | 1046 |
+| `KFM-P1-FEAT-0074` | feature | UNCHANGED | — | 1 → 17 | — | `a11be012dfcf60a4b` | 8.13.5 | 1047 |
+| `KFM-P10-FEAT-0002` | feature | UNCHANGED | — | 10 → 10 | — | `039ff18adf5c3c858` | 8.13.6 | 1048 |
+| `KFM-P12-FEAT-0001` | feature | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `f305e8a79bdfbdaae` | 8.13.9 | 1051 |
+| `KFM-P12-FEAT-0002` | feature | EXPANDED | — | 12 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b0f6f716d70315c56` | 8.13.10 | 1052 |
+| `KFM-P13-FEAT-0001` | feature | UNCHANGED | — | 13 → 13 | — | `5acb9adf122a51992` | 8.13.11 | 1053 |
+| `KFM-P13-FEAT-0002` | feature | UNCHANGED | — | 13 → 13 | — | `abe7c12bb79a9e666` | 8.13.12 | 1054 |
+| `KFM-P13-FEAT-0003` | feature | EXPANDED | — | 13 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `71a78d7e1a2d5ebe5` | 8.13.13 | 1055 |
+| `KFM-P14-FEAT-0001` | feature | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `c3100b2a7b0ad25d7` | 8.13.14 | 1056 |
+| `KFM-P15-FEAT-0001` | feature | UNCHANGED | — | 15 → 17 | — | `571723837516e820d` | 8.13.16 | 1058 |
+| `KFM-P15-FEAT-0002` | feature | UNCHANGED | — | 15 → 16 | — | `11dcdde2ce1ded9e6` | 8.13.17 | 1059 |
+| `KFM-P16-FEAT-0002` | feature | UNCHANGED | — | 16 → 16 | — | `ffdcf5f2bbaccbd02` | 8.13.19 | 1061 |
+| `KFM-P16-FEAT-0003` | feature | UNCHANGED | — | 16 → 16 | — | `77bc209f632dc4cca` | 8.13.20 | 1062 |
+| `KFM-P17-FEAT-0002` | feature | UNCHANGED | — | 17 → 17 | — | `f439fc1078464853f` | 8.13.21 | 1063 |
+| `KFM-P17-FEAT-0003` | feature | UNCHANGED | — | 17 → 17 | — | `23517d3617f7d2778` | 8.13.22 | 1064 |
+| `KFM-P18-FEAT-0001` | feature | UNCHANGED | — | 18 → 18 | — | `deff15273f68641d6` | 8.13.23 | 1065 |
+| `KFM-P18-FEAT-0003` | feature | UNCHANGED | — | 18 → 18 | — | `aa216a70a33bca97b` | 8.13.24 | 1066 |
+| `KFM-P18-FEAT-0004` | feature | EXPANDED | — | 18 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `9f8afd37f30ef34d6` | 8.13.25 | 1067 |
+| `KFM-P18-FEAT-0005` | feature | UNCHANGED | — | 18 → 19 | — | `5bbb027125728a6cf` | 8.13.26 | 1068 |
+| `KFM-P19-FEAT-0001` | feature | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `392a8465dfeaebceb` | 8.13.27 | 1069 |
+| `KFM-P19-FEAT-0002` | feature | UNCHANGED | — | 19 → 19 | — | `719efafd838515209` | 8.13.28 | 1070 |
+| `KFM-P19-FEAT-0004` | feature | EXPANDED | — | 19 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `b60ae552f2f60808d` | 8.13.29 | 1071 |
+| `KFM-P20-FEAT-0001` | feature | UNCHANGED | — | 20 → 20 | — | `0f56bca2818f863d0` | 8.13.30 | 1072 |
+| `KFM-P20-FEAT-0002` | feature | UNCHANGED | — | 20 → 20 | — | `eda0cddd864a5d588` | 8.13.31 | 1073 |
+| `KFM-P20-FEAT-0004` | feature | UNCHANGED | — | 20 → 20 | — | `17de33360e5d33a76` | 8.13.32 | 1074 |
+| `KFM-P20-FEAT-0006` | feature | UNCHANGED | — | 20 → 20 | — | `28a938c43479b7e63` | 8.13.33 | 1075 |
+| `KFM-P20-FEAT-0008` | feature | UNCHANGED | — | 20 → 20 | — | `f0f2eafa9d2fe62dd` | 8.13.34 | 1076 |
+| `KFM-P21-FEAT-0001` | feature | UNCHANGED | — | 21 → 21 | — | `4f318e530dd110293` | 8.13.36 | 1078 |
+| `KFM-P22-FEAT-0001` | feature | UNCHANGED | — | 22 → 22 | — | `fbfc574ef61dd6e51` | 8.13.45 | 1087 |
+| `KFM-P22-FEAT-0002` | feature | UNCHANGED | — | 22 → 22 | — | `c2c7ef336f0ae3233` | 8.13.46 | 1088 |
+| `KFM-P23-FEAT-0001` | feature | NEW | — | 23 → 23 | `SRC-P23-003` | `7b9f69d2cb8d87475` | 8.13.49 | 1091 |
+| `KFM-P23-FEAT-0002` | feature | NEW | — | 23 → 23 | `SRC-P23-004` | `a62bf8b819b9518eb` | 8.13.50 | 1092 |
+| `KFM-P4-FEAT-0001` | feature | UNCHANGED | — | 4 → 12 | — | `4ea2479413c3368ee` | 8.13.52 | 1094 |
+| `KFM-P6-FEAT-0001` | feature | UNCHANGED | — | 6 → 6 | — | `b6035b6ad47e16bbe` | 8.13.54 | 1096 |
+| `KFM-P6-FEAT-0002` | feature | UNCHANGED | — | 6 → 6 | — | `649e1981ae4817830` | 8.13.55 | 1097 |
+| `KFM-P6-FEAT-0003` | feature | UNCHANGED | — | 6 → 7 | — | `6d8bad4369292773c` | 8.13.56 | 1098 |
+| `KFM-P7-FEAT-0002` | feature | UNCHANGED | — | 7 → 7 | — | `6fe62a0d7becbfc28` | 8.13.57 | 1099 |
+| `KFM-P21-IDEA-0004` | idea | UNCHANGED | — | 21 → 21 | — | `af32cce2273200893` | 8.13.37 | 1079 |
+| `KFM-P22-IDEA-0006` | idea | UNCHANGED | — | 22 → 22 | — | `62b2735f81c6d0bb7` | 8.13.47 | 1089 |
+| `KFM-P11-PROG-0003` | programming | UNCHANGED | — | 11 → 11 | — | `45cde69ae20d5d434` | 8.13.7 | 1049 |
+| `KFM-P11-PROG-0022` | programming | UNCHANGED | — | 11 → 15 | — | `710bb28cc4d4f36ef` | 8.13.8 | 1050 |
+| `KFM-P14-PROG-0040` | programming | EXPANDED | — | 14 → 23 | `SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004` | `fdec229654a0e0e64` | 8.13.15 | 1057 |
+| `KFM-P15-PROG-0008` | programming | UNCHANGED | — | 15 → 15 | — | `ce88d1b9cd02c975d` | 8.13.18 | 1060 |
+| `KFM-P20-PROG-0040` | programming | UNCHANGED | — | 20 → 20 | — | `6f1720db45d279a50` | 8.13.35 | 1077 |
+| `KFM-P21-PROG-0026` | programming | UNCHANGED | — | 21 → 21 | — | `8a5cfca8dc4534e57` | 8.13.38 | 1080 |
+| `KFM-P21-PROG-0038` | programming | UNCHANGED | — | 21 → 21 | — | `9660546dcdcfc5373` | 8.13.39 | 1081 |
+| `KFM-P21-PROG-0041` | programming | UNCHANGED | — | 21 → 21 | — | `5eb78b4445b412539` | 8.13.40 | 1082 |
+| `KFM-P21-PROG-0043` | programming | UNCHANGED | — | 21 → 21 | — | `f79099d9985174e5f` | 8.13.41 | 1083 |
+| `KFM-P21-PROG-0045` | programming | UNCHANGED | — | 21 → 21 | — | `58a136b6b04da5a13` | 8.13.42 | 1084 |
+| `KFM-P21-PROG-0046` | programming | UNCHANGED | — | 21 → 21 | — | `6a8b35c2b28c36b76` | 8.13.43 | 1085 |
+| `KFM-P21-PROG-0050` | programming | UNCHANGED | — | 21 → 21 | — | `56ff5895a38bc7016` | 8.13.44 | 1086 |
+| `KFM-P22-PROG-0013` | programming | UNCHANGED | — | 22 → 22 | — | `dfbe4a1140eb2b165` | 8.13.48 | 1090 |
+| `KFM-P23-PROG-0049` | programming | NEW | — | 23 → 23 | `SRC-P23-004` | `c779587b6a67b2564` | 8.13.51 | 1093 |
+| `KFM-P5-PROG-0011` | programming | UNCHANGED | — | 5 → 17 | — | `0094466b51ae70716` | 8.13.53 | 1095 |
+| `KFM-P9-PROG-0076` | programming | UNCHANGED | — | 9 → 9 | — | `5123dd9dc5dd3f1ea` | 8.13.58 | 1100 |
+| `KFM-P9-PROG-0077` | programming | UNCHANGED | — | 9 → 9 | — | `d3f1a12062c1aa495` | 8.13.59 | 1101 |
+| `KFM-P9-PROG-0078` | programming | UNCHANGED | — | 9 → 9 | — | `c504755e916bfd72c` | 8.13.60 | 1102 |
+| `KFM-P9-PROG-0079` | programming | UNCHANGED | — | 9 → 9 | — | `98c6353a9e8652018` | 8.13.61 | 1103 |
+
+</details>
+
+> *Per-card body text is not duplicated here; see the Category Atlas (§8) for full card bodies. The canonical machine surface remains `manifest-pass-23.jsonl`.*
 6. Human Table of Contents
 1 Cover page .... page 1
 2 KFM Atlas Meta Block .... page 2
@@ -11009,3177 +10280,1781 @@ UNCHANGED, EXPANDED, or
 QUARANTINED. Pass 32 source entries appear as addenda when they safely refine prior ideas. New active cards use KFM-P32-IDEA/FEAT/PROG
 identifiers. Quarantined
 cards are retained for review and not adopted. Source IDs resolve in the Source Attribution Table.
-5. Machine-Readable Index
-stable_id | class | category | carry_forward_state | status | pass_introduced | pass_last_touched | source_ids | spec_hash |
-atlas_section |
-page_hint
-KFM-P1-IDEA-0061 | idea | ANA | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:43ee01379ce1b1a... | 8.1.1 | 40
-KFM-P1-IDEA-0064 | idea | ANA | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:540df530ece0765... | 8.1.2 | 40
-KFM-P1-IDEA-0073 | idea | ANA | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:17e692f7664bc41... | 8.1.3 | 40
-KFM-P1-PROG-0062 | programming | ANA | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:45087d80f21cb1a... | 8.1.4 | 40
-```
-
-<!-- page: 252 -->
-
-```text
-KFM-P1-PROG-0063 | programming | ANA | EXPANDED | active | 1 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:a5e567fdf80dc51... |
-8.1.5 | 40
-KFM-P10-PROG-0009 | programming | ANA | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:5e7e4fa3480b686... | 8.1.6 | 41
-KFM-P10-PROG-0016 | programming | ANA | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:312e16311b8a5ea... | 8.1.7 | 41
-KFM-P10-PROG-0017 | programming | ANA | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:751101948d53105... | 8.1.8 | 41
-KFM-P10-PROG-0018 | programming | ANA | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:f0b9985bc46403e... | 8.1.9 | 41
-KFM-P11-FEAT-0002 | feature | ANA | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:97a04fa421637d2... | 8.1.10 | 41
-KFM-P11-PROG-0001 | programming | ANA | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:9d9c89146f95df5... | 8.1.11 | 42
-KFM-P11-PROG-0002 | programming | ANA | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:9632d4cee761c28... | 8.1.12 | 42
-KFM-P11-PROG-0005 | programming | ANA | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:70da09cd4d31325... | 8.1.13 | 42
-KFM-P11-PROG-0012 | programming | ANA | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:35d529ff65f10b1... | 8.1.14 | 42
-KFM-P11-PROG-0020 | programming | ANA | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:19b716b98d93b72... | 8.1.15 | 42
-KFM-P12-IDEA-0001 | idea | ANA | UNCHANGED | active | 12 | 14 | SRC-P28-001,SRC-P28-002 | sha256:d1b6c534b694909... | 8.1.16 | 43
-KFM-P12-PROG-0003 | programming | ANA | UNCHANGED | active | 12 | 15 | SRC-P28-001,SRC-P28-002 | sha256:d69236062052125... | 8.1.17 |
-43
-KFM-P12-PROG-0022 | programming | ANA | UNCHANGED | active | 12 | 15 | SRC-P28-001,SRC-P28-002 | sha256:3255d65cc6a6e94... | 8.1.18 |
-43
-KFM-P12-PROG-0028 | programming | ANA | UNCHANGED | active | 12 | 15 | SRC-P28-001,SRC-P28-002 | sha256:140c4c7ac4a7439... | 8.1.19 |
-43
-KFM-P13-PROG-0006 | programming | ANA | UNCHANGED | active | 13 | 13 | SRC-P28-001,SRC-P28-002 | sha256:3a5dbf59aef324d... | 8.1.20 |
-43
-KFM-P13-PROG-0015 | programming | ANA | UNCHANGED | active | 13 | 14 | SRC-P28-001,SRC-P28-002 | sha256:79c36c190ae95fc... | 8.1.21 |
-44
-KFM-P14-PROG-0013 | programming | ANA | UNCHANGED | active | 14 | 14 | SRC-P28-001,SRC-P28-002 | sha256:f583c8fdfbcf394... | 8.1.22 |
-44
-KFM-P14-PROG-0020 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P28-001,SRC-P28-002 | sha256:03e09b7e37f64c6... | 8.1.23 |
-44
-KFM-P14-PROG-0022 | programming | ANA | UNCHANGED | active | 14 | 14 | SRC-P28-001,SRC-P28-002 | sha256:4a4e6e1e88cd3db... | 8.1.24 |
-44
-KFM-P14-PROG-0026 | programming | ANA | UNCHANGED | active | 14 | 23 | SRC-P28-001,SRC-P28-002 | sha256:d03c8e56e6e8069... | 8.1.25 |
-44
-KFM-P14-PROG-0035 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P28-001,SRC-P28-002 | sha256:9f1efb5a0d702a6... | 8.1.26 |
-45
-KFM-P14-PROG-0036 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P28-001,SRC-P28-002 | sha256:a3537327caf6666... | 8.1.27 |
-45
-KFM-P14-PROG-0037 | programming | ANA | UNCHANGED | active | 14 | 15 | SRC-P28-001,SRC-P28-002 | sha256:5101a46618d2d6e... | 8.1.28 |
-45
-KFM-P15-PROG-0009 | programming | ANA | UNCHANGED | active | 15 | 23 | SRC-P28-001,SRC-P28-002 | sha256:a3bc4156d22f30c... | 8.1.29 |
-45
-KFM-P15-PROG-0010 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P28-001,SRC-P28-002 | sha256:38024fee00e6c0d... | 8.1.30 |
-45
-KFM-P15-PROG-0011 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P28-001,SRC-P28-002 | sha256:5f99639d8c80f1b... | 8.1.31 |
-46
-KFM-P15-PROG-0012 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P28-001,SRC-P28-002 | sha256:fb9ed27ab438703... | 8.1.32 |
-46
-KFM-P15-PROG-0024 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P28-001,SRC-P28-002 | sha256:a4a035b44c92888... | 8.1.33 |
-46
-KFM-P15-PROG-0036 | programming | ANA | UNCHANGED | active | 15 | 15 | SRC-P28-001,SRC-P28-002 | sha256:7ac863def11dabb... | 8.1.34 |
-46
-KFM-P16-IDEA-0002 | idea | ANA | UNCHANGED | active | 16 | 19 | SRC-P28-001,SRC-P28-002 | sha256:8353068f263d69f... | 8.1.35 | 46
-KFM-P17-PROG-0013 | programming | ANA | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:dd3b73c044d3f00... | 8.1.36 |
-47
-KFM-P17-PROG-0015 | programming | ANA | UNCHANGED | active | 17 | 18 | SRC-P28-001,SRC-P28-002 | sha256:e8a3e7a2b196d61... | 8.1.37 |
-47
-KFM-P17-PROG-0021 | programming | ANA | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:a03839471ecec53... | 8.1.38 |
-47
-KFM-P17-PROG-0034 | programming | ANA | UNCHANGED | active | 17 | 23 | SRC-P28-001,SRC-P28-002 | sha256:a6683a676580d80... | 8.1.39 |
-47
-KFM-P18-IDEA-0008 | idea | ANA | UNCHANGED | active | 18 | 20 | SRC-P28-001,SRC-P28-002 | sha256:999cbe5f122fa3b... | 8.1.40 | 47
-KFM-P18-PROG-0015 | programming | ANA | UNCHANGED | active | 18 | 19 | SRC-P28-001,SRC-P28-002 | sha256:8f9a6378c1738be... | 8.1.41 |
-48
-KFM-P18-PROG-0018 | programming | ANA | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:c8c54884dc5f765... | 8.1.42 |
-48
-KFM-P18-PROG-0035 | programming | ANA | UNCHANGED | active | 18 | 23 | SRC-P28-001,SRC-P28-002 | sha256:6758eaf23346d63... | 8.1.43 |
-48
-KFM-P19-IDEA-0008 | idea | ANA | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:7f2862b6cb5f8a9... | 8.1.44 | 48
-KFM-P19-PROG-0016 | programming | ANA | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:56e9449b9dadd53... | 8.1.45 |
-48
-KFM-P20-FEAT-0007 | feature | ANA | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:cd5683380b4ec65... | 8.1.46 | 49
-KFM-P20-IDEA-0002 | idea | ANA | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:096900213d4f935... | 8.1.47 | 49
-KFM-P20-IDEA-0010 | idea | ANA | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:9723e178a107b88... | 8.1.48 | 49
-KFM-P20-PROG-0034 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:a99fee4582b5950... | 8.1.49 |
-49
-KFM-P20-PROG-0035 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:20e012d64addaa5... | 8.1.50 |
-49
-KFM-P20-PROG-0039 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:028fcaef2cd0deb... | 8.1.51 |
-50
-KFM-P20-PROG-0041 | programming | ANA | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:7fb4085d89e9efd... | 8.1.52 |
-50
-KFM-P21-PROG-0007 | programming | ANA | UNCHANGED | active | 21 | 23 | SRC-P28-001,SRC-P28-002 | sha256:8dae42fe5b3c474... | 8.1.53 |
-50
-KFM-P21-PROG-0013 | programming | ANA | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:b225b99daf74a0d... | 8.1.54 |
-50
-KFM-P25-FEAT-0007 | feature | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:df2cbe4980d8c47... | 8.1.55 | 50
-```
-
-<!-- page: 253 -->
-
-```text
-KFM-P25-IDEA-0001 | idea | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:e0fcb7c868bf296... | 8.1.56 | 51
-KFM-P25-IDEA-0002 | idea | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:159e0a425e8dcde... | 8.1.57 | 51
-KFM-P25-IDEA-0003 | idea | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:70513d5868f0a82... | 8.1.58 | 51
-KFM-P25-IDEA-0015 | idea | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:cca3cc4868c6660... | 8.1.59 | 51
-KFM-P27-IDEA-0015 | idea | ANA | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:170aef750c32771... | 8.1.60 | 51
-KFM-P27-IDEA-0017 | idea | ANA | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:4120af455a5d98b... | 8.1.61 | 52
-KFM-P27-PROG-0018 | programming | ANA | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:1c06df494ae1f67... | 8.1.62 |
-52
-KFM-P27-PROG-0020 | programming | ANA | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:81f7ba123cf2500... | 8.1.63 |
-52
-KFM-P28-FEAT-0009 | feature | ANA | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:172086f7afa1652... | 8.1.64 | 52
-KFM-P28-IDEA-0003 | idea | ANA | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:47749725d706320... | 8.1.65 | 52
-KFM-P28-IDEA-0004 | idea | ANA | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:434a3ae29f62e12... | 8.1.66 | 53
-KFM-P28-IDEA-0018 | idea | ANA | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:af067761afb89d2... | 8.1.67 | 53
-KFM-P28-PROG-0028 | programming | ANA | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:6c13056b4309c1c... | 8.1.68 | 53
-KFM-P28-PROG-0029 | programming | ANA | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:9d595aacbfb506b... | 8.1.69 | 53
-KFM-P29-FEAT-0004 | feature | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:6c61a0f3cbf1299... | 8.1.70 | 53
-KFM-P29-FEAT-0005 | feature | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:9023ff1a4a50c50... | 8.1.71 | 54
-KFM-P29-IDEA-0003 | idea | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:b018a79c28cd510... | 8.1.72 | 54
-KFM-P29-IDEA-0008 | idea | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:99071aa6712a650... | 8.1.73 | 54
-KFM-P29-IDEA-0020 | idea | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:48cc881047191a0... | 8.1.74 | 54
-KFM-P29-PROG-0007 | programming | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:bb046c8a3523ad7... | 8.1.75 | 54
-KFM-P29-PROG-0014 | programming | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:44e5ce2d15971a0... | 8.1.76 | 55
-KFM-P29-PROG-0024 | programming | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:2baf0bd414a9e34... | 8.1.77 | 55
-KFM-P29-PROG-0027 | programming | ANA | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:9c8acb5993e4695... | 8.1.78 | 55
-KFM-P3-IDEA-0002 | idea | ANA | UNCHANGED | active | 3 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:ba6f23058056bf1... | 8.1.79 | 55
-KFM-P30-IDEA-0001 | idea | ANA | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:2c5c5d6ed69f1e2... | 8.1.80 | 55
-KFM-P30-IDEA-0002 | idea | ANA | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:8036ad2dc5db383... | 8.1.81 | 56
-KFM-P30-IDEA-0003 | idea | ANA | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:79e02c807e09faa... | 8.1.82 | 56
-KFM-P30-IDEA-0005 | idea | ANA | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:8028cbbbf2bb63f... | 8.1.83 | 56
-KFM-P30-IDEA-0013 | idea | ANA | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:099eb9392252ec5... | 8.1.84 | 56
-KFM-P30-PROG-0004 | programming | ANA | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:caf56d07b99795d... | 8.1.85 | 56
-KFM-P30-PROG-0016 | programming | ANA | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:1e55482bad0dbc2... | 8.1.86 | 57
-KFM-P32-FEAT-0001 | feature | ANA | NEW | active | 32 | 32 | SRC-P32-001 | sha256:b1918f996e70f5b... | 8.1.87 | 57
-KFM-P32-FEAT-0005 | feature | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:1ac995f45199918... | 8.1.88 | 57
-KFM-P32-FEAT-0006 | feature | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:e6ef00997d73335... | 8.1.89 | 57
-KFM-P32-FEAT-0007 | feature | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:63e16ecd2e3cd67... | 8.1.90 | 57
-KFM-P32-IDEA-0002 | idea | ANA | NEW | active | 32 | 32 | SRC-P32-001 | sha256:dabbc806be96d4b... | 8.1.91 | 58
-KFM-P32-IDEA-0011 | idea | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:84a3d0545052447... | 8.1.92 | 58
-KFM-P32-IDEA-0012 | idea | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:1a1b69f7617d949... | 8.1.93 | 58
-KFM-P32-PROG-0005 | programming | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:ace1edf74385921... | 8.1.94 | 58
-KFM-P32-PROG-0006 | programming | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:9c7a7aa5aad0d7e... | 8.1.95 | 58
-KFM-P32-PROG-0009 | programming | ANA | NEW | active | 32 | 32 | SRC-P32-002 | sha256:7c45461eacc3292... | 8.1.96 | 59
-KFM-P4-IDEA-0001 | idea | ANA | UNCHANGED | active | 4 | 14 | SRC-P28-001,SRC-P28-002 | sha256:f7af18eeaf19bf3... | 8.1.97 | 59
-KFM-P8-IDEA-0003 | idea | ANA | UNCHANGED | active | 8 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:052fce51eb8d933... | 8.1.98 | 59
-KFM-P8-PROG-0022 | programming | ANA | UNCHANGED | active | 8 | 10 | SRC-P28-001,SRC-P28-002 | sha256:afbf6baf73e8427... | 8.1.99 | 59
-KFM-P9-FEAT-0005 | feature | ANA | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:49ee4c028ceac3b... | 8.1.100 | 59
-KFM-P9-FEAT-0006 | feature | ANA | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:5178a603c8f29fb... | 8.1.101 | 60
-KFM-P9-FEAT-0007 | feature | ANA | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:c661adedca00842... | 8.1.102 | 60
-KFM-P9-FEAT-0008 | feature | ANA | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:f3feefa0c94a25d... | 8.1.103 | 60
-KFM-P9-FEAT-0009 | feature | ANA | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:e546543ee316d75... | 8.1.104 | 60
-KFM-P9-FEAT-0010 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:f0fb8e255a5a0c3... | 8.1.105 | 60
-KFM-P9-FEAT-0017 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:bab1860eb8524ab... | 8.1.106 | 61
-KFM-P9-FEAT-0018 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:44f0843705b403f... | 8.1.107 | 61
-KFM-P9-FEAT-0019 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:53a3ef0f87ad2fb... | 8.1.108 | 61
-KFM-P9-FEAT-0020 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:d4c348b545c33fa... | 8.1.109 | 61
-KFM-P9-FEAT-0021 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:a10e856f2ef5f2c... | 8.1.110 | 61
-KFM-P9-FEAT-0022 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:bcb65a1d1c28a00... | 8.1.111 | 62
-KFM-P9-FEAT-0023 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:e58f9eb6fd78550... | 8.1.112 | 62
-KFM-P9-FEAT-0024 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:a902ec3ab838253... | 8.1.113 | 62
-KFM-P9-FEAT-0025 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:5ce5c20fb57929b... | 8.1.114 | 62
-KFM-P9-FEAT-0026 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:be7e4801052e457... | 8.1.115 | 62
-KFM-P9-FEAT-0027 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:2677d711fa852ea... | 8.1.116 | 63
-KFM-P9-FEAT-0028 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:5963e24fdd90b83... | 8.1.117 | 63
-KFM-P9-FEAT-0029 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:dcf67dbc63125dc... | 8.1.118 | 63
-KFM-P9-FEAT-0030 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:3df3ed168a0c54e... | 8.1.119 | 63
-KFM-P9-FEAT-0031 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:81b9fb45dd3a56b... | 8.1.120 | 63
-KFM-P9-FEAT-0032 | feature | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:8977a8915f93b05... | 8.1.121 | 64
-KFM-P9-IDEA-0021 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:6d8f74fb1b0c648... | 8.1.122 | 64
-KFM-P9-IDEA-0022 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:599fc874440b538... | 8.1.123 | 64
-KFM-P9-IDEA-0023 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:b6430a417487b62... | 8.1.124 | 64
-KFM-P9-IDEA-0024 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:2f9cb0ec25718ed... | 8.1.125 | 64
-KFM-P9-IDEA-0025 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:d651f4c9d122040... | 8.1.126 | 65
-KFM-P9-IDEA-0026 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:962eb2146a46b70... | 8.1.127 | 65
-KFM-P9-IDEA-0027 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:48b262e2c10e70d... | 8.1.128 | 65
-KFM-P9-IDEA-0028 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:4119f528d7f9aa4... | 8.1.129 | 65
-KFM-P9-IDEA-0029 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:842ccaf35a9dfc7... | 8.1.130 | 65
-KFM-P9-IDEA-0030 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:8594408ba2e1bd3... | 8.1.131 | 66
-KFM-P9-IDEA-0031 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:730936a74dbdbcf... | 8.1.132 | 66
-KFM-P9-IDEA-0032 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:7df159332a920d5... | 8.1.133 | 66
-KFM-P9-IDEA-0033 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:1af2b434b83b981... | 8.1.134 | 66
-KFM-P9-IDEA-0034 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:351242159d7d05b... | 8.1.135 | 66
-KFM-P9-IDEA-0035 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:bb0918a91ae5687... | 8.1.136 | 67
-KFM-P9-IDEA-0036 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:5574f3b51fbe8ab... | 8.1.137 | 67
-KFM-P9-IDEA-0037 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:196ae42e2922cdb... | 8.1.138 | 67
-KFM-P9-IDEA-0038 | idea | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:4a2d0cea0c66473... | 8.1.139 | 67
-KFM-P9-PROG-0029 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:fed13ed9b00f2e3... | 8.1.140 | 67
-KFM-P9-PROG-0030 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:63b774c1ce18d94... | 8.1.141 | 68
-```
-
-<!-- page: 254 -->
-
-```text
-KFM-P9-PROG-0031 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:83f31ce801b262c... | 8.1.142 | 68
-KFM-P9-PROG-0032 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:2fbbdc60b4c0035... | 8.1.143 | 68
-KFM-P9-PROG-0033 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:687b269f3be459a... | 8.1.144 | 68
-KFM-P9-PROG-0034 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:99722839685cbf0... | 8.1.145 | 68
-KFM-P9-PROG-0035 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:c2b67cdcec2eb2a... | 8.1.146 | 69
-KFM-P9-PROG-0036 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:f6e12a3e5c68f0f... | 8.1.147 | 69
-KFM-P9-PROG-0037 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:b95c38065716e52... | 8.1.148 | 69
-KFM-P9-PROG-0038 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:fd76a9a26175f82... | 8.1.149 | 69
-KFM-P9-PROG-0039 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:b4925ee17bfc6fb... | 8.1.150 | 69
-KFM-P9-PROG-0040 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:d674e0081fc4bd7... | 8.1.151 | 70
-KFM-P9-PROG-0041 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:028eeb011e89bd8... | 8.1.152 | 70
-KFM-P9-PROG-0042 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:a1211afe388ec9f... | 8.1.153 | 70
-KFM-P9-PROG-0043 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:d3aeab1a99b9373... | 8.1.154 | 70
-KFM-P9-PROG-0044 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:06cb48ee913d4ad... | 8.1.155 | 70
-KFM-P9-PROG-0045 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:ebe3e37fac7fb3b... | 8.1.156 | 71
-KFM-P9-PROG-0046 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:18d440e2070aece... | 8.1.157 | 71
-KFM-P9-PROG-0047 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:94de3c9b1f19b01... | 8.1.158 | 71
-KFM-P9-PROG-0080 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:fdba4da96f3fe5f... | 8.1.159 | 71
-KFM-P9-PROG-0081 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:cc60f17bc7ab75b... | 8.1.160 | 71
-KFM-P9-PROG-0082 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:f65e16ae8f60c76... | 8.1.161 | 72
-KFM-P1-IDEA-0020 | idea | CAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4b8427d15c14dd1... | 8.2.1 | 72
-KFM-P1-IDEA-0069 | idea | CAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:b9ad7a816018278... | 8.2.2 | 72
-KFM-P1-IDEA-0070 | idea | CAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:88f89f683cb56bd... | 8.2.3 | 72
-KFM-P1-IDEA-0071 | idea | CAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:10ea2f54d937e60... | 8.2.4 | 72
-KFM-P10-FEAT-0003 | feature | CAT | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:64cdb0466fe2270... | 8.2.5 | 72
-KFM-P11-PROG-0011 | programming | CAT | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:3c808bb588bfd54... | 8.2.6 | 73
-KFM-P11-PROG-0013 | programming | CAT | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:1877d250e059719... | 8.2.7 | 73
-KFM-P11-PROG-0014 | programming | CAT | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:ca233e3b0d9e6c0... | 8.2.8 | 73
-KFM-P12-PROG-0007 | programming | CAT | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:a08b9ea21c96c41... | 8.2.9 | 73
-KFM-P12-PROG-0012 | programming | CAT | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:63e26705638ac1d... | 8.2.10 | 73
-KFM-P12-PROG-0020 | programming | CAT | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:42237d6c57e0420... | 8.2.11 | 74
-KFM-P13-PROG-0027 | programming | CAT | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:62589eec53a22e9... | 8.2.12 | 74
-KFM-P14-PROG-0007 | programming | CAT | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:266e5b84cbbce8f... | 8.2.13 | 74
-KFM-P14-PROG-0009 | programming | CAT | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:110902dfa23b17f... | 8.2.14 | 74
-KFM-P14-PROG-0029 | programming | CAT | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:2a037bf81623ab5... | 8.2.15 | 74
-KFM-P15-PROG-0026 | programming | CAT | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:b9afec8fdc96116... | 8.2.16 | 75
-KFM-P15-PROG-0027 | programming | CAT | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:ea4e72e4748d146... | 8.2.17 | 75
-KFM-P15-PROG-0033 | programming | CAT | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:899b44d40e9a0d6... | 8.2.18 | 75
-KFM-P16-PROG-0028 | programming | CAT | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:bc525eed8591a2e... | 8.2.19 | 75
-KFM-P17-FEAT-0004 | feature | CAT | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:73692d2df8ecb3d... | 8.2.20 | 75
-KFM-P17-IDEA-0007 | idea | CAT | UNCHANGED | active | 17 | 27 | SRC-P28-001,SRC-P28-002 | sha256:c39216a39c04fbd... | 8.2.21 | 76
-KFM-P17-PROG-0026 | programming | CAT | UNCHANGED | active | 17 | 27 | SRC-P28-001,SRC-P28-002 | sha256:8beb5e927c265e9... | 8.2.22 |
-76
-KFM-P17-PROG-0041 | programming | CAT | UNCHANGED | active | 17 | 27 | SRC-P28-001,SRC-P28-002 | sha256:81c8531ecddbaaf... | 8.2.23 |
-76
-KFM-P17-PROG-0042 | programming | CAT | UNCHANGED | active | 17 | 27 | SRC-P28-001,SRC-P28-002 | sha256:54beece64358635... | 8.2.24 |
-76
-KFM-P18-FEAT-0007 | feature | CAT | UNCHANGED | active | 18 | 27 | SRC-P28-001,SRC-P28-002 | sha256:05fed1d87994ee6... | 8.2.25 | 76
-KFM-P18-IDEA-0006 | idea | CAT | UNCHANGED | active | 18 | 27 | SRC-P28-001,SRC-P28-002 | sha256:1262eb686d6701a... | 8.2.26 | 77
-KFM-P18-PROG-0023 | programming | CAT | UNCHANGED | active | 18 | 27 | SRC-P28-001,SRC-P28-002 | sha256:5bb339559d87c3b... | 8.2.27 |
-77
-KFM-P18-PROG-0031 | programming | CAT | UNCHANGED | active | 18 | 27 | SRC-P28-001,SRC-P28-002 | sha256:8fd7bb735ec123c... | 8.2.28 |
-77
-KFM-P18-PROG-0032 | programming | CAT | UNCHANGED | active | 18 | 27 | SRC-P28-001,SRC-P28-002 | sha256:81dae993238b1e6... | 8.2.29 |
-77
-KFM-P18-PROG-0033 | programming | CAT | UNCHANGED | active | 18 | 27 | SRC-P28-001,SRC-P28-002 | sha256:1cb203533928fb1... | 8.2.30 |
-77
-KFM-P18-PROG-0034 | programming | CAT | UNCHANGED | active | 18 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:f3aa98f57174656... | 8.2.31 | 78
-KFM-P19-FEAT-0005 | feature | CAT | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:f0632b01e8f7ce0... | 8.2.32 | 78
-KFM-P19-IDEA-0005 | idea | CAT | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:439b66dc5208064... | 8.2.33 | 78
-KFM-P19-PROG-0012 | programming | CAT | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:8c79b0bdb889df0... | 8.2.34 | 78
-KFM-P20-IDEA-0001 | idea | CAT | UNCHANGED | active | 20 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:59fe97964f5fad4... | 8.2.35 | 78
-KFM-P20-IDEA-0009 | idea | CAT | UNCHANGED | active | 20 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:3d18fc079bde06f... | 8.2.36 | 79
-KFM-P20-PROG-0001 | programming | CAT | UNCHANGED | active | 20 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:c0ea06d1777419a... | 8.2.37 | 79
-KFM-P20-PROG-0014 | programming | CAT | UNCHANGED | active | 20 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:347afa0ce784480... | 8.2.38 | 79
-KFM-P20-PROG-0031 | programming | CAT | UNCHANGED | active | 20 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:2e0ae0927e02f9c... | 8.2.39 | 79
-```
-
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 29: pages 255–258 -->
-
-<!-- page: 255 -->
-
-```text
-KFM-P21-PROG-0014 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:7b58e79e4a14cd2... | 8.2.40 |
-79
-KFM-P21-PROG-0024 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:84365301ebc84f7... | 8.2.41 |
-80
-KFM-P21-PROG-0031 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:9ea6c5db6ee8f04... | 8.2.42 |
-80
-KFM-P22-IDEA-0003 | idea | CAT | UNCHANGED | active | 22 | 23 | SRC-P28-001,SRC-P28-002 | sha256:0d1adc91437cea5... | 8.2.43 | 80
-KFM-P22-PROG-0005 | programming | CAT | UNCHANGED | active | 22 | 23 | SRC-P28-001,SRC-P28-002 | sha256:1eaac9679f31539... | 8.2.44 |
-80
-KFM-P22-PROG-0030 | programming | CAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:60bf9290ada806c... | 8.2.45 |
-80
-KFM-P23-PROG-0009 | programming | CAT | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:d2e086e4bf8cb98... | 8.2.46 |
-81
-KFM-P23-PROG-0029 | programming | CAT | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:54f1d0179aa1669... | 8.2.47 |
-81
-KFM-P24-FEAT-0003 | feature | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:f69ee1f7bd1a208... | 8.2.48 | 81
-KFM-P24-PROG-0001 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:4802c49953b978c... | 8.2.49 |
-81
-KFM-P24-PROG-0002 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:3007b5cfafb85d9... | 8.2.50 |
-81
-KFM-P24-PROG-0003 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:3e437a5ab2b6d98... | 8.2.51 |
-82
-KFM-P24-PROG-0004 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:f98ee428aada58b... | 8.2.52 |
-82
-KFM-P24-PROG-0005 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:f50ed1f6826b073... | 8.2.53 |
-82
-KFM-P24-PROG-0006 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:909c0f3b6980bfe... | 8.2.54 |
-82
-KFM-P24-PROG-0033 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:2da4c2e3339f852... | 8.2.55 |
-82
-KFM-P24-PROG-0034 | programming | CAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:34d1926415b88e7... | 8.2.56 |
-83
-KFM-P25-FEAT-0003 | feature | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:e163ca5ed83ad38... | 8.2.57 | 83
-KFM-P25-IDEA-0009 | idea | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:a595ec93176e320... | 8.2.58 | 83
-KFM-P25-PROG-0001 | programming | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:35c413acbba1dd4... | 8.2.59 |
-83
-KFM-P25-PROG-0007 | programming | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:beb8100b6681f1e... | 8.2.60 |
-83
-KFM-P25-PROG-0008 | programming | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:13bd1f7e9287008... | 8.2.61 |
-84
-KFM-P25-PROG-0009 | programming | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:c4c0cdfde7ef679... | 8.2.62 |
-84
-KFM-P25-PROG-0010 | programming | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:30dc5a997d4da8a... | 8.2.63 |
-84
-KFM-P25-PROG-0011 | programming | CAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:d748e768431f181... | 8.2.64 |
-84
-KFM-P26-FEAT-0004 | feature | CAT | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:06c6e5f101d381b... | 8.2.65 | 84
-KFM-P26-FEAT-0006 | feature | CAT | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:9a6e40b2dc18d50... | 8.2.66 | 85
-KFM-P26-IDEA-0005 | idea | CAT | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:50a06f3953e90db... | 8.2.67 | 85
-KFM-P26-PROG-0025 | programming | CAT | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:a63597a493e9201... | 8.2.68 |
-85
-KFM-P27-FEAT-0003 | feature | CAT | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:b476de8af1dbc7d... | 8.2.69 | 85
-KFM-P27-FEAT-0004 | feature | CAT | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:2259a7bc283d9d2... | 8.2.70 | 85
-KFM-P27-IDEA-0010 | idea | CAT | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:a050129f70ea509... | 8.2.71 | 86
-KFM-P28-FEAT-0001 | feature | CAT | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:2097822df140dc3... | 8.2.72 | 86
-KFM-P29-FEAT-0002 | feature | CAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:650f9b35406db57... | 8.2.73 | 86
-KFM-P29-IDEA-0004 | idea | CAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:2566a51e6ab769b... | 8.2.74 | 86
-KFM-P29-PROG-0025 | programming | CAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:75f8fdc21e14a1a... | 8.2.75 | 86
-KFM-P29-PROG-0028 | programming | CAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:97c1345bfd5aa85... | 8.2.76 | 87
-KFM-P30-FEAT-0003 | feature | CAT | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:6f4c1473127518e... | 8.2.77 | 87
-KFM-P30-PROG-0030 | programming | CAT | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:5fea1e1ff7e68d5... | 8.2.78 | 87
-KFM-P31-IDEA-0008 | idea | CAT | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:1e19591e302c657... | 8.2.79 | 87
-KFM-P31-IDEA-0018 | idea | CAT | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:a4c554c5cbcb835... | 8.2.80 | 87
-KFM-P32-FEAT-0016 | feature | CAT | NEW | active | 32 | 32 | SRC-P32-001 | sha256:5abdf699c160c23... | 8.2.81 | 88
-KFM-P6-PROG-0014 | programming | CAT | UNCHANGED | active | 6 | 23 | SRC-P28-001,SRC-P28-002 | sha256:e954b94854d846d... | 8.2.82 | 88
-KFM-P8-PROG-0006 | programming | CAT | UNCHANGED | active | 8 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:e45b55ba1be2e5b... | 8.2.83 | 88
-KFM-P1-IDEA-0006 | idea | DAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:06f2a7a40e0e7d6... | 8.3.1 | 88
-KFM-P1-IDEA-0011 | idea | DAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:8349dcc22eae094... | 8.3.2 | 88
-KFM-P1-PROG-0007 | programming | DAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:05db10e387c52bb... | 8.3.3 | 88
-KFM-P1-PROG-0008 | programming | DAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:83c0339c8639b62... | 8.3.4 | 88
-KFM-P1-PROG-0009 | programming | DAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:08f86e62a5f3e18... | 8.3.5 | 88
-KFM-P1-PROG-0010 | programming | DAT | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:10013c7e0199c7e... | 8.3.6 | 89
-KFM-P10-IDEA-0002 | idea | DAT | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:9fea948875b6271... | 8.3.7 | 89
-KFM-P10-PROG-0021 | programming | DAT | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:9d590a32347e56d... | 8.3.8 | 89
-KFM-P10-PROG-0022 | programming | DAT | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:94ed83b14e460dd... | 8.3.9 | 89
-KFM-P11-PROG-0006 | programming | DAT | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:bc0f012647c11b3... | 8.3.10 | 89
-KFM-P11-PROG-0007 | programming | DAT | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:4e875f6626df7a1... | 8.3.11 | 90
-KFM-P11-PROG-0021 | programming | DAT | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:2f1f3aa25f12a25... | 8.3.12 | 90
-KFM-P13-IDEA-0004 | idea | DAT | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:4659e9be99bbe03... | 8.3.13 | 90
-KFM-P13-PROG-0005 | programming | DAT | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:885a94c55d633aa... | 8.3.14 | 90
-```
-
-<!-- page: 256 -->
-
-```text
-KFM-P13-PROG-0022 | programming | DAT | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:b6b522ea8338acc... | 8.3.15 | 90
-KFM-P14-IDEA-0001 | idea | DAT | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:5d99c932ae085c3... | 8.3.16 | 91
-KFM-P14-PROG-0017 | programming | DAT | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:8f0415bc7f8fc3f... | 8.3.17 | 91
-KFM-P14-PROG-0025 | programming | DAT | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:e8001353a4c3e6f... | 8.3.18 | 91
-KFM-P15-PROG-0006 | programming | DAT | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:2539a26649baf08... | 8.3.19 | 91
-KFM-P15-PROG-0018 | programming | DAT | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:86189c0a01bc9f3... | 8.3.20 | 91
-KFM-P16-IDEA-0003 | idea | DAT | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:79dff9815c8b168... | 8.3.21 | 92
-KFM-P16-PROG-0001 | programming | DAT | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:441c73237779a3a... | 8.3.22 | 92
-KFM-P16-PROG-0007 | programming | DAT | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:e0fd175f293a10a... | 8.3.23 | 92
-KFM-P16-PROG-0010 | programming | DAT | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:8abf8dfa908568b... | 8.3.24 | 92
-KFM-P16-PROG-0013 | programming | DAT | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:9e609f1d68ad5fd... | 8.3.25 | 92
-KFM-P16-PROG-0015 | programming | DAT | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:1574495f2b27bc7... | 8.3.26 | 93
-KFM-P17-PROG-0003 | programming | DAT | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:3cd40aeea90907b... | 8.3.27 | 93
-KFM-P17-PROG-0008 | programming | DAT | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:86af027985192b5... | 8.3.28 | 93
-KFM-P17-PROG-0030 | programming | DAT | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:bc57aa2d0d55e45... | 8.3.29 | 93
-KFM-P18-IDEA-0003 | idea | DAT | EXPANDED | active | 18 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
-sha256:030dad515b4d7e5... | 8.3.30 | 93
-KFM-P18-PROG-0010 | programming | DAT | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:93f0458ba627502...
-| 8.3.31 | 94  
-KFM-P18-PROG-0011 | programming | DAT | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:915e84a814476a2...
-| 8.3.32 | 94  
-KFM-P18-PROG-0036 | programming | DAT | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:946d4fc61860219...
-| 8.3.33 | 94  
-KFM-P19-PROG-0003 | programming | DAT | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:e3275963c1dcace...
-| 8.3.34 | 94  
-KFM-P19-PROG-0037 | programming | DAT | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:145932ba71291e7...
-| 8.3.35 | 94  
-KFM-P2-IDEA-0018 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:cc54d3ea99a1409... | 8.3.36
-| 95  
-KFM-P2-IDEA-0019 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-001 |
-sha256:ef3e2d5a6a6bdda... | 8.3.37 | 95
-KFM-P2-IDEA-0020 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:04b9272e3edeb6e... | 8.3.38
-| 95  
-KFM-P2-IDEA-0021 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:fefd8fff857510c... | 8.3.39
-| 95  
-KFM-P2-IDEA-0022 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:12b2aae9fa8855e... | 8.3.40
-| 95  
-KFM-P2-IDEA-0023 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-001 | sha256:557ae6fe559632b... | 8.3.41
-| 96  
-KFM-P2-IDEA-0024 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-001 |
-sha256:a0d39592905d78e... | 8.3.42 | 96
-KFM-P2-IDEA-0025 | idea | DAT | UNCHANGED | active | 2 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-001 |
-sha256:3bc6a7e11dcbd85... | 8.3.43 | 96
-KFM-P2-IDEA-0026 | idea | DAT | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:9b7d0fee290426c... | 8.3.44 | 96
-KFM-P2-IDEA-0027 | idea | DAT | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:260b21eb40c4ba4... | 8.3.45 | 96
-KFM-P2-IDEA-0028 | idea | DAT | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:4c50ec2a538199a... | 8.3.46 | 97
-KFM-P2-IDEA-0029 | idea | DAT | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:70fa3fbbbec75df... | 8.3.47 | 97
-KFM-P20-IDEA-0006 | idea | DAT | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:5f1e7df6e86958f... | 8.3.48 | 97
-KFM-P20-PROG-0008 | programming | DAT | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:d941b296b06a5c0... | 8.3.49 |
-97
-KFM-P20-PROG-0023 | programming | DAT | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:ced8394286a76fe... | 8.3.50 |
-97
-KFM-P20-PROG-0029 | programming | DAT | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:c549826a27818a4... | 8.3.51 |
-98
-KFM-P21-PROG-0002 | programming | DAT | UNCHANGED | active | 21 | 23 | SRC-P28-001,SRC-P28-002 | sha256:fc6036bfddd4802... | 8.3.52 |
-98
-KFM-P21-PROG-0016 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:2e0eacd7ef4f308... | 8.3.53 |
-98
-KFM-P21-PROG-0020 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:ce42fad55fadc0f... | 8.3.54 |
-98
-KFM-P21-PROG-0025 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:a87e84ca99a21c2... | 8.3.55 |
-98
-KFM-P21-PROG-0028 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:0e7b20b2ce84b97... | 8.3.56 |
-99
-KFM-P21-PROG-0048 | programming | DAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:18ca7fbd66d51ec... | 8.3.57 |
-99
-KFM-P22-PROG-0014 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:14aa59a98bc511b... | 8.3.58 |
-99
-KFM-P22-PROG-0020 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:e2d56b4af93355e... | 8.3.59 |
-99
-KFM-P22-PROG-0026 | programming | DAT | UNCHANGED | active | 22 | 23 | SRC-P28-001,SRC-P28-002 | sha256:3635764941e32f0... | 8.3.60 |
-99
-KFM-P22-PROG-0034 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:f826eb31ac73a01... | 8.3.61 |
-100
-KFM-P22-PROG-0045 | programming | DAT | UNCHANGED | active | 22 | 23 | SRC-P28-001,SRC-P28-002 | sha256:365439fb0c2760e... | 8.3.62 |
-100
-```
-
-<!-- page: 257 -->
-
-```text
-KFM-P22-PROG-0046 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:e985cf843d7c14c... | 8.3.63 |
-100
-KFM-P22-PROG-0049 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:ce710eb58db7146... | 8.3.64 |
-100
-KFM-P23-PROG-0005 | programming | DAT | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:55c76d2ffe7205f... | 8.3.65 |
-100
-KFM-P23-PROG-0020 | programming | DAT | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:30d346191ac52cc... | 8.3.66 |
-101
-KFM-P23-PROG-0033 | programming | DAT | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:040fa4c7e8decb2... | 8.3.67 |
-101
-KFM-P23-PROG-0034 | programming | DAT | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:60c65204484853a... | 8.3.68 |
-101
-KFM-P24-IDEA-0001 | idea | DAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:59e9058e4ffdbf9... | 8.3.69 | 101
-KFM-P24-PROG-0009 | programming | DAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:79b6beb84321276... | 8.3.70 |
-101
-KFM-P24-PROG-0010 | programming | DAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:5e46a67e9247794... | 8.3.71 |
-102
-KFM-P24-PROG-0011 | programming | DAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:9bd537e3ce94a7c... | 8.3.72 |
-102
-KFM-P24-PROG-0012 | programming | DAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:daa71155411022c... | 8.3.73 |
-102
-KFM-P24-PROG-0025 | programming | DAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:7b36bc058f7e64e... | 8.3.74 |
-102
-KFM-P24-PROG-0043 | programming | DAT | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:68a099f6b333ac8... | 8.3.75 |
-102
-KFM-P25-FEAT-0008 | feature | DAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:60c0a73a17a99c1... | 8.3.76 | 103
-KFM-P25-IDEA-0013 | idea | DAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:636e54f79b4ddd3... | 8.3.77 | 103
-KFM-P25-PROG-0016 | programming | DAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:f3ecc27f276f3ee... | 8.3.78 |
-103
-KFM-P25-PROG-0020 | programming | DAT | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:50f63cc5ba80554... | 8.3.79 |
-103
-KFM-P26-FEAT-0001 | feature | DAT | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:8fa9ece4ac8d3bd... | 8.3.80 | 103
-KFM-P26-PROG-0010 | programming | DAT | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:cf6f749457e1aff... | 8.3.81 |
-104
-KFM-P26-PROG-0014 | programming | DAT | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:a70fa789aacbec0... | 8.3.82 |
-104
-KFM-P27-FEAT-0009 | feature | DAT | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:1b45f07f2f82ddd... | 8.3.83 | 104
-KFM-P27-IDEA-0018 | idea | DAT | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:29bf2333502d921... | 8.3.84 | 104
-KFM-P27-PROG-0022 | programming | DAT | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:65e7e3ee88bedcd... | 8.3.85 |
-104
-KFM-P29-FEAT-0003 | feature | DAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:77f98aaa76271d0... | 8.3.86 | 105
-KFM-P29-IDEA-0002 | idea | DAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:b0b2011646b89e0... | 8.3.87 | 105
-KFM-P29-PROG-0006 | programming | DAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:190e2a5ba983fb0... | 8.3.88 | 105
-KFM-P29-PROG-0008 | programming | DAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:d5d4cae032114b6... | 8.3.89 | 105
-KFM-P29-PROG-0016 | programming | DAT | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:6775c2b75a235b5... | 8.3.90 | 105
-KFM-P30-PROG-0013 | programming | DAT | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:40006356175be91... | 8.3.91 | 106
-KFM-P30-PROG-0028 | programming | DAT | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:2b7745b5907cf7b... | 8.3.92 | 106
-KFM-P31-PROG-0013 | programming | DAT | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:fa365992bb1c2f8... | 8.3.93 | 106
-KFM-P32-FEAT-0015 | feature | DAT | NEW | active | 32 | 32 | SRC-P32-002 | sha256:7a46d6386656141... | 8.3.94 | 106
-KFM-P32-FEAT-0018 | feature | DAT | NEW | active | 32 | 32 | SRC-P32-001 | sha256:47692941391f295... | 8.3.95 | 106
-KFM-P32-IDEA-0001 | idea | DAT | NEW | active | 32 | 32 | SRC-P32-002 | sha256:a33dde2ec5a1030... | 8.3.96 | 107
-KFM-P32-IDEA-0010 | idea | DAT | NEW | active | 32 | 32 | SRC-P32-001 | sha256:459c0e30cb2b227... | 8.3.97 | 107
-KFM-P32-PROG-0003 | programming | DAT | NEW | active | 32 | 32 | SRC-P32-001,SRC-P32-002 | sha256:eaa8ebe2e246cfd... | 8.3.98 | 107
-KFM-P32-PROG-0013 | programming | DAT | NEW | active | 32 | 32 | SRC-P32-001 | sha256:16caa0ecd54db78... | 8.3.99 | 107
-KFM-P32-PROG-0020 | programming | DAT | NEW | active | 32 | 32 | SRC-P32-002 | sha256:78f483c0bdb67dd... | 8.3.100 | 107
-KFM-P4-PROG-0001 | programming | DAT | UNCHANGED | active | 4 | 23 | SRC-P28-001,SRC-P28-002 | sha256:c31d5aaea3a8b09... | 8.3.101 |
-108
-KFM-P4-PROG-0004 | programming | DAT | UNCHANGED | active | 4 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:4b32e0cc97c9887... | 8.3.102 | 108
-KFM-P6-PROG-0001 | programming | DAT | UNCHANGED | active | 6 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:512d382c6f3ddf2... | 8.3.103 | 108
-KFM-P6-PROG-0015 | programming | DAT | UNCHANGED | active | 6 | 20 | SRC-P28-001,SRC-P28-002 | sha256:9e8be525927e0e2... | 8.3.104 |
-108
-KFM-P9-FEAT-0002 | feature | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:2b29bbf95b9f831... | 8.3.105 | 108
-KFM-P9-IDEA-0008 | idea | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:27111c8c3101774... | 8.3.106 | 109
-KFM-P9-IDEA-0009 | idea | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:27ca20d04e3b966... | 8.3.107 | 109
-KFM-P9-IDEA-0010 | idea | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:9d91928774ae14e... | 8.3.108 | 109
-KFM-P9-PROG-0003 | programming | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:efad27dd8d4bd26... | 8.3.109 | 109
-KFM-P9-PROG-0004 | programming | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:85de5e02b3e35ce... | 8.3.110 | 109
-KFM-P9-PROG-0005 | programming | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:739ae2f494c4906... | 8.3.111 | 110
-KFM-P9-PROG-0006 | programming | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:0254afcac20c6fb... | 8.3.112 | 110
-KFM-P9-PROG-0007 | programming | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:d9c341df1e0cd3f... | 8.3.113 | 110
-KFM-P9-PROG-0008 | programming | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:2620eb70e77a0a2... | 8.3.114 | 110
-KFM-P9-PROG-0009 | programming | DAT | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:f8ac416a08207b5... | 8.3.115 | 110
-KFM-P1-IDEA-0001 | idea | DOC | UNCHANGED | active | 1 | 11 | SRC-P28-001,SRC-P28-002 | sha256:efbf4728ec98745... | 8.4.1 | 111
-KFM-P1-IDEA-0002 | idea | DOC | UNCHANGED | active | 1 | 9 | SRC-P28-001,SRC-P28-002 | sha256:22ab564075ed2a5... | 8.4.2 | 111
-KFM-P1-IDEA-0003 | idea | DOC | UNCHANGED | active | 1 | 9 | SRC-P28-001,SRC-P28-002 | sha256:65945c358d62f6f... | 8.4.3 | 111
-KFM-P1-IDEA-0004 | idea | DOC | UNCHANGED | active | 1 | 9 | SRC-P28-001,SRC-P28-002 | sha256:9f1f3f5de74e103... | 8.4.4 | 111
-KFM-P1-IDEA-0005 | idea | DOC | UNCHANGED | active | 1 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:2675ebd2f9b01c6... | 8.4.5 | 111
-KFM-P12-IDEA-0002 | idea | DOC | UNCHANGED | active | 12 | 12 | SRC-P28-001,SRC-P28-002 | sha256:dab9d42d02b2144... | 8.4.6 | 112
-KFM-P12-PROG-0018 | programming | DOC | UNCHANGED | active | 12 | 13 | SRC-P28-001,SRC-P28-002 | sha256:6e82003f7aceed7... | 8.4.7 |
-112
-KFM-P13-PROG-0009 | programming | DOC | UNCHANGED | active | 13 | 13 | SRC-P28-001,SRC-P28-002 | sha256:3e60f2f62803e33... | 8.4.8 |
-```
-
-<!-- page: 258 -->
-
-```text
-112
-KFM-P15-PROG-0041 | programming | DOC | QUARANTINED | quarantine | 15 | 15 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:7bf12b2a217a8d5... | 8.4.9 | 112
-KFM-P17-FEAT-0005 | feature | DOC | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:3b4536db688f5c2... | 8.4.10 | 112
-KFM-P17-IDEA-0002 | idea | DOC | UNCHANGED | active | 17 | 18 | SRC-P28-001,SRC-P28-002 | sha256:875a110e43fbfc2... | 8.4.11 | 113
-KFM-P17-PROG-0024 | programming | DOC | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:f040154ece086e1... | 8.4.12 |
-113
-KFM-P17-PROG-0045 | programming | DOC | QUARANTINED | quarantine | 17 | 17 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:f9df888f2f200cb... | 8.4.13 | 113
-KFM-P18-FEAT-0002 | feature | DOC | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:a1aac7f8b829165... | 8.4.14 | 113
-KFM-P18-PROG-0019 | programming | DOC | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:e2b997abd30d716... | 8.4.15 |
-113
-KFM-P19-FEAT-0008 | feature | DOC | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:4c713d20fab0069... | 8.4.16 | 114
-KFM-P19-PROG-0039 | programming | DOC | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:14fd3c1fbc0ba7c... | 8.4.17 |
-114
-KFM-P2-PROG-0030 | programming | DOC | UNCHANGED | active | 2 | 13 | SRC-P28-001,SRC-P28-002 | sha256:375c2de2a67f958... | 8.4.18 |
-114
-KFM-P2-PROG-0031 | programming | DOC | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:5c9174fb992e0b6... | 8.4.19 | 114
-KFM-P20-PROG-0042 | programming | DOC | QUARANTINED | quarantine | 20 | 20 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:46900db9b8cb8dd... | 8.4.20 | 114
-KFM-P21-PROG-0027 | programming | DOC | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:053e6e4ef87bcf1... | 8.4.21 |
-115
-KFM-P21-PROG-0044 | programming | DOC | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:3a8c0b5e6bdb0dd... | 8.4.22 |
-115
-KFM-P22-PROG-0017 | programming | DOC | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:87543d6932383ab... | 8.4.23 |
-115
-KFM-P22-PROG-0018 | programming | DOC | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:19925e0f38383fd... | 8.4.24 |
-115
-KFM-P23-PROG-0052 | programming | DOC | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:0ad71f3555679ff... | 8.4.25 |
-115
-KFM-P23-PROG-0053 | programming | DOC | QUARANTINED | quarantine | 23 | 23 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:08e1b7bb859813e... | 8.4.26 | 116
-KFM-P24-PROG-0052 | programming | DOC | QUARANTINED | quarantine | 24 | 24 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:0479515503b6676... | 8.4.27 | 116
-KFM-P25-IDEA-0020 | idea | DOC | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:9ac7de8d7fd36e4... | 8.4.28 | 116
-KFM-P25-PROG-0031 | programming | DOC | QUARANTINED | quarantine | 25 | 25 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:4be9ece53299382... | 8.4.29 | 116
-KFM-P26-PROG-0031 | programming | DOC | QUARANTINED | quarantine | 26 | 26 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:d9e56b6c1ff32b4... | 8.4.30 | 116
-KFM-P27-PROG-0030 | programming | DOC | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:e12558fd3a498a4... | 8.4.31 |
-117
-KFM-P27-PROG-0031 | programming | DOC | QUARANTINED | quarantine | 27 | 27 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:243a6b3ce7430b0... | 8.4.32 | 117
-KFM-P28-IDEA-0017 | idea | DOC | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:1e73cb598b64e26... | 8.4.33 | 117
-KFM-P28-PROG-0031 | programming | DOC | QUARANTINED | quarantine | 28 | 28 | SRC-P28-003,SRC-P28-004,SRC-P28-005 |
-sha256:3d8471af1739980... | 8.4.34 | 117
-KFM-P29-PROG-0030 | programming | DOC | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:4717d04a3f80966... | 8.4.35 | 117
-KFM-P29-PROG-0031 | programming | DOC | QUARANTINED | quarantine | 29 | 29 | SRC-P29-003 | sha256:5153749fdd75dbc... | 8.4.36 | 118
-KFM-P3-FEAT-0005 | feature | DOC | UNCHANGED | active | 3 | 13 | SRC-P28-001,SRC-P28-002 | sha256:33da07627bf8296... | 8.4.37 | 118
-KFM-P30-PROG-0031 | programming | DOC | QUARANTINED | quarantine | 30 | 30 | SRC-P30-003 | sha256:df1a5b29a60e60c... | 8.4.38 | 118
-KFM-P32-FEAT-0019 | feature | DOC | NEW | active | 32 | 32 | SRC-P32-001 | sha256:9c0651b2af74ebd... | 8.4.39 | 118
-KFM-P7-PROG-0007 | programming | DOC | UNCHANGED | active | 7 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:86238459e89bab7... | 8.4.40 | 118
-KFM-P7-PROG-0008 | programming | DOC | UNCHANGED | active | 7 | 7 | SRC-P28-001,SRC-P28-002 | sha256:cecf61ddb6e0f2d... | 8.4.41 | 119
-KFM-P8-PROG-0020 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P28-001,SRC-P28-002 | sha256:5978e87ff476c14... | 8.4.42 | 119
-KFM-P8-PROG-0028 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P28-001,SRC-P28-002 | sha256:8877bbc1046e9dd... | 8.4.43 | 119
-KFM-P8-PROG-0029 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P28-001,SRC-P28-002 | sha256:bdbc5fdd7a9c12a... | 8.4.44 | 119
-KFM-P8-PROG-0030 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P28-001,SRC-P28-002 | sha256:f028d5f618e7817... | 8.4.45 | 119
-KFM-P8-PROG-0031 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P28-001,SRC-P28-002 | sha256:861e5a34a754c1f... | 8.4.46 | 120
-KFM-P8-PROG-0032 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P28-001,SRC-P28-002 | sha256:53eb5bed3682535... | 8.4.47 | 120
-KFM-P8-PROG-0033 | programming | DOC | QUARANTINED | quarantine | 8 | 8 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:879d60606a780f9... | 8.4.48 | 120
-KFM-P9-IDEA-0001 | idea | DOC | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:1c987627ed4bd40... | 8.4.49 | 120
-KFM-P9-PROG-0001 | programming | DOC | UNCHANGED | active | 9 | 23 | SRC-P28-001,SRC-P28-002 | sha256:e5d595ce89f17f6... | 8.4.50 |
-120
-KFM-P1-IDEA-0012 | idea | EVD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:e3342bc788c860f... | 8.5.1 | 121
-KFM-P1-IDEA-0014 | idea | EVD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:6d8e03842a00d96... | 8.5.2 | 121
-KFM-P1-IDEA-0019 | idea | EVD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:1b1563a08fd296f... | 8.5.3 | 121
-KFM-P1-PROG-0013 | programming | EVD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:767c4cd0c75ec9e... | 8.5.4 | 121
-KFM-P1-PROG-0015 | programming | EVD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:11c978ab2f46f41... | 8.5.5 | 121
-KFM-P1-PROG-0016 | programming | EVD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:8f7adb320ad5af4... | 8.5.6 | 122
-KFM-P1-PROG-0018 | programming | EVD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:1b289e4ebad99d3... | 8.5.7 | 122
-KFM-P10-PROG-0003 | programming | EVD | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:b2ee377350b5b16... | 8.5.8 | 122
-KFM-P10-PROG-0024 | programming | EVD | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:a884707bcc6d2d7... | 8.5.9 | 122
-KFM-P11-FEAT-0001 | feature | EVD | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:be9cbb16caea299... | 8.5.10 | 122
-KFM-P11-PROG-0010 | programming | EVD | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:166ef03da39a39b... | 8.5.11 | 123
-KFM-P11-PROG-0017 | programming | EVD | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:571e86a657d61c0... | 8.5.12 | 123
-KFM-P11-PROG-0029 | programming | EVD | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:1fda91fad9ec714... | 8.5.13 | 123
-KFM-P12-PROG-0030 | programming | EVD | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:797d1e88a63ed1c... | 8.5.14 | 123
-KFM-P13-PROG-0008 | programming | EVD | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-```
-
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 30: pages 259–262 -->
-
-<!-- page: 259 -->
-
-```text
-sha256:a8fb0e65938dd40... | 8.5.15 | 123
-KFM-P13-PROG-0010 | programming | EVD | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:b35e8679e1cbd13... | 8.5.16 | 124
-KFM-P14-PROG-0015 | programming | EVD | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:627392e5b0e0b8f... | 8.5.17 | 124
-KFM-P14-PROG-0016 | programming | EVD | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:9154fc1d633999f... | 8.5.18 | 124
-KFM-P14-PROG-0032 | programming | EVD | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:069459efc5b22b0... | 8.5.19 | 124
-KFM-P15-PROG-0002 | programming | EVD | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:0d3ad3813cdaf36... | 8.5.20 | 124
-KFM-P15-PROG-0030 | programming | EVD | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:5cf859c0a9062a0... | 8.5.21 | 125
-KFM-P15-PROG-0038 | programming | EVD | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:d2812bcc315841f... | 8.5.22 | 125
-KFM-P16-PROG-0032 | programming | EVD | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:91210e59c9cde1e... | 8.5.23 | 125
-KFM-P17-IDEA-0004 | idea | EVD | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:975279b9bd854c4... | 8.5.24 | 125
-KFM-P17-PROG-0001 | programming | EVD | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:2f49cb7cb9df2b7... | 8.5.25 | 125
-KFM-P17-PROG-0006 | programming | EVD | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:305b4fde0b81969... | 8.5.26 | 126
-KFM-P17-PROG-0011 | programming | EVD | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:ac9f88ff8255ba2... | 8.5.27 | 126
-KFM-P17-PROG-0012 | programming | EVD | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:ee934a418872846... | 8.5.28 | 126
-KFM-P17-PROG-0028 | programming | EVD | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:84736e05ddb9048... | 8.5.29 | 126
-KFM-P17-PROG-0039 | programming | EVD | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:de4634f0ff97242... | 8.5.30 | 126
-KFM-P18-IDEA-0002 | idea | EVD | EXPANDED | active | 18 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:fbd0d4a8c68594b... | 8.5.31 | 127
-KFM-P18-PROG-0006 | programming | EVD | EXPANDED | active | 18 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:5bfa73f9264ded1... | 8.5.32 | 127
-KFM-P18-PROG-0017 | programming | EVD | EXPANDED | active | 18 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:6ba24dcaeebb8e3... | 8.5.33 | 127
-KFM-P18-PROG-0040 | programming | EVD | EXPANDED | active | 18 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:b0b58dd13026b6a... | 8.5.34 | 127
-KFM-P19-IDEA-0001 | idea | EVD | EXPANDED | active | 19 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:79fa70d41f6c338... | 8.5.35 | 127
-KFM-P19-PROG-0005 | programming | EVD | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:26c103c41c6e12f...
-| 8.5.36 | 128  
-KFM-P19-PROG-0008 | programming | EVD | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:602610da7fb3bd3...
-| 8.5.37 | 128  
-KFM-P19-PROG-0031 | programming | EVD | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:d90bb1635354085...
-| 8.5.38 | 128  
-KFM-P19-PROG-0032 | programming | EVD | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:7548a1450fd053e...
-| 8.5.39 | 128  
-KFM-P20-IDEA-0007 | idea | EVD | UNCHANGED | active | 20 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:c44b622d0d52bdf... |
-8.5.40 | 128
-KFM-P20-PROG-0015 | programming | EVD | UNCHANGED | active | 20 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:0045530e8e43c59...
-| 8.5.41 | 129  
-KFM-P20-PROG-0024 | programming | EVD | UNCHANGED | active | 20 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:dca2a6f432c9802...
-| 8.5.42 | 129  
-KFM-P21-IDEA-0002 | idea | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:cdf7c026141c214... | 8.5.43 | 129
-KFM-P21-PROG-0011 | programming | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:1d6ca93c2c31693... | 8.5.44 |
-129
-KFM-P21-PROG-0021 | programming | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:04cca228262c900... | 8.5.45 |
-129
-KFM-P21-PROG-0022 | programming | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:8a4d23294ad99d8... | 8.5.46 |
-130
-KFM-P21-PROG-0023 | programming | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:bfbbe6bd040fb89... | 8.5.47 |
-130
-KFM-P21-PROG-0039 | programming | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:28b898318510a94... | 8.5.48 |
-130
-KFM-P21-PROG-0042 | programming | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:f734ae1f4628056... | 8.5.49 |
-130
-KFM-P21-PROG-0051 | programming | EVD | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:2d0d049a4a4a64b... | 8.5.50 |
-130
-KFM-P22-IDEA-0002 | idea | EVD | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:a937d1815a00263... | 8.5.51 | 131
-KFM-P22-PROG-0003 | programming | EVD | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:5225018e3fd886a...
-| 8.5.52 | 131  
-KFM-P22-PROG-0036 | programming | EVD | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:63efb336e133b19... | 8.5.53 |
-131
-KFM-P22-PROG-0050 | programming | EVD | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:7eb8d7ee5a44496...
-| 8.5.54 | 131  
-KFM-P23-IDEA-0005 | idea | EVD | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:3c967733ffce052... |
-8.5.55 | 131
-KFM-P23-PROG-0016 | programming | EVD | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:80d52919df240ca...
-| 8.5.56 | 132  
-KFM-P23-PROG-0023 | programming | EVD | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:0f9cefc67e5933a...
-| 8.5.57 | 132  
-KFM-P23-PROG-0025 | programming | EVD | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:0e4e8a525ff4fc9...
-| 8.5.58 | 132  
-```
-
-<!-- page: 260 -->
-
-```text
-KFM-P23-PROG-0047 | programming | EVD | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:a4832502b666730...
-| 8.5.59 | 132  
-KFM-P24-IDEA-0005 | idea | EVD | UNCHANGED | active | 24 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:8a20080990f2211... |
-8.5.60 | 132
-KFM-P24-PROG-0028 | programming | EVD | UNCHANGED | active | 24 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:0fb61e21ddbabda...
-| 8.5.61 | 133  
-KFM-P24-PROG-0042 | programming | EVD | UNCHANGED | active | 24 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:abe3fe5210a5e9e...
-| 8.5.62 | 133  
-KFM-P25-FEAT-0009 | feature | EVD | UNCHANGED | active | 25 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:43462cf51412c78... |
-8.5.63 | 133
-KFM-P25-IDEA-0017 | idea | EVD | UNCHANGED | active | 25 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:59d0e83cfa55e83... |
-8.5.64 | 133
-KFM-P26-FEAT-0008 | feature | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:88d97104116d7a8... |
-8.5.65 | 133
-KFM-P26-IDEA-0002 | idea | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:4fd5ba57d08ee0d... |
-8.5.66 | 134
-KFM-P26-IDEA-0003 | idea | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:03b068b898c48d9... |
-8.5.67 | 134
-KFM-P26-IDEA-0006 | idea | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:ffcb8639ebb9d62... |
-8.5.68 | 134
-KFM-P26-IDEA-0008 | idea | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:43cc8984763e129... |
-8.5.69 | 134
-KFM-P26-PROG-0004 | programming | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:fa3aafaf5d6e0af...
-| 8.5.70 | 134  
-KFM-P26-PROG-0005 | programming | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:992cf745469092d...
-| 8.5.71 | 135  
-KFM-P26-PROG-0008 | programming | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:1b7eb7d8ef364be...
-| 8.5.72 | 135  
-KFM-P26-PROG-0011 | programming | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:6c3d820e8f6a27a...
-| 8.5.73 | 135  
-KFM-P26-PROG-0012 | programming | EVD | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:0f0871cd409e02f...
-| 8.5.74 | 135  
-KFM-P27-IDEA-0002 | idea | EVD | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:aeaa9ddd6491ec6... |
-8.5.75 | 135
-KFM-P27-PROG-0003 | programming | EVD | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:9e1099a06ed000e...
-| 8.5.76 | 136  
-KFM-P28-FEAT-0010 | feature | EVD | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:0eff3b53a6ed9cd... | 8.5.77 | 136
-KFM-P28-IDEA-0007 | idea | EVD | UNCHANGED | active | 28 | 30 | SRC-P28-003,SRC-P30-002 | sha256:ffefd2f3b02eaa5... | 8.5.78 | 136
-KFM-P28-IDEA-0019 | idea | EVD | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:af981f39e0078e0... | 8.5.79 | 136
-KFM-P28-PROG-0006 | programming | EVD | UNCHANGED | active | 28 | 30 | SRC-P28-003,SRC-P30-002 | sha256:fd6e36dc286f875... | 8.5.80 |
-136
-KFM-P28-PROG-0011 | programming | EVD | UNCHANGED | active | 28 | 30 | SRC-P28-003,SRC-P30-002 | sha256:4e23b995d890e80... | 8.5.81 |
-137
-KFM-P28-PROG-0030 | programming | EVD | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:82c929312252c23... | 8.5.82 |
-137
-KFM-P29-IDEA-0007 | idea | EVD | UNCHANGED | active | 29 | 30 | SRC-P29-001,SRC-P30-002 | sha256:1543144c791c515... | 8.5.83 | 137
-KFM-P29-IDEA-0014 | idea | EVD | UNCHANGED | active | 29 | 30 | SRC-P29-002,SRC-P30-002 | sha256:c1347b1588472c0... | 8.5.84 | 137
-KFM-P3-PROG-0001 | programming | EVD | UNCHANGED | active | 3 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:45de9c165518666... | 8.5.85 | 137
-KFM-P30-IDEA-0018 | idea | EVD | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:e4cf2b507bbb36f... | 8.5.86 | 138
-KFM-P30-PROG-0029 | programming | EVD | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:cd77280751f0bc7... | 8.5.87 | 138
-KFM-P31-IDEA-0006 | idea | EVD | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:7657a480c693ece... | 8.5.88 | 138
-KFM-P31-PROG-0003 | programming | EVD | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:48b01f0bed00068... | 8.5.89 | 138
-KFM-P32-FEAT-0003 | feature | EVD | NEW | active | 32 | 32 | SRC-P32-002 | sha256:7f908925c42c9d7... | 8.5.90 | 138
-KFM-P32-IDEA-0004 | idea | EVD | NEW | active | 32 | 32 | SRC-P32-001 | sha256:0215f7e014e9120... | 8.5.91 | 139
-KFM-P32-IDEA-0013 | idea | EVD | NEW | active | 32 | 32 | SRC-P32-002 | sha256:320d637539e9838... | 8.5.92 | 139
-KFM-P32-PROG-0007 | programming | EVD | NEW | active | 32 | 32 | SRC-P32-002 | sha256:f47297f9f254f68... | 8.5.93 | 139
-KFM-P6-PROG-0009 | programming | EVD | UNCHANGED | active | 6 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:e1a00b4db14bc66... | 8.5.94 | 139
-KFM-P7-IDEA-0001 | idea | EVD | UNCHANGED | active | 7 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:e974130f1a06f48... | 8.5.95 | 139
-KFM-P8-IDEA-0001 | idea | EVD | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:f9cda604eb3e1ab... | 8.5.96
-| 140  
-KFM-P8-PROG-0019 | programming | EVD | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:a5faafc3b8216ba... | 8.5.97 | 140
-KFM-P9-FEAT-0003 | feature | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:d5c0da30df595ec... | 8.5.98 | 140
-KFM-P9-IDEA-0012 | idea | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:5d948065a620581... | 8.5.99 | 140
-KFM-P9-IDEA-0013 | idea | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:dd549790b19a250... | 8.5.100 | 140
-KFM-P9-IDEA-0014 | idea | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:15f507f2e507426... | 8.5.101 | 141
-KFM-P9-IDEA-0015 | idea | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:a8d1ea9fb12d462... | 8.5.102 | 141
-KFM-P9-PROG-0019 | programming | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:5659d9ddacfbe8d... | 8.5.103 | 141
-KFM-P9-PROG-0020 | programming | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:774cedbc9213aad... | 8.5.104 | 141
-KFM-P9-PROG-0021 | programming | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:bf951eec8ca2afa... | 8.5.105 | 141
-KFM-P9-PROG-0022 | programming | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:ccb11fc19088cc0... | 8.5.106 | 142
-KFM-P9-PROG-0023 | programming | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:8970db4bc65c8fd... | 8.5.107 | 142
-KFM-P9-PROG-0024 | programming | EVD | UNCHANGED | active | 9 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:5c21682a5549054... | 8.5.108 | 142
-KFM-P1-FEAT-0038 | feature | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:82245037b3ffefa... | 8.6.1 | 142
-KFM-P1-FEAT-0039 | feature | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:1901e6980c43b8c... | 8.6.2 | 142
-KFM-P1-FEAT-0042 | feature | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:2e0e39b42a81c0d... | 8.6.3 | 142
-KFM-P1-FEAT-0044 | feature | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0b0ff0159c40cb8... | 8.6.4 | 142
-```
-
-<!-- page: 261 -->
-
-```text
-KFM-P1-IDEA-0040 | idea | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:568be8588e91987... | 8.6.5 | 142
-KFM-P1-PROG-0041 | programming | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:57551d7a0312df6... | 8.6.6 | 143
-KFM-P1-PROG-0043 | programming | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:02f5031d28d4bf3... | 8.6.7 | 143
-KFM-P10-FEAT-0001 | feature | MAP | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:ab88cae81d15e36... | 8.6.8 | 143
-KFM-P11-PROG-0004 | programming | MAP | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:cb63ff84e5097ee... | 8.6.9 | 143
-KFM-P12-PROG-0021 | programming | MAP | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:7b455e1a8b20d87... | 8.6.10 | 143
-KFM-P13-PROG-0001 | programming | MAP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:f82af1faa4eef56... | 8.6.11 | 144
-KFM-P13-PROG-0014 | programming | MAP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0ec1a6bcbf224b1... | 8.6.12 | 144
-KFM-P13-PROG-0016 | programming | MAP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:540b03a1ab1deff... | 8.6.13 | 144
-KFM-P13-PROG-0017 | programming | MAP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:76f8a5dbf8f4220... | 8.6.14 | 144
-KFM-P13-PROG-0023 | programming | MAP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:2e7804870a38a2b... | 8.6.15 | 144
-KFM-P13-PROG-0024 | programming | MAP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:6203bda73d53e91... | 8.6.16 | 145
-KFM-P14-PROG-0011 | programming | MAP | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:24f61b8d32c4557... | 8.6.17 | 145
-KFM-P15-PROG-0013 | programming | MAP | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4d9964879062e39... | 8.6.18 | 145
-KFM-P15-PROG-0014 | programming | MAP | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:ae6051ab32d21f9... | 8.6.19 | 145
-KFM-P15-PROG-0028 | programming | MAP | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:b49bea36bc07c76... | 8.6.20 | 145
-KFM-P15-PROG-0029 | programming | MAP | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:a9e6a9be998ab8b... | 8.6.21 | 146
-KFM-P16-IDEA-0006 | idea | MAP | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:5ad87a2698652a1... | 8.6.22 | 146
-KFM-P16-PROG-0022 | programming | MAP | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:b190d464871e49b... | 8.6.23 | 146
-KFM-P16-PROG-0031 | programming | MAP | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:f3231a6ea6d2fbc... | 8.6.24 | 146
-KFM-P17-PROG-0019 | programming | MAP | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0b0407539dfca27... | 8.6.25 | 146
-KFM-P17-PROG-0033 | programming | MAP | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:3a2daeed7432c10... | 8.6.26 | 147
-KFM-P19-FEAT-0003 | feature | MAP | EXPANDED | active | 19 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:681beee44b83200... | 8.6.27 | 147
-KFM-P19-FEAT-0006 | feature | MAP | EXPANDED | active | 19 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4727da8bac60e6a... | 8.6.28 | 147
-KFM-P19-PROG-0021 | programming | MAP | EXPANDED | active | 19 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4ef438bf911d4ee... | 8.6.29 | 147
-KFM-P2-FEAT-0012 | feature | MAP | EXPANDED | active | 2 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:0611f3df664d543... | 8.6.30
-| 147  
-KFM-P2-FEAT-0013 | feature | MAP | EXPANDED | active | 2 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:73f85c16237e3cd... | 8.6.31
-| 148  
-KFM-P2-FEAT-0032 | feature | MAP | EXPANDED | active | 2 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:07ba90b7d72f863... | 8.6.32
-| 148  
-KFM-P2-FEAT-0035 | feature | MAP | EXPANDED | active | 2 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:bd5b39c57e18721... | 8.6.33
-| 148  
-KFM-P2-FEAT-0036 | feature | MAP | EXPANDED | active | 2 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:b345fe8438524ed... | 8.6.34 | 148
-KFM-P2-IDEA-0014 | idea | MAP | EXPANDED | active | 2 | 32 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 |
-sha256:b99c7e5f0cd939f... | 8.6.35 |
-148
-KFM-P2-IDEA-0033 | idea | MAP | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:85a409742c98e17... | 8.6.36 | 149
-KFM-P2-IDEA-0034 | idea | MAP | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:afd765314e4468a... | 8.6.37 | 149
-KFM-P20-FEAT-0003 | feature | MAP | UNCHANGED | active | 20 | 23 | SRC-P28-001,SRC-P28-002 | sha256:f5ef7357ebb4162... | 8.6.38 | 149
-KFM-P20-FEAT-0005 | feature | MAP | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:dd0fbb7ec9dded1... | 8.6.39 | 149
-KFM-P20-PROG-0013 | programming | MAP | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:bd39ae5c9fd15a0... | 8.6.40 |
-149
-KFM-P20-PROG-0038 | programming | MAP | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:65ca32712d1c377... | 8.6.41 |
-150
-KFM-P21-FEAT-0002 | feature | MAP | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:7a05c51ef3875af... | 8.6.42 | 150
-KFM-P21-PROG-0008 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:464d1ce22a853b0... | 8.6.43 |
-150
-KFM-P21-PROG-0018 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:5071200b3675373... | 8.6.44 |
-150
-KFM-P21-PROG-0034 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:6b4267d59d83b3d... | 8.6.45 |
-150
-KFM-P21-PROG-0035 | programming | MAP | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:157cc45698e9087... | 8.6.46 |
-151
-KFM-P22-PROG-0011 | programming | MAP | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:f539573db96f306... | 8.6.47 |
-151
-KFM-P22-PROG-0041 | programming | MAP | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:40559d2041d965b... | 8.6.48 |
-151
-KFM-P22-PROG-0042 | programming | MAP | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:21e0c01fd9f8fc4... | 8.6.49 |
-151
-KFM-P23-IDEA-0004 | idea | MAP | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:6fe88da73488487... | 8.6.50 | 151
-KFM-P23-PROG-0036 | programming | MAP | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:d9eaf6f338daa5c... | 8.6.51 |
-152
-```
-
-<!-- page: 262 -->
-
-```text
-KFM-P23-PROG-0037 | programming | MAP | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:2f3f6fc605cbb1c... | 8.6.52 |
-152
-KFM-P24-PROG-0051 | programming | MAP | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:499dfef82075e48... | 8.6.53 |
-152
-KFM-P25-FEAT-0005 | feature | MAP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:c0c9c67079c28d0... | 8.6.54 | 152
-KFM-P25-IDEA-0010 | idea | MAP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:c33cf65d448900c... | 8.6.55 | 152
-KFM-P25-PROG-0006 | programming | MAP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:ee84b66422b9d17... | 8.6.56 |
-153
-KFM-P25-PROG-0024 | programming | MAP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:af06e3779b96388... | 8.6.57 |
-153
-KFM-P26-FEAT-0007 | feature | MAP | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:c3109c816a90ecd... | 8.6.58 | 153
-KFM-P26-FEAT-0010 | feature | MAP | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:85bd938f4cddd16... | 8.6.59 | 153
-KFM-P26-IDEA-0018 | idea | MAP | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:dd657ee6e26a757... | 8.6.60 | 153
-KFM-P26-PROG-0029 | programming | MAP | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:9f4d5f47c5a62c4... | 8.6.61 |
-154
-KFM-P27-FEAT-0005 | feature | MAP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:0da0abdb704e66a... | 8.6.62 | 154
-KFM-P27-FEAT-0008 | feature | MAP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:f3adf5cba3f3e9f... | 8.6.63 | 154
-KFM-P27-IDEA-0007 | idea | MAP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:f81a224eddd3a11... | 8.6.64 | 154
-KFM-P27-PROG-0009 | programming | MAP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:30f8a2db4d02f96... | 8.6.65 |
-154
-KFM-P27-PROG-0010 | programming | MAP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:512079d94382613... | 8.6.66 |
-155
-KFM-P28-FEAT-0005 | feature | MAP | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:6688ed0cf3cb4f7... | 8.6.67 | 155
-KFM-P28-FEAT-0006 | feature | MAP | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:09032b63fa73e3b... | 8.6.68 | 155
-KFM-P28-IDEA-0012 | idea | MAP | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:c5d9b79d9d2d232... | 8.6.69 | 155
-KFM-P28-PROG-0016 | programming | MAP | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:70b52b460a1a322... | 8.6.70 | 155
-KFM-P28-PROG-0017 | programming | MAP | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:d2fba6fa7349a0b... | 8.6.71 | 156
-KFM-P28-PROG-0022 | programming | MAP | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:9ae981615b5bd4c... | 8.6.72 | 156
-KFM-P28-PROG-0023 | programming | MAP | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:6d92638e34c5d01... | 8.6.73 | 156
-KFM-P29-FEAT-0006 | feature | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:f5194e06cda5118... | 8.6.74 | 156
-KFM-P29-FEAT-0009 | feature | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:c3d1406459dd4c3... | 8.6.75 | 156
-KFM-P29-IDEA-0009 | idea | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:771b6258043d26c... | 8.6.76 | 157
-KFM-P29-IDEA-0018 | idea | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:0053adfaca03e07... | 8.6.77 | 157
-KFM-P29-PROG-0010 | programming | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:66a39d272fb1082... | 8.6.78 | 157
-KFM-P29-PROG-0017 | programming | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:569d8b08ade5510... | 8.6.79 | 157
-KFM-P29-PROG-0021 | programming | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:3e5e68dbe7d9cc2... | 8.6.80 | 157
-KFM-P29-PROG-0022 | programming | MAP | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:9f45fba90ab42b5... | 8.6.81 | 158
-KFM-P30-FEAT-0008 | feature | MAP | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:76c3812aecce6dc... | 8.6.82 | 158
-KFM-P30-IDEA-0019 | idea | MAP | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:3028b00379a932d... | 8.6.83 | 158
-KFM-P30-PROG-0027 | programming | MAP | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:78e19f546439592... | 8.6.84 | 158
-KFM-P31-IDEA-0010 | idea | MAP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:ba35b076eb90743... | 8.6.85 | 158
-KFM-P31-IDEA-0011 | idea | MAP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:36bc7bc35c9f13b... | 8.6.86 | 159
-KFM-P31-PROG-0006 | programming | MAP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:2a18032b4d87153... | 8.6.87 | 159
-KFM-P31-PROG-0007 | programming | MAP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:bffb42da11f5ce9... | 8.6.88 | 159
-KFM-P32-FEAT-0013 | feature | MAP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:1abffb98626cb8d... | 8.6.89 | 159
-KFM-P32-IDEA-0006 | idea | MAP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:7df27087ded2f02... | 8.6.90 | 159
-KFM-P32-IDEA-0019 | idea | MAP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:99bc73628699165... | 8.6.91 | 160
-KFM-P32-PROG-0014 | programming | MAP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:2209cb497dfa02b... | 8.6.92 | 160
-KFM-P32-PROG-0016 | programming | MAP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:09f1a511619f404... | 8.6.93 | 160
-KFM-P4-PROG-0002 | programming | MAP | UNCHANGED | active | 4 | 23 | SRC-P28-001,SRC-P28-002 | sha256:bd02ff19af4ec61... | 8.6.94 |
-160
-KFM-P5-PROG-0003 | programming | MAP | UNCHANGED | active | 5 | 20 | SRC-P28-001,SRC-P28-002 | sha256:be856d356324eab... | 8.6.95 |
-160
-KFM-P5-PROG-0004 | programming | MAP | UNCHANGED | active | 5 | 20 | SRC-P28-001,SRC-P28-002 | sha256:776820368cd8e00... | 8.6.96 |
-161
-KFM-P5-PROG-0012 | programming | MAP | UNCHANGED | active | 5 | 23 | SRC-P28-001,SRC-P28-002 | sha256:30f33d41b300ff7... | 8.6.97 |
-161
-KFM-P7-FEAT-0001 | feature | MAP | UNCHANGED | active | 7 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:c326a9aebf61384... | 8.6.98 | 161
-KFM-P7-PROG-0006 | programming | MAP | UNCHANGED | active | 7 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:0d1fd50961f3603... | 8.6.99 | 161
-KFM-P9-FEAT-0001 | feature | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:25e769522c0e629... | 8.6.100 | 161
-KFM-P9-FEAT-0011 | feature | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:d6aae1bda9c4992... | 8.6.101 | 162
-KFM-P9-FEAT-0012 | feature | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:af2c0233f443f89... | 8.6.102 | 162
-KFM-P9-FEAT-0013 | feature | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:03ffe7b2b49f1f7... | 8.6.103 | 162
-KFM-P9-FEAT-0014 | feature | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:15febee60ea89f7... | 8.6.104 | 162
-KFM-P9-FEAT-0015 | feature | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:dbc5af812d952e8... | 8.6.105 | 162
-KFM-P9-FEAT-0016 | feature | MAP | UNCHANGED | active | 9 | 15 | SRC-P28-001,SRC-P28-002 | sha256:b13650045f85fd0... | 8.6.106 | 163
-KFM-P9-IDEA-0002 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:4e637c47493959d... | 8.6.107 | 163
-KFM-P9-IDEA-0003 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:635790b4060a23c... | 8.6.108 | 163
-KFM-P9-IDEA-0004 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:99bd1af595b472b... | 8.6.109 | 163
-KFM-P9-IDEA-0005 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:8175e80d25fc245... | 8.6.110 | 163
-KFM-P9-IDEA-0006 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:8420b828141535c... | 8.6.111 | 164
-KFM-P9-IDEA-0007 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:68717de358d9e9a... | 8.6.112 | 164
-KFM-P9-IDEA-0039 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:b71b1d484a511fd... | 8.6.113 | 164
-KFM-P9-IDEA-0040 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:152f771e005ec5d... | 8.6.114 | 164
-KFM-P9-IDEA-0041 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:bfcfe899ec1a28e... | 8.6.115 | 164
-KFM-P9-IDEA-0042 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:9df150af0e4eda5... | 8.6.116 | 165
-KFM-P9-IDEA-0043 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-```
-
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 31: pages 263–266 -->
-
-<!-- page: 263 -->
-
-```text
-sha256:dc53addaf3d24b8... | 8.6.117 | 165
-KFM-P9-IDEA-0044 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:b99580b95fe0dd1... | 8.6.118 | 165
-KFM-P9-IDEA-0045 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:9b6c081be28aed1... | 8.6.119 | 165
-KFM-P9-IDEA-0049 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:6b4ccf2dbb49bdb... | 8.6.120 | 165
-KFM-P9-PROG-0002 | programming | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:198eac358c6cbf9... | 8.6.121 | 166
-KFM-P9-PROG-0048 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:2c21d90aa3bd526... | 8.6.122 |
-166
-KFM-P9-PROG-0049 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:a57cce6d2542f66... | 8.6.123 |
-166
-KFM-P9-PROG-0050 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:a235dc01709e046... | 8.6.124 |
-166
-KFM-P9-PROG-0051 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:106cfa64ee7a90d... | 8.6.125 |
-166
-KFM-P9-PROG-0052 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:c3f7d6b1132d110... | 8.6.126 |
-167
-KFM-P9-PROG-0053 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:e66736c8e835b9a... | 8.6.127 |
-167
-KFM-P9-PROG-0054 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:85ce2d9f16126e9... | 8.6.128 |
-167
-KFM-P9-PROG-0055 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:07a41bd617f811c... | 8.6.129 |
-167
-KFM-P9-PROG-0056 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:ad2fc2b000ba325... | 8.6.130 |
-167
-KFM-P9-PROG-0057 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:9763daa62b3cccf... | 8.6.131 |
-168
-KFM-P9-PROG-0058 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:71b3bd5e4570ca4... | 8.6.132 |
-168
-KFM-P9-PROG-0071 | programming | MAP | UNCHANGED | active | 9 | 15 | SRC-P28-001,SRC-P28-002 | sha256:feedbd984c8a4a9... | 8.6.133 |
-168
-KFM-P9-PROG-0072 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:4678c444d4ea708... | 8.6.134 |
-168
-KFM-P9-PROG-0073 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:615f191d019d2e6... | 8.6.135 |
-168
-KFM-P9-PROG-0074 | programming | MAP | UNCHANGED | active | 9 | 15 | SRC-P28-001,SRC-P28-002 | sha256:2352baca30dc165... | 8.6.136 |
-169
-KFM-P9-PROG-0075 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:55a0e8aa4d400c8... | 8.6.137 |
-169
-KFM-P1-PROG-0021 | programming | MDP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:5becf79b5e60515... | 8.7.1 | 169
-KFM-P1-PROG-0022 | programming | MDP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0d4812dfcd6942d... | 8.7.2 | 169
-KFM-P1-PROG-0023 | programming | MDP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:83f2a6831b8a6d3... | 8.7.3 | 169
-KFM-P10-PROG-0002 | programming | MDP | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:db1438786f924eb... | 8.7.4 | 169
-KFM-P10-PROG-0007 | programming | MDP | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:9827188699273ad... | 8.7.5 | 169
-KFM-P10-PROG-0020 | programming | MDP | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:97be4e93083552e... | 8.7.6 | 170
-KFM-P11-PROG-0016 | programming | MDP | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:ab14e392c5e7c3e... | 8.7.7 | 170
-KFM-P12-IDEA-0003 | idea | MDP | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:19e3ce75ded95e1... | 8.7.8 | 170
-KFM-P12-PROG-0029 | programming | MDP | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:ad43922ad0462a6... | 8.7.9 | 170
-KFM-P13-IDEA-0003 | idea | MDP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:b397f17c6321fb0... | 8.7.10 | 170
-KFM-P13-PROG-0012 | programming | MDP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:c84b830fa9a3374... | 8.7.11 | 171
-KFM-P13-PROG-0026 | programming | MDP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:75a1fb8741ba039... | 8.7.12 | 171
-KFM-P13-PROG-0030 | programming | MDP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:01ca4aa4f360a70... | 8.7.13 | 171
-KFM-P13-PROG-0032 | programming | MDP | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:50c0cb3158a2eed... | 8.7.14 | 171
-KFM-P14-IDEA-0002 | idea | MDP | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:1208091e08ba9b5... | 8.7.15 | 171
-KFM-P14-PROG-0008 | programming | MDP | UNCHANGED | active | 14 | 27 | SRC-P28-001,SRC-P28-002 | sha256:d366cbcc3009031... | 8.7.16 |
-172
-KFM-P14-PROG-0014 | programming | MDP | UNCHANGED | active | 14 | 27 | SRC-P28-001,SRC-P28-002 | sha256:54a6d94be75927c... | 8.7.17 |
-172
-KFM-P14-PROG-0021 | programming | MDP | UNCHANGED | active | 14 | 27 | SRC-P28-001,SRC-P28-002 | sha256:f363ffa8da3af70... | 8.7.18 |
-172
-KFM-P15-PROG-0035 | programming | MDP | UNCHANGED | active | 15 | 27 | SRC-P28-001,SRC-P28-002 | sha256:1705d744571629c... | 8.7.19 |
-172
-KFM-P16-PROG-0023 | programming | MDP | UNCHANGED | active | 16 | 27 | SRC-P28-001,SRC-P28-002 | sha256:dcb48ff28b1dbd0... | 8.7.20 |
-172
-KFM-P16-PROG-0024 | programming | MDP | UNCHANGED | active | 16 | 27 | SRC-P28-001,SRC-P28-002 | sha256:05fc2f69325361b... | 8.7.21 |
-173
-KFM-P18-PROG-0022 | programming | MDP | UNCHANGED | active | 18 | 27 | SRC-P28-001,SRC-P28-002 | sha256:731729003a20144... | 8.7.22 |
-173
-KFM-P18-PROG-0027 | programming | MDP | UNCHANGED | active | 18 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:a83f4572d567c23... | 8.7.23 | 173
-KFM-P19-IDEA-0006 | idea | MDP | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:ab763938b9b4260... | 8.7.24 | 173
-KFM-P19-PROG-0014 | programming | MDP | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:4546c59a39786a7... | 8.7.25 | 173
-KFM-P19-PROG-0018 | programming | MDP | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:6b97fe4309c6bd6... | 8.7.26 | 174
-KFM-P19-PROG-0023 | programming | MDP | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:51a48111641aafd... | 8.7.27 | 174
-```
-
-<!-- page: 264 -->
-
-```text
-KFM-P19-PROG-0034 | programming | MDP | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:33e1b05ebe74bcd... | 8.7.28 | 174
-KFM-P20-PROG-0003 | programming | MDP | UNCHANGED | active | 20 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:3e8d38a6950f962... | 8.7.29 | 174
-KFM-P21-PROG-0005 | programming | MDP | UNCHANGED | active | 21 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:480ae917da7a94e... | 8.7.30 | 174
-KFM-P21-PROG-0030 | programming | MDP | UNCHANGED | active | 21 | 23 | SRC-P28-001,SRC-P28-002 | sha256:d16593a98043692... | 8.7.31 |
-175
-KFM-P22-PROG-0002 | programming | MDP | UNCHANGED | active | 22 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:d8e16feba8469ea... | 8.7.32 | 175
-KFM-P22-PROG-0016 | programming | MDP | UNCHANGED | active | 22 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:d0b69b3c645ec42... | 8.7.33 | 175
-KFM-P22-PROG-0037 | programming | MDP | UNCHANGED | active | 22 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:a43503bbb2a883e... | 8.7.34 | 175
-KFM-P22-PROG-0038 | programming | MDP | UNCHANGED | active | 22 | 23 | SRC-P28-001,SRC-P28-002 | sha256:befdf840e73ed0b... | 8.7.35 |
-175
-KFM-P22-PROG-0039 | programming | MDP | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:ecbd433417881f9... | 8.7.36 |
-176
-KFM-P23-PROG-0013 | programming | MDP | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:3ed162ef9b96fda... | 8.7.37 |
-176
-KFM-P23-PROG-0019 | programming | MDP | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:2d7defbe94e42cc... | 8.7.38 |
-176
-KFM-P23-PROG-0030 | programming | MDP | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:f4d75cb36777b0b... | 8.7.39 |
-176
-KFM-P24-PROG-0045 | programming | MDP | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:c30b2f5f3b3e07f... | 8.7.40 |
-176
-KFM-P24-PROG-0046 | programming | MDP | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:1e61f58e5f20649... | 8.7.41 |
-177
-KFM-P25-IDEA-0004 | idea | MDP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:3a3191cba7e2b99... | 8.7.42 | 177
-KFM-P25-IDEA-0011 | idea | MDP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:afef6f783c7e9dc... | 8.7.43 | 177
-KFM-P25-IDEA-0014 | idea | MDP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:377e9f6aac10830... | 8.7.44 | 177
-KFM-P25-PROG-0025 | programming | MDP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:36050d7896d923c... | 8.7.45 |
-177
-KFM-P25-PROG-0026 | programming | MDP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:cf69b31c4d424ac... | 8.7.46 |
-178
-KFM-P25-PROG-0027 | programming | MDP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:73535c901d397a4... | 8.7.47 |
-178
-KFM-P25-PROG-0028 | programming | MDP | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:9d4e5b48543ed25... | 8.7.48 |
-178
-KFM-P26-IDEA-0007 | idea | MDP | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:13b435a86006444... | 8.7.49 | 178
-KFM-P26-IDEA-0016 | idea | MDP | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:41301ba46bf60ec... | 8.7.50 | 178
-KFM-P26-PROG-0013 | programming | MDP | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:49b2e1586dd2ec4... | 8.7.51 |
-179
-KFM-P27-IDEA-0009 | idea | MDP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:427dabe79771bb0... | 8.7.52 | 179
-KFM-P27-IDEA-0012 | idea | MDP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:9c5ee555cf01fe2... | 8.7.53 | 179
-KFM-P27-PROG-0011 | programming | MDP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:c0c33f37ee90f73... | 8.7.54 |
-179
-KFM-P27-PROG-0016 | programming | MDP | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:5c4afeec5524106... | 8.7.55 |
-179
-KFM-P28-PROG-0012 | programming | MDP | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:e1a855e56d2c39f... | 8.7.56 | 180
-KFM-P29-IDEA-0013 | idea | MDP | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:2c093ee20287123... | 8.7.57 | 180
-KFM-P29-PROG-0001 | programming | MDP | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:d48fccad1ebf445... | 8.7.58 | 180
-KFM-P29-PROG-0004 | programming | MDP | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:4e16647583df120... | 8.7.59 | 180
-KFM-P29-PROG-0009 | programming | MDP | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:2407ee7aa34ea35... | 8.7.60 | 180
-KFM-P29-PROG-0020 | programming | MDP | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:13d6404dd3f8f93... | 8.7.61 | 181
-KFM-P3-IDEA-0004 | idea | MDP | UNCHANGED | active | 3 | 23 | SRC-P28-001,SRC-P28-002 | sha256:c88a416232443d2... | 8.7.62 | 181
-KFM-P30-IDEA-0006 | idea | MDP | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:b52597ee1249b4b... | 8.7.63 | 181
-KFM-P30-IDEA-0007 | idea | MDP | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:4b670f6845b5064... | 8.7.64 | 181
-KFM-P30-PROG-0001 | programming | MDP | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:6fed794c95d8954... | 8.7.65 | 181
-KFM-P30-PROG-0002 | programming | MDP | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:75d9d72f4e3b5da... | 8.7.66 | 182
-KFM-P30-PROG-0005 | programming | MDP | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:582bcdbcde5aeab... | 8.7.67 | 182
-KFM-P30-PROG-0006 | programming | MDP | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:92c9a06ed542a28... | 8.7.68 | 182
-KFM-P30-PROG-0026 | programming | MDP | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:0eb6ff22be85e1f... | 8.7.69 | 182
-KFM-P31-IDEA-0007 | idea | MDP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:72f4997ad8c46d9... | 8.7.70 | 182
-KFM-P31-PROG-0004 | programming | MDP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:4b4d7f13e3d1756... | 8.7.71 | 183
-KFM-P32-IDEA-0005 | idea | MDP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:f8f87a9c858dc41... | 8.7.72 | 183
-KFM-P32-PROG-0004 | programming | MDP | NEW | active | 32 | 32 | SRC-P32-002 | sha256:3e0b0c84bdc56d2... | 8.7.73 | 183
-KFM-P6-PROG-0003 | programming | MDP | UNCHANGED | active | 6 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:10ff6c368bcdf6d... | 8.7.74 | 183
-KFM-P7-PROG-0001 | programming | MDP | UNCHANGED | active | 7 | 23 | SRC-P28-001,SRC-P28-002 | sha256:0dd4321490d8953... | 8.7.75 |
-183
-KFM-P1-IDEA-0045 | idea | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:74c1cd3290d759b... | 8.8.1 | 184
-KFM-P1-IDEA-0046 | idea | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4b59d18e16c6f56... | 8.8.2 | 184
-KFM-P1-IDEA-0047 | idea | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:48ce04959bcf0e1... | 8.8.3 | 184
-KFM-P1-IDEA-0049 | idea | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:a2c0936358ed1ae... | 8.8.4 | 184
-KFM-P1-IDEA-0050 | idea | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:f96cec8510ac8e0... | 8.8.5 | 184
-KFM-P1-IDEA-0051 | idea | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:30cdf0af74bfba5... | 8.8.6 | 185
-KFM-P1-IDEA-0072 | idea | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:92a81e90249d7cd... | 8.8.7 | 185
-KFM-P1-PROG-0048 | programming | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:a4c02cfb067cb75... | 8.8.8 | 185
-KFM-P1-PROG-0052 | programming | MOD | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:97b7b1cbf7cfbb2... | 8.8.9 | 185
-KFM-P10-PROG-0013 | programming | MOD | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:8209913f94c8a9e... | 8.8.10 | 185
-KFM-P12-PROG-0002 | programming | MOD | UNCHANGED | active | 12 | 26 | SRC-P28-001,SRC-P28-002 | sha256:9c72180563277b0... | 8.8.11 |
-186
-KFM-P12-PROG-0006 | programming | MOD | UNCHANGED | active | 12 | 26 | SRC-P28-001,SRC-P28-002 | sha256:d64f8ac17d0b685... | 8.8.12 |
-186
-```
-
-<!-- page: 265 -->
-
-```text
-KFM-P12-PROG-0026 | programming | MOD | UNCHANGED | active | 12 | 26 | SRC-P28-001,SRC-P28-002 | sha256:87a642292fec66b... | 8.8.13 |
-186
-KFM-P13-PROG-0007 | programming | MOD | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:f3cdc0dd1d6079a... | 8.8.14 |
-186
-KFM-P13-PROG-0025 | programming | MOD | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:275e8dd1cef70d9... | 8.8.15 |
-186
-KFM-P14-PROG-0023 | programming | MOD | UNCHANGED | active | 14 | 26 | SRC-P28-001,SRC-P28-002 | sha256:91899737fbcee80... | 8.8.16 |
-187
-KFM-P14-PROG-0027 | programming | MOD | UNCHANGED | active | 14 | 26 | SRC-P28-001,SRC-P28-002 | sha256:6b151643d6d0afe... | 8.8.17 |
-187
-KFM-P14-PROG-0028 | programming | MOD | UNCHANGED | active | 14 | 26 | SRC-P28-001,SRC-P28-002 | sha256:0be79d0140f6edd... | 8.8.18 |
-187
-KFM-P15-PROG-0015 | programming | MOD | UNCHANGED | active | 15 | 26 | SRC-P28-001,SRC-P28-002 | sha256:ac872ebae7eba67... | 8.8.19 |
-187
-KFM-P15-PROG-0016 | programming | MOD | UNCHANGED | active | 15 | 26 | SRC-P28-001,SRC-P28-002 | sha256:68269e7a92e3842... | 8.8.20 |
-187
-KFM-P15-PROG-0022 | programming | MOD | UNCHANGED | active | 15 | 25 | SRC-P28-001,SRC-P28-002 | sha256:ab4575e06da5685... | 8.8.21 |
-188
-KFM-P15-PROG-0037 | programming | MOD | UNCHANGED | active | 15 | 25 | SRC-P28-001,SRC-P28-002 | sha256:d1b25c0457afa5d... | 8.8.22 |
-188
-KFM-P16-PROG-0017 | programming | MOD | UNCHANGED | active | 16 | 25 | SRC-P28-001,SRC-P28-002 | sha256:616dad8274d7243... | 8.8.23 |
-188
-KFM-P16-PROG-0018 | programming | MOD | UNCHANGED | active | 16 | 25 | SRC-P28-001,SRC-P28-002 | sha256:127df6bccecc48a... | 8.8.24 |
-188
-KFM-P16-PROG-0025 | programming | MOD | UNCHANGED | active | 16 | 25 | SRC-P28-001,SRC-P28-002 | sha256:0a26b9cf681f876... | 8.8.25 |
-188
-KFM-P16-PROG-0030 | programming | MOD | UNCHANGED | active | 16 | 16 | SRC-P28-001,SRC-P28-002 | sha256:286385cd2a6bb9c... | 8.8.26 |
-189
-KFM-P16-PROG-0035 | programming | MOD | UNCHANGED | active | 16 | 16 | SRC-P28-001,SRC-P28-002 | sha256:40194d33a15f6a0... | 8.8.27 |
-189
-KFM-P17-IDEA-0005 | idea | MOD | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:95eaa18d120a8b3... | 8.8.28 | 189
-KFM-P17-PROG-0007 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:da2628a7a435a6d... | 8.8.29 |
-189
-KFM-P17-PROG-0009 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:10b8b970c461957... | 8.8.30 |
-189
-KFM-P17-PROG-0014 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:2824357d5b65b68... | 8.8.31 |
-190
-KFM-P17-PROG-0031 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:123a7f7e6b9b06d... | 8.8.32 |
-190
-KFM-P17-PROG-0043 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:56f0906e02e18f5... | 8.8.33 |
-190
-KFM-P17-PROG-0044 | programming | MOD | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:76cc3b38272752a... | 8.8.34 |
-190
-KFM-P18-PROG-0003 | programming | MOD | UNCHANGED | active | 18 | 19 | SRC-P28-001,SRC-P28-002 | sha256:ceca95365c9bcb8... | 8.8.35 |
-190
-KFM-P18-PROG-0016 | programming | MOD | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:fafe868f8c25a4b... | 8.8.36 |
-191
-KFM-P18-PROG-0020 | programming | MOD | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:ad94d4a12b6d485... | 8.8.37 |
-191
-KFM-P18-PROG-0021 | programming | MOD | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:c01e33f88f0ead4... | 8.8.38 |
-191
-KFM-P18-PROG-0042 | programming | MOD | QUARANTINED | quarantine | 18 | 18 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:2c713005e981acd... | 8.8.39 | 191
-KFM-P19-PROG-0027 | programming | MOD | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:b34d06dcf3020ff... | 8.8.40 |
-191
-KFM-P19-PROG-0042 | programming | MOD | QUARANTINED | quarantine | 19 | 19 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:c6d3acbf09dceab... | 8.8.41 | 192
-KFM-P2-IDEA-0016 | idea | MOD | UNCHANGED | active | 2 | 2 | SRC-P28-001,SRC-P28-002 | sha256:d2cac160ff7ecba... | 8.8.42 | 192
-KFM-P2-PROG-0017 | programming | MOD | UNCHANGED | active | 2 | 11 | SRC-P28-001,SRC-P28-002 | sha256:225e45f585f299f... | 8.8.43 |
-192
-KFM-P20-IDEA-0003 | idea | MOD | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:0f0f06eaa89b181... | 8.8.44 | 192
-KFM-P20-PROG-0011 | programming | MOD | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:6f87b08f0d5a3bc... | 8.8.45 |
-192
-KFM-P21-PROG-0015 | programming | MOD | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:0144cc9759483cb... | 8.8.46 |
-193
-KFM-P22-IDEA-0005 | idea | MOD | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:7a928fcaead7940... | 8.8.47 | 193
-KFM-P22-PROG-0051 | programming | MOD | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:6596570d68f05db... | 8.8.48 |
-193
-KFM-P22-PROG-0053 | programming | MOD | QUARANTINED | quarantine | 22 | 22 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:fb1c58f5909824d... | 8.8.49 | 193
-KFM-P23-IDEA-0003 | idea | MOD | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:82cc9cb8cd1b67f... | 8.8.50 | 193
-KFM-P23-PROG-0018 | programming | MOD | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:776403a3bc88633... | 8.8.51 |
-194
-KFM-P23-PROG-0031 | programming | MOD | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:c1007bf471ee114... | 8.8.52 |
-194
-KFM-P23-PROG-0032 | programming | MOD | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:968c491cabac76a... | 8.8.53 |
-194
-KFM-P23-PROG-0035 | programming | MOD | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:2bf53aa329be85a... | 8.8.54 |
-194
-KFM-P24-IDEA-0004 | idea | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:dd2dec06e9e5f34... | 8.8.55 | 194
-KFM-P24-PROG-0007 | programming | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:e72bc6062e6fa51... | 8.8.56 |
-195
-KFM-P24-PROG-0008 | programming | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:489890459053e9f... | 8.8.57 |
-195
-KFM-P24-PROG-0035 | programming | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:d3aecaddb931ae4... | 8.8.58 |
-195
-KFM-P24-PROG-0036 | programming | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:db8e56b98b1d864... | 8.8.59 |
-195
-KFM-P24-PROG-0037 | programming | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:f0a303dd889167c... | 8.8.60 |
-195
-KFM-P24-PROG-0038 | programming | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:839b1ebc53a7936... | 8.8.61 |
-196
-KFM-P24-PROG-0048 | programming | MOD | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:5587a77fef4596f... | 8.8.62 |
-196
-KFM-P25-IDEA-0005 | idea | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:91fbb13c2942de0... | 8.8.63 | 196
-```
-
-<!-- page: 266 -->
-
-```text
-KFM-P25-IDEA-0012 | idea | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:03a1f5b66c0219d... | 8.8.64 | 196
-KFM-P25-PROG-0012 | programming | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:5343e41e7b40f29... | 8.8.65 |
-196
-KFM-P25-PROG-0013 | programming | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:1df8cee7eb6c776... | 8.8.66 |
-197
-KFM-P25-PROG-0014 | programming | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:e98904b88a30e68... | 8.8.67 |
-197
-KFM-P25-PROG-0021 | programming | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:9767b120847b38d... | 8.8.68 |
-197
-KFM-P25-PROG-0022 | programming | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:1c30f7b589aba30... | 8.8.69 |
-197
-KFM-P25-PROG-0029 | programming | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:a94f1ca224cc651... | 8.8.70 |
-197
-KFM-P26-IDEA-0012 | idea | MOD | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:c3f263121bee7e7... | 8.8.71 | 198
-KFM-P26-IDEA-0015 | idea | MOD | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:64dfa2ae2092137... | 8.8.72 | 198
-KFM-P26-PROG-0019 | programming | MOD | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:c002495c437621e... | 8.8.73 |
-198
-KFM-P26-PROG-0026 | programming | MOD | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:0dad75a22bc1d67... | 8.8.74 |
-198
-KFM-P26-PROG-0027 | programming | MOD | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:75efce1edb0eb29... | 8.8.75 |
-198
-KFM-P26-PROG-0028 | programming | MOD | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:21c08f8ac44a96a... | 8.8.76 |
-199
-KFM-P27-IDEA-0003 | idea | MOD | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:f6fc941308a86b1... | 8.8.77 | 199
-KFM-P27-PROG-0002 | programming | MOD | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:8ce9c26b2fd76d5... | 8.8.78 |
-199
-KFM-P27-PROG-0004 | programming | MOD | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:90fe8826ed851a0... | 8.8.79 |
-199
-KFM-P27-PROG-0028 | programming | MOD | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:14c975bc8f0caf3... | 8.8.80 |
-199
-KFM-P28-IDEA-0010 | idea | MOD | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:f772b4967c3a4eb... | 8.8.81 | 200
-KFM-P28-PROG-0008 | programming | MOD | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:7e860e9c665e35a... | 8.8.82 | 200
-KFM-P29-IDEA-0015 | idea | MOD | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:4cb0b2a3de743c9... | 8.8.83 | 200
-KFM-P29-IDEA-0016 | idea | MOD | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:94cfe5a7598026b... | 8.8.84 | 200
-KFM-P30-IDEA-0009 | idea | MOD | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:342532e7a59368e... | 8.8.85 | 200
-KFM-P30-IDEA-0010 | idea | MOD | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:edabe0ed60403bd... | 8.8.86 | 201
-KFM-P30-IDEA-0012 | idea | MOD | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:44930ee54d982d8... | 8.8.87 | 201
-KFM-P30-PROG-0008 | programming | MOD | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:517810192f27527... | 8.8.88 | 201
-KFM-P30-PROG-0010 | programming | MOD | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:b40876ab01dbd8f... | 8.8.89 | 201
-KFM-P30-PROG-0015 | programming | MOD | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:cfaeabd64d3f8ef... | 8.8.90 | 201
-KFM-P31-IDEA-0001 | idea | MOD | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:f7997048fe27f96... | 8.8.91 | 202
-KFM-P31-IDEA-0004 | idea | MOD | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:3004a2e185c8252... | 8.8.92 | 202
-KFM-P31-IDEA-0014 | idea | MOD | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:85a9ee7b3dc47b1... | 8.8.93 | 202
-KFM-P31-PROG-0011 | programming | MOD | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:164271dd792c593... | 8.8.94 | 202
-KFM-P32-FEAT-0008 | feature | MOD | NEW | active | 32 | 32 | SRC-P32-002 | sha256:90d8ebdbd2af64a... | 8.8.95 | 202
-KFM-P32-IDEA-0018 | idea | MOD | NEW | active | 32 | 32 | SRC-P32-002 | sha256:362ee46929afc17... | 8.8.96 | 203
-KFM-P32-PROG-0011 | programming | MOD | NEW | active | 32 | 32 | SRC-P32-002 | sha256:ec1eceb95e1aa41... | 8.8.97 | 203
-KFM-P4-PROG-0005 | programming | MOD | UNCHANGED | active | 4 | 9 | SRC-P28-001,SRC-P28-002 | sha256:4c2d6c9572756a0... | 8.8.98 | 203
-KFM-P4-PROG-0006 | programming | MOD | UNCHANGED | active | 4 | 4 | SRC-P28-001,SRC-P28-002 | sha256:bdc45d7b896e9c8... | 8.8.99 | 203
-KFM-P4-PROG-0007 | programming | MOD | UNCHANGED | active | 4 | 4 | SRC-P28-001,SRC-P28-002 | sha256:d23aef8ffc65d4a... | 8.8.100 |
-203
-KFM-P5-PROG-0008 | programming | MOD | UNCHANGED | active | 5 | 23 | SRC-P28-001,SRC-P28-002 | sha256:7af75822ad9456c... | 8.8.101 |
-204
-KFM-P6-PROG-0002 | programming | MOD | UNCHANGED | active | 6 | 6 | SRC-P28-001,SRC-P28-002 | sha256:fd3e201854213ae... | 8.8.102 |
-204
-KFM-P8-PROG-0024 | programming | MOD | UNCHANGED | active | 8 | 8 | SRC-P28-001,SRC-P28-002 | sha256:6b88edf59030fbe... | 8.8.103 |
-204
-KFM-P9-IDEA-0011 | idea | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:d6bae9b73e0d71e... | 8.8.104 | 204
-KFM-P9-PROG-0010 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:37520b598235268... | 8.8.105 |
-204
-KFM-P9-PROG-0011 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:782c397403bfd1a... | 8.8.106 |
-205
-KFM-P9-PROG-0012 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:c9ddbaa2704b853... | 8.8.107 |
-205
-KFM-P9-PROG-0013 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:18ef644f6bbb4e5... | 8.8.108 |
-205
-KFM-P9-PROG-0014 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:8a14d8cc1742c84... | 8.8.109 |
-205
-KFM-P9-PROG-0015 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:96dd871283f3aef... | 8.8.110 |
-205
-KFM-P9-PROG-0016 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:c749429c4ef7b2b... | 8.8.111 |
-206
-KFM-P9-PROG-0017 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:e3886b54ea56c62... | 8.8.112 |
-206
-KFM-P9-PROG-0018 | programming | MOD | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:19a7e4f1dd36d42... | 8.8.113 |
-206
-KFM-P1-PROG-0024 | programming | PIP | EXPANDED | active | 1 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:faaab043d55c55d... | 8.9.1 | 206
-KFM-P1-PROG-0025 | programming | PIP | EXPANDED | active | 1 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:529214f29222c80... | 8.9.2 | 206
-KFM-P1-PROG-0026 | programming | PIP | EXPANDED | active | 1 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:9e189361c89bcd1... | 8.9.3 | 206
-KFM-P1-PROG-0027 | programming | PIP | EXPANDED | active | 1 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:5cf1fa4a6217f03... | 8.9.4 | 206
-KFM-P1-PROG-0028 | programming | PIP | EXPANDED | active | 1 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:2abd03837589db8... | 8.9.5 | 206
-KFM-P1-PROG-0029 | programming | PIP | EXPANDED | active | 1 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:130f2db130af536... | 8.9.6 | 207
-KFM-P1-PROG-0030 | programming | PIP | EXPANDED | active | 1 | 32 |
-```
-
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 32: pages 267–270 -->
-
-<!-- page: 267 -->
-
-```text
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:607823a951ee283... | 8.9.7 | 207
-KFM-P10-PROG-0001 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:887ecfe1f1b5982... | 8.9.8 | 207
-KFM-P10-PROG-0004 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:1ed2fc1c8c4b8f4... | 8.9.9 | 207
-KFM-P10-PROG-0008 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:3c37ddb1eaef37d... | 8.9.10 | 207
-KFM-P10-PROG-0010 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:5cfe0b69922f088... | 8.9.11 | 208
-KFM-P10-PROG-0011 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:dffc8fd5a170c1e... | 8.9.12 | 208
-KFM-P10-PROG-0012 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:6a0055eb723e4e4... | 8.9.13 | 208
-KFM-P10-PROG-0015 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:a872351941c57ac... | 8.9.14 | 208
-KFM-P10-PROG-0019 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:081613c110bc34e... | 8.9.15 | 208
-KFM-P10-PROG-0023 | programming | PIP | EXPANDED | active | 10 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:761b68d4f22ba9d... | 8.9.16 | 209
-KFM-P11-PROG-0009 | programming | PIP | EXPANDED | active | 11 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:48444c116450171... | 8.9.17 | 209
-KFM-P11-PROG-0015 | programming | PIP | EXPANDED | active | 11 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:87ac228fd4f7562... | 8.9.18 | 209
-KFM-P11-PROG-0018 | programming | PIP | EXPANDED | active | 11 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:7a607bbb3097f53... | 8.9.19 | 209
-KFM-P11-PROG-0019 | programming | PIP | EXPANDED | active | 11 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:474ae665dbd60d6... | 8.9.20 | 209
-KFM-P11-PROG-0026 | programming | PIP | EXPANDED | active | 11 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:cdfa016bd69c3cf... | 8.9.21 | 210
-KFM-P12-PROG-0001 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:e91681b387eaf0b... | 8.9.22 | 210
-KFM-P12-PROG-0004 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:ce0f050133aaa88... | 8.9.23 | 210
-KFM-P12-PROG-0005 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:b2279e5628adcfc... | 8.9.24 | 210
-KFM-P12-PROG-0010 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:df2136003865b74... | 8.9.25 | 210
-KFM-P12-PROG-0011 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:62bcc4a670406e6... | 8.9.26 | 211
-KFM-P12-PROG-0013 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:e30fe1f9acc274f... | 8.9.27 | 211
-KFM-P12-PROG-0015 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:62a64dc15f31252... | 8.9.28 | 211
-KFM-P12-PROG-0023 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:f397c10aef1a4f0... | 8.9.29 | 211
-KFM-P12-PROG-0027 | programming | PIP | EXPANDED | active | 12 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:6d26a9cfca671f4... | 8.9.30 | 211
-KFM-P13-IDEA-0002 | idea | PIP | EXPANDED | active | 13 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:7f43fec0f91866c... | 8.9.31 | 212
-KFM-P13-IDEA-0005 | idea | PIP | EXPANDED | active | 13 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:246a98e079b87c9... | 8.9.32 | 212
-KFM-P13-PROG-0004 | programming | PIP | EXPANDED | active | 13 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:a1682a2207cdd25... | 8.9.33 | 212
-KFM-P13-PROG-0013 | programming | PIP | EXPANDED | active | 13 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:f7e781bd9e5b4e4... | 8.9.34 | 212
-KFM-P13-PROG-0021 | programming | PIP | EXPANDED | active | 13 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:a7e04502360a956... | 8.9.35 | 212
-KFM-P13-PROG-0029 | programming | PIP | EXPANDED | active | 13 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:efc568e6e270df0... | 8.9.36 | 213
-KFM-P14-PROG-0002 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:13cb483fbb7782c... | 8.9.37 | 213
-KFM-P14-PROG-0003 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:7c5290431229501... | 8.9.38 | 213
-```
-
-<!-- page: 268 -->
-
-```text
-KFM-P14-PROG-0004 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:3130d605ea0a72d... | 8.9.39 | 213
-KFM-P14-PROG-0005 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:6fe25ab0b1cac80... | 8.9.40 | 213
-KFM-P14-PROG-0010 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:918099e5f1a9a81... | 8.9.41 | 214
-KFM-P14-PROG-0012 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:2bda46da4246694... | 8.9.42 | 214
-KFM-P14-PROG-0024 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:09fc29b73d46eaf... | 8.9.43 | 214
-KFM-P14-PROG-0034 | programming | PIP | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:e4bc4df8a430e5c... | 8.9.44 | 214
-KFM-P15-PROG-0001 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:b74212c9f22c513... | 8.9.45 | 214
-KFM-P15-PROG-0003 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:83ef8352d7d50cf... | 8.9.46 | 215
-KFM-P15-PROG-0005 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:251e47b7199c07a... | 8.9.47 | 215
-KFM-P15-PROG-0007 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:5530e6a7cd6e8b8... | 8.9.48 | 215
-KFM-P15-PROG-0019 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:421af3d3a0a75f5... | 8.9.49 | 215
-KFM-P15-PROG-0020 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:daad10c29dc0b96... | 8.9.50 | 215
-KFM-P15-PROG-0021 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:0fee57854b001bc... | 8.9.51 | 216
-KFM-P15-PROG-0023 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:8e250f0cce9b164... | 8.9.52 | 216
-KFM-P15-PROG-0040 | programming | PIP | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:54928b883cb0680... | 8.9.53 | 216
-KFM-P16-PROG-0003 | programming | PIP | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:20024e025ad41e9... | 8.9.54 | 216
-KFM-P16-PROG-0006 | programming | PIP | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:415301c800bb46c... | 8.9.55 | 216
-KFM-P16-PROG-0008 | programming | PIP | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:220b81eaab4b882... | 8.9.56 | 217
-KFM-P16-PROG-0012 | programming | PIP | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:d2b74fc3e9dc91c... | 8.9.57 | 217
-KFM-P16-PROG-0019 | programming | PIP | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:7bcab022a4e76dd... | 8.9.58 | 217
-KFM-P16-PROG-0020 | programming | PIP | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:9c21fcc1d59e593... | 8.9.59 | 217
-KFM-P16-PROG-0027 | programming | PIP | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
-sha256:5a44d0e02fc7f4d... | 8.9.60 | 217
-KFM-P16-PROG-0029 | programming | PIP | UNCHANGED | active | 16 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:dd4076f47517c59... | 8.9.61 |
-218
-KFM-P17-IDEA-0003 | idea | PIP | UNCHANGED | active | 17 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:dba7b30c52e6ce8... | 8.9.62 | 218
-KFM-P17-IDEA-0008 | idea | PIP | UNCHANGED | active | 17 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:87e07d2c056883d... | 8.9.63 | 218
-KFM-P17-PROG-0010 | programming | PIP | UNCHANGED | active | 17 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ad1ddde2d5410b5... | 8.9.64 | 218
-KFM-P17-PROG-0023 | programming | PIP | UNCHANGED | active | 17 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:86549473f875c16... | 8.9.65 | 218
-KFM-P17-PROG-0029 | programming | PIP | UNCHANGED | active | 17 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c1addd2755fddf6... | 8.9.66 | 219
-KFM-P17-PROG-0035 | programming | PIP | UNCHANGED | active | 17 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:8b4b1337a01c9f6... | 8.9.67 | 219
-KFM-P17-PROG-0036 | programming | PIP | UNCHANGED | active | 17 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:cfeb923417aa8a6... | 8.9.68 | 219
-KFM-P17-PROG-0038 | programming | PIP | UNCHANGED | active | 17 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:42759a610abf33a... | 8.9.69 | 219
-KFM-P18-IDEA-0001 | idea | PIP | UNCHANGED | active | 18 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:243cbd830ef60b0... | 8.9.70 | 219
-KFM-P18-PROG-0001 | programming | PIP | UNCHANGED | active | 18 | 31 |
-```
-
-<!-- page: 269 -->
-
-```text
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:e8708b00204afe8... | 8.9.71 | 220
-KFM-P18-PROG-0004 | programming | PIP | UNCHANGED | active | 18 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:2a56642db638c18... | 8.9.72 | 220
-KFM-P18-PROG-0007 | programming | PIP | UNCHANGED | active | 18 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:06e5efa611eb25f... | 8.9.73 | 220
-KFM-P18-PROG-0009 | programming | PIP | UNCHANGED | active | 18 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:5d18d84cafcfac3... | 8.9.74 | 220
-KFM-P18-PROG-0013 | programming | PIP | UNCHANGED | active | 18 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:359062c8e6c5fcc... | 8.9.75 | 220
-KFM-P18-PROG-0014 | programming | PIP | UNCHANGED | active | 18 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:20dc106258d5b2b... | 8.9.76 | 221
-KFM-P18-PROG-0037 | programming | PIP | UNCHANGED | active | 18 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b134f189e0ba363... | 8.9.77 |
-221
-KFM-P18-PROG-0039 | programming | PIP | UNCHANGED | active | 18 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7150bd3e979dccf... | 8.9.78 | 221
-KFM-P19-IDEA-0007 | idea | PIP | UNCHANGED | active | 19 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ea1d77cb3721faa... | 8.9.79 | 221
-KFM-P19-PROG-0001 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:f2f92fc354591d4... | 8.9.80 | 221
-KFM-P19-PROG-0004 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:d9e394c190854ef... | 8.9.81 | 222
-KFM-P19-PROG-0015 | programming | PIP | UNCHANGED | active | 19 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:e08f160755e6d86... | 8.9.82 |
-222
-KFM-P19-PROG-0017 | programming | PIP | UNCHANGED | active | 19 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:3b4a3b81b55309d... | 8.9.83 |
-222
-KFM-P19-PROG-0019 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:20d86147ee458bd... | 8.9.84 | 222
-KFM-P19-PROG-0020 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:953c1cfbb8039dc... | 8.9.85 | 222
-KFM-P19-PROG-0022 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c5ed25c11826bab... | 8.9.86 | 223
-KFM-P19-PROG-0028 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:45a967484eb4ba6... | 8.9.87 | 223
-KFM-P19-PROG-0029 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:1bb64d55e594203... | 8.9.88 | 223
-KFM-P19-PROG-0033 | programming | PIP | UNCHANGED | active | 19 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:000cf44724f5477... | 8.9.89 |
-223
-KFM-P19-PROG-0035 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:dbb3be68c4a5818... | 8.9.90 | 223
-KFM-P19-PROG-0036 | programming | PIP | UNCHANGED | active | 19 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ee716698ac765a4... | 8.9.91 | 224
-KFM-P19-PROG-0040 | programming | PIP | UNCHANGED | active | 19 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b37b89dc06e9d24... | 8.9.92 |
-224
-KFM-P2-PROG-0001 | programming | PIP | UNCHANGED | active | 2 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:23834cf32390119... | 8.9.93 | 224
-KFM-P2-PROG-0002 | programming | PIP | UNCHANGED | active | 2 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:13829840d013806... | 8.9.94 | 224
-KFM-P2-PROG-0003 | programming | PIP | UNCHANGED | active | 2 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:e2726bfefbec7f7... | 8.9.95 | 224
-KFM-P2-PROG-0004 | programming | PIP | UNCHANGED | active | 2 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:95668b4ea35ecc0... | 8.9.96 | 225
-KFM-P2-PROG-0005 | programming | PIP | UNCHANGED | active | 2 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b5bed95f4b43721... | 8.9.97 | 225
-KFM-P2-PROG-0006 | programming | PIP | UNCHANGED | active | 2 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7ac9d55aa0bafe7... | 8.9.98 | 225
-KFM-P2-PROG-0007 | programming | PIP | UNCHANGED | active | 2 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:9392c5f8f021711... | 8.9.99 | 225
-KFM-P2-PROG-0008 | programming | PIP | UNCHANGED | active | 2 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6620c5468d57015... | 8.9.100 | 225
-KFM-P2-PROG-0009 | programming | PIP | UNCHANGED | active | 2 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:edd23341353dd3d... | 8.9.101 | 226
-KFM-P2-PROG-0010 | programming | PIP | UNCHANGED | active | 2 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b73295b91b13da8... | 8.9.102 | 226
-KFM-P2-PROG-0011 | programming | PIP | UNCHANGED | active | 2 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:fea9d7b55c74aea... | 8.9.103 | 226
-KFM-P20-IDEA-0005 | idea | PIP | UNCHANGED | active | 20 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:440df20d7711992... | 8.9.104 | 226
-```
-
-<!-- page: 270 -->
-
-```text
-KFM-P20-IDEA-0008 | idea | PIP | UNCHANGED | active | 20 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:1ef7031d6b08e57... | 8.9.105 | 226
-KFM-P20-PROG-0002 | programming | PIP | UNCHANGED | active | 20 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:1c5297ba11fe9f1... | 8.9.106 | 227
-KFM-P20-PROG-0004 | programming | PIP | UNCHANGED | active | 20 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4424ba5cd3e2893... | 8.9.107 | 227
-KFM-P20-PROG-0005 | programming | PIP | UNCHANGED | active | 20 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b896859bf5ad01c... | 8.9.108 | 227
-KFM-P20-PROG-0006 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7d9a0640c32d74f... | 8.9.109 |
-227
-KFM-P20-PROG-0007 | programming | PIP | UNCHANGED | active | 20 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6c5f1b1a624a7aa... | 8.9.110 | 227
-KFM-P20-PROG-0009 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:f941fd41dfeef36... | 8.9.111 |
-228
-KFM-P20-PROG-0010 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:19071369e7c327e... | 8.9.112 |
-228
-KFM-P20-PROG-0012 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:d94877b70bbfa16... | 8.9.113 |
-228
-KFM-P20-PROG-0019 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c94b1d77e10ee3f... | 8.9.114 |
-228
-KFM-P20-PROG-0020 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:512e8a589bd5b0d... | 8.9.115 |
-228
-KFM-P20-PROG-0025 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:2b75b506246c326... | 8.9.116 |
-229
-KFM-P20-PROG-0026 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:57151f64f9546dd... | 8.9.117 |
-229
-KFM-P20-PROG-0028 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:1f6f246362bcf60... | 8.9.118 |
-229
-KFM-P20-PROG-0030 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:9a678277b12a6ed... | 8.9.119 |
-229
-KFM-P20-PROG-0032 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:072ab5302e80c8d... | 8.9.120 |
-229
-KFM-P20-PROG-0036 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:2ce67822a8f22b9... | 8.9.121 |
-230
-KFM-P20-PROG-0037 | programming | PIP | UNCHANGED | active | 20 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6895e9beb64c0e8... | 8.9.122 |
-230
-KFM-P21-IDEA-0001 | idea | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:382229b471b3835... | 8.9.123 | 230
-KFM-P21-IDEA-0005 | idea | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b1bff0e3984f2b5... | 8.9.124 | 230
-KFM-P21-PROG-0001 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:219d46db97c6fe5... | 8.9.125 |
-230
-KFM-P21-PROG-0003 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:0c69e60fcafa2ec... | 8.9.126 |
-231
-KFM-P21-PROG-0006 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:80121e9b99e7b18... | 8.9.127 |
-231
-KFM-P21-PROG-0010 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ac13be799794b5c... | 8.9.128 |
-231
-KFM-P21-PROG-0017 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:75b24b178c13754... | 8.9.129 |
-231
-KFM-P21-PROG-0019 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7c716e05d979055... | 8.9.130 |
-231
-KFM-P21-PROG-0032 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:9e6049c772a40a4... | 8.9.131 |
-232
-KFM-P21-PROG-0047 | programming | PIP | UNCHANGED | active | 21 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:eb2d6b53b83f6aa... | 8.9.132 |
-232
-KFM-P21-PROG-0052 | programming | PIP | QUARANTINED | quarantine | 21 | 21 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
-sha256:6ae0c6361468fa2... | 8.9.133 | 232
-KFM-P22-PROG-0001 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:69ea20c5c027133... | 8.9.134 |
-232
-KFM-P22-PROG-0006 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:9c714d8840e6b35... | 8.9.135 |
-232
-KFM-P22-PROG-0008 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:070010c871392e8... | 8.9.136 |
-233
-KFM-P22-PROG-0010 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:04731fb1a689f83... | 8.9.137 |
-```
-
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 33: pages 271–274 -->
-
-<!-- page: 271 -->
-
-```text
-233
-KFM-P22-PROG-0022 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:23d54c898f4d743... | 8.9.138 |
-233
-KFM-P22-PROG-0031 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6e216e4d1c599c8... | 8.9.139 |
-233
-KFM-P22-PROG-0035 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ed0b410fac161b5... | 8.9.140 |
-233
-KFM-P22-PROG-0043 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:248102849d45374... | 8.9.141 |
-234
-KFM-P22-PROG-0044 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:d3ad19e2071069a... | 8.9.142 |
-234
-KFM-P22-PROG-0047 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:88049bc47b6733d... | 8.9.143 |
-234
-KFM-P23-IDEA-0001 | idea | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:46478581c6aa777... | 8.9.144 | 234
-KFM-P23-PROG-0001 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:07eef09fafb114b... | 8.9.145 |
-234
-KFM-P23-PROG-0003 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:60acdb1d04a1f02... | 8.9.146 |
-235
-KFM-P23-PROG-0004 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:0cdf28783a7dad7... | 8.9.147 |
-235
-KFM-P23-PROG-0012 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b64ac9206626ff2... | 8.9.148 |
-235
-KFM-P23-PROG-0015 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:24beb0155f077c3... | 8.9.149 |
-235
-KFM-P23-PROG-0021 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:31204dd5a382344... | 8.9.150 |
-235
-KFM-P23-PROG-0022 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6aaf2c3a27f5c8e... | 8.9.151 |
-236
-KFM-P23-PROG-0026 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:3b77e02e3b78b25... | 8.9.152 |
-236
-KFM-P23-PROG-0039 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4cf5c0cc60426b8... | 8.9.153 |
-236
-KFM-P23-PROG-0040 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c5b4bcccacdb765... | 8.9.154 |
-236
-KFM-P23-PROG-0041 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c161eeae7e6d5f1... | 8.9.155 |
-236
-KFM-P23-PROG-0042 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ca8afdb7396f4ae... | 8.9.156 |
-237
-KFM-P23-PROG-0043 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4d03d9acc223e28... | 8.9.157 |
-237
-KFM-P23-PROG-0045 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7d6d046c3ff5da3... | 8.9.158 |
-237
-KFM-P23-PROG-0046 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:36cdda54b932f87... | 8.9.159 |
-237
-KFM-P23-PROG-0048 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:92c215e4a015a51... | 8.9.160 |
-237
-KFM-P23-PROG-0050 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:66bd19735b00dc4... | 8.9.161 |
-238
-KFM-P23-PROG-0051 | programming | PIP | UNCHANGED | active | 23 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:8712fe33ee29840... | 8.9.162 |
-238
-KFM-P24-PROG-0014 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7b35ab8a0ec0276... | 8.9.163 |
-238
-KFM-P24-PROG-0015 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:41eaed4552746c8... | 8.9.164 |
-238
-KFM-P24-PROG-0020 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:34c2b36a756e6ee... | 8.9.165 |
-238
-KFM-P24-PROG-0021 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:833d7a77f9eec10... | 8.9.166 |
-239
-KFM-P24-PROG-0022 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4f1d27610666da9... | 8.9.167 |
-239
-KFM-P24-PROG-0023 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:d435a8561cbb213... | 8.9.168 |
-239
-KFM-P24-PROG-0024 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:0cdb7e1757e4164... | 8.9.169 |
-```
-
-<!-- page: 272 -->
-
-```text
-239
-KFM-P24-PROG-0026 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:2ab28d169c03a66... | 8.9.170 |
-239
-KFM-P24-PROG-0029 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:3ebd2a65fb8b80b... | 8.9.171 |
-240
-KFM-P24-PROG-0030 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:03938d940bc1acf... | 8.9.172 |
-240
-KFM-P24-PROG-0031 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:525007283547f23... | 8.9.173 |
-240
-KFM-P24-PROG-0032 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:46eaf3219aa9dff... | 8.9.174 |
-240
-KFM-P24-PROG-0039 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:fa81b363099f948... | 8.9.175 |
-240
-KFM-P24-PROG-0040 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:354d96cd752d515... | 8.9.176 |
-241
-KFM-P24-PROG-0041 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b2f3cf0934a572f... | 8.9.177 |
-241
-KFM-P24-PROG-0047 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:3ec6f8679c0a4b9... | 8.9.178 |
-241
-KFM-P25-IDEA-0016 | idea | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:e0d85c46205f257... | 8.9.179 | 241
-KFM-P25-PROG-0002 | programming | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b677f86a2eac695... | 8.9.180 |
-241
-KFM-P25-PROG-0003 | programming | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:79c7007615d18d0... | 8.9.181 |
-242
-KFM-P25-PROG-0004 | programming | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:abc7b49fdd92237... | 8.9.182 |
-242
-KFM-P25-PROG-0005 | programming | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:e8bc50538acf35b... | 8.9.183 |
-242
-KFM-P25-PROG-0018 | programming | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:70a90cd39af97db... | 8.9.184 |
-242
-KFM-P25-PROG-0019 | programming | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:409e4676d044509... | 8.9.185 |
-242
-KFM-P25-PROG-0030 | programming | PIP | UNCHANGED | active | 25 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:d3eca670b0b56bb... | 8.9.186 |
-243
-KFM-P26-FEAT-0005 | feature | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:172e24f4b270809... | 8.9.187 | 243
-KFM-P26-IDEA-0001 | idea | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:d0193de0534f682... | 8.9.188 | 243
-KFM-P26-IDEA-0011 | idea | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:8bc107edd9d6b71... | 8.9.189 | 243
-KFM-P26-IDEA-0014 | idea | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:cc0cf6332158480... | 8.9.190 | 243
-KFM-P26-PROG-0001 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:445aa0a65359d63... | 8.9.191 |
-244
-KFM-P26-PROG-0002 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c1340f5f9f1d372... | 8.9.192 |
-244
-KFM-P26-PROG-0003 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:22413a6cf15eb37... | 8.9.193 |
-244
-KFM-P26-PROG-0007 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:72a6d67da9f0ef0... | 8.9.194 |
-244
-KFM-P26-PROG-0015 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:cce63e7a4004990... | 8.9.195 |
-244
-KFM-P26-PROG-0016 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:5b720a19d9525c0... | 8.9.196 |
-245
-KFM-P26-PROG-0018 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6f31fbde6a2663c... | 8.9.197 |
-245
-KFM-P26-PROG-0020 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:0ec7b4c177e3a65... | 8.9.198 |
-245
-KFM-P26-PROG-0023 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:92fe20e6729c4d9... | 8.9.199 |
-245
-KFM-P26-PROG-0024 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4bf7c21e22d4f4d... | 8.9.200 |
-245
-KFM-P26-PROG-0030 | programming | PIP | UNCHANGED | active | 26 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7b2a3d047253661... | 8.9.201 |
-246
-KFM-P27-IDEA-0001 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:85b79b512bfcdf0... | 8.9.202 | 246
-KFM-P27-IDEA-0004 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-```
-
-<!-- page: 273 -->
-
-```text
-sha256:f3cc6aa433bd490... | 8.9.203 | 246
-KFM-P27-IDEA-0005 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:9abb600e9140a17... | 8.9.204 | 246
-KFM-P27-IDEA-0006 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4420eb51a3c94af... | 8.9.205 | 246
-KFM-P27-IDEA-0013 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:0983940b9eee2f7... | 8.9.206 | 247
-KFM-P27-IDEA-0014 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:badec2ef616647f... | 8.9.207 | 247
-KFM-P27-IDEA-0016 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6468de995e0c966... | 8.9.208 | 247
-KFM-P27-PROG-0001 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7b229bd8a72d61c... | 8.9.209 |
-247
-KFM-P27-PROG-0005 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:77c5e6eabc49898... | 8.9.210 |
-247
-KFM-P27-PROG-0007 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:f6080879fb77456... | 8.9.211 |
-248
-KFM-P27-PROG-0012 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:458256c31e063c7... | 8.9.212 |
-248
-KFM-P27-PROG-0013 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:761f5792634388c... | 8.9.213 |
-248
-KFM-P27-PROG-0015 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:032fad23b70af52... | 8.9.214 |
-248
-KFM-P27-PROG-0017 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:74a70eaeabc182a... | 8.9.215 |
-248
-KFM-P27-PROG-0019 | programming | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6b7c2082f089b25... | 8.9.216 |
-249
-KFM-P28-FEAT-0002 | feature | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4f41a83f53bbcf6... | 8.9.217 | 249
-KFM-P28-FEAT-0004 | feature | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c5db94fa1a7b5e9... | 8.9.218 | 249
-KFM-P28-IDEA-0001 | idea | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:e2f485ac67409e6... | 8.9.219 | 249
-KFM-P28-IDEA-0002 | idea | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4623b2076e111b1... | 8.9.220 | 249
-KFM-P28-IDEA-0016 | idea | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:e9355adfa4c50f6... | 8.9.221 | 250
-KFM-P28-PROG-0001 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:20ef39b79d4e2b2... | 8.9.222 | 250
-KFM-P28-PROG-0002 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ed60aadbdbe607a... | 8.9.223 | 250
-KFM-P28-PROG-0003 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b91d0bd7a33491b... | 8.9.224 | 250
-KFM-P28-PROG-0004 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:7a1b2f1a61afc4d... | 8.9.225 | 250
-KFM-P28-PROG-0005 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:6efe9341be5db44... | 8.9.226 | 251
-KFM-P28-PROG-0007 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:4139792ae02a79a... | 8.9.227 | 251
-KFM-P28-PROG-0009 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:375c5c750a38476... | 8.9.228 | 251
-KFM-P28-PROG-0014 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:66f837e5400cdd3... | 8.9.229 | 251
-KFM-P28-PROG-0024 | programming | PIP | UNCHANGED | active | 28 | 31 | SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:b6108030a14542f... | 8.9.230 | 251
-KFM-P29-IDEA-0001 | idea | PIP | UNCHANGED | active | 29 | 31 | SRC-P29-001,SRC-P31-001,SRC-P31-002 | sha256:6c64c1b68669c04... |
-8.9.231 | 252
-KFM-P29-IDEA-0006 | idea | PIP | UNCHANGED | active | 29 | 31 | SRC-P29-001,SRC-P31-001,SRC-P31-002 | sha256:a9c71cbe22c8676... |
-8.9.232 | 252
-KFM-P29-PROG-0003 | programming | PIP | UNCHANGED | active | 29 | 31 | SRC-P29-001,SRC-P31-001,SRC-P31-002 | sha256:2050c7780b9cce9...
-| 8.9.233 | 252  
-KFM-P29-PROG-0005 | programming | PIP | UNCHANGED | active | 29 | 31 | SRC-P29-001,SRC-P31-001,SRC-P31-002 | sha256:a19f351dd351aa7...
-| 8.9.234 | 252  
-KFM-P29-PROG-0015 | programming | PIP | UNCHANGED | active | 29 | 31 | SRC-P29-001,SRC-P31-001,SRC-P31-002 | sha256:230415889ff2d62...
-| 8.9.235 | 252  
-KFM-P29-PROG-0026 | programming | PIP | UNCHANGED | active | 29 | 31 | SRC-P29-001,SRC-P31-001,SRC-P31-002 | sha256:864f3e2d4637e1b...
-| 8.9.236 | 253  
-KFM-P30-IDEA-0004 | idea | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:8f826a312562bc4... |
-8.9.237 | 253
-KFM-P30-IDEA-0008 | idea | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:e4fc1f3f8af7261... |
-8.9.238 | 253
-KFM-P30-IDEA-0015 | idea | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:9e388ed0d4fc6d4... |
-8.9.239 | 253
-KFM-P30-PROG-0003 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:7bc2ca941e28838...
-| 8.9.240 | 253  
-KFM-P30-PROG-0007 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:9862a216d083df3...
-| 8.9.241 | 254  
-KFM-P30-PROG-0009 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:9fe23a8a78aa4a2...
-| 8.9.242 | 254  
-KFM-P30-PROG-0012 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:1d980d4b27a49e8...
-| 8.9.243 | 254  
-KFM-P30-PROG-0014 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:e355615f6cda39c...
-| 8.9.244 | 254  
-KFM-P30-PROG-0018 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:1a1d3748ef83749...
-| 8.9.245 | 254  
-KFM-P30-PROG-0019 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:e66bec28113c2c2...
-| 8.9.246 | 255  
-```
-
-<!-- page: 274 -->
-
-```text
-KFM-P30-PROG-0020 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:94056d8ade3bf69...
-| 8.9.247 | 255  
-KFM-P31-IDEA-0002 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:0ee27e41ad606ca... | 8.9.248 | 255
-KFM-P31-IDEA-0003 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:46b2646d42230f4... | 8.9.249 | 255
-KFM-P31-IDEA-0009 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:ad84fe212578865... | 8.9.250 | 255
-KFM-P31-IDEA-0012 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:ad11998be9f4ccc... | 8.9.251 | 256
-KFM-P31-IDEA-0013 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:56cb55a76ac8748... | 8.9.252 | 256
-KFM-P31-IDEA-0017 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:0f421a4918550e6... | 8.9.253 | 256
-KFM-P31-IDEA-0019 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:6d58964a71aee38... | 8.9.254 | 256
-KFM-P31-PROG-0001 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:8082d3e0116cb5d... | 8.9.255 | 256
-KFM-P31-PROG-0002 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:7179be3072d2aa5... | 8.9.256 | 257
-KFM-P31-PROG-0005 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:df00897c204c95a... | 8.9.257 | 257
-KFM-P31-PROG-0008 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:69fa14fcb429c45... | 8.9.258 | 257
-KFM-P31-PROG-0009 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:8b660ba3a6f07cc... | 8.9.259 | 257
-KFM-P31-PROG-0010 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:e28035e26f35ce2... | 8.9.260 | 257
-KFM-P31-PROG-0014 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:aa325e37da516be... | 8.9.261 | 258
-KFM-P31-PROG-0015 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:e5b1ca7ebf8e559... | 8.9.262 | 258
-KFM-P31-PROG-0016 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:4a0a0da938d47e8... | 8.9.263 | 258
-KFM-P31-PROG-0017 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:fcd538cc36c1c9a... | 8.9.264 | 258
-KFM-P31-PROG-0018 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:b21ee1a5ddcdad7... | 8.9.265 | 258
-KFM-P31-PROG-0020 | programming | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:419fc1d96b05d8e... | 8.9.266 | 259
-KFM-P31-PROG-0021 | programming | PIP | QUARANTINED | quarantine | 31 | 31 | SRC-P31-003 | sha256:d18804340850cc1... | 8.9.267 | 259
-KFM-P32-IDEA-0009 | idea | PIP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:c8558e66654a04c... | 8.9.268 | 259
-KFM-P32-PROG-0010 | programming | PIP | NEW | active | 32 | 32 | SRC-P32-002 | sha256:55f74a88643a9c4... | 8.9.269 | 259
-KFM-P32-PROG-0012 | programming | PIP | NEW | active | 32 | 32 | SRC-P32-001 | sha256:30cd6af0a2cfa75... | 8.9.270 | 259
-KFM-P32-PROG-0021 | programming | PIP | QUARANTINED | quarantine | 32 | 32 | SRC-P32-001,SRC-P32-002 | sha256:3d9d2ecf848a59d... |
-8.9.271 | 260
-KFM-P5-PROG-0009 | programming | PIP | UNCHANGED | active | 5 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:729bf06d1efa7c4... | 8.9.272 | 260
-KFM-P6-IDEA-0001 | idea | PIP | UNCHANGED | active | 6 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:3ffa93b097abf78... | 8.9.273 | 260
-KFM-P6-PROG-0004 | programming | PIP | UNCHANGED | active | 6 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:c51b7afbe7ff2bf... | 8.9.274 | 260
-KFM-P6-PROG-0005 | programming | PIP | UNCHANGED | active | 6 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:05c96cf4ac024b5... | 8.9.275 | 260
-KFM-P6-PROG-0006 | programming | PIP | UNCHANGED | active | 6 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:ed60a87dc118124... | 8.9.276 | 261
-KFM-P6-PROG-0011 | programming | PIP | UNCHANGED | active | 6 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:66bf8c0b88f69d5... | 8.9.277 | 261
-KFM-P6-PROG-0013 | programming | PIP | UNCHANGED | active | 6 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:32c48e09556801d... | 8.9.278 | 261
-KFM-P7-PROG-0002 | programming | PIP | UNCHANGED | active | 7 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:87ee4fdcb0a63ee... | 8.9.279 | 261
-KFM-P7-PROG-0009 | programming | PIP | UNCHANGED | active | 7 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:9dc9cf54436fefe... | 8.9.280 | 261
-KFM-P8-PROG-0001 | programming | PIP | UNCHANGED | active | 8 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:26da4875ab69d3e... | 8.9.281 | 262
-KFM-P8-PROG-0002 | programming | PIP | UNCHANGED | active | 8 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:81fc44618deb987... | 8.9.282 | 262
-KFM-P8-PROG-0003 | programming | PIP | UNCHANGED | active | 8 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:92539b633a4bfd7... | 8.9.283 | 262
-KFM-P8-PROG-0004 | programming | PIP | UNCHANGED | active | 8 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:2e165df9122f12a... | 8.9.284 | 262
-KFM-P8-PROG-0005 | programming | PIP | UNCHANGED | active | 8 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:2cfb49c3f9202ed... | 8.9.285 | 262
-KFM-P8-PROG-0023 | programming | PIP | UNCHANGED | active | 8 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:db5a7dc03244429... | 8.9.286 | 263
-KFM-P8-PROG-0025 | programming | PIP | UNCHANGED | active | 8 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
-sha256:76e0c91078aea30... | 8.9.287 | 263
-KFM-P9-PROG-0025 | programming | PIP | UNCHANGED | active | 9 | 31 | SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002 |
-sha256:29d37a99b8e2cd0... | 8.9.288 | 263
-KFM-P9-PROG-0026 | programming | PIP | UNCHANGED | active | 9 | 31 | SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002 |
-sha256:cdc81dfedfc45e1... | 8.9.289 | 263
-KFM-P9-PROG-0027 | programming | PIP | UNCHANGED | active | 9 | 31 | SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002 |
-sha256:6d265cbd5acdf4e... | 8.9.290 | 263
-KFM-P9-PROG-0028 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:3e998d95e8c231b... |
-8.9.291 | 264
-KFM-P9-PROG-0062 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:02257db09374ab5... |
-8.9.292 | 264
-KFM-P9-PROG-0063 | programming | PIP | UNCHANGED | active | 9 | 31 | SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002 |
-sha256:e81449fca67d5ba... | 8.9.293 | 264
-KFM-P9-PROG-0064 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:1cb40da61bcbac0... |
-8.9.294 | 264
-KFM-P9-PROG-0065 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:2f1566c10a713d3... |
-8.9.295 | 264
-KFM-P9-PROG-0066 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:4c7db82ab649b71... |
-8.9.296 | 265
-KFM-P9-PROG-0067 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:84f2705ef0e3f18... |
-8.9.297 | 265
-KFM-P9-PROG-0068 | programming | PIP | UNCHANGED | active | 9 | 31 | SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002 |
-sha256:f105a654d3c9b23... | 8.9.298 | 265
-KFM-P9-PROG-0069 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:22f9965a4bc3277... |
-8.9.299 | 265
-KFM-P9-PROG-0070 | programming | PIP | UNCHANGED | active | 9 | 31 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002 | sha256:cbf066bf92d06db... |
-8.9.300 | 265
-KFM-P1-IDEA-0031 | idea | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:77b04f4a0de41d2... | 8.10.1 | 266
-```
-
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 34: pages 275–278 -->
-
-<!-- page: 275 -->
-
-```text
-KFM-P1-IDEA-0033 | idea | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:92b7ccdb3dca9c6... | 8.10.2 | 266
-KFM-P1-IDEA-0034 | idea | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:3166fa769c536bf... | 8.10.3 | 266
-KFM-P1-IDEA-0036 | idea | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:444a1c727df5026... | 8.10.4 | 266
-KFM-P1-IDEA-0037 | idea | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:3d57abddd63f949... | 8.10.5 | 266
-KFM-P1-PROG-0032 | programming | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4e1ad5cec93a7e6... | 8.10.6 | 267
-KFM-P1-PROG-0035 | programming | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0f3c1e48a31a151... | 8.10.7 | 267
-KFM-P10-IDEA-0001 | idea | POL | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:d4909880d611e8c... | 8.10.8 | 267
-KFM-P10-PROG-0014 | programming | POL | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:7bfcb84cf225713... | 8.10.9 | 267
-KFM-P11-PROG-0024 | programming | POL | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:c1dd22d439d297f... | 8.10.10 | 267
-KFM-P11-PROG-0025 | programming | POL | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:a3a46d3cf56f308... | 8.10.11 | 268
-KFM-P12-PROG-0019 | programming | POL | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:f20900492fdbf95... | 8.10.12 | 268
-KFM-P12-PROG-0025 | programming | POL | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:85927afa32b3a31... | 8.10.13 | 268
-KFM-P13-PROG-0018 | programming | POL | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:9b397ac4d9a1c7b... | 8.10.14 | 268
-KFM-P13-PROG-0019 | programming | POL | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:82a231c2800033e... | 8.10.15 | 268
-KFM-P14-FEAT-0002 | feature | POL | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4263b1353808e00... | 8.10.16 | 269
-KFM-P14-PROG-0001 | programming | POL | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:dbfa64265f26bc4... | 8.10.17 | 269
-KFM-P14-PROG-0038 | programming | POL | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:93764ee807bca14... | 8.10.18 | 269
-KFM-P14-PROG-0039 | programming | POL | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:4dedbd693f65738... | 8.10.19 | 269
-KFM-P15-PROG-0025 | programming | POL | EXPANDED | active | 15 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:cf49ae1d9a62d1a... | 8.10.20 | 269
-KFM-P15-PROG-0034 | programming | POL | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:6815f1fcb5fb31c... |
-8.10.21 | 270
-KFM-P16-IDEA-0004 | idea | POL | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:1116b79e404365f... | 8.10.22 | 270
-KFM-P16-PROG-0009 | programming | POL | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:244ae7b999a4d5b... |
-8.10.23 | 270
-KFM-P16-PROG-0011 | programming | POL | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:73f4d670c238229... | 8.10.24 | 270
-KFM-P16-PROG-0016 | programming | POL | EXPANDED | active | 16 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:34a303115caa326... |
-8.10.25 | 270
-KFM-P16-PROG-0026 | programming | POL | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:80067559760cc52... | 8.10.26 | 271
-KFM-P16-PROG-0033 | programming | POL | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:87baca31de0ce0b... | 8.10.27 | 271
-KFM-P16-PROG-0037 | programming | POL | EXPANDED | active | 16 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:b21e8d85cd9fc49... | 8.10.28 | 271
-KFM-P17-IDEA-0006 | idea | POL | EXPANDED | active | 17 | 32 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002
-| sha256:c25821d5a4f7ad4... | 8.10.29  
-| 271  
-KFM-P17-PROG-0002 | programming | POL | EXPANDED | active | 17 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:7a2363cc9156d73... |
-8.10.30 | 271
-KFM-P17-PROG-0017 | programming | POL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:09a01236376c51d... | 8.10.31 | 272
-KFM-P17-PROG-0018 | programming | POL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:0c354f36cc6050e... | 8.10.32 | 272
-KFM-P17-PROG-0022 | programming | POL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:6749b846038671a... | 8.10.33 | 272
-KFM-P17-PROG-0025 | programming | POL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:689b7948d152da2... | 8.10.34 | 272
-KFM-P17-PROG-0027 | programming | POL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:2176d9e0f8e23ea... | 8.10.35 | 272
-KFM-P17-PROG-0032 | programming | POL | UNCHANGED | active | 17 | 20 | SRC-P28-001,SRC-P28-002 | sha256:651fe226552fd8d... | 8.10.36 |
-273
-KFM-P17-PROG-0040 | programming | POL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:513d501e5566c6d... | 8.10.37 | 273
-KFM-P18-IDEA-0005 | idea | POL | UNCHANGED | active | 18 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:e529bce9989d4db... | 8.10.38 | 273
-KFM-P18-PROG-0005 | programming | POL | UNCHANGED | active | 18 | 23 | SRC-P28-001,SRC-P28-002 | sha256:0c20736b50ccc91... | 8.10.39 |
-273
-KFM-P18-PROG-0024 | programming | POL | UNCHANGED | active | 18 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:3873207e6d6a277... | 8.10.40 | 273
-KFM-P18-PROG-0025 | programming | POL | UNCHANGED | active | 18 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:06e3442f110f7f0... | 8.10.41 | 274
-KFM-P18-PROG-0028 | programming | POL | UNCHANGED | active | 18 | 23 | SRC-P28-001,SRC-P28-002 | sha256:69856b9b084df0c... | 8.10.42 |
-274
-KFM-P19-IDEA-0003 | idea | POL | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:ab18b256645b734... | 8.10.43 | 274
-KFM-P19-IDEA-0004 | idea | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:1aa723f00b18d58... | 8.10.44 | 274
-KFM-P19-IDEA-0009 | idea | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:35e4df2ba8ae815... | 8.10.45 | 274
-KFM-P19-PROG-0006 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:ac5ff089e130cbb... | 8.10.46 |
-275
-KFM-P19-PROG-0009 | programming | POL | UNCHANGED | active | 19 | 20 | SRC-P28-001,SRC-P28-002 | sha256:8e3c6e40ec88bab... | 8.10.47 |
-275
-```
-
-<!-- page: 276 -->
-
-```text
-KFM-P19-PROG-0010 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:71b233257f09e84... | 8.10.48 |
-275
-KFM-P19-PROG-0013 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:daea1d2f9908f3f... | 8.10.49 |
-275
-KFM-P19-PROG-0025 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:fbbabc5c8a7cf55... | 8.10.50 |
-275
-KFM-P19-PROG-0030 | programming | POL | UNCHANGED | active | 19 | 23 | SRC-P28-001,SRC-P28-002 | sha256:73714f392e64b7f... | 8.10.51 |
-276
-KFM-P2-IDEA-0015 | idea | POL | UNCHANGED | active | 2 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:307358594ce9a6b... | 8.10.52 | 276
-KFM-P20-PROG-0016 | programming | POL | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:dbbe68d29137964... | 8.10.53 |
-276
-KFM-P20-PROG-0017 | programming | POL | UNCHANGED | active | 20 | 23 | SRC-P28-001,SRC-P28-002 | sha256:28a1a1d447b8041... | 8.10.54 |
-276
-KFM-P20-PROG-0022 | programming | POL | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:da66827d009f0ce... | 8.10.55 |
-276
-KFM-P20-PROG-0033 | programming | POL | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:10e08f79e8900bb... | 8.10.56 |
-277
-KFM-P21-IDEA-0003 | idea | POL | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:a1ac4127b4c7d33... | 8.10.57 | 277
-KFM-P21-PROG-0009 | programming | POL | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:22bf28f37623f2e... | 8.10.58 |
-277
-KFM-P21-PROG-0012 | programming | POL | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:362943199529a0a... | 8.10.59 |
-277
-KFM-P21-PROG-0049 | programming | POL | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:ba003d053fd55ec... | 8.10.60 |
-277
-KFM-P22-PROG-0007 | programming | POL | UNCHANGED | active | 22 | 23 | SRC-P28-001,SRC-P28-002 | sha256:72d2d839d7743ce... | 8.10.61 |
-278
-KFM-P22-PROG-0015 | programming | POL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:263ffe847e470e8... | 8.10.62 |
-278
-KFM-P22-PROG-0021 | programming | POL | UNCHANGED | active | 22 | 23 | SRC-P28-001,SRC-P28-002 | sha256:5fcf8be2ace774e... | 8.10.63 |
-278
-KFM-P22-PROG-0032 | programming | POL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:a659c1e50601f60... | 8.10.64 |
-278
-KFM-P22-PROG-0048 | programming | POL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:d6c7fa2fbd63dbc... | 8.10.65 |
-278
-KFM-P23-PROG-0002 | programming | POL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:48914af019e2b1e... | 8.10.66 |
-279
-KFM-P23-PROG-0010 | programming | POL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:643040a5da23a52... | 8.10.67 |
-279
-KFM-P23-PROG-0011 | programming | POL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:a2ef0b999841559... | 8.10.68 |
-279
-KFM-P23-PROG-0014 | programming | POL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:8a63ad3499aaf3e... | 8.10.69 |
-279
-KFM-P23-PROG-0024 | programming | POL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:629b3dd0519691e... | 8.10.70 |
-279
-KFM-P23-PROG-0044 | programming | POL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:7d195753a9f1c9c... | 8.10.71 |
-280
-KFM-P24-IDEA-0002 | idea | POL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:f5e6629b6997707... | 8.10.72 | 280
-KFM-P24-PROG-0013 | programming | POL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:aeff02aa72c69ae... | 8.10.73 |
-280
-KFM-P24-PROG-0016 | programming | POL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:eaab1e5a1c9cda9... | 8.10.74 |
-280
-KFM-P24-PROG-0027 | programming | POL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:009c921aa9b0c1c... | 8.10.75 |
-280
-KFM-P25-FEAT-0010 | feature | POL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:16678cf2689bee0... | 8.10.76 | 281
-KFM-P25-IDEA-0006 | idea | POL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:068da5c7e05d74d... | 8.10.77 | 281
-KFM-P25-PROG-0015 | programming | POL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:592bddf0beaab73... | 8.10.78 |
-281
-KFM-P25-PROG-0017 | programming | POL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:6e25e0f3ffe71d2... | 8.10.79 |
-281
-KFM-P25-PROG-0023 | programming | POL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:05048d7f8b87dd8... | 8.10.80 |
-281
-KFM-P26-IDEA-0013 | idea | POL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:84e3b20bfc78b25... | 8.10.81 | 282
-KFM-P26-IDEA-0019 | idea | POL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:95514c1d109abdc... | 8.10.82 | 282
-KFM-P26-PROG-0021 | programming | POL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:3b44f0075d27577... | 8.10.83 |
-282
-KFM-P26-PROG-0022 | programming | POL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:88af075f25b0d83... | 8.10.84 |
-282
-KFM-P27-PROG-0006 | programming | POL | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:98f0a3ad9d0aae9... | 8.10.85 |
-282
-KFM-P27-PROG-0008 | programming | POL | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:cbccb62f4cd1b79... | 8.10.86 |
-283
-KFM-P27-PROG-0021 | programming | POL | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:c0c5d08a8134f58... | 8.10.87 |
-283
-KFM-P27-PROG-0029 | programming | POL | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:df99852db8d128b... | 8.10.88 |
-283
-KFM-P28-IDEA-0005 | idea | POL | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:f5ae23005295c01... | 8.10.89 | 283
-KFM-P28-IDEA-0006 | idea | POL | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:1bb4fca78d9176c... | 8.10.90 | 283
-KFM-P28-IDEA-0011 | idea | POL | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:6cf1332469dd0fa... | 8.10.91 | 284
-KFM-P28-PROG-0013 | programming | POL | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:753788189654f4f... | 8.10.92 | 284
-KFM-P29-IDEA-0011 | idea | POL | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:8e355179ef30a64... | 8.10.93 | 284
-KFM-P29-IDEA-0012 | idea | POL | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:c7dfb0b1a48a490... | 8.10.94 | 284
-KFM-P29-IDEA-0019 | idea | POL | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:90caf51429efa2d... | 8.10.95 | 284
-KFM-P29-PROG-0002 | programming | POL | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:c798ace6ffcf698... | 8.10.96 | 285
-KFM-P29-PROG-0013 | programming | POL | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:b28d106d0631c40... | 8.10.97 | 285
-KFM-P29-PROG-0019 | programming | POL | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:ce13f1ccceab2e9... | 8.10.98 | 285
-KFM-P3-IDEA-0003 | idea | POL | UNCHANGED | active | 3 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:b5e6337884082e0... | 8.10.99 | 285
-KFM-P30-IDEA-0014 | idea | POL | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:7a052ccfa5df0ce... | 8.10.100 | 285
-KFM-P30-IDEA-0020 | idea | POL | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:484d7abf482d2cf... | 8.10.101 | 286
-KFM-P30-PROG-0017 | programming | POL | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:e857d1df061bac7... | 8.10.102 | 286
-KFM-P30-PROG-0021 | programming | POL | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:28c95d5a83734ed... | 8.10.103 | 286
-KFM-P30-PROG-0025 | programming | POL | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:e23b67315474bc2... | 8.10.104 | 286
-KFM-P31-IDEA-0020 | idea | POL | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:9d383ebe2259a2d... | 8.10.105 | 286
-KFM-P32-FEAT-0009 | feature | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:2cd9646ecf60817... | 8.10.106 | 287
-```
-
-<!-- page: 277 -->
-
-```text
-KFM-P32-FEAT-0012 | feature | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:d6595ff8f3f1bb3... | 8.10.107 | 287
-KFM-P32-FEAT-0017 | feature | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:7d8fabfc1fb17ae... | 8.10.108 | 287
-KFM-P32-IDEA-0007 | idea | POL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:41d807e4bd5b0f8... | 8.10.109 | 287
-KFM-P32-IDEA-0016 | idea | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:f404a696261871f... | 8.10.110 | 287
-KFM-P32-IDEA-0017 | idea | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:7abc911b79404ca... | 8.10.111 | 288
-KFM-P32-PROG-0008 | programming | POL | NEW | active | 32 | 32 | SRC-P32-001,SRC-P32-002 | sha256:89c1d809ebbcb3b... | 8.10.112 | 288
-KFM-P32-PROG-0017 | programming | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:a3fa975df819b32... | 8.10.113 | 288
-KFM-P5-PROG-0001 | programming | POL | UNCHANGED | active | 5 | 23 | SRC-P28-001,SRC-P28-002 | sha256:dd67a310e9b4591... | 8.10.114 |
-288
-KFM-P5-PROG-0005 | programming | POL | UNCHANGED | active | 5 | 20 | SRC-P28-001,SRC-P28-002 | sha256:057f30f99d17934... | 8.10.115 |
-288
-KFM-P5-PROG-0006 | programming | POL | UNCHANGED | active | 5 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:77c10ea5e865d57... | 8.10.116 | 289
-KFM-P5-PROG-0007 | programming | POL | UNCHANGED | active | 5 | 23 | SRC-P28-001,SRC-P28-002 | sha256:d4f52761bea3f2e... | 8.10.117 |
-289
-KFM-P7-PROG-0004 | programming | POL | UNCHANGED | active | 7 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:086a88561ec1c6e... | 8.10.118 | 289
-KFM-P9-FEAT-0004 | feature | POL | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:b3e82511c14c9d0... | 8.10.119 | 289
-KFM-P9-IDEA-0016 | idea | POL | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:ab46d5256e7cd9a... | 8.10.120 | 289
-KFM-P9-IDEA-0017 | idea | POL | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:38242f8c8e9d9b4... | 8.10.121 | 290
-KFM-P9-IDEA-0018 | idea | POL | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:00fcb8a44db64a2... | 8.10.122 | 290
-KFM-P9-IDEA-0019 | idea | POL | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:05a099ae8252f0c... | 8.10.123 | 290
-KFM-P9-IDEA-0020 | idea | POL | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:02a6d1856029f6b... | 8.10.124 | 290
-KFM-P1-IDEA-0056 | idea | REL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:07dd1e6582cb8f6... | 8.11.1 | 290
-KFM-P1-IDEA-0059 | idea | REL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:3b3191370ea0ec1... | 8.11.2 | 290
-KFM-P1-PROG-0057 | programming | REL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:d09710cffccae64... | 8.11.3 | 290
-KFM-P1-PROG-0058 | programming | REL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:d63b7d1ed8d08a0... | 8.11.4 | 290
-KFM-P1-PROG-0060 | programming | REL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:ede22c5c10ef37c... | 8.11.5 | 290
-KFM-P11-PROG-0027 | programming | REL | UNCHANGED | active | 11 | 26 | SRC-P28-001,SRC-P28-002 | sha256:908d235835e7e85... | 8.11.6 |
-291
-KFM-P12-IDEA-0004 | idea | REL | UNCHANGED | active | 12 | 26 | SRC-P28-001,SRC-P28-002 | sha256:b9e9e5abb6b487c... | 8.11.7 | 291
-KFM-P12-PROG-0008 | programming | REL | UNCHANGED | active | 12 | 26 | SRC-P28-001,SRC-P28-002 | sha256:1665b49ec0fe362... | 8.11.8 |
-291
-KFM-P12-PROG-0014 | programming | REL | UNCHANGED | active | 12 | 26 | SRC-P28-001,SRC-P28-002 | sha256:f94d57cbf0afeca... | 8.11.9 |
-291
-KFM-P13-IDEA-0001 | idea | REL | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:fb6c5822a49964b... | 8.11.10 | 291
-KFM-P13-PROG-0002 | programming | REL | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:282699b43a6b975... | 8.11.11 |
-292
-KFM-P13-PROG-0003 | programming | REL | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:9a2669c8523fd0c... | 8.11.12 |
-292
-KFM-P13-PROG-0020 | programming | REL | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:501daa0c55ab81d... | 8.11.13 |
-292
-KFM-P13-PROG-0028 | programming | REL | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:da5ff96978239e7... | 8.11.14 |
-292
-KFM-P14-PROG-0031 | programming | REL | UNCHANGED | active | 14 | 26 | SRC-P28-001,SRC-P28-002 | sha256:496f14843e4e50c... | 8.11.15 |
-292
-KFM-P14-PROG-0033 | programming | REL | UNCHANGED | active | 14 | 26 | SRC-P28-001,SRC-P28-002 | sha256:948cc593eea3be1... | 8.11.16 |
-293
-KFM-P15-PROG-0032 | programming | REL | UNCHANGED | active | 15 | 26 | SRC-P28-001,SRC-P28-002 | sha256:235a1d1c1eee6d1... | 8.11.17 |
-293
-KFM-P16-FEAT-0001 | feature | REL | UNCHANGED | active | 16 | 26 | SRC-P28-001,SRC-P28-002 | sha256:0a03e1928298fbe... | 8.11.18 | 293
-KFM-P16-IDEA-0001 | idea | REL | UNCHANGED | active | 16 | 26 | SRC-P28-001,SRC-P28-002 | sha256:c09e683d75cb26b... | 8.11.19 | 293
-KFM-P16-IDEA-0005 | idea | REL | UNCHANGED | active | 16 | 26 | SRC-P28-001,SRC-P28-002 | sha256:420fed2536ab63d... | 8.11.20 | 293
-KFM-P16-PROG-0021 | programming | REL | UNCHANGED | active | 16 | 26 | SRC-P28-001,SRC-P28-002 | sha256:aba4d83b8946416... | 8.11.21 |
-294
-KFM-P16-PROG-0036 | programming | REL | UNCHANGED | active | 16 | 26 | SRC-P28-001,SRC-P28-002 | sha256:6ac49971b5bd605... | 8.11.22 |
-294
-KFM-P17-FEAT-0001 | feature | REL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:c3c72a2edbaca7f... | 8.11.23 | 294
-KFM-P17-IDEA-0001 | idea | REL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:4e8f954def27cf0... | 8.11.24 | 294
-KFM-P17-PROG-0004 | programming | REL | UNCHANGED | active | 17 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:497937257e24d6e... | 8.11.25 | 294
-KFM-P18-FEAT-0008 | feature | REL | UNCHANGED | active | 18 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:951bb0dce6c66de... | 8.11.26 | 295
-KFM-P18-IDEA-0004 | idea | REL | UNCHANGED | active | 18 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:f09d252e7400b33... | 8.11.27 | 295
-KFM-P18-PROG-0008 | programming | REL | UNCHANGED | active | 18 | 22 | SRC-P28-001,SRC-P28-002 | sha256:859de3a3f8d5f28... | 8.11.28 |
-295
-KFM-P18-PROG-0012 | programming | REL | UNCHANGED | active | 18 | 23 | SRC-P28-001,SRC-P28-002 | sha256:fa2b7db512a87c9... | 8.11.29 |
-295
-KFM-P18-PROG-0038 | programming | REL | UNCHANGED | active | 18 | 22 | SRC-P28-001,SRC-P28-002 | sha256:319683c7bdba5a4... | 8.11.30 |
-295
-KFM-P18-PROG-0041 | programming | REL | UNCHANGED | active | 18 | 22 | SRC-P28-001,SRC-P28-002 | sha256:1b74820126bb249... | 8.11.31 |
-296
-KFM-P19-IDEA-0010 | idea | REL | UNCHANGED | active | 19 | 23 | SRC-P28-001,SRC-P28-002 | sha256:8db4c71deae27f3... | 8.11.32 | 296
-KFM-P19-PROG-0007 | programming | REL | UNCHANGED | active | 19 | 22 | SRC-P28-001,SRC-P28-002 | sha256:e7f303090b6a14a... | 8.11.33 |
-296
-KFM-P19-PROG-0041 | programming | REL | UNCHANGED | active | 19 | 22 | SRC-P28-001,SRC-P28-002 | sha256:a6456ec33d93fb2... | 8.11.34 |
-296
-KFM-P20-IDEA-0004 | idea | REL | UNCHANGED | active | 20 | 22 | SRC-P28-001,SRC-P28-002 | sha256:378a7b739961506... | 8.11.35 | 296
-KFM-P20-PROG-0018 | programming | REL | UNCHANGED | active | 20 | 22 | SRC-P28-001,SRC-P28-002 | sha256:2d24ad8215cb2cf... | 8.11.36 |
-297
-KFM-P20-PROG-0021 | programming | REL | UNCHANGED | active | 20 | 22 | SRC-P28-001,SRC-P28-002 | sha256:8e467a743e872f0... | 8.11.37 |
-```
-
-<!-- page: 278 -->
-
-```text
-297
-KFM-P21-IDEA-0006 | idea | REL | UNCHANGED | active | 21 | 22 | SRC-P28-001,SRC-P28-002 | sha256:5c2d099d50f2249... | 8.11.38 | 297
-KFM-P21-PROG-0029 | programming | REL | UNCHANGED | active | 21 | 23 | SRC-P28-001,SRC-P28-002 | sha256:e0655589f602891... | 8.11.39 |
-297
-KFM-P21-PROG-0033 | programming | REL | UNCHANGED | active | 21 | 22 | SRC-P28-001,SRC-P28-002 | sha256:e3036a942962fce... | 8.11.40 |
-297
-KFM-P21-PROG-0036 | programming | REL | UNCHANGED | active | 21 | 22 | SRC-P28-001,SRC-P28-002 | sha256:5a691173092eef9... | 8.11.41 |
-298
-KFM-P21-PROG-0040 | programming | REL | UNCHANGED | active | 21 | 22 | SRC-P28-001,SRC-P28-002 | sha256:dc5018bd6ed2b73... | 8.11.42 |
-298
-KFM-P22-IDEA-0004 | idea | REL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:5729c4cdc89fb9c... | 8.11.43 | 298
-KFM-P22-PROG-0012 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:fa1908dc4e09427... | 8.11.44 |
-298
-KFM-P22-PROG-0025 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:bce0fcde113bb5e... | 8.11.45 |
-298
-KFM-P22-PROG-0027 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:9c32a6c8b3f9c62... | 8.11.46 |
-299
-KFM-P22-PROG-0040 | programming | REL | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:046a7b339050c4a... | 8.11.47 |
-299
-KFM-P23-IDEA-0006 | idea | REL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:3495a54d63c91ee... | 8.11.48 | 299
-KFM-P23-PROG-0017 | programming | REL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:8cf977d0eb97faa... | 8.11.49 |
-299
-KFM-P23-PROG-0027 | programming | REL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:23f180554893ad1... | 8.11.50 |
-299
-KFM-P23-PROG-0028 | programming | REL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:5bbecd676f186ab... | 8.11.51 |
-300
-KFM-P23-PROG-0038 | programming | REL | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:45b32b5cbb85aea... | 8.11.52 |
-300
-KFM-P24-FEAT-0004 | feature | REL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:1630299cf0e3483... | 8.11.53 | 300
-KFM-P24-IDEA-0003 | idea | REL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:2889a9cdf3dfada... | 8.11.54 | 300
-KFM-P24-PROG-0017 | programming | REL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:9f477c788b8ed76... | 8.11.55 |
-300
-KFM-P24-PROG-0018 | programming | REL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:9944b3793f92864... | 8.11.56 |
-301
-KFM-P24-PROG-0019 | programming | REL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:e24fa1a02e0b045... | 8.11.57 |
-301
-KFM-P24-PROG-0049 | programming | REL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:cbe04016ae6d011... | 8.11.58 |
-301
-KFM-P24-PROG-0050 | programming | REL | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:798330a7dd50380... | 8.11.59 |
-301
-KFM-P25-FEAT-0004 | feature | REL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:1f9db726ff529ff... | 8.11.60 | 301
-KFM-P25-IDEA-0007 | idea | REL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:8a2425d35ed4464... | 8.11.61 | 302
-KFM-P25-IDEA-0018 | idea | REL | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:8ca40a900baf94a... | 8.11.62 | 302
-KFM-P26-IDEA-0004 | idea | REL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:cd840e83ca06e66... | 8.11.63 | 302
-KFM-P26-IDEA-0009 | idea | REL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:4b67eda91e1d868... | 8.11.64 | 302
-KFM-P26-IDEA-0010 | idea | REL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:a299652e4fb6cae... | 8.11.65 | 302
-KFM-P26-IDEA-0020 | idea | REL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:ce73920f0296ce1... | 8.11.66 | 303
-KFM-P26-PROG-0006 | programming | REL | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:41018bc50f692e2... | 8.11.67 |
-303
-KFM-P27-PROG-0023 | programming | REL | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:4c69902f7c2a0b7... | 8.11.68 |
-303
-KFM-P28-IDEA-0009 | idea | REL | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:070a8a6b5a88870... | 8.11.69 | 303
-KFM-P28-IDEA-0015 | idea | REL | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:7e797ce9fc5c4f8... | 8.11.70 | 303
-KFM-P28-PROG-0015 | programming | REL | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:e72e44ed2ed9bea... | 8.11.71 | 304
-KFM-P28-PROG-0020 | programming | REL | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:6eda66b81109ba9... | 8.11.72 | 304
-KFM-P28-PROG-0021 | programming | REL | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:98462351906ec42... | 8.11.73 | 304
-KFM-P29-IDEA-0005 | idea | REL | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:b6460d56bd73d02... | 8.11.74 | 304
-KFM-P30-IDEA-0011 | idea | REL | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:5fe3a30f0ceb30a... | 8.11.75 | 304
-KFM-P30-PROG-0011 | programming | REL | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:8d5615f9da9cb2a... | 8.11.76 | 305
-KFM-P31-IDEA-0005 | idea | REL | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:132421d2b443c87... | 8.11.77 | 305
-KFM-P31-PROG-0019 | programming | REL | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:dc0312de7b5a06c... | 8.11.78 | 305
-KFM-P32-FEAT-0002 | feature | REL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:65a75ca1f6b9791... | 8.11.79 | 305
-KFM-P32-FEAT-0014 | feature | REL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:1c69b3575f3f715... | 8.11.80 | 305
-KFM-P32-FEAT-0020 | feature | REL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:c088fb2e037c005... | 8.11.81 | 306
-KFM-P32-IDEA-0003 | idea | REL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:eb026b7bc260548... | 8.11.82 | 306
-KFM-P32-IDEA-0020 | idea | REL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:907daa0d523393b... | 8.11.83 | 306
-KFM-P32-PROG-0001 | programming | REL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:aca9520c9b17ab5... | 8.11.84 | 306
-KFM-P4-IDEA-0002 | idea | REL | UNCHANGED | active | 4 | 22 | SRC-P28-001,SRC-P28-002 | sha256:f637bcb6523fbee... | 8.11.85 | 306
-KFM-P6-PROG-0007 | programming | REL | UNCHANGED | active | 6 | 22 | SRC-P28-001,SRC-P28-002 | sha256:a0c7eed715f3aae... | 8.11.86 |
-307
-KFM-P6-PROG-0008 | programming | REL | UNCHANGED | active | 6 | 23 | SRC-P28-001,SRC-P28-002 | sha256:ca92a925bbdf62a... | 8.11.87 |
-307
-KFM-P6-PROG-0012 | programming | REL | UNCHANGED | active | 6 | 22 | SRC-P28-001,SRC-P28-002 | sha256:fa99e470d80add3... | 8.11.88 |
-307
-KFM-P7-PROG-0003 | programming | REL | UNCHANGED | active | 7 | 22 | SRC-P28-001,SRC-P28-002 | sha256:eab74b840795193... | 8.11.89 |
-307
-KFM-P9-IDEA-0046 | idea | REL | UNCHANGED | active | 9 | 22 | SRC-P28-001,SRC-P28-002 | sha256:8376e7856c6a2f7... | 8.11.90 | 307
-KFM-P9-IDEA-0047 | idea | REL | UNCHANGED | active | 9 | 22 | SRC-P28-001,SRC-P28-002 | sha256:fbb329b848b5c9e... | 8.11.91 | 308
-KFM-P9-IDEA-0048 | idea | REL | UNCHANGED | active | 9 | 22 | SRC-P28-001,SRC-P28-002 | sha256:5d7d8685a5009ba... | 8.11.92 | 308
-KFM-P9-PROG-0059 | programming | REL | UNCHANGED | active | 9 | 22 | SRC-P28-001,SRC-P28-002 | sha256:557ac55bbde03e7... | 8.11.93 |
-308
-KFM-P9-PROG-0060 | programming | REL | UNCHANGED | active | 9 | 22 | SRC-P28-001,SRC-P28-002 | sha256:4182875f96646c6... | 8.11.94 |
-308
-KFM-P9-PROG-0061 | programming | REL | UNCHANGED | active | 9 | 22 | SRC-P28-001,SRC-P28-002 | sha256:a546c5334a7ae21... | 8.11.95 |
-308
-KFM-P1-PROG-0017 | programming | SEC | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:b7edec16270e96c... | 8.12.1 | 309
-KFM-P1-PROG-0053 | programming | SEC | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:fbd2de42acc6f73... | 8.12.2 | 309
-KFM-P1-PROG-0054 | programming | SEC | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:d64201c7e0c50ca... | 8.12.3 | 309
-KFM-P1-PROG-0055 | programming | SEC | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:b73454a307a18ea... | 8.12.4 | 309
-KFM-P10-PROG-0005 | programming | SEC | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:5fe1d73b545c29e... | 8.12.5 | 309
-```
-
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 35: pages 279–282 -->
-
-<!-- page: 279 -->
-
-```text
-KFM-P10-PROG-0006 | programming | SEC | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:eba7150ac63d4e7... | 8.12.6 | 310
-KFM-P11-PROG-0008 | programming | SEC | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:e2128c0b5b80b6b... | 8.12.7 | 310
-KFM-P11-PROG-0023 | programming | SEC | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:c6782341f175513... | 8.12.8 | 310
-KFM-P11-PROG-0028 | programming | SEC | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:41d3472db87f852... | 8.12.9 | 310
-KFM-P12-PROG-0009 | programming | SEC | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:8ffbbc4a4c180c7... | 8.12.10 |
-310
-KFM-P12-PROG-0016 | programming | SEC | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:5dda64acdbd952e... | 8.12.11 |
-311
-KFM-P12-PROG-0017 | programming | SEC | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:dfda5942af7048b... | 8.12.12 |
-311
-KFM-P12-PROG-0024 | programming | SEC | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:c4e4c801e2c99e7... | 8.12.13 |
-311
-KFM-P12-PROG-0031 | programming | SEC | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:8dcc00db7e55161... | 8.12.14 |
-311
-KFM-P13-PROG-0011 | programming | SEC | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:991fc612a1e5690... | 8.12.15 |
-311
-KFM-P13-PROG-0031 | programming | SEC | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:955b4faa5855177... | 8.12.16 |
-312
-KFM-P14-IDEA-0003 | idea | SEC | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:abaf6f73857776f... | 8.12.17 | 312
-KFM-P14-PROG-0006 | programming | SEC | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:4b91bfeabf7f313... | 8.12.18 |
-312
-KFM-P14-PROG-0018 | programming | SEC | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:aaeddbb0cade274... | 8.12.19 | 312
-KFM-P14-PROG-0019 | programming | SEC | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:6b060ae856fd4d3... | 8.12.20 | 312
-KFM-P14-PROG-0030 | programming | SEC | EXPANDED | active | 14 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:7e4847820127021... | 8.12.21 | 313
-KFM-P15-PROG-0004 | programming | SEC | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:ac2d670228f10ac... | 8.12.22 | 313
-KFM-P15-PROG-0017 | programming | SEC | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:5748dfdd39d3bc2... | 8.12.23 | 313
-KFM-P15-PROG-0031 | programming | SEC | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:b1db73f268b6c78... | 8.12.24 | 313
-KFM-P15-PROG-0039 | programming | SEC | EXPANDED | active | 15 | 32 |
-SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
-sha256:327882538c89590... | 8.12.25 | 313
-KFM-P16-PROG-0002 | programming | SEC | UNCHANGED | active | 16 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:3054d08891a8210... | 8.12.26 |
-314
-KFM-P16-PROG-0004 | programming | SEC | UNCHANGED | active | 16 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:db7d15bb00164f2... | 8.12.27 |
-314
-KFM-P16-PROG-0005 | programming | SEC | UNCHANGED | active | 16 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:2f4ad83d0ae85de...
-| 8.12.28 | 314  
-KFM-P16-PROG-0014 | programming | SEC | UNCHANGED | active | 16 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:aac5a1ad9cd9e93... | 8.12.29 |
-314
-KFM-P16-PROG-0034 | programming | SEC | UNCHANGED | active | 16 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:a0cebcb41f55d7c... | 8.12.30 |
-314
-KFM-P17-PROG-0005 | programming | SEC | UNCHANGED | active | 17 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:df13767f97a65b5...
-| 8.12.31 | 315  
-KFM-P17-PROG-0016 | programming | SEC | UNCHANGED | active | 17 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:290b2f0533451eb... | 8.12.32 |
-315
-KFM-P17-PROG-0020 | programming | SEC | UNCHANGED | active | 17 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:f953b72eb6b7693... | 8.12.33 |
-315
-KFM-P17-PROG-0037 | programming | SEC | UNCHANGED | active | 17 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:2f62fd748b29c57... | 8.12.34 |
-315
-KFM-P18-FEAT-0006 | feature | SEC | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:83752c14a9c1731... | 8.12.35 | 315
-KFM-P18-IDEA-0007 | idea | SEC | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:14efb2274219f4b... |
-8.12.36 | 316
-KFM-P18-PROG-0002 | programming | SEC | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:21218b9185dc159... | 8.12.37 |
-316
-KFM-P18-PROG-0026 | programming | SEC | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:b5a6515d7681926... | 8.12.38 |
-316
-KFM-P18-PROG-0029 | programming | SEC | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:df50a12d52b2faf... | 8.12.39 |
-316
-KFM-P18-PROG-0030 | programming | SEC | UNCHANGED | active | 18 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:034d119db7fb7f3... | 8.12.40 |
-```
-
-<!-- page: 280 -->
-
-```text
-316
-KFM-P19-FEAT-0007 | feature | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:6e593b489ca9405... | 8.12.41 | 317
-KFM-P19-IDEA-0002 | idea | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:71f42bfe38ca34e... | 8.12.42 | 317
-KFM-P19-PROG-0002 | programming | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:eff56743d2a53b2... | 8.12.43 |
-317
-KFM-P19-PROG-0011 | programming | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:305c291c72ed056... | 8.12.44 |
-317
-KFM-P19-PROG-0024 | programming | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:eaad924def03df3... | 8.12.45 |
-317
-KFM-P19-PROG-0026 | programming | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:6956bc2c2118866... | 8.12.46 |
-318
-KFM-P19-PROG-0038 | programming | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:e35bb36d323a06d... | 8.12.47 |
-318
-KFM-P20-PROG-0027 | programming | SEC | UNCHANGED | active | 20 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:cde66500de08be8... | 8.12.48 |
-318
-KFM-P21-PROG-0004 | programming | SEC | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:9646a532c8af92b...
-| 8.12.49 | 318  
-KFM-P21-PROG-0037 | programming | SEC | UNCHANGED | active | 21 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:17211000777d36c... | 8.12.50 |
-318
-KFM-P22-IDEA-0001 | idea | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:420d9a145acd98d... | 8.12.51 | 319
-KFM-P22-PROG-0004 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
-sha256:2a1bf74fb5b5ff3... | 8.12.52 |
-319
-KFM-P22-PROG-0009 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:bfdbbe95aad0769...
-| 8.12.53 | 319  
-KFM-P22-PROG-0019 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:a9f8688670f68b7...
-| 8.12.54 | 319  
-KFM-P22-PROG-0023 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:aed371c9a11a030...
-| 8.12.55 | 319  
-KFM-P22-PROG-0024 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:79864f1497d9697...
-| 8.12.56 | 320  
-KFM-P22-PROG-0028 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:ac5a0c936bab626...
-| 8.12.57 | 320  
-KFM-P22-PROG-0029 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:92b1dad33a37083...
-| 8.12.58 | 320  
-KFM-P22-PROG-0033 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:b059c936ccad819...
-| 8.12.59 | 320  
-KFM-P22-PROG-0052 | programming | SEC | UNCHANGED | active | 22 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:99791300846ac56...
-| 8.12.60 | 320  
-KFM-P23-IDEA-0002 | idea | SEC | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:3a0482e8768e970... |
-8.12.61 | 321
-KFM-P23-PROG-0006 | programming | SEC | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:334960d84648944...
-| 8.12.62 | 321  
-KFM-P23-PROG-0007 | programming | SEC | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:2fc9cc39d61bd15...
-| 8.12.63 | 321  
-KFM-P23-PROG-0008 | programming | SEC | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:c47868de76a13c6...
-| 8.12.64 | 321  
-KFM-P24-PROG-0044 | programming | SEC | UNCHANGED | active | 24 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:0857067f4996666...
-| 8.12.65 | 321  
-KFM-P25-IDEA-0019 | idea | SEC | UNCHANGED | active | 25 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:3d50d0f0f8c2775... |
-8.12.66 | 322
-KFM-P26-IDEA-0017 | idea | SEC | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:7dc12ad4bc30721... |
-8.12.67 | 322
-KFM-P26-PROG-0009 | programming | SEC | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:ba9852d666f45a9...
-| 8.12.68 | 322  
-KFM-P26-PROG-0017 | programming | SEC | UNCHANGED | active | 26 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:f36a504b30c7fd1...
-| 8.12.69 | 322  
-KFM-P27-FEAT-0006 | feature | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:875955ed7440915... |
-8.12.70 | 322
-KFM-P27-IDEA-0008 | idea | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:64a04cf3039d872... |
-8.12.71 | 323
-KFM-P27-IDEA-0011 | idea | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:c268179c9ccc192... |
-8.12.72 | 323
-KFM-P27-IDEA-0019 | idea | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:1f56a56918f9870... |
-8.12.73 | 323
-KFM-P27-IDEA-0020 | idea | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:6ebbd6a104aa49c... |
-8.12.74 | 323
-KFM-P27-PROG-0014 | programming | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:28ff96387b45900...
-| 8.12.75 | 323  
-KFM-P27-PROG-0024 | programming | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:b8487fa6ca07629...
-| 8.12.76 | 324  
-KFM-P27-PROG-0025 | programming | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:be6011a37b93b06...
-| 8.12.77 | 324  
-KFM-P27-PROG-0026 | programming | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:aca910e68b430eb...
-| 8.12.78 | 324  
-KFM-P27-PROG-0027 | programming | SEC | UNCHANGED | active | 27 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:2960c42f5f50350...
-| 8.12.79 | 324  
-KFM-P28-FEAT-0007 | feature | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:4901aa8409f8e63... | 8.12.80 | 324
-KFM-P28-IDEA-0008 | idea | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-003,SRC-P30-002 | sha256:b21879cfdff63a2... | 8.12.81 | 325
-KFM-P28-IDEA-0013 | idea | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:bbd3dc617568bdf... | 8.12.82 | 325
-KFM-P28-IDEA-0014 | idea | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:74c6cd90912758c... | 8.12.83 | 325
-KFM-P28-IDEA-0020 | idea | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:b12c1ab2dd5a4ae... | 8.12.84 | 325
-KFM-P28-PROG-0010 | programming | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-003,SRC-P30-002 | sha256:07c855c638e299c... | 8.12.85 |
-325
-KFM-P28-PROG-0018 | programming | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:96a005aec5709d8... | 8.12.86 |
-```
-
-<!-- page: 281 -->
-
-```text
-326
-KFM-P28-PROG-0019 | programming | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:4b5317ea2e74145... | 8.12.87 |
-326
-KFM-P28-PROG-0025 | programming | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:62bc29d8efa8611... | 8.12.88 |
-326
-KFM-P28-PROG-0026 | programming | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:dd3f3456cad9e41... | 8.12.89 |
-326
-KFM-P29-FEAT-0007 | feature | SEC | UNCHANGED | active | 29 | 30 | SRC-P29-001,SRC-P30-002 | sha256:7d982424b95e487... | 8.12.90 | 326
-KFM-P29-IDEA-0010 | idea | SEC | UNCHANGED | active | 29 | 30 | SRC-P29-001,SRC-P30-002 | sha256:445d1d3f45d74fc... | 8.12.91 | 327
-KFM-P29-PROG-0011 | programming | SEC | UNCHANGED | active | 29 | 30 | SRC-P29-001,SRC-P30-002 | sha256:496f28d0b7a7c20... | 8.12.92 |
-327
-KFM-P29-PROG-0012 | programming | SEC | UNCHANGED | active | 29 | 30 | SRC-P29-001,SRC-P30-002 | sha256:761c353b794fbbc... | 8.12.93 |
-327
-KFM-P29-PROG-0029 | programming | SEC | UNCHANGED | active | 29 | 30 | SRC-P29-001,SRC-P30-002 | sha256:b7496f80ab29a5d... | 8.12.94 |
-327
-KFM-P30-IDEA-0016 | idea | SEC | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:8f8708d89a75265... | 8.12.95 | 327
-KFM-P30-IDEA-0017 | idea | SEC | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:b2872e70f9af585... | 8.12.96 | 328
-KFM-P30-PROG-0022 | programming | SEC | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:cd694ec022782b5... | 8.12.97 | 328
-KFM-P30-PROG-0023 | programming | SEC | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:cbeaae3de51ab5d... | 8.12.98 | 328
-KFM-P30-PROG-0024 | programming | SEC | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:0a9b3201ff58e87... | 8.12.99 | 328
-KFM-P31-IDEA-0015 | idea | SEC | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:c7aea3d1060d5ee... | 8.12.100 | 328
-KFM-P31-IDEA-0016 | idea | SEC | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:dd2c150114bca94... | 8.12.101 | 329
-KFM-P31-PROG-0012 | programming | SEC | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:77e125124f7c04e... | 8.12.102 | 329
-KFM-P32-FEAT-0011 | feature | SEC | NEW | active | 32 | 32 | SRC-P32-002 | sha256:ba7a40e52f79b86... | 8.12.103 | 329
-KFM-P32-IDEA-0014 | idea | SEC | NEW | active | 32 | 32 | SRC-P32-002 | sha256:398d946d7f925fc... | 8.12.104 | 329
-KFM-P32-PROG-0002 | programming | SEC | NEW | active | 32 | 32 | SRC-P32-001 | sha256:2e99b43144bb40a... | 8.12.105 | 329
-KFM-P32-PROG-0015 | programming | SEC | NEW | active | 32 | 32 | SRC-P32-001 | sha256:d8845c8309d3cac... | 8.12.106 | 330
-KFM-P32-PROG-0018 | programming | SEC | NEW | active | 32 | 32 | SRC-P32-002 | sha256:360ec29489c3ec1... | 8.12.107 | 330
-KFM-P4-PROG-0003 | programming | SEC | UNCHANGED | active | 4 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:7bc350ab84f450d... |
-8.12.108 | 330
-KFM-P5-FEAT-0001 | feature | SEC | UNCHANGED | active | 5 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:60f6668854d5c54... |
-8.12.109 | 330
-KFM-P5-PROG-0002 | programming | SEC | UNCHANGED | active | 5 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:3bc96118cc52c9b... |
-8.12.110 | 330
-KFM-P5-PROG-0010 | programming | SEC | UNCHANGED | active | 5 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:88dd1758f989200... |
-8.12.111 | 331
-KFM-P5-PROG-0013 | programming | SEC | UNCHANGED | active | 5 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:5d0220d59585663... |
-8.12.112 | 331
-KFM-P6-PROG-0010 | programming | SEC | UNCHANGED | active | 6 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:9941a7cf1f438fa... |
-8.12.113 | 331
-KFM-P7-PROG-0005 | programming | SEC | UNCHANGED | active | 7 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:11f7c471d201029... |
-8.12.114 | 331
-KFM-P8-IDEA-0002 | idea | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:70b43210d321431... |
-8.12.115 | 331
-KFM-P8-PROG-0007 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:fafa1ca2675277f... |
-8.12.116 | 332
-KFM-P8-PROG-0008 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:dc61bbca0a2145c... |
-8.12.117 | 332
-KFM-P8-PROG-0009 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:b577e29947867e1... |
-8.12.118 | 332
-KFM-P8-PROG-0010 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:4a9ddc751be0c34... |
-8.12.119 | 332
-KFM-P8-PROG-0011 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:585de56bf7d2a08... |
-8.12.120 | 332
-KFM-P8-PROG-0012 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:25c0c9c2646f3b8... |
-8.12.121 | 333
-KFM-P8-PROG-0013 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:1b8275d8679d414... |
-8.12.122 | 333
-KFM-P8-PROG-0014 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:26184dfa4265150... |
-8.12.123 | 333
-KFM-P8-PROG-0015 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:77f51b489abe8f5... |
-8.12.124 | 333
-KFM-P8-PROG-0016 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:21ecbfa14ef91eb... |
-8.12.125 | 333
-KFM-P8-PROG-0017 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:6e56758fbf841b2... |
-8.12.126 | 334
-KFM-P8-PROG-0018 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:6cdc1478f7d1c67... |
-8.12.127 | 334
-KFM-P8-PROG-0021 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:841538bc99b0eba... |
-8.12.128 | 334
-KFM-P8-PROG-0026 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:81bb98a6fe6e475... |
-8.12.129 | 334
-KFM-P8-PROG-0027 | programming | SEC | UNCHANGED | active | 8 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:1c6af60fca2ada7... |
-8.12.130 | 334
-KFM-P1-FEAT-0065 | feature | UIX | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:21372316eb8efa4... | 8.13.1 | 335
-KFM-P1-FEAT-0066 | feature | UIX | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:1e3cbe4378ce56d... | 8.13.2 | 335
-KFM-P1-FEAT-0067 | feature | UIX | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:2cb19d9924dabb1... | 8.13.3 | 335
-KFM-P1-FEAT-0068 | feature | UIX | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:eeeb7ee7b277914... | 8.13.4 | 335
-KFM-P1-FEAT-0074 | feature | UIX | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:1c4645e37f1f80b... | 8.13.5 | 335
-KFM-P10-FEAT-0002 | feature | UIX | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0244d98ddba8f24... | 8.13.6 | 336
-KFM-P11-PROG-0003 | programming | UIX | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0b89fd76225cfd0... | 8.13.7 | 336
-KFM-P11-PROG-0022 | programming | UIX | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:3f5706b9b949c20... | 8.13.8 | 336
-KFM-P12-FEAT-0001 | feature | UIX | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:0da0650567e1249... | 8.13.9 | 336
-KFM-P12-FEAT-0002 | feature | UIX | EXPANDED | active | 12 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
-sha256:968f1c60f679693... | 8.13.10 | 336
-KFM-P13-FEAT-0001 | feature | UIX | UNCHANGED | active | 13 | 13 | SRC-P28-001,SRC-P28-002 | sha256:86dad4598c2c558... | 8.13.11 | 337
-```
-
-<!-- page: 282 -->
-
-```text
-KFM-P13-FEAT-0002 | feature | UIX | UNCHANGED | active | 13 | 13 | SRC-P28-001,SRC-P28-002 | sha256:56bc228e8da9941... | 8.13.12 | 337
-KFM-P13-FEAT-0003 | feature | UIX | UNCHANGED | active | 13 | 23 | SRC-P28-001,SRC-P28-002 | sha256:faf27e6639f6007... | 8.13.13 | 337
-KFM-P14-FEAT-0001 | feature | UIX | UNCHANGED | active | 14 | 23 | SRC-P28-001,SRC-P28-002 | sha256:6994e577825b0ef... | 8.13.14 | 337
-KFM-P14-PROG-0040 | programming | UIX | UNCHANGED | active | 14 | 23 | SRC-P28-001,SRC-P28-002 | sha256:2ea26a26ddd28c7... | 8.13.15 |
-337
-KFM-P15-FEAT-0001 | feature | UIX | UNCHANGED | active | 15 | 17 | SRC-P28-001,SRC-P28-002 | sha256:6ab2a5aa180c958... | 8.13.16 | 338
-KFM-P15-FEAT-0002 | feature | UIX | UNCHANGED | active | 15 | 16 | SRC-P28-001,SRC-P28-002 | sha256:3e2673d8ce324c8... | 8.13.17 | 338
-KFM-P15-PROG-0008 | programming | UIX | UNCHANGED | active | 15 | 15 | SRC-P28-001,SRC-P28-002 | sha256:77c1eb1bb3d7213... | 8.13.18 |
-338
-KFM-P16-FEAT-0002 | feature | UIX | UNCHANGED | active | 16 | 16 | SRC-P28-001,SRC-P28-002 | sha256:dd203ad3cca0b97... | 8.13.19 | 338
-KFM-P16-FEAT-0003 | feature | UIX | UNCHANGED | active | 16 | 16 | SRC-P28-001,SRC-P28-002 | sha256:83e46d028700d42... | 8.13.20 | 338
-KFM-P17-FEAT-0002 | feature | UIX | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:6f3a71a20674b9c... | 8.13.21 | 339
-KFM-P17-FEAT-0003 | feature | UIX | UNCHANGED | active | 17 | 17 | SRC-P28-001,SRC-P28-002 | sha256:2674b82ec6109fd... | 8.13.22 | 339
-KFM-P18-FEAT-0001 | feature | UIX | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:17781b13cb82d8e... | 8.13.23 | 339
-KFM-P18-FEAT-0003 | feature | UIX | UNCHANGED | active | 18 | 18 | SRC-P28-001,SRC-P28-002 | sha256:457187cd09f5f62... | 8.13.24 | 339
-KFM-P18-FEAT-0004 | feature | UIX | UNCHANGED | active | 18 | 23 | SRC-P28-001,SRC-P28-002 | sha256:b7e2cdd8233ca07... | 8.13.25 | 339
-KFM-P18-FEAT-0005 | feature | UIX | UNCHANGED | active | 18 | 19 | SRC-P28-001,SRC-P28-002 | sha256:41753d532a556b7... | 8.13.26 | 340
-KFM-P19-FEAT-0001 | feature | UIX | UNCHANGED | active | 19 | 23 | SRC-P28-001,SRC-P28-002 | sha256:157039e624ec507... | 8.13.27 | 340
-KFM-P19-FEAT-0002 | feature | UIX | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:a150c1f318a035a... | 8.13.28 | 340
-KFM-P19-FEAT-0004 | feature | UIX | UNCHANGED | active | 19 | 23 | SRC-P28-001,SRC-P28-002 | sha256:46422e1202b0e57... | 8.13.29 | 340
-KFM-P20-FEAT-0001 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:a87a10db8fdb41a... | 8.13.30 | 340
-KFM-P20-FEAT-0002 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:01099df5eeabb9b... | 8.13.31 | 341
-KFM-P20-FEAT-0004 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:21d81f2ef06866c... | 8.13.32 | 341
-KFM-P20-FEAT-0006 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:b3611e28ed6f6ae... | 8.13.33 | 341
-KFM-P20-FEAT-0008 | feature | UIX | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:53c5c1cf5deb7a0... | 8.13.34 | 341
-KFM-P20-PROG-0040 | programming | UIX | UNCHANGED | active | 20 | 20 | SRC-P28-001,SRC-P28-002 | sha256:5c3135c60240b77... | 8.13.35 |
-341
-KFM-P21-FEAT-0001 | feature | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:ac0fc2ab301ff79... | 8.13.36 | 342
-KFM-P21-IDEA-0004 | idea | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:7645919ae8f6df6... | 8.13.37 | 342
-KFM-P21-PROG-0026 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:542a43f6e036165... | 8.13.38 |
-342
-KFM-P21-PROG-0038 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:7a041ad85bfaf88... | 8.13.39 |
-342
-KFM-P21-PROG-0041 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:89ebfefa87aae2b... | 8.13.40 |
-342
-KFM-P21-PROG-0043 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:f3a2049b50662c0... | 8.13.41 |
-343
-KFM-P21-PROG-0045 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:0a7c15156e9f0ff... | 8.13.42 |
-343
-KFM-P21-PROG-0046 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:1d3913d356c4679... | 8.13.43 |
-343
-KFM-P21-PROG-0050 | programming | UIX | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:2af40cf30b0f958... | 8.13.44 |
-343
-KFM-P22-FEAT-0001 | feature | UIX | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:aad77d1a8738448... | 8.13.45 | 343
-KFM-P22-FEAT-0002 | feature | UIX | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:1f012e0b6e4ae61... | 8.13.46 | 344
-KFM-P22-IDEA-0006 | idea | UIX | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:de4a089c2f8ebc4... | 8.13.47 | 344
-KFM-P22-PROG-0013 | programming | UIX | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:0de4a53114b57c1... | 8.13.48 |
-344
-KFM-P23-FEAT-0001 | feature | UIX | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:931c9f8f843a80a... | 8.13.49 | 344
-KFM-P23-FEAT-0002 | feature | UIX | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:1daa5e69e5eaf44... | 8.13.50 | 344
-KFM-P23-PROG-0049 | programming | UIX | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:c26d72c0598f750... | 8.13.51 |
-345
-KFM-P24-FEAT-0001 | feature | UIX | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:145b50a9ef26c61... | 8.13.52 | 345
-KFM-P24-FEAT-0002 | feature | UIX | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:855b788a89aa262... | 8.13.53 | 345
-KFM-P25-FEAT-0001 | feature | UIX | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:2f8d733de066852... | 8.13.54 | 345
-KFM-P25-FEAT-0002 | feature | UIX | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:fa54523bd74bf76... | 8.13.55 | 345
-KFM-P25-FEAT-0006 | feature | UIX | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:ca02f8c906c0e31... | 8.13.56 | 346
-KFM-P25-IDEA-0008 | idea | UIX | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:978c9f6f3b35d4c... | 8.13.57 | 346
-KFM-P26-FEAT-0002 | feature | UIX | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:468d67c46922967... | 8.13.58 | 346
-KFM-P26-FEAT-0003 | feature | UIX | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:7d8745cb5adac97... | 8.13.59 | 346
-KFM-P26-FEAT-0009 | feature | UIX | UNCHANGED | active | 26 | 26 | SRC-P28-001,SRC-P28-002 | sha256:94b6a601f02f379... | 8.13.60 | 346
-KFM-P27-FEAT-0001 | feature | UIX | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:4458bf81935e773... | 8.13.61 | 347
-KFM-P27-FEAT-0002 | feature | UIX | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:5896323a6cd6040... | 8.13.62 | 347
-KFM-P27-FEAT-0007 | feature | UIX | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:408503a4db8867f... | 8.13.63 | 347
-KFM-P27-FEAT-0010 | feature | UIX | UNCHANGED | active | 27 | 27 | SRC-P28-001,SRC-P28-002 | sha256:d3cc8e2e459d415... | 8.13.64 | 347
-KFM-P28-FEAT-0003 | feature | UIX | UNCHANGED | active | 28 | 28 | SRC-P28-003 | sha256:c51f2d456026df1... | 8.13.65 | 347
-KFM-P28-FEAT-0008 | feature | UIX | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:adcd7c5b20012d5... | 8.13.66 | 348
-KFM-P28-PROG-0027 | programming | UIX | UNCHANGED | active | 28 | 28 | SRC-P28-004 | sha256:757123ae50ea479... | 8.13.67 | 348
-KFM-P29-FEAT-0001 | feature | UIX | UNCHANGED | active | 29 | 29 | SRC-P29-001 | sha256:c13351f836e84d0... | 8.13.68 | 348
-KFM-P29-FEAT-0008 | feature | UIX | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:e536a54a7fe559c... | 8.13.69 | 348
-KFM-P29-FEAT-0010 | feature | UIX | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:71b9a00e415f6ea... | 8.13.70 | 348
-KFM-P29-IDEA-0017 | idea | UIX | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:2ebde9568089414... | 8.13.71 | 349
-KFM-P29-PROG-0018 | programming | UIX | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:660d91db8747a12... | 8.13.72 | 349
-KFM-P29-PROG-0023 | programming | UIX | UNCHANGED | active | 29 | 29 | SRC-P29-002 | sha256:d49a37a1549429e... | 8.13.73 | 349
-KFM-P30-FEAT-0001 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:92124a54985bbec... | 8.13.74 | 349
-KFM-P30-FEAT-0002 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:06801eb3e0c06d7... | 8.13.75 | 349
-KFM-P30-FEAT-0004 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:e7ff556f5ae4d01... | 8.13.76 | 350
-KFM-P30-FEAT-0005 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:f38de52b3bed338... | 8.13.77 | 350
-KFM-P30-FEAT-0006 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-001 | sha256:d9e3b295d1ce62f... | 8.13.78 | 350
-KFM-P30-FEAT-0007 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:9e3d51a4a9b4a7e... | 8.13.79 | 350
-KFM-P30-FEAT-0009 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:2fc830eb3a76461... | 8.13.80 | 350
-KFM-P30-FEAT-0010 | feature | UIX | UNCHANGED | active | 30 | 30 | SRC-P30-002 | sha256:8ea395260513eeb... | 8.13.81 | 351
-KFM-P31-FEAT-0001 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:f71ef477e0077a4... | 8.13.82 | 351
-KFM-P31-FEAT-0002 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:cbeab8578f1a832... | 8.13.83 | 351
-KFM-P31-FEAT-0003 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:aea1ae35e30d354... | 8.13.84 | 351
-KFM-P31-FEAT-0004 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:c34f79af5deb0f3... | 8.13.85 | 351
-KFM-P31-FEAT-0005 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:67631812fef4630... | 8.13.86 | 352
-KFM-P31-FEAT-0006 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:def457a00cbe6ac... | 8.13.87 | 352
-KFM-P31-FEAT-0007 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:23bbb334f8ecfef... | 8.13.88 | 352
-KFM-P31-FEAT-0008 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:22a3adc6b0ad281... | 8.13.89 | 352
-KFM-P31-FEAT-0009 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:e4d38372bdbcb7d... | 8.13.90 | 352
-KFM-P31-FEAT-0010 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:532e11df481a6b8... | 8.13.91 | 353
-KFM-P31-FEAT-0011 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:a82528fdb3eb134... | 8.13.92 | 353
-KFM-P31-FEAT-0012 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:ea7c1720e59476d... | 8.13.93 | 353
-KFM-P31-FEAT-0013 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:d757904822f0a4a... | 8.13.94 | 353
-```
-<!-- source: KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf :contentReference[oaicite:0]{index=0} -->
-<!-- pass 36: pages 283–286 -->
-
-<!-- page: 283 -->
-
-```text
-KFM-P31-FEAT-0014 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:47908b0b4720f62... | 8.13.95 | 353
-KFM-P31-FEAT-0015 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:9be303c41a1b86f... | 8.13.96 | 354
-KFM-P31-FEAT-0016 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:fbddadd8d24dfea... | 8.13.97 | 354
-KFM-P31-FEAT-0017 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:446ad7e7e76921c... | 8.13.98 | 354
-KFM-P31-FEAT-0018 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:9c64eac718d511e... | 8.13.99 | 354
-KFM-P31-FEAT-0019 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:fe9b1d2a9e4f1d2... | 8.13.100 | 354
-KFM-P31-FEAT-0020 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:eaa99679a0b385a... | 8.13.101 | 355
-KFM-P32-FEAT-0004 | feature | UIX | NEW | active | 32 | 32 | SRC-P32-001 | sha256:93a77dbdccc5468... | 8.13.102 | 355
-KFM-P32-FEAT-0010 | feature | UIX | NEW | active | 32 | 32 | SRC-P32-002 | sha256:0ad35acfd521ce2... | 8.13.103 | 355
-KFM-P32-IDEA-0008 | idea | UIX | NEW | active | 32 | 32 | SRC-P32-001 | sha256:eef8ba04e47f439... | 8.13.104 | 355
-KFM-P32-IDEA-0015 | idea | UIX | NEW | active | 32 | 32 | SRC-P32-002 | sha256:c771e24782fa612... | 8.13.105 | 355
-KFM-P32-PROG-0019 | programming | UIX | NEW | active | 32 | 32 | SRC-P32-002 | sha256:4face8ffd994898... | 8.13.106 | 356
-KFM-P4-FEAT-0001 | feature | UIX | UNCHANGED | active | 4 | 12 | SRC-P28-001,SRC-P28-002 | sha256:4a3447552848f22... | 8.13.107 | 356
-KFM-P5-PROG-0011 | programming | UIX | UNCHANGED | active | 5 | 17 | SRC-P28-001,SRC-P28-002 | sha256:2e565892042dd8e... | 8.13.108 |
-356
-KFM-P6-FEAT-0001 | feature | UIX | UNCHANGED | active | 6 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:f4d668657ab991b... | 8.13.109 | 356
-KFM-P6-FEAT-0002 | feature | UIX | UNCHANGED | active | 6 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:47a690a8453a053... | 8.13.110 | 356
-KFM-P6-FEAT-0003 | feature | UIX | UNCHANGED | active | 6 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:16a48a83b4f9973... | 8.13.111 | 357
-KFM-P7-FEAT-0002 | feature | UIX | UNCHANGED | active | 7 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:315542fc06e05f9... | 8.13.112 | 357
-KFM-P9-PROG-0076 | programming | UIX | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:a02664097b01c33... | 8.13.113 | 357
-KFM-P9-PROG-0077 | programming | UIX | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:dc4510096dc4388... | 8.13.114 | 357
-KFM-P9-PROG-0078 | programming | UIX | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
-sha256:3449bcd26787f40... | 8.13.115 | 357
-KFM-P9-PROG-0079 | programming | UIX | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:5133312e202be48... | 8.13.116 |
-358
+### 5. Machine-Readable Index — Pass 32
+
+> **`CONFIRMED`** Pass 32 stable-ID inventory: **1,607** cards across **13** categories. Reorganized from a PDF-page-broken pipe-delimited dump into per-category tables. Card metadata is unchanged; no stable IDs were added, removed, or renumbered. The canonical machine surface remains the co-versioned `manifest-pass-32.jsonl` sidecar.
+
+#### 5.1 Column Legend & Defaults
+
+| Column | Meaning | Default (omitted in rows) |
+|---|---|---|
+| `Stable ID` | Permanent card identifier (`KFM-P{pass}-{class3}-{ordinal}`); never reused | — |
+| `Class` | `feature`, `idea`, or `programming` | — |
+| `Carry` | `UNCHANGED`, `EXPANDED`, `NEW`, `SUPERSEDED`, `QUARANTINED`, `WITHDRAWN_ON_EVIDENCE` | — |
+| `Status` | `active` or `quarantine` | `active` (omitted when default) |
+| `Passes` | `pass_introduced → pass_last_touched` | — |
+| `Sources` | Pass-scoped source attribution IDs | `SRC-P28-001,SRC-P28-002` (562 of 1,607 rows; shown as `—` when default) |
+| `Spec hash` | SHA-256 prefix of canonicalized card body (first 17 chars) | — |
+| `§` | Atlas section number (e.g. `8.1.1`) | — |
+| `Page` | Page hint within the Pass 32 source PDF | — |
+
+#### 5.2 Summary by Category
+
+| Category | Cards | feature | idea | programming | UNCHANGED | EXPANDED | NEW | quarantine |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| **ANA** — Analysis, Indicators, Statistics, ML, Model Interpretation | 161 | 32 | 50 | 79 | 136 | 15 | 10 | — |
+| **CAT** — Catalog, Discovery, Registration | 83 | 14 | 16 | 53 | 62 | 20 | 1 | — |
+| **DAT** — Data Lifecycle, Provenance, Receipts | 115 | 7 | 29 | 79 | 78 | 30 | 7 | — |
+| **DOC** — Documentation, Doctrine, Reader Surfaces | 50 | 5 | 10 | 35 | 37 | — | 1 | 12 |
+| **EVD** — Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain | 108 | 6 | 31 | 71 | 69 | 35 | 4 | — |
+| **MAP** — Map Surface, MapLibre, Tiles, Styling | 137 | 34 | 31 | 72 | 97 | 35 | 5 | — |
+| **MDP** — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV) | 75 | — | 17 | 58 | 58 | 15 | 2 | — |
+| **MOD** — Data Modeling, Domain Semantics, Temporal Structure, SQL | 113 | 1 | 29 | 83 | 97 | 10 | 3 | 3 |
+| **PIP** — Pipelines, Pipeline Specs, Validators | 300 | 3 | 39 | 258 | 234 | 60 | 3 | 3 |
+| **POL** — Policy-as-Code, Sensitivity, Rights, Sovereignty | 124 | 6 | 36 | 82 | 86 | 30 | 8 | — |
+| **REL** — Catalog Closure, Publication, Release, Rollback, Recompile | 95 | 8 | 31 | 56 | 84 | 5 | 6 | — |
+| **SEC** — Security, Auditability, Signatures, Attestation | 130 | 7 | 22 | 101 | 100 | 25 | 5 | — |
+| **UIX** — UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | 116 | 87 | 6 | 23 | 101 | 10 | 5 | — |
+| **Total** | **1,607** | 210 | 347 | 1,050 | 1,239 | 290 | 60 | 18 |
+
+#### 5.3 ANA — Analysis, Indicators, Statistics, ML, Model Interpretation
+
+<details>
+<summary><strong>161 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P11-FEAT-0002` | feature | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `97a04fa421637d2` | 8.1.10 | 41 |
+| `KFM-P20-FEAT-0007` | feature | UNCHANGED | — | 20 → 20 | — | `cd5683380b4ec65` | 8.1.46 | 49 |
+| `KFM-P25-FEAT-0007` | feature | UNCHANGED | — | 25 → 25 | — | `df2cbe4980d8c47` | 8.1.55 | 50 |
+| `KFM-P28-FEAT-0009` | feature | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `172086f7afa1652` | 8.1.64 | 52 |
+| `KFM-P29-FEAT-0004` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `6c61a0f3cbf1299` | 8.1.70 | 53 |
+| `KFM-P29-FEAT-0005` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `9023ff1a4a50c50` | 8.1.71 | 54 |
+| `KFM-P32-FEAT-0001` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `b1918f996e70f5b` | 8.1.87 | 57 |
+| `KFM-P32-FEAT-0005` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `1ac995f45199918` | 8.1.88 | 57 |
+| `KFM-P32-FEAT-0006` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `e6ef00997d73335` | 8.1.89 | 57 |
+| `KFM-P32-FEAT-0007` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `63e16ecd2e3cd67` | 8.1.90 | 57 |
+| `KFM-P9-FEAT-0005` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `49ee4c028ceac3b` | 8.1.100 | 59 |
+| `KFM-P9-FEAT-0006` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `5178a603c8f29fb` | 8.1.101 | 60 |
+| `KFM-P9-FEAT-0007` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `c661adedca00842` | 8.1.102 | 60 |
+| `KFM-P9-FEAT-0008` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `f3feefa0c94a25d` | 8.1.103 | 60 |
+| `KFM-P9-FEAT-0009` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `e546543ee316d75` | 8.1.104 | 60 |
+| `KFM-P9-FEAT-0010` | feature | UNCHANGED | — | 9 → 9 | — | `f0fb8e255a5a0c3` | 8.1.105 | 60 |
+| `KFM-P9-FEAT-0017` | feature | UNCHANGED | — | 9 → 9 | — | `bab1860eb8524ab` | 8.1.106 | 61 |
+| `KFM-P9-FEAT-0018` | feature | UNCHANGED | — | 9 → 9 | — | `44f0843705b403f` | 8.1.107 | 61 |
+| `KFM-P9-FEAT-0019` | feature | UNCHANGED | — | 9 → 9 | — | `53a3ef0f87ad2fb` | 8.1.108 | 61 |
+| `KFM-P9-FEAT-0020` | feature | UNCHANGED | — | 9 → 9 | — | `d4c348b545c33fa` | 8.1.109 | 61 |
+| `KFM-P9-FEAT-0021` | feature | UNCHANGED | — | 9 → 9 | — | `a10e856f2ef5f2c` | 8.1.110 | 61 |
+| `KFM-P9-FEAT-0022` | feature | UNCHANGED | — | 9 → 9 | — | `bcb65a1d1c28a00` | 8.1.111 | 62 |
+| `KFM-P9-FEAT-0023` | feature | UNCHANGED | — | 9 → 9 | — | `e58f9eb6fd78550` | 8.1.112 | 62 |
+| `KFM-P9-FEAT-0024` | feature | UNCHANGED | — | 9 → 9 | — | `a902ec3ab838253` | 8.1.113 | 62 |
+| `KFM-P9-FEAT-0025` | feature | UNCHANGED | — | 9 → 9 | — | `5ce5c20fb57929b` | 8.1.114 | 62 |
+| `KFM-P9-FEAT-0026` | feature | UNCHANGED | — | 9 → 9 | — | `be7e4801052e457` | 8.1.115 | 62 |
+| `KFM-P9-FEAT-0027` | feature | UNCHANGED | — | 9 → 9 | — | `2677d711fa852ea` | 8.1.116 | 63 |
+| `KFM-P9-FEAT-0028` | feature | UNCHANGED | — | 9 → 9 | — | `5963e24fdd90b83` | 8.1.117 | 63 |
+| `KFM-P9-FEAT-0029` | feature | UNCHANGED | — | 9 → 9 | — | `dcf67dbc63125dc` | 8.1.118 | 63 |
+| `KFM-P9-FEAT-0030` | feature | UNCHANGED | — | 9 → 9 | — | `3df3ed168a0c54e` | 8.1.119 | 63 |
+| `KFM-P9-FEAT-0031` | feature | UNCHANGED | — | 9 → 9 | — | `81b9fb45dd3a56b` | 8.1.120 | 63 |
+| `KFM-P9-FEAT-0032` | feature | UNCHANGED | — | 9 → 9 | — | `8977a8915f93b05` | 8.1.121 | 64 |
+| `KFM-P1-IDEA-0061` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `43ee01379ce1b1a` | 8.1.1 | 40 |
+| `KFM-P1-IDEA-0064` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `540df530ece0765` | 8.1.2 | 40 |
+| `KFM-P1-IDEA-0073` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `17e692f7664bc41` | 8.1.3 | 40 |
+| `KFM-P12-IDEA-0001` | idea | UNCHANGED | — | 12 → 14 | — | `d1b6c534b694909` | 8.1.16 | 43 |
+| `KFM-P16-IDEA-0002` | idea | UNCHANGED | — | 16 → 19 | — | `8353068f263d69f` | 8.1.35 | 46 |
+| `KFM-P18-IDEA-0008` | idea | UNCHANGED | — | 18 → 20 | — | `999cbe5f122fa3b` | 8.1.40 | 47 |
+| `KFM-P19-IDEA-0008` | idea | UNCHANGED | — | 19 → 19 | — | `7f2862b6cb5f8a9` | 8.1.44 | 48 |
+| `KFM-P20-IDEA-0002` | idea | UNCHANGED | — | 20 → 20 | — | `096900213d4f935` | 8.1.47 | 49 |
+| `KFM-P20-IDEA-0010` | idea | UNCHANGED | — | 20 → 20 | — | `9723e178a107b88` | 8.1.48 | 49 |
+| `KFM-P25-IDEA-0001` | idea | UNCHANGED | — | 25 → 25 | — | `e0fcb7c868bf296` | 8.1.56 | 51 |
+| `KFM-P25-IDEA-0002` | idea | UNCHANGED | — | 25 → 25 | — | `159e0a425e8dcde` | 8.1.57 | 51 |
+| `KFM-P25-IDEA-0003` | idea | UNCHANGED | — | 25 → 25 | — | `70513d5868f0a82` | 8.1.58 | 51 |
+| `KFM-P25-IDEA-0015` | idea | UNCHANGED | — | 25 → 25 | — | `cca3cc4868c6660` | 8.1.59 | 51 |
+| `KFM-P27-IDEA-0015` | idea | UNCHANGED | — | 27 → 27 | — | `170aef750c32771` | 8.1.60 | 51 |
+| `KFM-P27-IDEA-0017` | idea | UNCHANGED | — | 27 → 27 | — | `4120af455a5d98b` | 8.1.61 | 52 |
+| `KFM-P28-IDEA-0003` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `47749725d706320` | 8.1.65 | 52 |
+| `KFM-P28-IDEA-0004` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `434a3ae29f62e12` | 8.1.66 | 53 |
+| `KFM-P28-IDEA-0018` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `af067761afb89d2` | 8.1.67 | 53 |
+| `KFM-P29-IDEA-0003` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `b018a79c28cd510` | 8.1.72 | 54 |
+| `KFM-P29-IDEA-0008` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `99071aa6712a650` | 8.1.73 | 54 |
+| `KFM-P29-IDEA-0020` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `48cc881047191a0` | 8.1.74 | 54 |
+| `KFM-P3-IDEA-0002` | idea | UNCHANGED | — | 3 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `ba6f23058056bf1` | 8.1.79 | 55 |
+| `KFM-P30-IDEA-0001` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `2c5c5d6ed69f1e2` | 8.1.80 | 55 |
+| `KFM-P30-IDEA-0002` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `8036ad2dc5db383` | 8.1.81 | 56 |
+| `KFM-P30-IDEA-0003` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `79e02c807e09faa` | 8.1.82 | 56 |
+| `KFM-P30-IDEA-0005` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `8028cbbbf2bb63f` | 8.1.83 | 56 |
+| `KFM-P30-IDEA-0013` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `099eb9392252ec5` | 8.1.84 | 56 |
+| `KFM-P32-IDEA-0002` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `dabbc806be96d4b` | 8.1.91 | 58 |
+| `KFM-P32-IDEA-0011` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `84a3d0545052447` | 8.1.92 | 58 |
+| `KFM-P32-IDEA-0012` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `1a1b69f7617d949` | 8.1.93 | 58 |
+| `KFM-P4-IDEA-0001` | idea | UNCHANGED | — | 4 → 14 | — | `f7af18eeaf19bf3` | 8.1.97 | 59 |
+| `KFM-P8-IDEA-0003` | idea | UNCHANGED | — | 8 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `052fce51eb8d933` | 8.1.98 | 59 |
+| `KFM-P9-IDEA-0021` | idea | UNCHANGED | — | 9 → 9 | — | `6d8f74fb1b0c648` | 8.1.122 | 64 |
+| `KFM-P9-IDEA-0022` | idea | UNCHANGED | — | 9 → 9 | — | `599fc874440b538` | 8.1.123 | 64 |
+| `KFM-P9-IDEA-0023` | idea | UNCHANGED | — | 9 → 9 | — | `b6430a417487b62` | 8.1.124 | 64 |
+| `KFM-P9-IDEA-0024` | idea | UNCHANGED | — | 9 → 9 | — | `2f9cb0ec25718ed` | 8.1.125 | 64 |
+| `KFM-P9-IDEA-0025` | idea | UNCHANGED | — | 9 → 9 | — | `d651f4c9d122040` | 8.1.126 | 65 |
+| `KFM-P9-IDEA-0026` | idea | UNCHANGED | — | 9 → 9 | — | `962eb2146a46b70` | 8.1.127 | 65 |
+| `KFM-P9-IDEA-0027` | idea | UNCHANGED | — | 9 → 9 | — | `48b262e2c10e70d` | 8.1.128 | 65 |
+| `KFM-P9-IDEA-0028` | idea | UNCHANGED | — | 9 → 9 | — | `4119f528d7f9aa4` | 8.1.129 | 65 |
+| `KFM-P9-IDEA-0029` | idea | UNCHANGED | — | 9 → 9 | — | `842ccaf35a9dfc7` | 8.1.130 | 65 |
+| `KFM-P9-IDEA-0030` | idea | UNCHANGED | — | 9 → 9 | — | `8594408ba2e1bd3` | 8.1.131 | 66 |
+| `KFM-P9-IDEA-0031` | idea | UNCHANGED | — | 9 → 9 | — | `730936a74dbdbcf` | 8.1.132 | 66 |
+| `KFM-P9-IDEA-0032` | idea | UNCHANGED | — | 9 → 9 | — | `7df159332a920d5` | 8.1.133 | 66 |
+| `KFM-P9-IDEA-0033` | idea | UNCHANGED | — | 9 → 9 | — | `1af2b434b83b981` | 8.1.134 | 66 |
+| `KFM-P9-IDEA-0034` | idea | UNCHANGED | — | 9 → 9 | — | `351242159d7d05b` | 8.1.135 | 66 |
+| `KFM-P9-IDEA-0035` | idea | UNCHANGED | — | 9 → 9 | — | `bb0918a91ae5687` | 8.1.136 | 67 |
+| `KFM-P9-IDEA-0036` | idea | UNCHANGED | — | 9 → 9 | — | `5574f3b51fbe8ab` | 8.1.137 | 67 |
+| `KFM-P9-IDEA-0037` | idea | UNCHANGED | — | 9 → 9 | — | `196ae42e2922cdb` | 8.1.138 | 67 |
+| `KFM-P9-IDEA-0038` | idea | UNCHANGED | — | 9 → 9 | — | `4a2d0cea0c66473` | 8.1.139 | 67 |
+| `KFM-P1-PROG-0062` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `45087d80f21cb1a` | 8.1.4 | 40 |
+| `KFM-P1-PROG-0063` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `a5e567fdf80dc51` | 8.1.5 | 40 |
+| `KFM-P10-PROG-0009` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `5e7e4fa3480b686` | 8.1.6 | 41 |
+| `KFM-P10-PROG-0016` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `312e16311b8a5ea` | 8.1.7 | 41 |
+| `KFM-P10-PROG-0017` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `751101948d53105` | 8.1.8 | 41 |
+| `KFM-P10-PROG-0018` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `f0b9985bc46403e` | 8.1.9 | 41 |
+| `KFM-P11-PROG-0001` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `9d9c89146f95df5` | 8.1.11 | 42 |
+| `KFM-P11-PROG-0002` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `9632d4cee761c28` | 8.1.12 | 42 |
+| `KFM-P11-PROG-0005` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `70da09cd4d31325` | 8.1.13 | 42 |
+| `KFM-P11-PROG-0012` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `35d529ff65f10b1` | 8.1.14 | 42 |
+| `KFM-P11-PROG-0020` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `19b716b98d93b72` | 8.1.15 | 42 |
+| `KFM-P12-PROG-0003` | programming | UNCHANGED | — | 12 → 15 | — | `d69236062052125` | 8.1.17 | 43 |
+| `KFM-P12-PROG-0022` | programming | UNCHANGED | — | 12 → 15 | — | `3255d65cc6a6e94` | 8.1.18 | 43 |
+| `KFM-P12-PROG-0028` | programming | UNCHANGED | — | 12 → 15 | — | `140c4c7ac4a7439` | 8.1.19 | 43 |
+| `KFM-P13-PROG-0006` | programming | UNCHANGED | — | 13 → 13 | — | `3a5dbf59aef324d` | 8.1.20 | 43 |
+| `KFM-P13-PROG-0015` | programming | UNCHANGED | — | 13 → 14 | — | `79c36c190ae95fc` | 8.1.21 | 44 |
+| `KFM-P14-PROG-0013` | programming | UNCHANGED | — | 14 → 14 | — | `f583c8fdfbcf394` | 8.1.22 | 44 |
+| `KFM-P14-PROG-0020` | programming | UNCHANGED | — | 14 → 15 | — | `03e09b7e37f64c6` | 8.1.23 | 44 |
+| `KFM-P14-PROG-0022` | programming | UNCHANGED | — | 14 → 14 | — | `4a4e6e1e88cd3db` | 8.1.24 | 44 |
+| `KFM-P14-PROG-0026` | programming | UNCHANGED | — | 14 → 23 | — | `d03c8e56e6e8069` | 8.1.25 | 44 |
+| `KFM-P14-PROG-0035` | programming | UNCHANGED | — | 14 → 15 | — | `9f1efb5a0d702a6` | 8.1.26 | 45 |
+| `KFM-P14-PROG-0036` | programming | UNCHANGED | — | 14 → 15 | — | `a3537327caf6666` | 8.1.27 | 45 |
+| `KFM-P14-PROG-0037` | programming | UNCHANGED | — | 14 → 15 | — | `5101a46618d2d6e` | 8.1.28 | 45 |
+| `KFM-P15-PROG-0009` | programming | UNCHANGED | — | 15 → 23 | — | `a3bc4156d22f30c` | 8.1.29 | 45 |
+| `KFM-P15-PROG-0010` | programming | UNCHANGED | — | 15 → 15 | — | `38024fee00e6c0d` | 8.1.30 | 45 |
+| `KFM-P15-PROG-0011` | programming | UNCHANGED | — | 15 → 15 | — | `5f99639d8c80f1b` | 8.1.31 | 46 |
+| `KFM-P15-PROG-0012` | programming | UNCHANGED | — | 15 → 15 | — | `fb9ed27ab438703` | 8.1.32 | 46 |
+| `KFM-P15-PROG-0024` | programming | UNCHANGED | — | 15 → 15 | — | `a4a035b44c92888` | 8.1.33 | 46 |
+| `KFM-P15-PROG-0036` | programming | UNCHANGED | — | 15 → 15 | — | `7ac863def11dabb` | 8.1.34 | 46 |
+| `KFM-P17-PROG-0013` | programming | UNCHANGED | — | 17 → 17 | — | `dd3b73c044d3f00` | 8.1.36 | 47 |
+| `KFM-P17-PROG-0015` | programming | UNCHANGED | — | 17 → 18 | — | `e8a3e7a2b196d61` | 8.1.37 | 47 |
+| `KFM-P17-PROG-0021` | programming | UNCHANGED | — | 17 → 17 | — | `a03839471ecec53` | 8.1.38 | 47 |
+| `KFM-P17-PROG-0034` | programming | UNCHANGED | — | 17 → 23 | — | `a6683a676580d80` | 8.1.39 | 47 |
+| `KFM-P18-PROG-0015` | programming | UNCHANGED | — | 18 → 19 | — | `8f9a6378c1738be` | 8.1.41 | 48 |
+| `KFM-P18-PROG-0018` | programming | UNCHANGED | — | 18 → 18 | — | `c8c54884dc5f765` | 8.1.42 | 48 |
+| `KFM-P18-PROG-0035` | programming | UNCHANGED | — | 18 → 23 | — | `6758eaf23346d63` | 8.1.43 | 48 |
+| `KFM-P19-PROG-0016` | programming | UNCHANGED | — | 19 → 19 | — | `56e9449b9dadd53` | 8.1.45 | 48 |
+| `KFM-P20-PROG-0034` | programming | UNCHANGED | — | 20 → 20 | — | `a99fee4582b5950` | 8.1.49 | 49 |
+| `KFM-P20-PROG-0035` | programming | UNCHANGED | — | 20 → 20 | — | `20e012d64addaa5` | 8.1.50 | 49 |
+| `KFM-P20-PROG-0039` | programming | UNCHANGED | — | 20 → 20 | — | `028fcaef2cd0deb` | 8.1.51 | 50 |
+| `KFM-P20-PROG-0041` | programming | UNCHANGED | — | 20 → 20 | — | `7fb4085d89e9efd` | 8.1.52 | 50 |
+| `KFM-P21-PROG-0007` | programming | UNCHANGED | — | 21 → 23 | — | `8dae42fe5b3c474` | 8.1.53 | 50 |
+| `KFM-P21-PROG-0013` | programming | UNCHANGED | — | 21 → 21 | — | `b225b99daf74a0d` | 8.1.54 | 50 |
+| `KFM-P27-PROG-0018` | programming | UNCHANGED | — | 27 → 27 | — | `1c06df494ae1f67` | 8.1.62 | 52 |
+| `KFM-P27-PROG-0020` | programming | UNCHANGED | — | 27 → 27 | — | `81f7ba123cf2500` | 8.1.63 | 52 |
+| `KFM-P28-PROG-0028` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `6c13056b4309c1c` | 8.1.68 | 53 |
+| `KFM-P28-PROG-0029` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `9d595aacbfb506b` | 8.1.69 | 53 |
+| `KFM-P29-PROG-0007` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `bb046c8a3523ad7` | 8.1.75 | 54 |
+| `KFM-P29-PROG-0014` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `44e5ce2d15971a0` | 8.1.76 | 55 |
+| `KFM-P29-PROG-0024` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `2baf0bd414a9e34` | 8.1.77 | 55 |
+| `KFM-P29-PROG-0027` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `9c8acb5993e4695` | 8.1.78 | 55 |
+| `KFM-P30-PROG-0004` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `caf56d07b99795d` | 8.1.85 | 56 |
+| `KFM-P30-PROG-0016` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `1e55482bad0dbc2` | 8.1.86 | 57 |
+| `KFM-P32-PROG-0005` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `ace1edf74385921` | 8.1.94 | 58 |
+| `KFM-P32-PROG-0006` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `9c7a7aa5aad0d7e` | 8.1.95 | 58 |
+| `KFM-P32-PROG-0009` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `7c45461eacc3292` | 8.1.96 | 59 |
+| `KFM-P8-PROG-0022` | programming | UNCHANGED | — | 8 → 10 | — | `afbf6baf73e8427` | 8.1.99 | 59 |
+| `KFM-P9-PROG-0029` | programming | UNCHANGED | — | 9 → 9 | — | `fed13ed9b00f2e3` | 8.1.140 | 67 |
+| `KFM-P9-PROG-0030` | programming | UNCHANGED | — | 9 → 9 | — | `63b774c1ce18d94` | 8.1.141 | 68 |
+| `KFM-P9-PROG-0031` | programming | UNCHANGED | — | 9 → 9 | — | `83f31ce801b262c` | 8.1.142 | 68 |
+| `KFM-P9-PROG-0032` | programming | UNCHANGED | — | 9 → 9 | — | `2fbbdc60b4c0035` | 8.1.143 | 68 |
+| `KFM-P9-PROG-0033` | programming | UNCHANGED | — | 9 → 9 | — | `687b269f3be459a` | 8.1.144 | 68 |
+| `KFM-P9-PROG-0034` | programming | UNCHANGED | — | 9 → 9 | — | `99722839685cbf0` | 8.1.145 | 68 |
+| `KFM-P9-PROG-0035` | programming | UNCHANGED | — | 9 → 9 | — | `c2b67cdcec2eb2a` | 8.1.146 | 69 |
+| `KFM-P9-PROG-0036` | programming | UNCHANGED | — | 9 → 9 | — | `f6e12a3e5c68f0f` | 8.1.147 | 69 |
+| `KFM-P9-PROG-0037` | programming | UNCHANGED | — | 9 → 9 | — | `b95c38065716e52` | 8.1.148 | 69 |
+| `KFM-P9-PROG-0038` | programming | UNCHANGED | — | 9 → 9 | — | `fd76a9a26175f82` | 8.1.149 | 69 |
+| `KFM-P9-PROG-0039` | programming | UNCHANGED | — | 9 → 9 | — | `b4925ee17bfc6fb` | 8.1.150 | 69 |
+| `KFM-P9-PROG-0040` | programming | UNCHANGED | — | 9 → 9 | — | `d674e0081fc4bd7` | 8.1.151 | 70 |
+| `KFM-P9-PROG-0041` | programming | UNCHANGED | — | 9 → 9 | — | `028eeb011e89bd8` | 8.1.152 | 70 |
+| `KFM-P9-PROG-0042` | programming | UNCHANGED | — | 9 → 9 | — | `a1211afe388ec9f` | 8.1.153 | 70 |
+| `KFM-P9-PROG-0043` | programming | UNCHANGED | — | 9 → 9 | — | `d3aeab1a99b9373` | 8.1.154 | 70 |
+| `KFM-P9-PROG-0044` | programming | UNCHANGED | — | 9 → 9 | — | `06cb48ee913d4ad` | 8.1.155 | 70 |
+| `KFM-P9-PROG-0045` | programming | UNCHANGED | — | 9 → 9 | — | `ebe3e37fac7fb3b` | 8.1.156 | 71 |
+| `KFM-P9-PROG-0046` | programming | UNCHANGED | — | 9 → 9 | — | `18d440e2070aece` | 8.1.157 | 71 |
+| `KFM-P9-PROG-0047` | programming | UNCHANGED | — | 9 → 9 | — | `94de3c9b1f19b01` | 8.1.158 | 71 |
+| `KFM-P9-PROG-0080` | programming | UNCHANGED | — | 9 → 9 | — | `fdba4da96f3fe5f` | 8.1.159 | 71 |
+| `KFM-P9-PROG-0081` | programming | UNCHANGED | — | 9 → 9 | — | `cc60f17bc7ab75b` | 8.1.160 | 71 |
+| `KFM-P9-PROG-0082` | programming | UNCHANGED | — | 9 → 9 | — | `f65e16ae8f60c76` | 8.1.161 | 72 |
+
+</details>
+
+#### 5.4 CAT — Catalog, Discovery, Registration
+
+<details>
+<summary><strong>83 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P10-FEAT-0003` | feature | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `64cdb0466fe2270` | 8.2.5 | 72 |
+| `KFM-P17-FEAT-0004` | feature | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `73692d2df8ecb3d` | 8.2.20 | 75 |
+| `KFM-P18-FEAT-0007` | feature | UNCHANGED | — | 18 → 27 | — | `05fed1d87994ee6` | 8.2.25 | 76 |
+| `KFM-P19-FEAT-0005` | feature | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `f0632b01e8f7ce0` | 8.2.32 | 78 |
+| `KFM-P24-FEAT-0003` | feature | UNCHANGED | — | 24 → 24 | — | `f69ee1f7bd1a208` | 8.2.48 | 81 |
+| `KFM-P25-FEAT-0003` | feature | UNCHANGED | — | 25 → 25 | — | `e163ca5ed83ad38` | 8.2.57 | 83 |
+| `KFM-P26-FEAT-0004` | feature | UNCHANGED | — | 26 → 26 | — | `06c6e5f101d381b` | 8.2.65 | 84 |
+| `KFM-P26-FEAT-0006` | feature | UNCHANGED | — | 26 → 26 | — | `9a6e40b2dc18d50` | 8.2.66 | 85 |
+| `KFM-P27-FEAT-0003` | feature | UNCHANGED | — | 27 → 27 | — | `b476de8af1dbc7d` | 8.2.69 | 85 |
+| `KFM-P27-FEAT-0004` | feature | UNCHANGED | — | 27 → 27 | — | `2259a7bc283d9d2` | 8.2.70 | 85 |
+| `KFM-P28-FEAT-0001` | feature | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `2097822df140dc3` | 8.2.72 | 86 |
+| `KFM-P29-FEAT-0002` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `650f9b35406db57` | 8.2.73 | 86 |
+| `KFM-P30-FEAT-0003` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `6f4c1473127518e` | 8.2.77 | 87 |
+| `KFM-P32-FEAT-0016` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `5abdf699c160c23` | 8.2.81 | 88 |
+| `KFM-P1-IDEA-0020` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4b8427d15c14dd1` | 8.2.1 | 72 |
+| `KFM-P1-IDEA-0069` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `b9ad7a816018278` | 8.2.2 | 72 |
+| `KFM-P1-IDEA-0070` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `88f89f683cb56bd` | 8.2.3 | 72 |
+| `KFM-P1-IDEA-0071` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `10ea2f54d937e60` | 8.2.4 | 72 |
+| `KFM-P17-IDEA-0007` | idea | UNCHANGED | — | 17 → 27 | — | `c39216a39c04fbd` | 8.2.21 | 76 |
+| `KFM-P18-IDEA-0006` | idea | UNCHANGED | — | 18 → 27 | — | `1262eb686d6701a` | 8.2.26 | 77 |
+| `KFM-P19-IDEA-0005` | idea | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `439b66dc5208064` | 8.2.33 | 78 |
+| `KFM-P20-IDEA-0001` | idea | UNCHANGED | — | 20 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `59fe97964f5fad4` | 8.2.35 | 78 |
+| `KFM-P20-IDEA-0009` | idea | UNCHANGED | — | 20 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `3d18fc079bde06f` | 8.2.36 | 79 |
+| `KFM-P22-IDEA-0003` | idea | UNCHANGED | — | 22 → 23 | — | `0d1adc91437cea5` | 8.2.43 | 80 |
+| `KFM-P25-IDEA-0009` | idea | UNCHANGED | — | 25 → 25 | — | `a595ec93176e320` | 8.2.58 | 83 |
+| `KFM-P26-IDEA-0005` | idea | UNCHANGED | — | 26 → 26 | — | `50a06f3953e90db` | 8.2.67 | 85 |
+| `KFM-P27-IDEA-0010` | idea | UNCHANGED | — | 27 → 27 | — | `a050129f70ea509` | 8.2.71 | 86 |
+| `KFM-P29-IDEA-0004` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `2566a51e6ab769b` | 8.2.74 | 86 |
+| `KFM-P31-IDEA-0008` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `1e19591e302c657` | 8.2.79 | 87 |
+| `KFM-P31-IDEA-0018` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `a4c554c5cbcb835` | 8.2.80 | 87 |
+| `KFM-P11-PROG-0011` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `3c808bb588bfd54` | 8.2.6 | 73 |
+| `KFM-P11-PROG-0013` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `1877d250e059719` | 8.2.7 | 73 |
+| `KFM-P11-PROG-0014` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `ca233e3b0d9e6c0` | 8.2.8 | 73 |
+| `KFM-P12-PROG-0007` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `a08b9ea21c96c41` | 8.2.9 | 73 |
+| `KFM-P12-PROG-0012` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `63e26705638ac1d` | 8.2.10 | 73 |
+| `KFM-P12-PROG-0020` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `42237d6c57e0420` | 8.2.11 | 74 |
+| `KFM-P13-PROG-0027` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `62589eec53a22e9` | 8.2.12 | 74 |
+| `KFM-P14-PROG-0007` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `266e5b84cbbce8f` | 8.2.13 | 74 |
+| `KFM-P14-PROG-0009` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `110902dfa23b17f` | 8.2.14 | 74 |
+| `KFM-P14-PROG-0029` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `2a037bf81623ab5` | 8.2.15 | 74 |
+| `KFM-P15-PROG-0026` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `b9afec8fdc96116` | 8.2.16 | 75 |
+| `KFM-P15-PROG-0027` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `ea4e72e4748d146` | 8.2.17 | 75 |
+| `KFM-P15-PROG-0033` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `899b44d40e9a0d6` | 8.2.18 | 75 |
+| `KFM-P16-PROG-0028` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `bc525eed8591a2e` | 8.2.19 | 75 |
+| `KFM-P17-PROG-0026` | programming | UNCHANGED | — | 17 → 27 | — | `8beb5e927c265e9` | 8.2.22 | 76 |
+| `KFM-P17-PROG-0041` | programming | UNCHANGED | — | 17 → 27 | — | `81c8531ecddbaaf` | 8.2.23 | 76 |
+| `KFM-P17-PROG-0042` | programming | UNCHANGED | — | 17 → 27 | — | `54beece64358635` | 8.2.24 | 76 |
+| `KFM-P18-PROG-0023` | programming | UNCHANGED | — | 18 → 27 | — | `5bb339559d87c3b` | 8.2.27 | 77 |
+| `KFM-P18-PROG-0031` | programming | UNCHANGED | — | 18 → 27 | — | `8fd7bb735ec123c` | 8.2.28 | 77 |
+| `KFM-P18-PROG-0032` | programming | UNCHANGED | — | 18 → 27 | — | `81dae993238b1e6` | 8.2.29 | 77 |
+| `KFM-P18-PROG-0033` | programming | UNCHANGED | — | 18 → 27 | — | `1cb203533928fb1` | 8.2.30 | 77 |
+| `KFM-P18-PROG-0034` | programming | UNCHANGED | — | 18 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `f3aa98f57174656` | 8.2.31 | 78 |
+| `KFM-P19-PROG-0012` | programming | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `8c79b0bdb889df0` | 8.2.34 | 78 |
+| `KFM-P20-PROG-0001` | programming | UNCHANGED | — | 20 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `c0ea06d1777419a` | 8.2.37 | 79 |
+| `KFM-P20-PROG-0014` | programming | UNCHANGED | — | 20 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `347afa0ce784480` | 8.2.38 | 79 |
+| `KFM-P20-PROG-0031` | programming | UNCHANGED | — | 20 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `2e0ae0927e02f9c` | 8.2.39 | 79 |
+| `KFM-P21-PROG-0014` | programming | UNCHANGED | — | 21 → 21 | — | `7b58e79e4a14cd2` | 8.2.40 | 79 |
+| `KFM-P21-PROG-0024` | programming | UNCHANGED | — | 21 → 21 | — | `84365301ebc84f7` | 8.2.41 | 80 |
+| `KFM-P21-PROG-0031` | programming | UNCHANGED | — | 21 → 21 | — | `9ea6c5db6ee8f04` | 8.2.42 | 80 |
+| `KFM-P22-PROG-0005` | programming | UNCHANGED | — | 22 → 23 | — | `1eaac9679f31539` | 8.2.44 | 80 |
+| `KFM-P22-PROG-0030` | programming | UNCHANGED | — | 22 → 22 | — | `60bf9290ada806c` | 8.2.45 | 80 |
+| `KFM-P23-PROG-0009` | programming | UNCHANGED | — | 23 → 23 | — | `d2e086e4bf8cb98` | 8.2.46 | 81 |
+| `KFM-P23-PROG-0029` | programming | UNCHANGED | — | 23 → 23 | — | `54f1d0179aa1669` | 8.2.47 | 81 |
+| `KFM-P24-PROG-0001` | programming | UNCHANGED | — | 24 → 24 | — | `4802c49953b978c` | 8.2.49 | 81 |
+| `KFM-P24-PROG-0002` | programming | UNCHANGED | — | 24 → 24 | — | `3007b5cfafb85d9` | 8.2.50 | 81 |
+| `KFM-P24-PROG-0003` | programming | UNCHANGED | — | 24 → 24 | — | `3e437a5ab2b6d98` | 8.2.51 | 82 |
+| `KFM-P24-PROG-0004` | programming | UNCHANGED | — | 24 → 24 | — | `f98ee428aada58b` | 8.2.52 | 82 |
+| `KFM-P24-PROG-0005` | programming | UNCHANGED | — | 24 → 24 | — | `f50ed1f6826b073` | 8.2.53 | 82 |
+| `KFM-P24-PROG-0006` | programming | UNCHANGED | — | 24 → 24 | — | `909c0f3b6980bfe` | 8.2.54 | 82 |
+| `KFM-P24-PROG-0033` | programming | UNCHANGED | — | 24 → 24 | — | `2da4c2e3339f852` | 8.2.55 | 82 |
+| `KFM-P24-PROG-0034` | programming | UNCHANGED | — | 24 → 24 | — | `34d1926415b88e7` | 8.2.56 | 83 |
+| `KFM-P25-PROG-0001` | programming | UNCHANGED | — | 25 → 25 | — | `35c413acbba1dd4` | 8.2.59 | 83 |
+| `KFM-P25-PROG-0007` | programming | UNCHANGED | — | 25 → 25 | — | `beb8100b6681f1e` | 8.2.60 | 83 |
+| `KFM-P25-PROG-0008` | programming | UNCHANGED | — | 25 → 25 | — | `13bd1f7e9287008` | 8.2.61 | 84 |
+| `KFM-P25-PROG-0009` | programming | UNCHANGED | — | 25 → 25 | — | `c4c0cdfde7ef679` | 8.2.62 | 84 |
+| `KFM-P25-PROG-0010` | programming | UNCHANGED | — | 25 → 25 | — | `30dc5a997d4da8a` | 8.2.63 | 84 |
+| `KFM-P25-PROG-0011` | programming | UNCHANGED | — | 25 → 25 | — | `d748e768431f181` | 8.2.64 | 84 |
+| `KFM-P26-PROG-0025` | programming | UNCHANGED | — | 26 → 26 | — | `a63597a493e9201` | 8.2.68 | 85 |
+| `KFM-P29-PROG-0025` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `75f8fdc21e14a1a` | 8.2.75 | 86 |
+| `KFM-P29-PROG-0028` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `97c1345bfd5aa85` | 8.2.76 | 87 |
+| `KFM-P30-PROG-0030` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `5fea1e1ff7e68d5` | 8.2.78 | 87 |
+| `KFM-P6-PROG-0014` | programming | UNCHANGED | — | 6 → 23 | — | `e954b94854d846d` | 8.2.82 | 88 |
+| `KFM-P8-PROG-0006` | programming | UNCHANGED | — | 8 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `e45b55ba1be2e5b` | 8.2.83 | 88 |
+
+</details>
+
+#### 5.5 DAT — Data Lifecycle, Provenance, Receipts
+
+<details>
+<summary><strong>115 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P25-FEAT-0008` | feature | UNCHANGED | — | 25 → 25 | — | `60c0a73a17a99c1` | 8.3.76 | 103 |
+| `KFM-P26-FEAT-0001` | feature | UNCHANGED | — | 26 → 26 | — | `8fa9ece4ac8d3bd` | 8.3.80 | 103 |
+| `KFM-P27-FEAT-0009` | feature | UNCHANGED | — | 27 → 27 | — | `1b45f07f2f82ddd` | 8.3.83 | 104 |
+| `KFM-P29-FEAT-0003` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `77f98aaa76271d0` | 8.3.86 | 105 |
+| `KFM-P32-FEAT-0015` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `7a46d6386656141` | 8.3.94 | 106 |
+| `KFM-P32-FEAT-0018` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `47692941391f295` | 8.3.95 | 106 |
+| `KFM-P9-FEAT-0002` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `2b29bbf95b9f831` | 8.3.105 | 108 |
+| `KFM-P1-IDEA-0006` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `06f2a7a40e0e7d6` | 8.3.1 | 88 |
+| `KFM-P1-IDEA-0011` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `8349dcc22eae094` | 8.3.2 | 88 |
+| `KFM-P10-IDEA-0002` | idea | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `9fea948875b6271` | 8.3.7 | 89 |
+| `KFM-P13-IDEA-0004` | idea | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `4659e9be99bbe03` | 8.3.13 | 90 |
+| `KFM-P14-IDEA-0001` | idea | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `5d99c932ae085c3` | 8.3.16 | 91 |
+| `KFM-P16-IDEA-0003` | idea | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `79dff9815c8b168` | 8.3.21 | 92 |
+| `KFM-P18-IDEA-0003` | idea | EXPANDED | — | 18 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `030dad515b4d7e5` | 8.3.30 | 93 |
+| `KFM-P2-IDEA-0018` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `cc54d3ea99a1409` | 8.3.36 | 95 |
+| `KFM-P2-IDEA-0019` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-001` | `ef3e2d5a6a6bdda` | 8.3.37 | 95 |
+| `KFM-P2-IDEA-0020` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `04b9272e3edeb6e` | 8.3.38 | 95 |
+| `KFM-P2-IDEA-0021` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `fefd8fff857510c` | 8.3.39 | 95 |
+| `KFM-P2-IDEA-0022` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `12b2aae9fa8855e` | 8.3.40 | 95 |
+| `KFM-P2-IDEA-0023` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `557ae6fe559632b` | 8.3.41 | 96 |
+| `KFM-P2-IDEA-0024` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-001` | `a0d39592905d78e` | 8.3.42 | 96 |
+| `KFM-P2-IDEA-0025` | idea | UNCHANGED | — | 2 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-001` | `3bc6a7e11dcbd85` | 8.3.43 | 96 |
+| `KFM-P2-IDEA-0026` | idea | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `9b7d0fee290426c` | 8.3.44 | 96 |
+| `KFM-P2-IDEA-0027` | idea | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `260b21eb40c4ba4` | 8.3.45 | 96 |
+| `KFM-P2-IDEA-0028` | idea | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `4c50ec2a538199a` | 8.3.46 | 97 |
+| `KFM-P2-IDEA-0029` | idea | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `70fa3fbbbec75df` | 8.3.47 | 97 |
+| `KFM-P20-IDEA-0006` | idea | UNCHANGED | — | 20 → 20 | — | `5f1e7df6e86958f` | 8.3.48 | 97 |
+| `KFM-P24-IDEA-0001` | idea | UNCHANGED | — | 24 → 24 | — | `59e9058e4ffdbf9` | 8.3.69 | 101 |
+| `KFM-P25-IDEA-0013` | idea | UNCHANGED | — | 25 → 25 | — | `636e54f79b4ddd3` | 8.3.77 | 103 |
+| `KFM-P27-IDEA-0018` | idea | UNCHANGED | — | 27 → 27 | — | `29bf2333502d921` | 8.3.84 | 104 |
+| `KFM-P29-IDEA-0002` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `b0b2011646b89e0` | 8.3.87 | 105 |
+| `KFM-P32-IDEA-0001` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `a33dde2ec5a1030` | 8.3.96 | 107 |
+| `KFM-P32-IDEA-0010` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `459c0e30cb2b227` | 8.3.97 | 107 |
+| `KFM-P9-IDEA-0008` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `27111c8c3101774` | 8.3.106 | 109 |
+| `KFM-P9-IDEA-0009` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `27ca20d04e3b966` | 8.3.107 | 109 |
+| `KFM-P9-IDEA-0010` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `9d91928774ae14e` | 8.3.108 | 109 |
+| `KFM-P1-PROG-0007` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `05db10e387c52bb` | 8.3.3 | 88 |
+| `KFM-P1-PROG-0008` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `83c0339c8639b62` | 8.3.4 | 88 |
+| `KFM-P1-PROG-0009` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `08f86e62a5f3e18` | 8.3.5 | 88 |
+| `KFM-P1-PROG-0010` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `10013c7e0199c7e` | 8.3.6 | 89 |
+| `KFM-P10-PROG-0021` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `9d590a32347e56d` | 8.3.8 | 89 |
+| `KFM-P10-PROG-0022` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `94ed83b14e460dd` | 8.3.9 | 89 |
+| `KFM-P11-PROG-0006` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `bc0f012647c11b3` | 8.3.10 | 89 |
+| `KFM-P11-PROG-0007` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `4e875f6626df7a1` | 8.3.11 | 90 |
+| `KFM-P11-PROG-0021` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `2f1f3aa25f12a25` | 8.3.12 | 90 |
+| `KFM-P13-PROG-0005` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `885a94c55d633aa` | 8.3.14 | 90 |
+| `KFM-P13-PROG-0022` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `b6b522ea8338acc` | 8.3.15 | 90 |
+| `KFM-P14-PROG-0017` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `8f0415bc7f8fc3f` | 8.3.17 | 91 |
+| `KFM-P14-PROG-0025` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `e8001353a4c3e6f` | 8.3.18 | 91 |
+| `KFM-P15-PROG-0006` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `2539a26649baf08` | 8.3.19 | 91 |
+| `KFM-P15-PROG-0018` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `86189c0a01bc9f3` | 8.3.20 | 91 |
+| `KFM-P16-PROG-0001` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `441c73237779a3a` | 8.3.22 | 92 |
+| `KFM-P16-PROG-0007` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `e0fd175f293a10a` | 8.3.23 | 92 |
+| `KFM-P16-PROG-0010` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `8abf8dfa908568b` | 8.3.24 | 92 |
+| `KFM-P16-PROG-0013` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `9e609f1d68ad5fd` | 8.3.25 | 92 |
+| `KFM-P16-PROG-0015` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `1574495f2b27bc7` | 8.3.26 | 93 |
+| `KFM-P17-PROG-0003` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `3cd40aeea90907b` | 8.3.27 | 93 |
+| `KFM-P17-PROG-0008` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `86af027985192b5` | 8.3.28 | 93 |
+| `KFM-P17-PROG-0030` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002` | `bc57aa2d0d55e45` | 8.3.29 | 93 |
+| `KFM-P18-PROG-0010` | programming | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `93f0458ba627502` | 8.3.31 | 94 |
+| `KFM-P18-PROG-0011` | programming | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `915e84a814476a2` | 8.3.32 | 94 |
+| `KFM-P18-PROG-0036` | programming | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `946d4fc61860219` | 8.3.33 | 94 |
+| `KFM-P19-PROG-0003` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `e3275963c1dcace` | 8.3.34 | 94 |
+| `KFM-P19-PROG-0037` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-001` | `145932ba71291e7` | 8.3.35 | 94 |
+| `KFM-P20-PROG-0008` | programming | UNCHANGED | — | 20 → 20 | — | `d941b296b06a5c0` | 8.3.49 | 97 |
+| `KFM-P20-PROG-0023` | programming | UNCHANGED | — | 20 → 20 | — | `ced8394286a76fe` | 8.3.50 | 97 |
+| `KFM-P20-PROG-0029` | programming | UNCHANGED | — | 20 → 20 | — | `c549826a27818a4` | 8.3.51 | 98 |
+| `KFM-P21-PROG-0002` | programming | UNCHANGED | — | 21 → 23 | — | `fc6036bfddd4802` | 8.3.52 | 98 |
+| `KFM-P21-PROG-0016` | programming | UNCHANGED | — | 21 → 21 | — | `2e0eacd7ef4f308` | 8.3.53 | 98 |
+| `KFM-P21-PROG-0020` | programming | UNCHANGED | — | 21 → 21 | — | `ce42fad55fadc0f` | 8.3.54 | 98 |
+| `KFM-P21-PROG-0025` | programming | UNCHANGED | — | 21 → 21 | — | `a87e84ca99a21c2` | 8.3.55 | 98 |
+| `KFM-P21-PROG-0028` | programming | UNCHANGED | — | 21 → 21 | — | `0e7b20b2ce84b97` | 8.3.56 | 99 |
+| `KFM-P21-PROG-0048` | programming | UNCHANGED | — | 21 → 21 | — | `18ca7fbd66d51ec` | 8.3.57 | 99 |
+| `KFM-P22-PROG-0014` | programming | UNCHANGED | — | 22 → 22 | — | `14aa59a98bc511b` | 8.3.58 | 99 |
+| `KFM-P22-PROG-0020` | programming | UNCHANGED | — | 22 → 22 | — | `e2d56b4af93355e` | 8.3.59 | 99 |
+| `KFM-P22-PROG-0026` | programming | UNCHANGED | — | 22 → 23 | — | `3635764941e32f0` | 8.3.60 | 99 |
+| `KFM-P22-PROG-0034` | programming | UNCHANGED | — | 22 → 22 | — | `f826eb31ac73a01` | 8.3.61 | 100 |
+| `KFM-P22-PROG-0045` | programming | UNCHANGED | — | 22 → 23 | — | `365439fb0c2760e` | 8.3.62 | 100 |
+| `KFM-P22-PROG-0046` | programming | UNCHANGED | — | 22 → 22 | — | `e985cf843d7c14c` | 8.3.63 | 100 |
+| `KFM-P22-PROG-0049` | programming | UNCHANGED | — | 22 → 22 | — | `ce710eb58db7146` | 8.3.64 | 100 |
+| `KFM-P23-PROG-0005` | programming | UNCHANGED | — | 23 → 23 | — | `55c76d2ffe7205f` | 8.3.65 | 100 |
+| `KFM-P23-PROG-0020` | programming | UNCHANGED | — | 23 → 23 | — | `30d346191ac52cc` | 8.3.66 | 101 |
+| `KFM-P23-PROG-0033` | programming | UNCHANGED | — | 23 → 23 | — | `040fa4c7e8decb2` | 8.3.67 | 101 |
+| `KFM-P23-PROG-0034` | programming | UNCHANGED | — | 23 → 23 | — | `60c65204484853a` | 8.3.68 | 101 |
+| `KFM-P24-PROG-0009` | programming | UNCHANGED | — | 24 → 24 | — | `79b6beb84321276` | 8.3.70 | 101 |
+| `KFM-P24-PROG-0010` | programming | UNCHANGED | — | 24 → 24 | — | `5e46a67e9247794` | 8.3.71 | 102 |
+| `KFM-P24-PROG-0011` | programming | UNCHANGED | — | 24 → 24 | — | `9bd537e3ce94a7c` | 8.3.72 | 102 |
+| `KFM-P24-PROG-0012` | programming | UNCHANGED | — | 24 → 24 | — | `daa71155411022c` | 8.3.73 | 102 |
+| `KFM-P24-PROG-0025` | programming | UNCHANGED | — | 24 → 24 | — | `7b36bc058f7e64e` | 8.3.74 | 102 |
+| `KFM-P24-PROG-0043` | programming | UNCHANGED | — | 24 → 24 | — | `68a099f6b333ac8` | 8.3.75 | 102 |
+| `KFM-P25-PROG-0016` | programming | UNCHANGED | — | 25 → 25 | — | `f3ecc27f276f3ee` | 8.3.78 | 103 |
+| `KFM-P25-PROG-0020` | programming | UNCHANGED | — | 25 → 25 | — | `50f63cc5ba80554` | 8.3.79 | 103 |
+| `KFM-P26-PROG-0010` | programming | UNCHANGED | — | 26 → 26 | — | `cf6f749457e1aff` | 8.3.81 | 104 |
+| `KFM-P26-PROG-0014` | programming | UNCHANGED | — | 26 → 26 | — | `a70fa789aacbec0` | 8.3.82 | 104 |
+| `KFM-P27-PROG-0022` | programming | UNCHANGED | — | 27 → 27 | — | `65e7e3ee88bedcd` | 8.3.85 | 104 |
+| `KFM-P29-PROG-0006` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `190e2a5ba983fb0` | 8.3.88 | 105 |
+| `KFM-P29-PROG-0008` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `d5d4cae032114b6` | 8.3.89 | 105 |
+| `KFM-P29-PROG-0016` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `6775c2b75a235b5` | 8.3.90 | 105 |
+| `KFM-P30-PROG-0013` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `40006356175be91` | 8.3.91 | 106 |
+| `KFM-P30-PROG-0028` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `2b7745b5907cf7b` | 8.3.92 | 106 |
+| `KFM-P31-PROG-0013` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `fa365992bb1c2f8` | 8.3.93 | 106 |
+| `KFM-P32-PROG-0003` | programming | NEW | — | 32 → 32 | `SRC-P32-001,SRC-P32-002` | `eaa8ebe2e246cfd` | 8.3.98 | 107 |
+| `KFM-P32-PROG-0013` | programming | NEW | — | 32 → 32 | `SRC-P32-001` | `16caa0ecd54db78` | 8.3.99 | 107 |
+| `KFM-P32-PROG-0020` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `78f483c0bdb67dd` | 8.3.100 | 107 |
+| `KFM-P4-PROG-0001` | programming | UNCHANGED | — | 4 → 23 | — | `c31d5aaea3a8b09` | 8.3.101 | 108 |
+| `KFM-P4-PROG-0004` | programming | UNCHANGED | — | 4 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `4b32e0cc97c9887` | 8.3.102 | 108 |
+| `KFM-P6-PROG-0001` | programming | UNCHANGED | — | 6 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `512d382c6f3ddf2` | 8.3.103 | 108 |
+| `KFM-P6-PROG-0015` | programming | UNCHANGED | — | 6 → 20 | — | `9e8be525927e0e2` | 8.3.104 | 108 |
+| `KFM-P9-PROG-0003` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `efad27dd8d4bd26` | 8.3.109 | 109 |
+| `KFM-P9-PROG-0004` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `85de5e02b3e35ce` | 8.3.110 | 109 |
+| `KFM-P9-PROG-0005` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `739ae2f494c4906` | 8.3.111 | 110 |
+| `KFM-P9-PROG-0006` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `0254afcac20c6fb` | 8.3.112 | 110 |
+| `KFM-P9-PROG-0007` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `d9c341df1e0cd3f` | 8.3.113 | 110 |
+| `KFM-P9-PROG-0008` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `2620eb70e77a0a2` | 8.3.114 | 110 |
+| `KFM-P9-PROG-0009` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `f8ac416a08207b5` | 8.3.115 | 110 |
+
+</details>
+
+#### 5.6 DOC — Documentation, Doctrine, Reader Surfaces
+
+<details>
+<summary><strong>50 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P17-FEAT-0005` | feature | UNCHANGED | — | 17 → 17 | — | `3b4536db688f5c2` | 8.4.10 | 112 |
+| `KFM-P18-FEAT-0002` | feature | UNCHANGED | — | 18 → 18 | — | `a1aac7f8b829165` | 8.4.14 | 113 |
+| `KFM-P19-FEAT-0008` | feature | UNCHANGED | — | 19 → 19 | — | `4c713d20fab0069` | 8.4.16 | 114 |
+| `KFM-P3-FEAT-0005` | feature | UNCHANGED | — | 3 → 13 | — | `33da07627bf8296` | 8.4.37 | 118 |
+| `KFM-P32-FEAT-0019` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `9c0651b2af74ebd` | 8.4.39 | 118 |
+| `KFM-P1-IDEA-0001` | idea | UNCHANGED | — | 1 → 11 | — | `efbf4728ec98745` | 8.4.1 | 111 |
+| `KFM-P1-IDEA-0002` | idea | UNCHANGED | — | 1 → 9 | — | `22ab564075ed2a5` | 8.4.2 | 111 |
+| `KFM-P1-IDEA-0003` | idea | UNCHANGED | — | 1 → 9 | — | `65945c358d62f6f` | 8.4.3 | 111 |
+| `KFM-P1-IDEA-0004` | idea | UNCHANGED | — | 1 → 9 | — | `9f1f3f5de74e103` | 8.4.4 | 111 |
+| `KFM-P1-IDEA-0005` | idea | UNCHANGED | — | 1 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `2675ebd2f9b01c6` | 8.4.5 | 111 |
+| `KFM-P12-IDEA-0002` | idea | UNCHANGED | — | 12 → 12 | — | `dab9d42d02b2144` | 8.4.6 | 112 |
+| `KFM-P17-IDEA-0002` | idea | UNCHANGED | — | 17 → 18 | — | `875a110e43fbfc2` | 8.4.11 | 113 |
+| `KFM-P25-IDEA-0020` | idea | UNCHANGED | — | 25 → 25 | — | `9ac7de8d7fd36e4` | 8.4.28 | 116 |
+| `KFM-P28-IDEA-0017` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `1e73cb598b64e26` | 8.4.33 | 117 |
+| `KFM-P9-IDEA-0001` | idea | UNCHANGED | — | 9 → 9 | — | `1c987627ed4bd40` | 8.4.49 | 120 |
+| `KFM-P12-PROG-0018` | programming | UNCHANGED | — | 12 → 13 | — | `6e82003f7aceed7` | 8.4.7 | 112 |
+| `KFM-P13-PROG-0009` | programming | UNCHANGED | — | 13 → 13 | — | `3e60f2f62803e33` | 8.4.8 | 112 |
+| `KFM-P15-PROG-0041` | programming | QUARANTINED | quarantine | 15 → 15 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `7bf12b2a217a8d5` | 8.4.9 | 112 |
+| `KFM-P17-PROG-0024` | programming | UNCHANGED | — | 17 → 17 | — | `f040154ece086e1` | 8.4.12 | 113 |
+| `KFM-P17-PROG-0045` | programming | QUARANTINED | quarantine | 17 → 17 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `f9df888f2f200cb` | 8.4.13 | 113 |
+| `KFM-P18-PROG-0019` | programming | UNCHANGED | — | 18 → 18 | — | `e2b997abd30d716` | 8.4.15 | 113 |
+| `KFM-P19-PROG-0039` | programming | UNCHANGED | — | 19 → 19 | — | `14fd3c1fbc0ba7c` | 8.4.17 | 114 |
+| `KFM-P2-PROG-0030` | programming | UNCHANGED | — | 2 → 13 | — | `375c2de2a67f958` | 8.4.18 | 114 |
+| `KFM-P2-PROG-0031` | programming | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `5c9174fb992e0b6` | 8.4.19 | 114 |
+| `KFM-P20-PROG-0042` | programming | QUARANTINED | quarantine | 20 → 20 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `46900db9b8cb8dd` | 8.4.20 | 114 |
+| `KFM-P21-PROG-0027` | programming | UNCHANGED | — | 21 → 21 | — | `053e6e4ef87bcf1` | 8.4.21 | 115 |
+| `KFM-P21-PROG-0044` | programming | UNCHANGED | — | 21 → 21 | — | `3a8c0b5e6bdb0dd` | 8.4.22 | 115 |
+| `KFM-P22-PROG-0017` | programming | UNCHANGED | — | 22 → 22 | — | `87543d6932383ab` | 8.4.23 | 115 |
+| `KFM-P22-PROG-0018` | programming | UNCHANGED | — | 22 → 22 | — | `19925e0f38383fd` | 8.4.24 | 115 |
+| `KFM-P23-PROG-0052` | programming | UNCHANGED | — | 23 → 23 | — | `0ad71f3555679ff` | 8.4.25 | 115 |
+| `KFM-P23-PROG-0053` | programming | QUARANTINED | quarantine | 23 → 23 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `08e1b7bb859813e` | 8.4.26 | 116 |
+| `KFM-P24-PROG-0052` | programming | QUARANTINED | quarantine | 24 → 24 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `0479515503b6676` | 8.4.27 | 116 |
+| `KFM-P25-PROG-0031` | programming | QUARANTINED | quarantine | 25 → 25 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `4be9ece53299382` | 8.4.29 | 116 |
+| `KFM-P26-PROG-0031` | programming | QUARANTINED | quarantine | 26 → 26 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `d9e56b6c1ff32b4` | 8.4.30 | 116 |
+| `KFM-P27-PROG-0030` | programming | UNCHANGED | — | 27 → 27 | — | `e12558fd3a498a4` | 8.4.31 | 117 |
+| `KFM-P27-PROG-0031` | programming | QUARANTINED | quarantine | 27 → 27 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `243a6b3ce7430b0` | 8.4.32 | 117 |
+| `KFM-P28-PROG-0031` | programming | QUARANTINED | quarantine | 28 → 28 | `SRC-P28-003,SRC-P28-004,SRC-P28-005` | `3d8471af1739980` | 8.4.34 | 117 |
+| `KFM-P29-PROG-0030` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `4717d04a3f80966` | 8.4.35 | 117 |
+| `KFM-P29-PROG-0031` | programming | QUARANTINED | quarantine | 29 → 29 | `SRC-P29-003` | `5153749fdd75dbc` | 8.4.36 | 118 |
+| `KFM-P30-PROG-0031` | programming | QUARANTINED | quarantine | 30 → 30 | `SRC-P30-003` | `df1a5b29a60e60c` | 8.4.38 | 118 |
+| `KFM-P7-PROG-0007` | programming | UNCHANGED | — | 7 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `86238459e89bab7` | 8.4.40 | 118 |
+| `KFM-P7-PROG-0008` | programming | UNCHANGED | — | 7 → 7 | — | `cecf61ddb6e0f2d` | 8.4.41 | 119 |
+| `KFM-P8-PROG-0020` | programming | UNCHANGED | — | 8 → 8 | — | `5978e87ff476c14` | 8.4.42 | 119 |
+| `KFM-P8-PROG-0028` | programming | UNCHANGED | — | 8 → 8 | — | `8877bbc1046e9dd` | 8.4.43 | 119 |
+| `KFM-P8-PROG-0029` | programming | UNCHANGED | — | 8 → 8 | — | `bdbc5fdd7a9c12a` | 8.4.44 | 119 |
+| `KFM-P8-PROG-0030` | programming | UNCHANGED | — | 8 → 8 | — | `f028d5f618e7817` | 8.4.45 | 119 |
+| `KFM-P8-PROG-0031` | programming | UNCHANGED | — | 8 → 8 | — | `861e5a34a754c1f` | 8.4.46 | 120 |
+| `KFM-P8-PROG-0032` | programming | UNCHANGED | — | 8 → 8 | — | `53eb5bed3682535` | 8.4.47 | 120 |
+| `KFM-P8-PROG-0033` | programming | QUARANTINED | quarantine | 8 → 8 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `879d60606a780f9` | 8.4.48 | 120 |
+| `KFM-P9-PROG-0001` | programming | UNCHANGED | — | 9 → 23 | — | `e5d595ce89f17f6` | 8.4.50 | 120 |
+
+</details>
+
+#### 5.7 EVD — Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain
+
+<details>
+<summary><strong>108 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P11-FEAT-0001` | feature | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `be9cbb16caea299` | 8.5.10 | 122 |
+| `KFM-P25-FEAT-0009` | feature | UNCHANGED | — | 25 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `43462cf51412c78` | 8.5.63 | 133 |
+| `KFM-P26-FEAT-0008` | feature | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `88d97104116d7a8` | 8.5.65 | 133 |
+| `KFM-P28-FEAT-0010` | feature | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `0eff3b53a6ed9cd` | 8.5.77 | 136 |
+| `KFM-P32-FEAT-0003` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `7f908925c42c9d7` | 8.5.90 | 138 |
+| `KFM-P9-FEAT-0003` | feature | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `d5c0da30df595ec` | 8.5.98 | 140 |
+| `KFM-P1-IDEA-0012` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `e3342bc788c860f` | 8.5.1 | 121 |
+| `KFM-P1-IDEA-0014` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `6d8e03842a00d96` | 8.5.2 | 121 |
+| `KFM-P1-IDEA-0019` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `1b1563a08fd296f` | 8.5.3 | 121 |
+| `KFM-P17-IDEA-0004` | idea | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `975279b9bd854c4` | 8.5.24 | 125 |
+| `KFM-P18-IDEA-0002` | idea | EXPANDED | — | 18 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `fbd0d4a8c68594b` | 8.5.31 | 127 |
+| `KFM-P19-IDEA-0001` | idea | EXPANDED | — | 19 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `79fa70d41f6c338` | 8.5.35 | 127 |
+| `KFM-P20-IDEA-0007` | idea | UNCHANGED | — | 20 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `c44b622d0d52bdf` | 8.5.40 | 128 |
+| `KFM-P21-IDEA-0002` | idea | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `cdf7c026141c214` | 8.5.43 | 129 |
+| `KFM-P22-IDEA-0002` | idea | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `a937d1815a00263` | 8.5.51 | 131 |
+| `KFM-P23-IDEA-0005` | idea | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `3c967733ffce052` | 8.5.55 | 131 |
+| `KFM-P24-IDEA-0005` | idea | UNCHANGED | — | 24 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `8a20080990f2211` | 8.5.60 | 132 |
+| `KFM-P25-IDEA-0017` | idea | UNCHANGED | — | 25 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `59d0e83cfa55e83` | 8.5.64 | 133 |
+| `KFM-P26-IDEA-0002` | idea | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `4fd5ba57d08ee0d` | 8.5.66 | 134 |
+| `KFM-P26-IDEA-0003` | idea | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `03b068b898c48d9` | 8.5.67 | 134 |
+| `KFM-P26-IDEA-0006` | idea | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `ffcb8639ebb9d62` | 8.5.68 | 134 |
+| `KFM-P26-IDEA-0008` | idea | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `43cc8984763e129` | 8.5.69 | 134 |
+| `KFM-P27-IDEA-0002` | idea | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `aeaa9ddd6491ec6` | 8.5.75 | 135 |
+| `KFM-P28-IDEA-0007` | idea | UNCHANGED | — | 28 → 30 | `SRC-P28-003,SRC-P30-002` | `ffefd2f3b02eaa5` | 8.5.78 | 136 |
+| `KFM-P28-IDEA-0019` | idea | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `af981f39e0078e0` | 8.5.79 | 136 |
+| `KFM-P29-IDEA-0007` | idea | UNCHANGED | — | 29 → 30 | `SRC-P29-001,SRC-P30-002` | `1543144c791c515` | 8.5.83 | 137 |
+| `KFM-P29-IDEA-0014` | idea | UNCHANGED | — | 29 → 30 | `SRC-P29-002,SRC-P30-002` | `c1347b1588472c0` | 8.5.84 | 137 |
+| `KFM-P30-IDEA-0018` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `e4cf2b507bbb36f` | 8.5.86 | 138 |
+| `KFM-P31-IDEA-0006` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `7657a480c693ece` | 8.5.88 | 138 |
+| `KFM-P32-IDEA-0004` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `0215f7e014e9120` | 8.5.91 | 139 |
+| `KFM-P32-IDEA-0013` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `320d637539e9838` | 8.5.92 | 139 |
+| `KFM-P7-IDEA-0001` | idea | UNCHANGED | — | 7 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `e974130f1a06f48` | 8.5.95 | 139 |
+| `KFM-P8-IDEA-0001` | idea | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `f9cda604eb3e1ab` | 8.5.96 | 140 |
+| `KFM-P9-IDEA-0012` | idea | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `5d948065a620581` | 8.5.99 | 140 |
+| `KFM-P9-IDEA-0013` | idea | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `dd549790b19a250` | 8.5.100 | 140 |
+| `KFM-P9-IDEA-0014` | idea | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `15f507f2e507426` | 8.5.101 | 141 |
+| `KFM-P9-IDEA-0015` | idea | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `a8d1ea9fb12d462` | 8.5.102 | 141 |
+| `KFM-P1-PROG-0013` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `767c4cd0c75ec9e` | 8.5.4 | 121 |
+| `KFM-P1-PROG-0015` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `11c978ab2f46f41` | 8.5.5 | 121 |
+| `KFM-P1-PROG-0016` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `8f7adb320ad5af4` | 8.5.6 | 122 |
+| `KFM-P1-PROG-0018` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `1b289e4ebad99d3` | 8.5.7 | 122 |
+| `KFM-P10-PROG-0003` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `b2ee377350b5b16` | 8.5.8 | 122 |
+| `KFM-P10-PROG-0024` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `a884707bcc6d2d7` | 8.5.9 | 122 |
+| `KFM-P11-PROG-0010` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `166ef03da39a39b` | 8.5.11 | 123 |
+| `KFM-P11-PROG-0017` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `571e86a657d61c0` | 8.5.12 | 123 |
+| `KFM-P11-PROG-0029` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `1fda91fad9ec714` | 8.5.13 | 123 |
+| `KFM-P12-PROG-0030` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `797d1e88a63ed1c` | 8.5.14 | 123 |
+| `KFM-P13-PROG-0008` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `a8fb0e65938dd40` | 8.5.15 | 123 |
+| `KFM-P13-PROG-0010` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `b35e8679e1cbd13` | 8.5.16 | 124 |
+| `KFM-P14-PROG-0015` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `627392e5b0e0b8f` | 8.5.17 | 124 |
+| `KFM-P14-PROG-0016` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `9154fc1d633999f` | 8.5.18 | 124 |
+| `KFM-P14-PROG-0032` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `069459efc5b22b0` | 8.5.19 | 124 |
+| `KFM-P15-PROG-0002` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `0d3ad3813cdaf36` | 8.5.20 | 124 |
+| `KFM-P15-PROG-0030` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `5cf859c0a9062a0` | 8.5.21 | 125 |
+| `KFM-P15-PROG-0038` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `d2812bcc315841f` | 8.5.22 | 125 |
+| `KFM-P16-PROG-0032` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `91210e59c9cde1e` | 8.5.23 | 125 |
+| `KFM-P17-PROG-0001` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `2f49cb7cb9df2b7` | 8.5.25 | 125 |
+| `KFM-P17-PROG-0006` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `305b4fde0b81969` | 8.5.26 | 126 |
+| `KFM-P17-PROG-0011` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `ac9f88ff8255ba2` | 8.5.27 | 126 |
+| `KFM-P17-PROG-0012` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `ee934a418872846` | 8.5.28 | 126 |
+| `KFM-P17-PROG-0028` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `84736e05ddb9048` | 8.5.29 | 126 |
+| `KFM-P17-PROG-0039` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `de4634f0ff97242` | 8.5.30 | 126 |
+| `KFM-P18-PROG-0006` | programming | EXPANDED | — | 18 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `5bfa73f9264ded1` | 8.5.32 | 127 |
+| `KFM-P18-PROG-0017` | programming | EXPANDED | — | 18 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `6ba24dcaeebb8e3` | 8.5.33 | 127 |
+| `KFM-P18-PROG-0040` | programming | EXPANDED | — | 18 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `b0b58dd13026b6a` | 8.5.34 | 127 |
+| `KFM-P19-PROG-0005` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `26c103c41c6e12f` | 8.5.36 | 128 |
+| `KFM-P19-PROG-0008` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `602610da7fb3bd3` | 8.5.37 | 128 |
+| `KFM-P19-PROG-0031` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `d90bb1635354085` | 8.5.38 | 128 |
+| `KFM-P19-PROG-0032` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `7548a1450fd053e` | 8.5.39 | 128 |
+| `KFM-P20-PROG-0015` | programming | UNCHANGED | — | 20 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `0045530e8e43c59` | 8.5.41 | 129 |
+| `KFM-P20-PROG-0024` | programming | UNCHANGED | — | 20 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `dca2a6f432c9802` | 8.5.42 | 129 |
+| `KFM-P21-PROG-0011` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `1d6ca93c2c31693` | 8.5.44 | 129 |
+| `KFM-P21-PROG-0021` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `04cca228262c900` | 8.5.45 | 129 |
+| `KFM-P21-PROG-0022` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `8a4d23294ad99d8` | 8.5.46 | 130 |
+| `KFM-P21-PROG-0023` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `bfbbe6bd040fb89` | 8.5.47 | 130 |
+| `KFM-P21-PROG-0039` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `28b898318510a94` | 8.5.48 | 130 |
+| `KFM-P21-PROG-0042` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `f734ae1f4628056` | 8.5.49 | 130 |
+| `KFM-P21-PROG-0051` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `2d0d049a4a4a64b` | 8.5.50 | 130 |
+| `KFM-P22-PROG-0003` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `5225018e3fd886a` | 8.5.52 | 131 |
+| `KFM-P22-PROG-0036` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `63efb336e133b19` | 8.5.53 | 131 |
+| `KFM-P22-PROG-0050` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `7eb8d7ee5a44496` | 8.5.54 | 131 |
+| `KFM-P23-PROG-0016` | programming | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `80d52919df240ca` | 8.5.56 | 132 |
+| `KFM-P23-PROG-0023` | programming | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `0f9cefc67e5933a` | 8.5.57 | 132 |
+| `KFM-P23-PROG-0025` | programming | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `0e4e8a525ff4fc9` | 8.5.58 | 132 |
+| `KFM-P23-PROG-0047` | programming | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `a4832502b666730` | 8.5.59 | 132 |
+| `KFM-P24-PROG-0028` | programming | UNCHANGED | — | 24 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `0fb61e21ddbabda` | 8.5.61 | 133 |
+| `KFM-P24-PROG-0042` | programming | UNCHANGED | — | 24 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `abe3fe5210a5e9e` | 8.5.62 | 133 |
+| `KFM-P26-PROG-0004` | programming | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `fa3aafaf5d6e0af` | 8.5.70 | 134 |
+| `KFM-P26-PROG-0005` | programming | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `992cf745469092d` | 8.5.71 | 135 |
+| `KFM-P26-PROG-0008` | programming | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `1b7eb7d8ef364be` | 8.5.72 | 135 |
+| `KFM-P26-PROG-0011` | programming | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `6c3d820e8f6a27a` | 8.5.73 | 135 |
+| `KFM-P26-PROG-0012` | programming | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `0f0871cd409e02f` | 8.5.74 | 135 |
+| `KFM-P27-PROG-0003` | programming | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `9e1099a06ed000e` | 8.5.76 | 136 |
+| `KFM-P28-PROG-0006` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-003,SRC-P30-002` | `fd6e36dc286f875` | 8.5.80 | 136 |
+| `KFM-P28-PROG-0011` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-003,SRC-P30-002` | `4e23b995d890e80` | 8.5.81 | 137 |
+| `KFM-P28-PROG-0030` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `82c929312252c23` | 8.5.82 | 137 |
+| `KFM-P3-PROG-0001` | programming | UNCHANGED | — | 3 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `45de9c165518666` | 8.5.85 | 137 |
+| `KFM-P30-PROG-0029` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `cd77280751f0bc7` | 8.5.87 | 138 |
+| `KFM-P31-PROG-0003` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `48b01f0bed00068` | 8.5.89 | 138 |
+| `KFM-P32-PROG-0007` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `f47297f9f254f68` | 8.5.93 | 139 |
+| `KFM-P6-PROG-0009` | programming | UNCHANGED | — | 6 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `e1a00b4db14bc66` | 8.5.94 | 139 |
+| `KFM-P8-PROG-0019` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `a5faafc3b8216ba` | 8.5.97 | 140 |
+| `KFM-P9-PROG-0019` | programming | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `5659d9ddacfbe8d` | 8.5.103 | 141 |
+| `KFM-P9-PROG-0020` | programming | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `774cedbc9213aad` | 8.5.104 | 141 |
+| `KFM-P9-PROG-0021` | programming | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `bf951eec8ca2afa` | 8.5.105 | 141 |
+| `KFM-P9-PROG-0022` | programming | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `ccb11fc19088cc0` | 8.5.106 | 142 |
+| `KFM-P9-PROG-0023` | programming | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `8970db4bc65c8fd` | 8.5.107 | 142 |
+| `KFM-P9-PROG-0024` | programming | UNCHANGED | — | 9 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `5c21682a5549054` | 8.5.108 | 142 |
+
+</details>
+
+#### 5.8 MAP — Map Surface, MapLibre, Tiles, Styling
+
+<details>
+<summary><strong>137 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P1-FEAT-0038` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `82245037b3ffefa` | 8.6.1 | 142 |
+| `KFM-P1-FEAT-0039` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `1901e6980c43b8c` | 8.6.2 | 142 |
+| `KFM-P1-FEAT-0042` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `2e0e39b42a81c0d` | 8.6.3 | 142 |
+| `KFM-P1-FEAT-0044` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0b0ff0159c40cb8` | 8.6.4 | 142 |
+| `KFM-P10-FEAT-0001` | feature | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `ab88cae81d15e36` | 8.6.8 | 143 |
+| `KFM-P19-FEAT-0003` | feature | EXPANDED | — | 19 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `681beee44b83200` | 8.6.27 | 147 |
+| `KFM-P19-FEAT-0006` | feature | EXPANDED | — | 19 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4727da8bac60e6a` | 8.6.28 | 147 |
+| `KFM-P2-FEAT-0012` | feature | EXPANDED | — | 2 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `0611f3df664d543` | 8.6.30 | 147 |
+| `KFM-P2-FEAT-0013` | feature | EXPANDED | — | 2 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `73f85c16237e3cd` | 8.6.31 | 148 |
+| `KFM-P2-FEAT-0032` | feature | EXPANDED | — | 2 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `07ba90b7d72f863` | 8.6.32 | 148 |
+| `KFM-P2-FEAT-0035` | feature | EXPANDED | — | 2 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `bd5b39c57e18721` | 8.6.33 | 148 |
+| `KFM-P2-FEAT-0036` | feature | EXPANDED | — | 2 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `b345fe8438524ed` | 8.6.34 | 148 |
+| `KFM-P20-FEAT-0003` | feature | UNCHANGED | — | 20 → 23 | — | `f5ef7357ebb4162` | 8.6.38 | 149 |
+| `KFM-P20-FEAT-0005` | feature | UNCHANGED | — | 20 → 20 | — | `dd0fbb7ec9dded1` | 8.6.39 | 149 |
+| `KFM-P21-FEAT-0002` | feature | UNCHANGED | — | 21 → 21 | — | `7a05c51ef3875af` | 8.6.42 | 150 |
+| `KFM-P25-FEAT-0005` | feature | UNCHANGED | — | 25 → 25 | — | `c0c9c67079c28d0` | 8.6.54 | 152 |
+| `KFM-P26-FEAT-0007` | feature | UNCHANGED | — | 26 → 26 | — | `c3109c816a90ecd` | 8.6.58 | 153 |
+| `KFM-P26-FEAT-0010` | feature | UNCHANGED | — | 26 → 26 | — | `85bd938f4cddd16` | 8.6.59 | 153 |
+| `KFM-P27-FEAT-0005` | feature | UNCHANGED | — | 27 → 27 | — | `0da0abdb704e66a` | 8.6.62 | 154 |
+| `KFM-P27-FEAT-0008` | feature | UNCHANGED | — | 27 → 27 | — | `f3adf5cba3f3e9f` | 8.6.63 | 154 |
+| `KFM-P28-FEAT-0005` | feature | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `6688ed0cf3cb4f7` | 8.6.67 | 155 |
+| `KFM-P28-FEAT-0006` | feature | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `09032b63fa73e3b` | 8.6.68 | 155 |
+| `KFM-P29-FEAT-0006` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `f5194e06cda5118` | 8.6.74 | 156 |
+| `KFM-P29-FEAT-0009` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `c3d1406459dd4c3` | 8.6.75 | 156 |
+| `KFM-P30-FEAT-0008` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `76c3812aecce6dc` | 8.6.82 | 158 |
+| `KFM-P32-FEAT-0013` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `1abffb98626cb8d` | 8.6.89 | 159 |
+| `KFM-P7-FEAT-0001` | feature | UNCHANGED | — | 7 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `c326a9aebf61384` | 8.6.98 | 161 |
+| `KFM-P9-FEAT-0001` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `25e769522c0e629` | 8.6.100 | 161 |
+| `KFM-P9-FEAT-0011` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `d6aae1bda9c4992` | 8.6.101 | 162 |
+| `KFM-P9-FEAT-0012` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `af2c0233f443f89` | 8.6.102 | 162 |
+| `KFM-P9-FEAT-0013` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `03ffe7b2b49f1f7` | 8.6.103 | 162 |
+| `KFM-P9-FEAT-0014` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `15febee60ea89f7` | 8.6.104 | 162 |
+| `KFM-P9-FEAT-0015` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `dbc5af812d952e8` | 8.6.105 | 162 |
+| `KFM-P9-FEAT-0016` | feature | UNCHANGED | — | 9 → 15 | — | `b13650045f85fd0` | 8.6.106 | 163 |
+| `KFM-P1-IDEA-0040` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `568be8588e91987` | 8.6.5 | 142 |
+| `KFM-P16-IDEA-0006` | idea | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `5ad87a2698652a1` | 8.6.22 | 146 |
+| `KFM-P2-IDEA-0014` | idea | EXPANDED | — | 2 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `b99c7e5f0cd939f` | 8.6.35 | 148 |
+| `KFM-P2-IDEA-0033` | idea | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `85a409742c98e17` | 8.6.36 | 149 |
+| `KFM-P2-IDEA-0034` | idea | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `afd765314e4468a` | 8.6.37 | 149 |
+| `KFM-P23-IDEA-0004` | idea | UNCHANGED | — | 23 → 23 | — | `6fe88da73488487` | 8.6.50 | 151 |
+| `KFM-P25-IDEA-0010` | idea | UNCHANGED | — | 25 → 25 | — | `c33cf65d448900c` | 8.6.55 | 152 |
+| `KFM-P26-IDEA-0018` | idea | UNCHANGED | — | 26 → 26 | — | `dd657ee6e26a757` | 8.6.60 | 153 |
+| `KFM-P27-IDEA-0007` | idea | UNCHANGED | — | 27 → 27 | — | `f81a224eddd3a11` | 8.6.64 | 154 |
+| `KFM-P28-IDEA-0012` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `c5d9b79d9d2d232` | 8.6.69 | 155 |
+| `KFM-P29-IDEA-0009` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `771b6258043d26c` | 8.6.76 | 157 |
+| `KFM-P29-IDEA-0018` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `0053adfaca03e07` | 8.6.77 | 157 |
+| `KFM-P30-IDEA-0019` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `3028b00379a932d` | 8.6.83 | 158 |
+| `KFM-P31-IDEA-0010` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `ba35b076eb90743` | 8.6.85 | 158 |
+| `KFM-P31-IDEA-0011` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `36bc7bc35c9f13b` | 8.6.86 | 159 |
+| `KFM-P32-IDEA-0006` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `7df27087ded2f02` | 8.6.90 | 159 |
+| `KFM-P32-IDEA-0019` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `99bc73628699165` | 8.6.91 | 160 |
+| `KFM-P9-IDEA-0002` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `4e637c47493959d` | 8.6.107 | 163 |
+| `KFM-P9-IDEA-0003` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `635790b4060a23c` | 8.6.108 | 163 |
+| `KFM-P9-IDEA-0004` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `99bd1af595b472b` | 8.6.109 | 163 |
+| `KFM-P9-IDEA-0005` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `8175e80d25fc245` | 8.6.110 | 163 |
+| `KFM-P9-IDEA-0006` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `8420b828141535c` | 8.6.111 | 164 |
+| `KFM-P9-IDEA-0007` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `68717de358d9e9a` | 8.6.112 | 164 |
+| `KFM-P9-IDEA-0039` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `b71b1d484a511fd` | 8.6.113 | 164 |
+| `KFM-P9-IDEA-0040` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `152f771e005ec5d` | 8.6.114 | 164 |
+| `KFM-P9-IDEA-0041` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `bfcfe899ec1a28e` | 8.6.115 | 164 |
+| `KFM-P9-IDEA-0042` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `9df150af0e4eda5` | 8.6.116 | 165 |
+| `KFM-P9-IDEA-0043` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `dc53addaf3d24b8` | 8.6.117 | 165 |
+| `KFM-P9-IDEA-0044` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `b99580b95fe0dd1` | 8.6.118 | 165 |
+| `KFM-P9-IDEA-0045` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `9b6c081be28aed1` | 8.6.119 | 165 |
+| `KFM-P9-IDEA-0049` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `6b4ccf2dbb49bdb` | 8.6.120 | 165 |
+| `KFM-P1-PROG-0041` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `57551d7a0312df6` | 8.6.6 | 143 |
+| `KFM-P1-PROG-0043` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `02f5031d28d4bf3` | 8.6.7 | 143 |
+| `KFM-P11-PROG-0004` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `cb63ff84e5097ee` | 8.6.9 | 143 |
+| `KFM-P12-PROG-0021` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `7b455e1a8b20d87` | 8.6.10 | 143 |
+| `KFM-P13-PROG-0001` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `f82af1faa4eef56` | 8.6.11 | 144 |
+| `KFM-P13-PROG-0014` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0ec1a6bcbf224b1` | 8.6.12 | 144 |
+| `KFM-P13-PROG-0016` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `540b03a1ab1deff` | 8.6.13 | 144 |
+| `KFM-P13-PROG-0017` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `76f8a5dbf8f4220` | 8.6.14 | 144 |
+| `KFM-P13-PROG-0023` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `2e7804870a38a2b` | 8.6.15 | 144 |
+| `KFM-P13-PROG-0024` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `6203bda73d53e91` | 8.6.16 | 145 |
+| `KFM-P14-PROG-0011` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `24f61b8d32c4557` | 8.6.17 | 145 |
+| `KFM-P15-PROG-0013` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4d9964879062e39` | 8.6.18 | 145 |
+| `KFM-P15-PROG-0014` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `ae6051ab32d21f9` | 8.6.19 | 145 |
+| `KFM-P15-PROG-0028` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `b49bea36bc07c76` | 8.6.20 | 145 |
+| `KFM-P15-PROG-0029` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `a9e6a9be998ab8b` | 8.6.21 | 146 |
+| `KFM-P16-PROG-0022` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `b190d464871e49b` | 8.6.23 | 146 |
+| `KFM-P16-PROG-0031` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `f3231a6ea6d2fbc` | 8.6.24 | 146 |
+| `KFM-P17-PROG-0019` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0b0407539dfca27` | 8.6.25 | 146 |
+| `KFM-P17-PROG-0033` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `3a2daeed7432c10` | 8.6.26 | 147 |
+| `KFM-P19-PROG-0021` | programming | EXPANDED | — | 19 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4ef438bf911d4ee` | 8.6.29 | 147 |
+| `KFM-P20-PROG-0013` | programming | UNCHANGED | — | 20 → 20 | — | `bd39ae5c9fd15a0` | 8.6.40 | 149 |
+| `KFM-P20-PROG-0038` | programming | UNCHANGED | — | 20 → 20 | — | `65ca32712d1c377` | 8.6.41 | 150 |
+| `KFM-P21-PROG-0008` | programming | UNCHANGED | — | 21 → 21 | — | `464d1ce22a853b0` | 8.6.43 | 150 |
+| `KFM-P21-PROG-0018` | programming | UNCHANGED | — | 21 → 21 | — | `5071200b3675373` | 8.6.44 | 150 |
+| `KFM-P21-PROG-0034` | programming | UNCHANGED | — | 21 → 21 | — | `6b4267d59d83b3d` | 8.6.45 | 150 |
+| `KFM-P21-PROG-0035` | programming | UNCHANGED | — | 21 → 21 | — | `157cc45698e9087` | 8.6.46 | 151 |
+| `KFM-P22-PROG-0011` | programming | UNCHANGED | — | 22 → 22 | — | `f539573db96f306` | 8.6.47 | 151 |
+| `KFM-P22-PROG-0041` | programming | UNCHANGED | — | 22 → 22 | — | `40559d2041d965b` | 8.6.48 | 151 |
+| `KFM-P22-PROG-0042` | programming | UNCHANGED | — | 22 → 22 | — | `21e0c01fd9f8fc4` | 8.6.49 | 151 |
+| `KFM-P23-PROG-0036` | programming | UNCHANGED | — | 23 → 23 | — | `d9eaf6f338daa5c` | 8.6.51 | 152 |
+| `KFM-P23-PROG-0037` | programming | UNCHANGED | — | 23 → 23 | — | `2f3f6fc605cbb1c` | 8.6.52 | 152 |
+| `KFM-P24-PROG-0051` | programming | UNCHANGED | — | 24 → 24 | — | `499dfef82075e48` | 8.6.53 | 152 |
+| `KFM-P25-PROG-0006` | programming | UNCHANGED | — | 25 → 25 | — | `ee84b66422b9d17` | 8.6.56 | 153 |
+| `KFM-P25-PROG-0024` | programming | UNCHANGED | — | 25 → 25 | — | `af06e3779b96388` | 8.6.57 | 153 |
+| `KFM-P26-PROG-0029` | programming | UNCHANGED | — | 26 → 26 | — | `9f4d5f47c5a62c4` | 8.6.61 | 154 |
+| `KFM-P27-PROG-0009` | programming | UNCHANGED | — | 27 → 27 | — | `30f8a2db4d02f96` | 8.6.65 | 154 |
+| `KFM-P27-PROG-0010` | programming | UNCHANGED | — | 27 → 27 | — | `512079d94382613` | 8.6.66 | 155 |
+| `KFM-P28-PROG-0016` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `70b52b460a1a322` | 8.6.70 | 155 |
+| `KFM-P28-PROG-0017` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `d2fba6fa7349a0b` | 8.6.71 | 156 |
+| `KFM-P28-PROG-0022` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `9ae981615b5bd4c` | 8.6.72 | 156 |
+| `KFM-P28-PROG-0023` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `6d92638e34c5d01` | 8.6.73 | 156 |
+| `KFM-P29-PROG-0010` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `66a39d272fb1082` | 8.6.78 | 157 |
+| `KFM-P29-PROG-0017` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `569d8b08ade5510` | 8.6.79 | 157 |
+| `KFM-P29-PROG-0021` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `3e5e68dbe7d9cc2` | 8.6.80 | 157 |
+| `KFM-P29-PROG-0022` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `9f45fba90ab42b5` | 8.6.81 | 158 |
+| `KFM-P30-PROG-0027` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `78e19f546439592` | 8.6.84 | 158 |
+| `KFM-P31-PROG-0006` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `2a18032b4d87153` | 8.6.87 | 159 |
+| `KFM-P31-PROG-0007` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `bffb42da11f5ce9` | 8.6.88 | 159 |
+| `KFM-P32-PROG-0014` | programming | NEW | — | 32 → 32 | `SRC-P32-001` | `2209cb497dfa02b` | 8.6.92 | 160 |
+| `KFM-P32-PROG-0016` | programming | NEW | — | 32 → 32 | `SRC-P32-001` | `09f1a511619f404` | 8.6.93 | 160 |
+| `KFM-P4-PROG-0002` | programming | UNCHANGED | — | 4 → 23 | — | `bd02ff19af4ec61` | 8.6.94 | 160 |
+| `KFM-P5-PROG-0003` | programming | UNCHANGED | — | 5 → 20 | — | `be856d356324eab` | 8.6.95 | 160 |
+| `KFM-P5-PROG-0004` | programming | UNCHANGED | — | 5 → 20 | — | `776820368cd8e00` | 8.6.96 | 161 |
+| `KFM-P5-PROG-0012` | programming | UNCHANGED | — | 5 → 23 | — | `30f33d41b300ff7` | 8.6.97 | 161 |
+| `KFM-P7-PROG-0006` | programming | UNCHANGED | — | 7 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `0d1fd50961f3603` | 8.6.99 | 161 |
+| `KFM-P9-PROG-0002` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `198eac358c6cbf9` | 8.6.121 | 166 |
+| `KFM-P9-PROG-0048` | programming | UNCHANGED | — | 9 → 9 | — | `2c21d90aa3bd526` | 8.6.122 | 166 |
+| `KFM-P9-PROG-0049` | programming | UNCHANGED | — | 9 → 9 | — | `a57cce6d2542f66` | 8.6.123 | 166 |
+| `KFM-P9-PROG-0050` | programming | UNCHANGED | — | 9 → 9 | — | `a235dc01709e046` | 8.6.124 | 166 |
+| `KFM-P9-PROG-0051` | programming | UNCHANGED | — | 9 → 9 | — | `106cfa64ee7a90d` | 8.6.125 | 166 |
+| `KFM-P9-PROG-0052` | programming | UNCHANGED | — | 9 → 9 | — | `c3f7d6b1132d110` | 8.6.126 | 167 |
+| `KFM-P9-PROG-0053` | programming | UNCHANGED | — | 9 → 9 | — | `e66736c8e835b9a` | 8.6.127 | 167 |
+| `KFM-P9-PROG-0054` | programming | UNCHANGED | — | 9 → 9 | — | `85ce2d9f16126e9` | 8.6.128 | 167 |
+| `KFM-P9-PROG-0055` | programming | UNCHANGED | — | 9 → 9 | — | `07a41bd617f811c` | 8.6.129 | 167 |
+| `KFM-P9-PROG-0056` | programming | UNCHANGED | — | 9 → 9 | — | `ad2fc2b000ba325` | 8.6.130 | 167 |
+| `KFM-P9-PROG-0057` | programming | UNCHANGED | — | 9 → 9 | — | `9763daa62b3cccf` | 8.6.131 | 168 |
+| `KFM-P9-PROG-0058` | programming | UNCHANGED | — | 9 → 9 | — | `71b3bd5e4570ca4` | 8.6.132 | 168 |
+| `KFM-P9-PROG-0071` | programming | UNCHANGED | — | 9 → 15 | — | `feedbd984c8a4a9` | 8.6.133 | 168 |
+| `KFM-P9-PROG-0072` | programming | UNCHANGED | — | 9 → 9 | — | `4678c444d4ea708` | 8.6.134 | 168 |
+| `KFM-P9-PROG-0073` | programming | UNCHANGED | — | 9 → 9 | — | `615f191d019d2e6` | 8.6.135 | 168 |
+| `KFM-P9-PROG-0074` | programming | UNCHANGED | — | 9 → 15 | — | `2352baca30dc165` | 8.6.136 | 169 |
+| `KFM-P9-PROG-0075` | programming | UNCHANGED | — | 9 → 9 | — | `55a0e8aa4d400c8` | 8.6.137 | 169 |
+
+</details>
+
+#### 5.9 MDP — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV)
+
+<details>
+<summary><strong>75 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P12-IDEA-0003` | idea | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `19e3ce75ded95e1` | 8.7.8 | 170 |
+| `KFM-P13-IDEA-0003` | idea | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `b397f17c6321fb0` | 8.7.10 | 170 |
+| `KFM-P14-IDEA-0002` | idea | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `1208091e08ba9b5` | 8.7.15 | 171 |
+| `KFM-P19-IDEA-0006` | idea | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `ab763938b9b4260` | 8.7.24 | 173 |
+| `KFM-P25-IDEA-0004` | idea | UNCHANGED | — | 25 → 25 | — | `3a3191cba7e2b99` | 8.7.42 | 177 |
+| `KFM-P25-IDEA-0011` | idea | UNCHANGED | — | 25 → 25 | — | `afef6f783c7e9dc` | 8.7.43 | 177 |
+| `KFM-P25-IDEA-0014` | idea | UNCHANGED | — | 25 → 25 | — | `377e9f6aac10830` | 8.7.44 | 177 |
+| `KFM-P26-IDEA-0007` | idea | UNCHANGED | — | 26 → 26 | — | `13b435a86006444` | 8.7.49 | 178 |
+| `KFM-P26-IDEA-0016` | idea | UNCHANGED | — | 26 → 26 | — | `41301ba46bf60ec` | 8.7.50 | 178 |
+| `KFM-P27-IDEA-0009` | idea | UNCHANGED | — | 27 → 27 | — | `427dabe79771bb0` | 8.7.52 | 179 |
+| `KFM-P27-IDEA-0012` | idea | UNCHANGED | — | 27 → 27 | — | `9c5ee555cf01fe2` | 8.7.53 | 179 |
+| `KFM-P29-IDEA-0013` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `2c093ee20287123` | 8.7.57 | 180 |
+| `KFM-P3-IDEA-0004` | idea | UNCHANGED | — | 3 → 23 | — | `c88a416232443d2` | 8.7.62 | 181 |
+| `KFM-P30-IDEA-0006` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `b52597ee1249b4b` | 8.7.63 | 181 |
+| `KFM-P30-IDEA-0007` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `4b670f6845b5064` | 8.7.64 | 181 |
+| `KFM-P31-IDEA-0007` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `72f4997ad8c46d9` | 8.7.70 | 182 |
+| `KFM-P32-IDEA-0005` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `f8f87a9c858dc41` | 8.7.72 | 183 |
+| `KFM-P1-PROG-0021` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `5becf79b5e60515` | 8.7.1 | 169 |
+| `KFM-P1-PROG-0022` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0d4812dfcd6942d` | 8.7.2 | 169 |
+| `KFM-P1-PROG-0023` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `83f2a6831b8a6d3` | 8.7.3 | 169 |
+| `KFM-P10-PROG-0002` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `db1438786f924eb` | 8.7.4 | 169 |
+| `KFM-P10-PROG-0007` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `9827188699273ad` | 8.7.5 | 169 |
+| `KFM-P10-PROG-0020` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `97be4e93083552e` | 8.7.6 | 170 |
+| `KFM-P11-PROG-0016` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `ab14e392c5e7c3e` | 8.7.7 | 170 |
+| `KFM-P12-PROG-0029` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `ad43922ad0462a6` | 8.7.9 | 170 |
+| `KFM-P13-PROG-0012` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `c84b830fa9a3374` | 8.7.11 | 171 |
+| `KFM-P13-PROG-0026` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `75a1fb8741ba039` | 8.7.12 | 171 |
+| `KFM-P13-PROG-0030` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `01ca4aa4f360a70` | 8.7.13 | 171 |
+| `KFM-P13-PROG-0032` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `50c0cb3158a2eed` | 8.7.14 | 171 |
+| `KFM-P14-PROG-0008` | programming | UNCHANGED | — | 14 → 27 | — | `d366cbcc3009031` | 8.7.16 | 172 |
+| `KFM-P14-PROG-0014` | programming | UNCHANGED | — | 14 → 27 | — | `54a6d94be75927c` | 8.7.17 | 172 |
+| `KFM-P14-PROG-0021` | programming | UNCHANGED | — | 14 → 27 | — | `f363ffa8da3af70` | 8.7.18 | 172 |
+| `KFM-P15-PROG-0035` | programming | UNCHANGED | — | 15 → 27 | — | `1705d744571629c` | 8.7.19 | 172 |
+| `KFM-P16-PROG-0023` | programming | UNCHANGED | — | 16 → 27 | — | `dcb48ff28b1dbd0` | 8.7.20 | 172 |
+| `KFM-P16-PROG-0024` | programming | UNCHANGED | — | 16 → 27 | — | `05fc2f69325361b` | 8.7.21 | 173 |
+| `KFM-P18-PROG-0022` | programming | UNCHANGED | — | 18 → 27 | — | `731729003a20144` | 8.7.22 | 173 |
+| `KFM-P18-PROG-0027` | programming | UNCHANGED | — | 18 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `a83f4572d567c23` | 8.7.23 | 173 |
+| `KFM-P19-PROG-0014` | programming | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `4546c59a39786a7` | 8.7.25 | 173 |
+| `KFM-P19-PROG-0018` | programming | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `6b97fe4309c6bd6` | 8.7.26 | 174 |
+| `KFM-P19-PROG-0023` | programming | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `51a48111641aafd` | 8.7.27 | 174 |
+| `KFM-P19-PROG-0034` | programming | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `33e1b05ebe74bcd` | 8.7.28 | 174 |
+| `KFM-P20-PROG-0003` | programming | UNCHANGED | — | 20 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `3e8d38a6950f962` | 8.7.29 | 174 |
+| `KFM-P21-PROG-0005` | programming | UNCHANGED | — | 21 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `480ae917da7a94e` | 8.7.30 | 174 |
+| `KFM-P21-PROG-0030` | programming | UNCHANGED | — | 21 → 23 | — | `d16593a98043692` | 8.7.31 | 175 |
+| `KFM-P22-PROG-0002` | programming | UNCHANGED | — | 22 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `d8e16feba8469ea` | 8.7.32 | 175 |
+| `KFM-P22-PROG-0016` | programming | UNCHANGED | — | 22 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `d0b69b3c645ec42` | 8.7.33 | 175 |
+| `KFM-P22-PROG-0037` | programming | UNCHANGED | — | 22 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `a43503bbb2a883e` | 8.7.34 | 175 |
+| `KFM-P22-PROG-0038` | programming | UNCHANGED | — | 22 → 23 | — | `befdf840e73ed0b` | 8.7.35 | 175 |
+| `KFM-P22-PROG-0039` | programming | UNCHANGED | — | 22 → 22 | — | `ecbd433417881f9` | 8.7.36 | 176 |
+| `KFM-P23-PROG-0013` | programming | UNCHANGED | — | 23 → 23 | — | `3ed162ef9b96fda` | 8.7.37 | 176 |
+| `KFM-P23-PROG-0019` | programming | UNCHANGED | — | 23 → 23 | — | `2d7defbe94e42cc` | 8.7.38 | 176 |
+| `KFM-P23-PROG-0030` | programming | UNCHANGED | — | 23 → 23 | — | `f4d75cb36777b0b` | 8.7.39 | 176 |
+| `KFM-P24-PROG-0045` | programming | UNCHANGED | — | 24 → 24 | — | `c30b2f5f3b3e07f` | 8.7.40 | 176 |
+| `KFM-P24-PROG-0046` | programming | UNCHANGED | — | 24 → 24 | — | `1e61f58e5f20649` | 8.7.41 | 177 |
+| `KFM-P25-PROG-0025` | programming | UNCHANGED | — | 25 → 25 | — | `36050d7896d923c` | 8.7.45 | 177 |
+| `KFM-P25-PROG-0026` | programming | UNCHANGED | — | 25 → 25 | — | `cf69b31c4d424ac` | 8.7.46 | 178 |
+| `KFM-P25-PROG-0027` | programming | UNCHANGED | — | 25 → 25 | — | `73535c901d397a4` | 8.7.47 | 178 |
+| `KFM-P25-PROG-0028` | programming | UNCHANGED | — | 25 → 25 | — | `9d4e5b48543ed25` | 8.7.48 | 178 |
+| `KFM-P26-PROG-0013` | programming | UNCHANGED | — | 26 → 26 | — | `49b2e1586dd2ec4` | 8.7.51 | 179 |
+| `KFM-P27-PROG-0011` | programming | UNCHANGED | — | 27 → 27 | — | `c0c33f37ee90f73` | 8.7.54 | 179 |
+| `KFM-P27-PROG-0016` | programming | UNCHANGED | — | 27 → 27 | — | `5c4afeec5524106` | 8.7.55 | 179 |
+| `KFM-P28-PROG-0012` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `e1a855e56d2c39f` | 8.7.56 | 180 |
+| `KFM-P29-PROG-0001` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `d48fccad1ebf445` | 8.7.58 | 180 |
+| `KFM-P29-PROG-0004` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `4e16647583df120` | 8.7.59 | 180 |
+| `KFM-P29-PROG-0009` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `2407ee7aa34ea35` | 8.7.60 | 180 |
+| `KFM-P29-PROG-0020` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `13d6404dd3f8f93` | 8.7.61 | 181 |
+| `KFM-P30-PROG-0001` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `6fed794c95d8954` | 8.7.65 | 181 |
+| `KFM-P30-PROG-0002` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `75d9d72f4e3b5da` | 8.7.66 | 182 |
+| `KFM-P30-PROG-0005` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `582bcdbcde5aeab` | 8.7.67 | 182 |
+| `KFM-P30-PROG-0006` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `92c9a06ed542a28` | 8.7.68 | 182 |
+| `KFM-P30-PROG-0026` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `0eb6ff22be85e1f` | 8.7.69 | 182 |
+| `KFM-P31-PROG-0004` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `4b4d7f13e3d1756` | 8.7.71 | 183 |
+| `KFM-P32-PROG-0004` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `3e0b0c84bdc56d2` | 8.7.73 | 183 |
+| `KFM-P6-PROG-0003` | programming | UNCHANGED | — | 6 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `10ff6c368bcdf6d` | 8.7.74 | 183 |
+| `KFM-P7-PROG-0001` | programming | UNCHANGED | — | 7 → 23 | — | `0dd4321490d8953` | 8.7.75 | 183 |
+
+</details>
+
+#### 5.10 MOD — Data Modeling, Domain Semantics, Temporal Structure, SQL
+
+<details>
+<summary><strong>113 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P32-FEAT-0008` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `90d8ebdbd2af64a` | 8.8.95 | 202 |
+| `KFM-P1-IDEA-0045` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `74c1cd3290d759b` | 8.8.1 | 184 |
+| `KFM-P1-IDEA-0046` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4b59d18e16c6f56` | 8.8.2 | 184 |
+| `KFM-P1-IDEA-0047` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `48ce04959bcf0e1` | 8.8.3 | 184 |
+| `KFM-P1-IDEA-0049` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `a2c0936358ed1ae` | 8.8.4 | 184 |
+| `KFM-P1-IDEA-0050` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `f96cec8510ac8e0` | 8.8.5 | 184 |
+| `KFM-P1-IDEA-0051` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `30cdf0af74bfba5` | 8.8.6 | 185 |
+| `KFM-P1-IDEA-0072` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `92a81e90249d7cd` | 8.8.7 | 185 |
+| `KFM-P17-IDEA-0005` | idea | UNCHANGED | — | 17 → 17 | — | `95eaa18d120a8b3` | 8.8.28 | 189 |
+| `KFM-P2-IDEA-0016` | idea | UNCHANGED | — | 2 → 2 | — | `d2cac160ff7ecba` | 8.8.42 | 192 |
+| `KFM-P20-IDEA-0003` | idea | UNCHANGED | — | 20 → 20 | — | `0f0f06eaa89b181` | 8.8.44 | 192 |
+| `KFM-P22-IDEA-0005` | idea | UNCHANGED | — | 22 → 22 | — | `7a928fcaead7940` | 8.8.47 | 193 |
+| `KFM-P23-IDEA-0003` | idea | UNCHANGED | — | 23 → 23 | — | `82cc9cb8cd1b67f` | 8.8.50 | 193 |
+| `KFM-P24-IDEA-0004` | idea | UNCHANGED | — | 24 → 24 | — | `dd2dec06e9e5f34` | 8.8.55 | 194 |
+| `KFM-P25-IDEA-0005` | idea | UNCHANGED | — | 25 → 25 | — | `91fbb13c2942de0` | 8.8.63 | 196 |
+| `KFM-P25-IDEA-0012` | idea | UNCHANGED | — | 25 → 25 | — | `03a1f5b66c0219d` | 8.8.64 | 196 |
+| `KFM-P26-IDEA-0012` | idea | UNCHANGED | — | 26 → 26 | — | `c3f263121bee7e7` | 8.8.71 | 198 |
+| `KFM-P26-IDEA-0015` | idea | UNCHANGED | — | 26 → 26 | — | `64dfa2ae2092137` | 8.8.72 | 198 |
+| `KFM-P27-IDEA-0003` | idea | UNCHANGED | — | 27 → 27 | — | `f6fc941308a86b1` | 8.8.77 | 199 |
+| `KFM-P28-IDEA-0010` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `f772b4967c3a4eb` | 8.8.81 | 200 |
+| `KFM-P29-IDEA-0015` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `4cb0b2a3de743c9` | 8.8.83 | 200 |
+| `KFM-P29-IDEA-0016` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `94cfe5a7598026b` | 8.8.84 | 200 |
+| `KFM-P30-IDEA-0009` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `342532e7a59368e` | 8.8.85 | 200 |
+| `KFM-P30-IDEA-0010` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `edabe0ed60403bd` | 8.8.86 | 201 |
+| `KFM-P30-IDEA-0012` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `44930ee54d982d8` | 8.8.87 | 201 |
+| `KFM-P31-IDEA-0001` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `f7997048fe27f96` | 8.8.91 | 202 |
+| `KFM-P31-IDEA-0004` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `3004a2e185c8252` | 8.8.92 | 202 |
+| `KFM-P31-IDEA-0014` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `85a9ee7b3dc47b1` | 8.8.93 | 202 |
+| `KFM-P32-IDEA-0018` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `362ee46929afc17` | 8.8.96 | 203 |
+| `KFM-P9-IDEA-0011` | idea | UNCHANGED | — | 9 → 9 | — | `d6bae9b73e0d71e` | 8.8.104 | 204 |
+| `KFM-P1-PROG-0048` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `a4c02cfb067cb75` | 8.8.8 | 185 |
+| `KFM-P1-PROG-0052` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `97b7b1cbf7cfbb2` | 8.8.9 | 185 |
+| `KFM-P10-PROG-0013` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `8209913f94c8a9e` | 8.8.10 | 185 |
+| `KFM-P12-PROG-0002` | programming | UNCHANGED | — | 12 → 26 | — | `9c72180563277b0` | 8.8.11 | 186 |
+| `KFM-P12-PROG-0006` | programming | UNCHANGED | — | 12 → 26 | — | `d64f8ac17d0b685` | 8.8.12 | 186 |
+| `KFM-P12-PROG-0026` | programming | UNCHANGED | — | 12 → 26 | — | `87a642292fec66b` | 8.8.13 | 186 |
+| `KFM-P13-PROG-0007` | programming | UNCHANGED | — | 13 → 26 | — | `f3cdc0dd1d6079a` | 8.8.14 | 186 |
+| `KFM-P13-PROG-0025` | programming | UNCHANGED | — | 13 → 26 | — | `275e8dd1cef70d9` | 8.8.15 | 186 |
+| `KFM-P14-PROG-0023` | programming | UNCHANGED | — | 14 → 26 | — | `91899737fbcee80` | 8.8.16 | 187 |
+| `KFM-P14-PROG-0027` | programming | UNCHANGED | — | 14 → 26 | — | `6b151643d6d0afe` | 8.8.17 | 187 |
+| `KFM-P14-PROG-0028` | programming | UNCHANGED | — | 14 → 26 | — | `0be79d0140f6edd` | 8.8.18 | 187 |
+| `KFM-P15-PROG-0015` | programming | UNCHANGED | — | 15 → 26 | — | `ac872ebae7eba67` | 8.8.19 | 187 |
+| `KFM-P15-PROG-0016` | programming | UNCHANGED | — | 15 → 26 | — | `68269e7a92e3842` | 8.8.20 | 187 |
+| `KFM-P15-PROG-0022` | programming | UNCHANGED | — | 15 → 25 | — | `ab4575e06da5685` | 8.8.21 | 188 |
+| `KFM-P15-PROG-0037` | programming | UNCHANGED | — | 15 → 25 | — | `d1b25c0457afa5d` | 8.8.22 | 188 |
+| `KFM-P16-PROG-0017` | programming | UNCHANGED | — | 16 → 25 | — | `616dad8274d7243` | 8.8.23 | 188 |
+| `KFM-P16-PROG-0018` | programming | UNCHANGED | — | 16 → 25 | — | `127df6bccecc48a` | 8.8.24 | 188 |
+| `KFM-P16-PROG-0025` | programming | UNCHANGED | — | 16 → 25 | — | `0a26b9cf681f876` | 8.8.25 | 188 |
+| `KFM-P16-PROG-0030` | programming | UNCHANGED | — | 16 → 16 | — | `286385cd2a6bb9c` | 8.8.26 | 189 |
+| `KFM-P16-PROG-0035` | programming | UNCHANGED | — | 16 → 16 | — | `40194d33a15f6a0` | 8.8.27 | 189 |
+| `KFM-P17-PROG-0007` | programming | UNCHANGED | — | 17 → 17 | — | `da2628a7a435a6d` | 8.8.29 | 189 |
+| `KFM-P17-PROG-0009` | programming | UNCHANGED | — | 17 → 17 | — | `10b8b970c461957` | 8.8.30 | 189 |
+| `KFM-P17-PROG-0014` | programming | UNCHANGED | — | 17 → 17 | — | `2824357d5b65b68` | 8.8.31 | 190 |
+| `KFM-P17-PROG-0031` | programming | UNCHANGED | — | 17 → 17 | — | `123a7f7e6b9b06d` | 8.8.32 | 190 |
+| `KFM-P17-PROG-0043` | programming | UNCHANGED | — | 17 → 17 | — | `56f0906e02e18f5` | 8.8.33 | 190 |
+| `KFM-P17-PROG-0044` | programming | UNCHANGED | — | 17 → 17 | — | `76cc3b38272752a` | 8.8.34 | 190 |
+| `KFM-P18-PROG-0003` | programming | UNCHANGED | — | 18 → 19 | — | `ceca95365c9bcb8` | 8.8.35 | 190 |
+| `KFM-P18-PROG-0016` | programming | UNCHANGED | — | 18 → 18 | — | `fafe868f8c25a4b` | 8.8.36 | 191 |
+| `KFM-P18-PROG-0020` | programming | UNCHANGED | — | 18 → 18 | — | `ad94d4a12b6d485` | 8.8.37 | 191 |
+| `KFM-P18-PROG-0021` | programming | UNCHANGED | — | 18 → 18 | — | `c01e33f88f0ead4` | 8.8.38 | 191 |
+| `KFM-P18-PROG-0042` | programming | QUARANTINED | quarantine | 18 → 18 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `2c713005e981acd` | 8.8.39 | 191 |
+| `KFM-P19-PROG-0027` | programming | UNCHANGED | — | 19 → 19 | — | `b34d06dcf3020ff` | 8.8.40 | 191 |
+| `KFM-P19-PROG-0042` | programming | QUARANTINED | quarantine | 19 → 19 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `c6d3acbf09dceab` | 8.8.41 | 192 |
+| `KFM-P2-PROG-0017` | programming | UNCHANGED | — | 2 → 11 | — | `225e45f585f299f` | 8.8.43 | 192 |
+| `KFM-P20-PROG-0011` | programming | UNCHANGED | — | 20 → 20 | — | `6f87b08f0d5a3bc` | 8.8.45 | 192 |
+| `KFM-P21-PROG-0015` | programming | UNCHANGED | — | 21 → 21 | — | `0144cc9759483cb` | 8.8.46 | 193 |
+| `KFM-P22-PROG-0051` | programming | UNCHANGED | — | 22 → 22 | — | `6596570d68f05db` | 8.8.48 | 193 |
+| `KFM-P22-PROG-0053` | programming | QUARANTINED | quarantine | 22 → 22 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `fb1c58f5909824d` | 8.8.49 | 193 |
+| `KFM-P23-PROG-0018` | programming | UNCHANGED | — | 23 → 23 | — | `776403a3bc88633` | 8.8.51 | 194 |
+| `KFM-P23-PROG-0031` | programming | UNCHANGED | — | 23 → 23 | — | `c1007bf471ee114` | 8.8.52 | 194 |
+| `KFM-P23-PROG-0032` | programming | UNCHANGED | — | 23 → 23 | — | `968c491cabac76a` | 8.8.53 | 194 |
+| `KFM-P23-PROG-0035` | programming | UNCHANGED | — | 23 → 23 | — | `2bf53aa329be85a` | 8.8.54 | 194 |
+| `KFM-P24-PROG-0007` | programming | UNCHANGED | — | 24 → 24 | — | `e72bc6062e6fa51` | 8.8.56 | 195 |
+| `KFM-P24-PROG-0008` | programming | UNCHANGED | — | 24 → 24 | — | `489890459053e9f` | 8.8.57 | 195 |
+| `KFM-P24-PROG-0035` | programming | UNCHANGED | — | 24 → 24 | — | `d3aecaddb931ae4` | 8.8.58 | 195 |
+| `KFM-P24-PROG-0036` | programming | UNCHANGED | — | 24 → 24 | — | `db8e56b98b1d864` | 8.8.59 | 195 |
+| `KFM-P24-PROG-0037` | programming | UNCHANGED | — | 24 → 24 | — | `f0a303dd889167c` | 8.8.60 | 195 |
+| `KFM-P24-PROG-0038` | programming | UNCHANGED | — | 24 → 24 | — | `839b1ebc53a7936` | 8.8.61 | 196 |
+| `KFM-P24-PROG-0048` | programming | UNCHANGED | — | 24 → 24 | — | `5587a77fef4596f` | 8.8.62 | 196 |
+| `KFM-P25-PROG-0012` | programming | UNCHANGED | — | 25 → 25 | — | `5343e41e7b40f29` | 8.8.65 | 196 |
+| `KFM-P25-PROG-0013` | programming | UNCHANGED | — | 25 → 25 | — | `1df8cee7eb6c776` | 8.8.66 | 197 |
+| `KFM-P25-PROG-0014` | programming | UNCHANGED | — | 25 → 25 | — | `e98904b88a30e68` | 8.8.67 | 197 |
+| `KFM-P25-PROG-0021` | programming | UNCHANGED | — | 25 → 25 | — | `9767b120847b38d` | 8.8.68 | 197 |
+| `KFM-P25-PROG-0022` | programming | UNCHANGED | — | 25 → 25 | — | `1c30f7b589aba30` | 8.8.69 | 197 |
+| `KFM-P25-PROG-0029` | programming | UNCHANGED | — | 25 → 25 | — | `a94f1ca224cc651` | 8.8.70 | 197 |
+| `KFM-P26-PROG-0019` | programming | UNCHANGED | — | 26 → 26 | — | `c002495c437621e` | 8.8.73 | 198 |
+| `KFM-P26-PROG-0026` | programming | UNCHANGED | — | 26 → 26 | — | `0dad75a22bc1d67` | 8.8.74 | 198 |
+| `KFM-P26-PROG-0027` | programming | UNCHANGED | — | 26 → 26 | — | `75efce1edb0eb29` | 8.8.75 | 198 |
+| `KFM-P26-PROG-0028` | programming | UNCHANGED | — | 26 → 26 | — | `21c08f8ac44a96a` | 8.8.76 | 199 |
+| `KFM-P27-PROG-0002` | programming | UNCHANGED | — | 27 → 27 | — | `8ce9c26b2fd76d5` | 8.8.78 | 199 |
+| `KFM-P27-PROG-0004` | programming | UNCHANGED | — | 27 → 27 | — | `90fe8826ed851a0` | 8.8.79 | 199 |
+| `KFM-P27-PROG-0028` | programming | UNCHANGED | — | 27 → 27 | — | `14c975bc8f0caf3` | 8.8.80 | 199 |
+| `KFM-P28-PROG-0008` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `7e860e9c665e35a` | 8.8.82 | 200 |
+| `KFM-P30-PROG-0008` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `517810192f27527` | 8.8.88 | 201 |
+| `KFM-P30-PROG-0010` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `b40876ab01dbd8f` | 8.8.89 | 201 |
+| `KFM-P30-PROG-0015` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `cfaeabd64d3f8ef` | 8.8.90 | 201 |
+| `KFM-P31-PROG-0011` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `164271dd792c593` | 8.8.94 | 202 |
+| `KFM-P32-PROG-0011` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `ec1eceb95e1aa41` | 8.8.97 | 203 |
+| `KFM-P4-PROG-0005` | programming | UNCHANGED | — | 4 → 9 | — | `4c2d6c9572756a0` | 8.8.98 | 203 |
+| `KFM-P4-PROG-0006` | programming | UNCHANGED | — | 4 → 4 | — | `bdc45d7b896e9c8` | 8.8.99 | 203 |
+| `KFM-P4-PROG-0007` | programming | UNCHANGED | — | 4 → 4 | — | `d23aef8ffc65d4a` | 8.8.100 | 203 |
+| `KFM-P5-PROG-0008` | programming | UNCHANGED | — | 5 → 23 | — | `7af75822ad9456c` | 8.8.101 | 204 |
+| `KFM-P6-PROG-0002` | programming | UNCHANGED | — | 6 → 6 | — | `fd3e201854213ae` | 8.8.102 | 204 |
+| `KFM-P8-PROG-0024` | programming | UNCHANGED | — | 8 → 8 | — | `6b88edf59030fbe` | 8.8.103 | 204 |
+| `KFM-P9-PROG-0010` | programming | UNCHANGED | — | 9 → 9 | — | `37520b598235268` | 8.8.105 | 204 |
+| `KFM-P9-PROG-0011` | programming | UNCHANGED | — | 9 → 9 | — | `782c397403bfd1a` | 8.8.106 | 205 |
+| `KFM-P9-PROG-0012` | programming | UNCHANGED | — | 9 → 9 | — | `c9ddbaa2704b853` | 8.8.107 | 205 |
+| `KFM-P9-PROG-0013` | programming | UNCHANGED | — | 9 → 9 | — | `18ef644f6bbb4e5` | 8.8.108 | 205 |
+| `KFM-P9-PROG-0014` | programming | UNCHANGED | — | 9 → 9 | — | `8a14d8cc1742c84` | 8.8.109 | 205 |
+| `KFM-P9-PROG-0015` | programming | UNCHANGED | — | 9 → 9 | — | `96dd871283f3aef` | 8.8.110 | 205 |
+| `KFM-P9-PROG-0016` | programming | UNCHANGED | — | 9 → 9 | — | `c749429c4ef7b2b` | 8.8.111 | 206 |
+| `KFM-P9-PROG-0017` | programming | UNCHANGED | — | 9 → 9 | — | `e3886b54ea56c62` | 8.8.112 | 206 |
+| `KFM-P9-PROG-0018` | programming | UNCHANGED | — | 9 → 9 | — | `19a7e4f1dd36d42` | 8.8.113 | 206 |
+
+</details>
+
+#### 5.11 PIP — Pipelines, Pipeline Specs, Validators
+
+<details>
+<summary><strong>300 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P26-FEAT-0005` | feature | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `172e24f4b270809` | 8.9.187 | 243 |
+| `KFM-P28-FEAT-0002` | feature | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4f41a83f53bbcf6` | 8.9.217 | 249 |
+| `KFM-P28-FEAT-0004` | feature | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c5db94fa1a7b5e9` | 8.9.218 | 249 |
+| `KFM-P13-IDEA-0002` | idea | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `7f43fec0f91866c` | 8.9.31 | 212 |
+| `KFM-P13-IDEA-0005` | idea | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `246a98e079b87c9` | 8.9.32 | 212 |
+| `KFM-P17-IDEA-0003` | idea | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `dba7b30c52e6ce8` | 8.9.62 | 218 |
+| `KFM-P17-IDEA-0008` | idea | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `87e07d2c056883d` | 8.9.63 | 218 |
+| `KFM-P18-IDEA-0001` | idea | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `243cbd830ef60b0` | 8.9.70 | 219 |
+| `KFM-P19-IDEA-0007` | idea | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ea1d77cb3721faa` | 8.9.79 | 221 |
+| `KFM-P20-IDEA-0005` | idea | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `440df20d7711992` | 8.9.104 | 226 |
+| `KFM-P20-IDEA-0008` | idea | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `1ef7031d6b08e57` | 8.9.105 | 226 |
+| `KFM-P21-IDEA-0001` | idea | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `382229b471b3835` | 8.9.123 | 230 |
+| `KFM-P21-IDEA-0005` | idea | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b1bff0e3984f2b5` | 8.9.124 | 230 |
+| `KFM-P23-IDEA-0001` | idea | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `46478581c6aa777` | 8.9.144 | 234 |
+| `KFM-P25-IDEA-0016` | idea | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `e0d85c46205f257` | 8.9.179 | 241 |
+| `KFM-P26-IDEA-0001` | idea | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `d0193de0534f682` | 8.9.188 | 243 |
+| `KFM-P26-IDEA-0011` | idea | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `8bc107edd9d6b71` | 8.9.189 | 243 |
+| `KFM-P26-IDEA-0014` | idea | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `cc0cf6332158480` | 8.9.190 | 243 |
+| `KFM-P27-IDEA-0001` | idea | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `85b79b512bfcdf0` | 8.9.202 | 246 |
+| `KFM-P27-IDEA-0004` | idea | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `f3cc6aa433bd490` | 8.9.203 | 246 |
+| `KFM-P27-IDEA-0005` | idea | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `9abb600e9140a17` | 8.9.204 | 246 |
+| `KFM-P27-IDEA-0006` | idea | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4420eb51a3c94af` | 8.9.205 | 246 |
+| `KFM-P27-IDEA-0013` | idea | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `0983940b9eee2f7` | 8.9.206 | 247 |
+| `KFM-P27-IDEA-0014` | idea | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `badec2ef616647f` | 8.9.207 | 247 |
+| `KFM-P27-IDEA-0016` | idea | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6468de995e0c966` | 8.9.208 | 247 |
+| `KFM-P28-IDEA-0001` | idea | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `e2f485ac67409e6` | 8.9.219 | 249 |
+| `KFM-P28-IDEA-0002` | idea | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4623b2076e111b1` | 8.9.220 | 249 |
+| `KFM-P28-IDEA-0016` | idea | UNCHANGED | — | 28 → 31 | `SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `e9355adfa4c50f6` | 8.9.221 | 250 |
+| `KFM-P29-IDEA-0001` | idea | UNCHANGED | — | 29 → 31 | `SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6c64c1b68669c04` | 8.9.231 | 252 |
+| `KFM-P29-IDEA-0006` | idea | UNCHANGED | — | 29 → 31 | `SRC-P29-001,SRC-P31-001,SRC-P31-002` | `a9c71cbe22c8676` | 8.9.232 | 252 |
+| `KFM-P30-IDEA-0004` | idea | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `8f826a312562bc4` | 8.9.237 | 253 |
+| `KFM-P30-IDEA-0008` | idea | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `e4fc1f3f8af7261` | 8.9.238 | 253 |
+| `KFM-P30-IDEA-0015` | idea | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `9e388ed0d4fc6d4` | 8.9.239 | 253 |
+| `KFM-P31-IDEA-0002` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `0ee27e41ad606ca` | 8.9.248 | 255 |
+| `KFM-P31-IDEA-0003` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `46b2646d42230f4` | 8.9.249 | 255 |
+| `KFM-P31-IDEA-0009` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `ad84fe212578865` | 8.9.250 | 255 |
+| `KFM-P31-IDEA-0012` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `ad11998be9f4ccc` | 8.9.251 | 256 |
+| `KFM-P31-IDEA-0013` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `56cb55a76ac8748` | 8.9.252 | 256 |
+| `KFM-P31-IDEA-0017` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `0f421a4918550e6` | 8.9.253 | 256 |
+| `KFM-P31-IDEA-0019` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `6d58964a71aee38` | 8.9.254 | 256 |
+| `KFM-P32-IDEA-0009` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `c8558e66654a04c` | 8.9.268 | 259 |
+| `KFM-P6-IDEA-0001` | idea | UNCHANGED | — | 6 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `3ffa93b097abf78` | 8.9.273 | 260 |
+| `KFM-P1-PROG-0024` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `faaab043d55c55d` | 8.9.1 | 206 |
+| `KFM-P1-PROG-0025` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `529214f29222c80` | 8.9.2 | 206 |
+| `KFM-P1-PROG-0026` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `9e189361c89bcd1` | 8.9.3 | 206 |
+| `KFM-P1-PROG-0027` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `5cf1fa4a6217f03` | 8.9.4 | 206 |
+| `KFM-P1-PROG-0028` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `2abd03837589db8` | 8.9.5 | 206 |
+| `KFM-P1-PROG-0029` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `130f2db130af536` | 8.9.6 | 207 |
+| `KFM-P1-PROG-0030` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `607823a951ee283` | 8.9.7 | 207 |
+| `KFM-P10-PROG-0001` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `887ecfe1f1b5982` | 8.9.8 | 207 |
+| `KFM-P10-PROG-0004` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `1ed2fc1c8c4b8f4` | 8.9.9 | 207 |
+| `KFM-P10-PROG-0008` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `3c37ddb1eaef37d` | 8.9.10 | 207 |
+| `KFM-P10-PROG-0010` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `5cfe0b69922f088` | 8.9.11 | 208 |
+| `KFM-P10-PROG-0011` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `dffc8fd5a170c1e` | 8.9.12 | 208 |
+| `KFM-P10-PROG-0012` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `6a0055eb723e4e4` | 8.9.13 | 208 |
+| `KFM-P10-PROG-0015` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `a872351941c57ac` | 8.9.14 | 208 |
+| `KFM-P10-PROG-0019` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `081613c110bc34e` | 8.9.15 | 208 |
+| `KFM-P10-PROG-0023` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `761b68d4f22ba9d` | 8.9.16 | 209 |
+| `KFM-P11-PROG-0009` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `48444c116450171` | 8.9.17 | 209 |
+| `KFM-P11-PROG-0015` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `87ac228fd4f7562` | 8.9.18 | 209 |
+| `KFM-P11-PROG-0018` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `7a607bbb3097f53` | 8.9.19 | 209 |
+| `KFM-P11-PROG-0019` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `474ae665dbd60d6` | 8.9.20 | 209 |
+| `KFM-P11-PROG-0026` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `cdfa016bd69c3cf` | 8.9.21 | 210 |
+| `KFM-P12-PROG-0001` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `e91681b387eaf0b` | 8.9.22 | 210 |
+| `KFM-P12-PROG-0004` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `ce0f050133aaa88` | 8.9.23 | 210 |
+| `KFM-P12-PROG-0005` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `b2279e5628adcfc` | 8.9.24 | 210 |
+| `KFM-P12-PROG-0010` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `df2136003865b74` | 8.9.25 | 210 |
+| `KFM-P12-PROG-0011` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `62bcc4a670406e6` | 8.9.26 | 211 |
+| `KFM-P12-PROG-0013` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `e30fe1f9acc274f` | 8.9.27 | 211 |
+| `KFM-P12-PROG-0015` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `62a64dc15f31252` | 8.9.28 | 211 |
+| `KFM-P12-PROG-0023` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `f397c10aef1a4f0` | 8.9.29 | 211 |
+| `KFM-P12-PROG-0027` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `6d26a9cfca671f4` | 8.9.30 | 211 |
+| `KFM-P13-PROG-0004` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `a1682a2207cdd25` | 8.9.33 | 212 |
+| `KFM-P13-PROG-0013` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `f7e781bd9e5b4e4` | 8.9.34 | 212 |
+| `KFM-P13-PROG-0021` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `a7e04502360a956` | 8.9.35 | 212 |
+| `KFM-P13-PROG-0029` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `efc568e6e270df0` | 8.9.36 | 213 |
+| `KFM-P14-PROG-0002` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `13cb483fbb7782c` | 8.9.37 | 213 |
+| `KFM-P14-PROG-0003` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `7c5290431229501` | 8.9.38 | 213 |
+| `KFM-P14-PROG-0004` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `3130d605ea0a72d` | 8.9.39 | 213 |
+| `KFM-P14-PROG-0005` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `6fe25ab0b1cac80` | 8.9.40 | 213 |
+| `KFM-P14-PROG-0010` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `918099e5f1a9a81` | 8.9.41 | 214 |
+| `KFM-P14-PROG-0012` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `2bda46da4246694` | 8.9.42 | 214 |
+| `KFM-P14-PROG-0024` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `09fc29b73d46eaf` | 8.9.43 | 214 |
+| `KFM-P14-PROG-0034` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `e4bc4df8a430e5c` | 8.9.44 | 214 |
+| `KFM-P15-PROG-0001` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `b74212c9f22c513` | 8.9.45 | 214 |
+| `KFM-P15-PROG-0003` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `83ef8352d7d50cf` | 8.9.46 | 215 |
+| `KFM-P15-PROG-0005` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `251e47b7199c07a` | 8.9.47 | 215 |
+| `KFM-P15-PROG-0007` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `5530e6a7cd6e8b8` | 8.9.48 | 215 |
+| `KFM-P15-PROG-0019` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `421af3d3a0a75f5` | 8.9.49 | 215 |
+| `KFM-P15-PROG-0020` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `daad10c29dc0b96` | 8.9.50 | 215 |
+| `KFM-P15-PROG-0021` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `0fee57854b001bc` | 8.9.51 | 216 |
+| `KFM-P15-PROG-0023` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `8e250f0cce9b164` | 8.9.52 | 216 |
+| `KFM-P15-PROG-0040` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `54928b883cb0680` | 8.9.53 | 216 |
+| `KFM-P16-PROG-0003` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `20024e025ad41e9` | 8.9.54 | 216 |
+| `KFM-P16-PROG-0006` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `415301c800bb46c` | 8.9.55 | 216 |
+| `KFM-P16-PROG-0008` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `220b81eaab4b882` | 8.9.56 | 217 |
+| `KFM-P16-PROG-0012` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `d2b74fc3e9dc91c` | 8.9.57 | 217 |
+| `KFM-P16-PROG-0019` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `7bcab022a4e76dd` | 8.9.58 | 217 |
+| `KFM-P16-PROG-0020` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `9c21fcc1d59e593` | 8.9.59 | 217 |
+| `KFM-P16-PROG-0027` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002` | `5a44d0e02fc7f4d` | 8.9.60 | 217 |
+| `KFM-P16-PROG-0029` | programming | UNCHANGED | — | 16 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `dd4076f47517c59` | 8.9.61 | 218 |
+| `KFM-P17-PROG-0010` | programming | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ad1ddde2d5410b5` | 8.9.64 | 218 |
+| `KFM-P17-PROG-0023` | programming | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `86549473f875c16` | 8.9.65 | 218 |
+| `KFM-P17-PROG-0029` | programming | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c1addd2755fddf6` | 8.9.66 | 219 |
+| `KFM-P17-PROG-0035` | programming | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `8b4b1337a01c9f6` | 8.9.67 | 219 |
+| `KFM-P17-PROG-0036` | programming | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `cfeb923417aa8a6` | 8.9.68 | 219 |
+| `KFM-P17-PROG-0038` | programming | UNCHANGED | — | 17 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `42759a610abf33a` | 8.9.69 | 219 |
+| `KFM-P18-PROG-0001` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `e8708b00204afe8` | 8.9.71 | 220 |
+| `KFM-P18-PROG-0004` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `2a56642db638c18` | 8.9.72 | 220 |
+| `KFM-P18-PROG-0007` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `06e5efa611eb25f` | 8.9.73 | 220 |
+| `KFM-P18-PROG-0009` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `5d18d84cafcfac3` | 8.9.74 | 220 |
+| `KFM-P18-PROG-0013` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `359062c8e6c5fcc` | 8.9.75 | 220 |
+| `KFM-P18-PROG-0014` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `20dc106258d5b2b` | 8.9.76 | 221 |
+| `KFM-P18-PROG-0037` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b134f189e0ba363` | 8.9.77 | 221 |
+| `KFM-P18-PROG-0039` | programming | UNCHANGED | — | 18 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7150bd3e979dccf` | 8.9.78 | 221 |
+| `KFM-P19-PROG-0001` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `f2f92fc354591d4` | 8.9.80 | 221 |
+| `KFM-P19-PROG-0004` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `d9e394c190854ef` | 8.9.81 | 222 |
+| `KFM-P19-PROG-0015` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `e08f160755e6d86` | 8.9.82 | 222 |
+| `KFM-P19-PROG-0017` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `3b4a3b81b55309d` | 8.9.83 | 222 |
+| `KFM-P19-PROG-0019` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `20d86147ee458bd` | 8.9.84 | 222 |
+| `KFM-P19-PROG-0020` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `953c1cfbb8039dc` | 8.9.85 | 222 |
+| `KFM-P19-PROG-0022` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c5ed25c11826bab` | 8.9.86 | 223 |
+| `KFM-P19-PROG-0028` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `45a967484eb4ba6` | 8.9.87 | 223 |
+| `KFM-P19-PROG-0029` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `1bb64d55e594203` | 8.9.88 | 223 |
+| `KFM-P19-PROG-0033` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `000cf44724f5477` | 8.9.89 | 223 |
+| `KFM-P19-PROG-0035` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `dbb3be68c4a5818` | 8.9.90 | 223 |
+| `KFM-P19-PROG-0036` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ee716698ac765a4` | 8.9.91 | 224 |
+| `KFM-P19-PROG-0040` | programming | UNCHANGED | — | 19 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b37b89dc06e9d24` | 8.9.92 | 224 |
+| `KFM-P2-PROG-0001` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `23834cf32390119` | 8.9.93 | 224 |
+| `KFM-P2-PROG-0002` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `13829840d013806` | 8.9.94 | 224 |
+| `KFM-P2-PROG-0003` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `e2726bfefbec7f7` | 8.9.95 | 224 |
+| `KFM-P2-PROG-0004` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `95668b4ea35ecc0` | 8.9.96 | 225 |
+| `KFM-P2-PROG-0005` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b5bed95f4b43721` | 8.9.97 | 225 |
+| `KFM-P2-PROG-0006` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7ac9d55aa0bafe7` | 8.9.98 | 225 |
+| `KFM-P2-PROG-0007` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `9392c5f8f021711` | 8.9.99 | 225 |
+| `KFM-P2-PROG-0008` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6620c5468d57015` | 8.9.100 | 225 |
+| `KFM-P2-PROG-0009` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `edd23341353dd3d` | 8.9.101 | 226 |
+| `KFM-P2-PROG-0010` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b73295b91b13da8` | 8.9.102 | 226 |
+| `KFM-P2-PROG-0011` | programming | UNCHANGED | — | 2 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `fea9d7b55c74aea` | 8.9.103 | 226 |
+| `KFM-P20-PROG-0002` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `1c5297ba11fe9f1` | 8.9.106 | 227 |
+| `KFM-P20-PROG-0004` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4424ba5cd3e2893` | 8.9.107 | 227 |
+| `KFM-P20-PROG-0005` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b896859bf5ad01c` | 8.9.108 | 227 |
+| `KFM-P20-PROG-0006` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7d9a0640c32d74f` | 8.9.109 | 227 |
+| `KFM-P20-PROG-0007` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6c5f1b1a624a7aa` | 8.9.110 | 227 |
+| `KFM-P20-PROG-0009` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `f941fd41dfeef36` | 8.9.111 | 228 |
+| `KFM-P20-PROG-0010` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `19071369e7c327e` | 8.9.112 | 228 |
+| `KFM-P20-PROG-0012` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `d94877b70bbfa16` | 8.9.113 | 228 |
+| `KFM-P20-PROG-0019` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c94b1d77e10ee3f` | 8.9.114 | 228 |
+| `KFM-P20-PROG-0020` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `512e8a589bd5b0d` | 8.9.115 | 228 |
+| `KFM-P20-PROG-0025` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `2b75b506246c326` | 8.9.116 | 229 |
+| `KFM-P20-PROG-0026` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `57151f64f9546dd` | 8.9.117 | 229 |
+| `KFM-P20-PROG-0028` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `1f6f246362bcf60` | 8.9.118 | 229 |
+| `KFM-P20-PROG-0030` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `9a678277b12a6ed` | 8.9.119 | 229 |
+| `KFM-P20-PROG-0032` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `072ab5302e80c8d` | 8.9.120 | 229 |
+| `KFM-P20-PROG-0036` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `2ce67822a8f22b9` | 8.9.121 | 230 |
+| `KFM-P20-PROG-0037` | programming | UNCHANGED | — | 20 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6895e9beb64c0e8` | 8.9.122 | 230 |
+| `KFM-P21-PROG-0001` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `219d46db97c6fe5` | 8.9.125 | 230 |
+| `KFM-P21-PROG-0003` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `0c69e60fcafa2ec` | 8.9.126 | 231 |
+| `KFM-P21-PROG-0006` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `80121e9b99e7b18` | 8.9.127 | 231 |
+| `KFM-P21-PROG-0010` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ac13be799794b5c` | 8.9.128 | 231 |
+| `KFM-P21-PROG-0017` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `75b24b178c13754` | 8.9.129 | 231 |
+| `KFM-P21-PROG-0019` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7c716e05d979055` | 8.9.130 | 231 |
+| `KFM-P21-PROG-0032` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `9e6049c772a40a4` | 8.9.131 | 232 |
+| `KFM-P21-PROG-0047` | programming | UNCHANGED | — | 21 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `eb2d6b53b83f6aa` | 8.9.132 | 232 |
+| `KFM-P21-PROG-0052` | programming | QUARANTINED | quarantine | 21 → 21 | `SRC-P28-001,SRC-P28-002,SRC-P28-005` | `6ae0c6361468fa2` | 8.9.133 | 232 |
+| `KFM-P22-PROG-0001` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `69ea20c5c027133` | 8.9.134 | 232 |
+| `KFM-P22-PROG-0006` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `9c714d8840e6b35` | 8.9.135 | 232 |
+| `KFM-P22-PROG-0008` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `070010c871392e8` | 8.9.136 | 233 |
+| `KFM-P22-PROG-0010` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `04731fb1a689f83` | 8.9.137 | 233 |
+| `KFM-P22-PROG-0022` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `23d54c898f4d743` | 8.9.138 | 233 |
+| `KFM-P22-PROG-0031` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6e216e4d1c599c8` | 8.9.139 | 233 |
+| `KFM-P22-PROG-0035` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ed0b410fac161b5` | 8.9.140 | 233 |
+| `KFM-P22-PROG-0043` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `248102849d45374` | 8.9.141 | 234 |
+| `KFM-P22-PROG-0044` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `d3ad19e2071069a` | 8.9.142 | 234 |
+| `KFM-P22-PROG-0047` | programming | UNCHANGED | — | 22 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `88049bc47b6733d` | 8.9.143 | 234 |
+| `KFM-P23-PROG-0001` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `07eef09fafb114b` | 8.9.145 | 234 |
+| `KFM-P23-PROG-0003` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `60acdb1d04a1f02` | 8.9.146 | 235 |
+| `KFM-P23-PROG-0004` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `0cdf28783a7dad7` | 8.9.147 | 235 |
+| `KFM-P23-PROG-0012` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b64ac9206626ff2` | 8.9.148 | 235 |
+| `KFM-P23-PROG-0015` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `24beb0155f077c3` | 8.9.149 | 235 |
+| `KFM-P23-PROG-0021` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `31204dd5a382344` | 8.9.150 | 235 |
+| `KFM-P23-PROG-0022` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6aaf2c3a27f5c8e` | 8.9.151 | 236 |
+| `KFM-P23-PROG-0026` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `3b77e02e3b78b25` | 8.9.152 | 236 |
+| `KFM-P23-PROG-0039` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4cf5c0cc60426b8` | 8.9.153 | 236 |
+| `KFM-P23-PROG-0040` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c5b4bcccacdb765` | 8.9.154 | 236 |
+| `KFM-P23-PROG-0041` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c161eeae7e6d5f1` | 8.9.155 | 236 |
+| `KFM-P23-PROG-0042` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ca8afdb7396f4ae` | 8.9.156 | 237 |
+| `KFM-P23-PROG-0043` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4d03d9acc223e28` | 8.9.157 | 237 |
+| `KFM-P23-PROG-0045` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7d6d046c3ff5da3` | 8.9.158 | 237 |
+| `KFM-P23-PROG-0046` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `36cdda54b932f87` | 8.9.159 | 237 |
+| `KFM-P23-PROG-0048` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `92c215e4a015a51` | 8.9.160 | 237 |
+| `KFM-P23-PROG-0050` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `66bd19735b00dc4` | 8.9.161 | 238 |
+| `KFM-P23-PROG-0051` | programming | UNCHANGED | — | 23 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `8712fe33ee29840` | 8.9.162 | 238 |
+| `KFM-P24-PROG-0014` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7b35ab8a0ec0276` | 8.9.163 | 238 |
+| `KFM-P24-PROG-0015` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `41eaed4552746c8` | 8.9.164 | 238 |
+| `KFM-P24-PROG-0020` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `34c2b36a756e6ee` | 8.9.165 | 238 |
+| `KFM-P24-PROG-0021` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `833d7a77f9eec10` | 8.9.166 | 239 |
+| `KFM-P24-PROG-0022` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4f1d27610666da9` | 8.9.167 | 239 |
+| `KFM-P24-PROG-0023` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `d435a8561cbb213` | 8.9.168 | 239 |
+| `KFM-P24-PROG-0024` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `0cdb7e1757e4164` | 8.9.169 | 239 |
+| `KFM-P24-PROG-0026` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `2ab28d169c03a66` | 8.9.170 | 239 |
+| `KFM-P24-PROG-0029` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `3ebd2a65fb8b80b` | 8.9.171 | 240 |
+| `KFM-P24-PROG-0030` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `03938d940bc1acf` | 8.9.172 | 240 |
+| `KFM-P24-PROG-0031` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `525007283547f23` | 8.9.173 | 240 |
+| `KFM-P24-PROG-0032` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `46eaf3219aa9dff` | 8.9.174 | 240 |
+| `KFM-P24-PROG-0039` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `fa81b363099f948` | 8.9.175 | 240 |
+| `KFM-P24-PROG-0040` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `354d96cd752d515` | 8.9.176 | 241 |
+| `KFM-P24-PROG-0041` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b2f3cf0934a572f` | 8.9.177 | 241 |
+| `KFM-P24-PROG-0047` | programming | UNCHANGED | — | 24 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `3ec6f8679c0a4b9` | 8.9.178 | 241 |
+| `KFM-P25-PROG-0002` | programming | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b677f86a2eac695` | 8.9.180 | 241 |
+| `KFM-P25-PROG-0003` | programming | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `79c7007615d18d0` | 8.9.181 | 242 |
+| `KFM-P25-PROG-0004` | programming | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `abc7b49fdd92237` | 8.9.182 | 242 |
+| `KFM-P25-PROG-0005` | programming | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `e8bc50538acf35b` | 8.9.183 | 242 |
+| `KFM-P25-PROG-0018` | programming | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `70a90cd39af97db` | 8.9.184 | 242 |
+| `KFM-P25-PROG-0019` | programming | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `409e4676d044509` | 8.9.185 | 242 |
+| `KFM-P25-PROG-0030` | programming | UNCHANGED | — | 25 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `d3eca670b0b56bb` | 8.9.186 | 243 |
+| `KFM-P26-PROG-0001` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `445aa0a65359d63` | 8.9.191 | 244 |
+| `KFM-P26-PROG-0002` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c1340f5f9f1d372` | 8.9.192 | 244 |
+| `KFM-P26-PROG-0003` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `22413a6cf15eb37` | 8.9.193 | 244 |
+| `KFM-P26-PROG-0007` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `72a6d67da9f0ef0` | 8.9.194 | 244 |
+| `KFM-P26-PROG-0015` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `cce63e7a4004990` | 8.9.195 | 244 |
+| `KFM-P26-PROG-0016` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `5b720a19d9525c0` | 8.9.196 | 245 |
+| `KFM-P26-PROG-0018` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6f31fbde6a2663c` | 8.9.197 | 245 |
+| `KFM-P26-PROG-0020` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `0ec7b4c177e3a65` | 8.9.198 | 245 |
+| `KFM-P26-PROG-0023` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `92fe20e6729c4d9` | 8.9.199 | 245 |
+| `KFM-P26-PROG-0024` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4bf7c21e22d4f4d` | 8.9.200 | 245 |
+| `KFM-P26-PROG-0030` | programming | UNCHANGED | — | 26 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7b2a3d047253661` | 8.9.201 | 246 |
+| `KFM-P27-PROG-0001` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7b229bd8a72d61c` | 8.9.209 | 247 |
+| `KFM-P27-PROG-0005` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `77c5e6eabc49898` | 8.9.210 | 247 |
+| `KFM-P27-PROG-0007` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `f6080879fb77456` | 8.9.211 | 248 |
+| `KFM-P27-PROG-0012` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `458256c31e063c7` | 8.9.212 | 248 |
+| `KFM-P27-PROG-0013` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `761f5792634388c` | 8.9.213 | 248 |
+| `KFM-P27-PROG-0015` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `032fad23b70af52` | 8.9.214 | 248 |
+| `KFM-P27-PROG-0017` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `74a70eaeabc182a` | 8.9.215 | 248 |
+| `KFM-P27-PROG-0019` | programming | UNCHANGED | — | 27 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6b7c2082f089b25` | 8.9.216 | 249 |
+| `KFM-P28-PROG-0001` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `20ef39b79d4e2b2` | 8.9.222 | 250 |
+| `KFM-P28-PROG-0002` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ed60aadbdbe607a` | 8.9.223 | 250 |
+| `KFM-P28-PROG-0003` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b91d0bd7a33491b` | 8.9.224 | 250 |
+| `KFM-P28-PROG-0004` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `7a1b2f1a61afc4d` | 8.9.225 | 250 |
+| `KFM-P28-PROG-0005` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `6efe9341be5db44` | 8.9.226 | 251 |
+| `KFM-P28-PROG-0007` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `4139792ae02a79a` | 8.9.227 | 251 |
+| `KFM-P28-PROG-0009` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `375c5c750a38476` | 8.9.228 | 251 |
+| `KFM-P28-PROG-0014` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-003,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `66f837e5400cdd3` | 8.9.229 | 251 |
+| `KFM-P28-PROG-0024` | programming | UNCHANGED | — | 28 → 31 | `SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `b6108030a14542f` | 8.9.230 | 251 |
+| `KFM-P29-PROG-0003` | programming | UNCHANGED | — | 29 → 31 | `SRC-P29-001,SRC-P31-001,SRC-P31-002` | `2050c7780b9cce9` | 8.9.233 | 252 |
+| `KFM-P29-PROG-0005` | programming | UNCHANGED | — | 29 → 31 | `SRC-P29-001,SRC-P31-001,SRC-P31-002` | `a19f351dd351aa7` | 8.9.234 | 252 |
+| `KFM-P29-PROG-0015` | programming | UNCHANGED | — | 29 → 31 | `SRC-P29-001,SRC-P31-001,SRC-P31-002` | `230415889ff2d62` | 8.9.235 | 252 |
+| `KFM-P29-PROG-0026` | programming | UNCHANGED | — | 29 → 31 | `SRC-P29-001,SRC-P31-001,SRC-P31-002` | `864f3e2d4637e1b` | 8.9.236 | 253 |
+| `KFM-P30-PROG-0003` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `7bc2ca941e28838` | 8.9.240 | 253 |
+| `KFM-P30-PROG-0007` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `9862a216d083df3` | 8.9.241 | 254 |
+| `KFM-P30-PROG-0009` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `9fe23a8a78aa4a2` | 8.9.242 | 254 |
+| `KFM-P30-PROG-0012` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `1d980d4b27a49e8` | 8.9.243 | 254 |
+| `KFM-P30-PROG-0014` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `e355615f6cda39c` | 8.9.244 | 254 |
+| `KFM-P30-PROG-0018` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `1a1d3748ef83749` | 8.9.245 | 254 |
+| `KFM-P30-PROG-0019` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `e66bec28113c2c2` | 8.9.246 | 255 |
+| `KFM-P30-PROG-0020` | programming | UNCHANGED | — | 30 → 31 | `SRC-P30-001,SRC-P31-001,SRC-P31-002` | `94056d8ade3bf69` | 8.9.247 | 255 |
+| `KFM-P31-PROG-0001` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `8082d3e0116cb5d` | 8.9.255 | 256 |
+| `KFM-P31-PROG-0002` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `7179be3072d2aa5` | 8.9.256 | 257 |
+| `KFM-P31-PROG-0005` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `df00897c204c95a` | 8.9.257 | 257 |
+| `KFM-P31-PROG-0008` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `69fa14fcb429c45` | 8.9.258 | 257 |
+| `KFM-P31-PROG-0009` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `8b660ba3a6f07cc` | 8.9.259 | 257 |
+| `KFM-P31-PROG-0010` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `e28035e26f35ce2` | 8.9.260 | 257 |
+| `KFM-P31-PROG-0014` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `aa325e37da516be` | 8.9.261 | 258 |
+| `KFM-P31-PROG-0015` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `e5b1ca7ebf8e559` | 8.9.262 | 258 |
+| `KFM-P31-PROG-0016` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `4a0a0da938d47e8` | 8.9.263 | 258 |
+| `KFM-P31-PROG-0017` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `fcd538cc36c1c9a` | 8.9.264 | 258 |
+| `KFM-P31-PROG-0018` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `b21ee1a5ddcdad7` | 8.9.265 | 258 |
+| `KFM-P31-PROG-0020` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `419fc1d96b05d8e` | 8.9.266 | 259 |
+| `KFM-P31-PROG-0021` | programming | QUARANTINED | quarantine | 31 → 31 | `SRC-P31-003` | `d18804340850cc1` | 8.9.267 | 259 |
+| `KFM-P32-PROG-0010` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `55f74a88643a9c4` | 8.9.269 | 259 |
+| `KFM-P32-PROG-0012` | programming | NEW | — | 32 → 32 | `SRC-P32-001` | `30cd6af0a2cfa75` | 8.9.270 | 259 |
+| `KFM-P32-PROG-0021` | programming | QUARANTINED | quarantine | 32 → 32 | `SRC-P32-001,SRC-P32-002` | `3d9d2ecf848a59d` | 8.9.271 | 260 |
+| `KFM-P5-PROG-0009` | programming | UNCHANGED | — | 5 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `729bf06d1efa7c4` | 8.9.272 | 260 |
+| `KFM-P6-PROG-0004` | programming | UNCHANGED | — | 6 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `c51b7afbe7ff2bf` | 8.9.274 | 260 |
+| `KFM-P6-PROG-0005` | programming | UNCHANGED | — | 6 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `05c96cf4ac024b5` | 8.9.275 | 260 |
+| `KFM-P6-PROG-0006` | programming | UNCHANGED | — | 6 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `ed60a87dc118124` | 8.9.276 | 261 |
+| `KFM-P6-PROG-0011` | programming | UNCHANGED | — | 6 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `66bf8c0b88f69d5` | 8.9.277 | 261 |
+| `KFM-P6-PROG-0013` | programming | UNCHANGED | — | 6 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `32c48e09556801d` | 8.9.278 | 261 |
+| `KFM-P7-PROG-0002` | programming | UNCHANGED | — | 7 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `87ee4fdcb0a63ee` | 8.9.279 | 261 |
+| `KFM-P7-PROG-0009` | programming | UNCHANGED | — | 7 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `9dc9cf54436fefe` | 8.9.280 | 261 |
+| `KFM-P8-PROG-0001` | programming | UNCHANGED | — | 8 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `26da4875ab69d3e` | 8.9.281 | 262 |
+| `KFM-P8-PROG-0002` | programming | UNCHANGED | — | 8 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `81fc44618deb987` | 8.9.282 | 262 |
+| `KFM-P8-PROG-0003` | programming | UNCHANGED | — | 8 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `92539b633a4bfd7` | 8.9.283 | 262 |
+| `KFM-P8-PROG-0004` | programming | UNCHANGED | — | 8 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `2e165df9122f12a` | 8.9.284 | 262 |
+| `KFM-P8-PROG-0005` | programming | UNCHANGED | — | 8 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `2cfb49c3f9202ed` | 8.9.285 | 262 |
+| `KFM-P8-PROG-0023` | programming | UNCHANGED | — | 8 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `db5a7dc03244429` | 8.9.286 | 263 |
+| `KFM-P8-PROG-0025` | programming | UNCHANGED | — | 8 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002` | `76e0c91078aea30` | 8.9.287 | 263 |
+| `KFM-P9-PROG-0025` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002` | `29d37a99b8e2cd0` | 8.9.288 | 263 |
+| `KFM-P9-PROG-0026` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002` | `cdc81dfedfc45e1` | 8.9.289 | 263 |
+| `KFM-P9-PROG-0027` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002` | `6d265cbd5acdf4e` | 8.9.290 | 263 |
+| `KFM-P9-PROG-0028` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `3e998d95e8c231b` | 8.9.291 | 264 |
+| `KFM-P9-PROG-0062` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `02257db09374ab5` | 8.9.292 | 264 |
+| `KFM-P9-PROG-0063` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002` | `e81449fca67d5ba` | 8.9.293 | 264 |
+| `KFM-P9-PROG-0064` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `1cb40da61bcbac0` | 8.9.294 | 264 |
+| `KFM-P9-PROG-0065` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `2f1566c10a713d3` | 8.9.295 | 264 |
+| `KFM-P9-PROG-0066` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `4c7db82ab649b71` | 8.9.296 | 265 |
+| `KFM-P9-PROG-0067` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `84f2705ef0e3f18` | 8.9.297 | 265 |
+| `KFM-P9-PROG-0068` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P31-001,SRC-P31-002` | `f105a654d3c9b23` | 8.9.298 | 265 |
+| `KFM-P9-PROG-0069` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `22f9965a4bc3277` | 8.9.299 | 265 |
+| `KFM-P9-PROG-0070` | programming | UNCHANGED | — | 9 → 31 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P31-001,SRC-P31-002` | `cbf066bf92d06db` | 8.9.300 | 265 |
+
+</details>
+
+#### 5.12 POL — Policy-as-Code, Sensitivity, Rights, Sovereignty
+
+<details>
+<summary><strong>124 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P14-FEAT-0002` | feature | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4263b1353808e00` | 8.10.16 | 269 |
+| `KFM-P25-FEAT-0010` | feature | UNCHANGED | — | 25 → 25 | — | `16678cf2689bee0` | 8.10.76 | 281 |
+| `KFM-P32-FEAT-0009` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `2cd9646ecf60817` | 8.10.106 | 287 |
+| `KFM-P32-FEAT-0012` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `d6595ff8f3f1bb3` | 8.10.107 | 287 |
+| `KFM-P32-FEAT-0017` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `7d8fabfc1fb17ae` | 8.10.108 | 287 |
+| `KFM-P9-FEAT-0004` | feature | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `b3e82511c14c9d0` | 8.10.119 | 289 |
+| `KFM-P1-IDEA-0031` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `77b04f4a0de41d2` | 8.10.1 | 266 |
+| `KFM-P1-IDEA-0033` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `92b7ccdb3dca9c6` | 8.10.2 | 266 |
+| `KFM-P1-IDEA-0034` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `3166fa769c536bf` | 8.10.3 | 266 |
+| `KFM-P1-IDEA-0036` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `444a1c727df5026` | 8.10.4 | 266 |
+| `KFM-P1-IDEA-0037` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `3d57abddd63f949` | 8.10.5 | 266 |
+| `KFM-P10-IDEA-0001` | idea | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `d4909880d611e8c` | 8.10.8 | 267 |
+| `KFM-P16-IDEA-0004` | idea | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `1116b79e404365f` | 8.10.22 | 270 |
+| `KFM-P17-IDEA-0006` | idea | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `c25821d5a4f7ad4` | 8.10.29 | 271 |
+| `KFM-P18-IDEA-0005` | idea | UNCHANGED | — | 18 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `e529bce9989d4db` | 8.10.38 | 273 |
+| `KFM-P19-IDEA-0003` | idea | UNCHANGED | — | 19 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `ab18b256645b734` | 8.10.43 | 274 |
+| `KFM-P19-IDEA-0004` | idea | UNCHANGED | — | 19 → 19 | — | `1aa723f00b18d58` | 8.10.44 | 274 |
+| `KFM-P19-IDEA-0009` | idea | UNCHANGED | — | 19 → 19 | — | `35e4df2ba8ae815` | 8.10.45 | 274 |
+| `KFM-P2-IDEA-0015` | idea | UNCHANGED | — | 2 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `307358594ce9a6b` | 8.10.52 | 276 |
+| `KFM-P21-IDEA-0003` | idea | UNCHANGED | — | 21 → 21 | — | `a1ac4127b4c7d33` | 8.10.57 | 277 |
+| `KFM-P24-IDEA-0002` | idea | UNCHANGED | — | 24 → 24 | — | `f5e6629b6997707` | 8.10.72 | 280 |
+| `KFM-P25-IDEA-0006` | idea | UNCHANGED | — | 25 → 25 | — | `068da5c7e05d74d` | 8.10.77 | 281 |
+| `KFM-P26-IDEA-0013` | idea | UNCHANGED | — | 26 → 26 | — | `84e3b20bfc78b25` | 8.10.81 | 282 |
+| `KFM-P26-IDEA-0019` | idea | UNCHANGED | — | 26 → 26 | — | `95514c1d109abdc` | 8.10.82 | 282 |
+| `KFM-P28-IDEA-0005` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `f5ae23005295c01` | 8.10.89 | 283 |
+| `KFM-P28-IDEA-0006` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `1bb4fca78d9176c` | 8.10.90 | 283 |
+| `KFM-P28-IDEA-0011` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `6cf1332469dd0fa` | 8.10.91 | 284 |
+| `KFM-P29-IDEA-0011` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `8e355179ef30a64` | 8.10.93 | 284 |
+| `KFM-P29-IDEA-0012` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `c7dfb0b1a48a490` | 8.10.94 | 284 |
+| `KFM-P29-IDEA-0019` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `90caf51429efa2d` | 8.10.95 | 284 |
+| `KFM-P3-IDEA-0003` | idea | UNCHANGED | — | 3 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `b5e6337884082e0` | 8.10.99 | 285 |
+| `KFM-P30-IDEA-0014` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `7a052ccfa5df0ce` | 8.10.100 | 285 |
+| `KFM-P30-IDEA-0020` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `484d7abf482d2cf` | 8.10.101 | 286 |
+| `KFM-P31-IDEA-0020` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `9d383ebe2259a2d` | 8.10.105 | 286 |
+| `KFM-P32-IDEA-0007` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `41d807e4bd5b0f8` | 8.10.109 | 287 |
+| `KFM-P32-IDEA-0016` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `f404a696261871f` | 8.10.110 | 287 |
+| `KFM-P32-IDEA-0017` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `7abc911b79404ca` | 8.10.111 | 288 |
+| `KFM-P9-IDEA-0016` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `ab46d5256e7cd9a` | 8.10.120 | 289 |
+| `KFM-P9-IDEA-0017` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `38242f8c8e9d9b4` | 8.10.121 | 290 |
+| `KFM-P9-IDEA-0018` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `00fcb8a44db64a2` | 8.10.122 | 290 |
+| `KFM-P9-IDEA-0019` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `05a099ae8252f0c` | 8.10.123 | 290 |
+| `KFM-P9-IDEA-0020` | idea | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `02a6d1856029f6b` | 8.10.124 | 290 |
+| `KFM-P1-PROG-0032` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4e1ad5cec93a7e6` | 8.10.6 | 267 |
+| `KFM-P1-PROG-0035` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0f3c1e48a31a151` | 8.10.7 | 267 |
+| `KFM-P10-PROG-0014` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `7bfcb84cf225713` | 8.10.9 | 267 |
+| `KFM-P11-PROG-0024` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `c1dd22d439d297f` | 8.10.10 | 267 |
+| `KFM-P11-PROG-0025` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `a3a46d3cf56f308` | 8.10.11 | 268 |
+| `KFM-P12-PROG-0019` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `f20900492fdbf95` | 8.10.12 | 268 |
+| `KFM-P12-PROG-0025` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `85927afa32b3a31` | 8.10.13 | 268 |
+| `KFM-P13-PROG-0018` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `9b397ac4d9a1c7b` | 8.10.14 | 268 |
+| `KFM-P13-PROG-0019` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `82a231c2800033e` | 8.10.15 | 268 |
+| `KFM-P14-PROG-0001` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `dbfa64265f26bc4` | 8.10.17 | 269 |
+| `KFM-P14-PROG-0038` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `93764ee807bca14` | 8.10.18 | 269 |
+| `KFM-P14-PROG-0039` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `4dedbd693f65738` | 8.10.19 | 269 |
+| `KFM-P15-PROG-0025` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `cf49ae1d9a62d1a` | 8.10.20 | 269 |
+| `KFM-P15-PROG-0034` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `6815f1fcb5fb31c` | 8.10.21 | 270 |
+| `KFM-P16-PROG-0009` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `244ae7b999a4d5b` | 8.10.23 | 270 |
+| `KFM-P16-PROG-0011` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `73f4d670c238229` | 8.10.24 | 270 |
+| `KFM-P16-PROG-0016` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `34a303115caa326` | 8.10.25 | 270 |
+| `KFM-P16-PROG-0026` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `80067559760cc52` | 8.10.26 | 271 |
+| `KFM-P16-PROG-0033` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `87baca31de0ce0b` | 8.10.27 | 271 |
+| `KFM-P16-PROG-0037` | programming | EXPANDED | — | 16 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `b21e8d85cd9fc49` | 8.10.28 | 271 |
+| `KFM-P17-PROG-0002` | programming | EXPANDED | — | 17 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002` | `7a2363cc9156d73` | 8.10.30 | 271 |
+| `KFM-P17-PROG-0017` | programming | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `09a01236376c51d` | 8.10.31 | 272 |
+| `KFM-P17-PROG-0018` | programming | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `0c354f36cc6050e` | 8.10.32 | 272 |
+| `KFM-P17-PROG-0022` | programming | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `6749b846038671a` | 8.10.33 | 272 |
+| `KFM-P17-PROG-0025` | programming | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `689b7948d152da2` | 8.10.34 | 272 |
+| `KFM-P17-PROG-0027` | programming | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `2176d9e0f8e23ea` | 8.10.35 | 272 |
+| `KFM-P17-PROG-0032` | programming | UNCHANGED | — | 17 → 20 | — | `651fe226552fd8d` | 8.10.36 | 273 |
+| `KFM-P17-PROG-0040` | programming | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `513d501e5566c6d` | 8.10.37 | 273 |
+| `KFM-P18-PROG-0005` | programming | UNCHANGED | — | 18 → 23 | — | `0c20736b50ccc91` | 8.10.39 | 273 |
+| `KFM-P18-PROG-0024` | programming | UNCHANGED | — | 18 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `3873207e6d6a277` | 8.10.40 | 273 |
+| `KFM-P18-PROG-0025` | programming | UNCHANGED | — | 18 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `06e3442f110f7f0` | 8.10.41 | 274 |
+| `KFM-P18-PROG-0028` | programming | UNCHANGED | — | 18 → 23 | — | `69856b9b084df0c` | 8.10.42 | 274 |
+| `KFM-P19-PROG-0006` | programming | UNCHANGED | — | 19 → 19 | — | `ac5ff089e130cbb` | 8.10.46 | 275 |
+| `KFM-P19-PROG-0009` | programming | UNCHANGED | — | 19 → 20 | — | `8e3c6e40ec88bab` | 8.10.47 | 275 |
+| `KFM-P19-PROG-0010` | programming | UNCHANGED | — | 19 → 19 | — | `71b233257f09e84` | 8.10.48 | 275 |
+| `KFM-P19-PROG-0013` | programming | UNCHANGED | — | 19 → 19 | — | `daea1d2f9908f3f` | 8.10.49 | 275 |
+| `KFM-P19-PROG-0025` | programming | UNCHANGED | — | 19 → 19 | — | `fbbabc5c8a7cf55` | 8.10.50 | 275 |
+| `KFM-P19-PROG-0030` | programming | UNCHANGED | — | 19 → 23 | — | `73714f392e64b7f` | 8.10.51 | 276 |
+| `KFM-P20-PROG-0016` | programming | UNCHANGED | — | 20 → 20 | — | `dbbe68d29137964` | 8.10.53 | 276 |
+| `KFM-P20-PROG-0017` | programming | UNCHANGED | — | 20 → 23 | — | `28a1a1d447b8041` | 8.10.54 | 276 |
+| `KFM-P20-PROG-0022` | programming | UNCHANGED | — | 20 → 20 | — | `da66827d009f0ce` | 8.10.55 | 276 |
+| `KFM-P20-PROG-0033` | programming | UNCHANGED | — | 20 → 20 | — | `10e08f79e8900bb` | 8.10.56 | 277 |
+| `KFM-P21-PROG-0009` | programming | UNCHANGED | — | 21 → 21 | — | `22bf28f37623f2e` | 8.10.58 | 277 |
+| `KFM-P21-PROG-0012` | programming | UNCHANGED | — | 21 → 21 | — | `362943199529a0a` | 8.10.59 | 277 |
+| `KFM-P21-PROG-0049` | programming | UNCHANGED | — | 21 → 21 | — | `ba003d053fd55ec` | 8.10.60 | 277 |
+| `KFM-P22-PROG-0007` | programming | UNCHANGED | — | 22 → 23 | — | `72d2d839d7743ce` | 8.10.61 | 278 |
+| `KFM-P22-PROG-0015` | programming | UNCHANGED | — | 22 → 22 | — | `263ffe847e470e8` | 8.10.62 | 278 |
+| `KFM-P22-PROG-0021` | programming | UNCHANGED | — | 22 → 23 | — | `5fcf8be2ace774e` | 8.10.63 | 278 |
+| `KFM-P22-PROG-0032` | programming | UNCHANGED | — | 22 → 22 | — | `a659c1e50601f60` | 8.10.64 | 278 |
+| `KFM-P22-PROG-0048` | programming | UNCHANGED | — | 22 → 22 | — | `d6c7fa2fbd63dbc` | 8.10.65 | 278 |
+| `KFM-P23-PROG-0002` | programming | UNCHANGED | — | 23 → 23 | — | `48914af019e2b1e` | 8.10.66 | 279 |
+| `KFM-P23-PROG-0010` | programming | UNCHANGED | — | 23 → 23 | — | `643040a5da23a52` | 8.10.67 | 279 |
+| `KFM-P23-PROG-0011` | programming | UNCHANGED | — | 23 → 23 | — | `a2ef0b999841559` | 8.10.68 | 279 |
+| `KFM-P23-PROG-0014` | programming | UNCHANGED | — | 23 → 23 | — | `8a63ad3499aaf3e` | 8.10.69 | 279 |
+| `KFM-P23-PROG-0024` | programming | UNCHANGED | — | 23 → 23 | — | `629b3dd0519691e` | 8.10.70 | 279 |
+| `KFM-P23-PROG-0044` | programming | UNCHANGED | — | 23 → 23 | — | `7d195753a9f1c9c` | 8.10.71 | 280 |
+| `KFM-P24-PROG-0013` | programming | UNCHANGED | — | 24 → 24 | — | `aeff02aa72c69ae` | 8.10.73 | 280 |
+| `KFM-P24-PROG-0016` | programming | UNCHANGED | — | 24 → 24 | — | `eaab1e5a1c9cda9` | 8.10.74 | 280 |
+| `KFM-P24-PROG-0027` | programming | UNCHANGED | — | 24 → 24 | — | `009c921aa9b0c1c` | 8.10.75 | 280 |
+| `KFM-P25-PROG-0015` | programming | UNCHANGED | — | 25 → 25 | — | `592bddf0beaab73` | 8.10.78 | 281 |
+| `KFM-P25-PROG-0017` | programming | UNCHANGED | — | 25 → 25 | — | `6e25e0f3ffe71d2` | 8.10.79 | 281 |
+| `KFM-P25-PROG-0023` | programming | UNCHANGED | — | 25 → 25 | — | `05048d7f8b87dd8` | 8.10.80 | 281 |
+| `KFM-P26-PROG-0021` | programming | UNCHANGED | — | 26 → 26 | — | `3b44f0075d27577` | 8.10.83 | 282 |
+| `KFM-P26-PROG-0022` | programming | UNCHANGED | — | 26 → 26 | — | `88af075f25b0d83` | 8.10.84 | 282 |
+| `KFM-P27-PROG-0006` | programming | UNCHANGED | — | 27 → 27 | — | `98f0a3ad9d0aae9` | 8.10.85 | 282 |
+| `KFM-P27-PROG-0008` | programming | UNCHANGED | — | 27 → 27 | — | `cbccb62f4cd1b79` | 8.10.86 | 283 |
+| `KFM-P27-PROG-0021` | programming | UNCHANGED | — | 27 → 27 | — | `c0c5d08a8134f58` | 8.10.87 | 283 |
+| `KFM-P27-PROG-0029` | programming | UNCHANGED | — | 27 → 27 | — | `df99852db8d128b` | 8.10.88 | 283 |
+| `KFM-P28-PROG-0013` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `753788189654f4f` | 8.10.92 | 284 |
+| `KFM-P29-PROG-0002` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `c798ace6ffcf698` | 8.10.96 | 285 |
+| `KFM-P29-PROG-0013` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `b28d106d0631c40` | 8.10.97 | 285 |
+| `KFM-P29-PROG-0019` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `ce13f1ccceab2e9` | 8.10.98 | 285 |
+| `KFM-P30-PROG-0017` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `e857d1df061bac7` | 8.10.102 | 286 |
+| `KFM-P30-PROG-0021` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `28c95d5a83734ed` | 8.10.103 | 286 |
+| `KFM-P30-PROG-0025` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `e23b67315474bc2` | 8.10.104 | 286 |
+| `KFM-P32-PROG-0008` | programming | NEW | — | 32 → 32 | `SRC-P32-001,SRC-P32-002` | `89c1d809ebbcb3b` | 8.10.112 | 288 |
+| `KFM-P32-PROG-0017` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `a3fa975df819b32` | 8.10.113 | 288 |
+| `KFM-P5-PROG-0001` | programming | UNCHANGED | — | 5 → 23 | — | `dd67a310e9b4591` | 8.10.114 | 288 |
+| `KFM-P5-PROG-0005` | programming | UNCHANGED | — | 5 → 20 | — | `057f30f99d17934` | 8.10.115 | 288 |
+| `KFM-P5-PROG-0006` | programming | UNCHANGED | — | 5 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `77c10ea5e865d57` | 8.10.116 | 289 |
+| `KFM-P5-PROG-0007` | programming | UNCHANGED | — | 5 → 23 | — | `d4f52761bea3f2e` | 8.10.117 | 289 |
+| `KFM-P7-PROG-0004` | programming | UNCHANGED | — | 7 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `086a88561ec1c6e` | 8.10.118 | 289 |
+
+</details>
+
+#### 5.13 REL — Catalog Closure, Publication, Release, Rollback, Recompile
+
+<details>
+<summary><strong>95 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P16-FEAT-0001` | feature | UNCHANGED | — | 16 → 26 | — | `0a03e1928298fbe` | 8.11.18 | 293 |
+| `KFM-P17-FEAT-0001` | feature | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `c3c72a2edbaca7f` | 8.11.23 | 294 |
+| `KFM-P18-FEAT-0008` | feature | UNCHANGED | — | 18 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `951bb0dce6c66de` | 8.11.26 | 295 |
+| `KFM-P24-FEAT-0004` | feature | UNCHANGED | — | 24 → 24 | — | `1630299cf0e3483` | 8.11.53 | 300 |
+| `KFM-P25-FEAT-0004` | feature | UNCHANGED | — | 25 → 25 | — | `1f9db726ff529ff` | 8.11.60 | 301 |
+| `KFM-P32-FEAT-0002` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `65a75ca1f6b9791` | 8.11.79 | 305 |
+| `KFM-P32-FEAT-0014` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `1c69b3575f3f715` | 8.11.80 | 305 |
+| `KFM-P32-FEAT-0020` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `c088fb2e037c005` | 8.11.81 | 306 |
+| `KFM-P1-IDEA-0056` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `07dd1e6582cb8f6` | 8.11.1 | 290 |
+| `KFM-P1-IDEA-0059` | idea | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `3b3191370ea0ec1` | 8.11.2 | 290 |
+| `KFM-P12-IDEA-0004` | idea | UNCHANGED | — | 12 → 26 | — | `b9e9e5abb6b487c` | 8.11.7 | 291 |
+| `KFM-P13-IDEA-0001` | idea | UNCHANGED | — | 13 → 26 | — | `fb6c5822a49964b` | 8.11.10 | 291 |
+| `KFM-P16-IDEA-0001` | idea | UNCHANGED | — | 16 → 26 | — | `c09e683d75cb26b` | 8.11.19 | 293 |
+| `KFM-P16-IDEA-0005` | idea | UNCHANGED | — | 16 → 26 | — | `420fed2536ab63d` | 8.11.20 | 293 |
+| `KFM-P17-IDEA-0001` | idea | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `4e8f954def27cf0` | 8.11.24 | 294 |
+| `KFM-P18-IDEA-0004` | idea | UNCHANGED | — | 18 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `f09d252e7400b33` | 8.11.27 | 295 |
+| `KFM-P19-IDEA-0010` | idea | UNCHANGED | — | 19 → 23 | — | `8db4c71deae27f3` | 8.11.32 | 296 |
+| `KFM-P20-IDEA-0004` | idea | UNCHANGED | — | 20 → 22 | — | `378a7b739961506` | 8.11.35 | 296 |
+| `KFM-P21-IDEA-0006` | idea | UNCHANGED | — | 21 → 22 | — | `5c2d099d50f2249` | 8.11.38 | 297 |
+| `KFM-P22-IDEA-0004` | idea | UNCHANGED | — | 22 → 22 | — | `5729c4cdc89fb9c` | 8.11.43 | 298 |
+| `KFM-P23-IDEA-0006` | idea | UNCHANGED | — | 23 → 23 | — | `3495a54d63c91ee` | 8.11.48 | 299 |
+| `KFM-P24-IDEA-0003` | idea | UNCHANGED | — | 24 → 24 | — | `2889a9cdf3dfada` | 8.11.54 | 300 |
+| `KFM-P25-IDEA-0007` | idea | UNCHANGED | — | 25 → 25 | — | `8a2425d35ed4464` | 8.11.61 | 302 |
+| `KFM-P25-IDEA-0018` | idea | UNCHANGED | — | 25 → 25 | — | `8ca40a900baf94a` | 8.11.62 | 302 |
+| `KFM-P26-IDEA-0004` | idea | UNCHANGED | — | 26 → 26 | — | `cd840e83ca06e66` | 8.11.63 | 302 |
+| `KFM-P26-IDEA-0009` | idea | UNCHANGED | — | 26 → 26 | — | `4b67eda91e1d868` | 8.11.64 | 302 |
+| `KFM-P26-IDEA-0010` | idea | UNCHANGED | — | 26 → 26 | — | `a299652e4fb6cae` | 8.11.65 | 302 |
+| `KFM-P26-IDEA-0020` | idea | UNCHANGED | — | 26 → 26 | — | `ce73920f0296ce1` | 8.11.66 | 303 |
+| `KFM-P28-IDEA-0009` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `070a8a6b5a88870` | 8.11.69 | 303 |
+| `KFM-P28-IDEA-0015` | idea | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `7e797ce9fc5c4f8` | 8.11.70 | 303 |
+| `KFM-P29-IDEA-0005` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `b6460d56bd73d02` | 8.11.74 | 304 |
+| `KFM-P30-IDEA-0011` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `5fe3a30f0ceb30a` | 8.11.75 | 304 |
+| `KFM-P31-IDEA-0005` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `132421d2b443c87` | 8.11.77 | 305 |
+| `KFM-P32-IDEA-0003` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `eb026b7bc260548` | 8.11.82 | 306 |
+| `KFM-P32-IDEA-0020` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `907daa0d523393b` | 8.11.83 | 306 |
+| `KFM-P4-IDEA-0002` | idea | UNCHANGED | — | 4 → 22 | — | `f637bcb6523fbee` | 8.11.85 | 306 |
+| `KFM-P9-IDEA-0046` | idea | UNCHANGED | — | 9 → 22 | — | `8376e7856c6a2f7` | 8.11.90 | 307 |
+| `KFM-P9-IDEA-0047` | idea | UNCHANGED | — | 9 → 22 | — | `fbb329b848b5c9e` | 8.11.91 | 308 |
+| `KFM-P9-IDEA-0048` | idea | UNCHANGED | — | 9 → 22 | — | `5d7d8685a5009ba` | 8.11.92 | 308 |
+| `KFM-P1-PROG-0057` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `d09710cffccae64` | 8.11.3 | 290 |
+| `KFM-P1-PROG-0058` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `d63b7d1ed8d08a0` | 8.11.4 | 290 |
+| `KFM-P1-PROG-0060` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `ede22c5c10ef37c` | 8.11.5 | 290 |
+| `KFM-P11-PROG-0027` | programming | UNCHANGED | — | 11 → 26 | — | `908d235835e7e85` | 8.11.6 | 291 |
+| `KFM-P12-PROG-0008` | programming | UNCHANGED | — | 12 → 26 | — | `1665b49ec0fe362` | 8.11.8 | 291 |
+| `KFM-P12-PROG-0014` | programming | UNCHANGED | — | 12 → 26 | — | `f94d57cbf0afeca` | 8.11.9 | 291 |
+| `KFM-P13-PROG-0002` | programming | UNCHANGED | — | 13 → 26 | — | `282699b43a6b975` | 8.11.11 | 292 |
+| `KFM-P13-PROG-0003` | programming | UNCHANGED | — | 13 → 26 | — | `9a2669c8523fd0c` | 8.11.12 | 292 |
+| `KFM-P13-PROG-0020` | programming | UNCHANGED | — | 13 → 26 | — | `501daa0c55ab81d` | 8.11.13 | 292 |
+| `KFM-P13-PROG-0028` | programming | UNCHANGED | — | 13 → 26 | — | `da5ff96978239e7` | 8.11.14 | 292 |
+| `KFM-P14-PROG-0031` | programming | UNCHANGED | — | 14 → 26 | — | `496f14843e4e50c` | 8.11.15 | 292 |
+| `KFM-P14-PROG-0033` | programming | UNCHANGED | — | 14 → 26 | — | `948cc593eea3be1` | 8.11.16 | 293 |
+| `KFM-P15-PROG-0032` | programming | UNCHANGED | — | 15 → 26 | — | `235a1d1c1eee6d1` | 8.11.17 | 293 |
+| `KFM-P16-PROG-0021` | programming | UNCHANGED | — | 16 → 26 | — | `aba4d83b8946416` | 8.11.21 | 294 |
+| `KFM-P16-PROG-0036` | programming | UNCHANGED | — | 16 → 26 | — | `6ac49971b5bd605` | 8.11.22 | 294 |
+| `KFM-P17-PROG-0004` | programming | UNCHANGED | — | 17 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `497937257e24d6e` | 8.11.25 | 294 |
+| `KFM-P18-PROG-0008` | programming | UNCHANGED | — | 18 → 22 | — | `859de3a3f8d5f28` | 8.11.28 | 295 |
+| `KFM-P18-PROG-0012` | programming | UNCHANGED | — | 18 → 23 | — | `fa2b7db512a87c9` | 8.11.29 | 295 |
+| `KFM-P18-PROG-0038` | programming | UNCHANGED | — | 18 → 22 | — | `319683c7bdba5a4` | 8.11.30 | 295 |
+| `KFM-P18-PROG-0041` | programming | UNCHANGED | — | 18 → 22 | — | `1b74820126bb249` | 8.11.31 | 296 |
+| `KFM-P19-PROG-0007` | programming | UNCHANGED | — | 19 → 22 | — | `e7f303090b6a14a` | 8.11.33 | 296 |
+| `KFM-P19-PROG-0041` | programming | UNCHANGED | — | 19 → 22 | — | `a6456ec33d93fb2` | 8.11.34 | 296 |
+| `KFM-P20-PROG-0018` | programming | UNCHANGED | — | 20 → 22 | — | `2d24ad8215cb2cf` | 8.11.36 | 297 |
+| `KFM-P20-PROG-0021` | programming | UNCHANGED | — | 20 → 22 | — | `8e467a743e872f0` | 8.11.37 | 297 |
+| `KFM-P21-PROG-0029` | programming | UNCHANGED | — | 21 → 23 | — | `e0655589f602891` | 8.11.39 | 297 |
+| `KFM-P21-PROG-0033` | programming | UNCHANGED | — | 21 → 22 | — | `e3036a942962fce` | 8.11.40 | 297 |
+| `KFM-P21-PROG-0036` | programming | UNCHANGED | — | 21 → 22 | — | `5a691173092eef9` | 8.11.41 | 298 |
+| `KFM-P21-PROG-0040` | programming | UNCHANGED | — | 21 → 22 | — | `dc5018bd6ed2b73` | 8.11.42 | 298 |
+| `KFM-P22-PROG-0012` | programming | UNCHANGED | — | 22 → 22 | — | `fa1908dc4e09427` | 8.11.44 | 298 |
+| `KFM-P22-PROG-0025` | programming | UNCHANGED | — | 22 → 22 | — | `bce0fcde113bb5e` | 8.11.45 | 298 |
+| `KFM-P22-PROG-0027` | programming | UNCHANGED | — | 22 → 22 | — | `9c32a6c8b3f9c62` | 8.11.46 | 299 |
+| `KFM-P22-PROG-0040` | programming | UNCHANGED | — | 22 → 22 | — | `046a7b339050c4a` | 8.11.47 | 299 |
+| `KFM-P23-PROG-0017` | programming | UNCHANGED | — | 23 → 23 | — | `8cf977d0eb97faa` | 8.11.49 | 299 |
+| `KFM-P23-PROG-0027` | programming | UNCHANGED | — | 23 → 23 | — | `23f180554893ad1` | 8.11.50 | 299 |
+| `KFM-P23-PROG-0028` | programming | UNCHANGED | — | 23 → 23 | — | `5bbecd676f186ab` | 8.11.51 | 300 |
+| `KFM-P23-PROG-0038` | programming | UNCHANGED | — | 23 → 23 | — | `45b32b5cbb85aea` | 8.11.52 | 300 |
+| `KFM-P24-PROG-0017` | programming | UNCHANGED | — | 24 → 24 | — | `9f477c788b8ed76` | 8.11.55 | 300 |
+| `KFM-P24-PROG-0018` | programming | UNCHANGED | — | 24 → 24 | — | `9944b3793f92864` | 8.11.56 | 301 |
+| `KFM-P24-PROG-0019` | programming | UNCHANGED | — | 24 → 24 | — | `e24fa1a02e0b045` | 8.11.57 | 301 |
+| `KFM-P24-PROG-0049` | programming | UNCHANGED | — | 24 → 24 | — | `cbe04016ae6d011` | 8.11.58 | 301 |
+| `KFM-P24-PROG-0050` | programming | UNCHANGED | — | 24 → 24 | — | `798330a7dd50380` | 8.11.59 | 301 |
+| `KFM-P26-PROG-0006` | programming | UNCHANGED | — | 26 → 26 | — | `41018bc50f692e2` | 8.11.67 | 303 |
+| `KFM-P27-PROG-0023` | programming | UNCHANGED | — | 27 → 27 | — | `4c69902f7c2a0b7` | 8.11.68 | 303 |
+| `KFM-P28-PROG-0015` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `e72e44ed2ed9bea` | 8.11.71 | 304 |
+| `KFM-P28-PROG-0020` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `6eda66b81109ba9` | 8.11.72 | 304 |
+| `KFM-P28-PROG-0021` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `98462351906ec42` | 8.11.73 | 304 |
+| `KFM-P30-PROG-0011` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `8d5615f9da9cb2a` | 8.11.76 | 305 |
+| `KFM-P31-PROG-0019` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `dc0312de7b5a06c` | 8.11.78 | 305 |
+| `KFM-P32-PROG-0001` | programming | NEW | — | 32 → 32 | `SRC-P32-001` | `aca9520c9b17ab5` | 8.11.84 | 306 |
+| `KFM-P6-PROG-0007` | programming | UNCHANGED | — | 6 → 22 | — | `a0c7eed715f3aae` | 8.11.86 | 307 |
+| `KFM-P6-PROG-0008` | programming | UNCHANGED | — | 6 → 23 | — | `ca92a925bbdf62a` | 8.11.87 | 307 |
+| `KFM-P6-PROG-0012` | programming | UNCHANGED | — | 6 → 22 | — | `fa99e470d80add3` | 8.11.88 | 307 |
+| `KFM-P7-PROG-0003` | programming | UNCHANGED | — | 7 → 22 | — | `eab74b840795193` | 8.11.89 | 307 |
+| `KFM-P9-PROG-0059` | programming | UNCHANGED | — | 9 → 22 | — | `557ac55bbde03e7` | 8.11.93 | 308 |
+| `KFM-P9-PROG-0060` | programming | UNCHANGED | — | 9 → 22 | — | `4182875f96646c6` | 8.11.94 | 308 |
+| `KFM-P9-PROG-0061` | programming | UNCHANGED | — | 9 → 22 | — | `a546c5334a7ae21` | 8.11.95 | 308 |
+
+</details>
+
+#### 5.14 SEC — Security, Auditability, Signatures, Attestation
+
+<details>
+<summary><strong>130 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P18-FEAT-0006` | feature | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `83752c14a9c1731` | 8.12.35 | 315 |
+| `KFM-P19-FEAT-0007` | feature | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `6e593b489ca9405` | 8.12.41 | 317 |
+| `KFM-P27-FEAT-0006` | feature | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `875955ed7440915` | 8.12.70 | 322 |
+| `KFM-P28-FEAT-0007` | feature | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `4901aa8409f8e63` | 8.12.80 | 324 |
+| `KFM-P29-FEAT-0007` | feature | UNCHANGED | — | 29 → 30 | `SRC-P29-001,SRC-P30-002` | `7d982424b95e487` | 8.12.90 | 326 |
+| `KFM-P32-FEAT-0011` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `ba7a40e52f79b86` | 8.12.103 | 329 |
+| `KFM-P5-FEAT-0001` | feature | UNCHANGED | — | 5 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `60f6668854d5c54` | 8.12.109 | 330 |
+| `KFM-P14-IDEA-0003` | idea | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `abaf6f73857776f` | 8.12.17 | 312 |
+| `KFM-P18-IDEA-0007` | idea | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `14efb2274219f4b` | 8.12.36 | 316 |
+| `KFM-P19-IDEA-0002` | idea | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `71f42bfe38ca34e` | 8.12.42 | 317 |
+| `KFM-P22-IDEA-0001` | idea | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `420d9a145acd98d` | 8.12.51 | 319 |
+| `KFM-P23-IDEA-0002` | idea | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `3a0482e8768e970` | 8.12.61 | 321 |
+| `KFM-P25-IDEA-0019` | idea | UNCHANGED | — | 25 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `3d50d0f0f8c2775` | 8.12.66 | 322 |
+| `KFM-P26-IDEA-0017` | idea | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `7dc12ad4bc30721` | 8.12.67 | 322 |
+| `KFM-P27-IDEA-0008` | idea | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `64a04cf3039d872` | 8.12.71 | 323 |
+| `KFM-P27-IDEA-0011` | idea | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `c268179c9ccc192` | 8.12.72 | 323 |
+| `KFM-P27-IDEA-0019` | idea | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `1f56a56918f9870` | 8.12.73 | 323 |
+| `KFM-P27-IDEA-0020` | idea | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `6ebbd6a104aa49c` | 8.12.74 | 323 |
+| `KFM-P28-IDEA-0008` | idea | UNCHANGED | — | 28 → 30 | `SRC-P28-003,SRC-P30-002` | `b21879cfdff63a2` | 8.12.81 | 325 |
+| `KFM-P28-IDEA-0013` | idea | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `bbd3dc617568bdf` | 8.12.82 | 325 |
+| `KFM-P28-IDEA-0014` | idea | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `74c6cd90912758c` | 8.12.83 | 325 |
+| `KFM-P28-IDEA-0020` | idea | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `b12c1ab2dd5a4ae` | 8.12.84 | 325 |
+| `KFM-P29-IDEA-0010` | idea | UNCHANGED | — | 29 → 30 | `SRC-P29-001,SRC-P30-002` | `445d1d3f45d74fc` | 8.12.91 | 327 |
+| `KFM-P30-IDEA-0016` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `8f8708d89a75265` | 8.12.95 | 327 |
+| `KFM-P30-IDEA-0017` | idea | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `b2872e70f9af585` | 8.12.96 | 328 |
+| `KFM-P31-IDEA-0015` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `c7aea3d1060d5ee` | 8.12.100 | 328 |
+| `KFM-P31-IDEA-0016` | idea | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `dd2c150114bca94` | 8.12.101 | 329 |
+| `KFM-P32-IDEA-0014` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `398d946d7f925fc` | 8.12.104 | 329 |
+| `KFM-P8-IDEA-0002` | idea | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `70b43210d321431` | 8.12.115 | 331 |
+| `KFM-P1-PROG-0017` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `b7edec16270e96c` | 8.12.1 | 309 |
+| `KFM-P1-PROG-0053` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `fbd2de42acc6f73` | 8.12.2 | 309 |
+| `KFM-P1-PROG-0054` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `d64201c7e0c50ca` | 8.12.3 | 309 |
+| `KFM-P1-PROG-0055` | programming | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `b73454a307a18ea` | 8.12.4 | 309 |
+| `KFM-P10-PROG-0005` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `5fe1d73b545c29e` | 8.12.5 | 309 |
+| `KFM-P10-PROG-0006` | programming | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `eba7150ac63d4e7` | 8.12.6 | 310 |
+| `KFM-P11-PROG-0008` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `e2128c0b5b80b6b` | 8.12.7 | 310 |
+| `KFM-P11-PROG-0023` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `c6782341f175513` | 8.12.8 | 310 |
+| `KFM-P11-PROG-0028` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `41d3472db87f852` | 8.12.9 | 310 |
+| `KFM-P12-PROG-0009` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `8ffbbc4a4c180c7` | 8.12.10 | 310 |
+| `KFM-P12-PROG-0016` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `5dda64acdbd952e` | 8.12.11 | 311 |
+| `KFM-P12-PROG-0017` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `dfda5942af7048b` | 8.12.12 | 311 |
+| `KFM-P12-PROG-0024` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `c4e4c801e2c99e7` | 8.12.13 | 311 |
+| `KFM-P12-PROG-0031` | programming | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `8dcc00db7e55161` | 8.12.14 | 311 |
+| `KFM-P13-PROG-0011` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `991fc612a1e5690` | 8.12.15 | 311 |
+| `KFM-P13-PROG-0031` | programming | EXPANDED | — | 13 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `955b4faa5855177` | 8.12.16 | 312 |
+| `KFM-P14-PROG-0006` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `4b91bfeabf7f313` | 8.12.18 | 312 |
+| `KFM-P14-PROG-0018` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `aaeddbb0cade274` | 8.12.19 | 312 |
+| `KFM-P14-PROG-0019` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `6b060ae856fd4d3` | 8.12.20 | 312 |
+| `KFM-P14-PROG-0030` | programming | EXPANDED | — | 14 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `7e4847820127021` | 8.12.21 | 313 |
+| `KFM-P15-PROG-0004` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `ac2d670228f10ac` | 8.12.22 | 313 |
+| `KFM-P15-PROG-0017` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `5748dfdd39d3bc2` | 8.12.23 | 313 |
+| `KFM-P15-PROG-0031` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `b1db73f268b6c78` | 8.12.24 | 313 |
+| `KFM-P15-PROG-0039` | programming | EXPANDED | — | 15 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002,SRC-P32-001,SRC-P32-002` | `327882538c89590` | 8.12.25 | 313 |
+| `KFM-P16-PROG-0002` | programming | UNCHANGED | — | 16 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `3054d08891a8210` | 8.12.26 | 314 |
+| `KFM-P16-PROG-0004` | programming | UNCHANGED | — | 16 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `db7d15bb00164f2` | 8.12.27 | 314 |
+| `KFM-P16-PROG-0005` | programming | UNCHANGED | — | 16 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `2f4ad83d0ae85de` | 8.12.28 | 314 |
+| `KFM-P16-PROG-0014` | programming | UNCHANGED | — | 16 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `aac5a1ad9cd9e93` | 8.12.29 | 314 |
+| `KFM-P16-PROG-0034` | programming | UNCHANGED | — | 16 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `a0cebcb41f55d7c` | 8.12.30 | 314 |
+| `KFM-P17-PROG-0005` | programming | UNCHANGED | — | 17 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `df13767f97a65b5` | 8.12.31 | 315 |
+| `KFM-P17-PROG-0016` | programming | UNCHANGED | — | 17 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `290b2f0533451eb` | 8.12.32 | 315 |
+| `KFM-P17-PROG-0020` | programming | UNCHANGED | — | 17 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `f953b72eb6b7693` | 8.12.33 | 315 |
+| `KFM-P17-PROG-0037` | programming | UNCHANGED | — | 17 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `2f62fd748b29c57` | 8.12.34 | 315 |
+| `KFM-P18-PROG-0002` | programming | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `21218b9185dc159` | 8.12.37 | 316 |
+| `KFM-P18-PROG-0026` | programming | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `b5a6515d7681926` | 8.12.38 | 316 |
+| `KFM-P18-PROG-0029` | programming | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `df50a12d52b2faf` | 8.12.39 | 316 |
+| `KFM-P18-PROG-0030` | programming | UNCHANGED | — | 18 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `034d119db7fb7f3` | 8.12.40 | 316 |
+| `KFM-P19-PROG-0002` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `eff56743d2a53b2` | 8.12.43 | 317 |
+| `KFM-P19-PROG-0011` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `305c291c72ed056` | 8.12.44 | 317 |
+| `KFM-P19-PROG-0024` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `eaad924def03df3` | 8.12.45 | 317 |
+| `KFM-P19-PROG-0026` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `6956bc2c2118866` | 8.12.46 | 318 |
+| `KFM-P19-PROG-0038` | programming | UNCHANGED | — | 19 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `e35bb36d323a06d` | 8.12.47 | 318 |
+| `KFM-P20-PROG-0027` | programming | UNCHANGED | — | 20 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `cde66500de08be8` | 8.12.48 | 318 |
+| `KFM-P21-PROG-0004` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `9646a532c8af92b` | 8.12.49 | 318 |
+| `KFM-P21-PROG-0037` | programming | UNCHANGED | — | 21 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `17211000777d36c` | 8.12.50 | 318 |
+| `KFM-P22-PROG-0004` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002` | `2a1bf74fb5b5ff3` | 8.12.52 | 319 |
+| `KFM-P22-PROG-0009` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `bfdbbe95aad0769` | 8.12.53 | 319 |
+| `KFM-P22-PROG-0019` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `a9f8688670f68b7` | 8.12.54 | 319 |
+| `KFM-P22-PROG-0023` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `aed371c9a11a030` | 8.12.55 | 319 |
+| `KFM-P22-PROG-0024` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `79864f1497d9697` | 8.12.56 | 320 |
+| `KFM-P22-PROG-0028` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `ac5a0c936bab626` | 8.12.57 | 320 |
+| `KFM-P22-PROG-0029` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `92b1dad33a37083` | 8.12.58 | 320 |
+| `KFM-P22-PROG-0033` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `b059c936ccad819` | 8.12.59 | 320 |
+| `KFM-P22-PROG-0052` | programming | UNCHANGED | — | 22 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `99791300846ac56` | 8.12.60 | 320 |
+| `KFM-P23-PROG-0006` | programming | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `334960d84648944` | 8.12.62 | 321 |
+| `KFM-P23-PROG-0007` | programming | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `2fc9cc39d61bd15` | 8.12.63 | 321 |
+| `KFM-P23-PROG-0008` | programming | UNCHANGED | — | 23 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `c47868de76a13c6` | 8.12.64 | 321 |
+| `KFM-P24-PROG-0044` | programming | UNCHANGED | — | 24 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `0857067f4996666` | 8.12.65 | 321 |
+| `KFM-P26-PROG-0009` | programming | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `ba9852d666f45a9` | 8.12.68 | 322 |
+| `KFM-P26-PROG-0017` | programming | UNCHANGED | — | 26 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `f36a504b30c7fd1` | 8.12.69 | 322 |
+| `KFM-P27-PROG-0014` | programming | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `28ff96387b45900` | 8.12.75 | 323 |
+| `KFM-P27-PROG-0024` | programming | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `b8487fa6ca07629` | 8.12.76 | 324 |
+| `KFM-P27-PROG-0025` | programming | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `be6011a37b93b06` | 8.12.77 | 324 |
+| `KFM-P27-PROG-0026` | programming | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `aca910e68b430eb` | 8.12.78 | 324 |
+| `KFM-P27-PROG-0027` | programming | UNCHANGED | — | 27 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `2960c42f5f50350` | 8.12.79 | 324 |
+| `KFM-P28-PROG-0010` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-003,SRC-P30-002` | `07c855c638e299c` | 8.12.85 | 325 |
+| `KFM-P28-PROG-0018` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `96a005aec5709d8` | 8.12.86 | 326 |
+| `KFM-P28-PROG-0019` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `4b5317ea2e74145` | 8.12.87 | 326 |
+| `KFM-P28-PROG-0025` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `62bc29d8efa8611` | 8.12.88 | 326 |
+| `KFM-P28-PROG-0026` | programming | UNCHANGED | — | 28 → 30 | `SRC-P28-004,SRC-P30-002` | `dd3f3456cad9e41` | 8.12.89 | 326 |
+| `KFM-P29-PROG-0011` | programming | UNCHANGED | — | 29 → 30 | `SRC-P29-001,SRC-P30-002` | `496f28d0b7a7c20` | 8.12.92 | 327 |
+| `KFM-P29-PROG-0012` | programming | UNCHANGED | — | 29 → 30 | `SRC-P29-001,SRC-P30-002` | `761c353b794fbbc` | 8.12.93 | 327 |
+| `KFM-P29-PROG-0029` | programming | UNCHANGED | — | 29 → 30 | `SRC-P29-001,SRC-P30-002` | `b7496f80ab29a5d` | 8.12.94 | 327 |
+| `KFM-P30-PROG-0022` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `cd694ec022782b5` | 8.12.97 | 328 |
+| `KFM-P30-PROG-0023` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `cbeaae3de51ab5d` | 8.12.98 | 328 |
+| `KFM-P30-PROG-0024` | programming | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `0a9b3201ff58e87` | 8.12.99 | 328 |
+| `KFM-P31-PROG-0012` | programming | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `77e125124f7c04e` | 8.12.102 | 329 |
+| `KFM-P32-PROG-0002` | programming | NEW | — | 32 → 32 | `SRC-P32-001` | `2e99b43144bb40a` | 8.12.105 | 329 |
+| `KFM-P32-PROG-0015` | programming | NEW | — | 32 → 32 | `SRC-P32-001` | `d8845c8309d3cac` | 8.12.106 | 330 |
+| `KFM-P32-PROG-0018` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `360ec29489c3ec1` | 8.12.107 | 330 |
+| `KFM-P4-PROG-0003` | programming | UNCHANGED | — | 4 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `7bc350ab84f450d` | 8.12.108 | 330 |
+| `KFM-P5-PROG-0002` | programming | UNCHANGED | — | 5 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `3bc96118cc52c9b` | 8.12.110 | 330 |
+| `KFM-P5-PROG-0010` | programming | UNCHANGED | — | 5 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `88dd1758f989200` | 8.12.111 | 331 |
+| `KFM-P5-PROG-0013` | programming | UNCHANGED | — | 5 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `5d0220d59585663` | 8.12.112 | 331 |
+| `KFM-P6-PROG-0010` | programming | UNCHANGED | — | 6 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `9941a7cf1f438fa` | 8.12.113 | 331 |
+| `KFM-P7-PROG-0005` | programming | UNCHANGED | — | 7 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `11f7c471d201029` | 8.12.114 | 331 |
+| `KFM-P8-PROG-0007` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `fafa1ca2675277f` | 8.12.116 | 332 |
+| `KFM-P8-PROG-0008` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `dc61bbca0a2145c` | 8.12.117 | 332 |
+| `KFM-P8-PROG-0009` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `b577e29947867e1` | 8.12.118 | 332 |
+| `KFM-P8-PROG-0010` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `4a9ddc751be0c34` | 8.12.119 | 332 |
+| `KFM-P8-PROG-0011` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `585de56bf7d2a08` | 8.12.120 | 332 |
+| `KFM-P8-PROG-0012` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `25c0c9c2646f3b8` | 8.12.121 | 333 |
+| `KFM-P8-PROG-0013` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `1b8275d8679d414` | 8.12.122 | 333 |
+| `KFM-P8-PROG-0014` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `26184dfa4265150` | 8.12.123 | 333 |
+| `KFM-P8-PROG-0015` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `77f51b489abe8f5` | 8.12.124 | 333 |
+| `KFM-P8-PROG-0016` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `21ecbfa14ef91eb` | 8.12.125 | 333 |
+| `KFM-P8-PROG-0017` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `6e56758fbf841b2` | 8.12.126 | 334 |
+| `KFM-P8-PROG-0018` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `6cdc1478f7d1c67` | 8.12.127 | 334 |
+| `KFM-P8-PROG-0021` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `841538bc99b0eba` | 8.12.128 | 334 |
+| `KFM-P8-PROG-0026` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `81bb98a6fe6e475` | 8.12.129 | 334 |
+| `KFM-P8-PROG-0027` | programming | UNCHANGED | — | 8 → 30 | `SRC-P28-001,SRC-P28-002,SRC-P30-002` | `1c6af60fca2ada7` | 8.12.130 | 334 |
+
+</details>
+
+#### 5.15 UIX — UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer
+
+<details>
+<summary><strong>116 cards</strong> — click to expand</summary>
+
+| Stable ID | Class | Carry | Status | Passes | Sources | Spec hash | § | Page |
+|---|---|---|---|---|---|---|---|---:|
+| `KFM-P1-FEAT-0065` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `21372316eb8efa4` | 8.13.1 | 335 |
+| `KFM-P1-FEAT-0066` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `1e3cbe4378ce56d` | 8.13.2 | 335 |
+| `KFM-P1-FEAT-0067` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `2cb19d9924dabb1` | 8.13.3 | 335 |
+| `KFM-P1-FEAT-0068` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `eeeb7ee7b277914` | 8.13.4 | 335 |
+| `KFM-P1-FEAT-0074` | feature | EXPANDED | — | 1 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `1c4645e37f1f80b` | 8.13.5 | 335 |
+| `KFM-P10-FEAT-0002` | feature | EXPANDED | — | 10 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0244d98ddba8f24` | 8.13.6 | 336 |
+| `KFM-P12-FEAT-0001` | feature | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0da0650567e1249` | 8.13.9 | 336 |
+| `KFM-P12-FEAT-0002` | feature | EXPANDED | — | 12 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `968f1c60f679693` | 8.13.10 | 336 |
+| `KFM-P13-FEAT-0001` | feature | UNCHANGED | — | 13 → 13 | — | `86dad4598c2c558` | 8.13.11 | 337 |
+| `KFM-P13-FEAT-0002` | feature | UNCHANGED | — | 13 → 13 | — | `56bc228e8da9941` | 8.13.12 | 337 |
+| `KFM-P13-FEAT-0003` | feature | UNCHANGED | — | 13 → 23 | — | `faf27e6639f6007` | 8.13.13 | 337 |
+| `KFM-P14-FEAT-0001` | feature | UNCHANGED | — | 14 → 23 | — | `6994e577825b0ef` | 8.13.14 | 337 |
+| `KFM-P15-FEAT-0001` | feature | UNCHANGED | — | 15 → 17 | — | `6ab2a5aa180c958` | 8.13.16 | 338 |
+| `KFM-P15-FEAT-0002` | feature | UNCHANGED | — | 15 → 16 | — | `3e2673d8ce324c8` | 8.13.17 | 338 |
+| `KFM-P16-FEAT-0002` | feature | UNCHANGED | — | 16 → 16 | — | `dd203ad3cca0b97` | 8.13.19 | 338 |
+| `KFM-P16-FEAT-0003` | feature | UNCHANGED | — | 16 → 16 | — | `83e46d028700d42` | 8.13.20 | 338 |
+| `KFM-P17-FEAT-0002` | feature | UNCHANGED | — | 17 → 17 | — | `6f3a71a20674b9c` | 8.13.21 | 339 |
+| `KFM-P17-FEAT-0003` | feature | UNCHANGED | — | 17 → 17 | — | `2674b82ec6109fd` | 8.13.22 | 339 |
+| `KFM-P18-FEAT-0001` | feature | UNCHANGED | — | 18 → 18 | — | `17781b13cb82d8e` | 8.13.23 | 339 |
+| `KFM-P18-FEAT-0003` | feature | UNCHANGED | — | 18 → 18 | — | `457187cd09f5f62` | 8.13.24 | 339 |
+| `KFM-P18-FEAT-0004` | feature | UNCHANGED | — | 18 → 23 | — | `b7e2cdd8233ca07` | 8.13.25 | 339 |
+| `KFM-P18-FEAT-0005` | feature | UNCHANGED | — | 18 → 19 | — | `41753d532a556b7` | 8.13.26 | 340 |
+| `KFM-P19-FEAT-0001` | feature | UNCHANGED | — | 19 → 23 | — | `157039e624ec507` | 8.13.27 | 340 |
+| `KFM-P19-FEAT-0002` | feature | UNCHANGED | — | 19 → 19 | — | `a150c1f318a035a` | 8.13.28 | 340 |
+| `KFM-P19-FEAT-0004` | feature | UNCHANGED | — | 19 → 23 | — | `46422e1202b0e57` | 8.13.29 | 340 |
+| `KFM-P20-FEAT-0001` | feature | UNCHANGED | — | 20 → 20 | — | `a87a10db8fdb41a` | 8.13.30 | 340 |
+| `KFM-P20-FEAT-0002` | feature | UNCHANGED | — | 20 → 20 | — | `01099df5eeabb9b` | 8.13.31 | 341 |
+| `KFM-P20-FEAT-0004` | feature | UNCHANGED | — | 20 → 20 | — | `21d81f2ef06866c` | 8.13.32 | 341 |
+| `KFM-P20-FEAT-0006` | feature | UNCHANGED | — | 20 → 20 | — | `b3611e28ed6f6ae` | 8.13.33 | 341 |
+| `KFM-P20-FEAT-0008` | feature | UNCHANGED | — | 20 → 20 | — | `53c5c1cf5deb7a0` | 8.13.34 | 341 |
+| `KFM-P21-FEAT-0001` | feature | UNCHANGED | — | 21 → 21 | — | `ac0fc2ab301ff79` | 8.13.36 | 342 |
+| `KFM-P22-FEAT-0001` | feature | UNCHANGED | — | 22 → 22 | — | `aad77d1a8738448` | 8.13.45 | 343 |
+| `KFM-P22-FEAT-0002` | feature | UNCHANGED | — | 22 → 22 | — | `1f012e0b6e4ae61` | 8.13.46 | 344 |
+| `KFM-P23-FEAT-0001` | feature | UNCHANGED | — | 23 → 23 | — | `931c9f8f843a80a` | 8.13.49 | 344 |
+| `KFM-P23-FEAT-0002` | feature | UNCHANGED | — | 23 → 23 | — | `1daa5e69e5eaf44` | 8.13.50 | 344 |
+| `KFM-P24-FEAT-0001` | feature | UNCHANGED | — | 24 → 24 | — | `145b50a9ef26c61` | 8.13.52 | 345 |
+| `KFM-P24-FEAT-0002` | feature | UNCHANGED | — | 24 → 24 | — | `855b788a89aa262` | 8.13.53 | 345 |
+| `KFM-P25-FEAT-0001` | feature | UNCHANGED | — | 25 → 25 | — | `2f8d733de066852` | 8.13.54 | 345 |
+| `KFM-P25-FEAT-0002` | feature | UNCHANGED | — | 25 → 25 | — | `fa54523bd74bf76` | 8.13.55 | 345 |
+| `KFM-P25-FEAT-0006` | feature | UNCHANGED | — | 25 → 25 | — | `ca02f8c906c0e31` | 8.13.56 | 346 |
+| `KFM-P26-FEAT-0002` | feature | UNCHANGED | — | 26 → 26 | — | `468d67c46922967` | 8.13.58 | 346 |
+| `KFM-P26-FEAT-0003` | feature | UNCHANGED | — | 26 → 26 | — | `7d8745cb5adac97` | 8.13.59 | 346 |
+| `KFM-P26-FEAT-0009` | feature | UNCHANGED | — | 26 → 26 | — | `94b6a601f02f379` | 8.13.60 | 346 |
+| `KFM-P27-FEAT-0001` | feature | UNCHANGED | — | 27 → 27 | — | `4458bf81935e773` | 8.13.61 | 347 |
+| `KFM-P27-FEAT-0002` | feature | UNCHANGED | — | 27 → 27 | — | `5896323a6cd6040` | 8.13.62 | 347 |
+| `KFM-P27-FEAT-0007` | feature | UNCHANGED | — | 27 → 27 | — | `408503a4db8867f` | 8.13.63 | 347 |
+| `KFM-P27-FEAT-0010` | feature | UNCHANGED | — | 27 → 27 | — | `d3cc8e2e459d415` | 8.13.64 | 347 |
+| `KFM-P28-FEAT-0003` | feature | UNCHANGED | — | 28 → 28 | `SRC-P28-003` | `c51f2d456026df1` | 8.13.65 | 347 |
+| `KFM-P28-FEAT-0008` | feature | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `adcd7c5b20012d5` | 8.13.66 | 348 |
+| `KFM-P29-FEAT-0001` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-001` | `c13351f836e84d0` | 8.13.68 | 348 |
+| `KFM-P29-FEAT-0008` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `e536a54a7fe559c` | 8.13.69 | 348 |
+| `KFM-P29-FEAT-0010` | feature | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `71b9a00e415f6ea` | 8.13.70 | 348 |
+| `KFM-P30-FEAT-0001` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `92124a54985bbec` | 8.13.74 | 349 |
+| `KFM-P30-FEAT-0002` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `06801eb3e0c06d7` | 8.13.75 | 349 |
+| `KFM-P30-FEAT-0004` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `e7ff556f5ae4d01` | 8.13.76 | 350 |
+| `KFM-P30-FEAT-0005` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `f38de52b3bed338` | 8.13.77 | 350 |
+| `KFM-P30-FEAT-0006` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-001` | `d9e3b295d1ce62f` | 8.13.78 | 350 |
+| `KFM-P30-FEAT-0007` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `9e3d51a4a9b4a7e` | 8.13.79 | 350 |
+| `KFM-P30-FEAT-0009` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `2fc830eb3a76461` | 8.13.80 | 350 |
+| `KFM-P30-FEAT-0010` | feature | UNCHANGED | — | 30 → 30 | `SRC-P30-002` | `8ea395260513eeb` | 8.13.81 | 351 |
+| `KFM-P31-FEAT-0001` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `f71ef477e0077a4` | 8.13.82 | 351 |
+| `KFM-P31-FEAT-0002` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `cbeab8578f1a832` | 8.13.83 | 351 |
+| `KFM-P31-FEAT-0003` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `aea1ae35e30d354` | 8.13.84 | 351 |
+| `KFM-P31-FEAT-0004` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `c34f79af5deb0f3` | 8.13.85 | 351 |
+| `KFM-P31-FEAT-0005` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `67631812fef4630` | 8.13.86 | 352 |
+| `KFM-P31-FEAT-0006` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `def457a00cbe6ac` | 8.13.87 | 352 |
+| `KFM-P31-FEAT-0007` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `23bbb334f8ecfef` | 8.13.88 | 352 |
+| `KFM-P31-FEAT-0008` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `22a3adc6b0ad281` | 8.13.89 | 352 |
+| `KFM-P31-FEAT-0009` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `e4d38372bdbcb7d` | 8.13.90 | 352 |
+| `KFM-P31-FEAT-0010` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-001` | `532e11df481a6b8` | 8.13.91 | 353 |
+| `KFM-P31-FEAT-0011` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `a82528fdb3eb134` | 8.13.92 | 353 |
+| `KFM-P31-FEAT-0012` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `ea7c1720e59476d` | 8.13.93 | 353 |
+| `KFM-P31-FEAT-0013` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `d757904822f0a4a` | 8.13.94 | 353 |
+| `KFM-P31-FEAT-0014` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `47908b0b4720f62` | 8.13.95 | 353 |
+| `KFM-P31-FEAT-0015` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `9be303c41a1b86f` | 8.13.96 | 354 |
+| `KFM-P31-FEAT-0016` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `fbddadd8d24dfea` | 8.13.97 | 354 |
+| `KFM-P31-FEAT-0017` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `446ad7e7e76921c` | 8.13.98 | 354 |
+| `KFM-P31-FEAT-0018` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `9c64eac718d511e` | 8.13.99 | 354 |
+| `KFM-P31-FEAT-0019` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `fe9b1d2a9e4f1d2` | 8.13.100 | 354 |
+| `KFM-P31-FEAT-0020` | feature | UNCHANGED | — | 31 → 31 | `SRC-P31-002` | `eaa99679a0b385a` | 8.13.101 | 355 |
+| `KFM-P32-FEAT-0004` | feature | NEW | — | 32 → 32 | `SRC-P32-001` | `93a77dbdccc5468` | 8.13.102 | 355 |
+| `KFM-P32-FEAT-0010` | feature | NEW | — | 32 → 32 | `SRC-P32-002` | `0ad35acfd521ce2` | 8.13.103 | 355 |
+| `KFM-P4-FEAT-0001` | feature | UNCHANGED | — | 4 → 12 | — | `4a3447552848f22` | 8.13.107 | 356 |
+| `KFM-P6-FEAT-0001` | feature | UNCHANGED | — | 6 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `f4d668657ab991b` | 8.13.109 | 356 |
+| `KFM-P6-FEAT-0002` | feature | UNCHANGED | — | 6 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `47a690a8453a053` | 8.13.110 | 356 |
+| `KFM-P6-FEAT-0003` | feature | UNCHANGED | — | 6 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `16a48a83b4f9973` | 8.13.111 | 357 |
+| `KFM-P7-FEAT-0002` | feature | UNCHANGED | — | 7 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `315542fc06e05f9` | 8.13.112 | 357 |
+| `KFM-P21-IDEA-0004` | idea | UNCHANGED | — | 21 → 21 | — | `7645919ae8f6df6` | 8.13.37 | 342 |
+| `KFM-P22-IDEA-0006` | idea | UNCHANGED | — | 22 → 22 | — | `de4a089c2f8ebc4` | 8.13.47 | 344 |
+| `KFM-P25-IDEA-0008` | idea | UNCHANGED | — | 25 → 25 | — | `978c9f6f3b35d4c` | 8.13.57 | 346 |
+| `KFM-P29-IDEA-0017` | idea | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `2ebde9568089414` | 8.13.71 | 349 |
+| `KFM-P32-IDEA-0008` | idea | NEW | — | 32 → 32 | `SRC-P32-001` | `eef8ba04e47f439` | 8.13.104 | 355 |
+| `KFM-P32-IDEA-0015` | idea | NEW | — | 32 → 32 | `SRC-P32-002` | `c771e24782fa612` | 8.13.105 | 355 |
+| `KFM-P11-PROG-0003` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `0b89fd76225cfd0` | 8.13.7 | 336 |
+| `KFM-P11-PROG-0022` | programming | EXPANDED | — | 11 → 32 | `SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002` | `3f5706b9b949c20` | 8.13.8 | 336 |
+| `KFM-P14-PROG-0040` | programming | UNCHANGED | — | 14 → 23 | — | `2ea26a26ddd28c7` | 8.13.15 | 337 |
+| `KFM-P15-PROG-0008` | programming | UNCHANGED | — | 15 → 15 | — | `77c1eb1bb3d7213` | 8.13.18 | 338 |
+| `KFM-P20-PROG-0040` | programming | UNCHANGED | — | 20 → 20 | — | `5c3135c60240b77` | 8.13.35 | 341 |
+| `KFM-P21-PROG-0026` | programming | UNCHANGED | — | 21 → 21 | — | `542a43f6e036165` | 8.13.38 | 342 |
+| `KFM-P21-PROG-0038` | programming | UNCHANGED | — | 21 → 21 | — | `7a041ad85bfaf88` | 8.13.39 | 342 |
+| `KFM-P21-PROG-0041` | programming | UNCHANGED | — | 21 → 21 | — | `89ebfefa87aae2b` | 8.13.40 | 342 |
+| `KFM-P21-PROG-0043` | programming | UNCHANGED | — | 21 → 21 | — | `f3a2049b50662c0` | 8.13.41 | 343 |
+| `KFM-P21-PROG-0045` | programming | UNCHANGED | — | 21 → 21 | — | `0a7c15156e9f0ff` | 8.13.42 | 343 |
+| `KFM-P21-PROG-0046` | programming | UNCHANGED | — | 21 → 21 | — | `1d3913d356c4679` | 8.13.43 | 343 |
+| `KFM-P21-PROG-0050` | programming | UNCHANGED | — | 21 → 21 | — | `2af40cf30b0f958` | 8.13.44 | 343 |
+| `KFM-P22-PROG-0013` | programming | UNCHANGED | — | 22 → 22 | — | `0de4a53114b57c1` | 8.13.48 | 344 |
+| `KFM-P23-PROG-0049` | programming | UNCHANGED | — | 23 → 23 | — | `c26d72c0598f750` | 8.13.51 | 345 |
+| `KFM-P28-PROG-0027` | programming | UNCHANGED | — | 28 → 28 | `SRC-P28-004` | `757123ae50ea479` | 8.13.67 | 348 |
+| `KFM-P29-PROG-0018` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `660d91db8747a12` | 8.13.72 | 349 |
+| `KFM-P29-PROG-0023` | programming | UNCHANGED | — | 29 → 29 | `SRC-P29-002` | `d49a37a1549429e` | 8.13.73 | 349 |
+| `KFM-P32-PROG-0019` | programming | NEW | — | 32 → 32 | `SRC-P32-002` | `4face8ffd994898` | 8.13.106 | 356 |
+| `KFM-P5-PROG-0011` | programming | UNCHANGED | — | 5 → 17 | — | `2e565892042dd8e` | 8.13.108 | 356 |
+| `KFM-P9-PROG-0076` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `a02664097b01c33` | 8.13.113 | 357 |
+| `KFM-P9-PROG-0077` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `dc4510096dc4388` | 8.13.114 | 357 |
+| `KFM-P9-PROG-0078` | programming | UNCHANGED | — | 9 → 28 | `SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004` | `3449bcd26787f40` | 8.13.115 | 357 |
+| `KFM-P9-PROG-0079` | programming | UNCHANGED | — | 9 → 9 | — | `5133312e202be48` | 8.13.116 | 358 |
+
+</details>
+
+> *Per-card body text is not duplicated here; see the Category Atlas (§8) for full card bodies. The canonical machine surface remains `manifest-pass-32.jsonl`.*
 6. Human Table of Contents
 1 Cover page
 2 KFM Atlas Meta Block
