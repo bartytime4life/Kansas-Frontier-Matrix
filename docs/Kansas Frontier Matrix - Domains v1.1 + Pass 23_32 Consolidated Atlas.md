@@ -200,7 +200,6 @@ Because no content-bearing true duplicate was found, every source page from both
 
 <a id="kansas-frontier-matrix-domains-culmination-atlas-v11"></a>
 
-
 ---
 
 <!-- ============================================================ -->
@@ -1052,7 +1051,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Emergency alerts and 
 
 PROPOSED: Domain viewing products include HUC12 watershed view; gauge/site time-series view; hydrograph view; regulatory flood-context layer; observed flood-event layer; terrain-derived hydrology layer; Evidence Drawer. [DOM-HYD] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -1077,7 +1076,7 @@ CONFIRMED doctrine / PROPOSED lane application: Hydrology follows RAW -> WORK / 
 
 CONFIRMED / PROPOSED: Hydrology denies unclear rights and flood-role misuse; NFHL-as-observed-flood claims are denied. Infrastructure and private-property implications require review. [DOM-HYD] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -1215,7 +1214,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Crop and yield claims
 
 PROPOSED: Domain viewing products include static soil mapunit view; component/horizon drill-down; hydrologic soil group view; soil-moisture station series; gridded derivative view; suitability/interpretation view; support-type badges. [DOM-SOIL] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -1237,7 +1236,7 @@ CONFIRMED doctrine / PROPOSED lane application: Soil follows RAW -> WORK / QUARA
 
 CONFIRMED / PROPOSED: Support-type separation is mandatory; static survey, gridded derivative, station reading, satellite grid, pedon evidence, and interpretation cannot masquerade as one surface. [DOM-SOIL] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -1376,7 +1375,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Fauna owns taxa and a
 
 PROPOSED: Domain viewing products include habitat overlay registry; source-role badges; critical habitat view; modeled habitat view; occurrence summary view; connectivity/corridor view; Evidence Drawer Habitat panel. [DOM-HAB] [DOM-HF] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -1398,7 +1397,7 @@ CONFIRMED doctrine / PROPOSED lane application: Habitat follows RAW -> WORK / QU
 
 CONFIRMED / PROPOSED: Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context must not be flattened. Sensitive occurrence details deny by default. [DOM-HAB] [DOM-HF] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -1540,7 +1539,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Habitat owns habitat 
 
 PROPOSED: Domain viewing products include public species status view; public range polygons; occurrence density grid; species richness grid; invasive monitoring public layer; seasonal support layer; public-safe popup; taxon search. [DOM-FAUNA] [DOM-HF] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -1565,7 +1564,7 @@ CONFIRMED doctrine / PROPOSED lane application: Fauna follows RAW -> WORK / QUAR
 
 CONFIRMED / PROPOSED: Exact sensitive occurrence, nest, den, roost, hibernacula, spawning, and steward-controlled records fail closed. Public exact occurrence tiles for sensitive taxa are denied. [DOM-FAUNA] [DOM-HF] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -1703,7 +1702,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Habitat owns habitat 
 
 PROPOSED: Domain viewing products include public generalized occurrence layer; public range/distribution layer; vegetation community layer; invasive plant layer; phenology/condition layer; habitat association summary; review candidate view. [DOM-FLORA] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -1725,7 +1724,7 @@ CONFIRMED doctrine / PROPOSED lane application: Flora follows RAW -> WORK / QUAR
 
 CONFIRMED / PROPOSED: Rare, protected, culturally sensitive, and steward-reviewed flora default to generalized, withheld, staged, or denied public geometry. [DOM-FLORA] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -1866,7 +1865,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Soil owns canonical s
 
 PROPOSED: Domain viewing products include public-safe crop progress maps; aggregate crop-condition view; soil-crop suitability map; station soil-moisture series; satellite/grid moisture context; vegetation-index context; drought/pest stress indicators. [DOM-AG] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -1888,7 +1887,7 @@ CONFIRMED doctrine / PROPOSED lane application: Agriculture follows RAW -> WORK 
 
 CONFIRMED / PROPOSED: Aggregate statistics and satellite products must not become field/operator truth; farm/operator private data, proprietary yield, pesticide records, and private-sensitive joins fail closed. [DOM-AG] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -2033,7 +2032,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Hydrology measurement
 
 PROPOSED: Domain viewing products include bedrock unit map; surficial unit map; structure/fault view; stratigraphy/correlation view; borehole public-generalized view; mineral occurrence/deposit summary; extraction/reclamation context. [DOM-GEOL] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -2055,7 +2054,7 @@ CONFIRMED doctrine / PROPOSED lane application: Geology follows RAW -> WORK / QU
 
 CONFIRMED / PROPOSED: Exact borehole, sample, sensitive resource, well-log, and private well locations default to restricted or generalized public geometry. Occurrence, deposit, estimate, permit, production, and reserve claims must remain distinct. [DOM-GEOL] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -2195,7 +2194,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Hazards owns emergenc
 
 PROPOSED: Domain viewing products include observed sensor layers; public AQI report layers; regulatory archive layers; low-cost sensor caveat layers; model-field layers; remote-sensing mask layers; climate/anomaly context; derived fusion layers; advisory layers. [DOM-AIR] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -2217,7 +2216,7 @@ CONFIRMED doctrine / PROPOSED lane application: Atmosphere/Air follows RAW -> WO
 
 CONFIRMED / PROPOSED: AQI is not concentration; AOD is not PM2.5; model fields are not observations; low-cost sensor public release requires correction, caveats, confidence, and limitations. [DOM-AIR] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -2359,7 +2358,7 @@ PROPOSED: Domain viewing products include historical event layers; operational w
 
 <!-- VERIFY: extraction split "advisory/watch" and "remote-sensing" across line-break/control characters, page 91 -->
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -2381,7 +2380,7 @@ CONFIRMED doctrine / PROPOSED lane application: Hazards follows RAW -> WORK / QU
 
 CONFIRMED / PROPOSED: Operational warning products are contextual only and not for life safety; unknown source roles are quarantined; expired operational context cannot appear as current warning state. [DOM-HAZ] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -2527,7 +2526,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Settlements owns sett
 
 PROPOSED: Domain viewing products include modern roads layer; rail alignment layer; facility/crossing view; restriction/status timeline; freight-corridor context; historic route claim view; generalized trade-route corridor; derived graph/connectivity view. [DOM-ROADS] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -2551,7 +2550,7 @@ CONFIRMED doctrine / PROPOSED lane application: Roads/Rail follows RAW -> WORK /
 
 CONFIRMED / PROPOSED: Indigenous trade and mobility corridors, oral history, treaty, cultural, and interpretive evidence default to steward review and generalized public geometry. Critical transport facilities require review. [DOM-ROADS] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -2693,7 +2692,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: Roads/Rail owns trans
 
 PROPOSED: Domain viewing products include current settlement view; historic townsite view; legal-status-event view; census-place comparison; public-safe asset view; service-area aggregate view; dependency-summary view; restricted internal review view. [DOM-SETTLE] [ENCY]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -2715,7 +2714,7 @@ CONFIRMED doctrine / PROPOSED lane application: Settlements/Infrastructure follo
 
 CONFIRMED / PROPOSED: Critical infrastructure, utilities, condition observations, dependencies, operator-sensitive details, and exact facility geometry default to restricted or review. [DOM-SETTLE] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -2860,7 +2859,7 @@ PROPOSED: Domain viewing products include public generalized site summaries; pub
 
 <!-- VERIFY: extraction split "survey-coverage" across a line-break/control character, page 112 -->
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -2884,7 +2883,7 @@ CONFIRMED / PROPOSED: Exact archaeological locations, burial, human remains, sac
 
 <!-- VERIFY: extraction split "cultural" across a line-break/control character, page 113 -->
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -3035,7 +3034,7 @@ PROPOSED: Domain viewing products include historical person profile maps; reside
 
 <!-- VERIFY: extraction split "migration" across a line-break/control character, page 119 -->
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -3057,7 +3056,7 @@ CONFIRMED doctrine / PROPOSED lane application: People/DNA/Land follows RAW -> W
 
 CONFIRMED / PROPOSED: Living-person output and DNA-derived outputs are denied or restricted by default; raw kit/vendor IDs and DNA segments are not public; assessor/tax records and parcel geometry are not title truth. [DOM-PEOPLE] [ENCY]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -3197,7 +3196,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: People/DNA/Land owns 
 
 PROPOSED: Domain viewing products include frontier county-year dashboard; time slider; county panel map; threshold model comparison; settlement/access overlay; land oﬀice/public land layer; uncertainty view; matrix cell inspector. [ENCY] [UNIFIED]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -3219,7 +3218,7 @@ CONFIRMED doctrine / PROPOSED lane application: Frontier Matrix follows RAW -> W
 
 CONFIRMED / PROPOSED: Aggregate county-year outputs are the safest first public posture; sensitive joins to living persons, DNA, exact archaeology, rare species/plants, and critical infrastructure are denied or generalized. [ENCY] [UNIFIED]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -3362,7 +3361,7 @@ CONFIRMED / PROPOSED: This domain explicitly does not own: This lane renders, re
 
 PROPOSED: Domain viewing products include terrain evidence view; point-cloud review view; 3D tile scene view; glTF asset inspection; digital-twin composite view; synthetic-surface comparison; reality-boundary overlay; 3D admission review view; planetary reference view. [ENCY] [MAP-MASTER] [UIAI]
 
-CONFIRMED doctrine: Cross-cutting viewing products include Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. [MAP-MASTER] [GAI]
+_Doctrine callout C2 ("Cross-cutting viewing products") — see first occurrence above; identical across all 16 domain chapters._
 
 ### H. Pipeline shape (RAW -> PUBLISHED).
 
@@ -3384,7 +3383,7 @@ CONFIRMED doctrine / PROPOSED lane application: Planetary/3D follows RAW -> WORK
 
 CONFIRMED / PROPOSED: 3D scenes are higher-exposure carriers; public 3D should use generalized/lower-resolution/clipped/withheld content where sensitive. Synthetic surfaces require Reality Boundary Note. [ENCY] [MAP-MASTER] [UIAI]
 
-CONFIRMED doctrine: Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. [ENCY] [DIRRULES]
+_Doctrine callout C1 ("Deny-by-default promotion gate") — see first occurrence above; identical across all 16 domain chapters._
 
 ### J. API, contract, and schema surfaces.
 
@@ -4611,10 +4610,6 @@ End of Appendix G. End of v1.1 back matter. The v1.0 interior of this document (
 
 <!-- page: 184 -->
 
-KFM Pass 23 + Pass 32 consolidated atlas
-
-page 1 of 1095
-
 # Kansas Frontier Matrix - Pass 23 + Pass 32 Consolidated Deduplicated Atlas
 
 Generated UTC: 2026-05-18T19:05:25Z
@@ -4629,7 +4624,6 @@ Alignment threshold: NEAR when normalized statement token/sequence similarity >=
 
 <!-- page: 185 -->
 
-
 ---
 
 <!-- ============================================================ -->
@@ -4637,10 +4631,6 @@ Alignment threshold: NEAR when normalized statement token/sequence similarity >=
 <!-- Original source pages 1–1095 retained as converted above.   -->
 <!-- Upstream conversion truncated at approximately page 286.    -->
 <!-- ============================================================ -->
-
-KFM Pass 23 + Pass 32 consolidated atlas
-
-page 2 of 1095
 
 ## Table of Contents
 
@@ -4690,10 +4680,6 @@ Embedded Manifest Note . . . 1095
 
 <!-- page: 186 -->
 
-KFM Pass 23 + Pass 32 consolidated atlas
-
-page 3 of 1095
-
 ## Extraction Reliability and Limits
 
 CONFIRMED: Both input PDFs have selectable text on every page. PyMuPDF extraction found zero image XObjects in both inputs and no pages without text. OCR was not invoked.
@@ -4708,10 +4694,6 @@ NEEDS VERIFICATION: ReportLab produced selectable text, embedded font subsets, o
 | B | 296 | 19706539 | 0bd0e9cabf8666163a58... | 0 | 0 | KFM Pass 32 Idea Index Category Atlas and Expansion Dossier |
 
 <!-- page: 187 -->
-
-KFM Pass 23 + Pass 32 consolidated atlas
-
-page 4 of 1095
 
 ## Alignment Summary
 
@@ -4734,10 +4716,6 @@ CONFIRMED: No same-stable-ID contradictions were detected by the mechanical alig
 Resolution rule applied: B is retained as the later canonical card body for shared IDs; A-specific unique lines are retained as variant detail. B-only cards are retained verbatim. Non-card material from both sources is retained in source-labeled sections.
 
 <!-- page: 188 -->
-
-KFM Pass 23 + Pass 32 consolidated atlas
-
-page 5 of 1095
 
 ## Pass-Specific Non-Card Material
 
@@ -4780,10 +4758,6 @@ sha256: 0bd0e9cabf8666163a58597e21ef282ac1ccffd203ef9d2ff6aa13300c4d18b1
 page_count: 296
 
 <!-- page: 189 -->
-
-KFM Pass 23 + Pass 32 consolidated atlas
-
-page 6 of 1095
 
 ## Source A non-card material - Pass 23
 
@@ -4889,10 +4863,6 @@ KFM-P1-IDEA-0064 | idea | ANA | UNCHANGED | active | 1 | 15 | SRC-P23-001,SRC-P2
 
 <!-- page: 190 -->
 
-KFM Pass 23 + Pass 32 consolidated atlas
-
-page 7 of 1095
-
 ```
 KFM-P1-IDEA-0073 | idea | ANA | UNCHANGED | active | 1 | 15 | SRC-P23-001,SRC-P23-002 | sha256:708e299b5ebb9da56... | 8.1.3 | 36
 KFM-P1-PROG-0062 | programming | ANA | UNCHANGED | active | 1 | 15 | SRC-P23-001,SRC-P23-002 | sha256:4e94a7c429755497e... | 8.1.4 | 37
@@ -4956,8 +4926,6 @@ KFM-P21-PROG-0013 | programming | ANA | UNCHANGED | active | 21 | 21 | SRC-P23-0
 <!-- page: 191 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 8 of 1095
 KFM-P3-IDEA-0002 | idea | ANA | UNCHANGED | active | 3 | 9 | SRC-P23-001,SRC-P23-002 | sha256:a479899b4ef3feccd... | 8.1.55 | 88
 KFM-P4-IDEA-0001 | idea | ANA | UNCHANGED | active | 4 | 14 | SRC-P23-001,SRC-P23-002 | sha256:f883e6e3f63bd13c4... | 8.1.56 | 89
 KFM-P8-IDEA-0003 | idea | ANA | UNCHANGED | active | 8 | 9 | SRC-P23-001,SRC-P23-002 | sha256:3d5c12ce906673266... | 8.1.57 | 90
@@ -5058,8 +5026,6 @@ KFM-P1-IDEA-0070 | idea | CAT | UNCHANGED | active | 1 | 6 | SRC-P23-001,SRC-P23
 <!-- page: 192 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 9 of 1095
 KFM-P1-IDEA-0071 | idea | CAT | UNCHANGED | active | 1 | 6 | SRC-P23-001,SRC-P23-002 | sha256:96d2bc9b20e552300... | 8.2.4 | 158
 KFM-P10-FEAT-0003 | feature | CAT | EXPANDED | active | 10 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
 sha256:f3c8a0d9825a80ebc... | 8.2.5 | 159
@@ -5160,8 +5126,6 @@ KFM-P1-PROG-0010 | programming | DAT | UNCHANGED | active | 1 | 17 | SRC-P23-001
 <!-- page: 193 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 10 of 1095
 210
 KFM-P10-IDEA-0002 | idea | DAT | UNCHANGED | active | 10 | 10 | SRC-P23-001,SRC-P23-002 | sha256:b1c699dff3d948596... | 8.3.7 | 211
 KFM-P10-PROG-0021 | programming | DAT | UNCHANGED | active | 10 | 11 | SRC-P23-001,SRC-P23-002 | sha256:d26471f78b8d507e4... | 8.3.8 |
@@ -5265,8 +5229,6 @@ sha256:595a3b526ac475662... | 8.3.60 | 264
 <!-- page: 194 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 11 of 1095
 KFM-P22-PROG-0034 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P23-001,SRC-P23-002 | sha256:b316051d9089630c7... | 8.3.61
 | 265  
 KFM-P22-PROG-0045 | programming | DAT | EXPANDED | active | 22 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
@@ -5367,8 +5329,6 @@ KFM-P8-PROG-0030 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,
 <!-- page: 195 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 12 of 1095
 321
 KFM-P8-PROG-0031 | programming | DOC | UNCHANGED | active | 8 | 8 | SRC-P23-001,SRC-P23-002 | sha256:5f17dea215b083cb1... | 8.4.34 |
 322
@@ -5469,8 +5429,6 @@ KFM-P21-PROG-0021 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-0
 <!-- page: 196 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 13 of 1095
 KFM-P21-PROG-0022 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:83498c46eab7aeba0... | 8.5.46
 | 373  
 KFM-P21-PROG-0023 | programming | EVD | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:29ff7ded7b74c745a... | 8.5.47
@@ -5574,8 +5532,6 @@ KFM-P19-FEAT-0003 | feature | MAP | UNCHANGED | active | 19 | 19 | SRC-P23-001,S
 <!-- page: 197 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 14 of 1095
 430
 KFM-P19-FEAT-0006 | feature | MAP | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:d6f59b4c6c2bda9cb... | 8.6.28 |
 431
@@ -5676,8 +5632,6 @@ KFM-P9-PROG-0057 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,
 <!-- page: 198 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 15 of 1095
 493
 KFM-P9-PROG-0058 | programming | MAP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:b19093415384fb3a9... | 8.6.91 |
 494
@@ -5778,8 +5732,6 @@ KFM-P1-IDEA-0047 | idea | MOD | UNCHANGED | active | 1 | 9 | SRC-P23-001,SRC-P23
 <!-- page: 199 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 16 of 1095
 KFM-P1-IDEA-0049 | idea | MOD | UNCHANGED | active | 1 | 11 | SRC-P23-001,SRC-P23-002 | sha256:78cbd551917b02051... | 8.8.4 | 547
 KFM-P1-IDEA-0050 | idea | MOD | UNCHANGED | active | 1 | 18 | SRC-P23-001,SRC-P23-002 | sha256:86958955d85e826c1... | 8.8.5 | 548
 KFM-P1-IDEA-0051 | idea | MOD | UNCHANGED | active | 1 | 4 | SRC-P23-001,SRC-P23-002 | sha256:4d86a346ed506c40c... | 8.8.6 | 549
@@ -5883,8 +5835,6 @@ KFM-P4-PROG-0007 | programming | MOD | UNCHANGED | active | 4 | 4 | SRC-P23-001,
 <!-- page: 200 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 17 of 1095
 600
 KFM-P5-PROG-0008 | programming | MOD | EXPANDED | active | 5 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
 sha256:1e979e1e2c4a5a89e... | 8.8.58 | 601
@@ -5985,8 +5935,6 @@ sha256:96f5d574eaaaac9c5... | 8.9.34 | 648
 <!-- page: 201 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 18 of 1095
 KFM-P13-PROG-0021 | programming | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
 sha256:c70a1d143155c0a20... | 8.9.35 | 649
 KFM-P13-PROG-0029 | programming | PIP | EXPANDED | active | 13 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
@@ -6087,8 +6035,6 @@ KFM-P19-PROG-0015 | programming | PIP | EXPANDED | active | 19 | 23 | SRC-P23-00
 <!-- page: 202 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 19 of 1095
 sha256:31bbf6db8ecc124ea... | 8.9.82 | 696
 KFM-P19-PROG-0017 | programming | PIP | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
 sha256:5c756e36a820c8b33... | 8.9.83 | 697
@@ -6192,8 +6138,6 @@ KFM-P21-PROG-0032 | programming | PIP | EXPANDED | active | 21 | 23 | SRC-P23-00
 <!-- page: 203 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 20 of 1095
 sha256:4a834e24161f15a82... | 8.9.131 | 745
 KFM-P21-PROG-0047 | programming | PIP | UNCHANGED | active | 21 | 21 | SRC-P23-001,SRC-P23-002 | sha256:93a561f8087e5f82f... | 8.9.132
 | 746  
@@ -6294,8 +6238,6 @@ KFM-P9-PROG-0066 | programming | PIP | UNCHANGED | active | 9 | 9 | SRC-P23-001,
 <!-- page: 204 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 21 of 1095
 801
 KFM-P9-PROG-0067 | programming | PIP | UNCHANGED | active | 9 | 9 | SRC-P23-001,SRC-P23-002 | sha256:69f9e3cf677860a06... | 8.9.188 |
 802
@@ -6396,8 +6338,6 @@ KFM-P19-PROG-0010 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P23-0
 <!-- page: 205 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 22 of 1095
 KFM-P19-PROG-0013 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:ec7cfbd7e64854b3c... | 8.10.49
 | 855  
 KFM-P19-PROG-0025 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P23-001,SRC-P23-002 | sha256:c36b212be9835fcae... | 8.10.50
@@ -6501,8 +6441,6 @@ KFM-P16-PROG-0036 | programming | REL | UNCHANGED | active | 16 | 22 | SRC-P23-0
 <!-- page: 206 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 23 of 1095
 KFM-P17-FEAT-0001 | feature | REL | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:26ba6e31b24f4fbb8... | 8.11.23 |
 913
 KFM-P17-IDEA-0001 | idea | REL | UNCHANGED | active | 17 | 22 | SRC-P23-001,SRC-P23-002 | sha256:8c664d599c5cebc70... | 8.11.24 | 914
@@ -6603,8 +6541,6 @@ KFM-P12-PROG-0024 | programming | SEC | UNCHANGED | active | 12 | 22 | SRC-P23-0
 <!-- page: 207 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 24 of 1095
 5. Machine-Readable Index (continued)
 KFM-P12-PROG-0031 | programming | SEC | UNCHANGED | active | 12 | 22 | SRC-P23-001,SRC-P23-002 | sha256:50ea4805d1a71738c... | 8.12.14
 | 968  
@@ -6705,8 +6641,6 @@ KFM-P23-IDEA-0002 | idea | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:e
 <!-- page: 208 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 25 of 1095
 KFM-P23-PROG-0006 | programming | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:9f7a954a08f38ee12... | 8.12.62 | 1016
 KFM-P23-PROG-0007 | programming | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:f282ff21a1f2cb88b... | 8.12.63 | 1017
 KFM-P23-PROG-0008 | programming | SEC | NEW | active | 23 | 23 | SRC-P23-003 | sha256:7df9763371bc14470... | 8.12.64 | 1018
@@ -6810,8 +6744,6 @@ sha256:9f8afd37f30ef34d6... | 8.13.25 | 1067
 <!-- page: 209 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 26 of 1095
 KFM-P18-FEAT-0005 | feature | UIX | UNCHANGED | active | 18 | 19 | SRC-P23-001,SRC-P23-002 | sha256:5bbb027125728a6cf... | 8.13.26 |
 1068
 KFM-P19-FEAT-0001 | feature | UIX | EXPANDED | active | 19 | 23 | SRC-P23-001,SRC-P23-002,SRC-P23-003,SRC-P23-004 |
@@ -6912,8 +6844,6 @@ ANA - Analysis, Indicators, Statistics, Machine Learning, Model Interpretation: 
 <!-- page: 210 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 27 of 1095
 CAT - Catalog, Discovery, Registration: 49 cards; overview page 154
 DAT - Data Lifecycle, Provenance, Receipts: 83 cards; overview page 204
 DOC - Documentation, Doctrine, Reader Surfaces: 38 cards; overview page 288
@@ -7014,8 +6944,6 @@ KFM-P10-IDEA-0001 | POL | UNCHANGED | active | last_touched=10
 <!-- page: 211 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 28 of 1095
 KFM-P10-IDEA-0002 | DAT | UNCHANGED | active | last_touched=10
 KFM-P10-PROG-0001 | PIP | UNCHANGED | active | last_touched=21
 KFM-P10-PROG-0002 | MDP | UNCHANGED | active | last_touched=10
@@ -7119,8 +7047,6 @@ KFM-P12-PROG-0031 | SEC | UNCHANGED | active | last_touched=22
 <!-- page: 212 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 29 of 1095
 KFM-P13-FEAT-0001 | UIX | UNCHANGED | active | last_touched=13
 KFM-P13-FEAT-0002 | UIX | UNCHANGED | active | last_touched=13
 KFM-P13-FEAT-0003 | UIX | EXPANDED | active | last_touched=23
@@ -7221,8 +7147,6 @@ KFM-P15-PROG-0007 | PIP | UNCHANGED | active | last_touched=21
 <!-- page: 213 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 30 of 1095
 KFM-P15-PROG-0008 | UIX | UNCHANGED | active | last_touched=15
 KFM-P15-PROG-0009 | ANA | EXPANDED | active | last_touched=23
 KFM-P15-PROG-0010 | ANA | UNCHANGED | active | last_touched=15
@@ -7323,8 +7247,6 @@ KFM-P17-IDEA-0008 | PIP | EXPANDED | active | last_touched=23
 <!-- page: 214 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 31 of 1095
 KFM-P17-PROG-0001 | EVD | UNCHANGED | active | last_touched=20
 KFM-P17-PROG-0002 | POL | UNCHANGED | active | last_touched=19
 KFM-P17-PROG-0003 | DAT | UNCHANGED | active | last_touched=20
@@ -7428,8 +7350,6 @@ KFM-P18-PROG-0032 | CAT | UNCHANGED | active | last_touched=18
 <!-- page: 215 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 32 of 1095
 KFM-P18-PROG-0033 | CAT | UNCHANGED | active | last_touched=18
 KFM-P18-PROG-0034 | CAT | UNCHANGED | active | last_touched=18
 KFM-P18-PROG-0035 | ANA | EXPANDED | active | last_touched=23
@@ -7530,8 +7450,6 @@ KFM-P2-PROG-0002 | PIP | UNCHANGED | active | last_touched=21
 <!-- page: 216 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 33 of 1095
 KFM-P2-PROG-0003 | PIP | EXPANDED | active | last_touched=23
 KFM-P2-PROG-0004 | PIP | EXPANDED | active | last_touched=23
 KFM-P2-PROG-0005 | PIP | EXPANDED | active | last_touched=23
@@ -7632,8 +7550,6 @@ KFM-P21-PROG-0013 | ANA | UNCHANGED | active | last_touched=21
 <!-- page: 217 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 34 of 1095
 KFM-P21-PROG-0014 | CAT | UNCHANGED | active | last_touched=21
 KFM-P21-PROG-0015 | MOD | UNCHANGED | active | last_touched=21
 KFM-P21-PROG-0016 | DAT | UNCHANGED | active | last_touched=21
@@ -7734,8 +7650,6 @@ KFM-P22-PROG-0046 | DAT | UNCHANGED | active | last_touched=22
 <!-- page: 218 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 35 of 1095
 KFM-P22-PROG-0047 | PIP | UNCHANGED | active | last_touched=22
 KFM-P22-PROG-0048 | POL | UNCHANGED | active | last_touched=22
 KFM-P22-PROG-0049 | DAT | UNCHANGED | active | last_touched=22
@@ -7839,8 +7753,6 @@ KFM-P8-PROG-0024 | MOD | UNCHANGED | active | last_touched=8
 <!-- page: 219 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 36 of 1095
 9. Carry-Forward Register (continued)
 KFM-P8-PROG-0025 | PIP | EXPANDED | active | last_touched=23
 KFM-P8-PROG-0026 | SEC | UNCHANGED | active | last_touched=22
@@ -7941,8 +7853,6 @@ KFM-P9-PROG-0003 | DAT | UNCHANGED | active | last_touched=9
 <!-- page: 220 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 37 of 1095
 KFM-P9-PROG-0004 | DAT | UNCHANGED | active | last_touched=9
 KFM-P9-PROG-0005 | DAT | UNCHANGED | active | last_touched=9
 KFM-P9-PROG-0006 | DAT | UNCHANGED | active | last_touched=9
@@ -8043,8 +7953,6 @@ KFM-P23-PROG-0005 | programming | DAT | active | Promotion manifest bundle | SRC
 <!-- page: 221 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 38 of 1095
 KFM-P23-PROG-0006 | programming | SEC | active | Keyless Cosign sign-blob bundle | SRC-P23-003
 KFM-P23-PROG-0007 | programming | SEC | active | Rekor UUID audit reference | SRC-P23-003
 KFM-P23-PROG-0008 | programming | SEC | active | Offline verify-blob workflow | SRC-P23-003
@@ -8147,8 +8055,6 @@ KFM-P12-IDEA-0001, KFM-P12-PROG-0003, KFM-P12-PROG-0022, KFM-P12-PROG-0028, KFM-
 <!-- page: 222 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 39 of 1095
 KFM-P13-PROG-0015, KFM-P14-PROG-0013, KFM-P14-PROG-0020, KFM-P14-PROG-0022, KFM-P14-PROG-0026,
 KFM-P14-PROG-0035, KFM-P14-PROG-0036, KFM-P14-PROG-0037
 NEEDS VERIFICATION: Which Pass 18 source patterns are already represented in current repo schemas,
@@ -8252,8 +8158,6 @@ NEEDS VERIFICATION: What evidence should prove that a KFM planning tool is usabl
 <!-- page: 223 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 40 of 1095
 or steward workflows? | cards: KFM-P9-FEAT-0022
 NEEDS VERIFICATION: How should KFM handle conflicting route recommendations for different public
 groups? 471 KFM Components Pass | cards: KFM-P9-FEAT-0023
@@ -8354,8 +8258,6 @@ NEEDS VERIFICATION: What minimum source support is needed before KFM can display
 <!-- page: 224 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 41 of 1095
 cards: KFM-P9-PROG-0080
 NEEDS VERIFICATION: What public-safe generalization is appropriate for displacement- related maps? |
 cards: KFM-P9-PROG-0081
@@ -8456,8 +8358,6 @@ NEEDS VERIFICATION: What schema home currently owns SourceDescriptor in the repo
 <!-- page: 225 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 42 of 1095
 KFM-P1-PROG-0007
 NEEDS VERIFICATION: Should pre-RAW event family be modeled as its own contract package or as source
 descriptor output? | cards: KFM-P1-PROG-0008
@@ -8558,8 +8458,6 @@ KFM-P21-PROG-0002, KFM-P21-PROG-0016, KFM-P21-PROG-0020, KFM-P21-PROG-0025, KFM-
 <!-- page: 226 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 43 of 1095
 KFM-P21-PROG-0048, KFM-P22-PROG-0014, KFM-P22-PROG-0020, KFM-P22-PROG-0026, KFM-P22-PROG-0034,
 KFM-P22-PROG-0045, KFM-P22-PROG-0046, KFM-P22-PROG-0049
 NEEDS VERIFICATION: How should SourceIntakeRecord relate to CandidateDelta in the pipeline loop? |
@@ -8663,8 +8561,6 @@ versions, endpoint currentness, and CI behavior remain unverified in this docs-o
 <!-- page: 227 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 44 of 1095
 KFM-P7-PROG-0007, KFM-P7-PROG-0008, KFM-P8-PROG-0020, KFM-P8-PROG-0028, KFM-P8-PROG-0029,
 KFM-P8-PROG-0030, KFM-P8-PROG-0031, KFM-P8-PROG-0032, KFM-P8-PROG-0033
 NEEDS VERIFICATION: Is ACCEPTANCE required for components that are themselves checks? Probably yes,
@@ -8765,8 +8661,6 @@ KFM-P14-PROG-0016, KFM-P15-PROG-0002, KFM-P15-PROG-0038, KFM-P17-PROG-0001, KFM-
 <!-- page: 228 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 45 of 1095
 KFM-P3-PROG-0001, KFM-P8-IDEA-0001
 NEEDS VERIFICATION: Confirm Directory Rules ownership root, schema home, source rights, tool
 versions, current endpoint behavior, and package defaults before adoption. | cards:
@@ -8867,8 +8761,6 @@ NEEDS VERIFICATION: What trust-state vocabulary should be shared across API, UI,
 <!-- page: 229 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 46 of 1095
 manifests? | cards: KFM-P1-FEAT-0044
 NEEDS VERIFICATION: Which artifact formats are mandatory for the first public thin slice? | cards:
 KFM-P1-IDEA-0040
@@ -8969,8 +8861,6 @@ KFM-P9-FEAT-0001
 <!-- page: 230 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 47 of 1095
 NEEDS VERIFICATION: Verify source rights, version-sensitive facts, current repo placement, and
 operational readiness before implementing or publishing. | cards: KFM-P9-FEAT-0001,
 KFM-P9-FEAT-0011, KFM-P9-FEAT-0012, KFM-P9-FEAT-0013, KFM-P9-FEAT-0014, KFM-P9-FEAT-0015,
@@ -9074,8 +8964,6 @@ receipt-first patterns are already represented in current repo schemas, policies
 <!-- page: 231 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 48 of 1095
 source registries, or release artifacts? | cards: KFM-P1-PROG-0021, KFM-P13-PROG-0030,
 KFM-P16-PROG-0024, KFM-P18-PROG-0027, KFM-P3-IDEA-0004, KFM-P6-PROG-0003, KFM-P7-PROG-0001
 NEEDS VERIFICATION: Which Pass 20 biodiversity, HLS, soils, frontier-route, WPE agent, OpenLineage,
@@ -9176,8 +9064,6 @@ NEEDS VERIFICATION: Confirm Directory Rules ownership root, schema home, source 
 <!-- page: 232 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 49 of 1095
 versions, current endpoint behavior, and package defaults before adoption. | cards:
 KFM-P14-PROG-0023, KFM-P14-PROG-0027, KFM-P14-PROG-0028
 UNKNOWN: Repository implementation, current external source status, route names, workflow behavior,
@@ -9278,8 +9164,6 @@ KFM-P2-PROG-0009, KFM-P2-PROG-0010, KFM-P2-PROG-0011, KFM-P5-PROG-0009, KFM-P6-I
 <!-- page: 233 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 50 of 1095
 KFM-P6-PROG-0004, KFM-P6-PROG-0005, KFM-P6-PROG-0006, KFM-P6-PROG-0011 ... (+23 more)
 UNKNOWN: Repository implementation status remains unverified in this docs-only session. | cards:
 KFM-P1-PROG-0024, KFM-P1-PROG-0025, KFM-P1-PROG-0026, KFM-P1-PROG-0027, KFM-P1-PROG-0028,
@@ -9380,8 +9264,6 @@ NEEDS VERIFICATION: Where exactly does NatureServe data sit in the lifecycle, an
 <!-- page: 234 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 51 of 1095
 distributed (or denied) to consumers? | cards: KFM-P2-PROG-0002
 NEEDS VERIFICATION: What is the public-DTO posture for preliminary AirNow data? Should it be served
 at all, or only finalized AQS for promotion? | cards: KFM-P2-PROG-0003
@@ -9485,8 +9367,6 @@ change without warning; the corpus notes the issue without pinning a backoff pol
 <!-- page: 235 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 52 of 1095
 KFM-P8-PROG-0023
 NEEDS VERIFICATION: Should the validator be Conftest / OPA, or a dedicated WZDx schema validator? |
 cards: KFM-P8-PROG-0025
@@ -9587,8 +9467,6 @@ cards: KFM-P15-PROG-0025, KFM-P15-PROG-0034, KFM-P16-IDEA-0004, KFM-P16-PROG-000
 <!-- page: 236 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 53 of 1095
 KFM-P16-PROG-0011, KFM-P16-PROG-0016, KFM-P16-PROG-0026, KFM-P16-PROG-0033, KFM-P16-PROG-0037,
 KFM-P18-IDEA-0005, KFM-P18-PROG-0005, KFM-P18-PROG-0024, KFM-P18-PROG-0025, KFM-P18-PROG-0028,
 KFM-P19-IDEA-0003, KFM-P19-IDEA-0004, KFM-P19-IDEA-0009, KFM-P19-PROG-0006, KFM-P19-PROG-0009,
@@ -9689,8 +9567,6 @@ verification? | cards: KFM-P1-PROG-0057
 <!-- page: 237 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 54 of 1095
 NEEDS VERIFICATION: Which object storage/CDN behavior does KFM need to certify for safe artifact
 swaps? | cards: KFM-P1-PROG-0058
 NEEDS VERIFICATION: Should future runs reject non-ISO run_date values or normalize them with a
@@ -9791,8 +9667,6 @@ receipt-first patterns are already represented in current repo schemas, policies
 <!-- page: 238 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 55 of 1095
 source registries, or release artifacts? | cards: KFM-P1-PROG-0017, KFM-P1-PROG-0053,
 KFM-P10-PROG-0006, KFM-P11-PROG-0028, KFM-P12-PROG-0016, KFM-P12-PROG-0017, KFM-P12-PROG-0031,
 KFM-P13-PROG-0031, KFM-P14-PROG-0006, KFM-P14-PROG-0030, KFM-P15-PROG-0017, KFM-P15-PROG-0031,
@@ -9896,8 +9770,6 @@ rather than location-addressed? | cards: KFM-P7-PROG-0005
 <!-- page: 239 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 56 of 1095
 NEEDS VERIFICATION: How are LINDDUN and CARE outcomes reconciled when they conflict? | cards:
 KFM-P8-IDEA-0002
 NEEDS VERIFICATION: Resolve Pass 17 tension before operationalizing this candidate: Three frameworks
@@ -9998,8 +9870,6 @@ KFM-P14-FEAT-0001, KFM-P14-PROG-0040
 <!-- page: 240 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 57 of 1095
 UNKNOWN: Repository implementation, current external source status, route names, workflow behavior,
 and deployment maturity remain unverified in this docs-only pass. | cards: KFM-P15-FEAT-0001,
 KFM-P15-FEAT-0002, KFM-P15-PROG-0008
@@ -10100,8 +9970,6 @@ KFM-P1-IDEA-0059 -> KFM-P1-PROG-0008, KFM-P1-PROG-0027
 <!-- page: 241 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 58 of 1095
 KFM-P1-IDEA-0061 -> KFM-P1-IDEA-0045, KFM-P1-IDEA-0064
 KFM-P1-IDEA-0064 -> KFM-P1-IDEA-0061, KFM-P1-FEAT-0068
 KFM-P1-IDEA-0069 -> KFM-P1-PROG-0024, KFM-P1-IDEA-0049
@@ -10202,8 +10070,6 @@ KFM-P11-PROG-0024 -> KFM-P1-IDEA-0037, KFM-P1-PROG-0025
 <!-- page: 242 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 59 of 1095
 KFM-P11-PROG-0025 -> KFM-P11-PROG-0024, KFM-P1-PROG-0023
 KFM-P11-PROG-0026 -> KFM-P1-IDEA-0059, KFM-P6-PROG-0014
 KFM-P11-PROG-0027 -> KFM-P4-PROG-0002, KFM-P1-PROG-0018
@@ -10307,8 +10173,6 @@ KFM-P14-PROG-0008 -> KFM-P14-IDEA-0002, KFM-P1-PROG-0021, KFM-P1-IDEA-0020
 <!-- page: 243 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 60 of 1095
 KFM-P14-PROG-0009 -> KFM-P9-FEAT-0016, KFM-P9-PROG-0074, KFM-P12-PROG-0007
 KFM-P14-PROG-0010 -> KFM-P10-PROG-0019, KFM-P12-PROG-0027, KFM-P13-PROG-0022
 KFM-P14-PROG-0011 -> KFM-P12-FEAT-0002, KFM-P1-IDEA-0040, KFM-P4-PROG-0002
@@ -10409,8 +10273,6 @@ KFM-P16-PROG-0011 -> KFM-P1-PROG-0053, KFM-P1-PROG-0026
 <!-- page: 244 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 61 of 1095
 KFM-P16-PROG-0012 -> KFM-P1-PROG-0030, KFM-P10-PROG-0011
 KFM-P16-PROG-0013 -> KFM-P1-PROG-0028, KFM-P6-PROG-0015
 KFM-P16-PROG-0014 -> KFM-P1-FEAT-0074, KFM-P5-PROG-0011
@@ -10511,8 +10373,6 @@ KFM-P18-IDEA-0003 -> KFM-P16-PROG-0010, KFM-P4-PROG-0003
 <!-- page: 245 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 62 of 1095
 KFM-P18-IDEA-0004 -> KFM-P4-PROG-0001, KFM-P16-PROG-0031
 KFM-P18-IDEA-0005 -> KFM-P11-PROG-0025, KFM-P17-IDEA-0004
 KFM-P18-IDEA-0006 -> KFM-P17-IDEA-0008, KFM-P1-IDEA-0014
@@ -10613,8 +10473,6 @@ KFM-P19-PROG-0030 -> KFM-P19-PROG-0029, KFM-P14-PROG-0032
 <!-- page: 246 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 63 of 1095
 KFM-P19-PROG-0031 -> KFM-P19-IDEA-0001, KFM-P18-PROG-0040
 KFM-P19-PROG-0032 -> KFM-P19-PROG-0031, KFM-P14-PROG-0006
 KFM-P19-PROG-0033 -> KFM-P12-PROG-0001, KFM-P19-FEAT-0004
@@ -10718,8 +10576,6 @@ KFM-P3-FEAT-0005 -> KFM-P1-IDEA-0005, KFM-P1-IDEA-0019, KFM-P1-PROG-0023
 <!-- page: 247 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 64 of 1095
 KFM-P3-IDEA-0002 -> KFM-P1-IDEA-0056, KFM-P1-IDEA-0070, KFM-P1-PROG-0030, KFM-P2-PROG-0017
 KFM-P3-IDEA-0003 -> KFM-P1-IDEA-0056, KFM-P1-PROG-0029, KFM-P1-PROG-0054
 KFM-P3-IDEA-0004 -> KFM-P1-IDEA-0019, KFM-P1-PROG-0017, KFM-P1-PROG-0021
@@ -10820,8 +10676,6 @@ KFM-P8-PROG-0002 -> KFM-P1-IDEA-0006, KFM-P1-PROG-0025, KFM-P1-PROG-0030, KFM-P1
 <!-- page: 248 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 65 of 1095
 KFM-P1-PROG-0057, KFM-P5-PROG-0009, KFM-P6-IDEA-0001
 KFM-P8-PROG-0003 -> KFM-P1-PROG-0009, KFM-P1-PROG-0016, KFM-P1-PROG-0026, KFM-P8-PROG-0004
 KFM-P8-PROG-0004 -> KFM-P1-PROG-0015, KFM-P1-PROG-0016, KFM-P1-PROG-0057, KFM-P5-PROG-0010,
@@ -10922,8 +10776,6 @@ KFM-P9-IDEA-0015 -> KFM-P1-PROG-0016, KFM-P1-PROG-0015
 <!-- page: 249 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 66 of 1095
 KFM-P9-IDEA-0016 -> KFM-P1-PROG-0035, KFM-P1-IDEA-0037
 KFM-P9-IDEA-0017 -> KFM-P1-IDEA-0037, KFM-P1-PROG-0032
 KFM-P9-IDEA-0018 -> KFM-P1-IDEA-0037, KFM-P1-PROG-0035
@@ -11024,8 +10876,6 @@ KFM-P9-PROG-0061 -> KFM-P1-PROG-0060, KFM-P1-IDEA-0056
 <!-- page: 250 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 67 of 1095
 KFM-P9-PROG-0062 -> KFM-P1-PROG-0030, KFM-P1-PROG-0028
 KFM-P9-PROG-0063 -> KFM-P1-PROG-0027, KFM-P1-PROG-0024
 KFM-P9-PROG-0064 -> KFM-P1-PROG-0027, KFM-P1-PROG-0030
@@ -11079,8 +10929,6 @@ lists sidecars and hash algorithm.
 <!-- page: 251 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 68 of 1095
 Source B non-card material - Pass 32
 Includes Pass 32 title page, meta block, machine-readable index, authority note, carry-forward register, source attribution,
 related-ideas appendix, glossary, and footer text not inside individual card bodies.
@@ -11178,8 +11026,6 @@ sha256:45087d80f21cb1a... | 8.1.4 | 40
 <!-- page: 252 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 69 of 1095
 KFM-P1-PROG-0063 | programming | ANA | EXPANDED | active | 1 | 32 |
 SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P32-001,SRC-P32-002 | sha256:a5e567fdf80dc51... |
 8.1.5 | 40
@@ -11280,8 +11126,6 @@ KFM-P25-FEAT-0007 | feature | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,S
 <!-- page: 253 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 70 of 1095
 KFM-P25-IDEA-0001 | idea | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:e0fcb7c868bf296... | 8.1.56 | 51
 KFM-P25-IDEA-0002 | idea | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:159e0a425e8dcde... | 8.1.57 | 51
 KFM-P25-IDEA-0003 | idea | ANA | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:70513d5868f0a82... | 8.1.58 | 51
@@ -11382,8 +11226,6 @@ KFM-P9-PROG-0030 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,
 <!-- page: 254 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 71 of 1095
 KFM-P9-PROG-0031 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:83f31ce801b262c... | 8.1.142 | 68
 KFM-P9-PROG-0032 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:2fbbdc60b4c0035... | 8.1.143 | 68
 KFM-P9-PROG-0033 | programming | ANA | UNCHANGED | active | 9 | 9 | SRC-P28-001,SRC-P28-002 | sha256:687b269f3be459a... | 8.1.144 | 68
@@ -11487,8 +11329,6 @@ sha256:2e0ae0927e02f9c... | 8.2.39 | 79
 <!-- page: 255 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 72 of 1095
 KFM-P21-PROG-0014 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:7b58e79e4a14cd2... | 8.2.40 |
 79
 KFM-P21-PROG-0024 | programming | CAT | UNCHANGED | active | 21 | 21 | SRC-P28-001,SRC-P28-002 | sha256:84365301ebc84f7... | 8.2.41 |
@@ -11589,8 +11429,6 @@ sha256:885a94c55d633aa... | 8.3.14 | 90
 <!-- page: 256 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 73 of 1095
 KFM-P13-PROG-0022 | programming | DAT | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
 sha256:b6b522ea8338acc... | 8.3.15 | 90
 KFM-P14-IDEA-0001 | idea | DAT | EXPANDED | active | 14 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-001,SRC-P32-001,SRC-P32-002 |
@@ -11691,8 +11529,6 @@ KFM-P22-PROG-0045 | programming | DAT | UNCHANGED | active | 22 | 23 | SRC-P28-0
 <!-- page: 257 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 74 of 1095
 KFM-P22-PROG-0046 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:e985cf843d7c14c... | 8.3.63 |
 100
 KFM-P22-PROG-0049 | programming | DAT | UNCHANGED | active | 22 | 22 | SRC-P28-001,SRC-P28-002 | sha256:ce710eb58db7146... | 8.3.64 |
@@ -11793,8 +11629,6 @@ KFM-P13-PROG-0009 | programming | DOC | UNCHANGED | active | 13 | 13 | SRC-P28-0
 <!-- page: 258 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 75 of 1095
 112
 KFM-P15-PROG-0041 | programming | DOC | QUARANTINED | quarantine | 15 | 15 | SRC-P28-001,SRC-P28-002,SRC-P28-005 |
 sha256:7bf12b2a217a8d5... | 8.4.9 | 112
@@ -11898,8 +11732,6 @@ KFM-P13-PROG-0008 | programming | EVD | EXPANDED | active | 13 | 32 | SRC-P28-00
 <!-- page: 259 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 76 of 1095
 sha256:a8fb0e65938dd40... | 8.5.15 | 123
 KFM-P13-PROG-0010 | programming | EVD | EXPANDED | active | 13 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
 sha256:b35e8679e1cbd13... | 8.5.16 | 124
@@ -12000,8 +11832,6 @@ KFM-P23-PROG-0025 | programming | EVD | UNCHANGED | active | 23 | 30 | SRC-P28-0
 <!-- page: 260 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 77 of 1095
 KFM-P23-PROG-0047 | programming | EVD | UNCHANGED | active | 23 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:a4832502b666730...
 | 8.5.59 | 132  
 KFM-P24-IDEA-0005 | idea | EVD | UNCHANGED | active | 24 | 30 | SRC-P28-001,SRC-P28-002,SRC-P30-002 | sha256:8a20080990f2211... |
@@ -12102,8 +11932,6 @@ sha256:0b0ff0159c40cb8... | 8.6.4 | 142
 <!-- page: 261 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 78 of 1095
 KFM-P1-IDEA-0040 | idea | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
 sha256:568be8588e91987... | 8.6.5 | 142
 KFM-P1-PROG-0041 | programming | MAP | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
@@ -12204,8 +12032,6 @@ KFM-P23-PROG-0036 | programming | MAP | UNCHANGED | active | 23 | 23 | SRC-P28-0
 <!-- page: 262 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 79 of 1095
 KFM-P23-PROG-0037 | programming | MAP | UNCHANGED | active | 23 | 23 | SRC-P28-001,SRC-P28-002 | sha256:2f3f6fc605cbb1c... | 8.6.52 |
 152
 KFM-P24-PROG-0051 | programming | MAP | UNCHANGED | active | 24 | 24 | SRC-P28-001,SRC-P28-002 | sha256:499dfef82075e48... | 8.6.53 |
@@ -12309,8 +12135,6 @@ KFM-P9-IDEA-0043 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P2
 <!-- page: 263 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 80 of 1095
 sha256:dc53addaf3d24b8... | 8.6.117 | 165
 KFM-P9-IDEA-0044 | idea | MAP | UNCHANGED | active | 9 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
 sha256:b99580b95fe0dd1... | 8.6.118 | 165
@@ -12411,8 +12235,6 @@ sha256:51a48111641aafd... | 8.7.27 | 174
 <!-- page: 264 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 81 of 1095
 KFM-P19-PROG-0034 | programming | MDP | UNCHANGED | active | 19 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
 sha256:33e1b05ebe74bcd... | 8.7.28 | 174
 KFM-P20-PROG-0003 | programming | MDP | UNCHANGED | active | 20 | 28 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004 |
@@ -12513,8 +12335,6 @@ KFM-P12-PROG-0006 | programming | MOD | UNCHANGED | active | 12 | 26 | SRC-P28-0
 <!-- page: 265 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 82 of 1095
 KFM-P12-PROG-0026 | programming | MOD | UNCHANGED | active | 12 | 26 | SRC-P28-001,SRC-P28-002 | sha256:87a642292fec66b... | 8.8.13 |
 186
 KFM-P13-PROG-0007 | programming | MOD | UNCHANGED | active | 13 | 26 | SRC-P28-001,SRC-P28-002 | sha256:f3cdc0dd1d6079a... | 8.8.14 |
@@ -12615,8 +12435,6 @@ KFM-P25-IDEA-0005 | idea | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-
 <!-- page: 266 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 83 of 1095
 KFM-P25-IDEA-0012 | idea | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:03a1f5b66c0219d... | 8.8.64 | 196
 KFM-P25-PROG-0012 | programming | MOD | UNCHANGED | active | 25 | 25 | SRC-P28-001,SRC-P28-002 | sha256:5343e41e7b40f29... | 8.8.65 |
 196
@@ -12720,8 +12538,6 @@ KFM-P1-PROG-0030 | programming | PIP | EXPANDED | active | 1 | 32 |
 <!-- page: 267 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 84 of 1095
 SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
 sha256:607823a951ee283... | 8.9.7 | 207
 KFM-P10-PROG-0001 | programming | PIP | EXPANDED | active | 10 | 32 |
@@ -12822,8 +12638,6 @@ sha256:7c5290431229501... | 8.9.38 | 213
 <!-- page: 268 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 85 of 1095
 KFM-P14-PROG-0004 | programming | PIP | EXPANDED | active | 14 | 32 |
 SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002,SRC-P32-001,SRC-P32-002 |
 sha256:3130d605ea0a72d... | 8.9.39 | 213
@@ -12924,8 +12738,6 @@ KFM-P18-PROG-0001 | programming | PIP | UNCHANGED | active | 18 | 31 |
 <!-- page: 269 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 86 of 1095
 SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
 sha256:e8708b00204afe8... | 8.9.71 | 220
 KFM-P18-PROG-0004 | programming | PIP | UNCHANGED | active | 18 | 31 |
@@ -13026,8 +12838,6 @@ sha256:440df20d7711992... | 8.9.104 | 226
 <!-- page: 270 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 87 of 1095
 KFM-P20-IDEA-0008 | idea | PIP | UNCHANGED | active | 20 | 31 |
 SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
 sha256:1ef7031d6b08e57... | 8.9.105 | 226
@@ -13131,8 +12941,6 @@ sha256:04731fb1a689f83... | 8.9.137 |
 <!-- page: 271 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 88 of 1095
 233
 KFM-P22-PROG-0022 | programming | PIP | UNCHANGED | active | 22 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
 sha256:23d54c898f4d743... | 8.9.138 |
@@ -13233,8 +13041,6 @@ sha256:0cdb7e1757e4164... | 8.9.169 |
 <!-- page: 272 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 89 of 1095
 239
 KFM-P24-PROG-0026 | programming | PIP | UNCHANGED | active | 24 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
 sha256:2ab28d169c03a66... | 8.9.170 |
@@ -13335,8 +13141,6 @@ KFM-P27-IDEA-0004 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-
 <!-- page: 273 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 90 of 1095
 sha256:f3cc6aa433bd490... | 8.9.203 | 246
 KFM-P27-IDEA-0005 | idea | PIP | UNCHANGED | active | 27 | 31 | SRC-P28-001,SRC-P28-002,SRC-P29-001,SRC-P31-001,SRC-P31-002 |
 sha256:9abb600e9140a17... | 8.9.204 | 246
@@ -13437,8 +13241,6 @@ KFM-P30-PROG-0019 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-0
 <!-- page: 274 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 91 of 1095
 KFM-P30-PROG-0020 | programming | PIP | UNCHANGED | active | 30 | 31 | SRC-P30-001,SRC-P31-001,SRC-P31-002 | sha256:94056d8ade3bf69...
 | 8.9.247 | 255  
 KFM-P31-IDEA-0002 | idea | PIP | UNCHANGED | active | 31 | 31 | SRC-P31-001 | sha256:0ee27e41ad606ca... | 8.9.248 | 255
@@ -13542,8 +13344,6 @@ sha256:77b04f4a0de41d2... | 8.10.1 | 266
 <!-- page: 275 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 92 of 1095
 KFM-P1-IDEA-0033 | idea | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
 sha256:92b7ccdb3dca9c6... | 8.10.2 | 266
 KFM-P1-IDEA-0034 | idea | POL | EXPANDED | active | 1 | 32 | SRC-P28-001,SRC-P28-002,SRC-P32-001,SRC-P32-002 |
@@ -13644,8 +13444,6 @@ KFM-P19-PROG-0009 | programming | POL | UNCHANGED | active | 19 | 20 | SRC-P28-0
 <!-- page: 276 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 93 of 1095
 KFM-P19-PROG-0010 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:71b233257f09e84... | 8.10.48 |
 275
 KFM-P19-PROG-0013 | programming | POL | UNCHANGED | active | 19 | 19 | SRC-P28-001,SRC-P28-002 | sha256:daea1d2f9908f3f... | 8.10.49 |
@@ -13746,8 +13544,6 @@ KFM-P32-FEAT-0009 | feature | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha25
 <!-- page: 277 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 94 of 1095
 KFM-P32-FEAT-0012 | feature | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:d6595ff8f3f1bb3... | 8.10.107 | 287
 KFM-P32-FEAT-0017 | feature | POL | NEW | active | 32 | 32 | SRC-P32-002 | sha256:7d8fabfc1fb17ae... | 8.10.108 | 287
 KFM-P32-IDEA-0007 | idea | POL | NEW | active | 32 | 32 | SRC-P32-001 | sha256:41d807e4bd5b0f8... | 8.10.109 | 287
@@ -13848,8 +13644,6 @@ KFM-P20-PROG-0021 | programming | REL | UNCHANGED | active | 20 | 22 | SRC-P28-0
 <!-- page: 278 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 95 of 1095
 297
 KFM-P21-IDEA-0006 | idea | REL | UNCHANGED | active | 21 | 22 | SRC-P28-001,SRC-P28-002 | sha256:5c2d099d50f2249... | 8.11.38 | 297
 KFM-P21-PROG-0029 | programming | REL | UNCHANGED | active | 21 | 23 | SRC-P28-001,SRC-P28-002 | sha256:e0655589f602891... | 8.11.39 |
@@ -13953,8 +13747,6 @@ sha256:5fe1d73b545c29e... | 8.12.5 | 309
 <!-- page: 279 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 96 of 1095
 KFM-P10-PROG-0006 | programming | SEC | EXPANDED | active | 10 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
 sha256:eba7150ac63d4e7... | 8.12.6 | 310
 KFM-P11-PROG-0008 | programming | SEC | EXPANDED | active | 11 | 32 | SRC-P28-001,SRC-P28-002,SRC-P30-002,SRC-P32-001,SRC-P32-002 |
@@ -14055,8 +13847,6 @@ sha256:034d119db7fb7f3... | 8.12.40 |
 <!-- page: 280 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 97 of 1095
 316
 KFM-P19-FEAT-0007 | feature | SEC | UNCHANGED | active | 19 | 30 | SRC-P28-001,SRC-P28-002,SRC-P28-003,SRC-P28-004,SRC-P30-002 |
 sha256:6e593b489ca9405... | 8.12.41 | 317
@@ -14157,8 +13947,6 @@ KFM-P28-PROG-0018 | programming | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-0
 <!-- page: 281 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 98 of 1095
 326
 KFM-P28-PROG-0019 | programming | SEC | UNCHANGED | active | 28 | 30 | SRC-P28-004,SRC-P30-002 | sha256:4b5317ea2e74145... | 8.12.87 |
 326
@@ -14259,8 +14047,6 @@ KFM-P13-FEAT-0001 | feature | UIX | UNCHANGED | active | 13 | 13 | SRC-P28-001,S
 <!-- page: 282 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 99 of 1095
 KFM-P13-FEAT-0002 | feature | UIX | UNCHANGED | active | 13 | 13 | SRC-P28-001,SRC-P28-002 | sha256:56bc228e8da9941... | 8.13.12 | 337
 KFM-P13-FEAT-0003 | feature | UIX | UNCHANGED | active | 13 | 23 | SRC-P28-001,SRC-P28-002 | sha256:faf27e6639f6007... | 8.13.13 | 337
 KFM-P14-FEAT-0001 | feature | UIX | UNCHANGED | active | 14 | 23 | SRC-P28-001,SRC-P28-002 | sha256:6994e577825b0ef... | 8.13.14 | 337
@@ -14363,8 +14149,6 @@ KFM-P31-FEAT-0013 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 |
 <!-- page: 283 -->
 
 ```text
-KFM Pass 23 + Pass 32 consolidated atlas
-page 100 of 1095
 KFM-P31-FEAT-0014 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:47908b0b4720f62... | 8.13.95 | 353
 KFM-P31-FEAT-0015 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:9be303c41a1b86f... | 8.13.96 | 354
 KFM-P31-FEAT-0016 | feature | UIX | UNCHANGED | active | 31 | 31 | SRC-P31-002 | sha256:fbddadd8d24dfea... | 8.13.97 | 354
