@@ -1,86 +1,1103 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kfm.local/contracts/v1/source/source_descriptor.schema.json",
-  "title": "source_descriptor",
-  "type": "object",
-  "description": "KFM contract for source_descriptor.",
-  "x-kfm": {
-    "contract_doc": "contracts/source/source_descriptor.md",
-    "fixtures_root": "fixtures/contracts/v1/source/source_descriptor/",
-    "validator": "tools/validators/validate_source_descriptor.py",
-    "policy": "policy/source/",
-    "status": "PROPOSED"
-  },
-  "properties": {
-    "id": {
-      "type": "string"
-    },
-    "domain": {
-      "type": "string"
-    },
-    "role": {
-      "type": "string",
-      "enum": [
-        "primary",
-        "corroborating",
-        "context",
-        "restricted"
-      ]
-    },
-    "authority": {
-      "type": "string"
-    },
-    "rights": {
-      "type": "object",
-      "required": [
-        "license",
-        "attribution_required"
-      ],
-      "properties": {
-        "license": {
-          "type": "string"
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schemas.kfm.local/contracts/v1/source/source_descriptor.schema.json",
+    "title": "source_descriptor",
+    "type": "object",
+    "description": "KFM SourceDescriptor v1 contract for admitting and governing external or internal sources. The descriptor records source identity, source type, source role, authority posture, rights, sensitivity, cadence, access, citation, source-head metadata, admissibility limits, review state, release state, and lifecycle posture. It records how a source may be treated; it does not make the source's claims true.",
+    "x-kfm": {
+        "contract_doc": "contracts/source/source_descriptor.md",
+        "canonical_schema_path": "schemas/contracts/v1/sources/source_descriptor.schema.json",
+        "legacy_schema_path": "schemas/contracts/v1/source/source_descriptor.schema.json",
+        "fixtures_root": "tests/fixtures/sources/source_descriptor/",
+        "validator": "tools/validators/sources/validate_source_descriptor.py",
+        "policy": "policy/source/",
+        "registry_home": "data/registry/sources/",
+        "status": "PROPOSED",
+        "object_family": "SourceDescriptor",
+        "directory_rules_basis": "Field-level schema belongs under schemas/contracts/v1; source identity, rights, and sensitivity records belong under data/registry and policy surfaces.",
+        "legacy_field_map": {
+            "id": "source_id",
+            "domain": "domain_scope[]",
+            "role": "source_role",
+            "authority": "authority_rank + authority_notes",
+            "sensitivity_floor": "sensitivity_default",
+            "update_cadence": "cadence.update_cadence",
+            "access_posture": "access.access_posture",
+            "citation_template": "citation.citation_template"
         },
-        "attribution_required": {
-          "type": "boolean"
+        "breaking_change_note": "This update keeps legacy alias fields as deprecated optional properties, but canonical validation requires the richer SourceDescriptor fields. Add or update fixtures rather than relying on old minimal records."
+    },
+    "required": [
+        "object_type",
+        "schema_version",
+        "source_id",
+        "descriptor_version",
+        "title",
+        "source_type",
+        "source_role",
+        "authority_rank",
+        "publisher",
+        "owner_or_steward",
+        "rights",
+        "sensitivity_default",
+        "cadence",
+        "access",
+        "citation",
+        "source_head",
+        "admissibility_limits",
+        "public_release",
+        "review_state",
+        "release_state",
+        "lifecycle"
+    ],
+    "properties": {
+        "object_type": {
+            "const": "SourceDescriptor"
+        },
+        "schema_version": {
+            "const": "v1"
+        },
+        "source_id": {
+            "type": "string",
+            "description": "Stable KFM source identifier. Prefer kfm://source/... once registry conventions are fixed; src:... is allowed for fixtures and early migration records.",
+            "pattern": "^(kfm://source/[a-z0-9][a-z0-9._~/-]*|src:[a-z0-9][a-z0-9._~/-]*)$"
+        },
+        "descriptor_version": {
+            "type": "string",
+            "description": "Semantic version for the descriptor record, independent from the upstream source version.",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "title": {
+            "type": "string",
+            "minLength": 3
+        },
+        "description": {
+            "type": "string"
+        },
+        "domain_scope": {
+            "type": "array",
+            "description": "KFM domain lanes where this source may be considered. This is not an authority grant by itself.",
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "minLength": 1
+            },
+            "default": []
+        },
+        "source_type": {
+            "$ref": "#/$defs/source_type"
+        },
+        "source_role": {
+            "$ref": "#/$defs/source_role"
+        },
+        "secondary_source_roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "$ref": "#/$defs/source_role"
+            },
+            "default": []
+        },
+        "authority_rank": {
+            "$ref": "#/$defs/authority_rank"
+        },
+        "authority_notes": {
+            "type": "string"
+        },
+        "publisher": {
+            "$ref": "#/$defs/organization_contact"
+        },
+        "owner_or_steward": {
+            "$ref": "#/$defs/organization_contact"
+        },
+        "rights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "rights_status",
+                "license_or_terms",
+                "attribution_required",
+                "redistribution_allowed",
+                "commercial_use_allowed",
+                "last_verified_at",
+                "verified_by"
+            ],
+            "properties": {
+                "rights_status": {
+                    "$ref": "#/$defs/rights_status"
+                },
+                "license_or_terms": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "license_url": {
+                    "type": "string"
+                },
+                "terms_url": {
+                    "type": "string"
+                },
+                "attribution_required": {
+                    "type": "boolean"
+                },
+                "attribution_text": {
+                    "type": "string"
+                },
+                "redistribution_allowed": {
+                    "$ref": "#/$defs/permission_state"
+                },
+                "commercial_use_allowed": {
+                    "$ref": "#/$defs/permission_state"
+                },
+                "api_key_or_account_required": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "consent_or_agreement_ref": {
+                    "type": "string"
+                },
+                "last_verified_at": {
+                    "$ref": "#/$defs/iso_datetime"
+                },
+                "verified_by": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "rights_notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "sensitivity_default": {
+            "$ref": "#/$defs/sensitivity_class"
+        },
+        "sensitivity_notes": {
+            "type": "string"
+        },
+        "cadence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "update_cadence",
+                "freshness_expectation",
+                "staleness_policy"
+            ],
+            "properties": {
+                "update_cadence": {
+                    "$ref": "#/$defs/update_cadence"
+                },
+                "freshness_expectation": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "staleness_policy": {
+                    "type": "string",
+                    "enum": [
+                        "mark_stale",
+                        "abstain",
+                        "deny_publication",
+                        "review_required",
+                        "not_applicable"
+                    ]
+                },
+                "known_update_window": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                }
+            }
+        },
+        "access": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "access_method",
+                "access_posture",
+                "endpoints"
+            ],
+            "properties": {
+                "access_method": {
+                    "$ref": "#/$defs/access_method"
+                },
+                "access_posture": {
+                    "$ref": "#/$defs/access_posture"
+                },
+                "endpoints": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/$defs/endpoint"
+                    }
+                },
+                "auth": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "auth_required",
+                        "auth_type"
+                    ],
+                    "properties": {
+                        "auth_required": {
+                            "type": "boolean"
+                        },
+                        "auth_type": {
+                            "type": "string",
+                            "enum": [
+                                "none",
+                                "api_key",
+                                "oauth",
+                                "account",
+                                "written_permission",
+                                "vault_secret",
+                                "unknown"
+                            ]
+                        },
+                        "secret_handling": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "rate_limit_notes": {
+                    "type": "string"
+                },
+                "format_targets": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "citation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "citation_required",
+                "citation_template",
+                "citation_guidance"
+            ],
+            "properties": {
+                "citation_required": {
+                    "type": "boolean"
+                },
+                "citation_template": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "citation_guidance": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "preferred_link": {
+                    "type": "string"
+                },
+                "publisher_citation_text": {
+                    "type": "string"
+                }
+            }
+        },
+        "source_head": {
+            "type": "object",
+            "description": "Low-cost source-head or content-identity evidence. This supports drift detection but does not replace validation, rights review, or publication gates.",
+            "additionalProperties": false,
+            "required": [
+                "observed_at",
+                "method",
+                "content_identity"
+            ],
+            "properties": {
+                "observed_at": {
+                    "$ref": "#/$defs/iso_datetime"
+                },
+                "method": {
+                    "type": "string",
+                    "enum": [
+                        "http_head",
+                        "http_get",
+                        "api_metadata",
+                        "file_checksum",
+                        "manual_review",
+                        "registry_snapshot",
+                        "not_applicable"
+                    ]
+                },
+                "content_identity": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "etag": {
+                            "type": "string"
+                        },
+                        "last_modified": {
+                            "type": "string"
+                        },
+                        "content_length": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "content_sha256": {
+                            "type": "string",
+                            "pattern": "^[A-Fa-f0-9]{64}$"
+                        },
+                        "upstream_version": {
+                            "type": "string"
+                        },
+                        "revision_id": {
+                            "type": "string"
+                        },
+                        "source_head_uri": {
+                            "type": "string"
+                        },
+                        "not_applicable_reason": {
+                            "type": "string"
+                        }
+                    },
+                    "anyOf": [
+                        {
+                            "required": [
+                                "etag"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "last_modified"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "content_length"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "content_sha256"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "upstream_version"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "revision_id"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "not_applicable_reason"
+                            ]
+                        }
+                    ]
+                },
+                "source_head_notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "admissibility_limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "allowed_claim_roles",
+                "prohibited_claim_roles",
+                "limitations",
+                "confidence_posture"
+            ],
+            "properties": {
+                "allowed_claim_roles": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                        "$ref": "#/$defs/claim_role"
+                    }
+                },
+                "prohibited_claim_roles": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                        "$ref": "#/$defs/claim_role"
+                    }
+                },
+                "limitations": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "confidence_posture": {
+                    "type": "string",
+                    "enum": [
+                        "source_authoritative_within_role",
+                        "corroborate_before_claim",
+                        "context_only",
+                        "candidate_only",
+                        "fixture_only",
+                        "unknown"
+                    ]
+                },
+                "review_required_before_use": {
+                    "type": "boolean"
+                },
+                "review_required_before_publication": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "public_release": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "allowed",
+                "requires_review",
+                "redaction_required",
+                "release_conditions"
+            ],
+            "properties": {
+                "allowed": {
+                    "type": "boolean"
+                },
+                "requires_review": {
+                    "type": "boolean"
+                },
+                "redaction_required": {
+                    "type": "boolean"
+                },
+                "release_conditions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "deny_reason_if_not_allowed": {
+                    "type": "string"
+                }
+            }
+        },
+        "connectors": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "activation_state": {
+                    "type": "string",
+                    "enum": [
+                        "disabled",
+                        "fixture_only",
+                        "live_candidate",
+                        "live_active",
+                        "quarantined",
+                        "retired"
+                    ]
+                },
+                "connector_ref": {
+                    "type": "string"
+                },
+                "watcher_ref": {
+                    "type": "string"
+                },
+                "activation_notes": {
+                    "type": "string"
+                }
+            }
+        },
+        "review_state": {
+            "$ref": "#/$defs/review_state"
+        },
+        "release_state": {
+            "$ref": "#/$defs/release_state"
+        },
+        "lifecycle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "registry_state",
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "registry_state": {
+                    "type": "string",
+                    "enum": [
+                        "proposed",
+                        "active",
+                        "quarantined",
+                        "retired",
+                        "superseded"
+                    ]
+                },
+                "created_at": {
+                    "$ref": "#/$defs/iso_datetime"
+                },
+                "updated_at": {
+                    "$ref": "#/$defs/iso_datetime"
+                },
+                "supersedes": {
+                    "type": "string"
+                },
+                "superseded_by": {
+                    "type": "string"
+                },
+                "deactivation_reason": {
+                    "type": "string"
+                }
+            }
+        },
+        "governance_refs": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "source_registry_ref": {
+                    "type": "string"
+                },
+                "rights_review_ref": {
+                    "type": "string"
+                },
+                "sensitivity_policy_ref": {
+                    "type": "string"
+                },
+                "adr_ref": {
+                    "type": "string"
+                },
+                "validation_report_ref": {
+                    "type": "string"
+                }
+            }
+        },
+        "spec_hash": {
+            "type": "string",
+            "pattern": "^(sha256|blake3):[A-Fa-f0-9]{32,128}$"
+        },
+        "id": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Deprecated legacy alias for source_id. Retained for migration only."
+        },
+        "domain": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Deprecated legacy alias. Use domain_scope array."
+        },
+        "role": {
+            "type": "string",
+            "deprecated": true,
+            "enum": [
+                "primary",
+                "corroborating",
+                "context",
+                "restricted"
+            ],
+            "description": "Deprecated legacy role. Use source_role and admissibility_limits."
+        },
+        "authority": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Deprecated legacy authority text. Use authority_rank and authority_notes."
+        },
+        "sensitivity_floor": {
+            "type": "string",
+            "deprecated": true,
+            "enum": [
+                "public",
+                "generalized",
+                "restricted",
+                "quarantine"
+            ],
+            "description": "Deprecated legacy sensitivity floor. Use sensitivity_default and public_release controls."
+        },
+        "update_cadence": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Deprecated legacy cadence string. Use cadence.update_cadence."
+        },
+        "access_posture": {
+            "type": "string",
+            "deprecated": true,
+            "enum": [
+                "open",
+                "credentialed",
+                "restricted",
+                "closed"
+            ],
+            "description": "Deprecated legacy access posture. Use access.access_posture."
+        },
+        "citation_template": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Deprecated legacy citation string. Use citation.citation_template."
         }
-      },
-      "additionalProperties": false
     },
-    "sensitivity_floor": {
-      "type": "string",
-      "enum": [
-        "public",
-        "generalized",
-        "restricted",
-        "quarantine"
-      ]
-    },
-    "update_cadence": {
-      "type": "string"
-    },
-    "access_posture": {
-      "type": "string",
-      "enum": [
-        "open",
-        "credentialed",
-        "restricted",
-        "closed"
-      ]
-    },
-    "citation_template": {
-      "type": "string"
+    "allOf": [
+        {
+            "if": {
+                "required": [
+                    "rights"
+                ],
+                "properties": {
+                    "rights": {
+                        "required": [
+                            "rights_status"
+                        ],
+                        "properties": {
+                            "rights_status": {
+                                "enum": [
+                                    "unknown",
+                                    "noassertion",
+                                    "denied"
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "public_release": {
+                        "required": [
+                            "allowed"
+                        ],
+                        "properties": {
+                            "allowed": {
+                                "const": false
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "required": [
+                    "sensitivity_default"
+                ],
+                "properties": {
+                    "sensitivity_default": {
+                        "enum": [
+                            "restricted",
+                            "sensitive_location",
+                            "living_person",
+                            "dna_genomic",
+                            "cultural_sensitive",
+                            "infrastructure_sensitive",
+                            "steward_controlled",
+                            "controlled",
+                            "unknown_review_required"
+                        ]
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "public_release": {
+                        "required": [
+                            "requires_review"
+                        ],
+                        "properties": {
+                            "requires_review": {
+                                "const": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "required": [
+                    "connectors"
+                ],
+                "properties": {
+                    "connectors": {
+                        "required": [
+                            "activation_state"
+                        ],
+                        "properties": {
+                            "activation_state": {
+                                "enum": [
+                                    "live_candidate",
+                                    "live_active"
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "review_state": {
+                        "enum": [
+                            "reviewed",
+                            "approved"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "required": [
+                    "source_role"
+                ],
+                "properties": {
+                    "source_role": {
+                        "const": "fixture_only"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "public_release": {
+                        "required": [
+                            "allowed"
+                        ],
+                        "properties": {
+                            "allowed": {
+                                "const": false
+                            }
+                        }
+                    },
+                    "release_state": {
+                        "enum": [
+                            "not_released",
+                            "withdrawn"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "required": [
+                    "public_release"
+                ],
+                "properties": {
+                    "public_release": {
+                        "required": [
+                            "allowed"
+                        ],
+                        "properties": {
+                            "allowed": {
+                                "const": true
+                            }
+                        }
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "review_state": {
+                        "enum": [
+                            "reviewed",
+                            "approved"
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "additionalProperties": false,
+    "$defs": {
+        "iso_datetime": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T"
+        },
+        "source_type": {
+            "type": "string",
+            "enum": [
+                "official_government_dataset",
+                "regulatory_record",
+                "legal_record",
+                "assessor_tax_record",
+                "scientific_observation",
+                "operational_feed",
+                "remote_sensing_product",
+                "model_output",
+                "community_observation",
+                "occurrence_aggregator",
+                "historical_archive",
+                "field_survey",
+                "steward_controlled_record",
+                "derived_index",
+                "map_artifact",
+                "bibliography_or_report",
+                "web_service_endpoint",
+                "synthetic_fixture"
+            ]
+        },
+        "source_role": {
+            "type": "string",
+            "enum": [
+                "authoritative_for_claim",
+                "regulatory_context",
+                "legal_context",
+                "observation",
+                "occurrence_evidence",
+                "aggregator",
+                "operational_context",
+                "remote_sensing_observation",
+                "model_context",
+                "candidate_signal",
+                "historical_context",
+                "corroborating_context",
+                "derived_public_product",
+                "steward_review_source",
+                "citation_source",
+                "fixture_only"
+            ]
+        },
+        "authority_rank": {
+            "type": "string",
+            "enum": [
+                "authoritative_for_role",
+                "primary_authority",
+                "regulatory_authority",
+                "legal_authority",
+                "steward_authority",
+                "corroborating",
+                "contextual",
+                "aggregator",
+                "derived",
+                "candidate_only",
+                "fixture_only",
+                "unknown"
+            ]
+        },
+        "claim_role": {
+            "type": "string",
+            "enum": [
+                "identity",
+                "legal_status",
+                "regulatory_context",
+                "observed_event",
+                "observation",
+                "occurrence",
+                "range_context",
+                "historical_context",
+                "model_context",
+                "candidate_signal",
+                "map_display",
+                "citation_support",
+                "derived_summary",
+                "operational_context",
+                "not_for_life_safety",
+                "not_for_title_truth",
+                "fixture_only"
+            ]
+        },
+        "sensitivity_class": {
+            "type": "string",
+            "enum": [
+                "public",
+                "low",
+                "restricted",
+                "sensitive_location",
+                "living_person",
+                "dna_genomic",
+                "cultural_sensitive",
+                "infrastructure_sensitive",
+                "steward_controlled",
+                "controlled",
+                "unknown_review_required"
+            ]
+        },
+        "rights_status": {
+            "type": "string",
+            "enum": [
+                "verified_open",
+                "verified_restricted",
+                "permission_required",
+                "unknown",
+                "noassertion",
+                "denied"
+            ]
+        },
+        "permission_state": {
+            "type": "string",
+            "enum": [
+                "yes",
+                "yes_with_conditions",
+                "no",
+                "unknown"
+            ]
+        },
+        "update_cadence": {
+            "type": "string",
+            "enum": [
+                "realtime",
+                "near_realtime",
+                "subdaily",
+                "daily",
+                "weekly",
+                "monthly",
+                "quarterly",
+                "annual",
+                "event_driven",
+                "irregular",
+                "static",
+                "unknown"
+            ]
+        },
+        "access_method": {
+            "type": "string",
+            "enum": [
+                "https_download",
+                "rest_api",
+                "ogc_api",
+                "arcgis_rest",
+                "wms",
+                "wmts",
+                "stac",
+                "socrata",
+                "bulk_file",
+                "database_export",
+                "manual_archive",
+                "field_collection",
+                "internal_fixture",
+                "other"
+            ]
+        },
+        "access_posture": {
+            "type": "string",
+            "enum": [
+                "open",
+                "credentialed",
+                "restricted",
+                "closed",
+                "unknown"
+            ]
+        },
+        "review_state": {
+            "type": "string",
+            "enum": [
+                "draft",
+                "needs_review",
+                "reviewed",
+                "approved",
+                "rejected",
+                "superseded",
+                "deactivated"
+            ]
+        },
+        "release_state": {
+            "type": "string",
+            "enum": [
+                "not_released",
+                "candidate",
+                "released",
+                "deprecated",
+                "withdrawn"
+            ]
+        },
+        "organization_contact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "name",
+                "contact"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "jurisdiction": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "contact_status"
+                    ],
+                    "properties": {
+                        "contact_status": {
+                            "type": "string",
+                            "enum": [
+                                "verified",
+                                "public_contact",
+                                "steward_contact",
+                                "unknown",
+                                "not_applicable"
+                            ]
+                        },
+                        "contact_name": {
+                            "type": "string"
+                        },
+                        "contact_email": {
+                            "type": "string"
+                        },
+                        "contact_url": {
+                            "type": "string"
+                        },
+                        "contact_phone": {
+                            "type": "string"
+                        }
+                    },
+                    "anyOf": [
+                        {
+                            "required": [
+                                "contact_email"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "contact_url"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "contact_phone"
+                            ]
+                        },
+                        {
+                            "properties": {
+                                "contact_status": {
+                                    "const": "not_applicable"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "endpoint": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "label",
+                "uri",
+                "purpose"
+            ],
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "uri": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "purpose": {
+                    "type": "string",
+                    "enum": [
+                        "metadata",
+                        "download",
+                        "query",
+                        "tiles",
+                        "documentation",
+                        "citation",
+                        "fixture",
+                        "contact",
+                        "other"
+                    ]
+                },
+                "version": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                }
+            }
+        }
     }
-  },
-  "required": [
-    "id",
-    "domain",
-    "role",
-    "authority",
-    "rights",
-    "sensitivity_floor",
-    "update_cadence",
-    "access_posture",
-    "citation_template"
-  ],
-  "additionalProperties": false
 }
