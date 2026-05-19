@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/flora/redaction_receipt.flora.schema.json",
+  "title": "Redaction Receipt",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/flora/redaction_receipt.flora.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/flora/FILE_SYSTEM_PLAN.md",
+    "contract_doc": "contracts/domains/flora/redaction_receipt.flora.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

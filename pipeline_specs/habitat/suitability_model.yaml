@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/habitat/MISSING_OR_PLANNED_FILES.md
+path: pipeline_specs/habitat/suitability_model.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

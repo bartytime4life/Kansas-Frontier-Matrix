@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/evidence/evidence-bundle.schema.json",
+  "title": "Evidence Bundle",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/evidence/evidence-bundle.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/habitat/FILE_SYSTEM_PLAN.md",
+    "contract_doc": null
+  },
+  "properties": {},
+  "additionalProperties": true
+}

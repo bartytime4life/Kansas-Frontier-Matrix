@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/geology/extraction_site.schema.json",
+  "title": "Extraction Site",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/geology/extraction_site.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
+    "contract_doc": "contracts/domains/geology/extraction_site.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

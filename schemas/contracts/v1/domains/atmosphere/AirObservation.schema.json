@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/atmosphere/AirObservation.schema.json",
+  "title": "Airobservation",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/atmosphere/AirObservation.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/atmosphere/CANONICAL_PATHS.md",
+    "contract_doc": "contracts/domains/atmosphere/AirObservation.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

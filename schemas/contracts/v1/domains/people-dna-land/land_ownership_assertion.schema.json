@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/people-dna-land/land_ownership_assertion.schema.json",
+  "title": "Land Ownership Assertion",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/people-dna-land/land_ownership_assertion.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/people-dna-land/CANONICAL_PATHS.md",
+    "contract_doc": "contracts/domains/people-dna-land/land_ownership_assertion.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

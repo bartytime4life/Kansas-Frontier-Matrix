@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/hydrology/FILE_SYSTEM_PLAN.md
+path: pipeline_specs/hydrology/usgs_water_observations.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

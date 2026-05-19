@@ -1,0 +1,8 @@
+{
+  "status": "PROPOSED",
+  "source_doc": "docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md",
+  "path": "fixtures/domains/archaeology/synthetic_publication_transform_receipt/generalize_to_township.json",
+  "notes": [
+    "Placeholder created from docs/domains markdown inventory."
+  ]
+}

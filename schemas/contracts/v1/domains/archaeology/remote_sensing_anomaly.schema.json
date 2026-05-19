@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/archaeology/remote_sensing_anomaly.schema.json",
+  "title": "Remote Sensing Anomaly",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/archaeology/remote_sensing_anomaly.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md",
+    "contract_doc": "contracts/domains/archaeology/remote_sensing_anomaly.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/archaeology/publication_transform_receipt.schema.json",
+  "title": "Publication Transform Receipt",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/archaeology/publication_transform_receipt.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md",
+    "contract_doc": "contracts/domains/archaeology/publication_transform_receipt.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

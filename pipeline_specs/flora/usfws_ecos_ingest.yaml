@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/flora/FILE_SYSTEM_PLAN.md
+path: pipeline_specs/flora/usfws_ecos_ingest.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

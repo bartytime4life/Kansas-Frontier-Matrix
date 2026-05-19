@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/hazards/MISSING_OR_PLANNED_FILES.md
+path: pipeline_specs/hazards/fema_openfema.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

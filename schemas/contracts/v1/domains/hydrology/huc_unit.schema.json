@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/hydrology/huc_unit.schema.json",
+  "title": "Huc Unit",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/hydrology/huc_unit.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/hydrology/CANONICAL_PATHS.md",
+    "contract_doc": "contracts/domains/hydrology/huc_unit.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

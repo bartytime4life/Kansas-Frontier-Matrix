@@ -1,0 +1,8 @@
+{
+  "status": "PROPOSED",
+  "source_doc": "docs/domains/fauna/MISSING_OR_PLANNED_FILES.md",
+  "path": "fixtures/domains/fauna/invalid/over_precise_sensitive.json",
+  "notes": [
+    "Placeholder created from docs/domains markdown inventory."
+  ]
+}
