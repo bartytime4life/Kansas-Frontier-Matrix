@@ -1,0 +1,206 @@
+name: Publish KFM scaffold files
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/kfm-scaffold-publish.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish-scaffolds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Generate scaffold files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, json, re, zlib
+
+          DATA_B64 = """
+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
+          """
+
+          items = json.loads(zlib.decompress(base64.b64decode("".join(DATA_B64.split()))).decode())
+
+          def title_from_path(path, schema=False):
+              name = Path(path).name
+              if schema:
+                  name = name[:-len('.schema.json')]
+                  name = name.split('.')[0]
+              elif name.lower() == 'readme.md':
+                  name = Path(path).parent.name
+              else:
+                  name = Path(path).stem
+              return re.sub(r'[-_.]+', ' ', name).title()
+
+          def contract_doc_for_schema(path):
+              parts = path.split('/')
+              if len(parts) >= 6 and parts[:4] == ['schemas', 'contracts', 'v1', 'domains']:
+                  name = Path(path).name[:-len('.schema.json')]
+                  return f"contracts/domains/{parts[4]}/{name}.md"
+              return None
+
+          def package_for_rego(path):
+              stem = path[:-len('.rego')]
+              return 'kfm.generated.' + '.'.join(re.sub(r'[^A-Za-z0-9_]', '_', part) for part in stem.split('/'))
+
+          def render(path, source):
+              if path == 'docs/adr/ADR-0001-schema-home.md':
+                  return '# ADR-0001 - Schema Home\n\nThis compatibility pointer exists because domain docs reference `docs/adr/ADR-0001-schema-home.md`.\n\nCanonical ADR file: [ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md).\n'
+              if path.endswith('.md'):
+                  return f'# {title_from_path(path)}\n\n**Status:** PROPOSED scaffold.\n**Source:** `{source}`\n\nThis file was created because the domain markdown inventory lists `{path}` as a planned or expected path. Fill in the authoritative content, owners, validation status, and links before promoting it beyond scaffold status.\n\n## Notes\n\n- Keep machine-checkable shape in `schemas/`, policy in `policy/`, fixtures in `fixtures/`, and release decisions in `release/` unless an accepted ADR says otherwise.\n- Replace this scaffold with domain-reviewed content before treating the path as canonical truth.\n'
+              if path.endswith('.schema.json'):
+                  obj = {
+                      '$schema': 'https://json-schema.org/draft/2020-12/schema',
+                      '$id': f'https://schemas.kfm.local/{path}',
+                      'title': title_from_path(path, schema=True),
+                      'type': 'object',
+                      'description': f'PROPOSED scaffold for {path}. Fields are to be defined by the owning domain steward.',
+                      'x-kfm': {
+                          'status': 'PROPOSED',
+                          'source_doc': source,
+                          'contract_doc': contract_doc_for_schema(path),
+                      },
+                      'properties': {},
+                      'additionalProperties': True,
+                  }
+                  return json.dumps(obj, indent=2) + '\n'
+              if path.endswith('.json'):
+                  obj = {
+                      'status': 'PROPOSED',
+                      'source_doc': source,
+                      'path': path,
+                      'notes': ['Placeholder created from docs/domains markdown inventory.'],
+                  }
+                  return json.dumps(obj, indent=2) + '\n'
+              if path.endswith('.yaml'):
+                  return f'status: PROPOSED\nsource_doc: {source}\npath: {path}\nnotes:\n  - Placeholder created from docs/domains markdown inventory.\n'
+              if path.endswith('.py'):
+                  return f'"""PROPOSED placeholder created from {source} for {path}."""\n'
+              if path.endswith('.rego'):
+                  return f'package {package_for_rego(path)}\n\n# Status: PROPOSED scaffold. Source: {source}\ndefault allow := false\n'
+              if path.endswith('.geojson'):
+                  return f'# PROPOSED placeholder created from {source} for {path}.\n'
+              raise ValueError(path)
+
+          for path, source in items:
+              target = Path(path)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_text(render(path, source), encoding='utf-8')
+          print(f'generated {len(items)} scaffold files')
+          PY
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add contracts data docs fixtures pipeline_specs pipelines policy schemas tests tools
+          git rm --ignore-unmatch .github/workflows/kfm-scaffold-publish.yml
+          if git diff --cached --quiet; then
+            echo "No scaffold changes to commit."
+            exit 0
+          fi
+          git commit -m "Add domain scaffold files from docs inventory"
+          git push
