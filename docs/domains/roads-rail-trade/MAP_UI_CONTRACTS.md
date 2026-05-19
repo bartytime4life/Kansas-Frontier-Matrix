@@ -4,7 +4,7 @@ title: Map UI Contracts — Roads, Rail, and Trade Routes
 type: standard
 version: v1
 status: draft
-owners: TBD (Roads/Rail/Trade Routes steward) <!-- NEEDS VERIFICATION -->
+owners: TBD  # NEEDS VERIFICATION — Roads/Rail/Trade Routes steward
 created: 2026-05-19
 updated: 2026-05-19
 policy_label: public
@@ -16,7 +16,7 @@ related:
   - docs/standards/PROV.md
   - schemas/contracts/v1/ui/                         # PROPOSED schema home — NEEDS VERIFICATION
   - schemas/contracts/v1/map/                        # PROPOSED schema home — NEEDS VERIFICATION
-  - schemas/contracts/v1/runtime/decision_envelope.schema.json  # PROPOSED — NEEDS VERIFICATION
+  - schemas/contracts/v1/runtime/decision_envelope.schema.json   # PROPOSED — NEEDS VERIFICATION
 tags: [kfm, domain:roads-rail-trade, ui, maplibre, contracts, governance]
 notes:
   - "Doctrine grounded in DOM-ROADS, MAP-MASTER, GAI, ENCY, DIRRULES."
