@@ -1,0 +1,58 @@
+name: PMTiles Attestation
+
+on:
+  pull_request:
+    paths:
+      - "artifacts/**/*.pmtiles"
+      - "artifacts/**/*.pmidx"
+      - "artifacts/**/*.pmsig"
+      - "tools/validators/pmtiles/**"
+      - "tools/attest/**"
+      - "policy/rego/tiles_publish.rego"
+  workflow_dispatch:
+
+jobs:
+  validate-pmtiles-attestation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate PMTiles headers when artifacts exist
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          files=(artifacts/**/*.pmtiles)
+          if (( ${#files[@]} == 0 )); then
+            echo "No PMTiles artifacts found; skipping header validation."
+            exit 0
+          fi
+          python tools/validators/pmtiles/validate_header.py "${files[@]}"
+      - name: Validate PMIDX sidecars when artifacts exist
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          files=(artifacts/**/*.pmtiles.pmidx)
+          if (( ${#files[@]} == 0 )); then
+            echo "No PMIDX sidecars found; skipping sidecar validation."
+            exit 0
+          fi
+          for f in "${files[@]}"; do
+            base="${f%.pmidx}"
+            if [[ -f "$base" ]]; then
+              python tools/validators/pmtiles/verify_merkle.py "$f" --pmtiles "$base"
+            else
+              python tools/validators/pmtiles/verify_merkle.py "$f"
+            fi
+          done
+      - name: Validate PMSIG bundle shape only
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          files=(artifacts/**/*.pmtiles.pmsig)
+          if (( ${#files[@]} == 0 )); then
+            echo "No PMSIG bundles found; skipping signature validation."
+            exit 0
+          fi
+          python tools/attest/verify_cose.py --shape-only "${files[@]}"
