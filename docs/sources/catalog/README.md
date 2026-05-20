@@ -209,7 +209,7 @@ A page here that begins to dictate behavior is **drift**. Open a `docs/registers
 ## 8. Directory tree (PROPOSED)
 
 > [!NOTE]
-> As of **2026-05-20** the per-family folders below **exist** — the lane's flat per-source pages were reorganized into one folder per source family. Product-page entries marked *PROPOSED* are not yet authored.
+> As of **2026-05-20** the per-family folders below **exist** — the lane's flat per-source pages were reorganized into one folder per source family, and per-product pages have been scaffolded for every family. See [`INDEX.md`](./INDEX.md) for per-family product-page counts.
 
 ```text
 docs/sources/catalog/
