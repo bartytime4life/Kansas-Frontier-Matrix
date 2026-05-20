@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/pmtiles/pmidx.schema.json",
+  "title": "KFM PMIDX Sidecar",
+  "type": "object",
+  "required": ["schema_version", "spec_hash", "pmtiles_sha256", "merkle"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"const": "kfm.pmidx.v1"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$"},
+    "pmtiles_sha256": {"type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$"},
+    "merkle": {
+      "type": "object",
+      "required": ["arity", "chunk_bytes", "root", "leaves"],
+      "additionalProperties": true,
+      "properties": {
+        "arity": {"type": "integer", "minimum": 2},
+        "chunk_bytes": {"type": "integer", "minimum": 1},
+        "root": {"type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$"},
+        "leaves": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$"}
+        }
+      }
+    },
+    "ranges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["offset", "length", "leaf"],
+        "properties": {
+          "tile_id": {"type": ["string", "integer"]},
+          "offset": {"type": "integer", "minimum": 0},
+          "length": {"type": "integer", "minimum": 1},
+          "leaf": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}
