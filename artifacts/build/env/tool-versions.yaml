@@ -1,1 +1,26 @@
+# PROPOSED scaffold for the build toolchain pin used by artifacts/build outputs.
+status: PROPOSED
+path: artifacts/build/env/tool-versions.yaml
 
+tools:
+  pandoc:
+    version: "3.1.12.3"
+    status: CONFIRMED_BY_DOCTRINE
+  xelatex:
+    version: null
+    status: NEEDS_VERIFICATION
+  ghostscript:
+    version: null
+    status: NEEDS_VERIFICATION
+  qpdf:
+    version: null
+    status: NEEDS_VERIFICATION
+
+environment:
+  source_date_epoch: derived-from-git-commit-time
+  locale: C.UTF-8
+  font_policy: embed-required-fonts
+
+notes:
+  - Replace null versions with discovered or pinned values before using this file as a build gate.
+  - This scaffold supports reproducibility only; receipts and proofs belong in their canonical data lanes.
