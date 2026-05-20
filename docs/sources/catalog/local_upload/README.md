@@ -411,7 +411,7 @@ Because at admission KFM has no resolved rights, no validated provenance, no sen
 - [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *PROPOSED* — public-client boundary
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — *PROPOSED* — RAW → PUBLISHED governance
 - [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — *PROPOSED* — cite-or-abstain default
-- [`docs/governance/separation-of-duties.md`](../../../governance/separation-of-duties.md) — *PROPOSED / TODO* — release-authority vs author
+- [`docs/governance/SEPARATION_OF_DUTIES.md`](../../../governance/SEPARATION_OF_DUTIES.md) — release-authority vs author
 - [`connectors/local_upload/README.md`](../../../../connectors/local_upload/README.md) — *PROPOSED / TODO* — connector-level README
 - [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) — *PROPOSED / NEEDS VERIFICATION* — descriptor schema per ADR-0001
 - [`policy/sources/`](../../../../policy/sources/) — *PROPOSED / TODO* — rights, sensitivity, admission gates

@@ -403,19 +403,19 @@ notes:
 
 > Placeholders are linked relative to repo root. Some targets are **PROPOSED** and may not yet exist.
 
-- [`docs/sources/README.md`](../README.md) — *PROPOSED* — index of source families
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED* — descriptor field standard
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-surface boundary
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain
-- [`docs/domains/roads-rail-trade/README.md`](../../domains/roads-rail-trade/README.md) — primary consuming domain
-- [`docs/domains/settlements-infrastructure/README.md`](../../domains/settlements-infrastructure/README.md) — secondary consuming domain
-- [`docs/domains/hydrology/README.md`](../../domains/hydrology/README.md) — secondary consuming domain
-- [`docs/domains/archaeology/README.md`](../../domains/archaeology/README.md) — sensitivity-dominant domain
-- [`docs/adr/`](../../adr/) — ADR index (e.g., ADR-0001 schema home)
-- [`connectors/osm/README.md`](../../../connectors/osm/README.md) — *PROPOSED* — connector home
-- [`schemas/contracts/v1/source/source-descriptor.schema.json`](../../../schemas/contracts/v1/source/source-descriptor.schema.json) — *PROPOSED* — canonical schema home
+- [`docs/sources/README.md`](../../README.md) — index of source families
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — descriptor field standard
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law
+- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
+- [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — public-surface boundary
+- [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain
+- [`docs/domains/roads-rail-trade/README.md`](../../../domains/roads-rail-trade/README.md) — primary consuming domain
+- [`docs/domains/settlements-infrastructure/README.md`](../../../domains/settlements-infrastructure/README.md) — secondary consuming domain
+- [`docs/domains/hydrology/README.md`](../../../domains/hydrology/README.md) — secondary consuming domain
+- [`docs/domains/archaeology/README.md`](../../../domains/archaeology/README.md) — sensitivity-dominant domain
+- [`docs/adr/`](../../../adr/) — ADR index (e.g., ADR-0001 schema home)
+- [`connectors/osm/`](../../../../connectors/osm/) — connector home
+- [`schemas/contracts/v1/source/source-descriptor.schema.json`](../../../../schemas/contracts/v1/source/source-descriptor.schema.json) — canonical schema home
 
 ---
 
