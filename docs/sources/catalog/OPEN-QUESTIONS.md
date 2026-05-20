@@ -22,7 +22,7 @@ notes:
 
 **Status:** scaffold (PROPOSED)
 
-Entries `OPEN-DSC-01` through `OPEN-DSC-08` are carried forward from [`README.md`](./README.md) §19. Entries `OPEN-DSC-09` through `OPEN-DSC-12` and `OPEN-DSC-NEW` are added by this scaffold PR.
+Entries `OPEN-DSC-01` through `OPEN-DSC-08` are carried forward from [`README.md`](./README.md) §19. Entries `OPEN-DSC-09` through `OPEN-DSC-13` and `OPEN-DSC-NEW` are added by the scaffold and the 2026-05-20 reorganization.
 
 ## Register
 
@@ -32,9 +32,9 @@ Entries `OPEN-DSC-01` through `OPEN-DSC-08` are carried forward from [`README.md
 **Resolution path:** per-root note in `docs/sources/README.md`, or ADR.
 
 ### OPEN-DSC-02 — per-family page layout
-**Question:** Does the per-family page list live in this lane or in `docs/sources/README.md` as a flat index? Observed in this session: the lane currently holds **flat** `<family>.md` pages at its root, while `README.md` §8 proposes a **nested** `<family>/` folder layout — the two disagree.
-**Status:** PROPOSED.
-**Resolution path:** ADR deciding flat vs. nested, plus a migration plan if the nested layout is chosen.
+**Question:** Does the per-family page list live in this lane or in `docs/sources/README.md` as a flat index? The flat-vs-nested split observed earlier (flat `<family>.md` pages vs. `README.md` §8's nested folders) has been acted on.
+**Status:** PARTIALLY RESOLVED — on 2026-05-20 the lane was reorganized into per-family folders (maintainer decision), implementing `README.md` §8. An ADR should still ratify the realized folder layout and settle the `docs/sources/README.md`-index vs. lane-index question.
+**Resolution path:** ADR ratifying the realized folder layout.
 
 ### OPEN-DSC-03 — provenance namespace
 **Question:** Is the KFM provenance namespace `kfm:` (KFM-global) or `ks-kfm:` (Kansas-scoped)? (Pass-10 C4-01.)
@@ -67,24 +67,29 @@ Entries `OPEN-DSC-01` through `OPEN-DSC-08` are carried forward from [`README.md
 **Resolution path:** ongoing verification as products materialize.
 
 ### OPEN-DSC-09 — candidate families: federal agencies
-**Question:** Should NASA, USDA, EPA, and DOT be promoted to `directory-rules.md` §7.3 families with full connector, registry, and nested-folder treatment? Flat catalog pages already exist for some (for example `epa.md`).
-**Status:** DEFERRED.
+**Question:** Should NASA, USDA, EPA, DOT, and BLM be promoted to `directory-rules.md` §7.3 families with full connector and registry treatment?
+**Status:** DEFERRED — folders `blm/` and `epa/` were created in the 2026-05-20 reorganization ahead of ADR; folder existence does **not** constitute §7.3 promotion.
 **Resolution path:** ADR per family, gated on a `connectors/<family>/` plus `data/registry/sources/<family>/` companion.
 
 ### OPEN-DSC-10 — candidate families: archival and genealogy
-**Question:** Should the Library of Congress (LOC) and FamilySearch be promoted to §7.3 families? Flat pages already exist (`loc.md`, `familysearch.md`).
-**Status:** DEFERRED.
-**Resolution path:** ADR per family; genealogy sources additionally gated on CARE and sensitivity review.
+**Question:** Should the Library of Congress (LOC), FamilySearch, AHGP, and Newspapers be promoted to §7.3 families?
+**Status:** DEFERRED — folders `loc/`, `familysearch/`, `ahgp/`, `newspapers/` were created in the 2026-05-20 reorganization ahead of ADR; folder existence does **not** constitute §7.3 promotion.
+**Resolution path:** ADR per family; genealogy and archival sources additionally gated on CARE and sensitivity review.
 
 ### OPEN-DSC-11 — candidate families: citizen-science and sensors
-**Question:** Should PurpleAir and eBird be promoted to §7.3 families? A flat `ebird.md` page already exists.
-**Status:** DEFERRED.
-**Resolution path:** ADR per family; eBird additionally gated on sensitive-species redaction policy.
+**Question:** Should PurpleAir, eBird, and EDDMapS be promoted to §7.3 families?
+**Status:** DEFERRED — folders `ebird/` and `eddmaps/` were created in the 2026-05-20 reorganization ahead of ADR; folder existence does **not** constitute §7.3 promotion.
+**Resolution path:** ADR per family; eBird and EDDMapS additionally gated on sensitive-species redaction policy.
 
 ### OPEN-DSC-12 — candidate families: biodiversity collections and genomic
-**Question:** Should iDigBio/Symbiota, NatureServe/USFWS, and direct-to-consumer (DTC) genomic sources be promoted to §7.3 families? Flat pages already exist (`idigbio.md`, `natureserve.md`, `usfws-ecos.md`, `ftDNA.md`).
-**Status:** DEFERRED.
+**Question:** Should iDigBio/Symbiota, NatureServe/USFWS, and direct-to-consumer (DTC) genomic sources be promoted to §7.3 families?
+**Status:** DEFERRED — folders `idigbio/`, `natureserve/`, `usfws_ecos/`, `ftdna/` were created in the 2026-05-20 reorganization ahead of ADR; folder existence does **not** constitute §7.3 promotion.
 **Resolution path:** ADR per family; genomic and rare-species sources gated deny-by-default per ADR-0010.
+
+### OPEN-DSC-13 — folders without a clear family classification
+**Question:** `openstreetmap/` and `manual_curation/` received folders in the 2026-05-20 reorganization but do not map cleanly to a source family — OpenStreetMap is a base-map source and Manual Curation describes a process rather than a source.
+**Status:** OPEN — flagged by the 2026-05-20 reorganization.
+**Resolution path:** maintainer decision, then ADR, relocation, or reclassification.
 
 ### OPEN-DSC-NEW — §15 README-contract field-order deviation
 **Question:** The `_template/SOURCE_FAMILY_TEMPLATE.md` scaffold inserts a `## Directory tree` section between `## Outputs` and `## Validation`, deviating from the §15 README-contract field order in `directory-rules.md`.
