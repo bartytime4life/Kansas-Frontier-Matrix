@@ -209,40 +209,40 @@ A page here that begins to dictate behavior is **drift**. Open a `docs/registers
 ## 8. Directory tree (PROPOSED)
 
 > [!NOTE]
-> This tree is **illustrative**. No file existence is asserted. Per-family pages are added only when the family has materialized in `connectors/` and `data/registry/sources/`.
+> As of **2026-05-20** the per-family folders below **exist** — the lane's flat per-source pages were reorganized into one folder per source family. Product-page entries marked *PROPOSED* are not yet authored.
 
 ```text
 docs/sources/catalog/
-├── README.md                              # this file
-├── _template/
-│   └── SOURCE_FAMILY_TEMPLATE.md          # PROPOSED — see §16
-├── usgs/                                  # PROPOSED per family
-│   ├── README.md                          # family overview
-│   ├── earthquake-catalog.md              # PROPOSED — example product page
-│   └── nwis-water.md                      # PROPOSED — example product page
-├── fema/
-│   └── README.md
-├── noaa/
+├── README.md                       # this file
+├── INDEX.md                        # family navigation index
+├── GLOSSARY.md   CROSSWALKS.md   PROFILES.md   IDENTITY.md   NAMING.md
+├── RIGHTS-AND-SENSITIVITY-MAP.md   CARE-COMPLIANCE.md   COVERAGE-MATRIX.md
+├── OPEN-QUESTIONS.md   CHANGELOG.md     # ← cross-cutting governance docs
+├── _template/                      # SOURCE_FAMILY / SOURCE_PRODUCT / CROSSWALK / RIGHTS_NOTE
+├── _examples/                      # illustrative STAC / DCAT / PROV-O payloads
+│
+│                                   # directory-rules.md §7.3 source families
+├── usgs/README.md
+├── fema/README.md
+├── noaa/README.md
+├── nrcs/README.md
+├── kansas/                         # Kansas state-scoped sources
 │   ├── README.md
-│   ├── storm-events.md                    # PROPOSED
-│   └── nws-alerts.md                      # PROPOSED
-├── nrcs/
-│   ├── README.md
-│   ├── ssurgo.md                          # PROPOSED
-│   └── gnatsgo.md                         # PROPOSED
-├── kansas/                                # Kansas-state sources (e.g. Mesonet, KGS)
-│   └── README.md
-├── gbif/
-│   └── README.md
-├── inaturalist/
-│   └── README.md
-├── census/
-│   └── README.md
-└── local_upload/                          # curated uploads admitted through the trust membrane
-    └── README.md
+│   ├── ksgs.md   kdwp.md   khri.md   kansas-memory.md
+│   ├── kansas-state-archives.md   ksu-research-extension.md
+│   └── ku-nhm.md   fhsu-sternberg.md
+├── gbif/README.md
+├── inaturalist/README.md
+├── census/README.md
+├── local_upload/README.md
+│
+│                                   # additional families — beyond §7.3, pending ADR
+├── ahgp/   blm/   ebird/   eddmaps/   epa/   familysearch/   ftdna/
+├── idigbio/   loc/   manual_curation/   natureserve/   newspapers/
+└── openstreetmap/   usfws_ecos/     # each contains README.md
 ```
 
-The family list mirrors `connectors/` per `directory-rules.md` §7.3 (CONFIRMED in doctrine corpus; mounted-repo presence NEEDS VERIFICATION). New families MUST appear here only after a `connectors/<family>/` and `data/registry/sources/<family>/` companion exists.
+Nine of the folders above mirror the `connectors/` inventory in `directory-rules.md` §7.3 (CONFIRMED in doctrine corpus; sibling `connectors/<family>/` presence CONFIRMED in a mounted-repo session). The remaining fourteen were added by the 2026-05-20 reorganization at the maintainer's direction; they **exceed** the §7.3 nine and are tracked for ADR ratification in [§19](#19-open-questions) (`OPEN-DSC-09`–`OPEN-DSC-12`). A family folder SHOULD have a `connectors/<family>/` and `data/registry/sources/<family>/` companion.
 
 [↑ Back to top](#contents)
 
@@ -328,6 +328,18 @@ The table below mirrors the connector inventory from `directory-rules.md` §7.3 
 | `local_upload/` | any | DCAT · PROV (typically) | Curated uploads admitted via the trust membrane; rights review mandatory. |
 
 For per-family rights, freshness, and sensitivity treatment, see the domain dossiers' *Key source families* sections in the Consolidated Atlas and the `data/registry/sources/` records when present.
+
+### 10.1 Additional families (beyond §7.3)
+
+The 2026-05-20 reorganization also created folders for fourteen sources that are **not** part of the `directory-rules.md` §7.3 connector inventory. They carry per-source pages today; promotion to a full §7.3 family (with a `connectors/` and `data/registry/sources/` companion) is gated on a per-family ADR — see [§19](#19-open-questions) `OPEN-DSC-09`–`OPEN-DSC-12`.
+
+| Folder(s) | Source(s) | Deferral tracked in |
+|---|---|---|
+| `blm/`, `epa/` | Bureau of Land Management, EPA | OPEN-DSC-09 |
+| `loc/`, `familysearch/`, `ahgp/`, `newspapers/` | Library of Congress, FamilySearch, AHGP, Newspapers | OPEN-DSC-10 |
+| `ebird/`, `eddmaps/` | eBird, EDDMapS | OPEN-DSC-11 |
+| `idigbio/`, `natureserve/`, `usfws_ecos/`, `ftdna/` | iDigBio, NatureServe, USFWS ECOS, Family Tree DNA | OPEN-DSC-12 |
+| `openstreetmap/`, `manual_curation/` | OpenStreetMap, Manual Curation | not yet tracked — confirm whether these are source families |
 
 [↑ Back to top](#contents)
 
@@ -589,7 +601,7 @@ Notes:
 
 ## Last reviewed <a id="last-reviewed"></a>
 
-**2026-05-20** *(authoring session, docs-only — no mounted repo inspected)*.
+**2026-05-20** *(updated for the flat-to-folder reorganization — Claude Code session, mounted repo; §8 and §10.1 reflect the realized per-family folder layout)*.
 Re-review trigger: any of (a) `docs/sources/` reorganization, (b) ADR resolving [§19 OPEN-DSC-01](#19-open-questions), (c) addition of a new connector family in `connectors/`, (d) change to STAC / DCAT / PROV profile choice in `docs/standards/`.
 
 [↑ Back to top](#contents)
