@@ -1,1 +1,16 @@
-
+{
+  "schema_version": "0.1-scaffold",
+  "status": "PROPOSED",
+  "path": "artifacts/build/env/build-env.json",
+  "generated_at": null,
+  "source_git_sha": null,
+  "source_date_epoch": null,
+  "locale": null,
+  "platform": null,
+  "tools": [],
+  "outputs": [],
+  "notes": [
+    "Scaffold for a per-build environment fingerprint. Replace with a generated run snapshot when a build pipeline writes here.",
+    "This file is not a receipt or proof; trust-bearing copies belong under data/receipts/ or data/proofs/."
+  ]
+}
