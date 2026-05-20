@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "data/published/layers/settlements-infrastructure/mission_sites.layer.yaml"
+source_docs:
+  - "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

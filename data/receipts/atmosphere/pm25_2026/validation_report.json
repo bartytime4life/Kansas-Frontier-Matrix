@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "path": "data/receipts/atmosphere/pm25_2026/validation_report.json",
+  "source_docs": [
+    "docs/domains/atmosphere/RELEASE_INDEX.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}
