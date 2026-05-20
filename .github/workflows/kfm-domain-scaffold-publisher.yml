@@ -80,8 +80,8 @@ jobs:
               s = s.replace("\\", "/")
               return s.rstrip(trail_strip)
 
-          def normalize_path(s, source):
-              s = clean(s)
+          def normalize_path(raw, source):
+              s = clean(raw)
               if not s:
                   return None
               low = s.lower()
@@ -108,11 +108,11 @@ jobs:
                   return None
               return s.rstrip(".,;:")
 
-          def is_file_path(p):
-              name = p.rsplit("/", 1)[-1]
+          def is_file_path(path):
+              name = path.rsplit("/", 1)[-1]
               if name in known_files:
                   return True
-              suffixes = pathlib.PurePosixPath(p).suffixes
+              suffixes = pathlib.PurePosixPath(path).suffixes
               return bool(suffixes and (suffixes[-1].lower() in file_exts or any(x.lower() in file_exts for x in suffixes)))
 
           def title_for(path):
@@ -133,27 +133,34 @@ jobs:
               return " ".join(w.upper() if w.isupper() else w.capitalize() for w in base.split()) or "Scaffold"
 
           def source_lines(sources):
-              return "\n".join(f"- `{s}`" for s in sources) if sources else "- `docs/domains` inventory"
+              if not sources:
+                  return ["- `docs/domains` inventory"]
+              return [f"- `{source}`" for source in sources]
 
           def md_content(path, sources):
               first = sources[0] if sources else "docs/domains inventory"
-              return f"""# {title_for(path)}
-
-**Status:** PROPOSED scaffold.  
-**Source:** `{first}`  
-**Referenced path:** `{path}`
-
-This file was created because the current `docs/domains` markdown inventory lists this path as planned, expected, or linked. Fill in the authoritative content, owners, validation status, and cross-links before promoting it beyond scaffold status.
-
-## Source Documents
-
-{source_lines(sources)}
-
-## Notes
-
-- Keep machine-checkable shape in `schemas/`, policy in `policy/`, fixtures in `fixtures/`, and release decisions in `release/` unless an accepted ADR says otherwise.
-- Replace this scaffold with domain-reviewed content before treating the path as canonical truth.
-"""
+              lines = [
+                  f"# {title_for(path)}",
+                  "",
+                  "**Status:** PROPOSED scaffold.  ",
+                  f"**Source:** `{first}`  ",
+                  f"**Referenced path:** `{path}`",
+                  "",
+                  "This file was created because the current `docs/domains` markdown inventory lists this path as planned, expected, or linked. Fill in the authoritative content, owners, validation status, and cross-links before promoting it beyond scaffold status.",
+                  "",
+                  "## Source Documents",
+                  "",
+              ]
+              lines.extend(source_lines(sources))
+              lines.extend([
+                  "",
+                  "## Notes",
+                  "",
+                  "- Keep machine-checkable shape in `schemas/`, policy in `policy/`, fixtures in `fixtures/`, and release decisions in `release/` unless an accepted ADR says otherwise.",
+                  "- Replace this scaffold with domain-reviewed content before treating the path as canonical truth.",
+                  "",
+              ])
+              return "\n".join(lines)
 
           def schema_content(path, sources):
               contract_doc = None
@@ -185,11 +192,11 @@ This file was created because the current `docs/domains` markdown inventory list
               return json.dumps(s)
 
           def yaml_content(path, sources):
-              src = "".join(f"  - {yaml_quote(s)}\n" for s in sources) or "  - \"docs/domains inventory\"\n"
+              src = "".join(f"  - {yaml_quote(source)}\n" for source in sources) or "  - \"docs/domains inventory\"\n"
               return f"status: PROPOSED\npath: {yaml_quote(path)}\nsource_docs:\n{src}notes:\n  - \"Placeholder created from the current docs/domains markdown inventory.\"\n"
 
           def py_content(path, sources):
-              src = "\n".join(f"- {s}" for s in sources) or "- docs/domains inventory"
+              src = "\n".join(f"- {source}" for source in sources) or "- docs/domains inventory"
               return f"\"\"\"PROPOSED placeholder generated from the current docs/domains inventory.\n\nPath: {path}\nSources:\n{src}\n\"\"\"\n"
 
           def rego_package(path):
@@ -207,20 +214,20 @@ This file was created because the current `docs/domains` markdown inventory list
               return f"package {rego_package(path)}\n\n# Status: PROPOSED scaffold. Source docs: {src}\ndefault allow := false\n"
 
           def content_for(path, sources):
-              pp = pathlib.PurePosixPath(path)
+              suffix = pathlib.PurePosixPath(path).suffix
               if path.endswith(".schema.json"):
                   return schema_content(path, sources)
-              if pp.suffix == ".json":
+              if suffix == ".json":
                   return json_content(path, sources)
-              if pp.suffix in {".yaml", ".yml"}:
+              if suffix in {".yaml", ".yml"}:
                   return yaml_content(path, sources)
-              if pp.suffix == ".py":
+              if suffix == ".py":
                   return py_content(path, sources)
-              if pp.suffix == ".rego":
+              if suffix == ".rego":
                   return rego_content(path, sources)
-              if pp.suffix in {".md", ".mdx"}:
+              if suffix in {".md", ".mdx"}:
                   return md_content(path, sources)
-              return f"PROPOSED placeholder generated from the current docs/domains inventory.\nPath: {path}\nSources:\n{source_lines(sources)}\n"
+              return "PROPOSED placeholder generated from the current docs/domains inventory.\n"
 
           candidates = {}
           md_count = skipped = 0
@@ -238,41 +245,41 @@ This file was created because the current `docs/domains` markdown inventory list
                       vals.append(raw)
               vals += [match.group(1) for match in broad_re.finditer(text)]
               for raw in vals:
-                  p = normalize_path(raw, md)
-                  if not p:
+                  path = normalize_path(raw, md)
+                  if not path:
                       continue
-                  candidates.setdefault(p, set()).add(source_rel)
+                  candidates.setdefault(path, set()).add(source_rel)
 
           records = []
-          for p, sources in sorted(candidates.items()):
-              abs_path = root / pathlib.PurePosixPath(p)
-              kind = "file" if is_file_path(p) else "dir"
-              records.append({"path": p, "sources": sorted(sources), "kind": kind, "exists": abs_path.exists()})
+          for path, sources in sorted(candidates.items()):
+              abs_path = root / pathlib.PurePosixPath(path)
+              records.append({"path": path, "sources": sorted(sources), "kind": "file" if is_file_path(path) else "dir", "exists": abs_path.exists()})
 
           missing_files = [r for r in records if r["kind"] == "file" and not r["exists"]]
           file_paths = {r["path"] for r in missing_files}
           missing_dirs = [r for r in records if r["kind"] == "dir" and not r["exists"]]
           remaining_dirs = []
           for r in missing_dirs:
-              d = r["path"].rstrip("/")
-              if any(p.startswith(d + "/") for p in file_paths):
+              directory = r["path"].rstrip("/")
+              if any(path.startswith(directory + "/") for path in file_paths):
                   continue
-              remaining_dirs.append(d)
+              remaining_dirs.append(directory)
+
           folder_markers = []
-          for d in sorted(set(remaining_dirs)):
-              if any(other.startswith(d + "/") for other in remaining_dirs if other != d):
+          for directory in sorted(set(remaining_dirs)):
+              if any(other.startswith(directory + "/") for other in remaining_dirs if other != directory):
                   continue
-              folder_markers.append(d + "/.gitkeep")
+              folder_markers.append(directory + "/.gitkeep")
 
           written_files = []
-          for r in missing_files:
-              rel = pathlib.PurePosixPath(r["path"])
+          for record in missing_files:
+              rel = pathlib.PurePosixPath(record["path"])
               dest = root / pathlib.Path(*rel.parts)
               if dest.exists():
                   continue
               dest.parent.mkdir(parents=True, exist_ok=True)
-              dest.write_text(content_for(r["path"], r.get("sources", [])), encoding="utf-8", newline="\n")
-              written_files.append(r["path"])
+              dest.write_text(content_for(record["path"], record.get("sources", [])), encoding="utf-8", newline="\n")
+              written_files.append(record["path"])
 
           written_markers = []
           for marker in folder_markers:
@@ -285,28 +292,28 @@ This file was created because the current `docs/domains` markdown inventory list
               written_markers.append(marker)
 
           json_errors = []
-          for p in written_files:
-              if pathlib.PurePosixPath(p).suffix == ".json":
-                  f = root / pathlib.Path(*pathlib.PurePosixPath(p).parts)
+          for path in written_files:
+              if pathlib.PurePosixPath(path).suffix == ".json":
+                  file_path = root / pathlib.Path(*pathlib.PurePosixPath(path).parts)
                   try:
-                      json.loads(f.read_text(encoding="utf-8"))
+                      json.loads(file_path.read_text(encoding="utf-8"))
                   except Exception as exc:
-                      json_errors.append((p, str(exc)))
+                      json_errors.append((path, str(exc)))
 
           py_errors = []
-          for p in written_files:
-              if pathlib.PurePosixPath(p).suffix == ".py":
-                  f = root / pathlib.Path(*pathlib.PurePosixPath(p).parts)
+          for path in written_files:
+              if pathlib.PurePosixPath(path).suffix == ".py":
+                  file_path = root / pathlib.Path(*pathlib.PurePosixPath(path).parts)
                   try:
-                      compile(f.read_text(encoding="utf-8"), str(f), "exec")
+                      compile(file_path.read_text(encoding="utf-8"), str(file_path), "exec")
                   except Exception as exc:
-                      py_errors.append((p, str(exc)))
+                      py_errors.append((path, str(exc)))
 
-          bad_paths = [p for p in written_files + written_markers if any(x in p for x in ["...", "\u2026", ",", "%", ":"])]
+          bad_paths = [path for path in written_files + written_markers if any(x in path for x in ["...", "\u2026", ",", "%", ":"])]
           print(f"scanned_markdown={md_count} skipped_generated_scaffolds={skipped}")
           print(f"candidate_paths={len(records)} missing_files={len(missing_files)} missing_dirs={len(missing_dirs)}")
           print(f"written_files={len(written_files)} written_folder_markers={len(written_markers)}")
-          print(f"json_checked={sum(1 for p in written_files if pathlib.PurePosixPath(p).suffix == '.json')} py_checked={sum(1 for p in written_files if pathlib.PurePosixPath(p).suffix == '.py')}")
+          print(f"json_checked={sum(1 for path in written_files if pathlib.PurePosixPath(path).suffix == '.json')} py_checked={sum(1 for path in written_files if pathlib.PurePosixPath(path).suffix == '.py')}")
           if json_errors or py_errors or bad_paths:
               print("json_errors", json_errors[:10])
               print("py_errors", py_errors[:10])
