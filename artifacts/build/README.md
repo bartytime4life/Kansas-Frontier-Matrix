@@ -1,3 +1,30 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/artifacts-build-readme
+title: artifacts/build/ — Compiled Build Outputs and Distributables
+type: readme
+version: v1
+status: draft
+owners: @kfm-docs-steward, @kfm-build-steward
+created: 2026-05-20
+updated: 2026-05-20
+policy_label: public
+related: [
+  docs/directory-rules.md,
+  artifacts/README.md,
+  data/receipts/README.md,
+  data/proofs/README.md,
+  release/README.md,
+  data/published/README.md,
+  docs/doctrine/ai-build-operating-contract.md
+]
+tags: [kfm, artifacts, build, compatibility-root, reproducibility, ARTIFACT_DIGEST]
+notes: [
+  "Authored doctrine-only; no mounted repo inspected.",
+  "Subfolder of compatibility root artifacts/ per Directory Rules §8.2.",
+  "Class transitional inherited from parent artifacts/."
+]
+[/KFM_META_BLOCK_V2] -->
+
 # `artifacts/build/`
 
 > Compiled, byte-deterministic build outputs and distributables — staged here for hash-pinning and citation, never as a trust surface.
