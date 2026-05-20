@@ -1,13 +1,330 @@
 name: KFM Domain Scaffold Publisher
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/kfm-domain-scaffold-publisher.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  noop:
+  publish:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Placeholder for the domain scaffold publisher."
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate domain scaffolds
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import json
+          import pathlib
+          import posixpath
+          import re
+          import sys
+
+          root = pathlib.Path.cwd()
+          md_root = root / "docs" / "domains"
+          allowed_roots = {
+              "apps", "artifacts", "catalog", "configs", "connectors", "contracts", "control_plane", "data", "docs",
+              "examples", "fixtures", "infra", "migrations", "packages", "pipelines", "pipeline_specs", "policy", "release",
+              "runtime", "schemas", "scripts", "src", "tests", "tools",
+          }
+          file_exts = {
+              ".md", ".mdx", ".json", ".jsonl", ".yaml", ".yml", ".toml", ".ini", ".csv", ".tsv", ".txt", ".sql",
+              ".py", ".js", ".ts", ".tsx", ".jsx", ".rego", ".sh", ".ps1", ".env", ".rdf", ".ttl", ".xml",
+              ".xsd", ".geojson", ".gpkg", ".parquet", ".duckdb", ".db", ".sqlite", ".html", ".css", ".wasm",
+              ".lock", ".rules", ".pbtxt", ".proto", ".graphql", ".ipynb",
+          }
+          known_files = {"LICENSE", "NOTICE", "CHANGELOG", "Makefile", "Dockerfile"}
+          url_re = re.compile(r"^(https?|s3|gs|mailto|urn|doi|ark|tel):", re.I)
+          lead_strip = " \t\r\n`'\"("
+          trail_strip = " \t\r\n`'\".,;:)"
+          patterns = [
+              re.compile(r"\[[^\]]*\]\(([^)]+)\)"),
+              re.compile(r"\b(?:href|src)=([\"'])(.*?)\1"),
+              re.compile(r"`([^`\n]+)`"),
+          ]
+          broad_re = re.compile(
+              r"(?<![A-Za-z0-9_.-])((?:" + "|".join(map(re.escape, sorted(allowed_roots))) +
+              r")(?:/[A-Za-z0-9_.@+=#~\-]+)+/?)(?![A-Za-z0-9_.-])"
+          )
+          skip_substrings = [
+              "domain_slug", "domain-slug", "source-id", "source_id", "dataset-id", "dataset_id", "run-id", "run_id",
+              "model-id", "model_id", "version-id", "version_id", "{domain}", "<domain>", "{slug}", "<slug>",
+              "{source}", "<source>", "{id}", "<id>", "adr-xxxx", "xxxx", "tbd", "yyyy", "%e2%80%a6",
+          ]
+          placeholder_chars = set("<>{}[]$*,|%:")
+
+          def is_generated_scaffold(text):
+              return "**Status:** PROPOSED scaffold." in text and "This file was created because the domain markdown inventory lists" in text
+
+          def clean(raw):
+              if not raw:
+                  return None
+              s = raw.lstrip(lead_strip).rstrip(trail_strip)
+              if not s or "://" in s or url_re.match(s):
+                  return None
+              if " " in s and "/" in s.split()[0]:
+                  s = s.split()[0].rstrip(trail_strip)
+              if "#" in s:
+                  s = s.split("#", 1)[0]
+              if "?" in s:
+                  s = s.split("?", 1)[0]
+              s = s.replace("\\", "/")
+              return s.rstrip(trail_strip)
+
+          def normalize_path(s, source):
+              s = clean(s)
+              if not s:
+                  return None
+              low = s.lower()
+              if any(x in low for x in skip_substrings):
+                  return None
+              if "..." in s or "\u2026" in s or any(ch in s for ch in placeholder_chars):
+                  return None
+              if s.startswith("/"):
+                  s = s.lstrip("/")
+              if s.startswith("../") or s.startswith("./"):
+                  base = source.parent.relative_to(root).as_posix()
+                  s = posixpath.normpath(posixpath.join(base, s)).lstrip("/")
+              else:
+                  s = posixpath.normpath(s).lstrip("/")
+              if s in (".", "") or s.startswith("../"):
+                  return None
+              first = s.split("/", 1)[0]
+              if first not in allowed_roots:
+                  return None
+              parts = s.split("/")
+              if any(p in {"...", "..", "."} or not p for p in parts):
+                  return None
+              if any(p.endswith("-") or p.startswith("-") or p.endswith("_") for p in parts):
+                  return None
+              return s.rstrip(".,;:")
+
+          def is_file_path(p):
+              name = p.rsplit("/", 1)[-1]
+              if name in known_files:
+                  return True
+              suffixes = pathlib.PurePosixPath(p).suffixes
+              return bool(suffixes and (suffixes[-1].lower() in file_exts or any(x.lower() in file_exts for x in suffixes)))
+
+          def title_for(path):
+              p = pathlib.PurePosixPath(path)
+              base = p.parent.name if p.name == "README.md" else p.name
+              suffixes = []
+              if path.endswith(".schema.json"):
+                  suffixes.append(".schema.json")
+              if len(p.suffixes) >= 2:
+                  suffixes.append("".join(p.suffixes[-2:]))
+              if p.suffix:
+                  suffixes.append(p.suffix)
+              for suffix in suffixes:
+                  if suffix and base.endswith(suffix):
+                      base = base[:-len(suffix)]
+                      break
+              base = base.replace("_", " ").replace("-", " ").replace(".", " ")
+              return " ".join(w.upper() if w.isupper() else w.capitalize() for w in base.split()) or "Scaffold"
+
+          def source_lines(sources):
+              return "\n".join(f"- `{s}`" for s in sources) if sources else "- `docs/domains` inventory"
+
+          def md_content(path, sources):
+              first = sources[0] if sources else "docs/domains inventory"
+              return f"""# {title_for(path)}
+
+**Status:** PROPOSED scaffold.  
+**Source:** `{first}`  
+**Referenced path:** `{path}`
+
+This file was created because the current `docs/domains` markdown inventory lists this path as planned, expected, or linked. Fill in the authoritative content, owners, validation status, and cross-links before promoting it beyond scaffold status.
+
+## Source Documents
+
+{source_lines(sources)}
+
+## Notes
+
+- Keep machine-checkable shape in `schemas/`, policy in `policy/`, fixtures in `fixtures/`, and release decisions in `release/` unless an accepted ADR says otherwise.
+- Replace this scaffold with domain-reviewed content before treating the path as canonical truth.
+"""
+
+          def schema_content(path, sources):
+              contract_doc = None
+              m = re.match(r"^schemas/contracts/v1/domains/([^/]+)/(.+)\.schema\.json$", path)
+              if m:
+                  contract_doc = f"contracts/domains/{m.group(1)}/{m.group(2)}.md"
+              obj = {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "$id": f"kfm://{path}",
+                  "title": title_for(path),
+                  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+                  "type": "object",
+                  "additionalProperties": True,
+                  "properties": {},
+                  "x-kfm": {"status": "PROPOSED", "path": path, "source_docs": sources, "contract_doc": contract_doc},
+              }
+              return json.dumps(obj, indent=2) + "\n"
+
+          def json_content(path, sources):
+              obj = {
+                  "status": "PROPOSED",
+                  "path": path,
+                  "source_docs": sources,
+                  "notes": ["Placeholder created from the current docs/domains markdown inventory."],
+              }
+              return json.dumps(obj, indent=2) + "\n"
+
+          def yaml_quote(s):
+              return json.dumps(s)
+
+          def yaml_content(path, sources):
+              src = "".join(f"  - {yaml_quote(s)}\n" for s in sources) or "  - \"docs/domains inventory\"\n"
+              return f"status: PROPOSED\npath: {yaml_quote(path)}\nsource_docs:\n{src}notes:\n  - \"Placeholder created from the current docs/domains markdown inventory.\"\n"
+
+          def py_content(path, sources):
+              src = "\n".join(f"- {s}" for s in sources) or "- docs/domains inventory"
+              return f"\"\"\"PROPOSED placeholder generated from the current docs/domains inventory.\n\nPath: {path}\nSources:\n{src}\n\"\"\"\n"
+
+          def rego_package(path):
+              stem = path[:-5] if path.endswith(".rego") else path
+              parts = ["kfm", "generated"]
+              for part in stem.split("/"):
+                  token = re.sub(r"[^A-Za-z0-9_]", "_", part)
+                  if not token or token[0].isdigit():
+                      token = "_" + token
+                  parts.append(token.lower())
+              return ".".join(parts)
+
+          def rego_content(path, sources):
+              src = ", ".join(sources) if sources else "docs/domains inventory"
+              return f"package {rego_package(path)}\n\n# Status: PROPOSED scaffold. Source docs: {src}\ndefault allow := false\n"
+
+          def content_for(path, sources):
+              pp = pathlib.PurePosixPath(path)
+              if path.endswith(".schema.json"):
+                  return schema_content(path, sources)
+              if pp.suffix == ".json":
+                  return json_content(path, sources)
+              if pp.suffix in {".yaml", ".yml"}:
+                  return yaml_content(path, sources)
+              if pp.suffix == ".py":
+                  return py_content(path, sources)
+              if pp.suffix == ".rego":
+                  return rego_content(path, sources)
+              if pp.suffix in {".md", ".mdx"}:
+                  return md_content(path, sources)
+              return f"PROPOSED placeholder generated from the current docs/domains inventory.\nPath: {path}\nSources:\n{source_lines(sources)}\n"
+
+          candidates = {}
+          md_count = skipped = 0
+          for md in sorted(md_root.rglob("*.md")):
+              text = md.read_text(encoding="utf-8", errors="replace")
+              if is_generated_scaffold(text):
+                  skipped += 1
+                  continue
+              md_count += 1
+              source_rel = md.relative_to(root).as_posix()
+              vals = []
+              for pat in patterns:
+                  for match in pat.finditer(text):
+                      raw = match.group(2) if pat.pattern.startswith("\\b") else match.group(1)
+                      vals.append(raw)
+              vals += [match.group(1) for match in broad_re.finditer(text)]
+              for raw in vals:
+                  p = normalize_path(raw, md)
+                  if not p:
+                      continue
+                  candidates.setdefault(p, set()).add(source_rel)
+
+          records = []
+          for p, sources in sorted(candidates.items()):
+              abs_path = root / pathlib.PurePosixPath(p)
+              kind = "file" if is_file_path(p) else "dir"
+              records.append({"path": p, "sources": sorted(sources), "kind": kind, "exists": abs_path.exists()})
+
+          missing_files = [r for r in records if r["kind"] == "file" and not r["exists"]]
+          file_paths = {r["path"] for r in missing_files}
+          missing_dirs = [r for r in records if r["kind"] == "dir" and not r["exists"]]
+          remaining_dirs = []
+          for r in missing_dirs:
+              d = r["path"].rstrip("/")
+              if any(p.startswith(d + "/") for p in file_paths):
+                  continue
+              remaining_dirs.append(d)
+          folder_markers = []
+          for d in sorted(set(remaining_dirs)):
+              if any(other.startswith(d + "/") for other in remaining_dirs if other != d):
+                  continue
+              folder_markers.append(d + "/.gitkeep")
+
+          written_files = []
+          for r in missing_files:
+              rel = pathlib.PurePosixPath(r["path"])
+              dest = root / pathlib.Path(*rel.parts)
+              if dest.exists():
+                  continue
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              dest.write_text(content_for(r["path"], r.get("sources", [])), encoding="utf-8", newline="\n")
+              written_files.append(r["path"])
+
+          written_markers = []
+          for marker in folder_markers:
+              rel = pathlib.PurePosixPath(marker)
+              dest = root / pathlib.Path(*rel.parts)
+              if dest.exists():
+                  continue
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              dest.write_text("", encoding="utf-8", newline="\n")
+              written_markers.append(marker)
+
+          json_errors = []
+          for p in written_files:
+              if pathlib.PurePosixPath(p).suffix == ".json":
+                  f = root / pathlib.Path(*pathlib.PurePosixPath(p).parts)
+                  try:
+                      json.loads(f.read_text(encoding="utf-8"))
+                  except Exception as exc:
+                      json_errors.append((p, str(exc)))
+
+          py_errors = []
+          for p in written_files:
+              if pathlib.PurePosixPath(p).suffix == ".py":
+                  f = root / pathlib.Path(*pathlib.PurePosixPath(p).parts)
+                  try:
+                      compile(f.read_text(encoding="utf-8"), str(f), "exec")
+                  except Exception as exc:
+                      py_errors.append((p, str(exc)))
+
+          bad_paths = [p for p in written_files + written_markers if any(x in p for x in ["...", "\u2026", ",", "%", ":"])]
+          print(f"scanned_markdown={md_count} skipped_generated_scaffolds={skipped}")
+          print(f"candidate_paths={len(records)} missing_files={len(missing_files)} missing_dirs={len(missing_dirs)}")
+          print(f"written_files={len(written_files)} written_folder_markers={len(written_markers)}")
+          print(f"json_checked={sum(1 for p in written_files if pathlib.PurePosixPath(p).suffix == '.json')} py_checked={sum(1 for p in written_files if pathlib.PurePosixPath(p).suffix == '.py')}")
+          if json_errors or py_errors or bad_paths:
+              print("json_errors", json_errors[:10])
+              print("py_errors", py_errors[:10])
+              print("bad_paths", bad_paths[:10])
+              sys.exit(1)
+          PY
+      - name: Commit generated scaffolds
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/kfm-domain-scaffold-publisher.yml
+          git status --short
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "No generated changes to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add remaining domain scaffolds from docs inventory"
+          git push
