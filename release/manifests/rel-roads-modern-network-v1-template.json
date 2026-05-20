@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "path": "release/manifests/rel-roads-modern-network-v1-template.json",
+  "source_docs": [
+    "docs/domains/roads-rail-trade/RELEASE_INDEX.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

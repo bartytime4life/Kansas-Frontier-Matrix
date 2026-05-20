@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/domains/hazards/source_descriptor.schema.json",
+  "title": "Source Descriptor",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/domains/hazards/source_descriptor.schema.json",
+    "source_docs": [
+      "docs/domains/hazards/VERIFICATION_BACKLOG.md"
+    ],
+    "contract_doc": "contracts/domains/hazards/source_descriptor.md"
+  }
+}

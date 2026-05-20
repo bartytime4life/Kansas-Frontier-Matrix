@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/domains/soil/soil_map_unit.schema.json",
+  "title": "Soil Map Unit",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/domains/soil/soil_map_unit.schema.json",
+    "source_docs": [
+      "docs/domains/soil/CANONICAL_PATHS.md"
+    ],
+    "contract_doc": "contracts/domains/soil/soil_map_unit.md"
+  }
+}

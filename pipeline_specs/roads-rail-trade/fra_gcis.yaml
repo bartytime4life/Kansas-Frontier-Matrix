@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "pipeline_specs/roads-rail-trade/fra_gcis.yaml"
+source_docs:
+  - "docs/domains/roads-rail-trade/MISSING_OR_PLANNED_FILES.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

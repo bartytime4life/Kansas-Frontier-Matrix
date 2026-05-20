@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "data/registry/sources/archaeology/sensitivity_policies.yaml"
+source_docs:
+  - "docs/domains/archaeology/SOURCE_REGISTRY.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

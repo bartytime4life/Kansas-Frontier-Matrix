@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/layers/layer_manifest.schema.json",
+  "title": "Layer Manifest",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/layers/layer_manifest.schema.json",
+    "source_docs": [
+      "docs/domains/agriculture/API_CONTRACTS.md",
+      "docs/domains/agriculture/VERIFICATION_BACKLOG.md",
+      "docs/domains/archaeology/MAP_UI_CONTRACTS.md",
+      "docs/domains/fauna/MAP_UI_CONTRACTS.md",
+      "docs/domains/hydrology/MAP_UI_CONTRACTS.md"
+    ],
+    "contract_doc": null
+  }
+}

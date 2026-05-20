@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/focus/runtime_response_envelope.schema.json",
+  "title": "Runtime Response Envelope",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/focus/runtime_response_envelope.schema.json",
+    "source_docs": [
+      "docs/domains/hazards/API_CONTRACTS.md"
+    ],
+    "contract_doc": null
+  }
+}

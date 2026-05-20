@@ -1,0 +1,11 @@
+{
+  "status": "PROPOSED",
+  "path": "schemas/contracts/v1/source/source-activation-decision.json",
+  "source_docs": [
+    "docs/domains/fauna/SOURCE_REGISTRY.md",
+    "docs/domains/habitat/SOURCE_REGISTRY.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

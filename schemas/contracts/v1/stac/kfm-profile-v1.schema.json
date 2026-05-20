@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/stac/kfm-profile-v1.schema.json",
+  "title": "Kfm Profile V1",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/stac/kfm-profile-v1.schema.json",
+    "source_docs": [
+      "docs/domains/hazards/RELEASE_INDEX.md"
+    ],
+    "contract_doc": null
+  }
+}
