@@ -65,6 +65,8 @@ notes:
   - "On mounted-repo inspection: verify every related-link, the proposed substructure tree (build/ · docs/ · qa/ · temporary/), and the validator-orchestrator exit-code contract (§7.5.a, OPEN-DR-03)."
 [/KFM_META_BLOCK_V2] -->
 
+# `artifacts/release/`
+
 > **Release-pipeline build scratch.** Non-trust-bearing build, docs, and QA outputs from the release pipeline. Trust-bearing release state lives in [`release/`](../../release/) — not here.
 
 <!-- [KFM_META_BLOCK_V2]
