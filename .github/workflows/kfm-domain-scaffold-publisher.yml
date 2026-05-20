@@ -1,0 +1,13 @@
+name: KFM Domain Scaffold Publisher
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Placeholder for the domain scaffold publisher."
