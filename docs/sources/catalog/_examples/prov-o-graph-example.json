@@ -1,0 +1,24 @@
+{
+  "_note": "ILLUSTRATIVE ONLY — PROPOSED shape, NEEDS VERIFICATION against schemas/contracts/v1/source/",
+  "@context": "https://www.w3.org/ns/prov",
+  "@graph": [
+    {
+      "@id": "kfm://run/<placeholder>",
+      "@type": "prov:Activity",
+      "prov:startedAtTime": "2024-04-12T17:40:00Z",
+      "prov:endedAtTime": "2024-04-12T17:42:00Z"
+    },
+    {
+      "@id": "kfm://evidence/<placeholder>",
+      "@type": "prov:Entity",
+      "prov:wasGeneratedBy": "kfm://run/<placeholder>",
+      "kfm:spec_hash": "sha256:<placeholder>"
+    },
+    {
+      "@id": "kfm-noaa-storm-events-PLACEHOLDER",
+      "@type": "prov:Entity",
+      "prov:wasDerivedFrom": "kfm://evidence/<placeholder>",
+      "prov:wasAttributedTo": "kfm://agent/<placeholder>"
+    }
+  ]
+}
