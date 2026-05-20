@@ -1,0 +1,4 @@
+PROPOSED scaffold for mypy output.
+
+No type-check run has been recorded here yet. Replace this file with generated
+mypy output if the QA pipeline writes to artifacts/qa/lint/mypy.txt.

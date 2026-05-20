@@ -1,0 +1,9 @@
+{
+  "status": "PROPOSED",
+  "tool": "eslint",
+  "path": "artifacts/qa/lint/eslint.json",
+  "results": [],
+  "notes": [
+    "Illustrative placeholder for ESLint output. Replace with generated output when available."
+  ]
+}

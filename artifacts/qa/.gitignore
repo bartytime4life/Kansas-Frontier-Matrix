@@ -1,0 +1,15 @@
+# Generated QA runs can be large or noisy. Keep scaffolds, ignore local run debris.
+policy-boundary-guards.xml
+*.tmp
+*.log
+*.html
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.zip
+*.tar
+*.tar.gz
+
+# Preserve empty scaffold directories.
+!.gitkeep
