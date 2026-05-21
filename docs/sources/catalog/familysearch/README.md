@@ -2,46 +2,50 @@
 doc_id: kfm://doc/source-catalog-familysearch
 title: FamilySearch — Source Catalog Entry
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: Docs steward + People-Genealogy-DNA-Land domain owner + Source-registry steward
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - docs/sources/catalog/README.md
   - docs/domains/people-genealogy-dna-land/README.md
   - docs/doctrine/directory-rules.md
   - schemas/contracts/v1/source/source-descriptor.schema.json
   - data/registry/sources/people-genealogy-dna-land/
   - connectors/familysearch/README.md
   - policy/genealogy/publication.rego
-tags: [kfm, source-catalog, genealogy, c9-02, oauth2, ga4gh, gedcom-x, sensitive]
+  - docs/standards/DUO_MAPPING.md
+  - docs/policy/familysearch-retention.md
+tags: [kfm, source-catalog, genealogy, c9-02, oauth2, ga4gh, gedcom-x, sensitive, dom-people]
 notes:
-  - Path docs/sources/catalog/familysearch.md is PROPOSED; the docs/sources/ subtree currently has only docs/sources/SOURCE_DESCRIPTOR_STANDARD.md as a PROPOSED file in prior reports — see Section 1 below and Directory Rules §3.
-  - This doc is the human-readable per-source briefing. The machine-readable SourceDescriptor record lives under data/registry/sources/<domain>/; the JSON Schema lives under schemas/contracts/v1/source/.
-  - No claim is made that the FamilySearch connector, SourceActivationDecision, or any related schema is implemented in the current repo.
+  - "Path `docs/sources/catalog/familysearch.md` is PROPOSED; the `docs/sources/` subtree currently has only `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` as a PROPOSED file in prior reports — see §1 and Directory Rules §3. The `catalog/<source>` subfolder pattern is NEEDS VERIFICATION against mounted-repo state and may not match a sibling pattern of `docs/sources/catalog/<family>/<product>` used elsewhere."
+  - "This doc is the human-readable per-source briefing. The machine-readable SourceDescriptor record lives under `data/registry/sources/<domain>/`; the JSON Schema lives under `schemas/contracts/v1/source/`."
+  - "No claim is made that the FamilySearch connector, SourceActivationDecision, or any related schema is implemented in the current repo."
+  - "v0.2 revision: added Doctrinal anchors table; cross-referenced Pass-23 atlas cards (KFM-P1-IDEA-0033, KFM-P15-PROG-0034) that carry the C9 posture forward; added C9-07 (23andMe Chapter 11) vendor-risk note; tightened §10 gates with explicit spec-hash-match (C5-04) and lineage-required (C5-08) items; cleaned badge encoding."
 [/KFM_META_BLOCK_V2] -->
 
 # 🧬 FamilySearch — Source Catalog Entry
 
 > **Human-readable briefing for the FamilySearch upstream.** Tracks identity, source role, rights posture, access method, consent and revocation behavior, sensitivity class, lifecycle handling, and the governance gates that must be satisfied before any FamilySearch-derived material crosses the publication boundary. **Not authoritative for runtime decisions** — the machine-readable `SourceDescriptor` and the policy bundle govern admission, promotion, and release.
 
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![truth: CONFIRMED%20doctrine%20%2F%20PROPOSED%20path](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%2F%20PROPOSED%20path-yellow)
-![category: C9.b%20Genealogical%20APIs](https://img.shields.io/badge/category-C9.b%20Genealogical%20APIs-blueviolet)
-![domain: people-genealogy-dna-land](https://img.shields.io/badge/domain-people--genealogy--dna--land-informational)
-![source_role: candidate%20%7C%20observation%20(scoped)](https://img.shields.io/badge/source__role-candidate%20%7C%20observation%20(scoped)-blue)
-![sensitivity: living--person%20DENY--by--default](https://img.shields.io/badge/sensitivity-living--person%20DENY--by--default-critical)
-![consent: OAuth2%20%2B%20GA4GH%20Passport](https://img.shields.io/badge/consent-OAuth2%20%2B%20GA4GH%20Passport-success)
-![release: gated%20by%20policy%20%2B%20review%20%2B%20redaction](https://img.shields.io/badge/release-gated-lightgrey)
+[![Status: draft](https://img.shields.io/badge/status-draft-orange)](#)
+[![Truth: CONFIRMED doctrine / PROPOSED paths](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%2F%20PROPOSED%20paths-yellow)](#-doctrinal-anchors)
+[![Category: C9.b Genealogical APIs](https://img.shields.io/badge/category-C9.b%20Genealogical%20APIs-blueviolet)](#-doctrinal-anchors)
+[![Domain: DOM-PEOPLE](https://img.shields.io/badge/domain-DOM--PEOPLE-informational)](../domains/people-genealogy-dna-land/README.md)
+[![source_role: candidate + observation (scoped)](https://img.shields.io/badge/source__role-candidate%20%2B%20observation%20(scoped)-blue)](#3-what-this-source-is-what-it-is-not)
+[![Sensitivity: living-person DENY-by-default](https://img.shields.io/badge/sensitivity-living--person%20DENY--by--default-critical)](#6-sensitivity-rights-and-the-deny-by-default-posture)
+[![Consent: OAuth2 + GA4GH Passport](https://img.shields.io/badge/consent-OAuth2%20%2B%20GA4GH%20Passport-success)](#5-access-oauth2-and-the-ga4gh-overlay)
+[![Release: gated](https://img.shields.io/badge/release-gated%20by%20policy%20%2B%20review%20%2B%20redaction-lightgrey)](#10-gates-before-publication)
 
 | Field | Value |
 |---|---|
 | **Doc type** | Standard doc — source catalog entry |
-| **Status** | `draft` |
+| **Status** | `draft` (v0.2) |
 | **Owners** | Docs steward · People-Genealogy-DNA-Land domain owner · Source-registry steward |
-| **Last updated** | 2026-05-13 |
+| **Last updated** | 2026-05-21 |
 | **Authority of this doc** | **Explains** the source. Does not decide admission. See `data/registry/sources/...` and `policy/genealogy/...` for decisions. |
 | **Source ID (PROPOSED)** | `familysearch-api` |
 | **Upstream** | FamilySearch Developer Platform — `https://www.familysearch.org/developers/` |
@@ -51,6 +55,7 @@ notes:
 
 ## 📚 Quick jump
 
+- [Doctrinal anchors](#-doctrinal-anchors)
 - [1. Scope and path posture](#1-scope-and-path-posture)
 - [2. Repo fit and lifecycle](#2-repo-fit-and-lifecycle)
 - [3. What this source is, what it is not](#3-what-this-source-is-what-it-is-not)
@@ -67,10 +72,41 @@ notes:
 
 ---
 
+## 🧭 Doctrinal anchors
+
+> [!NOTE]
+> The cards below are the load-bearing project-knowledge entries this briefing depends on. Components Pass-10 is the C-series spine; Pass-23 / Pass-32 atlas IDs (`KFM-P*`) confirm the carry-forward into the current doctrinal layer.
+
+| Anchor | Source | Why it applies here |
+|---|---|---|
+| **C9-01** | GEDCOM 5.5 and GEDCOM-X for genealogical interchange | Interchange formats; CIDOC-CRM E21 normalization (CONFIRMED Pass-10) |
+| **C9-02** | FamilySearch API as genealogy upstream | This page's core source card (CONFIRMED Pass-10) |
+| **C9-03** | DTC Raw-Genomic Exports (23andMe, Ancestry, MyHeritage) | Adjacent C9 sibling; consent overlap (CONFIRMED Pass-10) |
+| **C9-04** | GA4GH AAI / Passports / DUO / MRCG | Consent and access-control framework (CONFIRMED Pass-10) |
+| **C9-07** | 23andMe Chapter 11, March 2025 | Vendor-risk watchlist trigger; hardens consent / revocation posture (CONFIRMED Pass-10; see §11) |
+| **C5-09** | Tombstones for revocation | Revocation → signed tombstone + ledger append (CONFIRMED Pass-10) |
+| **C6-06** | k-anonymity for living-person overlays | Default profile `k=10`, `cell_m=500`, fallback `radius_mask=250m` (CONFIRMED Pass-10) |
+| **C6-07** | Consent Tokens | JWT shape; OAuth introspection; PDP enforcement (CONFIRMED Pass-10) |
+| **C6-08** | Revocation endpoints, embargo timestamps, cache invalidation | Render-time enforcement (CONFIRMED Pass-10) |
+| **C8-01** | CIDOC-CRM core classes (E5/E7/E21/E53/E55/E74) | Graph backbone for persons, places, events (CONFIRMED Pass-10) |
+| **C8-03** | PROV-O and PAV | Claim-level provenance (CONFIRMED Pass-10) |
+| **C8-04** | Evidence-Bundle JSON-LD (content-addressed) | Wrapping graph fragments with evidence (CONFIRMED Pass-10) |
+| **C7-09** | USGS GNIS for U.S. place authority | Place anchoring (CONFIRMED Pass-10) |
+| **KFM-P1-IDEA-0033** | Living-person, DNA, and genomic restriction posture | Pass-23 carry-forward of the C9 sensitivity stance (PROPOSED) |
+| **KFM-P15-PROG-0034** | Genealogy and genomics uploads governance | Auditable consent, policy-aware tokens, conservative aggregation, minimum cell sizes (PROPOSED) |
+| **DOM-PEOPLE** | Domains Atlas People/Genealogy/DNA/Land | Object families (`Person Assertion`, `PersonCanonical`, `NameAssertion`); domain rules |
+| **Directory Rules §§3, 4, 7.3, 7.4** | Placement law | `docs/` explains, `connectors/` fetches, `data/raw/` captures, schemas under `schemas/contracts/v1/...` |
+| **ADR-0001** | Schema home rule | Establishes `schemas/contracts/v1/source/source-descriptor.schema.json` as canonical home |
+| **`ai-build-operating-contract.md` §34** | RunReceipt / GENERATED_RECEIPT requirements | Receipt envelope and validation gates (CONFIRMED contract) |
+
+[Back to top](#-familysearch--source-catalog-entry)
+
+---
+
 ## 1. Scope and path posture
 
 > [!NOTE]
-> **Path is PROPOSED.** `docs/sources/catalog/familysearch.md` is a placement inference based on (a) prior reports proposing `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`, (b) Directory Rules §3 — `docs/` owns human explanation, and (c) the lane pattern that domain-specific docs live as **segments**, not roots. A `docs/sources/catalog/` subfolder has not been verified against mounted repo state. Until verified or codified by ADR, this file may also be valid at `docs/sources/familysearch.md`.
+> **Path is PROPOSED.** `docs/sources/catalog/familysearch.md` is a placement inference based on (a) prior reports proposing `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`, (b) Directory Rules §3 — `docs/` owns human explanation, and (c) the lane pattern that domain-specific docs live as **segments**, not roots. A `docs/sources/catalog/` subfolder has not been verified against mounted repo state. Sibling product pages elsewhere in this docs tree use `docs/sources/catalog/<family>/<product>.md` (e.g. EPA AQS); the choice between a flat `docs/sources/catalog/familysearch.md` placement and a nested `docs/sources/catalog/familysearch/README.md` placement is **NEEDS VERIFICATION** until codified by ADR.
 
 This document is a **per-source briefing**, not a contract, schema, or policy. It explains:
 
@@ -162,11 +198,11 @@ The People-Genealogy-DNA-Land domain dossier and the Domains Atlas describe gene
 |---|---|---|
 | Indexed historical record images (census, vital, church, etc.) | `observation` (scoped) | Source-document evidence with a date and place — admissible as observation under People-domain rules. |
 | Community-contributed tree nodes / Family Tree person records | `candidate` | Hypotheses authored by contributors; **must** carry `role_candidate_disposition` and **must not** appear on PUBLISHED edges until merged. |
-| FamilySearch Places / authorities (place IDs) | `context` | Used for anchoring, not as the primary place authority — anchor against GNIS / TGN with confidence scoring (idea **C9-06**). |
+| FamilySearch Places / authorities (place IDs) | `context` | Used for anchoring, not as the primary place authority — anchor against GNIS / TGN with confidence scoring (idea **C9-06**, **C7-09**). |
 | Aggregated record counts / index summaries | `aggregate` | If used, MUST carry `role_aggregation_unit` to prevent geometry-scope drift on join. |
 
 > [!NOTE]
-> The `source_role` enum and its required co-fields are described in the Domains Atlas §24.1.3 (PROPOSED descriptor surface) and remain **PROPOSED** until the mounted `source_descriptor.schema.json` is verified.
+> The `source_role` enum and its required co-fields are described in the Domains Atlas §24.1.3 (PROPOSED descriptor surface) and remain **PROPOSED** until the mounted `source_descriptor.schema.json` is verified. The Pass-23 source-role table additionally rules: *"Administrative compilation cited as observation → DENY publication of compilation as observed event timeline"* — FamilySearch tree records are **administrative compilations** and must not be cited as observed events.
 
 [Back to top](#-familysearch--source-catalog-entry)
 
@@ -181,7 +217,7 @@ The descriptor below is the **human-readable view** of the record that lives und
 | `source_id` | `familysearch-api` | Stable. Renames require a new descriptor + `CorrectionNotice`. |
 | `source_role` | per-subset (see §3) | Set at admission. Never edited in place. |
 | `role_authority` | `FamilySearch International` (when `aggregate` or `administrative`) | Disambiguates downstream citation text. |
-| `role_candidate_disposition` | `pending` (default for tree records) | `pending | merged | rejected | quarantined`. PUBLISHED edge forbidden until `merged`. |
+| `role_candidate_disposition` | `pending` (default for tree records) | `pending \| merged \| rejected \| quarantined`. PUBLISHED edge forbidden until `merged`. |
 | `authority` | Org: FamilySearch International; cooperative steward: KFM People-Genealogy domain owner | Disambiguates issuing body. |
 | `rights` | Per FamilySearch Developer Terms of Use + per-record license metadata returned by the API | **NEEDS VERIFICATION:** current terms must be re-checked at every connector revision. |
 | `access` | OAuth 2.0 authorization-code flow; per-user consent scopes; GA4GH Passport overlay | See §5. |
@@ -190,6 +226,7 @@ The descriptor below is the **human-readable view** of the record that lives und
 | `citation_rules` | Cite the FamilySearch record URL or persistent identifier plus contributor attribution; preserve raw record under `data/raw/...` for re-examination | Verbatim original strings preserved per idea **C9-06**. |
 | `freshness_expectations` | Records can change as contributors edit trees; treat tree subsets as snapshot-in-time. | Snapshot timestamp MUST appear in the receipt. |
 | `public_release_class` | **default DENY for living-person fields**; aggregated / k-anonymized derivations only after policy + review pass | See §6 and §10. |
+| `vendor_risk_class` | **watchlist** — see C9-07 (23andMe Chapter 11) precedent; vendor-solvency or terms-of-service shifts may change posture without notice | NEEDS VERIFICATION |
 
 > [!TIP]
 > Treat this table as a worked example, not as the schema. The authoritative field list and types live in the schema file. Discrepancies are tracked in `docs/registers/DRIFT_REGISTER.md`.
@@ -247,6 +284,11 @@ sequenceDiagram
 
 **CONFIRMED doctrine (Encyclopedia §13 Sensitive / Deny-by-Default Register).** Living-person identity and DNA/genomic linkage are **DENY by default** for public release. FamilySearch material commonly contains both, so the catalog entry inherits the strictest posture.
 
+The Pass-23 atlas carries this stance forward:
+
+- **KFM-P1-IDEA-0033** (Pass-23, PROPOSED): *"Living-person and DNA/genomic information should be restricted by default and exposed only through evidence-bound, consent-aware, policy-approved surfaces."*
+- **KFM-P15-PROG-0034** (Pass-23, PROPOSED): *"Genealogy and genomics uploads should be treated as user assets requiring auditable consent, policy-aware access tokens, conservative aggregation, and minimum cell-size controls."*
+
 | Risk class | Default | Required controls |
 |---|---|---|
 | **Living persons** — names, residences, identity assertions | **DENY** public exact / identifying output | privacy review · redaction · aggregate · staged access |
@@ -254,9 +296,10 @@ sequenceDiagram
 | **Place strings tied to living-person residences** | **DENY** exact public location | geographic generalization receipt |
 | **Tree records as "evidence"** | **DENY** publication of tree-only assertions as observed events | preserve `source_role=candidate`; require corroborating `observation` |
 | **Rights-limited or unclear-rights records** | **DENY** public release until terms resolved | rights register entry; `RightsDecision` |
+| **Aggregate cited as a per-place truth** | **DENY** join from aggregate cell to single record; **ABSTAIN at AI** | aggregation receipt; geometry-scope guard (Pass-23 source-role table) |
 
 > [!CAUTION]
-> **No public-safe rendering of a FamilySearch record is automatic.** Every transform that crosses the publication boundary MUST emit a `RedactionReceipt` (sensitive transforms) or `AggregationReceipt` (geometry-scope aggregations), and the `EvidenceBundle` MUST resolve before publication. The renderer never invents truth, the AI surface never substitutes for evidence.
+> **No public-safe rendering of a FamilySearch record is automatic.** Every transform that crosses the publication boundary MUST emit a `RedactionReceipt` (sensitive transforms) or `AggregationReceipt` (geometry-scope aggregations), and the `EvidenceBundle` MUST resolve before publication. The renderer never invents truth; the AI surface never substitutes for evidence.
 
 [Back to top](#-familysearch--source-catalog-entry)
 
@@ -264,7 +307,7 @@ sequenceDiagram
 
 ## 7. Lifecycle and run-receipt envelope
 
-Every fetch from FamilySearch is a **governed operation** and produces a **receipt**. Per the Encyclopedia Feature Index, the receipt family for this source includes:
+Every fetch from FamilySearch is a **governed operation** and produces a **receipt**. Per the Encyclopedia Feature Index and `ai-build-operating-contract.md` §34, the receipt family for this source includes:
 
 | Receipt | When emitted | Required content (PROPOSED shape) |
 |---|---|---|
@@ -301,6 +344,7 @@ flowchart TB
 | Embargo timestamp passes / extends | Re-evaluate gate; deny if `now < embargo_until` regardless of other approvals | `PolicyDecision` |
 | Revocation endpoint unreachable | **Fail closed.** Rendering MUST deny even if it inconveniences users | `PolicyDecision` (DENY with reason) |
 | FamilySearch user deceased; consent becomes ambiguous | **UNKNOWN default.** Components Pass-10 explicitly flags this as an open question — embargo vs. surface vs. escalate has not been decided | open question, see §11 |
+| Vendor solvency event affecting upstream (cf. C9-07 23andMe Chapter 11) | Re-evaluate consent posture; escalate to steward; **fail closed** while reviewing | `PolicyDecision` + steward review |
 
 > [!IMPORTANT]
 > **Revocation that does not invalidate caches is incomplete.** Stale tiles, stale JSON responses, stale graph projections, and stale AI cache entries can all leak retracted content. Invalidation hooks MUST be tested before relying on the revocation pathway.
@@ -311,15 +355,16 @@ flowchart TB
 
 ## 9. Normalization, anchoring, and CIDOC-CRM projection
 
-**CONFIRMED doctrine (ideas C9-01, C9-06, C8-01).** FamilySearch payloads are normalized at ingest but the original is preserved verbatim under `data/raw/...` so scholarly work can re-examine interpretation.
+**CONFIRMED doctrine (ideas C9-01, C9-06, C8-01, C8-03, C8-04).** FamilySearch payloads are normalized at ingest but the original is preserved verbatim under `data/raw/...` so scholarly work can re-examine interpretation.
 
 | Aspect | Treatment |
 |---|---|
 | **Dates** | GEDCOM-X qualifiers (`ABT`, `BEF`, `AFT`, `BET`, `FROM`, `TO`, `CAL`, `EST`) normalized to **ISO 8601 structured intervals**; original string preserved. |
-| **Places** | Hierarchical strings anchored to **GNIS** (preferred for U.S.) or **TGN**, with a **confidence score** on the anchoring decision; ambiguous matches enter a curator-review queue rather than auto-deciding silently. |
-| **Persons** | Projected to **CIDOC-CRM E21** with all source-document attributions intact; E13 Attribute Assignment carries the evidence per claim. |
-| **Names** | Multiple `NameAssertion` records over time, each tied to its source. |
+| **Places** | Hierarchical strings anchored to **GNIS** (preferred for U.S. — idea **C7-09**) or **TGN**, with a **confidence score** on the anchoring decision; ambiguous matches enter a curator-review queue rather than auto-deciding silently. |
+| **Persons** | Projected to **CIDOC-CRM E21** (idea **C8-01**) with all source-document attributions intact; **E13 Attribute Assignment** carries the evidence per claim. |
+| **Names** | Multiple `NameAssertion` records over time, each tied to its source (DOM-PEOPLE object family). |
 | **Events** | Projected as CIDOC-CRM **E5 Event** with timespan, place anchor, and source attribution. |
+| **Provenance** | **PROV-O** Activity/Entity/Agent + **PAV** Authoring/Versioning per idea **C8-03**; wrapped in content-addressed **Evidence-Bundle JSON-LD** per idea **C8-04**. |
 | **Web surface** | Schema.org Person / Place / Event for discoverability, with `sameAs` to Wikidata / VIAF / LCNAF / FAST where confidence permits (idea **C7-01**). |
 
 > [!NOTE]
@@ -341,8 +386,11 @@ Before any FamilySearch-derived material crosses the publication boundary, **all
 - [ ] **k-anonymity** satisfied for living-person overlays (default `k=10`, `cell_m=500`, fallback `radius_mask=250m`), or fallback mask applied with a receipt.
 - [ ] **EvidenceRef** resolves to a real `EvidenceBundle`; cite-or-abstain holds for all claims that depend on FamilySearch.
 - [ ] **No tree-only assertion** is rendered as an `observed` event. `source_role=candidate` is preserved through the projection.
+- [ ] **Spec-hash-match** gate (C5-04): receipt's `spec_hash` matches a freshly recomputed JCS+SHA-256 of the checked-in spec.
+- [ ] **Lineage required** (C5-08): every published asset has an OpenLineage trail back to receipts.
 - [ ] **ReleaseManifest** binds the artifact and **RollbackCard** exists.
-- [ ] **Policy bundle version** pinned; CI / runtime parity verified.
+- [ ] **Policy bundle version** pinned; CI / runtime parity verified (C5-03).
+- [ ] **Vendor-risk posture** current (no unresolved C9-07-class vendor event affecting FamilySearch).
 
 > [!WARNING]
 > **Fail-closed is the default.** If any gate is unresolved, the answer is `DENY` or `ABSTAIN` — not "proceed and document later." A `RuntimeResponseEnvelope` with finite outcome `ABSTAIN` is preferred to a fluent answer that bypasses governance.
@@ -353,7 +401,7 @@ Before any FamilySearch-derived material crosses the publication boundary, **all
 
 ## 11. Known tensions and open questions
 
-Carried forward from Components Pass-10 (idea **C9-02**) and the Domains Atlas. None of these are resolved by this doc; they are **flagged for ADR or policy work**.
+Carried forward from Components Pass-10 (idea **C9-02**, with vendor-risk context from **C9-07**) and the Domains Atlas. None of these are resolved by this doc; they are **flagged for ADR or policy work**.
 
 | # | Question | Why it matters | Suggested resolution |
 |---|---|---|---|
@@ -362,6 +410,7 @@ Carried forward from Components Pass-10 (idea **C9-02**) and the Domains Atlas. 
 | 3 | **Non-conforming GEDCOM-X threshold** — when does a non-conforming response fail the gate vs. accept with a warning? | The parser must be tolerant without silently mis-interpreting. | Publish a GEDCOM-conformance test corpus; codify thresholds in `policy/genealogy/...`. |
 | 4 | **Bulk fetch posture** — current default is on-demand per user. Are there approved bulk pathways (e.g., FamilySearch partner agreements) and what is the gating procedure? | Bulk fetch changes the rights and consent posture materially. | Requires a documented rights review and ADR before any bulk pathway is enabled. |
 | 5 | **DUO mapping completeness** — are all FamilySearch scopes mapped to DUO codes? | Without coverage, some scopes fall through to a default DENY or unsafe ALLOW. | Build and publish a `docs/standards/DUO_MAPPING.md`; pin policy bundle version. |
+| 6 | **Vendor-risk lessons from C9-07 (23andMe Chapter 11, March 2025)** — what is the playbook if FamilySearch's terms of use, ownership, or operational solvency materially change? | The C9-07 precedent established that vendor solvency itself is a consent-relevant variable for DTC data; the same logic applies to a single-vendor genealogy upstream. | Run a vendor-loss tabletop using the C9-07 scenario as a template; document a FamilySearch contingency in `docs/runbooks/`. |
 
 [Back to top](#-familysearch--source-catalog-entry)
 
@@ -372,16 +421,20 @@ Carried forward from Components Pass-10 (idea **C9-02**) and the Domains Atlas. 
 > [!NOTE]
 > Several of these targets are **PROPOSED** in prior reports and have not been verified against mounted repo state. Treat absence as "not yet created," not "not intended."
 
-- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — Standard descriptor fields and intake posture (PROPOSED)
-- `docs/domains/people-genealogy-dna-land/README.md` — Domain README (PROPOSED)
-- `docs/doctrine/directory-rules.md` — Placement law (CONFIRMED doctrine; concrete paths PROPOSED)
-- `docs/doctrine/lifecycle-law.md`, `docs/doctrine/trust-membrane.md`, `docs/doctrine/authority-ladder.md` — Adjacent doctrine
-- `schemas/contracts/v1/source/source-descriptor.schema.json` — Machine shape (PROPOSED per ADR-0001)
-- `policy/genealogy/publication.rego` — OPA publication gate (PROPOSED, draft outlined in New-Ideas packet)
-- `connectors/familysearch/README.md` — Connector docs (PROPOSED)
-- `tools/validators/source_descriptor/` — Descriptor validator (PROPOSED)
-- `docs/registers/DRIFT_REGISTER.md` — Drift entries for any conflict between this catalog entry and repo state
-- `docs/adr/` — `ADR-familysearch-retention`, `ADR-duo-mapping` (PROPOSED, not yet drafted)
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](./SOURCE_DESCRIPTOR_STANDARD.md) — Standard descriptor fields and intake posture (PROPOSED)
+- [`docs/sources/catalog/README.md`](./catalog/README.md) — Sources catalog index (PROPOSED placement)
+- [`docs/domains/people-genealogy-dna-land/README.md`](../domains/people-genealogy-dna-land/README.md) — Domain README (PROPOSED)
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — Placement law (CONFIRMED doctrine; concrete paths PROPOSED)
+- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — Adjacent doctrine
+- [`schemas/contracts/v1/source/source-descriptor.schema.json`](../../schemas/contracts/v1/source/source-descriptor.schema.json) — Machine shape (PROPOSED per ADR-0001)
+- [`policy/genealogy/publication.rego`](../../policy/genealogy/publication.rego) — OPA publication gate (PROPOSED, draft outlined in New-Ideas packet)
+- [`connectors/familysearch/README.md`](../../connectors/familysearch/README.md) — Connector docs (PROPOSED)
+- [`tools/validators/source_descriptor/`](../../tools/validators/source_descriptor/) — Descriptor validator (PROPOSED)
+- [`docs/standards/DUO_MAPPING.md`](../standards/DUO_MAPPING.md) — DUO ↔ FamilySearch scope mapping (PROPOSED; see §11.5)
+- [`docs/policy/familysearch-retention.md`](../policy/familysearch-retention.md) — Retention policy (PROPOSED; see §11.1)
+- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — Drift entries for any conflict between this catalog entry and repo state
+- [`docs/adr/`](../adr/) — `ADR-familysearch-retention`, `ADR-duo-mapping`, `ADR-deceased-user-consent` (PROPOSED, not yet drafted)
+- [`ai-build-operating-contract.md`](../../ai-build-operating-contract.md) §34 — RunReceipt / GENERATED_RECEIPT contract (CONFIRMED)
 
 ---
 
@@ -405,11 +458,13 @@ Carried forward from Components Pass-10 (idea **C9-02**) and the Domains Atlas. 
 <details>
 <summary><strong>A.2 Sensitive / Deny-by-Default register (excerpt relevant to FamilySearch)</strong></summary>
 
-Carried verbatim in posture (not text) from Encyclopedia §13:
+Carried verbatim in posture (not text) from Encyclopedia §13 and reinforced by Pass-23 KFM-P1-IDEA-0033:
 
 - **Living persons** — DENY public exact / identifying output unless legal basis, consent / review, and release state are proven.
 - **DNA / genomics** — DENY by default; restricted steward / research only with policy approval.
 - **Source-rights-limited records** — DENY public release until terms are resolved.
+- **Administrative compilations** — DENY citation as observed events (Pass-23 source-role table).
+- **Aggregate values** — DENY join from aggregate cell to single record; ABSTAIN at AI.
 
 </details>
 
@@ -422,12 +477,20 @@ Carried verbatim in posture (not text) from Encyclopedia §13:
 | GA4GH AAI / Passports / DUO / MRCG framework | Components Pass-10, idea **C9-04** |
 | Tombstones, revocation endpoints, embargo behavior | Components Pass-10, ideas **C5-09**, **C6-07**, **C6-08** |
 | k-anonymity for living-person overlays (`k=10`, `cell_m=500`, fallback `250m`) | Components Pass-10, idea **C6-06** |
-| GEDCOM 5.5 / GEDCOM-X normalization; CIDOC-CRM projection; verbatim string preservation | Components Pass-10, ideas **C9-01**, **C9-06**, **C8-01** |
+| GEDCOM 5.5 / GEDCOM-X normalization; CIDOC-CRM projection; verbatim string preservation | Components Pass-10, ideas **C9-01**, **C9-06**, **C8-01**, **C8-03**, **C8-04** |
+| Place anchoring against GNIS | Components Pass-10, idea **C7-09** |
+| Vendor-risk watchlist; 23andMe Chapter 11 precedent | Components Pass-10, idea **C9-07** |
+| Spec-hash-match gate | Components Pass-10, idea **C5-04** |
+| Policy parity (CI = runtime) | Components Pass-10, idea **C5-03** |
+| Lineage required (OpenLineage → receipts) | Components Pass-10, idea **C5-08** |
 | Source-role enum and required co-fields | Domains Atlas §24.1.3 |
+| Source-role table (admin ≠ observation; aggregate ≠ per-place) | Domains Atlas Pass-23 source-role rules table |
 | Sensitive / Deny-by-Default Register | Encyclopedia §13 |
+| Pass-23 carry-forward of living-person/DNA/genomic restriction | Atlas **KFM-P1-IDEA-0033** |
+| Pass-23 carry-forward of genealogy/genomics uploads governance | Atlas **KFM-P15-PROG-0034** |
 | Source registry as admission surface; SourceActivationDecision | Unified Build Manual §3.6 |
 | Directory Rules — `docs/` for explanation, `connectors/` for fetch, `data/raw/...` for capture, schema-home convention | Directory Rules §§3, 4, 7.3, 7.4 |
-| Receipt families (RawCapture, Transform, Redaction, Aggregation, RunReceipt) | Encyclopedia Feature Index; Domains Atlas §24.2 |
+| Receipt families (RawCapture, Transform, Redaction, Aggregation, RunReceipt) | Encyclopedia Feature Index; Domains Atlas §24.2; `ai-build-operating-contract.md` §34 |
 | Doc-path placement reference (`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`) | UI + Governed-AI Expansion Report, Appendix A |
 
 </details>
@@ -447,14 +510,24 @@ This is a draft and **not** a substitute for the `SourceActivationDecision` work
 [ ] Receipt envelope verified (scope, passport, token fingerprint, checksum)
 [ ] Revocation listener wired; tombstone path exercised end-to-end
 [ ] Cache-invalidation hooks tested (PMTiles index, tile server, governed-API cache)
-[ ] Policy bundle pinned; CI parity with runtime verified
+[ ] Policy bundle pinned; CI parity with runtime verified (C5-03)
+[ ] Spec-hash-match gate exercised on a fixture (C5-04)
+[ ] Lineage trail verified end-to-end (C5-08)
 [ ] Validator and fixture coverage present in tools/validators/source_descriptor/ and tests/fixtures/...
 [ ] Rights review recorded; retention policy linked
+[ ] Vendor-risk posture noted (C9-07-class events tracked in runbook)
 [ ] SourceActivationDecision issued: allowed | restricted | denied | needs-review
 ```
 
 </details>
 
+<details>
+<summary><strong>A.5 Anchor-stability notes (v0.2 revision)</strong></summary>
+
+Numeric section headings (`§1` through `§12`) and Appendix anchors are **preserved unchanged** from v0.1. The new "Doctrinal anchors" section is unnumbered to avoid renumbering. Inbound deep-links targeting `#1-scope-and-path-posture` through `#12-related-docs` and `#appendix-a--field-index-and-citations` remain valid. The top-of-doc anchor `#-familysearch--source-catalog-entry` (leading hyphen from stripped emoji + double hyphen from stripped em-dash) is preserved.
+
+</details>
+
 ---
 
-<sub>**Last updated:** 2026-05-13 · **Truth labels:** doctrine CONFIRMED; concrete paths and schema field names PROPOSED / NEEDS VERIFICATION until mounted-repo inspection. · **Doc class:** standard / source-catalog briefing. · [Back to top](#-familysearch--source-catalog-entry)</sub>
+<sub>**Last updated:** 2026-05-21 (v0.2) · **Truth labels:** doctrine CONFIRMED; concrete paths and schema field names PROPOSED / NEEDS VERIFICATION until mounted-repo inspection. · **Doc class:** standard / source-catalog briefing. · [Back to top](#-familysearch--source-catalog-entry)</sub>
