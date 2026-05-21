@@ -239,10 +239,12 @@ docs/sources/catalog/
 │                                   # additional families — beyond §7.3, pending ADR
 ├── ahgp/   blm/   ebird/   eddmaps/   epa/   familysearch/   ftdna/
 ├── idigbio/   loc/   manual_curation/   natureserve/   newspapers/
-└── openstreetmap/   usfws_ecos/     # each contains README.md
+├── openstreetmap/   usfws_ecos/
+│                                   # connector-derived families (2026-05-21, OPEN-DSC-14)
+└── nasa/   usda/   usdot/   openaq/   hifld/   isric/   drought_monitor/   landfire/
 ```
 
-Nine of the folders above mirror the `connectors/` inventory in `directory-rules.md` §7.3 (CONFIRMED in doctrine corpus; sibling `connectors/<family>/` presence CONFIRMED in a mounted-repo session). The remaining fourteen were added by the 2026-05-20 reorganization at the maintainer's direction; they **exceed** the §7.3 nine and are tracked for ADR ratification in [§19](#19-open-questions) (`OPEN-DSC-09`–`OPEN-DSC-12`). A family folder SHOULD have a `connectors/<family>/` and `data/registry/sources/<family>/` companion.
+Nine of the folders above mirror the `connectors/` inventory in `directory-rules.md` §7.3 (CONFIRMED in doctrine corpus; sibling `connectors/<family>/` presence CONFIRMED in a mounted-repo session). The other twenty-two **exceed** the §7.3 nine — fourteen added by the 2026-05-20 reorganization and eight scaffolded 2026-05-21 from the `connectors/` inventory — and are tracked for ADR ratification in [§19](#19-open-questions) (`OPEN-DSC-09`–`OPEN-DSC-14`). A family folder SHOULD have a `connectors/<family>/` and `data/registry/sources/<family>/` companion.
 
 [↑ Back to top](#contents)
 
@@ -331,7 +333,7 @@ For per-family rights, freshness, and sensitivity treatment, see the domain doss
 
 ### 10.1 Additional families (beyond §7.3)
 
-The 2026-05-20 reorganization also created folders for fourteen sources that are **not** part of the `directory-rules.md` §7.3 connector inventory. They carry per-source pages today; promotion to a full §7.3 family (with a `connectors/` and `data/registry/sources/` companion) is gated on a per-family ADR — see [§19](#19-open-questions) `OPEN-DSC-09`–`OPEN-DSC-12`.
+Beyond the §7.3 nine, the lane carries **twenty-two** additional family folders — fourteen from the 2026-05-20 reorganization and eight scaffolded 2026-05-21 from the `connectors/` inventory. Promotion to a full §7.3 family (with a populated `connectors/` and `data/registry/sources/` companion) is gated on a per-family ADR — see [§19](#19-open-questions) `OPEN-DSC-09`–`OPEN-DSC-14`.
 
 | Folder(s) | Source(s) | Deferral tracked in |
 |---|---|---|
@@ -339,7 +341,8 @@ The 2026-05-20 reorganization also created folders for fourteen sources that are
 | `loc/`, `familysearch/`, `ahgp/`, `newspapers/` | Library of Congress, FamilySearch, AHGP, Newspapers | OPEN-DSC-10 |
 | `ebird/`, `eddmaps/` | eBird, EDDMapS | OPEN-DSC-11 |
 | `idigbio/`, `natureserve/`, `usfws_ecos/`, `ftdna/` | iDigBio, NatureServe, USFWS ECOS, Family Tree DNA | OPEN-DSC-12 |
-| `openstreetmap/`, `manual_curation/` | OpenStreetMap, Manual Curation | not yet tracked — confirm whether these are source families |
+| `openstreetmap/`, `manual_curation/` | OpenStreetMap, Manual Curation | OPEN-DSC-13 |
+| `nasa/`, `usda/`, `usdot/`, `openaq/`, `hifld/`, `isric/`, `drought_monitor/`, `landfire/` | NASA, USDA, USDOT, OpenAQ, HIFLD, ISRIC, U.S. Drought Monitor, LANDFIRE | OPEN-DSC-14 |
 
 [↑ Back to top](#contents)
 
