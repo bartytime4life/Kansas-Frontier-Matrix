@@ -31,11 +31,11 @@ This index covers the nine source families enumerated in [`docs/doctrine/directo
 
 | Family | Status | Family page | Product pages |
 |---|---|---|---|
-| `usgs` | draft | [`usgs/README.md`](./usgs/README.md) | 7 |
+| `usgs` | draft | [`usgs/README.md`](./usgs/README.md) | 10 |
 | `fema` | draft | [`fema/README.md`](./fema/README.md) | 5 |
-| `noaa` | draft | [`noaa/README.md`](./noaa/README.md) | 4 |
+| `noaa` | draft | [`noaa/README.md`](./noaa/README.md) | 8 |
 | `nrcs` | draft | [`nrcs/README.md`](./nrcs/README.md) | 6 |
-| `kansas` | draft | [`kansas/README.md`](./kansas/README.md) | 8 |
+| `kansas` | draft | [`kansas/README.md`](./kansas/README.md) | 13 |
 | `gbif` | draft | [`gbif/README.md`](./gbif/README.md) | 4 |
 | `inaturalist` | draft | [`inaturalist/README.md`](./inaturalist/README.md) | 1 |
 | `census` | draft | [`census/README.md`](./census/README.md) | 5 |
@@ -43,26 +43,34 @@ This index covers the nine source families enumerated in [`docs/doctrine/directo
 
 ## Additional families (beyond §7.3 — pending ADR)
 
-These folders were created by the 2026-05-20 reorganization but are **not** part of `directory-rules.md` §7.3; see `OPEN-DSC-09`–`OPEN-DSC-12` in [`OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md).
+These folders are **not** part of `directory-rules.md` §7.3 — fourteen from the 2026-05-20 reorganization and eight scaffolded 2026-05-21 from the `connectors/` inventory; see `OPEN-DSC-09`–`OPEN-DSC-14` in [`OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md).
 
 | Family | Family page | Product pages |
 |---|---|---|
 | `ahgp` | [`ahgp/README.md`](./ahgp/README.md) | 5 |
 | `blm` | [`blm/README.md`](./blm/README.md) | 5 |
+| `drought_monitor` | [`drought_monitor/README.md`](./drought_monitor/README.md) | 1 |
 | `ebird` | [`ebird/README.md`](./ebird/README.md) | 3 |
 | `eddmaps` | [`eddmaps/README.md`](./eddmaps/README.md) | 3 |
 | `epa` | [`epa/README.md`](./epa/README.md) | 4 |
 | `familysearch` | [`familysearch/README.md`](./familysearch/README.md) | 3 |
 | `ftdna` | [`ftdna/README.md`](./ftdna/README.md) | 4 |
+| `hifld` | [`hifld/README.md`](./hifld/README.md) | 1 |
 | `idigbio` | [`idigbio/README.md`](./idigbio/README.md) | 4 |
+| `isric` | [`isric/README.md`](./isric/README.md) | 1 |
+| `landfire` | [`landfire/README.md`](./landfire/README.md) | 1 |
 | `loc` | [`loc/README.md`](./loc/README.md) | 5 |
 | `manual_curation` | [`manual_curation/README.md`](./manual_curation/README.md) | 1 |
+| `nasa` | [`nasa/README.md`](./nasa/README.md) | 4 |
 | `natureserve` | [`natureserve/README.md`](./natureserve/README.md) | 2 |
 | `newspapers` | [`newspapers/README.md`](./newspapers/README.md) | 4 |
+| `openaq` | [`openaq/README.md`](./openaq/README.md) | 1 |
 | `openstreetmap` | [`openstreetmap/README.md`](./openstreetmap/README.md) | 4 |
+| `usda` | [`usda/README.md`](./usda/README.md) | 3 |
+| `usdot` | [`usdot/README.md`](./usdot/README.md) | 7 |
 | `usfws_ecos` | [`usfws_ecos/README.md`](./usfws_ecos/README.md) | 4 |
 
-**Total:** 92 product pages across 23 family folders (84 scaffolded 2026-05-20 plus `kansas`'s 8 reorganized pages).
+**Total:** 123 product pages across 31 family folders (92 as of 2026-05-20 plus 31 added 2026-05-21: 19 in the eight new families and 12 in `kansas`, `usgs`, `noaa`).
 
 ## Cross-cutting docs in this lane
 - [`GLOSSARY.md`](./GLOSSARY.md) — term definitions.

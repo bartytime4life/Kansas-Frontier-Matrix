@@ -255,10 +255,12 @@ docs/sources/catalog/
 │                                   # additional families — beyond §7.3, pending ADR
 ├── ahgp/   blm/   ebird/   eddmaps/   epa/   familysearch/   ftdna/
 ├── idigbio/   loc/   manual_curation/   natureserve/   newspapers/
-└── openstreetmap/   usfws_ecos/     # each contains README.md
+├── openstreetmap/   usfws_ecos/
+│                                   # connector-derived families (2026-05-21, OPEN-DSC-14)
+└── nasa/   usda/   usdot/   openaq/   hifld/   isric/   drought_monitor/   landfire/
 ```
 
-Nine of the folders above mirror the `connectors/` inventory in `directory-rules.md` §7.3 (CONFIRMED in doctrine corpus; sibling `connectors/<family>/` presence CONFIRMED in a mounted-repo session). The remaining fourteen were added by the 2026-05-20 reorganization at the maintainer's direction; they **exceed** the §7.3 nine and are tracked for ADR ratification in [§19](#19-open-questions) (`OPEN-DSC-09`–`OPEN-DSC-12`). A family folder SHOULD have a `connectors/<family>/` and `data/registry/sources/<family>/` companion.
+Nine of the folders above mirror the `connectors/` inventory in `directory-rules.md` §7.3 (CONFIRMED in doctrine corpus; sibling `connectors/<family>/` presence CONFIRMED in a mounted-repo session). The other twenty-two **exceed** the §7.3 nine — fourteen added by the 2026-05-20 reorganization and eight scaffolded 2026-05-21 from the `connectors/` inventory — and are tracked for ADR ratification in [§21](#21-open-questions) (`OPEN-DSC-09`–`OPEN-DSC-14`). A family folder SHOULD have a `connectors/<family>/` and `data/registry/sources/<family>/` companion.
 
 [↑ Back to top](#contents)
 
@@ -348,7 +350,7 @@ For per-family rights, freshness, and sensitivity treatment, see the domain doss
 
 ### 10.1 Additional families (beyond §7.3)
 
-The 2026-05-20 reorganization also created folders for fourteen sources that are **not** part of the `directory-rules.md` §7.3 connector inventory. They carry per-source pages today; promotion to a full §7.3 family (with a `connectors/` and `data/registry/sources/` companion) is gated on a per-family ADR — see [§19](#19-open-questions) `OPEN-DSC-09`–`OPEN-DSC-12`.
+Beyond the §7.3 nine, the lane carries **twenty-two** additional family folders — fourteen from the 2026-05-20 reorganization and eight scaffolded 2026-05-21 from the `connectors/` inventory. Promotion to a full §7.3 family (with a populated `connectors/` and `data/registry/sources/` companion) is gated on a per-family ADR — see [§21](#21-open-questions) `OPEN-DSC-09`–`OPEN-DSC-14`.
 
 | Folder(s) | Source(s) | Deferral tracked in |
 |---|---|---|
@@ -356,7 +358,8 @@ The 2026-05-20 reorganization also created folders for fourteen sources that are
 | `loc/`, `familysearch/`, `ahgp/`, `newspapers/` | Library of Congress, FamilySearch, AHGP, Newspapers | OPEN-DSC-10 |
 | `ebird/`, `eddmaps/` | eBird, EDDMapS | OPEN-DSC-11 |
 | `idigbio/`, `natureserve/`, `usfws_ecos/`, `ftdna/` | iDigBio, NatureServe, USFWS ECOS, Family Tree DNA | OPEN-DSC-12 |
-| `openstreetmap/`, `manual_curation/` | OpenStreetMap, Manual Curation | not yet tracked — confirm whether these are source families |
+| `openstreetmap/`, `manual_curation/` | OpenStreetMap, Manual Curation | OPEN-DSC-13 |
+| `nasa/`, `usda/`, `usdot/`, `openaq/`, `hifld/`, `isric/`, `drought_monitor/`, `landfire/` | NASA, USDA, USDOT, OpenAQ, HIFLD, ISRIC, U.S. Drought Monitor, LANDFIRE | OPEN-DSC-14 |
 
 [↑ Back to top](#contents)
 
@@ -517,21 +520,21 @@ Each per-family page SHOULD use the section order below. The template lives at `
 
 ## 18. Per-family authoring status
 
-The table below tracks which per-family pages are authored. **All entries currently show `not started`**: this README ships first; the per-family pages are subsequent routine PRs. Each row's "owner" is `<PLACEHOLDER>` until `.github/CODEOWNERS` is confirmed.
+The table below tracks per-family page authoring. As of **2026-05-21** every `directory-rules.md` §7.3 family has a `README.md` and per-product pages, so all rows show `draft`. The lane also carries **22 additional families** beyond §7.3 (see §10.1); [`INDEX.md`](./INDEX.md) is the authoritative index of all 31 family folders and their product-page counts. Each row's "owner" is `<PLACEHOLDER>` until `.github/CODEOWNERS` is confirmed.
 
-| Family | Page path (PROPOSED) | Status | Owner |
+| Family | Page path | Status | Owner |
 |---|---|---|---|
-| USGS | `docs/sources/catalog/usgs/README.md` | not started | `<PLACEHOLDER>` |
-| FEMA | `docs/sources/catalog/fema/README.md` | not started | `<PLACEHOLDER>` |
-| NOAA | `docs/sources/catalog/noaa/README.md` | not started | `<PLACEHOLDER>` |
-| NRCS | `docs/sources/catalog/nrcs/README.md` | not started | `<PLACEHOLDER>` |
-| Kansas (state) | `docs/sources/catalog/kansas/README.md` | not started | `<PLACEHOLDER>` |
-| GBIF | `docs/sources/catalog/gbif/README.md` | not started | `<PLACEHOLDER>` |
-| iNaturalist | `docs/sources/catalog/inaturalist/README.md` | not started | `<PLACEHOLDER>` |
-| Census | `docs/sources/catalog/census/README.md` | not started | `<PLACEHOLDER>` |
-| `local_upload` | `docs/sources/catalog/local_upload/README.md` | not started | `<PLACEHOLDER>` |
+| USGS | `docs/sources/catalog/usgs/README.md` | draft | `<PLACEHOLDER>` |
+| FEMA | `docs/sources/catalog/fema/README.md` | draft | `<PLACEHOLDER>` |
+| NOAA | `docs/sources/catalog/noaa/README.md` | draft | `<PLACEHOLDER>` |
+| NRCS | `docs/sources/catalog/nrcs/README.md` | draft | `<PLACEHOLDER>` |
+| Kansas (state) | `docs/sources/catalog/kansas/README.md` | draft | `<PLACEHOLDER>` |
+| GBIF | `docs/sources/catalog/gbif/README.md` | draft | `<PLACEHOLDER>` |
+| iNaturalist | `docs/sources/catalog/inaturalist/README.md` | draft | `<PLACEHOLDER>` |
+| Census | `docs/sources/catalog/census/README.md` | draft | `<PLACEHOLDER>` |
+| `local_upload` | `docs/sources/catalog/local_upload/README.md` | draft | `<PLACEHOLDER>` |
 
-The status column SHOULD update via PR when a page moves through `not started → draft → review → published`. Authoring SHOULD be sequenced behind the per-family `connectors/<family>/README.md` and `data/registry/sources/<family>/` records — a per-family page that references a connector that doesn't exist is documentation-as-fiction.
+The status column SHOULD update via PR as a page moves through `not started → draft → review → published`. Authoring SHOULD be sequenced behind the per-family `connectors/<family>/README.md` and `data/registry/sources/<family>/` records — a per-family page that references a connector that doesn't exist is documentation-as-fiction.
 
 [↑ Back to top](#contents)
 
@@ -726,6 +729,6 @@ Notes:
 ## Last reviewed <a id="last-reviewed"></a>
 
 **2026-05-20** *(updated for the flat-to-folder reorganization — Claude Code session, mounted repo; §8 and §10.1 reflect the realized per-family folder layout)*.
-Re-review trigger: any of (a) `docs/sources/` reorganization, (b) ADR resolving [§19 OPEN-DSC-01](#19-open-questions), (c) addition of a new connector family in `connectors/`, (d) change to STAC / DCAT / PROV profile choice in `docs/standards/`.
+Re-review trigger: any of (a) `docs/sources/` reorganization, (b) ADR resolving [§21 OPEN-DSC-01](#21-open-questions), (c) addition of a new connector family in `connectors/`, (d) change to STAC / DCAT / PROV profile choice in `docs/standards/`.
 
 [↑ Back to top](#contents)

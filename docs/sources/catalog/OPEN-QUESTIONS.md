@@ -22,7 +22,7 @@ notes:
 
 **Status:** scaffold (PROPOSED)
 
-Entries `OPEN-DSC-01` through `OPEN-DSC-08` are carried forward from [`README.md`](./README.md) §19. Entries `OPEN-DSC-09` through `OPEN-DSC-13` and `OPEN-DSC-NEW` are added by the scaffold and the 2026-05-20 reorganization.
+Entries `OPEN-DSC-01` through `OPEN-DSC-08` are carried forward from [`README.md`](./README.md) §19. Entries `OPEN-DSC-09` through `OPEN-DSC-14` and `OPEN-DSC-NEW` are added by the scaffold, the 2026-05-20 reorganization, and the 2026-05-21 connector-derived family scaffold.
 
 ## Register
 
@@ -90,6 +90,11 @@ Entries `OPEN-DSC-01` through `OPEN-DSC-08` are carried forward from [`README.md
 **Question:** `openstreetmap/` and `manual_curation/` received folders in the 2026-05-20 reorganization but do not map cleanly to a source family — OpenStreetMap is a base-map source and Manual Curation describes a process rather than a source.
 **Status:** OPEN — flagged by the 2026-05-20 reorganization.
 **Resolution path:** maintainer decision, then ADR, relocation, or reclassification.
+
+### OPEN-DSC-14 — connector-derived families (second wave)
+**Question:** Should NASA, USDA, USDOT, OpenAQ, HIFLD, ISRIC, the U.S. Drought Monitor, and LANDFIRE be promoted to `directory-rules.md` §7.3 families?
+**Status:** DEFERRED — folders `nasa/`, `usda/`, `usdot/`, `openaq/`, `hifld/`, `isric/`, `drought_monitor/`, `landfire/` were scaffolded on 2026-05-21 from the `connectors/` inventory ahead of ADR; folder existence does **not** constitute §7.3 promotion. Product descriptions are grounded in `docs/domains/*/SOURCE_REGISTRY.md` because the connector folders are empty stubs.
+**Resolution path:** ADR per family, gated on a populated `connectors/<family>/` plus `data/registry/sources/<family>/` companion.
 
 ### OPEN-DSC-NEW — §15 README-contract field-order deviation
 **Question:** The `_template/SOURCE_FAMILY_TEMPLATE.md` scaffold inserts a `## Directory tree` section between `## Outputs` and `## Validation`, deviating from the §15 README-contract field order in `directory-rules.md`.
