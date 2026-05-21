@@ -2,35 +2,34 @@
 doc_id: kfm://doc/source-catalog-eddmaps
 title: Source Catalog — EDDMapS (Early Detection & Distribution Mapping System)
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: <kfm-source-stewards@TBD> · domain liaison: <flora-steward@TBD> + <fauna-steward@TBD>
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/README.md                                 # PROPOSED — NEEDS VERIFICATION
+  - docs/sources/catalog/README.md                         # PROPOSED — NEEDS VERIFICATION (catalog lane index)
   - docs/domains/flora/README.md                           # PROPOSED — NEEDS VERIFICATION
   - docs/domains/fauna/README.md                           # PROPOSED — NEEDS VERIFICATION
   - docs/standards/PROV.md                                 # CONFIRMED authored (prior session)
   - docs/standards/ISO-19115.md                            # CONFIRMED authored (prior session)
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md          # CONFIRMED authored (prior session)
-  - control_plane/source_authority_register.yaml          # PROPOSED — NEEDS VERIFICATION
+  - control_plane/source_authority_register.yaml           # PROPOSED — NEEDS VERIFICATION
   - schemas/contracts/v1/source/source-descriptor.json     # PROPOSED per ADR-0001
+  - policy/sensitivity/                                    # PROPOSED — referenced for sensitive-fauna/flora rules
+  - policy/sources/                                        # PROPOSED — referenced for source-role admission rules
 tags: [kfm, source-catalog, fauna, flora, invasive-species, sensitive-geometry, geoprivacy]
 notes:
-  - Placement (docs/sources/catalog/) is PROPOSED. The Directory Rules §6.1 tree lists
-    docs/sources/ as the home for "source-descriptor standards, source families" but
-    does not lock a catalog/ subfolder convention. Treat as parallel to OPEN-DR-02
-    (docs/runbooks/<domain>/ vs flat).
-  - All EDDMapS-specific facts (publisher, history, formats, access, citation) are
-    EXTERNAL and cited inline. All KFM treatment of EDDMapS is PROPOSED until
-    mounted-repo evidence (schemas, registry, validators, policy bundles) is checked.
+  - "Placement (docs/sources/catalog/) is PROPOSED. The Directory Rules §6.1 tree lists docs/sources/ as the home for 'source-descriptor standards, source families' but does not lock a catalog/ subfolder convention. Treat as parallel to OPEN-DR-02 (docs/runbooks/<domain>/ vs flat)."
+  - "All EDDMapS-specific facts (publisher, history, formats, access, citation) are EXTERNAL and cited inline. All KFM treatment of EDDMapS is PROPOSED until mounted-repo evidence (schemas, registry, validators, policy bundles) is checked."
+  - "v0.2 update — strengthens atlas-card grounding (Fauna §D 'EDDMapS and invasive feeds' CONFIRMED naming; KFM-P24-IDEA-0002/PROG-0013 deny-by-default; KFM-P27-IDEA-0001/KFM-P2-PROG-0006 PLANTS crosswalk authority; KFM-P29-IDEA-0004/FEAT-0002 PLANTS delta surface; KFM-P19-IDEA-0005 KDWP regulatory authority; KFM-P24-PROG-0015 HUC12 aggregation; C6-03/04/05/06 redaction profiles; KFM-P22-PROG-0037/38/39 tri-checksum closure). Surfaces the Fauna §D / Flora §D asymmetry (atlas names EDDMapS in Fauna but not Flora, despite Flora owning InvasivePlantRecord). Adds explicit §7.3 placement OPEN (parallel to OPEN-DSC-14)."
 [/KFM_META_BLOCK_V2] -->
 
 # EDDMapS — Source Catalog Entry
 
-> A compact, governed source-reference card for the **Early Detection & Distribution Mapping System**, used by KFM Flora and Fauna lanes as a volunteer- and aggregator-fed observation source for invasive species and pests.
+> A compact, governed source-reference card for the **Early Detection & Distribution Mapping System**, recognized in **CONFIRMED** KFM atlas Fauna lane §D as the "EDDMapS and invasive feeds" source family. Used by KFM Flora and Fauna lanes as a volunteer- and aggregator-fed observation source for invasive species and pests.
 
 <!-- Badge row -->
 
@@ -40,9 +39,10 @@ notes:
 ![rights](https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-yellow)
 ![cadence](https://img.shields.io/badge/cadence-continuous%20(verifier--gated)-informational)
 ![lane](https://img.shields.io/badge/lanes-flora%20%7C%20fauna-green)
+![family](https://img.shields.io/badge/atlas%20family-EDDMapS%20and%20invasive%20feeds-blueviolet)
 ![ci](https://img.shields.io/badge/source--watcher-TODO-lightgrey)
 
-**Status:** draft · **Owners:** `<kfm-source-stewards@TBD>` · **Updated:** 2026-05-20
+**Status:** draft · **Version:** v0.2 · **Owners:** `<kfm-source-stewards@TBD>` · **Updated:** 2026-05-21
 
 ---
 
@@ -75,8 +75,9 @@ notes:
 | Home URL | <https://www.eddmaps.org/> | **EXTERNAL** |
 | Geographic scope | United States and Canada | **EXTERNAL** |
 | Initial launch | 2005 | **EXTERNAL** |
-| KFM lane(s) | Flora (`InvasivePlantRecord`); Fauna (`Invasive Species Record`) | **CONFIRMED doctrine** (lane ownership); **PROPOSED** (route binding) |
-| KFM source family | "EDDMapS and invasive feeds" | **CONFIRMED** in atlas as a recognized source family |
+| KFM lane(s) | Flora (`InvasivePlantRecord`); Fauna (`Invasive Species Record`) | **CONFIRMED doctrine** (lane ownership per atlas Fauna §B + Flora §B); **PROPOSED** (route binding) |
+| KFM source family | "**EDDMapS and invasive feeds**" | **CONFIRMED** in atlas Fauna lane §D — verbatim source-family naming |
+| Cross-lane relation | Fauna ↔ Flora "ecological community, pollinator, **invasive**, food-web context" | **CONFIRMED** atlas Fauna §F cross-lane relations table |
 
 EDDMapS is a web-based mapping system for documenting invasive species and pest distribution, launched in 2005 by the Center for Invasive Species and Ecosystem Health at the University of Georgia, and has since expanded to cover the entire US and Canada.  The platform was formerly known as the Bugwood Network and now documents all taxa — insects and arthropods, plants, diseases, and wildlife — including invasive species, pests, and biocontrol agents across the United States and Canada. 
 
@@ -91,9 +92,19 @@ EDDMapS is a web-based mapping system for documenting invasive species and pest 
 
 > **PROPOSED — source-role assignment.** EDDMapS is best modeled as a **mixed observation + aggregator** source with **verifier-gated** admission. The aggregator dimension applies because EDDMapS aggregates data from federal and state agencies, herbaria/museums, other databases, and from individual contributors.  The observation dimension applies because the platform also accepts direct volunteer field reports.
 
+### Atlas naming and lane asymmetry
+
+**CONFIRMED** in the Pass 23+32 Consolidated Atlas:
+
+- **Fauna lane §D** lists "EDDMapS and invasive feeds" as a recognized source family alongside KDWP-like steward sources, USFWS ECOS-like federal sources, NatureServe / heritage-style sources, GBIF/eBird/iNaturalist/iDigBio/BISON-like aggregators, agency monitoring (surveys/eDNA/acoustic/telemetry), and NLCD/NWI/PAD-US/SSURGO context layers. Rights and freshness for the family are explicitly tagged "NEEDS VERIFICATION; sensitive joins fail closed."
+- **Flora lane §D**, by contrast, lists KDWP flora context, KDWP Ecological Review Tool, Kansas Biological Survey / KU herbarium surfaces, USFWS ECOS plant context, NatureServe Explorer / Explorer Pro, GBIF vascular plant downloads, iDigBio specimen records, and iNaturalist-derived observations — **but does not include EDDMapS** as a recognized Flora source family, even though Flora lane §B owns `InvasivePlantRecord`.
+
+> [!IMPORTANT]
+> The atlas Fauna-vs-Flora asymmetry is a **real drift candidate**: the corpus names EDDMapS as a Fauna source family but is silent about it as a Flora source family, while assigning the `InvasivePlantRecord` object to Flora. This catalog entry treats EDDMapS as feeding both lanes per the `InvasivePlantRecord` ownership, but the Flora §D omission should be reconciled in the atlas. See [Q10](#10-open-questions-and-verification-backlog).
+
 ### Lane and object binding
 
-| KFM lane | KFM object (CONFIRMED ownership) | EDDMapS contribution | Label |
+| KFM lane | KFM object (CONFIRMED ownership per atlas §B) | EDDMapS contribution | Label |
 |---|---|---|---|
 | Flora | `InvasivePlantRecord` | Volunteer + agency + herbarium-sourced invasive-plant occurrences | **PROPOSED** binding |
 | Flora | `Flora Occurrence` (public/restricted variants) | Subset where source role permits | **PROPOSED** binding |
@@ -138,6 +149,10 @@ kfm_spec_hash: <pending JCS+SHA-256>
 
 A typical EDDMapS record includes reporter identity, observation date, location (lat/long entered as decimal degrees in NAD83 or WGS84, with state and county fields), species, plant description, ownership/landowner category, optional photo(s), and optional voucher/herbarium specimen reference. (**EXTERNAL** — see documents 20, 32.)
 
+### Public-safe map product alignment
+
+EDDMapS-derived data, once it has passed KFM gates and redaction, feeds the atlas Fauna §G PROPOSED public viewing product **"invasive monitoring public layer"** (CONFIRMED doctrine intent, PROPOSED implementation). Flora §G has analogous PROPOSED viewing products for vegetation surfaces and rare/protected flora; the invasive flora component is the cross-lane case.
+
 [↑ back to top](#eddmaps--source-catalog-entry)
 
 ---
@@ -163,6 +178,15 @@ EDDMapS accepts user-side uploads in CSV, XLS/XLSX, KML/KMZ, and GIS/GDB file ty
 > [!NOTE]
 > **PROPOSED watcher pattern.** A KFM EDDMapS watcher SHOULD record a `SourceDescriptor` plus per-query parameters (taxon, county, date window), capture ETag / Last-Modified equivalents where the platform exposes them, and emit a `SourceIntakeRecord` with retrieval time, query hash, and download checksum (see KFM-P28-PROG-0012 source_descriptor.schema.json). The watcher **MUST NOT** publish; per the Directory Rules watcher-as-non-publisher invariant, ingest goes to `data/raw/<flora|fauna>/eddmaps/<run_id>/` (PROPOSED path).
 
+### §7.3 connector-placement question
+
+`directory-rules.md` §7.3 enumerates exactly nine canonical connector roots: `usgs`, `fema`, `noaa`, `nrcs`, `kansas`, `gbif`, `inaturalist`, `census`, `local_upload`. **EDDMapS is not among them**, and no `uga/` or `cises/` (Center for Invasive Species and Ecosystem Health) root exists. Candidate placements (PROPOSED, all require ADR resolution alongside the broader `OPEN-DSC-14` family question):
+
+- `connectors/eddmaps/` — sibling of §7.3 roots; requires §7.3 amendment.
+- `connectors/uga/eddmaps/` — hosts EDDMapS under its producing institution; requires new `uga/` root.
+- `connectors/cises/eddmaps/` — more precise institutional scope; requires new `cises/` root.
+- `connectors/local_upload/eddmaps/` — folds under the existing `local_upload/` if EDDMapS downloads are treated as semi-manual; defensible but flattens institutional source identity.
+
 [↑ back to top](#eddmaps--source-catalog-entry)
 
 ---
@@ -177,6 +201,11 @@ EDDMapS accepts user-side uploads in CSV, XLS/XLSX, KML/KMZ, and GIS/GDB file ty
 - Only records that have been reviewed by a verifier or entered as expert data are available on maps and as downloads. 
 - The data is made freely available to everyone, including scientists, researchers, land managers, land owners, educators, conservationists, ecologists, farmers, foresters, state and national parks. 
 - "Freely available" is not a license name. KFM treats absence of an explicit license name as **NEEDS VERIFICATION**, not as a presumption of open license. Confirmation required before any KFM re-publication.
+
+### License-fail-closed doctrine
+
+> [!CAUTION]
+> Per **CONFIRMED** doctrine `ML-062-016` (Master MapLibre Components): *"license travels with deltas before map ingestion."* Map-layer admission MUST fail closed when license or use terms are unknown. This applies to EDDMapS until Q1 is resolved.
 
 ### Suggested citation (illustrative)
 
@@ -196,6 +225,18 @@ https://www.eddmaps.org/; last accessed <YYYY-MM-DD>.
 
 ## 6. Sensitivity and geoprivacy posture
 
+### Anchoring doctrine
+
+CONFIRMED atlas Fauna §D rule: for the "EDDMapS and invasive feeds" source family, "rights and current terms NEEDS VERIFICATION; **sensitive joins fail closed**" — verbatim.
+
+PROPOSED reinforcing doctrine (`KFM-P24-IDEA-0002`, `KFM-P24-PROG-0013`):
+
+> *"Fauna occurrence records for sensitive taxa should default to DENY or ABSTAIN until redaction, aggregation, or role-gated access is explicitly approved."*
+>
+> *"OPA policy should return ABSTAIN or DENY for sensitive fauna unless spatial generalization, aggregation, or access gating obligations are satisfied."*
+
+Both apply directly to EDDMapS records resolving to sensitive taxa.
+
 ### Tier assignment (PROPOSED)
 
 Per KFM atlas §24.5.2 sensitivity matrix (**CONFIRMED doctrine**, **PROPOSED** field realization), EDDMapS-derived records intersect the most-restrictive lanes in two ways:
@@ -204,7 +245,7 @@ Per KFM atlas §24.5.2 sensitivity matrix (**CONFIRMED doctrine**, **PROPOSED** 
 |---|---|---|---|
 | EDDMapS report of a rare / culturally sensitive / protected plant at exact coordinate | **T4** | Generalization + `RedactionReceipt` → T1; ethnobotanical context governed | `RedactionReceipt` + `ReviewRecord` |
 | EDDMapS report of a sensitive fauna occurrence (e.g., nest, den, roost, hibernaculum, spawning site) | **T4** | Geoprivacy generalization + `RedactionReceipt` → T1 | `RedactionReceipt` + `ReviewRecord` + `PolicyDecision` |
-| EDDMapS report of a routine invasive plant or pest at non-sensitive landowner setting | **T1** (default) | Aggregation / county roll-up where geoprivacy demands it | `AggregationReceipt` *or* none if no transform required |
+| EDDMapS report of a routine invasive plant or pest at non-sensitive landowner setting | **T1** (default) | Aggregation / county / HUC / H3 roll-up where geoprivacy demands it | `AggregationReceipt` *or* none if no transform required |
 
 ### "Private" flag handling
 
@@ -212,6 +253,17 @@ EDDMapS supports making certain data elements "Private" by contacting the site a
 
 > [!WARNING]
 > **Style filters are not protection.** Per **CONFIRMED** ML-Q-082, MapLibre style filters MUST NOT be relied on to hide sensitive geometry. Sensitive EDDMapS records that are admitted at all are admitted **only** with geometry transformed at the data layer.
+
+### Redaction profile palette (Pass-10 C6 family, CONFIRMED)
+
+| Profile | Where it applies | Source doctrine |
+|---|---|---|
+| **Seeded reproducible jitter** | Display redaction only. PRNG seeded by `spec_hash + occurrence_id` (or `spec_hash + EDDMapS record id` for this source) so the same record always receives the same offset. Random-each-render jitter is forbidden. | `C6-03` — CONFIRMED |
+| **H3 hex cell generalization** | Recommended default for biodiversity occurrences; snap points to H3 cells of documented size per sensitivity rank. | `C6-04` — CONFIRMED; H3 is the documented hex default |
+| **Square-grid generalization (ST_SnapToGrid)** | Alternative to H3 where downstream tooling prefers square cells. | `C6-04` — CONFIRMED |
+| **HUC12 aggregation** | Watershed-scale outputs — sensitive occurrence records aggregatable to HUC12 or coarser units as alternative to point publication. | `KFM-P24-PROG-0015` — PROPOSED |
+| **Differential privacy** | **Only for aggregate outputs** (counts, heatmaps). NEVER for raw points. Epsilon/delta recorded in receipts. | `C6-05` — CONFIRMED scope |
+| **k-Anonymity** | Render-time check; suppress or merge cells below `k`-unique observers or `k`-unique records as policy dictates. | `C6-06` — CONFIRMED |
 
 ### Geoprivacy transform contract (illustrative)
 
@@ -221,7 +273,7 @@ flowchart LR
   B{Sensitive taxon<br/>or Private flag?}
   C["data/raw/&lt;lane&gt;/eddmaps/&lt;run_id&gt;"]
   Q["data/quarantine/&lt;lane&gt;/eddmaps/&lt;run_id&gt;"]
-  G["Geoprivacy transform<br/>(generalize → county / HUC / H3 cell)"]
+  G["Geoprivacy transform<br/>(generalize → county / HUC12 / H3 cell)"]
   R["RedactionReceipt<br/>+ ReviewRecord<br/>+ PolicyDecision"]
   P["data/published/layers/&lt;lane&gt;/invasive_*"]
   D["DENY public publication"]
@@ -244,17 +296,20 @@ flowchart LR
 
 ## 7. KFM lifecycle behavior (RAW → PUBLISHED)
 
-Per **CONFIRMED doctrine** the EDDMapS source obeys the standard lifecycle invariant; **PROPOSED** application is as follows.
+Per **CONFIRMED doctrine** the EDDMapS source obeys the standard lifecycle invariant (atlas Fauna §H, Flora §H — both PROPOSED implementations of the CONFIRMED doctrine); **PROPOSED** application is as follows.
 
 | Stage | Handling | Gate | KFM status |
 |---|---|---|---|
 | **RAW** | Watcher fetches Advanced Query Tool CSV / KML / Shapefile (or ArcGIS Hub asset). Immutable capture under `data/raw/<lane>/eddmaps/<run_id>/` with `SourceDescriptor`, retrieval time, query parameters, checksums. | `SourceDescriptor` exists; rights posture recorded (may be NEEDS_VERIFICATION) | **PROPOSED** |
 | **WORK / QUARANTINE** | Normalize: schema → SourceDescriptor + candidate `InvasivePlantRecord` / `Invasive Species Record`; geometry → projected, validated; time → observed vs retrieval split; identity → taxon crosswalk; rights → propagated; "Private" or sensitive-taxon records routed to `quarantine/`. | Validation + policy gate pass, or quarantine reason recorded | **PROPOSED** |
 | **PROCESSED** | Emit validated normalized objects with EvidenceRef; AggregationReceipt for any roll-up; RedactionReceipt for any geoprivacy transform. | `EvidenceRef`, `ValidationReport`, digest closure | **PROPOSED** |
-| **CATALOG / TRIPLET** | STAC/DCAT/PROV catalog records; EvidenceBundles; graph projection (taxon, place, time); release candidate dossier. | Catalog/proof closure | **PROPOSED** |
-| **PUBLISHED** | Public-safe invasive monitoring layer; species-level summary popups; aggregated invasive density layer. Restricted lanes serve through reviewer surface only. | `ReleaseManifest` + `PolicyDecision` + rollback target | **PROPOSED** |
+| **CATALOG / TRIPLET** | STAC/DCAT/PROV catalog records; EvidenceBundles; graph projection (taxon, place, time); release candidate dossier. Tri-checksum closure required (`KFM-P22-PROG-0037` STAC ↔ `KFM-P22-PROG-0038` DCAT ↔ `KFM-P22-PROG-0039` PROV against ReleaseManifest digest). | Catalog/proof closure | **PROPOSED** |
+| **PUBLISHED** | Public-safe invasive monitoring layer (atlas Fauna §G PROPOSED viewing product); species-level summary popups; aggregated invasive density layer. Restricted lanes serve through reviewer surface only. | `ReleaseManifest` + `PolicyDecision` + rollback target | **PROPOSED** |
 
 > Promotion is a **governed state transition**, not a file move. A bytes-only copy from `raw/` to `published/` is a violation regardless of disk layout.
+
+> [!TIP]
+> Atlas Fauna §G PROPOSED viewing product "invasive monitoring public layer" is the public-release target for non-sensitive EDDMapS-derived records. Cross-cutting CONFIRMED viewing products (Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, governed Focus Mode) apply to every EDDMapS-derived map surface.
 
 [↑ back to top](#eddmaps--source-catalog-entry)
 
@@ -268,7 +323,7 @@ The mapping below is **PROPOSED** for the standard EDDMapS download surface (CSV
 |---|---|---|---|
 | `source_id` | constant `kfm:source/eddmaps` | n/a | **PROPOSED** |
 | `source_record_id` | EDDMapS record/object id | preserve verbatim for round-trip | **PROPOSED** |
-| `taxon_id` (canonical) | EDDMapS species code / scientific name | crosswalk via USDA PLANTS (Flora) or ITIS / GBIF (Fauna); see Flora intake doctrine for PLANTS authority | **PROPOSED** |
+| `taxon_id` (canonical) | EDDMapS species code / scientific name | crosswalk via **USDA PLANTS** (Flora) or **ITIS / GBIF** (Fauna); see Flora intake doctrine for PLANTS authority | **PROPOSED** |
 | `scientific_name` | EDDMapS scientificName | preserve verbatim; do not normalize away | **PROPOSED** |
 | `observed_at` | EDDMapS observation date | timezone NEEDS VERIFICATION | **PROPOSED** |
 | `retrieved_at` | watcher run time | KFM-side | **CONFIRMED** field, **PROPOSED** binding |
@@ -280,8 +335,21 @@ The mapping below is **PROPOSED** for the standard EDDMapS download surface (CSV
 | `media_refs` | EDDMapS photo URL(s) | rights NEEDS VERIFICATION; Bugwood Image Database has its own license terms | **NEEDS VERIFICATION** |
 | `source_kfm_spec_hash` | computed (JCS+SHA-256) over the SourceDescriptor and per-run query parameters | n/a | **PROPOSED** |
 
+### Crosswalk discipline (CONFIRMED doctrine)
+
 > [!TIP]
-> **Crosswalk caution.** Per **CONFIRMED** Flora doctrine, USDA PLANTS is the authoritative federal source for US plant checklist, state distribution, county distribution, symbol, and scientific-name fields in KFM flora intake. EDDMapS taxonomy should be **crosswalked to PLANTS**, not substituted for it. The same caution applies to the Fauna crosswalk (ITIS / GBIF), where EDDMapS provides observation evidence but does not provide taxonomic authority.
+> **For Flora records**: per `KFM-P27-IDEA-0001` ("USDA PLANTS canonical flora source"), USDA PLANTS is treated as *"the authoritative federal source for U.S. plant checklist, state distribution, county distribution, symbol, and scientific-name fields in KFM flora intake."* `KFM-P2-PROG-0006` defines the ingestion pipeline: *"Ingest the USDA PLANTS Complete Checklist plus state and county distribution extracts, normalize symbol uniqueness, scientific-name-with-author, family, native status, growth habit, wetland status, USPS state codes, and 5-digit FIPS county codes into a canonical KFM dataset with EvidenceBundle attribution as US federal public domain."*
+>
+> EDDMapS taxonomy **MUST be crosswalked to PLANTS**, not substituted for it. EDDMapS provides observation evidence; PLANTS provides taxonomic authority.
+
+> [!TIP]
+> **For Fauna records**: the analogous crosswalk targets are **ITIS** (primary U.S. authority) and **GBIF Backbone** (international second-line). EDDMapS provides observation evidence; ITIS / GBIF Backbone provide taxonomic authority.
+
+### Delta-detection use case
+
+`KFM-P29-IDEA-0004` (CONFIRMED card; PROPOSED implementation): *"USDA PLANTS county-package changes should be cataloged as taxon-listing source events when taxa or governed status intersections change."* `KFM-P29-FEAT-0002` ("PLANTS Delta Dashboard"): *"A PLANTS delta surface should show species_count, listed taxa intersections, and status/listing changes by county."*
+
+EDDMapS-derived county-presence observations are a **candidate corroborating signal** for PLANTS-side delta events — *e.g.*, a PLANTS county-presence flip from absent to present is corroborated by an EDDMapS report in the same county within the same window. This is a downstream analytic use, not part of admission.
 
 [↑ back to top](#eddmaps--source-catalog-entry)
 
@@ -291,18 +359,18 @@ The mapping below is **PROPOSED** for the standard EDDMapS download surface (CSV
 
 ### Allowed (subject to gate closure)
 
-- Public, county-level or HUC-level aggregated invasive-monitoring layers for non-sensitive taxa, with `AggregationReceipt`.
+- Public, county-level or HUC12-level aggregated invasive-monitoring layers for non-sensitive taxa, with `AggregationReceipt` (`KFM-P24-PROG-0015` HUC12 alternative).
 - Reviewer-only (T2) surfaces of full-resolution records under steward review.
 - EvidenceBundle support for corroborating an `InvasivePlantRecord` or `Invasive Species Record` already grounded in a primary authority.
-- Drift detection: comparing EDDMapS county-presence vs. USDA PLANTS county-presence (Flora) as a delta event candidate (cf. KFM-P29-IDEA-0004 "PLANTS taxon deltas as source events").
-- Focus Mode citations explicitly attributing claims to EDDMapS as a source role (observed / aggregated, verifier-gated upstream) — never as a sovereign authority.
+- **Drift detection**: comparing EDDMapS county-presence vs. USDA PLANTS county-presence (Flora) as a delta event candidate (cf. `KFM-P29-IDEA-0004` *"PLANTS taxon deltas as source events"* + `KFM-P29-FEAT-0002` PLANTS Delta Dashboard).
+- Focus Mode citations explicitly attributing claims to EDDMapS as a source role (observed / aggregated, verifier-gated upstream) — never as a sovereign authority. AI may summarize **released EvidenceBundles only** (atlas L. Governed AI behavior, CONFIRMED doctrine).
 
 ### Denied by default
 
 - **DENY** — public exposure of EDDMapS records flagged "Private" upstream, in any form below county-level generalization.
-- **DENY** — public exact-coordinate publication of any record whose taxon resolves to KFM Flora "Rare Plant Record" or Fauna "SensitiveSite" classes, regardless of upstream verification state.
-- **DENY** — using EDDMapS as the **authoritative** source for taxonomic identity (use USDA PLANTS / ITIS / GBIF; EDDMapS is evidence, not authority).
-- **DENY** — using EDDMapS as a regulatory source. Noxious-weed listing authority resides with the Kansas Department of Agriculture and other regulatory bodies; EDDMapS publishes a state list pointer but is not the regulator.
+- **DENY** — public exact-coordinate publication of any record whose taxon resolves to KFM Flora `Rare Plant Record` or Fauna `SensitiveSite` / `Occurrence Restricted` classes, regardless of upstream verification state. Per `KFM-P24-IDEA-0002`/`PROG-0013`, sensitive-fauna OPA returns ABSTAIN or DENY unless redaction/aggregation/role-gating is satisfied.
+- **DENY** — using EDDMapS as the **authoritative** source for taxonomic identity (use USDA PLANTS / ITIS / GBIF; EDDMapS is evidence, not authority). See `KFM-P27-IDEA-0001` and `KFM-P2-PROG-0006` for the PLANTS authority discipline.
+- **DENY** — using EDDMapS as a regulatory source. Per `KFM-P19-IDEA-0005` (CONFIRMED Kansas regulatory authority), **KDWP endangered/threatened/SINC lists** are the controlling Kansas regulatory source family for listed-species status; noxious-weed listing authority resides with the Kansas Department of Agriculture and other regulatory bodies. EDDMapS publishes state-list pointers but is not the regulator.
 - **DENY** — using EDDMapS as an emergency-alert authority (per the cross-cutting hazards/alert boundary).
 - **DENY** — AI summarization of EDDMapS records that have not passed the KFM EvidenceBundle + release gate. AI may summarize only released EvidenceBundles.
 
@@ -323,6 +391,11 @@ The mapping below is **PROPOSED** for the standard EDDMapS download surface (CSV
 | Q7 | Bugwood Image Database license that governs EDDMapS-attached photographs. | Bugwood license page | **NEEDS VERIFICATION** |
 | Q8 | KFM-side schema home for the EDDMapS adapter / connector and the canonical `SourceDescriptor` instance file. | Mounted repo evidence; `control_plane/source_authority_register.yaml`; ADR-0001 confirmation. | **PROPOSED / NEEDS VERIFICATION** |
 | Q9 | Placement convention for `docs/sources/catalog/` vs flat `docs/sources/`. | New ADR or `docs/sources/README.md` update | **OPEN** (parallel to §18 OPEN-DR-02) |
+| Q10 | **Flora vs Fauna source-family asymmetry**: atlas Fauna §D lists "EDDMapS and invasive feeds" but Flora §D does not include EDDMapS, even though Flora §B owns `InvasivePlantRecord`. ADR or atlas amendment required. | Atlas amendment proposal; Flora §D update or explicit cross-reference. | **OPEN** (atlas drift candidate) |
+| Q11 | **§7.3 connector placement (OPEN-DSC-14 family)**: §7.3 lists nine connector roots; EDDMapS is not among them. Resolve as `connectors/eddmaps/`, `connectors/uga/eddmaps/`, `connectors/cises/eddmaps/`, or `connectors/local_upload/eddmaps/`. | ADR resolving the §7.3 amendment and/or new institutional root. | **OPEN** (parallel to broader OPEN-DSC-14) |
+| Q12 | Sensitivity-rank-to-cell-size table values for invasive taxa (H3 resolution per KDWP SINC tier; HUC12 thresholds). | `policy/sensitivity/<lane>/` bundle authored and pinned. | **NEEDS VERIFICATION** |
+| Q13 | Reporter-PII handling: does EDDMapS expose reporter identifiers in the standard download surface, and if so, how does KFM map this to its `policy/sensitivity/people/` lane? | Captured download header + Cornell-style data-request review for reporter-PII clauses. | **NEEDS VERIFICATION** |
+| Q14 | Whether a `connectors/eddmaps/<run_id>/` watcher state matches the `KFM-P27-PROG-0005`-style "harvest normalizer ... dedupe by stable occurrence/checklist keys" pattern used by the eBird family. | Mounted-repo connector code review. | **NEEDS VERIFICATION** |
 
 [↑ back to top](#eddmaps--source-catalog-entry)
 
@@ -330,7 +403,16 @@ The mapping below is **PROPOSED** for the standard EDDMapS download surface (CSV
 
 ## 11. Related docs
 
+### Sibling source-catalog entries (PROPOSED parallel structure)
+
+- `docs/sources/catalog/ebird/` family (README + product pages `ebird-api.md`, `ebird-ebd.md`, `ebird-sed.md`) — sibling pattern for a comparable Fauna source family with restricted-use terms. **CONFIRMED** authored in prior sessions; provides the catalog-entry vocabulary EDDMapS extends.
+- `docs/sources/catalog/drought_monitor/` family (README + `drought-monitor.md`) — sibling pattern for an Agriculture/Hydrology cross-lane source. **CONFIRMED** authored in prior sessions.
+- *Future siblings (PROPOSED)*: `gbif.md`, `inaturalist.md`, `natureserve.md`, `usfws.md`, `idigbio.md`, `symbiota.md`, `usda-plants.md` — atlas-recognized source families, candidates for parallel catalog entries.
+
+### Doctrine, standards, registers
+
 - [`docs/sources/README.md`](../../README.md) — source-descriptor standards, source families (**PROPOSED** — NEEDS VERIFICATION)
+- [`docs/sources/catalog/README.md`](../README.md) — catalog lane index (**PROPOSED** — NEEDS VERIFICATION; parallels eBird/drought_monitor structure)
 - [`docs/domains/flora/README.md`](../../../domains/flora/README.md) — Flora domain ownership of `InvasivePlantRecord` (**PROPOSED** — NEEDS VERIFICATION)
 - [`docs/domains/fauna/README.md`](../../../domains/fauna/README.md) — Fauna domain ownership of `Invasive Species Record` (**PROPOSED** — NEEDS VERIFICATION)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance standard profile (**CONFIRMED authored** prior session; naming variance vs `PROVENANCE.md` → OPEN-DR-01)
@@ -339,6 +421,18 @@ The mapping below is **PROPOSED** for the standard EDDMapS download surface (CSV
 - [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule for SourceDescriptor placement (**CONFIRMED** referenced in Directory Rules)
 - `control_plane/source_authority_register.yaml` — register entry for `kfm:source/eddmaps` (**PROPOSED** — NEEDS VERIFICATION)
 - `schemas/contracts/v1/source/source-descriptor.json` — SourceDescriptor schema home (**PROPOSED** path per ADR-0001; **NEEDS VERIFICATION**)
+- `policy/sensitivity/` — sensitive-species/sensitive-fauna policy bundle (**PROPOSED** — NEEDS VERIFICATION)
+- `policy/sources/` — source-role admission rules bundle (**PROPOSED** — NEEDS VERIFICATION)
+
+### Atlas anchor citations (CONFIRMED)
+
+- Atlas Fauna lane §B — Fauna domain owns `Invasive Species Record`.
+- Atlas Fauna lane §D — "EDDMapS and invasive feeds" source family verbatim; "rights and current terms NEEDS VERIFICATION; sensitive joins fail closed."
+- Atlas Fauna lane §F — Fauna ↔ Flora cross-lane "invasive, food-web context" relation.
+- Atlas Fauna lane §G — "invasive monitoring public layer" PROPOSED viewing product.
+- Atlas Fauna lane §H — RAW → PUBLISHED pipeline shape.
+- Atlas Flora lane §B — Flora domain owns `InvasivePlantRecord`.
+- Atlas Flora lane §D — Flora source families list (EDDMapS conspicuously absent → Q10).
 
 [↑ back to top](#eddmaps--source-catalog-entry)
 
@@ -373,10 +467,10 @@ flowchart TB
     RAW["data/raw/&lt;lane&gt;/eddmaps/&lt;run_id&gt;"]
     WQ["data/work · data/quarantine"]
     PROC["data/processed/&lt;lane&gt;"]
-    CAT["data/catalog · triplets"]
-    POL{{"policy / sensitivity gates<br/>+ RedactionReceipt"}}
+    CAT["data/catalog · triplets<br/>tri-checksum closure<br/>(KFM-P22-PROG-0037/38/39)"]
+    POL{{"policy / sensitivity gates<br/>+ RedactionReceipt<br/>+ KFM-P24-IDEA-0002/PROG-0013<br/>deny-by-default"}}
     REL["release/manifests"]
-    PUB["data/published/layers/<br/>invasive_*"]
+    PUB["data/published/layers/<br/>invasive_*<br/>(Fauna §G public viewing product)"]
     REV["reviewer surface (T2)"]
     DENY["DENY (T4 default)"]
   end
@@ -392,6 +486,15 @@ flowchart TB
   POL -->|reviewer-only| REV
   POL -->|sensitive without transform| DENY
   REL --> PUB
+
+  classDef external fill:#6e7681,stroke:#30363d,color:#fff;
+  classDef governed fill:#bf8700,stroke:#5c4400,color:#fff;
+  classDef policy fill:#cf222e,stroke:#82071e,color:#fff;
+  classDef pub fill:#2ea44f,stroke:#1a5e2f,color:#fff;
+  class R1,R2,R3,R4,V,DB,Q external;
+  class SD,W,RAW,WQ,PROC,CAT,REL,REV governed;
+  class POL,DENY policy;
+  class PUB pub;
 ```
 
 > Diagram is **PROPOSED** and reflects this catalog entry's design; route names, schema homes, and policy bundle ids remain `NEEDS VERIFICATION` against the mounted repo.
@@ -422,17 +525,48 @@ flowchart TB
 
 </details>
 
+<details>
+<summary><strong>Expand: KFM atlas cards anchored in v0.2 update</strong></summary>
+
+| Card | Used to inform |
+|---|---|
+| **Atlas Fauna §B** | `Invasive Species Record` object ownership |
+| **Atlas Fauna §D** | "EDDMapS and invasive feeds" verbatim source-family naming; "sensitive joins fail closed" |
+| **Atlas Fauna §F** | Fauna ↔ Flora "invasive, food-web context" cross-lane relation |
+| **Atlas Fauna §G** | "invasive monitoring public layer" PROPOSED viewing product |
+| **Atlas Fauna §H** | RAW → PUBLISHED pipeline shape and gates |
+| **Atlas Flora §B** | `InvasivePlantRecord` object ownership |
+| **Atlas Flora §D** | Flora source families list (EDDMapS absent → Q10) |
+| `KFM-P2-PROG-0006` | USDA PLANTS ingestion as flora taxonomy and state/county presence baseline |
+| `KFM-P19-IDEA-0005` | KDWP listing status as canonical Kansas regulatory authority |
+| `KFM-P22-PROG-0037/38/39` | STAC / DCAT / PROV tri-checksum closure against ReleaseManifest digest |
+| `KFM-P24-IDEA-0002` | Sensitive species deny-by-default posture |
+| `KFM-P24-PROG-0013` | Sensitive taxa redaction policy (OPA ABSTAIN/DENY) |
+| `KFM-P24-PROG-0015` | HUC12 aggregation transform as alternative to point publication |
+| `KFM-P26-PROG-0025` | Catalog closure writers (license, providers, stac_extensions, EvidenceBundle refs) |
+| `KFM-P27-IDEA-0001` | USDA PLANTS as canonical flora source (taxonomic authority) |
+| `KFM-P27-FEAT-0003` | STAC Projection lint report |
+| `KFM-P27-PROG-0005` | eBird harvest normalizer pattern — dedupe by stable occurrence/checklist keys (applies analogously to EDDMapS record keys) |
+| `KFM-P29-IDEA-0004` | PLANTS taxon deltas as source events (corroboration use case) |
+| `KFM-P29-FEAT-0002` | PLANTS Delta Dashboard surface |
+| Pass-10 `C6-03/04/05/06` | Redaction profile family (seeded jitter / grid generalization / DP / k-anonymity) |
+| `ML-062-016` | License travels with deltas; admission fail-closed when license unknown |
+| `ML-Q-080` | Unknown source rights block public promotion |
+| `ML-Q-082` | MapLibre style filters MUST NOT hide sensitive geometry (data-layer transform only) |
+
+</details>
+
 ---
 
 ### Footer
 
 > [!NOTE]
-> **Reviewer pointers.** Before promoting this entry from `status: draft` to `status: review`, please resolve Q1 (license) and Q8 (schema home), and verify that `docs/sources/catalog/` is the agreed placement (Q9). Without Q1 closed, EDDMapS-derived records remain blocked from public KFM release per **CONFIRMED** ML-Q-080.
+> **Reviewer pointers.** Before promoting this entry from `status: draft` to `status: review`, please resolve **Q1** (license), **Q8** (schema home), **Q9** (`docs/sources/catalog/` placement), **Q10** (Flora vs Fauna source-family asymmetry), and **Q11** (§7.3 connector placement). Without Q1 closed, EDDMapS-derived records remain blocked from public KFM release per **CONFIRMED** `ML-Q-080` + `ML-062-016`.
 
 ---
 
-**Related:** [Flora](../../../domains/flora/README.md) · [Fauna](../../../domains/fauna/README.md) · [PROV](../../../standards/PROV.md) · [ISO-19115](../../../standards/ISO-19115.md) · [Source-refresh runbook (fauna)](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md)
+**Related:** [Flora](../../../domains/flora/README.md) · [Fauna](../../../domains/fauna/README.md) · [PROV](../../../standards/PROV.md) · [ISO-19115](../../../standards/ISO-19115.md) · [Source-refresh runbook (fauna)](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [Sibling catalog entries: `ebird/`, `drought_monitor/`](../)
 
-**Last updated:** 2026-05-20 · **Doc id:** `kfm://doc/source-catalog-eddmaps` · **Version:** v0.1
+**Last updated:** 2026-05-21 · **Doc id:** `kfm://doc/source-catalog-eddmaps` · **Version:** v0.2
 
 [↑ Back to top](#eddmaps--source-catalog-entry)
