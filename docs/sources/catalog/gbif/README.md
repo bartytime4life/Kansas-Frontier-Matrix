@@ -2,39 +2,46 @@
 doc_id: kfm://doc/source-catalog/gbif
 title: GBIF — Global Biodiversity Information Facility (KFM Source Catalog Entry)
 type: standard
-version: v0.1
+version: v0.2
 status: draft
-owners: [TODO: biodiversity-lane steward], [TODO: source registry owner], docs steward
+owners: [TODO: biodiversity-lane steward], [TODO: source registry owner], [TODO: sensitivity reviewer], docs steward
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-05-21
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md         # PROPOSED — see §11
   - docs/sources/catalog/README.md                     # PROPOSED — see §11
-  - docs/domains/fauna/                                # PROPOSED
-  - docs/domains/flora/                                # PROPOSED
-  - docs/domains/habitat/                              # PROPOSED
+  - docs/sources/catalog/ftdna.md                      # Sibling source-catalog entry (PROPOSED path)
+  - docs/domains/fauna/                                # PROPOSED — CONFIRMED domain in Atlas Part 1
+  - docs/domains/flora/                                # PROPOSED — CONFIRMED domain in Atlas Part 1
+  - docs/domains/habitat/                              # PROPOSED — CONFIRMED domain in Atlas Part 1
   - schemas/contracts/v1/source/source-descriptor.json # PROPOSED per ADR-0001
+  - schemas/contracts/v1/fauna/occurrence-evidence.schema.json  # PROPOSED — CONFIRMED object family
   - control_plane/source_authority_register.yaml       # PROPOSED
   - policy/sensitivity/                                # PROPOSED
-tags: [kfm, source, biodiversity, gbif, taxonomy, dwc, stac]
+  - policy/rights/                                     # PROPOSED
+tags: [kfm, source, biodiversity, gbif, taxonomy, dwc, stac, fauna, flora, habitat]
 notes:
-  - Repository is not mounted in this session; all repo-state-shaped claims are PROPOSED or NEEDS VERIFICATION.
-  - Source role assignments below are doctrinal defaults; final values are set at admission per SourceDescriptor.
+  - "Repository is not mounted in this session; all repo-state-shaped claims are PROPOSED or NEEDS VERIFICATION."
+  - "GBIF as canonical aggregated biodiversity authority is CONFIRMED per KFM-P2-IDEA-0018 and C10-06."
+  - "Source role assignments below are doctrinal defaults; final values are set at admission per SourceDescriptor."
+  - "v0.2 corrections from v0.1: (1) replaced spurious C10-12 reference with C10-06 (where EBD restricted-use actually lives); (2) corrected sibling-README link from `../README.md` to `./README.md`; (3) added Domain consumer map (§3.1) tying CONFIRMED Fauna/Flora object families to GBIF inputs; (4) tightened several PROPOSED → CONFIRMED truth labels where the corpus directly supports them; (5) refined source-role badge from misleading single-value claim to multi-value-by-artifact."
 [/KFM_META_BLOCK_V2] -->
 
 # GBIF — Global Biodiversity Information Facility
 
 > KFM source catalog entry — international biodiversity occurrence aggregator and taxonomic backbone, admitted under license gating, sensitivity controls, and Backbone-DOI versioning.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Source role: observed (default)](https://img.shields.io/badge/source__role-observed-blue)
+![Status: draft (v0.2)](https://img.shields.io/badge/status-draft%20(v0.2)-orange)
+![Source role: varies by artifact](https://img.shields.io/badge/source__role-varies%20by%20artifact-blue)
 ![Sensitivity: S1%2FS2 redaction required](https://img.shields.io/badge/sensitivity-S1%2FS2%20redaction%20required-yellow)
 ![License gating: CC0 · CC-BY · CC-BY-SA](https://img.shields.io/badge/license%20gating-CC0%20%C2%B7%20CC--BY%20%C2%B7%20CC--BY--SA-green)
-![Taxonomy anchor: ITIS + GBIF Backbone DOI 10.15468%2F39omei](https://img.shields.io/badge/taxonomy-ITIS%20%2B%20GBIF%20Backbone-purple)
+![Taxonomy anchor: ITIS first · GBIF Backbone second](https://img.shields.io/badge/taxonomy-ITIS%20first%20%C2%B7%20GBIF%20Backbone%20second-purple)
+![Backbone DOI: 10.15468%2F39omei](https://img.shields.io/badge/backbone%20DOI-10.15468%2F39omei-purple)
 ![Lifecycle: RAW → PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-lightgrey)
-![Last updated: 2026-05-13](https://img.shields.io/badge/last%20updated-2026--05--13-informational)
+![Trust: truth≠receipt≠proof≠catalog≠publication](https://img.shields.io/badge/truth-%E2%89%A0receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication-555)
+![Last updated: 2026-05-21](https://img.shields.io/badge/last%20updated-2026--05--21-informational)
 
 > [!NOTE]
 > **Status & scope.** This document describes KFM's intended posture toward GBIF as a **source** — admission, rights gating, sensitivity treatment, taxonomic anchoring, and pipeline shape. It does not assert that any connector, schema file, policy bundle, or workflow is implemented. Repository inspection has not been performed in this session; concrete paths, route names, and validator IDs remain `PROPOSED` or `NEEDS VERIFICATION` per KFM truth labels.
@@ -46,6 +53,7 @@ notes:
 - [1. Scope](#1-scope)
 - [2. Repo fit](#2-repo-fit)
 - [3. What GBIF is, in KFM terms](#3-what-gbif-is-in-kfm-terms)
+- [3.1 Domain consumer map](#31-domain-consumer-map)
 - [4. Source role and authority posture](#4-source-role-and-authority-posture)
 - [5. SourceDescriptor — fields and defaults](#5-sourcedescriptor--fields-and-defaults)
 - [6. Rights, licensing, and gating](#6-rights-licensing-and-gating)
@@ -65,13 +73,15 @@ notes:
 
 GBIF is admitted in KFM as **two distinct things that must not be conflated**:
 
-1. **A biodiversity occurrence aggregator** — an international index of species occurrence records contributed by museums, herbaria, citizen-science platforms, monitoring programs, and government agencies. Records carry their **originating institution** and travel under the **upstream dataset's license**, not under a single GBIF license.
-2. **A taxonomic backbone** — the GBIF Backbone Taxonomy (DOI [`10.15468/39omei`](https://doi.org/10.15468/39omei)), a synthesized, versioned hierarchy used by KFM as the **international crosswalk** where ITIS coverage is incomplete or international comparability is required. _(CONFIRMED in KFM corpus, C7-08.)_
+1. **A biodiversity occurrence aggregator** — an international index of species occurrence records contributed by museums, herbaria, citizen-science platforms, monitoring programs, and government agencies. Records carry their **originating institution** and travel under the **upstream dataset's license**, not under a single GBIF license. *(CONFIRMED, KFM-P2-IDEA-0018: "GBIF is treated as the canonical aggregated authority for biodiversity occurrences, ingested via the governed-pull pattern with Darwin Core (DwC) compliance.")*
+2. **A taxonomic backbone** — the GBIF Backbone Taxonomy (DOI [`10.15468/39omei`](https://doi.org/10.15468/39omei)), a synthesized, versioned hierarchy used by KFM as the **international crosswalk** where ITIS coverage is incomplete or international comparability is required. *(CONFIRMED, C7-08.)*
 
-KFM's biodiversity stack pairs GBIF with **ITIS TSN** (U.S.-canonical), **iNaturalist** (research-grade citizen-science), **eBird EBD** (canonical bird occurrences, restricted-use terms), **NatureServe** (conservation status that drives sensitivity), **USFWS** (listed-species and critical habitat), **iDigBio / Symbiota** (U.S. specimen aggregators), and in-state collections (**KU Biodiversity Institute**, **FHSU Sternberg Museum**). _(CONFIRMED in KFM corpus, C10-06.)_
+KFM's biodiversity stack pairs GBIF with **ITIS TSN** (U.S.-canonical), **iNaturalist** (research-grade citizen-science), **eBird EBD** (canonical bird occurrences, restricted-use terms), **NatureServe** (conservation status that drives sensitivity), **USFWS** (listed-species and critical habitat), **iDigBio / Symbiota** (U.S. specimen aggregators), and in-state collections (**KU Biodiversity Institute** at ~454,000 specimens cited in the corpus, **FHSU Sternberg Museum**). *(CONFIRMED, C10-06.)*
 
 > [!IMPORTANT]
-> **GBIF is not the sole or final taxonomic authority for KFM.** ITIS TSN is the U.S.-canonical anchor; GBIF Backbone is the international second-line anchor and the international crosswalk. Records lacking *both* anchors fail a doctrinal completeness check.
+> **GBIF is not the sole or final taxonomic authority for KFM.** ITIS TSN is the U.S.-canonical anchor *(CONFIRMED, C7-07)*; GBIF Backbone is the international second-line anchor and the international crosswalk *(CONFIRMED, C7-08)*. Records lacking *both* anchors fail a doctrinal completeness check (PROPOSED CI rule per C7-07 Suggested Future Work).
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
@@ -87,6 +97,7 @@ docs/
 | Field                                       | Value                                                                                           |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | **Doc home (this file)**                    | `docs/sources/catalog/gbif.md` — PROPOSED                                                       |
+| **Sibling source-catalog entry**            | [`docs/sources/catalog/ftdna.md`](./ftdna.md) — PROPOSED                                        |
 | **Upstream (canonical KFM doctrine)**       | `docs/doctrine/directory-rules.md` · KFM core invariants · authority ladder                     |
 | **Sibling standard**                        | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — PROPOSED                                         |
 | **Downstream (consumers)**                  | `docs/domains/fauna/`, `docs/domains/flora/`, `docs/domains/habitat/` — PROPOSED                |
@@ -96,7 +107,7 @@ docs/
 | **Policy home (rights & sensitivity)**      | `policy/sensitivity/`, `policy/rights/` — PROPOSED                                              |
 
 > [!WARNING]
-> The `docs/sources/catalog/` subdirectory is **PROPOSED**. Directory Rules §6.1 lists `docs/sources/` as canonical for source-descriptor standards and source families, but does not enumerate a `catalog/` sub-folder explicitly. The repo may use a different layout (e.g., flat `docs/sources/<source>.md`, or a domain-grouped layout). Verify against mounted repo and open a `docs/registers/DRIFT_REGISTER.md` entry if a different convention is in force.
+> The `docs/sources/catalog/` subdirectory is **PROPOSED**. Directory Rules canonical tree (line 291 of the mounted `directory-rules.md`, CONFIRMED) lists `docs/sources/` as the home for "source-descriptor standards, source families" but does not enumerate a `catalog/` sub-folder. The repo may use a different layout (e.g., flat `docs/sources/<source>.md`, or a domain-grouped layout). Note also that "catalog" is the KFM lifecycle phase noun (RAW → WORK / QUARANTINE → PROCESSED → **CATALOG** / TRIPLET → PUBLISHED) and the name of the canonical lifecycle root `data/catalog/`, so using `catalog/` as a `docs/` subfolder risks reader confusion. Verify against mounted repo and open a `docs/registers/DRIFT_REGISTER.md` entry if a different convention is in force.
 
 ### What belongs in this doc
 
@@ -113,6 +124,8 @@ docs/
 | Connector code (fetching, retries, ETag handling)    | `connectors/gbif/` (PROPOSED)                                                             |
 | Run receipts and content hashes                      | `data/receipts/` (PROPOSED home; emitted by the connector)                                |
 | Domain-specific record mapping (fauna, flora, etc.)  | `docs/domains/<domain>/sources.md` (PROPOSED) + domain pipeline specs                     |
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
@@ -152,28 +165,57 @@ flowchart LR
   PUB --> Subscribers
 ```
 
-<sup>_Diagram: KFM's PROPOSED admission and lifecycle flow for GBIF data. The Backbone DOI is consulted at the **catalog** stage to anchor `properties.taxon`; per-dataset license metadata is consulted at **admission** to drive the SourceActivationDecision. Diagram reflects KFM doctrine (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED) and the corpus's GBIF integration pattern; specific paths are PROPOSED until repo-verified._</sup>
+<sup>*Diagram: KFM's PROPOSED admission and lifecycle flow for GBIF data. The Backbone DOI is consulted at the **catalog** stage to anchor `properties.taxon`; per-dataset license metadata is consulted at **admission** to drive the SourceActivationDecision. Diagram reflects CONFIRMED KFM lifecycle invariant (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED, per Directory Rules §0) and the CONFIRMED GBIF integration pattern (KFM-P2-IDEA-0018, C10-06); specific paths are PROPOSED until repo-verified.*</sup>
 
 > [!CAUTION]
-> **GBIF is upstream of the trust membrane, not part of it.** Public KFM clients **never** read directly from GBIF — they read released artifacts through the governed API. Promotion of any GBIF-derived record requires the full publication gate (validation, source/rights/sensitivity checks, review state, release manifest, correction path, rollback target). _(CONFIRMED doctrine; see Operating Law in `kfm_encyclopedia.pdf` §4.)_
+> **GBIF is upstream of the trust membrane, not part of it.** Public KFM clients **never** read directly from GBIF — they read released artifacts through the governed API. Promotion of any GBIF-derived record requires the full publication gate (validation, source/rights/sensitivity checks, review state, release manifest, correction path, rollback target). *(CONFIRMED doctrine; see Operating Law in `kfm_encyclopedia.pdf` §4.)*
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
+
+---
+
+## 3.1 Domain consumer map
+
+GBIF feeds three KFM domain lanes — Fauna, Flora, and Habitat. The corpus defines the destination object families in each domain (Atlas Part 1 §E for Fauna; §E for Flora). The table below maps GBIF inputs to those CONFIRMED destinations.
+
+| GBIF input | Destination domain | CONFIRMED destination object family | Notes |
+|---|---|---|---|
+| Animal specimen / observation record | Fauna | `OccurrenceEvidence` *(CONFIRMED object family in Atlas Part 1 §E Fauna)* | The general atomic unit of species-occurrence support. |
+| Sensitive animal occurrence (S1/S2, nest/den/roost, etc.) | Fauna | `OccurrenceRestricted` *(CONFIRMED)* | Routed before any T0/T1 release; redaction profile applied. |
+| Public-safe animal occurrence derivative | Fauna | `OccurrencePublic` *(CONFIRMED)* | The T0/T1 release form after sensitivity treatment. |
+| Animal taxonomic resolution | Fauna | `Taxon` + `TaxonCrosswalk` *(CONFIRMED)* | Anchored ITIS TSN first, GBIF Backbone second. |
+| Conservation status (NatureServe / KDWP SINC overlay) | Fauna | `ConservationStatus` *(CONFIRMED)* | Drives sensitivity decisions; status itself is admitted as separate evidence. |
+| Range polygon (if from GBIF-hosted modeled asset) | Fauna | `RangePolygon` *(CONFIRMED)* | `source_role = modeled`; `role_model_run_ref` MUST resolve. |
+| Plant specimen / observation record | Flora | `Flora Occurrence` *(CONFIRMED)* | Most herbarium specimens; iNaturalist plant observations. |
+| Plant taxonomic resolution | Flora | `Plant Taxon` + `FloraTaxon Crosswalk` *(CONFIRMED)* | Anchoring rule identical to Fauna. |
+| Rare plant record | Flora | `Rare Plant Record` *(CONFIRMED)* | T4-default per the rare-plant tier rule (Atlas §24.5.2). |
+| Specimen-level record (museum / herbarium voucher) | Flora | `SpecimenRecord` *(CONFIRMED)* | Preserves originating institution + specimen barcode. |
+| Habitat-associated occurrence | Habitat | `Habitat Association` *(CONFIRMED in Flora §E; cross-references Habitat lane)* | Join key; never the join target itself. |
+
+> [!NOTE]
+> The object families above are **CONFIRMED** in the corpus's per-domain ubiquitous-language tables and object-family tables (Atlas Part 1, Fauna and Flora chapters). Their *schema realizations* under `schemas/contracts/v1/fauna/...` and `schemas/contracts/v1/flora/...` are PROPOSED per Directory Rules §13.1 and ADR-0001, with file presence **NEEDS VERIFICATION** against a mounted repo.
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
 ## 4. Source role and authority posture
 
-The KFM `source_role` field is **fixed at admission** and **never edited in place**; corrections produce a new descriptor plus a CorrectionNotice. _(CONFIRMED doctrine; see Domains Atlas §24.1.3.)_
+The KFM `source_role` field is **fixed at admission** and **never edited in place**; corrections produce a new descriptor plus a CorrectionNotice. *(CONFIRMED doctrine; Atlas §24.1.3.)*
 
 | GBIF artifact                                                              | Default `source_role`                                  | Notes                                                                                                                                              |
 | -------------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Specimen records (museum, herbarium)                                       | `observed`                                             | Preserve originating institution; per-dataset license applies.                                                                                     |
 | Field observations (e.g., iNaturalist research-grade republished via GBIF) | `observed`                                             | Confidence and identification quality must be preserved in `properties.taxon`.                                                                     |
-| Citizen-science aggregates (e.g., eBird via GBIF)                          | `observed` **but flagged restricted**                  | eBird EBD travels under restricted-use terms; **redistribution may be denied** even when license string parses. See §6 and `policy/rights/`.       |
+| Citizen-science aggregates (e.g., eBird via GBIF)                          | `observed` **but flagged restricted**                  | eBird EBD travels under restricted-use terms; **redistribution may be denied** even when license string parses. See §6 and `policy/rights/`. *(CONFIRMED restricted-use posture, C10-06.)* |
 | GBIF Backbone Taxonomy                                                     | `administrative` (taxonomic authority, not occurrence) | Used as anchor only; never published as occurrence evidence. DOI version captured in run receipt.                                                  |
-| Aggregated occurrence counts (cell, county, grid)                          | `aggregate`                                            | Geometry-scope token (county, HUC, grid) **MUST** be recorded; aggregate cells must not be cited as per-place observations. _(CONFIRMED doctrine.)_ |
+| Aggregated occurrence counts (cell, county, grid)                          | `aggregate`                                            | Geometry-scope token (county, HUC, grid) **MUST** be recorded; aggregate cells must not be cited as per-place observations. *(CONFIRMED doctrine, Atlas §24.1.3.)* |
 | Modeled species range polygons (if pulled from GBIF-hosted modeled assets) | `modeled`                                              | `role_model_run_ref` MUST resolve to a ModelRunReceipt; never publish as observation.                                                              |
 
 > [!IMPORTANT]
-> **Source role is not upgraded by promotion.** Modeled GBIF range polygons do not become "observed" by passing through validation. The trust membrane treats source-role collapse as a DENY-grade anti-pattern. _(CONFIRMED, Domains Atlas §24.9.)_
+> **Source role is not upgraded by promotion.** Modeled GBIF range polygons do not become "observed" by passing through validation. The trust membrane treats source-role collapse as a DENY-grade anti-pattern. *(CONFIRMED, Doctrine Synthesis §29.3.)*
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
@@ -186,7 +228,7 @@ The canonical SourceDescriptor schema home is `schemas/contracts/v1/source/sourc
 | `source_id`                    | e.g. `gbif`, `gbif-backbone`, `gbif-dataset-<key>` (PROPOSED)                              | MUST      | Stable, never reused; per-dataset descriptors PROPOSED for fine-grained rights tracking.                       |
 | `source_role`                  | See §4                                                                                    | MUST      | Set at admission; never edited in place.                                                                       |
 | `role_authority`               | `"Global Biodiversity Information Facility (gbif.org)"`                                   | MUST when role is `regulatory \| modeled \| aggregate` | Disambiguates cite text.                                                                                       |
-| `role_aggregation_unit`        | e.g. `county`, `grid_0p1deg` (only when role = `aggregate`)                               | MUST when `aggregate` | Prevents geometry-scope drift on join.                                                                         |
+| `role_aggregation_unit`        | e.g. `county`, `grid_0p1deg` (only when role = `aggregate`)                               | MUST when `aggregate` | Prevents geometry-scope drift on join. *(CONFIRMED, Atlas §24.1.3.)*                                          |
 | `rights.license`               | Per-dataset, parsed from GBIF metadata endpoint                                            | MUST      | Permitted set: `CC0`, `CC-BY`, `CC-BY-SA`. Unknown → fail closed.                                              |
 | `rights.attribution_text`      | Per-dataset citation block + GBIF Download DOI                                            | MUST      | Carried through to public surfaces.                                                                            |
 | `rights.terms_url`             | Per-dataset terms; for Backbone, the DOI URL                                              | MUST      | Used by rights-checker; archived in evidence bundle.                                                           |
@@ -197,16 +239,18 @@ The canonical SourceDescriptor schema home is `schemas/contracts/v1/source/sourc
 | `steward`                      | [TODO: biodiversity-lane steward]                                                          | MUST      | Owns rights, sensitivity, and source-role review for this entry.                                               |
 | `freshness_expectation`        | TBD per domain (e.g., Fauna: weekly; Backbone: annual rotation)                           | SHOULD    | Drives staleness banners.                                                                                       |
 | `public_release_class`         | `public-safe-derivative-only` (NEVER raw API responses)                                   | MUST      | Public surfaces serve cataloged, validated, sensitivity-treated artifacts only.                                |
-| `backbone_doi_version`         | The exact GBIF Backbone DOI version at fetch time (e.g., `10.15468/39omei`, snapshot id)  | MUST when anchoring uses Backbone | Captured in `RunReceipt`; required for replayable resolution.                                |
+| `backbone_doi_version`         | The exact GBIF Backbone DOI version at fetch time (e.g., `10.15468/39omei`, snapshot id)  | MUST when anchoring uses Backbone | Captured in `RunReceipt`; required for replayable resolution. *(CONFIRMED, C7-08.)*                          |
 
 > [!NOTE]
 > **Per-dataset SourceDescriptors are recommended (PROPOSED).** GBIF aggregates from thousands of upstream datasets under heterogeneous licenses. A single `gbif` descriptor cannot carry the rights granularity required for promotion gates. The corpus's PROPOSED pattern is one envelope descriptor for the GBIF aggregator plus per-dataset descriptors for any dataset whose records are admitted to RAW.
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
 ## 6. Rights, licensing, and gating
 
-KFM's rights posture is **fail-closed**: unknown rights, unresolved source role, missing evidence, or unresolved sensitivity blocks public promotion. _(CONFIRMED, Operating Law; Domains Atlas §I.)_
+KFM's rights posture is **fail-closed**: unknown rights, unresolved source role, missing evidence, or unresolved sensitivity blocks public promotion. *(CONFIRMED, Operating Law; Atlas §I.)*
 
 ### Permitted licenses (gating set)
 
@@ -220,33 +264,35 @@ KFM's rights posture is **fail-closed**: unknown rights, unresolved source role,
 ### Restricted-use special cases
 
 > [!WARNING]
-> **eBird Basic Dataset (EBD) — restricted republication.** eBird records distributed through GBIF carry eBird's terms in addition to the dataset license string. The corpus is explicit: _"any KFM release derived from EBD must be checked against the EBD terms and may require approval."_ A general license check is **not sufficient**. Routing logic must inspect the originating dataset and apply the **biodiversity restricted-use registry** (PROPOSED, `policy/rights/biodiversity_restricted_use.yaml`) before promotion. _(CONFIRMED, C10-06, C10-12.)_
+> **eBird Basic Dataset (EBD) — restricted republication.** eBird records distributed through GBIF carry eBird's terms in addition to the dataset license string. The corpus is explicit: *"any KFM release derived from EBD must be checked against the EBD terms and may require approval."* A general license check is **not sufficient**. Routing logic must inspect the originating dataset and apply the **biodiversity restricted-use registry** (PROPOSED, `policy/rights/biodiversity_restricted_use.yaml`) before promotion. *(CONFIRMED, C10-06 Tensions / Expansion Directions.)*
 
 > [!WARNING]
-> **NatureServe access tier.** NatureServe conservation status drives KFM's sensitivity gate, but **NatureServe Explorer PRO access is rights-controlled**. Records pulled from NatureServe-gated endpoints are not licensed for republication; KFM uses NatureServe **rankings** as policy inputs, not as published evidence rows. _(CONFIRMED, corpus.)_
+> **NatureServe access tier.** NatureServe conservation status drives KFM's sensitivity gate, but **NatureServe Explorer PRO access is rights-controlled**. Records pulled from NatureServe-gated endpoints are not licensed for republication; KFM uses NatureServe **rankings** as policy inputs, not as published evidence rows. *(CONFIRMED posture, C10-06; specific NatureServe-Pro access terms NEEDS VERIFICATION at admission.)*
 
 ### Download identity and citation
 
-- **Async downloads** issue a citable **GBIF Download DOI**. This DOI is the canonical citation handle and **MUST** be captured in the `RunReceipt` and surfaced in every downstream EvidenceBundle. _(Per GBIF technical documentation, as cited in the KFM corpus.)_
-- **Occurrence search** (synchronous) is suitable for small subsets but does not yield a DOI; for any public-facing derivative, **prefer async + DOI** for reproducibility. _(Per KFM corpus citing techdocs.gbif.org.)_
+- **Async downloads** issue a citable **GBIF Download DOI**. This DOI is the canonical citation handle and **MUST** be captured in the `RunReceipt` and surfaced in every downstream EvidenceBundle. *(Per GBIF technical documentation, as cited in the KFM corpus.)*
+- **Occurrence search** (synchronous) is suitable for small subsets but does not yield a DOI; for any public-facing derivative, **prefer async + DOI** for reproducibility. *(Per KFM corpus citing techdocs.gbif.org.)*
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
 ## 7. Sensitivity posture and geoprivacy
 
-KFM applies the **C6 sensitivity machinery** to biodiversity records — biodiversity is the domain where sensitivity is exercised most heavily and where the FAIR + CARE tension is most operationally visible. _(CONFIRMED, C10-06.)_
+KFM applies the **C6 sensitivity machinery** to biodiversity records — biodiversity is the domain where sensitivity is exercised most heavily and where the FAIR + CARE tension is most operationally visible. *(CONFIRMED, C10-06.)*
 
 | Sensitivity input                                  | KFM treatment (PROPOSED defaults)                                                          | Citation               |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------- |
-| **NatureServe S1 / S2** (critically imperiled / imperiled) | Redact precise coordinates by default; publish via grid generalization or county-level only | _(C6, C10-06)_         |
-| **KDWP SINC** (Species in Need of Conservation)    | Same as NatureServe S1/S2; in-state authority overlay                                      | _(C7-10, C10-06)_      |
-| **Nest / den / roost / hibernacula / spawning site locations** | Fail closed unless documented geoprivacy transform + review state allow release           | _(DOM-FAUNA §§12-13)_  |
-| **Steward-controlled records**                     | Respect upstream restriction; do not relax                                                  | _(DOM-FAUNA)_          |
-| **Exact occurrence geometry, sensitive taxa**      | Apply redaction_profile (truncation, grid, county); record `GeoprivacyTransformReceipt`     | _(C6-04, DOM-FAUNA)_   |
-| **Living-person observers (collector names, etc.)** | Subject to People/Land sensitivity rules; minimize in public surfaces                       | _(C9, DOM-PEOPLE)_     |
+| **NatureServe S1 / S2** (critically imperiled / imperiled) | Redact precise coordinates by default; publish via grid generalization or county-level only | *(C6, C10-06)*         |
+| **KDWP SINC** (Species in Need of Conservation)    | Same as NatureServe S1/S2; in-state authority overlay                                      | *(C7-10, C10-06)*      |
+| **Nest / den / roost / hibernacula / spawning site locations** | Fail closed unless documented geoprivacy transform + review state allow release           | *(DOM-FAUNA §§12-13)*  |
+| **Steward-controlled records**                     | Respect upstream restriction; do not relax                                                  | *(DOM-FAUNA)*          |
+| **Exact occurrence geometry, sensitive taxa**      | Apply `redaction_profile` (truncation, grid, county); record `GeoprivacyTransformReceipt`   | *(C6-04, DOM-FAUNA)*   |
+| **Living-person observers (collector names, etc.)** | Subject to People/Land sensitivity rules; minimize in public surfaces                       | *(C9, DOM-PEOPLE)*     |
 
 > [!CAUTION]
-> **No "hide in style."** Sensitive geometry cannot be hidden through MapLibre style filters alone — it must be transformed (masked, generalized, restricted-tier, or denied) **before** public tile or layer generation. Renderer-level concealment is a documented anti-pattern. _(CONFIRMED, MapLibre Master Trust-Membrane chapter.)_
+> **No "hide in style."** Sensitive geometry cannot be hidden through MapLibre style filters alone — it must be transformed (masked, generalized, restricted-tier, or denied) **before** public tile or layer generation. Renderer-level concealment is a documented anti-pattern. *(CONFIRMED, Master MapLibre Components Trust-Membrane chapter; Doctrine Synthesis §30 risk register.)*
 
 ### Geoprivacy transform receipts
 
@@ -258,13 +304,15 @@ Any sensitivity-driven transformation MUST emit a `GeoprivacyTransformReceipt` (
 - output geometry digest
 - reviewer / approval state where required
 
-_(CONFIRMED object family; PROPOSED implementation.)_
+*(CONFIRMED receipt-family doctrine per Atlas §24.2.1; specific `GeoprivacyTransformReceipt` field set is PROPOSED.)*
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
 ## 8. Taxonomic anchoring — ITIS first, GBIF Backbone second
 
-KFM's taxonomic anchoring rule is precise: **every species-level record anchors to ITIS TSN where ITIS has coverage; GBIF Backbone serves as the second-line anchor and the international crosswalk where ITIS is silent or stale (notably for many invertebrates, fungi, and microbiota).** _(CONFIRMED, C7-07, C7-08.)_
+KFM's taxonomic anchoring rule is precise: **every species-level record anchors to ITIS TSN where ITIS has coverage; GBIF Backbone serves as the second-line anchor and the international crosswalk where ITIS is silent or stale (notably for many invertebrates, fungi, and microbiota).** *(CONFIRMED, C7-07, C7-08.)*
 
 ```mermaid
 flowchart TD
@@ -281,17 +329,19 @@ flowchart TD
 ```
 
 > [!IMPORTANT]
-> **Backbone DOI version must be captured in the run receipt.** The Backbone is re-versioned periodically; a record anchored to Backbone version A may resolve differently against version B. KFM requires `backbone_doi_version` in `RunReceipt` so downstream queries can replay against the same snapshot. _(CONFIRMED, C7-08.)_
+> **Backbone DOI version must be captured in the run receipt.** The Backbone is re-versioned periodically; a record anchored to Backbone version A may resolve differently against version B. KFM requires `backbone_doi_version` in `RunReceipt` so downstream queries can replay against the same snapshot. *(CONFIRMED, C7-08.)*
 
 ### ITIS / GBIF disagreement
 
-The corpus is explicit that the **ITIS/GBIF tie-breaker policy is not yet codified** in the policy bundle. The PROPOSED default is: **ITIS wins for U.S. federal-data reconciliation; GBIF wins for international comparability queries.** Records where the two authorities place a name in different higher classifications must be surfaced in an **ITIS-vs-GBIF disagreement report** (PROPOSED). _(C7-07 Open Questions; C7-07 Expansion Directions.)_
+The corpus is explicit that the **ITIS/GBIF tie-breaker policy is not yet codified** in the policy bundle. *(CONFIRMED open question, C7-07.)* The PROPOSED default is: **ITIS wins for U.S. federal-data reconciliation; GBIF wins for international comparability queries.** Records where the two authorities place a name in different higher classifications must be surfaced in an **ITIS-vs-GBIF disagreement report** (PROPOSED per C7-07 Expansion Directions).
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
 ## 9. STAC × Darwin Core encoding
 
-KFM encodes biodiversity occurrences as a **STAC × DwC hybrid**: a STAC Item (Feature with geometry and datetime) whose `properties` carry Darwin Core terms inside a `taxon` object, plus a `redaction_profile` and an evidence block. _(CONFIRMED, C4-03.)_
+KFM encodes biodiversity occurrences as a **STAC × DwC hybrid**: a STAC Item (Feature with geometry and datetime) whose `properties` carry Darwin Core terms inside a `taxon` object, plus a `redaction_profile` and an evidence block. *(CONFIRMED, C4-03.)*
 
 ```jsonc
 // Illustrative skeleton — not a fixture, not a schema.
@@ -305,6 +355,8 @@ KFM encodes biodiversity occurrences as a **STAC × DwC hybrid**: a STAC Item (F
   "bbox": [/* … */],
   "properties": {
     "datetime": "<DwC eventDate, normalized>",
+    "kfm:object_family": "OccurrenceEvidence",     // CONFIRMED Fauna object family (Atlas §E)
+    "kfm:source_role": "observed",                  // see §4
     "taxon": {
       "scientific_name":   "<DwC scientificName>",
       "common_name":       "<DwC vernacularName, if present>",
@@ -328,6 +380,13 @@ KFM encodes biodiversity occurrences as a **STAC × DwC hybrid**: a STAC Item (F
       "license":                 "<CC0|CC-BY|CC-BY-SA>",
       "rights_holder":           "<rightsHolder>",
       "evidence_bundle_ref":     "kfm://evidence/<id>"
+    },
+    "kfm:provenance": {                             // CONFIRMED block per C4-01
+      "spec_hash":           "sha256:<TBD>",
+      "evidence_bundle_ref": "kfm://evidence/<digest>",
+      "run_record_ref":      "kfm://run/<run-id>",
+      "audit_ref":           "kfm://audit/<attestation-id>",
+      "policy_digest":       "sha256:<TBD>"
     }
   },
   "assets":   { /* … */ },
@@ -336,31 +395,35 @@ KFM encodes biodiversity occurrences as a **STAC × DwC hybrid**: a STAC Item (F
 ```
 
 > [!NOTE]
-> **DwC terms live under `properties.taxon`, not at the top level.** This keeps the STAC envelope clean while preserving DwC semantics for biodiversity-aware consumers (GBIF, iDigBio, Symbiota). _(CONFIRMED, C4-03.)_
+> **DwC terms live under `properties.taxon`, not at the top level.** This keeps the STAC envelope clean while preserving DwC semantics for biodiversity-aware consumers (GBIF, iDigBio, Symbiota). *(CONFIRMED, C4-03.)* The `kfm:provenance` block is the CONFIRMED `C4-01` provenance shape; the `kfm:object_family` field signals which CONFIRMED Fauna object family this item realizes.
 
 ### DwC Event records (surveys)
 
-The hybrid extends to **Darwin Core Event records** for surveys, with `eventID`, `eventDate`, `samplingProtocol`, `sampleSizeValue`, plus linked **MeasurementOrFact** rows capturing counts, effort, seasonal status, and detection / non-detection. _(CONFIRMED, C4-03.)_
+The hybrid extends to **Darwin Core Event records** for surveys, with `eventID`, `eventDate`, `samplingProtocol`, `sampleSizeValue`, plus linked **MeasurementOrFact** rows capturing counts, effort, seasonal status, and detection / non-detection. *(CONFIRMED, C4-03.)*
 
 > [!NOTE]
 > The corpus is **silent** on whether KFM should round-trip through DwC-Archive (DwC-A) ZIP bundles or treat STAC × DwC as canonical. This is on the verification backlog (§14).
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
 ## 10. Pipeline shape (RAW → PUBLISHED)
 
-KFM lifecycle law applies: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**. Promotion is a **governed state transition**, not a file move. _(CONFIRMED doctrine; Operating Law.)_
+KFM lifecycle law applies: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**. Promotion is a **governed state transition**, not a file move. *(CONFIRMED doctrine; Directory Rules §0.)*
 
 | Stage           | What happens with GBIF data                                                                                                                     | Gate                                                                                                  | Status (this session) |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | --------------------- |
 | **RAW**         | Connector emits immutable source payload (DwC-A, JSON, CSV) under `data/raw/biodiversity/gbif/<run_id>/`, with `RawCaptureReceipt`, checksum, ETag/Last-Modified, GBIF Download DOI when async. | `SourceDescriptor` exists; `SourceActivationDecision = allow` for this dataset.                       | PROPOSED              |
 | **WORK / QUARANTINE** | Normalize schema, geometry, time, identity, evidence, rights, and policy; hold rights-unknown, license-unparsable, sensitive-raw-geometry, and integrity-failure cases.   | Validation + policy gate pass, **or** quarantine reason recorded.                                     | PROPOSED              |
 | **PROCESSED**   | Emit validated, normalized occurrence/event objects; emit `ValidationReport`; resolve ITIS/Backbone anchors; apply redaction profile.            | `EvidenceRef` resolvable; `ValidationReport` present; digest closure exists.                          | PROPOSED              |
-| **CATALOG / TRIPLET** | Emit STAC × DwC items, `EvidenceBundle`s, and graph/triplet projection.                                                                  | Catalog / proof closure passes.                                                                       | PROPOSED              |
+| **CATALOG / TRIPLET** | Emit STAC × DwC items, `EvidenceBundle`s, and graph/triplet projection.                                                                  | Catalog / proof closure passes per `KFM-P1-IDEA-0020` (CONFIRMED).                                    | PROPOSED              |
 | **PUBLISHED**   | Serve released, public-safe artifacts through the governed API and layer manifests; expose Evidence Drawer; allow Focus Mode queries.            | `ReleaseManifest` + correction path + rollback target + review/policy state.                          | PROPOSED              |
 
 > [!CAUTION]
-> **Connectors do not publish.** A GBIF connector writes to `data/raw/` or `data/quarantine/` **only** — never to `data/processed/`, `data/catalog/`, or `data/published/`. _(CONFIRMED, Directory Rules §7.3.)_
+> **Connectors do not publish.** A GBIF connector writes to `data/raw/` or `data/quarantine/` **only** — never to `data/processed/`, `data/catalog/`, or `data/published/`. *(CONFIRMED, Directory Rules §7.3.)*
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
@@ -377,7 +440,8 @@ docs/
     ├── SOURCE_DESCRIPTOR_STANDARD.md        # PROPOSED — sibling standard
     └── catalog/
         ├── README.md                        # PROPOSED — index of source catalog entries
-        └── gbif.md                          # PROPOSED — THIS FILE
+        ├── gbif.md                          # PROPOSED — THIS FILE
+        └── ftdna.md                         # PROPOSED — sibling source-catalog entry
 
 contracts/
 ├── OBJECT_MAP.md                            # PROPOSED — names SourceDescriptor and related
@@ -386,8 +450,14 @@ contracts/
 
 schemas/
 └── contracts/v1/
-    └── source/
-        └── source-descriptor.json           # PROPOSED per ADR-0001
+    ├── source/
+    │   └── source-descriptor.json           # PROPOSED per ADR-0001
+    ├── fauna/
+    │   ├── occurrence-evidence.schema.json  # PROPOSED — CONFIRMED object family
+    │   ├── occurrence-public.schema.json    # PROPOSED — CONFIRMED object family
+    │   └── occurrence-restricted.schema.json # PROPOSED — CONFIRMED object family
+    └── flora/
+        └── flora-occurrence.schema.json     # PROPOSED — CONFIRMED object family
 
 connectors/
 └── gbif/
@@ -433,7 +503,9 @@ docs/adr/
 </details>
 
 > [!NOTE]
-> **No new root-level domain folders.** Per Directory Rules §3, biodiversity does not get a `gbif/` or `biodiversity/` at repo root. Everything lives under responsibility roots (`docs/`, `schemas/`, `policy/`, `connectors/`, `pipelines/`, `tests/`, `data/`).
+> **No new root-level domain folders.** Per Directory Rules §3 (CONFIRMED), biodiversity does not get a `gbif/` or `biodiversity/` at repo root. Everything lives under responsibility roots (`docs/`, `schemas/`, `policy/`, `connectors/`, `pipelines/`, `tests/`, `data/`).
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
@@ -452,7 +524,10 @@ The corpus consistently requires these for biodiversity-source admission. All ar
 | STAC × DwC schema conformance             | Validate `properties.taxon` shape, `evidence` block, `redaction_profile`, datetime, geometry.                  | PROPOSED |
 | Source-role collapse test                 | Modeled-range record promoted as observed → DENY.                                                              | PROPOSED |
 | Aggregate-as-per-place test               | Aggregate cell cited as per-place observation → DENY at AI, DENY at publication.                               | PROPOSED |
+| Object-family routing test                | OccurrenceRestricted record on a public path → DENY (CONFIRMED Fauna family routing).                          | PROPOSED |
 | End-to-end RAW → PUBLISHED lane test      | One thin slice (e.g., a single county, one taxon) exercising every gate.                                       | PROPOSED |
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
@@ -506,6 +581,8 @@ GET https://api.gbif.org/v1/species/match?name=<scientificName>
 # → record acceptedTaxonKey AND the Backbone DOI snapshot identifier in the run receipt.
 ```
 
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
+
 ---
 
 ## 14. Open questions and verification backlog
@@ -515,28 +592,33 @@ GET https://api.gbif.org/v1/species/match?name=<scientificName>
 | Q-1   | Does this repo have a `docs/sources/catalog/` subdirectory, or a different layout for per-source docs?                                          | Mounted-repo inspection → `docs/registers/DRIFT_REGISTER.md` if it conflicts.         |
 | Q-2   | Is `SourceDescriptor` schema actually at `schemas/contracts/v1/source/source-descriptor.json`?                                                  | Mounted-repo inspection → ADR-0001 alignment check.                                   |
 | Q-3   | One-envelope-plus-per-dataset SourceDescriptor pattern: is this codified anywhere, or only PROPOSED in this doc?                                | New ADR or extension of `SOURCE_DESCRIPTOR_STANDARD.md`.                              |
-| Q-4   | ITIS / GBIF tie-breaker policy is not yet codified in the policy bundle.                                                                       | Author per C7-07 Suggested Future Work; CI check that flags un-double-anchored records. |
-| Q-5   | Backbone-version-rotation cadence (annual? on-demand? upstream-driven?) and deprecated-taxon handling.                                          | Author Backbone-rotation playbook per C7-08 Suggested Future Work.                    |
+| Q-4   | ITIS / GBIF tie-breaker policy is not yet codified in the policy bundle. *(CONFIRMED open question, C7-07.)*                                    | Author per C7-07 Suggested Future Work; CI check that flags un-double-anchored records. |
+| Q-5   | Backbone-version-rotation cadence (annual? on-demand? upstream-driven?) and deprecated-taxon handling. *(CONFIRMED open question, C7-08.)*       | Author Backbone-rotation playbook per C7-08 Suggested Future Work.                    |
 | Q-6   | Should KFM round-trip through DwC-Archive (DwC-A), or treat STAC × DwC as canonical?                                                            | Codify in `docs/standards/stac-dwc-hybrid.md` (PROPOSED).                             |
-| Q-7   | Are there restricted-use biodiversity datasets beyond eBird EBD and NatureServe Pro that KFM has not yet catalogued?                            | Build the **biodiversity restricted-use registry** per C10-06 Suggested Future Work.  |
-| Q-8   | Does KFM publish a Collection-id convention (e.g., `kfm-gbif-occurrences`, `kfm-<org>-<product>`)?                                              | C4-02 Open Questions → STAC profile doc.                                              |
+| Q-7   | Are there restricted-use biodiversity datasets beyond eBird EBD and NatureServe Pro that KFM has not yet catalogued? *(CONFIRMED open question, C10-06.)* | Build the **biodiversity restricted-use registry** per C10-06 Suggested Future Work.  |
+| Q-8   | Does KFM publish a Collection-id convention (e.g., `kfm-gbif-occurrences`, `kfm-<org>-<product>`)? *(CONFIRMED open question, C4-02.)*           | C4-02 Open Questions → STAC profile doc; align with the sibling FTDNA catalog entry pattern. |
 | Q-9   | How should aggregate-vs-per-place detection be enforced at the AI / Focus Mode boundary for GBIF aggregate products?                            | Citation validator + aggregate-as-per-place negative fixture (§12).                   |
-| Q-10  | EBD-derivative-release policy: what can KFM publish from eBird-via-GBIF, and what requires upstream approval?                                   | Author EBD-derivative-release policy per C10-06 Expansion Directions.                  |
+| Q-10  | EBD-derivative-release policy: what can KFM publish from eBird-via-GBIF, and what requires upstream approval? *(CONFIRMED expansion direction, C10-06.)* | Author EBD-derivative-release policy.                                                  |
+| Q-11  | Path collision: `docs/sources/catalog/` shares the noun "catalog" with the lifecycle phase **CATALOG** and the canonical lifecycle root `data/catalog/`. Resolve before this path is ratified. | ADR.                                                                                  |
+| Q-12  | Fauna object-family routing: when does an incoming GBIF record become `OccurrenceEvidence` vs `OccurrencePublic` vs `OccurrenceRestricted`? Where is the canonical routing rule? | Domain dossier `docs/domains/fauna/` + `policy/sensitivity/biodiversity_*.rego`.        |
+
+[↑ Back to top](#gbif--global-biodiversity-information-facility)
 
 ---
 
 ## 15. Related docs
 
-- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law, lifecycle invariant, schema-home convention. **(CONFIRMED reference.)**
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — sibling standard, source-descriptor fields. **(PROPOSED — see Whole-UI + Governed AI Expansion Report §11.)**
-- [`docs/sources/catalog/README.md`](../README.md) — index of source catalog entries. **(PROPOSED — see §11.)**
-- [`docs/domains/fauna/`](../../../domains/fauna/) — Fauna lane that consumes GBIF occurrence data. **(PROPOSED.)**
-- [`docs/domains/flora/`](../../../domains/flora/) — Flora lane (herbaria + observations). **(PROPOSED.)**
-- [`docs/domains/habitat/`](../../../domains/habitat/) — Habitat lane that joins occurrences to habitat surfaces. **(PROPOSED.)**
-- [`docs/standards/stac-dwc-hybrid.md`](../../../standards/stac-dwc-hybrid.md) — STAC × DwC profile. **(PROPOSED — see C4-03.)**
-- [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — log discrepancies between this doc and mounted-repo evidence. **(PROPOSED.)**
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../../registers/VERIFICATION_BACKLOG.md) — verification items from §14. **(PROPOSED.)**
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lifecycle invariant, schema-home convention. **(CONFIRMED reference.)**
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../SOURCE_DESCRIPTOR_STANDARD.md) — sibling standard, source-descriptor fields. **(PROPOSED — see §11.)**
+- [`docs/sources/catalog/README.md`](./README.md) — index of source catalog entries. **(PROPOSED — see §11.)**
+- [`docs/sources/catalog/ftdna.md`](./ftdna.md) — sibling source-catalog entry (FTDNA DTC genetic-genealogy vendor). **(PROPOSED — same catalog convention as this file.)**
+- [`docs/domains/fauna/`](../../domains/fauna/) — Fauna lane that consumes GBIF occurrence data via `OccurrenceEvidence` / `OccurrencePublic` / `OccurrenceRestricted` object families. **(CONFIRMED domain doctrine, Atlas Part 1; folder PROPOSED.)**
+- [`docs/domains/flora/`](../../domains/flora/) — Flora lane (herbaria + observations) via `Flora Occurrence` / `SpecimenRecord` / `Rare Plant Record` object families. **(CONFIRMED domain doctrine; folder PROPOSED.)**
+- [`docs/domains/habitat/`](../../domains/habitat/) — Habitat lane that joins occurrences to habitat surfaces. **(CONFIRMED domain doctrine; folder PROPOSED.)**
+- [`docs/standards/stac-dwc-hybrid.md`](../../standards/stac-dwc-hybrid.md) — STAC × DwC profile. **(PROPOSED — see C4-03.)**
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — log discrepancies between this doc and mounted-repo evidence. **(PROPOSED.)**
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — verification items from §14. **(PROPOSED.)**
 
 ---
 
-<sub>Last updated: 2026-05-13 · Status: draft · Owners: [TODO]. This document encodes KFM's PROPOSED admission posture for the Global Biodiversity Information Facility as a source; specific paths, schemas, policies, validators, fixtures, and runtime behavior remain PROPOSED or NEEDS VERIFICATION until verified against a mounted repository. [↑ Back to top](#gbif--global-biodiversity-information-facility)</sub>
+<sub>Last updated: 2026-05-21 · Status: draft (v0.2) · Owners: [TODO]. This document encodes KFM's PROPOSED admission posture for the Global Biodiversity Information Facility as a source; specific paths, schemas, policies, validators, fixtures, and runtime behavior remain PROPOSED or NEEDS VERIFICATION until verified against a mounted repository. [↑ Back to top](#gbif--global-biodiversity-information-facility)</sub>
