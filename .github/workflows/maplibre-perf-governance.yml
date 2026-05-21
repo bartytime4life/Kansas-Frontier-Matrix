@@ -137,7 +137,7 @@ jobs:
 
       - name: Upload MapLibre perf ProofPack artifacts
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: maplibre-perf-proofpack
           path: |
@@ -148,7 +148,7 @@ jobs:
 
       - name: Upload MapLibre perf failure artifacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: maplibre-perf-failure-bundle
           path: |
