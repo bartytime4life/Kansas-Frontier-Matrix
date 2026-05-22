@@ -1,653 +1,530 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs-sources-catalog-loc-loc-iiif-presentations
-title: LOC IIIF Presentations
-type: product-page
-version: v0.2
+doc_id: kfm://doc/sources-catalog-local-upload
+title: Local Upload — Source Catalog Entry
+type: standard
+version: v2
 status: draft
-owners: <PLACEHOLDER — Docs steward + Source steward for `loc` family>
-created: 2026-05-20
+owners: <docs steward + source-intake steward — placeholder>
+created: 2026-05-13
 updated: 2026-05-22
 policy_label: public
 related:
-  - docs/sources/catalog/loc/README.md
-  - docs/sources/catalog/loc/IDENTITY.md
-  - docs/sources/catalog/loc/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/loc/LCNAF.md
-  - docs/sources/catalog/loc/LCSH.md
-  - docs/sources/catalog/loc/CHRONICLING-AMERICA.md
-  - docs/sources/catalog/loc/HISTORIC-MAPS.md
-  - docs/sources/catalog/loc/_examples/stac-item-example.json
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/sources/catalog/README.md
-  - docs/standards/STAC_KFM_PROFILE.md
-  - docs/standards/PROV.md
-  - docs/standards/IIIF_PROFILE.md
-  - docs/standards/PLUGIN_ALLOWLIST.md
+  - docs/sources/catalog/loc/iiif-presentations.md
   - docs/doctrine/directory-rules.md
-  - data/registry/sources/loc/iiif-presentations/
-  - schemas/contracts/v1/source/source-descriptor.schema.json
-  - connectors/loc/iiif-presentations/
-  - pipeline_specs/cross-domain/loc-iiif-presentations/
-tags: [kfm, docs, sources, catalog, loc, iiif, presentation-manifest, archive, manuscript, photograph, base-pattern]
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - connectors/local_upload/README.md
+  - schemas/contracts/v1/source/source_descriptor.schema.json
+  - policy/sources/local_upload/
+tags: [kfm, sources, catalog, local_upload, connector, intake, quarantine]
 notes:
-  - "PROPOSED product-page scaffold; the docs/sources/catalog/loc/ tree itself is PROPOSED until repo verification."
-  - "This is the UMBRELLA / BASE-PATTERN product for general LoC IIIF holdings (manuscripts, photographs, prints, drawings) NOT covered by sibling products."
-  - "Doctrine grounded in KFM-P14-PROG-0009 (LoC IIIF STAC PROV ingestor) and C10-07 (Archives Stack: LOC IIIF as federal-level discovery surface)."
-  - "Sibling products extend this base pattern: HISTORIC-MAPS.md adds georeferencing; CHRONICLING-AMERICA.md specializes for newspapers."
-  - "Owners, badge targets, and example links are explicit placeholders — not fabricated."
+  - "`connectors/local_upload/` is named in Directory Rules §7.3 and in the proposed target tree; specific file presence at any commit remains NEEDS VERIFICATION."
+  - "Subdirectory `docs/sources/catalog/` remains PROPOSED — not directly attested in Directory Rules; see §13.1."
+  - "All other referenced repo paths are PROPOSED until mounted-repo verification."
+  - "v2: refreshed truth labels, sibling product-page cross-link, evidence appendix; no anchor changes vs v1."
 [/KFM_META_BLOCK_V2] -->
 
-# LOC IIIF Presentations
+# Local Upload — Source Catalog Entry
 
-> The **federal-level discovery surface** for general Library of Congress holdings — manuscripts, photographs, prints, drawings, and items — admitted into KFM as source records via their **IIIF Presentation Manifests**, with manifest digests, STAC metadata assets, and PROV `wasDerivedFrom` lineage. **This is the base IIIF-ingest pattern** that sibling LoC products extend (Historic Maps adds Allmaps georeferencing; Chronicling America specializes for newspapers).
+> Governance entry for the `local_upload` connector — the source family that admits user-supplied files at the trust edge with **rights, sensitivity, and source role unknown until proven**.
 
-[![Status: PROPOSED](https://img.shields.io/badge/status-PROPOSED-orange)]() &nbsp;
-[![Family: loc](https://img.shields.io/badge/family-loc-blue)](./README.md) &nbsp;
-[![Source role: context · observation](https://img.shields.io/badge/source--role-context%20%C2%B7%20observation-purple)]() &nbsp;
-[![Base pattern: IIIF ingest](https://img.shields.io/badge/base--pattern-IIIF%20ingest-9cf)]() &nbsp;
-[![Policy: public](https://img.shields.io/badge/policy-public-green)]() &nbsp;
-[![Rights: NEEDS%20VERIFICATION](https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-yellow)](./RIGHTS-AND-SENSITIVITY-MAP.md) &nbsp;
-[![Doctrine: KFM v1.1](https://img.shields.io/badge/doctrine-KFM%20v1.1-lightgrey)](../../../doctrine/directory-rules.md) &nbsp;
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)]()
+<p align="left">
+  <img src="https://img.shields.io/badge/status-draft-orange" alt="status: draft (placeholder)">
+  <img src="https://img.shields.io/badge/policy-deny--by--default-red" alt="policy: deny-by-default">
+  <img src="https://img.shields.io/badge/source%20role-candidate-blue" alt="source role: candidate">
+  <img src="https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20QUARANTINE-yellow" alt="lifecycle: RAW → QUARANTINE">
+  <img src="https://img.shields.io/badge/truth-receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication-blueviolet" alt="truth class: receipt != proof != catalog != publication">
+  <img src="https://img.shields.io/badge/evidence-docs--only-lightgrey" alt="evidence basis: docs-only (no mounted repo this session)">
+  <img src="https://img.shields.io/badge/build-TODO-lightgrey" alt="build: TODO (placeholder)">
+  <img src="https://img.shields.io/badge/last%20updated-2026--05--22-informational" alt="last updated: 2026-05-22">
+</p>
 
-**Status:** PROPOSED — scaffold only · **Source family:** [`loc`](./README.md) · **Source role (PROPOSED):** **`context`** by default; **`observation`** for items where the photograph or manuscript carries date-stamped, located, attributed evidence  
-**Anchored object families (CONFIRMED doctrine):** `SourceDescriptor`, catalog records (STAC, DCAT, PROV), `EvidenceBundle`, authority crosswalks (LCNAF + LCSH + GNIS as applicable)  
-**Owners:** `<PLACEHOLDER — Docs steward + Source steward for loc>` · **Last reviewed:** 2026-05-22
+| Field | Value |
+|---|---|
+| **Status** | `draft` |
+| **Owners** | Docs steward + source-intake steward · *placeholder, NEEDS VERIFICATION* |
+| **Last updated** | 2026-05-22 |
+| **Doc class** | Standard governance doc (source catalog entry) |
+| **Authority of this entry** | PROPOSED until source descriptor, fixtures, validators, and policy gates exist |
+| **Authority of paths quoted here** | Mixed — `connectors/local_upload/` is CONFIRMED at the doctrine level (Directory Rules §7.3); specific file presence at any commit and all other paths remain PROPOSED until verified against mounted-repo evidence |
+| **Default policy posture** | `DENY` for publication · `QUARANTINE` for admission unless rights & sensitivity resolved |
+| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
 
 ---
 
 ## Contents
 
-- [1. Overview](#1-overview)
-- [2. Where this product fits in the KFM corpus](#2-where-this-product-fits-in-the-kfm-corpus)
-- [3. Source authority (no descriptor fields here)](#3-source-authority-no-descriptor-fields-here)
-- [4. The IIIF base-ingest pattern](#4-the-iiif-base-ingest-pattern)
-- [5. Catalog profiles used](#5-catalog-profiles-used)
-- [6. Collection identity](#6-collection-identity)
-- [7. Provenance fields (`kfm:provenance` + manifest digest)](#7-provenance-fields-kfmprovenance--manifest-digest)
-- [8. Temporal handling](#8-temporal-handling)
-- [9. Geometry, projection, and spatial handling](#9-geometry-projection-and-spatial-handling)
-- [10. Rights, sensitivity, and CARE posture](#10-rights-sensitivity-and-care-posture)
-- [11. Viewer plugin governance (Mirador · UniversalViewer)](#11-viewer-plugin-governance-mirador--universalviewer)
-- [12. Validation and catalog closure](#12-validation-and-catalog-closure)
-- [13. Related contracts and schemas](#13-related-contracts-and-schemas)
-- [14. Related connectors and pipelines](#14-related-connectors-and-pipelines)
-- [15. Examples (illustrative only)](#15-examples-illustrative-only)
-- [16. Open questions](#16-open-questions)
-- [17. Related docs · sibling products](#17-related-docs--sibling-products)
-- [Appendix · Field expectations and disposition matrix](#appendix--field-expectations-and-disposition-matrix)
+- [1. Scope](#1-scope)
+- [2. Repo fit](#2-repo-fit)
+- [3. Accepted inputs](#3-accepted-inputs)
+- [4. Exclusions](#4-exclusions)
+- [5. Source descriptor (PROPOSED surface)](#5-source-descriptor-proposed-surface)
+- [6. Lifecycle and admission flow](#6-lifecycle-and-admission-flow)
+- [7. Directory placement](#7-directory-placement)
+- [8. Sensitive content & deny-by-default register](#8-sensitive-content--deny-by-default-register)
+- [9. Validation, fixtures, and gates](#9-validation-fixtures-and-gates)
+- [10. Quickstart (illustrative)](#10-quickstart-illustrative)
+- [11. FAQ](#11-faq)
+- [12. Related docs](#12-related-docs)
+- [13. Appendix — open questions and verification backlog](#13-appendix--open-questions-and-verification-backlog)
 
 ---
 
-## 1. Overview
+## 1. Scope
 
-CONFIRMED (`KFM-P14-PROG-0009`, CAT category, EXPANDED through Pass 32): *"LoC item pages can enter KFM as source records by **fetching their IIIF Presentation Manifests**, **hashing manifest bytes**, **writing STAC metadata assets**, and **attaching PROV `wasDerivedFrom` links**."* This is the **base IIIF-ingest pattern** for KFM.
+The `local_upload` source family covers any file admitted into KFM **from a person rather than from a versioned external source endpoint** — drag-and-drop uploads, browser file pickers, CLI imports, and watcher-detected staging-folder additions where the producer is a KFM user or operator rather than a third-party publisher.
 
-CONFIRMED (Pass 10 C10-07, "Archives Stack"): *"LOC IIIF provides the **federal-level discovery surface**"* alongside KSHS Kansas Memory (~600,000 items cited), KHRI, KU Spencer, KSU Special Collections (~1,000,000 items cited), WSU, county historical societies, and SNAC/EAC-CPF as the cross-archive authority. The Kansas archives stack is *plurally sourced*; LoC IIIF is the federal anchor in that stack.
+This is the **highest-uncertainty intake lane in KFM**. Identity, rights, sensitivity, geometry precision, datum, source role, freshness, and redistribution posture are all **unknown at the moment of admission**. The lane therefore follows the strictest of KFM's intake defaults:
 
-CONFIRMED (`KFM-P14-PROG-0009` Pass 27 addendum): catalog QA, STAC Projection lint, time-series collections, and workflow-security STAC items reinforce catalog closure and federation readiness.
+- **PROPOSED** — `local_upload` is treated as a `candidate` source role at admission, never `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, or `synthetic` until a steward review re-roles it. CONFIRMED doctrine: *source role cannot be inferred from convenience*, and *promotion never upgrades source role* (Atlas v1.1 §24.9.3).
+- **CONFIRMED doctrine** — *"Unknown rights fail closed."* Material with unresolved rights stays in `QUARANTINE` until a `RightsDecision` and `SourceActivationDecision` permit movement (per Unified Implementation Architecture, source-registry doctrine).
+- **CONFIRMED doctrine** — *"Quarantine is not a publishable staging area."* No path from `local_upload` to `PUBLISHED` may skip lifecycle gates.
+- **CONFIRMED doctrine** — **trust membrane** (Atlas v1.1 §24.9.2): *public clients and the map shell **must not** read `RAW`, `WORK`, `QUARANTINE`, or unpublished candidates from this lane.* Governed APIs and released artifacts are the only public path.
 
-CONFIRMED (`KFM-P14-PROG-0009` Pass 32 addendum): **source-watch cadence**, **artifact provenance**, **STAC/DCAT/PROV distribution mapping**, **consent/reveal controls**, and **PMTiles render verification** refine this card.
-
-PROPOSED (this product's scope, by elimination from sibling products):
-- Manuscripts, personal papers, correspondence held in LoC's Manuscript Division
-- Photographs, prints, drawings, and posters from LoC's Prints and Photographs (P&P) Division
-- Items, collections, and exhibition objects served as IIIF Presentation Manifests
-- **Excludes** newspapers (handled by [`CHRONICLING-AMERICA.md`](./CHRONICLING-AMERICA.md))
-- **Excludes** georeferenced / warped historic maps (handled by [`HISTORIC-MAPS.md`](./HISTORIC-MAPS.md))
-- **Excludes** controlled-vocabulary authority records (handled by [`LCNAF.md`](./LCNAF.md), [`LCSH.md`](./LCSH.md))
-
-PROPOSED (this product page): The page describes the canonical IIIF base ingest, scoped to the umbrella case. No live repository is mounted in this session.
-
-> [!NOTE]
-> **This page is the base-pattern reference.** If a sibling LoC product (or a future non-LoC IIIF-based product) needs to specialize the ingest, it should **extend** the pattern defined here rather than re-author it. The Historic Maps product page (with Allmaps georeferencing + Representation Receipt) and the Chronicling America product page (with NER-to-event recall layer) are the two extant examples of that extension model.
-
-[↑ Back to top](#loc-iiif-presentations)
+> [!IMPORTANT]
+> A `local_upload` file is **not a source** until a `SourceDescriptor` is created, reviewed, and a `SourceActivationDecision` permits its use. Until then it is a candidate awaiting steward action.
 
 ---
 
-## 2. Where this product fits in the KFM corpus
+## 2. Repo fit
 
-CONFIRMED (Directory Rules §0, §5, §6, §6.4, §6.5, §7.3, §7.4, §9.1): KFM uses **responsibility roots**, not topic roots. A product page belongs in `docs/`; the source descriptor belongs in `data/registry/sources/`; schemas live under `schemas/contracts/v1/source/` per **ADR-0001**; policy lives in `policy/`; connectors live in `connectors/`; pipelines live in `pipelines/`; declarative specs live in `pipeline_specs/`.
+`local_upload` is a connector. It lives in the `connectors/` responsibility root and emits to `data/raw/` or `data/quarantine/` only — **never** to `processed/`, `catalog/`, or `published/`. This rule is **CONFIRMED in Directory Rules §7.3** (*"Connectors MUST NOT publish, mutate canonical truth, or write under `data/processed/`, `data/catalog/`, or `data/published/`"*).
 
-PROPOSED (path of this file): `docs/sources/catalog/loc/IIIF-PRESENTATIONS.md`. NEEDS VERIFICATION — the `docs/sources/catalog/loc/` tree itself is PROPOSED.
+This entry in `docs/sources/` is the **human-facing governance record** for the connector; it does not replace the per-connector README, the source descriptor schema, the validators, the policy gates, or the fixtures.
 
 ```mermaid
 flowchart LR
-    A[LoC item page<br/>IIIF Presentation Manifest] -->|conditional GET| B[connectors/loc/<br/>iiif-presentations/]
-    B -->|raw IIIF bytes<br/>manifest digest<br/>+ receipts| C[data/raw/cross-domain/<br/>loc-iiif-presentations/]
-    C --> D[data/work/<br/>extract metadata · resolve authorities]
-    D -->|validators + policy| E[data/processed/]
-    E --> F[data/catalog/<br/>stac/ · dcat/ · prov/]
-    E -.->|authority anchoring| G[Graph projection<br/>E21 · E74 · E53 · E5<br/>via LCNAF · LCSH · GNIS]
-    F --> H[release/]
-    G -.-> H
-    H -->|ReleaseManifest| I[data/published/<br/>api_payloads/]
-    I -.->|governed API| J[Public UI · Focus Mode<br/>IIIF viewer plugin<br/>via plugin allowlist]
-    style A fill:#eef,stroke:#88a
-    style G fill:#fef,stroke:#a8a
-    style J fill:#eff,stroke:#8aa
-    style D fill:#fee,stroke:#a88
+    classDef src fill:#fff5e6,stroke:#cc7a00,color:#663300
+    classDef gov fill:#e8f4fd,stroke:#2b6cb0,color:#1a365d
+    classDef life fill:#f0e6ff,stroke:#6b46c1,color:#322659
+    classDef pub fill:#e6f7ec,stroke:#2f855a,color:#1c4532
+    classDef deny fill:#fde8e8,stroke:#c53030,color:#742a2a
+
+    User([User / Operator]):::src
+    Conn[connectors/local_upload/]:::src
+    SD[(SourceDescriptor<br/>candidate role)]:::gov
+    PreRaw[Pre-RAW<br/>event_envelope]:::gov
+    Raw[data/raw/...<br/>immutable]:::life
+    QT[data/quarantine/...]:::deny
+    Work[data/work/...]:::life
+    Proc[data/processed/...]:::life
+    Cat[data/catalog/...]:::life
+    Pub[data/published/...]:::pub
+
+    User -->|file| Conn
+    Conn -->|describe| SD
+    Conn -->|admission attempt| PreRaw
+    PreRaw -->|admit| Raw
+    PreRaw -->|defect| QT
+    Raw -->|normalize + validate| Work
+    Work -->|fail| QT
+    Work -->|pass| Proc
+    Proc -->|catalog closure| Cat
+    Cat -->|release decision| Pub
+
+    linkStyle default stroke-width:1.5px
 ```
 
-> [!IMPORTANT]
-> The diagram reflects **CONFIRMED doctrine** (RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED; the IIIF Presentation Manifest fetch → digest → STAC + PROV mapping per `KFM-P14-PROG-0009`; authority anchoring per Pass 10 C7) — not a verified implementation. Box paths are **PROPOSED**; presence in the live repo is NEEDS VERIFICATION.
+**PROPOSED diagram surface, CONFIRMED doctrine.** The arrows reflect Directory Rules and the lifecycle invariant; the specific implementation that realizes each arrow is **NEEDS VERIFICATION**. Promotion is a **governed state transition**, never a file move.
 
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 3. Source authority (no descriptor fields here)
-
-CONFIRMED (doctrine, Directory Rules §9.1): The **authoritative `SourceDescriptor`** for this product lives under [`data/registry/sources/`](../../../../data/registry/sources/) (PROPOSED leaf: `data/registry/sources/loc/iiif-presentations/`). The schema home is `schemas/contracts/v1/source/source-descriptor.schema.json` per **ADR-0001**.
-
-> [!WARNING]
-> **Do not duplicate descriptor fields here.** A product page explains; the **registry owns identity, role, rights, cadence, steward, sensitivity, and access method**. Parallel authority for source identity is a Directory Rules §13 anti-pattern.
-
-| Descriptor responsibility | Home (CONFIRMED) | Authored here? |
-|---|---|---|
-| Identity, role, access, cadence, rights | `data/registry/sources/loc/iiif-presentations/` | **No** — registry owns |
-| Machine shape of the descriptor | `schemas/contracts/v1/source/` (ADR-0001) | **No** — schemas owns |
-| Allow / deny / restrict / abstain | `policy/sensitivity/` and `policy/release/` | **No** — policy owns |
-| Viewer-plugin allowlist | `policy/plugins/` (PROPOSED — see §11) | **No** — policy owns |
-| Human-facing orientation, base-pattern reference, examples | this product page (`docs/`) | **Yes** |
-
-[↑ Back to top](#loc-iiif-presentations)
+[⬆ Back to top](#local-upload--source-catalog-entry)
 
 ---
 
-## 4. The IIIF base-ingest pattern
+## 3. Accepted inputs
 
-This section defines the **canonical IIIF-ingest pattern** that other KFM IIIF-based products extend. The pattern is grounded in `KFM-P14-PROG-0009` (CONFIRMED atlas card) and informed by the broader archives doctrine in Pass 10 C10-07.
+The connector **MAY** accept the following file classes as candidate material. Acceptance is not approval; every class still passes through admission, descriptor creation, sensitivity screening, and policy evaluation.
 
-CONFIRMED (`KFM-P14-PROG-0009` PROPOSED operational normalization):
-
-| Step | Behavior | Status |
-|---|---|---|
-| 1. **Fetch** | Pull the IIIF Presentation Manifest with conditional GET (Pass 10 C3-01) | CONFIRMED requirement |
-| 2. **Hash manifest bytes** | Compute SHA-256 of the manifest JSON-LD bytes as fetched; this is the **`iiif_manifest_digest`** | CONFIRMED requirement |
-| 3. **Write STAC metadata assets** | Emit a STAC Item with the manifest as an asset, plus extracted metadata as STAC properties | CONFIRMED requirement |
-| 4. **Attach PROV `wasDerivedFrom` links** | Every downstream KFM artifact derived from this item carries `prov:wasDerivedFrom` back to the manifest IRI + digest | CONFIRMED requirement |
-
-CONFIRMED extensions across the `loc` family:
-
-| Extension | Carried by | Status |
-|---|---|---|
-| **Georeferencing** (warped overlay + GCPs + RMS receipt + Representation Receipt + Reality Boundary Note) | [`HISTORIC-MAPS.md`](./HISTORIC-MAPS.md) — Allmaps-annotated maps | CONFIRMED (`KFM-P9-FEAT-0016`, `KFM-P9-PROG-0074`) |
-| **OCR / NER-to-event recall layer** | [`CHRONICLING-AMERICA.md`](./CHRONICLING-AMERICA.md) — newspapers | CONFIRMED (`KFM-P15-PROG-0033`) |
-| **Plain item ingest** (this product) | manuscripts, photographs, prints, drawings, items | CONFIRMED (`KFM-P14-PROG-0009` base case) |
-
-> [!TIP]
-> Read in family order: this page → `HISTORIC-MAPS.md` → `CHRONICLING-AMERICA.md`. The siblings inherit (and rely on) the base pattern defined here. A new IIIF-based product should likewise inherit this page and document only the deltas.
-
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 5. Catalog profiles used
-
-CONFIRMED (Pass 10 C4 + `KFM-P14-PROG-0009`): KFM publishes through **STAC** (spatiotemporal), **DCAT** (dataset-level), and **PROV-O / PAV** (lineage). The base IIIF-ingest pattern writes STAC metadata assets and attaches PROV `wasDerivedFrom` lineage — both are required.
-
-| Profile | Lane (CONFIRMED canonical home) | Used by this product? | Basis |
+| Class | Typical extensions | Default admission posture | Notes |
 |---|---|---|---|
-| STAC (Items + Collection) | `data/catalog/stac/` | **PROPOSED — Yes**. Each LoC IIIF item is a STAC Item with `datetime` (from manifest metadata) and `geometry` (null or a point/bbox when location is documented). | CONFIRMED (`KFM-P14-PROG-0009`); Pass 10 C4-01 |
-| DCAT | `data/catalog/dcat/` | **PROPOSED — Yes** (dataset-level row for the LoC IIIF snapshot KFM consumes) | Pass 10 C4-05; `KFM-P14-PROG-0009` Pass 32 STAC/DCAT/PROV mapping |
-| PROV-O / PAV | `data/catalog/prov/` | **PROPOSED — Yes — REQUIRED**. `prov:wasDerivedFrom` chains every downstream KFM artifact back to the manifest IRI + digest | CONFIRMED (`KFM-P14-PROG-0009`); Pass 10 C8-03 |
-| Domain projection | `data/catalog/domain/cross-domain/` | **PROPOSED — Yes** (cross-domain — items feed People, Settlements, Roads, Archaeology, etc.) | Directory Rules §9.1 |
-| `kfm:care` extension on STAC / DCAT | as above | **PROPOSED — Yes** for items touching Indigenous communities, sovereignty-relevant content, or living-person privacy | Pass 10 C15-02 |
-
-> [!NOTE]
-> Most LoC IIIF items have a **`datetime`** value (creation date or interval) but **no geometry**. The STAC profile must support null-geometry Items for archive material. Where geometry is present (e.g., a photograph documenting a specific dated, located event), it is recorded as a point (`Point`) or bounding box (`Polygon`), not as a raster overlay.
-
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 6. Collection identity
-
-PROPOSED (Pass 10 C4-02): Collection id pattern is `kfm-<org>-<product>`; the exact form for this product is left to [`IDENTITY.md`](./IDENTITY.md). Collection ids are **stable handles** — renaming a Collection breaks links throughout the catalog.
-
-PROPOSED (Pass 10 C4-01 open question, tracked as **OPEN-DSC-03**): The vendor namespace for KFM extension fields is **unresolved between `kfm:` (KFM-global) and `ks-kfm:` (Kansas-scoped)**.
-
-| Identity item | Status | Notes |
-|---|---|---|
-| Collection id pattern | PROPOSED | `kfm-<org>-<product>` (Pass 10 C4-02) |
-| Namespace | UNKNOWN | `kfm:` vs `ks-kfm:` — pending **OPEN-DSC-03** ADR |
-| Asset roles | NEEDS VERIFICATION | Likely `["iiif", "metadata"]` for the Presentation Manifest; `["image", "thumbnail"]` for IIIF Image API derivatives — confirm against `schemas/contracts/v1/source/` |
-| Provider block | NEEDS VERIFICATION | Library of Congress as `publisher`; KFM as `processor` (PROPOSED) |
-| Sub-collection breakdown | PROPOSED | Likely one Collection per LoC Division consumed (Manuscripts, P&P, Geography & Map, etc.) — see OPEN-IIIF-04 |
-
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 7. Provenance fields (`kfm:provenance` + manifest digest)
-
-CONFIRMED (Pass 10 C4-01): STAC Items carry `item.properties.kfm:provenance` with:
-
-| Field | Role | Resolves to |
-|---|---|---|
-| `spec_hash` | Deterministic identity of the canonical record (JCS + SHA-256) | n/a — opaque digest |
-| `evidence_bundle_ref` | Truth-bearing JSON-LD bundle (claims + citations + receipts) | `kfm://evidence/<digest>` |
-| `run_record_ref` | The run that produced this artifact | `kfm://run/<run-id>` |
-| `audit_ref` | SLSA / OPA attestation chain | `kfm://audit/<attestation-id>` |
-| `policy_digest` | The policy bundle at promotion time | sha256 of the policy set |
-
-**Per-asset integrity:** `file:checksum` applies to each cached IIIF Presentation Manifest snapshot and any cached IIIF Image API derivative.
-
-CONFIRMED (`KFM-P14-PROG-0009` — the **base pattern**): an `kfm:iiif` block is required:
-
-| Field | Role | Status |
-|---|---|---|
-| `manifest_iri` | The IIIF Presentation Manifest IRI (LoC item page derived) | CONFIRMED requirement |
-| `manifest_digest` | sha256 of the manifest JSON-LD bytes at fetch time | **CONFIRMED requirement** (`KFM-P14-PROG-0009` "hashing manifest bytes") |
-| `manifest_version` | IIIF Presentation API version (2.x or 3.x — see §11) | PROPOSED — required |
-| `retrieval_time` | When KFM fetched the manifest | **MUST** — required |
-| `prov_wasDerivedFrom[]` | One entry per downstream KFM artifact derived from this manifest | **CONFIRMED requirement** (`KFM-P14-PROG-0009` "attaching PROV wasDerivedFrom links") |
-
-> [!TIP]
-> The `manifest_digest` is the **integrity anchor** for the whole product. If LoC changes the manifest, KFM detects it at next harvest and triggers re-validation of dependent artifacts (Story Nodes, Evidence Drawer payloads, derivative renders). A KFM artifact lacking a `manifest_digest` is not a governed IIIF artifact, regardless of what STAC fields it carries.
-
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 8. Temporal handling
-
-CONFIRMED (doctrine §24.8 + repeated multi-temporal discipline): KFM keeps source / observed / valid / retrieval / release / correction times distinct where material. For LoC IIIF items:
-
-| Time field | Meaning for this product | Status |
-|---|---|---|
-| `source_time` | The item's **creation date** (a photograph's exposure date, a manuscript's writing date) — often an interval | PROPOSED — required where the IIIF manifest exposes it; encode as interval where imprecise |
-| `observed_time` | For an `observation`-role item (e.g., a date-stamped photograph documenting an event), the time the event was observed — typically equals `source_time` | PROPOSED — required for observation-role items |
-| `valid_time` | Rarely applicable to archive items; sometimes used for manuscripts whose validity is bounded (a deed for a parcel valid between two dates) | NEEDS VERIFICATION per item |
-| `retrieval_time` | When KFM fetched the IIIF manifest | **MUST** — required |
-| `release_time` | When the KFM cached item entered PUBLISHED | PROPOSED — required (set by `ReleaseManifest`) |
-| `correction_time` | When LoC re-released the item or KFM re-ingested | PROPOSED — required when applicable |
-| `manifest_revision_time` *(IIIF-specific)* | When the IIIF Presentation Manifest itself was last modified | PROPOSED — surface as a stale-state badge per §24.8 |
-
-CONFIRMED (`KFM-P14-PROG-0009` Pass 32 addendum): **source-watch cadence** is required so that manifest revisions propagate. A manifest revised upstream without re-harvest produces silent drift in dependent KFM artifacts.
-
-CONFIRMED (§24.8 stale-state markers): When LoC revises a manifest, KFM must show a **schema-or-source-drift** badge and trigger re-validation on dependent artifacts.
-
-> [!NOTE]
-> Archive item dating is **structurally imprecise**: a "1872 photograph" may have a date stamped in pencil years later, a manuscript "ca. 1880" may span 1875–1885. Encode `source_time` as an interval where the manifest supports it; do not collapse to a single year for UI convenience.
-
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 9. Geometry, projection, and spatial handling
-
-CONFIRMED (Pass 10 C4-01): STAC Items have `geometry` and `bbox`. For LoC IIIF items, geometry is **conditionally present** depending on item type and metadata richness.
-
-| Item type (illustrative) | Typical geometry | Notes |
-|---|---|---|
-| Personal correspondence, manuscript | **null** (no documented location) | STAC profile must support null-geometry Items |
-| Photograph with documented location | `Point` (where the photographer stood) — encoded EPSG:4326 | Cite the source of the location in `kfm:provenance.evidence_bundle_ref` |
-| Photograph documenting a region | `Polygon` (bbox of depicted area) — encoded EPSG:4326 | Same |
-| Manuscript bound to a specific place | `Point` or `Polygon` from authority resolution (GNIS / TGN / Wikidata-place) | Place authority resolved separately, see §13 |
-| Architectural drawing of a built structure | `Point` (structure location) — encoded EPSG:4326 | If the structure is geocoded; null otherwise |
+| Tabular | `.csv`, `.tsv`, `.parquet` | `RAW` if schema-recognizable, else `QUARANTINE` | PII / DNA / parcel data trips deny-by-default per §8 |
+| Vector geo | `.geojson`, `.shp` (zipped), `.gpkg` | `RAW` if geometry valid; `QUARANTINE` on datum/CRS unknown | CRS / datum provenance required (per source family doctrine) |
+| Raster | `.tif`/`.tiff` (GeoTIFF/COG), `.png` (georef sidecar) | `RAW` if header parseable; `QUARANTINE` otherwise | Large rasters require downstream tile/COG conversion in `pipelines/` |
+| Tabular archives | `.zip`, `.7z` containing tabular or DwC-A bundles | Unpacked into `data/work/` after virus / safety scan; per-file admission | Darwin Core Archive structure is illustrative, not authoritative |
+| Documents | `.pdf`, `.docx`, `.md`, `.txt` | `RAW` with text-extraction sidecar; `QUARANTINE` if encrypted | Document content is candidate evidence, not graph truth |
+| Imagery (non-geo) | `.jpg`, `.png` | `QUARANTINE` by default — EXIF / face / location risks | Requires explicit steward review before exit from quarantine |
+| Unknown / opaque | anything not in this table | `QUARANTINE` | Never silently admitted |
 
 > [!CAUTION]
-> A geometry on a LoC item is a **derived inference**, not an observed measurement, unless the item itself contains geospatial coordinates (rare). The Evidence Drawer must surface the **basis** of the geometry (manifest field, authority resolution, or steward annotation) so the user can judge confidence.
+> The table above is **illustrative**. Extension is not identity. Magic-byte sniffing, schema probing, and steward review govern actual class assignment. Do not treat the extensions list as a whitelist.
 
-PROPOSED rules:
-- **CRS for geometry-carrying Items:** `EPSG:4326` for catalog records; tile-time CRS (`EPSG:3857`) applies only if the item enters a map-layer publication path.
-- **Generalization:** archive-item geometries are typically point or bbox; generalization rules do not apply in the way they do to raster overlays.
-- **Geocoding provenance:** every geometry must record its provenance (manifest, place authority, steward) — bare coordinates without provenance are denied.
-
-[↑ Back to top](#loc-iiif-presentations)
+[⬆ Back to top](#local-upload--source-catalog-entry)
 
 ---
 
-## 10. Rights, sensitivity, and CARE posture
+## 4. Exclusions
 
-NEEDS VERIFICATION (default for this product): defer to [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+The `local_upload` lane **MUST NOT** accept, and the connector **MUST** refuse or quarantine:
 
-CONFIRMED (Master MapLibre Q section; Pass 10 C15 CARE; `KFM-P10-PROG-0014` SPDX guard):
+| Excluded class | Reason | Goes instead to |
+|---|---|---|
+| Files from versioned external publishers (USGS, FEMA, NOAA, NRCS, GBIF, iNaturalist, Census, Kansas, LOC, etc.) | These have dedicated connectors with rights/cadence/access already declared | `connectors/<vendor>/` |
+| Files claiming to be release artifacts (`.pmtiles`, `.json` release manifests, signed receipts) | Release artifacts originate from governed pipelines, not user uploads | Rejected; `release/` is not a user-writable surface |
+| Files containing real secrets (API keys, tokens, private cosign keys) | `configs/` carries templates and defaults only; no real secrets in repo | Rejected at admission; security incident path |
+| Files that bypass the trust membrane (uploads addressed to `data/processed/`, `data/catalog/`, `data/published/`) | Connectors **MUST NOT** publish or mutate canonical truth | Rejected at admission |
+| Files generated by an AI model and presented as observed reality | Synthetic content requires `RealityBoundaryNote` and `synthetic` source role at admission | Re-roled as `synthetic` with a Reality Boundary Note, or rejected |
+| Files identifying living persons, exact archaeological coordinates, DNA/genomic data, rare-species exact locations, critical-infrastructure precision data | Deny-by-default register; see §8 | `QUARANTINE` with steward escalation |
 
-- **Anti-pattern (CONFIRMED):** *"Assuming all mirrors inherit federal public domain rights."* LoC IIIF items have **highly variable** rights postures — some U.S.-government works in the public domain, some donated collections with separate rights, some items where rights are unknown. Rights **MUST be checked per item**, not assumed federal-domain.
-- **IIIF rights propagation (CONFIRMED, `KFM-P15-PROG-0033`):** LOC services should be admitted *"with **rights propagation**"*. The rights statement carried in the IIIF manifest MUST be preserved as a STAC asset on the Item and surfaced in the Evidence Drawer.
-- **SPDX discipline (PROPOSED):** DCAT `license` and any package manifest touching this product MUST carry a valid SPDX identifier or accepted license IRI; `license_map.json` (`KFM-P26-PROG-0021`) maps statuses to allowed flags.
-
-PROPOSED (sensitivity tier baseline):
-
-- **T0** (open public) for items whose IIIF manifest asserts no restriction and whose content is not culturally or personally sensitive.
-- **T1+ escalation** when the item:
-  - depicts a **living person** without consent (rare in archive material but possible in 20th-century collections);
-  - depicts **Indigenous individuals, ceremonies, sacred sites, or culturally-restricted material** — CARE applicability per Pass 10 C15-02 / C15-03; OPA default-deny on publication applies until the named authority's consent grant is present, valid, and unrevoked;
-  - depicts **medical / military / law-enforcement** content with a documented restriction;
-  - is part of a **donor-restricted collection** where the IIIF manifest's rights statement signals restriction.
-
-CONFIRMED (`KFM-P14-PROG-0009` Pass 32 addendum): **consent/reveal controls** are part of the IIIF-ingest pattern's runtime obligations — the UI surface (per `KFM-P32-FEAT-0010` "Reveal timer HUD") must display reveal state, time remaining, consent scope, and revoke action while sensitive overlays are active.
-
-> [!WARNING]
-> LoC's Manuscript Division and Prints & Photographs Division both contain material that **documents communities and individuals who did not consent to its preservation or publication**. CARE flags + steward review + a public-facing interpretive caveat in the Evidence Drawer are required for such material. Do not silently render Indigenous, immigrant, or marginalized-community material as if it were neutral archive content.
-
-[↑ Back to top](#loc-iiif-presentations)
+[⬆ Back to top](#local-upload--source-catalog-entry)
 
 ---
 
-## 11. Viewer plugin governance (Mirador · UniversalViewer)
+## 5. Source descriptor (PROPOSED surface)
 
-CONFIRMED (Pass 10 C10-07 Dependencies): **IIIF v3 viewer integration** is a named dependency for the Kansas archives stack.
+Every successful admission produces a `SourceDescriptor`. For `local_upload` the descriptor carries elevated defaults reflecting the elevated uncertainty of the lane. Atlas card **KFM-P1-PROG-0007** records that *every admitted source should have a descriptor that records identity, role, rights posture, update cadence, authority scope, and verification obligations* — and that descriptors should be validated before fetch, before transformation, and before publication.
 
-CONFIRMED (parallel to `ML-064-037` for Allmaps `WarpedMapLayer`): KFM treats third-party viewer plugins as **conditional overlay plugins with dependency governance** — plugin allowlist + attribution/rights tests are required.
+> [!NOTE]
+> **PROPOSED schema home:** `schemas/contracts/v1/source/source_descriptor.schema.json` per Directory Rules §7.4 and ADR-0001. **NEEDS VERIFICATION** — actual file presence and field names are not asserted here.
 
-PROPOSED (operational rules for IIIF viewer plugins):
+| Field | Default for `local_upload` | Notes |
+|---|---|---|
+| `source_id` | Deterministic — e.g. `local-upload:<bao_root_hash>` (PROPOSED) | Derived from content digest, not filename, not timestamp |
+| `source_family` | `local_upload` | Fixed for this lane |
+| `source_role` | `candidate` | **MUST NOT** be admitted as `observed`; re-role requires steward review and a new descriptor |
+| `role_candidate_disposition` | `pending` | Tracks promotion state; `PUBLISHED` edge forbidden until `merged` |
+| `rights_status` | `unknown` | Triggers deny-by-default for public release until a `RightsDecision` resolves |
+| `license_spdx` | `unknown` (PROPOSED) | If the uploader provides one, it is recorded but not trusted until reviewed |
+| `sensitivity` | `restricted` (default) | Downgrade requires reviewer + transform receipts; see §8 |
+| `cadence` | `one-shot` | Uploads are point-in-time admissions; re-upload produces a new descriptor |
+| `steward` | uploader handle + assigned reviewer | Author ≠ release authority when materiality applies (separation of duties) |
+| `attribution_required` | `true` until resolved | Default-true is safer than default-false |
+| `public_release_class` | `denied` | Until steward action; the lane is private by default |
 
-| Concern | Rule |
-|---|---|
-| Allowlist | The IIIF viewer (e.g., Mirador, UniversalViewer, or any other IIIF v3 viewer) must appear in `policy/plugins/` (PROPOSED path) with pinned versions and digests |
-| IIIF Presentation API version | Both v2 and v3 are observed in the wild; KFM SHOULD prefer v3 and document v2 → v3 migration per the IIIF specification | PROPOSED |
-| SRI / version pinning | Browser-loaded viewer assets must be SRI-pinned or shipped as in-tree packages |
-| Attribution test | A CI test must verify that every Story Node consuming a LoC IIIF item surfaces the LoC attribution and IIIF rights statement |
-| Sandboxing | The viewer runs only inside the Story Node / Evidence Drawer panel; it does not gain access to other governed UI surfaces |
-| Update governance | A new viewer version must enter via an ADR or per-root README update — never as a silent dependency bump |
+Fields beyond the table above (e.g. `role_authority`, `role_aggregation_unit`, `role_model_run_ref`, `role_synthetic_basis`) apply only when the descriptor is **later re-roled** away from `candidate`. See `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` *(NEEDS VERIFICATION — path PROPOSED).*
+
+> [!TIP]
+> **Watcher intake envelope (PROPOSED).** Atlas card **KFM-P4-PROG-0001** proposes that watcher / connector outputs normalize into a `SourceIntakeRecord` carrying `source_role`, `publication_state`, `promotion_required`, `evidence_bundle_resolved`, `policy_review_required`, `source_descriptor_ref`, and `drift_summary`. For `local_upload`, that envelope sits **alongside** the `SourceDescriptor`; it does not replace it. NEEDS VERIFICATION against mounted-repo schema homes.
+
+[⬆ Back to top](#local-upload--source-catalog-entry)
+
+---
+
+## 6. Lifecycle and admission flow
+
+The lifecycle invariant applies in full. `local_upload` adds **no shortcut**.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as User / Operator
+    participant C as connectors/local_upload
+    participant E as Pre-RAW event family
+    participant R as data/raw/
+    participant Q as data/quarantine/
+    participant V as Validators
+    participant P as Policy gates
+    participant S as Steward / reviewer
+    participant Cat as data/catalog/
+    participant Pub as data/published/
+
+    U->>C: Submit file + uploader-claimed metadata
+    C->>E: event_envelope, prefilter_output, event_run_receipt
+    E->>P: license_spdx, rights, sensitivity probe
+    alt admission allowed
+        E->>R: write under data/raw/<domain>/local_upload/<run_id>/
+        R->>V: schema, geometry, temporal, evidence checks
+        V->>P: PolicyDecision
+        alt all pass
+            P->>Cat: catalog closure (EvidenceBundle resolves)
+            Cat->>S: ReviewRecord required (sensitive or material)
+            S->>Pub: ReleaseManifest + rollback target
+        else any fail
+            V->>Q: quarantine with reason + remediation note
+        end
+    else admission denied
+        E->>Q: quarantine event_run_receipt + reason
+    end
+```
+
+**CONFIRMED doctrine** — every transition is a governed state change, never a file move (Atlas v1.1 §24.9.1; Directory Rules §0 "Lifecycle invariant"). **PROPOSED** — exact validator names, route names, and receipt schema paths remain unverified. The pre-RAW event family itself is **PROPOSED** per Atlas card **KFM-P1-PROG-0008** (*"Watchers should produce pre-RAW or WORK-candidate events with receipts, not direct published records"*); whether it is modeled as its own contract package or as `SourceDescriptor` output is an **open atlas question**.
+
+### Receipts emitted along the way
+
+| Receipt | Where emitted | Required for |
+|---|---|---|
+| `event_run_receipt` (pre-RAW) | `data/receipts/ingest/` | Every admission attempt — successful or not |
+| `SourceDescriptor` | `data/registry/sources/` | Every admitted file |
+| `RawCaptureReceipt` | `data/receipts/ingest/` | RAW capture with content checksum |
+| `QuarantineRecord` | `data/quarantine/<reason>/<run_id>/` | Anything that fails admission, validation, rights, or sensitivity |
+| `ValidationReport` | `data/receipts/validation/` | WORK → PROCESSED transitions |
+| `RedactionReceipt` | `data/receipts/pipeline/` | When sensitivity transforms apply |
+| `ReviewRecord` | `data/proofs/review/` | Sensitive lanes and any material release |
+| `ReleaseManifest` | `release/manifests/` | Publication; **always** with a rollback target |
+
+Paths above are **PROPOSED** and follow the proposed lifecycle tree in the *KFM Repository Structure Guiding Document* (which mirrors Directory Rules §9 and §7.4). NEEDS VERIFICATION against mounted repo at the file level.
+
+[⬆ Back to top](#local-upload--source-catalog-entry)
+
+---
+
+## 7. Directory placement
+
+```text
+PROPOSED tree — reflects Directory Rules §6.1, §7.3, §7.4, §9, and the proposed target tree in
+the KFM Repository Structure Guiding Document. NEEDS VERIFICATION against mounted-repo evidence
+beyond the doctrinal naming of connectors/local_upload/ (CONFIRMED doctrine, §7.3).
+
+connectors/
+└── local_upload/                        # CONFIRMED named in Directory Rules §7.3
+    ├── README.md                        # connector-level doc, source descriptor reference
+    ├── src/                             # admission code, prefilter, magic-byte sniff
+    ├── tests/                           # connector tests + negative fixtures
+    └── pipeline_specs/local_upload/     # declarative intake spec (or under pipeline_specs/)
+
+docs/
+└── sources/
+    ├── SOURCE_DESCRIPTOR_STANDARD.md    # PROPOSED — referenced by every source-catalog entry
+    └── catalog/                         # PROPOSED subdirectory; see §13
+        ├── README.md                    # catalog of source-family entries (PROPOSED)
+        ├── local_upload.md              # THIS FILE
+        └── loc/                         # sibling family example (LOC IIIF Presentations, etc.)
+            ├── README.md
+            └── iiif-presentations.md
+
+schemas/contracts/v1/
+├── source/source_descriptor.schema.json # PROPOSED per ADR-0001 default
+└── intake/event_envelope.schema.json    # PROPOSED (pre-RAW event family)
+
+policy/
+└── sources/                             # rights, sensitivity, admission gates
+    └── local_upload/                    # PROPOSED — lane-specific overrides if any
+
+tests/fixtures/sources/local_upload/     # PROPOSED — valid + invalid sample uploads
+                                         # MUST include negative fixtures
+
+data/
+├── raw/<domain>/local_upload/<run_id>/  # immutable admitted material
+├── quarantine/<reason>/<run_id>/        # admission / validation / rights failures
+├── registry/sources/                    # SourceDescriptor records
+└── receipts/ingest/                     # event + raw capture receipts
+```
 
 > [!IMPORTANT]
-> The viewer plugin allowlist is **policy**, not a build-time convenience. The Historic Maps product page applies the same pattern for Allmaps `WarpedMapLayer` (`ML-064-037`). Both sibling products share `policy/plugins/` as the canonical home.
+> **Connectors MUST NOT publish, mutate canonical truth, or write under `data/processed/`, `data/catalog/`, or `data/published/`.** This rule (Directory Rules §7.3 and the watcher-as-non-publisher invariant per Atlas card **KFM-P1-PROG-0008**) is non-negotiable. A `local_upload` admission that ends up in `data/published/` without traversing every gate above is a doctrine violation.
 
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 12. Validation and catalog closure
-
-CONFIRMED (`KFM-P1-IDEA-0020`, "Catalog closure before public release"): Public release requires **catalog closure** that links evidence, source role, policy, proof, release state, and rollback target.
-
-| Gate | Reference | Status for this product |
-|---|---|---|
-| Catalog closure (STAC + DCAT + PROV + evidence) | `KFM-P1-IDEA-0020` | **Required** before publication |
-| **IIIF manifest digest computed and stored** | `KFM-P14-PROG-0009` ("hashing manifest bytes") | **Required** — the integrity anchor |
-| **PROV `wasDerivedFrom` chain present** | `KFM-P14-PROG-0009` ("attaching PROV wasDerivedFrom links") | **Required** for every downstream KFM artifact |
-| **IIIF manifest rights preserved and surfaced** | `KFM-P15-PROG-0033` ("rights propagation") | **Required** |
-| Viewer plugin allowlist + attribution test | parallel `ML-064-037`; Pass 10 C10-07 | **Required** |
-| Source-watch cadence configured | `KFM-P14-PROG-0009` Pass 32 addendum | **Required** |
-| Consent/reveal controls for T1+ items | `KFM-P14-PROG-0009` Pass 32 addendum; `KFM-P32-FEAT-0010` | **Required** for sensitive items |
-| Catalog QA surface | `KFM-P27-FEAT-0004` | PROPOSED |
-| STAC Projection lint | `KFM-P27-FEAT-0003` | PROPOSED (for geometry-carrying Items) |
-| Dataset promotion MetaBlock v2 checklist | `KFM-P14-PROG-0033` | PROPOSED — fail-closed |
-| SPDX license guard | `KFM-P10-PROG-0014` | PROPOSED — required |
-
-[↑ Back to top](#loc-iiif-presentations)
+[⬆ Back to top](#local-upload--source-catalog-entry)
 
 ---
 
-## 13. Related contracts and schemas
+## 8. Sensitive content & deny-by-default register
 
-| Object family | Home (CONFIRMED doctrine) | Status |
+The `local_upload` lane intersects nearly every sensitive class KFM names. The connector treats these as **deny-by-default**: admission is allowed (to `RAW` or `QUARANTINE`), publication is not.
+
+| Class (CONFIRMED doctrine) | If detected in upload | Default outcome |
 |---|---|---|
-| `SourceDescriptor` (meaning) | [`contracts/source/`](../../../../contracts/source/) | NEEDS VERIFICATION |
-| `SourceDescriptor` (shape) | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — per **ADR-0001** | CONFIRMED schema-home rule |
-| `EvidenceBundle` (shape) | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | CONFIRMED in Master MapLibre object table |
-| STAC Item / Collection (shape) | `schemas/contracts/v1/stac/` *(structure NEEDS VERIFICATION)* | PROPOSED |
-| `EvidenceDrawerPayload` | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | CONFIRMED in Master MapLibre object table |
-| Catalog records (DCAT, PROV) | `schemas/contracts/v1/{dcat,prov}/` *(structure NEEDS VERIFICATION)* | PROPOSED |
-| Graph projection (CIDOC-CRM) | derived; not a primary store (Pass 10 C8-01 / C8-04) | CONFIRMED doctrine |
-| Authority crosswalks | See sibling pages [`LCNAF.md`](./LCNAF.md), [`LCSH.md`](./LCSH.md) | CONFIRMED (Pass 10 C7-02 + C7 overview) |
-| Plugin allowlist | [`policy/plugins/`](../../../../policy/plugins/) (PROPOSED) | PROPOSED |
-| Policy bundle | [`policy/`](../../../../policy/) — singular, canonical | CONFIRMED (Directory Rules §6.5) |
+| Living-person personal data, residences, identifying assertions | Flag for privacy review; redact / aggregate / staged access | DENY public exact / identifying output |
+| DNA / genomic data, raw DTC exports | Encrypted-storage isolation; no public AI inference | DENY by default; restricted steward/research only |
+| Rare-species exact occurrence / nest / den / roost | Apply geoprivacy transform with receipt | DENY public exact location; generalized only |
+| Archaeology coordinates, burial / sacred / culturally sensitive materials | Cultural / steward review; suppression or generalization | DENY exact public location |
+| Sacred / culturally sensitive places (oral history, cultural routes) | Consultation record; sensitivity transform | DENY until steward review and access class approve |
+| Critical infrastructure exact facilities / dependencies | Public-safe aggregation; role-based access | RESTRICT / DENY public precision |
+| Private landowner-sensitive (field boundaries, owner identity) | Aggregation; permissions; policy review | DENY exact / public if private or rights unclear |
+| Source-rights-limited records (licensed, no-redistribution, uncertain terms) | Rights register; attribution; deny derivative if barred | DENY public release until terms resolved |
+| Emergency-warning misuse (operational warnings, hazard instructions) | Not-for-life-safety disclaimer | DENY life-safety replacement |
+| Synthetic content (AI-generated maps, reconstructions) | Source role = `synthetic`; `RealityBoundaryNote` required | DENY publication without note; HOLD for steward review |
+
+> [!WARNING]
+> Detection is **best-effort**, not perfect. A file that *passes* automated screens is not certified clean — it is **not-yet-flagged**. Public release still requires a `ReviewRecord` and a `ReleaseManifest`. **CONFIRMED doctrine — *"Documenting a change is not validating it."* (Atlas v1.1 §24.9.3)**
+
+[⬆ Back to top](#local-upload--source-catalog-entry)
+
+---
+
+## 9. Validation, fixtures, and gates
+
+### Required validators (PROPOSED locations)
+
+| Validator family | Proposed location | What it must prove |
+|---|---|---|
+| Source descriptor validator | `tools/validators/source_descriptor/` | Descriptor present; `source_role = candidate` at admission; rights & sensitivity fields populated (even if `unknown`) |
+| Connector gate | `tools/validators/connector_gate/` | Connector did not write outside `data/raw/` or `data/quarantine/` |
+| Rights / license validator | `tools/validators/connector_gate/` (or `policy/sources/local_upload/`) | `license_spdx` is governed; `unknown` posture routes to `QUARANTINE` |
+| Geometry / CRS validator | `tools/validators/<geo>` | Datum / CRS provenance preserved; no silent reprojection |
+| Sensitivity probe | `policy/sensitivity/` | Deny-by-default classes per §8 flagged before any catalog closure |
+| Promotion gate | `tools/validators/promotion_gate/` | No path skips a phase; fail-closed on missing receipts |
+
+### Negative fixtures (REQUIRED)
+
+Per KFM testing doctrine, every validator **MUST** carry at least one negative fixture proving it fails closed. For `local_upload` that means **at minimum**:
+
+- An upload with `license_spdx = unknown` proving admission routes to `QUARANTINE`.
+- An upload with a precise sensitive-class coordinate proving publication is denied.
+- An upload missing a `SourceDescriptor` proving catalog closure is denied.
+- An upload claiming `source_role = observed` directly proving the candidate-default rule fires.
+- An upload with synthetic / AI-generated content lacking a `RealityBoundaryNote` proving release denial.
+- An upload that attempts to write to `data/processed/` proving the connector boundary holds.
 
 > [!NOTE]
-> If contracts and schemas conflict (e.g., a `*.schema.json` under `contracts/`), the **schema-home rule (ADR-0001)** wins: `schemas/contracts/v1/...` is canonical.
+> Fixture paths above are **PROPOSED** following the `tests/fixtures/sources/local_upload/` convention. NEEDS VERIFICATION against mounted repo conventions.
 
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 14. Related connectors and pipelines
-
-CONFIRMED (Directory Rules §7.3, §7.4): Connectors fetch and admit; pipelines transition lifecycle phases.
-
-| Stage | Path (CONFIRMED canonical home) | Status for this product |
-|---|---|---|
-| Source fetch + admission | `connectors/loc/iiif-presentations/` | **PROPOSED** — uses conditional GET (Pass 10 C3-01); cache keyed by IIIF manifest IRI |
-| Ingest | `pipelines/ingest/` | PROPOSED — IIIF manifest byte capture + digest computation |
-| Normalize | `pipelines/normalize/` | PROPOSED — extract STAC properties; resolve authorities (LCNAF, LCSH, GNIS as applicable) |
-| Validate | `pipelines/validate/` | PROPOSED — IIIF v2 / v3 schema validation, rights presence, authority anchor presence for in-scope record classes |
-| Catalog | `pipelines/catalog/` | PROPOSED — STAC Item + DCAT row + PROV chain |
-| Triplets / graph projection | `pipelines/triplets/` | PROPOSED — bind to E5 / E7 / E21 / E53 / E55 / E74 per CIDOC-CRM C8-01 |
-| Watchers | `pipelines/watchers/` | PROPOSED — periodic re-harvest for manifest revisions (`KFM-P14-PROG-0009` Pass 32 source-watch cadence) |
-| Declarative spec | `pipeline_specs/cross-domain/loc-iiif-presentations/` | PROPOSED — cross-domain because consumers span People, Settlements, Roads, Archaeology, etc. |
-
-NEEDS VERIFICATION (Directory Rules §13.5 anti-pattern *Source alias drift risk*): the connector folder name must align with the source id under `data/registry/sources/`. Do not introduce a connector alias that diverges from the registry id without a recorded compatibility map.
-
-[↑ Back to top](#loc-iiif-presentations)
+[⬆ Back to top](#local-upload--source-catalog-entry)
 
 ---
 
-## 15. Examples (illustrative only)
+## 10. Quickstart (illustrative)
 
-> [!NOTE]
-> Examples below are **illustrative**, not authoritative. Authoritative samples live under [`_examples/`](./_examples/) and the fixture lanes — do not treat any block on this page as a contract.
+> The block below is **illustrative pseudocode**, not a runnable command. Tool names, flag spellings, output paths, and validator names are PROPOSED and require verification against mounted-repo evidence.
 
-See [`_examples/stac-item-example.json`](./_examples/stac-item-example.json).
+```bash
+# 1. Stage an uploaded file (admission attempt, pre-RAW).
+#    Records event_envelope + event_run_receipt regardless of outcome.
+kfm intake local-upload stage \
+  --file ./incoming/spreadsheet.csv \
+  --uploader-handle alice \
+  --uploader-claimed-license "CC-BY-4.0" \
+  --domain hydrology \
+  --run-id $(uuidgen)
 
-<details>
-<summary><strong>Illustrative STAC Item sketch for a manuscript or photograph (DO NOT COPY VERBATIM)</strong></summary>
+# 2. Inspect the SourceDescriptor that was produced.
+#    Note: source_role is 'candidate' regardless of what the uploader claimed.
+cat data/registry/sources/local-upload-*.json | jq '.source_role,.rights_status,.sensitivity'
 
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.0.0",
-  "id": "<PROPOSED collection-id>/<loc-item-id>",
-  "collection": "<PROPOSED kfm-<org>-loc-iiif-presentations>",
-  "geometry": null,
-  "bbox": null,
-  "properties": {
-    "datetime": null,
-    "start_datetime": "<source_time_lower YYYY-MM-DDTHH:MM:SSZ>",
-    "end_datetime": "<source_time_upper YYYY-MM-DDTHH:MM:SSZ>",
-    "title": "<item title from IIIF manifest>",
-    "description": "<item description>",
-    "license": "<SPDX or rights statement IRI — NEEDS VERIFICATION per item>",
-    "kfm:provenance": {
-      "spec_hash": "sha256:<...>",
-      "evidence_bundle_ref": "kfm://evidence/<digest>",
-      "run_record_ref": "kfm://run/<run-id>",
-      "audit_ref": "kfm://audit/<attestation-id>",
-      "policy_digest": "sha256:<...>"
-    },
-    "kfm:iiif": {
-      "manifest_iri": "<IIIF Presentation Manifest URL>",
-      "manifest_digest": "sha256:<...>",
-      "manifest_version": "3.0",
-      "retrieval_time": "<ISO-8601>",
-      "prov_wasDerivedFrom": []
-    },
-    "kfm:authority_anchors": {
-      "lcnaf": ["https://id.loc.gov/authorities/names/<n##########>"],
-      "lcsh":  ["https://id.loc.gov/authorities/subjects/sh##########"],
-      "gnis":  null,
-      "wikidata": ["http://www.wikidata.org/entity/Q<...>"]
-    }
-  },
-  "assets": {
-    "iiif_manifest": {
-      "href": "<IIIF Presentation Manifest URL>",
-      "type": "application/ld+json",
-      "roles": ["metadata", "iiif"],
-      "file:checksum": "sha256:<...>"
-    },
-    "iiif_thumbnail": {
-      "href": "<IIIF Image API thumbnail URL>",
-      "type": "image/jpeg",
-      "roles": ["thumbnail", "image"],
-      "file:checksum": "sha256:<...>"
-    }
-  },
-  "links": [
-    { "rel": "attestation", "href": "kfm://evidence/<digest>", "title": "EvidenceBundle (KFM)" },
-    { "rel": "via", "href": "<LoC item page URL>", "title": "Library of Congress item page" }
-  ]
-}
+# 3. Run admission validators. Fail-closed on rights / sensitivity / schema.
+kfm validate connector-gate --run-id <run_id>
+kfm validate source-descriptor --run-id <run_id>
+
+# 4. If anything fails, the file is in data/quarantine/ with a QuarantineRecord.
+ls data/quarantine/
+
+# 5. Public release is NOT a flag on this command.
+#    It requires: ReviewRecord (sensitive or material), ReleaseManifest,
+#    and a rollback target — issued by release authority, not by uploader.
 ```
 
-</details>
+**CONFIRMED doctrine** — *no public surface change* happens at upload time. The uploader cannot publish; the connector cannot publish; only a release authority can publish, against a `ReleaseManifest` with a rollback target.
 
-<details>
-<summary><strong>Illustrative STAC Item sketch for a photograph with documented location</strong></summary>
-
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.0.0",
-  "id": "<PROPOSED collection-id>/<loc-item-id>",
-  "collection": "<PROPOSED kfm-<org>-loc-iiif-presentations>",
-  "geometry": { "type": "Point", "coordinates": [/* lon, lat in EPSG:4326 */] },
-  "bbox": [/* point bbox */],
-  "properties": {
-    "datetime": "<source_time YYYY-MM-DDTHH:MM:SSZ>",
-    "title": "<photo title>",
-    "kfm:geometry_basis": "iiif_manifest_field",
-    "kfm:provenance": { /* as above */ },
-    "kfm:iiif": { /* as above */ }
-  },
-  "assets": { /* as above */ }
-}
-```
-
-</details>
-
-<details>
-<summary><strong>Illustrative PROV chain sketch (DO NOT COPY VERBATIM)</strong></summary>
-
-```turtle
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix kfm:  <https://kfm.example/ns/> .
-
-<kfm://artifact/<downstream-id>> a prov:Entity ;
-    prov:wasDerivedFrom <kfm://iiif/manifest/<digest>> ;
-    prov:wasGeneratedBy <kfm://run/<run-id>> .
-
-<kfm://iiif/manifest/<digest>> a prov:Entity ;
-    kfm:manifest_iri "<LoC IIIF Presentation Manifest URL>" ;
-    kfm:manifest_digest "sha256:<...>" ;
-    kfm:retrieval_time "<ISO-8601>" .
-
-<kfm://run/<run-id>> a prov:Activity ;
-    prov:used <kfm://iiif/manifest/<digest>> ;
-    kfm:run_receipt_ref <kfm://run/<run-id>> .
-```
-
-</details>
-
-[↑ Back to top](#loc-iiif-presentations)
+[⬆ Back to top](#local-upload--source-catalog-entry)
 
 ---
 
-## 16. Open questions
-
-- **OPEN-IIIF-01** — Confirm whether KFM standardizes on **IIIF Presentation API v3** as the canonical version, with v2 → v3 migration handled at ingest. CONFIRMED dependency (`C10-07`) names "IIIF v3 viewer integration"; specific KFM policy pending an ADR.
-- **OPEN-IIIF-02** — Pin the **IIIF viewer plugin allowlist** (`policy/plugins/` PROPOSED) — which viewer (Mirador, UniversalViewer, or other) is the canonical choice; SRI / version-pin convention.
-- **OPEN-IIIF-03** — Resolve `source_role` defaulting: this page proposes **`context`** by default, **`observation`** for date-stamped located photographs / manuscripts. Pin in an ADR or in the source descriptor's role enum.
-- **OPEN-IIIF-04** — Confirm whether this product warrants its own **STAC Collection** or one Collection per LoC Division (Manuscripts, P&P, etc.) or a single `kfm-<org>-loc-iiif-presentations` umbrella Collection.
-- **OPEN-IIIF-05** — Confirm rights status per snapshot — federal-domain default MUST NOT be applied silently.
-- **OPEN-IIIF-06** — Pin namespace choice (`kfm:` vs `ks-kfm:`) — tracked as **OPEN-DSC-03**.
-- **OPEN-IIIF-07** — Resolve docs filename naming (`PROV.md` vs `PROVENANCE.md`) — tracked as **ADR-S-06**.
-- **OPEN-IIIF-08** — Confirm whether `docs/sources/catalog/loc/` is the established docs convention for source product pages, or whether they live under `docs/dossiers/sources/`.
-- **OPEN-IIIF-09** — Confirm the **source-watch cadence** for LoC IIIF manifests (`KFM-P14-PROG-0009` Pass 32 addendum names the requirement; specific cadence values are pending).
-- **OPEN-IIIF-10** — Define the **`kfm:authority_anchors`** field shape conclusively; this page treats it as a multi-authority object keyed by authority name. Codify in an ADR or atlas card.
-- **OPEN-IIIF-11** — Confirm domain lane: `pipeline_specs/cross-domain/loc-iiif-presentations/` (PROPOSED) vs. per-primary-consumer-domain scoping.
-- **OPEN-IIIF-12** — Confirm IIIF Image API derivative handling — whether KFM mirrors thumbnails / full images locally for offline reads, or always references LoC's IIIF Image API endpoint at view time.
-
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## 17. Related docs · sibling products
-
-- [`./README.md`](./README.md) — `loc` source family overview
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern, namespace decisions for the `loc` family
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — rights and sensitivity disposition for `loc` products
-- **Sibling `loc` products (extension relationships explicit):**
-  - [`./LCNAF.md`](./LCNAF.md) — authority anchor for persons / corporate bodies that appear in LoC IIIF items (CIDOC-CRM E21 / E74 binding)
-  - [`./LCSH.md`](./LCSH.md) — authority anchor for topical subject classification on LoC IIIF items (CIDOC-CRM E55 Type binding)
-  - [`./CHRONICLING-AMERICA.md`](./CHRONICLING-AMERICA.md) — **extends** this base pattern for LoC newspapers, adding OCR + NER-to-event recall layer
-  - [`./HISTORIC-MAPS.md`](./HISTORIC-MAPS.md) — **extends** this base pattern for LoC G&M historic maps, adding Allmaps georeferencing + Representation Receipt + Reality Boundary Note
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — minimal STAC + `kfm:provenance` + `kfm:iiif` shape
-- [`../README.md`](../README.md) — `docs/sources/catalog/` overview
-- [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC profile (namespace, extensions, attestation hook)
-- [`../../../standards/PROV.md`](../../../standards/PROV.md) — PROV-O / PAV provenance profile *(filename pending ADR-S-06)*
-- [`../../../standards/IIIF_PROFILE.md`](../../../standards/IIIF_PROFILE.md) — KFM IIIF profile (version pin, viewer choices) *(path PROPOSED)*
-- [`../../../standards/PLUGIN_ALLOWLIST.md`](../../../standards/PLUGIN_ALLOWLIST.md) — plugin-allowlist convention *(path PROPOSED)*
-- [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule *(path PROPOSED)*
-
-[↑ Back to top](#loc-iiif-presentations)
-
----
-
-## Appendix · Field expectations and disposition matrix
+## 11. FAQ
 
 <details>
-<summary><strong>Expand: per-field expectations summary</strong></summary>
+<summary><strong>Can a user upload a file and have it appear on the public map?</strong></summary>
 
-| Concern | Field / artifact | Required? | Status |
-|---|---|---|---|
-| Identity | STAC `id`, `collection` | MUST | PROPOSED pattern: `kfm-<org>-<product>` |
-| Manifest IRI | `kfm:iiif.manifest_iri` | MUST | CONFIRMED requirement (`KFM-P14-PROG-0009`) |
-| **Manifest digest** | `kfm:iiif.manifest_digest` (sha256 of manifest bytes) | **MUST — integrity anchor** | CONFIRMED requirement (`KFM-P14-PROG-0009`) |
-| Manifest version | `kfm:iiif.manifest_version` (2 or 3) | MUST | PROPOSED |
-| Authority anchors | `kfm:authority_anchors.{lcnaf, lcsh, gnis, wikidata}[]` | when applicable | PROPOSED — see OPEN-IIIF-10 |
-| Time | `start_datetime` / `end_datetime` (source interval), `retrieval_time` | MUST | PROPOSED |
-| Geometry | `geometry` (null OK; Point or Polygon when documented) + `kfm:geometry_basis` | when applicable | PROPOSED |
-| License | DCAT `dct:license` (SPDX or rights statement IRI) | MUST | NEEDS VERIFICATION per item |
-| Provenance | `kfm:provenance.{spec_hash, evidence_bundle_ref, run_record_ref, audit_ref, policy_digest}` | MUST | CONFIRMED shape (Pass 10 C4-01) |
-| **PROV chain** | `prov:wasDerivedFrom` linking downstream artifacts to the manifest IRI + digest | MUST | CONFIRMED requirement (`KFM-P14-PROG-0009`) |
-| Asset integrity | `file:checksum` on cached manifest + thumbnails | MUST | CONFIRMED shape (Pass 10 C4-01) |
-| Viewer plugin | allowlist entry + SRI / version pin | MUST | PROPOSED (parallel to `ML-064-037`) |
-| Attribution test | CI test for LoC attribution + IIIF rights surfacing | MUST | CONFIRMED requirement (`KFM-P15-PROG-0033` "rights propagation") |
-| CARE handling | `kfm:care` block on STAC / DCAT for sensitive items | when applicable | CONFIRMED extension (Pass 10 C15-02) |
-| Consent/reveal | reveal HUD per `KFM-P32-FEAT-0010`; default-deny per Pass 10 C15-03 | when applicable (T1+) | CONFIRMED requirement |
-| Catalog closure | STAC + DCAT + PROV + EvidenceBundle + receipt + rollback target | MUST before publish | CONFIRMED gate (`KFM-P1-IDEA-0020`) |
-| Source-watch cadence | watcher configured per `KFM-P14-PROG-0009` Pass 32 addendum | MUST | CONFIRMED requirement |
-| Stale-state markers | manifest revision, schema drift, policy change | UI badge required | CONFIRMED (§24.8) |
+Not directly, and not quickly. Admission produces (at best) a `RAW` capture and a `SourceDescriptor` with `source_role = candidate`. Reaching `PUBLISHED` requires normalization, validation, sensitivity screening, catalog closure with a resolvable `EvidenceBundle`, a `ReviewRecord` where materiality or sensitivity applies, and a signed `ReleaseManifest` with a rollback target — produced by a release authority distinct from the uploader. **Promotion is a governed state transition, not a file move.**
+</details>
+
+<details>
+<summary><strong>Why does <code>local_upload</code> default to <code>QUARANTINE</code> rather than <code>RAW</code>?</strong></summary>
+
+It doesn't, strictly — well-formed uploads with admissible identity, schema, rights, and sensitivity move to `RAW`. But the *publication* posture is deny-by-default. Per CONFIRMED doctrine, *"Unknown rights fail closed."* Most user-supplied files at first contact have unknown rights, unknown sensitivity, or unknown geometry provenance. The lane is therefore conservative.
+</details>
+
+<details>
+<summary><strong>What if the uploader provides a license and rights statement?</strong></summary>
+
+Recorded, not trusted. The uploader's claim is stored on the `SourceDescriptor` for audit, but `rights_status` does not become `resolved` until a `RightsDecision` records steward review. An incorrect or fraudulent uploader claim does not move the file out of quarantine on its own.
+</details>
+
+<details>
+<summary><strong>Is <code>local_upload</code> a single connector or a family?</strong></summary>
+
+Directory Rules §7.3 names `connectors/local_upload/` as a single connector slot. In practice the lane may support multiple admission surfaces (browser drop, CLI, watcher) sharing one source family and one descriptor schema. The catalog entry covers the family; per-surface details live in the connector's own README.
+</details>
+
+<details>
+<summary><strong>What happens to an upload that is denied or withdrawn?</strong></summary>
+
+Denied admission produces a `QuarantineRecord` with a reason and remains in `data/quarantine/`. Withdrawn material after publication requires a `WithdrawalNotice` in `release/withdrawal_notices/`, a `CorrectionNotice` listing invalidated derivatives, and a `RollbackCard` if a release manifest is being reverted. Quarantine is not deletion — it is a **governed holding state**.
+</details>
+
+<details>
+<summary><strong>Why is the public-release default <code>denied</code> rather than <code>restricted</code>?</strong></summary>
+
+Because at admission KFM has no resolved rights, no validated provenance, no sensitivity classification, and no review record. `denied` is the safest publication-class default for a lane whose evidentiary posture is unestablished. A steward review can downgrade to `restricted` or `public` once support exists.
+</details>
+
+<details>
+<summary><strong>How does <code>local_upload</code> differ from a versioned-publisher connector (e.g. LOC IIIF)?</strong></summary>
+
+A versioned publisher arrives with declared identity (the LoC manifest URL), declared rights (the IIIF / LoC rights statement), and a cadence inferable from upstream change. A `local_upload` arrives with **none** of these. The LoC IIIF Presentations connector can admit at `source_role = observed` (or `authority`) once the descriptor is reviewed; `local_upload` cannot, by construction — it admits at `candidate` and re-roling requires a steward and a new descriptor. See the sibling product page at [`docs/sources/catalog/loc/iiif-presentations.md`](./loc/iiif-presentations.md) for contrast.
+</details>
+
+[⬆ Back to top](#local-upload--source-catalog-entry)
+
+---
+
+## 12. Related docs
+
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED* — descriptor fields, rights & sensitivity intake posture.
+- [`docs/sources/catalog/README.md`](../README.md) — *PROPOSED / TODO* — catalog-lane orientation for source-family entries.
+- [`docs/sources/catalog/loc/iiif-presentations.md`](./loc/iiif-presentations.md) — sibling product-page example (LOC IIIF Presentations) for contrast with this lane.
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — §6.1 (`docs/`), §7.3 (`connectors/`), §7.4 (`pipelines/` and schema home), §9 (`data/` and `release/`).
+- [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *PROPOSED* — public-client boundary.
+- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — *PROPOSED* — RAW → PUBLISHED governance.
+- [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — *PROPOSED* — cite-or-abstain default.
+- [`docs/governance/SEPARATION_OF_DUTIES.md`](../../../governance/SEPARATION_OF_DUTIES.md) — release-authority vs author.
+- [`connectors/local_upload/README.md`](../../../../connectors/local_upload/README.md) — *PROPOSED / TODO* — connector-level README.
+- [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) — *PROPOSED / NEEDS VERIFICATION* — descriptor schema per ADR-0001.
+- [`policy/sources/`](../../../../policy/sources/) — *PROPOSED / TODO* — rights, sensitivity, admission gates.
+- [`tests/fixtures/sources/local_upload/`](../../../../tests/fixtures/sources/local_upload/) — *PROPOSED / TODO* — valid + negative fixtures.
+
+[⬆ Back to top](#local-upload--source-catalog-entry)
+
+---
+
+## 13. Appendix — open questions and verification backlog
+
+<details>
+<summary><strong>13.1 Open questions (NEEDS VERIFICATION / NEEDS ADR)</strong></summary>
+
+1. **Subdirectory authority.** Directory Rules §6.1 attests `docs/sources/` for *"source-descriptor standards, source families."* It does **not** explicitly attest `docs/sources/catalog/` as a subdirectory. The Whole-UI Expansion Report references `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` (flat). The catalog subdirectory pattern used by this file (and by the sibling LOC product page) is therefore **PROPOSED** and merits either (a) a per-root README confirming the convention, or (b) a placement of this file at `docs/sources/local_upload.md` flat. Resolve before scaling the pattern across all source families.
+2. **Connector activation order.** *"Keep connectors / watchers inactive until activation decision, fixtures, validators, and policy gates exist."* For `local_upload`, are all four prerequisites in place in the mounted repo? **UNKNOWN.**
+3. **Pre-RAW event family.** The pre-RAW admission edge (`event_envelope`, `prefilter_output`, `event_run_receipt`) is **PROPOSED** per Atlas card **KFM-P1-PROG-0008**. Schema home, fixture home, and validator coverage for `local_upload` are **UNKNOWN.** The open atlas question — *modeled as its own contract package or as `SourceDescriptor` output?* — remains unresolved.
+4. **SourceIntakeRecord envelope.** Atlas card **KFM-P4-PROG-0001** proposes a watcher-output envelope; the relationship to `SourceDescriptor` (parallel record vs. embedded fields) is **OPEN.**
+5. **Default sensitivity.** This entry proposes `sensitivity = restricted` at admission. Is that consistent with the canonical sensitivity tier scheme (ADR-S-05 is on the open ADR backlog)? **NEEDS VERIFICATION / NEEDS ADR.**
+6. **Uploader identity attestation.** Should `local_upload` require an authenticated uploader handle, an anonymous-but-receipted upload, or both? **OPEN.**
+7. **Virus / safety scanning.** Where in the pipeline does AV / archive-bomb / zip-slip protection sit? `tools/validators/connector_gate/`, `infra/`, or a dedicated scanner package? **OPEN.**
+8. **Re-roling.** The procedure for re-roling a `candidate` descriptor to `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, or `synthetic` is **PROPOSED** (new descriptor + `CorrectionNotice`, never an in-place edit per Atlas v1.1 §24.1.3). Concrete validator and CI workflow are **UNKNOWN.**
 
 </details>
 
 <details>
-<summary><strong>Expand: disposition by source-role family</strong></summary>
+<summary><strong>13.2 Repository-state claims (UNKNOWN until mounted-repo inspection)</strong></summary>
 
-| KFM source role | Applies to this product? | Notes |
-|---|---|---|
-| `observed` | **Sometimes** | Date-stamped located photographs and dated manuscripts documenting specific events can be `observation`-role |
-| `regulatory` | No | LoC IIIF items are not regulatory artifacts |
-| `modeled` | No | Items are not model outputs |
-| `aggregate` | No | Items are per-item, not aggregate |
-| `administrative` | Sometimes | Some manuscripts (deeds, certificates) are administrative artifacts |
-| `candidate` | **Yes** during admission | New harvests are candidates until validated |
-| `synthetic` | No | LoC items are not synthetic |
-| `authority` | No | Authorities (LCNAF, LCSH) are sibling products, not this one |
-| **`context`** *(KFM-specific default for this product)* | **Yes — primary role** | Most LoC IIIF items provide contextual evidence for Story Nodes and Focus Mode; pin in OPEN-IIIF-03 |
+The following statements are **UNKNOWN** in this session and remain so until the repository is inspected:
+
+- Whether `connectors/local_upload/` exists *at a given commit* (the slot is CONFIRMED in doctrine per Directory Rules §7.3, but file presence at any commit is not asserted here).
+- Whether `docs/sources/` or `docs/sources/catalog/` exists.
+- Whether `schemas/contracts/v1/source/source_descriptor.schema.json` exists with the fields summarized in §5.
+- Whether any of the validators in §9 exist by those names or any other.
+- Whether the policy gates in `policy/sources/` exist.
+- Whether ADR-0001 (schema home) is in `accepted` status.
+- Whether the pre-RAW event family schemas are present.
+- Whether `release/` and `data/registry/sources/` exist as Directory Rules §9 describes.
+
+This file makes no claim about the runtime state, the CI workflow state, the test coverage, the branch protections, the deployment posture, or the public-route maturity of `local_upload`. All such claims would require mounted-repo evidence not available in this session.
 
 </details>
 
 <details>
-<summary><strong>Expand: worked rows for item outcomes (illustrative)</strong></summary>
+<summary><strong>13.3 Evidence basis (this entry)</strong></summary>
 
-| Case | Outcome | Required artifact |
-|---|---|---|
-| Manuscript with clear LoC rights, no geometry, full LCNAF / LCSH anchoring | Promote to PUBLISHED; surface in Story Node / Focus Mode | full STAC Item + `kfm:iiif` + `kfm:authority_anchors` + Evidence Drawer payload |
-| Photograph with documented location, LoC rights clear | Promote with `geometry` as Point + `kfm:geometry_basis: "iiif_manifest_field"` | as above + non-null `geometry` |
-| Photograph depicting Indigenous individuals / ceremony / sacred site | CARE flag; route to steward review; reveal controls per `KFM-P32-FEAT-0010` before any public surface | `kfm:care` block + `ReviewRecord` + reveal HUD |
-| Item with uncertain LoC rights | Deny publication; route to rights-clearance review | `PolicyDecision` (DENY) + `ReviewRecord` |
-| Manifest revised upstream after KFM cache | Trigger re-harvest watcher; mark dependent artifacts stale until re-validated | stale-state badge per §24.8 |
-| Viewer plugin version bump without ADR | Catalog-closure gate fails closed | block release; require ADR or per-root README update |
-| Item without LCNAF / LCSH coverage for an in-scope authority class | Route to stewarded local authority; do not fall through to bare Wikidata | local term + `ReviewRecord` |
+- **CONFIRMED doctrine** — Directory Rules v1.2 §0 (lifecycle invariant), §6.1 (`docs/`), §7.3 (`connectors/`), §7.4 (schema home).
+- **CONFIRMED doctrine** — Atlas v1.1 §24.9.1 (placement / authority anti-patterns), §24.9.2 (trust-membrane anti-patterns), §24.9.3 (governance-process anti-patterns), §24.1.3 (source-role anti-collapse register).
+- **CONFIRMED doctrine** — KFM Connected Dots Architecture Brief (canonical-evidence vs delivery vs runtime layer separation).
+- **PROPOSED tree** — KFM Repository Structure Guiding Document (proposed target tree under `connectors/`, `data/`, `release/`).
+- **Atlas cards referenced** — KFM-P1-PROG-0007 (source descriptors and source-role registry), KFM-P1-PROG-0008 (pre-RAW events and watcher intake), KFM-P4-PROG-0001 (SourceIntakeRecord envelope).
+- **Out of scope** — current LoC endpoint behavior, current AV scanner choice, current ADR-S-05 disposition, runtime / CI state of `local_upload` in any specific commit.
 
 </details>
 
+<details>
+<summary><strong>13.4 Anchor & link breakage notice</strong></summary>
+
+- This is a v2 revision of a draft doc; **no Section-1 through Section-13 anchors changed** between v1 and v2. Outbound links remain placeholders until target docs are created or verified.
+- v2 adds one new outbound link to the sibling product page at [`./loc/iiif-presentations.md`](./loc/iiif-presentations.md). Adopting (or rejecting) the `docs/sources/catalog/` subdirectory pattern affects both this file and the sibling; coordinate with the docs steward before broad adoption.
+
+</details>
+
+[⬆ Back to top](#local-upload--source-catalog-entry)
+
 ---
 
-> [!NOTE]
-> **Truth posture:** Every implementation-shaped claim on this page is **PROPOSED** or **NEEDS VERIFICATION** until a mounted-repo inspection, an accepted ADR, and the relevant per-root README review confirm the placements. Doctrine references (Directory Rules §§0, 5–9; ADR-0001; CDB §24.7 receipts; §24.8 stale-state; Pass 10 C4-01, C4-05, C8-01, C8-03, C10-07, C15-02 / C15-03; `KFM-P14-PROG-0009`; `KFM-P15-PROG-0033`; `KFM-P9-FEAT-0016`; `KFM-P9-PROG-0074`; `KFM-P1-IDEA-0020`; `KFM-P14-PROG-0033`; `KFM-P32-FEAT-0010`) are **CONFIRMED** as doctrinal references; their implementation in this repo is **NEEDS VERIFICATION**.
+<sub>**Related docs:** [SOURCE_DESCRIPTOR_STANDARD](../../SOURCE_DESCRIPTOR_STANDARD.md) · [Catalog README](../README.md) · [LOC IIIF Presentations (sibling)](./loc/iiif-presentations.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Trust membrane](../../../doctrine/trust-membrane.md) · [Lifecycle law](../../../doctrine/lifecycle-law.md)</sub>
 
----
-
-**Related docs:** [loc family README](./README.md) · [IDENTITY](./IDENTITY.md) · [RIGHTS-AND-SENSITIVITY-MAP](./RIGHTS-AND-SENSITIVITY-MAP.md) · [LCNAF](./LCNAF.md) · [LCSH](./LCSH.md) · [Chronicling America](./CHRONICLING-AMERICA.md) · [Historic Maps](./HISTORIC-MAPS.md) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [IIIF Profile](../../../standards/IIIF_PROFILE.md) · [Plugin Allowlist](../../../standards/PLUGIN_ALLOWLIST.md) · [Directory Rules](../../../doctrine/directory-rules.md)
-
-*Last updated: 2026-05-22 · Doc version: v0.2 · Status: PROPOSED scaffold*
-
-[↑ Back to top](#loc-iiif-presentations)
+<sub>**Last updated:** 2026-05-22 · **Status:** draft · **Version:** v2 · **Authority:** PROPOSED until source descriptor, fixtures, validators, and policy gates exist · **Evidence basis:** docs-only (no mounted repo this session) · [⬆ Back to top](#local-upload--source-catalog-entry)</sub>
