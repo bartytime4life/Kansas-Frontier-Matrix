@@ -1,14 +1,86 @@
 {
-  "id": "wbd_huc12",
-  "domain": "hydrology",
-  "role": "primary",
-  "authority": "U.S. Geological Survey (USGS) National Geospatial Program",
-  "rights": {
-    "license": "Public Domain (17 USC \u00a7 105)",
-    "attribution_required": false
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:usgs-wbd-huc12",
+  "descriptor_version": "1.0.0",
+  "title": "USGS Watershed Boundary Dataset (HUC12)",
+  "description": "Twelve-digit hydrologic unit boundaries from the USGS Watershed Boundary Dataset.",
+  "domain_scope": ["hydrology"],
+  "source_type": "official_government_dataset",
+  "source_role": "authoritative_for_claim",
+  "authority_rank": "primary_authority",
+  "authority_notes": "Maintained by the USGS National Geospatial Program.",
+  "publisher": {
+    "name": "U.S. Geological Survey National Geospatial Program",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+    }
   },
-  "sensitivity_floor": "public",
-  "update_cadence": "steward-reviewed",
-  "access_posture": "open",
-  "citation_template": "USGS Watershed Boundary Dataset (WBD) HUC12, source_id={id}, accessed_at={accessed_at}, url=https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+  "owner_or_steward": {
+    "name": "USGS National Geospatial Technical Operations Center",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.usgs.gov/national-hydrography"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "Public Domain (17 USC 105)",
+    "attribution_required": false,
+    "redistribution_allowed": "yes",
+    "commercial_use_allowed": "yes",
+    "last_verified_at": "2026-01-05T00:00:00Z",
+    "verified_by": "kfm-source-review"
+  },
+  "sensitivity_default": "public",
+  "cadence": {
+    "update_cadence": "irregular",
+    "freshness_expectation": "Updated as watershed boundaries are revised and stewarded.",
+    "staleness_policy": "review_required"
+  },
+  "access": {
+    "access_method": "https_download",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "WBD national download",
+        "uri": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/WBD/",
+        "purpose": "download"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "USGS Watershed Boundary Dataset (WBD) HUC12, source_id={source_id}, accessed_at={accessed_at}, url=https://www.usgs.gov/national-hydrography/watershed-boundary-dataset",
+    "citation_guidance": "Cite the USGS Watershed Boundary Dataset with the HUC12 identifier and access date."
+  },
+  "source_head": {
+    "observed_at": "2026-01-05T00:00:00Z",
+    "method": "registry_snapshot",
+    "content_identity": {
+      "revision_id": "wbd-2026-q1"
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": ["map_display", "range_context"],
+    "prohibited_claim_roles": ["not_for_title_truth"],
+    "limitations": "Watershed boundaries are cartographic delineations, not legal property lines.",
+    "confidence_posture": "source_authoritative_within_role"
+  },
+  "public_release": {
+    "allowed": true,
+    "requires_review": false,
+    "redaction_required": false,
+    "release_conditions": []
+  },
+  "review_state": "approved",
+  "release_state": "released",
+  "lifecycle": {
+    "registry_state": "active",
+    "created_at": "2025-10-01T00:00:00Z",
+    "updated_at": "2026-01-05T00:00:00Z"
+  }
 }
