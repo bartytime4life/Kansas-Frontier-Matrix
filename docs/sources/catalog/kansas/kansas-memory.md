@@ -1,52 +1,92 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/source-family/kansas-memory
+doc_id: kfm://doc/docs-sources-catalog-kansas-kansas-memory
 title: Kansas Memory — Source Family
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: <Source Registry Steward — TODO assign>, <Archives Domain Lead — TODO assign>
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-05-21
 policy_label: public
 related:
-  - docs/sources/README.md
-  - docs/sources/catalog/khri.md
-  - docs/sources/catalog/spencer.md
-  - docs/sources/catalog/ksu_special_collections.md
-  - docs/sources/catalog/wsu_special_collections.md
-  - docs/sources/catalog/loc_iiif.md
-  - docs/standards/snac-eac-cpf.md
-  - docs/domains/archaeology/README.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/lifecycle-law.md
+  - ../README.md
+  - ../../README.md
+  - ../../IDENTITY.md
+  - ../../PROFILES.md
+  - ../../RIGHTS-AND-SENSITIVITY-MAP.md
+  - ../../OPEN-QUESTIONS.md
+  - ../../_template/SOURCE_PRODUCT_TEMPLATE.md
+  - ../khri.md
+  - ../kansas-state-archives.md
+  - ../../../doctrine/directory-rules.md
+  - ../../../doctrine/authority-ladder.md
+  - ../../../doctrine/truth-posture.md
+  - ../../../doctrine/lifecycle-law.md
+  - ../../../standards/snac-eac-cpf.md
+  - ../../../standards/oai-pmh.md
+  - ../../../standards/iiif.md
+  - ../../../standards/SENSITIVITY_RUBRIC.md
+  - ../../../domains/archaeology/README.md
+  - ../../../domains/people-dna-land/README.md
+  - ../../../registers/VERIFICATION_BACKLOG.md
+  - ../../../adr/ADR-0001-schema-home.md
   - control_plane/source_authority_register.yaml
-  - data/registry/sources/archives/kansas_memory/source_descriptor.yaml
-tags: [kfm, source-family, archives, kansas, kshs, c10-07]
+  - data/registry/sources/archives/kansas-memory/source_descriptor.yaml
+  - schemas/contracts/v1/source/source_descriptor.schema.json
+  - connectors/kansas/
+  - policy/sensitivity/
+  - policy/rights/
+tags: [kfm, source-family, archives, kansas, kshs, c10-07, c7-10]
 notes:
-  - "PROPOSED placement under docs/sources/catalog/; the catalog/ subdivision is not codified in Directory Rules §6.1."
-  - "Item-count, API surface, rights terms remain on the medium-priority verification backlog."
+  - >-
+    v0.2 path migration: this doc was at `docs/sources/catalog/kansas_memory.md`
+    in v0.1 (flat path, underscore slug) and has moved to
+    `docs/sources/catalog/kansas/kansas-memory.md` in v0.2 (nested under the
+    `kansas/` family folder, hyphenated slug for consistency with sibling
+    product pages — `fhsu-sternberg.md`, `ku-nhm.md`, etc.). OQ-KM-01 from
+    v0.1 is partially resolved by this reorganization; the
+    `catalog/<family>/<product>` convention is the one adopted.
+  - >-
+    The kansas family README v0.2 lists this product page explicitly as one of
+    eight Kansas institutions; `connectors/kansas/` is CONFIRMED (at commit
+    `b6a27916bbb9e07cbf3752870c867476e1e094e7`) as one of the nine canonical
+    `directory-rules.md` v1.2 §7.3 connector families.
+  - >-
+    Kansas Memory's role as the canonical record for "Kansas Historical
+    Quarterly indexes and Kansas Memory items" is CONFIRMED per Pass-10
+    `C7-10`. Item-count, API surface, and rights terms remain on the
+    medium-priority verification backlog — the corpus itself flags item
+    counts as ambiguous-denominator.
+  - >-
+    Item-count, API surface, rights terms remain on the medium-priority
+    verification backlog.
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Memory — Source Family
 
-> Source-family record for the **Kansas State Historical Society's Kansas Memory** digital collection — the largest single source for digitized Kansas historical materials in the KFM Archives Stack (C10-07).
+> Source-family record for the **Kansas State Historical Society's Kansas Memory** digital collection — the largest single source for digitized Kansas historical materials in the KFM Archives Stack (`C10-07`), anchored by Pass-10 `C7-10` as the canonical record for Kansas Historical Quarterly indexes and Kansas Memory items.
 
 <!-- Badges: placeholders permitted per presentation standard; targets unverified -->
 ![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)
-![Source family: archives](https://img.shields.io/badge/family-archives-blue)
+![doc-version](https://img.shields.io/badge/doc--version-v0.2-blue)
+![Source family: archives](https://img.shields.io/badge/family-archives%20(under%20kansas%2F)-blue)
 ![Stack: C10--07](https://img.shields.io/badge/stack-C10--07-purple)
+![Authority: C7--10](https://img.shields.io/badge/authority-C7--10%20Kansas--first-success)
 ![Sensitivity: review-required](https://img.shields.io/badge/sensitivity-review--required-orange)
 ![Rights: NEEDS VERIFICATION](https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-red)
 ![CARE: applies](https://img.shields.io/badge/CARE-applies-teal)
-![Last updated: 2026-05-13](https://img.shields.io/badge/updated-2026--05--13-informational)
+![Connector lane](https://img.shields.io/badge/connectors%2Fkansas%2F-CONFIRMED%20%C2%A77.3-success)
+![Activation](https://img.shields.io/badge/activation-NOT_YET_ADMITTED-red)
+![Last updated: 2026-05-21](https://img.shields.io/badge/updated-2026--05--21-informational)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` (PROPOSED source-family record; not activated) |
 | **Owners** | Source Registry Steward · Archives Domain Lead — **TODO assign** |
-| **Updated** | 2026-05-13 |
+| **Updated** | 2026-05-21 |
 | **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
 | **Activation gate** | `SourceActivationDecision` required before any connector emits public-path output |
+| **Family lane** | `connectors/kansas/` — CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3 |
 
 ---
 
@@ -68,23 +108,28 @@ notes:
 - [14. Related docs](#14-related-docs)
 - [Appendix A — Compact source descriptor sketch](#appendix-a--compact-source-descriptor-sketch)
 - [Appendix B — Glossary of terms used here](#appendix-b--glossary-of-terms-used-here)
+- [Appendix C — Change log](#appendix-c--change-log)
 
 ---
 
 ## 1. Scope
 
-**CONFIRMED doctrine.** This document is the human-facing **source-family record** for KSHS Kansas Memory. It describes who publishes the source, what KFM ingests from it, what role it plays in the C10-07 Archives Stack, how it travels through the lifecycle, and which governance gates it must clear before any public-path use.
+**CONFIRMED doctrine.** This document is the human-facing **source-family record** for KSHS Kansas Memory. It describes who publishes the source, what KFM ingests from it, what role it plays in the `C10-07` Archives Stack, how it travels through the lifecycle, and which governance gates it must clear before any public-path use.
+
+> [!NOTE]
+> **Path and slug migration (v0.1 → v0.2).** This page was authored as `docs/sources/catalog/kansas_memory.md` in v0.1 (flat path, underscore slug) and **moved to `docs/sources/catalog/kansas/kansas-memory.md`** in v0.2 (nested under the `kansas/` family folder; hyphenated slug to match sibling product pages — `fhsu-sternberg.md`, `ku-nhm.md`, etc.). The kansas family README v0.2 lists this product page explicitly. Relative links have been adjusted; any external link to the old flat path or the underscore slug will break and should be retargeted. OQ-KM-01 from v0.1 (was OQ §12 item 9) is **partially resolved** by this reorganization.
 
 **What this document is.**
 
-- A `docs/sources/` human-facing description of the source family (per Directory Rules §6.1: *"source-descriptor standards, source families"*).
-- The narrative companion to the machine-readable `SourceDescriptor` that will live (PROPOSED) under `data/registry/sources/archives/kansas_memory/`.
+- A `docs/sources/catalog/kansas/` human-facing description of the source family (per Directory Rules §6.1: *"source-descriptor standards, source families"*).
+- The narrative companion to the machine-readable `SourceDescriptor` that will live (PROPOSED) under `data/registry/sources/archives/kansas-memory/`.
 - An anchor for downstream connector code, schemas, validators, fixtures, and policy rules.
+- One of eight product pages listed in the kansas family README v0.2; siblings are `ksgs.md` (KGS), `kdwp.md` (KDWP), `khri.md` (KHRI), `kansas-state-archives.md` (Kansas State Archives), `ksu-research-extension.md` (KSU R&E), `ku-nhm.md` (KU NHM), `fhsu-sternberg.md` (FHSU Sternberg).
 
 **What this document is not.**
 
 - It is **not** the SourceDescriptor itself; that is a structured artifact under `data/registry/sources/` (PROPOSED path).
-- It is **not** the connector implementation; that lives under `connectors/kansas/` (PROPOSED path).
+- It is **not** the connector implementation; that lives under `connectors/kansas/kansas-memory/` (PROPOSED per-institution path within the CONFIRMED `connectors/kansas/` lane).
 - It is **not** a release decision; promotion is governed by `SourceActivationDecision` and downstream gates.
 - It is **not** authority for rights, sensitivity, or release class — those live in `policy/`, `data/registry/rights/`, and `data/registry/sensitivity/`.
 
@@ -101,10 +146,11 @@ notes:
 
 | Field | Value | Status |
 |---|---|---|
-| **Path** | `docs/sources/catalog/kansas_memory.md` | PROPOSED — see §2.3 |
+| **Path** | `docs/sources/catalog/kansas/kansas-memory.md` | PROPOSED — convention adopted in v0.2; mounted-repo verification NEEDS VERIFICATION |
 | **Responsibility root** | `docs/` (human-facing control plane) | CONFIRMED — Directory Rules §6.1 |
 | **Subdivision** | `docs/sources/` | CONFIRMED — Directory Rules §6.1 lists `sources/` as a `docs/` lane |
-| **Sub-subdivision** | `docs/sources/catalog/` | PROPOSED — not codified in Directory Rules |
+| **Sub-subdivision** | `docs/sources/catalog/` | PROPOSED — convention adopted across v0.2 catalog reorganization |
+| **Family folder** | `docs/sources/catalog/kansas/` | PROPOSED — convention adopted in v0.2 (one folder per source family) |
 | **Doc type** | Standard doc (KFM Meta Block v2 applies) | CONFIRMED |
 | **Authority class** | Descriptive (explains); not normative (does not decide admissibility) | CONFIRMED |
 
@@ -115,44 +161,50 @@ notes:
                        │   docs/doctrine/                │
                        │   ├─ authority-ladder.md        │
                        │   ├─ truth-posture.md           │
-                       │   └─ lifecycle-law.md           │
+                       │   ├─ lifecycle-law.md           │
+                       │   └─ directory-rules.md v1.2    │
                        └────────────┬───────────────────┘
                                     │ governs
                                     ▼
                        ┌────────────────────────────────┐
-                       │   docs/sources/README.md        │
-                       │   (source-family index)         │
+                       │   docs/sources/catalog/         │
+                       │   README.md (catalog index)     │
                        └────────────┬───────────────────┘
                                     │ contains
                                     ▼
                        ┌────────────────────────────────┐
-                       │   docs/sources/catalog/         │  ◀── you are here
-                       │   kansas_memory.md              │
+                       │   docs/sources/catalog/kansas/  │
+                       │   README.md (family v0.2)       │
+                       └────────────┬───────────────────┘
+                                    │ contains
+                                    ▼
+                       ┌────────────────────────────────┐
+                       │   docs/sources/catalog/kansas/  │  ◀── you are here
+                       │   kansas-memory.md              │
                        └────────────┬───────────────────┘
                                     │ anchors
                   ┌─────────────────┼──────────────────────┐
                   ▼                 ▼                      ▼
          data/registry/    connectors/kansas/        schemas/contracts/v1/
-         sources/          kansas_memory/            source/
-         archives/         (PROPOSED)                source_descriptor.schema.json
-         kansas_memory/                              (PROPOSED per ADR-0001)
-         (PROPOSED)
+         sources/          kansas-memory/            source/
+         archives/         (PROPOSED per-           source_descriptor.schema.json
+         kansas-memory/    institution path;        (PROPOSED per ADR-0001)
+         (PROPOSED)        family lane CONFIRMED
+                           §7.3 at commit
+                           b6a27916...)
 ```
 
-### 2.3 PROPOSED `catalog/` subdivision
+### 2.3 Catalog reorganization (v0.2)
 
-The `catalog/` subdirectory under `docs/sources/` is **PROPOSED** organization. Directory Rules §6.1 lists `docs/sources/` as the lane for *"source-descriptor standards, source families"* but does not codify an internal grouping.
+The v0.2 reorganization adopted `docs/sources/catalog/<family>/<product>.md` as the catalog convention. Family folders mirror the §7.3 connector families:
 
-A reasonable PROPOSED grouping is:
+| Family folder | §7.3 status | Product pages |
+|---|---|---|
+| `docs/sources/catalog/kansas/` | CONFIRMED at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` | This doc, plus `ksgs.md`, `kdwp.md`, `khri.md`, `kansas-memory.md` (this doc), `kansas-state-archives.md`, `ksu-research-extension.md`, `ku-nhm.md`, `fhsu-sternberg.md` |
+| `docs/sources/catalog/inaturalist/` | CONFIRMED §7.3 | `inaturalist.md`, `research-grade-observations.md` |
+| `docs/sources/catalog/isric/` | PROPOSED — OPEN-DSC-14 (not in §7.3) | `isric-soilgrids.md` |
 
-| Bucket | Members it would hold |
-|---|---|
-| `docs/sources/catalog/` | Catalog-style archival and discovery surfaces with item-level metadata (Kansas Memory, KHRI, Spencer, KSU SC, WSU, LOC IIIF) |
-| `docs/sources/api/` | Programmatic API sources (USGS NWIS, GBIF, etc.) |
-| `docs/sources/feed/` | Streaming or event feeds (GTFS-rt, WZDx) |
-| `docs/sources/bulk/` | Bulk file-based exports (SSURGO, RCMAP) |
-
-This grouping is **not authoritative** absent an ADR or a per-root README in `docs/sources/`. If the mounted repo or `docs/sources/README.md` codifies a different grouping, this file should be moved and the change recorded in `docs/registers/DRIFT_REGISTER.md`.
+This is the v0.2 grouping; mounted-repo verification NEEDS VERIFICATION.
 
 [↑ Back to top](#quick-jump)
 
@@ -161,21 +213,23 @@ This grouping is **not authoritative** absent an ADR or a per-root README in `do
 ## 3. Source identity
 
 > [!NOTE]
-> The item-count figure of **~600,000** comes from the KFM corpus's normalized statement for **C10-07 Archives Stack** in the Pass 10 Idea Index. The corpus itself flags this count as a medium-priority verification item ("Verify KU NHM, KSU SC, and KSHS Kansas Memory item counts and clarify denominators"), so the number is treated here as **NEEDS VERIFICATION**.
+> The item-count figure of **~600,000** comes from the KFM corpus's normalized statement for **`C10-07` Archives Stack** in the Pass 10 Idea Index. The corpus itself flags this count as a medium-priority verification item (per the `C7-10` evidence-needed list: "Verify KU NHM, KSU SC, and KSHS Kansas Memory item counts and clarify denominators"), so the number is treated here as **NEEDS VERIFICATION**.
 
 | Field | Value | Status |
 |---|---|---|
-| **KFM source family ID** | `kansas_memory` (PROPOSED stable slug) | PROPOSED |
+| **KFM source family ID** | `kansas-memory` (PROPOSED stable slug; v0.1 used `kansas_memory`) | PROPOSED |
 | **Publisher** | Kansas State Historical Society (KSHS) | CONFIRMED — corpus |
 | **Family name** | Kansas Memory | CONFIRMED — corpus |
 | **Category** | C10 Domain Datasets | CONFIRMED — corpus |
 | **Subcategory** | C10.g Archives and Cultural Heritage | CONFIRMED — corpus |
-| **Stack** | C10-07 Archives Stack | CONFIRMED — corpus |
+| **Stack** | `C10-07` Archives Stack | CONFIRMED — corpus |
 | **Role in stack** | "Largest single source for digitized Kansas historical materials" | CONFIRMED — corpus |
-| **Approximate scale** | ~600,000 digitized items | NEEDS VERIFICATION |
+| **Approximate scale** | ~600,000 digitized items | NEEDS VERIFICATION (corpus flag) |
+| **Atlas card (descriptor)** | `KFM-P18-PROG-0033` — Kansas Memory source descriptor ("historical digital-collections source family with record identifiers, rights notes, media type, provenance role") | CONFIRMED idea-index card exists; descriptor shape is PROPOSED per the card |
+| **Atlas card (provenance)** | `KFM-P17-PROG-0011` — Kansas historical provenance source object (preserves source type, collection or program, source_ref, scan IDs, rights_spdx, page-level references) | CONFIRMED idea-index card exists; shape is PROPOSED per the card |
 | **Material types** | Digitized historical materials (photographs, documents, maps, periodicals, etc.) | INFERRED — corpus describes "digitized Kansas historical materials" without itemizing types |
 | **Public web surface** | KSHS-operated Kansas Memory site | INFERRED — not explicitly URL-cited in corpus |
-| **Current access modalities** | Mix per Kansas archives stack: APIs, OAI-PMH, PDFs, CSVs, bespoke agents | CONFIRMED for the stack as a whole; per-source split is NEEDS VERIFICATION for Kansas Memory specifically |
+| **Current access modalities** | Mix per Kansas archives stack: APIs, OAI-PMH, PDFs, CSVs, bespoke agents | CONFIRMED for the stack as a whole; per-source split NEEDS VERIFICATION for Kansas Memory specifically |
 
 [↑ Back to top](#quick-jump)
 
@@ -187,18 +241,21 @@ This grouping is **not authoritative** absent an ADR or a per-root README in `do
 
 | Aspect | Posture | Status |
 |---|---|---|
-| **Primary source role** | Archival-evidence aggregator: digitized representations of primary historical materials | INFERRED from corpus characterization |
-| **Authority weight** | Canonical record for "Kansas Historical Quarterly indexes and Kansas Memory items" | CONFIRMED — corpus |
+| **Primary source role** | `observed` (archival-evidence aggregator: digitized representations of primary historical materials) per Atlas §24.1.3 source-role enum | INFERRED from corpus characterization; PROPOSED per descriptor |
+| **Authority weight** | Canonical record for "Kansas Historical Quarterly indexes and Kansas Memory items" | CONFIRMED — Pass-10 `C7-10` |
 | **Evidence character** | Source-edge captures referenced by `EvidenceRef`; never sovereign truth in their own right | CONFIRMED doctrine |
 | **Sensitivity default** | Review-required; CARE considerations apply for cultural materials, living-person references, sensitive places, and archaeology adjacencies | INFERRED from cross-domain CARE/sensitivity doctrine |
 | **AI-inference posture** | AI may summarize or classify referenced items; AI **never** establishes truth, bypasses steward review, publishes, overrides policy, or replaces `EvidenceBundle`s | CONFIRMED doctrine |
 
+> [!IMPORTANT]
+> **Source-role anti-collapse** (CONFIRMED doctrine, Atlas §24.1.3). Role is set at admission and **never edited in place**. An AI summary that promotes a Kansas Memory archival reference to "authoritative" status, or treats a digitized representation as the primary historical document, is a governance violation. Corrections produce a new descriptor plus a `CorrectionNotice`.
+
 ### 4.2 Authority within the Kansas authority constellation
 
-**CONFIRMED doctrine.** The corpus emphasizes that *Kansas-first dossiers must run against Kansas-specific authorities even when federal authorities are present, because the local authorities carry detail that federal authorities aggregate away.* Kansas Memory is the canonical home for *Kansas Memory items and Kansas Historical Quarterly indexes*; it does not substitute for, but anchors alongside, the federal authority layer.
+**CONFIRMED doctrine** (Pass-10 `C7-10`). The corpus emphasizes that Kansas-first dossiers must run against Kansas-specific authorities even when federal authorities are present, because the local authorities carry detail (cultural specificity, fine-grained habitat data, occurrence-level provenance) that federal authorities aggregate away. Kansas Memory is the canonical home for *Kansas Memory items and Kansas Historical Quarterly indexes*; it does not substitute for, but anchors alongside, the federal authority layer.
 
 > [!TIP]
-> KFM convention is to **store the Kansas-authority IRI in parallel with the federal or international anchor** (e.g., LCNAF, VIAF, Wikidata, SNAC). A Kansas Memory item reference does not displace SNAC EAC-CPF anchoring or LCNAF anchoring; it sits next to them in the person/place/event record.
+> **Parallel-anchor rule** (CONFIRMED, `C7-10`). KFM convention is to **store the Kansas-authority IRI in parallel with the federal or international anchor** (e.g., LCNAF, VIAF, Wikidata, SNAC). A Kansas Memory item reference does not displace SNAC EAC-CPF anchoring or LCNAF anchoring; it sits next to them in the person/place/event record.
 
 [↑ Back to top](#quick-jump)
 
@@ -208,9 +265,7 @@ This grouping is **not authoritative** absent an ADR or a per-root README in `do
 
 ### 5.1 Stack-wide ingest posture
 
-**CONFIRMED — corpus.** "The KFM ingest approach varies per institution: some publish stable APIs, some publish OAI-PMH, some publish PDFs and CSVs that must be harvested with bespoke agents. The receipt records the access path and the harvest cadence."
-
-Which of those access paths Kansas Memory currently exposes is **NEEDS VERIFICATION**: the corpus describes the stack-wide variability without pinning Kansas Memory specifically to a single modality, and the Pass 10 medium-priority backlog includes *"Document Kansas-authority API stability and harvest cadence per authority."*
+**CONFIRMED — corpus** (Pass-10 `C7-10`). Several Kansas authorities lack stable HTTP APIs or persistent identifiers and rely on PDF or spreadsheet publication; the corpus warns that "the harvest layer must tolerate non-API sources for the foreseeable future." Which of those access paths Kansas Memory currently exposes is **NEEDS VERIFICATION**: the corpus describes the stack-wide variability without pinning Kansas Memory specifically to a single modality, and the Pass-10 medium-priority backlog includes "Document Kansas-authority API stability and harvest cadence per authority."
 
 ### 5.2 Stack-wide dependencies
 
@@ -226,14 +281,14 @@ Which of those access paths Kansas Memory currently exposes is **NEEDS VERIFICAT
 ```mermaid
 flowchart LR
     KM["Kansas Memory<br/>(KSHS public surface)"]
-    CON["connectors/kansas/<br/>kansas_memory/<br/>(PROPOSED)"]
-    RAW["data/raw/archives/<br/>kansas_memory/&lt;run_id&gt;/"]
+    CON["connectors/kansas/<br/>kansas-memory/<br/>(family lane CONFIRMED §7.3;<br/>per-institution PROPOSED)"]
+    RAW["data/raw/archives/<br/>kansas-memory/&lt;run_id&gt;/"]
     Q["data/quarantine/<br/>archives/&lt;reason&gt;/&lt;run_id&gt;/"]
-    PR["data/processed/<br/>archives/kansas_memory/<br/>&lt;version&gt;/"]
+    PR["data/processed/<br/>archives/kansas-memory/<br/>&lt;version&gt;/"]
     CAT["data/catalog/<br/>stac · dcat · prov · domain"]
     PUB["data/published/<br/>(public-safe artifacts only)"]
     REC["data/receipts/ingest/<br/>(access path,<br/>cadence,<br/>checksum)"]
-    REG["data/registry/sources/<br/>archives/kansas_memory/<br/>SourceDescriptor"]
+    REG["data/registry/sources/<br/>archives/kansas-memory/<br/>SourceDescriptor"]
     POL["policy/<br/>rights · sensitivity · CARE"]
     SAD["SourceActivationDecision<br/>(allowed | restricted |<br/>denied | needs-review)"]
 
@@ -250,12 +305,13 @@ flowchart LR
     CAT -- promotion + release decision --> PUB
 
     classDef proposed fill:#fff7e6,stroke:#d48806,stroke-dasharray:5 5;
+    classDef confirmed fill:#d5e8d4,stroke:#82b366;
     class CON,RAW,Q,PR,CAT,PUB,REC,REG,SAD proposed;
 ```
 
 **Interpretation.**
 
-- The connector path `connectors/kansas/kansas_memory/` is **PROPOSED** until verified against repo state. Directory Rules §7.3 establishes `connectors/kansas/` as the Kansas connector lane.
+- The family lane `connectors/kansas/` is **CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)** as one of the nine canonical §7.3 connector families. The per-institution path `connectors/kansas/kansas-memory/` is **PROPOSED** until verified against repo state.
 - `connectors/` output **MUST** land in `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/...` per Directory Rules §7.3. The connector **MUST NOT** write to `data/processed/`, `data/catalog/`, or `data/published/`.
 - Promotion from `data/processed/` to `data/catalog/` to `data/published/` is a **governed state transition**, not a file move. It must pass validators, policy gates, evidence-bundle creation, catalog closure, and release-decision recording.
 - The `SourceActivationDecision` is a **precondition** for the connector to run on the public path at all. Without it, the connector remains inactive.
@@ -277,17 +333,20 @@ flowchart LR
 | **KFM default outcome on unknown rights** | DENY | CONFIRMED doctrine — *"Unknown rights fail closed"* |
 | **Attribution requirement** | Attribution to KSHS and originating collection is expected at minimum | INFERRED from standard archival reuse norms; specific KSHS terms NEEDS VERIFICATION |
 | **Redistribution posture** | Per-item; **MUST** be recorded in the SourceDescriptor and verified before public release | CONFIRMED doctrine — `RightsDecision` precedes any release |
+| **Descriptor shape** | Per `KFM-P18-PROG-0033`: record identifiers, rights notes, media type, provenance role | PROPOSED descriptor shape (idea card status: active, PROPOSED) |
+| **Provenance shape** | Per `KFM-P17-PROG-0011`: source type, collection or program, source_ref, scan IDs, rights_spdx, page-level references | PROPOSED provenance object shape (idea card status: active, PROPOSED) |
 
 ### 6.2 Public release class
 
 **CONFIRMED doctrine.** Every published KFM dataset or layer derived from Kansas Memory items **MUST** carry:
 
-- A resolved `SourceDescriptor` with rights, role, sensitivity, cadence, access method, and attribution
+- A resolved `SourceDescriptor` with rights, role, sensitivity, cadence, access method, and attribution (per `KFM-P18-PROG-0033`)
 - A `RightsDecision` per item (or per item-class)
 - A `ValidationReport` proving schema, geometry (where applicable), temporal, rights, sensitivity, and evidence checks
 - An `EvidenceBundle` that the `EvidenceRef` resolves to
 - A `PolicyDecision` of ALLOW (or RESTRICT with documented redaction)
 - A `ReleaseManifest` with rollback target
+- A historical-provenance object that preserves source type, collection or program, `source_ref`, scan IDs, `rights_spdx`, and page-level references (per `KFM-P17-PROG-0011`)
 
 Items lacking any of those **MUST** be quarantined or denied.
 
@@ -307,30 +366,32 @@ Items lacking any of those **MUST** be quarantined or denied.
 ## 7. Sensitivity and CARE considerations
 
 > [!CAUTION]
-> Archival materials carry sensitivities that the source publisher may not have flagged. KFM's **fail-closed** posture and **CARE alignment** govern how Kansas Memory items can be republished, mapped, or used to anchor claims.
+> Archival materials carry sensitivities that the source publisher may not have flagged. KFM's **fail-closed** posture (`C5-02` default-deny promotion + `KFM-P24-IDEA-0002` sensitive-records deny-by-default + `KFM-P24-PROG-0013` redaction policy) and **CARE alignment** govern how Kansas Memory items can be republished, mapped, or used to anchor claims.
 
 ### 7.1 Applicable sensitivity classes
 
 Per the KFM Sensitive / Deny-by-Default Register (CONFIRMED doctrine), Kansas Memory items may intersect:
 
-| Sensitivity class | Why it can apply to Kansas Memory items | Default outcome |
-|---|---|---|
-| **Living persons** | Letters, photographs, oral histories, vital records adjacent to living individuals | DENY public exact/identifying output unless legal basis, consent/review, and release state proven |
-| **Archaeology / cultural heritage** | Documents referencing archaeological sites, burial grounds, sacred places | DENY exact public location by default |
-| **Sacred / culturally sensitive places** | Oral histories, cultural routes, sacred sites mentioned in Kansas Memory items | DENY until steward review and access class approve |
-| **Private landowner-sensitive data** | Historical land records that touch operations or owner identity of private parcels | DENY exact/public if private or rights unclear |
-| **Source-rights-limited records** | Items with restricted, no-redistribution, or uncertain terms | DENY public release until terms resolved |
+| Sensitivity class | Why it can apply to Kansas Memory items | Default outcome | C6-01 rank guideline |
+|---|---|---|---|
+| **Living persons** | Letters, photographs, oral histories, vital records adjacent to living individuals | DENY public exact/identifying output unless legal basis, consent/review, and release state proven | rank 4+; k-anonymity per `C6-06` |
+| **Archaeology / cultural heritage** | Documents referencing archaeological sites, burial grounds, sacred places | DENY exact public location by default | rank 3+; generalize to county or coarser |
+| **Sacred / culturally sensitive places** | Oral histories, cultural routes, sacred sites mentioned in Kansas Memory items | DENY until steward review and access class approve | rank 4–5 typical; `kfm:care` extension applies |
+| **Private landowner-sensitive data** | Historical land records that touch operations or owner identity of private parcels | DENY exact/public if private or rights unclear | per-record review |
+| **Source-rights-limited records** | Items with restricted, no-redistribution, or uncertain terms | DENY public release until terms resolved | rights gate, not sensitivity rank |
 
 ### 7.2 CARE alignment
 
 **CONFIRMED doctrine.** The C8 person-place-event graph layer is *"the layer most exposed to the FAIR+CARE tension because identity, kinship, and provenance about Indigenous and marginalized communities live here."* Kansas Memory items that touch Indigenous people, communities, places, or cultural practices **MUST** be reviewed against the CARE Principles for Indigenous Data Governance (Collective Benefit, Authority to Control, Responsibility, Ethics) before any public-path republication.
 
+The `kfm:care` STAC/DCAT extension (`C15-02`, CONFIRMED) surfaces MetaBlock v2 CARE fields (steward_org, authority_to_control, consent, obligations, benefit_commitments) directly in catalog distributions where applicable. OPA default-deny on CARE-tagged assets (`C15-03`, CONFIRMED) gates publication of any asset whose MetaBlock v2 declares a non-empty `authority_to_control`.
+
 ### 7.3 Transforms and receipts
 
 Any sensitivity-driven transform applied to a Kansas Memory derivative **MUST** record:
 
-- `RedactionReceipt` — policy reference, redaction method, kept fields, removed fields, geometry transform (if any), reviewer
-- `TransformReceipt` — for projection or generalization of any associated geometry
+- `RedactionReceipt` — policy reference, redaction method (named profile per `C6-02`: `point_10km_hex_seeded_v1`, `point_3km_jitter_v1`, `centroid_1km_v1`, or `kfm:redact:none`), kept fields, removed fields, geometry transform (if any), reviewer
+- `TransformReceipt` — for projection or generalization of any associated geometry (per Atlas §24.2.1 — `input_geom_hash`, `output_geom_hash`, transform, parameters, tolerance, timestamp, actor)
 - `ReviewRecord` — steward review state, notes, decisions, release/correction references
 
 [↑ Back to top](#quick-jump)
@@ -343,13 +404,13 @@ Any sensitivity-driven transform applied to a Kansas Memory derivative **MUST** 
 
 | Authority | KFM idea ID | Role in relation to Kansas Memory |
 |---|---|---|
-| **KSHS (Kansas State Historical Society)** | C7-10 | Publisher; canonical record for Kansas Historical Quarterly indexes and Kansas Memory items |
-| **KHRI (Kansas Historic Resources Inventory)** | C7-10 | Canonical inventory of Kansas historic resources (buildings, sites, districts) — anchors place-based references found in Kansas Memory |
-| **SNAC + EAC-CPF** | C7-06 | Archive-specific person/corporate-body authority; anchors persons documented through Kansas Memory and other KSHS collections |
-| **LCNAF** | C7-02 | National authority for published-work creators that also appear in Kansas Memory |
-| **VIAF** | C7-03 | International cross-reference for named persons |
-| **GNIS** | C7-09 | Place-name authority for places referenced in Kansas Memory items |
-| **CIDOC-CRM** | C8-01 | Graph backbone vocabulary (E5 Event, E7 Activity, E21 Person, E53 Place, E55 Type, E74 Group) for items anchored to the person/place/event graph |
+| **KSHS (Kansas State Historical Society)** | `C7-10` | Publisher; canonical record for Kansas Historical Quarterly indexes and Kansas Memory items |
+| **KHRI (Kansas Historic Resources Inventory)** | `C7-10` | Canonical inventory of Kansas historic resources (buildings, sites, districts) — anchors place-based references found in Kansas Memory |
+| **SNAC + EAC-CPF** | `C7-06` | Archive-specific person/corporate-body authority; anchors persons documented through Kansas Memory and other KSHS collections |
+| **LCNAF** | `C7-02` | National authority for published-work creators that also appear in Kansas Memory |
+| **VIAF** | `C7-03` | International cross-reference for named persons |
+| **GNIS** | `C7-09` | Place-name authority for places referenced in Kansas Memory items |
+| **CIDOC-CRM** | `C8-01` | Graph backbone vocabulary (E5 Event, E7 Activity, E21 Person, E53 Place, E55 Type, E74 Group) for items anchored to the person/place/event graph |
 | **Wikidata** | (C7 family) | Web-discoverable cross-reference target |
 
 ### 8.2 Anchoring posture
@@ -372,14 +433,14 @@ Any sensitivity-driven transform applied to a Kansas Memory derivative **MUST** 
 | `work/` | Normalized intermediates, candidate assertions about persons/places/events derived from items | Public API/UI · release aliases |
 | `quarantine/` | Items with failed validation, unresolved rights/sensitivity, schema drift, or over-precise geometry references | Promotion candidates without remediation |
 | `processed/` | Validated canonical records anchored to authorities | Assumption of public/release status |
-| `catalog/` | STAC, DCAT, PROV records, and domain catalog entries | Uncited claims · unclosed identifiers |
+| `catalog/` | STAC, DCAT, PROV records, and domain catalog entries with `kfm:provenance` block per `C4-01` | Uncited claims · unclosed identifiers |
 | `triplets/` | Relationship projections (person → place → event) backed by Kansas Memory `EvidenceRef`s | Canonical replacement semantics |
 | `published/` | Public-safe artifacts only, with `ReleaseManifest`, rollback target, and rights/sensitivity satisfied | Raw items · quarantined items · exact restricted geometry |
 | `receipts/`, `proofs/`, `rollback/` | Emitted alongside; record process memory, evidence integrity, and rollback artifacts | Substitute for the release decision itself |
 
 ### 9.2 Promotion is a governed state transition
 
-**CONFIRMED doctrine.** Promotion of a Kansas Memory–derived asset is not a file move. A bypass of validators, policy gates, evidence-bundle creation, catalog closure, or release-decision recording is a **violation of the invariant** regardless of which directory the bytes ended up in.
+**CONFIRMED doctrine** (`C5-02` default-deny promotion; `C5-04` spec-hash-match gate; `C5-08` lineage required). Promotion of a Kansas Memory–derived asset is not a file move. A bypass of validators, policy gates, evidence-bundle creation, catalog closure, or release-decision recording is a **violation of the invariant** regardless of which directory the bytes ended up in.
 
 [↑ Back to top](#quick-jump)
 
@@ -387,7 +448,7 @@ Any sensitivity-driven transform applied to a Kansas Memory derivative **MUST** 
 
 ## 10. Related sources in the Archives Stack
 
-Kansas Memory is one node in the C10-07 Archives Stack. The full stack as recorded in the KFM corpus:
+Kansas Memory is one node in the `C10-07` Archives Stack. The full stack as recorded in the KFM corpus:
 
 | Source | Cited scale | Subcategory | Notes |
 |---|---|---|---|
@@ -398,10 +459,10 @@ Kansas Memory is one node in the C10-07 Archives Stack. The full stack as record
 | **WSU Special Collections** | Regional holdings (count not cited) | C10.g | Additional regional holdings |
 | **County historical societies** | Variable; many lack structured publication | C10.g | "Harvest layer must tolerate manual submission flows for the foreseeable future" |
 | **LOC IIIF** | Federal discovery surface | C10.g | Federal-level discovery presentation |
-| **SNAC / EAC-CPF** | Cross-archive authority | C7-06 | Cross-archive authority layer for persons, corporate bodies, families |
+| **SNAC / EAC-CPF** | Cross-archive authority | `C7-06` | Cross-archive authority layer for persons, corporate bodies, families |
 
 > [!TIP]
-> The Archives Stack documents will live as siblings under `docs/sources/catalog/` (PROPOSED grouping). When a sibling file is created, link it from §10 and from the related-docs section.
+> The Archives Stack documents live as siblings under `docs/sources/catalog/kansas/` (where the institution is Kansas-state-scoped — KSHS, KHRI, KU Spencer, KSU SC, WSU SC, county societies). Federal layers like LOC IIIF and cross-archive authorities like SNAC live elsewhere in the catalog. When a sibling file is created, link it from §10 and from the related-docs section.
 
 [↑ Back to top](#quick-jump)
 
@@ -411,17 +472,21 @@ Kansas Memory is one node in the C10-07 Archives Stack. The full stack as record
 
 | Item | Status | Notes |
 |---|---|---|
-| C10-07 Archives Stack (doctrinal) | CONFIRMED | Pass 10 Idea Index records as CONFIRMED |
-| Source role classification for Kansas Memory | INFERRED | Archival aggregator; not synthetic/modeled |
-| Kansas Memory `SourceDescriptor` artifact | UNKNOWN | No current-session repo evidence; PROPOSED home is `data/registry/sources/archives/kansas_memory/` |
-| Kansas Memory connector | UNKNOWN | No current-session repo evidence; PROPOSED home is `connectors/kansas/kansas_memory/` |
+| `C10-07` Archives Stack (doctrinal) | CONFIRMED | Pass 10 Idea Index records as CONFIRMED |
+| `C7-10` Kansas-First Domain Authorities (doctrinal) | CONFIRMED | Pass 10 Idea Index records as CONFIRMED |
+| `connectors/kansas/` lane | CONFIRMED at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` | Directory Rules v1.2 §7.3 + Repository Structure Guiding Document |
+| `KFM-P18-PROG-0033` Kansas Memory source descriptor | CONFIRMED idea card exists; shape PROPOSED | Pass 32 atlas; descriptor itself remains PROPOSED |
+| `KFM-P17-PROG-0011` Kansas historical provenance source object | CONFIRMED idea card exists; shape PROPOSED | Pass 32 atlas; provenance shape remains PROPOSED |
+| Source role classification for Kansas Memory | INFERRED | Archival aggregator (`observed` role per Atlas §24.1.3); not synthetic/modeled |
+| Kansas Memory `SourceDescriptor` artifact | UNKNOWN | No current-session repo evidence; PROPOSED home is `data/registry/sources/archives/kansas-memory/` |
+| Kansas Memory connector (`connectors/kansas/kansas-memory/`) | UNKNOWN | Family lane CONFIRMED; per-institution adapter PROPOSED |
 | Validators (schema, rights, sensitivity) | UNKNOWN | Stack-wide validator surface is PROPOSED across the KFM corpus |
 | `SourceActivationDecision` | UNKNOWN | Required precondition; not verifiable in current session |
 | Connector–pipeline–catalog wiring | UNKNOWN | Not verifiable absent mounted repo |
 | Public release of any Kansas Memory–derived layer | UNKNOWN | None confirmed; **MUST** clear the full gate stack first |
 
 > [!NOTE]
-> This document presents **doctrine confidently** where the corpus supports it, and keeps **implementation maturity bounded**. No claim above asserts that the Kansas Memory pipeline exists in the mounted repository.
+> This document presents **doctrine confidently** where the corpus supports it, and keeps **implementation maturity bounded**. The family lane (`connectors/kansas/`) is CONFIRMED at commit; no claim above asserts that the Kansas Memory **per-institution adapter** or pipeline exists in the mounted repository.
 
 [↑ Back to top](#quick-jump)
 
@@ -431,16 +496,19 @@ Kansas Memory is one node in the C10-07 Archives Stack. The full stack as record
 
 | # | Item | Priority | Source |
 |---|---|---|---|
-| 1 | Verify Kansas Memory item count and clarify denominator | Medium | Pass 10 Backlog C.2 #19 |
-| 2 | Document Kansas-authority API stability and harvest cadence per authority (Kansas Memory included) | High | Pass 10 Backlog C.1 / C.2 #19 |
+| 1 | Verify Kansas Memory item count and clarify denominator | Medium | Pass 10 Backlog (per `C7-10` evidence-needed list) |
+| 2 | Document Kansas-authority API stability and harvest cadence per authority (Kansas Memory included) | High | Pass 10 Backlog; `C7-10` Kansas-Authority Compatibility Report future-work |
 | 3 | Confirm current access modality for Kansas Memory specifically (API · OAI-PMH · IIIF · bespoke harvester) | Medium | Stack-wide variability cited; per-source not pinned |
 | 4 | Confirm rights statements and license terms per item-class | High | "Unknown rights fail closed" — must resolve before public release |
 | 5 | Confirm attribution requirements (institution, collection, item ID format) | Medium | Standard archival practice; specific terms NEEDS VERIFICATION |
-| 6 | Confirm `SourceDescriptor` shape (PROPOSED schema-home: `schemas/contracts/v1/source/source_descriptor.schema.json`) | High | ADR-0001 schema home; specific path PROPOSED |
-| 7 | Verify CARE-applicable item classes within Kansas Memory and steward-review channel | High | Cross-domain CARE doctrine |
+| 6 | Confirm `SourceDescriptor` shape (PROPOSED schema-home: `schemas/contracts/v1/source/source_descriptor.schema.json`) | High | ADR-0001 schema home; specific path PROPOSED; descriptor shape ref'd from `KFM-P18-PROG-0033` |
+| 7 | Verify CARE-applicable item classes within Kansas Memory and steward-review channel | High | Cross-domain CARE doctrine (`C15-02`, `C15-03`) |
 | 8 | Identify SNAC EAC-CPF coverage gaps for Kansas Memory–referenced persons | Medium | Pass 10 Tasks: "Pilot SNAC contribution pipeline using a Kansas Historical Quarterly volume" |
-| 9 | Confirm whether `docs/sources/catalog/` is the canonical home for archival source-family docs, or whether a flat `docs/sources/` is preferred | Low | Subdivision PROPOSED; depends on repo convention or ADR |
+| 9 | OQ-KM-01 (was v0.1 #9): confirm `docs/sources/catalog/kansas/` is the canonical home | Low | **PARTIALLY RESOLVED in v0.2** by the flat-to-folder reorganization; mounted-repo verification remains |
 | 10 | Track this file's badge targets to real Shields.io endpoints | Low | Badges currently use placeholder schemas |
+| 11 (new) | Confirm per-institution adapter path `connectors/kansas/kansas-memory/` (or analogous slug) under the CONFIRMED `connectors/kansas/` family lane | High | Mounted-repo `connectors/kansas/` tree |
+| 12 (new) | Resolve slug convention (`kansas_memory` underscore vs `kansas-memory` hyphen) | Low | v0.2 adopts hyphen for consistency with sibling product pages; mounted-repo verification |
+| 13 (new) | Confirm relationship between `kansas-memory.md` and `kansas-state-archives.md` (one institution or two distinct holdings streams) | Medium | Open question carried from kansas family README v0.2 |
 
 [↑ Back to top](#quick-jump)
 
@@ -448,13 +516,15 @@ Kansas Memory is one node in the C10-07 Archives Stack. The full stack as record
 
 ## 13. Open questions
 
-These mirror open questions from the C10-07 record and the broader Pass 10 backlog as they touch Kansas Memory specifically:
+These mirror open questions from the `C10-07` record and the broader Pass-10 backlog as they touch Kansas Memory specifically:
 
 - What is the right governance model for **KFM-as-aggregator** across the Kansas archive ecosystem? Who holds the editorial seat for the federated catalog?
 - What is the current API-stability posture of KSHS / Kansas Memory specifically?
-- What pilot is the right first move for KFM-derived **contribution-back** to Kansas Memory or SNAC (the Pass 10 task names a Kansas Historical Quarterly volume as a candidate pilot)?
+- What pilot is the right first move for KFM-derived **contribution-back** to Kansas Memory or SNAC (the Pass-10 task names a Kansas Historical Quarterly volume as a candidate pilot)?
 - Which Kansas Memory item-classes are most CARE-sensitive, and what is the per-class default outcome?
 - How does Kansas Memory's de-facto coverage of pre-1900 vs post-1900 materials interact with the GNIS / TGN / KHRI / Wikidata place-anchoring ladder?
+- Are **Kansas State Archives** and **KSHS Kansas Memory** the same institution / overlapping holdings, or distinct? (Open question carried from kansas family README v0.2.)
+- Resolve OPEN-DSC-03 (`kfm:` vs `ks-kfm:` STAC namespace) per `C4-01` — the Kansas family is the most plausible argument **for** `ks-kfm:`.
 
 [↑ Back to top](#quick-jump)
 
@@ -462,17 +532,29 @@ These mirror open questions from the C10-07 record and the broader Pass 10 backl
 
 ## 14. Related docs
 
-- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED invariant (PROPOSED path per Directory Rules §6.1)
-- [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain posture (PROPOSED path)
-- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (PROPOSED canonical home per its own §0)
-- [`docs/sources/README.md`](../../README.md) — source-family index — **TODO** create if absent
-- [`docs/standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference — **TODO** if absent
-- [`docs/standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard reference — **TODO** if absent
-- [`docs/standards/iiif.md`](../../../standards/iiif.md) — IIIF v3 reference — **TODO** if absent
-- [`docs/domains/archaeology/README.md`](../../../domains/archaeology/README.md) — adjacent domain that consumes Kansas Memory references
-- [`docs/domains/people-dna-land/README.md`](../../../domains/people-dna-land/README.md) — adjacent domain that consumes Kansas Memory references
-- [`control_plane/source_authority_register.yaml`](../../../../control_plane/source_authority_register.yaml) — machine-readable register of source authority — see Directory Rules §6.2
-- [`data/registry/sources/archives/kansas_memory/source_descriptor.yaml`](../../../../data/registry/sources/archives/kansas_memory/source_descriptor.yaml) — PROPOSED `SourceDescriptor` artifact home
+- [`../README.md`](../README.md) — `docs/sources/catalog/kansas/` family README v0.2 (lists this page; confirms `connectors/kansas/` as §7.3 canonical at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)
+- [`../../README.md`](../../README.md) — `docs/sources/catalog/` index
+- [`../../IDENTITY.md`](../../IDENTITY.md) — Collection-id and namespace conventions
+- [`../../PROFILES.md`](../../PROFILES.md) — catalog-profile selection guidance
+- [`../../RIGHTS-AND-SENSITIVITY-MAP.md`](../../RIGHTS-AND-SENSITIVITY-MAP.md) — lane-wide rights/sensitivity matrix
+- [`../../OPEN-QUESTIONS.md`](../../OPEN-QUESTIONS.md) — lane-wide `OPEN-DSC-*` items
+- [`../khri.md`](../khri.md) — sibling Kansas Historic Resources Inventory product page (PROPOSED)
+- [`../kansas-state-archives.md`](../kansas-state-archives.md) — sibling Kansas State Archives product page (PROPOSED; relationship to this doc OPEN)
+- [`../../../doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED invariant
+- [`../../../doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain posture
+- [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (v1.2 §6.1, §7.3, §11)
+- [`../../../doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — Kansas-first authority posture
+- [`../../../standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference — **TODO** if absent
+- [`../../../standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard reference — **TODO** if absent
+- [`../../../standards/iiif.md`](../../../standards/iiif.md) — IIIF v3 reference — **TODO** if absent
+- [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus; not yet authored)
+- [`../../../domains/archaeology/README.md`](../../../domains/archaeology/README.md) — adjacent domain that consumes Kansas Memory references
+- [`../../../domains/people-dna-land/README.md`](../../../domains/people-dna-land/README.md) — adjacent domain that consumes Kansas Memory references
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home authority for the `SourceDescriptor` JSON Schema location
+- `control_plane/source_authority_register.yaml` — machine-readable register of source authority — see Directory Rules §6.2
+- `data/registry/sources/archives/kansas-memory/source_descriptor.yaml` — PROPOSED `SourceDescriptor` artifact home (slug normalized to hyphen)
+- Pass-10 Idea Index — **`C10-07`** Archives Stack (CONFIRMED); **`C7-10`** Kansas-First Domain Authorities (CONFIRMED)
+- Pass-23/32 Consolidated Atlas — **`KFM-P18-PROG-0033`** Kansas Memory source descriptor; **`KFM-P17-PROG-0011`** Kansas historical provenance source object
 
 [↑ Back to top](#quick-jump)
 
@@ -481,17 +563,20 @@ These mirror open questions from the C10-07 record and the broader Pass 10 backl
 ## Appendix A — Compact source descriptor sketch
 
 > [!NOTE]
-> The block below is an **illustrative sketch** of what a Kansas Memory `SourceDescriptor` could look like. It is **not** the canonical schema. The authoritative shape lives under `schemas/contracts/v1/source/source_descriptor.schema.json` (PROPOSED per ADR-0001), with `contracts/` defining the meaning. All values below are placeholders or PROPOSED.
+> The block below is an **illustrative sketch** of what a Kansas Memory `SourceDescriptor` could look like. It is **not** the canonical schema. The authoritative shape lives under `schemas/contracts/v1/source/source_descriptor.schema.json` (PROPOSED per ADR-0001), with `contracts/` defining the meaning. All values below are placeholders or PROPOSED. The shape is grounded in `KFM-P18-PROG-0033` (descriptor) and `KFM-P17-PROG-0011` (provenance object).
 
 <details>
 <summary>Click to expand: illustrative SourceDescriptor sketch (PROPOSED shape, not authoritative)</summary>
 
 ```yaml
-# data/registry/sources/archives/kansas_memory/source_descriptor.yaml
+# data/registry/sources/archives/kansas-memory/source_descriptor.yaml
 # Illustrative PROPOSED shape — NOT canonical until validated against
 # schemas/contracts/v1/source/source_descriptor.schema.json
-source_id: "kansas_memory"
-source_family: "archives"
+# Shape grounded in KFM-P18-PROG-0033 (descriptor) + KFM-P17-PROG-0011 (provenance)
+source_id: "kansas-memory"                     # v0.2 hyphenated slug; v0.1 used kansas_memory
+source_family: "kansas"                        # the canonical §7.3 family
+source_family_enum: "other"                    # closed enum per KFM-P3-PROG-0001
+archives_subfamily: "archives"                 # internal sub-grouping within kansas
 publisher:
   name: "Kansas State Historical Society"
   short_name: "KSHS"
@@ -501,25 +586,38 @@ classification:
   category: "C10"
   subcategory: "C10.g"
   stack: "archives"
+  kansas_first_anchor: "C7-10"                 # CONFIRMED authority anchor
 role:
-  source_role: "actual"          # actual | modeled | synthetic | candidate
+  source_role: "observed"                       # Atlas §24.1.3 enum
   evidence_character: "archival_aggregator"
-  candidate_disposition: null    # only when source_role = candidate
+  role_authority: "KSHS"
 authority_anchors:
   - { scheme: "kshs", id_pattern: "<TODO>" }
-  - { scheme: "snac", optional: true }
-  - { scheme: "lcnaf", optional: true }
+  - { scheme: "snac", optional: true }         # C7-06 archive-specific authority
+  - { scheme: "lcnaf", optional: true }        # C7-02 national authority
+  - { scheme: "viaf", optional: true }         # C7-03 international cross-ref
+  - { scheme: "gnis", optional: true }         # C7-09 place-name authority
+parallel_anchor_rule: "C7-10"                  # store Kansas-authority IRI in parallel with federal/international
 access:
-  modality: "NEEDS_VERIFICATION"  # api | oai_pmh | iiif | bulk | bespoke
+  modality: "NEEDS_VERIFICATION"               # api | oai_pmh | iiif | bulk | bespoke
   endpoint: "NEEDS_VERIFICATION"
   cadence: "NEEDS_VERIFICATION"
-  fixture_path: "fixtures/sources/archives/kansas_memory/"
-rights:
+  fixture_path: "fixtures/sources/archives/kansas-memory/"
+rights:                                          # per KFM-P18-PROG-0033 (rights notes)
   per_item: true
   default_outcome_on_unknown: "DENY"
   attribution_required: true
   attribution_template: "NEEDS_VERIFICATION"
+provenance_object:                              # per KFM-P17-PROG-0011
+  preserved_fields:
+    - "source_type"
+    - "collection_or_program"
+    - "source_ref"
+    - "scan_ids"
+    - "rights_spdx"
+    - "page_level_references"
 sensitivity:
+  rubric: "C6-01"                               # CONFIRMED 0–5 scale
   classes_to_screen:
     - "living_persons"
     - "archaeology"
@@ -527,18 +625,20 @@ sensitivity:
     - "private_landowner_sensitive"
     - "source_rights_limited"
   default_outcome: "review_required"
+  default_redaction_profile_for_rank_3: "point_10km_hex_seeded_v1"  # C6-02
 review:
   steward: "<TODO: archives steward>"
-  care_review_required: true
+  care_review_required: true                    # per C15-02 / C15-03
 release:
   posture: "not_yet_activated"
   source_activation_decision_ref: "NEEDS_VERIFICATION"
 provenance:
-  ingest_receipt_template: "data/receipts/ingest/archives/kansas_memory/"
+  ingest_receipt_template: "data/receipts/ingest/archives/kansas-memory/"
   evidence_bundle_required: true
 notes:
-  - "Item count ~600,000 is corpus-cited; verification on Pass 10 backlog."
+  - "Item count ~600,000 is corpus-cited; verification on Pass 10 backlog per C7-10."
   - "Per-institution access modality is corpus-stack-level; Kansas Memory specifics NEEDS VERIFICATION."
+  - "v0.2 slug change: kansas_memory → kansas-memory (consistency with sibling product pages)."
 ```
 
 </details>
@@ -554,23 +654,27 @@ notes:
 
 - **`EvidenceBundle`** — content-addressed JSON-LD bundle that packages a graph fragment with its evidence. Outranks generated language.
 - **`EvidenceRef`** — stable reference from a claim to the `EvidenceBundle` that supports it. Must resolve before publication.
-- **`SourceDescriptor`** — machine-readable source identity record: role, rights, cadence, access, steward, sensitivity, release posture. Anchors every downstream receipt.
+- **`SourceDescriptor`** — machine-readable source identity record: role, rights, cadence, access, steward, sensitivity, release posture. Anchors every downstream receipt. Kansas Memory shape grounded in `KFM-P18-PROG-0033`.
 - **`SourceActivationDecision`** — gate record deciding whether a source may be used, restricted, quarantined, denied, or held for review.
 - **`RightsDecision`** — explicit decision recording rights posture for a source or item.
 - **`PolicyDecision`** — finite ALLOW / DENY / RESTRICT / ABSTAIN / ERROR decision.
 - **`RedactionReceipt`** — record of a public-safe transformation that removed, masked, fuzzed, or withheld content for sensitivity, rights, or policy.
-- **`TransformReceipt`** — record of a spatial or attribute transform (reprojection, generalization, etc.).
+- **`TransformReceipt`** — record of a spatial or attribute transform (reprojection, generalization, etc.) per Atlas §24.2.1.
 - **`ValidationReport`** — schema, geometry, temporal, rights, sensitivity, evidence-check results.
 - **`ReleaseManifest`** — release-decision artifact carrying rollback target.
 - **`RollbackCard`** — rollback artifact: prior release manifest, artifact digests, cache invalidation, replay steps.
 - **`ReviewRecord`** — steward review state, notes, decisions, release/correction references.
 - **`CorrectionNotice`** — public correction lineage object linked to claims and releases.
-- **C10-07 Archives Stack** — KFM-corpus identifier for the Kansas archives source family (KSHS Kansas Memory, KHRI, KU Spencer, KSU SC, WSU, county societies, LOC IIIF, SNAC/EAC-CPF).
-- **C7-06 SNAC + EAC-CPF** — KFM-corpus identifier for the archive-specific person/corporate-body authority layer.
+- **Kansas historical provenance source object** — per `KFM-P17-PROG-0011`: preserves source type, collection or program, source_ref, scan IDs, rights_spdx, page-level references for historical claim evidence.
+- **`C10-07` Archives Stack** — KFM-corpus identifier for the Kansas archives source family (KSHS Kansas Memory, KHRI, KU Spencer, KSU SC, WSU, county societies, LOC IIIF, SNAC/EAC-CPF).
+- **`C7-06` SNAC + EAC-CPF** — KFM-corpus identifier for the archive-specific person/corporate-body authority layer.
+- **`C7-10` Kansas-First Domain Authorities** — KFM-corpus identifier for the parallel-anchor doctrine (store Kansas IRI alongside federal/international anchor); names KSHS holding the canonical record for Kansas Memory items.
+- **`C6-01` Sensitivity Rubric 0–5** — KFM-corpus identifier for the sensitivity rank scale; rank 3 default profile is `point_10km_hex_seeded_v1`.
 - **Lifecycle invariant** — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a **governed state transition, not a file move.**
-- **CARE Principles** — Collective Benefit, Authority to Control, Responsibility, Ethics — the governance frame for Indigenous and marginalized-community data. Applied jointly with FAIR.
+- **CARE Principles** — Collective Benefit, Authority to Control, Responsibility, Ethics — the governance frame for Indigenous and marginalized-community data. Applied jointly with FAIR. Surfaced in catalog via `kfm:care` extension (`C15-02`).
 - **Trust membrane** — the boundary between canonical/internal stores and the public surface. Public clients use governed interfaces, not canonical stores.
 - **Watcher-as-non-publisher** — invariant that connectors and workers emit receipts and candidate decisions but never publish or mutate canonical truth.
+- **Parallel-anchor rule** — `C7-10` convention: Kansas-authority IRI stored alongside federal/international anchor (LCNAF, VIAF, SNAC, Wikidata), not replacing them.
 
 </details>
 
@@ -578,4 +682,15 @@ notes:
 
 ---
 
-**Related docs:** see [§14](#14-related-docs) · **Last updated:** 2026-05-13 · [↑ Back to top](#quick-jump)
+## Appendix C — Change log
+
+| Date | Author | Change | Reviewed by |
+|---|---|---|---|
+| 2026-05-13 | `<docs-steward — TODO>` | Initial v0.1 source-family record: scope, repo fit, source identity, role/authority posture, access topology, rights, sensitivity & CARE, authority anchoring, lifecycle, related sources, implementation status, verification backlog, open questions, descriptor sketch, glossary. Path: flat `docs/sources/catalog/kansas_memory.md`. | `<archives-domain-lead — TODO>` |
+| 2026-05-21 | `<docs-steward — TODO>` | **v0.2 revision.** Path migration to `docs/sources/catalog/kansas/kansas-memory.md` (flat-to-folder reorganization; slug normalized to hyphen for consistency with sibling product pages `fhsu-sternberg.md`, `ku-nhm.md`, etc.). Connected to kansas family README v0.2 (which lists this page as one of eight Kansas institutions and confirms `connectors/kansas/` as §7.3 canonical at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`). Upgraded `connectors/kansas/` family lane from PROPOSED to CONFIRMED at commit. Added citation lineage to atlas cards `KFM-P18-PROG-0033` (Kansas Memory source descriptor) and `KFM-P17-PROG-0011` (Kansas historical provenance source object). Added explicit `C7-10` Kansas-First Domain Authorities framing (parallel-anchor rule). Added `C6-01` rank guideline column to sensitivity table; `C6-02` named profiles in §7.3. Added `C15-02` / `C15-03` CARE extension references in §7.2. Added source-role anti-collapse callout in §4.1 (Atlas §24.1.3). Updated §2 Repo fit to reflect v0.2 catalog reorganization; partially resolved OQ-KM-01. Added §12 items #11 (per-institution adapter path), #12 (slug convention), #13 (Kansas State Archives ↔ KSHS relationship). Added Appendix C change log. Adjusted all relative paths for the new depth (added one extra `../`). | `<archives-domain-lead — TODO>` |
+
+[↑ Back to top](#quick-jump)
+
+---
+
+**Related docs:** see [§14](#14-related-docs) · **Last updated:** 2026-05-21 · **Status:** draft (v0.2) · **Family lane:** `connectors/kansas/` CONFIRMED at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` · [↑ Back to top](#quick-jump)
