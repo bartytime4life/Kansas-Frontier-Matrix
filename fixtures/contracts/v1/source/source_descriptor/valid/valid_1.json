@@ -1,14 +1,87 @@
 {
-  "id": "src1",
-  "domain": "hydrology",
-  "role": "primary",
-  "authority": "USGS",
-  "rights": {
-    "license": "CC-BY-4.0",
-    "attribution_required": true
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:usgs-nwis-hydrology",
+  "descriptor_version": "1.0.0",
+  "title": "USGS National Water Information System",
+  "description": "Streamflow and water-level observations published by the U.S. Geological Survey.",
+  "domain_scope": ["hydrology"],
+  "source_type": "official_government_dataset",
+  "source_role": "authoritative_for_claim",
+  "authority_rank": "primary_authority",
+  "authority_notes": "Federal authority for national hydrologic monitoring.",
+  "publisher": {
+    "name": "U.S. Geological Survey",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.usgs.gov/"
+    }
   },
-  "sensitivity_floor": "public",
-  "update_cadence": "daily",
-  "access_posture": "open",
-  "citation_template": "USGS {{id}}"
+  "owner_or_steward": {
+    "name": "USGS Water Resources Mission Area",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.usgs.gov/mission-areas/water-resources"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "Public Domain (17 USC 105)",
+    "attribution_required": true,
+    "attribution_text": "Data courtesy of the U.S. Geological Survey.",
+    "redistribution_allowed": "yes",
+    "commercial_use_allowed": "yes",
+    "last_verified_at": "2026-01-15T00:00:00Z",
+    "verified_by": "kfm-source-review"
+  },
+  "sensitivity_default": "public",
+  "cadence": {
+    "update_cadence": "daily",
+    "freshness_expectation": "Observations refresh on a daily cycle.",
+    "staleness_policy": "mark_stale"
+  },
+  "access": {
+    "access_method": "rest_api",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "NWIS instantaneous values service",
+        "uri": "https://waterservices.usgs.gov/nwis/iv/",
+        "purpose": "query"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "U.S. Geological Survey, National Water Information System ({source_id}), accessed {accessed_at}.",
+    "citation_guidance": "Cite USGS NWIS with the station identifier and access date."
+  },
+  "source_head": {
+    "observed_at": "2026-01-15T00:00:00Z",
+    "method": "http_head",
+    "content_identity": {
+      "last_modified": "Wed, 14 Jan 2026 00:00:00 GMT"
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": ["observation", "operational_context"],
+    "prohibited_claim_roles": ["not_for_life_safety"],
+    "limitations": "Provisional values may be revised; not for life-safety decisions.",
+    "confidence_posture": "source_authoritative_within_role"
+  },
+  "public_release": {
+    "allowed": true,
+    "requires_review": false,
+    "redaction_required": false,
+    "release_conditions": []
+  },
+  "review_state": "approved",
+  "release_state": "released",
+  "lifecycle": {
+    "registry_state": "active",
+    "created_at": "2025-12-01T00:00:00Z",
+    "updated_at": "2026-01-15T00:00:00Z"
+  }
 }
