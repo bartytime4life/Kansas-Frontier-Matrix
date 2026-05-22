@@ -1,3 +1,37 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/root-readme
+title: Kansas Frontier Matrix — Root README
+type: standard
+version: v1.1
+status: draft
+owners: <repo steward · docs steward · subsystem owners — placeholder, confirm via CODEOWNERS>
+created: 2026-05-11
+updated: 2026-05-22
+policy_label: public
+related:
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/authority-ladder.md
+  - docs/registers/AUTHORITY_LADDER.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - .github/README.md
+  - policy/README.md
+  - release/README.md
+tags: [kfm, root-readme, doctrine, governance, evidence-first, map-first, time-aware]
+notes:
+  - "Doctrine claims throughout this file are CONFIRMED by attached project corpus (Directory Rules, KFM Encyclopedia, Domains Atlas v1.1, Unified Implementation Manual, Whole-UI + Governed-AI Expansion, Master MapLibre, Pass-10 / Pass-23 / Pass-32 Idea Index, AI Build Operating Contract)."
+  - "Implementation maturity is PROPOSED / NEEDS VERIFICATION — no mounted repository was inspected when this revision was drafted."
+  - "MetaBlock v2 fields follow atlas card KFM-P22-PROG-0002; presentation follows KFM-P7-PROG-0008 (META / BADGES / DESCRIPTION / FILES / ACCEPTANCE)."
+[/KFM_META_BLOCK_V2] -->
+
+<p align="center">
+  <img src="docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix Seal — transparent crop" width="280" />
+</p>
+
 # Kansas Frontier Matrix
 
 > A governed, evidence-first, map-first, time-aware spatial knowledge system for Kansas and the surrounding frontier.
@@ -6,9 +40,12 @@
 [![Lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW→WORK%2FQUARANTINE→PROCESSED→CATALOG%2FTRIPLET→PUBLISHED-1f6feb)](docs/doctrine/lifecycle-law.md)
 [![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth_posture-cite--or--abstain-2da44e)](docs/doctrine/truth-posture.md)
 [![Public path: governed API only](https://img.shields.io/badge/public_path-governed_API_only-8957e5)](docs/architecture/governed-api.md)
+[![Gates: A–G fail-closed](https://img.shields.io/badge/gates-A%E2%80%93G%20fail--closed-2f855a)](docs/doctrine/promotion-gates.md)
+[![Starter pack: C14-01](https://img.shields.io/badge/C14--01-five--file%20starter%20pack-0b7285)](#governance-enforcement-at-a-glance)
+[![Watcher-as-non-publisher](https://img.shields.io/badge/invariant-watcher--as--non--publisher-d97706)](#core-invariants)
 [![Build: TODO](https://img.shields.io/badge/build-TODO-lightgrey)](#status-and-maturity)
 [![License: TODO](https://img.shields.io/badge/license-TODO-lightgrey)](LICENSE)
-[![Docs last updated: 2026-05-11](https://img.shields.io/badge/docs_updated-2026--05--11-informational)](#last-updated)
+[![Docs last updated: 2026-05-22](https://img.shields.io/badge/docs_updated-2026--05--22-informational)](#last-updated)
 
 > [!NOTE]
 > **Status & posture.** KFM doctrine, invariants, and governance contracts are **CONFIRMED** in attached project sources. **Implementation maturity is PROPOSED / NEEDS VERIFICATION** in this session: the repository was not mounted while drafting, so all per-path, per-route, per-test, and per-workflow claims below must be verified against actual repo state before treated as fact. Badge targets shown as `TODO` are placeholders awaiting first-pass verification.
@@ -17,11 +54,13 @@
 |---|---|
 | **Status** | doctrine CONFIRMED · implementation PROPOSED / NEEDS VERIFICATION |
 | **Owners** | TODO — Repo steward · Docs steward · Subsystem owners (per `CODEOWNERS`) |
-| **Last reviewed** | 2026-05-11 |
+| **Last reviewed** | 2026-05-22 |
 | **Authoritative placement rules** | [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) |
+| **Authoritative AI-build contract** | [`docs/doctrine/ai-build-operating-contract.md`](docs/doctrine/ai-build-operating-contract.md) (`CONTRACT_VERSION = "3.0.0"`) |
 | **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
 | **Truth posture** | Cite-or-abstain. EvidenceRef must resolve to EvidenceBundle before consequential claims. |
 | **Public path** | Standard clients consume **governed APIs and released artifacts only.** No public access to RAW / WORK / QUARANTINE / candidate / internal stores / model runtimes. |
+| **Promotion** | A governed state transition, **not** a file move. Gates A–G (Pass-10 C5-01) fail-closed by default. |
 
 ---
 
@@ -30,8 +69,10 @@
 - [What KFM is](#what-kfm-is)
 - [Why it works this way](#why-it-works-this-way)
 - [Core invariants](#core-invariants)
+- [Governance enforcement at a glance](#governance-enforcement-at-a-glance)
 - [Repository layout](#repository-layout)
 - [How a claim travels through KFM](#how-a-claim-travels-through-kfm)
+- [Promotion gates A–G](#promotion-gates-ag)
 - [Truth labels you'll see in this repo](#truth-labels-youll-see-in-this-repo)
 - [Domains](#domains)
 - [Public surfaces](#public-surfaces)
@@ -82,7 +123,7 @@ Three commitments shape every other rule in the system.
 
 ## Core invariants
 
-The system holds these invariants by default. A change that bends one requires an explicit tradeoff and (where §2.4 of Directory Rules applies) an ADR.
+The system holds these invariants by default. A change that bends one requires an explicit tradeoff and (where Directory Rules §2.4 applies) an ADR.
 
 | # | Invariant | Operational meaning |
 |---|---|---|
@@ -90,13 +131,65 @@ The system holds these invariants by default. A change that bends one requires a
 | 2 | **Public path governance** | Public surfaces use governed interfaces; canonical/internal stores are not directly readable from the browser. |
 | 3 | **Cite-or-abstain** | EvidenceRef must resolve to EvidenceBundle before claims; otherwise the surface returns `ABSTAIN`. |
 | 4 | **Policy-aware fail-safe defaults** | Sensitive lanes (rare species, archaeology, infrastructure, living-person, DNA, exact location) **default to DENY** unless rights, sensitivity, validation, and review explicitly allow. |
-| 5 | **Deterministic identity** | Object identity is stable across time and representations; mistaken identity is treated as data corruption. |
-| 6 | **Governed promotion** | Validation, policy decision, proof or citation closure, release manifest, review state, correction path, rollback target, and receipt trail are all required. |
+| 5 | **Deterministic identity** | Object identity is stable across time and representations; spec hashes are RFC 8785 JCS + SHA-256 (Pass-10 C1-02); mistaken identity is treated as data corruption. |
+| 6 | **Governed promotion** | Validation, policy decision, proof or citation closure, release manifest, review state, correction path, rollback target, and receipt trail are all required. Default-deny on absence of evidence (Pass-10 C5-02). |
 | 7 | **Auditable governance trail** | Provenance, receipts, reviews, corrections, and rollback targets remain inspectable after the fact. |
-| 8 | **AI is interpretive, not sovereign** | Generated text never substitutes for evidence, policy, review state, source authority, or release state. |
-| 9 | **Separation of duties** | Policy-significant release duties are separated from authoring when materiality justifies it. |
+| 8 | **AI is interpretive, not sovereign** | Generated text never substitutes for evidence, policy, review state, source authority, or release state. AI-authored artifacts require a `GENERATED_RECEIPT.json` (operating-contract §34). |
+| 9 | **Watcher-as-non-publisher** | Watchers, CI workflows, and intake jobs emit candidate decisions, receipts, and intake records — they **never** mutate catalog, release, or `data/published/` directly. |
+| 10 | **Policy parity (CI = runtime)** | The same OPA bundle digest gates merges in CI and admissions at runtime (Pass-10 C5-03). Drift between the two is a class of bug, not a configuration choice. |
+| 11 | **Separation of duties** | Policy-significant release duties are separated from authoring when materiality justifies it. |
 
-Primary doctrine: [`docs/doctrine/lifecycle-law.md`](docs/doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](docs/doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](docs/doctrine/truth-posture.md), [`docs/doctrine/authority-ladder.md`](docs/doctrine/authority-ladder.md). All paths PROPOSED until mounted-repo inspection confirms.
+Primary doctrine: [`docs/doctrine/lifecycle-law.md`](docs/doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](docs/doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](docs/doctrine/truth-posture.md), [`docs/doctrine/authority-ladder.md`](docs/doctrine/authority-ladder.md), [`docs/doctrine/ai-build-operating-contract.md`](docs/doctrine/ai-build-operating-contract.md). All paths PROPOSED until mounted-repo inspection confirms.
+
+---
+
+## Governance enforcement at a glance
+
+> [!TIP]
+> KFM doctrine is operationalized by a **minimum viable governance posture** — Pass-10 idea **C14-01** (CONFIRMED). The five files plus one CI workflow plus one local script below let CI, runtime, and a developer's laptop all evaluate the same gates against the same evidence.
+
+| Starter-pack file | Canonical home | What it pins |
+|---|---|---|
+| `CODEOWNERS` | `.github/CODEOWNERS` *or* repo root | Path-to-reviewer routing for gate **G** (Reviewability). |
+| `tool-versions.yaml` | `configs/` or repo root | Pinned toolchain (Pass-10 C13-01); enables reproducible CI signal. |
+| `policy-bundle.json` | `policy/` (digest-pinned) | The single OPA bundle digest gating **CI = runtime** parity (C5-03). |
+| `sbom.yaml` | `release/` or repo root | Software bill of materials for gate **F** (Provenance & Lineage). |
+| `run_receipt.schema.json` | `schemas/contracts/v1/receipts/` | Canonical receipt schema for `RunReceipt` (C1-01) and `GENERATED_RECEIPT` (operating-contract §34). |
+| `integrity.yml` *(CI workflow)* | `.github/workflows/integrity.yml` | The workflow that runs `verify.sh` on every push and PR. |
+| `verify.sh` *(local script)* | `scripts/dev/` or `tools/` | The same script CI runs — locally reproducible by any contributor. |
+
+```mermaid
+flowchart LR
+    classDef canon fill:#e6f0fb,stroke:#1f4f8f,color:#0b2545,stroke-width:1.2px;
+    classDef hook fill:#fff5e6,stroke:#b25900,color:#5a3500,stroke-width:1.4px;
+    classDef result fill:#dcfce7,stroke:#15803d,color:#14532d,stroke-width:1.2px;
+
+    DEV["developer laptop<br/>./scripts/dev/verify.sh"]:::hook
+    CI[".github/workflows/integrity.yml<br/>(GitHub Actions)"]:::hook
+    RT["runtime PDP / Gatekeeper<br/>(in-cluster admission)"]:::hook
+
+    POL["policy/<br/>OPA bundle (digest-pinned)"]:::canon
+    SCH["schemas/contracts/v1/<br/>shape authority"]:::canon
+    FIX["fixtures/ + tests/"]:::canon
+    REL["release/<br/>manifests · rollback · correction"]:::canon
+
+    POL -- "same digest" --> DEV
+    POL -- "same digest" --> CI
+    POL -- "same digest" --> RT
+    SCH --> DEV
+    SCH --> CI
+    FIX --> DEV
+    FIX --> CI
+    CI --> REL
+    DEV --> CI
+
+    OUT["matching decisions<br/>local · CI · runtime"]:::result
+    DEV --> OUT
+    CI --> OUT
+    RT --> OUT
+```
+
+**Reading the diagram.** The OPA bundle digest is pinned in exactly one place — `policy/` — and is referenced by the developer's `verify.sh`, by `.github/workflows/integrity.yml`, and by the runtime PDP / Gatekeeper in `infra/`. **C5-03** parity holds when all three reference the same digest. Drift in any one is a governance bug, not a configuration choice. *PROPOSED for this repo until mounted-state inspection confirms.*
 
 ---
 
@@ -113,7 +206,7 @@ Kansas-Frontier-Matrix/
 ├── LICENSE
 ├── CODEOWNERS                   # may live in .github/CODEOWNERS instead
 ├── .github/                     # workflows, issue/PR templates, governance hooks
-├── docs/                        # human-facing control plane (doctrine, ADRs, architecture, runbooks)
+├── docs/                        # human-facing control plane (doctrine, ADRs, architecture, runbooks, brand)
 ├── control_plane/               # machine-readable governance maps & registers
 ├── contracts/                   # object-family MEANING (what an object is)
 ├── schemas/                     # machine-checkable SHAPE (default: schemas/contracts/v1/<…>)
@@ -121,7 +214,7 @@ Kansas-Frontier-Matrix/
 ├── tests/                       # enforceability proof
 ├── fixtures/                    # golden / valid / invalid test inputs
 ├── tools/                       # repo-wide validators, generators, builders
-├── scripts/                     # small operational helpers
+├── scripts/                     # small operational helpers (incl. dev/verify.sh)
 ├── apps/                        # deployable applications (governed-api, explorer-web)
 ├── packages/                    # shared libraries (ui, maplibre, evidence-resolver, …)
 ├── connectors/                  # source-specific fetchers / admitters
@@ -140,7 +233,7 @@ Kansas-Frontier-Matrix/
 ```
 
 > [!WARNING]
-> **Status of this tree:** the **rules** that produce it are CONFIRMED in `docs/doctrine/directory-rules.md`. The **presence** of any specific root in the live repo is **PROPOSED until verified** against mounted-repo evidence (see [Directory Rules §0](docs/doctrine/directory-rules.md) and §5). Domain folders at repo root (e.g., `hydrology/`, `soil/`, `fauna/`) are **anti-patterns** — domains belong as lanes under responsibility roots.
+> **Status of this tree:** the **rules** that produce it are CONFIRMED in [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md). The **presence** of any specific root in the live repo is **PROPOSED until verified** against mounted-repo evidence (see Directory Rules §0 and §5). Domain folders at repo root (e.g., `hydrology/`, `soil/`, `fauna/`) are **anti-patterns** — domains belong as lanes under responsibility roots.
 
 ### Where things go (quick map)
 
@@ -214,6 +307,30 @@ flowchart LR
 
 **Reading the diagram.** Public clients only touch the green band on the right. Promotion across each arrow is a **governed transition** that requires the artifacts named in the lifecycle invariant — not a file move. The pre-RAW intake (`event_envelope`, `prefilter_output`, `event_run_receipt`) records attempted intake **before** material is admitted into RAW, so watchers, GitOps emission, and live feeds never blur the boundary between observed input and accepted source.
 
+[Back to top](#kansas-frontier-matrix)
+
+---
+
+## Promotion gates A–G
+
+> [!IMPORTANT]
+> The **seven-gate matrix** is **CONFIRMED doctrine** (Pass-10 idea **C5-01**). Branch protection should require check names that match these gates one-for-one; a gate that did not run is a gate that failed — "we didn't check" is not a PASS.
+
+| Gate | Intent | Required evidence (PROPOSED objects) |
+|---|---|---|
+| **A — Structure & Metadata** | MetaBlock presence, zone correctness, path-role validity | Path/drift scan + MetaBlock-v2 check (KFM-P22-PROG-0002) |
+| **B — Schemas & Contracts** | Object conforms to schema + contract vocabulary | `SchemaValidationReport` against `schemas/contracts/v1/` and fixtures |
+| **C — Policy Parity** | CI and runtime decide on the same OPA bundle digest | `PolicyDecision` from pinned bundle (C5-03) |
+| **D — Security & Sensitivity** | Rights, sensitivity, license allowlist, secret hygiene | SPDX allowlist + sensitivity classifier + `RightsReviewRecord` |
+| **E — Data Quality** | DQ profilers, assertions, threshold pass | DQ check outputs with `status: pass` |
+| **F — Provenance & Lineage** | RunReceipt, spec_hash, signed bundle, catalog closure | `RunReceipt` + `CatalogMatrixReport` + `CitationValidationReport` |
+| **G — Reviewability** | CODEOWNERS + two-key approval + policy approval | GitHub review state + `PromotionDecision` + `ReleaseManifest` + `RollbackCard` |
+
+> [!CAUTION]
+> **Default-deny on absence of evidence.** Promotion is denied unless `spec_hash` matches a recomputation, the run receipt is cosign-signed and verifiable, SPDX rights are in the allowlist, at least one attestation bundle is published, and every dataset-quality check has `status: pass` (Pass-10 **C5-02**).
+
+CI surface lives in [`.github/`](.github/); per-domain Definitions of Done specialize the gate evidence per lane.
+
 ---
 
 ## Truth labels you'll see in this repo
@@ -277,40 +394,43 @@ What the **public** interacts with — and what they pointedly **do not**.
 
 All surfaces are **CONFIRMED doctrine / PROPOSED implementation** in the supplied corpus. Routes, DTOs, and runtime behavior are **UNKNOWN** until repository inspection.
 
+[Back to top](#kansas-frontier-matrix)
+
 ---
 
 ## Getting oriented (no install yet)
 
 If you're new to KFM and the repo isn't checked out, read in this order. Each link is **PROPOSED** until verified against the mounted repo.
 
-1. **Doctrine first.** [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md), then [`docs/doctrine/lifecycle-law.md`](docs/doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](docs/doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](docs/doctrine/truth-posture.md), [`docs/doctrine/authority-ladder.md`](docs/doctrine/authority-ladder.md).
+1. **Doctrine first.** [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md), then [`docs/doctrine/ai-build-operating-contract.md`](docs/doctrine/ai-build-operating-contract.md), then [`docs/doctrine/lifecycle-law.md`](docs/doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](docs/doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](docs/doctrine/truth-posture.md), [`docs/doctrine/authority-ladder.md`](docs/doctrine/authority-ladder.md).
 2. **Architecture.** [`docs/architecture/system-context.md`](docs/architecture/system-context.md), [`docs/architecture/governed-api.md`](docs/architecture/governed-api.md), [`docs/architecture/map-shell.md`](docs/architecture/map-shell.md), [`docs/architecture/contract-schema-policy-split.md`](docs/architecture/contract-schema-policy-split.md).
 3. **Registers.** [`docs/registers/AUTHORITY_LADDER.md`](docs/registers/AUTHORITY_LADDER.md), [`CANONICAL_LINEAGE_EXPLORATORY.md`](docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md), [`DRIFT_REGISTER.md`](docs/registers/DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](docs/registers/VERIFICATION_BACKLOG.md).
 4. **ADRs.** [`docs/adr/`](docs/adr/) — start with `ADR-0001-schema-home.md`.
-5. **Domains.** [`docs/domains/<domain>/`](docs/domains/) — pick the lane you care about.
+5. **Governance hooks.** [`.github/README.md`](.github/README.md) — workflows, CODEOWNERS, PR/issue templates, the seven-gate CI map.
+6. **Domains.** [`docs/domains/<domain>/`](docs/domains/) — pick the lane you care about.
 
 ---
 
 ## Quickstart (when the repo is mounted)
 
 > [!NOTE]
-> **Illustrative — not a verified pipeline.** The package manager, app entry points, and validator commands are PROPOSED until the actual repo is inspected. Treat this block as a placeholder for the eventual `runbooks/`-backed flow.
+> **Illustrative — not a verified pipeline.** The package manager, app entry points, and validator commands are PROPOSED until the actual repo is inspected. Treat this block as a placeholder for the eventual `runbooks/`-backed flow. The `verify.sh` invocation reflects the five-file starter pack (Pass-10 **C14-01**, CONFIRMED doctrine).
 
 ```bash
 # 1) Clone (PROPOSED URL)
 git clone https://github.com/<org>/Kansas-Frontier-Matrix.git
 cd Kansas-Frontier-Matrix
 
-# 2) Doctrine pre-flight: read the rules that govern placement
+# 2) Doctrine pre-flight: read the rules that govern placement and AI-build behavior
 cat docs/doctrine/directory-rules.md
+cat docs/doctrine/ai-build-operating-contract.md
 
 # 3) Install dependencies (PROPOSED — package manager NEEDS VERIFICATION)
 # e.g. one of:  pnpm install   |   npm install   |   yarn install
 
-# 4) Validate schemas, fixtures, and policy (PROPOSED command surfaces)
-# e.g.:        pnpm run validate:schemas
-#              pnpm run validate:fixtures
-#              pnpm run policy:test
+# 4) Reproduce the CI signal locally — same script CI runs (C14-01 verify.sh)
+./scripts/dev/verify.sh
+# (validates schemas + fixtures + policy bundle digest + receipt closure)
 
 # 5) Run the governed API locally (PROPOSED path)
 # e.g.:        pnpm --filter @kfm/governed-api dev
@@ -327,7 +447,7 @@ If your command surface differs from the above, the **mounted repo is the truth 
 
 KFM treats placement, evidence, and release as governance, not paperwork. Before opening a PR:
 
-- [ ] **Read** [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md). Use the §4 Placement Protocol to choose a path.
+- [ ] **Read** [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) and [`docs/doctrine/ai-build-operating-contract.md`](docs/doctrine/ai-build-operating-contract.md). Use the Directory Rules §4 Placement Protocol to choose a path.
 - [ ] **Cite the rule** in your PR description that justifies any new, moved, or renamed path.
 - [ ] **Truth-label** uncertain claims (`CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`) rather than smoothing them away.
 - [ ] **No parallel authority.** Do not create a sibling home for schemas, contracts, policy, sources, registries, releases, proofs, or receipts without an ADR (Directory Rules §2.4).
@@ -336,6 +456,7 @@ KFM treats placement, evidence, and release as governance, not paperwork. Before
 - [ ] **README contract.** Affected folders carry a README that meets [Directory Rules §15](docs/doctrine/directory-rules.md).
 - [ ] **Tests, fixtures, policy, runbook** updates accompany behavioral change. Docs are part of the working system — but they do **not** substitute for validation.
 - [ ] **Rollback path** is named for any release-affecting change.
+- [ ] **AI-authored work** carries a `GENERATED_RECEIPT.json` per operating-contract §34, and the PR body follows §27.1.
 
 Full contribution guide: [`CONTRIBUTING.md`](CONTRIBUTING.md) (PROPOSED — verify presence and content).
 
@@ -355,11 +476,18 @@ Security disclosures and exposure-posture concerns: [`SECURITY.md`](SECURITY.md)
 | Cite-or-abstain | CONFIRMED | UNKNOWN — runtime/citation-validator state not verified |
 | Sensitivity tiers (T0–T4) | CONFIRMED scheme | PROPOSED per-source assignments |
 | Governed AI finite outcomes (`ANSWER / ABSTAIN / DENY / ERROR`) | CONFIRMED | UNKNOWN — adapter/runtime not verified |
+| Seven-gate matrix A–G | CONFIRMED (Pass-10 C5-01) | NEEDS VERIFICATION — branch-protection check names not inspected |
+| Policy parity (CI = runtime, same OPA digest) | CONFIRMED (Pass-10 C5-03) | NEEDS VERIFICATION — CI/`infra/` digest match not inspected |
+| Five-file starter pack + `integrity.yml` + `verify.sh` | CONFIRMED (Pass-10 C14-01) | NEEDS VERIFICATION — file presence not inspected |
+| AI-build operating contract (`CONTRACT_VERSION = "3.0.0"`) | CONFIRMED authored | NEEDS VERIFICATION — adoption checklist §48 not exercised |
+| `GENERATED_RECEIPT.json` gate on AI-authored merges | CONFIRMED requirement (§34) | UNKNOWN — CI gate wiring not verified |
 | Directory Rules canonical roots | CONFIRMED | PROPOSED presence in live repo |
 | ADR discipline | CONFIRMED | UNKNOWN — `docs/adr/` contents not verified |
 | Domain dossiers | CONFIRMED doctrine per domain | PROPOSED implementation per domain |
 
 The current-session evidence limit applies: doctrine speaks confidently because attached sources support it; implementation claims are bounded until the repo can be inspected.
+
+[Back to top](#kansas-frontier-matrix)
 
 ---
 
@@ -374,7 +502,7 @@ Because the public surface needs to **earn** every claim, and a generic GIS port
 <details>
 <summary><strong>Why isn't the AI just answering questions directly?</strong></summary>
 
-Because fluent generation isn't evidence. Focus Mode answers only what `EvidenceBundle` resolution and policy permit. If the evidence is missing, ambiguous, or restricted, the surface returns `ABSTAIN` or `DENY` — with a reason — rather than improvising. Every governed AI exchange emits an `AIReceipt` that records the provider/model adapter, the evidence references, the citation validation result, and the policy decision, without exposing private chain-of-thought.
+Because fluent generation isn't evidence. Focus Mode answers only what `EvidenceBundle` resolution and policy permit. If the evidence is missing, ambiguous, or restricted, the surface returns `ABSTAIN` or `DENY` — with a reason — rather than improvising. Every governed AI exchange emits an `AIReceipt` that records the provider/model adapter, the evidence references, the citation validation result, and the policy decision, without exposing private chain-of-thought. AI-authored repo changes additionally emit a `GENERATED_RECEIPT.json` per operating-contract §34.
 </details>
 
 <details>
@@ -401,6 +529,18 @@ It means the design, path, placement, or recommendation is sound on paper but **
 In **deny-by-default** lanes. Public-safe derivatives only appear after rights, sovereignty, sensitivity, validation, review, and release have all been resolved, often via redaction, generalization, or staged access. Unclear cases prefer quarantine, denial, or delay.
 </details>
 
+<details>
+<summary><strong>What is "policy parity (CI = runtime)" and why does it matter?</strong></summary>
+
+It's the rule that the OPA bundle digest evaluated in CI must be the same digest evaluated by the runtime PDP / Gatekeeper (Pass-10 **C5-03**). Without parity, a check that passes in CI can fail differently in production — or vice versa — and an audit can't answer what the system was actually enforcing yesterday. Parity is the difference between policy theatre and enforced policy.
+</details>
+
+<details>
+<summary><strong>What does "watcher-as-non-publisher" mean in practice?</strong></summary>
+
+Watchers, CI workflows, and intake jobs may *detect* change, *emit* candidate decisions, *record* receipts, and *trigger* downstream pipelines — but they MUST NOT mutate `data/catalog/`, `data/published/`, or `release/manifests/` directly. Promotion stays a governed transition with human review where materiality requires it. This invariant prevents fluent automation from quietly becoming the publisher.
+</details>
+
 ---
 
 ## Related docs
@@ -408,13 +548,16 @@ In **deny-by-default** lanes. Public-safe derivatives only appear after rights, 
 > [!NOTE]
 > Links below resolve once the doctrinal and architecture trees are in place. They are **PROPOSED paths**, consistent with Directory Rules §5–§7. Verify against mounted-repo state before treating as canonical.
 
-- **Doctrine** — [`docs/doctrine/`](docs/doctrine/) (directory-rules · lifecycle-law · trust-membrane · truth-posture · authority-ladder)
-- **Architecture** — [`docs/architecture/`](docs/architecture/) (system-context · governed-api · map-shell · contract-schema-policy-split)
+- **Doctrine** — [`docs/doctrine/`](docs/doctrine/) (`directory-rules.md` · `ai-build-operating-contract.md` · `lifecycle-law.md` · `trust-membrane.md` · `truth-posture.md` · `authority-ladder.md`)
+- **Architecture** — [`docs/architecture/`](docs/architecture/) (`system-context.md` · `governed-api.md` · `map-shell.md` · `contract-schema-policy-split.md`)
 - **ADRs** — [`docs/adr/`](docs/adr/) (start with `ADR-0001-schema-home.md`)
 - **Registers** — [`docs/registers/`](docs/registers/) (`AUTHORITY_LADDER`, `CANONICAL_LINEAGE_EXPLORATORY`, `DRIFT_REGISTER`, `VERIFICATION_BACKLOG`, `OBJECT_FAMILY_MAP`)
 - **Domains** — [`docs/domains/`](docs/domains/) (per-domain dossiers and lane plans)
 - **Sources & standards** — [`docs/sources/`](docs/sources/), [`docs/standards/`](docs/standards/)
 - **Runbooks** — [`docs/runbooks/`](docs/runbooks/) (`ui_LOCAL_DEV`, `ui_VALIDATION`, `ui_ROLLBACK`, `governed_ai_*`)
+- **Governance hooks** — [`.github/README.md`](.github/README.md) (workflows, CODEOWNERS, gate matrix)
+- **Policy** — [`policy/README.md`](policy/README.md) (OPA bundle home; digest-pinned)
+- **Release** — [`release/README.md`](release/README.md) (manifests, rollback cards, correction notices)
 - **Contributing & security** — [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), [`CODEOWNERS`](CODEOWNERS)
 
 [Back to top ↑](#kansas-frontier-matrix)
@@ -436,6 +579,7 @@ In **deny-by-default** lanes. Public-safe derivatives only appear after rights, 
 | **PolicyDecision** | Explicit allow / deny / restrict / abstain / error decision tied to user, purpose, release class, evidence, and sensitivity. |
 | **DecisionEnvelope / RuntimeResponseEnvelope** | Finite-outcome wrappers used by APIs, runtime surfaces, and UI/AI payloads to avoid ambiguous truth states. |
 | **AIReceipt** | Runtime accountability record for bounded AI use; provider/model adapter, evidence refs, citation validation, policy result. Never a substitute for `EvidenceBundle`. |
+| **GENERATED_RECEIPT.json** | Build-time accountability record for AI-authored repo changes (operating-contract §34). Required when AI authored or substantively modified files in the diff. |
 | **CitationValidationReport** | Pass/fail citation closure object for Focus Mode, Story Nodes, popups, and exports. |
 | **RunReceipt / PromotionReceipt** | Build/run receipts for pipeline or tile artifact generation; promotion-gate receipts for state transitions. |
 | **ReleaseManifest** | The release-decision artifact (lives under `release/manifests/`). |
@@ -446,6 +590,8 @@ In **deny-by-default** lanes. Public-safe derivatives only appear after rights, 
 | **Authority root / Compatibility root** | Responsibility-bearing canonical root vs. legacy/mirror/transitional root, per Directory Rules §5 / §8. |
 | **Promotion** | Governed state transition between lifecycle phases. **Not a file move.** |
 | **Trust membrane** | The boundary that prevents raw / unreviewed / model-generated / internal state from becoming public truth. Operational form: `apps/governed-api/`. |
+| **Policy parity** | The CI = runtime invariant — same OPA bundle digest gates merges in CI and admissions at runtime (Pass-10 C5-03). |
+| **Watcher-as-non-publisher** | Invariant that watchers, CI workflows, and intake jobs emit candidates and receipts only; never mutate catalog or release directly. |
 
 </details>
 
@@ -478,10 +624,30 @@ Tier upgrades (toward more public) require both a transform receipt **and** a re
 
 </details>
 
+<details>
+<summary><strong>Pass-10 / Pass-23 / Pass-32 idea-card anchors referenced by this README</strong></summary>
+
+| Card | Status | Why it's cited here |
+|---|---|---|
+| **C1-01** RunReceipt | CONFIRMED | Receipt envelope referenced by gates F and G. |
+| **C1-02** spec_hash (JCS + SHA-256) | CONFIRMED | Deterministic identity invariant. |
+| **C5-01** Gate Matrix A–G | CONFIRMED | Seven-gate canonical labels used in this README. |
+| **C5-02** Default-Deny Promotion | CONFIRMED | Absence-of-evidence-blocks-promotion rule. |
+| **C5-03** Policy Parity (CI = Runtime) | CONFIRMED | Same OPA bundle digest in CI and runtime. |
+| **C14-01** Five-File Starter Pack + `integrity.yml` | CONFIRMED | Minimum viable governance posture. |
+| **KFM-P7-PROG-0008** META / BADGES / DESCRIPTION / FILES / ACCEPTANCE | CONFIRMED | Five-block doc template applied here. |
+| **KFM-P22-PROG-0002** MetaBlock v2 release anchor | PROPOSED | Top-of-file YAML-in-comment block convention. |
+| **KFM-P17-FEAT-0001** Deterministic obligations comment on PR failure | PROPOSED | CI behavior on policy-gated publish failure. |
+| **KFM-P8-PROG-0005** GitHub Actions kill-switch | CONFIRMED | Named env-var pattern for emergency shutdown. |
+
+</details>
+
 ---
 
 ### Last updated
 
-`2026-05-11` — initial polished draft authored from project doctrine (Directory Rules, KFM Encyclopedia, Domains Culmination Atlas v1.1, Unified Implementation Architecture Build Manual, Whole-UI + Governed AI Expansion Report, Master MapLibre Components Manual, Pass-18 Idea Index). Repository was not mounted during drafting; all repo-state claims are **PROPOSED / NEEDS VERIFICATION** until inspection.
+`2026-05-22` — v1.1 revision. Added KFM Meta Block v2, brand seal at top center (`docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png`), Governance-enforcement-at-a-glance section with starter-pack diagram, explicit Promotion-Gates-A–G section, watcher-as-non-publisher and policy-parity invariants, AI-build operating-contract references throughout, and several FAQ entries. All repo-state claims remain **PROPOSED / NEEDS VERIFICATION** until a mounted repository is inspected.
+
+Previous edition: `2026-05-11` — initial polished draft authored from project doctrine (Directory Rules, KFM Encyclopedia, Domains Culmination Atlas v1.1, Unified Implementation Architecture Build Manual, Whole-UI + Governed AI Expansion Report, Master MapLibre Components Manual, Pass-18 Idea Index).
 
 [Back to top ↑](#kansas-frontier-matrix)
