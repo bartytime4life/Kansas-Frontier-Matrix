@@ -1,368 +1,607 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs-sources-catalog-kansas-readme
-title: kansas source family
-type: readme
+doc_id: kfm://doc/docs-sources-catalog-kansas-ksgs
+title: Kansas Geological Survey (KGS) — Source Catalog Entry
+type: standard
+subtype: source-catalog-entry
 version: v0.2
 status: draft
-owners: <PLACEHOLDER — Docs steward + Source steward for kansas>
-created: 2026-05-20
+owners: <docs steward + Geology subsystem owner — PLACEHOLDER, NEEDS VERIFICATION>
+created: 2026-05-13
 updated: 2026-05-21
 policy_label: public
 related:
+  - docs/sources/catalog/kansas/README.md
+  - docs/sources/catalog/kansas/kcc-oil-gas-reg.md
+  - docs/sources/catalog/kansas/kdwp.md
+  - docs/sources/catalog/kansas/kdhe.md
+  - docs/sources/catalog/kansas/kda.md
+  - docs/sources/catalog/kansas/kansas-mesonet.md
+  - docs/sources/catalog/kansas/kansas-state-archives.md
+  - docs/sources/catalog/kansas/kansas-memory.md
+  - docs/sources/catalog/kansas/khri.md
+  - docs/sources/catalog/kansas/kbs.md
+  - docs/sources/catalog/kansas/ku-nhm.md
+  - docs/sources/catalog/kansas/fhsu-sternberg.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/PROFILES.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/doctrine/directory-rules.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
   - docs/domains/geology/README.md
-  - docs/domains/fauna/README.md
-  - docs/domains/flora/README.md
-  - docs/domains/archaeology/README.md
+  - docs/domains/hydrology/README.md
+  - docs/domains/environment/README.md
   - docs/standards/SENSITIVITY_RUBRIC.md
+  - docs/registers/AUTHORITY_LADDER.md
+  - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/adr/ADR-0001-schema-home.md
+  - control_plane/source_authority_register.yaml
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/kansas/
+  - connectors/kansas/kgs/
   - data/registry/sources/
   - policy/sensitivity/
-tags: [kfm, docs, sources, catalog, kansas, kansas-first, multi-institution]
+  - policy/rights/
+tags: [kfm, sources, catalog, kansas, kansas-first, kgs, ksgs, geology, hydrology, oil-and-gas, wwc5, las, geoportal, c7-10, c10-03, dom-geol]
 notes:
   - >-
-    `kansas/` is CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)
-    as one of the nine canonical connector families enumerated in
-    `directory-rules.md` v1.2 §7.3. Family-level confirmation; per-institution
-    descriptor and product-page presence remain NEEDS VERIFICATION.
+    v0.2 path migration: this doc was at `docs/sources/catalog/ksgs.md` (flat)
+    in v1 and has moved to `docs/sources/catalog/kansas/ksgs.md` (nested under
+    the `kansas/` family folder per v0.2 catalog convention). The kansas
+    family README v0.2 lists this brief explicitly.
   - >-
-    Created as the `kansas` family overview during the flat-to-folder
-    reorganization; sibling-link presence reported by the Claude Code session
-    but NOT verified against a mounted repo. Atlas idea cards anchor the
-    Kansas-first doctrine: `C7-10` Kansas-First Domain Authorities,
-    `KFM-P2-IDEA-0024` (CONFIRMED Kansas agency list), `KFM-P19-IDEA-0005`
-    (KDWP listing-status canonicity), `C10-06` (KU NHM, FHSU Sternberg in
-    biodiversity stack), `C10-07` (KSHS Kansas Memory, KHRI in archives stack).
+    Slug retention: v1 used `ksgs.md` rather than `kgs.md`. v0.2 PRESERVES the
+    `ksgs` slug at the user's discretion (the original v1 NOTE callout flagged
+    this as PROPOSED). Surfaced as OPEN-KSGS-13 in §13 — the slug-vs-corpus-
+    abbreviation choice should be ratified by ADR or repo convention. This
+    matches the long-standing OPEN-DSC-15 (Kansas family README v0.2 lane-wide
+    item) which Andy flagged in the earlier kansas/README.md revision.
   - >-
-    Original scaffold cites `ADR-0010` for deny-by-default sensitivity gating —
-    preserved as referenced but NEEDS VERIFICATION; the corpus settles the
-    deny-by-default posture via Pass-10 `C5-02` + KFM-P24-IDEA-0002 +
-    KFM-P24-PROG-0013 rather than naming `ADR-0010` directly.
+    Connector path was ALREADY correct in v1: `connectors/kansas/kgs/` sits
+    under the canonical `connectors/kansas/` §7.3 family. Note slug
+    discrepancy — file uses `ksgs.md` while connector path uses `kgs/`. v0.2
+    preserves both verbatim; see OPEN-KSGS-13 for ratification.
+  - >-
+    Atlas card lineage CONFIRMED: `DOM-GEOL` Domains Atlas §D Geology — FIVE
+    KGS-related source-family rows ("Kansas Geological Survey data and maps";
+    "KGS surficial geology and geologic maps"; "KGS oil and gas wells and
+    production"; "KGS/KDHE WWC5 and water-well program"; "KGS LAS digital well
+    logs and well tops"); `C10-03` Water Stack (WWC5 + KGS Geoportal);
+    `C10-07`-adjacent geology stack; `KFM-P2-IDEA-0024` (KGS named as
+    Kansas-specific authority); `KFM-P25-IDEA-0001` (KGS oil-and-gas refresh
+    as analytic baseline change); `KFM-P25-PROG-0001` (KGS oil-and-gas source
+    descriptor shape); `KFM-P2-PROG-0009` (WIMAS/WWC5 joint KGS+KDA-DWR);
+    `KFM-P8-PROG-0024` (KGS surficial geology minimal unit model);
+    `KFM-P2-PROG-0017` (waterbody crosswalks include KGS); `C7-10`
+    parallel-anchor rule; `C7-09` GNIS federal place anchor.
+  - >-
+    `connectors/kansas/` lane is CONFIRMED (at commit
+    `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3.
 [/KFM_META_BLOCK_V2] -->
 
-# `kansas` source family
+# Kansas Geological Survey (KGS) — Source Catalog Entry
 
-> Source-oriented catalog documentation for the **Kansas state-scoped** source family — Kansas-first authorities (state agencies, universities, museums, archives) whose data KFM ingests in parallel with federal and international anchors.
+> Per-publisher catalog entry for the **Kansas Geological Survey (KGS)** — publisher of Kansas bedrock and surficial geology, oil-and-gas wells and production, the WWC5 water-well program (jointly with KDHE per CONFIRMED `KFM-P2-PROG-0009` joint program), LAS digital well logs and well tops, and the KGS Geoportal. KGS is one of five Kansas-specific authorities named in CONFIRMED `KFM-P2-IDEA-0024`. Used across the Geology / Natural Resources and Hydrology lanes per CONFIRMED `DOM-GEOL` (five source-family rows) and `C10-03` Water Stack.
 
-<!-- Badge row — Shields.io placeholders; replace targets once owners/CI/policies land -->
-![status](https://img.shields.io/badge/status-draft-orange)
+<!-- BADGES — Shields.io endpoints are PLACEHOLDERS; replace once review state is established. -->
+
+![Catalog Entry](https://img.shields.io/badge/catalog%20entry-draft-orange)
 ![doc-version](https://img.shields.io/badge/doc--version-v0.2-blue)
-![family](https://img.shields.io/badge/family-CONFIRMED%20%C2%A77.3%20canonical-success)
-![scope](https://img.shields.io/badge/scope-multi--institution-blue)
-![sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default%20when%20rank%20%E2%89%A53-orange)
-![kdwp-sinc](https://img.shields.io/badge/KDWP%20SINC-drives%20C6%20redaction-yellow)
-![activation](https://img.shields.io/badge/activation-NOT%20ACTIVATED-red)
-![last-updated](https://img.shields.io/badge/last--updated-2026--05--21-blue)
+![family](https://img.shields.io/badge/family-kansas%20%C2%A77.3%20canonical-success)
+![DOM-GEOL](https://img.shields.io/badge/DOM--GEOL-5%20source--family%20rows-success)
+![authority](https://img.shields.io/badge/C7--10-Kansas--first%20authority-7e57c2)
+![Source Role](https://img.shields.io/badge/source__role-per--descriptor%20(mixed)-blue)
+![Joint with KDHE](https://img.shields.io/badge/WWC5-KGS%20%2B%20KDHE%20joint-informational)
+![Rights Review](https://img.shields.io/badge/rights%20review-NEEDS%20VERIFICATION-red)
+![Sensitivity Default](https://img.shields.io/badge/sensitivity-well%20locations%20RESTRICTED%2FGENERALIZED-yellow)
+![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-lightgrey)
+![Last Updated](https://img.shields.io/badge/last%20updated-2026--05--21-informational)
 
-| Status | Owners | Last reviewed |
-|---|---|---|
-| Draft — family lane CONFIRMED at §7.3; per-institution work PROPOSED | `<Docs steward + Source steward for kansas — TODO assign>` | 2026-05-21 |
+**Status:** `draft` (v0.2) &middot; **Owners:** `<docs steward + Geology subsystem owner>` *(placeholder, NEEDS VERIFICATION)* &middot; **Updated:** `2026-05-21`
+
+---
+
+> [!NOTE]
+> **Path migration (v1 → v0.2).** This page was authored as `docs/sources/catalog/ksgs.md` in v1 (flat) and **moved to `docs/sources/catalog/kansas/ksgs.md`** in v0.2 (nested under the `kansas/` family folder per v0.2 catalog convention; v1 slug `ksgs` preserved — see OPEN-KSGS-13). The kansas family README v0.2 lists this brief explicitly.
 
 > [!IMPORTANT]
-> **Why this family matters** (CONFIRMED doctrine, Pass-10 `C7-10`). The Kansas-first dossiers must run against Kansas-specific authorities **even when federal authorities are present**, because the local authorities carry detail (cultural specificity, fine-grained habitat data, occurrence-level provenance) that federal authorities aggregate away. The KFM convention is to **store the Kansas-authority IRI in parallel with the federal or international anchor** — not to replace it.
+> **Slug-vs-corpus-abbreviation discrepancy preserved (v1 NOTE → v0.2 OPEN-KSGS-13).** Across the KFM corpus the canonical short name for this publisher is **KGS** (Kansas Geological Survey). This file is preserved at the v1-supplied slug `ksgs` per Andy's discretion — possibly to disambiguate against another `kgs` collision (Kansas Genealogical Society, Kansas Gas Service, etc.). The connector path uses `connectors/kansas/kgs/` (per v1). v0.2 preserves both verbatim; reconciliation deferred to OPEN-KSGS-13 (this is the same pattern as the lane-wide OPEN-DSC-15 surfaced in the kansas family README v0.2).
+
+> [!IMPORTANT]
+> **Connector path was ALREADY correct in v1.** Like sibling KDWP v0.2 and KHRI v0.2 — and unlike sibling Kansas Mesonet (OPEN-MESO-01), KBS (OPEN-KBS-01), KCC oil-and-gas (OPEN-KCC-01), and KDOT (OPEN-KDOT-01) revisions — **KGS's v1 already used `connectors/kansas/kgs/`** correctly under the canonical `connectors/kansas/` §7.3 family lane. No path-correction OPEN item is needed for the connector lane (slug discrepancy is a separate item per OPEN-KSGS-13).
+
+> [!IMPORTANT]
+> **This document is a human-readable catalog entry, not the canonical source register.** The machine-readable authority surface lives in `control_plane/source_authority_register.yaml` (CONFIRMED doctrine, PROPOSED file path). This file *describes* a publisher and its sub-products; it does **not** decide admission, role, rights, sensitivity, or release class. Those decisions live in `SourceDescriptor` records and the activation flow per `C5-02` default-deny promotion.
 
 ---
 
-## Quick jump
+## Quick links
 
-- [1. Overview](#1-overview)
-- [2. Family identity & position](#2-family-identity--position)
-- [3. Product pages](#3-product-pages)
-- [4. Source authority](#4-source-authority)
-- [5. Catalog profiles](#5-catalog-profiles)
-- [6. Identity & namespaces](#6-identity--namespaces)
-- [7. Rights & sensitivity](#7-rights--sensitivity)
-- [8. Validation](#8-validation)
-- [9. Related contracts & schemas](#9-related-contracts--schemas)
-- [10. Related connectors & pipelines](#10-related-connectors--pipelines)
-- [11. Open questions](#11-open-questions)
-- [12. Verification backlog](#12-verification-backlog)
-- [Appendix A — Atlas idea-card lineage](#appendix-a--atlas-idea-card-lineage)
+- [1. Scope](#1-scope)
+- [2. Publisher and authority](#2-publisher-and-authority)
+- [3. Sub-products in scope](#3-sub-products-in-scope)
+- [4. Source-role posture](#4-source-role-posture)
+- [5. Rights, terms, and attribution](#5-rights-terms-and-attribution)
+- [6. Sensitivity and publication posture](#6-sensitivity-and-publication-posture)
+- [7. Cadence and freshness](#7-cadence-and-freshness)
+- [8. Identifiers and crosswalks](#8-identifiers-and-crosswalks)
+- [9. Lifecycle placement and dataflow](#9-lifecycle-placement-and-dataflow)
+- [10. Schema, contract, and connector surface](#10-schema-contract-and-connector-surface)
+- [11. Domain consumers](#11-domain-consumers)
+- [12. Validators, gates, and tests](#12-validators-gates-and-tests)
+- [13. Open questions and verification backlog](#13-open-questions-and-verification-backlog)
+- [14. Related docs](#14-related-docs)
+- [Appendix A — KGS at a glance](#appendix-a--kgs-at-a-glance)
+- [Appendix B — Atlas idea-card lineage](#appendix-b--atlas-idea-card-lineage)
+- [Appendix C — Change log](#appendix-c--change-log)
 
 ---
 
-## 1. Overview
+## 1. Scope
 
-The `kansas` family groups **Kansas state-scoped sources** — state agencies, the in-state biodiversity collections of record, historic-resources inventories, and archives whose data KFM ingests. Unlike single-product families, `kansas` aggregates **many distinct Kansas institutions**, each documented on its own product page.
+**This catalog entry covers** KGS-published datasets that feed KFM's Geology / Natural Resources lane and (via WWC5 and the KGS Geoportal) the Hydrology lane. It records what the publisher offers, how KFM treats it at admission, what rights and sensitivity defaults apply, and where the corresponding `SourceDescriptor`, connector, and lifecycle outputs are expected to live.
+
+**This entry does not:**
+
+- Set source role for any specific sub-product (that is per-`SourceDescriptor`, set at admission per Atlas §24.1.3).
+- Approve or deny ingestion (that is a `SourceActivationDecision`).
+- Replace the machine-readable register at `control_plane/source_authority_register.yaml`.
+- Claim that any of the paths below exist in the current repository.
+
+> [!TIP]
+> Use this entry as the **human-facing orientation** for a reviewer asked to admit, refresh, restrict, or retire a KGS-derived source. Pair it with the `SOURCE_DESCRIPTOR_STANDARD.md` and the relevant domain README ([`../../../domains/geology/README.md`](../../../domains/geology/README.md) or [`../../../domains/hydrology/README.md`](../../../domains/hydrology/README.md)).
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 2. Publisher and authority
+
+| Field | Value |
+|---|---|
+| **Publisher (full)** | Kansas Geological Survey *(CONFIRMED — corpus consistent across DOM-GEOL, `KFM-P2-IDEA-0024`, `KFM-P25-IDEA-0001`, `KFM-P25-PROG-0001`)* |
+| **Publisher (short)** | KGS *(CONFIRMED — corpus canonical)* |
+| **Affiliation** | University of Kansas *(NEEDS VERIFICATION — not asserted in corpus extracts; standard public knowledge but not pinned by corpus)* |
+| **Primary KFM domain** | Geology and Natural Resources |
+| **Secondary KFM domain(s)** | Hydrology *(via WWC5 well-completion records and KGS Geoportal groundwater products per `C10-03`)* |
+| **Corpus source-family entries (DOM-GEOL §D, CONFIRMED — FIVE rows)** | (1) "Kansas Geological Survey data and maps"; (2) "KGS surficial geology and geologic maps"; (3) "KGS oil and gas wells and production"; (4) "KGS/KDHE WWC5 and water-well program"; (5) "KGS LAS digital well logs and well tops" |
+| **Authority class** | Kansas-first domain authority *(CONFIRMED — `KFM-P2-IDEA-0024` names KGS in the five Kansas-specific authorities; `C7-10` parallel-anchor rule applies)*; pairs with USGS and federal anchors via documented crosswalk |
+| **Joint-program partnerships** | **WWC5 jointly with KDHE** *(CONFIRMED — DOM-GEOL "KGS/KDHE WWC5"; `KFM-P2-PROG-0009` WIMAS/WWC5 KGS+KDA-DWR joint program — note WWC5 is KGS+KDHE per DOM-GEOL while WIMAS is KGS+KDA-DWR per `KFM-P2-PROG-0009`)*; **waterbody crosswalks with NHDPlus, NWIS, Kansas Mesonet** *(CONFIRMED — `KFM-P2-PROG-0017`)* |
+| **Role at admission** | **Per `SourceDescriptor`** — see §4. The corpus lists KGS as serving "authority / observation / context / model **as source role requires**" per DOM-GEOL. A publisher cannot be assigned a single role at the publisher level. |
+| **Rights / current terms** | **NEEDS VERIFICATION** per DOM-GEOL "rights and current terms NEEDS VERIFICATION; sensitive joins fail closed." Default posture is deny-public-release until terms are resolved per `C5-02`. |
+| **Activation status** | **PROPOSED** — no `SourceActivationDecision` is asserted to exist in this session. |
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 3. Sub-products in scope
+
+The following KGS sub-products are referenced in the KFM corpus and are expected to drive separate `SourceDescriptor` records. Each sub-product is admitted, role-tagged, and rights-reviewed **independently** per Atlas §24.1.3.
+
+| Sub-product | Primary domain | Typical role candidate | Notes / corpus reference |
+|---|---|---|---|
+| **Surficial geology & geologic maps** | Geology | observed *(map compilation)* / context | "KGS surficial geology and geologic maps" — DOM-GEOL §D, row 2. Vintage-specific; pair with USGS NGMDB / GeMS where available. Cf. `KFM-P8-PROG-0024` KGS surficial geology minimal unit model. |
+| **Bedrock geology** | Geology | observed *(map compilation)* / context | Part of "Kansas Geological Survey data and maps" — DOM-GEOL §D, row 1; vintage-specific. |
+| **Oil & gas wells and production** | Geology *(extraction / resource context)* | observed *(well records)* and/or aggregate *(production totals)* | "KGS oil and gas wells and production" — DOM-GEOL §D, row 4. **Cf. `KFM-P25-PROG-0001`** — "KGS oil and gas source descriptor should record production table scope, update date, county/field/lease/well-header layers, source URI, cadence, rights, and source role." **Cf. `KFM-P25-IDEA-0001`** — refreshes trigger incremental ingest + manifest/spec_hash comparison. Distinguish well-record observation from production aggregate; never collapse roles. |
+| **WWC5 water-well program (joint with KDHE)** | Hydrology / Geology | observed *(per-well completion)* | "KGS/KDHE WWC5 and water-well program" — DOM-GEOL §D, row 6. Also referenced under `C10-03` *Water Stack*. **Cf. `KFM-P2-PROG-0009`** — "Public records with disclaimers and use constraints that map awkwardly onto open-data assumptions"; "Latitude/longitude is sometimes inferred from legal survey description (T/R/S), so positional accuracy varies." |
+| **LAS digital well logs & well tops** | Geology *(subsurface)* | observed *(log curves)* / context *(picked tops)* | "KGS LAS digital well logs and well tops" — DOM-GEOL §D, row 7. Tops are interpretations; preserve interpretation lineage. **Modeled-derived structural maps** picked from tops carry `source_role: modeled` per Atlas §24.1.3, with `role_model_run_ref` to a `ModelRunReceipt`. |
+| **KGS Geoportal — groundwater & geological products** | Hydrology / Geology | mixed *(per resource)* | Cited in `C10-03` *Water Stack* as the source of additional state-level products. Treat each Geoportal resource as a separate descriptor. |
+
+> [!CAUTION]
+> **Anti-collapse rule (CONFIRMED, Atlas §24.1.3).** An *observed* well-completion record is not interchangeable with an *aggregate* production total; a *regulatory* determination by KCC (see [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md)) is not the same as a KGS *observation*; an *interpretation* (well top) is not the same as the underlying log curve. Each must carry its own role and citation per the Source-Role Anti-Collapse Register.
+
+> [!TIP]
+> **PLSS-derived coordinates carry uncertainty** (CONFIRMED, `KFM-P2-PROG-0009`). WWC5 lat/lon is "sometimes inferred from legal survey description (T/R/S), so positional accuracy varies." KFM derivatives of WWC5 records MUST stamp `geometry_source: plss_derived` and the PLSS resolution level. This is the same operational discipline applied to KCC oil-and-gas regulatory records (see [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) §9).
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 4. Source-role posture
+
+Source role is a **first-class identity attribute set at admission** per Atlas §24.1.3 and preserved through every promotion. It is recorded on the `SourceDescriptor` and never edited in place; corrections must produce a new descriptor plus a `CorrectionNotice`.
+
+The corpus assigns KGS source families the role label **"authority / observation / context / model — as source role requires"** per DOM-GEOL, which is doctrinal shorthand for *the role is sub-product-specific*. Below is a **PROPOSED** mapping; treat as guidance, not authority.
+
+| Role *(CONFIRMED enum per Atlas §24.1.3)* | KGS example | Citation rule |
+|---|---|---|
+| `observed` | Per-well WWC5 completion record; raw LAS log curve; field observation point | Cite as observation with vintage; never relabel as regulatory or aggregate. |
+| `aggregate` | County or field-level oil/gas production totals; resource estimate summaries | Pin geometry scope via `role_aggregation_unit`; never cite at sub-unit precision. `AggregationReceipt` per Atlas §24.2.1. |
+| `administrative` | Tract/permit roster compilations not produced as observations | Cite as administrative context; never as observed event timeline. |
+| `modeled` | Geoportal-published interpreted surfaces; derived structural maps; picked well tops as interpretation; surficial-geology minimal-unit model per `KFM-P8-PROG-0024` | Pin `role_model_run_ref` to a `ModelRunReceipt` per Atlas §24.2.1. |
+| `context` | Generalized bedrock or surficial map at small scale | Cite as context layer; never as per-place observation. |
+| `candidate` | Pre-review WWC5 batch or LAS upload pending validation | May appear in WORK / QUARANTINE only; never PUBLISHED per `C5-02`. |
+| `synthetic` | *(Not expected from KGS as primary publisher.)* | If a derivative is synthesized inside KFM from KGS inputs, it carries `synthetic` and a Reality Boundary Note. |
+
+> [!NOTE]
+> **`regulatory` is explicitly NOT a KGS role.** Oil and gas regulatory determinations are published by the **Kansas Corporation Commission (KCC)**, tracked as a separate publisher per DOM-GEOL §D row 5 ("KCC oil and gas regulatory data"). See sibling product page [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) v0.2 for the regulatory complement. **An AI summary that treats a KGS well-observation as a KCC regulatory authorization, or vice versa, is a source-role anti-collapse violation.**
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 5. Rights, terms, and attribution
+
+| Field | Value |
+|---|---|
+| **License / terms** | **NEEDS VERIFICATION** per sub-product. Corpus posture (DOM-GEOL): "current terms NEEDS VERIFICATION; sensitive joins fail closed." |
+| **Default outcome if rights unknown** | **DENY public release** per `C5-02` default-deny promotion. Doctrine: "Unknown rights fail closed." |
+| **Attribution requirement** | **NEEDS VERIFICATION.** Must be captured in each `SourceDescriptor` at admission so downstream citation can render correctly. |
+| **Redistribution** | **NEEDS VERIFICATION.** No public derivative may be released if redistribution is barred. |
+| **Per-sub-product variance expected** | Yes. WWC5 (jointly with KDHE per DOM-GEOL) may carry different terms than LAS logs or Geoportal map services. Each descriptor is reviewed independently. |
+| **"Public-but-not-unrestricted" doctrine** | CONFIRMED per `KFM-P2-PROG-0009` — WWC5 / WIMAS-style data are "public records with disclaimers and use constraints that map awkwardly onto open-data assumptions." Disclaimers MUST be preserved in released assets. |
 
 > [!WARNING]
-> **Non-API sources are common in this family** (CONFIRMED tension, Pass-10 `C7-10`). Several Kansas authorities lack stable HTTP APIs or persistent identifiers and rely on PDF or spreadsheet publication. The corpus warns that "the harvest layer must tolerate non-API sources for the foreseeable future." Treat per-product NEEDS VERIFICATION items about API surface, ETag/Last-Modified support, and bulk-download posture as the default expectation here, not an exception.
+> **Disclaimer-preservation rule** (CONFIRMED parallel doctrine, `KFM-P2-PROG-0009`). WWC5 and KGS-published records carry use-constraint disclaimers that are NOT decoration — they are governance statements. Every KGS-derived public-safe artifact MUST carry the upstream disclaimer text in its `disclaimer` asset metadata. This mirrors the discipline applied to sibling KCC oil-and-gas regulatory records ([`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) v0.2 §10).
 
-| KFM treats Kansas sources as | KFM does not treat Kansas sources as |
-|---|---|
-| The local-detail layer for Kansas-first dossiers | A substitute for federal or international anchors |
-| The controlling authority for Kansas-specific regulatory state (e.g., KDWP listing status) | A replacement for USFWS / NatureServe federal listings |
-| Drivers of C6 sensitivity policy (KDWP SINC at S1/S2 triggers redaction) | Sources of generic global truth |
-| Multi-institution lane carrying state agencies, universities, museums, archives | A single homogeneous source |
-
-[Back to top](#quick-jump)
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
 
 ---
 
-## 2. Family identity & position
+## 6. Sensitivity and publication posture
+
+> [!WARNING]
+> **Exact borehole, sample, sensitive resource, well-log, and private well locations default to RESTRICTED or GENERALIZED public geometry** *(CONFIRMED — DOM-GEOL §I "Sensitivity, rights, and publication posture")*. Public release of exact point coordinates for these classes requires steward review, a `RedactionReceipt` per Atlas §24.2.1 or equivalent geometry transform per `KFM-P13-PROG-0018`, and an approved release class.
+
+| Sensitivity class *(corpus)* | Applies to KGS via | Default outcome | `C6-01` rank guideline | Required controls |
+|---|---|---|---|---|
+| **Private landowner-sensitive data** | Private water wells in WWC5; landowner-attached attributes on oil/gas wells | DENY exact / public if private or rights unclear | rank 3+ | aggregation; permissions; policy review *(SRC-AG, SRC-PEOPLE basis)* |
+| **Critical infrastructure** *(applicable subset)* | Active production / pipeline-adjacent records, where applicable | RESTRICT / DENY public precision | rank 3+ | public-safe aggregation; role-based access |
+| **Exact sensitive locations** | Any exact point that increases harm risk | DENY by default | rank 3–4; profile `point_10km_hex_seeded_v1` (`C6-02`) for rank 3 default | redaction / generalization per `KFM-P13-PROG-0018`; audit |
+| **Source-rights-limited records** | Any KGS sub-product with unresolved terms | DENY public release until terms resolved | rights gate (not rank) | rights register; attribution; no public derivative if barred per `C5-02` |
+| **PLSS-derived coordinate uncertainty** | WWC5 wells with lat/lon inferred from T/R/S | Stamp uncertainty; do NOT treat as surveyed precision | n/a (uncertainty marker, not rank) | `geometry_source: plss_derived`; uncertainty in meters; PLSS resolution level (Section ≈ ±800 m; Quarter-Quarter ≈ ±200 m) per `KFM-P2-PROG-0009` parallel |
+
+**Anti-collapse rules that affect KGS publication:**
+
+- *Occurrence, deposit, estimate, permit, production, and reserve claims must remain distinct* (DOM-GEOL §I, CONFIRMED doctrine).
+- *Aggregate cited as a per-place truth* → DENY join from aggregate cell to single record per Atlas §24.1.2.
+- *Modeled product labeled or queried as observed* → DENY at publication, ABSTAIN at AI per Atlas §24.1.2.
+- *KGS observation cited as KCC regulatory determination* → DENY at publication per §4 NOTE.
+
+> [!IMPORTANT]
+> **Geometry-generalization rule applied by parallel** (CONFIRMED, `KFM-P13-PROG-0018`). The deterministic-grid-generalization doctrine — "deterministic grid snapping, representative point plus uncertainty, or withholding tiers while preserving precise private coordinates and rule-version provenance" — applies to KGS sensitive well-location geometry the same way it applies to sensitive species locations. Every redaction emits a `RedactionReceipt`; rule-version provenance is mandatory.
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 7. Cadence and freshness
+
+| Sub-product | Cadence | Freshness expectation | Status |
+|---|---|---|---|
+| Surficial / bedrock geology & maps | Source-vintage specific *(map sheets update on irregular schedules)* | Track vintage in `SourceDescriptor`; do not assume currency | NEEDS VERIFICATION per publication |
+| Oil & gas wells & production | Periodic *(reporting cadence varies; well-add vs production roll-ups differ)* | **Refresh triggers incremental ingest + manifest/spec_hash comparison** per `KFM-P25-IDEA-0001`. Separate cadence per role *(observed well-add vs aggregate production)*. | NEEDS VERIFICATION |
+| WWC5 water-well program | Continuous-add (per-well submission) | Per-well completion timestamps preserved | NEEDS VERIFICATION; expected weekly or finer in operational pipelines per `C10-03` |
+| LAS digital well logs & well tops | Continuous-add with curation lag | Treat tops as interpretation with own provenance | NEEDS VERIFICATION |
+| KGS Geoportal products | Per-resource | Per-resource cadence record | NEEDS VERIFICATION |
+
+> [!TIP]
+> Use HTTP validators (`ETag` / `Last-Modified`) and manifest checksums per the C3-01 / C3-02 patterns to detect upstream change without redundant fetches; record cadence and observed freshness on every `RunReceipt`. Per `KFM-P25-IDEA-0001` (CONFIRMED for KGS specifically), "Kansas oil and gas production refreshes should trigger incremental ingest and manifest/spec_hash comparison before hydrocarbon analyses are treated as current."
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 8. Identifiers and crosswalks
+
+KFM doctrine: every in-scope record carries one or more **durable authority IRIs** and a machine-readable crosswalk; identifiers without authority anchors decay into local strings *(CONFIRMED — Components Pass 10 §6.7 Authority Anchoring; `C7-10` parallel-anchor rule)*.
+
+| Anchor layer | Example for KGS records | Status |
+|---|---|---|
+| **Kansas-first authority** | KGS publication ID / well API number / WWC5 record ID / KGS map ID | CONFIRMED doctrine *(Kansas-first with documented crosswalk; `C7-10` parallel-anchor rule)*; specific scheme per sub-product is NEEDS VERIFICATION |
+| **Federal anchor (geologic units)** | USGS NGMDB / GeMS identifier for geologic units | CONFIRMED doctrine *(DOM-GEOL §D row 3 lists USGS NGMDB and GeMS as a peer source family)*; NEEDS VERIFICATION per join |
+| **Federal anchor (hydrologic)** | USGS NWIS site identifier for hydrologic measurements where they co-locate | CONFIRMED doctrine per `C10-03` Water Stack and `KFM-P2-PROG-0017` waterbody crosswalks |
+| **Federal anchor (minerals)** | USGS MRDS for mineral deposits | CONFIRMED listing per DOM-GEOL §D row 8 |
+| **Universal crosswalk substrate** | Wikidata QID as routing anchor *(not sole truth)* per `C7-01` | CONFIRMED doctrine |
+| **Place anchor (for sites)** | GNIS FID *(USGS, `C7-09`)* with KHRI / TGN secondary | CONFIRMED doctrine; KHRI cross-reference via [`./khri.md`](./khri.md) v0.2 |
+
+> [!TIP]
+> **Waterbody crosswalks** are a CONFIRMED operational pattern per `KFM-P2-PROG-0017`: "Waterbody features are crosswalked across NHDPlus (canonical hydrography), NWIS site (USGS observation sites), KGS (Kansas Geological Survey groundwater), and Kansas Mesonet (climate stations near water features). The crosswalk uses spatial joins with documented buffer distances and stable `feature_ids`." KGS Geoportal and KGS groundwater products participate in this crosswalk.
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 9. Lifecycle placement and dataflow
+
+KGS sources enter the KFM lifecycle through `connectors/` and traverse the canonical invariant:
+**RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED.**
+Promotion is a **governed state transition, not a file move** *(CONFIRMED doctrine — Directory Rules §0; `C5-02` default-deny)*.
 
 ```mermaid
-flowchart TB
-    subgraph KANSAS["kansas/ source family — multi-institution lane (CONFIRMED §7.3)"]
-        direction TB
-        subgraph AGENCY["State agencies"]
-            KGS["KGS — Kansas Geological Survey<br/>(geology, oil & gas, WIMAS, WWC5, LAS logs)"]
-            KDWP["KDWP — Kansas Dept of Wildlife & Parks<br/>(SINC list, listing status)"]
-        end
-        subgraph COLLECTIONS["In-state collections of record"]
-            KUNHM["KU NHM — KU Biodiversity Institute /<br/>Natural History Museum"]
-            STERNBERG["FHSU Sternberg<br/>Museum of Natural History"]
-        end
-        subgraph ARCHIVES["Archives & inventories"]
-            KMEM["KSHS Kansas Memory<br/>(~600k digitized items per C10-07)"]
-            KHRI["KHRI — Kansas Historic<br/>Resources Inventory"]
-            KSA["Kansas State Archives<br/>(NEEDS VERIFICATION vs KSHS)"]
-        end
-        subgraph EXT["Extension & research"]
-            KSURE["KSU Research & Extension"]
-        end
-    end
+flowchart LR
+  KGS["Kansas Geological Survey<br/>(publisher)"]:::pub
 
-    KANSAS --> DOMAINS["Anchored domains:<br/>Geology · Fauna · Flora · Habitat ·<br/>Hydrology · Archaeology · Agriculture · Hazards"]
+  subgraph products["KGS sub-products (each its own SourceDescriptor)"]
+    A1["surficial &amp;<br/>bedrock geology"]
+    A2["oil &amp; gas wells<br/>&amp; production"]
+    A3["WWC5 water-well<br/>(joint with KDHE)"]
+    A4["LAS digital well logs<br/>&amp; tops"]
+    A5["KGS Geoportal<br/>(groundwater &amp; geology)"]
+  end
 
-    classDef agency fill:#dae8fc,stroke:#6c8ebf;
-    classDef coll fill:#d5e8d4,stroke:#82b366;
-    classDef arch fill:#fff2cc,stroke:#b58900;
-    classDef ext fill:#e1d5e7,stroke:#9673a6;
-    class KGS,KDWP agency
-    class KUNHM,STERNBERG coll
-    class KMEM,KHRI,KSA arch
-    class KSURE ext
+  KGS --> products
+  products -->|"SourceDescriptor + rights review"| C["connectors/kansas/kgs/<br/>(family lane CONFIRMED at commit;<br/>per-institution adapter PROPOSED)"]:::confirmed
+  C -->|"approved · role · cadence"| RAW["data/raw/{geology,hydrology}/kgs/&lt;run_id&gt;/<br/>(PROPOSED paths)"]:::prop
+  C -.->|"unclear rights / sensitive<br/>fail-closed (C5-02)"| Q["data/quarantine/<br/>(no public surface)"]:::quar
+  RAW --> WORK["WORK · normalize · validate"]
+  WORK --> PROC["PROCESSED"]
+  PROC --> CAT["CATALOG / TRIPLET"]
+  CAT -->|"PromotionReceipt + ReleaseManifest"| PUB["PUBLISHED<br/>(governed-api only)"]:::pub
+  PUB -.->|"correction / rollback<br/>(CorrectionNotice)"| CAT
+
+  classDef pub fill:#fef9c3,stroke:#854d0e,stroke-width:1.5px,color:#1f2937;
+  classDef confirmed fill:#d5e8d4,stroke:#82b366,stroke-width:1.5px,color:#1f2937;
+  classDef prop fill:#e0f2fe,stroke:#075985,stroke-width:1px,color:#1f2937;
+  classDef quar fill:#fee2e2,stroke:#991b1b,stroke-width:1.5px,color:#1f2937;
 ```
 
 > [!NOTE]
-> **Each Kansas authority has its own identifier scheme and access pattern.** Per `C7-10`, the KFM convention is to store the Kansas-authority IRI **in parallel with** the federal or international anchor (e.g., Kansas Memory record id + LCNAF/SNAC anchor; KU NHM specimen id + GBIF Backbone + ITIS TSN; KDWP SINC code + NatureServe S-rank).
+> The connector node `connectors/kansas/kgs/` shows the **CONFIRMED family lane at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`** (Directory Rules v1.2 §7.3); the per-institution adapter remains PROPOSED. Downstream `data/raw/...`, `data/quarantine/...`, `data/catalog/...`, `data/published/...` paths are PROPOSED per Directory Rules §7.3 and §9.1. Verify against mounted repo before treating as fact.
 
-[Back to top](#quick-jump)
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
 
 ---
 
-## 3. Product pages
+## 10. Schema, contract, and connector surface
 
-| Page | Source | Anchor domain(s) | Corpus citation |
+| Surface | PROPOSED location (v0.2) | Status |
+|---|---|---|
+| `SourceDescriptor` (one per sub-product) | `schemas/contracts/v1/source/source_descriptor.schema.json` *(per ADR-0001 schema-home, Directory Rules §7.4)* | CONFIRMED doctrine / PROPOSED file |
+| Connector | `connectors/kansas/kgs/` *(per Directory Rules §7.3; family lane CONFIRMED at commit `b6a27916...`)* | Family lane CONFIRMED; per-institution adapter PROPOSED |
+| Connector output (RAW) | `data/raw/geology/kgs/<run_id>/` and `data/raw/hydrology/kgs/<run_id>/` | PROPOSED path |
+| Quarantine target | `data/quarantine/...` | PROPOSED path |
+| Pipeline spec(s) | `pipeline_specs/geology/`, `pipeline_specs/hydrology/` | PROPOSED path |
+| Pipeline executable(s) | `pipelines/ingest/`, `pipelines/normalize/`, `pipelines/validate/` | PROPOSED path |
+| Validator | `tools/validators/source_descriptor/`, `tools/validators/connector_gate/` | PROPOSED path |
+| Machine-readable register entry | `control_plane/source_authority_register.yaml` | CONFIRMED doctrine / PROPOSED file |
+| Geology domain doc | `docs/domains/geology/` | PROPOSED path |
+| Hydrology domain doc | `docs/domains/hydrology/` | PROPOSED path |
+
+> [!IMPORTANT]
+> A connector **MUST NOT** publish, mutate canonical truth, or write under `data/processed/`, `data/catalog/`, or `data/published/` *(CONFIRMED — Directory Rules §7.3)*. The connector emits RAW + receipts; promotion is a separate governed event per `C5-02`.
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 11. Domain consumers
+
+| KFM domain | What it consumes from KGS | Source basis |
+|---|---|---|
+| **Geology & Natural Resources** | Surficial / bedrock geology (incl. minimal-unit model per `KFM-P8-PROG-0024`), oil & gas wells (with KCC regulatory complement per [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md)), LAS logs & tops, geophysics / geochemistry references via Geoportal, reclamation context | Encyclopedia §7.8 "Geology and Natural Resources"; DOM-GEOL §D (FIVE KGS rows) |
+| **Hydrology** | WWC5 well-completion (groundwater modeling, joint with KDHE per DOM-GEOL row 6), Geoportal groundwater products, waterbody crosswalks per `KFM-P2-PROG-0017` | `C10-03` "Water Stack"; `KFM-P2-PROG-0017` |
+| **Environment** *(adjacent)* | Indirect via produced-water disposal context (where intersecting KCC UIC records) | `KFM-P2-IDEA-0024` Kansas-specific environmental authorities lane |
+| **Settlements / Infrastructure** *(boundary)* | Indirect via well-density / mineral history context — not a direct consumer | Encyclopedia §7.10 *(boundary, not ownership)* |
+| **Hazards** *(boundary)* | Indirect via subsurface context for induced-seismicity or well-related hazards | Encyclopedia §7.9 *(boundary, not ownership)* |
+
+> [!NOTE]
+> Hydrology consumes KGS via specific descriptors (WWC5, Geoportal groundwater products) — not as a generic publisher import. The water stack also leans on KDA-DWR (WIMAS/WRIS), USGS NWIS, WIZARD, and Kansas Mesonet (see [`./kansas-mesonet.md`](./kansas-mesonet.md) v0.2); KGS is one publisher among several in that lane per `C10-03`.
+
+> [!TIP]
+> **KGS×KCC complementarity for oil-and-gas data.** A complete picture of Kansas oil-and-gas requires both KGS (factual well + production records, `authority`/`observed`) and KCC (regulatory framework, `regulatory`). See sibling [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) v0.2 §4 for the source-role anti-collapse discussion; the v0.2 KCC page explicitly cites KGS as the parallel-but-distinct authority surface.
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 12. Validators, gates, and tests
+
+The following are CONFIRMED-doctrine / PROPOSED-implementation per the Geology Atlas §K. They must be present and passing before any KGS-derived layer reaches a public surface per `C5-02`.
+
+- **Source-role validators** — assert per-descriptor `source_role` and refuse role drift (Atlas §24.1.3).
+- **Resource-class anti-collapse tests** — refuse aggregation-to-per-place joins for production / estimate / reserve (Atlas §24.1.2).
+- **KGS-vs-KCC role anti-collapse tests** — refuse cross-publisher role collapse (KGS `observed` ≠ KCC `regulatory`).
+- **Public-safe geometry tests** — assert well-point generalization or removal in public outputs per `KFM-P13-PROG-0018`.
+- **PLSS-uncertainty stamping tests** — assert `geometry_source: plss_derived` and uncertainty value where lat/lon is PLSS-derived per `KFM-P2-PROG-0009`.
+- **Borehole / well-log rights tests** — fail closed where rights are unresolved per `C5-02`.
+- **Catalog closure tests** — every published KGS-derived dataset has source, schema, validation, policy, and release metadata.
+- **Disclaimer-preservation tests** — released KGS-derived assets carry upstream disclaimer text per `KFM-P2-PROG-0009`.
+- **Refresh-as-baseline-change tests** — oil-and-gas refreshes trigger incremental ingest + manifest/spec_hash comparison per `KFM-P25-IDEA-0001`.
+- **AI evidence-before-model tests** — AI summaries of KGS evidence must resolve `EvidenceRef → EvidenceBundle` and emit an `AIReceipt`; ABSTAIN when evidence is insufficient.
+
+> [!TIP]
+> A new KGS sub-product should not be activated until its **fixtures, validators, and policy gates exist** *(CONFIRMED doctrine — Source Registry Architecture, BLD-COMP §§8.1–8.2; IMPL-PIPE §13)*. Activation precedes connector wake-up, not the other way around.
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+## 13. Open questions and verification backlog
+
+These items must be resolved before relying on this entry to drive admission or promotion. Each should land in `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED).
+
+| # | Item | Action | Why it matters |
 |---|---|---|---|
-| [`ksgs.md`](./ksgs.md) | Kansas Geological Survey (KGS) | Geology · Hydrology | `KFM-P2-IDEA-0024`, `KFM-P8-PROG-0024`, `KFM-P2-PROG-0017` (waterbody crosswalk), `KFM-P2-PROG-0009` (WIMAS/WWC5), Domains §geology source families |
-| [`kdwp.md`](./kdwp.md) | Kansas Department of Wildlife and Parks | Fauna · Flora · Habitat | `KFM-P19-IDEA-0005` (KDWP listing-status canonicity), `C7-10` (KDWP SINC), `C6-01` (sensitivity rubric default profile `profile:sinc-obscure-10km`) |
-| [`khri.md`](./khri.md) | Kansas Historic Resources Inventory | Archaeology · Settlements-Infrastructure | `C7-10`, `C10-07` (Kansas archives stack) |
-| [`kansas-memory.md`](./kansas-memory.md) | Kansas Memory (KSHS) — ~600k digitized items | Archaeology · People-DNA-Land | `C10-07`, `KFM-P18-PROG-0033` (Kansas Memory source descriptor), `KFM-P17-PROG-0011` |
-| [`kansas-state-archives.md`](./kansas-state-archives.md) | Kansas State Archives | Archaeology · People-DNA-Land | PROPOSED — relationship to KSHS Kansas Memory **NEEDS VERIFICATION** (may be the same institution or a distinct holdings stream) |
-| [`ksu-research-extension.md`](./ksu-research-extension.md) | KSU Research and Extension | Agriculture · Soil · Flora | `C7-10`, Domains §agriculture and §soil source families |
-| [`ku-nhm.md`](./ku-nhm.md) | KU Biodiversity Institute & Natural History Museum | Fauna · Flora · Habitat | `C10-06` (biodiversity stack), `C7-10`; corpus cites ~454k specimens |
-| [`fhsu-sternberg.md`](./fhsu-sternberg.md) | FHSU Sternberg Museum of Natural History | Fauna · Flora · Geology | `C10-06` (biodiversity stack), `C7-10` |
+| 1 (v1) | Canonical short name vs filename — `KGS` (corpus) vs `KSGS` (filename) vs `kgs` (connector slug) | Decide via ADR or repo convention; align with `control_plane/source_authority_register.yaml`. **See OPEN-KSGS-13 (new in v0.2)** — this is the lane-wide same item as OPEN-DSC-15 surfaced in kansas/README.md v0.2. | Naming drift breeds duplicate descriptors |
+| 2 (v1) | Current license / redistribution terms for each sub-product | Per-sub-product rights review with KGS | Default is DENY per `C5-02` until resolved |
+| 3 (v1) | Attribution string | Capture exact required citation form per sub-product | Required by citation-or-abstain doctrine |
+| 4 (v1) | Cadence per sub-product | Document observed cadence (WWC5, oil/gas production, LAS adds, map sheet vintage, Geoportal layer-by-layer) | Receipts and conditional GETs depend on it; refresh-as-baseline-change per `KFM-P25-IDEA-0001` |
+| 5 (v1) | Identifier scheme per sub-product | Document well API, WWC5 ID, KGS publication ID schemes and crosswalks to USGS NGMDB / NWIS / MRDS / Wikidata / GNIS | Federation across authorities per `C7-10` parallel-anchor rule |
+| 6 (v1) — path/slug | `docs/sources/catalog/` placement; `ksgs.md` vs `kgs.md` slug | **PARTIALLY RESOLVED (v0.2)** — `docs/sources/catalog/<family>/<product>.md` adopted across v0.2 reorganization (path moved to `docs/sources/catalog/kansas/ksgs.md`); slug discrepancy `ksgs` vs `kgs` preserved per OPEN-KSGS-13. | Avoid silent root drift *(Directory Rules §2.5)* |
+| 7 (v1) | `SourceActivationDecision` per sub-product | Open intake records | Without it, connectors stay inactive *(BLD-COMP §8.1; `C5-02`)* |
+| 8 (v1) | Sensitivity policy fixtures for KGS classes | Author DENY / ABSTAIN fixtures for well-location, private-well, and production-aggregate joins | Fail-closed proof *(Sensitive / Deny-by-Default Register; `KFM-P13-PROG-0018`)* |
+| 9 (v1) | Drift entry if mounted repo conflicts | If repo evidence shows a different KGS placement, file in `docs/registers/DRIFT_REGISTER.md` rather than silently conforming | Directory Rules §2.5 |
+| 10 (v1) | Anchor-to-federal crosswalk for unit and well IDs | Pilot a KGS-unit ↔ USGS NGMDB / WBD / NWIS crosswalk on one county | Kansas-first with documented crosswalk per `C7-10` |
+| 11 (new v0.2) — OPEN-KSGS-11 | Confirm KGS connector adapter at `connectors/kansas/kgs/` (note: connector slug `kgs` while doc slug is `ksgs`) | Mounted-repo verification | Family lane CONFIRMED at commit; adapter PROPOSED |
+| 12 (new v0.2) — OPEN-KSGS-12 | Confirm joint-program governance: WWC5 is KGS+KDHE per DOM-GEOL; WIMAS is KGS+KDA-DWR per `KFM-P2-PROG-0009`. How are joint-program descriptors structured — one descriptor per program with joint publishers, or one descriptor per publisher referencing the program? | ADR or descriptor-shape decision | Affects descriptor identity, citation, and rights review |
+| 13 (new v0.2) — OPEN-KSGS-13 | **Resolve slug `ksgs` vs `kgs`.** v0.2 preserves both verbatim (`ksgs.md` doc slug; `kgs/` connector slug); reconciliation by ADR. Same lane-wide item as OPEN-DSC-15. | ADR | Naming consistency across catalog, connector, register, and citations |
+| 14 (new v0.2) — OPEN-KSGS-14 | Confirm corpus card-ID stability for `KFM-P25-IDEA-0001`, `KFM-P25-PROG-0001`, `KFM-P2-PROG-0009`, `KFM-P8-PROG-0024`, `KFM-P2-PROG-0017` | Idea-index lookup | Card stability |
+| 15 (new v0.2) — OPEN-KSGS-15 | Confirm sibling product pages exist under `docs/sources/catalog/kansas/`: `kcc-oil-gas-reg.md`, `kdwp.md`, `kdhe.md`, `kda.md`, `kansas-mesonet.md`, etc. | Mounted-repo verification | Cross-reference integrity |
+| 16 (new v0.2) — OPEN-KSGS-16 | Confirm KGS surficial-geology minimal-unit-model shape per `KFM-P8-PROG-0024` | Corpus card + steward review | Drives modeled-surface descriptor design |
 
-> [!CAUTION]
-> **Slug discrepancy flagged.** The corpus uses the abbreviation **`KGS`** for Kansas Geological Survey throughout. The product file slug is `ksgs.md` (note `S` between `K` and `G`). Either the slug is intentional and `kgs.md` is reserved, or this is a flat-to-folder migration typo. Preserved as-is pending OPEN-DSC-15 (new).
-
-### Known Kansas sources without product pages yet
-
-Surfaced for completeness from the Kansas authority lists in `KFM-P2-IDEA-0024`, `C7-10`, `C10-06`, `C10-07`, and the agriculture / soil / hydrology dossiers. None are in this README's product table; they are NEEDS VERIFICATION items that may warrant their own pages.
-
-| Source | Why it's a candidate | Status |
-|---|---|---|
-| KDA — Kansas Department of Agriculture (incl. KDA-DWR for water rights) | CONFIRMED Kansas authority in `KFM-P2-IDEA-0024`; joint maintainer of WIMAS with KGS per `KFM-P2-PROG-0009` | OPEN |
-| KDHE — Kansas Department of Health and Environment | CONFIRMED Kansas authority in `KFM-P2-IDEA-0024`; joint with KGS on WWC5 water-well program | OPEN |
-| Kansas Mesonet (K-State) | CONFIRMED in `C10-01` soil stack and `C10-02` air-quality stack; in-state climate / soil-moisture sensors at 5/10/20/50 cm depths | OPEN |
-| KSU Special Collections (~1M items per `C10-07`) | CONFIRMED in `C10-07` archives stack | OPEN |
-| WSU Special Collections | CONFIRMED in `C10-07` archives stack | OPEN |
-| KU Spencer Research Library | CONFIRMED in `C10-07` archives stack | OPEN |
-| County historical societies | CONFIRMED in `C10-07` archives stack | OPEN |
-| KBS NHI — Kansas Biological Survey / Natural Heritage Inventory | CONFIRMED in `C7-10` Kansas-First Domain Authorities | OPEN |
-
-[Back to top](#quick-jump)
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
 
 ---
 
-## 4. Source authority
+## 14. Related docs
 
-Authoritative `SourceDescriptor`s live in [`data/registry/sources/`](../../../../data/registry/sources/) — **do not duplicate descriptor fields here.**
+> [!NOTE]
+> Targets below reflect the v0.2 catalog reorganization (`docs/sources/catalog/<family>/<product>.md`, kebab-case slugs, nested under §7.3 family folders). Sibling product pages PROPOSED until verified in the mounted repo.
 
-Per Atlas §24.1.3, each Kansas authority is admitted with its own descriptor and **its own `source_role`** drawn from the closed enum (`observed | regulatory | modeled | aggregate | administrative | candidate | synthetic`). For Kansas sources, common assignments are:
+- [`./README.md`](./README.md) — `docs/sources/catalog/kansas/` family README v0.2 (lists this brief; confirms `connectors/kansas/` as §7.3 canonical at commit `b6a27916...`)
+- [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) — **sibling KCC oil-and-gas regulatory page (v0.2)** — parallel-but-distinct authority for the oil-and-gas data lane
+- [`./kdwp.md`](./kdwp.md) — sibling Kansas-first authority per `C7-10` (regulatory framing complement)
+- [`./kdhe.md`](./kdhe.md) — **joint-program partner** for WWC5 (PROPOSED sibling page)
+- [`./kda.md`](./kda.md) — joint-program partner for WIMAS via KDA-DWR (PROPOSED sibling page)
+- [`./kansas-mesonet.md`](./kansas-mesonet.md) — waterbody-crosswalk partner per `KFM-P2-PROG-0017` (v0.2 sibling)
+- [`./kansas-state-archives.md`](./kansas-state-archives.md) — KSHS-umbrella brief (sibling Kansas-first authority)
+- [`./kansas-memory.md`](./kansas-memory.md) — sister KSHS surface
+- [`./khri.md`](./khri.md) — KHRI place anchor sibling per `C7-09` ladder
+- [`./kbs.md`](./kbs.md) — sibling Kansas-first biodiversity authority
+- [`./ku-nhm.md`](./ku-nhm.md) — sibling Kansas-first biodiversity authority
+- [`./fhsu-sternberg.md`](./fhsu-sternberg.md) — sibling in-state collection
+- [`../README.md`](../README.md) — `docs/sources/catalog/` index (TODO: create or verify)
+- [`../IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace conventions
+- [`../PROFILES.md`](../PROFILES.md) — catalog-profile selection guidance
+- [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — lane-wide rights/sensitivity matrix
+- [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) — lane-wide `OPEN-DSC-*` items (incl. OPEN-DSC-15 slug item)
+- [`../../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED CREATE per Whole-UI Governed AI report*
+- [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law and authority order
+- [`../../../doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance
+- [`../../../doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain
+- [`../../../domains/geology/README.md`](../../../domains/geology/README.md) — primary consuming domain
+- [`../../../domains/hydrology/README.md`](../../../domains/hydrology/README.md) — secondary consuming domain via WWC5 / Geoportal
+- [`../../../domains/environment/README.md`](../../../domains/environment/README.md) — adjacent consuming domain
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order
+- [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — drift filing
+- [`../../../../control_plane/source_authority_register.yaml`](../../../../control_plane/source_authority_register.yaml) — machine-readable register
+- [`../../../../schemas/contracts/v1/source/source_descriptor.schema.json`](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) — `SourceDescriptor` schema home
+- Pass-10 Idea Index — **`C7-10`** Kansas-First Domain Authorities (CONFIRMED); **`C10-03`** Water Stack (CONFIRMED); **`C7-09`** GNIS (CONFIRMED); **`C7-01`** Wikidata (CONFIRMED); **`C5-02`** default-deny (CONFIRMED); **`C6-01`/`C6-02`** sensitivity rubric + named profiles (CONFIRMED)
+- Pass-23/32 Consolidated Atlas — **`KFM-P25-IDEA-0001`** KGS oil-and-gas refresh as analytic baseline change (active); **`KFM-P25-PROG-0001`** KGS oil-and-gas source descriptor (active); **`KFM-P2-PROG-0009`** WIMAS/WWC5 joint program + disclaimer doctrine (active); **`KFM-P8-PROG-0024`** KGS surficial geology minimal unit model (active); **`KFM-P2-PROG-0017`** waterbody crosswalks (active); **`KFM-P2-IDEA-0024`** Kansas authorities including KGS (CONFIRMED); **`KFM-P13-PROG-0018`** sensitive grid generalization (active); **DOM-GEOL** Domains Atlas §D Geology — FIVE KGS source-family rows (CONFIRMED listing); Atlas §24.1.2 + §24.1.3 + §24.2.1 + §24.8 (CONFIRMED)
 
-| Source | Likely `source_role` (PROPOSED) | Rationale |
-|---|---|---|
-| KDWP listing / SINC lists | `regulatory` | `KFM-P19-IDEA-0005` — controlling Kansas regulatory source family for listed-species status |
-| KGS surficial geology, oil & gas, WIMAS, WWC5, LAS logs | `observed` / `aggregate` (per product) | Mix of survey observations and aggregations |
-| KU NHM, Sternberg specimen records | `observed` | Specimen-backed observation |
-| Kansas Memory items | `observed` (as digital-collection record) | Historical record evidence; per `KFM-P18-PROG-0033` |
-| KHRI inventory entries | `administrative` (per Atlas administrative-compilation framing) | Inventory compilation, not field-event observation |
-| KSU Research & Extension extension publications | `observed` / `administrative` (per product) | Mix |
-
-> [!IMPORTANT]
-> **Source-role anti-collapse** (CONFIRMED doctrine, Atlas §24.1.3). Role is set at admission and **never edited in place**. An AI summary that promotes KU NHM observation to "authoritative listing" or treats KGS observed data as "regulatory" is a governance violation. Corrections produce a new descriptor plus a `CorrectionNotice`.
-
-[Back to top](#quick-jump)
-
----
-
-## 5. Catalog profiles
-
-Kansas sources span many domains and land across **STAC**, **DCAT**, **PROV-O**, and the domain projections in [`data/catalog/`](../../../../data/catalog/). See per-product pages and [`PROFILES.md`](../PROFILES.md).
-
-| Profile | Typical Kansas usage (PROPOSED) | Citation |
-|---|---|---|
-| STAC × Darwin Core hybrid | KU NHM, Sternberg biodiversity occurrences | `C4-03` (CONFIRMED for biodiversity occurrences) |
-| STAC raster + proj/raster extensions | KGS surficial geology / structure rasters where applicable | `C4-01`, `KFM-P27-PROG-0011` |
-| DCAT | Dataset-level metadata for non-spatiotemporal extension publications | `C4-05` |
-| PROV-O | Required to carry the provenance trail for Kansas Memory and KHRI records | `C8-03`, `C5-08` |
-| Domain projections | Per anchor domain: `data/catalog/domain/{geology,fauna,flora,archaeology,settlements-infrastructure,agriculture,soil}/` | Directory Rules §6.1 |
-| `kfm:care` extension | Apply when records overlap tribal or Indigenous-knowledge ties | `C15-02` |
-
-[Back to top](#quick-jump)
-
----
-
-## 6. Identity & namespaces
-
-Collection-id and namespace conventions follow [`IDENTITY.md`](../IDENTITY.md).
-
-- **Collection id pattern:** `kfm-<org>-<institution>-<product>` (e.g., `kfm-<org>-kdwp-listings`, `kfm-<org>-ku-nhm-specimens`) per `C4-02`. Renaming a Collection breaks links.
-- **Namespace pin:** `kfm:` vs `ks-kfm:` is **unresolved** — see `OPEN-DSC-03` in [`OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md). Pass-10 `C4-01` explicitly lists this open question; the Kansas family is the most plausible argument **for** `ks-kfm:`, but the corpus does not settle it.
-- **Per-authority IRI in parallel with federal/international anchor:** CONFIRMED convention per `C7-10`. Example: a KU NHM specimen carries the KU specimen id, the GBIF Backbone Taxonomy anchor (DOI `10.15468/39omei`), and the ITIS TSN anchor in parallel.
-
-[Back to top](#quick-jump)
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
 
 ---
 
-## 7. Rights & sensitivity
+## Appendix A — KGS at a glance
 
-NEEDS VERIFICATION per source — see [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) and [`policy/sensitivity/`](../../../../policy/sensitivity/). **Never restate policy here.**
+<details>
+<summary><strong>Click to expand: condensed source-family card</strong> (mirrors Domains Atlas §D, Geology, with annotations)</summary>
 
-> [!CAUTION]
-> **Deny-by-default for sensitive Kansas natural-history and archaeological sources.** The original scaffold cites `ADR-0010` — preserved as referenced but **NEEDS VERIFICATION**. The corpus settles the deny-by-default posture via Pass-10 `C5-02` (default-deny promotion), `KFM-P24-IDEA-0002` (sensitive species deny-by-default), and `KFM-P24-PROG-0013` (sensitive taxa redaction policy). KDWP SINC is the **operational driver** of this posture (`C7-10`, `C6-01`, `KFM-P19-IDEA-0005`).
+```text
+Publisher        Kansas Geological Survey (KGS)
+Doc-slug         ksgs (v1 retention; reconciliation OPEN-KSGS-13)
+Connector-slug   kgs  (under connectors/kansas/kgs/)
+Affiliation      University of Kansas              [NEEDS VERIFICATION]
+KFM primary      Geology and Natural Resources
+KFM secondary    Hydrology (WWC5, Geoportal groundwater)
+Adjacent         Environment (produced-water context with KCC UIC)
 
-| Concern | Family-level posture | Citation |
-|---|---|---|
-| KDWP SINC / NatureServe S1–S2 species | **DENY public exact location**; route to restricted lane | `C10-06`, `C6-01` rank 3+ |
-| Default redaction profile for rank-3 SINC | `profile:sinc-obscure-10km` (a.k.a. `point_10km_hex_seeded_v1`) | `C6-01`, `C6-02` |
-| Archaeology — exact site location | **DENY** public exact location | Domains §archaeology |
-| Living-person fields (genealogy / Kansas Memory ties) | Deny / k-anonymity (`C6-06`); LCNAF / SNAC anchor still preserved | `C6-06` |
-| Sovereignty / CARE | Apply when records overlap tribal or Indigenous-knowledge ties (e.g., archaeology, ethnobotany); `kfm:care` extension required | `C15-01`, `C15-02`, `C15-03` |
-| Rights variability per institution | High — each authority has its own terms, license, and access pattern | `C7-10` |
+Sub-products (DOM-GEOL §D rows + joint programs)
+  - Surficial geology & geologic maps          [DOM-GEOL row 2; KFM-P8-PROG-0024 minimal unit model]
+  - Bedrock geology                            [DOM-GEOL row 1]
+  - Oil and gas wells and production           [DOM-GEOL row 4; KFM-P25-IDEA-0001 + KFM-P25-PROG-0001]
+  - WWC5 water-well program (with KDHE)        [DOM-GEOL row 6; C10-03; KFM-P2-PROG-0009]
+  - LAS digital well logs and well tops        [DOM-GEOL row 7]
+  - KGS Geoportal (groundwater & geological)   [C10-03 Water Stack member]
+  - Waterbody crosswalk participation          [KFM-P2-PROG-0017 — with NHDPlus/NWIS/Mesonet]
 
-[Back to top](#quick-jump)
+Source-role posture (Atlas §24.1.3)
+  authority / observation / context / model — per descriptor
+  regulatory is NOT a KGS role (that is KCC; see ./kcc-oil-gas-reg.md v0.2)
 
----
+Rights / terms
+  NEEDS VERIFICATION per sub-product
+  Default: DENY public release if terms unclear (C5-02)
+  Disclaimer-preservation rule applies (KFM-P2-PROG-0009)
 
-## 8. Validation
+Sensitivity defaults
+  Exact well / borehole / sample / private-well locations -> RESTRICTED or GENERALIZED public geometry
+  PLSS-derived coordinates stamped with uncertainty (KFM-P2-PROG-0009 parallel)
+  Production vs reserve vs estimate vs permit -> kept distinct (anti-collapse per Atlas §24.1.2)
+  Grid-generalization profiles (KFM-P13-PROG-0018) apply by parallel
 
-| Validator / gate | Purpose | Status |
-|---|---|---|
-| Markdown lint | Per-file Markdown conformance | NEEDS VERIFICATION — workflow not yet wired |
-| Link integrity | Repo-relative targets resolve | NEEDS VERIFICATION |
-| Per-product page conformance to [`_template/SOURCE_PRODUCT_TEMPLATE.md`](../_template/SOURCE_PRODUCT_TEMPLATE.md) | Structural consistency across product pages | PROPOSED |
-| Source-descriptor completeness | Each Kansas authority MUST have its own descriptor with `source_role`, `rights`, `sensitivity`, `cadence` | CONFIRMED doctrine; implementation NEEDS VERIFICATION |
-| Non-API source handling | Cadence + retrieval-method (PDF / CSV / spreadsheet harvest) recorded honestly in descriptor | CONFIRMED tension from `C7-10`; implementation PROPOSED |
-| KDWP SINC sensitivity gate | Records of S1/S2 taxa fail closed on public exact location | CONFIRMED doctrine (`C5-02`, `KFM-P24-IDEA-0002`, `KFM-P24-PROG-0013`); implementation PROPOSED |
-| Parallel-anchor rule | Kansas-authority IRI stored alongside federal/international anchor | CONFIRMED convention per `C7-10` |
+Cadence
+  source-vintage or cadence specific per sub-product [NEEDS VERIFICATION]
+  Oil-and-gas refresh triggers incremental ingest + spec_hash comparison (KFM-P25-IDEA-0001)
 
-[Back to top](#quick-jump)
+Activation
+  Family lane connectors/kansas/ CONFIRMED at commit b6a27916...
+  Per-institution adapter connectors/kansas/kgs/ PROPOSED
+  No SourceActivationDecision asserted in this session
+```
 
----
+</details>
 
-## 9. Related contracts & schemas
+<details>
+<summary><strong>Click to expand: doctrinal references used in this entry</strong></summary>
 
-- [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — `SourceDescriptor` machine shape (per ADR-0001).
-- [`contracts/`](../../../../contracts/) — object families. Kansas sources contribute evidence into object families across Geology (`Geologic Unit`, `SurficialUnit`, `BoreholeReference`, `Well LogReference`, `Mineral Occurrence`, `ResourceEstimate`, `Extraction Site`), Fauna / Flora (`OccurrenceEvidence`, `OccurrencePublic`, `OccurrenceRestricted`, `ConservationStatus`, `RangePolygon`, `SensitiveSite`), Archaeology, Settlements-Infrastructure, Agriculture, and People-DNA-Land.
+- *Directory Rules v1.2* — §§0, 2.4, 2.5, 5, 6.1, 7.3, 7.4 *(authority order, placement law, schema-home, connector lane; commit `b6a27916...`)*
+- *KFM Domain & Capability Encyclopedia* — §6 Cross-Domain Capability Taxonomy; §7.8 Geology and Natural Resources; §13 Sensitive / Deny-by-Default Register; Appendix D Source family index; Appendix E Feature index
+- *KFM Domains Culmination Atlas v1.1* — §D Geology key source families (FIVE KGS rows); §I Sensitivity, rights, and publication posture; §24.1 Master Source-Role Anti-Collapse Register; §24.1.2 Anti-collapse failure modes; §24.1.3 Roles to source-descriptor fields; §24.2.1 Master receipt catalog; §24.8 Time discipline
+- *KFM Components Pass 10* — §6.7 Authority Anchoring; §7.6 Kansas-First with Documented Crosswalk; `C10-03` Water Stack; `C7-10` Kansas-First Domain Authorities; `C7-09` GNIS; `C7-01` Wikidata; `C5-02` default-deny; `C6-01` / `C6-02` sensitivity rubric and named profiles
+- *KFM Pass-23/32 Atlas* — `KFM-P25-IDEA-0001` (KGS oil-and-gas refresh as analytic baseline change); `KFM-P25-PROG-0001` (KGS oil-and-gas source descriptor); `KFM-P2-PROG-0009` (WIMAS/WWC5 KGS+KDA-DWR joint program); `KFM-P8-PROG-0024` (KGS surficial geology minimal unit model); `KFM-P2-PROG-0017` (waterbody crosswalks NHDPlus + NWIS + KGS + Kansas Mesonet); `KFM-P2-IDEA-0024` (USDA NASS / KGS / KDA / KDHE / KDWP Kansas-specific authorities); `KFM-P13-PROG-0018` (sensitive species grid generalization, applied by parallel)
+- *KFM Whole-UI Governed AI Expansion Report* — `SOURCE_DESCRIPTOR_STANDARD.md` creation row
 
-[Back to top](#quick-jump)
+</details>
 
----
-
-## 10. Related connectors & pipelines
-
-- [`connectors/kansas/`](../../../../connectors/kansas/) — connector implementation. **CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)** as one of the nine canonical §7.3 connector families per Directory Rules v1.2. Per-institution adapter content NEEDS VERIFICATION.
-- Pipelines: [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/).
-- Pipeline specs (per anchor domain): [`pipeline_specs/geology/`](../../../../pipeline_specs/geology/), [`pipeline_specs/fauna/`](../../../../pipeline_specs/fauna/), [`pipeline_specs/flora/`](../../../../pipeline_specs/flora/), [`pipeline_specs/archaeology/`](../../../../pipeline_specs/archaeology/), [`pipeline_specs/agriculture/`](../../../../pipeline_specs/agriculture/), etc. (PROPOSED — confirm each per product).
-
-> [!IMPORTANT]
-> **Connector-as-non-publisher** rule (CONFIRMED, Directory Rules §7.3). Per-institution adapters under `connectors/kansas/<institution>/` write only to `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/<domain>/<reason>/<run_id>/`. They MUST NOT write to `data/processed/`, `data/catalog/`, or `data/published/`.
-
-[Back to top](#quick-jump)
-
----
-
-## 11. Open questions
-
-- **OPEN-DSC-15** (new) — Resolve the `ksgs.md` vs `kgs.md` slug discrepancy (corpus uses `KGS`).
-- **OPEN-DSC-03** — Settle `kfm:` vs `ks-kfm:` namespace (`C4-01`). The Kansas family is the most-cited argument for `ks-kfm:`.
-- OPEN — confirm which Kansas institutions warrant their own STAC Collections vs. shared collections.
-- OPEN — confirm rights / sensitivity tier per source.
-- OPEN — relationship between **Kansas State Archives** and **KSHS Kansas Memory** (one institution or two distinct holdings streams).
-- OPEN — pages for KDA, KDHE, Kansas Mesonet, KSU SC, WSU SC, KU Spencer, county historical societies, KBS NHI.
-- OPEN — confirm whether `ADR-0010` (cited in original scaffold) exists and governs deny-by-default; otherwise rely on `C5-02` + `KFM-P24-IDEA-0002` + `KFM-P24-PROG-0013`.
-- OPEN — Kansas-Authority Compatibility Report scoring each authority on API stability, identifier persistence, and harvest cadence (per `C7-10` future-work item).
-- See [`OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) for lane-wide `OPEN-DSC-*` items.
-
-[Back to top](#quick-jump)
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
 
 ---
 
-## 12. Verification backlog
+## Appendix B — Atlas idea-card lineage
 
-| Item | Evidence that would settle it | Status |
-|---|---|---|
-| `connectors/kansas/<institution>/` adapter content per product page | Mounted-repo connector tree | NEEDS VERIFICATION (family lane CONFIRMED at commit) |
-| `data/registry/sources/` descriptor instances for each Kansas institution | Mounted registry + descriptor files | NEEDS VERIFICATION |
-| `ksgs.md` vs `kgs.md` slug (OPEN-DSC-15) | Convention decision + per-product page rename if needed | NEEDS VERIFICATION |
-| Kansas State Archives ↔ KSHS relationship | Source steward + KSHS contact | OPEN |
-| `ADR-0010` existence and content | Mounted-repo `docs/adr/` listing | NEEDS VERIFICATION |
-| KU NHM specimen count (~454k cited; denominator ambiguous per `C7-10` evidence-needed list) | Source steward + KU NHM | NEEDS VERIFICATION |
-| KSHS Kansas Memory count (~600k cited; denominator ambiguous per `C7-10`) | Source steward + KSHS | NEEDS VERIFICATION |
-| KDWP SINC list cadence and current endpoint | Source steward + KDWP contact | NEEDS VERIFICATION |
-| WIMAS / WWC5 access posture (KGS + KDA-DWR jointly maintained) | Source steward + KGS + KDA-DWR contacts | NEEDS VERIFICATION |
-| Non-API source posture per institution (PDF / CSV / spreadsheet vs API) | Per-product source-steward review | OPEN per `C7-10` |
-| Sibling family-level files present (`PROFILES.md`, `IDENTITY.md`, `RIGHTS-AND-SENSITIVITY-MAP.md`, `OPEN-QUESTIONS.md`, `_template/SOURCE_PRODUCT_TEMPLATE.md`) | Mounted-repo `docs/sources/catalog/` tree | NEEDS VERIFICATION |
-| Kansas-Authority Compatibility Report | Author + steward review | OPEN per `C7-10` |
-| Parallel-anchor convention adoption (Kansas IRI + federal/international IRI in catalog rows) | STAC profile + sample Items | NEEDS VERIFICATION |
-
-[Back to top](#quick-jump)
-
----
-
-## Appendix A — Atlas idea-card lineage
-
-For traceability into the KFM Idea Index spine, the `kansas` family draws on the following atlas cards.
+For traceability into the KFM Idea Index spine, this brief draws on the following atlas cards.
 
 <details>
 <summary>Click to expand — idea-card lineage</summary>
 
-| Stable ID | Title | Status (atlas) | Relevance to this family |
+| Stable ID | Title | Status (atlas) | Relevance to this brief |
 |---|---|---|---|
-| `C7-10` | Kansas-First Domain Authorities | CONFIRMED (Pass-10) | Foundational doctrine: KSHS, KHRI, KU NHM, KBS NHI, KDWP SINC — store Kansas-authority IRI in parallel with federal/international anchor |
-| `KFM-P2-IDEA-0024` | USDA NASS, KGS, KDA, KDHE, KDWP as Kansas-specific agricultural and environmental authorities | CONFIRMED, Pass 32 | Confirms the Kansas agency list (KGS, KDA, KDHE, KDWP) and the per-agency watcher / license / cadence rule |
-| `KFM-P19-IDEA-0005` | KDWP listing status is canonical regulatory context | active, Pass 32 | KDWP endangered, threatened, and SINC lists treated as the controlling Kansas regulatory source family |
-| `C10-06` | Biodiversity Stack | CONFIRMED (Pass-10) | KU NHM and FHSU Sternberg as in-state collections of record; KDWP SINC S1/S2 triggers C6 redaction |
-| `C10-07` | Archives Stack | CONFIRMED (Pass-10) | KSHS Kansas Memory (~600k items), KHRI, KU Spencer, KSU SC (~1M items), WSU SC, county historical societies |
-| `C6-01` | Sensitivity Rubric 0–5 | CONFIRMED (Pass-10) | KDWP SINC rank-3 default profile is `profile:sinc-obscure-10km` (a.k.a. `point_10km_hex_seeded_v1`) |
-| `KFM-P18-PROG-0033` | Kansas Memory source descriptor | active, Pass 32 | Kansas Memory described as a historical digital-collections source family with record identifiers, rights notes, media type, provenance role |
-| `KFM-P17-PROG-0011` | Kansas historical provenance source object | active, Pass 32 | Historical claim evidence objects preserve source type, collection or program, source_ref, scan IDs, rights_spdx, page-level references |
-| `KFM-P8-PROG-0024` | KGS surficial geology → minimal unit model | active, Pass 32 | KGS surficial geology ingested into a minimal unit model — flat schema of map units with stratigraphic attributes |
-| `KFM-P2-PROG-0009` | Kansas-specific water systems (WIMAS and WWC5) ingest | active, Pass 32 | WIMAS + WWC5 jointly maintained by KGS and KDA-DWR; redact sensitive owner info and precise coordinates by default |
-| `KFM-P2-PROG-0017` | Waterbody crosswalks: NHDPlus, NWIS site, KGS, and Kansas Mesonet | active, Pass 32 | KGS groundwater participates in the canonical waterbody crosswalk |
-| `KFM-P24-IDEA-0002` | Sensitive species deny-by-default posture | active, Pass 32 | Fauna occurrence records for sensitive taxa default to DENY or ABSTAIN |
-| `KFM-P24-PROG-0013` | Sensitive taxa redaction policy | active, Pass 32 | OPA policy returns ABSTAIN or DENY for sensitive fauna unless generalization / aggregation / access gating satisfied |
+| `DOM-GEOL` (Domains Atlas §D Geology source families) | KGS source-family rows | CONFIRMED listing | **FIVE KGS rows + WWC5 joint with KDHE.** Names KGS as the canonical Kansas geology publisher with five named sub-products. |
+| `C10-03` | Water Stack | CONFIRMED (Pass-10) | "WWC5 well-completion records from the Kansas Geological Survey" + "KGS Geoportal exposes additional state-level products." Water stack member; WWC5 essential for groundwater modeling. |
+| `C7-10` | Kansas-First Domain Authorities | CONFIRMED (Pass-10) | Parallel-anchor rule: store Kansas-authority IRI alongside federal/international anchor. |
+| `KFM-P2-IDEA-0024` | USDA NASS, KGS, KDA, KDHE, KDWP as Kansas-specific authorities | CONFIRMED, Pass 32 | **KGS explicitly named** as one of five Kansas-specific authorities. Per-agency-watcher pattern with own license posture and cadence. |
+| `KFM-P25-IDEA-0001` | KGS oil and gas refresh as analytic baseline change | active, Pass 32 | **CENTRAL CARD for KGS oil-and-gas.** "Kansas oil and gas production refreshes should trigger incremental ingest and manifest/spec_hash comparison before hydrocarbon analyses are treated as current." |
+| `KFM-P25-PROG-0001` | KGS oil and gas source descriptor | active, Pass 32 | **CENTRAL CARD for KGS oil-and-gas descriptor shape.** "Production table scope, update date, county/field/lease/well-header layers, source URI, cadence, rights, and source role." |
+| `KFM-P2-PROG-0009` | WIMAS/WWC5 KGS+KDA-DWR joint program | active, Pass 32 | "Public records with disclaimers and use constraints that map awkwardly onto open-data assumptions"; "Latitude/longitude is sometimes inferred from legal survey description (T/R/S), so positional accuracy varies." Disclaimer-preservation rule; PLSS-uncertainty doctrine. |
+| `KFM-P8-PROG-0024` | KGS surficial geology minimal unit model | active, Pass 32 | KGS surficial-geology sub-product modeled-surface shape. |
+| `KFM-P2-PROG-0017` | Waterbody crosswalks (NHDPlus + NWIS + KGS + Kansas Mesonet) | active, Pass 32 | KGS Geoportal participation in waterbody crosswalk with documented buffer distances and stable `feature_ids`. |
+| `KFM-P13-PROG-0018` | Sensitive species grid generalization policy | active, Pass 32, EXPANDED | "Deterministic grid snapping, representative point plus uncertainty, or withholding tiers while preserving precise private coordinates and rule-version provenance" — applied by parallel to KGS sensitive well-location geometry. |
+| `C7-09` | USGS GNIS for U.S. Place Authorities | CONFIRMED (Pass-10) | Federal place authority; KGS sites anchor to GNIS where coverage exists. |
+| `C7-01` | Wikidata as universal crosswalk substrate | CONFIRMED (Pass-10) | Routing anchor, not truth source. |
+| `C5-02` | Default-deny promotion | CONFIRMED (Pass-10) | Anchors deny-by-default rights posture; "unknown rights fail closed." |
+| `C5-04` | Spec-hash-match gate | CONFIRMED (Pass-10) | Promotion gate; baseline-change refresh per `KFM-P25-IDEA-0001`. |
+| `C5-08` | Lineage required | CONFIRMED (Pass-10) | OpenLineage trail back to receipts per Atlas §24.2.1. |
+| `C6-01` | Sensitivity rubric 0–5 | CONFIRMED (Pass-10) | Family default 0–1 for non-sensitive maps; rank 3+ for well-location classes. |
+| `C6-02` | Named redaction profiles | CONFIRMED (Pass-10) | `point_10km_hex_seeded_v1` and similar for rank-3 default. |
+| `C6-04` | Grid generalization (H3 r7+ public floor) | CONFIRMED (Pass-10) | Geometry generalization floor. |
+| `C4-01` | STAC `kfm:provenance` namespace | CONFIRMED (Pass-10) | Provenance block shape for KGS catalog rows. |
+| `C4-02` | STAC Collection (`kfm-<org>-<product>`) | CONFIRMED (Pass-10) | Collection-id convention. |
+| `C4-05` | DCAT distribution | CONFIRMED (Pass-10) | Applicable to KGS tabular exports. |
+| Atlas §24.1.2 | Anti-collapse failure modes | CONFIRMED (Pass-23/32) | "Aggregate cited as a per-place truth" → DENY at trust membrane; "Modeled product labeled as observed" → DENY. |
+| Atlas §24.1.3 | Source-role enum (Master Source-Role Anti-Collapse Register) | CONFIRMED (Pass-23/32) | `observed | regulatory | modeled | aggregate | administrative | candidate | synthetic`; KGS exercises 6 of 7 (NOT `regulatory` — that's KCC). |
+| Atlas §24.2.1 | Master receipt catalog | CONFIRMED (Pass-23/32) | `SourceDescriptor`, `TransformReceipt`, `AggregationReceipt`, `RedactionReceipt`, `ModelRunReceipt`, `RunReceipt`. |
+| Atlas §24.8 | Time discipline | CONFIRMED (Pass-23/32) | source / observed / valid / retrieval / release / correction times preserved separately. |
+| **`KFM-P19-IDEA-0005`** (referenced for contrast) | KDWP listing canonical regulatory context | active, Pass 32 | Cited in §4 NOTE to contrast KGS's mixed `observed`/`authority`/`modeled` framing with KDWP's `regulatory` framing — different sibling authority posture. |
+| **KCC sibling (referenced for contrast)** | KCC oil-and-gas regulatory data | CONFIRMED DOM-GEOL listing | Cited in §4 NOTE and §11 TIP — parallel-but-distinct authority surface for oil-and-gas data. |
 
 </details>
 
-[Back to top](#quick-jump)
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
 
 ---
 
-### Footer
+## Appendix C — Change log
 
-> **Related:** [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Geology dossier](../../../domains/geology/README.md) · [Fauna dossier](../../../domains/fauna/README.md) · [Flora dossier](../../../domains/flora/README.md) · [Archaeology dossier](../../../domains/archaeology/README.md)
-> **Last updated:** 2026-05-21 *(Claude Code revision — family overview enriched with Kansas-first authority doctrine from C7-10, KDWP SINC sensitivity hooks, and per-institution citation lineage)* · **Status:** draft · **Authority of this doc:** explanatory family README; does **not** decide admission, activation, or release. Family lane is CONFIRMED §7.3; per-institution work remains PROPOSED.
-> [⬆ Back to top](#kansas-source-family)
+| Date | Author | Change | Reviewed by |
+|---|---|---|---|
+| 2026-05-13 | `<docs-steward — TODO>` | Initial v1 source-catalog entry: scope, publisher and authority, sub-products in scope, source-role posture, rights/terms/attribution, sensitivity and publication posture, cadence and freshness, identifiers and crosswalks, lifecycle placement, schema/contract/connector surface, domain consumers, validators/gates/tests, open questions, related docs, "KGS at a glance" appendix. Path: `docs/sources/catalog/ksgs.md` (flat). Slug `ksgs` preserved per supplied path; connector path `connectors/kansas/kgs/` already correctly placed under §7.3 canonical family. | `<Geology-subsystem-owner — TODO>` |
+| 2026-05-21 | `<docs-steward — TODO>` | **v0.2 revision.** Path migration to `docs/sources/catalog/kansas/ksgs.md` (flat-to-folder reorganization; consistent with sibling product pages — `kcc-oil-gas-reg.md`, `kdwp.md`, `khri.md`, `kansas-state-archives.md`, etc.). Slug `ksgs` PRESERVED at user's discretion (v1 NOTE retained as OPEN-KSGS-13; lane-wide same item as OPEN-DSC-15). **Substantive doctrinal additions:** (a) explicit IMPORTANT callout in preamble noting that connector path `connectors/kansas/kgs/` was ALREADY correct in v1 (distinguishing KGS/KDWP/KHRI from four sibling v0.2 revisions that required path corrections); (b) explicit citations to **`KFM-P25-IDEA-0001`** (KGS oil-and-gas refresh as analytic baseline change), **`KFM-P25-PROG-0001`** (KGS oil-and-gas source descriptor shape), **`KFM-P2-PROG-0009`** (WIMAS/WWC5 joint program + disclaimer + PLSS-uncertainty doctrine), **`KFM-P8-PROG-0024`** (KGS surficial geology minimal unit model), **`KFM-P2-PROG-0017`** (waterbody crosswalks NHDPlus+NWIS+KGS+Mesonet), **`KFM-P2-IDEA-0024`** (KGS named as Kansas-specific authority), **`KFM-P13-PROG-0018`** (sensitive grid generalization applied by parallel) throughout §2, §3, §4, §5, §6, §7, §8, §9, §10, §12; v1 cited only DOM-GEOL listing without these atlas-card spine references. (c) Upgraded `connectors/kansas/` family lane to **CONFIRMED at commit `b6a27916...`** (was PROPOSED in v1); per-institution adapter `connectors/kansas/kgs/` remains PROPOSED. Lifecycle Mermaid diagram updated to reflect this with explicit confirmed-styled node. (d) Added §3 TIP callout on PLSS-uncertainty doctrine per `KFM-P2-PROG-0009` — direct cross-reference to sibling KCC v0.2 §9 which applies the same discipline. (e) Added §5 WARNING callout on disclaimer-preservation rule per `KFM-P2-PROG-0009`. (f) Added §6 IMPORTANT callout applying `KFM-P13-PROG-0018` deterministic-grid-generalization by parallel to KGS sensitive well-location geometry. (g) Added `C6-01` rank guideline column and PLSS-derived coordinate uncertainty row to §6 sensitivity-class table. (h) Added §8 TIP callout on waterbody crosswalks per `KFM-P2-PROG-0017`. (i) Updated §11 domain consumers with Environment as adjacent (produced-water context) and a TIP callout on KGS×KCC complementarity for oil-and-gas data. (j) Updated §12 validators with three new gate types: KGS-vs-KCC role anti-collapse, PLSS-uncertainty stamping, disclaimer-preservation, refresh-as-baseline-change. (k) Updated §13 open-questions table: marked v1 OV #6 (path/slug) as PARTIALLY RESOLVED; added six new items (OPEN-KSGS-11 through OPEN-KSGS-16) including the slug reconciliation (OPEN-KSGS-13 = lane-wide OPEN-DSC-15) and joint-program governance (OPEN-KSGS-12 — WWC5 with KDHE vs WIMAS with KDA-DWR). (l) Updated §14 related docs with v0.2 sibling paths (twelve sibling product pages under `kansas/` family folder; explicit cross-references to KCC v0.2, Kansas Mesonet v0.2, KDWP v0.2, KHRI v0.2) and Pass-10 + Pass-23/32 corpus-card reference group. (m) Expanded Appendix A "KGS at a glance" condensed card with: doc-slug vs connector-slug distinction (OPEN-KSGS-13); waterbody-crosswalk participation; PLSS-uncertainty stamping; refresh-as-baseline-change; family-lane CONFIRMED status. (n) Added Appendix B (atlas idea-card lineage, 25 cards). (o) Added Appendix C (this change log). (p) Updated meta block to v0.2 with full related-docs list and notes block. (q) Updated badges: added doc-version, family, DOM-GEOL row count, authority, joint-with-KDHE; fixed timestamp. | `<Geology-subsystem-owner — TODO>` |
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
+
+---
+
+**Related:** [Directory Rules](../../../doctrine/directory-rules.md) &middot; [Source Descriptor Standard](../../SOURCE_DESCRIPTOR_STANDARD.md) *(PROPOSED)* &middot; [Geology domain](../../../domains/geology/README.md) *(PROPOSED)* &middot; [Hydrology domain](../../../domains/hydrology/README.md) *(PROPOSED)* &middot; [KCC oil-and-gas regulatory sibling (v0.2)](./kcc-oil-gas-reg.md) &middot; [Source Authority Register](../../../../control_plane/source_authority_register.yaml) *(PROPOSED)*
+
+**Last updated:** 2026-05-21 &middot; **Doc version:** v0.2 (draft) &middot; **Family lane:** `connectors/kansas/` CONFIRMED §7.3 at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` &middot; **Per-institution adapter:** `connectors/kansas/kgs/` PROPOSED (v1 path retained correctly) &middot; **Slug:** `ksgs` (doc) / `kgs` (connector) per OPEN-KSGS-13
+
+[⬆ Back to top](#kansas-geological-survey-kgs--source-catalog-entry)
