@@ -1,86 +1,106 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/focus-modes-readme  # NEEDS_VERIFICATION until registered
-title: Focus Modes
+title: Focus Modes — County Focus Mode Control Plane
 type: standard
-version: v0.1
+version: v0.2
 status: draft
-owners: [NEEDS_VERIFICATION]
+owners:
+  - <OWNER:focus-mode-steward>
+  - <OWNER:directory-rules-steward>
 created: 2026-05-21
-updated: 2026-05-21
+updated: 2026-05-22
 policy_label: public
+authority: restates directory-rules.md §6.7 (NEVER overrides it)
 related:
   - docs/standards/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md            # NEEDS_VERIFICATION
-  - docs/focus-modes/ellsworth-county/build-plan.md
-  - docs/focus-modes/riley-county/build-plan.md
-  - docs/focus-modes/shawnee-county/build-plan.md
-  - docs/focus-modes/ford-county/build-plan.md
-  - docs/focus-modes/wyandotte-county/build-plan.md
-  - docs/focus-modes/sedgwick-county/build-plan.md
-  - docs/focus-modes/douglas-county/build-plan.md
-  - docs/focus-modes/leavenworth-county/build-plan.md
-  - docs/focus-modes/reno-county/build-plan.md
-  - docs/focus-modes/johnson-county/build-plan.md
-  - docs/focus-modes/barton-county/build-plan.md
-  - docs/focus-modes/geary-county/build-plan.md
-  - docs/focus-modes/finney-county/build-plan.md
-  - docs/focus-modes/cherokee-county/build-plan.md
-  - docs/focus-modes/saline-county/build-plan.md
-  - docs/focus-modes/crawford-county/build-plan.md
-  - docs/focus-modes/lyon-county/build-plan.md
-tags: [kfm, focus-mode, proof-slice, evidence-first, map-first, governed-ai, directory-rules]
+  - docs/adr/ADR-0001-schema-home.md                                      # NEEDS_VERIFICATION
+  - docs/adr/ADR-0027-county-focus-mode-control-plane.md                  # PROPOSED — this control plane
+  - docs/focus-modes/COUNTY_INDEX.md
+  - docs/focus-modes/_template/county-build-plan.md
+  - contracts/focus_mode/focus_mode_payload.md
+  - schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json        # NEEDS_VERIFICATION (PROPOSED emission)
+  - tools/validators/validate_focus_mode_index.py
+  - tools/validators/validate_focus_mode_payload.py                       # PROPOSED follow-up
+tags:
+  - kfm
+  - focus-mode
+  - proof-slice
+  - evidence-first
+  - map-first
+  - governed-ai
+  - directory-rules
+  - control-plane
 notes:
   - PROPOSED v1.2 deliverable referenced as a deferred item in directory-rules.md §18.d.
-  - Restates directory-rules.md §6.7 placement contract, casing convention, and first-PR sequence for new Focus Mode authors.
+  - Restates directory-rules.md §6.7 placement contract, casing convention, and first-PR sequence.
   - All cross-root paths are governed by directory-rules.md §6.7; this README is an orientation, not an override.
   - Existence of per-county build plans is PROPOSED until verified against the live repository.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Focus Modes
+# `docs/focus-modes/` — County Focus Mode Control Plane
 
 > **One README, many lanes.** A Focus Mode is a governed, evidence-bounded, county- or region-scale **proof slice** that demonstrates the full KFM trust path for a bounded spatial frame — without becoming a root folder, a domain, or a parallel authority.
 
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Doc class](https://img.shields.io/badge/doc%20class-orientation-blue)
-![Authority](https://img.shields.io/badge/authority-restates%20%C2%A76.7-6f42c1)
-![Truth posture](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
-![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-2b8a3e)
-![Repo evidence](https://img.shields.io/badge/repo%20evidence-not%20mounted-lightgrey)
+![governance](https://img.shields.io/badge/governance-CONFIRMED%20doctrine-blue)
+![placement](https://img.shields.io/badge/placement-Directory%20Rules%20v1.2%20%C2%A76.7-blue)
+![status](https://img.shields.io/badge/status-draft-yellow)
+![implementation](https://img.shields.io/badge/implementation-PROPOSED-yellow)
+![doc%20class](https://img.shields.io/badge/doc%20class-orientation%20%2B%20control%20plane-6f42c1)
+![authority](https://img.shields.io/badge/authority-restates%20%C2%A76.7-6f42c1)
+![truth%20posture](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
+![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-2b8a3e)
+![ci](https://img.shields.io/badge/CI-NEEDS%20VERIFICATION-lightgrey)
+![rights](https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-yellow)
+![repo%20evidence](https://img.shields.io/badge/repo%20evidence-not%20mounted-lightgrey)
+![rollback](https://img.shields.io/badge/rollback%20target-pre--control--plane-informational)
 
-**Status:** Draft · **Owners:** `NEEDS_VERIFICATION` · **Last updated:** 2026-05-21
+**Status:** Draft (control plane, first emission) · **Lane:** `docs/focus-modes/` · **Authority:** human-facing control plane (semantic), not machine truth · **Owners:** `<OWNER:focus-mode-steward>`, `<OWNER:directory-rules-steward>` · **Last reviewed:** 2026-05-22
 
 > [!IMPORTANT]
-> This file **restates** the canonical Focus Mode placement contract defined in `directory-rules.md` §6.7. If this README and `directory-rules.md` ever diverge, **`directory-rules.md` wins.** Open a PR to reconcile this file, not the other way around.
+> **A Focus Mode is NOT a domain, NOT a root folder, and NOT a publication target by itself.** It is a cross-cutting *compositional unit* — a "proof slice" — that binds a county (or region/corridor) to released layers, an Evidence Drawer profile, a `FocusModePayload` contract, a `MapReleaseManifest`, and a rollback target. Its files MUST live as lanes inside the appropriate responsibility roots. **(CONFIRMED doctrine** — `directory-rules.md` §6.7; `kfm_repository_structure_guiding_document.md` §8.3.)
+
+> [!IMPORTANT]
+> **Reconciliation invariant.** This file **restates** the canonical Focus Mode placement contract defined in `directory-rules.md` §6.7. If this README and `directory-rules.md` ever diverge, **`directory-rules.md` wins.** Open a PR to update *this* file; do **not** edit `directory-rules.md` to match a stale restatement here.
 
 ---
 
-## Quick links
+## Contents
 
-- [1. Scope](#1-scope)
+- [1. Scope and what this lane is](#1-scope-and-what-this-lane-is)
 - [2. What is a Focus Mode?](#2-what-is-a-focus-mode)
 - [3. Repo fit](#3-repo-fit)
-- [4. Inputs — what belongs under `docs/focus-modes/<area>/`](#4-inputs--what-belongs-under-docsfocus-modesarea)
-- [5. Exclusions — what does not belong here](#5-exclusions--what-does-not-belong-here)
-- [6. Directory layout (inside `docs/focus-modes/`)](#6-directory-layout-inside-docsfocus-modes)
+- [4. What lives here, what does NOT](#4-what-lives-here-what-does-not)
+- [5. Directory layout (inside `docs/focus-modes/`)](#5-directory-layout-inside-docsfocus-modes)
+- [6. The control plane in this directory](#6-the-control-plane-in-this-directory)
 - [7. Cross-root composition](#7-cross-root-composition)
 - [8. Canonical placement table](#8-canonical-placement-table)
 - [9. Casing convention per host root](#9-casing-convention-per-host-root)
-- [10. What a Focus Mode is NOT](#10-what-a-focus-mode-is-not)
+- [10. Lifecycle of a county Focus Mode](#10-lifecycle-of-a-county-focus-mode)
 - [11. Trust flow inside a Focus Mode](#11-trust-flow-inside-a-focus-mode)
-- [12. Recommended first-PR sequence](#12-recommended-first-pr-sequence)
-- [13. Focus-mode registry](#13-focus-mode-registry)
-- [14. Authoring checklist](#14-authoring-checklist)
-- [15. FAQ](#15-faq)
-- [16. Related docs](#16-related-docs)
+- [12. Per-area lane: required files](#12-per-area-lane-required-files)
+- [13. Sensitivity defaults (fail-closed lanes)](#13-sensitivity-defaults-fail-closed-lanes)
+- [14. Add-a-county procedure](#14-add-a-county-procedure)
+- [15. Recommended first-PR sequence](#15-recommended-first-pr-sequence)
+- [16. Authoring checklist](#16-authoring-checklist)
+- [17. Validation and CI hooks](#17-validation-and-ci-hooks)
+- [18. ADR triggers](#18-adr-triggers)
+- [19. Focus-mode registry (in-flight drafts)](#19-focus-mode-registry-in-flight-drafts)
+- [20. What a Focus Mode is NOT](#20-what-a-focus-mode-is-not)
+- [21. Drift register and open items](#21-drift-register-and-open-items)
+- [22. FAQ](#22-faq)
+- [23. Cross-references](#23-cross-references)
+- [24. README contract self-check](#24-readme-contract-self-check)
 
 ---
 
-## 1. Scope
+## 1. Scope and what this lane is
 
-This README is the **orientation** for the `docs/focus-modes/` directory. It exists for one reason: a Focus Mode is a *cross-cutting compositional unit* whose files land in **at least nine different responsibility roots**, and new authors need a single place that:
+**CONFIRMED doctrine.** `docs/focus-modes/` is the **human-facing control plane** for the County Focus Mode family. It holds, per area, the planning + acceptance documents that a `FocusModePayload` later materializes from: `README.md`, `build-plan.md`, `layer-registry.md`, `evidence-model.md`, `acceptance-checklist.md`, `source-seed-list.md`, `public-safety-notes.md`. *(directory-rules.md §6.7.2.)*
+
+This README is the **orientation** for the directory. It exists for one reason: a Focus Mode is a *cross-cutting compositional unit* whose files land in **at least nine different responsibility roots**, and new authors need a single place that:
 
 - defines what a Focus Mode is (and is not);
 - restates the canonical per-root placement contract;
@@ -88,10 +108,19 @@ This README is the **orientation** for the `docs/focus-modes/` directory. It exi
 - shows the recommended first-PR sequence;
 - indexes the draft build plans already in flight.
 
+It is **not** the home for:
+
+- machine schemas (those live at `schemas/contracts/v1/focus_mode/`);
+- semantic object contracts (those live at `contracts/focus_mode/`);
+- payload fixtures (those live at `fixtures/focus_modes/<area>/{valid,invalid}/`);
+- UI prototypes (those live at `apps/explorer-web/src/focus-modes/<area>/`);
+- validators (those live at `tools/validators/`);
+- published artifacts, release manifests, policy bundles, or receipts.
+
 > [!NOTE]
 > **CONFIRMED doctrine** — this file restates `directory-rules.md` §6.7.1 through §6.7.6. **PROPOSED** — every other repo-shaped claim below is provisional until verified against the live repository.
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
@@ -113,7 +142,7 @@ A Focus Mode is **simultaneously two things**, and both must be visible in place
 > [!IMPORTANT]
 > The placement rules in §8 apply to **both senses simultaneously**. A Focus Mode is not finished when the docs land; it is finished when every lane has a populated, validated, released composition behind a `ReleaseManifest`.
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
@@ -121,69 +150,57 @@ A Focus Mode is **simultaneously two things**, and both must be visible in place
 
 | Aspect | Value |
 |---|---|
-| **Path** | `docs/focus-modes/` (kebab-case, plural; per `directory-rules.md` §6.7.2) |
-| **Upstream authority** | `directory-rules.md` §3 (root-stays-boring), §6.7 (proof-slice placement contract), §7.1.a (`apps/explorer-web/` canonical), §12 (Domain Placement Law), §13.5 (drift anti-patterns 8–10). |
+| **Path** | `docs/focus-modes/` (kebab-case, **plural**; per `directory-rules.md` §6.7.2) |
+| **Upstream authority** | `directory-rules.md` §3 (root-stays-boring), §6.7 (proof-slice placement contract), §7.1.a (`apps/explorer-web/` canonical), §12 (Domain Placement Law), §13.5 (drift anti-patterns 8–10), §18.d (v1.2 deferred items). |
 | **Downstream consumers** | Per-county `docs/focus-modes/<area>-county/` folders; sibling lanes in `contracts/focus_mode/`, `schemas/contracts/v1/focus_mode/`, `fixtures/focus_modes/<area>/`, `apps/explorer-web/src/focus-modes/<area>/`, `data/catalog/sources/<area>/`, `data/published/layers/<area>/`, `release/candidates/<area>-focus-mode/`. |
 | **Truth class** | Orientation / restatement. **Not** a normative authority on its own. Authority remains in `directory-rules.md`. |
 | **Doc class** | Standard doc (KFM Meta Block v2 required) **and** directory README (README-like minimums required). |
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
-## 4. Inputs — what belongs under `docs/focus-modes/<area>/`
+## 4. What lives here, what does NOT
 
-For each area (county, corridor, region), the `docs/focus-modes/<area>-<scope>/` folder is the **human-readable spine** of the proof slice. **PROPOSED** file set, per the eleven-plus draft build plans:
-
-| File | Role |
-|---|---|
-| `README.md` | One-line purpose, badges, links to siblings, public-safety posture. |
-| `build-plan.md` | Phased plan: control plane → mock API → UI prototype → repo integration → source intake → release. |
-| `layer-registry.md` | Per-layer table: source role, time scope, sensitivity class, owner, release state. |
-| `evidence-model.md` | Area-specific EvidenceRef / EvidenceBundle conventions; required citations per claim type. |
-| `acceptance-checklist.md` | Definition-of-done for the proof slice (validators pass, negative fixtures pass, ReleaseManifest exists). |
-| `source-seed-list.md` | Seed source identifiers, descriptors, intake status. |
-| `public-safety-notes.md` | Sensitivity, rights, geoprivacy, redaction posture for this area. |
-| *(area-specific framing notes)* | E.g., `shawnee-mission-and-indigenous-history-notes.md`, `tri-state-mining-district-notes.md`. |
-
-> [!NOTE]
-> The file list above is **PROPOSED** — it reflects the convergent pattern across the seventeen draft county plans, not a verified live-repo tree.
-
-[Back to top](#top)
-
----
-
-## 5. Exclusions — what does not belong here
-
-`docs/focus-modes/<area>/` is documentation only. The following live elsewhere and are governed by their own host root's README:
-
-| Artifact | Goes here (canonical) | Does NOT go here |
+| Category | Belongs in `docs/focus-modes/` | Belongs elsewhere (canonical) |
 |---|---|---|
-| Semantic Markdown for `FocusModePayload`, `LayerRegistryEntry`, `AtlasCard` | `contracts/focus_mode/` | `docs/focus-modes/<area>/` |
-| `.schema.json` files | `schemas/contracts/v1/focus_mode/` | `contracts/focus_mode/`, `docs/focus-modes/<area>/` |
-| Valid / invalid fixtures | `fixtures/focus_modes/<area>/{valid,invalid}/` | `docs/focus-modes/<area>/`, `tests/` (unit-scoped fixtures are a separate question; see §6.6 of `directory-rules.md`) |
-| UI code | `apps/explorer-web/src/focus-modes/<area>/` | `apps/web/` (drift; see OPEN-DR-06), `docs/focus-modes/<area>/` |
-| Validators | `tools/validators/validate_focus_mode_payload.py` (and siblings) | `docs/focus-modes/<area>/` |
-| Catalog source descriptors | `data/catalog/sources/<area>/source_descriptors.yaml` | `docs/focus-modes/<area>/` |
-| Released layer artifacts | `data/published/layers/<area>/` | `docs/focus-modes/<area>/` |
-| Release candidate dossier and `ReleaseManifest` | `release/candidates/<area>-focus-mode/`, `release/manifests/<area>-focus-mode-v<n>.json` | `docs/focus-modes/<area>/`, `artifacts/` (see §13.2 anti-pattern) |
-| Policy bundles (runtime / promotion / release gates) | `policy/{runtime,promotion,release}/` | `docs/focus-modes/<area>/`, `release/*.rego` (drift) |
+| Per-area planning & acceptance | ✅ `docs/focus-modes/<area>-<scope>/{README,build-plan,layer-registry,evidence-model,acceptance-checklist,source-seed-list,public-safety-notes}.md` | — |
+| Area-specific framing notes (optional) | ✅ `docs/focus-modes/<area>-<scope>/<area>-specific-framing-notes.md` (e.g., `shawnee-mission-and-indigenous-history-notes.md`, `tri-state-mining-district-notes.md`) | — |
+| Master index of all county slices | ✅ `docs/focus-modes/COUNTY_INDEX.md` | — |
+| Build-plan template | ✅ `docs/focus-modes/_template/county-build-plan.md` | — |
+| Semantic Markdown for `FocusModePayload`, `LayerRegistryEntry`, `AtlasCard` | ❌ | `contracts/focus_mode/` |
+| Machine schema (`.schema.json`) | ❌ | `schemas/contracts/v1/focus_mode/` |
+| Valid / invalid payload fixtures | ❌ | `fixtures/focus_modes/<area>/{valid,invalid}/` |
+| Mock APIs, layer registries (code), UI prototypes | ❌ | `apps/explorer-web/src/focus-modes/<area>/` (**not** `apps/web/` — OPEN-DR-06 drift) |
+| Validators | ❌ | `tools/validators/` |
+| Release manifests | ❌ | `release/manifests/focus_modes/` |
+| Released layer artifacts | ❌ | `data/published/layers/<area>/` |
+| Published payloads | ❌ | `data/published/api_payloads/focus-modes/<area>.json` |
+| Source descriptors (yaml) | ❌ | `data/catalog/sources/<area>/source_descriptors.yaml` |
+| Policy overrides | ❌ | `policy/sensitivity/<area>/` (when justified) |
+| Policy bundles (runtime / promotion / release gates) | ❌ | `policy/{runtime,promotion,release}/` |
+
+> [!CAUTION]
+> Creating a top-level `focus-mode/`, `focus_mode/`, `focus-modes/`, or `focus_modes/` folder at repo root is **drift** per `directory-rules.md` §13.5 anti-pattern #8 and `kfm_repository_structure_guiding_document.md` §3 (root-stays-boring). Use the host-root lanes above.
 
 > [!WARNING]
 > Putting `.schema.json` files under `contracts/focus_mode/` is **drift anti-pattern #10** in `directory-rules.md` §13.5. Schemas live in `schemas/contracts/v1/focus_mode/` per ADR-0001 (`NEEDS_VERIFICATION` of ADR number against the live repo).
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
-## 6. Directory layout (inside `docs/focus-modes/`)
+## 5. Directory layout (inside `docs/focus-modes/`)
 
-**PROPOSED tree.** The shape below is the convergent pattern across the seventeen draft county build plans. Live-repo presence is `NEEDS_VERIFICATION`.
+**PROPOSED tree.** The shape below is the convergent pattern across the 17+ draft county build plans. Live-repo presence is `NEEDS_VERIFICATION`.
 
 ```text
 docs/focus-modes/
-├── README.md                          # this file
-├── <area>-county/                     # kebab-case + scope suffix
+├── README.md                          # this file — lane doctrine + add-a-county procedure
+├── COUNTY_INDEX.md                    # master index: 105 KS counties, status, paths, validation state
+├── _template/
+│   └── county-build-plan.md           # standardized template with YAML front-matter spec
+├── <area>-county/                     # kebab-case + scope suffix (added one PR at a time)
 │   ├── README.md
 │   ├── build-plan.md
 │   ├── layer-registry.md
@@ -191,7 +208,7 @@ docs/focus-modes/
 │   ├── acceptance-checklist.md
 │   ├── source-seed-list.md
 │   ├── public-safety-notes.md
-│   └── <area>-specific-framing-notes.md
+│   └── <area>-specific-framing-notes.md   # optional
 ├── <area>-corridor/                   # multi-county corridor (e.g., smoky-hill-corridor)
 │   └── …
 └── <area>-region/                     # multi-county region (rare)
@@ -199,9 +216,36 @@ docs/focus-modes/
 ```
 
 > [!NOTE]
-> A corridor or region (e.g., `smoky-hill-corridor`) is its **own** area name and **does not mirror** under each member county. See [§6.7.4 — One area = one Focus Mode](#9-casing-convention-per-host-root) (restated in §9 below).
+> A corridor or region (e.g., `smoky-hill-corridor`) is its **own** area name and **does not mirror** under each member county. See [§9 — one area = one Focus Mode](#9-casing-convention-per-host-root) and `directory-rules.md` §6.7.4.
 
-[Back to top](#top)
+[↑ Back to top](#top)
+
+---
+
+## 6. The control plane in this directory
+
+This directory itself contains four in-directory artifacts plus four out-of-directory companions that together gate further per-county work. **CONFIRMED doctrine** (the shapes); **PROPOSED implementation** (the files emitted in this PR).
+
+### 6.1 In-directory artifacts
+
+| File | Role |
+|---|---|
+| `README.md` | This file. Lane doctrine + add-a-county procedure. |
+| `COUNTY_INDEX.md` | Master index of all 105 Kansas counties; status, lane, owner, priority, sensitivity flags, source-seed family. |
+| `_template/county-build-plan.md` | Standardized template with mandatory YAML front-matter spec. |
+| `<area>-county/` (per-area lanes) | The seven required files (§12) plus optional framing notes. |
+
+### 6.2 Out-of-directory companions
+
+| File | Canonical home | Role |
+|---|---|---|
+| `validate_focus_mode_index.py` | `tools/validators/` | Lightweight validator: broken links, missing READMEs, duplicate selection, naming drift. |
+| `validate_focus_mode_payload.py` | `tools/validators/` | PROPOSED. Payload validator (per-area instance). |
+| `focus_mode_payload.md` | `contracts/focus_mode/` | Plan → governed UI payload semantic contract. |
+| `focus_mode_payload.schema.json` | `schemas/contracts/v1/focus_mode/` | Machine schema (NEEDS VERIFICATION in live repo; emit in PR-1 if absent). |
+| `ADR-0027-county-focus-mode-control-plane.md` | `docs/adr/` | ADR formalizing this control plane. |
+
+[↑ Back to top](#top)
 
 ---
 
@@ -237,7 +281,7 @@ flowchart TD
 > [!CAUTION]
 > The diagram is **schematic**. The exact path patterns, especially the **casing of `<area>` per root**, are not interchangeable — see §9.
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
@@ -247,20 +291,21 @@ flowchart TD
 
 | Root | Path pattern | Authority | Notes |
 |---|---|---|---|
-| `docs/` | `docs/focus-modes/<area>-<scope>/` (e.g., `docs/focus-modes/ellsworth-county/`) | Canonical | Kebab-case area + scope suffix (`-county`, `-region`, `-corridor`). Holds `README.md`, `build-plan.md`, `layer-registry.md`, `evidence-model.md`, `acceptance-checklist.md`, `source-seed-list.md`, `public-safety-notes.md`, and area-specific framing notes. |
+| `docs/` | `docs/focus-modes/<area>-<scope>/` (e.g., `docs/focus-modes/ellsworth-county/`) | Canonical | Kebab-case area + scope suffix (`-county`, `-region`, `-corridor`). Holds the seven required files (§12) and optional area-specific framing notes. |
 | `contracts/` | `contracts/focus_mode/` | Canonical (new top-level family; v1.2) | Snake_case, **singular**. Joins existing `contracts/{source,evidence,data,runtime,release,correction,governance,domains}/`. Holds the **semantic Markdown** for `FocusModePayload`, `LayerRegistryEntry`, `AtlasCard` (if not under `contracts/atlas/`), and area-bounding contracts. **MUST NOT** hold `.schema.json` files. |
 | `schemas/` | `schemas/contracts/v1/focus_mode/` | Canonical (per ADR-0001 schema home) | Holds `focus_mode_payload.schema.json`, `layer_registry_entry.schema.json`, and area-bounding schema files. |
-| `fixtures/` | `fixtures/focus_modes/<area>/{valid,invalid}/` | Canonical | Note the **plural snake_case** here (`focus_modes`), in contrast to `contracts/focus_mode/` (singular). Each area MUST have both `valid/` and `invalid/` populated. Negative fixtures (unresolved evidence, public RAW access, missing policy label, model output as evidence, exact sensitive geometry) are **required, not optional**. |
+| `fixtures/` | `fixtures/focus_modes/<area>/{valid,invalid}/` | Canonical | **Plural snake_case** here (`focus_modes`), in contrast to `contracts/focus_mode/` (singular). Each area MUST have both `valid/` and `invalid/` populated. Negative fixtures (unresolved evidence, public RAW access, missing policy label, model output as evidence, exact sensitive geometry) are **required, not optional**. |
 | `apps/` | `apps/explorer-web/src/focus-modes/<area>/` | Canonical (per §7.1.a, CONFIRMED at commit `b6a279…`) | New work targets `apps/explorer-web/`. Several draft county build plans reference `apps/web/`; that path is **drift** (OPEN-DR-06) and SHOULD be reconciled on next revision. |
-| `tools/` | `tools/validators/validate_focus_mode_payload.py`, `validate_atlas_card.py`, `validate_evidence_bundle.py`, `validate_layer_registry.py` | Canonical | Flat validator naming under `tools/validators/`; orchestrated per §7.5.a. |
+| `tools/` | `tools/validators/validate_focus_mode_payload.py`, `validate_atlas_card.py`, `validate_evidence_bundle.py`, `validate_layer_registry.py`, `validate_focus_mode_index.py` | Canonical | Flat validator naming under `tools/validators/`; orchestrated per §7.5.a. |
 | `data/catalog/` | `data/catalog/sources/<area>/source_descriptors.yaml`, `data/catalog/stac/<area>/` | Canonical | Area lives parallel to `data/catalog/domain/<domain>/`, **not** under it. An area composes across domains; it is not a domain. |
 | `data/published/` | `data/published/layers/<area>/`, `data/published/api_payloads/focus-modes/<area>.json` | Canonical | Released layer artifacts scoped to the focus area. |
 | `data/registry/` | `data/registry/sources/<area>/` (optional) | Canonical | Only when an area-bounded source slice needs its own registry view. |
 | `release/` | `release/candidates/<area>-focus-mode/`, `release/manifests/<area>-focus-mode-v<n>.json` | Canonical | Release candidate dossiers and `ReleaseManifest` files. |
 | `pipeline_specs/` | `pipeline_specs/focus_modes/<area>/` (optional) | Canonical | Only when an area needs its own declarative pipeline composition. |
 | `examples/` | `examples/focus-modes/<area>/` (optional) | Canonical | Worked, runnable area-scoped example wiring. |
+| `policy/` | `policy/sensitivity/<area>/` (optional) | Canonical | Only when per-area sensitivity overrides cross-domain defaults; requires deny-fixture and ADR-level justification. |
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
@@ -281,27 +326,41 @@ flowchart TD
 
 **CONFIRMED.** An area MUST appear as exactly one Focus Mode composition. If a Focus Mode grows beyond a county (e.g., `smoky-hill-corridor` spanning Ellsworth + Saline + Russell counties), it gets **its own area name**; it does NOT mirror under each member county.
 
-[Back to top](#top)
+### Scope suffix area-lane summary (the `docs/` view)
+
+- Kebab-case + scope suffix.
+- Examples: `ellsworth-county/`, `smoky-hill-corridor/`, `cheyenne-bottoms-region/`.
+- The scope suffix MUST be one of: `-county`, `-region`, `-corridor`. Other scopes require an ADR.
+
+[↑ Back to top](#top)
 
 ---
 
-## 10. What a Focus Mode is NOT
+## 10. Lifecycle of a county Focus Mode
 
-**CONFIRMED.** Restated verbatim from `directory-rules.md` §6.7.5. A Focus Mode MUST NOT:
+```mermaid
+flowchart LR
+  NS[not-started] -->|claim in COUNTY_INDEX| PL[planned]
+  PL -->|emit docs/focus-modes/area-county/| DR[draft]
+  DR -->|fixtures + payload pass validators| VD[validated]
+  VD -->|FocusModePayload built + cite-or-abstain proof| PR[payload-ready]
+  PR -->|PromotionDecision passes gates A–G| RL[released]
+  RL -->|correction or rollback| RB[rolled-back]
+  RL -->|superseded| DP[deprecated]
+```
 
-> [!CAUTION]
-> - Become a root folder (`focus_modes/` or `focus-modes/` at repo root → §3 violation, §13.5 anti-pattern #8).
-> - Hold `.schema.json` files inside `contracts/focus_mode/` (→ §6.4 schema-home violation, §13.1 anti-pattern, §13.5 anti-pattern #10).
-> - Use `apps/web/` (→ §7.1 canonical-shell violation; OPEN-DR-06).
-> - Read directly from `data/raw/`, `data/work/`, or `data/quarantine/` from public UI (→ §7.1 trust-membrane violation).
-> - Publish without a `ReleaseManifest` under `release/manifests/` (→ §9.2 lifecycle invariant; §13.4 lifecycle skip).
-> - Treat AI output as proof (→ §6.7.1 finite-outcome rule; §13.5 "model output as evidence").
-> - Carry a domain into a root folder via the focus-mode pattern (→ §12 Domain Placement Law).
+| Status | Entry condition | Exit condition |
+|---|---|---|
+| `not-started` | County exists in Kansas (1 of 105) | An owner is recorded in `COUNTY_INDEX.md` |
+| `planned` | Owner + scope agreed | `docs/focus-modes/<area>-county/` lane exists with at least `README.md` + `build-plan.md` |
+| `draft` | All seven lane files exist | All validators in §17 pass on the lane |
+| `validated` | Validators pass | A `FocusModePayload` instance exists at `data/published/api_payloads/focus-modes/<area>.json` and validates against `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` |
+| `payload-ready` | Payload validates + citation closure proven | `PromotionDecision` envelope passes promotion gates A–G (per `ai-build-operating-contract.md` Part VI) |
+| `released` | `MapReleaseManifest` + rollback target exist | A correction is filed or a successor release supersedes |
+| `rolled-back` | `RollbackCard` written, cache invalidated | Re-validation closes a corrected version |
+| `deprecated` | Successor released, deprecation notice in lane README | (terminal) |
 
-> [!NOTE]
-> Drifts 8, 9, and 10 in `directory-rules.md` §13.5 — "Focus-mode as root", "Focus-mode app shell divergence" (`apps/web/` vs `apps/explorer-web/`), and "Focus-mode schema in `contracts/`" — were added in v1.2 specifically to defend the Focus Mode pattern against the most common drift attempts.
-
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
@@ -348,41 +407,210 @@ flowchart LR
 > [!IMPORTANT]
 > The Focus Mode AI surface is **never the root truth source**. It synthesizes only over **resolved, visible, policy-safe evidence** and **must cite, abstain, deny, or error** — never invent.
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
-## 12. Recommended first-PR sequence
+## 12. Per-area lane: required files
+
+**CONFIRMED canonical pattern** per `directory-rules.md` §6.7.2; **NEEDS VERIFICATION** at the live-repo area-segment level.
+
+### 12.1 Seven required files
+
+| File | Required | Role |
+|---|---|---|
+| `README.md` | yes | Lane-level KFM Meta Block, status, owner, links, public-safety posture summary. |
+| `build-plan.md` | yes | The plan itself (use `_template/county-build-plan.md`). Phased: control plane → mock API → UI prototype → repo integration → source intake → release. |
+| `layer-registry.md` | yes | Per-layer entries: source role, time scope, sensitivity class, owner, release state, evidence ref, style ref. |
+| `evidence-model.md` | yes | Area-specific EvidenceRef / EvidenceBundle conventions; required citations per claim type. Each claim carries an `EvidenceRef` ID. |
+| `acceptance-checklist.md` | yes | Per-county checklist (a)–(h) from COUNTY-01 acceptance card. Definition-of-done for the proof slice. |
+| `source-seed-list.md` | yes | Per-county source-seed signals + rights posture; descriptors + intake status. |
+| `public-safety-notes.md` | yes | Sensitivity, rights, geoprivacy, redaction posture for this area; per-lane DENY/ABSTAIN reasons. |
+
+### 12.2 Optional files
+
+| File | Role |
+|---|---|
+| `<area>-specific-framing-notes.md` | Free-form framing notes specific to the area (e.g., `shawnee-mission-and-indigenous-history-notes.md`, `tri-state-mining-district-notes.md`). Useful for areas with culturally or politically sensitive history that benefits from a dedicated framing artifact. |
+
+[↑ Back to top](#top)
+
+---
+
+## 13. Sensitivity defaults (fail-closed lanes)
+
+**CONFIRMED doctrine** per `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` §16.3 COUNTY-04 and `kfm_unified_doctrine_synthesis.md` Part VII (publication, rights, sensitivity).
+
+| Lane | Default outcome | Rationale |
+|---|---|---|
+| Parcel / title claims | ABSTAIN or DENY | private property; potential misuse |
+| Exact archaeology coordinates | DENY | sovereignty / cultural heritage |
+| Burial / sacred locations | DENY | sovereignty / cultural heritage |
+| Rare species exact locations | DENY or generalize | species protection |
+| Critical infrastructure exact details | DENY | public-safety vulnerability |
+| Living-person identifiers | DENY | privacy |
+| DNA / genomic data | DENY | privacy + CARE/FAIR |
+| Emergency-alert claims | ABSTAIN | KFM is not an alert authority |
+
+Per-county `policy/sensitivity/<area>/` overrides cross-domain defaults **only with a documented justification and a deny-fixture for the overridden lane** (`fixtures/focus_modes/<area>/invalid/`).
+
+[↑ Back to top](#top)
+
+---
+
+## 14. Add-a-county procedure
+
+**PROPOSED workflow** (gated by validator in §17; ADR-required for any deviation from §6.7.2 placement):
+
+1. **Claim** in `COUNTY_INDEX.md`: change the row's `status` from `not-started` to `planned`, fill `owner`, and run `python tools/validators/validate_focus_mode_index.py docs/focus-modes/` to verify no naming collision.
+2. **Scaffold** the lane: copy `_template/county-build-plan.md` to `docs/focus-modes/<area>-county/build-plan.md` and fill in the YAML front-matter. Emit the other six lane files as stubs.
+3. **Seed evidence**: every layer claim in `layer-registry.md` and `evidence-model.md` MUST carry an `EvidenceRef` that resolves (or fail-closed `ABSTAIN`). No claim survives without one. *(kfm_unified_doctrine_synthesis.md Part III cite-or-abstain.)*
+4. **Mark sensitivity defaults** in `public-safety-notes.md`: parcel/title → ABSTAIN/DENY; exact archaeology → DENY; rare species → DENY/generalize; critical infrastructure → DENY; emergency-alert claims → ABSTAIN. **(See §13.)**
+5. **Run the validator.** Lane advances to `draft` only when the validator passes on this lane.
+6. **Hand off** to the mock-API + UI PR sequence per `directory-rules.md` §6.7.6 (the four-PR sequence below in §15). **County plans in `docs/focus-modes/` are PR-1 of that sequence.**
+
+> [!IMPORTANT]
+> **County plans do not become a `FocusModePayload` by sitting in `docs/focus-modes/`.** They become a payload only when (a) the semantic contract at `contracts/focus_mode/focus_mode_payload.md` is satisfied, (b) the schema at `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` validates a generated instance, (c) `fixtures/focus_modes/<area>/valid/` contains a passing example, and (d) `fixtures/focus_modes/<area>/invalid/` contains negative fixtures covering DENY, ABSTAIN, and ERROR paths. The plan-to-payload crosswalk lives in `contracts/focus_mode/focus_mode_payload.md` §3.
+
+[↑ Back to top](#top)
+
+---
+
+## 15. Recommended first-PR sequence
 
 **CONFIRMED recommendation (not normative).** From `directory-rules.md` §6.7.6. The sequence preserves the cite-or-abstain posture from the very first commit:
 
-1. **Control plane**  
-   `docs/focus-modes/<area>-<scope>/{README.md, build-plan.md, layer-registry.md, acceptance-checklist.md}`  
-   `contracts/focus_mode/focus_mode_payload.md`  
-   `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json`  
-   `fixtures/focus_modes/<area>/{valid,invalid}/...`
+1. **Control plane** (PR-1)
+   - `docs/focus-modes/<area>-<scope>/{README.md, build-plan.md, layer-registry.md, acceptance-checklist.md, evidence-model.md, source-seed-list.md, public-safety-notes.md}`
+   - `contracts/focus_mode/focus_mode_payload.md`
+   - `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json`
+   - `fixtures/focus_modes/<area>/{valid,invalid}/...`
 
-2. **Mock API + layer registry**  
-   `apps/explorer-web/src/focus-modes/<area>/{mock-api.js, layers.js}`  
-   Fixture payloads.
+2. **Mock API + layer registry** (PR-2)
+   - `apps/explorer-web/src/focus-modes/<area>/{mock-api.js, layers.js}`
+   - Fixture payloads.
 
-3. **UI prototype**  
-   `apps/explorer-web/src/focus-modes/<area>/{index.js, evidence-drawer.js, timeline.js, ai-panel.js, styles.css}`
+3. **UI prototype** (PR-3)
+   - `apps/explorer-web/src/focus-modes/<area>/{index.js, evidence-drawer.js, timeline.js, ai-panel.js, styles.css}`
 
-4. **Validators + negative fixtures**  
-   `tools/validators/validate_focus_mode_payload.py`  
-   Invalid fixtures exercising every `DENY` / `ABSTAIN` / `ERROR` path.
+4. **Validators + negative fixtures** (PR-4)
+   - `tools/validators/validate_focus_mode_payload.py`
+   - Invalid fixtures exercising every `DENY` / `ABSTAIN` / `ERROR` path.
 
 > [!NOTE]
 > If an existing county build plan shows a different sequence, **the sequence is a recommendation, not authority** — the placement contract in §8 is. The recommendation is also why every county build plan begins with a *control plane* PR before any UI code.
 
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
-## 13. Focus-mode registry
+## 16. Authoring checklist
 
-**PROPOSED — draft build plans only.** The build plans below are `status: draft`, all dated 2026-05-21, and their existence in the live repository is `NEEDS_VERIFICATION`. None has yet produced a published `ReleaseManifest`.
+Use this checklist for **any new Focus Mode** (county, corridor, or region). Items map directly to `directory-rules.md` §6.7.
+
+### 16.1 Control plane
+
+- [ ] Area name chosen; scope suffix decided (`-county`, `-region`, `-corridor`)
+- [ ] Row in `COUNTY_INDEX.md` moved from `not-started` → `planned`; owner filled
+- [ ] `docs/focus-modes/<area>-<scope>/README.md` created with KFM Meta Block v2
+- [ ] `docs/focus-modes/<area>-<scope>/build-plan.md` drafted (phases + acceptance) from `_template/county-build-plan.md`
+- [ ] `docs/focus-modes/<area>-<scope>/layer-registry.md` drafted with sensitivity classes
+- [ ] `docs/focus-modes/<area>-<scope>/evidence-model.md` drafted; every claim carries an `EvidenceRef` ID
+- [ ] `docs/focus-modes/<area>-<scope>/acceptance-checklist.md` drafted with COUNTY-01 items (a)–(h)
+- [ ] `docs/focus-modes/<area>-<scope>/source-seed-list.md` drafted with rights posture
+- [ ] `docs/focus-modes/<area>-<scope>/public-safety-notes.md` drafted with §13 defaults
+
+### 16.2 Contracts and schemas
+
+- [ ] `contracts/focus_mode/focus_mode_payload.md` exists (semantic Markdown, NO `.schema.json`)
+- [ ] `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` validates against KFM JSON Schema conventions
+- [ ] `schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json` present
+
+### 16.3 Fixtures (both directions)
+
+- [ ] `fixtures/focus_modes/<area>/valid/` populated
+- [ ] `fixtures/focus_modes/<area>/invalid/` populated with **all** required negatives:
+  - [ ] `unresolved_evidence_ref.invalid.json`
+  - [ ] `public_raw_access.invalid.json`
+  - [ ] `missing_policy_label.invalid.json`
+  - [ ] `model_output_as_evidence.invalid.json`
+  - [ ] `exact_sensitive_geometry.invalid.json` (where sensitivity applies)
+
+### 16.4 App shell
+
+- [ ] UI lives in `apps/explorer-web/src/focus-modes/<area>/` (**not** `apps/web/` — OPEN-DR-06)
+- [ ] `mock-api.js`, `layers.js`, `index.js`, `evidence-drawer.js`, `timeline.js`, `ai-panel.js` present
+- [ ] No reads from `data/raw/`, `data/work/`, or `data/quarantine/`
+
+### 16.5 Catalog, published, release
+
+- [ ] `data/catalog/sources/<area>/source_descriptors.yaml` exists
+- [ ] `data/published/layers/<area>/` populated only after release
+- [ ] `release/candidates/<area>-focus-mode/` dossier prepared
+- [ ] `release/manifests/<area>-focus-mode-v<n>.json` written **before** any public UI exposure
+
+### 16.6 Governance gates
+
+- [ ] Every public claim resolves an `EvidenceRef` to an `EvidenceBundle`
+- [ ] `PolicyDecision` produced for every release candidate (ALLOW / DENY / ABSTAIN / ERROR)
+- [ ] Focus Mode AI returns one of **ANSWER / ABSTAIN / DENY / ERROR** — never free-form generation
+- [ ] `AIReceipt` and `CitationValidationReport` attached to every AI answer
+- [ ] `RollbackCard` and prior `ReleaseManifest` reference present
+
+[↑ Back to top](#top)
+
+---
+
+## 17. Validation and CI hooks
+
+**PROPOSED.** The control plane is gated by one validator that the canonical orchestrator (`tools/validate_all.py`, CONFIRMED live-repo location per `directory-rules.md` §7.5.a / OPEN-DR-07) discovers via `tools/validators/registry.yaml`:
+
+```bash
+python tools/validators/validate_focus_mode_index.py docs/focus-modes/
+```
+
+Checks performed (see `tools/validators/validate_focus_mode_index.py` for the source):
+
+1. `COUNTY_INDEX.md` parses; the table contains exactly the 105 Kansas counties; no duplicates; statuses ∈ enum.
+2. Every row with `status` ≥ `planned` points to an existing `docs/focus-modes/<area>-county/` lane.
+3. Every existing lane contains the seven required files (§12.1).
+4. Every `build-plan.md` has YAML front-matter with the required keys (see `_template/county-build-plan.md`).
+5. `ui_shell` front-matter key equals `apps/explorer-web` (no `apps/web/` drift — OPEN-DR-06).
+6. No `.schema.json` files exist under any `docs/focus-modes/` lane (schema-home violation per §6.4).
+7. No lane references `apps/web/src/focus-modes/`.
+8. Internal markdown links resolve.
+9. No duplicate county claim (one county cannot appear in two area lanes).
+10. Area lane names match kebab-case + scope-suffix pattern (`<area>-county|region|corridor`).
+11. Every `acceptance-checklist.md` contains all eight COUNTY-01 acceptance items (a)–(h).
+12. Sensitivity defaults table present in every `public-safety-notes.md`.
+
+CI MUST call `python tools/validate_all.py`, which discovers and runs this validator. Pre-commit hook is OPTIONAL but recommended.
+
+[↑ Back to top](#top)
+
+---
+
+## 18. ADR triggers
+
+**CONFIRMED required-ADR triggers** per `directory-rules.md` §2.4 and `ai-build-operating-contract.md` §28. Any of the following in this lane requires an accepted ADR before merge:
+
+- Adding, removing, or renaming a top-level focus-mode artifact root (e.g., introducing `focus_modes/` at repo root — denied; or changing `docs/focus-modes/` casing).
+- Adding a new scope suffix beyond `-county`, `-region`, `-corridor`.
+- Changing the seven required per-lane files (§12.1).
+- Changing the YAML front-matter spec in `_template/county-build-plan.md` in a way that invalidates existing plans.
+- Changing the lifecycle states (§10) or the promotion gates referenced therein.
+- Changing the sensitivity defaults (§13).
+- Introducing a per-area schema home (denied by default; machine schemas are in `schemas/contracts/v1/focus_mode/`, area-agnostic, per ADR-0001).
+- Changing the canonical UI shell from `apps/explorer-web/` to anything else.
+- Resolving OPEN-DR-08 (the three-casings-per-area design) to a single casing.
+
+[↑ Back to top](#top)
+
+---
+
+## 19. Focus-mode registry (in-flight drafts)
+
+**PROPOSED — draft build plans only.** The build plans below are `status: draft`, all dated 2026-05-21, and their existence in the live repository is `NEEDS_VERIFICATION`. None has yet produced a published `ReleaseManifest`. For the full 105-county universe (including all `not-started` rows and per-county sensitivity flags), see [`COUNTY_INDEX.md`](./COUNTY_INDEX.md).
 
 | # | Area | Scope | Build plan path (PROPOSED) | Distinguishing profile |
 |---|---|---|---|---|
@@ -405,66 +633,60 @@ flowchart LR
 | 17 | Lyon | county | `docs/focus-modes/lyon-county/build-plan.md` | Emporia, Flint Hills edge, Kansas Turnpike corridor |
 
 > [!NOTE]
-> The first eleven counties motivated the §6.7 placement contract in `directory-rules.md` v1.2; counties 12–17 are subsequent draft plans following the same template. Per-build-plan implementation maturity is `UNKNOWN` until the live repository is mounted.
+> The first eleven counties motivated the §6.7 placement contract in `directory-rules.md` v1.2; counties 12–17 are subsequent draft plans following the same template. Per-build-plan implementation maturity is `UNKNOWN` until the live repository is mounted. `COUNTY_INDEX.md` carries the larger ≥30-county set from `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` Appendix C at `status: draft`, and all remaining Kansas counties (to 105) at `status: not-started`.
 
-[Back to top](#top)
-
----
-
-## 14. Authoring checklist
-
-Use this checklist for **any new Focus Mode** (county, corridor, or region). Items map directly to `directory-rules.md` §6.7.
-
-### Control plane
-
-- [ ] Area name chosen; scope suffix decided (`-county`, `-region`, `-corridor`)
-- [ ] `docs/focus-modes/<area>-<scope>/README.md` created with KFM Meta Block v2
-- [ ] `docs/focus-modes/<area>-<scope>/build-plan.md` drafted (phases + acceptance)
-- [ ] `docs/focus-modes/<area>-<scope>/layer-registry.md` drafted with sensitivity classes
-- [ ] `docs/focus-modes/<area>-<scope>/public-safety-notes.md` drafted
-
-### Contracts and schemas
-
-- [ ] `contracts/focus_mode/focus_mode_payload.md` exists (semantic Markdown, NO `.schema.json`)
-- [ ] `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` validates against KFM JSON Schema conventions
-- [ ] `schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json` present
-
-### Fixtures (both directions)
-
-- [ ] `fixtures/focus_modes/<area>/valid/` populated
-- [ ] `fixtures/focus_modes/<area>/invalid/` populated with **all** required negatives:
-  - [ ] `unresolved_evidence_ref.invalid.json`
-  - [ ] `public_raw_access.invalid.json`
-  - [ ] `missing_policy_label.invalid.json`
-  - [ ] `model_output_as_evidence.invalid.json`
-  - [ ] `exact_sensitive_geometry.invalid.json` (where sensitivity applies)
-
-### App shell
-
-- [ ] UI lives in `apps/explorer-web/src/focus-modes/<area>/` (**not** `apps/web/`)
-- [ ] `mock-api.js`, `layers.js`, `index.js`, `evidence-drawer.js`, `timeline.js`, `ai-panel.js` present
-- [ ] No reads from `data/raw/`, `data/work/`, or `data/quarantine/`
-
-### Catalog, published, release
-
-- [ ] `data/catalog/sources/<area>/source_descriptors.yaml` exists
-- [ ] `data/published/layers/<area>/` populated only after release
-- [ ] `release/candidates/<area>-focus-mode/` dossier prepared
-- [ ] `release/manifests/<area>-focus-mode-v<n>.json` written **before** any public UI exposure
-
-### Governance gates
-
-- [ ] Every public claim resolves an `EvidenceRef` to an `EvidenceBundle`
-- [ ] `PolicyDecision` produced for every release candidate (ALLOW / DENY / ABSTAIN / ERROR)
-- [ ] Focus Mode AI returns one of **ANSWER / ABSTAIN / DENY / ERROR** — never free-form generation
-- [ ] `AIReceipt` and `CitationValidationReport` attached to every AI answer
-- [ ] `RollbackCard` and prior `ReleaseManifest` reference present
-
-[Back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
-## 15. FAQ
+## 20. What a Focus Mode is NOT
+
+**CONFIRMED.** Restated verbatim from `directory-rules.md` §6.7.5. A Focus Mode MUST NOT:
+
+> [!CAUTION]
+>
+> - Become a root folder (`focus_modes/` or `focus-modes/` at repo root → §3 violation, §13.5 anti-pattern #8).
+> - Hold `.schema.json` files inside `contracts/focus_mode/` (→ §6.4 schema-home violation, §13.1 anti-pattern, §13.5 anti-pattern #10).
+> - Use `apps/web/` (→ §7.1 canonical-shell violation; OPEN-DR-06).
+> - Read directly from `data/raw/`, `data/work/`, or `data/quarantine/` from public UI (→ §7.1 trust-membrane violation).
+> - Publish without a `ReleaseManifest` under `release/manifests/` (→ §9.2 lifecycle invariant; §13.4 lifecycle skip).
+> - Treat AI output as proof (→ §6.7.1 finite-outcome rule; §13.5 "model output as evidence").
+> - Carry a domain into a root folder via the focus-mode pattern (→ §12 Domain Placement Law).
+
+> [!NOTE]
+> Drifts 8, 9, and 10 in `directory-rules.md` §13.5 — "Focus-mode as root", "Focus-mode app shell divergence" (`apps/web/` vs `apps/explorer-web/`), and "Focus-mode schema in `contracts/`" — were added in v1.2 specifically to defend the Focus Mode pattern against the most common drift attempts.
+
+[↑ Back to top](#top)
+
+---
+
+## 21. Drift register and open items
+
+Two registers track items surfaced from this lane:
+
+- **`OPEN-FM-*`** — items only this lane tracks (lane-internal control-plane decisions).
+- **`OPEN-DR-*`** — corpus-wide drifts surfaced here but registered in `directory-rules.md` §18.
+
+| ID | Item | Status | Action |
+|---|---|---|---|
+| OPEN-FM-01 | `docs/focus-mode/` (singular) vs `docs/focus-modes/` (plural) — which is present in the live tree? | NEEDS VERIFICATION | Inspect; migrate if singular drift is found. ADR-required if migrating. Canonical is **plural**. |
+| OPEN-FM-02 | Eleven counties (`directory-rules.md` v1.2 §0) vs ≥30 (`Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` Appendix C) — corpus internal disagreement | CONFIRMED corpus state | `COUNTY_INDEX.md` lists the ≥30 from MapLibre v2.1 Appendix C as `draft`; the 11 are marked as "priority subset" (P1). |
+| OPEN-FM-03 | County plans referencing `apps/web/` instead of `apps/explorer-web/` (same as OPEN-DR-06) | CONFIRMED drift in corpus | Validator check 5 + 7 (§17) catches this; revise on next plan iteration. |
+| OPEN-FM-04 | Validator orchestrator at `tools/validate_all.py` (live) vs `tools/validators/validate_all.py` (doctrine) (same as OPEN-DR-07) | CONFIRMED live; doctrine variance | CI calls live path; ADR pending. |
+| OPEN-FM-05 | `contracts/focus_mode/focus_mode_payload.md` exists? `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` exists? | NEEDS VERIFICATION | If not present, control-plane PR-1 emits both. |
+| OPEN-FM-06 | Per-area sensitivity overrides at `policy/sensitivity/<area>/` — are any overrides justified yet? | UNKNOWN | None defaulted; record any override in the ADR per §18 trigger. |
+| OPEN-FM-07 | Owner for each county lane — `<OWNER>` placeholders in `COUNTY_INDEX.md` | NEEDS VERIFICATION | Fill as plans move from `not-started` to `planned`. |
+| OPEN-FM-08 | Optional area-specific framing notes — naming convention not yet codified | PROPOSED | Examples in use: `shawnee-mission-and-indigenous-history-notes.md`, `tri-state-mining-district-notes.md`. ADR if standardization needed. |
+| OPEN-DR-06 | Several draft county build plans reference `apps/web/`; canonical is `apps/explorer-web/` | CONFIRMED drift | Tracked in `directory-rules.md` §18. |
+| OPEN-DR-07 | Validator orchestrator path (`tools/validate_all.py` live vs doctrine variant) | CONFIRMED variance | Tracked in `directory-rules.md` §18. |
+| OPEN-DR-08 | Three casings per area across roots (kebab+scope vs snake_case vs kebab area-only) | OPEN | ADR-level resolution pending; pending ADR, §9 table stands. |
+| OPEN-DR-09 | Existence of `docs/registers/DRIFT_REGISTER.md` | NEEDS VERIFICATION | Confirm against live repo. |
+
+[↑ Back to top](#top)
+
+---
+
+## 22. FAQ
 
 <details>
 <summary><strong>Why is the casing different across roots? Can't we just pick one?</strong></summary>
@@ -497,7 +719,7 @@ No. `directory-rules.md` §3 (root-stays-boring) and §13.5 anti-pattern #8 expl
 <details>
 <summary><strong>Several county build plans say <code>apps/web/</code> — is that correct?</strong></summary>
 
-No. The canonical shell is `apps/explorer-web/` (`directory-rules.md` §7.1.a, CONFIRMED at commit `b6a279…`). Eleven draft build plans use `apps/web/`; that is **drift** and is tracked as **OPEN-DR-06**. New work targets `apps/explorer-web/`. Existing draft plans SHOULD be reconciled on their next revision.
+No. The canonical shell is `apps/explorer-web/` (`directory-rules.md` §7.1.a, CONFIRMED at commit `b6a279…`). Eleven+ draft build plans use `apps/web/`; that is **drift** and is tracked as **OPEN-DR-06**. New work targets `apps/explorer-web/`. Existing draft plans SHOULD be reconciled on their next revision.
 
 </details>
 
@@ -508,19 +730,61 @@ No. The canonical shell is `apps/explorer-web/` (`directory-rules.md` §7.1.a, C
 
 </details>
 
-[Back to top](#top)
+<details>
+<summary><strong>Why <code>docs/focus-modes/</code> (plural) and not <code>docs/focus-mode/</code> (singular)?</strong></summary>
+
+`docs/` uses plural collection names for sibling lanes (`docs/adr/`, `docs/runbooks/`, `docs/standards/`). The directory holds **many** county Focus Modes, so the plural matches the convention. A singular `docs/focus-mode/` in the live tree would be drift requiring ADR-gated migration — see **OPEN-FM-01**.
+
+</details>
+
+<details>
+<summary><strong>Is the AI surface allowed to read the data layers directly?</strong></summary>
+
+No. The AI surface consumes only a `MapContextEnvelope` (the resolved, policy-checked, evidence-bounded UI state) and produces a `FocusModeResponse` with `AIReceipt` and `CitationValidationReport` attached. It never reads `data/raw/`, `data/work/`, `data/quarantine/`, or even raw `data/published/` artifacts. The trust membrane between data and AI is fixed; the AI outranks no evidence (`ai-build-operating-contract.md` §10).
+
+</details>
+
+[↑ Back to top](#top)
 
 ---
 
-## 16. Related docs
+## 23. Cross-references
 
-- `docs/standards/directory-rules.md` — **authority** for everything in this file (§6.7, §7.1.a, §12, §13.5, §18.d).
+- `directory-rules.md` §6.7 (Focus Modes placement contract); §7.1.a (`apps/explorer-web/` canonical); §12 (Domain Placement Law); §13.5 (drift register); §15 (per-root README contract); §18.d (v1.2 deferred items).
+- `kfm_repository_structure_guiding_document.md` §3 (root-stays-boring); §8 (Focus Mode placement contract).
+- `kfm_unified_doctrine_synthesis.md` Part III (cite-or-abstain); Part VI (promotion gates); Part VII (publication/sensitivity); Part XI (validator worked example).
+- `ai-build-operating-contract.md` §10 (AI is interpretive); §26 (governed loop); §27 (PR discipline); §28 (ADR triggers); §29 (object-family guardrails).
+- `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` §16.3 (COUNTY-01..04 family); Appendix C (county build plan index).
 - `docs/standards/PROV.md` — provenance standards profile applied to `EvidenceBundle` and `AIReceipt`.
 - `docs/adr/ADR-0001-schema-home.md` — schema-home rule (`NEEDS_VERIFICATION` of exact ADR path).
+- `docs/adr/ADR-0027-county-focus-mode-control-plane.md` — ADR formalizing this control plane.
 - `docs/registers/DRIFT_REGISTER.md` — running register of OPEN-DR items, including OPEN-DR-06 / -07 / -08 / -09 (`NEEDS_VERIFICATION` of existence).
-- Per-county build plans — see [§13](#13-focus-mode-registry).
-- Master MapLibre Components-Functions-Features — source of the Focus Mode AI / `MapContextEnvelope` / `FocusModeRequest` / `FocusModeResponse` doctrine.
-- KFM Domains Atlas v1.1 + Pass 23–32 — cross-domain coverage that any single Focus Mode must compose across.
+- `contracts/focus_mode/focus_mode_payload.md` — this control plane's plan-to-payload contract.
+- `tools/validators/validate_focus_mode_index.py` — this control plane's validator.
+- Per-county build plans — see [§19](#19-focus-mode-registry-in-flight-drafts) and [`COUNTY_INDEX.md`](./COUNTY_INDEX.md).
+
+[↑ Back to top](#top)
+
+---
+
+## 24. README contract self-check
+
+Per `directory-rules.md` §15, every canonical/compatibility root README must declare:
+
+| Field | Value |
+|---|---|
+| Purpose | Human-facing control plane for County Focus Mode planning + acceptance lanes |
+| Authority level | Canonical sub-lane of `docs/` (§6.1, §6.7.2) — semantic; never machine truth |
+| Status | CONFIRMED root pattern; PROPOSED first-emission file set |
+| What belongs here | §4 above |
+| What does NOT belong here | §4 above |
+| Inputs | Doctrine (Directory Rules v1.2, Doctrine Synthesis, MapLibre v2.1, Build Manual), ADRs, county source seeds |
+| Outputs | Lane-level planning markdown consumed by the validator (§17), the `contracts/focus_mode/focus_mode_payload.md` crosswalk, and downstream `apps/explorer-web/src/focus-modes/<area>/` |
+| Validation | `tools/validators/validate_focus_mode_index.py`; orchestrated by `tools/validate_all.py` |
+| Review burden | Focus Mode steward + Directory Rules steward + per-county owner + sensitivity reviewer where applicable |
+| Related folders | `contracts/focus_mode/`, `schemas/contracts/v1/focus_mode/`, `fixtures/focus_modes/`, `apps/explorer-web/src/focus-modes/`, `tools/validators/`, `data/catalog/sources/`, `data/published/api_payloads/focus-modes/`, `release/manifests/focus_modes/`, `policy/sensitivity/` |
+| ADRs | ADR-0027 (PROPOSED; this control plane); ADR-0001 (schema home); ADR-S-05 (sensitivity tiers, PROPOSED) |
+| Last reviewed | 2026-05-22 |
 
 ---
 
@@ -529,4 +793,4 @@ No. The canonical shell is `apps/explorer-web/` (`directory-rules.md` §7.1.a, C
 
 ---
 
-**Last updated:** 2026-05-21 · **Version:** v0.1 (draft) · **Authority:** restates `directory-rules.md` §6.7 · [Back to top](#top)
+**Last updated:** 2026-05-22 · **Version:** v0.2 (draft, merged) · **Authority:** restates `directory-rules.md` §6.7 · [↑ Back to top](#top)
