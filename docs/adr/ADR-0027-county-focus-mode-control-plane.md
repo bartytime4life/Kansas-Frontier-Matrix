@@ -1,8 +1,8 @@
-# ADR-00XX — County Focus Mode Control Plane
+# ADR-0027 — County Focus Mode Control Plane
 
 > **Status:** PROPOSED · **Last reviewed:** 2026-05-22 · **Owners:** `<OWNER:focus-mode-steward>`, `<OWNER:directory-rules-steward>`
 >
-> **ADR number is `00XX` until assigned.** Several corpus documents informally reserve `ADR-0003` for different topics; the user has flagged this conflict separately. Assign the next available ID from `docs/adr/`.
+> **ADR number is `0027`.** Several corpus documents informally reserve `ADR-0003` for different topics; the user has flagged this conflict separately. Assign the next available ID from `docs/adr/`.
 
 ---
 
@@ -72,7 +72,7 @@ PROPOSED: every file path emitted by this ADR. No live repo was mounted in the a
 | `docs/focus-modes/_template/county-build-plan.md` | `docs/` | `_template/` leading-underscore is **PROPOSED**; alternative is `template/` without underscore. Decided here: leading underscore signals "not a county lane; do not consume from validators." | §6.7.2 |
 | `tools/validators/validate_focus_mode_index.py` | `tools/` | flat naming under `tools/validators/`; orchestrated by `tools/validate_all.py` | §7.5, §7.5.a |
 | `contracts/focus_mode/focus_mode_payload.md` | `contracts/` | singular snake_case for the focus-mode family; matches `contracts/{source,evidence,…}/` | §6.3, §6.7.2 |
-| `docs/adr/ADR-00XX-county-focus-mode-control-plane.md` | `docs/adr/` | ADR naming convention | §6.1, §2.4 |
+| `docs/adr/ADR-0027-county-focus-mode-control-plane.md` | `docs/adr/` | ADR naming convention | §6.1, §2.4 |
 
 ---
 
