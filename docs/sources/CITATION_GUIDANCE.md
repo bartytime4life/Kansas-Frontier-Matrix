@@ -822,11 +822,11 @@ Each entry below carries one Status value drawn from this vocabulary:
 flowchart LR
   subgraph Doctrine["Doctrine (CONFIRMED)"]
     AIBOC["AI Build Operating Contract<br/>(cite-or-abstain core invariant)"]
-    Atlas24_1["Atlas v1.1 §24.1<br/>(source-role anti-collapse)"]
-    Atlas24_3["Atlas v1.1 §24.3<br/>(decision outcome envelope)"]
-    Atlas24_5["Atlas v1.1 §24.5<br/>(sensitivity tier T0..T4)"]
-    Atlas24_12["Atlas v1.1 §24.12<br/>(ADR-S-04 · ADR-S-05 · ADR-S-06)"]
-    DirRules["directory-rules.md<br/>(§6.1.a placement)"]
+    Atlas24_1["Atlas v1.1 #sect;24.1<br/>(source-role anti-collapse)"]
+    Atlas24_3["Atlas v1.1 #sect;24.3<br/>(decision outcome envelope)"]
+    Atlas24_5["Atlas v1.1 #sect;24.5<br/>(sensitivity tier T0..T4)"]
+    Atlas24_12["Atlas v1.1 #sect;24.12<br/>(ADR-S-04 · ADR-S-05 · ADR-S-06)"]
+    DirRules["directory-rules.md<br/>(#sect;6.1.a placement)"]
   end
 
   subgraph SourcesLane["docs/sources/ (this lane)"]
@@ -858,22 +858,22 @@ flowchart LR
   end
 
   AIBOC -.derives.-> CG
-  Atlas24_1 -.grounds §7.-> CG
-  Atlas24_3 -.grounds §3.1.-> CG
-  Atlas24_5 -.grounds §8.-> CG
+  Atlas24_1 -.grounds sec 7.-> CG
+  Atlas24_3 -.grounds sec 3-1.-> CG
+  Atlas24_5 -.grounds sec 8.-> CG
   Atlas24_12 -.ADR backlog.-> CG
-  DirRules -.placement §6.1.a.-> CG
+  DirRules -.placement.-> CG
 
   CG --> SDS
-  CG -. cross-references .-> Identity
-  CG -. cross-references .-> Profiles
-  CG -. cross-references .-> Rights
-  CG -. cross-references .-> Care
-  CG -. coordinates allocations via .-> OQ
+  CG -. cross-refs .-> Identity
+  CG -. cross-refs .-> Profiles
+  CG -. cross-refs .-> Rights
+  CG -. cross-refs .-> Care
+  CG -. allocations via .-> OQ
 
-  CG -. PROPOSED schema home .-> SD_schema
-  CG -. PROPOSED schema home .-> EB_schema
-  CG -. PROPOSED schema home .-> CVR_schema
+  CG -. PROPOSED home .-> SD_schema
+  CG -. PROPOSED home .-> EB_schema
+  CG -. PROPOSED home .-> CVR_schema
 
   CG --> EvidenceDrawer
   CG --> FocusMode
