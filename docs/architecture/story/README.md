@@ -483,13 +483,13 @@ The Story subsystem inherits the finite-outcome grammar shared by Map click, Foc
 ```mermaid
 flowchart TD
     A["Node requests layer mode<br/>(terrain · globe · extrusion ·<br/>tiles3d · gltf · pointcloud · deck.gl)"]
-    A --> B{StoryEvidenceGate<br/>(evidence · release · drawer · policy)}
-    B -- fail: evidence/release/drawer --> D["Fall back to 2D"]
-    B -- fail: policy --> E["DENY or ABSTAIN with reason"]
-    B -- pass --> C{3D Admission Decision<br/>(I-3D-6)}
+    A --> B{"StoryEvidenceGate<br/>(evidence · release · drawer · policy)"}
+    B -- "fail: evidence/release/drawer" --> D["Fall back to 2D"]
+    B -- "fail: policy" --> E["DENY or ABSTAIN with reason"]
+    B -- pass --> C{"3D Admission Decision<br/>(I-3D-6)"}
     C -- DENY --> E
     C -- ABSTAIN --> D
-    C -- ALLOW --> P{Plugin Admission<br/>(I-3D-7)}
+    C -- ALLOW --> P{"Plugin Admission<br/>(I-3D-7)"}
     P -- DENY --> E
     P -- ALLOW --> M["Runtime constructs<br/>plugin-hosted layer"]
     M --> R["RepresentationReceipt<br/>emitted"]
