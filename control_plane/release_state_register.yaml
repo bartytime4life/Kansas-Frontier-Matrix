@@ -4,6 +4,6 @@ meta:
   description: Maps release_id to spec_hash, gate outcomes, reviewers, rollback targets.
   last_reviewed: 2026-05-14
   related_doctrine:
-    - docs/directory-rules.md
+    - docs/doctrine/directory-rules.md
 
 entries: []

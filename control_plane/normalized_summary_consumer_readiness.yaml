@@ -3,7 +3,7 @@ meta:
   owner: docs steward
   last_reviewed: 2026-05-16
   related_doctrine:
-    - docs/directory-rules.md
+    - docs/doctrine/directory-rules.md
 
 normalized_summary_consumers:
   - consumer: scripts/maintenance/run_doctrine_artifact_test_suite.sh

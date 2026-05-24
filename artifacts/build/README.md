@@ -9,7 +9,7 @@ created: 2026-05-20
 updated: 2026-05-20
 policy_label: public
 related: [
-  docs/directory-rules.md,
+  docs/doctrine/directory-rules.md,
   artifacts/README.md,
   data/receipts/README.md,
   data/proofs/README.md,
@@ -29,9 +29,9 @@ notes: [
 
 > Compiled, byte-deterministic build outputs and distributables — staged here for hash-pinning and citation, never as a trust surface.
 
-[![authority: compatibility](https://img.shields.io/badge/authority-compatibility-orange)](../../docs/directory-rules.md#8-compatibility-roots)
-[![class: transitional](https://img.shields.io/badge/class-transitional-yellow)](../../docs/directory-rules.md#81-common-compatibility-roots-and-their-canonical-homes)
-[![status: PROPOSED](https://img.shields.io/badge/status-PROPOSED-lightgrey)](../../docs/directory-rules.md#82-the-artifacts-rule)
+[![authority: compatibility](https://img.shields.io/badge/authority-compatibility-orange)](../../docs/doctrine/directory-rules.md#8-compatibility-roots)
+[![class: transitional](https://img.shields.io/badge/class-transitional-yellow)](../../docs/doctrine/directory-rules.md#81-common-compatibility-roots-and-their-canonical-homes)
+[![status: PROPOSED](https://img.shields.io/badge/status-PROPOSED-lightgrey)](../../docs/doctrine/directory-rules.md#82-the-artifacts-rule)
 [![reproducibility: deterministic](https://img.shields.io/badge/reproducibility-deterministic-blue)](#11-validation)
 [![last reviewed: 2026-05-20](https://img.shields.io/badge/last%20reviewed-2026--05--20-informational)](#12-last-reviewed)
 
@@ -321,7 +321,7 @@ The folder is validated by checks on the build process and on the regenerable pr
 | [`../../release/`](../../release/) | Canonical home for `ReleaseManifest`, `RollbackCard`, `CorrectionNotice` | `PROPOSED` path; doctrine `CONFIRMED` |
 | [`../../data/published/`](../../data/published/) | Released map layers / artifacts (the `PUBLISHED` phase) | `PROPOSED` path; doctrine `CONFIRMED` |
 | [`../../tools/`](../../tools/) | Build scripts, validators, the `validate_all.py` orchestrator | `PROPOSED` |
-| [`../../docs/directory-rules.md`](../../docs/directory-rules.md) | Authoritative placement contract | `CONFIRMED` doctrine |
+| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | Authoritative placement contract | `CONFIRMED` doctrine |
 
 [Back to top](#top)
 
@@ -433,7 +433,7 @@ Without the digest, receipts that reference documentation point at moving conten
 
 ### Related docs
 
-- [`../../docs/directory-rules.md`](../../docs/directory-rules.md) — placement contract (canonical authority for this README) · *CONFIRMED doctrine*
+- [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) — placement contract (canonical authority for this README) · *CONFIRMED doctrine*
 - [`../README.md`](../README.md) — parent `artifacts/` README (declares class, lists what does NOT belong) · *PROPOSED presence*
 - [`../../data/receipts/README.md`](../../data/receipts/README.md) — canonical home for receipts that cite outputs here · *PROPOSED presence*
 - [`../../data/proofs/README.md`](../../data/proofs/README.md) — canonical home for `EvidenceBundle`s and attestations · *PROPOSED presence*

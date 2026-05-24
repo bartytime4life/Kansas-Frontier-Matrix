@@ -23,7 +23,7 @@ related_adrs:
   - docs/adr/ADR-0027-county-focus-mode-control-plane.md                  # PROPOSED — county control plane (this ADR extends scope)
   - docs/adr/ADR-S-05-sensitivity-tier-scheme.md                          # PROPOSED — referenced for sensitivity tiers (T0–T4)
 related:
-  - docs/standards/directory-rules.md                                     # §6.7 placement contract; §2.4 ADR triggers
+  - docs/doctrine/directory-rules.md                                     # §6.7 placement contract; §2.4 ADR triggers
   - docs/focus-modes/README.md                                            # v0.3 (design spec this ADR evaluates)
   - docs/focus-modes/COUNTY_INDEX.md
   - docs/focus-modes/STATE_INDEX.md                                       # PROPOSED — single-area state-scale index
@@ -369,7 +369,7 @@ The state-scale Focus Mode (`kansas-state`) MUST be composed from statewide sour
 
 **Amended artifacts:**
 
-- `docs/standards/directory-rules.md` — §6.7 amendments per §4.1 above; §18.d open-items register update; §21 changelog (v1.3 entry).
+- `docs/doctrine/directory-rules.md` — §6.7 amendments per §4.1 above; §18.d open-items register update; §21 changelog (v1.3 entry).
 - `docs/focus-modes/README.md` — version bump v0.3 → v0.4 reflecting acceptance (changes PROPOSED labels on state-scale rows to CONFIRMED).
 - `docs/focus-modes/_template/county-build-plan.md` — YAML front-matter additions.
 - `docs/focus-modes/COUNTY_INDEX.md` — add `scale_class` column (default `county`) for consistency.

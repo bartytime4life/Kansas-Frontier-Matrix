@@ -3,7 +3,7 @@ meta:
   owner: docs steward
   last_reviewed: 2026-05-15
   related_doctrine:
-    - docs/directory-rules.md
+    - docs/doctrine/directory-rules.md
 
 required_doctrine_artifacts:
   - filename: KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf
