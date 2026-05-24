@@ -2,14 +2,14 @@
 COUNTY BUILD PLAN TEMPLATE — KFM Focus Mode Control Plane
 
 Copy this file to:
-  docs/focus-modes/<area>-county/build-plan.md
+  docs/focus-mode/counties/<county-slug>_county/<county-slug>_county_focus_mode_build_plan.md
 
 Replace every <PLACEHOLDER> and fill the YAML front-matter exactly per the spec
 in the front-matter block. The validator at tools/validators/validate_focus_mode_index.py
 will reject this template (placeholders present) and accept a filled instance.
 
 This template is also the spec: do not change required keys or field types
-without an ADR (see docs/focus-modes/README.md §9).
+without an ADR (see docs/focus-mode/README.md §20).
 -->
 
 ---
@@ -21,7 +21,7 @@ kfm_artifact: "focus_mode_build_plan"      # MUST equal this literal
 area:
   county: "<County Name>"                  # human-readable, e.g., "Ellsworth"
   lane: "<county-slug>-county"             # kebab-case slug + "-county"; MUST match folder name
-  scope: "county"                          # one of: county | region | corridor
+  scope: "county"                          # one of: county | region | corridor (state lives in state-build-plan.md)
 status: "draft"                            # one of: planned | draft | validated | payload-ready | released | rolled-back | deprecated
 owner: "<OWNER>"                           # GitHub handle or steward role; do not leave blank
 priority: "P2"                             # P1 (Directory Rules v1.2 priority) | P2 (corpus draft) | P3 (later)
@@ -37,7 +37,7 @@ canonical_paths:                           # where artifacts from this plan land
   source_descriptors: "data/catalog/sources/<county-slug>-county/source_descriptors.yaml"
   published_payload: "data/published/api_payloads/focus-modes/<county-slug>-county.json"
   release_manifest: "release/manifests/focus_modes/<county-slug>-county-v1.json"
-sensitivity_lanes:                         # per-lane outcome; defaults from README.md §7
+sensitivity_lanes:                         # per-lane outcome; defaults from docs/focus-mode/README.md §15
   parcel_title: "ABSTAIN"                  # ABSTAIN | DENY (override only with justification)
   exact_archaeology: "DENY"
   burial_sacred: "DENY"
@@ -75,7 +75,7 @@ adr_open_questions: []                     # any ADR triggers raised by this pla
 
 # `<County Name>` County Focus Mode — Build Plan
 
-> **Status:** see front-matter `status` · **Lane:** `docs/focus-modes/<county-slug>-county/` · **Owner:** see front-matter `owner` · **Priority:** see front-matter `priority`
+> **Status:** see front-matter `status` · **Lane:** `docs/focus-mode/counties/<county-slug>_county/` · **Owner:** see front-matter `owner` · **Priority:** see front-matter `priority`
 
 ![status](https://img.shields.io/badge/status-PROPOSED-yellow)
 ![placement](https://img.shields.io/badge/placement-Directory%20Rules%20v1.2%20%C2%A76.7-blue)
@@ -84,7 +84,7 @@ adr_open_questions: []                     # any ADR triggers raised by this pla
 ![validator](https://img.shields.io/badge/validator-not--run-lightgrey)
 
 > [!IMPORTANT]
-> This file is one of **seven required files** per area lane (§6.2 of `docs/focus-modes/README.md`). It is a planning + acceptance artifact, **not a publication target**. The slice becomes a `FocusModePayload` only through the crosswalk in `contracts/focus_mode/focus_mode_payload.md` §3.
+> This file is one of **seven required files** per area lane (§13 of `docs/focus-mode/README.md`). It is a planning + acceptance artifact, **not a publication target**. The slice becomes a `FocusModePayload` only through the crosswalk in `contracts/focus_mode/focus_mode_payload.md` §3.
 
 ---
 
@@ -122,7 +122,7 @@ PROPOSED. Bounding geometry (county boundary plus tolerance), CRS, time window f
 
 ## 3. Domains in scope
 
-PROPOSED. The KFM domain bounded-contexts this slice composes across. Standard set: hydrology, soil, atmosphere, geology, fauna, flora, habitat, archaeology, settlements/infrastructure, hazards, agriculture, people/DNA/land/genealogy. Strike domains not in scope; add per-slice rationale.
+PROPOSED. The KFM domain bounded-contexts this slice composes across. Standard set: hydrology, soil, atmosphere, geology, fauna, flora, habitat, archaeology, settlements/infrastructure, hazards, agriculture, people/DNA/land/genealogy, roads/railroads. Strike domains not in scope; add per-slice rationale.
 
 [↑ Back to top](#top)
 
@@ -154,7 +154,7 @@ PROPOSED. What claims the slice will display, each tied to an `EvidenceRef` ID. 
 
 ## 7. Public-safety posture (summary)
 
-PROPOSED. Bulleted summary; full posture in `public-safety-notes.md`. Defaults applied from `docs/focus-modes/README.md` §7. List any **proposed overrides** here and in front-matter `sensitivity_overrides[]`. Every override requires a deny-fixture (`fixtures/focus_modes/<county-slug>-county/invalid/`).
+PROPOSED. Bulleted summary; full posture in `public-safety-notes.md`. Defaults applied from `docs/focus-mode/README.md` §15. List any **proposed overrides** here and in front-matter `sensitivity_overrides[]`. Every override requires a deny-fixture (`fixtures/focus_modes/<county-slug>-county/invalid/`).
 
 [↑ Back to top](#top)
 
@@ -196,8 +196,9 @@ PROPOSED. Open NEEDS VERIFICATION / UNKNOWN items specific to this slice. Add AD
 
 ## 11. Cross-references
 
-- `docs/focus-modes/README.md` — control plane
-- `docs/focus-modes/COUNTY_INDEX.md` — master index
+- `docs/focus-mode/README.md` — control plane
+- `docs/focus-mode/counties/COUNTY_INDEX.md` — master index (county scale)
+- `docs/focus-mode/state/STATE_INDEX.md` — companion (state scale, PROPOSED)
 - `contracts/focus_mode/focus_mode_payload.md` — plan→payload crosswalk
 - `tools/validators/validate_focus_mode_index.py` — validator
 - `directory-rules.md` §6.7 — placement contract
