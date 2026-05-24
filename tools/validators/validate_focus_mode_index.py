@@ -1,42 +1,61 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-validate_focus_mode_index.py — Lightweight validator for the KFM County Focus Mode control plane.
+validate_focus_mode_index.py — KFM Focus Mode lane validator (v3).
 
-Status: PROPOSED implementation. Stdlib-only (no PyYAML, no third-party deps) so the validator
-runs in any CI lane and can be vendored without negotiation. Discovered and orchestrated by
-tools/validate_all.py per directory-rules.md §7.5.a.
+Implements docs/focus-mode/ORGANIZATION_RULES.md v0.2 §3 (categorization rules)
+and §8 (categorizer contract). Replaces the pre-ADR-0029 v1 validator that
+encoded the seven-file split, kebab-case area dirs, and plural `focus-modes/`
+lane name.
 
 Doctrine basis (CONFIRMED):
-  - directory-rules.md §6.7 (Focus Modes placement contract)
-  - directory-rules.md §6.7.2 (per-host-root casing)
-  - directory-rules.md §15 (per-root README contract)
+  - docs/doctrine/directory-rules.md v1.3 §6.7.2 (placement table; amended per ADR-0029)
+  - docs/doctrine/directory-rules.md v1.3 §6.7.3 (casing convention; closes OPEN-DR-08)
+  - docs/focus-mode/ORGANIZATION_RULES.md v0.2 §3 (categorization rules; this spec)
+  - docs/focus-mode/README.md v0.5 §14 (13-domain coverage)
+  - docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md §3 + §6.3 (decisions + validator rules)
+  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md §3 (13-domain coverage rule)
   - kfm_repository_structure_guiding_document.md §8 (Focus Mode placement contract)
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md §16.3 (COUNTY-01..04)
 
-Checks performed (mirror docs/focus-modes/README.md §8):
-  C01: COUNTY_INDEX.md parses; table has exactly the 105 KS counties; no duplicates.
-  C02: Statuses are in the declared enum.
-  C03: Every row with status >= 'planned' has a matching lane folder.
-  C04: Every lane folder contains the seven required files.
-  C05: Every build-plan.md has YAML-like front-matter with required keys.
-  C06: ui_shell front-matter value is "apps/explorer-web" (apps/web is drift per OPEN-DR-06).
-  C07: No .schema.json files anywhere under docs/focus-modes/ (schema-home violation).
-  C08: No 'apps/web/src/focus-modes/' references in any lane file.
-  C09: Area lane names match kebab-case + scope suffix pattern.
-  C10: No county is claimed by two different area lanes.
-  C11: Every acceptance-checklist.md mentions the 8 COUNTY-01 acceptance items (a)..(h).
-  C12: Internal markdown links resolve (best-effort; relative paths only).
+Checks performed:
+  C01: Lane root has REQUIRED files (README.md, ORGANIZATION_RULES.md) per §3.1
+  C02: Container subdirs (counties/, state/, regions/, corridors/) — if present, have
+       REQUIRED files (README.md, <SCOPE>_INDEX.md) per §3.2
+  C03: Each container's _template/ has the canonical consolidated template filename
+       per §3.3
+  C04: Per-area lanes (snake_case + _<scope> suffix) have REQUIRED files (README.md
+       and <area>_<scope>_focus_mode_build_plan.md) per §3.4
+  C05: Per-area build plan filename matches its parent directory name exactly
+       (self-describing-filename principle per ADR-0029 §4.3)
+  C06: In-lane domain folders have canonical names (the 13 from ADR-0028 §3)
+       and each has a README.md per §3.5
+  C07: No drift-out-of-lane files (.schema.json, .rego, .py, fixtures, source
+       descriptors, release manifests anywhere under docs/focus-mode/) per §3.6
+  C08: No `apps/web/src/focus-modes/` references in any lane file (preserved
+       from v1 — OPEN-DR-06 drift)
+  C09: counties/COUNTY_INDEX.md (if present) parses; table covers Kansas counties
+       (preserved/adapted from v1 C01)
+  C10: ui_shell front-matter value is "apps/explorer-web" in any build-plan files
+       (preserved from v1 C06)
+  C11: 13-domain coverage map in per-area build plans enumerates the 13 canonical
+       keys exactly (per ADR-0028 §3)
+  C12: Per-file disposition report (machine-readable; not pass/fail itself)
 
 Exit codes:
-  0 = all pass
+  0 = all pass (no drift-out-of-lane or unknown dispositions)
   1 = at least one check failed
   2 = system error (paths missing, parse error)
 
 Usage:
-  python tools/validators/validate_focus_mode_index.py docs/focus-modes/
-  python tools/validators/validate_focus_mode_index.py docs/focus-modes/ --emit-json out.json
-  python tools/validators/validate_focus_mode_index.py docs/focus-modes/ --strict
+  python tools/validators/validate_focus_mode_index.py docs/focus-mode/
+  python tools/validators/validate_focus_mode_index.py docs/focus-mode/ --emit-json out.json
+  python tools/validators/validate_focus_mode_index.py docs/focus-mode/ --strict
+
+Migration window (per ORGANIZATION_RULES.md v0.2 §6.3): for one minor version of
+directory-rules.md after ADR-0029 acceptance, legacy filenames (kebab-case area
+dirs, seven-file split, etc.) are tolerated as warnings; after the migration
+window they become failures. The --strict flag treats warnings as failures
+immediately.
 """
 
 from __future__ import annotations
@@ -50,10 +69,84 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 # ----------------------------------------------------------------------
-# Reference data
+# Doctrine constants (per ORGANIZATION_RULES.md v0.2 + ADR-0028 + ADR-0029)
 # ----------------------------------------------------------------------
 
-# CONFIRMED: 105 Kansas counties (alphabetical).
+LANE_ROOT_REQUIRED: Set[str] = {"README.md", "ORGANIZATION_RULES.md"}
+
+CANONICAL_CONTAINERS: Set[str] = {"counties", "state", "regions", "corridors"}
+CONTAINER_REQUIRED_INDEX: Dict[str, str] = {
+    "counties": "COUNTY_INDEX.md",
+    "state": "STATE_INDEX.md",
+    "regions": "REGION_INDEX.md",
+    "corridors": "CORRIDOR_INDEX.md",
+}
+CONTAINER_TEMPLATE_FILE: Dict[str, str] = {
+    "counties": "county_focus_mode_build_plan.md",
+    "state": "state_focus_mode_build_plan.md",
+    "regions": "region_focus_mode_build_plan.md",
+    "corridors": "corridor_focus_mode_build_plan.md",
+}
+# Container → expected scope-suffix for area dirs inside it
+CONTAINER_SCOPE: Dict[str, str] = {
+    "counties": "county",
+    "state": "state",
+    "regions": "region",
+    "corridors": "corridor",
+}
+
+# 13 canonical thematic domains per ADR-0028 §3 + README v0.5 §14.1
+CANONICAL_DOMAINS: Tuple[str, ...] = (
+    "agriculture", "archaeology", "atmosphere_air", "fauna", "flora",
+    "geology", "habitat", "hazards", "hydrology", "people_dna_land",
+    "roads_rail", "settlements_infrastructure", "soil",
+)
+CANONICAL_DOMAINS_SET: Set[str] = set(CANONICAL_DOMAINS)
+assert len(CANONICAL_DOMAINS) == 13, "CANONICAL_DOMAINS must contain exactly 13 entries"
+
+VALID_SCOPES: Tuple[str, ...] = ("county", "state", "region", "corridor")
+
+# Per-area lane directory naming: snake_case + _<scope> suffix per ADR-0029 §3.3
+AREA_LANE_RE = re.compile(r"^([a-z][a-z0-9_]*)_(county|state|region|corridor)$")
+
+# Legacy patterns (migration window per ORGANIZATION_RULES.md v0.2 §6.3)
+LEGACY_KEBAB_AREA_RE = re.compile(r"^([a-z][a-z0-9-]*)-(county|state|region|corridor)$")
+LEGACY_SEVEN_FILE_SPLIT: Set[str] = {
+    "build-plan.md", "layer-registry.md", "evidence-model.md",
+    "acceptance-checklist.md", "source-seed-list.md", "public-safety-notes.md",
+}
+LEGACY_TEMPLATE_NAMES: Set[str] = {
+    "county-build-plan.md", "state-build-plan.md",
+    "region-build-plan.md", "corridor-build-plan.md",
+}
+
+# Drift-out-of-lane patterns (per ORGANIZATION_RULES.md v0.2 §3.6)
+DRIFT_OUT_PATTERNS: List[Tuple[re.Pattern, str]] = [
+    (re.compile(r".*\.schema\.json$"),
+     "schemas live in schemas/contracts/v1/focus_mode/ per directory-rules.md §6.4 + ADR-0001"),
+    (re.compile(r".*\.rego$"),
+     "policies live in policy/ per directory-rules.md §6.5"),
+    (re.compile(r".*\.py$"),
+     "Python tools live in tools/ per directory-rules.md §6.6"),
+    (re.compile(r".*/(valid|invalid)/.*\.json$"),
+     "fixtures live in fixtures/focus_modes/<area>/{valid,invalid}/ per directory-rules.md §6.7.2"),
+    (re.compile(r"^(.*/)?source[-_]descriptors\.ya?ml$"),
+     "source descriptors live in data/catalog/sources/<area>/ per directory-rules.md §6.7.2"),
+    (re.compile(r".*[Rr]elease.*[Mm]anifest.*\.json$"),
+     "release manifests live in release/manifests/focus_modes/ per directory-rules.md §6.7.2"),
+]
+ROOT_LEVEL_DRIFT_OUT: Dict[str, str] = {
+    "MIGRATION_NOTE.md": "belongs under migrations/<migration-id>/ per directory-rules.md §2.5",
+    "CHANGELOG.md": "belongs under migrations/<migration-id>/ or at repo root",
+}
+
+# Forbidden substrings (preserved from v1 — OPEN-DR-06)
+FORBIDDEN_PATH_SUBSTRINGS: Tuple[str, ...] = ("apps/web/src/focus-modes/",)
+
+# Optional file patterns
+OPTIONAL_NOTES_RE = re.compile(r"^.*-notes\.md$")
+
+# 105 Kansas counties (preserved from v1 for C09)
 KANSAS_COUNTIES: Tuple[str, ...] = (
     "Allen", "Anderson", "Atchison", "Barber", "Barton", "Bourbon", "Brown",
     "Butler", "Chase", "Chautauqua", "Cherokee", "Cheyenne", "Clark", "Clay",
@@ -72,56 +165,39 @@ KANSAS_COUNTIES: Tuple[str, ...] = (
     "Wabaunsee", "Wallace", "Washington", "Wichita", "Wilson", "Woodson",
     "Wyandotte",
 )
-assert len(KANSAS_COUNTIES) == 105, "KANSAS_COUNTIES list must contain exactly 105 entries"
+assert len(KANSAS_COUNTIES) == 105
 
-VALID_STATUSES: Tuple[str, ...] = (
-    "not-started", "planned", "draft", "validated",
-    "payload-ready", "released", "rolled-back", "deprecated",
-)
-STATUS_ORDER = {s: i for i, s in enumerate(VALID_STATUSES)}
-STATUS_REQUIRES_LANE_AT_OR_ABOVE = "planned"  # status >= planned requires a lane folder
+# ----------------------------------------------------------------------
+# Disposition + signature vocabularies (per ORGANIZATION_RULES.md v0.2 §5)
+# ----------------------------------------------------------------------
 
-VALID_SCOPES: Tuple[str, ...] = ("county", "region", "corridor")
-VALID_PRIORITIES: Tuple[str, ...] = ("P1", "P2", "P3", "—", "")
-
-REQUIRED_LANE_FILES: Tuple[str, ...] = (
-    "README.md",
-    "build-plan.md",
-    "layer-registry.md",
-    "evidence-model.md",
-    "acceptance-checklist.md",
-    "source-seed-list.md",
-    "public-safety-notes.md",
-)
-
-REQUIRED_FRONTMATTER_KEYS: Tuple[str, ...] = (
-    "schema_version", "kfm_artifact", "area", "status", "owner",
-    "priority", "last_reviewed", "plan_anchors", "ui_shell",
-    "canonical_paths", "sensitivity_lanes", "sensitivity_overrides",
-    "source_seed_families", "release",
-)
-
-ACCEPTANCE_ITEMS: Tuple[str, ...] = (
-    "(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)",
-)
-
-LANE_NAME_RE = re.compile(r"^[a-z][a-z0-9\-]*-(county|region|corridor)$")
-COUNTY_SLUG_RE = re.compile(r"^[a-z][a-z0-9\-]*$")
-
-# Markers we refuse to see anywhere in lane content
-FORBIDDEN_PATH_SUBSTRINGS: Tuple[str, ...] = (
-    "apps/web/src/focus-modes/",  # OPEN-DR-06 drift
-)
-
+DISP_KEEP_ROOT = "keep-root"
+DISP_KEEP_AREA = "keep-area"
+DISP_KEEP_TEMPLATE = "keep-template"
+DISP_OPTIONAL = "optional-keep"
+DISP_DRIFT_WITHIN = "drift-within-lane"
+DISP_DRIFT_OUT = "drift-out-of-lane"
+DISP_UNKNOWN = "unknown"
+ALL_DISPOSITIONS = (DISP_KEEP_ROOT, DISP_KEEP_AREA, DISP_KEEP_TEMPLATE,
+                    DISP_OPTIONAL, DISP_DRIFT_WITHIN, DISP_DRIFT_OUT, DISP_UNKNOWN)
+CLEAN_DISPOSITIONS = {DISP_KEEP_ROOT, DISP_KEEP_AREA, DISP_KEEP_TEMPLATE, DISP_OPTIONAL}
+DIRTY_DISPOSITIONS = {DISP_DRIFT_WITHIN, DISP_DRIFT_OUT, DISP_UNKNOWN}
 
 # ----------------------------------------------------------------------
 # Data classes
 # ----------------------------------------------------------------------
 
 @dataclass
+class FileClassification:
+    path: str                            # path relative to lane root
+    disposition: str
+    signatures: List[str] = field(default_factory=list)
+    rationale: str = ""
+
+@dataclass
 class CheckResult:
     name: str
-    status: str  # "pass" | "fail" | "warn" | "skip"
+    status: str                          # "pass" | "fail" | "warn" | "skip"
     details: List[str] = field(default_factory=list)
     affected: List[str] = field(default_factory=list)
 
@@ -130,478 +206,534 @@ class CheckResult:
         if item:
             self.affected.append(item)
 
-
-@dataclass
-class IndexRow:
-    county: str
-    lane: str
-    status: str
-    owner: str
-    priority: str
-    sensitivity_hot_lanes: str
-    source_seed_family: str
-    validation: str
-    source_line: int
-
-
 @dataclass
 class ValidationReport:
     schema_version: str
-    focus_modes_dir: str
+    lane_root: str
+    file_count: int
+    classifications: List[FileClassification]
     checks: List[CheckResult]
-    overall_status: str  # "pass" | "fail" | "error"
+    overall_status: str                  # "pass" | "warn" | "fail" | "error"
 
     def to_dict(self) -> Dict:
         return {
             "schema_version": self.schema_version,
-            "focus_modes_dir": self.focus_modes_dir,
+            "lane_root": self.lane_root,
+            "file_count": self.file_count,
             "overall_status": self.overall_status,
+            "classifications": [asdict(c) for c in self.classifications],
             "checks": [asdict(c) for c in self.checks],
         }
 
-
 # ----------------------------------------------------------------------
-# Parsing helpers (stdlib only)
-# ----------------------------------------------------------------------
-
-def _slugify_county(name: str) -> str:
-    """Convert 'McPherson' -> 'mcpherson', 'Wyandotte' -> 'wyandotte'."""
-    return name.strip().lower()
-
-
-def parse_index_table(index_md: Path) -> Tuple[List[IndexRow], List[str]]:
-    """
-    Parse the §3 markdown table in COUNTY_INDEX.md.
-
-    Returns (rows, parse_errors). Parse errors do NOT raise; the caller decides.
-    The parser is intentionally simple: it locates the first table whose header
-    contains 'County', 'Lane', 'Status' in that order.
-    """
-    errors: List[str] = []
-    if not index_md.exists():
-        errors.append(f"COUNTY_INDEX.md not found at {index_md}")
-        return ([], errors)
-
-    text = index_md.read_text(encoding="utf-8")
-    lines = text.splitlines()
-
-    # Locate header line and separator
-    header_idx = None
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if stripped.startswith("|") and "County" in stripped and "Lane" in stripped and "Status" in stripped:
-            # Verify next line is a separator (| --- | ...)
-            if i + 1 < len(lines) and re.match(r"^\|\s*[-:]+", lines[i + 1].strip()):
-                header_idx = i
-                break
-
-    if header_idx is None:
-        errors.append("Could not locate the master county table (header with 'County | Lane | Status').")
-        return ([], errors)
-
-    # Parse header to map column positions
-    header_cells = [c.strip() for c in lines[header_idx].strip().strip("|").split("|")]
-    col_map = {name: idx for idx, name in enumerate(header_cells)}
-    required_cols = ("County", "Lane", "Status", "Owner", "Priority",
-                     "Sensitivity hot lanes", "Source-seed family", "Validation")
-    for col in required_cols:
-        if col not in col_map:
-            errors.append(f"Master table missing required column: {col!r}")
-    if errors:
-        return ([], errors)
-
-    rows: List[IndexRow] = []
-    for i in range(header_idx + 2, len(lines)):
-        line = lines[i].strip()
-        if not line.startswith("|"):
-            break
-        if re.match(r"^\|\s*[-:]+", line):
-            continue
-        cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if len(cells) < len(header_cells):
-            errors.append(f"Line {i + 1}: row has {len(cells)} cells; expected {len(header_cells)}")
-            continue
-        rows.append(
-            IndexRow(
-                county=cells[col_map["County"]],
-                lane=cells[col_map["Lane"]].strip("`"),
-                status=cells[col_map["Status"]],
-                owner=cells[col_map["Owner"]],
-                priority=cells[col_map["Priority"]],
-                sensitivity_hot_lanes=cells[col_map["Sensitivity hot lanes"]],
-                source_seed_family=cells[col_map["Source-seed family"]],
-                validation=cells[col_map["Validation"]],
-                source_line=i + 1,
-            )
-        )
-    return (rows, errors)
-
-
-def extract_frontmatter(md_path: Path) -> Tuple[Dict[str, str], List[str]]:
-    """
-    Extract YAML-like front-matter from a markdown file.
-
-    Returns (top_level_keys_present, errors). This is intentionally minimal:
-    it does NOT parse nested structures; it only confirms required *top-level*
-    keys appear after the opening '---' fence at the head of the file.
-
-    For deeper validation, a follow-up pass with PyYAML is recommended once
-    PyYAML is approved as a tools/validators/ dependency (ADR-class decision).
-    """
-    errors: List[str] = []
-    keys_present: Dict[str, str] = {}
-    if not md_path.exists():
-        errors.append(f"{md_path} not found")
-        return (keys_present, errors)
-
-    text = md_path.read_text(encoding="utf-8")
-    # Allow leading HTML comment and blank lines before the front-matter fence
-    fm_match = re.search(r"(?:\A|\n)---\n(.*?)\n---\n", text, re.DOTALL)
-    if not fm_match:
-        errors.append(f"{md_path}: no YAML front-matter block found")
-        return (keys_present, errors)
-
-    body = fm_match.group(1)
-    for raw_line in body.splitlines():
-        # Skip comments and blank lines
-        line = raw_line.split("#", 1)[0].rstrip()
-        if not line.strip():
-            continue
-        # Top-level key:value (no leading whitespace)
-        m = re.match(r"^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$", raw_line)
-        if m and not raw_line.startswith((" ", "\t")):
-            key = m.group(1)
-            val = m.group(2).strip()
-            keys_present[key] = val
-    return (keys_present, errors)
-
-
-def get_frontmatter_value(md_path: Path, key: str) -> Optional[str]:
-    """
-    Best-effort retrieval of a top-level scalar value (e.g., ui_shell).
-    Returns None if not found.
-    """
-    keys, _errs = extract_frontmatter(md_path)
-    raw = keys.get(key)
-    if raw is None:
-        return None
-    # Strip surrounding quotes
-    raw = raw.strip()
-    if (raw.startswith('"') and raw.endswith('"')) or (raw.startswith("'") and raw.endswith("'")):
-        raw = raw[1:-1]
-    return raw
-
-
-def find_markdown_links(text: str) -> List[str]:
-    """Return relative-path link targets ([text](path)) excluding http(s), mailto, anchors."""
-    targets = []
-    for m in re.finditer(r"\[[^\]]+\]\(([^)]+)\)", text):
-        tgt = m.group(1).strip()
-        if tgt.startswith(("http://", "https://", "mailto:", "#")):
-            continue
-        targets.append(tgt)
-    return targets
-
-
-# ----------------------------------------------------------------------
-# Checks
+# Classifier — applies ORGANIZATION_RULES.md v0.2 §3 rules
 # ----------------------------------------------------------------------
 
-def check_c01_index_parses_and_counties(rows: List[IndexRow], parse_errors: List[str]) -> CheckResult:
-    r = CheckResult(name="C01_index_parses_and_105_counties", status="pass")
-    if parse_errors:
-        r.status = "fail"
-        for e in parse_errors:
-            r.add(e)
-        return r
-    counties_seen = [row.county for row in rows]
-    if len(counties_seen) != 105:
-        r.status = "fail"
-        r.add(f"Expected 105 county rows; found {len(counties_seen)}")
-    expected = set(KANSAS_COUNTIES)
-    actual = set(counties_seen)
-    missing = sorted(expected - actual)
-    extra = sorted(actual - expected)
+def classify(rel: Path) -> FileClassification:
+    """Apply §3.1 → §3.6 rules in order; first match wins."""
+    parts = rel.parts
+    name = rel.name
+    posix = rel.as_posix()
+
+    # §3.6 catch-all drift-out patterns first (they apply at any depth)
+    for pattern, reason in DRIFT_OUT_PATTERNS:
+        if pattern.match(posix) or pattern.match(name):
+            return FileClassification(path=posix, disposition=DISP_DRIFT_OUT,
+                                      signatures=["drift-out"], rationale=reason)
+
+    # §3.1 Lane-root files
+    if len(parts) == 1:
+        if name in LANE_ROOT_REQUIRED:
+            return FileClassification(path=posix, disposition=DISP_KEEP_ROOT,
+                rationale=f"canonical lane-root file per ORGANIZATION_RULES.md v0.2 §3.1")
+        if name in ROOT_LEVEL_DRIFT_OUT:
+            return FileClassification(path=posix, disposition=DISP_DRIFT_OUT,
+                signatures=["drift-out"], rationale=ROOT_LEVEL_DRIFT_OUT[name])
+        # Legacy: COUNTY_INDEX.md / STATE_INDEX.md at lane root (now container-scoped)
+        if name in ("COUNTY_INDEX.md", "STATE_INDEX.md", "REGION_INDEX.md", "CORRIDOR_INDEX.md"):
+            return FileClassification(path=posix, disposition=DISP_DRIFT_WITHIN,
+                signatures=["legacy-lane-root-index"],
+                rationale="container-scoped index per ADR-0029 §3.2; move to <container>/")
+        return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+            signatures=["unknown"], rationale="loose file at lane root; not in canonical set")
+
+    top = parts[0]
+
+    # §3.5 In-lane domain folders
+    if top in CANONICAL_DOMAINS_SET:
+        if len(parts) == 2 and name == "README.md":
+            return FileClassification(path=posix, disposition=DISP_KEEP_AREA,
+                rationale=f"required in-lane domain README for canonical domain `{top}` per ORGANIZATION_RULES.md v0.2 §3.5")
+        if len(parts) == 2 and OPTIONAL_NOTES_RE.match(name):
+            return FileClassification(path=posix, disposition=DISP_OPTIONAL,
+                rationale=f"optional framing-notes file in `{top}` per ORGANIZATION_RULES.md v0.2 §3.5")
+        if len(parts) > 2:
+            return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                signatures=["unknown"],
+                rationale=f"file in unexpected subdir of `{top}/`; in-lane domain folders are flat")
+        return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+            signatures=["unknown"], rationale=f"unrecognized file in `{top}/`")
+
+    # Non-canonical domain folder names (legacy drift)
+    if top in {"atmosphere", "hydrogeology", "people", "settlements-infrastructure",
+               "roads", "railroads"}:
+        return FileClassification(path=posix, disposition=DISP_DRIFT_WITHIN,
+            signatures=["#6-domain-name-mismatch"],
+            rationale=f"non-canonical domain folder `{top}/`; rename per ADR-0029 §10.2 + Atlas Appendix C")
+
+    # §3.2 / §3.3 / §3.4 Container subdirectories
+    if top in CANONICAL_CONTAINERS:
+        if len(parts) == 1:
+            # The container dir itself — shouldn't classify as a "file"
+            return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                signatures=["unknown"], rationale="unexpected: container path classified as file")
+
+        # §3.2 Container-level files
+        if len(parts) == 2:
+            if name == "README.md":
+                return FileClassification(path=posix, disposition=DISP_KEEP_AREA,
+                    rationale=f"required container README per ORGANIZATION_RULES.md v0.2 §3.2")
+            if name == CONTAINER_REQUIRED_INDEX.get(top):
+                return FileClassification(path=posix, disposition=DISP_KEEP_AREA,
+                    rationale=f"required container index per ORGANIZATION_RULES.md v0.2 §3.2")
+            if top == "counties" and name == "domains.md":
+                return FileClassification(path=posix, disposition=DISP_OPTIONAL,
+                    rationale="optional cross-domain composition reference per ORGANIZATION_RULES.md v0.2 §3.2")
+            if OPTIONAL_NOTES_RE.match(name):
+                return FileClassification(path=posix, disposition=DISP_OPTIONAL,
+                    rationale=f"optional framing-notes file in `{top}/` per ORGANIZATION_RULES.md v0.2 §3.2")
+            return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                signatures=["unknown"], rationale=f"unexpected file directly under `{top}/`")
+
+        # §3.3 Template files
+        if parts[1] == "_template":
+            canonical_tpl = CONTAINER_TEMPLATE_FILE.get(top)
+            if len(parts) == 3 and name == canonical_tpl:
+                return FileClassification(path=posix, disposition=DISP_KEEP_TEMPLATE,
+                    rationale=f"canonical consolidated template per ADR-0029 §3.4")
+            if len(parts) == 3 and name in LEGACY_TEMPLATE_NAMES:
+                return FileClassification(path=posix, disposition=DISP_DRIFT_WITHIN,
+                    signatures=["legacy-template-kebab"],
+                    rationale=f"legacy kebab template; rename to {canonical_tpl} per ADR-0029 §3.4")
+            if len(parts) == 3 and name == "README.md":
+                return FileClassification(path=posix, disposition=DISP_OPTIONAL,
+                    rationale="optional template-overview README per ORGANIZATION_RULES.md v0.2 §3.3")
+            if len(parts) > 3:
+                return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                    signatures=["unknown"], rationale="templates are flat; no nested subdirs allowed")
+            return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                signatures=["unknown"], rationale=f"unexpected file in `{top}/_template/`")
+
+        # §3.4 Per-area lane files
+        area_dir = parts[1]
+        m = AREA_LANE_RE.match(area_dir)
+        if m:
+            expected_scope = CONTAINER_SCOPE[top]
+            actual_scope = m.group(2)
+            if actual_scope != expected_scope:
+                return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                    signatures=["scope-container-mismatch"],
+                    rationale=f"area dir `{area_dir}` has scope `{actual_scope}` but lives in container `{top}/` (expects `{expected_scope}`)")
+
+            if len(parts) == 3 and name == "README.md":
+                return FileClassification(path=posix, disposition=DISP_KEEP_AREA,
+                    rationale=f"required per-area README per ORGANIZATION_RULES.md v0.2 §3.4")
+            if len(parts) == 3 and name == f"{area_dir}_focus_mode_build_plan.md":
+                return FileClassification(path=posix, disposition=DISP_KEEP_AREA,
+                    rationale=f"required per-area consolidated build plan per ADR-0029 §3.4")
+            if len(parts) == 3 and OPTIONAL_NOTES_RE.match(name):
+                return FileClassification(path=posix, disposition=DISP_OPTIONAL,
+                    rationale=f"optional framing-notes file per ORGANIZATION_RULES.md v0.2 §3.4")
+            if len(parts) == 3 and name in LEGACY_SEVEN_FILE_SPLIT:
+                return FileClassification(path=posix, disposition=DISP_DRIFT_WITHIN,
+                    signatures=["legacy-seven-file-split"],
+                    rationale=f"legacy seven-file split; consolidate into {area_dir}_focus_mode_build_plan.md per ADR-0029 §3.4")
+            if len(parts) > 3:
+                return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                    signatures=["unknown"], rationale="per-area lanes are flat; no nested subdirs allowed")
+            return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+                signatures=["unknown"], rationale=f"unrecognized file in per-area lane `{area_dir}/`")
+
+        # Legacy kebab-case area dirs
+        m2 = LEGACY_KEBAB_AREA_RE.match(area_dir)
+        if m2:
+            return FileClassification(path=posix, disposition=DISP_DRIFT_WITHIN,
+                signatures=["#5-kebab-area-dir"],
+                rationale=f"legacy kebab-case area dir `{area_dir}/`; rename to snake_case per ADR-0029 §3.3")
+
+        return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+            signatures=["unknown"], rationale=f"non-canonical subdir under `{top}/`: `{area_dir}/`")
+
+    return FileClassification(path=posix, disposition=DISP_UNKNOWN,
+        signatures=["unknown"],
+        rationale=f"file under non-canonical lane-root subdir `{top}/`")
+
+# ----------------------------------------------------------------------
+# Walk + check pipeline
+# ----------------------------------------------------------------------
+
+def walk_lane(lane_root: Path) -> List[FileClassification]:
+    out: List[FileClassification] = []
+    for p in sorted(lane_root.rglob("*")):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(lane_root)
+        if any(part.startswith(".") for part in rel.parts):
+            continue
+        out.append(classify(rel))
+    return out
+
+def check_c01_lane_root_required(lane_root: Path) -> CheckResult:
+    """C01: Lane root has REQUIRED files per §3.1."""
+    chk = CheckResult(name="C01 lane-root REQUIRED files", status="pass")
+    present = {p.name for p in lane_root.iterdir() if p.is_file()}
+    for req in LANE_ROOT_REQUIRED:
+        if req not in present:
+            chk.status = "fail"
+            chk.add(f"missing REQUIRED lane-root file: {req}", item=req)
+    return chk
+
+def check_c02_container_required(lane_root: Path) -> CheckResult:
+    """C02: Containers (if present) have REQUIRED README + <SCOPE>_INDEX.md per §3.2."""
+    chk = CheckResult(name="C02 container REQUIRED files", status="pass")
+    for container in sorted(CANONICAL_CONTAINERS):
+        cdir = lane_root / container
+        if not cdir.is_dir():
+            continue
+        present = {p.name for p in cdir.iterdir() if p.is_file()}
+        for req in ("README.md", CONTAINER_REQUIRED_INDEX[container]):
+            if req not in present:
+                chk.status = "fail"
+                chk.add(f"missing REQUIRED file in {container}/: {req}", item=f"{container}/{req}")
+    if not chk.details:
+        chk.add("all present-container REQUIRED files found")
+    return chk
+
+def check_c03_templates(lane_root: Path) -> CheckResult:
+    """C03: Each container's _template/ has canonical template filename per §3.3."""
+    chk = CheckResult(name="C03 canonical template filenames", status="pass")
+    found_any = False
+    for container, tpl in CONTAINER_TEMPLATE_FILE.items():
+        tdir = lane_root / container / "_template"
+        if not tdir.is_dir():
+            continue
+        found_any = True
+        if not (tdir / tpl).exists():
+            chk.status = "warn"
+            chk.add(f"missing canonical template {container}/_template/{tpl}", item=str(tdir / tpl))
+        for f in tdir.iterdir():
+            if f.is_file() and f.name in LEGACY_TEMPLATE_NAMES:
+                chk.status = "warn"
+                chk.add(f"legacy template present: {container}/_template/{f.name} — rename to {tpl}",
+                        item=str(f))
+    if not found_any:
+        chk.status = "skip"
+        chk.add("no container _template/ directories present")
+    return chk
+
+def check_c04_per_area_required(lane_root: Path, classifications: List[FileClassification]) -> CheckResult:
+    """C04: Per-area lanes have REQUIRED files (README.md + <area>_<scope>_focus_mode_build_plan.md) per §3.4."""
+    chk = CheckResult(name="C04 per-area lane REQUIRED files", status="pass")
+    area_dirs: Dict[str, Path] = {}
+    for container in CANONICAL_CONTAINERS:
+        cdir = lane_root / container
+        if not cdir.is_dir():
+            continue
+        for sub in cdir.iterdir():
+            if sub.is_dir() and AREA_LANE_RE.match(sub.name) and sub.name != "_template":
+                area_dirs[f"{container}/{sub.name}"] = sub
+    if not area_dirs:
+        chk.status = "skip"
+        chk.add("no per-area lanes found")
+        return chk
+    for label, adir in sorted(area_dirs.items()):
+        area_name = adir.name
+        files = {p.name for p in adir.iterdir() if p.is_file()}
+        if "README.md" not in files:
+            chk.status = "fail"
+            chk.add(f"missing README.md in {label}/", item=label)
+        expected_bp = f"{area_name}_focus_mode_build_plan.md"
+        if expected_bp not in files:
+            chk.status = "fail"
+            chk.add(f"missing build plan in {label}/: {expected_bp}", item=label)
+    return chk
+
+def check_c05_build_plan_filename_matches_dir(lane_root: Path) -> CheckResult:
+    """C05: Build plan filename matches parent directory name (ADR-0029 §4.3)."""
+    chk = CheckResult(name="C05 self-describing build-plan filename", status="pass")
+    found_any = False
+    for container in CANONICAL_CONTAINERS:
+        cdir = lane_root / container
+        if not cdir.is_dir():
+            continue
+        for sub in cdir.iterdir():
+            if not (sub.is_dir() and AREA_LANE_RE.match(sub.name) and sub.name != "_template"):
+                continue
+            found_any = True
+            expected = f"{sub.name}_focus_mode_build_plan.md"
+            for f in sub.iterdir():
+                if not f.is_file():
+                    continue
+                if f.name.endswith("_focus_mode_build_plan.md") and f.name != expected:
+                    chk.status = "fail"
+                    chk.add(f"build-plan filename mismatch: {container}/{sub.name}/{f.name} — expected {expected}",
+                            item=f"{container}/{sub.name}/{f.name}")
+    if not found_any:
+        chk.status = "skip"
+    return chk
+
+def check_c06_canonical_domain_folders(lane_root: Path) -> CheckResult:
+    """C06: 13 canonical domain folders present with READMEs (§3.5 + ADR-0028 §3)."""
+    chk = CheckResult(name="C06 13 canonical in-lane domain folders", status="pass")
+    missing = []
+    no_readme = []
+    for d in CANONICAL_DOMAINS:
+        dpath = lane_root / d
+        if not dpath.is_dir():
+            missing.append(d)
+            continue
+        if not (dpath / "README.md").is_file():
+            no_readme.append(d)
     if missing:
-        r.status = "fail"
-        r.add(f"Counties missing from index: {missing}")
-        r.affected.extend(missing)
-    if extra:
-        r.status = "fail"
-        r.add(f"Counties not in Kansas (typos or extras): {extra}")
-        r.affected.extend(extra)
-    # Duplicate detection
-    seen: Set[str] = set()
-    dups: List[str] = []
-    for c in counties_seen:
-        if c in seen:
-            dups.append(c)
-        seen.add(c)
-    if dups:
-        r.status = "fail"
-        r.add(f"Duplicate county rows: {sorted(set(dups))}")
-        r.affected.extend(sorted(set(dups)))
-    return r
-
-
-def check_c02_statuses_in_enum(rows: List[IndexRow]) -> CheckResult:
-    r = CheckResult(name="C02_statuses_in_enum", status="pass")
-    for row in rows:
-        if row.status not in VALID_STATUSES:
-            r.status = "fail"
-            r.add(f"Line {row.source_line}: status {row.status!r} not in {list(VALID_STATUSES)}", row.county)
-    return r
-
-
-def check_c03_lane_folders_exist(rows: List[IndexRow], focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C03_lane_folder_present_when_status_planned_or_above", status="pass")
-    threshold = STATUS_ORDER[STATUS_REQUIRES_LANE_AT_OR_ABOVE]
-    for row in rows:
-        if row.status not in STATUS_ORDER:
+        chk.status = "fail"
+        chk.add(f"missing canonical domain folder(s): {', '.join(missing)}", item=",".join(missing))
+    if no_readme:
+        chk.status = "fail"
+        chk.add(f"domain folder(s) without README.md: {', '.join(no_readme)}", item=",".join(no_readme))
+    if not (missing or no_readme):
+        chk.add(f"all 13 canonical domain folders present with READMEs")
+    # Non-canonical domain folders (drift)
+    non_canon = []
+    for sub in lane_root.iterdir():
+        if not sub.is_dir():
             continue
-        if STATUS_ORDER[row.status] >= threshold:
-            lane_dir = focus_modes_dir / row.lane
-            if not lane_dir.is_dir():
-                r.status = "fail"
-                r.add(
-                    f"Line {row.source_line}: status={row.status!r} but lane folder absent: {lane_dir}",
-                    row.lane,
-                )
-    return r
-
-
-def check_c04_required_lane_files(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C04_seven_required_files_per_lane", status="pass")
-    if not focus_modes_dir.is_dir():
-        r.status = "skip"
-        r.add(f"{focus_modes_dir} is not a directory")
-        return r
-    for child in sorted(focus_modes_dir.iterdir()):
-        if not child.is_dir():
+        if sub.name in CANONICAL_CONTAINERS or sub.name in CANONICAL_DOMAINS_SET:
             continue
-        if child.name.startswith("_") or child.name.startswith("."):
-            continue  # skip _template, hidden
-        if not LANE_NAME_RE.match(child.name):
-            continue  # naming check is C09
-        missing = []
-        for fname in REQUIRED_LANE_FILES:
-            if not (child / fname).is_file():
-                missing.append(fname)
-        if missing:
-            r.status = "fail"
-            r.add(f"{child.name}: missing required files: {missing}", child.name)
-    return r
+        non_canon.append(sub.name)
+    if non_canon:
+        if chk.status == "pass":
+            chk.status = "warn"
+        chk.add(f"non-canonical lane-root subdir(s) present (drift): {', '.join(sorted(non_canon))}")
+    return chk
 
+def check_c07_drift_out(classifications: List[FileClassification]) -> CheckResult:
+    """C07: No drift-out-of-lane files (§3.6)."""
+    chk = CheckResult(name="C07 no drift-out-of-lane files", status="pass")
+    drifted = [c for c in classifications if c.disposition == DISP_DRIFT_OUT]
+    if drifted:
+        chk.status = "fail"
+        for c in drifted[:20]:
+            chk.add(f"{c.path} — {c.rationale}", item=c.path)
+        if len(drifted) > 20:
+            chk.add(f"(+{len(drifted)-20} more)")
+    return chk
 
-def check_c05_frontmatter_keys(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C05_build_plan_frontmatter_required_keys", status="pass")
-    for child in sorted(focus_modes_dir.iterdir()) if focus_modes_dir.is_dir() else []:
-        if not child.is_dir() or child.name.startswith(("_", ".")):
+def check_c08_no_apps_web(lane_root: Path) -> CheckResult:
+    """C08: No bare `apps/web/src/focus-modes/` references in any lane file (OPEN-DR-06).
+
+    Skips occurrences inside backtick-delimited inline code or fenced code blocks
+    — those are documentation of the forbidden pattern, not uses of it.
+    """
+    chk = CheckResult(name="C08 no apps/web/ references (OPEN-DR-06)", status="pass")
+    for p in lane_root.rglob("*.md"):
+        if any(part.startswith(".") for part in p.relative_to(lane_root).parts):
             continue
-        bp = child / "build-plan.md"
-        if not bp.exists():
-            continue  # absence reported by C04
-        keys, errs = extract_frontmatter(bp)
-        if errs:
-            r.status = "fail"
-            for e in errs:
-                r.add(e, child.name)
-            continue
-        missing = [k for k in REQUIRED_FRONTMATTER_KEYS if k not in keys]
-        if missing:
-            r.status = "fail"
-            r.add(f"{bp.relative_to(focus_modes_dir.parent.parent if focus_modes_dir.parent.parent else focus_modes_dir.parent)}: missing front-matter keys: {missing}", child.name)
-    return r
-
-
-def check_c06_ui_shell_is_explorer_web(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C06_ui_shell_is_apps_explorer_web", status="pass")
-    expected = "apps/explorer-web"
-    for child in sorted(focus_modes_dir.iterdir()) if focus_modes_dir.is_dir() else []:
-        if not child.is_dir() or child.name.startswith(("_", ".")):
-            continue
-        bp = child / "build-plan.md"
-        if not bp.exists():
-            continue
-        val = get_frontmatter_value(bp, "ui_shell")
-        if val is None:
-            continue  # absence reported by C05
-        if val != expected:
-            r.status = "fail"
-            r.add(f"{child.name}/build-plan.md: ui_shell={val!r} (expected {expected!r}; apps/web is drift per OPEN-DR-06)", child.name)
-    return r
-
-
-def check_c07_no_schema_json_under_docs(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C07_no_schema_json_under_docs_focus_modes", status="pass")
-    if not focus_modes_dir.is_dir():
-        return r
-    for p in focus_modes_dir.rglob("*.schema.json"):
-        r.status = "fail"
-        r.add(f"schema-home violation: {p} (machine schemas live at schemas/contracts/v1/focus_mode/)", str(p))
-    return r
-
-
-def check_c08_no_apps_web_references(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C08_no_apps_web_references_in_lane_files", status="pass")
-    if not focus_modes_dir.is_dir():
-        return r
-    for md in focus_modes_dir.rglob("*.md"):
         try:
-            text = md.read_text(encoding="utf-8")
+            text = p.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
-        for needle in FORBIDDEN_PATH_SUBSTRINGS:
-            if needle in text:
-                # Allow if explicitly inside a 'do NOT use' or 'drift' annotation block — too brittle
-                # to detect reliably; instead emit a warn and let humans inspect.
-                r.status = "warn" if r.status == "pass" else r.status
-                r.add(f"{md}: contains {needle!r} (drift per OPEN-DR-06; verify it's not an authoritative reference)", str(md))
-    return r
+        # Strip fenced code blocks and inline code spans, then check
+        stripped = re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+        stripped = re.sub(r"`[^`\n]*`", "", stripped)
+        for forbidden in FORBIDDEN_PATH_SUBSTRINGS:
+            if forbidden in stripped:
+                chk.status = "fail"
+                # Count bare occurrences for the report
+                bare_count = stripped.count(forbidden)
+                chk.add(f"forbidden path substring `{forbidden}` ({bare_count} bare occurrence{'s' if bare_count != 1 else ''}) in {p.relative_to(lane_root)}",
+                        item=str(p.relative_to(lane_root)))
+    return chk
 
+def check_c09_county_index_coverage(lane_root: Path) -> CheckResult:
+    """C09: counties/COUNTY_INDEX.md (if present) covers Kansas counties (preserved from v1 C01)."""
+    chk = CheckResult(name="C09 COUNTY_INDEX.md county coverage", status="pass")
+    idx = lane_root / "counties" / "COUNTY_INDEX.md"
+    if not idx.is_file():
+        chk.status = "skip"
+        chk.add("counties/COUNTY_INDEX.md not present")
+        return chk
+    try:
+        text = idx.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        chk.status = "fail"
+        chk.add(f"could not read {idx} as UTF-8")
+        return chk
+    # Best-effort: count how many of the 105 county names appear as words
+    found: Set[str] = set()
+    for c in KANSAS_COUNTIES:
+        if re.search(r"\b" + re.escape(c) + r"\b", text):
+            found.add(c)
+    missing = sorted(set(KANSAS_COUNTIES) - found)
+    if missing:
+        chk.status = "warn"
+        chk.add(f"COUNTY_INDEX.md does not mention {len(missing)} of 105 counties: {missing[:5]}{'...' if len(missing) > 5 else ''}")
+    else:
+        chk.add(f"all 105 Kansas counties mentioned in COUNTY_INDEX.md")
+    return chk
 
-def check_c09_lane_naming(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C09_lane_naming_kebab_plus_scope", status="pass")
-    if not focus_modes_dir.is_dir():
-        return r
-    for child in sorted(focus_modes_dir.iterdir()):
-        if not child.is_dir() or child.name.startswith(("_", ".")):
+def check_c10_ui_shell(lane_root: Path) -> CheckResult:
+    """C10: ui_shell front-matter value is apps/explorer-web (preserved from v1 C06)."""
+    chk = CheckResult(name="C10 ui_shell is apps/explorer-web (OPEN-DR-06)", status="pass")
+    ui_re = re.compile(r"^\s*ui_shell\s*:\s*(.+?)\s*(?:#.*)?$", re.MULTILINE)
+    found_any = False
+    for p in lane_root.rglob("*_focus_mode_build_plan.md"):
+        try:
+            text = p.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
             continue
-        if not LANE_NAME_RE.match(child.name):
-            r.status = "fail"
-            r.add(f"Lane folder {child.name!r} does not match kebab-case + scope suffix pattern (expected <slug>-{{county|region|corridor}})", child.name)
-    return r
+        for m in ui_re.finditer(text):
+            found_any = True
+            val = m.group(1).strip().strip('"').strip("'")
+            if val != "apps/explorer-web":
+                chk.status = "fail"
+                chk.add(f"non-canonical ui_shell in {p.relative_to(lane_root)}: `{val}` (expected apps/explorer-web)",
+                        item=str(p.relative_to(lane_root)))
+    if not found_any:
+        chk.status = "skip"
+        chk.add("no build-plan files with ui_shell front-matter found")
+    return chk
 
-
-def check_c10_no_duplicate_county_claims(focus_modes_dir: Path) -> CheckResult:
-    """
-    Detect a county claimed by two different area lanes by examining each
-    build-plan.md's front-matter `area.county` (best-effort scalar extraction).
-    """
-    r = CheckResult(name="C10_no_duplicate_county_claims", status="pass")
-    seen: Dict[str, str] = {}  # county_lower -> lane
-    if not focus_modes_dir.is_dir():
-        return r
-    for child in sorted(focus_modes_dir.iterdir()):
-        if not child.is_dir() or child.name.startswith(("_", ".")):
+def check_c11_domain_coverage(lane_root: Path) -> CheckResult:
+    """C11: build-plan domain_coverage map enumerates the 13 canonical keys (ADR-0028 §3)."""
+    chk = CheckResult(name="C11 13-domain coverage in per-area build plans", status="pass")
+    coverage_re = re.compile(r"^\s*domain_coverage\s*:\s*$", re.MULTILINE)
+    found_any = False
+    for p in lane_root.rglob("*_focus_mode_build_plan.md"):
+        # Skip template files
+        if "_template" in p.parts:
             continue
-        bp = child / "build-plan.md"
-        if not bp.exists():
+        try:
+            text = p.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
             continue
-        text = bp.read_text(encoding="utf-8")
-        # Best-effort: find `county: "<Name>"` line under area:
-        m = re.search(r"^\s+county:\s*[\"']?([^\"'\n]+)[\"']?\s*$", text, re.MULTILINE)
+        m = coverage_re.search(text)
         if not m:
             continue
-        county = m.group(1).strip().lower()
-        if county in seen and seen[county] != child.name:
-            r.status = "fail"
-            r.add(f"County {county!r} claimed by both {seen[county]!r} and {child.name!r}", child.name)
-        else:
-            seen[county] = child.name
-    return r
-
-
-def check_c11_acceptance_items(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C11_acceptance_checklist_has_eight_items", status="pass")
-    if not focus_modes_dir.is_dir():
-        return r
-    for child in sorted(focus_modes_dir.iterdir()):
-        if not child.is_dir() or child.name.startswith(("_", ".")):
-            continue
-        ac = child / "acceptance-checklist.md"
-        if not ac.exists():
-            continue
-        text = ac.read_text(encoding="utf-8")
-        missing = [item for item in ACCEPTANCE_ITEMS if item not in text]
-        if missing:
-            r.status = "fail"
-            r.add(f"{ac}: acceptance-checklist.md missing items {missing}", child.name)
-    return r
-
-
-def check_c12_links(focus_modes_dir: Path) -> CheckResult:
-    r = CheckResult(name="C12_internal_markdown_links_resolve", status="pass")
-    if not focus_modes_dir.is_dir():
-        return r
-    for md in focus_modes_dir.rglob("*.md"):
-        try:
-            text = md.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            continue
-        for tgt in find_markdown_links(text):
-            # Strip anchors; resolve relative
-            path_part = tgt.split("#", 1)[0]
-            if not path_part:
+        found_any = True
+        # Crude extraction: lines after `domain_coverage:` matching `  <key>: <value>`
+        after = text[m.end():]
+        block_lines = []
+        for line in after.splitlines():
+            if not line.startswith((" ", "\t")):
+                break
+            if re.match(r"^\s*#", line):
                 continue
-            resolved = (md.parent / path_part).resolve()
-            if not resolved.exists():
-                r.status = "warn" if r.status == "pass" else r.status
-                r.add(f"{md}: broken relative link target {tgt!r} (resolved to {resolved})", str(md))
-    return r
-
+            block_lines.append(line)
+            if len(block_lines) > 30:
+                break
+        keys = set()
+        for line in block_lines:
+            km = re.match(r"^\s+([a-z_]+)\s*:", line)
+            if km:
+                keys.add(km.group(1))
+        missing = CANONICAL_DOMAINS_SET - keys
+        extra = keys - CANONICAL_DOMAINS_SET
+        if missing or extra:
+            chk.status = "fail"
+            msg = []
+            if missing: msg.append(f"missing keys: {sorted(missing)}")
+            if extra:   msg.append(f"extra keys: {sorted(extra)}")
+            chk.add(f"{p.relative_to(lane_root)} — domain_coverage has {'; '.join(msg)}",
+                    item=str(p.relative_to(lane_root)))
+    if not found_any:
+        chk.status = "skip"
+        chk.add("no per-area build plans with domain_coverage block found")
+    return chk
 
 # ----------------------------------------------------------------------
-# Orchestration
+# Orchestrator
 # ----------------------------------------------------------------------
 
-def run_all(focus_modes_dir: Path) -> ValidationReport:
-    index_md = focus_modes_dir / "COUNTY_INDEX.md"
-    rows, parse_errors = parse_index_table(index_md)
-
-    checks: List[CheckResult] = []
-    checks.append(check_c01_index_parses_and_counties(rows, parse_errors))
-    checks.append(check_c02_statuses_in_enum(rows))
-    checks.append(check_c03_lane_folders_exist(rows, focus_modes_dir))
-    checks.append(check_c04_required_lane_files(focus_modes_dir))
-    checks.append(check_c05_frontmatter_keys(focus_modes_dir))
-    checks.append(check_c06_ui_shell_is_explorer_web(focus_modes_dir))
-    checks.append(check_c07_no_schema_json_under_docs(focus_modes_dir))
-    checks.append(check_c08_no_apps_web_references(focus_modes_dir))
-    checks.append(check_c09_lane_naming(focus_modes_dir))
-    checks.append(check_c10_no_duplicate_county_claims(focus_modes_dir))
-    checks.append(check_c11_acceptance_items(focus_modes_dir))
-    checks.append(check_c12_links(focus_modes_dir))
+def run_all(lane_root: Path) -> ValidationReport:
+    classifications = walk_lane(lane_root)
+    checks: List[CheckResult] = [
+        check_c01_lane_root_required(lane_root),
+        check_c02_container_required(lane_root),
+        check_c03_templates(lane_root),
+        check_c04_per_area_required(lane_root, classifications),
+        check_c05_build_plan_filename_matches_dir(lane_root),
+        check_c06_canonical_domain_folders(lane_root),
+        check_c07_drift_out(classifications),
+        check_c08_no_apps_web(lane_root),
+        check_c09_county_index_coverage(lane_root),
+        check_c10_ui_shell(lane_root),
+        check_c11_domain_coverage(lane_root),
+    ]
+    # Categorization-based pass/warn/fail
+    unknowns = [c for c in classifications if c.disposition == DISP_UNKNOWN]
+    drift_within = [c for c in classifications if c.disposition == DISP_DRIFT_WITHIN]
+    c12 = CheckResult(name="C12 per-file categorization summary", status="pass")
+    c12.add(f"{len(classifications)} files classified")
+    by_disp: Dict[str, int] = {}
+    for c in classifications:
+        by_disp[c.disposition] = by_disp.get(c.disposition, 0) + 1
+    for d in ALL_DISPOSITIONS:
+        if by_disp.get(d, 0) > 0:
+            c12.add(f"  {d}: {by_disp[d]}")
+    if unknowns:
+        c12.status = "fail"
+        c12.add(f"{len(unknowns)} file(s) with `unknown` disposition — halt for human review")
+    elif drift_within:
+        c12.status = "warn"
+        c12.add(f"{len(drift_within)} file(s) with `drift-within-lane` — migration-window warnings")
+    checks.append(c12)
 
     has_fail = any(c.status == "fail" for c in checks)
     has_warn = any(c.status == "warn" for c in checks)
     overall = "fail" if has_fail else ("warn" if has_warn else "pass")
 
     return ValidationReport(
-        schema_version="1",
-        focus_modes_dir=str(focus_modes_dir),
+        schema_version="3",
+        lane_root=str(lane_root),
+        file_count=len(classifications),
+        classifications=classifications,
         checks=checks,
         overall_status=overall,
     )
 
-
 def print_human(report: ValidationReport) -> None:
-    print(f"validate_focus_mode_index v{report.schema_version}")
-    print(f"focus_modes_dir: {report.focus_modes_dir}")
+    print(f"validate_focus_mode_index v{report.schema_version} (per ORGANIZATION_RULES.md v0.2 + ADR-0029)")
+    print(f"lane_root:       {report.lane_root}")
+    print(f"file_count:      {report.file_count}")
     print(f"overall_status:  {report.overall_status}")
     print()
     for c in report.checks:
         flag = {"pass": "PASS", "fail": "FAIL", "warn": "WARN", "skip": "SKIP"}[c.status]
         print(f"  [{flag}] {c.name}")
-        for d in c.details:
+        for d in c.details[:8]:
             print(f"         - {d}")
+        if len(c.details) > 8:
+            print(f"         - (+{len(c.details)-8} more)")
     print()
 
-
 def main(argv: Optional[List[str]] = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("focus_modes_dir", type=Path, help="Path to docs/focus-modes/")
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("lane_root", type=Path, help="Path to docs/focus-mode/")
     parser.add_argument("--emit-json", type=Path, default=None, help="Write report JSON to this path")
     parser.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     args = parser.parse_args(argv)
 
-    if not args.focus_modes_dir.exists():
-        print(f"error: focus_modes_dir does not exist: {args.focus_modes_dir}", file=sys.stderr)
+    if not args.lane_root.exists():
+        print(f"error: lane_root does not exist: {args.lane_root}", file=sys.stderr)
+        return 2
+    if not args.lane_root.is_dir():
+        print(f"error: lane_root is not a directory: {args.lane_root}", file=sys.stderr)
         return 2
 
     try:
-        report = run_all(args.focus_modes_dir)
-    except Exception as exc:  # noqa: BLE001 -- surface as system error per exit-code contract
+        report = run_all(args.lane_root)
+    except Exception as exc:
         print(f"system error: {exc}", file=sys.stderr)
         return 2
 
@@ -616,7 +748,6 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.strict and report.overall_status == "warn":
         return 1
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())
