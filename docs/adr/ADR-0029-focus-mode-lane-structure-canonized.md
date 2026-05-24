@@ -19,7 +19,7 @@ superseded_by: none
 related_adrs:
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md           # CONFIRMED — schema home (anti-pattern #10 in directory-rules.md §13.5)
   - docs/adr/ADR-0027-county-focus-mode-control-plane.md                          # CONFIRMED — county control plane
-  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md                           # CONFIRMED — -state scope + 13-domain coverage rule; filename collides with kebab convention (separate question)
+  - docs/adr/ADR-0028-state-scale-focus-mode-scope.md                           # CONFIRMED — -state scope + 13-domain coverage rule; filename collides with kebab convention (separate question)
 related:
   - docs/doctrine/directory-rules.md                                               # CONFIRMED — §6.7.2 current spec is incompatible with live tree; this ADR reconciles
   - docs/focus-mode/README.md                                                      # CONFIRMED — v0.3 in tree; v0.5 bump follows this ADR
@@ -476,7 +476,7 @@ Six in-lane domain folders use non-canonical names (`hydrogeology`, `roads`, `ra
 
 ### 10.3 ADR-0028 filename convention
 
-ADR-0028's filename (`ADR-0028 — State-scale Focus Mode scope.md`) uses spaces and an em-dash, diverging from the kebab-case `ADR-NNNN-<slug>.md` convention used by ADR-0001 through ADR-0027 and adopted by this ADR. Rename is a separate question; cross-refs in this file quote the actual filename.
+ADR-0028's filename (`ADR-0028-state-scale-focus-mode-scope.md`) uses spaces and an em-dash, diverging from the kebab-case `ADR-NNNN-<slug>.md` convention used by ADR-0001 through ADR-0027 and adopted by this ADR. Rename is a separate question; cross-refs in this file quote the actual filename.
 
 ### 10.4 Architecture stub at `docs/architecture/directory-rules.md`
 

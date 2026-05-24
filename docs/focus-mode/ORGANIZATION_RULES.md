@@ -16,7 +16,7 @@ related:
   - docs/focus-mode/README.md
   - docs/focus-mode/counties/domains.md                                # cross-domain composition reference (separate doc)
   - docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md
-  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md                # 13-domain coverage rule
+  - docs/adr/ADR-0028-state-scale-focus-mode-scope.md                # 13-domain coverage rule
   - tools/validators/validate_focus_mode_index.py                      # NEEDS_VERIFICATION — implementer of these rules
   - /tmp/kfm-organize/organize_v2.py                                   # working v2 categorizer; reference implementation at commit 334b8d6
 tags:
@@ -297,7 +297,7 @@ The two files do not duplicate each other and are governed separately. This docu
 - `docs/focus-mode/counties/domains.md` v0.1 — cross-domain composition reference; how the 13 domains compose in a county slice.
 - `docs/doctrine/directory-rules.md` v1.2 (as amended by ADR-0029 §7) — root-level placement contract.
 - `docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md` — the structural decision this document implements.
-- `docs/adr/ADR-0028 — State-scale Focus Mode scope.md` — `-state` scope + 13-domain coverage rule (independent prerequisite for state-scale rules in §3.2 / §3.3).
+- `docs/adr/ADR-0028-state-scale-focus-mode-scope.md` — `-state` scope + 13-domain coverage rule (independent prerequisite for state-scale rules in §3.2 / §3.3).
 
 [↑ Back to top](#top)
 

@@ -24,7 +24,7 @@ related:
   - docs/focus-mode/README.md
   - docs/focus-mode/ORGANIZATION_RULES.md
   - docs/focus-mode/state/STATE_INDEX.md
-  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md
+  - docs/adr/ADR-0028-state-scale-focus-mode-scope.md
   - docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md
   # 13 canonical in-lane domain treatments (NEEDS_VERIFICATION same as county template)
   - docs/focus-mode/agriculture/README.md
@@ -74,7 +74,7 @@ abstain_justifications:
 
 [![status: planned](https://img.shields.io/badge/status-planned-lightgrey)](#2-status-and-lifecycle)
 [![scale: state](https://img.shields.io/badge/scale-state-blueviolet)](#1-purpose-and-frame)
-[![scope ADR: pending ADR-0028](https://img.shields.io/badge/scope%20ADR-pending%20ADR--0028-orange)](docs/adr/ADR-0028%20%E2%80%94%20State-scale%20Focus%20Mode%20scope.md)
+[![scope ADR: pending ADR-0028](https://img.shields.io/badge/scope%20ADR-pending%20ADR--0028-orange)](docs/adr/ADR-0028-state-scale-focus-mode-scope.md)
 [![ui-shell: apps/explorer-web](https://img.shields.io/badge/ui--shell-apps%2Fexplorer--web-purple)](#)
 [![cardinality: 1](https://img.shields.io/badge/cardinality-1-blue)](#11-cardinality)
 [![domain coverage: 0 of 13 populated](https://img.shields.io/badge/domain%20coverage-0%20of%2013%20populated-lightgrey)](#3-13-domain-coverage-matrix)
@@ -262,7 +262,7 @@ Same shape as county template §4: every populated layer-registry row resolves t
 
 ## 5. Acceptance checklist
 
-- [ ] **Gate A — ADR-0028 accepted** _(state-scale gate)_. Verify `docs/adr/ADR-0028 — State-scale Focus Mode scope.md` `status` is `accepted` or `proposed-acceptable`. **REQUIRED.**
+- [ ] **Gate A — ADR-0028 accepted** _(state-scale gate)_. Verify `docs/adr/ADR-0028-state-scale-focus-mode-scope.md` `status` is `accepted` or `proposed-acceptable`. **REQUIRED.**
 - [ ] **Gate A.1 — Authoring complete.** §1 frame populated; §3 has at least one `populated` row.
 - [ ] **Gate B — Domain coverage closed.** All 13 rows in `domain_coverage` map have a value with a corresponding `abstain_justifications` entry.
 - [ ] **Gate C — Evidence resolved.** Every `populated` row has a resolvable `EvidenceRef`.
@@ -334,7 +334,7 @@ If the state Focus Mode is rolled back from `released`:
 - `docs/focus-mode/README.md` v0.5 — orientation and design
 - `docs/focus-mode/ORGANIZATION_RULES.md` v0.2 — categorization spec
 - `docs/focus-mode/state/STATE_INDEX.md` — state-scale index
-- `docs/adr/ADR-0028 — State-scale Focus Mode scope.md` — `-state` scope + 13-domain coverage rule (gating ADR)
+- `docs/adr/ADR-0028-state-scale-focus-mode-scope.md` — `-state` scope + 13-domain coverage rule (gating ADR)
 - `docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md` — structural decisions this template implements
 - 13 in-lane domain READMEs at `docs/focus-mode/<domain>/README.md` (NEEDS_VERIFICATION for non-canonical live names)
 - `docs/standards/Evidence_Bundle.md` — evidence model

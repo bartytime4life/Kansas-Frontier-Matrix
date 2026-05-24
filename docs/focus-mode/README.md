@@ -16,7 +16,7 @@ related:
   - docs/standards/PROV.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/adr/ADR-0027-county-focus-mode-control-plane.md
-  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md                   # adds -state to allowed scope suffixes; filename naming separate question (ADR-0029 §10.3)
+  - docs/adr/ADR-0028-state-scale-focus-mode-scope.md                   # adds -state to allowed scope suffixes; filename naming separate question (ADR-0029 §10.3)
   - docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md              # this README v0.5 implements ADR-0029 structural decisions
   - docs/focus-mode/COUNTY_INDEX.md                                       # NEEDS_VERIFICATION — lives at counties/COUNTY_INDEX.md per ADR-0029 §3.2 (container-scoped)
   - docs/focus-mode/counties/COUNTY_INDEX.md

@@ -238,7 +238,7 @@ If the amendments are rejected after merge:
 - `docs/doctrine/directory-rules.md` v1.2 — the file being amended
 - `docs/focus-mode/README.md` v0.5 — orientation; reflects ADR-0029
 - `docs/focus-mode/ORGANIZATION_RULES.md` v0.2 — categorization spec
-- `docs/adr/ADR-0028 — State-scale Focus Mode scope.md` — independent prerequisite for §6.2 OPEN-FM-09 / OPEN-FM-10 closures
+- `docs/adr/ADR-0028-state-scale-focus-mode-scope.md` — independent prerequisite for §6.2 OPEN-FM-09 / OPEN-FM-10 closures
 
 [↑ Back to top](#top)
 

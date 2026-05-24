@@ -14,7 +14,7 @@ Doctrine basis (CONFIRMED):
   - docs/focus-mode/ORGANIZATION_RULES.md v0.2 §3 (categorization rules; this spec)
   - docs/focus-mode/README.md v0.5 §14 (13-domain coverage)
   - docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md §3 + §6.3 (decisions + validator rules)
-  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md §3 (13-domain coverage rule)
+  - docs/adr/ADR-0028-state-scale-focus-mode-scope.md §3 (13-domain coverage rule)
   - kfm_repository_structure_guiding_document.md §8 (Focus Mode placement contract)
 
 Checks performed:

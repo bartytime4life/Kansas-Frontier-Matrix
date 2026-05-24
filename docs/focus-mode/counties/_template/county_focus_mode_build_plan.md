@@ -21,7 +21,7 @@ related:
   - docs/focus-mode/counties/COUNTY_INDEX.md
   - docs/focus-mode/counties/domains.md
   - docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md
-  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md   # 13-domain coverage rule
+  - docs/adr/ADR-0028-state-scale-focus-mode-scope.md   # 13-domain coverage rule
   # 13 canonical in-lane domain treatments (NEEDS_VERIFICATION for folders not yet present at canonical names)
   - docs/focus-mode/agriculture/README.md
   - docs/focus-mode/archaeology/README.md
@@ -355,7 +355,7 @@ If this county's Focus Mode needs to be rolled back from `released` (or earlier)
 - `docs/focus-mode/counties/COUNTY_INDEX.md` — 105-county roster
 - `docs/focus-mode/counties/domains.md` v0.1 — cross-domain composition reference
 - `docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md` — structural decisions this template implements
-- `docs/adr/ADR-0028 — State-scale Focus Mode scope.md` — 13-domain coverage rule
+- `docs/adr/ADR-0028-state-scale-focus-mode-scope.md` — 13-domain coverage rule
 - 13 in-lane domain READMEs at `docs/focus-mode/<domain>/README.md` (see meta-block `related:` for full list including NEEDS_VERIFICATION notes for non-canonical live names)
 - `docs/standards/Evidence_Bundle.md` — evidence model
 - `docs/standards/SENSITIVITY_RUBRIC.md` — sensitivity tiers
