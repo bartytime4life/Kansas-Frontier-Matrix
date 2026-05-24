@@ -1,0 +1,3 @@
+# contracts/biodiversity
+
+Greenfield stub.

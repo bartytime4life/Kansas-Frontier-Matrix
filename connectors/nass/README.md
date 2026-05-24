@@ -1,0 +1,3 @@
+# connectors/nass
+
+Greenfield stub.

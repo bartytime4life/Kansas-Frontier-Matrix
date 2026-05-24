@@ -1,0 +1,3 @@
+# connectors/agriculture
+
+Greenfield stub.

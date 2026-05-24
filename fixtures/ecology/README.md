@@ -1,0 +1,3 @@
+# fixtures/ecology
+
+Greenfield stub.

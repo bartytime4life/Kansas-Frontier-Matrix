@@ -1,0 +1,3 @@
+# connectors/symbiota
+
+Greenfield stub.

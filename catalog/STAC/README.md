@@ -1,0 +1,3 @@
+# catalog/STAC
+
+Greenfield stub.

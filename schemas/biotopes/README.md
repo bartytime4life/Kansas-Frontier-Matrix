@@ -1,0 +1,3 @@
+# schemas/biotopes
+
+Greenfield stub.

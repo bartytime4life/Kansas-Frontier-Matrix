@@ -1,0 +1,3 @@
+# contracts/habitat
+
+Greenfield stub.

@@ -1,0 +1,3 @@
+# fixtures/fauna
+
+Greenfield stub.

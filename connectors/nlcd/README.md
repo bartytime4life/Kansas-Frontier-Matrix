@@ -1,0 +1,3 @@
+# connectors/nlcd
+
+Greenfield stub.

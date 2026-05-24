@@ -1,0 +1,3 @@
+# connectors/openaq
+
+Greenfield stub.

@@ -1,0 +1,3 @@
+# connectors/kbs
+
+Greenfield stub.

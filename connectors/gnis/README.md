@@ -1,0 +1,3 @@
+# connectors/gnis
+
+Greenfield stub.

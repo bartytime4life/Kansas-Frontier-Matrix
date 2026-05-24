@@ -1,0 +1,3 @@
+# contracts/transport
+
+Greenfield stub.

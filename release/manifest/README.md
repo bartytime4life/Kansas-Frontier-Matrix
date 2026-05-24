@@ -1,0 +1,3 @@
+# release/manifest
+
+Greenfield stub.

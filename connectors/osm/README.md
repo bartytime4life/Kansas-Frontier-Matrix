@@ -1,0 +1,3 @@
+# connectors/osm
+
+Greenfield stub.

@@ -1,0 +1,3 @@
+# pipelines/specs
+
+Greenfield stub.

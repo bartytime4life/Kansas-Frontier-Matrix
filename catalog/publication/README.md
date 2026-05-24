@@ -1,0 +1,3 @@
+# catalog/publication
+
+Greenfield stub.

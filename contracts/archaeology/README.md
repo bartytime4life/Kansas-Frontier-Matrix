@@ -1,0 +1,3 @@
+# contracts/archaeology
+
+Greenfield stub.

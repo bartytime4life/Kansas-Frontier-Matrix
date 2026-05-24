@@ -1,0 +1,3 @@
+# connectors/ssurgo
+
+Greenfield stub.

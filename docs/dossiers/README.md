@@ -1,0 +1,3 @@
+# docs/dossiers
+
+Greenfield stub.

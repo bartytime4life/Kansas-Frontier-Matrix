@@ -1,0 +1,3 @@
+# connectors/eddmaps
+
+Greenfield stub.

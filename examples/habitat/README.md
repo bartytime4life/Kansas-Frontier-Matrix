@@ -1,0 +1,3 @@
+# examples/habitat
+
+Greenfield stub.

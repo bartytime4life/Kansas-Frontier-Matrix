@@ -1,0 +1,3 @@
+# connectors/lf
+
+Greenfield stub.

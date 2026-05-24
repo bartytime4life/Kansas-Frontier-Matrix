@@ -1,0 +1,3 @@
+# policy/proof
+
+Greenfield stub.

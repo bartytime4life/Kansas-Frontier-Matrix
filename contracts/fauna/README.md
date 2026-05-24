@@ -1,0 +1,3 @@
+# contracts/fauna
+
+Greenfield stub.

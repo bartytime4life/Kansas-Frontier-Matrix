@@ -1,0 +1,3 @@
+# contracts/geology
+
+Greenfield stub.

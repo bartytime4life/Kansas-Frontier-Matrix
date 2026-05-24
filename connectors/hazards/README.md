@@ -1,0 +1,3 @@
+# connectors/hazards
+
+Greenfield stub.

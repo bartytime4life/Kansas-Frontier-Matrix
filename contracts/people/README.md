@@ -1,0 +1,3 @@
+# contracts/people
+
+Greenfield stub.

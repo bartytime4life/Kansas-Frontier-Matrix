@@ -1,0 +1,3 @@
+# contracts/air
+
+Greenfield stub.

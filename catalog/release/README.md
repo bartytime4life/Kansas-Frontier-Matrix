@@ -1,0 +1,3 @@
+# catalog/release
+
+Greenfield stub.

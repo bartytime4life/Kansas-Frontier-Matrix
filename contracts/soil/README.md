@@ -1,0 +1,3 @@
+# contracts/soil
+
+Greenfield stub.

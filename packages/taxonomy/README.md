@@ -1,0 +1,3 @@
+# packages/taxonomy
+
+Greenfield stub.

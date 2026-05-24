@@ -1,0 +1,3 @@
+# schemas/atmosphere
+
+Greenfield stub.

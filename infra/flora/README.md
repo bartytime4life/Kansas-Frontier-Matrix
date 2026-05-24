@@ -1,0 +1,3 @@
+# infra/flora
+
+Greenfield stub.

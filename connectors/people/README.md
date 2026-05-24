@@ -1,0 +1,3 @@
+# connectors/people
+
+Greenfield stub.

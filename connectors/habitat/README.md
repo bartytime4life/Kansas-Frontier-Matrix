@@ -1,0 +1,3 @@
+# connectors/habitat
+
+Greenfield stub.

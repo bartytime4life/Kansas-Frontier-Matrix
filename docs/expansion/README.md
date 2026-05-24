@@ -1,0 +1,3 @@
+# docs/expansion
+
+Greenfield stub.

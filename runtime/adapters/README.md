@@ -1,0 +1,3 @@
+# runtime/adapters
+
+Greenfield stub.

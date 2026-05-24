@@ -1,0 +1,3 @@
+# catalog/manifest
+
+Greenfield stub.

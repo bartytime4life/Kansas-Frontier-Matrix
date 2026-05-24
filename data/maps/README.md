@@ -1,0 +1,3 @@
+# data/maps
+
+Greenfield stub.

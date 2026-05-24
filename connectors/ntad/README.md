@@ -1,0 +1,3 @@
+# connectors/ntad
+
+Greenfield stub.

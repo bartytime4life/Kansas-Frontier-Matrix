@@ -1,0 +1,3 @@
+# connectors/kdot
+
+Greenfield stub.

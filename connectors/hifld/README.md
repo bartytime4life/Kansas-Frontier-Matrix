@@ -1,0 +1,3 @@
+# connectors/hifld
+
+Greenfield stub.

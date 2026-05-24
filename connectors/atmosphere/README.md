@@ -1,0 +1,3 @@
+# connectors/atmosphere
+
+Greenfield stub.

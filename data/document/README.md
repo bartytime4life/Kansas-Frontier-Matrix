@@ -1,0 +1,3 @@
+# data/document
+
+Greenfield stub.

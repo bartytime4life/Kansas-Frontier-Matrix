@@ -1,0 +1,3 @@
+# connectors/airnow
+
+Greenfield stub.

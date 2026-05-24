@@ -1,0 +1,3 @@
+# tools/joins
+
+Greenfield stub.

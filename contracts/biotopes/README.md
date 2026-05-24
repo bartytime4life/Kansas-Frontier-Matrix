@@ -1,0 +1,3 @@
+# contracts/biotopes
+
+Greenfield stub.

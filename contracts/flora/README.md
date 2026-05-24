@@ -1,0 +1,3 @@
+# contracts/flora
+
+Greenfield stub.

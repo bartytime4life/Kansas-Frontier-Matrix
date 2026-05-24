@@ -1,0 +1,3 @@
+# policy/contract
+
+Greenfield stub.

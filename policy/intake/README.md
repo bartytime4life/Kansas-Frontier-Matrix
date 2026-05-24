@@ -1,0 +1,3 @@
+# policy/intake
+
+Greenfield stub.

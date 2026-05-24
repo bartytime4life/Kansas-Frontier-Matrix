@@ -1,0 +1,3 @@
+# contracts/hazards
+
+Greenfield stub.

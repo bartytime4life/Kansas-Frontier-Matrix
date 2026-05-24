@@ -1,0 +1,3 @@
+# connectors/flora
+
+Greenfield stub.

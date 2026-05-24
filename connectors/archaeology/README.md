@@ -1,0 +1,3 @@
+# connectors/archaeology
+
+Greenfield stub.
