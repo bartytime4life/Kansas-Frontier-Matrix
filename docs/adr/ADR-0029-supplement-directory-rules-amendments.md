@@ -3,10 +3,12 @@ doc_id: kfm://doc/adr-0029-supplement-directory-rules-amendments   # NEEDS_VERIF
 title: "ADR-0029 Supplement — Directory Rules amendments (paste-ready patches)"
 type: adr-supplement
 adr_id: ADR-0029-supplement
-version: v0.1
-status: proposed
+version: v0.2
+status: applied
 created: 2026-05-24
 updated: 2026-05-24
+applied_at_commit: 2e3e029     # docs/doctrine/directory-rules.md v1.3 — amendments per ADR-0029
+applied_on_branch: claude/magical-johnson-jP2GB
 owners:
   - <OWNER:directory-rules-steward>
   - <OWNER:focus-mode-steward>
@@ -30,13 +32,17 @@ notes:
   - The pre-amendment text quoted in the "Before" sections of §§4–7 of this supplement was captured from docs/doctrine/directory-rules.md at commit `b71f2e5` on branch `claude/magical-johnson-jP2GB`. If the live §6.7.2 / §6.7.3 / §13.5 / §18.d text has drifted since, re-run the verification block in §3 before applying.
 [/KFM_META_BLOCK_V2] -->
 
-[![status: proposed](https://img.shields.io/badge/status-proposed-yellow)](#1-purpose)
+[![status: applied](https://img.shields.io/badge/status-applied-green)](#1-purpose)
 [![supplements: ADR-0029](https://img.shields.io/badge/supplements-ADR--0029-blue)](docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md)
 [![target: docs/doctrine/directory-rules.md](https://img.shields.io/badge/target-docs%2Fdoctrine%2Fdirectory--rules.md-orange)](docs/doctrine/directory-rules.md)
+[![applied at](https://img.shields.io/badge/applied%20at-commit%202e3e029-blue)](#)
 
 <a id="top"></a>
 
 # ADR-0029 Supplement — Directory Rules amendments (paste-ready patches)
+
+> [!NOTE]
+> **Status: applied (v0.2).** All four amendments below were applied to `docs/doctrine/directory-rules.md` in commit `2e3e029` on branch `claude/magical-johnson-jP2GB` (directory-rules.md bumped v1.2 → v1.3 in the same commit). This supplement is retained as the historical record of the paste-ready patches that were applied — the "Before" sections quote the pre-amendment text; the "After" sections quote the post-amendment text now live in the file. If you are reading this for the first time and the patches need to be re-applied (e.g., after a revert), follow §8 with the verification step in §2.
 
 ## Contents
 
