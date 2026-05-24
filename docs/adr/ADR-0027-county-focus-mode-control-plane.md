@@ -17,7 +17,7 @@ policy_label: public
 supersedes: []
 superseded_by: []
 related:
-  - docs/standards/directory-rules.md
+  - docs/doctrine/directory-rules.md
   - docs/focus-modes/README.md
   - docs/focus-modes/COUNTY_INDEX.md
   - docs/focus-modes/_template/county-build-plan.md
@@ -437,7 +437,7 @@ The plan-to-payload contract is validated **indirectly** via the schema and the 
 - `tools/validators/validate_focus_mode_index.py`
 - `contracts/focus_mode/focus_mode_payload.md`
 - `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` *(PROPOSED follow-up)*
-- `docs/standards/directory-rules.md` §0, §2.4, §6.7, §13.5, §14.2, §15, §18
+- `docs/doctrine/directory-rules.md` §0, §2.4, §6.7, §13.5, §14.2, §15, §18
 - `docs/adr/ADR-0001-schema-home.md` *(NEEDS_VERIFICATION)*
 - `docs/adr/ADR-0003-policy-singular-is-canonical.md` *(NEEDS_VERIFICATION; informal conflict — see OPEN-FM-08)*
 - `kfm_repository_structure_guiding_document.md` §3, §8

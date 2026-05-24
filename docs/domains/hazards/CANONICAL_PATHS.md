@@ -350,7 +350,7 @@ The following are points of friction or PROPOSED state that may surface during r
 
 ## 12. Related docs
 
-- [`docs/directory-rules.md`](../../../directory-rules.md) — root authority for placement, lifecycle, and trust membrane. (CONFIRMED authority)
+- [`docs/doctrine/directory-rules.md`](../../../directory-rules.md) — root authority for placement, lifecycle, and trust membrane. (CONFIRMED authority)
 - [`docs/domains/hazards/README.md`](./README.md) — domain landing page. *(TODO: confirm existence in mounted repo.)*
 - [`docs/domains/README.md`](../README.md) — domains index. *(TODO: confirm.)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standards profile referenced by Hazards `EvidenceBundle`s.

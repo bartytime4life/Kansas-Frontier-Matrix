@@ -25,5 +25,5 @@ Wave 1 governance placeholder for the register name referenced by Directory Rule
 
 ## Evidence refs
 
-- `docs/directory-rules.md` §6.1 (register naming list)
-- `docs/directory-rules.md` §6.2 (`control_plane/` machine-readable governance maps)
+- `docs/doctrine/directory-rules.md` §6.1 (register naming list)
+- `docs/doctrine/directory-rules.md` §6.2 (`control_plane/` machine-readable governance maps)

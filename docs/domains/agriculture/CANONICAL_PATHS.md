@@ -10,7 +10,7 @@ updated: 2026-05-15
 policy_label: public
 related:
   - docs/domains/agriculture/README.md
-  - docs/directory-rules.md
+  - docs/doctrine/directory-rules.md
   - docs/architecture/domain-placement-law.md
   - schemas/contracts/v1/domains/agriculture/
   - policy/domains/agriculture/
@@ -450,7 +450,7 @@ When you are about to add or move an Agriculture-domain file, walk this five-ste
 
 ## 16. Related docs
 
-- [`docs/directory-rules.md`](../../directory-rules.md) — CONFIRMED doctrine; this doc realizes §12 for Agriculture.
+- [`docs/doctrine/directory-rules.md`](../../directory-rules.md) — CONFIRMED doctrine; this doc realizes §12 for Agriculture.
 - [`docs/domains/agriculture/README.md`](./README.md) — Domain README (TODO if not yet present).
 - [`docs/domains/agriculture/SOURCES.md`](./SOURCES.md) — PROPOSED source registry crosswalk for NASS, NRCS, Mesonet, SMAP, HLS-VI.
 - [`docs/domains/agriculture/POLICY.md`](./POLICY.md) — PROPOSED Agriculture policy summary.

@@ -5,7 +5,7 @@ authority: register
 owner: docs steward
 reviewers: [docs steward, subsystem owner]
 related_doctrine:
-  - docs/directory-rules.md
+  - docs/doctrine/directory-rules.md
 truth_labels:
   doctrine: CONFIRMED
   path: PROPOSED
@@ -30,5 +30,5 @@ Track exploratory lineage notes that may later be admitted into canonical lineag
 
 
 ## Evidence basis
-- CONFIRMED doctrine anchor: `docs/directory-rules.md` (§4 placement protocol; §5–§6 root and register placement).
+- CONFIRMED doctrine anchor: `docs/doctrine/directory-rules.md` (§4 placement protocol; §5–§6 root and register placement).
 - Content posture remains PROPOSED until steward-verified entries are added.

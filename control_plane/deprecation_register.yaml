@@ -4,6 +4,6 @@ meta:
   description: Deprecated paths, replacement, sunset date.
   last_reviewed: 2026-05-14
   related_doctrine:
-    - docs/directory-rules.md
+    - docs/doctrine/directory-rules.md
 
 entries: []

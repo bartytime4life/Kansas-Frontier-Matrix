@@ -15,7 +15,7 @@ supersedes:
   - docs/focus-modes/README.md @ v0.2                                    # CONFIRMED prior version at canonical path
   - docs/focus-mode/counties/README.md @ v0.1                            # PROPOSED divergence — retired; see §0 Reconciliation
 related:
-  - docs/standards/directory-rules.md
+  - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
   - docs/adr/ADR-0001-schema-home.md                                     # NEEDS_VERIFICATION
   - docs/adr/ADR-0027-county-focus-mode-control-plane.md                 # PROPOSED — this control plane

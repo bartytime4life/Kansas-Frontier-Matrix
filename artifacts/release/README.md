@@ -32,7 +32,7 @@ related:
   - ../../data/rollback/README.md                 # Alias-revert receipts (data plane)
   - ../../data/registry/README.md                 # SourceDescriptor / rights / sensitivity rows
   # Doctrine and tooling
-  - ../../docs/directory-rules.md                 # Authoritative placement source — NEEDS VERIFICATION (mounted path)
+  - ../../docs/doctrine/directory-rules.md                 # Authoritative placement source — NEEDS VERIFICATION (mounted path)
   - ../../tools/validators/README.md              # Validator orchestrator (Directory Rules §7.5.a)
   # Doctrinal references (logical IDs, not file paths)
   - kfm://doctrine/directory-rules
@@ -82,7 +82,7 @@ policy_label: public
 related: [
   ../README.md,
   ../../release/README.md,
-  ../../docs/directory-rules.md,
+  ../../docs/doctrine/directory-rules.md,
   ../../data/receipts/README.md,
   ../../data/proofs/README.md,
   ../../data/published/README.md
@@ -378,7 +378,7 @@ flowchart LR
 | [`../../data/published/`](../../data/published/) | Canonical home for released public-safe artifacts (PMTiles, GeoJSON, COG, GeoParquet, style bundles). |
 | [`../../data/rollback/`](../../data/rollback/) | Canonical home for alias-revert receipts (data plane). |
 | [`../../data/catalog/`](../../data/catalog/) | Canonical home for STAC / DCAT / PROV catalog records. |
-| [`../../docs/directory-rules.md`](../../docs/directory-rules.md) | Authoritative placement source; especially §§8.1–8.2, §9.1–9.2, §13.5, §15, §18. *(Path NEEDS VERIFICATION — repo not mounted.)* |
+| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | Authoritative placement source; especially §§8.1–8.2, §9.1–9.2, §13.5, §15, §18. *(Path NEEDS VERIFICATION — repo not mounted.)* |
 | [`../../tools/validators/`](../../tools/validators/) | Validator orchestrator (`validate_all.py`); release CI may invoke a `--fast` subset whose QA reports land in `qa/`. |
 
 <!-- TODO: verify every relative link above against mounted-repo evidence; any link returning 404 in the rendered README is a drift candidate. -->
@@ -449,7 +449,7 @@ Next review trigger: whichever comes first —
 
 ### Related docs
 
-- [Directory Rules — root authority for placement](../../docs/directory-rules.md) — especially §§8.1–8.2, §9.1–9.2, §13.5, §15, §18. *(Path NEEDS VERIFICATION.)*
+- [Directory Rules — root authority for placement](../../docs/doctrine/directory-rules.md) — especially §§8.1–8.2, §9.1–9.2, §13.5, §15, §18. *(Path NEEDS VERIFICATION.)*
 - [`artifacts/README.md`](../README.md) — parent compatibility-root README. *(NEEDS VERIFICATION — confirm presence and §15 contract conformance.)*
 - [`release/README.md`](../../release/README.md) — canonical release-plane README. *(TODO — verify presence.)*
 - [`data/receipts/README.md`](../../data/receipts/README.md) — canonical receipts home. *(TODO — verify presence.)*

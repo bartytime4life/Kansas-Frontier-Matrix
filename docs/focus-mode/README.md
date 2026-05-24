@@ -12,7 +12,7 @@ updated: 2026-05-23
 policy_label: public
 authority: restates directory-rules.md §6.7 (NEVER overrides it); proposes extension of §6.7 to add -state scope (PROPOSED, pending ADR-0028)
 related:
-  - docs/standards/directory-rules.md
+  - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
   - docs/adr/ADR-0001-schema-home.md                                      # NEEDS_VERIFICATION
   - docs/adr/ADR-0027-county-focus-mode-control-plane.md                  # PROPOSED — this control plane
