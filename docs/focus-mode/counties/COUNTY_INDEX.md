@@ -217,8 +217,9 @@ Columns:
 ## 4. Notes on corpus evidence and discrepancies
 
 - **34 draft counts (CONFIRMED in corpus).** The county build-plan files listed in this pack as `draft` mirror the 34 counties present in the project corpus. Validator output is the authoritative reconciliation.
-- **Spelling.** The current repo contains a folder `republick_county/` which appears to be a typo for `republic_county/`. This index uses the correct `republic-county` slug; the rename is OUT OF SCOPE for this pack — file an ADR or a focused PR.
-- **`grove_county`.** The repo also contains a `grove_county/` folder. There is no Kansas county named "Grove" (Gove County exists). The validator will flag this; resolution is OUT OF SCOPE for this pack.
+- **Spelling — fixed.** The repo previously contained a folder `republick_county/` (typo). Renamed to `republic_county/` as part of this PR. The index slug `republic-county` is canonical.
+- **`grove_county` → `gove_county` — fixed.** The repo previously contained a `grove_county/` folder holding Gove County content (file `gove_county_focus_mode_build_plan.md`). Renamed to `gove_county/` as part of this PR. Gove County is the canonical Kansas county name; "Grove" is not.
+- **Empty `README.md` placeholders.** Most county lane `README.md` files are empty placeholders awaiting content. The `kansas-state` lane (state-scale companion) ships with a filled-in `README.md` and `build-plan.md` as a reference shape for what county READMEs should eventually look like.
 - **Sensitivity hot lanes.** The "defaults" entries mean: all eight default-fail-closed lanes (parcel_title=ABSTAIN; exact_archaeology=DENY; burial_sacred=DENY; rare_species_exact=DENY; critical_infrastructure_exact=DENY; living_person_identifiers=DENY; dna_genomic=DENY; emergency_alert=ABSTAIN). Per-row additions in this column are *also* hot lanes for that county.
 
 [↑ Back to top](#top)
