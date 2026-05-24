@@ -1,494 +1,515 @@
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr-0007-cesium-3d-conditional-and-gated
-title: ADR-0007 — Cesium 3D Is Conditional and Gated
-type: standard
-version: v1.1
-status: draft
-owners: <TBD — map-shell steward + governed-API steward + policy steward>
-created: 2026-05-10
-updated: 2026-05-15
-policy_label: public
-related:
-  - docs/doctrine/directory-rules.md
-  - docs/architecture/map-shell.md
-  - docs/adr/ADR-0001-schema-home.md
-  - packages/cesium/README.md
-  - packages/maplibre/README.md
-  - apps/explorer-web/README.md
-  - apps/governed-api/README.md
-tags: [kfm, adr, map-shell, cesium, 3d, governance]
-notes:
-  - Authority of this ADR is PROPOSED until accepted.
-  - Path docs/adr/ADR-0007-... follows the ADR home in Directory Rules §6.1, pending mounted-repo verification.
-  - Owners and related links remain placeholders until repo/CODEOWNERS inspection.
-  - v1.1 tightens 3D asset, manifest, accessibility, and validation gates without changing the core decision.
-[/KFM_META_BLOCK_V2] -->
+<!--
+================================================================================
+KFM Meta Block v2
+--------------------------------------------------------------------------------
+document_id:        kfm-adr-0007-maplibre-sole-browser-renderer
+title:              ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer
+class:              architecture decision record (ADR)
+adr_id:             ADR-0007
+adr_status:         PROPOSED
+truth_posture:      cite-or-abstain
+governance_layer:   UI/AI plane · Planetary/3D domain (Atlas §18)
+proposed_path:      docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md
+directory_rule:     directory-rules.md §5 (canonical roots — `docs/adr/`);
+                    directory-rules.md §2.4 (ADR required for reversing a
+                    previously canonical rule, and for bending a §3 invariant);
+                    directory-rules.md §17 (reversing a previously canonical
+                    rule requires ADR + supersession notice + drift register
+                    entry).
+supersedes:         KFM-P2-FEAT-0012 (Pass 23 / Pass 32 idea-index card —
+                    prior dual-renderer posture for 3D scene rendering).
+                    The card is retained in the register with
+                    `superseded_by: ADR-0007` and a forward link.
+related_adrs:       ADR-0001 — Schema home (NEEDS VERIFICATION of accepted
+                    text against the live ADR set);
+                    ADR-0003 — `policy/` singular is canonical (PROPOSED per
+                    user-memory; NEEDS VERIFICATION against the live ADR set);
+                    Build Manual §30 Recommended ADR Queue informally lists
+                    different topics under the ADR-0007 / ADR-0008 slots —
+                    see §10 Open Questions, OQ-A7-01.
+related_docs:       docs/architecture/maplibre-3d.md  (PROPOSED)
+                    docs/architecture/master-maplibre-components-functions-features.md
+                    KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas (§18)
+                    KFM_Unified_Implementation_Architecture_Build_Manual.md
+                    ai-build-operating-contract.md (§7 publication; §28 ADR
+                    skeleton; §29 object-family guardrails; §31 security)
+                    docs/doctrine/directory-rules.md (v1.2)
+spec_hash:          NEEDS VERIFICATION (emit via canonical JCS+SHA-256 at PR
+                    acceptance; do not invent before release).
+last_reviewed:      <YYYY-MM-DD — set on PR>
+owner:              <PLACEHOLDER — UI/AI plane steward; do not invent>
+================================================================================
+-->
 
-# ADR-0007 — Cesium 3D Is Conditional and Gated
+<a id="top"></a>
 
-> **One-line decision.** In KFM, Cesium-based 3D is an **optional, opt-in, evidence-gated alternate renderer** behind the governed API — not a default surface, not a parallel truth path, and not a substitute for the 2D MapLibre shell.
+# ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer
 
-<p align="left">
-  <a href="#"><img alt="ADR" src="https://img.shields.io/badge/ADR-0007-blue"></a>
-  <a href="#status"><img alt="Status" src="https://img.shields.io/badge/status-proposed-orange"></a>
-  <a href="#"><img alt="Scope" src="https://img.shields.io/badge/scope-map--shell%20%2B%203D%20governance-1f6feb"></a>
-  <a href="#"><img alt="Authority" src="https://img.shields.io/badge/authority-PROPOSED-lightgrey"></a>
-  <a href="#"><img alt="Risk" src="https://img.shields.io/badge/risk-medium-yellow"></a>
-  <a href="#"><img alt="Reversibility" src="https://img.shields.io/badge/reversible-yes-2ea44f"></a>
-</p>
+![adr](https://img.shields.io/badge/ADR-0007-blue?style=flat-square)
+![status](https://img.shields.io/badge/status-PROPOSED-orange?style=flat-square)
+![truth--posture](https://img.shields.io/badge/truth--posture-cite--or--abstain-success?style=flat-square)
+![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-success?style=flat-square)
+![implementation](https://img.shields.io/badge/implementation-PROPOSED-orange?style=flat-square)
+![repo--depth](https://img.shields.io/badge/repo--depth-UNKNOWN-lightgrey?style=flat-square)
+![renderer](https://img.shields.io/badge/renderer-MapLibre%20GL%20JS-blueviolet?style=flat-square)
+![trust--membrane](https://img.shields.io/badge/trust%20membrane-single-success?style=flat-square)
+![supersedes](https://img.shields.io/badge/supersedes-KFM--P2--FEAT--0012-yellow?style=flat-square)
+![rollback](https://img.shields.io/badge/rollback-additive%20via%20exception--ADR-informational?style=flat-square)
+<!-- CI badge URL left as a placeholder; no mounted workflow was verified this session.
+![ci](https://img.shields.io/github/actions/workflow/status/<OWNER>/<REPO>/<WORKFLOW>.yml?branch=main)
+-->
 
-**Quick jump:** [Status](#status) · [Context](#context) · [Decision](#decision) · [Gating Conditions](#gating-conditions) · [Architecture Boundary](#architecture-boundary) · [Conformance](#conformance) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Validation](#validation) · [Rollback](#rollback) · [Open Questions](#open-questions) · [References](#references)
+> **One-line decision.** MapLibre GL JS is KFM's **default and sole browser-side renderer.** Every 2D, 2.5D, true-3D, point-cloud, globe, and visualization-overlay surface in KFM lives inside MapLibre's API surface — native capabilities plus an explicitly admitted plugin set governed by a `PluginAdmission` PolicyDecision. Any introduction of a browser-side rendering technology beyond the admitted plugin set requires an accepted **exception-ADR** with attached supply-chain attestation and an explicit, scoped use case.
 
 ---
 
-## Status
+## Mini Table of Contents
 
-| Field | Value |
+- [1. Status](#1)
+- [2. Context](#2)
+- [3. Decision](#3)
+- [4. Evidence basis](#4)
+- [5. Directory Rules basis](#5)
+- [6. Consequences](#6)
+- [7. Alternatives considered](#7)
+- [8. Validation](#8)
+- [9. Rollback](#9)
+- [10. Open questions](#10)
+- [11. Migration plan](#11)
+- [12. Truth-label summary](#12)
+
+---
+
+<a id="1"></a>
+
+## 1. Status
+
+**PROPOSED.**
+
+Accepts when:
+
+- the numbering conflict with the Build Manual §30 Recommended ADR Queue (OQ-A7-01) is resolved against the **live** `docs/adr/` set;
+- `KFM-P2-FEAT-0012` is marked `superseded_by: ADR-0007` in the Idea Index Master, with a forward link to this document;
+- a supersession entry is recorded in `docs/registers/DRIFT_REGISTER.md`;
+- the `PluginAdmission` contract is named in `contracts/` with a machine schema under `schemas/contracts/v1/...`;
+- `docs/architecture/maplibre-3d.md` updates its meta block to reference this ADR by accepted number.
+
+Supersedes (per directory-rules §17): **`KFM-P2-FEAT-0012`** — Pass 23 / Pass 32 idea-index card carrying the prior dual-renderer posture for 3D scene rendering. The card is **retained** with `superseded_by: ADR-0007` and is **not deleted**.
+
+[↑ Back to top](#top)
+
+---
+
+<a id="2"></a>
+
+## 2. Context
+
+### 2.1 The architectural commitment this ADR makes
+
+KFM's UI/AI plane has, in the corpus, more than one architectural sketch for how 3D scenes are rendered in the browser. Doctrine has not previously named a single renderer as the system's commitment. This ADR makes that commitment.
+
+The choice is **MapLibre GL JS** — and only MapLibre GL JS, augmented by a small set of explicitly admitted plugins — as KFM's browser-side rendering surface. The decision rests on three things, in order:
+
+1. **MapLibre 5.x's capability surface is sufficient for every 3D need KFM has identified** at Kansas focus-mode and state-wide working scales. The capability matrix in §2.2 enumerates this.
+2. **A single renderer upholds the trust membrane by construction.** One `ViewState` model, one `CameraPath`, one `RepresentationReceipt` stream, one supply chain, one `PluginAdmission` surface, one set of plugin pins, one reviewer burden.
+3. **The corpus already classifies 3D rendering as a conditional overlay.** Master MapLibre v2.1 Category W normalizes 3D and globe surfaces as *conditional overlays that must preserve evidence identity and performance limits.* A single renderer is the most direct way to uphold that condition.
+
+### 2.2 MapLibre 5.x capability map
+
+Every 3D capability KFM has identified in the Planetary/3D domain (Atlas §18) is reachable inside MapLibre's API surface — natively where possible, and through a small named plugin set otherwise. *(CONFIRMED at external-tech level against MapLibre's official documentation, plugins page, and the MapLibre 3D Tiles via three.js example dated 2026-03-03 — see `docs/architecture/maplibre-3d.md` §§2.4, 2.8.)*
+
+| KFM 3D requirement | MapLibre 5.x path | Status |
+|---|---|---|
+| 3D terrain mesh | `raster-dem` source + `Map.setTerrain` | **CONFIRMED native** |
+| Hillshade / shaded relief | `hillshade` layer | **CONFIRMED native** |
+| Globe projection + sky / atmosphere | `setProjection({type:'globe'})` + `sky` block (MapLibre 5.0+, Jan 2025) | **CONFIRMED native** |
+| 2.5D extruded geometry | `fill-extrusion` (evidence-bearing height attributes) | **CONFIRMED native** |
+| Camera control / cinematic ViewStates | `setPitch` / `setBearing` / `setVerticalFieldOfView` (`maxPitch ≈ 85°`) | **CONFIRMED native** |
+| Custom WebGL hosting | `type: 'custom'` layers (foundation for plugin paths) | **CONFIRMED native** |
+| OGC 3D Tiles (b3dm, i3dm, pnts) | `3d-tiles-renderer` via three.js custom layer | **CONFIRMED — MapLibre example dated 2026-03-03** |
+| glTF assets | `maplibre-three-plugin` or three.js custom layer | **CONFIRMED plugin ecosystem** |
+| LAS / LAZ / COPC point clouds | `maplibre-gl-lidar` (deck.gl-based) | **CONFIRMED plugin** |
+| EPT (Entwine) streaming point clouds | `maplibre-gl-lidar` | **CONFIRMED plugin** |
+| Massive vector / large-scale aggregation viz | `deck.gl` interleaved (`MapboxOverlay`, WebGL2, MapLibre ≥ 3) | **CONFIRMED integration** |
+| COG-as-source | `maplibre-cog-protocol` | **CONFIRMED plugin** |
+| PMTiles | `pmtiles` via `addProtocol` | **CONFIRMED plugin** |
+| Vector text protocols (CSV/TSV/Topojson/KML/GPX/TCX) | `maplibre-gl-vector-text-protocol` | **CONFIRMED plugin** |
+| Contour generation from vector | `maplibre-contourmap` | **CONFIRMED plugin** |
+| Babylon.js scenes (alternative to three.js) | MapLibre custom layer | **CONFIRMED advertised** |
+
+What MapLibre **does not** do, and what this ADR does **not** promise:
+
+- **Subsurface volumetric stratigraphy** at production quality. This is **UNKNOWN regardless of approach** — no browser-side renderer covers this today. If it ever becomes in-scope it transits §3.5 (exception path).
+- **Planetary-scale terrain quality beyond zoom 18.** Irrelevant at Kansas focus-mode and state-wide scales (Atlas §18 working envelope).
+- **Free orbital camera beyond ~85° pitch.** No current KFM use case requires orbital views; if one emerges it transits §3.5.
+
+### 2.3 Why this needs to be an ADR, not an architecture note
+
+Per directory-rules §2.4 / §17, naming a single renderer is an **architecturally canonical commitment** and reversing the prior multi-renderer posture (carried in `KFM-P2-FEAT-0012`) is an §17-class rule reversal. Both require an ADR + supersession notice + drift register entry. This document is that ADR.
+
+[↑ Back to top](#top)
+
+---
+
+<a id="3"></a>
+
+## 3. Decision
+
+### 3.1 Sole renderer
+
+**MapLibre GL JS is KFM's default and sole browser-side renderer.** It hosts:
+
+- 2D vector and raster layers (Master MapLibre v2.1 Categories K, M).
+- 2.5D `fill-extrusion` (evidence-bearing height attributes only; `geometry_label: '2.5D'` per Atlas §18 invariant `I-3D-4`).
+- 3D terrain (`raster-dem` + `setTerrain`) with hillshade as a context layer.
+- Globe projection and sky / atmosphere.
+- OGC 3D Tiles via `3d-tiles-renderer` + three.js custom layer.
+- glTF assets via `maplibre-three-plugin` or direct three.js custom layer.
+- LiDAR point clouds via `maplibre-gl-lidar`.
+- Visualization overlays via `deck.gl` interleaved (`MapboxOverlay`).
+
+### 3.2 Admitted plugin set is the boundary of "the renderer"
+
+The phrase *"the renderer"* in this ADR is defined as **MapLibre GL JS + the admitted plugin set.** The admitted plugin set is enumerated in `contracts/3d/plugin-dependencies.md` (PROPOSED) and pinned per-release by `PluginAdmission` PolicyDecisions emitted from `policy/maplibre/plugin-admission.rego` (PROPOSED).
+
+A plugin's appearance in this ADR's §2.2 capability map does **not** constitute admission. Admission is a per-plugin, per-version PolicyDecision, satisfying:
+
+- License clearance (`OQ-A7-02`).
+- Version pin in `packages/maplibre-runtime/src/plugin-registry.ts` (PROPOSED).
+- Supply-chain attestation (per AI Build Operating Contract §31).
+- Schema-checked round-trip of the plugin's contribution to `LayerManifest.plugin_dependencies` (per Atlas §18 invariant `I-3D-7`).
+
+### 3.3 Default-path commitments
+
+The following are **canonical** as of acceptance (PROPOSED locations; **NEEDS VERIFICATION** against a mounted repo):
+
+| Commitment | Surface |
 |---|---|
-| **ADR id** | `ADR-0007` |
-| **Title** | Cesium 3D is conditional and gated |
-| **Status** | `proposed` |
-| **Date** | 2026-05-10 |
-| **Updated** | 2026-05-15 |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Amends Directory Rules?** | No. Clarifies map-shell / 3D admission rules; does not create, remove, or rename a canonical root. |
-| **ADR class** | Governance + map-shell scope |
-| **Owners** | Map-shell steward · governed-API steward · policy steward *(placeholder — assign on acceptance)* |
-| **Required reviewers** | Docs steward, map-shell steward, governed-API steward, policy steward, and one release / validation steward |
+| All default-path map components import MapLibre GL JS and never an alternative browser-side renderer SDK. | `apps/*`, `packages/*` |
+| All 3D-capable contracts are defined inside the MapLibre family of contracts. | `contracts/maplibre/`, `contracts/3d/` |
+| All 3D-capable schemas live under the MapLibre / 3D family. | `schemas/contracts/v1/maplibre/`, `schemas/contracts/v1/3d/` |
+| All 3D-capable policy bundles live under the MapLibre family. | `policy/maplibre/` |
+| All `MapReleaseManifest` layers carry `renderer: "maplibre"` by default. | `release/manifests/` |
 
-> [!NOTE]
-> Status is `proposed`. Until accepted, the rules in this ADR are PROPOSED. The underlying doctrine it relies on is stronger: the lifecycle invariant, governed API trust membrane, cite-or-abstain posture, Directory Rules placement discipline, and renderer-as-downstream-carrier posture remain controlling.
+### 3.4 Default-deny on additional rendering technology
 
-> [!IMPORTANT]
-> This ADR is a governance decision, not implementation proof. Repo path presence, test names, package versions, route names, CI jobs, and emitted proof objects remain **NEEDS VERIFICATION** until inspected in the mounted repository.
+For any browser-side rendering technology **outside the admitted plugin set** — including any second WebGL/WebGPU rendering SDK, any alternative 3D engine, any external scene-streaming runtime, or any plugin not yet listed in `contracts/3d/plugin-dependencies.md`:
 
----
+- **DENY** at `policy/maplibre/plugin-admission.rego` if the technology appears in a `LayerManifest.plugin_dependencies`, a `SceneManifest`, or a `MapReleaseManifest` without an accepted exception-ADR reference.
+- **DENY** at `policy/release/renderer-boundary.rego` for any `MapReleaseManifest` layer whose `renderer` field is not `maplibre` and which does not reference an accepted exception-ADR id.
+- **DENY** at lockfile validator (`tools/validators/validate_plugin_admission.py`, PROPOSED) for any package matching an unadmitted renderer-family identifier.
+- **DENY** in CI bundle-analyzer guardrail if a default-path bundle includes code paths from an unadmitted renderer family.
 
-## Context
+These DENY surfaces are the operational meaning of *sole renderer*. They make the commitment in §3.1 testable rather than aspirational.
 
-KFM's doctrinal posture on rendered surfaces is unambiguous: **tiles, maps, scenes, vector indexes, summaries, screenshots, graph projections, and generated text are not sovereign truth**. The Map Shell — whether 2D or 3D — is downstream of the lifecycle:
+### 3.5 Exception path
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+An additional browser-side rendering technology MAY be admitted by a **follow-on accepted ADR** that:
 
-and downstream of the trust membrane (`apps/governed-api/`). Anything that lets a 3D scene short-circuit that ordering is a violation of a core invariant, not a styling decision.
+1. Names the specific use case and dataset that requires it.
+2. Documents the alternative MapLibre + admitted-plugin paths considered and explains why each fails for that use case.
+3. Names the edition / variant of the technology, its license, and its rights posture.
+4. Pins versions and attaches supply-chain attestation (DSSE / cosign / Rekor or equivalent).
+5. Defines or references a `PluginAdmission` PolicyDecision for that admission.
+6. Defines a rollback path that does **not** break the MapLibre-only default-path deployment.
+7. Is scoped to the named use case and does **not** promote the additional technology to default-path status.
 
-Three converging signals make a dedicated ADR necessary.
+An admitted exception **does not modify this ADR.** It is a scoped, named amendment recorded in the register and forward-linked from this document.
 
-**1. Directory Rules already pin the boundary, but not the admission gate.** Directory Rules identify the clean modern map layout as `apps/explorer-web/`, `packages/ui/`, `packages/maplibre/`, `packages/cesium/`, `docs/architecture/map-shell.md`, and `data/registry/layers/`. They state that MapLibre is the disciplined 2D renderer and that Cesium / 3D, where present, must consume the same `EvidenceBundle` and `DecisionEnvelope` as 2D because it is an alternate renderer, not an alternate truth path. This establishes the **boundary**; it does not fully specify **when** 3D may load, **what evidence burden justifies it**, **which manifests and tests are required**, or **how rollback works**.
-
-**2. The MapLibre atlas treats 3D as conditional evidence context.** The Master MapLibre material repeatedly frames 3D, Cesium, deck.gl, terrain, and 3D Tiles as downstream carriers. Its v1.9 update explicitly records that `ML-064-101` keeps 3D/Cesium conditional around evidence burden: use Cesium / 3D only when vertical or terrain context materially improves evidence review, with 2D/3D synchronization and Evidence Drawer parity tests.
-
-**3. The MapLibre operating manual keeps the 2D shell first.** The MapLibre operating manual identifies MapLibre GL JS as the default first governed 2D shell. It treats Cesium / 3D-first rendering as situational: use it only where vertical, globe, or 3D context is evidence-bearing and the trust model survives.
-
-In short: the doctrine says *3D is downstream of evidence*; the architecture says *Cesium lives beside MapLibre as an optional renderer*; the implementation atlas says *3D is conditional*. This ADR converts those signals into a reviewable admission rule.
-
-### Forces
-
-| Force | Direction | Notes |
-|---|---|---|
-| **Evidence integrity** | Pulls toward gating | Scenes that draw elevations, extrusions, point clouds, volumes, camera paths, or terrain must not carry evidentiary weight without `EvidenceBundle` resolution and manifest-bound provenance. |
-| **Sensitivity / rights** | Pulls toward gating | 3D contexts can expose precise geometry, line-of-sight, terrain, site visibility, infrastructure, archaeological, ecological, or sovereignty-sensitive material. |
-| **User value** | Pulls toward conditional enabling | Vertical / terrain context, viewshed, hydrology volumes, hazards, archaeology, LiDAR, GLO overlays, structural context, and 2D/3D comparison can materially improve evidence review. |
-| **Maintenance cost** | Pulls toward gating | Scene authoring, terrain assets, camera paths, temporal anchoring, accessibility alternatives, and 2D/3D parity tests add real operational burden. |
-| **Mobile-first delivery** | Pulls toward gating | KFM's mobile-first posture assumes thin clients and constrained networks; Cesium adds payload weight, GPU pressure, and platform-specific parity requirements. |
-| **License / edition ambiguity** | Forces deferral | CesiumJS versus Cesium Ion / hosted services must be decided separately before production dependency or hosted-asset commitments. |
-| **Lifecycle invariance** | Hard constraint | 3D MUST NOT introduce a parallel publication path; it consumes only governed API responses and released / published artifacts. |
-| **Accessibility** | Hard constraint | 3D MUST have a 2D fallback and accessible alternative descriptions; camera motion, depth, and terrain perspective cannot be the only way to inspect a claim. |
+[↑ Back to top](#top)
 
 ---
 
-## Decision
+<a id="4"></a>
 
-**KFM adopts Cesium-based 3D as a conditional, gated alternate renderer with the following invariants.**
+## 4. Evidence basis
 
-### D-1 — 3D is opt-in by default
+> *Priority order: corpus doctrine + workspace evidence first, then authoritative external research where versions or capabilities are version-sensitive.*
 
-The default Map Shell experience is **2D MapLibre**. The Cesium 3D path **MUST NOT** auto-load on entry to `apps/explorer-web/`.
+### 4.1 Doctrine evidence (CONFIRMED)
 
-Activation requires both:
+- **`KFM-P2-FEAT-0012`** — Pass 23 / Pass 32 idea-index card recording the prior dual-renderer posture for 3D scene rendering. The card itself carries `NEEDS VERIFICATION` on an unresolved edition-selection question and a `tension` entry on sustainable scene-authoring workflow. This ADR's supersession of the card resolves both by removing the dual-renderer posture from the default path. *(CONFIRMED in `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`, §8.6.30.)*
 
-1. a **user gesture** such as a 3D view, terrain, globe, story, comparison, or vertical-context affordance; and
-2. a **governed layer / scenario decision** showing that 3D rendering is permitted for that layer, view, or Story Node.
+- **Master MapLibre v2.1, Category W** — entries `ML-W-072` through `ML-W-075` normalize 3D and globe surfaces as **conditional overlays that must preserve evidence identity and performance limits.** A single renderer is the most direct construction-level guarantee of evidence identity across all overlays. *(CONFIRMED in `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md`.)*
 
-A URL parameter MAY request 3D only when it resolves to a permitted layer / scenario and still passes the gates in [Gating Conditions](#gating-conditions).
+- **Master MapLibre v2.1, Category W — `ML-W-006` through `ML-W-010`** — entries about shared artifacts, point clouds, terrain layers, and overlay synchronization are each marked as cumulative expansions requiring revalidation against mounted-repo tests, manifests, release receipts, and source-ledger checks. A single renderer reduces the number of such revalidation surfaces to one. *(CONFIRMED.)*
 
-### D-2 — 3D consumes the same governed interfaces as 2D
+- **AI Build Operating Contract** — §§7 (publication, rights, sensitivity), 29 (object-family guardrails), 31 (security and exposure rules). Each of these is easier to satisfy with a single renderer's single supply chain than with two parallel chains. *(CONFIRMED in `ai-build-operating-contract.md`.)*
 
-Cesium **MUST** read through `apps/governed-api/`, consume `DecisionEnvelope` / runtime response envelopes, and resolve `EvidenceRef` to `EvidenceBundle` exactly as MapLibre does.
+- **Directory Rules v1.2** — §§2.4(2)/(5)/(6), §13.5, §17. The "two parallel schema / contract / policy / source / registry / release / proof homes" anti-pattern (§13.5) directly applies to dual-renderer architectures, which would require parallel contracts, schemas, policies, and release surfaces. This ADR closes that latent parallel-home risk. *(CONFIRMED in `directory-rules.md`.)*
 
-Cesium **MUST NOT** read directly from:
+- **`docs/architecture/maplibre-3d.md` (PROPOSED)** — the companion architecture document. This ADR is the canonical decision that the architecture document's recommendation depends on; the architecture document is the implementation reference. *(CONFIRMED at doctrine rank; implementation PROPOSED.)*
 
-- `data/raw/`,
-- `data/work/`,
-- `data/quarantine/`,
-- `data/processed/`,
-- `data/catalog/`,
-- `runtime/` stores,
-- graph internals,
-- model runtimes,
-- local filesystem staging outputs,
-- unpublished candidate artifacts.
+### 4.2 External-tech evidence (CONFIRMED)
 
-The trust membrane applies identically to 2D and 3D.
+> *KFM's authoritative-research clause (operating-contract §1.3) permits and expects external research for version-sensitive capabilities. The following are CONFIRMED against MapLibre's own published documentation and examples, not asserted from memory.*
 
-### D-3 — 3D consumes only released / published artifacts
+- **MapLibre GL JS 5.0** released January 2025 — native globe projection (`Map.setProjection({type:'globe'})`) and `GlobeControl`. *(CONFIRMED — MapLibre release notes and docs.)*
+- **MapLibre Style Spec** — `terrain`, `hillshade`, `sky`, `light`, `fill-extrusion`, `projection` are first-class in the published style spec. *(CONFIRMED.)*
+- **MapLibre 3D Terrain example** — uses two `raster-dem` sources (one for `terrain`, one for `hillshade`) for render quality. *(CONFIRMED — `maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/`.)*
+- **MapLibre 3D Tiles via three.js example**, dated **2026-03-03** — `three@^0.183.0`, `3d-tiles-renderer@^0.4.21`, `GLTFLoader`, `DRACOLoader`. *(CONFIRMED — `maplibre.org/maplibre-gl-js/docs/examples/add-3d-tiles-using-threejs/`.)*
+- **MapLibre Plugins page** lists `maplibre-three-plugin`, `maplibre-gl-lidar`, `pmtiles`, `maplibre-cog-protocol`, `maplibre-gl-vector-text-protocol`, `maplibre-contourmap`. *(CONFIRMED — MapLibre plugins page.)*
+- **deck.gl `MapboxOverlay` interleaved mode** with WebGL2 supports MapLibre ≥ 3. *(CONFIRMED — deck.gl docs.)*
 
-Cesium 3D Tiles, terrain meshes, DEM / heightfield derivatives, point clouds, GLB / glTF, CZML, camera paths, and volumetric assets consumed by the 3D path **MUST** originate from `data/published/` or a published-equivalent governed delivery surface with:
+### 4.3 What this ADR does **not** rely on
 
-- `ReleaseManifest` or `MapReleaseManifest`,
-- `TileArtifactManifest` or 3D asset manifest,
-- `EvidenceBundle`,
-- `SourceDescriptor`,
-- policy decision,
-- review / promotion decision,
-- rollback target.
+- It does **not** rely on any performance benchmark beyond Kansas focus-mode and state-wide working envelopes. Performance is monitored via `RenderReceipt` budgets, not by this ADR.
+- It does **not** rely on any specific plugin version. Each plugin pin is the job of a per-release `PluginAdmission` PolicyDecision, not this ADR.
+- It does **not** rely on the maturity of any single plugin to be permanent. If a plugin regresses, it leaves the admitted set via the `PluginAdmission` flow; the renderer commitment remains.
 
-Watcher-as-non-publisher applies: no worker, connector, scene-builder, converter, tiler, or preview script may directly emit into `data/published/`.
-
-### D-4 — 2D ↔ 3D parity is a hard gate
-
-Switching between 2D MapLibre and 3D Cesium **MUST** preserve:
-
-- active layer set,
-- active filter set,
-- Focus Mode state and citations,
-- Evidence Drawer binding,
-- consent / rights / sensitivity policy state,
-- temporal selection,
-- selected feature or scene object,
-- `EvidenceBundle` binding,
-- released / stale / degraded / denied state,
-- rollback-visible release identity.
-
-Parity is enforced by:
-
-- a shared layer / scene manifest family,
-- shared evidence / policy payloads,
-- a shared camera / view-state protocol,
-- 2D↔3D round-trip tests,
-- Evidence Drawer parity tests,
-- deny / abstain parity tests.
-
-### D-5 — 3D is gated on evidence burden
-
-The 3D path **MUST** be enabled only when vertical, terrain, structural, volumetric, line-of-sight, or globe context **materially improves evidence review**.
-
-This is a *per-layer, per-scenario* judgment, not a global product preference. The justification MUST be recorded in the layer manifest, source descriptor, Story Node metadata, or 3D asset manifest. Layers without that justification **SHOULD NOT** expose a 3D affordance.
-
-### D-6 — Sensitivity policy is not relaxed in 3D
-
-Sensitivity, rights, sovereignty, CARE / Focus Mode constraints, geomasking, redaction, embargo, and generalization rules apply **identically** in 3D.
-
-Precise geometry that is denied, generalized, delayed, or redacted in 2D **MUST** be denied, generalized, delayed, or redacted in 3D. Cesium **MUST NOT** become an exposure shortcut for restricted-precision data, including but not limited to archaeological sites, cultural / sacred places, rare-species locations, sensitive infrastructure, living-person data, or rights-uncertain source material.
-
-Style filters, camera limits, clipping planes, or visual opacity **MUST NOT** be the only protection for sensitive geometry. Sensitive geometry must be transformed, generalized, withheld, or denied before public release.
-
-### D-7 — Cesium edition decision is deferred
-
-The choice between **CesiumJS open-source**, **Cesium Ion hosted services**, self-hosted terrain / 3D Tiles, or another 3D delivery model is **explicitly deferred** to a follow-up ADR:
-
-```text
-docs/adr/ADR-XXXX-cesium-edition-and-licensing.md
-```
-
-Until that ADR lands:
-
-- new work **MUST** target a license / edition-neutral integration surface,
-- `packages/cesium/` **MUST NOT** hard-code a paid-tier dependency or Ion asset URL,
-- any prototype or spike **MUST** be marked `experimental`,
-- any hosted-asset path **MUST** be blocked from public release unless rights, attribution, privacy, and rollback are reviewed.
-
-### D-8 — Reversibility
-
-Disabling the Cesium 3D path **MUST** be a one-flag or one-manifest operation. The 2D Map Shell **MUST** remain fully functional with Cesium absent, unloaded, feature-flagged off, or build-excluded.
-
-No domain feature, no Focus Mode answer, no public claim, and no released layer may rely on the 3D viewer for correctness.
-
-### D-9 — 3D assets are governed object families
-
-3D assets are not loose visual files. Terrain tilesets, 3D Tiles, GLB / glTF models, CZML, point clouds, camera paths, volumetric layers, and 3D Story Node assets **MUST** be represented by manifest-bound object families with:
-
-- stable ID,
-- source references,
-- artifact digest,
-- spatial extent,
-- temporal extent where material,
-- CRS / vertical datum where material,
-- license / rights state,
-- sensitivity label,
-- accessibility metadata,
-- 2D fallback pointer,
-- rollback target.
-
-Where no accepted KFM schema exists yet, this ADR treats the field set as **PROPOSED** and requires follow-up schema work before production release.
-
-### D-10 — 3D accessibility and fallback are release gates
-
-A 3D view **MUST** have a 2D fallback and meaningful accessible alternative. Camera paths, fly-throughs, animated terrain, or depth-dependent views **SHOULD** include reduced-motion support, textual explanation, alt text / description metadata, and keyboard-reachable Evidence Drawer paths.
-
-A 3D layer that cannot provide an inspectable 2D fallback **MUST NOT** be the only public representation of a consequential claim.
+[↑ Back to top](#top)
 
 ---
 
-## Gating Conditions
+<a id="5"></a>
 
-A layer, Story Node, scene, or scenario qualifies for the 3D path **only if all required gates pass**.
+## 5. Directory Rules basis
 
-| # | Condition | Verifiable by |
-|---|---|---|
-| G-1 | The source artifact is released / published or governed-release-equivalent. | Release register; `PromotionDecision`; `ReleaseManifest` / `MapReleaseManifest`. |
-| G-2 | `EvidenceRef` resolution succeeds for any rendered claim. | Governed API resolver; Evidence Drawer parity test. |
-| G-3 | Rights, sensitivity, sovereignty, CARE, and public precision policy permit the 3D exposure. | Policy decision; source terms; sensitivity policy; redaction / generalization receipt. |
-| G-4 | Vertical, terrain, structural, volumetric, line-of-sight, or globe context materially improves evidence review. | Source descriptor justification; layer / scene manifest; review note. |
-| G-5 | A 2D fallback exists and is equally cite-able. | MapLibre layer entry; style / layer manifest; Evidence Drawer test. |
-| G-6 | 2D ↔ 3D parity tests are green for this layer / scenario. | `tests/ui/3d_parity/` *(PROPOSED placement)* or repo-native equivalent. |
-| G-7 | Performance budget is met, or an explicit reviewed exception is recorded. | Runtime probe; tile load budget; device-tier report; release note. |
-| G-8 | Cesium edition / licensing is compatible with the future edition ADR, or exposure is marked `experimental` and non-public. | Edition ADR; package manifest; rights review. |
-| G-9 | 3D asset metadata includes digest, source, temporal extent where material, CRS / vertical datum where material, and rollback target. | 3D asset manifest; `TileArtifactManifest`; catalog record. |
-| G-10 | Accessibility fallback exists. | 2D fallback, alt text / description metadata, reduced-motion handling where applicable, keyboard Evidence Drawer path. |
-| G-11 | Sensitive geometry is transformed before release, not merely hidden by style or camera. | Redaction / generalization receipt; public artifact diff; sensitive-geometry deny fixture. |
+### 5.1 Why an ADR is required at all
 
-A layer that fails **any** of G-1 through G-7 or G-9 through G-11 **MUST NOT** be exposed in the public 3D path. Failure of G-8 reduces the layer to non-public `experimental` exposure until the edition ADR resolves.
+- **§2.4(6) — Bending an invariant from §3.** Naming a single renderer reinforces the *single trust membrane* invariant. The reversal of `KFM-P2-FEAT-0012`'s prior posture is itself an §17-class rule reversal.
+- **§17 — "Reversing a previously canonical rule"** — requires ADR + supersession notice + drift register entry. All three are produced by this ADR.
 
----
+### 5.2 Why this ADR lives at `docs/adr/`
 
-## Architecture Boundary
+- **§5 canonical roots** — `docs/adr/` is the canonical home for accepted and superseded ADRs.
+- The filename pattern `ADR-NNNN-<kebab-case-decision>.md` matches the precedents of `ADR-0001-schema-home.md` and `ADR-0003-policy-singular-is-canonical.md`. *(PROPOSED — mounted ADR set NEEDS VERIFICATION.)*
 
-```mermaid
-flowchart LR
-    subgraph CANONICAL["Canonical lifecycle"]
-        RAW["data/raw"]
-        WORK["data/work / data/quarantine"]
-        PROC["data/processed"]
-        CAT["data/catalog / data/triplets"]
-        PUB["data/published"]
-    end
+### 5.3 Why `docs/architecture/maplibre-3d.md` is the companion document, not this ADR
 
-    subgraph MEMBRANE["Trust membrane"]
-        API["apps/governed-api"]
-        ENV["DecisionEnvelope / runtime envelope"]
-        EVD["EvidenceBundle resolver"]
-        POL["PolicyDecision"]
-    end
+- **§6 docs lane — `docs/architecture/<topic>.md`** is the canonical home for cross-domain architecture doctrine.
+- **§12 Domain Placement Law** — 3D is a cross-cutting carrier, not a domain root. The architecture document belongs at `docs/architecture/`; this decision document belongs at `docs/adr/`.
 
-    subgraph MANIFESTS["Governed release objects"]
-        LM["LayerManifest"]
-        SM["StyleManifest"]
-        TM["TileArtifactManifest / 3D asset manifest"]
-        RM["MapReleaseManifest"]
-        RB["Rollback target"]
-    end
+### 5.4 Compatibility-root posture
 
-    subgraph SHELL["Map Shell"]
-        ML["packages/maplibre<br/>2D default"]
-        CS["packages/cesium<br/>3D conditional"]
-        DRAWER["Evidence Drawer"]
-        FOCUS["Focus Mode"]
-    end
+This ADR does **not** create new compatibility roots, **does not** promote any compatibility root to canonical, **does not** change the schema-home rule, and **does not** add a lifecycle phase. It satisfies the §2.4 "no parallel home" anti-pattern by **closing** a latent parallel-renderer family rather than opening one.
 
-    USER((User))
-
-    RAW --> WORK --> PROC --> CAT --> PUB
-    PUB --> RM
-    RM --> LM
-    RM --> SM
-    RM --> TM
-    RM --> RB
-    RM --> API
-
-    API --> ENV
-    API --> EVD
-    API --> POL
-
-    ENV --> ML
-    EVD --> ML
-    POL --> ML
-
-    ENV -. gated .-> CS
-    EVD -. gated .-> CS
-    POL -. gated .-> CS
-
-    ML <-. shared layer/view state .-> CS
-    ML --> DRAWER
-    CS --> DRAWER
-    DRAWER --> FOCUS
-
-    USER --> ML
-    USER -. explicit affordance .-> CS
-
-    classDef gated stroke-dasharray: 4 3
-    class CS gated
-```
-
-> [!IMPORTANT]
-> The dashed edges into Cesium encode the gate: 3D may only be reached through governed envelopes, released artifacts, policy decisions, EvidenceBundle resolution, and an explicit user or scenario affordance. The dashed edge between MapLibre and Cesium is a parity contract, not a data bypass.
-
-### Module placement
-
-| Concern | Path | ADR posture |
-|---|---|---|
-| 3D renderer package | `packages/cesium/` | PROPOSED path presence; placement aligns with Directory Rules map-root layout. |
-| 2D renderer package | `packages/maplibre/` | PROPOSED path presence; 2D default renderer. |
-| Shared UI package | `packages/ui/` | PROPOSED path presence; shared shell components. |
-| Map shell deployable | `apps/explorer-web/` | PROPOSED path presence; public / semi-public map UI. |
-| Trust membrane | `apps/governed-api/` | PROPOSED path presence; governed API boundary. |
-| Layer registry | `data/registry/layers/` | PROPOSED path presence; registry root for layer descriptors. |
-| Map-shell doctrine | `docs/architecture/map-shell.md` | PROPOSED path presence; architecture doc home. |
-| 3D parity tests | `tests/ui/3d_parity/` *(PROPOSED)* | Test root; exact home must follow mounted repo convention. |
-| 3D asset schemas | `schemas/contracts/v1/map/3d-asset-manifest.schema.json` *(PROPOSED)* | Schema home follows ADR-0001 / Directory Rules default; exact path needs repo verification. |
-| Camera / view-state schema | `schemas/contracts/v1/ui/camera-state.schema.json` *(PROPOSED)* | Follow-up schema work; exact path needs repo verification. |
-| Cesium edition ADR | `docs/adr/ADR-XXXX-cesium-edition-and-licensing.md` *(PROPOSED)* | Follow-up ADR; number to assign after `docs/adr/` inspection. |
-
-> **NEEDS VERIFICATION** — Per-path presence in the mounted repo is not verified in this ADR text. Paths are placement proposals under Directory Rules, not claims of current implementation.
+[↑ Back to top](#top)
 
 ---
 
-## Conformance
+<a id="6"></a>
 
-Conformance language follows RFC 2119-style usage.
+## 6. Consequences
 
-| ID | Rule | Level |
-|---|---|---|
-| C-1 | The 2D MapLibre path **MUST** be the default Map Shell surface. | MUST |
-| C-2 | Cesium **MUST** read through `apps/governed-api/` and **MUST NOT** read raw, work, quarantine, processed, catalog, graph, model, or runtime stores directly. | MUST |
-| C-3 | Cesium **MUST NOT** publish, mutate canonical truth, or write into lifecycle directories. | MUST |
-| C-4 | 3D-eligible layers **MUST** carry an explicit evidence-burden justification. | MUST |
-| C-5 | Sensitivity, rights, sovereignty, CARE, and Focus Mode constraints **MUST** be enforced identically in 3D and 2D. | MUST |
-| C-6 | A 2D ↔ 3D parity test **MUST** pass before a 3D affordance is exposed for a layer / scenario. | MUST |
-| C-7 | The Map Shell **MUST** remain functional with Cesium absent, disabled, or build-excluded. | MUST |
-| C-8 | `packages/cesium/` **MUST NOT** hard-code a paid-tier Cesium Ion dependency until the edition ADR is accepted. | MUST |
-| C-9 | Auto-loading 3D on app entry **MUST NOT** occur. | MUST NOT |
-| C-10 | New 3D scene-build workflows **SHOULD** be staged behind a feature flag and accompanied by manifest-bound evidence and receipts. | SHOULD |
-| C-11 | Cesium edition spikes **MAY** exist under a clearly marked experimental lane, provided they do not ship to public release. | MAY |
-| C-12 | `runtime/` adapters, `connectors/`, `pipelines/`, and `apps/workers/` **MUST NOT** treat Cesium as a sink or as a substitute for catalog closure. | MUST |
-| C-13 | 3D assets **MUST** carry digest, source, release, policy, accessibility, and rollback metadata before public exposure. | MUST |
-| C-14 | 3D camera paths and animations **SHOULD** include reduced-motion or non-motion alternatives where used in public or semi-public surfaces. | SHOULD |
-| C-15 | Public 3D affordances **MUST** show denial, stale, degraded, or abstain states rather than silently hiding failed gates. | MUST |
+### 6.1 Positive
 
----
+- **One trust membrane.** One renderer to govern; one set of receipts to emit; one `ViewState` and `CameraPath` model; no cross-renderer drift to specify, monitor, or test.
+- **Evidence identity by construction.** The same tiles drive 2D, 2.5D, globe, 3D Tiles, glTF, and point-cloud views. Master MapLibre v2.1 Category W's *evidence identity* requirement is structurally upheld.
+- **Single supply chain.** AI Build Operating Contract §31 attestation discipline applies to one chain, not two; SBOM, signing, and lockfile checks are simpler and more comprehensive.
+- **Smaller bundle, simpler stack.** No dual-renderer infrastructure, no cross-renderer camera sync, no shared-layer-manifest translation overhead, no reviewer burden duplication.
+- **Easier to test and to govern.** One `PluginAdmission` surface, one `RepresentationReceipt` schema, one lockfile guardrail, one bundle-analyzer rule.
+- **Reversible by exception.** The §3.5 exception path means this commitment is firm but not absolute — KFM keeps the ability to admit additional rendering technology under a scoped, attested ADR if a use case ever truly requires it.
 
-## Consequences
+### 6.2 Negative / accepted risks
 
-### Positive
+- **Maturity dependency on the admitted plugin set.** Some plugins in §2.2 are younger than the corresponding capabilities in mature alternative engines. KFM accepts this risk at Kansas-scale working envelopes; the risk is re-evaluated per use case via §3.5.
+- **`maxPitch ≈ 85°`.** Sufficient for all current KFM use cases; orbital cases transit §3.5.
+- **Plugin-version drift becomes a real governance surface.** Mitigated by `PluginAdmission` per-release and CI lockfile checks. *(PROPOSED implementation.)*
+- **An exception-ADR carries non-trivial cost.** This is a feature of the governance, not a bug — the cost of admitting an additional rendering technology is the same as the cost of upholding the trust membrane against it.
 
-- **Truth posture preserved.** 3D does not become a parallel publication path; viewer-as-non-truth doctrine becomes operational.
-- **Reversibility preserved.** The Map Shell can ship, evolve, and pass releases without Cesium present.
-- **Sensitivity posture preserved.** Restricted-precision data does not leak through a 3D shortcut.
-- **Maintenance cost contained.** The 3D surface area grows only under named gates.
-- **Mobile-first delivery protected.** Default 2D path remains unburdened by Cesium payload and GPU pressure.
-- **Edition / licensing risk deferred deliberately.** No premature lock-in to Cesium Ion, CesiumJS-only assumptions, or hosted terrain dependencies.
-- **Accessibility becomes explicit.** 3D is not treated as evidence access unless a 2D fallback and accessible path exist.
+### 6.3 Carried-forward, **unchanged** by this ADR
 
-### Negative / costs
+- The **2.5D vs. true-3D label discipline** (`KFM-P9-FEAT-0011`, `KFM-P9-FEAT-0013`) remains in effect.
+- The Atlas §18 object families — **Scene Manifest, Layer Manifest, Style Manifest, Terrain Model, View State, Camera Path, Representation Receipt, 3D Admission Decision, Reality Boundary Note** — remain in effect.
+- The **CARE-grade generalization** rule for archaeology terrain-linked layers (`≥5 km`; `ML-059-055`) remains in effect.
+- The **cite-or-abstain** posture and **EvidenceBundle** discipline are untouched.
+- The **deny-by-default release gate** is untouched.
+- The 3D invariants `I-3D-1` through `I-3D-7` (governed tile-host endpoints; evidence parity; no cross-renderer drift; 2.5D ≠ true-3D; CARE / sensitivity generalization; living-person / DNA exclusion; pinned plugin admission) are upheld by construction.
 
-- **Discoverability cost.** Users may miss 3D affordances when they are conditional; mitigations belong in map-shell UX guidance.
-- **Parity test burden.** Maintaining 2D ↔ 3D parity adds CI and fixture surface.
-- **Manifest complexity.** 3D assets require extra metadata: temporal anchors, CRS / vertical datum, digests, accessibility fields, and rollback targets.
-- **Two-renderer cognitive load.** Layer authors must understand shared manifest and evidence contracts.
-- **Scene-build pipeline still thin.** This ADR gates scene use; it does not fully design sustained scene-building operations.
-
-### Trade-offs accepted
-
-- We accept a thinner 3D surface in exchange for evidence integrity and reversibility.
-- We accept delayed Cesium edition commitment in exchange for avoiding accidental lock-in.
-- We accept parity and accessibility test cost in exchange for coherent dual-view behavior.
-- We accept user-visible denial / abstain states in exchange for not hiding failed trust gates.
+[↑ Back to top](#top)
 
 ---
 
-## Alternatives Considered
+<a id="7"></a>
 
-| Alternative | Why considered | Why not chosen |
-|---|---|---|
-| **A. No 3D at all.** | Simplest. Preserves all invariants by default. | Forfeits legitimate evidence-review value in LiDAR, GLO overlays, terrain, viewshed, hydrology, hazards, archaeology, and volumetric contexts. |
-| **B. Cesium as first-class, always-on.** | Makes 3D discoverable from day one. | Violates mobile-first delivery posture, magnifies scene-authoring burden, raises sensitive-geometry risk, and couples release to unresolved edition / licensing. |
-| **C. Cesium with a separate API path / store.** | Could optimize 3D-specific delivery. | Direct violation of the trust membrane; creates parallel authority. |
-| **D. Cesium behind the governed API, but no parity contract.** | Lower test burden. | Allows 2D and 3D to disagree about shown, cited, denied, or stale content. |
-| **E. Pin Cesium Ion now.** | Operationally convenient. | Pre-empts edition / licensing review and creates rollback debt. |
-| **F. (Chosen) Cesium 3D as conditional, opt-in, evidence-gated.** | Preserves invariants while admitting evidence-bearing 3D use. | Requires additional manifests, gates, tests, and follow-up ADRs. |
+## 7. Alternatives considered
 
----
+### 7.1 Multi-renderer architecture (the prior posture)
 
-## Validation
+**Rejected.** A multi-renderer architecture requires parallel contracts, schemas, policy bundles, release surfaces, and supply chains — exactly the "two parallel homes" anti-pattern that directory-rules §13.5 names. It doubles the reviewer burden and creates a standing cross-renderer drift risk that the corpus's evidence-identity requirement (`ML-W-072`–`ML-W-075`) cannot tolerate without significant additional discipline that no architecture document has yet specified. The prior posture in `KFM-P2-FEAT-0012` also carried unresolved governance items (edition selection, sustainable authoring workflow) that this ADR does not attempt to resolve in-place; it resolves them by removing the multi-renderer posture from the default path.
 
-A PR claiming conformance with this ADR **SHOULD** demonstrate:
+### 7.2 Use `deck.gl` as the primary renderer; treat MapLibre as a basemap host
 
-- 2D-only default configuration (C-1, C-9).
-- Cesium read path through governed API only (C-2, C-3, C-12).
-- No public RAW / WORK / QUARANTINE / candidate / graph-internal / model-runtime fetches.
-- For each 3D-exposed layer: source descriptor, layer / scene manifest, evidence-burden justification, release state, and rollback target.
-- 2D ↔ 3D parity run for layer, filter, time, selection, Evidence Drawer, deny / abstain state, and citations.
-- Sensitivity / rights / Focus Mode parity test showing identical deny / abstain behavior across 2D and 3D.
-- 3D asset manifest test for digest, source, temporal extent where material, CRS / vertical datum where material, accessibility metadata, and rollback target.
-- Build-without-Cesium smoke test confirming the shell remains functional.
-- No hard-coded Ion asset URL, paid-tier client key, or hosted-terrain assumption without edition ADR approval.
-- Accessibility smoke test for 2D fallback, keyboard reachability, and reduced-motion / alt-text expectations.
-- Rollback replay test showing the previous 2D release remains valid and public 3D affordances can be withdrawn.
+**Rejected.** `deck.gl` on its own does not provide the vector style spec, native terrain mesh, hillshade layer, globe projection, sky / atmosphere, or `fill-extrusion` API that KFM's 2D and 2.5D surfaces depend on (Master MapLibre v2.1 Categories K, M, Q). `deck.gl` **is** admitted as an interleaved overlay (`MapboxOverlay`, `interleaved: true`) per `docs/architecture/maplibre-3d.md` — that integration is consistent with this ADR. The rejected option is making `deck.gl` *primary*, not making it *admitted*.
 
-> [!CAUTION]
-> A public 3D affordance shipped without evidence-burden justification, manifest-bound assets, parity tests, policy checks, and governed-API read path is a release-state violation. Treat it as a publication incident, not a UI bug.
+### 7.3 Adopt a hand-rolled three.js scene as the primary renderer
+
+**Rejected.** A hand-rolled three.js scene would lose the MapLibre style spec, the governed source families (`pmtiles`, `cog-protocol`, vector text protocols), the globe projection, the terrain-and-hillshade pair, and the existing `RepresentationReceipt` plumbing. three.js **is** admitted as the host for OGC 3D Tiles and glTF rendering inside MapLibre custom layers, which is consistent with this ADR. The rejected option is making three.js *primary*, not making it *admitted*.
+
+### 7.4 Adopt MapLibre as default but leave the renderer commitment unstated
+
+**Rejected.** Silence is not reversal. Per directory-rules §17, a previously canonical rule must be **explicitly** reversed; per §2.5, drift between doctrine and repo must be raised as a drift-register entry and resolved by ADR. An unstated commitment would leave the corpus in contradiction with the architecture and would leave the §13.5 anti-pattern latent rather than closed.
+
+### 7.5 Defer the decision until a mounted repo is inspected
+
+**Rejected as the default.** The decision is doctrine-level; it does not depend on mounted-repo evidence to be **correct**. It depends on mounted-repo evidence to be **operational** (file paths, validator names, CI workflows). The two concerns are separated in this ADR — the decision sits in §3, the operational paths sit in §3.3 and §8 as PROPOSED — so acceptance of the decision is not blocked on a mounted-repo inspection. The mounted-repo inspection drives §11 migration scope, not the §3 decision.
+
+[↑ Back to top](#top)
 
 ---
 
-## Rollback
+<a id="8"></a>
 
-Because Cesium is opt-in and the shell remains functional without it, rollback should be a bounded state change:
+## 8. Validation
 
-1. Disable the 3D affordance in the affected layer / scene manifests.
-2. Withdraw the Cesium build target from `apps/explorer-web/` deployment if needed.
-3. Remove or quarantine public 3D asset references from the active `MapReleaseManifest`.
-4. Preserve the 2D release and verify it still resolves Evidence Drawer payloads.
-5. File a correction notice under `release/correction_notices/` only if a public 3D exposure made or implied an unsupported claim.
-6. Open or update a drift entry in `docs/registers/DRIFT_REGISTER.md` if path, schema, or release-home assumptions caused the incident.
-7. Re-run no-public-raw-path, no-unreleased-tile, sensitive-geometry denial, and 2D Evidence Drawer tests.
+> *Per directory-rules §2.4 and operating-contract §28, every ADR carries a validation surface. Each item below is **PROPOSED** until backed by a mounted test, fixture, or CI run.*
 
-No rollback step should require deleting canonical lifecycle data; canonical truth is unaffected.
+### 8.1 Contract / schema tests
 
----
+- `schemas/contracts/v1/policy/plugin_admission.schema.json` validates a `PluginAdmission` instance with `renderer: "maplibre"` (default) and accepts an `additional_renderer` field only when paired with an `exception_adr_id` referencing an accepted ADR. **PROPOSED.**
+- `schemas/contracts/v1/maplibre/scene_manifest.schema.json` defines a single-renderer `SceneManifest` with no cross-renderer bridge fields. **PROPOSED.**
+- `schemas/contracts/v1/release/map_release_manifest.schema.json` validates `MapReleaseManifest.layers[*].renderer == "maplibre"` by default and accepts other values only when paired with an `exception_adr_id`. **PROPOSED.**
+- `schemas/contracts/v1/maplibre/layer_manifest.schema.json` validates `plugin_dependencies[*]` against the admitted plugin set. **PROPOSED.**
 
-## Open Questions
+### 8.2 Policy tests (Rego or chosen DSL)
 
-These belong in the verification backlog until resolved.
+- `policy/maplibre/plugin-admission.rego` — DENIES `LayerManifest` whose `plugin_dependencies` include any identifier not in the admitted set and without an accepted `exception_adr_id`. **PROPOSED.**
+- `policy/release/renderer-boundary.rego` — DENIES `MapReleaseManifest` whose layers carry a `renderer` value outside the admitted set without an accepted `exception_adr_id`. **PROPOSED.**
+- CARE / sensitivity / archaeology / living-person / DNA policies remain in effect across all layers; admission via the §3.5 exception path does **not** relax sensitivity gates. **PROPOSED.**
 
-- **OPEN — Cesium edition.** CesiumJS open-source, Cesium Ion hosted services, self-hosted 3D Tiles / terrain, or mixed delivery? Follow-up ADR required before production commitment.
-- **OPEN — 3D asset manifest schema.** Which schema governs terrain tilesets, GLB / glTF, CZML, camera paths, 3D Tiles, point clouds, and volumetric assets?
-- **OPEN — Scene-build pipeline.** What is the sustained workflow for terrain, LiDAR, building footprints, GLO overlays, hydrology volumes, archaeology, and other 3D-relevant data?
-- **OPEN — Camera / view-state protocol.** What fields synchronize pitch, bearing, altitude, time, selected object, focus state, and Evidence Drawer binding?
-- **OPEN — Layer-manifest 3D fields.** Which fields declare 3D eligibility, vertical justification, edition compatibility, 2D fallback, accessibility metadata, and rollback target?
-- **OPEN — Performance budgets.** What device tiers, tile load budgets, GPU / memory caps, and click-to-drawer latency thresholds apply to 3D?
-- **OPEN — Accessibility acceptance criteria.** What alt text, reduced-motion, keyboard, and 2D fallback checks are mandatory for public 3D?
-- **NEEDS VERIFICATION — Repo presence.** Whether `packages/cesium/`, `packages/maplibre/`, `apps/explorer-web/`, `apps/governed-api/`, and `data/registry/layers/` exist in the mounted repo.
-- **NEEDS VERIFICATION — ADR numbering.** That `ADR-0007` is available and does not conflict with existing `docs/adr/` entries.
-- **NEEDS VERIFICATION — Schema home.** Whether `schemas/contracts/v1/...` remains the active schema home in the mounted repo and accepted ADR set.
-- **NEEDS VERIFICATION — CI placement.** Exact test home for 2D↔3D parity, accessibility, no-public-raw-path, and release rollback tests.
+### 8.3 Validator tests
 
----
+- `tools/validators/validate_plugin_admission.py` — fails closed on missing or unknown `exception_adr_id` for any non-admitted renderer family. **PROPOSED.**
+- `tools/validators/validate_scene_manifest.py` — fails closed on any cross-renderer bridge field appearing in a `SceneManifest`. **PROPOSED.**
+- `tools/validators/validate_layer_manifest.py` — fails closed on unadmitted `plugin_dependencies` entries. **PROPOSED.**
 
-## References
+### 8.4 Build / CI tests
 
-### KFM doctrine and design
+- Lockfile (`package-lock.json` or equivalent) check fails closed if a package matching an unadmitted renderer-family identifier appears without an accepted `exception_adr_id`. **PROPOSED.**
+- Bundle-analyzer guardrail flags any default-path bundle that includes code paths from an unadmitted renderer family. **PROPOSED.**
+- 3D smoke test: `setTerrain` succeeds, `terrain` event fires, `RenderReceipt` emitted within budget. **PROPOSED.**
+- 2D fallback test: terrain-admission failure → 2D render with visible reason. **PROPOSED.**
+- Globe toggle test: `setProjection({type:'globe'})` succeeds at MapLibre 5.0+. **PROPOSED.**
+- 3D Tiles via three.js smoke test: tileset loads, first tile renders within budget, `RenderReceipt` records `3d-tiles-renderer` version. **PROPOSED.**
+- LiDAR EPT smoke test: point cloud streams, point budget respected, classification filter passes. **PROPOSED.**
 
-- `docs/doctrine/directory-rules.md` — placement discipline; lifecycle invariant; ADR requirements for canonical-root and schema-home changes; map-root layout; MapLibre / Cesium renderer boundary.
-- `KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf` — MapLibre as disciplined 2D shell; Cesium / 3D as situational; public surfaces consume governed APIs, released artifacts, catalog records, EvidenceBundle resolution, and release manifests.
-- `Master MapLibre Components-Functions-Features.pdf` v1.9 — MapLibre / tile / renderer / 3D atlas; ML-064-101 conditional 3D evidence-burden gate; required object families and validation gates.
+### 8.5 Documentation tests
 
-### Adjacent ADRs and docs
+- `docs/architecture/maplibre-3d.md` meta block references `ADR-0007` after acceptance (no `<NNNN>` placeholder remains). **PROPOSED.**
+- `docs/registers/DRIFT_REGISTER.md` carries an entry recording the supersession of `KFM-P2-FEAT-0012`. **PROPOSED.**
+- The `KFM-P2-FEAT-0012` card in the Idea Index Master gains `superseded_by: ADR-0007` and a forward link. **PROPOSED.**
+- Master MapLibre v2.1 Category W entries that referenced cross-renderer assumptions are refreshed to reference this ADR. **PROPOSED.**
 
-- `docs/adr/ADR-0001-schema-home.md` — referenced schema-home convention; exact repo presence and current accepted status need verification.
-- `docs/architecture/map-shell.md` — PROPOSED adjacent architecture doc; exact repo presence needs verification.
-- `docs/adr/ADR-XXXX-cesium-edition-and-licensing.md` — PROPOSED follow-up, not yet authored.
-- `schemas/contracts/v1/ui/camera-state.schema.json` — PROPOSED follow-up schema.
-- `schemas/contracts/v1/map/3d-asset-manifest.schema.json` — PROPOSED follow-up schema.
-
-### Glossary anchors
-
-`EvidenceBundle` · `EvidenceRef` · `DecisionEnvelope` · `PolicyDecision` · `PromotionDecision` · `ReleaseManifest` · `MapReleaseManifest` · `TileArtifactManifest` · `EvidenceDrawerPayload` · `CitationValidationReport` · `RunReceipt` · `Trust membrane` · `Watcher-as-non-publisher` · `Lifecycle invariant` · `Rollback target`.
+[↑ Back to top](#top)
 
 ---
 
-<sub>This ADR is in `proposed` status. Until accepted, treat the gates and conformance rules as PROPOSED. The governing doctrine it relies on is stronger than this ADR; per-path repo presence, ADR numbering, schema-home status, CI behavior, package versions, Cesium edition, and runtime behavior remain NEEDS VERIFICATION.</sub>
+<a id="9"></a>
 
-[↑ Back to top](#adr-0007--cesium-3d-is-conditional-and-gated)
+## 9. Rollback
+
+> *Per operating-contract §1.5 and §28, every ADR names a rollback path. KFM's preference is **reversible, additive** rollback whenever possible.*
+
+### 9.1 Rollback is additive
+
+If a future KFM use case demonstrates a genuine need for a browser-side rendering technology outside the admitted plugin set, this ADR is rolled back **by amendment**, not by deletion:
+
+1. Author a follow-on **exception-ADR** that satisfies the seven §3.5 conditions.
+2. Mark this ADR (`ADR-0007`) as **amended** (not superseded) with a forward link to the new ADR. The default-off, gated posture for everything outside the named exception remains in effect.
+3. Add an amendment entry to `docs/registers/DRIFT_REGISTER.md`.
+
+### 9.2 Full reversal
+
+A full reversal — restoring a multi-renderer default-path posture — requires a superseding ADR (`status: accepted`, with this ADR's `status: superseded` and a forward link) and would itself be an §17-class rule reversal. This path is documented for completeness; it is not anticipated.
+
+### 9.3 What rollback never restores
+
+- An exception-ADR **must** resolve the governance items that this ADR's supersession of `KFM-P2-FEAT-0012` left behind (edition selection, licensing posture, sustainable authoring workflow, sustainable supply-chain attestation). Rollback does **not** restore the prior posture *with those open items still open.*
+
+[↑ Back to top](#top)
+
+---
+
+<a id="10"></a>
+
+## 10. Open questions
+
+### OQ-A7-01 — Numbering conflict (NEEDS VERIFICATION)
+
+The Build Manual §30 Recommended ADR Queue informally lists different topics under the ADR-0007 and ADR-0008 slots than this ADR uses. The user-supplied path for this decision is `docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md`.
+
+**Treatment in this draft:** the user-supplied number is honored. The Build Manual queue is itself a recommendation table (PROPOSED), not an accepted ADR set. The numbering conflict is recorded here for resolution against the **live** `docs/adr/` directory at PR time.
+
+**Resolution paths (any of):**
+
+- **(a)** Accept this ADR as `0007` and renumber the Build Manual queue's reservations.
+- **(b)** Renumber this ADR to the lowest free slot in the live `docs/adr/` set (e.g., `0008` if `0007` is already taken in the accepted set).
+- **(c)** Renumber the Build Manual queue's reservations to align with this ADR.
+
+**Status:** NEEDS VERIFICATION against the mounted `docs/adr/` directory.
+
+### OQ-A7-02 — Admitted plugin licensing inventory (PROPOSED)
+
+Several MapLibre plugins listed in §2.2 carry licenses marked `NEEDS VERIFICATION` in `docs/architecture/maplibre-3d.md` Appendix A. This ADR does not block on those entries — they are governed at `PluginAdmission` time — but the licensing inventory should be completed before the first release that depends on any of them. Plugins in scope: `3d-tiles-renderer`, `maplibre-three-plugin`, `maplibre-gl-lidar`, `maplibre-cog-protocol`, `maplibre-gl-vector-text-protocol`, `maplibre-contourmap`.
+
+### OQ-A7-03 — `PluginAdmission` schema home (PROPOSED)
+
+`schemas/contracts/v1/policy/plugin_admission.schema.json` is the PROPOSED home. If `ADR-S-03` (Receipt schema layout) is decided in favor of per-domain schema homes, the path may move to `schemas/contracts/v1/maplibre/plugin_admission.schema.json`. **Resolution required by** `ADR-S-03` or a follow-on ADR.
+
+### OQ-A7-04 — Pre-existing artifacts from the prior posture (NEEDS VERIFICATION)
+
+If the mounted repo already contains artifacts authored under the prior dual-renderer posture (`KFM-P2-FEAT-0012`), they must be enumerated, evaluated, and either removed in the migration PR (§11) or admitted under an exception-ADR. **NEEDS VERIFICATION** against the live repo. Default treatment in the migration PR is removal with a drift-register entry; admission would require the §3.5 exception path.
+
+### OQ-A7-05 — Subsurface stratigraphy (UNKNOWN — independent of this ADR)
+
+Subsurface volumetric stratigraphy remains **UNKNOWN** for browser rendering at production quality. This ADR does not promise to solve that case; if it ever becomes in-scope it is handled under §3.5 exception path with a `geometry_label` outside the current 2D / 2.5D / 3D set.
+
+### OQ-A7-06 — Effect on Master MapLibre v2.1 Category W (PROPOSED)
+
+Category W entries `ML-W-006` through `ML-W-010` and `ML-W-072` through `ML-W-075` carry assumptions about multi-renderer artifacts and overlay synchronization. Once this ADR is accepted, Category W should be refreshed to align with the single-renderer commitment and mark the affected rows `superseded_by: ADR-0007`. This is a Master MapLibre v2.x edition concern, not a blocker on acceptance of this ADR.
+
+### OQ-A7-07 — `RepresentationReceipt` schema completeness (PROPOSED)
+
+`schemas/contracts/v1/maplibre/representation_receipt.schema.json` should carry `renderer`, `renderer_version`, `plugin_versions[]`, `view_state_id`, `camera_path_id`, and `spec_hashes[]` at minimum. A complete shape is the job of `ADR-S-03` and follow-on contract work, not this ADR.
+
+[↑ Back to top](#top)
+
+---
+
+<a id="11"></a>
+
+## 11. Migration plan
+
+> *PROPOSED migration steps. Each step lands as a separate PR or a clearly-scoped section of a single PR; none of these steps modifies trust-bearing receipts after the fact.*
+
+| # | Step | Affected path (PROPOSED) | Type |
+|---|---|---|---|
+| 1 | Mark `KFM-P2-FEAT-0012` `superseded_by: ADR-0007` with a forward link. | Idea Index Master (location NEEDS VERIFICATION) | doctrine update |
+| 2 | Add drift register entry recording the supersession. | `docs/registers/DRIFT_REGISTER.md` | governance ledger |
+| 3 | Update `docs/architecture/maplibre-3d.md` meta block to reference `ADR-0007`; remove the `<NNNN>` placeholder; align §0.1 framing with this ADR. | `docs/architecture/maplibre-3d.md` | doctrine update |
+| 4 | Refresh Master MapLibre v2.1 Category W to align with single-renderer commitment. | `docs/architecture/master-maplibre-components-functions-features.md` (PROPOSED path) | doctrine update |
+| 5 | Author the `PluginAdmission` contract and machine schema. | `contracts/3d/plugin-dependencies.md`, `schemas/contracts/v1/policy/plugin_admission.schema.json` | contract + schema |
+| 6 | Author `policy/maplibre/plugin-admission.rego` and `policy/release/renderer-boundary.rego`. | `policy/maplibre/`, `policy/release/` | policy |
+| 7 | Author `tools/validators/validate_plugin_admission.py`, `validate_scene_manifest.py`, `validate_layer_manifest.py`. | `tools/validators/` | validator |
+| 8 | Author or extend `packages/maplibre-runtime/` with `terrain.ts`, `hillshade.ts`, `sky.ts`, `globe.ts`, `fill-extrusion.ts`, `camera-path.ts`, `custom-layer-host.ts`, `tiles3d-three.ts`, `gltf-three.ts`, `lidar-decklike.ts`, `deckgl-interleaved.ts`, `admission.ts`, `plugin-registry.ts`, `receipts.ts`. | `packages/maplibre-runtime/src/` | runtime |
+| 9 | Add CI lockfile guardrail (deny unadmitted renderer-family identifiers without exception-ADR). | `.github/workflows/` (PROPOSED) | CI |
+| 10 | Add CI bundle-analyzer guardrail. | `.github/workflows/` (PROPOSED) | CI |
+| 11 | Enumerate and act on any pre-existing artifacts from the prior posture (per OQ-A7-04). | repo-wide | cleanup |
+| 12 | Confirm no default-path package, contract, schema, policy, or release manifest references an unadmitted renderer family. | repo-wide | conformance check |
+
+Every step preserves reversibility per operating-contract §1.5.
+
+[↑ Back to top](#top)
+
+---
+
+<a id="12"></a>
+
+## 12. Truth-label summary
+
+- **CONFIRMED at doctrine level.** The single-renderer commitment is supported by Master MapLibre v2.1 Category W's evidence-identity normalization (`ML-W-072`–`ML-W-075`), by directory-rules §13.5's "two parallel homes" anti-pattern, and by AI Build Operating Contract §§7, 29, 31. The supersession of `KFM-P2-FEAT-0012` is supported by the card's own unresolved governance items.
+- **CONFIRMED at external-tech level.** MapLibre GL JS 5.0 native globe (January 2025), MapLibre 3D Tiles via three.js example (2026-03-03), MapLibre plugins page entries, and deck.gl `MapboxOverlay` interleaved mode are each verified against MapLibre's own published documentation and examples.
+- **PROPOSED at implementation level.** Every file path, schema URI, package name, validator name, CI workflow name, plugin pin, owner, `spec_hash`, and `last_reviewed` date in this ADR is **PROPOSED** or a **PLACEHOLDER** until verified against a mounted repository.
+- **NEEDS VERIFICATION.** The ADR-0007 numbering conflict with the Build Manual Recommended ADR Queue (OQ-A7-01); any pre-existing artifacts from the prior posture in the live repo (OQ-A7-04); the live `docs/adr/` set and acceptance status of `ADR-0001` and `ADR-0003`; the location of the Idea Index Master for `superseded_by` updates.
+- **UNKNOWN.** Subsurface volumetric stratigraphy for browser rendering at production quality (OQ-A7-05) — independent of this ADR's renderer commitment.
+
+This ADR is a **doctrine-level** instrument. It does **not** imply that the contracts, schemas, policies, validators, CI workflows, or apps it names exist in the mounted repo; it specifies what **must** exist for the decision to be operational, and what **must not** exist (default-path artifacts from unadmitted renderer families) for the decision to remain in effect.
+
+[↑ Back to top](#top)
+
+---
+
+<sub>**Document control.** ADR id `ADR-0007` is treated as binding per the user-supplied path; numbering conflict with the Build Manual §30 Recommended ADR Queue is recorded in OQ-A7-01 and to be reconciled against the live `docs/adr/` set at PR time. `spec_hash` is `NEEDS VERIFICATION` — emit via canonical JCS+SHA-256 of the frontmatter + body once the hashing tool is wired. Owner is a `<PLACEHOLDER>` per operating-contract §28; do not invent. Acceptance moves this document from `PROPOSED` to `accepted` and emits a forward link from `KFM-P2-FEAT-0012`.</sub>
+
+[↑ Back to top](#top)
