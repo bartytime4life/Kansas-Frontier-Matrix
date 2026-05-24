@@ -1,29 +1,33 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/focus-modes-readme  # NEEDS_VERIFICATION until registered
-title: Focus Modes — State + County Focus Mode Control Plane
+doc_id: kfm://doc/focus-mode-readme  # NEEDS_VERIFICATION until registered
+title: Focus Mode — State + County Focus Mode Control Plane
 type: standard
-version: v0.3
+version: v0.5
 status: draft
 owners:
   - <OWNER:focus-mode-steward>
   - <OWNER:directory-rules-steward>
 created: 2026-05-21
-updated: 2026-05-23
+updated: 2026-05-24
 policy_label: public
-authority: restates directory-rules.md §6.7 (NEVER overrides it); proposes extension of §6.7 to add -state scope (PROPOSED, pending ADR-0028)
+authority: restates docs/doctrine/directory-rules.md §6.7 (NEVER overrides it); §6.7 amended per ADR-0029 to canonize the singular lane name, container subdirectories, snake_case area dirs with _<scope> suffix, and consolidated single-file build plan; -state scope added per ADR-0028 (pending acceptance)
 related:
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md                                      # NEEDS_VERIFICATION
-  - docs/adr/ADR-0027-county-focus-mode-control-plane.md                  # PROPOSED — this control plane
-  - docs/adr/ADR-0028-state-scale-focus-mode-scope.md                     # PROPOSED — adds -state to allowed scope suffixes
-  - docs/focus-modes/COUNTY_INDEX.md
-  - docs/focus-modes/STATE_INDEX.md                                       # PROPOSED — state-scale lane index (single area)
-  - docs/focus-modes/_template/county-build-plan.md
-  - docs/focus-modes/_template/state-build-plan.md                        # PROPOSED — state-scale template
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0027-county-focus-mode-control-plane.md
+  - docs/adr/ADR-0028 — State-scale Focus Mode scope.md                   # adds -state to allowed scope suffixes; filename naming separate question (ADR-0029 §10.3)
+  - docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md              # this README v0.5 implements ADR-0029 structural decisions
+  - docs/focus-mode/COUNTY_INDEX.md                                       # NEEDS_VERIFICATION — lives at counties/COUNTY_INDEX.md per ADR-0029 §3.2 (container-scoped)
+  - docs/focus-mode/counties/COUNTY_INDEX.md
+  - docs/focus-mode/state/STATE_INDEX.md                                  # gated on ADR-0028
+  - docs/focus-mode/counties/_template/county_focus_mode_build_plan.md    # consolidated single-file template per ADR-0029 §3.4
+  - docs/focus-mode/state/_template/state_focus_mode_build_plan.md        # consolidated single-file template; gated on ADR-0028
+  - docs/focus-mode/ORGANIZATION_RULES.md                                 # v0.2 — categorization spec per ADR-0029 §6.1
+  - docs/focus-mode/counties/domains.md                                   # v0.1 — cross-domain composition reference
   - contracts/focus_mode/focus_mode_payload.md
   - schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json        # NEEDS_VERIFICATION (PROPOSED emission)
-  - tools/validators/validate_focus_mode_index.py
+  - tools/validators/validate_focus_mode_index.py                         # validator update REQUIRED per ADR-0029 §6.3
   - tools/validators/validate_focus_mode_payload.py                       # PROPOSED follow-up
 tags:
   - kfm
@@ -38,23 +42,27 @@ tags:
   - state-scale
   - county-scale
   - domain-coverage
+  - lane-structure-canonized
 notes:
-  - PROPOSED v1.2 deliverable referenced as a deferred item in directory-rules.md §18.d.
-  - Restates directory-rules.md §6.7 placement contract, casing convention, and first-PR sequence.
-  - v0.3 adds state-scale (kansas-state) lane as a PROPOSED extension to the §6.7 scope-suffix enumeration; this extension requires ADR-0028 before any kansas-state/ lane is merged.
-  - All cross-root paths are governed by directory-rules.md §6.7; this README is an orientation, not an override.
-  - Existence of per-county build plans is PROPOSED until verified against the live repository.
+  - v0.5 (2026-05-24) reflects ADR-0029 (Focus Mode lane structure canonized). Bookkeeping bump on v0.3 structure; no §-renumbering. Specifically reconciled: lane root is singular `docs/focus-mode/` (closes OPEN-FM-01); container subdirectories `counties/`, `state/`, `regions/`, `corridors/` are canonical (ADR-0029 §3.2); per-area dirs use `snake_case` with `_<scope>` suffix (closes OPEN-DR-08; ADR-0029 §3.3); per-area build plan is a single consolidated file `<area>_<scope>_focus_mode_build_plan.md` (ADR-0029 §3.4) — supersedes the seven-file split implied by v0.3 §13.
+  - The v0.3 plural form `docs/focus-modes/` is legacy spelling per ADR-0029 §3.6; surviving uses in body text below mark a sentence-by-sentence sweep that is OUT OF SCOPE for this bookkeeping bump and tracked as a separate cleanup PR.
+  - Restates docs/doctrine/directory-rules.md §6.7 placement contract, casing convention, and first-PR sequence — as amended by ADR-0029 §7.
+  - All cross-root paths are governed by docs/doctrine/directory-rules.md §6.7; this README is an orientation, not an override.
+  - Existence of per-county build plans is CONFIRMED at commit `44a6e7c` (64 county lanes present; templates pending pack-v2 emission).
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `docs/focus-modes/` — State + County Focus Mode Control Plane
+# `docs/focus-mode/` — State + County Focus Mode Control Plane
+
+> [!NOTE]
+> **v0.5 (2026-05-24)** — bookkeeping bump per ADR-0029. The lane root is singular `docs/focus-mode/`; container subdirectories (`counties/`, `state/`, `regions/`, `corridors/`) are canonical; per-area dirs use `snake_case` with `_<scope>` suffix; the per-area build plan is a single consolidated file. Surviving plural `docs/focus-modes/` spellings in the body below are legacy and tracked as a separate cleanup PR. See `docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md`.
 
 > **One README, many lanes, two scales.** A Focus Mode is a governed, evidence-bounded **proof slice** that demonstrates the full KFM trust path for a bounded spatial frame — at **state scale (Kansas-wide)** and at **county scale**, with the same 13 KFM domains represented at both scales. It is not a root folder, not a domain, and not a publication target by itself.
 
 ![governance](https://img.shields.io/badge/governance-CONFIRMED%20doctrine-blue)
-![placement](https://img.shields.io/badge/placement-Directory%20Rules%20v1.2%20%C2%A76.7-blue)
-![status](https://img.shields.io/badge/status-draft-yellow)
+![placement](https://img.shields.io/badge/placement-Directory%20Rules%20v1.2%20%C2%A76.7%20%2B%20ADR--0029-blue)
+![status](https://img.shields.io/badge/status-draft%20v0.5-yellow)
 ![implementation](https://img.shields.io/badge/implementation-PROPOSED-yellow)
 ![scope%20extension](https://img.shields.io/badge/scope%20extension-%2Dstate%20PROPOSED%20(ADR--0028)-orange)
 ![doc%20class](https://img.shields.io/badge/doc%20class-orientation%20%2B%20control%20plane-6f42c1)
