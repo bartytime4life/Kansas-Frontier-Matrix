@@ -9,7 +9,7 @@ created: 2026-05-22
 updated: 2026-05-22
 policy_label: public_draft
 related:
-  - docs/focus-mode/people/README.md                # PROPOSED sibling — People/DNA/Land authoring guidance
+  - docs/focus-mode/people_dna_land/README.md                # PROPOSED sibling — People/DNA/Land authoring guidance
   - docs/focus-modes/README.md                      # PROPOSED — canonical Focus Mode pattern overview per Directory Rules §6.7
   - docs/focus-modes/ellsworth-county/README.md     # PROPOSED — county exemplar
   - docs/domains/                                   # PROPOSED — canonical domain lane roots per Directory Rules §12
@@ -99,7 +99,7 @@ flowchart TB
   subgraph BRIDGE["Cross-cutting Focus Mode authoring docs (PROPOSED tree)"]
     BR1["docs/focus-mode/counties/domains.md
     (this doc)"]:::flag
-    BR2["docs/focus-mode/people/README.md
+    BR2["docs/focus-mode/people_dna_land/README.md
     (sibling)"]:::flag
   end
 
@@ -155,7 +155,7 @@ CONFIRMED: the Atlas v1.0 domain inventory and citation short-names. [ENCY §2.1
 | 11 | Roads / Rail / Trade | [DOM-ROADS] | `RoadSegment`, `RailSegment`, `CorridorRoute`, `TransportFacility`, `RestrictionEvent` | T0 (mostly); T2/T4 sensitive condition detail | Public corridors first-slice; vulnerability detail denied. |
 | 12 | Settlements / Infrastructure | [DOM-SETTLE] | `Settlement`, `Municipality`, `GhostTown`, `InfrastructureAsset`, `Fort`, `Mission` | T0 settlement; **T4 default** for critical-asset detail | Settlements safe; critical-asset condition denied or generalized. |
 | 13 | Archaeology / Cultural Heritage | [DOM-ARCH] | `ArchaeologicalSite`, `SiteComponent`, `CulturalTemporalPeriod`, `SurveyProject`, `ArtifactRecord` | **T4 default**; T1 generalized only after steward review | Exact coordinates **never** public; only generalized after sovereignty review. |
-| 14 | People / Genealogy / DNA / Land | [DOM-PEOPLE] | `PersonAssertion`, `LifeEvent`, `LandOwnershipAssertion`, `DNAMatchEvidence`, `LandParcel` | **T4 default** for living-person/DNA/private parcel join | See `docs/focus-mode/people/README.md`. |
+| 14 | People / Genealogy / DNA / Land | [DOM-PEOPLE] | `PersonAssertion`, `LifeEvent`, `LandOwnershipAssertion`, `DNAMatchEvidence`, `LandParcel` | **T4 default** for living-person/DNA/private parcel join | See `docs/focus-mode/people_dna_land/README.md`. |
 | 15 | Frontier Matrix | [ENCY] [UNIFIED] | `FrontierDefinition`, `GeographyVersion`, `County-YearPanel`, `PopulationObservation`, `LandOfficeRecord`, `AdminBoundaryChange` | T0 | County-year panels are central to county slices. |
 
 PROPOSED 16th lane — **Planetary / 3D / Digital Twin / Synthetic** [MAP-MASTER] [UIAI] — is admission-gated for county slices: scenes require a `RealityBoundaryNote`, `RepresentationReceipt`, and 3D admission closure. Most first-county slices defer 3D entirely.
@@ -602,7 +602,7 @@ Use when planning or reviewing any county Focus Mode build plan. Items map back 
 ## 13. Path placement and open verification
 
 > [!NOTE]
-> Per the rules under which this doc is authored, path drift is surfaced, not smoothed. The same drift applies to this file as to its sibling `docs/focus-mode/people/README.md`.
+> Per the rules under which this doc is authored, path drift is surfaced, not smoothed. The same drift applies to this file as to its sibling `docs/focus-mode/people_dna_land/README.md`.
 
 ### 13.1 Path discrepancies (PROPOSED, NEEDS VERIFICATION)
 
@@ -612,7 +612,7 @@ Use when planning or reviewing any county Focus Mode build plan. Items map back 
 | Sub-segment | `counties/` (a scope class, not an area) | `<area>-<scope>/` (a single area name with scope suffix) per §6.7.2, §6.7.4 | DRIFT in form — `counties/` is not a single Focus Mode area |
 | Most defensible reading | Cross-cutting **authoring reference** for any county Focus Mode | Not a Focus Mode composition | PROPOSED |
 | Alternative canonical homes | n/a | `docs/focus-modes/README.md` (a section inside the pattern overview) **or** `docs/focus-modes/_reference/counties-domains.md` | PROPOSED for ADR |
-| Sibling pattern | `docs/focus-mode/people/README.md`, `docs/focus-mode/counties/domains.md`, … | PROPOSED authoring-reference tree distinct from `docs/focus-modes/<area>-county/` composition tree | PROPOSED — would benefit from an ADR formalizing the distinction |
+| Sibling pattern | `docs/focus-mode/people_dna_land/README.md`, `docs/focus-mode/counties/domains.md`, … | PROPOSED authoring-reference tree distinct from `docs/focus-modes/<area>-county/` composition tree | PROPOSED — would benefit from an ADR formalizing the distinction |
 
 ### 13.2 Open verification items
 
