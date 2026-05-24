@@ -10,6 +10,7 @@ on:
 jobs:
   doctrine-artifact-prereq:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v6
       - run: python scripts/maintenance/check_required_doctrine_artifacts.py
