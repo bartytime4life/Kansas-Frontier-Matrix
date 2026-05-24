@@ -9,7 +9,7 @@
 | Field | Value |
 |---|---|
 | **Document type** | Governance doctrine |
-| **Edition** | **v1.2** — refresh + new evidence basis. No canonical root added, removed, or renamed. Adds §6.7 (focus-mode placement contract) and folds in CONFIRMED live-repo evidence at a specific commit. See §21 for the v1.1 → v1.2 changelog. |
+| **Edition** | **v1.3** — Focus Mode lane structure canonized per ADR-0029. Amends §6.7.2 (singular `docs/focus-mode/` lane name + container subdirectories + snake_case area dirs + consolidated single-file build plan), §6.7.3 (closes OPEN-DR-08), §13.5 (clarifying note on in-lane domain folders as framework treatment, not domain doctrine), §18.d (OPEN-DR-08 closure). No canonical root added, removed, or renamed. See §21 for the v1.2 → v1.3 changelog. |
 | **Authority of these rules** | CONFIRMED — these are the canonical placement rules |
 | **Authority of any specific path quoted here** | Mixed. Live-repo paths CONFIRMED at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` per the *KFM Repository Structure Guiding Document* (v0.1) are marked **CONFIRMED (at commit)**. All other paths remain **PROPOSED** until verified against later mounted-repo evidence. |
 | **Canonical home** | `docs/doctrine/directory-rules.md` — **RESOLVED.** Moved to the proposed canonical home from `docs/directory-rules.md` on branch `claude/magical-johnson-jP2GB`. The bootstrap stub previously at this path is superseded by this file's content. |
@@ -459,7 +459,7 @@ The Focus Mode pattern uses **consistent area sub-lanes** across responsibility 
 
 | Root | Path pattern | Authority | Notes |
 |---|---|---|---|
-| `docs/` | `docs/focus-modes/<area>-<scope>/` (e.g., `docs/focus-modes/ellsworth-county/`) | Canonical | Kebab-case area name with scope suffix (`-county`, `-region`, `-corridor`). Holds `README.md`, `build-plan.md`, `layer-registry.md`, `evidence-model.md`, `acceptance-checklist.md`, `source-seed-list.md`, `public-safety-notes.md`, and area-specific framing notes. |
+| `docs/` | `docs/focus-mode/{counties,state,regions,corridors}/<area>_<scope>/` (e.g., `docs/focus-mode/counties/ellsworth_county/`) | Canonical (v1.3 per ADR-0029) | **Singular** lane name, **kebab-case container** subdirectories, **snake_case area dir + `_<scope>` suffix**. Holds `README.md`, `<area>_<scope>_focus_mode_build_plan.md` (consolidated single-file build plan per ADR-0029 §3.4), and optional `*-notes.md` framing files. Plus container-level `COUNTY_INDEX.md` / `STATE_INDEX.md` and container-scoped `_template/`. Plus 13 in-lane `<domain>/` folders holding focus-mode framework treatment of each canonical domain (NOT domain doctrine — see §13.5 clarification and ADR-0029 §7.3). |
 | `contracts/` | `contracts/focus_mode/` | Canonical (new top-level family; v1.2) | Snake_case, singular. Joins the existing `contracts/{source,evidence,data,runtime,release,correction,governance,domains}/` families. Holds the **semantic Markdown** for `FocusModePayload`, `LayerRegistryEntry`, `AtlasCard` (if not under `contracts/atlas/`), and area-bounding contracts. **MUST NOT** hold `.schema.json` files (those go under §6.4 schema home). |
 | `schemas/` | `schemas/contracts/v1/focus_mode/` | Canonical | Per ADR-0001 schema home (§7.4). Holds `focus_mode_payload.schema.json`, `layer_registry_entry.schema.json`, and area-bounding schema files. |
 | `fixtures/` | `fixtures/focus_modes/<area>/{valid,invalid}/` | Canonical | Note the **plural snake_case** here (`focus_modes`), in contrast to `contracts/focus_mode/` (singular). This mirrors the §6.6 `fixtures/{valid,invalid}/` substructure. Each area MUST have both `valid/` and `invalid/` populated; negative fixtures (unresolved evidence, public RAW access, missing policy label, model output as evidence, exact sensitive geometry) are required, not optional. |
@@ -472,17 +472,17 @@ The Focus Mode pattern uses **consistent area sub-lanes** across responsibility 
 | `pipeline_specs/` | `pipeline_specs/focus_modes/<area>/` (optional) | Canonical | Only when an area requires its own declarative pipeline composition distinct from the domain pipeline specs. |
 | `examples/` | `examples/focus-modes/<area>/` (optional) | Canonical | Worked, runnable area-scoped example wiring. |
 
-#### 6.7.3 Casing convention (v1.2 PROPOSED, pending ADR)
+#### 6.7.3 Casing convention (v1.3 RESOLVED per ADR-0029; closes OPEN-DR-08)
 
-The Focus Mode pattern uses **two casing styles** by responsibility root, and this is intentional:
+The Focus Mode pattern uses **three casing styles** by responsibility root, and this is intentional:
 
-- **Kebab-case + scope suffix in `docs/`:** `docs/focus-modes/ellsworth-county/`, `docs/focus-modes/smoky-hill-corridor/`. Matches `docs/` convention (kebab-case lanes; human-readable scope).
+- **Singular + snake_case + scope suffix in `docs/focus-mode/`:** `docs/focus-mode/counties/ellsworth_county/`, `docs/focus-mode/state/kansas_state/`. **Deliberate exception** to the general kebab-case sibling-lane convention in `docs/`. Rationale per ADR-0029 §3.3 and §4.3 (self-describing-filename principle): the per-area build-plan file is `<area>_<scope>_focus_mode_build_plan.md`, and matching the directory name's word-separator convention to the filename's removes a class of authoring errors.
 - **Snake_case, area-only in `contracts/`, `schemas/`, `fixtures/`, `pipeline_specs/`:** `contracts/focus_mode/`, `fixtures/focus_modes/ellsworth/`. Matches Python/JSON identifier convention; scope suffix dropped because the parent already encodes scope.
 - **Kebab-case, area-only in `apps/`, `data/{catalog,published,registry}/`, `release/`, `examples/`:** `apps/explorer-web/src/focus-modes/ellsworth/`, `data/published/layers/ellsworth/`, `release/candidates/ellsworth-focus-mode/`. Matches URL/filesystem convention.
 
-**Why mixed casing is acceptable here:** the convention follows the *host root's* convention, not the focus-mode pattern's convention. This avoids forcing one casing across roots that have different established norms. The cost is that the same area appears as `ellsworth-county`, `ellsworth`, and `ellsworth-focus-mode` across roots; this is recorded as **OPEN-DR-08** (§18.d) for ADR-level resolution.
+**Why mixed casing is acceptable here:** the convention follows the *host root's* convention, not the focus-mode pattern's convention. This avoids forcing one casing across roots that have different established norms. The cost is that the same area appears as `ellsworth_county`, `ellsworth`, and `ellsworth-focus-mode` across roots; OPEN-DR-08 (§18.d) was the open item tracking this; ADR-0029 closes it by ratifying the per-root pattern above.
 
-Pending ADR, the per-root casing in §6.7.2 is the v1.2 recommendation. A `docs/focus-modes/README.md` SHOULD restate the mapping so new authors do not invent siblings.
+The §6.7.2 placement table is the v1.3 normative pattern (per ADR-0029). `docs/focus-mode/README.md` v0.5 restates the mapping so new authors do not invent siblings.
 
 #### 6.7.4 One area = one Focus Mode
 
@@ -964,6 +964,8 @@ The original four drift patterns, retained, with concrete fixes.
 | **Docs naming duplication** *(v1.2; CONFIRMED at commit `b6a279…`)* | `docs/atlas/` and `docs/atlases/` both present | Pick `docs/atlases/` per §6.1 / Atlas v1.1 Appendix G; deprecate or mirror `docs/atlas/`. |
 | **Docs registry mirrors canonical roots** *(v1.2; CONFIRMED at commit `b6a279…`)* | `docs/registry/schema/`, `docs/registry/fixture/`, `docs/registry/validator/`, `docs/registry/policy/` present | Compatibility-as-authority drift. `docs/` explains; it does not own schema/fixture/validator/policy. Convert to pointer pages; move machine registers to `control_plane/`. |
 
+> **Clarification per ADR-0029 (v1.3).** Per-domain folders inside `docs/focus-mode/<domain>/` are *focus-mode framework treatment of each domain*, NOT domain doctrine. Domain doctrine remains at `docs/domains/<domain>/` per §12 Domain Placement Law. The in-lane `<domain>/README.md` files cross-reference `docs/domains/<domain>/` but do not duplicate it. The §6.7.5 + §12 "Focus Mode is NOT a domain" anti-pattern is preserved: the in-lane folders are not domains, they are framework treatments. See ADR-0029 §7.3.
+
 ---
 
 ## 14. Migration Discipline
@@ -1158,7 +1160,7 @@ These questions are healthy; they are the kinds of questions ADRs resolve. They 
 
 - **OPEN-DR-07 — `tools/validate_all.py` (CONFIRMED at commit) vs `tools/validators/validate_all.py` (v1.1 doctrine).** Live-repo evidence places the orchestrator at `tools/validate_all.py` (one level higher than v1.1 doctrine assumed). The location difference is **non-trivial** because: (a) the exit-code contract is ADR-class per §2.4(5) and the contract documentation must point to one path; (b) CI workflows, pre-commit hooks, and Make targets all reference one path; (c) downstream documentation (`tools/README.md`) was authored against the v1.1 path. **Resolution required by ADR.** Two viable resolutions: **(R1) Reconcile doctrine to repo** — v1.2 doctrine and §7.5.a follow the live-repo location `tools/validate_all.py`. Lightest migration, lightest doctrine change. **(R2) Reconcile repo to doctrine** — move the live `validate_all.py` to `tools/validators/validate_all.py` and update CI / Make. Heavier migration; aligns with the principle that "the orchestrator belongs with the things it orchestrates." Recommendation pending ADR is **R1** because it minimizes churn and the orchestrator-at-tools-root pattern is defensible (orchestrators commonly sit one level above their constituents).
 
-- **OPEN-DR-08 — Focus-mode casing inconsistency across responsibility roots.** The §6.7.2 canonical placement uses kebab-case-with-scope-suffix in `docs/` (`docs/focus-modes/ellsworth-county/`), snake_case-area-only in `contracts/`/`schemas/`/`fixtures/`/`pipeline_specs/` (`contracts/focus_mode/`, `fixtures/focus_modes/ellsworth/`), and kebab-case-area-only in `apps/`/`data/`/`release/`/`examples/` (`apps/explorer-web/src/focus-modes/ellsworth/`, `release/candidates/ellsworth-focus-mode/`). Same area = three forms. This is intentional (follow the host root's casing) but creates a cross-reference burden. **Resolution by per-root README in `docs/focus-modes/README.md`** (no ADR needed; analogous to OPEN-DR-04's resolution) is acceptable; alternatively a one-line ADR can freeze the mapping. **Recommendation:** authoritative casing table in `docs/focus-modes/README.md`, restated from §6.7.3.
+- **OPEN-DR-08 — Focus-mode casing inconsistency across responsibility roots. [CLOSED v1.3 by ADR-0029 §3.3.]** The `docs/` Focus Mode root uses singular + snake_case + `_<scope>` suffix (`docs/focus-mode/counties/ellsworth_county/`, `docs/focus-mode/state/kansas_state/`) per ADR-0029; the snake_case-area-only and kebab-case-area-only conventions in other roots are unchanged. The "three forms for the same area" cross-reference burden remains an authoring concern but is no longer an open question for doctrine — the per-root pattern is ratified by ADR-0029 §3.3 + §4.3 (self-describing-filename principle). See `docs/focus-mode/README.md` v0.5 for the authoritative restatement.
 
 - **OPEN-DR-09 — Live-repo drift items requiring ADR-class resolution.** The *KFM Repository Structure Guiding Document* (v0.1, commit `b6a27916…`) CONFIRMS the following drift items in the live repo. Each is recorded as an anti-pattern in §13.5 (v1.2 rows); each requires ADR-class resolution because the fix involves root retirement, parallel-authority retirement, or lifecycle-phase reconciliation per §2.4. They are listed here as a single OPEN-DR umbrella to avoid fragmenting the open-question list; individual ADRs (ADR-DR-09-a, -b, -c, …) SHOULD be opened as the work is sequenced.
 
@@ -1258,6 +1260,36 @@ The thirteen v1.2-added drifts to prevent (§13.5):
 ---
 
 ## 21. Changelog
+
+### v1.3 — 2026-05-24 (Focus Mode lane structure canonized per ADR-0029)
+
+**Authority class:** §17 "PR + reviewer sign-off; ADR required for §2.4 changes." ADR-0029 is the ADR; this edition applies the four §7 amendments specified there. No canonical root added, removed, or renamed. Schema-home rule unchanged. Lifecycle phases unchanged. No parallel authority created.
+
+**What changed:**
+
+| § | Change | Authority |
+|---|---|---|
+| §0 | Edition row bumped to v1.3; v1.3 summary added | this changelog entry |
+| §6.7.2 `docs/` row | Singular `docs/focus-mode/` lane name + `{counties,state,regions,corridors}/` container subdirectories + `snake_case` area dirs with `_<scope>` suffix + consolidated single-file `<area>_<scope>_focus_mode_build_plan.md` + 13 in-lane domain folders | ADR-0029 §3.1, §3.2, §3.3, §3.4, §3.6 |
+| §6.7.3 | Casing convention amended: singular + snake_case + scope suffix in `docs/focus-mode/` listed as the first bullet (deliberate exception to general kebab-case sibling-lane convention in `docs/`); subsection heading marked "RESOLVED per ADR-0029; closes OPEN-DR-08" | ADR-0029 §3.3, §4.3, §7.2 |
+| §13.5 | Clarifying note added (does not remove existing anti-patterns): per-domain folders inside `docs/focus-mode/<domain>/` are *focus-mode framework treatment*, NOT domain doctrine; the §6.7.5 + §12 "Focus Mode is NOT a domain" anti-pattern is preserved | ADR-0029 §7.3 |
+| §18.d OPEN-DR-08 | Status changed from open to CLOSED — singular + snake_case + scope suffix in `docs/focus-mode/`. The "three forms for the same area" cross-reference burden is now an authoring concern, not an open doctrinal question. | ADR-0029 §3.3 |
+
+**What did NOT change:**
+
+- No canonical root added, removed, or renamed.
+- The §6.7.5 "What a Focus Mode is NOT" list is unchanged; the in-lane domain folders in `docs/focus-mode/<domain>/` are not domains — they are framework treatments per the §13.5 clarification.
+- ADR-0028 (`-state` scope + 13-domain coverage rule) is independent and remains in force.
+- OPEN-DR-06 (apps/web vs apps/explorer-web), OPEN-DR-07 (validate_all.py location), OPEN-DR-09 (live-repo drift items) are unchanged by this edition.
+
+**Companion artifacts authored alongside this amendment** (on branch `claude/magical-johnson-jP2GB`):
+
+- `docs/adr/ADR-0029-focus-mode-lane-structure-canonized.md`
+- `docs/adr/ADR-0029-supplement-directory-rules-amendments.md` (the paste-ready patches applied here)
+- `docs/focus-mode/README.md` v0.5 (bookkeeping bump)
+- `docs/focus-mode/ORGANIZATION_RULES.md` v0.2 (categorization spec)
+- `docs/focus-mode/counties/_template/county_focus_mode_build_plan.md` (consolidated template)
+- `docs/focus-mode/state/_template/state_focus_mode_build_plan.md` (consolidated state template; gated on ADR-0028)
 
 ### v1.2 — 2026-05-21 (refresh + new evidence basis, no canonical-root change)
 
