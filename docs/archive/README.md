@@ -1,12 +1,62 @@
+<!--
+================================================================================
+KFM Meta Block v2
+--------------------------------------------------------------------------------
+doc_id:             kfm://doc/docs-archive-readme
+title:              docs/archive — Folder README
+class:              folder README (README-like)
+status:             draft
+truth_posture:      cite-or-abstain
+governance_layer:   docs/ control plane · archive authority class
+proposed_path:      docs/archive/README.md   (CONFIRMED doctrinally per
+                    directory-rules.md §6.1; mounted-repo presence UNKNOWN)
+directory_rule:     §6.1 (docs/ tree lists docs/archive/),
+                    §15  (folder README contract; archive class enumeration),
+                    §14.1/§14.2 (migration discipline that populates lineage/),
+                    §17  (placement-change bands; subfolder set is ADR-class).
+sibling_readmes:    docs/archive/lineage/README.md       (PROPOSED — §6 below)
+                    docs/archive/exploratory/README.md   (PROPOSED — §6 below)
+                    docs/archive/deprecated/README.md    (PROPOSED — §6 below)
+related_doctrine:   docs/doctrine/directory-rules.md
+                    docs/doctrine/lifecycle-law.md
+                    docs/doctrine/truth-posture.md
+                    docs/doctrine/trust-membrane.md
+related_registers:  docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md  (classifier)
+                    docs/registers/DRIFT_REGISTER.md                 (drift)
+                    docs/registers/VERIFICATION_BACKLOG.md
+related_arch_docs:  docs/architecture/spatial-foundation.md  (recent sibling)
+                    docs/architecture/trust-membrane.md      (recent sibling)
+                    docs/architecture/maplibre-3d.md         (CONFIRMED authored)
+related_control:    control_plane/deprecation_register.yaml  (sunset tracker)
+related_adrs:       ADR-0001 (schema home) — schema lineage stays at schema home,
+                    NOT here.
+                    PROPOSED ADR — archive immutability + metadata contract.
+                    PROPOSED ADR — deprecated/ ↔ deprecation_register handoff.
+spec_hash:          NEEDS VERIFICATION (generated at release time).
+owners:             <PLACEHOLDER — docs steward; do not invent>
+created:            <YYYY-MM-DD — set on PR>
+updated:            <YYYY-MM-DD — set on PR>
+policy_label:       public
+tags:               [kfm, docs, archive, lineage, exploratory, deprecated,
+                    supersession, directory-rules, README]
+notes:              Authored docs-only; no mounted repo, ADR set, CI run, or
+                    register state inspected. Every implementation-layer path,
+                    validator name, or sibling-README claim is PROPOSED until
+                    mounted-repo verification.
+================================================================================
+-->
+
+<a id="top"></a>
+
 # docs/archive
 
-> Retained predecessors, retired exploratory packets, and slated-for-removal material kept as **lineage evidence** — never as current canon.
+> **One-line purpose.** Retained predecessors, retired exploratory packets, and slated-for-removal material kept as **lineage evidence** — never as current canon. This folder holds; the registers classify; the canonical homes (`docs/doctrine/`, `docs/architecture/`, `docs/adr/`, `docs/atlases/`, `docs/standards/`, `docs/runbooks/`) decide.
 
 [![Authority](https://img.shields.io/badge/authority-archive-7c4a8d)](../doctrine/directory-rules.md)
-[![Status](https://img.shields.io/badge/status-PROPOSED-orange)](#0-status--authority)
+[![Status](https://img.shields.io/badge/status-PROPOSED-orange)](#3-status)
 [![Doctrine](https://img.shields.io/badge/doctrine-Directory%20Rules%20%C2%A76.1-blue)](../doctrine/directory-rules.md)
 [![Supersession](https://img.shields.io/badge/policy-supersede%2C%20do%20not%20delete-success)](#5-the-supersession-rule)
-[![Last reviewed](https://img.shields.io/badge/last%20reviewed-TODO-lightgrey)](#19-last-reviewed)
+[![Last reviewed](https://img.shields.io/badge/last%20reviewed-TODO-lightgrey)](#21-last-reviewed)
 [![License](https://img.shields.io/badge/license-TODO-lightgrey)](../../LICENSE)
 
 ---
@@ -35,6 +85,7 @@
 - [19. FAQ](#19-faq)
 - [20. Open questions](#20-open-questions)
 - [21. Last reviewed](#21-last-reviewed)
+- [22. Worked example — one supersession, end to end](#22-worked-example--one-supersession-end-to-end)
 
 ---
 
@@ -43,17 +94,18 @@
 | Field | Value |
 |---|---|
 | **Document type** | Folder README (README-like) |
-| **Folder authority class** | `archive` (per Directory Rules §15) — CONFIRMED |
+| **Folder authority class** | `archive` (per Directory Rules §15 enumeration) — CONFIRMED |
 | **Folder presence in mounted repo** | UNKNOWN — repository not mounted this session |
 | **Proposed canonical home** | `docs/archive/` per Directory Rules §6.1 — CONFIRMED doctrinally; PROPOSED as repo path |
 | **Owner** | Docs steward (PROPOSED) |
 | **Reviewers required for change** | Docs steward + at least one subsystem owner whose lineage is touched |
 | **Supersedes** | None |
-| **Related doctrine** | `../doctrine/directory-rules.md`, `../doctrine/lifecycle-law.md`, `../doctrine/truth-posture.md`, `../registers/CANONICAL_LINEAGE_EXPLORATORY.md`, `../registers/DRIFT_REGISTER.md` |
-| **Lifecycle invariant respected** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED — `docs/archive/` is **not** in this chain; it preserves doctrine and idea-packet history outside the data lifecycle. |
+| **Related doctrine** | `../doctrine/directory-rules.md`, `../doctrine/lifecycle-law.md`, `../doctrine/truth-posture.md`, `../doctrine/trust-membrane.md`, `../registers/CANONICAL_LINEAGE_EXPLORATORY.md`, `../registers/DRIFT_REGISTER.md` |
+| **Related sibling architecture docs** | [`../architecture/spatial-foundation.md`](../architecture/spatial-foundation.md), [`../architecture/trust-membrane.md`](../architecture/trust-membrane.md), [`../architecture/maplibre-3d.md`](../architecture/maplibre-3d.md) — examples of docs whose predecessor editions, if any, will land in [`lineage/architecture/`](#lineage). |
+| **Lifecycle invariant respected** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` — `docs/archive/` is **not** in this chain; it preserves doctrine and idea-packet history outside the data lifecycle. |
 
 > [!IMPORTANT]
-> `docs/archive/` is the destination of "preserve as lineage if superseded." It is read-mostly and append-mostly: things are added when superseded or retired, not edited in place. Editing an archived artifact silently is a drift event.
+> `docs/archive/` is the destination of "preserve as lineage if superseded." It is **read-mostly** and **append-mostly**: things are added when superseded or retired, not edited in place. Editing an archived artifact silently is a drift event.
 
 ---
 
@@ -67,7 +119,9 @@
 4. **Lineage stays readable.** Humans (not just registers) can walk back through the doctrinal history of any KFM concept.
 
 > [!NOTE]
-> `docs/archive/` **holds** lineage artifacts. The machine-readable classification of canon vs. lineage vs. exploratory lives in [`../registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../registers/CANONICAL_LINEAGE_EXPLORATORY.md) (PROPOSED). The two are complementary: the register classifies; the archive holds.
+> `docs/archive/` **holds** lineage artifacts. The machine-readable classification of canon vs. lineage vs. exploratory lives in [`../registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../registers/CANONICAL_LINEAGE_EXPLORATORY.md) *(PROPOSED)*. The two are complementary: the register classifies; the archive holds.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -79,7 +133,7 @@ This class means:
 
 - Content here is **never the source of a current decision.** A citation to anything under `docs/archive/` MUST resolve to a `superseded_by`, `replaced_by`, or `retired_on` link.
 - Content here is **retained for traceability**, not for active reading by new contributors.
-- Removal of an archived artifact is a content change with its own review burden (see §15).
+- Removal of an archived artifact is itself a content change with its own review burden (see [§15](#15-review-burden)).
 
 ---
 
@@ -91,19 +145,40 @@ This class means:
 
 ## 4. Repo fit
 
-- **Upstream (what populates this folder):**
-  - `docs/doctrine/`, `docs/architecture/`, `docs/adr/`, `docs/atlases/` *(PROPOSED)*, `docs/sources/`, `docs/standards/`, `docs/runbooks/` — when a current edition supersedes a prior one.
-  - `docs/intake/IDEA_INTAKE.md`, `docs/intake/NEW_IDEAS_INDEX.md` — when an exploratory packet is closed without promotion.
-  - `control_plane/deprecation_register.yaml` — entries with a sunset date eventually land their docs here.
-- **Downstream (what reads this folder):**
-  - `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` — references lineage entries by relative path.
-  - `docs/registers/DRIFT_REGISTER.md` — references archived predecessors when explaining a drift event.
-  - ADRs that record supersession.
-- **Not a substitute for:**
-  - `docs/reports/` — read-only **generated** review/release reports (current outputs).
-  - `docs/registers/` — machine-friendly **indexes** of classification.
-  - `control_plane/deprecation_register.yaml` — operational deprecation **tracker**.
-  - `release/` — release **decisions** (which are also retained, but in their canonical home, not here).
+### 4.1 Upstream — what populates this folder
+
+| Source | Triggers lineage entry when… | Lands in |
+|---|---|---|
+| `docs/doctrine/` | A successor edition replaces a prior one. | `lineage/doctrine/` |
+| `docs/architecture/` | A successor architecture page replaces a prior one. | `lineage/architecture/` |
+| `docs/adr/` | An ADR is superseded. | `lineage/adr/` |
+| `docs/atlases/` *(PROPOSED)* | A successor edition replaces a prior atlas/supplement entirely. | `lineage/atlases/` |
+| `docs/sources/` | A source-descriptor brief is replaced. | `lineage/<area>/` |
+| `docs/standards/` | A standards conformance brief is replaced. | `lineage/standards/` |
+| `docs/runbooks/` | A runbook is replaced. | `lineage/runbooks/` |
+| `docs/intake/IDEA_INTAKE.md`, `docs/intake/NEW_IDEAS_INDEX.md` | An exploratory packet is closed without promotion. | `exploratory/idea-packets/` |
+| `control_plane/deprecation_register.yaml` | Entries reach a scheduled sunset. | `deprecated/<sunset-dated subtree>/` |
+
+### 4.2 Downstream — what reads this folder
+
+| Reader | What it does with archive entries |
+|---|---|
+| [`../registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../registers/CANONICAL_LINEAGE_EXPLORATORY.md) *(PROPOSED)* | References lineage entries by relative path; classifies them. |
+| [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) *(PROPOSED)* | References archived predecessors when explaining a drift event. |
+| ADRs that record supersession | Link the archived predecessor as evidentiary tail. |
+| Stewards and reviewers | Walk the supersession chain to understand doctrinal history. |
+
+### 4.3 Not a substitute for
+
+| Confusable folder | What it actually is |
+|---|---|
+| `docs/reports/` | Read-only **generated** review/release reports (current outputs). |
+| `docs/registers/` | Machine-friendly **indexes** of classification. |
+| `control_plane/deprecation_register.yaml` | Operational deprecation **tracker** (sunset dates, migration plans). |
+| `release/` | Release **decisions** (retained in their canonical home, not here). |
+| `data/receipts/`, `data/proofs/`, `data/published/` | Trust artifacts — never in `docs/`. |
+
+[↑ Back to top](#top)
 
 ---
 
@@ -134,7 +209,7 @@ Operationally, the rule has three forms:
 
 ### lineage
 
-Predecessors of current canon. The reader can walk from a current doctrine doc back through its full revision lineage by following `superseded_by`/`supersedes` chains. Files here are **immutable** except for metadata updates (e.g., adding a back-link from a new successor).
+Predecessors of current canon. The reader can walk from a current doctrine doc back through its full revision lineage by following `superseded_by` / `supersedes` chains. Files here are **immutable** except for metadata updates (e.g., adding a back-link from a new successor).
 
 ### exploratory
 
@@ -146,6 +221,8 @@ A short-stay holding area. Files here are on a clock: each has a sunset date in 
 
 > [!CAUTION]
 > `deprecated/` is **not** a synonym for "old." Old-but-current content stays in its canonical home. Material lands in `deprecated/` only when an ADR or deprecation register entry has scheduled its removal.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -175,6 +252,9 @@ docs/archive/
     ├── README.md                # explains the deprecated bucket (PROPOSED)
     └── <sunset-dated subtrees>  # scheduled-for-removal docs (PROPOSED)
 ```
+
+> [!NOTE]
+> Topical subfolders under `lineage/` (`doctrine/`, `architecture/`, `adr/`, etc.) are an **intentional exception** to "flat is better than nested" because lineage is most readable when grouped by the canonical home it mirrors. Per Directory Rules §17, the subfolder set itself is ADR-class — see [§18](#18-adrs).
 
 ---
 
@@ -217,6 +297,8 @@ The "do not put X here" list is as important as the "do put Y here" list. Routin
 > [!WARNING]
 > The most common drift pattern for this folder is using it as a **convenience parking lot** for anything that "feels old." If the file still informs a current decision, it is not archived — it is current. Mark it current and review it, or supersede it properly.
 
+[↑ Back to top](#top)
+
 ---
 
 ## 10. Lifecycle: how things arrive
@@ -248,8 +330,10 @@ flowchart LR
     class X del;
 ```
 
+**Legend.** Green = current canonical state · Purple = archive bucket · Blue = classifier register · Red = deletion (rare; reviewed PR).
+
 > [!NOTE]
-> **NEEDS VERIFICATION:** the precise hand-off mechanism between `control_plane/deprecation_register.yaml` sunset events and `docs/archive/deprecated/` placement is not formally specified in current doctrine. Treat the dashed transitions in the diagram as PROPOSED.
+> **NEEDS VERIFICATION:** the precise hand-off mechanism between `control_plane/deprecation_register.yaml` sunset events and `docs/archive/deprecated/` placement is not formally specified in current doctrine. Treat the dashed transitions in the diagram as PROPOSED. See [§18](#18-adrs).
 
 ---
 
@@ -275,21 +359,24 @@ This folder does **not** emit:
 - Machine-readable registers (those live in `docs/registers/` and `control_plane/`).
 - Released artifacts (those live in `release/` and `data/published/`).
 
+[↑ Back to top](#top)
+
 ---
 
 ## 13. Conventions
 
-Every file in `docs/archive/` MUST carry a small front-matter block (HTML comment or YAML, matching the file's original convention) with these fields:
+Every file in `docs/archive/` MUST carry a small front-matter block with these fields. The block uses the file's original convention: **HTML comment** for Markdown docs that don't already carry YAML front-matter, **YAML front-matter** for those that do. Mixing the two in one file is forbidden.
 
 ```text
-archived_on:      YYYY-MM-DD
-archived_by:      <reviewer or team>
-predecessor_of:   <relative path to successor, or "none — exploratory closure" / "none — deprecated">
+archived_on:      YYYY-MM-DD          # ISO-8601 date
+archived_by:      <reviewer or team>  # GitHub handle, team, or "docs steward"
+predecessor_of:   <relative path to successor, or
+                   "none — exploratory closure" / "none — deprecated">
 supersession:     extension | replacement | retirement
 adr_ref:          <ADR id, if structural>
 register_ref:     <line/anchor in docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md>
 reason:           <one or two sentences>
-sunset_date:      YYYY-MM-DD   # required only for deprecated/
+sunset_date:      YYYY-MM-DD          # required only for deprecated/
 ```
 
 Additional rules:
@@ -313,6 +400,8 @@ Additional rules:
 
 > [!NOTE]
 > All validator paths above are **PROPOSED**. The validator-home convention is `tools/validators/<area>/` per Directory Rules §7.5; specific names and exit codes are NEEDS VERIFICATION until a validator PR lands.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -340,6 +429,8 @@ CODEOWNERS reference: *TODO — link once `CODEOWNERS` lines for `docs/archive/*
 | **Hidden retirement** | A canon doc disappears with no archive trace. | Open a PR that performs the `git mv` and adds metadata; never delete without supersession. |
 | **Cross-archive migration** | An exploratory packet "graduates" to `lineage/` after the fact. | Promote the **current** version to canon; leave the original packet in `exploratory/`. |
 
+[↑ Back to top](#top)
+
 ---
 
 ## 17. Related folders
@@ -347,7 +438,7 @@ CODEOWNERS reference: *TODO — link once `CODEOWNERS` lines for `docs/archive/*
 | Folder | Relationship |
 |---|---|
 | [`../doctrine/`](../doctrine/) | Source of most lineage entries; superseded doctrine moves here. |
-| [`../architecture/`](../architecture/) | Predecessor architecture pages land in `lineage/architecture/`. |
+| [`../architecture/`](../architecture/) | Predecessor architecture pages land in `lineage/architecture/`. Recent siblings: [`spatial-foundation.md`](../architecture/spatial-foundation.md), [`trust-membrane.md`](../architecture/trust-membrane.md), [`maplibre-3d.md`](../architecture/maplibre-3d.md). |
 | [`../adr/`](../adr/) | Superseded ADRs land in `lineage/adr/`. |
 | [`../atlases/`](../atlases/) *(PROPOSED)* | Atlas predecessor editions, if their canonical home retires them. |
 | [`../standards/`](../standards/) | Predecessor standards conformance briefs. |
@@ -368,8 +459,11 @@ CODEOWNERS reference: *TODO — link once `CODEOWNERS` lines for `docs/archive/*
 | `ADR-0001-schema-home.md` | Defines schema lineage convention (kept in `schemas/contracts/v1/...`, **not** here). |
 | *PROPOSED ADR* — archive immutability and metadata contract | Would formalize §13 conventions and §14 validation. |
 | *PROPOSED ADR* — relationship between `docs/archive/deprecated/` and `control_plane/deprecation_register.yaml` | Would close the dashed transitions in §10. |
+| *PROPOSED ADR* — `docs/archive/lineage/` subfolder set | Locks the topical subfolders (`doctrine/`, `architecture/`, `adr/`, `atlases/`, `standards/`, `runbooks/`, `domains/`) as the canonical set; new subfolders are ADR-class. |
 
 > Adding, removing, or renaming a subfolder under `docs/archive/` is a Directory Rules §2.4 change and requires an ADR.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -392,7 +486,7 @@ The register **classifies** (machine-readable list of canon vs. lineage vs. expl
 <details>
 <summary><strong>If Atlas v1.1 retains v1.0 verbatim "by integrated extension," should v1.0 be archived?</strong></summary>
 
-No — not while v1.0 remains a standalone, citable artifact in its canonical home. Per Atlas v1.1 doctrine, the v1.0 PDF "remains retained at its existing path as historical record." `docs/archive/lineage/atlases/` becomes the destination only if a future edition replaces v1.0 entirely (i.e., supersession by replacement, not extension).
+No — not while v1.0 remains a standalone, citable artifact in its canonical home. Per Atlas v1.1 doctrine, the v1.0 PDF "remains retained at its existing path as historical record." `docs/archive/lineage/atlases/` becomes the destination only if a future edition replaces v1.0 entirely (i.e., supersession by **replacement**, not extension).
 
 </details>
 
@@ -424,6 +518,15 @@ Rarely. The default is retain-forever. Deletion is reserved for content with exp
 
 </details>
 
+<details>
+<summary><strong>What about predecessor versions of recently-authored architecture docs?</strong></summary>
+
+Sibling architecture docs such as [`spatial-foundation.md`](../architecture/spatial-foundation.md), [`trust-membrane.md`](../architecture/trust-membrane.md), and [`maplibre-3d.md`](../architecture/maplibre-3d.md) are **currently `draft`**; they have no predecessors yet. If a future v2 supersedes any of them by **replacement**, the v1 file moves to `lineage/architecture/` under `git mv` with the supersession block from §13. If a future v2 **extends** v1 (the way Atlas v1.1 extends v1.0), the v1 file stays at its canonical home with the named edition tag.
+
+</details>
+
+[↑ Back to top](#top)
+
 ---
 
 ## 20. Open questions
@@ -437,6 +540,7 @@ These are explicitly **not resolved** by this README and should be tracked in `d
 - **OPEN:** Should `docs/archive/lineage/atlases/` accept Atlas v1.0 if and only if a future edition supersedes it by replacement? Recommend an ADR to fix the rule before the situation arises.
 - **OPEN:** Should `tools/validators/docs/archive_metadata/` be a domain of its own validator, or part of a broader `tools/validators/docs/` family? Resolution affects §14.
 - **OPEN:** Sunset-to-deletion default for `deprecated/`: retain-forever in `lineage/` vs. delete-after-window. Current text defaults to retain-forever; an ADR would lock it.
+- **OPEN:** Should the `lineage/architecture/` subtree mirror the canonical `docs/architecture/` layout 1:1 (one folder per superseded doc) or use a flat `<doc-name>.v<n>.md` naming convention? Resolution affects [§13](#13-conventions) filename rules.
 
 ---
 
@@ -448,6 +552,50 @@ These are explicitly **not resolved** by this README and should be tracked in `d
 | **Reviewer** | TODO |
 | **Next review due** | TODO (default: 6 months after last review per Directory Rules §15) |
 
+[↑ Back to top](#top)
+
+---
+
+## 22. Worked example — one supersession, end to end
+
+> **Illustrative only.** The example uses placeholder dates and identifiers. It does not claim that any mounted file actually moved this way; it shows the **shape** of a correctly-executed supersession.
+
+Suppose `docs/doctrine/lifecycle-law.md` is replaced by a v2 edition (supersession by **replacement**, per [§5](#5-the-supersession-rule)).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant A as Author (docs steward)
+    participant R as Reviewer (subsystem owner)
+    participant CI as CI / validators
+    participant REG as docs/registers/<br/>CANONICAL_LINEAGE_EXPLORATORY.md
+    participant ADR as docs/adr/
+
+    A->>A: draft v2 at docs/doctrine/lifecycle-law.md (replaces v1)
+    A->>A: git mv docs/doctrine/lifecycle-law.md \
+                  docs/archive/lineage/doctrine/lifecycle-law.v1.md
+    A->>A: add §13 metadata to v1:<br/>archived_on, archived_by,<br/>predecessor_of: ../../../doctrine/lifecycle-law.md,<br/>supersession: replacement,<br/>reason: "..."
+    A->>A: add supersedes: ../archive/lineage/doctrine/lifecycle-law.v1.md to v2
+    A->>ADR: open ADR-XXXX recording the change (if structural)
+    A->>REG: add classifier entry pointing at v1 archive path
+    A->>R: open PR
+    R->>CI: trigger validator suite
+    CI->>CI: §14 checks — metadata present, predecessor_of resolves,<br/>register entry exists, no canon doc cites the archive path as authority
+    CI-->>R: PASS
+    R->>A: approve (docs steward + subsystem owner per §15)
+    A->>A: merge
+    Note over A,REG: After merge: v1 is citable from v2 and from any<br/>future drift register entry that needs to explain the<br/>v1 → v2 transition. v1 is never edited again<br/>except for metadata corrections.
+```
+
+**Counter-example (what NOT to do).**
+
+- ❌ Delete `lifecycle-law.md` and start `lifecycle-law-v2.md` fresh, with no archive trace. *(Hidden retirement — anti-pattern [§16](#16-anti-patterns).)*
+- ❌ Edit `lifecycle-law.md` in place to become v2, with no `git mv` and no archive entry. *(Drift; the v1 content is unrecoverable from the doc history without spelunking commits.)*
+- ❌ Put the v1 file under `deprecated/` instead of `lineage/`. *(Wrong bucket; `deprecated/` is for sunsetting toward removal, not for predecessors with continuing reference value.)*
+- ❌ Cite `docs/archive/lineage/doctrine/lifecycle-law.v1.md` as the authority for a current decision. *(Archive-as-canon citation — anti-pattern [§16](#16-anti-patterns).)*
+
+[↑ Back to top](#top)
+
 ---
 
 ### Related docs
@@ -455,8 +603,17 @@ These are explicitly **not resolved** by this README and should be tracked in `d
 - [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) — folder authority classes, README contract, migration discipline.
 - [`../doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) *(PROPOSED)* — the data lifecycle, for contrast with the doctrine lifecycle the archive supports.
 - [`../doctrine/truth-posture.md`](../doctrine/truth-posture.md) *(PROPOSED)* — cite-or-abstain posture; archive entries are cited only as predecessors.
+- [`../doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) *(PROPOSED)* — boundary preventing raw/internal/unreviewed state from becoming public truth; archive is downstream of the same authority ladder.
+- [`../architecture/spatial-foundation.md`](../architecture/spatial-foundation.md) · [`../architecture/trust-membrane.md`](../architecture/trust-membrane.md) · [`../architecture/maplibre-3d.md`](../architecture/maplibre-3d.md) — recent sibling architecture docs whose predecessors (if any) will land in `lineage/architecture/`.
 - [`../registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../registers/CANONICAL_LINEAGE_EXPLORATORY.md) *(PROPOSED)* — classification register that complements this folder.
 - [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) *(PROPOSED)* — drift entries citing archived predecessors.
 - [`../adr/README.md`](../adr/README.md) *(PROPOSED)* — ADR home; superseded ADRs land in `lineage/adr/`.
 
-**Last updated:** TODO · **Authority class:** `archive` · **[⬆ Back to top](#docsarchive)**
+---
+
+**Last updated:** `<YYYY-MM-DD — set on PR>`
+**Doc version:** `v2 (draft)` — revises v1 (this session's update; no anchors changed)
+**Spec hash:** *NEEDS VERIFICATION (generated at release time).*
+**Authority class:** `archive`
+
+[↑ Back to top](#top)
