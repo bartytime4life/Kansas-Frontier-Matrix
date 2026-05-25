@@ -486,25 +486,28 @@ sequenceDiagram
     autonumber
     participant A as Author
     participant R as Reviewer
+    participant DS as Docs steward
     participant CI as CI / validators
     participant REG as docs/registers/<br/>CANONICAL_LINEAGE_EXPLORATORY.md
-    participant ADRH as docs/adr/<br/>(accepted-ADR home)
-    participant WD as this folder<br/>docs/archive/exploratory/<br/>withdrawn-adrs/
+    participant DR as this folder<br/>docs/archive/exploratory/<br/>drafts/
+    participant ADR as docs/adr/<br/>ADR-0078 — accepted
 
-    A->>ADRH: open ADR-0042 at docs/adr/ADR-0042-rename-...md<br/>status: Proposed
-    R->>A: comment — "collides with the release/ root"
-    A->>A: agree; decide to withdraw
-    A->>A: git mv docs/adr/ADR-0042-rename-...md \
-                   docs/archive/exploratory/withdrawn-adrs/\
-                   ADR-0042-rename-data-published-to-data-release.withdrawn.md
-    A->>A: add §9 metadata:<br/>archived_on, archived_by,<br/>predecessor_of: none — withdrawn,<br/>supersession: retirement,<br/>adr_id: ADR-0042,<br/>adr_status_at_withdrawal: proposed,<br/>closure_kind: withdrawn,<br/>withdrawn_on, withdrawn_by,<br/>withdrawal_reason: "Collides with the release/ root;<br/>a different ADR will clarify the data/published<br/>vs release/ boundary."
-    A->>REG: add classifier entry pointing here
-    A->>CI: open PR
-    CI->>CI: §12 checks — metadata present, filename matches,<br/>ADR id no longer claimed at docs/adr/, register entry exists
-    CI-->>R: PASS
-    R->>A: approve (docs steward per §13)
+    A->>A: write alternative-trust-membrane-as-service-mesh.2026-03.draft.md<br/>~1,800 words, 2 Mermaid diagrams, cites trust-membrane doctrine
+    A->>R: circulate to architecture review group
+    R->>A: discussion concludes — API-gate approach is preferred
+    ADR->>ADR: ADR-0078 — API-gate trust membrane — is authored,<br/>reviewed, and accepted weeks later
+    A->>A: decide to retire the draft — superseded by ADR-0078<br/>reason — superseded_by_other, not idea_not_pursued
+    A->>DR: git mv — or fresh authoring of —<br/>alternative-trust-membrane-as-service-mesh.2026-03.draft.md
+    Note over A,DR: §9 metadata added to the retired draft —<br/>archived_on, archived_by,<br/>predecessor_of — none — draft retirement,<br/>supersession — retirement,<br/>draft_title — "Alternative Trust-Membrane as Service Mesh",<br/>draft_authored — 2026-03,<br/>draft_circulated — true,<br/>draft_circulated_to — "architecture review group",<br/>retirement_reason — superseded_by_other,<br/>retired_on, retired_by,<br/>retirement_note — "Group consensus moved to API-gate approach.<br/>ADR-0078 governs the accepted decision.",<br/>superseded_by_ref — docs/adr/ADR-0078-...md,<br/>substance_evidence — "1,800 words, 2 diagrams, circulated"
+    A->>REG: add classifier entry pointing at the draft
+    A->>R: open PR
+    R->>DS: request docs steward review
+    DS->>CI: trigger validator suite
+    CI->>CI: §12 checks — metadata present, filename matches,<br/>superseded_by_ref resolves, substance_evidence cites §5.1,<br/>register entry exists, no canon doc cites it as authority
+    CI-->>DS: PASS
+    DS->>A: approve — docs steward per §13
     A->>A: merge
-    Note over A,WD: ADR-0042 id is consumed and never reused.<br/>A future ADR clarifying the data/published vs release/<br/>boundary receives a new id and cites this withdrawal<br/>in its "Alternatives considered" section.
+    Note over A,DR: The retired draft is now citable as "the path not taken"<br/>from ADR-0078's Alternatives section. The filename is<br/>consumed for traceability — a future service-mesh draft,<br/>if revived, gets a new filename with a later date stamp.
 ```
 
 **Counter-example (what NOT to do).**
