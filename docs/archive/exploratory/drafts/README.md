@@ -587,24 +587,24 @@ sequenceDiagram
     participant CI as CI / validators
     participant REG as docs/registers/<br/>CANONICAL_LINEAGE_EXPLORATORY.md
     participant DR as this folder<br/>docs/archive/exploratory/<br/>drafts/
-    participant ADR as docs/adr/<br/>ADR-0078 (accepted)
+    participant ADR as docs/adr/<br/>ADR-0078 — accepted
 
     A->>A: write alternative-trust-membrane-as-service-mesh.2026-03.draft.md<br/>~1,800 words, 2 Mermaid diagrams, cites trust-membrane doctrine
     A->>R: circulate to architecture review group
     R->>A: discussion concludes — API-gate approach is preferred
-    ADR->>ADR: ADR-0078 (API-gate trust membrane) is authored,<br/>reviewed, and accepted weeks later
-    A->>A: decide to retire the draft — superseded by ADR-0078<br/>(superseded_by_other, not idea_not_pursued)
-    A->>DR: git mv (or fresh authoring of)<br/>alternative-trust-membrane-as-service-mesh.2026-03.draft.md
-    A->>A: add §9 metadata —<br/>archived_on, archived_by,<br/>predecessor_of: none — draft retirement,<br/>supersession: retirement,<br/>draft_title — "Alternative Trust-Membrane as Service Mesh",<br/>draft_authored: 2026-03,<br/>draft_circulated: true,<br/>draft_circulated_to: "architecture review group",<br/>retirement_reason: superseded_by_other,<br/>retired_on, retired_by,<br/>retirement_note — "Group consensus moved to API-gate<br/>implementation; ADR-0078 governs the accepted approach.",<br/>superseded_by_ref: docs/adr/ADR-0078-...md,<br/>substance_evidence — "1,800 words, 2 diagrams, circulated"
+    ADR->>ADR: ADR-0078 — API-gate trust membrane — is authored,<br/>reviewed, and accepted weeks later
+    A->>A: decide to retire the draft — superseded by ADR-0078<br/>reason — superseded_by_other, not idea_not_pursued
+    A->>DR: git mv — or fresh authoring of —<br/>alternative-trust-membrane-as-service-mesh.2026-03.draft.md
+    Note over A,DR: §9 metadata added to the retired draft —<br/>archived_on, archived_by,<br/>predecessor_of — none — draft retirement,<br/>supersession — retirement,<br/>draft_title — "Alternative Trust-Membrane as Service Mesh",<br/>draft_authored — 2026-03,<br/>draft_circulated — true,<br/>draft_circulated_to — "architecture review group",<br/>retirement_reason — superseded_by_other,<br/>retired_on, retired_by,<br/>retirement_note — "Group consensus moved to API-gate approach.<br/>ADR-0078 governs the accepted decision.",<br/>superseded_by_ref — docs/adr/ADR-0078-...md,<br/>substance_evidence — "1,800 words, 2 diagrams, circulated"
     A->>REG: add classifier entry pointing at the draft
     A->>R: open PR
     R->>DS: request docs steward review
     DS->>CI: trigger validator suite
     CI->>CI: §12 checks — metadata present, filename matches,<br/>superseded_by_ref resolves, substance_evidence cites §5.1,<br/>register entry exists, no canon doc cites it as authority
     CI-->>DS: PASS
-    DS->>A: approve (docs steward per §13)
+    DS->>A: approve — docs steward per §13
     A->>A: merge
-    Note over A,DR: The retired draft is now citable as "the path not taken"<br/>from ADR-0078's Alternatives section. The filename is<br/>consumed for traceability — a future service-mesh draft<br/>(if revived) gets a new filename with a later date stamp.
+    Note over A,DR: The retired draft is now citable as "the path not taken"<br/>from ADR-0078's Alternatives section. The filename is<br/>consumed for traceability — a future service-mesh draft,<br/>if revived, gets a new filename with a later date stamp.
 ```
 
 **Counter-example (what NOT to do).**
