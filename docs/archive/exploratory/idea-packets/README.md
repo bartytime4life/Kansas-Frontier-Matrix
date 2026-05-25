@@ -554,10 +554,10 @@ sequenceDiagram
 
     A->>IDX: open INTAKE-0042 row<br/>disposition: open<br/>title: "Add data/cold-storage/ root"
     A->>A: draft packet body at working file<br/>(captures rationale, references, source links)
-    R->>A: comment — "parallel home to data/raw/;<br/>covered by retention metadata extension"
-    A->>A: agree; decide to close as not_promoted
+    R->>A: comment — parallel home to data/raw/,<br/>covered by retention metadata extension
+    A->>A: agree — decide to close as not_promoted
     A->>IP: git mv (or fresh authoring of)<br/>INTAKE-0042-add-data-cold-storage-root.packet.md
-    A->>A: add §9 metadata:<br/>archived_on, archived_by,<br/>predecessor_of: none — packet closure,<br/>supersession: retirement,<br/>intake_id: INTAKE-0042,<br/>intake_title: "Add data/cold-storage/ root",<br/>intake_opened_on, closure_disposition: not_promoted,<br/>closed_on, closed_by,<br/>closure_reason: "Would create parallel home to<br/>data/raw/ (Directory Rules §2.4(5)). Retention<br/>need already addressed by extending<br/>data/raw/<domain>/<source>/<timestamp>/ with<br/>retention metadata."
+    A->>A: add §9 metadata —<br/>archived_on, archived_by,<br/>predecessor_of: none — packet closure,<br/>supersession: retirement,<br/>intake_id: INTAKE-0042,<br/>intake_title: "Add data/cold-storage/ root",<br/>intake_opened_on, closure_disposition: not_promoted,<br/>closed_on, closed_by,<br/>closure_reason: "Would create parallel home to<br/>data/raw/ (Directory Rules §2.4(5)). Retention<br/>need already addressed by extending<br/>data/raw/{domain}/{source}/{timestamp}/ with<br/>retention metadata."
     A->>IDX: update row — disposition: closed_not_promoted,<br/>link: docs/archive/exploratory/idea-packets/<br/>INTAKE-0042-add-data-cold-storage-root.packet.md
     A->>REG: add classifier entry pointing at the packet
     A->>R: open PR
