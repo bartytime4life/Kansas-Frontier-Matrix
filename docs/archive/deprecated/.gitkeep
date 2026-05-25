@@ -1,0 +1,3 @@
+# deprecated/ — sunset-dated subtrees go here (PROPOSED, currently empty)
+# Each scheduled removal gets its own <YYYY-MM-DD>-<short-slug>/ subtree per
+# docs/archive/deprecated/README.md §5. No files until a sunset is scheduled.
