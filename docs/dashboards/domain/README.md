@@ -34,7 +34,7 @@ notes:
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-blue">
   <img alt="Lane: PROPOSED" src="https://img.shields.io/badge/lane-PROPOSED-orange">
   <img alt="Scope: specifications only" src="https://img.shields.io/badge/scope-specifications%20only-informational">
-  <img alt="Domains: 0 of 13" src="https://img.shields.io/badge/domains-0%20of%2013-yellow">
+  <img alt="Domains: 13 of 13" src="https://img.shields.io/badge/domains-13%20of%2013-yellowgreen">
   <img alt="Master indicators: Atlas §24.11" src="https://img.shields.io/badge/master%20indicators-Atlas%20%C2%A724.11-purple">
   <img alt="ADR: OPEN-DASH-01" src="https://img.shields.io/badge/ADR-OPEN--DASH--01-yellow">
   <img alt="Policy label: public" src="https://img.shields.io/badge/policy--label-public-lightgrey">
@@ -179,19 +179,19 @@ Domain naming follows `docs/domains/<domain>/` convention from Directory Rules �
 
 | Atlas Ch. | Domain | File | Status | Indicator categories that primarily apply |
 |:---:|:---|:---|:---:|:---|
-| 4 | Hydrology | `hydrology.md` | ⏳ | Evidence-and-source; Release-correction-rollback; Documentation-and-drift |
-| 5 | Soil | `soil.md` | ⏳ | Evidence-and-source; Documentation-and-drift |
-| 6 | Habitat | `habitat.md` | ⏳ | Evidence-and-source; Sensitivity-and-rights |
-| 7 | Fauna | `fauna.md` | ⏳ | **Sensitivity-and-rights** *(T4 defaults)*; Evidence-and-source |
-| 8 | Flora | `flora.md` | ⏳ | **Sensitivity-and-rights** *(T4 defaults)*; Evidence-and-source |
-| 9 | Agriculture | `agriculture.md` | ⏳ | Evidence-and-source; Documentation-and-drift |
-| 10 | Geology / Natural Resources | `geology.md` | ⏳ | Evidence-and-source |
-| 11 | Atmosphere / Air | `atmosphere.md` | ⏳ | Evidence-and-source; **AI-surface-health** *(forecasting cite-or-abstain)* |
-| 12 | Hazards | `hazards.md` | ⏳ | **Release-correction-rollback** *(alert-authority denial)*; Evidence-and-source |
-| 13 | Roads / Rail / Trade Routes | `roads-rail-trade.md` | ⏳ | Evidence-and-source; Documentation-and-drift |
-| 14 | Settlements / Infrastructure | `settlements-infrastructure.md` | ⏳ | **Sensitivity-and-rights** *(critical-asset T4)*; Release-correction-rollback |
-| 15 | Archaeology / Cultural Heritage | `archaeology.md` | ⏳ | **Sensitivity-and-rights** *(T4 defaults, sovereignty)*; Evidence-and-source |
-| 16 | People / Genealogy / DNA / Land Ownership | `people-dna-land.md` | ⏳ | **Sensitivity-and-rights** *(living-person T4, DNA T4)*; AI-surface-health |
+| 4 | Hydrology | [`hydrology.md`](hydrology.md) | ✅ | Evidence-and-source; Release-correction-rollback; Documentation-and-drift |
+| 5 | Soil | [`soil.md`](soil.md) | ✅ | Evidence-and-source; Documentation-and-drift |
+| 6 | Habitat | [`habitat.md`](habitat.md) | ✅ | Evidence-and-source; Sensitivity-and-rights |
+| 7 | Fauna | [`fauna.md`](fauna.md) | ✅ | **Sensitivity-and-rights** *(T4 defaults)*; Evidence-and-source |
+| 8 | Flora | [`flora.md`](flora.md) | ✅ | **Sensitivity-and-rights** *(T4 defaults)*; Evidence-and-source |
+| 9 | Agriculture | [`agriculture.md`](agriculture.md) | ✅ | Evidence-and-source; Documentation-and-drift |
+| 10 | Geology / Natural Resources | [`geology.md`](geology.md) | ✅ | Evidence-and-source |
+| 11 | Atmosphere / Air | [`atmosphere.md`](atmosphere.md) | ✅ | Evidence-and-source; **AI-surface-health** *(forecasting cite-or-abstain)* |
+| 12 | Hazards | [`hazards.md`](hazards.md) | ✅ | **Release-correction-rollback** *(alert-authority denial)*; Evidence-and-source |
+| 13 | Roads / Rail / Trade Routes | [`roads-rail-trade.md`](roads-rail-trade.md) | ✅ | Evidence-and-source; Documentation-and-drift |
+| 14 | Settlements / Infrastructure | [`settlements-infrastructure.md`](settlements-infrastructure.md) | ✅ | **Sensitivity-and-rights** *(critical-asset T4)*; Release-correction-rollback |
+| 15 | Archaeology / Cultural Heritage | [`archaeology.md`](archaeology.md) | ✅ | **Sensitivity-and-rights** *(T4 defaults, sovereignty)*; Evidence-and-source |
+| 16 | People / Genealogy / DNA / Land Ownership | [`people-dna-land.md`](people-dna-land.md) | ✅ | **Sensitivity-and-rights** *(living-person T4, DNA T4)*; AI-surface-health |
 
 > [!NOTE]
 > **Cross-domain systems** (Atlas Ch. 17 Frontier Matrix, Ch. 18 Planetary/3D, Ch. 19 Cross-Domain Systems) are **not** in this inventory — they belong in `docs/dashboards/cross-domain/` (PROPOSED sibling). Spatial Foundation (Ch. 3) is foundational, not a domain; its instrumentation rolls up into every domain's dashboard.
