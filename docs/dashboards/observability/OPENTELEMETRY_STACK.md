@@ -10,6 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/dashboards/README.md
+  - docs/dashboards/observability/README.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/dashboards/operational/SLO_LIVE_FEEDS.md
   - docs/standards/TELEMETRY_MINIMUMS.md
@@ -141,7 +142,7 @@ Mounted-repo / infra state NEEDS VERIFICATION.
 
 ---
 
-**Related docs:** [README.md](../README.md) · [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) ·
+**Related docs:** [observability/README.md](README.md) · [dashboards/README.md](../README.md) · [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) ·
 [operational/SLO_LIVE_FEEDS.md](../operational/SLO_LIVE_FEEDS.md) ·
 [standards/TELEMETRY_MINIMUMS.md](../../standards/TELEMETRY_MINIMUMS.md)
 

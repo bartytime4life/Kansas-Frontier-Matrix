@@ -10,6 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/dashboards/README.md
+  - docs/dashboards/governance/README.md
   - docs/dashboards/INDICATOR_CATALOG.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1.md   # §24.11.4
@@ -106,7 +107,7 @@ CONFIRMED receipt types (Atlas v1.1 §24.2); mounted-repo paths NEEDS VERIFICATI
 
 ---
 
-**Related docs:** [README.md](../README.md) · [INDICATOR_CATALOG.md](../INDICATOR_CATALOG.md) ·
+**Related docs:** [governance/README.md](README.md) · [dashboards/README.md](../README.md) · [INDICATOR_CATALOG.md](../INDICATOR_CATALOG.md) ·
 [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) · [governed-ai/](../../governed-ai/)
 
 **Last updated:** 2026-05-20 · **Edition:** v0.1 (draft) · **Owners:** `<ai-surface-steward>` (PROPOSED)

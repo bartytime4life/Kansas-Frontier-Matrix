@@ -71,6 +71,8 @@ notes:
 Governance-health dashboards mirror Atlas v1.1 Ch. 24.11. They **report** posture; the
 validator **enforces**.
 
+> See also: [`governance/README.md`](governance/README.md) — folder-level scope, exclusions, template, conflict resolution, and `OPEN-DASH-G-*` open questions.
+
 | Spec file | Documents | Source | Owner (PROPOSED) | Runs on (PROPOSED) | Status |
 |---|---|---|---|---|---|
 | [`governance/EVIDENCE_INTEGRITY.md`](governance/EVIDENCE_INTEGRITY.md) | EvidenceRef resolution, cite-or-abstain compliance, source-role drift, stale-source rate, quarantine throughput. | Atlas v1.1 §24.11.1 | Release / Source / AI surface stewards | `apps/review-console/` | PROPOSED |
@@ -87,6 +89,8 @@ validator **enforces**.
 
 Feed, artifact, and QC dashboards. They watch the pipeline's day-to-day health.
 
+> See also: [`operational/README.md`](operational/README.md) — folder-level scope, the card-driven inventory pattern, exclusions, and `OPEN-DASH-O-*` open questions.
+
 | Spec file | Documents | Source | Owner (PROPOSED) | Runs on (PROPOSED) | Status |
 |---|---|---|---|---|---|
 | [`operational/SLO_LIVE_FEEDS.md`](operational/SLO_LIVE_FEEDS.md) | Standards-first SLOs for live transit and other high-cadence feeds: freshness, schema validation, latency, deduplication, non-material suppression, agency license terms. | `KFM-P11-FEAT-0002` | Source steward · Observability steward | OpenTelemetry stack / `apps/review-console/` | PROPOSED |
@@ -102,6 +106,8 @@ Feed, artifact, and QC dashboards. They watch the pipeline's day-to-day health.
 
 Domain-specific dashboards live under `domain/<domain>/`. The `<domain>` segment MUST
 match a Directory Rules §6.1 `docs/domains/` name.
+
+> See also: [`domain/README.md`](domain/README.md) — folder-level scope, per-domain inventory and emphasis, the §6 spec template, and `OPEN-DASH-01..08` open questions (subfolder vs. flat layout, sensitivity-reviewer gating, cross-domain promotion path).
 
 | Spec file | Documents | Source | Owner (PROPOSED) | Runs on (PROPOSED) | Status |
 |---|---|---|---|---|---|
@@ -127,6 +133,8 @@ match a Directory Rules §6.1 `docs/domains/` name.
 ## 5. Observability dashboards
 
 CI / pipeline observability surfaces — the stack the other dashboards may read from.
+
+> See also: [`observability/README.md`](observability/README.md) — folder-level scope, substrate-vs-application guard, per-card inventory, and `OPEN-DASH-OBS-*` open questions.
 
 | Spec file | Documents | Source | Owner (PROPOSED) | Runs on (PROPOSED) | Status |
 |---|---|---|---|---|---|

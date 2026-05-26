@@ -10,6 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/dashboards/README.md
+  - docs/dashboards/governance/README.md
   - docs/dashboards/INDICATOR_CATALOG.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1.md   # §24.11.5
@@ -108,7 +109,7 @@ Mounted-repo paths NEEDS VERIFICATION.
 
 ---
 
-**Related docs:** [README.md](../README.md) · [INDICATOR_CATALOG.md](../INDICATOR_CATALOG.md) ·
+**Related docs:** [governance/README.md](README.md) · [dashboards/README.md](../README.md) · [INDICATOR_CATALOG.md](../INDICATOR_CATALOG.md) ·
 [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) ·
 [doctrine/directory-rules.md](../../doctrine/directory-rules.md) ·
 [registers/DRIFT_REGISTER.md](../../registers/DRIFT_REGISTER.md)
