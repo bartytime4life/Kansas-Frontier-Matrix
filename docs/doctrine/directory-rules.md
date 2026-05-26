@@ -1,6 +1,131 @@
+I’ll start by gathering evidence from the project knowledge before drafting. The task says “update this markdown” — the markdown content attached is Directory Rules v1.2, and the attached rules are the AI Build Operating Contract (in the system context) plus the KFM-aware documentation engineer prompt. Let me confirm the current state of docs/doctrine/directory-rules.md and verify formatting conventions used elsewhere in the corpus.
+
+I found a v1.3 of directory-rules.md already in project knowledge — a “renderer-decision refresh” that retires packages/cesium/. Let me retrieve more of the v1.3 to understand the current canonical state before deciding what to update.
+
+Let me see more of the v1.3 content and the supporting maplibre-3d.md doc to understand the current canonical state of the document.
+
+Let me check the current state of the v1.3 mini-TOC, KFM Meta Block usage, and badge conventions to determine what polish is missing.
+
+I need to verify I have the full v1.3 §11 rewrite (UI and Map Roots) and v1.3 §16 checklist additions before drafting.
+
+I now have a complete enough picture. The attached document is v1.2, but project knowledge contains v1.3 (renderer-decision refresh, Cesium retired) which supersedes v1.2. Per the source hierarchy, project knowledge is authoritative for KFM concepts and the v1.3 supersession is documented. I’ll produce a v1.4 presentation refresh that integrates the v1.3 substantive content (since it’s the current canonical state per project knowledge) and applies the Document 2 formatting mandate (KFM Meta Block v2, Shields.io badge row, quick-jump mini-TOC, Mermaid diagram, back-to-top anchors, footer block). Doctrine is unchanged at v1.4.
+
+SECTION 1 — GITHUB MARKDOWN
+
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/doctrine/directory-rules
+title: Directory Rules
+type: doctrine
+subtype: placement-doctrine
+version: v1.4 (presentation refresh; doctrine unchanged from v1.3)
+prior_version: v1.3 (renderer-decision refresh; 2026-05-24)
+status: draft
+owners: <docs-steward>                # PLACEHOLDER — assign before review
+created: 2026-05-18
+updated: 2026-05-25
+policy_label: public
+proposed_home: docs/doctrine/directory-rules.md
+related:
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/architecture/maplibre-3d.md                              # v1.3 sole-renderer doctrine (renderer-decision ADR PROPOSED)
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0003-policy-singular-is-canonical.md             # PROPOSED
+  - docs/adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md     # PROPOSED — number pending; §18.e OPEN-DR-10
+  - control_plane/document_registry.yaml
+truth_labels: [CONFIRMED, PROPOSED, INFERRED, NEEDS VERIFICATION, UNKNOWN, EXTERNAL]
+authority_class: governance doctrine
+supersedes:
+  - v1.3 (presentation only; substantive doctrine carries forward unchanged)
+spec_hash: PROPOSED — emit via canonical JCS+SHA-256 once tooling is wired
+tags: [kfm, doctrine, directory-rules, placement, governance, lifecycle, trust-membrane, maplibre-3d, focus-mode]
+notes:
+  - "v1.4 is a presentation refresh: adds KFM Meta Block v2, Shields.io badge row, quick-jump mini-TOC, authority-surface Mermaid diagram, back-to-top anchors, and footer block. Doctrine carries forward from v1.3 unchanged."
+  - "v1.3 substantive doctrine (Cesium retirement, MapLibre as sole browser-side renderer) remains PROPOSED pending the renderer-decision ADR (§18.e OPEN-DR-10). Until acceptance, the §11 freeze rule blocks new cesium* code, schemas, policies, or tests."
+  - "All path claims remain PROPOSED until verified against mounted-repo evidence. Commit-pinned paths at b6a27916bbb9e07cbf3752870c867476e1e094e7 (v1.2 evidence) are visibly marked CONFIRMED (at commit); all other paths are PROPOSED or NEEDS VERIFICATION."
+  - "No mounted repo was inspected in the v1.4 authoring session. Implementation maturity is bounded per the AI Build Operating Contract current-session evidence limit."
+  - "Open ADR-class questions OPEN-DR-01 through OPEN-DR-13 are explicitly tracked in §18; v1.4 takes no unilateral position on any of them."
+[/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+
 # Directory Rules
 
 > **Where a file lives encodes who owns it, what governance it answers to, and what lifecycle it belongs to. Topic does not justify a root folder; responsibility does.**
+
+![status](https://img.shields.io/badge/status-draft-yellow?style=flat-square)
+![type](https://img.shields.io/badge/type-doctrine-blue?style=flat-square)
+![edition](https://img.shields.io/badge/edition-v1.4-1f6feb?style=flat-square)
+![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-success?style=flat-square)
+![paths](https://img.shields.io/badge/paths-PROPOSED%20%2F%20NEEDS%20VERIFICATION-orange?style=flat-square)
+![authority](https://img.shields.io/badge/authority-governance-critical?style=flat-square)
+![supersedes](https://img.shields.io/badge/supersedes-v1.3-lightgrey?style=flat-square)
+![last%20updated](https://img.shields.io/badge/last%20updated-2026--05--25-blue?style=flat-square)
+
+> [!IMPORTANT]
+> **v1.4 is a presentation refresh; doctrine is unchanged from v1.3.** The v1.3 Cesium retirement and MapLibre-as-sole-renderer doctrine remain **PROPOSED** pending acceptance of the renderer-decision ADR (§18.e OPEN-DR-10). Live-repo paths are CONFIRMED only for the subset recorded in the *KFM Repository Structure Guiding Document* at commit `b6a27916…`; all other paths are PROPOSED or NEEDS VERIFICATION. **This file does not decide whether artifacts should exist; it decides where they go once they do.**
+
+## Quick jump
+
+| Foundation | Placement | Authority roots | Drift & migration | Reference |
+|---|---|---|---|---|
+| [§0 Status & Authority](#0-status--authority) · [§1 Purpose](#1-purpose) · [§2 Authority](#2-authority-conformance-and-conflict-resolution) · [§3 The Deeper Rule](#3-the-deeper-rule) | [§4 Placement Protocol](#4-where-does-this-file-go--placement-protocol) | [§5 Canonical Root Tree](#5-canonical-root-tree) · [§6 Governance & Authority Roots](#6-governance-and-authority-roots) · [§7 Implementation Roots](#7-implementation-roots) · [§8 Compatibility Roots](#8-compatibility-roots) · [§9 Data & Release Roots](#9-data-and-release-roots) · [§10 Runtime / Infra / Configs](#10-runtime-infrastructure-and-configuration-roots) · [§11 UI & Map Roots](#11-ui-and-map-roots) · [§12 Domain Placement Law](#12-domain-placement-law) | [§13 Anti-Patterns & Drift Prevention](#13-anti-patterns-and-drift-prevention) · [§14 Migration Discipline](#14-migration-discipline) · [§15 Required README Contract](#15-required-readme-contract) · [§16 Path-Validation Checklist](#16-path-validation-checklist-for-reviewers) · [§17 Document Change Discipline](#17-document-change-discipline) | [§18 Open Questions](#18-open-questions-and-needs-verification) · [§19 Glossary](#19-glossary) · [§20 Final Recommendation](#20-practical-final-recommendation) · [§21 Changelog](#21-changelog) |
+
+## Authority surface at a glance
+
+```mermaid
+flowchart LR
+    subgraph Governance["Governance & Authority"]
+        DOCS["docs/<br/>human control plane"]
+        CP["control_plane/<br/>machine registers"]
+        CONTRACTS["contracts/<br/>object meaning"]
+        SCHEMAS["schemas/<br/>machine shape"]
+        POLICY["policy/<br/>admissibility"]
+        RELEASE["release/<br/>release decisions"]
+    end
+    subgraph Implementation["Implementation"]
+        APPS["apps/<br/>deployables<br/>(explorer-web · governed-api · ...)"]
+        PACKAGES["packages/<br/>shared libs<br/>(maplibre-runtime sole renderer)"]
+        CONNECTORS["connectors/<br/>source admit"]
+        PIPELINES["pipelines/ +<br/>pipeline_specs/"]
+        TOOLS["tools/ + scripts/<br/>validators · helpers"]
+    end
+    subgraph Data["Data & Lifecycle"]
+        DATA["data/<br/>RAW → WORK / QUARANTINE →<br/>PROCESSED → CATALOG / TRIPLET →<br/>PUBLISHED<br/>(+ receipts · proofs · registry · rollback)"]
+    end
+    subgraph Operate["Validate & Operate"]
+        TESTS["tests/ + fixtures/"]
+        RUNTIME["runtime/<br/>local adapters"]
+        INFRA["infra/<br/>deny-by-default"]
+        CONFIGS["configs/<br/>no secrets"]
+        MIGRATIONS["migrations/"]
+        EXAMPLES["examples/"]
+    end
+    CONTRACTS --- SCHEMAS
+    POLICY --- RELEASE
+    CONNECTORS --> DATA
+    PIPELINES --> DATA
+    DATA --> RELEASE
+    APPS -. "governed-api trust membrane" .-> DATA
+    TESTS --- TOOLS
+    DOCS --- CP
+    classDef governance fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef impl fill:#f1f8e9,stroke:#558b2f,color:#33691e
+    classDef data fill:#fff3e0,stroke:#e65100,color:#bf360c
+    classDef ops fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c
+    class DOCS,CP,CONTRACTS,SCHEMAS,POLICY,RELEASE governance
+    class APPS,PACKAGES,CONNECTORS,PIPELINES,TOOLS impl
+    class DATA data
+    class TESTS,RUNTIME,INFRA,CONFIGS,MIGRATIONS,EXAMPLES ops
+```
+
+> [!NOTE]
+> The diagram is **illustrative** of authority-root groupings, not an exhaustive dependency graph. The lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** is the only flow promoted to invariant status; the other edges are relationship hints. Compatibility roots (`artifacts/`, `jsonschema/`, `policies/`, `ui/`, `web/`, `styles/`, `viewer_templates/`) are not shown — they exist as transitional shells per §8 until migration completes.
 
 ---
 
@@ -9,26 +134,33 @@
 | Field | Value |
 |---|---|
 | **Document type** | Governance doctrine |
-| **Edition** | **v1.2** — refresh + new evidence basis. No canonical root added, removed, or renamed. Adds §6.7 (focus-mode placement contract) and folds in CONFIRMED live-repo evidence at a specific commit. See §21 for the v1.1 → v1.2 changelog. |
+| **Edition** | **v1.4** — presentation refresh. Adds KFM Meta Block v2, Shields.io badge row, quick-jump mini-TOC, authority-surface Mermaid diagram, back-to-top anchors, and footer block. **Doctrine is unchanged from v1.3.** No canonical root added, removed, or renamed. See §21 for the v1.3 → v1.4 changelog. |
+| **Prior edition** | **v1.3** — renderer-decision refresh. Retired `packages/cesium/` as a canonical placement and aligned all 3D placement guidance with the proposed *MapLibre as Sole Browser-Side Renderer* ADR (see `docs/architecture/maplibre-3d.md`). |
 | **Authority of these rules** | CONFIRMED — these are the canonical placement rules |
-| **Authority of any specific path quoted here** | Mixed. Live-repo paths CONFIRMED at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` per the *KFM Repository Structure Guiding Document* (v0.1) are marked **CONFIRMED (at commit)**. All other paths remain **PROPOSED** until verified against later mounted-repo evidence. |
-| **Canonical home** | `docs/doctrine/directory-rules.md` — **RESOLVED.** Moved to the proposed canonical home from `docs/directory-rules.md` on branch `claude/magical-johnson-jP2GB`. The bootstrap stub previously at this path is superseded by this file's content. |
+| **Authority of any specific path quoted here** | Mixed. Live-repo paths CONFIRMED at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` per the *KFM Repository Structure Guiding Document* (v0.1) are marked **CONFIRMED (at commit)**. 3D / MapLibre placement paths added in v1.3 are **PROPOSED** pending acceptance of the renderer-decision ADR (§18.e OPEN-DR-10). All other paths remain **PROPOSED** until verified against later mounted-repo evidence. |
+| **Proposed canonical home** | `docs/doctrine/directory-rules.md` |
 | **Owner** | Docs steward |
-| **Reviewers required for change** | Docs steward + at least one subsystem owner; ADR required for §2.4 changes |
-| **Supersedes** | v1.1 of this document. v1.0 text remains preserved verbatim in §§1–20; v1.1 additions are preserved and visibly marked; v1.2 additions are visibly marked and listed in §21. Roll-back to v1.1 is mechanical (see §21 reversibility note). |
-| **Related doctrine** | `docs/doctrine/authority-ladder.md`, `docs/doctrine/truth-posture.md`, `docs/doctrine/trust-membrane.md`, `docs/doctrine/lifecycle-law.md`, `docs/architecture/contract-schema-policy-split.md` |
-| **Schema-home convention** | `schemas/contracts/v1/<…>` as default per ADR-0001 (schema home). See §7.4. **Unchanged in v1.2.** |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Promotion is a **governed state transition, not a file move. Unchanged in v1.2.** |
-| **Last reviewed** | 2026-05-21 (v1.2 refresh) |
+| **Reviewers required for change** | Docs steward + at least one subsystem owner; ADR required for §2.4 changes; the v1.3 renderer-decision changes are governed by the ADR cited in §18.e OPEN-DR-10. **v1.4 presentation changes are routine PR per §17.** |
+| **Supersedes** | v1.3 of this document for presentation only; v1.3 substantive doctrine carries forward unchanged. v1.0 text remains preserved verbatim in §§1–20; v1.1, v1.2, v1.3, and v1.4 additions are preserved and visibly marked; v1.4 additions are listed in §21. Roll-back to v1.3 is mechanical (see §21 v1.4 reversibility note). |
+| **Related doctrine** | `docs/doctrine/authority-ladder.md`, `docs/doctrine/truth-posture.md`, `docs/doctrine/trust-membrane.md`, `docs/doctrine/lifecycle-law.md`, `docs/architecture/contract-schema-policy-split.md`, **`docs/architecture/maplibre-3d.md` (v1.3 sole-renderer doctrine)** |
+| **Schema-home convention** | `schemas/contracts/v1/<…>` as default per ADR-0001 (schema home). See §7.4. **Unchanged in v1.4.** v1.3 added two top-level family segments — `schemas/contracts/v1/maplibre/` and `schemas/contracts/v1/3d/` (per `maplibre-3d.md` §6.2). These join the existing families; they do not create a parallel schema home. |
+| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Promotion is a **governed state transition, not a file move. Unchanged in v1.4.** |
+| **Last reviewed** | 2026-05-25 (v1.4 presentation refresh) |
 
-> **v1.2 truth posture note.** v1.2 additions are grounded in three evidence layers, in descending strength:
+> **v1.4 truth posture note.** v1.4 adds **no new substantive claims** beyond v1.3. All v1.0–v1.3 truth-posture statements carry forward unchanged. The v1.4 additions are pure presentation (HTML comment meta block, Shields.io badge images, anchor IDs, Mermaid diagram, mini-TOC, footer) — none of which assert any new fact about the repository, the doctrine, or the lifecycle.
+
+> **v1.3 truth posture note (carried forward).** v1.3 substantive changes (Cesium retirement and MapLibre-as-sole-renderer doctrine) are grounded in `docs/architecture/maplibre-3d.md` (CONFIRMED authored; status `draft (recommends ADR-PROPOSED)`) and *Master MapLibre Components-Functions-Features* v2.1. All v1.3 placement claims are **PROPOSED**; mounted-repo presence of any v1.3 path is **NEEDS VERIFICATION**. No mounted-repo `cesium*` inventory was conducted; OPEN-DR-11 is the operational hook for that work.
+
+> **v1.2 truth posture note (carried forward).** v1.2 additions are grounded in three evidence layers, in descending strength:
 > 1. **Live-repo evidence at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`** (read via GitHub web view), captured in the *KFM Repository Structure Guiding Document* (v0.1). Paths marked **CONFIRMED (at commit)** in this edition trace to this evidence. The commit-pinned evidence covers root-folder presence and selected first-level subfolders; deeper inspection (every nested file, CI logs, dashboards, runtime state) was **not** performed.
 > 2. **Prior-session-authored artifacts** (visible via past-chat retrieval) — same posture as v1.1.
-> 3. **Attached doctrine corpus visible to the v1.2 authoring session**: ten Kansas-county Focus Mode Build Plans (Ellsworth, Riley, Shawnee, Ford, Wyandotte, Sedgwick, Douglas, Leavenworth, Reno, Johnson, Barton), KFM Unified Doctrine Synthesis, KFM Encyclopedia, AI Build Operating Contract, Domains Atlas v1.1, Master MapLibre Components-Functions-Features, Pass-10 Idea Index, Domain-Driven Design Reference, KFM Unified Implementation Architecture Build Manual, KFM Connected Dots Architecture Brief.
+> 3. **Attached doctrine corpus visible to the v1.2 authoring session**: eleven Kansas-county Focus Mode Build Plans (Ellsworth, Riley, Shawnee, Ford, Wyandotte, Sedgwick, Douglas, Leavenworth, Reno, Johnson, Barton), KFM Unified Doctrine Synthesis, KFM Encyclopedia, AI Build Operating Contract, Domains Atlas v1.1, Master MapLibre Components-Functions-Features, Pass-10 Idea Index, Domain-Driven Design Reference, KFM Unified Implementation Architecture Build Manual, KFM Connected Dots Architecture Brief.
 >
-> **What v1.2 still does not have:** CI run logs, workflow execution evidence, dashboards, runtime traces, branch-protection state, full recursive file listings, or test-pass evidence. Implementation depth claims remain bounded; presence of any specific path below the commit-pinned first level is **NEEDS VERIFICATION**.
+> **What v1.4 still does not have** (carrying forward v1.2's and v1.3's limits): CI run logs, workflow execution evidence, dashboards, runtime traces, branch-protection state, full recursive file listings, test-pass evidence, mounted-repo `cesium*` inventory. Path presence below the commit-pinned first level remains **NEEDS VERIFICATION**.
 >
-> **v1.1 truth posture note (carried forward).** v1.1 additions were grounded in attached doctrine and prior-session authoring; no mounted repo was inspected at v1.1 authoring time. v1.2 does not retroactively upgrade v1.1 claims — it adds a stronger evidence layer alongside them.
+> **v1.1 truth posture note (carried forward).** v1.1 additions were grounded in attached doctrine and prior-session authoring; no mounted repo was inspected at v1.1 authoring time. v1.2, v1.3, and v1.4 do not retroactively upgrade v1.1 claims.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -96,6 +228,8 @@ If the mounted repo shows a structure that contradicts the Rules:
 3. **Propose a resolution** — ADR amending the Rules, or migration plan bringing the repo into conformance.
 4. **Until resolved,** mark affected paths `PROPOSED / CONFLICTED` and avoid creating divergent siblings.
 
+[↑ Back to top](#top)
+
 ---
 
 ## 3. The Deeper Rule
@@ -161,7 +295,7 @@ For files under `data/`, name the phase explicitly: **raw, work, quarantine, pro
 
 If the file is domain-specific, the domain appears as a **segment** inside the responsibility root, never as a **root itself**:
 
-```
+```text
 docs/domains/<domain>/
 contracts/domains/<domain>/
 schemas/contracts/v1/domains/<domain>/
@@ -180,13 +314,16 @@ release/candidates/<domain>/
 
 ### Step 4 — Confirm authority
 
-The owning root MUST already exist, or be created in the same change with a per-root README (§9). If the proposed location requires a new canonical root, a new compatibility root, or a new sibling under `data/`, an ADR (§2.4) is required.
+The owning root MUST already exist, or be created in the same change with a per-root README (§15). If the proposed location requires a new canonical root, a new compatibility root, or a new sibling under `data/`, an ADR (§2.4) is required.
 
 ### Step 5 — Cite the rule
 
 In the PR description, name the Rules section that justifies the placement. If no section justifies it, mark the path **PROPOSED** or **NEEDS VERIFICATION** and open an entry in `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md`.
 
+> [!TIP]
 > **Reviewer's one-line check:** *"Does the path encode the right responsibility, the right lifecycle phase (if data), and the right domain segment — and does this PR cite a rule for it?"*
+
+[↑ Back to top](#top)
 
 ---
 
@@ -195,7 +332,7 @@ In the PR description, name the Rules section that justifies the placement. If n
 Status of the **rules below**: CONFIRMED.
 Status of any **specific repo's presence** of these roots: PROPOSED until verified.
 
-```
+```text
 Kansas-Frontier-Matrix/
 ├── README.md
 ├── CHANGELOG.md
@@ -251,8 +388,10 @@ Kansas-Frontier-Matrix/
 | `migrations/` | **Canonical** | Includes a `rollback/` subtree by default. |
 | `examples/` | **Canonical** | Runnable, kept current. Stale examples are deletion candidates. |
 | `artifacts/` | **Compatibility** | Optional; tightly scoped (build, docs, qa, temporary). Not a home for trust-bearing receipts/proofs/manifests. |
-| `ui/`, `web/`, `styles/`, `viewer_templates/` | **Compatibility** | Migration targets: `apps/explorer-web/`, `packages/ui/`, `packages/maplibre/`. See §8. |
+| `ui/`, `web/`, `styles/`, `viewer_templates/` | **Compatibility** | Migration targets: `apps/explorer-web/`, `packages/ui/`, **`packages/maplibre-runtime/`** *(v1.3 — was `packages/maplibre/` in v1.2; v1.2-historical name retained as transitional per §18.e OPEN-DR-12)*. See §8. |
 | `jsonschema/`, `policies/` | **Compatibility** | Mirrors of canonical `schemas/`, `policy/`. README must declare class. See §8. |
+
+[↑ Back to top](#top)
 
 ---
 
@@ -260,9 +399,10 @@ Kansas-Frontier-Matrix/
 
 ### 6.1 `docs/` — the human-facing control plane
 
-> **v1.1 note.** Sub-listings under `docs/standards/` and `docs/runbooks/` below reflect prior-session-authored artifacts (CONFIRMED authored; mounted-repo presence NEEDS VERIFICATION). The list is **illustrative, not exhaustive**, and intentionally calls out a known naming-variance question (`PROV.md` vs `PROVENANCE.md`, see §18 OPEN-DR-01) and a known subfolder-convention question (`docs/runbooks/<domain>/`, see §18 OPEN-DR-02).
+> [!NOTE]
+> **v1.1 note (carried forward).** Sub-listings under `docs/standards/` and `docs/runbooks/` below reflect prior-session-authored artifacts (CONFIRMED authored; mounted-repo presence NEEDS VERIFICATION). The list is **illustrative, not exhaustive**, and intentionally calls out a known naming-variance question (`PROV.md` vs `PROVENANCE.md`, see §18 OPEN-DR-01) and a known subfolder-convention question (`docs/runbooks/<domain>/`, see §18 OPEN-DR-02).
 
-```
+```text
 docs/
 ├── README.md
 ├── doctrine/
@@ -271,48 +411,53 @@ docs/
 │   ├── truth-posture.md
 │   ├── trust-membrane.md
 │   ├── lifecycle-law.md
-│   └── directory-rules.md       # this file
+│   └── directory-rules.md            # this file
 ├── architecture/
 │   ├── README.md
 │   ├── system-context.md
 │   ├── deployment-topology.md
 │   ├── governed-api.md
 │   ├── map-shell.md
+│   ├── maplibre-3d.md                # (v1.3) sole-renderer doctrine + 3D feature surface
 │   └── contract-schema-policy-split.md
 ├── adr/
 │   ├── README.md
-│   └── ADR-0001-schema-home.md
+│   ├── ADR-0001-schema-home.md
+│   └── ADR-NNNN-maplibre-sole-renderer-retire-cesium.md  # (v1.3) PROPOSED — number pending; §18.e OPEN-DR-10
 ├── domains/
 │   ├── README.md
 │   ├── hydrology/   soil/   fauna/   flora/   habitat/
 │   ├── geology/     atmosphere/   roads-rail-trade/
 │   ├── settlements-infrastructure/   archaeology/
 │   ├── hazards/     agriculture/    people-dna-land/
-├── sources/                # source-descriptor standards, source families
-├── standards/              # external standards KFM conforms to (STAC, DCAT, PROV, …)
+├── focus-modes/                       # (v1.2) county / region proof-slice docs
 │   ├── README.md
-│   ├── ISO-19115.md             # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
-│   ├── OAI-PMH.md               # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
-│   ├── OGC-API-TILES.md         # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
-│   ├── PMTILES.md               # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
-│   ├── PROV.md                  # CONFIRMED authored (prior session); naming variance vs corpus PROVENANCE.md → §18 OPEN-DR-01
-│   ├── SIGNING.md               # PROPOSED in corpus (Pass-10 C1-03); not yet authored
-│   ├── SENSITIVITY_RUBRIC.md    # PROPOSED in corpus (Pass-10 C6-01); not yet authored
-│   ├── REDACTION_DETERMINISM.md # PROPOSED in corpus (Pass-10 C6-03); not yet authored
-│   └── SMART_SYNC.md            # PROPOSED in corpus (Pass-10 C3-01); not yet authored
-├── runbooks/               # ops procedures, rollback drills, validation runs
+│   └── <area>-county/  or  <area>-region/
+├── sources/                           # source-descriptor standards, source families
+├── standards/                         # external standards KFM conforms to (STAC, DCAT, PROV, …)
+│   ├── README.md
+│   ├── ISO-19115.md                  # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
+│   ├── OAI-PMH.md                    # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
+│   ├── OGC-API-TILES.md              # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
+│   ├── PMTILES.md                    # CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
+│   ├── PROV.md                       # CONFIRMED authored (prior session); naming variance vs corpus PROVENANCE.md → §18 OPEN-DR-01
+│   ├── SIGNING.md                    # PROPOSED in corpus (Pass-10 C1-03); not yet authored
+│   ├── SENSITIVITY_RUBRIC.md         # PROPOSED in corpus (Pass-10 C6-01); not yet authored
+│   ├── REDACTION_DETERMINISM.md      # PROPOSED in corpus (Pass-10 C6-03); not yet authored
+│   └── SMART_SYNC.md                 # PROPOSED in corpus (Pass-10 C3-01); not yet authored
+├── runbooks/                         # ops procedures, rollback drills, validation runs
 │   ├── README.md
 │   ├── fauna/                                  # NEEDS VERIFICATION: subfolder vs flat → §18 OPEN-DR-02
 │   │   └── SOURCE_REFRESH_RUNBOOK.md           # CONFIRMED authored (prior session)
 │   └── <flat or domain-segmented>              # convention pending ADR
-├── security/               # threat model, exposure posture, incident response
-├── governance/             # roles, review burden, separation of duties
-├── registers/              # AUTHORITY_LADDER, CANONICAL_LINEAGE_EXPLORATORY, DRIFT_REGISTER, VERIFICATION_BACKLOG, OBJECT_FAMILY_MAP
-├── intake/                 # IDEA_INTAKE, NEW_IDEAS_INDEX
-├── archive/                # lineage/, exploratory/, deprecated/
-├── reports/                # generated review/release reports (read-only)
-├── atlases/                # versioned domain atlases / dossiers (per ADR-S-02)
-└── brand/                  # styles guides, logo, voice — only if not in packages/ui/
+├── security/                         # threat model, exposure posture, incident response
+├── governance/                       # roles, review burden, separation of duties
+├── registers/                        # AUTHORITY_LADDER, CANONICAL_LINEAGE_EXPLORATORY, DRIFT_REGISTER, VERIFICATION_BACKLOG, OBJECT_FAMILY_MAP
+├── intake/                           # IDEA_INTAKE, NEW_IDEAS_INDEX
+├── archive/                          # lineage/, exploratory/, deprecated/
+├── reports/                          # generated review/release reports (read-only)
+├── atlases/                          # versioned domain atlases / dossiers (per ADR-S-02)
+└── brand/                            # styles guides, logo, voice — only if not in packages/ui/
 ```
 
 `docs/` **explains**; `control_plane/` **indexes**; `contracts/` **defines meaning**; `schemas/` **defines shape**. These four are different layers of the same governance function and MUST NOT collapse into one another.
@@ -338,7 +483,7 @@ Pattern A scales better as multiple runbooks per domain accumulate; Pattern B is
 
 ### 6.2 `control_plane/` — machine-readable governance maps
 
-```
+```text
 control_plane/
 ├── README.md
 ├── document_registry.yaml
@@ -356,16 +501,19 @@ control_plane/
 
 ### 6.3 `contracts/` — object meaning
 
-```
+```text
 contracts/
 ├── README.md
-├── source/             # source_descriptor, ingest_receipt
-├── evidence/           # evidence_ref, evidence_bundle
-├── data/               # dataset_version, validation_report
-├── runtime/            # runtime_response_envelope, decision_envelope, run_receipt, ai_receipt
-├── release/            # release_manifest, promotion_decision, rollback_card
-├── correction/         # correction_notice
-├── governance/         # review_record
+├── source/                # source_descriptor, ingest_receipt
+├── evidence/              # evidence_ref, evidence_bundle
+├── data/                  # dataset_version, validation_report
+├── runtime/               # runtime_response_envelope, decision_envelope, run_receipt, ai_receipt
+├── release/               # release_manifest, promotion_decision, rollback_card
+├── correction/            # correction_notice
+├── governance/            # review_record
+├── focus_mode/            # (v1.2) FocusModePayload, LayerRegistryEntry — Markdown only
+├── maplibre/              # (v1.3) scene-manifest.md, style-manifest.md, representation-receipt.md, plugin-dependencies.md
+├── 3d/                    # (v1.3) geometry-labeling.md, reality-boundary-notes.md
 └── domains/
     ├── hydrology/   soil/   …
 ```
@@ -374,13 +522,16 @@ contracts/
 
 ### 6.4 `schemas/` — machine-checkable shape
 
-```
+```text
 schemas/
 ├── README.md
 ├── contracts/
 │   └── v1/
 │       ├── common/      source/      evidence/      data/
 │       ├── runtime/     policy/      release/       correction/
+│       ├── focus_mode/                       # (v1.2)
+│       ├── maplibre/                         # (v1.3) scene_manifest, layer_manifest, style_manifest, terrain_model, synthetic_surface, view_state, representation_receipt, camera_path
+│       ├── 3d/                               # (v1.3) 3d_tile_set, gltf_asset, point_cloud, digital_twin_view, reality_boundary_note
 │       └── domains/
 │           ├── hydrology/   soil/   fauna/   …
 └── tests/
@@ -399,37 +550,41 @@ The clean split is:
 
 ### 6.5 `policy/` — admissibility and release
 
-```
+```text
 policy/
 ├── README.md
-├── bundles/         # Rego/OPA bundles or equivalents
-├── fixtures/        # policy fixtures distinct from tests/fixtures/
-├── tests/           # policy tests
-├── runtime/         # runtime gate policy (Focus Mode, evidence resolution, abstain)
-├── promotion/       # promotion gate policy
-├── sensitivity/     # sensitivity classes, redaction rules
-├── rights/          # rights status, license enforcement
+├── bundles/                                  # Rego/OPA bundles or equivalents
+├── fixtures/                                 # policy fixtures distinct from tests/fixtures/
+├── tests/                                    # policy tests
+├── runtime/                                  # runtime gate policy (Focus Mode, evidence resolution, abstain)
+├── promotion/                                # promotion gate policy
+├── sensitivity/                              # sensitivity classes, redaction rules
+├── rights/                                   # rights status, license enforcement
+├── maplibre/                                 # (v1.3) 3D admission, plugin admission, sky/light defaults, globe-projection admission
 ├── domains/
 │   ├── fauna/   archaeology/   people-dna-land/   …
-└── release/         # release-gate policy
+└── release/                                  # release-gate policy
 ```
 
 `policy/` is the **canonical** singular. If `policies/` exists, treat it as legacy / mirror / deprecated / external-export per §8.
 
 ### 6.6 `tests/` and `fixtures/`
 
-```
+```text
 tests/
 ├── README.md
 ├── contracts/      schemas/        policy/         validators/
 ├── pipelines/      api/            ui/             e2e/
-├── runtime_proof/                                  # finite-outcome and abstain proof
+├── runtime_proof/                              # finite-outcome and abstain proof
+├── maplibre/                                   # (v1.3) terrain, globe, fill-extrusion, 3D-Tiles-via-three, lidar EPT, deckgl-interleaved tests
 └── domains/
     ├── hydrology/   …
 
 fixtures/
 ├── README.md
 ├── valid/          invalid/        golden/         synthetic/
+├── focus_modes/                                # (v1.2)
+├── maplibre/                                   # (v1.3) valid + invalid scene_manifest, view_state, layer_manifest, plugin_admission fixtures
 └── domains/
     ├── hydrology/   …
 ```
@@ -438,6 +593,7 @@ You MAY keep fixtures under `tests/fixtures/` instead of root `fixtures/`. You M
 
 ### 6.7 Focus Modes — proof-slice placement contract (v1.2)
 
+> [!IMPORTANT]
 > **Authority:** §3 (root-stays-boring), §12 (Domain Placement Law), and the §2.4 invariants. **A Focus Mode is NOT a domain and MUST NOT become a root folder.** It is a cross-cutting *compositional* unit (a "proof slice") that bundles a geographic + temporal + evidence + UI + release composition. Its files MUST be placed as lanes inside the appropriate responsibility roots.
 
 #### 6.7.1 Definition
@@ -511,21 +667,23 @@ A new Focus Mode typically lands in four PRs, in this order. The sequence is rec
 
 If a county build plan shows a different sequence, the sequence is a recommendation, not authority — the placement contract above is.
 
+[↑ Back to top](#top)
+
 ---
 
 ## 7. Implementation Roots
 
 ### 7.1 `apps/` — deployable applications
 
-```
+```text
 apps/
 ├── README.md
-├── governed-api/     # main trust membrane; public clients land here
-├── explorer-web/     # map-first public/semi-public interface
-├── review-console/   # steward review, promotion, correction, sensitivity
-├── cli/              # maintainer commands, validation, release dry-runs
-├── workers/          # ingestion, validation, cataloging, tiling, receipts
-└── admin/            # restricted admin; not a normal public path
+├── governed-api/      # main trust membrane; public clients land here
+├── explorer-web/      # map-first public/semi-public interface
+├── review-console/    # steward review, promotion, correction, sensitivity
+├── cli/               # maintainer commands, validation, release dry-runs
+├── workers/           # ingestion, validation, cataloging, tiling, receipts
+└── admin/             # restricted admin; not a normal public path
 ```
 
 Suggested role table:
@@ -533,7 +691,7 @@ Suggested role table:
 | App | Role |
 |---|---|
 | `apps/governed-api/` | Trust membrane in executable form. Returns `RuntimeResponseEnvelope` with finite outcomes (ANSWER, ABSTAIN, DENY, ERROR). MUST be the public trust path. |
-| `apps/explorer-web/` | Map-first public UI. Reads via `governed-api/`; never directly from `data/raw|work|quarantine`. |
+| `apps/explorer-web/` | Map-first public UI. Reads via `governed-api/`; never directly from `data/raw\|work\|quarantine`. |
 | `apps/review-console/` | Steward / reviewer surface. Role-gated and audited. |
 | `apps/cli/` | Operator CLI. Validation, release dry-runs, reports. |
 | `apps/workers/` | Background pipeline workers. Watcher-as-non-publisher applies: workers emit receipts and candidate decisions, **never** publish or rewrite catalog. |
@@ -551,22 +709,52 @@ If both `apps/api/` and `apps/governed-api/` exist, the canonical boundary MUST 
 
 ### 7.2 `packages/` — shared libraries
 
-```
+```text
 packages/
 ├── README.md
 ├── evidence-resolver/      policy-runtime/        schema-registry/
 ├── source-registry/        hashing/               geo/
 ├── temporal/               catalog/               release/
-├── ui/                     maplibre/              cesium/
+├── ui/                     maplibre-runtime/      # (v1.3) sole governed browser-side renderer adapter; supersedes the v1.2 cesium/ entry. See §7.2.a.
 └── domains/
     ├── hydrology/   …
 ```
 
 A package MUST be reusable. If it runs once as a workflow step, it belongs in `tools/` or `pipelines/`.
 
+#### 7.2.a `packages/maplibre-runtime/` is the sole governed renderer adapter (v1.3)
+
+**Authority:** the proposed ADR *MapLibre as Sole Browser-Side Renderer; Retire Cesium Dependency* (`docs/adr/ADR-<NNNN>-maplibre-sole-renderer-retire-cesium.md`, **PROPOSED**, file number pending — see §18.e OPEN-DR-10), recommended by `docs/architecture/maplibre-3d.md` §0.4 and Appendix B. This ADR supersedes KFM-P2-FEAT-0012's dual-renderer posture.
+
+**Status:** doctrine **PROPOSED** (ADR not yet accepted at v1.3 authoring). Implementation **NEEDS VERIFICATION** in mounted repo.
+
+**What lives here:**
+
+- `packages/maplibre-runtime/src/terrain.ts`, `hillshade.ts`, `sky.ts`, `globe.ts`, `fill-extrusion.ts`, `camera-path.ts` — native MapLibre GL JS feature wrappers.
+- `packages/maplibre-runtime/src/custom-layer-host.ts` — base class for plugin-hosted layers.
+- `packages/maplibre-runtime/src/tiles3d-three.ts` — 3D Tiles via `three.js` + `3d-tiles-renderer`.
+- `packages/maplibre-runtime/src/gltf-three.ts` — glTF via `maplibre-three-plugin`.
+- `packages/maplibre-runtime/src/lidar-decklike.ts` — wraps `maplibre-gl-lidar`.
+- `packages/maplibre-runtime/src/deckgl-interleaved.ts` — wraps `MapboxOverlay` interleaved=true.
+- `packages/maplibre-runtime/src/admission.ts` — 3D Admission Decision evaluator.
+- `packages/maplibre-runtime/src/plugin-registry.ts` — pinned plugin versions + supply-chain references.
+- `packages/maplibre-runtime/src/receipts.ts` — `RenderReceipt` / `RepresentationReceipt` emission.
+
+**What MUST NOT live here:**
+
+- Direct application UI (lives in `apps/explorer-web/`).
+- 3D admission *policy* (lives in `policy/maplibre/` — code-vs-policy split per §6.5).
+- 3D *schemas* (live in `schemas/contracts/v1/maplibre/` and `schemas/contracts/v1/3d/` per §6.4).
+- A second renderer adapter (`packages/cesium-runtime/`, `packages/deckgl-runtime/` as a peer, etc.) — see §13.5 (v1.3) anti-pattern *"Reintroducing a parallel browser renderer."*
+
+> [!IMPORTANT]
+> **Import discipline (mirrored from `maplibre-3d.md` §7.1):** application feature code MUST NOT import `maplibre-gl`, `three`, `3d-tiles-renderer`, `deck.gl`, or `maplibre-gl-lidar` directly. All access goes through `packages/maplibre-runtime/`, which enforces admission, attaches evidence references, emits receipts, and resolves the pinned plugin set.
+
+**Compatibility:** any pre-v1.3 reference to `packages/maplibre/` in this document is a v1.2 historical name for the same concept; treat it as a `mirror` / `transitional` compatibility name pending physical rename. The retired name `packages/cesium/` is not a compatibility root — it is **removed doctrine** (see §13.5 anti-pattern *"Reintroducing a parallel browser renderer"*).
+
 ### 7.3 `connectors/` — source-specific fetch and admission
 
-```
+```text
 connectors/
 ├── README.md
 ├── usgs/    fema/    noaa/    nrcs/    kansas/
@@ -578,7 +766,7 @@ Connector output MUST go to `data/raw/<domain>/<source_id>/<run_id>/` or `data/q
 
 ### 7.4 `pipelines/` and `pipeline_specs/`
 
-```
+```text
 pipelines/
 ├── README.md
 ├── ingest/    normalize/    validate/    catalog/
@@ -594,7 +782,7 @@ Split: `pipeline_specs/` says **what** should run (declarative); `pipelines/` sa
 
 ### 7.5 `tools/` and `scripts/`
 
-```
+```text
 tools/
 ├── README.md                                   # CONFIRMED authored (prior session); v1.1
 ├── validate_all.py                             # CONFIRMED at commit b6a279… — live-repo location is tools/ root, NOT tools/validators/. See §7.5.a (v1.2 reconciliation).
@@ -617,11 +805,13 @@ scripts/
 
 Long-lived, trust-bearing scripts MUST graduate to `tools/`, `pipelines/`, or `packages/`. `scripts/one_off/` is a holding pen, not a permanent home.
 
+> [!WARNING]
 > **v1.2 drift signal — long-lived trust-bearing scripts in `scripts/`.** The *KFM Repository Structure Guiding Document* identifies `scripts/build-maplibre-perf-proof.mjs`, `scripts/build-maplibre-perf-release.mjs`, and `scripts/build-maplibre-rollback-card.mjs` as CONFIRMED at commit `b6a279…`. These are trust-bearing (release/proof/rollback builders) and SHOULD graduate to `tools/release/`, `tools/proof_pack/`, or `pipelines/publish/` per the graduation rule above. Tracked in the drift register, not a new rule.
 
 #### 7.5.a `tools/validators/validate_all.py` — canonical orchestrator pattern (v1.1, reconciled v1.2)
 
-**v1.2 reconciliation note (read first).** v1.1 doctrine placed the orchestrator at `tools/validators/validate_all.py`. **Live-repo evidence at commit `b6a27916…` places it at `tools/validate_all.py`** (one level higher, directly under `tools/`). This is an **inversion** between doctrine and implementation. Until resolved by ADR (see **OPEN-DR-07**, §18.d), the **CONFIRMED location is `tools/validate_all.py`**; the **PROPOSED doctrine location of `tools/validators/validate_all.py`** is preserved below for context but should not be treated as authoritative path until ADR resolution.
+> [!NOTE]
+> **v1.2 reconciliation note (read first).** v1.1 doctrine placed the orchestrator at `tools/validators/validate_all.py`. **Live-repo evidence at commit `b6a27916…` places it at `tools/validate_all.py`** (one level higher, directly under `tools/`). This is an **inversion** between doctrine and implementation. Until resolved by ADR (see **OPEN-DR-07**, §18.d), the **CONFIRMED location is `tools/validate_all.py`**; the **PROPOSED doctrine location of `tools/validators/validate_all.py`** is preserved below for context but should not be treated as authoritative path until ADR resolution.
 
 **Doctrine status:** CONFIRMED doctrine intent (atlas card KFM-P5-PROG-0009). **Implementation status:** CONFIRMED present at `tools/validate_all.py` at commit `b6a27916…`; nested-location proposal at `tools/validators/validate_all.py` is PROPOSED.
 
@@ -644,6 +834,8 @@ Long-lived, trust-bearing scripts MUST graduate to `tools/`, `pipelines/`, or `p
 - CI workflows MUST call **`python tools/validate_all.py`** (live-repo location) rather than orchestrating individual validators directly.
 
 **Negative-state rule (from `tools/README.md`):** Validators MUST exercise DENY / ABSTAIN / ERROR paths, not only success paths. A validator that only proves the happy case is incomplete.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -668,14 +860,14 @@ Each compatibility root MUST have a `README.md` that declares its class:
 | `ui/` | `apps/explorer-web/`, `packages/ui/` | `legacy` or `transitional` | Migrate shared components to `packages/ui/`; surface code to `apps/explorer-web/`. |
 | `web/` | `apps/explorer-web/` | `legacy` or `transitional` | Migrate. |
 | `styles/` | `packages/ui/`, `apps/explorer-web/`, or `docs/brand/` | `legacy` | Migrate by usage class. |
-| `viewer_templates/` | `apps/explorer-web/`, `examples/`, or `packages/maplibre/` | `legacy` | Migrate. |
+| `viewer_templates/` | `apps/explorer-web/`, `examples/`, or **`packages/maplibre-runtime/`** *(v1.3 — was `packages/maplibre/` in v1.2)* | `legacy` | Migrate by usage class. |
 | `artifacts/` | `data/receipts/`, `data/proofs/`, `release/`, `data/published/` for trust content | `transitional` | Restrict `artifacts/` to build/docs/qa/temporary; keep trust-bearing material out. |
 
 ### 8.2 The `artifacts/` rule
 
 `artifacts/` MAY exist, but MUST be tightly scoped. Recommended substructure:
 
-```
+```text
 artifacts/
 ├── README.md       # declares class and what does NOT belong
 ├── build/          # compiled outputs, distributables
@@ -696,7 +888,7 @@ Two homes for the same authority is the most common drift in KFM. If both exist,
 
 ### 9.1 `data/` — the lifecycle invariant
 
-```
+```text
 data/
 ├── README.md
 ├── raw/
@@ -751,7 +943,7 @@ Promotion is a **governed state transition**, not a file move. A path-level move
 
 ### 9.2 `release/` — release decisions
 
-```
+```text
 release/
 ├── README.md
 ├── candidates/           # release candidate dossiers
@@ -773,13 +965,15 @@ release/
 
 Mixing these is one of the four drift patterns in §10. A release manifest does not live in `data/published/`; a published PMTiles file does not live in `release/`.
 
+[↑ Back to top](#top)
+
 ---
 
 ## 10. Runtime, Infrastructure, and Configuration Roots
 
 ### 10.1 `runtime/`
 
-```
+```text
 runtime/
 ├── README.md
 ├── local/             # local runtime wiring
@@ -794,7 +988,7 @@ Local AI runtimes (Ollama, etc.) MUST stay **behind the governed API** and MUST 
 
 ### 10.2 `infra/`
 
-```
+```text
 infra/
 ├── README.md
 ├── docker/    compose/        reverse_proxy/
@@ -806,7 +1000,7 @@ For a local system exposed through a home firewall, reverse proxy, or VPN, this 
 
 ### 10.3 `configs/`
 
-```
+```text
 configs/
 ├── README.md
 ├── dev/   test/   local/
@@ -814,11 +1008,12 @@ configs/
 └── examples/
 ```
 
-`configs/` MUST NOT store real secrets — ever, even for "test" or "local". Real secrets live in environment-specific secret stores referenced by name. If a real secret lands here, treat it as a security incident: rotate, audit, and write a runbook entry in `docs/runbooks/`.
+> [!CAUTION]
+> **`configs/` MUST NOT store real secrets — ever, even for "test" or "local".** Real secrets live in environment-specific secret stores referenced by name. If a real secret lands here, treat it as a security incident: rotate, audit, and write a runbook entry in `docs/runbooks/`.
 
 ### 10.4 `migrations/`
 
-```
+```text
 migrations/
 ├── README.md
 ├── database/    schema/   data/   graph/
@@ -831,20 +1026,32 @@ Every migration MUST have a corresponding entry under `rollback/`, even if the r
 
 ## 11. UI and Map Roots
 
-The clean modern layout is:
+The clean modern layout *(v1.3 — Cesium retired; sole-renderer architecture)*:
 
-```
+```text
 apps/explorer-web/
 packages/ui/
-packages/maplibre/
-packages/cesium/
+packages/maplibre-runtime/        # (v1.3) sole governed renderer adapter; see §7.2.a
+schemas/contracts/v1/maplibre/    # (v1.3) renderer/scene schemas
+schemas/contracts/v1/3d/          # (v1.3) 3D-asset schemas hosted via MapLibre plugins
+policy/maplibre/                  # (v1.3) 3D admission + plugin admission + sky/light defaults
+contracts/maplibre/               # (v1.3) renderer/scene contracts (Markdown meaning)
+contracts/3d/                     # (v1.3) geometry-labeling, reality-boundary-notes
 docs/architecture/map-shell.md
+docs/architecture/maplibre-3d.md  # (v1.3) sole-renderer doctrine + 3D feature surface
 data/registry/layers/
 ```
 
-MapLibre is the disciplined 2D renderer and interaction runtime. It is **not** the truth store, publication authority, policy authority, citation authority, or AI authority. Cesium / 3D, where present, MUST consume the same `EvidenceBundle` and `DecisionEnvelope` as 2D — it is an alternate renderer, not an alternate truth path.
+**MapLibre GL JS is KFM's sole browser-side renderer.** The `packages/maplibre-runtime/` adapter is a governed wrapper around MapLibre's native 3D feature surface (terrain via `raster-dem` + `setTerrain`, globe projection, sky layer, hillshade, 3D fill-extrusion) and an admission-gated host for plugin-rendered 3D assets (3D Tiles via `three.js` + `3d-tiles-renderer`; glTF via `maplibre-three-plugin`; LiDAR/point clouds via `maplibre-gl-lidar`; deck.gl interleaved layers via `MapboxOverlay`). It is **not** the truth store, publication authority, policy authority, citation authority, or AI authority. All 3D layers MUST consume the same `EvidenceBundle` and `DecisionEnvelope` as 2D — 3D is an alternate **rendering mode** within the single renderer, not an alternate truth path. Every 3D-enabled layer MUST pass through the **3D Admission Decision** evaluator (`PolicyDecision` subtype, schema at `schemas/contracts/v1/policy/3d_admission_decision.schema.json` — but referenced via `schemas/contracts/v1/maplibre/` and `schemas/contracts/v1/3d/`) **before** `setTerrain`, `setProjection({type:'globe'})`, or any plugin-hosted layer construction, and MUST emit a `RepresentationReceipt` (subtype of `RenderReceipt`) after each render-frame batch.
+
+**Retired doctrine (v1.2 → v1.3):** the v1.2 entries `packages/cesium/`, "Cesium / 3D as an alternate renderer," and any path under `packages/cesium*`, `policy/cesium*`, `schemas/contracts/v1/cesium*`, or `contracts/cesium*` are **removed**. They MUST NOT be reintroduced as parallel renderer authority. Any pre-v1.3 reference is superseded; see §13.5 anti-pattern *"Reintroducing a parallel browser renderer"* and §18.e OPEN-DR-10.
 
 Avoid making root `ui/` and `web/` long-term canonical homes. The recommendation is the migration table in §8.1.
+
+> [!IMPORTANT]
+> **(v1.3)** The sole-renderer decision is **PROPOSED** until the renderer-decision ADR is accepted (§18.e OPEN-DR-10). Until acceptance, the §11 layout above is the **doctrine target**, and the v1.2 `packages/cesium/` placement is **frozen** — no new code, schemas, policies, or tests may land under a `cesium*` segment.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -852,14 +1059,14 @@ Avoid making root `ui/` and `web/` long-term canonical homes. The recommendation
 
 A domain MUST NOT become a root folder. Hydrology should not look like:
 
-```
+```text
 hydrology/
 ├── data/    schemas/   policy/   docs/
 ```
 
 It MUST look like the lane pattern:
 
-```
+```text
 docs/domains/hydrology/
 contracts/domains/hydrology/
 schemas/contracts/v1/domains/hydrology/
@@ -902,6 +1109,8 @@ A **Focus Mode** (county- or region-scale proof slice) is also cross-cutting, bu
 
 A Focus Mode composes multiple domains (a county slice may surface hydrology + history + infrastructure + hazards layers); the domains continue to live as lanes per §12, and the focus mode references them, never replaces them.
 
+[↑ Back to top](#top)
+
 ---
 
 ## 13. Anti-Patterns and Drift Prevention
@@ -924,7 +1133,7 @@ The original four drift patterns, retained, with concrete fixes.
 
 **Symptom:** Three or four directories all claim to host the map shell, with overlapping components and styles.
 
-**Fix:** Canonical is `apps/explorer-web/` (deployable shell) + `packages/ui/` (shared components) + `packages/maplibre/` (renderer) + `packages/cesium/` (3D, optional). `ui/` and `web/` become compatibility roots per §8.1 with a migration plan.
+**Fix:** Canonical is `apps/explorer-web/` (deployable shell) + `packages/ui/` (shared components) + `packages/maplibre-runtime/` (sole governed renderer adapter; see §7.2.a) *(v1.3 — was `packages/maplibre/` + `packages/cesium/` in v1.2; Cesium retired per §11 and §18.e OPEN-DR-10)*. `ui/` and `web/` become compatibility roots per §8.1 with a migration plan.
 
 ### 13.4 Domain folders becoming root folders and fragmenting the lifecycle
 
@@ -933,6 +1142,9 @@ The original four drift patterns, retained, with concrete fixes.
 **Fix:** Apply Domain Placement Law (§12). Migrate piece by piece into the responsibility-root lane pattern. Preserve the domain README in `docs/domains/<domain>/`.
 
 ### 13.5 Additional anti-patterns
+
+<details>
+<summary><strong>Click to expand the full anti-pattern table (27 rows: v1.0 + v1.1 + v1.2 + v1.3)</strong></summary>
 
 | Anti-pattern | Symptom | Fix |
 |---|---|---|
@@ -963,6 +1175,17 @@ The original four drift patterns, retained, with concrete fixes.
 | **Runtime domain folders** *(v1.2; CONFIRMED at commit `b6a279…`)* | `runtime/flora/`, `runtime/people/`, `runtime/release/` present in repo | Per §10.1, runtime substructure is `local/`, `model_adapters/`, `ollama/`, `mock/`, `service_configs/`, `envelopes/`. Domain-named runtime folders MAY be misplaced adapters or release content. NEEDS VERIFICATION; reclassify and move per content type. |
 | **Docs naming duplication** *(v1.2; CONFIRMED at commit `b6a279…`)* | `docs/atlas/` and `docs/atlases/` both present | Pick `docs/atlases/` per §6.1 / Atlas v1.1 Appendix G; deprecate or mirror `docs/atlas/`. |
 | **Docs registry mirrors canonical roots** *(v1.2; CONFIRMED at commit `b6a279…`)* | `docs/registry/schema/`, `docs/registry/fixture/`, `docs/registry/validator/`, `docs/registry/policy/` present | Compatibility-as-authority drift. `docs/` explains; it does not own schema/fixture/validator/policy. Convert to pointer pages; move machine registers to `control_plane/`. |
+| **Reintroducing a parallel browser renderer** *(v1.3)* | Any path under `packages/cesium*`, `packages/deckgl-runtime/` as a peer, or any new "renderer adapter" alongside `packages/maplibre-runtime/` | Per §11 and §13.5 (v1.3), MapLibre is the sole browser-side renderer. A parallel renderer package is parallel authority per §2.4(5) and requires a superseding ADR before any code lands. Until then: refuse the PR; route the work into `packages/maplibre-runtime/src/<adapter>.ts`. |
+| **Direct renderer-library import in app code** *(v1.3)* | `apps/explorer-web/src/...` or any feature code imports `maplibre-gl`, `three`, `3d-tiles-renderer`, `deck.gl`, `maplibre-gl-lidar`, or `maplibre-three-plugin` directly | Per §7.2.a and `maplibre-3d.md` §7.1, all renderer/plugin access goes through `packages/maplibre-runtime/`, which enforces 3D admission, attaches evidence references, emits `RepresentationReceipt`, and resolves the pinned plugin set. A direct import bypasses I-3D-1, I-3D-2, I-3D-6, and I-3D-7. **Fix:** route through the adapter; if the adapter lacks the surface, extend the adapter, not the call site. |
+| **3D admission policy outside `policy/`** *(v1.3)* | `3d_admission.rego` or `plugin_admission.rego` placed under `packages/maplibre-runtime/`, `apps/explorer-web/`, or `release/` instead of `policy/maplibre/` | Per §6.5 (v1.3), governed-renderer admission policy lives at `policy/maplibre/3d-admission.rego`, `policy/maplibre/plugin-admission.rego`, `policy/maplibre/sky-and-light-defaults.rego`, `policy/maplibre/globe-projection-admission.rego`, with CARE-mask sensitivity rules under `policy/sensitivity/care-terrain-generalization.rego`. Policy-as-code MUST NOT be co-located with adapter code. |
+| **3D schemas outside `schemas/`** *(v1.3)* | `scene_manifest.schema.json` or `3d_tile_set.schema.json` placed under `packages/maplibre-runtime/`, `contracts/maplibre/`, or `contracts/3d/` | Per ADR-0001 schema home and §6.4 (v1.3), 3D / renderer schemas live at `schemas/contracts/v1/maplibre/<*.schema.json>` and `schemas/contracts/v1/3d/<*.schema.json>`. The Markdown semantic contracts (`contracts/maplibre/<*>.md`, `contracts/3d/<*>.md`) describe meaning; they MUST NOT carry `.schema.json` siblings. See §13.1. |
+| **Renderer-switch UI** *(v1.3)* | `apps/explorer-web/src/map/renderer-switch.tsx` (or any "MapLibre vs Cesium" toggle UI) appears in the repo | Single-renderer architecture per §11; there is no renderer to switch *to*. The mode boundary is 2D / 2.5D / globe / true-3D **within** MapLibre (per `maplibre-3d.md` §3 and §6.2), not across renderers. **Fix:** delete the switch; replace with mode toggles inside `apps/explorer-web/src/map/mode-{2d,2_5d,globe,true-3d}.tsx`. |
+| **Cross-renderer integration test** *(v1.3)* | `tests/integration/cross-renderer/*.test.ts` (e.g., `camera_sync_maplibre_cesium.test.ts`) | No second renderer exists; the test category is doctrinally empty. **Fix:** remove the directory; if camera-sync logic survives, it tests `mode-true-3d` ↔ `mode-globe` transitions inside `tests/integration/maplibre/`. |
+| **`packages/maplibre/` historical name persisting after rename** *(v1.3)* | `packages/maplibre/` continues to evolve alongside `packages/maplibre-runtime/` | Per §18.e OPEN-DR-12, `packages/maplibre/` is a v1.2 historical name; rename to `packages/maplibre-runtime/` as part of the renderer-decision ADR PR. Mark as `transitional` per §8 if rename is deferred. |
+
+</details>
+
+[↑ Back to top](#top)
 
 ---
 
@@ -1046,7 +1269,10 @@ ISO date of last review. Older than 6 months → flag for review.
 
 A folder without a README that meets this contract is a drift candidate. The drift register MAY auto-populate from a missing-README scan.
 
-> **v1.1 note.** The KFM corpus also defines a *component* README order — Provenance → Promotion Contract → Citation → License → Contributing (atlas KFM-P7-PROG-0007) — that applies to **component**-level READMEs (e.g., a release artifact's accompanying README). The §15 contract above governs **folder**-level READMEs (per canonical and compatibility root). The two contracts are complementary and do not conflict. A future ADR may explicitly reconcile them.
+> [!NOTE]
+> **v1.1 note (carried forward).** The KFM corpus also defines a *component* README order — Provenance → Promotion Contract → Citation → License → Contributing (atlas KFM-P7-PROG-0007) — that applies to **component**-level READMEs (e.g., a release artifact's accompanying README). The §15 contract above governs **folder**-level READMEs (per canonical and compatibility root). The two contracts are complementary and do not conflict. A future ADR may explicitly reconcile them.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -1073,8 +1299,16 @@ When reviewing a PR that adds, moves, or renames a path, work through this list.
 - [ ] *(v1.2)* **Focus-mode schemas live under `schemas/`.** `.schema.json` files for focus-mode payloads live at `schemas/contracts/v1/focus_mode/...`, not `contracts/focus_mode/...` (§6.4, §6.7.5).
 - [ ] *(v1.2)* **Validator orchestrator call uses live-repo path.** CI and pre-commit invoke `python tools/validate_all.py` (CONFIRMED at commit `b6a279…`); not `tools/validators/validate_all.py` (v1.1 doctrine path) until ADR-07 resolves the location (§7.5.a, §18.d OPEN-DR-07).
 - [ ] *(v1.2)* **No new top-level `catalog/`, `src/`, `focus_modes/`, or domain root.** If the PR introduces one, it is drift (§3, §13.5) — open an ADR or relocate per the v1.2 anti-pattern table.
+- [ ] *(v1.3)* **No `cesium*` segment.** Per §11 (v1.3), MapLibre is the sole renderer. If the PR adds anything under `packages/cesium*`, `policy/cesium*`, `schemas/contracts/v1/cesium*`, `contracts/cesium*`, `tests/cesium*`, or `apps/*/cesium*`, it is removed doctrine — refuse the PR or require a superseding ADR (§18.e OPEN-DR-10).
+- [ ] *(v1.3)* **3D code routes through `packages/maplibre-runtime/`.** If the PR touches 3D (terrain, globe, fill-extrusion, 3D Tiles, glTF, point cloud, deck.gl interleaved), the renderer/plugin calls live inside `packages/maplibre-runtime/`. Application code (`apps/explorer-web/`, focus modes) MUST NOT import `maplibre-gl`, `three`, `3d-tiles-renderer`, `deck.gl`, `maplibre-gl-lidar`, or `maplibre-three-plugin` directly (§7.2.a, §13.5 v1.3).
+- [ ] *(v1.3)* **3D schemas under correct schema home.** `.schema.json` files for `scene_manifest`, `terrain_model`, `3d_tile_set`, `gltf_asset`, `point_cloud`, `representation_receipt`, `reality_boundary_note`, etc. live at `schemas/contracts/v1/maplibre/` or `schemas/contracts/v1/3d/` (§6.4, §13.5 v1.3).
+- [ ] *(v1.3)* **3D policy under `policy/maplibre/`.** `3d-admission.rego`, `plugin-admission.rego`, `sky-and-light-defaults.rego`, `globe-projection-admission.rego` live at `policy/maplibre/`; CARE-mask rules at `policy/sensitivity/care-terrain-generalization.rego` (§6.5, §13.5 v1.3).
+- [ ] *(v1.3)* **No renderer-switch UI.** No `renderer-switch.tsx` (or equivalent) appears in `apps/explorer-web/src/map/`. Mode boundaries are within MapLibre (`mode-2d`, `mode-2_5d`, `mode-globe`, `mode-true-3d`) (§11, §13.5 v1.3).
+- [ ] *(v1.3)* **No cross-renderer integration test.** No `tests/integration/cross-renderer/*` directory. Integration tests for MapLibre live at `tests/integration/maplibre/` (§6.6, §13.5 v1.3).
 
 A reviewer who cannot tick every applicable box SHOULD request changes or open a drift entry.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -1095,6 +1329,12 @@ Every PR touching this file MUST update §0's "Last reviewed" / version metadata
 > **v1.1 classification.** This edition's changes (visible §0 edition metadata, §6.1 sub-listings reflecting authored artifacts, §7.5.a orchestrator pattern, §13.5 three new anti-pattern rows, §16 two new checklist items, §18 four new Open Questions, new §21 Changelog) fall in the **"PR + reviewer sign-off; no ADR"** band. No canonical root was added, removed, or renamed; the schema-home rule is unchanged; lifecycle phases are unchanged; no parallel authority was created. All v1.1 additions are visibly marked.
 
 > **v1.2 classification.** This edition's changes (§0 edition metadata + v1.2 truth-posture note, new §4 Step 1 focus-mode row, new §6.7 focus-mode placement contract, new §7.1.a `apps/explorer-web/` clarification, §7.5.a reconciliation between doctrine and CONFIRMED live-repo path for `validate_all.py`, §12 Focus-Modes-are-not-domains addition, §13.5 thirteen new anti-pattern rows (4 focus-mode-related + 9 live-repo CONFIRMED drift items), §16 six new checklist items, new §18.d Open Questions OPEN-DR-06 through OPEN-DR-09, §19 new glossary entries, §20 three additional drift categories, new §21 v1.2 changelog entry) also fall in the **"PR + reviewer sign-off; no ADR"** band. No canonical root was added, removed, or renamed; the schema-home rule is unchanged; lifecycle phases are unchanged; no parallel authority was created; no §3 invariant was bent. The four new OPEN-DR items (OPEN-DR-06 through OPEN-DR-09) are flagged for **future ADR resolution** but are not unilaterally resolved by this edition. All v1.2 additions are visibly marked.
+
+> **v1.3 classification.** This edition's changes fall in the **"Reversing a previously canonical rule"** band of §17. The retirement of `packages/cesium/` from §5, §7.2, §11, and §13.3 reverses v1.2 canonical doctrine that explicitly named Cesium as an alternate renderer. Per §17 this requires **ADR + supersession notice + drift register entry**. The relevant ADR (the proposed *MapLibre as Sole Browser-Side Renderer; Retire Cesium Dependency* in `docs/architecture/maplibre-3d.md` Appendix B) is **PROPOSED, not yet accepted**; v1.3 therefore conditions its substantive Cesium-retirement claims on §18.e OPEN-DR-10 acceptance. The supersession notice lives in §0's *Supersedes* field; the drift register entry is required as a follow-up PR (see §21 v1.3 deferred items). All other v1.3 changes (the additive `schemas/contracts/v1/maplibre/` + `/3d/` segments, `policy/maplibre/`, `tests/maplibre/`, `fixtures/maplibre/`, the seven new §13.5 anti-pattern rows, the six new §16 checklist items, OPEN-DR-10/-11, glossary additions) are additive and fall in the **"PR + reviewer sign-off; no ADR"** band — they create no parallel authority, they add no canonical root, and they bend no §3 invariant. All v1.3 additions are visibly marked.
+
+> **v1.4 classification.** This edition's changes (KFM Meta Block v2 at the top of file, Shields.io badge row, top anchor `<a id="top"></a>`, quick-jump mini-TOC, authority-surface Mermaid diagram, back-to-top anchors at major-section boundaries, `<details>` collapsible for the §13.5 anti-pattern table, GitHub-alert callouts on key warnings/tips, footer block, and a new §21 v1.4 changelog entry) fall in the **"Typo, clarification, dead-link fix"** / **"PR + reviewer sign-off; no ADR"** bands. No canonical root added, removed, or renamed; no doctrine changed; the schema-home rule is unchanged; lifecycle phases are unchanged; no parallel authority was created; no §3 invariant was bent; no v1.0–v1.3 substantive text was altered. All v1.4 additions are pure presentation and are visibly marked.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -1118,11 +1358,11 @@ These items are explicitly **not resolved** by this document and SHOULD be track
 
 - **OPEN-DR-01 — `docs/standards/PROV.md` vs `docs/standards/PROVENANCE.md`.** Prior-session authoring used `PROV.md` (short standard name, matches `ISO-19115.md`, `OAI-PMH.md`, `OGC-API-TILES.md`, `PMTILES.md`). The KFM corpus (Pass-10 C1-04; multiple expansion directions) references `docs/standards/PROVENANCE.md`. Either is defensible; the document content is the same. **Resolution required by ADR**, then alias / redirect the other. Until resolved, treat the authored `PROV.md` as the live artifact and flag any new cross-reference to `PROVENANCE.md` as a drift candidate.
 
-- **OPEN-DR-02 — `docs/runbooks/<domain>/` subfolder vs flat `docs/runbooks/<domain>_<topic>.md`.** The fauna source-refresh runbook was authored at `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` (Pattern A — subfolder). Some prior planning artifacts assumed Pattern B — flat with prefix. **Resolution required by ADR.** Pattern A scales better as multiple runbooks per domain accumulate (likely with flora, hydrology, hazards, archaeology). Pattern B is simpler but starts producing very long filenames as topics multiply. The recommendation pending ADR is **Pattern A**; new authors SHOULD adopt the subfolder for any domain that already has one. See also §6.1.b.
+- **OPEN-DR-02 — `docs/runbooks/<domain>/` subfolder vs flat `docs/runbooks/<domain>_<topic>.md`.** The fauna source-refresh runbook was authored at `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` (Pattern A — subfolder). Some prior planning artifacts assumed Pattern B — flat with prefix. **Resolution required by ADR.** Pattern A scales better as multiple runbooks per domain accumulate; new authors SHOULD adopt the subfolder for any domain that already has one. See also §6.1.b.
 
 - **OPEN-DR-03 — Validator exit-code contract (`tools/validators/validate_all.py`).** The proposed contract is exit `0` = pass, `1` = any fail, `2` = system error (§7.5.a). The contract is currently published in `tools/README.md` as PROPOSED. Per §2.4(5), a contract that standardizes a cross-tool behavior is **ADR-class**. **Resolution required by ADR.** Pending ADR, CI workflows that call individual validators directly MUST be migrated to call `validate_all.py` to avoid drift.
 
-- **OPEN-DR-04 — Filename casing in `docs/standards/`.** External standards use UPPERCASE-WITH-HYPHENS (`ISO-19115.md`, `OGC-API-TILES.md`); KFM-topical multi-word standards documents proposed in the corpus use UPPERCASE_WITH_UNDERSCORES (`SENSITIVITY_RUBRIC.md`, `REDACTION_DETERMINISM.md`, `SMART_SYNC.md`). The mixed convention is a known irregularity. **Resolution by per-root README in `docs/standards/README.md`** (no ADR needed) is acceptable; alternatively a one-line ADR can freeze the rule. The pragmatic guidance is: hyphens for the standard's own short name, underscores for KFM-coined topical standards documents.
+- **OPEN-DR-04 — Filename casing in `docs/standards/`.** External standards use UPPERCASE-WITH-HYPHENS (`ISO-19115.md`, `OGC-API-TILES.md`); KFM-topical multi-word standards documents proposed in the corpus use UPPERCASE_WITH_UNDERSCORES (`SENSITIVITY_RUBRIC.md`, `REDACTION_DETERMINISM.md`, `SMART_SYNC.md`). **Resolution by per-root README in `docs/standards/README.md`** (no ADR needed) is acceptable; alternatively a one-line ADR can freeze the rule.
 
 - **OPEN-DR-05 — `docs/standards/` population backlog.** Authored: `ISO-19115.md`, `OAI-PMH.md`, `OGC-API-TILES.md`, `PMTILES.md`, `PROV.md`. **Proposed but not yet authored** (from corpus): `SIGNING.md`, `SENSITIVITY_RUBRIC.md`, `REDACTION_DETERMINISM.md`, `SMART_SYNC.md`. **Likely also relevant:** `STAC.md`, `DCAT.md`, `JSON-LD.md`, `SLSA.md`, `OPA.md`, `CIDOC-CRM.md`, `OPENLINEAGE.md`. This is not an ADR-class question; it is a verification-backlog tracking item. Each addition is a routine PR per §17.
 
@@ -1140,7 +1380,7 @@ The consolidated atlas (v1.1 Ch. 24.12) maintains a broader "Master Open-ADR Bac
 | ADR-S-04 | Source-role vocabulary v1 | adjacent (not placement) |
 | ADR-S-05 | Sensitivity tier scheme T0–T4 | adjacent (not placement) |
 | ADR-S-06 | AI surface boundary | adjacent (not placement) |
-| ADR-S-07 | 3D admission policy | adjacent (not placement) |
+| ADR-S-07 | 3D admission policy | **operationalized by v1.3 §11 and §7.2.a; see §18.e OPEN-DR-10** |
 | ADR-S-08 | Frontier Matrix cell semantics | adjacent (not placement) |
 | ADR-S-09 | Reviewer separation-of-duties threshold | governance; not placement |
 | ADR-S-10 | Stale-state propagation | adjacent (not placement) |
@@ -1156,11 +1396,11 @@ These questions are healthy; they are the kinds of questions ADRs resolve. They 
 
 - **OPEN-DR-06 — `apps/web/` vs `apps/explorer-web/` for Focus Mode UI.** Eleven county Focus Mode Build Plans (Ellsworth, Riley, Shawnee, Ford, Wyandotte, Sedgwick, Douglas, Leavenworth, Reno, Johnson, Barton) reference `apps/web/src/focus-modes/<area>/`. The CONFIRMED canonical shell is `apps/explorer-web/` per §7.1, §11, and live-repo evidence at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` (per the *KFM Repository Structure Guiding Document* v0.1). Doctrine wins per §2.1. **Resolution required by ADR** or by mass revision of the eleven draft build plans (whichever is lighter-weight). Until resolved, **new Focus Mode work MUST target `apps/explorer-web/`**; build-plan drafts that say `apps/web/` are flagged as drift candidates in `docs/registers/DRIFT_REGISTER.md`.
 
-- **OPEN-DR-07 — `tools/validate_all.py` (CONFIRMED at commit) vs `tools/validators/validate_all.py` (v1.1 doctrine).** Live-repo evidence places the orchestrator at `tools/validate_all.py` (one level higher than v1.1 doctrine assumed). The location difference is **non-trivial** because: (a) the exit-code contract is ADR-class per §2.4(5) and the contract documentation must point to one path; (b) CI workflows, pre-commit hooks, and Make targets all reference one path; (c) downstream documentation (`tools/README.md`) was authored against the v1.1 path. **Resolution required by ADR.** Two viable resolutions: **(R1) Reconcile doctrine to repo** — v1.2 doctrine and §7.5.a follow the live-repo location `tools/validate_all.py`. Lightest migration, lightest doctrine change. **(R2) Reconcile repo to doctrine** — move the live `validate_all.py` to `tools/validators/validate_all.py` and update CI / Make. Heavier migration; aligns with the principle that "the orchestrator belongs with the things it orchestrates." Recommendation pending ADR is **R1** because it minimizes churn and the orchestrator-at-tools-root pattern is defensible (orchestrators commonly sit one level above their constituents).
+- **OPEN-DR-07 — `tools/validate_all.py` (CONFIRMED at commit) vs `tools/validators/validate_all.py` (v1.1 doctrine).** Live-repo evidence places the orchestrator at `tools/validate_all.py` (one level higher than v1.1 doctrine assumed). The location difference is **non-trivial** because: (a) the exit-code contract is ADR-class per §2.4(5) and the contract documentation must point to one path; (b) CI workflows, pre-commit hooks, and Make targets all reference one path; (c) downstream documentation (`tools/README.md`) was authored against the v1.1 path. **Resolution required by ADR.** Two viable resolutions: **(R1) Reconcile doctrine to repo** — v1.2 doctrine and §7.5.a follow the live-repo location `tools/validate_all.py`. Lightest migration, lightest doctrine change. **(R2) Reconcile repo to doctrine** — move the live `validate_all.py` to `tools/validators/validate_all.py` and update CI / Make. Heavier migration. Recommendation pending ADR is **R1**.
 
-- **OPEN-DR-08 — Focus-mode casing inconsistency across responsibility roots.** The §6.7.2 canonical placement uses kebab-case-with-scope-suffix in `docs/` (`docs/focus-modes/ellsworth-county/`), snake_case-area-only in `contracts/`/`schemas/`/`fixtures/`/`pipeline_specs/` (`contracts/focus_mode/`, `fixtures/focus_modes/ellsworth/`), and kebab-case-area-only in `apps/`/`data/`/`release/`/`examples/` (`apps/explorer-web/src/focus-modes/ellsworth/`, `release/candidates/ellsworth-focus-mode/`). Same area = three forms. This is intentional (follow the host root's casing) but creates a cross-reference burden. **Resolution by per-root README in `docs/focus-modes/README.md`** (no ADR needed; analogous to OPEN-DR-04's resolution) is acceptable; alternatively a one-line ADR can freeze the mapping. **Recommendation:** authoritative casing table in `docs/focus-modes/README.md`, restated from §6.7.3.
+- **OPEN-DR-08 — Focus-mode casing inconsistency across responsibility roots.** The §6.7.2 canonical placement uses kebab-case-with-scope-suffix in `docs/`, snake_case-area-only in `contracts/`/`schemas/`/`fixtures/`/`pipeline_specs/`, and kebab-case-area-only in `apps/`/`data/`/`release/`/`examples/`. Same area = three forms. **Resolution by per-root README in `docs/focus-modes/README.md`** (no ADR needed) is acceptable; alternatively a one-line ADR can freeze the mapping.
 
-- **OPEN-DR-09 — Live-repo drift items requiring ADR-class resolution.** The *KFM Repository Structure Guiding Document* (v0.1, commit `b6a27916…`) CONFIRMS the following drift items in the live repo. Each is recorded as an anti-pattern in §13.5 (v1.2 rows); each requires ADR-class resolution because the fix involves root retirement, parallel-authority retirement, or lifecycle-phase reconciliation per §2.4. They are listed here as a single OPEN-DR umbrella to avoid fragmenting the open-question list; individual ADRs (ADR-DR-09-a, -b, -c, …) SHOULD be opened as the work is sequenced.
+- **OPEN-DR-09 — Live-repo drift items requiring ADR-class resolution.** The *KFM Repository Structure Guiding Document* (v0.1, commit `b6a27916…`) CONFIRMS the following drift items in the live repo. Each is recorded as an anti-pattern in §13.5 (v1.2 rows); each requires ADR-class resolution because the fix involves root retirement, parallel-authority retirement, or lifecycle-phase reconciliation per §2.4.
 
   | Sub-item | Drift | §13.5 row | §2.4 trigger |
   |---|---|---|---|
@@ -1175,7 +1415,17 @@ These questions are healthy; they are the kinds of questions ADRs resolve. They 
   | OPEN-DR-09-i | `docs/registry/{schema,fixture,validator,policy}/` mirroring canonical roots | "Docs registry mirrors canonical roots" | §2.4(5) parallel authority retirement |
   | OPEN-DR-09-j | Long-lived trust-bearing scripts in `scripts/` (`build-maplibre-perf-proof.mjs`, `build-maplibre-perf-release.mjs`, `build-maplibre-rollback-card.mjs`) | "Long-lived trust-bearing scripts" (v1.2 §7.5 sidebar) | §7.5 graduation rule; routine PR |
 
-  These items are **not new doctrine** — they were already covered by §3, §5, §8, §9, §10, §12, §13 — but the live-repo evidence now CONFIRMS their concrete presence rather than leaving them as hypothetical drift patterns. The drift register (`docs/registers/DRIFT_REGISTER.md`) is the operational home for tracking these; this section provides the doctrine-side cross-reference.
+### 18.e New in v1.3
+
+- **OPEN-DR-10 — Renderer-decision ADR not yet filed/accepted.** The v1.3 edition retires `packages/cesium/`, `policy/cesium/`, `schemas/contracts/v1/cesium/`, and Cesium-as-renderer language from §5, §7.2, §11, and §13.3, on the authority of the **proposed** ADR *MapLibre as Sole Browser-Side Renderer; Retire Cesium Dependency* (recommended in `docs/architecture/maplibre-3d.md` Appendix B; ADR number to be assigned, with the open ADR-0003 numbering conflict noted in `maplibre-3d.md` §6.1). **Resolution required:** file the ADR with a definitive number, mark `status: accepted`, add the supersession link to KFM-P2-FEAT-0012, and update §0's *Supersedes* field. Until acceptance, the v1.3 retirement language is **doctrine-target / PROPOSED**; the **freeze rule** in §11 (no new `cesium*` code, schemas, policies, or tests) takes effect immediately to prevent further drift while the ADR pends.
+
+- **OPEN-DR-11 — `packages/cesium*`, `policy/cesium*`, `schemas/contracts/v1/cesium*`, `contracts/cesium*` presence in mounted repo.** v1.3 was authored **without mounted-repo inspection** for Cesium artifacts. If any of these paths exist in the live repo (whether populated, stub, or empty), they require migration or removal under the same ADR as OPEN-DR-10. **Resolution required:** (a) inspect the mounted repo for `cesium*` segments; (b) for each found, record it in `docs/registers/DRIFT_REGISTER.md` with a migration card; (c) move surviving 3D adapter logic to `packages/maplibre-runtime/src/<adapter>.ts`; (d) move surviving 3D admission policy to `policy/maplibre/`; (e) move surviving 3D schemas to `schemas/contracts/v1/maplibre/` or `schemas/contracts/v1/3d/`; (f) delete renderer-switch UI and cross-renderer tests; (g) write a one-time `migrations/code/<date>-retire-cesium.md` migration manifest.
+
+- **OPEN-DR-12 — `packages/maplibre/` v1.2 historical name vs `packages/maplibre-runtime/` v1.3 canonical name.** v1.2 doctrine used `packages/maplibre/` as the renderer-package name; v1.3 doctrine uses `packages/maplibre-runtime/`. If the mounted repo has `packages/maplibre/`, it is a **compatibility name** for the same concept and SHOULD be renamed to `packages/maplibre-runtime/` as part of the same ADR/PR sequence as OPEN-DR-10 / OPEN-DR-11. **Resolution required by routine PR** once OPEN-DR-10 is accepted (no separate ADR; the renderer-decision ADR carries the rename). If the rename is deferred, `docs/registers/DRIFT_REGISTER.md` SHOULD record `packages/maplibre/` as `transitional` per §8.
+
+- **OPEN-DR-13 — `schemas/contracts/v1/maplibre/` vs `schemas/contracts/v1/3d/` boundary.** v1.3 splits renderer/scene schemas (`maplibre/`) from 3D-asset schemas (`3d/`). The boundary is intentional — `maplibre/` covers what the renderer does (scene_manifest, layer_manifest, style_manifest, terrain_model, synthetic_surface, view_state, representation_receipt, camera_path); `3d/` covers what the renderer renders (3d_tile_set, gltf_asset, point_cloud, digital_twin_view, reality_boundary_note). Edge cases (e.g., LiDAR EPT layers — renderer-hosted asset family) are placed by primary responsibility. **Resolution by per-root README** in `schemas/contracts/v1/maplibre/README.md` and `schemas/contracts/v1/3d/README.md`; ADR optional if reviewers disagree on edge cases.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -1188,186 +1438,4 @@ Terms used throughout this document, defined here for placement disambiguation. 
 | **Authority root** | A repo-root folder that carries one of the §3 responsibilities. |
 | **Compatibility root** | A root that exists for legacy, mirror, deprecated, external-export, or transitional reasons. |
 | **Lane** | A domain or topic segment inside a responsibility root (e.g., `data/processed/hydrology/`). |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. |
-| **Promotion** | A governed state transition between lifecycle phases. Not a file move. |
-| **Trust membrane** | The boundary that prevents raw / unreviewed / model-generated / internal state from becoming public truth. Operational form: `apps/governed-api/`. |
-| **EvidenceBundle / EvidenceRef** | Resolved support package for claims; lives in `data/proofs/`. References resolve via `packages/evidence-resolver/`. |
-| **ReleaseManifest** | The release decision artifact; lives in `release/manifests/`. |
-| **CorrectionNotice** | Public notice of a corrected claim; lives in `release/correction_notices/`. |
-| **RollbackCard** | Rollback decision artifact; lives in `release/rollback_cards/`. |
-| **RuntimeResponseEnvelope** | Finite-outcome wrapper (ANSWER, ABSTAIN, DENY, ERROR) returned by the governed API; schema in `schemas/contracts/v1/runtime/`. |
-| **Watcher-as-non-publisher** | The invariant that workers emit receipts and candidates only — they do not publish, mutate canonical records, or bypass review. |
-| **Validator orchestrator** *(v1.1)* | `tools/validators/validate_all.py`; canonical entry point that runs every registered validator in deterministic order and emits `validation_report.json` with exit codes 0/1/2 (§7.5.a). PROPOSED implementation; ADR-class contract (§18 OPEN-DR-03). **v1.2 reconciliation:** the CONFIRMED live-repo path is `tools/validate_all.py` (one level higher than the v1.1 doctrine path). See OPEN-DR-07. |
-| **Focus Mode** *(v1.2)* | A county- or region-scale governed proof slice that bundles a docs lane, contracts, schemas, fixtures, UI, validators, and release candidate for one bounded area. Also the AI surface within the map shell that returns ANSWER / ABSTAIN / DENY / ERROR over `MapContextEnvelope`. Placement is governed by **§6.7**, not by §12 Domain Placement Law. Casing is per-host-root (see §6.7.3). |
-| **Proof slice** *(v1.2)* | The minimum coherent composition that demonstrates the full KFM trust path (source → evidence → claim → decision → release → public UI → correction) for a bounded scope. A Focus Mode is the geographic form of a proof slice. |
-| **Area** *(v1.2)* | The geographic identifier of a Focus Mode (`ellsworth`, `riley`, `smoky-hill-corridor`, …). Lives as a sub-segment inside multiple responsibility roots per §6.7.2; not a domain (§12). |
-| **Commit-pinned evidence** *(v1.2)* | Live-repository evidence read at a specific commit SHA, captured in a guiding document. v1.2 uses commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` per the *KFM Repository Structure Guiding Document* v0.1. Stronger than doctrine-only evidence; weaker than recursive-clone-plus-CI-log evidence. |
-
----
-
-## 20. Practical Final Recommendation
-
-Use this as the normalized root policy.
-
-**Canonical roots:**
-
-```
-.github/   docs/   control_plane/   contracts/   schemas/   policy/
-tests/     fixtures/    tools/   scripts/    apps/    packages/
-connectors/   pipelines/   pipeline_specs/   data/    release/
-runtime/   infra/    configs/    migrations/    examples/
-```
-
-**Compatibility roots needing README + class declaration:**
-
-```
-artifacts/   jsonschema/   policies/   ui/   web/   styles/   viewer_templates/
-```
-
-The four drifts to prevent (§13.1–13.4):
-
-1. `contracts/` and `schemas/` both claiming machine-schema authority.
-2. `artifacts/`, `data/proofs/`, `data/receipts/`, and `release/` mixing proof, process memory, build output, and release decisions.
-3. `ui/`, `web/`, `apps/explorer-web/`, and `packages/ui/` becoming competing shell homes.
-4. Domain folders becoming root folders and fragmenting the lifecycle.
-
-The three v1.1-added drifts to prevent (§13.5):
-
-5. Standards-file naming inconsistency (e.g., `PROV.md` vs `PROVENANCE.md` evolving in parallel).
-6. Runbook subfolder/flat drift (mixed `docs/runbooks/<domain>/<topic>.md` and `docs/runbooks/<domain>_<topic>.md`).
-7. Validator orchestration drift (CI calling individual validators instead of `tools/validate_all.py`).
-
-The thirteen v1.2-added drifts to prevent (§13.5):
-
-8. **Focus-mode as root** (`focus_modes/` or `focus-modes/` at repo root → §6.7 violation).
-9. **Focus-mode app shell divergence** (`apps/web/` instead of canonical `apps/explorer-web/`; see OPEN-DR-06).
-10. **Focus-mode schema in `contracts/`** (`.schema.json` files under `contracts/focus_mode/` instead of `schemas/contracts/v1/focus_mode/`).
-11. **Validator orchestrator location ambiguity** (`tools/validate_all.py` vs `tools/validators/validate_all.py`; see OPEN-DR-07).
-12. **Top-level `catalog/` root** (CONFIRMED in live repo at commit `b6a279…`; severe parallel-authority drift).
-13. **Trust content in `artifacts/release/`** (CONFIRMED in live repo; violates §8.2).
-14. **Root `src/`** (CONFIRMED in live repo; not in canonical root list).
-15. **Policy code under `release/`** (`release/*.rego`; parallel policy authority).
-16. **Data lifecycle sibling ambiguity** (`data/manifests/`, `data/prov/`, `data/trade-routes/`, `data/triplet/`, mixed `triplet/`+`triplets/`).
-17. **Naming form duplication in `tests/`** (`tests/cross-domain/` and `tests/cross_domain/` both present).
-18. **Runtime domain folders** (`runtime/flora/`, `runtime/people/`, `runtime/release/`).
-19. **Docs naming duplication** (`docs/atlas/` and `docs/atlases/` both present).
-20. **Docs registry mirrors canonical roots** (`docs/registry/{schema,fixture,validator,policy}/`).
-
-**KFM's root MUST be boring, stable, and governed. The complexity belongs inside the lanes — registries, contracts, schemas, policies, tests, release objects — not scattered across root-level topic folders.**
-
----
-
-## 21. Changelog
-
-### v1.2 — 2026-05-21 (refresh + new evidence basis, no canonical-root change)
-
-**Authority class:** §17 "PR + reviewer sign-off; no ADR." No canonical root added, removed, or renamed. Schema-home rule unchanged. Lifecycle phases unchanged. No parallel authority created. The four new OPEN-DR items (OPEN-DR-06 through OPEN-DR-09) are flagged for **future ADR resolution** but are not unilaterally resolved by this edition.
-
-**Evidence basis:**
-
-1. **Commit-pinned live-repo evidence** at `b6a27916bbb9e07cbf3752870c867476e1e094e7` (read via GitHub web view), captured in the *KFM Repository Structure Guiding Document* (v0.1, PROPOSED). This is the first edition of Directory Rules grounded in any live-repo evidence, however limited.
-2. **Eleven Kansas-county Focus Mode Build Plans** (Ellsworth, Riley, Shawnee, Ford, Wyandotte, Sedgwick, Douglas, Leavenworth, Reno, Johnson, Barton) — all `status: draft`, all dated 2026-05-21. These motivated the §6.7 placement contract and the `apps/web/` vs `apps/explorer-web/` reconciliation (OPEN-DR-06).
-3. **Carried-forward doctrine corpus**: KFM Unified Doctrine Synthesis (§18 MapLibre/Evidence Drawer/Focus Mode), KFM Encyclopedia, AI Build Operating Contract, KFM Unified Implementation Architecture Build Manual, KFM Connected Dots Architecture Brief, Domains Atlas v1.1, Master MapLibre Components-Functions-Features, Pass-10 Idea Index, Domain-Driven Design Reference.
-
-**What v1.2 still does not have:** CI run logs, workflow execution evidence, dashboards, runtime traces, branch-protection state, full recursive file listings, or test-pass evidence. Path presence below the commit-pinned first level remains **NEEDS VERIFICATION**.
-
-#### Substantive additions
-
-| § | Section | Change | Evidence |
-|---|---|---|---|
-| §0 | Status & Authority | Bumped to v1.2; added v1.2 truth-posture note distinguishing commit-pinned, prior-session, and corpus evidence layers; clarified that paths CONFIRMED at the b6a279… commit carry stronger evidence than other PROPOSED paths | self-evident; KFM Repository Structure Guiding Document |
-| §4 | Step 1 placement table | Added focus-mode (proof-slice) row pointing to §6.7 | County Focus Mode Build Plans |
-| §6.7 | NEW — Focus Modes placement contract | Defines focus mode as cross-cutting compositional unit (NOT a domain, NOT a root); canonical placement table across docs/, contracts/, schemas/, fixtures/, apps/, tools/, data/, release/, pipeline_specs/, examples/; per-host-root casing convention; "what a focus mode is NOT" list; recommended first-PR sequence | County Focus Mode Build Plans (all 11); KFM Unified Doctrine §18 |
-| §7.1.a | NEW — `apps/explorer-web/` canonical clarification | CONFIRMED `apps/explorer-web/` at commit b6a279…; flagged `apps/web/` in build plans as drift; resolution recommendation pending OPEN-DR-06 | KFM Repository Structure Guiding Document; County Focus Mode Build Plans |
-| §7.5 | `tools/` and `scripts/` tree | Updated tree to show `tools/validate_all.py` at CONFIRMED live-repo location (tools/ root); added `attest/`, `ci/`, `watchers/` to tree; added v1.2 drift signal about long-lived MapLibre proof/release/rollback scripts in `scripts/` | KFM Repository Structure Guiding Document |
-| §7.5.a | Reconciliation note for validator orchestrator location | v1.1 said `tools/validators/validate_all.py`; CONFIRMED location at commit b6a279… is `tools/validate_all.py`. CI workflow path updated; OPEN-DR-07 flags for ADR | KFM Repository Structure Guiding Document |
-| §12 | Domain Placement Law | Added "Focus Modes are not domains" subsection cross-referencing §6.7; explicit table contrasting domain pattern vs focus-mode pattern | self-evident from §6.7 |
-| §13.5 | Anti-patterns table | Added 13 new rows: 4 focus-mode-related (focus-mode-as-root, app shell divergence, schema-in-contracts, orchestrator location ambiguity) + 9 live-repo-CONFIRMED drift items (top-level `catalog/`, `artifacts/release/`, root `src/`, `release/*.rego`, data lifecycle ambiguity, tests cross-domain naming, runtime domain folders, docs atlas/atlases, docs/registry/) | County Focus Mode Build Plans; KFM Repository Structure Guiding Document |
-| §16 | Path-validation checklist | Added 6 v1.2 checklist items covering focus-mode multi-root pattern, app shell, schema home, validator orchestrator call, and "no new top-level root" guard | per §13.5 v1.2 additions |
-| §17 | Document change discipline | Added v1.2 classification note (same band as v1.1: PR + reviewer sign-off, no ADR) | self-evident |
-| §18.d | NEW — v1.2 Open Questions | OPEN-DR-06 (`apps/web/` vs `apps/explorer-web/`), OPEN-DR-07 (`tools/validate_all.py` location), OPEN-DR-08 (focus-mode casing), OPEN-DR-09 umbrella (live-repo drift items, sub-items a–j with §13.5 row + §2.4 trigger mapping) | KFM Repository Structure Guiding Document; County Focus Mode Build Plans |
-| §19 | Glossary | Updated "Validator orchestrator" with reconciliation note; added "Focus Mode", "Proof slice", "Area", "Commit-pinned evidence" entries | per §6.7, §7.5.a, §0 v1.2 note |
-| §20 | Practical Final Recommendation | Listed the 13 v1.2-added drifts as drifts 8–20 | per §13.5 |
-| §21 | Changelog | This entry | self-evident |
-
-#### What did **not** change
-
-- The full v1.0 substantive text in §§1–14, §17 (decision matrix), §19 (carried-forward glossary entries), §20 (canonical/compatibility root lists, four original drifts).
-- The full v1.1 additions in §§0, 6.1, 6.1.a, 6.1.b, 7.5, 7.5.a (the pattern itself; only the path was reconciled), 13.5 (original v1.1 three rows), 15 (component-vs-folder README note), 16 (v1.1 two checklist items), 17 (v1.1 classification), 18.a/b/c, 19 (v1.1 glossary row), 20 (v1.1 drifts 5–7), 21 v1.1 changelog entry.
-- §3 deeper rule (responsibility-rooted, not topic-rooted).
-- §5 canonical root tree (no roots added, removed, or renamed; the v1.2 evidence shows the rules' canonical roots are largely present in the live repo at commit b6a279…).
-- §6.3 `contracts/` substructure (new top-level family `focus_mode/` joins existing families per §6.7 placement contract; this is family-level addition, not root-level addition, and therefore not §2.4(1)).
-- §8 compatibility-root table and `artifacts/` rule.
-- §9 lifecycle invariant and phase rules.
-- §12 Domain Placement Law (only an *additive* subsection clarifying that Focus Modes are not domains; the law itself is unchanged).
-- §15 Required README Contract.
-
-#### Validation
-
-- **Self-consistency:** v1.2 additions cross-reference each other (§4 Step 1 row ↔ §6.7 ↔ §13.5 v1.2 rows ↔ §16 v1.2 checklist items ↔ §18.d OPEN-DR-06/-07/-08/-09; §7.1.a ↔ §13.5 "Focus-mode app shell divergence" ↔ §18.d OPEN-DR-06; §7.5.a reconciliation ↔ §13.5 "Validator orchestrator location ambiguity" ↔ §18.d OPEN-DR-07; §6.7.3 casing ↔ §18.d OPEN-DR-08).
-- **No invariant bend:** §3 deeper rule and §9 lifecycle invariant unchanged. Focus Modes explicitly excluded from becoming roots (§6.7.5).
-- **No silent resolution of ADR-class questions:** OPEN-DR-06 through OPEN-DR-09 are explicitly flagged for ADR resolution; this edition takes no unilateral position beyond "pending ADR, prefer X" or "the CONFIRMED live-repo location is X."
-- **Evidence layering:** v1.2 distinguishes CONFIRMED-at-commit (strongest), prior-session-authored, and corpus-doctrine (weakest) in §0's truth-posture note. No v1.2 claim about path presence below the commit-pinned first level is asserted as CONFIRMED.
-- **Reversibility:** to roll back v1.2, remove every block tagged *(v1.2)*: §0 v1.2 metadata + truth-posture note, §4 Step 1 v1.2 row, the entire §6.7 section, §7.1.a, the v1.2 update to the §7.5 tree and §7.5.a reconciliation note (revert to v1.1 path `tools/validators/validate_all.py`), the §12 "Focus Modes are not domains" subsection, the thirteen v1.2 rows in §13.5, the six v1.2 §16 checklist items, the §17 v1.2 classification note, all of §18.d, the v1.2 glossary rows in §19, drifts 8–20 in §20, and this v1.2 changelog entry. The v1.1 and v1.0 text remains intact.
-
-#### Items deliberately deferred
-
-- **Resolution of OPEN-DR-06** (`apps/web/` vs `apps/explorer-web/`) — requires either an ADR or coordinated revision of all eleven county Focus Mode Build Plans. Recommendation: revise the build plans rather than ADR a non-canonical path.
-- **Resolution of OPEN-DR-07** (`tools/validate_all.py` location) — requires ADR per §2.4(5); recommendation R1 (reconcile doctrine to repo) pending ADR.
-- **Resolution of OPEN-DR-08** (focus-mode casing across roots) — per-root README in `docs/focus-modes/README.md` is sufficient; ADR optional.
-- **Resolution of OPEN-DR-09** (live-repo drift items a–j) — each sub-item requires its own ADR or routine PR per §2.4 / §17; tracked in `docs/registers/DRIFT_REGISTER.md`.
-- **Authoring of `docs/focus-modes/README.md`** — proposed v1.2; restates §6.7 placement and casing for new authors; routine PR.
-- **Authoring of `contracts/focus_mode/README.md`, `schemas/contracts/v1/focus_mode/README.md`, `fixtures/focus_modes/README.md`** — each is a routine PR per §15.
-
-### v1.1 — 2026-05-18 (refresh, no canonical-root change)
-
-**Authority class:** §17 "PR + reviewer sign-off; no ADR." No canonical root added, removed, or renamed. Schema-home rule unchanged. Lifecycle phases unchanged. No parallel authority created.
-
-**Evidence basis:** Prior-session-authored artifacts (visible via past-chat retrieval), plus attached KFM doctrine corpus (Unified Implementation Architecture Build Manual; Domains v1.1 Atlas Parts 1–2; Pass-10 Idea Index; KFM Encyclopedia; Master MapLibre Components-Functions-Features; Domain-Driven Design Reference). **No mounted repo, CI, workflow, dashboard, or runtime log was inspected.** Mounted-repo presence of every named path remains **NEEDS VERIFICATION**.
-
-#### Substantive additions
-
-| § | Section | Change | Evidence |
-|---|---|---|---|
-| §0 | Status & Authority | Added Edition (v1.1), Last reviewed (2026-05-18), v1.1 truth-posture note, refined Supersedes line | self-evident |
-| §6.1 | `docs/` tree | Expanded `docs/standards/` sub-listing to reflect authored and corpus-proposed files; added `docs/runbooks/fauna/` placeholder; added `docs/atlases/` per ADR-S-02 | prior-session authoring; atlas v1.1 Appendix G |
-| §6.1.a | NEW — `docs/standards/` placement contract | One file per external standard; naming convention; subsidiary-folder rule for large profiles | prior-session authoring pattern |
-| §6.1.b | NEW — `docs/runbooks/` placement contract | Two live patterns (subfolder vs flat) documented; recommendation pending ADR | prior-session authoring (fauna runbook) |
-| §7.5 | `tools/` and `scripts/` | Added `validate_all.py`, `registry.yaml` placeholders to tree | atlas KFM-P5-PROG-0009 |
-| §7.5.a | NEW — Validator orchestrator pattern | Documented exit-code contract (0/1/2), `ValidationResult` interface, `--fast` mode, negative-state rule | atlas KFM-P5-PROG-0009; prior-session `tools/README.md` |
-| §13.5 | Anti-patterns table | Added three new rows: standards-file naming inconsistency, runbook subfolder/flat drift, validator orchestration drift | prior-session evidence |
-| §15 | Required README Contract | Added v1.1 note distinguishing folder-level (§15) from component-level (KFM-P7-PROG-0007) README contracts | atlas KFM-P7-PROG-0007 |
-| §16 | Path-validation checklist | Added two new checklist items: standards filename convention; runbook subfolder consistency | per §13.5 additions |
-| §18 | Open Questions | Reorganized into 18.a (carried forward), 18.b (new in v1.1: OPEN-DR-01 through OPEN-DR-05), 18.c (ADR-S-* cross-reference table from atlas v1.1 Ch. 24.12) | atlas v1.1 Ch. 24.12; session evidence |
-| §19 | Glossary | Added "Validator orchestrator" entry | per §7.5.a |
-| §20 | Practical Final Recommendation | Listed the three v1.1-added drifts as drifts 5–7 | per §13.5 |
-| §21 | NEW — Changelog | This section | self-evident |
-
-#### What did **not** change
-
-- The full v1.0 substantive text in §§1–14, §17 (decision matrix), §19 (carried-forward glossary entries), §20 (canonical/compatibility root lists, four original drifts).
-- §3 deeper rule (responsibility-rooted, not topic-rooted).
-- §5 canonical root tree (no roots added, removed, or renamed).
-- §8 compatibility-root table and `artifacts/` rule.
-- §9 lifecycle invariant and phase rules.
-- §12 Domain Placement Law.
-
-#### Validation
-
-- **Self-consistency:** v1.1 additions cross-reference each other (§6.1 ↔ §6.1.a ↔ §6.1.b ↔ §18 OPEN-DR-01..04; §7.5 ↔ §7.5.a ↔ §18 OPEN-DR-03; §13.5 ↔ §16 ↔ §18; §19 ↔ §7.5.a).
-- **No invariant bend:** §10 invariants unchanged.
-- **No silent resolution of ADR-class questions:** OPEN-DR-01 through OPEN-DR-03 are explicitly flagged for ADR resolution; this edition takes no unilateral position beyond "pending ADR, prefer X."
-- **Reversibility:** to roll back v1.1, remove the v1.1-marked subsections (§6.1.a, §6.1.b, §7.5.a, the three new §13.5 rows, the two new §16 checklist items, §18.b, §18.c, §19 Validator-orchestrator row, §20 drifts 5–7, this §21). The original §§1–20 text remains intact.
-
-#### Items deliberately deferred
-
-- **Resolution of OPEN-DR-01** (`PROV.md` vs `PROVENANCE.md`) — requires ADR.
-- **Resolution of OPEN-DR-02** (`docs/runbooks/<domain>/` vs flat) — requires ADR.
-- **Resolution of OPEN-DR-03** (validator exit-code contract canonicalization) — requires ADR per §2.4(5).
-- **Resolution of OPEN-DR-04** (filename casing in `docs/standards/`) — per-root README in `docs/standards/README.md` is sufficient; no ADR required.
-- **Resolution of OPEN-DR-05** (`docs/standards/` population backlog) — routine PRs per §17, tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
-- **Authoring of `docs/standards/SIGNING.md`, `SENSITIVITY_RUBRIC.md`, `REDACTION_DETERMINISM.md`, `SMART_SYNC.md`** — these are corpus-proposed (Pass-10 C1-03, C6-01, C6-03, C3-01) and have not been authored yet. Each is a separate routine PR.
-
-### v1.0 — initial Markdown edition
-
-Replaced the original `Directory_Rules.pdf`. Established the 20-section structure preserved (verbatim where unchanged) in this v1.1 edition.
+| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PRO
