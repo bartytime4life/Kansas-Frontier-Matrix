@@ -1,448 +1,9 @@
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs.domains.agriculture.api-contracts
-title: Agriculture — API Contracts
-type: standard
-version: v1
-status: draft
-owners: TBD (Agriculture steward + API owner + Contract/schema steward)
-created: 2026-05-15
-updated: 2026-05-15
-policy_label: public
-related:
-  - docs/domains/agriculture/README.md
-  - docs/architecture/governed-ai/
-  - docs/standards/PROV.md
-  - schemas/contracts/v1/domains/agriculture/
-  - contracts/domains/agriculture/
-  - policy/domains/agriculture/
-  - apps/governed-api/
-tags: [kfm, domain, agriculture, api, contracts, decision-envelope]
-notes:
-  - All repo paths, route names, and DTO names are PROPOSED until mounted-repo verification.
-  - Schema home defaults to schemas/contracts/v1/ per Directory Rules §7.4 / ADR-0001.
-[/KFM_META_BLOCK_V2] -->
+| **AI-authored merges** | Every AI-authored merge touching this surface emits a `GENERATED_RECEIPT.json` per [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) §34, with `contract_version = "3.0.0"`, `artifact_paths[]` including the merged file, `truth_labels[]`, `validation_gates[]`, and `human_review.state`. |
 
-<a id="top"></a>
-
-# Agriculture — API Contracts
-
-> Governed API surfaces, finite outcomes, and DTO/schema homes for the Agriculture domain — aggregate-only, public-safe by default, field-level deny by default.
-
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Domain](https://img.shields.io/badge/domain-agriculture-2e7d32)
-![Outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-blue)
-![Sensitivity](https://img.shields.io/badge/sensitivity-aggregate--only-critical)
-![Schema home](https://img.shields.io/badge/schemas-contracts%2Fv1%2Fdomains%2Fagriculture-informational)
-![Trust path](https://img.shields.io/badge/route-apps%2Fgoverned--api%20(PROPOSED)-purple)
-![Last updated](https://img.shields.io/badge/last%20updated-2026--05--15-lightgrey)
-
-| Status | Owners | Last reviewed |
-|---|---|---|
-| `draft` · PROPOSED routes / NEEDS VERIFICATION paths | Agriculture steward · API owner · Contract/schema steward (placeholder) | 2026-05-15 |
-
----
-
-## Quick jump
-
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. Authority & placement](#2-authority--placement)
-- [3. Surface inventory](#3-surface-inventory)
-- [4. Outcome grammar](#4-outcome-grammar)
-- [5. DTOs & envelopes](#5-dtos--envelopes)
-- [6. Object families resolved by these contracts](#6-object-families-resolved-by-these-contracts)
-- [7. Sensitivity & deny-by-default lanes](#7-sensitivity--deny-by-default-lanes)
-- [8. Pipeline state and admission gates](#8-pipeline-state-and-admission-gates)
-- [9. Cross-lane relations](#9-cross-lane-relations)
-- [10. Validators & contract tests](#10-validators--contract-tests)
-- [11. Governed AI behavior on this surface](#11-governed-ai-behavior-on-this-surface)
-- [12. Correction & rollback contract](#12-correction--rollback-contract)
-- [13. Open questions & NEEDS VERIFICATION](#13-open-questions--needs-verification)
-- [14. Related docs](#14-related-docs)
-
----
-
-## 1. Purpose & scope
-
-This document defines the **governed API contract surface** for the Kansas Frontier Matrix (KFM) Agriculture domain. It enumerates the surfaces that may be exposed to clients, the finite outcome grammar each surface returns, the DTO and schema families each surface depends on, and the sensitivity and review constraints that bound what may be answered.
-
-The Agriculture domain mission, from the project source of truth: *represent crops, fields, soils, irrigation, yields, conservation practices and agricultural economy in **public-safe aggregate or permissioned form**; never publish private farm operations, field-level sensitive details, or source-rights-limited data without review.* `[ENCY §7.7.A]` `[DOM-AG]`
-
-| In scope | Out of scope |
-|---|---|
-| Agriculture feature / detail resolution through the trust membrane | Direct access to `data/raw`, `data/work`, or `data/quarantine` (forbidden by trust membrane) |
-| Agriculture layer manifest resolution for map clients | Field-level operator truth from aggregate satellite products |
-| Evidence Drawer payload assembly for Agriculture claims | Title / ownership / parcel privacy (owned by People/Land) |
-| Focus Mode answers grounded in released Agriculture `EvidenceBundle`s | Water observations and flood context (owned by Hydrology) |
-| Correction submission and read-only review surface for Agriculture | Canonical soil map-unit and horizon semantics (owned by Soil) |
+`[CONFIRMED doctrine — ENCY §7.7.I; Atlas §9.L; GAI; ai-build-operating-contract.md §31–§34.]`
 
 > [!IMPORTANT]
-> Agriculture is one of the domains where **aggregate cited as per-place truth** is an explicit anti-pattern: joining an aggregate cell to a single record is DENY at the route boundary and ABSTAIN at AI. `[ATLAS §24.x]` `[DOM-AG]`
-
-[Back to top](#top)
-
----
-
-## 2. Authority & placement
-
-### 2.1 Authority order for the contracts in this doc
-
-1. **KFM core invariants** — lifecycle law, trust membrane, cite-or-abstain, watcher-as-non-publisher.
-2. **Accepted ADRs** explicitly amending Directory Rules or schema home.
-3. **Directory Rules** — `docs/doctrine/directory-rules.md`.
-4. **Per-root READMEs** under affected canonical roots.
-5. **Domain dossier** — `[DOM-AG]`, `[ENCY §7.7]`, `[ATLAS §9]` — lineage / proposed.
-6. **Convention from mounted repo** — drift, not authority.
-
-`[CONFIRMED doctrine, DIRRULES §2.1]`
-
-### 2.2 PROPOSED responsibility-root homes
-
-Per Directory Rules §4 Step 3, the agriculture domain appears as a **segment inside each responsibility root**, never as a root itself. The Agriculture-owned homes below are PROPOSED until the mounted repo is inspected.
-
-```text
-docs/domains/agriculture/                      # this document and siblings
-contracts/domains/agriculture/                 # semantic object meaning (PROPOSED)
-schemas/contracts/v1/domains/agriculture/      # executable JSON Schema (PROPOSED, ADR-0001 default)
-policy/domains/agriculture/                    # admissibility, release, sensitivity gates (PROPOSED)
-tests/domains/agriculture/                     # contract, policy, fixture, e2e tests (PROPOSED)
-fixtures/domains/agriculture/                  # no-network golden / invalid fixtures (PROPOSED)
-data/raw/agriculture/         data/work/agriculture/        data/quarantine/agriculture/
-data/processed/agriculture/   data/catalog/domain/agriculture/
-data/published/layers/agriculture/             # public-safe release surface only (PROPOSED)
-release/candidates/agriculture/                # release decisions (PROPOSED)
-```
-
-`[PROPOSED — Directory Rules §4 Step 3; ENCY §7.7.J file-home note; ATLAS §24.13]`
-
-> [!NOTE]
-> Every path above is **PROPOSED** until inspected against a mounted repo. Per Directory Rules §0, *the authority of any specific path quoted here is PROPOSED until verified against mounted-repo evidence.* Treat this section as a placement plan, not a repo claim. `[CONFIRMED — DIRRULES §0]`
-
-### 2.3 Trust-membrane placement
-
-Public and normal-UI clients **MUST** reach Agriculture data through `apps/governed-api/` and **MUST NOT** read from canonical or internal stores directly. The Explorer Web app (`apps/explorer-web/` PROPOSED) reads via `apps/governed-api/`; never directly from `data/raw|work|quarantine`. `[CONFIRMED doctrine — DIRRULES §7.1; UIAI]`
-
-[Back to top](#top)
-
----
-
-## 3. Surface inventory
-
-Five surface families are PROPOSED for the Agriculture domain. Each one returns a finite outcome from the [outcome grammar](#4-outcome-grammar). Routes are illustrative URL shapes; **exact route names are UNKNOWN** until the backend framework, route convention, and OpenAPI/GraphQL surface are verified against a mounted repo.
-
-| # | Surface | Illustrative shape | DTO / schema | Outcomes | Status |
-|---|---|---|---|---|---|
-| 1 | Agriculture feature / detail resolver | `GET /api/v1/domains/agriculture/features/{id}` | `AgricultureFeatureDTO` + `EvidenceRef[]`, wrapped in `AgricultureDecisionEnvelope` | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| 2 | Agriculture layer manifest resolver | `GET /api/v1/layers/agriculture/{layer_id}/manifest` | `LayerManifest` (agriculture profile) | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-| 3 | Agriculture Evidence Drawer payload | `GET /api/v1/evidence-drawer/agriculture/{claim_id}` | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| 4 | Agriculture Focus Mode answer | `POST /api/v1/focus/agriculture` | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| 5 | Correction submit (shared) | `POST /api/v1/corrections` (domain-tagged) | `CorrectionNoticeCandidate` | `ACCEPTED` · `DENY` · `ERROR` | PROPOSED |
-| 6 | Review decision (shared, steward only) | `POST /api/v1/review/{queue}/{id}/decision` | `ReviewRecord` | `ALLOW` · `RESTRICT` · `DENY` · `ERROR` | PROPOSED |
-
-`[ENCY §7.7.J — domain dossier J. table]` `[ATLAS §9.J]` `[ATLAS §20.3 Master API Surface]`
-
-```mermaid
-flowchart LR
-  Client["Public UI / steward UI / programmatic client"]
-  GovAPI["apps/governed-api/<br/>(trust membrane, PROPOSED)"]
-
-  Feat["Feature / detail<br/>resolver"]
-  Layer["Layer manifest<br/>resolver"]
-  Drawer["Evidence Drawer<br/>payload"]
-  Focus["Focus Mode<br/>answer"]
-  Corr["Correction<br/>submit"]
-  Rev["Review decision<br/>(steward)"]
-
-  Released[("data/published/layers/agriculture/<br/>+ catalog + EvidenceBundle")]
-  Policy{{"policy/domains/agriculture/<br/>+ policy/sensitivity/*"}}
-  AIReceipt[/"AIReceipt + RuntimeResponseEnvelope"/]
-
-  Client -->|HTTPS| GovAPI
-  GovAPI --> Feat
-  GovAPI --> Layer
-  GovAPI --> Drawer
-  GovAPI --> Focus
-  GovAPI --> Corr
-  GovAPI --> Rev
-
-  Feat --> Released
-  Layer --> Released
-  Drawer --> Released
-  Focus --> Released
-  Focus --> AIReceipt
-
-  Feat -. consult .-> Policy
-  Layer -. consult .-> Policy
-  Drawer -. consult .-> Policy
-  Focus -. consult .-> Policy
-  Corr -. consult .-> Policy
-  Rev -. consult .-> Policy
-```
-
-> [!CAUTION]
-> The diagram is **PROPOSED structural model**. The actual app boundary may be `apps/governed-api/`, `apps/governed_api/`, `packages/api/`, or another adapter — and route naming may differ. Resolve before implementation; record an ADR if the boundary deviates. `[NEEDS VERIFICATION — UIAI §15 open file-home conflicts]`
-
-[Back to top](#top)
-
----
-
-## 4. Outcome grammar
-
-Every Agriculture surface returns a finite outcome from KFM's consolidated decision-outcome envelope (`[ATLAS §24.3]`). The outcome is the contract — clients **MUST** treat any non-finite or unrecognized outcome as `ERROR`.
-
-| Outcome | When | Required artifacts | Public-surface effect |
-|---|---|---|---|
-| `ANSWER` | Evidence is sufficient; policy permits; release state allows; review state (if required) is recorded. | `EvidenceBundle` resolved; `PolicyDecision = allow`; `ReleaseManifest` applies. | Substantive answer with Evidence Drawer and citation. |
-| `ABSTAIN` | Evidence insufficient/incomplete; citations cannot be validated; source roles conflict; temporal scope insufficient; AI cannot cite. | `AIReceipt` with reason; no claim emitted. | Non-substantive note with reason; never invents. |
-| `DENY` | Policy, rights, sensitivity, or release state forbids the answer. Sensitive lanes default here. | `PolicyDecision = deny` + `reason_code`; `AIReceipt` records denial. | Denial reason; offer alternative non-restricted surface where possible. |
-| `ERROR` | Governed API cannot evaluate — missing schema, malformed query, contract violation, infrastructure failure. | Error envelope with diagnostic code; no claim leakage. | Finite, actionable error; never silently falls through to a different lane. |
-| `HOLD` (release/correction lanes only) | Promotion/release/correction paused pending steward, rights-holder, or policy review. | `ReviewRecord` pending; `PolicyDecision = hold`. | Surface remains in prior state; no silent rollback or replacement. |
-
-`[CONFIRMED doctrine — ATLAS §24.3.1; ENCY §7.7.I; GAI]`
-
-### 4.1 Forbidden outcomes per surface
-
-| Surface | Outcomes returned | Forbidden behaviors |
-|---|---|---|
-| Feature / detail resolver | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Returning an unreleased candidate as `ANSWER`; exposing internal-store identifiers; joining aggregate-cell value to a single record. |
-| Layer manifest resolver | `ANSWER` · `DENY` · `ERROR` | Returning a layer that lacks a `ReleaseManifest`; serving `WORK` or `CATALOG` layers to public clients. |
-| Evidence Drawer payload | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Returning raw source bytes; returning quarantined source as `ANSWER`. |
-| Focus Mode answer | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Emitting AI text as evidence; answering without an `AIReceipt`; bypassing citation validation. |
-| Correction submit | `ACCEPTED` · `DENY` · `ERROR` | Treating an acceptance as a publication decision; auto-promoting without review. |
-| Review decision | `ALLOW` · `RESTRICT` · `DENY` · `ERROR` | Allowing a non-steward role; emitting public artifacts before promotion. |
-
-`[CONFIRMED doctrine — ATLAS §24.3.2; ENCY §7.7.I; GAI]`
-
-[Back to top](#top)
-
----
-
-## 5. DTOs & envelopes
-
-PROPOSED schema homes (defaults per ADR-0001 / Directory Rules §7.4 — *schema-home authority is `schemas/contracts/v1/<…>`*). Each schema below is **PROPOSED to create**; none is asserted to exist in the current repo.
-
-| DTO / envelope | Purpose | PROPOSED schema home |
-|---|---|---|
-| `AgricultureDecisionEnvelope` | Domain-tagged finite-outcome wrapper used by the feature/detail resolver. | `schemas/contracts/v1/domains/agriculture/agriculture_decision_envelope.schema.json` |
-| `AgricultureFeatureDTO` | Public-safe projection of an Agriculture feature (county/HUC/grid aggregate). | `schemas/contracts/v1/domains/agriculture/agriculture_feature_dto.schema.json` |
-| `LayerManifest` (agriculture profile) | Layer descriptor with trust badge inputs, source-role tags, freshness, sensitivity transforms, release reference. | `schemas/contracts/v1/layers/layer_manifest.schema.json` (shared) |
-| `EvidenceDrawerPayload` | Drawer payload with claim, `EvidenceRef`s, bundle refs, source roles, valid time, review state, rights, sensitivity, correction, transforms. | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` (shared) |
-| `EvidenceBundle` projection | Public-safe projection of the released Agriculture `EvidenceBundle` referenced by the drawer or focus answer. | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` (shared) |
-| `RuntimeResponseEnvelope` + `AIReceipt` | Common governed response wrapper for Focus / story / review. `AIReceipt` records outcome, `evidence_refs`, `policy_decision`, `citation_validation`. | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` + `schemas/contracts/v1/runtime/ai_receipt.schema.json` (shared) |
-| `CorrectionNoticeCandidate` | Public correction intake form; non-public until reviewed. | `schemas/contracts/v1/corrections/correction_notice_candidate.schema.json` (shared) |
-| `ReviewRecord` | Steward decision artifact (allow/restrict/deny/hold). | `schemas/contracts/v1/review/review_record.schema.json` (shared) |
-
-`[PROPOSED schema homes — DIRRULES §7.4 + ADR-0001; UIAI §15]`
-
-<details>
-<summary><b>Illustrative DecisionEnvelope shape (not authoritative)</b></summary>
-
-The shape below is **illustrative**, drawn from the consolidated DecisionEnvelope pattern in the project sources. It is **not** an authoritative agriculture schema. The authoritative schema must be authored in `schemas/contracts/v1/domains/agriculture/`, validated by fixtures, and gated by `policy/domains/agriculture/`.
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schema/AgricultureDecisionEnvelope.schema.json",
-  "title": "AgricultureDecisionEnvelope (PROPOSED, illustrative)",
-  "type": "object",
-  "required": [
-    "object_type",
-    "schema_version",
-    "envelope_id",
-    "created",
-    "spec_hash",
-    "outcome",
-    "evidence_refs"
-  ],
-  "properties": {
-    "object_type":     { "const": "AgricultureDecisionEnvelope" },
-    "schema_version":  { "const": "v1" },
-    "envelope_id":     { "type": "string", "minLength": 8 },
-    "created":         { "type": "string", "format": "date-time" },
-    "spec_hash":       { "type": "string", "pattern": "^[A-Fa-f0-9]{32,128}$" },
-    "outcome":         { "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"] },
-    "reason_code":     { "type": "string" },
-    "policy_decision": { "type": "string", "enum": ["allow", "deny", "hold"] },
-    "freshness":       { "type": "string", "format": "date-time" },
-    "evidence_refs": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["uri", "digest"],
-        "properties": {
-          "role":      { "enum": ["primary", "secondary", "derived", "aggregate"] },
-          "uri":       { "type": "string", "format": "uri" },
-          "digest":    {
-            "type": "object",
-            "required": ["alg", "value"],
-            "properties": {
-              "alg":   { "enum": ["sha256", "blake3"] },
-              "value": { "type": "string" }
-            }
-          }
-        }
-      }
-    },
-    "obligations": {
-      "type": "object",
-      "properties": {
-        "redactions":      { "type": "array", "items": { "type": "object" } },
-        "generalizations": { "type": "array", "items": { "type": "object" } }
-      }
-    }
-  }
-}
-```
-
-**Illustrative only** — sourced from the cross-cutting `DecisionEnvelope`, `EvidenceBundle`, and runtime-envelope patterns in the project knowledge base. Field set, required-ness, and naming for the agriculture-tagged envelope must be settled in an ADR and validated by fixtures.
-
-`[INFERRED structure — composite of [New Ideas 5-8-26.pdf] DecisionEnvelope + EvidenceBundle + UIAI runtime envelope]`
-</details>
-
-[Back to top](#top)
-
----
-
-## 6. Object families resolved by these contracts
-
-The Agriculture domain owns the following object families. Each may surface through one or more of the routes above, and each is identity-bounded by the rule *source id + object role + temporal scope + normalized digest* (PROPOSED). `[ATLAS §9.E]`
-
-| Object family | Public surfacing posture | Aggregate-only required? |
-|---|---|---|
-| `CropObservation` | Aggregate (county/HUC/grid) public; field-level deny by default. | Yes for public release. |
-| `FieldCandidate` | Restricted by default; review-gated. | n/a — private boundary not public. |
-| `CropRotation` | Aggregate public; field-level restricted. | Yes. |
-| `YieldObservation` | Aggregate public; proprietary yield denied. | Yes. |
-| `IrrigationLink` | Aggregate / context public; operator-specific restricted. | Yes. |
-| `ConservationPractice` | Public only where source terms permit. | Conditional on rights. |
-| `SoilCropSuitability` | Public model output (with model receipt). | Aggregate threshold per release manifest. |
-| `AgriculturalEconomyObservation` | Aggregate public where rights permit. | Yes. |
-| `SupplyChainNode` | Public only after rights/sensitivity review. | Conditional. |
-| `DroughtStressIndicator` | Public-safe indicator; not field truth. | Yes. |
-| `PestStressIndicator` | Public-safe indicator; not field truth. | Yes. |
-| `AggregationReceipt` | Process memory; not directly public — referenced via `EvidenceBundle`. | n/a (receipt). |
-
-`[CONFIRMED — ENCY §7.7.C; ATLAS §9.B–E]`
-
-[Back to top](#top)
-
----
-
-## 7. Sensitivity & deny-by-default lanes
-
-The trust posture for Agriculture is **aggregate-only by default**. Field-level operator truth is denied; satellite or model derivatives must not become field/operator truth; private joins fail closed.
-
-| Lane | Default outcome | Required controls |
-|---|---|---|
-| Private landowner-sensitive data (field boundaries, owner identity, operations) | `DENY` exact/public if private or rights unclear | aggregation; permissions; policy review `[ENCY §13]` |
-| Aggregate cited as per-place truth (join aggregate cell → single record) | `DENY` at route boundary; `ABSTAIN` at AI | aggregation receipt; geometry-scope guard; matrix-cell semantics `[ATLAS §24.x]` |
-| Field-level NASS-derived claims | `DENY` by policy | policy denial test in `policy/domains/agriculture/` `[ENCY §7.7.K]` |
-| Source-rights-limited records (licensed, no-redistribution, uncertain terms) | `DENY` public release until terms resolved | rights register; attribution; no public derivative if barred `[ENCY §13]` |
-| Farm/operator joins to People/Land | `DENY` until review | restricted view; policy gate `[ATLAS §9.F]` |
-
-> [!WARNING]
-> *Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion.* This is non-negotiable. `[CONFIRMED — ENCY §7.7.I; DIRRULES]`
-
-### 7.1 Required obligations on Agriculture envelopes
-
-When the envelope carries any aggregate or generalized product, the `obligations` block **SHOULD** record the applied transforms so downstream consumers can verify provenance of the sensitivity posture. Methods drawn from the cross-cutting evidence-bundle obligation vocabulary: `bin`, `blur`, `truncate`, `tile_precision`, `mask`, `k-anon`. `[CONFIRMED method enum — EvidenceBundle structural schema]`
-
-[Back to top](#top)
-
----
-
-## 8. Pipeline state and admission gates
-
-Agriculture follows the canonical lifecycle: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**. Promotion is a **governed state transition, not a file move.** `[CONFIRMED — DIRRULES; ATLAS §9.H]`
-
-```mermaid
-flowchart LR
-  RAW["RAW<br/>SourceDescriptor exists"] --> WQ["WORK / QUARANTINE<br/>validation + policy gate"]
-  WQ --> PROC["PROCESSED<br/>EvidenceRef + ValidationReport<br/>+ digest closure"]
-  PROC --> CAT["CATALOG / TRIPLET<br/>EvidenceBundle + release candidate"]
-  CAT --> PUB["PUBLISHED<br/>ReleaseManifest + correction +<br/>rollback target + review state"]
-  PUB -.->|served via| API["apps/governed-api/<br/>(PROPOSED)"]
-  WQ -.->|hold| HOLD[("HOLD — review queue")]
-```
-
-Each governed Agriculture surface only resolves to artifacts admitted at or beyond **PROCESSED** for AI / drawer reads and **PUBLISHED** for public client reads. The route **MUST** return `DENY` on any attempt to surface `RAW`, `WORK`, or `QUARANTINE` content. `[CONFIRMED — DIRRULES; ATLAS §24.3.2]`
-
-### 8.1 Gate order at admission (PROPOSED)
-
-| # | Gate | Default failure |
-|---|---|---|
-| 1 | Shape (schema validation) | `ERROR` / quarantine |
-| 2 | Meaning (contract / vocabulary) | `ERROR` / review |
-| 3 | Source (role, rights, cadence, sensitivity) | `DENY` / quarantine |
-| 4 | Evidence (`EvidenceRef` → `EvidenceBundle` resolves) | `ABSTAIN` |
-| 5 | Policy (rights, sensitivity, purpose, release class) | `DENY` |
-| 6 | Lifecycle state (`RAW … PUBLISHED`) | `DENY` |
-| 7 | Receipt (`RunReceipt` / `PromotionReceipt` present) | `ERROR` |
-| 8 | Release (`ReleaseManifest` + proof + correction + rollback) | `ERROR` |
-| 9 | Public-surface validation (aggregate threshold, redaction receipt) | `DENY` |
-
-`[CONFIRMED gate order — UNIFIED §24 Validators and policy gates; PROPOSED for Agriculture-specific routing]`
-
-[Back to top](#top)
-
----
-
-## 9. Cross-lane relations
-
-The Agriculture surface is allowed to join to adjacent domains **only when the relation preserves ownership, source role, sensitivity, and `EvidenceBundle` support.** `[CONFIRMED constraint — ATLAS §9.F]`
-
-| This domain | Related lane | Relation type | Constraint |
-|---|---|---|---|
-| Agriculture | Soil | MUKEY joins and suitability support. | Preserve ownership, source role, sensitivity, and `EvidenceBundle` support. |
-| Agriculture | Hydrology | Irrigation, drought, water-use context. | Same. |
-| Agriculture | Atmosphere / Air | Weather, heat, smoke, vegetation stress. | Same. |
-| Agriculture | People / Land | Farm/operator and parcel-sensitive contexts. | **Restricted by default.** |
-
-The route layer **MUST** carry `source_role` through joins. Aggregate, modeled, regulatory, observed, and administrative source roles MUST NOT be collapsed into each other. `[CONFIRMED anti-pattern — ATLAS §24.1.x source-role anti-collapse]`
-
-[Back to top](#top)
-
----
-
-## 10. Validators & contract tests
-
-PROPOSED test families for Agriculture surfaces. All are **to be created**; none is asserted to exist.
-
-- [ ] **Schema validation** — valid / invalid fixtures over every PROPOSED Agriculture schema. `[ENCY §7.7.K]`
-- [ ] **SourceDescriptor validation** — required source-role and role-authority fields. `[ATLAS §24.1.3]`
-- [ ] **Rights validation** — source-terms registered before any public surfacing. `[ENCY §7.7.M]`
-- [ ] **Sensitivity validation** — aggregate-threshold receipt present on every public artifact. `[ENCY §7.7.I]`
-- [ ] **SSURGO / SDA lineage tests** — joins preserve source role and version. `[ENCY §7.7.K]`
-- [ ] **Soil-moisture unit / depth / QC tests** — unit conversion receipts attached. `[ENCY §7.7.K]`
-- [ ] **Crop progress aggregate-only tests** — assert no field-level leakage. `[ENCY §7.7.K]`
-- [ ] **Vegetation index mask / time tests** — temporal alignment and mask integrity. `[ENCY §7.7.K]`
-- [ ] **Policy denial for field-level NASS claims** — negative-fixture must fail closed. `[ENCY §7.7.K]`
-- [ ] **Evidence closure tests** — `EvidenceRef` → `EvidenceBundle` resolution. `[ENCY §7.7.K]`
-- [ ] **Citation validation tests** — Focus answer cites resolvable evidence. `[GAI]`
-- [ ] **ReleaseManifest validation tests** — public layer carries manifest, correction path, rollback target. `[ENCY §7.7.K]`
-- [ ] **Rollback drill** — promotion can be reversed without orphaning published artifacts. `[ENCY §7.7.M]`
-- [ ] **No-network fixtures** — full route resolution offline with synthetic Agriculture fixture. `[ENCY §7.7.L feature backlog]`
-- [ ] **Non-regression for prior lineage** — stale-state handling preserved across releases. `[ENCY §7.7.K]`
-
-`[All PROPOSED — none asserted to exist in repo]`
-
-[Back to top](#top)
-
----
-
-## 11. Governed AI behavior on this surface
-
-| AI behavior | Rule on the Agriculture surface |
-|---|---|
-| **Allowed** | Evidence-bounded summarization over released Agriculture `EvidenceBundle`s; citation-backed explanation; evidence comparison; steward drafting; anomaly explanation; schema/validator suggestions. |
-| **Required `ABSTAIN`** | `EvidenceBundle` missing; citations cannot be validated; source roles conflict; temporal scope insufficient; user asks for unsupported inference (e.g., field-level claim from aggregate). |
-| **Required `DENY`** | Direct `RAW` / `WORK` / `QUARANTINE` access; field-level operator exposure from aggregate; restricted personal/farm-operator inference; uncited authoritative claims. |
-| **Required receipt** | Every Focus answer emits `AIReceipt` + `RuntimeResponseEnvelope` with `outcome`, `evidence_refs`, `policy_decision`, `citation_validation`. |
-
-`[CONFIRMED doctrine — ENCY §7.7.I; ATLAS §9.L; GAI]`
-
-> [!IMPORTANT]
-> *AI text treated as evidence* is the highest-severity anti-pattern at any Focus Mode surface: `DENY` at publication, `ABSTAIN` at Focus, and `AIReceipt` is mandatory. The Focus answer is interpretation, never root truth. `[CONFIRMED — ATLAS §24.x AI anti-patterns; GAI]`
+> *AI text treated as evidence* is the highest-severity anti-pattern at any Focus Mode surface: `DENY` at publication, `ABSTAIN` at Focus, and `AIReceipt` is mandatory. The Focus answer is interpretation, never root truth. `[CONFIRMED — Atlas §24.9.2 AI anti-patterns; GAI; ai-as-assistant.md.]`
 
 [Back to top](#top)
 
@@ -450,68 +11,191 @@ PROPOSED test families for Agriculture surfaces. All are **to be created**; none
 
 ## 12. Correction & rollback contract
 
-Agriculture publication requires: `ReleaseManifest`, `EvidenceBundle`, validation/policy support, review state where required, correction path, stale-state rule, and rollback target. `[CONFIRMED doctrine — ENCY Appendix E; ATLAS §9.M]`
+Agriculture publication requires: `ReleaseManifest`, `EvidenceBundle`, validation / policy support, review state where required, correction path, stale-state rule, and rollback target. `[CONFIRMED doctrine — ENCY Appendix E; Atlas §9.M; corrections-are-first-class.md.]`
+
+The correction lane uses **workflow outcomes** (§4.3) at intake and **policy-gate outcomes** (§4.2) at review. No public publication is emitted by `ACCEPTED` alone; publication requires `ALLOW` from review and emission of a `CorrectionNotice`.
 
 ```mermaid
 flowchart LR
-  Public["public reader / steward"] -->|submit| Corr["POST /api/v1/corrections<br/>CorrectionNoticeCandidate<br/>(PROPOSED)"]
+  Public["public reader · steward"] -->|submit| Corr["POST /api/v1/corrections<br/>CorrectionNoticeCandidate<br/>(PROPOSED)<br/>→ ACCEPTED / DENY / ERROR"]
   Corr --> Review["review queue<br/>(steward only)"]
-  Review -->|allow| Accept["ReviewRecord = ALLOW<br/>→ CorrectionNotice<br/>→ supersede / revise published artifact"]
-  Review -->|restrict| Restrict["ReviewRecord = RESTRICT<br/>→ public surface narrows"]
-  Review -->|deny| Deny["ReviewRecord = DENY<br/>→ public surface unchanged"]
-  Review -->|hold| Hold["ReviewRecord = HOLD<br/>→ no public change while held"]
-  Accept --> Rollback["RollbackCard target preserved;<br/>derivative invalidation recorded"]
+  Review -->|ALLOW| Accept["ReviewRecord = ALLOW<br/>→ CorrectionNotice<br/>→ supersede / revise published artifact<br/>→ downstream EvidenceRef re-evaluation"]
+  Review -->|RESTRICT| Restrict["ReviewRecord = RESTRICT<br/>→ public surface narrows<br/>→ obligations attached"]
+  Review -->|DENY| Deny["ReviewRecord = DENY<br/>→ public surface unchanged"]
+  Review -->|HOLD| Hold["ReviewRecord = HOLD<br/>→ no public change while held<br/>→ surface remains in prior state"]
+  Accept --> Rollback["RollbackCard target preserved;<br/>derivative invalidation recorded;<br/>downstream cells ABSTAIN evidence.revoked_upstream"]
 ```
 
 | Lane | Outcomes | Required artifacts |
 |---|---|---|
-| Correction submit | `ACCEPTED` · `DENY` · `ERROR` | `CorrectionNoticeCandidate` written; no public claim until review allows. |
-| Review decision | `ALLOW` · `RESTRICT` · `DENY` · `HOLD` · `ERROR` | `ReviewRecord` + `PolicyDecision`. |
-| Rollback | (operational; not a public route) | `RollbackCard`, derivative invalidation, correction lineage. |
+| Correction submit (workflow) | `ACCEPTED` · `DENY` · `ERROR` | `CorrectionNoticeCandidate` written; no public claim until review allows. `[See §4.3.]` |
+| Review decision (policy gate) | `ALLOW` · `RESTRICT` · `DENY` · `HOLD` · `ERROR` | `ReviewRecord` + `PolicyDecision`. `[See §4.2.]` |
+| Rollback (operational; not a public route) | — | `RollbackCard` execution record, derivative invalidation, correction lineage. Indexed in [`runbooks/README.md`](./runbooks/README.md); canonical procedure at `docs/runbooks/agriculture/ROLLBACK_RUNBOOK.md` (PROPOSED). |
 
-`[CONFIRMED outcomes — ATLAS §20.2 Capability Matrix]`
+`[CONFIRMED — Atlas §20.2 Capability Matrix; corrections-are-first-class.md; trust-membrane.md §8.]`
+
+> [!NOTE]
+> **Correction propagation is non-trivial for agriculture** because ag aggregates often feed Frontier Matrix cells. When a published cropland claim is corrected, every matrix cell that consumed it MAY downgrade to `ABSTAIN evidence.revoked_upstream` at its next call per [`trust-membrane.md`](../../doctrine/trust-membrane.md) §8. The `CORRECTION_RUNBOOK.md` (PROPOSED) includes a derivative-identification step. `[CONFIRMED — Atlas §24.4.7; runbooks/README.md §9.5.]`
 
 [Back to top](#top)
 
 ---
 
-## 13. Open questions & NEEDS VERIFICATION
+## 13. Open questions register
 
-| Item | Evidence that would settle it | Status |
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| **OQ-AG-API-01** | Exact backend framework, route convention, and API stem for `apps/governed-api/`. Whether the boundary is `apps/governed-api/`, `apps/governed_api/`, `packages/api/`, or another adapter. | API owner + Architecture steward | Inspect package manifest, route registry, OpenAPI / GraphQL surface in mounted repo; ADR if boundary deviates from PROPOSED. |
+| **OQ-AG-API-02** | Whether the canonical schema home for executable JSON Schema is `schemas/contracts/v1/` or `contracts/` (CONFLICTED in older corpus); ADR-0001 status. | Contract / schema steward | ADR-0001 ratification; schema-registry inspection. |
+| **OQ-AG-API-03** | Whether `policy/` (singular) or `policies/` (plural) is the canonical policy home. ADR-0003 proposes `policy/` singular. | Policy steward | Inspect mounted repo; ADR-0003 status. |
+| **OQ-AG-API-04** | Is `ui_negative_state` on the runtime envelope **normative** (validated by schema, enforced by CI) or **advisory** (UI hint only)? | Architecture steward + UI steward | ADR; reconcile with operating contract §22.2 wording. |
+| **OQ-AG-API-05** | Final names for `AgricultureDecisionEnvelope`, `AgricultureFeatureDTO`, and the agriculture layer manifest profile. | Contract / schema steward | ADR + schema authoring + fixture validation. |
+| **OQ-AG-API-06** | When is `NARROWED` / `BOUNDED` allowed on Agriculture surfaces? Should the envelope schema admit them at v1, v1.1, or only after explicit ADR? | Architecture steward | ADR; consistent with operating contract §21.2 optional-extension posture. |
+| **OQ-AG-API-07** | Should `aggregation_receipt` be a required (vs optional) field on `AgricultureDecisionEnvelope` for any envelope whose `evidence_refs[]` includes `role = aggregate`? | Contract / schema steward + Policy steward | ADR — touches Atlas §24.13 centrality claim. |
+| **OQ-AG-API-08** | Are the **release-tier audience classes** (`public` / `partner` / `steward` / `internal` / `denied`) the same concept as the API audience class in atlas card KFM-P9-PROG-0069, or distinct concepts sharing a value space? Parallels OQ-AG-SUB-06. | Architecture steward | Card reconciliation; ADR if distinct. |
+| **OQ-AG-API-09** | NASS / QuickStats / Crop Progress source-activation status under KFM. | Source steward | Mounted-repo source registry; `SourceActivationDecision`. |
+| **OQ-AG-API-10** | Kansas Mesonet and HLS / SMAP product terms (rights, redistribution, attribution). | Source steward + Rights-holder representative | Source-terms records in `data/registry/sources/agriculture/`. |
+| **OQ-AG-API-11** | Public release sensitivity rules for farm / operator joins (exact thresholds, generalization steps). | Sensitivity reviewer + Policy steward | `policy/sensitivity/agriculture/` decisions + steward review records. |
+| **OQ-AG-API-12** | Exact aggregate-threshold values for county / HUC / grid public release (when does a county-level aggregate become small enough to fail `k-anon`?). | Policy steward + Agriculture domain steward | ADR + `policy/domains/agriculture/` release rules. |
+| **OQ-AG-API-13** | Whether Agriculture corrections share the global queue or have a domain-tagged queue. | API owner + Policy steward | Inspect `apps/governed-api/` route map + `policy/review/`. |
+| **OQ-AG-API-14** | Final form of `obligations` block (redactions / generalizations vocabulary) for Agriculture envelopes. | Contract / schema steward | ADR + `EvidenceBundle` schema confirmation. |
+| **OQ-AG-API-15** | Should the `RuntimeResponseEnvelope` `contract_version` field be a **`const`** ("3.0.0" only) or a **`pattern`** (allows v3.x minor evolution without schema break)? | Architecture steward | ADR — touches operating contract §37.1 lifecycle. |
+| **OQ-AG-API-16** | Are revocation events propagated push-style (proactive cell re-evaluation) or pull-style (cells re-evaluate on next call)? Affects the `revocation propagation tests` validator. | Architecture steward | Reconcile with `trust-membrane.md` §8. |
+
+[Back to top](#top)
+
+---
+
+## 14. Open verification backlog
+
+Items below are verification work that this document cannot complete in a session without a mounted repo. Each MUST be tracked in `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED) until closed.
+
+| Item | What to check | Owner | Settles which OQ / claim |
+|---|---|---|---|
+| **Mounted-repo presence of `apps/governed-api/`** | Confirm the directory exists; inspect package manifest, route registry, OpenAPI / GraphQL surface. | API owner | OQ-AG-API-01. |
+| **Mounted-repo presence of `schemas/contracts/v1/`** | Confirm the schema-home convention; resolve CONFLICTED references. | Contract / schema steward | OQ-AG-API-02. |
+| **Mounted-repo presence of `policy/`** | Confirm singular `policy/` vs plural `policies/`. | Policy steward | OQ-AG-API-03. |
+| **Mounted-repo presence of `docs/domains/agriculture/`** | Confirm placement; confirm sibling `policy/`, `runbooks/`, `sublanes/` aspect READMEs. | Docs steward | Sibling integration. |
+| **`SourceDescriptor` instances for ag sources** | Confirm `data/registry/sources/agriculture/` directory and admitted-source coverage (CDL, NASS, SSURGO, NLCD, LANDFIRE, GAP, PLANTS, vegetation index, FSA CLU). | Source steward | OQ-AG-API-09; OQ-AG-API-10. |
+| **`AggregationReceipt` schema home** | Confirm whether the schema lives at `schemas/contracts/v1/receipts/aggregation_receipt.schema.json` or elsewhere; depends on ADR-S-03 (Atlas §24.12). | Contract / schema steward | §5 schema home; OQ-AG-API-07. |
+| **`GENERATED_RECEIPT` schema home** | Confirm `schemas/contracts/v1/receipts/generated_receipt.schema.json` exists per operating contract §47. | Contract / schema steward | §5; §10 validator. |
+| **`apps/explorer-web/` reader path** | Confirm Explorer Web reads via `apps/governed-api/`, not directly from canonical stores. | API owner + UI owner | §2.4 trust-membrane placement. |
+| **`policy/sensitivity/agriculture/` artifacts** | Confirm per-sublane sensitivity rule presence (`public_safe_aggregate/`, `private_operator/`, `field_level_aggregate_derived/`, `person_parcel_join/`). | Policy steward + Sensitivity reviewer | §7 sensitivity lanes. |
+| **`policy/release/agriculture/` artifacts** | Confirm per-tier release rules (`public/`, `partner/`, `steward/`, `internal/`, `denied/`). | Policy steward | §3 audience class column. |
+| **OPA / Conftest / Cosign pins** | Confirm tooling versions are pinned. | Policy steward + Build owner | Validator infrastructure. |
+| **CODEOWNERS for `docs/domains/agriculture/`** | Confirm reviewer coverage. | Docs steward | Owner roster. |
+| **CI workflow names** | Confirm or assign the validator job names listed in §10. | Build owner | §10 validators. |
+| **ADR backlog rows** | Confirm ADR-0001 (schema home), ADR-0003 (`policy/` singular), ADR-S-03 (`AggregationReceipt` home), ADR-S-04 (source-role enum), ADR-S-05 (sensitivity tier) status. | Architecture steward | Doctrine ratification across OQs. |
+
+`[All open; resolution path varies per row. See ai-build-operating-contract.md §28 ADR template; UIAI §27.]`
+
+[Back to top](#top)
+
+---
+
+## 15. Changelog v1 → v2
+
+| § | Change | Rationale |
 |---|---|---|
-| Exact backend framework, route convention, and API stem for `apps/governed-api/` | Inspect package manifest, route registry, OpenAPI/GraphQL surface in mounted repo. | UNKNOWN |
-| Whether the canonical schema home is `schemas/contracts/v1/` or `contracts/` for executable JSON Schema | Inspect existing schema registry; resolve via ADR-0001 status. | NEEDS VERIFICATION |
-| Whether `policy/` or `policies/` is the canonical policy home | Inspect mounted repo; default is `policy/`. | NEEDS VERIFICATION |
-| Final names for `AgricultureDecisionEnvelope`, `AgricultureFeatureDTO`, and the agriculture layer manifest profile | ADR + schema authoring + fixture validation. | PROPOSED |
-| NASS / QuickStats / Crop Progress activation status | Mounted repo source registry; release manifests. | NEEDS VERIFICATION `[ENCY §7.7.N]` |
-| Kansas Mesonet and HLS / SMAP product terms (rights, redistribution) | Source-terms records in `data/registry/sources/agriculture/`. | NEEDS VERIFICATION `[ENCY §7.7.N]` |
-| Public release sensitivity rules for farm/operator joins | `policy/sensitivity/agriculture/` decisions + steward review records. | NEEDS VERIFICATION `[ENCY §7.7.N]` |
-| Agriculture API and layer registry presence | `data/registry/` + `release/candidates/agriculture/` evidence. | NEEDS VERIFICATION `[ENCY §7.7.N]` |
-| Exact aggregate-threshold values for county / HUC / grid public release | ADR + `policy/domains/agriculture/` release rules. | OPEN |
-| Whether Agriculture corrections share the global queue or have a domain-tagged queue | Inspect `apps/governed-api/` route map + `policy/review/`. | OPEN |
-| Final form of `obligations` block (redactions / generalizations vocabulary) for Agriculture envelopes | ADR + `EvidenceBundle` schema confirmation. | NEEDS VERIFICATION |
-
-Open verification items beyond this surface (recorded in `docs/registers/VERIFICATION_BACKLOG.md` PROPOSED): mounted repo presence; package manager; OPA / Conftest / Cosign pins; CODEOWNERS for `docs/domains/agriculture/`; existing Agriculture files (if any). `[UIAI §27]`
+| Meta block | Added `subtype: domain-api-contracts`; added `contract_version: "3.0.0"`; refreshed `owners` to operating-contract reviewer pattern; refreshed `updated: 2026-05-26`; expanded `related[]` to include sibling agriculture domain-aspect READMEs (`policy/`, `runbooks/`, `sublanes/`, `sublanes/cropland.md`), receipt schemas, sensitivity / release policy paths; expanded `tags[]`; added v2 reconciliation note. | v3.0 operating contract requires `contract_version` pin; sibling READMEs created this session need cross-reference. |
+| Title / badge row | Added Version, Contract, Conformance, Posture, Aggregation, Sensitivity badges; updated last-reviewed badge. | Reflects contract pinning, fail-closed posture, aggregation centrality. |
+| IMPORTANT callout | Added top-of-doc IMPORTANT callout explaining outcome-grammar reconciliation across layers. | v1 ran together AI-runtime / policy-gate / workflow outcomes; v2 separates them per operating contract §21.2 + Atlas §24.3.1. |
+| NOTE callout | Added top-of-doc NOTE callout linking sibling docs (`policy/`, `runbooks/`, `sublanes/`, `sublanes/cropland.md`). | Sibling docs created this session; this doc is the interface contract that the others orbit. |
+| §1 Purpose & scope | Added audience-class row to in-scope/out-of-scope table; replaced generic `[ATLAS §24.x]` with specific `[Atlas §24.9.2]`. | Audience-class is CONFIRMED per atlas card KFM-P9-PROG-0069 and was absent from v1. |
+| §2 Authority & placement | Expanded authority order from 6 to 9 entries (operating contract v3.0, trust-vocabulary doctrine, sibling agriculture READMEs); added §2.2 RFC 2119 conformance; renumbered §2.3 (paths) and §2.4 (trust-membrane placement); expanded path tree to include `policy/sensitivity/agriculture/`, `policy/release/agriculture/`, `schemas/contracts/v1/runtime/`, `schemas/contracts/v1/receipts/`, `data/registry/sources/agriculture/`, `docs/domains/agriculture/sublanes/`, `docs/runbooks/agriculture/`. | v3.0 operating contract requires explicit authority stack; sibling READMEs added; RFC 2119 conformance is a corpus-wide expectation. |
+| §3 Surface inventory | Added **audience-class column** to surface table; updated Mermaid diagram to show audience-class enforcement, `AggregationReceipt` in Released store, `GENERATED_RECEIPT` carried off Focus path. | Audience-class is a first-class concept; aggregate receipt centrality per Atlas §24.13. |
+| §4 Outcome grammar | **Major restructure.** Split into §4.1 runtime outcomes (canonical four + optional `NARROWED` / `BOUNDED`), §4.2 policy-gate outcomes (`ALLOW` / `RESTRICT` / `DENY` / `HOLD` / `ERROR` — with explicit "HOLD is gate-level, not runtime" note), §4.3 workflow outcomes (correction `ACCEPTED` / `DENY` / `ERROR`), §4.4 UI negative states paired with §22.2 vocabulary, §4.5 forbidden outcomes per surface (expanded). | v1 conflated all three vocabularies. Operating contract §21.2 + Atlas §24.3.1 keep them distinct; this is the most important v1→v2 reconciliation. |
+| §5 DTOs & envelopes | Added `AggregationReceipt` and `GENERATED_RECEIPT.json` rows; updated illustrative schema to include `contract_version` const (`"3.0.0"`), `audience_class` enum, `ui_negative_state` enum, `aggregation_receipt` block, expanded `role` enum to include `modeled` / `observed` / `regulatory` / `admin` per source-role anti-collapse. | `AggregationReceipt` is load-bearing per Atlas §24.13; contract-version pin per operating contract §37.1; source-role enum complete per Atlas §24.9.3. |
+| §6 Object families | Added **Topical-sublane home** column pointing to `sublanes/cropland.md` and planned profiles; added IMPORTANT callout elevating `AggregationReceipt` centrality per Atlas §24.13. | Cropland sublane profile created this session; aggregation-receipt centrality is CONFIRMED. |
+| §7 Sensitivity lanes | Expanded from 5 to 9 rows: added CDL-as-observed deny, NASS-aggregate-as-field deny, drought/pest-as-alert deny, conservation-as-instruction deny rows; §7.1 expanded with explicit `aggregation_receipt` requirement on any envelope with `role = aggregate`. | Source-role anti-collapse rows are CONFIRMED rejections per Atlas §24.9.3; alert / instruction rows are CONFIRMED rejections per Atlas §24.4.4 / §24.9.2. |
+| §8 Pipeline | Updated Mermaid diagram to include classmap-version note on RAW, `AggregationReceipt` at PROCESSED, audience-class enforcement at API, revocation arrow PUB→WQ; §8.1 gate table gained Cropland-specific-notes column. | Cropland is the worked topical sublane; classmap-version preservation is CONFIRMED per atlas KFM-P25-PROG-0005. |
+| §9 Cross-lane | Expanded from 4 to 10 rows: added Habitat / Fauna / Flora / Geology / Frontier-Matrix / Hazards with default disposition column per Atlas §24.4. | v1 covered only the four most obvious cross-lane edges; Atlas §24.4.7 enumerates the full set. |
+| §10 Validators | **Major reorganization** into 6 categories (schema/admission, outcome/envelope, sensitivity/aggregation, audience-class/trust-membrane, evidence/release/correction/rollback, no-network/drift/AI authoring); expanded from ~15 to ~27 validators; added classmap-version, `NARROWED`/`BOUNDED` schema-gate, `contract_version` pin, reason-shape-not-contents, revocation-propagation, freshness-window, `GENERATED_RECEIPT` presence validators. | v1 was a flat checklist that obscured groupings; new validators reflect material added in §4 / §5 / §7 / §11. |
+| §11 Governed AI behavior | Added `AI-authored merges` row requiring `GENERATED_RECEIPT.json` per `ai-build-operating-contract.md` §34; expanded `ABSTAIN` triggers to include freshness-window-lapsed; expanded `DENY` triggers to include cross-lane join to identifiable operator / parcel; added `contract_version = "3.0.0"` to required receipt fields. | Operating contract §34 makes `GENERATED_RECEIPT` mandatory for AI-authored merges; freshness-window-lapsed is a CONFIRMED `ABSTAIN` reason per trust-membrane.md §10. |
+| §12 Correction & rollback | Diagram updated with downstream `EvidenceRef` re-evaluation arrow; NOTE callout added explaining correction propagation to Frontier Matrix cells; runbook cross-reference added. | Correction-propagation cascade is CONFIRMED per trust-membrane.md §8 and indexed in runbooks/README.md §9.5. |
+| §13 → §17 | Renumbered v1 §13 → v2 §13 (renamed "Open questions register" with OQ-AG-API-XX IDs); added v2 §14 Open verification backlog, v2 §15 Changelog v1→v2, v2 §16 Definition of done; renumbered v1 §14 Related docs → v2 §17 Related docs with expanded entries. | Doctrine-adjacent docs include all four companion sections per the AI-builder Markdown-authoring contract; OQ IDs make individual questions citable across the corpus. |
+| Footer | Updated version to v2, last updated to 2026-05-26, added contract pin. | Routine v1→v2 hygiene. |
 
 [Back to top](#top)
 
 ---
 
-## 14. Related docs
+## 16. Definition of done
+
+A repository implementation of this document conforms when **all** of the following hold:
+
+- [ ] `docs/domains/agriculture/api-contracts.md` exists with KFM Meta Block v2 and `contract_version: "3.0.0"`.
+- [ ] All sibling agriculture aspect READMEs ([`policy/`](./policy/README.md), [`runbooks/`](./runbooks/README.md), [`sublanes/`](./sublanes/README.md)) exist and cross-reference this document.
+- [ ] [`sublanes/cropland.md`](./sublanes/cropland.md) exists as the worked topical-sublane profile.
+- [ ] `apps/governed-api/` (or its accepted-ADR equivalent) exists and enforces audience-class boundaries.
+- [ ] `AgricultureDecisionEnvelope`, `AgricultureFeatureDTO`, and the agriculture `LayerManifest` profile are authored under `schemas/contracts/v1/domains/agriculture/`.
+- [ ] Each schema includes `contract_version: { "const": "3.0.0" }`.
+- [ ] Each schema admits the canonical four runtime outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) and, where applicable, the optional `NARROWED` / `BOUNDED` extensions.
+- [ ] `AggregationReceipt` schema is present at its agreed home (pending ADR-S-03 resolution) and is referenced by every aggregate-bearing envelope.
+- [ ] `GENERATED_RECEIPT` schema is present at `schemas/contracts/v1/receipts/generated_receipt.schema.json`.
+- [ ] Audience-class enforcement is wired (`internal` / `denied` never appears in `public` / `partner` envelopes).
+- [ ] Source-role anti-collapse is enforced (CDL = `modeled`, NASS = `aggregate`, etc.).
+- [ ] Person-parcel-join `DENY` default is enforced.
+- [ ] Field-level NASS `DENY` is enforced.
+- [ ] Public-facing aggregate envelopes carry `aggregation_receipt`.
+- [ ] `RAW` / `WORK` / `QUARANTINE` / candidate / direct-model paths never appear in public envelopes.
+- [ ] Correction-propagation cascade emits `CorrectionNotice` and triggers downstream `EvidenceRef` re-evaluation.
+- [ ] Every AI-authored merge touching this surface emits a `GENERATED_RECEIPT.json` with `contract_version = "3.0.0"`.
+- [ ] Every validator in §10 ships with both valid and invalid fixtures; invalid fixtures fail for the expected reason.
+- [ ] Drift between this document and live state is logged in `docs/registers/DRIFT_REGISTER.md`.
+- [ ] All open questions in §13 are either resolved or assigned to ADRs with active owners.
+- [ ] All verification items in §14 are tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+
+[Back to top](#top)
+
+---
+
+## 17. Related docs
 
 > Links use repo-relative paths. Targets marked `(PROPOSED)` are not yet asserted to exist; `TODO` entries are placeholders for sibling docs to be authored.
 
-- `docs/domains/agriculture/README.md` — Agriculture domain landing page (PROPOSED).
+**Operating doctrine**
+
+- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`). `[CONFIRMED sibling.]`
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement protocol. `[CONFIRMED sibling.]`
+
+**Trust-boundary doctrine**
+
+- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — the trust contract every envelope warrants. `[CONFIRMED sibling.]`
+- [`docs/doctrine/policy-aware.md`](../../doctrine/policy-aware.md) — finite policy outcomes. `[CONFIRMED sibling.]`
+- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. `[CONFIRMED sibling.]`
+- [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md) — cite-or-abstain. `[CONFIRMED sibling.]`
+- [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) — AI behavior at the runtime surface. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
+
+**Agriculture domain orientation (created this session)**
+
+- [`docs/domains/agriculture/README.md`](./README.md) — agriculture domain landing page. `[PROPOSED.]`
+- [`docs/domains/agriculture/policy/README.md`](./policy/README.md) — agriculture policy aspect index. `[PROPOSED sibling.]`
+- [`docs/domains/agriculture/runbooks/README.md`](./runbooks/README.md) — agriculture runbooks aspect index. `[PROPOSED sibling.]`
+- [`docs/domains/agriculture/sublanes/README.md`](./sublanes/README.md) — agriculture sublane decomposition (5 axes). `[PROPOSED sibling.]`
+- [`docs/domains/agriculture/sublanes/cropland.md`](./sublanes/cropland.md) — worked topical-sublane profile. `[PROPOSED sibling.]`
 - `docs/domains/agriculture/SOURCES.md` — Agriculture source registry summary (TODO).
 - `docs/domains/agriculture/SENSITIVITY.md` — Agriculture sensitivity / deny-by-default lanes detail (TODO).
+
+**Architecture and runtime**
+
 - `docs/architecture/governed-ai/FOCUS_FLOW.md` — Cross-cutting Focus Mode flow (PROPOSED).
 - `docs/architecture/ui/EVIDENCE_DRAWER.md` — Evidence Drawer payload contract (PROPOSED).
 - `docs/standards/PROV.md` — W3C PROV-O / PAV provenance crosswalk.
-- `docs/doctrine/directory-rules.md` — Canonical placement rules (`CONFIRMED` authority; specific paths `PROPOSED`).
-- `docs/doctrine/trust-membrane.md` — Trust-membrane invariants (TODO).
+
+**ADR backlog (relevant to this doc)**
+
 - `docs/adr/ADR-0001-schema-home.md` — Schema-home authority (`schemas/contracts/v1/`) (NEEDS VERIFICATION).
+- `docs/adr/ADR-0003-policy-singular.md` — `policy/` singular as canonical (PROPOSED — see OQ-AG-API-03).
+- `docs/adr/ADR-S-03-aggregation-receipt-home.md` — `AggregationReceipt` schema home (PROPOSED per Atlas §24.12).
+- `docs/adr/ADR-S-04-source-role-enum.md` — source-role enum evolution (PROPOSED per Atlas §24.12).
+- `docs/adr/ADR-S-05-sensitivity-tier.md` — sensitivity tier scheme (PROPOSED per Atlas §24.12).
+
+**Cross-cutting**
+
 - `contracts/OBJECT_MAP.md` — Cross-cutting object-family crosswalk (PROPOSED).
 
 ---
 
-<sub>**Last reviewed:** 2026-05-15 · **Owners:** TBD · **Status:** `draft` · `PROPOSED` routes / `NEEDS VERIFICATION` paths · [Back to top](#top)</sub>
+<sub>**Last reviewed:** 2026-05-26 · **Owners:** *TODO — Docs steward + Agriculture domain steward + API owner + Contract/schema steward + Policy steward* · **Version:** v2 (draft) · **Status:** `draft` · `PROPOSED` routes / `NEEDS VERIFICATION` paths · **Pinned to:** `CONTRACT_VERSION = "3.0.0"` · [Back to top](#top)</sub>
