@@ -11,6 +11,12 @@ policy_label: public
 related:
   - docs/doctrine/directory-rules.md            # §6.1 (placement authority)
   - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1.md   # Ch. 24.11 (Master Governance Health Indicators)
+  - docs/dashboards/INDICATOR_CATALOG.md        # mirror of Atlas §24.11
+  - docs/dashboards/DASHBOARD_CATALOG.md        # index of all dashboard specs in this lane
+  - docs/dashboards/governance/README.md        # per-category governance-health specs (5)
+  - docs/dashboards/operational/README.md       # per-card operational specs (4)
+  - docs/dashboards/domain/README.md            # per-domain dashboard specs (13)
+  - docs/dashboards/observability/README.md     # per-card observability-substrate specs (1)
   - docs/registers/DRIFT_REGISTER.md            # placement drift entry will live here
   - docs/registers/VERIFICATION_BACKLOG.md      # VB-11-08 (governance health instrumentation)
   - docs/reports/README.md                      # neighbor: generated review/release reports (read-only)
@@ -191,6 +197,7 @@ docs/dashboards/
 ├── DASHBOARD_CATALOG.md                     # PROPOSED — index of all dashboard specs
 │
 ├── governance/                              # PROPOSED — governance-health dashboards
+│   ├── README.md                            # folder-level scope, template, OPEN-DASH-G-*
 │   ├── EVIDENCE_INTEGRITY.md                # Atlas v1.1 §24.11.1
 │   ├── RELEASE_CORRECTION_ROLLBACK.md       # Atlas v1.1 §24.11.2
 │   ├── SENSITIVITY_RIGHTS.md                # Atlas v1.1 §24.11.3
@@ -198,16 +205,32 @@ docs/dashboards/
 │   └── DOCUMENTATION_DRIFT.md               # Atlas v1.1 §24.11.5
 │
 ├── operational/                             # PROPOSED — feed / artifact / QC dashboards
+│   ├── README.md                            # folder-level scope, card-driven inventory, OPEN-DASH-O-*
 │   ├── SLO_LIVE_FEEDS.md                    # KFM-P11-FEAT-0002 (Standards-first SLO dashboard)
 │   ├── REALTIME_FEED_FRESHNESS.md           # KFM-P31-FEAT-0015 (Realtime Feed Freshness Monitor)
 │   ├── COG_ZARR_REPRODUCIBILITY.md          # KFM-P31-FEAT-0016 (COG/Zarr Reproducibility)
 │   └── GEOSPATIAL_QC_PANEL.md               # KFM-P31-FEAT-0017 (Quick Geospatial QC Panel)
 │
 ├── domain/                                  # PROPOSED — domain-specific dashboards
+│   ├── README.md                            # folder-level scope, per-domain inventory, OPEN-DASH-01..08
+│   ├── hydrology.md                         # Atlas Ch. 4
+│   ├── soil.md                              # Atlas Ch. 5
+│   ├── habitat.md                           # Atlas Ch. 6
+│   ├── fauna.md                             # Atlas Ch. 7 (T4 defaults)
+│   ├── flora.md                             # Atlas Ch. 8 (T4 defaults, poaching-vulnerable taxa)
+│   ├── agriculture.md                       # Atlas Ch. 9
+│   ├── geology.md                           # Atlas Ch. 10
+│   ├── atmosphere.md                        # Atlas Ch. 11 (AI-surface emphasis)
+│   ├── hazards.md                           # Atlas Ch. 12 (alert-authority denial emphasis)
+│   ├── roads-rail-trade.md                  # Atlas Ch. 13
+│   ├── settlements-infrastructure.md        # Atlas Ch. 14 (critical-asset T4)
+│   ├── archaeology.md                       # Atlas Ch. 15 (T4 defaults, sovereignty)
+│   ├── people-dna-land.md                   # Atlas Ch. 16 (living-person T4, DNA T4, AI-surface)
 │   └── air/
 │       └── PM_SENSOR_CALIBRATION_REVIEW.md  # KFM-P30-FEAT-0001 (PM Sensor Calibration Review)
 │
 └── observability/                           # PROPOSED — CI / pipeline observability
+    ├── README.md                            # folder-level scope, substrate-vs-application guard, OPEN-DASH-OBS-*
     └── OPENTELEMETRY_STACK.md               # KFM-P8-PROG-0026 (OTEL + Tempo + Mimir + Loki)
 ```
 
@@ -291,29 +314,18 @@ flowchart LR
 
 ## 8. Dashboard catalog
 
-PROPOSED catalog of dashboard specs to live under `docs/dashboards/`. Each row PROPOSES a
-spec file; **no file exists yet**. The "Source card" column links each spec to its
-originating Atlas idea card (CONFIRMED present in corpus; CONFIRMED PROPOSED status per
-the card's own truth label).
+> [!IMPORTANT]
+> **Canonical index:** [`DASHBOARD_CATALOG.md`](DASHBOARD_CATALOG.md). The table below is a per-category roll-up for orientation only; row-level truth (file paths, owners, source cards, status) lives in `DASHBOARD_CATALOG.md` and the per-folder READMEs. If this table and the catalog disagree, the catalog wins; log the divergence in `docs/registers/DRIFT_REGISTER.md`.
 
-| Spec file (PROPOSED) | Category | What the dashboard documents | Source card | Spec status |
+| Category | Folder | Folder README | Spec count | Source-of-truth |
 |---|---|---|---|---|
-| `governance/EVIDENCE_INTEGRITY.md` | Governance | EvidenceRef resolution rate; cite-or-abstain compliance; source-role distribution drift; stale source rate; quarantine throughput. | Atlas v1.1 §24.11.1 | PROPOSED — not yet authored |
-| `governance/RELEASE_CORRECTION_ROLLBACK.md` | Governance | % releases with rollback target; correction lead time; derivative-invalidation coverage; rollback rehearsal rate; supersession lineage gap. | Atlas v1.1 §24.11.2 | PROPOSED — not yet authored |
-| `governance/SENSITIVITY_RIGHTS.md` | Governance | Sensitive-lane fail-closed rate; RedactionReceipt coverage; review-aged-out incidence; rights-change response time; side-channel audit cadence. | Atlas v1.1 §24.11.3 | PROPOSED — not yet authored |
-| `governance/AI_SURFACE_HEALTH.md` | Governance | AIReceipt presence rate; ABSTAIN rate by template; DENY reason distribution; synthetic-claim incidence. | Atlas v1.1 §24.11.4 | PROPOSED — not yet authored |
-| `governance/DOCUMENTATION_DRIFT.md` | Governance | ADR completeness; drift register size; per-root README presence; atlas/supplement lineage clarity. | Atlas v1.1 §24.11.5 | PROPOSED — not yet authored |
-| `operational/SLO_LIVE_FEEDS.md` | Operational | Standards-first SLOs for live transit and other high-cadence feeds: freshness, schema validation, latency, deduplication, non-material suppression, agency license terms. | `KFM-P11-FEAT-0002` (EXPANDED, active) | PROPOSED — not yet authored |
-| `operational/REALTIME_FEED_FRESHNESS.md` | Operational | Realtime feed dashboards: schema validation, SLO freshness, canonical identity, partition output, promotion/hold state. | `KFM-P31-FEAT-0015` (UNCHANGED, active) | PROPOSED — not yet authored |
-| `operational/COG_ZARR_REPRODUCIBILITY.md` | Operational | Raster/datacube artifacts: build container, GDAL/numcodecs versions, chained hashes, overview/block layout, reproducibility verdict. | `KFM-P31-FEAT-0016` (UNCHANGED, active) | PROPOSED — not yet authored |
-| `operational/GEOSPATIAL_QC_PANEL.md` | Operational | Quick geospatial QC panel — fast inspectable surface for geometry/CRS/topology checks. | `KFM-P31-FEAT-0017` (UNCHANGED, active) | PROPOSED — not yet authored |
-| `domain/air/PM_SENSOR_CALIBRATION_REVIEW.md` | Domain · Air | PM-sensor trust scores, meteorology features, co-location windows, low-concentration safeguards. | `KFM-P30-FEAT-0001` (UNCHANGED, active) | PROPOSED — not yet authored |
-| `observability/OPENTELEMETRY_STACK.md` | Observability | CI/pipeline observability via OpenTelemetry Collector → Tempo (traces) + Mimir (metrics) + Loki (logs), one agent shape across runners. | `KFM-P8-PROG-0026` (UNCHANGED, active) | PROPOSED — not yet authored |
+| Governance | [`governance/`](governance/) | [`governance/README.md`](governance/README.md) | 5 (one per Atlas v1.1 §24.11 category) | Atlas §24.11 (CONFIRMED doctrine) + `INDICATOR_CATALOG.md` mirror |
+| Operational | [`operational/`](operational/) | [`operational/README.md`](operational/README.md) | 4 (card-driven: `KFM-P11-FEAT-0002`, `KFM-P31-FEAT-0015/16/17`) | Atlas idea-cards corpus |
+| Domain | [`domain/`](domain/) | [`domain/README.md`](domain/README.md) | 13 per-domain specs (Atlas v1.0 Ch. 4–16) + 1 air sub-card (`KFM-P30-FEAT-0001`) | Per-domain dossiers (`docs/domains/<domain>/`); Atlas §24.11 wins on indicator conflicts |
+| Observability | [`observability/`](observability/) | [`observability/README.md`](observability/README.md) | 1 (`KFM-P8-PROG-0026` — OTEL + Tempo + Mimir + Loki) | Atlas idea-cards corpus |
 
 > [!NOTE]
-> All source cards above carry their own `UNKNOWN: Repository implementation status
-> remains unverified` self-check. The dashboards documented here are PROPOSED designs,
-> not claims of running surfaces.
+> **Status posture.** All specs in the table above exist as authored files (24 total as of edition v0.1). They are PROPOSED designs, **not** claims of running surfaces. A spec moves from PROPOSED to a verified status only when mounted-repo evidence confirms a running implementation; see `DASHBOARD_CATALOG.md` §6 lifecycle states.
 
 [↑ back to top](#dashboards--docsdashboards)
 

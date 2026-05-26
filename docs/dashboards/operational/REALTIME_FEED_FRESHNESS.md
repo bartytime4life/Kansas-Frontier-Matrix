@@ -10,6 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/dashboards/README.md
+  - docs/dashboards/operational/README.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/dashboards/operational/SLO_LIVE_FEEDS.md
   - docs/dashboards/observability/OPENTELEMETRY_STACK.md
@@ -109,7 +110,7 @@ Mounted-repo paths NEEDS VERIFICATION.
 
 ---
 
-**Related docs:** [README.md](../README.md) · [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) ·
+**Related docs:** [operational/README.md](README.md) · [dashboards/README.md](../README.md) · [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) ·
 [operational/SLO_LIVE_FEEDS.md](SLO_LIVE_FEEDS.md) ·
 [observability/OPENTELEMETRY_STACK.md](../observability/OPENTELEMETRY_STACK.md)
 

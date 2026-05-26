@@ -10,6 +10,8 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/dashboards/README.md
+  - docs/dashboards/domain/README.md
+  - docs/dashboards/domain/atmosphere.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/domains/
 tags: [kfm, dashboards, domain, air, atmosphere, pm-sensor, calibration, air-quality]
@@ -121,7 +123,7 @@ Mounted-repo paths NEEDS VERIFICATION.
 
 ---
 
-**Related docs:** [README.md](../../README.md) · [DASHBOARD_CATALOG.md](../../DASHBOARD_CATALOG.md) ·
+**Related docs:** [domain/README.md](../README.md) · [domain/atmosphere.md](../atmosphere.md) · [dashboards/README.md](../../README.md) · [DASHBOARD_CATALOG.md](../../DASHBOARD_CATALOG.md) ·
 [domains/](../../../domains/)
 
 **Last updated:** 2026-05-20 · **Edition:** v0.1 (draft) · **Owners:** `<atmosphere-domain-steward>` (PROPOSED)

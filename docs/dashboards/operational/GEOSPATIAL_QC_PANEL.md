@@ -10,6 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/dashboards/README.md
+  - docs/dashboards/operational/README.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/dashboards/operational/COG_ZARR_REPRODUCIBILITY.md
   - docs/standards/GEOPARQUET.md
@@ -107,7 +108,7 @@ Mounted-repo paths NEEDS VERIFICATION.
 
 ---
 
-**Related docs:** [README.md](../README.md) · [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) ·
+**Related docs:** [operational/README.md](README.md) · [dashboards/README.md](../README.md) · [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) ·
 [operational/COG_ZARR_REPRODUCIBILITY.md](COG_ZARR_REPRODUCIBILITY.md) ·
 [standards/GEOPARQUET.md](../../standards/GEOPARQUET.md)
 

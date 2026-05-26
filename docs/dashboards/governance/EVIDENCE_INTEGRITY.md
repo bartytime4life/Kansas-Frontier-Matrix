@@ -10,6 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/dashboards/README.md
+  - docs/dashboards/governance/README.md
   - docs/dashboards/INDICATOR_CATALOG.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1.md   # §24.11.1
@@ -113,7 +114,7 @@ A change to this spec is "correct enough to publish" when:
 
 ---
 
-**Related docs:** [README.md](../README.md) · [INDICATOR_CATALOG.md](../INDICATOR_CATALOG.md) ·
+**Related docs:** [governance/README.md](README.md) · [dashboards/README.md](../README.md) · [INDICATOR_CATALOG.md](../INDICATOR_CATALOG.md) ·
 [DASHBOARD_CATALOG.md](../DASHBOARD_CATALOG.md) · [standards/EVIDENCE_BUNDLE.md](../../standards/EVIDENCE_BUNDLE.md)
 
 **Last updated:** 2026-05-20 · **Edition:** v0.1 (draft) · **Owners:** `<release-steward>`, `<source-steward>` (PROPOSED)
