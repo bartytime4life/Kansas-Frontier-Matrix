@@ -1,17 +1,3 @@
-I’ll start by gathering evidence from the project knowledge before drafting. The task says “update this markdown” — the markdown content attached is Directory Rules v1.2, and the attached rules are the AI Build Operating Contract (in the system context) plus the KFM-aware documentation engineer prompt. Let me confirm the current state of docs/doctrine/directory-rules.md and verify formatting conventions used elsewhere in the corpus.
-
-I found a v1.3 of directory-rules.md already in project knowledge — a “renderer-decision refresh” that retires packages/cesium/. Let me retrieve more of the v1.3 to understand the current canonical state before deciding what to update.
-
-Let me see more of the v1.3 content and the supporting maplibre-3d.md doc to understand the current canonical state of the document.
-
-Let me check the current state of the v1.3 mini-TOC, KFM Meta Block usage, and badge conventions to determine what polish is missing.
-
-I need to verify I have the full v1.3 §11 rewrite (UI and Map Roots) and v1.3 §16 checklist additions before drafting.
-
-I now have a complete enough picture. The attached document is v1.2, but project knowledge contains v1.3 (renderer-decision refresh, Cesium retired) which supersedes v1.2. Per the source hierarchy, project knowledge is authoritative for KFM concepts and the v1.3 supersession is documented. I’ll produce a v1.4 presentation refresh that integrates the v1.3 substantive content (since it’s the current canonical state per project knowledge) and applies the Document 2 formatting mandate (KFM Meta Block v2, Shields.io badge row, quick-jump mini-TOC, Mermaid diagram, back-to-top anchors, footer block). Doctrine is unchanged at v1.4.
-
-SECTION 1 — GITHUB MARKDOWN
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/doctrine/directory-rules
 title: Directory Rules
