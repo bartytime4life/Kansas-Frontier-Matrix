@@ -226,11 +226,11 @@ CONFIRMED doctrine (`KFM-P1-IDEA-0056`): promotion is a **reviewed, receipt-emit
 
 ```mermaid
 flowchart TB
-    CAND[Promotion candidate<br/>at lifecycle gate]:::cand --> CHECK{Gate evaluation}:::check
-    CHECK -->|all artifacts present<br/>and resolve| DEC[PromotionDecision<br/>+ PolicyDecision<br/>+ ReviewRecord]:::dec
-    CHECK -->|MISSING_RECEIPT /<br/>MISSING_EVIDENCE /<br/>REVIEW_NEEDED| HOLD[HOLD at prior state<br/>fail-closed]:::hold
-    DEC --> NEXT[Next lifecycle state<br/>+ receipt chain]:::next
-    NEXT --> RT[Signed rollback token<br/>(PROPOSED; KFM-P22-PROG-0027)]:::roll
+    CAND["Promotion candidate<br/>at lifecycle gate"]:::cand --> CHECK{Gate evaluation}:::check
+    CHECK -->|all artifacts present<br/>and resolve| DEC["PromotionDecision<br/>+ PolicyDecision<br/>+ ReviewRecord"]:::dec
+    CHECK -->|MISSING_RECEIPT /<br/>MISSING_EVIDENCE /<br/>REVIEW_NEEDED| HOLD["HOLD at prior state<br/>fail-closed"]:::hold
+    DEC --> NEXT["Next lifecycle state<br/>+ receipt chain"]:::next
+    NEXT --> RT["Signed rollback token<br/>(PROPOSED; KFM-P22-PROG-0027)"]:::roll
 
     classDef cand  fill:#e0f2fe,stroke:#0369a1,color:#0f172a;
     classDef check fill:#fef9c3,stroke:#a16207,color:#0f172a;
