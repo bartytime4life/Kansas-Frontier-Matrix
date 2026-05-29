@@ -6,19 +6,22 @@ version: v1
 status: draft
 owners: Atmosphere/Air domain steward · Pipeline steward · Docs steward
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-05-28
 policy_label: public
 related:
+  - ai-build-operating-contract.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/domains/atmosphere/README.md
+  - docs/domains/atmosphere/CROSS_LANE_RELATIONS.md
   - docs/architecture/governed-api.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
 tags: [kfm, domain, atmosphere, air, lifecycle, governance, publication]
 notes:
+  - CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
   - All repo-shaped paths are PROPOSED until verified against the mounted repository.
   - Atmosphere/Air does not replace official advisories or emergency alerting.
 [/KFM_META_BLOCK_V2] -->
@@ -33,13 +36,14 @@ notes:
   <img alt="doctrine: lifecycle law" src="https://img.shields.io/badge/doctrine-lifecycle%20law-success">
   <img alt="posture: cite-or-abstain" src="https://img.shields.io/badge/posture-cite--or--abstain-informational">
   <img alt="default: fail-closed" src="https://img.shields.io/badge/default-fail--closed-critical">
+  <img alt="CONTRACT_VERSION: 3.0.0" src="https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue">
   <img alt="implementation: PROPOSED" src="https://img.shields.io/badge/implementation-PROPOSED-lightgrey">
   <!-- TODO: replace placeholder badges with CI / coverage / freshness endpoints once wired -->
 </p>
 
 | Status | Owners | Last updated |
 |---|---|---|
-| `draft` | Atmosphere/Air domain steward · Pipeline steward · Docs steward | 2026-05-15 |
+| `draft` | Atmosphere/Air domain steward · Pipeline steward · Docs steward | 2026-05-28 |
 
 > [!IMPORTANT]
 > This document is **doctrine, applied to a domain**. The lifecycle invariant
@@ -47,6 +51,7 @@ notes:
 > All file paths, route names, and validator names cited below are **PROPOSED** until verified
 > against the mounted Kansas Frontier Matrix repository. Atmosphere/Air **is not** an emergency
 > alerting system — it carries evidence-labeled context, not life-safety instructions.
+> Pinned `CONTRACT_VERSION = "3.0.0"`.
 
 ---
 
@@ -64,8 +69,11 @@ notes:
 - [10. Validators, tests, and fixtures](#10-validators-tests-and-fixtures)
 - [11. Correction and rollback](#11-correction-and-rollback)
 - [12. Directory placement (PROPOSED)](#12-directory-placement-proposed)
-- [13. Verification backlog and open questions](#13-verification-backlog-and-open-questions)
-- [14. Related docs](#14-related-docs)
+- [Open questions register](#open-questions-register)
+- [Open verification backlog](#open-verification-backlog)
+- [Changelog v0 → v1](#changelog-v0--v1)
+- [Definition of done](#definition-of-done)
+- [Related docs](#related-docs)
 - [Appendix A — Glossary](#appendix-a--glossary)
 
 ---
@@ -91,7 +99,8 @@ observations, official contexts, or derived products** — never emergency instr
 > Where a downstream domain (e.g., Hazards, Agriculture, Hydrology, Biodiversity) consumes
 > atmosphere-derived context, the **source role, sensitivity, evidence support, and release
 > state of the originating atmosphere artifact MUST be preserved** across the handoff. See
-> [§9. Cross-lane handoffs](#9-cross-lane-handoffs).
+> [§9. Cross-lane handoffs](#9-cross-lane-handoffs) and the companion
+> [`CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) *(PROPOSED neighbor)*.
 
 [Back to top](#contents)
 
@@ -143,14 +152,16 @@ flowchart LR
 ## 3. Stage-by-stage handling
 
 **CONFIRMED doctrine / PROPOSED implementation.** Each row below restates the universal
-KFM stage and adds the atmosphere-specific handling burden. Implementation maturity for each
-stage in the mounted repository is **UNKNOWN** in this session.
+KFM stage (per the Atmosphere/Air *H. Pipeline shape* table) and adds the atmosphere-specific
+handling burden. Implementation maturity for each stage in the mounted repository is **UNKNOWN**
+in this session.
 
 ### 3.1 RAW — admitted source material under source identity
 
 | Aspect | Specification |
 |---|---|
 | **Purpose** | Capture immutable source payload or reference with source role, rights, sensitivity, citation, time, and content hash. |
+| **Gate (CONFIRMED doctrine)** | `SourceDescriptor` exists. |
 | **Required artifact** | `SourceDescriptor` (role, authority, rights, sensitivity, cadence, ingest hash, time, citation); `RawCaptureReceipt`. |
 | **Atmosphere specifics** | Pin **issue/expiry time**, **observed time**, **valid time**, **model run time**, and **units** at admission. Sensor channels and station network identity preserved verbatim. |
 | **Public access** | **DENIED.** RAW is not a public surface. |
@@ -162,6 +173,7 @@ stage in the mounted repository is **UNKNOWN** in this session.
 | Aspect | Specification |
 |---|---|
 | **Purpose** | Normalize schema, geometry, time, identity, evidence, rights, and policy. |
+| **Gate (CONFIRMED doctrine)** | Validation and policy gate pass, or quarantine reason is recorded. |
 | **Required artifacts** | `TransformReceipt`; working `ValidationReport`; `PolicyDecision`. |
 | **Atmosphere specifics** | Unit conversions (e.g., µg/m³ ↔ ppb) emit `TransformReceipt` recording the conversion factor and reference. Station/network harmonization recorded. Low-cost sensor calibration and correction context attached (never silently flattened to "PM2.5"). |
 | **Public access** | **DENIED.** |
@@ -184,6 +196,7 @@ stage in the mounted repository is **UNKNOWN** in this session.
 | Aspect | Specification |
 |---|---|
 | **Purpose** | Emit validated, normalized objects with receipts; produce public-safe candidates. |
+| **Gate (CONFIRMED doctrine)** | `EvidenceRef`, `ValidationReport`, and digest closure exist. |
 | **Required artifacts** | `ValidationReport` (pass); `RedactionReceipt` if sensitivity applies; `AggregationReceipt` if applies; resolvable `EvidenceRef`; digest closure. |
 | **Atmosphere specifics** | Knowledge-character labels attached: `OBSERVATION`, `PUBLIC_AQI_REPORT`, `REGULATORY_ARCHIVE`, `MODEL_FIELD`, `REMOTE_SENSING_MASK`, `CLIMATE_NORMAL/ANOMALY`, `DERIVED_FUSION`, `ALERT_AND_ADVISORY_CONTEXT`, `NETWORK_AND_SITE_CONTEXT`. Stale-state flags computed against source cadence. |
 | **Public access** | **DENIED** as canonical; public surfaces only see published derivatives. |
@@ -195,6 +208,7 @@ stage in the mounted repository is **UNKNOWN** in this session.
 | Aspect | Specification |
 |---|---|
 | **Purpose** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, and release candidates. |
+| **Gate (CONFIRMED doctrine)** | Catalog / proof closure passes. |
 | **Required artifacts** | `CatalogMatrix` entry; `EvidenceBundle`; graph/triplet projection where applicable; `ReviewRecord` if review is required. |
 | **Atmosphere specifics** | Realtime and historical AQ products **split into distinct catalog collections** (different cadence, freshness, and rights). STAC items partition by hourly window or sensor chunk. PROV activities record fetch and normalization. |
 | **Public access** | **DENIED.** No public edge until `PUBLISHED`. |
@@ -206,6 +220,7 @@ stage in the mounted repository is **UNKNOWN** in this session.
 | Aspect | Specification |
 |---|---|
 | **Purpose** | Serve released, policy-allowed, reviewable, rollback-capable artifacts through governed APIs and manifests. |
+| **Gate (CONFIRMED doctrine)** | `ReleaseManifest`, correction path, rollback target, and review/policy state exist. |
 | **Required artifacts** | `ReleaseManifest`; resolvable `EvidenceBundle`; `RollbackCard` (target); correction path; `ReviewRecord` (where required); policy posture recorded. |
 | **Atmosphere specifics** | Public release of **low-cost sensor data requires correction, caveats, confidence, and limitations** on the surface. AdvisoryContext layers carry **redirection to the official source** rather than reproducing life-safety text. |
 | **Public access** | **ALLOWED** through `apps/governed-api/` only — never direct reads of `data/processed/` or `data/catalog/`. |
@@ -226,8 +241,8 @@ stage in the mounted repository is **UNKNOWN** in this session.
 **CONFIRMED doctrine.** Each transition between phases is a *gate*, not a directory move.
 Every gate has a pre-condition, required artifacts, and a **failure-closed outcome**: if the
 required artifacts are not present, the artifact does not advance. For Atmosphere/Air the
-gates are doctrinally identical to KFM-wide gates; the **artifacts** that satisfy each gate are
-domain-shaped.
+gates are doctrinally identical to the KFM-wide Master Pipeline Gate Reference; the
+**artifacts** that satisfy each gate are domain-shaped.
 
 | Gate (transition) | Pre-condition | Required artifacts (PROPOSED minimum) | Atmosphere-flavored emphasis | Failure-closed outcome |
 |---|---|---|---|---|
@@ -255,12 +270,14 @@ did not happen in the governed sense.** Receipts created at earlier phases remai
 (not duplicated) at later phases via `EvidenceRef`.
 
 The dots in the table below mean a receipt is normally **emitted, amended, or referenced** at
-that phase for an Atmosphere/Air artifact.
+that phase for an Atmosphere/Air artifact. The set of receipt types is **PROPOSED** pending
+verification against the repo's receipt catalog.
 
 | Receipt | RAW | WORK / QUARANTINE | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
 |---|:---:|:---:|:---:|:---:|:---:|
 | `SourceDescriptor` | • | • | • | • | • |
 | `RawCaptureReceipt` | • |   |   |   |   |
+| `RunReceipt` (fetch / pipeline run) | • | • | • | • | • |
 | `TransformReceipt` (unit conv., projection, generalization) |   | • | • | • |   |
 | `RedactionReceipt` |   | • | • | • |   |
 | `AggregationReceipt` (decadal mean, county-year roll-up) |   | • | • | • |   |
@@ -294,7 +311,8 @@ fundamentally different things. The lifecycle enforces the distinctions through 
 denials and required labels.
 
 > [!IMPORTANT]
-> These are **non-negotiable, validator-enforceable denials** for the Atmosphere/Air lane:
+> These are **non-negotiable, validator-enforceable denials** for the Atmosphere/Air lane
+> (source: domain *I. Sensitivity, rights, and publication posture*):
 >
 > - **AQI is not concentration.** A claim that conflates a categorical Air Quality Index with
 >   a measured concentration value is **DENIED**.
@@ -344,6 +362,13 @@ applies this rule alongside domain-specific sensitivity considerations.
 | Stale source past freshness threshold | **ABSTAIN** or display stale badge. | Fresh fetch; new `RunReceipt`; updated catalog entry. |
 | Synthetic or reconstructed surfaces | **DENY** if unlabeled. | `RealityBoundaryNote` published with the surface. |
 
+> [!CAUTION]
+> **Biodiversity handoff — no sensitive-location exposure.** Where phenology, smoke, fire, or
+> drought-stress context is cited by Fauna / Flora / Habitat, the join MUST NOT reveal sensitive
+> species locations. Route disposition through the operating contract **§23.2** sensitive-domain
+> matrix; default chain is DENY exact → GENERALIZE → REDACT → QUARANTINE → steward review →
+> `RedactionReceipt`. `CONFIRMED` doctrine / `PROPOSED` implementation.
+
 > [!WARNING]
 > **KFM Atmosphere/Air is not an emergency alert system.** It MUST NOT issue, replace, or
 > simulate life-safety instructions. AdvisoryContext exists to *redirect* users to the
@@ -378,7 +403,8 @@ guarantees no out-of-band success or silent partial result.
 
 **CONFIRMED / PROPOSED.** Atmosphere/Air evidence frequently flows into adjacent domains as
 *context*, never as substitute truth. Each handoff **preserves ownership, source role,
-sensitivity, and `EvidenceBundle` support**.
+sensitivity, and `EvidenceBundle` support** — the four-part constraint carried in the
+domain's *F. Cross-lane relations* table.
 
 | From Atmosphere/Air → To | Carried context | Constraint at handoff |
 |---|---|---|
@@ -389,7 +415,8 @@ sensitivity, and `EvidenceBundle` support**.
 
 > [!TIP]
 > The cross-lane handoff is itself a governed operation. The receiving lane references the
-> originating `EvidenceBundle` by `EvidenceRef` rather than copying values.
+> originating `EvidenceBundle` by `EvidenceRef` rather than copying values. Full edge detail
+> lives in [`CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) *(PROPOSED neighbor)*.
 
 [Back to top](#contents)
 
@@ -398,8 +425,8 @@ sensitivity, and `EvidenceBundle` support**.
 ## 10. Validators, tests, and fixtures
 
 **PROPOSED.** The Atmosphere/Air lane carries the KFM-universal validator set plus
-domain-specific knowledge-character validators. Names and CI wiring are **PROPOSED** until
-verified against the mounted repository.
+domain-specific knowledge-character validators (source: domain *K. Validators, tests,
+fixtures*). Names and CI wiring are **PROPOSED** until verified against the mounted repository.
 
 <details>
 <summary><strong>Universal validator set (applies to all lanes)</strong></summary>
@@ -476,14 +503,15 @@ sequenceDiagram
 
 ## 12. Directory placement (PROPOSED)
 
-**Source basis:** Directory Rules §§4, 6.1, 9.1, 12 (CONFIRMED doctrine); current repository
-inventory **UNKNOWN** in this session. Every path below is **PROPOSED** until verified against
-mounted-repo evidence.
+**Source basis:** Directory Rules §6 (`docs/` and per-root trees), §9 (lifecycle phases under
+`data/`), §12 (Domain Placement Law), and the §5 canonical root tree (CONFIRMED doctrine);
+current repository inventory **UNKNOWN** in this session. Every path below is **PROPOSED**
+until verified against mounted-repo evidence.
 
 ```text
 docs/domains/atmosphere/                    # human-facing domain control plane (this file lives here)
 contracts/domains/atmosphere/               # object-meaning Markdown (AirStation, AirObservation, …)
-schemas/contracts/v1/domains/atmosphere/    # machine shapes (ADR-0001 canonical)
+schemas/contracts/v1/domains/atmosphere/    # machine shapes (ADR-0001 canonical schema home)
 policy/domains/atmosphere/                  # admissibility, sensitivity, release policy
 tests/domains/atmosphere/                   # enforceability proof
 fixtures/domains/atmosphere/                # golden / valid / invalid samples
@@ -506,46 +534,83 @@ release/candidates/atmosphere/
 ```
 
 > [!NOTE]
-> **Directory Rules basis.** §6.1 enumerates `docs/domains/atmosphere/` as an indexed domain
-> directory. §12 (Domain Placement Law) requires the lane pattern: a domain MUST NOT become a
-> root folder; it appears as a **segment** inside each responsibility root. §9.1 fixes the
-> lifecycle phases under `data/`. ADR-0001 fixes `schemas/contracts/v1/...` as canonical
-> schema home.
+> **Directory Rules basis.** §12 (Domain Placement Law) requires the lane pattern: a domain
+> MUST NOT become a root folder; it appears as a **segment** inside each responsibility root.
+> §9 fixes the lifecycle phases under `data/`. ADR-0001 fixes `schemas/contracts/v1/...` as the
+> canonical schema home. The schema/contract **segment name** for this lane is `air/` in the
+> Atlas crosswalk (`schemas/contracts/v1/air/`) while the docs segment is `atmosphere/`; this
+> divergence is flagged in [OQ-AIR-LC-01](#open-questions-register). `CONFLICTED` until resolved.
 
 [Back to top](#contents)
 
 ---
 
-## 13. Verification backlog and open questions
+## Open questions register
 
-**PROPOSED / NEEDS VERIFICATION.** Items below cannot be resolved without mounted-repo
-evidence. Each will settle into `CONFIRMED` or `PROPOSED-with-fix` when checked against
-files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release
-manifests.
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-AIR-LC-01 | Reconcile docs segment `atmosphere/` vs schema/contract segment `air/`. | Docs steward + atmosphere steward | ADR |
+| OQ-AIR-LC-02 | Is `SensorCalibrationReceipt` a real receipt type, or a sub-field of `TransformReceipt`? | Pipeline steward | Receipt-catalog inspection + ADR |
+| OQ-AIR-LC-03 | Canonical home for the realtime-vs-historical AQ STAC collection split. | Catalog steward | repo inspection + ADR |
+| OQ-AIR-LC-04 | Confirm `data/receipts/` and `data/proofs/` sub-segment names against the live tree. | Pipeline steward | mounted-repo inspection |
+
+## Open verification backlog
+
+These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`. Each
+settles into `CONFIRMED` or `PROPOSED-with-fix` when checked against files, schemas, registry
+entries, tests, logs, emitted artifacts, review records, or release manifests.
 
 | Item to verify | Evidence that would settle it | Status |
 |---|---|---|
 | Existence and shape of atmosphere-lane directories under `data/`, `schemas/`, `policy/`, `tests/`, `pipelines/`. | Mounted-repo tree inspection. | **NEEDS VERIFICATION** |
 | Live rights, terms, quotas, and attribution requirements per source family (AQS, AirNow, NWS, Mesonet, OpenAQ, CAMS, HRRR-Smoke, HMS, GOES/ABI, VIIRS). | `SourceDescriptor` entries with current license and terms. | **NEEDS VERIFICATION** |
 | Implementation of the knowledge-character registry (label allowlist + enforcement). | Schema file + validator + negative fixtures. | **NEEDS VERIFICATION** |
-| Validator exit-code contract for atmosphere validators. | `tools/validators/.../README.md` + ADR. | **NEEDS VERIFICATION** (open KFM-wide question, not domain-specific) |
+| Validator exit-code contract for atmosphere validators. | `tools/validators/.../README.md` + ADR (open KFM-wide question OPEN-DR-03). | **NEEDS VERIFICATION** |
 | Catalog / proof / release closure for at least one atmosphere thin-slice. | `EvidenceBundle` + `CatalogMatrix` + `ReleaseManifest` artifacts; CI logs. | **NEEDS VERIFICATION** |
 | MapLibre / Evidence Drawer / Focus Mode integration for atmosphere layers. | `LayerManifest` + Evidence Drawer payload + `AIReceipt` examples. | **NEEDS VERIFICATION** |
 | Realtime vs. historical AQ collection split in STAC. | STAC collection JSON. | **NEEDS VERIFICATION** |
+| The receipt-type set in §5 (esp. `RunReceipt`, `ModelRunReceipt`, `SensorCalibrationReceipt`). | Repo receipt catalog / schemas. | **NEEDS VERIFICATION** |
+
+## Changelog v0 → v1
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Initial draft mapping the lifecycle invariant to the Atmosphere/Air lane | new | Stand up the domain lifecycle doctrine doc. |
+| Added per-stage gate column matching the domain *H. Pipeline shape* table | clarification | Tie each stage to its CONFIRMED gate condition. |
+| Added `RunReceipt` row to the receipts matrix | gap closure | §7 and Appendix referenced it; matrix omitted it. |
+| Added doctrine companion sections (Open Qs, Changelog, DoD) | housekeeping | Required for doctrine-adjacent docs. |
+| Pinned `CONTRACT_VERSION = "3.0.0"`; softened Directory Rules subsection citations (§9.1 → §9) | reconciliation | Cited subsection numbers not verified; corrected to verified sections. |
+
+> **Backward compatibility.** Heading anchors for §§1–14 are preserved from the original draft;
+> only tail companion sections were appended. The original Contents links remain valid.
+
+## Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (and OQ-AIR-LC-01 is resolved);
+- the Atmosphere/Air domain steward, pipeline steward, and a docs steward review it;
+- it is linked from the atmosphere domain index and the lifecycle-law doctrine index;
+- it does not conflict with accepted ADRs;
+- any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `GENERATED_RECEIPT.json` planned in the PR is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
 
 [Back to top](#contents)
 
 ---
 
-## 14. Related docs
+## Related docs
 
 > Paths below are **PROPOSED** until verified.
 
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract v3.0 (canonical). *(Verify relative path.)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — CONFIRMED canonical statement of the lifecycle invariant.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law and per-root authority.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Public surfaces consume governed APIs only.
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain default.
 - [`docs/domains/atmosphere/README.md`](./README.md) — Atmosphere/Air domain landing page. *(TODO if absent.)*
+- [`docs/domains/atmosphere/CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) — cross-lane relation detail. *(PROPOSED neighbor.)*
 - [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — The only legitimate public path.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance crosswalk used by atmosphere PROV activities.
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — Geographic metadata crosswalk.
@@ -584,8 +649,8 @@ live in `docs/doctrine/` and `contracts/`.
 
 ---
 
-**Related docs:** [`lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`directory-rules.md`](../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../doctrine/trust-membrane.md) · [`atmosphere/README.md`](./README.md) *(TODO)*
+**Related docs:** [`lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`directory-rules.md`](../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../doctrine/trust-membrane.md) · [`CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) *(PROPOSED)* · [`atmosphere/README.md`](./README.md) *(TODO)*
 
-**Last updated:** 2026-05-15 · **Status:** draft · **Owners:** Atmosphere/Air domain steward · Pipeline steward · Docs steward
+**Last updated:** 2026-05-28 · **Status:** draft · **Owners:** Atmosphere/Air domain steward · Pipeline steward · Docs steward
 
 [Back to top](#contents)
