@@ -2,15 +2,16 @@
 doc_id: kfm://doc/domains/archaeology/cultural-review
 title: Archaeology Domain — Cultural Review Protocol
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: archaeology-domain-steward + cultural-review-liaison + docs-steward    # PLACEHOLDER — NEEDS VERIFICATION
 created: 2026-05-27
-updated: 2026-05-27
+updated: 2026-05-29
 policy_label: public                                  # Document is public; subject matter is sensitivity-gated by §23.2
+contract_version: "3.0.0"
 related:
   - docs/doctrine/ai-build-operating-contract.md      # CONFIRMED authority; pins CONTRACT_VERSION = "3.0.0"
-  - docs/doctrine/directory-rules.md                  # PROPOSED
+  - docs/doctrine/directory-rules.md                  # CONFIRMED edition v1.3; PROPOSED canonical home
   - docs/doctrine/authority-ladder.md                 # PROPOSED
   - docs/doctrine/lifecycle-law.md                    # PROPOSED
   - docs/doctrine/trust-membrane.md                   # PROPOSED
@@ -19,6 +20,7 @@ related:
   - docs/domains/archaeology/CANONICAL_PATHS.md       # PROPOSED — sibling (path-namespace authority)
   - docs/domains/archaeology/CONTINUITY_INVENTORY.md  # PROPOSED — sibling
   - docs/domains/archaeology/CROSS_DOMAIN.md          # PROPOSED — sibling (cross-lane edges)
+  - docs/domains/archaeology/DATA_LIFECYCLE.md        # PROPOSED — sibling (lifecycle gates that consume these reviews)
   - docs/domains/archaeology/SENSITIVITY.md           # PROPOSED — sibling
   - docs/architecture/sovereignty-care.md             # PROPOSED — cross-cutting CARE doctrine
   - policy/sensitivity/archaeology/                   # PROPOSED — §23.2 enforcement home
@@ -34,20 +36,23 @@ related:
 tags: [kfm, archaeology, cultural-review, sovereignty, CARE, consent, governance, sensitivity, doctrine-adjacent]
 notes:
   - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §0 and §37."
+  - "Directory Rules is the live v1.3 edition (renderer-decision refresh); cited explicitly in §1, §2, and the release notes."
   - "Three §23.2 rows apply: 'Archaeology — site locations', 'Indigenous / cultural records', 'Burial / sacred sites'. The most restrictive applicable row applies."
+  - "The §23.2 county/region generalization is the CONFIRMED public floor for site geometry; any H3 r7 floor is a PROPOSED lane-local refinement subordinate to it."
   - "This document encodes the GOVERNANCE of cultural review (who, when, how recorded, how revoked) — it does NOT define the substance of cultural knowledge. Substance is deferred to the named authority per DDD Anticorruption Layer pattern."
-  - "All file-path-shaped claims PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §13). Path namespace uses Directory Rules §12 form (contracts/domains/archaeology/) per CANONICAL_PATHS.md v1.1 §2.4."
-  - "v1.0 initial release. No prior version exists; companion sections include 'Initial release notes' rather than a changelog."
+  - "All file-path-shaped claims PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §13). Path namespace uses Directory Rules v1.3 §12 form (contracts/domains/archaeology/) per CANONICAL_PATHS.md v1.1 §2.4."
+  - "v1.1 reconciliation: Directory Rules v1.3 pinned; §16 DoD receipt-CI citation corrected §48 → §47 (§48 is the Adoption checklist; the receipt schema + companion-artifact authority is §34 + §47); H3 r7 subordinated to the §23.2 county/region floor; [CONTRACT v3.0] §12 untrusted-content posture added for oral-history / document ingestion."
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Cultural Review Protocol
 
-> The single page that says **how cultural / tribal / steward review works** in the Kansas Frontier Matrix for archaeology and cultural-heritage material — who reviews, what they review, what records the review produces, how consent is captured and revoked, and how sovereignty labels inherit through artifacts. Aligned with `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`), the §23.2 sensitive-domain matrix, and the FAIR + CARE pairing.
+> The single page that says **how cultural / tribal / steward review works** in the Kansas Frontier Matrix for archaeology and cultural-heritage material — who reviews, what they review, what records the review produces, how consent is captured and revoked, and how sovereignty labels inherit through artifacts. Aligned with `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`), the §23.2 sensitive-domain matrix, Directory Rules v1.3, and the FAIR + CARE pairing.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1f6feb)
 ![doc%20type](https://img.shields.io/badge/doc%20type-cultural%20review%20protocol-blue)
 ![domain](https://img.shields.io/badge/domain-archaeology-8a6d3b)
+![directory rules](https://img.shields.io/badge/Directory%20Rules-v1.3-8957e5)
 ![§23.2 rows](https://img.shields.io/badge/%C2%A723.2-3%20rows%20apply-purple)
 ![sensitivity](https://img.shields.io/badge/sensitivity-deny%20by%20default-critical)
 ![CARE](https://img.shields.io/badge/CARE-default--deny%20on%20authority__to__control-d33)
@@ -55,9 +60,9 @@ notes:
 ![sovereignty](https://img.shields.io/badge/sovereignty%20label-inherits%20from%20AIANNH%2FBIA%20overlay-orange)
 ![conformance](https://img.shields.io/badge/conformance-RFC%202119-555)
 ![repo%20mount](https://img.shields.io/badge/repo%20mount-NOT%20VERIFIED-lightgrey)
-![last updated](https://img.shields.io/badge/last%20updated-2026--05--27-informational)
+![last updated](https://img.shields.io/badge/last%20updated-2026--05--29-informational)
 
-**Status:** draft · v1.0 (initial)  ·  **Pinned contract:** `CONTRACT_VERSION = "3.0.0"`  ·  **Owners:** `archaeology-domain-steward + cultural-review-liaison + docs-steward` *(placeholder — NEEDS VERIFICATION)*  ·  **Required reviewers** *(see §4)*: archaeology domain steward · tribal / cultural reviewer · rights-holder representative · sensitivity reviewer · release authority  ·  **Last updated:** 2026-05-27
+**Status:** draft · v1.1  ·  **Pinned contract:** `CONTRACT_VERSION = "3.0.0"`  ·  **Directory Rules:** v1.3  ·  **Owners:** `archaeology-domain-steward + cultural-review-liaison + docs-steward` *(placeholder — NEEDS VERIFICATION)*  ·  **Required reviewers** *(see §4)*: archaeology domain steward · tribal / cultural reviewer · rights-holder representative · sensitivity reviewer · release authority  ·  **Last updated:** 2026-05-29
 
 > [!CAUTION]
 > **This document encodes the *governance* of cultural review — not the *content* of cultural knowledge.** Per the DDD Anticorruption Layer pattern in the project corpus, KFM does **not** translate Indigenous knowledge, sacred-place attributes, oral-history substance, or community-controlled categories into its own model. Substance is **deferred** to the named authority recorded in `authority_to_control` (MetaBlock v2). This protocol governs *who reviews, when, how recorded, how revoked* — never *what the cultural content means*. **No section of this document authorizes a release**; releases require the receipts and reviewer records named in §3 and §11.
@@ -104,7 +109,7 @@ PROPOSED scope. This protocol governs:
 - CARE MetaBlock v2 fields (`steward_org`, `authority_to_control`, `consent`, `obligations`, `benefit_commitments`).
 - OPA default-deny on CARE-tagged assets per Pass 10 §C15-03.
 - Tribal sovereignty label inheritance from AIANNH / BIA overlay intersection per KFM-P11-PROG-0025.
-- Oral-history and culturally sensitive material protocol — consent, attribution, retention, revocation.
+- Oral-history and culturally sensitive material protocol — consent, attribution, retention, revocation, and untrusted-content handling (`[CONTRACT v3.0]` §12).
 
 This protocol **does not**:
 
@@ -114,7 +119,7 @@ This protocol **does not**:
 - Authorize any release. Releases require all four artifacts from `[CONTRACT v3.0]` §23.2: `RedactionReceipt`, `PolicyDecision`, `MapReleaseManifest` (when maps), `ReviewRecord` (from this protocol).
 
 > [!NOTE]
-> **Path basis.** This file lives at `docs/domains/archaeology/CULTURAL_REVIEW.md` per Directory Rules §4 (Step 1: "explains something to humans" → `docs/`), §12 (Domain Placement Law: domain segments under responsibility roots, never as root folders), and `[CONTRACT v3.0]` §11. The path itself is PROPOSED until verified against the mounted repository. The `domains/` intermediate segment is preserved per `CANONICAL_PATHS.md` v1.1 §2.4.
+> **Path basis.** This file lives at `docs/domains/archaeology/CULTURAL_REVIEW.md` per Directory Rules v1.3 §4 (Step 1: "explains something to humans" → `docs/`), §12 (Domain Placement Law: domain segments under responsibility roots, never as root folders), and `[CONTRACT v3.0]` §11. The path itself is PROPOSED until verified against the mounted repository. The `domains/` intermediate segment is preserved per `CANONICAL_PATHS.md` v1.1 §2.4 (Directory Rules §12 wins on §2.1 authority order over the Atlas v1.1 §24.13 shorthand).
 
 [Back to top ↑](#-quick-jump)
 
@@ -122,23 +127,25 @@ This protocol **does not**:
 
 ## 2. Authority and truth-label posture
 
-CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0 §5, Directory Rules §2.1, `authority-ladder.md` v1.1):
+CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0 §5, Directory Rules v1.3 §2.1, `authority-ladder.md` §7):
 
 1. **`ai-build-operating-contract.md` v3.0 §23.2** — verbatim authority for the three archaeology-relevant rows in this protocol ("Archaeology — site locations", "Indigenous / cultural records", "Burial / sacred sites"). §1 Operating Law wins on any conflict.
 2. **The named authority recorded in `authority_to_control`** — for the *substance* of any cultural / Indigenous / community-controlled material, the authority outranks KFM's interpretation. KFM provides the *interface*; the authority provides the *content* (DDD Anticorruption Layer pattern).
-3. **KFM core invariants and doctrine** — lifecycle law, cite-or-abstain, trust membrane, watcher-as-non-publisher (`[CONTRACT v3.0]` §10).
+3. **KFM core invariants and doctrine** — lifecycle law, cite-or-abstain, trust membrane, watcher-as-non-publisher (`[CONTRACT v3.0]` §10; Directory Rules v1.3 §7.1 / §13.5).
 4. **Accepted ADRs** — particularly ADRs that ratify the §23.2 row defaults during v3.x adoption.
 5. **DOM-ARCH §E** — `CulturalReview` and `StewardReview` term definitions.
 6. **Atlas v1.1 §24.5** — tier scheme T0–T4 and transition rules.
 7. **Pass 10 §C15** — CARE operational profile (MetaBlock v2, OPA default-deny).
 8. **KFM-P11-PROG-0025** — tribal sovereignty label inheritance.
 9. **KFM-P19-IDEA-0003** — consent revocation as live fail-closed input.
-10. **Sibling archaeology docs** (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`, `CROSS_DOMAIN.md`) — refine but never override.
+10. **Sibling archaeology docs** (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`, `CROSS_DOMAIN.md`, `DATA_LIFECYCLE.md`) — refine but never override.
+
+When Directory Rules and an Atlas crosswalk disagree on a path, **Directory Rules v1.3 §12 governs** (per its own §2.1 authority order) and the conflict surfaces an ADR obligation.
 
 | Label | Use in this document |
 |---|---|
-| **CONFIRMED** | §23.2 row text (verbatim); CARE C15-01/C15-03 (Pass 10 status: CONFIRMED); tier-transition rules from Atlas v1.1 §24.5.3. |
-| **PROPOSED** | Reviewer rosters, schema URIs, route names, validator implementations, OPA rule files, per-edge transform profiles, tribal-sovereignty waiver shapes. |
+| **CONFIRMED** | §23.2 row text (verbatim); CARE C15-01/C15-03 (Pass 10 status: CONFIRMED); tier-transition rules from Atlas v1.1 §24.5.3; Directory Rules edition v1.3. |
+| **PROPOSED** | Reviewer rosters, schema URIs, route names, validator implementations, OPA rule files, per-edge transform profiles, tribal-sovereignty waiver shapes; H3 r7 generalization-refinement floor. |
 | **NEEDS VERIFICATION** | Standing tribal/cultural reviewer rosters; rights-holder rep designations; current AIANNH/BIA overlay source endpoints + rights; oral-history protocol per community; GA4GH-aware policy module availability. |
 | **CONFLICTED** | Multi-party consent shape (KFM-P19-IDEA-0003 open question); GA4GH vs JWT vs MetaBlock v2 consent vocabulary reconciliation (Pass 10 §8.6); `PublicationTransformReceipt` vs `RedactionReceipt` overlap (`OQ-CR-04`). |
 | **LINEAGE** | Atlas v1.0 per-domain F. tables — superseded by v1.1 where v1.1 speaks. |
@@ -146,7 +153,7 @@ CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0 §5
 | **EXTERNAL** | Not used in this file; no external research was performed. |
 
 > [!NOTE]
-> **Memory is not evidence** (`[CONTRACT v3.0]` §13.5). Every claim in this protocol carries a citation back to `[CONTRACT v3.0]` §23.2, Atlas v1.1 §24.5, DOM-ARCH, Pass 10 §C15, or the project's POL idea cards.
+> **Memory is not evidence** (`[CONTRACT v3.0]` — Operating Law; "memory is not evidence" principle). Every claim in this protocol carries a citation back to `[CONTRACT v3.0]` §23.2, Atlas v1.1 §24.5, DOM-ARCH, Pass 10 §C15, Directory Rules v1.3, or the project's POL idea cards.
 
 [Back to top ↑](#-quick-jump)
 
@@ -186,6 +193,9 @@ CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0 §5
 ### 3.4 Most-restrictive-applicable-row rule
 
 When a record matches multiple rows, the **most restrictive** disposition, transform, reviewer, and receipt set applies. Per Atlas v1.1 §24.5.2, **burial / human remains / sacred sites are T4 with the stricter constraint that no transform releases them to T0** — T3 only under explicit named authorization with sovereignty review + `ReviewRecord` + `PolicyDecision`.
+
+> [!NOTE]
+> **Generalization floor.** The §23.2 row 1 disposition — **generalize to county/region** — is the **CONFIRMED authoritative public floor** for archaeology site geometry. Any tighter cell-based floor (e.g., the **H3 r7** value drawn from MasterMapLibre SRC-061) is a **PROPOSED lane-local refinement** subordinate to it, and is itself ADR-gated. Whatever value is chosen MUST be no coarser-permitting than the §23.2 county/region floor.
 
 ```mermaid
 flowchart TB
@@ -227,12 +237,12 @@ flowchart TB
 | **Archaeology domain steward** | Lane-internal — interpretation, candidate-vs-confirmed, evidence sufficiency, source-role posture | Every promotion from `CandidateFeature` to `ArchaeologicalSite`; every catalog-closure record; every cross-lane edge that consumes archaeology | Author the artifact under review; sign the release authorization for the same artifact (separation of duties) | Restricted by source-rights; access-class set per `SourceDescriptor` | `[CONTRACT v3.0]` §23.2, §33; DOM-ARCH §B |
 | **Tribal / cultural reviewer** | Community / sovereignty — substance of cultural material, Indigenous knowledge, sacred-place context, oral history | Every archaeology subject that intersects an AIANNH/BIA overlay (§9); every subject tagged Indigenous, sacred, burial, or culturally sensitive; every cross-lane edge to People/Land where cultural affiliation is cited | Be substituted by a KFM steward when sovereignty applies; act as final authority on archaeology *evidence interpretation* (that is the domain steward's lane) | **Bound by the community's own confidentiality posture, recorded in `authority_to_control`** — not KFM's | `[CONTRACT v3.0]` §23.2 rows 1, 2, 3; Atlas v1.1 §24.4.13; KFM-P11-PROG-0025 |
 | **Rights-holder representative** | Source-rights — terms of use, redistribution, attribution, restricted joins | Every release whose source has rights-bounded terms; every cross-lane join involving rights-limited records (e.g., licensed SHPO records, restricted research drafts) | Approve cultural sensitivity decisions absent the cultural reviewer | Bound by license / agreement terms | `[CONTRACT v3.0]` §23.2 row 1; `[ENCY]` §13 |
-| **Sensitivity reviewer** | Cross-cutting — exact-coord denial, H3 floor, generalization profile, public-safe transform discipline | Every `RedactionReceipt` + `PublicationTransformReceipt`; every public-layer release manifest; every negative-fixture suite outcome | Be the same person as the artifact's author; bypass §23.2 receipts on time pressure | Restricted | DOM-ARCH §I; Master MapLibre §Q |
-| **Release authority** | Lane-public — final authorization for trust-membrane crossing | Every `ReleaseManifest` + `MapReleaseManifest`; every rollback drill; every `CorrectionNotice` issuance | Author content; sign their own cultural / steward review; act as cultural reviewer when sovereignty applies | Restricted; access logged | `[CONTRACT v3.0]` §33; Directory Rules §16 |
+| **Sensitivity reviewer** | Cross-cutting — exact-coord denial, §23.2 county/region floor (+ H3 lane refinement), generalization profile, public-safe transform discipline | Every `RedactionReceipt` + `PublicationTransformReceipt`; every public-layer release manifest; every negative-fixture suite outcome | Be the same person as the artifact's author; bypass §23.2 receipts on time pressure | Restricted | DOM-ARCH §I; Master MapLibre §Q |
+| **Release authority** | Lane-public — final authorization for trust-membrane crossing | Every `ReleaseManifest` + `MapReleaseManifest`; every rollback drill; every `CorrectionNotice` | Author content; sign their own cultural / steward review; act as cultural reviewer when sovereignty applies | Restricted; access logged | `[CONTRACT v3.0]` §33; Directory Rules v1.3 §16 |
 
 ### 4.2 Separation-of-duties matrix
 
-**CONFIRMED doctrine** (`[CONTRACT v3.0]` §33, §23.2; Directory Rules §16). The following combinations are **FORBIDDEN** in a single actor for the same artifact:
+**CONFIRMED doctrine** (`[CONTRACT v3.0]` §33, §23.2; Directory Rules v1.3 §16). The following combinations are **FORBIDDEN** in a single actor for the same artifact:
 
 | Pair | Forbidden because |
 |---|---|
@@ -279,7 +289,7 @@ flowchart LR
 
 ## 5. Review-record object families
 
-**CONFIRMED doctrine / PROPOSED implementation**. The following object families carry review state. Identity follows the deterministic basis used elsewhere in the archaeology lane: `source_id + object_role + temporal_scope + normalized_digest`.
+**CONFIRMED doctrine / PROPOSED implementation**. The following object families carry review state; they are trust-bearing surfaces in the sense of `[CONTRACT v3.0]` §29. Identity follows the deterministic basis used elsewhere in the archaeology lane: `source_id + object_role + temporal_scope + normalized_digest`.
 
 | Object family | Purpose | Source authority | Public default | Citation |
 |---|---|---|---|---|
@@ -309,9 +319,12 @@ ReviewRecord {
   policy_decision_ref        : link to companion PolicyDecision
   decided_at                 : decision time
   recorded_at                : recorded time (distinct from decided_at)
-  spec_hash                  : JCS+SHA-256 canonical digest
+  spec_hash                  : canonical digest (canonicalization + hash algorithm ADR-governed; see note)
 }
 ```
+
+> [!NOTE]
+> The `spec_hash` canonicalization + hash algorithm is **ADR-governed** (SHA-256 is the CONFIRMED universal baseline per the Build Manual; a JCS-canonicalization tag is a PROPOSED programming idea, not a ratified default). Do not assert a specific `jcs:sha256:` tag as canonical until the ADR lands. Field-level schema realization (`schemas/contracts/v1/governance/`) is PROPOSED; the schema home — under `schemas/contracts/v1/governance/`, `schemas/contracts/v1/receipts/`, or `schemas/contracts/v1/domains/archaeology/` — is tracked as **`OQ-CR-03`**.
 
 ### 5.2 `CulturalReview` extends `ReviewRecord` with (PROPOSED)
 
@@ -338,9 +351,6 @@ StewardReview {
 }
 ```
 
-> [!NOTE]
-> Field-level schema realization (`schemas/contracts/v1/governance/`) is PROPOSED. The schema home — under `schemas/contracts/v1/governance/`, `schemas/contracts/v1/receipts/`, or `schemas/contracts/v1/domains/archaeology/` — is tracked as **`OQ-CR-03`**.
-
 [Back to top ↑](#-quick-jump)
 
 ---
@@ -351,18 +361,18 @@ StewardReview {
 
 | Object class | Default tier | §23.2 row(s) | Required reviewers | Required artifacts before T4 → T<n> | Citation |
 |---|---|---|---|---|---|
-| `ArchaeologicalSite` — exact geometry | **T4** | Archaeology — site locations | Archaeology steward + tribal/cultural reviewer + rights-holder rep | `RedactionReceipt` + `CulturalReview` + `StewardReview` + `PolicyDecision` → T1; T2 / T3 require additional named-party agreement | Atlas §24.5.2; §23.2 |
+| `ArchaeologicalSite` — exact geometry | **T4** | Archaeology — site locations | Archaeology steward + tribal/cultural reviewer + rights-holder rep | `RedactionReceipt` + `CulturalReview` + `StewardReview` + `PolicyDecision` → T1 (generalized to §23.2 county/region floor); T2 / T3 require additional named-party agreement | Atlas §24.5.2; §23.2 |
 | `ArchaeologicalSite` — generalized geometry | **T1** | Archaeology — site locations | Sensitivity reviewer + release authority | `MapReleaseManifest` + `ReleaseManifest` | Atlas §24.5.2 |
 | **Burial / human remains / sacred sites** | **T4** | Burial / sacred sites; Indigenous / cultural records | Cultural reviewer + rights-holder rep; **no transform releases to T0**; T3 only with explicit named authorization | Sovereignty review + `CulturalReview` + `PolicyDecision`; **no `RedactionReceipt` path to T1 / T0** | Atlas §24.5.2 (verbatim); §23.2 |
 | `CandidateFeature` (LiDAR / RS / geophys) | **T4 (public DENY)** | Archaeology — site locations | Archaeology steward (for promotion); tribal/cultural reviewer (if subject geography is sovereign) | `StewardReview` decision (merged / rejected / quarantined); promotion to `ArchaeologicalSite` requires full T4 → T1 workflow | DOM-ARCH §E; `[CONTRACT v3.0]` §38 |
-| Oral history / cultural knowledge payload | **T4** | Indigenous / cultural records | Cultural reviewer (community authority); rights-holder rep | `CulturalReview` (only path); `PolicyDecision`; consultation record reference | §23.2 row 2; §10 below |
+| Oral history / cultural knowledge payload | **T4** | Indigenous / cultural records | Cultural reviewer (community authority); rights-holder rep | `CulturalReview` (only path); `PolicyDecision`; consultation record reference; untrusted-content lint clears (§12) | §23.2 row 2; §10 below |
 | `SurveyTransect` raw geometry | **T2 (reviewer)** | Archaeology — site locations | Archaeology steward | `StewardReview`; restricted catalog | DOM-ARCH §D |
 | `SurveyTransect` coverage summary (generalized) | **T1** | Archaeology — site locations | Sensitivity reviewer | `RedactionReceipt` + `MapReleaseManifest` | Atlas §24.5.2 |
 | `ArtifactRecord` with provenience | **T2** if rights-bounded; **T1** if generalized | Restricted source terms (variable) | Archaeology steward + rights-holder rep | `StewardReview` + rights basis | DOM-ARCH §D |
 | `CollectionAccession` (with security detail) | **T2** | Indigenous / cultural records (if culturally affiliated) | Archaeology steward + cultural reviewer (when affiliation applies) | `StewardReview` + `CulturalReview` (when applicable) | DOM-ARCH §E |
 | `ChronologyAssertion` (period level) | **T0** | None directly; inherits from underlying evidence | Archaeology steward (citation closure only) | `EvidenceBundle` resolution | DOM-ARCH §E |
 | `RemoteSensingAnomaly` / `GeophysicsObservation` | **T2** raw; **T1** generalized | Archaeology — site locations | Archaeology steward + sensitivity reviewer | `StewardReview` + `RedactionReceipt` (for generalized release) | DOM-ARCH §E |
-| `ThreeDDocumentation` | **T4** by default | Archaeology — site locations | Archaeology steward + cultural reviewer + 3D admission reviewer + rights-holder rep | `StewardReview` + `CulturalReview` + **Reality Boundary Note** + `RepresentationReceipt` + `RedactionReceipt` per Atlas §24.5.2; ADR-S-07 OPEN | Atlas §24.5.2; §24.4.16 |
+| `ThreeDDocumentation` | **T4** by default | Archaeology — site locations | Archaeology steward + cultural reviewer + 3D admission reviewer + rights-holder rep | `StewardReview` + `CulturalReview` + **Reality Boundary Note** + `RepresentationReceipt` + `RedactionReceipt` per Atlas §24.5.2; 3D schemas at `schemas/contracts/v1/3d/` (Directory Rules v1.3 §6.4); ADR-S-07 + OPEN-DR-10 OPEN | Atlas §24.5.2; §24.4.16 |
 
 ### 6.1 Workflow diagram — generic T4 → public release
 
@@ -376,7 +386,7 @@ flowchart TB
   Sens["Sensitivity reviewer<br/>(transform profile +<br/>RedactionReceipt)"]
   Pol["PolicyDecision<br/>(allow / restrict / deny / abstain)"]
   Rel["Release authority<br/>(ReleaseManifest +<br/>MapReleaseManifest when map)"]
-  Pub["Public surface<br/>(T1 generalized)"]
+  Pub["Public surface<br/>(T1 generalized to county/region)"]
   Drill["Rollback drill<br/>verifies path"]
 
   T4 --> Decide
@@ -425,7 +435,7 @@ ConsentReceipt {
   expiry_time               : optional bound; null for ongoing
   revocation_endpoint       : how to look up live revocation status
   duo_codes[]               : GA4GH Data Use Ontology codes (when applicable)
-  spec_hash                 : JCS+SHA-256
+  spec_hash                 : canonical digest (ADR-governed algorithm; SHA-256 baseline)
 }
 ```
 
@@ -516,7 +526,7 @@ A CARE violation is rejected at all three points.
 |---|---|---|
 | **F**indable — stable identifiers | Deterministic identity (`source_id + object_role + temporal_scope + normalized_digest`) | Findability does not mean publicly findable; `authority_to_control` gates surface visibility |
 | **A**ccessible — open protocols | Governed API (`apps/governed-api/`); finite outcomes | Access mediated by `PolicyDecision`; not all assets are publicly accessible |
-| **I**nteroperable — shared standards | STAC / DCAT / PROV catalog; H3 generalization | `kfm:care` extension surfaces CARE state in standard vocabularies (Pass 10 §C15-02) |
+| **I**nteroperable — shared standards | STAC / DCAT / PROV catalog; generalization to the §23.2 county/region floor (H3 refinement where ratified) | `kfm:care` extension surfaces CARE state in standard vocabularies (Pass 10 §C15-02) |
 | **R**eusable — clear licensing | `SourceDescriptor` rights field; license register | Reuse mediated by obligations + benefit commitments; reuse without obligation honor is a violation |
 
 [Back to top ↑](#-quick-jump)
@@ -579,7 +589,7 @@ DOM-ARCH §N "Verify oral history/cultural knowledge protocol" is `NEEDS VERIFIC
 | Stage | KFM responsibility | Named authority responsibility | Required record |
 |---|---|---|---|
 | **Pre-intake consultation** | Provide consultation surface; do not pre-classify content | Decide whether to share, in what form, under what conditions | Consultation record (cross-referenced from `CulturalReview`) |
-| **Intake** | Capture material in restricted store; record `SourceDescriptor` with `source_role: authority (cultural)` and full rights / sensitivity / access-class fields | Decide what fields are recorded; designate `authority_to_control` | `SourceDescriptor`; `ConsentReceipt` |
+| **Intake** | Capture material in restricted store; record `SourceDescriptor` with `source_role: authority (cultural)` and full rights / sensitivity / access-class fields; run the §12 untrusted-content lint on any ingested document payload | Decide what fields are recorded; designate `authority_to_control` | `SourceDescriptor`; `ConsentReceipt` |
 | **Attribution** | Record attribution exactly as designated; preserve original phrasing where designated; **never paraphrase community terminology into generic language** | Designate attribution form and required preservation | `CulturalReview` with `community_obligations[]` including attribution |
 | **Access** | Default-deny public; T2 reviewer / T3 named-party only when the authority designates | Designate audience class; revoke at any time | `PolicyDecision`; `RevocationManifest` entry on revocation |
 | **Retention** | Honor named retention period; tombstone or delete per designation | Designate retention period | `CulturalReview` with `retention_policy` |
@@ -595,6 +605,7 @@ KFM does **NOT**:
 - Translate community terminology into generic terms (`[CONTRACT v3.0]` §38 anti-pattern: terminology drift).
 - Apply paraphrasing or summarization to oral history payloads in AI surfaces — `ABSTAIN` is the default for AI on this material.
 - Treat absence of a stated protocol as permission to publish — absence is `DENY`.
+- Act on any imperative AI-directed string found inside an ingested oral-history or document payload — per `[CONTRACT v3.0]` §12, ingested content is data, never instructions; flag to steward review and route to quarantine, never act.
 
 > [!IMPORTANT]
 > The protocol governs **what KFM records about the review**, not **what the review decides**. Substance is the community's; KFM's job is to record the decision, preserve the record, honor it at every gate, and revoke immediately when asked.
@@ -688,6 +699,7 @@ flowchart LR
 | CR10 | **Burial / sacred T0 publication via incremental T2 → T1 → T0** | Successive small relaxations route burial material toward public exposure. | Atlas §24.5.2 hard stop: no transform releases burial / sacred to T0. The boundary holds. | Atlas §24.5.2 verbatim |
 | CR11 | **AI surface drafts a `CulturalReview` for human approval but the human rubber-stamps** | AI drafts the review and the human signs without independent decision. | AI may *draft notes* (`[CONTRACT v3.0]` §19); the human reviewer MUST make an independent decision. AI text is never evidence (`[CONTRACT v3.0]` §38). | `[CONTRACT v3.0]` §§19, 21, 38 |
 | CR12 | **Revocation manifest mutated (not append-only)** | A revocation entry is removed or edited rather than superseded. | `RevocationManifest` is append-only; corrections add new entries; prior entries are preserved for audit. | KFM-P19-IDEA-0003 |
+| CR13 | **Acting on an instruction embedded in an ingested cultural payload** *(new in v1.1)* | An oral-history PDF, scraped page, or field-notes file carries "publish immediately" / "ignore previous instructions" and the intake pipeline or an AI surface acts on it. | `[CONTRACT v3.0]` §12: ingested content is data, not instructions; surface to steward review, route to quarantine, never act. | §10.1; §10.2; `[CONTRACT v3.0]` §12 |
 
 [Back to top ↑](#-quick-jump)
 
@@ -713,12 +725,13 @@ flowchart LR
 11. Retention period defaults — tombstoned assets, revoked-consent files. **Pass 10 §8.4 gap.**
 12. `RevocationManifest` storage backend, retention, query latency target. `OQ-CR-07`.
 13. Schema home for `ReviewRecord`, `CulturalReview`, `StewardReview`, `ConsentReceipt`, `RevocationManifest`, `SovereigntyWaiver`. **ADR required.** `OQ-CR-03`.
-14. `GENERATED_RECEIPT.json` schema availability at `schemas/contracts/v1/receipts/generated_receipt.schema.json` per `[CONTRACT v3.0]` §47.
+14. `GENERATED_RECEIPT.json` schema availability at `schemas/contracts/v1/receipts/generated_receipt.schema.json` per `[CONTRACT v3.0]` §34 / §47.
 15. CI workflow enforcing CARE default-deny on every promotion. **`.github/workflows/` inspection required.** UNKNOWN.
 16. Cadence of cultural-review audit (per `[CONTRACT v3.0]` §35 health signals: abstain rate, deny rate, drift inflow). **Dashboard placement required.**
-17. Reconciliation of the prior `ARCHITECTURE.md` v1.1 draft's Atlas-shorthand path namespace with this doc's Directory Rules §12 form. `OQ-CR-02`.
+17. Reconciliation of the prior `ARCHITECTURE.md` v1.1 draft's Atlas-shorthand path namespace with this doc's Directory Rules v1.3 §12 form. `OQ-CR-02`.
 18. Whether `policy/consent/` and `policy/sovereignty/` are separate roots or under `policy/sensitivity/`. **Directory Rules ADR required.** `OQ-CR-06`.
 19. Cross-lane review propagation rule when archaeology context is cited by another lane (cross-reference `CROSS_DOMAIN.md` `OQ-CD-04`).
+20. `spec_hash` canonicalization + hash algorithm ADR (SHA-256 baseline CONFIRMED; JCS-canonicalization tag PROPOSED, not ratified). **ADR required before any `jcs:sha256:` tag is asserted canonical.** `OQ-CR-11`.
 
 </details>
 
@@ -742,6 +755,7 @@ flowchart LR
 | **OQ-CR-08** | Reconciliation of three consent vocabularies (JWT, GA4GH Passport, MetaBlock v2 `consent`) per Pass 10 §8.6 gap. | Policy steward + privacy reviewer | ADR (proposed: `ADR-consent-vocabulary-normalization`) |
 | **OQ-CR-09** | Multi-party consent shape (e.g., family genealogy with multiple living relatives' stake). Pass 10 / KFM-P19-IDEA-0003 open. | Privacy reviewer + cultural-review liaison | ADR (proposed: `ADR-multi-party-consent`) |
 | **OQ-CR-10** | Tribal sovereignty label retention period in derivative artifacts. KFM-P11-PROG-0025 names the inheritance rule but not the persistence semantics for derivatives. | Policy steward + archaeology steward | ADR (proposed: `ADR-sovereignty-label-retention`) |
+| **OQ-CR-11** *(new in v1.1)* | `spec_hash` canonicalization + hash algorithm for review-record / consent / waiver objects — SHA-256 baseline is CONFIRMED; is JCS canonicalization the ratified default, and what is the algorithm tag? | Architecture steward + policy steward | ADR (proposed: `ADR-canonicalization-and-hash`); Build Manual §437 |
 
 ### 14.2 Open ADRs
 
@@ -757,7 +771,9 @@ flowchart LR
 | `ADR-consent-vocabulary-normalization` | Resolve `OQ-CR-08` — three consent vocabularies | Pass 10 §C6-07, §C9-04, §C15-01, §8.6 |
 | `ADR-multi-party-consent` | Resolve `OQ-CR-09` | KFM-P19-IDEA-0003 open question |
 | `ADR-sovereignty-label-retention` | Resolve `OQ-CR-10` | KFM-P11-PROG-0025 |
+| `ADR-canonicalization-and-hash` | Resolve `OQ-CR-11` — `spec_hash` algorithm | Build Manual §437; `[CONTRACT v3.0]` §34 |
 | **`ADR-S-14`** (Atlas v1.1 §24.12, OPEN) | Cross-lane join policy — cross-references `CROSS_DOMAIN.md` and this doc | Atlas v1.1 §24.12 |
+| **`OPEN-DR-10`** (Directory Rules v1.3 §18.e, OPEN) | MapLibre as sole browser-side renderer — governs the 3D archaeology handoff and `schemas/contracts/v1/3d/` placement (§6 `ThreeDDocumentation` row) | Directory Rules v1.3 §18.e |
 
 [Back to top ↑](#-quick-jump)
 
@@ -765,29 +781,42 @@ flowchart LR
 
 ## 15. Initial release notes v1.0
 
-This is the **initial release** of `docs/domains/archaeology/CULTURAL_REVIEW.md`. Per `[CONTRACT v3.0]` §37, initial drafts of doctrine-adjacent docs are **MINOR** versions of the archaeology lane doc set (no prior version of this file exists).
+This section documents the **initial release** of `docs/domains/archaeology/CULTURAL_REVIEW.md`. Per `[CONTRACT v3.0]` §37, initial drafts of doctrine-adjacent docs are **MINOR** versions of the archaeology lane doc set (no prior version of this file existed at v1.0). The **v1.0 → v1.1 reconciliation** is summarized at the foot of this section.
 
 | Section | Source authority | Notes |
 |---|---|---|
 | §3 §23.2 rows | `[CONTRACT v3.0]` §23.2 (verbatim — three rows) | Most-restrictive-applicable-row rule made explicit. |
 | §4 Five reviewer roles | `[CONTRACT v3.0]` §23.2, §33; DOM-ARCH §E; Atlas v1.1 §24.5.3 | Separation-of-duties matrix; authority-deferral diagram emphasizes that cultural reviewer authority is community-conferred. |
-| §5 Review-record object families | DOM-ARCH §E (`CulturalReview`, `StewardReview`); `[CONTRACT v3.0]` §29; Pass 10 §C6-07 (`ConsentReceipt`); KFM-P19-IDEA-0003 (`RevocationManifest`); KFM-P11-PROG-0025 (`SovereigntyWaiver`) | PROPOSED minimum field sets; schema home tracked as `OQ-CR-03`. |
+| §5 Review-record object families | DOM-ARCH §E (`CulturalReview`, `StewardReview`); `[CONTRACT v3.0]` §29; Pass 10 §C6-07 (`ConsentReceipt`); KFM-P19-IDEA-0003 (`RevocationManifest`); KFM-P11-PROG-0025 (`SovereigntyWaiver`) | PROPOSED minimum field sets; schema home tracked as `OQ-CR-03`; `spec_hash` algorithm ADR-governed (`OQ-CR-11`). |
 | §6 Review workflows by object class | Atlas v1.1 §24.5.2 (tier defaults); §23.2 row applicability | 11 object classes; hard-stop row for burial / sacred preserved verbatim. |
 | §7 Consent, revocation, waiver | Pass 10 §C6-07, §C15-01, §C15-03; KFM-P19-IDEA-0003 | Revocation = live fail-closed input. CONFLICTED consent vocabularies flagged (`OQ-CR-08`). |
 | §8 CARE operational profile | Pass 10 §C15-01, §C15-03, §C15-04 (CONFIRMED status) | "FAIR by design, CARE in practice" slogan preserved verbatim. MetaBlock v2 CARE fields enumerated. |
 | §9 Tribal sovereignty label inheritance | KFM-P11-PROG-0025 (verbatim) | AIANNH / BIA overlay intersection → inheritance or signed time-boxed waiver. |
-| §10 Oral history protocol | DOM-ARCH §D, §N; KFM-P1-IDEA-0034; ENCY §7.13 | PROPOSED operationalization of DOM-ARCH §N "Verify oral history / cultural knowledge protocol" item. KFM defers substance to community; records governance. |
+| §10 Oral history protocol | DOM-ARCH §D, §N; KFM-P1-IDEA-0034; ENCY §7.13 | PROPOSED operationalization of DOM-ARCH §N "Verify oral history / cultural knowledge protocol" item. KFM defers substance to community; records governance. v1.1 adds the §12 untrusted-content lint at intake. |
 | §11 Review-gated lifecycle transitions | Atlas v1.1 §24.5.3 (verbatim transition table) | Hard-stop rows (burial / sacred / Hazards-as-alert-authority / AI RAW access) preserved verbatim. |
-| §12 Anti-patterns | `[CONTRACT v3.0]` §38; Pass 10 §C15; Atlas §24.9 | 12 cultural-review-specific anti-patterns. |
-| §13 Verification backlog | Composite | 19 items; 6, 9, 14, 15 are UNKNOWN (repo not mounted). |
-| §14 Open questions register | `[CONTRACT v3.0]` §49; authority-ladder v1.1 §7 | 10 questions; `OQ-CR-04` cross-references prior `OQ-CP-03`, `OQ-CI-03`, `OQ-CD-03` (sibling-doc consistency). |
-| §15 Initial release notes (this section) | `[CONTRACT v3.0]` §37 | Replaces "Changelog" for an initial release. |
-| §16 Definition of done | `[CONTRACT v3.0]` §51 (analog) | Standard doctrine-doc DoD. |
+| §12 Anti-patterns | `[CONTRACT v3.0]` §38; Pass 10 §C15; Atlas §24.9 | 13 cultural-review-specific anti-patterns (CR13 added v1.1). |
+| §13 Verification backlog | Composite | 20 items (item 20 added v1.1); 6, 9, 14, 15 are UNKNOWN (repo not mounted). |
+| §14 Open questions register | `[CONTRACT v3.0]` §49; authority-ladder §7 | 11 questions (OQ-CR-11 added v1.1); `OQ-CR-04` cross-references prior `OQ-CP-03`, `OQ-CI-03`, `OQ-CD-03` (sibling-doc consistency). |
+| §15 Initial release notes (this section) | `[CONTRACT v3.0]` §37 | Replaces "Changelog" for an initial release; v1.0 → v1.1 reconciliation appended below. |
+| §16 Definition of done | `[CONTRACT v3.0]` §51 | Standard doctrine-doc DoD. |
 | §17 Related docs | Sibling archaeology docs + doctrine roots + governance schemas | All paths PROPOSED. |
 
-> **Backward compatibility.** Not applicable — this is v1.0 initial release.
+**v1.0 → v1.1 reconciliation (MINOR per `[CONTRACT v3.0]` §37):**
 
-> **Cross-doc consistency.** This doc is the fifth archaeology doc in the sequence (after `ARCHITECTURE.md` v1.1, `CANONICAL_PATHS.md` v1.1, `CONTINUITY_INVENTORY.md` v1.1, `CROSS_DOMAIN.md` v1.0). Four of five now consistently use the Directory Rules §12 path namespace. `ARCHITECTURE.md` v1.2 reconciliation tracked as `OQ-CR-02`.
+| Change | Reason | Citation |
+|---|---|---|
+| Pinned **Directory Rules to the live v1.3 edition** in the meta block, badge row, top strap, §1, §2, §4, and release notes | v1.0 cited Directory Rules without an edition; the mounted-project header reads `Edition v1.3` | Directory Rules v1.3 header |
+| Corrected the §16 DoD receipt-CI citation from `[CONTRACT v3.0]` §34, §48 to **§34, §47** | §48 is the Adoption checklist; the receipt machine-schema + companion-artifact authority is §34 + §47 (§47 names `generated_receipt.schema.json`) | `[CONTRACT v3.0]` §34 / §47 |
+| Named the **§23.2 county/region generalization as the CONFIRMED public floor** and reframed any H3 r7 floor as a PROPOSED lane-local refinement subordinate to it — §3.4 NOTE, §4 sensitivity-reviewer scope, §6, §8.3 | v1.0 referenced an "H3 floor" without anchoring it to the §23.2 disposition it quotes verbatim in §3.1 | `[CONTRACT v3.0]` §23.2 row 1 |
+| Added the **`[CONTRACT v3.0]` §12 untrusted-content posture** for oral-history / document ingestion — §1 scope, §6 oral-history row, §10.1 intake stage, §10.2, new anti-pattern CR13 | The lane admits oral-history PDFs / scraped HTML / OCR / field notes — exactly the surface §12 governs | `[CONTRACT v3.0]` §12 |
+| Softened the "memory is not evidence" citation from a specific §13.5 pin to the cross-cutting `[CONTRACT v3.0]` principle | The principle appears across §0 / §8 / §13 preflight, not as a numbered §13.5 row | `[CONTRACT v3.0]` (Operating Law) |
+| Made the `spec_hash` algorithm **ADR-governed** (SHA-256 baseline CONFIRMED; JCS tag PROPOSED) in §5.1 / §7.1; added `OQ-CR-11` + `ADR-canonicalization-and-hash` | Aligns with the sibling Identity-Model correction; avoids asserting a `jcs:sha256:` tag as canonical | Build Manual §437; `[CONTRACT v3.0]` §34 |
+| Added v1.3 3D context (`schemas/contracts/v1/3d/`, OPEN-DR-10) to §6 `ThreeDDocumentation` row and §14.2 | Directory Rules v1.3 §6.4 / §18.e establishes the 3D schema home and sole-renderer ADR | Directory Rules v1.3 §6.4 / §18.e |
+| Tightened the watcher / trust-membrane citations to add Directory Rules v1.3 §7.1 / §13.5 (§2 authority order) | The trust-membrane and watcher-as-non-publisher invariants are Directory Rules §7.1 / §13.5 | Directory Rules v1.3 §7.1 / §13.5 |
+| Added `DATA_LIFECYCLE.md` to `related` and the sibling-doc lists (§2, §17) | The lifecycle doc consumes these reviews; cross-link the now-existing sibling | — |
+| Updated dates, version (`v1.0` → `v1.1`), footer | Standard refresh | — |
+
+> **Backward compatibility (v1.0 → v1.1).** All §1–§17 anchors are **preserved**; the §15 section title and anchor are unchanged. New items (CR13, verification item 20, OQ-CR-11, the §14.2 ADR rows) are **appended**; no existing CR / OQ-CR / verification id is renumbered. The §23.2-floor edits are **reconciliations** (the floor was already quoted verbatim in §3.1), the §48→§47 edit is a **citation correction**, and the v1.3 pin is a **version reconciliation** — none retire an anchor or rename a field. **MINOR** per contract §37.
 
 [Back to top ↑](#-quick-jump)
 
@@ -797,17 +826,20 @@ This is the **initial release** of `docs/domains/archaeology/CULTURAL_REVIEW.md`
 
 This document is done enough to enter the repository when:
 
-- it is placed at `docs/domains/archaeology/CULTURAL_REVIEW.md` per Directory Rules §12 and `[CONTRACT v3.0]` §11;
+- it is placed at `docs/domains/archaeology/CULTURAL_REVIEW.md` per Directory Rules v1.3 §12 and `[CONTRACT v3.0]` §11;
 - the docs steward, archaeology domain steward, sensitivity reviewer, and cultural / sovereignty review liaison review it;
 - a tribal / cultural reviewer and rights-holder rep have been named per `[CONTRACT v3.0]` §23.2 (`OQ-CR-05`) — and **the named designees have been consulted on this protocol's framing of their role**;
-- it is linked from the docs index, the domain index, `docs/domains/archaeology/README.md`, and the four sibling doctrine docs (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`, `CROSS_DOMAIN.md`);
+- it is linked from the docs index, the domain index, `docs/domains/archaeology/README.md`, and the sibling doctrine docs (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`, `CROSS_DOMAIN.md`, `DATA_LIFECYCLE.md`);
 - `ARCHITECTURE.md` has been reconciled to the `contracts/domains/archaeology/` path namespace (`OQ-CR-02`);
-- it does not conflict with accepted ADRs (`OQ-CR-01` through `OQ-CR-10` are accepted or explicitly deferred);
+- the Directory Rules edition cited here (**v1.3**) matches the live `docs/doctrine/directory-rules.md` edition at merge time;
+- the §23.2 county/region generalization floor is honored, and any tighter H3 r7 lane refinement is resolved by ADR or logged in `docs/registers/DRIFT_REGISTER.md`;
+- it does not conflict with accepted ADRs (`OQ-CR-01` through `OQ-CR-11` are accepted or explicitly deferred);
 - the OPA default-deny CARE rule (Pass 10 §C15-03) has a corresponding policy file under `policy/sensitivity/archaeology/` (or wherever `OQ-CR-06` resolves);
 - the `RevocationManifest` storage backend is selected and durability + latency targets recorded (`OQ-CR-07`);
 - the consent vocabulary reconciliation ADR has been opened (`OQ-CR-08`);
+- the `spec_hash` canonicalization + hash ADR has been opened (`OQ-CR-11`);
 - any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
-- the `GENERATED_RECEIPT.json` planned for this AI-authored initial release is wired into CI per `[CONTRACT v3.0]` §34, §48;
+- the `GENERATED_RECEIPT.json` planned for this AI-authored revision is wired into CI per `[CONTRACT v3.0]` §34, §47;
 - a per-community consultation checklist exists for oral-history intake (operationalization of DOM-ARCH §N);
 - future changes follow `[CONTRACT v3.0]` §37 lifecycle.
 
@@ -825,7 +857,7 @@ This document is done enough to enter the repository when:
 
 - **Doctrine roots** (CONFIRMED rule / PROPOSED placement):
   [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (CONFIRMED; pinned `CONTRACT_VERSION = "3.0.0"`; §23.2 verbatim authority) ·
-  [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law ·
+  [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law (**v1.3**) ·
   [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — truth labels and authority order ·
   [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) ·
   [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) ·
@@ -836,6 +868,7 @@ This document is done enough to enter the repository when:
   [`docs/domains/archaeology/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) ·
   [`docs/domains/archaeology/CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) ·
   [`docs/domains/archaeology/CROSS_DOMAIN.md`](./CROSS_DOMAIN.md) ·
+  [`docs/domains/archaeology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle gates that consume these reviews ·
   [`docs/domains/archaeology/SENSITIVITY.md`](./SENSITIVITY.md) ·
   [`docs/domains/archaeology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md)
 - **Cross-cutting architecture neighbors** (PROPOSED):
@@ -882,6 +915,6 @@ This document is done enough to enter the repository when:
 
 ---
 
-<sub>**Related:** [Operating Contract v3.0](../../doctrine/ai-build-operating-contract.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Authority Ladder](../../doctrine/authority-ladder.md) · [Archaeology Architecture](./ARCHITECTURE.md) · [Canonical Paths](./CANONICAL_PATHS.md) · [Continuity Inventory](./CONTINUITY_INVENTORY.md) · [Cross-Domain](./CROSS_DOMAIN.md) *(all PROPOSED until mounted-repo evidence verifies presence)*</sub>
+<sub>**Related:** [Operating Contract v3.0](../../doctrine/ai-build-operating-contract.md) · [Directory Rules v1.3](../../doctrine/directory-rules.md) · [Authority Ladder](../../doctrine/authority-ladder.md) · [Archaeology Architecture](./ARCHITECTURE.md) · [Canonical Paths](./CANONICAL_PATHS.md) · [Continuity Inventory](./CONTINUITY_INVENTORY.md) · [Cross-Domain](./CROSS_DOMAIN.md) · [Data Lifecycle](./DATA_LIFECYCLE.md) *(all PROPOSED until mounted-repo evidence verifies presence)*</sub>
 
-<sub>**Last updated:** 2026-05-27 · **Pinned:** <code>CONTRACT_VERSION = "3.0.0"</code> · **Doc type:** standard (cultural review protocol) · **§23.2 rows:** Archaeology — site locations; Indigenous / cultural records; Burial / sacred sites · **Reviewer roles:** 5 distinct · **Authority deferral:** community-conferred cultural reviewer authority outranks KFM-conferred roles for cultural substance · **Default disposition:** DENY by default; ALLOW requires full §23.2 receipt set · [Back to top ↑](#-quick-jump)</sub>
+<sub>**Last updated:** 2026-05-29 · **Version:** v1.1 (was v1.0 dated 2026-05-27) · **Pinned:** <code>CONTRACT_VERSION = "3.0.0"</code> · **Directory Rules:** v1.3 · **Doc type:** standard (cultural review protocol) · **§23.2 rows:** Archaeology — site locations; Indigenous / cultural records; Burial / sacred sites · **Public floor:** §23.2 county/region (H3 r7 = PROPOSED lane refinement) · **Reviewer roles:** 5 distinct · **Authority deferral:** community-conferred cultural reviewer authority outranks KFM-conferred roles for cultural substance · **Default disposition:** DENY by default; ALLOW requires full §23.2 receipt set · [Back to top ↑](#-quick-jump)</sub>
