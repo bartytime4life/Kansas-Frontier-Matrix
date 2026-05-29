@@ -6,20 +6,28 @@ version: v0.1
 status: draft
 owners: <atmosphere-air domain steward> + <map-ui contract steward>  # PLACEHOLDER — assign in repo
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-29
 policy_label: public
 related:
   - docs/domains/atmosphere/README.md            # PROPOSED — verify presence
+  - docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md   # companion — knowledge-character registry
+  - docs/domains/atmosphere/IDENTITY_MODEL.md         # companion — identity view
+  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md       # companion — placement view
+  - docs/domains/atmosphere/EXPANSION_BACKLOG.md      # companion — candidate register
   - docs/architecture/map-shell.md               # PROPOSED — verify presence
   - docs/architecture/governed-api.md            # PROPOSED — verify presence
   - docs/adr/ADR-0001-schema-home.md             # CONFIRMED doctrine; verify file presence
+  - ai-build-operating-contract.md               # CONFIRMED — operating contract
   - schemas/contracts/v1/map/                    # PROPOSED — verify presence per ADR-0001
   - schemas/contracts/v1/ui/                     # PROPOSED — verify presence per ADR-0001
   - schemas/contracts/v1/ai/                     # PROPOSED — verify presence per ADR-0001
 tags: [kfm, atmosphere, air, map, ui, contracts, evidence-drawer, focus-mode, knowledge-character]
 notes:
-  - Lane name "atmosphere/" CONFIRMED from directory-rules.md §5, §12.
-  - Lane name conflict with Atlas crosswalk "air/" surfaced in §11 (Open Questions).
+  # Lane name "atmosphere/" CONFIRMED from directory-rules.md §12 (Domain Placement Law uniform list).
+  # Lane-name / schema-home conflict with Atlas crosswalk "air/" surfaced in §14 — RESOLVED in favor of atmosphere/ + schemas/contracts/v1/domains/atmosphere/ per Directory Rules §2.1 authority order (Directory Rules > Atlas crosswalks).
+  # All twelve map/UI contracts are CONFIRMED Master MapLibre objects ([MAP-MASTER]); atmosphere-specific field additions are PROPOSED.
+  # CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
+  # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere/Air — Map & UI Contracts
@@ -32,9 +40,10 @@ notes:
 ![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)
 ![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
 ![policy: public-safe-only](https://img.shields.io/badge/policy-public--safe--only-informational)
-![last updated: 2026-05-16](https://img.shields.io/badge/updated-2026--05--16-blue)
+![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
+![last updated: 2026-05-29](https://img.shields.io/badge/updated-2026--05--29-blue)
 
-**Status:** draft · **Owners:** `<atmosphere-air steward>` + `<map-ui contract steward>` *(placeholder — assign)* · **Updated:** 2026-05-16
+**Status:** draft · **Owners:** `<atmosphere-air steward>` + `<map-ui contract steward>` *(placeholder — assign)* · **Updated:** 2026-05-29 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -54,7 +63,9 @@ notes:
 12. [Cross-lane relations](#12-cross-lane-relations)
 13. [Validators, tests, fixtures](#13-validators-tests-fixtures)
 14. [Open questions and verification backlog](#14-open-questions-and-verification-backlog)
-15. [Related docs](#15-related-docs)
+15. [Changelog](#15-changelog)
+16. [Definition of done](#16-definition-of-done)
+17. [Related docs](#17-related-docs)
 
 ---
 
@@ -77,6 +88,10 @@ notes:
 - **Not** a source-onboarding spec — that lives with the source descriptor catalogs, not here.
 - **Not** a renderer build guide — MapLibre toolchain, style authoring, and tile generation are owned by the map shell and packages docs.
 - **Not** a schema definition — JSON Schemas live under `schemas/contracts/v1/...` per ADR-0001; this doc describes intent and atmosphere-specific bindings.
+- **Not** the knowledge-character vocabulary definition — that is the companion [`KNOWLEDGE_CHARACTERS.md`](./KNOWLEDGE_CHARACTERS.md); this doc *consumes* it and binds it to UI surfaces.
+
+> [!NOTE]
+> **Companion documents.** This is the *map/UI binding* view of the Atmosphere lane. Its siblings are [`KNOWLEDGE_CHARACTERS.md`](./KNOWLEDGE_CHARACTERS.md) (the vocabulary this doc renders), [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) (what makes two objects the same thing), [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) (where files live), [`EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md), and [`EXPANSION_PLAN.md`](./EXPANSION_PLAN.md).
 
 [↑ Back to top](#contents)
 
@@ -91,6 +106,7 @@ CONFIRMED authority hierarchy for atmosphere map/UI surfaces:
 
 | # | Authority | What it owns | Citation |
 |---|---|---|---|
+| 0 | **`ai-build-operating-contract.md` v3.0** | Canonical operating law; truth labels; invariants. `CONTRACT_VERSION = "3.0.0"`. | (operating contract) |
 | 1 | **Directory Rules** | Responsibility-root placement; lane = `atmosphere/`. | [DIRRULES] §5, §12 |
 | 2 | **DOM-AIR dossier + Encyclopedia §7.9** | Atmosphere/Air knowledge-character discipline; object families; source roles. | [DOM-AIR][ENCY] |
 | 3 | **Master MapLibre architecture / UIAI-MAP** | Renderer boundary; Evidence Drawer; Focus Mode; finite outcomes. | [MAP-MASTER][UIAI-MAP] |
@@ -99,24 +115,27 @@ CONFIRMED authority hierarchy for atmosphere map/UI surfaces:
 
 **Source-role posture (CONFIRMED / PROPOSED).** Atmosphere/Air source families include EPA AQS-like archive, AirNow / agency reporting, OpenAQ-like aggregators, NOAA/NWS, Kansas Mesonet, CAMS / ECMWF-family model fields, HRRR-Smoke, HMS smoke, GOES/ABI AOD, VIIRS fire/hotspot, and PurpleAir-class low-cost sensors with EPA correction. Each family is admitted with a single source role — `authority`, `observation`, `context`, or `model` — and **roles are never silently collapsed** at the UI layer. [DOM-AIR][ENCY]
 
+> [!NOTE]
+> **Source-role vocabulary is ADR-class.** The Atlas records the Atmosphere source-role string as a set (`authority / observation / context / model`) with rights `NEEDS VERIFICATION`. The canonical enum is governed by Atlas ADR-S-04; the four-value set used here is the Atlas wording but the frozen enum is not yet pinned. This binds to the same `source_role` discipline used in the companion [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) §5 and [`KNOWLEDGE_CHARACTERS.md`](./KNOWLEDGE_CHARACTERS.md) §5.
+
 [↑ Back to top](#contents)
 
 ---
 
 ## 3. Contract surface (KFM map/UI object families)
 
-CONFIRMED doctrine: every atmosphere layer renders through this fixed set of contracts. PROPOSED implementation: all schema home paths below resolve under `schemas/contracts/v1/...` per ADR-0001 and remain UNKNOWN until verified in a mounted repo.
+CONFIRMED doctrine: every atmosphere layer renders through this fixed set of contracts — all twelve are confirmed Master MapLibre objects with the field roles shown. PROPOSED implementation: all schema-home paths below resolve under `schemas/contracts/v1/...` per ADR-0001 and remain UNKNOWN until verified in a mounted repo.
 
 | Contract | Role in atmosphere map UI | Required atmosphere bindings | PROPOSED schema home |
 |---|---|---|---|
 | `SourceDescriptor` | Admits an air/weather/smoke source with role, rights, sensitivity, cadence, limitations. | `source_role` ∈ {authority, observation, context, model}; `cadence`; `rights_status`. | `schemas/contracts/v1/sources/source_descriptor.schema.json` |
 | `LayerManifest` | Binds a UI layer to source/evidence/policy/release. | `evidence_ref_field`; `temporal_fields`; `policy_label`; `release_state`; **atmosphere-specific** knowledge-character label (§5). | `schemas/contracts/v1/map/layer_manifest.schema.json` |
 | `StyleManifest` | Versioned style identity, sprites, glyphs, digest. | Style validation; only references released atmosphere `layer_ids`. | `schemas/contracts/v1/map/style_manifest.schema.json` |
-| `TileArtifactManifest` | Binds PMTiles/MVT/COG bytes to digest + range/CORS. | Atmosphere rasters (e.g., AOD, model fields) carry COG layout + NODATA + CRS proof. | `schemas/contracts/v1/map/tile_artifact_manifest.schema.json` |
+| `TileArtifactManifest` | Binds PMTiles/MVT/MLT/COG bytes to digest + range/CORS. | Atmosphere rasters (e.g., AOD, model fields) carry COG layout + NODATA + CRS proof. | `schemas/contracts/v1/map/tile_artifact_manifest.schema.json` |
 | `MapReleaseManifest` | Complete published map release. | Atmosphere layers grouped by knowledge-character class; `rollback_target` required. | `schemas/contracts/v1/map/map_release_manifest.schema.json` |
 | `EvidenceBundle` | Truth-bearing evidence object. | `domain: "atmosphere"`; `observation_basis`; `units`; `temporal_basis`. | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` |
 | `EvidenceDrawerPayload` | Click-resolution payload. | Atmosphere-class limitations (e.g., "low-cost sensor; EPA Barkjohn correction applied"). | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` |
-| `MapContextEnvelope` | Bounded map context for Focus Mode. | Includes `visible_layers` with knowledge-character class so Focus Mode never crosses classes silently. | `schemas/contracts/v1/ui/map_context_envelope.schema.json` |
+| `MapContextEnvelope` | Bounded map context for Focus Mode (released context only). | Includes `visible_layers` with knowledge-character class so Focus Mode never crosses classes silently. | `schemas/contracts/v1/ui/map_context_envelope.schema.json` |
 | `FocusModeRequest` / `Response` | Governed AI question/answer over atmosphere context. | Finite outcome required; atmosphere-specific abstain reasons enumerated. | `schemas/contracts/v1/ai/focus_mode_*.schema.json` |
 | `AIReceipt` | Audit trail for model execution. | Records evidence used + atmosphere policy decisions. | `schemas/contracts/v1/ai/ai_receipt.schema.json` |
 | `CitationValidationReport` | Cite-or-abstain enforcement. | Atmosphere AI answers fail closed when citation refs don't resolve. | `schemas/contracts/v1/evidence/citation_validation_report.schema.json` |
@@ -124,7 +143,7 @@ CONFIRMED doctrine: every atmosphere layer renders through this fixed set of con
 | `PromotionDecision` | Governed transition to PUBLISHED. | Includes atmosphere-specific gates (units, AQI vs. concentration, model vs. observed). | `schemas/contracts/v1/policy/promotion_decision.schema.json` |
 
 > [!NOTE]
-> Contract field lists above reflect the Master MapLibre object-map (CONFIRMED doctrine from [MAP-MASTER]). Atmosphere-specific bindings are PROPOSED additions; all field-level additions require schema and ADR confirmation in the mounted repo.
+> Contract field lists above reflect the Master MapLibre object-map (**CONFIRMED doctrine** from [MAP-MASTER]: `LayerManifest` carries layer_id, title, source refs, source-layer, geometry class, evidence dependency, policy class, stale rules; `MapContextEnvelope` carries camera, bounds, time, visible layers, clicked feature, **released context only**; `MapReleaseManifest` carries the rollback target and no-file-move promotion). Atmosphere-specific bindings are **PROPOSED** additions; all field-level additions require schema and ADR confirmation in the mounted repo. The atmosphere `Runtime Response Envelope`/`FocusModeResponse` pairing matches the per-domain J-table pattern (`AtmosphereAirDecisionEnvelope`, route UNKNOWN) used across the Atlas.
 
 [↑ Back to top](#contents)
 
@@ -133,6 +152,9 @@ CONFIRMED doctrine: every atmosphere layer renders through this fixed set of con
 ## 4. Atmosphere/Air layer families and knowledge-character labels
 
 CONFIRMED doctrine: atmosphere layers split into **non-interchangeable knowledge-character classes**. PROPOSED implementation: each class becomes a `LayerManifest.knowledge_character` value (or equivalent enum); public surfaces must display the label and never collapse classes. [DOM-AIR][ENCY]
+
+> [!NOTE]
+> **Canonical vocabulary lives in the companion.** The class labels below are the *map-UI rendering* of the twelve knowledge characters defined in [`KNOWLEDGE_CHARACTERS.md` §4](./KNOWLEDGE_CHARACTERS.md). The UI label strings here are a presentation layer over that vocabulary; the canonical enum is OPEN (Atlas KFM-P1-IDEA-0051) and must be reconciled with the registry rather than independently invented.
 
 ```mermaid
 flowchart LR
@@ -164,6 +186,9 @@ flowchart LR
 | `derived_fusion` | Multi-source synthesis (e.g., PM2.5 fusion outputs). | "Derived fusion — uncertainty inherited" | derived | public-with-caveat |
 | `advisory_context` | Advisory layer with redirect to official issuer. | "Advisory context — not a KFM-issued advisory" | context | public |
 
+> [!NOTE]
+> The map-UI uses **nine** rendering classes; the canonical vocabulary in [`KNOWLEDGE_CHARACTERS.md`](./KNOWLEDGE_CHARACTERS.md) names **eleven** characters (plus the umbrella). The mapping is many-to-one in places (e.g., `METEOROLOGICAL_CONTEXT` and `NETWORK_AND_SITE_CONTEXT` fold into `observed_sensor`/`climate_context` rendering). This collapse is a *presentation* choice and is `INFERRED` — confirm it does not erase a denial-bearing distinction. See §14 OQ-11.
+
 > [!CAUTION]
 > The label is **load-bearing UI state**, not decoration. A `model_field` layer that loses its class label and appears as a generic point measurement is a knowledge-character violation regardless of geometry correctness. CI must include a regression that asserts each atmosphere layer in a `MapReleaseManifest` carries a populated knowledge-character label. [PROPOSED]
 
@@ -173,7 +198,7 @@ flowchart LR
 
 ## 5. LayerManifest atmosphere-specific expectations
 
-PROPOSED additions to `LayerManifest` for atmosphere layers, layered on the CONFIRMED Master MapLibre field set (`layer_id`, `title`, `geometry_type`, `source_id`, `source_layer`, `evidence_ref_field`, `temporal_fields`, `policy_label`, `release_state`):
+PROPOSED additions to `LayerManifest` for atmosphere layers, layered on the CONFIRMED Master MapLibre field set (`layer_id`, `title`, `geometry_type`, `source_id`, `source_layer`, `evidence_ref_field`, `temporal_fields`, `policy_label`, `release_state`, stale rules):
 
 | Field (PROPOSED) | Purpose | Example | Validator behavior |
 |---|---|---|---|
@@ -190,7 +215,7 @@ PROPOSED additions to `LayerManifest` for atmosphere layers, layered on the CONF
 | `advisory_redirect` | Required for `advisory_context`. | `{"issuer": "...", "url": "..."}` | FAIL CLOSED on `advisory_context` without redirect. |
 
 > [!TIP]
-> `temporal_fields` (CONFIRMED Master MapLibre field) on atmosphere layers must enumerate distinct **source time**, **observed time**, **valid time**, **retrieval time**, **release time**, and **correction time** where material. CONFIRMED doctrine: these times stay distinct on every atmosphere object. [DOM-AIR §F][ENCY]
+> `temporal_fields` (CONFIRMED Master MapLibre field) on atmosphere layers must enumerate distinct **source time**, **observed time**, **valid time**, **retrieval time**, **release time**, and **correction time** where material. CONFIRMED doctrine: these times stay distinct on every atmosphere object — see [`IDENTITY_MODEL.md` §6](./IDENTITY_MODEL.md#6-temporal-discipline). [DOM-AIR §E][ENCY]
 
 <details>
 <summary><strong>Illustrative LayerManifest excerpt (PROPOSED; illustrative only)</strong></summary>
@@ -223,6 +248,8 @@ PROPOSED additions to `LayerManifest` for atmosphere layers, layered on the CONF
 ```
 
 This snippet is **illustrative only**. Field names and enum values are PROPOSED and must be confirmed against the actual `schemas/contracts/v1/map/layer_manifest.schema.json` in the mounted repo.
+
+> Note: the example pairs `knowledge_character: "public_aqi_report"` with `parameter: "PM2.5"` and `unit: "µg/m³"`. A reviewer should confirm whether an AirNow PM2.5 hourly *report* is being rendered as a concentration (`observed_sensor`) or as a public index (`public_aqi_report`) — these are different knowledge characters with different denials (§11). The example deliberately surfaces that ambiguity; it is not a settled binding.
 </details>
 
 [↑ Back to top](#contents)
@@ -231,7 +258,7 @@ This snippet is **illustrative only**. Field names and enum values are PROPOSED 
 
 ## 6. Trust-visible state, badges, and freshness
 
-CONFIRMED doctrine (Master MapLibre): the MapLibre shell **must** show released layer state, stale/degraded badges, evidence resolution, denial/abstain reasons, and correction/rollback visibility — without exposing raw or restricted data. Atmosphere/Air refines this with class-aware badges.
+CONFIRMED doctrine (Master MapLibre): the MapLibre shell **must** show released layer state, stale/degraded badges, evidence resolution, denial/abstain reasons, and correction/rollback visibility — **without exposing raw watcher state, unreleased tile URLs, direct model output, or canonical/internal stores**. Atmosphere/Air refines this with class-aware badges.
 
 ### 6.1 Required trust-visible states per atmosphere class
 
@@ -252,7 +279,7 @@ CONFIRMED doctrine (Master MapLibre): the MapLibre shell **must** show released 
 >
 > - **Badge as proof substitute.** A badge that decorates a tile without resolving to a receipt or `EvidenceBundle`. [MAP-MASTER]
 > - **Popup as Evidence Drawer substitute.** Popups may summarize; only the Evidence Drawer resolves evidence and trust state. [MAP-MASTER]
-> - **Sensitive geometry hidden only by style.** Style toggling never substitutes for upstream redaction/generalization with a recorded receipt. [MAP-MASTER]
+> - **Sensitive geometry hidden only by style.** Style toggling never substitutes for upstream redaction/generalization with a recorded receipt. *(CONFIRMED — Master MapLibre: "Sensitive geometry must be transformed before rendering, not hidden only by style.")*
 > - **Visual sameness across knowledge-character classes.** `observed_sensor` and `model_field` must not render identically; the user must see they're different epistemic kinds. [DOM-AIR]
 > - **Source-role mismatch in display.** A `model_field` layer must never be labeled or described as an observation. [DOM-AIR][ENCY]
 
@@ -303,7 +330,7 @@ sequenceDiagram
 
 ### 7.1 EvidenceDrawerPayload — atmosphere-specific surfaces
 
-CONFIRMED Master MapLibre fields (`feature_id`, `layer_id`, `evidence_bundle_refs`, source summary, citations, policy state, release state, limitations). Atmosphere PROPOSED additions:
+CONFIRMED Master MapLibre fields (`clicked feature`, `feature_id`, `evidence refs`, citations, source state, policy messages, correction links, plus run/prov IDs). Atmosphere PROPOSED additions:
 
 - **Knowledge-character chip.** Class label from §4, rendered prominently.
 - **Parameter + unit chip.** e.g., `PM2.5 · µg/m³` — never elided into a unitless number.
@@ -327,7 +354,7 @@ CONFIRMED doctrine (UIAI-MAP, GAI): Focus Mode is bounded — it answers, abstai
 The envelope passed to Focus Mode must:
 
 1. **Enumerate visible atmosphere layers with their knowledge-character class.** Focus Mode reasoning that crosses classes without explicit evidence is treated as ABSTAIN. [DOM-AIR §L][GAI]
-2. **Carry only EvidenceRefs** — never raw features or restricted geometry. [MAP-MASTER]
+2. **Carry only EvidenceRefs** — never raw features or restricted geometry. *(CONFIRMED — Master MapLibre: `MapContextEnvelope` carries "released context only".)*
 3. **Include the time window** that the user has actually scoped (timeline state), not the model's preferred window.
 4. **Include selected_features** as IDs only; evidence resolves through the governed API.
 5. **Include freshness state** from §6 so the model can refuse to claim "current PM2.5" over stale evidence.
@@ -358,7 +385,7 @@ CONFIRMED doctrine / PROPOSED enumeration of reason codes for atmosphere:
 
 ## 9. Finite outcomes on public map surfaces
 
-CONFIRMED doctrine: every governed surface returns a finite outcome from a small, well-known set. PROPOSED atmosphere binding:
+CONFIRMED doctrine: every governed surface returns a finite outcome from a small, well-known set. PROPOSED atmosphere binding (mirrors the Atlas §J per-domain table for Atmosphere/Air, where the feature/detail resolver returns an `AtmosphereAirDecisionEnvelope` and the route is UNKNOWN):
 
 | Surface | Outcomes | Forbidden behavior |
 |---|---|---|
@@ -413,7 +440,7 @@ Promotion to `PUBLISHED` requires all of:
 ### 10.2 Rollback and correction
 
 - **Rollback**: `RollbackCard` repoints current released state to a prior `ReleaseManifest`; history is preserved, not destroyed.
-- **Correction**: a published claim is corrected via `CorrectionNotice` and a new `ReleaseManifest`, with the correction lineage carried forward. The Evidence Drawer surfaces `correction_state` so users see when a layer was corrected.
+- **Correction**: a published claim is corrected via `CorrectionNotice` and a new `ReleaseManifest`, with the correction lineage carried forward. The Evidence Drawer surfaces `correction_state` so users see when a layer was corrected. *(A re-characterization — changing a layer's knowledge character — is a new identity, not an edit; see [`IDENTITY_MODEL.md` §8](./IDENTITY_MODEL.md#8-identity-through-the-lifecycle).)*
 
 [↑ Back to top](#contents)
 
@@ -421,19 +448,19 @@ Promotion to `PUBLISHED` requires all of:
 
 ## 11. Anti-collapse rules — knowledge-character denials
 
-CONFIRMED doctrine (DOM-AIR, Encyclopedia §7.9): these denials are the **core trust posture** of the Atmosphere/Air lane in any UI. They must be enforced before render, before drawer display, and before any Focus Mode answer.
+CONFIRMED doctrine (DOM-AIR §I, Encyclopedia §7.9): these denials are the **core trust posture** of the Atmosphere/Air lane in any UI. They must be enforced before render, before drawer display, and before any Focus Mode answer. The first four are the explicit Atlas §11.I denials; the last two are `INFERRED` extensions of the same rule.
 
-| Denial rule | Rationale | Required outcome |
-|---|---|---|
-| **AQI is not concentration.** | AQI is a public index, not µg/m³ or ppb. Treating them as the same number is a category error. | DENY (`atmosphere.unit_collapse`) any UI/API path that returns AQI as concentration or vice versa. |
-| **AOD is not PM2.5.** | Aerosol optical depth is a column-integrated optical property; PM2.5 is a surface concentration. | DENY (`atmosphere.unit_collapse`) any UI/API path that elides AOD into PM2.5. |
-| **Model fields are not observations.** | Forecast/analysis fields are model output regardless of how realistic they appear. | DENY (`atmosphere.model_as_observed`) any UI/API path that labels a `model_field` layer as observation. |
-| **Low-cost sensor public release requires correction, caveats, confidence, limitations.** | PurpleAir-class outputs without EPA-style correction are not equivalent to regulatory monitors. | ABSTAIN or DENY in absence of `correction_method` + limitations on the layer. |
-| **Smoke masks ≠ smoke exposure.** | A satellite smoke mask shows column-detected smoke; surface exposure requires HRRR-Smoke-class fields and ground evidence. | ABSTAIN when a UI/API path would conflate them. |
-| **KFM is never an alert authority.** | KFM carries advisories as context only; users are redirected to official issuers. | DENY (`atmosphere.alert_authority_substitution`) for any path that would issue or paraphrase an advisory. |
+| Denial rule | Rationale | Required outcome | Status |
+|---|---|---|---|
+| **AQI is not concentration.** | AQI is a public index, not µg/m³ or ppb. Treating them as the same number is a category error. | DENY (`atmosphere.unit_collapse`) any UI/API path that returns AQI as concentration or vice versa. | CONFIRMED [DOM-AIR §I] |
+| **AOD is not PM2.5.** | Aerosol optical depth is a column-integrated optical property; PM2.5 is a surface concentration. | DENY (`atmosphere.unit_collapse`) any UI/API path that elides AOD into PM2.5. | CONFIRMED [DOM-AIR §I] |
+| **Model fields are not observations.** | Forecast/analysis fields are model output regardless of how realistic they appear. | DENY (`atmosphere.model_as_observed`) any UI/API path that labels a `model_field` layer as observation. | CONFIRMED [DOM-AIR §I] |
+| **Low-cost sensor public release requires correction, caveats, confidence, limitations.** | PurpleAir-class outputs without EPA-style correction are not equivalent to regulatory monitors. | ABSTAIN or DENY in absence of `correction_method` + limitations on the layer. | CONFIRMED [DOM-AIR §I] |
+| **Smoke masks ≠ smoke exposure.** | A satellite smoke mask shows column-detected smoke; surface exposure requires HRRR-Smoke-class fields and ground evidence. | ABSTAIN when a UI/API path would conflate them. | INFERRED [DOM-AIR] |
+| **KFM is never an alert authority.** | KFM carries advisories as context only; users are redirected to official issuers. | DENY (`atmosphere.alert_authority_substitution`) for any path that would issue or paraphrase an advisory. | CONFIRMED [DOM-AIR §B][DOM-HAZ] |
 
 > [!IMPORTANT]
-> These rules apply uniformly across the map shell, click flow, Evidence Drawer, Focus Mode, exports, screenshots, and downstream APIs. A denial that fires only on one surface is a leak.
+> These rules apply uniformly across the map shell, click flow, Evidence Drawer, Focus Mode, exports, screenshots, and downstream APIs. A denial that fires only on one surface is a leak. *(This is the same enforcement-everywhere posture stated in [`KNOWLEDGE_CHARACTERS.md` §6](./KNOWLEDGE_CHARACTERS.md#6-the-anti-collapse-rule).)*
 
 [↑ Back to top](#contents)
 
@@ -445,7 +472,7 @@ CONFIRMED / PROPOSED: atmosphere joins with adjacent lanes must preserve ownersh
 
 | Counterpart lane | Atmosphere relation | UI/contract constraint |
 |---|---|---|
-| **Hazards** | Smoke, heat/cold, advisory, visibility, fire/emissions context. | Atmosphere never asserts hazard alerts; hazards never replace atmosphere observations. Map shell renders each in its lane with its own `LayerManifest`. |
+| **Hazards** | Smoke, heat/cold, advisory, visibility, fire/emissions context. | Atmosphere never asserts hazard alerts; hazards never replace atmosphere observations. Map shell renders each in its lane with its own `LayerManifest`. **`SmokeContext` is a shared object family** (owned by both lanes — Atlas §11.B, §12.B); render the Atmosphere projection here, Hazards owns hazard-event truth. |
 | **Hydrology** | Precipitation, drought signals, flood-weather forcing. | Joined views must cite both lanes' EvidenceBundles; no silent unit harmonization. |
 | **Agriculture** | Heat, smoke, precipitation, vegetation stress. | Joins emit a derived layer with its own knowledge-character class (`derived_fusion`) and combined limitations. |
 | **Biodiversity** (Fauna / Flora / Habitat) | Phenology, smoke, fire, drought stress. | **No exposure of sensitive species locations** via atmosphere overlay tricks. Generalize or deny per biodiversity sensitivity profile before render. |
@@ -456,17 +483,20 @@ CONFIRMED / PROPOSED: atmosphere joins with adjacent lanes must preserve ownersh
 
 ## 13. Validators, tests, fixtures
 
-PROPOSED test catalog for atmosphere map/UI contracts. CONFIRMED doctrine: every public-surface invariant must be enforced by a fixture or fail-closed gate; cite-or-abstain and no-network-on-publish are non-negotiable. [DOM-AIR §K][ENCY][MAP-MASTER]
+PROPOSED test catalog for atmosphere map/UI contracts. CONFIRMED doctrine: every public-surface invariant must be enforced by a fixture or fail-closed gate; cite-or-abstain and no-network-on-publish are non-negotiable. The Master MapLibre validation list (schema validation, no public RAW/WORK/QUARANTINE path, no unreleased tile load, proof/signature checks, source-layer validity, Range/CORS/CDN probes, visual regression, keyboard accessibility, Focus Mode cite/abstain/deny, rollback restore, cache-invalidation record) applies in full. [DOM-AIR §K][ENCY][MAP-MASTER]
+
+> [!IMPORTANT]
+> Per Directory Rules §13.5, validator *logic* lives in `tools/validators/<topic>/...` and is **called** by the tests below — never authored inside the test files. Cross-lane checks (e.g., a shared smoke validator) use a non-domain segment, `tools/validators/smoke/`.
 
 ### 13.1 Schema / contract tests
 
 - [ ] `LayerManifest` schema validation, including atmosphere PROPOSED additions (§5).
 - [ ] `StyleManifest` digest stability; only references released atmosphere `layer_ids`.
 - [ ] `TileArtifactManifest` digest / range / CORS validation; COG layout/NODATA for raster atmosphere layers.
-- [ ] `MapReleaseManifest` rollback-target presence; supersedes-chain coherence.
+- [ ] `MapReleaseManifest` rollback-target presence; supersedes-chain coherence; no-file-move promotion.
 - [ ] `EvidenceBundle` closure: `evidence_refs` resolve, `spec_hash` deterministic, atmosphere extensions present.
 - [ ] `EvidenceDrawerPayload` includes knowledge-character chip + parameter/unit chip + source-role chip.
-- [ ] `MapContextEnvelope` carries `visible_layers` with knowledge-character class.
+- [ ] `MapContextEnvelope` carries `visible_layers` with knowledge-character class; released context only.
 
 ### 13.2 Negative / anti-pattern fixtures
 
@@ -486,6 +516,7 @@ PROPOSED test catalog for atmosphere map/UI contracts. CONFIRMED doctrine: every
 | `cross_lane_sensitive_location_leak.json` | DENY |
 | `popup_as_evidence_drawer.json` | FAIL CLOSED on UI snapshot test |
 | `badge_without_receipt.json` | FAIL CLOSED on badge-binding test |
+| `sensitive_geometry_style_hidden_only.json` | FAIL CLOSED (must be transformed, not style-hidden) |
 
 ### 13.3 Accessibility, UX, and visual regression
 
@@ -503,37 +534,85 @@ CONFIRMED Master MapLibre expectation: trust-visible states require keyboard, co
 
 | # | Item | Status | What would resolve it |
 |---|---|---|---|
-| 1 | Atlas crosswalk uses `schemas/contracts/v1/air/`; Directory Rules §12 uses `atmosphere/` as lane. Two names for the same lane. | NEEDS VERIFICATION / ADR | ADR pinning the canonical lane name (`atmosphere` recommended, matching Directory Rules §12) and the schema-home segment. Atlas crosswalk to follow. |
+| 1 | Atlas crosswalk uses `schemas/contracts/v1/air/`; Directory Rules §12 uses `atmosphere/` as the lane and `schemas/contracts/v1/domains/atmosphere/` as the schema home. | **RESOLVED in favor of `atmosphere/` + `…/domains/atmosphere/`** *(Directory Rules §2.1 authority order: Directory Rules > Atlas crosswalk; §12 lists `schemas/contracts/v1/domains/<domain>/` verbatim)* — pending ADR-S-01 ratification + a single drift entry. | ADR-S-01 acceptance + `docs/registers/DRIFT_REGISTER.md` entry. |
 | 2 | Exact schema file homes under `schemas/contracts/v1/...` for atmosphere additions to `LayerManifest`. | PROPOSED | Inspect mounted repo `schemas/contracts/v1/map/` and `schemas/contracts/v1/ui/`. |
 | 3 | Whether `knowledge_character` belongs on `LayerManifest` directly or on a sidecar `AtmosphereLayerProfile`. | PROPOSED | ADR after schema-team review. |
 | 4 | Exact route names for atmosphere feature/detail/layer manifest/Focus Mode resolvers. | UNKNOWN | Inspect mounted `apps/governed-api/` routes. |
 | 5 | Source rights / terms / quotas for OpenAQ, AirNow, EPA AQS, NOAA, Mesonet, PurpleAir, CAMS, HRRR-Smoke, HMS, GOES/ABI, VIIRS. | NEEDS VERIFICATION | Source-onboarding receipts and the source registry under `data/registry/sources/atmosphere/`. |
 | 6 | Whether `low_cost_sensor` correction is gated to EPA Barkjohn-class methods only. | PROPOSED | Policy gate decision + ADR. |
-| 7 | Whether smoke advisories ever render as a dedicated atmosphere advisory layer or always defer to Hazards. | NEEDS VERIFICATION | Cross-lane ADR with Hazards. |
-| 8 | Whether `AutomationBadgePayload` is in scope here or only on the Master MapLibre badge contracts. | PROPOSED | Confirm shared `packages/maplibre/` placement and reference from this doc rather than redefining. |
+| 7 | Whether smoke advisories ever render as a dedicated atmosphere advisory layer or always defer to Hazards (shared `SmokeContext`). | NEEDS VERIFICATION | Cross-lane ADR with Hazards (Atlas ADR-S-14). |
+| 8 | Whether badge/automation payloads are in scope here or only on the Master MapLibre badge contracts. | PROPOSED | Confirm shared `packages/maplibre/` placement and reference from this doc rather than redefining. |
 | 9 | Whether atmosphere `EvidenceBundle` extensions (`observation_basis`, `units`, `temporal_basis`) are typed in the bundle schema or in a domain sidecar. | PROPOSED | Schema-team ADR. |
 | 10 | MLT (next-gen tile) pilot applicability to atmosphere rasters (AOD, model fields). | UNKNOWN | Map-shell pilot results; not a blocker for v0.1. |
+| 11 | The §4 nine-class **UI rendering** set vs. the eleven canonical knowledge characters in `KNOWLEDGE_CHARACTERS.md` — does the many-to-one collapse erase any denial-bearing distinction? | NEEDS VERIFICATION | Reconcile §4 with the canonical registry; confirm no `METEOROLOGICAL_CONTEXT` / `NETWORK_AND_SITE_CONTEXT` distinction is lost. |
+| 12 | Source-role enum casing/values (`authority/observation/context/model` vs. the seven-value `observed/regulatory/modeled/aggregate/administrative/candidate/synthetic` set used in `IDENTITY_MODEL.md`). | OPEN | Atlas ADR-S-04 — the two docs use different role vocabularies and must be reconciled. |
 
 [↑ Back to top](#contents)
 
 ---
 
-## 15. Related docs
+## 15. Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Confirmed all twelve map/UI contracts against Master MapLibre object-map | gap closure | [MAP-MASTER] confirms `LayerManifest`/`StyleManifest`/`TileArtifactManifest`/`MapReleaseManifest`/`EvidenceDrawerPayload`/`MapContextEnvelope`/Focus Mode field roles verbatim. |
+| **Resolved** the `air/` vs `atmosphere/` schema-home conflict in §14 OQ-01 | reconciliation | Directory Rules §12 lists `schemas/contracts/v1/domains/<domain>/`; §2.1 authority order puts Directory Rules above the Atlas crosswalk. Consistent with the sibling FILE_SYSTEM_PLAN / IDENTITY_MODEL revisions. |
+| Surfaced source-role vocabulary mismatch between this doc (4-value) and `IDENTITY_MODEL.md` (7-value) as OQ-12 | reconciliation | The two docs use different role enums; ADR-S-04 must unify them. |
+| Surfaced the §4 nine-UI-class vs. eleven-character collapse as OQ-11 | clarification | Avoid silently erasing a denial-bearing distinction. |
+| Flagged `SmokeContext` as shared with Hazards (§12, OQ-07) | clarification | Atlas §11.B and §12.B both own it. |
+| Labeled the two non-Atlas-explicit denials (`smoke mask ≠ exposure`) as INFERRED in §11 | clarification | Only the four §11.I denials are CONFIRMED verbatim. |
+| Added a reviewer note to the §5 example flagging the `public_aqi_report` + PM2.5 µg/m³ pairing | clarification | The example itself risks an AQI/concentration ambiguity; surfaced rather than presented as settled. |
+| Added companion sections (Changelog, Definition of done); pinned `CONTRACT_VERSION = "3.0.0"`; added the operating contract as authority row 0 | gap closure / housekeeping | Doctrine-adjacent doc completeness. |
+| Added reciprocal companion-doc links (KNOWLEDGE_CHARACTERS, IDENTITY_MODEL, FILE_SYSTEM_PLAN, EXPANSION_*) | housekeeping | Cross-document navigability. |
+| Added `sensitive_geometry_style_hidden_only` negative fixture | gap closure | Master MapLibre names "hidden only by style" as a violation; it lacked a fixture. |
+| Updated `updated:` and badge to 2026-05-29 | housekeeping | Review date. |
+
+> **Backward compatibility.** Section anchors §1–§14 preserved; §15–§17 append after them (the prior trailing "Related docs" block is consolidated into §17). OQ rows 1–10 keep their numbers; 11–12 are new.
+
+[↑ Back to top](#contents)
+
+---
+
+## 16. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (`docs/domains/atmosphere/MAP_UI_CONTRACTS.md`, `PROPOSED` per §12);
+- the lane-name / schema-home resolution (OQ-01) is ratified by ADR-S-01 and recorded in `docs/registers/DRIFT_REGISTER.md`;
+- the source-role vocabulary (OQ-12) is unified with `IDENTITY_MODEL.md` via ADR-S-04, and the §4 UI-class collapse (OQ-11) is reconciled with `KNOWLEDGE_CHARACTERS.md`;
+- the atmosphere `LayerManifest` additions (§5) are confirmed against the mounted `schemas/contracts/v1/map/layer_manifest.schema.json` (or a sidecar, OQ-03);
+- an atmosphere-air steward and a map-UI contract steward review it; `CODEOWNERS` confirmed;
+- it is linked from `docs/domains/atmosphere/README.md` and cross-links the four sibling lane docs;
+- the §13 validators exist in `tools/validators/` and are exercised by `tests/domains/atmosphere/`;
+- the `GENERATED_RECEIPT.json` planned for this artifact is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[↑ Back to top](#contents)
+
+---
+
+## 17. Related docs
 
 > [!NOTE]
-> All paths below are **PROPOSED** until confirmed in the mounted repo. They follow Directory Rules placement.
+> All paths below are **PROPOSED** until confirmed in the mounted repo unless marked CONFIRMED. They follow Directory Rules placement.
 
-- `docs/domains/atmosphere/README.md` — atmosphere lane landing page (PROPOSED; verify).
-- `docs/domains/atmosphere/SOURCES.md` — atmosphere source families and roles (PROPOSED).
-- `docs/domains/atmosphere/POLICY.md` — atmosphere sensitivity, rights, publication posture (PROPOSED).
-- `docs/architecture/map-shell.md` — map shell operating architecture (PROPOSED; verify).
-- `docs/architecture/governed-api.md` — trust-membrane and finite-outcome contract (PROPOSED; verify).
-- `docs/adr/ADR-0001-schema-home.md` — schemas/contracts/v1 as canonical schema home (CONFIRMED doctrine; verify file).
-- `docs/standards/PROV.md` — provenance profile (CONFIRMED file from project state).
-- `docs/runbooks/atmosphere/SOURCE_REFRESH_RUNBOOK.md` — atmosphere refresh runbook (PROPOSED; not yet authored).
-- `schemas/contracts/v1/map/layer_manifest.schema.json` — `LayerManifest` schema (PROPOSED home per ADR-0001).
-- `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` — `EvidenceDrawerPayload` schema (PROPOSED home).
-- `schemas/contracts/v1/ai/focus_mode_request.schema.json` / `focus_mode_response.schema.json` — Focus Mode contracts (PROPOSED home).
+- `docs/domains/atmosphere/README.md` — atmosphere lane landing page *(PROPOSED; verify)*.
+- [`docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md`](./KNOWLEDGE_CHARACTERS.md) — knowledge-character vocabulary this doc renders *(companion)*.
+- [`docs/domains/atmosphere/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) — identity model; temporal + source-role discipline *(companion)*.
+- [`docs/domains/atmosphere/FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) — lane placement *(companion)*.
+- [`docs/domains/atmosphere/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — candidate register *(companion)*.
+- [`docs/domains/atmosphere/EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) — sequenced roadmap *(companion)*.
+- `docs/domains/atmosphere/SOURCES.md` — atmosphere source families and roles *(PROPOSED)*.
+- `docs/domains/atmosphere/POLICY.md` — atmosphere sensitivity, rights, publication posture *(PROPOSED)*.
+- `docs/architecture/map-shell.md` — map shell operating architecture *(PROPOSED; verify)*.
+- `docs/architecture/governed-api.md` — trust-membrane and finite-outcome contract *(PROPOSED; verify)*.
+- `docs/adr/ADR-0001-schema-home.md` — `schemas/contracts/v1` as canonical schema home *(CONFIRMED doctrine; verify file)*.
+- `ai-build-operating-contract.md` — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*.
+- `docs/standards/PROV.md` — provenance profile *(CONFIRMED file from project state; name vs. `PROVENANCE.md` is an open item)*.
+- `docs/runbooks/atmosphere/SOURCE_REFRESH_RUNBOOK.md` — atmosphere refresh runbook *(PROPOSED; not yet authored)*.
+- `schemas/contracts/v1/map/layer_manifest.schema.json` — `LayerManifest` schema *(PROPOSED home per ADR-0001)*.
+- `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` — `EvidenceDrawerPayload` schema *(PROPOSED home)*.
+- `schemas/contracts/v1/ai/focus_mode_request.schema.json` / `focus_mode_response.schema.json` — Focus Mode contracts *(PROPOSED home)*.
 
 ---
 
@@ -541,7 +620,7 @@ CONFIRMED Master MapLibre expectation: trust-visible states require keyboard, co
 
 - **[DIRRULES]** — Directory Rules.
 - **[ENCY]** — KFM Domain and Capability Encyclopedia.
-- **[DOM-AIR]** — Atmosphere/Air dossier (`KFM_Atmosphere_Air_PDF_Only_Architecture_Report_2026-04-21.pdf`).
+- **[DOM-AIR]** — Atmosphere/Air dossier (`KFM_Atmosphere_Air_PDF_Only_Architecture_Report_2026-04-21.pdf` — *not in this session's project knowledge; NEEDS VERIFICATION for dossier-specific detail*).
 - **[DOM-HAZ]** — Hazards dossier.
 - **[MAP-MASTER]** — Master MapLibre Components-Functions-Features.
 - **[UIAI-MAP]** — KFM MapLibre Operating Architecture (Governed UI/AI Interaction Manual).
@@ -549,4 +628,4 @@ CONFIRMED Master MapLibre expectation: trust-visible states require keyboard, co
 
 ---
 
-**Related docs:** see [§15](#15-related-docs) · **Last updated:** 2026-05-16 · **Version:** v0.1 (draft) · [↑ Back to top](#contents)
+**Related docs:** see [§17](#17-related-docs) · **Last updated:** 2026-05-29 · **Version:** v0.1 (draft) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · [↑ Back to top](#contents)
