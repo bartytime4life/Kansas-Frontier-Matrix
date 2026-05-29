@@ -6,7 +6,7 @@ version: v1-draft
 status: draft
 owners: <atmosphere-stewards> (TBD)
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-05-29
 policy_label: public
 related:
   - docs/domains/atmosphere/README.md
@@ -14,10 +14,13 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/adr/
+  - ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, backlog, expansion, governance]
 notes:
-  - Path PROPOSED per Directory Rules §12 (Domain Placement Law).
-  - Item statuses align with [DOM-AIR] and [ENCY] §7.9 doctrine; implementation maturity remains PROPOSED until a mounted-repo scan confirms.
+  # Path PROPOSED per Directory Rules §12 (Domain Placement Law) and §4 (placement quick check).
+  # Item statuses align with [DOM-AIR] and [ENCY] §7.9 doctrine; implementation maturity remains PROPOSED until a mounted-repo scan confirms.
+  # Doctrine-adjacent doc: pinned CONTRACT_VERSION = "3.0.0".
+  # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌬️ Atmosphere / Air — Expansion Backlog
@@ -30,18 +33,20 @@ notes:
 ![Pipeline](https://img.shields.io/badge/pipeline-RAW%20%E2%86%92%20PUBLISHED-555?style=flat-square)
 ![Promotion](https://img.shields.io/badge/promotion-default--deny-critical?style=flat-square)
 ![Truth Posture](https://img.shields.io/badge/posture-cite--or--abstain-purple?style=flat-square)
-![Last Reviewed](https://img.shields.io/badge/last_reviewed-2026--05--15-lightgrey?style=flat-square)
+![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational?style=flat-square)
+![Last Reviewed](https://img.shields.io/badge/last_reviewed-2026--05--29-lightgrey?style=flat-square)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` — initial assembly from doctrine; not yet steward-reviewed |
 | **Owners** | `<atmosphere-stewards>` *(PROPOSED — assign in `CODEOWNERS`)* |
-| **Last updated** | `2026-05-15` |
+| **Last updated** | `2026-05-29` |
+| **Operating contract** | `CONTRACT_VERSION = "3.0.0"` *(per `ai-build-operating-contract.md`)* |
 | **Implementation maturity** | `UNKNOWN` — repo not mounted in this session; no claim about live files, tests, routes, or releases |
-| **Doctrinal anchors** | `[DOM-AIR]`, `[ENCY]` §7.9 + §11, `[UNIFIED]` §6.10, `[DIRRULES]` §12 |
+| **Doctrinal anchors** | `[DOM-AIR]`, `[ENCY]` §7.9 + §11, `[UNIFIED]` §6.10, `[DIRRULES]` §12, `[ENCY]` Atlas §24.12 |
 
 > [!IMPORTANT]
-> **This file is a backlog, not a roadmap commitment.** Every item is labeled `PROPOSED`, `INFERRED`, `NEEDS VERIFICATION`, or `DENY` and must clear the standard KFM gates — SourceDescriptor, EvidenceBundle, ValidationReport, policy decision, ReleaseManifest, correction path, rollback target — before any element transitions from backlog to `data/published/layers/atmosphere/`.
+> **This file is a backlog, not a roadmap commitment.** Every item is labeled `PROPOSED`, `INFERRED`, `NEEDS VERIFICATION`, or `DENY` and must clear the standard KFM gates — `SourceDescriptor`, `EvidenceBundle`, `ValidationReport`, policy decision, `ReleaseManifest`, correction path, rollback target — before any element transitions from backlog to `data/published/layers/atmosphere/`.
 
 ---
 
@@ -65,8 +70,11 @@ notes:
 16. [Open ADR candidates](#16-open-adr-candidates)
 17. [Triage and intake protocol](#17-triage-and-intake-protocol)
 18. [Out of scope](#18-out-of-scope)
-19. [Related docs](#19-related-docs)
-20. [Appendix](#20-appendix)
+19. [Open questions register](#19-open-questions-register)
+20. [Changelog](#20-changelog)
+21. [Definition of done](#21-definition-of-done)
+22. [Related docs](#22-related-docs)
+23. [Appendix](#23-appendix)
 
 ---
 
@@ -79,6 +87,9 @@ notes:
 > *Owns:* `AirStation`, `AirObservation`, `PM2.5 Observation`, `Ozone Observation`, `SmokeContext`, `AODRaster`, `WeatherStation`, `WeatherObservation`, `WindField`, `PrecipitationObservation`, `TemperatureObservation`, `ClimateNormal`, `ClimateAnomaly`, `ForecastContext`, `AdvisoryContext`. `[DOM-AIR]` `[ENCY]`
 
 **Out of ownership.** Emergency / hazard event truth and life-safety context belong to **Hazards**; canonical claims for hydrology, agriculture, habitat, settlements, etc., belong to their own lanes. This backlog never proposes the Atmosphere domain take those over. `[DOM-AIR]` `[ENCY]`
+
+> [!NOTE]
+> `SmokeContext` is a **shared object family**: it is named in the owned-family list of **both** Atmosphere / Air (`[DOM-AIR]` §B) **and** Hazards (`[DOM-HAZ]` §B). The boundary discipline is unchanged — Atmosphere supplies **observed / model smoke context**; Hazards owns **hazard-event truth and life-safety context**. Any cross-lane `SmokeContext` join MUST preserve that ownership split. `CONFLICTED → resolve via cross-lane join policy ADR (see §16, aligned to Atlas ADR-S-14).`
 
 **Truth posture.** `CONFIRMED` doctrine; `PROPOSED` implementation. Live API rights, source schemas, attribution requirements, source cadence, and mounted-repo depth all remain `UNKNOWN / NEEDS VERIFICATION` per `[UNIFIED]` §6.10.
 
@@ -111,7 +122,7 @@ flowchart LR
 ```
 
 > [!TIP]
-> Status labels follow the KFM convention from `[DOM-AIR]` `[ENCY]`: `CONFIRMED`, `PROPOSED`, `INFERRED`, `UNKNOWN`, `NEEDS VERIFICATION`, `DENY`. Memory is not evidence — a sentence without one of these labels and a citation is treated as opinion, not fact.
+> Status labels follow the KFM convention from `[DOM-AIR]` `[ENCY]`: `CONFIRMED`, `PROPOSED`, `INFERRED`, `UNKNOWN`, `NEEDS VERIFICATION`, `CONFLICTED`, `DENY`. Memory is not evidence — a sentence without one of these labels and a citation is treated as opinion, not fact.
 
 | Label | Meaning in this backlog |
 |---|---|
@@ -119,6 +130,7 @@ flowchart LR
 | `PROPOSED` | Design or path consistent with doctrine; not yet verified in implementation. |
 | `INFERRED` | Reasonably derivable from doctrine but not directly stated. |
 | `NEEDS VERIFICATION` | Checkable against a mounted repo, source terms, or external spec — not yet checked. |
+| `CONFLICTED` | Sources disagree, or doctrine and a proposed convention appear inconsistent; held until an ADR or drift entry resolves it. |
 | `UNKNOWN` | Not resolvable without more evidence. |
 | `DENY` | Policy-blocked on the normal public path; never promoted by default. |
 
@@ -160,7 +172,7 @@ The Atmosphere / Air lane follows the canonical KFM lifecycle. Every backlog ite
 | A-07 | Domain `docs/domains/atmosphere/SOURCES.md` register (source families, roles, rights status, freshness) | steward | doc + cross-link to `data/registry/sources/atmosphere/` | rights drift | manual review + lint | `PROPOSED` `[DIRRULES]` §12 |
 
 > [!NOTE]
-> Track A is the **trust spine** for Atmosphere. None of Tracks B, C, or D are allowed to consume Atmosphere data publicly until Track A closes. This mirrors the doctrine-wide ordering in `[ENCY]` §12 (Programming Possibilities Backlog), where Phase 0 establishes the spine before any domain proof lane runs.
+> Track A is the **trust spine** for Atmosphere. None of Tracks B, C, or D are allowed to consume Atmosphere data publicly until Track A closes. This mirrors the doctrine-wide ordering in `[ENCY]` §21 (Programming Possibilities Backlog) and the dependency graph in §21.1, where the spine is established before any domain proof lane runs.
 
 [Back to top](#-contents)
 
@@ -200,7 +212,7 @@ Track C items extend reach but **never** become root truth. AI may summarize rel
 | C-07 | AOD reanalysis archive integration (CAMS / ECMWF family) | developer | source rights + model-field knowledge character | reanalysis presented as truth | model-as-observed denial test | `PROPOSED` rights `NEEDS VERIFICATION` `[DOM-AIR]` |
 
 > [!NOTE]
-> Track C items are **research-grade carriers**, not truth sources. Search indexes, vector retrieval, and graph projections are derivative; they may not be cited as root authority. `[GAI]` `[ENCY]` §7.9.H
+> Track C items are **research-grade carriers**, not truth sources. Search indexes, vector retrieval, and graph projections are derivative; they may not be cited as root authority. `EvidenceBundle` outranks generated language, renderer state, graph projections, and synthetic scenes. `[GAI]` `[ENCY]`
 
 [Back to top](#-contents)
 
@@ -220,7 +232,7 @@ These are recorded so the deny posture is **explicit, visible, and tested** — 
 | D-06 | Model-field grid (HRRR-Smoke, CAMS, etc.) presented as observation | Knowledge-character anti-collapse | `ATMOSPHERIC_MODEL_FIELD` label + model-run-time + ensemble caveat | `DENY` `[DOM-AIR]` |
 
 > [!WARNING]
-> Track D items are intentionally **bypass-resistant**: each must have a corresponding `policy/domains/atmosphere/` rule and a `tests/domains/atmosphere/` deny test. A backlog row alone is not enforcement.
+> Track D items are intentionally **bypass-resistant**: each must have a corresponding `policy/domains/atmosphere/` rule and a `tests/domains/atmosphere/` deny test. A backlog row alone is not enforcement. This mirrors the doctrine that named anti-patterns must be tested, not merely listed (`[ENCY]` §24.9). `[DIRRULES]` §13.5
 
 [Back to top](#-contents)
 
@@ -228,7 +240,7 @@ These are recorded so the deny posture is **explicit, visible, and tested** — 
 
 ## 8. Source admission backlog
 
-Per `[DOM-AIR]` §D, source-family roles and rights all currently sit at `NEEDS VERIFICATION`. Admission is gated by `SourceDescriptor` registration and rights review. Source role is part of the source-role anti-collapse discipline; see Pass 18 / `[INDEX-18]` for vocabulary stability.
+Per `[DOM-AIR]` §D, source-family roles and rights all currently sit at `NEEDS VERIFICATION`. The Atlas source-family table records the role string as *"authority / observation / context / model as source role requires"* — i.e., a single family may serve different roles depending on the product, and the canonical role string itself is `NEEDS VERIFICATION`. Admission is gated by `SourceDescriptor` registration and rights review; **sensitive joins fail closed**. Source-role vocabulary stability is ADR-class (Atlas ADR-S-04). `[DOM-AIR]` `[ENCY]`
 
 <details>
 <summary><strong>Source families to admit (click to expand)</strong></summary>
@@ -236,8 +248,8 @@ Per `[DOM-AIR]` §D, source-family roles and rights all currently sit at `NEEDS 
 | Source family | Proposed role(s) | Rights / sensitivity | Freshness cadence | Admission status |
 |---|---|---|---|---|
 | **EPA AQS / AirData** | `authority` / `observation` / `context` / `model` (per source role) | Rights + current terms `NEEDS VERIFICATION`; sensitive joins fail closed | source-vintage / cadence-specific | `PROPOSED` `[DOM-AIR]` |
-| **AirNow / agency reporting** | `authority` / `observation` / `context` | Rights + terms `NEEDS VERIFICATION` | near-real-time | `PROPOSED` `[DOM-AIR]` |
-| **OpenAQ-like aggregators** | `aggregator` / `observation` (if rights allow) | Rights `NEEDS VERIFICATION`; redistribution class unresolved | varies | `PROPOSED` `[DOM-AIR]` |
+| **AirNow / agency reporting** | `authority` / `observation` / `context` | Rights + terms `NEEDS VERIFICATION`; sensitive joins fail closed | near-real-time | `PROPOSED` `[DOM-AIR]` |
+| **OpenAQ-like aggregators** | `aggregator` / `observation` (if rights allow) | Rights `NEEDS VERIFICATION`; redistribution class unresolved; sensitive joins fail closed | varies | `PROPOSED` `[DOM-AIR]` |
 | **NOAA / NWS** | `authority` / `observation` / `model` / `advisory` | Public domain works typically permissive; per-product `NEEDS VERIFICATION` | hourly to sub-hourly | `PROPOSED` `[DOM-AIR]` |
 | **Kansas Mesonet** | `observation` / `network-and-site-context` | Rights `NEEDS VERIFICATION` (institutional terms) | 5-min / hourly | `PROPOSED` `[ENCY]` §7.9 |
 | **CAMS / ECMWF-family** | `model` | Rights + attribution `NEEDS VERIFICATION`; reanalysis vs. forecast must be labeled | run-cycle | `PROPOSED` `[DOM-AIR]` |
@@ -257,7 +269,7 @@ Per `[DOM-AIR]` §D, source-family roles and rights all currently sit at `NEEDS 
 
 ## 9. Object family realization backlog
 
-The Atmosphere / Air domain's owned object families per `[DOM-AIR]` §B and `[ENCY]` §7.9.C. Identity rule for each is `PROPOSED` as `source id + object role + temporal scope + normalized digest`; temporal handling preserves source / observed / valid / retrieval / release / correction times where material. `[DOM-AIR]` §E
+The Atmosphere / Air domain's owned object families per `[DOM-AIR]` §B / §E and `[ENCY]` §7.9.C. The Atlas confirms the identity rule for every family is the **PROPOSED deterministic basis: `source id + object role + temporal scope + normalized digest`**, and **CONFIRMS** that source / observed / valid / retrieval / release / correction times stay distinct where material. `[DOM-AIR]` §E
 
 <details>
 <summary><strong>Object families and realization status (click to expand)</strong></summary>
@@ -268,7 +280,7 @@ The Atmosphere / Air domain's owned object families per `[DOM-AIR]` §B and `[EN
 | `AirObservation` | `PROPOSED` | Parameterized; unit-normalization receipt required. |
 | `PM2.5Observation` | `PROPOSED` | Must distinguish reference-method vs. low-cost. |
 | `OzoneObservation` | `PROPOSED` | Unit-conflation guard required. |
-| `SmokeContext` | `PROPOSED` | Source roles: analyst (HMS), model (HRRR-Smoke), remote-sensing (GOES). |
+| `SmokeContext` | `PROPOSED` — **shared with Hazards** | Source roles: analyst (HMS), model (HRRR-Smoke), remote-sensing (GOES). Ownership split per §1 note. |
 | `AODRaster` | `PROPOSED` | `REMOTE_SENSING_MASK` knowledge character; never collapse to PM2.5. |
 | `WeatherStation` | `PROPOSED` | Mesonet vs. ASOS vs. cooperative-observer site context. |
 | `WeatherObservation` | `PROPOSED` | Parameter registry shared with `AirObservation` where overlapping. |
@@ -288,21 +300,24 @@ The Atmosphere / Air domain's owned object families per `[DOM-AIR]` §B and `[EN
 
 ## 10. Knowledge-character registry backlog
 
-The Atmosphere domain treats **knowledge character** (per `[DOM-AIR]` §C) as a first-class field: AQI is not concentration; AOD is not PM2.5; model fields are not observations. The registry below is the controlled vocabulary the domain must register and test. `[DOM-AIR]` `[ENCY]`
+The Atmosphere domain treats **knowledge character** (per `[DOM-AIR]` §C) as a first-class field: AQI is not concentration; AOD is not PM2.5; model fields are not observations. Each term below is **CONFIRMED as ubiquitous-language doctrine** in the Atlas with **PROPOSED field realization** — meaning the vocabulary is settled but the machine-readable registry artifact is not yet built. `[DOM-AIR]` `[ENCY]`
 
 | Knowledge character | Meaning (PROPOSED field realization) | Required guards | Status |
 |---|---|---|---|
-| `OBSERVED_SENSOR` | Direct sensor observation, reference or research-grade. | Calibration / QA metadata; unit receipts. | `PROPOSED` registry entry `[DOM-AIR]` |
-| `PUBLIC_AQI_REPORT` | Agency-published AQI summary (e.g., AirNow). | Not concentration; category metadata; freshness badge. | `PROPOSED` `[DOM-AIR]` |
-| `REGULATORY_ARCHIVE` | Archived regulatory dataset (e.g., EPA AQS historical). | Vintage label; archive lineage. | `PROPOSED` `[DOM-AIR]` |
-| `LOW_COST_SENSOR` | Consumer / community-grade sensor data. | Correction + caveats + confidence + limitations before any public release. | `PROPOSED` `[DOM-AIR]` `[ENCY]` |
-| `ATMOSPHERIC_MODEL_FIELD` | NWP, chemical-transport, or reanalysis model output. | Model run-time; ensemble caveat; "not observation" badge. | `PROPOSED` `[DOM-AIR]` |
-| `REMOTE_SENSING_MASK` | Satellite-derived raster / mask. | Retrieval algorithm + uncertainty surface. | `PROPOSED` `[DOM-AIR]` |
-| `CLIMATE_ANOMALY_CONTEXT` | Departure from a baseline normal. | Baseline period; reference dataset. | `PROPOSED` `[DOM-AIR]` |
-| `DERIVED_FUSION` | Multi-source blended product. | Lineage chain + per-input uncertainty + "derivative, not observation" badge. | `PROPOSED` `[DOM-AIR]` |
-| `METEOROLOGICAL_CONTEXT` | Supporting meteorology (e.g., boundary-layer height, mixing-layer). | Source-role label; not to be treated as the variable it forces. | `PROPOSED` `[DOM-AIR]` |
-| `ALERT_AND_ADVISORY_CONTEXT` | Public advisory context; **never** a substitute for the official alerting authority. | Redirect to official source; non-emergency disclaimer. | `PROPOSED` `[DOM-AIR]` `[DOM-HAZ]` |
-| `NETWORK_AND_SITE_CONTEXT` | Network / site metadata. | Operator + program + siting class. | `PROPOSED` `[DOM-AIR]` |
+| `OBSERVED_SENSOR` | Direct sensor observation, reference or research-grade. | Calibration / QA metadata; unit receipts. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `PUBLIC_AQI_REPORT` | Agency-published AQI summary (e.g., AirNow). | Not concentration; category metadata; freshness badge. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `REGULATORY_ARCHIVE` | Archived regulatory dataset (e.g., EPA AQS historical). | Vintage label; archive lineage. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `LOW_COST_SENSOR` | Consumer / community-grade sensor data. | Correction + caveats + confidence + limitations before any public release. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` `[ENCY]` |
+| `ATMOSPHERIC_MODEL_FIELD` | NWP, chemical-transport, or reanalysis model output. | Model run-time; ensemble caveat; "not observation" badge. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `REMOTE_SENSING_MASK` | Satellite-derived raster / mask. | Retrieval algorithm + uncertainty surface. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `CLIMATE_ANOMALY_CONTEXT` | Departure from a baseline normal. | Baseline period; reference dataset. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `DERIVED_FUSION` | Multi-source blended product. | Lineage chain + per-input uncertainty + "derivative, not observation" badge. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `METEOROLOGICAL_CONTEXT` | Supporting meteorology (e.g., boundary-layer height, mixing-layer). | Source-role label; not to be treated as the variable it forces. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+| `ALERT_AND_ADVISORY_CONTEXT` | Public advisory context; **never** a substitute for the official alerting authority. | Redirect to official source; non-emergency disclaimer. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` `[DOM-HAZ]` |
+| `NETWORK_AND_SITE_CONTEXT` | Network / site metadata. | Operator + program + siting class. | `CONFIRMED` term / `PROPOSED` realization `[DOM-AIR]` |
+
+> [!NOTE]
+> Registry **placement** (`data/registry/` vs. `control_plane/`) is itself ADR-class per `[DIRRULES]` §2.4(5). See §16 ADR-AIR-03.
 
 [Back to top](#-contents)
 
@@ -310,7 +325,7 @@ The Atmosphere domain treats **knowledge character** (per `[DOM-AIR]` §C) as a 
 
 ## 11. Validator, test, and fixture backlog
 
-Per `[DOM-AIR]` §K and `[ENCY]` Appendix K, every validator below is `PROPOSED` until a mounted-repo scan locates it in `tools/validators/` or `tests/domains/atmosphere/`.
+Per `[DOM-AIR]` §K and `[ENCY]` Appendix K, every validator below is `PROPOSED` until a mounted-repo scan locates it in `tools/validators/` or `tests/domains/atmosphere/`. The Atlas explicitly names V-01 through V-07 as PROPOSED for this domain; V-08 through V-12 are `INFERRED` from cross-cutting doctrine.
 
 | # | Validator / test | Purpose | Status |
 |---|---|---|---|
@@ -321,14 +336,14 @@ Per `[DOM-AIR]` §K and `[ENCY]` Appendix K, every validator below is `PROPOSED`
 | V-05 | `model-as-observed` denial | Block any public payload where a model field is rendered as an observation. | `PROPOSED` `[DOM-AIR]` `[ENCY]` |
 | V-06 | Low-cost sensor caveat tests | Verify correction + caveat + confidence + limitations are present before release. | `PROPOSED` `[DOM-AIR]` `[ENCY]` |
 | V-07 | Dryrun no-live-fetch tests | CI must fail any connector that opens a live network socket in a dry run. | `PROPOSED` `[DOM-AIR]` |
-| V-08 | Temporal-logic tests | Source / observed / valid / retrieval / release / correction times stay distinct where material. | `PROPOSED` `[DOM-AIR]` `[ENCY]` |
-| V-09 | Cross-lane sensitivity-redaction tests | Joins with Habitat / Fauna / Archaeology never expose sensitive locations. | `PROPOSED` `[DOM-AIR]` `[ENCY]` |
-| V-10 | Citation validator | Every public claim resolves to an `EvidenceBundle`; no uncited claim escapes. | `PROPOSED` `[GAI]` `[ENCY]` |
-| V-11 | Stale-state policy test | Freshness badge logic per source-family cadence. | `PROPOSED` `[DOM-AIR]` |
-| V-12 | Rollback drill (Atmosphere) | Release → rollback card → restored prior manifest. | `PROPOSED` `[DOM-AIR]` `[ENCY]` Appendix E |
+| V-08 | Temporal-logic tests | Source / observed / valid / retrieval / release / correction times stay distinct where material. | `INFERRED` `[DOM-AIR]` `[ENCY]` |
+| V-09 | Cross-lane sensitivity-redaction tests | Joins with Habitat / Fauna / Archaeology never expose sensitive locations. | `INFERRED` `[DOM-AIR]` `[ENCY]` |
+| V-10 | Citation validator | Every public claim resolves to an `EvidenceBundle`; no uncited claim escapes. | `INFERRED` `[GAI]` `[ENCY]` |
+| V-11 | Stale-state policy test | Freshness badge logic per source-family cadence. | `INFERRED` `[DOM-AIR]` |
+| V-12 | Rollback drill (Atmosphere) | Release → rollback card → restored prior manifest. | `INFERRED` `[DOM-AIR]` `[ENCY]` Appendix E |
 
 > [!IMPORTANT]
-> Per `[DIRRULES]` §13.5 ("Test-only validator" anti-pattern), validator logic must live in `tools/validators/<topic>/...` and be **called** by tests, not authored inside test files.
+> Per `[DIRRULES]` §13.5 ("Test-only validator" anti-pattern), validator logic must live in `tools/validators/<topic>/...` and be **called** by tests, not authored inside test files. Cross-domain validators (e.g., a shared geometry or sensitivity validator) live in a **non-domain** segment — `tools/validators/<topic>/...`, never `tools/validators/domains/<picked-one>/...`. `[DIRRULES]` §12
 
 [Back to top](#-contents)
 
@@ -342,10 +357,14 @@ Per `[DOM-AIR]` §K and `[ENCY]` Appendix K, every validator below is `PROPOSED`
 | Atmosphere layer-manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | `PROPOSED`; public-safe release only. `[DOM-AIR]` |
 | Atmosphere Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | `PROPOSED`; evidence + policy filtered. `[DOM-AIR]` `[MAP-MASTER]` |
 | Atmosphere Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | `PROPOSED`; AI never root truth. `[GAI]` `[DOM-AIR]` |
-| Schema home for Atmosphere contracts | `schemas/contracts/v1/air/` *(per `[DIRRULES]` Atlas §24.13 crosswalk)* | n/a | `PROPOSED`; resolve via ADR (see §16). `[DIRRULES]` |
+| Shape home for Atmosphere contracts | `schemas/contracts/v1/<...>` *(default schema home per `[DIRRULES]` §3 / ADR-0001)* | n/a | `PROPOSED`; confirm domain segment via ADR (see §16). `[DIRRULES]` |
+| Semantic home for Atmosphere contracts | `contracts/domains/atmosphere/` *(object-family meaning per `[DIRRULES]` §12 lane pattern)* | n/a | `PROPOSED`; `CONFLICTED` vs. Atlas §24.13 crosswalk (see §16). `[DIRRULES]` |
 
 > [!NOTE]
-> Public clients **must** consume Atmosphere data via `apps/governed-api/` — never directly from `data/processed/atmosphere/` or `data/published/layers/atmosphere/`. The trust membrane is non-negotiable. `[DIRRULES]` §13.5
+> Public clients **must** consume Atmosphere data via the governed API surface — never directly from `data/processed/atmosphere/` or `data/published/layers/atmosphere/`. The trust membrane is non-negotiable. The Atlas records the **schema responsibility root** as `schemas/contracts/v1/` (`PROPOSED`; verify with Directory Rules and ADR). `[DIRRULES]` §13.5 `[DOM-AIR]` §J
+
+> [!WARNING]
+> **Naming conflict surfaced (do not silently resolve).** Directory Rules §12 places **semantic** object-family contracts under `contracts/domains/<domain>/` and **shape** under `schemas/contracts/v1/<...>`. The earlier draft of this backlog collapsed both into a single `schemas/contracts/v1/air/` path. Per `[DIRRULES]` §2.1 authority order (Directory Rules > Atlas crosswalks) and §2.5, this is logged as a `CONFLICTED` item pending ADR resolution rather than picked silently. See §16 ADR-AIR-01 and the open question in §19.
 
 [Back to top](#-contents)
 
@@ -362,19 +381,24 @@ flowchart TB
     AG[Agriculture]
     HYD[Hydrology]
     BIO[Biodiversity domains<br/>Habitat / Fauna / Flora]
+    SET[Settlements / Infrastructure]
     AIR -- smoke / heat-cold / advisory / visibility / fire-emissions --> HAZ
     AIR -- heat / smoke / precipitation / vegetation stress --> AG
     AIR -- precipitation / drought / flood-weather forcing --> HYD
     AIR -- phenology / smoke / fire / drought stress<br/>(sensitive locations redacted) --> BIO
+    AIR -- exposure context only<br/>(no asset disclosure) --> SET
 ```
 
 | # | Join | Constraint | Status |
 |---|---|---|---|
-| X-01 | Atmosphere ↔ Hazards (smoke, heat / cold, advisory, visibility, fire / emissions context) | Hazards owns hazard-event truth; Atmosphere supplies observed / model context. | `PROPOSED` `[DOM-AIR]` `[DOM-HAZ]` |
+| X-01 | Atmosphere ↔ Hazards (smoke, heat / cold, advisory, visibility, fire / emissions context) | Hazards owns hazard-event truth; Atmosphere supplies observed / model context. `SmokeContext` is shared (§1 note). | `PROPOSED` `[DOM-AIR]` `[DOM-HAZ]` |
 | X-02 | Atmosphere ↔ Agriculture (heat, smoke, precipitation, vegetation stress) | Agriculture owns crop / field truth; Atmosphere supplies weather forcing. | `PROPOSED` `[DOM-AIR]` `[DOM-AG]` |
 | X-03 | Atmosphere ↔ Hydrology (precipitation, drought, flood-weather forcing) | Hydrology owns water-body / gauge truth; Atmosphere supplies precip / climate forcing. | `PROPOSED` `[DOM-AIR]` `[DOM-HYD]` |
 | X-04 | Atmosphere ↔ Biodiversity domains (phenology, smoke, fire, drought stress) | Sensitive locations redacted by default; joins must use generalized geometry. | `PROPOSED` `[DOM-AIR]` `[DOM-HF]` |
 | X-05 | Atmosphere ↔ Settlements / Infrastructure (exposure context, not asset disclosure) | Critical-asset deny lane; Atmosphere never exposes precise infrastructure exposure. | `PROPOSED` `[DOM-AIR]` `[DOM-SETTLE]` |
+
+> [!CAUTION]
+> Cross-lane joins are **inference-risk multipliers** (Atlas ADR-S-14). A join with Habitat, Fauna, or Archaeology can re-expose a sensitive location even when each input layer was individually public-safe. Joins touching sensitive lanes MUST fail closed, use generalized geometry, and route through steward review with a `RedactionReceipt`. `[ENCY]` §23.2 `[DIRRULES]`
 
 [Back to top](#-contents)
 
@@ -401,18 +425,18 @@ Per `[ENCY]` §7.9.M; reproduced here as a backlog row so each risk has a tracke
 
 ## 15. Verification backlog and open questions
 
-Tracked in `docs/registers/VERIFICATION_BACKLOG.md` per `[DIRRULES]` §18. Reproduced here with Atmosphere-specific framing.
+Tracked in `docs/registers/VERIFICATION_BACKLOG.md` per `[DIRRULES]` §18. Reproduced here with Atmosphere-specific framing. The four Atlas `[DOM-AIR]` §N items (source rights, knowledge-character registry, catalog/proof/release closure, MapLibre integration) map to Q-01 through Q-04.
 
 | # | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
-| Q-01 | Verify source rights and endpoint behavior for every admitted source. | Mounted source-registry entries + license review + per-source descriptor. | `NEEDS VERIFICATION` `[DOM-AIR]` |
-| Q-02 | Implement knowledge-character registry as a machine-readable artifact. | Mounted registry file in `data/registry/` or `control_plane/` + validator. | `NEEDS VERIFICATION` `[DOM-AIR]` |
-| Q-03 | Verify catalog / proof / release closure for the first Atmosphere release candidate. | Emitted `EvidenceBundle` + `ValidationReport` + `ReleaseManifest`. | `NEEDS VERIFICATION` `[DOM-AIR]` |
-| Q-04 | Verify MapLibre / Evidence Drawer / Focus Mode integration for at least one Atmosphere feature. | Mounted UI fixtures + drawer test + Focus Mode QA fixture. | `NEEDS VERIFICATION` `[DOM-AIR]` `[MAP-MASTER]` |
-| Q-05 | Verify whether `schemas/contracts/v1/air/` is the live schema home (vs. `contracts/air/`). | Mounted-repo schema inspection + ADR-0001 confirmation. | `NEEDS VERIFICATION` `[DIRRULES]` |
+| Q-01 | Verify source rights and endpoint behavior for every admitted source. | Mounted source-registry entries + license review + per-source descriptor. | `NEEDS VERIFICATION` `[DOM-AIR]` §N |
+| Q-02 | Implement knowledge-character registry as a machine-readable artifact. | Mounted registry file in `data/registry/` or `control_plane/` + validator. | `NEEDS VERIFICATION` `[DOM-AIR]` §N |
+| Q-03 | Verify catalog / proof / release closure for the first Atmosphere release candidate. | Emitted `EvidenceBundle` + `ValidationReport` + `ReleaseManifest`. | `NEEDS VERIFICATION` `[DOM-AIR]` §N |
+| Q-04 | Verify MapLibre / Evidence Drawer / Focus Mode integration for at least one Atmosphere feature. | Mounted UI fixtures + drawer test + Focus Mode QA fixture. | `NEEDS VERIFICATION` `[DOM-AIR]` §N `[MAP-MASTER]` |
+| Q-05 | Verify schema home and the `contracts/domains/atmosphere/` vs. `schemas/contracts/v1/<...>` split. | Mounted-repo schema inspection + ADR-0001 confirmation. | `NEEDS VERIFICATION` `[DIRRULES]` |
 | Q-06 | Verify owners and CODEOWNERS entries for Atmosphere reviewers. | Mounted `CODEOWNERS` + per-root README listing reviewers. | `NEEDS VERIFICATION` `[DIRRULES]` §15 |
 | Q-07 | Verify rollback-card template applies cleanly to a synthetic Atmosphere release. | Rollback dry-run record. | `NEEDS VERIFICATION` `[ENCY]` Appendix E |
-| Q-08 | Verify climate-anomaly baseline period selection and source. | Baseline metadata + steward review. | `OPEN` `[DOM-AIR]` |
+| Q-08 | Verify climate-anomaly baseline period selection and source. | Baseline metadata + steward review. | `UNKNOWN` `[DOM-AIR]` |
 
 [Back to top](#-contents)
 
@@ -420,16 +444,19 @@ Tracked in `docs/registers/VERIFICATION_BACKLOG.md` per `[DIRRULES]` §18. Repro
 
 ## 16. Open ADR candidates
 
-Per `[DIRRULES]` §2.4, certain decisions require an ADR before a path, schema, policy, or release surface is treated as canonical. The following Atmosphere-relevant candidates align with the Atlas v1.1 Open-ADR backlog (§24.12). `[DIRRULES]` `[ENCY]`
+Per `[DIRRULES]` §2.4, certain decisions require an ADR before a path, schema, policy, or release surface is treated as canonical. The candidates below align with the Atlas v1.1 **Master Open-ADR Backlog (§24.12)**, whose canonical IDs are `ADR-S-NN`. The local `ADR-AIR-NN` IDs are working handles for this domain and are mapped to the Atlas IDs explicitly to avoid creating a parallel ADR namespace. `[DIRRULES]` `[ENCY]`
 
-| # | Question | Why ADR-class | Suggested ADR title (`PROPOSED`) |
-|---|---|---|---|
-| ADR-AIR-01 | Confirm Atmosphere schema home as `schemas/contracts/v1/air/` (vs. `contracts/air/`). | Schema-home rule is explicitly ADR-required per `[DIRRULES]` §2.4(3). | "Atmosphere schema home: `schemas/contracts/v1/air/`." |
-| ADR-AIR-02 | Source-role enum for Atmosphere — canonical vocabulary and evolution rule. | Source-role anti-collapse is doctrine-significant. | "Atmosphere source-role vocabulary v1." |
-| ADR-AIR-03 | Knowledge-character registry placement — `data/registry/` vs. `control_plane/`. | New parallel home is ADR-class per `[DIRRULES]` §2.4(5). | "Atmosphere knowledge-character registry placement." |
-| ADR-AIR-04 | Low-cost sensor public-release contract: correction + caveat + confidence + limitations as a hard schema requirement. | Public-safety / accuracy posture. | "Low-cost atmospheric sensor public-release contract." |
-| ADR-AIR-05 | Advisory-context redirect contract: never substitute for the official alerting authority. | Trust membrane + ownership boundary with Hazards. | "Atmosphere advisory-context redirect contract." |
-| ADR-AIR-06 | Climate scenario vs. observed labeling discipline (`scenario_horizon`, `scenario_role`). | Confusing scenario with observed change is a known failure mode. | "Climate scenario labeling for Atmosphere layers." |
+| Local # | Maps to Atlas | Question | Why ADR-class | Suggested ADR title (`PROPOSED`) |
+|---|---|---|---|---|
+| ADR-AIR-01 | ADR-S-01 | Confirm Atmosphere schema home (`schemas/contracts/v1/<...>`) and the semantic/shape split vs. `contracts/domains/atmosphere/`. | Schema-home rule is explicitly ADR-required per `[DIRRULES]` §2.4(3). | "Atmosphere schema home & contract/schema split (confirm/amend ADR-0001)." |
+| ADR-AIR-02 | ADR-S-04 | Source-role enum for Atmosphere — canonical vocabulary and evolution rule. | Source-role anti-collapse is doctrine-significant; vocabulary stability matters. | "Atmosphere source-role vocabulary v1." |
+| ADR-AIR-03 | ADR-S-03 (analogue) | Knowledge-character registry placement — `data/registry/` vs. `control_plane/`. | New parallel home is ADR-class per `[DIRRULES]` §2.4(5). | "Atmosphere knowledge-character registry placement." |
+| ADR-AIR-04 | ADR-S-05 (analogue) | Low-cost sensor public-release contract: correction + caveat + confidence + limitations as a hard schema requirement. | Public-safety / accuracy posture; release-significant. | "Low-cost atmospheric sensor public-release contract." |
+| ADR-AIR-05 | ADR-S-06 / ADR-S-14 | Advisory-context redirect contract: never substitute for the official alerting authority. | Trust membrane + ownership boundary with Hazards. | "Atmosphere advisory-context redirect contract." |
+| ADR-AIR-06 | (new candidate) | Climate scenario vs. observed labeling discipline (`scenario_horizon`, `scenario_role`). | Confusing scenario with observed change is a known failure mode. | "Climate scenario labeling for Atmosphere layers." |
+
+> [!NOTE]
+> ADR-AIR-06 has no obvious Atlas §24.12 counterpart; it is surfaced here as a **new** ADR candidate for triage, not as a settled mapping. `INFERRED` from `[INDEX-18]` scenario-card doctrine.
 
 [Back to top](#-contents)
 
@@ -440,14 +467,14 @@ Per `[DIRRULES]` §2.4, certain decisions require an ADR before a path, schema, 
 How a new item enters this backlog.
 
 1. **Submit** as a PR adding a row to the appropriate track (A / B / C / D) or thematic register (sources, objects, knowledge characters, validators, surfaces, cross-lane).
-2. **Label** with the narrowest truthful status: `PROPOSED`, `INFERRED`, `NEEDS VERIFICATION`, `UNKNOWN`, or `DENY`. Memory is not evidence.
+2. **Label** with the narrowest truthful status: `PROPOSED`, `INFERRED`, `NEEDS VERIFICATION`, `CONFLICTED`, `UNKNOWN`, or `DENY`. Memory is not evidence.
 3. **Cite** doctrine: `[DOM-AIR]`, `[ENCY]` §7.9 / §11, `[DIRRULES]` §12, `[UNIFIED]` §6.10, `[MAP-MASTER]`, `[GAI]`, `[INDEX-18]`, as applicable.
 4. **Identify the gate** the item must clear: `SourceDescriptor`, `ValidationReport`, `EvidenceBundle`, policy decision, `ReleaseManifest`, correction path, rollback target.
-5. **Flag ADR-class** items per `[DIRRULES]` §2.4 and add them to §16 above.
+5. **Flag ADR-class** items per `[DIRRULES]` §2.4 and add them to §16 above, mapping to an Atlas §24.12 `ADR-S-NN` ID where one exists.
 6. **Steward review** before promotion to a track that touches a public surface (B, C). Deny items (D) are reviewed but **not** scheduled.
 
 > [!TIP]
-> A backlog item with no citation, no gate, and no validation path is documentation drift, not a proposal. Reviewers may close such PRs and request the author resubmit with the missing fields.
+> A backlog item with no citation, no gate, and no validation path is documentation drift, not a proposal. Reviewers may close such PRs and request the author resubmit with the missing fields. Conflicts between this backlog and the mounted repo open a `docs/registers/DRIFT_REGISTER.md` entry per `[DIRRULES]` §2.5 — they are not silently conformed.
 
 [Back to top](#-contents)
 
@@ -467,7 +494,56 @@ This backlog **does not**:
 
 ---
 
-## 19. Related docs
+## 19. Open questions register
+
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-AIR-01 | Is the Atmosphere schema home `schemas/contracts/v1/<...>` (shape) with semantics under `contracts/domains/atmosphere/`, or does the Atlas §24.13 crosswalk's `domains/`-omitting pattern govern? | docs steward + architecture owner | ADR-AIR-01 (→ ADR-S-01) + Directory Rules §2.1 authority order + repo inspection |
+| OQ-AIR-02 | What is the canonical source-role enum for Atmosphere, given the Atlas role string is `NEEDS VERIFICATION`? | atmosphere steward | ADR-AIR-02 (→ ADR-S-04) |
+| OQ-AIR-03 | Does the machine-readable knowledge-character registry live in `data/registry/` or `control_plane/`? | architecture owner | ADR-AIR-03 |
+| OQ-AIR-04 | Which steward / reviewer signs off on the first public-safe Atmosphere proof slice, and is reviewer separation tooling-enforced? | release owner | ADR-S-09 (reviewer separation) + CODEOWNERS inspection |
+| OQ-AIR-05 | Is `SmokeContext` modeled once and shared, or projected separately per owning lane (Atmosphere vs. Hazards)? | atmosphere + hazards stewards | Cross-lane join policy ADR (→ ADR-S-14) |
+
+[Back to top](#-contents)
+
+---
+
+## 20. Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Added companion sections (Open questions register, Changelog, Definition of done) | gap closure | Doctrine-adjacent doc completeness per operating-contract pattern. |
+| Surfaced `schemas/contracts/v1/air/` → `contracts/domains/<domain>/` + `schemas/contracts/v1/<...>` split as `CONFLICTED` | reconciliation | Directory Rules §12 separates semantic (`contracts/`) from shape (`schemas/`); prior draft collapsed them. Authority order §2.1: Directory Rules > Atlas crosswalk. |
+| Re-mapped local `ADR-AIR-NN` IDs to Atlas §24.12 `ADR-S-NN` backlog | reconciliation | Avoid creating a parallel ADR namespace; Atlas backlog is the canonical home. |
+| Flagged `SmokeContext` as shared between Atmosphere and Hazards | clarification | Both `[DOM-AIR]` §B and `[DOM-HAZ]` §B list it as owned. |
+| Relabeled knowledge-character rows as `CONFIRMED term / PROPOSED realization` | clarification | Atlas §C records terms as CONFIRMED ubiquitous language with PROPOSED field realization. |
+| Split validator statuses into `PROPOSED` (Atlas-named V-01–V-07) vs. `INFERRED` (V-08–V-12) | clarification | Only V-01–V-07 are explicitly named PROPOSED in `[DOM-AIR]` §K. |
+| Corrected §21 reference (Programming Possibilities Backlog) and §24.12 anchor | housekeeping | Atlas TOC places the backlog at §21, not §12. |
+| Updated `updated:` and badge date to 2026-05-29; pinned `CONTRACT_VERSION = "3.0.0"` | housekeeping | Doctrine-adjacent doc requirement. |
+
+> **Backward compatibility.** Section anchors §1–§18 are preserved; new sections (§19–§23) append at the tail. The schema-home path was **not** silently rewritten — it is held as `CONFLICTED` with both candidate paths shown, so no downstream reference is broken by an unreviewed rename.
+
+[Back to top](#-contents)
+
+---
+
+## 21. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (`docs/domains/atmosphere/EXPANSION_BACKLOG.md`, `PROPOSED` per §12);
+- a docs steward and an atmosphere steward review it;
+- it is linked from the docs index and the Atmosphere domain `README.md`;
+- it does not conflict with accepted ADRs (ADR-AIR-01 / ADR-S-01 resolves the schema-home question);
+- the `schemas/contracts/v1/<...>` vs. `contracts/domains/atmosphere/` conflict is logged in `docs/registers/DRIFT_REGISTER.md` until ADR-resolved;
+- the `GENERATED_RECEIPT.json` planned for this artifact is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top](#-contents)
+
+---
+
+## 22. Related docs
 
 > [!NOTE]
 > Links below are repo-relative. Targets marked **`TODO`** are `PROPOSED` per Directory Rules §12 lane pattern but have not been verified to exist in a mounted repo this session.
@@ -478,16 +554,19 @@ This backlog **does not**:
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — master verification backlog *(**TODO**)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift register *(**TODO**)*
 - [`docs/adr/`](../../adr/) — ADR home *(**TODO**)*
-- [`schemas/contracts/v1/air/`](../../../schemas/contracts/v1/air/) — proposed schema home *(**TODO** — confirm via ADR-AIR-01)*
+- [`contracts/domains/atmosphere/`](../../../contracts/domains/atmosphere/) — proposed semantic contract home *(**TODO** — confirm via ADR-AIR-01)*
+- [`schemas/contracts/v1/`](../../../schemas/contracts/v1/) — default schema (shape) home *(**TODO** — confirm domain segment via ADR-AIR-01)*
 - [`policy/domains/atmosphere/`](../../../policy/domains/atmosphere/) — proposed policy lane *(**TODO**)*
 - [`tests/domains/atmosphere/`](../../../tests/domains/atmosphere/) — proposed test lane *(**TODO**)*
 - [`data/registry/sources/atmosphere/`](../../../data/registry/sources/atmosphere/) — proposed source registry *(**TODO**)*
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 External (doctrinal) — names only; not links:
 
-- `[DOM-AIR]` — Atmosphere / Air dossier
-- `[ENCY]` — Domain & Capability Encyclopedia §7.9 and §11
-- `[DIRRULES]` — Directory Rules (Domain Placement Law §12)
+- `[DOM-AIR]` — Atmosphere / Air dossier (Atlas §11)
+- `[DOM-HAZ]` — Hazards dossier (Atlas §12)
+- `[ENCY]` — Domain & Capability Encyclopedia §7.9, §11, §21, §24.9, §24.12
+- `[DIRRULES]` — Directory Rules (Domain Placement Law §12; §2.1 authority order; §2.4 ADR triggers; §13.5 anti-patterns)
 - `[UNIFIED]` — Unified Implementation Architecture Build Manual §6.10
 - `[MAP-MASTER]` — Master MapLibre Components-Functions-Features
 - `[GAI]` — Governed AI doctrine
@@ -497,45 +576,71 @@ External (doctrinal) — names only; not links:
 
 ---
 
-## 20. Appendix
+## 23. Appendix
 
 <details>
 <summary><strong>A. Cross-reference: backlog item → doctrinal anchor (click to expand)</strong></summary>
 
 | Backlog block | Primary anchor | Secondary anchors |
 |---|---|---|
-| Track A | `[ENCY]` §7.9.L | `[DOM-AIR]` §K, `[UNIFIED]` §6.10 |
+| Track A | `[ENCY]` §7.9.L | `[DOM-AIR]` §K, `[UNIFIED]` §6.10, `[ENCY]` §21.1 |
 | Track B | `[ENCY]` §7.9.L | `[DOM-AIR]` §G, `[MAP-MASTER]` |
 | Track C | `[ENCY]` §7.9.L | `[GAI]`, `[DOM-AIR]` §L |
-| Track D | `[ENCY]` §7.9.L | `[DOM-AIR]` §I, `[INDEX-18]` |
-| §8 Source admission | `[DOM-AIR]` §D | `[ENCY]` §7.9.B |
+| Track D | `[ENCY]` §7.9.L | `[DOM-AIR]` §I, `[INDEX-18]`, `[ENCY]` §24.9 |
+| §8 Source admission | `[DOM-AIR]` §D | `[ENCY]` §7.9.B, ADR-S-04 |
 | §9 Object families | `[DOM-AIR]` §B + §E | `[ENCY]` §7.9.C |
 | §10 Knowledge characters | `[DOM-AIR]` §C | `[ENCY]` §11.C |
 | §11 Validators | `[DOM-AIR]` §K | `[ENCY]` §7.9.K, `[DIRRULES]` §13.5 |
-| §12 Surfaces | `[DOM-AIR]` §J | `[MAP-MASTER]`, `[GAI]` |
-| §13 Cross-lane | `[DOM-AIR]` §F | per-domain dossiers |
+| §12 Surfaces | `[DOM-AIR]` §J | `[MAP-MASTER]`, `[GAI]`, `[DIRRULES]` §3 |
+| §13 Cross-lane | `[DOM-AIR]` §F | per-domain dossiers, ADR-S-14 |
 | §14 Risks | `[ENCY]` §7.9.M | `[INDEX-18]` |
 | §15 Verification | `[DOM-AIR]` §N | `[DIRRULES]` §18 |
-| §16 ADR candidates | `[DIRRULES]` §2.4 | `[ENCY]` Atlas §24.12 |
+| §16 ADR candidates | `[DIRRULES]` §2.4 | `[ENCY]` §24.12 (`ADR-S-NN`) |
 
 </details>
 
 <details>
-<summary><strong>B. Placement basis (Directory Rules §12) (click to expand)</strong></summary>
+<summary><strong>B. Placement basis (Directory Rules §12 + §4 quick check) (click to expand)</strong></summary>
 
-This file lives at `docs/domains/atmosphere/EXPANSION_BACKLOG.md` because:
+This file is `PROPOSED` at `docs/domains/atmosphere/EXPANSION_BACKLOG.md` because, running the §4 placement quick check:
 
-- **Responsibility** (`[DIRRULES]` §4 Step 1): "Explains something to humans" → `docs/`.
-- **Domain segment** (`[DIRRULES]` §4 Step 3 + §12): A domain MUST appear as a segment inside a responsibility root, never as a root. Hence `docs/domains/atmosphere/`, not `atmosphere/docs/`.
-- **Doctrinal artifact**: This is not a release decision (`release/`), not machine governance (`control_plane/`), not policy (`policy/`), not schema (`schemas/`). It is human-facing doctrine + backlog → `docs/`.
-- **Sibling pattern**: Parallels `docs/domains/hydrology/`, `docs/domains/soil/`, etc., per the lane pattern in `[DIRRULES]` §12.
+1. **Identify the responsibility** (`[DIRRULES]` §4 Step 1): "Explains something to humans" → `docs/`.
+2. **Identify the lifecycle phase** (Step 2): not lifecycle data → no `data/<phase>/` segment.
+3. **Identify the domain** (Step 3 + §12): a domain MUST appear as a **segment inside** a responsibility root, never as a root. Hence `docs/domains/atmosphere/`, not `atmosphere/docs/`.
+4. **Confirm authority** (Step 4): owning root `docs/` exists; per-root README expected.
+5. **Cite the rule** (Step 5): Directory Rules §12 lane pattern; if the mounted repo differs, open a `DRIFT_REGISTER.md` entry rather than silently conforming (§2.5).
 
-If the mounted repo shows a different convention, raise a drift entry per `[DIRRULES]` §2.5 before silently conforming.
+This is not a release decision (`release/`), not machine governance (`control_plane/`), not policy (`policy/`), not schema (`schemas/`), not semantic contract (`contracts/`). It is human-facing doctrine + backlog → `docs/`. It parallels `docs/domains/hydrology/`, `docs/domains/soil/`, etc.
 
 </details>
 
 <details>
-<summary><strong>C. Glossary (KFM terms used in this backlog) (click to expand)</strong></summary>
+<summary><strong>C. GENERATED_RECEIPT.json plan (Directory Rules / operating-contract §34) (click to expand)</strong></summary>
+
+If this backlog is merged, it is an AI-authored artifact and `SHOULD` ship a `GENERATED_RECEIPT.json` with at minimum:
+
+```json
+{
+  "receipt_id": "NEEDS-VERIFICATION",
+  "contract_version": "3.0.0",
+  "artifact_paths": ["docs/domains/atmosphere/EXPANSION_BACKLOG.md"],
+  "artifact_hashes": { "docs/domains/atmosphere/EXPANSION_BACKLOG.md": "BLAKE3:NEEDS-VERIFICATION" },
+  "model_identity": "NEEDS-VERIFICATION",
+  "truth_labels": "PROPOSED (implementation) / CONFIRMED (doctrine)",
+  "validation_gates": [
+    { "name": "polish_checklist", "status": "PASS" },
+    { "name": "truth_checklist", "status": "PASS" }
+  ],
+  "human_review": { "state": "pending" }
+}
+```
+
+> Illustrative only. A receipt with `human_review.state == "pending"` is well-formed but **not mergeable** until review transitions to `approved`. `[contract §34]`
+
+</details>
+
+<details>
+<summary><strong>D. Glossary (KFM terms used in this backlog) (click to expand)</strong></summary>
 
 | Term | Meaning |
 |---|---|
@@ -548,6 +653,7 @@ If the mounted repo shows a different convention, raise a drift entry per `[DIRR
 | `LayerManifest` | Governed descriptor for a map layer + its evidence binding. `[MAP-MASTER]` |
 | `ReleaseManifest` | Authoritative record of a release decision; references rollback target. `[ENCY]` Appendix E |
 | `RollbackCard` | Rollback target + drill object; preserves history while repointing current release. `[ENCY]` Appendix E |
+| `RedactionReceipt` | Record of a public-safe field or geometry transformation. `[ENCY]` |
 | `RuntimeResponseEnvelope` | Finite answer envelope for AI and runtime surfaces. `[GAI]` |
 | `AIReceipt` | Provenance receipt for an AI-generated answer. `[GAI]` |
 | `Promotion` | Governed release transition; never a file move. `[DIRRULES]` |
@@ -557,6 +663,6 @@ If the mounted repo shows a different convention, raise a drift entry per `[DIRR
 
 ---
 
-**Last reviewed:** `2026-05-15` · **Doc id:** `kfm://doc/atmosphere-expansion-backlog` · **Anchors:** `[DOM-AIR]` `[ENCY]` §7.9 + §11 · `[DIRRULES]` §12 · `[UNIFIED]` §6.10
+**Last reviewed:** `2026-05-29` · **Doc id:** `kfm://doc/atmosphere-expansion-backlog` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Anchors:** `[DOM-AIR]` `[ENCY]` §7.9 + §11 · `[DIRRULES]` §12 · `[UNIFIED]` §6.10
 
 [Back to top](#-contents)
