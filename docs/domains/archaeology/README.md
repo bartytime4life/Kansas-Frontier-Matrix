@@ -2,23 +2,26 @@
 doc_id: kfm://doc/docs-domains-archaeology-readme
 title: Archaeology and Cultural Heritage — Domain Documentation
 type: standard
-version: v1
+version: v2
 status: draft
 owners: TODO — KFM archaeology steward; cultural-review reviewer; docs steward
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-05-28
 policy_label: public
 related:
   - docs/domains/README.md
-  - docs/doctrine/directory-rules.md
+  - directory-rules.md
   - contracts/domains/archaeology/
   - schemas/contracts/v1/domains/archaeology/
   - policy/domains/archaeology/
   - data/published/layers/archaeology/
+  - ai-build-operating-contract.md
 tags: [kfm, domains, archaeology, cultural-heritage, sensitivity, care, t4]
 notes:
+  - CONTRACT_VERSION = "3.0.0" pinned (doctrine-adjacent landing doc).
   - All implementation-layer paths in this README are PROPOSED until verified against a mounted repository.
   - Sensitivity defaults follow Atlas v1.1 §24.5 (T0–T4); see Sensitivity section.
+  - Per-source tier assignments in the Source families table are INFERRED, not Atlas §15.D doctrine (which leaves rights NEEDS VERIFICATION).
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology and Cultural Heritage — Domain Documentation
@@ -34,9 +37,10 @@ notes:
 ![default sensitivity: T4](https://img.shields.io/badge/default%20sensitivity-T4-critical)
 ![CARE: required](https://img.shields.io/badge/CARE-required-purple)
 ![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
-![updated: 2026-05-15](https://img.shields.io/badge/updated-2026--05--15-informational)
+![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
+![updated: 2026-05-28](https://img.shields.io/badge/updated-2026--05--28-informational)
 
-**Status:** draft · **Authority level:** canonical (documentation; implementation maturity PROPOSED) · **Owners:** TODO — archaeology steward, cultural-review reviewer, docs steward · **Last reviewed:** 2026-05-15
+**Status:** draft · **Authority level:** canonical (documentation; implementation maturity PROPOSED) · **Owners:** TODO — archaeology steward, cultural-review reviewer, docs steward · **Last reviewed:** 2026-05-28
 
 > [!IMPORTANT]
 > **Exact-location denial is the default.** Exact archaeological geometry, burial sites, human remains, sacred sites, unresolved cultural sensitivity, collection security detail, private landowner detail, and looting-risk exposure **fail closed** at every gate. They MAY be released only after recorded cultural and steward review, a recorded SensitivityTransform, an EvidenceBundle, a ReleaseManifest, and a rollback target. Atlas v1.1 §24.5 sets these defaults at **T4**.
@@ -68,8 +72,11 @@ notes:
 21. [Related folders and docs](#related-folders-and-docs)
 22. [ADRs](#adrs)
 23. [Verification backlog and open questions](#verification-backlog-and-open-questions)
-24. [FAQ](#faq)
-25. [Appendix](#appendix)
+24. [Open questions register](#open-questions-register)
+25. [Changelog](#changelog)
+26. [Definition of done](#definition-of-done)
+27. [FAQ](#faq)
+28. [Appendix](#appendix)
 
 ---
 
@@ -91,7 +98,8 @@ The domain's mission, drawn from the *KFM Domains Culmination Atlas* v1.1 §15 a
 |---|---|
 | Authority level (per Directory Rules §5–6) | **Canonical (documentation)** — `docs/` is the human-facing control plane. |
 | Status (per Directory Rules §15) | **CONFIRMED doctrine / PROPOSED implementation.** |
-| Doctrine source | Atlas v1.1 §15 (Archaeology and Cultural Heritage); Atlas v1.1 §24.5 (Sensitivity tier matrix); Encyclopedia §7.13; Directory Rules §12 (Domain Placement Law). |
+| Doctrine source | Atlas v1.1 §15 (Archaeology and Cultural Heritage); Atlas v1.1 §24.5 (Sensitivity tier matrix); Encyclopedia §7.13; Directory Rules (Domain Placement Law). |
+| Operating contract | `ai-build-operating-contract.md`, `CONTRACT_VERSION = "3.0.0"`. |
 | Implementation maturity | UNKNOWN in this session. Repository not mounted; paths, modules, tests, workflows, manifests, runtime behavior, branches, and policy rule presence cannot be verified here. |
 
 > [!NOTE]
@@ -123,6 +131,9 @@ The Archaeology domain owns the following object families. Each is constrained b
 - `ChronologyAssertion` · `CulturalTemporalPeriod`
 - `SensitivityTransform` · `PublicationTransformReceipt`
 
+> [!NOTE]
+> **`CONFLICTED` — colloquial vs. formalized names.** Atlas §15.B lists owned concepts colloquially (Survey, Artifact, Feature, Context, Remote Sensing Anomaly, LiDAR Candidate, Collection Accession, Chronology Assertion, Sensitivity Transform), while §15.C lists formalized term names (`SurveyProject`, `ArtifactRecord`, `CandidateFeature`, `ProvenienceContext`, `CollectionRepositoryRecord`, `CulturalTemporalPeriod`, `PublicationTransformReceipt`). The pairings above are the likely mapping (`INFERRED`); the formalized names for `GeophysicsObservation`, `ThreeDDocumentation`, `CulturalReview`, and `StewardReview` have no §15.C glossary entry and are `NEEDS VERIFICATION`. See `docs/domains/archaeology/ubiquitous-language.md`.
+
 ### Explicit non-ownership (CONFIRMED doctrine)
 
 The Archaeology domain **does not own** the following — these supply context but **cannot confirm sites or bypass archaeological sensitivity**:
@@ -139,7 +150,7 @@ The Archaeology domain **does not own** the following — these supply context b
 
 ## Repo fit — lane pattern
 
-CONFIRMED placement (per Directory Rules §6.1 `docs/` tree and §12 Domain Placement Law). The archaeology domain lives as a **segment** across responsibility roots, never as a root-level domain folder.
+CONFIRMED placement (per Directory Rules `docs/` tree and the Domain Placement Law). The archaeology domain lives as a **segment** across responsibility roots, never as a root-level domain folder.
 
 ```text
 docs/domains/archaeology/                  ← THIS FOLDER (human-facing doctrine)
@@ -161,7 +172,7 @@ data/registry/sources/archaeology/         ← source descriptors
 release/candidates/archaeology/            ← release decisions, manifests
 ```
 
-All paths above are **PROPOSED** until verified against a mounted repository, but the *pattern* is **CONFIRMED** by Directory Rules §12 ("This pattern applies uniformly to: …archaeology…").
+All paths above are **PROPOSED** until verified against a mounted repository, but the *pattern* is **CONFIRMED** by the Directory Rules Domain Placement Law (domains are segments inside responsibility roots, never root folders).
 
 [Back to top](#contents)
 
@@ -174,17 +185,19 @@ This folder (`docs/domains/archaeology/`) holds **only human-facing documentatio
 | File pattern | Purpose | Status |
 |---|---|---|
 | `README.md` | This landing doc — orientation, lane pattern, cross-links. | **CONFIRMED required** |
-| `SCOPE.md` | Detailed scope, boundary, ownership / non-ownership. | PROPOSED |
-| `UBIQUITOUS_LANGUAGE.md` | Term-by-term glossary (Atlas v1.1 §15.C). | PROPOSED |
-| `SOURCES.md` | Source families, rights, sensitivity, cadence. | PROPOSED |
-| `SENSITIVITY.md` | T0–T4 tier matrix, allowed transforms, gates, CARE binding. | PROPOSED |
-| `PIPELINE.md` | RAW → PUBLISHED gates for this lane. | PROPOSED |
-| `CROSS_DOMAIN.md` | Edges to Spatial Foundation, Roads/Rail, Settlements, Hazards, People/Land. | PROPOSED |
-| `API.md` | Governed API surface (decision envelopes, layer manifests, drawer payloads). | PROPOSED |
-| `VALIDATORS.md` | Test, fixture, and validator inventory. | PROPOSED |
-| `VERIFICATION_BACKLOG.md` | Open questions, NEEDS VERIFICATION items. | PROPOSED |
-| `FAQ.md` | Frequent questions and clarifications. | PROPOSED |
+| `ubiquitous-language.md` | Term-by-term glossary (Atlas v1.1 §15.C). | PROPOSED (sibling exists) |
+| `source-families.md` | Source families, rights, sensitivity, cadence. | PROPOSED (sibling exists) |
+| `sensitivity-and-publication-posture.md` | T0–T4 tier matrix, allowed transforms, gates, CARE binding. | PROPOSED (sibling exists) |
+| `pipeline-shape.md` | RAW → PUBLISHED gates for this lane. | PROPOSED (sibling exists) |
+| `cross-lane-relations.md` | Edges to Spatial Foundation, Roads/Rail, Settlements, Hazards, People/Land. | PROPOSED (sibling exists) |
+| `governed-ai-behavior.md` | Governed-AI posture (decision envelopes, Focus Mode, AIReceipt). | PROPOSED (sibling exists) |
+| `verification-backlog.md` | Open questions, NEEDS VERIFICATION items. | PROPOSED (sibling exists) |
+| `SCOPE.md` | Detailed scope, boundary, ownership / non-ownership (optional). | PROPOSED |
+| `FAQ.md` | Frequent questions and clarifications (optional). | PROPOSED |
 | `assets/*.{svg,png,mmd}` | Diagrams referenced from the docs above. | PROPOSED |
+
+> [!NOTE]
+> Several sibling docs in this lane already use lowercase-hyphenated filenames (`ubiquitous-language.md`, `source-families.md`, `sensitivity-and-publication-posture.md`, `pipeline-shape.md`, `cross-lane-relations.md`, `governed-ai-behavior.md`, `verification-backlog.md`). The earlier `UPPERCASE.md` names in this table have been reconciled to that convention; confirm the casing convention against the mounted repo and log any mismatch in `docs/registers/DRIFT_REGISTER.md`.
 
 [Back to top](#contents)
 
@@ -202,11 +215,11 @@ This folder (`docs/domains/archaeology/`) holds **only human-facing documentatio
 - ❌ **Pipeline code or specs** — go to `pipelines/domains/archaeology/` and `pipeline_specs/archaeology/`.
 - ❌ **Source data of any phase (RAW / WORK / PROCESSED / CATALOG / PUBLISHED)** — go to `data/.../archaeology/`.
 - ❌ **Release manifests, rollback cards, correction notices** — go to `release/candidates/archaeology/` or `data/published/`.
-- ❌ **Receipts (transform, run, validation, redaction)** — go to `data/receipts/` (per Directory Rules §13.2).
+- ❌ **Receipts (transform, run, validation, redaction)** — go to `data/receipts/`.
 - ❌ **Proofs (EvidenceBundle, digest closures)** — go to `data/proofs/`.
 - ❌ **Exact site coordinates, sacred-site geometry, human-remains records** — NEVER in any doc here. Mention only as governance examples, never with real coordinates.
 - ❌ **Generated reports, build outputs** — go to `docs/reports/` or `artifacts/`.
-- ❌ **Treating this README as the canonical source of any decision** — promote material decisions to an ADR or to `control_plane/` (per Directory Rules §13.5, "Documentation as truth" anti-pattern).
+- ❌ **Treating this README as the canonical source of any decision** — promote material decisions to an ADR or to `control_plane/` ("Documentation as truth" anti-pattern).
 
 [Back to top](#contents)
 
@@ -219,21 +232,19 @@ This folder (`docs/domains/archaeology/`) holds **only human-facing documentatio
 
 ```text
 docs/domains/archaeology/
-├── README.md                       # this file — landing, orientation, lane pattern
-├── SCOPE.md                        # full scope + boundary
-├── UBIQUITOUS_LANGUAGE.md          # term-by-term glossary
-├── SOURCES.md                      # source families, rights, cadence
-├── SENSITIVITY.md                  # T0–T4 tier matrix + CARE
-├── PIPELINE.md                     # RAW → PUBLISHED gates
-├── CROSS_DOMAIN.md                 # cross-lane relations
-├── API.md                          # governed API surface (PROPOSED routes / DTOs)
-├── VALIDATORS.md                   # test + validator inventory
-├── VERIFICATION_BACKLOG.md         # open questions
-├── FAQ.md                          # FAQ
+├── README.md                              # this file — landing, orientation, lane pattern
+├── ubiquitous-language.md                 # term-by-term glossary
+├── source-families.md                     # source families, rights, cadence
+├── sensitivity-and-publication-posture.md # T0–T4 tier matrix + CARE
+├── pipeline-shape.md                      # RAW → PUBLISHED gates
+├── cross-lane-relations.md                # cross-lane relations
+├── governed-ai-behavior.md                # governed-AI posture
+├── verification-backlog.md                # open questions
+├── FAQ.md                                 # FAQ (optional)
 └── assets/
-    ├── lifecycle.mmd               # Mermaid source for lifecycle diagram
-    ├── cross-lane.mmd              # Mermaid source for cross-lane edges
-    └── tier-matrix.svg             # Optional rendered tier matrix
+    ├── lifecycle.mmd                       # Mermaid source for lifecycle diagram
+    ├── cross-lane.mmd                      # Mermaid source for cross-lane edges
+    └── tier-matrix.svg                     # Optional rendered tier matrix
 ```
 
 [Back to top](#contents)
@@ -242,7 +253,7 @@ docs/domains/archaeology/
 
 ## Lifecycle diagram
 
-CONFIRMED lifecycle invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** (Directory Rules §4 Step 2; Atlas v1.1 §24.6). Application to archaeology is PROPOSED implementation; gates and required artifacts are CONFIRMED doctrine.
+CONFIRMED lifecycle invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** (Directory Rules placement protocol; Atlas v1.1 §24.6). Application to archaeology is PROPOSED implementation; gates and required artifacts are CONFIRMED doctrine.
 
 ```mermaid
 flowchart LR
@@ -289,7 +300,7 @@ flowchart LR
 
 ## Ubiquitous language
 
-CONFIRMED terms / PROPOSED field realization (Atlas v1.1 §15.C). Each term is used inside this domain with meaning constrained by source role, evidence, time, and release state. KFM casing is preserved.
+CONFIRMED terms / PROPOSED field realization (Atlas v1.1 §15.C). Each term is used inside this domain with meaning constrained by source role, evidence, time, and release state. KFM casing is preserved. The full glossary lives in `docs/domains/archaeology/ubiquitous-language.md`; the key terms:
 
 | Term | One-line definition |
 |---|---|
@@ -307,7 +318,7 @@ CONFIRMED terms / PROPOSED field realization (Atlas v1.1 §15.C). Each term is u
 | `PublicationTransformReceipt` | A signed record of the redaction / generalization applied before publication. |
 
 > [!NOTE]
-> **Candidate ≠ confirmed.** Atlas §15 makes this explicit. `CandidateFeature`, `RemoteSensingAnomaly`, and `LiDARCandidate` MUST NOT be labeled, indexed, or published as `ArchaeologicalSite` without cultural and steward review.
+> **Candidate ≠ confirmed.** Atlas §15 makes this explicit. `CandidateFeature`, `RemoteSensingAnomaly`, and `LiDARCandidate` MUST NOT be labeled, indexed, or published as `ArchaeologicalSite` without cultural and steward review (ML-061-167).
 
 [Back to top](#contents)
 
@@ -315,23 +326,24 @@ CONFIRMED terms / PROPOSED field realization (Atlas v1.1 §15.C). Each term is u
 
 ## Source families
 
-CONFIRMED families (Atlas v1.1 §15.D; Encyclopedia §7.13.B). Rights, sensitivity, and freshness are source-vintage specific and require verification per source.
+CONFIRMED families (Atlas v1.1 §15.D; Encyclopedia §7.13.B). In Atlas §15.D each family carries the uniform role pattern *authority / observation / context / model as the source requires*, with **rights and current terms `NEEDS VERIFICATION`** and **sensitive joins fail closed**.
 
-| Source family | Role | Default sensitivity | Status |
+> [!NOTE]
+> The "Likely role" and "Indicative tier" columns below are **`INFERRED`** drafting guidance, **not** Atlas §15.D doctrine (the Atlas does not assign per-family tiers). The actual source role is fixed per source at admission; the actual tier is set by the §24.5 object-class matrix, not by source family. Confirm both against a mounted repo.
+
+| Source family | Likely role (INFERRED) | Indicative tier (INFERRED) | Rights status |
 |---|---|---|---|
-| State site inventory / SHPO or equivalent | authority / observation | T4 default | NEEDS VERIFICATION (rights) |
-| Public NRHP-like listings | authority / observation | T1 / T2 | NEEDS VERIFICATION (rights) |
-| Field survey forms | observation / authority | T2 / T4 | NEEDS VERIFICATION (rights) |
-| Excavation records and provenience packets | observation / authority | T2 / T4 | NEEDS VERIFICATION (rights) |
-| Artifact / collection / repository records | observation / authority | T2 / T4 | NEEDS VERIFICATION (rights) |
-| Lab reports | observation / model | T2 / T4 | NEEDS VERIFICATION (rights) |
-| Historic maps / plats / land records / newspapers | context | T0 / T1 | NEEDS VERIFICATION (rights) |
-| Tribal / steward review records | authority | T3 / T4 | NEEDS VERIFICATION (sovereignty) |
-| LiDAR / remote sensing / geophysics | observation | T2 / T4 (sensitive zones) | NEEDS VERIFICATION (rights, cadence) |
-| Oral history and cultural knowledge | authority | T3 / T4 | NEEDS VERIFICATION (consent, sovereignty) |
+| State site inventory / SHPO or equivalent | authority / observation | T4 floor | NEEDS VERIFICATION |
+| Public NRHP-like listings | regulatory / authority | T1 / T2 | NEEDS VERIFICATION |
+| Field survey forms | observation | T2 / T4 | NEEDS VERIFICATION |
+| Excavation records and provenience packets | observation | T2 / T4 | NEEDS VERIFICATION |
+| Artifact / collection / repository records | administrative / observation | T2 / T4 | NEEDS VERIFICATION |
+| Lab reports | observation / model | T2 / T4 | NEEDS VERIFICATION |
+| Historic maps / plats / land records / newspapers | administrative / context | T0 / T1 | NEEDS VERIFICATION |
+| Oral history and cultural knowledge | authority (steward-held) | T3 / T4 | NEEDS VERIFICATION (consent, sovereignty) |
 
 > [!CAUTION]
-> Sensitive joins **fail closed** by default. A source family's "default" tier is the *floor*, not the ceiling — any join, derivative, or aggregation that increases re-identification risk must trigger a fresh sensitivity review and a recorded `SensitivityTransform`.
+> Sensitive joins **fail closed** by default (Atlas §15.D). An indicative tier is the *floor*, not the ceiling — any join, derivative, or aggregation that increases re-identification risk must trigger a fresh sensitivity review and a recorded `SensitivityTransform`. Oral history and steward-held records route through the Indigenous/cultural §23.2 row.
 
 [Back to top](#contents)
 
@@ -341,7 +353,7 @@ CONFIRMED families (Atlas v1.1 §15.D; Encyclopedia §7.13.B). Rights, sensitivi
 
 CONFIRMED doctrine: KFM publishes the safest representation that still answers the reasonable need (Atlas v1.1 §24.5). The Deny-by-Default Register (Atlas v1.0 §20.5) names the archaeology defaults; v1.1 §24.5.2 binds them to tiers and required gates.
 
-### Archaeology tier defaults (PROPOSED defaults from Atlas v1.1 §24.5.2)
+### Archaeology tier defaults (Atlas v1.1 §24.5.2 — defaults PROPOSED until ADR-S-05)
 
 | Object class | Default tier | Allowed transforms | Required gates |
 |---|---|---|---|
@@ -362,15 +374,16 @@ CONFIRMED doctrine: KFM publishes the safest representation that still answers t
 | T4 | Denied | No release. Existence of the record may be acknowledged only as steward review permits. |
 
 > [!IMPORTANT]
-> **CARE binds the publication gate, not the badge.** Per Pass 10 Category C15 and MapLibre supplement ML-061: an asset whose MetaBlock v2 declares a non-empty `authority_to_control` is gated by an OPA default-deny rule. Consent grants must be present, valid, and unrevoked, and the gate runs at both promotion *and* admission. FAIR/CARE badges in the UI are **not** release authority — `EvidenceBundle`, `PolicyDecision`, and `PromotionDecision` are.
+> **CARE binds the publication gate, not the badge.** Per Pass 10 Category C15 (C15-01, C15-03): a MetaBlock v2 asset whose `authority_to_control` is non-empty is gated by an OPA **default-deny** rule that fails closed unless an explicit allow rule (valid, unrevoked consent) is satisfied. FAIR/CARE badges in the UI are **not** release authority — `EvidenceBundle`, `PolicyDecision`, and `PromotionDecision` are (ML-061-160).
 
 ### Generalization thresholds (CONFIRMED source evidence, PROPOSED implementation)
 
-From the Master MapLibre Components reference (SRC-059, SRC-061):
+From the Master MapLibre Components reference:
 
-- Generalization of **at least 5 km** for terrain tied to archaeological locations (ML-059-055, ML-059-068).
+- Coordinate generalization of **at least 5 km** for terrain tied to archaeological locations (ML-059-055; enforced as a 3D-admission DENY in `maplibre-3d.md` §8.1).
 - **Any geometry below H3 r7** is prohibited for sensitive archaeology products without review (ML-061-159).
-- CARE labels and sovereignty notice chips are required in UI for sensitive content (ML-061-160).
+- Sensitive / sacred symbols MUST NOT default to full public display; generalized or hidden tiers are required (ML-059-046).
+- CARE labels and sovereignty notice chips are required in the UI for sensitive content (ML-061-160).
 - Generalization logs are validation evidence and must accompany sensitive map products (ML-061-161).
 
 [Back to top](#contents)
@@ -379,7 +392,7 @@ From the Master MapLibre Components reference (SRC-059, SRC-061):
 
 ## Cross-domain relations
 
-CONFIRMED edges (Atlas v1.1 §15.F). Each relation must preserve ownership, source role, sensitivity, and `EvidenceBundle` support.
+CONFIRMED edges (Atlas v1.1 §15.F). Each relation must preserve ownership, source role, sensitivity, and `EvidenceBundle` support. The full treatment lives in `docs/domains/archaeology/cross-lane-relations.md`.
 
 | This domain | Related lane | Relation type | Constraint |
 |---|---|---|---|
@@ -387,8 +400,9 @@ CONFIRMED edges (Atlas v1.1 §15.F). Each relation must preserve ownership, sour
 | Archaeology | Roads/Rail | Historic routes, cultural paths. | Roads/Rail does not confirm sites. |
 | Archaeology | Settlements/Infrastructure | Forts, missions, townsites, reservation communities. | Generalized historical context only; no exact-site bypass. |
 | Archaeology | Hazards | Threat, erosion, fire, flood, exposure context. | Hazards never confirms a site or weakens sensitivity. |
-| Archaeology | Flora | Ethnobotanical context (rare plant locations under steward review). | Mutual exact-location denial. |
-| Archaeology | People/Land | Historic person-place links — strict T4 defaults on overlap. | Living-person fields denied; consent required. |
+
+> [!NOTE]
+> The four rows above are the `CONFIRMED` Atlas §15.F relations. Two further edges sometimes cited — **Flora** (ethnobotanical context) and **People/Land** (historic person-place links) — are **`INFERRED`** from adjacent-domain non-ownership statements, not from the §15.F table. Treat them as plausible context edges pending confirmation; both carry mutual exact-location denial and (for People/Land) living-person/consent controls.
 
 [Back to top](#contents)
 
@@ -407,7 +421,7 @@ PROPOSED governed-API surface for archaeology (Atlas v1.1 §15.J). Exact routes,
 | Schema responsibility root | `schemas/contracts/v1/domains/archaeology/` | finite validator outcomes | PROPOSED per ADR-0001. |
 
 > [!NOTE]
-> Per Directory Rules §7 (Trust Membrane), public clients **must** read through `apps/governed-api/`, not directly from `data/processed/`, `data/catalog/`, or `data/published/`. Cesium / 3D renderers, where present, consume the same `EvidenceBundle` and `DecisionEnvelope` as 2D — they are alternate renderers, not alternate truth paths.
+> Per the Trust Membrane, public clients **must** read through `apps/governed-api/`, not directly from `data/processed/`, `data/catalog/`, or `data/published/`. Cesium / 3D renderers, where present, consume the same `EvidenceBundle` and `DecisionEnvelope` as 2D — they are alternate renderers, not alternate truth paths.
 
 [Back to top](#contents)
 
@@ -415,7 +429,7 @@ PROPOSED governed-API surface for archaeology (Atlas v1.1 §15.J). Exact routes,
 
 ## Validators, tests, fixtures (PROPOSED)
 
-PROPOSED test catalog (Atlas v1.1 §15.K). All names are illustrative; presence and behavior require verification against a mounted `tests/domains/archaeology/` and `fixtures/domains/archaeology/`.
+PROPOSED test catalog (Atlas v1.1 §15.K). All names are illustrative; presence and behavior require verification against a mounted `tests/domains/archaeology/` and `fixtures/domains/archaeology/`. Each test must exercise its negative (`DENY`/`ABSTAIN`/`HOLD`) branch, not only the happy path.
 
 - PROPOSED — `EvidenceBundle`-required tests (no public claim without bundle closure).
 - PROPOSED — candidate-not-site tests (`CandidateFeature` cannot promote to `ArchaeologicalSite` without cultural and steward review).
@@ -425,7 +439,7 @@ PROPOSED test catalog (Atlas v1.1 §15.K). All names are illustrative; presence 
 - PROPOSED — catalog closure tests (`EvidenceRef` resolves, digests close).
 - PROPOSED — AI exact-location denial (Focus Mode must DENY exact-coordinate queries).
 - PROPOSED — generalization-log presence tests (Atlas v1.1 §24.5; ML-061-161).
-- PROPOSED — CARE default-deny tests (C15-03; `authority_to_control` triggers OPA deny without valid consent).
+- PROPOSED — CARE default-deny tests (C15-03; non-empty `authority_to_control` triggers OPA deny without valid consent).
 
 [Back to top](#contents)
 
@@ -433,18 +447,19 @@ PROPOSED test catalog (Atlas v1.1 §15.K). All names are illustrative; presence 
 
 ## Governed AI posture
 
-CONFIRMED doctrine / PROPOSED implementation (Atlas v1.1 §15.L):
+CONFIRMED doctrine / PROPOSED implementation (Atlas v1.1 §15.L). Full treatment in `docs/domains/archaeology/governed-ai-behavior.md`:
 
 > AI MAY summarize *released* Archaeology `EvidenceBundle`s, compare evidence, explain limitations, and draft steward-review notes. AI MUST `ABSTAIN` when evidence is insufficient and `DENY` where policy, rights, sensitivity, or release state blocks the request.
 
-Applied constraints (from Master MapLibre supplement ML-061-162, ML-061-163):
+Applied constraints (from Master MapLibre supplement ML-061-162, ML-061-163, ML-061-164):
 
 - Focus Mode for archaeology MUST be sovereignty-aware and explain which evidence influenced the answer.
 - Cluster summaries (e.g., "Late Prehistoric activity zones") MUST state that zones are **generalized**, not precise sites.
+- Focus Mode archaeology panels show CARE labels, provenance badges, and generalization/uncertainty explanations.
 - AI never reads RAW or WORK content; it consumes only released `EvidenceBundle`s gated by `PolicyDecision` and tagged with an `AIReceipt`.
 
 > [!IMPORTANT]
-> **Fluent generation is not evidence.** Per the project's Governed AI Rule (and the `<governed_ai_rule>` in the Directory Rules priority order): AI is interpretive, not the root truth source. `EvidenceBundle` outranks generated language. A polished Focus Mode answer that lacks bundle support MUST `ABSTAIN`, not `ANSWER`.
+> **Fluent generation is not evidence.** Per the project's Governed AI Rule, AI is interpretive, not the root truth source. `EvidenceBundle` outranks generated language. A polished Focus Mode answer that lacks bundle support MUST `ABSTAIN`, not `ANSWER`.
 
 [Back to top](#contents)
 
@@ -487,7 +502,7 @@ Archaeology publication requires:
 Where files in this folder come from:
 
 - **Authored** by the archaeology steward, cultural-review reviewer, and docs steward, with mandatory cross-review for any change that touches sensitivity, sovereignty, or release posture.
-- **Synchronized** from upstream doctrine: Atlas v1.1 §15 and §24.5; Encyclopedia §7.13; Directory Rules §12; Pass 10 / Pass 18 idea cards; MapLibre supplement ML-059 / ML-061.
+- **Synchronized** from upstream doctrine: Atlas v1.1 §15 and §24.5; Encyclopedia §7.13; Directory Rules (Domain Placement Law); Pass 10 / Pass 18 idea cards; MapLibre supplement ML-059 / ML-061.
 - **Not** generated by build tools, pipelines, or AI without explicit human review and a recorded `ReviewRecord`.
 
 [Back to top](#contents)
@@ -519,7 +534,7 @@ How this folder is checked. Validators below are **PROPOSED** until verified in 
 | KFM Meta Block v2 schema | `tools/validators/docs/meta-block` | Fail PR. |
 | Cross-reference parity (terms match Atlas / Encyclopedia) | `tools/validators/docs/terminology-parity` | Fail PR. |
 | Truth-label discipline (no unlabeled implementation claims) | `tools/validators/docs/truth-label-lint` | Warn → fail at maturity. |
-| Stale-doc detection (last reviewed > 6 months) | `tools/validators/docs/stale-scan` | Auto-populate drift register (Directory Rules §15). |
+| Stale-doc detection (last reviewed > 6 months) | `tools/validators/docs/stale-scan` | Auto-populate drift register. |
 
 [Back to top](#contents)
 
@@ -530,7 +545,7 @@ How this folder is checked. Validators below are **PROPOSED** until verified in 
 PROPOSED. Final assignments require a CODEOWNERS entry verified against a mounted repository.
 
 - **Required reviewers for any change:** archaeology steward; cultural-review reviewer; docs steward.
-- **Additional required reviewers for changes that touch sensitivity, sovereignty, or release posture:** rights-holder representative (per `authority_to_control`); release authority for any change to Section 16 (Publication, correction, and rollback).
+- **Additional required reviewers for changes that touch sensitivity, sovereignty, or release posture:** rights-holder representative (per `authority_to_control`); release authority for any change to the Publication, correction, and rollback section.
 - **CODEOWNERS reference:** TODO — confirm path `/.github/CODEOWNERS` lists `docs/domains/archaeology/` with the above reviewers.
 
 [Back to top](#contents)
@@ -540,22 +555,23 @@ PROPOSED. Final assignments require a CODEOWNERS entry verified against a mounte
 ## Related folders and docs
 
 > [!NOTE]
-> Links below are **PROPOSED** relative paths. Existence and exact filenames require verification against a mounted repository.
+> Links below are **PROPOSED** relative paths. Existence and exact filenames require verification against a mounted repository. The canonical location of the Directory Rules file is itself an open verification item (see Open questions register OQ-ARCH-RM-01).
 
 - [`docs/domains/README.md`](../README.md) — domain documentation index.
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law §12; Required README Contract §15.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-path discipline.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED.
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — `DecisionEnvelope`, `EvidenceBundle` surfaces.
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance crosswalk.
-- [`docs/registers/AUTHORITY_LADDER.md`](../../registers/AUTHORITY_LADDER.md) — authority ranking.
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — open verification items.
-- [`docs/runbooks/`](../../runbooks/) — rollback drills, validation runs.
-- `contracts/domains/archaeology/` — TODO once present.
-- `schemas/contracts/v1/domains/archaeology/` — TODO once present.
-- `policy/domains/archaeology/` — TODO once present.
-- `tests/domains/archaeology/` — TODO once present.
-- `release/candidates/archaeology/` — TODO once present.
+- `directory-rules.md` — Domain Placement Law; Required README Contract. *(Canonical path NEEDS VERIFICATION — see OQ-ARCH-RM-01.)*
+- `docs/doctrine/trust-membrane.md` — public-path discipline (PROPOSED path).
+- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED (PROPOSED path).
+- [`docs/domains/archaeology/ubiquitous-language.md`](./ubiquitous-language.md) — full glossary.
+- [`docs/domains/archaeology/source-families.md`](./source-families.md) — source families.
+- [`docs/domains/archaeology/sensitivity-and-publication-posture.md`](./sensitivity-and-publication-posture.md) — tiers + CARE.
+- [`docs/domains/archaeology/pipeline-shape.md`](./pipeline-shape.md) — RAW → PUBLISHED.
+- [`docs/domains/archaeology/cross-lane-relations.md`](./cross-lane-relations.md) — cross-lane edges.
+- [`docs/domains/archaeology/governed-ai-behavior.md`](./governed-ai-behavior.md) — governed-AI posture.
+- [`docs/domains/archaeology/verification-backlog.md`](./verification-backlog.md) — open verification items.
+- `docs/architecture/governed-api.md` — `DecisionEnvelope`, `EvidenceBundle` surfaces (PROPOSED path).
+- `docs/standards/PROV.md` — provenance crosswalk (PROPOSED path).
+- `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide open verification items (PROPOSED path).
+- `contracts/domains/archaeology/` · `schemas/contracts/v1/domains/archaeology/` · `policy/domains/archaeology/` · `tests/domains/archaeology/` · `release/candidates/archaeology/` — TODO once present.
 
 [Back to top](#contents)
 
@@ -565,12 +581,15 @@ PROPOSED. Final assignments require a CODEOWNERS entry verified against a mounte
 
 ADRs that govern or are relevant to this folder:
 
-- **ADR-0001 — Schema home** (CONFIRMED reference): `schemas/contracts/v1/...` is canonical (Directory Rules §13.1).
-- **PROPOSED ADRs from the Master Open-ADR Backlog** (Atlas v1.1 §24.12) that touch archaeology:
-  - ADR-S-04 — Source-role enum vocabulary v1.
-  - ADR-S-05 — Sensitivity tier scheme (T0–T4) — adopt as canonical or revise.
-  - ADR-S-XX — Cultural review process and authorities (TODO — number assignment).
-  - ADR-S-XX — Generalization-threshold canon (5 km terrain; H3 r7 floor) — TODO.
+- **ADR-0001 — Schema home** (CONFIRMED reference): `schemas/contracts/v1/...` is canonical.
+- **PROPOSED ADRs from the Master Open-ADR Backlog** (Atlas v1.1 §24.12 / ADR-S series) that touch archaeology:
+  - **ADR-S-04** — Source-role enum vocabulary v1.
+  - **ADR-S-05** — Sensitivity tier scheme (T0–T4) — adopt as canonical or revise.
+  - **ADR-S-09** — Governed-AI provider-neutral adapter contract (Focus Mode / `AIReceipt`).
+  - **ADR-S-11** — Cross-lane join policy + `most-restrictive-applicable` default.
+  - **ADR-S-12** — Two-person-rule scope for T3/T4 promotion.
+  - **ADR-S-NN (TODO — number)** — Cultural review process and authorities.
+  - **ADR-S-NN (TODO — number)** — Generalization-threshold canon (≥5 km terrain; H3 r7 floor).
 - TODO — confirm `docs/adr/` index entries when repo is mounted.
 
 [Back to top](#contents)
@@ -579,7 +598,7 @@ ADRs that govern or are relevant to this folder:
 
 ## Verification backlog and open questions
 
-Direct from Atlas v1.1 §15.N, plus this README's residual gaps. All are **NEEDS VERIFICATION** until a mounted repository confirms or refutes them.
+Direct from Atlas v1.1 §15.N, plus this README's residual gaps. All are **NEEDS VERIFICATION** until a mounted repository confirms or refutes them. The lane-scoped backlog with IDs lives in `docs/domains/archaeology/verification-backlog.md`.
 
 | Item | Evidence that would settle it | Status |
 |---|---|---|
@@ -590,7 +609,56 @@ Direct from Atlas v1.1 §15.N, plus this README's residual gaps. All are **NEEDS
 | Confirm CODEOWNERS entries for `docs/domains/archaeology/`. | Mounted `.github/CODEOWNERS`. | NEEDS VERIFICATION |
 | Confirm presence of `schemas/contracts/v1/domains/archaeology/`. | Mounted schema tree. | NEEDS VERIFICATION |
 | Confirm validator + workflow names referenced in Validation table. | Mounted `tools/` and `.github/workflows/`. | NEEDS VERIFICATION |
-| Confirm ADR numbers for source-role enum, sensitivity tiers, generalization thresholds. | Mounted `docs/adr/`. | NEEDS VERIFICATION |
+| Confirm ADR numbers for source-role enum, sensitivity tiers, generalization thresholds, cultural review. | Mounted `docs/adr/`. | NEEDS VERIFICATION |
+
+[Back to top](#contents)
+
+---
+
+## Open questions register
+
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-ARCH-RM-01 | What is the canonical path/filename for the Directory Rules file (`directory-rules.md` vs `docs/doctrine/directory-rules.md` vs `Directory Rules.pdf`)? | docs steward | repo inspection / ADR |
+| OQ-ARCH-RM-02 | Is the lane filename convention lowercase-hyphenated (siblings) or `UPPERCASE.md`? | docs steward | repo inspection / `DRIFT_REGISTER.md` |
+| OQ-ARCH-RM-03 | Are the §15.F cross-lane edges only the four CONFIRMED rows, or do Flora and People/Land edges belong in the table? | archaeology steward | ADR / repo inspection |
+| OQ-ARCH-RM-04 | Do per-source tiers exist, or is tier set solely by the §24.5 object-class matrix? | archaeology steward | steward ratification |
+| OQ-ARCH-RM-05 | What ADR numbers cover cultural-review process and generalization-threshold canon? | docs steward | repo inspection |
+
+[Back to top](#contents)
+
+---
+
+## Changelog
+
+| Version | Change | Type (per contract §37) | Reason |
+|---|---|---|---|
+| v1 → v2 | Pinned `CONTRACT_VERSION = "3.0.0"`; added badge + meta field | clarification | Doctrine-adjacent doc requirement |
+| v1 → v2 | Reconciled sibling filenames to lowercase-hyphenated; linked existing sibling docs | reconciliation | Match the lane's actual sibling docs |
+| v1 → v2 | Relabeled per-source tiers in Source families as `INFERRED` (not §15.D doctrine) | reconciliation | Atlas §15.D assigns no per-family tiers; avoid overclaiming |
+| v1 → v2 | Marked Flora / People/Land cross-lane rows `INFERRED` (not §15.F) | reconciliation | §15.F has four CONFIRMED rows only |
+| v1 → v2 | Surfaced Directory Rules path and §15.B↔§15.C naming as `CONFLICTED`/open | reconciliation | Do not smooth over unresolved naming |
+| v1 → v2 | Added Open questions register, Changelog, Definition of done | gap closure | Doctrine companion sections |
+| v1 → v2 | Filled ADR-S numbers (04, 05, 09, 11, 12) from the backlog | gap closure | Replace generic placeholders with corpus-grounded IDs |
+
+> **Backward compatibility.** All v1 section anchors are preserved (headings 1–25 unchanged in text). New sections (Open questions register, Changelog, Definition of done) were inserted before FAQ and Appendix; the Contents list was renumbered accordingly. No v1 content was removed.
+
+[Back to top](#contents)
+
+---
+
+## Definition of done
+
+This README is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (`docs/domains/archaeology/`);
+- the archaeology steward, cultural-review reviewer, and docs steward review it;
+- it is linked from `docs/domains/README.md` and the lane sibling docs;
+- it does not conflict with accepted ADRs (notably ADR-0001);
+- the Directory Rules path (OQ-ARCH-RM-01) and filename convention (OQ-ARCH-RM-02) are resolved or logged in `docs/registers/DRIFT_REGISTER.md`;
+- owner and CODEOWNERS placeholders are replaced with verified values;
+- the `GENERATED_RECEIPT.json` planned in Section 2 (Notes) is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
 
 [Back to top](#contents)
 
@@ -608,7 +676,7 @@ The repository is not mounted in this session. Per Directory Rules and the proje
 <details>
 <summary><strong>Q: Can a "Late Prehistoric activity zone" be shown on the public map?</strong></summary>
 
-CONFIRMED doctrine: generalized cultural-temporal zones MAY be shown publicly when they are explicitly labeled as **generalized**, not precise sites (per Master MapLibre supplement ML-061-163). Exact site geometry remains T4 by default. Any zone visualization must carry a `RedactionReceipt` and a CARE label.
+CONFIRMED doctrine: generalized cultural-temporal zones MAY be shown publicly when they are explicitly labeled as **generalized**, not precise sites (ML-061-163). Exact site geometry remains T4 by default. Any zone visualization must carry a `RedactionReceipt` and a CARE label.
 
 </details>
 
@@ -629,7 +697,7 @@ No. Per the Governed AI posture and CARE default-deny rule, exact-coordinate que
 <details>
 <summary><strong>Q: Why is `CandidateFeature` distinct from `ArchaeologicalSite`?</strong></summary>
 
-Atlas §15 explicitly marks the distinction: anomalies from LiDAR, remote sensing, and geophysics are *candidates*, not confirmed sites. A candidate cannot be labeled, indexed, or published as a site without cultural and steward review. This separation prevents anomaly-detection workflows from inadvertently confirming sites under the public layer (Pass 18 KFM-P18-INV-019; ML-061-159).
+Atlas §15 explicitly marks the distinction: anomalies from LiDAR, remote sensing, and geophysics are *candidates*, not confirmed sites. A candidate cannot be labeled, indexed, or published as a site without cultural and steward review. This separation prevents anomaly-detection workflows from inadvertently confirming sites under the public layer (ML-061-159; ML-061-167).
 
 </details>
 
@@ -643,19 +711,19 @@ Atlas §15 explicitly marks the distinction: anomalies from LiDAR, remote sensin
 <summary><strong>A. Doctrine sources consulted for this README (CONFIRMED)</strong></summary>
 
 - *KFM Domains Culmination Atlas* v1.1 — §15 (Archaeology and Cultural Heritage); §24.5 (Sensitivity tier matrix); §24.6 (Pipeline gates); §24.12 (Open-ADR backlog); Appendix G (Lineage).
-- *KFM Domain and Capability Encyclopedia* v0.1 — §7.13 (Archaeology and Cultural Heritage); §20.5 (Deny-by-Default Register).
-- *Directory Rules* — §4 (Placement Protocol); §6.1 (`docs/` tree); §7 (Trust Membrane); §12 (Domain Placement Law); §13 (Anti-Patterns); §15 (Required README Contract); §16 (Path-Validation Checklist).
-- *KFM Whole-UI + Governed AI Expansion Report* — `docs/domains/README.md` placement reference (Appendix A).
-- *Master MapLibre Components-Functions-Features* — ML-059 (CARE metadata, 5 km generalization); ML-061 (sensitive geometry, H3 r7, sovereignty-aware Focus Mode); ML-064 (dynamic H3 generalization).
-- *KFM Components Pass 10 Idea Index* — C6 (Sensitivity rubric); C15 (FAIR + CARE Reconciliation, default-deny on CARE-tagged assets).
-- *KFM Pass 18 Idea Index* — KFM-P18-INV-019, KFM-P18-INV-020, and related cards (3D archaeology, candidate-not-site).
+- *KFM Domain and Capability Encyclopedia* — §7.13 (Archaeology and Cultural Heritage); §20.5 (Deny-by-Default Register).
+- *Directory Rules* — Placement Protocol; `docs/` tree; Trust Membrane; Domain Placement Law; Anti-Patterns; Required README Contract; Path-Validation Checklist.
+- *Master MapLibre Components-Functions-Features* v2.1 — ML-059 (CARE metadata, 5 km generalization: ML-059-046, ML-059-055); ML-061 (sensitive geometry / H3 r7: ML-061-159; CARE labels: ML-061-160; generalization logs: ML-061-161; sovereignty-aware Focus Mode: ML-061-162/163/164; candidate-not-site: ML-061-167).
+- *maplibre-3d.md* — §8.1 default-deny matrix (Archaeology without ≥5 km generalization → DENY).
+- *KFM Components Pass 10 Idea Index* — C15 (FAIR + CARE Reconciliation: C15-01 MetaBlock v2 CARE fields; C15-03 OPA default-deny on CARE-tagged assets).
+- *KFM Pass 18 Idea Index* — KFM-P18-INV-019 and related (3D archaeology, candidate-not-site); *Pass 32* KFM-P9-FEAT-0012 (anomaly detection as reviewed inference).
 
 </details>
 
 <details>
 <summary><strong>B. Glossary cross-reference (KFM terms preserved exactly)</strong></summary>
 
-`EvidenceRef` · `EvidenceBundle` · `SourceDescriptor` · `RunReceipt` · `TransformReceipt` · `RedactionReceipt` · `AggregationReceipt` · `PublicationTransformReceipt` · `ValidationReport` · `DecisionEnvelope` · `ReleaseManifest` · `RollbackCard` · `CorrectionNotice` · `ReviewRecord` · `CulturalReview` · `StewardReview` · `LayerManifest` · `EvidenceDrawerPayload` · `AIReceipt` · `SensitivityTransform` · `PromotionDecision` · `MetaBlock v2`.
+`EvidenceRef` · `EvidenceBundle` · `SourceDescriptor` · `RunReceipt` · `TransformReceipt` · `RedactionReceipt` · `AggregationReceipt` · `PublicationTransformReceipt` · `ValidationReport` · `DecisionEnvelope` · `RuntimeResponseEnvelope` · `ReleaseManifest` · `RollbackCard` · `CorrectionNotice` · `ReviewRecord` · `CulturalReview` · `StewardReview` · `LayerManifest` · `EvidenceDrawerPayload` · `AIReceipt` · `SensitivityTransform` · `PromotionDecision` · `MetaBlock v2`.
 
 </details>
 
@@ -680,9 +748,11 @@ Before opening a PR that touches this folder:
 ---
 
 ### Last reviewed
-2026-05-15
+2026-05-28
 
 ### Related docs
-[`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/standards/PROV.md`](../../standards/PROV.md) · [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
+[`docs/domains/README.md`](../README.md) · `directory-rules.md` · [`docs/domains/archaeology/sensitivity-and-publication-posture.md`](./sensitivity-and-publication-posture.md) · [`docs/domains/archaeology/governed-ai-behavior.md`](./governed-ai-behavior.md) · [`docs/domains/archaeology/verification-backlog.md`](./verification-backlog.md)
+
+**CONTRACT_VERSION = "3.0.0"**
 
 [⬆ Back to top](#archaeology-and-cultural-heritage--domain-documentation)
