@@ -4,11 +4,13 @@ title: Atmosphere — Domain Architecture
 type: standard
 version: v1
 status: draft
-owners: <atmosphere-domain-stewards>  # PLACEHOLDER — assign before review
+owners: <atmosphere-domain-stewards>  # PLACEHOLDER — assign in CODEOWNERS before review
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-05-28
 policy_label: public
+contract_version: "3.0.0"
 related:
+  - ai-build-operating-contract.md
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/governed-api.md
@@ -18,7 +20,9 @@ related:
   - data/registry/sources/atmosphere/
 tags: [kfm, domain, atmosphere, air, climate, weather]
 notes:
-  - "Implementation paths are PROPOSED until mounted-repo verification (Directory Rules §18)."
+  - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md."
+  - "Directory Rules cited at v1.3 (current corpus version)."
+  - "Implementation paths are PROPOSED until mounted-repo verification."
   - "Domain ownership and source rights still NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
@@ -32,16 +36,18 @@ notes:
 ![implementation](https://img.shields.io/badge/implementation-PROPOSED-yellow)
 ![lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-lightgrey)
 ![policy](https://img.shields.io/badge/policy-public%2Fsafe--by--default-blueviolet)
-![last%20updated](https://img.shields.io/badge/last%20updated-2026--05--15-informational)
+![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-6f42c1)
+![last%20updated](https://img.shields.io/badge/last%20updated-2026--05--28-informational)
 <!-- Badge targets are placeholders; replace with Shields.io endpoints once CI, release, and registry surfaces are wired. -->
 
 | Field | Value |
 |---|---|
 | **Status** | Draft (CONFIRMED doctrine / PROPOSED implementation) |
-| **Owners** | `<atmosphere-domain-stewards>` — placeholder; assign before review |
-| **Last reviewed** | 2026-05-15 |
-| **Doctrinal anchor** | KFM Domains Culmination Atlas §11; KFM Encyclopedia §7.9 |
-| **Placement** | `docs/domains/atmosphere/ARCHITECTURE.md` (Directory Rules §5, §12) |
+| **Owners** | `<atmosphere-domain-stewards>` — placeholder; assign in `CODEOWNERS` before review |
+| **Operating contract** | `CONTRACT_VERSION = "3.0.0"` — `ai-build-operating-contract.md` |
+| **Last reviewed** | 2026-05-28 |
+| **Doctrinal anchor** | KFM Domains Culmination Atlas Ch. 11 (Atmosphere/Air); KFM Encyclopedia (Atmosphere/Air/Climate) |
+| **Placement** | `docs/domains/atmosphere/ARCHITECTURE.md` (Directory Rules v1.3 §4 Step 3, §12) |
 
 > [!IMPORTANT]
 > Every path, schema home, route name, validator, package, and CI workflow named below is **PROPOSED** until verified against a mounted repository. Doctrine in this document is grounded in attached KFM sources; implementation maturity is not claimed. See [Verification backlog](#verification-backlog).
@@ -80,7 +86,7 @@ notes:
 The domain participates in the KFM trust membrane the same way every other lane does: every public claim resolves through a governed API, against an `EvidenceBundle`, with finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`), traceable to a `ReleaseManifest` and a rollback target.
 
 > [!NOTE]
-> "Atmosphere" here is the directory-lane name from Directory Rules §12 and the Domain Atlas §11; the encyclopedia refers to the same scope as "Atmosphere, Air, and Climate" (§7.9). Both names cover the same bounded context.
+> "Atmosphere" here is the directory-lane name from Directory Rules §12 (Domain Placement Law) and the Domain Atlas Ch. 11; the Encyclopedia refers to the same scope as "Atmosphere, Air, and Climate." Both names cover the same bounded context. The exact Encyclopedia section anchor is **NEEDS VERIFICATION** — cite the chapter, not a pinned section number, until confirmed.
 
 [⬆ Back to top](#-quick-jump)
 
@@ -88,7 +94,7 @@ The domain participates in the KFM trust membrane the same way every other lane 
 
 ## 2. Repo fit
 
-**Doctrinal placement (Directory Rules §5, §12):** This file lives at `docs/domains/atmosphere/ARCHITECTURE.md`. The atmosphere domain is a *lane* under multiple responsibility roots — it is **not** a root folder. The placement is canonical for `docs/`; sibling lanes appear under `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`, `pipeline_specs/`, `data/`, `release/`. See [§11. Domain lanes](#11-domain-lanes-placement).
+**Doctrinal placement (Directory Rules v1.3 §4 Step 3, §12):** This file lives at `docs/domains/atmosphere/ARCHITECTURE.md`. The atmosphere domain is a *lane* under multiple responsibility roots — it is **not** a root folder. The placement is canonical for `docs/`; sibling lanes appear under `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`, `pipeline_specs/`, `data/`, `release/`. See [§11. Domain lanes](#11-domain-lanes-placement).
 
 | Direction | Counterpart | Status |
 |---|---|---|
@@ -97,10 +103,13 @@ The domain participates in the KFM trust membrane the same way every other lane 
 | **Cross-domain peers** | `docs/domains/hazards/`, `docs/domains/agriculture/`, `docs/domains/hydrology/`, `docs/domains/{habitat,fauna,flora}/` | **PROPOSED** paths |
 | **Contracts** | `contracts/domains/atmosphere/` | **PROPOSED** |
 | **Schemas** | `schemas/contracts/v1/domains/atmosphere/` (per ADR-0001 default) | **PROPOSED** |
-| **Policy** | `policy/domains/atmosphere/` | **PROPOSED** |
+| **Policy** | `policy/domains/atmosphere/` | **PROPOSED**; `policy/` singular is canonical (ADR-0003, PROPOSED) |
 | **Tests / fixtures** | `tests/domains/atmosphere/`, `fixtures/domains/atmosphere/` | **PROPOSED** |
-| **Data lanes** | `data/{raw,work,quarantine,processed}/atmosphere/`, `data/catalog/domain/atmosphere/`, `data/published/layers/atmosphere/`, `data/registry/sources/atmosphere/` | **PROPOSED** |
+| **Data lanes** | `data/{raw,work,quarantine,processed}/atmosphere/`, `data/catalog/domain/atmosphere/`, `data/published/layers/atmosphere/`, `data/registry/sources/atmosphere/`, `data/rollback/atmosphere/` | **PROPOSED** |
 | **Release** | `release/candidates/atmosphere/` | **PROPOSED** |
+
+> [!NOTE]
+> **Receipts/proofs vs. release split (Directory Rules v1.3 §8.2, §9.1).** Trust-bearing receipts and proofs live under `data/receipts/...` and `data/proofs/...`; release *decisions* (manifests, correction notices, rollback cards) live under `release/`. Rollback lifecycle material itself lives under `data/rollback/<domain>/`. `artifacts/` is build/docs/qa/temporary only and MUST NOT hold any of these.
 
 [⬆ Back to top](#-quick-jump)
 
@@ -137,10 +146,10 @@ The following are explicitly **not** owned by this domain:
 
 ## 4. Domain invariants
 
-These four invariants distinguish atmospheric data discipline from generic geospatial data discipline. They are **CONFIRMED doctrine** in the Domain Atlas (§11.I) and **PROPOSED** as enforcement targets for validators and policy gates ([§13](#13-validators-tests-fixtures)).
+These four invariants distinguish atmospheric data discipline from generic geospatial data discipline. They are **CONFIRMED doctrine** in the Domain Atlas (Ch. 11 §I, "Sensitivity, rights, and publication posture") and **PROPOSED** as enforcement targets for validators and policy gates ([§13](#13-validators-tests-fixtures)).
 
 > [!CAUTION]
-> Each invariant has a corresponding validator that should **DENY** the conflated form before any release. Treat these as hard publication gates.
+> Each invariant has a corresponding validator that should **DENY** the conflated form before any release. Treat these as hard publication gates. They are also the acute source-role anti-collapse cases the Atlas flags for Atmosphere/Air.
 
 | # | Invariant | Conflation to deny | Validator (PROPOSED) |
 |---|---|---|---|
@@ -176,7 +185,7 @@ A fifth, operational invariant rounds out the set:
 - **`NETWORK_AND_SITE_CONTEXT`** — station/network metadata: siting, instrument, exposure.
 
 > [!NOTE]
-> "Knowledge character" is itself a domain term (CONFIRMED in the Atlas §11.C). The PROPOSED *knowledge-character registry* will pin these values, their permitted source roles, and their downstream policy behavior. The registry is in the [verification backlog](#verification-backlog).
+> "Knowledge character" is itself a domain term (CONFIRMED in the Atlas Ch. 11 §C, "Ubiquitous language"). The PROPOSED *knowledge-character registry* will pin these values, their permitted source roles, and their downstream policy behavior. The registry is in the [verification backlog](#verification-backlog).
 
 [⬆ Back to top](#-quick-jump)
 
@@ -184,7 +193,7 @@ A fifth, operational invariant rounds out the set:
 
 ## 6. Source families
 
-**CONFIRMED candidates / NEEDS VERIFICATION rights.** Each source family below appears in the Domain Atlas §11.D and Encyclopedia §7.9. *Source role* assignments (authority / observation / context / model) must be recorded in a `SourceDescriptor` per `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` (**PROPOSED**) before public promotion. Rights and current terms remain **NEEDS VERIFICATION**.
+**CONFIRMED candidates / NEEDS VERIFICATION rights.** Each source family below appears in the Domain Atlas Ch. 11 §D and the Encyclopedia. *Source role* assignments (authority / observation / context / model) must be recorded in a `SourceDescriptor` per `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` (**PROPOSED**) before public promotion. The Atlas records the role string for this domain as *"authority / observation / context / model as source role requires,"* with *rights and current terms NEEDS VERIFICATION; sensitive joins fail closed*.
 
 | Source family | Typical role(s) | Knowledge character | Notes | Status |
 |---|---|---|---|---|
@@ -192,13 +201,13 @@ A fifth, operational invariant rounds out the set:
 | AirNow / agency reporting | authority · observation | `PUBLIC_AQI_REPORT` | AQI buckets — invariant **I-1** applies. | NEEDS VERIFICATION |
 | OpenAQ-like aggregators | observation · context | `OBSERVED_SENSOR` | Aggregator terms vary; redistribution rights gate publication. | NEEDS VERIFICATION |
 | NOAA / NWS | authority · context · observation | `METEOROLOGICAL_CONTEXT`, `ALERT_AND_ADVISORY_CONTEXT` | Advisories are context only — invariant boundary with Hazards. | NEEDS VERIFICATION |
-| Kansas Mesonet | observation | `OBSERVED_SENSOR`, `NETWORK_AND_SITE_CONTEXT` | Station-level KS meteorology. | NEEDS VERIFICATION |
+| Kansas Mesonet | observation | `OBSERVED_SENSOR`, `NETWORK_AND_SITE_CONTEXT` | Station-level KS meteorology. INFERRED source; confirm against registry. | NEEDS VERIFICATION |
 | CAMS / ECMWF-family model fields | model | `ATMOSPHERIC_MODEL_FIELD` | Invariant **I-3** applies. | NEEDS VERIFICATION |
 | HRRR-Smoke / NOAA smoke forecast | model | `ATMOSPHERIC_MODEL_FIELD`, `SmokeContext` | Forecast, not observation. | NEEDS VERIFICATION |
 | HMS smoke | observation · context | `REMOTE_SENSING_MASK`, `SmokeContext` | Satellite-derived mask. | NEEDS VERIFICATION |
 | GOES / ABI AOD | observation · model | `REMOTE_SENSING_MASK`, `AODRaster` | Invariant **I-2** applies. | NEEDS VERIFICATION |
 | VIIRS fire / hotspot | observation | `REMOTE_SENSING_MASK` | Cross-lane relation to Hazards. | NEEDS VERIFICATION |
-| Climate normals (e.g., NCEI) | context | `CLIMATE_ANOMALY_CONTEXT`, `ClimateNormal` | Reference periods must be cited. | NEEDS VERIFICATION |
+| Climate normals (e.g., NCEI) | context | `CLIMATE_ANOMALY_CONTEXT`, `ClimateNormal` | Reference periods must be cited. INFERRED source; confirm against registry. | NEEDS VERIFICATION |
 | Low-cost sensor networks (e.g., PurpleAir-like) | observation | `LOW_COST_SENSOR` | Invariant **I-4** applies. | NEEDS VERIFICATION |
 
 > [!IMPORTANT]
@@ -239,7 +248,7 @@ graph LR
 ```
 
 > [!NOTE]
-> The diagram above shows family lineage, not data flow. Public exposure of any of these objects still flows through the trust membrane (§10), regardless of family.
+> The diagram above shows family lineage, not data flow. Public exposure of any of these objects still flows through the trust membrane (§10), regardless of family. Family/role color-coding is illustrative; an object's actual `source_role` is set at admission per source, not by family.
 
 [⬆ Back to top](#-quick-jump)
 
@@ -247,12 +256,12 @@ graph LR
 
 ## 8. Cross-lane relations
 
-**CONFIRMED / PROPOSED.** Atmosphere does not own these adjacent lanes; it *relates* to them. Every relation must preserve ownership, source role, sensitivity, and `EvidenceBundle` support.
+**CONFIRMED / PROPOSED.** Atmosphere does not own these adjacent lanes; it *relates* to them. Every relation must preserve ownership, source role, sensitivity, and `EvidenceBundle` support (Atlas Ch. 11 §F).
 
 | This domain | Related lane | Relation | Constraint |
 |---|---|---|---|
-| Atmosphere | Hazards | smoke, heat/cold, advisory, visibility, fire/emissions context | Preserve ownership; do not republish Hazards events as atmospheric truth. |
-| Atmosphere | Agriculture | heat, smoke, precipitation, vegetation stress inputs | Pass typed context; agriculture decides interpretation. |
+| Atmosphere | Hazards | smoke, heat/cold, advisory, visibility, fire/emissions context | Preserve ownership; do not republish Hazards events as atmospheric truth. KFM is never an alert authority on either side. |
+| Atmosphere | Agriculture | heat, smoke, precipitation, vegetation stress inputs | Pass typed context; agriculture decides interpretation. Aggregate-vs-observation discipline. |
 | Atmosphere | Hydrology | precipitation, drought, flood-weather forcing | Hydrology owns hydrologic drought; atmosphere contributes meteorology. |
 | Atmosphere | Biodiversity (habitat / fauna / flora) | phenology, smoke, fire, drought stress context | Never expose sensitive species locations; redact at the join. |
 
@@ -281,7 +290,7 @@ flowchart LR
 
 ## 9. Pipeline shape (RAW → PUBLISHED)
 
-**CONFIRMED doctrine / PROPOSED lane application.** Atmosphere follows the universal KFM lifecycle (Directory Rules §3, lifecycle law) with promotion as a *governed state transition*, never a file move.
+**CONFIRMED doctrine / PROPOSED lane application.** Atmosphere follows the universal KFM lifecycle (Directory Rules v1.3 §9.1, lifecycle law) with promotion as a *governed state transition*, never a file move.
 
 ```mermaid
 flowchart LR
@@ -295,15 +304,15 @@ flowchart LR
   PUB -. RollbackCard .-> REL
   classDef stage fill:#ecfeff,stroke:#0891b2,color:#164e63;
   classDef gate fill:#fef3c7,stroke:#d97706,color:#7c2d12;
-  classDef end fill:#dcfce7,stroke:#16a34a,color:#14532d;
+  classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d;
   classDef bad fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;
   class R,P,C,REL stage
   class W gate
-  class PUB end
+  class PUB done
   class Q bad
 ```
 
-Gate summary (per Atlas §11.H, all stage realizations **PROPOSED**):
+Gate summary (per Atlas Ch. 11 §H, all stage realizations **PROPOSED**):
 
 | Stage | Handling | Gate |
 |---|---|---|
@@ -314,7 +323,7 @@ Gate summary (per Atlas §11.H, all stage realizations **PROPOSED**):
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | `ReleaseManifest`, correction path, rollback target, review/policy state exist. |
 
 > [!TIP]
-> Connectors emit into `data/raw/atmosphere/` or `data/quarantine/atmosphere/` only. They do **not** publish (Directory Rules §13.5: *connector-publishes* anti-pattern). Watchers emit receipts and candidates; they do not mutate canonical records (*watcher-as-non-publisher* invariant).
+> Connectors emit into `data/raw/atmosphere/` or `data/quarantine/atmosphere/` only. They do **not** publish (Directory Rules §13.5: *connector-publishes* anti-pattern). Watchers emit receipts and candidate decisions; they do not mutate canonical records (*watcher-as-non-publisher* invariant). A pipeline writing directly from `data/raw/` to `data/published/` is the *lifecycle-skip* anti-pattern (§13.5).
 
 [⬆ Back to top](#-quick-jump)
 
@@ -362,7 +371,7 @@ PROPOSED governed surfaces for this domain (exact routes UNKNOWN; verify against
 | Schema responsibility root | `schemas/contracts/v1/domains/atmosphere/` (per ADR-0001 default) | n/a | **PROPOSED**; verify with Directory Rules and ADR |
 
 > [!WARNING]
-> **No public RAW path.** Public clients and normal UI surfaces do not fetch RAW, WORK, QUARANTINE, unpublished candidates, direct source services, or canonical/internal stores for atmospheric data. MapLibre and any 3D renderer consume only released, manifest-bound artifacts via the governed API.
+> **No public RAW path.** Public clients and normal UI surfaces do not fetch RAW, WORK, QUARANTINE, unpublished candidates, direct source services, or canonical/internal stores for atmospheric data. MapLibre and any 3D renderer consume only released, manifest-bound artifacts via the governed API. A public route reading `data/processed/` directly is a trust-membrane anti-pattern (Directory Rules §13.5).
 
 [⬆ Back to top](#-quick-jump)
 
@@ -370,7 +379,7 @@ PROPOSED governed surfaces for this domain (exact routes UNKNOWN; verify against
 
 ## 11. Domain lanes (placement)
 
-**CONFIRMED doctrine (Directory Rules §12) / PROPOSED tree.** The atmosphere lane appears as a *segment* under each responsibility root, never as a root. The tree below is the standard domain placement law instantiated for `atmosphere`:
+**CONFIRMED doctrine (Directory Rules v1.3 §4 Step 3, §12) / PROPOSED tree.** The atmosphere lane appears as a *segment* under each responsibility root, never as a root. The tree below is the standard domain placement law instantiated for `atmosphere`:
 
 ```text
 docs/domains/atmosphere/                          # this file lives here
@@ -389,13 +398,14 @@ data/processed/atmosphere/                        # validated normalized objects
 data/catalog/domain/atmosphere/                   # catalog records + EvidenceBundles
 data/published/layers/atmosphere/                 # released public-safe artifacts
 data/registry/sources/atmosphere/                 # SourceDescriptor entries
+data/rollback/atmosphere/                         # rollback lifecycle material
 release/candidates/atmosphere/                    # release decision artifacts
 ```
 
 > [!NOTE]
-> The above tree is **PROPOSED** as the canonical placement *until mounted-repo inspection confirms it*. Per Directory Rules §18, per-root presence is PROPOSED until a `git ls-tree`-equivalent inspection confirms it.
+> The above tree is **PROPOSED** as the canonical placement *until mounted-repo inspection confirms it*. Per Directory Rules §4 Step 5, any path that no section justifies is marked **PROPOSED** or **NEEDS VERIFICATION** and tracked in `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md`. Receipts and proofs (process memory and evidence closure) are emitted *alongside* these lanes under `data/receipts/...` and `data/proofs/...`; release *decisions* live under `release/` — not in this domain's data lanes.
 
-Cross-domain artifacts (e.g., a smoke validator that also serves Hazards and Agriculture) live under the **lowest common responsibility root** *without* an `atmosphere/` segment — e.g., `tools/validators/smoke/`, not `tools/validators/domains/atmosphere/smoke/`.
+Cross-domain artifacts (e.g., a smoke validator that also serves Hazards and Agriculture) live under the **lowest common responsibility root** *without* an `atmosphere/` segment — e.g., `tools/validators/smoke/`, not `tools/validators/domains/atmosphere/smoke/` (Directory Rules, multi-domain / cross-cutting files).
 
 [⬆ Back to top](#-quick-jump)
 
@@ -410,10 +420,10 @@ Cross-domain artifacts (e.g., a smoke validator that also serves Hazards and Agr
 | Summarize released Atmosphere `EvidenceBundle`s | Evidence is insufficient for a claim | Policy, rights, sensitivity, or release state blocks the request |
 | Compare evidence across sources (with citations) | Citations fail validation | A request would expose unpublished or quarantined data |
 | Explain limitations and uncertainty | Source role is unresolved | A request would conflate AQI with concentration, AOD with PM2.5, or model with observation (invariants I-1 to I-3) |
-| Draft steward-review notes | A claim depends on unresolved knowledge character | Sensitive geometry is implicated |
+| Draft steward-review notes | A claim depends on unresolved knowledge character | Sensitive geometry is implicated; or the framing implies alert authority |
 
 > [!IMPORTANT]
-> **AI never root truth.** Focus Mode flow: define scope → policy precheck → retrieve admissible released evidence → resolve `EvidenceRef`s to `EvidenceBundle`s → call backend model adapter if allowed → validate citations → policy postcheck → return `RuntimeResponseEnvelope` and receipt references. No browser-side model call; no direct canonical-store fetch.
+> **AI never root truth.** Focus Mode flow: define scope → policy precheck → retrieve admissible released evidence → resolve `EvidenceRef`s to `EvidenceBundle`s → call backend model adapter if allowed → validate citations → policy postcheck → return `RuntimeResponseEnvelope` and `AIReceipt`. No browser-side model call; no direct canonical-store fetch. An `AIReceipt` is mandatory for every Focus Mode call, including ABSTAIN and DENY.
 
 [⬆ Back to top](#-quick-jump)
 
@@ -438,24 +448,27 @@ Cross-domain artifacts (e.g., a smoke validator that also serves Hazards and Agr
 
 Fixtures should be **no-network** by default. Co-location windows (e.g., 2–6 weeks for low-cost sensor calibration) appear as validation metadata rather than implicit assumption.
 
+> [!TIP]
+> **Negative fixtures matter as much as positive fixtures.** A `model-as-observed` fixture proves the validator denies the relabel; a `stale-source` fixture proves the surface abstains rather than serving a stale value. The trust posture is enforced by failing closed on the bad cases.
+
 [⬆ Back to top](#-quick-jump)
 
 ---
 
 ## 14. Publication, correction, rollback
 
-**CONFIRMED doctrine / PROPOSED implementation.** Atmosphere publication requires every element of the release closure:
+**CONFIRMED doctrine / PROPOSED implementation.** Atmosphere publication requires every element of the release closure. Placement follows the Directory Rules v1.3 §8.2 / §9.1 split: process memory and evidence live under `data/`; release *decisions* live under `release/`.
 
-- **`ReleaseManifest`** — the release decision artifact (lives in `release/manifests/`, **PROPOSED**).
-- **`EvidenceBundle`** — resolved support package (lives in `data/proofs/`, **PROPOSED**).
-- **Validation + policy support** — `ValidationReport`, `PolicyDecision`.
+- **`ReleaseManifest`** — the release decision artifact (lives under `release/`, **PROPOSED**).
+- **`EvidenceBundle`** — resolved support package (lives under `data/proofs/evidence_bundle/`, **PROPOSED**).
+- **Validation + policy support** — `ValidationReport` (`data/proofs/validation_report/`), `PolicyDecision`.
 - **Review state where required** — `ReviewRecord` (**PROPOSED**).
-- **Correction path** — `CorrectionNotice` (lives in `release/correction_notices/`, **PROPOSED**).
+- **Correction path** — `CorrectionNotice` (a release decision; lives under `release/`, **PROPOSED**).
 - **Stale-state rule** — freshness/badge logic at the trust membrane.
-- **Rollback target** — `RollbackCard` (lives in `release/rollback_cards/`, **PROPOSED**).
+- **Rollback target** — `RollbackCard` (a release decision; lives under `release/`, with rollback lifecycle material under `data/rollback/atmosphere/`, **PROPOSED**).
 
 > [!CAUTION]
-> A release without a rollback target is not a release. A correction without a `CorrectionNotice` is not a correction. A "promotion" that is just a file move is not promotion.
+> A release without a rollback target is not a release. A correction without a `CorrectionNotice` is not a correction. A "promotion" that is just a file move is not promotion. (Receipts and manifests MUST NOT live in `artifacts/` — Directory Rules §8.2.)
 
 [⬆ Back to top](#-quick-jump)
 
@@ -475,7 +488,7 @@ Fixtures should be **no-network** by default. Co-location windows (e.g., 2–6 w
 | Low-cost sensor data | Require correction, caveats, confidence, limitations | Calibration receipt + trust state in payload |
 
 > [!IMPORTANT]
-> Generalization, redaction, delay, and denial each produce a recorded transform — not a silent edit. Every transform leaves a receipt that a `CorrectionNotice` can refer back to.
+> Generalization, redaction, delay, and denial each produce a recorded transform — not a silent edit. Every transform leaves a `RedactionReceipt` (or equivalent transform receipt) that a `CorrectionNotice` can refer back to.
 
 [⬆ Back to top](#-quick-jump)
 
@@ -491,6 +504,7 @@ Fixtures should be **no-network** by default. Co-location windows (e.g., 2–6 w
 - **AOD rendered as PM2.5.** Invariant **I-2** — fail closed.
 - **Model fields displayed as observations.** Invariant **I-3** — fail closed.
 - **Cross-domain truth claims.** Atmosphere supplies context; ownership belongs to the receiving lane.
+- **Receipts, proofs, or release manifests in `artifacts/`.** Trust-bearing material lives under `data/` or `release/` (Directory Rules §8.2).
 - **Anything written to `data/published/` without a `ReleaseManifest` + rollback target.** Lifecycle skip is an anti-pattern (Directory Rules §13.5).
 
 [⬆ Back to top](#-quick-jump)
@@ -502,8 +516,9 @@ Fixtures should be **no-network** by default. Co-location windows (e.g., 2–6 w
 > [!NOTE]
 > All paths below are **PROPOSED** until mounted-repo verification. Resolve links once the corresponding docs land.
 
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED present in project)*
 - [`docs/domains/README.md`](../README.md) — domains landing page *(PROPOSED)*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law *(CONFIRMED present in project; PROPOSED in repo path)*
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, v1.3 *(CONFIRMED present in project; PROPOSED in repo path)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle *(PROPOSED)*
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed surfaces *(PROPOSED)*
 - [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — `apps/governed-api/` architecture *(PROPOSED)*
@@ -521,14 +536,16 @@ These items are explicitly unresolved by this document and should be tracked in 
 
 | # | Item | Evidence that would settle it | Status |
 |---|---|---|---|
-| V-1 | Verify source rights and endpoint behavior for each source family in §6. | Mounted repo: `data/registry/sources/atmosphere/*.yaml`; license terms; current API surface. | **NEEDS VERIFICATION** |
+| V-1 | Verify source rights and endpoint behavior for each source family in §6. | Mounted repo: `data/registry/sources/atmosphere/*`; license terms; current API surface. | **NEEDS VERIFICATION** |
 | V-2 | Implement the knowledge-character registry and its tests. | `schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json` + fixtures + tests. | **NEEDS VERIFICATION** |
 | V-3 | Verify catalog / proof / release closure for at least one Atmosphere thin slice. | A released artifact with full `EvidenceBundle`, `ReleaseManifest`, `RollbackCard`. | **NEEDS VERIFICATION** |
 | V-4 | Verify MapLibre / Evidence Drawer / Focus Mode integration for an Atmosphere layer. | E2E test or runtime evidence of click → governed API → drawer payload → optional Focus answer. | **NEEDS VERIFICATION** |
 | V-5 | Confirm canonical schema home for this domain (`schemas/contracts/v1/domains/atmosphere/`). | Mounted-repo inspection per ADR-0001 default. | **NEEDS VERIFICATION** |
-| V-6 | Confirm `policy/` vs `policies/` canonical home for atmospheric gates. | Mounted-repo inspection + ADR confirmation. | **NEEDS VERIFICATION** |
+| V-6 | Confirm `policy/` vs `policies/` canonical home for atmospheric gates. | Mounted-repo inspection + ADR-0003 confirmation (PROPOSED). | **NEEDS VERIFICATION** |
 | V-7 | Assign atmosphere domain stewards in CODEOWNERS. | Repo-side `CODEOWNERS` plus governance register entry. | **UNKNOWN** |
-| V-8 | Pin the knowledge-character enum values against the Atlas §11.C list. | Validator + fixture suite proving exact membership. | **PROPOSED** |
+| V-8 | Pin the knowledge-character enum values against the Atlas Ch. 11 §C list. | Validator + fixture suite proving exact membership. | **PROPOSED** |
+| V-9 | Confirm the Encyclopedia section anchor for Atmosphere/Air/Climate (this doc avoids a pinned §number). | Mounted Encyclopedia table of contents. | **NEEDS VERIFICATION** |
+| V-10 | Confirm whether `WeatherStation`/`PrecipitationObservation` casing matches the Atlas (which renders "Weather Station", "Precipitation Observation" with a space). | Mounted contract/schema for the object family. | **NEEDS VERIFICATION** |
 
 [⬆ Back to top](#-quick-jump)
 
@@ -537,7 +554,7 @@ These items are explicitly unresolved by this document and should be tracked in 
 ## Appendix A — Full knowledge-character registry
 
 <details>
-<summary><strong>Expand: knowledge-character registry (PROPOSED, sourced from Atlas §11.C)</strong></summary>
+<summary><strong>Expand: knowledge-character registry (PROPOSED, sourced from Atlas Ch. 11 §C)</strong></summary>
 
 > **Status:** CONFIRMED terms / **PROPOSED** field realization. Each entry below is "used inside this domain with meaning constrained by source role, evidence, time, and release state."
 
@@ -556,6 +573,8 @@ These items are explicitly unresolved by this document and should be tracked in 
 | `ALERT_AND_ADVISORY_CONTEXT` | Pointer to issuing authority advisories. Not life-safety instruction. | context · authority |
 | `NETWORK_AND_SITE_CONTEXT` | Station/network metadata: siting, instrument, exposure. | context |
 
+> The `Knowledge character`, `OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, `REGULATORY_ARCHIVE`, `LOW_COST_SENSOR`, `ATMOSPHERIC_MODEL_FIELD`, `REMOTE_SENSING_MASK`, `CLIMATE_ANOMALY_CONTEXT`, `DERIVED_FUSION`, `METEOROLOGICAL_CONTEXT`, `ALERT_AND_ADVISORY_CONTEXT`, and `NETWORK_AND_SITE_CONTEXT` terms are CONFIRMED in the Atlas; the source-role pairings in the right column are PROPOSED and are exactly what V-8 must pin.
+
 </details>
 
 [⬆ Back to top](#-quick-jump)
@@ -567,7 +586,7 @@ These items are explicitly unresolved by this document and should be tracked in 
 <details>
 <summary><strong>Expand: object families (PROPOSED field realization)</strong></summary>
 
-> All objects share the same identity rule and temporal-handling rule (see §7).
+> All objects share the same identity rule and temporal-handling rule (see §7). Identity basis is the PROPOSED deterministic form `source id + object role + temporal scope + normalized digest`; the six time facets stay distinct where material (CONFIRMED).
 
 | Object | Purpose | Knowledge character (typical) | Identity basis (PROPOSED) |
 |---|---|---|---|
@@ -577,15 +596,17 @@ These items are explicitly unresolved by this document and should be tracked in 
 | `Ozone Observation` | Ozone reading. | `OBSERVED_SENSOR` | source id + role + scope + digest |
 | `SmokeContext` | Smoke presence / plume context. | `REMOTE_SENSING_MASK`, `ATMOSPHERIC_MODEL_FIELD` | source id + role + scope + digest |
 | `AODRaster` | Satellite AOD field. Not a surface concentration (**I-2**). | `REMOTE_SENSING_MASK` | source id + role + scope + digest |
-| `WeatherStation` | Weather station identity. | `NETWORK_AND_SITE_CONTEXT` | source id + role + scope + digest |
-| `WeatherObservation` | Measurement event at a `WeatherStation`. | `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT` | source id + role + scope + digest |
+| `Weather Station` | Weather station identity. | `NETWORK_AND_SITE_CONTEXT` | source id + role + scope + digest |
+| `Weather Observation` | Measurement event at a `Weather Station`. | `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT` | source id + role + scope + digest |
 | `WindField` | Gridded wind product (observed or modeled). | `METEOROLOGICAL_CONTEXT`, `ATMOSPHERIC_MODEL_FIELD` | source id + role + scope + digest |
-| `PrecipitationObservation` | Precipitation observation. | `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT` | source id + role + scope + digest |
-| `TemperatureObservation` | Temperature observation. | `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT` | source id + role + scope + digest |
-| `ClimateNormal` | Reference-period normals. | `CLIMATE_ANOMALY_CONTEXT` | source id + role + scope + digest |
-| `ClimateAnomaly` | Departure from a `ClimateNormal`. | `CLIMATE_ANOMALY_CONTEXT`, `DERIVED_FUSION` | source id + role + scope + digest |
-| `ForecastContext` | Forecast model field as context. Not observation (**I-3**). | `ATMOSPHERIC_MODEL_FIELD` | source id + role + scope + digest |
-| `AdvisoryContext` | Authority advisory as context. Not life-safety instruction. | `ALERT_AND_ADVISORY_CONTEXT` | source id + role + scope + digest |
+| `Precipitation Observation` | Precipitation observation. | `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT` | source id + role + scope + digest |
+| `Temperature Observation` | Temperature observation. | `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT` | source id + role + scope + digest |
+| `Climate Normal` | Reference-period normals. | `CLIMATE_ANOMALY_CONTEXT` | source id + role + scope + digest |
+| `Climate Anomaly` | Departure from a `Climate Normal`. | `CLIMATE_ANOMALY_CONTEXT`, `DERIVED_FUSION` | source id + role + scope + digest |
+| `Forecast Context` | Forecast model field as context. Not observation (**I-3**). | `ATMOSPHERIC_MODEL_FIELD` | source id + role + scope + digest |
+| `Advisory Context` | Authority advisory as context. Not life-safety instruction. | `ALERT_AND_ADVISORY_CONTEXT` | source id + role + scope + digest |
+
+> **Casing note (NEEDS VERIFICATION — V-10):** the Atlas renders several of these with a space (`Weather Station`, `Weather Observation`, `Precipitation Observation`, `Temperature Observation`, `Climate Normal`, `Climate Anomaly`, `Forecast Context`, `Advisory Context`, `PM2.5 Observation`, `Ozone Observation`). The compact forms used in §3 (`WeatherStation`, `PrecipitationObservation`, etc.) are PROPOSED identifier-friendly aliases. The mounted contract/schema is authoritative for the canonical spelling.
 
 > **Temporal handling (CONFIRMED across the family):** source time, observed time, valid time, retrieval time, release time, and correction time stay distinct where material. Collapsing any two of these is a validation failure.
 
@@ -598,10 +619,10 @@ These items are explicitly unresolved by this document and should be tracked in 
 ## Footer
 
 > [!NOTE]
-> This document is **draft** and reflects CONFIRMED doctrine from the KFM Domains Culmination Atlas (§11), the KFM Encyclopedia (§7.9), and Directory Rules (§12, §15). Implementation depth is **PROPOSED** until mounted-repo evidence is available.
+> This document is **draft** and reflects CONFIRMED doctrine from the KFM Domains Culmination Atlas (Ch. 11), the KFM Encyclopedia (Atmosphere/Air/Climate), and Directory Rules v1.3. Implementation depth is **PROPOSED** until mounted-repo evidence is available. Operating contract `CONTRACT_VERSION = "3.0.0"`.
 
-**Related docs:** [`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) · sibling domains under [`docs/domains/`](../)
+**Related docs:** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) · sibling domains under [`docs/domains/`](../)
 
-**Last reviewed:** 2026-05-15 · **Next review:** within 6 months (per Directory Rules §15)
+**Last reviewed:** 2026-05-28 · **Next review:** within 6 months (per Directory Rules §15 README contract: docs older than 6 months are flagged for review)
 
 [⬆ Back to top](#-quick-jump)
