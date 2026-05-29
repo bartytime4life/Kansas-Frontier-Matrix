@@ -2,14 +2,17 @@
 doc_id: kfm://doc/docs-domains-archaeology-expansion-backlog
 title: Archaeology & Cultural Heritage — Expansion Backlog
 type: standard
-version: v0.2
+version: v0.3
 status: draft
 owners: <Archaeology domain steward — TODO>, <Docs steward — TODO>
 created: 2026-05-15
-updated: 2026-05-27
+updated: 2026-05-29
 policy_label: public
+contract_version: "3.0.0"
 related: [
   docs/domains/archaeology/README.md,
+  docs/domains/archaeology/EXPANSION_PLAN.md,
+  docs/domains/archaeology/FILE_SYSTEM_PLAN.md,
   docs/doctrine/directory-rules.md,
   docs/doctrine/ai-build-operating-contract.md,
   docs/doctrine/authority-ladder.md,
@@ -19,11 +22,12 @@ related: [
 ]
 tags: [kfm, archaeology, backlog, expansion, governance, sensitivity, doctrine-adjacent]
 notes: [
-  "CONTRACT_VERSION = \"3.0.0\" — pinned per ai-build-operating-contract.md §1 and authoring-prompt §authority.",
-  "PROPOSED placement per Directory Rules §12 (Domain Placement Law); no mounted repo verified this session.",
+  "CONTRACT_VERSION = \"3.0.0\" — pinned per ai-build-operating-contract.md §0 / §37.",
+  "PROPOSED placement per Directory Rules v1.3 §12 (Domain Placement Law); no mounted repo verified this session.",
   "All implementation-shaped claims default to PROPOSED until repo evidence resolves them.",
   "External standards (CARE, H3, FAIR) referenced only through KFM project sources.",
-  "Normative language follows RFC 2119 / RFC 8174 per ai-build-operating-contract.md §5.1.1."
+  "Normative language follows RFC 2119 / RFC 8174 per ai-build-operating-contract.md §5.1.1.",
+  "v0.3 corrections: Directory Rules is the live v1.3 edition; contracts-home is contracts/domains/archaeology/ (the v0.2 contracts/archaeology/ omitted the domains/ segment and matched the DR §12 CONFLICTED anti-pattern); schema-home shorthand schemas/contracts/v1/archaeology/ is flagged against the canonical schemas/contracts/v1/domains/archaeology/; the §23.2 county/region floor is named the authoritative public floor and H3 r7 / 5 km are reframed as PROPOSED lane refinements."
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -36,18 +40,20 @@ notes: [
   <img alt="domain: archaeology" src="https://img.shields.io/badge/domain-archaeology%20%26%20cultural%20heritage-8a4f7d">
   <img alt="doctrine: CONFIRMED" src="https://img.shields.io/badge/doctrine-CONFIRMED-2ea043">
   <img alt="implementation: PROPOSED" src="https://img.shields.io/badge/implementation-PROPOSED-orange">
+  <img alt="directory rules: v1.3" src="https://img.shields.io/badge/Directory%20Rules-v1.3-8957e5">
   <img alt="sensitivity default: T4" src="https://img.shields.io/badge/sensitivity%20default-T4%20(fail--closed)-b30000">
   <img alt="contract: v3.0.0" src="https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-2ea043">
-  <img alt="last-updated: 2026-05-27" src="https://img.shields.io/badge/last%20updated-2026--05--27-blue">
+  <img alt="last-updated: 2026-05-29" src="https://img.shields.io/badge/last%20updated-2026--05--29-blue">
 </p>
 
 | | |
 |---|---|
 | **Status** | Draft — review pending |
 | **Owners** | Archaeology domain steward · Docs steward *(names — TODO)* |
-| **Last reviewed** | 2026-05-27 |
+| **Last reviewed** | 2026-05-29 |
 | **Authority class** | Doctrine-grounded planning register (subordinate to ADRs, Directory Rules, and per-root READMEs) |
 | **Operating contract** | `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`) |
+| **Directory Rules** | v1.3 (renderer-decision refresh) |
 | **Repository state** | UNKNOWN — no repo mounted this session; all path / route / file-presence claims are **PROPOSED** |
 
 ---
@@ -69,7 +75,7 @@ notes: [
 - [13. Process for adding or closing a backlog item](#13-process-for-adding-or-closing-a-backlog-item)
 - [Open questions register](#open-questions-register)
 - [Open verification backlog](#open-verification-backlog)
-- [Changelog v0.1 → v0.2](#changelog-v01--v02)
+- [Changelog](#changelog)
 - [Definition of done](#definition-of-done)
 - [14. Related docs](#14-related-docs)
 
@@ -93,7 +99,7 @@ This document is the **forward-work register** for the Archaeology and Cultural 
 **Conformance language.** Normative terms in this document — MUST, MUST NOT, SHOULD, SHOULD NOT, MAY — follow RFC 2119 / RFC 8174 as interpreted by `ai-build-operating-contract.md` §5.1.1: **MUST / MUST NOT** are non-negotiable; **SHOULD / SHOULD NOT** require a brief justification when deviated from (record it in a backlog-row note or in `docs/registers/DRIFT_REGISTER.md`); **MAY** is permitted with no justification required.
 
 > [!IMPORTANT]
-> Exact archaeological site locations are denied by default. Burial, human remains, sacred sites, unresolved cultural sensitivity, collection security, private-landowner details, and looting-risk exposure **fail closed**. No backlog item in this document loosens that posture; items that touch sensitive geometry MUST route through steward review and a recorded `SensitivityTransform` before promotion.
+> Exact archaeological site locations are denied by default. Burial, human remains, sacred sites, unresolved cultural sensitivity, collection security, private-landowner details, and looting-risk exposure **fail closed**. Per operating contract §23.2, archaeology site locations `DENY` exact coordinates and **generalize to county/region**; burial / sacred sites `DENY` exact location. No backlog item in this document loosens that posture; items that touch sensitive geometry MUST route through steward review and a recorded `SensitivityTransform` before promotion.
 
 [↑ back to top](#contents)
 
@@ -109,15 +115,16 @@ The table below separates what KFM doctrine treats as **CONFIRMED** from what cu
 | Object families and ubiquitous language | **CONFIRMED doctrine / PROPOSED field realization** | Atlas v1.1 §15.C–E |
 | Cross-lane relations | **CONFIRMED doctrine / PROPOSED** | Atlas v1.1 §15.F, §24.4.13 |
 | Pipeline shape (RAW → PUBLISHED) | **CONFIRMED doctrine / PROPOSED lane application** | Directory Rules §0, §3; Atlas v1.1 §15.H, §8 |
-| Sensitivity tier defaults (T4 for exact coords; T1 only after steward review) | **CONFIRMED doctrine** | Atlas v1.1 §24.5; MapLibre Master ML-061-159 |
-| Schema home (`schemas/contracts/v1/archaeology/…`) | **PROPOSED** (per ADR-0001 default) | Atlas v1.1 §24.13 row 15; Directory Rules §7.4 |
+| Sensitivity tier defaults (T4 for exact coords; T1 only after steward review) | **CONFIRMED doctrine** | Atlas v1.1 §24.5; operating contract §23.2; MapLibre Master ML-061-159 |
+| Public site-geometry floor (generalize to county/region) | **CONFIRMED doctrine** | operating contract §23.2 |
+| Schema home — canonical `schemas/contracts/v1/domains/archaeology/` (DR §12); shorthand `schemas/contracts/v1/archaeology/` in some Atlas crosswalks | **PROPOSED** (canonical per ADR-0001 + DR §12); shorthand **CONFLICTED** pending ADR | Directory Rules v1.3 §12 / §7.4; Atlas v1.1 §24.13 row 15 |
 | Policy home (`policy/sensitivity/archaeology/…`) | **PROPOSED** | Atlas v1.1 §24.13 row 15; Directory Rules §10/§12 |
 | Specific routes / DTOs / runtime behavior | **UNKNOWN** (route TBD; pending mounted-repo inspection) | Atlas v1.1 §15.J |
 | Test, fixture, and validator presence | **NEEDS VERIFICATION** | Atlas v1.1 §15.K |
 | Steward identity, separation-of-duties, rollback drill | **NEEDS VERIFICATION** | Atlas v1.1 §15.N |
 
 > [!NOTE]
-> Truth labels in this document follow the label set codified in `ai-build-operating-contract.md` §8 and `docs/doctrine/authority-ladder.md` v1.1 §7: **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, **NEEDS VERIFICATION**, **CONFLICTED**, **LINEAGE**, **EXPLORATORY**, **EXTERNAL**. Runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`) are not used here as authoring labels; they appear only as expected behavior in validator and runtime references.
+> Truth labels in this document follow the label set codified in `ai-build-operating-contract.md` §8 and `docs/doctrine/authority-ladder.md` §7: **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, **NEEDS VERIFICATION**, **CONFLICTED**, **LINEAGE**, **EXPLORATORY**, **EXTERNAL**. Runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`) are not used here as authoring labels; they appear only as expected behavior in validator and runtime references.
 
 [↑ back to top](#contents)
 
@@ -148,7 +155,7 @@ flowchart LR
     G2["TransformReceipt +<br/>ValidationReport +<br/>PolicyDecision"]
     G3["EvidenceBundle +<br/>RedactionReceipt"]
     G4["CatalogMatrix +<br/>graph / triplet"]
-    G5["ReleaseManifest +<br/>RollbackCard +<br/>ReviewRecord"]
+    G5["ReleaseManifest / MapReleaseManifest +<br/>RollbackCard +<br/>ReviewRecord"]
   end
 
   F -.promotes only via.-> A
@@ -171,7 +178,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> Gate labels above represent the **PROPOSED minimum** artifact set per Atlas v1.1 §8 (Master Pipeline Gate Reference). Whether each gate is implemented as code in the current repository remains **NEEDS VERIFICATION**.
+> Gate labels above represent the **PROPOSED minimum** artifact set per Atlas v1.1 §8 (Master Pipeline Gate Reference). For archaeology map layers, §23.2 names `MapReleaseManifest` (with `RedactionReceipt` + `PolicyDecision`) as the release-gate receipt set. Whether each gate is implemented as code in the current repository remains **NEEDS VERIFICATION**.
 
 [↑ back to top](#contents)
 
@@ -186,7 +193,7 @@ These rows extend the Encyclopedia §7.13.L feature backlog and re-state it with
 | Build first | Archaeology source registry + no-network fixture | steward / developer | `SourceDescriptor` + synthetic fixture | rights / source-role ambiguity | schema, source, rights validators | **PROPOSED** |
 | Build first | Archaeology Evidence Drawer inspector for one generalized feature | public / researcher / steward | `EvidenceBundle` for one feature | uncited public claim | evidence-closure + citation tests | **PROPOSED** |
 | Build first | Candidate-vs-confirmed UI distinction for `RemoteSensingAnomaly` / `LiDARCandidate` | public / researcher | candidate-not-site label rule | reading a candidate as a confirmed site | candidate-not-site fixture tests | **PROPOSED** |
-| Build first | Public generalized site-summary tile (T1) wired to a `RedactionReceipt` | public / steward | `RedactionReceipt` + `ReviewRecord` | exact-coordinate leak | sensitive-geometry no-leak tests | **PROPOSED** |
+| Build first | Public generalized site-summary tile (T1) wired to a `RedactionReceipt` (geometry generalized to county/region per §23.2) | public / steward | `RedactionReceipt` + `ReviewRecord` | exact-coordinate leak | sensitive-geometry no-leak tests | **PROPOSED** |
 | After proof lane | Archaeology time slider + compare mode | researcher / steward | versioned observations / layers | false temporal alignment | temporal-logic tests | **PROPOSED** |
 | After proof lane | Survey-coverage public summary (`SurveyProject` / `SurveyTransect`) | researcher / steward | survey extents + coverage stats | implying confirmed sites in unsurveyed gaps | coverage-vs-find rate tests | **PROPOSED** |
 | After proof lane | Chronology / `ChronologyAssertion` timeline view with EDTF + OWL-Time alignment | researcher / steward | chronology assertions + uncertainty bands + calendar flag on Julian dates | overconfident period bands; implicit timezone | uncertainty-band tests; EDTF validity tests | **PROPOSED** |
@@ -208,14 +215,15 @@ These items are taken directly from Atlas v1.1 §15.N and the Encyclopedia Appen
 | ID *(local)* | Item to verify | Evidence that would settle it | Blocking | Status |
 |---|---|---|---|---|
 | ARCH-VER-01 | Steward authority and confidentiality scope for Archaeology lane | named stewards in repo governance; `ReviewRecord` examples | T1 / T2 publication of any site-derived summary | **NEEDS VERIFICATION** |
-| ARCH-VER-02 | Public geometry thresholds and transform profiles (e.g., H3 r7 minimum; ≥5 km terrain generalization near sites) | a published `policy/sensitivity/archaeology/` profile; fixture tests | any generalized public layer | **NEEDS VERIFICATION** |
+| ARCH-VER-02 | Public geometry thresholds relative to the §23.2 county/region floor — op-contract §23.2 names **county/region** as the authoritative floor; lane-local refinements (H3 r7 minimum; ≥5 km terrain generalization near sites) are **PROPOSED** tighter values | a published `policy/sensitivity/archaeology/` profile; fixture tests; §23.2 reconciliation | any generalized public layer | **NEEDS VERIFICATION** |
 | ARCH-VER-03 | Oral history and cultural-knowledge handling protocol | a recorded protocol + steward sign-off + rights record | admission of oral-history sources | **NEEDS VERIFICATION** |
 | ARCH-VER-04 | Emergency public-layer disablement and rollback drill | a dry-run drill log + `RollbackCard` artifact | any `PUBLISHED` archaeology layer | **NEEDS VERIFICATION** |
 | ARCH-VER-05 | LiDAR vertical datum and vintage handling for candidate anomalies | terrain manifest test + vintage field on `LiDARCandidate` | promoting `LiDARCandidate` to `CandidateFeature` | **NEEDS VERIFICATION** |
-| ARCH-VER-06 | Schema home for archaeology object families (default `schemas/contracts/v1/archaeology/`) | a tree under that path + ADR-0001 confirmation | every schema-tagged item below | **NEEDS VERIFICATION** *(pending **ADR-S-01**)* |
+| ARCH-VER-06 | Schema home for archaeology object families — canonical `schemas/contracts/v1/domains/archaeology/` per Directory Rules v1.3 §12; the shorthand `schemas/contracts/v1/archaeology/` (no `domains/` segment) appearing in some Atlas crosswalks is CONFLICTED | a tree under the canonical path + ADR-0001 confirmation; ADR reconciling the shorthand | every schema-tagged item below | **NEEDS VERIFICATION** *(pending **ADR-S-01**)* |
 | ARCH-VER-07 | Specific governed-API route and DTO names for archaeology resolvers | route table or OpenAPI doc under `apps/governed-api/…` | runtime claims; client wiring | **UNKNOWN** |
 | ARCH-VER-08 | Whether `policy/sensitivity/archaeology/` exists and is the canonical home (vs. `policies/`) | mounted-repo inspection; per-root README | every sensitivity claim below | **NEEDS VERIFICATION** *(pending **ADR-S-05**)* |
 | ARCH-VER-09 | `ChronologyAssertion` temporal compliance (EDTF validity, OWL-Time mapping, CIDOC CRM E52 alignment, no implicit timezone, calendar flag on Julian dates) | temporal-validator fixture pass + cross-lane reference to temporal doctrine | any chronology-bearing surface (timeline view, period overlays, time slider) | **NEEDS VERIFICATION** |
+| ARCH-VER-10 | Contracts-home segment — canonical `contracts/domains/archaeology/` per Directory Rules v1.3 §12; the bare `contracts/archaeology/` form matches the DR §12 CONFLICTED anti-pattern symptom | DR §12 confirmation; ADR if the bare form is ever intended | every semantic-contract reference | **NEEDS VERIFICATION** |
 
 [↑ back to top](#contents)
 
@@ -231,7 +239,7 @@ The Atlas v1.1 §15.K names seven **PROPOSED** validator classes for Archaeology
 | ARCH-TST-02 | Candidate-not-site tests | refuse promotion of a `RemoteSensingAnomaly` or `LiDARCandidate` as a confirmed `ArchaeologicalSite` without `StewardReview` | candidate fixture + missing-review fixture | **PROPOSED** |
 | ARCH-TST-03 | Public no-leak tests | refuse public emission of restricted fields (exact coords, internal identifiers, sensitive joins) | restricted-field corpus + redaction acceptance fixture | **PROPOSED** |
 | ARCH-TST-04 | Rights and cultural-review tests | refuse promotion when `CulturalReview` / rights-holder representative sign-off is missing where required | review-present + review-absent fixtures | **PROPOSED** |
-| ARCH-TST-05 | Exact sensitive geometry denial | refuse geometry below H3 r7 (or equivalent threshold once **ADR-S-05** lands) for sensitive lanes | sub-r7 geometry fixtures | **PROPOSED** |
+| ARCH-TST-05 | Exact sensitive geometry denial | refuse geometry finer than the §23.2 county/region floor (and any tighter ADR-ratified lane floor, e.g. sub-H3-r7 once **ADR-S-05** lands) for sensitive lanes | sub-floor geometry fixtures | **PROPOSED** |
 | ARCH-TST-06 | Catalog closure tests | refuse release when `CatalogMatrix` entry, digests, or triplet projections do not close | closure-pass + closure-fail fixtures | **PROPOSED** |
 | ARCH-TST-07 | AI exact-location denial | refuse AI generation of exact archaeology coordinates regardless of prompt phrasing | adversarial prompt fixtures + `AIReceipt` audit | **PROPOSED** |
 | ARCH-TST-08 | Cultural-symbol policy tests *(from MapLibre ML-061 family)* | refuse style rules that use sacred symbols or tribal insignia for archaeology layers | symbol-set linter fixture | **PROPOSED** |
@@ -239,7 +247,7 @@ The Atlas v1.1 §15.K names seven **PROPOSED** validator classes for Archaeology
 | ARCH-TST-10 | `ChronologyAssertion` temporal-validity tests | refuse chronology records that fail EDTF parsing, carry implicit timezones, or assert Julian dates without a calendar flag | EDTF-valid fixture + EDTF-invalid fixture + tz-naive fixture + Julian-no-flag fixture | **PROPOSED** |
 
 > [!TIP]
-> The Encyclopedia §7.13.K test list applies uniformly across domains; the archaeology-specific additions are ARCH-TST-02, ARCH-TST-05, ARCH-TST-07, ARCH-TST-08, and ARCH-TST-10. When a shared validator covers both archaeology and another lane (notably temporal validators shared with the chronology / time lane), prefer placement under `tools/validators/<topic>/…` per Directory Rules §12 "Multi-domain and cross-cutting files."
+> The Encyclopedia §7.13.K test list applies uniformly across domains; the archaeology-specific additions are ARCH-TST-02, ARCH-TST-05, ARCH-TST-07, ARCH-TST-08, and ARCH-TST-10. When a shared validator covers both archaeology and another lane (notably temporal validators shared with the chronology / time lane), prefer placement under `tools/validators/<topic>/…` per Directory Rules §12 "Multi-domain and cross-cutting files." Fixtures follow Directory Rules **§6.6**: you MAY keep them under `tests/fixtures/` instead of root `fixtures/`, but MUST NOT maintain two competing fixture homes unless both READMEs state the difference.
 
 [↑ back to top](#contents)
 
@@ -247,15 +255,15 @@ The Atlas v1.1 §15.K names seven **PROPOSED** validator classes for Archaeology
 
 ## 7. Cross-lane backlog
 
-These edges are owned by Archaeology and are restated here as backlog rows so the work is trackable per related lane. Each edge MUST preserve ownership, source role, sensitivity, and `EvidenceBundle` support. **CONFIRMED doctrine / PROPOSED implementation** throughout, per Atlas v1.1 §15.F and §24.4.13.
+These edges are owned by Archaeology and are restated here as backlog rows so the work is trackable per related lane. Each edge MUST preserve ownership, source role, sensitivity, and `EvidenceBundle` support. **CONFIRMED doctrine / PROPOSED implementation** throughout, per Atlas v1.1 §15.F and §24.4.13 ("Edges owned by Archaeology / Cultural Heritage").
 
 | Related lane | Relation (CONFIRMED doctrine) | Backlog work | Status |
 |---|---|---|---|
-| Spatial Foundation | Exact / public geometry split + transform receipts | Profile every public geometry with a `PublicationTransformReceipt`; record method + threshold | **PROPOSED** |
+| Spatial Foundation | Exact / public geometry split + transform receipts | Profile every public geometry with a `PublicationTransformReceipt`; record method + threshold; generalize to the §23.2 county/region floor | **PROPOSED** |
 | Roads / Rail / Trade Routes | Historic routes and cultural paths | Bind site interpretation to historic route evidence; deny exact coords; allow generalized corridor overlays only | **PROPOSED** |
 | Settlements / Infrastructure | Forts, missions, townsites, reservation communities | Cultural temporal period + survey context anchors historical settlement interpretation; site coords denied | **PROPOSED** |
 | Hazards | Threat / erosion / fire / flood / exposure context | Hazard exposure may inform threat ranking for sensitive sites; KFM is **never** an alert authority for archaeology | **PROPOSED** |
-| Planetary / 3D | Sites admitted only via steward-reviewed, generalized 3D representation with reality-boundary note | 3D admission lane (`ThreeDDocumentation` + Scene Manifest); reality-boundary note required | **PROPOSED** *(gated by **ADR-S-07**)* |
+| Planetary / 3D | Sites admitted only via steward-reviewed, generalized 3D representation with reality-boundary note; sole renderer `packages/maplibre-runtime/`; 3D schemas at `schemas/contracts/v1/3d/` (Directory Rules v1.3) | 3D admission lane (`ThreeDDocumentation` + Scene Manifest); reality-boundary note required | **PROPOSED** *(gated by **ADR-S-07**)* |
 | People / Genealogy / Land | Cultural affiliations cited with rights, sovereignty, and steward review | Indigenous community context: steward-reviewed, rights-bounded; living-person fields fail closed | **PROPOSED** |
 | Time / Temporal doctrine | `ChronologyAssertion` and event-bearing records align with EDTF, OWL-Time, CIDOC CRM E52, Allen interval algebra, STAC datetime fields, and W3C PROV-O | Reuse shared temporal validators; uncertainty bands MUST be visible in any public chronology surface | **PROPOSED** |
 | Frontier Matrix | (Inbound) Settlement-status cells may reference archaeology context generalized | Verify generalization sufficiency before any matrix snapshot carries an archaeology-derived field | **NEEDS VERIFICATION** |
@@ -295,7 +303,7 @@ The Pass 18 Idea Index identifies the FIE category as containing **59 cards tota
 </details>
 
 > [!NOTE]
-> Pass 18 cards are inventory-level planning candidates with **CONFIRMED** source support but **UNKNOWN** repository implementation. They do not promote themselves to schema, contract, or policy entries; each MUST travel through the normal admission, validation, and ADR (where structural) gates before any path-shaped claim is made.
+> Pass 18 cards are inventory-level planning candidates with **CONFIRMED** source support but **UNKNOWN** repository implementation. They do not promote themselves to schema, contract, or policy entries; each MUST travel through the normal admission, validation, and ADR (where structural) gates before any path-shaped claim is made. The 3D-asset cards land their schemas under `schemas/contracts/v1/3d/` (Directory Rules v1.3 §6.4), not under the domain schema segment.
 
 [↑ back to top](#contents)
 
@@ -306,13 +314,13 @@ The Pass 18 Idea Index identifies the FIE category as containing **59 cards tota
 The Archaeology lane is one of the highest-sensitivity lanes in KFM. The default tier is **T4** (fail-closed); generalized public release at **T1** requires `RedactionReceipt` + `ReviewRecord`. Tier transitions follow Atlas v1.1 §24.5 — upgrade (toward more public) always requires both a transform receipt and a review record; downgrade (toward less public) needs only a `CorrectionNotice`.
 
 > [!CAUTION]
-> This section governs the lane's hardest line. Every row below MUST be read against `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix). When a row in this backlog and a row in §23.2 disagree, **the operating contract wins** and the conflict MUST be logged in `docs/registers/DRIFT_REGISTER.md`.
+> This section governs the lane's hardest line. Every row below MUST be read against `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix). When a row in this backlog and a row in §23.2 disagree, **the operating contract wins** and the conflict MUST be logged in `docs/registers/DRIFT_REGISTER.md`. Per §23.2: archaeology site locations `DENY` exact coordinates and **generalize to county/region** (reviewers: tribal/cultural + rights-holder rep; receipts `RedactionReceipt` + `PolicyDecision` + `MapReleaseManifest`); burial / sacred sites `DENY` exact location.
 
 | Concern | Doctrine source | Backlog work | Status |
 |---|---|---|---|
-| Exact site coordinates fail closed by default | Atlas v1.1 §15.I; Encyclopedia §7.13.M | Reify in `policy/sensitivity/archaeology/` once **ADR-S-05** lands | **PROPOSED** |
-| Geometry below H3 r7 prohibited for sensitive archaeology products without review | MapLibre Master ML-061-159 | Implement and fixture-test the threshold; record per-feature `transform_method` | **PROPOSED** |
-| Terrain near archaeological locations needs ≥5 km coordinate generalization | MapLibre Master ML-059-055 | Encode in terrain manifest; require `RedactionReceipt` with method + scale | **PROPOSED** |
+| Exact site coordinates fail closed by default; public floor is county/region | operating contract §23.2; Atlas v1.1 §15.I; Encyclopedia §7.13.M | Reify in `policy/sensitivity/archaeology/` once **ADR-S-05** lands | **PROPOSED** |
+| Geometry below H3 r7 prohibited for sensitive archaeology products without review *(PROPOSED lane refinement tighter than the §23.2 county/region floor)* | MapLibre Master ML-061-159 | Implement and fixture-test the threshold; record per-feature `transform_method`; reconcile against §23.2 | **PROPOSED** |
+| Terrain near archaeological locations needs ≥5 km coordinate generalization *(PROPOSED lane refinement)* | MapLibre Master ML-059-055 | Encode in terrain manifest; require `RedactionReceipt` with method + scale | **PROPOSED** |
 | CARE labels and sovereignty notice chips required in UI | MapLibre Master ML-061-160 | Wire `CulturalReview` outcome to Evidence Drawer and Focus Mode chips | **PROPOSED** |
 | Cultural symbols MUST avoid sacred symbols / tribal insignia and use neutral accessible vector forms | MapLibre Master ML-059-058 | Symbol-set linter (ARCH-TST-08) + steward-approved symbol catalog | **PROPOSED** |
 | Focus Mode MUST be sovereignty-aware and explain which evidence influenced answers | MapLibre Master ML-061-162 | Bind Focus Mode templates to `AIReceipt` + sovereignty gating; audit `ABSTAIN` and `DENY` rates | **PROPOSED** |
@@ -332,13 +340,14 @@ These ADRs are drawn from the **Master Open-ADR Backlog** in Atlas v1.1 §24.12.
 
 | ADR | Question | Blocks |
 |---|---|---|
-| **ADR-S-01** | Where is the canonical schema home? (Default: `schemas/contracts/v1/…` per ADR-0001.) | ARCH-VER-06; every schema-shaped backlog row |
-| **ADR-S-03** | Receipt class home: shared `schemas/contracts/v1/receipts/` vs. per-domain `schemas/contracts/v1/<domain>/receipts/` | `RedactionReceipt`, `PublicationTransformReceipt`, `RunReceipt` placement |
-| **ADR-S-05** | Sensitivity tier scheme (T0–T4) — adopt as canonical or revise | All sensitivity rows in §9; ARCH-TST-05 |
-| **ADR-S-07** | 3D admission policy: minimum required receipts, deny lanes, reality-boundary disclosure | 3D admission lane in §4; `ThreeDDocumentation` rows in §7 and §8 |
+| **ADR-S-01** | Where is the canonical schema home? (Default: `schemas/contracts/v1/domains/<domain>/` per ADR-0001 + Directory Rules v1.3 §12; the bare `schemas/contracts/v1/<domain>/` shorthand is CONFLICTED.) | ARCH-VER-06; ARCH-VER-10; every schema-shaped backlog row |
+| **ADR-S-03** | Receipt class home: shared `schemas/contracts/v1/receipts/` vs. per-domain `schemas/contracts/v1/domains/<domain>/receipts/` | `RedactionReceipt`, `PublicationTransformReceipt`, `RunReceipt`, `GENERATED_RECEIPT.json` placement |
+| **ADR-S-05** | Sensitivity tier scheme (T0–T4) — adopt as canonical or revise; reconcile any tighter lane floor (H3 r7 / 5 km) against the §23.2 county/region floor | All sensitivity rows in §9; ARCH-TST-05; ARCH-VER-02 |
+| **ADR-S-07** | 3D admission policy: minimum required receipts, deny lanes, reality-boundary disclosure; 3D schema home `schemas/contracts/v1/3d/` (v1.3) | 3D admission lane in §4; `ThreeDDocumentation` rows in §7 and §8 |
 | **ADR-S-09** | Reviewer role separation: when is separation enforced by tooling vs. custom | Steward authority items in §5 and §9 |
 | **ADR-S-10** | Stale-state propagation: how does a stale upstream propagate to downstream claims | Time-slider and matrix-snapshot rows in §4 and §7 |
 | **ADR-S-14** | Cross-lane join policy: which joins require steward review, which are denied, which are open | Cross-lane work in §7; living-person row in §9 |
+| **OPEN-DR-10** *(Directory Rules v1.3 §18.e)* | MapLibre as sole browser-side renderer — governs the 3D archaeology handoff and `packages/maplibre-runtime/` placement | 3D admission lane in §4; Planetary/3D row in §7 |
 
 > [!CAUTION]
 > Any row that depends on an open ADR **MUST NOT** be implemented as if the ADR is already resolved. Pre-emptive implementation is one of the placement and authority anti-patterns named in Atlas v1.1 §24.9.1; it hardens drift into canon.
@@ -354,7 +363,7 @@ These rows specialize the Encyclopedia §7.13.M risk register to the archaeology
 | Risk | Mitigation (PROPOSED) |
 |---|---|
 | Rights uncertainty | Block public release until source terms and redistribution class are recorded on the `SourceDescriptor` |
-| Sensitive-location exposure | Default redaction / generalization; restricted views; geoprivacy transform receipts; H3-r7 minimum |
+| Sensitive-location exposure | Default redaction / generalization to the §23.2 county/region floor; restricted views; geoprivacy transform receipts; tighter H3-r7 lane refinement where ratified |
 | False precision | Show uncertainty / support, scale and source-role badges; `ABSTAIN` on over-precise claims |
 | Source-authority confusion (observation vs. model vs. authority record) | Source-role registry; separate observation / model / authority / context contexts at the `SourceDescriptor` |
 | Model hallucination | Citation validation; finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`); no direct model-to-public path |
@@ -364,6 +373,7 @@ These rows specialize the Encyclopedia §7.13.M risk register to the archaeology
 | Photorealistic 3D read as direct observation | Reality-boundary note on every admitted 3D asset; representation-mode label (KFM-P18-INV-485) |
 | Temporal misalignment (implicit timezone; un-flagged Julian dates; EDTF-invalid strings) | EDTF-validity tests (ARCH-TST-10); calendar flag required on Julian dates; OWL-Time mapping for interval logic; uncertainty bands on every `ChronologyAssertion` public surface |
 | Prompt injection inside ingested archaeology source files | Pre-admission lint per §9; surface to steward review, do not act |
+| Placement drift — domain folder forms that omit the `domains/` segment (`contracts/archaeology/`, `schemas/contracts/v1/archaeology/`) | Use the Directory Rules v1.3 §12 canonical forms (`contracts/domains/archaeology/`, `schemas/contracts/v1/domains/archaeology/`); log any divergence in `docs/registers/DRIFT_REGISTER.md` (ARCH-VER-06, ARCH-VER-10) |
 
 [↑ back to top](#contents)
 
@@ -379,11 +389,11 @@ Restated as a checklist of artifacts the slice must produce (each **PROPOSED**):
 
 - a synthetic `RemoteSensingAnomaly` and a synthetic `LiDARCandidate` fixture with deliberately invented coordinates,
 - a `SourceDescriptor` for the synthetic source family,
-- a `TransformReceipt` and `RedactionReceipt` showing the H3-r7 minimum generalization in action,
+- a `TransformReceipt` and `RedactionReceipt` showing generalization to the §23.2 county/region floor (tighter H3-r7 lane refinement applied where ratified),
 - a `CandidateFeature` record that does **not** assert it is an `ArchaeologicalSite`,
 - a public generalized vector tile served only through the governed API path,
 - a `ReviewRecord` showing steward sign-off on the generalization,
-- a `ReleaseManifest` + `RollbackCard`,
+- a `ReleaseManifest` + `RollbackCard` (and a `MapReleaseManifest` per §23.2 for the map layer),
 - a dry-run rollback drill that restores the prior manifest,
 - a `CorrectionNotice` round-trip showing a downgrade from a generalized state back to restricted,
 - a `ChronologyAssertion` attached to the candidate with an EDTF-valid uncertain date and an explicit timezone or `Z`-anchored value.
@@ -402,7 +412,7 @@ Every change to this file should preserve the doctrine-to-implementation separat
 1. **Adding a row.** New rows arrive **PROPOSED** with at least one citation to project doctrine (Atlas, Encyclopedia, Pass 18 card, Directory Rules) or to a steward-recorded need. Rows without doctrine grounding belong in a discussion, not here.
 2. **Promoting a row.** A backlog row does not become canon by being implemented. It promotes by: (a) the relevant ADR landing, (b) the artifact appearing in the repo at the **PROPOSED** path with a `ReviewRecord`, and (c) the matching validator producing a passing fixture run.
 3. **Closing a row.** When closed, the row stays in the file with status `CLOSED` and a forward link to the artifact that closed it (ADR id, PR url, or release id). Removing rows silently is treated as drift.
-4. **Conflicts.** If a row conflicts with a row in `docs/registers/VERIFICATION_BACKLOG.md` or with an accepted ADR, the ADR wins; if a row conflicts with Atlas v1.0 / v1.1, the Atlas governs and the conflict is logged in `docs/registers/DRIFT_REGISTER.md`. If a row conflicts with `ai-build-operating-contract.md` v3.0, the contract wins and the row becomes `CONFLICTED` until an ADR resolves it.
+4. **Conflicts.** If a row conflicts with a row in `docs/registers/VERIFICATION_BACKLOG.md` or with an accepted ADR, the ADR wins; if a row conflicts with Atlas v1.0 / v1.1, the Atlas governs and the conflict is logged in `docs/registers/DRIFT_REGISTER.md`. If a row conflicts with `ai-build-operating-contract.md` v3.0, the contract wins and the row becomes `CONFLICTED` until an ADR resolves it. When Directory Rules and an Atlas crosswalk disagree on a path (e.g., the `domains/` segment), Directory Rules v1.3 §12 governs and the conflict surfaces an ADR obligation.
 5. **Cadence.** Recommend a quarterly steward review of this file with the open-ADR backlog open in another tab. Aging entries past two reviews without progress are candidates for explicit closure as `WONTFIX`, with reason.
 6. **Receipts.** Any AI-authored revision to this file SHOULD produce a `GENERATED_RECEIPT.json` per `ai-build-operating-contract.md` §34, pinning `CONTRACT_VERSION = "3.0.0"`. A receipt with `human_review.state == "pending"` is well-formed but NOT mergeable until reviewed.
 
@@ -425,6 +435,7 @@ These are smaller, doc-scoped questions that sit below the formal ADRs in §10 b
 | OQ-ARCH-EXP-04 | Should this backlog enumerate per-row `RuntimeResponseEnvelope` expectations (`ANSWER` / `ABSTAIN` / `DENY` / `NARROWED` / `BOUNDED` mix) for the candidate-vs-confirmed UI, or is that the runtime contract's job? | Archaeology steward + Contracts owner | Runtime contract review; reference, do not duplicate |
 | OQ-ARCH-EXP-05 | Is a `CLOSED` row that links to a landed artifact authoritative for downstream readers, or does it require a parallel entry in `docs/registers/VERIFICATION_BACKLOG.md` for canonicity? | Docs steward | Closure-rule clarification in §13 Process; possibly an ADR |
 | OQ-ARCH-EXP-06 | When ingested archaeology source content contains an apparent AI-directed instruction, where does the lint result live — on the `SourceDescriptor`, on a parallel `IngestionFlag` record, or in a `ReviewRecord` queue? | Archaeology steward + Contracts owner | Operating contract §12 cross-reference; admission-pipeline ADR if needed |
+| OQ-ARCH-EXP-07 | The bare `contracts/archaeology/` and `schemas/contracts/v1/archaeology/` forms (no `domains/` segment) appear in some Atlas §24.13 crosswalk rows but conflict with Directory Rules v1.3 §12. Which governs the physical tree? | Archaeology steward + Docs steward | Directory Rules v1.3 §12 governs (canonical `domains/` segment); reconcile the crosswalk via ADR (ARCH-VER-06, ARCH-VER-10) |
 
 [↑ back to top](#contents)
 
@@ -432,11 +443,12 @@ These are smaller, doc-scoped questions that sit below the formal ADRs in §10 b
 
 ## Open verification backlog
 
-The verification backlog for this lane is enumerated above in [§5](#5-verification-backlog) — rows **ARCH-VER-01** through **ARCH-VER-09**. Each row remains `NEEDS VERIFICATION` (or `UNKNOWN`, for routes / DTOs) until mounted-repo or steward-review evidence settles it. This document MUST NOT be promoted from `status: draft` to `status: published` until at minimum:
+The verification backlog for this lane is enumerated above in [§5](#5-verification-backlog) — rows **ARCH-VER-01** through **ARCH-VER-10**. Each row remains `NEEDS VERIFICATION` (or `UNKNOWN`, for routes / DTOs) until mounted-repo or steward-review evidence settles it. This document MUST NOT be promoted from `status: draft` to `status: published` until at minimum:
 
 1. **ARCH-VER-01** (steward authority) is settled — owners are named, not placeholders.
-2. **ARCH-VER-06** is settled by **ADR-S-01** landing — schema home is canonical, not PROPOSED.
+2. **ARCH-VER-06** is settled by **ADR-S-01** landing — schema home is canonical (`schemas/contracts/v1/domains/archaeology/`), not PROPOSED, and the bare-segment shorthand is resolved.
 3. **ARCH-VER-08** is settled by **ADR-S-05** landing — policy home is canonical, not PROPOSED.
+4. **ARCH-VER-10** (contracts-home segment) is confirmed against Directory Rules v1.3 §12.
 
 The remaining ARCH-VER rows may carry forward into `published` with their labels intact, provided each has at least an assigned owner.
 
@@ -444,29 +456,35 @@ The remaining ARCH-VER rows may carry forward into `published` with their labels
 
 ---
 
-## Changelog v0.1 → v0.2
+## Changelog
+
+### v0.2 → v0.3
 
 | Change | Type (per contract §37) | Reason |
 |---|---|---|
-| Added `CONTRACT_VERSION = "3.0.0"` pin to meta block, badge row, and §13 process | clarification | Align the doc with `ai-build-operating-contract.md` v3.0 doctrine-adjacent posture |
-| Added RFC 2119 / RFC 8174 conformance note in §1 | clarification | The doc already uses "must," "must not," and "should" without prior anchor |
-| Expanded the truth-labels note in §2 to reference the operating contract §8 label set (added **CONFLICTED**, **LINEAGE**, **EXPLORATORY**, **EXTERNAL**, and the runtime outcomes **NARROWED**, **BOUNDED**, **SOURCE_STALE**) | clarification | Bring the doc's label vocabulary into alignment with `authority-ladder.md` v1.1 §7 |
-| Added `ARCH-VER-09` to §5 (verification backlog) — `ChronologyAssertion` temporal compliance | gap closure | Temporal doctrine (EDTF / OWL-Time / CIDOC CRM E52 / Allen interval algebra / no implicit timezone / Julian calendar flag) was implicit in §4 but had no verification row |
-| Added `ARCH-TST-10` to §6 (validator backlog) — `ChronologyAssertion` temporal-validity tests | gap closure | Paired test class for the new ARCH-VER-09 verification row |
-| Added a Time / Temporal-doctrine row to §7 (cross-lane backlog) | gap closure | The relation was implicit via `ChronologyAssertion`; making it explicit prevents accidental ownership drift |
-| Added a row to §9 covering the operating contract §12 untrusted-content rule applied to ingested archaeology source files | gap closure | The lane admits PDF reports, scraped HTML, OCR output, and field notes — exactly the surface §12 governs |
-| Added a temporal-misalignment risk and a prompt-injection risk to §11 | gap closure | Mirrors the new §5, §6, §9 rows |
-| Added a `ChronologyAssertion` artifact to the §12 thin slice | gap closure | The thin slice was already comprehensive; adding a chronology artifact aligns it with §4's chronology timeline row |
-| Added receipt step (item 6) to §13 process | clarification | Operating contract §34 requires `GENERATED_RECEIPT.json` for AI-authored artifacts; the process step now names it |
-| Added **Open questions register** (`OQ-ARCH-EXP-01..06`) | gap closure | Companion section required by the doctrine-doc pattern; distinct from the ADRs in §10 |
-| Added **Open verification backlog** summary section | clarification | Names the specific verification gates that block `draft` → `published` promotion |
-| Added **Definition of done** | gap closure | Companion section required by the doctrine-doc pattern |
-| Added **Changelog v0.1 → v0.2** (this section) | housekeeping | Companion section required by the doctrine-doc pattern |
-| Updated meta-block `version` to `v0.2` and `updated` to `2026-05-27`; added `ai-build-operating-contract.md` and `docs/doctrine/authority-ladder.md` to `related`; added `doctrine-adjacent` tag | housekeeping | Reflect this revision pass |
-| Updated the top-of-file metadata table to add **Operating contract** row | housekeeping | Surface the v3.0 pin where readers will see it |
-| Added a `> [!CAUTION]` callout at the head of §9 cross-referencing operating contract §23.2 (sensitive-domain decision matrix) | clarification | Make the precedence rule visible at the point of greatest consequence |
+| Named the live **Directory Rules v1.3** edition in the badge row, top-of-file table, §2 status snapshot, §7, §10, §11, and footer | reconciliation (MINOR) | The mounted-project Directory Rules header reads `Edition v1.3` (renderer-decision refresh). v0.2 cited Directory Rules without an edition; pinning it prevents silent staleness. |
+| **Corrected the contracts-home path** `contracts/archaeology/` → **`contracts/domains/archaeology/`** in §14; added ARCH-VER-10 and OQ-ARCH-EXP-07 to track the segment | reconciliation (MINOR) | Directory Rules v1.3 §12 places domain semantic contracts at `contracts/domains/<domain>/`; the bare `contracts/archaeology/` form is exactly the DR §12 CONFLICTED anti-pattern symptom (divergent `contracts/<domain>/` vs `schemas/contracts/v1/domains/<domain>/`). |
+| **Flagged the schema-home shorthand** `schemas/contracts/v1/archaeology/` against the canonical `schemas/contracts/v1/domains/archaeology/` (DR §12) in §2, ARCH-VER-06, ADR-S-01, §14 | reconciliation (MINOR) | DR §12 canonical form carries the `domains/` segment; the shorthand in the Atlas §24.13 crosswalk is CONFLICTED pending ADR. Not silently rewritten (the Atlas crosswalk is its source); flagged consistently with the sibling FILE_SYSTEM_PLAN treatment. |
+| Named the operating contract **§23.2 county/region** generalization as the **authoritative public floor** in the §1 IMPORTANT, §2, §4, ARCH-VER-02, ARCH-TST-05, §9 (CAUTION + rows), §11, §12; reframed H3 r7 / ≥5 km as PROPOSED lane refinements | reconciliation (MINOR) | Aligns with the sibling docs' corrections; v0.2 cited H3 r7 / 5 km as operative thresholds without anchoring them to §23.2. |
+| Added v1.3 3D context (`packages/maplibre-runtime/` sole renderer, `schemas/contracts/v1/3d/` schema home, OPEN-DR-10) to §7, §8, §10 | gap closure (MINOR) | Directory Rules v1.3 §6.4 / §18.e establishes the 3D schema home and sole-renderer posture; relevant to the `ThreeDDocumentation` / 3D-admission rows. |
+| Noted `MapReleaseManifest` (per §23.2) in the §3 gate diagram, §3 note, §9 CAUTION, and §12 thin slice | clarification (PATCH) | §23.2 names `MapReleaseManifest` as a required receipt for archaeology map layers. |
+| Added `EXPANSION_PLAN.md` and `FILE_SYSTEM_PLAN.md` to meta-block `related` | gap closure (PATCH) | Cross-link the sibling lane docs. |
+| Added a placement-drift risk row to §11 | gap closure (PATCH) | Operationalize the segment-omission correction as a tracked risk. |
+| Renamed the changelog section from "Changelog v0.1 → v0.2" to "Changelog" and nested the v0.1→v0.2 table beneath the new v0.2→v0.3 table | housekeeping (PATCH) | Keeps the `#changelog` anchor stable across future bumps. |
+| Updated dates, badge, footer | housekeeping (PATCH) | Standard refresh. |
 
-> **Backward compatibility.** All §1–§14 anchors from v0.1 are preserved. The four new companion sections (Open questions register, Open verification backlog, Changelog, Definition of done) appear after §13 and before §14 (Related docs); the original numbering is unchanged. The truth-label vocabulary expansion is additive — no v0.1 label is retired, redefined, or relabeled. Existing inbound links to the original section anchors continue to resolve.
+> **Backward compatibility (v0.2 → v0.3).** All §1–§14 anchors are **preserved**. The changelog-section anchor changed from `#changelog-v01--v02` to `#changelog` (the Contents list is updated to match; any external link to the old changelog anchor needs updating — flagged for the docs steward). New verification rows (ARCH-VER-10) and open questions (OQ-ARCH-EXP-07) are **appended**; no existing ARCH-VER / ARCH-TST / OQ id is renumbered. The contracts-home and schema-home edits are **corrections** (the bare-segment forms matched a DR §12 anti-pattern), and the §23.2-floor edits are **reconciliations** — they retire no anchor and rename no field. **MINOR** per contract §37.
+
+### v0.1 → v0.2 (carried forward)
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Added `CONTRACT_VERSION = "3.0.0"` pin to meta block, badge row, §13 process | clarification | Align with v3.0 doctrine-adjacent posture. |
+| Added RFC 2119 / RFC 8174 conformance note (§1) and expanded the §2 truth-labels note | clarification | Anchor the MUST/SHOULD usage and label set. |
+| Added ARCH-VER-09 (§5), ARCH-TST-10 (§6), the §7 Time/Temporal row, the §9 untrusted-content row | gap closure | Time fields and ingested content participate in the lane. |
+| Added temporal-misalignment + prompt-injection risks (§11); a `ChronologyAssertion` thin-slice artifact (§12); receipt step (§13 item 6) | gap closure | Operationalize the new invariants. |
+| Added Open questions register, Open verification backlog, Changelog, Definition of done | gap closure / housekeeping | Companion-section pattern. |
+| Added the §9 CAUTION cross-referencing operating contract §23.2 | clarification | Make the precedence rule visible. |
 
 [↑ back to top](#contents)
 
@@ -478,12 +496,14 @@ This document is done enough to enter the repository when:
 
 - it is placed under `docs/domains/archaeology/` per Directory Rules §12 (path is **PROPOSED** until repo evidence confirms);
 - a docs steward and the named Archaeology domain steward review it, with the steward's identity recorded in `owners` (replacing the `TODO` placeholders);
-- it is linked from `docs/domains/archaeology/README.md` and from any docs index that routes to domain backlogs;
-- it does not conflict with accepted ADRs in the §10 list — specifically **ADR-S-01**, **ADR-S-05**, **ADR-S-07**, **ADR-S-09**, **ADR-S-10**, and **ADR-S-14**;
+- it is linked from `docs/domains/archaeology/README.md`, from the sibling [`EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) and [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md), and from any docs index that routes to domain backlogs;
+- it does not conflict with accepted ADRs in the §10 list — specifically **ADR-S-01**, **ADR-S-05**, **ADR-S-07**, **ADR-S-09**, **ADR-S-10**, **ADR-S-14**, and **OPEN-DR-10**;
+- the Directory Rules edition cited here (**v1.3**) matches the live `docs/doctrine/directory-rules.md` edition at merge time, and the canonical domain-segment forms (`contracts/domains/archaeology/`, `schemas/contracts/v1/domains/archaeology/`) hold against §12;
+- the §23.2 county/region generalization floor is honored, and any tighter lane-local floor (H3 r7 / 5 km) is resolved by ADR or logged in `docs/registers/DRIFT_REGISTER.md`;
 - any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
 - the `GENERATED_RECEIPT.json` planned in the authoring pass (see §13 item 6) is wired into CI under `schemas/contracts/v1/receipts/generated_receipt.schema.json` (**PROPOSED** per operating contract §47), pinning `CONTRACT_VERSION = "3.0.0"`;
-- at minimum **ARCH-VER-01**, **ARCH-VER-06**, and **ARCH-VER-08** are settled (see [Open verification backlog](#open-verification-backlog) above);
-- future revisions follow `ai-build-operating-contract.md` §37 — **MINOR** is the default bump for row additions, label clarifications, and companion-section expansions; **MAJOR** is reserved for changes that touch the sensitivity defaults, the DENY-by-default lane, or the cross-lane ownership map.
+- at minimum **ARCH-VER-01**, **ARCH-VER-06**, **ARCH-VER-08**, and **ARCH-VER-10** are settled (see [Open verification backlog](#open-verification-backlog) above);
+- future revisions follow `ai-build-operating-contract.md` §37 — **MINOR** is the default bump for row additions, label clarifications, and companion-section expansions; **MAJOR** is reserved for changes that touch the sensitivity defaults, the §23.2 / DENY-by-default lane, or the cross-lane ownership map.
 
 [↑ back to top](#contents)
 
@@ -491,23 +511,26 @@ This document is done enough to enter the repository when:
 
 ## 14. Related docs
 
-Paths below are **PROPOSED** per Directory Rules §12 and the Atlas v1.1 §24.13 crosswalk; presence and exact filenames remain **NEEDS VERIFICATION** until a repo is mounted.
+Paths below are **PROPOSED** per Directory Rules v1.3 §12 and the Atlas v1.1 §24.13 crosswalk; presence and exact filenames remain **NEEDS VERIFICATION** until a repo is mounted. The canonical domain forms carry the `domains/` segment (DR §12); bare-segment variants in some Atlas crosswalk rows are CONFLICTED pending ADR (see ARCH-VER-06 / ARCH-VER-10).
 
 - `docs/domains/archaeology/README.md` — domain landing page *(TODO: confirm presence and link target)*
+- `docs/domains/archaeology/EXPANSION_PLAN.md` — companion expansion roadmap (sibling)
+- `docs/domains/archaeology/FILE_SYSTEM_PLAN.md` — companion placement plan (sibling)
 - `docs/doctrine/ai-build-operating-contract.md` — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
-- `docs/doctrine/directory-rules.md` — placement and lifecycle doctrine
-- `docs/doctrine/authority-ladder.md` — truth-label and authority source order (v1.1)
+- `docs/doctrine/directory-rules.md` — placement and lifecycle doctrine, **v1.3**
+- `docs/doctrine/authority-ladder.md` — truth-label and authority source order
 - `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` — Atlas v1.1, §15 (Archaeology) and §24
 - `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide verification backlog
 - `docs/registers/DRIFT_REGISTER.md` — drift entries when repo state and doctrine disagree
-- `schemas/contracts/v1/archaeology/` — **PROPOSED** schema home for archaeology object families
+- `schemas/contracts/v1/domains/archaeology/` — **PROPOSED** canonical schema home for archaeology object families (DR §12; the bare `schemas/contracts/v1/archaeology/` form is CONFLICTED)
 - `schemas/contracts/v1/receipts/generated_receipt.schema.json` — **PROPOSED** receipt schema home (per contract §47)
+- `schemas/contracts/v1/3d/` — **PROPOSED** 3D-asset schema home (Directory Rules v1.3 §6.4)
 - `policy/sensitivity/archaeology/` — **PROPOSED** sensitivity policy home
-- `contracts/archaeology/` — **PROPOSED** semantic Markdown for archaeology object families
+- `contracts/domains/archaeology/` — **PROPOSED** semantic Markdown for archaeology object families (DR §12; the bare `contracts/archaeology/` form is CONFLICTED — see ARCH-VER-10)
 - `tests/domains/archaeology/` — **PROPOSED** test home; cross-domain validators belong under `tools/validators/<topic>/`
-- `fixtures/domains/archaeology/` — **PROPOSED** fixture home
+- `fixtures/domains/archaeology/` — **PROPOSED** fixture home (Directory Rules §6.6 fixtures rule)
 - `release/candidates/archaeology/` — **PROPOSED** release-candidate staging
 
 ---
 
-**Last reviewed:** 2026-05-27  ·  **Edition:** v0.2 draft  ·  **CONTRACT_VERSION:** `3.0.0`  ·  [↑ back to top](#contents)
+**Last reviewed:** 2026-05-29  ·  **Edition:** v0.3 draft  ·  **CONTRACT_VERSION:** `3.0.0`  ·  **Directory Rules:** v1.3  ·  [↑ back to top](#contents)
