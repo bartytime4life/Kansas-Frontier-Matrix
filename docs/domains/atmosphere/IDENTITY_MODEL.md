@@ -6,31 +6,37 @@ version: v1
 status: draft
 owners: DOM-AIR steward + Docs steward (PLACEHOLDER — NEEDS VERIFICATION)
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-29
 policy_label: public
 related:
   - docs/domains/atmosphere/README.md            # PROPOSED — NEEDS VERIFICATION
   - docs/domains/atmosphere/CANONICAL_PATHS.md   # PROPOSED — NEEDS VERIFICATION
+  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md  # companion — placement view
+  - docs/domains/atmosphere/EXPANSION_BACKLOG.md # companion — candidate register
   - docs/doctrine/directory-rules.md             # CONFIRMED — this project
   - docs/doctrine/lifecycle-law.md               # PROPOSED — NEEDS VERIFICATION
   - docs/doctrine/truth-posture.md               # PROPOSED — NEEDS VERIFICATION
   - docs/architecture/contract-schema-policy-split.md # PROPOSED — NEEDS VERIFICATION
   - docs/standards/PROV.md                       # CONFIRMED — drafted in this project series
-  - docs/adr/ADR-0001-schema-home.md             # CONFIRMED — cited by Directory Rules §0
+  - docs/adr/ADR-0001-schema-home.md             # CONFIRMED — cited by Directory Rules
+  - ai-build-operating-contract.md               # CONFIRMED — operating contract
 tags: [kfm, atmosphere, air, identity, evidence, governance, doctrine]
 notes:
-  - Implementation-layer claims are PROPOSED pending mounted-repo inspection.
-  - Deterministic-identity basis (`source id + object role + temporal scope + normalized digest`) is PROPOSED per Domains Culmination Atlas v1.1.
-  - Source-role enum and `spec_hash` convention (JCS+SHA-256) are CONFIRMED doctrine.
+  # Implementation-layer claims are PROPOSED pending mounted-repo inspection.
+  # Deterministic-identity basis ('source id + object role + temporal scope + normalized digest') is PROPOSED per Domains Culmination Atlas v1.1.
+  # Source-role enum and spec_hash convention (JCS + SHA-256, recorded jcs:sha256:<hex>) are CONFIRMED doctrine (Pass-10 C1-02).
+  # The specific bundle_id / evidence_ref_id base32 derivation is NEEDS VERIFICATION (not located in indexed project knowledge).
+  # CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
+  # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere — Identity Model
 
 > **What it means for two Atmosphere objects to be the same thing — and what kinds of "sameness" the Atmosphere domain refuses to collapse.**
 
-[![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#) [![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue)](#) [![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#) [![Lane: atmosphere](https://img.shields.io/badge/lane-atmosphere-0aa)](#) [![Policy label: public](https://img.shields.io/badge/policy__label-public-green)](#) [![Last updated: 2026-05-16](https://img.shields.io/badge/last__updated-2026--05--16-lightgrey)](#)
+[![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#) [![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue)](#) [![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#) [![Lane: atmosphere](https://img.shields.io/badge/lane-atmosphere-0aa)](#) [![Contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](#) [![Policy label: public](https://img.shields.io/badge/policy__label-public-green)](#) [![Last updated: 2026-05-29](https://img.shields.io/badge/last__updated-2026--05--29-lightgrey)](#)
 
-**Status:** Draft · **Owners:** DOM-AIR steward + Docs steward *(PLACEHOLDER — NEEDS VERIFICATION)* · **Updated:** 2026-05-16
+**Status:** Draft · **Owners:** DOM-AIR steward + Docs steward *(PLACEHOLDER — NEEDS VERIFICATION)* · **Updated:** 2026-05-29 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -50,8 +56,10 @@ notes:
 10. [Validators that touch identity](#10-validators-that-touch-identity)
 11. [Anti-patterns the model is designed to prevent](#11-anti-patterns-the-model-is-designed-to-prevent)
 12. [Open questions and verification backlog](#12-open-questions-and-verification-backlog)
-13. [Reference appendices](#13-reference-appendices)
-14. [Related docs](#14-related-docs)
+13. [Changelog](#13-changelog)
+14. [Definition of done](#14-definition-of-done)
+15. [Reference appendices](#15-reference-appendices)
+16. [Related docs](#16-related-docs)
 
 ---
 
@@ -59,13 +67,16 @@ notes:
 
 This document defines **how the Atmosphere domain identifies its objects** — what counts as "the same thing" across re-runs, re-publications, source updates, and re-projections; what counts as a *different* thing even when attributes overlap; and where identity sits relative to KFM's trust-membrane, evidence, and release controls.
 
-It is **not** a schema. It is the *identity contract* that schemas, validators, policy bundles, and the governed API must respect. Field-level shape lives in `schemas/contracts/v1/domains/atmosphere/` *(PROPOSED path per Directory Rules §12 + ADR-0001 — NEEDS VERIFICATION)*. Object meaning lives in `contracts/domains/atmosphere/` *(PROPOSED — NEEDS VERIFICATION)*. Admissibility lives in `policy/domains/atmosphere/` *(PROPOSED — NEEDS VERIFICATION)*.
+It is **not** a schema. It is the *identity contract* that schemas, validators, policy bundles, and the governed API must respect. Field-level shape lives in `schemas/contracts/v1/domains/atmosphere/` *(PROPOSED path per Directory Rules §12 + ADR-0001 — confirmed as the §12 lane pattern; presence NEEDS VERIFICATION)*. Object meaning lives in `contracts/domains/atmosphere/` *(PROPOSED — NEEDS VERIFICATION)*. Admissibility lives in `policy/domains/atmosphere/` *(PROPOSED — NEEDS VERIFICATION)*.
 
 **Primary readers:** atmosphere data stewards, schema authors, validator authors, policy authors, AI-receipt reviewers, release stewards.
 **Secondary readers:** anyone consuming Atmosphere `EvidenceBundle`s or building cross-lane joins (Hazards, Agriculture, Hydrology, Biodiversity).
 
 > [!IMPORTANT]
-> **Identity is a governance attribute, not a storage concern.** Two records that share a deterministic Atmosphere identity must mean the same thing in the same source-role under the same temporal scope. Two records with different identity must remain distinguishable even when their attributes coincide. Mistaken identity is treated as a publication-blocking defect.
+> **Identity is a governance attribute, not a storage concern.** Two records that share a deterministic Atmosphere identity must mean the same thing in the same source-role under the same temporal scope. Two records with different identity must remain distinguishable even when their attributes coincide. This restates the Domain-Driven Design entity rule — *the model must define what it means to be the same thing*, and *mistaken identity can lead to data corruption* (DDD Reference p. 11). Mistaken identity is treated here as a publication-blocking defect.
+
+> [!NOTE]
+> **Companion documents.** This is the *identity* view of the Atmosphere lane. Its siblings are [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) (where files live), [`EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) (candidate register), and [`EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) (sequenced roadmap). Where those say *where* and *when*, this one says *what is the same thing*.
 
 [Back to top ↑](#contents)
 
@@ -77,14 +88,15 @@ The Atmosphere identity model is a *specialization* of repo-wide doctrine; it do
 
 | # | Anchor | What it gives the model | Status |
 |---|---|---|---|
-| 1 | KFM lifecycle invariant — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED | Identity must remain *stable* through governed state transitions; promotion is a state change, not a file move. | **CONFIRMED** doctrine *(Directory Rules §0; Domains Culmination Atlas §11.H)* |
+| 1 | KFM lifecycle invariant — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED | Identity must remain *stable* through governed state transitions; promotion is a state change, not a file move. | **CONFIRMED** doctrine *(Directory Rules; Atlas §11.H)* |
 | 2 | Source-role anti-collapse rule | An observed reading, a regulatory determination, a modeled estimate, an aggregate, and an administrative compilation are **not interchangeable** — even when they describe the same place and time. | **CONFIRMED** doctrine *(Atlas §24.1)* |
 | 3 | Cite-or-abstain truth posture | Identity must resolve to an `EvidenceBundle` for any claim that depends on evidence; orphan claims trigger ABSTAIN, then DENY at the trust membrane. | **CONFIRMED** doctrine |
 | 4 | Atmosphere-specific knowledge-character denials | AQI ≠ concentration; AOD ≠ PM2.5; model ≠ observation; low-cost sensor public release requires correction, caveats, confidence, and limitations. | **CONFIRMED** doctrine *(Atlas §11.I)* |
 | 5 | Domain-Driven Design entity / value-object distinction | Some Atmosphere concepts carry durable identity through changing attributes (entities); others should be treated as immutable value carriers (value objects). | **CONFIRMED** principle *(DDD Reference pp. 11–12)* |
-| 6 | Deterministic, content-addressed identity for evidence — `spec_hash` via RFC 8785 JCS + SHA-256, recorded as `jcs:sha256:<hex>` | Reproducible identity for `EvidenceBundle` and `EvidenceRef` that survives re-runs, re-serialization, and storage moves. | **CONFIRMED** *(Pass-10 Idea Index C1-02)* |
+| 6 | Deterministic, content-addressed identity for evidence — `spec_hash` via RFC 8785 JCS + SHA-256, recorded as `jcs:sha256:<hex>` | Reproducible identity for `EvidenceBundle` and `EvidenceRef` that survives re-runs, re-serialization, and storage moves. | **CONFIRMED** *(Pass-10 C1-02)* |
 | 7 | Directory Rules §12 — Domain Placement Law | Atmosphere lives as a lane (`docs/domains/atmosphere/`, `schemas/contracts/v1/domains/atmosphere/`, …), never as a root folder. | **CONFIRMED** doctrine |
 | 8 | Watcher-as-non-publisher invariant | Watchers and connectors emit candidates and receipts only; identity never gains publication status by file presence — only by governed promotion. | **CONFIRMED** doctrine |
+| 9 | EvidenceRef resolution triad | Resolution supports deterministic `spec_hash` lookup, run-receipt lookup, and quarantine attestation for inputs crossing trust boundaries. | **CONFIRMED** doctrine *(Atlas KFM-P26-IDEA-0002)* |
 
 [Back to top ↑](#contents)
 
@@ -124,7 +136,7 @@ flowchart LR
 | **`normalized_digest`** | A `spec_hash` computed by RFC 8785 JCS canonicalization → SHA-256, recorded as `jcs:sha256:<hex>`. | Without canonicalization, a re-serialized payload would hash differently and break promotion gates, watchers, tombstones, and rollback. | **CONFIRMED** algorithm *(Pass-10 C1-02)* · PROPOSED for Atmosphere objects |
 
 > [!NOTE]
-> The Atlas labels this whole basis **PROPOSED** for every domain, including Atmosphere, because no current-session repo evidence proves all four parts are implemented in mounted schemas. Until verified, treat the basis as **doctrine the schema PR must satisfy**, not as a guarantee the schema already does.
+> The Atlas labels this whole basis **PROPOSED** for every domain, including Atmosphere, because no current-session repo evidence proves all four parts are implemented in mounted schemas. Until verified, treat the basis as **doctrine the schema PR must satisfy**, not as a guarantee the schema already does. The Pass-1 atlas also notes a `sha256` fallback was used where `blake3` was unavailable — confirm the canonical hash choice (SHA-256 vs. BLAKE3 vs. dual-hash) before relying on a specific algorithm tag.
 
 [Back to top ↑](#contents)
 
@@ -147,7 +159,7 @@ The Atmosphere domain owns 15 object families per the Domains Culmination Atlas 
 | **Ozone Observation** | Entity-observation | observed time + retrieval time | as `AirObservation` plus averaging window (1-hr / 8-hr) | `observed` |
 | **Weather Station** | **Entity** | retrieval time + valid-from / valid-to of station metadata | `source_id`, native station id, geometry, network (NWS / Mesonet / co-op), sensor inventory | `observed` infrastructure |
 | **Weather Observation** | Entity-observation | observed time + retrieval time | station ref, parameter, unit, observation interval, value, QA | `observed` |
-| **Precipitation Observation** | Entity-observation | observed time + retrieval time | station ref, accumulation window, unit, value, sensor type (gauge / disdrometer / radar-derived) | `observed`, with sensor-type disclosure required if radar-derived (which is technically `modeled`) |
+| **Precipitation Observation** | Entity-observation | observed time + retrieval time | station ref, accumulation window, unit, value, sensor type (gauge / disdrometer / radar-derived) | `observed`, with sensor-type disclosure required if radar-derived (which is technically `modeled` — see OQ-12) |
 | **Temperature Observation** | Entity-observation | observed time + retrieval time | station ref, height, sensor type, unit, value | `observed` |
 
 ### 4.2 Public-AQI, advisory, and regulatory objects
@@ -166,10 +178,13 @@ These objects need extra care because they describe **spatial-temporal fields** 
 |---|---|---|---|---|
 | **AODRaster** | Entity-grid | source time + valid time + retrieval time | `source_id`, product family (MAIAC MCD19 / VNP19 / GOES-ABI), grid spec (CRS, resolution, extent), time slice, version tag | `observed` remote-sensing mask *(NOT a PM2.5 value — see §5)* |
 | **WindField** | Entity-grid | model-run time + valid time | `source_id`, model identity, grid spec, level, time slice, run tag | `modeled` field |
-| **SmokeContext** | Entity-issuance / Entity-grid | source time + valid time | source authority (HMS / HRRR-Smoke), product type (mask / forecast plume), time slice, geometry fingerprint | `regulatory` / `modeled` — never collapse with observed PM2.5 |
+| **SmokeContext** *(shared w/ Hazards)* | Entity-issuance / Entity-grid | source time + valid time | source authority (HMS / HRRR-Smoke), product type (mask / forecast plume), time slice, geometry fingerprint | `regulatory` / `modeled` — never collapse with observed PM2.5 |
 | **Forecast Context** | Entity-issuance | model-run time + valid time | issuing authority, forecast model, valid window, geographic scope | `modeled` context |
 | **Climate Normal** | Entity-aggregate | period window (e.g., 1991–2020) + release time | issuing authority (NCEI / Mesonet), parameter, geographic unit, aggregation function, baseline period | `aggregate` — NEVER cite as a per-place event |
 | **Climate Anomaly** | Entity-aggregate | reference period + comparison window + release time | parameter, geographic unit, anomaly method, both period anchors | `aggregate`, derived from `Climate Normal` — depend chain must be inspectable |
+
+> [!NOTE]
+> `SmokeContext` appears in the owned-family list of **both** Atmosphere / Air (Atlas §11.B) **and** Hazards (Atlas §12.B). This identity model governs the **Atmosphere** projection (observed / model smoke context); Hazards owns hazard-event truth in its own lane. Confirm the shared-vs-projected modeling decision via the cross-lane join policy ADR (Atlas ADR-S-14).
 
 ### 4.4 Value-object candidates (no durable identity)
 
@@ -183,7 +198,7 @@ Per the DDD value-object rule and the Pass-18 inventory cards, the following con
 - **`PolicyLabelValue`** — a closed-enum policy label.
 
 > [!NOTE]
-> Value-object classification is **INFERRED** for Atmosphere. The Pass-18 inventory (KFM-P18-INV-268, KFM-P18-INV-267) proposes value-object treatment for these categories at the KFM-wide level; an Atmosphere-specific decision belongs in `contracts/domains/atmosphere/` and is **NEEDS VERIFICATION**.
+> Value-object classification is **INFERRED** for Atmosphere. The Pass-18 inventory (cited as KFM-P18-INV-268, KFM-P18-INV-267 — *exact card IDs NEEDS VERIFICATION*) proposes value-object treatment for these categories at the KFM-wide level; an Atmosphere-specific decision belongs in `contracts/domains/atmosphere/` and is **NEEDS VERIFICATION**.
 
 [Back to top ↑](#contents)
 
@@ -234,16 +249,19 @@ These collapses are explicitly enumerated by the Atmosphere chapter as **deny-by
 > [!WARNING]
 > **A correction is a new identity, not a mutation.** If a source revises a reading, the result is a new `AirObservation` (or `WeatherObservation`, etc.) with a new `spec_hash`, linked by a `CorrectionNotice`. The old identity is preserved and can be rolled back to. Editing the original record in place would break promotion idempotency, watcher change-detection, and rollback drills.
 
-### 5.2 Role-to-descriptor-field crosswalk *(PROPOSED shape — Atlas §24.1.3)*
+### 5.2 Role-to-descriptor-field crosswalk *(PROPOSED shape — Atlas §24.1; field names NEEDS VERIFICATION)*
 
 | Descriptor field | Type / vocabulary | Required when | Atmosphere note |
 |---|---|---|---|
-| `source_role` | enum: `observed · regulatory · modeled · aggregate · administrative · candidate · synthetic` | MUST always | Set at admission. Correction → new descriptor + `CorrectionNotice`. |
+| `source_role` | enum: `observed · regulatory · modeled · aggregate · administrative · candidate · synthetic` | MUST always | Set at admission. Correction → new descriptor + `CorrectionNotice`. Canonical enum is ADR-class (Atlas ADR-S-04). |
 | `role_authority` | string (issuing body / model identity / steward) | MUST when role ∈ {regulatory, modeled, aggregate} | e.g., `EPA-AQS`, `NCEP-HRRR-Smoke-v4`, `NCEI-Climate-Normals-1991-2020` |
 | `role_aggregation_unit` | geometry-scope token | MUST when `source_role = aggregate` | e.g., `kfm-county`, `huc12`, `nws-zone`, `climate-division` |
 | `role_model_run_ref` | `EvidenceRef` → `ModelRunReceipt` | MUST when `source_role = modeled` | Pins inputs, parameters, model version for the grid or trajectory. |
 | `role_synthetic_basis` | `{ method, inputs, reality_boundary_note_ref }` | MUST when `source_role = synthetic` | Required for downscaled / bias-corrected / interpolated products. |
 | `role_candidate_disposition` | enum: `pending · merged · rejected · quarantined` | MUST when `source_role = candidate` | Low-cost-sensor pre-review path; PUBLISHED edge forbidden until merged. |
+
+> [!NOTE]
+> The descriptor **field names** above (`role_authority`, `role_model_run_ref`, etc.) are an `INFERRED` shape; the Atlas confirms the source-role *vocabulary* and the anti-collapse *rule*, but the exact descriptor field layout is `NEEDS VERIFICATION` against the mounted `SourceDescriptor` schema and is gated by ADR-S-04.
 
 [Back to top ↑](#contents)
 
@@ -252,7 +270,7 @@ These collapses are explicitly enumerated by the Atmosphere chapter as **deny-by
 ## 6. Temporal discipline
 
 > [!IMPORTANT]
-> **The Atmosphere domain has six distinct time facets, and identity respects every facet that is material to the claim.** Collapsing them is the single most common error mode for atmospheric data — and the easiest to hide behind a single "timestamp" field. *(CONFIRMED — Atlas §11.E temporal handling; Master MapLibre §P time-aware map interaction.)*
+> **The Atmosphere domain has six distinct time facets, and identity respects every facet that is material to the claim.** Collapsing them is the single most common error mode for atmospheric data — and the easiest to hide behind a single "timestamp" field. *(CONFIRMED — Atlas §11.E temporal handling.)*
 
 | Facet | Meaning | Atmosphere example | Identity participation |
 |---|---|---|---|
@@ -305,12 +323,12 @@ flowchart LR
 |---|---|
 | `grid_spec` *(PROPOSED)* | A 1 km MAIAC AOD tile and a 9 km re-aggregation of it have different identities even if their `valid_time` is the same. |
 | `product_version` *(PROPOSED)* | MAIAC MCD19A2 v6 and v6.1 are distinct identities; conflation would hide algorithm changes. |
-| `geometry_fingerprint` *(PROPOSED — Spatial Foundation §3)* | The same bounding box at two CRSes is two identities; reprojections generate `TransformReceipt`s, not in-place edits. |
+| `geometry_fingerprint` *(PROPOSED — Spatial Foundation)* | The same bounding box at two CRSes is two identities; reprojections generate `TransformReceipt`s, not in-place edits. |
 | `level / band set` *(PROPOSED)* | A 10 m WindField level and a 100 m level are distinct identities; multi-level products must declare their levels in identity. |
-| `analysis-CRS vs. web-delivery-CRS distinction` *(CONFIRMED — Master MapLibre ML-061-096)* | Identity is tied to the analysis CRS; web-delivery reprojections produce derived artifacts with their own identity and `TransformReceipt`. |
+| `analysis-CRS vs. web-delivery-CRS distinction` *(CONFIRMED principle — Master MapLibre; exact ML card id NEEDS VERIFICATION)* | Identity is tied to the analysis CRS; web-delivery reprojections produce derived artifacts with their own identity and `TransformReceipt`. |
 
 > [!CAUTION]
-> **Cloud Optimized GeoTIFFs (COGs) and PMTiles are derived artifacts, not identity-bearing originals.** *(CONFIRMED — Master MapLibre ML-061-095.)* The COG / PMTiles version of an `AODRaster` references the analysis-CRS identity via `EvidenceRef`; it does not replace it.
+> **Cloud Optimized GeoTIFFs (COGs) and PMTiles are derived artifacts, not identity-bearing originals.** *(CONFIRMED principle — Master MapLibre; exact ML card id NEEDS VERIFICATION.)* The COG / PMTiles version of an `AODRaster` references the analysis-CRS identity via `EvidenceRef`; it does not replace it.
 
 [Back to top ↑](#contents)
 
@@ -359,18 +377,21 @@ flowchart LR
 
 ## 9. `EvidenceRef` → `EvidenceBundle` resolution
 
-Atmosphere claims that depend on evidence must resolve through the governed `EvidenceRef` → `EvidenceBundle` path. The identity contract for this resolution *(PROPOSED design — `New_Ideas_5-8-26.pdf`)*:
+Atmosphere claims that depend on evidence must resolve through the governed `EvidenceRef` → `EvidenceBundle` path. The Atlas confirms the **resolution triad** — deterministic `spec_hash` lookup, run-receipt lookup, and quarantine attestation for inputs crossing trust boundaries (KFM-P26-IDEA-0002) — and confirms the **bundle/ref schema field requirements**: an `EvidenceBundle` carries `bundle_id`, identity/`spec_hash`, inputs, parameters, artifacts, checks, integrity, and signatures (KFM-P26-PROG-0004); an `EvidenceRef` carries `ref_id`, target `spec_hash`, expected bundle digest, resolution, and policy metadata (KFM-P26-PROG-0005). **CONFIRMED doctrine.**
 
-| Step | Behavior |
-|---|---|
-| **Compute** | `spec_hash` over a normalized spec that includes `object_type`, `schema_version`, `source_refs`, `dataset_refs`, `evidence_refs`, `object_refs`, `policy_label`, `rights_status`, `sensitivity`, and any field that changes evidentiary meaning. Transport / runtime fields (timestamps, storage URLs, signatures, nonces) are excluded. |
-| **Derive IDs** | `bundle_id = "eb-" + base32(lowercase(SHA-256(spec_hash)))[:26]`; `evidence_ref_id = "er-" + base32(lowercase(SHA-256(target_bundle_spec_hash)))[:26]`. IDs derive only from normalized spec — no environment entropy. |
-| **Resolve** | Read `evidence_ref.spec_hash` → look up a bundle whose `spec_hash` equals the ref's hash → verify the bundle's `bundle_id` recomputes from the same `spec_hash`. If not, **DENY**. |
-| **Publication gate** | Promotion requires a matching `spec_hash`. Any mismatch triggers ABSTAIN at validation or DENY at policy, per the stage. |
-| **Algorithm stability** | SHA-256 is fixed for v1; future migration requires an ADR and a dual-hash compatibility window. |
+| Step | Behavior | Status |
+|---|---|---|
+| **Compute** | `spec_hash` over a normalized spec that includes `object_type`, `schema_version`, `source_refs`, `dataset_refs`, `evidence_refs`, `object_refs`, `policy_label`, `rights_status`, `sensitivity`, and any field that changes evidentiary meaning. Transport / runtime fields (timestamps, storage URLs, signatures, nonces) are excluded. | **CONFIRMED** approach *(Pass-10 C1-02; C4-04 content addressing)* |
+| **Derive IDs** | IDs derive only from the normalized spec — no environment entropy — so two consumers compute the same id for the same logical content. | **CONFIRMED** principle; **specific `eb-`/`er-` base32-26 formula NEEDS VERIFICATION** *(see note)* |
+| **Resolve** | Read `evidence_ref` target `spec_hash` → look up a bundle whose `spec_hash` equals the ref's target → verify the bundle's id recomputes from the same `spec_hash`. If not, **DENY**. | **CONFIRMED** triad *(KFM-P26-IDEA-0002)* |
+| **Publication gate** | Promotion requires a matching `spec_hash`. Any mismatch triggers ABSTAIN at validation or DENY at policy, per the stage. | **CONFIRMED** posture |
+| **Algorithm stability** | SHA-256 is fixed for v1; future migration requires an ADR and a dual-hash compatibility window. The BLAKE3-vs-SHA-256 question is itself open. | **CONFIRMED** need; algorithm choice **OPEN** |
 
 > [!IMPORTANT]
-> **Tampering, accidental substitution, and partial promotion are all detected by hash mismatch.** Two consumers fetching the same evidence reference must receive byte-identical bundles. This is what makes Atmosphere `EvidenceBundle`s portable across the broader geospatial tooling ecosystem (STAC, DCAT, JSON-LD, pgstac, stac-fastapi). *(CONFIRMED — Pass-10 C4-01, C4-04, C8-04.)*
+> **Tampering, accidental substitution, and partial promotion are all detected by hash mismatch.** Two consumers fetching the same evidence reference must receive byte-identical bundles. This is what makes Atmosphere `EvidenceBundle`s portable across the broader geospatial tooling ecosystem (STAC, DCAT, JSON-LD). *(CONFIRMED — Pass-10 C4-01, C4-04; content-addressed URI form `kfm://entity-bundle/<sha256>`.)*
+
+> [!WARNING]
+> **ID-derivation formula is unverified.** The concrete scheme `bundle_id = "eb-" + base32(lowercase(SHA-256(spec_hash)))[:26]` / `evidence_ref_id = "er-" + ...` was attributed to `New_Ideas_5-8-26.pdf`, which is **not present in this session's indexed project knowledge**. What *is* confirmed is content-addressing from `spec_hash` (C4-04, URI form `kfm://entity-bundle/<sha256>`) and the required field set (KFM-P26-PROG-0004/0005). The exact `eb-`/`er-` base32-26 encoding is therefore **NEEDS VERIFICATION** and must be confirmed against a mounted `evidence_bundle.schema.json` / `evidence_ref.schema.json` before any tool relies on the literal id format. See §12 OQ-13.
 
 [Back to top ↑](#contents)
 
@@ -389,12 +410,15 @@ The Atlas §11.K backlog and the Atmosphere knowledge-character constraints impl
 | `model-as-observed-denial` | A `WindField`, `SmokeContext` forecast, or downscaled grid cannot be relabeled `observed`. |
 | `low-cost-sensor-caveat-tests` | Public release of low-cost-sensor data without correction, caveats, confidence, and limitations is rejected. |
 | `dryrun-no-live-fetch-tests` | Dry-run pipelines do not perform live fetches; identity computation is reproducible from fixtures. |
-| `timestamp-normalization-determinism` | Identical payloads produce identical UTC normalizations across AQS, OpenAQ, PurpleAir, Mesonet, satellite products. *(CONFIRMED — Master MapLibre ML-061-091.)* |
+| `timestamp-normalization-determinism` | Identical payloads produce identical UTC normalizations across AQS, OpenAQ, PurpleAir, Mesonet, satellite products. *(principle CONFIRMED — Master MapLibre; exact card id NEEDS VERIFICATION.)* |
 | `time-facet-distinction` | Source / observed / valid / retrieval / release / correction times are carried separately wherever they differ. |
-| `digest-closure-tests` | The `EvidenceBundle` `spec_hash` recomputes from its declared `bundle_id` and from the reference that targets it. |
+| `digest-closure-tests` | The `EvidenceBundle` `spec_hash` recomputes from its declared id and from the reference that targets it. |
 | `correction-creates-new-identity` | A `CorrectionNotice` produces a new `spec_hash`-bearing identity, not an in-place edit. |
 | `release-manifest-identity-match` | The `spec_hash` in `ReleaseManifest` matches the `spec_hash` of the PROCESSED object exactly. |
 | `rollback-replay-on-fixture` | A rollback drill on a saved Atmosphere fixture restores the prior released identity. |
+
+> [!IMPORTANT]
+> Per Directory Rules §13.5, validator **logic** lives in `tools/validators/<topic>/...` and is *called* by these tests; it is not authored inside the test files. The names above identify the tests/fixtures, not the validator implementations.
 
 [Back to top ↑](#contents)
 
@@ -422,27 +446,68 @@ The Atlas §11.K backlog and the Atmosphere knowledge-character constraints impl
 
 | # | Item | Status | What would settle it |
 |---|---|---|---|
-| 1 | Confirm `schemas/contracts/v1/domains/atmosphere/` is the live machine-schema home (vs. `contracts/domains/atmosphere/` carrying schemas in lineage). | **NEEDS VERIFICATION** | Mounted-repo inspection per ADR-0001. |
-| 2 | Confirm `source_role` enum shape and field name in mounted `SourceDescriptor`. | **NEEDS VERIFICATION** | Schema file inspection at `schemas/contracts/v1/sources/source_descriptor.schema.json` (or equivalent). |
-| 3 | Confirm whether the Atmosphere `kfm:` namespace choice (`kfm:` vs. `ks-kfm:`) has been pinned by ADR. | **OPEN** *(Pass-10 C4-01)* | An accepted ADR or a `STAC_KFM_PROFILE.md` declaration. |
-| 4 | Confirm JCS vs. URDNA2015 canonicalization choice for Atmosphere `EvidenceBundle`s where the bundle has been merged with non-KFM RDF. | **OPEN** *(Pass-10 C8-05)* | ADR + canonicalization test vectors. |
-| 5 | Confirm `geometry_fingerprint` canonicalization rule for Atmosphere field objects (AODRaster, WindField). | **NEEDS VERIFICATION** | Spatial Foundation `GeometryFingerprint` contract + Atmosphere-specific fixtures. |
-| 6 | Confirm whether `Climate Normal` and `Climate Anomaly` require an `AggregationReceipt` per Atlas §24.2; confirm its field shape. | **NEEDS VERIFICATION** | Mounted receipt schema and golden fixtures. |
-| 7 | Confirm DDD entity/value-object classification for each Atmosphere object family in `contracts/domains/atmosphere/`. | **NEEDS VERIFICATION** | Mounted contract Markdown declaring posture per family. |
-| 8 | Confirm low-cost-sensor caveat enforcement — exact validator names, fixture content, and policy bundle. | **NEEDS VERIFICATION** | `tests/domains/atmosphere/` + `policy/domains/atmosphere/` inspection. |
-| 9 | Confirm dryrun-no-live-fetch test presence and content for the Atmosphere PROPOSED first PR. | **NEEDS VERIFICATION** | Test inventory inspection. |
-| 10 | Resolve `PROV.md` vs. `PROVENANCE.md` naming for the standards profile (open item from the project series). | **OPEN** | ADR or rename PR. |
-| 11 | Confirm `CODEOWNERS` for `docs/domains/atmosphere/IDENTITY_MODEL.md` and for the Atmosphere lane generally. | **NEEDS VERIFICATION** | `.github/CODEOWNERS` inspection. |
-| 12 | Confirm radar-derived precipitation handling — is `Precipitation Observation` from a radar-derived product treated as `observed`, `modeled`, or split into a separate object family? | **OPEN** | Atmosphere contract or ADR. |
+| OQ-01 | Confirm `schemas/contracts/v1/domains/atmosphere/` is the live machine-schema home (vs. `contracts/domains/atmosphere/` carrying schemas in lineage). | **NEEDS VERIFICATION** *(Directory Rules §12 confirms the pattern; presence unverified)* | Mounted-repo inspection per ADR-0001. |
+| OQ-02 | Confirm `source_role` enum shape and field name in mounted `SourceDescriptor`. | **NEEDS VERIFICATION** *(gated by ADR-S-04)* | Schema file inspection at `schemas/contracts/v1/.../source_descriptor.schema.json` (or equivalent). |
+| OQ-03 | Confirm whether the Atmosphere `kfm:` namespace choice (`kfm:` vs. `ks-kfm:`) has been pinned by ADR. | **OPEN** *(Pass-10 C4-01)* | An accepted ADR or a `STAC_KFM_PROFILE.md` declaration. |
+| OQ-04 | Confirm JCS vs. URDNA2015 canonicalization choice for Atmosphere `EvidenceBundle`s merged with non-KFM RDF. | **OPEN** *(Pass-10 C8-05 — JCS is the confirmed default; URDNA2015 reserved for RDF-semantic equivalence)* | ADR + canonicalization test vectors. |
+| OQ-05 | Confirm `geometry_fingerprint` canonicalization rule for Atmosphere field objects (AODRaster, WindField). | **NEEDS VERIFICATION** | Spatial Foundation `GeometryFingerprint` contract + Atmosphere-specific fixtures. |
+| OQ-06 | Confirm whether `Climate Normal` and `Climate Anomaly` require an `AggregationReceipt`; confirm its field shape. | **NEEDS VERIFICATION** | Mounted receipt schema and golden fixtures. |
+| OQ-07 | Confirm DDD entity/value-object classification for each Atmosphere object family in `contracts/domains/atmosphere/`. | **NEEDS VERIFICATION** | Mounted contract Markdown declaring posture per family. |
+| OQ-08 | Confirm low-cost-sensor caveat enforcement — exact validator names, fixture content, and policy bundle. | **NEEDS VERIFICATION** | `tests/domains/atmosphere/` + `policy/domains/atmosphere/` inspection. |
+| OQ-09 | Confirm dryrun-no-live-fetch test presence and content for the Atmosphere PROPOSED first PR. | **NEEDS VERIFICATION** | Test inventory inspection. |
+| OQ-10 | Resolve `PROV.md` vs. `PROVENANCE.md` naming for the standards profile (recurring open item across the project series). | **OPEN** | ADR or rename PR. |
+| OQ-11 | Confirm `CODEOWNERS` for `docs/domains/atmosphere/IDENTITY_MODEL.md` and for the Atmosphere lane generally. | **NEEDS VERIFICATION** | `.github/CODEOWNERS` inspection. |
+| OQ-12 | Confirm radar-derived precipitation handling — is radar-derived `Precipitation Observation` treated as `observed`, `modeled`, or split into a separate family? | **OPEN** | Atmosphere contract or ADR. |
+| OQ-13 | Confirm the literal `bundle_id` / `evidence_ref_id` derivation (`eb-`/`er-` + base32-26) vs. the content-addressed `kfm://entity-bundle/<sha256>` form. | **NEEDS VERIFICATION** *(formula attributed to an unlocatable source; content-addressing CONFIRMED, exact encoding not)* | Mounted `evidence_bundle.schema.json` / `evidence_ref.schema.json`. |
+| OQ-14 | Confirm canonical hash algorithm (SHA-256 vs. BLAKE3 vs. dual-hash) for Atmosphere `spec_hash`. | **OPEN** *(Pass-1 used sha256 fallback where blake3 unavailable)* | Hashing-policy ADR + build-environment confirmation. |
+| OQ-15 | Confirm the `New_Ideas_5-8-26.pdf` source referenced for the resolution rule, Mesonet consent note, FIRMS thresholds, and SMAP cadence. | **NEEDS VERIFICATION** *(file not in indexed project knowledge; Kansas Mesonet corroborated only via `New Ideas 4-14-26.pdf`, SRC-P23-003)* | Source-ledger / mounted-repo confirmation of the file and its contents. |
 
 [Back to top ↑](#contents)
 
 ---
 
-## 13. Reference appendices
+## 13. Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Confirmed `EvidenceRef` resolution triad and bundle/ref required-field sets against the Atlas | gap closure | Atlas KFM-P26-IDEA-0002 / PROG-0004 / PROG-0005 ground §9. |
+| **Demoted** the literal `eb-`/`er-` base32-26 id-derivation formula to `NEEDS VERIFICATION` | reconciliation | Formula attributed to `New_Ideas_5-8-26.pdf`, which is not in indexed project knowledge; only content-addressing from `spec_hash` (C4-04) is CONFIRMED. |
+| Flagged `New_Ideas_5-8-26.pdf` consistently as `NEEDS VERIFICATION` (resolution rule, Mesonet consent, FIRMS, SMAP) | clarification | Same unlocatable file flagged in the companion `FILE_SYSTEM_PLAN` / `EXPANSION_PLAN`; Kansas Mesonet is corroborated only via `New Ideas 4-14-26.pdf` (SRC-P23-003). |
+| Softened Pass-18 (`KFM-P18-INV-267/268`) and Master MapLibre (`ML-061-09x`) card-id citations to "id NEEDS VERIFICATION" | clarification | Card-level ids not confirmed in this session; the underlying principles are confirmed. |
+| Noted JCS-as-default / URDNA2015-reserved explicitly (C8-05) | clarification | The OQ on canonicalization had a confirmed default worth stating. |
+| Added BLAKE3-vs-SHA-256 hash-algorithm open question (OQ-14) | gap closure | Pass-1 used a sha256 fallback where blake3 was unavailable; the choice is genuinely open. |
+| Flagged `SmokeContext` as shared with Hazards | clarification | Atlas §11.B and §12.B both list it. |
+| Added companion sections (Changelog, Definition of done) and `CONTRACT_VERSION = "3.0.0"` pin; reflowed Meta Block annotations to `#` style | gap closure / housekeeping | Doctrine-adjacent doc completeness + Meta Block v2 rule. |
+| Added companion-doc cross-links (FILE_SYSTEM_PLAN, EXPANSION_BACKLOG/PLAN) | housekeeping | Cross-document navigability. |
+| Renumbered tail (Reference appendices → §15, Related docs → §16) to seat new §13–§14 | housekeeping | Section insertion. |
+| Updated `updated:` and badge to 2026-05-29 | housekeeping | Review date. |
+
+> **Backward compatibility.** Section anchors §1–§11 are preserved; §12 retains its slot (re-IDed open-question rows as `OQ-NN` but kept the section number). New §13–§14 insert before the appendices, which move to §15–§16. The original used a single `#contents` anchor that GitHub generates from "Contents"; preserved.
+
+[Back to top ↑](#contents)
+
+---
+
+## 14. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (`docs/domains/atmosphere/IDENTITY_MODEL.md`, `PROPOSED` per §12);
+- a DOM-AIR steward and a docs steward review it, and `CODEOWNERS` is confirmed (OQ-11);
+- it is linked from `docs/domains/atmosphere/README.md` and cross-links the file-system plan, backlog, and expansion plan;
+- the `source_role` enum (OQ-02 / ADR-S-04), the `spec_hash` algorithm (OQ-14), and the bundle/ref id-derivation (OQ-13) are confirmed against mounted schemas;
+- the `PROV.md` vs. `PROVENANCE.md` naming (OQ-10) and the `kfm:`-namespace (OQ-03) questions are resolved by ADR;
+- the `GENERATED_RECEIPT.json` planned for this artifact is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top ↑](#contents)
+
+---
+
+## 15. Reference appendices
 
 <details>
-<summary><strong>Appendix A — Receipt families that touch Atmosphere identity</strong> <em>(PROPOSED shape — Atlas §24.2)</em></summary>
+<summary><strong>Appendix A — Receipt families that touch Atmosphere identity</strong> <em>(PROPOSED shape — Atlas §24.2; field shapes NEEDS VERIFICATION)</em></summary>
 
 | Receipt | Purpose | When Atmosphere emits it |
 |---|---|---|
@@ -462,23 +527,23 @@ The Atlas §11.K backlog and the Atmosphere knowledge-character constraints impl
 </details>
 
 <details>
-<summary><strong>Appendix B — Atmosphere source families and their default source-role</strong> <em>(PROPOSED — Atlas §11.D)</em></summary>
+<summary><strong>Appendix B — Atmosphere source families and their default source-role</strong> <em>(PROPOSED — Atlas §11.D; role split INFERRED; rights NEEDS VERIFICATION)</em></summary>
 
-| Source family | Default `source_role` | Notes |
+| Source family | Default `source_role` *(INFERRED)* | Notes |
 |---|---|---|
-| EPA AQS-like archive | `regulatory` archive *(role = administrative compilation of `observed`)* | Vintage tag required; conflating versions is denied. |
+| EPA AQS-like archive | `regulatory` archive *(administrative compilation of `observed`)* | Vintage tag required; conflating versions is denied. |
 | AirNow / agency reporting | `regulatory` reporting | Public AQI surfaces; not a concentration. |
 | OpenAQ-like aggregators | `observed` *(rights-permitting)* | Rights NEEDS VERIFICATION; many entries are republished from regulatory or low-cost networks and inherit their role. |
-| Kansas Mesonet | `observed` | Written data-usage consent required *(New Ideas 5-8-26)*; fail-closed if missing. |
+| Kansas Mesonet | `observed` | Written data-usage consent reportedly required *(attributed to `New_Ideas_5-8-26.pdf` — NEEDS VERIFICATION; Mesonet corroborated only via `New Ideas 4-14-26.pdf`)*; fail-closed if rights unrecorded. |
 | NWS / NOAA stations | `observed` | Standard meteorological networks. |
 | Low-cost sensors (e.g., PurpleAir) | `observed` *(low-cost — caveated)* or `candidate` pre-review | Public release requires correction, caveats, confidence, and limitations. |
 | GOES-ABI AOD | `observed` remote-sensing mask | Column-integrated; AOD ≠ PM2.5. |
 | MAIAC MCD19 / VNP19 AOD | `observed` remote-sensing mask | Product version and validation status critical to identity. |
-| VIIRS / MODIS fire / FIRMS | `observed` remote-sensing detection | FRP threshold rules in `New Ideas 5-8-26`. |
+| VIIRS / MODIS fire / FIRMS | `observed` remote-sensing detection | FRP threshold rules attributed to `New_Ideas_5-8-26.pdf` — NEEDS VERIFICATION. |
 | HMS smoke product | `regulatory` smoke context | Analyst-issued. |
 | HRRR-Smoke / NOAA smoke forecast | `modeled` field | Forecast valid time distinct from run time. |
 | CAMS / ECMWF-family model fields | `modeled` field | Run identity required. |
-| SMAP L4 (soil-moisture context for Atmosphere joins) | `modeled` field | 3-hourly cadence; staleness threshold per `New Ideas 5-8-26`. |
+| SMAP L4 (soil-moisture context for Atmosphere joins) | `modeled` field | Cadence / staleness threshold attributed to `New_Ideas_5-8-26.pdf` — NEEDS VERIFICATION. |
 | Forecast / advisory issuances | `regulatory` issuance | Authority + valid window required. |
 
 </details>
@@ -533,8 +598,34 @@ Climate Anomaly    { source_id, parameter, geographic_unit, anomaly_method,
 
 Each object also carries (but does not include in `spec_hash`):
 - transport / runtime fields (storage URLs, fetch headers, signatures, nonces);
-- `bundle_id`, `evidence_ref_id` (derived from `spec_hash`);
-- `policy_label`, `rights_status`, `sensitivity` *(these DO participate in `spec_hash` per the resolution rule)*.
+- derived ids (e.g., `bundle_id`, `evidence_ref_id`) — *derivation formula NEEDS VERIFICATION, see §9 / OQ-13*.
+
+`policy_label`, `rights_status`, and `sensitivity` **DO** participate in `spec_hash` per the resolution rule in §9.
+
+</details>
+
+<details>
+<summary><strong>Appendix D — GENERATED_RECEIPT.json plan (operating-contract §34)</strong></summary>
+
+If this identity model is merged, it is an AI-authored artifact and `SHOULD` ship a `GENERATED_RECEIPT.json`:
+
+```json
+{
+  "receipt_id": "NEEDS-VERIFICATION",
+  "contract_version": "3.0.0",
+  "artifact_paths": ["docs/domains/atmosphere/IDENTITY_MODEL.md"],
+  "artifact_hashes": { "docs/domains/atmosphere/IDENTITY_MODEL.md": "BLAKE3-or-SHA256:NEEDS-VERIFICATION" },
+  "model_identity": "NEEDS-VERIFICATION",
+  "truth_labels": "CONFIRMED (identity doctrine) / PROPOSED (implementation) / NEEDS VERIFICATION (id-derivation formula)",
+  "validation_gates": [
+    { "name": "polish_checklist", "status": "PASS" },
+    { "name": "truth_checklist", "status": "PASS" }
+  ],
+  "human_review": { "state": "pending" }
+}
+```
+
+> Illustrative only. `human_review.state == "pending"` is well-formed but **not mergeable** until `approved`.
 
 </details>
 
@@ -542,30 +633,34 @@ Each object also carries (but does not include in `spec_hash`):
 
 ---
 
-## 14. Related docs
+## 16. Related docs
 
-The following are **PROPOSED** sibling and ancestor documents per Directory Rules §6 and §12; presence and exact paths **NEEDS VERIFICATION**.
+The following are **PROPOSED** sibling and ancestor documents per Directory Rules §6 and §12; presence and exact paths **NEEDS VERIFICATION** unless marked CONFIRMED.
 
 - [`docs/domains/atmosphere/README.md`](./README.md) — Atmosphere lane overview *(PROPOSED)*
-- [`docs/domains/atmosphere/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — Canonical-paths registry for the Atmosphere lane *(PROPOSED — drafted in prior project conversation)*
-- [`docs/domains/atmosphere/SENSITIVITY.md`](./SENSITIVITY.md) — Knowledge-character and low-cost-sensor caveat posture *(PROPOSED — TODO)*
-- [`docs/domains/atmosphere/SOURCES.md`](./SOURCES.md) — Atmosphere source families and source descriptors *(PROPOSED — TODO)*
+- [`docs/domains/atmosphere/FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) — placement view *(companion)*
+- [`docs/domains/atmosphere/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — candidate register *(companion)*
+- [`docs/domains/atmosphere/EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) — sequenced roadmap *(companion)*
+- [`docs/domains/atmosphere/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — canonical-paths registry *(PROPOSED — drafted in prior project conversation)*
+- [`docs/domains/atmosphere/SENSITIVITY.md`](./SENSITIVITY.md) — knowledge-character and low-cost-sensor caveat posture *(PROPOSED — TODO)*
+- [`docs/domains/atmosphere/SOURCES.md`](./SOURCES.md) — Atmosphere source families and descriptors *(PROPOSED — TODO)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules *(CONFIRMED — this project)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle invariant *(PROPOSED — NEEDS VERIFICATION)*
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain doctrine *(PROPOSED — NEEDS VERIFICATION)*
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Meaning vs. shape vs. admissibility *(PROPOSED — NEEDS VERIFICATION)*
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O and PAV profile *(CONFIRMED — drafted in this project series)*
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O and PAV profile *(CONFIRMED — drafted in this project series; name vs. `PROVENANCE.md` is OQ-10)*
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles v3 profile *(CONFIRMED — drafted in this project series)*
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — OGC API Tiles delivery *(CONFIRMED — drafted in this project series)*
 - [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md) — OAI-PMH 2.0 harvest *(CONFIRMED — drafted in this project series)*
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 crosswalk *(CONFIRMED — drafted in this project series)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Default machine-schema home *(CONFIRMED — cited by Directory Rules §0)*
-- `schemas/contracts/v1/domains/atmosphere/` — Atmosphere machine-shape home *(PROPOSED — NEEDS VERIFICATION)*
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — default machine-schema home *(CONFIRMED — cited by Directory Rules)*
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
+- `schemas/contracts/v1/domains/atmosphere/` — Atmosphere machine-shape home *(PROPOSED — §12 lane pattern; presence NEEDS VERIFICATION)*
 - `contracts/domains/atmosphere/` — Atmosphere object meaning *(PROPOSED — NEEDS VERIFICATION)*
 - `policy/domains/atmosphere/` — Atmosphere admissibility / sensitivity bundles *(PROPOSED — NEEDS VERIFICATION)*
 
 ---
 
-**Last updated:** 2026-05-16 · **Version:** v1 (draft) · **Status:** draft · **Doctrine:** CONFIRMED · **Implementation:** PROPOSED
+**Last updated:** 2026-05-29 · **Version:** v1 (draft) · **Status:** draft · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Doctrine:** CONFIRMED · **Implementation:** PROPOSED
 
 [Back to top ↑](#contents)
