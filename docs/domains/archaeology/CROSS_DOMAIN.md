@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/archaeology/cross-domain
 title: Archaeology Domain — Cross-Domain Relations
 type: standard
-version: v1
+version: v1.0
 status: draft
 owners: archaeology-domain-steward + docs-steward    # PLACEHOLDER — NEEDS VERIFICATION
 created: 2026-05-27
-updated: 2026-05-27
+updated: 2026-05-29
 policy_label: public                                  # Document is public; subject content is sensitivity-gated
 related:
   - docs/doctrine/ai-build-operating-contract.md      # CONFIRMED authority; pins CONTRACT_VERSION = "3.0.0"
@@ -22,20 +22,20 @@ related:
   - docs/domains/archaeology/SENSITIVITY.md           # PROPOSED — sibling
   - docs/registers/VERIFICATION_BACKLOG.md            # PROPOSED
   - docs/registers/DRIFT_REGISTER.md                  # PROPOSED
-  - policy/sensitivity/archaeology/                   # PROPOSED — §23.2 enforcement home
+  - policy/sensitivity/archaeology/                   # PROPOSED — §23.2 enforcement home (ENCY §7.13)
   - policy/runtime/cross_lane/                        # PROPOSED — cross-lane runtime gate
 tags: [kfm, archaeology, cross-domain, cross-lane, governance, evidence, sensitivity, doctrine-adjacent]
 notes:
-  - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §0 and §37."
-  - "Cross-lane sensitivity gate: [CONTRACT v3.0] §23.2 row 'Archaeology — site locations' applies to every join surface in this document. Joins involving People/DNA/Land additionally fail closed on living-person + DNA fields per §23.2 row 'Living-person data' and 'Genealogy / DNA'."
-  - "Atlas v1.1 §24.4.13 names three edges OWNED by Archaeology (Settlements, Planetary/3D, People/Land). DOM-ARCH §F names four edges Archaeology CONSUMES (Spatial Foundation, Roads/Rail, Settlements, Hazards). Atlas §24.4.6 / §24.4.11 / §24.4.14 catalog three reciprocal edges where Archaeology is cited by other lanes (Flora, Roads/Rail, People/Land)."
-  - "All path-shaped claims PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §13). The contracts/domains/archaeology/ form is preserved per CANONICAL_PATHS.md v1.1 §2.4 (Directory Rules §12 wins on §2.1 authority order)."
-  - "Cross-lane join policy is ADR-S-14 in Atlas v1.1 §24.12 (OPEN). Until accepted, every cross-lane archaeology join defers to the most restrictive applicable §23.2 row."
+  - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §23 and the v3.0 front matter."
+  - "Cross-lane sensitivity gate: [CONTRACT v3.0] §23.2 row 'Archaeology — site locations' applies to every join surface in this document. The §23.2 matrix is itself labeled PROPOSED in v3.0 (steward ratification pending); until ratified, the most restrictive applicable row applies. Joins involving People/DNA/Land additionally fail closed on living-person + DNA fields per §23.2 rows 'Living-person data' and 'Genealogy / DNA'."
+  - "Atlas v1.1 §24.4.13 names three edges OWNED by Archaeology (Settlements, Planetary/3D, People/Land). DOM-ARCH §F names four edges Archaeology CONSUMES (Spatial Foundation, Roads/Rail, Settlements, Hazards). Atlas §24.4.6 / §24.4.11 / §24.4.14 / §24.4.16 catalog the reciprocal edges where Archaeology is cited by other lanes (Flora, Roads/Rail, People/Land, Planetary/3D)."
+  - "All path-shaped claims PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §13). The contracts/domains/archaeology/ form is preserved per CANONICAL_PATHS.md v1.1 §2.4 (Directory Rules §12 wins on §2.1 authority order). NOTE: Atlas §24.13 crosswalk and ENCY §7.13 both render this as contracts/archaeology/ (no domains/ segment) — the unresolved namespace discrepancy this doc tracks."
+  - "Cross-lane join policy is enumerated as ADR-S-14 in the Atlas v1.1 §24.12 Master Open-ADR Backlog (a PROPOSED triage backlog, not an accepted/opened ADR). Until ratified, every cross-lane archaeology join defers to the most restrictive applicable §23.2 row."
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Cross-Domain Relations
 
-> The single page that says **how archaeology relates to every other KFM lane** — which edges archaeology owns, which it consumes, which sensitivity gates dominate at the boundary, and which joins are deny-by-default until ADR-S-14 lands. Aligned with `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`) and the §23.2 sensitive-domain matrix.
+> The single page that says **how archaeology relates to every other KFM lane** — which edges archaeology owns, which it consumes, which sensitivity gates dominate at the boundary, and which joins are deny-by-default until the cross-lane join policy (ADR-S-14) is ratified. Aligned with `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`) and the §23.2 sensitive-domain matrix.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1f6feb)
@@ -43,16 +43,16 @@ notes:
 ![domain](https://img.shields.io/badge/domain-archaeology-8a6d3b)
 ![§23.2 row](https://img.shields.io/badge/%C2%A723.2-Archaeology%20%E2%80%94%20site%20locations-purple)
 ![sensitivity](https://img.shields.io/badge/sensitivity-deny%20exact%20location-critical)
-![join%20policy](https://img.shields.io/badge/cross--lane%20join%20policy-ADR--S--14%20OPEN-orange)
+![join%20policy](https://img.shields.io/badge/cross--lane%20join%20policy-ADR--S--14%20backlog-orange)
 ![asymmetric%20continuity](https://img.shields.io/badge/asymmetric%20continuity-strengthen%20freely%20%2F%20relax%20by%20review-informational)
 ![conformance](https://img.shields.io/badge/conformance-RFC%202119-555)
 ![repo%20mount](https://img.shields.io/badge/repo%20mount-NOT%20VERIFIED-lightgrey)
-![last updated](https://img.shields.io/badge/last%20updated-2026--05--27-informational)
+![last updated](https://img.shields.io/badge/last%20updated-2026--05--29-informational)
 
 **Status:** draft · v1.0 (initial)  ·  **Pinned contract:** `CONTRACT_VERSION = "3.0.0"`  ·  **Owners:** `archaeology-domain-steward + docs-steward` *(placeholder — NEEDS VERIFICATION)*  ·  **Required additional reviewer at every cross-lane boundary (§23.2):** tribal/cultural reviewer · rights-holder rep  ·  **Path basis:** Directory Rules §4 (`docs/` responsibility root for human-facing explanation), §12 (Domain Placement Law), `[CONTRACT v3.0]` §11. *Per-root presence in the live repo: PROPOSED until verified.*
 
 > [!CAUTION]
-> **Sensitivity dominates at every boundary.** Per `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix), the default disposition for archaeology site locations at the public surface is **`DENY` exact coordinates · generalize to county/region · tribal/cultural reviewer + rights-holder rep required · `RedactionReceipt` + `PolicyDecision` + `MapReleaseManifest` required**. **No edge in this document authorizes a cross-lane join that bypasses §23.2.** When archaeology joins People/DNA/Land, the stricter of the two rows applies (living-person and DNA fields fail closed). When archaeology joins Planetary/3D, the **Reality Boundary Note** is required.
+> **Sensitivity dominates at every boundary.** Per `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix), the default disposition for archaeology site locations at the public surface is **`DENY` exact coordinates · generalize to county/region · tribal/cultural reviewer + rights-holder rep required · `RedactionReceipt` + `PolicyDecision` + `MapReleaseManifest` required**. The §23.2 matrix is **PROPOSED** as of v3.0 (steward ratification pending); until ratified the **most restrictive applicable row applies**, which only strengthens the gate. **No edge in this document authorizes a cross-lane join that bypasses §23.2.** When archaeology joins People/DNA/Land, the stricter of the two rows applies (living-person and DNA fields fail closed). When archaeology joins Planetary/3D, the **Reality Boundary Note** is required.
 
 ---
 
@@ -83,7 +83,7 @@ CONFIRMED doctrine. This document is the **per-domain cross-lane relations refer
 
 1. *"Which other lanes does archaeology own an edge to?"* → §4, from Atlas v1.1 §24.4.13.
 2. *"Which other lanes does archaeology consume from?"* → §5, from DOM-ARCH §F.
-3. *"Which other lanes cite archaeology as context?"* → §6, from Atlas v1.1 §24.4.6 / §24.4.11 / §24.4.14 / §24.13 master object-family matrix.
+3. *"Which other lanes cite archaeology as context?"* → §6, from Atlas v1.1 §24.4.6 / §24.4.11 / §24.4.14 / §24.4.16 / §24.14 master object-family matrix.
 4. *"What gates apply at every boundary?"* → §3 (`[CONTRACT v3.0]` §23.2), §10 (asymmetric continuity rule), §9 (cross-lane join policy).
 
 PROPOSED scope. This inventory records:
@@ -101,7 +101,7 @@ This document **does not**:
 - Authorize any cross-lane release. Releases are governed by `ReleaseManifest`, `MapReleaseManifest`, `EvidenceBundle`, `RedactionReceipt`, `PolicyDecision`, and explicit cultural / steward / rights-holder rep review.
 
 > [!NOTE]
-> **Path basis.** This file lives at `docs/domains/archaeology/CROSS_DOMAIN.md` per Directory Rules §4 (Step 1: "explains something to humans" → `docs/`), §12 (Domain Placement Law: domain segments under responsibility roots, never as root folders), and `[CONTRACT v3.0]` §11. The path itself is PROPOSED until verified against the mounted repository. The `domains/` intermediate segment is preserved per `CANONICAL_PATHS.md` v1.1 §2.4 (Directory Rules §12 wins the §2.1 authority order).
+> **Path basis.** This file lives at `docs/domains/archaeology/CROSS_DOMAIN.md` per Directory Rules §4 (Step 1: "explains something to humans" → `docs/`), §12 (Domain Placement Law: domain segments under responsibility roots, never as root folders), and `[CONTRACT v3.0]` §11. The path itself is PROPOSED until verified against the mounted repository. The `domains/` intermediate segment is preserved per `CANONICAL_PATHS.md` v1.1 §2.4 (Directory Rules §12 wins the §2.1 authority order). The Atlas v1.1 §24.13 crosswalk and ENCY §7.13 both render the *contracts* form without the `domains/` segment (`contracts/archaeology/`); that conflict is tracked as `OQ-CD-02`.
 
 [Back to top ↑](#-quick-jump)
 
@@ -109,11 +109,11 @@ This document **does not**:
 
 ## 2. Authority and truth-label posture
 
-CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0 §5, Directory Rules §2.1, `authority-ladder.md` v1.1):
+CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0, Directory Rules §2.1, `authority-ladder.md` v1.1):
 
-1. **`ai-build-operating-contract.md` v3.0** — canonical operating contract; `CONTRACT_VERSION = "3.0.0"` is pinned; §1 Operating Law wins on any conflict; **§23.2** is the verbatim authority for sensitive-domain disposition.
-2. **KFM core invariants and doctrine** — lifecycle law, cite-or-abstain, trust membrane, watcher-as-non-publisher (`[CONTRACT v3.0]` §10).
-3. **Accepted ADRs** — including the still-open **ADR-S-14** (cross-lane join policy).
+1. **`ai-build-operating-contract.md` v3.0** — canonical operating contract; `CONTRACT_VERSION = "3.0.0"` is pinned; Operating Law wins on any conflict; **§23.2** is the authority for sensitive-domain disposition *(verbatim text CONFIRMED; the matrix's defaults are labeled PROPOSED in v3.0 pending steward ratification)*.
+2. **KFM core invariants and doctrine** — lifecycle law, cite-or-abstain, trust membrane, watcher-as-non-publisher (`[CONTRACT v3.0]` core invariants).
+3. **Accepted ADRs** — including any ADR that ratifies the cross-lane join policy currently sitting as **ADR-S-14** in the Atlas backlog.
 4. **Canonical doctrine docs** — Directory Rules, authority ladder.
 5. **Atlas v1.1 §24.4.x** "edges owned by" register — CONFIRMED doctrine for cross-lane edges.
 6. **DOM-ARCH §F** archaeology-side cross-lane relations — CONFIRMED doctrine.
@@ -123,16 +123,16 @@ CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0 §5
 
 | Label | Use in this document |
 |---|---|
-| **CONFIRMED** | Doctrinal statements from Atlas v1.1 §24.4.x, DOM-ARCH §F, ENCY §7.13, `[CONTRACT v3.0]` §23.2. |
-| **PROPOSED** | Any path, schema URI, route name, validator, or fixture claim. |
+| **CONFIRMED** | Doctrinal statements from Atlas v1.1 §24.4.x, DOM-ARCH §F, ENCY §7.13, and the §23.2 row text. The *edges* are CONFIRMED doctrine; several of the *defaults* layered on them (sensitivity tier defaults, the §23.2 matrix, the §24.14 matrix) are themselves PROPOSED in their source corpus and are labeled as such below. |
+| **PROPOSED** | Any path, schema URI, route name, validator, or fixture claim; the §23.2 matrix defaults (v3.0); the §24.14 sensitivity-default column; the §24.5 tier scheme. |
 | **NEEDS VERIFICATION** | Cross-lane reviewer rosters, edge-specific transform profiles, source-rights status, repo presence. |
-| **CONFLICTED** | Reciprocal-edge text differs between Atlas §24.4.x and DOM-ARCH §F (held pending ADR — see `OQ-CD-04`). |
+| **CONFLICTED** | Reciprocal-edge text differs between Atlas §24.4.x and DOM-ARCH §F (held pending ADR — see `OQ-CD-04`); ADR-S-07 status differs between Atlas §24.12 (backlog) and `directory-rules.md` v1.3 §18.c (operationalized) — see `OQ-CD-09`. |
 | **LINEAGE** | Atlas v1.0 §F per-domain tables — superseded by Atlas v1.1 §24.4.x where they differ; v1.0 governs where Atlas v1.1 is silent (per Atlas v1.1 completeness note). |
 | **UNKNOWN** | Live deployment, route names, branch state, current CI workflow state. |
 | **EXTERNAL** | Not used in this file; no external research was performed. |
 
 > [!NOTE]
-> **Memory is not evidence** (`[CONTRACT v3.0]` §13.5). Recollection, guessed paths, and likely behavior are not facts. Every cross-lane edge in this document carries a citation back to Atlas v1.1, DOM-ARCH, the master object-family matrix, or `[CONTRACT v3.0]` §23.2.
+> **Memory is not evidence** (`[CONTRACT v3.0]` §13). Recollection, guessed paths, and likely behavior are not facts. Every cross-lane edge in this document carries a citation back to Atlas v1.1, DOM-ARCH, the master object-family matrix, or `[CONTRACT v3.0]` §23.2.
 
 [Back to top ↑](#-quick-jump)
 
@@ -140,16 +140,16 @@ CONFIRMED authority order (lifted from `ai-build-operating-contract.md` v3.0 §5
 
 ## 3. The §23.2 row as the master cross-lane gate
 
-**CONFIRMED** — from `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix). Every cross-lane edge in this document inherits these requirements. The most restrictive applicable row applies when archaeology joins another sensitive lane.
+**CONFIRMED row text / PROPOSED matrix** — from `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix). The row text below is verbatim; the matrix as a whole is marked PROPOSED in v3.0, with the explicit instruction that until domain stewards ratify, **the most restrictive applicable row applies**. Every cross-lane edge in this document inherits these requirements. The most restrictive applicable row applies when archaeology joins another sensitive lane.
 
 | Field | Value (verbatim from `[CONTRACT v3.0]` §23.2 row "Archaeology — site locations") | Cross-lane implication |
 |---|---|---|
 | **Default disposition at public surface** | `DENY` exact coordinates; generalize to county/region | Any cross-lane join surfacing exact archaeology geometry to public clients fails closed. |
-| **Required transform before any release** | Geometry generalization; redact precise UTM | Cross-lane joins emit `RedactionReceipt` + `PublicationTransformReceipt` before crossing the trust membrane. |
-| **Required reviewer beyond domain steward** | Tribal/cultural reviewer; rights-holder rep | Five-role separation applies at every archaeology boundary (`[CONTRACT v3.0]` §33). |
+| **Required transform before any release** | Geometry generalization; redact precise UTM | Cross-lane joins emit `RedactionReceipt` (+ `PublicationTransformReceipt` where surface fidelity differs from evidence fidelity) before crossing the trust membrane. |
+| **Required reviewer beyond domain steward** | Tribal/cultural reviewer; rights-holder rep | Separation-of-duties (ENCY §24.7 / `[CONTRACT v3.0]` reviewer roles) applies at every archaeology boundary. |
 | **Required receipts/manifests** | `RedactionReceipt`; `PolicyDecision`; `MapReleaseManifest` | Every cross-lane release that includes archaeology context carries all three. |
 
-For burial / sacred sites, the §23.2 row is stricter: **`DENY` exact location · buffer/generalize or full denial · cultural reviewer + rights-holder rep · `RedactionReceipt` + `PolicyDecision`**.
+For burial / sacred sites, the §23.2 row is stricter: **`DENY` exact location · buffer/generalize or full denial · cultural reviewer + rights-holder rep · `RedactionReceipt` + `PolicyDecision`** (`[CONTRACT v3.0]` §23.2 row "Burial / sacred sites"; sensitivity tier **T4** with no transform to T0 per ENCY §24.5.2 / `kfm_unified_doctrine_synthesis.md` §16).
 
 **Multi-lane sensitivity stack.** When archaeology joins another sensitive lane, the rows compound:
 
@@ -158,11 +158,11 @@ For burial / sacred sites, the §23.2 row is stricter: **`DENY` exact location �
 | People / Genealogy / DNA / Land | "Living-person data" · "Genealogy / DNA" · "Private land assertions" | Living-person identifiers, DNA fields, and ownership claims fail closed *in addition to* exact archaeology geometry. |
 | Hazards | "Hazards / emergency" | Archaeology context never reframes a hazard answer as an alert; `BOUNDED` outcomes only; defer to official sources. |
 | Fauna (rare-species) | "Rare species (occurrence)" | Joint records use the *coarser* of the two generalization profiles; ethnobotanical / faunal context never re-exposes exact coords. |
-| Planetary / 3D | (3D admission policy — ADR-S-07 OPEN) | **Reality Boundary Note** required for any 3D admission of archaeology context. |
+| Planetary / 3D | (3D admission policy — ADR-S-07; see §9 + `OQ-CD-09`) | **Reality Boundary Note** required for any 3D admission of archaeology context. |
 | Critical infrastructure (Settlements) | "Critical infrastructure" | Both default to coarse-only depiction; security reviewer added. |
 
 > [!IMPORTANT]
-> Cross-lane joins are **inference-risk multipliers** — Atlas v1.1 §24.12 ADR-S-14 names this explicitly. A join that is safe in either lane in isolation can become deny-class when composed. Reviewers MUST check the §23.2 row of *every* lane in the join, not just archaeology's.
+> Cross-lane joins are **inference-risk multipliers** — the Atlas v1.1 §24.12 ADR-S-14 row names this explicitly as the reason the join policy is ADR-class. A join that is safe in either lane in isolation can become deny-class when composed. Reviewers MUST check the §23.2 row of *every* lane in the join, not just archaeology's.
 
 [Back to top ↑](#-quick-jump)
 
@@ -175,7 +175,7 @@ For burial / sacred sites, the §23.2 row is stricter: **`DENY` exact location �
 | Owner | Receiving lane | Relation (verbatim from Atlas v1.1 §24.4.13) | Required gates | Citation |
 |---|---|---|---|---|
 | **Archaeology** | **Settlements / Infrastructure** | "Cultural temporal period and survey context bound historical settlement interpretation; site coords denied." | `CulturalTemporalPeriod` (T0) freely cited; `ArchaeologicalSite` exact geometry stays T4. Settlements public-safe views never re-expose archaeology exact coords. | `[DOM-ARCH]` `[DOM-SETTLE]` Atlas §24.4.13 |
-| **Archaeology** | **Planetary / 3D / Digital Twin / Synthetic** | "Sites are admitted only via steward-reviewed, generalized 3D representation with reality-boundary note." | `ThreeDDocumentation` admission requires `StewardReview` + `CulturalReview` + `Reality Boundary Note` + `RedactionReceipt`. ADR-S-07 (3D admission policy) is OPEN. | `[DOM-ARCH]` `[MAP-MASTER]` Atlas §24.4.13 |
+| **Archaeology** | **Planetary / 3D / Digital Twin / Synthetic** | "Sites are admitted only via steward-reviewed, generalized 3D representation with reality-boundary note." | `ThreeDDocumentation` / scene admission requires `StewardReview` + `CulturalReview` + `Reality Boundary Note` + `RedactionReceipt`. Admission policy is ADR-S-07 (Atlas backlog OPEN; see `OQ-CD-09` for the `directory-rules.md` v1.3 operationalization). | `[DOM-ARCH]` `[MAP-MASTER]` Atlas §24.4.13 |
 | **Archaeology** | **People / Genealogy / DNA / Land** | "Cultural affiliations cited with rights, sovereignty, and steward review." | Tribal/cultural reviewer + rights-holder rep required (`[CONTRACT v3.0]` §23.2). Living-person + DNA fields fail closed *separately* per §23.2 rows "Living-person data" / "Genealogy / DNA". | `[DOM-ARCH]` `[DOM-PEOPLE]` Atlas §24.4.13 |
 
 ### 4.1 Per-edge receipt set
@@ -183,7 +183,7 @@ For burial / sacred sites, the §23.2 row is stricter: **`DENY` exact location �
 | Edge | `RedactionReceipt` | `PublicationTransformReceipt` | `MapReleaseManifest` | `Reality Boundary Note` | Additional reviewer beyond domain steward |
 |---|---|---|---|---|---|
 | Archaeology → Settlements | Required if exact geometry would otherwise leak | Required for generalized footprint exposure | Required if join produces a map layer | n/a (2D) | Tribal/cultural reviewer; rights-holder rep |
-| Archaeology → Planetary/3D | Required | Required | n/a (3D scene) | **Required** | Tribal/cultural reviewer; rights-holder rep; 3D admission reviewer |
+| Archaeology → Planetary/3D | Required | Required *(or `RepresentationReceipt` where surface fidelity differs from evidence fidelity, per ENCY §24.2)* | n/a (3D scene) | **Required** | Tribal/cultural reviewer; rights-holder rep; 3D admission reviewer |
 | Archaeology → People/Land | Required | Required when geometry is involved | Required if join produces a map layer | n/a (2D) | Tribal/cultural reviewer; rights-holder rep; privacy reviewer |
 
 [Back to top ↑](#-quick-jump)
@@ -192,26 +192,26 @@ For burial / sacred sites, the §23.2 row is stricter: **`DENY` exact location �
 
 ## 5. Edges where Archaeology is the consumer
 
-**CONFIRMED doctrine** from DOM-ARCH §F. Archaeology consumes from four other lanes. The relation **MUST** preserve **ownership, source role, sensitivity, and `EvidenceBundle` support** — the four-fold constraint named in DOM-ARCH §F applies to every row.
+**CONFIRMED doctrine** from DOM-ARCH §F. Archaeology consumes from four other lanes. The relation **MUST** preserve **ownership, source role, sensitivity, and `EvidenceBundle` support** — the four-fold constraint named verbatim in DOM-ARCH §F applies to every row.
 
 | Archaeology consumes from | Relation (verbatim from DOM-ARCH §F) | Boundary constraint | Citation |
 |---|---|---|---|
-| **Spatial Foundation** | "exact/public geometry split and transform receipts" | Generalization profile (≥ H3 r7 for sensitive layers) and `PublicationTransformReceipt` + `RedactionReceipt` are archaeology-owned; spatial foundation supplies CRS, geometry primitives, transform machinery. Public surface receives generalized geometry only. | `[DOM-ARCH]` `[MAP-MASTER]` DOM-ARCH §F |
+| **Spatial Foundation** | "exact/public geometry split and transform receipts" | Generalization profile (≥ H3 r7 for sensitive layers — PROPOSED parameter, see §12 item 5) and `PublicationTransformReceipt` + `RedactionReceipt` are archaeology-owned; spatial foundation supplies CRS, geometry primitives, transform machinery. Public surface receives generalized geometry only. | `[DOM-ARCH]` `[MAP-MASTER]` DOM-ARCH §F |
 | **Roads / Rail / Trade** | "historic routes and cultural paths" | Historic corridor reconstructions cited as context only; exact archaeological coordinates denied (Atlas §24.4.11 reciprocal). Cultural-path attributions remain attached to archaeology's source roles; roads lane does not relabel them. | `[DOM-ARCH]` `[DOM-ROADS]` DOM-ARCH §F; Atlas §24.4.11 |
 | **Settlements / Infrastructure** | "forts, missions, townsites, reservation communities" | Joint records preserve archaeology's sensitivity gates even when Settlements publishes a public-safe view (T0 settlement → joined record inherits T4 archaeology default for exact site geometry). Settlement object families (`Fort`, `Mission`, `Townsite`, `ReservationCommunity`) provide context; archaeology authority bounds interpretation. | `[DOM-ARCH]` `[DOM-SETTLE]` DOM-ARCH §F |
 | **Hazards** | "threat, erosion, fire, flood, exposure context with exact-site denial" | Hazard-context views **NEVER** reveal exact archaeology sites; aggregation or generalization applies before any joint render. KFM is never an alert authority (`[CONTRACT v3.0]` §23.2 "Hazards / emergency" row); archaeology context cannot upgrade a hazard answer to actionable alert. | `[DOM-ARCH]` `[DOM-HAZ]` DOM-ARCH §F |
 
-### 5.1 PROPOSED extensions (DOM-ARCH §F is silent; Atlas §24.4.x consumer-side rows imply these)
+### 5.1 PROPOSED extensions (DOM-ARCH §F is silent; Atlas §24.4.x reciprocal rows imply these)
 
-These rows are PROPOSED for ratification by ADR; DOM-ARCH §F lists only the four CONFIRMED rows above, but Atlas v1.1 §24.4.6 / §24.4.14 imply two more reciprocal consumer edges:
+These rows are PROPOSED for ratification by ADR; DOM-ARCH §F lists only the four CONFIRMED rows above, but Atlas v1.1 §24.4.6 / §24.4.14 name two reciprocal edges *owned by the other lane* into Archaeology, which imply a consumer relationship:
 
 | Archaeology consumes from (PROPOSED) | Relation | Boundary constraint | Status |
 |---|---|---|---|
-| **Flora** | Ethnobotanical context (steward-reviewed) bounds site interpretation | Never overrides cultural-heritage authority; rare-plant exact location denied separately. | PROPOSED — Atlas v1.1 §24.4.6 names this as a Flora-owned edge into Archaeology |
+| **Flora** | Ethnobotanical context (steward-reviewed) bounds site interpretation | Never overrides cultural-heritage authority; rare-plant exact location denied separately (`RarePlantRecord` T4 default). | PROPOSED — Atlas v1.1 §24.4.6 names this as a Flora-owned edge into Archaeology |
 | **People / Genealogy / DNA / Land** | Indigenous community context, steward-reviewed and rights-bounded | Reciprocal of §4 edge; living-person + DNA fields fail closed. | PROPOSED — Atlas v1.1 §24.4.14 names this as a People/Land-owned edge into Archaeology |
 
 > [!NOTE]
-> The two PROPOSED rows above represent the same edges as Atlas §24.4.6 (Flora → Archaeology, ethnobotanical context) and §24.4.14 (People/Land → Archaeology, Indigenous context). DOM-ARCH §F does not list them on archaeology's consumer side. Whether DOM-ARCH §F is incomplete or whether these edges are genuinely owner-side only is tracked as **`OQ-CD-04`** in §13.
+> The two PROPOSED rows above represent the same edges as Atlas §24.4.6 (Flora → Archaeology, ethnobotanical context) and §24.4.14 (People/Land → Archaeology, Indigenous context). Both are owner-side edges in the Atlas; DOM-ARCH §F does not list them on archaeology's *consumer* side. Whether DOM-ARCH §F is incomplete or whether these edges are genuinely owner-side only (with archaeology merely cited, not consuming) is tracked as **`OQ-CD-04`** in §13.
 
 [Back to top ↑](#-quick-jump)
 
@@ -239,30 +239,31 @@ These rows are PROPOSED for ratification by ADR; DOM-ARCH §F lists only the fou
 
 ## 7. Cross-domain object-family registry
 
-**CONFIRMED doctrine** from Atlas v1.1 §24.14 (Master Object Family × Domain Reference Matrix), with archaeology-relevant rows extracted.
+**CONFIRMED edges / PROPOSED sensitivity defaults** from Atlas v1.1 §24.14 (Master Object Family × Domain Reference Matrix). The Atlas labels the matrix itself "PROPOSED" and its sensitivity-default column "PROPOSED, this supplement"; the owner/citing-domain columns are CONFIRMED doctrine. Archaeology-relevant rows extracted.
 
 ### 7.1 Archaeology-owned families that travel into other lanes
 
-| Object family | Owner | Citing domains | Sensitivity default | Citation |
+| Object family | Owner | Citing domains | Sensitivity default (PROPOSED) | Citation |
 |---|---|---|---|---|
 | `ArchaeologicalSite` | Archaeology | Settlements (historical context, generalized); Planetary/3D (admission-gated) | T4 default; T1 generalized only after steward review | Atlas §24.14 |
 | `CulturalTemporalPeriod` | Archaeology | Settlements; Frontier Matrix | T0 | Atlas §24.14 |
 | `SiteComponent` (DOM-ARCH §E spine) | Archaeology | Settlements (where component-level context bounds interpretation) | Inherits parent site sensitivity | DOM-ARCH §E |
-| `CandidateFeature` | Archaeology | **None — public DENY** | Public DENY until promoted to `ArchaeologicalSite` | DOM-ARCH §E; `[CONTRACT v3.0]` §38 |
-| `PublicationTransformReceipt` | Archaeology *(receipt-owner question — see `OQ-CD-03`)* | All lanes consuming archaeology context | n/a (receipt) | DOM-ARCH §M; `kfm_unified_doctrine_synthesis.md` glossary |
+| `CandidateFeature` | Archaeology | **None — public DENY** | Public DENY until promoted to `ArchaeologicalSite` | DOM-ARCH §E; `[CONTRACT v3.0]` candidate-not-sovereign rule |
+| `PublicationTransformReceipt` | Archaeology *(receipt-owner question — see `OQ-CD-03`)* | All lanes consuming archaeology context | n/a (receipt) | DOM-ARCH §E/§M; `kfm_unified_doctrine_synthesis.md` glossary |
 
 ### 7.2 Cross-cutting families that bound archaeology joins
 
 | Object family | Owner | Archaeology-side use | Sensitivity default | Citation |
 |---|---|---|---|---|
-| `SourceDescriptor` | Cross-cutting (source steward) | Every archaeology source carries one with role, rights, sensitivity, citation | Varies by source | Atlas §24.14; `[CONTRACT v3.0]` §29 |
+| `SourceDescriptor` | Cross-cutting (source steward) | Every archaeology source carries one with role, rights, sensitivity, citation | Varies by source | Atlas §24.14; `[CONTRACT v3.0]` source-role rules |
 | `EvidenceBundle` | Cross-cutting (ENCY doctrine) | Every public archaeology claim resolves to one | Mirrors claim's tier | Atlas §24.14 |
 | `GeographyVersion` | Spatial Foundation | All archaeology spatial products carry one | T0 | Atlas §24.14 |
 | `CoordinateReferenceProfile` | Spatial Foundation | All archaeology map producers cite one | T0 | Atlas §24.14 |
-| `RedactionReceipt` *(`[CONTRACT v3.0]` §23.2 / §29)* | Cross-cutting (receipts) | Required for every public archaeology release | n/a (receipt) | `[CONTRACT v3.0]` §23.2 |
+| `RedactionReceipt` *(`[CONTRACT v3.0]` §23.2)* | Cross-cutting (receipts; ENCY §24.2) | Required for every public archaeology release | n/a (receipt) | `[CONTRACT v3.0]` §23.2; ENCY §24.2 |
 | `MapReleaseManifest` *(`[CONTRACT v3.0]` §23.2)* | Cross-cutting (release) | Required for every published archaeology map layer | n/a (manifest) | `[CONTRACT v3.0]` §23.2 |
+| `RepresentationReceipt` | Cross-cutting (ENCY §24.2; MAP-MASTER) | Required where archaeology surface fidelity differs from evidence fidelity (3D scene from 2D, tile downsampling) | n/a (receipt) | ENCY §24.2 |
 | `Reality Boundary Note` | Cross-cutting (Planetary/3D + UIAI doctrine) | Required for every archaeology admission into a 3D scene | n/a (caveat) | Atlas §24.4.16; `[MAP-MASTER]`; `[UIAI]` |
-| `GENERATED_RECEIPT.json` | Cross-cutting (`[CONTRACT v3.0]` §34) | Required for every AI-authored archaeology Markdown (including this file) | n/a (receipt) | `[CONTRACT v3.0]` §34 |
+| `AIReceipt` | Cross-cutting (GAI; ENCY §24.2) | Required for every AI-authored archaeology answer or drafted note (including any Focus Mode cross-lane answer) | n/a (receipt) | ENCY §24.2; `[GAI]` |
 
 ### 7.3 Families archaeology cites from other lanes
 
@@ -272,8 +273,8 @@ These rows are PROPOSED for ratification by ADR; DOM-ARCH §F lists only the fou
 | `Settlement` / `Municipality` / `GhostTown` / `Fort` / `Mission` / `Townsite` / `ReservationCommunity` | Settlements | Historical settlement context for site interpretation | T0; critical infrastructure T4 | Atlas §24.14; `[DOM-SETTLE]` |
 | `HazardEvent` / `HazardObservation` | Hazards | Threat, erosion, fire, flood exposure context (with exact-site denial) | T0 | Atlas §24.14; `[DOM-HAZ]` |
 | `RarePlantRecord` | Flora | Ethnobotanical context (steward-reviewed, public-safe derivative only) | T4 default; T1 via generalization | Atlas §24.14; `[DOM-FLORA]` |
-| `PersonAssertion` / cultural affiliation | People/Genealogy | Cultural affiliation citation (rights, sovereignty, steward review) | T1/T2 (living-person fields denied); aggregate T0 | Atlas §24.14; `[DOM-PEOPLE]` |
-| `LandParcel` | People/Land | Land ownership context for site historical record | NEEDS VERIFICATION; private joins denied by default | Atlas §24.4.7; `[DOM-PEOPLE]` |
+| `PersonAssertion` / `NameAssertion` / cultural affiliation | People/Genealogy | Cultural affiliation citation (rights, sovereignty, steward review) | T1/T2 (living-person fields denied); aggregate T0 | Atlas §24.14; `[DOM-PEOPLE]` |
+| `LandParcel` | People/Land | Land ownership context for site historical record | NEEDS VERIFICATION; private person-parcel joins denied by default | Atlas §24.4.7 / §24.4.14; `[DOM-PEOPLE]` |
 | `GeologicUnit` / `Lithology` | Geology | Subsurface context (advisory; never confirms cultural feature) | T0 | Atlas §24.14; `[DOM-GEOL]` |
 
 [Back to top ↑](#-quick-jump)
@@ -349,7 +350,7 @@ flowchart TB
 
 ## 9. Cross-lane join policy and ADR-S-14
 
-**OPEN — `ADR-S-14` (Atlas v1.1 §24.12 "Cross-lane join policy: which joins require steward review, which are denied, which are open") is NOT YET ACCEPTED.** Until it is, the following PROPOSED defaults apply:
+**`ADR-S-14` (Atlas v1.1 §24.12 "Cross-lane join policy: which joins require steward review, which are denied, which are open") is an item in the Master Open-ADR Backlog, which the Atlas labels a PROPOSED triage backlog — "intended for triage, not for execution."** It is therefore *not yet an accepted or even formally opened ADR.* Until a ratifying ADR lands, the following PROPOSED defaults apply:
 
 | Join type | Default disposition | Required additional reviewer | Receipts required |
 |---|---|---|---|
@@ -360,22 +361,22 @@ flowchart TB
 | **Archaeology × Geology** | `ALLOW` for subsurface context (advisory); `DENY` for joins treating geophysics anomaly as confirmed cultural feature | Domain steward only | `EvidenceBundle` |
 | **Archaeology × Flora** | `ALLOW` for ethnobotanical context (steward-reviewed only); never overrides cultural-heritage authority | Tribal/cultural reviewer | `RedactionReceipt`; rare-plant transform receipt |
 | **Archaeology × Fauna** | `ALLOW` only after both lanes generalize to coarser of the two profiles | Wildlife steward + tribal/cultural reviewer | Both lanes' `RedactionReceipt`s |
-| **Archaeology × Planetary/3D** | `DENY` by default; admit only with `StewardReview` + `CulturalReview` + `Reality Boundary Note` | 3D admission reviewer + tribal/cultural reviewer + rights-holder rep | `RedactionReceipt`; admission decision; Reality Boundary Note |
+| **Archaeology × Planetary/3D** | `DENY` by default; admit only with `StewardReview` + `CulturalReview` + `Reality Boundary Note` | 3D admission reviewer + tribal/cultural reviewer + rights-holder rep | `RedactionReceipt`; admission `PolicyDecision`; Reality Boundary Note; `RepresentationReceipt` |
 | **Archaeology × People/Land — non-living context** | `ALLOW` with steward + rights-holder rep review | Tribal/cultural reviewer; rights-holder rep | `RedactionReceipt`; `PolicyDecision` |
 | **Archaeology × People/Land — living-person or DNA** | `DENY` (both §23.2 rows compound) | Privacy reviewer + tribal/cultural reviewer + rights-holder rep | None — denied |
 | **Archaeology × Frontier Matrix** | `ALLOW` only for `CulturalTemporalPeriod` (T0) and aggregate counts; `DENY` for exact site exposure through matrix-cell snapshots | Matrix steward + tribal/cultural reviewer | `RedactionReceipt`; matrix-cell receipt |
 | **Archaeology × Agriculture** | `ALLOW` only for non-private context; `DENY` for joins that expose private parcels or exact archaeology coords | Privacy reviewer + tribal/cultural reviewer | `AggregationReceipt`; `RedactionReceipt` |
 
 > [!CAUTION]
-> **Until `ADR-S-14` lands**, any cross-lane archaeology join not enumerated above defaults to **`DENY`** until reviewed (`[CONTRACT v3.0]` §23.2 "the most restrictive applicable row applies"). Convenience joins, vector indexes, search snippets, and graph projections are subject to the same gates as map releases — derivative artifacts are not sovereign (`[CONTRACT v3.0]` §38).
+> **Until a ratifying ADR lands**, any cross-lane archaeology join not enumerated above defaults to **`DENY`** until reviewed (`[CONTRACT v3.0]` §23.2 "the most restrictive applicable row applies"). Convenience joins, vector indexes, search snippets, and graph projections are subject to the same gates as map releases — derivative artifacts are not sovereign (`[CONTRACT v3.0]` non-collapse / candidate-not-sovereign rules; Atlas v1.1 non-collapse note).
 
 ### 9.1 Join inference-risk multiplier
 
-Atlas v1.1 §24.12 notes that **cross-lane joins are inference-risk multipliers**. A T0 archaeology object joined to a T0 settlement record at a fine enough spatial resolution can re-derive exact location even when neither input is exact. Validators MUST:
+The Atlas v1.1 §24.12 ADR-S-14 row notes that **cross-lane joins are inference-risk multipliers**. A T0 archaeology object joined to a T0 settlement record at a fine enough spatial resolution can re-derive exact location even when neither input is exact. Validators MUST:
 
 - Test the *joint* output against the negative-fixture suite, not just each input.
 - Apply the *coarser* of the two lanes' generalization profiles to the joint output.
-- Fail closed if the joint geometry would otherwise resolve below the H3 r7 floor.
+- Fail closed if the joint geometry would otherwise resolve below the sensitive-layer generalization floor (PROPOSED ≥ H3 r7; the exact parameter is a §12 backlog item, not yet fixed by ADR).
 
 [Back to top ↑](#-quick-jump)
 
@@ -383,7 +384,7 @@ Atlas v1.1 §24.12 notes that **cross-lane joins are inference-risk multipliers*
 
 ## 10. Asymmetric continuity rule
 
-**CONFIRMED doctrine** (preserved from `CONTINUITY_INVENTORY.md` v1.1 §7 and `[CONTRACT v3.0]` §38).
+**CONFIRMED doctrine** (preserved from `CONTINUITY_INVENTORY.md` v1.1 §7 and `[CONTRACT v3.0]` non-collapse / derivative-not-sovereign rules).
 
 > Cross-lane changes that **strengthen** sensitivity propagate freely.
 > Cross-lane changes that **relax** archaeology constraints — even via convenience joins, vector indexes, search snippets, or graph projections — require:
@@ -394,11 +395,11 @@ Atlas v1.1 §24.12 notes that **cross-lane joins are inference-risk multipliers*
 > 4. A `CorrectionNotice` for any previously released artifacts that depended on the prior (stricter) gate.
 > 5. Passing the joint negative-fixture suite per §9.1.
 
-**Derivative artifacts are not sovereign.** A vector index, summary text, graph projection, search snippet, AI answer, or map tile derived from archaeology data carries archaeology's gates. The fact that the artifact is "downstream" does not exempt it from §23.2 (`[CONTRACT v3.0]` §38 anti-pattern register).
+**Derivative artifacts are not sovereign.** A vector index, summary text, graph projection, search snippet, AI answer, or map tile derived from archaeology data carries archaeology's gates. The fact that the artifact is "downstream" does not exempt it from §23.2 (`[CONTRACT v3.0]` non-collapse rule; Atlas v1.1 non-collapse note: "nothing in v1.1 … lets summaries, tables, registers, or master atlases substitute for evidence, policy, review state, source authority, or release state").
 
 ### 10.1 Stale-state propagation
 
-**CONFIRMED doctrine / OPEN ADR** — `ADR-S-10` (Atlas v1.1 §24.12 "Stale-state propagation") is OPEN. Until accepted, the PROPOSED default is:
+**CONFIRMED doctrine direction / backlog ADR for the cascade rule** — `ADR-S-10` (Atlas v1.1 §24.12 "Stale-state propagation") sits in the same PROPOSED backlog as ADR-S-14. The UI negative-state `SOURCE_STALE` is CONFIRMED in `[CONTRACT v3.0]` §22.2; the cross-lane *cascade* rule below is the PROPOSED default until ADR-S-10 is ratified:
 
 - When archaeology releases a `CorrectionNotice` or `RollbackCard`, every cross-lane consumer that cited the affected `EvidenceBundle` MUST be flagged `SOURCE_STALE` until they re-resolve.
 - When a cross-lane consumer releases a correction that depended on archaeology context, archaeology emits a corresponding `CorrectionNotice` if the archaeology evidence itself was wrong.
@@ -410,21 +411,21 @@ Atlas v1.1 §24.12 notes that **cross-lane joins are inference-risk multipliers*
 
 ## 11. Cross-domain anti-patterns
 
-Directory Rules §13 and `[CONTRACT v3.0]` §38 list general anti-patterns. These are the cross-lane-specific ones reviewers should call out when archaeology context is involved.
+Directory Rules §13 and `[CONTRACT v3.0]` denied-behaviors register list general anti-patterns. These are the cross-lane-specific ones reviewers should call out when archaeology context is involved.
 
 | # | Anti-pattern | Symptom | Fix | Citation |
 |---|---|---|---|---|
 | X1 | **Settlement re-exposes archaeology exact coords** | A `Townsite` or `Fort` record in `data/published/layers/settlement/` embeds exact `ArchaeologicalSite` coordinates. | Move to `data/quarantine/`; emit `CorrectionNotice` for the settlement release; re-promote with generalized geometry. | Atlas §24.4.13; `[CONTRACT v3.0]` §23.2 |
 | X2 | **Roads/Rail historic corridor labels a site** | A historic corridor record is promoted to an `ArchaeologicalSite` claim without `EvidenceBundle` + cultural review. | `DENY`; corridor stays in roads/rail lane; archaeology authority is required to promote anything to a site. | Atlas §24.4.11; DOM-ARCH §B |
 | X3 | **Hazard answer reframed as alert via archaeology context** | A hazard summary citing archaeology context implies actionable instruction. | `BOUNDED` only; KFM is never an alert authority. Strip alert framing; defer to official sources. | `[CONTRACT v3.0]` §23.2 "Hazards / emergency"; `[DOM-HAZ]` |
-| X4 | **3D scene admits archaeology without Reality Boundary Note** | A `Scene Manifest` includes archaeology 3D documentation without the required note. | Block admission; require `StewardReview` + `CulturalReview` + Reality Boundary Note + `RedactionReceipt`. | Atlas §24.4.16; ADR-S-07 |
+| X4 | **3D scene admits archaeology without Reality Boundary Note** | A `Scene Manifest` includes archaeology 3D documentation without the required note. | Block admission; require `StewardReview` + `CulturalReview` + Reality Boundary Note + `RedactionReceipt`. | Atlas §24.4.16; ADR-S-07 (see `OQ-CD-09`) |
 | X5 | **People/Land join leaks living-person + archaeology cultural-affiliation combo** | A joint record exposes a living person's cultural affiliation in a way that would not be acceptable on either lane alone. | Both §23.2 rows compound; `DENY`. Strip living-person fields *and* coarsen archaeology context. | `[CONTRACT v3.0]` §23.2; Atlas §24.4.14 |
 | X6 | **Frontier Matrix cell embeds exact site geometry** | A matrix-cell snapshot includes `ArchaeologicalSite` exact coords as a cell attribute. | Matrix cells use `CulturalTemporalPeriod` (T0) only; exact geometry never enters a cell snapshot. Re-issue cell. | Atlas §24.4.15; `[CONTRACT v3.0]` §23.2 |
-| X7 | **Cross-lane vector index re-derives exact location** | A search index over archaeology + settlement + roads enables nearest-neighbor reconstruction of exact archaeology coords. | Apply §9.1 inference-risk multiplier rule; coarsen index input or block index. | Atlas §24.12 ADR-S-14; `[CONTRACT v3.0]` §38 |
-| X8 | **AI summary across lanes drops archaeology citations** | A Focus Mode answer joining archaeology + roads context omits archaeology `EvidenceRef` or omits `RedactionReceipt` from the `AIReceipt`. | `ABSTAIN` or re-issue with full citation + receipts; `AIReceipt` carries all cross-lane `evidence_refs`. | `[CONTRACT v3.0]` §§19, 21, 34 |
+| X7 | **Cross-lane vector index re-derives exact location** | A search index over archaeology + settlement + roads enables nearest-neighbor reconstruction of exact archaeology coords. | Apply §9.1 inference-risk multiplier rule; coarsen index input or block index. | Atlas §24.12 ADR-S-14; `[CONTRACT v3.0]` derivative-not-sovereign |
+| X8 | **AI summary across lanes drops archaeology citations** | A Focus Mode answer joining archaeology + roads context omits archaeology `EvidenceRef` or omits `RedactionReceipt` from the `AIReceipt`. | `ABSTAIN` or re-issue with full citation + receipts; `AIReceipt` carries all cross-lane `evidence_refs`. | `[CONTRACT v3.0]` cite-or-abstain; ENCY §24.2 `AIReceipt` |
 | X9 | **Flora ethnobotanical context overrides cultural-heritage authority** | A Flora release promotes ethnobotanical interpretation as archaeology authority. | `DENY`; ethnobotanical context may bound site interpretation but never overrides archaeology authority. | Atlas §24.4.6 |
 | X10 | **Cross-lane join published without joint receipt set** | A joint release includes `RedactionReceipt` from one lane but not the other. | Block release; require all involved lanes' receipts. | `[CONTRACT v3.0]` §23.2; §9 above |
-| X11 | **Anticorruption-layer absent at lane boundary** | Archaeology terminology, identity rules, or sensitivity gates leak into another lane's contracts or schemas verbatim, eroding bounded-context discipline. | Per DDD reference (project corpus), introduce an anticorruption layer at the boundary; translate identity + sensitivity at the edge, do not share the model wholesale. | `[DDD]` Anticorruption Layer pattern |
+| X11 | **Anticorruption-layer absent at lane boundary** | Archaeology terminology, identity rules, or sensitivity gates leak into another lane's contracts or schemas verbatim, eroding bounded-context discipline. | Per the Anticorruption Layer pattern (DDD reference, project corpus), translate identity + sensitivity at the boundary; do not share the model wholesale. | `[DDD]` Anticorruption Layer pattern |
 
 [Back to top ↑](#-quick-jump)
 
@@ -437,20 +438,20 @@ Directory Rules §13 and `[CONTRACT v3.0]` §38 list general anti-patterns. Thes
 <details>
 <summary><strong>Click to expand verification backlog</strong></summary>
 
-1. Whether `ADR-S-14` (cross-lane join policy) has been accepted, deferred, or amended. **ADR text required.** Atlas v1.1 §24.12 lists it as OPEN.
-2. Whether `ADR-S-07` (3D admission policy) has been accepted; the Archaeology × Planetary/3D edge depends on it.
-3. Whether `ADR-S-10` (stale-state propagation) has been accepted; §10.1 default applies until then.
+1. Whether a ratifying ADR for the cross-lane join policy (`ADR-S-14`) has been opened, accepted, deferred, or amended. **ADR text required.** Atlas v1.1 §24.12 lists it only as a PROPOSED backlog item.
+2. Whether `ADR-S-07` (3D admission policy) has been accepted; the Archaeology × Planetary/3D edge depends on it. **CONFLICTED:** Atlas §24.12 lists it as an open backlog item, but `directory-rules.md` v1.3 §18.c states it is operationalized by `packages/maplibre-runtime/src/admission.ts` + `policy/maplibre/3d-admission.rego`. Reconcile — see `OQ-CD-09`.
+3. Whether `ADR-S-10` (stale-state propagation cascade) has been accepted; §10.1 default applies until then.
 4. Whether `ADR-S-08` (Frontier Matrix cell semantics) has been accepted; the Archaeology × Frontier Matrix edge depends on it.
-5. Per-edge transform profile parameters (H3 floor by edge; UTM redaction precision). **Policy fixtures + reviewer approval + ADR required.**
+5. Per-edge transform profile parameters (H3 floor by edge; UTM redaction precision). The ≥ H3 r7 floor in §5 / §9.1 is PROPOSED, not fixed by ADR. **Policy fixtures + reviewer approval + ADR required.**
 6. Standing tribal/cultural reviewers and rights-holder reps per edge (Settlements, Planetary/3D, People/Land, Flora). **`CODEOWNERS` + roster required.** See `OQ-CD-06`.
 7. Whether DOM-ARCH §F is the authoritative consumer-edge list, or whether Flora/People-Land edges from Atlas §24.4.6/§24.4.14 should be added to §F. **ADR + atlas-supplement reconciliation required.** See `OQ-CD-04`.
 8. Whether the cross-lane runtime gate lives at `policy/runtime/cross_lane/` (PROPOSED here) or a different home. **ADR required.** See `OQ-CD-05`.
-9. Receipt schema homes — domain-local versus cross-cutting `schemas/contracts/v1/receipts/` per `[CONTRACT v3.0]` §47. **ADR required.** See `OQ-CD-03`.
+9. Receipt schema homes — domain-local versus cross-cutting `schemas/contracts/v1/receipts/` per the Atlas ADR-S-03 backlog item. **ADR required.** See `OQ-CD-03`.
 10. Existence of `policy/sensitivity/archaeology/`, `policy/runtime/cross_lane/`, `tests/cross_lane/`, `fixtures/cross_lane/`. **`git ls-tree`-equivalent mount inspection required.** Status: **UNKNOWN**.
 11. CI workflow enforcing cross-lane negative-fixture suite (§9.1 inference-risk multiplier). **`.github/workflows/` inspection required.** Status: **UNKNOWN**.
 12. Validator implementation for the §9.1 joint-coarseness rule (apply coarser of two lanes' generalization profiles). **Validator code required.**
-13. `GENERATED_RECEIPT.json` schema availability at `schemas/contracts/v1/receipts/generated_receipt.schema.json` per `[CONTRACT v3.0]` §47.
-14. Health-signal collection per `[CONTRACT v3.0]` §35 for cross-lane joins (deny rate, abstain rate, `BOUNDED`-outcome rate, `SOURCE_STALE` propagation latency).
+13. AI-receipt wiring for this AI-authored Markdown — whether the `AIReceipt` (ENCY §24.2) for this initial release is captured at authoring time per the cite-or-abstain audit posture. Status: **NEEDS VERIFICATION**.
+14. Health-signal collection (ENCY §24.11 governance health indicators) for cross-lane joins (deny rate, abstain rate, `BOUNDED`-outcome rate, `SOURCE_STALE` propagation latency).
 15. Whether the prior `ARCHITECTURE.md` v1.1 draft's Atlas-shorthand path namespace has been reconciled to the Directory Rules §12 form used here and in `CANONICAL_PATHS.md` v1.1. See `OQ-CD-02`.
 
 </details>
@@ -465,27 +466,31 @@ Directory Rules §13 and `[CONTRACT v3.0]` §38 list general anti-patterns. Thes
 
 | ID | Question | Owner role | Resolution path |
 |---|---|---|---|
-| **OQ-CD-01** | When does `ADR-S-14` (cross-lane join policy) land? Until accepted, the §9 PROPOSED defaults apply. | Architecture steward + policy steward | Atlas-supplement ADR pipeline; cross-reference Atlas v1.1 §24.12 |
-| **OQ-CD-02** | The v1.1 draft of `ARCHITECTURE.md` resolved the path-namespace conflict in favor of the Atlas shorthand (`contracts/archaeology/`). This document, `CANONICAL_PATHS.md` v1.1, and `CONTINUITY_INVENTORY.md` v1.1 use the Directory Rules §12 form (`contracts/domains/archaeology/`). Reconciliation? | Docs steward + archaeology steward | Re-issue `ARCHITECTURE.md` v1.2; proposed ADR: `ADR-archaeology-architecture-doc-reconciliation` |
-| **OQ-CD-03** | Canonical schema home for cross-cutting receipts (`RedactionReceipt`, `PublicationTransformReceipt`, `MapReleaseManifest`, `GENERATED_RECEIPT.json`) — `schemas/contracts/v1/receipts/` (cross-cutting) vs `schemas/contracts/v1/domains/archaeology/` (domain-local)? | Architecture steward + policy steward | ADR (proposed: `ADR-cross-cutting-receipts-home`); cross-reference `ADR-S-03` |
+| **OQ-CD-01** | When does a ratifying ADR for the cross-lane join policy (`ADR-S-14`) land? Until accepted, the §9 PROPOSED defaults apply. | Architecture steward + policy steward | Atlas-supplement ADR pipeline; cross-reference Atlas v1.1 §24.12 |
+| **OQ-CD-02** | The v1.1 draft of `ARCHITECTURE.md` resolved the path-namespace conflict in favor of the Atlas shorthand (`contracts/archaeology/`, also used by Atlas §24.13 and ENCY §7.13). This document, `CANONICAL_PATHS.md` v1.1, and `CONTINUITY_INVENTORY.md` v1.1 use the Directory Rules §12 form (`contracts/domains/archaeology/`). Reconciliation? | Docs steward + archaeology steward | Re-issue `ARCHITECTURE.md` v1.2; proposed ADR: `ADR-archaeology-architecture-doc-reconciliation` |
+| **OQ-CD-03** | Canonical schema home for cross-cutting receipts (`RedactionReceipt`, `PublicationTransformReceipt`, `RepresentationReceipt`, `MapReleaseManifest`, `AIReceipt`) — `schemas/contracts/v1/receipts/` (cross-cutting) vs `schemas/contracts/v1/domains/archaeology/receipts/` (domain-local)? | Architecture steward + policy steward | ADR (proposed: `ADR-cross-cutting-receipts-home`); cross-reference Atlas `ADR-S-03` |
 | **OQ-CD-04** | Is DOM-ARCH §F (four consumer edges) authoritative, or do Atlas v1.1 §24.4.6 / §24.4.14 imply Archaeology also consumes from Flora and People/Land? §5.1 lists these as PROPOSED extensions. | Encyclopedia steward + archaeology steward | ADR (proposed: `ADR-archaeology-consumer-edges-completeness`); update §5 and §7 |
 | **OQ-CD-05** | Where do cross-lane runtime gates live? §9 PROPOSES `policy/runtime/cross_lane/`; `CANONICAL_PATHS.md` §7 also names it. | Architecture steward + policy steward | ADR (proposed: `ADR-cross-lane-policy-home`) |
 | **OQ-CD-06** | Standing tribal/cultural reviewers and rights-holder reps per cross-lane edge. §23.2 requires them at every archaeology boundary. | Archaeology steward + release authority | Standing roster + `CODEOWNERS` entry per edge |
 | **OQ-CD-07** | How is the §9.1 inference-risk multiplier enforced — by validator, by reviewer, or both? | Architecture steward + policy steward | ADR + validator implementation |
-| **OQ-CD-08** | Stale-state propagation cadence for cross-lane archaeology citations (`ADR-S-10` dependency). | Release authority + cross-lane stewards | ADR-S-10 acceptance |
+| **OQ-CD-08** | Stale-state propagation cadence for cross-lane archaeology citations (`ADR-S-10` dependency). | Release authority + cross-lane stewards | ADR-S-10 ratification |
+| **OQ-CD-09** | ADR-S-07 status is CONFLICTED: Atlas §24.12 lists it as an open backlog item; `directory-rules.md` v1.3 §18.c states it is operationalized by `packages/maplibre-runtime/src/admission.ts` + `policy/maplibre/3d-admission.rego`. Which is current, and does the Archaeology × Planetary/3D edge inherit an accepted admission gate? | Architecture steward + 3D/scene steward | Reconcile Atlas backlog vs Directory Rules v1.3; log in `DRIFT_REGISTER.md`; confirm against mounted repo |
 
-### 13.2 Open ADRs
+### 13.2 Open ADRs (Atlas v1.1 §24.12 backlog — PROPOSED triage, not accepted)
 
-**OPEN — ADRs likely required before stable promotion of this lane:**
+> [!NOTE]
+> The Atlas v1.1 §24.12 "Master Open-ADR Backlog" is explicitly **PROPOSED** and "intended for triage, not for execution." The `ADR-S-*` items below are therefore *candidate* ADRs, not opened or accepted decisions, except where other doctrine (e.g. `directory-rules.md` v1.3) indicates partial operationalization.
 
-| Proposed ADR | Question | Citation basis |
+| Backlog item | Question | Citation basis |
 |---|---|---|
 | **`ADR-S-14`** (Atlas v1.1 §24.12) | Cross-lane join policy: which joins require steward review, which are denied, which are open | Atlas v1.1 §24.12 |
-| **`ADR-S-07`** (Atlas v1.1 §24.12) | 3D admission policy: minimum required receipts, deny lanes, reality-boundary disclosure | Atlas v1.1 §24.12 |
+| **`ADR-S-07`** (Atlas v1.1 §24.12) | 3D admission policy: minimum required receipts, deny lanes, reality-boundary disclosure | Atlas v1.1 §24.12; **partially operationalized per `directory-rules.md` v1.3 §18.c — see `OQ-CD-09`** |
 | **`ADR-S-10`** (Atlas v1.1 §24.12) | Stale-state propagation across lanes | Atlas v1.1 §24.12 |
 | **`ADR-S-08`** (Atlas v1.1 §24.12) | Frontier Matrix cell semantics — including archaeology citation rules | Atlas v1.1 §24.12 |
+| **`ADR-S-03`** (Atlas v1.1 §24.12) | Receipt class home (top-level vs per-domain) | Atlas v1.1 §24.12; Directory Rules §2.4(5) |
+| **`ADR-S-05`** (Atlas v1.1 §24.12) | Sensitivity tier scheme (T0–T4) — adopt as canonical or revise | Atlas v1.1 §24.12; §24.5 tier scheme is PROPOSED |
 | `ADR-archaeology-consumer-edges-completeness` | Resolve `OQ-CD-04` — DOM-ARCH §F vs Atlas §24.4.6/§24.4.14 | DOM-ARCH §F; Atlas v1.1 §24.4.6, §24.4.14 |
-| `ADR-cross-cutting-receipts-home` | Resolve `OQ-CD-03` — receipt schema home | `[CONTRACT v3.0]` §47; `ADR-S-03` |
+| `ADR-cross-cutting-receipts-home` | Resolve `OQ-CD-03` — receipt schema home | Atlas `ADR-S-03` |
 | `ADR-cross-lane-policy-home` | Resolve `OQ-CD-05` — `policy/runtime/cross_lane/` placement | Directory Rules §6; `[CONTRACT v3.0]` §11 |
 | `ADR-archaeology-architecture-doc-reconciliation` | Resolve `OQ-CD-02` — reconcile `ARCHITECTURE.md` v1.1 with sibling docs | This doc §2; `CANONICAL_PATHS.md` v1.1 §2.4 |
 
@@ -495,23 +500,23 @@ Directory Rules §13 and `[CONTRACT v3.0]` §38 list general anti-patterns. Thes
 
 ## 14. Initial release notes v1.0
 
-This is the **initial release** of `docs/domains/archaeology/CROSS_DOMAIN.md`. Per `[CONTRACT v3.0]` §37, initial drafts of doctrine-adjacent docs are **MINOR** versions of the archaeology lane doc set (no prior version of this file exists).
+This is the **initial release** of `docs/domains/archaeology/CROSS_DOMAIN.md`. No prior version of this file exists.
 
 | Section | Source authority | Notes |
 |---|---|---|
-| §3 §23.2 master gate | `[CONTRACT v3.0]` §23.2 (verbatim) | Multi-lane sensitivity-stack table derived from §23.1 sensitive-domain list. |
+| §3 §23.2 master gate | `[CONTRACT v3.0]` §23.2 (row text verbatim; matrix PROPOSED) | Multi-lane sensitivity-stack table derived from §23.1 sensitive-domain list. |
 | §4 Owned edges | Atlas v1.1 §24.4.13 (verbatim) | Three edges: Settlements, Planetary/3D, People/Land. |
 | §5 Consumer edges | DOM-ARCH §F (verbatim) | Four edges: Spatial Foundation, Roads/Rail, Settlements, Hazards. §5.1 lists two PROPOSED extensions (Flora, People/Land) per Atlas v1.1 §24.4.6/§24.4.14 — flagged as `OQ-CD-04`. |
 | §6 Cited-by edges | Atlas v1.1 §24.4.6, §24.4.11, §24.4.14, §24.4.16, §24.14 | Six cited-by edges. |
-| §7 Cross-domain object-family registry | Atlas v1.1 §24.14 master object-family × domain matrix | Owned (§7.1) + cross-cutting (§7.2) + cited-from (§7.3) tables. |
+| §7 Cross-domain object-family registry | Atlas v1.1 §24.14 master object-family × domain matrix (owner/citing columns CONFIRMED; sensitivity-default column PROPOSED) | Owned (§7.1) + cross-cutting (§7.2) + cited-from (§7.3) tables. |
 | §8 Edge graph | Atlas v1.1 §24.4.x; DOM-ARCH §F | Three-subgraph Mermaid diagram. |
-| §9 Cross-lane join policy | Atlas v1.1 §24.12 ADR-S-14 (OPEN); `[CONTRACT v3.0]` §23.2 | 12 join-type rows; PROPOSED defaults until ADR-S-14 lands. §9.1 inference-risk multiplier rule. |
-| §10 Asymmetric continuity | `CONTINUITY_INVENTORY.md` v1.1 §7; `[CONTRACT v3.0]` §38 | Preserved verbatim from continuity register. |
-| §11 Anti-patterns | Atlas v1.1 §24.4.x; `[CONTRACT v3.0]` §38; DDD reference | 11 cross-lane anti-patterns; X11 cites the DDD Anticorruption Layer pattern. |
-| §12 Verification backlog | Composite | 15 items; 10–11 are UNKNOWN (repo not mounted). |
-| §13 Open questions register | `[CONTRACT v3.0]` §49; authority-ladder v1.1 §7 | 8 questions tied to Atlas open ADRs and cross-doc reconciliation. |
-| §14 Initial release notes (this section) | `[CONTRACT v3.0]` §37 | Replaces "Changelog" section for an initial release. |
-| §15 Definition of done | `[CONTRACT v3.0]` §51 (analog) | Standard doctrine-doc DoD. |
+| §9 Cross-lane join policy | Atlas v1.1 §24.12 ADR-S-14 (PROPOSED backlog); `[CONTRACT v3.0]` §23.2 | 12 join-type rows; PROPOSED defaults until a ratifying ADR lands. §9.1 inference-risk multiplier rule. |
+| §10 Asymmetric continuity | `CONTINUITY_INVENTORY.md` v1.1 §7; `[CONTRACT v3.0]` non-collapse rules; Atlas non-collapse note | Preserved from continuity register. |
+| §11 Anti-patterns | Atlas v1.1 §24.4.x; `[CONTRACT v3.0]` denied-behaviors; DDD reference | 11 cross-lane anti-patterns; X11 cites the DDD Anticorruption Layer pattern. |
+| §12 Verification backlog | Composite | 15 items; 10–11 are UNKNOWN (repo not mounted); item 2 is CONFLICTED (ADR-S-07). |
+| §13 Open questions register | Atlas §24.12; authority-ladder v1.1 | 9 questions (added `OQ-CD-09` for ADR-S-07 status conflict). |
+| §14 Initial release notes (this section) | `[CONTRACT v3.0]` lifecycle | Replaces "Changelog" section for an initial release. |
+| §15 Definition of done | `[CONTRACT v3.0]` (analog) | Standard doctrine-doc DoD. |
 | §16 Related docs | Sibling archaeology docs + doctrine roots | All paths PROPOSED. |
 
 > **Backward compatibility.** Not applicable — this is v1.0 initial release. No prior anchors exist to preserve.
@@ -529,13 +534,14 @@ This document is done enough to enter the repository when:
 - a tribal/cultural reviewer and rights-holder rep have been named per `[CONTRACT v3.0]` §23.2;
 - the **owning lanes** of every edge in §4, §5, §6 sign off on archaeology's characterization of the relation (Settlements, Planetary/3D, People/Land for §4; Spatial Foundation, Roads/Rail, Settlements, Hazards for §5; Flora, Roads/Rail, People/Land, Planetary/3D, Frontier Matrix for §6);
 - it is linked from the docs index, the domain index, `docs/domains/archaeology/README.md`, and the three sibling doctrine docs (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`);
-- `ARCHITECTURE.md` has been reconciled to the `contracts/domains/archaeology/` path namespace (`OQ-CD-02`);
-- it does not conflict with accepted ADRs (`OQ-CD-01` through `OQ-CD-08` are accepted or explicitly deferred);
-- the four Atlas-named ADRs (`ADR-S-07`, `ADR-S-08`, `ADR-S-10`, `ADR-S-14`) are at minimum acknowledged in §13.2 with status;
+- `ARCHITECTURE.md` has been reconciled to a single path namespace and the `contracts/archaeology/` vs `contracts/domains/archaeology/` conflict is resolved (`OQ-CD-02`);
+- the ADR-S-07 status conflict (`OQ-CD-09`) is reconciled and logged in `DRIFT_REGISTER.md`;
+- it does not conflict with accepted ADRs (`OQ-CD-01` through `OQ-CD-09` are accepted or explicitly deferred);
+- the Atlas-named backlog items (`ADR-S-07`, `ADR-S-08`, `ADR-S-10`, `ADR-S-14`) are at minimum acknowledged in §13.2 with status;
 - any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
-- the `GENERATED_RECEIPT.json` planned for this AI-authored initial release is wired into CI per `[CONTRACT v3.0]` §34, §48;
+- the `AIReceipt` for this AI-authored initial release is captured per the cite-or-abstain audit posture (ENCY §24.2; §12 item 13);
 - the §9.1 inference-risk multiplier rule has a corresponding validator under `tools/validators/cross_lane/` (PROPOSED);
-- future changes follow the `[CONTRACT v3.0]` §37 lifecycle.
+- future changes follow the `[CONTRACT v3.0]` doc lifecycle.
 
 [Back to top ↑](#-quick-jump)
 
@@ -578,22 +584,23 @@ This document is done enough to enter the repository when:
   [`docs/domains/planetary-3d/ARCHITECTURE.md`](../planetary-3d/ARCHITECTURE.md) — Planetary/3D
 - **Architecture neighbors** (PROPOSED):
   [`docs/architecture/cross-lane.md`](../../architecture/cross-lane.md) — cross-lane doctrine (PROPOSED) ·
-  [`docs/architecture/sovereignty-care.md`](../../architecture/sovereignty-care.md) — sovereignty / CARE cross-cutting
+  [`docs/architecture/sovereignty-care.md`](../../architecture/sovereignty-care.md) — sovereignty / CARE cross-cutting ·
+  [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — 3D admission operationalization (ADR-S-07; see `OQ-CD-09`)
 - **Registers** (PROPOSED):
   [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) ·
   [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) ·
   [`docs/registers/AUTHORITY_LADDER.md`](../../registers/AUTHORITY_LADDER.md)
-- **Policy / schemas** (PROPOSED; subject to `OQ-CD-03` and `OQ-CD-05`):
-  [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — §23.2 enforcement home ·
+- **Policy / schemas** (PROPOSED; subject to `OQ-CD-03`, `OQ-CD-05`, and the `OQ-CD-02` namespace conflict):
+  [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — §23.2 enforcement home (ENCY §7.13) ·
   [`policy/runtime/cross_lane/`](../../../policy/runtime/cross_lane/) — cross-lane runtime gate (PROPOSED) ·
-  [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) — archaeology schemas (ADR-0001 default) ·
+  [`policy/maplibre/3d-admission.rego`](../../../policy/maplibre/3d-admission.rego) — 3D admission gate (`directory-rules.md` v1.3 §18.c) ·
+  [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) — archaeology schemas (Directory Rules §12 form; vs `schemas/contracts/v1/archaeology/` in Atlas §24.13 / ENCY §7.13 — `OQ-CD-02`) ·
   [`schemas/contracts/v1/receipts/redaction_receipt.schema.json`](../../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) ·
   [`schemas/contracts/v1/release/map_release_manifest.schema.json`](../../../schemas/contracts/v1/release/map_release_manifest.schema.json) ·
-  [`schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../../schemas/contracts/v1/receipts/generated_receipt.schema.json) ·
   [`tools/validators/cross_lane/`](../../../tools/validators/cross_lane/) — joint negative-fixture validator (PROPOSED per §9.1)
 - **Atlas & encyclopedia**:
-  Atlas v1.1 §24.4.6 (Flora → Archaeology) · §24.4.11 (Roads/Rail → Archaeology) · §24.4.13 (Archaeology owned edges) · §24.4.14 (People/Land → Archaeology) · §24.4.16 (Planetary/3D citation rules) · §24.12 (open ADRs `ADR-S-07`, `ADR-S-08`, `ADR-S-10`, `ADR-S-14`) · §24.14 (master object-family × domain matrix) ·
-  Encyclopedia §7.13 (Archaeology) · §13 (sensitive register) ·
+  Atlas v1.1 §24.4.6 (Flora → Archaeology) · §24.4.11 (Roads/Rail → Archaeology) · §24.4.13 (Archaeology owned edges) · §24.4.14 (People/Land → Archaeology) · §24.4.16 (Planetary/3D citation rules) · §24.5 (sensitivity tier reference, PROPOSED) · §24.12 (Open-ADR backlog: `ADR-S-03/05/07/08/10/14`) · §24.14 (master object-family × domain matrix) ·
+  Encyclopedia §7.13 (Archaeology) ·
   DOM-ARCH §F (cross-lane relations)
 - **DDD reference** (project corpus): Anticorruption Layer pattern (§11 X11)
 
@@ -605,4 +612,4 @@ This document is done enough to enter the repository when:
 
 <sub>**Related:** [Operating Contract v3.0](../../doctrine/ai-build-operating-contract.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Authority Ladder](../../doctrine/authority-ladder.md) · [Archaeology Architecture](./ARCHITECTURE.md) · [Canonical Paths](./CANONICAL_PATHS.md) · [Continuity Inventory](./CONTINUITY_INVENTORY.md) *(all PROPOSED until mounted-repo evidence verifies presence)*</sub>
 
-<sub>**Last updated:** 2026-05-27 · **Pinned:** <code>CONTRACT_VERSION = "3.0.0"</code> · **Doc type:** standard (cross-domain register) · **§23.2 row:** Archaeology — site locations · **Join policy:** `ADR-S-14` OPEN · **Authority:** refines but never overrides core invariants, ADRs, or canonical doctrine docs · [Back to top ↑](#-quick-jump)</sub>
+<sub>**Last updated:** 2026-05-29 · **Pinned:** <code>CONTRACT_VERSION = "3.0.0"</code> · **Doc type:** standard (cross-domain register) · **§23.2 row:** Archaeology — site locations (matrix PROPOSED) · **Join policy:** `ADR-S-14` PROPOSED backlog · **Authority:** refines but never overrides core invariants, ADRs, or canonical doctrine docs · [Back to top ↑](#-quick-jump)</sub>
