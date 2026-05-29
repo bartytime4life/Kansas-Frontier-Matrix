@@ -1,54 +1,57 @@
-# Atmosphere — Preservation Matrix
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/atmosphere/preservation-matrix
+title: Atmosphere/Air — Preservation Matrix
+type: standard
+version: v2
+status: draft
+owners: TODO-atmosphere-domain-steward, TODO-sensitivity-reviewer, TODO-release-authority, TODO-docs-steward
+created: 2026-05-16
+updated: 2026-05-29
+policy_label: public
+contract_version: 3.0.0
+related:
+  - docs/domains/atmosphere/README.md
+  - docs/domains/atmosphere/OBJECT_FAMILY_MAP.md
+  - docs/domains/atmosphere/PIPELINE.md
+  - docs/domains/atmosphere/POLICY.md
+  - docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md
+  - docs/doctrine/directory-rules.md
+  - ai-build-operating-contract.md
+  - schemas/contracts/v1/source/source-descriptor.json
+tags: [kfm, atmosphere, air, doctrine, preservation, source-role, knowledge-character, sensitivity, lifecycle, anti-collapse]
+notes:
+  - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent register.
+  - Document name PRESERVATION_MATRIX.md is PROPOSED; no pre-existing KFM artifact uses this exact name.
+  - All implementation-layer claims (schemas, validators, policies, routes) are PROPOSED until verified against a mounted repo.
+  - "Atmosphere / Air" is the canonical domain identity in Atlas v1.1 11; "atmosphere" is the directory slug per Directory Rules 12.
+  - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
+[/KFM_META_BLOCK_V2] -->
 
-> What must be **preserved**, in what state, and with what evidence, so any Atmosphere / Air artifact can move from **RAW → PUBLISHED** without losing source role, knowledge character, temporal fidelity, sensitivity posture, calibration trust, or correction lineage.
+# Atmosphere/Air — Preservation Matrix
 
-[![Status](https://img.shields.io/badge/status-draft-orange.svg)](#)
-[![Domain](https://img.shields.io/badge/domain-atmosphere-blue.svg)](#)
-[![Authority](https://img.shields.io/badge/authority-doctrine-purple.svg)](#)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-green.svg)](#)
-[![Policy](https://img.shields.io/badge/policy_label-public-lightgrey.svg)](#)
-[![Updated](https://img.shields.io/badge/updated-2026--05--16-informational.svg)](#)
-[![CI](https://img.shields.io/badge/CI-TODO-lightgrey.svg)](# "CI badge target unverified — placeholder")
+> What must be **preserved**, in what state, and with what evidence, so any Atmosphere/Air artifact can move from **RAW → PUBLISHED** without losing source role, knowledge character, temporal fidelity, sensitivity posture, calibration trust, or correction lineage.
+
+[![Status: Draft](https://img.shields.io/badge/status-draft-orange.svg)](#)
+[![Domain: Atmosphere / Air](https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff.svg)](./README.md)
+[![Authority: Doctrine](https://img.shields.io/badge/authority-doctrine_grounded-blueviolet.svg)](#3-authority-chain)
+[![Lifecycle: RAW%20%E2%86%92%20PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-555.svg)](#4-the-preservation-matrix-at-a-glance)
+[![Policy: public](https://img.shields.io/badge/policy_label-public-lightgrey.svg)](#8-sensitivity-rights-and-tier-preservation)
+[![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue.svg)](#)
+[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey.svg)](# "CI badge target unverified — placeholder")
+[![Last Reviewed: 2026-05-29](https://img.shields.io/badge/last_reviewed-2026--05--29-informational.svg)](#footer)
 
 | Status | Owners | Last updated |
 |---|---|---|
-| Draft | _TBD — Atmosphere domain steward · Sensitivity reviewer · Release authority_ | 2026-05-16 |
+| Draft | _TODO — Atmosphere domain steward · Sensitivity reviewer · Release authority · Docs steward_ | 2026-05-29 |
 
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/atmosphere-preservation-matrix
-title: Atmosphere — Preservation Matrix
-type: standard
-version: v1
-status: draft
-owners: TBD — Atmosphere domain steward; Sensitivity reviewer; Release authority
-created: 2026-05-16
-updated: 2026-05-16
-policy_label: public
-related:
-  - docs/domains/atmosphere/README.md            # PROPOSED — NEEDS VERIFICATION
-  - docs/doctrine/lifecycle-law.md               # PROPOSED — NEEDS VERIFICATION
-  - docs/doctrine/truth-posture.md               # PROPOSED — NEEDS VERIFICATION
-  - docs/doctrine/trust-membrane.md              # PROPOSED — NEEDS VERIFICATION
-  - docs/doctrine/directory-rules.md             # PROPOSED — NEEDS VERIFICATION
-  - docs/atlases/source-role-anti-collapse.md    # PROPOSED — NEEDS VERIFICATION
-  - docs/atlases/sensitivity-tier-reference.md   # PROPOSED — NEEDS VERIFICATION
-  - docs/atlases/pipeline-gate-reference.md      # PROPOSED — NEEDS VERIFICATION
-  - docs/atlases/stale-state-reference.md        # PROPOSED — NEEDS VERIFICATION
-  - docs/atlases/receipt-catalog.md              # PROPOSED — NEEDS VERIFICATION
-  - schemas/contracts/v1/source/source-descriptor.json # PROPOSED per ADR-0001 + Directory Rules §7.4
-tags: [kfm, atmosphere, air, doctrine, preservation, source-role, knowledge-character, sensitivity, lifecycle, anti-collapse]
-notes:
-  - This document name (PRESERVATION_MATRIX.md) is PROPOSED; no pre-existing KFM artifact uses this exact name.
-  - All implementation-layer claims (schemas, validators, policies, routes) are PROPOSED until verified against a mounted repo.
-  - "Atmosphere / Air" is the canonical domain identity in Atlas v1.1 §11; "atmosphere" is the directory slug per Directory Rules §12.
-[/KFM_META_BLOCK_V2] -->
+> **CONTRACT_VERSION = "3.0.0"**
 
 ---
 
 ## Contents
 
 - [1. Purpose & scope](#1-purpose--scope)
-- [2. What “preservation” means in this matrix](#2-what-preservation-means-in-this-matrix)
+- [2. What "preservation" means in this matrix](#2-what-preservation-means-in-this-matrix)
 - [3. Authority chain](#3-authority-chain)
 - [4. The Preservation Matrix at a glance](#4-the-preservation-matrix-at-a-glance)
 - [5. Source-role preservation (Atmosphere/Air specialization)](#5-source-role-preservation-atmosphereair-specialization)
@@ -61,18 +64,22 @@ notes:
 - [12. Receipt and audit preservation](#12-receipt-and-audit-preservation)
 - [13. Anti-collapse failure modes (DENY conditions)](#13-anti-collapse-failure-modes-deny-conditions)
 - [14. Validators, gates, and tests](#14-validators-gates-and-tests)
-- [15. Open questions & verification backlog](#15-open-questions--verification-backlog)
+- [Open questions register](#open-questions-register)
+- [Open verification backlog](#open-verification-backlog)
+- [Changelog v1 → v2](#changelog-v1--v2)
+- [Definition of done](#definition-of-done)
 - [16. Related docs](#16-related-docs)
 - [Appendix A — Glossary of preservation terms](#appendix-a--glossary-of-preservation-terms)
 - [Appendix B — Worked examples](#appendix-b--worked-examples)
+- [Footer](#footer)
 
 ---
 
 ## 1. Purpose & scope
 
-**Purpose.** The Atmosphere — Preservation Matrix is a domain-specific reference that names, in one place, **what must be preserved** for an Atmosphere/Air artifact to survive promotion from `RAW` through `PUBLISHED` without losing the trust properties on which KFM depends: source identity, source role, knowledge character, temporal fidelity, sensitivity posture, calibration trust, evidence closure, review state, and correction lineage. **[CONFIRMED doctrine — Atlas v1.1 §11; ENCY §7.9; DIRRULES §3]**
+**Purpose.** The Atmosphere/Air Preservation Matrix is a domain-specific reference that names, in one place, **what must be preserved** for an Atmosphere/Air artifact to survive promotion from `RAW` through `PUBLISHED` without losing the trust properties on which KFM depends: source identity, source role, knowledge character, temporal fidelity, sensitivity posture, calibration trust, evidence closure, review state, and correction lineage. **[CONFIRMED doctrine — Atlas v1.1 §11; ENCY §7.9; DIRRULES §3]**
 
-**Scope.** This document covers the Atmosphere/Air domain only. It specializes — it does not replace — the cross-cutting registers in Atlas v1.1 Chapter 24 (Source-Role Anti-Collapse, Sensitivity Tier Reference, Pipeline Gate Reference, Stale-State Reference, Receipt Catalog) and the encyclopedia’s §7.9 domain section. Cross-lane edges (Hazards, Hydrology, Agriculture, Biodiversity domains) are referenced where they intersect Atmosphere/Air responsibilities. **[CONFIRMED doctrine — Atlas v1.1 §11.F; §24.1; §24.4]**
+**Scope.** This document covers the Atmosphere/Air domain only. It specializes — it does not replace — the cross-cutting registers in Atlas v1.1 Chapter 24 (Source-Role Anti-Collapse, Sensitivity Tier Reference, Pipeline Gate Reference, Stale-State Reference, Receipt Catalog) and the encyclopedia's §7.9 domain section. Cross-lane edges (Hazards, Hydrology, Agriculture, Biodiversity domains) are referenced where they intersect Atmosphere/Air responsibilities. **[CONFIRMED doctrine — Atlas v1.1 §11.F; §24.1; §24.4]**
 
 **Out of scope.**
 
@@ -81,15 +88,15 @@ notes:
 - Public client UI affordances. Those are governed by `apps/explorer-web/` and `packages/maplibre/`, not by this document. **[CONFIRMED doctrine — DIRRULES §11; MAP-MASTER]**
 
 > [!IMPORTANT]
-> **Truth posture.** Every claim in this document is labeled. Implementation-layer claims (schemas, validators, exact paths, routes, policies) are **PROPOSED** until verified against a mounted repository. The document name `PRESERVATION_MATRIX.md` and its placement under `docs/domains/atmosphere/` are also **PROPOSED** under Directory Rules §12 (Domain Placement Law) — see Section 3.
+> **Truth posture.** Every claim in this document is labeled. Implementation-layer claims (schemas, validators, exact paths, routes, policies) are **PROPOSED** until verified against a mounted repository. The document name `PRESERVATION_MATRIX.md` and its placement under `docs/domains/atmosphere/` are also **PROPOSED** under Directory Rules §12 (Domain Placement Law) — see §3 and the Open Questions register.
 
 [Back to top](#contents)
 
 ---
 
-## 2. What “preservation” means in this matrix
+## 2. What "preservation" means in this matrix
 
-In KFM, *preservation* is not an archival concern about disk storage. It is a **governance discipline** that keeps the meaning of an Atmosphere/Air artifact intact across every state transition. A reading that started as an EPA AQS-monitored sample at a regulatory station MUST still be recognizable as an *observed regulatory-grade sample at that station, on that day, in those units* when the public API surfaces it — not as an unlabeled “AQI value,” a “modeled estimate,” or a “fused product.” **[CONFIRMED doctrine — Atlas v1.1 §24.1.1; ENCY §7.9]**
+In KFM, *preservation* is not an archival concern about disk storage. It is a **governance discipline** that keeps the meaning of an Atmosphere/Air artifact intact across every state transition. A reading that started as an EPA AQS-monitored sample at a regulatory station MUST still be recognizable as an *observed regulatory-grade sample at that station, on that day, in those units* when the public API surfaces it — not as an unlabeled "AQI value," a "modeled estimate," or a "fused product." **[CONFIRMED doctrine — Atlas v1.1 §24.1.1; ENCY §7.9]**
 
 The matrix names **seven preservation axes** that, together, define the doctrine. Each axis has its own anti-collapse rule, its own receipt(s), its own gate(s), and its own DENY conditions.
 
@@ -99,12 +106,12 @@ The matrix names **seven preservation axes** that, together, define the doctrine
 | 2 | **Knowledge character** | OBSERVED_SENSOR, PUBLIC_AQI_REPORT, REGULATORY_ARCHIVE, LOW_COST_SENSOR, ATMOSPHERIC_MODEL_FIELD, REMOTE_SENSING_MASK, CLIMATE_ANOMALY_CONTEXT, DERIVED_FUSION, METEOROLOGICAL_CONTEXT, ALERT_AND_ADVISORY_CONTEXT, NETWORK_AND_SITE_CONTEXT | Atlas v1.1 §11.C (Atmosphere ubiquitous language) |
 | 3 | **Temporal role** | source / observed / valid / retrieval / release / correction times stay distinct where material | Atlas v1.1 §11.E; ENCY §7.9.D |
 | 4 | **Sensitivity & rights** | T0–T4 tiering; deny-by-default lanes; rights changes propagate | Atlas v1.1 §24.5; ENCY §13; §20.5 |
-| 5 | **Unit · parameter · calibration** | AQI is not concentration; AOD is not PM2.5; low-cost ≠ reference; correction version is pinned | Atlas v1.1 §11.I; ENCY §7.9; SRC-060/SRC-061 ideas |
+| 5 | **Unit · parameter · calibration** | AQI is not concentration; AOD is not PM2.5; low-cost ≠ reference; correction version is pinned | Atlas v1.1 §11.I; ENCY §7.9; Pass 10 / SRC-060 / SRC-061 |
 | 6 | **Lineage & supersession** | every claim resolves to a SourceDescriptor and an EvidenceBundle; stale-state markers are visible | Atlas v1.1 §24.8; ENCY Appendix E |
 | 7 | **Audit & correction path** | receipts, ReleaseManifest, CorrectionNotice, RollbackCard are reachable from any PUBLISHED Atmosphere claim | Atlas v1.1 §11.M; §24.2; §24.6; ENCY |
 
 > [!NOTE]
-> The phrase **“Preservation Matrix”** is a **PROPOSED** consolidating name for this document. The seven axes are each grounded in CONFIRMED KFM doctrine; the matrix that pulls them together is an **INFERRED** synthesis assembled here for the Atmosphere/Air domain. No pre-existing KFM artifact uses this exact name in the indexed corpus.
+> The phrase **"Preservation Matrix"** is a **PROPOSED** consolidating name for this document. The seven axes are each grounded in CONFIRMED KFM doctrine; the matrix that pulls them together is an **INFERRED** synthesis assembled here for the Atmosphere/Air domain. No pre-existing KFM artifact uses this exact name in the indexed corpus (see Open Questions OQ-AIRPM-01).
 
 [Back to top](#contents)
 
@@ -117,18 +124,19 @@ This document is **derivative** of higher doctrine. When it disagrees with the d
 | Tier | Source | Status of cited doctrine | Relation to this doc |
 |---|---|---|---|
 | 1 | KFM core invariants (lifecycle, trust membrane, cite-or-abstain, watcher-as-non-publisher) | CONFIRMED | This doc preserves them; never bends them. |
-| 2 | Directory Rules §12 (Domain Placement Law) | CONFIRMED | Justifies `docs/domains/atmosphere/` as the home. |
-| 3 | Encyclopedia §7.9 (Atmosphere, Air, and Climate) | CONFIRMED doctrine / PROPOSED implementation | Domain mission, object families, deny register. |
-| 4 | Atlas v1.0 Ch. 11 (Atmosphere and Air) — A–N sections | CONFIRMED doctrine / PROPOSED implementation | Per-domain spine retained verbatim in v1.1. |
-| 5 | Atlas v1.1 Chapter 24 master registers (§24.1, §24.2, §24.5, §24.6, §24.8) | CONFIRMED purpose / PROPOSED schema homes | Cross-cutting consolidations this doc specializes. |
-| 6 | ADRs amending Directory Rules or schema homes | CONFIRMED when accepted | Override silent default; not currently inspected. |
-| 7 | Per-root `README.md` files | CONFIRMED for whatever they refine | UNKNOWN here; not currently inspected. |
-| 8 | This document | PROPOSED draft | Refines but cannot contradict (1)–(6). |
+| 2 | `ai-build-operating-contract.md` v3.0 (operating law; CONTRACT_VERSION 3.0.0) | CONFIRMED | Canonical operating contract; governs truth labels and §23.2 sensitivity routing. |
+| 3 | Directory Rules §12 (Domain Placement Law) | CONFIRMED | Justifies `docs/domains/atmosphere/` as the home. |
+| 4 | Encyclopedia §7.9 (Atmosphere, Air, and Climate) | CONFIRMED doctrine / PROPOSED implementation | Domain mission, object families, deny register. |
+| 5 | Atlas Ch. 11 (Atmosphere and Air) — A–N sections | CONFIRMED doctrine / PROPOSED implementation | Per-domain spine retained verbatim in v1.1. |
+| 6 | Atlas v1.1 Chapter 24 master registers (§24.1, §24.2, §24.5, §24.6, §24.8) | CONFIRMED purpose / PROPOSED schema homes | Cross-cutting consolidations this doc specializes. |
+| 7 | ADRs amending Directory Rules or schema homes | CONFIRMED when accepted | Override silent default; not currently inspected. |
+| 8 | Per-root `README.md` files | CONFIRMED for whatever they refine | UNKNOWN here; not currently inspected. |
+| 9 | This document | PROPOSED draft | Refines but cannot contradict (1)–(6). |
 
 > [!WARNING]
-> This document does **not** carry release authority. The PUBLISHED state of any Atmosphere/Air claim depends on the gates in [§14](#14-validators-gates-and-tests) and on a valid ReleaseManifest with rollback target. A summary in this Markdown is **never** a substitute for an EvidenceBundle. **[CONFIRMED doctrine — Atlas v1.1 §0 cover guidance; ENCY §20]**
+> This document does **not** carry release authority. The PUBLISHED state of any Atmosphere/Air claim depends on the gates in [§14](#14-validators-gates-and-tests) and on a valid ReleaseManifest with rollback target. A summary in this Markdown is **never** a substitute for an EvidenceBundle. **[CONFIRMED doctrine — Atlas §0 cover guidance; ENCY §20]**
 
-**Directory Rules basis for the proposed path.** Per Directory Rules §12 (Domain Placement Law), a domain MUST NOT become a root folder; it appears as a segment inside a responsibility root. Atmosphere is named explicitly in the §12 enumeration. The human-facing control plane (`docs/`) is the canonical responsibility root for doctrine artifacts of this kind. Therefore `docs/domains/atmosphere/PRESERVATION_MATRIX.md` is **PROPOSED CONFORMING** to §12. **[CONFIRMED rule — DIRRULES §12; PROPOSED path until repo-verified]**
+**Directory Rules basis for the proposed path.** Per Directory Rules §12, a domain MUST NOT become a root folder; it appears as a segment inside a responsibility root. Atmosphere is named explicitly in the §3/§12 enumeration. The human-facing control plane (`docs/`) is the canonical responsibility root for doctrine artifacts of this kind. Therefore `docs/domains/atmosphere/PRESERVATION_MATRIX.md` is **PROPOSED CONFORMING** to §12. **[CONFIRMED rule — DIRRULES §3, §12; PROPOSED path until repo-verified]**
 
 [Back to top](#contents)
 
@@ -166,7 +174,7 @@ flowchart LR
   LIFECYCLE -. anti-collapse violations .-> D[DENY / ABSTAIN / HOLD]:::deny
 ```
 
-**The matrix (compact form).** Cells show the minimum artifact that must exist at the gate for that axis. Cells marked “—” mean the axis does not generate a new artifact at that gate, but a prior artifact MUST still resolve.
+**The matrix (compact form).** Cells show the minimum artifact that must exist at the gate for that axis. Cells marked "—" mean the axis does not generate a new artifact at that gate, but a prior artifact MUST still resolve.
 
 | Axis ↓ \ Gate → | RAW | WORK / QUARANTINE | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
 |---|---|---|---|---|---|
@@ -178,10 +186,10 @@ flowchart LR
 | **Lineage & supersession** | source ingest hash | supersession entry if replacing prior | EvidenceRef → EvidenceBundle resolvable | supersession links + freshness cadence recorded | stale-state markers visible; supersession chain navigable |
 | **Audit & correction path** | admission record (PolicyDecision) | ValidationReport | TransformReceipt / AggregationReceipt / ModelRunReceipt | catalog/proof closure | ReleaseManifest + CorrectionNotice + RollbackCard reachable |
 
-*Sources for cell content: Atlas v1.1 §11.H pipeline shape; §24.1 source-role; §24.2 receipt ↔ phase mapping; §24.5 tier scheme; §24.6 gate reference; §24.8 stale-state; ENCY §7.9.H knowledge systems; ENCY §13 deny register.*
+*Sources for cell content: Atlas §11.H pipeline shape; §24.1 source-role; §24.2 receipt ↔ phase mapping; §24.5 tier scheme; §24.6 gate reference; §24.8 stale-state; ENCY §7.9.H knowledge systems; ENCY §13 deny register.*
 
 > [!CAUTION]
-> Every cell in this matrix is **fail-closed**. A missing artifact at any cell means the artifact above the cell remains in its current state — **promotion to the next lifecycle stage is denied**. There is no “best effort” path through this matrix.
+> Every cell in this matrix is **fail-closed**. A missing artifact at any cell means the artifact above the cell remains in its current state — **promotion to the next lifecycle stage is denied**. There is no "best effort" path through this matrix.
 
 [Back to top](#contents)
 
@@ -203,7 +211,7 @@ Source role is a first-class identity attribute set at admission and **preserved
 | **Candidate** | Quarantined connector output (e.g., a PurpleAir sensor batch whose Barkjohn correction version is undefined) | candidate evidence in WORK/QUARANTINE only | PUBLISHED edge forbidden |
 | **Synthetic** | AI-drafted summary of an AirObservation EvidenceBundle; reconstructed smoke scene; gap-fill surface from a generator | synthetic content with Reality Boundary Note + RepresentationReceipt | observed reality |
 
-*Source: Atlas v1.1 §24.1.1, specialized with Atmosphere/Air examples from ENCY §7.9.B and Atlas v1.1 §11.D.*
+*Source: Atlas v1.1 §24.1.1, specialized with Atmosphere/Air examples from ENCY §7.9.B and Atlas §11.D.*
 
 ### 5.2 Required SourceDescriptor fields (PROPOSED schema)
 
@@ -245,7 +253,7 @@ The cross-cutting Atlas v1.1 §24.1.3 names the SourceDescriptor surface that ca
 ### 5.3 Preservation rule
 
 > [!IMPORTANT]
-> **Promotion never upgrades a source role.** An observation cannot be promoted to a regulation; a modeled product cannot be promoted to an observation; an aggregate cannot be promoted to a per-place truth; a candidate cannot be promoted to PUBLISHED without a governed merge. Each of these is a **separate governed transition** with its own evidence and review requirements. **[CONFIRMED doctrine — Atlas v1.1 §24.1 reading note; §24.9.3]**
+> **Promotion never upgrades a source role.** An observation cannot be promoted to a regulation; a modeled product cannot be promoted to an observation; an aggregate cannot be promoted to a per-place truth; a candidate cannot be promoted to PUBLISHED without a governed merge. Each is a **separate governed transition** with its own evidence and review requirements. **[CONFIRMED doctrine — Atlas v1.1 §24.1 reading note; §24.9.3]**
 
 [Back to top](#contents)
 
@@ -253,7 +261,7 @@ The cross-cutting Atlas v1.1 §24.1.3 names the SourceDescriptor surface that ca
 
 ## 6. Knowledge-character preservation
 
-The Atmosphere/Air domain’s ubiquitous language in Atlas v1.1 §11.C names **eleven knowledge-character classes**. A knowledge-character label MUST be carried on every Atmosphere/Air object from admission through publication, and the label MUST be visible in the Evidence Drawer and in any AI-drafted citation. **[CONFIRMED doctrine — Atlas v1.1 §11.C; MAP-MASTER]**
+The Atmosphere/Air domain's ubiquitous language in Atlas §11.C names **eleven knowledge-character classes**. A knowledge-character label MUST be carried on every Atmosphere/Air object from admission through publication, and the label MUST be visible in the Evidence Drawer and in any AI-drafted citation. **[CONFIRMED doctrine — Atlas §11.C; MAP-MASTER]**
 
 | Knowledge character | What it labels | Status |
 |---|---|---|
@@ -270,14 +278,14 @@ The Atmosphere/Air domain’s ubiquitous language in Atlas v1.1 §11.C names **e
 | `NETWORK_AND_SITE_CONTEXT` | Station / sensor / network metadata. Administrative, not observational. | CONFIRMED term · PROPOSED field realization |
 
 > [!NOTE]
-> **Knowledge character is not source role.** A `LOW_COST_SENSOR` reading is still source role *observed* — it is the **character of the observation** (low-cost, requires correction) that constrains its public-safe use. The two labels are orthogonal and both must be preserved.
+> **Knowledge character is not source role.** A `LOW_COST_SENSOR` reading is still source role *observed* — it is the **character of the observation** (low-cost, requires correction) that constrains its public-safe use. The two labels are orthogonal and both must be preserved. (See [OBJECT_FAMILY_MAP](./OBJECT_FAMILY_MAP.md) §4 for the per-object binding.)
 
 **Cross-collapse rules (Atmosphere/Air specifics):**
 
-1. `PUBLIC_AQI_REPORT` is **not** a concentration. Joining AQI ↔ µg/m³ on a public surface without a documented transform is **DENY**. **[CONFIRMED — Atlas v1.1 §11.I]**
-2. `REMOTE_SENSING_MASK` (AOD) is **not** PM2.5. A correlation does not authorize a substitution. **[CONFIRMED — Atlas v1.1 §11.I]**
-3. `ATMOSPHERIC_MODEL_FIELD` is **not** an observation, even when the model is anchored to observations. **[CONFIRMED — Atlas v1.1 §11.I; §24.1.2]**
-4. `LOW_COST_SENSOR` public release requires correction, caveats, confidence, and limitations — never a bare value. **[CONFIRMED — Atlas v1.1 §11.I; SRC-060 / SRC-061]**
+1. `PUBLIC_AQI_REPORT` is **not** a concentration. Joining AQI ↔ µg/m³ on a public surface without a documented transform is **DENY**. **[CONFIRMED — Atlas §11.I]**
+2. `REMOTE_SENSING_MASK` (AOD) is **not** PM2.5. A correlation does not authorize a substitution. **[CONFIRMED — Atlas §11.I]**
+3. `ATMOSPHERIC_MODEL_FIELD` is **not** an observation, even when the model is anchored to observations. **[CONFIRMED — Atlas §11.I; §24.1.2]**
+4. `LOW_COST_SENSOR` public release requires correction, caveats, confidence, and limitations — never a bare value. **[CONFIRMED — Atlas §11.I; Pass 10 C10-01; SRC-060 / SRC-061]**
 
 [Back to top](#contents)
 
@@ -285,12 +293,12 @@ The Atmosphere/Air domain’s ubiquitous language in Atlas v1.1 §11.C names **e
 
 ## 7. Temporal-role preservation
 
-Atmosphere/Air work has more clock dimensions than most domains because monitors, models, and reports do not share a single timeline. **Five temporal roles** stay distinct where material; the encyclopedia phrases it as: *“Track source freshness, issue/expiry time, observed time, valid time, model run time, units and conversion receipts.”* **[CONFIRMED doctrine — ENCY §7.9.D; Atlas v1.1 §11.E temporal handling row; §24.1.1 reading note]**
+Atmosphere/Air work has more clock dimensions than most domains because monitors, models, and reports do not share a single timeline. **Five temporal roles** stay distinct where material; the encyclopedia phrases it as: *track source freshness, issue/expiry time, observed time, valid time, model run time, units and conversion receipts.* **[CONFIRMED doctrine — ENCY §7.9.D; Atlas §11.E temporal handling row; §24.1.1 reading note]**
 
 | Temporal role | What it captures | Atmosphere/Air example |
 |---|---|---|
 | **Source time** | When the source admitted or last reported the record. | EPA AQS API response timestamp; PurpleAir API `last_seen`. |
-| **Observed time** | When the phenomenon was sampled by the sensor / instrument. | PM2.5 reading’s sample interval start / end. |
+| **Observed time** | When the phenomenon was sampled by the sensor / instrument. | PM2.5 reading's sample interval start / end. |
 | **Valid time** | The time the record is taken to be valid for (may differ from observed time for daily summaries, climate normals). | Daily summary covering 2026-05-15 00:00–24:00 local. |
 | **Retrieval time** | When KFM fetched the record. | Connector run timestamp at admission. |
 | **Release time** | When KFM published the record to the governed API. | ReleaseManifest timestamp. |
@@ -303,10 +311,10 @@ Atmosphere/Air work has more clock dimensions than most domains because monitors
 - **Daily summary ≠ hourly observation.** A daily AQS summary has a `valid_time` window; it must not be cited as a per-hour observation.
 - **Model run time is not observed time.** A 06:00 UTC HRRR-Smoke run that estimates 12:00 UTC fields has both timestamps; both must be queryable.
 - **Forecast valid time is not observation time.** A forecast NWS field for *today at 18:00* observed at *today at 06:00* is still a model field.
-- **Retrieval and release are not the source’s clocks.** They are KFM’s clocks; they exist for audit and freshness, never for representing the data’s validity.
+- **Retrieval and release are not the source's clocks.** They are KFM's clocks; they exist for audit and freshness, never for representing the data's validity.
 
 > [!TIP]
-> A reader who cannot tell, from an Atmosphere/Air payload alone, which timestamp answers “when did it happen?” vs. “what is it valid for?” vs. “when did the model run?” is looking at a **temporal-role collapse** — quarantine the record and require disambiguation before promotion.
+> A reader who cannot tell, from an Atmosphere/Air payload alone, which timestamp answers "when did it happen?" vs. "what is it valid for?" vs. "when did the model run?" is looking at a **temporal-role collapse** — quarantine the record and require disambiguation before promotion.
 
 [Back to top](#contents)
 
@@ -314,7 +322,10 @@ Atmosphere/Air work has more clock dimensions than most domains because monitors
 
 ## 8. Sensitivity, rights, and tier preservation
 
-Atmosphere/Air is largely T0 (Open) by default — observed AQS samples, AirNow AQI, NWS station data, and climate normals are normally public-safe. The preservation discipline is therefore mostly about **rights and re-use terms**, **low-cost sensor caveats**, and **emergency-alert boundary**. Tiers follow the cross-cutting scheme in Atlas v1.1 §24.5. **[CONFIRMED doctrine — Atlas v1.1 §24.5.1; ENCY §13]**
+Atmosphere/Air is largely T0 (Open) by default — observed AQS samples, AirNow AQI, NWS station data, and climate normals are normally public-safe. The preservation discipline is therefore mostly about **rights and re-use terms**, **low-cost sensor caveats**, **station-siting exposure**, and the **emergency-alert boundary**. Tiers follow the cross-cutting scheme in Atlas v1.1 §24.5. **[CONFIRMED doctrine — Atlas v1.1 §24.5.1; ENCY §13]**
+
+> [!CAUTION]
+> **Sensitive-domain handling applies (operating contract §23.2).** While Atmosphere/Air is mostly T0, three product classes touch sensitive matrix rows and route through the most restrictive applicable row: (1) **exact station/sensor siting** (`NETWORK_AND_SITE_CONTEXT`) — generalize coordinates before public release, as precise siting can implicate private land or infrastructure; (2) **smoke/fire/AOD layers** crossing into Hazards and potentially near rare-species habitat or infrastructure — sensitive joins fail closed; (3) **rights-unresolved third-party feeds** — quarantine until resolved. Default disposition when no row clearly matches: DENY exact exposure → GENERALIZE → REDACT → QUARANTINE → steward review → `RedactionReceipt` → ABSTAIN. Link the relevant `policy/sensitivity/` entry or surface that one is missing.
 
 ### 8.1 Tier defaults for Atmosphere/Air
 
@@ -323,15 +334,19 @@ Atmosphere/Air is largely T0 (Open) by default — observed AQS samples, AirNow 
 | EPA AQS observation (regulatory monitor) | T0 (Open) | — | SourceDescriptor + ValidationReport + ReleaseManifest | [DOM-AIR] |
 | AirNow PUBLIC_AQI_REPORT | T0 | — | + advisory-context disclaimer | [DOM-AIR] |
 | NWS / Kansas Mesonet observation | T0 | — | SourceDescriptor + ValidationReport | [DOM-AIR] |
-| PurpleAir LOW_COST_SENSOR (corrected) | T0 with mandatory caveat | Barkjohn-version pin + corrected/uncorrected pair preserved | + SensorCalibrationReceipt + caveat layer | [DOM-AIR] · C10-02 (Pass 10) |
+| PurpleAir LOW_COST_SENSOR (corrected) | T0 with mandatory caveat | Barkjohn-version pin + corrected/uncorrected pair preserved | + SensorCalibrationReceipt + caveat layer | [DOM-AIR] · Pass 10 C10-01 |
 | HRRR-Smoke / CAMS / ECMWF model field | T0 with `ATMOSPHERIC_MODEL_FIELD` label | — | + ModelRunReceipt + uncertainty surface | [DOM-AIR] |
 | GOES/ABI AOD raster | T0 with `REMOTE_SENSING_MASK` label | — | + uncertainty + role-preserving DTO | [DOM-AIR] |
 | Climate normal / anomaly aggregate | T0 with aggregation receipt | — | + AggregationReceipt + role_aggregation_unit | [DOM-AIR] · [Atlas §24.1] |
+| Exact station / sensor coordinates | T1 (Generalized) by default | coordinate generalization | + RedactionReceipt + steward review | [DOM-AIR] · §23.2 |
 | Rights-unresolved third-party feed | **T4 until resolved** | none until rights resolved | quarantine + steward review | [ENCY §13] |
-| Source under restrictive license (no redistribution) | T2 / T4 per terms | only the allowed derivative | rights register + attribution + no public derivative if barred | [ENCY §13 — Source-rights-limited] |
+| Source under restrictive license (no redistribution) | T2 / T4 per terms | only the allowed derivative | rights register + attribution + no public derivative if barred | [ENCY §13 — source-rights-limited] |
 | Atmosphere × Hazards life-safety request | **DENY** | not allowed as KFM authority | redirect to official-source | [DOM-AIR] · [DOM-HAZ] · [ENCY §13] |
 
-*Source: Atlas v1.1 §24.5 tier scheme; ENCY §13 Deny-by-Default Register; Atlas v1.1 §11.I.*
+*Source: Atlas v1.1 §24.5 tier scheme; ENCY §13 Deny-by-Default Register; Atlas §11.I; operating contract §23.2.*
+
+> [!NOTE]
+> Tier labels (T0–T4) follow the Atlas sensitivity-tier scheme (ADR-S-05, PROPOSED). Per-object Atmosphere/Air default tiers are NEEDS VERIFICATION (Open Questions OQ-AIRPM-10).
 
 ### 8.2 Rights preservation rules
 
@@ -353,30 +368,32 @@ Atmosphere/Air carries the largest unit/parameter surface area of any KFM domain
 | Rule | Anti-collapse content | Status |
 |---|---|---|
 | **Units are explicit on every numeric field.** Missing units fail the validator closed. | `units` field required; the air validator fails closed when units are missing | CONFIRMED idea — New Ideas 5-15-26 (Air validator) |
-| **AQI is not concentration.** AQI ↔ µg/m³ requires a documented transform receipt. | `PUBLIC_AQI_REPORT` ≠ concentration | CONFIRMED doctrine — Atlas v1.1 §11.I |
-| **AOD is not PM2.5.** Correlation does not authorize substitution. | `REMOTE_SENSING_MASK` ≠ PM2.5 | CONFIRMED doctrine — Atlas v1.1 §11.I |
-| **Daily summary is not an hourly observation.** Aggregation receipt + `role_aggregation_unit` required. | `temporal_basis` ∈ {hourly, daily_summary, monthly, normal} | CONFIRMED — New Ideas 5-15-26 EvidenceBundle.Air; Atlas v1.1 §24.1.2 |
+| **AQI is not concentration.** AQI ↔ µg/m³ requires a documented transform receipt. | `PUBLIC_AQI_REPORT` ≠ concentration | CONFIRMED doctrine — Atlas §11.I |
+| **AOD is not PM2.5.** Correlation does not authorize substitution. | `REMOTE_SENSING_MASK` ≠ PM2.5 | CONFIRMED doctrine — Atlas §11.I |
+| **Daily summary is not an hourly observation.** Aggregation receipt + `role_aggregation_unit` required. | `temporal_basis` ∈ {hourly, daily_summary, monthly, normal} | CONFIRMED — New Ideas 5-15-26 EvidenceBundle.Air; Atlas §24.1.2 |
 | **Pollutant codes are validated.** Invalid pollutant code → DENY. | Air validator fails closed on invalid pollutant code | CONFIRMED — New Ideas 5-15-26 |
 | **Monitor IDs are mandatory.** Absent monitor IDs → ERROR. | Air validator fails closed on missing monitor IDs | CONFIRMED — New Ideas 5-15-26 |
 | **Observation / regulatory distinction is mandatory.** Absence → DENY. | Air validator fails closed when distinction absent | CONFIRMED — New Ideas 5-15-26 |
 
 ### 9.2 Calibration preservation (low-cost sensors)
 
-Low-cost networks (e.g., PurpleAir) are valuable for coverage but cannot be published raw. The KFM convention from Pass 10 (Kansas air stack) is to **preserve the corrected-and-uncorrected pair** so the correction is reversible and auditable. The Barkjohn correction is **itself versioned**; the version in use is recorded in the run receipt. **[CONFIRMED evidence — KFM Pass 10 C10-02; SRC-060 / SRC-061 ideas]**
+Low-cost networks (e.g., PurpleAir) are valuable for coverage but cannot be published raw. The KFM convention from Pass 10 (Kansas air stack, C10-01) is to **preserve the corrected-and-uncorrected pair** so the correction is reversible and auditable. The Barkjohn correction is the published regression that reconciles PurpleAir to regulatory monitors; it is **itself versioned**, and the version in use is recorded in the run receipt. **[CONFIRMED evidence — Pass 10 C10-01; KFM-P12-PROG-0028; KFM-P30-IDEA-0001/0002; SRC-060 / SRC-061]**
 
 | Calibration concern | Required preservation | Required artifact |
 |---|---|---|
 | Correction reversibility | Corrected and uncorrected values preserved as a pair | `SensorCalibrationReceipt` (PROPOSED) carrying both values |
 | Correction version | Barkjohn (or current EPA regression) **version pinned** | Receipt field `correction_version`; ADR if changed |
-| Channel / variant semantics | PurpleAir exposes multiple PM2.5 variants and channel behaviors; the field and algorithm variant used MUST be stored | Schema field documenting variant + channel | 
+| Channel / variant semantics | PurpleAir exposes multiple PM2.5 variants and channel behaviors; the field and algorithm variant used MUST be stored | Schema field documenting variant + channel |
 | Sensor sanity checks | Channel divergence and impossible-PM detection runs **before** corrected PM2.5 is published | CI fixture-driven negative gate |
 | Co-location windows | 2–6 week reference co-location windows treated as validation metadata; absent → `NEEDS VERIFICATION` | Validator requires co-location evidence or marks the record |
 | Trust / confidence | Sensor trust scores integrate accuracy, stability, responsiveness, consensus; **never** rendered as proof | UI badge linked to receipt; drawer carries calibration context |
+| Adaptive recalibration | Treat low-cost calibration as a governed adaptive QA lane, not a one-time static correction | Trust-score-driven recalibration trigger (PROPOSED) |
 | Humidity / aerosol regime | Kansas / Midwest humidity transferability is an explicit caveat on air-layer metadata, tooltips, and Evidence Drawer | Caveat layer + metadata field |
+| Smoke nonlinearity | PurpleAir nonlinear response at high PM2.5 (smoke) requires smoke-aware correction + uncertainty before fused surfaces | Smoke-aware correction guard (PROPOSED) |
 | Reference-monitor primacy | AQS regulatory monitors outrank low-cost sensors for calibration claims | Trust-membrane test: no public path treats them as equal |
 
 > [!CAUTION]
-> **Public clients MUST NOT see raw low-cost sensor values as direct truth.** A PurpleAir popup on the public map without correction context, calibration receipt, or caveat is an **anti-pattern** and DENIES at publication. **[CONFIRMED doctrine — MapLibre anti-pattern register “Raw low-cost PM2.5 sensor values as public truth”; SRC-061]**
+> **Public clients MUST NOT see raw low-cost sensor values as direct truth.** A PurpleAir popup on the public map without correction context, calibration receipt, or caveat is an **anti-pattern** and DENIES at publication. **[CONFIRMED doctrine — MapLibre anti-pattern register "raw low-cost PM2.5 sensor values as public truth"; SRC-061]**
 
 [Back to top](#contents)
 
@@ -384,11 +401,11 @@ Low-cost networks (e.g., PurpleAir) are valuable for coverage but cannot be publ
 
 ## 10. Cross-lane boundary preservation
 
-Atmosphere/Air ties into four other lanes. **Preservation across the boundary** means: cross-lane relations cite each other, but neither side rewrites the other’s source role, knowledge character, sensitivity tier, or evidence. **[CONFIRMED doctrine — Atlas v1.1 §11.F; §24.4]**
+Atmosphere/Air ties into four other lanes. **Preservation across the boundary** means: cross-lane relations cite each other, but neither side rewrites the other's source role, knowledge character, sensitivity tier, or evidence. **[CONFIRMED doctrine — Atlas §11.F; §24.4]**
 
 | Related lane | Relation type | Preservation requirement |
 |---|---|---|
-| **Hazards** | smoke, heat/cold, advisory, visibility, fire/emissions context | Atmosphere/Air provides context layers; Hazards owns hazard-event truth. KFM is never the alert authority. Ownership, source role, sensitivity, and EvidenceBundle support preserved on both sides. |
+| **Hazards** | smoke, heat/cold, advisory, visibility, fire/emissions context | Atmosphere/Air provides context layers; Hazards owns hazard-event truth. KFM is never the alert authority. Ownership, source role, sensitivity, and EvidenceBundle support preserved on both sides. **SmokeContext appears in both lanes** — Atmosphere/Air owns the atmospheric reading; Hazards owns the event/impact projection (cross-lane ADR pending). |
 | **Agriculture** | heat, smoke, precipitation, vegetation stress | Atmosphere/Air supplies meteorological / smoke context; Agriculture owns crop / pest / yield claims. Aggregate joins fall under `role_aggregation_unit` rules. |
 | **Hydrology** | precipitation, drought, flood-weather forcing | Atmosphere/Air supplies precipitation / drought indicators; Hydrology owns gauge / NHD / NFHL truth. Source-role anti-collapse is shared (NFHL regulatory ≠ observed event; both lanes enforce). |
 | **Biodiversity domains** (Fauna, Flora, Habitat) | phenology, smoke, fire, drought stress | Atmosphere/Air provides context **without** exposing sensitive locations (nests, dens, roosts, hibernacula, spawning sites). T4 sensitive content from biodiversity is **never** unmasked by an atmosphere join. |
@@ -397,7 +414,7 @@ Atmosphere/Air ties into four other lanes. **Preservation across the boundary** 
 
 - KFM used as the operational alert authority on a Hazards × Atmosphere surface → **DENY**. **[ENCY §13 emergency-alert-misuse]**
 - An atmosphere context layer used as authority to *re-publish* sensitive biodiversity locations → **DENY**. **[ENCY §13; DOM-FAUNA / DOM-FLORA]**
-- Hydrology NFHL regulatory zone joined to a real-time observed flood layer through atmosphere precipitation forcing without role labels → **DENY**. **[Atlas v1.1 §24.1.2 row “Regulatory zone labeled as observed flood / event”]**
+- Hydrology NFHL regulatory zone joined to a real-time observed flood layer through atmosphere precipitation forcing without role labels → **DENY**. **[Atlas §24.1.2 row "regulatory zone labeled as observed flood / event"]**
 
 [Back to top](#contents)
 
@@ -410,9 +427,9 @@ Atmosphere/Air is the most **freshness-sensitive** lane in KFM. Observations age
 | Marker | Triggered by | UI signal | Required action (Atmosphere/Air) |
 |---|---|---|---|
 | **Source freshness expired** | Cadence in SourceDescriptor passed without admission (e.g., AQS hourly cadence missed for N intervals) | Stale source badge in Evidence Drawer | Re-admit; or supersede; or mark dependent claims stale. |
-| **Time-scope outside support** | Claim’s temporal scope falls outside data support window | Time-out-of-support indicator | Mark stale; do not refresh silently. |
+| **Time-scope outside support** | Claim's temporal scope falls outside data support window | Time-out-of-support indicator | Mark stale; do not refresh silently. |
 | **Model version superseded** | `ModelRunReceipt` references an older HRRR-Smoke / CAMS / Barkjohn version than current | Model-version badge with new model identity | Re-run; supersede; or mark stale. |
-| **Schema version drift** | Object schema upgraded past the published claim’s schema version | Schema-drift badge; show migration ADR if any | Migrate, re-validate, re-release; or mark stale. |
+| **Schema version drift** | Object schema upgraded past the published claim's schema version | Schema-drift badge; show migration ADR if any | Migrate, re-validate, re-release; or mark stale. |
 | **Rights status changed** | Rights change in SourceDescriptor (e.g., PurpleAir terms-of-service update) | Rights-changed badge | Re-evaluate tier; potentially downgrade; emit CorrectionNotice. |
 | **Policy version changed** | Policy referenced by `PolicyDecision` superseded | Policy-version badge | Re-run gate; potentially supersede release. |
 | **Review aged out** | `ReviewRecord` older than the review cadence for the lane | Review-aged badge | Trigger steward review. |
@@ -424,7 +441,7 @@ Atmosphere/Air is the most **freshness-sensitive** lane in KFM. Observations age
 - Climate normal `GeographyVersion` replaced → both versions remain queryable; matrix-cell semantics apply per Atlas v1.1 §24.8.2.
 
 > [!NOTE]
-> **Stale ≠ wrong.** A stale observation is one whose evidence, source freshness, or context has aged past tolerance; a wrong observation has incorrect substance. Both have visible markers and traceable lifecycles. Stale claims are not silently refreshed. **[CONFIRMED doctrine — Atlas v1.1 §24.8 preamble]**
+> **Stale ≠ wrong.** A stale observation is one whose evidence, source freshness, or context has aged past tolerance; a wrong observation has incorrect substance. Both have visible markers and traceable lifecycles. Stale claims are not silently refreshed. **[CONFIRMED doctrine — Atlas v1.1 §24.8 preamble; ML-061-058]**
 
 [Back to top](#contents)
 
@@ -467,7 +484,7 @@ A consequential operation without a receipt **did not happen in the governed sen
 ```
 
 > [!NOTE]
-> The shape above is **PROPOSED** and illustrative; it is drawn from the current-ideas dossier (New Ideas 5-15-26.pdf). The canonical schema home and field names await ADR / repo confirmation.
+> The shape above is **PROPOSED** and illustrative; it is drawn from the current-ideas dossier (New Ideas 5-15-26). The canonical schema home and field names await ADR / repo confirmation.
 
 [Back to top](#contents)
 
@@ -493,6 +510,7 @@ The matrix is **fail-closed** by design. Every anti-collapse rule below denies p
 | Daily summary rendered as hourly observation | Publication; join | Temporal-role separation; `temporal_basis` field |
 | Forecast field surfaced without `model_run_time` and `valid_time` | Publication | Both timestamps queryable; not silently merged |
 | Rights-unresolved third-party feed pushed to PROCESSED | Validation gate | Quarantine; steward review; rights resolution |
+| Exact station/sensor coordinates exposed without generalization | Publication | RedactionReceipt; coordinate generalization; §23.2 |
 | KFM used as the operational emergency-alert authority on an atmosphere surface | Publication; UI; AI | Redirect to official source; advisory-context disclaimer |
 | PurpleAir API keys present in STAC / DCAT / catalog metadata | Build / release | Secret scanning; manifest schema check |
 
@@ -505,7 +523,7 @@ The matrix is **fail-closed** by design. Every anti-collapse rule below denies p
 
 ## 14. Validators, gates, and tests
 
-Each preservation axis has at least one validator at one or more lifecycle gates. The list below is **PROPOSED** for the Atmosphere/Air lane and aligns with Atlas v1.1 §11.K, the cross-cutting Validator Catalogue (v1.0 §20.4), and the current ideas dossier.
+Each preservation axis has at least one validator at one or more lifecycle gates. The list below is **PROPOSED** for the Atmosphere/Air lane and aligns with Atlas §11.K, the cross-cutting Validator Catalogue (§20.4), and the current-ideas dossier. Negative-state coverage (DENY / ABSTAIN / ERROR) is mandatory.
 
 ### 14.1 Atmosphere/Air validator surface (PROPOSED)
 
@@ -520,18 +538,19 @@ Each preservation axis has at least one validator at one or more lifecycle gates
 | Source-role anti-collapse test | All gates | DENY on role downcast / upcast; ABSTAIN at AI surface |
 | Trailing-window completeness test | PROCESSED → CATALOG | ABSTAIN if trailing window incomplete (e.g., AQI 7-day) |
 | EvidenceRef resolution test | CATALOG → PUBLISHED | DENY if any EvidenceRef does not resolve |
-| Dry-run / no-live-fetch test | CI gate | DENY if a “dry run” attempts a live source fetch |
+| Dry-run / no-live-fetch test | CI gate | DENY if a "dry run" attempts a live source fetch |
 | Lifecycle-boundary test | Trust membrane | DENY any public-surface reference to RAW / WORK / QUARANTINE / internal store |
+| Station-coordinate generalization test | PROCESSED → CATALOG | DENY exact coordinates without RedactionReceipt |
 | Emergency-alert authority test | UI / API | DENY any phrasing that positions KFM as the alert authority |
 | Secret scanning on catalog metadata | Release | DENY if API keys appear in STAC / DCAT / DTO |
 
-*Sources: Atlas v1.1 §11.K (Atmosphere validator list); §20.4 (cross-cutting catalog); New Ideas 5-15-26 (Air validator close-list); SRC-060 / SRC-061 (calibration & rights tests).*
+*Sources: Atlas §11.K (Atmosphere validator list); §20.4 (cross-cutting catalog); New Ideas 5-15-26 (Air validator close-list); Pass 10 / SRC-060 / SRC-061 (calibration & rights tests).*
 
 ### 14.2 Reason-coded outcomes
 
-Every governed Atmosphere/Air API surface returns one of the finite outcomes below. **[CONFIRMED doctrine — Atlas v1.1 §11.J; §20.3]**
+Every governed Atmosphere/Air API surface returns one of the finite outcomes below. **[CONFIRMED doctrine — Atlas §11.J; §20.3]**
 
-```
+```text
 ANSWER  — evidence resolved; policy allowed; release state valid
 ABSTAIN — evidence insufficient or trailing window incomplete
 DENY    — policy / rights / sensitivity / release state blocks
@@ -542,24 +561,66 @@ ERROR   — infrastructure or schema failure
 
 ---
 
-## 15. Open questions & verification backlog
+## Open questions register
 
-These items are **explicitly unresolved** by this document and should be tracked in `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED path per Directory Rules §18) and addressed via ADR or per-root README.
-
-| # | Item | Status | What would settle it |
+| ID | Question | Owner role | Resolution path |
 |---|---|---|---|
-| 1 | Whether `PRESERVATION_MATRIX.md` is the right artifact name, or whether this content should be split between `SOURCE_ROLE_REGISTER.md`, `CALIBRATION_GOVERNANCE.md`, `SENSITIVITY_TIER.md` under `docs/domains/atmosphere/` | NEEDS VERIFICATION | Mounted repo inspection of existing `docs/domains/<other-domain>/` patterns + ADR |
-| 2 | Whether `docs/domains/atmosphere/` exists today in the mounted repo and what other files live alongside | NEEDS VERIFICATION | `git ls-tree`-equivalent inspection |
-| 3 | Whether the SourceDescriptor schema actually carries the §24.1.3 field surface (`source_role`, `role_authority`, …) | NEEDS VERIFICATION | Inspection of `schemas/contracts/v1/source/source-descriptor.json` (PROPOSED path) |
-| 4 | `SensorCalibrationReceipt` as a named receipt class — is it cataloged under `schemas/contracts/v1/receipts/` or under `schemas/contracts/v1/domains/atmosphere/receipts/`? | NEEDS VERIFICATION (ties to ADR-S-03 in Atlas v1.1 §24.12) | ADR + schema PR |
-| 5 | Barkjohn correction version pinning policy and cadence for re-evaluation when EPA publishes a revised regression | NEEDS VERIFICATION (Pass 10 C10-02 open question) | ADR — Low-Churn / Calibration-Version Policy |
-| 6 | Current source rights and endpoint behavior for OpenAQ-like aggregators, EPA AQS-like archive, AirNow, CAMS / ECMWF, HRRR-Smoke, HMS smoke, GOES/ABI AOD, VIIRS fire/hotspot, Kansas Mesonet | NEEDS VERIFICATION (Atlas v1.1 §11.D row freshness) | Source-rights register + steward review |
-| 7 | Knowledge-character registry implementation (file location, allowed-label schema, validator) | NEEDS VERIFICATION (Atlas v1.1 §11.N) | Repo inspection + schema PR |
-| 8 | Routes and DTO names for the Atmosphere/Air feature/detail resolver, layer manifest resolver, Evidence Drawer payload, Focus Mode answer | UNKNOWN (Atlas v1.1 §11.J marks the exact route UNKNOWN) | API design ADR + repo inspection |
-| 9 | Whether `release/candidates/atmosphere/` exists in the mounted repo as the candidate-release home | NEEDS VERIFICATION | Repo inspection |
-| 10 | Adoption decision for sensitivity tier scheme T0–T4 (Atlas v1.1 §24.12 ADR-S-05) and source-role vocabulary v1 (ADR-S-04) | PROPOSED open ADRs | ADR-S-04 + ADR-S-05 acceptance |
-| 11 | Atmosphere × Hazards advisory-boundary enforcement — exact UI / API patterns for advisory redirection | NEEDS VERIFICATION | UI/API design + cross-lane policy ADR |
-| 12 | Pre-RAW admission edge (`event_envelope`, `prefilter_output`, `event_run_receipt`) implementation for live air feeds | NEEDS VERIFICATION (BLD-GREEN v1.1 §§1, 7, 21) | Pre-RAW design ADR |
+| OQ-AIRPM-01 | Is `PRESERVATION_MATRIX.md` the right artifact name, or should this content split between `SOURCE_ROLE_REGISTER.md`, `CALIBRATION_GOVERNANCE.md`, `SENSITIVITY_TIER.md`? Also add it to the planned-files register §6.1. | docs-steward | Mounted-repo inspection of sibling-domain patterns + ADR |
+| OQ-AIRPM-02 | Does `docs/domains/atmosphere/` exist today and what files live alongside? | docs-steward | `git ls-tree`-equivalent inspection |
+| OQ-AIRPM-03 | Does the SourceDescriptor schema carry the §24.1.3 field surface (`source_role`, `role_authority`, …)? | atmosphere-domain-steward | Inspect `schemas/contracts/v1/source/source-descriptor.json` |
+| OQ-AIRPM-04 | Is `SensorCalibrationReceipt` cataloged under `schemas/contracts/v1/receipts/` or `…/domains/atmosphere/receipts/`? | atmosphere-domain-steward | ADR-S-03 + schema PR |
+| OQ-AIRPM-05 | Barkjohn correction version-pinning policy and re-evaluation cadence when EPA publishes a revised regression. | atmosphere-domain-steward | ADR — Calibration-Version Policy (Pass 10 C10-01 open question) |
+| OQ-AIRPM-06 | Current source rights/endpoint behavior for every Atmosphere/Air source family. | source steward | Source-rights register + steward review |
+| OQ-AIRPM-07 | Knowledge-character registry implementation (file location, allowed-label schema, validator). | atmosphere-domain-steward | Repo inspection + schema PR (Atlas §11.N) |
+| OQ-AIRPM-08 | Routes and DTO names for the Atmosphere/Air resolver, layer-manifest resolver, Evidence Drawer payload, Focus Mode answer. | pipeline-steward | API design ADR (Atlas §11.J marks route UNKNOWN) |
+| OQ-AIRPM-09 | Does `release/candidates/atmosphere/` exist as the candidate-release home? | release-authority | Repo inspection |
+| OQ-AIRPM-10 | Adoption of sensitivity tier scheme T0–T4 (ADR-S-05) and source-role vocabulary v1 (ADR-S-04); per-object default tiers. | sensitivity reviewer | ADR-S-04 + ADR-S-05 acceptance |
+| OQ-AIRPM-11 | Atmosphere × Hazards advisory-boundary enforcement — exact UI/API patterns for advisory redirection. | atmosphere + hazards stewards | UI/API design + cross-lane policy ADR |
+| OQ-AIRPM-12 | Pre-RAW admission edge (`event_envelope`, `prefilter_output`, `event_run_receipt`) for live air feeds. | pipeline-steward | Pre-RAW design ADR |
+
+## Open verification backlog
+
+These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
+
+1. Repository mounting and confirmation that `docs/domains/atmosphere/` exists and what siblings it has.
+2. SourceDescriptor §24.1.3 field-surface presence in the live schema.
+3. `SensorCalibrationReceipt` schema home (ADR-S-03).
+4. Barkjohn version-pinning policy and re-evaluation cadence.
+5. Source rights/endpoint behavior for all source families (Atlas §11.D, all NEEDS VERIFICATION).
+6. Knowledge-character registry implementation (Atlas §11.N).
+7. Resolver routes/DTO names (Atlas §11.J — route UNKNOWN).
+8. `release/candidates/atmosphere/` presence.
+9. ADR-S-04 (source-role vocabulary) and ADR-S-05 (tier scheme) acceptance.
+10. Add `PRESERVATION_MATRIX.md` to the planned-files register §6.1.
+
+## Changelog v1 → v2
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Pinned `CONTRACT_VERSION = "3.0.0"`; added to meta block, badge, and status line | reconciliation | Doctrine-adjacent doc must pin the operating contract. |
+| Moved KFM Meta Block v2 to the very top of the file; removed nested-comment risk; added `#`-only annotation note | housekeeping | Meta Block placement and the no-nested-comment rule. |
+| Normalized doc_id to `kfm://doc/atmosphere/preservation-matrix` (domain-scoped) | clarification | Aligns with sibling atmosphere docs' id scheme. |
+| Added operating contract v3.0 to the authority chain (new Tier 2) | reconciliation | Contract is canonical operating law above this doc. |
+| Added the four doctrine companion sections (Open Questions register, Open verification backlog, Changelog, Definition of done); migrated former §15 backlog into them | gap closure | Required for doctrine-adjacent docs. |
+| Added §23.2 sensitive-domain `> [!CAUTION]` callout to §8 and a station-coordinate T1 tier row + DENY/validator rows | gap closure | Station siting, smoke/fire, rights-unresolved feeds touch sensitive rows. |
+| Strengthened calibration citations to Pass 10 C10-01, KFM-P12-PROG-0028, KFM-P30-IDEA-0001/0002, SRC-060/061; added adaptive-recalibration and smoke-nonlinearity rows | clarification | Newly corroborated this session; replaced thinner "C10-02 / 5-15-26" placeholders with grounded citations. |
+| Added SmokeContext cross-lane note to §10 | reconciliation | Same object name in Atmosphere/Air and Hazards. |
+| Bumped version v1 → v2; `updated` 2026-05-16 → 2026-05-29; owners as labeled `TODO-*` | housekeeping | Reflects completion pass. |
+
+> **Backward compatibility.** All v1 section anchors (`#1-purpose--scope` … `#16-related-docs`, both appendices) are preserved. The former §15 ("Open questions & verification backlog") content is retained and reorganized into the companion sections; its anchor is replaced by `#open-questions-register` and `#open-verification-backlog` — the only anchor change, flagged here.
+
+## Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed at `docs/domains/atmosphere/PRESERVATION_MATRIX.md` per Directory Rules (or split per OQ-AIRPM-01 if the ADR so decides);
+- it is added to the planned-files register §6.1;
+- a docs steward, the atmosphere-domain steward, a sensitivity reviewer, and a release authority review it;
+- it is linked from `docs/domains/atmosphere/README.md`;
+- it does not conflict with accepted ADRs (and ADR-S-03/04/05 plus the calibration-version ADR are at least filed);
+- any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `GENERATED_RECEIPT.json` planned in the PR (CONTRACT_VERSION `3.0.0`) is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
 
 [Back to top](#contents)
 
@@ -571,22 +632,24 @@ These items are **explicitly unresolved** by this document and should be tracked
 > All path values below are **PROPOSED** under Directory Rules §12 and the responsibility-root pattern. Mounted-repo presence is not asserted. Replace `TODO` with verified entries on first review.
 
 - `docs/domains/atmosphere/README.md` *(landing page; PROPOSED · NEEDS VERIFICATION)*
-- `docs/doctrine/lifecycle-law.md` *(RAW → PUBLISHED invariant; PROPOSED)*
-- `docs/doctrine/truth-posture.md` *(cite-or-abstain; PROPOSED)*
-- `docs/doctrine/trust-membrane.md` *(public-path discipline; PROPOSED)*
+- `docs/domains/atmosphere/OBJECT_FAMILY_MAP.md` *(object roster + knowledge characters; PROPOSED)*
+- `docs/domains/atmosphere/PIPELINE.md` *(lifecycle + gates; PROPOSED)*
+- `docs/domains/atmosphere/POLICY.md` *(allow/deny/restrict/abstain; PROPOSED)*
+- `docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md` *(planned-files register)*
 - `docs/doctrine/directory-rules.md` *(placement law; PROPOSED canonical home)*
-- `docs/atlases/source-role-anti-collapse.md` *(specializes Atlas v1.1 §24.1; PROPOSED)*
-- `docs/atlases/sensitivity-tier-reference.md` *(extends Atlas v1.1 §24.5; PROPOSED)*
-- `docs/atlases/pipeline-gate-reference.md` *(consolidates Atlas v1.1 §24.6; PROPOSED)*
-- `docs/atlases/stale-state-reference.md` *(Atlas v1.1 §24.8; PROPOSED)*
-- `docs/atlases/receipt-catalog.md` *(Atlas v1.1 §24.2; PROPOSED)*
+- `ai-build-operating-contract.md` *(canonical operating contract; CONTRACT_VERSION 3.0.0)*
+- `docs/atlases/source-role-anti-collapse.md` *(specializes Atlas §24.1; PROPOSED)*
+- `docs/atlases/sensitivity-tier-reference.md` *(extends Atlas §24.5; PROPOSED)*
+- `docs/atlases/pipeline-gate-reference.md` *(consolidates Atlas §24.6; PROPOSED)*
+- `docs/atlases/stale-state-reference.md` *(Atlas §24.8; PROPOSED)*
+- `docs/atlases/receipt-catalog.md` *(Atlas §24.2; PROPOSED)*
 - `docs/standards/PROV.md` *(W3C PROV-O profile; CONFIRMED prior delivery in this project context)*
 - `docs/standards/PMTILES.md` *(PMTiles v3 profile; CONFIRMED prior delivery)*
 - `docs/standards/OGC-API-TILES.md` *(OGC API Tiles; CONFIRMED prior delivery)*
 - `docs/standards/OAI-PMH.md` *(OAI-PMH 2.0; CONFIRMED prior delivery)*
 - `docs/standards/ISO-19115.md` *(ISO 19115 crosswalk; CONFIRMED prior delivery)*
 - `docs/registers/DRIFT_REGISTER.md` *(file conflicts here; PROPOSED)*
-- `docs/registers/VERIFICATION_BACKLOG.md` *(unresolved items from §15; PROPOSED)*
+- `docs/registers/VERIFICATION_BACKLOG.md` *(unresolved items; PROPOSED)*
 - `schemas/contracts/v1/source/source-descriptor.json` *(PROPOSED per Directory Rules §7.4 / ADR-0001)*
 - `schemas/contracts/v1/receipts/` *(receipt class home; ADR-S-03 open)*
 - `policy/domains/atmosphere/` *(atmosphere policy lane; PROPOSED)*
@@ -607,8 +670,8 @@ These items are **explicitly unresolved** by this document and should be tracked
 | Term | Definition (CONFIRMED unless marked) | Citation |
 |---|---|---|
 | **Source role** | A first-class identity attribute set at admission; one of observed, regulatory, modeled, aggregate, administrative, candidate, synthetic. Never changed by promotion. | Atlas v1.1 §24.1.1 |
-| **Knowledge character** | A domain-specific class describing the epistemic kind of a record (`OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, etc.). Atmosphere/Air defines eleven. Orthogonal to source role. | Atlas v1.1 §11.C |
-| **Temporal role** | A label distinguishing source / observed / valid / retrieval / release / correction / model-run / issue-expiry times. Roles stay distinct where material. | Atlas v1.1 §11.E; ENCY §7.9.D |
+| **Knowledge character** | A domain-specific class describing the epistemic kind of a record (`OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, etc.). Atmosphere/Air defines eleven. Orthogonal to source role. | Atlas §11.C |
+| **Temporal role** | A label distinguishing source / observed / valid / retrieval / release / correction / model-run / issue-expiry times. Roles stay distinct where material. | Atlas §11.E; ENCY §7.9.D |
 | **Sensitivity tier** | T0 Open · T1 Generalized · T2 Reviewer · T3 Restricted · T4 Denied. Cross-cutting scheme; Atmosphere/Air defaults are mostly T0 with rights-driven exceptions. | Atlas v1.1 §24.5.1 |
 | **EvidenceBundle** | The citation substrate for any public claim. Resolves from EvidenceRef. Outranks generated language. | ENCY; GAI |
 | **EvidenceRef** | Pointer that must resolve to an EvidenceBundle at runtime; failure to resolve → ABSTAIN or DENY. | GAI; ENCY |
@@ -616,7 +679,7 @@ These items are **explicitly unresolved** by this document and should be tracked
 | **RunReceipt** | Structured persisted record of a specific governed run (e.g., a watcher invocation, a pipeline run). | New Ideas 5-15-26 |
 | **AggregationReceipt** | Records an aggregation step and pins geometry/time scope. Required for any aggregate publication. | Atlas v1.1 §24.2.1 |
 | **ModelRunReceipt** | Records modeled outputs: model identity, version, inputs, parameters, uncertainty, validation. | Atlas v1.1 §24.2.1 |
-| **SensorCalibrationReceipt** *(PROPOSED, Atmosphere)* | Records a low-cost sensor correction: method, version, reference monitor, co-location window, corrected/uncorrected pair, trust score. | Atmosphere specialization; INFERRED from SRC-060 / SRC-061 + Pass 10 C10-02 |
+| **SensorCalibrationReceipt** *(PROPOSED, Atmosphere)* | Records a low-cost sensor correction: method, version, reference monitor, co-location window, corrected/uncorrected pair, trust score. | Atmosphere specialization; INFERRED from Pass 10 C10-01 + SRC-060/061 |
 | **ReleaseManifest** | Records contents, signatures, evidence refs, and rollback target for a release. | Atlas v1.1 §24.2.1 |
 | **CorrectionNotice** | Records a post-publication correction and what derivatives are invalidated. | Atlas v1.1 §24.2.1 |
 | **RollbackCard** | Records a rollback decision and the targeted prior release. | Atlas v1.1 §24.2.1 |
@@ -666,6 +729,12 @@ These items are **explicitly unresolved** by this document and should be tracked
 
 ---
 
-<sub>**Related:** [`docs/domains/atmosphere/README.md`](./README.md) · [`docs/atlases/source-role-anti-collapse.md`](../../atlases/source-role-anti-collapse.md) · [`docs/atlases/sensitivity-tier-reference.md`](../../atlases/sensitivity-tier-reference.md) · [`docs/atlases/pipeline-gate-reference.md`](../../atlases/pipeline-gate-reference.md) · [`docs/atlases/stale-state-reference.md`](../../atlases/stale-state-reference.md) · [`docs/atlases/receipt-catalog.md`](../../atlases/receipt-catalog.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — _all PROPOSED paths; NEEDS VERIFICATION_</sub>
+## Footer
 
-<sub>**Last updated:** 2026-05-16 · **Doc id:** `kfm://doc/atmosphere-preservation-matrix` · **Status:** Draft · [Back to top](#contents)</sub>
+---
+
+**Related:** [README](./README.md) · [Object Family Map](./OBJECT_FAMILY_MAP.md) · [Pipeline](./PIPELINE.md) · [Policy](./POLICY.md) · [Planned Files](./MISSING_OR_PLANNED_FILES.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../../ai-build-operating-contract.md) — _all PROPOSED paths; NEEDS VERIFICATION_
+
+**Last updated:** 2026-05-29 · **Doc id:** `kfm://doc/atmosphere/preservation-matrix` · **Version:** v2 · **Status:** Draft · **CONTRACT_VERSION = "3.0.0"**
+
+[⤴ Back to top](#contents)
