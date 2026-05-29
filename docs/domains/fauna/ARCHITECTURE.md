@@ -4,39 +4,34 @@ title: Fauna Domain Architecture
 type: standard
 version: v1
 status: draft
-owners: <fauna-lane-owner@kfm> <governance-steward@kfm>
+owners: <fauna-lane-owner@kfm> <governance-steward@kfm> <sensitivity-reviewer@kfm>
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-05-29
 policy_label: public
-related:
-  - docs/domains/README.md
-  - docs/domains/habitat/ARCHITECTURE.md
-  - docs/domains/flora/ARCHITECTURE.md
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - docs/doctrine/directory-rules.md
-  - docs/standards/PROV.md
-  - docs/adr/README.md
+related: [docs/domains/README.md, docs/domains/fauna/README.md, docs/domains/fauna/API_CONTRACTS.md, docs/domains/fauna/adr/README.md, docs/domains/habitat/ARCHITECTURE.md, docs/domains/flora/ARCHITECTURE.md, docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md, docs/doctrine/directory-rules.md, docs/standards/PROV.md, docs/adr/README.md, ai-build-operating-contract.md]
 tags: [kfm, domain, fauna, biodiversity, geoprivacy, governance]
-notes:
-  - Implementation-layer claims are PROPOSED; no mounted repo verification in this session.
-  - Schema home discrepancy between `schemas/contracts/v1/fauna/` (Atlas crosswalk) and `schemas/contracts/v1/domains/fauna/` (Directory Rules §12) is flagged for ADR resolution.
+notes: [CONTRACT_VERSION pinned 3.0.0 # implementation-layer claims PROPOSED; no mounted repo verification this session # schema-home discrepancy schemas/contracts/v1/fauna/ (Atlas §24.13) vs schemas/contracts/v1/domains/fauna/ (Directory Rules §12) flagged for ADR — see §2.1 # fauna is a sensitive lane: T4 default for sensitive occurrences/sites]
 [/KFM_META_BLOCK_V2] -->
 
-# Fauna Domain Architecture
+<a id="top"></a>
+
+# 🦫 Fauna Domain Architecture
 
 > Govern animal taxonomic identity, conservation/legal status, occurrence evidence, monitoring, range, seasonal support, sensitive sites, mortality, disease, invasive species, geoprivacy, public-safe products, and bounded APIs — under the KFM trust membrane and fail-closed sensitivity posture.
 
-<!-- Badge row — Shields.io placeholders pending repo wiring -->
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![version](https://img.shields.io/badge/version-v1-blue)
 ![policy_label](https://img.shields.io/badge/policy_label-public-success)
 ![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-informational)
-![sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default-critical)
-<!-- TODO: CI badge for fauna validators once `.github/workflows/fauna-*.yml` is wired -->
+![sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default%20(T4)-critical)
+![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-success)
 
-| Status | Owners | Last updated |
-|---|---|---|
-| `draft` | `<fauna-lane-owner@kfm>` · `<governance-steward@kfm>` | 2026-05-16 |
+> [!NOTE]
+> CI badge for fauna validators is a `TODO` until `.github/workflows/fauna-*.yml` is wired.
+
+| Status | Owners | Last updated | Contract |
+|---|---|---|---|
+| `draft` | `<fauna-lane-owner@kfm>` · `<governance-steward@kfm>` · `<sensitivity-reviewer@kfm>` | 2026-05-29 | `CONTRACT_VERSION = "3.0.0"` |
 
 ---
 
@@ -54,14 +49,17 @@ notes:
 10. [Governed AI behavior](#10-governed-ai-behavior)
 11. [Validators, tests, and fixtures](#11-validators-tests-and-fixtures)
 12. [Publication, correction, and rollback](#12-publication-correction-and-rollback)
-13. [Open questions and verification backlog](#13-open-questions-and-verification-backlog)
-14. [Related docs](#14-related-docs)
+13. [Open questions register](#13-open-questions-register)
+14. [Open verification backlog](#14-open-verification-backlog)
+15. [Changelog](#15-changelog-v0--v1)
+16. [Definition of done](#16-definition-of-done)
+17. [Related docs](#17-related-docs)
 
 ---
 
 ## 1. Purpose and scope
 
-**CONFIRMED doctrine / PROPOSED implementation.** The Fauna lane governs animal taxonomic identity, conservation and legal status, occurrence evidence, monitoring events, range and seasonal range, migration, sensitive sites (nests · dens · roosts · hibernacula · spawning sites), mortality, disease and pathogen observations, invasive species records, geoprivacy-bearing transforms, and the public-safe derivatives that flow from them. It exposes those products through bounded, governed APIs only — never as direct reads against canonical or restricted stores.
+**CONFIRMED doctrine / PROPOSED implementation.** The Fauna lane governs animal taxonomic identity, conservation and legal status, occurrence evidence, monitoring events, range and seasonal range, migration, sensitive sites (nests · dens · roosts · hibernacula · spawning sites), mortality, disease and pathogen observations, invasive species records, geoprivacy-bearing transforms, and the public-safe derivatives that flow from them. It exposes those products through bounded, governed APIs only — never as direct reads against canonical or restricted stores. [DOM-FAUNA] [DOM-HF] [ENCY]
 
 ### What this lane owns
 
@@ -82,6 +80,9 @@ notes:
 | `AbundanceIndicator`, `RichnessIndicator` | Derived public-safe indicators. |
 | `RedactionReceipt`, geoprivacy transform receipts | Auditable transformations applied for public release. |
 
+> [!NOTE]
+> The Atlas Ch. 7 owned-object list is: `Taxon`, `Taxon Crosswalk`, `Conservation Status`, `Occurrence Evidence`, `Occurrence Restricted`, `Occurrence Public`, `RangePolygon`, `SeasonalRange`, `MigrationRoute`, `SensitiveSite`, `MortalityObservation`, `DiseaseObservation`, `Invasive Species Record`, `Redaction Receipt`. The additional families above (`AbundanceIndicator`, `RichnessIndicator`, `NestDenRoostSpawningSite` as a `SensitiveSite` subtype) are **INFERRED** derived/public-safe products consistent with doctrine; confirm against `contracts/domains/fauna/` (see backlog). [DOM-FAUNA]
+
 ### What this lane explicitly does **not** own
 
 > [!WARNING]
@@ -89,9 +90,9 @@ notes:
 
 - **Habitat** owns habitat patches, classes, suitability, connectivity, restoration zones — see [`docs/domains/habitat/ARCHITECTURE.md`](../habitat/ARCHITECTURE.md).
 - **Flora** owns plant taxa, specimens, vegetation communities — see [`docs/domains/flora/ARCHITECTURE.md`](../flora/ARCHITECTURE.md).
-- **Hydrology, Soil, Agriculture, Hazards, Roads, People** provide context only through governed joins; their truth remains in their lanes.
+- **Hydrology, Soil, Agriculture, Hazards, Roads, People** provide context only through governed joins; their truth remains in their lanes. [DOM-FAUNA] [DOM-HF]
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -107,6 +108,7 @@ contracts/domains/fauna/                    # semantic meaning (Markdown)
 schemas/contracts/v1/domains/fauna/         # machine shape (JSON Schema) — see §2.1
 policy/domains/fauna/                       # admissibility, redaction rules
 policy/sensitivity/fauna/                   # sensitivity classes, deny-by-default
+policy/geoprivacy/                          # cross-cutting geoprivacy (per repo structure doc)
 tests/domains/fauna/                        # negative + positive proofs
 fixtures/domains/fauna/                     # public-safe synthetic fixtures
 packages/domains/fauna/                     # shared lane library (if needed)
@@ -125,7 +127,7 @@ release/candidates/fauna/                   # release candidates awaiting promot
 > [!NOTE]
 > Every path above is **PROPOSED** until the mounted repo is inspected. Treat them as the doctrinally-required shape per Directory Rules §12, not as a confirmed scaffold.
 
-### 2.1 Schema-home discrepancy (NEEDS VERIFICATION → ADR)
+### 2.1 Schema-home discrepancy (CONFLICTED → ADR)
 
 Two project sources name the Fauna schema home differently:
 
@@ -134,15 +136,15 @@ Two project sources name the Fauna schema home differently:
 | Directory Rules §12 (Domain Placement Law) | `schemas/contracts/v1/domains/fauna/` | CONFIRMED doctrine |
 | Atlas v1.1 §24.13 (chapter ↔ dossier ↔ root crosswalk) | `schemas/contracts/v1/fauna/` | LINEAGE / PROPOSED |
 
-Per the source hierarchy, **Directory Rules wins** for placement. The Atlas wording is treated as lineage. An ADR (working title: `ADR-fauna-schema-home`) should resolve the discrepancy and pin canonical path before any Fauna schema lands; until then, all `schemas/contracts/v1/fauna/*` references in lineage docs MUST be read as `schemas/contracts/v1/domains/fauna/*`.
+Per the source hierarchy, **Directory Rules wins** for placement — and this is the same slug-drift class flagged for Roads (`transport`), Settlements (`settlement`), and Atmosphere (`air`). The Atlas wording is treated as lineage. An ADR (working title: `ADR-fauna-schema-home`, or a single repo-wide `ADR-domain-slug` covering all affected lanes) should resolve the discrepancy and pin the canonical path before any Fauna schema lands; until then, all `schemas/contracts/v1/fauna/*` references in lineage docs MUST be read as `schemas/contracts/v1/domains/fauna/*`. Tracked at [§13 OQ-FAUNA-ARCH-01](#13-open-questions-register). [DIRRULES §12] [ENCY §24.13]
 
 ### 2.2 Compatibility surfaces this lane touches
 
 - `apps/governed-api/` — public trust path; all public Fauna reads route here.
-- `packages/maplibre/` and `apps/explorer-web/` — render only released layers and EvidenceDrawer payloads; never direct lane reads.
+- `packages/maplibre-runtime/` (v1.3; formerly `packages/maplibre/`) and `apps/explorer-web/` — render only released layers and EvidenceDrawer payloads; never direct lane reads.
 - `connectors/<vendor>/` (e.g., `gbif/`, `inaturalist/`) — write to `data/raw/fauna/...` only; never publish.
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -164,15 +166,15 @@ Per the source hierarchy, **Directory Rules wins** for placement. The Atlas word
 | **Geoprivacy transform** | A documented, deterministic spatial transformation (tile generalization, jitter, range coarsening) producing a public-safe derivative. |
 | **Public-safe derivative** | An object emitted for public surfaces after redaction and policy gate pass; carries a RedactionReceipt or generalization receipt. |
 
-Source: [DOM-FAUNA] · [DOM-HF] · [ENCY §7.5].
+Source: [DOM-FAUNA] · [DOM-HF] · [ENCY]. Full lane glossary: see the per-domain ubiquitous-language doc once authored.
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 4. Object families
 
-PROPOSED deterministic identity rule across the lane: **source id + object role + temporal scope + normalized digest** (JCS + SHA-256 canonicalization is the project-wide default; see [`docs/standards/PROV.md`](../../standards/PROV.md) for the canonicalization and digest stack). Times are tracked as distinct fields where material: `source_time`, `observed_time`, `valid_time`, `retrieval_time`, `release_time`, `correction_time`.
+PROPOSED deterministic identity rule across the lane: **source id + object role + temporal scope + normalized digest** (JCS + SHA-256 canonicalization is the project-wide default; see [`docs/standards/PROV.md`](../../standards/PROV.md) for the canonicalization and digest stack). Times are tracked as distinct fields where material: `source_time`, `observed_time`, `valid_time`, `retrieval_time`, `release_time`, `correction_time`. [DOM-FAUNA]
 
 ```mermaid
 flowchart LR
@@ -193,6 +195,8 @@ flowchart LR
   OccP --> Rich[RichnessIndicator]
   OccR -. transform .-> Red[RedactionReceipt]
   Red --> OccP
+  classDef deny fill:#b22,stroke:#700,color:#fff;
+  class Site,OccR deny;
 ```
 
 <details>
@@ -219,7 +223,7 @@ flowchart LR
 
 </details>
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -232,24 +236,24 @@ flowchart LR
 |---|---|---|---|
 | KDWP-like steward sources | authority · observation · context | rights & current terms NEEDS VERIFICATION; sensitive joins fail closed | source-vintage / cadence specific |
 | USFWS ECOS-like federal sources | authority · context | as above | as above |
-| NatureServe / heritage-style sources | authority (assessor) · context | as above | as above |
+| NatureServe / heritage-style sources | authority (assessor) · context | as above; **rare-species data requires access controls + redaction + license check** | as above |
 | GBIF / eBird / iNaturalist / iDigBio / BISON-like aggregators | observation · aggregator | as above | as above |
 | EDDMapS and invasive feeds | observation · aggregator | as above | as above |
 | Agency monitoring (surveys · eDNA · acoustic · telemetry) | observation | as above; **highest sensitivity for telemetry locations** | event-driven |
 | NLCD / NWI / PADUS / SSURGO context layers | context · model | as above | release-driven |
 
-PROPOSED constraint: **legal status MUST resolve to an authority-role source**; an aggregator-role source cannot supply ConservationStatus by itself.
+PROPOSED constraint: **legal status MUST resolve to an authority-role source**; an aggregator-role source cannot supply `ConservationStatus` by itself.
 
-Cited: [DOM-FAUNA §§1–3] · [DOM-HF §§1–5] · [ENCY §7.5].
+Cited: [DOM-FAUNA] · [DOM-HF] · [ENCY]. (NatureServe rare-data access-gate rule per fauna idea-card backlog.)
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 6. Pipeline shape (RAW → PUBLISHED)
 
 **CONFIRMED doctrine / PROPOSED lane application.** Fauna follows the lifecycle invariant
-`RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`, with **promotion as a governed state transition — not a file move**.
+`RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`, with **promotion as a governed state transition — not a file move**. [DIRRULES] [DOM-FAUNA] [ENCY]
 
 ```mermaid
 flowchart TD
@@ -280,14 +284,14 @@ flowchart TD
 
 See [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) for the operational procedure.
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 7. Sensitivity, rights, and publication posture
 
 > [!WARNING]
-> **Fauna deny-by-default register.** Exact sensitive occurrences, nests, dens, roosts, hibernacula, spawning sites, steward-controlled records, and exact occurrence geometry for sensitive taxa **fail closed**. Public exact-occurrence tiles for sensitive taxa are **denied**.
+> **Fauna deny-by-default register.** Per Atlas §7.I (verbatim): *exact sensitive occurrence, nest, den, roost, hibernacula, spawning, and steward-controlled records fail closed; public exact occurrence tiles for sensitive taxa are denied.* The §20.5 register allows release **only** when geoprivacy transform + `RedactionReceipt` + public-safe derivative are all present. [DOM-FAUNA §7.I] [ENCY §20.5]
 
 ### 7.1 What blocks public promotion
 
@@ -301,7 +305,7 @@ A Fauna release candidate **MUST NOT** advance to PUBLISHED while any of the fol
 - Missing **rollback target** or **correction path**.
 - Absent `RedactionReceipt` where the candidate derives from sensitive input.
 
-Cited: [DOM-FAUNA §§12–13] · [ENCY] · [DIRRULES].
+Cited: [DOM-FAUNA §7.I] · [ENCY] · [DIRRULES].
 
 ### 7.2 Allowed release pathways for sensitive material
 
@@ -316,17 +320,17 @@ Cited: [DOM-FAUNA §§12–13] · [ENCY] · [DIRRULES].
 
 The Focus Mode and any other governed AI surface MUST NOT emit text that re-introduces redacted geometry or names a sensitive site by location. This is enforced by `CitationValidationReport` against EvidenceBundles whose `obligations.redactions` are themselves part of the policy postcheck.
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 8. Cross-lane relations
 
-Cross-lane joins preserve ownership, source role, sensitivity, and EvidenceBundle support.
+Cross-lane joins preserve ownership, source role, sensitivity, and EvidenceBundle support. [DOM-FAUNA] [DOM-HF]
 
 | This domain | Related lane | Relation type | Constraint |
 |---|---|---|---|
-| Fauna | **Habitat** | Derived habitat assignment, seasonal support | Habitat-fauna assignment is the [Habitat × Fauna thin-slice proof pattern](https://example.invalid/dom-hf-thin-slice) (see [DOM-HF]); habitat outputs are adjacent derivatives, not fauna truth. |
+| Fauna | **Habitat** | Derived habitat assignment, seasonal support | Habitat–fauna assignment is the **Habitat × Fauna thin-slice** proof pattern (see [DOM-HF] and §8 note); habitat outputs are adjacent derivatives, not fauna truth. |
 | Fauna | **Flora** | Ecological community, pollinator, invasive, food-web context | Joins via governed relations; flora truth stays in Flora. |
 | Fauna | **Hydrology** | Aquatic, riparian, wetland, spawning context | Joins via governed relations; hydrology truth stays in Hydrology. |
 | Fauna | **Hazards** | Disease, mortality, wildfire, flood, drought exposure | Joins are context; hazards is **never an alert authority** inside KFM. |
@@ -334,29 +338,29 @@ Cross-lane joins preserve ownership, source role, sensitivity, and EvidenceBundl
 | Fauna | **People / DNA / Land** | Steward, observer attribution; living-person data fails closed | Person-level joins follow People lane deny-defaults. |
 
 > [!NOTE]
-> The **Habitat × Fauna thin-slice** (DOM-HF) is the project's proposed first proof-bearing slice for the species-related domains. Its proof pattern is a controlled habitat + fauna assignment using public-safe fixtures, **not** live sensitive source connectors.
+> The **Habitat × Fauna thin-slice** (DOM-HF) is the project's proposed first proof-bearing slice for the species-related domains (Roadmap phase 6: "Soil plus habitat/fauna controls — support-type separation and sensitive occurrence denial"). Its proof pattern is a controlled habitat + fauna assignment using public-safe fixtures, **not** live sensitive source connectors. [DOM-HF] [ENCY §21]
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 9. API, contract, and schema surfaces
 
-PROPOSED governed API surface; exact routes are UNKNOWN until the mounted repo is inspected. All public Fauna reads flow through `apps/governed-api/` and emit a finite-outcome envelope.
+PROPOSED governed API surface; exact routes are UNKNOWN until the mounted repo is inspected. All public Fauna reads flow through `apps/governed-api/` and emit a finite-outcome envelope. Full surface detail: [`API_CONTRACTS.md`](./API_CONTRACTS.md). [DOM-FAUNA §7.J]
 
 | Surface | DTO / schema | Outcomes | Status |
 |---|---|---|---|
-| Fauna feature/detail resolver | `FaunaDecisionEnvelope` (PROPOSED) | ANSWER · ABSTAIN · DENY · ERROR | PROPOSED; route TBD |
+| Fauna feature/detail resolver | `FaunaDecisionEnvelope` (per Atlas §7.J) | ANSWER · ABSTAIN · DENY · ERROR | PROPOSED; route TBD / UNKNOWN |
 | Fauna layer manifest resolver | `LayerManifest` / domain layer descriptor | ANSWER · DENY · ERROR | PROPOSED; public-safe release only |
 | Fauna Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | ANSWER · ABSTAIN · DENY · ERROR | PROPOSED; evidence- and policy-filtered |
 | Fauna Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | ANSWER · ABSTAIN · DENY · ERROR | PROPOSED; AI never root truth |
-| Correction submit | `CorrectionNoticeCandidate` | ACCEPTED · DENY · ERROR | PROPOSED |
-| Review decision | `ReviewRecord` | ALLOW · RESTRICT · DENY · ERROR | PROPOSED |
+| Correction submit | `CorrectionNoticeCandidate` | ACCEPTED · DENY · ERROR | PROPOSED ([§20.3]) |
+| Review decision | `ReviewRecord` + `PolicyDecision` | ALLOW · RESTRICT · DENY · ERROR | PROPOSED ([§20.3]) |
 
 ### 9.1 Schema responsibility root
 
 PROPOSED home: `schemas/contracts/v1/domains/fauna/` (per Directory Rules §12).
-Atlas crosswalk shows `schemas/contracts/v1/fauna/` — treated as **lineage** pending ADR (see [§2.1](#21-schema-home-discrepancy-needs-verification--adr)).
+Atlas crosswalk shows `schemas/contracts/v1/fauna/` — treated as **lineage** pending ADR (see [§2.1](#21-schema-home-discrepancy-conflicted--adr)).
 
 ### 9.2 Contracts (semantic Markdown)
 
@@ -368,8 +372,9 @@ PROPOSED homes:
 
 - `policy/domains/fauna/` — admissibility, redaction, generalization rules.
 - `policy/sensitivity/fauna/` — sensitivity classes, deny-by-default register; pairs with the Atlas v1.1 fauna sensitivity row.
+- `policy/geoprivacy/` — cross-cutting geoprivacy transform policy (per repo structure guiding document).
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -400,22 +405,22 @@ Every Focus Mode response emits an `AIReceipt` and a `RuntimeResponseEnvelope` (
 
 Cited: [GAI] · [DOM-FAUNA] · [DOM-HF] · [ENCY].
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 11. Validators, tests, and fixtures
 
-PROPOSED minimum test set for the lane. Fixtures are **public-safe synthetic** until live source rights are verified — no live wildlife connectors are activated in the first proof PR.
+PROPOSED minimum test set for the lane. Rows mapping to Atlas §7.K are marked. Fixtures are **public-safe synthetic** until live source rights are verified — no live wildlife connectors are activated in the first proof PR.
 
 | Test class | Purpose | Status |
 |---|---|---|
-| Source-role authority tests | Reject aggregator rows used as authority (e.g., legal-status from GBIF). | PROPOSED |
-| Taxonomy resolution / ambiguity tests | Reject ambiguous taxon resolution; require crosswalk closure. | PROPOSED |
-| Occurrence restricted/public split tests | Prove the two-class split with matched parent digests. | PROPOSED |
-| `RedactionReceipt` validation | Every `OccurrencePublic` derived from sensitive input carries a valid receipt. | PROPOSED |
-| Tile field allowlist tests | Public tiles never expose restricted fields. | PROPOSED |
-| `RuntimeResponseEnvelope` negative cases | ABSTAIN / DENY / ERROR each produce a typed envelope and receipt. | PROPOSED |
+| Source-role authority tests | Reject aggregator rows used as authority (e.g., legal-status from GBIF). | PROPOSED [§7.K] |
+| Taxonomy resolution / ambiguity tests | Reject ambiguous taxon resolution; require crosswalk closure. | PROPOSED [§7.K] |
+| Occurrence restricted/public split tests | Prove the two-class split with matched parent digests. | PROPOSED [§7.K] |
+| `RedactionReceipt` validation | Every `OccurrencePublic` derived from sensitive input carries a valid receipt. | PROPOSED [§7.K] |
+| Tile field allowlist tests | Public tiles never expose restricted fields. | PROPOSED [§7.K] |
+| `RuntimeResponseEnvelope` negative cases | ABSTAIN / DENY / ERROR each produce a typed envelope and receipt. | PROPOSED [§7.K] |
 | Watcher non-publisher tests | A watcher write to `data/published/` or `data/catalog/` MUST fail. | PROPOSED |
 | Citation validation negative tests | Focus Mode answer with unresolved EvidenceRef must ABSTAIN. | PROPOSED |
 | Negative geoprivacy tests | An attempted public exact-geometry tile for a sensitive taxon must DENY. | PROPOSED |
@@ -423,7 +428,7 @@ PROPOSED minimum test set for the lane. Fixtures are **public-safe synthetic** u
 
 PROPOSED fixture home: `fixtures/domains/fauna/{valid,invalid}/...` with the **first PR being synthetic and non-live-source**, including a source registry skeleton, public-safety validators, and synthetic fixtures only.
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -441,45 +446,86 @@ Publication requires:
 8. Stale-state rule recorded: when source freshness lapses, public answers downgrade to `ABSTAIN` or a stale badge.
 
 > [!IMPORTANT]
-> **Separation of duties** applies when materiality justifies it: the release authority should be distinct from the original author for sensitive-taxon publications.
+> **Separation of duties** applies when materiality justifies it: the release authority should be distinct from the original author for sensitive-taxon publications (cf. ADR-S-12, two-person rule for T3/T4 promotion). [ENCY §24.12]
 
-[Back to top](#contents)
+[↑ Back to top](#top)
 
 ---
 
-## 13. Open questions and verification backlog
+## 13. Open questions register
 
-| Item | Evidence that would settle it | Status |
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-FAUNA-ARCH-01 | Schema-home naming: `schemas/contracts/v1/domains/fauna/` (Directory Rules §12) vs `…/v1/fauna/` (Atlas §24.13). | Schema owner + Directory Rules owner | ADR (`ADR-fauna-schema-home` or repo-wide `ADR-domain-slug`) — CONFLICTED |
+| OQ-FAUNA-ARCH-02 | Taxonomy resolution implementation: lane library (`packages/domains/fauna/`) vs shared (`packages/taxonomy/`). | Fauna steward | ADR + repo inspection |
+| OQ-FAUNA-ARCH-03 | Are `AbundanceIndicator` / `RichnessIndicator` / `NestDenRoostSpawningSite` confirmed object families or INFERRED derivatives? | Fauna steward + contract author | `contracts/domains/fauna/` inspection |
+| OQ-FAUNA-ARCH-04 | Exact geoprivacy policy (tile precision, jitter, withholding thresholds). | Sensitivity reviewer | `policy/sensitivity/fauna/` + `policy/geoprivacy/` |
+| OQ-FAUNA-ARCH-05 | Runbook subfolder convention (`docs/runbooks/fauna/` vs flat) — repo-wide OPEN-DR-02. | Docs steward | ADR |
+| OQ-FAUNA-ARCH-06 | `FaunaDecisionEnvelope` (§7.J) vs generic `DecisionEnvelope` — one schema with projection or two? | Schema owner | ADR (cf. fauna `API_CONTRACTS.md` V-FAUNA-API-011) |
+
+## 14. Open verification backlog
+
+These items remain `NEEDS VERIFICATION` (or `UNKNOWN`) before promotion from `draft` to `published`:
+
+1. Fauna source rights and steward roles — `data/registry/sources/fauna/`, signed agreements. *(NEEDS VERIFICATION)*
+2. Taxonomy resolution implementation location (OQ-FAUNA-ARCH-02). *(NEEDS VERIFICATION)*
+3. Restricted/public occurrence split implementation — schemas, fixtures, policy, tests. *(NEEDS VERIFICATION)*
+4. Public layer safety and AI no-leak behavior — `policy/sensitivity/fauna/` + Focus citation tests. *(NEEDS VERIFICATION)*
+5. Live connector rights for GBIF / iNaturalist / eBird / EDDMapS / KDWP. *(NEEDS VERIFICATION)*
+6. Exact geoprivacy policy (OQ-FAUNA-ARCH-04). *(NEEDS VERIFICATION)*
+7. Schema-home naming (OQ-FAUNA-ARCH-01). *(UNKNOWN until ADR)*
+8. Runbook subfolder convention (OQ-FAUNA-ARCH-05). *(NEEDS VERIFICATION)*
+9. Habitat × Fauna thin-slice proof artifact — released slice, EvidenceBundle, ReleaseManifest. *(NOT YET CONFIRMED)*
+10. MapLibre layer registry and Focus behavior for Fauna — `packages/maplibre-runtime/` configs + integration tests. *(NEEDS VERIFICATION)*
+11. Object-family confirmation for derived indicators (OQ-FAUNA-ARCH-03). *(NEEDS VERIFICATION)*
+12. Owner / steward / sensitivity-reviewer assignment for the meta block. *(UNKNOWN)*
+
+## 15. Changelog v0 → v1
+
+| Change | Type (per contract §37) | Reason |
 |---|---|---|
-| Fauna source rights and steward roles | Mounted repo files, `data/registry/sources/fauna/`, signed agreements | NEEDS VERIFICATION |
-| Taxonomy resolution implementation (resolver service or library) | `packages/domains/fauna/` or shared `packages/taxonomy/`; tests; ADR | NEEDS VERIFICATION |
-| Restricted/public occurrence split implementation | Schemas, fixtures, policy bundles, tests | NEEDS VERIFICATION |
-| Public layer safety and AI no-leak behavior | `policy/sensitivity/fauna/` + Focus Mode citation validation tests | NEEDS VERIFICATION |
-| Live connector rights for GBIF / iNaturalist / eBird / EDDMapS / KDWP | Source descriptors with rights status + ToS review | NEEDS VERIFICATION |
-| Exact geoprivacy policy (tile precision, jitter, withholding rules) | `policy/sensitivity/fauna/*.rego` (or equivalent), test fixtures | NEEDS VERIFICATION |
-| Schema-home naming: `domains/fauna/` vs `fauna/` | Accepted ADR (`ADR-fauna-schema-home`) | UNKNOWN |
-| Runbook subfolder convention (`docs/runbooks/fauna/` vs flat `docs/runbooks/fauna_*`) | Accepted convention ADR or existing runbook neighbors | NEEDS VERIFICATION |
-| Habitat × Fauna thin-slice proof artifact | Released slice artifact, EvidenceBundle, ReleaseManifest | NOT YET CONFIRMED |
-| MapLibre layer registry and Focus behavior for Fauna | `packages/maplibre/` configs + Focus Mode integration tests | NEEDS VERIFICATION |
+| Initial Fauna domain architecture authored | new | First-pass lane architecture. |
+| Meta block normalized to inline form; `CONTRACT_VERSION` pinned | housekeeping | Conform to Meta Block v2 rule; doctrine-adjacent pin. |
+| Schema-home discrepancy upgraded to CONFLICTED with slug-drift-class note | reconciliation | Align with the Atmosphere/Roads/Settlements slug-drift pattern. |
+| §7 sensitivity grounded to Atlas §7.I verbatim + §20.5 three-part rule | gap closure | Tighten the deny-by-default doctrine basis. |
+| Broken `example.invalid` link removed; companion sections added | housekeeping / gap closure | Remove fake link; meet doctrine-doc companion requirement. |
+| Cross-links to fauna `API_CONTRACTS.md` and `adr/README.md` added | clarification | Connect the lane document set. |
 
-[Back to top](#contents)
+> **Backward compatibility.** Back-to-top target changed from `#contents` to `#top` (explicit anchor). Section numbering grew (companion sections 13–16 added; former §13/§14 became §13/§14/§17). Update internal/external backlinks accordingly.
+
+## 16. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (`docs/domains/fauna/`);
+- a docs steward, the Fauna domain steward, and the sensitivity reviewer review it;
+- it is linked from `docs/domains/fauna/README.md` and the domain index;
+- the schema-home discrepancy (OQ-FAUNA-ARCH-01) is at minimum logged in `docs/registers/DRIFT_REGISTER.md`;
+- it does not weaken the fauna deny-by-default register or any accepted ADR;
+- the `GENERATED_RECEIPT.json` planned in the PR is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[↑ Back to top](#top)
 
 ---
 
-## 14. Related docs
+## 17. Related docs
 
 - [`docs/domains/README.md`](../README.md) — domain lane index. *(TODO link target)*
+- [`docs/domains/fauna/README.md`](./README.md) — Fauna lane README. *(TODO link target)*
+- [`docs/domains/fauna/API_CONTRACTS.md`](./API_CONTRACTS.md) — Fauna governed-API surfaces.
+- [`docs/domains/fauna/adr/README.md`](./adr/README.md) — Fauna ADR index.
 - [`docs/domains/habitat/ARCHITECTURE.md`](../habitat/ARCHITECTURE.md) — habitat lane and DOM-HF thin-slice partner. *(TODO link target)*
 - [`docs/domains/flora/ARCHITECTURE.md`](../flora/ARCHITECTURE.md) — sibling species-related lane. *(TODO link target)*
 - [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — operational source refresh procedure.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law and root authority split.
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV profile and canonicalization stack.
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles governance for any published Fauna tile artifacts.
-- [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — tile delivery standard alignment.
-- [`docs/adr/`](../../adr/) — ADR index (look for `ADR-fauna-schema-home` once raised).
+- [`docs/adr/`](../../adr/) — repo-wide ADR index (look for `ADR-fauna-schema-home` / `ADR-domain-slug` once raised).
 
 ---
 
-**Last updated:** 2026-05-16 · **Doc version:** v1 · **Status:** draft
+**Last updated:** 2026-05-29 · **Doc version:** v1 · **Status:** `draft` · `CONTRACT_VERSION = "3.0.0"`
 
-[Back to top](#contents)
+[↑ Back to top](#top)
