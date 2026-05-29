@@ -2,19 +2,21 @@
 doc_id: kfm://doc/docs-domains-archaeology-runbooks-rollback-drill
 title: Archaeology — Rollback Drill Runbook
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: <TODO: archaeology-steward (incident commander); sovereignty-review-liaison; policy-steward; release-steward; docs-steward; AI-surface-steward>
 created: 2026-05-27
-updated: 2026-05-27
+updated: 2026-05-29
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/ARCHITECTURE.md
   - docs/domains/archaeology/VERIFICATION_BACKLOG.md
-  - docs/domains/archaeology/runbooks/README.md
   - docs/runbooks/README.md
+  - docs/runbooks/archaeology/README.md
+  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - policy/sensitivity/archaeology/
   - release/rollback_cards/
   - release/correction_notices/
@@ -22,9 +24,9 @@ related:
   - data/quarantine/
 tags: [kfm, archaeology, runbook, rollback, drill, emergency, sensitive-domain, T4]
 notes:
-  - CONTRACT_VERSION = "3.0.0" (pinned per ai-build-operating-contract.md §37).
+  - CONTRACT_VERSION = "3.0.0" (pinned per ai-build-operating-contract.md §37 versioning + CONTRACT_VERSION pinning convention).
   - Atlas v1.0 Ch. 15 §N item 4 anchor — emergency public-layer disablement and rollback drill.
-  - Placement: PROPOSED Pattern C (under domain dossier); supersedes the prior README's holding posture; ADR-class per Directory Rules §2.4(5) — see OQ-AR-RB-DRILL-01.
+  - PLACEMENT CORRECTED in v1.1 — canonical home is docs/runbooks/archaeology/rollback-drill.md (Directory Rules §6.1.b Pattern A; OPEN-DR-02 recommends Pattern A). The earlier "Pattern C" (docs/domains/<domain>/runbooks/) is NOT a Directory-Rules-defined runbook home and would create a parallel root (§13.5). See §0 and OQ-AR-RB-DRILL-01.
   - Synthetic fixtures only; no T4-class content in this file, in drill inputs, or in drill outputs.
   - This file is steward-driven; AI MAY draft text, AI MUST NOT execute the procedure.
 [/KFM_META_BLOCK_V2] -->
@@ -34,28 +36,29 @@ notes:
 > Scheduled drill that exercises the **emergency public-layer disablement and rollback procedure** for the Archaeology domain (Atlas v1.0 Ch. 15 §N item 4). Verifies that, given a synthetic T4 leak fixture, the domain can DENY, quarantine, rollback, correct, and review within a defined time budget — and that every required receipt actually emits.
 
 <p align="left">
-  <img alt="Edition" src="https://img.shields.io/badge/edition-v1%20draft-1f6feb">
+  <img alt="Edition" src="https://img.shields.io/badge/edition-v1.1%20draft-1f6feb">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
   <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-6e2a8a">
   <img alt="Runbook class: drill (paired with emergency-disablement)" src="https://img.shields.io/badge/class-drill-c0392b">
   <img alt="Sensitivity envelope: T4 inherited" src="https://img.shields.io/badge/sensitivity-T4%20inherited-c62828">
   <img alt="Sovereignty review path: required" src="https://img.shields.io/badge/sovereignty%20review-required-c62828">
   <img alt="Synthetic fixtures only" src="https://img.shields.io/badge/fixtures-synthetic%20only-0aa">
+  <img alt="Placement: docs/runbooks Pattern A" src="https://img.shields.io/badge/placement-docs%2Frunbooks%20Pattern%20A-2da44e">
   <img alt="Last rehearsed: never (draft)" src="https://img.shields.io/badge/last%20rehearsed-never%20(draft)-lightgrey">
   <img alt="CONTRACT_VERSION 3.0.0" src="https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-555">
   <!-- TODO: replace with live Shields.io endpoints (last-rehearsed-date, last-pass/fail outcome, CI drill-validator status) once the drill has been run against a synthetic fixture in the mounted repo. -->
 </p>
 
-**Status:** draft · **Owners:** _TODO: archaeology-steward (incident commander); sovereignty-review-liaison; policy-steward; release-steward; docs-steward; AI-surface-steward_ · **Last updated:** 2026-05-27 · **Last rehearsed:** never (draft)
+**Status:** draft · **Owners:** _TODO: archaeology-steward (incident commander); sovereignty-review-liaison; policy-steward; release-steward; docs-steward; AI-surface-steward_ · **Last updated:** 2026-05-29 · **Last rehearsed:** never (draft)
 
 > [!CAUTION]
-> **Sensitivity inherited from the Archaeology domain.** Site coordinates default to **T4 (Denied)**; human remains and sacred sites are **T4 forever** (Atlas v1.1 Ch. 24.5.2). This runbook uses **synthetic fixtures only** — no real coordinates, no real site identifiers, no real oral-history or cultural-knowledge content in the fixture, in the drill execution, or in the drill output artifacts. If a real T4 record is encountered at any drill step, **STOP, escalate as a real incident**, and treat the encounter as a doctrine drift (file to `docs/registers/DRIFT_REGISTER.md`).
+> **Sensitivity inherited from the Archaeology domain.** Site coordinates default to **T4 (Denied)** (T1 generalized only after steward review, Atlas §24.14); human remains and sacred sites are **T4 forever** (Atlas v1.1 §24.5.2). This runbook uses **synthetic fixtures only** — no real coordinates, no real site identifiers, no real oral-history or cultural-knowledge content in the fixture, in the drill execution, or in the drill output artifacts. If a real T4 record is encountered at any drill step, **STOP, escalate as a real incident**, and treat the encounter as a doctrine drift (file to `docs/registers/DRIFT_REGISTER.md`).
 
 > [!IMPORTANT]
-> **AI MUST NOT execute this procedure.** AI MAY draft the runbook text, summarize a completed drill, or assist the incident commander with read-only context — under `AIReceipt` discipline per contract §22. **The drill is steward-driven end-to-end.** Every gate requires a named human role.
+> **AI MUST NOT execute this procedure.** AI MAY draft the runbook text, summarize a completed drill, or assist the incident commander with read-only context — under `AIReceipt` discipline per contract §21. **The drill is steward-driven end-to-end.** Every gate requires a named human role.
 
-> [!WARNING]
-> **Placement is PROPOSED Pattern C and is ADR-class.** The prior `docs/domains/archaeology/runbooks/README.md` v1 stated that runbook content MUST NOT land here until **OQ-AR-RB-01** has a filed ADR. Authoring this runbook at this path **supersedes that holding posture in practice**, which means OQ-AR-RB-01 MUST be filed as an ADR now (alongside this PR), not later. The canonical-home alternative is `docs/runbooks/archaeology/rollback-drill.md` (Pattern A per Directory Rules §6.1.b + OPEN-DR-02). See [OQ-AR-RB-DRILL-01](#12-open-questions-register).
+> [!IMPORTANT]
+> **Placement corrected in v1.1.** The canonical home for this runbook is **`docs/runbooks/archaeology/rollback-drill.md`** — Directory Rules §6.1.b establishes `docs/runbooks/` as the canonical home for operational procedures (source refresh, **rollback drills**, incident response, steward review), and OPEN-DR-02 recommends the **Pattern A** domain-segment subfolder (`docs/runbooks/<domain>/<topic>.md`), already in use by the fauna source-refresh runbook. The earlier draft placed this at `docs/domains/archaeology/runbooks/rollback-drill.md` ("Pattern C"), which is **not a Directory-Rules-defined runbook home** and would stand up a parallel runbook root under the domain dossier — the §13.5 "parallel home" / §3 "domain folder must not own a responsibility root" drift. Per change discipline, this revision prefers the canonical home and surfaces the conflict rather than entrenching the non-canonical one. See [OQ-AR-RB-DRILL-01](#12-open-questions-register).
 
 ---
 
@@ -65,13 +68,13 @@ notes:
 |---|---|
 | **Document type** | Runbook (operational procedure). |
 | **Runbook class** | **Drill** — paired with the (PROPOSED, not-yet-authored) `emergency-disablement.md` runbook that handles real incidents. |
-| **Edition** | v1 draft. |
-| **Proposed repo path** | `docs/domains/archaeology/runbooks/rollback-drill.md` |
-| **Canonical alternative** | `docs/runbooks/archaeology/rollback-drill.md` (Pattern A). |
-| **Placement basis** | **PROPOSED Pattern C.** Directory Rules §2.4(5) parallel-home concern; OPEN-DR-02 still names Pattern A as recommended. See OQ-AR-RB-DRILL-01. |
+| **Edition** | v1.1 draft (v1 → v1.1; placement correction + citation corrections; see [§15-style changelog note](#11-post-drill-review) and `OQ-AR-RB-DRILL-04`). |
+| **Canonical repo path** | **`docs/runbooks/archaeology/rollback-drill.md`** (Directory Rules §6.1.b Pattern A; OPEN-DR-02 recommended). |
+| **Non-canonical alternative (rejected in v1.1)** | `docs/domains/archaeology/runbooks/rollback-drill.md` ("Pattern C") — not a Directory-Rules-defined runbook home; would create a parallel root. |
+| **Placement basis** | **CONFIRMED rule** — Directory Rules §6.1.b (`docs/runbooks/` is the canonical operational-procedure home); §4 Step 3 (domain is a segment inside the responsibility root); OPEN-DR-02 (Pattern A recommended pending ADR). |
 | **Atlas anchor** | **Atlas v1.0 Ch. 15 §N item 4** — _"Verify emergency public-layer disablement and rollback drill."_ |
-| **Operating contract** | `ai-build-operating-contract.md` v3.0; `CONTRACT_VERSION = "3.0.0"`. Contract §§10.8 (promotion-is-auditable), 10.9 (corrections-first-class), 24 (Master Pipeline Gate Reference), 27 (PR discipline), 34 (`GENERATED_RECEIPT`). |
-| **Sensitivity envelope** | **T4 inherited** (Atlas v1.1 Ch. 24.5.2). Drill content is synthetic-only; real T4 encountered at any step ⇒ STOP + escalate. |
+| **Operating contract** | `ai-build-operating-contract.md` v3.0; `CONTRACT_VERSION = "3.0.0"`. Contract §§10.1 (promotion is a governed state transition), 10.9 (corrections / rollback auditable — NEEDS VERIFICATION of exact subsection number), 21 (governed AI), 33 (separation of duties), 34 (`GENERATED_RECEIPT`), 37 (versioning), 38 (anti-patterns incl. negative-state expectation). |
+| **Sensitivity envelope** | **T4 inherited** (Atlas v1.1 §24.5.2). Drill content is synthetic-only; real T4 encountered at any step ⇒ STOP + escalate. |
 | **Sensitivity enforcement home** | `policy/sensitivity/archaeology/`. This runbook **invokes** policy; it does not encode it. |
 | **Authoring posture** | Steward-driven. AI may draft; AI must not execute. |
 | **Status of this file in any repo** | `draft` until rehearsed, reviewed, and merged. AI-authored — `GENERATED_RECEIPT.json` required per contract §34. |
@@ -118,12 +121,12 @@ The drill verifies, on a scheduled cadence, that:
 
 | Out of scope | Lives in |
 |---|---|
-| Real-incident execution | `emergency-disablement.md` (PROPOSED, not yet authored) |
+| Real-incident execution | `docs/runbooks/archaeology/emergency-disablement.md` (PROPOSED, not yet authored) |
 | Sensitivity policy text | `policy/sensitivity/archaeology/` |
 | Schema for `RollbackCard` / `CorrectionNotice` | `schemas/contracts/v1/release/` |
 | The actual rollback cards / correction notices | `release/rollback_cards/`, `release/correction_notices/` |
-| Sovereignty-review protocol | `sovereignty-review.md` (PROPOSED, not yet authored) |
-| Source-refresh procedure | `source-refresh.md` (PROPOSED) or `docs/runbooks/archaeology/SOURCE_REFRESH_RUNBOOK.md` (Pattern A canonical) |
+| Sovereignty-review protocol | `docs/runbooks/archaeology/sovereignty-review.md` (PROPOSED, not yet authored) |
+| Source-refresh procedure | `docs/runbooks/archaeology/source-refresh.md` (PROPOSED) — cf. fauna precedent `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` |
 
 [↑ Back to top](#contents)
 
@@ -133,14 +136,14 @@ The drill verifies, on a scheduled cadence, that:
 
 CONFIRMED:
 
-1. **Atlas v1.0 Ch. 15 §N item 4** — _"Verify emergency public-layer disablement and rollback drill."_ Status: `NEEDS VERIFICATION`. This runbook is one of the artifacts that would settle it (Atlas Ch. 15 §N evidence column: _"mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests"_).
-2. **Atlas v1.1 Ch. 24.5.2** — Archaeology sensitivity tier rows.
-3. **Atlas v1.1 Ch. 24.6.1** — Master Pipeline Gate Reference: **Correction** gate (PUBLISHED → PUBLISHED′) requires `CorrectionNotice` + derivative invalidation; rollback supported.
-4. **Atlas v1.1 Ch. 24.8** — Stale-State and Supersession Reference.
-5. **`ai-build-operating-contract.md` v3.0** §10.9 (corrections-first-class), §22 (governed AI), §34 (`GENERATED_RECEIPT`), §38 anti-patterns.
-6. **Directory Rules §6.1.b** runbooks placement contract; §2.5 drift handling.
+1. **Atlas v1.0 Ch. 15 §N item 4** — _"Verify emergency public-layer disablement and rollback drill."_ Status: `NEEDS VERIFICATION`. This runbook is one of the artifacts that would help settle it (Atlas Ch. 15 §N evidence column: _"mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests"_).
+2. **Atlas v1.1 §24.5.2** — Archaeology sensitivity tier rows (T4 site coords; T4-forever human remains / sacred sites).
+3. **Atlas v1.1 §24.6** — Master Pipeline Gate Reference: the **Correction** gate (PUBLISHED → PUBLISHED′) requires `CorrectionNotice` + derivative invalidation; rollback supported. (Exact subsection number NEEDS VERIFICATION.)
+4. **Atlas v1.1 §24.8** — Stale-State and Supersession Reference. (Exact subsection number NEEDS VERIFICATION.)
+5. **`ai-build-operating-contract.md` v3.0** — §10.1 (promotion is a governed state transition), §21 (governed AI), §33 (separation of duties), §34 (`GENERATED_RECEIPT`), §38 anti-patterns.
+6. **Directory Rules** — §6.1.b runbooks placement contract; §4 placement protocol; §13.5 drift handling; §18.b OPEN-DR-02 (runbook subfolder pattern).
 
-External sources consulted: **none**. No `<external_research>` trigger applied.
+External sources consulted: **none**.
 
 [↑ Back to top](#contents)
 
@@ -248,7 +251,7 @@ flowchart TB
 | **11. Post-drill** | T+≤24 h | Observer / scribe + incident commander | Produce `RehearsalReceipt` and `DrillReport` per §11. | Final artifacts. |
 
 > [!IMPORTANT]
-> Time targets are **PROPOSED defaults**. Real archaeology incidents may have shorter windows (active sovereignty concern; press attention; tribal-relationship sensitivity). Future drills MAY tighten time budgets after the first PASS establishes baseline numbers.
+> Time targets are **PROPOSED defaults**. Real archaeology incidents may have shorter windows (active sovereignty concern; press attention; tribal-relationship sensitivity). Future drills MAY tighten time budgets after the first PASS establishes baseline numbers (see `OQ-AR-RB-DRILL-05`).
 
 [↑ Back to top](#contents)
 
@@ -256,7 +259,7 @@ flowchart TB
 
 ## 6. Emitted artifacts
 
-Every drill emits a set of artifacts. **Real-incident artifacts** are emitted in their canonical homes but **flagged with `drill=true`** so they cannot be mistaken for real-incident artifacts. **Drill-specific artifacts** land in a drill-only home.
+Every drill emits a set of artifacts. **Real-incident-shaped artifacts** are emitted in their canonical homes but **flagged with `drill=true`** so they cannot be mistaken for real-incident artifacts. **Drill-specific artifacts** land in a drill-only home.
 
 | Artifact | Canonical home | Drill flag | Purpose |
 |---|---|---|---|
@@ -267,10 +270,10 @@ Every drill emits a set of artifacts. **Real-incident artifacts** are emitted in
 | `AIReceipt` | `data/receipts/ai_receipts/` | `drill=true` | Confirms AI surface DENY / ABSTAIN behavior. |
 | `ReviewRecord` | `data/receipts/review_records/` | `drill=true` | All six roles' sign-off. |
 | **`RehearsalReceipt`** (drill-specific, PROPOSED) | `data/receipts/rehearsals/archaeology/rollback_drill/` | always | Drill metadata: start time, end time, per-step timing, per-gate outcome, participating roles. |
-| **`DrillReport`** (drill-specific, PROPOSED) | `docs/domains/archaeology/runbooks/drill_reports/YYYY-MM-DD_rollback-drill.md` (PROPOSED — see [OQ-AR-RB-DRILL-02](#12-open-questions-register)) | always | Narrative report; lessons learned; recommendations for next drill. |
+| **`DrillReport`** (drill-specific, PROPOSED) | `docs/runbooks/archaeology/drill_reports/YYYY-MM-DD_rollback-drill.md` (PROPOSED — see [OQ-AR-RB-DRILL-02](#12-open-questions-register)) | always | Narrative report; lessons learned; recommendations for next drill. |
 
 > [!CAUTION]
-> **A drill artifact missing the `drill=true` flag is operationally indistinguishable from a real-incident artifact.** The drill validator (`tests/domains/archaeology/test_rollback_drill_artifacts.py`, PROPOSED) MUST enforce the flag on every emission. Failure to flag is a drill failure even if every other gate passes.
+> **A drill artifact missing the `drill=true` flag is operationally indistinguishable from a real-incident artifact.** The drill validator (`tests/domains/archaeology/test_rollback_drill_artifacts.py`, PROPOSED) MUST enforce the flag on every emission. Failure to flag is a drill failure even if every other gate passes. Whether every receipt schema can carry the flag is tracked as `OQ-AR-RB-DRILL-07`.
 
 [↑ Back to top](#contents)
 
@@ -278,7 +281,7 @@ Every drill emits a set of artifacts. **Real-incident artifacts** are emitted in
 
 ## 7. Gates (must-pass)
 
-PROPOSED. A drill PASSES if and only if **every gate** below passes within the time target. A single gate failure ⇒ drill FAILS ⇒ schedule a re-drill within 30 days plus open a remediation issue.
+PROPOSED. A drill PASSES if and only if **every gate** below passes within the time target. A single gate failure ⇒ drill FAILS ⇒ schedule a re-drill within 30 days plus open a remediation issue. Negative-state paths (DENY / ABSTAIN / ERROR) are first-class and MUST be exercised, not just the happy path (contract §38 negative-state expectation).
 
 | Gate | Target | Pass criterion | Owner role |
 |---|---|---|---|
@@ -290,7 +293,7 @@ PROPOSED. A drill PASSES if and only if **every gate** below passes within the t
 | **G8 — CorrectionNotice published** | T+≤45 min | `CorrectionNotice` published; content scan confirms no re-exposure of synthetic identifiers / coordinates. | Release steward + communications. |
 | **G10 — ReviewRecord** | T+≤90 min | All six roles sign the `ReviewRecord`; incident commander declares PASS/FAIL. | Incident commander. |
 | **G11 — Drill-flag integrity** | end-of-drill | All emitted artifacts carry `drill=true`; validator passes. | AI surface steward + observer. |
-| **G12 — Separation of duties** | end-of-drill | The release steward issuing `RollbackCard` and `CorrectionNotice` is NOT the same person who authored the original (synthetic) release. | Docs steward. |
+| **G12 — Separation of duties** | end-of-drill | The release steward issuing `RollbackCard` and `CorrectionNotice` is NOT the same person who authored the original (synthetic) release (contract §33). | Docs steward. |
 
 [↑ Back to top](#contents)
 
@@ -354,7 +357,7 @@ PROPOSED. Until the first drill PASSES, the cadence is **as soon as precondition
 | **Tooling change** | Any change to validators, receipt schemas, or paging system. | At minimum incident commander + release steward + AI surface steward. |
 
 > [!IMPORTANT]
-> If a quarterly drill is skipped for more than two consecutive quarters without an accepted ADR justifying the skip, **archaeology public release is paused** until a successful drill completes. Atlas v1.0 Ch. 15 §N item 4 makes the drill load-bearing for release readiness.
+> If a quarterly drill is skipped for more than two consecutive quarters without an accepted ADR justifying the skip, **archaeology public release SHOULD be paused** until a successful drill completes. Atlas v1.0 Ch. 15 §N item 4 makes the drill load-bearing for release readiness. (Whether this pause is automated via `control_plane/release_state_register.yaml` is `OQ-AR-RB-DRILL-06`.)
 
 [↑ Back to top](#contents)
 
@@ -366,12 +369,19 @@ PROPOSED. Within 24 hours of drill completion, the observer / scribe and inciden
 
 1. **`RehearsalReceipt`** — machine artifact. Schema PROPOSED at `schemas/contracts/v1/receipts/rehearsal_receipt.schema.json`. Fields: drill ID, fixture version, start/end times, per-gate outcomes, per-role participation, declared pass/fail.
 2. **`DrillReport`** — narrative document. Sections: scenario summary; per-step timing actual vs target; gate outcomes; failure modes encountered; lessons learned; recommendations; action items linked to `docs/domains/archaeology/VERIFICATION_BACKLOG.md`.
-3. **Updates to this runbook** — if the drill surfaces procedural gaps, edit the runbook in the same PR; bump version per contract §37; record in §15 changelog (PROPOSED — see [OQ-AR-RB-DRILL-04](#12-open-questions-register)).
+3. **Updates to this runbook** — if the drill surfaces procedural gaps, edit the runbook in the same PR; bump version per contract §37; record in the changelog (PROPOSED home — see [OQ-AR-RB-DRILL-04](#12-open-questions-register)).
 4. **Updates to `docs/domains/archaeology/CHANGELOG.md`** (if/when authored) — one entry per drill.
 
 ### Lessons learned discipline
 
 Lessons learned MUST be actionable. Bad: _"detection was slow."_ Good: _"detector role was paged at T+4 because the paging system has a 4-minute fan-out delay for the archaeology channel; action item: reduce fan-out delay or move detector role to direct page."_
+
+### Changelog (inline; pending OQ-AR-RB-DRILL-04)
+
+| Version | Date | Change | Type (§37) |
+|---|---|---|---|
+| v1 | 2026-05-27 | Initial draft. 15 sections; drill procedure, gates, failure modes, synthetic-fixture requirements, cadence, post-drill review, OQ register, verification backlog, DoD, related docs. Placed at "Pattern C" (`docs/domains/archaeology/runbooks/`). | new |
+| v1.1 | 2026-05-29 | **Placement corrected** to canonical `docs/runbooks/archaeology/rollback-drill.md` (Directory Rules §6.1.b; OPEN-DR-02 Pattern A) — "Pattern C" is not a Directory-Rules-defined runbook home and would create a parallel root (§13.5). Corrected contract citations: governed AI §22 → §21; promotion/lifecycle §10.8 → §10.1; removed the invented §24 "Master Pipeline Gate Reference" subsection precision (→ Atlas §24.6 with NEEDS VERIFICATION). Labeled §23.2 matrix PROPOSED and added Atlas §24.14 site-coord tier. Reframed `OQ-AR-RB-DRILL-01` around the corrected placement. Added negative-state expectation note to §7. Pointed sibling runbooks/reports/fixtures to `docs/runbooks/archaeology/`. | PATCH/MINOR — placement + citation correction |
 
 [↑ Back to top](#contents)
 
@@ -383,10 +393,10 @@ PROPOSED.
 
 | ID | Question | Owner role | Resolution path |
 |---|---|---|---|
-| **OQ-AR-RB-DRILL-01** | This file authored at Pattern C (`docs/domains/archaeology/runbooks/`) while the prior README v1 said no runbook content lands here until OQ-AR-RB-01 has a filed ADR. The user's request to author this file effectively supersedes that holding posture in practice. **OQ-AR-RB-01 (parent) MUST be filed as an ADR now**, not later. Alternative: relocate this file to `docs/runbooks/archaeology/rollback-drill.md` (Pattern A canonical) in the same PR sequence. | Docs steward + Directory-Rules editor + archaeology-domain steward | ADR for OQ-AR-RB-01, filed alongside this PR. |
-| **OQ-AR-RB-DRILL-02** | Where do per-drill `DrillReport` files live? PROPOSED `docs/domains/archaeology/runbooks/drill_reports/YYYY-MM-DD_rollback-drill.md`, but this creates further Pattern-C subfolder concerns. Alternative: `release/drill_reports/archaeology/` (treating drill reports as release-adjacent operational artifacts). | Release steward + docs steward | ADR if the canonical home is contested. |
-| **OQ-AR-RB-DRILL-03** | Filename casing for this and sibling runbooks: `rollback-drill.md` (lowercase-with-hyphens; this file) versus the fauna `SOURCE_REFRESH_RUNBOOK.md` precedent (UPPERCASE_WITH_UNDERSCORES). Connects to OQ-AR-RB-03 (sibling README §10). | Docs steward | Convention vote; codify in `docs/runbooks/README.md` or Directory Rules §6.1.b. |
-| **OQ-AR-RB-DRILL-04** | Where does this runbook's own §15-style changelog live? Inline section (per the per-file pattern established for the Agriculture `VERIFICATION_BACKLOG.md`) or external `docs/domains/archaeology/CHANGELOG.md` row? Both for safety? | Docs steward | Convention vote. |
+| **OQ-AR-RB-DRILL-01** | **(Reframed in v1.1.)** This runbook's canonical home is `docs/runbooks/archaeology/rollback-drill.md` (Directory Rules §6.1.b Pattern A; OPEN-DR-02 recommends Pattern A). The earlier draft placed it at `docs/domains/archaeology/runbooks/rollback-drill.md` ("Pattern C"), which Directory Rules does not define as a runbook home and which would create a parallel root. Remaining decision: ratify Pattern A repo-wide via the OPEN-DR-02 ADR, and confirm no domain-dossier runbook subfolder is intended. | Docs steward + Directory-Rules editor + archaeology-domain steward | ADR for OPEN-DR-02 (Pattern A vs B under `docs/runbooks/`); migrate any "Pattern C" file to `docs/runbooks/archaeology/`. |
+| **OQ-AR-RB-DRILL-02** | Where do per-drill `DrillReport` files live? PROPOSED `docs/runbooks/archaeology/drill_reports/YYYY-MM-DD_rollback-drill.md`. Alternative: `release/drill_reports/archaeology/` (treating drill reports as release-adjacent operational artifacts). | Release steward + docs steward | ADR if the canonical home is contested. |
+| **OQ-AR-RB-DRILL-03** | Filename casing for this and sibling runbooks: `rollback-drill.md` (lowercase-with-hyphens; this file) versus the fauna `SOURCE_REFRESH_RUNBOOK.md` precedent (UPPERCASE_WITH_UNDERSCORES). This is Directory Rules §18.b OPEN-DR-04 (filename casing); connects to the casing conflict flagged in the sibling api-contracts doc (`OQ-AR-API-07`). | Docs steward | Convention decision; codify in `docs/runbooks/README.md` or Directory Rules §6.1.b. |
+| **OQ-AR-RB-DRILL-04** | Where does this runbook's changelog live? Inline section (as added to §11 in v1.1) or external `docs/domains/archaeology/CHANGELOG.md` row? Both for safety? | Docs steward | Convention decision. |
 | **OQ-AR-RB-DRILL-05** | Time-budget targets in §5 / §7 are PROPOSED defaults. What are the right targets for archaeology specifically? Tribal-relationship sensitivity may warrant tighter sovereignty-review SLAs. | Archaeology steward + sovereignty-review liaison | Calibrate after first PASS drill; document in §10. |
 | **OQ-AR-RB-DRILL-06** | Should drill rehearsal cadence (§10) be encoded in `control_plane/release_state_register.yaml` so a missed cadence automatically pauses release readiness? Or is that overreach for a planning artifact? | Release steward + control-plane owner | ADR if control-plane integration is desired. |
 | **OQ-AR-RB-DRILL-07** | Is the `drill=true` flag implementable on every receipt type emitted in §6, or do some receipt schemas not yet support it? Audit needed. | AI surface steward + release steward | Receipt-schema audit; potential schema-bump per contract §37 / §34.3. |
@@ -399,18 +409,19 @@ PROPOSED.
 
 PROPOSED. Items that remain `NEEDS VERIFICATION` for this runbook before promotion from `draft` to `published`.
 
-1. Confirm placement at `docs/domains/archaeology/runbooks/rollback-drill.md` (this file) per the prior README's PROPOSED Pattern C — and file ADR for OQ-AR-RB-DRILL-01 (parent OQ-AR-RB-01) alongside.
+1. Confirm canonical placement at `docs/runbooks/archaeology/rollback-drill.md` (Directory Rules §6.1.b Pattern A) and file the OPEN-DR-02 ADR (`OQ-AR-RB-DRILL-01`); if a domain-dossier runbook subfolder is encountered, log the parallel-home drift to `DRIFT_REGISTER.md`.
 2. Confirm `fixtures/domains/archaeology/no_network/rollback_drill/` exists with a reviewer-approved synthetic fixture per §9.
 3. Confirm all six reviewer roles in §4 are defined in `CODEOWNERS` and have on-call rotations established.
-4. Confirm `release/rollback_cards/` and `release/correction_notices/` exist as canonical homes (cross-reference with the prior README §11 item).
-5. Confirm `data/receipts/policy_decisions/`, `data/receipts/`, `data/receipts/ai_receipts/`, `data/receipts/review_records/`, `data/receipts/rehearsals/archaeology/rollback_drill/` exist (or land them).
+4. Confirm `release/rollback_cards/` and `release/correction_notices/` exist as canonical homes.
+5. Confirm `data/receipts/policy_decisions/`, `data/receipts/`, `data/receipts/ai_receipts/`, `data/receipts/review_records/`, `data/receipts/rehearsals/archaeology/rollback_drill/` exist (or land them). (Receipt-class subsegmentation is a cross-cutting question shared with the sibling docs.)
 6. Confirm `schemas/contracts/v1/receipts/rehearsal_receipt.schema.json` (PROPOSED) exists or is in the schema backlog.
 7. Confirm `tests/domains/archaeology/test_rollback_drill_artifacts.py` (PROPOSED) is at least planned.
 8. Confirm a staging environment is available per P-3 and is **never** mistaken for production.
-9. Confirm the `drill=true` flag mechanism is implementable on every receipt type per OQ-AR-RB-DRILL-07.
-10. Confirm `GENERATED_RECEIPT.json` for this file's authorship is emitted at merge and references `CONTRACT_VERSION = "3.0.0"`.
-11. Confirm OPEN-DR-02 status (sibling README's parent OQ).
+9. Confirm the `drill=true` flag mechanism is implementable on every receipt type per `OQ-AR-RB-DRILL-07`.
+10. Confirm `GENERATED_RECEIPT.json` for this file's authorship is emitted at merge and references `CONTRACT_VERSION = "3.0.0"` (contract §34, §34.4 well-formedness gates).
+11. Confirm OPEN-DR-02 status (Directory Rules §18.b) and the runbook-casing OPEN-DR-04.
 12. Confirm sovereignty-review liaison is named and on-call before the first drill is scheduled.
+13. Confirm the exact Atlas subsection numbers for the Correction gate (§24.6) and Stale-State reference (§24.8).
 
 [↑ Back to top](#contents)
 
@@ -420,14 +431,14 @@ PROPOSED. Items that remain `NEEDS VERIFICATION` for this runbook before promoti
 
 This runbook is done enough to enter the repository when:
 
-- it is placed per Directory Rules §4 Step 3 (Pattern C as authored, OR Pattern A canonical at `docs/runbooks/archaeology/rollback-drill.md`);
-- **OQ-AR-RB-DRILL-01 (parent OQ-AR-RB-01) is filed as an ADR** — the runbook MAY land before the ADR is accepted, but the ADR MUST be open at merge to legitimize the placement;
+- it is placed at `docs/runbooks/archaeology/rollback-drill.md` (Directory Rules §6.1.b Pattern A), **not** under the domain dossier;
+- **the OPEN-DR-02 ADR is filed** (Pattern A vs B under `docs/runbooks/`) — the runbook MAY land before the ADR is accepted, but the ADR SHOULD be open at merge to legitimize the subfolder convention (`OQ-AR-RB-DRILL-01`);
 - all six reviewer roles (archaeology-domain steward, sovereignty-review liaison, policy steward, release steward, docs steward, AI surface steward) have reviewed and approved;
 - the synthetic fixture per §9 is reviewer-approved and present;
 - the runbook does not contain any T4-class archaeological content;
-- the runbook follows the §9 authoring conventions from the parent `runbooks/README.md`;
+- the runbook follows the authoring conventions of the `docs/runbooks/` placement contract (§6.1.b);
 - the `GENERATED_RECEIPT.json` planned for AI authorship is wired into CI per contract §34 with `CONTRACT_VERSION = "3.0.0"`;
-- the runbook is linked from `docs/domains/archaeology/runbooks/README.md` §5 row (and the row updated from _not yet authored_ to current version);
+- the runbook is linked from `docs/runbooks/archaeology/README.md` and from `docs/domains/archaeology/ARCHITECTURE.md` §13 (publication/rollback);
 - the runbook is linked from `docs/domains/archaeology/VERIFICATION_BACKLOG.md` as evidence partially settling Atlas v1.0 Ch. 15 §N item 4 (status remains `NEEDS VERIFICATION` until first PASS drill completes);
 - §§12–13 (Open questions, Open verification backlog) are stable enough to merge as draft;
 - a first drill is scheduled within 90 days of merge.
@@ -438,37 +449,38 @@ This runbook is done enough to enter the repository when:
 
 ## 15. Related docs and ADRs
 
-PROPOSED links. All paths are PROPOSED until verified against a mounted repo.
+PROPOSED links. All paths are PROPOSED until verified against a mounted repo. Relative paths below assume the canonical location `docs/runbooks/archaeology/rollback-drill.md`.
 
-- [`docs/doctrine/ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; §§10.8, 10.9, 22, 33, 34, 37, 38.
-- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — _TODO_ — §6.1.b runbooks placement contract; §2.4(5); §2.5 drift.
-- [`./README.md`](./README.md) — parent runbooks-folder README (this folder); see §0 and §7 of that file for the Pattern C placement framing.
-- [`../README.md`](../README.md) — _TODO_ — Archaeology domain README.
-- [`../VERIFICATION_BACKLOG.md`](../VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog; AT-VB item for Atlas Ch. 15 §N item 4 should link this file.
-- [`../CHANGELOG.md`](../CHANGELOG.md) — _TODO_ — Archaeology dossier changelog (PROPOSED, mirrors Agriculture pattern).
+- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; §§10.1, 21, 33, 34, 37, 38.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — _TODO_ — §6.1.b runbooks placement contract; §4 placement protocol; §13.5 drift; §18.b OPEN-DR-02 / OPEN-DR-04.
+- [`./README.md`](./README.md) — _TODO_ — Archaeology runbooks-folder README (`docs/runbooks/archaeology/`).
+- [`docs/runbooks/README.md`](../README.md) — _TODO_ — canonical runbooks root.
+- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../fauna/SOURCE_REFRESH_RUNBOOK.md) — _TODO_ — Pattern A precedent.
 - [`./emergency-disablement.md`](./emergency-disablement.md) — _TODO, not yet authored_ — real-incident runbook this drill rehearses.
 - [`./sovereignty-review.md`](./sovereignty-review.md) — _TODO, not yet authored_ — sovereignty-review protocol invoked at G7.
-- [`docs/runbooks/README.md`](../../../runbooks/README.md) — _TODO_ — canonical runbooks root.
-- [`docs/runbooks/archaeology/`](../../../runbooks/archaeology/) — _TODO_ — Pattern A canonical alternative location.
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — _TODO_ — Pattern A precedent.
-- [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — _TODO_ — drift entries (Pattern A vs C; filename casing; any re-exposure incident).
-- [`docs/adr/README.md`](../../../adr/README.md) — _TODO_ — ADR index; OQ-AR-RB-01 and OQ-AR-RB-DRILL-* to be filed here.
-- [`policy/sensitivity/archaeology/`](../../../../policy/sensitivity/archaeology/) — _TODO_ — sensitivity enforcement; the rule that fires at G3.
-- [`release/rollback_cards/`](../../../../release/rollback_cards/) — _TODO_ — emission home for G6.
-- [`release/correction_notices/`](../../../../release/correction_notices/) — _TODO_ — emission home for G8.
-- [`data/receipts/`](../../../../data/receipts/) — _TODO_ — emission home for `RunReceipt`, `PolicyDecision`, `AIReceipt`, `ReviewRecord`, `RehearsalReceipt`.
-- [`data/quarantine/`](../../../../data/quarantine/) — _TODO_ — destination for the quarantined synthetic record (G5).
-- [`fixtures/domains/archaeology/no_network/rollback_drill/`](../../../../fixtures/domains/archaeology/no_network/rollback_drill/) — _TODO_ — synthetic fixture home.
+- [`docs/domains/archaeology/ARCHITECTURE.md`](../../domains/archaeology/ARCHITECTURE.md) — Archaeology domain architecture; §13 publication/correction/rollback.
+- [`docs/domains/archaeology/README.md`](../../domains/archaeology/README.md) — _TODO_ — Archaeology domain README.
+- [`docs/domains/archaeology/VERIFICATION_BACKLOG.md`](../../domains/archaeology/VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog; the Atlas Ch. 15 §N item 4 entry should link this file.
+- [`docs/domains/archaeology/CHANGELOG.md`](../../domains/archaeology/CHANGELOG.md) — _TODO_ — Archaeology dossier changelog (PROPOSED).
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — _TODO_ — drift entries (Pattern A vs the rejected Pattern C; filename casing; any re-exposure incident).
+- [`docs/adr/README.md`](../../adr/README.md) — _TODO_ — ADR index; OPEN-DR-02 and the OQ-AR-RB-DRILL-* items to be filed here.
+- [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — _TODO_ — sensitivity enforcement; the rule that fires at G3.
+- [`release/rollback_cards/`](../../../release/rollback_cards/) — _TODO_ — emission home for G6.
+- [`release/correction_notices/`](../../../release/correction_notices/) — _TODO_ — emission home for G8.
+- [`data/receipts/`](../../../data/receipts/) — _TODO_ — emission home for `RunReceipt`, `PolicyDecision`, `AIReceipt`, `ReviewRecord`, `RehearsalReceipt`.
+- [`data/quarantine/`](../../../data/quarantine/) — _TODO_ — destination for the quarantined synthetic record (G5).
+- [`fixtures/domains/archaeology/no_network/rollback_drill/`](../../../fixtures/domains/archaeology/no_network/rollback_drill/) — _TODO_ — synthetic fixture home.
 
 **ADRs governing this runbook (when filed):**
 
-- ADR-PROPOSED — Per-domain-dossier runbook placement (OQ-AR-RB-01 / OQ-AR-RB-DRILL-01); Pattern A vs Pattern C.
-- ADR-PROPOSED — Drill artifact `drill=true` flag schema bump (OQ-AR-RB-DRILL-07).
-- ADR-PROPOSED — Drill cadence integration with `control_plane/release_state_register.yaml` (OQ-AR-RB-DRILL-06).
+- ADR-PROPOSED — `docs/runbooks/` subfolder pattern (Directory Rules OPEN-DR-02 / `OQ-AR-RB-DRILL-01`); Pattern A vs Pattern B.
+- ADR-PROPOSED — Runbook / standards filename casing (Directory Rules OPEN-DR-04 / `OQ-AR-RB-DRILL-03`).
+- ADR-PROPOSED — Drill artifact `drill=true` flag schema bump (`OQ-AR-RB-DRILL-07`).
+- ADR-PROPOSED — Drill cadence integration with `control_plane/release_state_register.yaml` (`OQ-AR-RB-DRILL-06`).
 
 ---
 
 > [!NOTE]
-> **Last updated:** 2026-05-27 · **Edition:** v1 draft · **`CONTRACT_VERSION = "3.0.0"`** · **Last rehearsed:** never (draft) · **Sensitivity:** T4 inherited · **Authority:** Atlas v1.0 Ch. 15 §N item 4 + Directory Rules §6.1.b + `ai-build-operating-contract.md` §§10.9, 22, 34.
+> **Last updated:** 2026-05-29 · **Edition:** v1.1 draft · **`CONTRACT_VERSION = "3.0.0"`** · **Last rehearsed:** never (draft) · **Sensitivity:** T4 inherited · **Canonical placement:** `docs/runbooks/archaeology/rollback-drill.md` (Directory Rules §6.1.b Pattern A) · **Authority:** Atlas v1.0 Ch. 15 §N item 4 + Directory Rules §6.1.b + `ai-build-operating-contract.md` §§10.1, 21, 33, 34.
 
 [↑ Back to top](#contents)
