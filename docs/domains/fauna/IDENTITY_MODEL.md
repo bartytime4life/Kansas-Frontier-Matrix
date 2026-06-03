@@ -2,39 +2,45 @@
 doc_id: kfm://doc/fauna-identity-model
 title: Fauna — Identity Model
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: DOM-FAUNA steward + Docs steward + Schema steward (PLACEHOLDER — NEEDS VERIFICATION)
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-02
 policy_label: public
+contract_version: "3.0.0"
 related:
   - docs/domains/fauna/README.md                         # PROPOSED — NEEDS VERIFICATION
   - docs/domains/fauna/CANONICAL_PATHS.md                # PROPOSED — NEEDS VERIFICATION
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md        # CONFIRMED — drafted in this project series
-  - docs/doctrine/directory-rules.md                     # CONFIRMED — this project
+  - docs/doctrine/directory-rules.md                     # CONFIRMED — this project (v1.2/v1.3)
+  - ai-build-operating-contract.md                       # CONFIRMED — canonical operating contract v3.0
   - docs/doctrine/lifecycle-law.md                       # PROPOSED — NEEDS VERIFICATION
   - docs/doctrine/truth-posture.md                       # PROPOSED — NEEDS VERIFICATION
   - docs/doctrine/trust-membrane.md                      # PROPOSED — NEEDS VERIFICATION
   - docs/architecture/contract-schema-policy-split.md    # PROPOSED — NEEDS VERIFICATION
   - docs/standards/PROV.md                               # CONFIRMED — drafted in this project series
-  - docs/standards/CANONICALIZATION.md                   # PROPOSED — NEEDS VERIFICATION
-  - docs/policy/sensitivity/fauna.md                     # PROPOSED — NEEDS VERIFICATION
-  - docs/adr/ADR-0001-schema-home.md                     # CONFIRMED — cited by Directory Rules §0
+  - docs/standards/CANONICALIZATION.md                   # PROPOSED — NEEDS VERIFICATION (C8-05 expansion)
+  - policy/sensitivity/fauna/                            # PROPOSED — NEEDS VERIFICATION (Atlas §24.13 crosswalk)
+  - policy/domains/fauna/                                # PROPOSED — NEEDS VERIFICATION (Directory Rules §6.5)
+  - docs/adr/ADR-0001-schema-home.md                     # CONFIRMED — cited by Directory Rules §2.4(3)
 tags: [kfm, fauna, identity, taxonomy, geoprivacy, evidence, governance, doctrine]
 notes:
-  - Doctrinal claims (lifecycle, deny-by-default sensitivity, six temporal facets, spec_hash via JCS+SHA-256, source-role enum, taxonomic anchoring) are CONFIRMED.
+  - "CONTRACT_VERSION = 3.0.0 pinned per ai-build-operating-contract.md."
+  - Doctrinal claims (lifecycle, deny-by-default sensitivity, six temporal facets, spec_hash via JCS+SHA-256, source-role anti-collapse, taxonomic anchoring) are CONFIRMED.
   - Implementation-level claims (schema paths, validator names, route names, exact deterministic ID format strings) are PROPOSED until verified against a mounted repository.
   - Occurrence Evidence / Occurrence Restricted / Occurrence Public is a triad of separately-identified objects, not three views of one object. See §6.
+  - "MonitoringEvent" appears in the §8 register but is NOT in the Atlas v1.1 Fauna ownership list — flagged CONFLICTED, see §8 and Open Questions OQ-FAUNA-ID-05.
+  - "NestDenRoostSpawningSite" is a PROPOSED descriptive grouping under SensitiveSite, not a distinct Atlas family — see §7.
 [/KFM_META_BLOCK_V2] -->
 
 # 🦌 Fauna — Identity Model
 
 > **What it means for two Fauna objects to be "the same thing" — and the kinds of sameness the Fauna domain refuses to collapse.**
 
-[![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#) [![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-2e7d32)](#) [![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#) [![Lane: fauna](https://img.shields.io/badge/lane-fauna-2e7d32)](#) [![Sensitivity: deny--by--default](https://img.shields.io/badge/sensitivity-deny--by--default-b71c1c)](#) [![Posture: cite--or--abstain](https://img.shields.io/badge/posture-cite--or--abstain-6a1b9a)](#) [![Identity: spec__hash%20JCS%2BSHA--256](https://img.shields.io/badge/identity-spec__hash%20JCS%2BSHA--256-1565c0)](#) [![Last updated: 2026-05-16](https://img.shields.io/badge/last__updated-2026--05--16-lightgrey)](#)
+[![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#) [![Contract: v3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1565c0)](#) [![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-2e7d32)](#) [![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#) [![Lane: fauna](https://img.shields.io/badge/lane-fauna-2e7d32)](#) [![Sensitivity: deny--by--default](https://img.shields.io/badge/sensitivity-deny--by--default-b71c1c)](#) [![Posture: cite--or--abstain](https://img.shields.io/badge/posture-cite--or--abstain-6a1b9a)](#) [![Identity: spec__hash%20JCS%2BSHA--256](https://img.shields.io/badge/identity-spec__hash%20JCS%2BSHA--256-1565c0)](#) [![Updated: 2026-06-02](https://img.shields.io/badge/updated-2026--06--02-lightgrey)](#)
 
-**Status:** Draft · **Owners:** DOM-FAUNA steward + Docs steward + Schema steward *(PLACEHOLDER — NEEDS VERIFICATION)* · **Updated:** 2026-05-16
+**Status:** Draft · **Version:** v1.1 · **Owners:** DOM-FAUNA steward + Docs steward + Schema steward *(PLACEHOLDER — NEEDS VERIFICATION)* · **Updated:** 2026-06-02
 
 ---
 
@@ -48,14 +54,17 @@ notes:
 4. [Six temporal facets kept distinct](#4-six-temporal-facets-kept-distinct)
 5. [Taxonomic identity and crosswalks](#5-taxonomic-identity-and-crosswalks)
 6. [The occurrence triad — Evidence, Restricted, Public](#6-the-occurrence-triad--evidence-restricted-public)
-7. [SensitiveSite, NestDenRoostSpawningSite, and the deny path](#7-sensitivesite-nestdenroostspawningsite-and-the-deny-path)
+7. [SensitiveSite and the deny path](#7-sensitivesite-and-the-deny-path)
 8. [Object-by-object identity register](#8-object-by-object-identity-register)
 9. [Cross-lane joins and identity preservation](#9-cross-lane-joins-and-identity-preservation)
 10. [`spec_hash`, `bundle_id`, `evidence_ref_id`](#10-spec_hash-bundle_id-evidence_ref_id)
 11. [Identity through the lifecycle](#11-identity-through-the-lifecycle)
 12. [Failure modes and required behavior](#12-failure-modes-and-required-behavior)
-13. [Verification backlog and open questions](#13-verification-backlog-and-open-questions)
-14. [Related docs](#14-related-docs)
+13. [Open questions register](#13-open-questions-register)
+14. [Open verification backlog](#14-open-verification-backlog)
+15. [Changelog](#15-changelog)
+16. [Definition of done](#16-definition-of-done)
+17. [Related docs](#17-related-docs)
 
 ---
 
@@ -63,11 +72,11 @@ notes:
 
 This document defines the **identity model** for the Fauna domain (`DOM-FAUNA`): the rules by which Fauna objects acquire stable identifiers, the facets of "sameness" the domain refuses to collapse, the rules for resolving an `EvidenceRef` to its `EvidenceBundle`, and the sensitivity controls that gate identity disclosure.
 
-It is **doctrine-first**. It does not invent new object families, new taxonomic authorities, or new sensitivity classes; it codifies the identity rules already implied by the Fauna domain dossier, the Domains Culmination Atlas, the Unified Implementation Architecture Build Manual, the Pass 20 Idea Index, and the cross-cutting evidence/identity ideas (`C1-02`, `C7-07`, `C7-08`, `KFM-IDX-EVD-005`, `KFM-IDX-POL-005`).
+It is **doctrine-first**. It does not invent new object families, new taxonomic authorities, or new sensitivity classes; it codifies the identity rules already implied by the Fauna domain dossier, the Domains Culmination Atlas v1.1, the Unified Implementation Architecture Build Manual, the Pass 10 Idea Index, and the cross-cutting evidence/identity ideas (`C1-02`, `C7-07`, `C7-08`, `C8-05`).
 
 Audience:
 
-- **Schema and contract authors** wiring identity fields into `schemas/contracts/v1/domains/fauna/…` and `contracts/domains/fauna/…`. *(PROPOSED paths; see Directory Rules §12.)*
+- **Schema and contract authors** wiring identity fields into `schemas/contracts/v1/fauna/…` and `contracts/fauna/…`. *(PROPOSED paths; see Directory Rules §12 and Atlas §24.13.)*
 - **Pipeline and connector authors** emitting Fauna RAW/WORK/PROCESSED/CATALOG artifacts.
 - **Reviewers and stewards** verifying that an identity claim is defensible under cite-or-abstain and deny-by-default postures.
 - **Governed AI** authors — identity is what lets a generated answer cite, not invent.
@@ -81,19 +90,19 @@ Audience:
 
 ## 2. Doctrinal anchors
 
-The Fauna identity model is constrained by the following anchors. Each is **CONFIRMED doctrine**; their concrete realization in the repository is **PROPOSED** until verified.
+The Fauna identity model is constrained by the following anchors. Each is **CONFIRMED doctrine**; its concrete realization in the repository is **PROPOSED** until verified against a mounted repo.
 
 | Anchor | Source | Effect on identity |
 |---|---|---|
-| **Lifecycle invariant** — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED | Directory Rules §0; `DIRRULES`; ENCY Appendix E | Identity must remain stable across stages; promotion is a governed state transition, not a re-identification. |
+| **Lifecycle invariant** — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED | Directory Rules §3; `DIRRULES`; ENCY Appendix E | Identity must remain stable across stages; promotion is a governed state transition, not a re-identification. |
 | **Cite-or-abstain truth posture** | Core invariants; `ENCY` | Identity claims with missing or mismatched `EvidenceRef → EvidenceBundle` resolution must `ABSTAIN`, not paper over the gap. |
-| **Deny-by-default sensitivity** | `DOM-FAUNA §§12-13`; Sensitive/Deny-by-Default Register | Identity disclosure for nests, dens, roosts, hibernacula, spawning sites, steward-controlled records, and exact occurrence geometry fails closed without a documented geoprivacy transform and review state. |
-| **Trust membrane** | Directory Rules §7.1; UIAI-MAP §7 | Public clients receive only `Occurrence Public` and other public-safe identities; restricted identities are never served on a public route. |
-| **Watcher-as-non-publisher invariant** | Directory Rules §13.5 | A watcher may *propose* an identity (PROPOSED record) but never *publish* one. |
-| **Deterministic identity basis** — `source id + object role + temporal scope + normalized digest` | Domains Culmination Atlas §E (Fauna E. Main object families) | The four-part basis is the same across every Fauna object family; the values differ. |
-| **`spec_hash` via JCS + SHA-256** | `C1-02`; New Ideas 5-15; Pass 20 `KFM-IDX-EVD-005` | The normalized digest portion of identity uses RFC 8785 JCS canonicalization followed by SHA-256, recorded as `jcs:sha256:<hex>`. |
-| **Six temporal facets distinct** | Domains Culmination Atlas §E (every Fauna row) | Source, observed, valid, retrieval, release, and correction times stay distinct where material. Identity must not silently collapse them. |
-| **Taxonomic anchoring required** | `C7-07` ITIS TSN; `C7-08` GBIF Backbone DOI 10.15468/39omei | Every species-level Fauna record carries an ITIS TSN anchor where ITIS has coverage; GBIF Backbone serves as the international crosswalk and the second-line anchor. |
+| **Deny-by-default sensitivity** | `DOM-FAUNA §I`; Atlas §20.5 Deny-by-Default Register | Identity disclosure for exact sensitive occurrences, nests, dens, roosts, hibernacula, spawning, and steward-controlled records fails closed without geoprivacy + Redaction Receipt + public-safe derivative. |
+| **Trust membrane** | Directory Rules §13.2; UIAI-MAP | Public clients receive only `Occurrence Public` and other public-safe identities; restricted identities are never served on a public route. |
+| **Watcher-as-non-publisher invariant** | Directory Rules §13; ENCY | A watcher may *propose* an identity (PROPOSED record) but never *publish* one. |
+| **Deterministic identity basis** — `source id + object role + temporal scope + normalized digest` | Domains Culmination Atlas v1.1 §7.E (Fauna object families) | The four-part basis is identical across every Fauna object family; the values differ. |
+| **`spec_hash` via JCS + SHA-256** | `C1-02` (CONFIRMED); recorded as `jcs:sha256:<hex>` | The normalized digest portion of identity uses RFC 8785 JCS canonicalization followed by SHA-256. |
+| **Six temporal facets distinct** | Domains Culmination Atlas v1.1 §7.E (every Fauna row) | Source, observed, valid, retrieval, release, and correction times stay distinct where material. Identity must not silently collapse them. |
+| **Taxonomic anchoring required** | `C7-07` ITIS TSN; `C7-08` GBIF Backbone DOI `10.15468/39omei` | Every species-level Fauna record carries an ITIS TSN anchor where ITIS has coverage; GBIF Backbone serves as the international crosswalk and second-line anchor. |
 
 [Back to top ↑](#contents)
 
@@ -101,7 +110,7 @@ The Fauna identity model is constrained by the following anchors. Each is **CONF
 
 ## 3. The four-part identity basis
 
-Every Fauna object's deterministic identifier composes four parts. The composition is **PROPOSED**; the *requirement that the four parts exist* is **CONFIRMED** by the Domains Culmination Atlas Fauna `Identity rule` column.
+Every Fauna object's deterministic identifier composes four parts. The composition is **PROPOSED**; the *requirement that the four parts exist* is **CONFIRMED** by the Atlas v1.1 Fauna `Identity rule` column, which reads identically for every family: *"PROPOSED deterministic basis: source id + object role + temporal scope + normalized digest."*
 
 ```text
 deterministic_id_basis = ( source_id, object_role, temporal_scope, normalized_digest )
@@ -113,13 +122,13 @@ flowchart LR
     B["object_role<br/><i>Taxon? Occurrence Public?<br/>SensitiveSite?<br/>MigrationRoute?</i>"] --> J
     C["temporal_scope<br/><i>observed | valid |<br/>release | snapshot</i>"] --> J
     D["normalized_digest<br/><i>spec_hash via<br/>JCS + SHA-256</i>"] --> J
-    J --> ID["Fauna deterministic identifier<br/><b>kfm:fauna:&lt;role&gt;:&lt;source&gt;:&lt;scope&gt;:&lt;digest26&gt;</b><br/><sub>PROPOSED format</sub>"]
+    J --> ID["Fauna deterministic identifier<br/><b>kfm:fauna:&lt;role&gt;:&lt;source&gt;:&lt;scope&gt;:&lt;digest26&gt;</b><br/><sub>PROPOSED format — illustrative only</sub>"]
 ```
 
 ### 3.1 What each part carries
 
-- **`source_id`** — the registered identifier of the upstream record under `data/registry/sources/fauna/<source_id>/…` *(PROPOSED path; CONFIRMED responsibility root per Directory Rules §6/§12)*. Examples of distinct `source_id` values (illustrative, not literal): a KDWP heritage record, a USFWS ECOS species page, a NatureServe element occurrence, a GBIF occurrence GBIF-ID, an eBird checklist observation, an iNaturalist observation, an EDDMapS record, an agency telemetry sample.
-- **`object_role`** — the Fauna object family the record realizes: `Taxon`, `Taxon Crosswalk`, `Conservation Status`, `Occurrence Evidence`, `Occurrence Restricted`, `Occurrence Public`, `RangePolygon`, `SeasonalRange`, `MigrationRoute`, `SensitiveSite`, `MonitoringEvent`, `MortalityObservation`, `DiseaseObservation`, `InvasiveSpeciesRecord`, `RedactionReceipt`. The role is not optional; it is what prevents two records that happen to share a `source_id` from being collapsed into one.
+- **`source_id`** — the registered identifier of the upstream record under `data/registry/sources/fauna/<source_id>/…` *(PROPOSED path; CONFIRMED responsibility root per Directory Rules §3/§12)*. Examples of distinct `source_id` values (illustrative, not literal): a KDWP heritage record, a USFWS ECOS species page, a NatureServe element occurrence, a GBIF occurrence GBIF-ID, an eBird checklist observation, an iNaturalist observation, an EDDMapS record, an agency telemetry sample.
+- **`object_role`** — the Fauna object family the record realizes (see §8). The role is not optional; it is what prevents two records that happen to share a `source_id` from being collapsed into one.
 - **`temporal_scope`** — the time slice the record claims authority over. The Atlas keeps six time facets distinct (§4); the `temporal_scope` portion of the identifier names the *kind* of time being scoped, not all six values.
 - **`normalized_digest`** — the `spec_hash` (RFC 8785 JCS + SHA-256, recorded as `jcs:sha256:<hex>`) over the canonicalized identity-bearing payload (object_type, schema_version, source_refs, evidence_refs, policy_label, sensitivity, taxonomic anchors, temporal facets that materially change meaning). Transport/runtime fields (storage URLs, signatures, nonces, wall-clock timestamps that do not change meaning) are **excluded** from the digest. *(See §10.)*
 
@@ -132,7 +141,7 @@ flowchart LR
 
 ## 4. Six temporal facets kept distinct
 
-Every Fauna object's `Temporal handling` row in the Atlas reads identically: **"source, observed, valid, retrieval, release, and correction times stay distinct where material."** That is **CONFIRMED doctrine** and it has direct identity consequences.
+Every Fauna object's `Temporal handling` row in the Atlas v1.1 reads identically: **"CONFIRMED source, observed, valid, retrieval, release, and correction times stay distinct where material."** That is **CONFIRMED doctrine** and it has direct identity consequences.
 
 | Facet | Question it answers | Identity consequence |
 |---|---|---|
@@ -152,7 +161,7 @@ Every Fauna object's `Temporal handling` row in the Atlas reads identically: **"
 
 ## 5. Taxonomic identity and crosswalks
 
-Fauna's most-asked identity question is *"is this the same species?"* The KFM doctrine for that question is **anchor-based, not name-based**: every species-level Fauna record carries one or more durable authority anchors, and the system fails closed when those anchors are missing for in-scope records.
+Fauna's most-asked identity question is *"is this the same species?"* The KFM doctrine for that question is **anchor-based, not name-based**: every species-level Fauna record carries one or more durable authority anchors, and the system fails closed when those anchors are missing for in-scope records. *(Authority-anchoring fail-closed doctrine per `C7`; the system "fails closed when those IRIs are missing for in-scope record types.")*
 
 ### 5.1 The required anchors
 
@@ -161,16 +170,17 @@ Fauna's most-asked identity question is *"is this the same species?"* The KFM do
 | **ITIS TSN** | U.S.-canonical taxonomic authority. Required anchor for any species-level record where ITIS has coverage. | CONFIRMED | `C7-07`; itis.gov |
 | **GBIF Backbone Taxonomy** (DOI `10.15468/39omei`) | International crosswalk and second-line anchor when ITIS lags (invertebrates, fungi, parts of plants). Backbone DOI version must be captured in the run receipt. | CONFIRMED | `C7-08` |
 | **Wikidata QID** | Routing anchor — not a sole truth source. Used to bridge other authority IRIs (LCNAF, VIAF, GBIF, etc.). Stored alongside upstream IRIs, not in place of them. | CONFIRMED | `C7-01` |
-| **NatureServe Element / Global ID** | Heritage/conservation anchor for rare-species governance. | PROPOSED | DOM-FAUNA source families |
+| **NatureServe Element / Global ID** | Heritage/conservation anchor for rare-species governance. | PROPOSED | `C7.c`; DOM-FAUNA source families |
 | **IUCN Red List ID** | International conservation-status anchor. | PROPOSED | `C7.c` Taxonomic Authorities |
 | **USFWS ECOS species code** | Federal listing anchor for ESA-relevant taxa. | PROPOSED | DOM-FAUNA source families |
+| **USDA PLANTS symbol** | Federal symbol carried in the taxon crosswalk where applicable. | PROPOSED | `KFM-P13-PROG-0025` (taxon crosswalk table) |
 
 ### 5.2 Why `Taxon` and `Taxon Crosswalk` are *separate* object families
 
-The Atlas lists both `Taxon` and `Taxon Crosswalk` as independent Fauna object families with independent identity rules. This is intentional:
+The Atlas v1.1 lists both `Taxon` and `Taxon Crosswalk` as independent Fauna object families with independent identity rules. This is intentional:
 
 - A **`Taxon`** is a domain object — one authoritative animal taxonomic identity, scoped to a source role and temporal scope, with its own `spec_hash`.
-- A **`Taxon Crosswalk`** is a bridge object — one mapping between two anchors (e.g., "this KFM Taxon is also ITIS TSN 174371 and GBIF taxonKey 2480637 as observed on 2026-04-12"). It has its own identity because **the mapping is itself a claim**, with its own evidence, its own retrieval, its own staleness, and its own correction path.
+- A **`Taxon Crosswalk`** is a bridge object — one mapping between two anchors (e.g., "this KFM Taxon is also ITIS TSN 174371 and GBIF taxonKey 2480637 as observed on 2026-04-12"). It has its own identity because **the mapping is itself a claim**, with its own evidence, its own retrieval, its own staleness, and its own correction path. The corpus envisages a versioned crosswalk "linking ITIS TSN, GBIF taxonKey, USDA symbols, scientific names, ranks, authorship, hierarchy, license, and source opinion provenance." *(`KFM-P13-PROG-0025`, PROPOSED.)*
 
 Treating the crosswalk as a separate identity prevents two failure modes:
 
@@ -178,7 +188,7 @@ Treating the crosswalk as a separate identity prevents two failure modes:
 2. **Crosswalk laundering.** A Wikidata QID swap upstream cannot mutate a previously-released KFM Taxon's identity; it can only emit a new crosswalk with its own provenance.
 
 > [!TIP]
-> **When ITIS and GBIF disagree** on the accepted name, the corpus default is *ITIS for federal-data reconciliation, GBIF for international biodiversity queries*. The disagreement itself is data: emit two `Taxon Crosswalk` records, one anchored to each, and let the policy layer choose which to expose where. Do not invent a third "merged" identity. *(Tie-breaker policy not yet codified — see `C7-07` open questions; this is a **NEEDS VERIFICATION** item.)*
+> **When ITIS and GBIF disagree** on the accepted name, the corpus default is *ITIS for federal-data reconciliation, GBIF for international biodiversity queries* — but `C7-07` is explicit that this default **is not yet codified in the policy bundle**. The disagreement itself is data: emit two `Taxon Crosswalk` records, one anchored to each, and let the policy layer choose which to expose where. Do not invent a third "merged" identity. *(Tie-breaker policy unresolved — see `C7-07` open questions; this is a **NEEDS VERIFICATION** item, OQ-FAUNA-ID-02.)*
 
 [Back to top ↑](#contents)
 
@@ -186,7 +196,7 @@ Treating the crosswalk as a separate identity prevents two failure modes:
 
 ## 6. The occurrence triad — Evidence, Restricted, Public
 
-The Fauna domain owns **three separately-identified occurrence object families**, not one occurrence object with three views:
+The Fauna domain owns **three separately-identified occurrence object families**, not one occurrence object with three views. The Atlas v1.1 lists `Occurrence Evidence`, `Occurrence Restricted`, and `Occurrence Public` as three distinct families, each with the same four-part deterministic identity rule applied to different payloads.
 
 ```mermaid
 flowchart TB
@@ -194,7 +204,7 @@ flowchart TB
     OE["<b>Occurrence Evidence</b><br/>Internal canonical record<br/>exact geometry<br/>full attributes<br/>full source citation"]
     OR["<b>Occurrence Restricted</b><br/>Steward-only derivative<br/>exact geometry preserved<br/>governed access only<br/>not on public route"]
     OP["<b>Occurrence Public</b><br/>Public-safe derivative<br/>generalized / jittered / suppressed<br/>geoprivacy transform receipt<br/>released artifact"]
-    RR["<b>RedactionReceipt</b><br/>records the transform<br/>input class &rarr; output class<br/>policy + reviewer"]
+    RR["<b>Redaction Receipt</b><br/>records the transform<br/>input class &rarr; output class<br/>policy + reviewer"]
 
     SRC --> OE
     OE -- "steward access<br/>policy gate" --> OR
@@ -225,21 +235,24 @@ flowchart TB
 Because the **payloads differ**, the JCS canonicalization of each yields a different byte string and therefore a different `spec_hash`. That is the point. The deterministic digest is what lets a verifier confirm that a record returned on a public route is the **public derivative** and not the internal canonical record. If the digests collided, the trust membrane would have no machine-checkable boundary.
 
 > [!CAUTION]
-> **`Occurrence Public` is not a "view" of `Occurrence Evidence` — it is a distinct trust object with its own identity, its own bundle, and its own release manifest.** Pipelines that emit a "public version" by toggling a `is_public` flag on the canonical record collapse the triad and break the membrane. The geoprivacy transform must be a real transform that emits a real new object, with a `RedactionReceipt` recording input class, output class, policy, reviewer, reason, and residual risk. *(Geoprivacy transform types — suppress, generalize-to-grid, generalize-to-watershed-or-county, buffer, constrained-jitter, delayed-publication, steward-only-exact — are **PROPOSED** per `KFM-IDX-POL-005`.)*
+> **`Occurrence Public` is not a "view" of `Occurrence Evidence` — it is a distinct trust object with its own identity, its own bundle, and its own release manifest.** Pipelines that emit a "public version" by toggling an `is_public` flag on the canonical record collapse the triad and break the membrane. The geoprivacy transform must be a real transform that emits a real new object, with a `RedactionReceipt` recording input class, output class, policy, reviewer, reason, and residual risk. The supporting schema rule is captured as PROPOSED: a fauna occurrence schema should require `public_safe_geometry` when `geoprivacy_status` is obscured, private, or generalized *(`KFM-P25-PROG-0017`, PROPOSED)*. Concrete transform types — suppress, generalize-to-grid, generalize-to-watershed-or-county, buffer, constrained-jitter, delayed-publication, steward-only-exact — remain **PROPOSED**.
 
 [Back to top ↑](#contents)
 
 ---
 
-## 7. SensitiveSite, NestDenRoostSpawningSite, and the deny path
+## 7. SensitiveSite and the deny path
 
-`SensitiveSite` and the related `NestDenRoostSpawningSite` family carry **deny-by-default identity disclosure** regardless of source. That is **CONFIRMED doctrine** per `DOM-FAUNA §§12-13` and the Sensitive / Deny-by-Default Register.
+`SensitiveSite` carries **deny-by-default identity disclosure** regardless of source. That is **CONFIRMED doctrine**: per `DOM-FAUNA §I`, *"exact sensitive occurrence, nest, den, roost, hibernacula, spawning, and steward-controlled records fail closed,"* and the Atlas §20.5 Deny-by-Default Register pairs Fauna's *"exact sensitive occurrences, nests/dens/roosts/hibernacula/spawning"* with the gate *"geoprivacy + Redaction Receipt + public-safe derivative."*
+
+> [!NOTE]
+> **`NestDenRoostSpawningSite` is a PROPOSED descriptive grouping, not a separate Atlas family.** The Atlas v1.1 lists `SensitiveSite` as the single sensitive-site family; "nest / den / roost / hibernaculum / spawning" appear as a descriptive enumeration of *site types*, not as a distinct object family. This doc treats them as a `site_type` discriminator inside `SensitiveSite` (see §8). Promoting them to a separate family is an ADR-class decision. *(OQ-FAUNA-ID-06.)*
 
 ```mermaid
 flowchart LR
     REQ["Identity disclosure request<br/>(API, viewer, AI answer)"]
     CLS{"Object class?"}
-    GEO{"Geoprivacy transform<br/>+ review state<br/>present?"}
+    GEO{"Geoprivacy transform<br/>+ Redaction Receipt<br/>+ review state present?"}
     POL{"Policy decision<br/>under current<br/>access role?"}
     PUB(["ANSWER<br/><i>public-safe identity</i>"])
     ABS(["ABSTAIN<br/><i>insufficient evidence</i>"])
@@ -248,7 +261,7 @@ flowchart LR
 
     REQ --> CLS
     CLS -- "Taxon / RangePolygon /<br/>Occurrence Public" --> POL
-    CLS -- "SensitiveSite /<br/>NestDenRoostSpawningSite /<br/>Occurrence Restricted" --> GEO
+    CLS -- "SensitiveSite /<br/>Occurrence Restricted" --> GEO
     GEO -- no --> DEN
     GEO -- yes --> POL
     POL -- allow --> PUB
@@ -264,10 +277,10 @@ flowchart LR
     class ABS,ERR terminal;
 ```
 
-The fauna identity model treats **the existence of a SensitiveSite** as itself sensitive in many cases: even confirming "yes, a peregrine eyrie exists in this watershed" can be a disclosure. The four-part identifier therefore reaches the public surface only when the geoprivacy transform and review state both authorize it. Otherwise, the public route returns `DENY` and the internal identity is preserved under restricted access.
+The fauna identity model treats **the existence of a SensitiveSite** as itself sensitive in many cases: even confirming "yes, a peregrine eyrie exists in this watershed" can be a disclosure. The four-part identifier therefore reaches the public surface only when the geoprivacy transform, Redaction Receipt, and review state all authorize it. Otherwise, the public route returns `DENY` and the internal identity is preserved under restricted access. The OPA-policy expression of this is captured as PROPOSED: policy should return `ABSTAIN` or `DENY` for sensitive fauna unless spatial generalization, aggregation, or access-gating obligations are satisfied *(`KFM-P24-PROG-0013`, PROPOSED)*.
 
 > [!WARNING]
-> **Join-induced sensitivity.** A `Taxon` identity that is publicly safe in isolation can become sensitive when joined to `Habitat`, `Hydrology` (spawning streams), or fine-grained `Occurrence Public` (clustered records that re-localize the species). The sensitivity is a property of the **join product**, not just of the inputs. This is captured in `P19-POL-003` / `KFM-IDX-POL-003` and applies to identity disclosure as much as to geometry disclosure. Validators must check the *output* class, not just the input classes.
+> **Join-induced sensitivity.** A `Taxon` identity that is publicly safe in isolation can become sensitive when joined to `Habitat`, `Hydrology` (spawning streams), or fine-grained `Occurrence Public` (clustered records that re-localize the species). The sensitivity is a property of the **join product**, not just of the inputs. Validators must check the *output* class, not just the input classes. *(Sensitive-join-fail-closed posture is CONFIRMED across the Fauna source-family table; the specific cross-lane join policy is ADR-class — see ADR-S-14.)*
 
 [Back to top ↑](#contents)
 
@@ -278,28 +291,31 @@ The fauna identity model treats **the existence of a SensitiveSite** as itself s
 The following register reproduces the Atlas's identity rule for every Fauna object family and adds the **identity-determining inputs** that the `normalized_digest` should canonicalize. The four-part deterministic basis is uniform across rows; the *values* it draws on differ.
 
 > [!NOTE]
-> Every row carries the same **PROPOSED deterministic basis** — `source id + object role + temporal scope + normalized digest` — and the same **CONFIRMED temporal rule** that source, observed, valid, retrieval, release, and correction times stay distinct where material. The "Identity-determining inputs" column below is **PROPOSED** and is the column most likely to need iteration as schemas land.
+> Every row carries the same **PROPOSED deterministic basis** — `source id + object role + temporal scope + normalized digest` — and the same **CONFIRMED temporal rule** that source, observed, valid, retrieval, release, and correction times stay distinct where material. The "Identity-determining inputs" column is **PROPOSED** and is the column most likely to need iteration as schemas land.
+
+> [!CAUTION]
+> **Atlas ownership scope.** The Atlas v1.1 Fauna ownership list (`DOM-FAUNA §B`) names **fourteen** families: Taxon, Taxon Crosswalk, Conservation Status, Occurrence Evidence, Occurrence Restricted, Occurrence Public, RangePolygon, SeasonalRange, MigrationRoute, SensitiveSite, MortalityObservation, DiseaseObservation, Invasive Species Record, and Redaction Receipt. **`MonitoringEvent` is NOT in that list** and is included below only as a **CONFLICTED / PROPOSED** candidate, pending an ADR that either admits it to Fauna ownership or assigns it to a neighboring lane. Do not treat `MonitoringEvent` as a confirmed Fauna family. *(OQ-FAUNA-ID-05.)*
 
 <details>
-<summary><b>Expand the full Fauna identity register (15 object families)</b></summary>
+<summary><b>Expand the full Fauna identity register (14 Atlas families + 1 CONFLICTED candidate)</b></summary>
 
 | Object family | `object_role` | Identity-determining inputs (digest scope) | Notes |
 |---|---|---|---|
-| **Taxon** | `Taxon` | Source ref · ITIS TSN (where covered) · GBIF Backbone DOI version · accepted scientific name · rank · authorship · temporal scope of authority assertion | Anchor-based; never identified by name alone. |
-| **Taxon Crosswalk** | `TaxonCrosswalk` | Source ref · pair of anchored IRIs (e.g. ITIS TSN ↔ GBIF taxonKey) · mapping confidence · retrieval time of the upstream pair | Distinct identity per mapping pair, per retrieval. |
-| **Conservation Status** | `ConservationStatus` | Source ref (USFWS / NatureServe / IUCN / KDWP) · Taxon anchor · status code · status scope (federal / state / global / subnational) · effective interval (valid time) | Status changes emit a new identity, not an in-place update. |
-| **Occurrence Evidence** | `OccurrenceEvidence` | Source ref · Taxon anchor · exact geometry · observation method · observed time · evidence quality · rights · sensitivity class | Internal canonical record. |
-| **Occurrence Restricted** | `OccurrenceRestricted` | Same as Evidence + restricted access class + steward review state | Exact geometry retained; not routable on public surfaces. |
-| **Occurrence Public** | `OccurrencePublic` | Taxon anchor · **transformed** geometry · `RedactionReceipt` ref · generalization rule id · release time | Public-safe derivative; distinct digest from Evidence/Restricted. |
-| **RangePolygon** | `RangePolygon` | Source ref · Taxon anchor · polygon geometry · methodology (modeled / observed / authoritative) · valid time | Range polygons carry methodology in the digest so modeled and observed ranges do not collide. |
-| **SeasonalRange** | `SeasonalRange` | Source ref · Taxon anchor · season descriptor · polygon geometry · valid time interval | One identity per season per valid interval. |
-| **MigrationRoute** | `MigrationRoute` | Source ref · Taxon anchor · route geometry · temporal pattern · methodology | Lines, not polygons; methodology distinguishes telemetry-derived vs literature-derived routes. |
-| **SensitiveSite** | `SensitiveSite` | Source ref · Taxon anchor · site type (nest / den / roost / hibernaculum / spawning) · exact geometry · sensitivity class · steward record | **Deny-by-default identity disclosure.** Exists internally; surfaces publicly only after geoprivacy transform + review. |
-| **MonitoringEvent** | `MonitoringEvent` | Source ref · monitoring program id · station / transect / route id · observed time · methodology | Distinct from `Occurrence Evidence`; one event may emit many occurrences. |
-| **MortalityObservation** | `MortalityObservation` | Source ref · Taxon anchor · cause class · observed time · location (subject to sensitivity rules) | Cause class is identity-bearing because two records of the same death by different attributed causes are different claims. |
-| **DiseaseObservation** | `DiseaseObservation` | Source ref · Taxon anchor · pathogen anchor (where applicable) · observed time · diagnostic basis | Pathogen anchor preserves identity across taxon hosts. |
-| **InvasiveSpeciesRecord** | `InvasiveSpeciesRecord` | Source ref · Taxon anchor · location class · observed time · response status | EDDMapS-style; response status is identity-bearing. |
-| **RedactionReceipt** | `RedactionReceipt` | Input object identity · output object identity · transform rule id · policy ref · reviewer · reason · residual risk class | Binds Occurrence Evidence → Occurrence Public (or analogous pairs); the receipt's own identity is the audit anchor. |
+| **Taxon** | `Taxon` | Source ref · ITIS TSN (where covered) · GBIF Backbone DOI version · accepted scientific name · rank · authorship · temporal scope of authority assertion | CONFIRMED family. Anchor-based; never identified by name alone. |
+| **Taxon Crosswalk** | `TaxonCrosswalk` | Source ref · pair of anchored IRIs (e.g. ITIS TSN ↔ GBIF taxonKey) · mapping confidence · retrieval time of the upstream pair | CONFIRMED family. Distinct identity per mapping pair, per retrieval. |
+| **Conservation Status** | `ConservationStatus` | Source ref (USFWS / NatureServe / IUCN / KDWP) · Taxon anchor · status code · status scope (federal / state / global / subnational) · effective interval (valid time) | CONFIRMED family. Status changes emit a new identity, not an in-place update. |
+| **Occurrence Evidence** | `OccurrenceEvidence` | Source ref · Taxon anchor · exact geometry · observation method · observed time · evidence quality · rights · sensitivity class | CONFIRMED family. Internal canonical record. |
+| **Occurrence Restricted** | `OccurrenceRestricted` | Same as Evidence + restricted access class + steward review state | CONFIRMED family. Exact geometry retained; not routable on public surfaces. |
+| **Occurrence Public** | `OccurrencePublic` | Taxon anchor · **transformed** geometry · `RedactionReceipt` ref · generalization rule id · release time | CONFIRMED family. Public-safe derivative; distinct digest from Evidence/Restricted. |
+| **RangePolygon** | `RangePolygon` | Source ref · Taxon anchor · polygon geometry · methodology (modeled / observed / authoritative) · valid time | CONFIRMED family. Methodology in the digest so modeled and observed ranges do not collide. |
+| **SeasonalRange** | `SeasonalRange` | Source ref · Taxon anchor · season descriptor · polygon geometry · valid time interval | CONFIRMED family. One identity per season per valid interval. |
+| **MigrationRoute** | `MigrationRoute` | Source ref · Taxon anchor · route geometry · temporal pattern · methodology | CONFIRMED family. Lines, not polygons; methodology distinguishes telemetry-derived vs literature-derived routes. |
+| **SensitiveSite** | `SensitiveSite` | Source ref · Taxon anchor · site type (nest / den / roost / hibernaculum / spawning) · exact geometry · sensitivity class · steward record | CONFIRMED family. **Deny-by-default identity disclosure.** `site_type` is a discriminator, not a separate family (§7). |
+| **MortalityObservation** | `MortalityObservation` | Source ref · Taxon anchor · cause class · observed time · location (subject to sensitivity rules) | CONFIRMED family. Cause class is identity-bearing: two records of the same death by different attributed causes are different claims. |
+| **DiseaseObservation** | `DiseaseObservation` | Source ref · Taxon anchor · pathogen anchor (where applicable) · observed time · diagnostic basis | CONFIRMED family. Pathogen anchor preserves identity across taxon hosts. |
+| **Invasive Species Record** | `InvasiveSpeciesRecord` | Source ref · Taxon anchor · location class · observed time · response status | CONFIRMED family. EDDMapS-style; response status is identity-bearing. |
+| **Redaction Receipt** | `RedactionReceipt` | Input object identity · output object identity · transform rule id · policy ref · reviewer · reason · residual risk class | CONFIRMED family. Binds Occurrence Evidence → Occurrence Public (or analogous pairs); the receipt's own identity is the audit anchor. |
+| **MonitoringEvent** *(CONFLICTED)* | `MonitoringEvent` | Source ref · monitoring program id · station / transect / route id · observed time · methodology | **CONFLICTED — not in Atlas v1.1 Fauna ownership list.** Included as a PROPOSED candidate only. Would be distinct from `Occurrence Evidence` (one event may emit many occurrences). Resolution pending ADR. *(OQ-FAUNA-ID-05.)* |
 
 </details>
 
@@ -309,7 +325,7 @@ The following register reproduces the Atlas's identity rule for every Fauna obje
 
 ## 9. Cross-lane joins and identity preservation
 
-The Fauna domain joins to four neighboring lanes. Each join preserves ownership, source role, sensitivity, and `EvidenceBundle` support. Joins do **not** rename identity — a Fauna `Taxon` is still owned by Fauna when it appears next to a Habitat `HabitatPatch`.
+The Fauna domain joins to neighboring lanes. Each join preserves ownership, source role, sensitivity, and `EvidenceBundle` support. Joins do **not** rename identity — a Fauna `Taxon` is still owned by Fauna when it appears next to a Habitat `HabitatPatch`. *(Fauna's explicit non-ownership boundary is CONFIRMED: "Habitat owns habitat patches and suitability; Flora owns plant records; hydrology/soil/agriculture/roads/people provide context only through governed joins.")*
 
 | This domain | Related lane | Relation type | Identity rule |
 |---|---|---|---|
@@ -319,7 +335,7 @@ The Fauna domain joins to four neighboring lanes. Each join preserves ownership,
 | **Fauna** | **Hazards** | Disease, mortality, wildfire, flood, drought exposure. | Hazards owns event identities; Fauna's `MortalityObservation` / `DiseaseObservation` reference hazard events without merging identities. |
 
 > [!IMPORTANT]
-> **A join is not a remapping.** When Habitat asks "what taxa occur in this patch?", the answer carries Fauna `Taxon` identifiers verbatim. Habitat must not mint a "habitat-scoped taxon id" — that would create a parallel identity space and break the lane boundary. (Directory Rules §13.5 — *Schema mirror divergence*.)
+> **A join is not a remapping.** When Habitat asks "what taxa occur in this patch?", the answer carries Fauna `Taxon` identifiers verbatim. Habitat must not mint a "habitat-scoped taxon id" — that would create a parallel identity space and break the lane boundary. *(Directory Rules §13 — schema-mirror divergence and parallel-home anti-patterns.)*
 
 [Back to top ↑](#contents)
 
@@ -327,7 +343,7 @@ The Fauna domain joins to four neighboring lanes. Each join preserves ownership,
 
 ## 10. `spec_hash`, `bundle_id`, `evidence_ref_id`
 
-The `normalized_digest` portion of every Fauna identity is computed as **`spec_hash`** per `C1-02` and the New Ideas 5-15 canonical-JSON-plus-SHA256 method:
+The `normalized_digest` portion of every Fauna identity is computed as **`spec_hash`** per `C1-02` (CONFIRMED): canonicalize via RFC 8785 JCS, then take SHA-256 over the canonical bytes, recorded as `jcs:sha256:<hex>`.
 
 ```text
 spec_hash = jcs:sha256:<hex>
@@ -357,18 +373,18 @@ spec_hash = jcs:sha256:<hex>
 - Mutable file paths
 
 > [!IMPORTANT]
-> **Hash the canonicalized bytes, not the developer-formatted JSON.** Per `C1-02`, trivial reformatting that changes the byte stream while preserving meaning **must not** rotate the hash. Use RFC 8785 JCS (or URDNA2015 for graph-shaped JSON-LD content per `C8-05`), then SHA-256. Record the canonicalization choice in the receipt.
+> **Hash the canonicalized bytes, not the developer-formatted JSON.** Per `C1-02`, the corpus is explicit that hashing developer-formatted JSON is not acceptable, because trivial reformatting would produce different hashes and break re-runs and audits. Use RFC 8785 JCS; reserve W3C URDNA2015 for cases where RDF-semantic equivalence is the relevant invariant (per `C8-05`). Record the canonicalization choice in the receipt.
 
 ### 10.2 Bundle and ref IDs
 
-Per New Ideas 5-15 §D2 (PROPOSED format, retained verbatim):
+The following ID-derivation forms are **PROPOSED** (retained from prior drafts; not yet codified against a mounted schema):
 
 ```text
 bundle_id        = "eb-" + base32(lowercase(SHA-256(spec_hash)))[:26]
 evidence_ref_id  = "er-" + base32(lowercase(SHA-256(target_bundle_spec_hash)))[:26]
 ```
 
-IDs derive only from the normalized spec; **no environment entropy**. The exact normalization rules are intended to live under `schemas/evidence/spec_normalization.md` *(PROPOSED — NEEDS VERIFICATION)* and to be enforced by validators.
+IDs derive only from the normalized spec; **no environment entropy**. The exact normalization rules are intended to live under `schemas/contracts/v1/evidence/…` *(PROPOSED — NEEDS VERIFICATION; schema home governed by ADR-0001)* and to be enforced by validators.
 
 ### 10.3 Resolution path
 
@@ -392,7 +408,7 @@ sequenceDiagram
 ```
 
 > [!NOTE]
-> **Hash algorithm stability.** Algorithm = SHA-256 is fixed for v1 (per New Ideas 5-15 §D5). A future migration requires an ADR and a dual-hash compatibility window. BLAKE3 is recommended for streaming artifact roots (per New Ideas 5-10 and `KFM-IDX-EVD-005`), but **not** as the descriptor identity hash. A hash-policy ADR is open (see §13).
+> **Hash algorithm stability.** SHA-256 is the descriptor identity hash; a future migration to another algorithm requires an ADR and a dual-hash compatibility window. BLAKE3 appears in the corpus as a candidate for streaming artifact roots, but **not** as the descriptor identity hash; the corpus leaves the SHA-256-vs-BLAKE3-vs-dual-hash question open. A hash-policy ADR is open (see §13, OQ-FAUNA-ID-05's sibling §14 item).
 
 [Back to top ↑](#contents)
 
@@ -427,7 +443,7 @@ flowchart LR
     class PUB pub;
 ```
 
-Identity-bearing properties at each stage *(all CONFIRMED doctrine; PROPOSED implementation):*
+Identity-bearing properties at each stage *(stage handling and gates are CONFIRMED doctrine per `DOM-FAUNA §H`; implementation status is PROPOSED):*
 
 | Stage | Identity-bearing artifacts | Identity gate |
 |---|---|---|
@@ -446,65 +462,119 @@ Identity-bearing properties at each stage *(all CONFIRMED doctrine; PROPOSED imp
 
 ## 12. Failure modes and required behavior
 
-The identity model defines explicit failure modes. Each maps to a finite outcome — `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` — per the Runtime Response Envelope.
+The identity model defines explicit failure modes. Each maps to a finite outcome — `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` — per the **`RuntimeResponseEnvelope`** (the canonical finite-outcome envelope; the bespoke `FaunaDecisionEnvelope` named in some Atlas tables is superseded by `RuntimeResponseEnvelope` + `AIReceipt` for AI/runtime surfaces).
 
 | # | Failure mode | Validator outcome | Publication outcome | Emitted code |
 |---|---|---|---|---|
 | 1 | **Missing bundle** — `EvidenceRef` resolves to nothing. | `ABSTAIN` | `DENY` | `ResolutionError.missing_bundle` |
 | 2 | **Hash mismatch** — `bundle_id` does not recompute from referenced `spec_hash`. | `ABSTAIN` | `DENY` | `ResolutionError.spec_hash_mismatch` |
 | 3 | **Missing taxonomic anchor** — species-level record lacks ITIS TSN (where covered) or GBIF Backbone fallback. | `ABSTAIN` | `DENY` | `IdentityError.missing_taxonomic_anchor` |
-| 4 | **Sensitivity disclosure without transform** — sensitive identity requested without geoprivacy transform + review state. | `DENY` | `DENY` | `PolicyError.sensitive_identity_no_transform` |
+| 4 | **Sensitivity disclosure without transform** — sensitive identity requested without geoprivacy transform + Redaction Receipt + review state. | `DENY` | `DENY` | `PolicyError.sensitive_identity_no_transform` |
 | 5 | **Cross-lane identity laundering** — a non-Fauna lane attempts to mint a Fauna-scoped identity. | `DENY` | `DENY` | `PolicyError.identity_laundering` |
 | 6 | **Identity collision across triad** — `Occurrence Evidence`, `Occurrence Restricted`, `Occurrence Public` digests collide. | `ABSTAIN` | `DENY` | `IdentityError.triad_digest_collision` |
 | 7 | **Canonicalization drift** — pipeline and validator disagree on JCS vs URDNA2015 output. | `ABSTAIN` | `DENY` | `IdentityError.canonicalization_drift` |
 | 8 | **Stale crosswalk** — Taxon Crosswalk references a superseded GBIF Backbone DOI version. | `ABSTAIN` | `ABSTAIN` (publication may proceed with new crosswalk) | `IdentityWarning.stale_crosswalk` |
 
-All codes above are **PROPOSED**; their final names should be registered alongside the validator exit-code contract ADR.
+All codes above are **PROPOSED**; their final names should be registered alongside the validator exit-code contract ADR. *(The finite-outcome set `ANSWER / ABSTAIN / DENY / ERROR` itself is CONFIRMED doctrine.)*
 
 [Back to top ↑](#contents)
 
 ---
 
-## 13. Verification backlog and open questions
+## 13. Open questions register
 
-The following items are **NEEDS VERIFICATION** against a mounted repository or unresolved per the Pass 20 / DOM-FAUNA dossiers. Each is intentionally left as a placeholder rather than guessed.
-
-| # | Item | What would settle it | Status |
+| ID | Question | Owner role | Resolution path |
 |---|---|---|---|
-| 1 | Concrete deterministic ID **format string** for Fauna objects (`kfm:fauna:<role>:<source>:<scope>:<digest26>` is illustrative). | Schema entries under `schemas/contracts/v1/domains/fauna/…`; ADR pinning the format. | PROPOSED |
-| 2 | ITIS vs GBIF tie-breaker policy when accepted names disagree. | Policy doc under `policy/domains/fauna/…`; `C7-07` follow-up. | NEEDS VERIFICATION |
-| 3 | Concrete geoprivacy transform rule set (suppress / generalize-to-grid / generalize-to-watershed / buffer / constrained-jitter / delayed-publication / steward-only-exact). | Policy rules + `RedactionReceipt` schema; `KFM-IDX-POL-005` expansion. | PROPOSED |
-| 4 | Decision between JCS and URDNA2015 for graph-shaped Fauna bundles. | ADR per `C8-05`; reference verifier in CI. | NEEDS VERIFICATION |
-| 5 | Hash-policy ADR (SHA-256 for descriptors vs BLAKE3 for streaming artifacts vs Bao for range proofs). | `EXP-004` per `KFM-IDX-EVD-005`. | NEEDS VERIFICATION |
-| 6 | Validator exit-code contract for `IdentityError.*` / `PolicyError.*` codes used above. | ADR; conftest fixtures. | PROPOSED |
-| 7 | Whether `Occurrence Restricted` is a **physically separate object** or a `(spec_hash, access_class)`-keyed view of `Occurrence Evidence` with its own digest. | Schema under `schemas/contracts/v1/domains/fauna/`; restricted/public split tests per `DOM-FAUNA §K`. | NEEDS VERIFICATION |
-| 8 | NatureServe Element / Global ID and IUCN Red List ID **status as required vs optional** anchors. | `data/registry/sources/fauna/` entries; rights review. | NEEDS VERIFICATION |
-| 9 | Concrete `temporal_scope` value vocabulary (`observed`, `valid`, `release`, `snapshot`, …). | Contract under `contracts/domains/fauna/`; schema enum. | PROPOSED |
-| 10 | Whether the four-part deterministic basis is enforced by a **single repo-wide identity validator** or by per-domain validators. | `tools/validators/identity/…` presence; ADR. | NEEDS VERIFICATION |
-| 11 | Reconciliation of the **`PROV.md` vs `PROVENANCE.md`** naming question for the standards anchor cited above. | ADR; standards directory inspection. | NEEDS VERIFICATION |
+| OQ-FAUNA-ID-01 | Concrete deterministic ID **format string** for Fauna objects (`kfm:fauna:<role>:<source>:<scope>:<digest26>` is illustrative). | Schema steward | ADR pinning the format; schema entries under `schemas/contracts/v1/fauna/…`. |
+| OQ-FAUNA-ID-02 | ITIS vs GBIF tie-breaker policy when accepted names disagree (`C7-07` notes this is not yet in the policy bundle). | DOM-FAUNA steward + Policy steward | Policy doc under `policy/domains/fauna/…`; `C7-07` follow-up. |
+| OQ-FAUNA-ID-03 | Concrete geoprivacy transform rule set (suppress / generalize-to-grid / generalize-to-watershed / buffer / constrained-jitter / delayed-publication / steward-only-exact). | Policy steward | `policy/sensitivity/fauna/` rules + `RedactionReceipt` schema. |
+| OQ-FAUNA-ID-04 | Decision between JCS and URDNA2015 for graph-shaped Fauna bundles (`C8-05`). | Schema steward | ADR; reference verifier in CI; `docs/standards/CANONICALIZATION.md`. |
+| OQ-FAUNA-ID-05 | Is **`MonitoringEvent`** a Fauna-owned family (it is absent from Atlas v1.1 `DOM-FAUNA §B`), and is the hash-policy (SHA-256 / BLAKE3 / dual-hash) pinned? | DOM-FAUNA steward + Schema steward | Object-family ownership ADR; hash-policy ADR. |
+| OQ-FAUNA-ID-06 | Is **`NestDenRoostSpawningSite`** a discriminator inside `SensitiveSite` or a separate family? | Schema steward | ADR; schema enum vs separate schema. |
+| OQ-FAUNA-ID-07 | Is `Occurrence Restricted` a physically separate object or a `(spec_hash, access_class)`-keyed view of `Occurrence Evidence` with its own digest? | Schema steward | Schema under `schemas/contracts/v1/fauna/`; restricted/public split tests per `DOM-FAUNA §K`. |
+| OQ-FAUNA-ID-08 | NatureServe / IUCN / USDA anchors — required vs optional status. | DOM-FAUNA steward | `data/registry/sources/fauna/` entries; rights review. |
+| OQ-FAUNA-ID-09 | Concrete `temporal_scope` value vocabulary (`observed`, `valid`, `release`, `snapshot`, …). | Schema steward | Contract under `contracts/fauna/`; schema enum. |
+| OQ-FAUNA-ID-10 | Single repo-wide identity validator vs per-domain validators. | Schema steward | `tools/validators/identity/…` presence; ADR. |
+| OQ-FAUNA-ID-11 | `PROV.md` vs `PROVENANCE.md` naming for the standards anchor. | Docs steward | ADR; `docs/standards/` inspection. |
 
 [Back to top ↑](#contents)
 
 ---
 
-## 14. Related docs
+## 14. Open verification backlog
+
+These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
+
+1. Confirm the Fauna schema home `schemas/contracts/v1/fauna/…` against a mounted repo (Directory Rules §2.4(3) / ADR-0001).
+2. Confirm `policy/sensitivity/fauna/` vs `policy/domains/fauna/` split against the mounted `policy/` tree (Directory Rules §6.5; Atlas §24.13 crosswalk).
+3. Confirm whether `MonitoringEvent` exists as a Fauna schema or belongs to a neighboring lane (OQ-FAUNA-ID-05).
+4. Verify the restricted/public occurrence split implementation (`DOM-FAUNA §N` "Verify restricted/public occurrence split").
+5. Verify taxonomy-resolution implementation and ITIS/GBIF disagreement handling (`DOM-FAUNA §N`).
+6. Verify public-layer safety and AI no-leak behavior (`DOM-FAUNA §N`).
+7. Confirm the validator exit-code contract for `IdentityError.*` / `PolicyError.*` codes (§12).
+8. Confirm the `bundle_id` / `evidence_ref_id` derivation forms against a mounted evidence schema (§10.2).
+
+[Back to top ↑](#contents)
+
+---
+
+## 15. Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Pinned `CONTRACT_VERSION = "3.0.0"` in meta block and badge row. | housekeeping | Doctrine-adjacent doc requirement. |
+| Flagged `MonitoringEvent` as CONFLICTED (absent from Atlas v1.1 Fauna ownership list); register relabeled "14 families + 1 candidate." | reconciliation | Doc previously asserted a 15th family the Atlas does not own. |
+| Clarified `NestDenRoostSpawningSite` as a PROPOSED `site_type` discriminator under `SensitiveSite`, not a distinct Atlas family. | reconciliation | Atlas lists only `SensitiveSite`; nest/den/roost/etc. are descriptive site types. |
+| Sharpened sensitivity citation to Atlas §20.5 Deny-by-Default Register pairing (geoprivacy + Redaction Receipt + public-safe derivative). | clarification | Grounds the deny gate in the exact register row. |
+| Added `RuntimeResponseEnvelope` supersession note over `FaunaDecisionEnvelope` in §12. | reconciliation | RuntimeResponseEnvelope + AIReceipt is canonical for AI/runtime surfaces. |
+| Added USDA PLANTS symbol anchor row and `KFM-P13-PROG-0025` crosswalk-table reference. | gap closure | Corpus crosswalk table names USDA symbols among anchored fields. |
+| Restructured tail into formal doctrine companion sections (Open Questions register, Verification backlog, Changelog, Definition of done). | housekeeping | Aligns with operating-contract doctrine-doc companion-section pattern. |
+| Corrected Directory Rules section references (§3 root rule, §6.5 policy, §12 Domain Placement Law, §13 anti-patterns). | clarification | Matches Directory Rules v1.2/v1.3 numbering. |
+| Bumped version v1 → v1.1; `updated` 2026-05-16 → 2026-06-02. | housekeeping | MINOR bump; no operating-law change, no receipt re-issue. |
+
+> **Backward compatibility.** Section anchors §1–§12 are preserved. The former §7 anchor `#7-sensitivesite-nestdenroostspawningsite-and-the-deny-path` is renamed to `#7-sensitivesite-and-the-deny-path` — update inbound links. The former §13/§14 ("Verification backlog and open questions" / "Related docs") are split and renumbered into §13–§17; inbound deep links to those tail sections should be re-pointed.
+
+[Back to top ↑](#contents)
+
+---
+
+## 16. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (proposed home `docs/domains/fauna/IDENTITY_MODEL.md`, NEEDS VERIFICATION);
+- a docs steward and the DOM-FAUNA + schema stewards review it;
+- it is linked from the Fauna lane README / docs index and the doctrine index;
+- it does not conflict with accepted ADRs (notably ADR-0001 schema home);
+- the `MonitoringEvent` and `NestDenRoostSpawningSite` ownership questions (OQ-FAUNA-ID-05, -06) are recorded in `docs/registers/DRIFT_REGISTER.md`;
+- any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `GENERATED_RECEIPT.json` planned in the notes is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top ↑](#contents)
+
+---
+
+## 17. Related docs
 
 > [!NOTE]
-> All paths below are **PROPOSED** per Directory Rules §0 except where marked CONFIRMED. They reflect the canonical lane pattern from Directory Rules §12 (Domain Placement Law) and prior drafts in this project series.
+> All paths below are **PROPOSED** per Directory Rules §2.5 except where marked CONFIRMED. They reflect the canonical lane pattern from Directory Rules §12 (Domain Placement Law) and the Atlas §24.13 responsibility-root crosswalk.
 
 - `docs/domains/fauna/README.md` — Fauna lane orientation. *(PROPOSED — NEEDS VERIFICATION)*
 - `docs/domains/fauna/CANONICAL_PATHS.md` — Fauna canonical paths register. *(PROPOSED — NEEDS VERIFICATION)*
 - `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` — Operational refresh runbook for Fauna sources. *(CONFIRMED — drafted in this project series.)*
-- `docs/doctrine/directory-rules.md` — Repository placement doctrine. *(CONFIRMED — this project.)*
+- `docs/doctrine/directory-rules.md` — Repository placement doctrine. *(CONFIRMED — this project, v1.2/v1.3.)*
+- `ai-build-operating-contract.md` — Canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED — this project.)*
 - `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED governing doctrine. *(PROPOSED — NEEDS VERIFICATION)*
 - `docs/doctrine/truth-posture.md` — Cite-or-abstain posture. *(PROPOSED — NEEDS VERIFICATION)*
 - `docs/doctrine/trust-membrane.md` — Public route / canonical store separation. *(PROPOSED — NEEDS VERIFICATION)*
 - `docs/architecture/contract-schema-policy-split.md` — Contract / schema / policy responsibility split. *(PROPOSED — NEEDS VERIFICATION)*
 - `docs/standards/PROV.md` — W3C PROV-O and PAV provenance profile. *(CONFIRMED — drafted in this project series; naming vs `PROVENANCE.md` is an open ADR item.)*
-- `docs/standards/CANONICALIZATION.md` — JCS vs URDNA2015 canonicalization decision matrix. *(PROPOSED per `C1-02` expansion.)*
-- `docs/policy/sensitivity/fauna.md` — Fauna sensitivity policy and geoprivacy transform rules. *(PROPOSED — NEEDS VERIFICATION)*
-- `docs/adr/ADR-0001-schema-home.md` — Schema home ADR. *(CONFIRMED — cited by Directory Rules §0.)*
+- `docs/standards/CANONICALIZATION.md` — JCS vs URDNA2015 canonicalization decision matrix. *(PROPOSED per `C8-05` expansion.)*
+- `policy/sensitivity/fauna/` — Fauna sensitivity policy and geoprivacy transform rules. *(PROPOSED — NEEDS VERIFICATION; Atlas §24.13.)*
+- `policy/domains/fauna/` — Fauna domain policy bundle. *(PROPOSED — NEEDS VERIFICATION; Directory Rules §6.5.)*
+- `docs/adr/ADR-0001-schema-home.md` — Schema home ADR. *(CONFIRMED — cited by Directory Rules §2.4(3).)*
 
 ---
 
-**Last updated:** 2026-05-16 · **Status:** Draft · **Owners:** *PLACEHOLDER — NEEDS VERIFICATION* · [Back to top ↑](#contents)
+**Last updated:** 2026-06-02 · **Version:** v1.1 · **Status:** Draft · **CONTRACT_VERSION:** `3.0.0` · **Owners:** *PLACEHOLDER — NEEDS VERIFICATION* · [Back to top ↑](#contents)
