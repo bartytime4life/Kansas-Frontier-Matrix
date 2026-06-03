@@ -2,31 +2,39 @@
 doc_id: kfm://doc/domain-flora-source-registry
 title: Flora — Source Registry
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: Docs steward + Flora lane owner + Source authority steward
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-03
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
+  - docs/doctrine/sensitivity.md                          # NEEDS VERIFICATION
   - docs/domains/flora/README.md                          # NEEDS VERIFICATION
+  - docs/domains/flora/SOURCE_FAMILIES.md                 # session lineage (authored this run)
+  - docs/domains/flora/SOURCES.md                         # session lineage (authored this run)
+  - docs/domains/flora/SOURCE_INTAKE.md                   # session lineage (authored this run)
   - docs/domains/fauna/SOURCE_REGISTRY.md                 # NEEDS VERIFICATION (sibling pattern)
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md            # NEEDS VERIFICATION
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md         # CONFIRMED (sibling pattern, this session lineage)
-  - docs/standards/PROV.md                                # CONFIRMED (sibling pattern, this session lineage)
+  - docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md         # session lineage (authored this run; Pattern A)
+  - docs/standards/SENSITIVITY_RUBRIC.md                  # NEEDS VERIFICATION
+  - docs/standards/REDACTION_DETERMINISM.md               # NEEDS VERIFICATION
+  - docs/standards/PROV.md                                # CONFIRMED (sibling pattern, prior session lineage)
   - docs/adr/ADR-0001-schema-home.md
   - control_plane/source_authority_register.yaml         # NEEDS VERIFICATION
   - data/registry/sources/flora/                          # PROPOSED machine-readable home
 tags: [kfm, domain, flora, source-registry, sources, governance, deny-by-default]
 notes:
+  - CONTRACT_VERSION = "3.0.0".
   - PROPOSED placement under docs/domains/flora/ per Directory Rules §12 Domain Placement Law and §6.1.
   - This doc is the human-readable doctrine for the Flora source registry; descriptors themselves live under data/registry/sources/flora/.
   - Source-role enum mapping for individual families is PROPOSED until ADR or schema PR confirms.
   - Rights and endpoint status for every source family is NEEDS VERIFICATION pending mounted-repo and live-source review.
+  - v0.2 reconciles with session-authored siblings (SOURCE_FAMILIES, SOURCES, SOURCE_INTAKE) and corrects the runbook home to docs/runbooks/flora/ per Directory Rules §6.1.b.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Flora — Source Registry
@@ -40,9 +48,10 @@ Doctrinal register of admissible Flora-domain sources — identity, role, rights
 [![Sensitivity: deny--by--default](https://img.shields.io/badge/sensitivity-deny--by--default-b71c1c)](#)
 [![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-2e7d32)](#)
 [![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#)
+[![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue)](#)
 [![CI](https://img.shields.io/badge/ci-TODO-lightgrey)](#)
 
-> **Status:** Draft · **Owners:** Docs steward · Flora lane owner · Source authority steward · **Updated:** 2026-05-16
+> **Status:** Draft · **Owners:** Docs steward · Flora lane owner · Source authority steward · **Updated:** 2026-06-03
 
 ---
 
@@ -61,7 +70,9 @@ Doctrinal register of admissible Flora-domain sources — identity, role, rights
 11. [SourceIntakeRecord shape](#11-sourceintakerecord-shape)
 12. [Anti-patterns](#12-anti-patterns)
 13. [Verification backlog and open questions](#13-verification-backlog-and-open-questions)
-14. [Related docs](#14-related-docs)
+14. [Changelog](#14-changelog)
+15. [Definition of done](#15-definition-of-done)
+16. [Related docs](#16-related-docs)
 
 ---
 
@@ -75,6 +86,15 @@ This document is the **human-readable doctrine** for the Flora registry. The **m
 
 > [!IMPORTANT]
 > **The descriptor records *that the source exists* and *how it should be treated*, not *what the source says*.** A source admitted to the registry is **not** therefore a publishable claim; it is a candidate that may flow through `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` only when every gate is satisfied.
+
+This registry is the **doctrinal anchor** of a four-document Flora source surface. Its companions, authored in lineage with this file, are:
+
+| Doc | Role | Relationship to this registry |
+|---|---|---|
+| [`SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) | Upstream profiles — *who* each family is, permitted roles, character. | The descriptive who's-who behind §5. |
+| [`SOURCES.md`](./SOURCES.md) | Per-source admission register — the `SourceDescriptor` instances. | The concrete admission decisions this registry governs. |
+| [`SOURCE_INTAKE.md`](./SOURCE_INTAKE.md) | Intake mechanics — pre-RAW, conditional fetch, Gate A. | *How* a source reaches `RAW`; operationalizes §4 and §10. |
+| [`../../runbooks/flora/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/flora/SOURCE_REFRESH_RUNBOOK.md) | Operator runbook — refresh, no-network dry run, failure response. | *How to operate* the refresh; lives under `docs/runbooks/`, not here. |
 
 ### Scope
 
@@ -102,19 +122,24 @@ Out of scope:
 
 ```text
 docs/domains/flora/SOURCE_REGISTRY.md          ← this file
-docs/domains/flora/README.md                   ← landing page             (NEEDS VERIFICATION)
-docs/sources/SOURCE_DESCRIPTOR_STANDARD.md     ← cross-domain standard    (NEEDS VERIFICATION)
+docs/domains/flora/SOURCE_FAMILIES.md          ← upstream family profiles  (session lineage)
+docs/domains/flora/SOURCES.md                  ← per-source admission register (session lineage)
+docs/domains/flora/SOURCE_INTAKE.md            ← intake mechanics          (session lineage)
+docs/domains/flora/README.md                   ← landing page              (NEEDS VERIFICATION)
+docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md  ← operator runbook          (session lineage; Pattern A)
+docs/sources/SOURCE_DESCRIPTOR_STANDARD.md     ← cross-domain standard     (NEEDS VERIFICATION)
 data/registry/sources/flora/                   ← machine-readable descriptors (PROPOSED)
-schemas/contracts/v1/source/source-descriptor.json   ← canonical schema   (PROPOSED, per ADR-0001)
-policy/domains/flora/                          ← domain policy bundle     (PROPOSED)
-control_plane/source_authority_register.yaml   ← cross-domain index       (NEEDS VERIFICATION)
-tests/domains/flora/                           ← validators + fixtures    (PROPOSED)
-fixtures/domains/flora/sources/                ← no-network fixtures      (PROPOSED)
+schemas/contracts/v1/source/source-descriptor.json   ← canonical schema    (PROPOSED, per ADR-0001)
+policy/domains/flora/                          ← domain policy bundle      (PROPOSED)
+policy/redaction/profiles.yaml                 ← named redaction profiles  (PROPOSED, per C6-02)
+control_plane/source_authority_register.yaml   ← cross-domain index        (NEEDS VERIFICATION)
+tests/domains/flora/                           ← validators + fixtures     (PROPOSED)
+fixtures/domains/flora/sources/                ← no-network fixtures       (PROPOSED)
 ```
 
 **Upstream doctrine:**
 
-- [Directory Rules](../../doctrine/directory-rules.md) — §6.1 (`docs/` layout), §9.1 (`data/registry/`), §12 (Domain Placement Law).
+- [Directory Rules](../../doctrine/directory-rules.md) — §6.1 (`docs/` layout), §6.1.b (`docs/runbooks/` placement), §9.1 (`data/registry/`), §12 (Domain Placement Law).
 - [Lifecycle Law](../../doctrine/lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`.
 - [Trust Membrane](../../doctrine/trust-membrane.md) — public clients consume governed APIs, never raw or work stores.
 - [Truth Posture](../../doctrine/truth-posture.md) — cite-or-abstain default.
@@ -135,7 +160,7 @@ fixtures/domains/flora/sources/                ← no-network fixtures      (PRO
 **Inputs accepted (descriptors live here, source bytes do not):**
 
 - One `SourceDescriptor` per admitted Flora source family or sub-feed (PROPOSED schema home: `schemas/contracts/v1/source/source-descriptor.json`).
-- One `SourceActivationDecision` per descriptor declaring `allowed | restricted | denied | needs-review` use (PROPOSED).
+- One `SourceActivationDecision` per descriptor declaring `allowed | restricted | denied | needs-review` use. **CONFIRMED doctrine** as an object family (the gate deciding source use, restriction, quarantine, or denial); **PROPOSED** as a concrete artifact shape and storage location.
 - Append-only history of descriptor revisions, supersession links, and retirement records.
 - Per-source steward sign-off records where rights or sensitivity demand it.
 
@@ -160,18 +185,18 @@ fixtures/domains/flora/sources/                ← no-network fixtures      (PRO
 
 ```mermaid
 flowchart LR
-  A[Candidate<br/>source identified] --> B[Draft<br/>SourceDescriptor]
-  B --> C{Rights<br/>resolved?}
-  C -- no --> Q1[QUARANTINE<br/>rights-unknown]
-  C -- yes --> D{Source role<br/>assignable?}
-  D -- no --> Q2[QUARANTINE<br/>role-ambiguous]
-  D -- yes --> E{Sensitivity<br/>posture set?}
-  E -- no --> Q3[QUARANTINE<br/>sensitivity-unset]
-  E -- yes --> F[Steward review<br/>and sign-off]
-  F --> G[SourceActivationDecision<br/>ALLOWED / RESTRICTED / DENIED / NEEDS-REVIEW]
-  G -- ALLOWED --> H[Connector/watcher<br/>may fetch to RAW]
+  A["Candidate<br/>source identified"] --> B["Draft<br/>SourceDescriptor"]
+  B --> C{"Rights<br/>resolved?"}
+  C -- no --> Q1["QUARANTINE<br/>rights-unknown"]
+  C -- yes --> D{"Source role<br/>assignable?"}
+  D -- no --> Q2["QUARANTINE<br/>role-ambiguous"]
+  D -- yes --> E{"Sensitivity<br/>posture set?"}
+  E -- no --> Q3["QUARANTINE<br/>sensitivity-unset"]
+  E -- yes --> F["Steward review<br/>and sign-off"]
+  F --> G["SourceActivationDecision<br/>ALLOWED / RESTRICTED / DENIED / NEEDS-REVIEW"]
+  G -- ALLOWED --> H["Connector/watcher<br/>may fetch to RAW"]
   G -- RESTRICTED --> H
-  G -- DENIED --> X[No connector activation]
+  G -- DENIED --> X["No connector activation"]
   G -- NEEDS-REVIEW --> F
 
   classDef quar fill:#fff3e0,stroke:#e65100,color:#3e2723;
@@ -183,7 +208,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> `SourceActivationDecision` is **PROPOSED** as the artifact that records the four-way activation outcome. The decision is referenced by every downstream `RunReceipt` and is the audit anchor when a connector is paused, retired, or rolled back.
+> `SourceActivationDecision` is **CONFIRMED doctrine** as the object family that records the source-use decision; the **four-way outcome shape** and storage location are **PROPOSED**. The decision is referenced by every downstream `RunReceipt` and is the audit anchor when a connector is paused, retired, or rolled back.
 
 [Back to top ↑](#contents)
 
@@ -191,12 +216,12 @@ flowchart LR
 
 ## 5. Flora source families
 
-**CONFIRMED doctrine / PROPOSED implementation.** The Flora domain's source families are drawn from the Encyclopedia (§7.6) and the Domains Culmination Atlas (§8.D), with the USDA PLANTS and Kansas herbaria additions from the New Ideas 5-8 packet. Each family below requires a `SourceDescriptor`; rights and endpoints are **NEEDS VERIFICATION** until live-source review and steward sign-off are recorded.
+**CONFIRMED doctrine / PROPOSED implementation.** The Flora domain's source families are drawn from the Encyclopedia (§7.6) and the Domains Culmination Atlas (§8.D), with the USDA PLANTS and Kansas herbaria additions from the New Ideas 5-8 packet. Each family below requires a `SourceDescriptor`; rights and endpoints are **NEEDS VERIFICATION** until live-source review and steward sign-off are recorded. Family character and permitted roles are profiled in [`SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md).
 
 | # | Family | Typical role(s) | Public release class (default) | Rights / sensitivity | Status |
 |---|---|---|---|---|---|
 | F1 | **KDWP listed-species and stewardship context** (state rare-plant program; Ecological Review Tool outputs) | regulatory · administrative · context | **deny-by-default** for exact locations | rights NEEDS VERIFICATION; sensitive joins fail closed | PROPOSED |
-| F2 | **Kansas Biological Survey / KU R. L. McGregor Herbarium** (specimen-portal exports; IPT/Darwin Core archives) | observed (specimens) | generalized public; exact for steward review | rights NEEDS VERIFICATION; many state herbaria use CC-BY 4.0 (EXTERNAL, see [§14](#14-related-docs)) | PROPOSED |
+| F2 | **Kansas Biological Survey / KU R. L. McGregor Herbarium** (specimen-portal exports; IPT/Darwin Core archives) | observed (specimens) | generalized public; exact for steward review | rights NEEDS VERIFICATION; many state herbaria use CC-BY 4.0 (EXTERNAL, see [§16](#16-related-docs)) | PROPOSED |
 | F3 | **K-State Herbarium (KSC)** (Great-Plains-focused specimens) | observed (specimens) | generalized public; exact for steward review | rights NEEDS VERIFICATION; CC-BY 4.0 reported by KSC (EXTERNAL) | PROPOSED |
 | F4 | **USFWS ECOS — plant context** (federally listed plants, recovery, critical habitat) | regulatory (legal status) · context | generalized public for listing context; deny exact sensitive geometry | federal public domain typical; per-record terms NEEDS VERIFICATION | PROPOSED |
 | F5 | **NatureServe Explorer / Explorer Pro** (conservation status ranks: G/S/T) | regulatory (status authority) · aggregate | status ranks releasable; exact occurrences are not the source product | terms-restricted; redistribution constrained; NEEDS VERIFICATION | PROPOSED |
@@ -270,7 +295,20 @@ The table below is a **PROPOSED** role-claim matrix for Flora. Mismatches betwee
 
 ## 7. Sensitivity and rights posture
 
-**CONFIRMED doctrine.** Rare, protected, culturally sensitive, and steward-reviewed flora **default to generalized, withheld, staged, or denied** public geometry. Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **block public promotion**.
+**CONFIRMED doctrine.** Rare, protected, culturally sensitive, and steward-reviewed flora **default to generalized, withheld, staged, or denied** public geometry. Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **block public promotion**. This aligns with the operating contract's §23.2 sensitive-domain matrix (rare species: `DENY` exact coordinates; generalize to a public-safe grid; wildlife steward; `RedactionReceipt` + sensitive-flagged `LayerManifest`).
+
+### Sensitivity rubric (0–5)
+
+**CONFIRMED doctrine.** Every Flora record carries a `sensitivity_rank` in 0–5; the rank is required on every node and persisted in catalog records and `EvidenceBundle`s. The rank maps to a required redaction profile.
+
+| Rank | Meaning | Default profile (PROPOSED names) |
+|---|---|---|
+| 0 | Public / open | `kfm:redact:none` |
+| 1 | Common, non-sensitive | `kfm:redact:none` |
+| 2 | Watchlist | named profile per policy |
+| 3 | SINC / locally sensitive | `profile:sinc-obscure-10km` (default) |
+| 4 | Threatened / rare | strict mask or embargo |
+| 5 | Sacred / critical | **fail-closed**; no map or timeline exposure |
 
 ### Default outcome by class (Flora-applicable subset of the Sensitive / Deny-by-Default Register)
 
@@ -284,6 +322,22 @@ The table below is a **PROPOSED** role-claim matrix for Flora. Mismatches betwee
 
 > [!CAUTION]
 > **Public release of exact rare-plant geometry is a publication-deny condition.** Public Flora layers must consume **generalized, geoprivacy-transformed surfaces**, with the transform recorded in a `RedactionReceipt`. The steward-only view may surface exact geometry under access controls — but never the trust-membrane public route.
+
+### Geoprivacy transform menu
+
+**CONFIRMED doctrine** (KFM Components C6). Redaction must be deterministic, reproducible, and policy-driven — never improvised at the edges. Public Flora geometry is produced by a **named redaction profile** that fixes the strategy, parameters, seeding rule, and any embargo.
+
+| Transform | What it does | Determinism rule | Citation |
+|---|---|---|---|
+| **Named profile** | References redaction by stable id (e.g., `profile:sinc-obscure-10km`), not inline params. | Profile changes are breaking; versioning is strict. | C6-02 |
+| **Grid generalization** | Snaps points to square (`ST_SnapToGrid`) or hex (H3) cells of `cell_m`; publishes the cell. | H3 has stable, reproducible indexing. | C6-04 |
+| **Seeded jitter** | Offsets display points by a PRNG seeded on `spec_hash` + `occurrence_id`. | Same record → same offset; prevents temporal triangulation. | C6-03 |
+| **DP for aggregates only** | Applies ε-δ noise to counts/heatmaps; raw points are never DP-noised. | ε, δ recorded in receipts. | C6-05 |
+| **Embargo / delayed release** | Time-bound suppression enforced at render via PDP introspection. | Embargo timestamp recorded. | C6 overview |
+| **Fail-closed (rank 5)** | No map or timeline exposure. | No profile ⇒ deny publish. | C6-01 |
+
+> [!NOTE]
+> **Seeded jitter and DP are not interchangeable.** Jitter is display obfuscation for raw points; DP is a formally bounded guarantee for aggregates only. Conflating them is an anti-pattern. Seed-salting policy is an open question (see §13).
 
 ### Rights as evidence
 
@@ -326,7 +380,7 @@ rights:
 | F12 Botanical surveys | irregular (project-driven) | per-survey | survey program register |
 
 > [!NOTE]
-> **Freshness is a policy choice, not a universal scientific absolute.** Materiality thresholds, recency windows, and "stale" cutoffs are recorded in the descriptor and reviewed by stewards. Treating any of these as machine-fixed constants is an anti-pattern.
+> **Freshness is a policy choice, not a universal scientific absolute.** Materiality thresholds, recency windows, and "stale" cutoffs are recorded in the descriptor and reviewed by stewards. Treating any of these as machine-fixed constants is an anti-pattern. Connector cadence and quarantine-recovery policy is governed by ADR-S-12.
 
 [Back to top ↑](#contents)
 
@@ -342,7 +396,7 @@ rights:
 |---|---|---|
 | **G-RIGHTS** | License recorded; redistribution class set; attribution captured; consent record present if required | `DENY` activation |
 | **G-ROLE** | `source_role` set; role-specific MUST fields present (`role_authority`, `role_model_run_ref`, `role_aggregation_unit`, etc.) | `DENY` activation |
-| **G-SENSITIVITY** | Sensitivity class assigned; default outcome recorded; geoprivacy posture set; join-sensitivity rules documented | `DENY` activation |
+| **G-SENSITIVITY** | Sensitivity rank assigned; default outcome recorded; geoprivacy profile set; join-sensitivity rules documented | `DENY` activation |
 | **G-CADENCE** | Cadence class and freshness window recorded; watcher signal selected | `ABSTAIN` (cannot activate watcher) |
 | **G-CONTACT** | Steward of record; source contact; rights contact | `ABSTAIN` |
 | **G-FIXTURE** | At least one positive and one negative no-network fixture present | `ABSTAIN` |
@@ -368,7 +422,7 @@ needs-review  — steward review required before any further state; quarantine i
 
 ## 10. Watchers and source-drift candidates
 
-**CONFIRMED doctrine.** Watchers detect change; they do not declare truth. Every watcher tick for a Flora source emits — at most — a `SourceIntakeRecord` candidate with `publication_state = WORK_CANDIDATE` and `promotion_required = true`. A successful fetch means *the URL responded*; it does not mean *the new content is admissible*.
+**CONFIRMED doctrine.** Watchers detect change; they do not declare truth. Every watcher tick for a Flora source emits — at most — a `SourceIntakeRecord` candidate with `publication_state = WORK_CANDIDATE` and `promotion_required = true`. A successful fetch means *the URL responded*; it does not mean *the new content is admissible*. The full intake mechanics are in [`SOURCE_INTAKE.md`](./SOURCE_INTAKE.md).
 
 ### Flora-relevant watchers (PROPOSED)
 
@@ -386,7 +440,7 @@ needs-review  — steward review required before any further state; quarantine i
 
 ### Source-head metadata (intake evidence, not validation)
 
-**CONFIRMED doctrine.** Fast source-head checks (HTTP `HEAD`, `ETag`, `If-None-Match`, `Last-Modified`, `content-length`) record intake evidence but **do not substitute for substantive validation, rights review, or publication gates**. ETag alone is insufficient — publishers may re-publish under the same URL — and content hashes are stronger evidence when feasible.
+**CONFIRMED doctrine.** Fast source-head checks (HTTP `HEAD`, `ETag`, `If-None-Match`, `Last-Modified`, `content-length`) record intake evidence but **do not substitute for substantive validation, rights review, or publication gates**. ETag alone is insufficient — publishers may re-publish under the same URL — and content hashes are stronger evidence when feasible. The layered playbook (validators → manifest checksums → object-store events → CDC, with debounce/coalesce) is in `docs/standards/SMART_SYNC.md`.
 
 Per-source descriptor recorded `source_head` shape (PROPOSED):
 
@@ -397,7 +451,7 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
   "last_modified": "...",
   "content_length": 123456,
   "spec_hash": "...",
-  "captured_at": "2026-05-16T00:00:00Z"
+  "captured_at": "2026-06-03T00:00:00Z"
 }
 ```
 
@@ -407,7 +461,7 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
 
 ## 11. SourceIntakeRecord shape
 
-**PROPOSED canonical shape** (drawn from New Ideas 5-15 and the Pass 20 Part 2 SRC normalization). The `SourceIntakeRecord` is the **watcher envelope** that wraps every drift signal, change candidate, or ingest decision so it remains reviewable.
+**PROPOSED canonical shape** (drawn from New Ideas 5-15 and the Pass 20 Part 2 SRC normalization). The `SourceIntakeRecord` is the **watcher envelope** that wraps every drift signal, change candidate, or ingest decision so it remains reviewable. The object family itself is CONFIRMED doctrine; the field set below is PROPOSED.
 
 ```json
 {
@@ -436,7 +490,7 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
     "spec_hash": "..."
   },
   "steward_summary_ref": "...",
-  "captured_at": "2026-05-16T00:00:00Z"
+  "captured_at": "2026-06-03T00:00:00Z"
 }
 ```
 
@@ -456,6 +510,8 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
 | **Fetch success = source acceptance** | A 200 OK or unchanged ETag is treated as proof of admissibility. | `source_head` is intake evidence; substantive validation, rights review, and policy gates are separate gates. |
 | **Role invention** | An AI summary calls iNaturalist "the authority for legal status." | Source role is a registry property set by a steward; AI may not invent it. |
 | **Reverse-engineering geoprivacy** | A pipeline upscales obscured iNaturalist coordinates from rounded grids. | Obscured-coordinate policy is honored; upscaling is a publication-deny condition. |
+| **Random-each-render jitter** | Display jitter is re-randomized each render, making the true point triangulable across snapshots. | Jitter is deterministic, seeded on `spec_hash` + `occurrence_id` (C6-03). |
+| **DP on raw points** | Differential-privacy noise applied to individual occurrences. | DP applies to aggregates only; raw points use mask/jitter/grid (C6-05). |
 | **Join-induced sensitivity ignored** | PLANTS county checklist joined to GBIF occurrence stream without sensitivity recompute. | Join sensitivity is computed on the **product**, not inherited from the **inputs**; `needs-review` on intersecting listed-species sets. |
 | **Convenience descriptor** | A free-text note in `data/raw/flora/...` standing in for a structured descriptor. | Every admitted source has a structured descriptor under `data/registry/sources/flora/`. |
 | **Quiet rights drift** | Source license changes; descriptor not updated; pipeline continues. | License change ⇒ new descriptor revision + `CorrectionNotice`; promotion may pause until reviewed. |
@@ -476,11 +532,11 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
 | Confirm `data/registry/sources/flora/` exists and is append-only | Mounted-repo directory listing; CI append-only check | NEEDS VERIFICATION |
 | Confirm `SourceActivationDecision` artifact shape and storage location | Schema PR or ADR; control-plane register entry | UNKNOWN |
 | Confirm flora-specific sensitivity registry (state-listed, federally listed, culturally sensitive) | `policy/sensitivity/flora/` files; cross-reference with KDWP / USFWS lists | NEEDS VERIFICATION |
-| Confirm geoprivacy transform menu (suppress, grid-generalize, county/HUC generalize, buffer, jitter-with-constraints, delayed-release, steward-only) and per-transform receipt schema | Policy bundle + schema + fixture coverage | NEEDS VERIFICATION |
+| Confirm named redaction profile catalog and per-profile verifier | `policy/redaction/profiles.yaml` (PROPOSED, per C6-02); fixture coverage | NEEDS VERIFICATION |
 | Confirm `taxonomy_version` registry source-of-truth (USDA PLANTS, ITIS, GBIF Backbone) and conflict-resolution rule | ADR or doctrine doc | UNKNOWN |
 | Confirm rare-plant exact-location threshold (km radius for generalization; per-class policy) | `policy/domains/flora/geoprivacy.yaml` (PROPOSED) | UNKNOWN |
 | Confirm PLANTS taxa-drift watcher first county fixture (county FIPS, baseline taxonomy version) | `fixtures/domains/flora/sources/plants/...` | PROPOSED |
-| Confirm naming convention for `docs/runbooks/flora/...` vs flat-prefix runbooks (parallel to fauna decision) | Local `docs/runbooks/README.md` or ADR | NEEDS VERIFICATION |
+| Confirm runbook home `docs/runbooks/flora/` vs flat-prefix (parallel to fauna decision) | Local `docs/runbooks/README.md` or ADR (OPEN-DR-02) | NEEDS VERIFICATION |
 
 ### Open questions
 
@@ -490,19 +546,63 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
 - Which **join patterns** (e.g., PLANTS × KDWP listed, GBIF × NatureServe S-rank) require **fail-closed denial** even when each input is individually safe?
 - What is the appropriate **county-level generalization radius** for KDWP-listed plants? What about USFWS-listed? Should the policy differ by listing tier?
 - Should community-science observations (iNaturalist research-grade) ever serve as the **sole** source for a public Flora claim, or always require corroboration?
+- Should seeded-jitter seeds be **salted with a server-side secret** to prevent third-party reproduction of jittered points (C6-03 open question)?
 
 [Back to top ↑](#contents)
 
 ---
 
-## 14. Related docs
+## 14. Changelog
+
+### v0.1 → v0.2
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Upgraded geoprivacy/redaction items from PROPOSED to CONFIRMED doctrine | reconciliation | KFM Components C6 (rubric, profiles, jitter, grid, DP) directly supports these as confirmed doctrine. |
+| Added §7 sensitivity rubric (0–5) and geoprivacy transform menu | gap closure | C6-01 through C6-05 give an explicit, citable transform library. |
+| Added `SourceActivationDecision` truth-label note (object family CONFIRMED; shape PROPOSED) | clarification | Confirmed as an object family in the unified synthesis / connected-dots brief glossary. |
+| Wired in session-authored siblings (FAMILIES, SOURCES, INTAKE) and corrected runbook home | reconciliation | Runbooks live under `docs/runbooks/` per Directory Rules §6.1.b, not the domain lane. |
+| Added Changelog + Definition of done companion sections; footer | housekeeping | Doctrine-doc companion pattern; full presentation standard. |
+| Two new anti-pattern rows (random-each-render jitter; DP on raw points) | gap closure | C6-03 / C6-05 make these explicit failure modes. |
+| Pinned `CONTRACT_VERSION = "3.0.0"`; refreshed `updated` date | housekeeping | Doctrine-adjacent doc requirement. |
+
+> **Backward compatibility.** All §1–§13 anchors are preserved; the Contents list gained §14/§15 and renumbered "Related docs" to §16 (its anchor changed from prior implicit numbering — update any external link to `#16-related-docs`). No doctrinally important language removed.
+
+[Back to top ↑](#contents)
+
+---
+
+## 15. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed under `docs/domains/flora/` per Directory Rules §12;
+- a docs steward, the Flora lane owner, and the source authority steward review it;
+- it is linked from the Flora lane README and the cross-domain source index;
+- it does not conflict with accepted ADRs (notably ADR-0001 schema home, ADR-S-04 source-role vocabulary, ADR-S-12 connector cadence);
+- the runbook-home divergence (OPEN-DR-02) and any conflict with repo conventions are logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `GENERATED_RECEIPT.json` planned in Section 2 is wired into CI;
+- per-family rights, the redaction profile catalog, and placeholder verification items are resolved.
+
+[Back to top ↑](#contents)
+
+---
+
+## 16. Related docs
 
 > [!NOTE]
-> Links below mix CONFIRMED, PROPOSED, and NEEDS VERIFICATION targets. Update once mounted-repo evidence is available.
+> Links below mix CONFIRMED, session-lineage, PROPOSED, and NEEDS VERIFICATION targets. Update once mounted-repo evidence is available.
+
+**Flora source surface (session lineage)**
+
+- [`docs/domains/flora/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — upstream family profiles.
+- [`docs/domains/flora/SOURCES.md`](./SOURCES.md) — per-source admission register.
+- [`docs/domains/flora/SOURCE_INTAKE.md`](./SOURCE_INTAKE.md) — intake mechanics (pre-RAW, conditional fetch, Gate A).
+- [`docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/flora/SOURCE_REFRESH_RUNBOOK.md) — operator refresh runbook (Pattern A).
 
 **Doctrine and lifecycle**
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12); `data/registry/` rules (§9.1). *(CONFIRMED)*
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12); `data/registry/` rules (§9.1); runbook placement (§6.1.b). *(CONFIRMED)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. *(NEEDS VERIFICATION as a target file)*
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain. *(NEEDS VERIFICATION)*
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md). *(NEEDS VERIFICATION)*
@@ -510,7 +610,10 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
 **Cross-domain source standards**
 
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — cross-domain descriptor doctrine. *(NEEDS VERIFICATION)*
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance profile. *(CONFIRMED, sibling pattern from this session)*
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance profile. *(CONFIRMED, sibling pattern from prior session)*
+- `docs/standards/SENSITIVITY_RUBRIC.md` — 0–5 rubric and label-to-profile lookup. *(NEEDS VERIFICATION; corpus-proposed)*
+- `docs/standards/REDACTION_DETERMINISM.md` — seed concatenation and determinism rules. *(NEEDS VERIFICATION; corpus-proposed)*
+- `docs/standards/SMART_SYNC.md` — conditional-GET / manifest-checksum / debounce. *(NEEDS VERIFICATION)*
 
 **Schemas and policy (PROPOSED homes)**
 
@@ -520,11 +623,12 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
 - `policy/domains/flora/rights.yaml`
 - `policy/domains/flora/sensitivity.yaml`
 - `policy/domains/flora/geoprivacy.yaml`
+- `policy/redaction/profiles.yaml`
 
 **Sibling domain registries (parallel pattern)**
 
 - `docs/domains/fauna/SOURCE_REGISTRY.md` *(NEEDS VERIFICATION — sibling not yet authored)*
-- `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` *(CONFIRMED — authored in this session)*
+- `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` *(CONFIRMED — authored in prior session; Pattern A precedent)*
 
 **External references (EXTERNAL, generic standards / external tool behavior)**
 
@@ -536,4 +640,4 @@ Per-source descriptor recorded `source_head` shape (PROPOSED):
 
 ---
 
-<sub>Last updated: 2026-05-16 · Doc id: `kfm://doc/domain-flora-source-registry` · Version: v0.1 (draft) · [Back to top ↑](#contents)</sub>
+<sub>Last updated: 2026-06-03 · Doc id: `kfm://doc/domain-flora-source-registry` · Version: v0.2 (draft) · CONTRACT_VERSION 3.0.0 · [Back to top ↑](#contents)</sub>
