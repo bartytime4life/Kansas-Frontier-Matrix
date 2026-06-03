@@ -1,39 +1,55 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<assign-on-publish>
+doc_id: kfm://doc/flora-preservation-matrix
 title: Flora Preservation Matrix
 type: standard
-version: v0.1
+version: v0.2
 status: draft
-owners: <flora-steward>, <docs-steward>
+owners: <flora-steward> · <docs-steward>
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-03
 policy_label: public
-related: [docs/doctrine/lifecycle-law.md, docs/doctrine/truth-posture.md, docs/doctrine/trust-membrane.md, docs/domains/flora/README.md]
+related:
+  - ai-build-operating-contract.md                 # CONFIRMED canonical operating contract (CONTRACT_VERSION 3.0.0)
+  - directory-rules.md                             # CONFIRMED placement authority (§12 Domain Placement Law, §13.1 contracts-vs-schemas)
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/trust-membrane.md
+  - docs/domains/flora/README.md
+  - docs/domains/flora/OBJECT_FAMILIES.md           # companion: per-family reference
+  - docs/domains/flora/IDENTITY_MODEL.md            # companion: deterministic identity charter
+  - docs/domains/flora/MISSING_OR_PLANNED_FILES.md  # companion: per-lane file register
 tags: [kfm, flora, preservation, sensitivity, governance]
-notes: [First edition; modality taxonomy and per-modality tier assignments are PROPOSED; forward references NEEDS VERIFICATION until mounted-repo pass]
+notes:
+  # CONTRACT_VERSION pin: doctrine-adjacent; tracks ai-build-operating-contract.md v3.0.0.
+  # Modality taxonomy (M1–M9) and per-modality tier assignments are PROPOSED; the tier scheme, receipt catalog, and lifecycle gates they map onto are CONFIRMED (Atlas Ch. 24.2/24.5/24.6).
+  # Sensitivity follows the canonical five-tier T0–T4 register (Atlas Ch. 24.5.1); tier-scheme adoption-as-canonical is ADR-S-05 (PROPOSED).
+  # Schema leaf uses schemas/contracts/v1/domains/flora/ (Directory Rules §12); companion Identity Model / Map UI docs use the bare flora/ form — CONFLICTED, see §13.
+  # Pass-20 index IDs KFM-IDX-POL-003 / -005: the join-sensitivity and geoprivacy PRINCIPLES are CONFIRMED doctrine; the exact index-ID strings are NEEDS VERIFICATION.
+  # Forward references to paths, schemas, policies, runbooks are NEEDS VERIFICATION until a mounted-repo pass.
 [/KFM_META_BLOCK_V2] -->
 
-# Flora Preservation Matrix
+# 🌿 Flora Preservation Matrix
 
-A doctrinal crosswalk that maps plant **preservation modalities** — in-situ, herbarium voucher, seed/germplasm, living collection, tissue/DNA, restoration planting, image-only, and digital-only — onto KFM's sensitivity tiers, evidence requirements, receipts, lifecycle gates, and cross-lane interfaces.
+> A doctrinal crosswalk that maps plant **preservation modalities** — in-situ, herbarium voucher, seed/germplasm, living collection, tissue/DNA, restoration planting, image-only, and digital-only — onto KFM's sensitivity tiers, evidence requirements, receipts, lifecycle gates, and cross-lane interfaces.
 
-> **Status:** `draft` · **Owners:** `<flora-steward>`, `<docs-steward>` · **Updated:** 2026-05-16
+[![status: draft](https://img.shields.io/badge/status-draft-orange)](#0-meta-and-authority)
+[![authority: doctrine](https://img.shields.io/badge/authority-doctrine-informational)](#0-meta-and-authority)
+[![lifecycle: RAW%E2%86%92PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-blue)](#10-lifecycle-integration-raw--published)
+[![sensitivity: deny--by--default](https://img.shields.io/badge/sensitivity-deny--by--default-red)](#5-the-matrix)
+[![domain: flora](https://img.shields.io/badge/domain-flora-2e8b57)](#)
+[![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-555)](#)
+[![rights: NEEDS%20VERIFICATION](https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-yellow)](#13-open-questions-and-verification-backlog)
+[![updated: 2026--06--03](https://img.shields.io/badge/updated-2026--06--03-lightgrey)](#)
+<!-- ci-validators badge — TODO once a flora preservation validator workflow is wired -->
 
----
-
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![authority: doctrine](https://img.shields.io/badge/authority-doctrine-informational)
-![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-blue)
-![sensitivity: deny--by--default](https://img.shields.io/badge/sensitivity-deny--by--default-red)
-![domain: flora](https://img.shields.io/badge/domain-flora-2e8b57)
-![rights: NEEDS%20VERIFICATION](https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-yellow)
-![last%20updated: 2026--05--16](https://img.shields.io/badge/last%20updated-2026--05--16-lightgrey)
-<!-- ci-validators badge — TODO once flora preservation validator workflow is wired -->
+| Status | Owners | Contract | Last updated |
+|---|---|---|---|
+| `draft` (v0.2) | `<flora-steward>` · `<docs-steward>` | `CONTRACT_VERSION = "3.0.0"` | 2026-06-03 |
 
 ---
 
 > [!IMPORTANT]
-> This document is **doctrine**, not implementation. The lifecycle invariant, sensitivity tier scheme, and receipt catalog cited here are **CONFIRMED** in the KFM corpus. The nine-modality taxonomy, per-modality default tiers, and recommended receipt combinations are **PROPOSED** until ADRs and schema PRs land. All forward references to paths, schemas, policies, and runbooks are **NEEDS VERIFICATION** without a mounted repository.
+> This document is **doctrine**, not implementation. The lifecycle invariant, sensitivity tier scheme, receipt catalog, and lifecycle gates cited here are **CONFIRMED** in the KFM corpus. The nine-modality taxonomy, per-modality default tiers, and recommended receipt combinations are **PROPOSED** until ADRs and schema PRs land. All forward references to paths, schemas, policies, and runbooks are **NEEDS VERIFICATION** without a mounted repository.
 
 ---
 
@@ -53,7 +69,8 @@ A doctrinal crosswalk that maps plant **preservation modalities** — in-situ, h
 - [11. Governed AI Behavior](#11-governed-ai-behavior)
 - [12. Anti-Patterns](#12-anti-patterns)
 - [13. Open Questions and Verification Backlog](#13-open-questions-and-verification-backlog)
-- [14. Related Docs and Change Log](#14-related-docs-and-change-log)
+- [14. Definition of Done](#14-definition-of-done)
+- [15. Related Docs and Change Log](#15-related-docs-and-change-log)
 
 ---
 
@@ -62,13 +79,14 @@ A doctrinal crosswalk that maps plant **preservation modalities** — in-situ, h
 | Field | Value |
 |---|---|
 | **Document type** | Domain doctrine (Flora) — preservation crosswalk |
-| **Path** | `docs/domains/flora/PRESERVATION_MATRIX.md` |
+| **Path** | `docs/domains/flora/PRESERVATION_MATRIX.md` *(PROPOSED; Directory Rules §12)* |
 | **Owner** | `<flora-steward>` *(placeholder until assigned in `CODEOWNERS`)* |
 | **Reviewers required for change** | Flora steward + Docs steward + Policy steward (sensitivity) |
+| **`CONTRACT_VERSION`** | `"3.0.0"` (this doc is doctrine-adjacent) |
 | **Authority of the matrix structure** | **PROPOSED** |
 | **Authority of cited KFM constructs** *(tiers, receipts, lifecycle, deny-by-default register)* | **CONFIRMED** per `[ATLAS] §24`, `[ENCY] §7.6, §13`, `[UNIFIED] §6.5`, `[DIRRULES] §12` |
 | **Authority of per-modality tier assignments** | **PROPOSED** — see §5, §6 |
-| **Supersedes** | None. First edition. |
+| **Supersedes** | None. First doctrinal content; v0.2 is a polish/reconciliation revision of v0.1. |
 | **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED *(CONFIRMED, `[DIRRULES] §0`)* |
 | **Promotion posture** | **Default-deny.** A preservation record is not public until its modality, sensitivity, rights, and review state resolve to a permitted public surface. |
 
@@ -82,6 +100,9 @@ When sources disagree, resolve in this order:
 4. **This document.**
 5. **Per-modality README files** under `docs/domains/flora/modalities/` *(PROPOSED)*.
 6. **Per-source descriptors** under `data/registry/sources/flora/` *(PROPOSED)*.
+
+> [!NOTE]
+> On a **path** question, `[DIRRULES]` outranks the Atlas (Directory Rules §2.1 authority order). The schema-leaf choice in this document (`schemas/contracts/v1/domains/flora/`) follows Directory Rules §12; see the cross-doc CONFLICTED note in [§13](#13-open-questions-and-verification-backlog).
 
 ### 0.2 Conformance language
 
@@ -114,10 +135,10 @@ This document does three things:
 
 ### 1.3 Out of scope
 
-- **Object-family meaning** → `contracts/domains/flora/` *(PROPOSED).*
+- **Object-family meaning** → `contracts/domains/flora/` and [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) *(companion).*
 - **Field-level shape** → `schemas/contracts/v1/domains/flora/` *(PROPOSED).*
 - **Admissibility / release decisions** → `policy/domains/flora/` and `release/` *(PROPOSED).*
-- **Source identity, rights, licensing** → `data/registry/sources/flora/` and `policy/sensitivity/` *(PROPOSED).*
+- **Source identity, rights, licensing** → `data/registry/sources/flora/` and `policy/sensitivity/flora/` *(PROPOSED).*
 - **Operational procedures** → `docs/runbooks/flora/` *(PROPOSED; pattern mirrors existing `docs/runbooks/fauna/`).*
 - **AI prompt design or Focus Mode templates** → `docs/governed-ai/` *(PROPOSED).*
 
@@ -139,10 +160,10 @@ This document does three things:
 | **In-situ preservation** | The living organism, population, or community at its naturally occurring location. The location *is* the record. | **PROPOSED** |
 | **Ex-situ preservation** | The organism, propagule, tissue, or specimen held outside its natural location: herbarium voucher, seed bank, living collection, tissue/DNA repository. The provenance points back to an originating in-situ context. | **PROPOSED** |
 | **Provenance chain** | The recorded sequence of acts (collection, accession, curation, transfer, deaccession, derivative production) that connects an ex-situ artifact to its in-situ origin. Each act is a transformation that should emit a receipt. | **PROPOSED** |
-| **Sensitivity inheritance** | An ex-situ derivative's sensitivity is bounded below by the sensitivity of its in-situ source. A common-species voucher is not made sensitive by ex-situ status; a rare-species voucher does **not** lose its in-situ location sensitivity simply because the plant is now pressed. | **INFERRED** from `[DOM-FLORA]` geoprivacy posture and `KFM-IDX-POL-003` (join-induced sensitivity) |
-| **Public surface** | What a public client sees through the governed API: feature, layer, attribute fields, Evidence Drawer payload, Focus Mode response. A preservation record may exist internally at exact tier yet appear publicly only as a generalized derivative. | **CONFIRMED** doctrine, applied to preservation in this document |
+| **Sensitivity inheritance** | An ex-situ derivative's sensitivity is bounded below by the sensitivity of its in-situ source. A common-species voucher is not made sensitive by ex-situ status; a rare-species voucher does **not** lose its in-situ location sensitivity simply because the plant is now pressed. | **INFERRED** from `[DOM-FLORA]` geoprivacy posture + the CONFIRMED join-induced-sensitivity principle *(Pass-20 index ID NEEDS VERIFICATION)* |
+| **Public surface** | What a public client sees through the governed API: feature, layer, attribute fields, Evidence Drawer payload, Focus Mode response. A preservation record may exist internally at exact tier yet appear publicly only as a generalized derivative. | **CONFIRMED** doctrine, applied to preservation here |
 | **Preservation act** | A consequential operation on preservation evidence: collection, accession, generalization, redaction, deaccession, digitization, derivative emission, publication. Each is governed and should emit a receipt. | **PROPOSED** |
-| **Modality drift** | The *recorded* modality of an artifact diverges from its physical reality — e.g., a "voucher specimen" record exists but the physical sheet was lost; a "living collection" accession is no longer alive. Modality drift is a known failure mode requiring correction. | **PROPOSED** |
+| **Modality drift** | The *recorded* modality of an artifact diverges from its physical reality — e.g., a "voucher specimen" record exists but the physical sheet was lost; a "living collection" accession is no longer alive. A known failure mode requiring correction. | **PROPOSED** |
 
 [back to top](#mini-table-of-contents)
 
@@ -185,7 +206,7 @@ If a reader needs any of the above, this document **MUST** point them to the cor
 ## 4. The Preservation Modality Taxonomy
 
 > [!WARNING]
-> **Status of this taxonomy: PROPOSED.** The modalities below are not enumerated verbatim in the cited KFM corpus; this document proposes them as the operational categorization Flora uses to apply tier and receipt rules consistently. The underlying object families (`PlantTaxon`, `SpecimenRecord`, `FloraOccurrence`, `RarePlantRecord`, `VegetationCommunity`, `InvasivePlantRecord`, `PhenologyObservation`, `RangePolygon`, `HabitatAssociation`, `BotanicalSurvey`, `RestorationPlanting`, `RedactionReceipt`) are **CONFIRMED** per `[ENCY] §7.6.C`.
+> **Status of this taxonomy: PROPOSED.** The modalities below are not enumerated verbatim in the cited KFM corpus; this document proposes them as the operational categorization Flora uses to apply tier and receipt rules consistently. The underlying object families (`PlantTaxon`, `SpecimenRecord`, `FloraOccurrence`, `RarePlantRecord`, `VegetationCommunity`, `InvasivePlantRecord`, `PhenologyObservation`, `RangePolygon`, `HabitatAssociation`, `BotanicalSurvey`, `RestorationPlanting`, `RedactionReceipt`) are **CONFIRMED** per `[ENCY] §7.6` / `[ATLAS] §8.B`. See [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md).
 
 ### 4.1 The nine modalities
 
@@ -202,7 +223,7 @@ If a reader needs any of the above, this document **MUST** point them to the cor
 | **M9** | Digital-only record | `DIGITAL-ONLY` | Written observation with no specimen and no image (e.g., a 19th-century survey notebook entry) | `FloraOccurrence` with reduced evidence support |
 
 > [!NOTE]
-> M4 / M5 / M6 are flagged as **PROPOSED subtypes** of `SpecimenRecord` because `[ENCY] §7.6.C` enumerates `SpecimenRecord` as a single class. Whether to split this class into subtypes, or to carry modality as a field, is an **open ADR question** — see §13.
+> M4 / M5 / M6 are flagged as **PROPOSED subtypes** of `SpecimenRecord` because `[ENCY] §7.6` / `[ATLAS] §8.B` enumerate `SpecimenRecord` as a single class. Whether to split this class into subtypes, or to carry modality as a field, is an **open ADR question** — see §13.
 
 ### 4.2 What makes a modality distinct
 
@@ -222,17 +243,17 @@ A modality is distinct in this matrix when **at least one** of the following dif
 
 ### 5.1 How to read this table
 
-Each row is a modality. The columns are governance dimensions. **Default tier** follows the CONFIRMED tier scheme `[ATLAS] §24.5.1` (`T0` = Open, `T1` = Generalized, `T2` = Reviewer, `T3` = Restricted, `T4` = Denied). For Flora, the cited default for "rare or culturally sensitive plant location" is `T4` (`[ATLAS] §24.5.2`); the modalities below extend that default to non-rare-plant cases.
+Each row is a modality. The columns are governance dimensions. **Default tier** follows the tier scheme in `[ATLAS] §24.5.1` (`T0` = Open, `T1` = Generalized, `T2` = Reviewer, `T3` = Restricted, `T4` = Denied — five tiers, **PROPOSED** as canonical pending ADR-S-05). For Flora, the cited default for "rare or culturally sensitive plant location" is `T4` (`[ATLAS] §24.5.2`); the modalities below extend that default to non-rare-plant cases.
 
 > [!IMPORTANT]
-> **Reading rule (CONFIRMED, `[ATLAS] §24.5.3`).** A tier *upgrade* (toward public) always needs both a transform receipt and a review record. A tier *downgrade* (toward less public) never needs both — `CorrectionNotice` alone suffices.
+> **Reading rule (CONFIRMED, `[ATLAS] §24.5.3`).** A tier *upgrade* (toward public) always needs both a transform receipt and a review record. A tier *downgrade* (toward less public) never needs both — `CorrectionNotice` alone suffices, and it precedes derivative invalidation.
 
 ### 5.2 The matrix proper
 
 | Modality | Default tier *(COMMON / non-sensitive species)* | Default tier *(RARE / steward-listed / culturally sensitive species)* | Permitted public surface *(see §6)* | Required receipts to publish anything | Required gates | Cross-lane risk |
 |---|---|---|---|---|---|---|
 | **M1 IN-SITU-EXACT** | **T1** *(public-safe needs generalization or aggregation; an exact common-species point is allowable T0 only if no sensitive join risk — see §7.4)* | **T4** | None — exact in-situ tier never publishes; only its M2 derivative does | `TransformReceipt`, `RedactionReceipt`, `ReviewRecord`, `EvidenceBundle`, `ReleaseManifest` | Validation; sensitivity-redaction; review; release | Habitat (community membership); Archaeology (ethnobotany); People/Land (landowner restriction) |
-| **M2 IN-SITU-GEN** | **T0** | **T1** | Generalized polygon / county / grid presence | `AggregationReceipt` *or* `RedactionReceipt`, `EvidenceBundle`, `ReleaseManifest` | Validation; aggregation/redaction; release | Join-induced sensitivity (`KFM-IDX-POL-003`); see §7.4 |
+| **M2 IN-SITU-GEN** | **T0** | **T1** | Generalized polygon / county / grid presence | `AggregationReceipt` *or* `RedactionReceipt`, `EvidenceBundle`, `ReleaseManifest` | Validation; aggregation/redaction; release | Join-induced sensitivity (§7.4) |
 | **M3 EX-SITU-VOUCHER** | **T0** *(record + label data; image MAY be T0)* | **T2 or T1** *(label data may locate the in-situ source; coordinates often need generalization)* | Specimen record (label data minus precise coords) + image where rights permit | `RedactionReceipt` *(for coordinate generalization)*, `EvidenceBundle`, `ReleaseManifest` | Validation; rights review; coordinate-handling review; release | Original collector / herbarium rights; in-situ source sensitivity inherited |
 | **M4 EX-SITU-SEED** | **T0** *(accession identifier, taxon)* | **T2 or T1** *(provenance polygon must be generalized; collector identity may be restricted)* | Accession identifier; taxonomic identity; coarse provenance polygon | `RedactionReceipt` *(provenance generalization)*, `EvidenceBundle`, `ReleaseManifest` | Validation; rights review *(repository terms)*; provenance-handling review; release | Originating wild-population sensitivity inherited; repository terms |
 | **M5 EX-SITU-LIVING** | **T0** *(accession identifier, taxon, garden/site)* | **T2** *(garden may itself be public; provenance must be generalized; sensitive accessions held but not advertised)* | Accession identifier; taxon; garden display location | `RedactionReceipt` *(provenance)*, `EvidenceBundle`, `ReleaseManifest`; `CorrectionNotice` if accession dies *(modality drift)* | Validation; living-collection rights; provenance handling | Inherited in-situ sensitivity; theft risk for rare accessions |
@@ -242,7 +263,7 @@ Each row is a modality. The columns are governance dimensions. **Default tier** 
 | **M9 DIGITAL-ONLY** | **T0** *(low confidence)* | **T1** | Observation record with explicit "no physical specimen, no image" flag and confidence floor | `EvidenceBundle` *(must record reduced evidence support)*, `ReleaseManifest` | Validation; confidence floor enforcement; release | Cannot be re-verified; downgraded confidence affects Evidence Drawer |
 
 > [!CAUTION]
-> **Sensitivity is a property of the published product, not the originating modality.** *(CONFIRMED, `[DOM-FLORA]` + `KFM-IDX-POL-003`.)* A modality default does not override species-level sensitivity, nor does it override join-induced sensitivity. A common-species voucher (M3, default `T0`) becomes sensitive if its locality joins a state-listed species inventory. A M2 generalized polygon becomes sensitive if its centroid plus a known rare-population radius identifies the source.
+> **Sensitivity is a property of the published product, not the originating modality.** *(CONFIRMED principle, `[DOM-FLORA]` + the join-induced-sensitivity rule; exact Pass-20 index ID NEEDS VERIFICATION.)* A modality default does not override species-level sensitivity, nor does it override join-induced sensitivity. A common-species voucher (M3, default `T0`) becomes sensitive if its locality joins a state-listed species inventory. A M2 generalized polygon becomes sensitive if its centroid plus a known rare-population radius identifies the source.
 
 [back to top](#mini-table-of-contents)
 
@@ -251,7 +272,7 @@ Each row is a modality. The columns are governance dimensions. **Default tier** 
 ## 6. Per-Modality Detail
 
 > [!NOTE]
-> Each subsection below names the modality, its provenance chain shape, the evidence it minimally needs, the public surface it can support, the receipts it must emit on tier upgrade, and known failure modes. Flora-specific behavior derives from `[ENCY] §7.6` and `[ATLAS] §24.5`; modality-level application is **PROPOSED**.
+> Each subsection names the modality, its provenance chain shape, the evidence it minimally needs, the public surface it can support, the receipts it must emit on tier upgrade, and known failure modes. Flora-specific behavior derives from `[ENCY] §7.6` and `[ATLAS] §24.5`; modality-level application is **PROPOSED**.
 
 <details>
 <summary><strong>M1 — IN-SITU-EXACT</strong> (the living plant at its recorded coordinate)</summary>
@@ -264,7 +285,7 @@ Each row is a modality. The columns are governance dimensions. **Default tier** 
   - Coordinate precision exceeds source's true accuracy (false precision).
   - EXIF or upstream metadata reveals the exact point even after textual redaction.
   - Join with a rare-species inventory exposes a "common" record's true sensitivity.
-- **Default-deny posture (CONFIRMED).** Exact in-situ records of rare or culturally sensitive plants `MUST NOT` reach a public surface. (`[ENCY] §13` — "Rare species — DENY public exact location".)
+- **Default-deny posture (CONFIRMED).** Exact in-situ records of rare or culturally sensitive plants `MUST NOT` reach a public surface. (`[ENCY] §13`; `[ATLAS] §24.5.2` Flora row = `T4`.)
 
 </details>
 
@@ -274,11 +295,11 @@ Each row is a modality. The columns are governance dimensions. **Default tier** 
 - **Provenance chain.** Length 2: M1 → generalization transform → M2.
 - **Minimum evidence.** Reference to the source M1 (as an `EvidenceRef` resolving to `EvidenceBundle`); generalization parameters; receipts.
 - **Public surface (PROPOSED).** Coarse polygon, county presence, HUC presence, or coarse grid cell, depending on species sensitivity and chosen generalization rule.
-- **Required receipts.** `AggregationReceipt` *or* `RedactionReceipt`, with explicit `geometry_transform` (`RedactionReceipt` field per `[ATLAS] §24.2.1`).
+- **Required receipts.** `AggregationReceipt` *or* `RedactionReceipt`, with explicit `geometry_transform` (a CONFIRMED `RedactionReceipt` field per `[ATLAS] §24.2.1`).
 - **Failure modes.**
   - Generalization parameter is too small relative to the rare-species protection radius.
   - Multiple M2 derivatives of the same M1 are released under different generalization radii, allowing intersection to localize the M1.
-- **Coordinate generalization options (PROPOSED, derived from `KFM-IDX-POL-005`).** Suppress, generalize-to-grid, generalize-to-watershed, generalize-to-county, buffer, delayed publication, steward-only exact.
+- **Coordinate generalization options (PROPOSED).** Suppress, generalize-to-grid, generalize-to-watershed, generalize-to-county, buffer, delayed publication, steward-only exact *(geoprivacy menu; Pass-20 index ID NEEDS VERIFICATION)*.
 
 </details>
 
@@ -287,7 +308,7 @@ Each row is a modality. The columns are governance dimensions. **Default tier** 
 
 - **Provenance chain.** Length 2–N: collection event (M1-like) → preservation act → accession → curation acts → digitization → public record.
 - **Minimum evidence.** Herbarium / institution code, accession number, collector, collection date, locality text, taxonomic determination history (`ReviewRecord` per redetermination), digitization receipt where applicable.
-- **Public surface (PROPOSED).** Specimen record with label data; coordinate fields generalized for sensitive species; image where rights permit. *Darwin Core Archive ingestion patterns are described in `[NEWIDEAS-5-8]` for herbarium portals.*
+- **Public surface (PROPOSED).** Specimen record with label data; coordinate fields generalized for sensitive species; image where rights permit. *Darwin Core Archive ingestion is described for USDA PLANTS / herbarium portals in `[NEWIDEAS-5-8]` (and the Pass-23 USDA PLANTS ingest card, KFM-P2-PROG-0006).*
 - **Required receipts to upgrade tier.** `RedactionReceipt` for coordinate generalization; `ReviewRecord` for rare-plant cases; `EvidenceBundle` closure before publication.
 - **Failure modes.**
   - Historical labels carry exact localities for species that have *since* become rare or extirpated — historic data inherits modern sensitivity.
@@ -332,7 +353,7 @@ Each row is a modality. The columns are governance dimensions. **Default tier** 
 
 - **Provenance chain.** Source individual → collection → tissue or DNA extraction → cryopreservation → possible derivative culture → possible sequencing → published sequence reference.
 - **Minimum evidence.** Repository identifier, voucher cross-reference (to M3 when available), taxon, source individual identity (often coded for restricted-access), extraction date, storage location class.
-- **Public surface (PROPOSED).** Aggregate descriptors only by default — e.g., *"the repository holds N accessions of taxon T from K collection events"*. Public release of individual-level molecular records requires a named agreement and falls under T3.
+- **Public surface (PROPOSED).** Aggregate descriptors only by default — e.g., *"the repository holds N accessions of taxon T from K collection events"*. Public release of individual-level molecular records requires a named agreement and falls under `T3`.
 - **Required receipts.** `PolicyDecision` against repository terms; `ReviewRecord` per release; potentially `AIReceipt` for any AI-mediated analysis surface.
 - **Failure modes.**
   - DNA/genomic adjacency: this modality borders the `[DOM-PEOPLE]` DNA posture; cross-domain joins (e.g., human ethnobotanical use → plant tissue → plant DNA) must be reviewed under both lanes.
@@ -374,7 +395,7 @@ Each row is a modality. The columns are governance dimensions. **Default tier** 
 - **Provenance chain.** Length 1, with reduced evidence: a textual claim, often historic.
 - **Minimum evidence.** Observer (where known), date, locality text, taxon name as recorded, explicit `evidence_class = "digital-only"` flag, explicit confidence floor.
 - **Public surface (PROPOSED).** The record is published only when its confidence floor passes the validator threshold and the Evidence Drawer can present its reduced support without misleading the reader.
-- **Required receipts.** `EvidenceBundle` `MUST` record the reduced-evidence flag; the public surface `MUST` carry a trust-state badge consistent with reduced support.
+- **Required receipts.** `EvidenceBundle` `MUST` record the reduced-evidence flag; the public surface `MUST` carry a trust-state badge consistent with reduced support (`BOUNDED` where the contract's optional outcome applies).
 - **Failure modes.**
   - Historic typo, misidentification, or taxonomic name churn collapses into a misleading modern claim.
   - Locality text is ambiguous ("near the river") and cannot be re-verified.
@@ -405,7 +426,7 @@ tier(M_N) = max(
 )
 ```
 
-This rule prevents an ex-situ artifact from "laundering" a sensitive source through the act of preservation. It operationalizes the `KFM-IDX-POL-003` principle that *sensitivity is a property of the published product, not just of the originating source*.
+This rule prevents an ex-situ artifact from "laundering" a sensitive source through the act of preservation. It operationalizes the CONFIRMED principle that *sensitivity is a property of the published product, not just of the originating source* *(Pass-20 join-sensitivity card; exact index ID NEEDS VERIFICATION)*.
 
 ### 7.3 The acquisition-date rule (INFERRED)
 
@@ -413,7 +434,7 @@ A historic voucher of a then-common plant that is *now* state-listed inherits **
 
 ### 7.4 Join sensitivity (CONFIRMED principle, modality-specific application)
 
-The principle that *a benign source can become sensitive through join* (per `KFM-IDX-POL-003` and the PLANTS-plus-occurrence warning in `[NEWIDEAS-5-15]`) applies in this domain as follows:
+The principle that *a benign source can become sensitive through join* — and that **sensitive joins fail closed** (CONFIRMED across the corpus; the PLANTS-plus-occurrence warning is in `[NEWIDEAS-5-15]`) — applies in this domain as follows:
 
 | Join | Modality of left input | Modality of right input | Effect |
 |---|---|---|---|
@@ -439,7 +460,7 @@ For each ex-situ modality, the following fields `SHOULD` exist somewhere in the 
 - `rights_terms_ref` — `EvidenceRef` to current repository terms
 
 > [!NOTE]
-> This is **PROPOSED shape only**. Authoritative field shapes belong in `schemas/contracts/v1/domains/flora/` *(PROPOSED location)*.
+> This is **PROPOSED shape only**. Authoritative field shapes belong in `schemas/contracts/v1/domains/flora/` *(PROPOSED location; leaf form CONFLICTED — see §13)*.
 
 [back to top](#mini-table-of-contents)
 
@@ -449,13 +470,13 @@ For each ex-situ modality, the following fields `SHOULD` exist somewhere in the 
 
 ### 8.1 Receipts used by this matrix (CONFIRMED catalog)
 
-The receipts below are CONFIRMED in `[ATLAS] §24.2.1` ("Master Receipt Catalog"). This section names which receipt applies to which preservation act; it does not redefine the receipts.
+The receipts below are CONFIRMED in `[ATLAS] §24.2.1` ("Master Receipt Catalog"). This section names which receipt applies to which preservation act; it does not redefine the receipts. **PROPOSED schema home for receipt classes: `schemas/contracts/v1/receipts/`** (per `[ATLAS] §24.2`, pending ADR-S-03; NEEDS VERIFICATION).
 
 | Receipt | When it applies to preservation | Citation |
 |---|---|---|
 | **`SourceDescriptor`** | At admission of any preservation source (herbarium portal, seed bank manifest, citizen-science feed). | `[ATLAS] §24.2.1`, `[DIRRULES]` |
 | **`TransformReceipt`** | When a geometry is reprojected, simplified, or otherwise transformed (e.g., generalizing an M1 coordinate to an M2 polygon). | `[ATLAS] §24.2.1` |
-| **`RedactionReceipt`** | When sensitive content is masked, fuzzed, withheld, or geometry-generalized for sensitivity, rights, or policy reasons. CONFIRMED citation for Flora. | `[ATLAS] §24.2.1`, `[DOM-FLORA]` |
+| **`RedactionReceipt`** | When sensitive content is masked, fuzzed, withheld, or geometry-generalized for sensitivity, rights, or policy reasons. CONFIRMED for Flora. | `[ATLAS] §24.2.1`, `[DOM-FLORA]` |
 | **`AggregationReceipt`** | When points are rolled up to a polygon, county, watershed, or grid cell as a public-safe derivative. | `[ATLAS] §24.2.1` |
 | **`ReviewRecord`** | When a steward, rights-holder, or policy reviewer approves or denies a transition (admission, redaction, promotion, release). | `[ATLAS] §24.2.1` |
 | **`PolicyDecision`** | When a policy rule evaluates an object: rights / sensitivity / release checks. | `[ATLAS] §24.2.1` |
@@ -494,7 +515,7 @@ Per `[ATLAS] §24.6.1` ("Lifecycle gates"):
 | M9 | `SourceDescriptor` | `TransformReceipt`, `PolicyDecision` | `ValidationReport`, evidence-class flag | `EvidenceBundle` (reduced-evidence) | `ReleaseManifest` | Trust-state badge `MUST` reflect reduced support |
 
 > [!NOTE]
-> The receipts named are CONFIRMED; the per-modality combination is **INFERRED** from the CONFIRMED gate requirements in `[ATLAS] §24.6.1`.
+> The receipts named are CONFIRMED; the per-modality combination is **INFERRED** from the CONFIRMED gate requirements in `[ATLAS] §24.6.1`. The receipt ↔ lifecycle-phase mapping in `[ATLAS] §24.2.2` confirms which receipts are emitted/referenced at each phase.
 
 [back to top](#mini-table-of-contents)
 
@@ -502,7 +523,7 @@ Per `[ATLAS] §24.6.1` ("Lifecycle gates"):
 
 ## 9. Cross-Lane Preservation Interfaces
 
-Flora preservation evidence does not live in isolation. The relations below are CONFIRMED in `[ATLAS] §24.4.6` ("Edges owned by Flora"); modality-level application is **PROPOSED**.
+Flora preservation evidence does not live in isolation. The relations below derive from `[ATLAS] §24.4.6` ("Edges owned by Flora"). The Atlas names three CONFIRMED Flora-owned edges — **Habitat, Agriculture, Archaeology**; the Hazards, People/Land, and Geology rows below are **PROPOSED extensions** drawn from Flora §8.F context relations and adjacent-lane posture. Modality-level application is **PROPOSED** throughout.
 
 ```mermaid
 flowchart LR
@@ -537,37 +558,37 @@ flowchart LR
     class M2 ok
 ```
 
-### 9.1 Flora ↔ Habitat
+### 9.1 Flora ↔ Habitat *(CONFIRMED edge, `[ATLAS] §24.4.6`)*
 
 | Relation | Modality side | Constraint |
 |---|---|---|
-| Vegetation community evidence feeds ecological-system mapping | M2 primarily; M3 historic context where useful | M1 exact rare-plant locations `MUST NOT` cross. (CONFIRMED, `[ATLAS] §24.4.6`.) |
+| Vegetation community evidence feeds ecological-system mapping | M2 primarily; M3 historic context where useful | M1 exact rare-plant locations `MUST NOT` cross. (CONFIRMED.) |
 
-### 9.2 Flora ↔ Archaeology (ethnobotany)
+### 9.2 Flora ↔ Archaeology (ethnobotany) *(CONFIRMED edge, `[ATLAS] §24.4.6`)*
 
 | Relation | Modality side | Constraint |
 |---|---|---|
 | Ethnobotanical context may bound archaeological-site interpretation | M3 vouchers with culturally relevant taxa | Steward / cultural review `MUST` precede any public surface. Flora `MUST NOT` override `[DOM-ARCH]` cultural authority. (CONFIRMED.) |
 
-### 9.3 Flora ↔ Agriculture
+### 9.3 Flora ↔ Agriculture *(CONFIRMED edge, `[ATLAS] §24.4.6`)*
 
 | Relation | Modality side | Constraint |
 |---|---|---|
 | Invasive-plant context informs management framing | M2 invasive-plant generalized surface | This `MUST` remain *framing*, never an instruction. (CONFIRMED.) |
 
-### 9.4 Flora ↔ Hazards
+### 9.4 Flora ↔ Hazards *(PROPOSED extension; Flora §8.F context relation)*
 
 | Relation | Modality side | Constraint |
 |---|---|---|
-| Fire, drought, flood, smoke, vegetation stress | M2 vegetation-index / community state | Flora outputs `MUST NOT` become emergency instructions. (CONFIRMED, `[DOM-HAZ]`.) |
+| Fire, drought, flood, smoke, vegetation stress | M2 vegetation-index / community state | Flora outputs `MUST NOT` become emergency instructions; KFM is never an alert authority. (`[DOM-HAZ]`.) |
 
-### 9.5 Flora ↔ People/Land
+### 9.5 Flora ↔ People/Land *(PROPOSED extension)*
 
 | Relation | Modality side | Constraint |
 |---|---|---|
 | Restoration plantings on private land; herbarium vouchers from private land | M7, M3 | Landowner rights MAY restrict location detail; private person-parcel joins fail closed by default. (`[DOM-PEOPLE]` posture, applied to Flora — **PROPOSED** extension.) |
 
-### 9.6 Flora ↔ Geology (paleobotany boundary — PROPOSED)
+### 9.6 Flora ↔ Geology (paleobotany boundary) *(PROPOSED)*
 
 | Relation | Modality side | Constraint |
 |---|---|---|
@@ -609,8 +630,9 @@ flowchart TD
 ### 10.1 Application notes
 
 - **Promotion is a governed state transition, not a file move.** (CONFIRMED, `[DIRRULES] §0`.) Preservation evidence often moves between systems — herbarium IPT → KFM RAW → public KFM API — and each step is a governed transition.
-- **Watcher-as-non-publisher.** Source watchers (herbarium portal pollers, citizen-science feed watchers) `MUST NOT` write directly to `data/processed/` or `data/published/`. They emit observations, receipts, and candidate decisions only. (CONFIRMED invariant.)
+- **Watcher-as-non-publisher.** Source watchers (herbarium portal pollers, citizen-science feed watchers) `MUST NOT` write directly to `data/processed/` or `data/published/`; they write only to `data/raw/` or `data/quarantine/` and emit receipts and candidate decisions. (CONFIRMED invariant, `[DIRRULES] §7.3`.)
 - **Default-deny at the catalog gate.** A preservation candidate `MUST NOT` cross to `CATALOG` until its modality, sensitivity, and review state resolve. Sensitive modalities lacking review `HOLD` at `PROCESSED`.
+- **Finite outcomes.** Every governed surface that touches a preservation record returns a `RuntimeResponseEnvelope` (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`, optional `NARROWED` / `BOUNDED`).
 
 [back to top](#mini-table-of-contents)
 
@@ -619,7 +641,7 @@ flowchart TD
 ## 11. Governed AI Behavior
 
 > [!NOTE]
-> **CONFIRMED doctrine** (`[ENCY] §7.6.I`, `[GAI]`). AI may summarize released Flora `EvidenceBundle`s, compare evidence, explain limitations, and draft steward-review notes. AI `MUST` `ABSTAIN` when evidence is insufficient and `DENY` where policy, rights, sensitivity, or release state blocks the request.
+> **CONFIRMED doctrine** (`[ENCY] §7.6`, `[GAI]`). AI may summarize released Flora `EvidenceBundle`s, compare evidence, explain limitations, and draft steward-review notes. AI `MUST` `ABSTAIN` when evidence is insufficient and `DENY` where policy, rights, sensitivity, or release state blocks the request. Every AI answer emits an `AIReceipt` and returns through the `RuntimeResponseEnvelope`.
 
 ### 11.1 Preservation-specific AI rules (PROPOSED extensions)
 
@@ -650,9 +672,9 @@ Any AI answer that touches a preservation record `MUST` cite the `EvidenceBundle
 | 12.3 | **Image-content leak** | EXIF is stripped; coordinate is generalized; but the image content shows a distinctive landmark that localizes the site. | Image-content review for rare-plant cases is part of release; mark as a gate failure, not a curiosity. |
 | 12.4 | **Modality drift unrecorded** | A M5 accession dies; the record still claims "alive" in the public surface. | Living modalities `MUST` carry a `current_status` field; status changes emit `CorrectionNotice`; downstream derivatives invalidate. |
 | 12.5 | **Restoration / occurrence collision** | Downstream consumers treat M7 as M1/M2 (natural occurrence), inflating apparent range. | `RestorationPlanting` and `FloraOccurrence` `MUST` remain distinguishable in the catalog; layer manifests `MUST NOT` blend them silently. |
-| 12.6 | **Source-watcher publishes** | A herbarium polling worker writes directly into `data/published/` to "save a step". | Watcher-as-non-publisher invariant: workers emit receipts and candidate decisions only. (CONFIRMED invariant.) |
-| 12.7 | **Implicit join sensitivity** | A common-species occurrence feed is joined to a state-listed plant inventory in a derivative product without review; the derivative is treated as having the lower input's sensitivity. | Join output inherits the higher tier; non-reviewed joins fail closed. (CONFIRMED, `KFM-IDX-POL-003`.) |
-| 12.8 | **Schema/contract parallel home** | A modality-specific schema appears in `contracts/domains/flora/` and a different version appears in `schemas/contracts/v1/domains/flora/`. | Canonical home is `schemas/contracts/v1/...` per ADR-0001 *(ADR number NEEDS VERIFICATION)*. (CONFIRMED principle, `[DIRRULES] §13.1`.) |
+| 12.6 | **Source-watcher publishes** | A herbarium polling worker writes directly into `data/published/` to "save a step". | Watcher-as-non-publisher invariant: workers write only to `data/raw/` or `data/quarantine/` and emit receipts and candidate decisions. (CONFIRMED, `[DIRRULES] §7.3`.) |
+| 12.7 | **Implicit join sensitivity** | A common-species occurrence feed is joined to a state-listed plant inventory in a derivative product without review; the derivative is treated as having the lower input's sensitivity. | Join output inherits the higher tier; non-reviewed joins fail closed. (CONFIRMED principle.) |
+| 12.8 | **Schema/contract parallel home** | A modality-specific schema appears in `contracts/domains/flora/` and a different version appears in `schemas/contracts/v1/domains/flora/`. | Canonical home is `schemas/contracts/v1/...` per ADR-0001; `contracts/` retains semantic Markdown only. (CONFIRMED principle, `[DIRRULES] §13.1`; ADR number NEEDS VERIFICATION.) |
 | 12.9 | **AI substitutes for steward** | An AI surface claims a re-determination ("this voucher is now considered X") without a `ReviewRecord`. | Re-determination requires steward review; AI `ABSTAIN` (§11.1). |
 | 12.10 | **Documentation as substitute for verification** | This file's claims are quoted as repo behavior. | Doctrine is not implementation. Mark implementation claims `PROPOSED` or `NEEDS VERIFICATION` until verified against a mounted repo. |
 
@@ -667,65 +689,89 @@ Any AI answer that touches a preservation record `MUST` cite the `EvidenceBundle
 
 | # | Item | Evidence that would settle it | Status |
 |---|---|---|---|
-| 13.1 | Should M4 / M5 / M6 be separate object families, or a single `SpecimenRecord` class with a `modality` field? | An ADR + a schema PR under `schemas/contracts/v1/domains/flora/`. Cited doctrine names `SpecimenRecord` as a single class (`[ENCY] §7.6.C`). | **Open ADR question** |
-| 13.2 | Is `RestorationPlanting` mature enough to be a distinct catalog projection, or does it ride on `FloraOccurrence` with a flag? | An ADR + fixtures showing distinguishability under §12.5. Cited doctrine names `RestorationPlanting` as a class (`[ENCY] §7.6.C`). | **Open ADR question** |
-| 13.3 | What is the canonical generalization rule per sensitivity class? Watershed? County? Grid cell? | A `policy/domains/flora/geoprivacy.rego` *(PROPOSED path)* plus a `RedactionReceipt` fixture set. Cited options: "generalize-to-grid / watershed / county / buffer / suppress / steward-only" (`KFM-IDX-POL-005`). | **NEEDS VERIFICATION** |
+| 13.1 | Should M4 / M5 / M6 be separate object families, or a single `SpecimenRecord` class with a `modality` field? | An ADR + a schema PR under `schemas/contracts/v1/domains/flora/`. Cited doctrine names `SpecimenRecord` as a single class (`[ENCY] §7.6` / `[ATLAS] §8.B`). | **Open ADR question** |
+| 13.2 | Is `RestorationPlanting` mature enough to be a distinct catalog projection, or does it ride on `FloraOccurrence` with a flag? | An ADR + fixtures showing distinguishability under §12.5. Cited doctrine names `RestorationPlanting` as a class. | **Open ADR question** |
+| 13.3 | What is the canonical generalization rule per sensitivity class? Watershed? County? Grid cell? | A `policy/sensitivity/flora/` *(or `policy/domains/flora/geoprivacy.rego`)* rule set plus a `RedactionReceipt` fixture set. | **NEEDS VERIFICATION** |
 | 13.4 | Where does paleobotanical material live — Flora or Geology? | An ADR; pending repo evidence. See §9.6. | **NEEDS VERIFICATION** |
 | 13.5 | Where do M6 (tissue/DNA) policy boundaries align with `[DOM-PEOPLE]` DNA policy? | Cross-domain policy review record; an ADR if needed. | **Open cross-lane question** |
-| 13.6 | What is the canonical home for per-modality README detail? `docs/domains/flora/modalities/M3-VOUCHER.md` (etc.) or sections within this file? | An ADR + a docs-stewardship decision. | **Open documentation question** |
-| 13.7 | Does the `docs/runbooks/flora/` subfolder exist? The fauna runbook at `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` establishes the pattern; the flora analog is **PROPOSED**. | A mounted-repo check. | **NEEDS VERIFICATION** |
-| 13.8 | What is the validator exit-code contract for Flora preservation validators? | Pending the validator exit-code ADR noted in the broader corpus. | **Pending ADR (project-wide)** |
-| 13.9 | What is the EXIF-redaction validator's behavior on uploads with no EXIF metadata at all (M8)? | Fixtures + validator behavior in a mounted repo. | **NEEDS VERIFICATION** |
-| 13.10 | Is the herbarium-data ingest flow Darwin Core Archive based (as suggested by `[NEWIDEAS-5-8]`), and where is the connector? | A `connectors/` or `pipelines/` reference. | **NEEDS VERIFICATION** |
-| 13.11 | Are there policy joins that should fail closed even when both inputs appear public (per `KFM-IDX-POL-003`)? Concretely: PLANTS × GBIF for any state-listed taxon. | A `policy/domains/flora/joins.rego` *(PROPOSED path)* with explicit deny rules. | **Open policy question** |
-| 13.12 | The `PROV.md` ↔ `PROVENANCE.md` naming question is open project-wide. This document cites no specific name; it references "provenance chain" descriptively. | The project-wide ADR resolving the naming. | **Project-wide ADR pending** |
+| 13.6 | Canonical home for per-modality README detail? `docs/domains/flora/modalities/M3-VOUCHER.md` or sections within this file? | An ADR + a docs-stewardship decision. | **Open documentation question** |
+| 13.7 | Does `docs/runbooks/flora/` exist? The fauna runbook establishes the pattern; the flora analog is **PROPOSED**. | A mounted-repo check. | **NEEDS VERIFICATION** |
+| 13.8 | Validator exit-code contract for Flora preservation validators. | The validator exit-code ADR (project-wide; Directory Rules OPEN-DR-03/07). | **Pending ADR (project-wide)** |
+| 13.9 | EXIF-redaction validator behavior on uploads with no EXIF metadata at all (M8). | Fixtures + validator behavior in a mounted repo. | **NEEDS VERIFICATION** |
+| 13.10 | Is the herbarium-data ingest flow Darwin Core Archive based (per `[NEWIDEAS-5-8]` / KFM-P2-PROG-0006), and where is the connector? | A `connectors/` or `pipelines/` reference. | **NEEDS VERIFICATION** |
+| 13.11 | Policy joins that should fail closed even when both inputs appear public: PLANTS × GBIF for any state-listed taxon. | A `policy/domains/flora/joins.rego` *(PROPOSED path)* with explicit deny rules. | **Open policy question** |
+| 13.12 | Exact Pass-20 index IDs for join-sensitivity and geoprivacy (cited descriptively as `KFM-IDX-POL-003` / `-005`). | Mounted Pass-20 index. The *principles* are CONFIRMED; the ID strings are **NEEDS VERIFICATION**. | **NEEDS VERIFICATION** |
+| 13.13 | Schema-leaf form: `schemas/contracts/v1/domains/flora/` (Directory Rules §12, used here) vs `schemas/contracts/v1/flora/` (companion Identity Model / Map UI docs). | One-line reconciliation; DRIFT_REGISTER entry; §2.1 favors `domains/flora/`. | **CONFLICTED** |
+| 13.14 | `PROV.md` ↔ `PROVENANCE.md` naming (project-wide). This doc references "provenance chain" descriptively. | The project-wide naming ADR. | **Project-wide ADR pending** |
 
 [back to top](#mini-table-of-contents)
 
 ---
 
-## 14. Related Docs and Change Log
+## 14. Definition of Done
 
-### 14.1 Related docs *(forward references — PROPOSED until mounted-repo pass)*
+This document is done enough to enter the repository when:
 
-- `docs/domains/flora/README.md`
-- `docs/domains/flora/RIGHTS_AND_SENSITIVITY.md`
+- it is placed at `docs/domains/flora/PRESERVATION_MATRIX.md` per Directory Rules §12 (PROPOSED; NEEDS VERIFICATION);
+- the flora steward, docs steward, and policy (sensitivity) steward review it;
+- it is linked from the Flora domain README and the companion Object-Families / Identity-Model / Missing-or-Planned-Files docs;
+- the schema-leaf and Pass-20-index-ID items (13.12, 13.13) are logged in `docs/registers/DRIFT_REGISTER.md` / `VERIFICATION_BACKLOG.md`;
+- it does not conflict with accepted ADRs (ADR-0001 schema home; ADR-S-05 tier scheme; the `SpecimenRecord` subtype ADR if filed);
+- the `GENERATED_RECEIPT.json` planned in the PR is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[back to top](#mini-table-of-contents)
+
+---
+
+## 15. Related Docs and Change Log
+
+### 15.1 Related docs *(forward references — PROPOSED until mounted-repo pass)*
+
+- [`docs/domains/flora/README.md`](./README.md)
+- [`docs/domains/flora/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — per-family reference *(companion)*
+- [`docs/domains/flora/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) — deterministic identity charter *(companion)*
+- [`docs/domains/flora/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — per-lane file register *(companion)*
+- `docs/domains/flora/RIGHTS_AND_SENSITIVITY.md` *(PROPOSED)*
 - `docs/domains/flora/modalities/` *(if §13.6 resolves toward per-modality READMEs)*
 - `contracts/domains/flora/`
 - `schemas/contracts/v1/domains/flora/`
-- `policy/domains/flora/`
+- `policy/sensitivity/flora/` · `policy/domains/flora/`
 - `data/registry/sources/flora/`
 - `docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md` *(parallel to existing fauna runbook)*
 
-### 14.2 Sources cited
+### 15.2 Sources cited
 
 | Citation key | Document | Sections relied upon |
 |---|---|---|
-| `[DOM-FLORA]` | `kfm_encyclopedia.pdf` | §7.6 (Flora — mission, sources, object families, lifecycle, sensitivity posture) |
-| `[ENCY]` | `kfm_encyclopedia.pdf` | §13 (Sensitive / Deny-by-Default Register) |
-| `[ATLAS]` | `KFM_Domains_Culmination_Atlas_v1_1.pdf` | §24.2.1 (Master Receipt Catalog); §24.4.6 (Edges owned by Flora); §24.5 (Tier scheme, per-domain matrix, transitions); §24.6.1 (Lifecycle gates) |
-| `[UNIFIED]` | `KFM_Unified_Implementation_Architecture_Build_Manual.pdf` | §6.5 (Flora — scope, sensitivity posture, objects, pipelines, publication gates) |
-| `[KFM-IDX]` | `KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` | `KFM-IDX-POL-003` (join-induced sensitivity); `KFM-IDX-POL-005` (geoprivacy and transform receipts) |
-| `[DIRRULES]` | `directory-rules.md` | §12 (Domain Placement Law); §13 (Anti-patterns); §2.4 (ADR-requiring changes) |
-| `[GAI]` | `KFM_Whole_UI_Governed_AI_Expansion_Report.pdf` | Governed AI rules |
-| `[NEWIDEAS-5-8]` | `New_Ideas_5-8-26.pdf` | USDA PLANTS / herbarium / Darwin Core ingest patterns |
-| `[NEWIDEAS-5-15]` | `New_Ideas_5-15-26.pdf` | PLANTS + GBIF/iNaturalist join-sensitivity warning |
+| `[DOM-FLORA]` | KFM Domain and Capability Encyclopedia | §7.6 (Flora — mission, sources, object families, lifecycle, sensitivity posture) |
+| `[ENCY]` | KFM Domain and Capability Encyclopedia | §13 (Sensitive / Deny-by-Default Register) |
+| `[ATLAS]` | KFM Domains Culmination Atlas v1.1 | §8.B (Flora object families); §24.2 / §24.2.1 (Master Receipt Catalog); §24.2.2 (receipt ↔ phase map); §24.4.6 (Edges owned by Flora); §24.5 (tier scheme, per-domain matrix, transitions); §24.6.1 (lifecycle gates) |
+| `[UNIFIED]` | KFM Unified Implementation Architecture Build Manual | §6.5 (Flora — scope, sensitivity posture, objects, pipelines, publication gates) |
+| `[DIRRULES]` | `directory-rules.md` v1.3 | §7.3 (connectors / watcher-as-non-publisher); §12 (Domain Placement Law); §13.1 (contracts-vs-schemas drift); §2.4 (ADR-requiring changes) |
+| `[GAI]` | KFM Whole-UI Governed AI Expansion Report | Governed AI rules; `AIReceipt`; finite outcomes |
+| `[NEWIDEAS-5-8]` | New Ideas 5-8-26 | USDA PLANTS / herbarium / Darwin Core ingest patterns *(see also Pass-23 card KFM-P2-PROG-0006)* |
+| `[NEWIDEAS-5-15]` | New Ideas 5-15-26 | PLANTS + GBIF/iNaturalist join-sensitivity warning |
 
-### 14.3 Change log
+> [!NOTE]
+> Pass-20 index IDs `KFM-IDX-POL-003` (join-induced sensitivity) and `KFM-IDX-POL-005` (geoprivacy / transform receipts) are cited descriptively in prior drafts. The underlying **principles are CONFIRMED** doctrine; the **exact index-ID strings are NEEDS VERIFICATION** against the mounted Pass-20 index (see §13.12).
+
+### 15.3 Change log
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| v0.1 | 2026-05-16 | `<flora-steward>` *(placeholder)* | First edition. Establishes the modality taxonomy, the matrix, per-modality detail, chain-of-custody rules, receipt-and-gate mapping, cross-lane interfaces, lifecycle integration, governed-AI rules, anti-patterns, and open questions. |
+| v0.1 | 2026-05-16 | `<flora-steward>` *(placeholder)* | First edition: modality taxonomy, matrix, per-modality detail, chain-of-custody, receipts-and-gates, cross-lane interfaces, lifecycle integration, governed-AI rules, anti-patterns, open questions. |
+| v0.2 | 2026-06-03 | `<flora-steward>` *(placeholder)* | Pinned `CONTRACT_VERSION = "3.0.0"`; added Definition of Done; cross-linked the Flora doc suite (Object Families, Identity Model, Missing-or-Planned-Files). Marked the five-tier scheme as PROPOSED-canonical (ADR-S-05). Marked Flora↔Hazards / People/Land cross-lane rows as PROPOSED extensions (only Habitat/Agriculture/Archaeology are CONFIRMED §24.4.6 edges). Relabeled Pass-20 index IDs: principle CONFIRMED, ID string NEEDS VERIFICATION. Added receipt schema-home (`schemas/contracts/v1/receipts/`, PROPOSED). Added the schema-leaf CONFLICTED note. Tightened the watcher-as-non-publisher rule to §7.3 (`data/raw`/`quarantine` only). Referenced `RuntimeResponseEnvelope` for finite outcomes. |
 
-### 14.4 Reviewer checklist for changes to this file
+### 15.4 Reviewer checklist for changes to this file
 
 - [ ] Does the change preserve the CONFIRMED tier scheme and receipt catalog? *(If altering, requires ADR.)*
 - [ ] Does the change preserve sensitivity inheritance and join-sensitivity rules? *(If altering, requires ADR + Policy steward.)*
 - [ ] Does the change introduce new modalities or merge existing ones? *(If yes, update §4 and §5 atomically.)*
 - [ ] Are PROPOSED / INFERRED labels still accurate after the change? *(Drift down rather than up; verification raises confidence.)*
 - [ ] Does the change require updates in `contracts/`, `schemas/`, `policy/`, or `docs/runbooks/`? *(Documentation alone is not enforcement.)*
-- [ ] Are forward references in §14.1 still PROPOSED, or have any moved to CONFIRMED with mounted-repo evidence?
+- [ ] Are forward references in §15.1 still PROPOSED, or have any moved to CONFIRMED with mounted-repo evidence?
 
 ---
 
-**Last updated:** 2026-05-16 · **Version:** v0.1 · [back to top](#flora-preservation-matrix)
+**Last updated:** 2026-06-03 · **Version:** v0.2 · `CONTRACT_VERSION = "3.0.0"` · [back to top](#mini-table-of-contents)
