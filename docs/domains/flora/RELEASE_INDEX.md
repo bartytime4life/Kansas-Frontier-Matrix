@@ -1,467 +1,731 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs-domains-fauna-release-index
-title: Fauna Domain — Release Index
+doc_id: kfm://doc/docs-domains-flora-readme
+title: Kansas Frontier Matrix — Flora Domain
 type: standard
-version: v1
+version: v2
 status: draft
-owners: TODO Fauna domain steward + Docs steward + Release authority
+owners: TODO (flora domain steward + governance steward)
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-03
 policy_label: public
 related:
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
+  - docs/domains/README.md
+  - docs/domains/flora/PUBLICATION_AND_ROLLBACK.md
+  - docs/domains/habitat/README.md
   - docs/domains/fauna/README.md
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - release/manifests/
-  - release/candidates/fauna/
-  - data/published/layers/fauna/
-  - schemas/contracts/v1/release/
-  - contracts/release/release_manifest.md
-tags: [kfm, fauna, release, governance, publication, index]
+tags: [kfm, domain, flora, biodiversity, governance]
 notes:
-  - This file is the human-facing INDEX for Fauna releases; it does not hold release decisions or artifacts.
-  - release_state enum is PROPOSED and currently has two candidate forms — see §13 Open Questions.
-  - All release_id values shown are illustrative template form, not real releases.
+  - "Doctrine-adjacent; pins CONTRACT_VERSION = 3.0.0 in notes per the operating contract."
+  - "All implementation, schema, route, and registry claims are PROPOSED until verified against a mounted repo."
+  - "Sensitivity posture is fail-closed for exact rare-plant geometry by default."
+  - "v2: corrected source-rights claims, upgraded source-role enum to CONFIRMED classes, grounded the flora watcher in KFM-P2-PROG-0002, reconciled the references appendix to the actual corpus."
 [/KFM_META_BLOCK_V2] -->
 
-# Fauna Domain — Release Index
+# 🌿 Kansas Frontier Matrix — Flora Domain
 
-> Human-facing register of Fauna releases — where they live, what gates they passed, and how to verify, correct, or roll them back. This document **explains and indexes**; it is not the release decision or the artifact.
+> Govern plant taxonomic identity, occurrences, specimens, vegetation communities, rare/protected/culturally sensitive flora controls, public-safe surfaces, evidence-backed maps, correction, and rollback for Kansas plant life.
 
-![status: draft](https://img.shields.io/badge/status-draft-yellow)
-![doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-1f6feb)
-![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)
-![policy: deny--by--default--sensitive](https://img.shields.io/badge/policy-deny--by--default--sensitive-critical)
-![rollback: required](https://img.shields.io/badge/rollback-required-blueviolet)
-![ci: TODO](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last updated: 2026--05--16](https://img.shields.io/badge/updated-2026--05--16-informational)
+<a id="top"></a>
 
-**Status:** `draft` · **Owners:** `TODO Fauna domain steward + Docs steward + Release authority` · **Last updated:** `2026-05-16`
+[![Domain](https://img.shields.io/badge/domain-flora-2e7d32)](#1-scope)
+[![Status](https://img.shields.io/badge/status-draft-orange)](#top)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-1565c0)](#7-pipeline-shape-raw--published)
+[![Sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default-b71c1c)](#9-sensitivity-rights--publication-posture)
+[![Governance](https://img.shields.io/badge/governance-evidence--first-455a64)](#11-governed-ai-behavior)
+[![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](../../doctrine/ai-build-operating-contract.md)
+[![Build](https://img.shields.io/badge/build-TODO-lightgrey)](#13-verification-backlog--open-questions)
 
----
-
-## Quick jump
-
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. Repo fit](#2-repo-fit)
-- [3. Release state vocabulary](#3-release-state-vocabulary)
-- [4. Fauna release lifecycle](#4-fauna-release-lifecycle)
-- [5. Sensitivity posture (Fauna)](#5-sensitivity-posture-fauna)
-- [6. Publication gates](#6-publication-gates)
-- [7. Fauna releases register](#7-fauna-releases-register)
-- [8. Release entry template](#8-release-entry-template)
-- [9. Artifact kinds in scope](#9-artifact-kinds-in-scope)
-- [10. Rollback, correction & withdrawal](#10-rollback-correction--withdrawal)
-- [11. AI behavior over Fauna releases](#11-ai-behavior-over-fauna-releases)
-- [12. Adding or updating an entry](#12-adding-or-updating-an-entry)
-- [13. Open questions & verification backlog](#13-open-questions--verification-backlog)
-- [14. Related docs](#14-related-docs)
-
----
-
-## 1. Purpose & scope
-
-The Fauna Release Index is the **human-facing register** that answers four questions for the Fauna domain:
-
-1. **What has been released, and at what state?** (`DRAFT`, `REVIEW`, candidate, published, withdrawn, corrected, superseded — see §3 for the unresolved enum.)
-2. **Where is the supporting evidence and where is the actual artifact?** (links to `release/manifests/`, `data/proofs/`, `data/published/layers/fauna/`, `release/rollback_cards/`.)
-3. **What gates did it pass, and what gates are still pending?**
-4. **What is the correction and rollback target for each release?**
+**Status:** `draft` · **Owners:** _TODO — flora domain steward; governance steward_ · **Last updated:** 2026-06-03 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
-> This file **indexes** Fauna releases. It is **not** the canonical release decision (that lives in `release/manifests/<release_id>.json`), and it is **not** the published artifact (those live in `data/published/layers/fauna/<release_id>/`). The trust membrane forbids treating this index as the authority. See [Directory Rules §9.2][dr-9-2] for the `release/` ↔ `data/published/` split.
-
-### 1.1 Out of scope
-
-This document does **not**:
-
-- Define `ReleaseManifest` field shape — see `schemas/contracts/v1/release/` and `contracts/release/release_manifest.md`. *(PROPOSED paths; verify with mounted-repo evidence.)*
-- Decide rights, sensitivity, or geoprivacy outcomes — those are policy. See `policy/domains/fauna/` and the Fauna sensitivity ladder.
-- Publish or promote a release — promotion is a **governed state transition**, not a file move (see [Lifecycle Law][doctrine-lifecycle]).
-- Replace the Fauna domain README — see [`README.md`](./README.md).
+> All paths, schemas, registries, validators, routes, and CI/workflow references in this document are **PROPOSED** until verified against a mounted KFM repository. This README states doctrine confidently where supported by attached project sources; it does **not** assert current implementation maturity. See [§13 Verification Backlog](#13-verification-backlog--open-questions).
 
 ---
 
-## 2. Repo fit
+## 📑 Mini Table of Contents
 
-**This file:** `docs/domains/fauna/RELEASE_INDEX.md` *(PROPOSED — placement basis: Directory Rules §6.1 `docs/` is the human-facing control plane; §12 Domain Placement Law puts domain segments under responsibility roots, never as roots; index/register-style naming follows the `docs/registers/` and `docs/intake/` convention of UPPER_SNAKE filenames.)*
+1. [Scope](#1-scope)
+2. [Repository Fit](#2-repository-fit)
+3. [Accepted Inputs](#3-accepted-inputs)
+4. [Exclusions](#4-exclusions)
+5. [Directory Tree (PROPOSED)](#5-directory-tree-proposed)
+6. [Domain Diagram](#6-domain-diagram)
+7. [Pipeline Shape (RAW → PUBLISHED)](#7-pipeline-shape-raw--published)
+8. [Ubiquitous Language, Source Families, Object Families](#8-ubiquitous-language-source-families-object-families)
+9. [Sensitivity, Rights & Publication Posture](#9-sensitivity-rights--publication-posture)
+10. [Map & Viewing Products](#10-map--viewing-products)
+11. [Governed AI Behavior](#11-governed-ai-behavior)
+12. [Validators, Tests & Thin-Slice Plan](#12-validators-tests--thin-slice-plan)
+13. [Verification Backlog & Open Questions](#13-verification-backlog--open-questions)
+14. [FAQ](#14-faq)
+15. [Companion Registers](#15-companion-registers)
+16. [Related Docs](#16-related-docs)
+17. [Appendix](#17-appendix)
 
-### 2.1 Upstream (what feeds this index)
+---
 
-| Source | Role | Path *(PROPOSED unless noted)* |
-|---|---|---|
-| Release decisions | Source of truth for what is released | `release/manifests/<release_id>.json` |
-| Release candidates (Fauna) | Pre-publish dossiers awaiting review | `release/candidates/fauna/<release_id>/` |
-| Promotion decisions | Governed state-transition records | `release/promotion_decisions/<release_id>.json` |
-| Signatures & attestations | DSSE / Sigstore | `release/signatures/<release_id>/` |
-| EvidenceBundle | Resolved support package | `data/proofs/evidence_bundle/<bundle_id>.json` |
-| Run receipts | Process memory for the publishing run | `data/receipts/release/<release_id>/` |
-| Published artifacts | The public-safe outputs | `data/published/layers/fauna/<release_id>/` |
-| Rollback cards | Rollback decision artifacts | `release/rollback_cards/<release_id>.json` |
-| Correction notices | Public corrections | `release/correction_notices/<release_id>-cN.json` |
+## 1. Scope
 
-### 2.2 Downstream (who reads this index)
+**CONFIRMED doctrine / PROPOSED implementation.** The Flora lane governs plant taxonomic identity, flora occurrence and specimen evidence, rare-plant and protected-species controls, invasive plants, phenology, restoration plantings, vegetation surfaces, range and distribution products, habitat associations, and public-safe botanical outputs — anchored to the KFM trust spine (`SourceDescriptor → EvidenceBundle → ValidationReport → ReleaseManifest → RollbackCard`).
 
-- Fauna domain steward & release authority (audit, planning, rollback drill prep).
-- Docs steward (consistency with `docs/registers/`).
-- Governed API and Evidence Drawer (the **decision** is upstream; this is a navigation aid for humans only).
-- Reviewers performing separation-of-duties checks for sensitive Fauna lanes.
+Flora is approached as a **proof-bearing thin slice**, not horizontal coverage: a single common-species occurrence joined to a vegetation-community polygon, backed by a resolvable `EvidenceBundle` and a public-safe map, is the first credible deliverable.
 
-### 2.3 What lives where (compatibility map)
-
-| If you want… | …go here, not here |
-|---|---|
-| The release decision | `release/manifests/<release_id>.json` — **not** this file |
-| The PMTiles / GeoJSON / Parquet output | `data/published/layers/fauna/<release_id>/` — **not** `release/` |
-| The EvidenceBundle | `data/proofs/evidence_bundle/<id>.json` — **not** `data/receipts/` |
-| The rollback decision | `release/rollback_cards/<id>.json` — **not** `data/rollback/` (that holds alias-revert receipts) |
-| A correction notice | `release/correction_notices/` — **not** an in-place edit of any prior artifact |
+- **One-line purpose.** Evidence-first botanical truth for Kansas, with deny-by-default protection for sensitive plant locations.
+- **Doctrinal posture.** Cite-or-abstain; deterministic identity; promotion as a governed state transition; auditable provenance, receipts, and rollback targets.
+- **Sensitivity posture.** Rare, protected, culturally sensitive, and steward-reviewed flora default to generalized, withheld, staged, or denied public geometry. *(CONFIRMED — Atlas, Flora §I.)*
 
 > [!NOTE]
-> The split is doctrinal: `data/published/` owns the **artifacts**; `release/` owns the **decisions**. Mixing them is one of the four named drift patterns (Directory Rules §13.2).
+> Flora is one of the domain lanes named explicitly in **Directory Rules §12 (Domain Placement Law)** and called out by name in the §3 "deeper rule." The lane appears as a `flora/` **segment** inside each owning responsibility root — it is **not** a root folder. *(CONFIRMED — Directory Rules §3, §12, §13.4.)*
 
-[⬆ Back to top](#fauna-domain--release-index)
+[↑ Back to top](#top)
 
 ---
 
-## 3. Release state vocabulary
+## 2. Repository Fit
 
-The Fauna domain consumes the project-wide release-state vocabulary. **CONFIRMED doctrine:** every Fauna PUBLISHED claim must be reachable via a `ReleaseManifest` with a resolvable rollback target. **PROPOSED implementation:** the exact enum values for `release_state` are not yet ADR-frozen — two candidate enumerations appear in the project corpus and must be reconciled before any Fauna release ships under either name.
+The Flora domain follows the **lane pattern** prescribed by Directory Rules §12. The domain segment appears under each responsibility root that owns a piece of its responsibility; flora never collapses into a single mega-folder.
+
+| Responsibility | Owning root | Domain segment (PROPOSED) |
+|---|---|---|
+| Human-facing explanation | `docs/` | `docs/domains/flora/` |
+| Object meaning (semantic) | `contracts/` | `contracts/domains/flora/` |
+| Machine shape | `schemas/` | `schemas/contracts/v1/domains/flora/` |
+| Admissibility (allow/deny/restrict/abstain) | `policy/` | `policy/domains/flora/` (and `policy/sensitivity/flora/`) |
+| Proofs | `tests/` | `tests/domains/flora/` |
+| Golden/valid/invalid samples | `fixtures/` | `fixtures/domains/flora/` |
+| Shared library code | `packages/` | `packages/domains/flora/` |
+| Executable pipeline logic | `pipelines/` | `pipelines/domains/flora/` |
+| Declarative pipeline configuration | `pipeline_specs/` | `pipeline_specs/flora/` |
+| Lifecycle data | `data/` | `data/<phase>/flora/`, `data/catalog/domain/flora/`, `data/published/layers/flora/`, `data/registry/sources/flora/` |
+| Release decisions | `release/` | `release/candidates/flora/` |
 
 > [!WARNING]
-> **Open conflict — `release_state` enum.** Two PROPOSED enumerations coexist in the project sources. Until an ADR resolves this (see §13), Fauna release entries below use the schema-side enum (UPPERCASE) and note the corresponding STAC profile token in a separate column.
+> Per Directory Rules **§13.4**, a flora subtree at repo root (e.g. `flora/data/`, `flora/schemas/`, `flora/policy/`) is an **anti-pattern** that fragments the lifecycle. Files belong under their **responsibility root**, with `flora/` as a domain segment. Cross-domain content (e.g. a habitat × flora × fauna validator) goes under the **lowest common responsibility root without a domain segment** — e.g. `tools/validators/<topic>/`, `schemas/contracts/v1/<topic>/`, `docs/architecture/<topic>.md`. *(CONFIRMED — Directory Rules §12 "Multi-domain and cross-cutting files," §13.4.)*
 
-### 3.1 PROPOSED enum — ReleaseManifest schema form (UPPERCASE)
+### Upstream and downstream
 
-| State | Meaning | Public-visible? | Required artifacts before entry |
-|---|---|---|---|
-| `DRAFT` | Authoring; gates not yet evaluated | No | None |
-| `REVIEW` | Under review; closure work in progress | No | candidate dossier, partial EvidenceRefs |
-| `PUBLISHED` | Released through governed APIs | **Yes** | `ReleaseManifest`, `EvidenceBundle`, rollback target, review where required |
-| `REVOKED` | Pulled from public surfaces; correction or withdrawal lineage | No (notice only) | `CorrectionNotice` or `withdrawal_notices/` entry |
-| `SUPERSEDED` | Replaced by a newer release; old release_id retained for lineage | No (lineage only) | Forward link to successor `release_id` |
+- **Upstream of Flora (governing doctrine):** `docs/doctrine/` (operating contract, authority ladder, truth posture, trust membrane, lifecycle law, directory rules) and accepted ADRs (notably ADR-0001 on schema home; the open `ADR-S-04` source-role vocabulary and `ADR-S-05` sensitivity tier scheme bear directly on this lane).
+- **Downstream of Flora:** `apps/governed-api/` (the sole public trust membrane), `apps/explorer-web/` + `packages/maplibre-runtime/` (shell + sole governed renderer), and any `data/published/layers/flora/` artifacts served via `LayerManifest`.
 
-### 3.2 PROPOSED enum — KFM STAC profile form (lowercase)
-
-| State | Meaning | Rough mapping to §3.1 |
-|---|---|---|
-| `unreleased` | Not yet promoted | `DRAFT` |
-| `candidate` | Awaiting closure | `REVIEW` |
-| `released` | Available to public clients | `PUBLISHED` |
-| `withdrawn` | Pulled from public surfaces | `REVOKED` (withdrawal lane) |
-| `corrected` | Reissued under a CorrectionNotice | `REVOKED` → new PUBLISHED with `correction_lineage` |
-| `superseded` | Replaced by a newer release | `SUPERSEDED` |
-
-> [!NOTE]
-> Both enums are PROPOSED. Whichever the ADR chooses, the Fauna domain inherits it without redefinition — domain docs do not create parallel vocabularies (Directory Rules §2.4).
-
-[⬆ Back to top](#fauna-domain--release-index)
+[↑ Back to top](#top)
 
 ---
 
-## 4. Fauna release lifecycle
+## 3. Accepted Inputs
 
-**CONFIRMED doctrine:** the Fauna domain follows the canonical KFM lifecycle. Promotion is a **governed state transition**, not a file move — bypassing validators, policy gates, EvidenceBundle creation, catalog closure, or release-decision recording is a violation regardless of where the bytes ended up.
+Files and content that **belong** somewhere under the Flora lane (all paths `PROPOSED`):
+
+- Flora-specific source descriptors — `data/registry/sources/flora/…`
+- Domain object semantics — `contracts/domains/flora/<object>.md`
+- Domain object schemas — `schemas/contracts/v1/domains/flora/<object>.schema.json` *(per ADR-0001)*
+- Flora-scoped policy bundles, sensitivity rules, rights checks — `policy/domains/flora/…`, `policy/sensitivity/flora/…`
+- Domain pipelines, normalizers, taxonomy reconcilers — `pipelines/domains/flora/…`
+- Domain pipeline specifications — `pipeline_specs/flora/…`
+- Flora-scoped tests, fixtures, and no-network fixture packs — `tests/domains/flora/…`, `fixtures/domains/flora/…`
+- Domain lifecycle artifacts — `data/<phase>/flora/…`
+- Released flora layers and catalog projections — `data/published/layers/flora/…`, `data/catalog/domain/flora/…`
+- Release candidates and decisions — `release/candidates/flora/…`
+- Flora-specific documentation — `docs/domains/flora/*.md` (this README is one such file)
+
+[↑ Back to top](#top)
+
+---
+
+## 4. Exclusions
+
+Content that **does not** belong under Flora, with redirects. *(CONFIRMED non-ownership — Atlas, Flora §B: "Habitat owns habitat patches and suitability; Fauna owns animal taxa and occurrences; Soil, hydrology, agriculture, hazards, roads, settlements, archaeology, and people keep their truth.")*
+
+| Topic | Owner | Redirect |
+|---|---|---|
+| Habitat patches, suitability surfaces, habitat models | **Habitat** | `docs/domains/habitat/` |
+| Animal taxa, fauna occurrences, fauna ranges, sensitive faunal sites | **Fauna** | `docs/domains/fauna/` |
+| Soil map units, horizons, soil-property surfaces | **Soil** | `docs/domains/soil/` |
+| Water observations, hydrography, flood context | **Hydrology** | `docs/domains/hydrology/` |
+| Crop observations, fields, rotation, yield, irrigation, agricultural economy | **Agriculture** | `docs/domains/agriculture/` |
+| Hazard events, fire/flood/drought records as hazards | **Hazards** | `docs/domains/hazards/` |
+| Roads, rail, trade routes | **Roads, Rail, and Trade** | `docs/domains/transport/` *(root segment PROPOSED)* |
+| Settlements, infrastructure, municipal records | **Settlements & Infrastructure** | `docs/domains/settlement/` *(root segment PROPOSED)* |
+| Archaeological sites, cultural heritage | **Archaeology** | `docs/domains/archaeology/` |
+| Living-person, DNA, land-ownership records | **People, DNA, Land** | `docs/domains/people/` |
+| Cross-domain schemas, validators, or doctrine | **Lowest common responsibility root** | e.g. `tools/validators/<topic>/`, `schemas/contracts/v1/<topic>/`, `docs/architecture/<topic>.md` — **no domain segment** |
+
+> [!CAUTION]
+> Flora may **reference** habitat, fauna, soil/hydrology, agriculture, and hazards through governed joins, but it **does not own** their object families. A join that imports another domain's truth into a Flora artifact must preserve **ownership, source role, sensitivity, and `EvidenceBundle` support**. See [§8 cross-lane relations](#cross-lane-relations). *(CONFIRMED relation constraint — Atlas, Flora §F.)*
+
+[↑ Back to top](#top)
+
+---
+
+## 5. Directory Tree (PROPOSED)
+
+The following tree is derived from Directory Rules §12 and the domain-lane pattern, with lifecycle paths cross-checked against the `kansas_flora_watch` blueprint (`KFM-P2-PROG-0002`). Paths are **PROPOSED** / **NEEDS VERIFICATION** against a mounted repo; nothing here implies current implementation.
+
+```text
+# docs/ — human-facing
+docs/domains/flora/
+├── README.md                    # this file
+├── PUBLICATION_AND_ROLLBACK.md  # PROPOSED — release/correction/stale/rollback contract
+├── object-families.md           # PROPOSED
+├── source-families.md           # PROPOSED
+├── sensitivity-posture.md       # PROPOSED
+├── thin-slice-plan.md           # PROPOSED
+└── governed-ai-behavior.md      # PROPOSED
+
+# contracts/ — semantic meaning
+contracts/domains/flora/
+├── plant-taxon.md               # PROPOSED
+├── flora-taxon-crosswalk.md     # PROPOSED
+├── flora-occurrence.md          # PROPOSED
+├── specimen-record.md           # PROPOSED
+├── rare-plant-record.md         # PROPOSED
+├── vegetation-community.md      # PROPOSED
+├── invasive-plant-record.md     # PROPOSED
+├── phenology-observation.md     # PROPOSED
+├── range-polygon.md             # PROPOSED
+├── distribution-surface.md      # PROPOSED
+├── habitat-association.md       # PROPOSED
+├── botanical-survey.md          # PROPOSED
+└── restoration-planting.md      # PROPOSED
+
+# schemas/ — machine shape (ADR-0001 default home)
+schemas/contracts/v1/domains/flora/
+├── plant-taxon.schema.json                # PROPOSED
+├── flora-taxon-crosswalk.schema.json      # PROPOSED
+├── flora-occurrence.schema.json           # PROPOSED
+├── specimen-record.schema.json            # PROPOSED
+├── rare-plant-record.schema.json          # PROPOSED
+├── vegetation-community.schema.json       # PROPOSED
+├── invasive-plant-record.schema.json      # PROPOSED
+├── phenology-observation.schema.json      # PROPOSED
+├── range-polygon.schema.json              # PROPOSED
+├── distribution-surface.schema.json       # PROPOSED
+├── habitat-association.schema.json        # PROPOSED
+├── botanical-survey.schema.json           # PROPOSED
+└── restoration-planting.schema.json       # PROPOSED
+
+# policy/ — admissibility, sensitivity, rights
+policy/domains/flora/                      # PROPOSED — promotion, rights gates
+policy/sensitivity/flora/                  # PROPOSED — rare-plant, culturally sensitive, geoprivacy
+                                           #   (the Atlas §24.13 crosswalk names policy/sensitivity/flora/)
+
+# tests/, fixtures/ — proofs and golden samples
+tests/domains/flora/                       # PROPOSED
+fixtures/domains/flora/                     # PROPOSED — no-network fixtures only
+
+# packages/, pipelines/, pipeline_specs/ — code and orchestration
+packages/domains/flora/                    # PROPOSED
+pipelines/domains/flora/                    # PROPOSED
+pipeline_specs/flora/                       # PROPOSED
+
+# data/ — lifecycle (RAW → PUBLISHED); paths per KFM-P2-PROG-0002
+data/raw/flora/<source>/<timestamp>/        # PROPOSED
+data/work/flora/<run_id>/                   # PROPOSED
+data/quarantine/flora/                      # PROPOSED
+data/processed/flora/<spec_hash>/           # PROPOSED
+data/catalog/{dcat,stac,prov}/flora/        # PROPOSED
+data/catalog/domain/flora/                  # PROPOSED
+data/published/layers/flora/                # PROPOSED — public-safe only
+data/registry/sources/flora/                # PROPOSED — SourceDescriptor entries
+data/receipts/flora/                        # PROPOSED — emitted alongside lifecycle
+
+# release/ — release decisions distinct from published artifacts
+release/candidates/flora/                   # PROPOSED
+```
+
+> [!NOTE]
+> Receipts, proofs, registry, and rollback artifacts are emitted **alongside** lifecycle directories per Directory Rules §3 — they do not replace lifecycle phases. The `data/raw/flora/<source>/<timestamp>/ … data/receipts/flora/` shape above is the lifecycle placement asserted in the `kansas_flora_watch` blueprint (`KFM-P2-PROG-0002`, PROPOSED). Whether `data/proofs/flora/…` and `data/rollback/flora/…` are confirmed sibling homes or require an ADR per §2.4 remains `NEEDS VERIFICATION` (see `ADR-S-03` receipt-class home).
+
+[↑ Back to top](#top)
+
+---
+
+## 6. Domain Diagram
+
+The diagram shows the Flora lane's relationship to the trust spine, the lifecycle phases, and adjacent domains. It is **conceptual**; runtime paths, routes, and module names are `PROPOSED`.
 
 ```mermaid
 flowchart LR
-    RAW["RAW<br/>(source-edge capture)"]
-    WORK["WORK<br/>(normalize)"]
-    QUAR["QUARANTINE<br/>(failed gate · sensitive defect)"]
-    PROC["PROCESSED<br/>(validated canonical)"]
-    CAT["CATALOG / TRIPLET<br/>(EvidenceBundle · candidate)"]
-    PUB["PUBLISHED<br/>(governed API · public-safe)"]
-    REL["release/manifests/<br/>(decision)"]
-    ROLL["release/rollback_cards/<br/>(reverse target)"]
-    CORR["release/correction_notices/<br/>(public correction)"]
+  subgraph SRC["Source families (CONFIRMED list / PROPOSED registry)"]
+    KANU["KU R.L. McGregor Herbarium (KANU) IPT"]
+    KSC["Kansas State Univ. Herbarium (KSC) IPT"]
+    USDA["USDA PLANTS (taxonomy + state presence)"]
+    GBIF["GBIF vascular plant downloads"]
+    IDIGBIO["iDigBio specimen records"]
+    INAT["iNaturalist-derived observations"]
+    KDWP["KDWP flora / Ecological Review Tool"]
+    NS["NatureServe Explorer / Explorer Pro"]
+    USFWS["USFWS ECOS plant context"]
+  end
 
-    RAW --> WORK
-    RAW -. defect .-> QUAR
-    WORK --> PROC
-    WORK -. policy/sensitivity .-> QUAR
-    PROC --> CAT
-    CAT -->|gate G: ReleaseManifest closed| PUB
-    QUAR -. steward remediation .-> WORK
-    PUB -.->|rollback drill| ROLL
-    PUB -.->|error or new evidence| CORR
-    CORR -->|new release_id| PUB
-    REL -.binds.- PUB
+  subgraph LANE["Flora lane (lifecycle — all PROPOSED until verified)"]
+    direction TB
+    RAW["RAW<br/>SourceDescriptor capture"] --> WQ["WORK / QUARANTINE<br/>normalize · validate · quarantine"]
+    WQ --> PROC["PROCESSED<br/>EvidenceRef · ValidationReport · digest closure"]
+    PROC --> CAT["CATALOG / TRIPLET<br/>EvidenceBundle · graph projection · release candidate"]
+    CAT --> PUB["PUBLISHED<br/>ReleaseManifest · public-safe LayerManifest"]
+  end
 
-    classDef public fill:#1f6feb,stroke:#0b3a85,color:#fff
-    classDef gated fill:#fff3bf,stroke:#a37b00,color:#000
-    classDef deny fill:#ffd7d7,stroke:#9b1d1d,color:#000
-    class PUB public
-    class CAT,REL gated
-    class QUAR deny
+  subgraph ADJ["Adjacent domains (governed joins only)"]
+    HAB["Habitat"]
+    FAU["Fauna"]
+    SOIL["Soil / Hydrology"]
+    HAZ["Hazards"]
+  end
+
+  subgraph TRUST["Trust membrane (CONFIRMED doctrine)"]
+    GAPI["apps/governed-api/"]
+    SHELL["apps/explorer-web/ + packages/maplibre-runtime/"]
+  end
+
+  SRC --> RAW
+  PUB --> GAPI
+  GAPI --> SHELL
+
+  HAB -. "habitat association · community context" .-> LANE
+  FAU -. "pollinator · food-web · invasive context" .-> LANE
+  SOIL -. "substrate · wetland · riparian · drought" .-> LANE
+  HAZ -. "fire · drought · flood · smoke · stress" .-> LANE
+
+  classDef proposed fill:#fff3e0,stroke:#ef6c00,color:#bf360c;
+  classDef trust fill:#e3f2fd,stroke:#1565c0,color:#0d47a1;
+
+  class SRC,ADJ,LANE proposed;
+  class TRUST trust;
 ```
 
-*Diagram reflects [Directory Rules §9.1][dr-9-1] (lifecycle phases), [§9.2][dr-9-2] (release decisions), and the Atlas §24.6.1 transition gate table. PROPOSED state labels above are doctrine names; specific gate identifiers (G1–G7) below are PROPOSED labels and may be renamed by an ADR.*
-
-[⬆ Back to top](#fauna-domain--release-index)
+[↑ Back to top](#top)
 
 ---
 
-## 5. Sensitivity posture (Fauna)
+## 7. Pipeline Shape (RAW → PUBLISHED)
+
+**CONFIRMED doctrine / PROPOSED lane application.** Flora follows the canonical lifecycle: `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`, with promotion as a **governed state transition**, not a file move. Connectors do not publish; watchers do not publish; pipelines promote only through gate-passing receipts. *(CONFIRMED — Directory Rules §0 lifecycle invariant, §13.5 connector/watcher-as-non-publisher; Atlas, Flora §H.)*
+
+| Stage | Handling | Gate | Status |
+|---|---|---|---|
+| **RAW** | Capture immutable source payload or reference with source role, rights, sensitivity, citation, time, and hash. | `SourceDescriptor` exists. | `PROPOSED` |
+| **WORK / QUARANTINE** | Normalize schema, geometry, time, identity, evidence, rights, and policy; hold failures with recorded quarantine reason. | Validation and policy gates pass, or quarantine reason is recorded. | `PROPOSED` |
+| **PROCESSED** | Emit validated, normalized objects, run/validation receipts, and public-safe candidates. | `EvidenceRef`, `ValidationReport`, and digest closure exist. | `PROPOSED` |
+| **CATALOG / TRIPLET** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, and release candidates. | Catalog/proof closure passes. | `PROPOSED` |
+| **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests only. | `ReleaseManifest`, correction path, rollback target, and review/policy state exist. | `PROPOSED` |
+
+> [!TIP]
+> The first flora PR should be **no-network and fixture-first**: synthetic source descriptors, synthetic specimens, synthetic vegetation polygons, and synthetic redaction receipts that exercise every gate. Live connector activation is a separate, smaller PR whose verification surface is just connector behavior and rights review. The `kansas_flora_watch` blueprint (`KFM-P2-PROG-0002`) names **promotion gates A–G** — schema valid, license compliant, provenance complete, spatial integrity verified, temporal consistency, deduplication across sources, Evidence Drawer renders correctly — as the closure set for this lane (PROPOSED).
+
+[↑ Back to top](#top)
+
+---
+
+## 8. Ubiquitous Language, Source Families, Object Families
+
+### Ubiquitous language (Flora)
+
+Terms below are **CONFIRMED** as part of the Flora ubiquitous language (Atlas, Flora §C). Their **field-level realization** in schemas and code is **PROPOSED** until verified.
+
+| Term | Meaning within Flora |
+|---|---|
+| **Plant Taxon** | A named plant taxonomic unit, anchored to an external authority where available. |
+| **FloraTaxon Crosswalk** | A reconciliation record linking accepted names, synonyms, and external identifiers across taxonomic authorities. |
+| **Flora Occurrence** | A spatially and temporally located observation of a taxon, with uncertainty and source-role discipline. |
+| **SpecimenRecord** | A vouchered, accessioned plant specimen (typically from a herbarium portal). |
+| **Rare Plant Record** | An occurrence or specimen for a rare/protected/culturally sensitive taxon, subject to fail-closed geoprivacy by default. |
+| **Vegetation Community** | A mapped polygon of plant community composition, structure, or condition. |
+| **InvasivePlantRecord** | An occurrence or treatment record for an invasive plant, with monitoring lineage. |
+| **Phenology Observation** | A timestamped observation of plant phenophase (leaf-out, bloom, fruiting, senescence). |
+| **RangePolygon** | A polygon (often generalized) representing a taxon's known or inferred range. |
+| **DistributionSurface** | A raster/surface product describing distribution likelihood or density. |
+| **Habitat Association** | A typed relation between a flora object and a habitat lane object, preserving sensitivity. |
+| **Botanical Survey** | A bounded survey event with method metadata and supporting evidence. |
+| **Restoration Planting** | A documented planting/restoration event with intent, source stock, and outcome data. |
+| **SourceRole** | The role a source plays for a claim, drawn from the canonical source-role classes (see below). |
+| **Redaction Receipt** | A transformation receipt recording how sensitive source geometry became a public-safe representation. |
+
+> [!NOTE]
+> `Botanical Survey` and `Restoration Planting` appear in this lane's working vocabulary but are **not** itemized in the Atlas Flora §C ubiquitous-language table; treat them as **INFERRED** lane terms pending a contract entry, distinct from the CONFIRMED Atlas terms above.
+
+### Source families
+
+The following families are **CONFIRMED in-scope** for Flora (Atlas, Flora §D). The Atlas records each family's role generically as *authority / observation / context / model as the source role requires* and its rights as **NEEDS VERIFICATION**, with **sensitive joins fail closed**. The role/rights columns below therefore carry explicit labels — do not read them as settled.
+
+| Source family | Role (per claim) | Rights / sensitivity | Freshness |
+|---|---|---|---|
+| KU R.L. McGregor Herbarium (KANU) IPT | observation / authority (specimen) — **per claim** | NEEDS VERIFICATION; sensitive joins fail closed | Source-vintage / IPT cadence |
+| Kansas State University Herbarium (KSC) IPT | observation / authority (specimen) — **per claim** | NEEDS VERIFICATION; sensitive joins fail closed | Source-vintage / IPT cadence |
+| USDA PLANTS Database | authority (federal checklist, names, state/county distribution) | NEEDS VERIFICATION (public-domain federal checklist assumed; confirm) | Versioned |
+| GBIF vascular plant downloads | observation / context | NEEDS VERIFICATION; per-dataset license; capture license + DOI per download | Snapshot / DOI |
+| iDigBio specimen records | observation | NEEDS VERIFICATION; per-dataset | Snapshot |
+| iNaturalist-derived observations | observation / context | NEEDS VERIFICATION; per-record license; community-science caveats | Continuous |
+| KDWP flora / Ecological Review Tool / stewardship outputs | authority (steward review) / context | NEEDS VERIFICATION; steward-controlled; sensitive joins fail closed | Cadence specific |
+| NatureServe Explorer / Explorer Pro | authority (conservation status) / context | NEEDS VERIFICATION; restricted-tier access for precise data | Versioned |
+| USFWS ECOS plant context | regulatory (federal status) / context | NEEDS VERIFICATION; public; redistribution terms unconfirmed | Cadence specific |
 
 > [!CAUTION]
-> **Fauna deny-by-default categories.** Exact occurrence geometry for sensitive taxa, nests, dens, roosts, hibernacula, spawning sites, and steward-controlled records **fails closed** unless a documented geoprivacy transform and review state allow release. This is CONFIRMED Fauna doctrine. Public exact-occurrence tiles for sensitive taxa are **denied**.
+> **Source-rights claims are not asserted here.** The Atlas marks every Flora source family's rights and current terms `NEEDS VERIFICATION`. Any specific license string (e.g. a particular CC-BY version) MUST be confirmed against the upstream dataset record before it appears as fact in a contract, schema, or `SourceDescriptor`. *(CONFIRMED posture — Atlas, Flora §D.)*
 
-### 5.1 What may enter `PUBLISHED` (Fauna)
+**Kansas-first authority posture (CONFIRMED).** KFM treats Kansas-specific authorities as first-class alongside the global aggregator: KANU and KSC are the primary in-state herbaria; iDigBio adds digitized specimens; **USDA PLANTS is the nomenclature authority and a distribution backstop**, and **specimen-backed observations are preferred over crowd observations**. Restricted taxa (NatureServe, listed species) are **quarantined or redacted before any aggregate is published**. *(CONFIRMED — `KFM-P2-IDEA-0019`, `KFM-P27-IDEA-0001`, `KFM-P2-PROG-0002`.)*
 
-| Public-safe candidate | Allowed at PUBLISHED? | Required transforms / receipts |
-|---|---|---|
-| Public range polygons | Yes — when source rights and sensitivity allow | EvidenceBundle; LayerManifest; tile field allowlist |
-| Occurrence density grid (generalized) | Yes — when generalization meets policy | Redaction Receipt; geoprivacy transform receipt |
-| Species richness grid | Yes | EvidenceBundle; aggregation rule documented |
-| Invasive monitoring public layer | Yes — observation-role only | Source-role authority test passed |
-| Seasonal support layer | Yes | EvidenceBundle; temporal scope declared |
-| Taxon search / public-safe popup | Yes | Tile field allowlist test; no exact-occurrence leakage |
-| Public species status view | Yes | Conservation Status field provenance documented |
+### Object families
 
-### 5.2 What must **not** enter `PUBLISHED` without explicit steward release
+The following objects are **owned by Flora** (CONFIRMED list — Atlas, Flora §E; **PROPOSED** deterministic identity rule: `source_id + object_role + temporal_scope + normalized_digest`):
 
-| Restricted category | Default outcome | Path if exception granted |
-|---|---|---|
-| Exact sensitive-taxon occurrence geometry | **DENY** | Steward-only review surface; Redaction Receipt + transform receipt + ReviewRecord |
-| Nest / den / roost / hibernacula / spawning sites | **DENY** | Same as above; geometry generalization or suppression required |
-| Steward-controlled records (e.g., tribal, landowner, agency-restricted) | **DENY** | Rights-holder representative co-signs; rights resolution recorded |
-| Joins of public sources that re-identify sensitive locations | **DENY** | Join rule + sensitivity reviewer; route through steward queue |
+```text
+Plant Taxon          FloraTaxon Crosswalk    Flora Occurrence
+SpecimenRecord       Rare Plant Record       Vegetation Community
+InvasivePlantRecord  Phenology Observation   RangePolygon
+DistributionSurface  Habitat Association
+```
+
+**Temporal handling** (CONFIRMED): source, observed, valid, retrieval, release, and correction times stay **distinct** where material. *(Atlas, Flora §E.)*
 
 > [!NOTE]
-> A claim can be **well sourced and still unsafe** for public release. Source quality does not override sensitivity. The Fauna lane treats public exposure as a governed state, not a reward for data quality.
+> `Botanical Survey`, `Restoration Planting`, and `Redaction Receipt` are listed under §8 ubiquitous language but are **not** itemized as Flora-owned object families in the Atlas §E table (`Redaction Receipt` is a cross-cutting receipt family per Atlas §24.2). Treat their object-family status as **PROPOSED / INFERRED** pending a contract entry.
 
-[⬆ Back to top](#fauna-domain--release-index)
+### Cross-lane relations
+
+CONFIRMED list (Atlas, Flora §F); relations must preserve **ownership**, **source role**, **sensitivity**, and **`EvidenceBundle`** support.
+
+| This domain | Related lane | Relation type |
+|---|---|---|
+| Flora | Habitat | Habitat association and vegetation community context |
+| Flora | Fauna | Pollinator, food-web, invasive, biodiversity context |
+| Flora | Soil / Hydrology | Substrate, wetland, riparian, drought context |
+| Flora | Hazards | Fire, drought, flood, smoke, vegetation stress |
+
+[↑ Back to top](#top)
 
 ---
 
-## 6. Publication gates
+## 9. Sensitivity, Rights & Publication Posture
 
-> **CONFIRMED doctrine / PROPOSED implementation.** Fauna publication requires a complete closure across the gates below. Missing any required artifact means the transition **fails closed** and the prior state is preserved.
+> [!CAUTION]
+> **Deny-by-default for exact sensitive locations.** Exact rare-plant, protected-plant, or culturally sensitive plant locations are denied on public surfaces. Public release requires steward review, generalized/withheld geometry, **and** a `RedactionReceipt` recording the transform. This routes through the operating contract's §23.2 sensitive-domain decision matrix — disposition is **not** re-derived here. *(CONFIRMED — Atlas §20.5 Deny-by-Default Register, Flora row; `KFM-P19-PROG-0013`.)*
 
-| ID *(PROPOSED label)* | Gate | Required artifact(s) | On fail |
+**CONFIRMED doctrine / PROPOSED implementation.** Rare, protected, culturally sensitive, and steward-reviewed flora default to **generalized, withheld, staged, or denied** public geometry. Permissible transforms (PROPOSED) include:
+
+- **Suppress** — no public geometry; metadata only with regional envelope.
+- **Generalize to grid / county / watershed / ecoregion** — coarsened geometry with documented radius/cell size.
+- **Buffer / jitter (constrained)** — only when scientific value justifies it and a transform receipt is emitted.
+- **Delayed publication** — staged release tied to a review state and freshness window.
+- **Steward-only exact access** — exact geometry available only to authorized stewards; never surfaced through public APIs.
+
+Each transform emits a **`RedactionReceipt`** stating: input class, output class, reason, policy, reviewer, and residual risk.
+
+### Deny-by-default register (Flora row)
+
+| Domain / surface | Denied by default | Allowed only when |
+|---|---|---|
+| **Flora** | Exact rare / protected / culturally sensitive plant locations | Review **+** generalized/withheld geometry **+** `RedactionReceipt` **+** resolvable `EvidenceBundle` |
+
+> [!IMPORTANT]
+> **Join-induced sensitivity.** A benign source can become sensitive when joined with others. Joining USDA PLANTS to a rare-plant locality dataset, an iNaturalist coordinate to a small-population polygon, or a herbarium record to an unprotected micro-habitat may be **more sensitive than either input**. Sensitivity is a property of the **resulting product**, not just of the input sources; joins that create new sensitivity must clear the same gates as the most sensitive input. *(Aligns with `ADR-S-14` cross-lane join policy, OPEN.)*
+
+### Sensitivity tier transitions (CONFIRMED doctrine)
+
+A tier **upgrade** toward more-public always needs **both** a transform receipt **and** a review record; a **downgrade** toward less-public needs only a correction. *(Atlas §24.5 / sensitivity-tier transitions.)*
+
+| Transition | Required artifacts | Authority | Reversibility |
 |---|---|---|---|
-| G1 | Source-role authority | `SourceDescriptor`; source-role registry entry | HOLD at RAW; reason `RIGHTS_UNKNOWN` or `ROLE_COLLAPSE` |
-| G2 | Rights & sensitivity resolution | Rights review; sensitivity classification; Fauna sensitivity ladder | QUARANTINE; reason `SENSITIVITY_UNRESOLVED` |
-| G3 | Taxonomy resolution | Taxon Crosswalk; taxonomy version pinned | HOLD at WORK; reason `SCHEMA_MISMATCH` (taxonomy) |
-| G4 | Occurrence restricted/public split | Restricted vs public Occurrence classification; tile field allowlist | QUARANTINE if exact restricted leaks |
-| G5 | Geoprivacy & redaction | Geoprivacy transform receipt; Redaction Receipt | HOLD at PROCESSED |
-| G6 | EvidenceBundle closure | `EvidenceBundle` resolves all `EvidenceRef`; digest closure | HOLD at CATALOG; reason `MISSING_EVIDENCE` |
-| G7 | Review state (where required) | `ReviewRecord` from independent reviewer for sensitive lanes | HOLD; reason `REVIEW_NEEDED` |
-| G8 | Release manifest & rollback | `ReleaseManifest`; rollback target; signatures | HOLD; reason `RELEASE_MANIFEST_INVALID` or `ROLLBACK_TARGET_MISSING` |
+| `T1 → T0` (publish) | `ReleaseManifest` + `ReviewRecord` | Steward + release authority | Reversible via `RollbackCard`. |
+| `Any tier → T4` (downgrade) | `CorrectionNotice` + `ReviewRecord` | Steward + rights-holder where applicable | Always permitted; precedes derivative invalidation. |
 
-**Watcher-as-non-publisher invariant.** *(CONFIRMED.)* Fauna source-drift detectors and ingest watchers emit candidate records — they do **not** publish, mutate canonical truth, or expose `RAW` / `WORK` / `QUARANTINE` payloads to public surfaces. Watcher output enters the lifecycle on the WORK side and requires explicit promotion.
+### Rights posture
 
-[⬆ Back to top](#fauna-domain--release-index)
+- Rights terms for each in-scope source family are **NEEDS VERIFICATION** (Atlas, Flora §D).
+- Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **blocks** public promotion. *(CONFIRMED — Atlas, Flora §I.)*
+- Restricted-use datasets (e.g. precise NatureServe Explorer Pro data, Kansas Natural Heritage Inventory rare-species localities) require recorded license terms and any derivative-release policy before public exposure.
+
+[↑ Back to top](#top)
 
 ---
 
-## 7. Fauna releases register
+## 10. Map & Viewing Products
+
+**PROPOSED domain viewing products** (all served via `apps/governed-api/` and rendered by `packages/maplibre-runtime/`; no public client may read canonical stores directly). *(Product list — Atlas, Flora §G.)*
+
+| Product | Audience | Notes |
+|---|---|---|
+| Generalized occurrence layer | Public | Geoprivacy-transformed; no exact sensitive geometry |
+| Public range / distribution layer | Public | `RangePolygon` / `DistributionSurface`, public-safe scale only |
+| Vegetation community layer | Public | Polygon mapping; verify rights per source |
+| Invasive plant layer | Public | Monitoring + treatment lineage where permitted |
+| Phenology / condition layer | Public | Time-aware; uncertainty visible |
+| Habitat association summary | Public | Governed join with Habitat lane only |
+| Plant species pages | Public | Backed by resolvable `EvidenceBundle` |
+| Review candidate view | Steward | Restricted; not a public surface |
+| Steward exact-location view | Steward | Restricted; never on a public route |
+
+**CONFIRMED cross-cutting viewing products** (apply to Flora layers): Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, and governed Focus Mode. *(Atlas, doctrine callout C2.)*
+
+[↑ Back to top](#top)
+
+---
+
+## 11. Governed AI Behavior
+
+**CONFIRMED doctrine / PROPOSED implementation.** AI within the Flora lane is **interpretive, not authoritative**. `EvidenceBundle` outranks generated language. *(Atlas, Flora §L; Governed AI doctrine.)*
+
+| AI behavior | Rule |
+|---|---|
+| Allowed | Evidence-bounded summarization over **released** Flora `EvidenceBundle`s; citation-backed explanation; evidence comparison; steward-review drafting; anomaly explanation; schema/validator suggestion. |
+| `ABSTAIN` | Insufficient evidence; missing/unresolvable `EvidenceRef`; uncertain temporal alignment; missing citation. |
+| `DENY` | Policy, rights, sensitivity, or release state blocks the request; query targets exact sensitive geometry; query touches RAW/WORK material directly. |
+| `ERROR` | Validation or runtime failure with a structured reason code. |
+| Required receipt | Every Focus Mode answer emits an `AIReceipt` and a `RuntimeResponseEnvelope` with outcome `ANSWER \| ABSTAIN \| DENY \| ERROR`, `evidence_refs`, `policy_decision`, and `citation_validation`. |
+
+> [!IMPORTANT]
+> No direct model-to-public path. AI never reads canonical or RAW stores. AI does not promote artifacts; promotion is a governed state transition outside the AI runtime. AI text is never treated as evidence (it carries a Reality Boundary Note / Representation Receipt as a `synthetic` source role). *(CONFIRMED — Atlas §24.1.2 "AI text treated as evidence" DENY condition.)*
+
+[↑ Back to top](#top)
+
+---
+
+## 12. Validators, Tests & Thin-Slice Plan
+
+### Validators and tests (PROPOSED)
+
+The following validator/test classes are **PROPOSED** for the Flora lane (Atlas, Flora §K, augmented by `KFM-P2-PROG-0002`):
+
+- Taxonomy reconciliation tests (USDA PLANTS as name authority; GBIF Backbone and ITIS as comparison; disagreement cases).
+- DwC-A validator that **rejects** archives lacking `scientificName`, `decimalLatitude`/`decimalLongitude`, `eventDate`, `license`, `rightsHolder`, or `datasetID` *(per `KFM-P2-PROG-0002`; PROPOSED home `tools/validators/flora_dwca_validator`)*.
+- Rights and sensitivity validators (source-role allowed claims, sensitivity classification, restricted-use denial).
+- Exact sensitive public-geometry **denial** tests.
+- Catalog closure tests (`EvidenceBundle` resolution, digest closure, `ReleaseManifest` completeness).
+- API finite-outcome fixtures (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`).
+- `RedactionReceipt` validation (input/output class, reason, policy, reviewer, residual risk).
+- Cross-domain join validators (join-induced sensitivity denial).
+- Cross-source dedupe key check (`institutionCode + catalogNumber + eventDate`, per `KFM-P2-PROG-0002`).
+- No-live-network fixture pipeline.
+- Rollback drill against a dry-run release.
+
+### Thin-slice plan
+
+**CONFIRMED thin-slice intent (PROPOSED implementation).** One common plant-species occurrence/specimen fixture **and** one vegetation community polygon, with an `EvidenceBundle`-backed species page and a public-safe map — closure across `SourceDescriptor → ValidationReport → EvidenceBundle → LayerManifest → ReleaseManifest`, with a working rollback target. Exact sensitive geometry stays steward-only or absent; public surfaces show only generalized derivatives with `RedactionReceipt`s where applicable.
+
+> [!TIP]
+> The Flora lane is judged by **closure**, not coverage. The first PR should not attempt to ingest all of GBIF; it should prove the trust spine end-to-end for one species and one community polygon.
+
+### API, contract, and schema surfaces (PROPOSED)
+
+| Endpoint or artifact | DTO / schema | Outcomes | Status |
+|---|---|---|---|
+| Flora feature/detail resolver (route TBD) | `FloraDecisionEnvelope` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; exact route UNKNOWN |
+| Flora layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | PROPOSED; public-safe only |
+| Flora Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; evidence- and policy-filtered |
+| Flora Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; AI never root truth |
+| Schema responsibility root | `schemas/contracts/v1/domains/flora/` | finite validator outcomes | PROPOSED per ADR-0001 |
 
 > [!NOTE]
-> **No Fauna release is CONFIRMED in this session.** All entries below are illustrative **template** form to show the expected shape of the register. Replace with real entries only once `release/manifests/` evidence exists and an ADR has frozen the `release_state` enum (see §13).
+> The Atlas, Flora §J names the resolver DTO `FloraDecisionEnvelope`. Per the active doctrine migration (`DecisionEnvelope → RuntimeResponseEnvelope`), this may reconcile to the canonical `RuntimeResponseEnvelope`. Treat `FloraDecisionEnvelope` as **CONFLICTED** pending the migration ADR. See [§13](#13-verification-backlog--open-questions).
 
-| `release_id` *(template)* | Title | State *(PROPOSED enum)* | Created | Spec hash | Manifest | Evidence bundle | Rollback target | Notes |
-|---|---|---|---|---|---|---|---|---|
-| `rel-fauna-public-range-template` | *(template)* Fauna public range polygons | `DRAFT` | `YYYY-MM-DDTHH:MM:SSZ` | `sha256:…` | `release/manifests/rel-fauna-public-range-template.json` | `data/proofs/evidence_bundle/<bundle_id>.json` | `null` *(initial)* | NEEDS VERIFICATION — no manifest exists yet |
-| `rel-fauna-density-grid-template` | *(template)* Fauna occurrence density grid (generalized) | `DRAFT` | `YYYY-MM-DDTHH:MM:SSZ` | `sha256:…` | `release/manifests/rel-fauna-density-grid-template.json` | `data/proofs/evidence_bundle/<bundle_id>.json` | `null` *(initial)* | NEEDS VERIFICATION — Redaction Receipt required |
-| `rel-fauna-invasive-monitoring-template` | *(template)* Invasive species monitoring public layer | `DRAFT` | `YYYY-MM-DDTHH:MM:SSZ` | `sha256:…` | `release/manifests/rel-fauna-invasive-monitoring-template.json` | `data/proofs/evidence_bundle/<bundle_id>.json` | `null` *(initial)* | NEEDS VERIFICATION — observation source-role only |
-
-> The register MUST be append-only with respect to the `release_id`; corrections to a release create a **new** `release_id` and append a row, then mark the prior row `SUPERSEDED` or `REVOKED` with a forward link. **Never silently edit** a prior released row.
-
-[⬆ Back to top](#fauna-domain--release-index)
+[↑ Back to top](#top)
 
 ---
 
-## 8. Release entry template
+## 13. Verification Backlog & Open Questions
 
-When adding a new entry to §7, fill out the block below in the release candidate dossier (`release/candidates/fauna/<release_id>/CANDIDATE.md`) first, then mirror the summary row into the register.
+Items to resolve against a mounted repo, source documentation, or stewards. These remain `NEEDS VERIFICATION` before promotion from `draft` to `published`.
+
+| Item to verify | Evidence that would settle it | Status |
+|---|---|---|
+| Live source endpoints, rights, and current terms for every Flora source family | Source rights documents, license fields, registry entries, license tests | NEEDS VERIFICATION |
+| Rare-plant steward policy (who reviews; what cadence; what transform set) | `policy/sensitivity/flora/…`, steward role records, runbook | NEEDS VERIFICATION |
+| Exact / public geometry thresholds (generalization radii, grid sizes per taxon class) | Policy bundle entries, fixture cases, deny tests | NEEDS VERIFICATION |
+| Taxonomic anchor policy (USDA PLANTS as name authority; GBIF Backbone DOI; tie-breaker rules) | ADR or policy doc; tests for disagreement cases | NEEDS VERIFICATION |
+| FloraTaxon Crosswalk realization (fields, identity rule, ingestion procedure) | Schema files, fixtures, reconciliation tests | NEEDS VERIFICATION |
+| Schema home for Flora objects (confirm `schemas/contracts/v1/domains/flora/` per ADR-0001 or amend) | Mounted repo schema directory, ADR-0001 status | NEEDS VERIFICATION |
+| `FloraDecisionEnvelope` vs canonical `RuntimeResponseEnvelope` | DecisionEnvelope → RuntimeResponseEnvelope migration ADR | CONFLICTED |
+| Focus Mode / Evidence Drawer behavior for Flora payloads | Runtime fixtures, `AIReceipt` records, deny/abstain tests | NEEDS VERIFICATION |
+| MapLibre layer registry binding for Flora layers | `data/registry/layers/…`, `LayerManifest` examples | NEEDS VERIFICATION |
+| Join-induced sensitivity policy (cross-domain) | Policy bundle, join tests, transform receipts (`ADR-S-14`) | NEEDS VERIFICATION |
+| Whether `data/receipts/flora/…`, `data/proofs/flora/…`, `data/rollback/flora/…` are sibling homes or require an ADR | Directory Rules §2.4 conformance + `ADR-S-03` | NEEDS VERIFICATION |
+| `RedactionReceipt` schema home (`schemas/contracts/v1/receipts/` vs domain-scoped) | `ADR-S-03`; schema directory | NEEDS VERIFICATION |
+| Source-role enum ratification and evolution rule | `ADR-S-04` (source-role canonical vocabulary) | NEEDS VERIFICATION |
+| Sensitivity tier scheme (T0–T4) adoption | `ADR-S-05` (sensitivity tier scheme) | NEEDS VERIFICATION |
+| Domain-pipeline placement (`pipelines/domains/flora/` vs `pipelines/<topic>/` for cross-domain joins) | Mounted repo evidence; PR history | NEEDS VERIFICATION |
+
+### Open questions
+
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-FLORA-01 | When USDA PLANTS and GBIF Backbone disagree on accepted name for a Kansas plant, how is the disagreement recorded, and does USDA PLANTS always win? | Domain steward (Flora) | Taxonomy-anchor ADR + reconciliation tests |
+| OQ-FLORA-02 | What generalization radius (grid, county, watershed, ecoregion) applies per rare-plant sensitivity class? | Domain steward + sensitivity reviewer | `policy/sensitivity/flora/` + `ADR-S-05` |
+| OQ-FLORA-03 | Are iNaturalist research-grade observations admitted as `observation` for non-sensitive taxa without steward review, or always behind review? | Domain steward (Flora) | Connector cadence ADR (`ADR-S-12`) |
+| OQ-FLORA-04 | How are restricted-use datasets (Kansas Natural Heritage Inventory localities, NatureServe Explorer Pro) modeled — separate descriptor class, separate policy class, or both? | Governance steward | `SourceDescriptor` schema + `policy/sensitivity/flora/` |
+| OQ-FLORA-05 | Where does culturally sensitive plant knowledge (tribally significant / ceremonial-use species) sit in the sensitivity matrix, and what review path applies? | Domain steward + rights-holder rep | §23.2 matrix + `ADR-S-05` |
+| OQ-FLORA-06 | What is the canonical CRS pair for Flora (projected for analysis, WebMercator for tiles), and where is it pinned? | Spatial Foundation steward | Spatial doctrine + schema header |
+
+[↑ Back to top](#top)
+
+---
+
+## 14. FAQ
 
 <details>
-<summary><strong>Click to expand — Fauna release entry block (template)</strong></summary>
+<summary><strong>Q: Why is Flora a domain segment under each responsibility root instead of a top-level <code>flora/</code> folder?</strong></summary>
 
-```yaml
-# release/candidates/fauna/<release_id>/CANDIDATE.md  (PROPOSED path)
-release_id: rel-fauna-<slug>-<yyyy>-<nnn>
-title: <human title>
-domain: fauna
-release_state: DRAFT          # PROPOSED enum — see §3
-policy_label: public          # public | restricted | unknown
-rights_status: open           # open | controlled | restricted | unknown
-sensitivity: public           # public | generalized | restricted | review_required
-spec_hash: sha256:<canonicalized-content-hash>
-artifacts:
-  - artifact_id: <id>
-    kind: pmtiles             # pmtiles | stac | geojson | parquet | model | manifest | receipt
-    path: data/published/layers/fauna/<release_id>/<file>.pmtiles
-    sha256: <hash>
-    blake3: <hash>
-evidence_refs:
-  - kfm://evidence/<bundle_id>
-  - kfm://run/<run_receipt_id>
-review:
-  required: true              # sensitive Fauna lanes: true
-  record: release/reviews/<record_id>.json    # PROPOSED path
-geoprivacy:
-  transforms:                 # zero or more
-    - type: generalize_to_grid   # suppress | generalize_to_grid | watershed | county | buffer | delayed_publication | steward_only
-      input_class: occurrence_exact
-      output_class: occurrence_density_grid
-      receipt: kfm://redaction/<receipt_id>
-rollback:
-  rollback_supported: true
-  previous_release: null
-  rollback_plan_ref: release/rollback_cards/<release_id>.json
-correction_lineage: []
-attestations:
-  - release/signatures/<release_id>/dsse.json
-```
+Per **Directory Rules §12 (Domain Placement Law)** and the §3 deeper rule, a domain MUST NOT become a root folder — `flora` is named explicitly in the list of domain names that live as lanes inside responsibility roots. A root-level `flora/` with its own `data/`, `schemas/`, `policy/`, and `docs/` is **§13.4** anti-pattern ("domain folders becoming root folders and fragmenting the lifecycle"). The lane pattern preserves lifecycle and governance boundaries: code lives in `packages/`, data lives in `data/<phase>/`, policy lives in `policy/`, schemas live in `schemas/`, and `docs/domains/flora/` is the human-facing landing page that ties them together. *(CONFIRMED — Directory Rules §3, §12, §13.4.)*
+</details>
+
+<details>
+<summary><strong>Q: Can the Flora lane publish exact rare-plant locations to a public layer?</strong></summary>
+
+No, not by default. Exact rare, protected, or culturally sensitive plant locations are **denied** on public surfaces. Public release requires: steward review, generalized or withheld geometry, a `RedactionReceipt`, and a resolvable `EvidenceBundle`. Steward-only exact-location views are not public routes. *(CONFIRMED — Atlas §20.5 Flora row; `KFM-P19-PROG-0013`.)*
+</details>
+
+<details>
+<summary><strong>Q: Does Flora own habitat polygons?</strong></summary>
+
+No. **Habitat owns habitat patches and suitability.** Flora may **link** to habitat through `Habitat Association` objects, but importing habitat truth into a Flora artifact must preserve ownership, source role, sensitivity, and `EvidenceBundle` support. The same applies to Fauna, Soil/Hydrology, Agriculture, and Hazards. *(CONFIRMED — Atlas, Flora §B, §F.)*
+</details>
+
+<details>
+<summary><strong>Q: How does Flora handle taxonomic disagreement between authorities?</strong></summary>
+
+`FloraTaxon Crosswalk` is the object family that records reconciliation across authorities. KFM doctrine directs that **USDA PLANTS be the authority for plant names**, with documented exceptions; GBIF Backbone and ITIS serve as comparison/coverage. Where authorities disagree on accepted name, the resolution policy is `NEEDS VERIFICATION` (OQ-FLORA-01). Records that lack at least one anchored authority should fail validation. *(CONFIRMED authority posture — `KFM-P2-IDEA-0019`, `KFM-P27-IDEA-0001`.)*
+</details>
+
+<details>
+<summary><strong>Q: Why must the first PR be no-network?</strong></summary>
+
+No-network dry runs prove **governance**, not **connectivity**. They remove legal/ethical exposure from live data, eliminate external-endpoint variability, and let schemas, validators, and policy gates be reviewed deterministically. Live activation is a separate, smaller PR whose verification surface is just the connector and rights review. *(CONFIRMED roadmap posture — Atlas §21 roadmap, phase 4 "no-network query-save-recompile dry run.")*
+</details>
+
+<details>
+<summary><strong>Q: What is the AI allowed to do in Flora Focus Mode?</strong></summary>
+
+Summarize released `EvidenceBundle`s, cite explanations, compare evidence, draft steward-review notes, suggest schemas or validators, and explain anomalies — all with an `AIReceipt`. AI must `ABSTAIN` when evidence is insufficient and `DENY` when policy, rights, sensitivity, or release state blocks the request. AI never reads canonical or RAW stores and never publishes. *(CONFIRMED — Atlas, Flora §L; §24.1.2.)*
+</details>
+
+[↑ Back to top](#top)
+
+---
+
+## 15. Companion Registers
+
+<details>
+<summary><strong>Open verification backlog (promotion blockers)</strong></summary>
+
+Before this README is promoted from `draft` to `published`:
+
+1. Confirm the `docs/domains/flora/` home and every sibling path in §2 / §5 against a mounted repo.
+2. Confirm `policy/sensitivity/flora/` exists and contains the rare-plant disposition entries referenced in §9.
+3. Confirm or amend the schema home `schemas/contracts/v1/domains/flora/` (ADR-0001).
+4. Resolve `FloraDecisionEnvelope` vs `RuntimeResponseEnvelope` (CONFLICTED).
+5. Ratify the source-role enum (`ADR-S-04`) and sensitivity tier scheme (`ADR-S-05`).
+6. Verify the `kansas_flora_watch` lifecycle paths and promotion gates A–G against repo evidence.
 
 </details>
 
-> [!IMPORTANT]
-> Field names mirror the **PROPOSED** `ReleaseManifest` schema observed in the project corpus. Do **not** invent new fields here — propose new fields through an ADR against `schemas/contracts/v1/release/release_manifest.schema.json`.
+### Changelog v1 → v2
 
-[⬆ Back to top](#fauna-domain--release-index)
-
----
-
-## 9. Artifact kinds in scope
-
-**CONFIRMED doctrine / PROPOSED schema enum:** the `ReleaseManifest` `artifacts[].kind` enum is `pmtiles | stac | geojson | parquet | model | manifest | receipt`. Fauna releases routinely cover the kinds shown below.
-
-| Kind | Typical Fauna use | Sensitivity-bound? | Integrity expectations *(PROPOSED)* |
-|---|---|---|---|
-| `pmtiles` | Range polygons, density grids, seasonal layers, public-safe popups | Yes — generalization required for sensitive taxa | BLAKE3 root hash; SHA-256 of file; OCI-native publication with sidecar |
-| `geojson` | Public-safe occurrence summaries, polygon exports | Yes — exact occurrence must not appear | SHA-256; JCS canonicalization where appropriate |
-| `parquet` (GeoParquet) | Tabular occurrence summaries, density panels | Yes | SHA-256; schema version pinned |
-| `stac` | Catalog items for layer assets, attestation references | No (catalog, not payload) | Validates against STAC 1.0 + `kfm-stac-profile-v1` *(PROPOSED)* |
-| `model` | Suitability / range models *(if any)* | Yes — model cards required; **derived**, not observation | Model card; training data lineage; rollback drill |
-| `manifest` | LayerManifest, ReleaseManifest (carried as artifact) | n/a | `spec_hash` excludes `spec_hash` field itself; manifest closure |
-| `receipt` | RunReceipt, Redaction Receipt, attestation | n/a | DSSE; cosign keyless; Rekor index where applicable |
-
-> [!NOTE]
-> 3D / planetary derivatives for Fauna are **not** an alternate truth path. Where present, they consume the **same** `EvidenceBundle` and `DecisionEnvelope` as 2D map products — they are alternate renderers, not alternate truth.
-
-[⬆ Back to top](#fauna-domain--release-index)
-
----
-
-## 10. Rollback, correction & withdrawal
-
-> [!IMPORTANT]
-> **Rollback is a closure property, not a recovery procedure.** A Fauna release that does not name a rollback target is not a complete release. Rollback drills must be tested as part of every release of map assets.
-
-### 10.1 Decision artifacts
-
-| Situation | Artifact | Lives at *(PROPOSED)* |
+| Change | Type (per contract §37) | Reason |
 |---|---|---|
-| Detected error or new evidence | `CorrectionNotice` | `release/correction_notices/<release_id>-cN.json` |
-| Failed release / post-publication failure | `RollbackCard` | `release/rollback_cards/<release_id>.json` |
-| Source rights revoked or sensitivity reclassified | `withdrawal_notices/` entry | `release/withdrawal_notices/<release_id>.json` |
-| Supersession by a newer release | `ReleaseManifest` with `correction_lineage` filled | `release/manifests/<new_release_id>.json` |
+| Corrected source-family rights claims; removed the unsourced "CC-BY 4.0" attribution for KSC | reconciliation | Atlas marks all Flora source rights `NEEDS VERIFICATION`; no specific license is grounded. |
+| Upgraded source-role vocabulary to CONFIRMED classes (§17.B) with PROPOSED field realization | clarification | Atlas §24.1.1 confirms the seven role classes; §24.1.3 and `ADR-S-04` govern field realization. |
+| Grounded the flora watcher, lifecycle paths, dedupe key, and DwC-A validator in `KFM-P2-PROG-0002` | gap closure | These were generic before; now tied to a specific blueprint card. |
+| Added Kansas-first authority posture (USDA PLANTS name authority; specimen-backed primacy) | gap closure | `KFM-P2-IDEA-0019`, `KFM-P27-IDEA-0001`. |
+| Reconciled the References appendix to the actual project corpus filenames | reconciliation | Prior appendix cited filenames not present in project knowledge. |
+| Flagged `FloraDecisionEnvelope` as CONFLICTED; cited `ADR-S-03/04/05/12/14` where relevant | clarification | Align with active doctrine migration and open ADR backlog. |
+| Added `PUBLICATION_AND_ROLLBACK.md` to related/meta and the directory tree | housekeeping | Companion Flora doc. |
+| Pinned `CONTRACT_VERSION = "3.0.0"` in badge, header line, and meta notes | housekeeping | Doctrine-adjacent doc requirement. |
 
-### 10.2 Propagation surface (open)
+> **Backward compatibility.** Heading anchors are preserved except for the new §15 (Companion Registers) inserted before Related Docs; the former "§15 Related Docs" is now §16 and "§16 Appendix" is now §17. Any external deep-links to `#15-related-docs` / `#16-appendix` should be updated to `#16-related-docs` / `#17-appendix`. No content was removed.
 
-Fauna rollback must consider downstream propagation: tiles, graph projections, Focus Mode caches, Story Nodes, and AI response envelopes may need invalidation. The propagation list is an **open question** — see §13.
-
-[⬆ Back to top](#fauna-domain--release-index)
-
----
-
-## 11. AI behavior over Fauna releases
-
-**CONFIRMED doctrine / PROPOSED implementation.** Governed AI may:
-
-- Summarize **released** Fauna `EvidenceBundle` content;
-- Compare evidence across Fauna releases;
-- Explain Fauna release limitations and stale-state markers;
-- Draft steward-review notes for sensitive Fauna release candidates.
-
-**AI must `ABSTAIN`** when evidence is insufficient, and **`DENY`** where policy, rights, sensitivity, or release state blocks the request. The trust membrane forbids AI surfaces from reaching `RAW` / `WORK` / `QUARANTINE`, canonical/internal stores, graph internals, source APIs, or direct model runtimes — only `PUBLISHED` content via the governed API.
-
-| AI surface | Source for Fauna | Finite outcomes |
-|---|---|---|
-| Evidence Drawer | `EvidenceBundle` projection from released Fauna manifests | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| Focus Mode | `RuntimeResponseEnvelope` + `AIReceipt` over released Fauna | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| Search / index | `SearchIndexManifest` derived from PUBLISHED Fauna | `ANSWER` / `DENY` / `ERROR` |
-
-[⬆ Back to top](#fauna-domain--release-index)
+[↑ Back to top](#top)
 
 ---
 
-## 12. Adding or updating an entry
+## 16. Related Docs
 
-Use this procedure when a Fauna release reaches a state worth indexing. The PR description SHOULD cite the Directory Rules section justifying any new path.
+- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), responsibility roots, anti-patterns (§13.4), ADR-0001
+- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → PUBLISHED` lifecycle invariant *(PROPOSED link target)*
+- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public path through governed API *(PROPOSED link target)*
+- [`docs/domains/flora/PUBLICATION_AND_ROLLBACK.md`](./PUBLICATION_AND_ROLLBACK.md) — Flora release / correction / stale-state / rollback contract *(PROPOSED)*
+- [`docs/domains/README.md`](../README.md) — domain index and lane register *(PROPOSED link target)*
+- [`docs/domains/habitat/README.md`](../habitat/README.md) — Habitat lane (adjacent domain) *(PROPOSED link target)*
+- [`docs/domains/fauna/README.md`](../fauna/README.md) — Fauna lane (adjacent domain) *(PROPOSED link target)*
+- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — trust membrane, public path *(PROPOSED link target)*
+- TODO — `docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED future companion)
 
-1. **Author the candidate dossier** at `release/candidates/fauna/<release_id>/CANDIDATE.md` using the §8 template. *(PROPOSED path.)*
-2. **Resolve gates G1–G8** (§6). Capture each gate's evidence: source-role registry entry, rights review, taxonomy version, geoprivacy transforms, `EvidenceBundle`, `ReviewRecord` (sensitive lanes), `ReleaseManifest`, rollback target.
-3. **Run the validator suite** *(PROPOSED — see `tests/domains/fauna/`)*: source-role authority, taxonomy resolution, restricted/public occurrence split, Redaction Receipt validation, tile field allowlist, Runtime Response Envelope negative cases.
-4. **Author the `ReleaseManifest`** at `release/manifests/<release_id>.json` and sign (`release/signatures/<release_id>/`).
-5. **Promote** via governed state transition — record `PromotionDecision` at `release/promotion_decisions/<release_id>.json`. Author ≠ release authority for sensitive Fauna lanes (separation of duties).
-6. **Add the row to §7** as a new entry. Do **not** edit prior rows; instead, mark them `SUPERSEDED` or `REVOKED` with a forward link.
-7. **Cross-link** the new entry from `docs/domains/fauna/README.md` and from any affected `docs/runbooks/fauna/` runbook.
-8. **Update the `updated:` field** in the Meta Block.
-
-> [!TIP]
-> If a candidate fails a gate, it should land in `QUARANTINE` with a structured reason code (e.g., `SENSITIVITY_UNRESOLVED`, `MISSING_EVIDENCE`, `ROLLBACK_TARGET_MISSING`) — not silently held in `WORK`. Reason codes are PROPOSED; see Atlas §24.6.3.
-
-[⬆ Back to top](#fauna-domain--release-index)
+[↑ Back to top](#top)
 
 ---
 
-## 13. Open questions & verification backlog
+## 17. Appendix
 
-These items are surfaced for ADR resolution or `docs/registers/VERIFICATION_BACKLOG.md` tracking. None of them block index drafting; all of them block any specific claim of repo-state maturity.
+<details>
+<summary><strong>A. Truth-label legend</strong></summary>
 
-| # | Item | Status | What would settle it |
-|---|---|---|---|
-| 1 | `release_state` enum form — UPPERCASE (`DRAFT`/`REVIEW`/`PUBLISHED`/`REVOKED`/`SUPERSEDED`) **vs** STAC-profile form (`unreleased`/`candidate`/`released`/`withdrawn`/`corrected`/`superseded`) | **PROPOSED — CONFLICT** | An ADR freezing one enum; cross-walk for the other; update `schemas/contracts/v1/release/release_manifest.schema.json` and `kfm-stac-profile-v1.schema.json` |
-| 2 | Exact `release/` subtree presence (`manifests/`, `candidates/`, `promotion_decisions/`, `rollback_cards/`, `correction_notices/`, `withdrawal_notices/`, `signatures/`, `changelog/`) | **NEEDS VERIFICATION** | Mounted-repo evidence; per-root README |
-| 3 | Schema home for `ReleaseManifest` (canonical `schemas/contracts/v1/release/` per ADR-0001) | **NEEDS VERIFICATION** | Mounted-repo confirmation; drift entry if `contracts/release/*.schema.json` also exists |
-| 4 | Fauna live-connector rights, steward permissions, and source-role registry entries | **NEEDS VERIFICATION** | Mounted-repo `data/registry/sources/fauna/` entries; rights review records |
-| 5 | Taxonomic resolver implementation and Taxon Crosswalk version pinning | **NEEDS VERIFICATION** | Mounted-repo schema, validator, and fixture coverage |
-| 6 | Restricted/public Occurrence split mechanism and tile field allowlist | **NEEDS VERIFICATION** | `policy/domains/fauna/` rules; `tests/domains/fauna/` cases |
-| 7 | Geoprivacy transform vocabulary and Redaction Receipt schema | **PROPOSED** | ADR enumerating transform types (`suppress`, `generalize_to_grid`, `watershed`, `county`, `buffer`, `delayed_publication`, `steward_only`) |
-| 8 | Rollback propagation surface — tiles, graph projections, Focus Mode caches, Story Nodes, AI envelopes | **OPEN** | Rollback drill specification; propagation manifest |
-| 9 | Separation-of-duties enforcement maturity for sensitive Fauna releases | **PROPOSED** | Tooling-enforced author ≠ release-authority rule; review console |
-| 10 | Index location — is `docs/domains/fauna/RELEASE_INDEX.md` the right home, or should a register live under `docs/registers/` for cross-domain release indexing? | **PROPOSED** | ADR; or a `docs/registers/RELEASE_REGISTER.md` that links to per-domain indices |
+| Label | Meaning in this README |
+|---|---|
+| **CONFIRMED** | Verified in this session from attached project sources (Domains Atlas v1.1 + Pass 23/32, KFM Encyclopedia, Directory Rules v1.3, Build Manual, atlas seed cards). |
+| **INFERRED** | Reasonably derivable from visible evidence but not directly stated. |
+| **PROPOSED** | Design, path, placement, or recommendation not yet verified in implementation. |
+| **NEEDS VERIFICATION** | Checkable but not yet checked strongly enough to act as fact; typically requires a mounted repo, source rights document, or steward input. |
+| **CONFLICTED** | Sources disagree or doctrine and an active migration are inconsistent; pending an ADR / drift-register entry. |
+| **UNKNOWN** | Not resolvable without more evidence. |
+</details>
 
-> [!NOTE]
-> Items 4–7 carry forward from the Fauna domain verification backlog *(N. Verification backlog, Atlas Ch. 7)* — they are not new questions introduced by this index.
+<details>
+<summary><strong>B. Source-role classes (CONFIRMED doctrine; field realization PROPOSED)</strong></summary>
 
-[⬆ Back to top](#fauna-domain--release-index)
+The seven canonical source-role classes are **CONFIRMED doctrine** (Atlas §24.1.1). Their realization as `SourceDescriptor` fields is **PROPOSED** (Atlas §24.1.3) and the enum's stability/evolution is governed by **`ADR-S-04`** (OPEN).
+
+```text
+observed | regulatory | modeled | aggregate | administrative | candidate | synthetic
+```
+
+Source role is set at admission and **preserved through every promotion** — promotion never upgrades an observation to a regulation, a model to an aggregate, or a candidate to a verified record. Examples for Flora:
+
+- `observed` — herbarium specimen, in-person survey, iNaturalist research-grade observation.
+- `regulatory` — federally listed status (USFWS ECOS); protected-species listing.
+- `modeled` — `DistributionSurface` from a species distribution model.
+- `aggregate` — county-level checklist (USDA PLANTS distribution code).
+- `administrative` — KDWP Ecological Review Tool output as an administrative classification.
+- `candidate` — pre-admission record awaiting review (quarantined connector output).
+- `synthetic` — modeled fill / AI-drafted note / illustrative fixture; never publishable as observed reality (carries a Reality Boundary Note).
+</details>
+
+<details>
+<summary><strong>C. Glossary (compact)</strong></summary>
+
+- **EvidenceBundle** — Resolved evidence package for a claim; what an `EvidenceRef` resolves to.
+- **EvidenceRef** — A reference that must resolve to an `EvidenceBundle` before a public claim has authority.
+- **SourceDescriptor** — Identity, role, rights, cadence, endpoint, version, sensitivity, and admissibility limits for a source.
+- **RunReceipt / ModelRunReceipt** — Execution record tying inputs, transforms, and outputs to time and digest.
+- **ValidationReport** — Structured outcome of validators run against an artifact.
+- **ReleaseManifest** — Governed record of what was published, with rollback target and correction path.
+- **RollbackCard** — Records a rollback decision and the targeted prior release.
+- **CorrectionNotice** — Records that a published claim was corrected: what changed, why, what derivatives were invalidated.
+- **LayerManifest** — Public-facing description of a published map layer; never reads canonical stores directly.
+- **PolicyDecision** — Finite policy outcome emitted by the policy engine.
+- **RedactionReceipt** — Transformation-lineage record for sensitive-to-public-safe geometry transforms.
+- **Focus Mode** — Governed AI surface that answers over released `EvidenceBundle`s only, with an `AIReceipt`.
+</details>
+
+<details>
+<summary><strong>D. References (project sources, reconciled to corpus)</strong></summary>
+
+This README is grounded in the following project-knowledge sources:
+
+- **Domains Atlas v1.1 + Pass 23/32 Consolidated Atlas** — Flora chapter (§A–N: scope, ubiquitous language, source families, object families, cross-lane relations, viewing products, pipeline, sensitivity §I, AI §L, publication/correction/rollback §M) and Chapter 24 master registers (§24.1 source-role anti-collapse; §24.2 receipt catalog; §24.5 tiers; §24.6 pipeline gates; §24.8 stale-state; §24.13 responsibility-root crosswalk; §24.12 open-ADR backlog `ADR-S-03/04/05/12/14`).
+- **`directory-rules.md` (v1.3)** — §3 deeper rule, §4 placement protocol, §5 canonical roots, §12 Domain Placement Law, §13.4 / §13.5 anti-patterns, §2.4 ADR triggers, ADR-0001 schema home.
+- **KFM Encyclopedia** — object/source/capability spine; deny-by-default register.
+- **KFM Unified Implementation Architecture Build Manual** — gate sequence and verification posture.
+- **Atlas seed cards / Pass 23–32 idea index** — `KFM-P2-PROG-0002` (kansas_flora_watch blueprint: KANU/KSC IPT, DwC-A validation, USDA PLANTS baseline, specimen-backed primacy, restricted-taxa quarantine, lifecycle paths, gates A–G), `KFM-P2-IDEA-0019` (Kansas-specific authorities), `KFM-P27-IDEA-0001` (USDA PLANTS canonical), `KFM-P19-PROG-0013` (rare-species redaction), `KFM-P7-PROG-0003` (ReleaseManifest), `KFM-P1-IDEA-0056` (promotion as governed transition).
+
+> Any product- or version-specific source-rights statement (e.g. a particular CC-BY version) is **NEEDS VERIFICATION** against the upstream dataset record and is intentionally not asserted here.
+</details>
 
 ---
 
-## 14. Related docs
+**Related:** [Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Publication & Rollback](./PUBLICATION_AND_ROLLBACK.md) · [Habitat lane](../habitat/README.md) · [Fauna lane](../fauna/README.md)
 
-- [`docs/domains/fauna/README.md`](./README.md) — Fauna domain landing page *(PROPOSED — verify presence)*
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — Fauna domain source refresh runbook
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Canonical placement and lifecycle doctrine
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle invariant
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane and governed-API rules
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV provenance standards profile
-- [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles v3 governance and conformance profile
-- [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 crosswalk profile
-- [`contracts/release/release_manifest.md`](../../../contracts/release/release_manifest.md) — `ReleaseManifest` semantic contract *(PROPOSED)*
-- [`schemas/contracts/v1/release/`](../../../schemas/contracts/v1/release/) — `ReleaseManifest` JSON Schema home *(PROPOSED — ADR-0001)*
-- [`policy/domains/fauna/`](../../../policy/domains/fauna/) — Fauna admissibility and release policy *(PROPOSED)*
-- [`release/manifests/`](../../../release/manifests/) — All ReleaseManifest decisions
-- [`release/candidates/fauna/`](../../../release/candidates/fauna/) — Fauna release candidate dossiers
-- [`data/published/layers/fauna/`](../../../data/published/layers/fauna/) — Fauna published artifacts
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Verification items index
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Doctrine ↔ repo drift entries
+**Last updated:** 2026-06-03 · **Status:** draft · **Owners:** TODO · `CONTRACT_VERSION = "3.0.0"`
 
----
-
-[dr-9-1]: ../../doctrine/directory-rules.md#91-data--the-lifecycle-invariant
-[dr-9-2]: ../../doctrine/directory-rules.md#92-release--release-decisions
-[doctrine-lifecycle]: ../../doctrine/lifecycle-law.md
-
----
-
-**Status:** `draft` · **Last updated:** `2026-05-16` · **Doc id:** `kfm://doc/docs-domains-fauna-release-index`
-
-[⬆ Back to top](#fauna-domain--release-index)
+[↑ Back to top](#top)
