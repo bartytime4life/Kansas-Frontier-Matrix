@@ -2,15 +2,17 @@
 doc_id: kfm://doc/docs.domains.flora.architecture
 title: Flora — Domain Architecture
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: Flora domain steward (TODO assign); Docs steward
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-03
 policy_label: public
+contract_version: "3.0.0"
 related:
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
@@ -21,9 +23,11 @@ related:
   - policy/sensitivity/flora/
 tags: [kfm, domain, flora, biodiversity, governance, architecture]
 notes:
-  - Source basis: SRC-FLORA, SRC-HAB, EXT-GBIF, EXT-INAT, EXT-NATSERVE, EXT-FWS
-  - Implementation paths are PROPOSED until verified against mounted-repo evidence
-  - Schema home follows ADR-0001 (schemas/contracts/v1/...)
+  - CONTRACT_VERSION pinned to 3.0.0 (ai-build-operating-contract.md v3.0).
+  - Source basis: DOM-FLORA (Domains v1.1 Atlas §8); ENCY §7.6.
+  - Implementation paths are PROPOSED until verified against mounted-repo evidence.
+  - Schema home follows ADR-0001 (schemas/contracts/v1/...); Atlas Appendix D `schemas/contracts/v1/flora/` form is lineage/CONFLICTED pending migration.
+  - Per-source rights/license terms are NEEDS VERIFICATION in the corpus; no external research was performed for this revision, so no external license fact is asserted as CONFIRMED.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Flora — Domain Architecture
@@ -32,21 +36,24 @@ notes:
 
 [![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#)
 [![Lane: Flora](https://img.shields.io/badge/lane-flora-2e7d32)](#)
+[![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](../../doctrine/ai-build-operating-contract.md)
 [![Lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-blue)](../../doctrine/lifecycle-law.md)
 [![Schema home: schemas/contracts/v1](https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1-informational)](../../../schemas/contracts/v1/domains/flora/)
 [![Sensitivity: Fail-closed for rare plants](https://img.shields.io/badge/sensitivity-fail--closed%20(rare%20plants)-critical)](../../../policy/sensitivity/flora/)
 [![Doctrine: KFM](https://img.shields.io/badge/doctrine-KFM-blueviolet)](../../doctrine/directory-rules.md)
 [![Build: TODO](https://img.shields.io/badge/build-TODO-lightgrey)](#)
-[![Updated: 2026-05-16](https://img.shields.io/badge/updated-2026--05--16-lightgrey)](#)
+<!-- TODO: replace placeholder badges with live Shields.io endpoints once docs CI badge contract is established. -->
 
 |  |  |
 |---|---|
 | **Status** | `draft` — awaiting Flora steward assignment and mounted-repo verification |
+| **Version** | `v1.1` |
 | **Owners** | Flora domain steward *(TODO assign)*; Docs steward |
-| **Last updated** | 2026-05-16 |
+| **Last updated** | 2026-06-03 |
+| **CONTRACT_VERSION** | `"3.0.0"` *(pinned — `ai-build-operating-contract.md` v3.0)* |
 | **Authority of paths quoted** | **PROPOSED** until verified against mounted-repo evidence |
 | **Schema home** | `schemas/contracts/v1/domains/flora/` (ADR-0001) |
-| **Source dossier** | `DOM-FLORA` (Encyclopedia §7.6; Domains Culmination Atlas §8) |
+| **Source dossier** | `DOM-FLORA` (Encyclopedia §7.6; Domains v1.1 Atlas §8) |
 
 ---
 
@@ -80,10 +87,10 @@ notes:
 
 **CONFIRMED doctrine / PROPOSED implementation.** Flora governs plant taxonomic identity, specimen and occurrence evidence, rare-plant controls, vegetation communities, invasive plant records, phenology, range and habitat associations, restoration planting context, and public-safe botanical surfaces as **evidence-backed claims** under KFM's trust membrane.
 
-The Flora lane is **not** a parallel publication path. It does not own animal taxa (Fauna), habitat patches (Habitat), crop operations (Agriculture), soil semantics (Soil), or water observations (Hydrology) — it consumes those lanes through governed joins and explicit cross-lane relations (§12).
+The Flora lane is **not** a parallel publication path. It explicitly does not own animal taxa (Fauna), habitat patches and suitability (Habitat), crop operations (Agriculture), soil semantics (Soil), or water observations (Hydrology) — and Soil, Hydrology, Agriculture, Hazards, Roads, Settlements, Archaeology, and People keep their own truth. Flora consumes those lanes through governed joins and explicit cross-lane relations (§12).
 
 > [!IMPORTANT]
-> **Rare, protected, culturally sensitive, and steward-reviewed flora default to generalized, withheld, staged, or denied public geometry.** Exact rare-plant locations fail closed unless a documented geoprivacy transform and review state allow release. See §11.
+> **Rare, protected, culturally sensitive, and steward-reviewed flora default to generalized, withheld, staged, or denied public geometry** (CONFIRMED doctrine, DOM-FLORA §I). Exact rare-plant locations fail closed unless a documented geoprivacy transform and review state allow release. See §11.
 
 [Back to top](#contents)
 
@@ -93,7 +100,7 @@ The Flora lane is **not** a parallel publication path. It does not own animal ta
 
 ### 2.1 What Flora owns
 
-**CONFIRMED / PROPOSED.** Flora owns these object families (each one a governed object with source role, evidence, temporal scope, and release state):
+**CONFIRMED object families / PROPOSED field realization** (DOM-FLORA §E; Atlas Appendix C). Each is a governed object whose meaning is constrained by source role, evidence, temporal scope, and release state:
 
 - `PlantTaxon`
 - `FloraTaxonCrosswalk`
@@ -103,13 +110,15 @@ The Flora lane is **not** a parallel publication path. It does not own animal ta
 - `VegetationCommunity`
 - `InvasivePlantRecord`
 - `PhenologyObservation`
-- `RangePolygon`
+- `RangePolygon` *(the corpus also uses `DistributionSurface` as the ubiquitous-language synonym; see §6)*
 - `HabitatAssociation` *(flora-side of the join; Habitat owns habitat patches)*
 - `BotanicalSurvey`
 - `RestorationPlanting`
 - `RedactionReceipt`
 
 ### 2.2 What Flora explicitly does **not** own
+
+CONFIRMED doctrine (DOM-FLORA §B): *Habitat owns habitat patches and suitability; Fauna owns animal taxa and occurrences; Soil, Hydrology, Agriculture, Hazards, Roads, Settlements, Archaeology, and People keep their truth.*
 
 | Concern | Owning lane | Cross-lane mechanism |
 |---|---|---|
@@ -134,19 +143,19 @@ These constraints are inherited from KFM core doctrine and apply to every Flora 
 
 | # | Invariant | Source |
 |---|---|---|
-| 1 | **Lifecycle law** — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`. Promotion is a **governed state transition, not a file move**. | `docs/doctrine/lifecycle-law.md` |
-| 2 | **Trust membrane** — public clients consume `apps/governed-api/`; never `data/raw\|work\|quarantine\|processed\|catalog\|triplets`. | `docs/doctrine/trust-membrane.md` |
-| 3 | **Watcher-as-non-publisher** — workers emit receipts and candidate decisions only; they MUST NOT publish or mutate canonical truth. | `docs/doctrine/directory-rules.md` §13.5 |
-| 4 | **Cite-or-abstain** — claims that depend on evidence require `EvidenceBundle` support; missing or stale evidence ⇒ `ABSTAIN`. | `docs/doctrine/truth-posture.md` |
-| 5 | **EvidenceBundle outranks generated language** — AI surfaces never become the truth source. | `docs/architecture/governed-api.md` |
-| 6 | **Default-deny promotion** — unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. | Encyclopedia §7.6; `policy/promotion/` |
-| 7 | **Join-induced sensitivity** — a benign source (e.g. USDA PLANTS county checklist) can become sensitive once joined with GBIF, iNaturalist, or heritage occurrence data. Sensitivity is a property of the **product**, not only the inputs. | `KFM-IDX-POL-003`, `KFM-IDX-POL-005` |
-| 8 | **Schema home rule (ADR-0001)** — machine schemas live under `schemas/contracts/v1/...`. `contracts/` retains semantic Markdown only. | Directory Rules §6.4 |
-| 9 | **Separation of meaning, shape, admissibility, proof** — `contracts/` (meaning), `schemas/` (shape), `policy/` (admissibility), `tests/fixtures/` (proof) MUST NOT collapse. | Directory Rules §6.3–6.6 |
-| 10 | **Watcher state is not public** — watcher outbox / candidate paths are not exposed through governed APIs without further promotion. | `KFM-IDX-SRC-003` |
+| 1 | **Lifecycle law** — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`. Promotion is a **governed state transition, not a file move**. | Directory Rules §9.1; `docs/doctrine/lifecycle-law.md` *(PROPOSED home)* |
+| 2 | **Trust membrane** — public clients consume `apps/governed-api/`; never `data/{raw\|work\|quarantine\|processed\|catalog\|triplets}` directly. | Directory Rules §7.1, §13.5; `docs/doctrine/trust-membrane.md` *(PROPOSED home)* |
+| 3 | **Watcher-as-non-publisher** — workers emit receipts and candidate decisions only; they MUST NOT publish or mutate canonical truth. | Directory Rules §13.5, §7.4 |
+| 4 | **Cite-or-abstain** — claims that depend on evidence require `EvidenceBundle` support; missing or stale evidence ⇒ `ABSTAIN`. | `ai-build-operating-contract.md`; `docs/doctrine/truth-posture.md` *(PROPOSED home)* |
+| 5 | **EvidenceBundle outranks generated language** — AI surfaces never become the truth source. | `docs/architecture/governed-api.md` *(PROPOSED home)* |
+| 6 | **Default-deny promotion** — unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. | ENCY §7.6; `policy/promotion/` *(PROPOSED home)* |
+| 7 | **Join-induced sensitivity** — a benign source (e.g. USDA PLANTS county checklist) can become sensitive once joined with GBIF, iNaturalist, or heritage occurrence data. Sensitivity is a property of the **product**, not only the inputs. | DOM-FLORA §D; Atlas §24.1 |
+| 8 | **Schema-home rule (ADR-0001)** — machine schemas live under `schemas/contracts/v1/...`. `contracts/` retains semantic Markdown only. | Directory Rules §6.4 |
+| 9 | **Separation of meaning, shape, admissibility, proof** — `contracts/` (meaning), `schemas/` (shape), `policy/` (admissibility), `tests/`+`fixtures/` (proof) MUST NOT collapse. | Directory Rules §6.3–6.6 |
+| 10 | **Connector / watcher state is not public** — connectors emit only to `data/raw/` or `data/quarantine/`; candidate paths are not exposed through governed APIs without further promotion. | Directory Rules §7.3, §13.5 |
 
 > [!WARNING]
-> Anti-patterns to refuse on review: a connector writing to `data/processed/flora/`; a worker writing to `data/catalog/domain/flora/`; `apps/explorer-web/` reading flora canonical stores directly; divergent schemas in both `schemas/` and `contracts/`; flora becoming a root folder.
+> Anti-patterns to refuse on review (Directory Rules §13.4–13.5): a connector writing to `data/processed/flora/` or `data/published/flora/`; a worker writing to `data/catalog/domain/flora/`; `apps/explorer-web/` reading flora canonical stores directly instead of through `apps/governed-api/`; divergent schemas in both `schemas/` and `contracts/`; Flora becoming a root folder (Domain Placement Law, §12).
 
 [Back to top](#contents)
 
@@ -168,26 +177,26 @@ policy/domains/flora/                        # flora-specific allow/deny
 policy/sensitivity/flora/                    # rare-plant / sensitive-join policy
 tests/domains/flora/                         # enforceability proof
 fixtures/domains/flora/                      # valid / invalid / golden / synthetic
-packages/domains/flora/                      # shared flora libraries
+packages/domains/flora/                      # shared flora libraries (PROPOSED)
 pipelines/domains/flora/                     # executable pipeline logic
 pipeline_specs/flora/                        # declarative pipeline configuration
 
-data/raw/flora/                              # immutable source payloads
-data/work/flora/                             # normalization work area
-data/quarantine/flora/                       # held failures
-data/processed/flora/                        # validated normalized objects
+data/raw/flora/<source_id>/<run_id>/         # immutable source payloads (§7.3 path form)
+data/work/flora/<run_id>/                    # normalization work area
+data/quarantine/flora/<reason>/<run_id>/     # held failures
+data/processed/flora/<dataset_id>/<version>/ # validated normalized objects
 data/catalog/domain/flora/                   # catalog records + EvidenceBundles
 data/published/layers/flora/                 # released, public-safe artifacts
 data/registry/sources/flora/                 # SourceDescriptor home
 
 release/candidates/flora/                    # release decision candidates
 
-connectors/gbif/, connectors/inaturalist/,   # source-specific fetchers (not under flora/)
-connectors/usda-plants/, connectors/natureserve/, connectors/kbs/
+connectors/gbif/, connectors/inaturalist/,   # source-specific fetchers (NOT under flora/)
+connectors/usda-plants/, connectors/natureserve/, connectors/kansas/
 ```
 
 > [!NOTE]
-> **Connectors are not domain-scoped.** Per Directory Rules §7.3, connectors are organized by **source** (e.g., `connectors/gbif/`), not by consuming domain. A GBIF connector emits to `data/raw/<domain>/<source_id>/<run_id>/` based on the resolved source role, not based on where its code lives.
+> **Connectors are organized by source, not by consuming domain (CONFIRMED, Directory Rules §7.3).** A connector lives under `connectors/<source>/` and emits to `data/raw/<domain>/<source_id>/<run_id>/` (or `data/quarantine/...`), with source descriptors, checksums, and ingest receipts. Connectors MUST NOT publish or write under `data/processed/`, `data/catalog/`, or `data/published/`. The exact connector folder names above are PROPOSED.
 
 [Back to top](#contents)
 
@@ -198,12 +207,12 @@ connectors/usda-plants/, connectors/natureserve/, connectors/kbs/
 ```mermaid
 flowchart LR
   subgraph SRC["Source families (external)"]
-    SRC1["USDA PLANTS<br/>(checklist · DOI-citable)"]
+    SRC1["USDA PLANTS<br/>(national checklist)"]
     SRC2["GBIF / iDigBio<br/>(occurrence aggregators)"]
     SRC3["iNaturalist<br/>(citizen observations)"]
     SRC4["NatureServe<br/>(conservation status)"]
     SRC5["USFWS ECOS<br/>(federal listing)"]
-    SRC6["KDWP / KBS / KU McGregor / KSC<br/>(state authorities & herbaria)"]
+    SRC6["KDWP / KBS / KU / KSC<br/>(state authorities and herbaria)"]
     SRC7["Vegetation indices / RS"]
     SRC8["Restoration project records"]
   end
@@ -213,14 +222,14 @@ flowchart LR
     RAW["data/raw/flora/"] --> WORK["data/work/flora/"]
     WORK --> QUAR["data/quarantine/flora/"]
     WORK --> PROC["data/processed/flora/"]
-    PROC --> CAT["data/catalog/domain/flora/<br/>+ EvidenceBundle"]
+    PROC --> CAT["data/catalog/domain/flora/ + EvidenceBundle"]
     CAT --> PUB["data/published/layers/flora/"]
   end
 
   subgraph TRUST["Trust membrane"]
     API["apps/governed-api/<br/>(finite outcomes)"]
-    POL["policy/sensitivity/flora/<br/>+ policy/promotion/"]
-    REL["release/candidates/flora/<br/>+ ReleaseManifest"]
+    POL["policy/sensitivity/flora/ + policy/promotion/"]
+    REL["release/candidates/flora/ + ReleaseManifest"]
   end
 
   subgraph PUBLIC["Public surfaces"]
@@ -255,27 +264,27 @@ flowchart LR
 
 ## 6. Ubiquitous language
 
-**CONFIRMED terms / PROPOSED field realization.** These terms have fixed meaning **within the Flora bounded context**. Their meaning is always constrained by source role, evidence, temporal scope, and release state. Field-level realization (JSON Schema) lands under `schemas/contracts/v1/domains/flora/`.
+**CONFIRMED terms / PROPOSED field realization** (DOM-FLORA §C). These terms have fixed meaning **within the Flora bounded context**, always constrained by source role, evidence, temporal scope, and release state. Field-level realization (JSON Schema) lands under `schemas/contracts/v1/domains/flora/`.
 
-| Term | Meaning (within Flora) |
-|---|---|
-| **PlantTaxon** | An identified plant taxonomic concept (typically anchored to ITIS TSN with a GBIF Backbone crosswalk). |
-| **FloraTaxonCrosswalk** | The mapping between authorities (USDA PLANTS symbol, ITIS TSN, GBIF Backbone key, NatureServe element code, family / synonym graph). |
-| **FloraOccurrence** | A spatially-and-temporally scoped observation or record of a plant taxon, with uncertainty and geoprivacy posture. |
-| **SpecimenRecord** | A herbarium-anchored physical-specimen record (Darwin Core-aligned), with catalog number, institution, collector. |
-| **RarePlantRecord** | A flora occurrence subject to fail-closed sensitivity treatment (state-listed, federally-listed, culturally sensitive, or steward-controlled). |
-| **VegetationCommunity** | A classified plant community polygon (e.g., NVCS-aligned alliance / association). |
-| **InvasivePlantRecord** | A taxon-occurrence record under invasive-species status or watch lists (EDDMapS-class data). |
-| **PhenologyObservation** | A time-scoped life-stage observation (e.g., bloom, fruit, senescence) tied to taxon, location, and method. |
-| **RangePolygon** | A modeled or aggregated distribution surface, distinct from raw occurrences. |
-| **HabitatAssociation** | The flora-side of a Flora ↔ Habitat join; preserves Habitat's ownership of patches and suitability. |
-| **BotanicalSurvey** | A spatially and temporally bounded survey effort with method, observer, and coverage. |
-| **RestorationPlanting** | A documented planting / re-vegetation event with site, mix, source-of-stock, and outcome tracking. |
-| **RedactionReceipt** | A transform receipt recording how exact sensitive geometry became a public-safe representation (input class, output class, reason, policy, reviewer, residual risk). |
-| **SourceRole** | One of `authority / observation / context / model` — a binding that constrains how a source's claims may be used. |
+| Term | Meaning (within Flora) | Truth label |
+|---|---|---|
+| **PlantTaxon** | An identified plant taxonomic concept. The crosswalk anchor (ITIS / GBIF Backbone) is a sensible PROPOSED design, not a corpus-confirmed binding. | CONFIRMED term / PROPOSED anchor |
+| **FloraTaxonCrosswalk** | The mapping between taxonomic authorities (e.g., USDA PLANTS symbol, ITIS, GBIF Backbone, NatureServe element code, synonym graph). | CONFIRMED term / PROPOSED fields |
+| **FloraOccurrence** | A spatially-and-temporally scoped observation or record of a plant taxon, with uncertainty and geoprivacy posture. | CONFIRMED term |
+| **SpecimenRecord** | A herbarium-anchored physical-specimen record (Darwin Core alignment is PROPOSED), with catalog number, institution, collector. | CONFIRMED term / PROPOSED alignment |
+| **RarePlantRecord** | A flora occurrence subject to fail-closed sensitivity treatment (state-listed, federally-listed, culturally sensitive, or steward-controlled). | CONFIRMED term |
+| **VegetationCommunity** | A classified plant-community polygon (NVCS alignment is PROPOSED). | CONFIRMED term / PROPOSED classification |
+| **InvasivePlantRecord** | A taxon-occurrence record under invasive-species status or watch lists. | CONFIRMED term |
+| **PhenologyObservation** | A time-scoped life-stage observation (e.g., bloom, fruit, senescence) tied to taxon, location, and method. | CONFIRMED term |
+| **RangePolygon / DistributionSurface** | A modeled or aggregated distribution surface, distinct from raw occurrences. The corpus uses both names; treat as synonyms pending an ADR. | CONFIRMED terms / CONFLICTED naming |
+| **HabitatAssociation** | The flora-side of a Flora ↔ Habitat join; preserves Habitat's ownership of patches and suitability. | CONFIRMED term |
+| **BotanicalSurvey** | A spatially and temporally bounded survey effort with method, observer, and coverage. | CONFIRMED term |
+| **RestorationPlanting** | A documented planting / re-vegetation event with site, mix, source-of-stock, and outcome tracking. | CONFIRMED term |
+| **RedactionReceipt** | A transform receipt recording how exact sensitive geometry became a public-safe representation. | CONFIRMED term / PROPOSED fields |
+| **SourceRole** | One of `authority / observation / context / model` — a binding that constrains how a source's claims may be used. | CONFIRMED term |
 
 > [!TIP]
-> When in doubt about wording, check Appendix B and the encyclopedia's flora chapter (§7.6). Renaming a flora-specific term is a **breaking** semantic change and requires an ADR.
+> When in doubt about wording, check Appendix B and the Encyclopedia's flora chapter (§7.6). Renaming a flora-specific term is a **breaking** semantic change and requires an ADR. The `RangePolygon` ↔ `DistributionSurface` naming is a known `DRIFT_REGISTER` candidate (§18).
 
 [Back to top](#contents)
 
@@ -283,23 +292,25 @@ flowchart LR
 
 ## 7. Canonical object families
 
-**PROPOSED deterministic identity basis:** `source_id + object_role + temporal_scope + normalized_digest`.
+**PROPOSED deterministic identity basis:** `source_id + object_role + temporal_scope + normalized_digest` (DOM-FLORA §E).
 **CONFIRMED temporal discipline:** source, observed, valid, retrieval, release, and correction times stay distinct where material.
 
-| Object | Cardinality | Public-safe by default? | Notes |
+The "public-safe by default?" and "cardinality" columns below are **PROPOSED** design judgments derived from the sensitivity doctrine in §11; they are not directly enumerated in the corpus.
+
+| Object | Cardinality (PROPOSED) | Public-safe by default? (PROPOSED) | Notes |
 |---|---|---|---|
-| `PlantTaxon` | 1:N occurrences | Yes | Identity anchored to ITIS / GBIF Backbone; FloraTaxonCrosswalk required. |
-| `FloraTaxonCrosswalk` | 1 per taxon | Yes | Versioned by taxonomy snapshot (e.g., GBIF Backbone DOI). |
+| `PlantTaxon` | 1:N occurrences | Yes | Identity anchor + `FloraTaxonCrosswalk` required (anchor authority PROPOSED). |
+| `FloraTaxonCrosswalk` | 1 per taxon | Yes | Versioned by taxonomy snapshot. |
 | `FloraOccurrence (public)` | N | Yes | Generalized / public-safe geometry only. |
 | `FloraOccurrence (restricted)` | N | **No — fail-closed** | Exact geometry; steward-only. |
-| `SpecimenRecord` | N | Conditionally yes | Subject to herbarium licensing and rare-plant policy. |
+| `SpecimenRecord` | N | Conditionally yes | Subject to herbarium licensing (NEEDS VERIFICATION) and rare-plant policy. |
 | `RarePlantRecord` | N | **No — fail-closed** | Exact geometry denied publicly; generalization receipt required. |
 | `VegetationCommunity` | N polygons | Yes | Subject to source rights and classification crosswalk. |
 | `InvasivePlantRecord` | N | Generally yes | May be public to support detection; exact private-land geometry may be restricted. |
-| `PhenologyObservation` | N | Yes | Public-safe; supports time-aware vegetation products. |
+| `PhenologyObservation` | N | Yes | Supports time-aware vegetation products. |
 | `RangePolygon` | 1:N per taxon | Yes | Model-class source role required; provenance must distinguish observed vs. modeled. |
-| `HabitatAssociation` | join | Conditional | Inherits sensitivity from both sides of the join. |
-| `BotanicalSurvey` | N | Yes | Survey effort metadata; supports completeness scoring. |
+| `HabitatAssociation` | join | Conditional | Inherits the stricter sensitivity of both sides of the join. |
+| `BotanicalSurvey` | N | Yes | Survey-effort metadata; supports completeness scoring. |
 | `RestorationPlanting` | N | Conditional | Private-land planting may require steward review. |
 | `RedactionReceipt` | 1 per transform | Yes | The proof object for geoprivacy transforms. |
 
@@ -309,26 +320,28 @@ flowchart LR
 
 ## 8. Source families and source roles
 
-**`SourceRole` discipline is non-negotiable.** Every source admission MUST declare exactly one of `authority | observation | context | model` and store it in the `SourceDescriptor`. Mixing roles in one record is a quarantine condition.
+**`SourceRole` discipline is non-negotiable** (CONFIRMED doctrine). Every source admission MUST declare exactly one of `authority | observation | context | model` and store it in the `SourceDescriptor`. Mixing roles in one record is a quarantine condition.
 
-| Source family | Typical role(s) | Rights / sensitivity | Status |
+> [!IMPORTANT]
+> **Rights are unverified in the corpus.** The Domains v1.1 Atlas (DOM-FLORA §D) records the role of **every** Flora source family as "authority / observation / context / model as source role requires" and the rights line as **"rights and current terms NEEDS VERIFICATION; sensitive joins fail closed."** No external research was performed for this revision, so this document does **not** assert any specific license, DOI, dataset identifier, or specimen count as fact. The "role" and "rights / sensitivity" columns below therefore carry the corpus posture verbatim; concrete license terms must be settled per-feed against live source agreements and recorded in `data/registry/sources/flora/`.
+
+| Source family | Role (corpus posture) | Rights / sensitivity | Status |
 |---|---|---|---|
-| **USDA PLANTS Database** (national checklist) | `authority` (taxonomy, distribution-codes) | Public-domain; **CONFIRMED** as non-copyrighted with citation guidance. | EXTERNAL fact; CONFIRMED from `New Ideas 5-8` packet. |
-| **GBIF Backbone Taxonomy** (DOI `10.15468/39omei`) | `authority` (international crosswalk) | Open; CC-BY citation required. Backbone DOI version MUST be captured in `RunReceipt`. | EXTERNAL fact; CONFIRMED. |
-| **GBIF Occurrence API** (incl. PLANTS dataset `705922f7-5ba5-49ab-a75d-722e3090e690`) | `observation` (aggregated) | License varies per record; record-level license MUST round-trip. | EXTERNAL fact; CONFIRMED. |
-| **iDigBio** (specimen records) | `observation` (specimen-anchored) | License varies; institution-level terms; NEEDS VERIFICATION per-feed. | PROPOSED admission. |
-| **iNaturalist-derived observations** | `observation` (citizen-science) | License varies; CC-BY / CC-BY-NC / CC0 / unknown; obscure-flag handling required. | PROPOSED admission. |
-| **NatureServe Explorer / Explorer Pro** | `authority` (conservation status) | Free Explorer; **Explorer Pro requires account** for precise occurrences. | EXTERNAL fact; CONFIRMED. |
-| **USFWS ECOS** (federal listing) | `authority` (legal status) | Public; current terms NEEDS VERIFICATION. | PROPOSED admission. |
-| **KDWP flora / listed-species context** | `authority` (state listing & stewardship) | Steward-controlled; sensitive joins fail-closed. | NEEDS VERIFICATION. |
-| **Kansas Biological Survey / KU McGregor Herbarium** | `observation` (specimens) | Often Darwin Core via IPT; ~400,000 vascular specimens; NEEDS VERIFICATION per feed. | PROPOSED admission. |
-| **KSU Herbarium (KSC)** | `observation` (specimens) | Reported CC-BY 4.0; NEEDS VERIFICATION current. | PROPOSED admission. |
-| **State rare-plant programs** | `authority` (status) | Restricted; steward-controlled. | NEEDS VERIFICATION. |
-| **Remote-sensing vegetation indices** (NDVI / EVI, etc.) | `observation` / `model` | License varies by provider; modeled vs. observed distinction MUST be preserved. | PROPOSED admission. |
-| **Restoration project records** | `observation` / `context` | May be private-land; steward review for inclusion. | PROPOSED admission. |
+| **USDA PLANTS Database** (national checklist) | role as use requires | rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | NEEDS VERIFICATION |
+| **GBIF vascular-plant downloads / Occurrence API** | role as use requires | rights and current terms **NEEDS VERIFICATION**; record-level license must round-trip; sensitive joins fail closed | NEEDS VERIFICATION |
+| **iDigBio specimen records** | role as use requires | rights and current terms **NEEDS VERIFICATION** per feed; sensitive joins fail closed | NEEDS VERIFICATION |
+| **iNaturalist-derived observations** | role as use requires | rights and current terms **NEEDS VERIFICATION**; obscured-coordinate handling required; sensitive joins fail closed | NEEDS VERIFICATION |
+| **NatureServe Explorer / Explorer Pro** | role as use requires | rights and current terms **NEEDS VERIFICATION** (precise-occurrence access governed); sensitive joins fail closed | NEEDS VERIFICATION |
+| **USFWS ECOS** (federal listing context) | role as use requires | rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | NEEDS VERIFICATION |
+| **KDWP flora / listed-species context; KDWP Ecological Review Tool / stewardship outputs** | role as use requires | steward-controlled; rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | NEEDS VERIFICATION |
+| **Kansas Biological Survey / KU herbarium surfaces** | role as use requires | rights and current terms **NEEDS VERIFICATION** per feed; sensitive joins fail closed | NEEDS VERIFICATION |
+| **KSU Herbarium (KSC)** | role as use requires | rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | NEEDS VERIFICATION |
+| **State rare-plant programs** | role as use requires | restricted; steward-controlled; **NEEDS VERIFICATION** | NEEDS VERIFICATION |
+| **Remote-sensing vegetation indices** (NDVI / EVI, etc.) | role as use requires (`observation` / `model` distinction MUST be preserved) | rights vary by provider; **NEEDS VERIFICATION** | NEEDS VERIFICATION |
+| **Restoration project records** | role as use requires | may be private-land; steward review for inclusion; **NEEDS VERIFICATION** | NEEDS VERIFICATION |
 
 > [!CAUTION]
-> **Join-induced sensitivity.** USDA PLANTS county checklists are public-domain in isolation, but joining them to GBIF / iNaturalist occurrence streams or to KDWP rare-species lists can produce a sensitive product even when each input is individually safe. Every join that touches `RarePlantRecord` or a state/federal listing list MUST emit a `RedactionReceipt` (or quarantine the result). See `KFM-IDX-POL-003`.
+> **Join-induced sensitivity (CONFIRMED).** USDA PLANTS county checklists may be benign in isolation, but joining them to GBIF / iNaturalist occurrence streams or to KDWP rare-species lists can produce a sensitive product even when each input is individually safe. Sensitivity is a property of the resulting product. Every join that touches `RarePlantRecord` or a state/federal listing list MUST emit a `RedactionReceipt` or quarantine the result. Link the governing entry under `policy/sensitivity/flora/`; surface that one is missing if it is.
 
 [Back to top](#contents)
 
@@ -338,22 +351,25 @@ flowchart LR
 
 ### 9.1 Spatial primitives
 
-- **Occurrence / specimen points** with `coordinateUncertaintyInMeters` and `geoprivacy` posture.
-- **Community polygons** for `VegetationCommunity` (NVCS-aligned alliance / association — PROPOSED).
+- **Occurrence / specimen points** with coordinate uncertainty and geoprivacy posture.
+- **Community polygons** for `VegetationCommunity` (NVCS alignment — PROPOSED).
 - **Vegetation-index rasters** as observation- or model-class sources.
-- **`RangePolygon`** surfaces distinguished by source role (observed aggregation vs. modeled).
+- **`RangePolygon` / `DistributionSurface`** distinguished by source role (observed aggregation vs. modeled).
 
 > [!IMPORTANT]
 > **Exact rare-plant locations fail closed** at every public surface — popups, tiles, search, AI answers, exports. Public surfaces serve generalized, withheld, or denied geometry only. The internal exact record is preserved for governed review.
 
 ### 9.2 Projections
 
-- **Analysis CRS:** EPSG:5070 (Albers Equal Area — continental) — PROPOSED default. *(EXTERNAL: matches PLANTS / GBIF analysis recommendations.)*
-- **Web tile CRS:** EPSG:3857 (WebMercator) via PMTiles for public layers. PMTiles attestation MUST be present on every published flora tile artifact.
+> [!NOTE]
+> The specific EPSG codes below are **PROPOSED defaults / illustrative**, not corpus-confirmed and not externally verified in this session. Confirm against the Spatial Foundation lane's `CoordinateReferenceProfile` and any accepted ADR.
+
+- **Analysis CRS (PROPOSED):** an equal-area projection appropriate to Kansas/CONUS (e.g., EPSG:5070 Albers) — verify against Spatial Foundation.
+- **Web tile CRS (PROPOSED):** EPSG:3857 (Web Mercator) via PMTiles for public layers. PMTiles attestation MUST be present on every published flora tile artifact (CONFIRMED tile-artifact discipline).
 
 ### 9.3 Temporal fields
 
-Time fields are kept **distinct** across the object lifecycle and never collapsed:
+Time fields are kept **distinct** across the object lifecycle and never collapsed (CONFIRMED doctrine):
 
 | Time field | Meaning |
 |---|---|
@@ -402,12 +418,12 @@ flowchart LR
 |---|---|---|---|
 | **RAW** | Capture immutable source payload (or reference) with source role, rights, sensitivity, citation, time, and content hash. | `SourceDescriptor` exists; ingest receipt emitted. | PROPOSED |
 | **WORK / QUARANTINE** | Normalize schema, geometry, time, identity, evidence, rights, and policy. Hold failures with reason. | Validation and policy gate pass — **or** quarantine reason is recorded. | PROPOSED |
-| **PROCESSED** | Emit validated normalized objects, receipts, and public-safe candidates. | `EvidenceRef` resolves; `ValidationReport` pass; content digest closure. | PROPOSED |
+| **PROCESSED** | Emit validated normalized objects, receipts, and public-safe candidates. | `EvidenceRef` resolves; `ValidationReport` pass; content-digest closure. | PROPOSED |
 | **CATALOG / TRIPLET** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, and release candidates. | Catalog/proof closure passes; promotion-gate inputs available. | PROPOSED |
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | `ReleaseManifest`, correction path, rollback target, review/policy state exist. | PROPOSED |
 
 > [!WARNING]
-> **No lifecycle skips.** A pipeline writing directly from `data/raw/flora/` to `data/published/layers/flora/` is a hard violation. All phases run; promotion is a governed state transition. See Directory Rules §13.5.
+> **No lifecycle skips.** A pipeline writing directly from `data/raw/flora/` to `data/published/layers/flora/` is a hard violation (Directory Rules §13.5). All phases run; promotion is a governed state transition.
 
 [Back to top](#contents)
 
@@ -417,8 +433,10 @@ flowchart LR
 
 ### 11.1 Default posture
 
-- **Rare, protected, culturally sensitive, or steward-reviewed flora** → generalized / withheld / staged / denied public geometry, **by default**.
-- **Ethnobotanical / Traditional Ecological Knowledge (TEK)** → cultural-sensitivity posture; steward review required; sovereignty considerations preserved.
+CONFIRMED doctrine (DOM-FLORA §I; Atlas §24.5 tier scheme):
+
+- **Rare, protected, culturally sensitive, or steward-reviewed flora** → generalized / withheld / staged / denied public geometry, **by default** (`T4` tier default for exact rare-plant locations).
+- **Ethnobotanical / Traditional Ecological Knowledge (TEK)** → cultural-sensitivity posture; steward and cultural review required; sovereignty considerations preserved.
 - **Sensitive joins** (PLANTS × GBIF, PLANTS × KDWP listings, occurrence × heritage layers) → fail-closed unless a transform receipt and reviewer attestation exist.
 
 ### 11.2 Geoprivacy transform outcome classes (PROPOSED)
@@ -428,12 +446,12 @@ flowchart LR
 | `exact` | Yes (only for confirmed non-sensitive taxa) | none — sensitivity classification recorded |
 | `generalized` | Yes (e.g., HUC12, county, grid cell) | `RedactionReceipt` with input/output class, generalization radius, reason |
 | `suppressed` | No geometry (taxon presence only) | `RedactionReceipt` with reason and steward |
-| `steward-only` | No public surface | `RedactionReceipt` + access role binding |
+| `steward-only` | No public surface | `RedactionReceipt` + access-role binding |
 | `denied` | No public surface, no derived product | `PolicyDecision` with `reason_code` |
 
 ### 11.3 Promotion blockers
 
-A release candidate is **blocked** when any of the following are unresolved:
+CONFIRMED doctrine: a release candidate is **blocked** when any of the following are unresolved:
 
 - Unclear rights or unverified license terms
 - Unresolved `SourceRole`
@@ -450,17 +468,17 @@ A release candidate is **blocked** when any of the following are unresolved:
 
 ## 12. Cross-lane relations
 
-**CONFIRMED / PROPOSED.** Every cross-lane relation MUST preserve the contributing lanes' ownership, source role, sensitivity classification, and `EvidenceBundle` support.
+**CONFIRMED / PROPOSED** (DOM-FLORA §F). Every cross-lane relation MUST preserve the contributing lanes' ownership, source role, sensitivity classification, and `EvidenceBundle` support.
 
 ```mermaid
 graph LR
   FLORA(("Flora")):::flora
-  HAB[Habitat]:::other
-  FAU[Fauna]:::other
-  SOIL[Soil]:::other
-  HYD[Hydrology]:::other
-  HAZ[Hazards]:::other
-  AG[Agriculture]:::other
+  HAB["Habitat"]:::other
+  FAU["Fauna"]:::other
+  SOIL["Soil"]:::other
+  HYD["Hydrology"]:::other
+  HAZ["Hazards"]:::other
+  AG["Agriculture"]:::other
 
   FLORA -- "habitat association · vegetation community" --> HAB
   FLORA -- "pollinator · food-web · invasive · biodiversity" --> FAU
@@ -475,10 +493,10 @@ graph LR
 
 | This domain | Related lane | Relation type | Constraint |
 |---|---|---|---|
-| Flora | Habitat | Habitat association; vegetation-community context. | Habitat owns patches & suitability; Flora owns the join's flora side. |
+| Flora | Habitat | Habitat association; vegetation-community context. | Habitat owns patches and suitability; Flora owns the join's flora side. |
 | Flora | Fauna | Pollinator, food-web, invasive, biodiversity context. | Both lanes' sensitivity posture applies; join inherits the stricter side. |
 | Flora | Soil / Hydrology | Substrate, wetland, riparian, drought context. | Soil / Hydrology own canonical truth; Flora consumes via governed adjacency. |
-| Flora | Hazards | Fire, drought, flood, smoke, vegetation stress. | Hazards are context, **never** alerting authority. |
+| Flora | Hazards | Fire, drought, flood, smoke, vegetation stress. | Hazards are context, **never** an alerting authority. |
 | Flora | Agriculture | Restoration / land-stewardship adjacency. | Agriculture must not publish private-farm operations through this join. |
 
 [Back to top](#contents)
@@ -487,32 +505,38 @@ graph LR
 
 ## 13. API, contract, and schema surfaces
 
-**PROPOSED.** Exact route names, DTO field shapes, and runtime behavior are UNKNOWN until verified against mounted-repo evidence.
+**PROPOSED.** Exact route names, DTO field shapes, and runtime behavior are UNKNOWN until verified against mounted-repo evidence. This section summarizes; the authoritative API contract is `docs/domains/flora/api-contracts.md`.
 
 ### 13.1 Governed-API surfaces
 
 | Endpoint / artifact | DTO / schema | Finite outcomes | Status |
 |---|---|---|---|
-| Flora feature / detail resolver (route TBD) | `FloraDecisionEnvelope` (`schemas/contracts/v1/domains/flora/`) | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED |
+| Flora feature / detail resolver (route TBD) | `DomainFeatureEnvelope` + `DecisionEnvelope` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED |
 | Flora layer manifest resolver | `LayerManifest` + flora domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | PROPOSED; public-safe release only |
 | Flora Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; evidence and policy filtered |
 | Flora Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; AI is never root truth |
-| Correction submit | `CorrectionNoticeCandidate` | `ACCEPTED` / `DENY` / `ERROR` | PROPOSED |
-| Review decision | `ReviewRecord` | `ALLOW` / `RESTRICT` / `DENY` / `ERROR` | PROPOSED |
+| Correction submit | `CorrectionNotice` candidate | `ACCEPTED` / `HOLD` / `DENY` / `ERROR` | PROPOSED |
+| Review decision | `ReviewRecord` | `ALLOW` / `RESTRICT` / `DENY` / `HOLD` / `ERROR` | PROPOSED |
+
+> [!NOTE]
+> The Flora §J dossier names a `FloraDecisionEnvelope` for the feature/detail resolver, while the cross-cutting Master API Surface Table (Atlas §20.3) pairs that surface with `DomainFeatureEnvelope` + `DecisionEnvelope`. This doc uses the cross-cutting names; whether `FloraDecisionEnvelope` is a distinct schema or a discriminated projection is **UNKNOWN** and tracked in `docs/domains/flora/api-contracts.md`.
 
 ### 13.2 Finite-outcome semantics
 
 | Outcome | When | Required artifacts |
 |---|---|---|
-| `ANSWER` | Evidence sufficient, policy permits, release allows. | `EvidenceBundle` resolved; `PolicyDecision = allow`; `ReleaseManifest` applies. |
+| `ANSWER` | Evidence sufficient, policy permits, release allows. | `EvidenceBundle` resolved; `PolicyDecision = ALLOW`; `ReleaseManifest` applies. |
 | `ABSTAIN` | Evidence insufficient, citations cannot validate, or stale with no released alternative. | `AIReceipt` with reason; no claim emitted. |
-| `DENY` | Policy / rights / sensitivity / release state forbids. **Rare-plant lane defaults here.** | `PolicyDecision = deny + reason_code`; `AIReceipt` records denial. |
+| `DENY` | Policy / rights / sensitivity / release state forbids. **Rare-plant lane defaults here.** | `PolicyDecision = DENY` + `reason_code`; `AIReceipt` records denial. |
 | `ERROR` | Governed API cannot evaluate (schema, infra, contract violation). | Diagnostic-coded error envelope; no claim leakage. |
-| `HOLD` | Promotion / release / correction paused pending review. | `ReviewRecord pending`; `PolicyDecision = hold`. |
+| `HOLD` | Promotion / release / correction paused pending review. | `ReviewRecord` pending; `PolicyDecision = HOLD`. |
+
+`PolicyDecision` outcomes use uppercase values (`ALLOW` / `DENY` / `HOLD`). `RuntimeResponseEnvelope` MAY additionally carry `NARROWED` / `BOUNDED`, and freshness is carried as `SOURCE_STALE` (`ai-build-operating-contract.md` §8).
 
 ### 13.3 Schema home
 
 - **Canonical:** `schemas/contracts/v1/domains/flora/` (per ADR-0001).
+- **CONFLICTED crosswalk:** Atlas Appendix D records `schemas/contracts/v1/flora/`. Directory Rules ADR-0001 classifies that divergent form as lineage/CONFLICTED requiring migration before any new schema lands; Directory Rules wins on path questions. Routed to `DRIFT_REGISTER` (§18).
 - **Mirror prohibition:** MUST NOT maintain divergent definitions in both `schemas/` and `contracts/`. `contracts/domains/flora/` retains semantic Markdown only.
 
 [Back to top](#contents)
@@ -521,13 +545,13 @@ graph LR
 
 ## 14. Governed AI behavior
 
-**CONFIRMED doctrine / PROPOSED implementation.**
+**CONFIRMED doctrine / PROPOSED implementation** (DOM-FLORA §L; GAI).
 
 | AI behavior | Rule |
 |---|---|
 | **Allowed** | Evidence-bounded summarization over released Flora `EvidenceBundle`s; citation-backed explanation; evidence comparison; steward drafting; anomaly explanation; schema/validator suggestions. |
 | **Required abstention** | `ABSTAIN` when `EvidenceBundle` is missing, citations cannot validate, source roles conflict, temporal scope is insufficient, or the user asks for unsupported inference. |
-| **Required denial** | `DENY` direct `RAW`/`WORK`/`QUARANTINE` access; exact sensitive-location exposure (rare plants, steward-controlled records); culturally restricted plant knowledge inference; uncited authoritative claims. |
+| **Required denial** | `DENY` direct `RAW`/`WORK`/`QUARANTINE` access; exact sensitive-location exposure (rare plants, steward-controlled records); culturally restricted plant-knowledge inference; uncited authoritative claims. |
 | **Receipt** | Emit `AIReceipt` and `RuntimeResponseEnvelope` with outcome, `evidence_refs`, `policy_decision`, `citation_validation`. |
 | **Boundaries** | AI is **never** the truth source. `EvidenceBundle` outranks generated language. No direct public model-client path. |
 
@@ -537,15 +561,15 @@ graph LR
 
 ## 15. Validators, tests, and fixtures
 
-**PROPOSED.** All listed here are doctrinal expectations; none are confirmed as currently implemented.
+**PROPOSED** (DOM-FLORA §K). All listed here are doctrinal expectations; none are confirmed as currently implemented.
 
-- **Taxonomy reconciliation tests** — ITIS ↔ GBIF Backbone agreement and disagreement fixtures; default ITIS for federal reconciliation, GBIF for international queries; **ADR pending** on tie-breaker policy.
+- **Taxonomy reconciliation tests** — authority crosswalk agreement/disagreement fixtures; tie-breaker policy is an **open ADR**.
 - **Rights / sensitivity validators** — license-presence, license-validity, rare-plant fail-closed, ethnobotanical TEK posture, join-induced sensitivity gates.
-- **Exact sensitive public geometry denial** — negative fixtures proving precise rare-plant geometry cannot publish or render publicly.
+- **Exact sensitive public geometry denial** — negative fixtures proving precise rare-plant geometry cannot publish or render publicly (deny at API and tile-artifact level, not by style filter).
 - **Catalog closure tests** — every published flora artifact has source, schema, validation, policy, review, release, rollback.
 - **API finite-outcome fixtures** — `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` exercised on positive and negative paths.
 - **No-live-network fixture pipeline** — first slice runs on synthetic / cached fixtures only; no live source activation.
-- **Stale-source fixture** — proving stale source headers trigger `ABSTAIN` / `DENY` or stale badge.
+- **Stale-source fixture** — proving stale source headers trigger `ABSTAIN` / `DENY` / `SOURCE_STALE` or a stale badge.
 - **Redaction-receipt validation** — every transform input → output binding produces a verifiable receipt.
 - **PMTiles attestation** — every published flora tile artifact carries a verifiable digest sidecar.
 
@@ -558,7 +582,7 @@ graph LR
 
 ## 16. Map and viewing products
 
-**PROPOSED domain viewing products.** Each MUST load through `apps/governed-api/` and originate from a published `LayerManifest`.
+**PROPOSED domain viewing products** (DOM-FLORA §G). Each MUST load through `apps/governed-api/` and originate from a published `LayerManifest`.
 
 - Plant **species page** (taxon-anchored)
 - Public generalized **occurrence layer**
@@ -573,7 +597,7 @@ graph LR
 **CONFIRMED cross-cutting viewing products** (apply to every flora layer): Evidence Drawer, time-aware state, trust badges (source role, rights, freshness, sensitivity), sensitivity-redacted view, correction / stale-state view, and governed Focus Mode.
 
 > [!NOTE]
-> MapLibre is a **renderer**, not a truth path. Cesium / 3D, where present, consumes the same `EvidenceBundle` and `DecisionEnvelope` as 2D.
+> MapLibre is a **renderer**, not a truth path. The sole browser-side renderer is `packages/maplibre-runtime/`; Cesium has been **retired** as KFM doctrine (Directory Rules §13.5; ADR-0007) and is not a parallel renderer. Any 3D surface is delivered via MapLibre plugins and consumes the same `EvidenceBundle` and `DecisionEnvelope` as 2D.
 
 [Back to top](#contents)
 
@@ -581,17 +605,17 @@ graph LR
 
 ## 17. Publication, correction, and rollback
 
-**CONFIRMED doctrine / PROPOSED implementation.** Every flora release MUST carry:
+**CONFIRMED doctrine / PROPOSED implementation** (DOM-FLORA §M; ENCY Appendix E). Every flora release MUST carry:
 
-- `ReleaseManifest` (release decision artifact — `release/manifests/`)
+- `ReleaseManifest` (release decision artifact)
 - `EvidenceBundle` closure
-- `ValidationReport` pass and `PolicyDecision = allow`
+- `ValidationReport` pass and `PolicyDecision = ALLOW`
 - `ReviewRecord` where review is required (rare plants, ethnobotanical context, sensitive joins)
-- A **correction path** — `CorrectionNotice` (`release/correction_notices/`)
-- A **stale-state rule** — freshness badge and `ABSTAIN`/`DENY` posture for stale evidence
-- A **rollback target** — `RollbackCard` (`release/rollback_cards/`) pointing to the prior release manifest, artifact digests, cache state, and rollback receipt
+- A **correction path** — `CorrectionNotice`
+- A **stale-state rule** — freshness badge and `ABSTAIN` / `DENY` / `SOURCE_STALE` posture for stale evidence
+- A **rollback target** — `RollbackCard` pointing to the prior release manifest, artifact digests, cache state, and rollback receipt
 
-Rollback drills are part of every flora release readiness check.
+Rollback drills are part of every flora release-readiness check.
 
 [Back to top](#contents)
 
@@ -601,18 +625,21 @@ Rollback drills are part of every flora release readiness check.
 
 | Item to verify | Evidence that would settle it | Status |
 |---|---|---|
-| Live source endpoints and current rights for every flora source family | Mounted repo: `data/registry/sources/flora/*` + source descriptors + license records | **NEEDS VERIFICATION** |
+| Live source endpoints and current rights/licenses for every flora source family | Mounted repo: `data/registry/sources/flora/*` + source descriptors + license records; live source agreements | **NEEDS VERIFICATION** |
+| Specific license claims (public-domain status, CC-BY, DOIs, dataset IDs, specimen counts) for PLANTS / GBIF / NatureServe / herbaria | Authoritative external source check (not yet performed) + recorded `SourceDescriptor` | **NEEDS VERIFICATION** *(no source asserted in this revision)* |
 | Rare-plant steward policy and access roles | Mounted repo: `policy/sensitivity/flora/` + `policy/domains/flora/` + review-record fixtures | **NEEDS VERIFICATION** |
-| Exact / generalized / suppressed public geometry thresholds | Mounted repo: geoprivacy policy bundle; review records | **NEEDS VERIFICATION** |
+| Exact / generalized / suppressed public-geometry thresholds | Mounted repo: geoprivacy policy bundle; review records | **NEEDS VERIFICATION** |
 | Focus Mode and Evidence Drawer behavior for flora surfaces | Mounted repo: route definitions; tests; negative fixtures | **NEEDS VERIFICATION** |
-| Taxonomic resolver implementation (ITIS ↔ GBIF tie-breaker) | Mounted repo: resolver package; tests; ADR on tie-breaker policy | **NEEDS VERIFICATION** (ADR pending) |
-| Schema home for flora — `schemas/contracts/v1/domains/flora/` vs. atlas-crosswalk `schemas/contracts/v1/flora/` | ADR-0001 application; mounted-repo convention | **CONFIRMED rule** (ADR-0001) / **PROPOSED path** (verify) |
+| Taxonomic resolver and authority tie-breaker policy | Mounted repo: resolver package; tests; ADR on tie-breaker | **NEEDS VERIFICATION** (ADR pending) |
+| Analysis / web CRS defaults (EPSG codes) | Spatial Foundation `CoordinateReferenceProfile`; ADR | **NEEDS VERIFICATION** |
+| Schema home — `schemas/contracts/v1/domains/flora/` (Directory Rules) vs. `schemas/contracts/v1/flora/` (Atlas Appendix D) | ADR-0001 application; `DRIFT_REGISTER` entry; mounted-repo convention | **CONFIRMED rule** (ADR-0001) / **CONFLICTED path** |
+| `RangePolygon` vs. `DistributionSurface` naming | ADR; corpus reconciliation | **CONFLICTED** (DRIFT candidate) |
 | Restricted vs. public occurrence split mechanism | Schema definitions; policy tests; routing rules | **NEEDS VERIFICATION** |
 | Ethnobotanical / TEK posture and sovereignty review path | Policy bundle; review-record schema; steward roles | **NEEDS VERIFICATION** |
 | Runbook subfolder convention — `docs/runbooks/flora/*` vs. flat `docs/runbooks/flora_*.md` | Directory Rules clarification or local convention | **OPEN ADR** |
 
 > [!NOTE]
-> Items marked `NEEDS VERIFICATION` cannot be settled without mounted-repo evidence. Doctrinal status is asserted; implementation status is bounded.
+> Items marked `NEEDS VERIFICATION` cannot be settled without mounted-repo evidence or, for external license facts, an authoritative external source check. Doctrinal status is asserted; implementation and external-fact status are bounded.
 
 [Back to top](#contents)
 
@@ -621,9 +648,10 @@ Rollback drills are part of every flora release readiness check.
 ## 19. Related docs
 
 <details>
-<summary><strong>Doctrine (must read first)</strong></summary>
+<summary><strong>Doctrine (read first)</strong></summary>
 
 - [Directory Rules](../../doctrine/directory-rules.md) — `docs/doctrine/directory-rules.md`
+- [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`
 - [Lifecycle law](../../doctrine/lifecycle-law.md) — *PROPOSED home*
 - [Trust membrane](../../doctrine/trust-membrane.md) — *PROPOSED home*
 - [Truth posture (cite-or-abstain)](../../doctrine/truth-posture.md) — *PROPOSED home*
@@ -635,6 +663,7 @@ Rollback drills are part of every flora release readiness check.
 <summary><strong>Architecture (cross-cutting)</strong></summary>
 
 - [Domains index](../README.md) — *PROPOSED home*
+- [Flora — API Contracts](./api-contracts.md) — Flora governed-API contract surface *(PROPOSED)*
 - [Governed API](../../architecture/governed-api.md) — *PROPOSED home*
 - [Map shell](../../architecture/map-shell.md) — *PROPOSED home*
 - [Contract / schema / policy split](../../architecture/contract-schema-policy-split.md) — *PROPOSED home*
@@ -642,13 +671,12 @@ Rollback drills are part of every flora release readiness check.
 </details>
 
 <details>
-<summary><strong>Standards (external profiles)</strong></summary>
+<summary><strong>Standards (external profiles — PROPOSED homes)</strong></summary>
 
-- [`PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV profile *(naming vs. `PROVENANCE.md` is an open ADR)*
+- [`PROV.md`](../../standards/PROV.md) — W3C PROV-O profile *(naming vs. `PROVENANCE.md` is an open ADR)*
 - [`PMTILES.md`](../../standards/PMTILES.md) — PMTiles v3 governance profile
 - [`OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — Tile delivery profile
 - [`ISO-19115.md`](../../standards/ISO-19115.md) — Geospatial metadata crosswalk
-- [`OAI-PMH.md`](../../standards/OAI-PMH.md) — Harvest profile
 
 </details>
 
@@ -658,7 +686,7 @@ Rollback drills are part of every flora release readiness check.
 - `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` — parallel-lane pattern *(NEEDS VERIFICATION in mounted repo)*
 - `docs/domains/habitat/` — habitat-side of cross-lane joins *(PROPOSED home)*
 - `docs/domains/fauna/` — fauna-side of cross-lane joins *(PROPOSED home)*
-- `docs/runbooks/flora_SOURCE_REFRESH.md` **or** `docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md` — *NEEDS VERIFICATION; runbook subfolder convention is an open ADR*
+- Flora source-refresh runbook — `docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md` **or** `docs/runbooks/flora_SOURCE_REFRESH.md` *(NEEDS VERIFICATION; subfolder convention is an open ADR)*
 
 </details>
 
@@ -668,7 +696,7 @@ Rollback drills are part of every flora release readiness check.
 
 ## Appendix A — Thin-slice plan
 
-**CONFIRMED first credible thin slice (per encyclopedia §7.6):** one common-species occurrence/specimen fixture **and** one vegetation-community polygon with `EvidenceBundle`-backed species page and public-safe map.
+**CONFIRMED first credible thin slice (DOM-FLORA §N):** one common-species occurrence/specimen fixture **and** one vegetation-community polygon, with an `EvidenceBundle`-backed species page and a public-safe map.
 
 ```mermaid
 flowchart TB
@@ -680,9 +708,9 @@ flowchart TB
   F --> G["Negative fixtures:<br/>rare-plant deny · stale-source abstain · uncited AI abstain"]
 ```
 
-PROPOSED first-PR rules (per parallel-lane discipline):
+PROPOSED first-PR rules (parallel-lane discipline):
 
-- **Synthetic / cached only.** No live wildlife or biodiversity connector activation.
+- **Synthetic / cached only.** No live biodiversity connector activation.
 - **Source registry skeleton** under `data/registry/sources/flora/`.
 - **Public-safety validators** wired with negative fixtures.
 - **Schema home** lands in `schemas/contracts/v1/domains/flora/`.
@@ -697,17 +725,17 @@ PROPOSED first-PR rules (per parallel-lane discipline):
 <details>
 <summary><strong>Expand glossary</strong></summary>
 
-- **`spec_hash`** — JCS-canonicalized SHA-256 of a content-addressed governance object; used for reproducible identity of EvidenceBundles, manifests, and proposals.
+- **`spec_hash`** — RFC 8785 JCS-canonicalized SHA-256 of a content-addressed governance object; reproducible identity for EvidenceBundles, manifests, and proposals.
 - **`EvidenceRef`** — A resolvable reference to an `EvidenceBundle`. Unresolved `EvidenceRef` is an `ABSTAIN` condition, not a render condition.
-- **`EvidenceBundle`** — JSON-LD content-addressed bundle of graph fragment + run receipts + authority crosswalks; the unit of publication for graph-layer assertions.
+- **`EvidenceBundle`** — Resolved evidence package for a claim; the unit of publication for graph-layer assertions; consumed by Evidence Drawer, Focus Mode, and review.
 - **`SourceDescriptor`** — Source identity, rights, role, sensitivity, citation, freshness, retrieval terms.
-- **`RunReceipt`** — Build/run receipt: inputs, config / spec hash, artifact digests, source_head, tool versions, attestations.
-- **`PolicyDecision`** — Allow / deny / abstain / hold output with reasons, obligations, sensitivity / rights posture.
+- **`RunReceipt`** — Build/run receipt: inputs, config / spec hash, artifact digests, source head, tool versions, attestations.
+- **`PolicyDecision`** — `ALLOW` / `DENY` / `HOLD` output with reasons, obligations, sensitivity / rights posture.
 - **`PromotionDecision`** — Promotion-gate result with gate IDs, inputs, proofs, release target, rollback target.
-- **`ReleaseManifest`** — Release decision artifact tying layer manifest, style manifest, tile artifact manifest, evidence bundle, policy decision, promotion decision, cache invalidation, and rollback target.
+- **`ReleaseManifest`** — Release decision artifact tying layer manifest, style manifest, tile-artifact manifest, evidence bundle, policy decision, promotion decision, cache invalidation, and rollback target.
 - **`CorrectionNotice`** — Public notice of a corrected claim.
 - **`RollbackCard`** — Rollback decision artifact.
-- **`RuntimeResponseEnvelope`** — Finite-outcome wrapper (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) returned by the governed API.
+- **`RuntimeResponseEnvelope`** — Finite-outcome wrapper (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`, plus optional `NARROWED` / `BOUNDED`) returned by the governed API.
 - **`AIReceipt`** — Records provider / model adapter, evidence refs, citation validation, policy result, and response metadata without exposing private chain-of-thought.
 - **`CitationValidationReport`** — Pass/fail citation closure object.
 - **`MapContextEnvelope`** — Bounded context carrying camera, layer IDs, feature IDs, temporal snapshot, release refs, selected evidence refs.
@@ -721,9 +749,9 @@ PROPOSED first-PR rules (per parallel-lane discipline):
 
 <div align="center">
 
-**Related:** [Directory Rules](../../doctrine/directory-rules.md) · [Governed API](../../architecture/governed-api.md) · [`PROV.md`](../../standards/PROV.md) · [Domains index](../README.md)
+**Related:** [Directory Rules](../../doctrine/directory-rules.md) · [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Flora API Contracts](./api-contracts.md) · [Governed API](../../architecture/governed-api.md) · [Domains index](../README.md)
 
-_Last updated: **2026-05-16** · Status: **draft** · Lane: **Flora** · Schema home: `schemas/contracts/v1/domains/flora/`_
+_Last updated: **2026-06-03** · Version: **v1.1** · Status: **draft** · CONTRACT_VERSION: **3.0.0** · Lane: **Flora** · Schema home: `schemas/contracts/v1/domains/flora/`_
 
 [⬆ Back to top](#contents)
 
