@@ -2,11 +2,11 @@
 doc_id: kfm://doc/fauna-data-lifecycle
 title: Fauna Data Lifecycle
 type: standard
-version: v1
+version: v2
 status: draft
 owners: <fauna-stewards@TBD>; <governance-stewards@TBD>
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-02
 policy_label: public
 related:
   - docs/doctrine/lifecycle-law.md
@@ -15,10 +15,13 @@ related:
   - docs/domains/fauna/SENSITIVITY.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/standards/PROV.md
+  - ai-build-operating-contract.md
 tags: [kfm, fauna, lifecycle, governance, sensitivity]
 notes:
+  - CONTRACT_VERSION = "3.0.0".
   - Implementation-layer paths are PROPOSED pending mounted-repo verification.
-  - Aligns Fauna lane to RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED.
+  - Aligns Fauna lane to RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED.
+  - v2 reconciles runtime-envelope naming to RuntimeResponseEnvelope (DecisionEnvelope migration, CONFLICTED until ADR).
 [/KFM_META_BLOCK_V2] -->
 
 # 🦌 Fauna — Data Lifecycle
@@ -29,14 +32,15 @@ notes:
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
   <img alt="Doc type: standard" src="https://img.shields.io/badge/doc%20type-standard-blue">
   <img alt="Domain: fauna" src="https://img.shields.io/badge/domain-fauna-2e8b57">
-  <img alt="Lifecycle: RAW→PUBLISHED" src="https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-orange">
+  <img alt="Lifecycle: RAW to PUBLISHED" src="https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-orange">
   <img alt="Policy: public" src="https://img.shields.io/badge/policy-public-success">
+  <img alt="Contract: 3.0.0" src="https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-6f42c1">
   <!-- TODO: replace placeholders with real Shields.io endpoints once CI exists -->
   <img alt="CI: TODO" src="https://img.shields.io/badge/CI-TODO-lightgrey">
-  <img alt="Last updated: 2026-05-16" src="https://img.shields.io/badge/updated-2026--05--16-informational">
+  <img alt="Last updated: 2026-06-02" src="https://img.shields.io/badge/updated-2026--06--02-informational">
 </p>
 
-**Status:** `draft` · **Owners:** `<fauna-stewards@TBD>`, `<governance-stewards@TBD>` · **Last updated:** `2026-05-16`
+**Status:** `draft` · **Owners:** `<fauna-stewards@TBD>`, `<governance-stewards@TBD>` · **Last updated:** `2026-06-02` · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
 > Fauna carries **deny-by-default sensitivity** for exact occurrences, nests, dens, roosts, hibernacula, spawning sites, and steward-controlled records. No path-level move publishes anything; promotion is a **governed state transition** with required receipts, reviews, and rollback targets.
@@ -56,8 +60,11 @@ notes:
 9. [Promotion Gates A–G — Fauna mapping](#9-promotion-gates-ag--fauna-mapping)
 10. [Failure-closed outcomes](#10-failure-closed-outcomes)
 11. [Cross-lane interactions](#11-cross-lane-interactions)
-12. [Open questions & verification backlog](#12-open-questions--verification-backlog)
-13. [Related docs](#13-related-docs)
+12. [Open questions register](#12-open-questions-register)
+13. [Open verification backlog](#13-open-verification-backlog)
+14. [Changelog](#14-changelog)
+15. [Definition of done](#15-definition-of-done)
+16. [Related docs](#16-related-docs)
 
 [↑ Back to top](#-fauna--data-lifecycle)
 
@@ -68,8 +75,8 @@ notes:
 This document describes how the **Fauna** domain applies the KFM lifecycle invariant — **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** — to its owned object families (Taxon, Taxon Crosswalk, Conservation Status, Occurrence Evidence, Occurrence Restricted, Occurrence Public, RangePolygon, SeasonalRange, MigrationRoute, SensitiveSite, MortalityObservation, DiseaseObservation, Invasive Species Record, Redaction Receipt). It is the lane-level companion to:
 
 - The **Directory Rules** placement and lifecycle law (CONFIRMED doctrine), which fixes the responsibility roots under `data/` and the meaning of each phase.
-- The **Master Pipeline Gate Reference**, which fixes the artifacts each transition requires.
-- The Fauna domain dossier in the **Domains Culmination Atlas**, which fixes Fauna's owned objects, source families, and sensitivity posture.
+- The **Master Pipeline Gate Reference** (Atlas v1.1 §24.6), which fixes the artifacts each transition requires.
+- The Fauna domain dossier in the **Domains Culmination Atlas** (Ch. 7), which fixes Fauna's owned objects, source families, and sensitivity posture.
 
 It does **not** redefine the lifecycle, the tier scheme, the receipt catalog, or the promotion-gate matrix. Those are cross-cutting doctrine; this doc shows how Fauna sits inside them.
 
@@ -78,7 +85,10 @@ It does **not** redefine the lifecycle, the tier scheme, the receipt catalog, or
 > **CONFIRMED** = verified from attached KFM doctrine in this session.
 > **PROPOSED** = design or lane-specific application not yet verified in a mounted repo.
 > **NEEDS VERIFICATION** = checkable but unchecked in this session.
+> **CONFLICTED** = sources disagree, or doctrine and implementation appear inconsistent; resolved by ADR or drift-register entry.
 > No statement here implies that a particular validator, schema file, route, or test is present in the current repo unless a mounted artifact has confirmed it.
+
+[↑ Back to top](#-fauna--data-lifecycle)
 
 ---
 
@@ -95,24 +105,24 @@ flowchart LR
     classDef pub  fill:#dcf5dc,stroke:#1f7a1f,color:#0e3f0e,stroke-width:1px;
     classDef pre  fill:#f0f0f0,stroke:#555,color:#222,stroke-width:1px,stroke-dasharray:3 3;
 
-    PRE["⟂ Pre-RAW edge<br/>event_envelope · prefilter_output · event_run_receipt<br/><i>(watchers · GitOps PR · live feeds)</i>"]:::pre
+    PRE["Pre-RAW edge<br/>event_envelope · prefilter_output · event_run_receipt<br/>(watchers · GitOps PR · live feeds)"]:::pre
     RAW["RAW<br/>Source-identity capture<br/>SourceDescriptor + hash"]:::gov
     WORK["WORK<br/>Normalize<br/>schema · geometry · time · identity · evidence · rights · policy"]:::gov
     QUAR["QUARANTINE<br/>Hold failures<br/>rights · sensitivity · validation · source-role · evidence"]:::hold
     PROC["PROCESSED<br/>Validated objects<br/>EvidenceRef · ValidationReport · digest closure"]:::proc
     CAT["CATALOG / TRIPLET<br/>EvidenceBundle · graph projection · release candidate"]:::cat
     PUB["PUBLISHED<br/>Governed API surfaces<br/>ReleaseManifest · rollback target · correction path"]:::pub
-    COR["CorrectionNotice / RollbackCard<br/><i>(any tier → T4 demotion always permitted)</i>"]:::hold
+    COR["CorrectionNotice / RollbackCard<br/>(any tier to T4 demotion always permitted)"]:::hold
 
-    PRE -. admission attempt .-> RAW
-    RAW -->|Admission gate<br/>SourceDescriptor| WORK
-    WORK -->|Validation gate<br/>ValidationReport pass| PROC
-    WORK -. failure .-> QUAR
-    QUAR -. corrected .-> WORK
-    PROC -->|Catalog closure<br/>EvidenceRefs resolve| CAT
-    CAT -->|Release gate<br/>ReleaseManifest + ReviewRecord| PUB
-    PUB -. error discovered .-> COR
-    COR -. demote / withdraw .-> CAT
+    PRE -. "admission attempt" .-> RAW
+    RAW -->|"Admission gate: SourceDescriptor"| WORK
+    WORK -->|"Validation gate: ValidationReport pass"| PROC
+    WORK -. "failure" .-> QUAR
+    QUAR -. "corrected" .-> WORK
+    PROC -->|"Catalog closure: EvidenceRefs resolve"| CAT
+    CAT -->|"Release gate: ReleaseManifest + ReviewRecord"| PUB
+    PUB -. "error discovered" .-> COR
+    COR -. "demote / withdraw" .-> CAT
 ```
 
 **Reading the picture.** The arrows are governed state transitions, not file moves. Each one fails closed: missing receipts, unresolved EvidenceRefs, unresolved sensitivity, unresolved rights, or absent release state holds the object at its current stage. CONFIRMED doctrine: a path-level move that bypasses validators, policy gates, evidence-bundle creation, catalog closure, and release-decision recording is a **violation of the invariant** regardless of which directory the bytes ended up in.
@@ -123,14 +133,14 @@ flowchart LR
 
 ## 3. Stage-by-stage — Fauna handling
 
-CONFIRMED doctrine / PROPOSED lane application. The stage handling and gate text below is the Fauna-specific reading of the universal lifecycle table.
+CONFIRMED doctrine / PROPOSED lane application. The stage handling and gate text below is the Fauna-specific reading of the universal lifecycle table (Atlas v1.1 §24.6.1 and the Ch. 7 Fauna pipeline-shape table).
 
 ### 3.1 RAW — admit, never expose
 
 | Aspect | Fauna handling |
 |---|---|
 | **Purpose** | Capture the immutable source payload (or content-addressed reference) along with source role, rights, sensitivity, citation, time, and content hash. |
-| **Required artifacts** | `SourceDescriptor` (role, authority, rights, sensitivity, cadence); payload hash; ingest receipt. |
+| **Required artifacts** | `SourceDescriptor` (role, authority, rights, sensitivity, cadence); payload hash; `SourceIntakeRecord` on admission. |
 | **Allowed work** | Identity tagging and hashing only. **No normalization, no enrichment, no AI inference, no public access.** |
 | **Sensitive payloads** | Exact occurrence geometry, nest/den/roost/hibernacula/spawning coordinates, and steward-controlled records remain encrypted-at-rest where supported and never leave the RAW lane unredacted. PROPOSED operational control; NEEDS VERIFICATION. |
 | **Failure-closed outcome** | If `SourceDescriptor` is missing or rights are unresolved, the candidate is logged as awaiting steward and **not admitted**. |
@@ -154,7 +164,7 @@ CONFIRMED doctrine / PROPOSED lane application. The stage handling and gate text
 |---|---|
 | **Purpose** | Emit validated, normalized Fauna objects (Taxon, Occurrence Restricted, Occurrence Public candidate, RangePolygon, SeasonalRange, MigrationRoute, SensitiveSite metadata-only stub, MortalityObservation, DiseaseObservation, Invasive Species Record). |
 | **Required artifacts** | `EvidenceRef` resolves; `ValidationReport` passes; digest closure achieved; `RedactionReceipt` present where sensitivity applies; `AggregationReceipt` present where aggregation applies. |
-| **Allowed work** | Public-safe derivative preparation (occurrence density grid, species richness grid, generalized range polygon, public-safe popup payload, taxon search index entries) — PROPOSED viewing products per Fauna dossier. |
+| **Allowed work** | Public-safe derivative preparation (occurrence density grid, species richness grid, generalized range polygon, public-safe popup payload, taxon search index entries) — PROPOSED viewing products per Fauna dossier §G. |
 | **Failure-closed outcome** | Stay in WORK; structured FAIL outcome on `ValidationReport`; the object does **not** progress to CATALOG / TRIPLET. |
 
 ### 3.4 CATALOG / TRIPLET — close evidence, prepare release
@@ -172,12 +182,15 @@ CONFIRMED doctrine / PROPOSED lane application. The stage handling and gate text
 |---|---|
 | **Purpose** | Serve released, public-safe Fauna artifacts through governed APIs and manifests — public species status view, public range polygons, occurrence density grid, species richness grid, invasive monitoring public layer, seasonal support layer, public-safe popup, taxon search. |
 | **Required artifacts** | `ReleaseManifest`; rollback target; correction path; `ReviewRecord` where review is required (sensitive taxa, geoprivacy transforms, steward-controlled records). |
-| **Allowed surfaces** | Governed Fauna feature/detail resolver returning a `FaunaDecisionEnvelope`; Fauna layer manifest resolver; Fauna Evidence Drawer payload; Fauna Focus Mode answer (with `AIReceipt`). All four are PROPOSED governed API surfaces; exact routes UNKNOWN until repo-mounted. |
+| **Allowed surfaces** | Governed Fauna feature/detail resolver returning a `RuntimeResponseEnvelope`; Fauna `LayerManifest` resolver; Fauna Evidence Drawer payload; Fauna Focus Mode answer (with `AIReceipt`). All four are PROPOSED governed API surfaces; exact routes UNKNOWN until repo-mounted. See the envelope-naming note below. |
 | **Forbidden surfaces** | Public exact occurrence tiles for sensitive taxa (CONFIRMED DENY). Direct RAW/WORK/QUARANTINE access by public clients or AI surfaces (CONFIRMED DENY). KFM acting as an emergency-alert authority on the back of disease or mortality records (CONFIRMED DENY — KFM is never an alert authority). |
 | **Failure-closed outcome** | HOLD at CATALOG; no public surface change. |
 
 > [!CAUTION]
-> The **trust membrane** rule applies without exception: every public client, UI surface, and AI surface consumes governed APIs and `ReleaseManifest`-backed artifacts. None of them reads from `data/raw/fauna/`, `data/work/fauna/`, `data/quarantine/fauna/`, or `data/processed/fauna/`. Treating any of those paths as a publication shortcut is a violation of the invariant.
+> **The trust membrane** rule applies without exception: every public client, UI surface, and AI surface consumes governed APIs and `ReleaseManifest`-backed artifacts. None of them reads from `data/raw/fauna/`, `data/work/fauna/`, `data/quarantine/fauna/`, or `data/processed/fauna/`. Treating any of those paths as a publication shortcut is a violation of the invariant.
+
+> [!NOTE]
+> **Envelope-naming note (CONFLICTED → migrating).** The Atlas v1.1 Ch. 7 Fauna dossier names a bespoke `FaunaDecisionEnvelope` for the feature/detail resolver, but names the cross-cutting **`RuntimeResponseEnvelope`** for the Focus Mode answer and for the Master API Surface Table (§20.3). The operating contract (§9 glossary, §21.1) and the doctrine synthesis use `RuntimeResponseEnvelope` as the single finite-response shape. This doc adopts **`RuntimeResponseEnvelope`** for all Fauna runtime surfaces and treats `FaunaDecisionEnvelope` as a lane-specific alias slated for retirement under the active `DecisionEnvelope → RuntimeResponseEnvelope` migration. Final naming is **CONFLICTED** pending the migration ADR.
 
 [↑ Back to top](#-fauna--data-lifecycle)
 
@@ -191,7 +204,8 @@ CONFIRMED doctrine / PROPOSED implementation: KFM defines a **pre-RAW event fami
 |---|---|---|
 | `event_envelope` | Records the candidate event: source URI, fingerprint, ETag, observed timestamp, watcher identity. | PROPOSED |
 | `prefilter_output` | Records cheap admissibility checks (size/delta thresholds, `spec_hash` compare, ETag compare) before fetch. | PROPOSED |
-| `event_run_receipt` | Pins the watcher run: tool, version, started/finished timestamps, exit outcome (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`). | PROPOSED |
+| `event_run_receipt` / `EventRunReceipt` | Pins the watcher run: tool, version, started/finished timestamps, exit outcome (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`). | PROPOSED |
+| `SourceIntakeRecord` | Normalized watcher/candidate envelope carrying `source_role`, `publication_state` (e.g. `WORK_CANDIDATE`), `promotion_required`, `evidence_bundle_resolved`, `policy_review_required`, `source_descriptor_ref`, `drift_summary`. | PROPOSED |
 
 > [!IMPORTANT]
 > **Watchers observe and emit; they do not publish.** A Fauna watcher may emit `SourceIntakeRecord`-shaped envelopes, source-drift candidates with `publication_state: WORK_CANDIDATE`, and pre-RAW receipts. It may not write under `data/processed/fauna/`, `data/catalog/`, `data/published/`, or `release/`. This is the **watcher-as-non-publisher invariant** (CONFIRMED doctrine).
@@ -199,10 +213,10 @@ CONFIRMED doctrine / PROPOSED implementation: KFM defines a **pre-RAW event fami
 ```mermaid
 sequenceDiagram
     autonumber
-    participant W as Fauna watcher<br/>(GBIF/eBird/EDDMapS/…)
-    participant E as Pre-RAW edge
-    participant R as data/raw/fauna/
-    participant S as Steward queue
+    participant W as "Fauna watcher (GBIF/eBird/EDDMapS/…)"
+    participant E as "Pre-RAW edge"
+    participant R as "data/raw/fauna/"
+    participant S as "Steward queue"
     W->>E: event_envelope (source_uri, fingerprint, ETag)
     E->>E: prefilter_output (spec_hash compare, thresholds)
     alt admissible
@@ -263,7 +277,7 @@ release/candidates/fauna/
 | Release | `release/candidates/fauna/<release_id>/` | Release candidates, manifests, rollback cards. |
 
 > [!NOTE]
-> Receipts (`data/receipts/`), proofs (`data/proofs/`), and rollback (`data/rollback/`) are **alongside** the lifecycle phases — they do not replace them. Cross-domain validators or schemas (e.g., a habitat × fauna × hydrology validator) live in the lowest common responsibility root **without** a domain segment.
+> Receipts (`data/receipts/`), proofs (`data/proofs/`), and rollback (`data/rollback/`) are emitted **alongside** the lifecycle phases — they do not replace them (Directory Rules §4 Step 2). Cross-domain validators or schemas (e.g., a habitat × fauna × hydrology validator) live in the **lowest common responsibility root without a domain segment** — e.g., `tools/validators/<topic>/`, `schemas/contracts/v1/<topic>/` — never under a single picked-one domain folder (Directory Rules §12, "Multi-domain and cross-cutting files").
 
 [↑ Back to top](#-fauna--data-lifecycle)
 
@@ -271,7 +285,7 @@ release/candidates/fauna/
 
 ## 6. Object families × lifecycle stage
 
-CONFIRMED objects (per Fauna dossier) / PROPOSED stage-by-stage applicability. A dot means the object family is normally present at that stage; later phases reference earlier-stage receipts via `EvidenceRef` rather than duplicating them.
+CONFIRMED objects (per Fauna dossier §B) / PROPOSED stage-by-stage applicability. A dot means the object family is normally present at that stage; later phases reference earlier-stage receipts via `EvidenceRef` rather than duplicating them.
 
 | Fauna object family | RAW | WORK / QUAR. | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
 |---|:-:|:-:|:-:|:-:|:-:|
@@ -290,6 +304,9 @@ CONFIRMED objects (per Fauna dossier) / PROPOSED stage-by-stage applicability. A
 | `Invasive Species Record` | • | • | • | • | • |
 | `Redaction Receipt` |  | • | • | • | • |
 
+> [!NOTE]
+> The Fauna dossier's ubiquitous-language list (§C) also names `MonitoringEvent`, `Geoprivacy transform`, and `Public-safe derivative` as in-lane terms. They are not separate lifecycle-tracked object families in the matrix above: `MonitoringEvent` is treated here as a source-side observation feeding `Occurrence Evidence` / `MortalityObservation` / `DiseaseObservation`; geoprivacy transform and public-safe derivative are processes/outputs captured by `RedactionReceipt` and the public Occurrence/Range objects. Promote any of these to its own row only if a mounted schema confirms an independent object family — NEEDS VERIFICATION.
+
 > [!IMPORTANT]
 > `SensitiveSite` does **not** propagate to CATALOG/TRIPLET or PUBLISHED in identifiable form. The only public surface is a steward-reviewed, generalized derivative (T1) anchored to a `RedactionReceipt` — and even that is denied by default until a `ReviewRecord` and `PolicyDecision` allow release.
 
@@ -299,27 +316,30 @@ CONFIRMED objects (per Fauna dossier) / PROPOSED stage-by-stage applicability. A
 
 ## 7. Receipts × lifecycle phase
 
-CONFIRMED doctrine: receipts make consequential transformations inspectable; if no receipt exists, the operation did not happen in the governed sense. The matrix below is the cross-cutting Receipt-↔-phase mapping with Fauna-relevant emphasis.
+CONFIRMED doctrine: receipts make consequential transformations inspectable; if no receipt exists, the operation did not happen in the governed sense. The matrix below is the cross-cutting Receipt-↔-phase mapping (Atlas v1.1 §24.2.2) with Fauna-relevant emphasis.
 
-| Receipt | RAW | WORK / QUAR. | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
-|---|:-:|:-:|:-:|:-:|:-:|
-| `SourceDescriptor` | • | • | • | • | • |
-| `TransformReceipt` |  | • | • | • |  |
-| `RedactionReceipt` (Fauna-critical) |  | • | • | • | • |
-| `AggregationReceipt` (density / richness grids) |  | • | • | • |  |
-| `ModelRunReceipt` (if model-derived) |  | • | • | • |  |
-| `RepresentationReceipt` (synthetic / reconstructed) |  | • | • | • |  |
-| `AIReceipt` |  |  |  |  | • (Focus Mode only) |
-| `ReviewRecord` |  |  | • | • | • |
-| `PolicyDecision` | • | • | • | • | • |
-| `ValidationReport` |  | • | • | • |  |
-| `ReleaseManifest` |  |  |  | • | • |
-| `CorrectionNotice` |  |  |  |  | • |
-| `RollbackCard` |  |  |  |  | • |
-| `RealityBoundaryNote` (synthetic carriers) |  |  | • | • | • |
+| Receipt | Pre-RAW | RAW | WORK / QUAR. | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| `EventRunReceipt` | • |  |  |  |  |  |
+| `SourceIntakeRecord` | • | • |  |  |  |  |
+| `SourceDescriptor` |  | • | • | • | • | • |
+| `TransformReceipt` |  |  | • | • | • |  |
+| `RedactionReceipt` (Fauna-critical) |  |  | • | • | • | • |
+| `AggregationReceipt` (density / richness grids) |  |  | • | • | • |  |
+| `ModelRunReceipt` (if model-derived) |  |  | • | • | • |  |
+| `RepresentationReceipt` (synthetic / reconstructed) |  |  | • | • | • |  |
+| `AIReceipt` |  |  |  |  |  | • (Focus Mode only) |
+| `ReviewRecord` |  |  |  | • | • | • |
+| `PolicyDecision` |  | • | • | • | • | • |
+| `ValidationReport` |  |  | • | • | • |  |
+| `CitationValidationReport` |  |  |  |  | • | • |
+| `ReleaseManifest` |  |  |  |  | • | • |
+| `CorrectionNotice` |  |  |  |  |  | • |
+| `RollbackCard` |  |  |  |  |  | • |
+| `RealityBoundaryNote` (synthetic carriers) |  |  |  | • | • | • |
 
 > [!TIP]
-> A tier **upgrade** (toward more public) requires both a transform receipt **and** a review record. A tier **downgrade** (toward less public) needs only a `CorrectionNotice` — correction alone is always sufficient to remove or restrict. This is CONFIRMED doctrine and a key safety property of the Fauna lane.
+> A tier **upgrade** (toward more public) requires both a transform receipt **and** a review record. A tier **downgrade** (toward less public) needs only a `CorrectionNotice` — correction alone is always sufficient to remove or restrict. This is CONFIRMED doctrine (Atlas v1.1 §24.5.3 reading note) and a key safety property of the Fauna lane.
 
 [↑ Back to top](#-fauna--data-lifecycle)
 
@@ -327,7 +347,7 @@ CONFIRMED doctrine: receipts make consequential transformations inspectable; if 
 
 ## 8. Sensitivity tiers & transitions
 
-CONFIRMED tier scheme; CONFIRMED / PROPOSED Fauna-specific defaults from the Master Sensitivity Reference and the Fauna dossier.
+CONFIRMED tier scheme (Atlas v1.1 §24.5.1); CONFIRMED / PROPOSED Fauna-specific defaults from the Master Sensitivity Reference (§24.5.2) and the Fauna dossier.
 
 | Tier | Name | Definition | Default audience |
 |---|---|---|---|
@@ -351,6 +371,8 @@ CONFIRMED tier scheme; CONFIRMED / PROPOSED Fauna-specific defaults from the Mas
 
 ### 8.2 Allowed tier transitions (motion)
 
+CONFIRMED transition matrix (Atlas v1.1 §24.5.3). Note the asymmetry: any tier may demote to **T4** via correction; upgrades require both a transform receipt and a review record.
+
 ```mermaid
 stateDiagram-v2
     [*] --> T4: default for sensitive
@@ -360,9 +382,9 @@ stateDiagram-v2
     T3 --> T2: PolicyDecision + ReviewRecord
     T2 --> T1: RedactionReceipt + ReviewRecord
     T1 --> T0: ReleaseManifest + ReviewRecord
-    T0 --> T4: CorrectionNotice + ReviewRecord
-    T1 --> T4: CorrectionNotice + ReviewRecord
-    T2 --> T4: CorrectionNotice + ReviewRecord
+    T0 --> T4: CorrectionNotice (+ ReviewRecord)
+    T1 --> T4: CorrectionNotice (+ ReviewRecord)
+    T2 --> T4: CorrectionNotice (+ ReviewRecord)
     T3 --> T4: CorrectionNotice
 ```
 
@@ -396,14 +418,17 @@ CONFIRMED doctrine: KFM enforces seven gates between authoring and publication. 
 
 ## 10. Failure-closed outcomes
 
-CONFIRMED doctrine: every governed API surface, validator, policy gate, and Focus Mode answer returns a finite outcome. PROPOSED Fauna mappings:
+CONFIRMED doctrine: every governed API surface, validator, policy gate, and Focus Mode answer returns a finite outcome from the `RuntimeResponseEnvelope` set. PROPOSED Fauna mappings:
 
 | Outcome | Meaning | Typical Fauna trigger |
 |---|---|---|
 | `ANSWER` | The request is satisfied by released, evidence-backed, policy-allowed material. | Public range polygon for a non-sensitive taxon; aggregated invasive monitoring layer. |
-| `ABSTAIN` | Evidence is insufficient or scope is too uncertain to answer. | Taxonomic ambiguity unresolved; temporal scope missing; `EvidenceRef` does not resolve. |
+| `ABSTAIN` | Evidence is insufficient or scope is too uncertain to answer. | Taxonomic ambiguity unresolved; temporal scope missing; `EvidenceRef` does not resolve; stale evidence with no released alternative. |
 | `DENY` | Policy, rights, sensitivity, or release state forbids the answer. | Exact sensitive occurrence; nest / den / roost / hibernacula / spawning coordinates; KFM asked to act as emergency-alert authority. |
 | `ERROR` | The system could not produce a finite outcome (infrastructure, contract, or schema fault). | Schema mismatch; signature verification failure; storage unavailable. |
+
+> [!NOTE]
+> The contract also defines optional extensions `NARROWED` and `BOUNDED`, and runtime UI negative states such as `SOURCE_STALE`, `GENERALIZED_GEOMETRY`, `RESTRICTED_ACCESS`, and `CITATION_FAILED`. These are CONFIRMED doctrine but PROPOSED for Fauna wiring; they MUST be backed by contract schemas before use. NEEDS VERIFICATION.
 
 > [!CAUTION]
 > **AI on the Fauna surface never roots truth.** AI may summarize released Fauna `EvidenceBundle`s, compare evidence, explain limitations, and draft steward-review notes. AI **must** `ABSTAIN` when evidence is insufficient and `DENY` where policy, rights, sensitivity, or release state blocks the request. AI never reads RAW / WORK / QUARANTINE Fauna content — CONFIRMED doctrine.
@@ -423,39 +448,77 @@ CONFIRMED Fauna cross-lane edges (per dossier §F). Each relation must preserve 
 | Fauna ↔ Hydrology | Aquatic / riparian / wetland / spawning context. | Spawning-site joins fail closed; only generalized hydrology context propagates. |
 | Fauna ↔ Hazards | Disease, mortality, wildfire, flood, drought exposure. | Aggregated mortality / disease only; KFM never becomes the alert authority. |
 
+> [!NOTE]
+> Cross-lane files that genuinely span Fauna + another domain (e.g., a habitat × fauna × hydrology validator) are **not** placed under `…/domains/fauna/`. They live under the lowest common responsibility root without a domain segment (Directory Rules §12).
+
 [↑ Back to top](#-fauna--data-lifecycle)
 
 ---
 
-## 12. Open questions & verification backlog
+## 12. Open questions register
 
-PROPOSED, NEEDS VERIFICATION, or UNKNOWN until repo evidence settles them:
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-FAUNA-LC-01 | Is `FaunaDecisionEnvelope` retired in favor of `RuntimeResponseEnvelope` for the Fauna feature/detail resolver? | Governance steward | `DecisionEnvelope → RuntimeResponseEnvelope` migration ADR; DRIFT_REGISTER entry. |
+| OQ-FAUNA-LC-02 | Should `MonitoringEvent` be a first-class lifecycle-tracked object family with its own schema, or remain a source-side observation? | Fauna steward | Mounted `schemas/contracts/v1/domains/fauna/` inspection + dossier §C reconciliation. |
+| OQ-FAUNA-LC-03 | Which geoprivacy transforms are admissible for which sensitive classes (radius mask, grid, jitter, DP, centroid, time-bucket)? | Fauna steward + governance | `policy/sensitivity/fauna/geoprivacy.rego` + ADR; cross-check sensitivity rubric 0–5 mapping. |
+| OQ-FAUNA-LC-04 | Stale-state rule for Fauna releases: freshness thresholds, and `SOURCE_STALE`/`ABSTAIN` vs `DENY` behavior. | Release authority | `policy/release/fauna/` or equivalent ADR (ties to ADR-S-10 stale-state propagation). |
 
-| Item | Evidence that would settle it | Status |
+## 13. Open verification backlog
+
+These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
+
+1. Exact `schemas/contracts/v1/domains/fauna/*.schema.json` files present and pinned (cross-check ADR-0001).
+2. `RedactionReceipt` schema canonical home and field set (`schemas/contracts/v1/receipts/redaction_receipt.schema.json` or equivalent).
+3. Geoprivacy method allowlist and its policy bundle (`policy/sensitivity/fauna/`).
+4. Source-role authority for each upstream source family (KDWP, USFWS, NatureServe, GBIF, eBird, iNaturalist, iDigBio, BISON, EDDMapS) in `data/registry/sources/fauna/*`.
+5. Restricted/public occurrence split policy and corresponding validator + tests under `tests/domains/fauna/`.
+6. Tile-field allowlist for public Fauna PMTiles (emitter config + validator + fixtures).
+7. Exact governed-API route for the Fauna feature/detail resolver (OpenAPI under `apps/governed-api/…`) — currently UNKNOWN.
+8. Pre-RAW event schemas (`event_envelope`, `prefilter_output`, `event_run_receipt`, `SourceIntakeRecord`) wired to Fauna watchers in `pipeline_specs/fauna/`.
+9. Runtime-envelope naming reconciled to `RuntimeResponseEnvelope` across all Fauna surfaces (resolves OQ-FAUNA-LC-01).
+
+## 14. Changelog
+
+| Change | Type (per contract §37) | Reason |
 |---|---|---|
-| Exact `schemas/contracts/v1/domains/fauna/*.schema.json` files present and pinned. | Mounted repo schema directory; ADR-0001 cross-check. | NEEDS VERIFICATION |
-| `RedactionReceipt` schema canonical home and field set. | Mounted `schemas/contracts/v1/receipts/redaction_receipt.schema.json` or equivalent. | NEEDS VERIFICATION |
-| Geoprivacy method allowlist (which transforms are admissible for which sensitive classes). | `policy/sensitivity/fauna/geoprivacy.rego` (or equivalent) and accompanying ADR. | NEEDS VERIFICATION |
-| Source-role authority for each upstream source family (KDWP, USFWS, NatureServe, GBIF, eBird, iNaturalist, iDigBio, BISON, EDDMapS). | `data/registry/sources/fauna/*` rows and source-role registry. | NEEDS VERIFICATION |
-| Restricted/public occurrence split policy and corresponding validator. | Validator under `tools/validators/...` + tests under `tests/domains/fauna/`. | NEEDS VERIFICATION |
-| Tile-field allowlist for public Fauna PMTiles. | PMTiles emitter config + validator + test fixtures. | NEEDS VERIFICATION |
-| Exact governed-API route for Fauna feature/detail resolver. | OpenAPI spec under `apps/governed-api/...` or equivalent. | UNKNOWN |
-| Pre-RAW event schemas (`event_envelope`, `prefilter_output`, `event_run_receipt`) wired to Fauna watchers. | Watcher specs in `pipeline_specs/fauna/` and emitted receipts. | PROPOSED |
-| Stale-state rule for Fauna releases (freshness badge thresholds; staleness → `ABSTAIN` vs. `DENY`). | Release policy under `policy/release/...` or equivalent ADR. | NEEDS VERIFICATION |
+| `FaunaDecisionEnvelope` → `RuntimeResponseEnvelope` for all Fauna runtime surfaces; added envelope-naming note. | reconciliation | Aligns with contract §9/§21 and Atlas §20.3; tracks active migration. |
+| Added `EventRunReceipt` and `SourceIntakeRecord` to the pre-RAW table and the receipt × phase matrix; added Pre-RAW column. | gap closure | Receipt catalog (§24.2) and KFM-P1-PROG-0008 / KFM-P4-PROG-0001 name these objects. |
+| Added `CitationValidationReport` to the receipt matrix. | gap closure | Listed in contract trust objects and receipt taxonomy. |
+| Generalized tier-transition diagram to reflect "any tier → T4" demotion and bracketed the optional `ReviewRecord`. | clarification | Matches Atlas §24.5.3 "Any tier → T4 (downgrade)" row. |
+| Added `MonitoringEvent` / geoprivacy-transform / public-safe-derivative reconciliation note to §6. | clarification | Dossier §C names them; matrix did not, risking anti-collapse confusion. |
+| Promoted companion sections (Open Qs, Verification Backlog, Changelog, Definition of Done) to first-class tail per contract pattern. | housekeeping | Doctrine-adjacent doc companion-section requirement. |
+| Removed decorative Unicode (`⟂`, `🦌` retained only in H1) from Mermaid labels; double-quoted labels with `(`, `:`, `/`. | housekeeping | Mermaid parse-safety; KFM Meta Block render-safety. |
+| Bumped `version: v1 → v2`, `updated: 2026-06-02`; added `ai-build-operating-contract.md` to `related`. | housekeeping | Standard revision metadata. |
+
+> **Backward compatibility.** Heading anchors are unchanged except for the new companion-section headings appended at the tail; no prior anchor was removed or renamed. The H1 anchor (`#-fauna--data-lifecycle`) is preserved, so all in-page "Back to top" links remain valid.
+
+## 15. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed at `docs/domains/fauna/` per Directory Rules;
+- a docs steward and a Fauna steward review it (governance steward sign-off required because it is doctrine-adjacent);
+- it is linked from the Fauna lane index and the doctrine/lifecycle index;
+- it does not conflict with accepted ADRs (notably the schema-home and `DecisionEnvelope → RuntimeResponseEnvelope` migration ADRs);
+- the envelope-naming conflict (OQ-FAUNA-LC-01) is logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `GENERATED_RECEIPT.json` planned for this artifact is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
 
 [↑ Back to top](#-fauna--data-lifecycle)
 
 ---
 
-## 13. Related docs
+## 16. Related docs
 
 <details>
 <summary><strong>Doctrine & cross-cutting references</strong></summary>
 
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — TODO link target; canonical lifecycle invariant.
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — TODO link target; placement protocol and Domain Placement Law.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — TODO link target; placement protocol and Domain Placement Law (§12).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — TODO link target; public clients consume governed APIs only.
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standards profile.
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — TODO link target; `CONTRACT_VERSION = "3.0.0"`; finite-outcome and `RuntimeResponseEnvelope` definitions.
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standards profile (`PROV.md` vs `PROVENANCE.md` filename open item — NEEDS VERIFICATION).
 
 </details>
 
@@ -465,7 +528,7 @@ PROPOSED, NEEDS VERIFICATION, or UNKNOWN until repo evidence settles them:
 - [`docs/domains/fauna/README.md`](./README.md) — TODO link target; Fauna landing page.
 - [`docs/domains/fauna/SENSITIVITY.md`](./SENSITIVITY.md) — TODO link target; sensitivity classes, geoprivacy transforms, redaction methods.
 - [`docs/domains/fauna/OBJECTS.md`](./OBJECTS.md) — TODO link target; Fauna object families and identity rules.
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — operational refresh runbook.
+- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — TODO link target; operational refresh runbook.
 
 </details>
 
@@ -481,5 +544,5 @@ PROPOSED, NEEDS VERIFICATION, or UNKNOWN until repo evidence settles them:
 
 ---
 
-<sub>Last updated: **2026-05-16** · Status: **draft** · Doc type: **standard**</sub>
+<sub>Last updated: **2026-06-02** · Status: **draft** · Doc type: **standard** · `CONTRACT_VERSION = "3.0.0"`</sub>
 <sub>[↑ Back to top](#-fauna--data-lifecycle)</sub>
