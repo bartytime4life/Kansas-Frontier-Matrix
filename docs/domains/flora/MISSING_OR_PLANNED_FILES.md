@@ -2,22 +2,29 @@
 doc_id: kfm://doc/flora-missing-or-planned-files
 title: Flora — Missing or Planned Files Register
 type: register
-version: v1
+version: v1.1
 status: draft
-owners: TODO-flora-domain-steward, TODO-docs-steward
+owners: <flora domain steward> · <docs steward>
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-03
 policy_label: public
 related:
-  - docs/domains/flora/README.md
-  - docs/doctrine/directory-rules.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - ai-build-operating-contract.md                 # CONFIRMED canonical operating contract (CONTRACT_VERSION 3.0.0)
+  - directory-rules.md                             # CONFIRMED placement authority (§12 Domain Placement Law, §15 README contract)
+  - docs/domains/flora/README.md                   # NEEDS VERIFICATION
+  - docs/domains/flora/IDENTITY_MODEL.md           # companion identity charter (envelope + object-family decisions)
+  - docs/domains/flora/MAP_UI_CONTRACTS.md         # companion map-binding contracts
+  - docs/registers/VERIFICATION_BACKLOG.md         # NEEDS VERIFICATION
+  - docs/registers/DRIFT_REGISTER.md               # CONFLICTED entries land here
+  - docs/adr/ADR-0001-schema-home.md               # NEEDS VERIFICATION (acceptance)
 tags: [kfm, domains, flora, register, planning, verification-backlog]
 notes:
-  - All paths in this register are PROPOSED until verified against a mounted repository.
-  - This register implements the Domain Placement Law (Directory Rules §12) for the Flora lane.
-  - Rare-plant locations remain deny-by-default per the Sensitivity Matrix.
+  # CONTRACT_VERSION pin: this register is doctrine-adjacent; it tracks ai-build-operating-contract.md v3.0.0.
+  # All paths in this register are PROPOSED until verified against a mounted repository.
+  # This register implements the Domain Placement Law (Directory Rules §12) for the Flora lane.
+  # Schema leaf follows Directory Rules §12 (schemas/contracts/v1/domains/flora/); the Encyclopedia/Atlas crosswalk uses the bare flora/ form — CONFLICTED, see §10.
+  # Rare-plant exact locations are T4 (Denied) deny-by-default per the Master Sensitivity / Rights Tier Reference (Atlas Ch. 24.5).
+  # Finite-outcome envelope aligned to RuntimeResponseEnvelope; bespoke FloraDecisionEnvelope flagged CONFLICTED / migration-tracked.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Flora — Missing or Planned Files Register
@@ -28,16 +35,17 @@ notes:
 > backlog grounded in the Flora dossier and Directory Rules §12.
 
 [![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#status)
-[![Type: Register](https://img.shields.io/badge/type-register-blue)](#scope)
-[![Policy: Public](https://img.shields.io/badge/policy-public-green)](#sensitivity-controls-rare-plant-defaults)
+[![Type: Register](https://img.shields.io/badge/type-register-blue)](#1-scope-and-intent)
+[![Policy: Public](https://img.shields.io/badge/policy-public-green)](#8-sensitivity-controls-rare-plant-defaults)
 [![Domain: Flora](https://img.shields.io/badge/domain-flora-2ea043)](README.md)
-[![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#status)
-[![Sensitivity: deny-by-default](https://img.shields.io/badge/sensitivity-deny--by--default-red)](#sensitivity-controls-rare-plant-defaults)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#open-questions-and-needs-verification)
-[![Last reviewed](https://img.shields.io/badge/last%20reviewed-2026--05--16-informational)](#document-footer)
+[![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#4-lane-status-overview)
+[![Sensitivity: T4 deny-by-default](https://img.shields.io/badge/sensitivity-T4%20deny--by--default-red)](#8-sensitivity-controls-rare-plant-defaults)
+[![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-555)](#)
+[![Last reviewed](https://img.shields.io/badge/last%20reviewed-2026--06--03-informational)](#document-footer)
 
-**Status:** `draft` · **Owners:** `TODO-flora-domain-steward`, `TODO-docs-steward`
-· **Last updated:** `2026-05-16`
+| Status | Owners | Contract | Last updated |
+|---|---|---|---|
+| `draft` (v1.1) | `<flora domain steward>` · `<docs steward>` | `CONTRACT_VERSION = "3.0.0"` | 2026-06-03 |
 
 ---
 
@@ -65,7 +73,9 @@ notes:
 - [8. Sensitivity controls (rare-plant defaults)](#8-sensitivity-controls-rare-plant-defaults)
 - [9. Cross-lane handoffs](#9-cross-lane-handoffs)
 - [10. Open questions and NEEDS VERIFICATION](#10-open-questions-and-needs-verification)
-- [11. Related docs](#11-related-docs)
+- [11. Changelog](#11-changelog)
+- [12. Definition of done](#12-definition-of-done)
+- [13. Related docs](#13-related-docs)
 
 ---
 
@@ -87,10 +97,10 @@ landing page at `docs/domains/flora/README.md` (PROPOSED).
 **This register covers:**
 
 - Files expected under each responsibility root for the Flora domain.
-- Owned object families (Plant Taxon, SpecimenRecord, Flora Occurrence, Rare Plant
-  Record, Vegetation Community, InvasivePlantRecord, Phenology Observation,
-  RangePolygon, Habitat Association, Botanical Survey, Restoration Planting,
-  Redaction Receipt) and the artifacts each implies.
+- Owned object families (`PlantTaxon`, `FloraTaxon Crosswalk`, `SpecimenRecord`,
+  `FloraOccurrence`, `RarePlantRecord`, `VegetationCommunity`, `InvasivePlantRecord`,
+  `PhenologyObservation`, `RangePolygon`, `HabitatAssociation`, `BotanicalSurvey`,
+  `RestorationPlanting`, `RedactionReceipt`) and the artifacts each implies.
 - Validator, fixture, and policy-test backlog drawn from the Flora dossier.
 - Sensitivity defaults and deny-by-default surfaces.
 
@@ -104,7 +114,7 @@ landing page at `docs/domains/flora/README.md` (PROPOSED).
 - Release decisions — those live under `release/candidates/flora/` (PROPOSED) and
   `release/manifests/` once an approved candidate exists.
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
@@ -118,15 +128,16 @@ labels:
 | **CONFIRMED** | Verified in this session from attached project docs (doctrine only). No file presence is ever CONFIRMED here without a mounted repository. |
 | **PROPOSED** | Path placement derived from Directory Rules §12 and the Flora dossier. Not verified in implementation. |
 | **NEEDS VERIFICATION** | Checkable against a mounted repo; not yet checked in this session. |
+| **CONFLICTED** | Two governing sources disagree (e.g., Directory Rules vs the Encyclopedia/Atlas crosswalk on a path form). Routed to `docs/registers/DRIFT_REGISTER.md`. |
 | **UNKNOWN** | Cannot be resolved without more evidence (e.g., live source rights, current implementation maturity). |
-| **DENY (by default)** | Sensitive surface — explicit governed approval required before any artifact lands. |
+| **DENY (by default)** | Sensitive surface (T4) — explicit governed approval required before any artifact lands. |
 
 > [!NOTE]
-> Placeholders such as `TODO-flora-domain-steward` are deliberate. The register
+> Placeholders such as `<flora domain steward>` are deliberate. The register
 > prefers a clearly reviewable placeholder over a fabricated owner, badge target,
 > CI URL, or ADR reference.
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
@@ -134,7 +145,8 @@ labels:
 
 Per Directory Rules §12, the Flora domain must appear as a **segment** under each
 applicable responsibility root, never as a root folder. The lane pattern below is
-PROPOSED for Flora and mirrors the canonical pattern shared by all KFM domains.
+PROPOSED for Flora and mirrors the canonical pattern shared by all KFM domains
+(Directory Rules §12 lists the segment forms verbatim).
 
 ```mermaid
 flowchart LR
@@ -160,7 +172,7 @@ flowchart LR
   end
 
   subgraph INGEST["connectors/ — source-specific fetch"]
-    CON["connectors/&lt;source&gt;/<br/>(GBIF, iNat, KDWP, …)"]
+    CON["connectors/&lt;vendor&gt;/&lt;source&gt;/<br/>(gbif, inaturalist, kansas, …)"]
   end
 
   subgraph LIFE["data/ — lifecycle lanes for Flora"]
@@ -199,9 +211,11 @@ flowchart LR
 > [!WARNING]
 > The diagram is **structural**, not an assertion of current implementation. Arrows
 > represent governed lifecycle transitions; no transition is automated, scheduled,
-> or guaranteed without a verified pipeline and policy gate.
+> or guaranteed without a verified pipeline and policy gate. Connectors output **only**
+> to `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/...` and MUST NOT
+> publish (Directory Rules §7.3).
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
@@ -211,14 +225,14 @@ flowchart LR
 |---|---|---|---|
 | Docs | `docs/domains/flora/` | PROPOSED / NEEDS VERIFICATION | public |
 | Contracts (meaning) | `contracts/domains/flora/` | PROPOSED / NEEDS VERIFICATION | public |
-| Schemas (shape) | `schemas/contracts/v1/domains/flora/` | PROPOSED / NEEDS VERIFICATION; ADR-0001 governs home | public |
+| Schemas (shape) | `schemas/contracts/v1/domains/flora/` | PROPOSED / NEEDS VERIFICATION; ADR-0001 governs home; **CONFLICTED** leaf form (see §10) | public |
 | Policy (admissibility) | `policy/domains/flora/` | PROPOSED / NEEDS VERIFICATION | deny-by-default for sensitive geometry |
 | Tests | `tests/domains/flora/` | PROPOSED / NEEDS VERIFICATION | n/a (test code) |
 | Fixtures | `fixtures/domains/flora/` | PROPOSED / NEEDS VERIFICATION; no-network only | synthetic, no live PII |
 | Packages | `packages/domains/flora/` | PROPOSED / NEEDS VERIFICATION | n/a (library code) |
 | Pipelines (exec) | `pipelines/domains/flora/` | PROPOSED / NEEDS VERIFICATION | watcher-as-non-publisher |
 | Pipeline specs | `pipeline_specs/flora/` | PROPOSED / NEEDS VERIFICATION | declarative only |
-| Connectors | `connectors/<source>/` (per source) | PROPOSED / NEEDS VERIFICATION; rights TODO per source | source-rights gated |
+| Connectors | `connectors/<vendor>/<source>/` (per source) | PROPOSED / NEEDS VERIFICATION; rights TODO per source | source-rights gated; output to `data/raw`/`quarantine` only |
 | Data — raw | `data/raw/flora/` | PROPOSED / NEEDS VERIFICATION | internal; never public |
 | Data — work / quarantine | `data/work/flora/`, `data/quarantine/flora/` | PROPOSED / NEEDS VERIFICATION | internal; never public |
 | Data — processed | `data/processed/flora/` | PROPOSED / NEEDS VERIFICATION | review-gated |
@@ -228,7 +242,7 @@ flowchart LR
 | Release candidates | `release/candidates/flora/` | PROPOSED / NEEDS VERIFICATION | governed promotion only |
 | Control-plane entries | `control_plane/*.yaml` | PROPOSED / NEEDS VERIFICATION | machine-readable registry |
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
@@ -245,12 +259,13 @@ Human-facing landing and supporting documentation for the Flora bounded context.
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `docs/domains/flora/README.md` | Domain landing page; bounded-context purpose, scope, non-ownership, terminology. | PROPOSED / NEEDS VERIFICATION | Atlas §8.A–C; Encyclopedia §7.6 |
-| `docs/domains/flora/MISSING_OR_PLANNED_FILES.md` | **This document.** | PROPOSED (draft v1) | Domain Placement Law (Directory Rules §12) |
+| `docs/domains/flora/MISSING_OR_PLANNED_FILES.md` | **This document.** | PROPOSED (draft v1.1) | Domain Placement Law (Directory Rules §12) |
+| `docs/domains/flora/IDENTITY_MODEL.md` | Deterministic identity charter (spec_hash, temporal facets, authority anchors). | PROPOSED / NEEDS VERIFICATION | Atlas §8.E; C1-02 |
+| `docs/domains/flora/MAP_UI_CONTRACTS.md` | Map-surface binding (LayerManifest, Evidence Drawer, Focus Mode). | PROPOSED / NEEDS VERIFICATION | Atlas §8.G/J; MAP-MASTER |
 | `docs/domains/flora/SOURCE_REFRESH_RUNBOOK.md` | Per-source admission / refresh / quarantine procedure for Flora connectors. | PROPOSED / NEEDS VERIFICATION | mirrors Fauna runbook precedent |
-| `docs/domains/flora/SENSITIVITY_POSTURE.md` | Rare-plant generalization / withholding / Redaction-Receipt rules. | PROPOSED / NEEDS VERIFICATION | Atlas §20.5; Flora §I |
-| `docs/domains/flora/EVIDENCE_DRAWER.md` | Evidence Drawer payload shape and citation rules for Flora features. | PROPOSED / NEEDS VERIFICATION | Atlas §8.J; Encyclopedia §7.6.H |
+| `docs/domains/flora/SENSITIVITY_POSTURE.md` | Rare-plant generalization / withholding / `RedactionReceipt` rules. | PROPOSED / NEEDS VERIFICATION | Atlas Ch. 24.5; §8.I |
 | `docs/domains/flora/OBJECT_FAMILIES.md` | Per-object family reference: identity, temporal handling, evidence rules. | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.E |
-| `docs/domains/flora/CROSSWALKS.md` | FloraTaxon Crosswalk and external-taxonomy reconciliation (USDA PLANTS, GBIF, NatureServe). | PROPOSED / NEEDS VERIFICATION | Encyclopedia §7.6.C; Atlas §8.C |
+| `docs/domains/flora/CROSSWALKS.md` | `FloraTaxon Crosswalk` and external-taxonomy reconciliation (ITIS, GBIF, WFO, USDA PLANTS, NatureServe). | PROPOSED / NEEDS VERIFICATION | Encyclopedia §7.6.C; Atlas §8.C; C7.c |
 | `docs/domains/flora/PUBLICATION_AND_ROLLBACK.md` | Publication gate, correction path, rollback target rules for Flora. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
 
 ### 5.2 `contracts/domains/flora/`
@@ -261,39 +276,48 @@ Semantic (Markdown) definitions of Flora object families. Field-level shape live
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `contracts/domains/flora/README.md` | Per-root README declaring class and contents. | PROPOSED / NEEDS VERIFICATION | Required README contract (Directory Rules §15) |
-| `contracts/domains/flora/plant_taxon.md` | Plant Taxon meaning, invariants, identity basis. | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.E |
-| `contracts/domains/flora/flora_taxon_crosswalk.md` | FloraTaxon Crosswalk between external taxonomies. | PROPOSED / NEEDS VERIFICATION | Atlas §8.C |
-| `contracts/domains/flora/specimen_record.md` | SpecimenRecord meaning (herbarium / collection origin). | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
-| `contracts/domains/flora/flora_occurrence.md` | Flora Occurrence meaning (point observation with uncertainty / geoprivacy). | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
-| `contracts/domains/flora/rare_plant_record.md` | Rare Plant Record — sensitive-by-default object. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I; §20.5 |
-| `contracts/domains/flora/vegetation_community.md` | Vegetation Community polygons / classification. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
-| `contracts/domains/flora/invasive_plant_record.md` | InvasivePlantRecord. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
-| `contracts/domains/flora/phenology_observation.md` | Phenology Observation / time-series semantics. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
-| `contracts/domains/flora/range_polygon.md` | RangePolygon (vs DistributionSurface). | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.E |
-| `contracts/domains/flora/habitat_association.md` | Habitat Association (relation to Habitat lane). | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.F |
-| `contracts/domains/flora/botanical_survey.md` | Botanical Survey object. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B |
-| `contracts/domains/flora/restoration_planting.md` | Restoration Planting object. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B |
-| `contracts/domains/flora/redaction_receipt.md` | Domain-flavored Redaction Receipt (shared kernel reference). | PROPOSED / NEEDS VERIFICATION | Atlas §8.C; shared kernel |
+| `contracts/domains/flora/plant_taxon.md` | `PlantTaxon` meaning, invariants, identity basis. | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.E |
+| `contracts/domains/flora/flora_taxon_crosswalk.md` | `FloraTaxon Crosswalk` between external taxonomies. | PROPOSED / NEEDS VERIFICATION | Atlas §8.C |
+| `contracts/domains/flora/specimen_record.md` | `SpecimenRecord` meaning (herbarium / collection origin). | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
+| `contracts/domains/flora/flora_occurrence.md` | `FloraOccurrence` meaning (point observation with uncertainty / geoprivacy). | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
+| `contracts/domains/flora/rare_plant_record.md` | `RarePlantRecord` — sensitive-by-default object (T4). | PROPOSED / NEEDS VERIFICATION | Atlas §8.I; Ch. 24.5 |
+| `contracts/domains/flora/vegetation_community.md` | `VegetationCommunity` polygons / classification. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
+| `contracts/domains/flora/invasive_plant_record.md` | `InvasivePlantRecord`. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
+| `contracts/domains/flora/phenology_observation.md` | `PhenologyObservation` / time-series semantics. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B–C |
+| `contracts/domains/flora/range_polygon.md` | `RangePolygon` (canonical Flora range family; a prior draft also named a separate `DistributionSurface` — folded here). | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.E |
+| `contracts/domains/flora/habitat_association.md` | `HabitatAssociation` (relation to Habitat lane). | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.F |
+| `contracts/domains/flora/botanical_survey.md` | `BotanicalSurvey` object. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B |
+| `contracts/domains/flora/restoration_planting.md` | `RestorationPlanting` object. | PROPOSED / NEEDS VERIFICATION | Atlas §8.B |
+| `contracts/domains/flora/redaction_receipt.md` | Domain-flavored `RedactionReceipt` (shared-kernel reference). | PROPOSED / NEEDS VERIFICATION | Atlas §8.C; shared kernel |
 
 > [!NOTE]
-> `contracts/` retains semantic Markdown only. Per **ADR-0001**, machine-checkable
-> JSON Schemas live under `schemas/contracts/v1/...` and never alongside the
-> Markdown contracts. Any pre-existing `contracts/domains/flora/*.schema.json` is a
-> drift candidate.
+> `contracts/` retains semantic Markdown only. Per **ADR-0001** (and Directory Rules
+> §6.4 / §13.1), machine-checkable JSON Schemas live under `schemas/contracts/v1/...`
+> and never alongside the Markdown contracts. Any pre-existing
+> `contracts/domains/flora/*.schema.json` is a drift candidate (§13.1).
 
 ### 5.3 `schemas/contracts/v1/domains/flora/`
 
-Machine-checkable JSON Schemas. Canonical home per **ADR-0001** (NEEDS VERIFICATION
-that the ADR is accepted in the current repo).
+Machine-checkable JSON Schemas. Home per **ADR-0001** and Directory Rules §12
+(`schemas/contracts/v1/domains/<domain>/`). NEEDS VERIFICATION that the ADR is
+accepted in the current repo.
+
+> [!CAUTION]
+> **CONFLICTED leaf form.** Directory Rules §12 specifies `schemas/contracts/v1/domains/flora/`
+> (used here). The KFM Encyclopedia §7.6 / Atlas Ch. 24.13 crosswalk uses the **bare**
+> form `schemas/contracts/v1/flora/`, and the companion Flora Identity Model and Map UI
+> Contracts docs followed that bare form. Per Directory Rules §2.1 authority order,
+> **Directory Rules wins on path questions**, so this register uses `domains/flora/`.
+> The divergence is logged for a one-line reconciliation (see [§10](#10-open-questions-and-needs-verification) and the Drift Register).
 
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `schemas/contracts/v1/domains/flora/README.md` | Per-root README, class declaration. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
-| `schemas/contracts/v1/domains/flora/plant_taxon.schema.json` | JSON Schema for Plant Taxon. | PROPOSED / NEEDS VERIFICATION | ADR-0001; Atlas §8.J |
+| `schemas/contracts/v1/domains/flora/plant_taxon.schema.json` | JSON Schema for `PlantTaxon`. | PROPOSED / NEEDS VERIFICATION | ADR-0001; Atlas §8.J |
 | `schemas/contracts/v1/domains/flora/flora_taxon_crosswalk.schema.json` | Crosswalk schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
 | `schemas/contracts/v1/domains/flora/specimen_record.schema.json` | Specimen schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
 | `schemas/contracts/v1/domains/flora/flora_occurrence.schema.json` | Public-vs-restricted occurrence shape. | PROPOSED / NEEDS VERIFICATION | ADR-0001; Atlas §8.I |
-| `schemas/contracts/v1/domains/flora/rare_plant_record.schema.json` | Sensitive-by-default schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001; §20.5 |
+| `schemas/contracts/v1/domains/flora/rare_plant_record.schema.json` | Sensitive-by-default schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001; Ch. 24.5 |
 | `schemas/contracts/v1/domains/flora/vegetation_community.schema.json` | Community polygon schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
 | `schemas/contracts/v1/domains/flora/invasive_plant_record.schema.json` | Invasive observation schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
 | `schemas/contracts/v1/domains/flora/phenology_observation.schema.json` | Phenology time-series schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
@@ -301,20 +325,35 @@ that the ADR is accepted in the current repo).
 | `schemas/contracts/v1/domains/flora/habitat_association.schema.json` | Cross-lane relation schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
 | `schemas/contracts/v1/domains/flora/botanical_survey.schema.json` | Survey schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
 | `schemas/contracts/v1/domains/flora/restoration_planting.schema.json` | Restoration planting schema. | PROPOSED / NEEDS VERIFICATION | ADR-0001 |
-| `schemas/contracts/v1/domains/flora/flora_decision_envelope.schema.json` | Finite-outcome envelope for Flora API surfaces. | PROPOSED / NEEDS VERIFICATION | Atlas §8.J |
 | `schemas/tests/valid/domains/flora/*.json` | Golden valid fixtures per object family. | PROPOSED / NEEDS VERIFICATION | Directory Rules §6.4 |
 | `schemas/tests/invalid/domains/flora/*.json` | Negative fixtures per object family. | PROPOSED / NEEDS VERIFICATION | Directory Rules §6.4 |
+
+> [!WARNING]
+> **No `flora_decision_envelope.schema.json` here.** The finite-outcome envelope is the
+> **cross-cutting** `RuntimeResponseEnvelope` (schema home `schemas/contracts/v1/runtime/`,
+> CONFIRMED per Directory Rules glossary), not a Flora-domain-local schema. The Atlas
+> §8.J names a bespoke `FloraDecisionEnvelope`; that is **CONFLICTED / migration-tracked**
+> (`DecisionEnvelope → RuntimeResponseEnvelope`). A Flora-local envelope schema in this
+> lane would be a Domain Placement Law (§12) violation. See [§10](#10-open-questions-and-needs-verification).
 
 ### 5.4 `policy/domains/flora/`
 
 Admissibility, sensitivity, rights, and release policy specific to Flora.
 
+> [!NOTE]
+> **Two policy homes to reconcile.** Directory Rules §12 gives the per-domain policy
+> lane as `policy/domains/flora/` (used here). The Encyclopedia §7.6 / Atlas Ch. 24.13
+> crosswalk also names `policy/sensitivity/flora/` (a sensitivity-specific home).
+> Both are CONFIRMED in their respective sources; whether the Flora sensitivity rules
+> live under `policy/domains/flora/sensitivity.rego` or `policy/sensitivity/flora/`
+> is a reconciliation item (see [§10](#10-open-questions-and-needs-verification)).
+
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `policy/domains/flora/README.md` | Per-root README. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
-| `policy/domains/flora/sensitivity.rego` | Rare/protected/culturally-sensitive deny rules. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I; §20.5 |
+| `policy/domains/flora/sensitivity.rego` | Rare/protected/culturally-sensitive deny rules (T4 default). | PROPOSED / NEEDS VERIFICATION | Atlas §8.I; Ch. 24.5 |
 | `policy/domains/flora/rights.rego` | Source-role and license enforcement for Flora connectors. | PROPOSED / NEEDS VERIFICATION | Atlas §8.D |
-| `policy/domains/flora/redaction.rego` | Geoprivacy / generalization / withholding decisions; emits Redaction Receipt. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I, §8.C |
+| `policy/domains/flora/redaction.rego` | Geoprivacy / generalization / withholding decisions; emits `RedactionReceipt`. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I, §8.C |
 | `policy/domains/flora/promotion.rego` | Per-domain promotion-gate composition. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M; Encyclopedia §12 |
 | `policy/domains/flora/citation.rego` | Cite-or-abstain enforcement for Flora Focus Mode answers. | PROPOSED / NEEDS VERIFICATION | Atlas §8.L; [GAI] |
 | `policy/domains/flora/source_role.rego` | Authority / observation / context / model role discipline. | PROPOSED / NEEDS VERIFICATION | Atlas §8.D |
@@ -322,9 +361,9 @@ Admissibility, sensitivity, rights, and release policy specific to Flora.
 | `policy/domains/flora/tests/` | Policy unit tests. | PROPOSED / NEEDS VERIFICATION | Directory Rules §6.5 |
 
 > [!CAUTION]
-> Sensitive locations of rare, protected, or culturally sensitive flora are
-> **DENY by default**. Any policy change loosening this default requires steward
-> review **and** a Redaction Receipt path — see §8 below.
+> Exact locations of rare, protected, or culturally sensitive flora are **T4 — DENY by
+> default** (Atlas Ch. 24.5). Any policy change loosening this default requires steward
+> review **and** a `RedactionReceipt` path — see [§8](#8-sensitivity-controls-rare-plant-defaults).
 
 ### 5.5 `tests/domains/flora/`
 
@@ -334,16 +373,16 @@ Proof that Flora rules are enforceable. Tests must be no-network and fixture-bac
 |---|---|---|---|
 | `tests/domains/flora/README.md` | Per-root README; lists validators covered. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
 | `tests/domains/flora/test_schema_validation.py` (or equivalent) | All Flora object-family schemas accept valid / reject invalid fixtures. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
-| `tests/domains/flora/test_taxonomy_reconciliation.py` | FloraTaxon Crosswalk closure / non-collision tests. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (taxonomy reconciliation) |
+| `tests/domains/flora/test_taxonomy_reconciliation.py` | `FloraTaxon Crosswalk` closure / non-collision tests. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (taxonomy reconciliation) |
 | `tests/domains/flora/test_rights_validators.py` | Source-rights and source-role gates. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (rights/sensitivity validators) |
 | `tests/domains/flora/test_sensitivity_denial.py` | Exact sensitive public-geometry DENY. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
-| `tests/domains/flora/test_redaction_receipts.py` | Redaction Receipt lineage / closure. | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.I |
-| `tests/domains/flora/test_catalog_closure.py` | Catalog/EvidenceBundle closure for Flora records. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (catalog closure tests) |
-| `tests/domains/flora/test_api_envelopes.py` | API finite-outcome (ANSWER / ABSTAIN / DENY / ERROR) fixtures. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (API finite-outcome fixtures) |
+| `tests/domains/flora/test_redaction_receipts.py` | `RedactionReceipt` lineage / closure. | PROPOSED / NEEDS VERIFICATION | Atlas §8.C, §8.I |
+| `tests/domains/flora/test_catalog_closure.py` | Catalog / `EvidenceBundle` closure for Flora records. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (catalog closure tests) |
+| `tests/domains/flora/test_api_envelopes.py` | API finite-outcome (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) fixtures via `RuntimeResponseEnvelope`. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (API finite-outcome fixtures) |
 | `tests/domains/flora/test_no_live_network.py` | Assert the Flora test corpus runs without live-network calls. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K (no-live-network fixture pipeline) |
 | `tests/domains/flora/test_temporal_logic.py` | source / observed / valid / retrieval / release / correction time distinctions. | PROPOSED / NEEDS VERIFICATION | Atlas §8.E |
 | `tests/domains/flora/test_geometry_validity.py` | Geometry validity + generalization invariants. | PROPOSED / NEEDS VERIFICATION | Encyclopedia §7.6.K |
-| `tests/domains/flora/test_release_manifest.py` | ReleaseManifest validation and rollback chain. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
+| `tests/domains/flora/test_release_manifest.py` | `ReleaseManifest` validation and rollback chain. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
 
 ### 5.6 `fixtures/domains/flora/`
 
@@ -353,20 +392,20 @@ network.**
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `fixtures/domains/flora/README.md` | Per-root README. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
-| `fixtures/domains/flora/source_descriptors/` | One SourceDescriptor per Flora source family. | PROPOSED / NEEDS VERIFICATION | Encyclopedia §7.6.L; Atlas §8.D |
+| `fixtures/domains/flora/source_descriptors/` | One `SourceDescriptor` per Flora source family. | PROPOSED / NEEDS VERIFICATION | Encyclopedia §7.6.L; Atlas §8.D |
 | `fixtures/domains/flora/plant_taxon/` | Valid / invalid taxon fixtures. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
-| `fixtures/domains/flora/flora_occurrence/` | Public-safe and sensitive occurrence fixtures (sensitive ones must never publish). | PROPOSED / NEEDS VERIFICATION | Atlas §8.K; §20.5 |
-| `fixtures/domains/flora/rare_plant_record/` | Synthetic rare-plant fixtures with generalized geometry; **no real rare-plant locations**. | PROPOSED / NEEDS VERIFICATION | Atlas §20.5 |
+| `fixtures/domains/flora/flora_occurrence/` | Public-safe and sensitive occurrence fixtures (sensitive ones must never publish). | PROPOSED / NEEDS VERIFICATION | Atlas §8.K; Ch. 24.5 |
+| `fixtures/domains/flora/rare_plant_record/` | Synthetic rare-plant fixtures with generalized geometry; **no real rare-plant locations**. | PROPOSED / NEEDS VERIFICATION | Atlas Ch. 24.5 |
 | `fixtures/domains/flora/vegetation_community/` | Community polygon fixtures. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
 | `fixtures/domains/flora/invasive_plant_record/` | Invasive observation fixtures. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
 | `fixtures/domains/flora/phenology_observation/` | Time-series fixtures. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
-| `fixtures/domains/flora/evidence_bundles/` | EvidenceBundle fixtures for catalog closure. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
-| `fixtures/domains/flora/decision_envelopes/` | ANSWER / ABSTAIN / DENY / ERROR fixtures. | PROPOSED / NEEDS VERIFICATION | Atlas §8.J |
+| `fixtures/domains/flora/evidence_bundles/` | `EvidenceBundle` fixtures for catalog closure. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
+| `fixtures/domains/flora/runtime_envelopes/` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` fixtures (`RuntimeResponseEnvelope`). | PROPOSED / NEEDS VERIFICATION | Atlas §8.J |
 
 > [!IMPORTANT]
-> Rare-plant fixtures **must** use synthetic or generalized geometry. Real
-> precise rare-plant locations must not be checked into the repo at any lifecycle
-> phase — Atlas §20.5 / Flora §I.
+> Rare-plant fixtures **must** use synthetic or generalized geometry. Real precise
+> rare-plant locations must not be checked into the repo at any lifecycle phase —
+> Atlas Ch. 24.5 / Flora §I.
 
 ### 5.7 `packages/domains/flora/`
 
@@ -376,32 +415,35 @@ in `scripts/` until they earn library status (Directory Rules §7.5).
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `packages/domains/flora/README.md` | Per-root README. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
-| `packages/domains/flora/taxonomy/` | FloraTaxon resolution / crosswalk reconciliation. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K; Encyclopedia §7.6 |
-| `packages/domains/flora/geoprivacy/` | Generalization, withholding, Redaction-Receipt emission helpers. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I |
+| `packages/domains/flora/taxonomy/` | `FloraTaxon` resolution / crosswalk reconciliation. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K; Encyclopedia §7.6 |
+| `packages/domains/flora/geoprivacy/` | Generalization, withholding, `RedactionReceipt` emission helpers. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I |
 | `packages/domains/flora/normalizers/` | Per-source normalizers (GBIF DwC, iNaturalist, USDA PLANTS, NatureServe). | PROPOSED / NEEDS VERIFICATION | Encyclopedia §7.6.B |
-| `packages/domains/flora/evidence/` | EvidenceBundle assemblers for Flora records. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
-| `packages/domains/flora/layer_manifests/` | LayerManifest builders for Flora public surfaces. | PROPOSED / NEEDS VERIFICATION | Atlas §8.J |
+| `packages/domains/flora/evidence/` | `EvidenceBundle` assemblers for Flora records. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
+| `packages/domains/flora/layer_manifests/` | `LayerManifest` builders for Flora public surfaces. | PROPOSED / NEEDS VERIFICATION | Atlas §8.J |
 
 ### 5.8 `pipelines/domains/flora/` and `pipeline_specs/flora/`
 
 Executable pipeline logic (`pipelines/`) and its declarative spec (`pipeline_specs/`).
+Split: `pipeline_specs/` says **what** should run; `pipelines/` says **how** (Directory Rules §7.4).
 
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `pipelines/domains/flora/README.md` | Per-root README. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
-| `pipelines/domains/flora/ingest/` | Connector → RAW admission for Flora sources. | PROPOSED / NEEDS VERIFICATION | Directory Rules §7.4 |
+| `pipelines/domains/flora/ingest/` | Connector → RAW admission for Flora sources. | PROPOSED / NEEDS VERIFICATION | Directory Rules §7.3–§7.4 |
 | `pipelines/domains/flora/normalize/` | RAW → WORK normalization. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H |
 | `pipelines/domains/flora/validate/` | Schema / rights / sensitivity / geometry validation. | PROPOSED / NEEDS VERIFICATION | Atlas §8.K |
-| `pipelines/domains/flora/catalog/` | PROCESSED → CATALOG and EvidenceBundle assembly. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H |
-| `pipelines/domains/flora/redact/` | Redaction Receipt emission for sensitive records. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I |
+| `pipelines/domains/flora/catalog/` | PROCESSED → CATALOG and `EvidenceBundle` assembly. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H |
+| `pipelines/domains/flora/redact/` | `RedactionReceipt` emission for sensitive records. | PROPOSED / NEEDS VERIFICATION | Atlas §8.I |
 | `pipeline_specs/flora/README.md` | Declarative spec README. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
 | `pipeline_specs/flora/*.yaml` | Per-source / per-product specs (one per Flora source family). | PROPOSED / NEEDS VERIFICATION | Directory Rules §7.4 |
 
 ### 5.9 `connectors/` — Flora source connectors
 
-Source-specific fetchers and admitters. Connector output goes to
-`data/raw/flora/<source_id>/<run_id>/` or `data/quarantine/...`; connectors **MUST
-NOT** publish (Directory Rules §7.3).
+Source-specific fetchers and admitters, grouped by vendor (Directory Rules §7.3:
+`connectors/<vendor>/`). Connector output MUST go to
+`data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/...`; connectors **MUST
+NOT** publish, mutate canonical truth, or write under `data/processed/`,
+`data/catalog/`, or `data/published/` (§7.3).
 
 | Source family (from Flora dossier) | Expected connector path | Status | Rights / sensitivity |
 |---|---|---|---|
@@ -410,15 +452,17 @@ NOT** publish (Directory Rules §7.3).
 | Kansas Biological Survey / KU herbarium (McGregor) | `connectors/kansas/kbs_herbarium/` | PROPOSED / NEEDS VERIFICATION | rights TODO; per-collection terms |
 | USFWS ECOS (plant context) | `connectors/usfws/ecos_plants/` | PROPOSED / NEEDS VERIFICATION | public; verify terms |
 | NatureServe Explorer / Explorer Pro | `connectors/natureserve/explorer/` | PROPOSED / NEEDS VERIFICATION | account / license required; sensitive |
-| GBIF vascular-plant downloads | `connectors/gbif/plants/` | PROPOSED / NEEDS VERIFICATION | citation + DOI obligations |
+| GBIF vascular-plant downloads | `connectors/gbif/plants/` | PROPOSED / NEEDS VERIFICATION | citation + DOI obligations (Backbone version pinned) |
 | iDigBio specimen records | `connectors/idigbio/specimens/` | PROPOSED / NEEDS VERIFICATION | per-collection license |
 | iNaturalist-derived observations | `connectors/inaturalist/observations/` | PROPOSED / NEEDS VERIFICATION | per-record license; obscured locations |
 | USDA PLANTS (vascular checklists / distributions) | `connectors/usda/plants/` | PROPOSED / NEEDS VERIFICATION | public domain per source; cite per guidance |
 
 > [!NOTE]
-> The USDA PLANTS, GBIF, iNaturalist, and NatureServe entries above reflect the
-> source families named in the Flora dossier and supplementary New-Ideas packets.
-> Concrete rights, current API surfaces, and per-source terms are
+> The vendor-grouping shape (`connectors/<vendor>/<source>/`) matches the Directory Rules
+> §7.3 connector tree (`usgs/`, `fema/`, `noaa/`, `nrcs/`, `kansas/`, `gbif/`,
+> `inaturalist/`, `census/`, `local_upload/`). Whether a deeper per-domain segment is
+> permitted under `connectors/` beyond the canonical roots is an OPEN doctrine item
+> (OPEN-DSC-14). Concrete rights, current API surfaces, and per-source terms are
 > **NEEDS VERIFICATION** and must be resolved before any connector is admitted.
 
 ### 5.10 `data/` — lifecycle lanes for Flora
@@ -443,13 +487,13 @@ data/
 
 | Lane | Purpose | Status | Driver |
 |---|---|---|---|
-| `data/raw/flora/` | Immutable source payloads with SourceDescriptor + hash. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H (RAW) |
+| `data/raw/flora/` | Immutable source payloads with `SourceDescriptor` + hash. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H (RAW) |
 | `data/work/flora/` | Normalization scratch. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H (WORK) |
 | `data/quarantine/flora/` | Records held on validation/policy failure with quarantine reason. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H (QUARANTINE) |
 | `data/processed/flora/` | Validated, normalized objects + receipts. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H (PROCESSED) |
-| `data/catalog/domain/flora/` | Catalog records + EvidenceBundles + triplet projections. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H (CATALOG) |
+| `data/catalog/domain/flora/` | Catalog records + `EvidenceBundle`s + triplet projections. | PROPOSED / NEEDS VERIFICATION | Atlas §8.H (CATALOG) |
 | `data/published/layers/flora/` | Public-safe released layers (generalized occurrence, vegetation community, phenology, etc.). | PROPOSED / NEEDS VERIFICATION | Atlas §8.G, §8.H (PUBLISHED) |
-| `data/registry/sources/flora/` | Per-source registry entries (SourceDescriptor IDs, rights, freshness). | PROPOSED / NEEDS VERIFICATION | Directory Rules §9.1 |
+| `data/registry/sources/flora/` | Per-source registry entries (`SourceDescriptor` IDs, rights, freshness). | PROPOSED / NEEDS VERIFICATION | Directory Rules §9.1 |
 | `data/rollback/flora/<release_id>/` | Rollback targets for prior Flora releases. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
 
 > [!WARNING]
@@ -457,27 +501,28 @@ data/
 > `data/quarantine/`, `data/processed/`, or `data/catalog/`. All public reads go
 > through the governed API (`apps/governed-api/` — PROPOSED). Direct reads of
 > canonical stores by `apps/explorer-web/` or any other shell are a trust-membrane
-> violation (Directory Rules §13).
+> violation (Directory Rules §7.1 / §13).
 
 ### 5.11 `release/candidates/flora/`
 
 Release decisions and candidates for Flora. Release **decisions** live here; released
 **artifacts** live under `data/published/layers/flora/` — the two are deliberately
-distinct (Directory Rules §5).
+distinct (Directory Rules §9.2; mixing them is a §10 drift pattern).
 
 | Expected path | Purpose | Status | Driver |
 |---|---|---|---|
 | `release/candidates/flora/README.md` | Per-root README. | PROPOSED / NEEDS VERIFICATION | Directory Rules §15 |
-| `release/candidates/flora/<candidate_id>/manifest.yaml` | Candidate ReleaseManifest. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
+| `release/candidates/flora/<candidate_id>/manifest.yaml` | Candidate `ReleaseManifest`. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
 | `release/candidates/flora/<candidate_id>/evidence_bundle.json` | Evidence basis for the candidate. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
-| `release/candidates/flora/<candidate_id>/policy_decision.json` | Captured PolicyDecision. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
+| `release/candidates/flora/<candidate_id>/policy_decision.json` | Captured `PolicyDecision`. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
 | `release/candidates/flora/<candidate_id>/rollback_card.json` | Rollback target. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
 | `release/correction_notices/flora/` (shared root) | Public correction notices touching Flora releases. | PROPOSED / NEEDS VERIFICATION | Atlas §8.M |
 
 ### 5.12 `control_plane/` — Flora register entries
 
-The control plane is the **machine-readable** "what governs what" layer. Flora entries
-appear in shared registers, not in a Flora-specific subtree (Directory Rules §6.2).
+The control plane is the **machine-readable** "what governs what" layer; it indexes,
+it does not store source data (Directory Rules §6.2). Flora entries appear in shared
+registers, not in a Flora-specific subtree.
 
 | Expected entry | Where | Status |
 |---|---|---|
@@ -488,7 +533,12 @@ appear in shared registers, not in a Flora-specific subtree (Directory Rules §6
 | Flora release states | `control_plane/release_state_register.yaml` (Flora entries) | PROPOSED / NEEDS VERIFICATION |
 | Flora verification backlog items | `control_plane/verification_backlog.yaml` (Flora-tagged) | PROPOSED / NEEDS VERIFICATION |
 
-[Back to top](#-flora--missing-or-planned-files-register)
+> [!NOTE]
+> Register file names above are PROPOSED. The actual register filenames are NEEDS
+> VERIFICATION; `control_plane/` is confirmed as the machine-readable governance root
+> (Directory Rules §6.2).
+
+[Back to top](#quick-jump)
 
 ---
 
@@ -504,23 +554,23 @@ inspection lands.
 
 | Object family | Contract (`contracts/.../<name>.md`) | Schema (`schemas/.../<name>.schema.json`) | Valid fixture | Invalid fixture | Policy hooks | Normalizer | Catalog projection | Sensitivity default |
 |---|---|---|---|---|---|---|---|---|
-| Plant Taxon | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public |
-| FloraTaxon Crosswalk | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public |
-| SpecimenRecord | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights | PROPOSED | PROPOSED | per-collection terms |
-| Flora Occurrence | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, sensitivity | PROPOSED | PROPOSED | generalize if uncertain |
-| Rare Plant Record | PROPOSED | PROPOSED | PROPOSED (synthetic) | PROPOSED | sensitivity (DENY default), redaction | PROPOSED | PROPOSED | **DENY by default** |
-| Vegetation Community | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public |
-| InvasivePlantRecord | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public |
-| Phenology Observation | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, temporal | PROPOSED | PROPOSED | public |
-| RangePolygon | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, sensitivity | PROPOSED | PROPOSED | generalized for rare taxa |
-| Habitat Association | PROPOSED | PROPOSED | PROPOSED | PROPOSED | cross-lane integrity | PROPOSED | PROPOSED | derived; mirrors source |
-| Botanical Survey | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, completeness | PROPOSED | PROPOSED | public |
-| Restoration Planting | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, sensitivity | PROPOSED | PROPOSED | per-project terms |
-| Redaction Receipt | PROPOSED | PROPOSED (shared kernel) | PROPOSED | PROPOSED | emitted by `redact/` | n/a | PROPOSED | public (the receipt is public) |
+| `PlantTaxon` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public (T0) |
+| `FloraTaxon Crosswalk` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public (T0) |
+| `SpecimenRecord` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights | PROPOSED | PROPOSED | per-collection terms |
+| `FloraOccurrence` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, sensitivity | PROPOSED | PROPOSED | generalize if uncertain |
+| `RarePlantRecord` | PROPOSED | PROPOSED | PROPOSED (synthetic) | PROPOSED | sensitivity (T4 DENY default), redaction | PROPOSED | PROPOSED | **T4 — DENY by default** |
+| `VegetationCommunity` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public (T0) |
+| `InvasivePlantRecord` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, citation | PROPOSED | PROPOSED | public (T0–T2) |
+| `PhenologyObservation` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, temporal | PROPOSED | PROPOSED | public (T0–T1) |
+| `RangePolygon` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, sensitivity | PROPOSED | PROPOSED | generalized (T1) for rare taxa |
+| `HabitatAssociation` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | cross-lane integrity | PROPOSED | PROPOSED | derived; strictest of inputs |
+| `BotanicalSurvey` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, completeness | PROPOSED | PROPOSED | public (T0–T2) |
+| `RestorationPlanting` | PROPOSED | PROPOSED | PROPOSED | PROPOSED | rights, sensitivity | PROPOSED | PROPOSED | per-project terms |
+| `RedactionReceipt` | PROPOSED | PROPOSED (shared kernel) | PROPOSED | PROPOSED | emitted by `redact/` | n/a | PROPOSED | public (the receipt is public) |
 
 </details>
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
@@ -531,143 +581,181 @@ Implementation presence is **NEEDS VERIFICATION** for every row.
 
 | Validator / test | Surface | Status | Source |
 |---|---|---|---|
-| Taxonomy reconciliation tests | crosswalks; FloraTaxon resolution | PROPOSED | Atlas §8.K |
+| Taxonomy reconciliation tests | crosswalks; `FloraTaxon` resolution | PROPOSED | Atlas §8.K |
 | Rights / sensitivity validators | source-rights, sensitivity tags | PROPOSED | Atlas §8.K |
-| Exact-sensitive public-geometry denial | rare-plant DENY | PROPOSED | Atlas §8.K; §20.5 |
-| Catalog closure tests | EvidenceBundle / digest closure | PROPOSED | Atlas §8.K |
-| API finite-outcome fixtures | ANSWER / ABSTAIN / DENY / ERROR | PROPOSED | Atlas §8.K |
+| Exact-sensitive public-geometry denial | rare-plant T4 DENY | PROPOSED | Atlas §8.K; Ch. 24.5 |
+| Catalog closure tests | `EvidenceBundle` / digest closure | PROPOSED | Atlas §8.K |
+| API finite-outcome fixtures | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` (`RuntimeResponseEnvelope`) | PROPOSED | Atlas §8.K |
 | No-live-network fixture pipeline | all Flora tests | PROPOSED | Atlas §8.K |
 | Source-descriptor validation | per-source admission | PROPOSED | Encyclopedia §7.6.K |
 | Temporal logic tests | source/observed/valid/retrieval/release/correction times | PROPOSED | Atlas §8.E |
 | Geometry validity tests | OGC validity + generalization invariants | PROPOSED | Encyclopedia §7.6.K |
 | Citation validation | cite-or-abstain enforcement | PROPOSED | Atlas §8.L; [GAI] |
-| ReleaseManifest validation | promotion / rollback chain | PROPOSED | Atlas §8.M |
+| `ReleaseManifest` validation | promotion / rollback chain | PROPOSED | Atlas §8.M |
 | Rollback drill | exercise rollback target | PROPOSED | Atlas §8.M |
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
 ## 8. Sensitivity controls (rare-plant defaults)
 
-The Sensitivity Matrix (Atlas §20.5) names Flora as a deny-by-default surface for
-**exact rare, protected, or culturally sensitive plant locations**. The Flora dossier
-reinforces that "rare, protected, culturally sensitive, and steward-reviewed flora
-default to generalized, withheld, staged, or denied public geometry"
-(Atlas §8.I).
+The Master Sensitivity / Rights Tier Reference (Atlas Ch. 24.5) places Flora rare,
+protected, or culturally sensitive **exact** plant locations at **T4 (Denied)**. The
+Flora dossier reinforces that "rare, protected, culturally sensitive, and
+steward-reviewed flora default to generalized, withheld, staged, or denied public
+geometry" (Atlas §8.I).
+
+> [!NOTE]
+> **Canonical five-tier register (Atlas Ch. 24.5.1).** `T0` Open · `T1` Generalized ·
+> `T2` Reviewer · `T3` Restricted (named agreement) · **`T4` Denied**. The canonical
+> Flora row: *rare or culturally sensitive plant location → **T4** → generalized
+> geometry + steward review → `T2` or `T1` → `RedactionReceipt` + `ReviewRecord`.*
+> Tier *upgrade* (toward public) needs a transform receipt **and** a review record;
+> tier *downgrade* needs only a `CorrectionNotice` + `ReviewRecord` and precedes
+> derivative invalidation.
 
 > [!CAUTION]
-> **Deny-by-default surfaces for Flora:**
+> **Deny-by-default (T4) surfaces for Flora:**
 >
 > - Exact precise locations of rare or protected plant taxa.
-> - Exact precise locations of culturally sensitive taxa (where steward review
->   identifies them).
-> - Records joined to sensitive habitat, archaeology, or land assertions where
->   the join itself elevates exposure.
+> - Exact precise locations of culturally sensitive / ethnobotanical taxa (where steward
+>   review identifies them).
+> - Records joined to sensitive habitat, archaeology, or land assertions where the join
+>   itself elevates exposure.
 >
-> Public release is permitted only with: explicit steward / cultural review,
-> generalized or withheld geometry, an emitted Redaction Receipt, and an approved
-> ReleaseManifest pointing at a public-safe derivative. (Atlas §20.5)
+> Public release is permitted only with: explicit steward / cultural review, generalized
+> or withheld geometry, an emitted `RedactionReceipt`, and an approved `ReleaseManifest`
+> pointing at a public-safe derivative. (Atlas Ch. 24.5; operating contract §23.2.)
 
-| Sensitive surface | Public-safe path | Receipt required |
-|---|---|---|
-| Rare Plant Record (exact location) | Generalized RangePolygon / withheld geometry | Redaction Receipt |
-| Sensitive collection joins (herbarium ↔ rare taxa) | Aggregated / generalized join surface | Redaction Receipt |
-| Culturally sensitive taxa | Steward-reviewed surface only | Redaction Receipt + ReviewRecord |
-| iNaturalist-obscured locations | Use source-obscured geometry only | per-source citation |
+| Sensitive surface | Default tier | Public-safe path | Receipt required |
+|---|---|---|---|
+| `RarePlantRecord` (exact location) | T4 | Generalized `RangePolygon` / withheld geometry → T1 | `RedactionReceipt` + `ReviewRecord` |
+| Sensitive collection joins (herbarium ↔ rare taxa) | T4 | Aggregated / generalized join surface → T1 | `RedactionReceipt` |
+| Culturally sensitive / ethnobotanical taxa | T4 | Steward-reviewed surface only (T2/T3) | `RedactionReceipt` + `ReviewRecord` |
+| iNaturalist-obscured locations | T1 | Use source-obscured geometry only | per-source citation |
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
 ## 9. Cross-lane handoffs
 
 Flora is a bounded context. Cross-lane handoffs MUST preserve ownership, source
-role, sensitivity, and EvidenceBundle support (Atlas §8.F).
+role, sensitivity, and `EvidenceBundle` support (Atlas §8.F).
 
 | From | To | Relation | Files implicated |
 |---|---|---|---|
-| Flora | Habitat | Habitat Association; Vegetation Community context | `contracts/domains/flora/habitat_association.md`; cross-domain validator in `tools/validators/<topic>/` (not in either domain's folder) |
+| Flora | Habitat | `HabitatAssociation`; vegetation-community context | `contracts/domains/flora/habitat_association.md`; cross-domain validator in `tools/validators/<topic>/` (not in either domain's folder) |
 | Flora | Fauna | Pollinator, food-web, invasive context | shared kernel; no flora-rooted fauna artifacts |
 | Flora | Soil / Hydrology | Substrate, wetland, riparian, drought context | derived joins; cross-domain validator |
 | Flora | Hazards | Fire, drought, flood, smoke, vegetation stress context | derived joins; cross-domain validator |
+| Flora | People / Land | Ethnobotanical context; traditional plant knowledge | T4 deny-default; steward/sovereignty review required |
 
 > [!NOTE]
 > Per Directory Rules §12, cross-lane files belong under the **lowest common
 > responsibility root** (e.g., `tools/validators/<topic>/`,
-> `schemas/contracts/v1/<topic>/`), **not** under one domain's lane.
+> `schemas/contracts/v1/<topic>/`), **not** under one domain's lane. Sensitivity of a
+> cross-lane product is the **strictest** of the contributing tiers.
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
 ## 10. Open questions and NEEDS VERIFICATION
 
-The following items are explicitly unresolved by this register and should be tracked
-in `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED entry) or addressed via ADR.
+| ID | Item | Status | Resolution path |
+|---|---|---|---|
+| OQ-FLORA-MPF-01 | Does the mounted repo contain `docs/domains/flora/`, and which §5.1 files already exist? | NEEDS VERIFICATION | Mounted-repo inspection |
+| OQ-FLORA-MPF-02 | Is ADR-0001 (canonical schema home `schemas/contracts/v1/...`) accepted in the current repo? | NEEDS VERIFICATION | Mounted ADR set |
+| OQ-FLORA-MPF-03 | Schema leaf form: `schemas/contracts/v1/domains/flora/` (Directory Rules §12) vs `schemas/contracts/v1/flora/` (Encyclopedia/Atlas crosswalk) | **CONFLICTED** | One-line reconciliation; DRIFT_REGISTER entry; Directory Rules §2.1 favors `domains/flora/` |
+| OQ-FLORA-MPF-04 | Policy home: `policy/domains/flora/` (§12) vs `policy/sensitivity/flora/` (crosswalk) | **CONFLICTED** | Reconciliation note; DRIFT_REGISTER |
+| OQ-FLORA-MPF-05 | Reconcile bespoke `FloraDecisionEnvelope` to canonical `RuntimeResponseEnvelope` | **CONFLICTED** | `DecisionEnvelope → RuntimeResponseEnvelope` migration ADR |
+| OQ-FLORA-MPF-06 | Are any `contracts/domains/flora/*.schema.json` files present (drift candidates per §13.1)? | NEEDS VERIFICATION | Mounted-repo inspection |
+| OQ-FLORA-MPF-07 | Source rights, license terms, current API surfaces for KDWP, KU/KBS herbaria, USFWS ECOS, NatureServe, GBIF, iDigBio, iNaturalist, USDA PLANTS | NEEDS VERIFICATION | Source registry + per-source terms |
+| OQ-FLORA-MPF-08 | Steward roles and approval authority for sensitive Flora promotions | NEEDS VERIFICATION | Atlas Ch. 24.7 separation-of-duties matrix; steward roster |
+| OQ-FLORA-MPF-09 | Current state of `data/registry/sources/flora/` and the `SourceDescriptor` record form actually used | NEEDS VERIFICATION | Mounted-repo inspection |
+| OQ-FLORA-MPF-10 | Pipeline-spec format (YAML / JSON / other) under `pipeline_specs/flora/` | NEEDS VERIFICATION | Pipeline framework conventions |
+| OQ-FLORA-MPF-11 | Is `release/correction_notices/` per-domain or cross-domain in the current layout? | NEEDS VERIFICATION | Mounted-repo inspection |
+| OQ-FLORA-MPF-12 | Connector path beyond the §7.3 canonical vendor roots (per-domain segment under `connectors/`?) | OPEN | OPEN-DSC-14 resolution |
+| OQ-FLORA-MPF-13 | Flora's own `EVIDENCE_DRAWER.md` vs a shared `docs/architecture/evidence-drawer.md` | OPEN | Docs-steward decision |
+| OQ-FLORA-MPF-14 | Subfolder conventions inside `docs/domains/flora/` (flat vs `runbooks/`, `references/`) | OPEN | Per-root README convention |
+| OQ-FLORA-MPF-15 | Should `FloraTaxon Crosswalk` live under `contracts/domains/flora/` or a shared `contracts/crosswalks/taxonomy/`? | OPEN | Crosswalk-home ADR |
 
-- **NEEDS VERIFICATION:** Does the mounted repo actually contain a
-  `docs/domains/flora/` directory, and if so, which of the files in §5.1 already
-  exist?
-- **NEEDS VERIFICATION:** Is ADR-0001 (canonical schema home at
-  `schemas/contracts/v1/...`) accepted in the current repo? If not, schema paths
-  in §5.3 are subject to revision.
-- **NEEDS VERIFICATION:** Are any `contracts/domains/flora/*.schema.json` files
-  present? If so, they are drift candidates per Directory Rules §13.1.
-- **NEEDS VERIFICATION:** Source rights, license terms, and current API surfaces
-  for KDWP, KU/KBS herbaria, USFWS ECOS, NatureServe, GBIF, iDigBio,
-  iNaturalist, and USDA PLANTS — none are confirmed for current use in this
-  session.
-- **NEEDS VERIFICATION:** Steward roles and approval authority for sensitive
-  Flora promotions (per Atlas §24.7, separation-of-duties matrix).
-- **NEEDS VERIFICATION:** Current state of `data/registry/sources/flora/` (or
-  any equivalent) and the form of SourceDescriptor records actually used in the
-  repo.
-- **NEEDS VERIFICATION:** Whether the canonical pipeline framework expects YAML
-  pipeline specs, JSON, or something else under `pipeline_specs/flora/`.
-- **NEEDS VERIFICATION:** Whether `release/correction_notices/` is per-domain or
-  cross-domain in the current repo layout.
-- **OPEN:** Whether Flora should carry its own `EVIDENCE_DRAWER.md` or reference
-  a shared `docs/architecture/evidence-drawer.md`.
-- **OPEN:** Subfolder conventions inside `docs/domains/flora/` — flat versus
-  organized into `runbooks/`, `references/`, etc. (mirrors the open
-  question raised for the fauna runbook subfolder).
-- **OPEN:** Whether the FloraTaxon Crosswalk should live under
-  `contracts/domains/flora/` or be promoted to a shared crosswalk subtree at
-  `contracts/crosswalks/taxonomy/`.
-
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
-## 11. Related docs
+## 11. Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Pinned `CONTRACT_VERSION = "3.0.0"`; added contract + companion docs to `related`; added Contract badge/column | housekeeping | Doctrine-adjacent register; contract requires the pin |
+| Surfaced the `domains/flora/` vs `flora/` schema-leaf divergence as CONFLICTED (Directory Rules §12 vs Encyclopedia/Atlas crosswalk); Directory Rules §2.1 favors `domains/flora/` | reconciliation | Real cross-doc inconsistency vs the companion Identity Model / Map UI Contracts docs |
+| Flagged `policy/domains/flora/` vs `policy/sensitivity/flora/` divergence as CONFLICTED | reconciliation | §12 vs crosswalk both CONFIRMED in their sources |
+| Aligned the finite-outcome envelope to `RuntimeResponseEnvelope`; removed `flora_decision_envelope.schema.json` from the Flora schema lane and flagged the bespoke `FloraDecisionEnvelope` as CONFLICTED / migration-tracked | reconciliation | Contract §8 + Directory Rules glossary make `RuntimeResponseEnvelope` canonical; a Flora-local envelope is a §12 violation |
+| Aligned sensitivity vocabulary to the canonical five-tier `T0–T4` register; rare/cultural exact locations stated as `T4` (Denied) | clarification | Atlas Ch. 24.5.1 is CONFIRMED doctrine |
+| Noted the `DistributionSurface` → `RangePolygon` consolidation | clarification | CONFIRMED atlas Flora object list names `RangePolygon` |
+| Corrected `directory-rules.md` link from `docs/doctrine/directory-rules.md` to repo-root `directory-rules.md` | housekeeping | Mounted path is repo-root |
+| Added connector-output-path note (`data/raw/<domain>/<source_id>/<run_id>/`) and OPEN-DSC-14 | gap closure | Directory Rules §7.3 |
+| Promoted the tail to doctrine companion sections (Open Questions as a register, Changelog, Definition of done) | housekeeping | Contract companion-section pattern |
+
+> **Backward compatibility.** Section anchors `#1`–`#9` are unchanged. The former free-form
+> "Open questions and NEEDS VERIFICATION" (§10) is preserved as §10 but tabulated with IDs;
+> former §11 "Related docs" moves to §13. Update inbound links to `#11-related-docs` →
+> `#13-related-docs`. The fixtures lane renamed `decision_envelopes/` → `runtime_envelopes/`
+> to match the canonical envelope. Truth labels preserved or narrowed, never loosened.
+
+[Back to top](#quick-jump)
+
+---
+
+## 12. Definition of done
+
+This register is done enough to enter the repository when:
+
+- it is placed at `docs/domains/flora/MISSING_OR_PLANNED_FILES.md` per Directory Rules §12 (PROPOSED; NEEDS VERIFICATION);
+- the flora domain steward and a docs steward review it;
+- it is linked from the Flora domain README and `docs/registers/VERIFICATION_BACKLOG.md`;
+- the schema-leaf and policy-home CONFLICTED items (OQ-FLORA-MPF-03/04) are logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `FloraDecisionEnvelope → RuntimeResponseEnvelope` migration (OQ-FLORA-MPF-05) has a tracking ADR;
+- it does not conflict with accepted ADRs (ADR-0001 schema home; the envelope-migration ADR; ADR-S-05 tier scheme);
+- the `GENERATED_RECEIPT.json` planned in the PR is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top](#quick-jump)
+
+---
+
+## 13. Related docs
 
 | Document | Path | Purpose |
 |---|---|---|
-| Flora landing README (PROPOSED) | `docs/domains/flora/README.md` | Domain landing / scope / non-ownership. |
-| Directory Rules | `docs/doctrine/directory-rules.md` | Canonical placement and lifecycle doctrine. |
-| ADR-0001 (schema home) | `docs/adr/ADR-0001-schema-home.md` | Default schema authority is `schemas/contracts/v1/...`. |
-| Verification Backlog | `docs/registers/VERIFICATION_BACKLOG.md` | Repo-wide verification items. |
+| Operating contract | `ai-build-operating-contract.md` | Canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. |
+| Directory Rules | `directory-rules.md` | Canonical placement and lifecycle doctrine (§12, §15). |
+| ADR-0001 (schema home) | `docs/adr/ADR-0001-schema-home.md` | Default schema authority `schemas/contracts/v1/...` *(NEEDS VERIFICATION)*. |
+| Flora landing README | `docs/domains/flora/README.md` | Domain landing / scope / non-ownership *(PROPOSED)*. |
+| Flora Identity Model | `docs/domains/flora/IDENTITY_MODEL.md` | Deterministic identity charter (companion). |
+| Flora Map UI Contracts | `docs/domains/flora/MAP_UI_CONTRACTS.md` | Map-surface binding (companion). |
+| Sensitivity Posture | `docs/domains/flora/SENSITIVITY_POSTURE.md` | Rare-plant generalization / withholding rules *(PROPOSED)*. |
+| Verification Backlog | `docs/registers/VERIFICATION_BACKLOG.md` | Repo-wide verification items *(NEEDS VERIFICATION)*. |
 | Drift Register | `docs/registers/DRIFT_REGISTER.md` | Conflicts between doctrine and repo state. |
-| Sensitivity Posture (PROPOSED) | `docs/domains/flora/SENSITIVITY_POSTURE.md` | Rare-plant generalization / withholding rules. |
 | Fauna analogue | `docs/domains/fauna/SOURCE_REFRESH_RUNBOOK.md` | Precedent for per-domain runbooks. |
 | Atlas v1.1 §8 Flora | `[DOM-FLORA]` / Domains Culmination Atlas | Doctrinal basis for this register. |
-| Encyclopedia §7.6 Flora | `kfm_encyclopedia.pdf` | Domain capability summary. |
+| Encyclopedia §7.6 Flora | KFM Encyclopedia | Domain capability summary. |
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
 
 ---
 
 ## Document footer
 
 > [!NOTE]
-> **Document status:** `draft v1` · **Coverage:** Flora bounded context only ·
-> **Implementation maturity:** UNKNOWN (no mounted repository inspected in
-> this session). Every file path in this register is **PROPOSED** under
-> Directory Rules §12 and remains **NEEDS VERIFICATION** until a `git
-> ls-tree`-equivalent inspection confirms it.
+> **Document status:** `draft v1.1` · **Coverage:** Flora bounded context only ·
+> **Implementation maturity:** UNKNOWN (no mounted repository inspected in this session).
+> Every file path in this register is **PROPOSED** under Directory Rules §12 and remains
+> **NEEDS VERIFICATION** until a `git ls-tree`-equivalent inspection confirms it.
 
-**Last reviewed:** 2026-05-16 · **Owners:** `TODO-flora-domain-steward`,
-`TODO-docs-steward` · **Change discipline:** see Directory Rules §17.
+<sub>Last reviewed: 2026-06-03 · Version: v1.1 · `CONTRACT_VERSION = "3.0.0"` · Owners: `<flora domain steward>` · `<docs steward>` · Change discipline: Directory Rules §17 / contract §37 · Doctrine sources: Atlas v1.1 (§8 Flora; Ch. 24.5 tier reference; Ch. 24.13 crosswalk); Encyclopedia §7.6; `directory-rules.md` v1.3 (§7.3, §9, §12, §15); `ai-build-operating-contract.md` v3.0 (§8, §23.2).</sub>
 
-[Back to top](#-flora--missing-or-planned-files-register)
+[Back to top](#quick-jump)
