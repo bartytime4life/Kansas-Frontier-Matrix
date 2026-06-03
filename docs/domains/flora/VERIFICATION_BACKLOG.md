@@ -2,14 +2,21 @@
 doc_id: kfm://doc/domains/flora/verification-backlog
 title: Flora — Verification Backlog
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: <flora-domain-stewards@TODO>, <governance-stewards@TODO>
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-03
 policy_label: public
 related:
   - docs/domains/flora/README.md
+  - docs/domains/flora/SOURCE_REGISTRY.md
+  - docs/domains/flora/SOURCE_FAMILIES.md
+  - docs/domains/flora/SOURCES.md
+  - docs/domains/flora/SOURCE_INTAKE.md
+  - docs/domains/flora/SOURCE_ROLES.md
+  - docs/domains/flora/THIN_SLICE_PLAN.md
+  - docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/adr/ADR-0001-schema-home.md
@@ -18,8 +25,10 @@ related:
   - policy/sensitivity/flora/
 tags: [kfm, domain, flora, verification, governance, register]
 notes:
+  - CONTRACT_VERSION = "3.0.0".
   - Domain-scoped backlog; rolls up into docs/registers/VERIFICATION_BACKLOG.md.
   - All implementation-layer claims are PROPOSED or NEEDS VERIFICATION until repo is mounted.
+  - v1.1 reconciles ADR references to the canonical ADR-S-* backlog (source-role vocabulary is ADR-S-04, sensitivity tiers ADR-S-05) instead of inventing parallel flora-specific ADRs, and wires in the session-authored flora source suite.
 [/KFM_META_BLOCK_V2] -->
 
 # Flora — Verification Backlog
@@ -31,10 +40,11 @@ notes:
 [![Policy: public](https://img.shields.io/badge/policy-public-blue)](#)
 [![Sensitivity Default: rare-plant deny](https://img.shields.io/badge/sensitivity-rare--plant%20deny-critical)](#)
 [![Schema Home: PROPOSED](https://img.shields.io/badge/schema--home-PROPOSED-orange)](../../adr/ADR-0001-schema-home.md)
+[![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue)](#)
 [![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
-[![Last Updated: 2026-05-16](https://img.shields.io/badge/updated-2026--05--16-informational)](#)
+[![Last Updated: 2026-06-03](https://img.shields.io/badge/updated-2026--06--03-informational)](#)
 
-**Status:** draft · **Owners:** `<flora-domain-stewards@TODO>` · **Last reviewed:** 2026-05-16
+**Status:** draft · **Owners:** `<flora-domain-stewards@TODO>` · **Last reviewed:** 2026-06-03
 
 ---
 
@@ -57,6 +67,8 @@ notes:
 - [15. Open ADRs and design questions](#15-open-adrs-and-design-questions)
 - [16. Verification workflow](#16-verification-workflow)
 - [17. Related docs](#17-related-docs)
+- [18. Promotion checklist](#18-promotion-checklist)
+- [19. Changelog](#19-changelog)
 - [Appendix A — Per-source verification checklist (collapsible)](#appendix-a--per-source-verification-checklist)
 - [Appendix B — Backlog YAML projection (collapsible)](#appendix-b--backlog-yaml-projection)
 
@@ -76,6 +88,8 @@ This file is the **flora-domain verification queue**: a working list of items wh
 
 > [!IMPORTANT]
 > Every implementation-layer row in this file is **PROPOSED** or **NEEDS VERIFICATION** until a mounted repo, schemas, registry entries, tests, workflows, logs, or release manifests confirm otherwise. Doctrine is stated confidently; implementation maturity is not.
+
+This backlog sits alongside the rest of the Flora source-and-proof surface authored in lineage with it: [`SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) (upstream profiles), [`SOURCE_ROLES.md`](./SOURCE_ROLES.md) (role discipline), [`SOURCES.md`](./SOURCES.md) (admission register), [`SOURCE_INTAKE.md`](./SOURCE_INTAKE.md) (intake mechanics), [`SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) (doctrinal registry), [`THIN_SLICE_PLAN.md`](./THIN_SLICE_PLAN.md) (the first proof slice), and the [`SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/flora/SOURCE_REFRESH_RUNBOOK.md). Many rows below resolve by producing artifacts those documents specify.
 
 [↑ Back to top](#contents)
 
@@ -130,6 +144,9 @@ flowchart LR
 
 These are the **four originating items** lifted from `Domains Atlas v1.1 §8.N` for Flora. They are the doctrinal seed; the rest of this file expands them into the verifiable sub-items implied by KFM Encyclopedia §7.6 and Directory Rules.
 
+> [!NOTE]
+> **CONFIRMED:** the Atlas Flora chapter §N lists exactly these four lines — *"Verify source endpoints and rights" · "Verify rare-plant steward policy" · "Verify exact/public geometry thresholds" · "Verify Focus Mode and Evidence Drawer behavior"* — each with the canonical settling-evidence phrase and status NEEDS VERIFICATION. The IDs below are KFM-local; the wording is faithful to the Atlas.
+
 | # | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
 | FLO-VB-001 | Verify Flora source endpoints and rights. | Mounted repo files, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests. | NEEDS VERIFICATION |
@@ -145,7 +162,7 @@ These are the **four originating items** lifted from `Domains Atlas v1.1 §8.N` 
 
 ## 5. Source rights, roles, and cadence
 
-Expands **FLO-VB-001**. Per `Domains Atlas v1.1 §8.D`, every flora source family carries a `SourceRole` (authority / observation / context / model), rights/sensitivity posture, and freshness profile that **must be source-vintage or cadence-specific** before any source is admitted past `RAW`.
+Expands **FLO-VB-001**. Per `Domains Atlas v1.1 §8.D`, every flora source family carries a `SourceRole` (authority / observation / context / model), rights/sensitivity posture, and freshness profile that **must be source-vintage or cadence-specific** before any source is admitted past `RAW`. Family profiles and role assignments live in [`SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) and [`SOURCE_ROLES.md`](./SOURCE_ROLES.md); admission decisions in [`SOURCES.md`](./SOURCES.md).
 
 | # | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
@@ -159,10 +176,10 @@ Expands **FLO-VB-001**. Per `Domains Atlas v1.1 §8.D`, every flora source famil
 | FLO-VB-012 | Confirm `SourceDescriptor` for **GBIF vascular-plant downloads** with **GBIF Backbone Taxonomy DOI version pinning** in `RunReceipt`. | RunReceipt fixture carrying `gbif_backbone_doi: 10.15468/39omei@<version>`. | NEEDS VERIFICATION |
 | FLO-VB-013 | Confirm `SourceDescriptor` for **iDigBio specimen records** and **iNaturalist-derived observations**, including observation-`SourceRole` constraint and de-duplication rule for GBIF-aggregated subsets. | De-duplication test in `tests/fixtures/flora/` + receipt fields. | NEEDS VERIFICATION |
 | FLO-VB-014 | Verify each source family's **redistribution terms** before any public flora product is published. Block on unknown rights. | Per-source license entry + policy `deny` test for missing license. | NEEDS VERIFICATION |
-| FLO-VB-015 | Verify **`SourceRole` anti-collapse**: authority, observation, aggregator, and model roles MUST NOT be conflated in fixtures or release manifests. | Negative-fixture set in `tests/fixtures/flora/source_role_collapse/`. | PROPOSED |
+| FLO-VB-015 | Verify **`SourceRole` anti-collapse**: authority, observation, aggregator, and model roles MUST NOT be conflated in fixtures or release manifests (per [`SOURCE_ROLES.md`](./SOURCE_ROLES.md) and ADR-S-04). | Negative-fixture set in `tests/fixtures/flora/source_role_collapse/` exercising `ROLE_COLLAPSE` / `ROLE_DOWNCAST_FORBIDDEN`. | PROPOSED |
 
 > [!CAUTION]
-> Per the broader Idea Index, **PLANTS becomes sensitive when joined with GBIF, iNaturalist, or heritage datasets** — a benign county species list in isolation can become a poaching map in combination. Joins are deny-by-default and require explicit policy clearance.
+> Per the broader Idea Index, **PLANTS becomes sensitive when joined with GBIF, iNaturalist, or heritage datasets** — a benign county species list in isolation can become a poaching map in combination. Joins are deny-by-default and require explicit policy clearance (cross-lane join policy is ADR-S-14).
 
 [↑ Back to top](#contents)
 
@@ -176,7 +193,7 @@ Expands **FLO-VB-001** and supports object-identity for `PlantTaxon` and `FloraT
 |---|---|---|---|
 | FLO-VB-016 | Verify **ITIS TSN** anchor is required for every Kansas species record where ITIS has coverage; **GBIF Backbone** is second-line where ITIS is silent or stale. | `PlantTaxon` schema requires `itis_tsn` OR `gbif_taxon_key` with a `reason` if ITIS is absent. | PROPOSED |
 | FLO-VB-017 | Verify **ITIS/GBIF tie-breaker policy** is codified (default: ITIS for federal-data reconciliation; GBIF for international comparability). | ADR `ADR-flora-itis-gbif-tiebreaker.md` (PROPOSED). | NEEDS VERIFICATION |
-| FLO-VB-018 | Verify **GBIF Backbone version pinning** in every `RunReceipt` that touches GBIF-derived taxa; backbone version rotation playbook exists. | Receipt schema + `docs/runbooks/flora_BACKBONE_ROTATION.md` (PROPOSED). | PROPOSED |
+| FLO-VB-018 | Verify **GBIF Backbone version pinning** in every `RunReceipt` that touches GBIF-derived taxa; backbone version rotation playbook exists. | Receipt schema + `docs/runbooks/flora/BACKBONE_ROTATION.md` (PROPOSED; Pattern A runbook home). | PROPOSED |
 | FLO-VB-019 | Verify treatment of **taxonomy drift** (rename) vs **package drift** (real presence/absence) in PLANTS county-package watcher. | Watcher unit tests demonstrating distinct outputs for rename vs add/remove events. | PROPOSED |
 | FLO-VB-020 | Verify **Wikidata QID** is stored as routing anchor only, never as truth source, alongside upstream IRIs (ITIS, GBIF). | Crosswalk-provenance fields populated in `FloraTaxon Crosswalk`. | PROPOSED |
 | FLO-VB-021 | Verify **World Flora Online** integration posture (intended role and override rules vs ITIS/GBIF). | Doctrine note in `docs/domains/flora/README.md` and source descriptor. | UNKNOWN |
@@ -187,18 +204,18 @@ Expands **FLO-VB-001** and supports object-identity for `PlantTaxon` and `FloraT
 
 ## 7. Sensitivity, rare-plant, and geoprivacy thresholds
 
-Expands **FLO-VB-002** and **FLO-VB-003**. Doctrine: rare/protected/culturally sensitive flora **fail closed**; public exposure is a governed state. *(Domains Atlas v1.1 §8.I; Encyclopedia §7.6.D)*
+Expands **FLO-VB-002** and **FLO-VB-003**. Doctrine: rare/protected/culturally sensitive flora **fail closed**; public exposure is a governed state. *(Domains Atlas v1.1 §8.I; Encyclopedia §7.6.D)* The transform menu and sensitivity rubric are catalogued in [`SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) §7.
 
 | # | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
 | FLO-VB-022 | Verify **`policy/sensitivity/flora/`** is the canonical policy home for the rare-plant lane (per Atlas v1.1 §24.13 row 8). | Directory exists; tests in `policy/tests/flora/`. | PROPOSED |
-| FLO-VB-023 | Verify the **sensitivity tier scheme** (T0–T4 per ADR-S-05 backlog) is bound to NatureServe S-rank, KDWP listed-status, and steward designation. | Mapping table + policy fixture demonstrating S1/S2 → restricted. | NEEDS VERIFICATION |
-| FLO-VB-024 | Verify **geoprivacy transform vocabulary** is defined: `suppress`, `generalize-to-grid` (H3 resolution PROPOSED, threshold TBD), `generalize-to-county`, `generalize-to-watershed`, `buffer`, `jitter-with-constraints`, `delayed-publication`, `steward-only-exact`. | Vocabulary in `schemas/contracts/v1/domains/flora/redaction_receipt.schema.json`. | PROPOSED |
+| FLO-VB-023 | Verify the **sensitivity tier scheme** (T0–T4 per ADR-S-05) is bound to NatureServe S-rank, KDWP listed-status, and steward designation. | Mapping table + policy fixture demonstrating S1/S2 → restricted. | NEEDS VERIFICATION |
+| FLO-VB-024 | Verify **geoprivacy transform vocabulary** is defined: `suppress`, `generalize-to-grid` (H3 resolution PROPOSED, threshold TBD), `generalize-to-county`, `generalize-to-watershed`, `buffer`, `jitter-with-constraints` (deterministic, seeded per C6-03), `delayed-publication`, `steward-only-exact`. | Vocabulary in `schemas/contracts/v1/domains/flora/redaction_receipt.schema.json` + named profiles in `policy/redaction/profiles.yaml`. | PROPOSED |
 | FLO-VB-025 | Verify **`RedactionReceipt`** records input class, output class, reason, policy id, reviewer, residual risk, and is content-addressed. | Schema + signed fixture. | PROPOSED |
 | FLO-VB-026 | Verify **exact rare-plant locations fail closed** in public layer manifest; only generalized derivatives are referenced from public `LayerManifest`. | Negative test demonstrating denial of exact-geometry request without steward role. | NEEDS VERIFICATION |
-| FLO-VB-027 | Verify the **specific public geometry threshold** for rare-plant occurrences (e.g., minimum aggregation unit — county? HUC? H3 r5/r6/r7?). The current doctrine is "generalize"; the **numeric threshold is UNKNOWN**. | ADR `ADR-flora-rare-plant-geoprivacy-threshold.md`. | UNKNOWN |
+| FLO-VB-027 | Verify the **specific public geometry threshold** for rare-plant occurrences (e.g., minimum aggregation unit — county? HUC? H3 r5/r6/r7?). The current doctrine is "generalize"; the **numeric threshold is UNKNOWN**. | ADR `ADR-flora-rare-plant-geoprivacy-threshold.md` (localizes the ADR-S-05 tier scheme for flora geometry). | UNKNOWN |
 | FLO-VB-028 | Verify **InvasivePlantRecord** geoprivacy posture (typically less restricted than rare; verify whether any taxa are dual-flagged). | Policy fixture covering both invasive and rare classifications. | NEEDS VERIFICATION |
-| FLO-VB-029 | Verify **stale-state rule** for rare-plant publications: a rank or listing change must trigger re-validation and possible quarantine. | Stale-state test + revocation hook. | PROPOSED |
+| FLO-VB-029 | Verify **stale-state rule** for rare-plant publications: a rank or listing change must trigger re-validation and possible quarantine (stale-state propagation is ADR-S-10). | Stale-state test + revocation hook. | PROPOSED |
 
 [↑ Back to top](#contents)
 
@@ -241,7 +258,7 @@ Per **ADR-0001** (schema-home rule), the default machine-schema home is `schemas
 
 ## 10. Pipeline and lifecycle gates (RAW → PUBLISHED)
 
-Per `Domains Atlas v1.1 §8.H` and Directory Rules: flora follows the canonical lifecycle and **promotion is a governed state transition**.
+Per `Domains Atlas v1.1 §8.H` and Directory Rules: flora follows the canonical lifecycle and **promotion is a governed state transition**. Intake mechanics (pre-RAW, Gate A) are detailed in [`SOURCE_INTAKE.md`](./SOURCE_INTAKE.md).
 
 ```mermaid
 flowchart LR
@@ -272,7 +289,7 @@ flowchart LR
 | # | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
 | FLO-VB-046 | Verify a public `LayerManifest` exists for: generalized occurrence/range, vegetation community, invasive plant, phenology/condition, habitat-association summary, review candidate view. | Layer manifests in `data/manifests/flora/` (PROPOSED). | PROPOSED |
-| FLO-VB-047 | Verify the **public-safe rare-plant product** (a public derivative whose every sensitive point has a corresponding `RedactionReceipt`) renders without leakage. | One published flora occurrence with full receipt closure (the Encyclopedia's flora "first credible thin slice"). | PROPOSED |
+| FLO-VB-047 | Verify the **public-safe rare-plant product** (a public derivative whose every sensitive point has a corresponding `RedactionReceipt`) renders without leakage. This is the [`THIN_SLICE_PLAN.md`](./THIN_SLICE_PLAN.md) deliverable — the flora "first credible thin slice." | One published flora occurrence with full receipt closure + the thin-slice deny fixture. | PROPOSED |
 | FLO-VB-048 | Verify PMTiles flora artifacts carry the integrity sidecar (root hash, optional bao outboard proofs) and the layer manifest references the sidecar. | PMTiles sidecar schema check. | PROPOSED |
 | FLO-VB-049 | Verify **Evidence Drawer** payload for any flora feature filters by evidence and policy before rendering. | Drawer fixture for a sensitive vs non-sensitive feature. | NEEDS VERIFICATION |
 
@@ -307,7 +324,7 @@ Per `Domains Atlas v1.1 §8.K`, the flora lane requires the validator/fixture se
 | FLO-VB-057 | Verify **exact sensitive public geometry denial** test exists and passes. | Policy deny test. | PROPOSED |
 | FLO-VB-058 | Verify **catalog closure tests** (every public flora claim resolves to an `EvidenceBundle`). | Closure test report. | PROPOSED |
 | FLO-VB-059 | Verify **API finite-outcome fixtures** cover ANSWER, ABSTAIN, DENY, ERROR for every flora route. | Fixture set under `tests/fixtures/flora/runtime/`. | PROPOSED |
-| FLO-VB-060 | Verify **no-live-network fixture pipeline** runs deterministically with mocked sources. | CI green on `no-network` profile. | PROPOSED |
+| FLO-VB-060 | Verify **no-live-network fixture pipeline** runs deterministically with mocked sources (the [`THIN_SLICE_PLAN.md`](./THIN_SLICE_PLAN.md) and [`SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/flora/SOURCE_REFRESH_RUNBOOK.md) §4 no-network posture). | CI green on `no-network` profile. | PROPOSED |
 | FLO-VB-061 | Verify **temporal-logic tests** keep source, observed, valid, retrieval, release, and correction times distinct where material. | Temporal-distinctness test. | PROPOSED |
 | FLO-VB-062 | Verify **geometry-validity tests** (no self-intersecting polygons; valid CRS for vegetation community polygons). | Geometry test pack. | PROPOSED |
 
@@ -323,7 +340,7 @@ Per `Domains Atlas v1.1 §8.K`, the flora lane requires the validator/fixture se
 | FLO-VB-064 | Verify **`CorrectionNotice`** flow accepts public flora corrections, routes through review, and emits a notice tied to the prior `EvidenceBundle`. | End-to-end correction drill. | PROPOSED |
 | FLO-VB-065 | Verify **`RollbackCard`** is producible for a flora release; rollback drill restores a prior `LayerManifest` and notifies dependents. | Rollback drill log + restored manifest. | PROPOSED |
 | FLO-VB-066 | Verify **revocation propagation**: a NatureServe S-rank change or a KDWP listing change can demote a flora release to QUARANTINE within the stated tolerance. | Revocation drill log. | PROPOSED |
-| FLO-VB-067 | Verify **separation of duties** for policy-significant flora releases (rare-plant, ethnobotanical) where promoter and approver are distinct. | Governance config + CI guard. | PROPOSED |
+| FLO-VB-067 | Verify **separation of duties** for policy-significant flora releases (rare-plant, ethnobotanical) where promoter and approver are distinct (reviewer separation is ADR-S-09). | Governance config + CI guard. | PROPOSED |
 
 [↑ Back to top](#contents)
 
@@ -333,14 +350,18 @@ Per `Domains Atlas v1.1 §8.K`, the flora lane requires the validator/fixture se
 
 These items are **ADR-class** under Directory Rules §2.4 and the Atlas master open-ADR backlog (§24.12). They are listed here because each blocks one or more rows above.
 
-| ADR id (PROPOSED) | Question | Why ADR-class |
+> [!IMPORTANT]
+> Source-role vocabulary and the sensitivity-tier scheme are **already** ADR-class items in the canonical backlog — **ADR-S-04** (source-role vocabulary v1) and **ADR-S-05** (T0–T4 tier scheme). Flora must **localize** those, not fork parallel flora-specific source-role or tier ADRs (a parallel-authority anti-pattern). The flora-specific ADRs below are genuine local decisions that sit *under* the canonical ones.
+
+| ADR id | Question | Why ADR-class |
 |---|---|---|
 | `ADR-0001-schema-home` (existing) | Confirm `schemas/contracts/v1/...` is the canonical schema home. | Schema-home rule is explicitly ADR-required. |
+| **`ADR-S-04`** (canonical) | Source-role vocabulary v1 and its evolution rule. | Source-role anti-collapse is doctrine-significant; flora localizes, does not fork. |
+| **`ADR-S-05`** (canonical) | T0–T4 sensitivity tier scheme. | Tier scheme governs every public rare-plant surface; flora binds S-rank/listing to it. |
 | `ADR-flora-itis-gbif-tiebreaker` | When ITIS and GBIF disagree, which authority wins for which use? | Vocabulary stability across all flora downstream artifacts. |
-| `ADR-flora-rare-plant-geoprivacy-threshold` | Numeric threshold for "generalize" (H3 resolution, county, HUC, or other). | Policy-significant for every public rare-plant surface. |
+| `ADR-flora-rare-plant-geoprivacy-threshold` | Numeric threshold for "generalize" (H3 resolution, county, HUC, or other) — localizing ADR-S-05 for flora geometry. | Policy-significant for every public rare-plant surface. |
 | `ADR-flora-ethnobotanical-scope` | Which taxa/contexts/sources trigger CARE controls in flora. | Determines policy-bundle default-deny scope. |
-| `ADR-flora-redaction-receipt-schema` | Canonical fields and content-addressing rule for `RedactionReceipt`. | Cross-cutting object family; receipt-class home is ADR-class. |
-| `ADR-flora-source-role-vocab` | Source-role vocabulary for the flora lane (authority / observation / context / model, with subtypes). | Source-role anti-collapse is doctrine-significant. |
+| `ADR-flora-redaction-receipt-schema` | Canonical fields and content-addressing rule for `RedactionReceipt`. | Cross-cutting object family; receipt-class home is ADR-class (ADR-S-03). |
 
 [↑ Back to top](#contents)
 
@@ -371,6 +392,18 @@ sequenceDiagram
 
 ## 17. Related docs
 
+**Flora source & proof surface (session lineage)**
+
+- [`docs/domains/flora/SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) — doctrinal source registry (sensitivity rubric + transform menu in §7).
+- [`docs/domains/flora/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — upstream family profiles.
+- [`docs/domains/flora/SOURCE_ROLES.md`](./SOURCE_ROLES.md) — source-role discipline & anti-collapse.
+- [`docs/domains/flora/SOURCES.md`](./SOURCES.md) — per-source admission register.
+- [`docs/domains/flora/SOURCE_INTAKE.md`](./SOURCE_INTAKE.md) — intake mechanics (pre-RAW, Gate A).
+- [`docs/domains/flora/THIN_SLICE_PLAN.md`](./THIN_SLICE_PLAN.md) — first public-safe proof slice.
+- [`docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/flora/SOURCE_REFRESH_RUNBOOK.md) — refresh runbook.
+
+**Registers, ADRs, doctrine**
+
 - [`docs/domains/flora/README.md`](./README.md) — Flora domain orientation (PROPOSED).
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Global verification backlog (rolls up domain queues).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Drift entries for items past their review cadence.
@@ -381,6 +414,43 @@ sequenceDiagram
 - [`schemas/contracts/v1/domains/flora/`](../../../schemas/contracts/v1/domains/flora/) — Flora object schemas.
 - KFM Encyclopedia §7.6 — Flora doctrinal mission and boundaries.
 - Domains Atlas v1.1 §8 — Flora dossier (Sections A–N).
+
+[↑ Back to top](#contents)
+
+---
+
+## 18. Promotion checklist
+
+This document is done enough to enter the repository when:
+
+- it is placed under `docs/domains/flora/` per Directory Rules §12;
+- a flora domain steward and a governance steward review it;
+- it is linked from the Flora lane README and rolls up into `docs/registers/VERIFICATION_BACKLOG.md`;
+- it does not conflict with accepted ADRs (notably ADR-0001, ADR-S-04, ADR-S-05);
+- the YAML projection (Appendix B) is kept in lockstep with `control_plane/verification_backlog.yaml`;
+- any conflict with current repo conventions is logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `GENERATED_RECEIPT.json` planned in Section 2 is wired into CI;
+- placeholder owners are resolved.
+
+[↑ Back to top](#contents)
+
+---
+
+## 19. Changelog
+
+### v1 → v1.1
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Reconciled §15 ADRs: source-role vocab → `ADR-S-04`, sensitivity tiers → `ADR-S-05` (canonical), instead of inventing parallel flora ADRs | reconciliation | Forking parallel source-role/tier ADRs is a parallel-authority anti-pattern; flora localizes the canonical ADR-S-* items. |
+| Confirmed §4 seed items against the actual Atlas §8.N four-item list | clarification | Atlas Flora §N lists exactly these four; wording verified faithful. |
+| Wired in session-authored siblings (FAMILIES, ROLES, SOURCES, INTAKE, REGISTRY, THIN_SLICE_PLAN, refresh runbook) | reconciliation | Many rows resolve by producing artifacts those docs specify. |
+| Corrected runbook reference `flora_BACKBONE_ROTATION.md` → `docs/runbooks/flora/BACKBONE_ROTATION.md` (Pattern A) | reconciliation | Runbooks live under `docs/runbooks/<domain>/` per Directory Rules §6.1.b. |
+| Added §18 Promotion checklist and §19 Changelog companion sections; refreshed footer/badges | housekeeping | Doctrine-doc companion pattern; full presentation standard. |
+| Pinned `CONTRACT_VERSION = "3.0.0"`; refreshed `updated` date | housekeeping | Doctrine-adjacent doc requirement. |
+| FLO-VB-015 / FLO-VB-024 / FLO-VB-029 cross-linked to reason codes (ROLE_COLLAPSE), C6-03 jitter, ADR-S-10 | clarification | Strengthens the settling-evidence column without changing status. |
+
+> **Backward compatibility.** All §1–§17 anchors preserved; Contents gained §18/§19 (the prior unnumbered footer is now formalized). Item IDs FLO-VB-001..067 unchanged. No row's status was upgraded to CONFIRMED — all implementation rows remain PROPOSED / NEEDS VERIFICATION / UNKNOWN pending mounted-repo evidence.
 
 [↑ Back to top](#contents)
 
@@ -434,7 +504,7 @@ items:
   - id: FLO-VB-003
     summary: "Verify exact/public geometry thresholds."
     status: NEEDS_VERIFICATION
-    evidence_needed: "geoprivacy transform vocabulary + ADR-flora-rare-plant-geoprivacy-threshold"
+    evidence_needed: "geoprivacy transform vocabulary + ADR-flora-rare-plant-geoprivacy-threshold (localizes ADR-S-05)"
     blocks: ["public rare-plant occurrence layer"]
   - id: FLO-VB-004
     summary: "Verify Focus Mode and Evidence Drawer behavior for Flora."
@@ -453,9 +523,9 @@ items:
 
 This document is part of the KFM **human-facing control plane** (`docs/`). It does not, on its own, prove repository implementation: it is a queue of checks against doctrine, designed to be closed by mounted-repo evidence, schemas, tests, receipts, and ADRs.
 
-**Related docs:** [Flora README](./README.md) · [Global Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Directory Rules](../../doctrine/directory-rules.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home.md)
+**Related docs:** [Flora README](./README.md) · [Source Registry](./SOURCE_REGISTRY.md) · [Thin Slice Plan](./THIN_SLICE_PLAN.md) · [Global Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Directory Rules](../../doctrine/directory-rules.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home.md)
 **Owners:** `<flora-domain-stewards@TODO>`, `<governance-stewards@TODO>`
-**Last updated:** 2026-05-16
-**Version:** v1 (draft)
+**Last updated:** 2026-06-03 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
+**Version:** v1.1 (draft)
 
 [↑ Back to top](#contents)
