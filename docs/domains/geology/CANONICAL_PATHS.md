@@ -2,23 +2,27 @@
 doc_id: kfm://doc/geology-canonical-paths
 title: Geology — Canonical Paths
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: TODO — Geology domain steward; Directory Rules owner
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-06-03
 policy_label: public
 related:
-  - docs/doctrine/directory-rules.md
+  - directory-rules.md
   - docs/domains/geology/README.md
   - docs/adr/ADR-0001-schema-home.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
+  - ai-build-operating-contract.md
 tags: [kfm, geology, directory-rules, canonical-paths, domain-placement-law]
 notes:
+  - Doctrine-adjacent; CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Applies Directory Rules §12 (Domain Placement Law) to the Geology lane.
-  - Surfaces a NEEDS VERIFICATION drift between Dir Rules §12 path form and Atlas v1.1 §24.13 crosswalk form.
+  - Surfaces a NEEDS VERIFICATION drift between Dir Rules §12 path form and Atlas v1.1 §24.13 crosswalk form (Atlas uses the short geology/ form — see §11).
+  - Schema-home rule is Directory Rules §6.4 + ADR-0001 (the §13.1 entry is the matching anti-pattern).
   - Repo not mounted in this session; file-presence claims are PROPOSED / NEEDS VERIFICATION.
+  - Placement-law location (directory-rules.md root vs docs/doctrine/) is itself OPEN/CONFLICTED — see §13.
 [/KFM_META_BLOCK_V2] -->
 
 # Geology — Canonical Paths
@@ -29,16 +33,18 @@ notes:
 ![type: standard](https://img.shields.io/badge/type-standard-blue)
 ![doctrine: Directory%20Rules%20§12](https://img.shields.io/badge/doctrine-Directory%20Rules%20%C2%A712-informational)
 ![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
+![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![CI](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last updated: 2026-05-16](https://img.shields.io/badge/updated-2026--05--16-blue)
+![last updated: 2026-06-03](https://img.shields.io/badge/updated-2026--06--03-blue)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` |
 | **Owners** | TODO — Geology domain steward; Directory Rules owner |
-| **Last updated** | 2026-05-16 |
-| **Authority basis** | `docs/doctrine/directory-rules.md` §12 · ADR-0001 |
+| **Last updated** | 2026-06-03 |
+| **Authority basis** | `directory-rules.md` §12 (lane pattern) · §6.4 + ADR-0001 (schema home) |
 | **Domain dossier** | `[DOM-GEOL]` (Geology / Natural Resources) |
+| **Contract** | Pinned `CONTRACT_VERSION = "3.0.0"` per `ai-build-operating-contract.md` |
 
 ---
 
@@ -57,7 +63,9 @@ notes:
 11. [Open naming drift — `contracts/geology/` vs `contracts/domains/geology/`](#11-open-naming-drift)
 12. [Placement protocol checklist](#12-placement-protocol-checklist)
 13. [Open questions & verification backlog](#13-open-questions--verification-backlog)
-14. [Related docs](#14-related-docs)
+14. [Changelog](#14-changelog)
+15. [Definition of done](#15-definition-of-done)
+16. [Related docs](#16-related-docs)
 
 ---
 
@@ -73,7 +81,7 @@ It answers three questions:
 
 It is **not** a substitute for:
 
-- Directory Rules itself (`docs/doctrine/directory-rules.md`) — the governing doctrine.
+- Directory Rules itself (`directory-rules.md`) — the governing doctrine.
 - ADR-0001 — the schema-home decision.
 - The Geology domain README (`docs/domains/geology/README.md`) — domain identity, scope, and ubiquitous language.
 - The Geology dossier `[DOM-GEOL]` — source families, object families, sensitivity posture.
@@ -85,17 +93,17 @@ It is **not** a substitute for:
 ## 2. Authority & truth posture
 
 > [!IMPORTANT]
-> **CONFIRMED doctrine:** Domains MUST NOT become repo-root folders. Geology files live as **lanes inside responsibility roots**. A root-level `geology/` directory is a Directory Rules §3 violation regardless of how much Geology content it would hold. *(Source: Directory Rules §§3, 12.)*
+> **CONFIRMED doctrine:** Domains MUST NOT become repo-root folders. Geology files live as **lanes inside responsibility roots**. A root-level `geology/` directory is a Directory Rules §3 violation regardless of how much Geology content it would hold. *(Source: Directory Rules §3 "The Deeper Rule"; §12 Domain Placement Law.)*
 
 | Layer | Source | Status |
 |---|---|---|
-| Lane Pattern itself | `docs/doctrine/directory-rules.md` §12 | **CONFIRMED doctrine** |
-| Schema-home (`schemas/contracts/v1/...`) | ADR-0001 (referenced by Dir Rules §13.1) | **CONFIRMED doctrine** |
-| Lifecycle invariant (RAW → PUBLISHED) | Dir Rules §9.1; ENCY §4 (Operating Law) | **CONFIRMED doctrine** |
+| Lane Pattern itself | `directory-rules.md` §12 (and §4 Step 3 tree) | **CONFIRMED doctrine** |
+| Schema-home (`schemas/contracts/v1/...`) | `directory-rules.md` §6.4 + ADR-0001 (the §13.1 entry is the matching anti-pattern) | **CONFIRMED doctrine** |
+| Lifecycle invariant (RAW → PUBLISHED) | `directory-rules.md` §4 Step 2 (phase list); Lifecycle Law doctrine; ENCY Operating Law | **CONFIRMED doctrine** |
 | Geology object families & source families | `[DOM-GEOL]`; Atlas v1.1 ch. 10 | **CONFIRMED doctrine** |
-| Geology sensitivity defaults | Atlas v1.1 §§7, 20.5 | **CONFIRMED doctrine** |
+| Geology sensitivity defaults | Atlas v1.1 §24.5 (tier scheme), §20.5 (deny register) | **CONFIRMED doctrine** |
 | Specific geology paths existing in the mounted repo | Repo not mounted in this session | **UNKNOWN / NEEDS VERIFICATION** |
-| Atlas v1.1 path form (`contracts/geology/`, no `domains/` segment) | Atlas v1.1 §24.13 | **PROPOSED**, conflicts with Dir Rules §12 — see §11 |
+| Atlas v1.1 §24.13 path form (`contracts/geology/`, no `domains/` segment) | Atlas v1.1 §24.13 crosswalk | **PROPOSED**, conflicts with Dir Rules §12 — see §11 |
 
 > [!NOTE]
 > Every path listed below is **PROPOSED application** of CONFIRMED doctrine to the Geology lane. File presence, ownership, and CI enforcement are **NEEDS VERIFICATION** until a mounted-repo inspection is recorded against this doc.
@@ -154,7 +162,7 @@ flowchart LR
     class L_DOCS,L_CONTRACTS,L_SCHEMAS,L_POLICY,L_TESTS,L_FIXTURES,L_PACKAGES,L_PIPELINES,L_SPECS,L_DATA,L_RELEASE lane;
 ```
 
-The pattern keeps the repo root **stable and boring** while letting the Geology lane grow without fragmenting the lifecycle. *(Source: Dir Rules §12.)*
+The pattern keeps the repo root **stable and boring** while letting the Geology lane grow without fragmenting the lifecycle. *(Source: Dir Rules §12; §4 Step 3 lane tree.)*
 
 [Back to top](#contents)
 
@@ -188,7 +196,7 @@ Each row records: the responsibility root, the Geology lane within it, what the 
 
 ## 5. Geology lane tree (PROPOSED)
 
-The full PROPOSED Geology lane layout, expanded from Dir Rules §12 and the Geology object/source families in `[DOM-GEOL]` and Atlas v1.1 ch. 10. Every path below is **PROPOSED / NEEDS VERIFICATION** until inspected against a mounted repo.
+The full PROPOSED Geology lane layout, expanded from Dir Rules §12 (§4 Step 3 tree) and the Geology object/source families in `[DOM-GEOL]` and Atlas v1.1 ch. 10. Every path below is **PROPOSED / NEEDS VERIFICATION** until inspected against a mounted repo.
 
 ```text
 docs/
@@ -300,7 +308,10 @@ release/
 
 ## 6. Data lifecycle paths
 
-The lifecycle invariant `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` is **CONFIRMED doctrine** (Dir Rules §9.1; ENCY §4 Operating Law). Promotion is a **governed state transition, not a file move** — a path-level move that bypasses validators, policy gates, EvidenceBundle creation, catalog closure, and release-decision recording is a Lifecycle Law violation regardless of which directory the bytes end up in.
+The lifecycle invariant `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` is **CONFIRMED doctrine** (Dir Rules §4 Step 2 phase list; Lifecycle Law; ENCY Operating Law). Promotion is a **governed state transition, not a file move** — a path-level move that bypasses validators, policy gates, EvidenceBundle creation, catalog closure, and release-decision recording is a Lifecycle Law violation regardless of which directory the bytes end up in.
+
+> [!NOTE]
+> **Pre-RAW is a CONFIRMED corpus stage** (the "Pre-RAW watcher event envelope", corpus card KFM-P21-PROG-0025). Per the structure guiding doc, pre-RAW objects (`EventEnvelope`, `EventRunReceipt`) land under `data/registry/sources/` and `data/receipts/ingest/` — **never** in a new `data/pre_raw/` sibling. Receipts, proofs, registry, and rollback are emitted *alongside* lifecycle directories; they do not replace them (Dir Rules §4 Step 2).
 
 ### 6.1 Geology data lifecycle paths (PROPOSED)
 
@@ -329,7 +340,7 @@ The lifecycle invariant `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPL
 | Release (CATALOG/TRIPLET → PUBLISHED) | `ReleaseManifest`; rollback target; correction path; `ReviewRecord` if required | HOLD at CATALOG; no public surface change |
 | Correction (PUBLISHED → PUBLISHED′) | `CorrectionNotice`; downstream-derivative identification | Public correction or supersession |
 
-*(Source: Atlas v1.1 §8.1 lifecycle gates; Dir Rules §9.1 phase rules.)*
+*(Source: Atlas v1.1 §24.6 Pipeline Gate Reference; Dir Rules §4 Step 2 / §5 phase rules.)*
 
 [Back to top](#contents)
 
@@ -337,7 +348,7 @@ The lifecycle invariant `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPL
 
 ## 7. Sensitivity, rights & publication paths
 
-Geology sensitivity defaults are **CONFIRMED doctrine** at the object-class level. Path-level enforcement happens in `policy/domains/geology/` and is mirrored by lifecycle holding paths (QUARANTINE and the redaction/aggregation receipt set in `data/proofs/` and `data/receipts/`).
+Geology sensitivity defaults are **CONFIRMED doctrine** at the object-class level (Atlas §10.I; §24.5 tier reference; §24.14 sets `GeologicUnit / Lithology` default to T0). Path-level enforcement happens in `policy/domains/geology/` and is mirrored by lifecycle holding paths (QUARANTINE and the redaction/aggregation receipt set in `data/proofs/` and `data/receipts/`).
 
 | Geology object class | Default sensitivity tier | Allowed transforms (PROPOSED) | Where the enforcement lives |
 |---|---|---|---|
@@ -352,7 +363,7 @@ Geology sensitivity defaults are **CONFIRMED doctrine** at the object-class leve
 > **Resource-class anti-collapse is a deny rule, not a quality issue.** Occurrence, deposit, estimate, permit, production, and reserve are distinct claim types. A schema that conflates them, or a publication path that lets one masquerade as another, is a Source-Role Anti-Collapse violation under Atlas v1.1 §24.1. *(Source: `[DOM-GEOL]` §I; Atlas v1.1 §24.1.)*
 
 > [!WARNING]
-> **Exact borehole / sample / well-log / private-well locations fail closed by default.** Public release requires either generalization (T1) plus `RedactionReceipt`, or steward review plus named-party agreement (T2/T3). *(Source: `[DOM-GEOL]` §I.)*
+> **Exact borehole / sample / well-log / private-well locations fail closed by default.** Public release requires either generalization (T1) plus `RedactionReceipt`, or steward review plus named-party agreement (T2/T3). *(Source: `[DOM-GEOL]` §I, verbatim.)*
 
 [Back to top](#contents)
 
@@ -365,17 +376,20 @@ Geology sensitivity defaults are **CONFIRMED doctrine** at the object-class leve
 
 | Forbidden placement | Why it's forbidden | Correct home |
 |---|---|---|
-| Root-level `geology/` | Domain Placement Law — domains MUST NOT become root folders (Dir Rules §§3, 12, 13.4) | Distribute across responsibility roots per §4 of this doc |
+| Root-level `geology/` | Domain Placement Law — domains MUST NOT become root folders (Dir Rules §3, §12, §13.4) | Distribute across responsibility roots per §4 of this doc |
 | `geology/data/`, `geology/schemas/`, `geology/policy/`, `geology/docs/` under a root `geology/` | Domain root fragments the lifecycle invariant (Dir Rules §13.4) | `data/{raw,work,…}/geology/`; `schemas/contracts/v1/domains/geology/`; `policy/domains/geology/`; `docs/domains/geology/` |
-| `contracts/geology/*.schema.json` (schemas in contracts/) | Schema-home rule per ADR-0001 — `schemas/contracts/v1/...` is canonical (Dir Rules §13.1) | `schemas/contracts/v1/domains/geology/*.schema.json` |
+| `contracts/geology/*.schema.json` (schemas in contracts/) | Schema-home rule per ADR-0001 — `schemas/contracts/v1/...` is canonical (Dir Rules §6.4; §13.1 anti-pattern) | `schemas/contracts/v1/domains/geology/*.schema.json` |
 | `jsonschema/geology/...` | `jsonschema/` is a compatibility/mirror root (Dir Rules §5, §8.1) | `schemas/contracts/v1/domains/geology/...` |
 | `policies/domains/geology/...` | `policies/` is compatibility/mirror; canonical is `policy/` (Dir Rules §8.1) | `policy/domains/geology/...` |
 | `data/published/geology/<release_id>/` mixing release decisions with artifacts | Release **decisions** vs released **artifacts** drift (Dir Rules §13.2) | Decisions → `release/...`; artifacts → `data/published/layers/geology/...` |
 | A Geology connector writing to `data/processed/geology/...` or `data/published/...` | Connector-publishes anti-pattern (Dir Rules §13.5) | Connector emits to `data/raw/geology/<source_id>/<run_id>/` or `data/quarantine/...`; pipelines promote |
 | A Geology watcher writing to `data/catalog/` or `data/published/` | Watcher-as-non-publisher invariant (Dir Rules §13.5; KFM Operating Law) | Watcher emits receipts and candidate decisions only |
 | A Geology pipeline writing directly to `data/published/` from `data/raw/` | Lifecycle-skip anti-pattern (Dir Rules §13.5) | All lifecycle phases run; promotion is a governed state transition |
-| Geology-specific shell components in `ui/`, `web/`, or `styles/` | Those are compatibility roots; canonical map shell is `apps/explorer-web/` + `packages/{ui,maplibre}` (Dir Rules §11, §13.3) | `apps/explorer-web/`, `packages/ui/`, `packages/maplibre/`; Geology-specific tweaks consume `EvidenceBundle` / `DecisionEnvelope` via the governed API |
+| Geology-specific shell components in `ui/`, `web/`, or `styles/` | Those are compatibility roots; canonical map shell is `apps/explorer-web/` + `packages/{ui,maplibre-runtime}` (Dir Rules §11, §13.3) | `apps/explorer-web/`, `packages/ui/`, `packages/maplibre-runtime/`; Geology-specific tweaks consume `EvidenceBundle` / `DecisionEnvelope` via the governed API |
 | Public client (`apps/explorer-web/`) reading `data/processed/geology/...` directly | Trust-membrane violation — public routes go through `apps/governed-api/` (Dir Rules §7.1, §13.5) | Route reads via `apps/governed-api/` |
+
+> [!NOTE]
+> Dir Rules §13.3 (v1.3) names `packages/maplibre-runtime/` as the sole governed renderer adapter (Cesium retired); earlier drafts cited `packages/maplibre/` + `packages/cesium/`. The canonical-shell rows above are updated accordingly.
 
 [Back to top](#contents)
 
@@ -390,12 +404,12 @@ Some Geology-adjacent files legitimately span domains. Per Dir Rules §12 ("Mult
 | Geometry validator used by Geology + Hydrology + Hazards | `tools/validators/<topic>/...` (no `domains/<picked-one>/`) | Cross-domain validator (Dir Rules §12) |
 | Cross-domain schema (e.g., hydrostratigraphic interface between Geology and Hydrology) | `schemas/contracts/v1/<topic>/...` (no single-domain segment) | Cross-domain schema (Dir Rules §12) |
 | Cross-domain doctrine (e.g., subsurface-knowledge admission doctrine) | `docs/architecture/<topic>.md` | Cross-domain doctrine (Dir Rules §12) |
-| Connector for a Geology source (KGS, USGS NGMDB, KCC, …) | `connectors/<source_id>/` | Connectors are organized by **source**, not by domain (Dir Rules §7.3) |
-| Source descriptor for a Geology source | `data/registry/sources/geology/` *or* `data/registry/source_descriptors/...` per current convention | Source-descriptor home (Dir Rules §9.1 registry tree) |
+| Connector for a Geology source (KGS, USGS NGMDB, KCC, …) | `connectors/<source_id>/` | Connectors are organized by **source**, not by domain (Dir Rules §7, deployable/shared-code root) |
+| Source descriptor for a Geology source | `data/registry/sources/geology/` *or* `data/registry/source_descriptors/...` per current convention | Source-descriptor home (Dir Rules §4 Step 3 / §5 registry tree) |
 | 3D / scene admission for subsurface | `schemas/contracts/v1/scene/...`, `policy/release/scene/...` | Scene admission belongs under the Planetary/3D lane, not Geology (Atlas v1.1 §24.13 row 18) |
 
 > [!NOTE]
-> **Connectors are organized by source, not by domain.** A KGS connector lives at `connectors/kgs/`, not at `connectors/geology/kgs/`. Cross-reference into Geology happens through the source descriptor and the `data/raw/geology/<source_id>/<run_id>/` admission path. *(Source: Dir Rules §7.3.)*
+> **Connectors are organized by source, not by domain.** A KGS connector lives at `connectors/kgs/`, not at `connectors/geology/kgs/`. Cross-reference into Geology happens through the source descriptor and the `data/raw/geology/<source_id>/<run_id>/` admission path. *(Source: Dir Rules §7 deployable/shared-code root; connector-publishes anti-pattern §13.5.)*
 
 [Back to top](#contents)
 
@@ -403,18 +417,18 @@ Some Geology-adjacent files legitimately span domains. Per Dir Rules §12 ("Mult
 
 ## 10. Compatibility roots & legacy paths
 
-Some compatibility roots may contain Geology content during migration windows. Treat these as **non-authority** mirrors — Geology rules, fields, and policy updates land in the canonical home first; the mirror regenerates or migrates. *(Source: Dir Rules §§8, 8.3.)*
+Some compatibility roots may contain Geology content during migration windows. Treat these as **non-authority** mirrors — Geology rules, fields, and policy updates land in the canonical home first; the mirror regenerates or migrates. *(Source: Dir Rules §8 compatibility-root handling; §8.1 declared classes.)*
 
 | Compatibility root | Class | Geology-relevant content (if any) | Canonical home for Geology |
 |---|---|---|---|
 | `jsonschema/` | `mirror` / `legacy` | Any `jsonschema/geology/...` (if present) | `schemas/contracts/v1/domains/geology/` |
 | `policies/` | `mirror` / `legacy` | Any `policies/geology/...` or `policies/domains/geology/...` | `policy/domains/geology/` |
-| `styles/`, `viewer_templates/` | Compatibility (UI migration target) | Any Geology-specific styling/templates | `apps/explorer-web/`, `packages/ui/`, `packages/maplibre/` |
+| `styles/`, `viewer_templates/` | Compatibility (UI migration target) | Any Geology-specific styling/templates | `apps/explorer-web/`, `packages/ui/`, `packages/maplibre-runtime/` |
 | `ui/`, `web/` | Compatibility (UI migration target) | Any Geology-specific UI fragments | `apps/explorer-web/`, `packages/ui/` |
 | `artifacts/` | Compatibility (build/docs/qa/temporary) | Geology QA/build outputs only — never receipts, proofs, or release manifests | Trust content moves to `data/receipts/`, `data/proofs/`, `release/` (Dir Rules §13.2) |
 
 > [!NOTE]
-> If both a canonical and compatibility home contain Geology content for the same authority, **open a drift entry in `docs/registers/DRIFT_REGISTER.md`** rather than letting the compatibility root evolve as parallel authority. *(Source: Dir Rules §§2.5, 8.3.)*
+> If both a canonical and compatibility home contain Geology content for the same authority, **open a drift entry in `docs/registers/DRIFT_REGISTER.md`** rather than letting the compatibility root evolve as parallel authority. *(Source: Dir Rules §2.5; §8 compatibility handling.)*
 
 [Back to top](#contents)
 
@@ -426,14 +440,17 @@ There is an unresolved form-level naming difference between two project sources 
 
 | Source | Form for `contracts/` | Form for `schemas/` |
 |---|---|---|
-| **Directory Rules §12** (Domain Placement Law lane pattern) — **CONFIRMED canonical** | `contracts/domains/geology/` | `schemas/contracts/v1/domains/geology/` |
+| **Directory Rules §12** (Domain Placement Law lane pattern; §4 Step 3 tree) — **CONFIRMED canonical** | `contracts/domains/geology/` | `schemas/contracts/v1/domains/geology/` |
 | **Atlas v1.1 §24.13** (Atlas Section ↔ Dossier ↔ Responsibility-Root Crosswalk) — **PROPOSED supplement** | `contracts/geology/` | `schemas/contracts/v1/geology/` |
+
+> [!NOTE]
+> **CONFIRMED:** the Atlas v1.1 §24.13 crosswalk row for Geology (ch. 10) does list the short form — `schemas/contracts/v1/geology/; contracts/geology/` — without the `domains/` segment. Directory Rules §4 Step 3 lists the segmented form (`contracts/domains/<domain>/`, `schemas/contracts/v1/domains/<domain>/`). The drift is therefore real and source-grounded, not an artifact of paraphrase.
 
 **Resolution posture (PROPOSED in this doc):**
 
-- **Preferred form for this CANONICAL_PATHS doc is the Dir Rules §12 form** with the explicit `domains/` segment, because Dir Rules §12 carries CONFIRMED-doctrine authority and Dir Rules §13.1 cites `schemas/contracts/v1/domains/<domain>/<x>.schema.json` as the ADR-0001-canonical schema-home shape.
-- The Atlas v1.1 §24.13 form is a **PROPOSED supplement** whose role is crosswalk readability, not placement authority.
-- This discrepancy **SHOULD** be filed as a drift entry in `docs/registers/DRIFT_REGISTER.md` and resolved by ADR — either by reconciling Atlas v1.1 §24.13 to the §12 form, or by accepting the shorter form via ADR amending Dir Rules §12. **Status: NEEDS VERIFICATION / ADR-pending.**
+- **Preferred form for this CANONICAL_PATHS doc is the Dir Rules §12 form** with the explicit `domains/` segment, because Dir Rules §12 (and the §4 Step 3 tree) carries CONFIRMED-doctrine authority and the §6.4 schema-home rule / §13.1 anti-pattern both name the segmented `schemas/contracts/v1/domains/<domain>/<x>.schema.json` shape as ADR-0001-canonical.
+- The Atlas v1.1 §24.13 form is a **PROPOSED supplement** whose role is crosswalk readability, not placement authority. Per Atlas v1.1's own conflict rule, where a Chapter 24 register and the lane doctrine disagree, the conflict is filed to `docs/registers/DRIFT_REGISTER.md` and resolved by ADR — Chapter 24 does not override.
+- This discrepancy **SHOULD** be filed as a drift entry and resolved by ADR — either by reconciling Atlas v1.1 §24.13 to the §12 form, or by accepting the shorter form via ADR amending Dir Rules §12. **Status: NEEDS VERIFICATION / ADR-pending (cf. ADR-S-01 schema home).**
 
 [Back to top](#contents)
 
@@ -448,11 +465,11 @@ Apply this before creating, moving, or renaming any Geology-bearing file. Adapte
 [ ] Step 2 — Mapped to a responsibility root from §4 of this doc.
 [ ] Step 3 — Confirmed it does NOT belong under a root-level geology/ (which doesn't exist anyway — see §8).
 [ ] Step 4 — If cross-domain, placed under the lowest common responsibility root WITHOUT a geology/ segment (see §9).
-[ ] Step 5 — Schema target verified against ADR-0001 (schemas/contracts/v1/domains/geology/).
+[ ] Step 5 — Schema target verified against ADR-0001 + Dir Rules §6.4 (schemas/contracts/v1/domains/geology/).
 [ ] Step 6 — If lifecycle data, the data/ phase is explicit (raw|work|quarantine|processed|catalog|triplets|published|receipts|proofs|registry|rollback).
 [ ] Step 7 — Compatibility-root status checked; if writing to a compatibility root, drift entry filed.
-[ ] Step 8 — Adjacent README updated if path conventions change.
-[ ] Step 9 — For structural moves (ADR-trigger conditions in Dir Rules §2.4 / §14.2), ADR drafted.
+[ ] Step 8 — Adjacent README updated if path conventions change (per Dir Rules §15 per-root README contract).
+[ ] Step 9 — For structural moves (ADR-trigger conditions in Dir Rules §2.4), ADR drafted.
 ```
 
 [Back to top](#contents)
@@ -476,6 +493,8 @@ Apply this before creating, moving, or renaming any Geology-bearing file. Adapte
 | Q8 | Has the drift between Dir Rules §12 and Atlas v1.1 §24.13 path forms been filed in `docs/registers/DRIFT_REGISTER.md`? | Drift register entry | NEEDS VERIFICATION |
 | Q9 | Is `data/published/layers/geology/` carved out, or is Geology published content sharing a flat layers folder? | Mounted repo inspection | NEEDS VERIFICATION |
 | Q10 | What runbooks exist for Geology source refresh, rollback drill, and quarantine triage? | `docs/runbooks/` inspection | NEEDS VERIFICATION |
+| Q11 | Confirm the lifecycle-invariant section number (this doc cites Dir Rules §4 Step 2 / §5; an earlier draft cited "§9.1") against the mounted `directory-rules.md`. | Mounted repo inspection of `directory-rules.md` headings | NEEDS VERIFICATION |
+| Q12 | Confirm the canonical location of the placement law itself (`directory-rules.md` at repo root vs `docs/doctrine/directory-rules.md`). | Mounted repo inspection; drift entry if citations and repo disagree | OPEN / CONFLICTED |
 
 </details>
 
@@ -483,20 +502,60 @@ Apply this before creating, moving, or renaming any Geology-bearing file. Adapte
 
 ---
 
-## 14. Related docs
+## 14. Changelog
 
-- `docs/doctrine/directory-rules.md` — Directory Rules (governing doctrine for §3, §9.1, §12, §13)
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Added `CONTRACT_VERSION = "3.0.0"` badge + meta pin + status row | housekeeping | Doctrine-adjacent doc requirement |
+| Added Changelog and Definition of done companion sections | gap closure | Doctrine-doc companion sections were absent |
+| Corrected schema-home citation: `Dir Rules §13.1` → `§6.4 + ADR-0001` (with §13.1 named as the matching anti-pattern) | reconciliation | §6.4 is the schema-home rule; §13.1 is the "two parallel schema homes" anti-pattern |
+| Corrected lifecycle-invariant citation: `§9.1` → `§4 Step 2 (phase list) / §5` + Lifecycle Law; added Q11 to verify | reconciliation | The phase enumeration is at §4 Step 2; "§9.1" was unverifiable against the corpus |
+| Added a CONFIRMED note in §11 that the Atlas §24.13 short form is source-grounded, plus the Atlas Chapter-24 conflict rule | clarification | Strengthen the drift's evidence basis and name the resolution authority |
+| Added a pre-RAW NOTE in §6 (corpus card KFM-P21-PROG-0025; pre-RAW objects land in `data/registry/sources/` + `data/receipts/ingest/`) | gap closure | pre-RAW placement is CONFIRMED corpus doctrine worth stating |
+| Updated renderer-adapter references `packages/maplibre/` → `packages/maplibre-runtime/`; noted Cesium retirement (Dir Rules §13.3 v1.3) | reconciliation | Current Dir Rules name the sole governed renderer adapter |
+| Changed `related` + body links `docs/doctrine/directory-rules.md` → `directory-rules.md`; added Q12 | reconciliation | Project file is `directory-rules.md`; location is an open question |
+| Anchored §7 tiers to Atlas §24.5/§24.14 (GeologicUnit/Lithology = T0) and §6.2 gates to Atlas §24.6 | clarification | Cite the specific tier and gate references rather than generic §§7, 20.5 |
+
+> **Backward compatibility.** All §1–§13 anchors are preserved. Two doctrine companion sections (§14 Changelog, §15 Definition of done) are inserted before "Related docs", which moves from §14 to §16. Any external link to the old `#14-related-docs` anchor must update to `#16-related-docs`.
+
+[Back to top](#contents)
+
+---
+
+## 15. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed at `docs/domains/geology/CANONICAL_PATHS.md` per Directory Rules §12 (short-form `geology` segment per Atlas §24.13);
+- the Geology domain steward and the Directory Rules owner review it;
+- it is linked from `docs/domains/geology/README.md` and the domains index;
+- it does not conflict with accepted ADRs (notably ADR-0001 schema home; ADR-S-01);
+- the §12-vs-§24.13 path-form drift (§11) is filed in `docs/registers/DRIFT_REGISTER.md`;
+- the lifecycle-section citation (Q11) and the placement-law location (Q12) are verified against the mounted `directory-rules.md`, or drift entries are filed;
+- the `GENERATED_RECEIPT.json` planned in the PR is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top](#contents)
+
+---
+
+## 16. Related docs
+
+- `directory-rules.md` — Directory Rules (governing doctrine for §3, §4 Step 2, §5, §6.4, §8, §12, §13, §15)
+- `ai-build-operating-contract.md` — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - `docs/adr/ADR-0001-schema-home.md` — Canonical schema-home decision
 - `docs/domains/geology/README.md` — Geology domain identity and ubiquitous language *(TODO — verify presence)*
+- `docs/domains/geology/ARCHITECTURE.md` — Geology lane architecture (companion)
+- `docs/domains/geology/API_CONTRACTS.md` — Geology governed API contracts (companion)
 - `docs/domains/geology/SOURCES.md` — Geology source families *(PROPOSED — see §4)*
 - `docs/domains/geology/SENSITIVITY.md` — Geology sensitivity register *(PROPOSED)*
 - `docs/registers/DRIFT_REGISTER.md` — Drift entries (host for the Dir Rules §12 vs Atlas v1.1 §24.13 entry)
 - `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` — Lineage notes for path moves
-- `docs/registers/VERIFICATION_BACKLOG.md` — Verification backlog (host for Q1–Q10 above)
+- `docs/registers/VERIFICATION_BACKLOG.md` — Verification backlog (host for Q1–Q12 above)
 - `[DOM-GEOL]` — Geology / Natural Resources dossier
 - `[ENCY]` — KFM Domain and Capability Encyclopedia
 - Atlas v1.1 ch. 10 (Geology) and §24.13 (responsibility-root crosswalk)
 
 ---
 
-<sub>Doc: `docs/domains/geology/CANONICAL_PATHS.md` · Version: v1 (draft) · Last updated: 2026-05-16 · Authority: Directory Rules §12 · [Back to top](#contents)</sub>
+<sub>Doc: `docs/domains/geology/CANONICAL_PATHS.md` · Version: v1.1 (draft) · Last updated: 2026-06-03 · `CONTRACT_VERSION = "3.0.0"` · Authority: Directory Rules §12 · [Back to top](#contents)</sub>
