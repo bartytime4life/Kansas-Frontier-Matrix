@@ -6,17 +6,18 @@ version: v1
 status: draft
 owners: <TBD: habitat-domain-steward>, <TBD: map-ui-steward>, <TBD: governance-reviewer>
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
   - docs/domains/habitat/README.md
-  - docs/domains/habitat/SOURCE_REGISTRY.md
-  - docs/domains/habitat/SENSITIVITY_POLICY.md
+  - docs/domains/habitat/HABITAT_SOURCE_LEDGER.md
+  - docs/domains/habitat/HABITAT_SENSITIVITY_PROFILE.md
   - docs/domains/habitat/CONTRACTS.md
+  - docs/domains/habitat/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
   - docs/architecture/map-shell.md
   - docs/architecture/governed-api.md
-  - docs/standards/PROV.md
+  - docs/standards/PROVENANCE.md
   - docs/standards/PMTILES.md
   - docs/standards/OGC-API-TILES.md
   - docs/doctrine/trust-membrane.md
@@ -24,11 +25,14 @@ related:
   - contracts/runtime/decision_envelope.md
   - schemas/contracts/v1/domains/habitat/
   - policy/domains/habitat/
+  - ai-build-operating-contract.md
 tags: [kfm, domain:habitat, map, ui, contracts, evidence-drawer, focus-mode, governed-api]
 notes:
+  - 'CONTRACT_VERSION = "3.0.0"'
   - Domain doc per Directory Rules §12 Domain Placement Law.
   - Cross-cutting map UI primitives are CONFIRMED doctrine; habitat-specific viewing products are PROPOSED per DOM-HAB §G.
   - All file paths outside docs/domains/habitat/ are PROPOSED until verified against a mounted repo.
+  - "CONFLICTED schema-home: ADR-0001 OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented schemas/contracts/v1/domains/habitat/ (DIRRULES §12) vs flat schemas/contracts/v1/habitat/ (Atlas §24.13). See §13, §15."
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat — Map and UI Contracts
@@ -40,15 +44,17 @@ notes:
 ![domain](https://img.shields.io/badge/domain-habitat-2e7d32)
 ![evidence](https://img.shields.io/badge/evidence-cite--or--abstain-purple)
 ![policy](https://img.shields.io/badge/policy-deny--by--default-critical)
+![schema home](https://img.shields.io/badge/schema__home-CONFLICTED%20%C2%A713-important)
+![CONTRACT_VERSION](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![ci](https://img.shields.io/badge/CI-TODO-lightgrey)
-![last%20updated](https://img.shields.io/badge/updated-2026--05--17-informational)
+![last updated](https://img.shields.io/badge/updated-2026--06--05-informational)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` |
 | **Owners** | `<TBD: habitat-domain-steward>`, `<TBD: map-ui-steward>` |
-| **Last updated** | 2026-05-17 |
-| **Doctrinal authority** | `[DOM-HAB]`, `[DOM-HF]`, `[MAP-MASTER]`, `[GAI]`, `[DIRRULES]`, `[ENCY]` |
+| **Last updated** | 2026-06-05 · `CONTRACT_VERSION = "3.0.0"` |
+| **Doctrinal authority** | `[DOM-HAB]`, `[DOM-HF]`, `[MAP-MASTER]`, `[GAI]`, `[DIRRULES]`, `[ENCY]`, `ai-build-operating-contract.md` |
 | **Implementation maturity** | PROPOSED — no live route, schema, or component is asserted here |
 
 ---
@@ -77,7 +83,7 @@ notes:
 
 ## 1. Purpose and Scope
 
-This document is the contract between **Habitat** (the domain owning `HabitatPatch`, `LandCoverObservation`, `EcologicalSystem`, `Habitat Quality Score`, `SuitabilityModel`, `ConnectivityEdge`, `Corridor`, `Restoration Opportunity`, `StewardshipZone`, `Model Run Receipt`, and `UncertaintySurface`) and KFM's map and UI surfaces. It pins down:
+This document is the contract between **Habitat** (the domain owning `HabitatPatch`, `LandCoverObservation`, `EcologicalSystem`, `HabitatQualityScore`, `SuitabilityModel`, `ConnectivityEdge`, `Corridor`, `RestorationOpportunity`, `StewardshipZone`, `ModelRunReceipt`, and `UncertaintySurface`) and KFM's map and UI surfaces. It pins down:
 
 - which **Habitat viewing products** the map shell may expose,
 - which **objects, manifests, and envelopes** carry those views,
@@ -91,7 +97,7 @@ This document is the contract between **Habitat** (the domain owning `HabitatPat
 **Out of scope.** Truth ownership of species occurrence (Fauna), plant records (Flora), and other adjacent lanes; raw source connector behavior; pipeline internals; the 3D scene admission policy; and any non-Habitat domain's UI specifics.
 
 > [!NOTE]
-> **Truth labels.** CONFIRMED = verified from attached doctrine in this session. PROPOSED = design or placement not verified in implementation. NEEDS VERIFICATION = checkable but not yet confirmed against a mounted repo. The cross-cutting map UI primitives (Evidence Drawer, Focus Mode, trust badges, sensitivity-redacted view, correction/stale-state view, time-aware state) are CONFIRMED doctrine. Their **Habitat-specific** realizations (overlay registry contents, source-role badges, critical-habitat view, modeled-habitat view, occurrence summary view, connectivity/corridor view, Evidence Drawer Habitat panel) are PROPOSED per `[DOM-HAB §G]`.
+> **Truth labels.** CONFIRMED = verified from attached doctrine in this session. PROPOSED = design or placement not verified in implementation. CONFLICTED = sources disagree, held until an ADR resolves it. NEEDS VERIFICATION = checkable but not yet confirmed against a mounted repo. The cross-cutting map UI primitives (Evidence Drawer, Focus Mode, trust badges, sensitivity-redacted view, correction/stale-state view, time-aware state) are CONFIRMED doctrine. Their **Habitat-specific** realizations (overlay registry contents, source-role badges, critical-habitat view, modeled-habitat view, occurrence summary view, connectivity/corridor view, Evidence Drawer Habitat panel) are PROPOSED per `[DOM-HAB §G]`.
 
 [Back to top](#contents)
 
@@ -105,8 +111,8 @@ Habitat map and UI surfaces inherit KFM's general trust posture without exceptio
 > 1. **Public clients consume the governed API, not canonical stores.** `apps/explorer-web/` reads through `apps/governed-api/`; it never fetches from `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, or `data/catalog/` directly. `[DIRRULES §13.5]` `[MAP-MASTER]`
 > 2. **EvidenceBundle outranks generated language and tiles.** Rendered features, popups, screenshots, and AI answers identify candidates — they do not constitute proof. `[MAP-MASTER]` `[GAI]`
 > 3. **Cite-or-abstain.** Consequential claims (e.g., "this patch is regulatory critical habitat for species X") MUST resolve through Evidence Drawer or Focus Mode with citations validated; otherwise the surface returns ABSTAIN or DENY. `[GAI]` `[ENCY]`
-> 4. **Sensitive geometry is transformed before tile generation.** Style filters MUST NOT be the only thing hiding sensitive features. Public exact occurrence-linked Habitat outputs are denied or generalized. `[DOM-HAB §I]` `[DOM-HF]`
-> 5. **Promotion is a governed state transition.** Only `PUBLISHED` Habitat artifacts referenced by a `MapReleaseManifest` are loadable in public clients; promotion requires `EvidenceBundle`, `ValidationReport`, `PolicyDecision`, `PromotionDecision`, and a rollback target. `[DIRRULES §6]` `[MAP-MASTER]`
+> 4. **Sensitive geometry is transformed before tile generation.** Style filters MUST NOT be the only thing hiding sensitive features. Public exact occurrence-linked Habitat outputs are denied or generalized; disposition routes through `ai-build-operating-contract.md` §23.2. `[DOM-HAB §I]` `[DOM-HF]`
+> 5. **Promotion is a governed state transition.** Only `PUBLISHED` Habitat artifacts referenced by a `MapReleaseManifest` are loadable in public clients; promotion requires `EvidenceBundle`, `ValidationReport`, `PolicyDecision`, `PromotionDecision`, and a rollback target. `[DIRRULES §9]` `[MAP-MASTER]`
 
 The rest of this document operationalizes those five rules for the Habitat lane specifically.
 
@@ -120,7 +126,7 @@ The architectural picture below shows the **only** path by which Habitat data ma
 
 ```mermaid
 flowchart LR
-    subgraph LIFECYCLE["Habitat lane lifecycle [DIRRULES §12]"]
+    subgraph LIFECYCLE["Habitat lane lifecycle [DIRRULES §9 / §12]"]
       RAW["data/raw/habitat/"] --> WORK["data/work/habitat/"]
       WORK --> QUAR["data/quarantine/habitat/"]
       WORK --> PROC["data/processed/habitat/"]
@@ -134,7 +140,7 @@ flowchart LR
     WEB --> ML["packages/maplibre/<br/>2D renderer"]
     WEB --> UI["packages/ui/<br/>Evidence Drawer, badges, panels"]
 
-    CONTRACTS["schemas/contracts/v1/domains/habitat/<br/>contracts/domains/habitat/"] --> API
+    CONTRACTS["schemas/contracts/v1/.../habitat/<br/>contracts/domains/habitat/"] --> API
     POLICY["policy/domains/habitat/<br/>policy/sensitivity/, policy/rights/"] --> API
     EVIDENCE["EvidenceBundle resolver<br/>packages/evidence-resolver/"] --> API
 
@@ -145,7 +151,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> **Path status.** `[DIRRULES §12]` confirms the per-domain lifecycle and lane structure. Specific repo paths (`apps/governed-api/`, `apps/explorer-web/`, `packages/maplibre/`, `packages/ui/`) are **canonical roots per Directory Rules** but their **internal Habitat-specific components, routes, and route names are NEEDS VERIFICATION** until inspected in a mounted repo. The diagram describes responsibilities, not extant files.
+> **Path status.** `[DIRRULES §9]` confirms the lifecycle invariant and `[DIRRULES §12]` the per-domain lane structure. Specific repo paths (`apps/governed-api/`, `apps/explorer-web/`, `packages/maplibre/`, `packages/ui/`) are **canonical roots per Directory Rules** but their **internal Habitat-specific components, routes, and route names are NEEDS VERIFICATION** until inspected in a mounted repo. The renderer package name is OPEN pending Cesium retirement (OPEN-DR-10/-11). The diagram describes responsibilities, not extant files.
 
 [Back to top](#contents)
 
@@ -158,13 +164,13 @@ flowchart LR
 | Viewing product | Status | Backing objects | Release vehicle | Dominant controls |
 |---|---|---|---|---|
 | Habitat patch map | PROPOSED `[DOM-HAB §G]` | `HabitatPatch`, `LandCoverObservation` | `LayerManifest` → `MapReleaseManifest` | release state, source role, time scope |
-| Habitat suitability view | PROPOSED `[DOM-HAB §G]` `[ENCY §11]` | `SuitabilityModel`, `Habitat Quality Score`, `UncertaintySurface` | `LayerManifest` + `Model Run Receipt` | model-vs-observation labeling, uncertainty, model card |
+| Habitat suitability view | PROPOSED `[DOM-HAB §G]` `[ENCY §11]` | `SuitabilityModel`, `HabitatQualityScore`, `UncertaintySurface` | `LayerManifest` + `ModelRunReceipt` | model-vs-observation labeling, uncertainty, model card |
 | Connectivity / corridor view | PROPOSED `[DOM-HAB §G]` | `ConnectivityEdge`, `Corridor` | `LayerManifest` | source role, evidence support |
-| Restoration opportunity view | PROPOSED `[ENCY §7.4 E]` | `Restoration Opportunity`, `StewardshipZone` | `LayerManifest` | review state, steward attribution |
+| Restoration opportunity view | PROPOSED `[ENCY §7.4 E]` | `RestorationOpportunity`, `StewardshipZone` | `LayerManifest` | review state, steward attribution |
 | Critical habitat view | PROPOSED `[DOM-HAB §G]` | `HabitatPatch` (regulatory role) | `LayerManifest` | regulatory source role, no model→regulatory collapse |
-| Modeled habitat view | PROPOSED `[DOM-HAB §G]` | `SuitabilityModel`, `HabitatPatch` (model role) | `LayerManifest` + `Model Run Receipt` | model card, uncertainty surfacing |
+| Modeled habitat view | PROPOSED `[DOM-HAB §G]` | `SuitabilityModel`, `HabitatPatch` (model role) | `LayerManifest` + `ModelRunReceipt` | model card, uncertainty surfacing |
 | Occurrence summary view | PROPOSED `[DOM-HAB §G]` | Cross-lane: Fauna occurrence summary joined to `HabitatPatch` | `LayerManifest` (Habitat-derived) | **geoprivacy transform receipt required** |
-| Habitat–fauna join view | PROPOSED `[DOM-HF]` `[ENCY §7.4 E]` | `HabitatPatch` × Fauna `Occurrence Public` | `LayerManifest` + transform receipt | sensitivity, geoprivacy, generalized geometry only |
+| Habitat–fauna join view | PROPOSED `[DOM-HF]` `[ENCY §7.4 E]` | `HabitatPatch` × Fauna `OccurrencePublic` | `LayerManifest` + transform receipt | sensitivity, geoprivacy, generalized geometry only |
 | Uncertainty mode | PROPOSED `[ENCY §7.4 E]` | `UncertaintySurface` | `LayerManifest` | confidence class, support metadata |
 | Sensitivity-redacted view | **CONFIRMED doctrine** `[MAP-MASTER]` `[GAI]` | any Habitat object touching sensitive context | `LayerManifest` + redaction receipt | deny-by-default for exact sensitive geometry |
 | Evidence Drawer (Habitat panel) | PROPOSED placement; **CONFIRMED pattern** `[MAP-MASTER]` `[GAI]` | resolved `EvidenceBundle` for clicked feature | `EvidenceDrawerPayload` | citation validation, source role, time scope |
@@ -187,7 +193,7 @@ Every Habitat-rendering UI surface is bound to a controlling object family. The 
 
 | Object family | Role on the map UI | Required content (intent) | Status |
 |---|---|---|---|
-| `SourceDescriptor` | Backs source-role badges and attribution | `source_id`, `source_family`, `role` (`authority` \| `observation` \| `context` \| `model`), `rights`, `cadence`, `license_spdx`, `sensitivity`, `authoritative_scope` | PROPOSED placement `[MAP-MASTER §11]` |
+| `SourceDescriptor` | Backs source-role badges and attribution | `source_id`, `source_family`, `role` (`regulatory`/`authority` \| `observed` \| `context` \| `model`), `rights`, `cadence`, `license_spdx`, `sensitivity`, `authoritative_scope` | PROPOSED placement `[MAP-MASTER §11]` |
 | `LayerManifest` | Defines a releasable Habitat layer | `layer_id`, `source_id` refs, catalog refs, policy labels, `release_state`, tile/style refs, attribution | PROPOSED placement `[MAP-MASTER §11]` |
 | `StyleManifest` | Defines the visual rendering of a Habitat layer | `style_id`, `style_json_digest`, renderer version, sprite/glyph refs | PROPOSED placement |
 | `TileArtifactManifest` | Binds a tile artifact (e.g., PMTiles) to digest, sidecar, and source layer | `artifact_id`, `type`, `uri`, `sha256`, sidecar hashes, zooms, Range/CORS | PROPOSED placement |
@@ -218,7 +224,7 @@ Every Habitat-rendering UI surface is bound to a controlling object family. The 
 
 ## 6. Finite Outcomes and Envelope Mapping
 
-Per `[GAI]` and `[ENCY §24.3]`, every governed Habitat surface returns one of a small, well-known set of outcomes. Map UI components MUST switch on these outcomes — not parse free-form text or assume empty responses are success.
+Per `[GAI]` and `[ATLAS §24.3]`, every governed Habitat surface returns one of a small, well-known set of outcomes. Map UI components MUST switch on these outcomes — not parse free-form text or assume empty responses are success.
 
 ### 6.1 Outcome reference
 
@@ -228,14 +234,17 @@ Per `[GAI]` and `[ENCY §24.3]`, every governed Habitat surface returns one of a
 | `ABSTAIN` | Evidence insufficient, citations cannot validate, or stale with no released alternative | Non-substantive note + reason; never invents |
 | `DENY` | Policy, rights, sensitivity, or release state forbids | Denial reason; offers a non-restricted alternative where possible |
 | `ERROR` | Schema, query, contract, or infrastructure failure | Finite, actionable error; no claim leakage |
-| `HOLD` | Promotion / correction paused pending steward review | Surface remains in prior state; no silent rollback |
+| `HOLD` | Promotion / correction paused pending steward review (review/release plane) | Surface remains in prior state; no silent rollback |
+
+> [!NOTE]
+> Outcome vocabularies are surface-scoped (Atlas §24.3.1/§24.3.2): caller-facing surfaces use `ANSWER`/`ABSTAIN`/`DENY`/`ERROR`; the **layer-manifest resolver uses `ANSWER`/`DENY`/`ERROR` only — no `ABSTAIN`**; validators are internal `PASS`/`FAIL`; review/release uses `HOLD`/`ALLOW`/`RESTRICT`. `HOLD` above is a review/release-plane state, not a caller-facing answer outcome.
 
 ### 6.2 Habitat surface → outcome mapping
 
 | Habitat surface | DTO / schema | Allowed outcomes | Forbidden behavior | Status |
 |---|---|---|---|---|
 | Habitat feature/detail resolver | `HabitatDecisionEnvelope` (or generic `DecisionEnvelope`) | ANSWER / ABSTAIN / DENY / ERROR | exposing internal store IDs; returning unreleased candidates as ANSWER | PROPOSED; exact route UNKNOWN `[DOM-HAB §J]` |
-| Habitat layer manifest resolver | `LayerManifest` | ANSWER / DENY / ERROR | serving `WORK` or `CATALOG` layers; serving without `ReleaseManifest` | PROPOSED `[DOM-HAB §J]` |
+| Habitat layer manifest resolver | `LayerManifest` | ANSWER / DENY / ERROR *(no ABSTAIN — Atlas §24.3.2)* | serving `WORK` or `CATALOG` layers; serving without `ReleaseManifest` | PROPOSED `[DOM-HAB §J]` |
 | Habitat Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | ANSWER / ABSTAIN / DENY / ERROR | popups replacing the drawer; uncited claims | PROPOSED `[DOM-HAB §J]` |
 | Habitat Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | ANSWER / ABSTAIN / DENY / ERROR | AI as root truth; sensitive coordinate leakage; uncited synthesis | PROPOSED `[DOM-HAB §J]` `[GAI]` |
 | Habitat correction submission | `CorrectionNoticeCandidate` | ACCEPTED / DENY / ERROR | accepting without identity / rights check | PROPOSED `[ENCY §J]` |
@@ -290,7 +299,7 @@ The Habitat realization of the cross-cutting `EvidenceDrawerPayload` `[MAP-MASTE
 
 - the clicked feature id and its `layer_id`,
 - resolved `EvidenceBundle` refs (one or more),
-- source role(s) per evidence ref (`authority` / `observation` / `context` / `model`) — collapse is forbidden,
+- source role(s) per evidence ref (`regulatory`/`authority` / `observed` / `context` / `model`) — collapse is forbidden,
 - temporal scope (source, observed, valid, retrieval, release, correction times where material),
 - `PolicyDecision` posture and reason codes (if any obligations apply),
 - citation validation state (pass/fail per claim),
@@ -332,10 +341,11 @@ flowchart LR
 | Constraint | Source | Behavior |
 |---|---|---|
 | AI is never the root truth source. | `[GAI]` `[DOM-HAB §L]` | `EvidenceBundle` outranks generated language. |
-| Critical habitat is a regulatory source role; do not collapse model output into it. | `[DOM-HAB §G]` `[DOM-HAB §I]` | Focus Mode MUST surface the source role distinction; model output is labeled "modeled," not "critical." |
-| Sensitive coordinates MUST NOT appear in answers. | `[KFM-IDX-POL-005]` `[DOM-HF]` | Postcheck denies any response containing exact sensitive geometry. |
+| Critical habitat is a regulatory source role; do not collapse model output into it. | `[DOM-HAB §G]` `[DOM-HAB §I]` `[ATLAS §24.1]` | Focus Mode MUST surface the source role distinction; model output is labeled "modeled," not "critical." Collapse → DENY at publication, ABSTAIN at AI surface. |
+| Sensitive coordinates MUST NOT appear in answers. | `[KFM-IDX-POL-005]` `[DOM-HF]` | Postcheck denies any response containing exact sensitive geometry; disposition routes through §23.2. |
 | Citations MUST validate before public answer. | `[GAI]` `[MAP-MASTER §O]` | `CitationValidationReport` fail → ABSTAIN. |
 | Model context length and runtime config are recorded. | `[MAP-MASTER §O]` | `AIReceipt` captures provider, model, prompt/context hash, evidence refs, output digest, citation report. |
+| AI never reads RAW or WORK. | `[GAI]` | Only released `EvidenceBundle`s are in scope for Focus Mode. |
 | Stale Habitat sources trigger ABSTAIN. | `[MAP-MASTER]` | When source freshness fails policy and no released alternative exists, return ABSTAIN with reason. |
 
 > [!WARNING]
@@ -349,11 +359,14 @@ flowchart LR
 
 Habitat sits one cross-lane join away from rare-species occurrence data, sensitive nests, dens, roosts, hibernacula, and spawning sites `[DOM-FAUNA §I]` `[DOM-HF]`. The map UI inherits a strict deny-by-default posture for those joins.
 
+> [!CAUTION]
+> **Disposition routing.** The decisions in this section profile the lane; the authoritative sensitive-domain matrix is `ai-build-operating-contract.md` §23.2 (most-restrictive applicable row), the tier scheme is Atlas §24.5, and the full rule set is `HABITAT_SENSITIVITY_PROFILE.md`. This section does not re-derive disposition.
+
 ### 9.1 Sensitivity rules on the map UI
 
 | Rule | Status | Citation |
 |---|---|---|
-| Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context MUST NOT be flattened into one another. | CONFIRMED doctrine | `[DOM-HAB §I]` |
+| Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context MUST NOT be flattened into one another. | CONFIRMED doctrine | `[DOM-HAB §I]` `[ATLAS §24.1]` |
 | Sensitive occurrence details deny by default. | CONFIRMED doctrine | `[DOM-HAB §I]` `[DOM-HF]` |
 | Exact occurrence-linked Habitat outputs MUST be generalized, redacted, reviewed, or denied when they create exposure risk. | CONFIRMED doctrine | `[KFM_Unified_Implementation_Architecture_Build_Manual §6.3]` |
 | Geoprivacy transforms emit a **redaction / transform receipt** stating input class, output class, reason, policy, reviewer, residual risk. | CONFIRMED doctrine | `[KFM-IDX-POL-005]` |
@@ -362,20 +375,20 @@ Habitat sits one cross-lane join away from rare-species occurrence data, sensiti
 
 ### 9.2 Permitted geoprivacy transform types (PROPOSED)
 
-Per `[KFM-IDX-POL-005]`, the public-safe Habitat map should support a finite, named set of geoprivacy transforms. Each transform's application emits a receipt.
+Per `[KFM-IDX-POL-005]`, the public-safe Habitat map should support a finite, named set of geoprivacy transforms. Each transform's application emits a receipt. Parameters (grid resolution, buffer distance, window length) are steward decisions bounded by policy and are NEEDS VERIFICATION here.
 
 | Transform | Effect | UI consequence |
 |---|---|---|
 | `suppress` | Feature removed from public tile | No render; drawer returns DENY with reason |
-| `generalize_to_grid` | Geometry snapped to coarse grid (e.g., `z=9`) | Render generalized cell with badge |
+| `generalize_to_grid` | Geometry snapped to coarse grid | Render generalized cell with badge |
 | `generalize_to_watershed` | Aggregated to HUC unit | Render HUC polygon; drawer cites generalization |
 | `generalize_to_county` | Aggregated to county | Render county polygon; drawer cites generalization |
-| `buffer` | Geometry buffered by N meters | Render buffered geometry; badge shown |
+| `buffer` | Geometry buffered (no centroid leakage) | Render buffered geometry; badge shown |
 | `delayed_publication` | Release deferred by policy window | Surface returns DENY until window opens |
 | `steward_only_exact` | Exact geometry visible only in review console | Public surface returns DENY; review console surfaces exact |
 
 > [!IMPORTANT]
-> **No transform → no public render.** If a Habitat layer that joins to sensitive occurrence data lacks a resolvable transform receipt, the governed API MUST return DENY, and the map shell MUST NOT load tiles for that layer.
+> **No transform → no public render.** If a Habitat layer that joins to sensitive occurrence data lacks a resolvable transform receipt, the governed API MUST return DENY, and the map shell MUST NOT load tiles for that layer. A transform is valid only if the public derivative cannot be inverted to recover the protected feature; otherwise the correct outcome is `suppress` or stay denied.
 
 [Back to top](#contents)
 
@@ -464,21 +477,21 @@ The validator catalog below combines the Habitat-specific test obligations from 
 <details>
 <summary><b>Fixture seed: minimal Habitat thin-slice (illustrative)</b></summary>
 
-This illustrates the **intent** of a Habitat + Fauna thin-slice fixture per `[DOM-HF]` and `[KFM-IDX-APP-002]`. It is **not** a normative schema — actual field names, types, and homes are PROPOSED until validated by `schemas/contracts/v1/domains/habitat/` and `policy/domains/habitat/`.
+This illustrates the **intent** of a Habitat + Fauna thin-slice fixture per `[DOM-HF]` and `[KFM-IDX-APP-002]`. It is **not** a normative schema — actual field names, types, and homes are PROPOSED until validated by the Habitat schema home (slug **CONFLICTED**, §13) and `policy/domains/habitat/`.
 
 ```json
 {
   "fixture_id": "hab-fauna-thinslice-001",
-  "scope": "public-safe occurrence → habitat patch assignment",
+  "scope": "public-safe occurrence -> habitat patch assignment",
   "habitat_patch": {
     "object_type": "HabitatPatch",
     "id": "patch-illustrative-001",
     "ecological_system_ref": "kfm://es/illustrative",
-    "source_role": "observation",
+    "source_role": "observed",
     "geometry_class": "generalized"
   },
   "fauna_occurrence_public": {
-    "object_type": "Occurrence Public",
+    "object_type": "OccurrencePublic",
     "taxon_ref": "kfm://taxon/illustrative",
     "geoprivacy_transform_receipt_ref": "kfm://receipt/transform/illustrative",
     "geometry_class": "generalized_to_grid"
@@ -486,7 +499,7 @@ This illustrates the **intent** of a Habitat + Fauna thin-slice fixture per `[DO
   "evidence_bundle": {
     "object_type": "EvidenceBundle",
     "claim": "patch X is potential habitat for taxon Y under model Z",
-    "source_roles": ["observation", "model"],
+    "source_roles": ["observed", "model"],
     "citations": ["..."],
     "temporal_scope": { "valid_time": "..." },
     "review_state": "draft"
@@ -521,12 +534,13 @@ Patterns that look like helpful shortcuts but break Habitat's trust posture. All
 | Treating popups as Evidence Drawer | Renders consequential claims without citation validation | Popups summarize; claims resolve in drawer `[MAP-MASTER §N]` |
 | Style filter hides sensitive Habitat-occurrence geometry | Style can be bypassed; geometry is still in tiles | Transform geometry before tile generation `[MAP-MASTER]` |
 | AI answer treated as Habitat truth | Generation outranks evidence — forbidden | `EvidenceBundle` outranks generation; ABSTAIN if missing `[GAI]` |
-| Modeled suitability rendered as "critical habitat" | Collapses model role into regulatory role | Source role distinction MUST be visible `[DOM-HAB §I]` |
+| Modeled suitability rendered as "critical habitat" | Collapses model role into regulatory role (`source_role_collapse`) | Source role distinction MUST be visible; DENY at publish, ABSTAIN at AI `[DOM-HAB §I]` `[ATLAS §24.1]` |
 | Loading an unreleased Habitat snapshot from the time slider | Bypasses promotion gate | Time slider only loads released snapshots `[MAP-MASTER §P]` |
 | Watcher emits a published Habitat tile directly | Watcher-as-non-publisher invariant violated | Workers emit receipts and candidate decisions only `[DIRRULES §13.5]` |
-| Connector writes to `data/published/layers/habitat/` | Connectors do not publish | Connectors emit to `data/raw/` or `data/quarantine/` `[DIRRULES §13.5]` |
-| `contracts/habitat/` and `schemas/contracts/v1/domains/habitat/` both edited as authority | Schema-home drift per ADR-0001 | `schemas/contracts/v1/...` is canonical; `contracts/` keeps semantic Markdown `[DIRRULES §13.1]` |
+| Connector writes to `data/published/layers/habitat/` | Connectors do not publish | Connectors emit to `data/raw/` or `data/quarantine/` with `publication_state: WORK_CANDIDATE` `[DIRRULES §13.5]` |
+| `contracts/habitat/*.schema.json` and `schemas/contracts/v1/.../habitat/` both edited as authority | Schema-home drift; and `.schema.json` must never live under `contracts/` | `.schema.json` lives only under `schemas/`; `contracts/` keeps semantic Markdown. The exact `schemas/` slug is **CONFLICTED** (segmented vs flat, ADR-S-01 open). File the drift; do not create both. `[DIRRULES §13.1, §6.4]` `[ATLAS §24.12 ADR-S-01]` |
 | Story Node renders Habitat narrative without `EvidenceBundle` refs | Narrative outruns evidence | Story Nodes are evidence-bound, release-aware, policy-filtered `[KFM-IDX-MAP-007]` |
+| Cross-lane join doctrine placed under `docs/domains/habitat-fauna/` | Combined-lane folder violates Domain Placement Law | Cross-domain doctrine lives under `docs/architecture/<topic>.md` `[DIRRULES §12]` |
 
 [Back to top](#contents)
 
@@ -538,15 +552,17 @@ These items are inherited from `[DOM-HAB §N]` and from the trust-membrane verif
 
 | Item | Status | Evidence that would settle it |
 |---|---|---|
+| **Schema home for Habitat machine schemas** — segmented `…/domains/habitat/` (DIRRULES §12) vs flat `…/habitat/` (Atlas §24.13); confirm/amend ADR-0001 (ADR-S-01; VB-11-01) | **CONFLICTED** | Accepted ADR-S-01 + DRIFT_REGISTER entry + mounted `schemas/` inspection |
 | Verify official critical habitat source descriptors | NEEDS VERIFICATION | mounted repo files, registry entries, tests |
 | Verify sensitive occurrence policy and geoprivacy transforms | NEEDS VERIFICATION | `policy/domains/habitat/`, `policy/sensitivity/`, fixtures |
-| Verify model-card requirements for suitability products | NEEDS VERIFICATION | schemas + `Model Run Receipt` fixtures |
+| Verify model-card requirements for suitability products | NEEDS VERIFICATION | schemas + `ModelRunReceipt` fixtures |
 | Verify Habitat MapLibre overlay registry and Focus behavior | NEEDS VERIFICATION | layer registry, route inventory, Focus adapter tests |
 | Confirm the exact governed-API route for the Habitat feature/detail resolver | UNKNOWN | route inventory ADR per `[KFM-IDX-API-001]` |
 | Confirm whether `HabitatDecisionEnvelope` is a Habitat-specific subtype or a generic `DecisionEnvelope` | PROPOSED, choice not settled | ADR + schema in `schemas/contracts/v1/runtime/` |
 | Confirm Habitat-specific Story Node payload contract | PROPOSED | StoryManifest spec, fixtures |
 | Confirm Habitat layer naming and `layer_id` convention | PROPOSED | layer registry entries in repo |
 | Confirm rollback receipt shape for Habitat releases | PROPOSED | `release/candidates/habitat/` + rollback fixtures |
+| Confirm renderer package name (Cesium retirement) | OPEN | OPEN-DR-10/-11 ADR |
 
 > [!NOTE]
 > **Posture.** Every PROPOSED row above is **doctrine-grounded but implementation-ungrounded**. Promotion of any row to CONFIRMED requires direct repo inspection or a merged ADR — not memory, not external research, not analogy to neighboring domains.
@@ -558,18 +574,21 @@ These items are inherited from `[DOM-HAB §N]` and from the trust-membrane verif
 ## 15. Related Docs
 
 - `docs/domains/habitat/README.md` — Habitat domain landing page <!-- TODO: confirm presence -->
-- `docs/domains/habitat/SOURCE_REGISTRY.md` — source families and rights <!-- TODO: confirm presence -->
-- `docs/domains/habitat/SENSITIVITY_POLICY.md` — geoprivacy and redaction posture <!-- TODO: confirm presence -->
-- `docs/domains/habitat/CONTRACTS.md` — Habitat object-meaning index <!-- TODO: confirm presence -->
+- `docs/domains/habitat/HABITAT_SOURCE_LEDGER.md` — source families and rights <!-- PROPOSED -->
+- `docs/domains/habitat/HABITAT_SENSITIVITY_PROFILE.md` — geoprivacy and redaction posture <!-- PROPOSED -->
+- `docs/domains/habitat/CONTRACTS.md` — Habitat object-meaning index <!-- PROPOSED -->
+- `docs/domains/habitat/IDENTITY_MODEL.md` — identity & spec_hash discipline <!-- PROPOSED -->
 - `docs/domains/fauna/MAP_UI_CONTRACTS.md` — adjacent lane; relevant for sensitive-occurrence joins <!-- TODO: confirm presence -->
 - `docs/architecture/map-shell.md` — cross-cutting map shell architecture <!-- TODO: confirm presence -->
 - `docs/architecture/governed-api.md` — trust membrane architecture <!-- TODO: confirm presence -->
+- `docs/architecture/habitat-fauna-thin-slice.md` — cross-lane thin-slice doctrine (non-domain home) <!-- PROPOSED -->
 - `docs/standards/PMTILES.md` — PMTiles governance profile
 - `docs/standards/OGC-API-TILES.md` — Tiles delivery profile
-- `docs/standards/PROV.md` — provenance profile
-- `docs/doctrine/trust-membrane.md` — `[DIRRULES §7.1]` materialization <!-- TODO: confirm presence -->
-- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant <!-- TODO: confirm presence -->
-- `schemas/contracts/v1/domains/habitat/` — canonical machine schemas (PROPOSED home)
+- `docs/standards/PROVENANCE.md` — provenance profile (`PROV.md` vs `PROVENANCE.md` is OPEN-DR-01)
+- `ai-build-operating-contract.md` — operating law; §23.2 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`)
+- `docs/doctrine/trust-membrane.md` — `[DIRRULES §13.5]` materialization <!-- TODO: confirm presence -->
+- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant (`[DIRRULES §9]`) <!-- TODO: confirm presence -->
+- `schemas/contracts/v1/domains/habitat/` — machine schemas (PROPOSED home; slug **CONFLICTED**, §13)
 - `policy/domains/habitat/` — Habitat policy bundles (PROPOSED home)
 - `tests/domains/habitat/` — Habitat tests (PROPOSED home)
 
@@ -589,14 +608,14 @@ Habitat's owned and cited object families, scoped to map and UI surfaces. Identi
 | `HabitatPatch` | Polygonal habitat unit; basis for patch map, critical/modeled views | source id + object role + temporal scope + normalized digest | distinct source/observed/valid/retrieval/release/correction times |
 | `LandCoverObservation` | Backing observation for patch derivation | same | same |
 | `EcologicalSystem` | Class label for patches | same | same |
-| `Habitat Quality Score` | Suitability scalar; surfaced in suitability view | same | same |
+| `HabitatQualityScore` | Suitability scalar; surfaced in suitability view; descriptive not prescriptive | same | same |
 | `SuitabilityModel` | Model artifact behind modeled views | same | same |
 | `ConnectivityEdge` | Edge in connectivity graph | same | same |
 | `Corridor` | Aggregated connectivity feature | same | same |
-| `Restoration Opportunity` | Candidate restoration polygon | same | same |
+| `RestorationOpportunity` | Candidate restoration polygon | same | same |
 | `StewardshipZone` | Steward-managed area context | same | same |
-| `Model Run Receipt` | Receipt for model runs; required for modeled views | same | same |
-| `UncertaintySurface` | Surface backing uncertainty mode | same | same |
+| `ModelRunReceipt` | Receipt for model runs; required for modeled views | same | same |
+| `UncertaintySurface` | Surface backing uncertainty mode; must not be erased | same | same |
 
 </details>
 
@@ -633,7 +652,7 @@ Habitat's owned and cited object families, scoped to map and UI surfaces. Identi
 <summary><b>Selected Habitat and map-UI terms</b></summary>
 
 - **HabitatPatch** — polygonal unit of habitat carrying source role, evidence, time scope, and release state `[DOM-HAB §C]`.
-- **Regulatory critical habitat** — legally designated habitat; source role is `authority`. Distinct from modeled habitat and MUST NOT be collapsed `[DOM-HAB §C]`.
+- **Regulatory critical habitat** — legally designated habitat; source role is `regulatory`/`authority`. Distinct from modeled habitat and MUST NOT be collapsed `[DOM-HAB §C]` `[ATLAS §24.1]`.
 - **Modeled habitat** — habitat derived from a `SuitabilityModel`; source role is `model`. Always labeled distinctly from regulatory or observed habitat `[DOM-HAB §C]`.
 - **Geoprivacy transform** — a named transformation (`suppress`, `generalize_to_grid`, `generalize_to_watershed`, `generalize_to_county`, `buffer`, `delayed_publication`, `steward_only_exact`) producing a public-safe representation; each application emits a receipt `[DOM-HAB §C]` `[KFM-IDX-POL-005]`.
 - **EvidenceBundle** — authority carrier for a claim, with source role, citations, temporal/spatial scope, and review state. Outranks rendered tiles and AI answers `[ENCY]`.
@@ -643,7 +662,7 @@ Habitat's owned and cited object families, scoped to map and UI surfaces. Identi
 - **AIReceipt** — audit record for any AI answer, including model, prompt/context hash, evidence refs, policy decisions, output digest, citation report `[MAP-MASTER §11]`.
 - **PolicyDecision** — allow/deny/abstain/error with reason codes and obligations; backs trust badges `[MAP-MASTER §11]`.
 - **MapReleaseManifest** — active public map release bundle: layer/style/tile manifests, promotion decision, rollback target, cache invalidation `[MAP-MASTER §11]`.
-- **Trust membrane** — the governed-API boundary between public clients and internal stores `[DIRRULES §7.1]` `[KFM-IDX-API-001]`.
+- **Trust membrane** — the governed-API boundary between public clients and internal stores `[DIRRULES §13.5]` `[KFM-IDX-API-001]`.
 
 </details>
 
@@ -651,6 +670,6 @@ Habitat's owned and cited object families, scoped to map and UI surfaces. Identi
 
 ---
 
-**Related docs:** [Habitat README](./README.md) · [Habitat Source Registry](./SOURCE_REGISTRY.md) · [Habitat Sensitivity Policy](./SENSITIVITY_POLICY.md) · [Map Shell Architecture](../../architecture/map-shell.md) · [Governed API Architecture](../../architecture/governed-api.md)
-**Last updated:** 2026-05-17
-[Back to top](#habitat--map-and-ui-contracts)
+**Related docs:** [Habitat README](./README.md) · [Habitat Source Ledger](./HABITAT_SOURCE_LEDGER.md) · [Habitat Sensitivity Profile](./HABITAT_SENSITIVITY_PROFILE.md) · [Map Shell Architecture](../../architecture/map-shell.md) · [Governed API Architecture](../../architecture/governed-api.md)
+**Last updated:** 2026-06-05 · `CONTRACT_VERSION = "3.0.0"`
+[Back to top](#contents)
