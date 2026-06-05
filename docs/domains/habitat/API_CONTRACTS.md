@@ -1,12 +1,12 @@
-<!-- KFM_META_BLOCK_V2
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/habitat-api-contracts
 title: Habitat — API Contracts
 type: standard
 version: v1
 status: draft
-owners: <habitat-steward>            # TODO confirm
+owners: <habitat-steward>            # TODO confirm against docs/governance/ steward charters
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
   - docs/domains/habitat/README.md
@@ -14,17 +14,22 @@ related:
   - docs/domains/habitat/SOURCES.md
   - docs/domains/habitat/SENSITIVITY.md
   - docs/domains/habitat/sublanes/ecoregions.md
+  - docs/domains/habitat/sublanes/suitability.md
+  - docs/domains/habitat/sublanes/restoration.md
   - docs/architecture/governed-api.md
   - docs/architecture/contract-schema-policy-split.md
   - contracts/domains/habitat/
   - schemas/contracts/v1/domains/habitat/
   - policy/domains/habitat/
+  - ai-build-operating-contract.md
 tags: [kfm, habitat, api, contracts, governed-api, decision-envelope]
 notes:
+  - CONTRACT_VERSION = "3.0.0"
   - All repo-path claims are PROPOSED until verified against a mounted repo.
   - HabitatDecisionEnvelope is a PROPOSED per-domain extension of the master DecisionEnvelope grammar (Atlas v1.1 §24.3).
   - Exact governed-API route paths remain UNKNOWN per Atlas §6.J.
-KFM_META_BLOCK_V2 -->
+  - "CONFLICTED schema-home slug: Directory Rules §12 uses schemas/contracts/v1/domains/habitat/ (segmented); Atlas §24.13 crosswalk uses schemas/contracts/v1/habitat/ (flat). ADR-required; see §16."
+[/KFM_META_BLOCK_V2] -->
 
 # Habitat — API Contracts
 
@@ -34,13 +39,14 @@ KFM_META_BLOCK_V2 -->
 [![Authority](https://img.shields.io/badge/authority-standard%20doc-blue)](#0-quick-jump)
 [![Policy Label](https://img.shields.io/badge/policy_label-public-2ea44f)](#12-sensitivity-rights-and-public-safe-derivatives)
 [![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-555)](#14-lifecycle-and-release-gates)
-[![Schema Home](https://img.shields.io/badge/schemas-schemas%2Fcontracts%2Fv1%2Fdomains%2Fhabitat%2F-lightgrey)](#16-directory-placement-and-schema-homes)
+[![Schema Home](https://img.shields.io/badge/schemas-CONFLICTED%20slug%20%C2%B7%20see%20%C2%A716-important)](#16-directory-placement-and-schema-homes)
+[![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](#)
 [![CI](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
 
-**Status:** `draft` &nbsp;·&nbsp; **Owners:** `<habitat-steward>` _(TODO confirm)_ &nbsp;·&nbsp; **Updated:** `2026-05-17` &nbsp;·&nbsp; **Lane:** `habitat` &nbsp;·&nbsp; **Authority:** standard doc — _not authoritative_; canonical truth lives in `schemas/contracts/v1/...`, `policy/...`, and resolved `EvidenceBundle`.
+**Status:** `draft` &nbsp;·&nbsp; **Owners:** `<habitat-steward>` _(TODO confirm)_ &nbsp;·&nbsp; **Updated:** `2026-06-05` &nbsp;·&nbsp; **Lane:** `habitat` &nbsp;·&nbsp; **Authority:** standard doc — _not authoritative_; canonical truth lives in the canonical schema home, `policy/...`, and resolved `EvidenceBundle`.
 
 > [!IMPORTANT]
-> This file **documents** the Habitat governed-API surfaces. It is not a schema, a route registration, or a policy bundle. Machine-checkable shape lives under `schemas/contracts/v1/domains/habitat/` (canonical per **ADR-0001**); admissibility lives under `policy/domains/habitat/`; service-side semantics live under `contracts/domains/habitat/`. Any conflict between this document and those authorities resolves in favor of those authorities, and the drift is filed against this file.
+> This file **documents** the Habitat governed-API surfaces. It is not a schema, a route registration, or a policy bundle. Machine-checkable shape lives under the canonical Habitat schema home (**ADR-0001**; see the §16 slug conflict); admissibility lives under `policy/domains/habitat/`; service-side semantics live under `contracts/domains/habitat/`. Any conflict between this document and those authorities resolves in favor of those authorities, and the drift is filed against this file in `docs/registers/DRIFT_REGISTER.md`. `CONTRACT_VERSION = "3.0.0"`.
 
 ---
 
@@ -76,14 +82,14 @@ The Habitat lane governs **`HabitatPatch`, `LandCoverObservation`, `EcologicalSy
 **This file covers**
 
 - The **finite-outcome envelopes** returned by every Habitat governed surface.
-- The **DTO shapes** the surfaces speak — referencing, not redefining, the canonical schemas under `schemas/contracts/v1/domains/habitat/`.
+- The **DTO shapes** the surfaces speak — referencing, not redefining, the canonical Habitat schemas.
 - The **reason codes**, **obligations**, and **trust badges** that accompany each outcome.
 - The **cross-lane discipline** Habitat APIs must preserve toward Fauna, Flora, Soil, Hydrology, Hazards, and Archaeology.
 
 **This file does not cover**
 
 - **Wire format mechanics** (HTTP verbs, status codes, content negotiation, pagination semantics). Those belong to `docs/architecture/governed-api.md` _(`PROPOSED`)_.
-- **Machine schemas.** Those live under `schemas/contracts/v1/domains/habitat/`.
+- **Machine schemas.** Those live under the canonical Habitat schema home (see §16; slug `CONFLICTED`).
 - **Map and UI rendering of these payloads.** That belongs to `docs/domains/habitat/MAP_UI_CONTRACTS.md` _(`PROPOSED`)_.
 - **Source descriptors and harvest mechanics.** Those belong to `docs/domains/habitat/SOURCES.md` _(`PROPOSED`)_ and the Habitat source-refresh runbook.
 
@@ -132,14 +138,14 @@ Co-location does not relax the membrane: a server-side renderer that runs in the
 
 ## 3. Surface inventory
 
-> `PROPOSED governed-API surfaces; exact routes UNKNOWN.` _Routes are `PROPOSED` until verified against a mounted repo and recorded in an ADR. Per [DOM-HAB §J], [ENCY §J], and §20.3._
+> `PROPOSED governed-API surfaces; exact routes UNKNOWN.` _Routes are `PROPOSED` until verified against a mounted repo and recorded in an ADR. Per [DOM-HAB §J], [ENCY §J], [ENCY §24.3.2], and §20.3._
 
-The Habitat lane exposes the surfaces below. Outcome columns follow the master grammar at Atlas v1.1 §24.3.
+The Habitat lane exposes the surfaces below. Outcome columns follow the master outcome × surface mapping at Atlas v1.1 §24.3.2.
 
 | Surface | DTO / schema | Outcomes | Status |
 |---|---|---|---|
 | Habitat feature / detail resolver | `HabitatFeatureEnvelope` wrapping `HabitatDecisionEnvelope` + `EvidenceRef[]` | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | `PROPOSED` |
-| Habitat layer manifest resolver | `LayerManifest` (domain-bound) | `ANSWER` · `DENY` · `ERROR` | `PROPOSED` — released artifacts only |
+| Habitat layer manifest resolver | `LayerManifest` (domain-bound) | `ANSWER` · `DENY` · `ERROR` | `PROPOSED` — released artifacts only; §24.3.2 forbids `ABSTAIN` here |
 | Habitat Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | `PROPOSED` — evidence- and policy-filtered |
 | Habitat Focus Mode answer | `FocusModeRequest` → `FocusModeResponse` + `AIReceipt` (carried inside `RuntimeResponseEnvelope`) | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | `PROPOSED` — AI is interpretive, never root truth |
 | Habitat correction submit | `CorrectionNoticeCandidate` | `ACCEPTED` · `HOLD` · `DENY` · `ERROR` | `PROPOSED` — steward-routed |
@@ -147,7 +153,7 @@ The Habitat lane exposes the surfaces below. Outcome columns follow the master g
 | Habitat source summary resolver | `SourceDescriptor` projection | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | `PROPOSED` — never returns raw source bytes |
 
 > [!NOTE]
-> The HTTP route shapes shown later in this document (e.g., `GET /api/v1/domains/habitat/features/{id}`) are **illustrative**, following the master surface pattern at [ENCY §J]. Final paths require an ADR before merge.
+> The HTTP route shapes shown later in this document (e.g., `GET /api/v1/domains/habitat/features/{id}`) are **illustrative**, following the master surface pattern at [ENCY §J] and [ENCY §20.3]. Final paths require an ADR before merge.
 
 [Back to top](#habitat--api-contracts)
 
@@ -159,10 +165,13 @@ The Habitat lane exposes the surfaces below. Outcome columns follow the master g
 
 Every Habitat governed surface returns a `HabitatDecisionEnvelope`. The envelope inherits the master outcome enum and reason-code discipline; **domain-specific** reason codes appear in §11 (source-role anti-collapse), §12 (sensitivity), and §14 (lifecycle), and are summarized in the §17 reason-code register.
 
+> [!NOTE]
+> The master `DecisionEnvelope` minimal shape (Atlas §24.3, `KFM-P5-PROG-0001`) is `{ decision_id, outcome, policy_family, reasons[], obligations[], evaluated_at }`, with a suggested cross-cutting home of `schemas/contracts/v1/runtime/decision_envelope.schema.json`. The fields below are the Habitat **extension** of that minimal shape; the extra fields are `PROPOSED`.
+
 | Field | Required | Notes |
 |---|---|---|
 | `decision_id` | yes | Stable identifier; supports audit, replay, and rollback drill. |
-| `outcome` | yes | One of `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` for caller-facing envelopes. Validator-internal envelopes additionally use `PASS`, `FAIL`, `HOLD` per Atlas §24.3.1. |
+| `outcome` | yes | One of `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` for caller-facing envelopes. Validator-internal checks additionally use `PASS`, `FAIL`; release/review surfaces use `HOLD` (and `ALLOW`/`RESTRICT` on the review queue) per Atlas §24.3.1–§24.3.2. |
 | `domain` | yes | Constant: `"habitat"`. |
 | `policy_family` | yes | E.g. `habitat.public_release`, `habitat.source_role`, `habitat.sensitivity`, `habitat.rights`. |
 | `reasons` | yes when `outcome != ANSWER` | Reason codes (see §17). Examples: `missing_evidence`, `unresolved_evidence_ref`, `source_role_collapse`, `modeled_as_critical_denied`, `restricted_exact_geometry`, `stale_evidence`, `unknown_rights`, `review_pending`. |
@@ -178,7 +187,7 @@ Every Habitat governed surface returns a `HabitatDecisionEnvelope`. The envelope
 | `rollback_target` | yes | Pointer to the prior `ReleaseManifest` and its root hash. |
 
 > [!NOTE]
-> The Atlas marks the envelope and its exact field set as **`PROPOSED`** at [DOM-HAB §J]. The shape above synthesizes the master `DecisionEnvelope` grammar with Habitat-specific obligations and reason codes. Final field names, JSON Schema, and route binding are subject to ADR review and live under `schemas/contracts/v1/domains/habitat/decision_envelope.schema.json` _(`PROPOSED` path)_.
+> The Atlas marks the envelope and its exact field set as **`PROPOSED`** at [DOM-HAB §J]. The shape above synthesizes the master `DecisionEnvelope` grammar with Habitat-specific obligations and reason codes. Final field names, JSON Schema, and route binding are subject to ADR review and live under the canonical Habitat schema home as `.../habitat/decision_envelope.schema.json` _(`PROPOSED` path; slug `CONFLICTED` per §16)_.
 
 [Back to top](#habitat--api-contracts)
 
@@ -250,11 +259,14 @@ Resolves a single Habitat feature — `HabitatPatch`, `LandCoverObservation`, `E
 
 ## 6. Layer manifest resolver
 
-> `PROPOSED governed-API surface.` _[ENCY §J], [DOM-HAB §J], [MAP-MASTER]._
+> `PROPOSED governed-API surface.` _[ENCY §J], [ENCY §24.3.2], [DOM-HAB §J], [MAP-MASTER]._
 
 Returns the `LayerManifest` for a Habitat map layer — habitat-patch overlay, suitability surface, connectivity/corridor view, restoration opportunity, uncertainty mode, sensitivity-redacted mode, habitat-fauna join view. Map shells consume these manifests to build MapLibre sources and layers; the manifest binds the rendered layer to its governed source and evidence semantics.
 
 **PROPOSED route:** `GET /api/v1/layers/{layer_id}/manifest`
+
+> [!NOTE]
+> This surface returns `ANSWER` / `DENY` / `ERROR` only — it does **not** `ABSTAIN`. Per Atlas §24.3.2, a layer either resolves to a released manifest or is denied; there is no non-substantive layer answer.
 
 **Required behavior**
 
@@ -297,7 +309,7 @@ When a user clicks or selects a Habitat feature, the map shell requests an `Evid
 | `correction_link` | Route into the correction-submit surface (§9). |
 
 > [!NOTE]
-> The drawer renders a **bounded view of evidence** — it is not the evidence store. A drawer that displays a claim without a citation is a `citation_validation_failed` denial.
+> The drawer renders a **bounded view of evidence** — it is not the evidence store. A drawer that displays a claim without a citation is a `citation_validation_failed` denial. Atlas §24.3.2 additionally forbids returning a drawer payload that includes restricted geometry.
 
 [Back to top](#habitat--api-contracts)
 
@@ -428,7 +440,7 @@ The governed API **must preserve these roles** end-to-end. The envelope's `sourc
 
 > `CONFIRMED doctrine / PROPOSED implementation.` _[DOM-HAB §I], [DOM-HF], [ENCY §24.5]._
 
-Habitat lies adjacent to species-occurrence sensitivity. Even when Habitat does not own occurrence truth, **a habitat-evidence response that reveals or implies sensitive occurrence location must fail closed**. Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context **must not be flattened**.
+Habitat lies adjacent to species-occurrence sensitivity. Even when Habitat does not own occurrence truth, **a habitat-evidence response that reveals or implies sensitive occurrence location must fail closed**. Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context **must not be flattened**. _[DOM-HAB §I]._
 
 ### 12.1 Default sensitivity tiers
 
@@ -520,7 +532,7 @@ flowchart LR
 
 ## 15. Validators, tests, and fixtures
 
-> `PROPOSED implementation.` _[DOM-HAB §K], [ENCY §24.7], [KFM-IDX-VAL-001], [KFM-IDX-VAL-002]._
+> `PROPOSED implementation.` _[DOM-HAB §K], [ENCY §24.7], [ENCY §20.4], [KFM-IDX-VAL-001], [KFM-IDX-VAL-002]._
 
 The contracts above are enforced by the following validator and test families. All paths are `PROPOSED` until verified against a mounted repo.
 
@@ -541,6 +553,7 @@ The contracts above are enforced by the following validator and test families. A
 | No-network fixture | Habitat × Fauna thin-slice fixture (one public-safe occurrence-to-habitat assignment). | `ANSWER` for the public-safe path; `DENY` for the sensitive-detail path. |
 | Cross-lane occurrence join | Public Habitat surface that exposes Fauna sensitive-occurrence detail. | `DENY` (`cross_lane_sensitivity_join`). |
 | Separation of duties | Reviewer and promoter are the same actor for a material change. | `DENY` (`separation_of_duties_violated`). |
+| Lifecycle boundary | Any public surface reference to `RAW` / `WORK` / `QUARANTINE` / internal store. | `DENY` / `ERROR` (per Atlas §20.4). |
 
 > [!TIP]
 > **The Habitat × Fauna thin slice** is the canonical first proof for this lane: one public-safe occurrence-to-habitat assignment using controlled fixtures, exercising `EvidenceBundle`, `LayerManifest`, `EvidenceDrawerPayload`, `FocusModeResponse`, `RuntimeResponseEnvelope`, and `RollbackCard` without touching live sensitive feeds. _[KFM-IDX-APP-002], [DOM-HF]._
@@ -551,18 +564,25 @@ The contracts above are enforced by the following validator and test families. A
 
 ## 16. Directory placement and schema homes
 
-> `CONFIRMED doctrine / PROPOSED specific paths.` _[DIRRULES §6, §7, §9, §12]._
+> `CONFIRMED doctrine / PROPOSED specific paths / CONFLICTED schema slug.` _[DIRRULES §6, §7, §9, §12], [ATLAS-v1.1 §24.13]._
 
 The Habitat lane follows Domain Placement Law: the domain is a **segment** inside each responsibility root, never a **root itself**.
+
+> [!IMPORTANT]
+> **`CONFLICTED` — Habitat schema-home slug.** Two project authorities disagree on the Habitat schema/contract slug:
+> - **Directory Rules §12** uses the **segmented** form: `schemas/contracts/v1/domains/habitat/`, `contracts/domains/habitat/`.
+> - **Atlas v1.1 §24.13** crosswalk uses the **flat** form: `schemas/contracts/v1/habitat/`, `contracts/habitat/`.
+>
+> This document previously asserted the segmented form as "canonical per ADR-0001" without flagging the conflict; that assertion is downgraded to `PROPOSED` pending ADR resolution. ADR-0001 establishes `schemas/contracts/v1/...` as the canonical *home*, but does **not** settle the `domains/`-segment-vs-flat question for habitat. Open an entry in `docs/registers/DRIFT_REGISTER.md` and route to an ADR (cf. open ADR backlog ADR-S-01). Until resolved, treat **either** slug as `PROPOSED`; do not create both as parallel schema homes (Directory Rules §13.1 anti-pattern).
 
 | Concern | PROPOSED responsibility root | Notes |
 |---|---|---|
 | This document | `docs/domains/habitat/API_CONTRACTS.md` | Standard doc; human-facing contract reference. |
-| Service-side semantic contracts (Markdown) | `contracts/domains/habitat/` | Pairs with schemas; not machine-checkable. |
-| Machine schemas | `schemas/contracts/v1/domains/habitat/` | **Canonical per ADR-0001.** |
-| Decision-envelope schema | `schemas/contracts/v1/domains/habitat/decision_envelope.schema.json` | `PROPOSED`. |
-| Layer-manifest schema (habitat-bound) | `schemas/contracts/v1/domains/habitat/layer_manifest.schema.json` | `PROPOSED`. |
-| Evidence-drawer-payload schema (habitat-bound) | `schemas/contracts/v1/domains/habitat/evidence_drawer_payload.schema.json` | `PROPOSED`. |
+| Service-side semantic contracts (Markdown) | `contracts/domains/habitat/` _or_ `contracts/habitat/` | **`CONFLICTED` slug** — see callout above. |
+| Machine schemas | `schemas/contracts/v1/domains/habitat/` _or_ `schemas/contracts/v1/habitat/` | **`CONFLICTED` slug**; ADR-0001 fixes the `v1` home, not the segment. |
+| Decision-envelope schema | `.../habitat/decision_envelope.schema.json` | `PROPOSED`; cross-cutting home `schemas/contracts/v1/runtime/decision_envelope.schema.json` also referenced in Atlas §24.3 — reconcile in §17 Q-10. |
+| Layer-manifest schema (habitat-bound) | `.../habitat/layer_manifest.schema.json` | `PROPOSED`. |
+| Evidence-drawer-payload schema (habitat-bound) | `.../habitat/evidence_drawer_payload.schema.json` | `PROPOSED`. |
 | Focus-mode schemas | `schemas/contracts/v1/ai/focus_mode_*.schema.json` (cross-cutting) | Not domain-segmented. |
 | Policy bundles | `policy/domains/habitat/` | `policy/` is the canonical singular. |
 | Tests | `tests/domains/habitat/` | Includes negative gates from §15. |
@@ -574,7 +594,7 @@ The Habitat lane follows Domain Placement Law: the domain is a **segment** insid
 | Release candidates | `release/candidates/habitat/` | Pre-publication staging. |
 
 > [!WARNING]
-> **No `habitat/` root folder.** Per [DIRRULES §12], a domain MUST NOT become a top-level root with its own `data/`, `schemas/`, `policy/`, `docs/` subtree. Files belong under the responsibility-root lane pattern above.
+> **No `habitat/` root folder.** Per [DIRRULES §12], a domain MUST NOT become a top-level root with its own `data/`, `schemas/`, `policy/`, `docs/` subtree. Files belong under the responsibility-root lane pattern above. (The §24.13 *flat* slug still lives **inside** `schemas/contracts/v1/` — it is a flat lane segment there, not a new root.)
 
 [Back to top](#habitat--api-contracts)
 
@@ -587,7 +607,7 @@ The Habitat lane follows Domain Placement Law: the domain is a **segment** insid
 | # | Item | Evidence that would settle it | Status |
 |---|---|---|---|
 | Q-01 | Exact route paths for the seven surfaces in §3. | ADR + mounted `apps/governed-api/src/routes/`. | `UNKNOWN` |
-| Q-02 | Final `HabitatDecisionEnvelope` field set, including reason-code enumeration. | Landed `schemas/contracts/v1/domains/habitat/decision_envelope.schema.json`. | `PROPOSED` |
+| Q-02 | Final `HabitatDecisionEnvelope` field set, including reason-code enumeration. | Landed `.../habitat/decision_envelope.schema.json`. | `PROPOSED` |
 | Q-03 | Validator exit-code contract (`PASS` / `FAIL` / `ERROR` vs OS exit codes). | ADR resolution; see open ADR referenced in `tools/README.md`. | `PROPOSED` |
 | Q-04 | Rights status and cadence of every Habitat source family — USFWS ECOS, KDWP review context, NLCD, NWI, GAP / LANDFIRE, NatureServe, GBIF / iNaturalist / iDigBio, PAD-US. | Source-activation decisions in `data/registry/sources/habitat/`. | `NEEDS VERIFICATION` |
 | Q-05 | Geoprivacy transform parameters for Habitat × Fauna joins (generalization granularity, residual-risk thresholds). | Policy bundle + transform-receipt schema. | `NEEDS VERIFICATION` |
@@ -595,8 +615,9 @@ The Habitat lane follows Domain Placement Law: the domain is a **segment** insid
 | Q-07 | Habitat MapLibre overlay registry shape and Focus binding. | Landed registry + Focus contract. | `NEEDS VERIFICATION` |
 | Q-08 | Habitat × Fauna thin-slice AOI selection. | Pilot proposal under `docs/intake/`. | `PROPOSED` |
 | Q-09 | Watcher state placement under Directory Rules (NLCD / critical-habitat-service watchers). | ADR. | `PROPOSED` |
-| Q-10 | Naming reconciliation for cross-cutting AI schemas (`schemas/contracts/v1/ai/`) vs domain-bound habitat schemas. | ADR or crosswalk note. | `PROPOSED` |
+| Q-10 | Naming reconciliation for cross-cutting AI / runtime schemas (`schemas/contracts/v1/ai/`, `.../runtime/decision_envelope.schema.json`) vs domain-bound habitat schemas. | ADR or crosswalk note. | `PROPOSED` |
 | Q-11 | `EvidenceDrawerPayload` route shape — domain-bound vs cross-cutting via `EvidenceRef`. | API ADR. | `PROPOSED` |
+| Q-12 | **Habitat schema-home slug: segmented `.../domains/habitat/` (Directory Rules §12) vs flat `.../habitat/` (Atlas §24.13).** | ADR (cf. ADR-S-01) + mounted-repo evidence + DRIFT_REGISTER entry. | `CONFLICTED` |
 
 <details>
 <summary><b>Reason-code register (PROPOSED, extensible)</b></summary>
@@ -640,6 +661,8 @@ The following reason codes are referenced by Habitat envelopes. Each must resolv
 - [`docs/domains/habitat/SOURCES.md`](./SOURCES.md) — Habitat source families and source-role posture _(`PROPOSED`)_
 - [`docs/domains/habitat/SENSITIVITY.md`](./SENSITIVITY.md) — Sensitivity tiers and geoprivacy transforms for Habitat _(`PROPOSED`)_
 - [`docs/domains/habitat/sublanes/ecoregions.md`](./sublanes/ecoregions.md) — Ecoregions sublane charter _(`PROPOSED`)_
+- [`docs/domains/habitat/sublanes/suitability.md`](./sublanes/suitability.md) — Suitability sublane _(`PROPOSED`)_
+- [`docs/domains/habitat/sublanes/restoration.md`](./sublanes/restoration.md) — Restoration sublane _(`PROPOSED`)_
 - [`docs/domains/habitat/REASON_CODES.md`](./REASON_CODES.md) — Reason-code register _(`PROPOSED`)_
 
 **Cross-lane peers (parallel API_CONTRACTS docs)**
@@ -651,20 +674,22 @@ The following reason codes are referenced by Habitat envelopes. Each must resolv
 
 - [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Cross-cutting governed-API architecture _(`PROPOSED`)_
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract / schema / policy split _(`PROPOSED`)_
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV profile
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV profile _(naming `PROV.md` vs `PROVENANCE.md` is a tracked drift item)_
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust-membrane doctrine _(`PROPOSED`)_
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle invariant _(`PROPOSED`)_
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 **Governance**
 
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Canonical schema home
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Canonical schema home (does not settle the §16 segment slug)
 - [`docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md) — Source-refresh runbook _(`PROPOSED`)_
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Drift register (schema-slug `CONFLICTED` entry) _(`PROPOSED`)_
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Cross-cutting verification backlog _(`PROPOSED`)_
 
 **Implementation roots (machine homes)**
 
-- [`contracts/domains/habitat/`](../../../contracts/domains/habitat/) — Service-side semantic contracts _(`PROPOSED`)_
-- [`schemas/contracts/v1/domains/habitat/`](../../../schemas/contracts/v1/domains/habitat/) — Habitat machine schemas (ADR-0001 canonical) _(`PROPOSED`)_
+- [`contracts/domains/habitat/`](../../../contracts/domains/habitat/) — Service-side semantic contracts _(`PROPOSED`; slug `CONFLICTED`)_
+- [`schemas/contracts/v1/domains/habitat/`](../../../schemas/contracts/v1/domains/habitat/) — Habitat machine schemas _(`PROPOSED`; slug `CONFLICTED` per §16)_
 - [`policy/domains/habitat/`](../../../policy/domains/habitat/) — Habitat policy bundles _(`PROPOSED`)_
 - [`tests/domains/habitat/`](../../../tests/domains/habitat/) — Habitat tests _(`PROPOSED`)_
 - [`fixtures/domains/habitat/`](../../../fixtures/domains/habitat/) — Habitat no-network fixtures _(`PROPOSED`)_
@@ -674,5 +699,5 @@ The following reason codes are referenced by Habitat envelopes. Each must resolv
 ---
 
 <sub>
-Document owner: <code>&lt;habitat-steward&gt;</code> <i>(TODO confirm)</i>. This document is <b>PROPOSED</b> and is non-authoritative: canonical truth lives in <code>schemas/contracts/v1/domains/habitat/</code>, <code>policy/domains/habitat/</code>, resolved <code>EvidenceBundle</code>, and the current <code>ReleaseManifest</code>. Last updated: <b>2026-05-17</b>. &nbsp;·&nbsp; <a href="#habitat--api-contracts">Back to top ↑</a>
+Document owner: <code>&lt;habitat-steward&gt;</code> <i>(TODO confirm)</i>. This document is <b>PROPOSED</b> and is non-authoritative: canonical truth lives in the canonical Habitat schema home (slug <b>CONFLICTED</b>, see §16), <code>policy/domains/habitat/</code>, resolved <code>EvidenceBundle</code>, and the current <code>ReleaseManifest</code>. <code>CONTRACT_VERSION = "3.0.0"</code>. Last updated: <b>2026-06-05</b>. &nbsp;·&nbsp; <a href="#habitat--api-contracts">Back to top ↑</a>
 </sub>
