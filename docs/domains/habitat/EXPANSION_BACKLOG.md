@@ -6,23 +6,31 @@ version: v1
 status: draft
 owners: [habitat-domain-steward, docs-steward]   # PROPOSED placeholders
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
   - docs/domains/habitat/README.md          # PROPOSED, NEEDS VERIFICATION
+  - docs/domains/habitat/ARCHITECTURE.md    # PROPOSED
+  - docs/domains/habitat/CANONICAL_PATHS.md # PROPOSED
+  - docs/domains/habitat/CONTRACTS.md       # PROPOSED
+  - docs/domains/habitat/DATA_LIFECYCLE.md  # PROPOSED
   - docs/domains/habitat/OPEN_QUESTIONS.md  # PROPOSED
   - docs/domains/fauna/EXPANSION_BACKLOG.md # PROPOSED parallel
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/adr/                               # ADR home
   - docs/doctrine/directory-rules.md
+  - ai-build-operating-contract.md
 tags: [kfm, habitat, domain, backlog, expansion, governance]
 notes:
+  - CONTRACT_VERSION = "3.0.0"
   - Path follows Directory Rules §12 (Domain Placement Law).
   - Implementation-layer claims remain PROPOSED until mounted-repo evidence is checked.
   - Anchors the Atlas v1.0 §6.N habitat verification backlog into PR-shaped work.
+  - "CONFLICTED schema-home: ADR-0001 OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented .../domains/habitat/ (DIRRULES §12) vs flat .../habitat/ (Atlas §24.13) unresolved. See ADR-HAB-001 / VB-HAB-01."
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
 
 # 🌿 Habitat Domain — Expansion Backlog
 
@@ -36,10 +44,12 @@ notes:
 ![Doctrine](https://img.shields.io/badge/doctrine-DOM--HAB%20%2B%20DOM--HF-blue)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-governed-informational)
 ![Sensitivity](https://img.shields.io/badge/sensitive%20joins-fail--closed-critical)
+![Schema home](https://img.shields.io/badge/schema__home-CONFLICTED%20%C2%A78-important)
+![CONTRACT_VERSION](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![CI](https://img.shields.io/badge/ci-TODO-lightgrey)
-![Last%20Updated](https://img.shields.io/badge/updated-2026--05--17-lightgrey)
+![Last Updated](https://img.shields.io/badge/updated-2026--06--05-lightgrey)
 
-**Status:** Draft · **Owners:** habitat-domain-steward, docs-steward _(PROPOSED placeholders)_ · **Updated:** 2026-05-17
+**Status:** Draft · **Owners:** habitat-domain-steward, docs-steward _(PROPOSED placeholders)_ · **Updated:** 2026-06-05 · `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -98,6 +108,7 @@ of a neighbor's object family are explicitly rejected. See §10.
 | **CONFIRMED** | Supported by attached KFM doctrine (`[DOM-HAB]`, `[DOM-HF]`, `[ENCY]`, `[DIRRULES]`) in this session. |
 | **PROPOSED** | A design direction, path, schema home, validator, fixture, or PR shape consistent with doctrine but not verified against a mounted repo. |
 | **NEEDS VERIFICATION** | Checkable, but not yet checked strongly enough — usually because mounted-repo evidence is not available in this session. |
+| **CONFLICTED** | Sources disagree, or doctrine and prior planning diverge; held until an ADR or drift entry resolves it. |
 | **UNKNOWN** | Not resolvable without more evidence (live source terms, validator code, runtime behavior, dashboards). |
 
 ### 2.2 Priority bands
@@ -120,7 +131,7 @@ An item is "done" only when **all five** are true:
 
 > [!NOTE]
 > These exit criteria mirror the universal lifecycle gates in the Atlas v1.1
-> Master Pipeline Gate Reference. They are deliberately strict: a habitat item that
+> Master Pipeline Gate Reference (§24.6). They are deliberately strict: a habitat item that
 > passes some gates but not others is **incomplete**, not "almost done."
 
 [⬆ back to top](#top)
@@ -132,27 +143,27 @@ An item is "done" only when **all five** are true:
 ```mermaid
 flowchart LR
     subgraph HIGH["High priority — closure-critical"]
-        H1[HAB-EXP-001<br/>Habitat × Fauna<br/>thin slice]
-        H2[HAB-EXP-002<br/>SourceDescriptor<br/>registry]
-        H3[HAB-EXP-003<br/>Source-role<br/>anti-collapse policy]
-        H4[HAB-EXP-004<br/>MapLibre overlay<br/>+ Evidence Drawer]
-        H5[HAB-EXP-005<br/>Sensitivity tier<br/>+ geoprivacy]
-        H6[HAB-EXP-006<br/>Catalog-closure<br/>fixtures]
+        H1["HAB-EXP-001<br/>Habitat × Fauna<br/>thin slice"]
+        H2["HAB-EXP-002<br/>SourceDescriptor<br/>registry"]
+        H3["HAB-EXP-003<br/>Source-role<br/>anti-collapse policy"]
+        H4["HAB-EXP-004<br/>MapLibre overlay<br/>+ Evidence Drawer"]
+        H5["HAB-EXP-005<br/>Sensitivity tier<br/>+ geoprivacy"]
+        H6["HAB-EXP-006<br/>Catalog-closure<br/>fixtures"]
     end
 
     subgraph MED["Medium priority — depends on High"]
-        M1[HAB-EXP-007<br/>SuitabilityModel<br/>model card]
-        M2[HAB-EXP-008<br/>Connectivity<br/>+ corridor proof]
-        M3[HAB-EXP-009<br/>Habitat PMTiles<br/>attestation]
-        M4[HAB-EXP-010<br/>Source-drift<br/>watcher]
-        M5[HAB-EXP-011<br/>Restoration<br/>+ stewardship surface]
-        M6[HAB-EXP-012<br/>Focus Mode<br/>habitat envelope]
+        M1["HAB-EXP-007<br/>SuitabilityModel<br/>model card"]
+        M2["HAB-EXP-008<br/>Connectivity<br/>+ corridor proof"]
+        M3["HAB-EXP-009<br/>Habitat PMTiles<br/>attestation"]
+        M4["HAB-EXP-010<br/>Source-drift<br/>watcher"]
+        M5["HAB-EXP-011<br/>Restoration<br/>+ stewardship surface"]
+        M6["HAB-EXP-012<br/>Focus Mode<br/>habitat envelope"]
     end
 
     subgraph LOW["Low priority — deferred"]
-        L1[HAB-EXP-013<br/>Habitat × Flora<br/>vegetation join]
-        L2[HAB-EXP-014<br/>Habitat × Hazards<br/>stress overlays]
-        L3[HAB-EXP-015<br/>Patch-graph<br/>triplet projection]
+        L1["HAB-EXP-013<br/>Habitat × Flora<br/>vegetation join"]
+        L2["HAB-EXP-014<br/>Habitat × Hazards<br/>stress overlays"]
+        L3["HAB-EXP-015<br/>Patch-graph<br/>triplet projection"]
     end
 
     H2 --> H1
@@ -188,20 +199,21 @@ flowchart LR
 | HAB-EXP-004 | Habitat MapLibre overlay registry + Evidence Drawer payload | High | `packages/maplibre/`, `apps/explorer-web/`, `contracts/` | `LayerManifest` + `EvidenceDrawerPayload` schemas | Click on habitat feature → drawer resolves released `EvidenceBundle` |
 | HAB-EXP-005 | Habitat sensitivity tier + geoprivacy transform | High | `policy/sensitivity/habitat/`, `policy/sensitivity/fauna/` | Tier table (T0–T4) for habitat objects + transform recipes | Sensitive-spillover join (habitat × sensitive occurrence) defaults T4 |
 | HAB-EXP-006 | Catalog-closure thin-slice fixtures | High | `fixtures/domains/habitat/`, `data/catalog/domain/habitat/` | NLCD-derived patch + `EvidenceBundle` + `RunReceipt` + `LayerManifest` | Catalog matrix entry resolves; release dry-run passes |
-| HAB-EXP-007 | `SuitabilityModel` model-card requirements | Medium | `contracts/`, `schemas/contracts/v1/domains/habitat/` | Model-card schema + one filled card | Public surface refuses publication of a card-less model output |
+| HAB-EXP-007 | `SuitabilityModel` model-card requirements | Medium | `contracts/`, canonical Habitat schema home (slug `CONFLICTED`, §8) | Model-card schema + one filled card | Public surface refuses publication of a card-less model output |
 | HAB-EXP-008 | Connectivity & corridor proof (least-cost path receipt) | Medium | `pipelines/domains/habitat/`, `tools/validators/` | `ConnectivityEdge` + `Corridor` + `UncertaintySurface` fixture | Path receipt carries model id, cost surface, and bounds |
 | HAB-EXP-009 | Habitat PMTiles attestation sidecars | Medium | `data/published/layers/habitat/`, `tools/attest/` | `.pmtiles.attest.json` with `spec_hash`, `root_hash`, DSSE signature | Tampered fixture denied at viewer init; clean fixture renders |
-| HAB-EXP-010 | NLCD / NatureServe class-map drift watcher | Medium | `tools/ingest/`, `policy/intake/` | Prefilter + scorer + outbox `PROPOSED_WORK_RECORD` | Class-map mutation produces candidate; clean run does not |
+| HAB-EXP-010 | NLCD / NatureServe class-map drift watcher | Medium | `tools/ingest/`, `policy/intake/` | Prefilter + scorer + outbox `WORK_CANDIDATE` record | Class-map mutation produces candidate; clean run does not |
 | HAB-EXP-011 | Restoration Opportunity + StewardshipZone public-safe surface | Medium | `policy/`, `data/published/layers/habitat/` | Generalized `RestorationOpportunity` layer + `StewardshipZone` T1 layer | Steward-restricted detail denied; generalized layer granted |
 | HAB-EXP-012 | Habitat Focus Mode answer envelope | Medium | `runtime/`, `contracts/` | `RuntimeResponseEnvelope` + `AIReceipt` for habitat queries | Insufficient evidence → `ABSTAIN`; sensitive request → `DENY` |
 | HAB-EXP-013 | Habitat × Flora vegetation community context | Low | `contracts/`, `policy/` | Cross-lane join contract draft | Deferred behind Flora source registry |
 | HAB-EXP-014 | Habitat × Hazards resilience-stress overlays | Low | `contracts/`, `data/published/layers/habitat/` | Stress-context join contract draft | Deferred behind Hazards lane proving |
-| HAB-EXP-015 | Patch-graph triplet projection | Low | `data/triplets/habitat/`, `schemas/` | Triplet projection of patch graph + evidence bundles | Projection re-derivable from released bundles |
+| HAB-EXP-015 | Patch-graph triplet projection | Low | `data/triplets/`, `schemas/` | Triplet projection of patch graph + evidence bundles | Projection re-derivable from released bundles |
 
 > [!NOTE]
 > All path segments above follow Directory Rules §12 (Domain Placement Law). They
-> are **PROPOSED** lane placements pending mounted-repo evidence and an
-> accepted schema-home ADR (`ADR-0001`).
+> are **PROPOSED** lane placements pending mounted-repo evidence and the
+> **OPEN** schema-home ADR (`ADR-0001` / ADR-S-01 — see §8). The `schemas/` slug
+> itself is `CONFLICTED` (segmented vs flat); see ADR-HAB-001.
 
 [⬆ back to top](#top)
 
@@ -260,6 +272,12 @@ administrative | candidate | synthetic`), and carries rights, sensitivity, and
 cadence fields. Rights and source terms remain **NEEDS VERIFICATION** until a
 source-currentness pass closes them.
 
+> [!NOTE]
+> This item's schema target lands under the canonical Habitat schema home, whose
+> slug is `CONFLICTED` (segmented `.../domains/habitat/` vs flat `.../habitat/`)
+> and gated on ADR-HAB-001 / ADR-S-01. Author against the meaning contract first;
+> bind the schema once the slug ADR lands.
+
 ---
 
 ### HAB-EXP-003 — Source-role anti-collapse policy: regulatory vs modeled habitat
@@ -275,8 +293,8 @@ versa. Enforce in DTO fields, OPA rules, validator suites, and the Evidence
 Drawer.
 
 **Why it matters.** This is the single highest collapse-risk pattern in the
-habitat lane. The doctrine identifies it explicitly: *"Modeled product labeled or
-queried as observed → DENY at publication; ABSTAIN at AI surface."*
+habitat lane. The doctrine identifies it explicitly: *modeled product labeled or
+queried as observed → DENY at publication; ABSTAIN at AI surface.*
 
 **Risks.** UI conflation; AI synthesis flattening labels; ad-hoc join queries
 that lose the role.
@@ -304,7 +322,8 @@ chain; without the drawer payload, click-through becomes uncited assertion.
 
 **Dependencies.** HAB-EXP-001 (slice produces the first manifest and payload),
 `packages/maplibre/` and `apps/explorer-web/` (PROPOSED migration targets per
-Directory Rules §8.1).
+Directory Rules §8.1). The renderer package name is OPEN (Cesium retirement
+pending Directory Rules OPEN-DR-10/-11).
 
 **Exit criteria.** A habitat feature click resolves through a governed API into a
 drawer payload that carries source role, version, evidence reference, policy
@@ -330,6 +349,12 @@ plus `ReviewRecord` carries it back to T1.
 content, but they become high-sensitivity carriers under joins. Without an
 explicit habitat-side rule, the sensitivity contract is enforced only on the
 Fauna side and can be subverted by a habitat-layer query path.
+
+> [!CAUTION]
+> Disposition for sensitive habitat joins routes through the
+> `ai-build-operating-contract.md` §23.2 sensitive-domain matrix (most-restrictive
+> applicable row). This item *implements* the habitat-side enforcement; it does not
+> re-derive disposition.
 
 **Exit criteria.** A habitat × sensitive-taxon exact-geometry request is denied
 at policy with a structured reason citing T4 default; the same request through
@@ -392,7 +417,8 @@ renders; the receipt is referenced from the run receipt.
 PROPOSED. A no-network prefilter that hashes class maps, detects upstream
 class-set drift, and emits a `SourceIntakeRecord` candidate with
 `publication_state: WORK_CANDIDATE`. Validator vs policy split is strict:
-validators check shape; policy decides admission. Closure: a mutated class map
+validators check shape; policy decides admission. **Watcher-as-non-publisher**
+applies — the watcher proposes, it never promotes. Closure: a mutated class map
 triggers a candidate; an unchanged class map does not.
 
 ### HAB-EXP-011 — Restoration Opportunity + StewardshipZone public-safe surface
@@ -433,7 +459,9 @@ alert surface — Atlas v1.1 §24.5 holds the boundary at T4 forever.
 ### HAB-EXP-015 — Patch-graph triplet projection
 
 PROPOSED · Deferred. Triplet projections are derivative indexes built from
-released or review-authorized evidence, not root truth (`[ENCY]` §H). Deferred
+released or review-authorized evidence, not root truth (`[ENCY]` §H). They live
+under the shared, non-domain-scoped `data/triplets/` (plural per Directory Rules §9),
+**not** a `data/triplets/habitat/` domain segment. Deferred
 until at least HAB-EXP-001 and HAB-EXP-008 have produced reusable bundles to
 project from.
 
@@ -448,18 +476,19 @@ ADR should land **before** the corresponding HAB-EXP item is merged.
 
 | Proposed ADR | Scope | Blocks |
 |---|---|---|
-| ADR-HAB-001 — Schema home for habitat contracts | Confirm `schemas/contracts/v1/domains/habitat/` per ADR-0001; freeze any `contracts/habitat/*.schema.json` mirrors as drift | HAB-EXP-002, HAB-EXP-006 |
+| ADR-HAB-001 — Schema home for habitat contracts | **CONFLICTED.** Confirm or amend ADR-0001 per **ADR-S-01** (Atlas App. G VB-11-01 is `NEEDS VERIFICATION`); **and** resolve segmented `schemas/contracts/v1/domains/habitat/` (DIRRULES §12) vs flat `schemas/contracts/v1/habitat/` (Atlas §24.13). CONFIRMED regardless: `.schema.json` never under `contracts/`; freeze any `contracts/habitat/*.schema.json` as drift. | HAB-EXP-002, HAB-EXP-006 |
 | ADR-HAB-002 — Modeled-vs-regulatory habitat anti-collapse | DTO field discipline, OPA rule shape, drawer badge contract | HAB-EXP-003, HAB-EXP-004 |
 | ADR-HAB-003 — Habitat sensitivity tier + spillover rule | Confirms inheritance: any habitat layer joined to sensitive Fauna defaults T4 | HAB-EXP-005, HAB-EXP-011 |
 | ADR-HAB-004 — `SuitabilityModel` model-card requirements | Mandatory card fields and publication-gate enforcement | HAB-EXP-007 |
 | ADR-HAB-005 — Habitat PMTiles attestation profile | Sidecar schema instantiation for habitat tiles | HAB-EXP-009 |
-| ADR-HAB-006 — Cross-lane join policy (Habitat ↔ Fauna / Flora / Hydrology / Hazards) | Allowed join shapes, sensitivity inheritance, source-role preservation | HAB-EXP-001, HAB-EXP-013, HAB-EXP-014 |
+| ADR-HAB-006 — Cross-lane join policy (Habitat ↔ Fauna / Flora / Hydrology / Hazards) | Allowed join shapes, sensitivity inheritance, source-role preservation. Cross-domain doctrine lives under `docs/architecture/<topic>.md`, not a `habitat-fauna/` domain folder (DIRRULES §12). | HAB-EXP-001, HAB-EXP-013, HAB-EXP-014 |
 
 > [!WARNING]
 > Habitat lane code, schemas, validators, or publications that ship **without**
 > the relevant ADR risk creating a parallel home, a silent role collapse, or an
 > unenforced sensitivity tier. Per Directory Rules §2.4, several of these
-> decisions **require** an ADR before merging.
+> decisions **require** an ADR before merging. ADR-HAB-001 in particular is
+> `CONFLICTED` and must not be treated as settled by either slug.
 
 [⬆ back to top](#top)
 
@@ -467,25 +496,25 @@ ADR should land **before** the corresponding HAB-EXP item is merged.
 
 ## 9. Verification register
 
-Items below are **NEEDS VERIFICATION**: they are checkable but require a mounted
+Items below are **NEEDS VERIFICATION** (one is **CONFLICTED**): they are checkable but require a mounted
 repository, source-rights review, validator code, or runtime evidence to settle.
 They are tracked here so that a future repo-evidence pass can close them.
 
 <details>
 <summary><b>Habitat verification items — click to expand</b></summary>
 
-| # | Item | Evidence that would settle it | Origin |
-|---|---|---|---|
-| VB-HAB-01 | Schema home for habitat contracts is `schemas/contracts/v1/domains/habitat/` and ADR-0001 governs it | Mounted repo tree + ADR-0001 text | Atlas v1.1 §6.J; Directory Rules §7.4 |
-| VB-HAB-02 | Habitat `SourceDescriptor` registry exists under `data/registry/sources/habitat/` (PROPOSED) and validates | Mounted repo + descriptor schema + parse logs | `[DOM-HAB]` §D |
-| VB-HAB-03 | Per-source rights, cadence, and license terms for USFWS ECOS, NLCD, NWI, GAP/LANDFIRE, NatureServe, KDWP, PAD-US | Current source-terms review + descriptor entries | `[DOM-HAB]` §D |
-| VB-HAB-04 | Sensitive-occurrence geoprivacy transforms exist and are testable | Policy text + validator + negative-path fixtures | Atlas v1.1 §6.N |
-| VB-HAB-05 | `SuitabilityModel` model-card requirements are mandatory at publication | Policy + validator + a deny case | Atlas v1.1 §6.N |
-| VB-HAB-06 | Habitat MapLibre overlay registry exists and is enforced; Focus Mode behavior on habitat queries is governed | `packages/maplibre/` evidence + Focus Mode tests | Atlas v1.1 §6.N |
-| VB-HAB-07 | Habitat × Fauna thin-slice fixtures exist under `fixtures/domains/habitat/` and produce a closed catalog entry | Mounted fixture set + dry-run logs | `[DOM-HF]` §§1-5 |
-| VB-HAB-08 | Modeled-vs-regulatory anti-collapse is enforced at DTO, OPA, validator, and UI layers | Negative-path tests passing | Atlas v1.1 §24.1 |
-| VB-HAB-09 | Habitat PMTiles attestation sidecars are required at release | CI workflow + verifier + denial case | New Ideas 5-10, 5-15 (operational packets) |
-| VB-HAB-10 | Habitat owner / steward roles are assigned in `CODEOWNERS` and `docs/governance/` | Mounted repo | Directory Rules §9 |
+| # | Item | Evidence that would settle it | Origin | Status |
+|---|---|---|---|---|
+| VB-HAB-01 | Schema home for habitat contracts: confirm/amend ADR-0001 (ADR-S-01) **and** resolve segmented `.../domains/habitat/` (DIRRULES §12) vs flat `.../habitat/` (Atlas §24.13) | Accepted ADR-S-01 + DRIFT_REGISTER entry + mounted repo tree | Atlas §24.12 ADR-S-01; §24.13; App. G VB-11-01; Directory Rules §6.4 | **CONFLICTED** |
+| VB-HAB-02 | Habitat `SourceDescriptor` registry exists under `data/registry/sources/habitat/` (PROPOSED) and validates | Mounted repo + descriptor schema + parse logs | `[DOM-HAB]` §D | NEEDS VERIFICATION |
+| VB-HAB-03 | Per-source rights, cadence, and license terms for USFWS ECOS, NLCD, NWI, GAP/LANDFIRE, NatureServe, KDWP, PAD-US | Current source-terms review + descriptor entries | `[DOM-HAB]` §D | NEEDS VERIFICATION |
+| VB-HAB-04 | Sensitive-occurrence geoprivacy transforms exist and are testable | Policy text + validator + negative-path fixtures | Atlas v1.1 §6.N | NEEDS VERIFICATION |
+| VB-HAB-05 | `SuitabilityModel` model-card requirements are mandatory at publication | Policy + validator + a deny case | Atlas v1.1 §6.N | NEEDS VERIFICATION |
+| VB-HAB-06 | Habitat MapLibre overlay registry exists and is enforced; Focus Mode behavior on habitat queries is governed | `packages/maplibre/` evidence + Focus Mode tests | Atlas v1.1 §6.N | NEEDS VERIFICATION |
+| VB-HAB-07 | Habitat × Fauna thin-slice fixtures exist under `fixtures/domains/habitat/` and produce a closed catalog entry | Mounted fixture set + dry-run logs | `[DOM-HF]` §§1-5 | NEEDS VERIFICATION |
+| VB-HAB-08 | Modeled-vs-regulatory anti-collapse is enforced at DTO, OPA, validator, and UI layers | Negative-path tests passing | Atlas v1.1 §24.1 | NEEDS VERIFICATION |
+| VB-HAB-09 | Habitat PMTiles attestation sidecars are required at release | CI workflow + verifier + denial case | New Ideas 5-10, 5-15 (operational packets) | NEEDS VERIFICATION |
+| VB-HAB-10 | Habitat owner / steward roles are assigned in `CODEOWNERS` and `docs/governance/` | Mounted repo | Directory Rules §9 | NEEDS VERIFICATION |
 
 </details>
 
@@ -538,6 +567,11 @@ items remain deferred behind their parent High items.
 > sensitivity tier and anti-collapse policy land. A visible layer without those
 > guards is the precise failure mode this backlog exists to prevent.
 
+> [!NOTE]
+> ADR-HAB-001 (schema-home, `CONFLICTED`) does **not** block items 2–5 from being
+> *authored against the meaning contracts* — but the schema binding for HAB-EXP-002
+> and HAB-EXP-006 should not be frozen until the slug ADR lands.
+
 [⬆ back to top](#top)
 
 ---
@@ -545,17 +579,22 @@ items remain deferred behind their parent High items.
 ## 12. Related docs
 
 - `docs/domains/habitat/README.md` — habitat domain landing (PROPOSED, NEEDS VERIFICATION)
+- `docs/domains/habitat/ARCHITECTURE.md` — habitat lane architecture (PROPOSED)
+- `docs/domains/habitat/CANONICAL_PATHS.md` — habitat path enumeration (PROPOSED)
+- `docs/domains/habitat/CONTRACTS.md` — habitat contract (meaning) index (PROPOSED)
+- `docs/domains/habitat/DATA_LIFECYCLE.md` — habitat lifecycle profile (PROPOSED)
 - `docs/domains/habitat/OPEN_QUESTIONS.md` — open-questions register (PROPOSED)
 - `docs/domains/fauna/EXPANSION_BACKLOG.md` — parallel fauna backlog (PROPOSED)
-- `docs/standards/PROV.md` — provenance profile
+- `docs/standards/PROV.md` — provenance profile (`PROV.md` vs `PROVENANCE.md` is OPEN-DR-01)
 - `docs/standards/PMTILES.md` — PMTiles governance profile
+- `ai-build-operating-contract.md` — operating law; §23.2 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`)
 - `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide verification queue
-- `docs/registers/DRIFT_REGISTER.md` — drift entries when repo conflicts with doctrine
+- `docs/registers/DRIFT_REGISTER.md` — drift entries when repo conflicts with doctrine (schema-slug `CONFLICTED`)
 - `docs/adr/` — accepted and proposed ADRs
 - `docs/doctrine/directory-rules.md` — placement law that governs this file's location
 
 ---
 
-<sub><b>Last updated:</b> 2026-05-17 · <b>Document version:</b> v1 (draft) · <b>Owners:</b> habitat-domain-steward, docs-steward _(PROPOSED placeholders)_</sub>
+<sub><b>Last updated:</b> 2026-06-05 · <b>Document version:</b> v1 (draft) · <b>Owners:</b> habitat-domain-steward, docs-steward _(PROPOSED placeholders)_ · <code>CONTRACT_VERSION = "3.0.0"</code></sub>
 
 [⬆ back to top](#top)
