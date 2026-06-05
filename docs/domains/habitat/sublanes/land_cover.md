@@ -2,14 +2,16 @@
 doc_id: kfm://doc/habitat-sublane-land-cover
 title: Habitat — Land Cover Sublane
 type: standard
-version: v0.1
+version: v0.2
 status: draft
-owners: <docs-steward + habitat-lane-owner>
+owners: <docs-steward + habitat-lane-owner>          # placeholder — confirm via CODEOWNERS
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-04
 policy_label: public
 related:
   - docs/domains/habitat/README.md
+  - docs/domains/habitat/sublanes/README.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/lifecycle-law.md
@@ -19,9 +21,11 @@ related:
   - docs/domains/agriculture/sublanes/cropland.md
 tags: [kfm, habitat, land-cover, sublane, nlcd, landfire, gap, nwi]
 notes:
-  - Sublane subfolder under docs/domains/habitat/ is PROPOSED structure; ADR pending.
-  - LandCoverObservation is a CONFIRMED Habitat object family; field realization is PROPOSED.
-  - Implementation paths (schemas, policy, pipelines) are PROPOSED until verified against mounted repo.
+  - "CONTRACT_VERSION = 3.0.0 pinned (doctrine-adjacent)."
+  - "Sublane subfolder under docs/domains/habitat/ is PROPOSED structure; ADR/index pending."
+  - "LandCoverObservation is a CONFIRMED Habitat object family; field realization is PROPOSED."
+  - "Materiality thresholds (2% / max(250 ha, 0.15%)) and PROPOSED_WORK_RECORD + .last.ok watcher pattern are CONFIRMED corpus ideas (ML-067-004/005/006/007, ML-065-026); corpus anchors them to COUNTY analysis units."
+  - "Implementation paths (schemas, policy, pipelines) are PROPOSED until verified against mounted repo."
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat — Land Cover Sublane
@@ -34,9 +38,10 @@ notes:
 ![Sublane: land--cover](https://img.shields.io/badge/sublane-land__cover-6a5acd)
 ![Lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-lightgrey)
 ![Policy: public-safe with caveats](https://img.shields.io/badge/policy-public--safe%20with%20caveats-orange)
+![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)
 
-**Status:** draft · **Owners:** `<docs-steward + habitat-lane-owner>` · **Last updated:** 2026-05-17
+**Status:** draft · **Owners:** `<docs-steward + habitat-lane-owner>` · **Last updated:** 2026-06-04
 
 ---
 
@@ -76,7 +81,7 @@ The sublane bounds itself to:
 - Supplying `LandCoverObservation` evidence to downstream Habitat sublanes (patch, suitability, connectivity, ecological-systems) **through governed joins** — never by direct file reach-around.
 
 > [!NOTE]
-> **Sublane structural status.** The `docs/domains/<domain>/sublanes/` subfolder is **PROPOSED** structure — it is not enumerated in the Directory Rules canonical lane pattern. This document treats `sublanes/` as a sub-organizational convention inside the documentation lane; the corresponding *implementation* lanes (`contracts/`, `schemas/`, `policy/`, `pipelines/`, `data/`, `release/`) follow the Directory Rules domain pattern without a sublane segment unless an ADR adds one. See [Appendix A](#appendix-a-proposed-file-homes) and [§13](#13-verification-backlog-and-open-questions).
+> **Sublane structural status.** The `docs/domains/<domain>/sublanes/` subfolder is **PROPOSED** structure — it is not enumerated in the Directory Rules canonical lane pattern. A `docs/`-internal sub-tier is most likely a **§17 routine-PR** change rather than a §2.4 ADR trigger (it adds no canonical root, schema home, lifecycle phase, or parallel authority). This document treats `sublanes/` as a sub-organizational convention inside the documentation lane; the corresponding *implementation* lanes (`contracts/`, `schemas/`, `policy/`, `pipelines/`, `data/`, `release/`) follow the Directory Rules domain pattern without a sublane segment unless an ADR adds one. See [Appendix A](#appendix-a-proposed-file-homes) and [§13](#13-verification-backlog-and-open-questions).
 
 ### Sublane shape
 
@@ -153,7 +158,7 @@ CONFIRMED at the Habitat-domain level / PROPOSED at the sublane level — meanin
 - **`LandCoverObservation`** — full ownership, both upstream evidence and downstream public-safe derivatives.
 - **`EcologicalSystem`** — partial, upstream ownership only: cover-class inputs and crosswalk material are sourced here; the synthesized `EcologicalSystem` object is the Ecological Systems sublane's responsibility.
 - **`UncertaintySurface`** for land-cover products — owned here when the uncertainty is a property of the land-cover artifact itself (classification accuracy, valid-pixel mask, source-vintage gap).
-- **`ModelRunReceipt`** when this sublane runs a land-cover-derived model (e.g., change-rate summary, generalization, reclassification crosswalk).
+- **`Model Run Receipt`** when this sublane runs a land-cover-derived model (e.g., change-rate summary, generalization, reclassification crosswalk).
 
 **[Back to top ↑](#habitat--land-cover-sublane)**
 
@@ -167,7 +172,7 @@ CONFIRMED Habitat-level boundary, reinforced here.
 - **Crop type and crop rotation.** Owned by Agriculture. USDA NASS CDL is a crop classification, not a habitat classification, and its joining into Habitat happens through a governed adjacency — never by reclassifying CDL inside this sublane.
 - **Soil map units, components, horizons.** Owned by Soil.
 - **Hydrologic features, watersheds, NFHL flood layers.** Owned by Hydrology.
-- **`HabitatPatch`, `SuitabilityModel`, `ConnectivityEdge`, `Corridor`, `RestorationOpportunity`, `StewardshipZone`.** Owned by other Habitat sublanes; this sublane supplies inputs only.
+- **`HabitatPatch`, `SuitabilityModel`, `ConnectivityEdge`, `Corridor`, `Restoration Opportunity`, `StewardshipZone`.** Owned by other Habitat sublanes; this sublane supplies inputs only.
 - **Critical-habitat regulatory designations (USFWS ECOS).** A separate Habitat sublane handles regulatory critical habitat; this sublane treats those services as cross-references, not as land-cover sources.
 
 > [!WARNING]
@@ -189,7 +194,7 @@ CONFIRMED terms (used at the Habitat-domain level) / PROPOSED field-realization 
 | **Cover-class crosswalk** | A reviewed, citable mapping between two class schemes (e.g., NLCD → GAP land cover), emitted as evidence and never as a silent transformation in a renderer. | PROPOSED |
 | **Land-cover change-rate summary** | A derived, public-safe summary (e.g., per-county hectare deltas by class between two vintages) produced under the materiality discipline described in [§8](#8-pipeline-shape-raw--published). | PROPOSED |
 | **Generalized cover layer** | A public-safe derivative — typically PMTiles or COG — produced after promotion, with declared generalization transform, source-vintage stamp, and citation surface. | PROPOSED |
-| **Modeled land cover** | Land cover output by a model rather than directly observed; carries `ModelRunReceipt` and model-vs-observation labeling. | CONFIRMED Habitat term / PROPOSED here |
+| **Modeled land cover** | Land cover output by a model rather than directly observed; carries `Model Run Receipt` and model-vs-observation labeling. | CONFIRMED Habitat term / PROPOSED here |
 | **Geoprivacy transform** | Used by Fauna/Flora; mentioned here because cross-lane joins must respect it. Land cover itself is generally not geoprivacy-sensitive, but joins to sensitive occurrences are. | CONFIRMED Habitat term / PROPOSED here |
 
 **[Back to top ↑](#habitat--land-cover-sublane)**
@@ -212,7 +217,7 @@ CONFIRMED Habitat source roster includes NLCD, GAP/LANDFIRE, NWI, NatureServe, a
 | **USDA NASS CDL** | **Adjacency** only (Agriculture-owned). Used as context, not reclassified into Habitat cover. | Authoritative federal observation | Public domain | Annual | CONFIRMED adjacency / PROPOSED join discipline |
 
 > [!IMPORTANT]
-> **No source family is activated until** a `SourceDescriptor` exists, source role is declared, rights and current terms are recorded, fixtures exist, validators pass, and a `SourceActivationDecision` is issued. Connectors and watchers remain inactive until activation. This applies uniformly to NLCD, LANDFIRE, GAP, NWI, NatureServe, state inventories, and remote-sensing inputs.
+> **No source family is activated until** a `SourceDescriptor` exists, source role is declared, rights and current terms are recorded, fixtures exist, validators pass, and a source-activation decision is issued. Connectors and watchers remain inactive until activation. This applies uniformly to NLCD, LANDFIRE, GAP, NWI, NatureServe, state inventories, and remote-sensing inputs. A cross-source watcher cadence matrix (SSURGO, AirData, NWIS, CDL, PLANTS) anchors per-source cadence and no-op receipt behavior. `[KFM-P29-IDEA-0006]`
 
 ### Source-role separations to preserve
 
@@ -237,7 +242,7 @@ CONFIRMED object spine at the Habitat-domain level / PROPOSED identity rules bel
 | `CoverClassCrosswalk` | Reviewed mapping between two `ClassSchemeProfile`s. | `from_scheme_id + to_scheme_id + crosswalk_version + reviewer_state` | Crosswalk versions are immutable once published. |
 | `LandCoverChangeSummary` | Public-safe summary of net/relative change between two `LandCoverObservation`s over an analysis unit (e.g., county). | `from_obs_id + to_obs_id + analysis_unit_id + threshold_profile_id` | Distinguishes observed change from interpretation. |
 | `UncertaintySurface` (land-cover scope) | Per-observation accuracy and footprint information. | `observation_id + uncertainty_kind + spec_hash` | Aligns to the observation's temporal scope. |
-| `ModelRunReceipt` (land-cover scope) | Signed receipt for any land-cover-derived modeled output (e.g., reclassification, generalization). | `model_id + model_version + inputs_digest + config_digest + spec_hash` | Run time, model version, input vintage all distinct. |
+| `Model Run Receipt` (land-cover scope) | Signed receipt for any land-cover-derived modeled output (e.g., reclassification, generalization). | `model_id + model_version + inputs_digest + config_digest + spec_hash` | Run time, model version, input vintage all distinct. |
 | `LayerManifest` (land-cover layer) | Describes a published, public-safe land-cover layer (PMTiles/COG/vector tiles). | `layer_id + source refs + style refs + tileset digest` | Stale-state rule applies. |
 
 > [!NOTE]
@@ -253,7 +258,7 @@ CONFIRMED doctrine — the KFM lifecycle invariant `RAW → WORK / QUARANTINE �
 
 | Stage | What this sublane does | Gate | Status |
 |---|---|---|---|
-| **RAW** | Capture immutable source payload or reference for an NLCD / LANDFIRE / GAP / NWI / RS scene with source role, rights, sensitivity, citation, time, and hash. | `SourceDescriptor` exists; `SourceActivationDecision` permits use. | PROPOSED |
+| **RAW** | Capture immutable source payload or reference for an NLCD / LANDFIRE / GAP / NWI / RS scene with source role, rights, sensitivity, citation, time, and hash. | `SourceDescriptor` exists; source-activation decision permits use. | PROPOSED |
 | **WORK / QUARANTINE** | Normalize CRS, class scheme, valid-pixel footprint, nodata, identity, evidence, and rights; hold failures (corrupt rasters, unverified attestations, undeclared class schemes, rights doubt). | Validation + policy gate pass, or quarantine reason recorded. | PROPOSED |
 | **PROCESSED** | Emit validated `LandCoverObservation` objects, `UncertaintySurface` artifacts, valid-pixel masks, normalized rasters/vectors, and `RunReceipt`s. Public-safe candidates emerge here. | `EvidenceRef` resolves; `ValidationReport` passes; digest closure exists. | PROPOSED |
 | **CATALOG / TRIPLET** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, and release candidates (generalized cover layers, change summaries, crosswalk artifacts). | Catalog/proof closure passes; `PromotionDecision` is reviewable. | PROPOSED |
@@ -261,7 +266,7 @@ CONFIRMED doctrine — the KFM lifecycle invariant `RAW → WORK / QUARANTINE �
 
 ### Watcher and source-drift discipline
 
-CONFIRMED doctrine: **watchers observe and record; watchers do not publish.** A land-cover watcher (e.g., NLCD vintage delta, LANDFIRE version delta, county-bounded reclassification) emits `PROPOSED_WORK_RECORD`-style outputs and writes `<key>.last.ok` checkpoints — it does not move artifacts into `data/published/`.
+CONFIRMED doctrine: **watchers observe and record; watchers do not publish.** A land-cover watcher (e.g., NLCD vintage delta, LANDFIRE version delta, county-bounded reclassification) emits a `PROPOSED_WORK_RECORD` and writes a `<key>.last.ok` checkpoint containing the `spec_hash` — it does not move artifacts into `data/published/`. The `PROPOSED_WORK_RECORD` carries domain, source, county_fips, time, source heads, reason, old/new histograms, and thresholds; it is consumed by review (a queue or PR-emitter), never by public UI. `[ML-067-006]` `[ML-067-007]` `[KFM-P1-PROG-0063]`
 
 ```mermaid
 flowchart TD
@@ -272,25 +277,25 @@ flowchart TD
   PROM --> PUB["data/published/<br/>layers/habitat/land_cover"]
 ```
 
-### Materiality (PROPOSED thresholds)
+### Materiality (thresholds)
 
-PROPOSED, modeled on the cropland-side CDL materiality pattern; thresholds belong in `policy/domains/habitat/land_cover/` as versioned policy inputs, never hard-coded.
+The materiality defaults below are **CONFIRMED corpus ideas** (`[ML-067-004]`, `[ML-065-026]`); the corpus directs that **thresholds be versioned policy inputs, not hard-coded map logic** — so they live in `policy/domains/habitat/land_cover/` and are steward-tunable.
 
-- **Reclassification fraction:** any class reclassification above **2% of analysis-unit area** (default: county).
-- **Net area change:** any net per-class delta above **max(250 ha, 0.15% of analysis-unit hectares)**.
-- **Boundary tests:** at threshold, just below threshold, and across analysis-unit scales.
+- **Reclassification fraction:** any class reclassification above **2% of analysis-unit area**. `[ML-067-004]` `[ML-065-026]`
+- **Net area change:** any net per-class delta above **max(250 ha, 0.15% of analysis-unit hectares)**. `[ML-067-004]` `[ML-065-026]`
+- **Boundary tests:** at threshold, just below threshold, and across analysis-unit scales. `[ML-067-004]`
 
 > [!NOTE]
-> These thresholds are PROPOSED defaults for **Habitat land cover**. They mirror the agriculture-side CDL pattern intentionally so reviewers and validators can recognize the discipline; per-domain steward tuning is expected.
+> **Analysis-unit caveat.** The corpus anchors these thresholds to the **county** analysis unit (CDL/county-histogram drift, `[ML-067-005]`, `[KFM-P1-PROG-0063]`). This sublane *proposes* generalizing the same discipline to other analysis units (HUC, ecoregion) for land cover — that generalization is **PROPOSED / NEEDS VERIFICATION**, not yet corpus-anchored. Per-domain steward tuning is expected, and the CDL/PLANTS materiality gate (`[KFM-P29-IDEA-0001]`) is the sibling pattern.
 
 ### Raster handling discipline (CONFIRMED externally; PROPOSED enforcement here)
 
 - **Categorical rasters** (NLCD, LANDFIRE EVT, GAP, NWI) use **nearest** or **mode** resampling; never bilinear.
 - **Continuous rasters** (RS indices, fractional cover) **may** use bilinear with declared statistics.
-- Keep **analysis CRS** separate from **web-delivery CRS**; declare both in the artifact manifest.
+- Keep **analysis CRS** separate from **web-delivery CRS**; declare both in the artifact manifest. `[ML-E-062]`
 - **Nodata** must remain consistent through overviews; valid-pixel footprints are evidence artifacts.
 - COGs require internal tiling, overviews, and HTTP Range / CORS verification before publication.
-- Histogram shifts between vintages belong in the **promotion diff report**, not silently in a rebuilt layer.
+- Histogram shifts between vintages belong in the **promotion diff report**, not silently in a rebuilt layer. Never silently drop geometry; area-drift thresholds become a CI gate. `[ML-061-035]` `[ML-061-036]`
 
 **[Back to top ↑](#habitat--land-cover-sublane)**
 
@@ -325,10 +330,10 @@ PROPOSED public-safe products served via governed interfaces; CONFIRMED cross-cu
 | Sensitivity-redacted mode | Activated when a land-cover view is joined to sensitive Fauna/Flora occurrences. Falls back to deny if the join would expose sensitive sites. | **Fails closed.** |
 | Habitat-fauna / habitat-flora join view | Bounded join driven by the Habitat-Fauna / Habitat-Flora sublanes. | Public-safe only after geoprivacy transform; otherwise denied. |
 
-CONFIRMED cross-cutting controls apply: **Evidence Drawer**, **time-aware state**, **trust badges**, **correction / stale-state view**, and **governed Focus Mode**. Popups and badges never substitute for the Evidence Drawer.
+CONFIRMED cross-cutting controls apply: **Evidence Drawer**, **time-aware state**, **trust badges**, **correction / stale-state view**, and **governed Focus Mode**. Popups and badges never substitute for the Evidence Drawer. Attribute leakage into public tiles is prevented by an explicit include-list; vector-tile attributes are whitelisted. `[ML-E-061]` `[ML-061-132]`
 
 > [!CAUTION]
-> A rendered tile is a downstream carrier. It is **not** the truth, **not** proof of release, and **not** authority for habitat assertion. Public clients resolve `EvidenceRef → EvidenceBundle` through the governed API; they do not read canonical stores directly.
+> A rendered tile is a downstream carrier. It is **not** the truth, **not** proof of release, and **not** authority for habitat assertion. A histogram or tile is not itself evidence closure. `[ML-065-027]` Public clients resolve `EvidenceRef → EvidenceBundle` through the governed API; they do not read canonical stores directly.
 
 **[Back to top ↑](#habitat--land-cover-sublane)**
 
@@ -342,12 +347,12 @@ CONFIRMED / PROPOSED relations preserving ownership, source role, sensitivity, a
 |---|---|---|---|
 | Land cover | Habitat / Patch sublane | Patch construction consumes cover-class evidence. | Patch is owner; land cover supplies inputs only. |
 | Land cover | Habitat / Ecological Systems sublane | Crosswalk and class-scheme inputs feed ecological-system synthesis. | Ecological Systems sublane is owner of the synthesized object. |
-| Land cover | Fauna | Cover-class context for occurrence interpretation, never an authority over taxon or occurrence. | Sensitive joins (nest, den, roost, hibernacula, spawning) fail closed regardless of source. |
-| Land cover | Flora | Vegetation-community and rare-plant context where the *Flora* sublane authorizes the join. | Rare-plant exact location denied to public consumers; cover layer must not become a sensitivity bypass. |
+| Land cover | Fauna | Cover-class context for occurrence interpretation, never an authority over taxon or occurrence. | Sensitive joins (nest, den, roost, hibernacula, spawning) fail closed regardless of source. `[ENCY §20.5]` `[Operating Contract §23.2]` |
+| Land cover | Flora | Vegetation-community and rare-plant context where the *Flora* sublane authorizes the join. | Rare-plant exact location denied to public consumers; cover layer must not become a sensitivity bypass. `[ENCY §20.5]` |
 | Land cover | Soil | Substrate context, not derivation. | Soil owns map units, components, horizons; cover does not reclassify into Soil. |
 | Land cover | Hydrology | Wetlands and riparian context; NWI is the wetland-class source. | NFHL flood layers remain Hydrology / regulatory context — never used as land cover. |
 | Land cover | Agriculture | Crop / CDL adjacency for non-cropland context only. | CDL stays Agriculture-owned; this sublane does not reclassify CDL into Habitat cover. |
-| Land cover | Hazards | Fire, drought, smoke stress context. | Hazards owns the events; land cover provides only the underlying cover state. |
+| Land cover | Hazards | Fire, drought, smoke stress context. | Hazards owns the events; land cover provides only the underlying cover state; KFM is never an alert authority. |
 | Land cover | Planetary / 3D | Generalized cover may be admitted to 3D scenes via reality-boundary controls. | Sensitive joins denied; 3D scene is alternate renderer, not alternate truth. |
 
 **[Back to top ↑](#habitat--land-cover-sublane)**
@@ -359,7 +364,7 @@ CONFIRMED / PROPOSED relations preserving ownership, source role, sensitivity, a
 Restated for this sublane. Bending any of these requires an ADR with a clear tradeoff statement.
 
 - **Trust membrane.** Public clients and normal UI surfaces consume governed APIs and released artifacts. They never read `data/raw/`, `data/work/`, `data/processed/`, or `data/catalog/` directly.
-- **Watcher-as-non-publisher.** A land-cover watcher emits work records, sidecars, and checkpoints. It does not write to `data/catalog/`, `data/published/`, or `release/`.
+- **Watcher-as-non-publisher.** A land-cover watcher emits work records, sidecars, and checkpoints. It does not write to `data/catalog/`, `data/published/`, or `release/`. `[ML-067-006]` `[ML-067-007]`
 - **Connector-as-non-publisher.** A connector emits to `data/raw/` or `data/quarantine/`. It does not publish.
 - **Promotion is a governed state transition.** Not a file move. Not a watcher action. Not a renderer side effect.
 - **Lifecycle skip is forbidden.** No pipeline writes from `RAW` directly to `data/published/`. Every phase runs; quarantine is recorded.
@@ -367,6 +372,7 @@ Restated for this sublane. Bending any of these requires an ADR with a clear tra
 - **Cite-or-abstain.** When source role, rights, freshness, or review state is incomplete, the sublane abstains.
 - **Default-deny on sensitive joins.** Land cover joined to sensitive Fauna/Flora occurrences fails closed unless a documented geoprivacy transform and review state allow release.
 - **No silent crosswalk.** Class-scheme conversion (e.g., NLCD → GAP) emits a `CoverClassCrosswalk` artifact reviewed and cited; renderers do not recode on the fly.
+- **No validator side effects.** Validators operate on declared evidence and lineage only — no live fetch, catalog mutation, publish, or AI-inferred truth. `[ML-065-025]`
 - **Schema-home discipline.** Per ADR-0001, machine schemas live under `schemas/contracts/v1/...`. `contracts/` retains semantic Markdown.
 - **Policy-home discipline.** `policy/` (singular) is canonical; `policies/`, if present, is mirror / compatibility.
 
@@ -378,19 +384,19 @@ Restated for this sublane. Bending any of these requires an ADR with a clear tra
 
 | Item | Evidence that would settle it | Status |
 |---|---|---|
-| Whether `docs/domains/<domain>/sublanes/` is a sanctioned subdivision, or whether sublane docs should live flat in `docs/domains/habitat/` with topic-prefixed filenames. | ADR amending Directory Rules, or per-root README convention. | **NEEDS VERIFICATION** |
+| Whether `docs/domains/<domain>/sublanes/` is a sanctioned subdivision, or whether sublane docs should live flat in `docs/domains/habitat/` with topic-prefixed filenames. | ADR amending Directory Rules, or per-root README / `sublanes/README.md` convention. | **NEEDS VERIFICATION** |
 | Whether `LandCoverObservation` schema home is `schemas/contracts/v1/domains/habitat/land_cover/` or a Habitat-flat home. | Mounted repo schemas + ADR-0001 application. | NEEDS VERIFICATION |
-| Whether NLCD and LANDFIRE source-rights metadata permits the planned derivatives (generalized cover, change summaries, joins to non-federal layers). | Source registry entries, rights review, `SourceActivationDecision`. | **NEEDS VERIFICATION** |
+| Whether NLCD and LANDFIRE source-rights metadata permits the planned derivatives (generalized cover, change summaries, joins to non-federal layers). | Source registry entries, rights review, source-activation decision. | **NEEDS VERIFICATION** |
 | Which vintages of NLCD (and which Annual NLCD years, if any) are activated. | `SourceDescriptor` entries; fixture set. | NEEDS VERIFICATION |
 | Which LANDFIRE version (EVT, BPS, FDist) is pinned and how upgrades are governed. | Pinning policy + ADR. | NEEDS VERIFICATION |
 | Whether NWI carries any stewardship caveats in the Kansas footprint that change the default public posture. | Source-rights review. | NEEDS VERIFICATION |
 | Whether state ecological inventories (e.g., KDWP) impose review-only access on any layers used here. | State-source rights review. | NEEDS VERIFICATION |
-| Exact materiality threshold values (2%, 250 ha, 0.15%) and analysis-unit choice (county, HUC, ecoregion). | Policy file + steward review. | PROPOSED, NEEDS VERIFICATION |
+| Whether the CONFIRMED county-anchored materiality thresholds (2%, max(250 ha, 0.15%)) generalize to HUC / ecoregion analysis units for land cover. | Policy file + steward review; corpus anchors county only (`[ML-067-004]`). | PROPOSED, NEEDS VERIFICATION |
 | Whether `LandCoverChangeSummary` is its own published object family or a derivative of `LandCoverObservation` pairs. | Schema-home decision; ADR if a new family is added. | UNKNOWN |
 | Whether `ClassSchemeProfile` and `CoverClassCrosswalk` belong in the shared governance kernel (used by Agriculture for CDL) or in lane-local schema. | Shared-kernel ADR. | UNKNOWN |
 | Whether MapLibre overlay registry binds land-cover layers via the standard `LayerManifest` / `TileArtifactManifest` flow. | Layer-manifest fixtures and MapLibre adapter evidence. | NEEDS VERIFICATION |
 | Whether `EcologicalSystem` upstream ownership lives here or in its own sublane. | Habitat-lane ADR. | UNKNOWN |
-| Whether watcher `PROPOSED_WORK_RECORD` schema is shared with the Agriculture / CDL watcher or domain-local. | Shared-kernel ADR. | UNKNOWN |
+| Whether watcher `PROPOSED_WORK_RECORD` schema is shared with the Agriculture / CDL watcher or domain-local. | Shared-kernel ADR; corpus shows a shared CDL/PLANTS pattern (`[ML-067-006]`). | UNKNOWN |
 
 **[Back to top ↑](#habitat--land-cover-sublane)**
 
@@ -401,13 +407,15 @@ Restated for this sublane. Bending any of these requires an ADR with a clear tra
 > Some of the entries below are **placeholders** and will only resolve after the corresponding files exist. Treat them as the link surface this sublane expects, not as a verified link inventory.
 
 - `docs/domains/habitat/README.md` — Habitat domain dossier (TODO).
+- `docs/domains/habitat/sublanes/README.md` — sublane index (TODO).
 - `docs/domains/habitat/sublanes/patch.md` — Habitat patch sublane (TODO).
-- `docs/domains/habitat/sublanes/ecological_systems.md` — Ecological Systems sublane (TODO).
+- `docs/domains/habitat/sublanes/ecological_systems.md` — Ecological Systems sublane.
 - `docs/domains/habitat/sublanes/suitability.md` — Suitability model sublane (TODO).
-- `docs/domains/habitat/sublanes/connectivity.md` — Connectivity / corridors sublane (TODO).
+- `docs/domains/habitat/sublanes/connectivity.md` — Connectivity / corridors sublane.
 - `docs/domains/fauna/README.md` — Fauna domain dossier (TODO).
 - `docs/domains/flora/README.md` — Flora domain dossier (TODO).
 - `docs/domains/agriculture/sublanes/cropland.md` — Cropland (CDL) sublane; adjacency reference (TODO).
+- `docs/doctrine/ai-build-operating-contract.md` — operating contract (`CONTRACT_VERSION = "3.0.0"`).
 - `docs/doctrine/directory-rules.md` — Canonical placement and lifecycle doctrine.
 - `docs/doctrine/authority-ladder.md` — Authority ordering.
 - `docs/doctrine/trust-membrane.md` — Public-path discipline.
@@ -434,7 +442,7 @@ Restated for this sublane. Bending any of these requires an ADR with a clear tra
 | `CoverClassCrosswalk` | `contracts/domains/habitat/land_cover/crosswalk.md` | `schemas/contracts/v1/domains/habitat/land_cover/crosswalk.schema.json` | `fixtures/domains/habitat/land_cover/crosswalk/` | `policy/domains/habitat/land_cover/crosswalk/` | `tests/domains/habitat/land_cover/crosswalk/` | `data/catalog/domain/habitat/` |
 | `LandCoverChangeSummary` | `contracts/domains/habitat/land_cover/change_summary.md` | `schemas/contracts/v1/domains/habitat/land_cover/change_summary.schema.json` | `fixtures/domains/habitat/land_cover/change_summary/` | `policy/domains/habitat/land_cover/change_summary/` | `tests/domains/habitat/land_cover/change_summary/` | `data/processed/habitat/land_cover/change/` |
 | `UncertaintySurface` (land-cover scope) | `contracts/domains/habitat/land_cover/uncertainty.md` | `schemas/contracts/v1/domains/habitat/land_cover/uncertainty.schema.json` | `fixtures/domains/habitat/land_cover/uncertainty/` | `policy/domains/habitat/land_cover/uncertainty/` | `tests/domains/habitat/land_cover/uncertainty/` | `data/processed/habitat/land_cover/uncertainty/` |
-| `ModelRunReceipt` (land-cover scope) | `contracts/domains/habitat/land_cover/model_run_receipt.md` | shared kernel (TODO confirm) | `fixtures/domains/habitat/land_cover/model_run/` | `policy/domains/habitat/land_cover/model_run/` | `tests/domains/habitat/land_cover/model_run/` | `data/receipts/habitat/land_cover/` |
+| `Model Run Receipt` (land-cover scope) | `contracts/domains/habitat/land_cover/model_run_receipt.md` | shared kernel (TODO confirm) | `fixtures/domains/habitat/land_cover/model_run/` | `policy/domains/habitat/land_cover/model_run/` | `tests/domains/habitat/land_cover/model_run/` | `data/receipts/habitat/land_cover/` |
 | `LayerManifest` (land-cover layer) | shared kernel (TODO confirm) | shared kernel (TODO confirm) | `fixtures/domains/habitat/land_cover/layer_manifest/` | `policy/domains/habitat/land_cover/layer_manifest/` | `tests/domains/habitat/land_cover/layer_manifest/` | `data/published/layers/habitat/land_cover/` |
 | Source-watcher `PROPOSED_WORK_RECORD` | shared kernel (TODO confirm) | shared kernel (TODO confirm) | `fixtures/domains/habitat/land_cover/watcher/` | `policy/domains/habitat/land_cover/watcher/` | `tests/domains/habitat/land_cover/watcher/` | `data/quarantine/habitat/land_cover/` or `data/receipts/habitat/land_cover/` |
 
@@ -447,7 +455,7 @@ These objects are candidates for the **shared governance kernel** rather than th
 
 - `EvidenceBundle`, `EvidenceRef`, `SourceDescriptor`, `RunReceipt`, `PromotionDecision`, `ReleaseManifest`, `PolicyDecision`, `DecisionEnvelope` — shared kernel (CONFIRMED at doctrine level).
 - `LayerManifest`, `TileArtifactManifest`, `StyleManifest`, `MapReleaseManifest` — shared map asset family (CONFIRMED at doctrine level; field set still PROPOSED).
-- `ClassSchemeProfile`, `CoverClassCrosswalk`, `ModelRunReceipt` — candidates for **shared kernel** because Agriculture / CDL needs the same shapes. Requires ADR before lane-local definitions diverge.
+- `ClassSchemeProfile`, `CoverClassCrosswalk`, `Model Run Receipt` — candidates for **shared kernel** because Agriculture / CDL needs the same shapes. The corpus already treats CDL/PLANTS watchers and sidecars as a shared pattern (`[ML-067-006]`, `[KFM-P29-IDEA-0006]`). Requires ADR before lane-local definitions diverge.
 
 </details>
 
@@ -460,7 +468,7 @@ These objects are candidates for the **shared governance kernel** rather than th
 <details>
 <summary><strong>Acronyms and external products (click to expand)</strong></summary>
 
-> These are **external** product references included for orientation. KFM treats each one through `SourceDescriptor`, rights review, and `SourceActivationDecision`. No external product is a trust authority inside KFM.
+> These are **external** product references included for orientation. KFM treats each one through `SourceDescriptor`, rights review, and source-activation decision. No external product is a trust authority inside KFM.
 
 - **NLCD** — National Land Cover Database (USGS / MRLC). Categorical land-cover product; multiple vintages. Source role here: **observation**.
 - **LANDFIRE** — Landscape Fire and Resource Management Planning Tools. EVT (Existing Vegetation Type), BPS (Biophysical Settings), and Fire/Disturbance products. Source role here: **observation**.
@@ -478,6 +486,6 @@ These objects are candidates for the **shared governance kernel** rather than th
 
 ---
 
-> **Related:** [Habitat README (TODO)](README.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Cropland sublane (TODO)](../../agriculture/sublanes/cropland.md) · [Drift Register (TODO)](../../../registers/DRIFT_REGISTER.md)
+> **Related:** [Habitat README (TODO)](README.md) · [Sublane index (TODO)](README.md) · [Ecological Systems](ecological_systems.md) · [Connectivity](connectivity.md) · [Operating Contract](../../../doctrine/ai-build-operating-contract.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Cropland sublane (TODO)](../../agriculture/sublanes/cropland.md) · [Drift Register (TODO)](../../../registers/DRIFT_REGISTER.md)
 >
-> **Last updated:** 2026-05-17 · **[Back to top ↑](#habitat--land-cover-sublane)**
+> **Last updated:** 2026-06-04 · **Version:** v0.2 · `CONTRACT_VERSION = "3.0.0"` · **[Back to top ↑](#habitat--land-cover-sublane)**
