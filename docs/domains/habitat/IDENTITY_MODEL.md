@@ -6,23 +6,25 @@ version: v1
 status: draft
 owners: TODO-habitat-domain-stewards
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
   - docs/domains/habitat/README.md
-  - docs/domains/habitat/SOURCES.md
-  - docs/domains/habitat/PIPELINE.md
-  - docs/domains/habitat/SENSITIVITY.md
+  - docs/domains/habitat/HABITAT_DOMAIN_MODEL.md
+  - docs/domains/habitat/HABITAT_SOURCE_LEDGER.md
+  - docs/domains/habitat/HABITAT_SENSITIVITY_PROFILE.md
+  - docs/domains/habitat/DATA_LIFECYCLE.md
   - docs/domains/fauna/IDENTITY_MODEL.md
-  - docs/standards/PROV.md
+  - docs/standards/PROVENANCE.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/adr/ADR-0001-schema-home.md
   - schemas/contracts/v1/domains/habitat/
+  - ai-build-operating-contract.md
 tags: [kfm, habitat, identity, evidence, ddd, spec_hash]
 notes:
+  - 'CONTRACT_VERSION = "3.0.0"'
   - "owners is a placeholder; confirm via control_plane/object_family_register.yaml"
   - "All habitat-object identity rules are PROPOSED until verified against a mounted repo."
-  - "Schema home schemas/contracts/v1/domains/habitat/ is the PROPOSED default per ADR-0001."
+  - "CONFLICTED schema-home: ADR-0001 is OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented schemas/contracts/v1/domains/habitat/ (DIRRULES §12) vs flat schemas/contracts/v1/habitat/ (Atlas §24.13) unresolved. See §2, §12."
 [/KFM_META_BLOCK_V2] -->
 
 
@@ -33,12 +35,14 @@ How the Habitat domain answers *“is this the same thing?”* — deterministic
 ![status: draft](https://img.shields.io/badge/status-draft-blue)
 ![doc type: standard](https://img.shields.io/badge/doc--type-standard-informational)
 ![domain: habitat](https://img.shields.io/badge/domain-habitat-2ea44f)
-![lifecycle: RAW%20→%20PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20→%20PUBLISHED-orange)
-![identity: spec_hash%20%2B%20JCS%2BSHA--256](https://img.shields.io/badge/identity-spec__hash%20%2B%20JCS%2BSHA--256-purple)
-![sensitivity: fail--closed](https://img.shields.io/badge/sensitivity-fail--closed-critical)
+![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-orange)
+![identity: spec_hash + JCS+SHA-256](https://img.shields.io/badge/identity-spec__hash%20%2B%20JCS%2BSHA--256-purple)
+![sensitivity: fail-closed](https://img.shields.io/badge/sensitivity-fail--closed-critical)
+![schema home: CONFLICTED](https://img.shields.io/badge/schema__home-CONFLICTED%20%C2%A72-important)
+![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![ci: TODO](https://img.shields.io/badge/ci-TODO-lightgrey)
 
-> **Status:** draft · **Owners:** `<habitat-domain-stewards>` *(placeholder)* · **Last updated:** 2026-05-17
+> **Status:** draft · **Owners:** `<habitat-domain-stewards>` *(placeholder)* · **Last updated:** 2026-06-05 · `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -68,7 +72,7 @@ This document defines **what it means to be the same Habitat object** across rel
 
 **In scope.** Identity rules for every Habitat object family (CONFIRMED list: HabitatPatch, LandCoverObservation, EcologicalSystem, HabitatQualityScore, SuitabilityModel, ConnectivityEdge, Corridor, RestorationOpportunity, StewardshipZone, ModelRunReceipt, UncertaintySurface). The `spec_hash` construction. Bundle and reference ID derivation. Temporal scope. Identity-side behavior at promotion and rollback. Cross-lane identity coordination with Fauna, Flora, Soil/Hydrology, and Hazards.
 
-**Out of scope.** Source-descriptor specifics (see [`SOURCES.md`](./SOURCES.md), PROPOSED). Pipeline mechanics (see [`PIPELINE.md`](./PIPELINE.md), PROPOSED). Sensitivity transform rules (see [`SENSITIVITY.md`](./SENSITIVITY.md), PROPOSED). MapLibre layer rendering. Schema *shape* — defined in `schemas/contracts/v1/domains/habitat/` *(PROPOSED path, ADR-0001)*.
+**Out of scope.** Source-descriptor specifics (see [`HABITAT_SOURCE_LEDGER.md`](./HABITAT_SOURCE_LEDGER.md), PROPOSED). Pipeline mechanics (see [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md), PROPOSED). Sensitivity transform rules (see [`HABITAT_SENSITIVITY_PROFILE.md`](./HABITAT_SENSITIVITY_PROFILE.md), PROPOSED). MapLibre layer rendering. Schema *shape* — defined under the Habitat schema home, whose slug is **`CONFLICTED`** (see [§2](#2-doctrinal-anchors)).
 
 > [!NOTE]
 > This file is doctrine-first. Every implementation-level claim — schema paths, validator names, ID prefixes, gate code — is **PROPOSED** until verified against a mounted repo. See [§12](#12-open-questions--verification-backlog).
@@ -84,12 +88,15 @@ This document defines **what it means to be the same Habitat object** across rel
 | Domain ownership, scope, and non-ownership | `[DOM-HAB]` · `[DOM-HF]` · `[ENCY]` (Domains Culmination Atlas §6; Encyclopedia §7.4) | **CONFIRMED doctrine** |
 | Object-family identity rule: *source id + object role + temporal scope + normalized digest* | `[DOM-HAB]` · `[ENCY]` (Habitat §E "Main object families") | **CONFIRMED doctrine** / **PROPOSED implementation** |
 | Temporal-time separation: source / observed / valid / retrieval / release / correction | `[ENCY]` · `[DOM-HAB]` | **CONFIRMED doctrine** |
-| `spec_hash` via RFC 8785 JCS + SHA-256 | New Ideas 5-8-26 (D1); Pass 10 C1-02; Pass 20 P2 EVD | **CONFIRMED doctrine** |
+| `spec_hash` via RFC 8785 JCS + SHA-256 | New Ideas 5-8-26 (D1); Pass 10 C1-02; Pass 20 P2 EVD | **CONFIRMED doctrine** / **PROPOSED implementation** |
 | Bundle/EvidenceRef derived IDs (`eb-…`, `er-…`) | New Ideas 5-8-26 (D2) | **CONFIRMED doctrine** / **PROPOSED implementation** |
 | BLAKE3 considered for streaming artifact roots (tiles, large rasters) | New Ideas 5-10-26; Pass 20 P2 EVD | **CONFIRMED doctrine** / **PROPOSED implementation** |
-| DDD entity-vs-value-object distinction | *Domain-Driven Design Reference* (Evans, pp. 11–12) | **CONFIRMED reference** |
+| DDD entity-vs-value-object distinction | *Domain-Driven Design Reference* (corpus) | **CONFIRMED reference** |
 | Habitat publication gates: ReleaseManifest, EvidenceBundle, validation/policy, review, correction, rollback | `[ENCY Appendix E]` · `[DOM-HAB]` · `[DOM-HF]` | **CONFIRMED doctrine** / **PROPOSED implementation** |
-| Schema home convention `schemas/contracts/v1/domains/habitat/` | `directory-rules.md` §12 + ADR-0001 | **CONFIRMED doctrine** / **PROPOSED path** |
+| Schema home for Habitat identity-bearing schemas | `directory-rules.md` §6.4 + ADR-0001 / Atlas ADR-S-01 | **CONFLICTED** — see callout below |
+
+> [!WARNING]
+> **Schema-home slug is `CONFLICTED` and ADR-required.** Two questions are **open**: (1) is `schemas/contracts/v1/…` confirmed as the canonical home? This is **ADR-S-01** — "confirm `schemas/contracts/v1/…` by ADR-0001 **or amend**"; Atlas App. G **VB-11-01** marks it `NEEDS VERIFICATION`. (2) Segmented `schemas/contracts/v1/domains/habitat/` (DIRRULES §12) vs flat `schemas/contracts/v1/habitat/` (Atlas §24.13). **CONFIRMED regardless:** `.schema.json` files never live under `contracts/`, and the repo MUST NOT keep divergent definitions in both `schemas/` and `contracts/`. This doc uses the segmented slug as illustration; if ADR-S-01 selects the flat form, read `…/domains/habitat/` as `…/habitat/`. Open a `DRIFT_REGISTER.md` entry; do not create both slugs. `[DIRRULES §6.4, §13.1, §2.4(3)]` · `[ATLAS §24.12 ADR-S-01]` · `[§24.13]` · `[App. G VB-11-01]`
 
 [⬆ Back to top](#-habitat--identity-model)
 
@@ -104,32 +111,32 @@ Habitat carries both kinds of objects. The identity model treats them differentl
 >
 > **Value object.** Identity does *not* matter independently — an `UncertaintySurface` cell value, a `Hydrologic Soil Group` code, or an attribute on a `HabitatQualityScore` is *what it is*; two instances with identical attributes are interchangeable.
 
-The DDD source is explicit: *“The model must define what it means to be the same thing.”* This document defines that for Habitat.
+The DDD source is explicit: the model must define what it means to be the same thing. This document defines that for Habitat.
 
 ```mermaid
 flowchart LR
   subgraph Entities["Identity-bearing entities (PROPOSED classification)"]
-    HP[HabitatPatch]
-    EC[EcologicalSystem]
-    SM[SuitabilityModel]
-    CE[ConnectivityEdge]
-    CO[Corridor]
-    RO[RestorationOpportunity]
-    SZ[StewardshipZone]
-    MR[ModelRunReceipt]
+    HP["HabitatPatch"]
+    EC["EcologicalSystem"]
+    SM["SuitabilityModel"]
+    CE["ConnectivityEdge"]
+    CO["Corridor"]
+    RO["RestorationOpportunity"]
+    SZ["StewardshipZone"]
+    MR["ModelRunReceipt"]
   end
   subgraph ValueLike["Observation / receipt / surface families (entity-like under source role)"]
-    LCO[LandCoverObservation]
-    HQS[HabitatQualityScore]
-    US[UncertaintySurface]
+    LCO["LandCoverObservation"]
+    HQS["HabitatQualityScore"]
+    US["UncertaintySurface"]
   end
-  Entities -- "deterministic ID + temporal scope" --> Bundle((EvidenceBundle))
+  Entities -- "deterministic ID + temporal scope" --> Bundle(("EvidenceBundle"))
   ValueLike -- "deterministic ID per source × time × geometry" --> Bundle
-  Bundle -. "spec_hash governs equivalence" .-> Catalog[(Catalog index)]
+  Bundle -. "spec_hash governs equivalence" .-> Catalog[("Catalog index")]
 ```
 
 > [!NOTE] *(PROPOSED classification)*
-> The entity/value-object split above is a **PROPOSED** reading of the Habitat object families. The Atlas marks each family as “PROPOSED deterministic basis: source id + object role + temporal scope + normalized digest,” which is consistent with treating all of them as identity-bearing in a governed catalog. The split here is a design hint, not a contract. Confirmation requires schema inspection. See [§12](#12-open-questions--verification-backlog).
+> The entity/value-object split above is a **PROPOSED** reading of the Habitat object families. The Atlas marks each family as "PROPOSED deterministic basis: source id + object role + temporal scope + normalized digest," which is consistent with treating all of them as identity-bearing in a governed catalog. The split here is a design hint, not a contract. Confirmation requires schema inspection. See [§12](#12-open-questions--verification-backlog).
 
 [⬆ Back to top](#-habitat--identity-model)
 
@@ -147,7 +154,7 @@ Expanded for Habitat:
 | Component | Meaning in Habitat | Status |
 |---|---|---|
 | **source id** | Stable identifier of the originating `SourceDescriptor` (e.g., NLCD vintage, USFWS critical habitat snapshot, KDWP review extract, NatureServe ecological systems version). | CONFIRMED doctrine / PROPOSED schema field |
-| **object role** | The object family within Habitat (e.g., `HabitatPatch`, `SuitabilityModel`, `ConnectivityEdge`). | CONFIRMED doctrine |
+| **object role** | The object family within Habitat (e.g., `HabitatPatch`, `SuitabilityModel`, `ConnectivityEdge`), plus its source role (`observed` / `regulatory` / `model` / `derivative` / `context`). | CONFIRMED doctrine |
 | **temporal scope** | The bounded time window the object represents: `valid_from`, `valid_to`, plus the source/observed/retrieval times it derives from. | CONFIRMED doctrine |
 | **normalized digest** | `spec_hash` over the canonicalized identity-bearing spec (see [§5](#5-spec_hash-bundle_id-evidence_ref_id)). | CONFIRMED doctrine / PROPOSED implementation |
 
@@ -166,7 +173,7 @@ This formula gives Habitat objects identity that is:
 
 ### 5.1 Canonical hash (`spec_hash`)
 
-> **CONFIRMED doctrine.** `spec_hash` is computed as **SHA-256** over the **RFC 8785 JCS** canonicalization of the identity-bearing spec, recorded with an explicit algorithm prefix.
+> **CONFIRMED doctrine / PROPOSED implementation.** `spec_hash` is computed as **SHA-256** over the **RFC 8785 JCS** canonicalization of the identity-bearing spec, recorded with an explicit algorithm prefix.
 
 | Property | Value |
 |---|---|
@@ -227,11 +234,11 @@ sequenceDiagram
             Gate-->>Client: DENY (hash_mismatch)
         end
     else miss
-        Idx-->>Client: ABSTAIN (validator) → DENY (policy)
+        Idx-->>Client: ABSTAIN (validator) then DENY (policy)
     end
 ```
 
-Finite outcomes follow the governed-API contract: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. *(CONFIRMED doctrine / PROPOSED implementation.)*
+Finite outcomes follow the governed-API contract: caller-facing `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`. The **layer-manifest resolver returns `ANSWER` / `DENY` / `ERROR` only (no `ABSTAIN`)** per Atlas §24.3.2. *(CONFIRMED doctrine / PROPOSED implementation.)*
 
 [⬆ Back to top](#-habitat--identity-model)
 
@@ -256,7 +263,7 @@ The eleven Habitat object families and how the identity formula applies to each.
 | **UncertaintySurface** | source-of-uncertainty refs · method · spatial scope · `valid_from`/`valid_to` | Raster | Confidence misread as fact when surface is missing |
 
 > [!CAUTION]
-> **Model vs observation labels are part of identity in spirit, even if encoded as `object_type`.** A `SuitabilityModel` output must never be silently re-identified as a `LandCoverObservation`. The Encyclopedia is explicit: *“Keep model vs observation labels visible.”*
+> **Model vs observation labels are part of identity in spirit, even if encoded as `object_type`.** A `SuitabilityModel` output (`model` role) must never be silently re-identified as a `LandCoverObservation` (`observed`) — nor as regulatory critical habitat (`regulatory`). The Encyclopedia is explicit: keep model vs observation labels visible. Flattening these roles is `source_role_collapse` — DENY at publication, ABSTAIN at the AI surface. `[DOM-HAB §C, §I]` · `[ATLAS §24.1]`
 
 [⬆ Back to top](#-habitat--identity-model)
 
@@ -301,7 +308,7 @@ Habitat is unusual: its own objects are mostly public-safe, but **joined to faun
 
 > [!WARNING]
 > **CONFIRMED / PROPOSED** (Habitat §I; Habitat–Fauna thin slice; Encyclopedia):
-> Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context **must not be flattened**. Sensitive occurrence details **deny by default**. Exact occurrence-linked habitat outputs must be generalized, redacted, reviewed, or denied when they create exposure risk.
+> Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context **must not be flattened**. Sensitive occurrence details **deny by default**. Exact occurrence-linked habitat outputs must be generalized, redacted, reviewed, or denied when they create exposure risk. Disposition routes through the `ai-build-operating-contract.md` **§23.2** sensitive-domain matrix (most-restrictive applicable row); this doc does not re-derive it. See [`HABITAT_SENSITIVITY_PROFILE.md`](./HABITAT_SENSITIVITY_PROFILE.md).
 
 Identity-model implications:
 
@@ -320,11 +327,11 @@ Habitat does **not** own fauna taxa, plant taxa, or animal occurrences. Cross-la
 
 ```mermaid
 flowchart LR
-  HAB[Habitat objects]
-  FAU[Fauna domain]
-  FLR[Flora domain]
-  SOIL[Soil / Hydrology]
-  HAZ[Hazards]
+  HAB["Habitat objects"]
+  FAU["Fauna domain"]
+  FLR["Flora domain"]
+  SOIL["Soil / Hydrology"]
+  HAZ["Hazards"]
 
   HAB -- "habitat_assignment(EvidenceRef)" --> FAU
   HAB -- "vegetation_context(EvidenceRef)" --> FLR
@@ -342,10 +349,10 @@ flowchart LR
 | Habitat ↔ Fauna (habitat assignment, occurrence context) | Sensitive joins fail closed; identity of the public Habitat object differs from any restricted counterpart; transform receipt required for any geoprivacy-changing derivative. | CONFIRMED doctrine / PROPOSED implementation |
 | Habitat ↔ Flora (vegetation community, rare plant context) | Rare-plant context obeys Flora’s sensitivity controls; Habitat identity does not encode Flora taxa. | CONFIRMED doctrine / PROPOSED implementation |
 | Habitat ↔ Soil / Hydrology (substrate, moisture, wetlands, riparian) | Habitat carries refs to soil/hydrology objects by `EvidenceRef`; their identities remain owned upstream. | CONFIRMED doctrine / PROPOSED implementation |
-| Habitat ↔ Hazards (fire, drought, flood, smoke stress) | Hazard context joined by ref; Habitat does not republish Hazard truth. | CONFIRMED doctrine / PROPOSED implementation |
+| Habitat ↔ Hazards (fire, drought, flood, smoke stress) | Hazard context joined by ref; Habitat does not republish Hazard truth; KFM is never an alert authority. | CONFIRMED doctrine / PROPOSED implementation |
 
 > [!NOTE]
-> The Habitat × Fauna thin-slice proof is the canonical place where this discipline is exercised in practice. See `[DOM-HF]` and the verification backlog in [§12](#12-open-questions--verification-backlog).
+> The Habitat × Fauna thin-slice proof is the canonical place where this discipline is exercised in practice. Its cross-lane *doctrine* lives under `docs/architecture/habitat-fauna-thin-slice.md` (a non-domain root, per Directory Rules §12 — never a `docs/domains/habitat-fauna/` combined-lane folder). See `[DOM-HF]` and the verification backlog in [§12](#12-open-questions--verification-backlog).
 
 [⬆ Back to top](#-habitat--identity-model)
 
@@ -353,7 +360,7 @@ flowchart LR
 
 ## 10. Validators, tests, and gate behavior
 
-All items below are **PROPOSED**; verification requires a mounted repo.
+All items below are **PROPOSED**; verification requires a mounted repo. The `tools/validators/domains/habitat/` paths below carry the §2 schema-home slug conflict only insofar as they mirror the schema layout; the validator-home convention itself is `tools/validators/<topic>/` for cross-domain checks.
 
 <details>
 <summary><strong>Identity validators (PROPOSED locations)</strong></summary>
@@ -362,7 +369,7 @@ All items below are **PROPOSED**; verification requires a mounted repo.
 |---|---|---|
 | `validate_spec_hash` | Recomputes `spec_hash` from canonicalized spec; fails on mismatch | `tools/validators/evidence/` |
 | `validate_identity_derivation` | Checks `bundle_id` / `evidence_ref_id` derive correctly from `spec_hash` | `tools/validators/evidence/` |
-| `validate_habitat_object_identity` | Asserts every Habitat object includes the four identity inputs from [§4](#4-the-habitat-identity-formula) | `tools/validators/domains/habitat/` *(PROPOSED, ADR-0001)* |
+| `validate_habitat_object_identity` | Asserts every Habitat object includes the four identity inputs from [§4](#4-the-habitat-identity-formula) | `tools/validators/domains/habitat/` *(PROPOSED)* |
 | `validate_temporal_scope_completeness` | Refuses publish when material temporal scope is missing | `tools/validators/evidence/` |
 | `validate_model_run_receipt_linkage` | Asserts `SuitabilityModel` and `HabitatQualityScore` ids bind to a `ModelRunReceipt` | `tools/validators/domains/habitat/` |
 | `validate_sensitivity_transform_separation` | Asserts public-safe derivatives carry distinct `spec_hash` from any restricted counterpart | `tools/validators/policy/` |
@@ -389,7 +396,7 @@ All items below are **PROPOSED**; verification requires a mounted repo.
 | RAW | `SourceDescriptor` exists with stable source id; raw payload checksum recorded. |
 | WORK / QUARANTINE | Identity inputs reconstructible; quarantine reason recorded on failure. |
 | PROCESSED | `EvidenceRef`, `ValidationReport`, and digest closure exist; `spec_hash` computed and stable. |
-| CATALOG / TRIPLET | `EvidenceBundle` resolves; `bundle_id` re-derives; catalog index keyed by `spec_hash` first, `bundle_id` second. |
+| CATALOG / TRIPLET | `EvidenceBundle` resolves; `bundle_id` re-derives; catalog index keyed by `spec_hash` first, `bundle_id` second. Triplet projections live under the shared, non-domain `data/triplets/` (plural, Directory Rules §9). |
 | PUBLISHED | `ReleaseManifest` references current `spec_hash`; rollback target points to a prior `spec_hash`; correction path is identity-aware. |
 
 </details>
@@ -400,13 +407,13 @@ All items below are **PROPOSED**; verification requires a mounted repo.
 
 ## 11. Identity changes, renames, and migration
 
-Per `directory-rules.md` §14.3, a rename that changes what an object **means** is a content change, not a placement change. For Habitat that implies:
+Per `directory-rules.md`, a rename that changes what an object **means** is a content change, not a placement change. For Habitat that implies:
 
 - **ADR required** (e.g., new object family, semantic narrowing of `HabitatPatch`, change to identity-bearing input set).
-- **Schema version bump** per ADR-0001.
+- **Schema version bump** per the schema-home ADR (ADR-0001 / ADR-S-01 — **OPEN**, §2).
 - **Compatibility map** for old fixtures (`old_spec_hash → new_spec_hash` where derivable; otherwise marked irreducible).
 - **Dual-hash window** when the canonicalization or hash algorithm changes (see [§5.1](#51-canonical-hash-spec_hash)).
-- **Old-fixture parity tests** in `tests/domains/habitat/identity/` *(PROPOSED).* 
+- **Old-fixture parity tests** in `tests/domains/habitat/identity/` *(PROPOSED).*
 - **Correction notices** for any released artifacts referencing the old identity, with rollback targets recorded on the previous `ReleaseManifest`.
 
 > [!TIP]
@@ -420,7 +427,7 @@ Per `directory-rules.md` §14.3, a rename that changes what an object **means** 
 
 | Item | What would settle it | Status |
 |---|---|---|
-| Confirm `schemas/contracts/v1/domains/habitat/` is the canonical schema home for Habitat identity-bearing object schemas. | Mounted repo inspection; ADR-0001 check; existing schema files. | NEEDS VERIFICATION |
+| **Schema home for Habitat identity-bearing schemas** — segmented `…/domains/habitat/` (DIRRULES §12) vs flat `…/habitat/` (Atlas §24.13); confirm/amend ADR-0001 (ADR-S-01; VB-11-01). | Accepted ADR-S-01 + DRIFT_REGISTER entry + mounted `schemas/` inspection. | **CONFLICTED** |
 | Confirm the precise identity-bearing field set per object family (the table in [§6](#6-per-object-identity-table) is PROPOSED). | Mounted schema files; `spec_normalization` doc; validator fixtures. | NEEDS VERIFICATION |
 | Confirm `jcs:sha256:<hex>` algorithm-prefix convention is used uniformly in habitat artifacts. | Mounted receipts; CI workflows; validator behavior. | NEEDS VERIFICATION |
 | Confirm whether BLAKE3 root-hash sidecars are emitted for habitat tiles and large suitability rasters. | Mounted tile sidecars; release manifests. | NEEDS VERIFICATION |
@@ -437,14 +444,15 @@ Per `directory-rules.md` §14.3, a rename that changes what an object **means** 
 ## 13. Related docs
 
 - [`docs/domains/habitat/README.md`](./README.md) — Habitat domain landing. *(TODO if absent.)*
-- [`docs/domains/habitat/SOURCES.md`](./SOURCES.md) — Habitat source families & roles. *(TODO if absent.)*
-- [`docs/domains/habitat/PIPELINE.md`](./PIPELINE.md) — RAW → PUBLISHED for Habitat. *(TODO if absent.)*
-- [`docs/domains/habitat/SENSITIVITY.md`](./SENSITIVITY.md) — Habitat sensitivity posture & geoprivacy. *(TODO if absent.)*
+- [`docs/domains/habitat/HABITAT_DOMAIN_MODEL.md`](./HABITAT_DOMAIN_MODEL.md) — object families & ubiquitous language. *(PROPOSED.)*
+- [`docs/domains/habitat/HABITAT_SOURCE_LEDGER.md`](./HABITAT_SOURCE_LEDGER.md) — Habitat source families & roles. *(PROPOSED.)*
+- [`docs/domains/habitat/HABITAT_SENSITIVITY_PROFILE.md`](./HABITAT_SENSITIVITY_PROFILE.md) — Habitat sensitivity posture & geoprivacy. *(PROPOSED.)*
+- [`docs/domains/habitat/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — RAW → PUBLISHED for Habitat. *(PROPOSED.)*
 - [`docs/domains/fauna/IDENTITY_MODEL.md`](../fauna/IDENTITY_MODEL.md) — Fauna identity (counterparty for Habitat × Fauna thin slice). *(TODO if absent.)*
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O profile.
+- [`docs/standards/PROVENANCE.md`](../../standards/PROVENANCE.md) — W3C PROV-O profile (`PROV.md` vs `PROVENANCE.md` is OPEN-DR-01).
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract/schema/policy split.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Canonical schema home decision.
-- `schemas/contracts/v1/domains/habitat/` — Habitat schemas (PROPOSED path).
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; §23.2 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
+- `schemas/contracts/v1/domains/habitat/` — Habitat schemas (PROPOSED path; slug **CONFLICTED**, §2).
 - `control_plane/object_family_register.yaml` — Cross-domain object-family register.
 
 [⬆ Back to top](#-habitat--identity-model)
@@ -504,10 +512,11 @@ Any failure → `DENY` (publication) or `ABSTAIN` (validator), per [§7](#7-temp
 |---|---|
 | **CONFIRMED** | Verified from attached KFM doctrine: Domains Culmination Atlas, Encyclopedia, Pass 20 Idea Index, New Ideas 5-8-26 / 5-10-26, Master MapLibre Components, Directory Rules, DDD Reference. |
 | **PROPOSED** | Design / placement / implementation detail consistent with doctrine but not yet verified against a mounted repo. |
+| **CONFLICTED** | Sources disagree (or doctrine and prior planning diverge); held until an ADR or drift entry resolves it. |
 | **NEEDS VERIFICATION** | Checkable against repo evidence (schemas, validators, manifests, fixtures, CI) but not yet checked in this session. |
 | **UNKNOWN** | Not resolvable without further evidence. |
 
 ---
 
-<sub>**Related docs:** [README](./README.md) · [SOURCES](./SOURCES.md) · [PIPELINE](./PIPELINE.md) · [SENSITIVITY](./SENSITIVITY.md) · [Fauna Identity Model](../fauna/IDENTITY_MODEL.md) · [PROV standard](../../standards/PROV.md)</sub>
-<sub>**Last updated:** 2026-05-17 · **Doc version:** v1 (draft) · [⬆ Back to top](#-habitat--identity-model)</sub>
+<sub>**Related docs:** [README](./README.md) · [Domain Model](./HABITAT_DOMAIN_MODEL.md) · [Source Ledger](./HABITAT_SOURCE_LEDGER.md) · [Sensitivity Profile](./HABITAT_SENSITIVITY_PROFILE.md) · [Data Lifecycle](./DATA_LIFECYCLE.md) · [Fauna Identity Model](../fauna/IDENTITY_MODEL.md) · [PROVENANCE standard](../../standards/PROVENANCE.md)</sub>
+<sub>**Last updated:** 2026-06-05 · **Doc version:** v1 (draft) · `CONTRACT_VERSION = "3.0.0"` · [⬆ Back to top](#-habitat--identity-model)</sub>
