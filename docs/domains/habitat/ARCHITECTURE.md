@@ -4,26 +4,32 @@ title: Habitat Domain · Architecture
 type: standard
 version: v1
 status: draft
-owners: <habitat-domain-steward>
+owners: <habitat-domain-steward>            # pending CODEOWNERS / steward charter assignment
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md
+  - docs/doctrine/truth-posture.md          # filename NEEDS VERIFICATION (see §17 note)
   - docs/doctrine/trust-membrane.md
+  - docs/domains/habitat/API_CONTRACTS.md
+  - docs/domains/habitat/sublanes/suitability.md
+  - docs/domains/habitat/sublanes/restoration.md
   - docs/domains/fauna/ARCHITECTURE.md
   - docs/domains/flora/ARCHITECTURE.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
+  - ai-build-operating-contract.md
   - kfm://doc/dom-hab
   - kfm://doc/dom-hf
 tags: [kfm, domain, habitat, ecology, lane-architecture]
 notes:
+  - CONTRACT_VERSION = "3.0.0"
   - Lane companion to docs/domains/fauna/ARCHITECTURE.md via DOM-HF thin slice.
   - All repo-path claims are PROPOSED until verified against a mounted repository.
   - Owner placeholder pending CODEOWNERS / steward assignment.
+  - "CONFLICTED schema-home: ADR-0001 is referenced by ADR-S-01 as still-open (confirm-or-amend); and Directory Rules §12 segmented slug (.../domains/habitat/) vs Atlas §24.13 flat slug (.../habitat/) is unresolved. See §3.2 and §16."
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain · Architecture
@@ -33,14 +39,15 @@ notes:
 <!-- BADGES -->
 ![Status: Draft](https://img.shields.io/badge/status-draft-orange)
 ![Lane: Habitat](https://img.shields.io/badge/lane-habitat-2ea44f)
-![Lifecycle: RAW%20→%20PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20→%20PUBLISHED-blue)
+![Lifecycle: RAW to PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-blue)
 ![Policy: public](https://img.shields.io/badge/policy-public-informational)
 ![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-success)
 ![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-yellow)
-![Sensitivity: contextual](https://img.shields.io/badge/sensitivity-contextual-lightgrey)
+![Schema home: CONFLICTED](https://img.shields.io/badge/schema__home-CONFLICTED%20%C2%A73.2-important)
+![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![Build: TODO](https://img.shields.io/badge/build-TODO-lightgrey)
 
-**Owners:** `<habitat-domain-steward>` · **Reviewers:** Habitat steward + Fauna steward (for DOM-HF joins) · **Last updated:** 2026-05-17 · **Spec lineage:** `DOM-HAB`, `DOM-HF`, `ENCY §7.4`, `DIRRULES §12`
+**Owners:** `<habitat-domain-steward>` · **Reviewers:** Habitat steward + Fauna steward (for DOM-HF joins) · **Last updated:** 2026-06-05 · **Spec lineage:** `DOM-HAB`, `DOM-HF`, `ENCY §7.4`, `DIRRULES §12` · `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -138,6 +145,7 @@ The pattern below is the canonical lane layout from **Directory Rules §12**. It
 docs/domains/habitat/
 ├── ARCHITECTURE.md          ← (this file) — doctrine + lane orientation
 ├── README.md                ← lane index (PROPOSED)
+├── API_CONTRACTS.md         ← governed-API surface reference (PROPOSED)
 ├── CURRENT_STATE.md         ← mounted-repo truth posture (PROPOSED)
 ├── SOURCE_REGISTRY.md       ← source families + roles + rights (PROPOSED)
 ├── DATA_MODEL.md            ← object families + identity rules (PROPOSED)
@@ -147,10 +155,13 @@ docs/domains/habitat/
 ├── VERIFICATION_BACKLOG.md
 ├── ROADMAP.md
 ├── GLOSSARY.md
-└── CHANGELOG.md
+├── CHANGELOG.md
+└── sublanes/
+    ├── suitability.md       ← modeled-habitat sublane (PROPOSED)
+    └── restoration.md       ← restoration-siting sublane (PROPOSED)
 
-contracts/domains/habitat/                    ← semantic meaning (Markdown)
-schemas/contracts/v1/domains/habitat/         ← machine shape (JSON Schema; ADR-0001)
+contracts/domains/habitat/                    ← semantic meaning (Markdown) — see slug conflict below
+schemas/contracts/v1/domains/habitat/         ← machine shape (JSON Schema) — see slug conflict below
 policy/domains/habitat/                       ← admissibility / release policy
 tests/domains/habitat/                        ← enforceability proof
 fixtures/domains/habitat/                     ← golden / valid / invalid inputs
@@ -168,8 +179,13 @@ data/registry/sources/habitat/                ← SourceDescriptors for Habitat
 release/candidates/habitat/                   ← release candidates + manifests
 ```
 
-> [!NOTE]
-> **Schema-home rule (ADR-0001):** the default machine-schema home is `schemas/contracts/v1/domains/habitat/`. Any earlier appearance of habitat schemas under `contracts/domains/habitat/*.schema.json` is **lineage / CONFLICTED** and MUST be migrated. `contracts/domains/habitat/` retains semantic Markdown only. *(Source basis: `DIRRULES §§6.3-6.4, §13.1`.)*
+> [!IMPORTANT]
+> **Schema-home rule — `CONFLICTED`, ADR-required.** Two questions about the Habitat machine-schema home are **open**, not settled:
+>
+> 1. **Is `schemas/contracts/v1/…` confirmed as the canonical schema home?** This is **ADR-S-01** in the master open-ADR backlog: _"Confirm `schemas/contracts/v1/…` by ADR-0001 **or amend**."_ Atlas v1.1 VB-11-01 lists "schema home confirmed by ADR-0001" as `NEEDS VERIFICATION`. Therefore ADR-0001 MUST be cited as **proposed/open**, not as an accepted rule.
+> 2. **Segmented vs flat slug.** Directory Rules §12 uses the **segmented** form `schemas/contracts/v1/domains/habitat/`; the Atlas §24.13 crosswalk uses the **flat** form `schemas/contracts/v1/habitat/`. This is an unresolved `CONFLICTED` drift.
+>
+> What **is** `CONFIRMED`: machine `.schema.json` files live under `schemas/contracts/v1/…` and **never** under `contracts/`; `contracts/domains/habitat/` holds semantic Markdown only. Any habitat schemas found under `contracts/domains/habitat/*.schema.json` are `LINEAGE / CONFLICTED` and MUST be migrated. Open a `docs/registers/DRIFT_REGISTER.md` entry; do not create both slugs as parallel schema homes (Directory Rules §13.1 anti-pattern). *(Source basis: `DIRRULES §§6.3-6.4, §13.1, §2.4(3)`, `ATLAS §24.12 ADR-S-01`, `ATLAS §24.13`, `ATLAS App. G VB-11-01`.)*
 
 ### 3.3 Lane responsibility map
 
@@ -184,25 +200,25 @@ flowchart LR
     NLCD["NLCD land cover"]:::ext
     NWI["NWI wetlands"]:::ext
     GAP["GAP / LANDFIRE"]:::ext
-    ECOS["USFWS ECOS\ncritical habitat"]:::ext
-    NATSERV["NatureServe / controlled\nbiodiversity sources"]:::ext
-    OCC["GBIF / iNaturalist / iDigBio\n(occurrence inputs)"]:::ext
+    ECOS["USFWS ECOS<br/>critical habitat"]:::ext
+    NATSERV["NatureServe / controlled<br/>biodiversity sources"]:::ext
+    OCC["GBIF / iNaturalist / iDigBio<br/>(occurrence inputs)"]:::ext
     PADUS["PAD-US stewardship"]:::ext
     KDWP["KDWP state review context"]:::ext
   end
 
   subgraph LANE[docs/domains/habitat lane]
-    SRC["SourceDescriptor\n(data/registry/sources/habitat/)"]:::gov
-    PIPE["Pipelines\n(pipelines/domains/habitat/)"]:::int
-    CAT["Catalog + EvidenceBundle\n(data/catalog/domain/habitat/)"]:::int
-    REL["ReleaseManifest\n(release/candidates/habitat/)"]:::gov
-    PUB["Published layers\n(data/published/layers/habitat/)"]:::pub
+    SRC["SourceDescriptor<br/>(data/registry/sources/habitat/)"]:::gov
+    PIPE["Pipelines<br/>(pipelines/domains/habitat/)"]:::int
+    CAT["Catalog + EvidenceBundle<br/>(data/catalog/domain/habitat/)"]:::int
+    REL["ReleaseManifest<br/>(release/candidates/habitat/)"]:::gov
+    PUB["Published layers<br/>(data/published/layers/habitat/)"]:::pub
   end
 
   subgraph API[Governed surfaces]
-    GAPI["Governed API\n(habitat feature/detail resolver)"]:::pub
-    EV["Evidence Drawer\nhabitat payload"]:::pub
-    FOCUS["Focus Mode answer\n(ANSWER / ABSTAIN / DENY / ERROR)"]:::pub
+    GAPI["Governed API<br/>(habitat feature/detail resolver)"]:::pub
+    EV["Evidence Drawer<br/>habitat payload"]:::pub
+    FOCUS["Focus Mode answer<br/>ANSWER / ABSTAIN / DENY / ERROR"]:::pub
   end
 
   EXT --> SRC --> PIPE --> CAT --> REL --> PUB
@@ -346,10 +362,10 @@ flowchart LR
 | **CATALOG / TRIPLET** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, and release candidates. | Catalog / proof closure passes. | PROPOSED |
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | `ReleaseManifest`, correction path, rollback target, review / policy state exist. | PROPOSED |
 
-*(Source basis: `DIRRULES §0` lifecycle invariant, `DOM-HAB §§1-2`, `DOM-HF §§8-12`, `ENCY Appendix E`.)*
+*(Source basis: `DIRRULES §9` lifecycle invariant, `DOM-HAB §§1-2`, `DOM-HF §§8-12`, `ENCY Appendix E`.)*
 
 > [!WARNING]
-> **Watchers are not publishers.** Any source-change watcher for Habitat MAY emit observations, receipts, and candidate decisions; it **MUST NOT** mutate catalog truth, publish directly, overwrite canonical records, or bypass review states. *(Source basis: `New Ideas 5-8` watcher invariant; `ENCY §4` operating law.)*
+> **Watchers are not publishers.** Any source-change watcher for Habitat MAY emit observations, receipts, and candidate decisions; it **MUST NOT** mutate catalog truth, publish directly, overwrite canonical records, or bypass review states. *(Source basis: watcher-as-non-publisher invariant; `ENCY §4` operating law.)*
 
 [Back to top ↑](#contents)
 
@@ -364,12 +380,15 @@ flowchart LR
 | Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context **must not be flattened**. | `DOM-HAB`, `DOM-HF`, `ENCY §7.4(I)` |
 | Sensitive occurrence-linked details **deny by default**. | `DOM-HAB`, `DOM-HF`, `ENCY §7.4(I)` |
 | Modeled habitat MUST be labeled as a model and MUST NOT be presented as critical habitat. | `DOM-HAB`, `DOM-HF` |
-| Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **blocks public promotion**. | `ENCY §4` publication gate; `DIRRULES §0` |
+| Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **blocks public promotion**. | `ENCY §4` publication gate; `DIRRULES §9` |
 | Sensitive geometry exposed via tile or layer **fails closed**; style filters are not a sensitivity control. | `Master MapLibre Atlas` anti-patterns |
 | Exact occurrence-linked habitat outputs must be **generalized, redacted, reviewed, or denied** when they create exposure risk. | `Unified Manual §6.3` |
 | Stewardship zones (PAD-US joins, etc.) default to **T1** until review confirms broader release. | `Atlas §24.5` |
 
 **Geoprivacy transform (CONFIRMED doctrine / PROPOSED implementation).** When a Habitat output is derived from a sensitive occurrence, it MUST be produced through a documented transform (suppress, generalize to grid, generalize to watershed or county, buffer, jitter under constraints, delayed publication, or steward-only exact access) and MUST emit a `RedactionReceipt` recording input class, output class, reason, policy, reviewer, and residual risk. *(Source basis: `KFM-IDX-POL-005` rare-species geoprivacy and transform receipts.)*
+
+> [!CAUTION]
+> **Sensitive-domain routing.** Disposition for rare-species, private-land, and steward-controlled habitat content routes through the `ai-build-operating-contract.md` §23.2 sensitive-domain matrix (most-restrictive applicable row). This doc does not re-derive disposition; the §23.2 default — DENY exact exposure, GENERALIZE, REDACT, QUARANTINE uncertain source, REQUIRE steward review, REQUIRE `RedactionReceipt`, ABSTAIN when support is inadequate — governs.
 
 [Back to top ↑](#contents)
 
@@ -377,19 +396,19 @@ flowchart LR
 
 ## 10. API, contract, and schema surfaces
 
-**PROPOSED governed API surfaces.** All Habitat surfaces are governed interfaces over released or reviewable trust objects — never raw database windows.
+**PROPOSED governed API surfaces.** All Habitat surfaces are governed interfaces over released or reviewable trust objects — never raw database windows. The detailed semantic contract reference lives in [`API_CONTRACTS.md`](API_CONTRACTS.md).
 
 | Endpoint or artifact | DTO / schema | Finite outcomes | Status |
 |---|---|---|---|
 | Habitat feature/detail resolver | `HabitatDecisionEnvelope` | `ANSWER / ABSTAIN / DENY / ERROR` | PROPOSED; exact route UNKNOWN. |
-| Habitat layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER / DENY / ERROR` | PROPOSED; public-safe release only. |
+| Habitat layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER / DENY / ERROR` | PROPOSED; public-safe release only (no `ABSTAIN` per Atlas §24.3.2). |
 | Habitat Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER / ABSTAIN / DENY / ERROR` | PROPOSED; evidence- and policy-filtered. |
 | Habitat Focus Mode answer | Runtime Response Envelope + `AIReceipt` | `ANSWER / ABSTAIN / DENY / ERROR` | PROPOSED; AI never root truth. |
-| Schema responsibility root | `schemas/contracts/v1/domains/habitat/` | finite validator outcomes | PROPOSED; verify with Directory Rules and ADR-0001. |
-| Contract responsibility root | `contracts/domains/habitat/` | semantic Markdown | PROPOSED; CONFLICTED if it also holds JSON Schema. |
+| Schema responsibility root | `schemas/contracts/v1/…` (segment slug `CONFLICTED`, §3.2) | finite validator outcomes | PROPOSED; ADR-S-01 open. |
+| Contract responsibility root | `contracts/domains/habitat/` | semantic Markdown | PROPOSED; `CONFLICTED` if it ever holds `.schema.json`. |
 | Policy responsibility root | `policy/domains/habitat/` | allow / deny / restrict / abstain | PROPOSED. |
 
-*(Source basis: `Atlas §J habitat`, `DOM-HAB §§1-2`, `DIRRULES §§6.3-6.5, §12`, `BLD-GREEN §12`, `UIAI-MAP §7`.)*
+*(Source basis: `Atlas §J habitat`, `Atlas §24.3.2` outcome×surface map, `DOM-HAB §§1-2`, `DIRRULES §§6.3-6.5, §12`, `UIAI-MAP §7`.)*
 
 > [!NOTE]
 > Public API payloads expose **finite outcome states**, **evidence references**, **policy posture**, **temporal and spatial scope**, **stale state**, **release state**, **correction lineage**, and **identifiers that allow `EvidenceBundle` inspection**. They do not expose raw connectors, internal store handles, or model-client paths. *(Source basis: `Unified Manual §3.8 API architecture`.)*
@@ -462,7 +481,7 @@ The validator set below is **PROPOSED**. Each validator MUST exercise positive, 
 
 </details>
 
-*(Source basis: `Atlas §K habitat`, `DOM-HAB`, `DOM-HF`, `New Ideas 5-10` PMTiles attestation, `KFM-IDX-VAL-001/002` fail-closed posture.)*
+*(Source basis: `Atlas §K habitat`, `DOM-HAB`, `DOM-HF`, PMTiles attestation, `KFM-IDX-VAL-001/002` fail-closed posture.)*
 
 [Back to top ↑](#contents)
 
@@ -494,18 +513,18 @@ The validator set below is **PROPOSED**. Each validator MUST exercise positive, 
 
 ```mermaid
 flowchart LR
-  F1["Public occurrence fixture\n(non-sensitive)"]:::fix
-  F2["Habitat patch fixture\n(NLCD-derived)"]:::fix
-  P1["SourceDescriptor (both)"] --> V1["Validators\n(schema, rights, sensitivity)"]
+  classDef fix fill:#fff3cd,stroke:#e0a800,color:#5c3c00;
+  F1["Public occurrence fixture<br/>(non-sensitive)"]:::fix
+  F2["Habitat patch fixture<br/>(NLCD-derived)"]:::fix
+  P1["SourceDescriptor (both)"] --> V1["Validators<br/>(schema, rights, sensitivity)"]
   F1 --> P1
   F2 --> P1
   V1 --> A1["Habitat assignment"] --> E1["EvidenceBundle"]
   E1 --> R1["ReleaseManifest + LayerManifest"]
-  R1 --> M1["MapLibre layer\n(public-safe)"]
+  R1 --> M1["MapLibre layer<br/>(public-safe)"]
   R1 --> D1["Evidence Drawer payload"]
-  R1 --> X1["Focus Mode answer\n(ANSWER / ABSTAIN / DENY)"]
+  R1 --> X1["Focus Mode answer<br/>ANSWER / ABSTAIN / DENY"]
   R1 -. rollback drill .-> RB["RollbackCard"]
-  classDef fix fill:#fff3cd,stroke:#e0a800,color:#5c3c00;
 ```
 
 **Definition of done (PROPOSED):**
@@ -527,15 +546,15 @@ flowchart LR
 |---|---|---|
 | Verify official USFWS ECOS critical habitat source descriptors. | `data/registry/sources/habitat/` entries, signed agreements, validator coverage. | NEEDS VERIFICATION |
 | Verify sensitive-occurrence geoprivacy policy and transform receipts. | `policy/sensitivity/fauna/` + `policy/domains/habitat/` rules, transform receipt fixtures. | NEEDS VERIFICATION |
-| Verify model-card requirements for `SuitabilityModel` products. | Model card schema in `schemas/contracts/v1/domains/habitat/`, ADR. | NEEDS VERIFICATION |
+| Verify model-card requirements for `SuitabilityModel` products. | Model card schema in the canonical Habitat schema home, ADR. | NEEDS VERIFICATION |
 | Verify Habitat MapLibre overlay registry and Focus Mode behavior. | `packages/maplibre/` configs + Focus Mode integration tests. | NEEDS VERIFICATION |
-| Verify schema-home naming under ADR-0001 (`schemas/contracts/v1/domains/habitat/` canonical). | Accepted ADR + migrated paths. | NEEDS VERIFICATION |
+| **Resolve schema-home for Habitat (two parts).** (a) Confirm or amend ADR-0001 per **ADR-S-01**; (b) resolve segmented `.../domains/habitat/` (DIRRULES §12) vs flat `.../habitat/` (Atlas §24.13). | Accepted ADR-S-01 + DRIFT_REGISTER entry + mounted-repo evidence. | CONFLICTED |
 | Verify connector cadence and rights for NLCD, NWI, GAP/LANDFIRE, ECOS, NatureServe, GBIF/iNaturalist/iDigBio, PAD-US, KDWP. | Source descriptors + ToS review. | NEEDS VERIFICATION |
-| Verify Habitat × Fauna thin-slice proof artifact. | Released slice artifact, `EvidenceBundle`, `ReleaseManifest`, rollback drill receipt. | NOT YET CONFIRMED |
+| Verify Habitat × Fauna thin-slice proof artifact. | Released slice artifact, `EvidenceBundle`, `ReleaseManifest`, rollback drill receipt. | NEEDS VERIFICATION |
 | Verify watcher integration for Habitat source change. | `tools/ingest/.../watcher` + dry-run receipts. | NEEDS VERIFICATION |
 | Verify `RestorationOpportunity` steward-review state machine. | `policy/domains/habitat/` + review fixtures. | NEEDS VERIFICATION |
 | Verify PMTiles attestation pipeline for published habitat tiles. | PMTiles sidecar + signature + root hash fixtures. | NEEDS VERIFICATION |
-| Resolve docs filename conventions (`ARCHITECTURE.md` casing, neighbor naming). | Existing neighbor docs in mounted repo. | NEEDS VERIFICATION |
+| Resolve docs filename conventions (`ARCHITECTURE.md` casing, neighbor naming; `truth-posture.md` vs neighbor doctrine names; `PROV.md` vs `PROVENANCE.md` per OPEN-DR-01). | Existing neighbor docs in mounted repo + ADR. | NEEDS VERIFICATION |
 
 [Back to top ↑](#contents)
 
@@ -543,18 +562,22 @@ flowchart LR
 
 ## 17. Related docs
 
+> [!NOTE]
+> **Doctrine filename drift.** This doc references `docs/doctrine/truth-posture.md`; the cite-or-abstain truth posture may instead live under a differently named doctrine companion (e.g., an `evidence-first` / `authority-ladder` companion). Treat the `truth-posture.md` target as `NEEDS VERIFICATION`. The `PROV.md` vs `PROVENANCE.md` filename is tracked as Directory Rules OPEN-DR-01.
+
 <details>
 <summary><strong>Lane companions, ADRs, and runbooks (PROPOSED locations)</strong></summary>
 
-- **Lane:** [`README.md`](README.md) · [`CURRENT_STATE.md`](CURRENT_STATE.md) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · [`DATA_MODEL.md`](DATA_MODEL.md) · [`PIPELINES_AND_LIFECYCLE.md`](PIPELINES_AND_LIFECYCLE.md) · [`PUBLICATION_AND_POLICY.md`](PUBLICATION_AND_POLICY.md) · [`UI_AND_EVIDENCE_DRAWER.md`](UI_AND_EVIDENCE_DRAWER.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md) · [`ROADMAP.md`](ROADMAP.md) · [`GLOSSARY.md`](GLOSSARY.md) · [`CHANGELOG.md`](CHANGELOG.md)
-- **ADRs:** [`ADR-habitat-schema-home.md`](../../adr/ADR-habitat-schema-home.md) · [`ADR-habitat-source-roles.md`](../../adr/ADR-habitat-source-roles.md) · [`ADR-habitat-modeled-vs-critical.md`](../../adr/ADR-habitat-modeled-vs-critical.md) · [`ADR-habitat-stewardship-zone-policy.md`](../../adr/ADR-habitat-stewardship-zone-policy.md) · [`ADR-habitat-fauna-thin-slice.md`](../../adr/ADR-habitat-fauna-thin-slice.md) *(all TODO link targets)*
-- **Runbooks:** `runbooks/habitat-ingest.md` · `runbooks/habitat-promotion.md` · `runbooks/habitat-rollback.md` · `runbooks/dom-hf-thin-slice.md` *(TODO link targets)*
+- **Lane:** [`README.md`](README.md) · [`API_CONTRACTS.md`](API_CONTRACTS.md) · [`CURRENT_STATE.md`](CURRENT_STATE.md) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · [`DATA_MODEL.md`](DATA_MODEL.md) · [`PIPELINES_AND_LIFECYCLE.md`](PIPELINES_AND_LIFECYCLE.md) · [`PUBLICATION_AND_POLICY.md`](PUBLICATION_AND_POLICY.md) · [`UI_AND_EVIDENCE_DRAWER.md`](UI_AND_EVIDENCE_DRAWER.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md) · [`ROADMAP.md`](ROADMAP.md) · [`GLOSSARY.md`](GLOSSARY.md) · [`CHANGELOG.md`](CHANGELOG.md)
+- **Sublanes:** [`sublanes/suitability.md`](sublanes/suitability.md) · [`sublanes/restoration.md`](sublanes/restoration.md)
+- **ADRs:** [`ADR-habitat-schema-home.md`](../../adr/ADR-habitat-schema-home.md) *(maps to ADR-S-01)* · [`ADR-habitat-source-roles.md`](../../adr/ADR-habitat-source-roles.md) · [`ADR-habitat-modeled-vs-critical.md`](../../adr/ADR-habitat-modeled-vs-critical.md) · [`ADR-habitat-stewardship-zone-policy.md`](../../adr/ADR-habitat-stewardship-zone-policy.md) · [`ADR-habitat-fauna-thin-slice.md`](../../adr/ADR-habitat-fauna-thin-slice.md) *(all TODO link targets)*
+- **Runbooks:** `runbooks/habitat-ingest.md` · `runbooks/habitat-promotion.md` · `runbooks/habitat-rollback.md` · `runbooks/dom-hf-thin-slice.md` *(TODO link targets; flat-vs-`<domain>/`-subfolder naming is OPEN-DR-02)*
 - **Cross-domain neighbors:** [`../fauna/ARCHITECTURE.md`](../fauna/ARCHITECTURE.md) · [`../flora/ARCHITECTURE.md`](../flora/ARCHITECTURE.md) · [`../soil/ARCHITECTURE.md`](../soil/ARCHITECTURE.md) · [`../hydrology/ARCHITECTURE.md`](../hydrology/ARCHITECTURE.md) · [`../agriculture/ARCHITECTURE.md`](../agriculture/ARCHITECTURE.md) · [`../hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md)
-- **Doctrine roots:** [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`../../doctrine/truth-posture.md`](../../doctrine/truth-posture.md) · [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md)
-- **Standards:** [`../../standards/PROV.md`](../../standards/PROV.md) · [`../../standards/PMTILES.md`](../../standards/PMTILES.md) · [`../../standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) · [`../../standards/ISO-19115.md`](../../standards/ISO-19115.md)
+- **Doctrine roots:** [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`../../doctrine/truth-posture.md`](../../doctrine/truth-posture.md) *(filename NEEDS VERIFICATION)* · [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
+- **Standards:** [`../../standards/PROV.md`](../../standards/PROV.md) *(vs `PROVENANCE.md`, OPEN-DR-01)* · [`../../standards/PMTILES.md`](../../standards/PMTILES.md) · [`../../standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) · [`../../standards/ISO-19115.md`](../../standards/ISO-19115.md)
 
 </details>
 
 ---
 
-<sub>**Last updated:** 2026-05-17 · **Spec lineage:** `DOM-HAB`, `DOM-HF`, `ENCY §7.4`, `DIRRULES §12` · **Doc id:** `kfm://doc/domain-habitat-architecture` · [Back to top ↑](#contents)</sub>
+<sub>**Last updated:** 2026-06-05 · **Spec lineage:** `DOM-HAB`, `DOM-HF`, `ENCY §7.4`, `DIRRULES §12` · **Doc id:** `kfm://doc/domain-habitat-architecture` · `CONTRACT_VERSION = "3.0.0"` · [Back to top ↑](#contents)</sub>
