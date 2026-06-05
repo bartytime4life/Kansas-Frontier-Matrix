@@ -6,10 +6,13 @@ version: v1
 status: draft
 owners: [habitat-stewards, lifecycle-stewards]   # NEEDS VERIFICATION
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
   - docs/domains/habitat/README.md                                 # PROPOSED — verify
+  - docs/domains/habitat/ARCHITECTURE.md                           # PROPOSED — verify
+  - docs/domains/habitat/CANONICAL_PATHS.md                        # PROPOSED — verify
+  - docs/domains/habitat/CONTRACTS.md                              # PROPOSED — verify
   - docs/doctrine/lifecycle-law.md                                 # PROPOSED — verify
   - docs/doctrine/directory-rules.md                               # CONFIRMED reference
   - docs/standards/PROV.md                                         # CONFIRMED reference
@@ -18,12 +21,15 @@ related:
   - docs/standards/OAI-PMH.md                                      # CONFIRMED reference
   - docs/standards/ISO-19115.md                                    # CONFIRMED reference
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md                  # CONFIRMED reference
+  - ai-build-operating-contract.md                                # CONFIRMED reference
   - data/README.md                                                 # PROPOSED — verify
   - release/README.md                                              # PROPOSED — verify
 tags: [kfm, habitat, lifecycle, governance, evidence, policy]
 notes:
+  - CONTRACT_VERSION = "3.0.0"
   - "Domain-scoped lifecycle profile; conforms to the KFM lifecycle invariant; does not redefine it."
   - "Implementation-layer paths and validators remain PROPOSED until verified against mounted repo."
+  - "CONFLICTED schema-home: ADR-0001 OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented .../domains/habitat/ (DIRRULES §12) vs flat .../habitat/ (Atlas §24.13) unresolved. See §2.2."
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain — Data Lifecycle
@@ -33,12 +39,14 @@ A governed, evidence-first traversal of the KFM lifecycle invariant for habitat 
 [![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)](#)
 [![Doc type: standard](https://img.shields.io/badge/doc--type-standard-blue)](#)
 [![Domain: habitat](https://img.shields.io/badge/domain-habitat-2e7d32)](#)
-[![Lifecycle: RAW%E2%86%92PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)](#3-lifecycle-overview)
+[![Lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)](#3-lifecycle-overview)
 [![Policy posture: public-safe by default](https://img.shields.io/badge/policy-public--safe--by--default-orange)](#7-sensitivity-rights-and-publication-posture)
+[![Schema home: CONFLICTED](https://img.shields.io/badge/schema__home-CONFLICTED%20%C2%A72.2-important)](#22-authority-boundaries)
+[![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](#)
 [![Build: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
-[![Last updated: 2026-05-17](https://img.shields.io/badge/updated-2026--05--17-informational)](#)
+[![Last updated: 2026-06-05](https://img.shields.io/badge/updated-2026--06--05-informational)](#)
 
-> **Status** · draft &nbsp;·&nbsp; **Owners** · habitat-stewards, lifecycle-stewards (NEEDS VERIFICATION) &nbsp;·&nbsp; **Updated** · 2026-05-17
+> **Status** · draft &nbsp;·&nbsp; **Owners** · habitat-stewards, lifecycle-stewards (NEEDS VERIFICATION) &nbsp;·&nbsp; **Updated** · 2026-06-05 &nbsp;·&nbsp; `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
 > This document is a **domain-scoped profile** of the KFM lifecycle invariant. It does not redefine the lifecycle, the trust membrane, the watcher-as-non-publisher invariant, or the publication gate. Where it appears to do so, **the upstream doctrine wins** and a drift entry should be opened in `docs/registers/DRIFT_REGISTER.md`.
@@ -68,12 +76,12 @@ A governed, evidence-first traversal of the KFM lifecycle invariant for habitat 
 
 **In scope.** The lifecycle traversal of habitat-domain artifacts from source admission through governed publication, correction, and rollback. CONFIRMED domain scope (doctrine-level): habitat patches, land-cover observations, ecological systems, habitat quality, suitability models, connectivity edges, corridors, restoration opportunities, stewardship zones, model-run receipts, and uncertainty surfaces.
 
-**Out of scope.** Object semantics (defined under `contracts/domains/habitat/`), machine shape (defined under `schemas/contracts/v1/domains/habitat/`), and admissibility logic (defined under `policy/domains/habitat/`). Species occurrence truth and animal taxonomy are owned by **Fauna**; plant taxonomy and rare-plant records are owned by **Flora**; soil, hydrology, hazards, agriculture, and archaeology retain their own truth. Habitat joins them through governed relationships only.
+**Out of scope.** Object semantics (defined under `contracts/domains/habitat/`; indexed by `docs/domains/habitat/CONTRACTS.md`), machine shape (defined under the canonical Habitat schema home — slug `CONFLICTED`, §2.2), and admissibility logic (defined under `policy/domains/habitat/`). Species occurrence truth and animal taxonomy are owned by **Fauna**; plant taxonomy and rare-plant records are owned by **Flora**; soil, hydrology, hazards, agriculture, and archaeology retain their own truth. Habitat joins them through governed relationships only.
 
 **Audience.** Domain stewards, pipeline engineers, validator authors, policy authors, release authorities, and reviewers responsible for habitat artifacts on their way to public surfaces.
 
 > [!NOTE]
-> **Doctrinal anchors.** This document profiles, not redefines, the KFM lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, with **promotion as a governed state transition, not a file move**. CONFIRMED across `directory-rules.md`, the Pipeline Manual lineage, and the Domains Culmination Atlas.
+> **Doctrinal anchors.** This document profiles, not redefines, the KFM lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, with **promotion as a governed state transition, not a file move**. CONFIRMED across `directory-rules.md` §9, the Pipeline Manual lineage, and the Domains Culmination Atlas §6.H.
 
 [Back to top ↑](#table-of-contents)
 
@@ -81,14 +89,14 @@ A governed, evidence-first traversal of the KFM lifecycle invariant for habitat 
 
 ## 2. Repo fit and authority boundaries
 
-Habitat is a **domain lane** distributed across responsibility roots — not a root-level folder. Path placement follows Domain Placement Law in `directory-rules.md`. CONFIRMED doctrine; specific paths PROPOSED until repo-verified.
+Habitat is a **domain lane** distributed across responsibility roots — not a root-level folder. Path placement follows Domain Placement Law in `directory-rules.md` §12. CONFIRMED doctrine; specific paths PROPOSED until repo-verified.
 
 ### 2.1 Habitat lane paths
 
 ```text
 docs/domains/habitat/                          # PROPOSED — this document lives here
 contracts/domains/habitat/                     # PROPOSED — object meaning
-schemas/contracts/v1/domains/habitat/          # PROPOSED — machine shape (canonical schema home; see ADR-0001)
+schemas/contracts/v1/domains/habitat/          # PROPOSED — machine shape (schema home; slug CONFLICTED — see §2.2)
 policy/domains/habitat/                        # PROPOSED — allow/deny/restrict/abstain
 tests/domains/habitat/                         # PROPOSED — proof of enforceability
 fixtures/domains/habitat/                      # PROPOSED — sample data for tests
@@ -102,7 +110,7 @@ data/work/habitat/<run_id>/                    # PROPOSED — normalized interme
 data/quarantine/habitat/<reason>/<run_id>/     # PROPOSED — failed/held items
 data/processed/habitat/<dataset_id>/<version>/ # PROPOSED — validated canonical records
 data/catalog/domain/habitat/                   # PROPOSED — STAC / DCAT / PROV / domain catalog
-data/triplets/                                 # PROPOSED — relationship projections (non-domain-scoped)
+data/triplets/                                 # PROPOSED — relationship projections (non-domain-scoped; triplets/ plural per DIRRULES §9)
 data/published/layers/habitat/                 # PROPOSED — released public-safe artifacts
 data/registry/sources/habitat/                 # PROPOSED — append-only source descriptors
 data/rollback/habitat/<release_id>/            # PROPOSED — alias-revert receipts
@@ -119,9 +127,12 @@ release/correction_notices/                    # PROPOSED — public correction 
 | Boundary | Habitat rule | Authority |
 |---|---|---|
 | Trust membrane | Public clients consume governed APIs and released artifacts; **never** `data/raw/`, `data/work/`, `data/quarantine/`, or unpublished candidates. | `apps/governed-api/` (PROPOSED route surface) |
-| Canonical schema home | Habitat schemas live under `schemas/contracts/v1/domains/habitat/`. Any mirror in `contracts/` is generated or frozen. | ADR-0001 (referenced by `directory-rules.md`) |
+| Canonical schema home | `.schema.json` files live under `schemas/`, **never** under `contracts/` (CONFIRMED). **Which `schemas/` slug is canonical is `CONFLICTED`** — see callout below. | ADR-0001 / **ADR-S-01 (OPEN)** |
 | Watcher posture | Source-drift detectors emit `WORK_CANDIDATE` records; they **never** write to `data/processed/`, `data/catalog/`, or `data/published/`. | Watcher-as-non-publisher invariant (CONFIRMED) |
 | Connector posture | Connectors admit to `data/raw/habitat/` or `data/quarantine/habitat/`; pipelines promote. | `directory-rules.md` §13.5 |
+
+> [!WARNING]
+> **Schema-home slug is `CONFLICTED` and ADR-required.** Two questions are **open**: (1) is `schemas/contracts/v1/…` confirmed as the canonical home? This is **ADR-S-01** — "confirm `schemas/contracts/v1/…` by ADR-0001 **or amend**"; Atlas App. G VB-11-01 marks it `NEEDS VERIFICATION`. (2) Segmented `schemas/contracts/v1/domains/habitat/` (DIRRULES §12) vs flat `schemas/contracts/v1/habitat/` (Atlas §24.13). CONFIRMED regardless: `.schema.json` never lives under `contracts/`, and the repo MUST NOT maintain divergent definitions in both `schemas/` and `contracts/`. Cite ADR-0001 as **proposed/open**; open a `DRIFT_REGISTER.md` entry; do not create both slugs. _[DIRRULES §6.4, §13.1, §2.4(3)], [ATLAS §24.12 ADR-S-01], [§24.13], [App. G VB-11-01]._
 
 [Back to top ↑](#table-of-contents)
 
@@ -151,7 +162,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> **Promotion is a governed state transition, not a file move.** A path-level copy from `data/raw/habitat/` into `data/processed/habitat/` that bypasses validators, policy gates, EvidenceBundle creation, catalog closure, and release-decision recording is a **violation of the invariant** regardless of which directory the bytes ended up in. CONFIRMED from `directory-rules.md` §9.1.
+> **Promotion is a governed state transition, not a file move.** A path-level copy from `data/raw/habitat/` into `data/processed/habitat/` that bypasses validators, policy gates, EvidenceBundle creation, catalog closure, and release-decision recording is a **violation of the invariant** regardless of which directory the bytes ended up in. CONFIRMED from `directory-rules.md` §9.
 
 [Back to top ↑](#table-of-contents)
 
@@ -175,7 +186,7 @@ Habitat follows the canonical lifecycle. CONFIRMED doctrine; stage application w
 ### 4.2 Universal gate reference (habitat application)
 
 <details>
-<summary>Expand: Master gate matrix — habitat application of `directory-rules.md` §9 / Atlas §24.6</summary>
+<summary>Expand: Master gate matrix — habitat application of <code>directory-rules.md</code> §9 / Atlas §24.6</summary>
 
 | Gate (transition) | Habitat artifacts required | Failure-closed outcome |
 |---|---|---|
@@ -194,24 +205,24 @@ Habitat follows the canonical lifecycle. CONFIRMED doctrine; stage application w
 
 ## 5. Object families by stage
 
-CONFIRMED ownership (doctrine, per Domains Culmination Atlas §6 and the KFM Encyclopedia). PROPOSED field-level realization until contracts and schemas are repo-verified.
+CONFIRMED ownership (doctrine, per Domains Culmination Atlas §6 and the KFM Encyclopedia §7.4). PROPOSED field-level realization until contracts and schemas are repo-verified.
 
 | Object family | Earliest emit | Stable from | Notes |
 |---|---|---|---|
 | `HabitatPatch` | WORK | PROCESSED | Identity rule (PROPOSED): `source_id + object_role + temporal_scope + normalized_digest`. |
 | `LandCoverObservation` | WORK | PROCESSED | NLCD-derived and similar; observation role. |
 | `EcologicalSystem` | WORK | PROCESSED | NatureServe-style classification context. |
-| `HabitatQualityScore` | PROCESSED | CATALOG | Derived; carries support / uncertainty. |
+| `HabitatQualityScore` | PROCESSED | CATALOG | Derived; carries support / uncertainty; descriptive, never prescriptive. |
 | `SuitabilityModel` | WORK | PROCESSED | Modeled artifact; **must not** be flattened into "critical habitat." |
 | `ConnectivityEdge` | PROCESSED | CATALOG | Graph projection candidate. |
 | `Corridor` | PROCESSED | CATALOG | Derived from connectivity + landscape context. |
 | `RestorationOpportunity` | PROCESSED | CATALOG | Public release only after sensitivity review. |
-| `StewardshipZone` | RAW | PROCESSED | PAD-US-like stewardship context. |
+| `StewardshipZone` | RAW | PROCESSED | PAD-US-like stewardship context; `T1` sensitivity default. |
 | `ModelRunReceipt` | WORK | PROCESSED | Receipt for every suitability/connectivity model execution. |
-| `UncertaintySurface` | PROCESSED | CATALOG | Co-released with suitability and connectivity products. |
+| `UncertaintySurface` | PROCESSED | CATALOG | Co-released with suitability and connectivity products; must not be erased. |
 
 > [!IMPORTANT]
-> **Model vs. observation labels stay visible** at every stage. A modeled suitability surface is **not** a regulatory critical-habitat designation, and a regulatory critical-habitat polygon is **not** an observation. Source-role discipline is the runtime expression of this rule; flattening source roles is a publication-deny condition.
+> **Model vs. observation labels stay visible** at every stage. A modeled suitability surface (`modeled` role) is **not** a regulatory critical-habitat designation (`regulatory` role), and a regulatory critical-habitat polygon is **not** an observation (`observed` role). Source-role discipline is the runtime expression of this rule; flattening source roles is a publication-deny condition. _[DOM-HAB], [ATLAS §6.I, §24.1]._
 
 [Back to top ↑](#table-of-contents)
 
@@ -225,14 +236,14 @@ CONFIRMED habitat source families (Atlas §6.D); rights and current terms remain
 
 | Source family | Typical role(s) | Lifecycle entry | Rights / sensitivity |
 |---|---|---|---|
-| USFWS ECOS / critical-habitat services | authority · context | `data/raw/habitat/usfws-ecos/...` | NEEDS VERIFICATION; sensitive joins fail closed. |
+| USFWS ECOS / critical-habitat services | authority · regulatory context | `data/raw/habitat/usfws-ecos/...` | NEEDS VERIFICATION; sensitive joins fail closed. |
 | KDWP state review context | authority · context | `data/raw/habitat/kdwp/...` | NEEDS VERIFICATION; steward-controlled. |
-| NLCD land cover | observation · context | `data/raw/habitat/nlcd/...` | Public; source-vintage specific. |
-| NWI wetlands | observation · context | `data/raw/habitat/nwi/...` | Public; source-vintage specific. |
-| GAP / LANDFIRE | model · context | `data/raw/habitat/gap-landfire/...` | Public; source-vintage specific. |
+| NLCD land cover | observation · context | `data/raw/habitat/nlcd/...` | Rights NEEDS VERIFICATION; source-vintage specific. |
+| NWI wetlands | observation · context | `data/raw/habitat/nwi/...` | Rights NEEDS VERIFICATION; source-vintage specific. |
+| GAP / LANDFIRE | observation · model · context | `data/raw/habitat/gap-landfire/...` | Rights NEEDS VERIFICATION; source-vintage specific. |
 | NatureServe / controlled biodiversity sources | authority · context | `data/raw/habitat/natureserve/...` | NEEDS VERIFICATION; controlled. |
 | GBIF / iNaturalist / iDigBio occurrence inputs (habitat-context-only) | observation | `data/raw/habitat/occurrence-context/...` | NEEDS VERIFICATION; joined to habitat only via Fauna geoprivacy. |
-| PAD-US stewardship context | context | `data/raw/habitat/pad-us/...` | Public; stewardship metadata. |
+| PAD-US stewardship context | context | `data/raw/habitat/pad-us/...` | Rights NEEDS VERIFICATION; stewardship metadata. |
 
 ### 6.2 Connector and watcher contracts
 
@@ -240,7 +251,7 @@ CONFIRMED habitat source families (Atlas §6.D); rights and current terms remain
 > **Connector publication is forbidden.** Connectors emit to `data/raw/habitat/` (or `data/quarantine/habitat/` on schema/rights/sensitivity failure). They MUST NOT write to `data/processed/`, `data/catalog/`, or `data/published/`. CONFIRMED via `directory-rules.md` §13.5.
 
 > [!WARNING]
-> **Watcher-as-non-publisher invariant.** Source-head probes, NLCD-version watchers, ECOS-change probes, and any habitat drift detector emit `SourceIntakeRecord` candidates with `publication_state: WORK_CANDIDATE`. They observe and propose; they never promote. CONFIRMED across Pass 19 / Pass 20 idea index and `directory-rules.md` §13.5.
+> **Watcher-as-non-publisher invariant.** Source-head probes, NLCD-version watchers, ECOS-change probes, and any habitat drift detector emit `SourceIntakeRecord` candidates with `publication_state: WORK_CANDIDATE`. They observe and propose; they never promote. CONFIRMED across the Pass 19 / Pass 20 idea index and `directory-rules.md` §13.5.
 
 [Back to top ↑](#table-of-contents)
 
@@ -249,6 +260,9 @@ CONFIRMED habitat source families (Atlas §6.D); rights and current terms remain
 ## 7. Sensitivity, rights, and publication posture
 
 CONFIRMED doctrine (`directory-rules.md` and the Sensitive / Deny-by-Default Register). PROPOSED implementation until policy bundles, validators, and redaction receipts are repo-verified.
+
+> [!CAUTION]
+> **Sensitive-domain routing.** Disposition for rare-species, sensitive-occurrence, private-land, and steward-controlled habitat content routes through the `ai-build-operating-contract.md` §23.2 sensitive-domain matrix (most-restrictive applicable row). This document profiles the lifecycle; it does **not** re-derive disposition.
 
 ### 7.1 Deny-by-default for habitat-adjacent sensitivity
 
@@ -297,12 +311,12 @@ CONFIRMED receipt families (Atlas §24); habitat-specific emission patterns PROP
 | `EvidenceBundle` |  |  |  | ● | ● |
 | `ReleaseManifest` |  |  |  | ● | ● |
 
-Reading note: a dot means the receipt is normally emitted, amended, or referenced at that phase. Receipts created earlier remain referenced (not duplicated) at later phases via `EvidenceRef`. CONFIRMED pattern from Atlas §24.2.2.
+Reading note: a dot means the receipt is normally emitted, amended, or referenced at that phase. Receipts created earlier remain referenced (not duplicated) at later phases via `EvidenceRef`. CONFIRMED pattern from Atlas §24.2.
 
 ### 8.2 EvidenceBundle closure for habitat
 
 > [!NOTE]
-> A habitat claim — a habitat-patch boundary, a suitability tile, a connectivity edge, a corridor polygon, a restoration opportunity — leaves `CATALOG / TRIPLET` for `PUBLISHED` only when its `EvidenceRef` resolves to a complete `EvidenceBundle`. Source list, excerpts/records, provenance, policy/review/release state, and citation closure must all be present. CONFIRMED doctrine (`EvidenceBundle outranks generated text`).
+> A habitat claim — a habitat-patch boundary, a suitability tile, a connectivity edge, a corridor polygon, a restoration opportunity — leaves `CATALOG / TRIPLET` for `PUBLISHED` only when its `EvidenceRef` resolves to a complete `EvidenceBundle`. Source list, excerpts/records, provenance, policy/review/release state, and citation closure must all be present. CONFIRMED doctrine (`EvidenceBundle` outranks generated text).
 
 [Back to top ↑](#table-of-contents)
 
@@ -359,11 +373,11 @@ CONFIRMED ownership boundary; PROPOSED join contracts.
 |---|---|---|
 | **Watcher publishes** habitat | An NLCD-version watcher or ECOS-change probe writes to `data/catalog/domain/habitat/` or `data/published/layers/habitat/`. | Watchers emit `SourceIntakeRecord` to a candidate path; pipelines promote. Per `directory-rules.md` §13.5. |
 | **Connector publishes** habitat | A NLCD/NWI/GAP/LANDFIRE connector writes to `data/processed/habitat/` or `data/published/`. | Connectors emit to `data/raw/habitat/` (or `data/quarantine/habitat/`); pipelines promote. |
-| **Lifecycle skip** | A pipeline copies a habitat raster from `data/raw/habitat/` straight into `data/published/layers/habitat/`. | All phases run; promotion is a governed state transition. Per `directory-rules.md` §9.1 and §13.5. |
+| **Lifecycle skip** | A pipeline copies a habitat raster from `data/raw/habitat/` straight into `data/published/layers/habitat/`. | All phases run; promotion is a governed state transition. Per `directory-rules.md` §9 and §13.5. |
 | **Model flattened into critical habitat** | A suitability surface is exposed as if it were regulatory critical-habitat designation. | Source-role discipline; `ModelRunReceipt` resolves; labels and badges remain visible. CONFIRMED Atlas §6.I. |
 | **Sensitive-join leakage** | An occurrence-linked habitat product publishes exact sensitive coordinates. | Quarantine; apply geoprivacy transform; emit `RedactionReceipt`; review; re-validate. |
 | **Public route reads canonical store** | A map shell reads `data/processed/habitat/` directly. | Route reads MUST go through the governed API. Trust membrane. Per `directory-rules.md` §13.5. |
-| **Parallel schema home** | `contracts/habitat/...` and `schemas/contracts/v1/domains/habitat/...` diverge. | `schemas/contracts/v1/...` is canonical (ADR-0001). Mirror or freeze; add drift entry. |
+| **Parallel schema home** | `contracts/domains/habitat/*.schema.json` exists, or the `schemas/` segmented and flat slugs both hold definitions. | `.schema.json` never under `contracts/` (CONFIRMED). The canonical `schemas/` slug is ADR-S-01 (`CONFLICTED`, §2.2). Mirror or freeze; add drift entry. |
 
 [Back to top ↑](#table-of-contents)
 
@@ -375,15 +389,16 @@ PROPOSED placement and PROPOSED enforcement. Each item below is checkable agains
 
 | Item | Evidence that would settle it | Status |
 |---|---|---|
+| **Habitat schema-home slug (two parts).** (a) Confirm or amend ADR-0001 per ADR-S-01; (b) resolve segmented `.../domains/habitat/` (DIRRULES §12) vs flat `.../habitat/` (Atlas §24.13). | Accepted ADR-S-01 + DRIFT_REGISTER entry + mounted `schemas/` inspection. | CONFLICTED |
 | Habitat source descriptors exist for USFWS ECOS / KDWP / NLCD / NWI / GAP / LANDFIRE / NatureServe / GBIF / PAD-US. | `data/registry/sources/habitat/` populated; per-source `SourceDescriptor` records. | NEEDS VERIFICATION |
 | Habitat policy bundle implements deny-by-default for sensitive occurrence joins. | `policy/domains/habitat/` with `PolicyDecision` fixtures and negative tests. | NEEDS VERIFICATION |
-| Geoprivacy transform types (suppress, generalize-to-grid, generalize-to-watershed, generalize-to-county, buffer, jitter-with-constraints, delayed publication, steward-only exact access) are codified for habitat-fauna joins. | Schemas + fixtures + receipts under `schemas/contracts/v1/.../redaction_receipt.schema.json`. | NEEDS VERIFICATION |
+| Geoprivacy transform types (suppress, generalize-to-grid, generalize-to-watershed, generalize-to-county, buffer, jitter-with-constraints, delayed publication, steward-only exact access) are codified for habitat-fauna joins. | Schemas + fixtures + receipts under the canonical `.../redaction_receipt.schema.json` home. | NEEDS VERIFICATION |
 | Model-card requirements for suitability products are documented and enforced. | A model-card schema + validator + at least one passing fixture. | NEEDS VERIFICATION |
 | Habitat MapLibre overlay registry + Evidence Drawer / Focus behavior exist. | Layer manifests under `data/published/layers/habitat/`; drawer payload fixtures. | NEEDS VERIFICATION |
 | Habitat + Fauna thin-slice fixture (one Kansas NLCD-derived habitat patch + one public-safe occurrence association + uncertainty/citation report) is repo-resident. | `fixtures/domains/habitat/.../thin_slice_v1/`. | NEEDS VERIFICATION |
-| ADR resolution on `PROV.md` vs. `PROVENANCE.md` reference target. | ADR entry under `docs/adr/`. | OPEN |
-| Runbook subfolder convention for `docs/runbooks/habitat/` vs. flat-prefix naming. | ADR entry or established repo convention. | OPEN |
-| Validator exit-code contract (referenced from habitat validators). | ADR entry + tooling reference under `tools/validators/...`. | OPEN |
+| ADR resolution on `PROV.md` vs. `PROVENANCE.md` reference target (OPEN-DR-01). | ADR entry under `docs/adr/`. | OPEN |
+| Runbook subfolder convention for `docs/runbooks/habitat/` vs. flat-prefix naming (OPEN-DR-02). | ADR entry or established repo convention. | OPEN |
+| Validator exit-code contract (referenced from habitat validators; OPEN-DR-03). | ADR entry + tooling reference under `tools/validators/...`. | OPEN |
 
 [Back to top ↑](#table-of-contents)
 
@@ -391,14 +406,18 @@ PROPOSED placement and PROPOSED enforcement. Each item below is checkable agains
 
 ## 13. Related docs
 
-- `docs/doctrine/lifecycle-law.md` — the lifecycle invariant (PROPOSED reference target). 
-- `docs/doctrine/directory-rules.md` — Domain Placement Law, lifecycle invariant, trust membrane, watcher invariant (CONFIRMED reference).
-- `docs/standards/PROV.md` — W3C PROV-O / PAV profile (CONFIRMED reference).
+- `docs/doctrine/lifecycle-law.md` — the lifecycle invariant (PROPOSED reference target).
+- `docs/doctrine/directory-rules.md` — Domain Placement Law (§12), lifecycle invariant (§9), trust membrane, watcher invariant (CONFIRMED reference).
+- `docs/domains/habitat/ARCHITECTURE.md` — Habitat lane architecture (PROPOSED — verify).
+- `docs/domains/habitat/CANONICAL_PATHS.md` — full Habitat path enumeration (PROPOSED — verify).
+- `docs/domains/habitat/CONTRACTS.md` — Habitat contract (meaning) index (PROPOSED — verify).
+- `docs/standards/PROV.md` — W3C PROV-O / PAV profile (CONFIRMED reference; `PROV.md` vs `PROVENANCE.md` is OPEN-DR-01).
 - `docs/standards/ISO-19115.md` — geospatial metadata crosswalk (CONFIRMED reference).
 - `docs/standards/OGC-API-TILES.md` — tile-delivery standard integration (CONFIRMED reference).
 - `docs/standards/PMTILES.md` — PMTiles v3 governance (CONFIRMED reference).
 - `docs/standards/OAI-PMH.md` — harvest governance (CONFIRMED reference).
 - `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` — neighbor-lane runbook informing cross-lane joins (CONFIRMED reference).
+- `ai-build-operating-contract.md` — operating law; §23.2 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
 - `docs/domains/habitat/README.md` — domain landing page (PROPOSED — verify).
 - `docs/domains/fauna/DATA_LIFECYCLE.md` — sibling lifecycle profile (PROPOSED — TODO once authored).
 - `release/README.md` — release-decision authority (PROPOSED — verify).
@@ -414,20 +433,20 @@ PROPOSED placement and PROPOSED enforcement. Each item below is checkable agains
 
 | Term | Habitat-scope definition | Citation |
 |---|---|---|
-| `HabitatPatch` | A spatially explicit habitat unit; CONFIRMED term, PROPOSED field realization constrained by source role, evidence, time, and release state. | Atlas §6.C / ENC §7.4 |
-| `LandCoverObservation` | Observation-role land-cover record (e.g., NLCD-derived). | Atlas §6.C / ENC §7.4 |
-| `EcologicalSystem` | Classification context (e.g., NatureServe-style ecological-system polygon). | Atlas §6.C / ENC §7.4 |
-| `HabitatQualityScore` | Derived score; carries support and uncertainty. | Atlas §6.E / ENC §7.4 |
-| `SuitabilityModel` | Modeled artifact; never flattened into regulatory designation. | Atlas §6.E / ENC §7.4 |
-| `ConnectivityEdge` / `Corridor` | Graph-projection and polygon products for movement context. | Atlas §6.E / ENC §7.4 |
-| `RestorationOpportunity` | Derived recommendation; subject to sensitivity review. | Atlas §6.E / ENC §7.4 |
-| `StewardshipZone` | Stewardship context (e.g., PAD-US-style). | Atlas §6.E / ENC §7.4 |
+| `HabitatPatch` | A spatially explicit habitat unit; CONFIRMED term, PROPOSED field realization constrained by source role, evidence, time, and release state. | Atlas §6.C / ENCY §7.4 |
+| `LandCoverObservation` | Observation-role land-cover record (e.g., NLCD-derived). | Atlas §6.C / ENCY §7.4 |
+| `EcologicalSystem` | Classification context (e.g., NatureServe-style ecological-system polygon). | Atlas §6.C / ENCY §7.4 |
+| `HabitatQualityScore` | Derived score; carries support and uncertainty; descriptive, not prescriptive. | Atlas §6.E / ENCY §7.4 |
+| `SuitabilityModel` | Modeled artifact; never flattened into regulatory designation. | Atlas §6.E / ENCY §7.4 |
+| `ConnectivityEdge` / `Corridor` | Graph-projection and polygon products for movement context. | Atlas §6.E / ENCY §7.4 |
+| `RestorationOpportunity` | Derived recommendation; subject to sensitivity review. | Atlas §6.E / ENCY §7.4 |
+| `StewardshipZone` | Stewardship context (e.g., PAD-US-style); `T1` default. | Atlas §6.E / ENCY §7.4 |
 | `ModelRunReceipt` | Receipt for each modeled habitat execution. | Atlas §6.E |
-| `UncertaintySurface` | Co-released with suitability and connectivity products. | ENC §7.4 |
+| `UncertaintySurface` | Co-released with suitability and connectivity products; must not be erased. | ENCY §7.4 |
 | `Modeled habitat` | Term distinct from "critical habitat" — source role and labels stay visible. | Atlas §6.C |
 | `Geoprivacy transform` | Codified transform from sensitive to public-safe geometry, with `RedactionReceipt`. | Atlas §6.C |
 | `Watcher-as-non-publisher` | Watchers observe and record; they never promote. | `directory-rules.md` §13.5; Pass 20 idea index |
-| `Promotion` | Governed state transition between lifecycle phases; not a file move. | `directory-rules.md` §9.1 |
+| `Promotion` | Governed state transition between lifecycle phases; not a file move. | `directory-rules.md` §9 |
 
 </details>
 
@@ -436,5 +455,5 @@ PROPOSED placement and PROPOSED enforcement. Each item below is checkable agains
 ---
 
 **Related docs** · [Doctrine](#13-related-docs) · [Standards profiles](#13-related-docs) · [Sibling lifecycle docs](#13-related-docs)
-**Last updated** · 2026-05-17
+**Last updated** · 2026-06-05 · `CONTRACT_VERSION = "3.0.0"`
 [Back to top ↑](#table-of-contents)
