@@ -6,19 +6,26 @@ version: v1
 status: draft
 owners: <TODO: domain-habitat-steward> + <TODO: docs-steward>
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
   - docs/domains/habitat/README.md
+  - docs/domains/habitat/ARCHITECTURE.md
+  - docs/domains/habitat/CANONICAL_PATHS.md
+  - docs/domains/habitat/CONTRACTS.md
   - docs/domains/fauna/FILE_SYSTEM_PLAN.md
   - docs/architecture/contract-schema-policy-split.md
+  - docs/architecture/habitat-fauna-thin-slice.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
+  - ai-build-operating-contract.md
 tags: [kfm, habitat, directory, governance, placement, ddd]
 notes:
+  - CONTRACT_VERSION = "3.0.0"
   - Specific paths are PROPOSED until verified against mounted-repo evidence.
   - Habitat × Fauna thin slice is the first proof-bearing lane.
+  - "CONFLICTED schema-home: ADR-0001 OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented .../domains/habitat/ (DIRRULES §12) vs flat .../habitat/ (Atlas §24.13) unresolved. See §1, §3."
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain — File System Plan
@@ -27,14 +34,15 @@ notes:
 
 <!-- Badges: status / governance / lifecycle / authority. Placeholders until CI targets are confirmed. -->
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
-![doctrine: directory--rules](https://img.shields.io/badge/doctrine-directory--rules-blue)
-![lifecycle: RAW%20%E2%86%92%20PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-7a3)
-![sensitivity: deny--by--default%20joins](https://img.shields.io/badge/sensitivity-deny--by--default%20joins-red)
-![schema home: schemas%2Fcontracts%2Fv1%2F](https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1%2F-555)
+![doctrine: directory-rules](https://img.shields.io/badge/doctrine-directory--rules-blue)
+![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-7a3)
+![sensitivity: deny-by-default joins](https://img.shields.io/badge/sensitivity-deny--by--default%20joins-red)
+![schema home: CONFLICTED](https://img.shields.io/badge/schema--home-CONFLICTED%20%C2%A73-important)
+![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 <!-- TODO: replace last-updated, CI, and policy-conformance badges once concrete CI URLs are confirmed. -->
-![last-updated: TBD](https://img.shields.io/badge/last--updated-TBD-lightgrey)
+![last-updated: 2026-06-05](https://img.shields.io/badge/last--updated-2026--06--05-lightgrey)
 
-**Status:** draft · **Owners:** `<TODO: domain-habitat-steward>` + `<TODO: docs-steward>` · **Last updated:** `<TODO: YYYY-MM-DD>`
+**Status:** draft · **Owners:** `<TODO: domain-habitat-steward>` + `<TODO: docs-steward>` · **Last updated:** 2026-06-05 · `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -63,11 +71,12 @@ This document is the **Habitat domain's file-system plan**. It states, for every
 - **Authority order (CONFIRMED doctrine).** [`directory-rules.md`] governs *where* Habitat files go. ADRs amending Directory Rules win over this plan when they explicitly apply. Per-root `README.md` files refine but cannot contradict. Domain dossiers ([DOM-HAB], [DOM-HF], [ENCY]) are lineage / proposed material for placement decisions, not new authority.
 - **Authority of any specific path quoted here:** **PROPOSED** until verified against mounted-repo evidence. No live repo was inspected for this draft; treat trees, paths, file names, and route names as proposed unless a per-root README, ADR, or `git`-equivalent inspection has confirmed them.
 - **Domain Placement Law (CONFIRMED).** Habitat **MUST NOT** appear as a root folder (`habitat/`). It appears as a **lane segment** inside each responsibility root that owns Habitat content. See [`directory-rules.md` §12].
-- **Schema home (CONFIRMED default).** `schemas/contracts/v1/...` is the canonical machine-schema home per ADR-0001. Habitat schemas follow that home unless an ADR amends it. [`directory-rules.md` §7.4]
-- **Lifecycle invariant (CONFIRMED).** `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a governed state transition, not a file move. [`directory-rules.md` §0]
+- **Schema home (`CONFLICTED` — ADR-required).** `.schema.json` files live under `schemas/`, **never** under `contracts/` (CONFIRMED). But **which `schemas/` slug is canonical is unresolved** — see the §3 callout. ADR-0001 is **OPEN** (Atlas ADR-S-01, "confirm or amend"; App. G VB-11-01 `NEEDS VERIFICATION`), and the segmented `schemas/contracts/v1/domains/habitat/` (DIRRULES §12) vs flat `schemas/contracts/v1/habitat/` (Atlas §24.13) slug is a drift. [`directory-rules.md` §6.4]
+- **Lifecycle invariant (CONFIRMED).** `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a governed state transition, not a file move. [`directory-rules.md` §9]
+- **Sensitive-domain disposition (CONFIRMED).** Rare-species, sensitive-occurrence, and steward-controlled habitat content routes through the `ai-build-operating-contract.md` §23.2 sensitive-domain matrix (most-restrictive applicable row). This plan does not re-derive it.
 
 > [!IMPORTANT]
-> If mounted-repo state conflicts with this plan, **the conflict is drift, not new authority**. Record it in `docs/registers/DRIFT_REGISTER.md` and resolve by ADR or migration — do not silently rewrite this plan to match the repo. [`directory-rules.md` §2]
+> If mounted-repo state conflicts with this plan, **the conflict is drift, not new authority**. Record it in `docs/registers/DRIFT_REGISTER.md` and resolve by ADR or migration — do not silently rewrite this plan to match the repo. [`directory-rules.md` §2.5]
 
 [Back to top](#contents)
 
@@ -89,7 +98,7 @@ This document is the **Habitat domain's file-system plan**. It states, for every
 | Shared governance objects (`EvidenceBundle`, `EvidenceRef`, `SourceDescriptor`, `RunReceipt`, `PromotionDecision`, `ReleaseManifest`, `PolicyDecision`, `DecisionEnvelope`) | **Shared kernel** ([DDD]) | Habitat consumes; it MUST NOT redefine these per-lane. |
 
 > [!CAUTION]
-> A "habitat × fauna" or "habitat × flora" file is a **cross-domain artifact**, not a Habitat-only file. Place it under the lowest common responsibility root **without** a single-domain segment, per [`directory-rules.md` §12 "Multi-domain and cross-cutting files"].
+> A "habitat × fauna" or "habitat × flora" file is a **cross-domain artifact**, not a Habitat-only file. Place it under the lowest common responsibility root **without** a single-domain segment, per [`directory-rules.md` §12 "Multi-domain and cross-cutting files"]. Cross-domain *doctrine* lives under `docs/architecture/<topic>.md`, **not** a combined `docs/domains/habitat-fauna/` lane folder.
 
 [Back to top](#contents)
 
@@ -102,15 +111,15 @@ The diagram below shows the responsibility roots that carry Habitat content, the
 ```mermaid
 flowchart LR
   subgraph SRC["Source admission"]
-    REG["data/registry/sources/habitat/\nSourceDescriptor"]
-    CON["connectors/habitat/\n(no publish)"]
+    REG["data/registry/sources/habitat/<br/>SourceDescriptor"]
+    CON["connectors/habitat/<br/>(no publish)"]
   end
 
   subgraph GOV["Doctrine & meaning"]
     DOCS["docs/domains/habitat/"]
-    CTR["contracts/domains/habitat/\n(meaning)"]
-    SCH["schemas/contracts/v1/domains/habitat/\n(machine shape)"]
-    POL["policy/domains/habitat/\npolicy/sensitivity/habitat/"]
+    CTR["contracts/domains/habitat/<br/>(meaning)"]
+    SCH["schemas/contracts/v1/.../habitat/<br/>(machine shape; slug CONFLICTED)"]
+    POL["policy/domains/habitat/<br/>policy/sensitivity/habitat/"]
   end
 
   subgraph DAT["Lifecycle (data/)"]
@@ -119,7 +128,7 @@ flowchart LR
     QRN["data/quarantine/habitat/"]
     PRC["data/processed/habitat/"]
     CAT["data/catalog/domain/habitat/"]
-    TRP["data/triplets/habitat/"]
+    TRP["data/triplets/ (shared)"]
     PUB["data/published/layers/habitat/"]
     REC["data/receipts/habitat/"]
     PRF["data/proofs/habitat/"]
@@ -128,7 +137,7 @@ flowchart LR
   subgraph VAL["Validation"]
     TST["tests/domains/habitat/"]
     FIX["fixtures/domains/habitat/"]
-    TOOL["tools/validators/habitat/\n(or topic root)"]
+    TOOL["tools/validators/habitat/<br/>(or topic root)"]
   end
 
   subgraph EXEC["Execution"]
@@ -145,7 +154,7 @@ flowchart LR
   end
 
   subgraph TRUST["Trust membrane"]
-    API["apps/governed-api/\n(public read path)"]
+    API["apps/governed-api/<br/>(public read path)"]
   end
 
   REG --> CON --> RAW
@@ -171,6 +180,9 @@ flowchart LR
   RBK  -.reverts.- API
 ```
 
+> [!WARNING]
+> **Schema-home slug is `CONFLICTED` and ADR-required.** Two questions are **open**: (1) is `schemas/contracts/v1/…` confirmed as the canonical home? This is **ADR-S-01** — "confirm `schemas/contracts/v1/…` by ADR-0001 **or amend**"; Atlas App. G VB-11-01 marks it `NEEDS VERIFICATION`. (2) Segmented `schemas/contracts/v1/domains/habitat/` (DIRRULES §12) vs flat `schemas/contracts/v1/habitat/` (Atlas §24.13). CONFIRMED regardless: `.schema.json` never lives under `contracts/`, and the repo MUST NOT maintain divergent definitions in both `schemas/` and `contracts/`. The table below uses the segmented slug; if ADR-S-01 selects the flat form, read `…/domains/habitat/` as `…/habitat/`. Open a `DRIFT_REGISTER.md` entry; do not create both slugs. [`directory-rules.md` §6.4, §13.1, §2.4(3)], [ATLAS §24.12 ADR-S-01], [§24.13], [App. G VB-11-01].
+
 The table below names each lane explicitly. **CONFIRMED** entries are doctrinal placements that come directly from Directory Rules §12. **PROPOSED** entries are habitat-specific names that need confirmation against mounted-repo state.
 
 | Responsibility root | Habitat lane (PROPOSED path) | Owns | Status |
@@ -178,7 +190,7 @@ The table below names each lane explicitly. **CONFIRMED** entries are doctrinal 
 | `docs/` | `docs/domains/habitat/` | Human-facing doctrine, this plan, README, runbooks (subfolder TBD) | CONFIRMED segment / PROPOSED files |
 | `control_plane/` | `control_plane/domains/habitat/` (if needed) | Machine-readable governance maps for Habitat (registry refs, ADR index slices) | PROPOSED |
 | `contracts/` | `contracts/domains/habitat/` | Habitat object **meaning** (Markdown contracts, ubiquitous-language definitions) | CONFIRMED segment / PROPOSED files |
-| `schemas/` | `schemas/contracts/v1/domains/habitat/` | Habitat object **machine shape** (JSON Schema / contracts v1) | CONFIRMED segment per ADR-0001 |
+| `schemas/` | `schemas/contracts/v1/domains/habitat/` *(slug CONFLICTED — see callout)* | Habitat object **machine shape** (JSON Schema / contracts v1) | CONFLICTED slug; ADR-S-01 open |
 | `policy/` | `policy/domains/habitat/`, `policy/sensitivity/habitat/`, `policy/release/habitat/` | Allow / deny / restrict / abstain rules; sensitive-join controls; model-card requirements | CONFIRMED segment / PROPOSED splits |
 | `tests/` | `tests/domains/habitat/` | Validators proving the rules above are enforceable | CONFIRMED segment |
 | `fixtures/` | `fixtures/domains/habitat/` | Golden / valid / invalid Habitat sample data; thin-slice fixtures | CONFIRMED segment |
@@ -195,7 +207,7 @@ The table below names each lane explicitly. **CONFIRMED** entries are doctrinal 
 | `examples/` | `examples/habitat/` if a runnable habitat example earns its keep | Runnable, kept current | PROPOSED |
 
 > [!NOTE]
-> The lane *segments* (e.g., `domains/habitat/` under `docs/`, `contracts/`, `schemas/contracts/v1/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`) are the **CONFIRMED** pattern from [`directory-rules.md` §12]. Any concrete *path* listed above is **PROPOSED** until repo-evidence verification.
+> The lane *segments* (e.g., `domains/habitat/` under `docs/`, `contracts/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`) are the **CONFIRMED** pattern from [`directory-rules.md` §12]. Any concrete *path* listed above is **PROPOSED** until repo-evidence verification, and the `schemas/` slug is additionally `CONFLICTED` per the callout.
 
 [Back to top](#contents)
 
@@ -203,7 +215,7 @@ The table below names each lane explicitly. **CONFIRMED** entries are doctrinal 
 
 ## 4. Proposed directory tree
 
-The tree below is **PROPOSED**. It illustrates how the lane segments expand for a realistic Habitat domain. It does not claim that any of these files or folders exist in the current repository.
+The tree below is **PROPOSED**. It illustrates how the lane segments expand for a realistic Habitat domain. It does not claim that any of these files or folders exist in the current repository. The `schemas/…/domains/habitat/` prefix below carries the §3 slug conflict.
 
 ```text
 docs/domains/habitat/
@@ -212,7 +224,7 @@ docs/domains/habitat/
 ├── HABITAT_DOMAIN_MODEL.md                      # PROPOSED — object families, ubiquitous language
 ├── HABITAT_SOURCE_LEDGER.md                     # PROPOSED — accepted source families, roles, sensitivity
 ├── HABITAT_SENSITIVITY_PROFILE.md               # PROPOSED — public-safe rules, deny-by-default joins
-├── runbooks/                                    # PROPOSED — subfolder NEEDS VERIFICATION
+├── runbooks/                                    # PROPOSED — subfolder NEEDS VERIFICATION (OPEN-DR-02)
 │   ├── HABITAT_SOURCE_REFRESH_RUNBOOK.md
 │   └── HABITAT_MODEL_REBUILD_RUNBOOK.md
 └── decisions/                                   # PROPOSED — ADR slices specific to Habitat lane
@@ -230,7 +242,7 @@ contracts/domains/habitat/
 ├── model-run-receipt.contract.md                # PROPOSED — lane reference to shared receipt
 └── uncertainty-surface.contract.md              # PROPOSED
 
-schemas/contracts/v1/domains/habitat/
+schemas/contracts/v1/domains/habitat/            # slug CONFLICTED (segmented vs flat) — §3
 ├── habitat-patch.schema.json                    # PROPOSED
 ├── land-cover-observation.schema.json           # PROPOSED
 ├── ecological-system.schema.json                # PROPOSED
@@ -300,7 +312,7 @@ data/work/habitat/            # PROPOSED — normalization in progress
 data/quarantine/habitat/      # PROPOSED — failed validation / policy hold (deny-by-default)
 data/processed/habitat/       # PROPOSED — validated normalized objects + public-safe candidates
 data/catalog/domain/habitat/  # PROPOSED — catalog records and EvidenceBundles
-data/triplets/habitat/        # PROPOSED — graph / triplet projections (plural per Directory Rules §18)
+data/triplets/                # PROPOSED — graph / triplet projections (SHARED, non-domain-scoped; plural per Directory Rules §9)
 data/published/layers/habitat/ # PROPOSED — released public-safe artifacts only
 data/receipts/habitat/        # PROPOSED — RunReceipts, PromotionReceipts, RedactionReceipts
 data/proofs/habitat/          # PROPOSED — EvidenceBundles, integrity envelopes
@@ -313,7 +325,7 @@ release/correction_notices/   # SHARED — corrections that name a Habitat artif
 ```
 
 > [!WARNING]
-> This tree is illustrative. **Do not** create any of these paths from this document alone. Every actual placement requires the path-validation checklist in [`directory-rules.md` §16] and a per-root README that meets §15.
+> This tree is illustrative. **Do not** create any of these paths from this document alone. Every actual placement requires the path-validation checklist in [`directory-rules.md` §4 / §16] and a per-root README that meets §15.
 
 [Back to top](#contents)
 
@@ -323,19 +335,22 @@ release/correction_notices/   # SHARED — corrections that name a Habitat artif
 
 The object families below are **CONFIRMED** for Habitat per the encyclopedia and atlas. Their **identity rule** ("source id + object role + temporal scope + normalized digest") is **PROPOSED** at the field level; the **temporal handling** (distinct `source / observed / valid / retrieval / release / correction` times) is **CONFIRMED** doctrine across KFM. [`kfm_encyclopedia.pdf §7.4`] [`KFM_Domains_Culmination_Atlas_v1_1.pdf` §6, Appendix C]
 
+> [!NOTE]
+> The `schemas/contracts/v1/domains/habitat/…` paths in this table carry the §3 slug conflict; if ADR-S-01 selects the flat form, read them as `schemas/contracts/v1/habitat/…`. The relative position (meaning vs shape vs policy vs proof) is unaffected.
+
 | Object family | `contracts/` (meaning) | `schemas/contracts/v1/` (shape) | `policy/` controls | `tests/` + `fixtures/` | Notes |
 |---|---|---|---|---|---|
 | `HabitatPatch` | `contracts/domains/habitat/habitat-patch.contract.md` | `…/domains/habitat/habitat-patch.schema.json` | source-role admission; sensitive-join deny | patch identity tests; NLCD-derived fixture | Patch graph node; observation-rooted. |
 | `LandCoverObservation` | `…/land-cover-observation.contract.md` | `…/land-cover-observation.schema.json` | source-role; license/rights gate | golden + negative NLCD fixtures | Observation, not model. Label visibly. |
 | `EcologicalSystem` | `…/ecological-system.contract.md` | `…/ecological-system.schema.json` | source-role (NatureServe rights NEEDS VERIFICATION) | classification fixtures | Authoritative classification source. |
-| `HabitatQualityScore` | `…/habitat-quality-score.contract.md` | `…/habitat-quality-score.schema.json` | model-card required | scored fixtures + invalid | Derived; model label visible. |
+| `HabitatQualityScore` | `…/habitat-quality-score.contract.md` | `…/habitat-quality-score.schema.json` | model-card required | scored fixtures + invalid | Derived; descriptive not prescriptive; model label visible. |
 | `SuitabilityModel` | `…/suitability-model.contract.md` | `…/suitability-model.schema.json` | model-card required; deny without `ModelRunReceipt` | small model run fixture | Always paired with `UncertaintySurface`. |
 | `ConnectivityEdge` | `…/connectivity-edge.contract.md` | `…/connectivity-edge.schema.json` | derivative labeling | patch-graph edge fixtures | Derived from patch graph. |
 | `Corridor` | `…/corridor.contract.md` | `…/corridor.schema.json` | sensitive-species corridor exposure check | corridor fixtures | May trigger sensitivity join checks. |
 | `RestorationOpportunity` | `…/restoration-opportunity.contract.md` | `…/restoration-opportunity.schema.json` | rights / steward review | candidate fixtures | Rights of restoration partners NEEDS VERIFICATION. |
-| `StewardshipZone` | `…/stewardship-zone.contract.md` | `…/stewardship-zone.schema.json` | PAD-US source role | zone fixtures | Context, not authority. |
+| `StewardshipZone` | `…/stewardship-zone.contract.md` | `…/stewardship-zone.schema.json` | PAD-US source role | zone fixtures | Context, not authority; `T1` default. |
 | `ModelRunReceipt` | shared-kernel reference | `schemas/contracts/v1/receipts/` (shared) | release-gate references it | model-run fixtures | **Shared kernel** — do not redefine in Habitat. |
-| `UncertaintySurface` | `…/uncertainty-surface.contract.md` | `…/uncertainty-surface.schema.json` | derivative labeling | uncertainty fixtures | Must accompany suitability outputs. |
+| `UncertaintySurface` | `…/uncertainty-surface.contract.md` | `…/uncertainty-surface.schema.json` | derivative labeling | uncertainty fixtures | Must accompany suitability outputs; must not be erased. |
 
 > [!NOTE]
 > The kernel objects Habitat consumes (`EvidenceBundle`, `EvidenceRef`, `SourceDescriptor`, `RunReceipt`, `PromotionDecision`, `PromotionReceipt`, `ReleaseManifest`, `PolicyDecision`, `DecisionEnvelope`, `RollbackCard`, `CorrectionNotice`, `RuntimeResponseEnvelope`) live under shared, non-domain schemas (e.g., `schemas/contracts/v1/evidence/`, `…/release/`, `…/runtime/`). Habitat references them; it does not redefine them. Any divergent Habitat copy is a drift entry. [`KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` KFM-IDX-DOC-005]
@@ -346,7 +361,7 @@ The object families below are **CONFIRMED** for Habitat per the encyclopedia and
 
 ## 6. Habitat lifecycle (`data/`)
 
-The lifecycle invariant is **CONFIRMED**: `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a governed state transition, **not a file move**. Watchers observe and record; they do not publish. [`directory-rules.md` §0, §13.5]
+The lifecycle invariant is **CONFIRMED**: `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a governed state transition, **not a file move**. Watchers observe and record; they do not publish. [`directory-rules.md` §9, §13.5]
 
 | Phase | Habitat lane (PROPOSED) | What it holds | Gate to next phase |
 |---|---|---|---|
@@ -354,7 +369,7 @@ The lifecycle invariant is **CONFIRMED**: `RAW → WORK / QUARANTINE → PROCESS
 | **WORK** | `data/work/habitat/<batch>/…` | Normalization in progress: schema, geometry, time, identity, evidence, rights, policy | Validation pass + policy decision recorded |
 | **QUARANTINE** | `data/quarantine/habitat/<batch>/…` | Failed validation or sensitive-hold material (deny-by-default access) | Resolution receipt or expiry |
 | **PROCESSED** | `data/processed/habitat/<batch>/…` | Validated, normalized objects + receipts + public-safe candidates | `EvidenceRef` resolves; `ValidationReport` present; digest closed |
-| **CATALOG / TRIPLET** | `data/catalog/domain/habitat/…`, `data/triplets/habitat/…` | Catalog records, `EvidenceBundle`s, graph/triplet projections, release candidates | Catalog & proof closure passes |
+| **CATALOG / TRIPLET** | `data/catalog/domain/habitat/…`, `data/triplets/…` (shared) | Catalog records, `EvidenceBundle`s, graph/triplet projections, release candidates | Catalog & proof closure passes |
 | **PUBLISHED** | `data/published/layers/habitat/…` | Released public-safe artifacts (e.g., generalized patch tiles, public suitability layer) | `ReleaseManifest`, correction path, rollback target exist |
 
 **Emitted alongside lifecycle phases (not as replacements):**
@@ -366,6 +381,9 @@ The lifecycle invariant is **CONFIRMED**: `RAW → WORK / QUARANTINE → PROCESS
 > [!CAUTION]
 > A Habitat pipeline that writes directly from `data/raw/habitat/` to `data/published/layers/habitat/` violates the lifecycle invariant. Lifecycle skips are an anti-pattern even when "the data is fine." [`directory-rules.md` §13.5]
 
+> [!NOTE]
+> `data/triplets/` is **plural** and **shared / non-domain-scoped** per Directory Rules §9 — graph/triplet projections do **not** live under a `data/triplets/habitat/` domain segment. The plural-vs-singular form is itself a tracked open item (see §12 item 4).
+
 [Back to top](#contents)
 
 ---
@@ -374,17 +392,20 @@ The lifecycle invariant is **CONFIRMED**: `RAW → WORK / QUARANTINE → PROCESS
 
 **CONFIRMED:** Sensitive occurrence details deny by default. Regulatory critical habitat, modeled habitat, species range, occurrence points, and landscape context **must not be flattened**. [`KFM_Domains_Culmination_Atlas_v1_1.pdf` §6.I] [`kfm_encyclopedia.pdf §13`]
 
+> [!CAUTION]
+> **Sensitive-domain routing.** Disposition for the rows below routes through the `ai-build-operating-contract.md` §23.2 sensitive-domain matrix (most-restrictive applicable row): DENY exact / GENERALIZE / REDACT / QUARANTINE / steward review / `RedactionReceipt` / ABSTAIN. This plan states the posture; it does not re-derive disposition.
+
 **Key Habitat-specific risk:** *join-induced sensitivity*. A benign NLCD-derived patch becomes sensitive when joined to a sensitive Fauna occurrence (nest, den, roost, hibernaculum, spawning site) or a rare-plant record. Sensitivity is a property of the **resulting product**, not just the input. [`KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` KFM-IDX-POL-003]
 
 | Surface | Default outcome | Allowed only when |
 |---|---|---|
 | Exact occurrence-linked habitat output | **DENY** | Generalization or suppression + `RedactionReceipt` + steward review |
-| Regulatory critical-habitat passthrough | **CONTEXT-LABELED**, never silently re-modeled | Source role = `authority`; model-derived layers labeled distinctly |
+| Regulatory critical-habitat passthrough | **CONTEXT-LABELED**, never silently re-modeled | Source role = `regulatory / authority`; model-derived layers labeled distinctly |
 | Modeled-as-critical relabel | **DENY** | Explicit denial test passes; model card present |
 | Sensitive corridor exposure | **DENY** at exact precision | Generalized corridor + sensitivity review |
 | Habitat × Fauna public join | **DENY** unless geoprivacy transform applied | `RedactionReceipt` + `PolicyDecision: ALLOW` + `ReleaseManifest` |
 
-**Policy file homes (PROPOSED).** Habitat-specific sensitivity rules live in `policy/sensitivity/habitat/`. Join policies that span Habitat + Fauna live under `policy/sensitivity/` without a single-domain segment, since the policy spans more than one domain.
+**Policy file homes (PROPOSED).** Habitat-specific sensitivity rules live in `policy/sensitivity/habitat/`. Join policies that span Habitat + Fauna live under `policy/sensitivity/` (or `policy/joins/…`, §8) without a single-domain segment, since the policy spans more than one domain.
 
 > [!WARNING]
 > Public observability — popups, AI-generated summaries, Evidence Drawer payloads, downloadable tiles — counts as exposure. The denial applies to the **rendered surface**, not just the underlying file. The trust membrane is the governed API; canonical stores are never a public read path. [`directory-rules.md` §13.5]
@@ -402,7 +423,7 @@ Habitat joins to **Fauna**, **Flora**, **Hydrology**, **Soil**, **Agriculture**,
 | Habitat × Fauna geoprivacy validator | `tools/validators/habitat/fauna-geoprivacy.*` | `tools/validators/geoprivacy/habitat-fauna.*` |
 | Habitat-Fauna join schema | `schemas/contracts/v1/domains/habitat/habitat-fauna-join.schema.json` | `schemas/contracts/v1/joins/habitat-fauna-join.schema.json` |
 | Habitat × Hydrology riparian policy | `policy/domains/habitat/riparian-with-hydrology.*` | `policy/joins/habitat-hydrology/riparian.*` |
-| Cross-domain ecology doctrine | `docs/domains/habitat/cross-domain.md` | `docs/architecture/ecology-cross-domain.md` |
+| Cross-domain ecology doctrine | `docs/domains/habitat/cross-domain.md` (or a `docs/domains/habitat-fauna/` lane folder) | `docs/architecture/ecology-cross-domain.md` |
 | Shared-kernel governance schema (e.g., `EvidenceBundle`) | `schemas/contracts/v1/domains/habitat/evidence-bundle.schema.json` | `schemas/contracts/v1/evidence/evidence-bundle.schema.json` (shared kernel) |
 
 **Shared-kernel rule.** Habitat must consume — not redefine — the kernel objects listed in [§5](#5-object-families--lane-placement). Any Habitat-local fork is a drift entry. [`KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` KFM-IDX-DOC-005]
@@ -415,7 +436,7 @@ Habitat joins to **Fauna**, **Flora**, **Hydrology**, **Soil**, **Agriculture**,
 
 **Status: PROPOSED.** The Habitat × Fauna thin slice is the **first credible proof slice** for the Habitat lane and a high-leverage early proof for the Fauna lane as well. It uses **public-safe fixtures**, not live sensitive connectors. [`kfm_encyclopedia.pdf §7.4`] [`KFM_Domains_Culmination_Atlas_v1_1.pdf` §6] [`KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` KFM-IDX-APP-002]
 
-Its file plan is intentionally small. Every entry below is **PROPOSED**.
+Its file plan is intentionally small. Every entry below is **PROPOSED**. The cross-lane *doctrine* doc for this slice belongs under `docs/architecture/habitat-fauna-thin-slice.md` (not a `docs/domains/habitat-fauna/` lane folder, per §8).
 
 <details>
 <summary><strong>Click to expand the proposed thin-slice file plan</strong></summary>
@@ -463,9 +484,9 @@ These are the placement mistakes most likely to appear in Habitat work. The firs
 | Anti-pattern | Symptom | Fix |
 |---|---|---|
 | Root domain folder | `habitat/` at repo root with its own `data/`, `schemas/`, `policy/`, `docs/` | Apply Domain Placement Law (§3, §4). Migrate into responsibility-root lanes. [`directory-rules.md` §13.4] |
-| Parallel schema home | Habitat schemas in both `contracts/domains/habitat/*.schema.json` and `schemas/contracts/v1/domains/habitat/*.schema.json` | `schemas/contracts/v1/...` is canonical per ADR-0001. Migrate, mirror the old path, add drift entry. [`directory-rules.md` §13.1] |
+| Parallel schema home | Habitat schemas in both `contracts/domains/habitat/*.schema.json` and `schemas/…/habitat/*.schema.json`, **or** the segmented and flat `schemas/` slugs both holding definitions | `.schema.json` never under `contracts/` (CONFIRMED). The canonical `schemas/` slug is ADR-S-01 (`CONFLICTED`, §3). Migrate, freeze the old path, add drift entry. [`directory-rules.md` §13.1] |
 | Suitability without uncertainty | `SuitabilityModel` output published without `UncertaintySurface` or `ModelRunReceipt` | Publication-gate validator must require both. Add tests under `tests/domains/habitat/`. |
-| Regulatory critical habitat re-modeled | Modeled output sharing the label "critical habitat" with regulatory critical-habitat features | Source-role separation: `authority` (USFWS) vs `model`. Add `modeled-as-critical.deny.rego` and matching test. |
+| Regulatory critical habitat re-modeled | Modeled output sharing the label "critical habitat" with regulatory critical-habitat features | Source-role separation: `regulatory / authority` (USFWS) vs `model`. Add `modeled-as-critical.deny.rego` and matching test. |
 | Habitat × Fauna join without geoprivacy | Public layer joining patches to exact sensitive occurrence geometry | Deny by default; require `RedactionReceipt` + `PolicyDecision: ALLOW`. Place policy in `policy/sensitivity/` (joint), not in `policy/domains/habitat/`. |
 | Watcher writes published Habitat tiles | A connector or watcher writes directly to `data/published/layers/habitat/` | Watcher-as-non-publisher invariant: workers emit receipts and candidates only. [`directory-rules.md` §13.5] |
 | Domain summary file used as authority | A `docs/domains/habitat/*.md` cited as the source of a canonical decision | Promote to ADR or `control_plane/` register. Docs explain; they do not adjudicate. [`directory-rules.md` §13.5] |
@@ -476,15 +497,15 @@ These are the placement mistakes most likely to appear in Habitat work. The firs
 
 ## 11. Conformance checklist for Habitat PRs
 
-Use this list for any PR that adds, moves, or renames a file inside a Habitat lane. It is the Habitat-specific overlay on top of [`directory-rules.md` §16] and SHOULD appear in the PR description.
+Use this list for any PR that adds, moves, or renames a file inside a Habitat lane. It is the Habitat-specific overlay on top of [`directory-rules.md` §4 / §16] and SHOULD appear in the PR description.
 
 - [ ] **Responsibility identified.** The file maps to exactly one Step-1 responsibility from [`directory-rules.md` §4].
 - [ ] **Right root.** The chosen root carries that responsibility; Habitat is a **lane segment**, never a root.
 - [ ] **Domain segment placement.** The Habitat segment appears inside the responsibility root (e.g., `tests/domains/habitat/`), not at root.
 - [ ] **Cross-domain check.** If the file legitimately spans Habitat and another domain, it lives under the **lowest common responsibility root** *without* a single-domain segment (see [§8](#8-cross-domain-joins-and-shared-kernel-placement)).
-- [ ] **Schema home.** Any Habitat schema lives under `schemas/contracts/v1/domains/habitat/` (or `…/joins/…` for cross-domain). `contracts/domains/habitat/` holds Markdown-only contract meaning.
+- [ ] **Schema home.** Any Habitat schema lives under `schemas/` (never `contracts/`); the exact slug (`…/domains/habitat/` vs `…/habitat/`) is `CONFLICTED` pending ADR-S-01 (§3). `contracts/domains/habitat/` holds Markdown-only contract meaning.
 - [ ] **Shared kernel respected.** No Habitat-local fork of `EvidenceBundle`, `EvidenceRef`, `SourceDescriptor`, `RunReceipt`, `PromotionDecision`, `ReleaseManifest`, `PolicyDecision`, `DecisionEnvelope`, `RollbackCard`, or `CorrectionNotice`.
-- [ ] **Sensitivity check.** Any Habitat × Fauna or Habitat × Flora join carries a `RedactionReceipt` and a `PolicyDecision`. Exact occurrence-linked outputs deny by default.
+- [ ] **Sensitivity check.** Any Habitat × Fauna or Habitat × Flora join carries a `RedactionReceipt` and a `PolicyDecision`. Exact occurrence-linked outputs deny by default; disposition routes through `ai-build-operating-contract.md` §23.2.
 - [ ] **Lifecycle phase explicit** (data files). Phase named; no skipped phases; promotion handled as a governed state transition.
 - [ ] **Trust-membrane discipline.** Habitat public reads go through `apps/governed-api/`. No public client reads `data/processed/`, `data/catalog/`, or `data/published/` directly.
 - [ ] **Per-root README current.** Affected root carries a README meeting [`directory-rules.md` §15].
@@ -501,14 +522,15 @@ Use this list for any PR that adds, moves, or renames a file inside a Habitat la
 | 1 | Whether `connectors/habitat/` (domain-rooted) or `connectors/<source>/` (source-rooted) is the chosen connector layout. | Repo inspection + ADR. |
 | 2 | Whether `tools/validators/habitat/` is preferred over `tools/validators/<topic>/` for Habitat-only validators. | Per-root README of `tools/validators/` clarifies. |
 | 3 | Whether `runtime/` carries a Habitat-specific adapter (e.g., for a habitat suitability model). | Implementation evidence. |
-| 4 | Whether `data/triplets/habitat/` (plural) or `data/triplet/habitat/` (singular) is the live form. | ADR per [`directory-rules.md` §18] open question. |
-| 5 | Whether `runbooks/` subfolder under `docs/domains/habitat/` is the established convention or whether runbooks use a flat-prefix naming convention. | Repo inspection + ADR. |
+| 4 | Whether `data/triplets/` (plural) or `data/triplet/` (singular) is the live form. The plan uses `triplets/` (plural, shared) per Directory Rules §9. | ADR per [`directory-rules.md`] open drift item. |
+| 5 | Whether `runbooks/` subfolder under `docs/domains/habitat/` is the established convention or whether runbooks use a flat-prefix naming convention (OPEN-DR-02). | Repo inspection + ADR. |
 | 6 | USFWS ECOS / critical-habitat source terms, snapshot cadence, current endpoints. | `data/registry/sources/habitat/usfws-critical-habitat.source.yaml` filled and reviewed. |
 | 7 | NatureServe / controlled biodiversity source rights. | Rights register entry + reviewer sign-off. |
 | 8 | Exact route names for the governed-API Habitat resolvers (`HabitatDecisionEnvelope`, `LayerManifest`, Evidence Drawer payload, Focus Mode answer). | `apps/governed-api/` routing manifest. |
 | 9 | Whether `policy/sensitivity/` for joint Habitat × Fauna policy is the chosen form vs. `policy/joins/habitat-fauna/`. | ADR. |
 | 10 | Whether MapLibre / Evidence Drawer / Focus Mode have any Habitat-specific implementation today. | Repo inspection of `packages/maplibre/`, `apps/explorer-web/`, `apps/governed-api/`. |
 | 11 | Whether `model-card` requirements for `SuitabilityModel` are codified anywhere (schema or policy). | Schema or `policy/domains/habitat/model-card-required.deny.rego` present. |
+| 12 | **Schema-home slug for Habitat** — segmented `.../domains/habitat/` (DIRRULES §12) vs flat `.../habitat/` (Atlas §24.13); confirm/amend ADR-0001 (ADR-S-01; VB-11-01). | Accepted ADR-S-01 + DRIFT_REGISTER entry + mounted `schemas/` inspection. **CONFLICTED** |
 
 [Back to top](#contents)
 
@@ -520,18 +542,23 @@ Use this list for any PR that adds, moves, or renames a file inside a Habitat la
 
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority and lifecycle invariant. **Authoritative.**
 - [`docs/domains/habitat/README.md`](./README.md) — Habitat domain landing page. **PROPOSED.**
+- [`docs/domains/habitat/ARCHITECTURE.md`](./ARCHITECTURE.md) — lane architecture. **PROPOSED.**
+- [`docs/domains/habitat/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — full path enumeration. **PROPOSED.**
+- [`docs/domains/habitat/CONTRACTS.md`](./CONTRACTS.md) — contract (meaning) index. **PROPOSED.**
 - [`docs/domains/habitat/HABITAT_DOMAIN_MODEL.md`](./HABITAT_DOMAIN_MODEL.md) — object families, ubiquitous language. **PROPOSED.**
 - [`docs/domains/habitat/HABITAT_SOURCE_LEDGER.md`](./HABITAT_SOURCE_LEDGER.md) — accepted source families and rights. **PROPOSED.**
 - [`docs/domains/habitat/HABITAT_SENSITIVITY_PROFILE.md`](./HABITAT_SENSITIVITY_PROFILE.md) — sensitive-join controls. **PROPOSED.**
 - [`docs/domains/fauna/FILE_SYSTEM_PLAN.md`](../fauna/FILE_SYSTEM_PLAN.md) — pairs with the Habitat × Fauna thin slice. **TODO** if absent.
 - [`docs/domains/flora/FILE_SYSTEM_PLAN.md`](../flora/FILE_SYSTEM_PLAN.md) — adjacent boundary. **TODO** if absent.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — contract vs schema vs policy boundary. **PROPOSED home.**
+- [`docs/architecture/habitat-fauna-thin-slice.md`](../../architecture/habitat-fauna-thin-slice.md) — cross-lane thin-slice doctrine (corrected home, §8). **PROPOSED.**
 - [`docs/architecture/ecology-cross-domain.md`](../../architecture/ecology-cross-domain.md) — cross-domain ecology doctrine. **PROPOSED home.**
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where mounted-repo vs plan conflicts get recorded.
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; §23.2 sensitive-domain matrix. **CONFIRMED** (`CONTRACT_VERSION = "3.0.0"`).
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where mounted-repo vs plan conflicts get recorded (incl. the §3 schema-slug conflict).
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — `NEEDS VERIFICATION` items from §12.
 
 ---
 
-<sub>**Last reviewed:** `<TODO: YYYY-MM-DD>` · **Plan version:** v1 (draft) · **Authority:** Directory Rules §12 (Domain Placement Law), ADR-0001 (schema home).</sub>
+<sub>**Last reviewed:** 2026-06-05 · **Plan version:** v1 (draft) · `CONTRACT_VERSION = "3.0.0"` · **Authority:** Directory Rules §12 (Domain Placement Law); ADR-0001 / ADR-S-01 (schema home — **OPEN / CONFLICTED**).</sub>
 
 [Back to top](#contents)
