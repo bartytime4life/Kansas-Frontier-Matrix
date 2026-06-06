@@ -2,22 +2,29 @@
 doc_id: kfm://doc/docs-domains-hazards-file-system-plan
 title: Hazards Domain — File System Plan
 type: standard
-version: v1
+version: v2
 status: draft
 owners: [hazards-domain-stewards, directory-rules-stewards]
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
+contract_version: "3.0.0"
 related:
-  - docs/domains/hazards/README.md
+  - ai-build-operating-contract.md
   - directory-rules.md
+  - docs/domains/hazards/README.md
+  - docs/domains/hazards/DATA_LIFECYCLE.md
+  - docs/domains/hazards/EXPANSION_BACKLOG.md
+  - docs/domains/hazards/EXPANSION_PLAN.md
   - docs/adr/ADR-0001-schema-home.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, hazards, directory, placement, plan]
 notes:
+  - CONTRACT_VERSION pinned at 3.0.0 per ai-build-operating-contract.md v3.0.
   - All implementation-layer claims are PROPOSED until verified against a mounted repo.
   - This document plans placement; it does not authorize publication.
+  - v2 cross-references DRIFT-HAZ-PATH-01 — the policy/release/hazards form derives from the Atlas §24.13 non-segmented shorthand; segmented §12 forms are canonical.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌪️ Hazards Domain — File System Plan
@@ -30,13 +37,14 @@ notes:
 ![policy](https://img.shields.io/badge/policy-public-green)
 ![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-lightgrey)
 ![life--safety](https://img.shields.io/badge/life--safety-not_an_alert_authority-critical)
+![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![ci](https://img.shields.io/badge/ci-TODO-lightgrey)
-![updated](https://img.shields.io/badge/updated-2026--05--17-informational)
+![updated](https://img.shields.io/badge/updated-2026--06--05-informational)
 
-**Status:** Draft · **Owners:** Hazards domain stewards + Directory Rules stewards · **Last updated:** 2026-05-17
+**Status:** Draft · **Owners:** Hazards domain stewards + Directory Rules stewards · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-05
 
 > [!IMPORTANT]
-> KFM is **not** an emergency alert system. Every Hazards path planned in this document inherits the life-safety boundary defined in the encyclopedia and Pass 20 idea `KFM-IDX-POL-007`: hazards layers carry historical, regulatory, modeled, and operational *context only*, and must redirect life-safety action to official sources.
+> KFM is **not** an emergency alert system. Every Hazards path planned in this document inherits the life-safety boundary: hazards layers carry historical, regulatory, modeled, and operational *context only*, and must redirect life-safety action to official sources. *(CONFIRMED — DOM-HAZ §12.B, §12.I; Atlas §24.9.2 "KFM used as alert / instruction authority → DENY".)*
 
 ---
 
@@ -56,7 +64,9 @@ notes:
 12. [Publication, correction, and rollback file plan](#12-publication-correction-and-rollback-file-plan)
 13. [Anti-patterns to avoid for this lane](#13-anti-patterns-to-avoid-for-this-lane)
 14. [Open questions and verification backlog](#14-open-questions-and-verification-backlog)
-15. [Related docs](#15-related-docs)
+15. [Changelog](#15-changelog)
+16. [Definition of done](#16-definition-of-done)
+17. [Related docs](#17-related-docs)
 
 ---
 
@@ -73,12 +83,12 @@ The plan exists to:
 
 This plan **does not**:
 
-- Authorize publication of any artifact. Publication is governed by the release-state machine; promotion is a governed state transition, not a file move (Directory Rules §9.1).
+- Authorize publication of any artifact. Publication is governed by the release-state machine; promotion is a governed state transition, not a file move (Directory Rules §0 lifecycle invariant; §13.5 "Lifecycle skip").
 - Override `directory-rules.md` or ADRs. Where this plan and the Rules disagree, the Rules win until an ADR amends them.
 - Substitute for the per-root `README.md` files. Each path materialized here must still satisfy the README contract in Directory Rules §15.
 
 > [!NOTE]
-> Implementation-layer claims in this document (whether a path exists today, whether a CI workflow runs, whether a connector is wired) are **PROPOSED** unless explicitly checked against a mounted repository. No mounted repo was available in the authoring session.
+> Implementation-layer claims in this document (whether a path exists today, whether a CI workflow runs, whether a connector is wired) are **PROPOSED** unless explicitly checked against a mounted repository. No mounted repo was available in the authoring session — **except** the commit-pinned evidence at `b6a279…` carried by the Repository Structure Guiding Document, which is noted inline where it applies (notably `apps/governed-api/` and `apps/explorer-web/`).
 
 [⬆ back to top](#-contents)
 
@@ -89,12 +99,13 @@ This plan **does not**:
 | Aspect | Value | Status |
 |---|---|---|
 | This file's path | `docs/domains/hazards/FILE_SYSTEM_PLAN.md` | CONFIRMED placement under Directory Rules §12 |
-| Responsibility root | `docs/` (human explanation) | CONFIRMED |
-| Domain segment | `domains/hazards/` | CONFIRMED |
+| Responsibility root | `docs/` (human explanation) | CONFIRMED (DR §4 Step 1, §6.1) |
+| Domain segment | `domains/hazards/` | CONFIRMED (DR §4 Step 3, §12) |
 | Authority class | Doctrine companion to the Hazards `README.md` | PROPOSED |
 | Governing rules | Directory Rules §§3, 4, 9, 12, 13, 15 | CONFIRMED |
-| Governing doctrine | KFM Encyclopedia §7.10; Atlas Ch. 12 + §24.13 crosswalk; Pass 20 KFM-IDX-POL-007, KFM-IDX-PLN-002 | CONFIRMED |
+| Governing doctrine | KFM Encyclopedia §7.10; Atlas Ch. 12 + §24.13 crosswalk; operating contract v3.0 | CONFIRMED |
 | Authority order | Doctrine → ADRs → Directory Rules → per-root READMEs → this plan → repo convention | CONFIRMED (Directory Rules §2.1) |
+| Contract pin | `CONTRACT_VERSION = "3.0.0"` | CONFIRMED (operating contract v3.0) |
 
 > [!TIP]
 > When a Hazards PR needs to cite the rule that justifies a path (Directory Rules §4 Step 5), it should cite **both** Directory Rules §12 **and** the relevant row of the [Per-root path plan](#6-per-root-path-plan) in this file.
@@ -109,7 +120,7 @@ This plan **does not**:
 
 - Lane-wide placement of Hazards files across `docs/`, `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`, `pipeline_specs/`, `data/`, `release/`, `runtime/`, and `connectors/`.
 - Mapping of the Hazards source families (NOAA Storm Events, NWS, FEMA Disaster Declarations, FEMA NFHL, USGS earthquakes, USGS Water, NASA FIRMS, NOAA HMS, drought monitors, Kansas/local emergency context) into the `data/raw/hazards/<source_id>/` layout.
-- Object-family placement crosswalk for `HazardEvent`, `HazardObservation`, `WarningContext`, `AdvisoryContext`, `DisasterDeclaration`, `FloodContext`, `WildfireDetection`, `SmokeContext`, `DroughtIndicator`, `EarthquakeEvent`, `HeatColdEvent`, `ExposureSummary`, `ResilienceSummary`, `HazardTimeline`, `ImpactArea` (encyclopedia §7.10C).
+- Object-family placement crosswalk for `HazardEvent`, `HazardObservation`, `WarningContext`, `AdvisoryContext`, `DisasterDeclaration`, `FloodContext`, `WildfireDetection`, `SmokeContext`, `DroughtIndicator`, `EarthquakeEvent`, `HeatColdEvent`, `ExposureSummary`, `ResilienceSummary`, `HazardTimeline`, `ImpactArea` (Atlas §12.B/E; Encyclopedia §7.10).
 - Cross-lane placement guidance where Hazards files touch Hydrology, Atmosphere/Air, Roads/Rail, or Settlements/Infrastructure.
 
 ### Explicit non-scope
@@ -132,13 +143,13 @@ The diagram below renders the responsibility-root lane pattern (Directory Rules 
 flowchart LR
   subgraph DOCS["docs/domains/hazards/"]
     DREADME["README.md"]
-    DPLAN["FILE_SYSTEM_PLAN.md<br/>(this file)"]
-    DBLUE["BLUEPRINT.md<br/>(PROPOSED)"]
+    DPLAN["FILE_SYSTEM_PLAN.md — this file"]
+    DBLUE["BLUEPRINT.md — PROPOSED"]
   end
 
   subgraph SEM["Semantic + Shape"]
     CON["contracts/domains/hazards/"]
-    SCH["schemas/contracts/v1/<br/>domains/hazards/"]
+    SCH["schemas/contracts/v1/domains/hazards/"]
   end
 
   subgraph GATE["Admissibility + Release Policy"]
@@ -155,7 +166,7 @@ flowchart LR
     PKG["packages/domains/hazards/"]
     PIPE["pipelines/domains/hazards/"]
     PSPEC["pipeline_specs/hazards/"]
-    CONN["connectors/hazards/<br/>(per-source)"]
+    CONN["connectors/hazards/ — per-source"]
   end
 
   subgraph DATA["Lifecycle data"]
@@ -174,8 +185,8 @@ flowchart LR
     RELRB["release/rollback_cards/"]
   end
 
-  GAPI["apps/governed-api/<br/>(trust membrane)"]
-  UI["apps/explorer-web/<br/>+ packages/maplibre/"]
+  GAPI["apps/governed-api/ — trust membrane"]
+  UI["apps/explorer-web/ + packages/maplibre-runtime/"]
 
   DBLUE -.governs.-> CON
   DBLUE -.governs.-> POL
@@ -198,7 +209,7 @@ flowchart LR
 ```
 
 > [!CAUTION]
-> The map shell (`apps/explorer-web/`, `packages/maplibre/`) **must not** read directly from `data/raw/`, `data/work/`, `data/processed/`, or `data/catalog/`. Hazards layers reach the renderer only via released artifacts under `data/published/layers/hazards/` through the governed API. This is the trust membrane (Directory Rules §13.5 and §7.1).
+> The map shell (`apps/explorer-web/`, `packages/maplibre-runtime/`) **must not** read directly from `data/raw/`, `data/work/`, `data/processed/`, or `data/catalog/`. Hazards layers reach the renderer only via released artifacts under `data/published/layers/hazards/` through the governed API. This is the trust membrane (Directory Rules §13.5 "Public route reads canonical store" + §7.1). `apps/governed-api/` and `apps/explorer-web/` are **CONFIRMED at commit** `b6a279…`.
 
 [⬆ back to top](#-contents)
 
@@ -206,7 +217,7 @@ flowchart LR
 
 ## 5. Directory tree (PROPOSED)
 
-The tree below is **PROPOSED**: it expresses the intended Hazards-lane layout under Directory Rules §12. Materialization is **UNKNOWN** without a mounted repo. Per-source paths use a `<source_id>` placeholder; the SourceDescriptor decides the concrete id.
+The tree below is **PROPOSED**: it expresses the intended Hazards-lane layout under Directory Rules §12. The *lane pattern* (domain as a segment under each root) is CONFIRMED by §12; *materialization of specific files* is **UNKNOWN** without a mounted repo. Per-source paths use a `<source_id>` placeholder; the SourceDescriptor decides the concrete id.
 
 ```text
 Kansas-Frontier-Matrix/
@@ -265,7 +276,7 @@ Kansas-Frontier-Matrix/
 │   │       ├── emergency_alert_denial.rego           # PROPOSED
 │   │       └── sensitivity_join.rego                 # PROPOSED
 │   └── release/
-│       └── hazards/
+│       └── hazards/                                  # PROPOSED — see DRIFT-HAZ-PATH-01
 │           ├── README.md
 │           └── public_safe_release.rego              # PROPOSED
 ├── tests/
@@ -306,7 +317,7 @@ Kansas-Frontier-Matrix/
 │       ├── README.md
 │       └── <source_id>.yaml                          # PROPOSED — one per source
 ├── connectors/
-│   └── hazards/
+│   └── hazards/                                      # grouping vs flat is OPEN — see §14
 │       ├── README.md
 │       ├── noaa_storm_events/
 │       ├── nws_api/
@@ -325,7 +336,7 @@ Kansas-Frontier-Matrix/
 │   ├── processed/hazards/<dataset_id>/<version>/
 │   ├── catalog/domain/hazards/
 │   ├── triplets/                                     # cross-domain; no hazards/ segment here
-│   ├── receipts/                                     # cross-domain; per Directory Rules §9.1
+│   ├── receipts/                                     # cross-domain; emitted alongside lifecycle (DR §9.1)
 │   ├── proofs/
 │   ├── published/layers/hazards/
 │   ├── rollback/hazards/<release_id>/
@@ -338,7 +349,7 @@ Kansas-Frontier-Matrix/
 ```
 
 > [!NOTE]
-> Cross-cutting roots (`data/triplets/`, `data/receipts/`, `data/proofs/`, `release/manifests/`, `release/rollback_cards/`, `release/correction_notices/`) **do not** carry a `hazards/` segment. They are repo-wide and refer to Hazards content via identifiers (release_id, evidence_bundle_id, etc.), not directory segmentation. This follows Directory Rules §9.
+> Cross-cutting roots (`data/triplets/`, `data/receipts/`, `data/proofs/`, `release/manifests/`, `release/rollback_cards/`, `release/correction_notices/`) **do not** carry a `hazards/` segment. They are repo-wide and refer to Hazards content via identifiers (release_id, evidence_bundle_id, etc.), not directory segmentation. This follows Directory Rules §9 and §4 Step 2 (receipts/proofs/registry/rollback are emitted *alongside* lifecycle phases, not as domain folders).
 
 [⬆ back to top](#-contents)
 
@@ -353,9 +364,9 @@ The table below enumerates every Hazards-domain path, what it owns, the rule tha
 | Path | Owns | Rule basis | Status |
 |---|---|---|---|
 | `docs/domains/hazards/README.md` | Hazards lane landing page; mini-TOC; links to all other Hazards files. | DR §6.1, §12 | PROPOSED |
-| `docs/domains/hazards/FILE_SYSTEM_PLAN.md` | This file. | DR §6.1, §12, §16 | CONFIRMED placement |
+| `docs/domains/hazards/FILE_SYSTEM_PLAN.md` | This file. | DR §6.1, §12, §15 | CONFIRMED placement |
 | `docs/domains/hazards/BLUEPRINT.md` | Full domain blueprint (encyclopedia §7.10 in repo-native form). | DR §6.1, §12 | PROPOSED |
-| `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` | Source-refresh runbook (Hazards). Subfolder convention pending ADR. | DR §6.1 | PROPOSED · NEEDS VERIFICATION |
+| `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` | Source-refresh runbook (Hazards). Subfolder convention pending ADR. | DR §6.1; §13.5 "Runbook subfolder/flat drift" | PROPOSED · NEEDS VERIFICATION |
 | `docs/runbooks/hazards/ROLLBACK_DRILL.md` | Hazards rollback drill runbook. | DR §6.1 | PROPOSED |
 
 ### 6.2 Object meaning — `contracts/`
@@ -364,7 +375,7 @@ The table below enumerates every Hazards-domain path, what it owns, the rule tha
 |---|---|---|---|
 | `contracts/domains/hazards/` | Markdown semantic definitions for each Hazards object family. | DR §6.3, §12 | PROPOSED |
 | `contracts/domains/hazards/README.md` | Per-root README per DR §15. | DR §15 | PROPOSED |
-| 15 × `<object_family>.md` | One per object family in encyclopedia §7.10C. | DR §6.3 | PROPOSED |
+| 15 × `<object_family>.md` | One per object family in Atlas §12.B/E. | DR §6.3 | PROPOSED |
 
 ### 6.3 Object shape — `schemas/`
 
@@ -375,23 +386,29 @@ The table below enumerates every Hazards-domain path, what it owns, the rule tha
 | `schemas/tests/valid/hazards/`, `schemas/tests/invalid/hazards/` | Shape-level positive/negative fixtures. | DR §6.4 | PROPOSED |
 
 > [!WARNING]
-> The shape home is **`schemas/contracts/v1/domains/hazards/`**, not `contracts/domains/hazards/*.schema.json`. ADR-0001 makes the schemas home canonical; a `*.schema.json` under `contracts/` is **lineage / CONFLICTED** and must be migrated. Hazards PRs that introduce schema files under `contracts/` should be rejected absent a superseding ADR.
+> The shape home is **`schemas/contracts/v1/domains/hazards/`**, not `contracts/domains/hazards/*.schema.json`. ADR-0001 makes the schemas home canonical; a `*.schema.json` under `contracts/` is **lineage / CONFLICTED** and must be migrated. Hazards PRs that introduce schema files under `contracts/` should be rejected absent a superseding ADR. *(DR §13.1 "contracts/ and schemas/ both claiming the same authority".)*
 
 ### 6.4 Admissibility and release — `policy/`
 
 | Path | Owns | Rule basis | Status |
 |---|---|---|---|
 | `policy/domains/hazards/` | Domain-specific admissibility policy (source roles, freshness, sensitivity). | DR §6.5, §12 | PROPOSED |
-| `policy/release/hazards/` | Release-gate policy for Hazards (public-safe transforms, official-source referral). | DR §6.5; Atlas §24.13 | PROPOSED |
+| `policy/release/hazards/` | Release-gate policy for Hazards (public-safe transforms, official-source referral). | DR §6.5; Atlas §24.13 (non-segmented form — see DRIFT-HAZ-PATH-01) | PROPOSED · CONFLICTED form |
 | `policy/sensitivity/hazards/` | Sensitivity classes specific to Hazards joins (e.g., infrastructure × hazard exposure). | DR §6.5 | PROPOSED — only if cross-cutting policy bundle is insufficient |
+
+> [!NOTE]
+> **DRIFT-HAZ-PATH-01.** `policy/release/hazards/` follows the Atlas §24.13 crosswalk (which is self-labeled "Primary responsibility root (PROPOSED)"). Directory Rules §6.5 / §12 do not split domain policy into a `release/` sub-segment by default — domain policy lives at `policy/domains/hazards/`. Whether release-gate policy legitimately splits to `policy/release/hazards/` or folds into `policy/domains/hazards/` is **OPEN** (see §14). Both forms are PROPOSED; the segmented `policy/domains/hazards/` is the safer default. Directory Rules §13.5 ("Policy code under `release/`") also forbids `.rego` under `release/` itself — note `policy/release/hazards/` is under `policy/`, so it does not trip that rule, but the split is still ADR-class.
 
 ### 6.5 Tests and fixtures
 
 | Path | Owns | Rule basis | Status |
 |---|---|---|---|
-| `tests/domains/hazards/` | Validator-bearing tests for Hazards (encyclopedia §7.10K). | DR §6.6, §12 | PROPOSED |
+| `tests/domains/hazards/` | Validator-bearing tests for Hazards (Atlas §12.K). | DR §6.6, §12 | PROPOSED |
 | `fixtures/domains/hazards/valid/` | Public-safe positive fixtures. | DR §6.6 | PROPOSED |
 | `fixtures/domains/hazards/invalid/` | Negative fixtures: anti-collapse, expiry, uncited, modeled-labeled-observed. | DR §6.6 | PROPOSED |
+
+> [!NOTE]
+> Fixture authority must be singular: choose root `fixtures/` **or** `tests/fixtures/`, not both, per DR §13.5 "Fixture sprawl." This plan uses root `fixtures/`.
 
 ### 6.6 Code — `packages/`, `pipelines/`, `pipeline_specs/`, `connectors/`
 
@@ -412,12 +429,12 @@ The table below enumerates every Hazards-domain path, what it owns, the rule tha
 | `data/processed/hazards/<dataset_id>/<version>/` | Validated canonical records. | DR §9.1 | PROPOSED |
 | `data/catalog/domain/hazards/` | STAC/DCAT/PROV records and domain catalog entries. | DR §9.1 | PROPOSED |
 | `data/published/layers/hazards/` | Released public-safe artifacts (PMTiles, GeoJSON, etc.). | DR §9.1 | PROPOSED |
-| `data/registry/sources/hazards/` | Append-only Hazards source registry. | DR §9.1 | PROPOSED |
+| `data/registry/sources/hazards/` | Append-only Hazards source registry. | DR §9.1 (note: §4 Step 3 also allows `data/registry/hazards/`) | PROPOSED · NEEDS VERIFICATION |
 | `data/rollback/hazards/<release_id>/` | Alias-revert receipts (data plane). | DR §9.1 | PROPOSED |
 
 ### 6.8 Release decisions — `release/`
 
-Release roots do **not** carry per-domain segmentation by directory; they segment by release_id. Hazards content is identified via release manifest contents, not by directory location.
+Release roots do **not** carry per-domain segmentation by directory beyond the candidate dossier; they segment by release_id. Hazards content is identified via release manifest contents, not by directory location.
 
 | Path | Owns | Rule basis | Status |
 |---|---|---|---|
@@ -432,18 +449,21 @@ Release roots do **not** carry per-domain segmentation by directory; they segmen
 
 ## 7. Data lifecycle for the Hazards lane
 
-The lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** is CONFIRMED doctrine (Directory Rules §9.1; encyclopedia §7.10H; Atlas §24.6). The table below records the Hazards-specific gating that each transition adds on top of the universal gates.
+The lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** is CONFIRMED doctrine (Directory Rules §0, §9.1; Encyclopedia §7.10; Atlas §24.6). The table below records the Hazards-specific gating that each transition adds on top of the universal gates.
 
 | Stage | Hazards-specific entrance gate | Required artifacts (PROPOSED) | Fail-closed outcome |
 |---|---|---|---|
-| **RAW** | SourceDescriptor present; source role recorded as one of *observed / regulatory / modeled / administrative / aggregate / candidate / context*; rights & retrieval metadata captured. | `data/registry/sources/hazards/<source_id>.json`; per-run receipt under `data/receipts/ingest/`. | Source not admitted; logged as candidate. |
+| **RAW** | SourceDescriptor present; source role recorded as one of the canonical seven (*observed / regulatory / modeled / aggregate / administrative / candidate / synthetic*); rights & retrieval metadata captured. | `data/registry/sources/hazards/<source_id>.json`; per-run receipt under `data/receipts/ingest/`. | Source not admitted; logged as candidate. |
 | **WORK / QUARANTINE** | Source-role anti-collapse holds; expiry/freshness for operational items present; sensitivity joins resolved. | TransformReceipt; ValidationReport (working set); PolicyDecision. | Quarantine with structured reason. |
 | **PROCESSED** | Schema-valid; temporal fields preserved (event / valid / issue / expiry / source / retrieval / release); sensitivity-redaction receipt where applicable. | ValidationReport pass; RedactionReceipt if applies. | Stay in WORK; structured FAIL. |
 | **CATALOG / TRIPLET** | EvidenceRefs resolve to EvidenceBundles; catalog digest closes; cross-lane joins preserve ownership and source role. | CatalogMatrix entry; EvidenceBundle; optional graph projections. | HOLD at PROCESSED; no public edge. |
 | **PUBLISHED** | Public-safe transform receipt present; **life-safety boundary disclaimer** present in layer manifest; official-source referral target recorded; review state where required; release authority separate from author when materiality applies. | ReleaseManifest; rollback target; correction path; ReviewRecord (if required). | HOLD at CATALOG; no public surface change. |
 
+> [!NOTE]
+> **v2 correction.** The v1 RAW-stage gate listed the role set as *observed / regulatory / modeled / administrative / aggregate / context*. `context` is not a canonical source role (the seven-role register in Atlas §24.1.1 has no `context` role); it has been corrected to the canonical seven, with `candidate` and `synthetic` added.
+
 > [!CAUTION]
-> **Expired operational context cannot appear as current warning state.** This is the single most consequential failure mode in the Hazards lane (encyclopedia §7.10I). The path-level expression of this rule is: a Hazards layer in `data/published/layers/hazards/` whose payload contains an `expiry` past the current clock must be either (a) re-released with a corrected payload, (b) withdrawn via `release/withdrawal_notices/`, or (c) rolled back via `release/rollback_cards/`. The renderer must not display an expired warning as live.
+> **Expired operational context cannot appear as current warning state.** This is the single most consequential failure mode in the Hazards lane (Atlas §12.I; §24.9.2). The path-level expression: a Hazards layer in `data/published/layers/hazards/` whose payload contains an `expiry` past the current clock must be either (a) re-released with a corrected payload, (b) withdrawn via `release/withdrawal_notices/`, or (c) rolled back via `release/rollback_cards/`. The renderer must not display an expired warning as live.
 
 [⬆ back to top](#-contents)
 
@@ -451,23 +471,26 @@ The lifecycle invariant **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / 
 
 ## 8. Source-family admission plan
 
-All Hazards source families are CONFIRMED at the doctrine level (encyclopedia §7.10B; Atlas Ch. 12 §D). Their **role per release** is set at admission and preserved through every promotion. The Atlas explicitly lists each as carrying potentially multiple of *authority / observation / context / model* — KFM does **not** treat these as interchangeable, even when one source provides material in more than one role.
+All Hazards source families are CONFIRMED at the doctrine level (Encyclopedia §7.10; Atlas §12.D). Their **role per release** is set at admission and preserved through every promotion. The Atlas §12.D NWS-row shorthand lists each as carrying potentially multiple of *authority / observation / context / model* "as the source role requires" — KFM does **not** treat these as interchangeable, even when one source provides material in more than one role. Canonical schema field values use the seven-role register (Atlas §24.1.1).
 
-| Source family | Primary intended role(s) | `connectors/hazards/<id>/` | `data/registry/sources/hazards/<id>.json` | Rights status | Status |
+| Source family | Primary intended role(s) (canonical) | `connectors/hazards/<id>/` | `data/registry/sources/hazards/<id>.json` | Rights status | Status |
 |---|---|---|---|---|---|
-| NOAA Storm Events / NCEI | observation / aggregate | `noaa_storm_events/` | yes | NEEDS VERIFICATION | PROPOSED |
-| NWS API (alerts/warnings/advisories/watches) | operational context (never live alerting) | `nws_api/` | yes | NEEDS VERIFICATION | PROPOSED |
-| FEMA Disaster Declarations / OpenFEMA | administrative / regulatory | `fema_disaster_declarations/` | yes | NEEDS VERIFICATION | PROPOSED |
+| NOAA Storm Events / NCEI | observed / aggregate | `noaa_storm_events/` | yes | NEEDS VERIFICATION | PROPOSED |
+| NWS API (alerts/warnings/advisories/watches) | operational `observed`, contextual-only (never live alerting) — role mapping CONFLICTED, see EXPANSION_PLAN OQ-HAZ-EP-01 | `nws_api/` | yes | NEEDS VERIFICATION | PROPOSED |
+| FEMA Disaster Declarations / OpenFEMA | administrative | `fema_disaster_declarations/` | yes | NEEDS VERIFICATION | PROPOSED |
 | FEMA NFHL / MSC | **regulatory** (never labeled "observed flood") | `fema_nfhl/` | yes | NEEDS VERIFICATION | PROPOSED |
-| USGS Earthquake Catalog | observation | `usgs_earthquake/` | yes | NEEDS VERIFICATION | PROPOSED |
-| USGS Water (flood/drought context) | observation / context | `usgs_water/` | yes | NEEDS VERIFICATION | PROPOSED |
-| NASA FIRMS active fire | observation (remote-sensing detection) | `nasa_firms/` | yes | NEEDS VERIFICATION | PROPOSED |
-| NOAA HMS Fire and Smoke | observation (remote-sensing detection) / model derivative | `noaa_hms/` | yes | NEEDS VERIFICATION | PROPOSED |
-| Drought monitors | aggregate / context | `drought_monitor/` | yes | NEEDS VERIFICATION | PROPOSED |
-| Kansas / local emergency context | administrative / context | `ks_emergency_context/` | yes | NEEDS VERIFICATION | PROPOSED |
+| USGS Earthquake Catalog | observed | `usgs_earthquake/` | yes | NEEDS VERIFICATION | PROPOSED |
+| USGS Water (flood/drought context) | observed | `usgs_water/` | yes | NEEDS VERIFICATION | PROPOSED |
+| NASA FIRMS active fire | observed (remote-sensing detection — candidate until reviewed) | `nasa_firms/` | yes | NEEDS VERIFICATION | PROPOSED |
+| NOAA HMS Fire and Smoke | modeled / observed (remote-sensing detection) | `noaa_hms/` | yes | NEEDS VERIFICATION | PROPOSED |
+| Drought monitors | modeled / aggregate | `drought_monitor/` | yes | NEEDS VERIFICATION | PROPOSED |
+| Kansas / local emergency context | administrative | `ks_emergency_context/` | yes | NEEDS VERIFICATION | PROPOSED |
 
 > [!IMPORTANT]
 > **Anti-collapse rule (Atlas §24.1.2):** Regulatory NFHL geometry must never be released or queried as observed flood inundation. A regulatory layer labeled as an observed event is a DENY condition at publication and an ABSTAIN condition at AI surfaces. The path-level expression is that `data/published/layers/hazards/nfhl/` and `data/published/layers/hazards/flood_event/` are **separate** layer roots with separate manifests; a unified "flood" layer is forbidden by doctrine.
+
+> [!NOTE]
+> The v1 admission table assigned FEMA Disaster Declarations the roles "administrative / regulatory" and FIRMS "observation." v2 narrows these to the canonical register: declarations are `administrative` (a declaration is a compiled administrative record, not a regulatory determination of a hazard zone), and FIRMS detections are `observed` but enter as `candidate` until steward review (Atlas §24.1.1 candidate role). The `authority` shorthand from §12.D is not a canonical role and is not used as a field value.
 
 [⬆ back to top](#-contents)
 
@@ -475,7 +498,7 @@ All Hazards source families are CONFIRMED at the doctrine level (encyclopedia §
 
 ## 9. Object-family placement crosswalk
 
-Every Hazards object family from encyclopedia §7.10C has a uniform placement pattern. Each family appears in: one Markdown contract file, one JSON Schema file, optional policy specialization, and at minimum one valid and one invalid fixture set.
+Every Hazards object family from Atlas §12.B/E has a uniform placement pattern. Each family appears in: one Markdown contract file, one JSON Schema file, optional policy specialization, and at minimum one valid and one invalid fixture set.
 
 <details>
 <summary>Click to expand the object-family placement crosswalk</summary>
@@ -498,7 +521,7 @@ Every Hazards object family from encyclopedia §7.10C has a uniform placement pa
 | `HazardTimeline` | `hazard_timeline.md` | `hazard_timeline.schema.json` | yes | role-aware composition |
 | `ImpactArea` | `impact_area.md` | `impact_area.schema.json` | yes | infrastructure sensitivity |
 
-All identity rules follow the PROPOSED deterministic basis from Atlas Ch. 12 §E: `source id + object role + temporal scope + normalized digest`. All families preserve distinct *source, observed, valid, retrieval, release, and correction* times where material (CONFIRMED).
+All identity rules follow the PROPOSED deterministic basis from Atlas §12.E: `source id + object role + temporal scope + normalized digest`. All families preserve distinct *source, observed, valid, retrieval, release, and correction* times where material (CONFIRMED — Atlas §12.E).
 
 </details>
 
@@ -508,17 +531,17 @@ All identity rules follow the PROPOSED deterministic basis from Atlas Ch. 12 §E
 
 ## 10. Cross-lane relations
 
-Hazards files routinely interact with adjacent lanes. Cross-lane files **do not** live under `docs/domains/hazards/`; they live under the lowest common responsibility root **without** a domain segment (Directory Rules §12, Multi-domain and cross-cutting files).
+Hazards files routinely interact with adjacent lanes. Cross-lane files **do not** live under `docs/domains/hazards/`; they live under the lowest common responsibility root **without** a domain segment (Directory Rules §12, "Multi-domain and cross-cutting files").
 
 | Adjacent lane | Typical relation | Where the cross-cutting file lives | Constraint |
 |---|---|---|---|
-| Hydrology | Flood/drought/water-event context with role separation. | `tools/validators/hydrology-hazards/` for joins; `schemas/contracts/v1/relations/` for relation shape. | Ownership preserved per lane; EvidenceBundle support required. |
-| Atmosphere / Air | Smoke, heat/cold, AQI/advisory, wind, fire-weather context. | `tools/validators/air-hazards/` for joins. | Knowledge-character labels remain inspectable. |
+| Hydrology | Flood/drought/water-event context with role separation. | `tools/validators/<topic>/` for joins; `schemas/contracts/v1/<topic>/` for relation shape. | Ownership preserved per lane; EvidenceBundle support required; NFHL never relabeled as observed water event. |
+| Atmosphere / Air | Smoke, heat/cold, AQI/advisory, wind, fire-weather context. | `tools/validators/<topic>/` for joins. | Knowledge-character labels remain inspectable. |
 | Settlements / Infrastructure | Exposure, lifelines, dependencies. | `policy/sensitivity/infrastructure/` continues to govern critical-asset exposure; Hazards exposure files cite but do not re-author. | Infrastructure sensitivity is a DENY-by-default lane. |
 | Roads / Rail | Closures, detours, bridge/crossing exposure, resilience. | `packages/domains/transport/` continues to own network identity; Hazards files cite. | No back-channel rewriting of transport identity from a Hazards file. |
 
 > [!TIP]
-> When in doubt about where a Hazards-touching file lives: if it carries Hazards-specific semantics, place under `…/domains/hazards/`. If it merely reads from or cites Hazards content as one of several inputs, place under the cross-cutting root and treat Hazards as a citation, not a parent folder.
+> When in doubt about where a Hazards-touching file lives: if it carries Hazards-specific semantics, place under `…/domains/hazards/`. If it merely reads from or cites Hazards content as one of several inputs, place under the cross-cutting root (the lowest common responsibility root, no domain segment) and treat Hazards as a citation, not a parent folder. *(DR §12.)*
 
 [⬆ back to top](#-contents)
 
@@ -526,7 +549,7 @@ Hazards files routinely interact with adjacent lanes. Cross-lane files **do not*
 
 ## 11. Validators, tests, and fixtures plan
 
-The Hazards validator backlog is CONFIRMED at the doctrine level (encyclopedia §7.10K; Atlas Ch. 12 §K). The table below maps each validator to its planned file home, the negative fixture that would prove it enforceable, and its truth status.
+The Hazards validator backlog is CONFIRMED at the doctrine level (Atlas §12.K). The table below maps each validator to its planned file home, the negative fixture that would prove it enforceable, and its truth status.
 
 | Validator | Test file | Negative fixture | Status |
 |---|---|---|---|
@@ -541,7 +564,7 @@ The Hazards validator backlog is CONFIRMED at the doctrine level (encyclopedia �
 | No-network fixture-first | covered by all of the above | n/a | PROPOSED |
 
 > [!NOTE]
-> Repo-wide validators that already exist (e.g., `tools/validators/validate_spec_hash.py`, `tools/validators/validate_attestation_ref.py`) **stay** under `tools/validators/` and are not duplicated into the Hazards lane. The lane-specific tests above wrap them, parameterized on Hazards fixtures.
+> Repo-wide validators that already exist stay under `tools/validators/` and are not duplicated into the Hazards lane (DR §13.5 "Test-only validator": extract the validator to `tools/`, tests call into it). The lane-specific tests above wrap them, parameterized on Hazards fixtures. The canonical orchestrator location (`tools/validate_all.py`, CONFIRMED at commit `b6a279…`) is the path CI must call.
 
 [⬆ back to top](#-contents)
 
@@ -573,10 +596,10 @@ The general anti-patterns in Directory Rules §13 apply universally. Below are t
 
 | Anti-pattern | Symptom in the Hazards lane | Fix |
 |---|---|---|
-| Hazards becoming a root folder | `hazards/` at repo root with its own `data/`, `schemas/`, `policy/`, `docs/` subtree. | Apply Domain Placement Law (DR §12). Migrate into the lane pattern; preserve `docs/domains/hazards/README.md`. |
-| Source-role collapse | NFHL regulatory polygons released as "observed flood" or merged into a single flood layer. | DENY at publication. Separate `data/published/layers/hazards/nfhl/` and `data/published/layers/hazards/flood_event/`; banner in UI; preserve `source_role` field in DTO. |
+| Hazards becoming a root folder | `hazards/` at repo root with its own `data/`, `schemas/`, `policy/`, `docs/` subtree. | Apply Domain Placement Law (DR §12, §13.4). Migrate into the lane pattern; preserve `docs/domains/hazards/README.md`. |
+| Source-role collapse | NFHL regulatory polygons released as "observed flood" or merged into a single flood layer. | DENY at publication (Atlas §24.1.2). Separate `data/published/layers/hazards/nfhl/` and `data/published/layers/hazards/flood_event/`; banner in UI; preserve `source_role` field in DTO. |
 | Operational feed → alerting drift | A NWS warning layer rendered without expiry/source/disclaimer, or read directly by the UI. | Map shell reads only `data/published/layers/hazards/...` via the governed API. WarningContext / AdvisoryContext payloads carry `expiry`, `source`, `not_emergency_alert_system: true`, and an `official_source_url`. |
-| Watcher publishes | An environmental-source watcher writes directly into `data/catalog/` or `data/published/`. | Watcher-as-non-publisher invariant (DR §13.5). Watchers emit receipts and candidate decisions into the pre-RAW envelope only. |
+| Watcher publishes | An environmental-source watcher writes directly into `data/catalog/` or `data/published/`. | Watcher-as-non-publisher (DR §13.5 "Watcher publishes"). Watchers emit receipts and candidate decisions into the pre-RAW envelope only. |
 
 [⬆ back to top](#-contents)
 
@@ -586,36 +609,76 @@ The general anti-patterns in Directory Rules §13 apply universally. Below are t
 
 Each item below is checkable against a mounted repository or by ADR. None should be silently resolved by this plan.
 
-| Item | What would settle it | Status |
-|---|---|---|
-| Whether `docs/domains/hazards/` already contains a `README.md` and `BLUEPRINT.md` in the live repo. | `ls docs/domains/hazards/` against a mounted repo. | UNKNOWN |
-| Whether `docs/runbooks/<domain>/` (subfolder) or `docs/runbooks/<domain>_<topic>.md` (flat-prefix) is the chosen convention. | Open ADR; cross-reference with `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`. | NEEDS VERIFICATION |
-| Whether `policy/sensitivity/hazards/` is needed alongside `policy/release/hazards/`, or whether cross-cutting `policy/sensitivity/` is sufficient. | Inspect `policy/` tree; resolve by ADR. | UNKNOWN |
-| Whether `data/registry/sources/hazards/` or `data/registry/hazards/` is the chosen form. Directory Rules §4 Step 3 allows either; DR §9.1 uses `sources/`. | Inspect `data/registry/`; freeze by ADR. | NEEDS VERIFICATION |
-| Hazards source rights (NOAA Storm Events, NWS, FEMA Disaster Declarations, NFHL, USGS, NASA FIRMS, drought monitors, Kansas/local). | Source-terms review per source; record in `data/registry/sources/hazards/<id>.json`. | NEEDS VERIFICATION |
-| Whether `triplets/` (plural) or `triplet/` (singular) wins in `data/`. This plan uses **`triplets/`** consistently with Directory Rules §9.1. | One-line ADR. | OPEN |
-| Whether per-source `pipeline_specs/hazards/<source_id>.yaml` is one file per source or one file per `<source_id>.<run_kind>`. | Inspect existing `pipeline_specs/` examples (none assumed visible). | UNKNOWN |
-| Whether `connectors/hazards/` is grouped by source (as proposed) or flat (`connectors/noaa_storm_events/`). DR §7.3 does not mandate either. | Inspect `connectors/` tree; freeze by ADR. | NEEDS VERIFICATION |
-| Whether a Hazards-specific `docs/architecture/hazards-trust-membrane.md` is warranted, or whether the cross-cutting trust-membrane doc suffices. | Inspect `docs/architecture/`. | OPEN |
+| ID | Item | What would settle it | Status |
+|---|---|---|---|
+| OQ-HAZ-FS-01 | Whether `docs/domains/hazards/` already contains a `README.md` and `BLUEPRINT.md` in the live repo. | `ls docs/domains/hazards/` against a mounted repo. | UNKNOWN |
+| OQ-HAZ-FS-02 | Whether `docs/runbooks/<domain>/` (subfolder) or `docs/runbooks/<domain>_<topic>.md` (flat-prefix) is the chosen convention. | Open ADR (DR §18 OPEN-DR-02); cross-reference `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`. | NEEDS VERIFICATION |
+| OQ-HAZ-FS-03 | Whether `policy/release/hazards/` is warranted alongside `policy/domains/hazards/`, or whether domain policy is sufficient. **(DRIFT-HAZ-PATH-01)** | Inspect `policy/` tree; resolve by ADR. | OPEN |
+| OQ-HAZ-FS-04 | Whether `data/registry/sources/hazards/` or `data/registry/hazards/` is the chosen form. DR §4 Step 3 allows either; §9.1 examples use `sources/`. | Inspect `data/registry/`; freeze by ADR. | NEEDS VERIFICATION |
+| OQ-HAZ-FS-05 | Hazards source rights (NOAA Storm Events, NWS, FEMA Disaster Declarations, NFHL, USGS, NASA FIRMS, drought monitors, Kansas/local). | Source-terms review per source; record in `data/registry/sources/hazards/<id>.json`. | NEEDS VERIFICATION |
+| OQ-HAZ-FS-06 | Whether `triplets/` (plural) or `triplet/` (singular) wins in `data/`. This plan uses **`triplets/`**, consistent with DR §9.1 / §18.a. | One-line ADR. | OPEN |
+| OQ-HAZ-FS-07 | Whether per-source `pipeline_specs/hazards/<source_id>.yaml` is one file per source or one file per `<source_id>.<run_kind>`. | Inspect existing `pipeline_specs/` examples. | UNKNOWN |
+| OQ-HAZ-FS-08 | Whether `connectors/hazards/` is grouped by source (as proposed) or flat (`connectors/noaa_storm_events/`). DR §7.3 does not mandate either. | Inspect `connectors/` tree; freeze by ADR. | NEEDS VERIFICATION |
+| OQ-HAZ-FS-09 | Whether a Hazards-specific `docs/architecture/hazards-trust-membrane.md` is warranted, or whether the cross-cutting trust-membrane doc suffices. | Inspect `docs/architecture/`. | OPEN |
 
 > [!NOTE]
-> Items marked `UNKNOWN` cannot be resolved without a mounted repo. Items marked `NEEDS VERIFICATION` are checkable and should be lifted into `docs/registers/VERIFICATION_BACKLOG.md` in the same PR that adopts this plan.
+> Items marked `UNKNOWN` cannot be resolved without a mounted repo. Items marked `NEEDS VERIFICATION` are checkable and should be lifted into `docs/registers/VERIFICATION_BACKLOG.md` in the same PR that adopts this plan. DRIFT-HAZ-PATH-01 (OQ-HAZ-FS-03) is shared with the sibling `EXPANSION_BACKLOG.md` and belongs in `docs/registers/DRIFT_REGISTER.md`.
 
 [⬆ back to top](#-contents)
 
 ---
 
-## 15. Related docs
+## 15. Changelog
 
-- [`directory-rules.md`](../../../directory-rules.md) — root Directory Rules; authoritative for placement.
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Pinned `CONTRACT_VERSION = "3.0.0"` in meta block, badge row, status line, repo-fit table | housekeeping | Operating contract v3.0 |
+| Corrected RAW-stage role set: removed non-canonical `context`, added `candidate` + `synthetic` to reach the canonical seven | reconciliation | Atlas §24.1.1 has no `context` role |
+| Narrowed §8 source roles to canonical vocabulary (FEMA declarations → `administrative` only; FIRMS → `observed`/`candidate`; dropped non-canonical `authority`) | reconciliation | Atlas §24.1.1 register |
+| Flagged `policy/release/hazards/` as the Atlas §24.13 non-segmented form and cross-referenced DRIFT-HAZ-PATH-01 | reconciliation | §24.13 is self-labeled PROPOSED; §12 segmented form is the safer default |
+| Upgraded `apps/governed-api/`, `apps/explorer-web/`, and `tools/validate_all.py` to CONFIRMED-at-commit | clarification | Directory Rules §7.1/§11/§13.5 + Repository Structure Guiding Document, commit `b6a279…` |
+| Renamed `packages/maplibre/` → `packages/maplibre-runtime/` | reconciliation | Directory Rules §11/§13.5 (v1.3) canonical renderer package name |
+| Tightened anti-pattern and cross-lane rule citations to exact DR sections (§13.2, §13.4, §13.5 named rows; §12 cross-cutting) | clarification | v1 cited some rules by section only; now cites the named row |
+| Added stable `OQ-HAZ-FS-*` IDs to the open-questions table; added Changelog + Definition of Done | gap closure | Doctrine companion-section pattern |
+| Sanitized the one Mermaid label carrying `<br/>` (FILE_SYSTEM_PLAN node) and bracketed parentheticals | housekeeping | Prevent Mermaid parse fragility |
+
+> **Backward compatibility.** Section anchors §1–§14 are preserved. New §15 (Changelog) and §16 (Definition of done) are inserted; "Related docs" moves from §15 to §17. Inbound links to the old `#15-related-docs` will break and should be repointed to `#17-related-docs`. The §14 open-questions rows gained stable IDs but kept their order.
+
+[⬆ back to top](#-contents)
+
+---
+
+## 16. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed at `docs/domains/hazards/FILE_SYSTEM_PLAN.md` per Directory Rules §12;
+- a hazards domain steward and a Directory Rules steward review it;
+- it is linked from the Hazards lane README and the sibling `DATA_LIFECYCLE.md`, `EXPANSION_BACKLOG.md`, and `EXPANSION_PLAN.md`;
+- it does not conflict with accepted ADRs (notably ADR-0001 schema home);
+- DRIFT-HAZ-PATH-01 (OQ-HAZ-FS-03) is logged in `docs/registers/DRIFT_REGISTER.md`;
+- the `GENERATED_RECEIPT.json` planned in the delivery notes is wired into CI with `human_review.state` transitioned past `pending`;
+- future changes follow the operating contract's §37 lifecycle.
+
+[⬆ back to top](#-contents)
+
+---
+
+## 17. Related docs
+
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`. **CONFIRMED authority**.
+- [`directory-rules.md`](../../../directory-rules.md) — root Directory Rules; authoritative for placement. **CONFIRMED**.
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane landing page (PROPOSED).
+- [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — Hazards lifecycle companion (sibling doc).
+- [`docs/domains/hazards/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — Hazards backlog (home of DRIFT-HAZ-PATH-01).
+- [`docs/domains/hazards/EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) — Hazards expansion plan (sibling doc).
 - [`docs/domains/hazards/BLUEPRINT.md`](./BLUEPRINT.md) — Full Hazards lane blueprint (PROPOSED).
 - [`docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md) — Hazards source refresh procedure (PROPOSED; subfolder convention pending ADR).
 - [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Canonical home for JSON Schemas; binding for the `schemas/` rows above.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Where the §14 backlog items should be lifted.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Where any conflict between this plan and the live repo should be filed.
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance profile that EvidenceBundles referenced here must satisfy.
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance profile that EvidenceBundles referenced here must satisfy (NEEDS VERIFICATION).
 
 ---
 
-<sub><sup>Last updated: 2026-05-17 · Doc version: v1 · Status: draft · [⬆ back to top](#-contents)</sup></sub>
+<sub><sup>Last updated: 2026-06-05 · Doc version: v2 · Status: draft · Contract: CONTRACT_VERSION = "3.0.0" · [⬆ back to top](#-contents)</sup></sub>
