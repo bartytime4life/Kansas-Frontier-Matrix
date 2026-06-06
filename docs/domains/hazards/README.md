@@ -1,16 +1,20 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/domains-hazards-readme
+doc_id: kfm://doc/docs/domains/hazards/readme
 title: Hazards Domain — README
 type: standard
-version: v1
+version: v2
 status: draft
 owners: <hazards-lane-steward> + <directory-rules-steward>   # PLACEHOLDER — assign before publish
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
+  - ai-build-operating-contract.md
   - directory-rules.md
   - docs/domains/README.md
+  - docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
+  - docs/domains/hazards/PRESERVATION_MATRIX.md
+  - docs/domains/hazards/MISSING_OR_PLANNED_FILES.md
   - docs/domains/hydrology/README.md
   - docs/domains/atmosphere/README.md
   - docs/domains/settlements-infrastructure/README.md
@@ -22,27 +26,31 @@ related:
   - docs/standards/OAI-PMH.md
 tags: [kfm, domain, hazards, not-for-life-safety, source-role, freshness, regulatory-context, evidence-first]
 notes:
-  - Derived from ENC §7.10 (Hazards), Atlas v1.1 Ch. 12 (Hazards), UIAI Manual §30.6, and Directory Rules §§4, 12, 13.4.
-  - Lane is doctrine-grounded; implementation specifics remain PROPOSED until mounted-repo inspection.
-  - The not-for-life-safety boundary is non-negotiable and applies across every surface.
+  # CONTRACT_VERSION = "3.0.0" (ai-build-operating-contract.md v3.0)
+  # Derived from ENC §7.10 (Hazards), Atlas v1.1 Ch. 12 (Hazards) + Ch. 24, UIAI Manual §30.6, Directory Rules §§4, 12, 13, 15.
+  # Lane is doctrine-grounded; implementation specifics remain PROPOSED until mounted-repo inspection.
+  # The not-for-life-safety boundary is non-negotiable and applies across every surface; KFM-as-alert-authority is T4 forever (Atlas §24.5.2).
+  # v2 crosswalks the §12.C hazards term vocabulary to the canonical seven-class source-role enum (Atlas §24.1.1) and aligns tier labels to T0–T4.
 [/KFM_META_BLOCK_V2] -->
 
-# Hazards Domain <a id="top"></a>
+# 🌪️ Hazards Domain <a id="top"></a>
 
 > **KFM's lane for historical, regulatory, observational, and modeled hazard information for Kansas — explicitly bounded so it is _never_ a life-safety alerting system.**
 
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![authority](https://img.shields.io/badge/authority-domain%20lane%20README-blue)
 ![directory-rules](https://img.shields.io/badge/conforms-Directory%20Rules%20%C2%A7%C2%A7%204%2C%2012%2C%2015-informational)
+![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blueviolet)
 ![not-for-life-safety](https://img.shields.io/badge/NOT%20FOR%20LIFE%20SAFETY-DENY%20emergency%20alerting-critical)
+![alert-authority](https://img.shields.io/badge/alert--authority-T4%20forever-b71c1c)
 ![publication](https://img.shields.io/badge/publication-default--deny%20without%20EvidenceBundle%20%2B%20freshness%20%2B%20disclaimer-important)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** `<hazards-lane-steward>` _(PLACEHOLDER)_ &nbsp;·&nbsp; **Last updated:** 2026-05-17
+**Status:** draft &nbsp;·&nbsp; **Owners:** `<hazards-lane-steward>` _(PLACEHOLDER)_ &nbsp;·&nbsp; **Last updated:** 2026-06-05 &nbsp;·&nbsp; **Pins:** `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
 > [!CAUTION]
-> **KFM is not an emergency alert system.** Operational warning, advisory, and watch products are surfaced **as context only**, never as life-safety instructions. Every Hazards surface — map layer, Evidence Drawer, Focus Mode answer, exported report — must carry a not-for-life-safety disclaimer and direct users to **official sources** (NWS, NOAA, FEMA, USGS, Kansas Division of Emergency Management, county and tribal emergency management) for actionable warnings. This boundary is **CONFIRMED doctrine** and is enforced at the publication gate, the governed API, and the UI. <small>[ENC §7.10.A] [Atlas v1.1 §12.B, §12.I] [UIAI §30.6] [KFM-IDX-POL-007] [KFM-IDX-PLN-002]</small>
+> **KFM is not an emergency alert system.** Operational warning, advisory, and watch products are surfaced **as context only**, never as life-safety instructions. Every Hazards surface — map layer, Evidence Drawer, Focus Mode answer, exported report — must carry a not-for-life-safety disclaimer and direct users to **official sources** (NWS, NOAA, FEMA, USGS, Kansas Division of Emergency Management, county and tribal emergency management) for actionable warnings. This boundary is **CONFIRMED doctrine**, enforced at the publication gate, the governed API, and the UI, and pinned at the strongest tier: **KFM-as-alert-authority is T4 forever — no transform releases it.** <small>[ENC §7.10.A] [Atlas v1.1 §12.B, §12.I, §24.5.2] [UIAI §30.6] [KFM-IDX-POL-007] [KFM-IDX-PLN-002]</small>
 
 ---
 
@@ -80,7 +88,7 @@ The lane is high-value precisely because hazards are consequential. KFM contribu
 **One-line mission:** Govern Kansas hazard history, observation, regulatory context, operational context, exposure, and resilience — evidence-bound, time-aware, role-separated, and not-for-life-safety. <small>[Atlas v1.1 §12.A]</small>
 
 > [!IMPORTANT]
-> The lane's value depends on its **boundary**. Hazards surfaces that drift toward alerting expose KFM to liability and the public to harm. The structural defense — built into the schema, the policy gate, the governed API envelope, and the UI surface vocabulary — is to keep the **planning / alerting** distinction visible at every layer. <small>[KFM-IDX-PLN-002]</small>
+> The lane's value depends on its **boundary**. Hazards surfaces that drift toward alerting expose KFM to liability and the public to harm. The structural defense — built into the schema, the policy gate, the governed API envelope, and the UI surface vocabulary — is to keep the **planning / alerting** distinction visible at every layer. The companion doc [`PUBLICATION_AND_BOUNDARY.md`](./PUBLICATION_AND_BOUNDARY.md) is the authoritative statement of that boundary. <small>[KFM-IDX-PLN-002]</small>
 
 [Back to top ↑](#top)
 
@@ -114,7 +122,10 @@ It also owns the not-for-life-safety official-link viewing mode that surfaces ha
 
 ### 3.1 Domain Placement Law
 
-Per Directory Rules §12, **the Hazards domain is _not_ a root folder.** It is a segment that appears _inside_ each responsibility root that owns a piece of the lane. The lane is read across roots, not within one. <small>[directory-rules §12, §13.4]</small>
+Per Directory Rules §12, **the Hazards domain is _not_ a root folder.** It is a segment that appears _inside_ each responsibility root that owns a piece of the lane. The lane is read across roots, not within one. The `domains/<domain>/` segment form below is the form §12 mandates verbatim. <small>[directory-rules §12, §13.4]</small>
+
+> [!NOTE]
+> **Crosswalk shorthand vs. segment form.** The Atlas §24.13 crosswalk lists hazards roots in non-segment shorthand (`contracts/hazards/`, `schemas/contracts/v1/hazards/`, `policy/release/hazards/`). Directory Rules §12 requires the `domains/` segment form used here, and the Atlas's own §24 authority rule treats a divergent Chapter 24 table as a drift entry, not a correction. **Directory Rules win**; the divergence is logged (see [`MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) and the DRIFT_REGISTER). The one nuance: `policy/release/hazards/` is a legitimate home for the release-gate `.rego` per Directory Rules §13.5 (tracked as ADR-HAZ-07). <small>[directory-rules §12, §13.5] [Atlas v1.1 §24.13]</small>
 
 ### 3.2 PROPOSED lane layout
 
@@ -122,7 +133,7 @@ Per Directory Rules §12, **the Hazards domain is _not_ a root folder.** It is a
 > The tree below is the **PROPOSED** application of Directory Rules §12 to the Hazards domain. Path existence is **NEEDS VERIFICATION** until inspected against a mounted repo. <small>[directory-rules §0, §12]</small>
 
 ```text
-docs/domains/hazards/              # this README — doctrine, glossary, lane orientation
+docs/domains/hazards/              # this README + PUBLICATION_AND_BOUNDARY + PRESERVATION_MATRIX + MISSING_OR_PLANNED_FILES
 contracts/domains/hazards/         # object meaning (Markdown):
                                    #   hazard_event.md, warning_context.md, advisory_context.md,
                                    #   disaster_declaration.md, flood_context.md, wildfire_detection.md,
@@ -131,6 +142,7 @@ contracts/domains/hazards/         # object meaning (Markdown):
                                    #   hazard_timeline.md, impact_area.md
 schemas/contracts/v1/domains/hazards/   # JSON Schema (per ADR-0001)
 policy/domains/hazards/            # admissibility, not-for-life-safety gate, redaction rules
+policy/release/hazards/            # release-gate .rego (admissible alt home per §13.5; see ADR-HAZ-07)
 tests/domains/hazards/             # validator + policy tests (positive + negative fixtures)
 fixtures/domains/hazards/          # golden, deny, abstain, stale, expired-warning fixtures
 packages/domains/hazards/          # shared hazards code (if any)
@@ -172,7 +184,7 @@ flowchart LR
     G["packages/domains/hazards/"]:::impl
     H["pipelines/domains/hazards/"]:::impl
     I["pipeline_specs/hazards/"]:::impl
-    J["connectors/<noaa-storm-events>/<br/>connectors/<nws-api>/<br/>connectors/<openfema>/<br/>connectors/<nfhl>/<br/>connectors/<usgs-eq>/<br/>connectors/<firms>/<br/>connectors/<hms>/<br/>…"]:::impl
+    J["connectors — noaa-storm-events · nws-api · openfema · nfhl · usgs-eq · firms · hms · …"]:::impl
   end
 
   subgraph LIFE["data/ (lifecycle, by phase)"]
@@ -199,24 +211,27 @@ flowchart LR
 
 ## 4. Ubiquitous language
 
-**Source:** Atlas v1.1 §12.C — every term below is **CONFIRMED as a Hazards-lane term**; the **field realization** in schemas is **PROPOSED** until inspected.
+**Source:** Atlas v1.1 §12.C — every term below is **CONFIRMED as a Hazards-lane term**; the **field realization** in schemas is **PROPOSED** until inspected. These terms describe how an artifact is *used* inside the lane; the canonical anti-collapse *source role* it carries is the seven-class enum in [§13](#13-source-role-anti-collapse-for-hazards) (crosswalk in the rightmost column).
 
-| Term | Role in Hazards | Notes |
-|---|---|---|
-| `hazard_event` | A discrete, time-bounded event with location and impact context. | Identity by source id + role + temporal scope + normalized digest (PROPOSED). |
-| `historical_event_record` | A retrospective record (e.g., NOAA Storm Events row). | Never reclassified as an operational warning. |
-| `operational_warning` | A warning issued by an official authority, surfaced **as context only**. | Carries `issue_time`, `expiry_time`, `source`, freshness state. |
-| `operational_advisory` | An advisory (lower-criticality), surfaced as context only. | Same temporal disclosure as warnings. |
-| `operational_watch` | A watch (potential conditions), surfaced as context only. | Never represented as a current warning. |
-| `administrative_declaration` | A disaster declaration (e.g., FEMA / state). | Cited as administrative context, not as observed damage evidence. |
-| `regulatory_context` | A regulatory hazard area (e.g., NFHL flood zone). | Never relabeled as observed flood inundation. |
-| `scientific_observation` | A measured observation (e.g., USGS quake catalog entry, water level). | Owned by adjacent lane where applicable; cited with role preserved. |
-| `remote_sensing_detection` | A detection (e.g., NASA FIRMS, NOAA HMS). | Probabilistic; never confused with confirmed wildfire occurrence. |
-| `modeled_derivative` | A model output (e.g., smoke trajectory, exposure surface). | Carries run receipt, inputs, bounds; never relabeled as observation. |
-| `resilience_analysis` | A summary product joining hazard + exposure + lifelines. | Public-safe by default; precise infrastructure deny by default. |
-| `unknown_unclassified` | A source whose role cannot be resolved. | **DENY** at publication; held in quarantine. |
+| Term | Role in Hazards | Canonical source role ([§13](#13-source-role-anti-collapse-for-hazards)) | Notes |
+|---|---|---|---|
+| `hazard_event` | A discrete, time-bounded event with location and impact context. | `observed` / `administrative` | Identity by source id + role + temporal scope + normalized digest (PROPOSED). |
+| `historical_event_record` | A retrospective record (e.g., NOAA Storm Events row). | `observed` / `administrative` | Never reclassified as an operational warning. |
+| `operational_warning` | A warning issued by an official authority, surfaced **as context only**. | `observed`/`administrative`, presented as context | Carries `issue_time`, `expiry_time`, `source`, freshness state. |
+| `operational_advisory` | An advisory (lower-criticality), surfaced as context only. | as above | Same temporal disclosure as warnings. |
+| `operational_watch` | A watch (potential conditions), surfaced as context only. | as above | Never represented as a current warning. |
+| `administrative_declaration` | A disaster declaration (e.g., FEMA / state). | `administrative` (+ `regulatory` where binding) | Cited as administrative context, not as observed damage evidence. |
+| `regulatory_context` | A regulatory hazard area (e.g., NFHL flood zone). | `regulatory` | Never relabeled as observed flood inundation. |
+| `scientific_observation` | A measured observation (e.g., USGS quake catalog entry, water level). | `observed` | Owned by adjacent lane where applicable; cited with role preserved. |
+| `remote_sensing_detection` | A detection (e.g., NASA FIRMS, NOAA HMS). | `observed` (with detection caveat) | Probabilistic; never confused with confirmed wildfire occurrence. |
+| `modeled_derivative` | A model output (e.g., smoke trajectory, exposure surface). | `modeled` | Carries run receipt, inputs, bounds; never relabeled as observation. |
+| `resilience_analysis` | A summary product joining hazard + exposure + lifelines. | `modeled` / `aggregate` | Public-safe by default; precise infrastructure deny by default. |
+| `unknown_unclassified` | A source whose role cannot be resolved. | `candidate` (unresolved) | **DENY** at publication; held in quarantine. |
 
-<small>[Atlas v1.1 §12.C] [ENC §7.10.C, §7.10.D]</small>
+<small>[Atlas v1.1 §12.C, §24.1.1] [ENC §7.10.C, §7.10.D]</small>
+
+> [!NOTE]
+> The §12.C term vocabulary and the §24.1.1 seven-class enum (`observed · regulatory · modeled · aggregate · administrative · candidate · synthetic`) are two views of the same discipline: §12.C names *how an artifact is used in the lane*, §24.1.1 names *the immutable source role set at admission*. The crosswalk above keeps them aligned; the enum vocabulary itself is ADR-class (ADR-S-04).
 
 [Back to top ↑](#top)
 
@@ -224,26 +239,26 @@ flowchart LR
 
 ## 5. Source families and source roles
 
-**CONFIRMED source families** (Atlas v1.1 §12.D + ENC §7.10.B). **Rights, freshness, and endpoint behavior are NEEDS VERIFICATION** until each `SourceDescriptor` is independently confirmed. <small>[KFM-IDX-SRC-008]</small>
+**CONFIRMED source families** (Atlas v1.1 §12.D + ENC §7.10.B). The Atlas records each family's role as **"authority / observation / context / model as source role requires"** — i.e., the role is **assigned at admission, not pre-pinned** — and marks **rights, freshness, and endpoint behavior as NEEDS VERIFICATION** until each `SourceDescriptor` is independently confirmed. The "canonical role(s)" column below is the **PROPOSED** mapping onto the seven-class enum, to be fixed per source at admission. <small>[Atlas v1.1 §12.D] [KFM-IDX-SRC-008]</small>
 
-| Source family | Canonical role(s) | Freshness profile | Status |
+| Source family | Canonical role(s) (PROPOSED, fixed at admission) | Freshness profile | Status |
 |---|---|---|---|
-| **NOAA Storm Events / NCEI** | Observation / administrative compilation | Source-vintage, retrospective | NEEDS VERIFICATION |
-| **NWS API — alerts / warnings / advisories / watches** | Operational context (not life-safety) | Issue/expiry-bound; **stale-deny** required | NEEDS VERIFICATION |
-| **FEMA Disaster Declarations / OpenFEMA** | Administrative declaration | Declaration-vintage | NEEDS VERIFICATION |
-| **FEMA NFHL / MSC flood hazard layers** | Regulatory context | Map-revision-vintage | NEEDS VERIFICATION |
-| **USGS Earthquake Catalog** | Observation | Near-real-time + retrospective | NEEDS VERIFICATION |
-| **NOAA HMS Fire and Smoke** | Remote sensing detection / model | Daily product cadence | NEEDS VERIFICATION |
-| **NASA FIRMS active fire** | Remote sensing detection | Sub-daily product cadence | NEEDS VERIFICATION |
-| **USGS Water Data** (for `FloodContext`) | Observation (sourced via Hydrology) | Provisional / final lifecycle | NEEDS VERIFICATION |
-| **Drought Monitor / drought indicators** | Modeled aggregate | Weekly / monthly cadence | NEEDS VERIFICATION |
-| **Kansas / local emergency management** | Administrative context | Source-specific | NEEDS VERIFICATION |
-| **State resilience plans** | Administrative / planning context | Plan-vintage | NEEDS VERIFICATION |
+| **NOAA Storm Events / NCEI** | `observed` / `administrative` | Source-vintage, retrospective | NEEDS VERIFICATION |
+| **NWS API — alerts / warnings / advisories / watches** | `observed`/`administrative`, presented as **context (not life-safety)** | Issue/expiry-bound; **stale-deny** required | NEEDS VERIFICATION |
+| **FEMA Disaster Declarations / OpenFEMA** | `administrative` (+ `regulatory` where binding) | Declaration-vintage | NEEDS VERIFICATION |
+| **FEMA NFHL / MSC flood hazard layers** | `regulatory` | Map-revision-vintage | NEEDS VERIFICATION |
+| **USGS Earthquake Catalog** | `observed` | Near-real-time + retrospective | NEEDS VERIFICATION |
+| **NOAA HMS Fire and Smoke** | `observed` (detection) / `modeled` (trajectory) | Daily product cadence | NEEDS VERIFICATION |
+| **NASA FIRMS active fire** | `observed` (detection) | Sub-daily product cadence | NEEDS VERIFICATION |
+| **USGS Water Data** (for `FloodContext`) | `observed` (sourced via Hydrology) | Provisional / final lifecycle | NEEDS VERIFICATION |
+| **Drought Monitor / drought indicators** | `modeled` / `aggregate` | Weekly / monthly cadence | NEEDS VERIFICATION |
+| **Kansas / local emergency management** | `administrative` (context) | Source-specific | NEEDS VERIFICATION |
+| **State resilience plans** | `administrative` / planning context | Plan-vintage | NEEDS VERIFICATION |
 
 <small>[Atlas v1.1 §12.D] [ENC §7.10.B]</small>
 
 > [!WARNING]
-> A source whose role cannot be resolved at admission becomes `unknown_unclassified` and is held in **quarantine**. It MUST NOT pass to PROCESSED, CATALOG, or PUBLISHED. <small>[Atlas v1.1 §12.C, §12.H]</small>
+> A source whose role cannot be resolved at admission becomes `unknown_unclassified` (canonical role: `candidate`, unresolved) and is held in **quarantine**. It MUST NOT pass to PROCESSED, CATALOG, or PUBLISHED. A `SourceActivationDecision` plus an explicit rights record is required before any connector ships. <small>[Atlas v1.1 §12.C, §12.H] [directory-rules §6.5]</small>
 
 [Back to top ↑](#top)
 
@@ -255,23 +270,26 @@ flowchart LR
 
 | Object family | Primary role | Carries explicit temporal disclosure | Default sensitivity |
 |---|---|---|---|
-| `HazardEvent` | Historical / observed event record | event_time + source/retrieval/release | public-safe with role badge |
-| `HazardObservation` | A measured observation tied to a hazard | observed + source/retrieval/release | public-safe with role badge |
-| `WarningContext` | NWS-style warning surfaced as context | issue + expiry + freshness | **not-for-life-safety** disclaimer required |
-| `AdvisoryContext` | Advisory surfaced as context | issue + expiry + freshness | not-for-life-safety disclaimer required |
-| `DisasterDeclaration` | FEMA / state declaration | declaration date + amendments | administrative context |
-| `FloodContext` | Pointer to Hydrology NFHL / observed water | regulatory vintage / observed time | regulatory framing required |
-| `WildfireDetection` | FIRMS / HMS detection (probabilistic) | acquisition / retrieval | detection-not-confirmation disclaimer |
-| `SmokeContext` | HMS smoke or modeled trajectory | acquisition / model run receipt | model framing required |
-| `DroughtIndicator` | USDM / SPI / etc. (aggregate) | indicator week / month | aggregation framing required |
-| `EarthquakeEvent` | USGS catalog event | origin + retrieval | public-safe |
-| `HeatColdEvent` | Heat / cold episode | observed + source | public-safe with role badge |
-| `ExposureSummary` | Hazard × population / lifelines / land use | analysis date + input citations | **public-safe summary only**; sensitive infrastructure precision deny by default |
-| `ResilienceSummary` | Resilience analysis projection | analysis date + input citations | public-safe summary only |
-| `HazardTimeline` | Role-aware multi-event timeline | per-event time discipline | public-safe with role badges |
-| `ImpactArea` | Polygonal impact / exposure zone | event-bound | public-safe with generalization |
+| `HazardEvent` | Historical / observed event record | event_time + source/retrieval/release | T0 public-safe with role badge |
+| `HazardObservation` | A measured observation tied to a hazard | observed + source/retrieval/release | T0 public-safe with role badge |
+| `WarningContext` | NWS-style warning surfaced as context | issue + expiry + freshness | **not-for-life-safety** disclaimer required; T3 for any "current" use |
+| `AdvisoryContext` | Advisory surfaced as context | issue + expiry + freshness | not-for-life-safety disclaimer required; T3 for any "current" use |
+| `DisasterDeclaration` | FEMA / state declaration | declaration date + amendments | T0 administrative context |
+| `FloodContext` | Pointer to Hydrology NFHL / observed water | regulatory vintage / observed time | T0 regulatory framing required |
+| `WildfireDetection` | FIRMS / HMS detection (probabilistic) | acquisition / retrieval | T0 detection-not-confirmation disclaimer |
+| `SmokeContext` | HMS smoke or modeled trajectory | acquisition / model run receipt | T0 model framing required |
+| `DroughtIndicator` | USDM / SPI / etc. (aggregate) | indicator week / month | T0 aggregation framing required |
+| `EarthquakeEvent` | USGS catalog event | origin + retrieval | T0 public-safe |
+| `HeatColdEvent` | Heat / cold episode | observed + source | T0 public-safe with role badge |
+| `ExposureSummary` | Hazard × population / lifelines / land use | analysis date + input citations | **T0 summary / T4 when critical-infrastructure detail implied** |
+| `ResilienceSummary` | Resilience analysis projection | analysis date + input citations | T0 summary / T1 in sensitive contexts |
+| `HazardTimeline` | Role-aware multi-event timeline | per-event time discipline | T0 public-safe with role badges |
+| `ImpactArea` | Polygonal impact / exposure zone | event-bound | T0 generalized / T1+ when input detail sensitive |
 
-<small>[ENC §7.10.C] [Atlas v1.1 §12.E] [Atlas v1.1 Appendix C — Hazards row]</small>
+<small>[ENC §7.10.C] [Atlas v1.1 §12.E] [Atlas v1.1 Appendix C — Hazards row; §24.5 tier reference]</small>
+
+> [!NOTE]
+> Tier semantics (CONFIRMED, Atlas §24.5.1): T0 Open · T1 Generalized · T2 Reviewer · T3 Restricted · T4 Denied. The **output tier tracks the most sensitive input that materially shaped it** — a T0 family default never overrides a T4 input. See [`PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) for the full per-family preservation/tier matrix.
 
 [Back to top ↑](#top)
 
@@ -305,9 +323,9 @@ flowchart LR
 
 | Adjacent lane | Relation | Constraint |
 |---|---|---|
-| **Hydrology** | flood, drought, water-event context | Role separation: NFHL = regulatory, gauge = observed, hydrograph = modeled. No conflation. |
-| **Atmosphere / Air** | smoke, heat/cold, AQI/advisory, wind, fire-weather context | Role separation: AOD ≠ PM2.5; model ≠ observation. |
-| **Settlements / Infrastructure** | exposure, lifelines, dependencies | Sensitive infrastructure precision is deny by default. |
+| **Hydrology** | flood, drought, water-event context | Role separation: NFHL = `regulatory`, gauge = `observed`, hydrograph = `modeled`. No conflation. |
+| **Atmosphere / Air** | smoke, heat/cold, AQI/advisory, wind, fire-weather context | Role separation: AOD ≠ PM2.5; `modeled` ≠ `observed`. |
+| **Settlements / Infrastructure** | exposure, lifelines, dependencies | Sensitive infrastructure precision is deny by default (T4). |
 | **Roads / Rail / Trade Routes** | closures, detours, bridge / crossing exposure, resilience | Public-safe representation only; sensitive cultural corridors out of scope. |
 | **Agriculture** | drought / wildfire / heat-stress impact context | Aggregate framing preserved; no per-field exact joins from aggregate hazards. |
 | **Frontier Matrix (cross-cutting)** | hazards × story / timeline contributions | Story is derivative, not truth. |
@@ -348,7 +366,7 @@ flowchart LR
 
 ## 10. Pipeline shape — RAW → PUBLISHED
 
-**CONFIRMED doctrine / PROPOSED lane application.** Hazards follows the canonical lifecycle invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, with promotion as a **governed state transition, not a file move**. <small>[directory-rules §0, §12] [Atlas v1.1 §12.H]</small>
+**CONFIRMED doctrine / PROPOSED lane application.** Hazards follows the canonical lifecycle invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, with promotion as a **governed state transition, not a file move**. <small>[directory-rules §0, §9.1, §12] [Atlas v1.1 §12.H, §24.6]</small>
 
 ### 10.1 Stage table
 
@@ -361,7 +379,7 @@ flowchart LR
 | **CATALOG / TRIPLET** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, and release candidates. | Catalog/proof closure passes. | PROPOSED |
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | `ReleaseManifest`, correction path, rollback target, review/policy state exist. | PROPOSED |
 
-<small>[Atlas v1.1 §12.H]</small>
+<small>[Atlas v1.1 §12.H, §24.6.1]</small>
 
 ### 10.2 Pipeline diagram
 
@@ -375,14 +393,13 @@ flowchart TB
   classDef pub fill:#FCE7F3,stroke:#9D174D,color:#111;
   classDef boundary fill:#FFF,stroke:#DC2626,color:#DC2626,stroke-dasharray: 4 2;
 
-  RAW["RAW<br/>(SourceDescriptor + payload/ref)"]:::raw
-  WORK["WORK<br/>(normalize: schema, geom, time,<br/>identity, role, rights)"]:::work
-  Q["QUARANTINE<br/>(unknown role · expired-as-current<br/>· rights unclear · role-collapse)"]:::quar
-  PROC["PROCESSED<br/>(validated objects · receipts<br/>· public-safe candidates)"]:::proc
-  CAT["CATALOG / TRIPLET<br/>(EvidenceBundle · graph projection<br/>· release candidates)"]:::cat
-  PUB["PUBLISHED<br/>(ReleaseManifest · LayerManifest<br/>· correction + rollback targets)"]:::pub
-
-  NLS["⚠️ NOT-FOR-LIFE-SAFETY BOUNDARY<br/>(disclaimer + official-source redirect<br/>at every public surface)"]:::boundary
+  RAW["RAW — SourceDescriptor + payload/ref"]:::raw
+  WORK["WORK — normalize: schema, geom, time, identity, role, rights"]:::work
+  Q["QUARANTINE — unknown role · expired-as-current · rights unclear · role-collapse"]:::quar
+  PROC["PROCESSED — validated objects · receipts · public-safe candidates"]:::proc
+  CAT["CATALOG / TRIPLET — EvidenceBundle · graph projection · release candidates"]:::cat
+  PUB["PUBLISHED — ReleaseManifest · LayerManifest · correction + rollback targets"]:::pub
+  NLS["⚠️ NOT-FOR-LIFE-SAFETY BOUNDARY — disclaimer + official-source redirect at every public surface"]:::boundary
 
   RAW --> WORK
   WORK --> PROC
@@ -394,7 +411,7 @@ flowchart TB
 ```
 
 > [!NOTE]
-> **Watchers observe and propose — they do not publish.** Per the watcher-as-non-publisher invariant, any Hazards watcher (e.g., NWS feed poller, FIRMS poller) emits only `SourceIntakeRecord` candidates and signed receipts into RAW / WORK; **promotion to PUBLISHED is a separate governed decision** with its own gates. <small>[directory-rules §13.5] [KFM-IDX-SRC-007]</small>
+> **Watchers observe and propose — they do not publish.** Per the watcher-as-non-publisher invariant, any Hazards watcher (e.g., NWS feed poller, FIRMS poller) emits only candidate intake records and signed receipts into RAW / WORK; **promotion to PUBLISHED is a separate governed decision** with its own gates. <small>[directory-rules §13.5] [KFM-IDX-SRC-007]</small>
 
 [Back to top ↑](#top)
 
@@ -402,16 +419,16 @@ flowchart TB
 
 ## 11. Sensitivity, rights, and publication posture
 
-**CONFIRMED doctrine** (deny-by-default register row for Hazards — ENC §13):
+**CONFIRMED doctrine** (deny-by-default register row for Hazards — ENC §13; Atlas §24.5.2, §20.5). Tier labels use the canonical T0–T4 scheme (§24.5.1).
 
 | Class | Default outcome | Required controls |
 |---|---|---|
-| **Emergency warning misuse** — operational warnings, forecasts, hazard instructions | **DENY** life-safety replacement; contextual-only with official redirection | Not-for-life-safety disclaimer; issue/expiry freshness; stale-deny |
-| **Critical infrastructure** (exposure summaries that include facility precision) | RESTRICT / DENY public precision | Public-safe aggregation; role-based access |
-| **Exact sensitive locations** (e.g., precise resilience-critical assets) | DENY by default | Redaction / generalization; audit |
-| **Source-rights-limited records** (licensed, no-redistribution, uncertain terms) | DENY public release until terms resolved | Rights register; attribution; no public derivative if barred |
+| **Emergency warning misuse** — operational warnings, forecasts, hazard instructions | **DENY** life-safety replacement; **T4 forever** as alert authority; contextual-only with official redirection | Not-for-life-safety disclaimer; issue/expiry freshness; stale-deny |
+| **Critical infrastructure** (exposure summaries that include facility precision) | **T4** default for critical detail; **T1** for generalized footprint after steward review | Public-safe aggregation; steward review; role-based access |
+| **Exact sensitive locations** (e.g., precise resilience-critical assets) | **DENY** (T4) by default | Redaction / generalization; `RedactionReceipt`; audit |
+| **Source-rights-limited records** (licensed, no-redistribution, uncertain terms) | **DENY** public release until terms resolved | Rights register; attribution; no public derivative if barred |
 
-<small>[ENC §13 — deny-by-default register: SRC-HAZ row] [Atlas v1.1 §12.I, §20.5]</small>
+<small>[ENC §13 — deny-by-default register: Hazards row] [Atlas v1.1 §12.I, §20.5, §24.5.2]</small>
 
 **Publication gate (CONFIRMED doctrine).** Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, missing freshness disclosure, or absent release state **blocks public promotion**. <small>[Atlas v1.1 §12.I] [ENC Appendix E]</small>
 
@@ -422,6 +439,7 @@ flowchart TB
 > 3. every public layer manifest description,
 > 4. every exported public-safe artifact,
 > 5. every API envelope returned for a Hazards object.
+>
 > Validators MUST fail closed when any of the five paths omits the disclaimer or the official-source redirect. <small>[UIAI §30.6] [Atlas v1.1 §12.I, §12.K]</small>
 
 [Back to top ↑](#top)
@@ -451,17 +469,17 @@ flowchart TB
 
 ## 13. Source-role anti-collapse for Hazards
 
-**CONFIRMED doctrine.** Hazards is one of the highest-risk domains for source-role collapse, because operational, observational, regulatory, modeled, aggregate, and administrative artifacts about the same physical phenomenon (a flood, a wildfire, a quake) sit side by side. The lane MUST keep them separate. <small>[Atlas v1.1 §24.1, §24.1.2]</small>
+**CONFIRMED doctrine.** Hazards is one of the highest-risk domains for source-role collapse, because `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, `candidate`, and `synthetic` artifacts about the same physical phenomenon (a flood, a wildfire, a quake) sit side by side. The lane MUST keep the canonical seven-class roles separate; roles are set at admission and **never upgraded by promotion**. <small>[Atlas v1.1 §24.1, §24.1.1, §24.1.2]</small>
 
 | Collapse pattern | Why it is denied | Required guardrail |
 |---|---|---|
-| **Regulatory zone labeled as observed flood event** (NFHL zone shown as "this area flooded") | NFHL is a regulatory determination, not an observation | Separate regulatory-layer and observed-event lanes; UI banner; role-preserving DTO field |
+| **Regulatory zone labeled as observed flood event** (NFHL zone shown as "this area flooded") | NFHL is a `regulatory` determination, not an `observed` event | Separate regulatory-layer and observed-event lanes; UI banner; role-preserving DTO field |
 | **Operational warning shown as historical event** (or vice versa) | Conflates the not-for-life-safety boundary with a historical record | Distinct object families; expiry+freshness gating; stale-deny |
-| **Wildfire detection shown as confirmed wildfire** (FIRMS hot pixel ≠ verified ignition) | Remote detection is probabilistic | Detection vs. confirmation badge; uncertainty surface |
-| **Smoke model shown as observed smoke** | Trajectory model ≠ observation | Run receipt + uncertainty; role-preserving DTO field |
-| **Aggregate drought indicator cited as per-place drought truth** | Aggregate loses per-place fidelity | Aggregation receipt; matrix-cell semantics; deny per-place join |
-| **Disaster declaration cited as event evidence** | Declaration is administrative, not observation | Role badge; never used as observation in timelines |
-| **Synthetic content (AI-drafted summary) cited as observed reality** | Synthetic is never observed | `AIReceipt`; Reality Boundary Note; never as primary citation |
+| **Wildfire detection shown as confirmed wildfire** (FIRMS hot pixel ≠ verified ignition) | `observed` detection is probabilistic, not confirmation | Detection vs. confirmation badge; uncertainty surface |
+| **Smoke model shown as observed smoke** | `modeled` trajectory ≠ `observed` | Run receipt + uncertainty; role-preserving DTO field |
+| **Aggregate drought indicator cited as per-place drought truth** | `aggregate` loses per-place fidelity | Aggregation receipt; matrix-cell semantics; deny per-place join |
+| **Disaster declaration cited as event evidence** | Declaration is `administrative`, not `observed` | Role badge; never used as observation in timelines |
+| **Synthetic content (AI-drafted summary) cited as observed reality** | `synthetic` is never `observed` | `AIReceipt`; Reality Boundary Note; never as primary citation |
 
 <small>[Atlas v1.1 §24.1.2 — DENY conditions]</small>
 
@@ -476,14 +494,14 @@ flowchart LR
   classDef op  fill:#FECACA,stroke:#991B1B,color:#111;
   classDef syn fill:#E5E7EB,stroke:#374151,color:#111;
 
-  OBS["Observation<br/>USGS quake · gauge · ground report"]:::obs
-  REG["Regulatory context<br/>NFHL flood zone"]:::reg
-  MOD["Modeled derivative<br/>smoke trajectory · exposure surface"]:::mod
-  AGG["Aggregate<br/>drought indicator · climate normal"]:::agg
-  ADM["Administrative<br/>FEMA / state declaration"]:::adm
-  DET["Remote-sensing detection<br/>FIRMS · HMS"]:::det
-  OP["Operational context<br/>NWS warning · advisory · watch"]:::op
-  SYN["Synthetic<br/>AI summary · scenario"]:::syn
+  OBS["observed — USGS quake · gauge · ground report"]:::obs
+  REG["regulatory — NFHL flood zone"]:::reg
+  MOD["modeled — smoke trajectory · exposure surface"]:::mod
+  AGG["aggregate — drought indicator · climate normal"]:::agg
+  ADM["administrative — FEMA / state declaration"]:::adm
+  DET["observed detection — FIRMS · HMS"]:::det
+  OP["operational context — NWS warning · advisory · watch"]:::op
+  SYN["synthetic — AI summary · scenario"]:::syn
 
   OBS -. never relabeled .-> REG
   MOD -. never relabeled .-> OBS
@@ -505,7 +523,7 @@ flowchart LR
 
 **PROPOSED validator coverage** (Atlas v1.1 §12.K; ENC §7.10.K):
 
-- Source-role anti-collapse tests (per §13 above)
+- Source-role anti-collapse tests (per [§13](#13-source-role-anti-collapse-for-hazards), seven-class enum)
 - Temporal-role validators (event vs. issue/expiry vs. valid vs. observed)
 - **Emergency-alert denial** (publication fails closed if disclaimer or official-source redirect is absent)
 - Operational expiry / freshness tests (stale-deny)
@@ -524,7 +542,7 @@ flowchart LR
 |---|---|---|
 | `golden_event_storm` | Historical NOAA Storm Events event — clean admission | `ANSWER` |
 | `golden_quake_usgs` | USGS earthquake catalog event — clean admission | `ANSWER` |
-| `golden_nfhl_zone` | NFHL polygon labeled regulatory | `ANSWER` (with regulatory badge) |
+| `golden_nfhl_zone` | NFHL polygon labeled `regulatory` | `ANSWER` (with regulatory badge) |
 | `negative_warning_expired_as_current` | NWS warning past `expiry_time` shown as current | `DENY` |
 | `negative_regulatory_as_observed` | NFHL zone exported as "observed flood" | `DENY` |
 | `negative_detection_as_confirmation` | FIRMS hot pixel exported as "confirmed wildfire" | `DENY` |
@@ -563,17 +581,17 @@ AI on Hazards surfaces:
 
 ## 16. Publication, correction, and rollback
 
-**CONFIRMED doctrine / PROPOSED implementation.** Hazards publication requires:
+**CONFIRMED doctrine / PROPOSED implementation.** Hazards publication requires `ReleaseManifest`, `EvidenceBundle`, validation/policy support, review state where required, correction path, stale-state rule, and rollback target. <small>[Atlas v1.1 §12.M, §24.6.1] [ENC Appendix E]</small>
 
-- `ReleaseManifest`
-- `EvidenceBundle` closure
-- Validation + policy support (positive and negative fixtures green)
-- Review state where required (steward sign-off for sensitive infrastructure exposure or first-release of an operational feed)
-- Correction path (`CorrectionNotice` issuable; downstream notification path defined)
-- Stale-state rule (badge + ABSTAIN on stale time-sensitive claims)
-- Rollback target (`RollbackCard` prepared; rollback drill rehearsed before first publication)
+- `ReleaseManifest` — names the rollback target; a release without one is incomplete.
+- `EvidenceBundle` closure — every `EvidenceRef` resolves.
+- Validation + policy support — positive and negative fixtures green.
+- Review state where required — steward sign-off for sensitive infrastructure exposure or first-release of an operational feed.
+- Correction path — `CorrectionNotice` issuable; downstream notification path defined; prior `EvidenceBundle` retained on supersession.
+- Stale-state rule — badge + ABSTAIN on stale time-sensitive claims.
+- Rollback target — `RollbackCard` prepared; rollback drill rehearsed before first publication; cache invalidation recorded.
 
-<small>[Atlas v1.1 §12.M] [ENC Appendix E]</small>
+The full preservation and rollback contract lives in [`PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md); the publication/boundary contract lives in [`PUBLICATION_AND_BOUNDARY.md`](./PUBLICATION_AND_BOUNDARY.md).
 
 [Back to top ↑](#top)
 
@@ -583,11 +601,11 @@ AI on Hazards surfaces:
 
 | Risk | Mitigation |
 |---|---|
-| **Surface drift toward alerting** | Disclaimer + official-source redirect enforced at every surface; validator-blocked publication; UI vocabulary uses "planning context, not alerting." <small>[KFM-IDX-PLN-002]</small> |
+| **Surface drift toward alerting** | Disclaimer + official-source redirect enforced at every surface; validator-blocked publication; T4-forever alert boundary; UI vocabulary uses "planning context, not alerting." <small>[KFM-IDX-PLN-002] [Atlas §24.5.2]</small> |
 | **Rights uncertainty** | Block public release until source terms and redistribution class are recorded. |
-| **Sensitive location exposure** (resilience layers touching infrastructure) | Default redaction / generalization; restricted views; geoprivacy transform receipts. |
+| **Sensitive location exposure** (resilience layers touching infrastructure) | Default redaction / generalization; restricted views; geoprivacy transform receipts; T4 critical detail. |
 | **False precision** | Uncertainty + scale + source-role badges on every feature; ABSTAIN on over-precise claims. |
-| **Source authority confusion** | Source-role registry; separate observation / model / regulatory / administrative lanes. |
+| **Source authority confusion** | Source-role registry (seven-class enum); separate observed / modeled / regulatory / administrative / aggregate lanes. |
 | **Model hallucination** | Citation validation; finite outcomes; no direct model-to-public path. |
 | **Stale data** | Freshness badges; explicit `retrieval_time` / `source_time` / `release_time`; stale-deny policy on time-sensitive claims. |
 | **Rollback complexity** | `ReleaseManifest` + `RollbackCard` + rollback drill for every release. |
@@ -605,7 +623,7 @@ AI on Hazards surfaces:
 **Closure checklist for the thin slice:**
 
 1. One historical Storm-Events fixture (e.g., a single Kansas county, single year).
-2. One NFHL polygon overlay labeled `regulatory_context`.
+2. One NFHL polygon overlay labeled `regulatory` (`regulatory_context`).
 3. One `ExposureSummary` joining the event to public-safe settlement aggregates.
 4. `SourceDescriptor` for each source.
 5. `EvidenceBundle` closure (all `EvidenceRef`s resolve).
@@ -629,21 +647,24 @@ AI on Hazards surfaces:
 | Item to verify | Evidence that would settle it |
 |---|---|
 | Official source endpoints and current rights for NWS, NOAA Storm Events, NOAA HMS, OpenFEMA, NFHL, USGS Earthquake, NASA FIRMS, USDM. | `SourceDescriptor` entries in `data/registry/sources/hazards/`; rights register; admission tests. |
-| Implementation of source-role taxonomy and freshness states. | Schemas under `schemas/contracts/v1/domains/hazards/`; validator tests under `tests/domains/hazards/`. |
-| Enforcement of the emergency-alert / not-for-life-safety boundary at the publication gate. | Policy bundle under `policy/domains/hazards/`; negative fixture causing DENY. |
+| Implementation of source-role taxonomy (seven-class enum) and freshness states. | Schemas under `schemas/contracts/v1/domains/hazards/`; validator tests under `tests/domains/hazards/`. |
+| Enforcement of the emergency-alert / not-for-life-safety boundary at the publication gate. | Policy bundle under `policy/domains/hazards/` (or `policy/release/hazards/`); negative fixture causing DENY. |
 | Release / correction / rollback drill rehearsed for at least one Hazards release. | `ReleaseManifest`, `CorrectionNotice` template, `RollbackCard`, rehearsal log. |
 | Disclaimer + official-source redirect present in every governed-API Hazards envelope. | Envelope tests; UI tests; AIReceipt content tests. |
 | Stale-deny behavior for time-sensitive Hazards claims. | Stale-source fixture; ABSTAIN outcome. |
-| Source-role anti-collapse coverage for the seven hazards-specific failure modes in §13. | Negative fixture set; validator pass log. |
+| Source-role anti-collapse coverage for the seven failure modes in §13. | Negative fixture set; validator pass log. |
 | Watcher-as-non-publisher enforced for any NWS / FIRMS / HMS pollers. | Watcher contract; receipts proving no direct publish. |
 
 ### Open questions
 
-- Which Kansas counties / AOIs offer the right combination of evidence richness, sensitivity, and review feasibility for the first Hazards thin slice? <small>[KFM-IDX-PLN-003 open question]</small>
-- Which Hazards layers carry the highest misuse risk and need the most prominent labeling? <small>[KFM-IDX-PLN-002 open question]</small>
-- Should the not-for-life-safety disclaimer be a per-domain policy fragment or a Hazards-specific contract field on every Hazards DTO? (PROPOSED: both — policy gate AND DTO field.)
-- What latency thresholds and freshness profiles are appropriate for each hazard source family, and where do probe receipts live (`data/receipts/`, a dedicated source-health register, or both)? <small>[EXP-003]</small>
-- Should Hazards have a separate **operational-feed** sub-lane (e.g., `policy/domains/hazards/operational/`) to localize the not-for-life-safety gate code, or stay flat? (NEEDS ADR.)
+| ID | Question | Status |
+|---|---|---|
+| OQ-HAZ-RM-01 | Which Kansas counties / AOIs offer the right combination of evidence richness, sensitivity, and review feasibility for the first Hazards thin slice? | OPEN <small>[KFM-IDX-PLN-003]</small> |
+| OQ-HAZ-RM-02 | Which Hazards layers carry the highest misuse risk and need the most prominent labeling? | OPEN <small>[KFM-IDX-PLN-002]</small> |
+| OQ-HAZ-RM-03 | Should the not-for-life-safety disclaimer be a per-domain policy fragment or a Hazards-specific contract field on every Hazards DTO? (PROPOSED: both — policy gate AND DTO field.) | OPEN (ADR — not-for-life-safety contract) |
+| OQ-HAZ-RM-04 | What latency thresholds and freshness profiles are appropriate for each hazard source family, and where do probe receipts live (`data/receipts/`, a dedicated source-health register, or both)? | OPEN <small>[EXP-003]</small> |
+| OQ-HAZ-RM-05 | Should Hazards have a separate operational-feed sub-lane (e.g., `policy/domains/hazards/operational/`) to localize the not-for-life-safety gate code, or stay flat? | NEEDS ADR |
+| OQ-HAZ-RM-06 | Release-gate `.rego` home: `policy/domains/hazards/` vs. `policy/release/hazards/` (both admissible per §13.5; crosswalk names the latter). | OPEN (ADR-HAZ-07) |
 
 [Back to top ↑](#top)
 
@@ -651,7 +672,12 @@ AI on Hazards surfaces:
 
 ## 20. Related docs
 
-- **Doctrine and placement:** `directory-rules.md` (§4 Placement Protocol, §12 Domain Placement Law, §13.4 anti-pattern fix, §15 Required README Contract)
+- **Operating contract:** `ai-build-operating-contract.md` (`CONTRACT_VERSION = "3.0.0"`)
+- **Sibling Hazards lane docs:**
+  - [`PUBLICATION_AND_BOUNDARY.md`](./PUBLICATION_AND_BOUNDARY.md) — publication path + the not-for-life-safety boundary (authoritative)
+  - [`PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — what the lane preserves, per lifecycle stage and tier
+  - [`MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — lane planning inventory across responsibility roots
+- **Doctrine and placement:** `directory-rules.md` (§4 Placement Protocol, §9.1 lifecycle, §12 Domain Placement Law, §13.4/§13.5 anti-patterns, §15 Required README Contract)
 - **Domain index (PROPOSED):** `docs/domains/README.md`
 - **Adjacent lane READMEs (PROPOSED targets):**
   - `docs/domains/hydrology/README.md` — flood / drought / water-event context
@@ -660,18 +686,19 @@ AI on Hazards surfaces:
   - `docs/domains/roads-rail-trade/README.md` — closures, detours, bridge / crossing exposure
 - **Standards already authored:** `docs/standards/PROV.md`, `docs/standards/PMTILES.md`, `docs/standards/OGC-API-TILES.md`, `docs/standards/OAI-PMH.md`, `docs/standards/ISO-19115.md`
 - **Operational runbooks (PROPOSED targets):**
-  - `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` — source refresh for Hazards (PROPOSED; subfolder convention NEEDS VERIFICATION vs. flat `hazards_*` prefix)
+  - `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` — source refresh for Hazards (PROPOSED; subfolder convention NEEDS VERIFICATION vs. flat `hazards_*` prefix per §13.5 / OPEN-DR-02)
   - `docs/runbooks/hazards/NOT_FOR_LIFE_SAFETY_AUDIT_RUNBOOK.md` — periodic audit of disclaimer presence and official-source redirect coverage (PROPOSED)
 - **Cross-cutting doctrine:**
-  - Atlas v1.1 §24.1 (Master Source-Role Anti-Collapse Register)
-  - Atlas v1.1 §20.5 (Deny-by-Default Register)
+  - Atlas v1.1 §24.1 (Master Source-Role Anti-Collapse Register), §24.5 (Sensitivity / Rights Tier Reference), §24.6 (Pipeline Gate Reference), §20.5 (Deny-by-Default Register)
   - ENC §13 (Sensitive / Deny-by-Default Register)
   - UIAI Manual §30.6 (Hazards lane assembly)
 - **ADRs likely to apply:**
   - **ADR-0001** (schema home — `schemas/contracts/v1/...`) — applies.
-  - **ADR-hazards-runbook-subfolder** (PROPOSED) — resolves `docs/runbooks/hazards/*` vs. flat `hazards_*` naming.
-  - **ADR-not-for-life-safety-contract** (PROPOSED) — decides whether the disclaimer is a DTO field, a policy fragment, or both.
-  - **ADR-source-role-taxonomy** (PROPOSED) — canonicalizes the source-role enum referenced in §13.
+  - **ADR-S-04** (source-role enum vocabulary) — canonicalizes the seven-class enum referenced in §4 and §13.
+  - **ADR-S-05** (sensitivity tier scheme T0–T4) — governs the tier labels in §6 and §11.
+  - **ADR-HAZ-07** (release-gate `.rego` home) — resolves `policy/domains/hazards/` vs. `policy/release/hazards/`.
+  - **ADR — not-for-life-safety contract** (PROPOSED) — decides whether the disclaimer is a DTO field, a policy fragment, or both (OQ-HAZ-RM-03).
+  - **ADR — hazards runbook subfolder** (PROPOSED) — resolves `docs/runbooks/hazards/*` vs. flat `hazards_*` naming (OPEN-DR-02).
 
 [Back to top ↑](#top)
 
@@ -701,6 +728,6 @@ AI on Hazards surfaces:
 
 ---
 
-**Related docs:** [Directory Rules](../../directory-rules.md) · [Domains index (PROPOSED)](../README.md) · [Hydrology](../hydrology/README.md) · [Atmosphere](../atmosphere/README.md) · [Settlements / Infrastructure](../settlements-infrastructure/README.md) · [Roads / Rail / Trade](../roads-rail-trade/README.md)
+**Related docs:** [Directory Rules](../../directory-rules.md) · [Domains index (PROPOSED)](../README.md) · [Publication & Boundary](./PUBLICATION_AND_BOUNDARY.md) · [Preservation Matrix](./PRESERVATION_MATRIX.md) · [Hydrology](../hydrology/README.md) · [Atmosphere](../atmosphere/README.md) · [Settlements / Infrastructure](../settlements-infrastructure/README.md) · [Roads / Rail / Trade](../roads-rail-trade/README.md)
 
-**Last updated:** 2026-05-17 · **Status:** draft · **Owners:** `<hazards-lane-steward>` _(PLACEHOLDER — NEEDS VERIFICATION)_ · [Back to top ↑](#top)
+**Last updated:** 2026-06-05 · **Doc version:** v2 · **Pins:** CONTRACT_VERSION = "3.0.0" · **Status:** draft · **Owners:** `<hazards-lane-steward>` _(PLACEHOLDER — NEEDS VERIFICATION)_ · [Back to top ↑](#top)
