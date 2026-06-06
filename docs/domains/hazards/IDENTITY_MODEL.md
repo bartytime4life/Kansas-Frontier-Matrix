@@ -2,14 +2,19 @@
 doc_id: kfm://doc/hazards-identity-model
 title: Hazards Identity Model
 type: standard
-version: v1
+version: v2
 status: draft
 owners: <TBD: Hazards Domain Steward; Trust Architecture Steward>
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
+contract_version: "3.0.0"
 related:
+  - ai-build-operating-contract.md
+  - directory-rules.md
   - docs/domains/hazards/README.md
+  - docs/domains/hazards/DATA_LIFECYCLE.md
+  - docs/domains/hazards/GLOSSARY.md
   - docs/architecture/source-role-anti-collapse.md
   - docs/standards/PROV.md
   - docs/standards/CANONICALIZATION.md
@@ -18,9 +23,11 @@ related:
   - policy/domains/hazards/
 tags: [kfm, hazards, identity, evidence, source-role, temporal-scope]
 notes:
-  - CONFIRMED doctrine derives from DOM-HAZ §§12.E, 24.1 and ENCY 7.10
-  - PROPOSED implementation specifics (paths, validator names) until repo evidence is mounted
-  - Hazards is NOT an emergency alert system; this document constrains identity, not alerting
+  - CONTRACT_VERSION pinned at 3.0.0 per ai-build-operating-contract.md v3.0.
+  - CONFIRMED doctrine derives from DOM-HAZ §§12.E, 24.1 and ENCY §7.10.
+  - PROPOSED implementation specifics (paths, validator names, ID derivation) until repo evidence is mounted.
+  - Hazards is NOT an emergency alert system; this document constrains identity, not alerting.
+  - v2 flags OQ-HAZ-IM-01 — operational-context source-role (administrative vs observed vs context) is CONFLICTED across the Hazards lane docs.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Identity Model
@@ -32,9 +39,10 @@ notes:
 ![domain](https://img.shields.io/badge/domain-hazards-orange)
 ![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-brightgreen)
 ![implementation](https://img.shields.io/badge/implementation-PROPOSED-lightgrey)
+![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![life--safety](https://img.shields.io/badge/not--for--life--safety-required-critical)
 
-**Status:** draft · **Owners:** `<TBD: Hazards Domain Steward; Trust Architecture Steward>` · **Last updated:** 2026-05-17
+**Status:** draft · **Owners:** `<TBD: Hazards Domain Steward; Trust Architecture Steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-05
 
 ---
 
@@ -47,14 +55,17 @@ notes:
 - [5. Source-role and identity (anti-collapse)](#5-source-role-and-identity-anti-collapse)
 - [6. Temporal scope and identity](#6-temporal-scope-and-identity)
 - [7. Geography versioning and identity](#7-geography-versioning-and-identity)
-- [8. Deterministic ID derivation](#8-deterministic-id-derivation)
+- [8. Deterministic ID derivation (PROPOSED)](#8-deterministic-id-derivation-proposed)
 - [9. Resolution and gates](#9-resolution-and-gates)
 - [10. Failure modes and outcomes](#10-failure-modes-and-outcomes)
 - [11. Cross-lane identity boundaries](#11-cross-lane-identity-boundaries)
 - [12. Worked examples (illustrative)](#12-worked-examples-illustrative)
 - [13. Validators, tests, fixtures](#13-validators-tests-fixtures)
-- [14. Open questions and verification backlog](#14-open-questions-and-verification-backlog)
-- [15. Related docs](#15-related-docs)
+- [14. Open questions register](#14-open-questions-register)
+- [15. Verification backlog](#15-verification-backlog)
+- [16. Changelog](#16-changelog)
+- [17. Definition of done](#17-definition-of-done)
+- [18. Related docs](#18-related-docs)
 - [Appendix A — Identity primitives reference](#appendix-a--identity-primitives-reference)
 - [Appendix B — Hazards knowledge-character labels](#appendix-b--hazards-knowledge-character-labels)
 
@@ -65,18 +76,19 @@ notes:
 This document defines the **identity model** for the Hazards domain — the rules that determine when two Hazards records refer to the same object, when they refer to different objects, and how stable, content-addressable identifiers are derived from evidence. It does not define alerting behavior, public release policy, or rendering rules; those live in adjacent documents.
 
 > [!IMPORTANT]
-> KFM Hazards is **not an emergency alert system** and must not provide life-safety instructions. This document constrains *what an object is*; it does not authorize life-safety messaging. See [`docs/domains/hazards/README.md`](./README.md) for the lane boundary and [DOM-HAZ §12.B] for the explicit non-ownership statement.
+> KFM Hazards is **not an emergency alert system** and must not provide life-safety instructions. This document constrains *what an object is*; it does not authorize life-safety messaging. See [`docs/domains/hazards/README.md`](./README.md) for the lane boundary and DOM-HAZ §12.B for the explicit non-ownership statement.
 
-**In scope.** Identity rules for the Hazards object families enumerated in DOM-HAZ §12.E and ENCY 7.10.C; deterministic ID derivation; source-role and temporal-scope contributions to identity; failure modes that produce `ABSTAIN` / `DENY`; resolution from `EvidenceRef` to `EvidenceBundle`.
+**In scope.** Identity rules for the Hazards object families enumerated in DOM-HAZ §12.E and ENCY §7.10; deterministic ID derivation; source-role and temporal-scope contributions to identity; failure modes that produce `ABSTAIN` / `DENY`; resolution from `EvidenceRef` to `EvidenceBundle`.
 
 **Out of scope.** Field-level schemas (live under `schemas/contracts/v1/domains/hazards/`); admissibility and release policy (lives under `policy/domains/hazards/`); rendering and viewing products (live under map / UI documents); life-safety alerting (explicitly denied, full stop).
 
 | Attribute | Value | Status |
 |---|---|---|
-| Authority for this document | Hazards Domain Steward (doctrine: [DOM-HAZ]) | CONFIRMED |
-| Authority for ID format | Trust Architecture Steward (doctrine: [ENCY], C1-02) | CONFIRMED |
-| Authority for schema home | ADR-0001; `schemas/contracts/v1/...` | PROPOSED |
+| Authority for this document | Hazards Domain Steward (doctrine: DOM-HAZ) | CONFIRMED |
+| Authority for ID format | Trust Architecture Steward (canonicalization doctrine) | CONFIRMED concept / PROPOSED derivation |
+| Authority for schema home | ADR-0001; `schemas/contracts/v1/domains/hazards/` | CONFIRMED placement (§12) / PROPOSED materialization |
 | Authority for placement of this doc | Directory Rules §12 (Domain Placement Law) | CONFIRMED |
+| Contract pin | `CONTRACT_VERSION = "3.0.0"` | CONFIRMED |
 
 [Back to top](#hazards-identity-model)
 
@@ -93,11 +105,11 @@ In Hazards, identity is the answer to the question: *given two records, are they
 - a **steward-curated** corrected version after a property-damage revision (corrected observed).
 
 > [!NOTE]
-> These are five different objects in KFM Hazards. They cite the **same physical event**, but each carries a different source, a different role, and a different evidentiary obligation. Collapsing them into one identity destroys the system's ability to reason about source-role, freshness, and rollback — which is exactly the anti-collapse rule in [DOM-HAZ §24.1.2].
+> These are five different objects in KFM Hazards. They cite the **same physical event**, but each carries a different source, a different role, and a different evidentiary obligation. Collapsing them into one identity destroys the system's ability to reason about source-role, freshness, and rollback — which is exactly the anti-collapse rule in Atlas §24.1.2.
 
 Identity therefore answers a narrower question: *given two records that purport to describe the same evidence in the same role over the same time window, are their normalized contents byte-equivalent?* If yes, they are the same identity. If not, they are different identities — even if they describe the same physical phenomenon.
 
-The Hazards identity rule (CONFIRMED doctrine, DOM-HAZ §12.E):
+The Hazards identity rule (CONFIRMED doctrine, Atlas §12.E):
 
 > **PROPOSED deterministic basis:** `source id + object role + temporal scope + normalized digest`.
 > **CONFIRMED temporal handling:** source, observed, valid, retrieval, release, and correction times stay distinct where material.
@@ -114,21 +126,21 @@ Hazards identity composes four primitives. Each is a CONFIRMED concept in KFM do
 
 ```mermaid
 flowchart LR
-  SD["<b>source_id</b><br/>SourceDescriptor identity<br/>(authority + role)"] --> TUP["<b>Identity Tuple</b><br/>{source_id, object_role,<br/>temporal_scope, digest}"]
-  OR["<b>object_role</b><br/>canonical source_role +<br/>hazards knowledge_character"] --> TUP
-  TS["<b>temporal_scope</b><br/>{event, valid, issue, expiry,<br/>source, retrieval}"] --> TUP
-  ND["<b>normalized_digest</b><br/>jcs:sha256:&lt;hex&gt;"] --> TUP
-  TUP --> SH["<b>spec_hash</b><br/>over canonical bytes"]
-  SH --> BID["<b>bundle_id</b><br/>eb-base32(SHA256(spec_hash))[0:26]"]
-  SH --> ERID["<b>evidence_ref_id</b><br/>er-base32(SHA256(target_spec_hash))[0:26]"]
+  SD["source_id — SourceDescriptor identity (authority plus role)"] --> TUP["Identity Tuple — source_id, object_role, temporal_scope, digest"]
+  OR["object_role — canonical source_role plus hazards knowledge_character"] --> TUP
+  TS["temporal_scope — event, valid, issue, expiry, source, retrieval"] --> TUP
+  ND["normalized_digest — jcs:sha256:hex (PROPOSED form)"] --> TUP
+  TUP --> SH["spec_hash — over canonical bytes"]
+  SH --> BID["bundle_id — PROPOSED derivation, see section 8"]
+  SH --> ERID["evidence_ref_id — PROPOSED derivation, see section 8"]
 ```
 
 | Primitive | What it captures | Where it comes from | Status |
 |---|---|---|---|
 | `source_id` | The admitted source's stable identity (e.g., NOAA Storm Events feed, FEMA OpenFEMA declarations) | `SourceDescriptor` at RAW admission | CONFIRMED doctrine / PROPOSED field shape |
-| `object_role` | The role this record plays *for this source* — canonical source-role enum + hazards knowledge-character label | `SourceDescriptor.source_role` + hazards label vocabulary | CONFIRMED doctrine |
+| `object_role` | The role this record plays *for this source* — canonical source-role enum + hazards knowledge-character label | `SourceDescriptor.source_role` + hazards label vocabulary | CONFIRMED doctrine (vocabulary reconciliation NEEDS VERIFICATION — see [§5](#5-source-role-and-identity-anti-collapse)) |
 | `temporal_scope` | The time-tuple that uniquely scopes this record (event/valid/issue/expiry — not retrieval or release) | Source feed fields, normalized at WORK | CONFIRMED doctrine / PROPOSED normalization |
-| `normalized_digest` | A deterministic content digest computed via JCS-canonical JSON + SHA-256 | `tools/...` validator (PROPOSED) | CONFIRMED doctrine (C1-02 / [ENCY]) |
+| `normalized_digest` | A deterministic content digest computed via canonical JSON + SHA-256 | canonicalization validator (PROPOSED) | CONFIRMED concept / PROPOSED form |
 
 > [!TIP]
 > The four primitives are independent. Identity is the **tuple**, not any single field. Two records that share three primitives but differ on the fourth are different identities.
@@ -139,22 +151,25 @@ flowchart LR
 
 ## 4. Per-object identity rule
 
-Every object family in DOM-HAZ §12.E carries the same shape of identity rule, with family-specific specifics for which fields participate in `temporal_scope` and which `object_role` values are admissible.
+Every object family in Atlas §12.E carries the same shape of identity rule, with family-specific specifics for which fields participate in `temporal_scope` and which `object_role` values are admissible.
+
+> [!CAUTION]
+> **The `object_role` column for operational-context families is CONFLICTED.** This document maps `WarningContext` / `AdvisoryContext` to `administrative`. The sibling `DATA_LIFECYCLE.md` treats operational warnings as `context`-posture carriers, and `EXPANSION_PLAN.md` maps them to `observed` (flagged there as OQ-HAZ-EP-01). The canonical seven-role register (Atlas §24.1.1) has **no `context` role**, so the carrier must take one of the seven — but *which* one is unsettled across the lane. Treat the `administrative` mapping below as **PROPOSED**, not settled. Resolution: ADR. Tracked here as **OQ-HAZ-IM-01** (shared with OQ-HAZ-EP-01 / OQ-HAZ-GL-01).
 
 | Object family | Identity rule | Dominant `object_role` values | Temporal handling | Status |
 |---|---|---|---|---|
 | `HazardEvent` | `{source_id, role, temporal_scope, digest}` | `observed`, `modeled` (reconstructed) | event_time + (valid window when bounded); source / retrieval / release / correction stay distinct | CONFIRMED doctrine / PROPOSED |
 | `HazardObservation` | same shape | `observed` | observed_time + sampling window | CONFIRMED doctrine / PROPOSED |
-| `WarningContext` | same shape | `administrative` (`operational_warning`) | issue_time + expiry_time; never retrieval | CONFIRMED doctrine / PROPOSED |
-| `AdvisoryContext` | same shape | `administrative` (`operational_advisory`) | issue_time + expiry_time | CONFIRMED doctrine / PROPOSED |
+| `WarningContext` | same shape | `administrative` *(CONFLICTED — see OQ-HAZ-IM-01)* | issue_time + expiry_time; never retrieval | CONFIRMED doctrine / PROPOSED role |
+| `AdvisoryContext` | same shape | `administrative` *(CONFLICTED — see OQ-HAZ-IM-01)* | issue_time + expiry_time | CONFIRMED doctrine / PROPOSED role |
 | `DisasterDeclaration` | same shape | `administrative` (`administrative_declaration`) | declaration_date + incident_period | CONFIRMED doctrine / PROPOSED |
 | `FloodContext` | same shape | `regulatory` (`regulatory_context`, e.g., NFHL) | effective_date + (panel_version where applicable) | CONFIRMED doctrine / PROPOSED |
-| `WildfireDetection` | same shape | `observed` (`remote_sensing_detection`) | detection_time + sensor_pass_window | CONFIRMED doctrine / PROPOSED |
+| `WildfireDetection` | same shape | `observed` (`remote_sensing_detection`); `candidate` until reviewed | detection_time + sensor_pass_window | CONFIRMED doctrine / PROPOSED |
 | `SmokeContext` | same shape | `modeled` (`modeled_derivative`) or `observed` | analysis_time + valid window | CONFIRMED doctrine / PROPOSED |
 | `DroughtIndicator` | same shape | `aggregate` or `modeled` | valid_week + analysis_release | CONFIRMED doctrine / PROPOSED |
 | `EarthquakeEvent` | same shape | `observed` | origin_time + (revision_id where USGS supplies one) | CONFIRMED doctrine / PROPOSED |
 | `HeatColdEvent` | same shape | `observed` or `modeled` | event_window | CONFIRMED doctrine / PROPOSED |
-| `ExposureSummary` | same shape | `modeled` | aggregation_window | CONFIRMED doctrine / PROPOSED |
+| `ExposureSummary` | same shape | `modeled` or `aggregate` | aggregation_window | CONFIRMED doctrine / PROPOSED |
 | `ResilienceSummary` | same shape | `aggregate` or `modeled` | analysis_window | CONFIRMED doctrine / PROPOSED |
 | `HazardTimeline` | same shape | derived (cites underlying roles) | composition_window | CONFIRMED doctrine / PROPOSED |
 | `ImpactArea` | same shape | `modeled` or `regulatory` | effective_window + geography_version | CONFIRMED doctrine / PROPOSED |
@@ -168,7 +183,7 @@ Every object family in DOM-HAZ §12.E carries the same shape of identity rule, w
 
 ## 5. Source-role and identity (anti-collapse)
 
-CONFIRMED doctrine (DOM-HAZ §24.1): source role is a **first-class identity attribute**. The same underlying phenomenon admitted by a different role produces a different identity. The KFM canonical source-role classes are:
+CONFIRMED doctrine (Atlas §24.1): source role is a **first-class identity attribute**. The same underlying phenomenon admitted by a different role produces a different identity. The KFM canonical source-role classes (Atlas §24.1.1) are:
 
 | Role | Hazards-typical example | Identity consequence |
 |---|---|---|
@@ -176,14 +191,17 @@ CONFIRMED doctrine (DOM-HAZ §24.1): source role is a **first-class identity att
 | `regulatory` | FEMA NFHL flood zone designation | Identity binds to the regulatory effective window and the issuing authority |
 | `modeled` | Smoke trajectory model; reconstructed hazard swath; AOD-derived raster | Identity binds to the model run receipt (inputs, parameters, version) |
 | `aggregate` | County-year hazard frequency; decadal climate normal | Identity binds to the aggregation unit and window |
-| `administrative` | FEMA disaster declaration; NWS warning/advisory/watch | Identity binds to the issuing-authority record and its issue/expiry window |
+| `administrative` | FEMA disaster declaration; (operational warning/advisory — see CONFLICTED note) | Identity binds to the issuing-authority record and its issue/expiry window |
 | `candidate` | Unresolved connector output awaiting review | Identity exists but cannot be promoted past QUARANTINE without role resolution |
 | `synthetic` | Reconstructed historical scene; AI-drafted summary of a hazard bundle | Identity carries a Reality Boundary Note and cannot be queried as observed reality |
 
 > [!CAUTION]
-> **Source-role anti-collapse is fail-closed.** A modeled product labeled or queried as observed, a regulatory zone labeled as an observed event, an aggregate cited as a per-place truth, an administrative compilation cited as observation, a candidate exposed on a public surface, or synthetic content presented as observed reality — each is a DENY in publication. See the master register in DOM-HAZ §24.1.2.
+> **Source-role anti-collapse is fail-closed.** A modeled product labeled or queried as observed, a regulatory zone labeled as an observed event, an aggregate cited as a per-place truth, an administrative compilation cited as observation, a candidate exposed on a public surface, or synthetic content presented as observed reality — each is a DENY in publication. See the master register in Atlas §24.1.2.
 
-**Hazards-specific knowledge-character labels** (DOM-HAZ §12.C) further refine the role for hazards reasoning: `historical_event_record`, `operational_warning`, `operational_advisory`, `operational_watch`, `administrative_declaration`, `regulatory_context`, `scientific_observation`, `remote_sensing_detection`, `modeled_derivative`, `resilience_analysis`, `unknown_unclassified`. These labels participate in `object_role` alongside the canonical enum, and they participate in `normalized_digest`. Changing a knowledge-character label rotates identity.
+> [!IMPORTANT]
+> **Two vocabularies, not yet reconciled.** KFM uses at least two role vocabularies that this document leans on: the **canonical seven-role register** (Atlas §24.1.1, above) for `source_role`, and the **hazards knowledge-character labels** (Atlas §12.C) for hazards reasoning. A third string, `authoritative_context`, appears as a `source_role` value in the Unified Implementation Architecture Build Manual examples. Whether knowledge-character labels are part of the canonical `source_role` enum or a parallel vocabulary, and how `authoritative_context` relates to the seven-role register, is **NEEDS VERIFICATION** (Atlas explicitly asks "what canonical enum values should KFM use for knowledge-character labels?"). See [§14](#14-open-questions-register) Q4.
+
+**Hazards-specific knowledge-character labels** (Atlas §12.C) further refine the role for hazards reasoning: `historical_event_record`, `operational_warning`, `operational_advisory`, `operational_watch`, `administrative_declaration`, `regulatory_context`, `scientific_observation`, `remote_sensing_detection`, `modeled_derivative`, `resilience_analysis`, `unknown_unclassified`. These labels participate in `object_role` alongside the canonical enum, and they participate in `normalized_digest`. Changing a knowledge-character label rotates identity.
 
 [Back to top](#hazards-identity-model)
 
@@ -191,7 +209,7 @@ CONFIRMED doctrine (DOM-HAZ §24.1): source role is a **first-class identity att
 
 ## 6. Temporal scope and identity
 
-CONFIRMED doctrine (DOM-HAZ §12.E and ENCY 7.10.D): **source, observed, valid, retrieval, release, and correction times stay distinct where material.** Only a subset of these participate in `temporal_scope` for identity; the rest are recorded but excluded from the digest so that retrieval churn and release scheduling do not rotate IDs.
+CONFIRMED doctrine (Atlas §12.E; ENCY §7.10): **source, observed, valid, retrieval, release, and correction times stay distinct where material.** Only a subset of these participate in `temporal_scope` for identity; the rest are recorded but excluded from the digest so that retrieval churn and release scheduling do not rotate IDs.
 
 | Time | Definition | Participates in `temporal_scope`? | Rationale |
 |---|---|---|---|
@@ -208,7 +226,7 @@ CONFIRMED doctrine (DOM-HAZ §12.E and ENCY 7.10.D): **source, observed, valid, 
 
 ### 6.1 Stale operational context and identity
 
-Operational warnings, advisories, and watches are time-bounded. CONFIRMED doctrine (DOM-HAZ §12.I): *expired operational context cannot appear as current warning state.* Identity does not change when an operational record passes its `expiry_time` — the record is still itself — but its **state** changes, and that state change is enforced at the trust membrane, not at identity. The same record, served past expiry without a stale-state badge, is a DENY at publication.
+Operational warnings, advisories, and watches are time-bounded. CONFIRMED doctrine (Atlas §12.I): *expired operational context cannot appear as current warning state.* Identity does not change when an operational record passes its `expiry_time` — the record is still itself — but its **state** changes, and that state change is enforced at the trust membrane, not at identity. The same record, served past expiry without a stale-state badge, is a DENY at publication.
 
 [Back to top](#hazards-identity-model)
 
@@ -216,7 +234,7 @@ Operational warnings, advisories, and watches are time-bounded. CONFIRMED doctri
 
 ## 7. Geography versioning and identity
 
-CONFIRMED doctrine (Pass 19, `KFM-IDX-MOD-003`): **geography versions are part of identity** where geometry refresh would otherwise produce false drift. Hazards records this most sharply for:
+CONFIRMED concept: **geography versions are part of identity** where geometry refresh would otherwise produce false drift. Hazards records this most sharply for:
 
 | Geography surface | Why it matters for Hazards | Identity participation |
 |---|---|---|
@@ -224,15 +242,16 @@ CONFIRMED doctrine (Pass 19, `KFM-IDX-MOD-003`): **geography versions are part o
 | County / HUC / tract boundaries | County-year hazard aggregates depend on the boundary used | `geography_version` participates in `temporal_scope` for `ExposureSummary` and `ResilienceSummary` (`aggregate` role) |
 | Storm event polygon revisions | NWS may revise storm polygons | Treated as a new `issue_time` rather than a geometry-version bump (recorded as revision lineage) |
 
-The `GeographyVersion` object is owned by Spatial Foundation (CONFIRMED doctrine, master object family matrix); Hazards cites it without re-defining it.
+The `GeographyVersion` object is owned by Spatial Foundation / Frontier Matrix (CONFIRMED — it appears in the Frontier Matrix object-family list); Hazards cites it without re-defining it.
 
 [Back to top](#hazards-identity-model)
 
 ---
 
-## 8. Deterministic ID derivation
+## 8. Deterministic ID derivation (PROPOSED)
 
-PROPOSED implementation (consistent with C1-02 in Pass 10 and the EvidenceRef/EvidenceBundle sketch in New_Ideas 5-8-26):
+> [!WARNING]
+> **This entire section is PROPOSED.** CONFIRMED doctrine establishes that `spec_hash`, `bundle_id`, and `evidence_ref_id` exist and that the `spec_hash` algorithm is SHA-256 over canonicalized bytes (Unified Implementation Architecture Build Manual; Atlas spec-hash notes; a JCS `spec_hash` utility is a named Pass-32 program item). The Build Manual, however, shows **human-readable** id forms (e.g., `bundle:hydrology:huc12:...`, `eref:001`), **not** the `eb-`/`er-` base32-truncated forms below. The base32 scheme, the 26-char truncation, and the `jcs:sha256:` tag string are this document's **PROPOSED** convention and require a cross-domain ADR before they are canonical. Where this section and a mounted repo disagree, the repo wins.
 
 ### 8.1 Normalization
 
@@ -249,22 +268,22 @@ The normalized spec includes the identity tuple plus all evidentiary-meaning-bea
 
 It **excludes** transport, runtime, and transient fields: storage URLs, retrieval timestamps, release timestamps, signatures, nonces.
 
-### 8.2 Hashing
+### 8.2 Hashing (PROPOSED form)
 
 ```text
-canonical_bytes = JCS(spec)                      # RFC 8785
-spec_hash       = "jcs:sha256:" + hex(sha256(canonical_bytes))
+canonical_bytes = JCS(spec)                      # RFC 8785 (PROPOSED canonicalizer)
+spec_hash       = "sha256:" + hex(sha256(canonical_bytes))   # CONFIRMED algorithm; "jcs:" prefix PROPOSED
 ```
 
-### 8.3 IDs
+### 8.3 IDs (PROPOSED form)
 
 ```text
-bundle_id         = "eb-" + base32(lowercase(sha256(spec_hash)))[:26]
-evidence_ref_id   = "er-" + base32(lowercase(sha256(target_bundle_spec_hash)))[:26]
+bundle_id         = "eb-" + base32(lowercase(sha256(spec_hash)))[:26]   # PROPOSED; Build Manual uses readable form
+evidence_ref_id   = "er-" + base32(lowercase(sha256(target_bundle_spec_hash)))[:26]   # PROPOSED
 ```
 
 > [!NOTE]
-> The algorithm tag (`jcs:sha256:`) is fixed for v1. Any future migration requires an ADR and a dual-hash compatibility window. See `docs/standards/CANONICALIZATION.md` (PROPOSED home for the JCS-vs-URDNA2015 decision matrix per Pass 10 C1-02).
+> The algorithm tag is fixed for v1 once chosen; any future migration requires an ADR and a dual-hash compatibility window. See `docs/standards/CANONICALIZATION.md` (PROPOSED home for the JCS-vs-URDNA2015 decision matrix).
 
 ### 8.4 Worked digest skeleton (illustrative, not authoritative)
 
@@ -287,26 +306,28 @@ evidence_ref_id   = "er-" + base32(lowercase(sha256(target_bundle_spec_hash)))[:
 }
 ```
 
+> The `source_role: "administrative"` value above inherits the CONFLICTED status from [§4](#4-per-object-identity-rule) (OQ-HAZ-IM-01). The `sensitivity: "T2"` value is illustrative — the default hazards sensitivity tier is itself an open question ([§14](#14-open-questions-register) Q8).
+
 [Back to top](#hazards-identity-model)
 
 ---
 
 ## 9. Resolution and gates
 
-CONFIRMED doctrine (ENCY): an `EvidenceRef` resolves to its `EvidenceBundle` through the governed catalog, and the resolution is gated.
+CONFIRMED doctrine (ENCY; Atlas §24.6): an `EvidenceRef` resolves to its `EvidenceBundle` through the governed catalog, and the resolution is gated.
 
 ```mermaid
 flowchart LR
-  REF["<b>EvidenceRef</b><br/>ref.spec_hash"] --> LOOK["Catalog lookup<br/>by spec_hash"]
-  LOOK -->|hit| MATCH{"bundle.spec_hash<br/>== ref.spec_hash ?"}
-  LOOK -->|miss| MISS["<b>ABSTAIN → DENY</b><br/>ResolutionError.missing_bundle"]
-  MATCH -->|yes| RECOMP{"recomputed<br/>bundle_id<br/>== stored id ?"}
-  MATCH -->|no| MM["<b>DENY</b><br/>ResolutionError.hash_mismatch"]
-  RECOMP -->|yes| OK["<b>ANSWER</b>"]
-  RECOMP -->|no| TAMPER["<b>DENY</b><br/>ResolutionError.id_recompute_failed"]
+  REF["EvidenceRef — ref.spec_hash"] --> LOOK["Catalog lookup by spec_hash"]
+  LOOK -->|hit| MATCH{"bundle.spec_hash equals ref.spec_hash ?"}
+  LOOK -->|miss| MISS["ABSTAIN then DENY — ResolutionError.missing_bundle"]
+  MATCH -->|yes| RECOMP{"recomputed bundle_id equals stored id ?"}
+  MATCH -->|no| MM["DENY — ResolutionError.hash_mismatch"]
+  RECOMP -->|yes| OK["ANSWER"]
+  RECOMP -->|no| TAMPER["DENY — ResolutionError.id_recompute_failed"]
 ```
 
-Publication adds further gates: matching `spec_hash` at promotion time, `RunReceipt` recompute, signature and Rekor inclusion (CONFIRMED doctrine), and a release-manifest entry. See [DOM-HAZ §12.J] for the hazards governed-API surface.
+Publication adds further gates: matching `spec_hash` at promotion time, `RunReceipt` recompute, signature and inclusion-proof verification (CONFIRMED concept), and a release-manifest entry. See Atlas §12.J for the hazards governed-API surface.
 
 [Back to top](#hazards-identity-model)
 
@@ -318,17 +339,17 @@ Publication adds further gates: matching `spec_hash` at promotion time, `RunRece
 |---|---|---|---|---|
 | 1 | Missing bundle | `EvidenceRef` resolves to nothing | `ABSTAIN` at validator → `DENY` at publication; emit `ResolutionError.missing_bundle` | CONFIRMED |
 | 2 | Hash mismatch | `ref.spec_hash` ≠ `bundle.spec_hash` | `DENY`; emit `ResolutionError.hash_mismatch` | CONFIRMED |
-| 3 | Non-deterministic serialization | Same logical spec, different canonical bytes across runtimes | `ERROR`; emit `NormalizationError.nondeterministic_serialization` | CONFIRMED |
-| 4 | Excluded-field violation | A meaning-bearing field was omitted from the digest set | `DENY`; emit `NormalizationError.field_exclusion_violation` | CONFIRMED |
+| 3 | Non-deterministic serialization | Same logical spec, different canonical bytes across runtimes | `ERROR`; emit `NormalizationError.nondeterministic_serialization` | CONFIRMED concept / PROPOSED error name |
+| 4 | Excluded-field violation | A meaning-bearing field was omitted from the digest set | `DENY`; emit `NormalizationError.field_exclusion_violation` | CONFIRMED concept / PROPOSED error name |
 | 5 | Hash algorithm drift | Unexpected algorithm tag | `DENY`; require explicit migration gate | CONFIRMED |
-| 6 | Source-role anti-collapse | Modeled labeled observed; regulatory labeled event; aggregate cited as per-place; etc. | `DENY` at publication; `ABSTAIN` at AI surface | CONFIRMED |
-| 7 | Operational expiry | Operational record served past `expiry_time` without stale-state badge | `DENY` at publication | CONFIRMED (DOM-HAZ §12.I) |
-| 8 | Life-safety framing | Hazards output framed as emergency instruction | `DENY`; route user to official source | CONFIRMED (DOM-HAZ §12.B) |
+| 6 | Source-role anti-collapse | Modeled labeled observed; regulatory labeled event; aggregate cited as per-place; etc. | `DENY` at publication; `ABSTAIN` at AI surface | CONFIRMED (Atlas §24.1.2) |
+| 7 | Operational expiry | Operational record served past `expiry_time` without stale-state badge | `DENY` at publication | CONFIRMED (Atlas §12.I) |
+| 8 | Life-safety framing | Hazards output framed as emergency instruction | `DENY`; route user to official source | CONFIRMED (Atlas §12.B; §24.9.2) |
 | 9 | Unknown / unclassified role | Source role not yet resolved | `QUARANTINE`; identity exists but cannot promote | CONFIRMED |
-| 10 | Synthetic-as-observed | Synthetic content presented as observed reality | `DENY` at publication; `HOLD` for steward review; `ABSTAIN` at AI | CONFIRMED |
+| 10 | Synthetic-as-observed | Synthetic content presented as observed reality | `DENY` at publication; `HOLD` for steward review; `ABSTAIN` at AI | CONFIRMED (Atlas §24.1.2) |
 
 > [!IMPORTANT]
-> Failure modes 6–10 are hazards-specific consequences of the general identity rule. They are enforced at the trust membrane (validators + policy), not at the digest layer. Identity itself is content-agnostic; admissibility is not.
+> Failure modes 6–10 are hazards-specific consequences of the general identity rule. They are enforced at the trust membrane (validators + policy), not at the digest layer. Identity itself is content-agnostic; admissibility is not. Error-string names (modes 3–4) are PROPOSED.
 
 [Back to top](#hazards-identity-model)
 
@@ -336,18 +357,18 @@ Publication adds further gates: matching `spec_hash` at promotion time, `RunRece
 
 ## 11. Cross-lane identity boundaries
 
-CONFIRMED doctrine (DOM-HAZ §12.F): hazards cites adjacent lanes but does not own their canonical sources. Identity must preserve ownership.
+CONFIRMED doctrine (Atlas §12.F): hazards cites adjacent lanes but does not own their canonical sources. Identity must preserve ownership.
 
 | Adjacent lane | What hazards may cite | Identity rule |
 |---|---|---|
-| Hydrology | `GaugeSite`, `FlowObservation`, NFHL regulatory channel | Hazards refers via `EvidenceRef` to hydrology-owned objects; never re-mints identity for them |
+| Hydrology | gauge/flow observations, NFHL regulatory channel | Hazards refers via `EvidenceRef` to hydrology-owned objects; never re-mints identity for them |
 | Atmosphere / Air | Smoke layers, AQI/advisory, fire-weather context | Hazards refers via `EvidenceRef`; air-owned objects keep air's identity |
 | Settlements / Infrastructure | Lifelines, critical-asset references for exposure | Hazards refers; settlements-owned objects keep settlements' identity |
 | Roads / Rail | Closures, detours, bridge/crossing exposure | Hazards refers; roads-owned objects keep roads' identity |
-| Spatial Foundation | `GeographyVersion`, `CoordinateReferenceProfile` | Cited by every Hazards object that depends on geometry refresh; never re-defined |
+| Spatial Foundation / Frontier Matrix | `GeographyVersion`, coordinate-reference profile | Cited by every Hazards object that depends on geometry refresh; never re-defined |
 
 > [!TIP]
-> When in doubt, cite rather than re-mint. A Hazards `ImpactArea` that depends on an NFHL zone references the hydrology-owned regulatory zone by its identity; it does not absorb that zone into hazards-owned identity.
+> When in doubt, cite rather than re-mint. A Hazards `ImpactArea` that depends on an NFHL zone references the regulatory zone by its identity; it does not absorb that zone into hazards-owned identity.
 
 [Back to top](#hazards-identity-model)
 
@@ -366,17 +387,17 @@ Source B: FEMA disaster declaration, role `administrative`, declaration_date = `
 
 ### 12.2 NWS revises a tornado warning mid-event
 
-Issue at `T1`: identity `eb-...A`.
+Issue at `T1`: identity `eb-...A` (PROPOSED id form).
 Revision at `T2`: identity `eb-...B` (different `issue_time` rotates `temporal_scope`).
 
 **Two identities.** The revision is not a mutation. Both records remain inspectable; the trust membrane decides which is current.
 
 ### 12.3 FIRMS hotspot vs. modeled smoke trajectory
 
-Source A: NASA FIRMS hotspot, role `observed` (`remote_sensing_detection`), detection_time = `T`.
+Source A: NASA FIRMS hotspot, role `observed` (`remote_sensing_detection`, `candidate` until reviewed), detection_time = `T`.
 Source B: HMS smoke model run, role `modeled` (`modeled_derivative`), analysis_time = `T`.
 
-**Different identities.** Same time scope, different role. A query that treats the model as an observation is a DENY (anti-collapse rule 1).
+**Different identities.** Same time scope, different role. A query that treats the model as an observation is a DENY (anti-collapse, failure mode 6).
 
 ### 12.4 NFHL zone updated on a new panel
 
@@ -398,7 +419,7 @@ Retrieval on Tuesday (same upstream record, no upstream change): identity `eb-..
 
 ## 13. Validators, tests, fixtures
 
-PROPOSED hazards-specific validator surface, in line with the cross-cutting identity tests in C1-02 and the DOM-HAZ §12.K backlog:
+PROPOSED hazards-specific validator surface, in line with the cross-cutting identity tests and the DOM-HAZ §12.K backlog:
 
 <details>
 <summary><b>Identity determinism tests</b> (positive / negative pairs; no-network)</summary>
@@ -410,58 +431,109 @@ PROPOSED hazards-specific validator surface, in line with the cross-cutting iden
 - **T5 — Hazards source-role anti-collapse.** A record relabeled from `observed` to `regulatory` rotates identity; a published mismatch denies.
 - **T6 — Operational expiry.** A `WarningContext` served past `expiry_time` without a stale-state badge fails the publication gate.
 - **T7 — Cross-lane citation parity.** A Hazards `ImpactArea` citing a hydrology NFHL zone preserves the hydrology-owned identity; tampering rotates and denies.
-- **T8 — Algorithm tag enforcement.** A non-`jcs:sha256:` tag is `DENY` with `HashAlgoUnsupported`.
+- **T8 — Algorithm tag enforcement.** A non-canonical hash tag is `DENY` with `HashAlgoUnsupported` (PROPOSED error name).
 
 </details>
 
 <details>
-<summary><b>Hazards-specific gates</b></summary>
+<summary><b>Hazards-specific gates</b> (DOM-HAZ §12.K)</summary>
 
-- Source-role anti-collapse tests (DOM-HAZ §12.K).
+- Source-role anti-collapse tests.
 - Temporal-role validators (issue / expiry / valid distinct from retrieval / release).
 - Emergency-alert denial (no life-safety framing in any answered hazards output).
 - Operational expiry / freshness tests.
-- Evidence Drawer disclaimer tests (`not_for_life_safety` label visible).
+- Evidence Drawer disclaimer tests (`not_emergency_alert_system` label visible).
 - UI no-direct-source tests (public clients only consume governed APIs).
 
 </details>
 
 > [!NOTE]
-> PROPOSED validator home is `tools/validators/hazards/` per Directory Rules §4 Step 1 (validator → `tools/`) and §12 (domain as segment). Confirmation requires mounted-repo inspection.
+> PROPOSED validator home is `tools/validators/<topic>/` for cross-cutting identity logic (Directory Rules §4 Step 1: validator → `tools/`; §12: cross-cutting files take no domain segment) with hazards-specific wrappers under `tests/domains/hazards/`. Confirmation requires mounted-repo inspection.
 
 [Back to top](#hazards-identity-model)
 
 ---
 
-## 14. Open questions and verification backlog
+## 14. Open questions register
 
-| # | Item | Evidence that would settle it | Status |
+| ID | Question | Owner role | Resolution path |
 |---|---|---|---|
-| Q1 | Final canonical schema home for hazards identity DTOs | Mounted `schemas/contracts/v1/domains/hazards/` + accepted ADR | NEEDS VERIFICATION |
-| Q2 | Confirmation of `bundle_id` / `evidence_ref_id` base32 truncation length (PROPOSED 26 chars) | Cross-domain ADR fixing the length | NEEDS VERIFICATION |
-| Q3 | Whether `correction_time` ever participates in `temporal_scope` (currently excluded) | Steward decision + ADR | UNKNOWN |
-| Q4 | Whether knowledge-character labels are part of the canonical `source_role` enum or a parallel vocabulary | Mounted `SourceDescriptor` schema; DOM-HAZ §24.1.3 implementation | NEEDS VERIFICATION |
-| Q5 | NFHL panel-version field name and surfacing across hazards / hydrology | Mounted hydrology contract; NFHL connector descriptor | NEEDS VERIFICATION |
-| Q6 | Identity treatment of `unknown_unclassified` records past a steward-review SLA | Steward policy + quarantine doctrine | PROPOSED |
-| Q7 | Whether `RunReceipt` for a hazards model run participates as a direct identity primitive or only via `evidence_refs` | C1-01 / C1-02 mapping for hazards | NEEDS VERIFICATION |
-| Q8 | Default sensitivity tier for hazards object families (operational warnings vs. historical events) | Hazards policy profile in `policy/domains/hazards/` | PROPOSED |
-| Q9 | Authoritative naming: `docs/standards/PROV.md` vs. `PROVENANCE.md` (cross-cutting open question) | ADR | NEEDS VERIFICATION |
+| OQ-HAZ-IM-01 | What canonical `source_role` do `operational_warning` / `advisory` / `watch` carry — `administrative` (this doc), `observed` (EXPANSION_PLAN), or `context`-posture (DATA_LIFECYCLE)? | Schema owner + hazards steward | ADR (shared with OQ-HAZ-EP-01 / OQ-HAZ-GL-01) |
+| OQ-HAZ-IM-02 | Are the `eb-`/`er-` base32-truncated id forms canonical, or does the Build Manual's readable `bundle:...`/`eref:...` form win? | Trust Architecture Steward | Cross-domain ID ADR |
+| OQ-HAZ-IM-03 | Is the `jcs:sha256:` tag the canonical algorithm tag, or plain `sha256:` per the Build Manual examples? | Trust Architecture Steward | Canonicalization ADR |
+| OQ-HAZ-IM-04 | Are knowledge-character labels part of the canonical `source_role` enum or a parallel vocabulary — and how does `authoritative_context` relate to the seven-role register? | Schema owner | Mounted `SourceDescriptor` schema; Atlas §24.1.3 |
+| OQ-HAZ-IM-05 | Does `correction_time` ever participate in `temporal_scope` (currently excluded)? | Hazards steward | ADR |
+| OQ-HAZ-IM-06 | Default sensitivity tier per hazards object family (operational warnings vs historical events)? | Policy author | `policy/domains/hazards/` profile |
+| OQ-HAZ-IM-07 | Identity treatment of `unknown_unclassified` records past a steward-review SLA. | Hazards steward | Quarantine doctrine + policy |
 
 [Back to top](#hazards-identity-model)
 
 ---
 
-## 15. Related docs
+## 15. Verification backlog
 
-- [`docs/domains/hazards/README.md`](./README.md) — Hazards lane landing and scope
-- [`docs/architecture/source-role-anti-collapse.md`](../../architecture/source-role-anti-collapse.md) — Cross-domain source-role register (PROPOSED home)
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O and PAV profile (provenance ties to identity via `RunReceipt`)
-- [`docs/standards/CANONICALIZATION.md`](../../standards/CANONICALIZATION.md) — JCS vs. URDNA2015 decision matrix (PROPOSED)
-- [`docs/standards/RUN_RECEIPT.md`](../../standards/RUN_RECEIPT.md) — Universal run receipt envelope (PROPOSED home per C1-01)
-- [`schemas/contracts/v1/domains/hazards/`](../../../schemas/contracts/v1/domains/hazards/) — Hazards schemas (PROPOSED canonical home)
+These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
+
+1. Final canonical schema home for hazards identity DTOs (`schemas/contracts/v1/domains/hazards/`) — mounted repo + accepted ADR.
+2. The `bundle_id` / `evidence_ref_id` derivation and truncation length against a mounted reference implementation (OQ-HAZ-IM-02).
+3. The canonical hash algorithm tag (`sha256:` vs `jcs:sha256:`) against the live `spec_hash` utility (OQ-HAZ-IM-03).
+4. Whether knowledge-character labels live in the `source_role` enum or a parallel field (OQ-HAZ-IM-04).
+5. NFHL panel-version field name and surfacing across hazards / hydrology.
+6. Whether `RunReceipt` for a hazards model run participates as a direct identity primitive or only via `evidence_refs`.
+7. The `C1-01` / `C1-02` Pass-10 identifiers cited in the v1 draft as the canonicalization authority — **could not be confirmed against the corpus this session**; replaced with the Build Manual + Atlas spec-hash evidence and the named Pass-32 JCS utility, which are verifiable.
+
+[Back to top](#hazards-identity-model)
+
+---
+
+## 16. Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Flagged the `WarningContext`/`AdvisoryContext` → `administrative` mapping as CONFLICTED (OQ-HAZ-IM-01) | reconciliation | Three sibling docs give three different operational-context roles; register has no `context` role |
+| Marked §8 ID derivation explicitly PROPOSED; noted the Build Manual's divergent readable id form and `sha256:` tag | reconciliation | CONFIRMED concept, but the `eb-`/`er-` base32 scheme and `jcs:` tag are this doc's convention, not doctrine |
+| Replaced unverifiable `C1-01`/`C1-02` Pass-10 citations with verifiable Build Manual + Atlas + Pass-32 JCS-utility evidence | clarification | C1-01/C1-02 identifiers not found in the corpus this session |
+| Strengthened the two-vocabularies note (`source_role` register vs knowledge-character labels vs `authoritative_context`) | clarification | Atlas explicitly flags the knowledge-character enum as NEEDS VERIFICATION |
+| Re-cited section anchors to Atlas/§ forms used across the lane (§12.B/E/F/I/J/K, §24.1, §24.1.2, §24.6, §24.9.2) | clarification | v1 used `DOM-HAZ §24.x` shorthand for some master-register sections that live in Chapter 24 |
+| Pinned `CONTRACT_VERSION = "3.0.0"`; added Open Questions register, Verification backlog, Changelog, Definition of done | housekeeping / gap closure | Operating contract v3.0; doctrine companion-section pattern |
+| Sanitized Mermaid node labels (removed `<b>`, `<br/>`, `{...}`, `&lt;`, `==` from label text) | housekeeping | HTML/brace/entity content in Mermaid labels is parse-fragile |
+| `ExposureSummary` role widened to `modeled` or `aggregate` for consistency with GLOSSARY/EXPANSION docs | clarification | Exposure summaries are aggregation-aware derivatives |
+
+> **Backward compatibility.** Section anchors §1–§13 are preserved. The v1 combined "§14 Open questions and verification backlog" is split into §14 (Open Questions, now with stable `OQ-HAZ-IM-*` IDs) and §15 (Verification backlog); "Related docs" moves §15 → §18; appendices keep their anchors. Inbound links to `#14-open-questions-and-verification-backlog` and `#15-related-docs` will break and should be repointed.
+
+[Back to top](#hazards-identity-model)
+
+---
+
+## 17. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed at `docs/domains/hazards/IDENTITY_MODEL.md` per Directory Rules §12;
+- a Hazards Domain Steward and a Trust Architecture Steward are assigned and review it;
+- it is linked from the Hazards lane README, `GLOSSARY.md`, and `DATA_LIFECYCLE.md`;
+- it does not conflict with accepted ADRs (notably ADR-0001 and the canonicalization ADR);
+- OQ-HAZ-IM-01 (operational source-role) and the canonicalization questions (OQ-HAZ-IM-02/03) are logged in the appropriate registers;
+- the `GENERATED_RECEIPT.json` planned in the delivery notes is wired into CI with `human_review.state` transitioned past `pending`;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top](#hazards-identity-model)
+
+---
+
+## 18. Related docs
+
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- [`directory-rules.md`](../../../directory-rules.md) — placement authority; §12 Domain Placement Law *(CONFIRMED)*
+- [`docs/domains/hazards/README.md`](./README.md) — Hazards lane landing and scope *(file presence NEEDS VERIFICATION)*
+- [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, freshness, receipt matrix *(sibling doc; operational-context role posture)*
+- [`docs/domains/hazards/GLOSSARY.md`](./GLOSSARY.md) — lane vocabulary; knowledge-character labels *(sibling doc)*
+- [`docs/architecture/source-role-anti-collapse.md`](../../architecture/source-role-anti-collapse.md) — cross-domain source-role register *(PROPOSED home)*
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV profile *(provenance ties to identity via `RunReceipt`; NEEDS VERIFICATION)*
+- [`docs/standards/CANONICALIZATION.md`](../../standards/CANONICALIZATION.md) — JCS vs URDNA2015 decision matrix *(PROPOSED)*
+- [`schemas/contracts/v1/domains/hazards/`](../../../schemas/contracts/v1/domains/hazards/) — Hazards schemas *(placement CONFIRMED per ADR-0001 + §12)*
 - [`contracts/domains/hazards/`](../../../contracts/domains/hazards/) — Hazards object-family meaning
 - [`policy/domains/hazards/`](../../../policy/domains/hazards/) — Hazards admissibility and release policy
-- [`directory-rules.md`](../../../directory-rules.md) — Placement authority
 
 [Back to top](#hazards-identity-model)
 
@@ -476,15 +548,15 @@ PROPOSED hazards-specific validator surface, in line with the cross-cutting iden
 |---|---|---|---|
 | `source_id` | n/a | Yes | Always |
 | `source_role` (canonical enum) | n/a | Yes | Anti-collapse primitive |
-| `knowledge_character` (hazards) | n/a | Yes | Hazards-specific refinement |
+| `knowledge_character` (hazards) | n/a | Yes | Hazards-specific refinement; enum NEEDS VERIFICATION |
 | `event_time` / `observed_time` | Yes (object-family-dependent) | Yes | |
 | `valid_from` / `valid_to` | Yes for regulatory / operational | Yes | |
 | `issue_time` / `expiry_time` | Yes for `WarningContext` / `AdvisoryContext` | Yes | Revisions rotate identity |
 | `source_time` | Optional | Yes when used | |
 | `retrieval_time` | No | No | Recorded in `RunReceipt` only |
 | `release_time` | No | No | Recorded in `ReleaseManifest` only |
-| `correction_time` | No | No | Tracked via `CorrectionNotice` |
-| `geography_version` | Yes where geometry refresh affects claims | Yes | Owned by Spatial Foundation |
+| `correction_time` | No | No | Tracked via `CorrectionNotice` (OQ-HAZ-IM-05) |
+| `geography_version` | Yes where geometry refresh affects claims | Yes | Owned by Spatial Foundation / Frontier Matrix |
 | `policy_label`, `rights_status`, `sensitivity` | No | Yes | Meaning-bearing |
 | Signatures, nonces, storage URLs | No | No | Transport/runtime only |
 
@@ -496,16 +568,16 @@ PROPOSED hazards-specific validator surface, in line with the cross-cutting iden
 ```python
 # Illustrative only; pinned implementation is PROPOSED.
 import json, hashlib
-# In production, use a pinned JCS library, not json.dumps.
+# In production, use a pinned RFC 8785 JCS library, not json.dumps.
 def canonical_bytes(obj: dict) -> bytes:
     return json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 def spec_hash(obj: dict) -> str:
-    return "jcs:sha256:" + hashlib.sha256(canonical_bytes(obj)).hexdigest()
+    return "sha256:" + hashlib.sha256(canonical_bytes(obj)).hexdigest()
 ```
 
 > [!WARNING]
-> The snippet above uses `json.dumps(sort_keys=True)` for illustration only. CONFIRMED doctrine (C1-02) requires RFC 8785 JCS; trivial reformatting of developer-formatted JSON does **not** satisfy the canonicalization rule. A pinned JCS library per language is a prerequisite.
+> The snippet above uses `json.dumps(sort_keys=True)` for illustration only. A canonicalization rule requires RFC 8785 JCS (a named Pass-32 program item: "JCS `spec_hash` utility"); trivial reformatting of developer-formatted JSON does **not** satisfy it. A pinned JCS library per language is a prerequisite. The `sha256:` vs `jcs:sha256:` tag is itself open (OQ-HAZ-IM-03).
 
 </details>
 
@@ -515,18 +587,18 @@ def spec_hash(obj: dict) -> str:
 
 ## Appendix B — Hazards knowledge-character labels
 
-CONFIRMED vocabulary (DOM-HAZ §12.C). These labels refine `object_role` for hazards reasoning and participate in `normalized_digest`.
+CONFIRMED vocabulary (Atlas §12.C). These labels refine `object_role` for hazards reasoning and participate in `normalized_digest`. The canonical enum values themselves are NEEDS VERIFICATION (Atlas open question on knowledge-character enums).
 
 | Label | Typical role | Identity consequence |
 |---|---|---|
 | `historical_event_record` | `observed` | Identity binds to the observing source and event_time |
-| `operational_warning` | `administrative` | Each issue is a separate identity |
-| `operational_advisory` | `administrative` | Each issue is a separate identity |
-| `operational_watch` | `administrative` | Each issue is a separate identity |
+| `operational_warning` | `administrative` *(CONFLICTED — OQ-HAZ-IM-01)* | Each issue is a separate identity |
+| `operational_advisory` | `administrative` *(CONFLICTED — OQ-HAZ-IM-01)* | Each issue is a separate identity |
+| `operational_watch` | `administrative` *(CONFLICTED — OQ-HAZ-IM-01)* | Each issue is a separate identity |
 | `administrative_declaration` | `administrative` | Identity binds to declaration_date and incident_period |
 | `regulatory_context` | `regulatory` | Identity binds to effective_date + geography_version |
 | `scientific_observation` | `observed` | Identity binds to observed_time |
-| `remote_sensing_detection` | `observed` | Identity binds to detection_time + sensor_pass_window |
+| `remote_sensing_detection` | `observed` (`candidate` until reviewed) | Identity binds to detection_time + sensor_pass_window |
 | `modeled_derivative` | `modeled` | Identity binds to model_run_ref |
 | `resilience_analysis` | `aggregate` or `modeled` | Identity binds to aggregation_window |
 | `unknown_unclassified` | `candidate` | Identity exists; promotion forbidden until classified |
@@ -536,6 +608,6 @@ CONFIRMED vocabulary (DOM-HAZ §12.C). These labels refine `object_role` for haz
 ---
 
 <sub>
-**Doc version:** v1 (draft) · **Last updated:** 2026-05-17 · **Authority:** DOM-HAZ §§12.E, 24.1; ENCY 7.10; C1-02 (Pass 10); Directory Rules §12.
+<b>Doc version:</b> v2 (draft) · <b>Last updated:</b> 2026-06-05 · <b>Contract:</b> CONTRACT_VERSION = "3.0.0" · <b>Authority:</b> Atlas §§12.E, 24.1; ENCY §7.10; Directory Rules §12.
 [Back to top](#hazards-identity-model)
 </sub>
