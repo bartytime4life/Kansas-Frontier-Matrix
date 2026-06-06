@@ -6,38 +6,46 @@
 doc_id: kfm://doc/domains/hazards/api-contracts
 title: Hazards · API Contracts
 type: standard
-version: v1
+version: v2
 status: draft
 owners: <hazards-domain-steward>, <governed-api-steward>, <security-steward>
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
+contract_version: "3.0.0"
 related:
   - docs/domains/hazards/README.md
   - docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md
   - docs/architecture/governed-api.md
-  - schemas/contracts/v1/domains/hazards/
-  - contracts/domains/hazards/
+  - schemas/contracts/v1/hazards/
+  - contracts/hazards/
   - policy/domains/hazards/
+  - policy/release/hazards/
   - tests/domains/hazards/
   - fixtures/domains/hazards/
   - release/candidates/hazards/
   - control_plane/domain_lane_register.yaml
 tags: [kfm, api, contracts, hazards, governance, decision-envelope]
 notes:
-  - "Route paths, DTO field shapes, and schema files are PROPOSED; not asserted to exist in the mounted repo."
-  - "KFM is never a life-safety alert authority — every Hazards surface must preserve that boundary."
-  - "Pending ADR: routing convention under apps/governed-api/ vs alternate naming."
+  # CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
+  # Route paths, DTO field shapes, and schema files are PROPOSED; not asserted to exist in the mounted repo.
+  # KFM is never a life-safety alert authority — every Hazards surface must preserve that boundary.
+  # Schema-home segment corrected v1->v2: Atlas Sec 24.13 crosswalk places hazards at
+  #   schemas/contracts/v1/hazards/ and contracts/hazards/ (no intervening /domains/ segment).
+  #   The /domains/<x>/ form used in v1 is now flagged CONFLICTED pending ADR-S-01 / ADR-0001 confirmation.
+  # Pending ADRs: ADR-S-01 (schema home), ADR-S-04 (source-role enum), ADR-S-09 (reviewer SoD),
+  #   routing-convention ADR (apps/governed-api/ route shape).
 [/KFM_META_BLOCK_V2] -->
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![type](https://img.shields.io/badge/type-standard-blue)
 ![domain](https://img.shields.io/badge/domain-hazards-orange)
+![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blueviolet)
 ![outcome%20grammar](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-informational)
 ![life--safety](https://img.shields.io/badge/life--safety-NOT%20AN%20ALERT%20SYSTEM-red)
 ![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
 
-**Status:** draft · **Owners:** `<hazards-domain-steward>`, `<governed-api-steward>`, `<security-steward>` · **Last updated:** 2026-05-17
+**Status:** draft · **Owners:** `<hazards-domain-steward>`, `<governed-api-steward>`, `<security-steward>` · **Last updated:** 2026-06-05 · **`CONTRACT_VERSION = "3.0.0"`**
 
 ---
 
@@ -60,7 +68,8 @@ notes:
 - [10. Validators and tests](#10-validators-and-tests)
 - [11. Trust-membrane invariants (must / must not)](#11-trust-membrane-invariants-must--must-not)
 - [12. Verification backlog and open questions](#12-verification-backlog-and-open-questions)
-- [13. Related docs](#13-related-docs)
+- [13. Changelog](#13-changelog)
+- [14. Related docs](#14-related-docs)
 - [Appendix A — Illustrative envelope shapes](#appendix-a--illustrative-envelope-shapes)
 - [Appendix B — Truth-label legend](#appendix-b--truth-label-legend)
 
@@ -75,8 +84,9 @@ This document specifies the **governed API surfaces** that publish Hazards-domai
 | Mission of the Hazards lane | Govern historical, regulatory, modeled, and operational-context hazard information for analysis and resilience. | **CONFIRMED** doctrine. |
 | Hard boundary | KFM **must not** act as a life-safety alert authority; operational warning products are contextual only. | **CONFIRMED** doctrine. |
 | Public path | Every public Hazards read flows through the governed API trust membrane. | **CONFIRMED** doctrine. |
-| Exact route names | Bound at `apps/governed-api/` per Directory Rules §7.1; concrete paths not asserted by this document. | **PROPOSED** / **NEEDS VERIFICATION**. |
-| DTO/schema field shapes | Drawn from the Master API Surface Table and the Hazards J-table; field-level shape resides in `schemas/contracts/v1/...` and is not asserted to exist here. | **PROPOSED**. |
+| Exact route names | Bound at `apps/governed-api/` per Directory Rules responsibility-root law; concrete paths not asserted by this document. | **PROPOSED** / **NEEDS VERIFICATION**. |
+| DTO/schema field shapes | Drawn from the Master API Surface Table and the Hazards J-table; field-level shape resides in `schemas/contracts/v1/hazards/` and is not asserted to exist here. | **PROPOSED**. |
+| Schema-home segment | Atlas §24.13 crosswalk places hazards at `schemas/contracts/v1/hazards/` (no intervening `/domains/` segment). | **CONFIRMED** crosswalk vs. v1 doc; resolved here, see §9. |
 
 > [!IMPORTANT]
 > **KFM is not an emergency alert system.** Hazards surfaces support analysis, history, regulatory context, operational context, and resilience review. Warnings, advisories, watches, and active detections appear **only** as `WarningContext` / `AdvisoryContext` / detection objects with explicit `issue`, `expiry`, `freshness`, `source`, and `not_for_life_safety` markers, and **must** redirect urgent life-safety needs to official sources.
@@ -133,14 +143,14 @@ flowchart LR
 
 ## 3. Governed API surfaces (registry)
 
-The Hazards domain exposes four primary governed surfaces, mirroring the Master API Surface Table specialized for Hazards-specific DTOs. Cross-cutting surfaces (Evidence resolver, Correction submit, Review decision) are domain-agnostic and inherit the master contract.
+The Hazards domain exposes four primary governed surfaces, mirroring the Master API Surface Table specialized for Hazards-specific DTOs. The four-surface set (feature/detail resolver, layer manifest resolver, Evidence Drawer payload, Focus Mode answer) and their outcome sets are **CONFIRMED** from the Hazards J-table; field shapes and routes remain **PROPOSED**. Cross-cutting surfaces (Evidence resolver, Correction submit, Review decision) are domain-agnostic and inherit the master contract.
 
 | # | Surface | DTO / schema (PROPOSED) | Finite outcomes | Status |
 |---|---|---|---|---|
-| H-API-1 | Hazards feature / detail resolver | `HazardsDecisionEnvelope` (= `DomainFeatureEnvelope` + Hazards-typed payload) | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | **PROPOSED** governed surface; exact route **UNKNOWN**. |
-| H-API-2 | Hazards layer manifest resolver | `LayerManifest` (Hazards-scoped) | `ANSWER` / `DENY` / `ERROR` | **PROPOSED**; public-safe release only. |
-| H-API-3 | Hazards Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | **PROPOSED**; evidence- and policy-filtered. |
-| H-API-4 | Hazards Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | **PROPOSED**; AI is interpretive, not root truth. |
+| H-API-1 | Hazards feature / detail resolver | `HazardsDecisionEnvelope` (= `DomainFeatureEnvelope` + Hazards-typed payload) | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Surface + outcomes **CONFIRMED** (J-table); route **UNKNOWN**. |
+| H-API-2 | Hazards layer manifest resolver | `LayerManifest` (Hazards-scoped) | `ANSWER` / `DENY` / `ERROR` | Surface + outcomes **CONFIRMED**; public-safe release only. |
+| H-API-3 | Hazards Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Surface + outcomes **CONFIRMED**; evidence- and policy-filtered. |
+| H-API-4 | Hazards Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Surface + outcomes **CONFIRMED**; AI is interpretive, not root truth. |
 | H-API-X1 | Evidence resolver (cross-cutting) | `EvidenceBundle` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | **PROPOSED** master surface. |
 | H-API-X2 | Correction submit (cross-cutting) | `CorrectionNoticeCandidate` | `ACCEPTED` / `DENY` / `ERROR` | **PROPOSED** master surface. |
 | H-API-X3 | Review decision (cross-cutting) | `ReviewRecord` | `ALLOW` / `RESTRICT` / `DENY` / `ERROR` | **PROPOSED** master surface. |
@@ -162,7 +172,7 @@ Each surface section captures: **purpose**, **inputs**, **DTO**, **outcome rules
 | DTO | `HazardsDecisionEnvelope` — specialization of `DomainFeatureEnvelope` carrying a Hazards-typed feature payload, `evidence_refs[]`, `policy_decision`, `release_state`, `temporal_scope`, and **mandatory** `not_for_life_safety` marker when operational context is involved. **PROPOSED**. |
 | Outcomes | `ANSWER` (evidence resolved, policy allows, release state OK, freshness within tolerance) · `ABSTAIN` (evidence insufficient, citation unresolvable, stale operational context with no released alternative) · `DENY` (policy/rights/sensitivity/release-state forbids; operational expiry passed; life-safety-instruction-like request) · `ERROR` (malformed request, schema violation, infra failure). |
 | Forbidden | Returning an unreleased candidate as `ANSWER`; exposing internal store identifiers; returning a `WarningContext` past its `expiry` as a current warning; conflating regulatory zones with observed events. |
-| Schema home | `schemas/contracts/v1/domains/hazards/...` per Directory Rules §6.4 and ADR-0001. **PROPOSED**; **NEEDS VERIFICATION**. |
+| Schema home | `schemas/contracts/v1/hazards/...` per Directory Rules responsibility-root law and ADR-0001. **PROPOSED**; **NEEDS VERIFICATION**. |
 
 > [!WARNING]
 > **Stale operational state is not a current warning.** A `WarningContext` or `AdvisoryContext` whose `valid_through` / `expiry` time has passed **must** be returned as `ABSTAIN` or `DENY`, with an explicit `freshness: expired` marker and an official-source referral — never as a current warning payload.
@@ -187,7 +197,7 @@ Each surface section captures: **purpose**, **inputs**, **DTO**, **outcome rules
 | DTO | `EvidenceDrawerPayload` — clicked feature, layer id, `evidence_refs`, policy state, source/citation display, caveats, conflicts, telemetry. **Hazards extension fields**: `source_role`, `issue_time`, `expiry_time`, `freshness_state`, `official_source_referral`, `not_for_life_safety`. **PROPOSED**. |
 | Outcomes | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR`. |
 | Forbidden | Dropping citation, policy, review, or release state during projection; rendering exact restricted geometry; displaying expired operational context without a `freshness: expired` badge. |
-| Schema home | `schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json` (cross-cutting) with Hazards-specific drawer fields documented under `contracts/domains/hazards/`. **PROPOSED**. |
+| Schema home | `schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json` (cross-cutting) with Hazards-specific drawer fields documented under `contracts/hazards/`. **PROPOSED**. |
 
 ### 4.4 Hazards Focus Mode answer
 
@@ -206,7 +216,7 @@ The Evidence resolver, Correction submit, and Review decision surfaces are domai
 
 - **Evidence resolver** — Hazards `EvidenceBundle`s must include `source_role`, `issue/expiry/valid` times, and `not_for_life_safety` posture when operational.
 - **Correction submit** — Hazards corrections may target a published `HazardEvent`, `WarningContext`, `AdvisoryContext`, `DisasterDeclaration`, or derivative; submissions enter the standard correction lifecycle with `ACCEPTED` / `DENY` / `ERROR`.
-- **Review decision** — Hazards review uses the standard `ReviewRecord` with `ALLOW` / `RESTRICT` / `DENY` / `ERROR`; restricted exposure applies when sensitivity or rights demand staged access.
+- **Review decision** — Hazards review uses the standard `ReviewRecord` with `ALLOW` / `RESTRICT` / `DENY` / `ERROR`; restricted exposure applies when sensitivity or rights demand staged access. Reviewer separation-of-duties on policy-significant Hazards releases is governed by **ADR-S-09** (threshold and tooling pending).
 
 [Back to top](#contents)
 
@@ -214,7 +224,7 @@ The Evidence resolver, Correction submit, and Review decision surfaces are domai
 
 ## 5. Outcome envelopes and semantics
 
-Hazards surfaces use the **finite, governed outcome grammar** that every KFM governed API uses. `Deny` is a first-class outcome, not an error. `Hold` may apply to promotion/correction flows but is not a runtime read outcome.
+Hazards surfaces use the **finite, governed outcome grammar** that every KFM governed API uses. `DENY` is a first-class outcome, not an error. `HOLD` may apply to promotion/correction flows but is not a runtime read outcome.
 
 ```mermaid
 flowchart TD
@@ -248,20 +258,20 @@ flowchart TD
 
 ## 6. Hazards-specific DENY conditions
 
-These are the failure modes the Hazards governed API **must** treat as `DENY`, regardless of evidence quality. They are derived from CONFIRMED Hazards doctrine and the Master Source-Role Anti-Collapse register.
+These are the failure modes the Hazards governed API **must** treat as `DENY`, regardless of evidence quality. They are derived from CONFIRMED Hazards doctrine and the Master Source-Role Anti-Collapse Register (Atlas §24.1).
 
 | # | Condition | Why it denies | Required guardrail |
 |---|---|---|---|
 | D-1 | Request seeks emergency-alert behavior, life-safety instruction, or real-time warning replacement. | KFM is not an alert authority. | DENY + official-source referral (NWS, FEMA, state EM) in payload. |
 | D-2 | Operational `WarningContext` / `AdvisoryContext` past its `expiry` / `valid_through` and the caller asks for it as current. | Stale operational state must not appear as current warning state. | DENY (or ABSTAIN with `freshness: expired` if a historical view is what was asked for). |
 | D-3 | Regulatory zone (e.g., NFHL flood-zone designation) used to assert an observed flood event. | Source-role anti-collapse: regulatory ≠ observed. | DENY publication; separate regulatory-layer and observed-event lanes; banner in UI. |
-| D-4 | Modeled product (smoke trajectory, hazard model grid) labeled or queried as an observation. | Source-role anti-collapse: modeled ≠ observed. | DENY at publication; ABSTAIN at AI surface; require model run receipt + uncertainty. |
-| D-5 | Aggregate (county hazard totals, decadal climate normal) cited as a per-place truth. | Aggregate cell ≠ per-place record. | DENY join from aggregate to single record; aggregation receipt required. |
-| D-6 | Candidate record (unmerged quarantined source output) requested on a public surface. | Promotion is a governed state transition. | DENY at trust membrane; route to QUARANTINE. |
-| D-7 | Synthetic content (reconstruction, AI-drafted summary) presented as observed reality. | Reality boundary doctrine. | DENY publication; HOLD for steward review; ABSTAIN at AI. |
+| D-4 | Modeled product (smoke trajectory, hazard model grid) labeled or queried as an observation. | Source-role anti-collapse: modeled ≠ observed. | DENY at publication; ABSTAIN at AI surface; require model run receipt + uncertainty surface. |
+| D-5 | Aggregate (county hazard totals, decadal climate normal) cited as a per-place truth. | Aggregate cell ≠ per-place record. | DENY join from aggregate to single record; aggregation receipt + geometry-scope guard required. |
+| D-6 | Candidate record (unmerged quarantined source output) requested on a public surface. | Promotion is a governed state transition. | DENY at trust membrane; route to QUARANTINE; no PUBLISHED edge to WORK/QUARANTINE. |
+| D-7 | Synthetic content (reconstruction, AI-drafted summary) presented as observed reality. | Reality-boundary doctrine. | DENY publication; HOLD for steward review; ABSTAIN at AI; Reality Boundary Note + Representation Receipt. |
 | D-8 | AI text treated as evidence in a Hazards claim. | Cite-or-abstain rule; `EvidenceBundle` outranks generated language. | DENY publication; ABSTAIN at Focus Mode; `AIReceipt` mandatory. |
-| D-9 | Direct read of `data/raw/hazards/`, `data/work/hazards/`, or `data/quarantine/hazards/` from a public client. | Trust membrane invariant. | DENY at membrane; client must use governed API. |
-| D-10 | Request for exact sensitive operational details (e.g., critical-infrastructure exposure precision tied to a hazard) without a steward-approved exposure class. | Critical-infrastructure exposure controls. | DENY (or RESTRICT via review surface) until reviewer + transform receipt exist. |
+| D-9 | Direct read of `data/raw/hazards/`, `data/work/hazards/`, or `data/quarantine/hazards/` from a public client. | Trust-membrane invariant. | DENY at membrane; client must use governed API. |
+| D-10 | Request for exact sensitive operational details (e.g., critical-infrastructure exposure precision tied to a hazard) without a steward-approved exposure class. | Critical-infrastructure exposure controls; sensitive lanes fail closed. | DENY (or RESTRICT via review surface) until reviewer + transform receipt (`RedactionReceipt`) exist. |
 
 [Back to top](#contents)
 
@@ -269,7 +279,7 @@ These are the failure modes the Hazards governed API **must** treat as `DENY`, r
 
 ## 7. Source roles and anti-collapse rules
 
-Hazards is one of the highest-risk domains for source-role collapse. The governed API **must** preserve the `source_role` of every record through every surface response.
+Hazards is one of the highest-risk domains for source-role collapse. The governed API **must** preserve the `source_role` of every record through every surface response. The seven roles below are the **canonical** vocabulary from the Master Source-Role Anti-Collapse Register (Atlas §24.1.1); the enum is governed by **ADR-S-04**.
 
 | Role | Hazards example | Allowed downstream role |
 |---|---|---|
@@ -281,8 +291,11 @@ Hazards is one of the highest-risk domains for source-role collapse. The governe
 | **Candidate** | Unmerged quarantined detection (e.g., unresolved FIRMS hot-spot). | May appear in WORK/QUARANTINE; **never** in PUBLISHED without promotion. |
 | **Synthetic** | AI-drafted summary; reconstructed historical hazard scene. | Carries Reality Boundary Note + Representation Receipt; never queried as observed reality. |
 
+> [!CAUTION]
+> **The "operational" feed is a sub-form, not an eighth canonical role.** A NWS warning/advisory/watch feed (active alerts) is admitted with a canonical `source_role` (typically *observed* or *regulatory* depending on the product) **plus** operational freshness windows governed by `policy/domains/hazards/`. It is **not** a new top-level role: the canonical enum remains the seven roles above per Atlas §24.1.1 and ADR-S-04. It is **never** interchangeable with an observation, a regulatory determination, or a model output, and it is **never** published or returned as a life-safety instruction. Whether "operational" warrants a distinct enum value or remains a freshness/policy overlay is **OPEN** pending ADR-S-04.
+
 > [!NOTE]
-> A NWS warning/advisory feed (active alerts) is admitted as an **operational** record — a constrained sub-form whose role and freshness windows are governed by `policy/domains/hazards/`. It is **not** interchangeable with an observation, a regulatory determination, or a model output, and it is **never** published or returned as a life-safety instruction.
+> Source role is **fixed at admission** (`SourceDescriptor`) and preserved through every promotion. Promotion never upgrades an observation to a regulation, a model to an aggregate, or a candidate to a verified record — those are separate governed transitions with their own evidence and review requirements.
 
 [Back to top](#contents)
 
@@ -290,7 +303,7 @@ Hazards is one of the highest-risk domains for source-role collapse. The governe
 
 ## 8. Object family ↔ surface map
 
-The Hazards canonical object families (CONFIRMED from the Hazards encyclopedia chapter) and their primary governed-API surfaces.
+The Hazards canonical object families (**CONFIRMED** object-family spine from the Hazards encyclopedia chapter; **PROPOSED** implementation) and their primary governed-API surfaces.
 
 | Object family | Feature / detail | Layer manifest | Drawer | Focus | Notes |
 |---|:---:|:---:|:---:|:---:|---|
@@ -310,18 +323,25 @@ The Hazards canonical object families (CONFIRMED from the Hazards encyclopedia c
 | `HazardTimeline` | ✓ | ✓ | ✓ | ✓ | Composite; per-event role preserved. |
 | `ImpactArea` | ✓ | ✓ | ✓ | ✓ | Spatial scope; sensitivity gated. |
 
+> [!NOTE]
+> The first eight families (`HazardEvent` through `SmokeContext`) are explicitly named in the Atlas Cross-Domain Object Index and Hazards §E table as **CONFIRMED** spine. The remaining families (`DroughtIndicator` onward) are **PROPOSED** extensions drawn from the Hazards §E object table and source families; treat their object names as **NEEDS VERIFICATION** against the live encyclopedia chapter.
+
 [Back to top](#contents)
 
 ---
 
 ## 9. Schema, contract, policy, and test placement
 
-Placement follows Directory Rules **Domain Placement Law (§12)**: the domain appears as a **segment** inside the responsibility root, never as a root.
+Placement follows Directory Rules: pick exactly one responsibility root, name the lifecycle phase (data only), and treat the **domain as a segment inside** the responsibility root, never as a root.
+
+> [!IMPORTANT]
+> **Schema-home segment corrected in v2.** The Atlas §24.13 *Section ↔ Dossier ↔ Responsibility Root Crosswalk* places Hazards at `schemas/contracts/v1/hazards/`, `contracts/hazards/`, and `policy/release/hazards/` — **with no intervening `/domains/` segment**. The v1 edition of this doc used a `schemas/contracts/v1/domains/hazards/` form. This is now treated as **CONFLICTED** (doc-internal drift vs. the crosswalk) and resolved in favor of the crosswalk form below, pending **ADR-S-01 / ADR-0001** confirmation. A `DRIFT_REGISTER.md` entry is required (see §12).
 
 ```text
-contracts/domains/hazards/                # semantic meaning (Markdown)
-schemas/contracts/v1/domains/hazards/     # machine shape (JSON Schema)        ← ADR-0001 canonical
+contracts/hazards/                        # semantic meaning (Markdown)        ← Atlas Sec 24.13 crosswalk
+schemas/contracts/v1/hazards/             # machine shape (JSON Schema)        ← ADR-0001 canonical
 policy/domains/hazards/                   # admissibility, deny, restrict
+policy/release/hazards/                   # release-policy lane (Sec 24.13)
 tests/domains/hazards/                    # proof of rules
 fixtures/domains/hazards/                 # golden / synthetic / invalid samples
 data/raw/hazards/                         # immutable source payloads / refs
@@ -335,13 +355,13 @@ docs/domains/hazards/                     # this document + adjacent docs
 ```
 
 > [!NOTE]
-> All paths in this section are **PROPOSED** placements per Directory Rules and ADR-0001. **NEEDS VERIFICATION**: actual presence in the mounted repo, the canonical schema root (`schemas/contracts/v1/` vs. `contracts/<domain>/<x>.schema.json` legacy), and any drift entries under `docs/registers/DRIFT_REGISTER.md`.
+> All paths in this section are **PROPOSED** placements per Directory Rules and ADR-0001. **NEEDS VERIFICATION**: actual presence in the mounted repo, the canonical schema root (`schemas/contracts/v1/` vs. legacy `contracts/<domain>/<x>.schema.json` or `jsonschema/`), the `policy/domains/hazards/` vs. `policy/release/hazards/` split, and any drift entries under `docs/registers/DRIFT_REGISTER.md`.
 
 ### Per-surface placement (PROPOSED)
 
 | Surface | Contract (.md) | Schema (.json) | Policy | Tests | Fixtures |
 |---|---|---|---|---|---|
-| Feature / detail resolver | `contracts/domains/hazards/hazards_decision_envelope.md` | `schemas/contracts/v1/domains/hazards/hazards_decision_envelope.schema.json` | `policy/domains/hazards/feature_resolver.rego` | `tests/domains/hazards/feature_resolver/` | `fixtures/domains/hazards/feature_resolver/` |
+| Feature / detail resolver | `contracts/hazards/hazards_decision_envelope.md` | `schemas/contracts/v1/hazards/hazards_decision_envelope.schema.json` | `policy/domains/hazards/feature_resolver.rego` | `tests/domains/hazards/feature_resolver/` | `fixtures/domains/hazards/feature_resolver/` |
 | Layer manifest resolver | `contracts/runtime/layer_manifest.md` | `schemas/contracts/v1/runtime/layer_manifest.schema.json` | `policy/domains/hazards/layer_manifest.rego` | `tests/domains/hazards/layer_manifest/` | `fixtures/domains/hazards/layer_manifest/` |
 | Evidence Drawer payload | `contracts/evidence/evidence_drawer_payload.md` | `schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json` | `policy/domains/hazards/drawer.rego` | `tests/domains/hazards/drawer/` | `fixtures/domains/hazards/drawer/` |
 | Focus Mode answer | `contracts/runtime/runtime_response_envelope.md` | `schemas/contracts/v1/focus/runtime_response_envelope.schema.json` | `policy/domains/hazards/focus.rego` | `tests/domains/hazards/focus/` | `fixtures/domains/hazards/focus/` |
@@ -352,7 +372,7 @@ docs/domains/hazards/                     # this document + adjacent docs
 
 ## 10. Validators and tests
 
-The Hazards lane carries the standard cross-cutting test families **plus** Hazards-specific negative paths. Every row below is **PROPOSED** until the mounted repo confirms presence.
+The Hazards lane carries the standard cross-cutting test families **plus** Hazards-specific negative paths (source-role anti-collapse, temporal-role, emergency-alert denial, operational expiry/freshness, catalog closure, Evidence Drawer disclaimer, UI no-direct-source — all **PROPOSED** per the Hazards §K validator list). Every row below is **PROPOSED** until the mounted repo confirms presence.
 
 | Test family | Required negative case | Expected outcome |
 |---|---|---|
@@ -380,16 +400,16 @@ The Hazards lane carries the standard cross-cutting test families **plus** Hazar
 
 | ID | Invariant | Source |
 |---|---|---|
-| HZ-INV-1 | Public reads of Hazards data **must** flow through the governed API. | CONFIRMED — trust membrane doctrine. |
+| HZ-INV-1 | Public reads of Hazards data **must** flow through the governed API. | CONFIRMED — trust-membrane doctrine. |
 | HZ-INV-2 | The governed API **must not** serve `RAW` / `WORK` / `QUARANTINE` / `PROCESSED`-only Hazards records as `ANSWER`. | CONFIRMED — lifecycle law. |
 | HZ-INV-3 | Every Hazards `ANSWER` **must** carry resolvable `EvidenceRef`s and a citation projection. | CONFIRMED — cite-or-abstain. |
 | HZ-INV-4 | Every Hazards surface **must** carry `not_for_life_safety` when operational context is involved, and **must** route urgent life-safety needs to official sources. | CONFIRMED — Hazards boundary. |
-| HZ-INV-5 | Source role **must** be preserved through every surface response; observed / regulatory / modeled / aggregate / administrative / candidate / synthetic are not interchangeable. | CONFIRMED — source-role anti-collapse. |
+| HZ-INV-5 | Source role **must** be preserved through every surface response; the seven canonical roles (observed / regulatory / modeled / aggregate / administrative / candidate / synthetic) are not interchangeable. | CONFIRMED — source-role anti-collapse (Atlas §24.1.1). |
 | HZ-INV-6 | Watchers and connectors **must not** publish; they emit candidates and receipts only. | CONFIRMED — watcher-as-non-publisher. |
 | HZ-INV-7 | Promotion is a governed state transition, not a file move; release requires `ReleaseManifest`, rollback target, correction path. | CONFIRMED — lifecycle law. |
 | HZ-INV-8 | AI surfaces (Focus Mode) **must** emit `AIReceipt` with a finite outcome and `CitationValidationReport`; AI is interpretive, never root truth. | CONFIRMED — governed AI rule. |
 | HZ-INV-9 | Expired operational state (`WarningContext`, `AdvisoryContext`) **must not** appear as a current warning. | CONFIRMED — Hazards doctrine. |
-| HZ-INV-10 | Sensitive operational details (e.g., critical-infrastructure exposure precision) **must** be restricted, generalized, or staged unless a steward-reviewed exposure class allows public exact release. | CONFIRMED — critical-infrastructure controls. |
+| HZ-INV-10 | Sensitive operational details (e.g., critical-infrastructure exposure precision) **must** be restricted, generalized, or staged unless a steward-reviewed exposure class allows public exact release. | CONFIRMED — critical-infrastructure controls; sensitive lanes fail closed. |
 
 [Back to top](#contents)
 
@@ -397,38 +417,68 @@ The Hazards lane carries the standard cross-cutting test families **plus** Hazar
 
 ## 12. Verification backlog and open questions
 
+These items remain `NEEDS VERIFICATION` or `OPEN` before promotion from `draft` to `published`.
+
 | Item | Evidence that would settle it | Status |
 |---|---|---|
-| Exact governed-API route paths for the four Hazards surfaces. | Mounted `apps/governed-api/src/routes/...`; routing convention ADR. | **NEEDS VERIFICATION**. |
-| Canonical schema home for Hazards envelopes (`schemas/contracts/v1/domains/hazards/` vs. legacy `contracts/<domain>/<x>.schema.json`). | ADR-0001 reaffirmation; `git ls-tree`-equivalent check; drift entry, if any. | **NEEDS VERIFICATION**. |
-| Field-level shape of `HazardsDecisionEnvelope` (extension fields beyond `DomainFeatureEnvelope`). | Schema file in `schemas/contracts/v1/domains/hazards/`; contract Markdown under `contracts/domains/hazards/`. | **PROPOSED** / **NEEDS VERIFICATION**. |
+| Schema-home segment: `schemas/contracts/v1/hazards/` (crosswalk) vs. legacy `.../domains/hazards/`. | ADR-S-01 / ADR-0001 reaffirmation; `git ls-tree`-equivalent check; `DRIFT_REGISTER.md` entry for the v1→v2 correction. | **NEEDS VERIFICATION**. |
+| Exact governed-API route paths for the four Hazards surfaces. | Mounted `apps/governed-api/src/routes/...`; routing-convention ADR. | **NEEDS VERIFICATION**. |
+| Field-level shape of `HazardsDecisionEnvelope` (extension fields beyond `DomainFeatureEnvelope`). | Schema file in `schemas/contracts/v1/hazards/`; contract Markdown under `contracts/hazards/`. | **PROPOSED** / **NEEDS VERIFICATION**. |
+| Whether "operational" is a distinct `source_role` enum value or a freshness/policy overlay on observed/regulatory. | ADR-S-04 (source-role vocabulary v1). | **OPEN**. |
 | Operational-feed freshness thresholds (NWS, FIRMS, drought monitor) and their policy expression. | `policy/domains/hazards/freshness.rego`; source-descriptor cadence fields. | **NEEDS VERIFICATION**. |
 | Official-source referral list (NWS, FEMA, state EM channels) and its placement. | `policy/domains/hazards/referrals.yaml` or equivalent. | **PROPOSED**. |
 | Emergency-alert denial test fixtures. | `tests/domains/hazards/focus/emergency_alert_denial/`. | **PROPOSED**. |
-| Drift between Hazards naming used here and any existing legacy folders. | `docs/registers/DRIFT_REGISTER.md` entry. | **NEEDS VERIFICATION**. |
+| Reviewer separation-of-duties threshold for policy-significant Hazards releases. | ADR-S-09 (reviewer separation-of-duties threshold). | **OPEN**. |
 | Whether `Hazards Focus Mode answer` shares its `RuntimeResponseEnvelope` schema with other domains or needs a Hazards-scoped extension. | Schema diff; ADR. | **OPEN**. |
-| Routing convention ADR (`apps/governed-api/src/routes/...` vs alternate). | Accepted ADR. | **OPEN**. |
 | Whether `not_for_life_safety` is a top-level envelope field or nested under `policy_decision.obligations`. | Schema decision; ADR. | **OPEN**. |
+| Object families beyond the eight-family CONFIRMED spine (`DroughtIndicator` onward). | Live Hazards encyclopedia §E object table. | **NEEDS VERIFICATION**. |
+
+### Open questions register
+
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-HAZ-API-01 | Is the canonical Hazards schema home `schemas/contracts/v1/hazards/` (crosswalk) or `.../domains/hazards/`? | governed-api-steward | ADR-S-01 / ADR-0001 check; Directory Rules; repo inspection |
+| OQ-HAZ-API-02 | Does "operational" deserve a distinct source-role enum value? | hazards-domain-steward | ADR-S-04 |
+| OQ-HAZ-API-03 | Top-level `not_for_life_safety` field vs. `policy_decision.obligations` nesting? | governed-api-steward | Schema decision + ADR |
+| OQ-HAZ-API-04 | Routing convention under `apps/governed-api/src/routes/...`? | governed-api-steward | Accepted routing ADR |
+| OQ-HAZ-API-05 | Reviewer SoD threshold for sensitive Hazards releases? | security-steward | ADR-S-09 |
 
 [Back to top](#contents)
 
 ---
 
-## 13. Related docs
+## 13. Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Corrected schema-home segment from `schemas/contracts/v1/domains/hazards/` to `schemas/contracts/v1/hazards/` (and `contracts/hazards/`, `policy/release/hazards/`). | reconciliation | Atlas §24.13 crosswalk places hazards without an intervening `/domains/` segment; v1 form flagged CONFLICTED. |
+| Pinned `CONTRACT_VERSION = "3.0.0"` in meta block, badge row, and header line. | housekeeping | Doctrine-adjacent doc; contract §authority pin requirement. |
+| Marked the seven canonical source roles as the authoritative enum; demoted "operational" to a sub-form overlay with an OPEN ADR-S-04 question. | clarification | Atlas §24.1.1 canonical role list; prior text implied an eighth role. |
+| Distinguished CONFIRMED surface/outcome sets from PROPOSED field shapes in §3. | clarification | J-table confirms surfaces and outcomes; field shapes remain unverified. |
+| Distinguished the eight-family CONFIRMED object spine from PROPOSED extensions in §8. | clarification | Cross-Domain Object Index names only the first eight. |
+| Added Open questions register and ADR cross-references (ADR-S-01, ADR-S-04, ADR-S-09). | gap closure | Doctrine-doc companion-section expectation; surfaces decisions for triage. |
+
+> **Backward compatibility.** All §-anchor headings and the `HZ-INV-*` / `D-*` / `H-API-*` identifiers are preserved. The only repo-path change (schema-home segment) is a PROPOSED placement, not a live path, so no live links break; the change is logged for `DRIFT_REGISTER.md`.
+
+[Back to top](#contents)
+
+---
+
+## 14. Related docs
 
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards domain landing page. `TODO` link target.
 - [`docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) — Source refresh runbook for hazards feeds.
 - [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Governed API trust membrane and route inventory. `TODO` link target.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — How `contracts/`, `schemas/`, `policy/`, and `tests/` divide responsibilities. `TODO` link target.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle law (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED). `TODO` link target.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane doctrine. `TODO` link target.
+- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust-membrane doctrine. `TODO` link target.
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain default. `TODO` link target.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (Domain Placement Law). `TODO` link target.
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV provenance profile.
-- [`docs/adr/`](../../adr/) — ADR index (ADR-0001 schema home; routing-convention ADR pending).
-- `schemas/contracts/v1/domains/hazards/` — Hazards JSON Schemas. PROPOSED.
-- `contracts/domains/hazards/` — Hazards semantic contracts. PROPOSED.
-- `policy/domains/hazards/` — Hazards policy bundle. PROPOSED.
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV provenance profile. *(Filename `PROV.md` vs `PROVENANCE.md` is OPEN per Directory Rules OPEN-DR-01.)*
+- [`docs/adr/`](../../adr/) — ADR index (ADR-0001 schema home; ADR-S-01, ADR-S-04, ADR-S-09, routing-convention ADRs pending).
+- `schemas/contracts/v1/hazards/` — Hazards JSON Schemas. PROPOSED.
+- `contracts/hazards/` — Hazards semantic contracts. PROPOSED.
+- `policy/domains/hazards/`, `policy/release/hazards/` — Hazards policy bundles. PROPOSED.
 - `tests/domains/hazards/` — Hazards conformance tests. PROPOSED.
 
 [Back to top](#contents)
@@ -590,9 +640,10 @@ The Hazards lane carries the standard cross-cutting test families **plus** Hazar
 
 | Label | Meaning (this document) |
 |---|---|
-| **CONFIRMED** | Verified this session from attached KFM doctrine documents (Encyclopedia, Domains Culmination Atlas, Whole-UI Governed AI Expansion Report, Pass 20 Idea Index, Directory Rules). |
+| **CONFIRMED** | Verified this session from attached KFM doctrine documents (Encyclopedia, Domains Culmination Atlas incl. Ch. 24, Directory Rules, Unified Doctrine Synthesis, Connected-Dots Architecture Brief). |
 | **PROPOSED** | Design or path not yet verified in the mounted repository; rests on attached doctrine + Directory Rules placement law. |
 | **NEEDS VERIFICATION** | Checkable, but not yet checked against the mounted repository in this session. |
+| **CONFLICTED** | Sources disagree (e.g., doc-internal schema-home segment vs. Atlas §24.13 crosswalk); resolved here pending ADR. |
 | **UNKNOWN** | Not resolvable without further evidence. |
 | **OPEN** | Pending an ADR or steward decision. |
 
@@ -602,6 +653,6 @@ The Hazards lane carries the standard cross-cutting test families **plus** Hazar
 
 **Related docs:** [Hazards README (TODO)](./README.md) · [Source Refresh Runbook](./SOURCE_REFRESH_RUNBOOK.md) · [Governed API architecture (TODO)](../../architecture/governed-api.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
-**Last updated:** 2026-05-17 · **Doc id:** `kfm://doc/domains/hazards/api-contracts` · **Version:** v1 · **Status:** draft
+**Last updated:** 2026-06-05 · **Doc id:** `kfm://doc/domains/hazards/api-contracts` · **Version:** v2 · **Status:** draft · **`CONTRACT_VERSION = "3.0.0"`**
 
 [↑ Back to top](#contents)
