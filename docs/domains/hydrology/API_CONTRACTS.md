@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: <hydrology-lane-steward>, <governed-api-owner>, <contract-schema-steward>
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-06
 policy_label: public
 related:
   - docs/domains/hydrology/README.md
@@ -14,21 +14,26 @@ related:
   - docs/architecture/governed-api.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/doctrine/trust-membrane.md
-  - docs/doctrine/directory-rules.md
+  - directory-rules.md                                  # placement authority (root file; docs/doctrine/ mirror is PROPOSED)
+  - ai-build-operating-contract.md                      # CONTRACT_VERSION = "3.0.0"
   - contracts/domains/hydrology/
   - schemas/contracts/v1/domains/hydrology/
   - policy/domains/hydrology/
   - tests/domains/hydrology/
   - fixtures/domains/hydrology/
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
+  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md        # sibling template (Pattern A; OPEN-DR-02)
 tags: [kfm, hydrology, api, contracts, governed-api, trust-membrane, evidence, decision-envelope]
 notes:
+  - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
   - Repository is not mounted in this drafting session; all path-shaped claims are PROPOSED or NEEDS VERIFICATION.
   - All API routes are PROPOSED; current implementation maturity is UNKNOWN.
-  - Authoritative doctrine is KFM Domains Atlas v1.1 §4 (Hydrology), Encyclopedia §7.2, Directory Rules §12, and Whole-UI + Governed AI Expansion Report.
+  - Authoritative doctrine — KFM Domains Atlas v1.1 §4 (Hydrology), §24.3, §24.6; Encyclopedia §7.2; ai-build-operating-contract.md §8, §21, §22; Directory Rules §6.3-§6.5, §7, §12; Whole-UI + Governed AI Expansion Report.
+  - Runtime answer outcomes (ANSWER / ABSTAIN / DENY / ERROR, optional NARROWED / BOUNDED) are distinct from gate-class outcomes (HOLD / PASS / FAIL) — see §5.
 [/KFM_META_BLOCK_V2] -->
 
-# Hydrology — API Contracts
+<a id="top"></a>
+
+# 💧 Hydrology — API Contracts
 
 > Trust-membrane contract reference for the Hydrology domain. Defines the governed API surfaces, outcome envelopes, DTOs, schema homes, and policy bindings that public clients, the Map shell, Focus Mode, and stewards may interact with — without ever touching canonical, RAW, WORK, or QUARANTINE stores.
 
@@ -36,13 +41,17 @@ notes:
 
 ![status: draft](https://img.shields.io/badge/status-draft-blue)
 ![authority: doctrine](https://img.shields.io/badge/authority-doctrine--bound-purple)
+![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-yellow)
 ![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-lightgrey)
 ![outcomes: ANSWER · ABSTAIN · DENY · ERROR](https://img.shields.io/badge/outcomes-ANSWER%20%C2%B7%20ABSTAIN%20%C2%B7%20DENY%20%C2%B7%20ERROR-informational)
 ![policy: cite-or-abstain](https://img.shields.io/badge/policy-cite--or--abstain-success)
 ![badges: TODO CI](https://img.shields.io/badge/badges-TODO%20CI%20targets-lightgrey)
 
-**Status:** draft · **Owners:** `<hydrology-lane-steward>`, `<governed-api-owner>`, `<contract-schema-steward>` · **Last updated:** 2026-05-17
+**Status:** draft · **Owners:** `<hydrology-lane-steward>`, `<governed-api-owner>`, `<contract-schema-steward>` · **Last updated:** 2026-06-06 · **`CONTRACT_VERSION = "3.0.0"`**
+
+> [!IMPORTANT]
+> **Repository not mounted in this session.** Every path-shaped claim below is `PROPOSED` or `NEEDS VERIFICATION`; route names, mounts, and schema files are not asserted as present. Verify against the current repo, ADR index, and `docs/registers/DRIFT_REGISTER.md` before treating any path here as canonical. Memory and prior plans are not evidence.
 
 ---
 
@@ -62,10 +71,12 @@ notes:
 12. [Pipeline binding and publication](#12-pipeline-binding-and-publication)
 13. [Anti-patterns](#13-anti-patterns)
 14. [Open verification backlog](#14-open-verification-backlog)
-15. [Change discipline](#15-change-discipline)
-16. [Related docs](#16-related-docs)
+15. [Open questions register](#15-open-questions-register)
+16. [Change discipline](#16-change-discipline)
+17. [Definition of done](#17-definition-of-done)
+18. [Related docs](#18-related-docs)
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -84,9 +95,9 @@ It is a **reference doc**, not a runtime spec. It pins doctrine, names objects, 
 | Source-family role discipline | ✅ | Source onboarding playbook (lives in source runbooks) |
 
 > [!NOTE]
-> **Status discipline.** Hydrology API doctrine — outcomes, DTO families, trust-membrane rules, sensitivity posture — is **CONFIRMED doctrine** in the Atlas and Encyclopedia. **Implementation** (routes, mounts, route handlers, schema files on disk) is **PROPOSED / NEEDS VERIFICATION** until inspected in the mounted repo. Memory and prior plans are not evidence.
+> **Status discipline.** Hydrology API doctrine — outcomes, DTO families, trust-membrane rules, sensitivity posture — is **CONFIRMED doctrine** in the Atlas, Encyclopedia, and operating contract. **Implementation** (routes, mounts, route handlers, schema files on disk) is **PROPOSED / NEEDS VERIFICATION** until inspected in the mounted repo. Memory and prior plans are not evidence.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -97,16 +108,16 @@ Hydrology's API surface sits behind the same **trust membrane** that governs eve
 > [!IMPORTANT]
 > The following invariants apply to every Hydrology endpoint and are **non-negotiable** trust-spine rules:
 >
-> - **No RAW / WORK / QUARANTINE public path.** Public clients receive only released, public-safe payloads through governed APIs and EvidenceBundle resolution.
+> - **No RAW / WORK / QUARANTINE public path.** Public clients receive only released, public-safe payloads through governed APIs and EvidenceBundle resolution. `PUBLISHED` is the only state from which the governed API may emit `ANSWER`.
 > - **No direct model client.** Focus Mode and AI runtime sit behind governed API boundaries and finite outcomes; no browser-to-model traffic.
 > - **No unreleased layer load.** A layer toggle is not publication; `LayerManifest`, `MapReleaseManifest`, and a passing `PolicyDecision` must allow the layer.
 > - **No popup as Evidence Drawer substitute.** A popup may summarize; consequential claims must resolve through `EvidenceDrawerPayload` and `CitationValidationReport`.
 > - **No uncited export.** Screenshots, PDFs, Story Nodes, and Focus Mode answers must carry citation, evidence ID, version lock, and release manifest reference.
 > - **No KFM-as-alert authority.** Hydrology is not an emergency flood-warning system; life-safety instructions are not a KFM output.
 
-CONFIRMED doctrine sources: Directory Rules §1, §12; Atlas v1.1 §4(I), §24.9.2; Whole-UI + Governed AI Expansion Report; MapLibre Operating Manual §10–11.
+CONFIRMED doctrine sources: Directory Rules §1, §12; Atlas v1.1 §4(I), §24.6.2, §24.9.2; `ai-build-operating-contract.md` §10, §22; Whole-UI + Governed AI Expansion Report; MapLibre Operating Manual §10–11.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -123,15 +134,18 @@ The table below enumerates the Hydrology-facing governed surfaces. **All endpoin
 | H-API-01 | Hydrology feature / detail resolver | `GET` (resource shape PROPOSED) | feature id, time scope, version lock | `HydrologyDecisionEnvelope` carrying `FeatureDTO` + `EvidenceRef[]` | ANSWER / ABSTAIN / DENY / ERROR | PROPOSED; route UNKNOWN |
 | H-API-02 | Hydrology layer manifest resolver | `GET` | layer id | `LayerManifest` (domain layer descriptor) | ANSWER / DENY / ERROR | PROPOSED; public-safe release only |
 | H-API-03 | Hydrology Evidence Drawer payload | `GET` / `POST` | feature/layer ref, time, policy context | `EvidenceDrawerPayload` (projection of `EvidenceBundle`) | ANSWER / ABSTAIN / DENY / ERROR | PROPOSED; evidence and policy filtered |
-| H-API-04 | Hydrology Focus Mode answer | `POST` | `FocusModeRequest` carrying `MapContextEnvelope` | `FocusModeResponse` + `AIReceipt` (`RuntimeResponseEnvelope`) | ANSWER / ABSTAIN / DENY / ERROR | PROPOSED; AI is never root truth |
+| H-API-04 | Hydrology Focus Mode answer | `POST` | `FocusModeRequest` carrying `MapContextEnvelope` | `FocusModeResponse` + `AIReceipt` (`RuntimeResponseEnvelope`) | ANSWER / ABSTAIN / DENY / ERROR (opt. NARROWED / BOUNDED) | PROPOSED; AI is never root truth |
 | H-API-05 | EvidenceBundle resolver | `GET` | `EvidenceRef` (bundle id) | `EvidenceBundle` | ANSWER / DENY / ERROR | PROPOSED; generic cross-domain surface |
-| H-API-06 | Correction submission | `POST` | `CorrectionNoticeCandidate` | acknowledgement w/ tracking id | ACCEPTED / DENY / ERROR | PROPOSED; queued for steward review |
-| H-API-07 | Steward review decision (restricted) | `POST` | review payload | `ReviewRecord` | ALLOW / RESTRICT / DENY / ERROR | PROPOSED; role-gated, audited |
-| H-API-08 | Hydrology export request | `POST` | export spec + scope | export envelope (job/artifact ref) | ANSWER / DENY / ERROR | PROPOSED; public-safe export only |
+| H-API-06 | Correction submission | `POST` | `CorrectionNoticeCandidate` | acknowledgement w/ tracking id | ACCEPTED / DENY / ERROR; HOLD at gate | PROPOSED; queued for steward review |
+| H-API-07 | Steward review decision (restricted) | `POST` | review payload | `ReviewRecord` | ALLOW / RESTRICT / DENY / ERROR; HOLD at gate | PROPOSED; role-gated, audited |
+| H-API-08 | Hydrology export request | `POST` | export spec + scope | export envelope (job/artifact ref) | ANSWER / DENY / ERROR; HOLD at gate | PROPOSED; public-safe export only |
 | H-API-09 | Hydrology telemetry intake (safe UI events) | `POST` | telemetry payload | acknowledgement | ANSWER / DENY / ERROR | PROPOSED; no PII, no model prompts |
 
 > [!CAUTION]
 > The table above mirrors Atlas v1.1 §4(J) and the generic cross-domain envelope in Encyclopedia §7.2(J). **Specific URL shapes** (e.g., `/api/v1/domains/hydrology/features/{id}`) appear in source dossiers as illustrative examples and are explicitly **PROPOSED**; the canonical URL ontology is set by the governed-API steward in conjunction with `docs/architecture/governed-api.md`.
+
+> [!NOTE]
+> `ANSWER / ABSTAIN / DENY / ERROR` are **answer-surface (runtime)** outcomes carried by `RuntimeResponseEnvelope`. `HOLD` (and the validator-class `PASS / FAIL`) are **gate-class** outcomes that govern promotion/release/correction, not the answer payload itself — see [§5](#5-finite-outcome-envelope).
 
 ### 3.2 Surfaces explicitly excluded
 
@@ -143,7 +157,7 @@ The following are **not** Hydrology API surfaces and MUST NOT be added under thi
 - Emergency alerting or life-safety instruction endpoints. Hydrology is not an alert authority.
 - "NFHL as observed flood" surfaces. See [§9](#9-hydrology-specific-deny-rules).
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -184,30 +198,38 @@ flowchart TD
 > [!NOTE]
 > The diagram reflects **doctrine**, not a verified implementation graph. Actual service names, mount paths, and adapter boundaries are PROPOSED until verified against the mounted repository.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
 ## 5. Finite outcome envelope
 
-Every Hydrology governed surface returns a **finite outcome** from the KFM outcome family. There is no "soft success" and no silent fall-through to a different lane. CONFIRMED doctrine: Atlas v1.1 §24.3.
+Every Hydrology governed surface returns a **finite outcome** from the KFM outcome family. There is no "soft success" and no silent fall-through to a different lane. CONFIRMED doctrine: Atlas v1.1 §24.3; `ai-build-operating-contract.md` §8, §21.2.
+
+> [!IMPORTANT]
+> **Two outcome classes, one family.** Answer-surface (runtime) outcomes ride in `RuntimeResponseEnvelope`: `ANSWER / ABSTAIN / DENY / ERROR`, with **optional** `NARROWED` / `BOUNDED` only if contract schemas define them. Gate-class outcomes — `HOLD` (steward/rights/policy review pending) and the validator-class `PASS / FAIL` — govern promotion, release, and correction transitions; they are **not** answer payloads. Do not conflate the two.
 
 ### 5.1 Outcome semantics
 
-| Outcome | When | Required carrier | Public effect |
-|---|---|---|---|
-| **ANSWER** | Evidence sufficient · policy allows · release state allows · review state recorded if required. | `EvidenceBundle` resolved · `PolicyDecision = allow` · `ReleaseManifest` applies. | Substantive payload with citation. |
-| **ABSTAIN** | Evidence insufficient · citation cannot be validated · evidence stale with no released alternative · source role conflicts · temporal scope insufficient. | `AIReceipt` with reason; no claim emitted. | Non-substantive note + reason; never invents. |
-| **DENY** | Policy, rights, sensitivity, release state, or source-role anti-collapse forbids the answer. | `PolicyDecision = deny` + `reason_code`; `AIReceipt` if AI-touched. | Denial reason; alternative non-restricted surface where possible. |
-| **ERROR** | API cannot evaluate — missing schema, malformed query, contract violation, infrastructure failure. | Error envelope with diagnostic code; no claim leakage. | Finite, actionable error. |
-| **HOLD** | Release / promotion / correction paused pending steward, rights-holder, or policy review. | `ReviewRecord` pending; `PolicyDecision = hold`. | Prior state retained; no silent replacement. |
+| Outcome | Class | When | Required carrier | Public effect |
+|---|---|---|---|---|
+| **ANSWER** | runtime | Evidence sufficient · policy allows · release state allows · review state recorded if required. | `EvidenceBundle` resolved · `PolicyDecision = allow` · `ReleaseManifest` applies. | Substantive payload with citation. |
+| **ABSTAIN** | runtime | Evidence insufficient · citation cannot be validated · evidence stale with no released alternative · source role conflicts · temporal scope insufficient. | `AIReceipt` with reason; no claim emitted. | Non-substantive note + reason; never invents. |
+| **DENY** | runtime | Policy, rights, sensitivity, release state, or source-role anti-collapse forbids the answer. | `PolicyDecision = deny` + `reason_code`; `AIReceipt` if AI-touched. | Denial reason; alternative non-restricted surface where possible. |
+| **ERROR** | runtime | API cannot evaluate — missing schema, malformed query, contract violation, infrastructure failure. | Error envelope with diagnostic code; no claim leakage. | Finite, actionable error. |
+| **NARROWED** | runtime (opt.) | Answer issued within a scope tighter than requested due to evidence or policy bounds. | `RuntimeResponseEnvelope` extension. | Scoped answer with stated narrowing. |
+| **BOUNDED** | runtime (opt.) | Answer issued with explicit confidence/coverage bounds. | `RuntimeResponseEnvelope` extension. | Answer with explicit bounds. |
+| **HOLD** | gate | Release / promotion / correction paused pending steward, rights-holder, or policy review. | `ReviewRecord` pending; `PolicyDecision = hold`. | Prior state retained; no silent replacement. |
+| **PASS / FAIL** | gate (validator) | A validator/admission check completed; input acceptable / unacceptable. | `ValidationReport`. | Internal; never emits a public answer directly. |
 
 > [!TIP]
 > **DENY is a valid outcome.** A KFM API call that returns DENY with a `reason_code` is not a bug — it is the membrane doing its job. Treat DENY shapes as first-class fixtures, not exception paths.
 
 ### 5.2 Outcome × Hydrology surface matrix
 
-| Surface | ANSWER | ABSTAIN | DENY | ERROR | HOLD |
+Runtime outcomes are shown per answer surface; `HOLD` appears only where the surface drives a governed gate (correction, review, export).
+
+| Surface | ANSWER | ABSTAIN | DENY | ERROR | HOLD (gate) |
 |---|---|---|---|---|---|
 | Feature / detail resolver | ✅ | ✅ | ✅ | ✅ | — |
 | Layer manifest resolver | ✅ | — | ✅ | ✅ | — |
@@ -226,7 +248,13 @@ Forbidden behaviors (per Atlas v1.1 §24.3.2):
 - Returning a Focus Mode ANSWER without a valid `CitationValidationReport`.
 - Silently substituting one outcome for another.
 
-[Back to top](#hydrology--api-contracts)
+### 5.3 UI negative states
+
+The map and drawer SHOULD distinguish these negative states rather than rendering a blank or a generic error (per `ai-build-operating-contract.md` §22.2):
+
+`MISSING_EVIDENCE` · `SOURCE_STALE` · `DENIED_BY_POLICY` · `GENERALIZED_GEOMETRY` · `RESTRICTED_ACCESS` · `CONFLICTED_SUPPORT` · `CITATION_FAILED` · `RELEASE_WITHDRAWN` · `RUNTIME_ERROR`.
+
+[Back to top](#top)
 
 ---
 
@@ -271,6 +299,7 @@ Source: Atlas v1.1 §4(E); Encyclopedia §7.2(C).
 | `EvidenceDrawerPayload` | UI projection of `EvidenceBundle` for a clicked Hydrology feature. |
 | `MapContextEnvelope` | Bounded camera / time / layer / feature context sent to Focus Mode. |
 | `FocusModeRequest` / `FocusModeResponse` | Bounded governed-AI request / finite-outcome response. |
+| `RuntimeResponseEnvelope` | Finite governed response shape (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`, opt. `NARROWED` / `BOUNDED`). |
 | `AIReceipt` | Audit record of any AI-touched Hydrology answer. |
 | `CitationValidationReport` | Pass/fail report tying any claim to `EvidenceBundle` and citations. |
 | `PolicyDecision` | Allow / deny / restrict / abstain verdict against rights, sensitivity, release class. |
@@ -281,12 +310,12 @@ Source: Atlas v1.1 §4(E); Encyclopedia §7.2(C).
 | `RollbackCard` | Prior release manifest pointer for rollback execution. |
 | `ReviewRecord` | Steward review state for a candidate transition. |
 
-CONFIRMED doctrine: Encyclopedia §7.2(H); Unified Implementation Architecture Build Manual §10; Master MapLibre Components §11.
+CONFIRMED doctrine: Encyclopedia §7.2(H); `ai-build-operating-contract.md` §9.2; Unified Implementation Architecture Build Manual §10; Master MapLibre Components §11.
 
 > [!NOTE]
 > Field-by-field DTO shapes are **schema content**, not contract content. They live under `schemas/contracts/v1/domains/hydrology/` (PROPOSED home, ADR-0001 governed). This document binds names, not bytes.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -302,12 +331,15 @@ Per Directory Rules §6.3–§6.5, §7.4, and §12, Hydrology's machine-checkabl
 | Machine shape (JSON Schema) | `schemas/contracts/v1/domains/hydrology/` | Canonical (ADR-0001) | `*.schema.json` files for each Hydrology DTO. |
 | Admissibility (allow / deny / restrict / abstain) | `policy/domains/hydrology/` | Canonical | OPA bundles / equivalent; sensitivity, rights, release-class rules. |
 | Validators and admission tests | `tools/validators/<topic>/...` and `tests/domains/hydrology/` | Canonical | Validators (cross-domain) and per-domain tests. |
-| Positive / negative test fixtures | `tests/fixtures/hydrology/` or `fixtures/domains/hydrology/` | Canonical | Valid/invalid fixtures (one home, per Directory Rules §6.6). |
+| Positive / negative test fixtures | `fixtures/domains/hydrology/{valid,invalid}/` | Canonical | Valid/invalid fixtures (one home, per Directory Rules §6.6). |
 | Pipelines | `pipelines/domains/hydrology/`, `pipeline_specs/hydrology/` | Implementation-bearing | Hydrology pipelines and specs. |
 | Lifecycle data | `data/raw/hydrology/`, `data/work/hydrology/`, `data/quarantine/hydrology/`, `data/processed/hydrology/`, `data/catalog/domain/hydrology/`, `data/published/layers/hydrology/`, `data/registry/sources/hydrology/` | Canonical (lifecycle) | RAW → PUBLISHED progression. |
 | Release candidates / decisions | `release/candidates/hydrology/` | Canonical | Pre-publication candidates and decisions. |
 | Governed API routes | `apps/governed-api/` (no domain segment in the URL tree itself) | Implementation-bearing | Hydrology endpoints implemented as API handlers. |
 | Trust receipts | `data/receipts/`, `data/proofs/`, `release/` | Canonical | Receipts, proofs, manifests, release decisions. Never `artifacts/`. |
+
+> [!NOTE]
+> The earlier draft listed both `tests/fixtures/hydrology/` and `fixtures/domains/hydrology/` as possible fixture homes. Directory Rules §6.6 + §12 favor the single domain-segmented home `fixtures/domains/hydrology/{valid,invalid}/`; this revision pins that and flags the alternative for verification (see [§14](#14-open-verification-backlog)).
 
 ### 7.2 ADR sensitivity
 
@@ -337,7 +369,7 @@ schemas/contracts/v1/domains/hydrology/
 > [!NOTE]
 > File names above are **PROPOSED**. The mounted repository convention governs casing, separator (`_` vs `-`), and `.json` vs `.schema.json` suffix.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -349,13 +381,16 @@ Hydrology source families and their CONFIRMED role discipline are summarized bel
 
 | Source family | Role discipline | Rights / sensitivity | Freshness | Status |
 |---|---|---|---|---|
-| USGS WBD / HUC12 | authority for hydrologic unit geometry | source-vintage specific; sensitive joins fail closed | per-vintage release cadence | CONFIRMED dossier / PROPOSED implementation |
-| NHDPlus HR / 3DHP-oriented hydrography | authority for hydrographic network | source-vintage specific | per-vintage cadence | CONFIRMED dossier / PROPOSED implementation |
+| USGS WBD / HUC12 | authority for hydrologic unit geometry | rights/terms NEEDS VERIFICATION; sensitive joins fail closed | per-vintage release cadence | CONFIRMED dossier / PROPOSED implementation |
+| NHDPlus HR / 3DHP-oriented hydrography | authority for hydrographic network | rights/terms NEEDS VERIFICATION | per-vintage cadence | CONFIRMED dossier / PROPOSED implementation |
 | USGS Water Data / NWIS | observation (gauge, flow, water-quality) | provisional/final distinction required | sub-daily to daily | CONFIRMED dossier / PROPOSED implementation |
 | FEMA NFHL / MSC | **regulatory context** (not observed inundation) | regulatory attribution required; event-driven updates | localized, event-driven | CONFIRMED dossier / PROPOSED implementation |
-| 3DEP terrain | context / derivative basis | source-vintage specific | per-vintage cadence | CONFIRMED dossier / PROPOSED implementation |
+| 3DEP terrain | context / derivative basis | rights/terms NEEDS VERIFICATION | per-vintage cadence | CONFIRMED dossier / PROPOSED implementation |
 | Water-quality and groundwater sources | observation / context | parameter-specific | source-specific | CONFIRMED dossier / PROPOSED implementation |
 | Historical observed flood evidence | observation (historical) | review-gated | static / archival | CONFIRMED dossier / PROPOSED implementation |
+
+> [!NOTE]
+> Per the Hydrology dossier (Atlas §4 D.), **rights and current terms for every family above are `NEEDS VERIFICATION`** and sensitive joins fail closed. A connector MUST NOT be activated until its rights posture is resolved.
 
 ### 8.2 Source-role anti-collapse
 
@@ -369,7 +404,7 @@ Hydrology source families and their CONFIRMED role discipline are summarized bel
 
 CONFIRMED doctrine: Atlas v1.1 §4(I), §24.9.3; Encyclopedia §7.2; Master MapLibre §10–11.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -389,9 +424,9 @@ Beyond the cross-cutting trust-membrane rules, Hydrology carries the following *
 | H-DENY-08 | Releasing a flood-context layer without `EvidenceBundle` closure and `RollbackCard`. | Catalog/release closure missing. | Promotion / publication gates. |
 
 > [!CAUTION]
-> **Hydrology denies unclear rights and flood-role misuse.** This is CONFIRMED doctrine from the Hydrology dossier and Atlas v1.1 §4(I). Surfaces that loosen these rules require an ADR plus a recorded sensitivity transform; they do not become tractable through implementation convenience.
+> **Hydrology denies unclear rights and flood-role misuse.** This is CONFIRMED doctrine from the Hydrology dossier and Atlas v1.1 §4(I). Sensitive-content disposition (infrastructure/private-property joins, exact coordinates) is governed by `ai-build-operating-contract.md` **§23.2 sensitive-domain matrix** — apply it; do not re-derive it here. Surfaces that loosen these rules require an ADR plus a recorded sensitivity transform (`RedactionReceipt`); they do not become tractable through implementation convenience.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -414,7 +449,7 @@ CONFIRMED doctrine: Atlas v1.1 §4(F).
 > [!TIP]
 > Cross-lane object families (e.g., a habitat × fauna × hydrology validator) live under the **lowest common responsibility root** without a domain segment — e.g., `tools/validators/<topic>/...`, not `tools/validators/domains/hydrology/...`. See Directory Rules §12 "Multi-domain and cross-cutting files."
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -441,7 +476,7 @@ Every Hydrology API surface contract is enforceable only if validators, fixtures
 | `CitationValidationReport` | Pass/fail citation closure before any public ANSWER or export. | PROPOSED |
 | `ReleaseManifest` validation | Manifest closure (digests, rollback target, cache invalidation). | PROPOSED |
 | Rollback drill | Rollback restores prior `ReleaseManifest`; cache invalidated. | PROPOSED |
-| Stale-source fixture | Stale source headers trigger ABSTAIN / DENY or stale badge. | PROPOSED |
+| Stale-source fixture | Stale source headers trigger ABSTAIN / DENY or `SOURCE_STALE` badge. | PROPOSED |
 | No-network proof fixture | Hydrology slice can be exercised entirely from fixtures (no live USGS / FEMA calls). | PROPOSED |
 | Non-regression | Prior lineage preserved across schema and release changes. | PROPOSED |
 
@@ -467,9 +502,9 @@ fixtures/domains/hydrology/
 ```
 
 > [!NOTE]
-> Atlas v1.1 §21 places Hydrology as the **roadmap Phase 5 proof-bearing thin slice**: HUC / gauge / NFHL fixture, EvidenceBundle, drawer, rollback. The fixture layout above reflects that roadmap; concrete filenames are PROPOSED.
+> Atlas v1.1 §21 places Hydrology as the **roadmap Phase 5 proof-bearing thin slice**: HUC / gauge / NFHL fixture, EvidenceBundle, drawer, rollback — with the standing rule *never label NFHL observed flood*. The fixture layout above reflects that roadmap; concrete filenames are PROPOSED.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -498,28 +533,26 @@ flowchart LR
 
 ### 12.2 Promotion gates (CONFIRMED doctrine; PROPOSED enforcement)
 
-Promotion gates A–G (per `PromotionDecision`) must pass before any Hydrology surface exposes a layer or feature publicly:
+The universal lifecycle gates (per Atlas §24.6.1) must pass before any Hydrology surface exposes a layer or feature publicly:
 
-- Source activation
-- Evidence closure
-- Source-role distinction (no NFHL-as-observed; no provisional-as-final)
-- Freshness marking
-- Validation (schema, geometry, temporal, rights, sensitivity)
-- `PolicyDecision`
-- `ReleaseManifest` + correction path + rollback target
+- **Admission** — `SourceDescriptor` + payload/reference hash; source-role intent fixed.
+- **Normalization** — `TransformReceipt`, `ValidationReport` (working set), `PolicyDecision`; QUARANTINE on failure.
+- **Validation** — deterministic validators tied to fixtures; `RedactionReceipt`/`AggregationReceipt` where applicable.
+- **Catalog closure** — `EvidenceRef` resolves; `CatalogMatrix` entry; `EvidenceBundle`.
+- **Release** — review state where required; **release authority distinct from the original author** when materiality applies; `ReleaseManifest` + rollback target + correction path.
 
-CONFIRMED doctrine: Unified Implementation Architecture Build Manual §3.4, §5.5; Atlas v1.1 §4(M), §21.
+CONFIRMED doctrine: Atlas v1.1 §24.6.1, §4(M), §21; Unified Implementation Architecture Build Manual §3.4, §5.5. Closure rule (§24.6.2): a transition is closed only when required artifacts exist, each *resolves* its dependencies, and the policy gate recorded its decision — else it fails closed and the prior state is preserved.
 
 > [!IMPORTANT]
 > **Promotion is a state transition, not a file move.** Copying a file from `data/processed/hydrology/` into `data/published/layers/hydrology/` is **not** a publication. Without a `PromotionDecision`, `ReleaseManifest`, and rollback target, the artifact is not released and MUST NOT be served.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
 ## 13. Anti-patterns
 
-CONFIRMED anti-patterns from Atlas v1.1 §24.9.1–§24.9.3 and Directory Rules §13, scoped to Hydrology's API surface.
+CONFIRMED anti-patterns from Atlas v1.1 §24.9.1–§24.9.3, `ai-build-operating-contract.md` §29, and Directory Rules §13, scoped to Hydrology's API surface.
 
 <details>
 <summary><b>Anti-pattern catalog</b> (click to expand)</summary>
@@ -539,7 +572,7 @@ CONFIRMED anti-patterns from Atlas v1.1 §24.9.1–§24.9.3 and Directory Rules 
 
 </details>
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
@@ -553,58 +586,90 @@ The items below are NEEDS VERIFICATION until a mounted repository is inspected. 
 | Whether `apps/api/` and `apps/governed-api/` co-exist; canonical public-trust path. | Mounted-repo inspection + ADR. | NEEDS VERIFICATION |
 | Canonical schema-home convention in this repo (default `schemas/contracts/v1/...` per ADR-0001). | Mounted-repo inspection. | NEEDS VERIFICATION |
 | Field-by-field shape of `HydrologyDecisionEnvelope`. | JSON Schema file in `schemas/contracts/v1/domains/hydrology/`. | NEEDS VERIFICATION |
+| Canonical fixture home: `fixtures/domains/hydrology/` vs `tests/fixtures/hydrology/`. | Mounted-repo inspection (Directory Rules §6.6 favors the former). | NEEDS VERIFICATION |
 | Whether `policies/` vs `policy/` is canonical. | Mounted-repo inspection (default `policy/`). | NEEDS VERIFICATION |
 | Existence and content of `tests/domains/hydrology/`, `fixtures/domains/hydrology/`. | Mounted-repo inspection. | NEEDS VERIFICATION |
+| Canonical placement of doctrine files (`directory-rules.md`, `ai-build-operating-contract.md`): root vs `docs/doctrine/`. | Mounted-repo inspection (contract is PROPOSED at `docs/doctrine/...`). | NEEDS VERIFICATION |
 | HUC12 fingerprint canonicalization rule. | Repo validator + fixture. | NEEDS VERIFICATION |
 | NHDPlus HR identity ambiguity ABSTAIN behavior. | Repo policy + test. | NEEDS VERIFICATION |
 | USGS NWIS normalizer behavior (parameter / unit / qualifier / no-data). | Repo normalizer + test fixtures. | NEEDS VERIFICATION |
 | NFHL source-role separation enforcement. | Repo policy + negative fixture. | NEEDS VERIFICATION |
 | MapLibre layer-adapter binding for Hydrology layers. | Repo adapter + ADR. | NEEDS VERIFICATION |
-| Exact `PROV.md` vs `PROVENANCE.md` naming convention in `docs/standards/`. | Mounted-repo + ADR. | OPEN — flagged in prior standards docs |
+| Exact `PROV.md` vs `PROVENANCE.md` naming convention in `docs/standards/`. | Mounted-repo + ADR (OPEN-DR-04 mixed-casing). | OPEN |
 | Validator exit-code contract. | Repo validator + ADR. | OPEN |
 
 > [!NOTE]
-> Atlas v1.1 §24.12 carries an ADR backlog including ADR-S-01 (schema home), ADR-S-04 (source-role vocabulary), ADR-S-05 (sensitivity tier scheme). Resolution of those ADRs may amend portions of this document; check the ADR index before treating any path here as canonical.
+> Atlas v1.1 §24.12 carries an ADR backlog including ADR-S-01 (schema home), ADR-S-04 (source-role vocabulary), ADR-S-05 (sensitivity tier scheme). The operating contract §49 carries its own open-questions register. Resolution of those may amend portions of this document; check the ADR index before treating any path here as canonical.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
-## 15. Change discipline
+## 15. Open questions register
 
-This contract reference is governance-bearing. Changes follow the Directory Rules change discipline (§14, §17).
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-HYD-API-01 | Canonical home of doctrine files (`directory-rules.md`, `ai-build-operating-contract.md`): repo root vs `docs/doctrine/`. | Docs steward + Directory Rules owner | Mounted-repo inspection; the contract itself is PROPOSED at `docs/doctrine/ai-build-operating-contract.md`. Reconcile `related` links accordingly. |
+| OQ-HYD-API-02 | Single canonical fixture home for the lane (`fixtures/domains/hydrology/` vs `tests/fixtures/hydrology/`). | Contract-schema steward | Directory Rules §6.6 check + repo inspection; log drift in `DRIFT_REGISTER.md`. |
+| OQ-HYD-API-03 | Canonical URL ontology for Hydrology governed routes. | Governed-API owner | `docs/architecture/governed-api.md` + ADR; pin in §3 once set. |
+| OQ-HYD-API-04 | `HydrologyDecisionEnvelope` field set and whether it carries optional `NARROWED` / `BOUNDED`. | Contract-schema steward | Schema authoring under `schemas/contracts/v1/domains/hydrology/`. |
+| OQ-HYD-API-05 | Receipt-schema home for `RedactionReceipt` / `GENERATED_RECEIPT` (shared vs per-domain). | Schema owner | Tracked as ADR-S-03 (receipt schema layout). |
+
+[Back to top](#top)
+
+---
+
+## 16. Change discipline
+
+This contract reference is governance-bearing. Changes follow the Directory Rules change discipline (§14, §17) and the operating contract §37 lifecycle.
 
 | Change type | Required action |
 |---|---|
-| Editorial, dead-link fix, clarification | Routine PR. |
-| New surface family (e.g., add a Hydrology API surface row) | PR + steward sign-off. Update §3 table; update §5 outcome matrix; update §11 validators. |
+| Editorial, dead-link fix, clarification | Routine PR (PATCH). |
+| New surface family (e.g., add a Hydrology API surface row) | PR + steward sign-off (MINOR). Update §3 table; update §5 outcome matrix; update §11 validators. |
 | Add / remove an outcome class for a Hydrology surface | **ADR required.** Update §5 and §11. |
-| Move schema home or rename DTO | **ADR required.** Per ADR-0001 discipline. Add supersession + migration manifest. |
+| Move schema home or rename DTO | **ADR required** (per ADR-0001). Add supersession + migration manifest. |
 | Loosen a deny-by-default rule in §9 | **ADR required + steward review + recorded sensitivity transform.** Never silent. |
 | Replace this document | ADR + supersession notice + drift register entry. |
 
-The KFM Meta Block v2 `updated` field MUST be refreshed on every material change.
+The KFM Meta Block v2 `updated` field MUST be refreshed on every material change, and `CONTRACT_VERSION` re-pinned to the edition the change conforms to.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
 
 ---
 
-## 16. Related docs
+## 17. Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (under `docs/domains/hydrology/`) and the doctrine-file path question (OQ-HYD-API-01) is resolved;
+- a docs steward, the governed-API owner, and the contract-schema steward review it;
+- it is linked from `docs/domains/hydrology/README.md` and from `docs/architecture/governed-api.md`;
+- it does not conflict with accepted ADRs (esp. ADR-0001 schema home);
+- the fixture-home and doctrine-path questions are logged in `docs/registers/DRIFT_REGISTER.md` until resolved;
+- a `GENERATED_RECEIPT.json` is wired into CI with `human_review.state` transitioning from `pending` to `approved`;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top](#top)
+
+---
+
+## 18. Related docs
 
 <!-- All links are repo-relative and PROPOSED. Update once mounted-repo paths are confirmed. -->
 
-- [`docs/domains/hydrology/README.md`](./README.md) — Hydrology domain index (PROPOSED).
-- [`docs/domains/hydrology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — Hydrology source families and role discipline (PROPOSED).
+- [`docs/domains/hydrology/README.md`](../README.md) — Hydrology domain index (PROPOSED).
+- [`docs/domains/hydrology/SOURCE_FAMILIES.md`](../SOURCE_FAMILIES.md) — Hydrology source families and role discipline (PROPOSED).
 - [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Governed API trust membrane (PROPOSED).
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract / schema / policy split (PROPOSED).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane doctrine (PROPOSED).
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (CONFIRMED doctrine).
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle law (PROPOSED).
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O and PAV profile.
+- `directory-rules.md` — Directory Rules (CONFIRMED doctrine; canonical path NEEDS VERIFICATION, OQ-HYD-API-01).
+- `ai-build-operating-contract.md` — operating contract, `CONTRACT_VERSION = "3.0.0"`; §8, §21, §22, §23.2 (canonical path NEEDS VERIFICATION).
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O and PAV profile *(naming vs `PROVENANCE.md` OPEN, OPEN-DR-04)*.
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles v3 governance.
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — OGC API Tiles profile.
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 crosswalk.
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — Sibling runbook template.
+- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — sibling runbook template *(Pattern A; OPEN-DR-02)*.
 - [`contracts/domains/hydrology/`](../../../contracts/domains/hydrology/) — Hydrology object meaning (PROPOSED home).
 - [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/) — Hydrology schemas (PROPOSED home; ADR-0001 governed).
 - [`policy/domains/hydrology/`](../../../policy/domains/hydrology/) — Hydrology admissibility policy (PROPOSED home).
@@ -613,6 +678,6 @@ The KFM Meta Block v2 `updated` field MUST be refreshed on every material change
 
 ---
 
-**Last updated:** 2026-05-17 · **Doc id:** `kfm://doc/domains/hydrology/api-contracts` · **Authority:** doctrine-bound; implementation PROPOSED until verified.
+**Last updated:** 2026-06-06 · **Doc id:** `kfm://doc/domains/hydrology/api-contracts` · **`CONTRACT_VERSION = "3.0.0"`** · **Authority:** doctrine-bound; implementation PROPOSED until verified.
 
-[Back to top](#hydrology--api-contracts)
+[Back to top](#top)
