@@ -6,24 +6,30 @@ version: v1
 status: draft
 owners: hydrology-lane-stewards <TODO: confirm owners>
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-06
 policy_label: public
 related:
-  - docs/doctrine/directory-rules.md
+  - directory-rules.md                                  # placement law (root file; docs/doctrine/ mirror is PROPOSED)
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
+  - docs/architecture/maplibre-3d.md                    # sole-renderer doctrine (v1.3)
+  - ai-build-operating-contract.md                      # CONTRACT_VERSION = "3.0.0"
   - docs/domains/hydrology/README.md
   - contracts/domains/hydrology/
   - schemas/contracts/v1/domains/hydrology/
   - policy/domains/hydrology/
 tags: [kfm, domain-lane, hydrology, architecture]
 notes:
+  - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
   - Doctrine is CONFIRMED from project knowledge; implementation maturity is PROPOSED until mounted-repo evidence confirms.
   - NFHL regulatory context is NOT observed inundation; USGS Water Data are observations, not emergency authority.
+  - Renderer corrected to packages/maplibre-runtime/ (Directory Rules v1.3); Cesium is RETIRED. Sole-renderer decision is doctrine-CONFIRMED at directory-rules v1.3; underlying ADR is PROPOSED (OPEN-DR-10).
 [/KFM_META_BLOCK_V2] -->
 
-# Hydrology Domain — Lane Architecture
+<a id="top"></a>
+
+# 💧 Hydrology Domain — Lane Architecture
 
 > The Kansas Frontier Matrix (KFM) **hydrology lane** governs watersheds, hydrologic units, stream networks, gauges, water observations, regulatory flood context, and terrain-derived hydrology — as evidence-bound, time-aware artifacts served through the trust membrane, never as emergency-grade authority.
 
@@ -31,13 +37,16 @@ notes:
   <img alt="Doc status: draft" src="https://img.shields.io/badge/status-draft-orange" />
   <img alt="Doc type: architecture" src="https://img.shields.io/badge/type-architecture-blue" />
   <img alt="Authority: lane doctrine" src="https://img.shields.io/badge/authority-lane%20doctrine-informational" />
+  <img alt="CONTRACT_VERSION: 3.0.0" src="https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blueviolet" />
   <img alt="Lifecycle scope: RAW → PUBLISHED" src="https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-success" />
   <img alt="Sensitivity: public, joins fail-closed" src="https://img.shields.io/badge/sensitivity-public%20%C2%B7%20joins%20fail--closed-yellow" />
   <img alt="Build: TODO" src="https://img.shields.io/badge/build-TODO-lightgrey" />
-  <img alt="Schema home: schemas/contracts/v1/domains/hydrology/" src="https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1%2Fdomains%2Fhydrology%2F-blueviolet" />
 </p>
 
-**Status** `draft` · **Owners** `hydrology-lane-stewards` *(placeholder — confirm)* · **Last updated** `2026-05-17`
+**Status** `draft` · **Owners** `hydrology-lane-stewards` *(placeholder — confirm)* · **Last updated** `2026-06-06` · **`CONTRACT_VERSION = "3.0.0"`**
+
+> [!IMPORTANT]
+> **Repository not mounted in this session.** Doctrine below is CONFIRMED from project knowledge; every path, module, package, and route is **PROPOSED / NEEDS VERIFICATION** until inspected against the mounted repo. Memory and prior plans are not evidence.
 
 ---
 
@@ -59,7 +68,9 @@ notes:
 14. [Lane Directory Pattern](#14-lane-directory-pattern)
 15. [First Proof Slice](#15-first-proof-slice)
 16. [Verification Backlog & Open Questions](#16-verification-backlog--open-questions)
-17. [Related Docs](#17-related-docs)
+17. [Open Questions Register](#17-open-questions-register)
+18. [Definition of Done](#18-definition-of-done)
+19. [Related Docs](#19-related-docs)
 
 ---
 
@@ -74,7 +85,7 @@ The hydrology lane represents Kansas water systems as **evidence-bound, time-awa
 
 **Adjacent (this lane consumes or contributes to, but does not own).** Soil moisture and hydrologic soil groups (soil lane); irrigation and crop-water context (agriculture lane); floodplain exposure of bridges, dams, and utilities (settlements/infrastructure lane); flood/drought hazard declarations and resilience context (hazards lane).
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -106,7 +117,7 @@ flowchart TB
 
   subgraph DELIVERY["Governed delivery surfaces"]
     D1["Governed API (apps/governed-api/)"]
-    D2["MapLibre layers + LayerManifest"]
+    D2["MapLibre layers + LayerManifest (packages/maplibre-runtime/)"]
     D3["Evidence Drawer (EvidenceDrawerPayload)"]
     D4["Focus Mode (bounded AI)"]
   end
@@ -126,7 +137,7 @@ flowchart TB
 > [!NOTE]
 > The diagram is a **conceptual** lane shape. Specific module names, route names, and package names remain **PROPOSED** until verified against mounted-repo evidence. The lane's *shape* — sources → governed lifecycle → governed delivery, with evidence-bound cross-lane joins — is **CONFIRMED doctrine**.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -145,7 +156,7 @@ Some material adjacent to water belongs to **other lanes**. Hydrology does not o
 > [!WARNING]
 > **NFHL is not observed inundation.** Any visualization or claim that conflates regulatory flood zones with observed flooding, real-time forecast, or hydraulic model output is a category violation and must fail the publication gate. (CONFIRMED — see source attribution under Source Families.)
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -172,7 +183,7 @@ These terms have meaning **inside the hydrology lane** that is constrained by so
 | **UpstreamTrace** / **DownstreamTrace** | Network navigation along NHDPlus HR flowlines, scoped to a temporal snapshot. |
 | **WaterUseLink** / **DroughtLink** / **IrrigationLink** | Evidence-bound cross-lane relations to agriculture, hazards, and soil. |
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -194,7 +205,7 @@ KFM's cross-domain rule is that **source role cannot be inferred from convenienc
 > [!CAUTION]
 > Source role is recorded in the `SourceDescriptor` and reviewed before activation. Connectors and watchers remain **inactive** until activation decision, fixtures, validators, and policy gates exist. (CONFIRMED activation rule.)
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -227,7 +238,7 @@ Object families are PROPOSED with a deterministic identity rule and confirmed te
 > [!NOTE]
 > The **shared kernel** that backs every object — `SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `RunReceipt`, `ValidationReport`, `PolicyDecision`, `PromotionDecision`, `ReleaseManifest`, `RollbackCard`, `CorrectionNotice`, `ReviewRecord` — is **not** owned by this lane. It is jointly governed across KFM and changed only via ADR. (CONFIRMED.)
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -250,7 +261,7 @@ Object families are PROPOSED with a deterministic identity rule and confirmed te
 
 **Qualifiers, units, uncertainty.** Parameter code, unit string, qualifier code, and (where available) uncertainty MUST travel with the observation through the lifecycle. NFHL regulatory attributes (e.g., `DFIRM_ID`, `VERSION_ID`, `EFFECTIVE_DATE`, flood zone code) MUST be preserved **verbatim**. *(CONFIRMED.)*
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -296,7 +307,10 @@ flowchart LR
 > [!IMPORTANT]
 > **Connectors do not publish.** A hydrology connector emits to `data/raw/hydrology/` (or `data/quarantine/hydrology/` if it fails admission). Pipelines promote. Watchers observe and record but never write to `data/catalog/` or `data/published/`. (CONFIRMED — watcher-as-non-publisher invariant.)
 
-[↑ Back to top](#table-of-contents)
+> [!NOTE]
+> **Closure rule (CONFIRMED, Atlas §24.6.2).** A transition is closed only when (i) the required artifacts exist, (ii) each *resolves* its dependencies (`EvidenceRef → EvidenceBundle`, `source_id → SourceDescriptor`), and (iii) the policy gate recorded its decision. Missing any of these means the transition fails closed and the prior state is preserved.
+
+[↑ Back to top](#top)
 
 ---
 
@@ -312,13 +326,16 @@ Cross-lane joins MUST preserve ownership, source role, sensitivity, and Evidence
 | Hydrology | **Settlements / Infrastructure** | Floodplain exposure of bridges, dams, utilities. | Infrastructure lane owns asset truth; exact-asset exposure may be staged-access. |
 | Hydrology | **Spatial Foundation** | CRS, base layers, geometry validation. | Hydrology consumes the shared spatial spine; does not redefine it. |
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 10. Map & Viewing Products
 
-Public surfaces are governed delivery, not direct reads of canonical stores. Hydrology layers are served through `apps/governed-api/` and rendered by `packages/maplibre/` from `LayerManifest` records. *(CONFIRMED doctrine; package paths PROPOSED per Directory Rules §13.3.)*
+Public surfaces are governed delivery, not direct reads of canonical stores. Hydrology layers are served through `apps/governed-api/` and rendered by **`packages/maplibre-runtime/`** from `LayerManifest` records. *(CONFIRMED doctrine; package presence PROPOSED.)*
+
+> [!WARNING]
+> **Renderer correction (Directory Rules v1.3).** An earlier draft of this doc named the renderer `packages/maplibre/` and referenced "Cesium where present." Both are out of date: the sole governed renderer adapter is **`packages/maplibre-runtime/`** (`packages/maplibre/` is the v1.2 historical name pending physical rename), and **Cesium is retired** from KFM's architecture — reintroducing a parallel browser renderer is a named anti-pattern (Directory Rules §13.5 v1.3). The sole-renderer decision is **doctrine-CONFIRMED at `directory-rules.md` v1.3**; the underlying ADR (*MapLibre as Sole Browser-Side Renderer; Retire Cesium Dependency*) is **PROPOSED, not yet accepted** (OPEN-DR-10). All 3D capability (terrain, globe, fill-extrusion, 3D Tiles, glTF, point clouds, deck.gl interleaved) is hosted **inside** `packages/maplibre-runtime/` via plugin-backed custom layers, gated by a **3D Admission Decision** before any `setTerrain` / globe / plugin-layer construction.
 
 **Domain viewing products (PROPOSED):**
 
@@ -344,9 +361,9 @@ Public surfaces are governed delivery, not direct reads of canonical stores. Hyd
 - **Focus Mode** — bounded AI synthesis over released, typed map context only.
 
 > [!NOTE]
-> **Renderer-as-non-publisher.** MapLibre (and Cesium where present) is a **renderer**, not an alternate truth path. 2D and 3D views consume the same `EvidenceBundle` and `DecisionEnvelope`. No tile, style, or scene is sovereign. (CONFIRMED.)
+> **Renderer-as-non-publisher.** MapLibre (via `packages/maplibre-runtime/`) is a **renderer**, not an alternate truth path. 2D and 3D views consume the same `EvidenceBundle` and `DecisionEnvelope`; 3D is an alternate **rendering mode** within the single renderer, not an alternate truth path. No tile, style, or scene is sovereign. (CONFIRMED.)
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -372,9 +389,9 @@ The hydrology lane participates in Focus Mode and Evidence Drawer-bound AI summa
 - Policy, rights, sensitivity, or release state blocks the request.
 - The user requests operational or life-safety authority that the hydrology lane explicitly does not own.
 
-Finite outcomes follow the KFM envelope: `ANSWER` · `ABSTAIN` · `DENY` · `ERROR`. `AIReceipt` records the provider/model adapter, evidence refs, citation-validation result, and policy outcome — without exposing private chain-of-thought.
+Finite outcomes follow the KFM `RuntimeResponseEnvelope`: `ANSWER` · `ABSTAIN` · `DENY` · `ERROR`, with optional `NARROWED` / `BOUNDED` only if contract schemas define them. `AIReceipt` records the provider/model adapter, evidence refs, citation-validation result, and policy outcome — without exposing private chain-of-thought.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -392,6 +409,9 @@ Hydrology is **generally public-suitable** when released, but the lane carries n
 | NFHL as observed inundation | **Forbidden** — category violation. |
 | Stale sources past freshness threshold | **ABSTAIN / stale badge** on the surface; do not silently re-publish. |
 
+> [!CAUTION]
+> Sensitive-content disposition (infrastructure/private-well joins, exact coordinates) is governed by the operating-contract **§23.2 sensitive-domain matrix** — apply it; do not re-derive it here. Any loosening requires an ADR plus a recorded sensitivity transform (`RedactionReceipt`).
+
 **Required for any public release** *(CONFIRMED — publication gate)*:
 
 1. `SourceDescriptor` activated.
@@ -403,7 +423,7 @@ Hydrology is **generally public-suitable** when released, but the lane carries n
 7. Correction path exists.
 8. Rollback target exists.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -434,16 +454,16 @@ Hydrology is a **fixture-first, no-network** lane during proof. Live connectors 
 | `valid/` | Positive path: one HUC12, one normalized observation, one NFHL record, one EvidenceBundle, one LayerManifest, one drawer payload. |
 | `rights-denied/` | Source whose rights/terms block public release. |
 | `sensitivity-denied/` | Join that exposes sensitive private well or infrastructure asset. |
-| `stale-source/` | Source past freshness threshold → ABSTAIN / stale badge. |
+| `stale-source/` | Source past freshness threshold → ABSTAIN / `SOURCE_STALE` badge. |
 | `unresolved-evidenceref/` | EvidenceRef that does not resolve to an EvidenceBundle. |
 | `ambiguous-reach/` | Reach identity ambiguity → classifier ABSTAIN. |
 | `nfhl-as-observed/` | Negative: category violation must be rejected. |
 | `rollback/` | Rehearsal of a release rollback. |
 
 > [!TIP]
-> The validators fail **closed**. Missing schema fields, missing policy decisions, missing rights evidence, missing proof objects, or missing release state all produce `DENY` / `ABSTAIN` / `ERROR` — never silent passes. (CONFIRMED — see `KFM-IDX-VAL-002`.)
+> The validators fail **closed**. Missing schema fields, missing policy decisions, missing rights evidence, missing proof objects, or missing release state all produce `DENY` / `ABSTAIN` / `ERROR` (runtime) or `HOLD` / `FAIL` (gate) — never silent passes. (CONFIRMED — see `KFM-IDX-VAL-002`.)
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -476,17 +496,17 @@ release/candidates/hydrology/                    # release decisions
 ```
 
 > [!NOTE]
-> Specific path existence is **PROPOSED** until verified against a mounted-repo inspection. The *pattern* (Domain Placement Law) is **CONFIRMED** by Directory Rules.
+> Specific path existence is **PROPOSED** until verified against a mounted-repo inspection. The *pattern* (Domain Placement Law) is **CONFIRMED** by Directory Rules. Note that the **renderer** (`packages/maplibre-runtime/`) is a cross-cutting package, **not** a hydrology lane segment — hydrology supplies `LayerManifest` records that the shared renderer consumes.
 
 **Cross-domain hydrology files** (e.g., a habitat × fauna × hydrology validator) go under the **lowest common responsibility root without** a domain segment — for example `tools/validators/<topic>/`, not `tools/validators/domains/hydrology/`.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
 ## 15. First Proof Slice
 
-The recommended first hydrology slice is **fixture-first, no-network, evidence-closing** *(CONFIRMED proposal per `KFM-IDX-APP-001` and the Master Domain Atlas):*
+The recommended first hydrology slice is **fixture-first, no-network, evidence-closing** *(CONFIRMED proposal per `KFM-IDX-APP-001` and the Master Domain Atlas; roadmap Phase 5):*
 
 > **One Kansas HUC12** + **one USGS gauge fixture** + **one NHDPlus identity crosswalk** + **one NFHL contextual overlay** + **one hydrograph panel** + **one EvidenceBundle closure** + **ABSTAIN on ambiguous reach identity.**
 
@@ -495,15 +515,15 @@ This slice exercises:
 1. `SourceDescriptor` activation across four source families with distinct roles.
 2. Identity crosswalk and ambiguity classification.
 3. Temporal field discipline (six times preserved through the lifecycle).
-4. NFHL category integrity (regulatory ≠ observed).
+4. NFHL category integrity (regulatory ≠ observed). *Never label NFHL observed flood.*
 5. `EvidenceBundle` closure and `EvidenceDrawerPayload` projection.
-6. `LayerManifest` + governed delivery via the trust membrane.
+6. `LayerManifest` + governed delivery via the trust membrane (rendered through `packages/maplibre-runtime/`).
 7. `Focus Mode` answer/abstain/deny envelope on a real map context.
 8. `ReleaseManifest` + `RollbackCard` + rehearsed rollback.
 
 A future expansion adds **live source verification** only after rights, endpoint behavior, cadence, and policy checks are complete.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
@@ -520,25 +540,58 @@ Items to track in `docs/registers/VERIFICATION_BACKLOG.md`. None are resolvable 
 | 5 | Geometry fingerprint canonicalization rule for hydro objects. | Mounted repo + ADR. | NEEDS VERIFICATION |
 | 6 | Whether `Observed Flood Event` has a dedicated schema home or is profiled from `HydroFeature`. | Mounted repo + lane ADR. | UNKNOWN |
 | 7 | Owners and steward roster for `hydrology-lane-stewards`. | CODEOWNERS or lane register. | NEEDS VERIFICATION |
-| 8 | MapLibre layer binding registry for hydrology layers and Focus Mode context contract for hydrograph features. | `LayerManifest` records, `MapContextEnvelope` schema. | NEEDS VERIFICATION |
+| 8 | MapLibre layer binding registry for hydrology layers and Focus Mode context contract for hydrograph features. | `LayerManifest` records, `MapContextEnvelope` schema, `packages/maplibre-runtime/` adapter. | NEEDS VERIFICATION |
 | 9 | Whether `Hydrology / Hazards` joins go through hazards-owned policy or a shared cross-lane policy bundle. | Policy bundle inspection + ADR. | OPEN |
 | 10 | Provisional → final transition policy: who issues the `CorrectionNotice`, and how is the prior release marked? | Policy + workflow inspection. | NEEDS VERIFICATION |
 | 11 | Public-safe geometry generalization rules for gauge ↔ infrastructure joins (where infrastructure exposure may be staged-access). | Cross-lane policy + ADR. | OPEN |
 | 12 | Whether NFHL WMS is permitted at all, or only NFHL FeatureServer/REST (analytics vs. visualization split per Master MapLibre ML-061-021). | Lane ADR. | OPEN |
+| 13 | Acceptance of the sole-renderer ADR (Cesium retirement) and physical rename `packages/maplibre/` → `packages/maplibre-runtime/`. | Mounted ADR set (OPEN-DR-10, OPEN-DR-12). | NEEDS VERIFICATION |
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#top)
 
 ---
 
-## 17. Related Docs
+## 17. Open Questions Register
+
+| ID | Question | Owner role | Resolution path |
+|---|---|---|---|
+| OQ-HYD-ARCH-01 | Canonical home of doctrine files (`directory-rules.md`, `ai-build-operating-contract.md`, `lifecycle-law.md`, `trust-membrane.md`): repo root vs `docs/doctrine/`. | Docs steward + Directory Rules owner | Mounted-repo inspection; the operating contract is PROPOSED at `docs/doctrine/ai-build-operating-contract.md`. Reconcile `related` links. |
+| OQ-HYD-ARCH-02 | Renderer rename + Cesium retirement acceptance. | Renderer/ADR owner | OPEN-DR-10 (sole-renderer ADR) + OPEN-DR-12 (`packages/maplibre/` → `packages/maplibre-runtime/` rename). |
+| OQ-HYD-ARCH-03 | Hydrology ↔ Hazards join policy home (hazards-owned vs shared cross-lane bundle). | Policy steward | Policy bundle inspection + ADR. |
+| OQ-HYD-ARCH-04 | `Observed Flood Event` schema home (dedicated vs profiled from `HydroFeature`). | Contract-schema steward | Lane ADR + schema authoring. |
+| OQ-HYD-ARCH-05 | NFHL delivery surface (WMS permitted vs FeatureServer/REST only). | Map-UI steward | Lane ADR (Master MapLibre ML-061-021). |
+
+[↑ Back to top](#top)
+
+---
+
+## 18. Definition of Done
+
+This document is done enough to enter the repository when:
+
+- it is placed according to Directory Rules (under `docs/domains/hydrology/`) and the doctrine-file path question (OQ-HYD-ARCH-01) is resolved;
+- the hydrology lane stewards (and the renderer/ADR owner for the §10 correction) review it;
+- it is linked from `docs/domains/hydrology/README.md`;
+- it does not conflict with accepted ADRs (esp. ADR-0001 schema home and the sole-renderer ADR, OPEN-DR-10);
+- the renderer correction and doctrine-path question are logged in `docs/registers/DRIFT_REGISTER.md` until resolved;
+- a `GENERATED_RECEIPT.json` is wired into CI with `human_review.state` transitioning from `pending` to `approved`;
+- future changes follow the operating contract's §37 lifecycle.
+
+[↑ Back to top](#top)
+
+---
+
+## 19. Related Docs
 
 > Placeholder links — paths are **PROPOSED** per Directory Rules; verify against the mounted repo before linking from elsewhere.
 
 - [`docs/domains/hydrology/README.md`](./README.md) — lane orientation (companion to this document).
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law (Domain Placement, §12).
+- `directory-rules.md` — placement law (Domain Placement, §12; renderer v1.3 §7.2.a, §11). *Canonical path NEEDS VERIFICATION (OQ-HYD-ARCH-01).*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed delivery boundary.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — split between `contracts/`, `schemas/`, `policy/`, `tests/`.
+- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — sole-renderer doctrine + 3D feature surface (v1.3).
+- `ai-build-operating-contract.md` — operating contract, `CONTRACT_VERSION = "3.0.0"`; §21 (finite outcomes), §22 (renderer/UI), §23.2 (sensitive-domain matrix). *Canonical path NEEDS VERIFICATION.*
 - [`contracts/domains/hydrology/`](../../../contracts/domains/hydrology/) — object meaning (Markdown).
 - [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/) — machine shape (JSON Schema).
 - [`policy/domains/hydrology/`](../../../policy/domains/hydrology/) — admissibility and release policy.
@@ -546,8 +599,8 @@ Items to track in `docs/registers/VERIFICATION_BACKLOG.md`. None are resolvable 
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — published-tile governance.
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — tile delivery standard.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — where this lane's open items belong.
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — any drift discovered between this doc and mounted-repo reality.
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — any drift discovered between this doc and mounted-repo reality (incl. the §10 renderer correction).
 
 ---
 
-<sub><strong>Last updated</strong> 2026-05-17 · <strong>Doc id</strong> <code>kfm://doc/domains/hydrology/architecture</code> · <a href="#hydrology-domain--lane-architecture">↑ Back to top</a></sub>
+<sub><strong>Last updated</strong> 2026-06-06 · <strong>Doc id</strong> <code>kfm://doc/domains/hydrology/architecture</code> · <strong><code>CONTRACT_VERSION = "3.0.0"</code></strong> · <a href="#top">↑ Back to top</a></sub>
