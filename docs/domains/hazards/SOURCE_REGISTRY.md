@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs/domains/hazards/SOURCE_REGISTRY
+doc_id: kfm://doc/docs/domains/hazards/source_registry
 title: Hazards Domain — Source Registry
 type: standard
-version: v1
+version: v2
 status: draft
 owners: TODO — hazards domain steward; source-registry steward; release safety reviewer
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 policy_label: public
 related:
+  - ai-build-operating-contract.md
   - docs/domains/hazards/README.md
-  - docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md
+  - docs/domains/hazards/SOURCES.md
+  - docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
+  - docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/domains/hydrology/SOURCE_REGISTRY.md
   - docs/domains/atmosphere/SOURCE_REGISTRY.md
@@ -21,9 +24,12 @@ related:
   - policy/sensitivity/
 tags: [kfm, hazards, source-registry, governance, admission, life-safety-boundary]
 notes:
-  - Path follows Directory Rules §12 domain-lane pattern.
-  - This document is a human-facing control surface, not the machine-readable registry.
-  - Hazards source admission MUST preserve the not-for-life-safety boundary at every gate.
+  # CONTRACT_VERSION = "3.0.0" (ai-build-operating-contract.md v3.0)
+  # Path follows Directory Rules §12 domain-lane pattern.
+  # This document is a human-facing control surface, not the machine-readable registry.
+  # Hazards source admission MUST preserve the not-for-life-safety boundary at every gate; alert authority is T4 forever (Atlas §24.5.2).
+  # Connector form is authority-clustered per Directory Rules §7.3 (usgs/ fema/ noaa/ nrcs/ kansas/).
+  # v2: CONTRACT_VERSION pin; packages/maplibre → packages/maplibre-runtime (§7.2 v1.3); runbook home corrected to docs/runbooks/hazards/; sibling cross-links.
 [/KFM_META_BLOCK_V2] -->
 
 # ⚠️ Hazards Domain — Source Registry
@@ -33,12 +39,13 @@ notes:
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
 ![doc type: standard](https://img.shields.io/badge/doc--type-standard-blue)
 ![domain: hazards](https://img.shields.io/badge/domain-hazards-c62828)
+![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blueviolet)
 ![lifecycle: admission](https://img.shields.io/badge/lifecycle-admission-555)
 ![life-safety: not--an--alert--system](https://img.shields.io/badge/life--safety-not--an--alert--system-b71c1c)
 ![ci: TODO](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last updated: 2026--05--17](https://img.shields.io/badge/last%20updated-2026--05--17-informational)
+![last updated: 2026--06--05](https://img.shields.io/badge/last%20updated-2026--06--05-informational)
 
-**Status:** draft &middot; **Owners:** TODO — hazards domain steward; source-registry steward; release safety reviewer &middot; **Updated:** 2026-05-17
+**Status:** draft &middot; **Owners:** TODO — hazards domain steward; source-registry steward; release safety reviewer &middot; **Updated:** 2026-06-05 &middot; **Pins:** `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -67,7 +74,7 @@ notes:
 
 The Hazards source registry is the **admission ledger and authority surface** for every external source the Hazards domain may touch. Each admitted source receives a `SourceDescriptor` that records identity, role, rights, sensitivity, cadence, endpoint, version, contact, and admissibility limits. The descriptor is what converts external material from anonymous data into accountable intake.
 
-This document is the **human-facing** counterpart to the machine-readable registry data under `data/registry/sources/hazards/` (PROPOSED path per Directory Rules §9.1 and §12). It explains what may enter, what may not, what must be redirected to official sources, and how each role is treated downstream.
+This document is the **human-facing** counterpart to the machine-readable registry data under `data/registry/sources/hazards/` (PROPOSED path per Directory Rules §9.1 and §12). It explains what may enter, what may not, what must be redirected to official sources, and how each role is treated downstream. For the source-side doctrine narrative (roles, descriptor fields, admission/activation) see the companion [`SOURCES.md`](./SOURCES.md); this registry is the admission *control surface* that doctrine feeds.
 
 > [!IMPORTANT]
 > The descriptor records *that a source exists* and *how it should be treated* — not *what the source says*. Truth resolution still requires `EvidenceBundle` resolution and policy review at publication. A descriptor is necessary for admission; it is not sufficient for release. **CONFIRMED doctrine.**
@@ -83,30 +90,30 @@ This document is the **human-facing** counterpart to the machine-readable regist
 ```mermaid
 flowchart LR
   subgraph DOCS["docs/domains/hazards/"]
-    A["SOURCE_REGISTRY.md<br/>(this file)"]
-    B[README.md]
-    C[SOURCE_REFRESH_RUNBOOK.md]
+    A["SOURCE_REGISTRY.md (this file)"]
+    B["README.md"]
+    C["SOURCES.md"]
   end
 
   subgraph DATA["data/registry/sources/hazards/"]
-    D[descriptors/*.yaml]
-    E[intake_records/]
-    F[drift_summaries/]
+    D["descriptors/*.yaml"]
+    E["intake_records/"]
+    F["drift_summaries/"]
   end
 
   subgraph SCHEMAS["schemas/contracts/v1/"]
-    G[source/source-descriptor.json]
-    H[domains/hazards/*]
+    G["source/source-descriptor.json"]
+    H["domains/hazards/*"]
   end
 
   subgraph POLICY["policy/"]
-    I[domains/hazards/]
-    J[sensitivity/]
-    K[rights/]
+    I["domains/hazards/"]
+    J["sensitivity/"]
+    K["rights/"]
   end
 
-  subgraph CONNECTORS["connectors/"]
-    L["noaa/, fema/, usgs/, nasa/, kansas/"]
+  subgraph CONNECTORS["connectors/ (authority-clustered, §7.3)"]
+    L["noaa/ · fema/ · usgs/ · nasa/ · kansas/"]
   end
 
   A -. governs admission shape .-> D
@@ -114,22 +121,23 @@ flowchart LR
   A -. invokes policy .-> I
   D -. validated by .-> G
   L -. emits .-> D
-  L -. writes RAW to .-> M[data/raw/hazards/]
+  L -. writes RAW to .-> M["data/raw/hazards/"]
   I -. consumes descriptor for gating .-> N["apps/governed-api/"]
 ```
 
 | Adjacent surface | Path (PROPOSED) | What it owns |
 |---|---|---|
 | Domain README | `docs/domains/hazards/README.md` | Domain identity, boundary, scope, navigation. |
-| Refresh runbook | `docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md` | How to refresh sources end-to-end. |
+| Source dossier | `docs/domains/hazards/SOURCES.md` | Source-side doctrine: roles, descriptor fields, admission/activation. |
+| Refresh runbook | `docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md` | How to refresh sources end-to-end (runbooks home per §6.1.b). |
 | Machine registry | `data/registry/sources/hazards/` | YAML/JSON descriptor records, append-only. |
 | Descriptor schema | `schemas/contracts/v1/source/source-descriptor.json` | Machine-checkable descriptor shape. Default home per ADR-0001. |
 | Domain policy | `policy/domains/hazards/` | Hazards-specific allow/deny/abstain/restrict. |
 | Sensitivity policy | `policy/sensitivity/` | Cross-domain redaction/generalization rules. |
-| Connectors | `connectors/{noaa,fema,usgs,nasa,kansas}/` | Source-specific fetch + admission. |
+| Connectors | `connectors/{noaa,fema,usgs,nasa,kansas}/` | Source-specific fetch + admission (authority-clustered, §7.3). |
 
 > [!NOTE]
-> Specific paths above are **PROPOSED** until verified against a mounted repository. The placement rules (which root holds which responsibility) are **CONFIRMED** by Directory Rules §3–§12.
+> Specific paths above are **PROPOSED** until verified against a mounted repository. The placement rules (which root holds which responsibility) are **CONFIRMED** by Directory Rules §3–§12. The connector form is **authority-clustered** per the §7.3 canonical tree (`connectors/usgs/ fema/ noaa/ nrcs/ kansas/ …`); finer per-product disambiguation happens inside each authority folder and via the descriptor `source_id`, and "source alias normalization" is itself **NEEDS VERIFICATION** (§7.3).
 
 [Back to top](#contents)
 
@@ -153,8 +161,11 @@ flowchart LR
 - Policy logic (lives in `policy/`).
 - Connector code (lives in `connectors/`).
 - Pipeline orchestration (lives in `pipelines/` and `pipeline_specs/`).
-- Tile artifacts, layer styles, or rendered map outputs (live in `data/published/` and `packages/maplibre/`).
+- Tile artifacts, layer styles, or rendered map outputs (live in `data/published/` and `packages/maplibre-runtime/`).
 - Receipts, proofs, or release decisions (live in `data/receipts/`, `data/proofs/`, and `release/`).
+
+> [!NOTE]
+> v2 correction: the renderer package is `packages/maplibre-runtime/` (Directory Rules §7.2, v1.3 — sole governed renderer adapter). Any reference to `packages/maplibre/` is a pre-v1.3 historical name treated as a transitional compatibility mirror pending physical rename; `packages/cesium/` is removed doctrine, not a compatibility root.
 
 > [!CAUTION]
 > If you find yourself adding live operational warnings, alert text, or freshness-bound advisories to this document — **stop**. That is exactly the boundary KFM Hazards refuses to cross. Operational feeds may enter the system as `operational_warning` / `operational_advisory` / `operational_watch` source-role context, with freshness and expiry tracked, but they do not become public alert surfaces. **CONFIRMED doctrine.**
@@ -166,7 +177,7 @@ flowchart LR
 ## 4. The Life-Safety Boundary
 
 > [!WARNING]
-> **KFM Hazards is not an emergency alert system and must not provide life-safety instructions.** This is the firm boundary of the entire domain. Every source admitted here, every descriptor written, every policy gate applied, and every release decision MUST preserve this boundary.
+> **KFM Hazards is not an emergency alert system and must not provide life-safety instructions.** This is the firm boundary of the entire domain. Every source admitted here, every descriptor written, every policy gate applied, and every release decision MUST preserve this boundary. The deny register pins it at the strongest tier: **alert authority is T4 forever — no transform releases it** (Atlas §24.5.2).
 
 CONFIRMED doctrine (Encyclopedia §7.10; Atlas §12; Idea Index KFM-IDX-POL-007):
 
@@ -185,12 +196,12 @@ A `SourceDescriptor` that does not record the source's life-safety boundary stat
 
 The table below enumerates the source families the Hazards domain *may* admit. Each row is one descriptor *family*; multiple endpoint or product variants from the same authority typically share a family but receive distinct descriptor records.
 
-**All status entries below are PROPOSED admission posture** — actual descriptor presence and current activation state require verification against `data/registry/sources/hazards/` (NEEDS VERIFICATION).
+**All status entries below are PROPOSED admission posture** — actual descriptor presence and current activation state require verification against `data/registry/sources/hazards/` (NEEDS VERIFICATION). Roles use the canonical seven-class enum (§6).
 
 | Source family | Authority | Typical source roles | Knowledge character | Default sensitivity | Freshness expectation | Status |
 |---|---|---|---|---|---|---|
 | NOAA Storm Events / NCEI | NOAA NCEI | observed, administrative | historical_event_record, scientific_observation | public; rare narrative redaction | source-vintage; periodic (NEEDS VERIFICATION cadence) | PROPOSED |
-| NWS alerts (warnings · advisories · watches) | NWS | observed (issue act), candidate (context) | operational_warning, operational_advisory, operational_watch | public; **freshness-gated**, life-safety boundary applies | event-driven; expiry-bound | PROPOSED |
+| NWS alerts (warnings · advisories · watches) | NWS | observed (issue act), administrative; **context only** | operational_warning, operational_advisory, operational_watch | public; **freshness-gated**, life-safety boundary applies | event-driven; expiry-bound | PROPOSED |
 | FEMA Disaster Declarations / OpenFEMA | FEMA | administrative | administrative_declaration | public | event-driven; periodic | PROPOSED |
 | FEMA NFHL / MSC flood hazard | FEMA | regulatory | regulatory_context | public; **regulatory ≠ observed inundation** | source-vintage; map revision | PROPOSED |
 | USGS Earthquake Catalog | USGS | observed, modeled (magnitude estimates) | scientific_observation, modeled_derivative | public | near-real-time + curated catalog | PROPOSED |
@@ -225,7 +236,7 @@ The seven canonical source roles, applied to Hazards examples:
 | **synthetic** | Reconstructed historical hazard scene; AI-drafted hazard summary | Carry Reality Boundary Note and Representation Receipt | Never presented or queried as observed reality |
 
 > [!IMPORTANT]
-> A SourceDescriptor MUST set `source_role` at admission. Corrections produce a **new descriptor + CorrectionNotice**, not an in-place edit. **CONFIRMED doctrine.**
+> A SourceDescriptor MUST set `source_role` at admission. Corrections produce a **new descriptor + CorrectionNotice**, not an in-place edit. The descriptor is retained with a `superseded_by` link (Atlas §24.8.2). **CONFIRMED doctrine.**
 
 [Back to top](#contents)
 
@@ -233,7 +244,7 @@ The seven canonical source roles, applied to Hazards examples:
 
 ## 7. SourceDescriptor Field Surface
 
-PROPOSED descriptor surface — illustrative, not authoritative. The canonical machine schema home defaults to `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 (**NEEDS VERIFICATION** in mounted repo).
+PROPOSED descriptor surface — illustrative, not authoritative. The canonical machine schema home defaults to `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 (**NEEDS VERIFICATION** in mounted repo). The role-conditional fields below match the Atlas §24.1.3 descriptor surface.
 
 | Field | Type / vocabulary | Required when | Hazards-specific notes |
 |---|---|---|---|
@@ -264,7 +275,7 @@ PROPOSED descriptor surface — illustrative, not authoritative. The canonical m
 
 ## 8. Hazards Knowledge-Character Vocabulary
 
-CONFIRMED ubiquitous-language terms for the Hazards domain (Atlas §12). Each term is a controlled label applied to the descriptor or to records emerging from intake. The label constrains what claims a record may support downstream.
+CONFIRMED ubiquitous-language terms for the Hazards domain (Atlas §12.C). Each term is a controlled label applied to the descriptor or to records emerging from intake. The label constrains what claims a record may support downstream. (For the crosswalk between these usage labels and the §24.1.1 source-role enum, see [`README.md`](./README.md) §4 / [`SOURCES.md`](./SOURCES.md) §2.)
 
 | Term | Meaning | Typical source family |
 |---|---|---|
@@ -289,17 +300,17 @@ CONFIRMED ubiquitous-language terms for the Hazards domain (Atlas §12). Each te
 
 ## 9. Lifecycle Posture (RAW → PUBLISHED)
 
-CONFIRMED invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED.** Promotion is a *governed state transition*, never a file move.
+CONFIRMED invariant: **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED.** Promotion is a *governed state transition*, never a file move. _(Directory Rules §9.1; Atlas §24.6.)_
 
 ```mermaid
 flowchart LR
-  S[Source authority] -->|connector fetch| RAW[("data/raw/hazards/<br/>&lt;source_id&gt;/&lt;run_id&gt;/")]
-  RAW -->|normalize| WORK[("data/work/hazards/")]
-  RAW -->|fail / hold| QUAR[("data/quarantine/hazards/")]
-  WORK -->|validate + policy gate| PROC[("data/processed/hazards/")]
+  S["Source authority"] -->|"connector fetch"| RAW[("data/raw/hazards/ source_id / run_id /")]
+  RAW -->|"normalize"| WORK[("data/work/hazards/")]
+  RAW -->|"fail / hold"| QUAR[("data/quarantine/hazards/")]
+  WORK -->|"validate + policy gate"| PROC[("data/processed/hazards/")]
   QUAR -. remediation .-> WORK
-  PROC -->|catalog closure| CAT[("data/catalog/domain/hazards/<br/>+ triplets/")]
-  CAT -->|release decision| PUB[("data/published/layers/hazards/<br/>+ release/manifests/")]
+  PROC -->|"catalog closure"| CAT[("data/catalog/domain/hazards/ + triplets/")]
+  CAT -->|"release decision"| PUB[("data/published/layers/hazards/ + release/manifests/")]
   PUB -. correction/rollback .-> CAT
 
   classDef gate fill:#fff3cd,stroke:#856404,color:#856404;
@@ -317,7 +328,7 @@ flowchart LR
 | PUBLISHED | ReleaseManifest, correction path, rollback target, review/policy state all present. Public-safe artifacts only. **No live alert path.** | PROPOSED |
 
 > [!IMPORTANT]
-> **Watcher-as-non-publisher** applies to every Hazards connector and watcher: they observe, record, and propose work; they do not publish, mutate canonical truth, or write under `data/processed/`, `data/catalog/`, or `data/published/`. **CONFIRMED doctrine.**
+> **Watcher-as-non-publisher** applies to every Hazards connector and watcher: they observe, record, and propose work; they do not publish, mutate canonical truth, or write under `data/processed/`, `data/catalog/`, or `data/published/`. Connector output MUST go to `data/raw/hazards/<source_id>/<run_id>/` or `data/quarantine/...`. **CONFIRMED doctrine** (Directory Rules §7.3, §13.5).
 
 [Back to top](#contents)
 
@@ -333,7 +344,7 @@ The hazards domain is particularly exposed to source-role collapse. Atlas §24.1
 | Modeled smoke / AOD / trajectory labeled as observed smoke | role collapse | **DENY** at publication; ABSTAIN at AI | Model run receipt + uncertainty surface; role-preserving DTO field |
 | Active fire detection (FIRMS / HMS) labeled as confirmed fire event | candidate-to-confirmed collapse | **DENY** confirmation claim; admit as candidate only | Candidate disposition tracked; promotion requires field/agency confirmation |
 | Expired operational warning shown as current | freshness collapse | **DENY** publication; fail-closed freshness gate | Issue/expiry tracked at descriptor and at record; freshness policy ref |
-| Operational warning treated as KFM life-safety guidance | life-safety collapse | **DENY** at every public surface; ABSTAIN at AI; redirect to official source | `life_safety_boundary` flag in descriptor; not-for-life-safety policy bundle |
+| Operational warning treated as KFM life-safety guidance | life-safety collapse | **DENY** at every public surface; ABSTAIN at AI; redirect to official source | `life_safety_boundary` flag in descriptor; not-for-life-safety policy bundle; **T4 forever** |
 | Aggregate drought index cited as a per-place truth | aggregate collapse | **DENY** join from cell to single record; ABSTAIN at AI | Aggregation receipt; geometry-scope guard |
 | Synthetic / AI-drafted hazard scene presented as observed reality | reality boundary collapse | **DENY** publication; HOLD for steward review | Reality Boundary Note; Representation Receipt; UI badge |
 | Unknown source role admitted to public surface | admission collapse | **QUARANTINE** by default | Source-role required at admission; quarantine until resolved |
@@ -348,11 +359,11 @@ The hazards domain is particularly exposed to source-role collapse. Atlas §24.1
 
 ## 11. Validators, Tests, Fixtures
 
-PROPOSED validator surface for the Hazards source registry (Encyclopedia §7.10 K; Atlas §12 K). Implementation status NEEDS VERIFICATION against `tools/validators/` and `tests/domains/hazards/`.
+PROPOSED validator surface for the Hazards source registry (Encyclopedia §7.10.K; Atlas §12.K). Implementation status NEEDS VERIFICATION against `tools/validators/` and `tests/domains/hazards/`.
 
 - Source-role anti-collapse tests (regulatory ≠ observed; modeled ≠ observed; candidate ≠ confirmed). **PROPOSED.**
 - Temporal-role validators (event time vs. valid time vs. issue/expiry vs. retrieval time stay distinct). **PROPOSED.**
-- Emergency-alert denial tests (any output framed as a life-safety instruction fails closed). **PROPOSED.**
+- Emergency-alert denial tests (any output framed as a life-safety instruction fails closed; T4 forever). **PROPOSED.**
 - Operational expiry / freshness tests (expired warning cannot appear as current). **PROPOSED.**
 - Catalog closure tests (no orphan hazard artifact may reach PUBLISHED). **PROPOSED.**
 - Evidence Drawer disclaimer tests (every public hazard claim carries source role, freshness, and not-for-life-safety badge when applicable). **PROPOSED.**
@@ -426,39 +437,39 @@ notes:
 ```mermaid
 flowchart TB
   subgraph ADMISSION["Admission (this doc + descriptor)"]
-    A1[Human registry guide<br/>docs/domains/hazards/SOURCE_REGISTRY.md]
-    A2[Machine registry<br/>data/registry/sources/hazards/]
-    A3[Descriptor schema<br/>schemas/contracts/v1/source/source-descriptor.json]
+    A1["Human registry guide — docs/domains/hazards/SOURCE_REGISTRY.md"]
+    A2["Machine registry — data/registry/sources/hazards/"]
+    A3["Descriptor schema — schemas/contracts/v1/source/source-descriptor.json"]
   end
 
-  subgraph CONNECTORS["Connectors (non-publishing)"]
-    C1[connectors/noaa/]
-    C2[connectors/fema/]
-    C3[connectors/usgs/]
-    C4[connectors/nasa/]
-    C5[connectors/kansas/]
+  subgraph CONNECTORS["Connectors (non-publishing, §7.3)"]
+    C1["connectors/noaa/"]
+    C2["connectors/fema/"]
+    C3["connectors/usgs/"]
+    C4["connectors/nasa/"]
+    C5["connectors/kansas/"]
   end
 
   subgraph LIFECYCLE["Lifecycle (governed)"]
-    L1[RAW]
-    L2[WORK / QUARANTINE]
-    L3[PROCESSED]
-    L4[CATALOG / TRIPLET]
-    L5[PUBLISHED]
+    L1["RAW"]
+    L2["WORK / QUARANTINE"]
+    L3["PROCESSED"]
+    L4["CATALOG / TRIPLET"]
+    L5["PUBLISHED"]
   end
 
   subgraph GOVERNANCE["Governance gates"]
-    G1[Rights / Sensitivity / Source-role gates]
-    G2[Freshness / Expiry gates]
-    G3[Anti-collapse validators]
-    G4[Life-safety boundary gate]
-    G5[Release decision + ReleaseManifest]
+    G1["Rights / Sensitivity / Source-role gates"]
+    G2["Freshness / Expiry gates"]
+    G3["Anti-collapse validators"]
+    G4["Life-safety boundary gate (T4 forever)"]
+    G5["Release decision + ReleaseManifest"]
   end
 
   subgraph PUBLIC["Public path"]
-    P1[apps/governed-api/]
-    P2[apps/explorer-web/]
-    P3[Evidence Drawer + Focus Mode]
+    P1["apps/governed-api/"]
+    P2["apps/explorer-web/"]
+    P3["Evidence Drawer + Focus Mode"]
   end
 
   A1 -. authoritative shape .-> A2
@@ -483,7 +494,7 @@ The registry is the **anchor** for every downstream gate. A descriptor that fail
 ## 14. Adding a New Source — Admission Checklist
 
 > [!TIP]
-> This is the human checklist. The corresponding machine gates live in the descriptor schema, the connector gate validator, and the policy bundles. A new source MUST clear both surfaces.
+> This is the human checklist. The corresponding machine gates live in the descriptor schema, the connector gate validator, and the policy bundles. A new source MUST clear both surfaces. For the operational *refresh* of an already-admitted source, use [`SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md).
 
 - [ ] **Authority identified.** Issuing body, contact, and steward path recorded.
 - [ ] **`source_role` chosen** from the canonical enum and justified against §6 anti-collapse rules.
@@ -493,8 +504,9 @@ The registry is the **anchor** for every downstream gate. A descriptor that fail
 - [ ] **`cadence` recorded** using the controlled vocabulary; freshness policy linked when applicable.
 - [ ] **`endpoint` recorded** without real secrets. Auth material referenced by name, stored in environment-scoped secret stores.
 - [ ] **Life-safety boundary flag set** when the source is operational/alert-adjacent.
+- [ ] **`SourceActivationDecision` recorded** — admission gate decision (use / restrict / quarantine / deny).
 - [ ] **Descriptor file added** to `data/registry/sources/hazards/` (PROPOSED path).
-- [ ] **Connector wired** to write to `data/raw/hazards/<source_id>/<run_id>/` only, never to `processed/`, `catalog/`, or `published/`.
+- [ ] **Connector wired** under the authority folder (`connectors/<authority>/`, §7.3) to write to `data/raw/hazards/<source_id>/<run_id>/` only, never to `processed/`, `catalog/`, or `published/`.
 - [ ] **No-network fixture added** to `fixtures/domains/hazards/` (PROPOSED path) with a synthetic descriptor and a synthetic source-edge capture.
 - [ ] **Negative fixtures added** for missing rights, missing role, missing freshness, missing life-safety-boundary flag, expired operational context.
 - [ ] **PR cites Directory Rules §12** (domain lane) and the relevant §6 anti-collapse rule.
@@ -511,12 +523,13 @@ The registry is the **anchor** for every downstream gate. A descriptor that fail
 | Whether `schemas/contracts/v1/source/source-descriptor.json` exists and matches §7 field surface | Mounted schema file + a passing validator on a real descriptor | NEEDS VERIFICATION |
 | Whether `data/registry/sources/hazards/` is the actual machine-registry path | Mounted repo inspection or ADR | NEEDS VERIFICATION |
 | Current endpoints, auth classes, and rate-limit classes for every source family | Live source documentation review + steward sign-off per family | NEEDS VERIFICATION |
-| Whether `connectors/noaa/`, `connectors/fema/`, `connectors/usgs/`, `connectors/nasa/`, `connectors/kansas/` exist as connector lanes | Mounted repo inspection | NEEDS VERIFICATION |
-| Whether `policy/domains/hazards/` exists and which gates it defines | Mounted policy bundle + tests | NEEDS VERIFICATION |
+| Whether `connectors/{noaa,fema,usgs,nasa,kansas}/` exist as authority-clustered connector lanes (per §7.3) and how source-alias normalization works | Mounted repo inspection (§7.3 flags alias normalization NEEDS VERIFICATION) | NEEDS VERIFICATION |
+| Whether `policy/domains/hazards/` exists and which gates it defines (and the release-gate `.rego` home vs. `policy/release/hazards/`) | Mounted policy bundle + tests; ADR-HAZ-07 | NEEDS VERIFICATION / OPEN |
 | Whether a `life_safety_boundary` enum (or equivalent flag) is implemented in the descriptor schema | Mounted schema + a denial test that fails closed | NEEDS VERIFICATION |
-| Naming: are descriptor records YAML, JSON, or both? Are they single-file or directory-per-source? | Mounted registry sample | NEEDS VERIFICATION |
+| Naming: are descriptor records YAML, JSON, or both? Single-file or directory-per-source? | Mounted registry sample | NEEDS VERIFICATION |
 | Exact cadence vocabulary (event-driven, near-real-time, daily, weekly, periodic, source-vintage) — is this enumerated in schema? | Schema enum verification | NEEDS VERIFICATION |
-| Whether `EXT-USDM` / drought-monitor cadence and rights are admissible without state-agreement review | Source terms review + steward decision | OPEN |
+| Source-role enum vocabulary and connector-cadence/quarantine policy | ADR-S-04 (role vocabulary); ADR-S-12 (connector cadence) | OPEN |
+| Whether USDM / drought-monitor cadence and rights are admissible without state-agreement review | Source terms review + steward decision | OPEN |
 | Whether Kansas / local emergency-management feeds carry redistribution constraints | Steward correspondence with KS DEM and county sources | OPEN |
 | Whether the descriptor versioning is independent of source vintage | ADR or schema clarification | OPEN |
 
@@ -529,14 +542,15 @@ The registry is the **anchor** for every downstream gate. A descriptor that fail
 > [!NOTE]
 > Targets marked **TODO** below have not been verified against a mounted repo. Paths follow Directory Rules §12 conventions.
 
+- `ai-build-operating-contract.md` — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`). **TODO — verify presence.**
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards domain identity, scope, and navigation. **TODO — verify presence.**
-- [`docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) — End-to-end source refresh runbook for Hazards. **TODO — verify presence.**
+- [`docs/domains/hazards/SOURCES.md`](./SOURCES.md) — Source-side doctrine (roles, descriptor fields, admission/activation). **TODO — verify presence.**
+- [`docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md`](./PUBLICATION_AND_BOUNDARY.md) — Publication path + not-for-life-safety boundary. **TODO — verify presence.**
+- [`docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md) — End-to-end source refresh runbook (runbooks home per §6.1.b). **TODO — verify presence.**
 - [`docs/domains/hydrology/SOURCE_REGISTRY.md`](../hydrology/SOURCE_REGISTRY.md) — Hydrology registry; cross-references for flood, drought, and water observations. **TODO — verify presence.**
 - [`docs/domains/atmosphere/SOURCE_REGISTRY.md`](../atmosphere/SOURCE_REGISTRY.md) — Atmosphere/Air registry; cross-references for smoke, AOD, AQ, heat/cold. **TODO — verify presence.**
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — Cross-domain source-descriptor standard. **TODO — verify presence.**
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle invariant. **TODO — verify presence.**
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane and governed API path. **TODO — verify presence.**
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (canonical home per §0 of that doc). **TODO — verify presence.**
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (§6.5 policy, §7.2 renderer, §7.3 connectors, §7.4 schema home, §9.1 lifecycle, §12 domain placement, §13.5 anti-patterns). **TODO — verify presence.**
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../schemas/contracts/v1/source/source-descriptor.json) — Descriptor schema. **TODO — verify presence.**
 - [`policy/domains/hazards/`](../../../policy/domains/hazards/) — Hazards policy bundles. **TODO — verify presence.**
 
@@ -547,6 +561,6 @@ The registry is the **anchor** for every downstream gate. A descriptor that fail
 
 ---
 
-**Last updated:** 2026-05-17 &middot; **Owners:** TODO — hazards domain steward; source-registry steward; release safety reviewer &middot; **Status:** draft
+**Last updated:** 2026-06-05 &middot; **Doc version:** v2 &middot; **Pins:** CONTRACT_VERSION = "3.0.0" &middot; **Owners:** TODO — hazards domain steward; source-registry steward; release safety reviewer &middot; **Status:** draft
 
 [Back to top](#contents)
