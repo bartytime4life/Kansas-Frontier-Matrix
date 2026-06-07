@@ -1,105 +1,104 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs/domains/hydrology/missing_or_planned_files
+doc_id: kfm://doc/domains/hydrology/missing-or-planned-files
 title: Hydrology — Missing or Planned Files
 type: standard
-version: v1
+version: v3
 status: draft
-owners: TBD — Hydrology domain stewards + Directory Rules reviewers
+owners: <hydrology lane steward> + <directory-rules reviewer>   # placeholders — resolve via CODEOWNERS
 created: 2026-05-18
-updated: 2026-05-18
+updated: 2026-06-06
 policy_label: public
+contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - docs/doctrine/directory-rules.md
+  - ai-build-operating-contract.md
+  - directory-rules.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/domains/hydrology/README.md
+  - docs/domains/hydrology/INDEX.md
+  - docs/domains/hydrology/FILE_SYSTEM_PLAN.md
   - docs/domains/hydrology/SOURCE_FAMILIES.md
-  - kfm://doc/docs/standards/PROV
+  - docs/standards/PROV.md
 tags: [kfm, hydrology, planning, directory-rules, backlog, proof-lane]
 notes:
-  - Repository not mounted in this session; all path claims are PROPOSED.
-  - Tracks the hydrology domain lane file inventory per Directory Rules §12.
-  - Hydrology is identified across KFM doctrine as the preferred early proof lane.
+  - Repository not mounted in this session; all path claims are PROPOSED and all absence claims are NEEDS VERIFICATION.
+  - v3 is a STATUS-TRACKING optimization of v2 — the exhaustive per-file lists now live in FILE_SYSTEM_PLAN.md; this doc tracks coverage state and the proof slice, not filenames.
+  - Per §15, a folder lacking a contract-conformant README is a DRIFT CANDIDATE, not confirmed MISSING, until the repo is inspected.
+  - Crosswalk validator home is CONFLICTED (ADR-S-CWV-01); SourceDescriptor schema home schemas/contracts/v1/source/ (source/ vs sources/ CONFLICTED).
+  - OBJECT_MAP vs OBJECT_FAMILIES filename drift resolved in favor of OBJECT_FAMILIES.md (sibling-doc convention). See Changelog.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌊 Hydrology — Missing or Planned Files
 
-> Working inventory of every file the **hydrology domain lane** is expected to carry, where each file belongs under Directory Rules §12, and whether it is currently **present, planned, missing, deferred, or unverified** against the mounted repository.
+> **Coverage tracker** for the hydrology domain lane: which expected lane segments and key artifacts are present, planned, drift candidates, or unverified against the mounted repository — and the proof-slice subset that gates the lane's first release. The exhaustive per-file placement lists live in [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md); **this doc tracks state, not filenames.**
 
 [![status](https://img.shields.io/badge/status-draft-orange)](#)
+[![CONTRACT_VERSION](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1f6feb)](#)
 [![domain](https://img.shields.io/badge/domain-hydrology-blue)](#)
-[![doc-type](https://img.shields.io/badge/type-planning--inventory-lightgrey)](#)
-[![directory-rules](https://img.shields.io/badge/directory--rules-v1-informational)](../../doctrine/directory-rules.md)
-[![proof-lane](https://img.shields.io/badge/proof--lane-early--candidate-success)](#hydrology-thin-slice-proof-lane-inventory)
-[![last-updated](https://img.shields.io/badge/updated-2026--05--18-lightgrey)](#)
+[![doc-type](https://img.shields.io/badge/type-coverage--tracker-lightgrey)](#)
+[![directory-rules](https://img.shields.io/badge/directory--rules-§12_§15-informational)](../../../directory-rules.md)
+[![proof-lane](https://img.shields.io/badge/proof--lane-early--candidate-success)](#proof-slice-tracker)
+[![last-updated](https://img.shields.io/badge/updated-2026--06--06-lightgrey)](#)
 
-**Status:** `draft` · **Owners:** _TBD — Hydrology stewards + Directory Rules reviewers_ · **Last updated:** `2026-05-18`
+**Status:** `draft` · **Owners:** `<hydrology lane steward>` + `<directory-rules reviewer>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** `2026-06-06`
 
 > [!IMPORTANT]
-> **Repository not mounted in this session.** Every concrete path in this document is **PROPOSED** under Directory Rules §12 (Domain Placement Law) and the Required README Contract (§15). Statuses below are **best-effort planning estimates** until the repo is inspected and reconciled. Until then, this file is a **planning instrument**, not a repo-state report.
+> **Repository not mounted in this session.** Because the repo is not mounted, **no file can be confirmed present or absent**: required-but-unseen READMEs are **drift candidates / NEEDS VERIFICATION**, not confirmed `MISSING`. Statuses are best-effort planning estimates. This is a **planning instrument**, not a repo-state report. Companions: [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) (placement contract — the authoritative file list), [`INDEX.md`](./INDEX.md) (navigation), [`README.md`](./README.md) (lane landing page).
 
 ---
 
 ## Quick navigation
 
-- [Purpose & scope](#purpose--scope)
-- [How to read this inventory](#how-to-read-this-inventory)
+- [How this doc relates to FILE_SYSTEM_PLAN](#how-this-doc-relates-to-file_system_plan)
+- [Status vocabulary](#status-vocabulary)
 - [Lane shape — Directory Rules §12](#lane-shape--directory-rules-12)
-- [Documentation files (`docs/domains/hydrology/`)](#documentation-files-docsdomainshydrology)
-- [Contracts (`contracts/domains/hydrology/`)](#contracts-contractsdomainshydrology)
-- [Schemas (`schemas/contracts/v1/domains/hydrology/`)](#schemas-schemascontractsv1domainshydrology)
-- [Policy (`policy/domains/hydrology/`)](#policy-policydomainshydrology)
-- [Tests (`tests/domains/hydrology/`)](#tests-testsdomainshydrology)
-- [Fixtures (`fixtures/domains/hydrology/`)](#fixtures-fixturesdomainshydrology)
-- [Packages (`packages/domains/hydrology/`)](#packages-packagesdomainshydrology)
-- [Pipelines & specs](#pipelines--specs)
-- [Cross-cutting tools (`tools/validators/`)](#cross-cutting-tools-toolsvalidators)
-- [Lifecycle data (`data/<phase>/hydrology/`)](#lifecycle-data-dataphasehydrology)
-- [Release (`release/candidates/hydrology/`)](#release-releasecandidateshydrology)
-- [Hydrology thin-slice proof lane inventory](#hydrology-thin-slice-proof-lane-inventory)
+- [Coverage by responsibility root](#coverage-by-responsibility-root)
+- [README coverage (§15 contract)](#readme-coverage-15-contract)
+- [Conflicted & cross-cutting placements](#conflicted--cross-cutting-placements)
+- [Proof-slice tracker](#proof-slice-tracker)
 - [ADRs needed or pending](#adrs-needed-or-pending)
 - [Open questions & verification backlog](#open-questions--verification-backlog)
 - [How to update this document](#how-to-update-this-document)
 - [Related docs](#related-docs)
+- [Changelog](#changelog)
 
 ---
 
-## Purpose & scope
+## How this doc relates to FILE_SYSTEM_PLAN
 
-**Purpose.** This document is the **single tracking surface** for every file the hydrology domain lane is doctrinally expected to carry. It exists so that:
+These two documents are deliberately split so they cannot drift against each other:
 
-1. Reviewers can see — at a glance — which expected files are present, which are still planned, and which have unresolved placement questions.
-2. PR authors proposing hydrology files have an inventory to consult **before** picking a path.
-3. The lane's coverage gaps surface in one place rather than across scattered TODOs.
-4. Directory Rules §12 (Domain Placement Law) and §15 (Required README Contract) are observably enforced for hydrology.
-
-**In scope.** Files that doctrinally belong to the hydrology domain lane: watersheds, HUC units, hydro features, reaches, gauges, flow and water-level observations, water quality, groundwater context, regulatory flood context (FEMA NFHL), observed flood evidence, and terrain-derived hydrology context. (Object families per Atlas v1.1 §4 and Encyclopedia §5.)
-
-**Out of scope.** Files for adjacent domains (Hazards, Soil, Agriculture, Settlements/Infrastructure, Spatial Foundation, Atmosphere) are tracked in **their own** `MISSING_OR_PLANNED_FILES.md`. Cross-domain validators or schemas — anything that spans hydrology × another domain — live under topic-named non-domain segments per Directory Rules §12 _Multi-domain and cross-cutting files_, and are linked from this document but **owned elsewhere**.
+| | [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) | **This doc** (`MISSING_OR_PLANNED_FILES.md`) |
+|---|---|---|
+| **Question it answers** | *Where does a hydrology file belong?* | *Which expected coverage exists yet, and what blocks the proof slice?* |
+| **Owns** | The exhaustive per-root file lists and placement rules | Coverage **state** + the proof-slice subset |
+| **Authority** | Placement contract (consult before picking a path) | Planning / tracking instrument |
 
 > [!NOTE]
-> Hydrology is identified as the **preferred early proof lane** in KFM build doctrine (Unified Implementation Architecture §6.1; Atlas v1.1 §21 Phase 5). The proof-lane subset of this inventory therefore carries higher priority than the full lane.
+> If a specific filename appears here and in `FILE_SYSTEM_PLAN.md` and they disagree, **`FILE_SYSTEM_PLAN.md` wins** and a `DRIFT_REGISTER.md` entry is opened. To prevent that, v3 stopped re-listing every schema/contract filename here — the coverage tables below track **lane segments and key artifacts**, not the full file inventory.
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
 ---
 
-## How to read this inventory
+## Status vocabulary
 
-Each table below lists expected files under one responsibility root. Statuses use this fixed vocabulary:
+The engine of this document. Every coverage row carries one of:
 
 | Status | Meaning |
 |---|---|
-| `PRESENT` | File exists in the repository and is verified this session (currently impossible — repo not mounted; reserve for future inspections). |
-| `PROPOSED` | Path conforms to Directory Rules; file does not yet exist (or cannot be confirmed) and is planned. |
-| `PLANNED` | Synonym of `PROPOSED` reserved for files with an accepted ADR or explicit roadmap entry. |
-| `MISSING` | Doctrinally required (e.g., per-root README under §15) and not present. Higher urgency than `PROPOSED`. |
-| `DEFERRED` | Path is recognised but intentionally pushed past the current phase (with reason). |
-| `NEEDS VERIFICATION` | Path may already exist or may need ADR; cannot be settled without a mounted repo. |
-| `UNKNOWN` | Doctrine does not yet settle whether this file is needed. |
+| `PRESENT` | Exists in the repo and verified **this session** (impossible while unmounted; reserved for future inspections). |
+| `PROPOSED` | Path conforms to Directory Rules; planned, not yet created/confirmed. |
+| `PLANNED` | `PROPOSED` with an accepted ADR or explicit roadmap entry. |
+| `DRIFT CANDIDATE` | Doctrinally required (e.g., a §15 README) but unconfirmable this session. Per §15, a folder lacking a contract-conformant README is a *drift candidate*; it becomes confirmed `MISSING` only after a mounted-repo scan shows it absent. |
+| `MISSING` | Doctrinally required **and confirmed absent against a mounted repo**. Not assignable this session. |
+| `DEFERRED` | Recognised but intentionally pushed past the current phase (with reason). |
+| `NEEDS VERIFICATION` | May already exist or may need an ADR; unsettlable without a mounted repo. |
+| `CONFLICTED` | Corpus sources disagree on placement; held open until an ADR + DRIFT_REGISTER entry resolve it. |
+| `UNKNOWN` | Doctrine does not yet settle whether the file is needed. |
 
 > [!TIP]
-> Move a row from `PROPOSED` → `PRESENT` only after the file has been viewed in the mounted repo **this session**. Do not promote based on memory, prior reports, or partial scans (Directory Rules §0; KFM truth posture).
+> Promote forward only with evidence: `PROPOSED → PRESENT` only after viewing the file in a mounted repo this session; `DRIFT CANDIDATE → MISSING` only after a scan confirms absence; `CONFLICTED →` resolved only after the named ADR is accepted (Operating Contract current-session evidence limit).
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
@@ -107,13 +106,14 @@ Each table below lists expected files under one responsibility root. Statuses us
 
 ## Lane shape — Directory Rules §12
 
-Directory Rules §12 uses hydrology as the **canonical worked example** of the Domain Placement Law. The lane MUST appear as segments inside responsibility roots, never as a root folder. The diagram below mirrors §12 verbatim and is the structural skeleton this inventory tracks.
+The lane appears as segments inside responsibility roots, never as a root folder. Cross-cutting (non-domain-segmented) homes: `data/pre_raw/` (watcher signals) and `data/triplets/` (graph projections, plural per §18.a).
 
 ```mermaid
 flowchart LR
   classDef root fill:#dbeafe,stroke:#1e3a8a,stroke-width:1px,color:#1e3a8a;
   classDef seg  fill:#ecfeff,stroke:#155e75,stroke-width:1px,color:#155e75;
   classDef data fill:#fef9c3,stroke:#854d0e,stroke-width:1px,color:#854d0e;
+  classDef xc   fill:#fae8ff,stroke:#86198f,stroke-width:1px,color:#86198f;
   classDef rel  fill:#dcfce7,stroke:#166534,stroke-width:1px,color:#166534;
 
   subgraph DOC["docs/"]
@@ -124,6 +124,7 @@ flowchart LR
   end
   subgraph SCH["schemas/contracts/v1/"]
     S1["schemas/.../domains/hydrology/"]:::seg
+    S2["schemas/.../source/ (shared)"]:::xc
   end
   subgraph POL["policy/"]
     P1["policy/domains/hydrology/"]:::seg
@@ -140,11 +141,13 @@ flowchart LR
     PP2["pipeline_specs/hydrology/"]:::seg
   end
   subgraph DAT["data/"]
+    PRE["data/pre_raw/ (cross-cutting)"]:::xc
     DR["data/raw/hydrology/"]:::data
     DW["data/work/hydrology/"]:::data
     DQ["data/quarantine/hydrology/"]:::data
     DP["data/processed/hydrology/"]:::data
     DC["data/catalog/domain/hydrology/"]:::data
+    DT["data/triplets/ (cross-cutting, plural)"]:::xc
     DPB["data/published/layers/hydrology/"]:::data
     DRG["data/registry/sources/hydrology/"]:::data
   end
@@ -164,277 +167,102 @@ flowchart LR
 ```
 
 > [!WARNING]
-> **Anti-pattern guard (Directory Rules §13.4).** A root-level `hydrology/` folder with its own `data/`, `schemas/`, `policy/`, `docs/` subtree is a documented anti-pattern. If such a folder appears, this document MUST open a drift entry pointing to `docs/registers/DRIFT_REGISTER.md` rather than treating it as the lane.
+> **Anti-pattern guard (Directory Rules §13.4).** A root-level `hydrology/` folder with its own `data/`, `schemas/`, `policy/`, `docs/` subtree is a documented anti-pattern. If one appears, open a drift entry pointing to `docs/registers/DRIFT_REGISTER.md` rather than treating it as the lane.
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
 ---
 
-## Documentation files (`docs/domains/hydrology/`)
+## Coverage by responsibility root
 
-Human-readable doctrine and orientation for the hydrology lane.
+One row per lane segment. The **Key artifacts** column names only the anchor files that gate coverage; for the full file list per segment, see [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md).
 
-| File | Status | Notes |
-|---|---|---|
-| `README.md` | `PROPOSED` / `MISSING` | Required by §15 Required README Contract. One-line purpose, authority class, what belongs / does not belong, validation, related folders. |
-| `MISSING_OR_PLANNED_FILES.md` | This file | `PROPOSED`. |
-| `ARCHITECTURE.md` | `PROPOSED` | Lane architecture: source-role separation, observed-vs-regulatory boundary, pipeline shape, proof-lane scope. |
-| `OBJECT_MAP.md` | `PROPOSED` | Watershed · HUCUnit · HydroFeature · ReachIdentity · GaugeSite · FlowObservation · WaterLevelObservation · WaterQualityObservation · GroundwaterWell · NFHLZone/FloodContext · ObservedFloodEvent · Hydrograph · UpstreamTrace. (Atlas v1.1 §4 E.) |
-| `UBIQUITOUS_LANGUAGE.md` | `PROPOSED` | CONFIRMED-term glossary per Atlas v1.1 §4 C. |
-| `SOURCE_FAMILIES.md` | `PROPOSED` | USGS WBD/HUC · NHDPlus HR/3DHP · USGS Water Data/NWIS · FEMA NFHL/MSC · 3DEP terrain · water-quality & groundwater · historical observed flood. (Atlas v1.1 §4 D.) |
-| `PUBLICATION_POSTURE.md` | `PROPOSED` | Public-suitable defaults; NFHL-as-observed-flood denial; emergency-boundary exclusion; freshness rules. |
-| `VERIFICATION_BACKLOG.md` | `PROPOSED` | Domain-scoped backlog mirroring Atlas v1.1 §4 N items into a checkable register. |
-| `runbooks/` (sibling under `docs/runbooks/hydrology/`) | `PROPOSED` | Lane-specific operational runbooks — placed under `docs/runbooks/`, **not** here, per the established runbook home (compare fauna's runbook placement). |
+| Lane segment | Key artifacts (coverage anchors) | README (§15) | Segment status |
+|---|---|---|---|
+| `docs/domains/hydrology/` | README, INDEX, GLOSSARY, identity-model, DATA_LIFECYCLE, FILE_SYSTEM_PLAN, MAP_UI_CONTRACTS, this doc — **authored this sprint**; ARCHITECTURE, BOUNDARY, OBJECT_FAMILIES, SOURCE_FAMILIES, THIN_SLICE_PLAN, VERIFICATION_BACKLOG — **not yet authored** | n/a (this *is* docs) | `PROPOSED` (8 of ~14 authored) |
+| `contracts/domains/hydrology/` | 13 object-meaning `.md` (watershed … upstream_trace) | `DRIFT CANDIDATE` | `PROPOSED` |
+| `schemas/contracts/v1/domains/hydrology/` | 13 object schemas + `comid_huc12_crosswalk.schema.json` (`crosswalks/` home OPEN) | `DRIFT CANDIDATE` | `PROPOSED` |
+| `schemas/contracts/v1/source/` *(shared)* | `source-descriptor.json` — **not a hydrology file**; `source/` vs `sources/` | n/a | `CONFLICTED` (ADR-0001) |
+| `policy/domains/hydrology/` | publication gate; NFHL role-separation; emergency-alert boundary; source-role disambiguation; freshness; groundwater sensitivity | `DRIFT CANDIDATE` | `PROPOSED` |
+| `tests/domains/hydrology/` | HUC12 fingerprint; reach-ambiguity ABSTAIN; NFHL role-separation; EvidenceBundle closure; temporal logic; no-network proof; rollback drill | `DRIFT CANDIDATE` | `PROPOSED` |
+| `fixtures/domains/hydrology/` | `valid/` proof-slice set + `invalid/` negative fixtures; **declare one fixture home** (root vs `tests/fixtures/`) | `DRIFT CANDIDATE` | `PROPOSED` (home choice OPEN) |
+| `packages/domains/hydrology/` | hydro-identity, hydro-temporal, hydro-evidence, hydro-crosswalk | `DRIFT CANDIDATE` | `PROPOSED` |
+| `pipelines/domains/hydrology/` + `pipeline_specs/hydrology/` | ingest (WBD/NHDPlus/NWIS/NFHL/3DEP), normalize, catalog-close, publish, rollback + declarative specs | `DRIFT CANDIDATE` (both) | `PROPOSED` |
+| `data/pre_raw/` *(cross-cutting)* | watcher `event_envelope` / `event_run_receipt` | per-root README | `PROPOSED` |
+| `data/{raw,work,quarantine,processed}/hydrology/` | lifecycle dirs (connector → processed) | per-phase READMEs | `PROPOSED` |
+| `data/catalog/domain/hydrology/` | EvidenceBundles, release candidates | per-root README | `PROPOSED` |
+| `data/triplets/` *(cross-cutting, plural)* | graph/triplet projections | per-root README | `PROPOSED` |
+| `data/published/layers/hydrology/` | public-safe layers (PMTiles, layer manifests) | per-root README | `PROPOSED` |
+| `data/registry/sources/hydrology/` | SourceDescriptor **instances** (schema lives under `schemas/.../source/`) | per-root README | `PROPOSED` |
+| `release/candidates/hydrology/` | release_manifest, promotion_decision, rollback_card, correction_notice, GENERATED_RECEIPT | `DRIFT CANDIDATE` | `PROPOSED` |
+| `tools/validators/<topic>/` *(cross-cutting)* | COMID↔HUC12 crosswalk validator + manifest emitter | — | `CONFLICTED` (ADR-S-CWV-01) |
 
 > [!NOTE]
-> A subfolder convention note: runbook files for this lane belong under `docs/runbooks/hydrology/`, not `docs/domains/hydrology/runbooks/`. This mirrors the fauna precedent (`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`) and keeps `docs/domains/<domain>/` doctrine-focused.
+> The `docs/` row tracks suite progress directly because this doc lives there. As of this sprint, eight lane docs are authored (drafts, `human_review` pending); six remain unauthored. See [`INDEX.md`](./INDEX.md) §2 for the live document map.
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
 ---
 
-## Contracts (`contracts/domains/hydrology/`)
+## README coverage (§15 contract)
 
-Semantic meaning files (Markdown). Validation logic does **not** live here — it lives in `schemas/` (shape), `policy/` (admissibility), and `tests/` (proof). (Directory Rules §6.3, §6.4.)
+Every canonical/compatibility root touched by the lane needs a §15 folder README (Purpose → Authority level → Status → What belongs → What does NOT belong → Inputs → Outputs → Validation → Review burden → Related folders → ADRs → Last reviewed). Until a mounted-repo scan runs, each is a **drift candidate**, not confirmed `MISSING`.
 
-| File | Status | Object family |
-|---|---|---|
-| `README.md` | `MISSING` | Required by §15. |
-| `watershed.md` | `PROPOSED` | Watershed identity, scope, hierarchy. |
-| `huc_unit.md` | `PROPOSED` | HUC2 / HUC4 / HUC8 / HUC10 / HUC12 unit; WBD snapshot tracking. |
-| `hydro_feature.md` | `PROPOSED` | NHD/NHDPlus HR generic feature identity. |
-| `reach_identity.md` | `PROPOSED` | COMID, permanent identifier, reachcode, VPUID semantics. |
-| `gauge_site.md` | `PROPOSED` | NWIS station identity; provider IDs as canonical keys. |
-| `flow_observation.md` | `PROPOSED` | Discharge time series; parameter, unit, qualifier, no-data semantics. |
-| `water_level_observation.md` | `PROPOSED` | Stage / gauge-height time series. |
-| `water_quality_observation.md` | `PROPOSED` | Concentration / characteristic observation; method / detection-limit context. |
-| `groundwater_well.md` | `PROPOSED` | Well identity, completion, level observations; sensitivity caveats. |
-| `nfhl_zone.md` | `PROPOSED` | Regulatory flood-zone classification; **explicitly not** observed inundation. |
-| `observed_flood_event.md` | `PROPOSED` | Observed inundation evidence (high-water marks, imagery footprints); source-role-isolated from NFHL. |
-| `hydrograph.md` | `PROPOSED` | Time-series projection of flow/level observations for UI. |
-| `upstream_trace.md` | `PROPOSED` | Network traversal projection; depends on NHDPlus HR identity. |
+| Segment README | Status |
+|---|---|
+| `docs/domains/hydrology/README.md` | `PROPOSED` (authored this sprint — drives this row toward `PRESENT` on merge) |
+| `contracts/`, `schemas/.../hydrology/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`, `pipeline_specs/`, each `data/<phase>/`, `release/candidates/hydrology/` READMEs | `DRIFT CANDIDATE` (×~14) |
+
+> [!NOTE]
+> A single mounted-repo missing-README scan resolves this entire section at once (`DRIFT CANDIDATE → PRESENT` or `→ MISSING`). It is the highest-leverage verification action for the lane (H-V-09).
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
 ---
 
-## Schemas (`schemas/contracts/v1/domains/hydrology/`)
+## Conflicted & cross-cutting placements
 
-Machine-checkable shape. Default home per **ADR-0001** (Directory Rules §6.4). No parallel home under `contracts/domains/hydrology/`.
+The placements that **cannot** be settled by this doc — each needs an ADR + `DRIFT_REGISTER.md` entry. These are the lane's true blockers; everything else is just authoring.
 
-| File | Status | Notes |
+| Placement | Conflict | Resolves via |
 |---|---|---|
-| `README.md` | `MISSING` | §15 required. |
-| `watershed.schema.json` | `PROPOSED` | |
-| `huc_unit.schema.json` | `PROPOSED` | 12-digit HUC12 enforcement; WBD snapshot field. |
-| `hydro_feature.schema.json` | `PROPOSED` | |
-| `reach_identity.schema.json` | `PROPOSED` | NHDPlus version + reachcode + permanent_identifier + VPUID. |
-| `gauge_site.schema.json` | `PROPOSED` | |
-| `flow_observation.schema.json` | `PROPOSED` | |
-| `water_level_observation.schema.json` | `PROPOSED` | |
-| `water_quality_observation.schema.json` | `PROPOSED` | |
-| `groundwater_well.schema.json` | `PROPOSED` | |
-| `nfhl_zone.schema.json` | `PROPOSED` | Carries `source_role: regulatory_context` invariant. |
-| `observed_flood_event.schema.json` | `PROPOSED` | Carries `source_role: observation` invariant. |
-| `hydrograph.schema.json` | `PROPOSED` | |
-| `upstream_trace.schema.json` | `PROPOSED` | |
-| `comid_huc12_crosswalk.schema.json` | `PROPOSED` | Crosswalk manifest; `decision_reason` enum: `official_crosswalk` / `area_weighted_overlay` / `centroid_in_polygon` / `snap_to_pour_point`. (Per New Ideas 5-8-26 hydro validator design.) |
-| `negative/` (invalid fixtures for each schema) | `PROPOSED` | Co-located negative-state fixtures per Directory Rules §6.6. |
+| Crosswalk **validator** home | `tools/probes/comid_huc12/` vs `tools/validators/validators/crosswalk/` vs `tools/validators/hydro/` | **ADR-S-CWV-01** |
+| `tools/validators/hydro/{schemas,policy}/` co-location | Schemas belong under `schemas/contracts/v1/...`; policy under `policy/domains/hydrology/` — not under `tools/` | ADR-S-CWV-01 + ADR-0001 |
+| `SourceDescriptor` **schema** path | `source/source-descriptor.json` (Atlas §24.1.3) vs `sources/source_descriptor.schema.json` (Operating Contract §46) | **ADR-0001** |
+| Crosswalk **schema** home | `schemas/.../domains/hydrology/` vs cross-cutting `schemas/.../crosswalks/` | ADR |
+| 3DHP supersession of the v2.1 crosswalk key | COMID → 3DHP `universal_reference_id` → HUC12? — corpus-open | ADR + connector evidence |
+| Fixture home | root `fixtures/domains/hydrology/` vs `tests/fixtures/domains/hydrology/` | ADR-hydro-fixture-home |
+| `alignment_score` threshold | fixed `0.75` vs per-source-family configurable — not settled doctrine (crosswalk card flags tuning) | threshold policy + ADR |
 
 > [!CAUTION]
-> **Schema-home discipline.** Schemas MUST NOT also live under `contracts/domains/hydrology/<x>.schema.json`. Any pre-existing path of that shape is `CONFLICTED` per ADR-0001 and triggers a drift entry, not a parallel home.
+> Do **not** assert any single home for the conflicted rows. The crosswalk validator and the `SourceDescriptor` schema path appear in **multiple** corpus locations; picking one without an ADR creates parallel authority. Reference canonical homes by path; co-locate nothing under `tools/`.
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
 ---
 
-## Policy (`policy/domains/hydrology/`)
+## Proof-slice tracker
 
-Admissibility, release, sensitivity, and source-role rules. Canonical singular root (`policy/`, not `policies/`).
+Hydrology is the **first proof-bearing thin slice**. This is the gating subset — fixture-first, no-network, no live USGS/WBD/FEMA traffic.
 
-| File | Status | Notes |
-|---|---|---|
-| `README.md` | `MISSING` | §15 required. |
-| `hydro_publication.rego` | `PROPOSED` | Public-safe publication gate; rights, source-role, freshness checks. |
-| `nfhl_role_separation.rego` | `PROPOSED` | **Deny** any claim that presents an NFHL regulatory zone as observed inundation. (Atlas v1.1 §4 B, §20.) |
-| `emergency_alert_boundary.rego` | `PROPOSED` | **Deny** the use of KFM as a life-safety alert authority; emergency text belongs to Hazards / official sources. (Atlas v1.1 §20.4.) |
-| `source_role_disambiguation.rego` | `PROPOSED` | Enforce separation among `observation` / `regulatory_context` / `model` / `authority` / `legal` source roles. |
-| `freshness_stale_state.rego` | `PROPOSED` | Stale-state badging and ABSTAIN rules for time-sensitive series. |
-| `groundwater_sensitivity.rego` | `PROPOSED` | Well-location sensitivity defaults; private-well joins fail closed. |
-| `tests/` (policy-side fixtures and rule tests) | `PROPOSED` | Distinct from `tests/domains/hydrology/`; per Directory Rules §6.5. |
+> **Thin slice (Encyclopedia §5 N):** _Kansas HUC12 + one USGS gauge fixture + one NHDPlus identity crosswalk + NFHL contextual overlay + hydrograph panel + EvidenceBundle closure + ABSTAIN on ambiguous reach identity._
 
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Tests (`tests/domains/hydrology/`)
-
-Proof the lane's contracts, schemas, and policies are enforceable.
-
-| File | Status | Tests |
-|---|---|---|
-| `README.md` | `MISSING` | §15 required. |
-| `test_huc12_fingerprint.py` | `PROPOSED` | HUC12 fingerprint rule per Atlas v1.1 §4 N. |
-| `test_nhdplus_hr_ambiguity.py` | `PROPOSED` | Ambiguous reach identity → ABSTAIN. |
-| `test_usgs_water_normalizer.py` | `PROPOSED` | Parameter / unit / qualifier / no-data handling. |
-| `test_nfhl_role_separation.py` | `PROPOSED` | Confirms NFHL never serialised as observed inundation. |
-| `test_evidence_bundle_closure.py` | `PROPOSED` | Lane EvidenceBundle closure with `EvidenceRef`. |
-| `test_temporal_logic.py` | `PROPOSED` | source / observed / valid / retrieval / release / correction times stay distinct. |
-| `test_geometry_validity.py` | `PROPOSED` | Polygon topology, catchment validity, multi-HUC candidates. |
-| `test_no_network_proof.py` | `PROPOSED` | Offline fixture-first proof slice (no live network). |
-| `test_release_manifest.py` | `PROPOSED` | Hydrology release manifest validation. |
-| `test_rollback_drill.py` | `PROPOSED` | RollbackCard dry-run. |
-| `test_citation_validation.py` | `PROPOSED` | Cite-or-abstain on lane-scoped AI answers. |
-
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Fixtures (`fixtures/domains/hydrology/`)
-
-Sample data for tests and proof slices. The lane MAY keep fixtures under `tests/fixtures/domains/hydrology/` instead; per Directory Rules §6.6, **only one** fixture home for this lane.
-
-| File | Status | Notes |
-|---|---|---|
-| `README.md` | `MISSING` | §15 required; must declare which fixture home is canonical for hydrology. |
-| `valid/huc12_kansas_sample.json` | `PROPOSED` | One Kansas HUC12 with WBD snapshot. |
-| `valid/usgs_gauge_observation.json` | `PROPOSED` | One USGS gauge + one flow observation. |
-| `valid/nhdplus_crosswalk_official.json` | `PROPOSED` | `decision_reason: official_crosswalk`. |
-| `valid/overlay_assignment.json` | `PROPOSED` | `decision_reason: area_weighted_overlay`. |
-| `valid/nfhl_zone_context.json` | `PROPOSED` | `source_role: regulatory_context`. |
-| `valid/observed_flood_event.json` | `PROPOSED` | `source_role: observation`. |
-| `invalid/invalid_huc_length.json` | `PROPOSED` | HUC12 not 12 digits → `FAIL_INVALID_HUC12`. |
-| `invalid/low_alignment.json` | `PROPOSED` | `alignment_score < 0.75` → `FAIL_LOW_ALIGNMENT`. |
-| `invalid/missing_provenance.json` | `PROPOSED` | Missing `source_head` → `FAIL_MISSING_PROVENANCE`. |
-| `invalid/duplicate_comid.json` | `PROPOSED` | Unjustified duplicate `(comid, huc12)` rows. |
-| `invalid/nfhl_as_observed.json` | `PROPOSED` | Negative fixture proving role-separation DENY. |
-| `invalid/multi_huc_unresolved.json` | `PROPOSED` | Catchment overlaps >1 HUC12 with no candidate ranking. |
-| `invalid/invalid_geometry_hash.json` | `PROPOSED` | Malformed catchment polygon hash. |
-
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Packages (`packages/domains/hydrology/`)
-
-Reusable, shared libraries scoped to the lane. A package MUST be reusable; one-off workflow steps belong in `tools/` or `pipelines/` (Directory Rules §7.2).
-
-| Path | Status | Responsibility |
-|---|---|---|
-| `README.md` | `MISSING` | §15 required. |
-| `hydro-identity/` | `PROPOSED` | COMID / HUC12 / reach identity utilities; canonicalisation; deterministic identity. |
-| `hydro-temporal/` | `PROPOSED` | Time-stamp distinction (observed / valid / retrieval / release / correction). |
-| `hydro-evidence/` | `PROPOSED` | EvidenceBundle helpers for hydrology objects. |
-| `hydro-crosswalk/` | `PROPOSED` | COMID ↔ HUC12 crosswalk computation; reads `comid_huc12_crosswalk.schema.json`. |
-
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Pipelines & specs
-
-Executable pipelines (`pipelines/domains/hydrology/`) describe **how** runs proceed. Declarative specs (`pipeline_specs/hydrology/`) describe **what** should run (Directory Rules §7.4).
-
-| Path | Status | Notes |
-|---|---|---|
-| `pipelines/domains/hydrology/README.md` | `MISSING` | §15 required. |
-| `pipelines/domains/hydrology/ingest_wbd_huc/` | `PROPOSED` | WBD / HUC12 RAW capture. |
-| `pipelines/domains/hydrology/ingest_nhdplus_hr/` | `PROPOSED` | NHDPlus HR / 3DHP identity ingest. |
-| `pipelines/domains/hydrology/ingest_usgs_water/` | `PROPOSED` | NWIS observation normalization. |
-| `pipelines/domains/hydrology/ingest_nfhl/` | `PROPOSED` | FEMA NFHL regulatory-context ingest. |
-| `pipelines/domains/hydrology/ingest_3dep_terrain/` | `PROPOSED` | Terrain-derived hydrology context. |
-| `pipelines/domains/hydrology/normalize_observation/` | `PROPOSED` | Parameter / unit / qualifier / no-data normalization. |
-| `pipelines/domains/hydrology/catalog_close/` | `PROPOSED` | Catalog / triplet projection + EvidenceBundle closure. |
-| `pipelines/domains/hydrology/publish_layers/` | `PROPOSED` | Public-safe layer emission (PMTiles / governed-API surfaces). |
-| `pipelines/domains/hydrology/rollback/` | `PROPOSED` | RollbackCard execution. |
-| `pipeline_specs/hydrology/README.md` | `MISSING` | §15 required. |
-| `pipeline_specs/hydrology/*.yaml` | `PROPOSED` | One spec per pipeline above, declarative. |
-
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Cross-cutting tools (`tools/validators/`)
-
-Cross-domain validators live under **topic-named non-domain segments** (Directory Rules §12 _Multi-domain and cross-cutting files_). The hydro crosswalk validator is the canonical example because it pre-dates and informs the schema home.
-
-| Path | Status | Notes |
-|---|---|---|
-| `tools/validators/hydro/README.md` | `PROPOSED` | Governed COMID ↔ HUC12 validation; fail-closed, offline-first. (Per New Ideas 5-8-26.) |
-| `tools/validators/hydro/check_crosswalk.py` | `PROPOSED` | CLI: structural / governance / hydrology-sanity gates. |
-| `tools/validators/hydro/emit_manifest.py` | `PROPOSED` | Emits HydroCrosswalkManifest with `spec_hash`. |
-| `tools/validators/hydro/test_check_crosswalk.py` | `PROPOSED` | Negative-path test set. |
-| `tools/validators/hydro/schemas/comid_huc12_crosswalk.schema.json` | `PROPOSED` / `CONFLICTED` | **Schema-home note:** New Ideas 5-8-26 placed this here; ADR-0001 says schemas live under `schemas/contracts/v1/...`. Reconcile via ADR or migration before landing. |
-| `tools/validators/hydro/fixtures/{valid,invalid}/` | `PROPOSED` | Local validator fixtures distinct from domain `fixtures/` home. |
-| `tools/validators/hydro/policy/hydro_publication.rego` | `PROPOSED` / `CONFLICTED` | Same issue: policy belongs under `policy/domains/hydrology/`, not under `tools/`. Resolve before merge. |
-
-> [!IMPORTANT]
-> The validator-package layout from New Ideas 5-8-26 (`tools/validators/hydro/schemas/`, `tools/validators/hydro/policy/`) **diverges** from Directory Rules §6.4 and §6.5, which call for canonical schema and policy homes. This is flagged as a `CONFLICTED` placement requiring an ADR before any of those files land. Until then, the validator should reference the canonical homes by path, not co-locate them.
-
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Lifecycle data (`data/<phase>/hydrology/`)
-
-Per Directory Rules §4 Step 2, every lifecycle phase has a dedicated home; promotion is a governed state transition, not a file move.
-
-| Phase | Path | Status | Notes |
-|---|---|---|---|
-| RAW | `data/raw/hydrology/<source_id>/<run_id>/` | `PROPOSED` | Immutable source payload; connector output only. |
-| WORK | `data/work/hydrology/` | `PROPOSED` | In-progress normalization. |
-| QUARANTINE | `data/quarantine/hydrology/` | `PROPOSED` | Held-back records with reason codes. |
-| PROCESSED | `data/processed/hydrology/` | `PROPOSED` | Validated normalized objects + receipts. |
-| CATALOG | `data/catalog/domain/hydrology/` | `PROPOSED` | EvidenceBundles, triplet projections, release candidates. |
-| PUBLISHED | `data/published/layers/hydrology/` | `PROPOSED` | Public-safe artifacts served via governed-API. |
-| REGISTRY | `data/registry/sources/hydrology/` | `PROPOSED` | SourceDescriptor records. |
-| RECEIPTS / PROOFS | `data/receipts/`, `data/proofs/` (cross-domain) | `PROPOSED` | Emitted alongside lifecycle dirs; not nested under hydrology. |
-
-Each phase folder needs a `README.md` declaring authority class and acceptable content (§15). All eight READMEs are `MISSING` until proven otherwise.
-
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Release (`release/candidates/hydrology/`)
-
-Release **decisions** for hydrology. Distinct from `data/published/layers/hydrology/`, which holds release **artifacts** (Directory Rules §5).
-
-| File | Status | Notes |
-|---|---|---|
-| `README.md` | `MISSING` | §15 required. |
-| `<release_id>/release_manifest.json` | `PROPOSED` | ReleaseManifest per release. |
-| `<release_id>/promotion_decision.json` | `PROPOSED` | PromotionDecision tying EvidenceBundle to release. |
-| `<release_id>/rollback_card.json` | `PROPOSED` | Rollback target identification. |
-| `<release_id>/correction_notice.json` | `PROPOSED` (when applicable) | Correction path artifact. |
-
-[⬆ Back to top](#-hydrology--missing-or-planned-files)
-
----
-
-## Hydrology thin-slice proof lane inventory
-
-KFM doctrine names hydrology as the **first proof-bearing thin slice**. The Encyclopedia §5 N and Atlas v1.1 §21 Phase 5 specify the exact slice composition. Tracking it separately makes the proof-slice subset visible.
-
-> **Thin slice (per Encyclopedia §5 N):** _Kansas HUC12 + one USGS gauge fixture + one NHDPlus identity crosswalk + NFHL contextual overlay + hydrograph panel + EvidenceBundle closure + ABSTAIN on ambiguous reach identity._
-
-| Component | Concrete file (PROPOSED path) | Status |
+| Component | Coverage anchor (PROPOSED path) | Status |
 |---|---|---|
 | HUC12 fixture | `fixtures/domains/hydrology/valid/huc12_kansas_sample.json` | `PROPOSED` |
 | USGS gauge fixture | `fixtures/domains/hydrology/valid/usgs_gauge_observation.json` | `PROPOSED` |
-| NHDPlus crosswalk | `fixtures/domains/hydrology/valid/nhdplus_crosswalk_official.json` | `PROPOSED` |
+| NHDPlus crosswalk (official-tier) | `fixtures/domains/hydrology/valid/nhdplus_crosswalk_official.json` | `PROPOSED` |
 | NFHL contextual overlay | `fixtures/domains/hydrology/valid/nfhl_zone_context.json` | `PROPOSED` |
 | EvidenceBundle closure | `data/catalog/domain/hydrology/<bundle_id>/evidence_bundle.json` | `PROPOSED` |
-| LayerManifest | `data/published/layers/hydrology/<layer_id>/layer_manifest.json` | `PROPOSED` |
-| Evidence Drawer payload | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` (cross-cutting, not lane-owned) | `PROPOSED` |
-| Hydrograph projection | `data/published/layers/hydrology/<gauge_id>/hydrograph.json` | `PROPOSED` |
-| RunReceipt | `data/receipts/<run_id>/run_receipt.json` (cross-domain home) | `PROPOSED` |
+| LayerManifest + hydrograph projection | `data/published/layers/hydrology/<layer_id>/…` | `PROPOSED` |
+| Evidence Drawer payload | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` *(cross-cutting, not lane-owned)* | `PROPOSED` |
+| RunReceipt | `data/receipts/<run_id>/run_receipt.json` *(cross-domain home)* | `PROPOSED` |
 | ReleaseManifest (dry-run) | `release/candidates/hydrology/<release_id>/release_manifest.json` | `PROPOSED` |
-| ABSTAIN test on ambiguous reach | `tests/domains/hydrology/test_nhdplus_hr_ambiguity.py` | `PROPOSED` |
-| No-network proof | `tests/domains/hydrology/test_no_network_proof.py` | `PROPOSED` |
+| ABSTAIN-on-ambiguous-reach test | `tests/domains/hydrology/test_nhdplus_hr_ambiguity.py` | `PROPOSED` |
+| No-network proof test | `tests/domains/hydrology/test_no_network_proof.py` | `PROPOSED` |
 
 > [!TIP]
-> The proof slice is **fixture-first and no-network**. No live USGS / WBD / FEMA traffic should be required for the proof slice to pass. Live source verification arrives only after rights, endpoint, cadence, and policy checks complete.
+> Keep this section at the top of priorities until the whole slice is `PRESENT`. It is the lane's definition of "first credible release," and it is fully achievable offline.
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
@@ -442,17 +270,21 @@ KFM doctrine names hydrology as the **first proof-bearing thin slice**. The Ency
 
 ## ADRs needed or pending
 
-ADRs the hydrology lane likely requires before fully landing. Status `NEEDS VERIFICATION` because no ADR index is mounted.
+Named ids where a sprint-wide ADR already exists; descriptive titles otherwise. Status `NEEDS VERIFICATION` where no ADR index is mounted.
 
-| ADR (proposed title) | Question it resolves | Status |
+| ADR (id / title) | Resolves | Status |
 |---|---|---|
-| ADR-hydro-source-role-separation | Canonical enumeration of `observation` / `regulatory_context` / `model` / `authority` / `legal` for hydrology; how role drift is detected. | `NEEDS VERIFICATION` |
-| ADR-hydro-nfhl-observed-flood-boundary | Formalises the **deny** rule against presenting NFHL zones as observed inundation. | `NEEDS VERIFICATION` |
-| ADR-hydro-emergency-alert-boundary | Formalises the **deny** rule against KFM as a life-safety alert authority. | `NEEDS VERIFICATION` |
-| ADR-hydro-crosswalk-canonicalisation | Canonical JSON serialisation, `spec_hash` rule, decision-reason enum for COMID ↔ HUC12. | `NEEDS VERIFICATION` |
-| ADR-hydro-validator-placement | Reconcile `tools/validators/hydro/{schemas,policy}/` co-location with §6.4 / §6.5 canonical homes. | `NEEDS VERIFICATION` |
-| ADR-hydro-temporal-distinctions | Canonical handling of source / observed / valid / retrieval / release / correction times. | `NEEDS VERIFICATION` |
-| ADR-hydro-fixture-home | Choose `fixtures/domains/hydrology/` vs `tests/fixtures/domains/hydrology/` and document. | `NEEDS VERIFICATION` |
+| **ADR-0001** | Schema home `schemas/contracts/v1/...`; `SourceDescriptor` `source/` vs `sources/` | `CONFLICTED` |
+| **ADR-S-04** | Source-role vocabulary (the canonical seven, fixed at admission) | `PROPOSED` |
+| **ADR-S-CWV-01** | Crosswalk validator home + `tools/validators/hydro/{schemas,policy}/` co-location | `CONFLICTED` |
+| **ADR-S-13** | Runbook subfolder convention (OPEN-DR-02) | `OPEN` |
+| **ADR-S-09 / S-12** | Reviewer separation of duties / connector cadence | `PROPOSED` |
+| **EXP-004** | Hash policy (SHA-256/JCS vs BLAKE3 per object family) | `PROPOSED` |
+| **OPEN-DR-01** | `PROV.md` vs `PROVENANCE.md` | `OPEN` |
+| ADR-hydro-nfhl-observed-flood-boundary | Formalises NFHL-as-observed-flood DENY (Atlas §24.1.2) | `NEEDS VERIFICATION` |
+| ADR-hydro-emergency-alert-boundary | Formalises KFM-not-an-alert-authority DENY (Atlas §20.4) | `NEEDS VERIFICATION` |
+| ADR-hydro-crosswalk-canonicalisation | Canonical JSON, `spec_hash`, decision-reason enum | `NEEDS VERIFICATION` |
+| ADR-hydro-fixture-home | `fixtures/domains/hydrology/` vs `tests/fixtures/...` | `NEEDS VERIFICATION` |
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
@@ -460,26 +292,29 @@ ADRs the hydrology lane likely requires before fully landing. Status `NEEDS VERI
 
 ## Open questions & verification backlog
 
-Mirrors the hydrology verification backlog from Atlas v1.1 §4 N into a checkable register for this lane.
+Mirrors the hydrology backlog (Atlas v1.1 §4 N) into a checkable register.
 
 | # | Item | Evidence that would settle it | Status |
 |---:|---|---|---|
-| H-V-01 | Verify HUC12 fixture and fingerprint rule | mounted repo files; `tests/domains/hydrology/test_huc12_fingerprint.py`; sample fixture | `NEEDS VERIFICATION` |
-| H-V-02 | Verify NHDPlus HR crosswalk and ambiguity ABSTAIN behavior | crosswalk fixture + ambiguity test + lane EvidenceBundle | `NEEDS VERIFICATION` |
-| H-V-03 | Verify USGS Water normalizer and NFHL source-role separation | normalizer code; role-separation policy test | `NEEDS VERIFICATION` |
-| H-V-04 | Verify hydrology API and MapLibre layer adapter | governed-API route surface; layer manifest fixtures; renderer-boundary tests | `NEEDS VERIFICATION` |
-| H-V-05 | Confirm fixture home choice (root `fixtures/` vs `tests/fixtures/`) | README declaration + reviewer confirmation | `NEEDS VERIFICATION` |
-| H-V-06 | Confirm schema home (any rogue `contracts/.../*.schema.json`?) | repo grep; ADR-0001 reconciliation | `NEEDS VERIFICATION` |
-| H-V-07 | Verify groundwater-well sensitivity defaults | `policy/domains/hydrology/groundwater_sensitivity.rego` + tests | `NEEDS VERIFICATION` |
-| H-V-08 | Verify freshness / stale-state rules per source family | freshness policy + per-family thresholds | `NEEDS VERIFICATION` |
-| H-V-09 | Verify presence of per-folder READMEs across all lane segments | each segment carries a current §15 README | `NEEDS VERIFICATION` |
-| H-V-10 | Drift entry needed for any root-level `hydrology/` folder? | repo top-level inspection | `NEEDS VERIFICATION` |
+| H-V-01 | HUC12 fixture and fingerprint rule | mounted repo files; fingerprint test; sample fixture | `NEEDS VERIFICATION` |
+| H-V-02 | NHDPlus HR crosswalk and ambiguity ABSTAIN behavior | crosswalk fixture + ambiguity test + lane EvidenceBundle | `NEEDS VERIFICATION` |
+| H-V-03 | USGS Water normalizer and NFHL source-role separation | normalizer code; role-separation policy test | `NEEDS VERIFICATION` |
+| H-V-04 | Hydrology API and MapLibre layer adapter | governed-API routes; layer manifest fixtures; renderer-boundary tests | `NEEDS VERIFICATION` |
+| H-V-05 | Fixture home choice (root `fixtures/` vs `tests/fixtures/`) | README declaration + reviewer confirmation | `NEEDS VERIFICATION` |
+| H-V-06 | Schema home (rogue `contracts/.../*.schema.json`?) + `source/` vs `sources/` | repo grep; ADR-0001 reconciliation | `CONFLICTED` |
+| H-V-07 | Groundwater-well sensitivity defaults | `groundwater_sensitivity.rego` + tests | `NEEDS VERIFICATION` |
+| H-V-08 | Freshness / stale-state rules per source family | freshness policy + per-family thresholds | `NEEDS VERIFICATION` |
+| H-V-09 | Per-folder §15 READMEs across all lane segments | **single missing-README scan** resolves the whole README-coverage section | `NEEDS VERIFICATION` |
+| H-V-10 | Drift entry for any root-level `hydrology/` folder? | repo top-level inspection | `NEEDS VERIFICATION` |
+| H-V-11 | Crosswalk validator home | ADR-S-CWV-01 | `CONFLICTED` |
+| H-V-12 | 3DHP supersession of the v2.1 crosswalk key | ADR + connector evidence (corpus-open) | `CONFLICTED` |
+| H-V-13 | Alignment-score threshold (fixed `0.75` vs configurable) | threshold policy + ADR | `PROPOSED` |
 
 > [!WARNING]
-> **NFHL ≠ observed flood.** Atlas v1.1 §4 B is explicit: NFHL regulatory context **must not** be collapsed into observed inundation. Any pipeline, schema, layer, or UI surface that allows that collapse is a publication blocker. Test `H-V-03` exists to catch this; do not promote past CATALOG without it passing.
+> **NFHL ≠ observed flood.** Atlas v1.1 §4 B / §24.1.2: NFHL regulatory context **must not** be collapsed into observed inundation. Any pipeline, schema, layer, or UI surface allowing that collapse is a publication blocker. `H-V-03` exists to catch it; do not promote past CATALOG without it passing.
 
 > [!CAUTION]
-> **Emergency-alert boundary.** Atlas v1.1 §20.4 lists Hazards / Hydrology / Air as the domains where KFM **may not** be used as a life-safety authority. Hydrology surfaces (drawer, AI summaries, layer descriptions) must avoid language framing released artifacts as official alerts.
+> **Emergency-alert boundary.** Atlas v1.1 §20.4: KFM may **not** be used as a life-safety authority in Hazards / Hydrology / Air. Hydrology surfaces must avoid language framing released artifacts as official alerts.
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
@@ -490,17 +325,17 @@ Mirrors the hydrology verification backlog from Atlas v1.1 §4 N into a checkabl
 <details>
 <summary><strong>Update procedure (click to expand)</strong></summary>
 
-1. **Inspect the mounted repo.** Confirm path presence before changing any status. Memory and prior reports do not count (Directory Rules §0).
-2. **Update one row at a time.** Each change should be reviewable.
+1. **Inspect the mounted repo.** Confirm path presence before changing any status. Memory and prior reports do not count (Operating Contract current-session evidence limit).
+2. **Track segments and key artifacts, not every filename.** If a specific file's placement is in question, that belongs in [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md); update the segment's coverage status here.
 3. **Move statuses forward only with evidence.**
-   - `PROPOSED` / `PLANNED` → `PRESENT`: the file is visible in the mounted repo, this session.
-   - `PROPOSED` → `MISSING`: the file is doctrinally required (e.g., §15 README) and confirmed absent.
-   - `NEEDS VERIFICATION` → `PRESENT` / `MISSING`: only after the verification action listed in the open-questions table is performed.
-4. **Open drift entries** for any path that exists but conflicts with Directory Rules (e.g., a root-level `hydrology/` folder; schema mirror divergence). Cross-link `docs/registers/DRIFT_REGISTER.md`.
-5. **Open ADRs** before landing files that require one — see the ADR table above.
-6. **Update the meta block.** Bump `updated` and (when status changes are large) `version`.
-7. **Run the path-validation checklist** from Directory Rules §16 for any new path added to this inventory.
-8. **Keep the proof-slice section visible at the top of priorities** until the slice is fully `PRESENT`.
+   - `PROPOSED`/`PLANNED` → `PRESENT`: file visible in the mounted repo, this session.
+   - `DRIFT CANDIDATE` → `MISSING`: a scan confirms the required file absent.
+   - `NEEDS VERIFICATION` → resolved: only after the listed verification action.
+   - `CONFLICTED` → resolved: only after the named ADR is accepted; close the DRIFT_REGISTER entry.
+4. **Open drift entries** for any path conflicting with Directory Rules (root-level `hydrology/`; schema mirror divergence; `tools/validators/hydro/{schemas,policy}/` co-location). Cross-link `DRIFT_REGISTER.md`.
+5. **Open ADRs** before landing files that require one (see ADR table).
+6. **Update the meta block.** Bump `updated` and (on large status changes) `version`.
+7. **Keep the proof-slice tracker at the top of priorities** until the slice is fully `PRESENT`.
 
 </details>
 
@@ -510,13 +345,13 @@ Mirrors the hydrology verification backlog from Atlas v1.1 §4 N into a checkabl
 | Symbol | Status | When to use |
 |---|---|---|
 | 🟢 | `PRESENT` | Verified this session against mounted repo. |
-| 🟡 | `PROPOSED` / `PLANNED` | Path conforms; file not yet created or not yet confirmed. |
-| 🔴 | `MISSING` | Doctrinally required (e.g., §15 README); confirmed absent. |
+| 🟡 | `PROPOSED` / `PLANNED` | Path conforms; not yet created or confirmed. |
+| 🟠 | `DRIFT CANDIDATE` | Doctrinally required (e.g., §15 README); unconfirmed this session. |
+| 🔴 | `MISSING` | Doctrinally required and **confirmed absent** against a mounted repo. |
+| 🟣 | `CONFLICTED` | Corpus sources disagree; ADR + DRIFT_REGISTER pending. |
 | ⏸ | `DEFERRED` | Recognised but pushed past the current phase, with a reason. |
 | ❓ | `NEEDS VERIFICATION` | Requires repo inspection or ADR. |
 | ⚪ | `UNKNOWN` | Doctrine does not yet settle whether this is needed. |
-
-Optional: prepend the symbol to status cells once the lane is mature enough to make the visual scan worthwhile.
 
 </details>
 
@@ -526,23 +361,39 @@ Optional: prepend the symbol to status cells once the lane is mature enough to m
 
 ## Related docs
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), Required README Contract (§15), Path-Validation Checklist (§16).
-- [`docs/domains/hydrology/README.md`](./README.md) — `PROPOSED` — lane orientation.
-- [`docs/domains/hydrology/ARCHITECTURE.md`](./ARCHITECTURE.md) — `PROPOSED` — lane architecture detail.
-- [`docs/domains/hydrology/OBJECT_MAP.md`](./OBJECT_MAP.md) — `PROPOSED` — object families.
+- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- [`directory-rules.md`](../../../directory-rules.md) — Domain Placement Law (§12), Required README Contract (§15), Path-Validation Checklist (§16), OPEN-DR-01/02.
+- [`docs/domains/hydrology/FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) — **per-root placement contract; the authoritative file list this tracker defers to.**
+- [`docs/domains/hydrology/INDEX.md`](./INDEX.md) — lane navigation hub (live document map).
+- [`docs/domains/hydrology/README.md`](./README.md) — lane landing page (§15 README).
 - [`docs/domains/hydrology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — `PROPOSED` — source ledger.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — repo-wide backlog target for promoted hydrology items.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries; cross-link when conflicts surface.
-- [`docs/runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md) — `PROPOSED` — operational refresh runbook (mirrors fauna precedent).
-- Sibling lane inventories — `PROPOSED` set: `docs/domains/{soil,fauna,flora,habitat,geology,atmosphere,roads-rail-trade,settlements-infrastructure,archaeology,hazards,agriculture,people-dna-land}/MISSING_OR_PLANNED_FILES.md`.
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standard profile (live artifact; cf. OPEN-DR-01).
+- [`docs/runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md) — `PROPOSED` — refresh runbook (fauna precedent; Pattern A pending ADR-S-13).
+- Sibling lane inventories — `PROPOSED`: `docs/domains/{soil,fauna,flora,habitat,geology,atmosphere,roads-rail-trade,settlements-infrastructure,archaeology,hazards,agriculture,people-dna-land}/MISSING_OR_PLANNED_FILES.md`.
 
 > [!NOTE]
-> All linked targets are `PROPOSED` until confirmed against the mounted repo. If any of these files do not exist yet, the links above will 404 on GitHub — that is the intended planning state. Promote to live links as files land.
+> All linked targets are `PROPOSED` / `DRIFT CANDIDATE` until confirmed against the mounted repo; until then several will 404 on GitHub — the intended planning state.
 
 [⬆ Back to top](#-hydrology--missing-or-planned-files)
 
 ---
 
-<sub>Document version: <code>v1</code> · Last updated: <code>2026-05-18</code> · Status: <code>draft</code> · Governs only the hydrology lane.</sub>
+## Changelog
+
+| Version | Date | Change |
+|---|---|---|
+| v3 | 2026-06-06 | **Status-tracking optimization.** Recast from a per-file inventory to a coverage tracker: replaced the eleven exhaustive per-root file tables with a single [Coverage by responsibility root](#coverage-by-responsibility-root) table (segment + key artifacts + README status + segment status), and pointed the authoritative file list to `FILE_SYSTEM_PLAN.md` with an explicit "FILE_SYSTEM_PLAN wins" drift rule. Consolidated all conflicts into one [Conflicted & cross-cutting placements](#conflicted--cross-cutting-placements) table. Added a [How this doc relates to FILE_SYSTEM_PLAN](#how-this-doc-relates-to-file_system_plan) delimiter. Resolved the `OBJECT_MAP.md` vs `OBJECT_FAMILIES.md` filename drift in favor of `OBJECT_FAMILIES.md` (sibling-doc convention). Renamed the doc-type badge to `coverage-tracker`. Trimmed H-V-14 (filename reconciliation, now resolved). |
+| v2 | 2026-06-06 | Pinned `CONTRACT_VERSION`; fixed `doc_id` (removed doubled `docs/`); `MISSING → DRIFT CANDIDATE` for unseen READMEs; added Pre-RAW + `data/triplets/`; reconciled source roles to the canonical seven; led the crosswalk section with ADR-S-CWV-01; corrected relative-link depth. |
+| v1 | 2026-05-18 | Initial per-file inventory. |
+
+> **Backward compatibility.** The Quick-navigation anchors changed substantially in v3 (sections were merged/renamed): the per-root sections (`#contracts-…`, `#schemas-…`, `#policy-…`, etc.) are replaced by `#coverage-by-responsibility-root`; `#hydrology-thin-slice-proof-lane-inventory` → `#proof-slice-tracker`; `#how-to-read-this-inventory` → `#status-vocabulary`. Inbound links from sibling docs that targeted the old per-root anchors must repoint. The page-top anchor and `doc_id` are unchanged from v2.
+
+[⬆ Back to top](#-hydrology--missing-or-planned-files)
+
+---
+
+<sub>Document version: <code>v3</code> · Contract: <code>CONTRACT_VERSION = "3.0.0"</code> · Last updated: <code>2026-06-06</code> · Status: <code>draft</code> · Coverage tracker for the hydrology lane.</sub>
 
 <sub>[⬆ Back to top](#-hydrology--missing-or-planned-files)</sub>
