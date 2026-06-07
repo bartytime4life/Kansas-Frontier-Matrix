@@ -8,22 +8,29 @@ title: People/DNA/Land — Verification Backlog
 type: register
 version: v1
 status: draft
-owners: <People/DNA/Land steward + Docs steward — PROPOSED; reviewer assignment NEEDS VERIFICATION>
+owners: People/DNA/Land steward + Docs steward — PROPOSED; reviewer assignment NEEDS VERIFICATION
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-06-07
 policy_label: public
 related:
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/ARCHITECTURE.md
+  - docs/domains/people-dna-land/SOURCE_REGISTRY.md
+  - docs/domains/people-dna-land/SOURCE_LEDGER.md
+  - docs/domains/people-dna-land/SOURCE_FAMILIES.md
+  - docs/domains/people-dna-land/SENSITIVITY_PROFILE.md
+  - docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/doctrine/directory-rules.md
-  - docs/atlases/domains-v1.1.md (Atlas Ch. 16)
-tags: [kfm, people, dna, land, genealogy, ownership, verification, register, sensitivity-deny-default]
+  - docs/atlases/domains-v1.1.md
 notes:
+  - CONTRACT_VERSION = "3.0.0".
   - Item set seeded from Atlas v1.1 §16.N (5 items), §16.K (7 validator/test items), §16.I (sensitivity posture), §16.J (API/contract surfaces), §16.H (pipeline gates), §20.5 (deny-by-default register).
-  - When this dossier disagrees with Atlas Ch. 16, dossier wins (ENCY §6.2); the disagreement is filed to docs/registers/DRIFT_REGISTER.md.
-  - All path claims below are PROPOSED until mounted-repo evidence verifies them.
+  - When this dossier disagrees with Atlas Ch. 16, dossier wins (Encyclopedia §6.2); the disagreement is filed to docs/registers/DRIFT_REGISTER.md.
+  - Lane-slug placement docs/domains/people-dna-land/ is CONFIRMED at doctrine level (Directory Rules §12 names people-dna-land in the uniform domain-lane pattern). The externally-presented canonical lane NAME is unsettled (Atlas names it "People / Genealogy / DNA / Land"); slug-vs-name drift is an ADR candidate. See OPEN-PDL-VBL-05.
+  - All other path claims below are PROPOSED until mounted-repo evidence verifies them.
+  - source_role canonical enum (Atlas §24.1.1): observed | regulatory | modeled | aggregate | administrative | candidate | synthetic.
 [/KFM_META_BLOCK_V2] -->
 
 ![status: draft](https://img.shields.io/badge/status-draft-lightgrey)
@@ -31,15 +38,17 @@ notes:
 ![sensitivity: deny-by-default](https://img.shields.io/badge/sensitivity-deny--by--default-critical)
 ![atlas authority: Ch.16](https://img.shields.io/badge/atlas%20authority-Ch.16-informational)
 ![lifecycle: review-driven](https://img.shields.io/badge/lifecycle-review--driven-yellow)
-![last updated: 2026-05-19](https://img.shields.io/badge/last%20updated-2026--05--19-blue)
+![contract: v3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue)
+![last updated: 2026-06-07](https://img.shields.io/badge/last%20updated-2026--06--07-blue)
 
 | Field | Value |
 |---|---|
 | **Status** | Draft (initial population) |
 | **Owners** | People/DNA/Land steward + Docs steward — **PROPOSED**; actual assignment **NEEDS VERIFICATION** |
-| **Last updated** | 2026-05-19 |
+| **Last updated** | 2026-06-07 |
+| **Pinned** | `CONTRACT_VERSION = "3.0.0"` |
 | **Authority scope** | This domain only. Repo-wide items belong in [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) |
-| **Conflict rule** | Dossier wins over Atlas chapter; file disagreement to [`DRIFT_REGISTER`](../../registers/DRIFT_REGISTER.md). [ENCY §6.2] |
+| **Conflict rule** | Dossier wins over Atlas chapter; file disagreement to [`DRIFT_REGISTER`](../../registers/DRIFT_REGISTER.md). [Encyclopedia §6.2] |
 
 ---
 
@@ -70,7 +79,10 @@ notes:
 
 **CONFIRMED doctrine.** The People/DNA/Land domain owns assertion-first person evidence, genealogy relationships, restricted DNA evidence, land instruments, ownership intervals, chain-of-title reasoning, consent, policy decisions, review, correction, graph projection, EvidenceBundle views, and rollback. [Atlas §16.A] [DOM-PEOPLE] [ENCY]
 
-**CONFIRMED placement.** This file lives at `docs/domains/people-dna-land/VERIFICATION_BACKLOG.md`, which is the established dossier-level home per Encyclopedia §6.2 ("The domain dossier under `docs/domains/<domain>/` carries the authoritative dossier for that domain — README, ARCHITECTURE, PRESERVATION_MATRIX, VERIFICATION_BACKLOG, etc.") and per Directory Rules §6.1 sub-listing for `docs/domains/people-dna-land/`. [ENCY §6.2] [DIRRULES §6.1]
+**CONFIRMED placement (slug); CONFLICTED name.** This file lives at `docs/domains/people-dna-land/VERIFICATION_BACKLOG.md`. The lane-slug placement is CONFIRMED at doctrine level: Directory Rules §12 names **`people-dna-land`** in the uniform domain-lane pattern ("This pattern applies uniformly to: hydrology, soil, … people-dna-land, and any new domain"), and Encyclopedia §6.2 makes the per-domain dossier (README, ARCHITECTURE, PRESERVATION_MATRIX, VERIFICATION_BACKLOG, etc.) the authoritative home for the domain. [DIRRULES §12] [ENCY §6.2]
+
+> [!NOTE]
+> **Slug vs. canonical name (CONFLICTED → ADR candidate).** The *slug* `people-dna-land` is CONFIRMED, but the *externally-presented canonical lane name* is unsettled: Atlas Ch. 16 names the lane "People / Genealogy / DNA / Land," and schema/policy paths use the `people/` segment (`schemas/contracts/v1/people/`, `policy/sensitivity/people/`, `policy/consent/people/`). This slug-vs-name drift is tracked in the corpus slug-drift register and Atlas §24.13; resolve by ADR. See [OPEN-PDL-VBL-05](#14-open-questions-beyond-the-backlog). [ATLAS §24.13]
 
 **Scope.**
 
@@ -81,7 +93,7 @@ notes:
 
 1. Mounted-repo evidence in this session (if any).
 2. This dossier and its sibling dossier docs (`README.md`, `ARCHITECTURE.md`, `PRESERVATION_MATRIX.md`).
-3. Atlas Ch. 16 (the chapter is synthesis; the dossier supersedes it on disagreement per ENCY §6.2).
+3. Atlas Ch. 16 (the chapter is synthesis; the dossier supersedes it on disagreement per Encyclopedia §6.2).
 4. Encyclopedia Ch. 7.16.
 5. Source dossier [DOM-PEOPLE].
 
@@ -107,12 +119,12 @@ Each row carries five fields:
 ```mermaid
 flowchart LR
     A["Item raised in Atlas §16<br/>or sibling dossier doc"] --> B["Open in this backlog<br/>(default: NEEDS VERIFICATION)"]
-    B --> C{Admissible<br/>evidence found?}
+    B --> C{"Admissible evidence found?"}
     C -->|"Mounted repo, schema, test,<br/>workflow, manifest, log, or receipt"| D["Inspect against<br/>Operating Law §6"]
-    C -->|None| E["Stays open;<br/>append notes / blockers"]
-    D --> F{Result}
+    C -->|"None"| E["Stays open;<br/>append notes / blockers"]
+    D --> F{"Result"}
     F -->|"Evidence supports claim"| G["Settle as CONFIRMED;<br/>link evidence in row"]
-    F -->|"Dossier ↔ Atlas disagree"| H["File DRIFT_REGISTER entry<br/>(ENCY §6.2: dossier wins)"]
+    F -->|"Dossier vs Atlas disagree"| H["File DRIFT_REGISTER entry<br/>(ENCY §6.2: dossier wins)"]
     F -->|"Architectural decision needed"| I["Open ADR-S<br/>(DIRRULES §2.4)"]
     F -->|"Conflict with another domain"| J["Coordinate with that domain's<br/>VERIFICATION_BACKLOG"]
     G --> K["Move row to §13 Closed items;<br/>preserve evidence link"]
@@ -127,7 +139,7 @@ flowchart LR
 
 | Status | Meaning | Example |
 |---|---|---|
-| **NEEDS VERIFICATION** | Claim is checkable, but unchecked in this session. | "Living-person denial enforced in policy/" |
+| **NEEDS VERIFICATION** | Claim is checkable, but unchecked in this session. | "Living-person denial enforced in `policy/`" |
 | **PROPOSED** | Design or path not yet committed or implemented. | "Schema home at `schemas/contracts/v1/people/`" |
 | **UNKNOWN** | Not resolvable without more evidence; may also be a true gap. | Exact route name of the `PeopleDNALandDecisionEnvelope` resolver. |
 | **INFERRED** | Reasonably derivable from visible evidence but not directly stated. | DNA segment data inherits the same redaction posture as DNA Match Evidence. |
@@ -158,6 +170,9 @@ flowchart LR
 - Assessor/tax records and parcel geometry are **not** title truth.
 - Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **blocks** public promotion.
 
+> [!IMPORTANT]
+> **Consent does NOT publish data.** A consent grant (e.g., a `ConsentSidecar`) is a *constraint package* that bounds what a render gate may materialize; publication still requires a `ReleaseManifest` and the release gate. A reviewer must not read "consent present" as "release authorized." [Pass-23 KFM-P5-PROG-0005]
+
 **Implication for this backlog.** Several items below describe controls whose *failure modes* themselves describe a sensitive leak. Reviewers attaching evidence (test fixtures, logs, request/response samples) must redact specifics and link to evidence rather than inline it.
 
 [Back to top](#contents)
@@ -170,10 +185,10 @@ These five items are CONFIRMED-raised by Atlas v1.1 §16.N. All carry **NEEDS VE
 
 | ID | Item to verify | Evidence that would settle it | Status | Notes / refs |
 |---|---|---|---|---|
-| `KFM-PDL-VER-0001` | Verify **living-person policy**: denied-by-default behavior is enforced for living-person identifiers, names, addresses, life events, and derived fields across all public surfaces. | `policy/consent/people/` rules, `policy/sensitivity/people/` rules, fixtures asserting DENY on living-person output, runtime/log samples showing DENY reason codes, ReleaseManifest entries excluding living-person artifacts. | NEEDS VERIFICATION | Atlas §16.N item 1; ties to §16.I, §20.5, §5 (deny-by-default register). |
-| `KFM-PDL-VER-0002` | Verify **DNA consent/revocation enforcement**: consent is required before any DNA-derived publication; revocation propagates to derived artifacts, indexes, and caches; revocation cleanup tests exist. | Consent schema and policy in `policy/consent/people/`, revocation cleanup test fixtures, tombstone receipts, audit log of revocation events, deletion-completion receipts referenced by RunReceipt/AIReceipt. | NEEDS VERIFICATION | Atlas §16.N item 2; ties to §16.K validator "revocation cleanup tests" and §16.K "DNA consent and raw-ID no-log tests". |
-| `KFM-PDL-VER-0003` | Verify **land instrument chain logic**: deed/title/assessor/parcel-version assertions are temporally distinct, do not collapse "assessor record" into "title truth", and surface chain-of-title gaps rather than silently bridging them. | Contracts for Deed Instrument, Title Instrument, Assessor Record, Parcel Version, Ownership Interval; validator tests for chain-of-title gap detection; legal-description test fixtures; cases that **must** DENY title-truth promotion when only assessor evidence exists. | NEEDS VERIFICATION | Atlas §16.N item 3; ties to §16.K "legal-description and chain-of-title gap tests" and §16.K "assessor-as-title denial". |
-| `KFM-PDL-VER-0004` | Verify **geometry-role boundary logic**: parcel geometry is treated as a *source-role-dependent observation*, not as title truth; geometries from cadastral, plat/survey, PLSS derivation, and assessor inputs are distinguished and never silently merged. | Contracts for Parcel Version and geometry-role; validator tests asserting geometry-role propagation through joins and projections; cases where mixed-role merges fail closed; documented transform receipts for any cross-role projection. | NEEDS VERIFICATION | Atlas §16.N item 4; ties to §16.D source families (plat/survey/metes/bounds/PLSS) and §16.K "graph projection safety tests". |
+| `KFM-PDL-VER-0001` | Verify **living-person policy**: denied-by-default behavior is enforced for living-person identifiers, names, addresses, life events, and derived fields across all public surfaces. | `policy/consent/people/` rules, `policy/sensitivity/people/` rules, fixtures asserting DENY on living-person output, runtime/log samples showing DENY reason codes, ReleaseManifest entries excluding living-person artifacts. | NEEDS VERIFICATION | Atlas §16.N item 1; ties to §16.I, §20.5. |
+| `KFM-PDL-VER-0002` | Verify **DNA consent/revocation enforcement**: consent is required before any DNA-derived publication; revocation propagates to derived artifacts, indexes, and caches; revocation cleanup tests exist; revocation is honored at the **render gate**, not only at publication. | Consent schema and policy in `policy/consent/people/`, render gate `policy/consent/render.rego`, revocation cleanup test fixtures, tombstone receipts, audit log of revocation events, cache-invalidation evidence (PMTiles index bump / tile purge). | NEEDS VERIFICATION | Atlas §16.N item 2; ties to §16.K "revocation cleanup tests" and "DNA consent and raw-ID no-log tests"; Pass-23 KFM-P5-PROG-0007. |
+| `KFM-PDL-VER-0003` | Verify **land instrument chain logic**: deed/title/assessor/parcel-version assertions are temporally distinct, do not collapse "assessor record" (`administrative`) into "title truth", and surface chain-of-title gaps rather than silently bridging them. | Contracts for Deed Instrument, Title Instrument, Assessor Record, Parcel Version, Ownership Interval; validator tests for chain-of-title gap detection; legal-description test fixtures; cases that **must** DENY title-truth promotion when only assessor evidence exists. | NEEDS VERIFICATION | Atlas §16.N item 3; ties to §16.K "legal-description and chain-of-title gap tests" and "assessor-as-title denial". |
+| `KFM-PDL-VER-0004` | Verify **geometry-role boundary logic**: parcel geometry is treated as a *source-role-dependent observation/derivation*, not as title truth; geometries from cadastral (`administrative`), plat/survey (`observed`), PLSS derivation (`modeled`), and assessor inputs are distinguished and never silently merged. | Contracts for Parcel Version and geometry-role; validator tests asserting geometry-role propagation through joins and projections; cases where mixed-role merges fail closed; documented transform receipts for any cross-role projection. | NEEDS VERIFICATION | Atlas §16.N item 4; ties to §16.D source families (plat/survey/metes/bounds/PLSS) and §16.K "graph projection safety tests". |
 | `KFM-PDL-VER-0005` | Verify **UI/API restricted-field no-leak behavior**: restricted fields (living-person identifiers, raw DNA IDs, DNA segments, private person-parcel joins) do not appear in popups, labels, tile attributes, AI Focus Mode answers, Evidence Drawer payloads, exported reports, or logs. | UI/API contract tests against the restricted-field allowlist; tile attribute audits; Focus Mode template fixtures with redaction assertions; popup/export side-channel audits; AIReceipt redaction evidence. | NEEDS VERIFICATION | Atlas §16.N item 5; ties to §20.5 "sensitive-content side-channel audit" metric and §24.11.3 indicators. |
 
 [Back to top](#contents)
@@ -186,12 +201,12 @@ These seven validator/test items are CONFIRMED-raised by Atlas v1.1 §16.K as **
 
 | ID | Validator / test | Closes (primary item) | Evidence form | Status |
 |---|---|---|---|---|
-| `KFM-PDL-VER-0006` | **Person assertion evidence tests** — every Person Assertion carries source role, evidence, time, and release state; bare assertions DENY. | partially `VER-0001` | Fixture pairs (valid / invalid) under `fixtures/domains/people/`; test cases under `tests/domains/people/`. | PROPOSED |
-| `KFM-PDL-VER-0007` | **GEDCOM import rights/living-flag tests** — GEDCOM/GEDZip imports detect and tag living persons; rights and source role propagate from the import. | `VER-0001` | Import test fixtures including living-flag edge cases; assertion logs of living-flag propagation; release-block tests. | PROPOSED |
+| `KFM-PDL-VER-0006` | **Person assertion evidence tests** — every Person Assertion carries source role, evidence, time, and release state; bare assertions DENY. | partially `VER-0001` | Fixture pairs (valid / invalid) under `fixtures/domains/people-dna-land/`; test cases under `tests/domains/people-dna-land/`. | PROPOSED |
+| `KFM-PDL-VER-0007` | **GEDCOM import rights/living-flag tests** — GEDCOM/GEDZip imports detect and tag living persons; rights and source role (`candidate`/`context`, never `observed`) propagate from the import. | `VER-0001` | Import test fixtures including living-flag edge cases; assertion logs of living-flag propagation; release-block tests. | PROPOSED |
 | `KFM-PDL-VER-0008` | **DNA consent and raw-ID no-log tests** — raw kit IDs, vendor IDs, and DNA segments never appear in logs, traces, exports, or telemetry. | `VER-0002`, `VER-0005` | Log-redaction tests; side-channel scanners against test runs; explicit fixtures with raw IDs that must be redacted across all sinks. | PROPOSED |
 | `KFM-PDL-VER-0009` | **Revocation cleanup tests** — DNA consent revocation removes derived rows, segments, match evidence, graph projections, tile attributes, and cached AIReceipts within the documented SLA. | `VER-0002` | End-to-end revocation simulation with receipts at each cleanup step; tombstone records; cache invalidation evidence. | PROPOSED |
 | `KFM-PDL-VER-0010` | **Legal-description and chain-of-title gap tests** — gaps in chain-of-title are surfaced, not silently bridged; ambiguous legal descriptions DENY automatic ownership promotion. | `VER-0003` | Chain-of-title test fixtures with intentional gaps; validator output showing DENY reason codes; ambiguous-description fixtures. | PROPOSED |
-| `KFM-PDL-VER-0011` | **Assessor-as-title denial** — assessor records and tax rolls are never promoted to title truth; cross-citation is allowed only with explicit source-role labels. | `VER-0003` | Test cases where assessor-only evidence is presented as title; expected DENY; receipts citing the assessor-as-title denial path. | PROPOSED |
+| `KFM-PDL-VER-0011` | **Assessor-as-title denial** — assessor records and tax rolls are never promoted to title truth; cross-citation is allowed only with explicit source-role labels (`administrative`). | `VER-0003` | Test cases where assessor-only evidence is presented as title; expected DENY; receipts citing the assessor-as-title denial path. | PROPOSED |
 | `KFM-PDL-VER-0012` | **Graph projection safety tests** — graph/triplet projections do not leak restricted fields, do not collapse source roles, and do not bridge person-parcel joins without policy support. | `VER-0004`, `VER-0005` | Projection fixtures with restricted source data; expected redacted or omitted edges; comparison against a public-safe ground-truth projection. | PROPOSED |
 
 > [!TIP]
@@ -208,9 +223,9 @@ These items track verification of policy enforcement specifically — the *gates
 | ID | Item to verify | Evidence form | Status |
 |---|---|---|---|
 | `KFM-PDL-VER-0013` | Policy home `policy/sensitivity/people/` exists, is reachable from the deny-by-default register, and emits reason-coded DENY/ABSTAIN/HOLD outcomes. | Policy files under `policy/sensitivity/people/`; reason-code enumeration; test runs showing reason codes in runtime envelopes. | NEEDS VERIFICATION |
-| `KFM-PDL-VER-0014` | Consent policy home `policy/consent/people/` exists; consent objects have schemas; consent revocation is observable in policy decisions. | Consent schema; consent-decision fixtures; PolicyDecision records showing consent state and revocation propagation. | NEEDS VERIFICATION |
+| `KFM-PDL-VER-0014` | Consent policy home `policy/consent/people/` exists; consent objects have schemas; the render gate `policy/consent/render.rego` emits a finite `ConsentDecision` (ALLOW/DENY/ABSTAIN/ERROR); revocation is observable in policy decisions. | Consent schema (`schemas/contracts/v1/consent/`); consent-decision fixtures; PolicyDecision/ConsentDecision records showing consent state and revocation propagation. | NEEDS VERIFICATION |
 | `KFM-PDL-VER-0015` | Private person-parcel join policy denies by default and only permits under the documented exception path. | Join policy file; test fixtures attempting private joins; expected DENY; documented exception path with PolicyDecision and review record. | NEEDS VERIFICATION |
-| `KFM-PDL-VER-0016` | Sensitivity tier assignment for People/DNA/Land follows the canonical tier scheme. | Sensitivity tier mapping in `policy/sensitivity/people/` or equivalent; tier-to-deny mapping; consistency check against §20.5. | NEEDS VERIFICATION |
+| `KFM-PDL-VER-0016` | Sensitivity tier assignment for People/DNA/Land follows the canonical T0–T4 tier scheme (Atlas §24.5). | Sensitivity tier mapping in `policy/sensitivity/people/` or equivalent; tier-to-deny mapping; consistency check against §20.5 and §24.5.2. | NEEDS VERIFICATION |
 | `KFM-PDL-VER-0017` | Side-channel audit (popups, labels, AI text, exports, logs) runs periodically and emits documented results. | CI workflow or scheduled job; audit reports under `docs/reports/` or `data/receipts/`; non-empty result history. | NEEDS VERIFICATION |
 
 > [!NOTE]
@@ -228,7 +243,10 @@ These items track verification of policy enforcement specifically — the *gates
 | `KFM-PDL-VER-0019` | `LayerManifest` for People/DNA/Land emits only public-safe release artifacts; restricted layers are absent from the public manifest. | Layer manifest file or generator; public-manifest sample; comparison against restricted-layer list. | NEEDS VERIFICATION |
 | `KFM-PDL-VER-0020` | `EvidenceDrawerPayload` for People/DNA/Land is evidence-filtered and policy-filtered before render. | Drawer payload schema; payload sample with redaction markers; policy filter trace. | NEEDS VERIFICATION |
 | `KFM-PDL-VER-0021` | Focus Mode answer envelope includes an `AIReceipt` for every People/DNA/Land answer; ABSTAIN/DENY are first-class outcomes, not warnings appended to ANSWER. | Receipt schema; sample receipts; ABSTAIN/DENY rate distribution per §24.11.4 indicators. | NEEDS VERIFICATION |
-| `KFM-PDL-VER-0022` | Schema home is confirmed at `schemas/contracts/v1/people/` per ADR-0001 (schema home) or by amendment ADR. | Mounted-repo schema home; ADR-0001 status; consistency with `schemas/contracts/v1/<domain>/` convention. | PROPOSED (path); NEEDS VERIFICATION (presence) |
+| `KFM-PDL-VER-0022` | Schema home is confirmed at `schemas/contracts/v1/people/` per ADR-0001 (schema home) or by amendment ADR. | Mounted-repo schema home; ADR-0001 status; consistency with `schemas/contracts/v1/domains/<domain>/` convention. | PROPOSED (path); NEEDS VERIFICATION (presence) |
+
+> [!NOTE]
+> **Schema-segment drift to watch.** Atlas §24.13 lists this lane's schema home as `schemas/contracts/v1/people/`, while Directory Rules §12 shows the canonical domain-segment shape `schemas/contracts/v1/domains/<domain>/`. `VER-0022` must reconcile which form is canonical; flag to `DRIFT_REGISTER` if both appear. [DIRRULES §12; ATLAS §24.13]
 
 [Back to top](#contents)
 
@@ -247,7 +265,7 @@ Each pipeline stage from RAW → PUBLISHED has a CONFIRMED doctrinal gate. Verif
 | `KFM-PDL-VER-0027` | PUBLISHED | `ReleaseManifest`, correction path, rollback target, and review/policy state exist. | Release manifest schema and sample; rollback target identifier; correction-notice template. | NEEDS VERIFICATION |
 
 > [!IMPORTANT]
-> Promotion is a **governed state transition, not a file move** (Directory Rules §0; Operating Law §5). Verifying gate `VER-0027` is not the same as verifying that a file appeared under `data/published/`.
+> Promotion is a **governed state transition, not a file move** (Directory Rules lifecycle invariant; Operating Law §5). Verifying gate `VER-0027` is not the same as verifying that a file appeared under `data/published/`.
 
 [Back to top](#contents)
 
@@ -259,11 +277,11 @@ Cross-lane relations preserve ownership, source role, sensitivity, and EvidenceB
 
 | ID | This domain ↔ Related lane | Relation type | Constraint to verify | Status |
 |---|---|---|---|---|
-| `KFM-PDL-VER-0028` | People/DNA/Land ↔ Settlements | residence, cemetery, school, court, county, township, place relation | Ownership, source role, sensitivity, EvidenceBundle preserved across join | NEEDS VERIFICATION |
+| `KFM-PDL-VER-0028` | People/DNA/Land ↔ Settlements | residence, cemetery, school, court, county, township, place relation | Ownership, source role, sensitivity, EvidenceBundle preserved across join; living-person fields fail closed | NEEDS VERIFICATION |
 | `KFM-PDL-VER-0029` | People/DNA/Land ↔ Roads/Rail | migration, access, movement | Ownership, source role, sensitivity, EvidenceBundle preserved across join | NEEDS VERIFICATION |
 | `KFM-PDL-VER-0030` | People/DNA/Land ↔ Archaeology | historic person, land, documentary, cultural-place context | Sovereignty review path respected; sensitive sites never joined to private person rows | NEEDS VERIFICATION |
 | `KFM-PDL-VER-0031` | People/DNA/Land ↔ Agriculture | farm, land use, producer-adjacent context with privacy | Aggregation receipts present; private-join denial default holds | NEEDS VERIFICATION |
-| `KFM-PDL-VER-0032` | People/DNA/Land ↔ Frontier Matrix | (implicit: matrix cells must not collapse PDL-owned fields into demographic aggregates without policy) | Verify cross-lane join policy; verify People/DNA/Land sovereignty over title, parcel, ownership decisions per Atlas §17.B | INFERRED from §17.B; NEEDS VERIFICATION as enforcement |
+| `KFM-PDL-VER-0032` | People/DNA/Land ↔ Frontier Matrix | aggregate population observations feed matrix cells (implicit: cells must not collapse PDL-owned fields into demographic aggregates without policy) | Verify cross-lane join policy; verify People/DNA/Land sovereignty over title, parcel, ownership decisions per Atlas §17.B | INFERRED from §17.B; NEEDS VERIFICATION as enforcement |
 
 [Back to top](#contents)
 
@@ -275,8 +293,9 @@ The Atlas Master Open-ADR Backlog (§24.12) carries 15 ADR-class questions. Thes
 
 | ADR-S id | Question | Affects PDL items | Notes |
 |---|---|---|---|
-| `ADR-S-01` | Where is the canonical schema home? Confirm `schemas/contracts/v1/...` by ADR-0001 or amend. | `VER-0022` (schema home) | ADR-required per Directory Rules §2.4(3). |
-| `ADR-S-05` | Sensitivity tier scheme (T0–T4) — adopt as canonical or revise. | `VER-0016` (tier assignment) | Tier scheme is referenced across Atlas (§24.14 cites T0/T4) but not yet ratified. |
+| `ADR-S-01` | Where is the canonical schema home? Confirm `schemas/contracts/v1/...` by ADR-0001 or amend (incl. `people/` vs `domains/people-dna-land/` segment). | `VER-0022` (schema home) | ADR-required per Directory Rules §2.4(3). |
+| `ADR-S-05` | Sensitivity tier scheme (T0–T4) — adopt as canonical or revise. | `VER-0016` (tier assignment) | Tier scheme is referenced across Atlas (§24.5, §24.14) but treated as PROPOSED until ratified. |
+| (lane-name) | Canonical externally-presented name of this lane (slug `people-dna-land` vs "People / Genealogy / DNA / Land"). | `OPEN-PDL-VBL-05` | Slug-drift register; Atlas §24.13. |
 | Others | Source-role enum, receipt schema layout, cross-lane join policy, atlas/supplement lifecycle, etc. | Indirect; surface as needed when an item escalates. | Atlas §24.12 has the full 15-item list. |
 
 > [!NOTE]
@@ -297,7 +316,7 @@ Per Operating Law §6 (Evidence Rule), admissible evidence is any of: attached d
 |---|---|
 | Policy-enforcement row (e.g., `VER-0001`, `VER-0013`) | Policy file path, reason-code enumeration, **at least one DENY test fixture and its expected outcome**, **at least one runtime log/receipt** showing the reason code emitted in practice. |
 | Validator/test row (`VER-0006` through `VER-0012`) | Test file path, fixture pair (valid / invalid), test run output showing PASS / FAIL distinction, **CI workflow** reference if the test is gated. |
-| Contract/schema row (`VER-0018` through `VER-0022`) | Schema file path under `schemas/contracts/v1/people/`, contract doc under `contracts/people/`, **at least one consumer** (resolver, UI, or pipeline) citing the schema. |
+| Contract/schema row (`VER-0018` through `VER-0022`) | Schema file path under `schemas/contracts/v1/people/`, contract doc under `contracts/people/` (or `contracts/domains/people-dna-land/`), **at least one consumer** (resolver, UI, or pipeline) citing the schema. |
 | Pipeline-gate row (`VER-0023` through `VER-0027`) | Pipeline spec or executable; gate output (PASS / quarantine reason / closure failure); receipt or proof object tied to the gate. |
 | Cross-lane row (`VER-0028` through `VER-0032`) | Cross-lane test cases; cross-lane contract for the relation type; sensitivity-propagation evidence. |
 | ADR-S-dependent row | The corresponding ADR with `status: accepted`; the ADR's `decision` and `consequences` resolve the question. |
@@ -332,7 +351,7 @@ What does **not** count as evidence:
 
 **Drift register entry conditions.**
 
-- Atlas Ch. 16 says X; this dossier's authoritative content says not-X. Dossier wins (ENCY §6.2); file the conflict.
+- Atlas Ch. 16 says X; this dossier's authoritative content says not-X. Dossier wins (Encyclopedia §6.2); file the conflict.
 - Repo evidence says X; this dossier says not-X. Open a drift entry **before** silently conforming the dossier to repo (DIRRULES §2.5).
 - A backlog row points to a path that mounted-repo evidence disproves. File drift, mark the row UNKNOWN, do not silently move the row.
 
@@ -345,9 +364,10 @@ What does **not** count as evidence:
 
 **Local invariants this backlog must not bend.**
 
-- Living-person and DNA controls cannot be relaxed by a closure ("we tested it, so it's fine") without consent + policy + restricted authorized surface present in the evidence.
+- Living-person and DNA controls cannot be relaxed by a closure ("we tested it, so it's fine") without consent + policy + restricted authorized surface present in the evidence — and consent alone is not a release authority.
 - Assessor records cannot become title truth via closure ("the assessor data agrees with title in this fixture") — `VER-0011` requires the *denial path*, not a happy-path test.
 - Geometry-role boundary cannot collapse via closure — `VER-0004` requires the role-distinction evidence, not a merged-output sample.
+- Source role is **fixed at admission**; no closure may demonstrate a role upgrade (e.g., `modeled` → `observed`) as acceptable. [Atlas §24.1]
 
 [Back to top](#contents)
 
@@ -371,9 +391,11 @@ What does **not** count as evidence:
 These are questions that surface during dossier review but do not yet warrant a backlog row (because they have not yet been claimed as a property of the system). They are tracked here so the next dossier reviewer sees them.
 
 - **OPEN-PDL-VBL-01.** Should the People/DNA/Land domain dossier carry its own `PRESERVATION_MATRIX.md` distinct from the cross-domain preservation matrix? Encyclopedia §6.2 lists `PRESERVATION_MATRIX` as a per-domain dossier file but does not mandate it. **UNKNOWN** until the dossier convention is settled.
-- **OPEN-PDL-VBL-02.** Should DNA Match Evidence and DNASegment be distinct object families in `contracts/people/` (per Atlas §16.E listing both) or one with a discriminator field? **INFERRED** distinct from Atlas E. table; **NEEDS VERIFICATION** in schema.
+- **OPEN-PDL-VBL-02.** Should DNA Match Evidence and DNASegment be distinct object families in `contracts/people/` (per Atlas §16.E listing both) or one with a discriminator field? **INFERRED** distinct from Atlas §16.E table; **NEEDS VERIFICATION** in schema.
 - **OPEN-PDL-VBL-03.** Does the cross-lane join with Frontier Matrix (Ch. 17) require a join-policy doc at this domain's layer, at the Frontier Matrix layer, or at a shared cross-domain layer? **UNKNOWN**.
 - **OPEN-PDL-VBL-04.** How should "Person Identity Candidate" (Atlas §16.B) differ from "PersonCanonical" (Atlas §16.C) in contract terms, and what is the promotion rule between them? **INFERRED** that PersonCanonical is the released/identity-resolved form; **NEEDS VERIFICATION**.
+- **OPEN-PDL-VBL-05.** What is the canonical externally-presented lane name — slug `people-dna-land` (CONFIRMED placement per DIRRULES §12) vs Atlas "People / Genealogy / DNA / Land" (schema/policy use `people/`)? **CONFLICTED** in the slug-drift register; resolve by ADR. [ATLAS §24.13]
+- **OPEN-PDL-VBL-06.** Is multi-party consent (a family genealogy claim where several living relatives have stake) representable in the `ConsentSidecar` shape? The corpus does not specify a multi-party shape. **UNKNOWN**. [Pass-23 KFM-P5-PROG-0005]
 
 > [!TIP]
 > Open questions promote into backlog rows once they are claimed in a dossier doc, an Atlas section, or an ADR. Until then, they live here.
@@ -386,18 +408,23 @@ These are questions that surface during dossier review but do not yet warrant a 
 
 - [`docs/domains/people-dna-land/README.md`](README.md) — domain dossier landing page (**PROPOSED**; presence **NEEDS VERIFICATION**).
 - [`docs/domains/people-dna-land/ARCHITECTURE.md`](ARCHITECTURE.md) — domain architecture dossier (**PROPOSED**; presence **NEEDS VERIFICATION**).
+- [`docs/domains/people-dna-land/SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) — admission/authority-control surface (**PROPOSED**).
+- [`docs/domains/people-dna-land/SOURCE_LEDGER.md`](SOURCE_LEDGER.md) — "what each source cannot prove" control surface (**PROPOSED**).
+- [`docs/domains/people-dna-land/SOURCE_FAMILIES.md`](SOURCE_FAMILIES.md) — family→role taxonomy (**PROPOSED**).
+- [`docs/domains/people-dna-land/SENSITIVITY_PROFILE.md`](SENSITIVITY_PROFILE.md) — tier disposition + revocation path (**PROPOSED**).
 - [`docs/domains/people-dna-land/PRESERVATION_MATRIX.md`](PRESERVATION_MATRIX.md) — preservation matrix (**PROPOSED** per ENCY §6.2; presence **NEEDS VERIFICATION**).
+- `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` — source refresh operations (**PROPOSED**; homed under `docs/runbooks/` per DIRRULES §6.1.b).
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — repo-wide verification backlog (cross-domain).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift register (file conflicts here per ENCY §6.2 and DIRRULES §2.5).
 - [`docs/adr/`](../../adr/) — ADR home (ADR-S items land here per Atlas §24.12).
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement and lifecycle doctrine.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement and lifecycle doctrine (proposed canonical home; v1.3).
 - [`docs/atlases/domains-v1.1.md`](../../atlases/domains-v1.1.md) — Atlas v1.1 Ch. 16 source (**PROPOSED** path; the underlying corpus is CONFIRMED).
 - [DOM-PEOPLE] — People/Genealogy/DNA/Land Ownership Architecture Blueprint (source dossier).
 
 ---
 
-**Last updated:** 2026-05-19
-**Doc version:** v1 (initial population)
+**Last updated:** 2026-06-07
+**Doc version:** v1 (initial population) · **Pinned** `CONTRACT_VERSION = "3.0.0"`
 **Authority:** Domain dossier; supersedes Atlas Ch. 16.N on conflict (file disagreement to `DRIFT_REGISTER`).
 
 [Back to top](#contents)
