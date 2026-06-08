@@ -2,25 +2,29 @@
 doc_id: kfm://doc/docs-domains-roads-rail-trade-readme
 title: Roads, Rail & Trade Routes — Domain Dossier README
 type: readme
-version: v1.0-draft
+version: v1.1-draft
 status: draft
 authority_class: canonical (docs/, domain segment)
 owners: TODO — CODEOWNERS entry NEEDS VERIFICATION
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-06-07
 policy_label: public
 related:
   - ../README.md
+  - ./OBJECT_FAMILIES.md
+  - ./PIPELINE.md
   - ../../doctrine/directory-rules.md
   - ../../adr/
-  - ../../../contracts/domains/roads-rail-trade/         # PROPOSED, NEEDS VERIFICATION
-  - ../../../schemas/contracts/v1/domains/roads-rail-trade/  # PROPOSED, NEEDS VERIFICATION
-  - ../../../policy/domains/roads-rail-trade/            # PROPOSED, NEEDS VERIFICATION
+  - ../../../contracts/transport/                        # CONFIRMED slug (Atlas Ch.24.13 / ENCY §7.11); presence NEEDS VERIFICATION
+  - ../../../schemas/contracts/v1/transport/             # CONFIRMED slug (Atlas Ch.24.13 / ENCY §7.11); presence NEEDS VERIFICATION
+  - ../../../policy/sensitivity/transport/               # PROPOSED, NEEDS VERIFICATION
+  - ../../../ai-build-operating-contract.md
 tags: [kfm, domain, roads, rail, trade-routes, transport]
 notes:
-  - Folder-level README per Directory Rules §15
-  - Doctrine grounded in Atlas Ch. 13 [DOM-ROADS]
-  - Implementation-layer paths are PROPOSED pending repo verification
+  - "CONTRACT_VERSION = 3.0.0 pinned for this doctrine-adjacent README."
+  - "CORRECTION v1.0→v1.1: schema/contract homes are schemas/contracts/v1/transport/ and contracts/transport/ per Atlas Ch.24.13 row 13 and Encyclopedia §7.11 — NOT domains/roads-rail-trade/. Lane segment slug roads-rail-trade applies to docs/, policy/, tests/, fixtures/, data/, pipelines/, release/; schema+contract use the transport/ segment. Documented divergence tracked as OQ-RRT-01."
+  - "Folder-level README per Directory Rules §15."
+  - "Doctrine grounded in Atlas Ch. 13 [DOM-ROADS]; implementation-layer presence is PROPOSED pending repo verification."
 [/KFM_META_BLOCK_V2] -->
 
 # 🛣️ Roads, Rail & Trade Routes — Domain Dossier
@@ -33,17 +37,24 @@ notes:
 ![Authority](https://img.shields.io/badge/authority-canonical-blue)
 ![Truth Posture](https://img.shields.io/badge/truth-cite_or_abstain-success)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-informational)
-![License](https://img.shields.io/badge/license-TODO-lightgrey)
-![Last Reviewed](https://img.shields.io/badge/last_reviewed-2026--05--19-blue)
+![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-brightgreen)
+![Last Reviewed](https://img.shields.io/badge/last_reviewed-2026--06--07-blue)
 
 | Field          | Value                                                                                        |
 |----------------|----------------------------------------------------------------------------------------------|
 | **Status**     | `draft` · authoritative for doctrine; implementation references PROPOSED                     |
 | **Authority**  | Canonical — `docs/` root, domain segment per Directory Rules §3, §12                         |
 | **Owners**     | TODO — `CODEOWNERS` entry NEEDS VERIFICATION                                                 |
-| **Updated**    | 2026-05-19                                                                                   |
-| **Supersedes** | None (initial README)                                                                        |
-| **Primary src**| Atlas Ch. 13 (`KFM_Domains_v1_1` Pt.1, pp. 83–89) [DOM-ROADS]; Directory Rules §6.1, §12     |
+| **Updated**    | 2026-06-07                                                                                   |
+| **Supersedes** | v1.0-draft (schema/contract-slug correction; see [Changelog](#changelog-v10draft--v11draft)) |
+| **Primary src**| Atlas Ch. 13 (`KFM_Domains_v1_1` Pt.1, pp. 83–89) [DOM-ROADS]; Atlas Ch. 24.13; ENCY §7.11; Directory Rules §6.1, §12 |
+
+> [!IMPORTANT]
+> **Schema & contract homes use the `transport/` segment, not `domains/roads-rail-trade/`.** Atlas Ch. 24.13
+> row 13 and Encyclopedia §7.11 both assign Roads/Rail/Trade to `schemas/contracts/v1/transport/` and
+> `contracts/transport/` ("Network identity governance"). The slug **`roads-rail-trade`** applies to the
+> other responsibility roots (`docs/`, `policy/`, `tests/`, `fixtures/`, `data/`, `pipelines/`, `release/`).
+> This split is a **documented divergence**, tracked as `OQ-RRT-01` — see [§9](#9-cross-root-domain-lane-crosswalk).
 
 ---
 
@@ -72,6 +83,7 @@ notes:
 - [21. FAQ](#21-faq)
 - [22. Related folders & docs](#22-related-folders--docs)
 - [23. ADRs](#23-adrs)
+- [Changelog](#changelog-v10draft--v11draft)
 - [Appendix A — Glossary deltas](#appendix-a--glossary-deltas)
 - [Appendix B — Source-attribution map](#appendix-b--source-attribution-map)
 - [Last reviewed · Back to top](#-last-reviewed)
@@ -80,7 +92,7 @@ notes:
 
 ## 1. Purpose
 
-This folder is the **human-facing dossier** for the **Roads / Rail / Trade Routes** domain — one of fourteen
+This folder is the **human-facing dossier** for the **Roads / Rail / Trade Routes** domain — one of the
 named domains in the Kansas Frontier Matrix (KFM). It explains what the domain governs, what objects it owns,
 which source families it admits, how its evidence moves from RAW to PUBLISHED, and where the rest of the
 domain's working surfaces (`contracts/`, `schemas/`, `policy/`, `tests/`, `data/`, `release/`, …) live across
@@ -105,17 +117,20 @@ The dossier **explains**; it does not **store source data** (`data/`), **define 
 | **Placement basis**   | Directory Rules §3 Step 3 (domain as segment, never root) and §6.1 (`docs/domains/roads-rail-trade/`)       |
 
 > [!NOTE]
-> The folder slug **`roads-rail-trade`** is the form used in Directory Rules §6.1. The Atlas long title is
-> *"Roads, Rail, and Trade Routes."* If a divergent slug (e.g. `roads-rail-trade-routes/`) appears in
-> implementation or in `docs/atlases/`, treat as drift (parallel to `OPEN-ENC-04` / `OPEN-DR-01`) and file
-> against `docs/registers/DRIFT_REGISTER.md` for ADR resolution. **NEEDS VERIFICATION** in mounted repo.
+> **Two slugs, one lane.** The folder slug **`roads-rail-trade`** is the form used in Directory Rules §6.1 for
+> the `docs/` (and most other) roots; the **schema/contract segment is `transport/`** per Atlas Ch. 24.13 and
+> Encyclopedia §7.11. This is an intentional, documented divergence — not drift — but it is tracked as
+> `OQ-RRT-01` pending an ADR that either ratifies the split or unifies the slug. A *third* divergent slug
+> (e.g. `roads-rail-trade-routes/`) appearing anywhere else **is** drift; file against
+> `docs/registers/DRIFT_REGISTER.md`. **NEEDS VERIFICATION** in mounted repo.
 
 ---
 
 ## 3. Scope — what this domain owns
 
 **CONFIRMED doctrine / PROPOSED field realization.** The Roads / Rail / Trade Routes domain owns the
-following objects, each constrained by source role, evidence, time, and release state. [DOM-ROADS] [ENCY]
+following objects, each constrained by source role, evidence, time, and release state. This is the verbatim
+DOM-ROADS §B roster. [DOM-ROADS] [ENCY]
 
 | # | Object                  | Notes                                                                              |
 |---|-------------------------|------------------------------------------------------------------------------------|
@@ -137,8 +152,9 @@ following objects, each constrained by source role, evidence, time, and release 
 |16 | **Movement Story Node** | Narrative + spatial + temporal + provenance + CARE link unit for Focus Mode.       |
 
 Source: Atlas Ch. 13 §B [DOM-ROADS], cross-referenced to [ENCY]. Object-family detail (identity rule,
-temporal handling) lives in [`contracts/domains/roads-rail-trade/`](../../../contracts/domains/roads-rail-trade/)
-**(PROPOSED · NEEDS VERIFICATION)**.
+temporal handling) lives in [`contracts/transport/`](../../../contracts/transport/)
+**(CONFIRMED slug · presence NEEDS VERIFICATION)** and in the sibling
+[`./OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) dossier.
 
 ---
 
@@ -178,14 +194,14 @@ flowchart LR
   classDef dat fill:#e0f2f1,stroke:#00897b,color:#202124;
   classDef rel fill:#fff3e0,stroke:#e65100,color:#202124;
 
-  THIS["docs/domains/<br/><b>roads-rail-trade/</b><br/><i>this folder — doctrine</i>"]:::doc
+  THIS["docs/domains/roads-rail-trade/<br/>(this folder — doctrine)"]:::doc
 
-  CTR["contracts/domains/<br/>roads-rail-trade/<br/>(object meaning, .md)"]:::ctr
-  SCH["schemas/contracts/v1/domains/<br/>roads-rail-trade/<br/>(JSON Schema)"]:::sch
-  POL["policy/domains/<br/>roads-rail-trade/<br/>(allow / deny / restrict / abstain)"]:::pol
-  TST["tests/domains/<br/>roads-rail-trade/<br/>fixtures/domains/<br/>roads-rail-trade/"]:::tst
-  DAT["data/{raw,work,quarantine,<br/>processed,catalog,published}/<br/>roads-rail-trade/"]:::dat
-  REL["release/candidates/<br/>roads-rail-trade/<br/>(release decisions)"]:::rel
+  CTR["contracts/transport/<br/>(object meaning, .md)"]:::ctr
+  SCH["schemas/contracts/v1/transport/<br/>(JSON Schema)"]:::sch
+  POL["policy/sensitivity/transport/<br/>(allow / deny / restrict / abstain)"]:::pol
+  TST["tests/domains/roads-rail-trade/<br/>fixtures/domains/roads-rail-trade/"]:::tst
+  DAT["data/{raw,work,quarantine,processed,catalog,published}/roads-rail-trade/"]:::dat
+  REL["release/candidates/roads-rail-trade/<br/>(release decisions)"]:::rel
 
   THIS -- "defines terms used by" --> CTR
   CTR  -- "shapes" --> SCH
@@ -197,9 +213,10 @@ flowchart LR
 ```
 
 > [!NOTE]
-> The diagram shows **conceptual relationships** between this folder and the canonical responsibility roots
-> per Directory Rules §3 and §12. Every sibling path shown is **PROPOSED · NEEDS VERIFICATION** until a
-> mounted-repo inspection (or `git ls-tree`-equivalent) confirms presence.
+> The diagram shows **conceptual relationships** between this folder and the canonical responsibility roots.
+> Note the **slug split**: `contracts/` and `schemas/` use the `transport/` segment (Atlas Ch. 24.13 / ENCY
+> §7.11), while `docs/`, `policy/`, `tests/`, `fixtures/`, `data/`, and `release/` use the `roads-rail-trade/`
+> segment. Every sibling path is **NEEDS VERIFICATION** until a mounted-repo inspection confirms presence.
 
 ---
 
@@ -229,25 +246,25 @@ release-attached component docs (atlas KFM-P7-PROG-0007). [DIRRULES §15 v1.1 no
 > release for** Roads / Rail / Trade Routes objects does **not** belong in `docs/`. It belongs in the
 > appropriate canonical responsibility root.
 
-| Do **not** put here                                       | Put it in (PROPOSED — NEEDS VERIFICATION)                                  |
-|-----------------------------------------------------------|----------------------------------------------------------------------------|
-| JSON Schemas, JSON-LD contexts                            | `schemas/contracts/v1/domains/roads-rail-trade/`                           |
-| Object-meaning Markdown (contract definitions)            | `contracts/domains/roads-rail-trade/`                                      |
-| Allow / deny / restrict / abstain rules                   | `policy/domains/roads-rail-trade/`                                         |
-| Validators, generators, repo-wide checkers                | `tools/validators/...` (cross-domain) or `tools/...`                       |
-| Golden / valid / invalid fixtures                         | `fixtures/domains/roads-rail-trade/`                                       |
-| Tests proving the rules                                   | `tests/domains/roads-rail-trade/`                                          |
-| Source-specific fetchers / admitters                      | `connectors/<source>/`                                                     |
-| Executable pipeline logic / declarative pipeline specs    | `pipelines/domains/roads-rail-trade/` · `pipeline_specs/roads-rail-trade/` |
-| Lifecycle data (raw, work, quarantine, processed, etc.)   | `data/<phase>/roads-rail-trade/`                                           |
-| Release manifests, promotion decisions, rollback cards    | `release/candidates/roads-rail-trade/` · `release/...`                     |
-| Receipts, proofs                                          | `data/receipts/...`, `data/proofs/...` — **not** in `artifacts/`           |
-| Operational runbooks (refresh, rollback drills)           | `docs/runbooks/...` — subfolder pattern pending ADR (OPEN-DR-02)           |
-| Generic transport doctrine that spans multiple domains    | `docs/architecture/` or `docs/doctrine/`                                   |
+| Do **not** put here                                       | Put it in (slugs per Atlas Ch.24.13; presence NEEDS VERIFICATION)            |
+|-----------------------------------------------------------|------------------------------------------------------------------------------|
+| JSON Schemas, JSON-LD contexts                            | `schemas/contracts/v1/transport/`                                            |
+| Object-meaning Markdown (contract definitions)            | `contracts/transport/`                                                       |
+| Allow / deny / restrict / abstain rules                   | `policy/sensitivity/transport/` (and `policy/domains/...` where applicable)  |
+| Validators, generators, repo-wide checkers                | `tools/validators/...` (cross-domain) or `tools/...`                         |
+| Golden / valid / invalid fixtures                         | `fixtures/domains/roads-rail-trade/`                                         |
+| Tests proving the rules                                   | `tests/domains/roads-rail-trade/`                                            |
+| Source-specific fetchers / admitters                      | `connectors/<source>/`                                                       |
+| Executable pipeline logic / declarative pipeline specs    | `pipelines/domains/roads-rail-trade/` · `pipeline_specs/roads-rail-trade/`   |
+| Lifecycle data (raw, work, quarantine, processed, etc.)   | `data/<phase>/roads-rail-trade/`                                             |
+| Release manifests, promotion decisions, rollback cards    | `release/candidates/roads-rail-trade/` · `release/...`                       |
+| Receipts, proofs                                          | `data/receipts/...`, `data/proofs/...` — **not** in `artifacts/`             |
+| Operational runbooks (refresh, rollback drills)           | `docs/runbooks/...` — subfolder pattern pending ADR (OPEN-DR-02)             |
+| Generic transport doctrine that spans multiple domains    | `docs/architecture/` or `docs/doctrine/`                                     |
 
 > [!WARNING]
-> Do **not** create a `roads-rail-trade/` folder at the repo root. The domain MUST appear as a **segment**
-> inside a canonical responsibility root, never as a root itself (Directory Rules §3, §12, §13).
+> Do **not** create a `roads-rail-trade/` or `transport/` folder at the repo root. The domain MUST appear as a
+> **segment** inside a canonical responsibility root, never as a root itself (Directory Rules §3, §12, §13).
 
 ---
 
@@ -261,10 +278,12 @@ release-attached component docs (atlas KFM-P7-PROG-0007). [DIRRULES §15 v1.1 no
 ```text
 docs/domains/roads-rail-trade/
 ├── README.md                              # this file — folder index + scope (§15)
+├── OBJECT_FAMILIES.md                     # object-family identity rules and temporal handling (sibling artifact)
+├── PIPELINE.md                            # RAW → PUBLISHED lifecycle for this lane (sibling artifact)
+├── PRESERVATION_MATRIX.md                 # multi-axis preservation duties (sibling artifact)
 ├── scope.md                               # PROPOSED — long-form scope and non-ownership prose
 ├── ubiquitous-language.md                 # PROPOSED — term-by-term glossary deltas
 ├── source-families.md                     # PROPOSED — source-role / rights / freshness per family
-├── object-families.md                     # PROPOSED — object-family identity rules and temporal handling
 ├── cross-lane-relations.md                # PROPOSED — joins to Settlements, Hydrology, Hazards, Archaeology
 ├── viewing-products.md                    # PROPOSED — MapLibre layers and Evidence Drawer surfaces
 ├── sensitivity-and-publication.md         # PROPOSED — Indigenous corridors, critical facilities posture
@@ -282,26 +301,35 @@ single-file folder live in `docs/domains/roads-rail-trade/` (Directory Rules §3
 
 Per Directory Rules §12 (Domain Placement Law), domain files appear as a **segment** inside each
 responsibility root, never as a root themselves. The crosswalk below is the canonical pattern for this
-domain. Every path is **PROPOSED · NEEDS VERIFICATION** in the mounted repo.
+domain. Slugs are CONFIRMED from Atlas Ch. 24.13 / ENCY §7.11 where noted; mounted-repo **presence** is
+**NEEDS VERIFICATION** throughout.
 
-| Responsibility root | Domain lane path (PROPOSED)                                                          | Owns                                              |
-|---------------------|---------------------------------------------------------------------------------------|---------------------------------------------------|
-| `docs/`             | `docs/domains/roads-rail-trade/`                                                      | Doctrine, dossier, scope                          |
-| `contracts/`        | `contracts/domains/roads-rail-trade/`                                                 | Object meaning (Markdown)                         |
-| `schemas/`          | `schemas/contracts/v1/domains/roads-rail-trade/`                                      | JSON Schema (per ADR-0001)                        |
-| `policy/`           | `policy/domains/roads-rail-trade/`                                                    | Admission decisions                               |
-| `tests/`            | `tests/domains/roads-rail-trade/`                                                     | Proof of enforceability                           |
-| `fixtures/`         | `fixtures/domains/roads-rail-trade/`                                                  | Golden / valid / invalid sample data              |
-| `packages/`         | `packages/domains/roads-rail-trade/`                                                  | Shared domain library                             |
-| `pipelines/`        | `pipelines/domains/roads-rail-trade/`                                                 | Executable pipeline logic                         |
-| `pipeline_specs/`   | `pipeline_specs/roads-rail-trade/`                                                    | Declarative pipeline configuration                |
-| `data/`             | `data/{raw,work,quarantine,processed}/roads-rail-trade/`                              | Lifecycle data (phase explicit)                   |
-| `data/catalog/`     | `data/catalog/domain/roads-rail-trade/`                                               | Catalog records, EvidenceBundles                  |
-| `data/published/`   | `data/published/layers/roads-rail-trade/`                                             | Public-safe published artifacts                   |
-| `data/registry/`    | `data/registry/roads-rail-trade/` or `data/registry/sources/roads-rail-trade/`        | Source registry entries                           |
-| `release/`          | `release/candidates/roads-rail-trade/`                                                | Release candidates, manifests, rollback cards     |
+| Responsibility root | Domain lane path | Segment slug | Owns |
+|---------------------|------------------|--------------|------|
+| `docs/`             | `docs/domains/roads-rail-trade/`                              | `roads-rail-trade` | Doctrine, dossier, scope |
+| `contracts/`        | `contracts/transport/`                                        | **`transport`** *(CONFIRMED, Ch.24.13)* | Object meaning (Markdown) |
+| `schemas/`          | `schemas/contracts/v1/transport/`                             | **`transport`** *(CONFIRMED, Ch.24.13; ADR-0001)* | JSON Schema |
+| `policy/`           | `policy/sensitivity/transport/` (and `policy/domains/...`)    | `transport` *(PROPOSED, by analogy to peers)* | Admission decisions |
+| `tests/`            | `tests/domains/roads-rail-trade/`                             | `roads-rail-trade` | Proof of enforceability |
+| `fixtures/`         | `fixtures/domains/roads-rail-trade/`                          | `roads-rail-trade` | Golden / valid / invalid sample data |
+| `packages/`         | `packages/domains/roads-rail-trade/`                          | `roads-rail-trade` | Shared domain library |
+| `pipelines/`        | `pipelines/domains/roads-rail-trade/`                         | `roads-rail-trade` | Executable pipeline logic |
+| `pipeline_specs/`   | `pipeline_specs/roads-rail-trade/`                            | `roads-rail-trade` *(CONFIRMED, repo guiding doc)* | Declarative pipeline configuration |
+| `data/`             | `data/{raw,work,quarantine,processed}/roads-rail-trade/`      | `roads-rail-trade` | Lifecycle data (phase explicit) |
+| `data/catalog/`     | `data/catalog/domain/roads-rail-trade/`                       | `roads-rail-trade` | Catalog records, EvidenceBundles |
+| `data/published/`   | `data/published/layers/roads-rail-trade/`                     | `roads-rail-trade` | Public-safe published artifacts |
+| `data/registry/`    | `data/registry/roads-rail-trade/` or `.../sources/roads-rail-trade/` | `roads-rail-trade` | Source registry entries |
+| `release/`          | `release/candidates/roads-rail-trade/`                        | `roads-rail-trade` | Release candidates, manifests, rollback cards |
 
-**Source:** Directory Rules §3 Step 3, §12 (Domain Placement Law). [DIRRULES]
+> [!IMPORTANT]
+> **The schema and contract roots use the `transport/` segment; everything else uses `roads-rail-trade/`.**
+> This split is established doctrine (Atlas Ch. 24.13 row 13: "Network identity governance"; ENCY §7.11), not
+> drift — but the two-slug pattern is recorded as `OQ-RRT-01` so an ADR can either ratify it or unify the
+> lane on a single slug. Until then, **do not "correct" `transport/` to `domains/roads-rail-trade/`** in
+> `schemas/` or `contracts/`; that would contradict the crosswalk.
+
+**Source:** Atlas Ch. 24.13 (Atlas ↔ Dossier ↔ Responsibility-Root Crosswalk), row 13; ENCY §7.11; Directory
+Rules §3 Step 3, §12. [DIRRULES] [ENCY]
 
 ---
 
@@ -318,16 +346,16 @@ flowchart LR
   classDef cat fill:#e8f5e9,stroke:#2e7d32;
   classDef pub fill:#ede7f6,stroke:#4527a0;
 
-  RAW["RAW<br/><i>source payload<br/>or reference</i>"]:::raw
-  WQ["WORK / QUARANTINE<br/><i>normalize +<br/>hold failures</i>"]:::work
-  PROC["PROCESSED<br/><i>validated +<br/>public-safe candidates</i>"]:::proc
-  CAT["CATALOG / TRIPLET<br/><i>EvidenceBundles +<br/>graph projections</i>"]:::cat
-  PUB["PUBLISHED<br/><i>served via<br/>governed APIs</i>"]:::pub
+  RAW["RAW<br/>(source payload or reference)"]:::raw
+  WQ["WORK / QUARANTINE<br/>(normalize + hold failures)"]:::work
+  PROC["PROCESSED<br/>(validated + public-safe candidates)"]:::proc
+  CAT["CATALOG / TRIPLET<br/>(EvidenceBundles + graph projections)"]:::cat
+  PUB["PUBLISHED<br/>(served via governed APIs)"]:::pub
 
   RAW -- "SourceDescriptor exists" --> WQ
-  WQ  -- "validation + policy pass<br/>OR quarantine reason recorded" --> PROC
-  PROC -- "EvidenceRef + ValidationReport<br/>+ digest closure" --> CAT
-  CAT -- "ReleaseManifest + review state<br/>+ correction path + rollback target" --> PUB
+  WQ  -- "validation + policy pass OR quarantine reason recorded" --> PROC
+  PROC -- "EvidenceRef + ValidationReport + digest closure" --> CAT
+  CAT -- "ReleaseManifest + review state + correction path + rollback target" --> PUB
 ```
 
 | Stage              | Handling                                                                                  | Gate                                                              | Status   |
@@ -342,6 +370,9 @@ flowchart LR
 > **Trust membrane.** Public clients and standard UI surfaces consume **governed APIs / governed layer
 > manifests** only. They must never reach RAW, WORK, QUARANTINE, canonical / internal stores, graph
 > internals, vector indexes, source APIs, or direct model runtimes. — [ENCY] [GAI] [DIRRULES]
+
+The full lane lifecycle, gates A–G, and receipt-by-phase mapping live in the sibling
+[`./PIPELINE.md`](./PIPELINE.md).
 
 [↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
 
@@ -378,12 +409,14 @@ by **source role, evidence, time, and release state**. [DOM-ROADS §C] [ENCY]
 ## 12. Main object families
 
 **CONFIRMED domain-defined object families / PROPOSED identity rule.** Identity is deterministic by
-construction: `source id + object role + temporal scope + normalized digest`. Source, observed, valid,
-retrieval, release, and correction times are kept **distinct where material**. [DOM-ROADS §E] [ENCY]
+construction: `source id + object role + temporal scope + normalized digest`, operationalized via the
+system-wide `spec_hash` convention (JCS RFC 8785 + SHA-256, recorded as `jcs:sha256:<hex>`). Source, observed,
+valid, retrieval, release, and correction times are kept **distinct where material**. [DOM-ROADS §E] [ENCY]
 
-The full identity-and-temporal table lives in `contracts/domains/roads-rail-trade/` **(PROPOSED · NEEDS
-VERIFICATION)**. A reproduction here would be a parallel definition home and is intentionally avoided per
-Directory Rules anti-pattern §13.1.
+The full identity-and-temporal table lives in [`contracts/transport/`](../../../contracts/transport/) **(CONFIRMED
+slug · presence NEEDS VERIFICATION)** and the sibling [`./OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md). A
+reproduction here would be a parallel definition home and is intentionally avoided per Directory Rules
+anti-pattern §13.1.
 
 | Object family             | Identity basis (PROPOSED)                                          | Notes                                            |
 |---------------------------|---------------------------------------------------------------------|--------------------------------------------------|
@@ -402,20 +435,27 @@ Directory Rules anti-pattern §13.1.
 
 ## 13. Key source families
 
-**CONFIRMED source families / NEEDS VERIFICATION rights & freshness.** Source role (`authority` /
-`observation` / `context` / `model`) is set per-record, not by source name. Rights and current terms remain
-NEEDS VERIFICATION; **sensitive joins fail closed**. [DOM-ROADS §D] [ENCY]
+**CONFIRMED source families / NEEDS VERIFICATION rights & freshness.** Source role
+(`observed | regulatory | modeled | aggregate | administrative | candidate | synthetic`) is set
+**per-record at admission** and preserved through promotion — never by source name, and never upgraded.
+Rights and current terms remain NEEDS VERIFICATION; **sensitive joins fail closed**. [DOM-ROADS §D] [ENCY §24.1]
 
 | Source family                                       | Typical role(s)             | Rights / sensitivity              | Freshness                  |
 |-----------------------------------------------------|-----------------------------|-----------------------------------|----------------------------|
-| Census **TIGER/Line** roads                         | authority / observation     | NEEDS VERIFICATION                | source-vintage             |
-| FHWA **HPMS**                                       | authority / observation     | NEEDS VERIFICATION                | annual-class               |
-| FHWA **National Highway Freight Network**           | authority / context         | NEEDS VERIFICATION                | source-vintage             |
-| **WZDx** feeds                                      | observation                 | NEEDS VERIFICATION                | high-cadence               |
-| **KDOT / KanPlan / KanDrive / Kansas GIS**          | authority / observation     | NEEDS VERIFICATION                | source-cadence specific    |
-| County / state **bridge and restriction data**      | authority / observation     | NEEDS VERIFICATION                | source-cadence specific    |
-| **GNIS** names                                      | authority / context         | NEEDS VERIFICATION                | low-cadence                |
-| **OpenStreetMap**                                   | observation / context       | OSM/GNIS legal-status denial test (PROPOSED) | rolling                    |
+| Census **TIGER/Line** roads                         | observed / administrative   | NEEDS VERIFICATION                | source-vintage             |
+| FHWA **HPMS**                                       | administrative / aggregate  | NEEDS VERIFICATION                | annual-class               |
+| FHWA **National Highway Freight Network**           | regulatory / administrative | NEEDS VERIFICATION                | source-vintage             |
+| **WZDx** feeds                                      | observed                    | NEEDS VERIFICATION                | high-cadence               |
+| **KDOT / KanPlan / KanDrive / Kansas GIS**          | administrative / observed   | NEEDS VERIFICATION                | source-cadence specific    |
+| County / state **bridge and restriction data**      | administrative / observed   | NEEDS VERIFICATION                | source-cadence specific    |
+| **GNIS** names                                      | administrative / context    | NEEDS VERIFICATION                | low-cadence                |
+| **OpenStreetMap**                                   | observed / candidate        | OSM/GNIS legal-status denial test (PROPOSED) | rolling         |
+
+> [!NOTE]
+> The role column above is **INFERRED** mapping of the Atlas §D "authority / observation / context / model"
+> language onto the seven canonical source-role classes (Atlas §24.1). The Atlas §D table records the role as
+> "as source role requires" per-record; the per-source roles here are illustrative defaults, not fixed
+> assignments. The binding role is whatever the `SourceDescriptor` records at admission.
 
 > [!CAUTION]
 > Per Atlas Ch. 13 §K (PROPOSED validators), **OSM and GNIS sources must not be treated as legal-status
@@ -435,10 +475,10 @@ entry — see [§20](#20-verification-backlog--open-questions).
 | Roads / Rail     | Hydrology                          | bridge / ferry / ford / river crossing                  | Preserve ownership, source role, sensitivity, EvidenceBundle |
 | Roads / Rail     | Hazards                            | closure, detour, flood / fire / smoke exposure          | Preserve ownership, source role, sensitivity, EvidenceBundle |
 | Roads / Rail     | Archaeology / Cultural Heritage    | historic routes, Indigenous corridors, forts, missions  | Preserve ownership, source role, sensitivity, EvidenceBundle |
-| Roads / Rail     | Frontier Matrix (aggregate)        | access observations bound the access cells              | Aggregate role; never per-place observation             |
+| Roads / Rail     | Frontier Matrix (aggregate)        | access observations bind the access cells               | Aggregate role; never per-place observation             |
 
-Source: Atlas Ch. 13 §F and Atlas Ch. 24.4.11 (Edges owned by Roads / Rail / Trade Routes). [DOM-ROADS]
-[DOM-SETTLE] [DOM-HYD] [DOM-HAZ] [DOM-ARCH] [ENCY]
+Source: Atlas Ch. 13 §F and the Cross-Lane Relation Atlas (Atlas Ch. 24.4, edges owned by Roads/Rail/Trade).
+[DOM-ROADS] [DOM-SETTLE] [DOM-HYD] [DOM-HAZ] [DOM-ARCH] [ENCY]
 
 [↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
 
@@ -463,15 +503,18 @@ badges, sensitivity-redacted view, correction/stale-state view, and governed Foc
 
 > [!IMPORTANT]
 > The MapLibre shell is a **renderer**, not a truth store, publication authority, policy authority,
-> citation authority, or AI authority. Tiles, screenshots, popups, graph projections, and AI answers are
-> **never sovereign truth**. Sensitive geometry MUST NOT be hidden by style filters alone — generalization
-> happens upstream in the lifecycle. — [MAP-MASTER] [GAI] [DIRRULES]
+> citation authority, or AI authority. MapLibre is the sole browser renderer (`packages/maplibre-runtime/`);
+> Cesium is retired per Directory Rules v1.3. Tiles, screenshots, popups, graph projections, and AI answers
+> are **never sovereign truth**. Sensitive geometry MUST NOT be hidden by style filters alone —
+> generalization happens upstream in the lifecycle. — [MAP-MASTER] [GAI] [DIRRULES]
 
 ---
 
 ## 16. Sensitivity, rights, and publication posture
 
-**CONFIRMED doctrine / PROPOSED implementation.** [DOM-ROADS §I] [ENCY]
+**CONFIRMED doctrine / PROPOSED implementation.** Lane sensitivity baseline is **T1** (ENCY §7.11); core road,
+rail, and corridor segments default to **T0** (Atlas §24.14), rising to **T4** for cultural corridors and
+critical-facility detail. [DOM-ROADS §I] [ENCY]
 
 - **Indigenous trade and mobility corridors**, oral history, treaty, cultural, and interpretive evidence
   **default to steward review and generalized public geometry.**
@@ -487,6 +530,9 @@ absent release state **blocks public promotion**. — [ENCY] [DIRRULES]
 > KFM is **never an alert authority** for transport disruption. Closures, detours, and hazard exposure are
 > cited from Hazards as **context** — they are not life-safety instructions and must never substitute for
 > official emergency guidance. — [DOM-HAZ] [ENCY]
+
+Per-object tier baselines and the full preservation duty set live in the sibling
+[`./PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md).
 
 ---
 
@@ -528,11 +574,13 @@ NEEDS VERIFICATION.
 - [ ] **Historic overprecision denial** — coarse-evidence historic routes cannot become precise public claims.
 - [ ] **Public generalization receipt** — every public-safe geometry transform emits a `RedactionReceipt`.
 - [ ] **Transport graph projection rollback** — derived edges roll back cleanly to a prior release.
+- [ ] **Source-role anti-collapse** — admin-role rosters/indexes cannot be emitted on an observed-event surface (Atlas §24.1.2; Roads named at-risk).
 
-All validators live under `tests/domains/roads-rail-trade/` with `fixtures/domains/roads-rail-trade/`
+All tests live under `tests/domains/roads-rail-trade/` with `fixtures/domains/roads-rail-trade/`
 **(PROPOSED · NEEDS VERIFICATION)**. The cross-domain validator orchestrator (`tools/validate_all.py` per
 Directory Rules §7.5.a v1.1) governs aggregate exit-code reporting; this domain's tests integrate into that
-contract rather than running a parallel orchestrator.
+contract rather than running a parallel orchestrator. Cross-lane validators (e.g. archaeological-coord denial)
+belong under `tools/validators/<topic>/`, not a domain-segmented validator folder.
 
 ---
 
@@ -549,6 +597,10 @@ contract rather than running a parallel orchestrator.
 **NEEDS VERIFICATION.** The exact CODEOWNERS entries for this domain are not confirmed in this session. A
 proposed entry should accompany the first PR that adds owner-bearing changes here.
 
+> [!NOTE]
+> `ReviewRecord` is a cross-cutting §24.2 receipt, not a Roads/Rail-owned object; reviewer separation-of-duties
+> (ADR-S-09) remains unresolved and is treated as NEEDS VERIFICATION.
+
 ---
 
 ## 20. Verification backlog & open questions
@@ -560,9 +612,9 @@ inspection or release artifact resolves them.
 |---|-----------------------------------------------------------|---------------------------------------------------------------------------------------------------------|---------------------|
 | 1 | KDOT / FHWA / FRA / WZDx source terms                     | Source registry entries + rights review records + release manifests                                     | NEEDS VERIFICATION  |
 | 2 | Indigenous / cultural corridor policy                     | Policy file + steward-review record + generalization tests + RedactionReceipt fixtures                  | NEEDS VERIFICATION  |
-| 3 | `RouteUncertaintyProfile` implementation                  | Contract Markdown + JSON Schema + fixtures + validator                                                  | NEEDS VERIFICATION  |
+| 3 | `UncertaintySurface` realization for historic routes      | Contract Markdown + JSON Schema + fixtures + validator                                                  | NEEDS VERIFICATION  |
 | 4 | Transport graph + MapLibre integration                    | LayerManifest + click-to-EvidenceBundle test + graph rollback test                                      | NEEDS VERIFICATION  |
-| 5 | Folder-slug ADR — `roads-rail-trade/` vs alternates       | Accepted ADR + drift register entry                                                                     | UNKNOWN             |
+| 5 | **`OQ-RRT-01`** — two-slug pattern (`transport/` for schema+contract vs `roads-rail-trade/` elsewhere) | Accepted ADR ratifying or unifying the split + drift register entry | OPEN — documented divergence |
 | 6 | Per-domain `CODEOWNERS` entry                             | `.github/CODEOWNERS` line referencing this domain                                                       | UNKNOWN             |
 
 All open items are mirrored or escalated to `docs/registers/VERIFICATION_BACKLOG.md` per Directory Rules
@@ -575,9 +627,19 @@ All open items are mirrored or escalated to `docs/registers/VERIFICATION_BACKLOG
 <details>
 <summary><b>Q. Should I put my road-segment JSON Schema in this folder?</b></summary>
 
-**No.** JSON Schemas live under `schemas/contracts/v1/domains/roads-rail-trade/` per **ADR-0001** (schema
-home) and Directory Rules §6.4. Co-locating schemas with doctrine creates two parallel definition homes and
-is the Directory Rules §13.1 anti-pattern.
+**No.** JSON Schemas live under `schemas/contracts/v1/transport/` per **ADR-0001** (schema home), Atlas
+Ch. 24.13 row 13, and Encyclopedia §7.11 — **not** `schemas/contracts/v1/domains/roads-rail-trade/`.
+Co-locating schemas with doctrine creates two parallel definition homes and is the Directory Rules §13.1
+anti-pattern.
+</details>
+
+<details>
+<summary><b>Q. Why is the schema folder <code>transport/</code> when this doc folder is <code>roads-rail-trade/</code>?</b></summary>
+
+Atlas Ch. 24.13 row 13 and Encyclopedia §7.11 assign the schema and contract homes to the `transport/`
+segment ("Network identity governance"), while Directory Rules §6.1 names the `docs/` folder
+`roads-rail-trade/`. The two-slug pattern is **documented doctrine, not drift**, tracked as `OQ-RRT-01`. An
+ADR may later ratify the split or unify the lane on one slug. Do not silently rename `transport/` to match.
 </details>
 
 <details>
@@ -585,7 +647,7 @@ is the Directory Rules §13.1 anti-pattern.
 
 **Facility identity is Settlement-owned**, but the depot's role as a network node and crossing point is
 Roads/Rail-owned. The two domains join through `EvidenceBundle`s; neither overwrites the other. See
-[§4 Non-ownership](#4-explicit-non-ownership) and Atlas Ch. 24.4.11.
+[§4 Non-ownership](#4-explicit-non-ownership) and the Cross-Lane Relation Atlas (Atlas Ch. 24.4).
 </details>
 
 <details>
@@ -607,18 +669,9 @@ normal public route. — [MAP-MASTER] [GAI] [DIRRULES]
 <details>
 <summary><b>Q. Is OSM authoritative for Kansas highway designation?</b></summary>
 
-**No.** OSM and GNIS are admitted as **observation / context**, not as legal-status authority. A legal-status
-denial test is PROPOSED at PROCESSED → CATALOG. Designation evidence must come from KDOT / FHWA / county /
-state authoritative records. — [DOM-ROADS §D, §K]
-</details>
-
-<details>
-<summary><b>Q. The folder slug here is <code>roads-rail-trade</code>, but the Atlas chapter says "Roads, Rail, and Trade Routes." Is that a problem?</b></summary>
-
-The slug `roads-rail-trade` is the form named in Directory Rules §6.1. A divergent slug (e.g.
-`roads-rail-trade-routes/`) appearing elsewhere is a **naming-variance question** parallel to
-`OPEN-DR-01` (`PROV.md` vs `PROVENANCE.md`). File against `docs/registers/DRIFT_REGISTER.md` and resolve by
-ADR if it persists.
+**No.** OSM and GNIS are admitted as **observed / candidate / context**, not as legal-status authority. A
+legal-status denial test is PROPOSED at PROCESSED → CATALOG. Designation evidence must come from
+KDOT / FHWA / county / state authoritative records. — [DOM-ROADS §D, §K]
 </details>
 
 ---
@@ -627,12 +680,16 @@ ADR if it persists.
 
 | Direction                | Target                                                                                  | Note                              |
 |--------------------------|------------------------------------------------------------------------------------------|-----------------------------------|
+| Sibling — Object families| [`./OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md)                                          | Identity rules, temporal handling |
+| Sibling — Pipeline       | [`./PIPELINE.md`](./PIPELINE.md)                                                        | RAW → PUBLISHED, gates A–G         |
+| Sibling — Preservation   | [`./PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md)                                   | Multi-axis preservation duties     |
 | Parent index             | [`../README.md`](../README.md)                                                           | `docs/domains/` index             |
 | Doctrine                 | [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md)                 | Placement law, README contract    |
 | Doctrine                 | [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md)                     | RAW → PUBLISHED gates             |
 | Architecture             | [`../../architecture/governed-api.md`](../../architecture/governed-api.md)               | Public-path discipline            |
 | Architecture             | [`../../architecture/map-shell.md`](../../architecture/map-shell.md)                     | MapLibre + Evidence Drawer        |
 | ADR home                 | [`../../adr/`](../../adr/)                                                               | ADR-0001 (schema home), more      |
+| Operating contract       | [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md)     | `CONTRACT_VERSION = "3.0.0"`       |
 | Atlases                  | `../../atlases/` (NEEDS VERIFICATION)                                                    | Versioned domain atlases          |
 | Registers                | `../../registers/VERIFICATION_BACKLOG.md` (NEEDS VERIFICATION)                           | Backlog mirror                    |
 | Registers                | `../../registers/DRIFT_REGISTER.md` (NEEDS VERIFICATION)                                 | For naming-variance entries       |
@@ -647,17 +704,32 @@ ADR if it persists.
 
 | ADR ID                      | Subject                                                                       | Relevance to this domain                                              |
 |-----------------------------|-------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| **ADR-0001**                | Schema home (`schemas/contracts/v1/...` as default)                            | Governs where this domain's JSON Schemas live                          |
+| **ADR-0001**                | Schema home (`schemas/contracts/v1/...` as default)                            | Governs where this domain's JSON Schemas live (`.../transport/`)       |
 | **ADR-S-01** *(proposed)*   | Confirm or amend ADR-0001 schema home                                          | Re-affirms canonical schema placement                                  |
 | **ADR-S-02** *(proposed)*   | Doctrine artifact placement (`docs/atlases/` vs `docs/dossiers/`)              | Affects where the Roads/Rail dossier PDF lives                         |
 | **ADR-S-04** *(proposed)*   | Source-role vocabulary v1                                                      | Affects every source family in [§13](#13-key-source-families)          |
 | **ADR-S-05** *(proposed)*   | Sensitivity tier scheme                                                        | Affects [§16](#16-sensitivity-rights-and-publication-posture)          |
+| **`OQ-RRT-01`** *(this doc)*| Lane slug: `transport/` (schema+contract) vs `roads-rail-trade/` (elsewhere)   | Governs the two-slug crosswalk in [§9](#9-cross-root-domain-lane-crosswalk) |
 | *(see Atlas Ch. 24.12 for the full ADR-S backlog — 15 items)*                                                                                                                                |
 
 ADRs listed as *proposed* are entries on the Atlas v1.1 Open-ADR Backlog (Ch. 24.12). They have not been
 accepted in this session.
 
 [↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
+
+---
+
+## Changelog v1.0-draft → v1.1-draft
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Corrected schema/contract homes to `schemas/contracts/v1/transport/` and `contracts/transport/` | reconciliation | Atlas Ch.24.13 row 13 + ENCY §7.11 assign the `transport/` segment; v1.0 used `domains/roads-rail-trade/`, contradicting the crosswalk. |
+| Added two-slug crosswalk column + `OQ-RRT-01` tracking | gap closure | Make the documented divergence explicit and reviewable. |
+| Added source-role anti-collapse validator (§18) + role column note (§13) | gap closure | Roads named at-risk in Atlas §24.1.2; was absent. |
+| Softened `RouteUncertaintyProfile` → `UncertaintySurface` (§20) | reconciliation | Anchored object name (doctrine-synthesis §16); fabricated name removed. |
+| Added `CONTRACT_VERSION = "3.0.0"` pin; cross-linked sibling dossiers | housekeeping | Doctrine-adjacent doc requirement; sibling artifacts now exist. |
+
+> **Backward compatibility.** All heading anchors from v1.0-draft are preserved (§1–§23, appendices, back-to-top targets). The only added anchor is `#changelog-v10draft--v11draft`. No anchor was removed or renamed.
 
 ---
 
@@ -688,8 +760,8 @@ accepted in this session.
 
 | Short-name        | Source                                                                 | Role in this README                            |
 |-------------------|------------------------------------------------------------------------|------------------------------------------------|
-| **[DOM-ROADS]**   | KFM Roads, Rail, and Trade Routes Architecture Plan (Atlas Ch. 13)     | Primary doctrine for this domain               |
-| **[ENCY]**        | KFM Encyclopedia (master domain / object / source / capability spine)  | Cross-domain doctrine anchor                   |
+| **[DOM-ROADS]**   | KFM Roads, Rail, and Trade Routes architecture (Atlas Ch. 13)          | Primary doctrine for this domain               |
+| **[ENCY]**        | KFM Encyclopedia (master spine; §7.11 lane row; §7.1 crosswalk)        | Cross-domain doctrine anchor; schema-home slug |
 | **[DIRRULES]**    | Directory Rules                                                        | Placement law, lifecycle, README contract      |
 | **[MAP-MASTER]**  | Master MapLibre Components / Functions / Features                      | Map shell, Evidence Drawer, Focus Mode         |
 | **[GAI]**         | Governed AI dossier                                                    | AIReceipt, cite-or-abstain, finite outcomes    |
@@ -698,7 +770,7 @@ accepted in this session.
 | **[DOM-HYD]**     | Hydrology dossier                                                      | Water-crossing evidence ownership              |
 | **[DOM-HAZ]**     | Hazards dossier                                                        | Closure / detour cross-lane relation           |
 | **[DOM-ARCH]**    | Archaeology / Cultural Heritage dossier                                | Historic / Indigenous corridor sensitivity     |
-| **[UNIFIED]**     | Unified Implementation Architecture Build Manual                       | Pipeline lineage, §6.8 scope baseline          |
+| **[UNIFIED]**     | Unified Implementation Architecture Build Manual                       | Pipeline lineage, scope baseline               |
 | **[DDD]**         | Domain-Driven Design Reference                                         | Bounded context, ubiquitous language patterns  |
 
 </details>
@@ -707,9 +779,11 @@ accepted in this session.
 
 ### 📅 Last reviewed
 
-**2026-05-19** · Doctrine baseline: Atlas Ch. 13 [DOM-ROADS]; placement basis: Directory Rules §3, §6.1, §12.
+**2026-06-07** · Doctrine baseline: Atlas Ch. 13 [DOM-ROADS]; placement basis: Atlas Ch. 24.13 row 13,
+Encyclopedia §7.11, Directory Rules §3, §6.1, §12; `CONTRACT_VERSION = "3.0.0"`.
 Per Directory Rules §15, this README is due for re-review when **(a)** Atlas Ch. 13 supersedes,
-**(b)** Directory Rules §6.1 or §12 changes, **(c)** a new sibling responsibility-root path is created for
-this domain, or **(d)** six months elapse — whichever comes first.
+**(b)** Directory Rules §6.1/§12 or the Atlas Ch. 24.13 crosswalk changes, **(c)** a new sibling
+responsibility-root path is created for this domain, **(d)** `OQ-RRT-01` is resolved by ADR, or **(e)** six
+months elapse — whichever comes first.
 
 [↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
