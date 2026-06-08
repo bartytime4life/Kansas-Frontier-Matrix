@@ -1,26 +1,34 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/domains/roads-rail-trade/map-ui-contracts
+doc_id: kfm://doc/docs.domains.roads-rail-trade.map-ui-contracts
 title: Map UI Contracts — Roads, Rail, and Trade Routes
 type: standard
-version: v1
+version: v0.2
 status: draft
-owners: TBD  # NEEDS VERIFICATION — Roads/Rail/Trade Routes steward
+owners: Roads/Rail/Trade domain steward (PLACEHOLDER) + Map-shell / UI steward (PLACEHOLDER)
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-06-07
 policy_label: public
 related:
-  - docs/domains/roads-rail-trade/README.md          # PROPOSED — NEEDS VERIFICATION
-  - docs/architecture/map-shell.md                   # PROPOSED — NEEDS VERIFICATION
-  - docs/architecture/governed-api.md                # PROPOSED — NEEDS VERIFICATION
-  - docs/doctrine/trust-membrane.md                  # PROPOSED — NEEDS VERIFICATION
+  - docs/domains/roads-rail-trade/README.md                # PROPOSED — NEEDS VERIFICATION
+  - docs/domains/roads-rail-trade/DATA_LIFECYCLE.md
+  - docs/domains/roads-rail-trade/FILE_SYSTEM_PLAN.md
+  - docs/domains/roads-rail-trade/GRAPH_PROJECTIONS.md
+  - docs/domains/roads-rail-trade/HISTORIC_ROUTES.md
+  - docs/domains/roads-rail-trade/IDENTITY_MODEL.md
+  - docs/architecture/maplibre-3d.md                       # PROPOSED — NEEDS VERIFICATION
   - docs/standards/PROV.md
-  - schemas/contracts/v1/ui/                         # PROPOSED schema home — NEEDS VERIFICATION
-  - schemas/contracts/v1/map/                        # PROPOSED schema home — NEEDS VERIFICATION
+  - schemas/contracts/v1/map/                              # PROPOSED schema home — NEEDS VERIFICATION
+  - schemas/contracts/v1/ui/                               # PROPOSED schema home — NEEDS VERIFICATION
+  - schemas/contracts/v1/ai/                               # PROPOSED schema home — NEEDS VERIFICATION
   - schemas/contracts/v1/runtime/decision_envelope.schema.json   # PROPOSED — NEEDS VERIFICATION
+  - ai-build-operating-contract.md                         # CONTRACT_VERSION = "3.0.0"
 tags: [kfm, domain:roads-rail-trade, ui, maplibre, contracts, governance]
 notes:
-  - "Doctrine grounded in DOM-ROADS, MAP-MASTER, GAI, ENCY, DIRRULES."
-  - "Implementation paths PROPOSED pending mounted-repo verification."
+  - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent map-UI contract profile.
+  - Doctrine grounded in DOM-ROADS, MAP-MASTER, GAI, ENCY, DIRRULES; DecisionEnvelope shape from KFM-P5-PROG-0001.
+  - Implementation paths PROPOSED pending mounted-repo verification.
+  - Segment-name conflict (roads-rail-trade vs transport) tracked as OPEN-ROADS-UI-09; aligned to FILE_SYSTEM_PLAN OPEN-RRT-FSP-01 (Directory Rules §12 names roads-rail-trade verbatim and is the stronger authority).
+  - The sole browser renderer is packages/maplibre-runtime/ (Directory Rules v1.3; Cesium retired).
 [/KFM_META_BLOCK_V2] -->
 
 # 🛣️ Map UI Contracts — Roads, Rail, and Trade Routes
@@ -31,10 +39,11 @@ notes:
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-blue)
 ![implementation](https://img.shields.io/badge/implementation-PROPOSED-lightgrey)
+![CONTRACT_VERSION](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-555)
 ![policy](https://img.shields.io/badge/policy_label-public-green)
-![last%20updated](https://img.shields.io/badge/last%20updated-2026--05--19-informational)
+![last%20updated](https://img.shields.io/badge/last%20updated-2026--06--07-informational)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** TBD (Roads/Rail/Trade Routes steward) <!-- NEEDS VERIFICATION --> &nbsp;·&nbsp; **Updated:** 2026-05-19
+**Status:** draft &nbsp;·&nbsp; **Owners:** Roads/Rail/Trade steward (PLACEHOLDER) + Map-shell/UI steward (PLACEHOLDER) &nbsp;·&nbsp; **Updated:** 2026-06-07
 
 ---
 
@@ -55,7 +64,9 @@ notes:
 - [13 · Anti-patterns specific to this surface](#13--anti-patterns-specific-to-this-surface)
 - [14 · Validators, fixtures, and tests (PROPOSED)](#14--validators-fixtures-and-tests-proposed)
 - [15 · Open questions register](#15--open-questions-register)
-- [16 · Related docs](#16--related-docs)
+- [16 · Changelog](#16--changelog)
+- [17 · Definition of done](#17--definition-of-done)
+- [18 · Related docs](#18--related-docs)
 - [Appendix A · Glossary](#appendix-a--glossary)
 - [Appendix B · Source basis](#appendix-b--source-basis)
 
@@ -80,33 +91,37 @@ It is **not** a route blueprint for an existing service, **not** a wire-protocol
 
 ## 2 · Repo fit and adjacent docs
 
-This file lives at `docs/domains/roads-rail-trade/MAP_UI_CONTRACTS.md` — a domain segment under the `docs/` responsibility root, per Directory Rules §4 Step 3 and §6.1 (which explicitly enumerates `roads-rail-trade/` in the `docs/domains/` tree). **CONFIRMED path basis; CONFIRMED authoring; mounted-repo presence NEEDS VERIFICATION.**
+This file lives at `docs/domains/roads-rail-trade/MAP_UI_CONTRACTS.md` — a domain segment under the `docs/` responsibility root. **CONFIRMED path basis** — Directory Rules §12 (Domain Placement Law) names `roads-rail-trade` verbatim as a canonical domain segment, and §6.1 places per-domain dossiers under `docs/domains/<domain>/`; **CONFIRMED authoring; mounted-repo presence NEEDS VERIFICATION.**
 
 ```text
 docs/
 └── domains/
     └── roads-rail-trade/
         ├── README.md                 # PROPOSED — NEEDS VERIFICATION
+        ├── DATA_LIFECYCLE.md         # companion (lifecycle)
+        ├── FILE_SYSTEM_PLAN.md       # companion (placement)
+        ├── GRAPH_PROJECTIONS.md      # companion (derived graph)
+        ├── HISTORIC_ROUTES.md        # companion (historic-route sensitivity)
+        ├── IDENTITY_MODEL.md         # companion (identity)
         ├── MAP_UI_CONTRACTS.md       # this file
-        ├── PIPELINES.md              # PROPOSED — NEEDS VERIFICATION
         ├── SENSITIVITY.md            # PROPOSED — NEEDS VERIFICATION
         └── OPEN_QUESTIONS.md         # PROPOSED — NEEDS VERIFICATION
 ```
 
-**Authority pointers** *(all PROPOSED until verified)*:
+**Authority pointers** *(placement per Directory Rules §12; all PROPOSED until verified)*:
 
 | Concern | Authority root | Path home |
 |---|---|---|
 | Object meaning (Road Segment, Rail Segment, CorridorRoute, …) | `contracts/` | `contracts/domains/roads-rail-trade/` |
 | Object shape (JSON Schema) | `schemas/` | `schemas/contracts/v1/domains/roads-rail-trade/` |
 | Allow / deny / restrict / abstain | `policy/` | `policy/domains/roads-rail-trade/` |
-| Map-UI contract shapes (LayerManifest, EvidenceDrawerPayload, …) | `schemas/` | `schemas/contracts/v1/ui/`, `schemas/contracts/v1/map/`, `schemas/contracts/v1/ai/` |
+| Map-UI contract shapes (LayerManifest, EvidenceDrawerPayload, …) | `schemas/` | `schemas/contracts/v1/map/`, `schemas/contracts/v1/ui/`, `schemas/contracts/v1/ai/` |
 | Tests / fixtures | `tests/`, `fixtures/` | `tests/domains/roads-rail-trade/`, `fixtures/domains/roads-rail-trade/` |
 | Released layer artifacts | `data/published/layers/` | `data/published/layers/roads-rail-trade/` |
 | Release decisions / rollback cards | `release/` | `release/candidates/roads-rail-trade/` |
 
 > [!NOTE]
-> The map-UI contract families (LayerManifest, StyleManifest, TileArtifactManifest, MapReleaseManifest, EvidenceDrawerPayload, MapContextEnvelope, FocusModeRequest, FocusModeResponse, AIReceipt, DecisionEnvelope, CitationValidationReport, PolicyDecision, PromotionDecision, rollback target) are **cross-cutting** — not owned by this domain. This document profiles how Roads/Rail/Trade Routes **uses** them, not where they live.
+> The map-UI contract families (LayerManifest, StyleManifest, TileArtifactManifest, MapReleaseManifest, EvidenceDrawerPayload, MapContextEnvelope, FocusModeRequest, FocusModeResponse, AIReceipt, DecisionEnvelope, CitationValidationReport, PolicyDecision, PromotionDecision, rollback target) are **cross-cutting** — not owned by this domain. This document profiles how Roads/Rail/Trade Routes **uses** them, not where they live. The sole browser renderer is `packages/maplibre-runtime/` (Directory Rules v1.3; Cesium retired).
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -140,13 +155,13 @@ flowchart LR
 
     RAW --> WORK --> PROC --> CAT
     CAT -- "promotion · governed state transition" --> PROM --> PUB
-    EVB -. resolves .-> DRAWER
+    EVB -. "resolves" .-> DRAWER
     PUB --> GAPI
     GAPI --> UI
     UI -- "click / hover" --> DRAWER
     UI -- "bounded context" --> FOCUS
-    POL -. gates .-> GAPI
-    RM -. binds .-> PUB
+    POL -. "gates" .-> GAPI
+    RM -. "binds" .-> PUB
 
     classDef bad fill:#fdecea,stroke:#b00020,stroke-width:1px,color:#5b0010;
     classDef good fill:#e6f4ea,stroke:#137333,stroke-width:1px,color:#0d652d;
@@ -156,11 +171,11 @@ flowchart LR
 
 *Diagram is doctrine-accurate; specific component placement and route names remain PROPOSED.*
 
-**Hard invariants the UI MUST observe for this domain** *(CONFIRMED doctrine):*
+**Hard invariants the UI MUST observe for this domain** *(CONFIRMED doctrine — MAP-MASTER components-and-features matrix):*
 
 1. **No public RAW / WORK / QUARANTINE path.** The Roads/Rail UI does not fetch canonical or internal stores; it consumes released artifacts and governed-API envelopes only.
 2. **No direct model client.** Focus Mode is an evidence-bounded adapter behind the governed API; the browser never speaks directly to a model runtime.
-3. **No unreleased tile load.** PMTiles / MVT / MLT / COG / 3D Tiles, style JSON, sprites, and glyphs must be released and manifest-bound (`MapReleaseManifest`).
+3. **No unreleased tile load.** PMTiles / MVT / MLT / COG / 3D Tiles, style JSON, sprites, and glyphs must be released and manifest-bound (`MapReleaseManifest`), with `release_state`, policy, rights, sensitivity, `evidence_refs`, hashes, and rollback valid before load.
 4. **No popup as Evidence Drawer substitute.** Popups may preview; material claims require an `EvidenceDrawerPayload` resolved to an `EvidenceBundle`.
 5. **No style-filter "hiding" of sensitive geometry.** Generalization, redaction, or denial must happen **before** public tile build — never via client-side opacity, expression, or paint filter.
 6. **No uncited export.** Screenshots, story nodes, exports, and Focus answers retain citations and manifest/version references.
@@ -180,13 +195,16 @@ The Roads/Rail/Trade Routes domain participates in the surfaces below. Status fo
 |---|---|---|---|---|
 | Roads/Rail feature/detail resolver | `RoadsRailDecisionEnvelope` (a `DecisionEnvelope` shape) | ANSWER / ABSTAIN / DENY / ERROR | CONFIRMED [DOM-ROADS §J] | route **UNKNOWN**; PROPOSED governed-API surface |
 | Roads/Rail layer manifest resolver | `LayerManifest` + domain layer descriptor | ANSWER / DENY / ERROR | CONFIRMED [DOM-ROADS §J] | PROPOSED — public-safe release only |
-| Roads/Rail Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | ANSWER / ABSTAIN / DENY / ERROR | CONFIRMED [DOM-ROADS §J; MAP-MASTER §N] | PROPOSED — evidence and policy filtered |
+| Roads/Rail Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | ANSWER / ABSTAIN / DENY / ERROR | CONFIRMED [DOM-ROADS §J; MAP-MASTER §M/§N] | PROPOSED — evidence and policy filtered |
 | Roads/Rail Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | ANSWER / ABSTAIN / DENY / ERROR | CONFIRMED [DOM-ROADS §J; GAI; MAP-MASTER §O] | PROPOSED — AI never root truth |
 | Roads/Rail layer release | `MapReleaseManifest` referencing `LayerManifest` + `StyleManifest` + `TileArtifactManifest` | release / rollback / supersede | CONFIRMED [MAP-MASTER §M] | PROPOSED — schema home `schemas/contracts/v1/map/` |
 | Roads/Rail correction / rollback | `CorrectionNotice` + `RollbackCard` | corrected / rolled-back / superseded | CONFIRMED [ENCY App. E; DOM-ROADS §M] | PROPOSED |
 | Schema responsibility root | `schemas/contracts/v1/...` | finite validator outcomes | CONFIRMED rule [DIRRULES] | PROPOSED placement; verify with ADR-0001 |
 
-**CONFIRMED finite-outcome shape** for `DecisionEnvelope` *(from KFM-P5-PROG-0001 / KFM-P22-PROG-0006; PROPOSED schema home `schemas/contracts/v1/runtime/decision_envelope.schema.json`):*
+> [!NOTE]
+> **Finite-outcome scope (CONFIRMED — Atlas §24.3.1).** The `DecisionEnvelope.outcome` enum is the four-value set **ANSWER / ABSTAIN / DENY / ERROR** (per KFM-P5-PROG-0001). The broader governed-surface outcome reference (§24.3.1) also defines **HOLD** (promotion/review paused, `ReviewRecord` pending) and the validator-class **PASS / FAIL**. The UI renders the four envelope outcomes; HOLD/PASS/FAIL appear at the release/validation layer, not as user-facing answer outcomes. Note: `ACCEPTED` is **not** a canonical outcome — the correction/rollback row uses release/rollback/supersede states, not `ACCEPTED`.
+
+**CONFIRMED finite-outcome shape** for `DecisionEnvelope` *(from KFM-P5-PROG-0001; suggested schema home `schemas/contracts/v1/runtime/decision_envelope.schema.json`):*
 
 ```json
 {
@@ -203,7 +221,7 @@ The Roads/Rail/Trade Routes domain participates in the surfaces below. Status fo
 }
 ```
 
-*Illustrative JSON, mirrored from the corpus. Field names and obligation taxonomy NEEDS VERIFICATION against the schema once mounted.*
+*Field names and the `reasons[]`/`policy_family` vocabulary are CONFIRMED from KFM-P5-PROG-0001. The card flags one open tension: `obligations[]` appears in both structured-object and string forms; converging on the structured form is the recommended direction (OPEN-ROADS-UI-07).*
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -213,18 +231,18 @@ The Roads/Rail/Trade Routes domain participates in the surfaces below. Status fo
 
 **CONFIRMED contract role.** A `LayerManifest` binds a published UI layer to its governed source / evidence / policy / release semantics. The UI MUST load Roads/Rail layers **only** through manifest-resolved descriptors. *(MAP-MASTER §M.)*
 
-**Fields the UI is expected to consume** *(CONFIRMED at field-name level from MAP-MASTER §M; per-field semantics PROPOSED until schema is mounted):*
+**Fields the UI is expected to consume** *(CONFIRMED field roster from MAP-MASTER §M / Object Map; per-field semantics PROPOSED until schema is mounted):*
 
 | Field | Purpose for Roads/Rail | Status |
 |---|---|---|
-| `layer_id` | Stable layer identity (e.g., `kfm:roads-rail-trade/modern-roads-v1`). | PROPOSED |
-| `title` | Human label rendered in the layer catalog. | PROPOSED |
-| `geometry_type` | line, point, polygon, or graph projection. | CONFIRMED required |
-| `source_id`, `source_layer` | Binds to `SourceDescriptor` and the source layer in tiles. | CONFIRMED required |
-| `evidence_ref_field` | Field on each feature carrying the `EvidenceRef` used by the drawer. | CONFIRMED required |
-| `temporal_fields` | The source / observed / valid / retrieval / release / correction times kept distinct. | CONFIRMED required [DOM-ROADS §E] |
-| `policy_label` | public · restricted · denied · needs-review (or equivalent enum). | CONFIRMED required |
-| `release_state` | released · stale · degraded · quarantined · denied · needs-review · error. | CONFIRMED required |
+| `layer_id` | Stable layer identity (e.g., `kfm:roads-rail-trade/modern-roads-v1`). | CONFIRMED field |
+| `title` | Human label rendered in the layer catalog. | CONFIRMED field |
+| `geometry_type` | line, point, polygon, or graph projection. | CONFIRMED field |
+| `source_id`, `source_layer` | Binds to `SourceDescriptor` and the source layer in tiles. | CONFIRMED field |
+| `evidence_ref_field` | Field on each feature carrying the `EvidenceRef` used by the drawer. | CONFIRMED field |
+| `temporal_fields` | The source / observed / valid / retrieval / release / correction times kept distinct. | CONFIRMED field [DOM-ROADS §E] |
+| `policy_label` | public · restricted · denied · needs-review (or equivalent enum). | CONFIRMED field |
+| `release_state` | released · stale · degraded · quarantined · denied · needs-review · error. | CONFIRMED field |
 
 **Roads/Rail viewing products this profile must support** *(PROPOSED list from DOM-ROADS §G):*
 
@@ -238,7 +256,7 @@ The Roads/Rail/Trade Routes domain participates in the surfaces below. Status fo
 - derived graph / connectivity view
 
 > [!NOTE]
-> The **derived graph / connectivity view** is downstream of canonical Road Segment / Rail Segment / Crossing / Network Node objects. A graph projection MUST NOT be treated as the source of truth for any segment; it is a release-class derivative. *(CONFIRMED doctrine from DOM-ROADS §K validators: "transport graph projection rollback tests" PROPOSED.)*
+> The **derived graph / connectivity view** is downstream of canonical Road Segment / Rail Segment / Crossing / Network Node objects. A graph projection MUST NOT be treated as the source of truth for any segment; it is a release-class derivative. See `GRAPH_PROJECTIONS.md`. *(CONFIRMED doctrine; DOM-ROADS §K validator "transport graph projection rollback tests" PROPOSED.)*
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -246,7 +264,7 @@ The Roads/Rail/Trade Routes domain participates in the surfaces below. Status fo
 
 ## 6 · EvidenceDrawerPayload — click resolution contract
 
-**CONFIRMED doctrine.** Every consequential click on a Roads/Rail feature resolves through the governed API into an `EvidenceDrawerPayload` that projects an `EvidenceBundle`. Popups may preview; the drawer carries the claim. *(MAP-MASTER §N; KFM-P1-FEAT-0065 — "Evidence Drawer required on layers, popovers, and AI answers".)*
+**CONFIRMED doctrine.** Every consequential click on a Roads/Rail feature resolves through the governed API into an `EvidenceDrawerPayload` that projects an `EvidenceBundle`. Popups may preview; the drawer carries the claim. *(MAP-MASTER §M/§N; KFM-P1-FEAT-0065 — "Evidence Drawer required on layers, popovers, and AI answers".)*
 
 ```mermaid
 sequenceDiagram
@@ -258,28 +276,28 @@ sequenceDiagram
     participant EVB as EvidenceBundle
     participant DR as Evidence Drawer
 
-    U->>UI: click on Road Segment / Crossing / Corridor
-    UI->>API: resolve(feature_id, layer_id, time_window)
-    API->>POL: evaluate (rights, sensitivity, release, role)
+    U->>UI: "click on Road Segment / Crossing / Corridor"
+    UI->>API: "resolve(feature_id, layer_id, time_window)"
+    API->>POL: "evaluate (rights, sensitivity, release, role)"
     alt allowed
-        POL-->>API: ANSWER + obligations
-        API->>EVB: fetch projection (citations, source, limitations)
-        EVB-->>API: payload
-        API-->>UI: EvidenceDrawerPayload (ANSWER)
-        UI->>DR: render citations, source, status, time, limitations
+        POL-->>API: "ANSWER + obligations"
+        API->>EVB: "fetch projection (citations, source, limitations)"
+        EVB-->>API: "payload"
+        API-->>UI: "EvidenceDrawerPayload (ANSWER)"
+        UI->>DR: "render citations, source, status, time, limitations"
     else policy/sensitivity blocks
-        POL-->>API: DENY (reasons[]) or ABSTAIN
-        API-->>UI: EvidenceDrawerPayload (DENY/ABSTAIN, reasons[])
-        UI->>DR: render human-readable denial / abstain, no sensitive geometry
+        POL-->>API: "DENY (reasons[]) or ABSTAIN"
+        API-->>UI: "EvidenceDrawerPayload (DENY/ABSTAIN, reasons[])"
+        UI->>DR: "render human-readable denial / abstain, no sensitive geometry"
     end
 ```
 
-**Fields the drawer is expected to surface** *(CONFIRMED at field-name level from MAP-MASTER §M):* `feature_id`, `layer_id`, `evidence_bundle_refs`, source summary, citations, policy state, release state, limitations.
+**Fields the drawer is expected to surface** *(CONFIRMED field roster from MAP-MASTER §M):* `feature_id`, `layer_id`, `evidence_bundle_refs`, source summary, citations, policy state, release state, limitations.
 
 **Roads/Rail-specific drawer expectations** *(PROPOSED, grounded in DOM-ROADS):*
 
 - For a **Road Segment**: the drawer should surface segment identity, the governing `SourceDescriptor` (TIGER/Line, KDOT, OSM, GNIS, etc.), the temporal scope (observed / valid / release times kept distinct), and any `RestrictionEvent` / `OperatorAssignment` resolved at the click time.
-- For a **Historic RouteClaim** or **TradeRouteCorridor**: the drawer must indicate **route uncertainty**, the source role of the supporting evidence (authority / observation / context / model), and an explicit limitations statement when geometry has been generalized.
+- For a **Historic RouteClaim** or **TradeRouteCorridor**: the drawer must indicate **route uncertainty**, the source role of the supporting evidence (authority / observation / context / model), and an explicit limitations statement when geometry has been generalized. See `HISTORIC_ROUTES.md`.
 - For a **Crossing** / **Bridge** / **Ferry**: cross-lane evidence from Hydrology (river crossing) or Hazards (closure, detour) MUST preserve ownership, source role, and `EvidenceBundle` support of the originating domain. *(CONFIRMED cross-lane constraint from DOM-ROADS §F.)*
 
 > [!WARNING]
@@ -293,14 +311,14 @@ sequenceDiagram
 
 **CONFIRMED contract role.** `MapContextEnvelope` is the bounded, policy-safe projection of the user's current map state passed to the governed AI surface. It carries **references**, not raw features. *(MAP-MASTER §M, §O.)*
 
-**Fields** *(CONFIRMED at field-name level from MAP-MASTER §M):* `visible_layers`, `bounds`, `zoom`, `pitch`, `bearing`, `filters`, `time_window`, `selected_features`, `evidence_refs`.
+**Fields** *(CONFIRMED field roster from MAP-MASTER §M):* `visible_layers`, `bounds`, `zoom`, `pitch`, `bearing`, `filters`, `time_window`, `selected_features`, `evidence_refs`.
 
 **Roads/Rail-specific obligations** *(PROPOSED, grounded in DOM-ROADS):*
 
 - `visible_layers` MUST be `LayerManifest`-resolved IDs (e.g., `kfm:roads-rail-trade/historic-routes-claims-v1`), not free-form layer names.
 - `time_window` MUST distinguish **observed** vs **valid** vs **release** times when material — e.g., a 1880s wagon-road claim viewed against a 2020s base map carries an observed time on the historic claim and a release time on the base. *(CONFIRMED temporal-separation rule from DOM-ROADS §E and MAP-MASTER §P.)*
 - `selected_features` carries IDs and `evidence_refs`, **not** raw geometry or attributes. Focus Mode resolves evidence behind the membrane.
-- For **sensitive corridors** (Indigenous trade and mobility, treaty, oral history, interpretive), the envelope MUST either omit the feature or carry only a generalized reference; the API MAY DENY at the envelope edge. *(CONFIRMED sensitivity default from DOM-ROADS §I.)*
+- For **sensitive corridors** (Indigenous trade and mobility, treaty, oral history, interpretive), the envelope MUST either omit the feature or carry only a generalized reference; the API MAY DENY at the envelope edge. *(CONFIRMED sensitivity default from DOM-ROADS §I; see `HISTORIC_ROUTES.md`.)*
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -323,7 +341,7 @@ sequenceDiagram
 - **DENY** where policy, rights, sensitivity, or release state blocks the request — including Indigenous corridor sensitivity, OSM/GNIS legal-status concerns, and historic overprecision. *(CONFIRMED denials from DOM-ROADS §K.)*
 
 > [!IMPORTANT]
-> The map UI MUST render `DENY` and `ABSTAIN` as **plain-language, accessible, evidence-free** messages with the `reasons[]` codes surfaced to the drawer. Color alone is not a trust signal; an icon plus text is required. *(CONFIRMED accessibility expectation from MAP-MASTER §S; ML-S-020 "No color-alone trust styling".)*
+> The map UI MUST render `DENY` and `ABSTAIN` as **plain-language, accessible, evidence-free** messages with the `reasons[]` codes surfaced to the drawer. Color alone is not a trust signal; an icon plus text is required. *(CONFIRMED accessibility expectation from MAP-MASTER §S; "No color-alone trust styling".)*
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -344,7 +362,7 @@ sequenceDiagram
 | `error` | Resolution or integrity failure. | Drop to neutral state; surface error code; do not retry silently. |
 
 > [!NOTE]
-> The canonical trust-state vocabulary across API, UI, and release manifests is **NEEDS VERIFICATION** (recorded as an open question in KFM-P1-FEAT-0044). The table above mirrors the corpus vocabulary verbatim; treat the enum as PROPOSED until ratified by ADR.
+> The canonical trust-state vocabulary across API, UI, and release manifests is **NEEDS VERIFICATION** (recorded as an open question in KFM-P1-FEAT-0044, and here as OPEN-ROADS-UI-06). The table above mirrors the corpus vocabulary; treat the enum as PROPOSED until ratified by ADR. Note that `release_state` (a `LayerManifest` field, §5) and these UI trust states overlap but may not be identical enums — reconciling them is part of OPEN-ROADS-UI-06.
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -352,14 +370,14 @@ sequenceDiagram
 
 ## 10 · Sensitivity, generalization, and redaction
 
-**CONFIRMED doctrine.** Indigenous trade and mobility corridors, oral-history evidence, treaty material, cultural and interpretive evidence default to **steward review and generalized public geometry**. Critical transport facilities require review. *(DOM-ROADS §I.)*
+**CONFIRMED doctrine.** Indigenous trade and mobility corridors, oral-history evidence, treaty material, cultural and interpretive evidence default to **steward review and generalized public geometry**. Critical transport facilities require review. *(DOM-ROADS §I; see `HISTORIC_ROUTES.md` for the full disposition.)*
 
 **The UI's obligation surface** *(CONFIRMED at the doctrine level; PROPOSED at the implementation level):*
 
 | Concern | Default | Allowed only when | Citation |
 |---|---|---|---|
 | Indigenous trade / mobility corridor exact geometry | **DENY** at public release; or generalize via `RedactionReceipt` | Steward review + transform receipt + EvidenceBundle support | [DOM-ROADS §I] |
-| Historic alignment with low precision evidence | **Generalize** or label uncertainty explicitly | `RouteUncertaintyProfile` present (NEEDS VERIFICATION — DOM-ROADS §N) | [DOM-ROADS §I, §K] |
+| Historic alignment with low precision evidence | **Generalize** or label uncertainty explicitly | `UncertaintySurface` present (lane realization `RouteUncertaintyProfile`, NEEDS VERIFICATION — DOM-ROADS §N) | [DOM-ROADS §I, §K] |
 | Critical transport facility detail | Review required | Steward review + public-safe generalization | [DOM-ROADS §I; DOM-SETTLE deny lane] |
 | OSM / GNIS legal-status claim | **DENY** legal-status promotion | Authoritative source role explicit | [DOM-ROADS §K] |
 
@@ -367,7 +385,10 @@ sequenceDiagram
 
 - Every transform that changes public-safe geometry (generalization, suppression, masking) MUST emit a `RedactionReceipt` recording the transform and its reason.
 - The receipt is part of the release lineage; the drawer's "limitations" field MUST reference it when the user clicks on a generalized feature.
-- **Style filters are not redaction.** Hiding geometry via paint/opacity/expression leaves the bytes in the tile and is forbidden for sensitive content. *(CONFIRMED anti-pattern from MAP-MASTER §13.)*
+- **Style filters are not redaction.** Hiding geometry via paint/opacity/expression leaves the bytes in the tile and is forbidden for sensitive content. *(CONFIRMED anti-pattern from MAP-MASTER.)*
+
+> [!NOTE]
+> **Generalization floor (CONFIRMED from MAP-MASTER).** Where a corridor overlaps archaeological/cultural sensitivity, the applicable floors are H3 r7–r9 generalization (geometry below H3 r7 prohibited) and ≥5 km coordinate generalization for terrain-linked locations, with CARE labels and sovereignty notice chips in the UI. These are owned by the Archaeology sensitivity policy that this lane consumes — see `HISTORIC_ROUTES.md`.
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -408,7 +429,7 @@ sequenceDiagram
 
 ## 13 · Anti-patterns specific to this surface
 
-**CONFIRMED anti-patterns** (Roads/Rail manifestations of cross-cutting trust-membrane failures; see MAP-MASTER §13 and v1.1 Ch. 24.9.2 for the master register):
+**CONFIRMED anti-patterns** (Roads/Rail manifestations of cross-cutting trust-membrane failures; see MAP-MASTER and v1.1 Ch. 24.9 for the master register):
 
 | Anti-pattern | Roads/Rail manifestation | Why it fails |
 |---|---|---|
@@ -459,6 +480,7 @@ sequenceDiagram
 - Tile load and interaction-to-drawer latency budgets.
 - Cache invalidation after release / rollback.
 - Rollback replay drill.
+- **Negative-state coverage** *(each test above also proves its DENY / ABSTAIN / quarantine path, not only the success path)*.
 
 </details>
 
@@ -472,32 +494,67 @@ sequenceDiagram
 |---|---|---|---|
 | OPEN-ROADS-UI-01 | Exact governed-API route for the Roads/Rail feature/detail resolver. | Mounted `apps/governed-api/` routing table or OpenAPI spec. | **UNKNOWN** [DOM-ROADS §J] |
 | OPEN-ROADS-UI-02 | Canonical KDOT / FHWA / FRA / WZDx source terms and rights status. | `SourceDescriptor` registry entries + rights review records. | **NEEDS VERIFICATION** [DOM-ROADS §N] |
-| OPEN-ROADS-UI-03 | Indigenous / cultural corridor policy (acceptance threshold, generalization level, denial criteria). | `policy/domains/roads-rail-trade/` + steward review records. | **NEEDS VERIFICATION** [DOM-ROADS §N] |
-| OPEN-ROADS-UI-04 | `RouteUncertaintyProfile` shape and binding to historic claims. | Schema + fixtures + UI consumer wiring. | **NEEDS VERIFICATION** [DOM-ROADS §N] |
-| OPEN-ROADS-UI-05 | Transport graph projection contract and MapLibre integration. | Graph schema + rollback drill + release manifest. | **NEEDS VERIFICATION** [DOM-ROADS §N] |
-| OPEN-ROADS-UI-06 | Canonical trust-state enum across API, UI, and release manifest. | ADR ratifying vocabulary; schema lint. | **NEEDS VERIFICATION** [KFM-P1-FEAT-0044] |
-| OPEN-ROADS-UI-07 | Whether `DecisionEnvelope.obligations[]` carries the structured object form or the string form for Roads/Rail policy. | Mounted `decision_envelope.schema.json` + policy fixtures. | **NEEDS VERIFICATION** [KFM-P5-PROG-0001] |
+| OPEN-ROADS-UI-03 | Indigenous / cultural corridor policy (acceptance threshold, generalization level, denial criteria). | `policy/domains/roads-rail-trade/` + steward review records; Archaeology-owned policy. | **NEEDS VERIFICATION** [DOM-ROADS §N] |
+| OPEN-ROADS-UI-04 | `UncertaintySurface` / `RouteUncertaintyProfile` shape and binding to historic claims. | Schema + fixtures + UI consumer wiring. | **NEEDS VERIFICATION** [DOM-ROADS §N] |
+| OPEN-ROADS-UI-05 | Transport graph projection contract and MapLibre integration. | Graph schema + rollback drill + release manifest; see `GRAPH_PROJECTIONS.md`. | **NEEDS VERIFICATION** [DOM-ROADS §N] |
+| OPEN-ROADS-UI-06 | Canonical trust-state enum across API, UI, and release manifest; reconciliation with `LayerManifest.release_state`. | ADR ratifying vocabulary; schema lint. | **NEEDS VERIFICATION** [KFM-P1-FEAT-0044] |
+| OPEN-ROADS-UI-07 | Whether `DecisionEnvelope.obligations[]` carries the structured object form or the string form for Roads/Rail policy. | Mounted `decision_envelope.schema.json` + policy fixtures. | **NEEDS VERIFICATION** [KFM-P5-PROG-0001 — tension documented in card] |
 | OPEN-ROADS-UI-08 | Final repo placement and review record for this file. | Mounted-repo path + ADR or ReviewRecord. | **NEEDS VERIFICATION** [DIRRULES §16] |
+| OPEN-ROADS-UI-09 | Schema/contract segment name: `domains/roads-rail-trade/` (Directory Rules §12) vs `transport/` (Atlas §24.13). | ADR; same as FILE_SYSTEM_PLAN OPEN-RRT-FSP-01. | **CONFLICTED** — §12 names `roads-rail-trade` verbatim (stronger authority); adopt it pending ADR |
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
 ---
 
-## 16 · Related docs
+## 16 · Changelog
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Verified the MapLibre contract families (`LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `MapReleaseManifest`, `EvidenceDrawerPayload`, `MapContextEnvelope`) and their field rosters against MAP-MASTER §M / Object Map; upgraded the §5/§6/§7 field statuses from PROPOSED to CONFIRMED-field. | reconciliation | The field names are confirmed in the master; only per-field semantics and schema presence remain PROPOSED. |
+| Grounded the `DecisionEnvelope` shape and `policy_family` vocabulary in KFM-P5-PROG-0001 (verbatim); added the §24.3.1 finite-outcome note (HOLD/PASS/FAIL exist at the governed-surface level; `ACCEPTED` is not canonical). | gap closure | The doc's §4 JSON matches the card; the broader outcome set was worth stating so the four-value envelope isn't mistaken for the whole universe. |
+| Aligned the segment-name handling to Directory Rules §12 (names `roads-rail-trade` verbatim) and added OPEN-ROADS-UI-09 pointing to FILE_SYSTEM_PLAN OPEN-RRT-FSP-01; corrected the §2 "Repo fit" basis to cite §12 (the verbatim authority) alongside §6.1. | reconciliation | Keeps the segment-name conflict consistent across all six Roads/Rail docs. |
+| Added the H3 r7 / ≥5 km generalization-floor note to §10 and cross-linked `HISTORIC_ROUTES.md` as the owning sensitivity disposition. | gap closure | Grounds the UI generalization obligation in the confirmed MapLibre-master floors. |
+| Replaced `owners: TBD` and the `kfm://doc/...map-ui-contracts` id with reviewable placeholders; pinned `CONTRACT_VERSION = "3.0.0"`; bumped v1 → v0.2; refreshed dates to 2026-06-07; cross-linked the five companion Roads/Rail docs; updated the renderer reference to `packages/maplibre-runtime/` (v1.3, Cesium retired). | housekeeping | Doctrine-doc requirements; ties the dossier set together. |
+| Quoted all Mermaid node/edge labels containing `(`, `)`, `/`, `,` and the sequence-diagram message labels. | clarification | Mermaid safety rule; prevents render failure on GitHub. |
+| Added §16 Changelog and §17 Definition of done; renumbered Related docs to §18. | housekeeping | Companion-section requirements. |
+
+> **Backward compatibility.** All section anchors §1–§15 and both appendices keep their slugs; "Related docs" moved from §16 to §18. Links to `#16--related-docs` shift to `#18--related-docs` — flagged here. The H1 anchor (`#-map-ui-contracts--roads-rail-and-trade-routes`) is unchanged, so all "Back to top" links remain valid. No content removed.
+
+## 17 · Definition of done
+
+This document is done enough to enter the repository when:
+
+- it is placed at `docs/domains/roads-rail-trade/MAP_UI_CONTRACTS.md` per Directory Rules §12;
+- the Roads/Rail domain steward **and** the map-shell/UI steward review it;
+- it is linked from the domain dossier `README.md` and cross-referenced by `GRAPH_PROJECTIONS.md` and `HISTORIC_ROUTES.md`;
+- the trust-state enum (OPEN-ROADS-UI-06) and the `obligations[]` form (OPEN-ROADS-UI-07) are reconciled against mounted schemas, or the divergence is recorded;
+- it does not conflict with accepted ADRs — in particular OPEN-ROADS-UI-09 (segment naming) is resolved or explicitly deferred with a `DRIFT_REGISTER.md` entry;
+- the `GENERATED_RECEIPT.json` planned in the authoring notes is wired into CI;
+- future changes follow the operating contract's §37 lifecycle.
+
+[Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
+
+---
+
+## 18 · Related docs
 
 > [!NOTE]
 > All links below are **PROPOSED** until verified against the mounted repository. Update on first verification pass.
 
 - [`docs/domains/roads-rail-trade/README.md`](./README.md) — domain README *(PROPOSED — NEEDS VERIFICATION)*
-- [`docs/architecture/map-shell.md`](../../architecture/map-shell.md) — map shell architecture *(PROPOSED — NEEDS VERIFICATION)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — governed API surface *(PROPOSED — NEEDS VERIFICATION)*
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — trust-membrane doctrine *(PROPOSED — NEEDS VERIFICATION)*
+- [`docs/domains/roads-rail-trade/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lane lifecycle *(companion)*
+- [`docs/domains/roads-rail-trade/FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) — placement; segment-name conflict OPEN-RRT-FSP-01 / OPEN-ROADS-UI-09 *(companion)*
+- [`docs/domains/roads-rail-trade/GRAPH_PROJECTIONS.md`](./GRAPH_PROJECTIONS.md) — derived graph / connectivity view *(companion)*
+- [`docs/domains/roads-rail-trade/HISTORIC_ROUTES.md`](./HISTORIC_ROUTES.md) — historic-route sensitivity & generalization *(companion)*
+- [`docs/domains/roads-rail-trade/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) — identity & spec_hash *(companion)*
+- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — MapLibre renderer / 3D surface *(PROPOSED — NEEDS VERIFICATION)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(CONFIRMED authored)*
-- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance reference *(CONFIRMED authored)*
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance reference *(PROPOSED — NEEDS VERIFICATION)*
 - `schemas/contracts/v1/map/` — `LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `MapReleaseManifest` *(PROPOSED schema home)*
 - `schemas/contracts/v1/ui/` — `EvidenceDrawerPayload`, `MapContextEnvelope` *(PROPOSED schema home)*
 - `schemas/contracts/v1/ai/` — `FocusModeRequest`, `FocusModeResponse`, `AIReceipt` *(PROPOSED schema home)*
-- `schemas/contracts/v1/runtime/decision_envelope.schema.json` — `DecisionEnvelope` *(PROPOSED schema home)*
+- `schemas/contracts/v1/runtime/decision_envelope.schema.json` — `DecisionEnvelope` *(PROPOSED schema home; KFM-P5-PROG-0001)*
+- `ai-build-operating-contract.md` — operating contract; `CONTRACT_VERSION = "3.0.0"`
 
 [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
 
@@ -509,15 +566,15 @@ sequenceDiagram
 <summary><strong>Terms used in this contract</strong></summary>
 
 - **CorridorRoute / RouteMembership** — CONFIRMED ubiquitous-language terms for the trade- and freight-corridor model. Field realization is PROPOSED. *(DOM-ROADS §C.)*
-- **DecisionEnvelope** — Finite decision wrapper used by APIs, runtime surfaces, and UI/AI payloads. Shape: `{decision_id, outcome, policy_family, reasons[], obligations[], evaluated_at}`. *(CONFIRMED [UNIFIED]; KFM-P5-PROG-0001 / KFM-P22-PROG-0006.)*
+- **DecisionEnvelope** — Finite decision wrapper used by APIs, runtime surfaces, and UI/AI payloads. Shape: `{decision_id, outcome, policy_family, reasons[], obligations[], evaluated_at}`. *(CONFIRMED — KFM-P5-PROG-0001.)*
 - **EvidenceBundle** — Resolved evidence package for a claim. Truth-bearing object that outranks generated language. *(CONFIRMED [ENCY].)*
 - **EvidenceRef** — Reference that must resolve to an `EvidenceBundle` before a public claim has authority. *(CONFIRMED [ENCY].)*
-- **EvidenceDrawerPayload** — Payload shown after click/selection, projecting an `EvidenceBundle`. *(CONFIRMED contract role [MAP-MASTER §M].)*
+- **EvidenceDrawerPayload** — Payload shown after click/selection, projecting an `EvidenceBundle`. *(CONFIRMED contract role + field roster [MAP-MASTER §M].)*
 - **Focus Mode** — Bounded, evidence-only AI map context returning finite outcomes. *(CONFIRMED [GAI; MAP-MASTER §O].)*
 - **Governed API** — Interface enforcing evidence, policy, release, finite outcomes, and audit. *(CONFIRMED [GAI; ENCY].)*
-- **Historic RouteClaim / TradeRouteCorridor** — CONFIRMED terms in this domain for historic route and trade-corridor evidence; field realization PROPOSED. *(DOM-ROADS §C.)*
-- **LayerManifest / StyleManifest / TileArtifactManifest / MapReleaseManifest** — The map release contract family. *(CONFIRMED [MAP-MASTER §M].)*
-- **MapContextEnvelope** — Bounded map context sent to the governed API / Focus Mode. *(CONFIRMED [MAP-MASTER §M].)*
+- **Historic RouteClaim / TradeRouteCorridor** — CONFIRMED terms in this domain for historic route and trade-corridor evidence; field realization PROPOSED. The owns-list spelling `Historic Route` (Ch. 13.B) differs from `Historic RouteClaim` (Ch. 13.C/G) — see `HISTORIC_ROUTES.md` OQ-RRT-HR-04. *(DOM-ROADS §C.)*
+- **LayerManifest / StyleManifest / TileArtifactManifest / MapReleaseManifest** — The map release contract family. *(CONFIRMED field rosters [MAP-MASTER §M].)*
+- **MapContextEnvelope** — Bounded map context sent to the governed API / Focus Mode. *(CONFIRMED field roster [MAP-MASTER §M].)*
 - **Promotion** — Governed release transition, not a file move. *(CONFIRMED [DIRRULES].)*
 - **Redaction Receipt** — Record of a public-safe field or geometry transformation. *(CONFIRMED object family / PROPOSED implementation [ENCY].)*
 - **RollbackCard** — Rollback target and drill object preserving history while repointing current release state. *(CONFIRMED [ENCY App. E].)*
@@ -544,6 +601,9 @@ sequenceDiagram
 | `[UIAI]` | Whole UI + AI report — UI doctrine |
 | `[UNIFIED]` | Unified / pipeline lineage |
 
+> [!NOTE]
+> **SourceDescriptor schema-home drift (intra-corpus).** The MapLibre-master Object Map lists `schemas/contracts/v1/sources/source_descriptor.schema.json` (plural `sources/`, snake_case), while Atlas §24.1.3 gives the canonical default `schemas/contracts/v1/source/source-descriptor.json` (singular `source/`, kebab-case, per Directory Rules §7.4 / ADR-0001). This doc references source descriptors abstractly and defers the home to §7.4 / ADR-0001; the drift is a candidate for `DRIFT_REGISTER.md`.
+
 All citation tags above are **CONFIRMED** by the v1.1 Atlas Appendix B citation index.
 
 </details>
@@ -554,4 +614,4 @@ All citation tags above are **CONFIRMED** by the v1.1 Atlas Appendix B citation 
 
 ---
 
-**Related docs:** see [§16](#16--related-docs) &nbsp;·&nbsp; **Last updated:** 2026-05-19 &nbsp;·&nbsp; [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
+**Related docs:** see [§18](#18--related-docs) &nbsp;·&nbsp; **Last updated:** 2026-06-07 &nbsp;·&nbsp; **Pins** `CONTRACT_VERSION = "3.0.0"` &nbsp;·&nbsp; [Back to top](#-map-ui-contracts--roads-rail-and-trade-routes)
