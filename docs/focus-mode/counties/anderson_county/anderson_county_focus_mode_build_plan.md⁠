@@ -1,0 +1,1336 @@
+<!--
+KFM_META_BLOCK_V2
+truth_posture: "CONFIRMED official-source checks / PROPOSED build plan / NEEDS_VERIFICATION exhaustive collision absence and repo placement"
+doc_id: "NEEDS_VERIFICATION:kfm-focus-mode-anderson-county-build-plan"
+county_name: "Anderson County"
+county_slug: "anderson-county"
+county_folder_candidate_legacy: "docs/focus-mode/counties/anderson_county/"
+county_plan_filename: "anderson_county_focus_mode_build_plan.md"
+created_date: "2026-06-11"
+updated_date: "2026-06-11"
+owners:
+  docs_owner: "NEEDS_VERIFICATION"
+  county_focus_mode_owner: "NEEDS_VERIFICATION"
+  evidence_steward: "NEEDS_VERIFICATION"
+  policy_steward: "NEEDS_VERIFICATION"
+  release_steward: "NEEDS_VERIFICATION"
+review_assignments:
+  directory_rules_review: "NEEDS_VERIFICATION"
+  source_admission_review: "NEEDS_VERIFICATION"
+  rights_review: "NEEDS_VERIFICATION"
+  sensitivity_review: "NEEDS_VERIFICATION"
+  public_safety_review: "NEEDS_VERIFICATION"
+  legal_review: "NEEDS_VERIFICATION"
+unverified_repository_paths:
+  human_plan_candidate: "PROPOSED/NEEDS_VERIFICATION:docs/focus-mode/counties/anderson_county/anderson_county_focus_mode_build_plan.md"
+  alternate_doctrine_path_seen: "PROPOSED/NEEDS_VERIFICATION:docs/focus-modes/anderson-county/build-plan.md"
+  county_index: "CONFIRMED via live GitHub read:docs/focus-mode/counties/COUNTY_INDEX.md"
+  county_readme_or_control_doc: "NEEDS_VERIFICATION"
+schema_contract_policy_fixture_homes:
+  schema_home: "PROPOSED/NEEDS_VERIFICATION:schemas/contracts/v1/focus_mode/counties/anderson_county/"
+  contract_home: "PROPOSED/NEEDS_VERIFICATION:contracts/focus_mode/counties/anderson_county/"
+  policy_home: "PROPOSED/NEEDS_VERIFICATION:policy/focus_mode/counties/anderson_county/"
+  fixture_home: "PROPOSED/NEEDS_VERIFICATION:fixtures/focus_mode/counties/anderson_county/"
+  correction_home: "PROPOSED/NEEDS_VERIFICATION:release/corrections/focus_mode/anderson_county/"
+  rollback_home: "PROPOSED/NEEDS_VERIFICATION:release/rollback/focus_mode/anderson_county/"
+  release_home: "PROPOSED/NEEDS_VERIFICATION:release/candidates/focus_mode/anderson_county/"
+release_status: "NEEDS_VERIFICATION:not released; planning artifact only"
+defining_public_safe_boundary: "Anderson County county/city web, property-service, zoning, road, public-safety, trail/recreation, agriculture, water, and historic context must not be converted into property-title, legal-access, parcel ownership, living-person profile, zoning/legal determination, emergency guidance, live facility/trail safety, infrastructure-vulnerability, or exact sensitive-location guidance."
+collision_search_results:
+  supplied_register: "CONFIRMED: Anderson County absent from supplied completed/collision register; Edwards County added as avoided because a plan was just generated in this chat."
+  live_county_index: "CONFIRMED: Anderson County row observed as not-started; NEEDS_VERIFICATION because index states rows are seeded by default and require validator reconciliation."
+  github_search_anderson: "CONFIRMED: accessible GitHub search returned no Anderson County Focus Mode plan hit in this run."
+  material_rejected_collisions:
+    - "Butler County: existing focus-mode plan path found."
+    - "Cheyenne County: existing focus-mode plan path found."
+    - "Graham County: existing focus-mode plan path found."
+    - "Gray County: existing focus-mode plan path found."
+  attached_project_materials: "CONFIRMED/NEEDS_VERIFICATION: accessible search did not surface an Anderson County plan; exhaustive absence across private branches, prior chats, and private artifacts remains NEEDS_VERIFICATION."
+directory_rules_basis:
+  basis: "Directory Rules says file placement encodes responsibility, lifecycle, and governance; human-facing explanations belong under docs/; domain-specific files are lane segments inside responsibility roots; lifecycle data belongs under data/<phase>/; release decisions belong under release/; promotion is a governed state transition, not a file move."
+  status: "CONFIRMED doctrine; exact path remains PROPOSED/NEEDS_VERIFICATION until current repo convention and maintainers verify."
+official_sources_checked_this_run:
+  - "Anderson County official website: county departments, public safety, property services, and legal-reliance disclaimer."
+  - "City of Garnett official website: city codes, municipal court, recreation, utilities, zoning, contact, and public event/service anchors."
+  - "KFM live COUNTY_INDEX.md: Anderson row and seeded-default caveat."
+  - "Directory Rules.pdf: repository placement doctrine."
+not_claimed:
+  - "No repository modification."
+  - "No source admission."
+  - "No schema, contract, policy, fixture, release, correction, or rollback implementation."
+  - "No review completion."
+  - "No validation/test success."
+  - "No promotion, deployment, or publication."
+-->
+
+# Anderson County Focus Mode Build Plan
+
+**Public county/city, working-landscape, trail, and history context — not property-title, zoning/legal, emergency, live-safety, infrastructure-vulnerability, or exact sensitive-location guidance.**
+
+**Product thesis:** Build a public-safe Anderson County Focus Mode that lets users explore county/city government anchors, Garnett civic context, working-landscape aggregates, public recreation candidates, transportation context, and historical orientation only through governed, citation-backed, policy-filtered evidence surfaces.
+
+![Status](https://img.shields.io/badge/status-PROPOSED-yellow) ![Truth posture](https://img.shields.io/badge/truth-cite--or--abstain-blue) ![Release](https://img.shields.io/badge/release-not%20claimed-lightgrey) ![Boundary](https://img.shields.io/badge/boundary-public--safe%20only-red) ![Lifecycle](https://img.shields.io/badge/lifecycle-RAW→PUBLISHED-green)
+
+> [!IMPORTANT]
+> This is a **planning artifact**, not a source-admission record, EvidenceBundle, ReleaseManifest, legal determination, safety advisory, emergency notice, property-access guide, or published KFM product. Anderson County’s defining public-safe boundary is active throughout this plan: **official web, property-service, zoning, road, public-safety, recreation, agriculture, water, and historical context must not become title/access advice, parcel ownership profiling, zoning/legal determinations, emergency guidance, live safety guidance, infrastructure vulnerability analysis, or exact sensitive-location disclosure.**
+
+## Status and identity
+
+| Field | Value |
+|---|---|
+| County | Anderson County, Kansas |
+| County slug | `anderson-county` |
+| Planning file | `anderson_county_focus_mode_build_plan.md` |
+| Created | 2026-06-11 |
+| Updated | 2026-06-11 |
+| Document posture | `CONFIRMED` source checks + `PROPOSED` build plan + `NEEDS_VERIFICATION` implementation paths |
+| Repository modification claimed? | No |
+| Source admission claimed? | No |
+| Review / validation / release claimed? | No |
+| Defining public-safe boundary | Public county/city, property-service, zoning, road, public-safety, trail/recreation, agriculture, water, and history context must not become property-title, legal-access, zoning/legal, emergency, live safety, infrastructure vulnerability, living-person, or exact sensitive-location guidance. |
+| Proposed human-doc path | `PROPOSED/NEEDS_VERIFICATION: docs/focus-mode/counties/anderson_county/anderson_county_focus_mode_build_plan.md` |
+| Alternate path seen in doctrine | `PROPOSED/NEEDS_VERIFICATION: docs/focus-modes/anderson-county/build-plan.md` |
+| Collision status | No Anderson plan found in accessible repo search; live index says `not-started` but seeded-default caveat means exhaustive absence remains `NEEDS_VERIFICATION`. |
+
+## Quick links
+
+- [1. Operating posture](#1-operating-posture)
+- [2. Why this county](#2-why-this-county)
+- [3. Product thesis](#3-product-thesis)
+- [4. Scope boundary](#4-scope-boundary)
+- [5. First demo layers](#5-first-demo-layers)
+- [6. User journeys](#6-user-journeys)
+- [7. UI surfaces](#7-ui-surfaces)
+- [8. Governed object model](#8-governed-object-model)
+- [9. Proposed repository shape](#9-proposed-repository-shape)
+- [10. Build phases](#10-build-phases)
+- [11. First PR sequence](#11-first-pr-sequence)
+- [12. Acceptance checklist](#12-acceptance-checklist)
+- [13. Fixture plan](#13-fixture-plan)
+- [14. Risk register](#14-risk-register)
+- [15. Source seed list](#15-source-seed-list)
+- [16. Open verification questions](#16-open-verification-questions)
+- [17. Recommended first milestone](#17-recommended-first-milestone)
+- [Appendix A — Public-safe narrative skeleton](#appendix-a--public-safe-narrative-skeleton)
+- [Appendix B — Required negative-path reason-code categories](#appendix-b--required-negative-path-reason-code-categories)
+- [Appendix C — References and evidence-use note](#appendix-c--references-and-evidence-use-note)
+
+## Executive build note
+
+Anderson County is a strong next county Focus Mode because it supports a public-safe governance-and-place proof slice without depending on sensitive exact locations. The first version should stay small: county/city official web anchors, Garnett civic context, public offices and public service categories, county-level working-landscape aggregates, public recreation candidates only after official source verification, and historical orientation only when supported by authoritative sources.
+
+The strongest Anderson-specific boundary is the public-convenience/legal-reliance problem. The Anderson County official site exposes county departments, public safety, property services, and public-facing information, but it also states that web information is for public convenience and that legal reliance should go to official records. KFM must preserve that distinction. Focus Mode may help users understand what kind of public source exists, what it can support, and where to go for official authority. It must not infer title, ownership, access rights, zoning status, legal obligations, emergency action, live road/trail/facility safety, or infrastructure vulnerability from public web visibility.
+
+> [!WARNING]
+> **GitHub placement callout:** The candidate file home follows the previously observed legacy county-plan convention under `docs/focus-mode/counties/<county>_county/`, but exact path authority remains `PROPOSED/NEEDS_VERIFICATION`. Directory Rules makes placement a governance boundary. This artifact does not create, move, or modify any repository file.
+
+## Evidence-boundary table
+
+| Label | What is included in this plan | Anderson County example |
+|---|---|---|
+| `CONFIRMED` | Verified during this run from official public web pages, live repo search/index, or attached doctrine. | Anderson County official website exposes county departments and includes a legal-reliance disclaimer; City of Garnett official site exposes municipal categories; live county index row was checked. |
+| `PROPOSED` | Recommended design, path, UI, object, fixture, phase, source-admission pattern, or repository shape not verified as implemented. | Proposed Anderson County boundary panel, layer cards, fixtures, policy gates, and candidate path. |
+| `NEEDS_VERIFICATION` | Checkable before implementation or publication, but not yet verified strongly enough. | Census/NASS/KDWP/KSHS/KDOT/FEMA/KGS source admission, source rights, geometry authority, path convention, reviewer assignments, release/correction/rollback homes. |
+| `UNKNOWN` | Not resolvable from accessible evidence in this run. | Whether a private branch, earlier private artifact, or prior chat already contains Anderson County plan content. |
+
+---
+
+# 1. Operating posture
+
+## 1.1 KFM governing rules applied to Anderson County
+
+| Rule | Anderson County application |
+|---|---|
+| EvidenceBundle outranks generated language. | Public text about Anderson County must trace to official or admitted EvidenceBundles before publication. Generated narrative can draft, but cannot certify. |
+| Public clients use governed APIs and released artifacts. | Focus Mode, map layers, Evidence Drawer, and any public UI must consume governed response envelopes, released artifacts, catalog/triplet/graph records, and policy-safe tile services only. |
+| Public UI must not read RAW, WORK, QUARANTINE, unpublished candidates, restricted sources, canonical stores, or model runtime output. | Anderson County county/city web captures, property-service references, road layers, floodplain layers, and recreation candidates remain blocked from public display until processed, cataloged, reviewed, and released. |
+| Publication is a governed state transition, not a file move. | Moving a Markdown file into `docs/` does not publish Anderson County Focus Mode. Release requires manifest, evidence closure, policy decision, review state, correction path, and rollback target. |
+| Source roles remain distinct. | County government web, city web, Census statistics, KDOT transportation, KDWP recreation, KSHS history, NASS agriculture, FEMA floodplain, and generated narrative stay separate. |
+| Cite-or-abstain. | If the system cannot prove a county claim with admissible evidence, it returns `ABSTAIN`, not a guessed answer. |
+| Sensitive and risky content fails closed. | Parcel title, living-person profiles, exact vulnerable locations, emergency operations, public-safety tactics, critical infrastructure exposure, and live safety guidance are denied by default. |
+
+## 1.2 Truth-label and finite-outcome key
+
+| Label/outcome | Meaning | Anderson County example |
+|---|---|---|
+| `CONFIRMED` | Verified in this run from inspected evidence. | The county website exposes public department categories and a legal-reliance disclaimer. |
+| `PROPOSED` | Design or recommendation not proven implemented. | A map layer showing public-safe civic anchor categories. |
+| `NEEDS_VERIFICATION` | Checkable before acting. | Whether KDWP trail data terms allow derivative display. |
+| `UNKNOWN` | Not currently resolvable. | Whether a private branch already contains an Anderson plan. |
+| `ANSWER` | Evidence supports a public-safe response. | “The county website lists the Register of Deeds under property services.” |
+| `ABSTAIN` | Evidence is insufficient, stale, unresolved, or source roles conflict. | “I cannot state current trail closure status without an official current facility notice.” |
+| `DENY` | Policy forbids the response. | “Show me exact private-well locations or parcel ownership profiles.” |
+| `ERROR` | System/tool failure, unavailable source, invalid request shape, or unresolved dependency. | Evidence resolver unavailable or citation validator cannot run. |
+
+## 1.3 Public trust-membrane flowchart
+
+```mermaid
+flowchart LR
+  U[Public user] --> UI[Anderson County Focus Mode UI]
+  UI --> API[Governed API]
+  API --> POL[PolicyDecision]
+  API --> CIT[CitationValidationReport]
+  API --> EREF[EvidenceRef resolver]
+  EREF --> EB[EvidenceBundle]
+  EB --> CAT[Catalog / triplet / graph records]
+  CAT --> REL[Released artifacts]
+  RAW[RAW] -. denied .-> UI
+  WORK[WORK / QUARANTINE] -. denied .-> UI
+  MODEL[Direct model runtime] -. denied .-> UI
+  REL --> API
+  POL --> ENV[RuntimeResponseEnvelope]
+  CIT --> ENV
+  ENV --> UI
+```
+
+## 1.4 Anderson County non-negotiable guardrails
+
+| Guardrail | Outcome when violated | Reason code |
+|---|---|---|
+| Do not infer title, ownership, access rights, or legal reliance from county property-service visibility. | `DENY` or official-authority redirect. | `PROPERTY_TITLE_ACCESS_DENIED` |
+| Do not turn city codes, zoning pages, or county web pages into legal advice or current compliance determinations. | `ABSTAIN` or `DENY`. | `LEGAL_ZONING_DETERMINATION_BLOCKED` |
+| Do not turn Emergency Management, Sheriff, road, or public-safety pages into live emergency guidance or operations detail. | `DENY`; redirect to official current channels. | `PUBLIC_SAFETY_OPERATIONAL_DENIED` |
+| Do not publish exact sensitive ecology, cultural, archaeological, or vulnerable infrastructure locations. | `DENY`; use generalized reviewed derivatives only. | `SENSITIVE_LOCATION_WITHHELD` |
+| Do not convert public recreation/trail context into live trail/facility safety, closure, water, hunting, or access advice. | `ABSTAIN` unless a current official notice is admitted. | `LIVE_RECREATION_STATUS_UNVERIFIED` |
+| Do not treat NASS/Census/KDOT/FEMA/KGS aggregate data as individualized property, health, safety, water-right, or private-well truth. | `ABSTAIN` or `DENY`. | `AGGREGATE_NOT_PROPERTY_LEVEL_TRUTH` |
+
+## 1.5 Candidate reason codes
+
+| Code | Finite outcome | Meaning |
+|---|---|---|
+| `EVIDENCE_UNRESOLVED` | `ABSTAIN` | EvidenceRef cannot resolve to an EvidenceBundle. |
+| `SOURCE_ROLE_CONFLICT` | `ABSTAIN` | Administrative, regulatory, scientific, or generated source roles conflict. |
+| `TEMPORAL_SCOPE_UNFIT` | `ABSTAIN` | Source is stale, undated, or not valid for the requested time. |
+| `PROPERTY_TITLE_ACCESS_DENIED` | `DENY` | User asks for title, ownership, property access, or living-person property profile. |
+| `LEGAL_ZONING_DETERMINATION_BLOCKED` | `DENY/ABSTAIN` | User asks KFM to decide legal zoning/compliance status. |
+| `PUBLIC_SAFETY_OPERATIONAL_DENIED` | `DENY` | User asks for emergency or law-enforcement operational details. |
+| `LIVE_RECREATION_STATUS_UNVERIFIED` | `ABSTAIN` | Current trail/facility/safety status lacks admitted official notice. |
+| `SENSITIVE_LOCATION_WITHHELD` | `DENY` | Exact vulnerable location requested. |
+| `RIGHTS_UNVERIFIED` | `ABSTAIN` | Source terms or derivative display rights are unresolved. |
+
+---
+
+# 2. Why this county
+
+## 2.1 Selection screen against completed/collision register
+
+| Screen | Result | Status |
+|---|---|---|
+| Supplied completed/collision register | Anderson County was absent. | `CONFIRMED` from prompt comparison |
+| Recently generated plans | Edwards County was just generated in this chat and is avoided; Chautauqua, Rawlins, Kearny, Kingman, Woodson, Rooks, Ottawa, and Thomas remain avoided. | `CONFIRMED` from prompt/conversation context |
+| Material rejected collisions | Butler, Cheyenne, Graham, and Gray were rejected because live repo search surfaced existing plan paths. | `CONFIRMED` from accessible GitHub search |
+| Anderson live repo search | No Anderson County Focus Mode plan surfaced in accessible GitHub search. | `CONFIRMED` search result / exhaustive absence `NEEDS_VERIFICATION` |
+| Live county index | Anderson row observed as `not-started`; not treated as proof because the index has seeded-default caveat. | `CONFIRMED` row / `NEEDS_VERIFICATION` absence |
+| Attached project materials | Search did not surface an Anderson plan; irrelevant Anderson hits were non-county terms. | `CONFIRMED` accessible search / exhaustive absence `NEEDS_VERIFICATION` |
+| Private branches, older chats, private artifacts | Not inspectable in this run. | `NEEDS_VERIFICATION` |
+
+## 2.2 Collision-search results
+
+| Candidate | Action | Collision evidence |
+|---|---|---|
+| Butler County | Rejected | Existing county plan path surfaced under `docs/focus-mode/counties/butler_county/`. |
+| Cheyenne County | Rejected | Existing county plan path surfaced under `docs/focus-mode/counties/cheyenne_county/`. |
+| Graham County | Rejected | Existing county plan path surfaced under `docs/focus-mode/counties/graham_county/`. |
+| Gray County | Rejected | Existing county plan path surfaced under `docs/focus-mode/counties/gray_county/`. |
+| Hodgeman County | Not selected | No immediate collision surfaced, but Anderson offered a stronger public-web/legal-reliance proof slice. |
+| Anderson County | Selected | No accessible collision surfaced; exhaustive absence remains `NEEDS_VERIFICATION`. |
+
+## 2.3 Proof-slice rationale table
+
+| Proof-slice dimension | Anderson County value | First-slice posture |
+|---|---|---|
+| County government/public services | Official county website lists departments, public safety, property services, public notices, and contact pathways. | `CONFIRMED` source seed; public-safe layer `PROPOSED`. |
+| Public-convenience vs legal reliance | County website explicitly warns that legal reliance should use official records. | `CONFIRMED` and central to public-safe boundary. |
+| Municipal anchor | City of Garnett official website exposes city services such as codes, municipal court, recreation, utilities, zoning, forms, payments, and contact. | `CONFIRMED` source seed; no legal/zoning determinations. |
+| Working landscape | Anderson can support county-level agriculture and land-cover aggregates after NASS/USDA/NLCD verification. | `NEEDS_VERIFICATION`; aggregate-only. |
+| Public recreation/trail candidate | Prairie Spirit Trail / recreation context is a strong candidate, but official KDWP source must be admitted before use. | `NEEDS_VERIFICATION`; live status denied/abstained until admitted. |
+| Transportation | KDOT road context can provide public-safe highway/road orientation after source verification. | `NEEDS_VERIFICATION`; no vulnerability analysis. |
+| History | KSHS and local authoritative sources can support county/city historical orientation after verification. | `NEEDS_VERIFICATION`; no unsupported historic interpretation. |
+| Water/floodplain | FEMA/KDA/KGS/USGS can support generalized watershed/floodplain/water context after admission. | `NEEDS_VERIFICATION`; no water-right/private-well/potability conclusions. |
+
+## 2.4 Distinct series value
+
+Anderson County adds a governance-heavy public-web and civic-service proof slice. Many county plans emphasize hydrology, geology, reservoirs, archaeology, or rare ecology. Anderson’s strongest contribution is different: it is a clean test of how KFM handles **official local-government pages that are useful to the public but explicitly not substitutes for official records or legal authority**. That makes Anderson an ideal place to prove official-authority redirects, property/legal abstention behavior, and county/city source-role separation.
+
+## 2.5 Public benefit
+
+A safe Anderson County Focus Mode would help a public user understand:
+
+- where official county and city sources exist;
+- which source can support which type of claim;
+- how to distinguish “public convenience web information” from legal reliance;
+- how to explore high-level county/city, working-landscape, recreation, transport, and history context without exposing sensitive or legally risky details;
+- when KFM refuses, abstains, or redirects to an official authority.
+
+## 2.6 County anchors supported by official sources checked in this run
+
+| Anchor | Source checked | Allowed claim scope |
+|---|---|---|
+| County official site exists and exposes public-facing county departments. | Anderson County official website. | Public web anchor and source discovery only. |
+| County website includes public-safety and property-service categories. | Anderson County official website. | Source-role inventory only; not emergency guidance, legal title, or access advice. |
+| County website includes public-convenience/legal-reliance warning. | Anderson County official website. | Supports KFM boundary and official-authority redirect pattern. |
+| Garnett official municipal site exposes city service categories. | City of Garnett official website. | Public municipal-source anchor only; not legal/zoning determination. |
+| Garnett official site provides city contact and public event/service anchors. | City of Garnett official website. | Public contact/source discovery only; currentness must be rechecked before public use. |
+
+---
+
+# 3. Product thesis
+
+## 3.1 One-sentence thesis
+
+**Anderson County Focus Mode should make local-government, municipal, working-landscape, recreation, transportation, and history context intelligible through evidence-backed map and answer surfaces while refusing to become a title/access, zoning/legal, emergency, live-safety, infrastructure-vulnerability, or sensitive-location system.**
+
+## 3.2 First-product promises
+
+| Promise | Boundary |
+|---|---|
+| Show public-safe county/city source anchors. | Only source role, citation, currentness, and official-authority redirect are shown. |
+| Explain what a source can and cannot prove. | Does not substitute for county records, city legal determinations, emergency channels, or source agencies. |
+| Provide high-level Anderson County map context. | Uses governed APIs and released artifacts only. |
+| Use Evidence Drawer for every consequential claim. | EvidenceRef must resolve to EvidenceBundle before public answer. |
+| Demonstrate denial and abstention behavior. | Denials and abstentions are first-class outcomes, not UI failures. |
+| Prepare for later NASS/Census/KDWP/KSHS/KDOT/FEMA/KGS integration. | Candidate sources require rights, currentness, geometry, sensitivity, and source-role admission. |
+
+## 3.3 Explicit non-promises
+
+| Non-promise | Reason |
+|---|---|
+| No title, deed, ownership, property-access, or parcel-boundary truth. | Property-service web visibility is not legal title or access authority. |
+| No zoning/legal/compliance decisions. | City/county web pages do not make KFM a legal authority. |
+| No live emergency, law-enforcement, road-closure, facility, or trail safety guidance. | KFM is not an emergency alert or operational command system. |
+| No exact vulnerable infrastructure or sensitive ecology/culture/archaeology locations. | Sensitive locations fail closed. |
+| No private-well, water-right, potability, or individualized environmental-health conclusions. | Scientific/administrative data does not become property-level or health advice. |
+| No publication merely because files exist in `docs/`. | Promotion is governed state transition, not file placement. |
+
+---
+
+# 4. Scope boundary
+
+## 4.1 Public-safe first slice
+
+| Included first-slice content | Status | Source posture | Boundary |
+|---|---|---|---|
+| County official-web source card. | `PROPOSED` | Anderson County source checked. | Source discovery and role explanation only. |
+| City of Garnett official-web source card. | `PROPOSED` | Garnett source checked. | Municipal source discovery only; no legal/zoning ruling. |
+| County/city service-category map or list. | `PROPOSED` | Official web pages checked. | No living-person profiles, no operational public-safety detail. |
+| Legal-reliance warning panel. | `PROPOSED` | County disclaimer checked. | Redirect users to official records for legal reliance. |
+| Candidate layer placeholders for agriculture, transportation, recreation, history, water/floodplain. | `DEFER` | Candidate official sources later. | Must pass source admission. |
+| Denial/abstention examples. | `PROPOSED` | Policy fixtures. | Demonstrate safe failure. |
+
+## 4.2 Deferred content
+
+| Deferred content | What must happen first |
+|---|---|
+| Census/ACS demographic cards. | Verify Census official page, tables, vintage, geography, rights, retrieval date, and geometry/version. |
+| USDA NASS agriculture aggregates. | Verify QuickStats/Census of Agriculture queries, units, year, county FIPS, license, and aggregation limits. |
+| KDWP Prairie Spirit Trail/recreation context. | Verify official KDWP page, currentness, facility/trail notices, derivative rights, and no live-safety overclaim. |
+| KSHS county/city history. | Verify KSHS official Anderson County/Garnett anchors and source-role limits. |
+| KDOT road/highway context. | Verify KDOT source, geometry authority, update date, and security posture. |
+| FEMA/KDA floodplain context. | Verify FEMA/KDA official source, map effective dates, limitations, and user redirection. |
+| KGS/USGS/KDHE water/geology/environment context. | Verify source role, temporal scope, geometry rights, and water-right/private-well/potability boundaries. |
+
+## 4.3 Denied-by-default content
+
+| Content | Outcome | Reason code |
+|---|---|---|
+| “Who owns this parcel?” or “Can I access this land?” | `DENY` | `PROPERTY_TITLE_ACCESS_DENIED` |
+| “Is this property legal/zoned/allowed?” | `DENY/ABSTAIN` | `LEGAL_ZONING_DETERMINATION_BLOCKED` |
+| “Where are exact wells, nests, archaeological sites, or critical infrastructure?” | `DENY` | `SENSITIVE_LOCATION_WITHHELD` |
+| “What road should emergency responders use right now?” | `DENY` | `PUBLIC_SAFETY_OPERATIONAL_DENIED` |
+| “Is the trail open and safe today?” without admitted current official notice. | `ABSTAIN` | `LIVE_RECREATION_STATUS_UNVERIFIED` |
+| “Is this water safe to drink?” | `DENY/ABSTAIN` | `HEALTH_OR_POTABILITY_UNSUPPORTED` |
+
+## 4.4 Excluded content
+
+- Direct RAW, WORK, QUARANTINE, or unpublished candidate access.
+- Direct model-runtime outputs.
+- Private, restricted, official-use-only, rights-unclear, tactical, or unsafe sources.
+- Living-person profile creation.
+- Parcel-level ownership/title/access determinations.
+- Exact sensitive ecology, archaeology, burial, sacred, or vulnerable infrastructure coordinates.
+- Emergency alerting or live public-safety operations.
+- Legal, regulatory, compliance, health, or safety advice.
+
+## 4.5 Boundary matrix
+
+| Boundary class | Anderson County rule |
+|---|---|
+| Sensitivity | Withhold exact vulnerable locations and use only reviewed generalized derivatives. |
+| Privacy | No living-person profiles, private ownership inferences, or personal-property dossiers. |
+| Rights | Public visibility does not prove redistribution, derivative display, or screenshot rights. |
+| Cultural/Tribal | Nation-authoritative and cultural review duties remain `NEEDS_VERIFICATION`; sensitive cultural places fail closed. |
+| Ecological | Exact sensitive species or habitat-use locations denied; aggregate/reviewed layers only. |
+| Health | Environmental/public-health reports do not become individual health judgments. |
+| Property | Appraiser/Register/parcel/public records are not title, access, or legal boundary truth. |
+| Operational | Emergency Management, Sheriff, roads, utilities, and facilities do not become live operational guidance. |
+| Legal | City codes/zoning pages do not make KFM a legal advisor. |
+| Public safety | KFM redirects to official current channels for emergencies and facility/trail/road status. |
+
+---
+
+# 5. First demo layers
+
+## 5.1 Prioritized first public-safe card/layer table
+
+| Priority | Card/layer | Source seeds | Evidence gates | Policy gates | Status |
+|---:|---|---|---|---|---|
+| 1 | Anderson official-source directory card | Anderson County official website | URL, retrieval date, source role, allowed claim scope, disclaimer captured | No legal reliance; no emergency guidance; no property title/access | `PROPOSED` |
+| 2 | Garnett municipal-source card | City of Garnett official website | URL, retrieval date, source role, allowed claim scope | No legal/zoning determination; no current obligation inference | `PROPOSED` |
+| 3 | Public-convenience/legal-reliance boundary banner | Anderson County disclaimer | EvidenceRef to disclaimer | Official-record redirect required | `PROPOSED` |
+| 4 | County/city service-category overview | County/city official pages | Categories only; no person profile | Public-safety and property-service restrictions | `PROPOSED` |
+| 5 | Agriculture aggregate placeholder | USDA NASS candidate | Query, year, units, county FIPS, license | Aggregate only; no farm/property inference | `DEFER` |
+| 6 | Recreation/trail candidate placeholder | KDWP candidate | Official page/current notice/date/terms | No live safety or closure advice unless current official notice admitted | `DEFER` |
+| 7 | KDOT transportation context placeholder | KDOT candidate | Source date, geometry authority | No vulnerability or live closure inference | `DEFER` |
+| 8 | KSHS history placeholder | KSHS candidate | Source page/date/rights | Interpretation remains source-bounded | `DEFER` |
+| 9 | Floodplain/water context placeholder | FEMA/KDA/KGS/USGS candidates | Effective dates, map limitations, source role | No water-right, well, potability, or property-level conclusion | `DEFER` |
+| 10 | Parcel/title/access request handler | Synthetic invalid fixture | Denied fixture path | Deny title/access/living-person profiling | `DENY` |
+| 11 | Exact sensitive location request handler | Synthetic invalid fixture | Denied fixture path | Deny exact vulnerable location | `DENY` |
+| 12 | Raw/unpublished source request handler | Synthetic invalid fixture | Denied fixture path | Deny RAW/WORK/QUARANTINE access | `EXCLUDE` |
+
+## 5.2 Mermaid map-composition diagram
+
+```mermaid
+flowchart TB
+  Base[Public-safe basemap] --> Shell[Anderson Focus Mode shell]
+  County[County boundary / public geography candidate] --> Shell
+  CountyWeb[County official-source card] --> Shell
+  Garnett[City of Garnett source card] --> Shell
+  Boundary[Legal-reliance / property / safety boundary panel] --> Shell
+  Ag[Ag aggregate placeholder] --> Shell
+  Trail[Recreation/trail placeholder] --> Shell
+  Roads[Transportation context placeholder] --> Shell
+  Hist[History placeholder] --> Shell
+  Water[Water/floodplain placeholder] --> Shell
+  Shell --> Evidence[Evidence Drawer]
+  Evidence --> Envelope[RuntimeResponseEnvelope]
+  Policy[PolicyDecision] --> Envelope
+  Citation[CitationValidationReport] --> Envelope
+```
+
+## 5.3 Layer-card truth contract
+
+Every Anderson County layer/card must declare:
+
+| Required field | Reason |
+|---|---|
+| `layer_id` / `card_id` | Deterministic identity. |
+| `county_slug` | Prevents cross-county collision. |
+| `source_role` | Prevents administrative, regulatory, scientific, historic, and generated source collapse. |
+| `allowed_claim_scope` | Stops official web visibility from becoming legal/property/safety truth. |
+| `time_basis` | Shows source retrieval date, publication date, effective date, or reporting period. |
+| `rights_basis` | Prevents public visibility from being treated as derivative-display permission. |
+| `sensitivity_class` | Drives deny/generalize/redact behavior. |
+| `evidence_refs[]` | Allows EvidenceBundle resolution. |
+| `policy_decision_ref` | Records allow/deny/restrict/abstain logic. |
+| `citation_validation_ref` | Blocks uncited public claims. |
+| `release_manifest_ref` | Ensures public surfaces use release state. |
+| `correction_ref` / `rollback_ref` | Makes public claims correctable and reversible. |
+
+---
+
+# 6. User journeys
+
+## 6.1 Public learning journeys
+
+| Journey | Public-safe answer behavior | Boundary behavior |
+|---|---|---|
+| “What official county source should I start with?” | Show Anderson County official-source card, source role, checked date, and allowed claim scope. | Explain that public web content is not legal reliance; redirect to official records when needed. |
+| “What does Garnett’s official site cover?” | Show municipal categories and contact/source link. | No legal/zoning/compliance determination. |
+| “What public services are visible for the county?” | Summarize department/service categories from admitted county source. | Do not produce emergency instructions, law-enforcement operations, or property title/access conclusions. |
+| “What later layers could this county support?” | Show candidate source roadmap for Census, NASS, KDWP, KDOT, KSHS, FEMA/KDA/KGS. | Mark every non-admitted source `NEEDS_VERIFICATION`. |
+| “Why won’t KFM answer my property/access question?” | Return denial panel with reason code and official-authority redirect. | Boundary is visible, not hidden. |
+
+## 6.2 Trust-demonstration journeys
+
+| Journey | Demonstration |
+|---|---|
+| Evidence Drawer from county-source card | Shows source name, authority role, checked date, allowed claim scope, rights limitations, and legal-reliance boundary. |
+| Citation validation failure | An uncited claim returns `ABSTAIN` with `EVIDENCE_UNRESOLVED`. |
+| Policy denial | A parcel/title/access request returns `DENY` with `PROPERTY_TITLE_ACCESS_DENIED`. |
+| Currentness failure | Trail/facility status request returns `ABSTAIN` unless a current official notice is admitted. |
+| Source-role separation | County web, city web, KSHS history, NASS statistics, and FEMA maps are displayed as different source roles. |
+
+## 6.3 County-specific denied and abstained requests
+
+| User request | Outcome | Reason code | User-facing explanation |
+|---|---|---|---|
+| “Who owns this land in Anderson County and can I go there?” | `DENY` | `PROPERTY_TITLE_ACCESS_DENIED` | KFM does not provide title, ownership, or access advice. Consult official records and qualified professionals. |
+| “Is this Garnett parcel legally zoned for my use?” | `ABSTAIN/DENY` | `LEGAL_ZONING_DETERMINATION_BLOCKED` | KFM can show source context, but not legal determinations. Consult the official city/county authority. |
+| “Show exact emergency response routes or law enforcement details.” | `DENY` | `PUBLIC_SAFETY_OPERATIONAL_DENIED` | KFM does not expose operational public-safety details. |
+| “Is the trail open and safe right now?” | `ABSTAIN` | `LIVE_RECREATION_STATUS_UNVERIFIED` | Current facility/trail safety requires an admitted current official notice. |
+| “Where are exact rare species, burials, archaeological sites, or vulnerable infrastructure?” | `DENY` | `SENSITIVE_LOCATION_WITHHELD` | Exact vulnerable locations are withheld by default. |
+| “Is this well water safe?” | `ABSTAIN/DENY` | `HEALTH_OR_POTABILITY_UNSUPPORTED` | KFM does not provide individualized health/potability judgments. |
+
+---
+
+# 7. UI surfaces
+
+## 7.1 Header
+
+**Header text:** `Anderson County Focus Mode — public-safe civic, landscape, recreation, and history context`
+
+**Header warning chip:** `Not title/access · Not legal/zoning · Not emergency · Not live safety · No exact sensitive locations`
+
+## 7.2 Map canvas
+
+| Element | Behavior |
+|---|---|
+| County outline | Shows public-safe orientation after geometry source admission. |
+| Garnett/city anchor | Shows municipal-source card, not legal boundaries or zoning determinations unless admitted for context only. |
+| Candidate placeholders | Show “verification pending” for NASS/Census/KDWP/KDOT/KSHS/FEMA/KGS layers. |
+| Click behavior | Opens Evidence Drawer; never opens raw source, restricted source, or direct model output. |
+
+## 7.3 Layer drawer
+
+| Layer group | Example cards | Boundary label |
+|---|---|---|
+| Official sources | Anderson County official site, City of Garnett official site | “Source role only; consult official records for legal reliance.” |
+| Civic services | County/city service categories | “No legal, emergency, or operational guidance.” |
+| Working landscape | Agriculture aggregate candidate | “Aggregate only; not farm/property truth.” |
+| Recreation | Trail/recreation candidate | “No live safety/closure advice until current official notice admitted.” |
+| Transportation | KDOT candidate | “No vulnerability or live closure inference.” |
+| History | KSHS/local history candidate | “Interpretation remains source-bounded.” |
+| Water/floodplain | FEMA/KDA/KGS/USGS candidates | “No water-right, well, potability, or property-level conclusions.” |
+
+## 7.4 Evidence Drawer
+
+Required fields:
+
+- source name;
+- source role;
+- checked date;
+- source URL or internal source descriptor ref;
+- publication/effective/reporting period when known;
+- rights status;
+- sensitivity status;
+- allowed claim scope;
+- denied claim scope;
+- EvidenceRef and EvidenceBundle digest;
+- CitationValidationReport result;
+- PolicyDecision outcome;
+- correction/rollback links when released.
+
+## 7.5 Answer panel
+
+The answer panel may produce `ANSWER` only when:
+
+1. at least one policy-allowed EvidenceRef resolves;
+2. source role supports the requested claim;
+3. temporal scope is fit;
+4. rights and sensitivity allow public display;
+5. the answer does not violate Anderson’s boundary against title/access, legal/zoning, emergency, live-safety, infrastructure-vulnerability, or exact sensitive-location guidance.
+
+## 7.6 Denial panel
+
+Denial panel format:
+
+```text
+Outcome: DENY
+Reason: PROPERTY_TITLE_ACCESS_DENIED
+Boundary: Anderson County official web and property-service context cannot be converted into title, ownership, access, or living-person property profiles.
+Official-authority redirect: consult official county records, the relevant office, and qualified professionals.
+```
+
+## 7.7 Abstention panel
+
+Abstention panel format:
+
+```text
+Outcome: ABSTAIN
+Reason: LIVE_RECREATION_STATUS_UNVERIFIED
+What is missing: no admitted current official notice for the requested facility/trail status.
+Next verification: admit and validate the official KDWP or local authority notice, including publication/effective/expiry dates.
+```
+
+## 7.8 Timeline/time-basis panel
+
+| Time field | Meaning |
+|---|---|
+| `source_checked_at` | When KFM checked the source. |
+| `source_published_at` | When source content was published, if available. |
+| `effective_period` | Legal/regulatory/map effective period, if applicable. |
+| `reporting_period` | Statistical/report period for Census/NASS/KDHE/NOAA/etc. |
+| `retrieved_at` | When raw source was fetched. |
+| `processed_at` | When normalized derivative was generated. |
+| `released_at` | When KFM release manifest approved public-safe derivative. |
+| `stale_after` | When source must be rechecked before use. |
+
+## 7.9 County-specific boundary panel
+
+Panel title: **Anderson County public-safe boundary**
+
+Panel body:
+
+> KFM may help you find official source context for Anderson County and Garnett, but it does not decide property title, land access, parcel ownership, zoning legality, emergency action, trail/facility safety, infrastructure vulnerability, water potability, water rights, private wells, or exact sensitive locations. When a request crosses that boundary, KFM returns `ABSTAIN`, `DENY`, or an official-authority redirect.
+
+## 7.10 Official-authority redirect panel
+
+| Request class | Redirect posture |
+|---|---|
+| Legal reliance on county records | Consult official county office/records and qualified professionals. |
+| City code/zoning/legal compliance | Consult City of Garnett or relevant official authority. |
+| Emergency or public safety | Use current official emergency channels. |
+| Trail/facility/road closures | Use current official agency notices. |
+| Water safety/potability | Use official health/environment authorities and qualified testing. |
+
+## 7.11 Correction/release panel
+
+| Field | Behavior |
+|---|---|
+| Release state | Shows `not released`, `candidate`, `released`, `rolled back`, or `deprecated`. |
+| Correction notice | Records claim corrected, source ref, reason, reviewer, date. |
+| Rollback target | Points to previous safe release manifest. |
+| User correction | Allows user to report broken source, stale source, or boundary concern. |
+
+## 7.12 Legend vocabulary table
+
+| Term | UI meaning |
+|---|---|
+| Official source | A government or authoritative public source checked/admitted for a limited source role. |
+| Candidate source | A plausible source not yet admitted. |
+| EvidenceRef | Pointer that must resolve to an EvidenceBundle. |
+| EvidenceBundle | Inspectable evidence package for a claim. |
+| PolicyDecision | Allow/deny/restrict/abstain decision with obligations. |
+| ReleaseManifest | Public-release state and artifact inventory. |
+| Boundary warning | Visible statement of what KFM will not infer. |
+| Official-authority redirect | Guidance to consult responsible official authority without KFM making the decision. |
+
+## 7.13 UI/API/policy/evidence sequence diagram
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant UI as Anderson Focus UI
+  participant API as Governed API
+  participant Policy as Policy Engine
+  participant Resolver as Evidence Resolver
+  participant Citation as Citation Validator
+  participant Release as Release Manifest
+
+  User->>UI: Ask about Anderson County source or layer
+  UI->>API: Submit governed request
+  API->>Policy: Pre-check request class and boundary
+  alt Denied boundary
+    Policy-->>API: DENY + reason code
+    API-->>UI: RuntimeResponseEnvelope(DENY)
+  else Policy permits evidence lookup
+    API->>Resolver: Resolve EvidenceRefs
+    Resolver-->>API: EvidenceBundle or unresolved
+    API->>Citation: Validate citations
+    Citation-->>API: pass/fail
+    API->>Release: Confirm release state
+    Release-->>API: released / not released
+    alt Evidence, citation, release valid
+      API-->>UI: RuntimeResponseEnvelope(ANSWER)
+    else Missing evidence or stale source
+      API-->>UI: RuntimeResponseEnvelope(ABSTAIN)
+    end
+  end
+```
+
+---
+
+# 8. Governed object model
+
+## 8.1 Shared KFM concepts proposed for this county slice
+
+| Object | Anderson County use | Status |
+|---|---|---|
+| `SourceDescriptor` | Records Anderson County official site, City of Garnett site, and later candidate official sources. | `PROPOSED` |
+| `EvidenceRef` | Stable pointer from layer/card/answer to EvidenceBundle. | `PROPOSED` |
+| `EvidenceBundle` | Package with source metadata, rights, source role, content digest, time basis, and allowed claim scope. | `PROPOSED` |
+| `PolicyDecision` | Records allow/deny/restrict/abstain and obligations for property/legal/safety/sensitive requests. | `PROPOSED` |
+| `RuntimeResponseEnvelope` | Finite response wrapper for `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. | `PROPOSED` |
+| `CitationValidationReport` | Proves citations resolve and claim scopes match evidence. | `PROPOSED` |
+| `ReleaseManifest` | Records released Anderson County artifacts and rollback target. | `PROPOSED` |
+| `AIReceipt` | Records generated answer inputs, EvidenceRefs, policy decisions, and citation validation. | `PROPOSED` |
+| `ReviewRecord` | Captures source, policy, rights, sensitivity, and release review. | `PROPOSED` |
+| `CorrectionNotice` | Documents post-release correction or stale-source correction. | `PROPOSED` |
+| `RollbackPlan` / rollback reference | Points to previous safe release and reversal steps. | `PROPOSED` |
+
+## 8.2 County-specific object candidates
+
+| Object candidate | Purpose | Boundary |
+|---|---|---|
+| `AndersonOfficialSourceCard` | Displays checked county/city source anchors. | Source discovery only; no legal reliance. |
+| `AndersonBoundaryNotice` | Encodes public-safe boundary text and reason codes. | Must appear in UI, fixtures, and answer envelopes. |
+| `CountyServiceCategory` | Normalizes public-facing department/service categories. | No operational details or living-person profiles. |
+| `MunicipalServiceAnchor` | Normalizes City of Garnett public categories. | No city legal/zoning determination. |
+| `AndersonCandidateLayerCard` | Tracks deferred NASS/Census/KDWP/KDOT/KSHS/FEMA/KGS candidates. | Cannot display as fact until admitted/released. |
+| `OfficialAuthorityRedirect` | Gives safe redirection without making the decision. | Used for legal/property/safety/currentness boundaries. |
+
+## 8.3 Source-role anti-collapse rules
+
+| Source role | Must not be collapsed into |
+|---|---|
+| County administrative web | Legal title, property access, emergency guidance, zoning/legal determination. |
+| City municipal web | Legal advice, current compliance determination, emergency/facility status. |
+| Census/statistical aggregate | Individual or household truth, property-level claim, current population estimate beyond vintage. |
+| NASS agricultural aggregate | Farm-level operation, ownership, or economic profile. |
+| KDWP recreation page | Live safety, facility condition, or access advice unless current official notice is admitted. |
+| KDOT road data | Vulnerability analysis or live closure/route guidance. |
+| KSHS historical text | Archaeological precision, cultural authority, or unsupported interpretation. |
+| FEMA/KDA floodplain data | Insurance/legal determination or live flood/emergency guidance. |
+| KGS/USGS/KDHE scientific/environmental data | Water rights, private well condition, potability, or individualized health conclusion. |
+| Generated narrative | Evidence, authority, review, release, or policy decision. |
+
+## 8.4 Minimal public `ANSWER` JSON example
+
+```json
+{
+  "outcome": "ANSWER",
+  "county_slug": "anderson-county",
+  "answer_type": "official_source_context",
+  "answer": "Anderson County has an official county website with public-facing department categories. The site is useful for source discovery, but KFM does not treat it as legal reliance, property title, land-access, emergency, or live-safety authority.",
+  "evidence_refs": [
+    "kfm:evidence-ref:anderson-county:official-site:2026-06-11"
+  ],
+  "policy_decision": {
+    "decision": "allow",
+    "obligations": [
+      "show_boundary_notice",
+      "show_source_role",
+      "show_checked_date",
+      "show_official_authority_redirect_for_legal_reliance"
+    ]
+  },
+  "citation_validation": {
+    "status": "pass",
+    "claim_scope": "source_discovery_and_boundary_only"
+  },
+  "boundary_notice": "Not property-title, legal-access, zoning/legal, emergency, live safety, infrastructure-vulnerability, or exact sensitive-location guidance."
+}
+```
+
+## 8.5 Minimal `ABSTAIN` JSON example
+
+```json
+{
+  "outcome": "ABSTAIN",
+  "county_slug": "anderson-county",
+  "reason_code": "LIVE_RECREATION_STATUS_UNVERIFIED",
+  "answer": null,
+  "explanation": "A current official trail/facility status notice has not been admitted and validated for this request.",
+  "needed_evidence": [
+    "current official recreation/facility source",
+    "publication/effective/expiry date",
+    "rights and derivative-display review",
+    "policy-safe EvidenceBundle"
+  ],
+  "policy_decision": {
+    "decision": "abstain",
+    "obligations": ["redirect_to_current_official_authority"]
+  }
+}
+```
+
+## 8.6 Minimal `DENY` JSON example
+
+```json
+{
+  "outcome": "DENY",
+  "county_slug": "anderson-county",
+  "reason_code": "PROPERTY_TITLE_ACCESS_DENIED",
+  "answer": null,
+  "explanation": "KFM does not provide title, ownership, parcel access, or living-person property profiles from Anderson County public web or property-service context.",
+  "policy_decision": {
+    "decision": "deny",
+    "obligations": [
+      "do_not_query_private_or_canonical_property_records",
+      "show_official_authority_redirect",
+      "log_denial_reason"
+    ]
+  }
+}
+```
+
+## 8.7 Deterministic identity candidates
+
+| Candidate ID | Purpose | Status |
+|---|---|---|
+| `kfm:focus-plan:anderson-county:v0.1` | Planning document identity. | `PROPOSED` |
+| `kfm:source:anderson-county-official-web` | County official web SourceDescriptor. | `PROPOSED` |
+| `kfm:source:garnett-official-web` | City official web SourceDescriptor. | `PROPOSED` |
+| `kfm:boundary:anderson-county-public-safe:v1` | Boundary policy reference. | `PROPOSED` |
+| `kfm:fixture:anderson-county:deny-property-title-access:v1` | Highest-risk invalid fixture. | `PROPOSED` |
+| `kfm:release-candidate:focus-mode:anderson-county:v0.1` | Future release candidate identity. | `PROPOSED` |
+
+## 8.8 `spec_hash` posture
+
+`spec_hash` should be computed from canonicalized JSON/YAML/Markdown-derived structured content, not from arbitrary prose ordering alone. For Anderson County, candidate hash inputs should include:
+
+- county slug and FIPS after verification;
+- source descriptor content;
+- boundary notice text;
+- source-role allowed/denied claim scopes;
+- layer/card registry;
+- policy rules and reason codes;
+- fixture pack version;
+- release manifest candidate metadata.
+
+---
+
+# 9. Proposed repository shape
+
+## 9.1 Directory Rules basis
+
+Directory Rules treats file placement as governance. The relevant basis for this plan is:
+
+- human-facing explanations belong under `docs/`;
+- object meaning belongs under `contracts/`;
+- machine shape belongs under `schemas/`;
+- allow/deny/restrict/abstain logic belongs under `policy/`;
+- golden/valid/invalid sample data belongs under `fixtures/`;
+- validators and generators belong under `tools/`;
+- lifecycle data belongs under `data/<phase>/`;
+- release decisions, correction, and rollback belong under `release/`;
+- domains/counties appear as lane segments inside responsibility roots, not as root folders;
+- promotion is a governed state transition, not a file move.
+
+## 9.2 Observed live-repository convention
+
+A previously observed county-plan convention is:
+
+```text
+docs/focus-mode/counties/<county_name_lowercase>_county/<county_name_lowercase>_county_focus_mode_build_plan.md
+```
+
+For Anderson County, the candidate path would be:
+
+```text
+docs/focus-mode/counties/anderson_county/anderson_county_focus_mode_build_plan.md
+```
+
+This exact path remains `PROPOSED/NEEDS_VERIFICATION` because repository conventions, current branch state, per-root README contracts, and county-plan control documents need maintainer verification.
+
+## 9.3 Path divergence
+
+| Convention | Candidate Anderson path | Status |
+|---|---|---|
+| Legacy observed county-plan convention | `docs/focus-mode/counties/anderson_county/anderson_county_focus_mode_build_plan.md` | `PROPOSED/NEEDS_VERIFICATION` |
+| Alternate doctrine proposal | `docs/focus-modes/anderson-county/build-plan.md` | `PROPOSED/NEEDS_VERIFICATION` |
+| Final path | Not selected by this artifact. | `NEEDS_VERIFICATION` |
+
+## 9.4 Candidate path table
+
+| Artifact type | Candidate path | Directory responsibility | Status |
+|---|---|---|---|
+| Human planning document | `docs/focus-mode/counties/anderson_county/anderson_county_focus_mode_build_plan.md` | `docs/` explains to humans. | `PROPOSED/NEEDS_VERIFICATION` |
+| County README/control | `docs/focus-mode/counties/anderson_county/README.md` | Human documentation/control. | `PROPOSED/NEEDS_VERIFICATION` |
+| Source descriptors | `data/registry/sources/focus_mode/anderson_county/` | Source identity/rights/sensitivity registry. | `PROPOSED/NEEDS_VERIFICATION` |
+| Contract docs | `contracts/focus_mode/counties/anderson_county/` | Object meaning. | `PROPOSED/NEEDS_VERIFICATION` |
+| JSON schemas | `schemas/contracts/v1/focus_mode/counties/anderson_county/` | Machine shape. | `PROPOSED/NEEDS_VERIFICATION` |
+| Policy rules | `policy/focus_mode/counties/anderson_county/` | Allow/deny/restrict/abstain. | `PROPOSED/NEEDS_VERIFICATION` |
+| Fixtures | `fixtures/focus_mode/counties/anderson_county/` | Valid/invalid test samples. | `PROPOSED/NEEDS_VERIFICATION` |
+| Validators | `tools/validators/focus_mode/` | Repo-wide validator tooling. | `PROPOSED/NEEDS_VERIFICATION` |
+| Release candidate | `release/candidates/focus_mode/anderson_county/` | Release decision candidate. | `PROPOSED/NEEDS_VERIFICATION` |
+| Correction notices | `release/corrections/focus_mode/anderson_county/` | Post-release correction control. | `PROPOSED/NEEDS_VERIFICATION` |
+| Rollback references | `release/rollback/focus_mode/anderson_county/` | Rollback control. | `PROPOSED/NEEDS_VERIFICATION` |
+| Public artifacts | `data/published/layers/focus_mode/anderson_county/` | Released data artifacts only. | `PROPOSED/NEEDS_VERIFICATION` |
+
+## 9.5 Proposed responsibility-rooted tree
+
+```text
+docs/
+  focus-mode/
+    counties/
+      anderson_county/
+        anderson_county_focus_mode_build_plan.md
+        README.md
+
+data/
+  registry/
+    sources/
+      focus_mode/
+        anderson_county/
+          SRC-ANDERSON-COUNTY.yaml
+          SRC-GARNETT.yaml
+  raw/
+    focus_mode/
+      anderson_county/
+        .gitkeep
+  work/
+    focus_mode/
+      anderson_county/
+        .gitkeep
+  quarantine/
+    focus_mode/
+      anderson_county/
+        .gitkeep
+  processed/
+    focus_mode/
+      anderson_county/
+        .gitkeep
+  catalog/
+    focus_mode/
+      anderson_county/
+        .gitkeep
+  published/
+    layers/
+      focus_mode/
+        anderson_county/
+          .gitkeep
+
+contracts/
+  focus_mode/
+    counties/
+      anderson_county/
+        README.md
+
+schemas/
+  contracts/
+    v1/
+      focus_mode/
+        counties/
+          anderson_county/
+            README.md
+
+policy/
+  focus_mode/
+    counties/
+      anderson_county/
+        README.md
+
+fixtures/
+  focus_mode/
+    counties/
+      anderson_county/
+        valid/
+        invalid/
+
+release/
+  candidates/
+    focus_mode/
+      anderson_county/
+  corrections/
+    focus_mode/
+      anderson_county/
+  rollback/
+    focus_mode/
+      anderson_county/
+```
+
+## 9.6 Placement prohibitions
+
+- Do not create a root-level `anderson_county/`, `anderson/`, `county_plans/`, `evidence/`, `receipts/`, `proofs/`, `sources/`, or `published/` folder.
+- Do not place trust-bearing release manifests, EvidenceBundles, receipts, or proofs under `artifacts/`.
+- Do not place schemas beside docs merely for convenience.
+- Do not put policy rules under `release/` or `docs/`.
+- Do not let public UI read `data/raw`, `data/work`, `data/quarantine`, or direct canonical/internal stores.
+- Do not treat this Markdown file as implementation or publication.
+
+## 9.7 File existence statement
+
+This plan **does not claim** that any proposed Anderson County file exists in the repository. It only creates this downloadable planning artifact in the current session workspace.
+
+---
+
+# 10. Build phases
+
+## 10.1 Ordered phase table
+
+| Phase | Entry gate | Outputs | Exit validation | Rollback posture |
+|---:|---|---|---|---|
+| 0. Collision and path verification | Repo mounted or accessible index/search checked. | Collision memo, path decision, Directory Rules note. | Anderson absence confirmed or plan aborted. | Stop; no files created. |
+| 1. Documentation control | Directory Rules path selected. | County README/control and plan doc. | Docs lint; truth labels; no implementation claims. | Remove candidate doc; retain decision note. |
+| 2. Source ledger/admission | SourceDescriptor schema available or reused. | County/city source descriptors and source-role limits. | Rights/currentness/source-role checklist passes. | Quarantine source descriptors. |
+| 3. Boundary and policy | Boundary text approved for fixtures. | Policy reason codes, allow/deny/abstain rules. | Invalid fixtures deny/abstain as expected. | Revert policy bundle. |
+| 4. Fixtures and validators | Fixture home verified. | Valid/invalid JSON fixtures. | No-network validation passes. | Remove fixtures or mark quarantined. |
+| 5. Mock governed API/UI | Shared response envelope available. | Mock `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` responses; UI panel stubs. | Public UI cannot reach RAW/WORK/QUARANTINE. | Disable county route. |
+| 6. Dry-run release proof | Release candidate home verified. | Candidate ReleaseManifest, CitationValidationReport, AIReceipt, rollback ref. | Dry-run only; no public publication. | Delete/revoke candidate release. |
+| 7. Optional minimal publication | Reviews complete, policy passes, rights clear. | Public-safe source-card layer only. | Release manifest signed/approved, rollback target exists. | Roll back to prior release or withdraw. |
+
+## 10.2 Mermaid dependency graph
+
+```mermaid
+graph TD
+  P0[Phase 0 collision/path verification] --> P1[Phase 1 docs control]
+  P1 --> P2[Phase 2 source ledger/admission]
+  P2 --> P3[Phase 3 boundary/policy]
+  P3 --> P4[Phase 4 fixtures/validators]
+  P4 --> P5[Phase 5 mock governed API/UI]
+  P5 --> P6[Phase 6 dry-run release proof]
+  P6 --> P7[Phase 7 optional minimal publication]
+  P2 --> R[Rights/currentness/sensitivity review]
+  R --> P6
+  P3 --> N[Negative-path denial pack]
+  N --> P5
+```
+
+---
+
+# 11. First PR sequence
+
+Live-source integration and public release are **not** first-PR work. The first PR should be a verification, documentation, source-ledger, fixture, policy, and mock-response PR only.
+
+| Order | PR slice | Contents | Explicit non-goal |
+|---:|---|---|---|
+| 1 | Verification and documentation control | Anderson collision memo, Directory Rules path note, county plan placement, county README stub. | No source ingestion. |
+| 2 | Source ledger/admission and public-safe boundary | SourceDescriptor candidates for Anderson County official site and City of Garnett; boundary record. | No public display yet. |
+| 3 | Contracts/schemas or shared-object reuse | Reuse existing SourceDescriptor/EvidenceRef/PolicyDecision/RuntimeResponseEnvelope schemas where verified; otherwise propose minimal county extensions. | No duplicate schema authority. |
+| 4 | Valid and invalid fixtures | Source card valid fixtures; title/access, zoning/legal, emergency, live safety, sensitive-location invalid fixtures. | No real sensitive geometry. |
+| 5 | Policy and validators | Reason-code policy, citation requirement, source-role anti-collapse validation. | No policy bypass. |
+| 6 | Mock governed API/UI | Mock Anderson responses and panels using finite outcomes. | No live source connector. |
+| 7 | Dry-run release proof | Candidate ReleaseManifest, AIReceipt, CitationValidationReport, RollbackPlan stub. | No publication. |
+| 8 | Optional minimal public-safe publication | Only after review, rights, policy, evidence, release, correction, rollback pass. | Not part of first PR. |
+
+---
+
+# 12. Acceptance checklist
+
+## 12.1 Governance and evidence
+
+- [ ] Anderson County is absent from completed/collision register at time of merge.
+- [ ] Live repo search and county index check are recorded.
+- [ ] Private branch/prior artifact uncertainty is recorded as `NEEDS_VERIFICATION` until resolved.
+- [ ] Every public claim resolves through EvidenceRef to EvidenceBundle or abstains.
+- [ ] Generated narrative is not treated as evidence.
+
+## 12.2 Source-role separation
+
+- [ ] County official web is administrative/source-discovery context only.
+- [ ] City web is municipal/source-discovery context only.
+- [ ] Census/NASS/KDWP/KDOT/KSHS/FEMA/KGS candidates have separate source roles.
+- [ ] Generated narrative source role is distinct and cannot authorize claims.
+
+## 12.3 Public/sensitive boundary
+
+- [ ] Property title/access requests deny.
+- [ ] Zoning/legal/compliance determinations deny or abstain.
+- [ ] Emergency/public-safety operations deny.
+- [ ] Live trail/facility status abstains unless current official notice is admitted.
+- [ ] Exact sensitive locations deny.
+- [ ] Water-right/private-well/potability/health questions deny or abstain.
+
+## 12.4 Currentness and expiry
+
+- [ ] Each source records checked date.
+- [ ] Each source records publication/effective/reporting period when available.
+- [ ] Each answer exposes time basis.
+- [ ] Stale-source behavior returns abstention or revalidation notice.
+
+## 12.5 Product and UI
+
+- [ ] Header warning chip is visible.
+- [ ] Boundary panel is visible.
+- [ ] Evidence Drawer opens from each public card/layer.
+- [ ] Denial and abstention panels are not styled as errors.
+- [ ] Official-authority redirects are shown for legal/property/safety requests.
+
+## 12.6 Repository placement
+
+- [ ] Path is checked against Directory Rules.
+- [ ] Human docs are under `docs/`.
+- [ ] Schemas, contracts, policy, fixtures, data, release, corrections, rollback use responsibility roots.
+- [ ] No root-level county or parallel authority homes are created.
+- [ ] Drift/ADR note exists if path convention diverges.
+
+## 12.7 Validation
+
+- [ ] Valid fixtures pass.
+- [ ] Invalid fixtures fail closed.
+- [ ] Citation validation blocks unsupported claims.
+- [ ] Policy validation blocks denied request classes.
+- [ ] Public UI/API tests prove no RAW/WORK/QUARANTINE access.
+
+## 12.8 Release
+
+- [ ] ReleaseManifest exists before public exposure.
+- [ ] ReviewRecord exists.
+- [ ] Rights/sensitivity/currentness recorded.
+- [ ] Rollback target exists.
+- [ ] Public artifact digest/spec_hash recorded.
+
+## 12.9 Correction
+
+- [ ] CorrectionNotice schema/path verified.
+- [ ] User correction path exists.
+- [ ] Stale/broken source correction path exists.
+- [ ] Corrected claims update EvidenceBundle/release references.
+
+## 12.10 Rollback
+
+- [ ] RollbackPlan exists.
+- [ ] Prior safe release target exists.
+- [ ] Rollback drill documented.
+- [ ] Public UI can show rolled-back/deprecated state.
+
+---
+
+# 13. Fixture plan
+
+## 13.1 Valid fixture table
+
+| Fixture | Purpose | Expected outcome |
+|---|---|---|
+| `valid/anderson_official_source_card.answer.json` | County official-source context with disclaimer. | `ANSWER` |
+| `valid/garnett_municipal_source_card.answer.json` | Garnett official-source context. | `ANSWER` |
+| `valid/anderson_boundary_notice.answer.json` | Boundary panel content. | `ANSWER` |
+| `valid/candidate_source_deferred.abstain.json` | Candidate source not yet admitted. | `ABSTAIN` |
+| `valid/source_role_explanation.answer.json` | Explains source roles without collapsing them. | `ANSWER` |
+
+## 13.2 Invalid/fail-closed fixture table
+
+| Fixture | Risk targeted | Expected outcome | Reason code |
+|---|---|---|---|
+| `invalid/property_title_access_request.deny.json` | Title/access/property profile. | `DENY` | `PROPERTY_TITLE_ACCESS_DENIED` |
+| `invalid/zoning_legal_determination_request.deny.json` | Legal/zoning/compliance advice. | `DENY` | `LEGAL_ZONING_DETERMINATION_BLOCKED` |
+| `invalid/emergency_operations_request.deny.json` | Public-safety operations. | `DENY` | `PUBLIC_SAFETY_OPERATIONAL_DENIED` |
+| `invalid/live_trail_status_without_notice.abstain.json` | Current trail/facility status. | `ABSTAIN` | `LIVE_RECREATION_STATUS_UNVERIFIED` |
+| `invalid/exact_sensitive_location_request.deny.json` | Sensitive/vulnerable locations. | `DENY` | `SENSITIVE_LOCATION_WITHHELD` |
+| `invalid/private_well_potability_request.abstain.json` | Health/potability/private well. | `ABSTAIN` | `HEALTH_OR_POTABILITY_UNSUPPORTED` |
+| `invalid/raw_source_access_request.deny.json` | RAW/WORK/QUARANTINE access. | `DENY` | `RAW_WORK_QUARANTINE_BLOCKED` |
+| `invalid/uncited_generated_answer.error.json` | Generated text without evidence. | `ERROR/ABSTAIN` | `CITATION_VALIDATION_FAILED` |
+
+## 13.3 Fixture-to-test matrix
+
+| Test | Fixtures | Must prove |
+|---|---|---|
+| Citation validator | valid answer fixtures + uncited invalid fixture | Every consequential claim has resolvable EvidenceRef. |
+| Policy deny tests | title/access, zoning, emergency, exact sensitive location | Denied requests never leak content. |
+| Abstention tests | candidate source, live trail status, private well/potability | Missing current/evidence/source role leads to `ABSTAIN`. |
+| Source-role tests | official source cards | Administrative/municipal/statistical/scientific/generated roles do not collapse. |
+| Trust-membrane tests | raw source access | Public UI/API cannot read RAW/WORK/QUARANTINE. |
+| Boundary panel tests | boundary notice fixture | Boundary appears in header, Evidence Drawer, answer/deny/abstain panels. |
+
+## 13.4 Highest-risk invalid fixture pack
+
+The first invalid pack should target Anderson’s defining public-safe boundary:
+
+```text
+fixtures/focus_mode/counties/anderson_county/invalid/high_risk_boundary_pack/
+  01_property_title_access_request.deny.json
+  02_zoning_legal_determination_request.deny.json
+  03_emergency_operations_request.deny.json
+  04_live_trail_status_without_current_notice.abstain.json
+  05_exact_sensitive_location_request.deny.json
+  06_private_well_potability_request.abstain.json
+  07_raw_work_quarantine_access_request.deny.json
+  08_generated_uncited_answer.abstain.json
+```
+
+---
+
+# 14. Risk register
+
+| Risk | Likelihood | Impact | Required mitigation | Release posture |
+|---|---:|---:|---|---|
+| County web treated as legal authority. | High | High | Boundary banner, official-record redirect, legal-reliance fixture. | Block release until deny/redirect tested. |
+| Property-service pages become title/access or living-person profiles. | High | High | Deny property/title/access requests; no parcel/living-person profile in public slice. | Block. |
+| City code/zoning context becomes legal/compliance decision. | Medium | High | Source-role anti-collapse; legal/zoning denial fixtures. | Block. |
+| Emergency/public-safety pages become live guidance. | Medium | High | Operational-public-safety deny policy. | Block. |
+| Trail/recreation context becomes live safety or closure advice. | Medium | Medium-High | Current official notice requirement; abstain when missing. | Block live-status claims. |
+| Candidate sources used before admission. | Medium | High | Candidate-source status, source-admission checklist, release gate. | Block. |
+| Public visibility mistaken for redistribution rights. | Medium | High | Rights review, metadata-only mode when uncertain. | Block derivative display. |
+| Sensitive locations exposed. | Medium | High | Generalization/redaction and exact-location denial. | Block. |
+| Aggregate data used for property/health/water-right claims. | Medium | High | Aggregate-only labels and deny/abstain rules. | Block. |
+| Stale pages produce outdated guidance. | Medium | Medium | Checked dates, stale-after policy, currentness panel. | Restrict or abstain. |
+| Repository path drift creates parallel authority. | Medium | Medium | Directory Rules review and ADR/drift register if divergent. | Block merge if unresolved. |
+| Release without rollback. | Low-Med | High | ReleaseManifest + RollbackPlan required. | Block publication. |
+
+---
+
+# 15. Source seed list
+
+## 15.1 Official sources checked during this run
+
+| Source name | Authority role | Verified anchor | Intended use | Allowed claim scope | Rights limitations | Sensitivity limitations | Operational/currentness limitations | Status |
+|---|---|---|---|---|---|---|---|---|
+| Anderson County official website | County administrative/public information source | County departments, public safety, property services, and legal-reliance/public-convenience disclaimer. | Official-source card, county service-category context, legal-reliance boundary. | Source discovery, department/category context, public-convenience warning. | Public visibility is not derivative-display permission; terms require review. | No property title/access/living-person profiles; no emergency operations. | Website content may change; legal reliance requires official records. | `CONFIRMED checked / source admission PROPOSED` |
+| City of Garnett official website | Municipal administrative/public information source | City codes, municipal court, recreation, utilities, zoning, payments/forms, contact, public event/service anchors. | Municipal source card and Garnett civic context. | Source discovery and municipal category context only. | Public visibility is not derivative-display permission; terms require review. | No zoning/legal/compliance determinations; no live facility status unless current notice admitted. | Pages may change; current obligations require official authority. | `CONFIRMED checked / source admission PROPOSED` |
+| KFM `COUNTY_INDEX.md` | Repository planning/control evidence | Anderson row observed as `not-started`; index caveat says seeded defaults need validator reconciliation. | Collision and path-planning evidence. | Repo planning status only; not proof of absence. | Internal repo/documentation use; verify current branch/commit before acting. | Not a public data source. | Index may be stale or incomplete. | `CONFIRMED checked / absence NEEDS_VERIFICATION` |
+| Directory Rules.pdf | KFM governance doctrine | Placement/lifecycle/responsibility-root doctrine. | Path basis and placement prohibitions. | Repository placement governance. | Not a source of county facts. | Not a release decision. | Exact path still requires repo verification. | `CONFIRMED doctrine` |
+
+## 15.2 Candidate sources for later verification
+
+| Candidate source | What must be verified before admission | Potential Anderson use | Boundary |
+|---|---|---|---|
+| U.S. Census Bureau QuickFacts / data.census.gov | Direct Anderson County page/table, vintage, geography, units, API/download terms. | Population/area/demographic context. | Aggregate only; not individual/household truth. |
+| USDA NASS QuickStats / Census of Agriculture | County FIPS, year, commodity/statistic/unit, license, query reproducibility. | Working-landscape aggregates. | Aggregate only; not farm/property/owner profile. |
+| KDWP Prairie Spirit Trail / state recreation official page | Official current page, facility/trail notices, terms, date, allowed derivative display. | Public recreation context. | No live safety/closure advice unless current notice admitted. |
+| Kansas Historical Society | Anderson County/Garnett pages, publication date, rights, source-role limits. | Historical orientation. | No archaeology/sacred/burial precision; interpretation bounded. |
+| KDOT county maps / road datasets | Dataset date, geometry authority, terms, update cadence, security review. | Transportation context. | No vulnerability/live closure/response guidance. |
+| FEMA Map Service Center / NFHL | Effective dates, map panel IDs, terms, official-use limitations. | Floodplain context. | No insurance/legal/emergency/property-level determination. |
+| Kansas Department of Agriculture / Division of Water Resources | Floodplain/DWR source authority, effective date, rights, limitations. | Floodplain/water-governance context. | No water-right/private-well/potability determination. |
+| Kansas Geological Survey | Geology/hydrogeology/groundwater datasets, publication date, terms. | Geology/water context. | Scientific context only; no property/well/potability conclusion. |
+| KDHE | Environmental/health reports, reporting period, terms. | Environmental context. | No individualized health/safety judgment. |
+| NOAA/NWS/NCEI Storm Events | Event source, date, geometry/time, warning limitations. | Historical hazard context. | Not live emergency guidance. |
+| USGS National Map/NHD/GNIS | Dataset version, geometry, terms. | Hydrography/place-name context. | No water-right/private-well/legal access. |
+| EPA ecoregions | Dataset version, geometry, terms. | Ecological context. | Generalized context only; no exact sensitive species. |
+
+## 15.3 Source-admission checklist
+
+- [ ] Source URL and publisher verified.
+- [ ] Authority role recorded.
+- [ ] Source role recorded separately from generated narrative.
+- [ ] Publication, effective, reporting, retrieval, and expiry dates captured where applicable.
+- [ ] Rights/terms/redistribution/derivative-display status recorded.
+- [ ] Geometry authority and spatial grain recorded.
+- [ ] Sensitivity and redaction obligations recorded.
+- [ ] Allowed claim scope and denied claim scope recorded.
+- [ ] EvidenceRef resolves to EvidenceBundle.
+- [ ] CitationValidationReport passes.
+- [ ] PolicyDecision passes.
+- [ ] ReviewRecord exists before release.
+- [ ] ReleaseManifest and RollbackPlan exist before publication.
+
+---
+
+# 16. Open verification questions
+
+| Area | Question | Status |
+|---|---|---|
+| Collision and existing-plan verification | Does any private branch, prior chat, artifact, or hidden repo path already contain Anderson County plan content? | `NEEDS_VERIFICATION` |
+| Canonical repository path | Should Anderson use `docs/focus-mode/counties/anderson_county/` or `docs/focus-modes/anderson-county/`? | `NEEDS_VERIFICATION` |
+| Shared contract/schema/policy reuse | Which shared SourceDescriptor/EvidenceRef/PolicyDecision/RuntimeResponseEnvelope schemas already exist and should be reused? | `NEEDS_VERIFICATION` |
+| Source authority | Which official Anderson/Garnett/Census/NASS/KDWP/KSHS/KDOT/FEMA/KGS sources are authoritative for each claim type? | `NEEDS_VERIFICATION` |
+| Rights and derivative display | Which checked/candidate sources allow public derivative display, screenshots, extracted text, or metadata-only use? | `NEEDS_VERIFICATION` |
+| Geometry authority | What is the official county/city/road/trail/floodplain geometry source and version? | `NEEDS_VERIFICATION` |
+| Temporal fitness | What are source publication/effective/reporting periods and stale-after policies? | `NEEDS_VERIFICATION` |
+| Privacy and living-person duties | What property/person data must be excluded or restricted beyond default denial? | `NEEDS_VERIFICATION` |
+| Cultural or Tribal review duties | Are any Anderson County cultural, Tribal, sacred, burial, or archaeological contexts implicated? | `NEEDS_VERIFICATION` |
+| Ecological sensitivity | What exact species/habitat/location data must be redacted/generalized? | `NEEDS_VERIFICATION` |
+| Health and safety limitations | Which KDHE/NOAA/FEMA/KDWP/KDOT materials could be misread as current safety guidance? | `NEEDS_VERIFICATION` |
+| Correction machinery | Where do Anderson correction notices live and who approves them? | `NEEDS_VERIFICATION` |
+| Rollback machinery | What is the rollback target and drill procedure for Anderson release candidates? | `NEEDS_VERIFICATION` |
+| Release approval duties | Which stewards sign source, policy, rights, sensitivity, and release approvals? | `NEEDS_VERIFICATION` |
+
+---
+
+# 17. Recommended first milestone
+
+## 17.1 Milestone name
+
+**Milestone ACFM-01 — Anderson County Official-Source Boundary Dry Run**
+
+## 17.2 Milestone statement
+
+Create a no-live-ingest, no-public-release Anderson County Focus Mode dry run that proves the county/city official-source cards, legal-reliance/property/legal/safety boundary panel, finite outcomes, valid/invalid fixtures, and mock governed API/UI responses without exposing RAW/WORK/QUARANTINE, sensitive locations, legal/property determinations, or live safety guidance.
+
+## 17.3 Deliverables
+
+| Deliverable | Status target |
+|---|---|
+| Collision/path verification memo | `CONFIRMED/NEEDS_VERIFICATION` |
+| Anderson County README/control stub | `PROPOSED` |
+| SourceDescriptor candidates for county and Garnett official sites | `PROPOSED` |
+| Boundary notice object | `PROPOSED` |
+| Valid official-source card fixtures | `PROPOSED` |
+| Invalid high-risk boundary fixtures | `PROPOSED` |
+| Policy reason-code pack | `PROPOSED` |
+| Mock RuntimeResponseEnvelope examples | `PROPOSED` |
+| Dry-run CitationValidationReport and AIReceipt examples | `PROPOSED` |
+| RollbackPlan stub | `PROPOSED` |
+
+## 17.4 Definition-of-done checklist
+
+- [ ] Anderson collision search recorded.
+- [ ] Directory Rules path basis recorded.
+- [ ] County/city official source cards have allowed/denied claim scopes.
+- [ ] Boundary appears in title/subtitle/header/Evidence Drawer/answer/deny/abstain/risk/fixture outputs.
+- [ ] Property/title/access fixture denies.
+- [ ] Zoning/legal fixture denies or abstains.
+- [ ] Emergency/public-safety fixture denies.
+- [ ] Live recreation/facility fixture abstains without current official notice.
+- [ ] Exact sensitive-location fixture denies.
+- [ ] Raw/unpublished source fixture denies.
+- [ ] No public release claimed.
+
+## 17.5 Go/no-go table
+
+| Gate | Go condition | No-go condition |
+|---|---|---|
+| Collision | No Anderson collision found in live repo and known artifacts. | Existing Anderson plan found. |
+| Path | Directory Rules-compliant human-doc path selected. | Path creates parallel root or unresolved conflict with no ADR note. |
+| Evidence | Source cards cite checked official sources. | Claims lack EvidenceRef/EvidenceBundle plan. |
+| Boundary | Deny/abstain fixtures cover property/legal/safety/sensitive cases. | Boundary missing or unenforced. |
+| Rights | Source rights limitations recorded. | Rights assumed from public visibility. |
+| Release | Dry-run only; release manifest candidate and rollback stub exist. | Public publication attempted before review. |
+
+---
+
+# Appendix A — Public-safe narrative skeleton
+
+## A.1 Future public-facing outline
+
+1. **Welcome to Anderson County Focus Mode**
+   - What this mode can show.
+   - What it will not decide.
+   - Boundary chip: not title/access, legal/zoning, emergency, live safety, or sensitive-location guidance.
+
+2. **Official source starting points**
+   - Anderson County official web card.
+   - City of Garnett official web card.
+   - Source-role labels and checked dates.
+
+3. **How to read the map**
+   - Public-safe civic anchors.
+   - Candidate layers marked verification pending.
+   - Evidence Drawer instructions.
+
+4. **Working landscape and public context**
+   - Future aggregate agriculture, land cover, transportation, history, recreation, water/floodplain context.
+   - Aggregate and source-role limitations.
+
+5. **Why some requests are denied or abstained**
+   - Property/title/access.
+   - Zoning/legal/compliance.
+   - Emergency/public-safety operations.
+   - Live trail/facility/road safety.
+   - Exact sensitive locations.
+   - Water/potability/health/private wells.
+
+6. **Corrections and source updates**
+   - How users report stale or broken sources.
+   - How KFM corrects or rolls back a release.
+
+## A.2 Narrative constraints
+
+- Each claim must have EvidenceRef support.
+- Currentness must be visible.
+- Source role must be visible.
+- Boundary must be visible.
+- Generated narrative must not certify evidence.
+- Every unsupported claim must abstain.
+
+---
+
+# Appendix B — Required negative-path reason-code categories
+
+| Category | Reason codes | Outcome |
+|---|---|---|
+| Evidence closure | `EVIDENCE_UNRESOLVED`, `CITATION_VALIDATION_FAILED`, `SOURCE_ROLE_CONFLICT` | `ABSTAIN/ERROR` |
+| Currentness | `TEMPORAL_SCOPE_UNFIT`, `LIVE_RECREATION_STATUS_UNVERIFIED`, `STALE_SOURCE` | `ABSTAIN` |
+| Rights | `RIGHTS_UNVERIFIED`, `DERIVATIVE_DISPLAY_NOT_AUTHORIZED` | `ABSTAIN/DENY` |
+| Property/legal | `PROPERTY_TITLE_ACCESS_DENIED`, `LEGAL_ZONING_DETERMINATION_BLOCKED`, `OFFICIAL_RECORD_REQUIRED` | `DENY/ABSTAIN` |
+| Public safety/operations | `PUBLIC_SAFETY_OPERATIONAL_DENIED`, `LIVE_EMERGENCY_GUIDANCE_DENIED`, `INFRASTRUCTURE_VULNERABILITY_DENIED` | `DENY` |
+| Sensitive location | `SENSITIVE_LOCATION_WITHHELD`, `CULTURAL_REVIEW_REQUIRED`, `ECOLOGY_GEOPRIVACY_REQUIRED` | `DENY/ABSTAIN` |
+| Health/water | `HEALTH_OR_POTABILITY_UNSUPPORTED`, `PRIVATE_WELL_INFERENCE_DENIED`, `WATER_RIGHT_INTERPRETATION_DENIED` | `DENY/ABSTAIN` |
+| Lifecycle/trust membrane | `RAW_WORK_QUARANTINE_BLOCKED`, `UNPUBLISHED_CANDIDATE_BLOCKED`, `DIRECT_MODEL_OUTPUT_BLOCKED` | `DENY` |
+
+---
+
+# Appendix C — References and evidence-use note
+
+## C.1 References checked during this run
+
+| Ref ID | Source | URL | Checked date | Source-role limitations |
+|---|---|---|---|---|
+| `SRC-ANDERSON-COUNTY` | Anderson County official website | `https://www.andersoncountyks.org/` | 2026-06-11 | County administrative/public information source. Supports public-source discovery, department/service category context, and legal-reliance boundary. Does not support title, access, legal/zoning, emergency, live safety, living-person, or sensitive-location claims. |
+| `SRC-GARNETT` | City of Garnett official website | `https://www.simplygarnett.com/` | 2026-06-11 | Municipal administrative/public information source. Supports municipal source discovery and category context. Does not support KFM legal/zoning/compliance determinations or live facility/safety claims. |
+| `SRC-KFM-COUNTY-INDEX` | KFM live `docs/focus-mode/counties/COUNTY_INDEX.md` | `https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/focus-mode/counties/COUNTY_INDEX.md` | 2026-06-11 | Repository planning/control evidence only. `not-started` does not prove no external/prior/private plan exists. |
+| `SRC-DIRRULES` | Directory Rules.pdf | Attached KFM doctrine file | 2026-06-11 | Repository placement doctrine. Supports path responsibility and lifecycle placement rules, not county facts or implementation proof. |
+
+## C.2 Material collision references from live repo search
+
+| Rejected county | Collision path observed |
+|---|---|
+| Butler County | `docs/focus-mode/counties/butler_county/butler_county_focus_mode_build_plan.md` |
+| Cheyenne County | `docs/focus-mode/counties/cheyenne_county/cheyenne_county_focus_mode_build_plan.md` |
+| Graham County | `docs/focus-mode/counties/graham_county/graham_county_focus_mode_build_plan.md` |
+| Gray County | `docs/focus-mode/counties/gray_county/gray_county_focus_mode_build_plan.md` |
+
+## C.3 Evidence-use note
+
+This Anderson County Focus Mode Build Plan is **not** itself an EvidenceBundle, source admission, legal determination, title/access record, zoning determination, emergency advisory, public-safety notice, recreation/facility safety notice, water-right or potability finding, ReleaseManifest, CorrectionNotice, RollbackPlan, or published KFM product. It is a planning artifact that records a proposed safe build sequence, official-source seeds checked during this run, collision-search status, and the public-safe boundary that must be enforced before any public Anderson County Focus Mode release.
+
