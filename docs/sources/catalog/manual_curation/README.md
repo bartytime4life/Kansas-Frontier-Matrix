@@ -2,60 +2,61 @@
 doc_id: kfm://doc/sources-catalog-manual-curation
 title: Manual Curation — Sources to Catalog
 type: standard
-version: v2
+version: v3
 status: draft
 owners: Source steward · Docs steward
 created: 2026-05-13
-updated: 2026-05-22
+updated: 2026-06-11
+supersedes: v2 (2026-05-22)
 policy_label: public
-related: [
-  docs/doctrine/directory-rules.md,
-  docs/doctrine/trust-membrane.md,
-  docs/doctrine/lifecycle-law.md,
-  docs/doctrine/truth-posture.md,
-  docs/sources/SOURCE_DESCRIPTOR_STANDARD.md,
-  docs/sources/catalog/README.md,
-  docs/sources/catalog/local_upload.md,
-  docs/sources/catalog/local_upload/user-file-upload.md,
-  docs/sources/catalog/loc/iiif-presentations.md,
-  docs/architecture/contract-schema-policy-split.md,
-  docs/architecture/review/README.md,
-  docs/governance/separation-of-duties.md,
-  docs/registers/DRIFT_REGISTER.md,
-  docs/adr/ADR-0001-schema-home.md
-]
-tags: [kfm, sources, catalog, curation, governance, lifecycle, stewardship]
-notes: [
-  "Path PROPOSED — verify against mounted-repo evidence before treating as canonical.",
-  "`connectors/local_upload/` is CONFIRMED at the doctrine level (Directory Rules §7.3); file presence at any commit is NEEDS VERIFICATION. Truth labels in v2 reflect that split.",
-  "v2 adds sibling cross-links to docs/sources/catalog/local_upload.md (family governance) and the two product-page examples; adds an evidence-basis sub-appendix; no Section-1 through Section-15 anchors changed.",
-  "All other schema and route references PROPOSED unless verified.",
-  "Cite-or-abstain throughout."
-]
+related:
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - docs/sources/source-roles.md
+  - docs/sources/catalog/README.md
+  - docs/sources/catalog/OPEN-QUESTIONS.md
+  - docs/sources/catalog/local_upload/README.md
+  - docs/sources/catalog/local_upload/user-file-upload.md
+  - docs/sources/catalog/loc/iiif-presentations.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/architecture/review/README.md
+  - docs/governance/separation-of-duties.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/adr/ADR-0001-schema-home.md
+tags: [kfm, sources, catalog, curation, governance, lifecycle, stewardship, source-roles]
+notes:
+  - "v3 polish pass: aligned with docs/sources/catalog/README.md v0.4 and docs/sources/source-roles.md; clarified that this file is methodology, not the manual_curation source-family page."
+  - "Path PROPOSED: docs/sources/catalog/manual_curation.md remains a candidate home; naming collision with a possible manual_curation/ family folder is flagged for OPEN-QUESTIONS / drift review."
+  - "connectors/local_upload/ is CONFIRMED at the Directory Rules doctrine level; concrete repo-file presence remains NEEDS VERIFICATION without mounted-repo inspection."
+  - "All schema, route, validator, policy-package, and release-path references are PROPOSED unless verified against the mounted repo."
+  - "Cite-or-abstain throughout. EvidenceBundle outranks generated language."
 [/KFM_META_BLOCK_V2] -->
 
 # Manual Curation — Sources to Catalog
 
-> The steward-led path that walks a source from admission through review, validation, and catalog closure — never around the gates, always through them.
+> The steward-led path that walks source material from admission through review, validation, evidence assembly, and catalog closure — never around the gates, always through them.
 
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![Doc type](https://img.shields.io/badge/doc-standard-blue)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-informational)
-![Authority](https://img.shields.io/badge/authority-doctrine%20%C2%B7%20reference-lightgrey)
+![Authority](https://img.shields.io/badge/authority-docs--standard-lightgrey)
 ![Policy](https://img.shields.io/badge/policy-deny--by--default-critical)
 ![Truth posture](https://img.shields.io/badge/posture-cite--or--abstain-success)
 ![Truth class](https://img.shields.io/badge/truth-receipt%E2%89%A0proof%E2%89%A0catalog%E2%89%A0publication-blueviolet)
 ![Evidence basis](https://img.shields.io/badge/evidence-docs--only-orange)
 ![Owners](https://img.shields.io/badge/owners-source%20steward%20%C2%B7%20docs%20steward-orange)
-![Last updated](https://img.shields.io/badge/updated-2026--05--22-lightgrey)
+![Last updated](https://img.shields.io/badge/updated-2026--06--11-lightgrey)
 
-**Status:** draft · **Version:** v2 · **Owners:** Source steward · Docs steward · **Last updated:** 2026-05-22
+**Status:** draft · **Version:** v3 · **Owners:** Source steward · Docs steward · **Last updated:** 2026-06-11
 
 ---
 
 ## Quick jump
 
-- [0. Status & Authority](#0-status--authority)
+- [0. Status and authority](#0-status-and-authority)
 - [1. Purpose](#1-purpose)
 - [2. Scope](#2-scope)
 - [3. Repo fit](#3-repo-fit)
@@ -68,29 +69,31 @@ notes: [
 - [10. Gate failures and reason codes](#10-gate-failures-and-reason-codes)
 - [11. Sensitive-lane curation](#11-sensitive-lane-curation)
 - [12. Catalog-closure checklist](#12-catalog-closure-checklist)
-- [13. Worked example](#13-worked-example)
+- [13. Worked examples](#13-worked-examples)
 - [14. Anti-patterns](#14-anti-patterns)
 - [15. Related docs](#15-related-docs)
-- [Verification backlog](#verification-backlog)
+- [16. Verification backlog](#16-verification-backlog)
+- [17. Changelog](#17-changelog)
 
 ---
 
-## 0. Status & Authority
+## 0. Status and authority
 
 | Field | Value |
 |---|---|
-| **Document type** | Standard doc — curation methodology and steward reference |
-| **Authority of this guide** | CONFIRMED doctrine (lifecycle, trust membrane, cite-or-abstain). PROPOSED operational details. |
-| **Authority of any specific path quoted here** | Mixed — `connectors/local_upload/` is CONFIRMED in Directory Rules §7.3 at the doctrine level; specific file presence at any commit and all other paths remain PROPOSED until verified against mounted-repo evidence |
-| **Proposed canonical home** | `docs/sources/catalog/manual_curation.md` (PROPOSED) |
-| **Owner** | Source steward |
-| **Co-owner** | Docs steward |
-| **Reviewers required for change** | Source steward + Docs steward; ADR if it alters the SourceDescriptor lifecycle or catalog-closure rule |
-| **Schema-home convention** | `schemas/contracts/v1/<…>` per ADR-0001 (PROPOSED reference) |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Promotion is a **governed state transition, not a file move.** |
+| **Document type** | Standard doc — curation methodology and steward reference. |
+| **Authority of this guide** | CONFIRMED for doctrine it restates: lifecycle, trust membrane, cite-or-abstain, source-role anti-collapse, and deny-by-default posture. PROPOSED for operational details, exact paths, exact schemas, tools, route names, and workflow names. |
+| **Authority of any specific path quoted here** | Mixed. `connectors/local_upload/` is CONFIRMED as a Directory Rules connector slot at the doctrine level. Concrete file presence at any commit, and all other path references in this document, are NEEDS VERIFICATION until checked against mounted-repo evidence. |
+| **Proposed canonical home** | `docs/sources/catalog/manual_curation.md` — PROPOSED. See naming-collision note below. |
+| **Potential naming conflict** | `manual_curation/` may also be a source-family folder in the catalog lane. If that folder is retained, this methodology file may need to move to `docs/sources/catalog/guides/manual-curation.md` or a similar docs-guide home by ADR or per-root README decision. |
+| **Owner** | Source steward. |
+| **Co-owner** | Docs steward. |
+| **Reviewers required for change** | Source steward + Docs steward. Add sensitivity reviewer, policy steward, domain steward, or rights-holder representative when the change affects sensitive lanes, source roles, rights, policy, or release posture. ADR required if the change alters lifecycle, schema-home, source-role, or catalog-closure rules. |
+| **Schema-home convention** | `schemas/contracts/v1/<...>` per ADR-0001 doctrine; concrete file presence NEEDS VERIFICATION. |
+| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Promotion is a governed state transition, not a file move. |
 
 > [!IMPORTANT]
-> This document **explains** a workflow. It does not certify that the workflow is implemented in any specific mounted-repo path, tool, schema, or route. Repo-state claims here are PROPOSED or NEEDS VERIFICATION unless verified against the working tree.
+> This document explains **how a steward should curate** source material. It does not certify that the workflow is implemented in any mounted-repo tool, schema, route, queue, validator, or CI job. Repo-state claims remain PROPOSED or NEEDS VERIFICATION unless verified in the working tree.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -98,14 +101,14 @@ notes: [
 
 ## 1. Purpose
 
-Manual curation is the **human-driven path** that takes a source — a dataset, archive, descriptor, document, or candidate record — from admission to a catalog entry that is fit for release consideration. It is the slow, evidence-first counterpart to automated watchers and connectors, and it is the **only path** for source material whose rights, sensitivity, role, or evidence posture is unresolved.
+Manual curation is the **human-governed path** for source material that cannot safely advance by automation alone. It applies to datasets, archives, documents, local uploads, candidate features, and proposed source records whose rights, sensitivity, source role, provenance, evidence closure, or review state is unresolved.
 
 Manual curation exists because:
 
-1. **Source role cannot be inferred from convenience.** Authority, observation, regulatory, modeled, aggregate, administrative, candidate, and synthetic sources have different downstream obligations, and only a steward — not a watcher and not an AI assistant — can assign that role at admission. *(CONFIRMED doctrine — Atlas v1.1 §24.1.3 source-role anti-collapse register; Atlas card **KFM-P1-PROG-0007** — source descriptors and source-role registry.)*
-2. **Rights and sensitivity must be resolved before publication.** Unknown rights fail closed; sensitive classes (rare species, archaeology, living-person data, DNA, critical infrastructure, sacred places, private-landowner) deny by default until reviewed. *(CONFIRMED doctrine — Unified Implementation Architecture, source-registry §3.6; Atlas v1.1 §24.9.2 trust-membrane anti-patterns.)*
-3. **Catalog closure is gated.** A release candidate does not reach PUBLISHED until catalog records, provenance records, artifact manifests, evidence references, source roles, policy decisions, digests, review state, correction path, and rollback target agree. *(PROPOSED catalog-closure pattern; doctrinally CONFIRMED — Pass-10 **C4-01**, **C4-02**, **C4-04**, **C4-05**; Atlas cards **KFM-P26-PROG-0025** and **KFM-P27-FEAT-0004**.)*
-4. **AI and watchers are advisory at this stage.** They may suggest, score, score-explain, or fetch — they may not approve. `EvidenceBundle` outranks generated text. *(CONFIRMED doctrine — Atlas v1.1 §24.9.2 *"AI returns uncited language"* anti-pattern; *KFM Connected Dots Architecture Brief* AI-interpretation layer rules.)*
+1. **Source role cannot be inferred from convenience.** A source may be observational, regulatory, administrative, modeled, aggregate, candidate, synthetic, legal authority, context, or corroborating evidence. These roles are not interchangeable. The source role must be assigned deliberately and preserved downstream. See [`docs/sources/source-roles.md`](../source-roles.md).
+2. **Rights and sensitivity fail closed.** Unknown rights, unknown consent, unclear sovereignty, rare-species precision, archaeology precision, DNA/genomics, living-person data, and critical-infrastructure exposure do not become public by default.
+3. **Catalog closure is gated.** A release candidate is not catalog-closed until source descriptors, receipts, validation, EvidenceBundle references, policy decisions, review records, catalog metadata, correction path, and rollback target agree.
+4. **AI and watchers are advisory, not approving authorities.** They may fetch, summarize, score, compare, or explain. They may not approve admission, validation, catalog closure, publication, or source-role upgrade. EvidenceBundle outranks generated language.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -113,31 +116,34 @@ Manual curation exists because:
 
 ## 2. Scope
 
-This document covers the steward-driven steps that move source material from **admission** through **catalog closure**. It is operational reference, not invariant doctrine; the invariants live in Directory Rules and the encyclopedia.
+This document covers steward-led steps from **admission** through **catalog closure**. It is methodology and review guidance, not a machine contract.
 
-**In scope**
+### 2.1 In scope
 
-- Steward-led admission of new and updated sources.
+- Steward-led admission of new or changed sources.
 - Authoring and updating `SourceDescriptor` records.
 - Issuing `SourceActivationDecision` records.
-- Driving review queues for rights, sensitivity, evidence closure, and schema validation.
-- Resolving items returned from `QUARANTINE`.
-- Closing `CatalogRecord` entries with required source, schema, validation, policy, and release metadata.
-- Manual rebuild and re-issuance of curation artifacts when a correction is required.
+- Routing rights, sensitivity, source-role, evidence, and validation review.
+- Resolving materials returned to QUARANTINE.
+- Closing `CatalogRecord` entries with source, schema, validation, policy, proof, review, correction, and rollback metadata.
+- Rebuilding or reissuing curation artifacts when corrections require re-evaluation.
 
-**Out of scope**
+### 2.2 Out of scope
 
-- Object-family meaning (lives in `contracts/`).
-- Field-level schema shape (lives in `schemas/`).
-- Allow/deny/restrict/abstain rules (live in `policy/`).
-- Connector or watcher mechanics (live in `connectors/`, `tools/ingest/watchers/`).
-- Release decisions (live in `release/`).
-- Public-surface presentation (lives in `apps/explorer-web/`, `packages/ui/`).
-- Family-level governance for any specific source family (lives in the family doc, e.g. [`./local_upload.md`](./local_upload.md)).
-- Product-level specifics for any individual product (lives in the product page, e.g. [`./local_upload/user-file-upload.md`](./local_upload/user-file-upload.md), [`./loc/iiif-presentations.md`](./loc/iiif-presentations.md)).
+| Out of scope item | Canonical owner |
+|---|---|
+| Object-family meaning | `contracts/` |
+| Field-level schema shape | `schemas/contracts/v1/...` |
+| Allow / deny / restrict / abstain policy | `policy/` |
+| Connector and watcher mechanics | `connectors/`, `pipelines/`, `tools/ingest/` |
+| Validator logic | `tools/validators/` |
+| Release decisions | `release/` |
+| Public UI and map presentation | `apps/`, `packages/ui/`, governed API clients |
+| Family-level source governance | `docs/sources/catalog/<family>/README.md` or the accepted per-family equivalent |
+| Product-specific source behavior | `docs/sources/catalog/<family>/<product>.md` |
 
 > [!TIP]
-> **How this doc relates to family and product docs.** This guide is the **methodology**; it describes *how* a steward walks any source through the gates. Family docs (e.g. `local_upload.md`) describe *which sources* belong to a lane and its admission defaults. Product pages (e.g. `loc/iiif-presentations.md`, `local_upload/user-file-upload.md`) describe *one specific source product*. All three layers apply simultaneously — none replaces the others.
+> **Methodology / family / product split.** This guide describes *how* a steward walks a source through the gates. A family page describes *which sources belong to a lane*. A product page describes *one specific source product*. All three can apply at the same time; none replaces the others.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -146,23 +152,26 @@ This document covers the steward-driven steps that move source material from **a
 ## 3. Repo fit
 
 > [!NOTE]
-> Most paths here are **PROPOSED** until verified against mounted-repo evidence. Two exceptions: `connectors/local_upload/` (CONFIRMED in Directory Rules §7.3) and the `docs/doctrine/directory-rules.md` itself (CONFIRMED). Treat the rest as intended responsibility-root placement, not as a snapshot of the current tree.
+> Most paths below are PROPOSED until verified against mounted-repo evidence. Treat them as responsibility-root placement guidance, not as a current-tree inventory.
 
-| Upstream / governs | This doc | Downstream / governed |
+| Upstream / governs | This document | Downstream / governed |
 |---|---|---|
-| `docs/doctrine/directory-rules.md` *(CONFIRMED)* | `docs/sources/catalog/manual_curation.md` | `tools/validators/source_descriptor/` (PROPOSED) |
-| `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` (PROPOSED) | | `schemas/contracts/v1/source/source-descriptor.json` (PROPOSED per ADR-0001) |
-| `contracts/OBJECT_MAP.md` (PROPOSED — semantic crosswalk) | | `data/registry/` (PROPOSED append-only register) |
-| `policy/sources/` (PROPOSED) | | `data/catalog/` lifecycle phase |
-| `docs/architecture/review/README.md` (PROPOSED) | | `release/candidates/`, `release/manifests/` (PROPOSED) |
+| `docs/doctrine/directory-rules.md` | `docs/sources/catalog/manual_curation.md` | `tools/validators/source_descriptor/` |
+| `docs/sources/source-roles.md` | | `data/registry/sources/` |
+| `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | | `schemas/contracts/v1/source/source_descriptor.schema.json` |
+| `contracts/OBJECT_MAP.md` | | `data/catalog/{stac,dcat,prov,domain}/` |
+| `policy/sources/`, `policy/sensitivity/`, `policy/catalog/` | | `release/candidates/`, `release/manifests/` |
+| `docs/architecture/review/README.md` | | `data/receipts/`, `data/proofs/` |
 
 ### 3.1 Sibling catalog docs that apply this methodology
 
-| Sibling doc | Role | Path |
-|---|---|---|
-| Family governance — `local_upload` | Family-level rules: scope, accepted inputs, exclusions, sensitive-content register, validators, FAQ. | [`./local_upload.md`](./local_upload.md) |
-| Product page — user file upload (`local_upload`) | One product inside the `local_upload` family: user-initiated drop / picker / CLI import. | [`./local_upload/user-file-upload.md`](./local_upload/user-file-upload.md) |
-| Product page — LOC IIIF Presentations | One product inside the `loc` family: versioned-publisher counter-example. | [`./loc/iiif-presentations.md`](./loc/iiif-presentations.md) |
+| Sibling doc | Role | Preferred path | Status |
+|---|---|---|---|
+| Source roles | Cross-lane source-role vocabulary and anti-collapse rule. | [`../source-roles.md`](../source-roles.md) | PROPOSED file; authored in workspace. |
+| Catalog lane README | Orientation for the source-to-catalog documentation lane. | [`./README.md`](./README.md) | PROPOSED path; v0.4 workspace artifact. |
+| Family governance — `local_upload` | Family-level admission defaults, accepted inputs, exclusions, and sensitive-content posture. | `./local_upload/README.md` | PROPOSED preferred folder form. Flat `./local_upload.md` may exist as legacy or alternative; verify. |
+| Product page — user file upload | One product within `local_upload`: user-initiated drop, picker, or CLI import. | [`./local_upload/user-file-upload.md`](./local_upload/user-file-upload.md) | PROPOSED. |
+| Product page — LOC IIIF Presentations | Versioned-publisher counter-example within the `loc` family. | [`./loc/iiif-presentations.md`](./loc/iiif-presentations.md) | PROPOSED. |
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -170,15 +179,15 @@ This document covers the steward-driven steps that move source material from **a
 
 ## 4. Accepted inputs
 
-A source becomes a manual-curation candidate when **any** of the following holds:
+A source becomes a manual-curation candidate when any of the following is true:
 
-- The source is new to KFM (no prior `SourceDescriptor`).
-- The source's rights, license, terms, or attribution requirements are unresolved or have changed.
-- The source's sensitivity class is unknown, contested, or has been raised by a steward.
-- The source's role (authority, observation, regulatory, modeled, aggregate, administrative, candidate, synthetic) cannot be set deterministically by a watcher.
-- A watcher emitted a `QUARANTINE` event referencing the source. *(CONFIRMED doctrine — watcher-as-non-publisher; Atlas card **KFM-P1-PROG-0008** pre-RAW events and watcher intake.)*
-- A correction notice or rollback card requires the source's curation state to be re-examined.
-- A candidate record (`CandidateFeature`, `CandidateDelta`, `SourceIntakeRecord` per Atlas card **KFM-P4-PROG-0001**, similar) needs steward judgement before promotion.
+- It is new to KFM and has no approved `SourceDescriptor`.
+- Its rights, license, terms, attribution requirements, consent state, or sovereignty status are unresolved or changed.
+- Its sensitivity class is unknown, contested, raised, or domain-specific.
+- Its source role cannot be set deterministically by a watcher.
+- A watcher emitted a QUARANTINE event or a `SourceIntakeRecord` candidate.
+- A correction notice, withdrawal, rollback card, or supersession event requires re-examining its curation state.
+- A candidate record, candidate geometry, candidate claim, or local upload requires steward judgment before it can move forward.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -186,13 +195,13 @@ A source becomes a manual-curation candidate when **any** of the following holds
 
 ## 5. Exclusions
 
-Manual curation is **not** the home for:
+Manual curation is not the home for:
 
-- **Bulk automated ingestion.** That belongs to `connectors/` and `tools/ingest/watchers/`. Watchers and connectors emit receipts and candidates only; they MUST NOT publish, mutate canonical truth, or write under `data/processed/`, `data/catalog/`, or `data/published/` *(CONFIRMED — Directory Rules §7.3)*.
-- **Validator authorship.** Validators are deterministic and live under `tools/validators/`. Curation **runs** validators; it does not **define** them.
-- **Policy authoring.** Allow/deny/restrict/abstain logic lives under `policy/`. Curation **invokes** policy gates; it does not **encode** them.
-- **Release decisions.** Issuing `ReleaseManifest`, rollback authorization, and PUBLISHED promotion live under `release/` and require a release authority distinct from the original author when materiality applies.
-- **AI-driven publication.** AI may summarize evidence and score candidates; it MUST NOT approve a curation step or substitute its output for an `EvidenceBundle` *(CONFIRMED — Atlas §24.9.2)*.
+- **Bulk automated ingestion.** Watchers and connectors emit receipts, pre-RAW events, and candidates only. They must not publish, mutate canonical truth, or write directly to catalog or published outputs.
+- **Validator authorship.** Curation runs deterministic validators; it does not define them.
+- **Policy authoring.** Curation invokes policy; it does not encode allow / deny / restrict / abstain rules.
+- **Release decisions.** Release manifests, rollback authorization, and PUBLISHED promotion belong to the release authority.
+- **AI-driven approval.** AI may summarize evidence or suggest triage. It must not approve curation, substitute for EvidenceBundle, or upgrade a source role.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -201,38 +210,40 @@ Manual curation is **not** the home for:
 ## 6. Proposed layout
 
 > [!CAUTION]
-> The tree below is **PROPOSED**. It expresses where curation artifacts should land under Directory Rules; it is not a claim about the current mounted-repo state. Where any specific subpath is contested, route the conflict to `docs/registers/DRIFT_REGISTER.md`, not to a parallel home here.
+> This tree is PROPOSED. It expresses the intended responsibility split. It is not a claim about current repo state. If a mounted repo shows a different convention, log the conflict in `docs/registers/DRIFT_REGISTER.md` and resolve it by ADR or migration plan.
 
 ```text
 docs/sources/
 ├── README.md
-├── SOURCE_DESCRIPTOR_STANDARD.md       # standard fields and intake posture
+├── SOURCE_DESCRIPTOR_STANDARD.md
+├── source-roles.md
 └── catalog/
-    ├── README.md                       # PROPOSED — catalog lane orientation
-    ├── manual_curation.md              # this file (PROPOSED home)
-    ├── local_upload.md                 # PROPOSED — family governance doc
-    ├── local_upload/                   # PROPOSED — family product pages
+    ├── README.md
+    ├── manual_curation.md              # this file; methodology guide, not source-family folder
+    ├── local_upload/
     │   ├── README.md
-    │   └── user-file-upload.md         # PROPOSED — sibling product page
-    ├── loc/                            # PROPOSED — family product pages
+    │   └── user-file-upload.md
+    ├── loc/
     │   ├── README.md
-    │   └── iiif-presentations.md       # PROPOSED — sibling product page
-    ├── review_queues.md                # PROPOSED — queue inventory and SLAs
-    ├── sensitive_lanes.md              # PROPOSED — sensitivity-class procedures
+    │   └── iiif-presentations.md
+    ├── guides/                         # PROPOSED alternative if guide/source-family name conflicts
+    │   └── manual-curation.md
+    ├── review_queues.md                # PROPOSED
+    ├── sensitive_lanes.md              # PROPOSED
     └── examples/
-        ├── hydrology_example.md        # PROPOSED — illustrative walkthrough
-        └── archaeology_example.md      # PROPOSED — sensitive-lane walkthrough
+        ├── hydrology-example.md        # PROPOSED
+        └── archaeology-example.md      # PROPOSED
 ```
 
-Adjacent canonical homes referenced by this doc (all PROPOSED until verified, except where noted):
+Adjacent homes referenced by this guide:
 
 ```text
-schemas/contracts/v1/source/source-descriptor.schema.json
-schemas/contracts/v1/source/source-activation-decision.schema.json
-schemas/contracts/v1/intake/event_envelope.schema.json    # PROPOSED — pre-RAW event family (KFM-P1-PROG-0008)
-schemas/contracts/v1/catalog/catalog-record.schema.json
-schemas/contracts/v1/evidence/evidence-bundle.schema.json
-schemas/contracts/v1/review/review-record.schema.json
+schemas/contracts/v1/source/source_descriptor.schema.json
+schemas/contracts/v1/source/source_activation_decision.schema.json
+schemas/contracts/v1/intake/event_envelope.schema.json
+schemas/contracts/v1/catalog/catalog_record.schema.json
+schemas/contracts/v1/evidence/evidence_bundle.schema.json
+schemas/contracts/v1/review/review_record.schema.json
 
 policy/sources/admission.rego
 policy/sources/rights.rego
@@ -244,13 +255,14 @@ tools/validators/evidence_bundle/
 tools/validators/connector_gate/
 tools/validators/promotion_gate/
 
-connectors/local_upload/                # CONFIRMED slot per Directory Rules §7.3; file presence NEEDS VERIFICATION
+connectors/local_upload/                # Directory Rules connector slot; repo presence NEEDS VERIFICATION
 
-data/registry/                          # append-only source/rights/sensitivity
-data/proofs/                            # EvidenceBundle, ProofPack
-data/receipts/                          # RunReceipt, IngestReceipt, ReviewRecord
-data/catalog/                           # STAC/DCAT/PROV CatalogRecord
-release/candidates/                     # release-candidate dossiers
+data/registry/
+data/receipts/
+data/proofs/
+data/catalog/
+release/candidates/
+release/manifests/
 ```
 
 [Back to top](#manual-curation--sources-to-catalog)
@@ -259,32 +271,32 @@ release/candidates/                     # release-candidate dossiers
 
 ## 7. Curation flow
 
-The diagram below sketches the **steward path** through the lifecycle. Each transition is a gate; the gate emits a record; missing records fail closed and preserve the prior state. *(CONFIRMED gate doctrine — Atlas v1.1 §24.9.1, Connected Dots Brief lifecycle law.)*
+The steward path below is a doctrinal flow. Each transition emits a record. Missing records fail closed and preserve the prior state.
 
 ```mermaid
 flowchart TD
-    A["Candidate Source<br/>(new / updated / quarantined)"] --> B["Author SourceDescriptor"]
-    B --> C{"Rights & sensitivity<br/>resolved?"}
-    C -- "No" --> Q["QUARANTINE<br/>(steward review queue)"]
-    C -- "Yes" --> D["Issue SourceActivationDecision<br/>(allow / restrict / deny / needs-review)"]
-    D --> E["RAW capture<br/>(connector / manual)"]
-    E --> F["Normalize → WORK"]
-    F --> G["Validate<br/>(schema · geometry · temporal · rights · sensitivity · evidence)"]
+    A["Candidate source<br/>(new · updated · uploaded · quarantined)"] --> B["Author or update SourceDescriptor"]
+    B --> C{"Source role, rights,<br/>and sensitivity resolved?"}
+    C -- "No" --> Q["QUARANTINE<br/>steward review queue"]
+    C -- "Yes" --> D["SourceActivationDecision<br/>allow · restrict · deny · needs-review"]
+    D --> E["RAW capture<br/>connector or manual capture"]
+    E --> F["Normalize to WORK<br/>record transform and loss"]
+    F --> G["Validation<br/>schema · geometry · temporal · rights · sensitivity · evidence"]
     G -- "Fail" --> Q
     G -- "Pass" --> H["PROCESSED"]
-    H --> I["Compose EvidenceBundle"]
-    I --> J{"Policy gate<br/>(allow / restrict / deny / abstain / error)"}
-    J -- "Deny / Abstain" --> Q
-    J -- "Allow / Restrict" --> K["Close CatalogRecord<br/>(STAC · DCAT · PROV closure)"]
-    K --> L["Steward ReviewRecord<br/>(separation of duties where required)"]
-    L --> M["CATALOG / TRIPLET<br/>(release-eligible)"]
-    M --> N["Release authority<br/>(out of scope here)"]
+    H --> I["EvidenceBundle<br/>EvidenceRef resolves"]
+    I --> J{"Policy gate<br/>allow · restrict · deny · abstain · error"}
+    J -- "Deny / Abstain / Error" --> Q
+    J -- "Allow / Restrict" --> K["Catalog closure<br/>STAC · DCAT · PROV · domain"]
+    K --> L["ReviewRecord<br/>separation where required"]
+    L --> M["CATALOG / TRIPLET<br/>release-eligible, not yet public"]
+    M --> N["Release authority<br/>out of scope here"]
 
     Q -. "remediate · resubmit" .-> B
 ```
 
-> [!NOTE]
-> The diagram reflects the **doctrinal** flow. Specific step names, tools, file paths, and record schemas remain PROPOSED until verified against mounted-repo evidence. If the implemented pipeline names these steps differently, open a `DRIFT_REGISTER.md` entry rather than silently renaming this guide.
+> [!IMPORTANT]
+> `CATALOG` is not equivalent to `PUBLISHED`. A catalog-closed artifact is release-eligible only. Public exposure still requires release review, release manifest, rollback target, and governed API / published artifact projection.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -292,22 +304,19 @@ flowchart TD
 
 ## 8. Stages and required artifacts
 
-Each stage emits at least one artifact. A stage is **closed** only when every required artifact exists, resolves its references (not just names them), and a policy decision has been recorded. *(CONFIRMED universal closure rules — Atlas v1.1 §24.9.1, Pass-10 catalog discipline.)*
+A stage is closed only when every required artifact exists, resolves its references, and records a policy or review outcome where required.
 
 | Stage | Trigger | Required artifact(s) | Owning role | Closure rule |
 |---|---|---|---|---|
-| **Admission** | New / updated source | `SourceDescriptor`, `SourceIntakeRecord` *(KFM-P4-PROG-0001)* | Source steward | Rights and source-role must be **set**, not blank. Unknown rights fail closed. |
-| **Activation** | Admission complete | `SourceActivationDecision` (allow / restrict / deny / needs-review) | Source steward + rights-holder rep (when applicable) | Connectors / watchers MUST remain inactive until activation decision exists. |
-| **RAW capture** | Activation = allow / restrict | `RawCaptureReceipt` with retrieval metadata + checksum | Source connector (under descriptor) | No public RAW path. |
-| **Normalization** | Captured payload | `TransformReceipt`, `DatasetVersion` | Domain steward | Record transform and loss. |
-| **Validation** | Normalized payload | `ValidationReport` (schema · geometry · temporal · rights · sensitivity · evidence) | Domain steward | Fail closed on high-risk ambiguity. |
-| **Evidence assembly** | Validation pass | `EvidenceBundle`, `EvidenceRef` | Domain steward | `EvidenceRef` MUST resolve to `EvidenceBundle`. |
-| **Policy gate** | Bundle composed | `PolicyDecision`, `DecisionEnvelope` | Policy admin / runtime | DENY by default for sensitive classes. |
-| **Catalog closure** | Policy allow / restrict | `CatalogRecord` (STAC · DCAT · PROV closure), digests, manifests | Domain steward + Docs steward (per Directory Rules) | No orphan artifacts; every published dataset/layer knows its source, schema, validation, policy, review, and release context. |
-| **Review** | Catalog candidate | `ReviewRecord` (separation of duties where required) | Reviewer (≠ author when materiality applies) | Reviewer action must be auditable. |
-
-> [!TIP]
-> Every emitted artifact above has a **PROPOSED schema home** under `schemas/contracts/v1/…` per ADR-0001. Specific schema files and field shapes are PROPOSED until inspected. Do not invent or freeze a field shape from this document alone.
+| **Admission** | New / updated / uploaded / quarantined source | `SourceDescriptor`, `SourceIntakeRecord` | Source steward | Source role, rights, sensitivity, steward, and access method are set. Unknown rights fail closed. |
+| **Activation** | Admission complete | `SourceActivationDecision` | Source steward; rights-holder rep where applicable | Connector / watcher remains inactive unless decision is `allow` or `restrict`. |
+| **RAW capture** | Activation = `allow` / `restrict` | `RawCaptureReceipt`, checksum, retrieval metadata | Connector under descriptor or manual curator | No public RAW path. |
+| **Normalization** | Captured payload | `TransformReceipt`, `DatasetVersion` | Domain steward | Transform and information loss are recorded. |
+| **Validation** | Normalized payload | `ValidationReport` | Domain steward | Schema, geometry, temporal, rights, sensitivity, and evidence checks pass or route to QUARANTINE. |
+| **Evidence assembly** | Validation pass | `EvidenceBundle`, resolvable `EvidenceRef` values | Domain steward | Every claim that needs evidence resolves to a bundle. |
+| **Policy gate** | Bundle composed | `PolicyDecision`, `DecisionEnvelope` | Policy runtime / policy admin | DENY by default on sensitive ambiguity or policy error. |
+| **Catalog closure** | Policy `allow` / `restrict` | `CatalogRecord` with STAC, DCAT, PROV, and/or domain closure | Domain steward + docs steward where docs are touched | No orphan artifacts. Catalog record links to source, schema, validation, policy, review, release context, correction path, and rollback target. |
+| **Review** | Catalog candidate | `ReviewRecord` | Reviewer distinct from author where materiality or sensitivity applies | Reviewer action is auditable. |
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -315,34 +324,34 @@ Each stage emits at least one artifact. A stage is **closed** only when every re
 
 ## 9. Roles and separation of duties
 
-KFM separates policy-significant release duties when maturity justifies it. Manual curation is the stage where most of those separations are first applied. *(CONFIRMED operating-law invariant — Atlas v1.1 §24.7 reviewer-role separation matrix.)*
+KFM separates policy-significant duties when materiality, sensitivity, or public trust requires it. Manual curation is where those separations first become visible.
 
-### 9.1 Role definitions (PROPOSED)
+### 9.1 Role definitions
 
 | Role | Curation responsibility |
 |---|---|
-| **Source steward** | Owns admission, rights confirmation, sensitivity tag for a named source family. |
-| **Domain steward** | Owns the meaning, contracts, and validators of a domain's object families during curation. |
-| **Sensitivity reviewer** | Reviews redaction, generalization, withholding, and tier decisions for sensitive content. |
-| **Rights-holder representative** | Confirms sovereignty, cultural-heritage, or consent-based release decisions. Required for archaeology, sovereign data, living-person data, DNA. |
-| **Reviewer** | Approves / denies source activation, policy result, or promotion candidate. Distinct from author when materiality applies. |
-| **Docs steward** | Owns governance documentation, ADR index, drift register, and curation-guide integrity. |
-| **AI surface steward** | Reviews any AI assistance touching curation (scoring, summarization, suggestion). |
+| **Source steward** | Owns admission, rights confirmation, source-role declaration, and source-family disposition. |
+| **Domain steward** | Owns object-family meaning, domain validation posture, and normalized-domain interpretation. |
+| **Sensitivity reviewer** | Reviews redaction, generalization, withholding, sensitivity tier, and public-safe transforms. |
+| **Rights-holder representative** | Confirms sovereignty, cultural-heritage, consent-based, or legal-rights release decisions where required. |
+| **Reviewer** | Approves, denies, or requests changes on activation, policy result, or catalog candidate. Distinct from author when materiality applies. |
+| **Docs steward** | Owns governance documentation, ADR links, drift register references, and guide integrity. |
+| **AI surface steward** | Reviews any AI support used for scoring, triage, explanation, or summarization in curation. |
 
-### 9.2 Separation-of-duties matrix (PROPOSED)
+### 9.2 Separation-of-duties matrix
 
-| Curation action | May the author also approve? | Required separation |
+| Curation action | May author also approve? | Required separation |
 |---|---|---|
-| Source admission (— → RAW) | Yes for routine; **No** when source has unresolved rights or sovereignty | Source steward + rights-holder rep where applicable |
-| Normalization receipts | Yes for routine; **No** when transforms are sensitivity-relevant | Domain steward; sensitivity reviewer when sensitivity-relevant |
-| Validator authorship and run | Yes (validators are deterministic) | Domain steward; periodic audit by Docs steward |
-| Promotion to PROCESSED / CATALOG | Yes for non-sensitive routine; **No** for sensitive lanes | Domain steward + sensitivity reviewer (sensitive lanes) |
-| Sensitive-lane catalog closure | **No** | Author + sensitivity reviewer + rights-holder rep |
-| AI-assisted scoring on a curation step | **No** | AI surface steward + Docs steward (policy binding) |
-| Atlas / curation-guide publication | **No** | Docs steward + at least one subsystem owner |
+| Source admission | Yes for routine public sources; no for unresolved rights, sovereignty, consent, or high sensitivity | Source steward + rights-holder representative where applicable |
+| Normalization receipt | Yes for routine transforms; no where transform changes sensitivity or location precision | Domain steward + sensitivity reviewer when relevant |
+| Validator run | Yes, because validators are deterministic; validator authoring needs review | Domain steward; periodic audit by docs steward or validator owner |
+| Promotion to PROCESSED / CATALOG | Yes for low-risk routine material; no for sensitive lanes | Domain steward + reviewer |
+| Sensitive-lane catalog closure | No | Author + sensitivity reviewer + rights-holder representative where applicable |
+| AI-assisted scoring used in triage | No, when result influences gate outcome | AI surface steward + docs steward or policy steward |
+| Guide or standard publication | No, when it changes binding posture | Docs steward + subsystem owner |
 
 > [!WARNING]
-> Separation of duties is **maturity-dependent**. Early-stage doctrine work may be authored and approved by the same actor when materiality is low; as the public trust surface expands, separation MUST be enforced through tooling, not custom. This guide does not pretend that tooling-enforced separation is already in place — that posture remains PROPOSED until verified. *(See Atlas §24.9.3 *"Approving one's own release on a sensitive lane"* anti-pattern.)*
+> Separation of duties may start as manual review in early-stage work, but trust-bearing lanes should become tooling-enforced as the public surface matures. This guide does not claim tooling enforcement exists.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -350,16 +359,18 @@ KFM separates policy-significant release duties when maturity justifies it. Manu
 
 ## 10. Gate failures and reason codes
 
-Curation gates emit failures as **structured reason codes**, not as free text. A failure preserves the prior state and routes the candidate to QUARANTINE for remediation. The catalog of codes below is PROPOSED and consolidates curation-relevant entries from the gate-failure register. *(PROPOSED reason-code catalog.)*
+Gate failures should emit structured reason codes, preserve prior state, and route the candidate to QUARANTINE or review. The catalog below is PROPOSED and should be reconciled with the implemented policy/validator reason-code registry.
 
-| Failure family | Reason code (PROPOSED) | Gates where it fires | Curation remediation |
+| Failure family | Reason code (PROPOSED) | Gates where it fires | Remediation |
 |---|---|---|---|
-| Missing required artifact | `MISSING_RECEIPT`, `MISSING_EVIDENCE`, `MISSING_REVIEW` | Normalization · Validation · Catalog · Review | Re-emit the missing receipt; re-run the missing review or validation; resubmit. |
-| Schema / contract mismatch | `SCHEMA_MISMATCH`, `CONTRACT_DRIFT` | Normalization · Validation | Schema fix and/or ADR; re-run validator. |
-| Rights / sensitivity unresolved | `RIGHTS_UNKNOWN`, `SENSITIVITY_UNRESOLVED` | Admission · Validation · Catalog · Release | Steward review; rights resolution; sensitivity-tier reassignment. |
-| Source-role collapse | `ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN`, `ROLE_UPCAST_FORBIDDEN` | Validation · Catalog · Release | Restore source role on the descriptor; refuse upcast *(per Atlas §24.9.3 — promotion never upgrades source role)*. |
-| Review state inadequate | `REVIEW_NEEDED`, `REVIEW_INSUFFICIENT`, `REVIEW_REJECTED` | Catalog · Release | Run the required review; supply `ReviewRecord`. |
-| Correction lineage broken | `CORRECTION_DERIVATIVES_UNRESOLVED`, `CORRECTION_PRIOR_RELEASE_MISSING` | Correction | Resolve dependent derivatives; add supersession entry. |
+| Missing required artifact | `MISSING_RECEIPT`, `MISSING_EVIDENCE`, `MISSING_REVIEW` | Normalization · validation · catalog · review | Re-emit or attach the missing artifact; re-run the gate. |
+| Schema / contract mismatch | `SCHEMA_MISMATCH`, `CONTRACT_DRIFT` | Normalization · validation | Fix schema or contract mapping; ADR if semantics changed; re-run validator. |
+| Rights / sensitivity unresolved | `RIGHTS_UNKNOWN`, `SENSITIVITY_UNRESOLVED`, `CONSENT_UNRESOLVED` | Admission · validation · catalog · release | Steward review; rights or consent decision; sensitivity tier reassignment. |
+| Source-role collapse | `ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN`, `ROLE_UPCAST_FORBIDDEN` | Validation · catalog · release | Restore the declared source role; issue a new descriptor if the role must change. |
+| Review state inadequate | `REVIEW_NEEDED`, `REVIEW_INSUFFICIENT`, `REVIEW_REJECTED` | Catalog · release | Obtain required review and attach `ReviewRecord`. |
+| Evidence closure failure | `EVIDENCE_REF_UNRESOLVED`, `EVIDENCE_BUNDLE_INCOMPLETE` | Evidence · catalog · API | Resolve references; rebuild EvidenceBundle; re-run policy. |
+| Correction lineage broken | `CORRECTION_DERIVATIVES_UNRESOLVED`, `CORRECTION_PRIOR_RELEASE_MISSING` | Correction · rollback | Resolve dependent derivatives; add supersession or rollback record. |
+| Trust membrane breach | `PUBLIC_PATH_INTERNAL_STATE`, `RAW_EXPOSED`, `QUARANTINE_EXPOSED` | API · UI · release | Withdraw exposure, fix route/layer manifest, add negative-path test. |
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -368,22 +379,19 @@ Curation gates emit failures as **structured reason codes**, not as free text. A
 ## 11. Sensitive-lane curation
 
 > [!CAUTION]
-> Sensitive classes deny by default. Manual curation in these lanes is slower, demands additional reviewers, and ends in **generalized**, **staged**, or **withheld** public products — never in exact restricted geometry. *(CONFIRMED sensitive deny-by-default register — Atlas v1.1 §24.5 sensitivity / rights tier reference T0–T4; per-domain dossiers for archaeology, fauna, flora, people-DNA-land.)*
-
-The deny-by-default register applies categorically. Curation in any of these classes MUST add the indicated reviewers and required controls before catalog closure:
+> Sensitive classes deny by default. Manual curation in these lanes is slower, requires additional reviewers, and usually ends in generalized, staged, restricted, delayed, or withheld public products — never exact restricted geometry by convenience.
 
 | Class | Default outcome | Required controls |
 |---|---|---|
-| **Living persons** | DENY public exact/identifying output | Privacy review · redaction · aggregation · staged access |
-| **DNA / genomics** | DENY by default; restricted only with approval | Separate restricted store · no public AI inference |
-| **Rare species** | DENY public exact locations | Geoprivacy transform receipt · steward review |
-| **Archaeology / sacred places** | DENY exact public locations | Cultural / steward review · suppression or generalization · rights-holder rep |
-| **Critical infrastructure** | RESTRICT / DENY public precision | Public-safe aggregation · role-based access |
-| **Private landowner data** | DENY exact / public if rights unclear | Aggregation · permissions · policy review |
-| **Source-rights-limited records** | DENY public release until terms resolved | Rights register · attribution · no public derivative if barred |
+| **Living persons** | DENY public exact or identifying output | Privacy review · aggregation · consent check · staged access |
+| **DNA / genomics** | DENY by default; restricted only with approval | Separate restricted store · no public AI inference · consent and revocation checks |
+| **Rare species** | DENY public exact locations | Geoprivacy transform receipt · steward review · generalized public geometry |
+| **Archaeology / sacred places** | DENY exact public locations | Cultural / steward review · suppression or generalization · rights-holder representative |
+| **Critical infrastructure** | RESTRICT or DENY public precision | Public-safe aggregation · role-based access · vulnerability review |
+| **Private landowner data** | DENY exact public release if rights unclear | Aggregation · permissions · policy review |
+| **Source-rights-limited records** | DENY public release until terms resolved | Rights register · attribution · derivative restrictions honored |
 
-> [!IMPORTANT]
-> The trust membrane forbids any public client, normal UI surface, or released AI surface from reaching RAW, WORK, QUARANTINE, candidate records, canonical / internal stores, graph internals, vector indexes, source APIs, or direct model runtimes. Manual curation MUST NOT engineer an exception path "just for stewards" that leaks into the public surface. Admin shortcuts must be justified, constrained, documented, and kept out of the normal public path. *(CONFIRMED — Atlas §24.9.2 *"AI generation routed through admin shortcut"* anti-pattern.)*
+Manual curation must not create an admin shortcut that becomes a public path. Steward tooling may view restricted material only through constrained, auditable, role-appropriate surfaces kept separate from normal public clients.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -391,70 +399,64 @@ The deny-by-default register applies categorically. Curation in any of these cla
 
 ## 12. Catalog-closure checklist
 
-Before a `CatalogRecord` is treated as release-eligible, every box below must be checked or the record fails closed and remains at PROCESSED. *(CONFIRMED catalog-closure doctrine — Pass-10 **C4-01**, **C4-02**, **C4-04**, **C4-05**; Atlas cards **KFM-P26-PROG-0025**, **KFM-P27-FEAT-0003**, **KFM-P27-FEAT-0004**.)*
+Before a `CatalogRecord` is release-eligible, every item below is checked or the record remains at PROCESSED / QUARANTINE.
 
-- [ ] `SourceDescriptor` exists, with `source_role`, rights status, sensitivity, cadence, steward, and access method set (not blank, not "unknown").
-- [ ] `SourceActivationDecision` exists and is `allow` or `restrict` (not `needs-review`, not `deny`).
-- [ ] `RawCaptureReceipt` resolves to retrieval metadata and a checksum.
+- [ ] `SourceDescriptor` exists and sets `source_role`, rights status, sensitivity, cadence, steward, and access method.
+- [ ] `SourceActivationDecision` exists and is `allow` or `restrict`.
+- [ ] `RawCaptureReceipt` resolves to retrieval metadata and checksum.
 - [ ] `TransformReceipt` records normalization steps and any information loss.
-- [ ] `ValidationReport` covers schema, geometry, temporal, rights, sensitivity, and evidence checks — and its outcome is `ANSWER`.
-- [ ] `EvidenceBundle` is composed, and every `EvidenceRef` on the candidate resolves to it.
-- [ ] `PolicyDecision` (or `DecisionEnvelope`) exists, evaluated, and is recorded.
-- [ ] `CatalogRecord` carries source, schema, validation, policy, review, and release metadata — STAC · DCAT · PROV closure (per Pass-10 catalog profiles).
-- [ ] `ReviewRecord` exists where separation of duties or sensitivity applies, naming a reviewer distinct from the author.
-- [ ] Stable identifiers (e.g., `spec_hash`, `content_hash`, `geometry_hash`) are computed and recorded; run hash is not conflated with content hash.
-- [ ] Correction path and rollback target are nominated before the record is offered to a release authority.
+- [ ] `ValidationReport` covers schema, geometry, temporal, rights, sensitivity, and evidence checks.
+- [ ] `EvidenceBundle` exists, and every required `EvidenceRef` resolves to it.
+- [ ] `PolicyDecision` / `DecisionEnvelope` exists, has been evaluated, and is recorded.
+- [ ] `CatalogRecord` carries source, schema, validation, policy, review, and release metadata.
+- [ ] STAC / DCAT / PROV / domain catalog closure is complete for the artifact type.
+- [ ] `ReviewRecord` exists where separation of duties or sensitivity applies.
+- [ ] Stable identifiers such as `spec_hash`, `content_hash`, `geometry_hash`, or `source_record_hash` are computed and recorded.
+- [ ] Run hash is not conflated with content hash.
+- [ ] Correction path and rollback target are nominated before release consideration.
+- [ ] Public examples, screenshots, maps, or AI summaries do not expose non-public lifecycle states.
 
 [Back to top](#manual-curation--sources-to-catalog)
 
 ---
 
-## 13. Worked example
+## 13. Worked examples
 
 <details>
-<summary><strong>Illustrative walkthrough — admitting a new hydrology dataset (PROPOSED, not implementation proof)</strong></summary>
+<summary><strong>Illustrative walkthrough — admitting a new hydrology dataset</strong></summary>
 
-> The walkthrough below is **illustrative**. It uses doctrinal names and stage transitions to show how a manual curation pass should look. It does not assert that any specific file, route, schema, or tool exists in the mounted repository.
+> This walkthrough is illustrative. It uses doctrinal object names and stage transitions; it does not assert that any specific route, schema, file, or tool exists.
 
-**Step 1 — Admission.** Source steward authors a `SourceDescriptor` for a county-level streamflow dataset: source ID, owner, retrieval URL, license SPDX, attribution requirements, source role (`observation`), cadence (daily), sensitivity (`public`), and steward.
-
-**Step 2 — Activation.** Source steward reviews the descriptor against the rights register and issues a `SourceActivationDecision = allow`. No rights-holder representative is required for this class.
-
-**Step 3 — RAW capture.** The connector fetches the file under the approved descriptor and emits a `RawCaptureReceipt` carrying ETag, Last-Modified, checksum, and timestamp. Output lands under `data/raw/hydrology/<source_id>/<run_id>/` (PROPOSED).
-
-**Step 4 — Normalization.** A pipeline step transforms the payload to canonical schema and emits a `TransformReceipt`. The candidate moves to `data/work/...` (PROPOSED).
-
-**Step 5 — Validation.** The validators run and emit a `ValidationReport` with outcome `ANSWER`. Schema, geometry, temporal, rights, sensitivity, and evidence checks all pass.
-
-**Step 6 — Evidence assembly.** Domain steward composes an `EvidenceBundle` linking the descriptor, capture receipt, transform receipt, validation report, and the canonical record's `spec_hash`. Every `EvidenceRef` resolves.
-
-**Step 7 — Policy gate.** Policy evaluates `allow` because rights status is `public`, sensitivity is `public`, and the review state is `approved`. A `PolicyDecision` is recorded.
-
-**Step 8 — Catalog closure.** A `CatalogRecord` is composed with STAC core fields, DCAT distribution metadata, and PROV activity links. Identifiers are stable and digest-pinned.
-
-**Step 9 — Review.** Reviewer (distinct from the domain steward) issues a `ReviewRecord = approve`. Correction path and rollback target are nominated.
-
-**Outcome.** The record is now release-eligible. It moves to `data/catalog/...` (PROPOSED) and waits for the release authority. Manual curation ends here; release decisions are out of scope for this guide.
+1. **Admission.** Source steward authors a `SourceDescriptor` for a county-level streamflow dataset: source ID, owner, retrieval URL, license, attribution requirements, source role (`observation`), cadence, sensitivity (`public`), and steward.
+2. **Activation.** Source steward reviews the descriptor and issues `SourceActivationDecision = allow`.
+3. **RAW capture.** Connector fetches under the approved descriptor and emits `RawCaptureReceipt` with ETag, Last-Modified, checksum, and timestamp.
+4. **Normalization.** Pipeline transforms payload to canonical schema and emits `TransformReceipt`.
+5. **Validation.** Validators emit `ValidationReport`; schema, geometry, temporal, rights, sensitivity, and evidence checks pass.
+6. **Evidence assembly.** Domain steward composes `EvidenceBundle` linking descriptor, capture receipt, transform receipt, validation report, and canonical record identifiers.
+7. **Policy gate.** Policy evaluates `allow`; a `PolicyDecision` is recorded.
+8. **Catalog closure.** `CatalogRecord` is composed with STAC, DCAT, and PROV links.
+9. **Review.** Reviewer issues `ReviewRecord = approve`; correction path and rollback target are nominated.
+10. **Outcome.** Record is release-eligible, not public. Release authority is out of scope for this guide.
 
 </details>
 
 <details>
-<summary><strong>Contrast walkthrough — admitting a user-uploaded file via <code>local_upload</code> (PROPOSED, illustrative)</strong></summary>
+<summary><strong>Contrast walkthrough — admitting a user-uploaded file via <code>local_upload</code></strong></summary>
 
-> Same methodology, different starting posture. The user-file-upload product page at [`./local_upload/user-file-upload.md`](./local_upload/user-file-upload.md) carries the full product specifics; this contrast highlights *what changes* when manual curation is applied to a `local_upload` candidate rather than to a versioned-publisher source.
+> This contrast shows what changes when the starting source is a user-uploaded candidate rather than a versioned external publisher product.
 
-| Step | Hydrology dataset (above) | User-uploaded file (this contrast) |
+| Step | Versioned hydrology dataset | User-uploaded file |
 |---|---|---|
-| Source role at admission | `observation` (set by steward) | **`candidate`** — never `observation` at admission; re-roling requires a new descriptor *(Atlas §24.1.3)* |
-| Rights status at admission | `public` (licensed, confirmed) | **`unknown`** — uploader claim recorded but not trusted |
-| Sensitivity default | `public` | **`restricted`** — downgrade requires sensitivity reviewer + transform receipts |
-| `SourceActivationDecision` | `allow` (routine) | **`needs-review`** by default; `allow` only after `RightsDecision` |
-| Connector path | `connectors/<vendor>/` | **`connectors/local_upload/`** *(CONFIRMED Directory Rules §7.3)* |
-| Identifier | Source-issued ID + `spec_hash` | **Content-addressed** ID (e.g., `local-upload:<bao_root_hash>`); the file *is* its own identity |
-| Catalog Collection | Stable Collection per product | **Open question** — may be no Collection at all, or `kfm-local-upload-candidates`; see product-page OPEN-LU-UFU-02 |
-| Public release path | Standard release authority flow | **Same** flow, but the candidate-role default means most uploads never reach this step without re-roling |
+| Source role at admission | `observation` if source authority supports it | `candidate` by default; never upgraded by promotion alone |
+| Rights status at admission | Confirmed license or public terms | Unknown or uploader-asserted until reviewed |
+| Sensitivity default | Often public, but still checked | Restricted until sensitivity review clears or transforms it |
+| Activation decision | May be `allow` for routine sources | Usually `needs-review` until rights/sensitivity resolved |
+| Connector path | `connectors/<family>/` | `connectors/local_upload/` connector slot |
+| Identifier | Source-issued ID + deterministic hashes | Content-addressed ID using content hash / digest |
+| Catalog collection | Stable collection per product | Open question: candidate collection, family collection, or no public collection |
+| Public release | Standard release authority flow | Same flow, but most uploads remain candidates unless re-curated |
 
-The methodology gates (admission, activation, RAW, normalize, validate, evidence, policy, catalog, review) are **identical**; what differs is the descriptor defaults and the expected quarantine rate.
+The gates are identical. The defaults and failure rate are different.
 
 </details>
 
@@ -466,15 +468,15 @@ The methodology gates (admission, activation, RAW, normalize, validate, evidence
 
 | Anti-pattern | Symptom | Correction |
 |---|---|---|
-| **Watcher publishes** | A worker writes to `data/catalog/` or `data/published/` | Watcher-as-non-publisher invariant: workers emit receipts and candidate decisions only. Return the case to manual curation. |
-| **Author also approves a sensitive release** | One actor authors the descriptor and signs off on a sensitive-lane catalog record | Apply §9.2 separation-of-duties matrix; require a sensitivity reviewer. |
-| **Unknown rights treated as "probably fine"** | `SourceDescriptor` shipped with rights `unknown` and activation `allow` | Unknown rights fail closed. Set activation to `needs-review` or `deny` until terms are resolved. |
-| **AI text used as evidence** | `EvidenceBundle` cites a generated summary instead of a source | `EvidenceBundle` outranks generated language. Curation MUST resolve evidence to a source, not to a model output. |
-| **Lifecycle skip** | A pipeline writes directly to `data/catalog/` from `data/raw/` | All lifecycle phases run; promotion is a governed state transition, not a file move. |
-| **Catalog record without closure** | `CatalogRecord` exists with missing `EvidenceBundle`, `ValidationReport`, or `PolicyDecision` | Orphan artifact. Withdraw from CATALOG; complete closure or route to QUARANTINE. |
-| **Source-role upcast at promotion** | A `candidate` descriptor is promoted to `observation` to satisfy a release | Source role is fixed at admission; never upgraded by promotion. Issue a *new* descriptor with steward review *(Atlas §24.1.3, §24.9.3)*. |
-| **Documentation as truth** | This guide cited as the source of a canonical decision | Promote the decision to an ADR or `control_plane/` register. This guide explains; it does not decide. |
-| **Parallel curation home** | A second `docs/.../manual_curation.md` or `policy/sources/manual_curation/` springs up | Compatibility roots and parallel authority are forbidden without an ADR. Route via `docs/registers/DRIFT_REGISTER.md`. |
+| **Watcher publishes** | Worker writes directly to `data/catalog/` or `data/published/`. | Watcher emits candidate/receipt only; route to curation and promotion. |
+| **Author self-approves sensitive release** | One actor authors descriptor and approves sensitive catalog closure. | Enforce separation of duties; add sensitivity reviewer and rights-holder representative where applicable. |
+| **Unknown rights treated as probably fine** | `rights = unknown` with activation `allow`. | Set `needs-review`, `restrict`, or `deny` until terms are resolved. |
+| **AI text used as evidence** | EvidenceBundle cites generated summary instead of source material. | Replace with source-bound evidence; retain AI summary only as interpretation. |
+| **Lifecycle skip** | Pipeline writes from RAW directly to CATALOG or PUBLISHED. | Re-run through WORK/QUARANTINE, PROCESSED, catalog closure, and release gate. |
+| **Catalog record without closure** | Catalog entry lacks EvidenceBundle, ValidationReport, PolicyDecision, or ReviewRecord. | Withdraw from CATALOG; complete closure or quarantine. |
+| **Source-role upcast at promotion** | Candidate source becomes observation because release needs it. | Source role is fixed for that descriptor. Issue a new descriptor with steward review if warranted. |
+| **Documentation as authority** | This guide is cited as the source of a binding policy. | Promote the decision to ADR, contract, schema, policy, or control-plane register. |
+| **Parallel curation home** | A second manual-curation standard appears elsewhere. | Log drift; migrate, supersede, or ADR the placement. |
 
 [Back to top](#manual-curation--sources-to-catalog)
 
@@ -482,46 +484,51 @@ The methodology gates (admission, activation, RAW, normalize, validate, evidence
 
 ## 15. Related docs
 
-- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law, compatibility roots, lifecycle invariant. **(CONFIRMED in project knowledge.)**
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — descriptor field standard. **(PROPOSED — referenced in expansion plan.)**
-- [`docs/sources/catalog/README.md`](./README.md) — catalog lane orientation. **(PROPOSED.)**
-- [`docs/sources/catalog/local_upload.md`](./local_upload.md) — `local_upload` family governance doc. **(PROPOSED sibling — applies this methodology to one source family.)**
-- [`docs/sources/catalog/local_upload/user-file-upload.md`](./local_upload/user-file-upload.md) — user-file-upload product page within the `local_upload` family. **(PROPOSED sibling product example.)**
-- [`docs/sources/catalog/loc/iiif-presentations.md`](./loc/iiif-presentations.md) — LOC IIIF Presentations product page (versioned-publisher counter-example). **(PROPOSED sibling product example.)**
-- `docs/architecture/contract-schema-policy-split.md` — the contracts / schemas / policy / tests / fixtures responsibility split. **(PROPOSED reference.)**
-- `docs/architecture/review/README.md` — read-only review surfaces, queue model, decision envelopes. **(PROPOSED reference.)**
-- `docs/governance/separation-of-duties.md` — full separation-of-duties matrix. **(PROPOSED — derived from Atlas §24.7.)**
-- `docs/registers/DRIFT_REGISTER.md` — where to log any conflict between this guide and mounted-repo conventions. **(PROPOSED.)**
-- `docs/adr/ADR-0001-schema-home.md` — schema-home authority. **(PROPOSED — referenced by Directory Rules §7.4.)**
-- `docs/standards/STAC.md`, `docs/standards/DCAT.md`, `docs/standards/PROV.md` — external standards used for catalog closure. **(PROPOSED — externals consumed by KFM STAC profile v1.)**
+| Doc | Relationship | Status |
+|---|---|---|
+| [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) | Placement law, compatibility roots, lifecycle invariant. | CONFIRMED doctrine. |
+| [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) | Public-path discipline and governed API boundary. | PROPOSED path; doctrine referenced. |
+| [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. | PROPOSED path; doctrine referenced. |
+| [`docs/sources/source-roles.md`](../source-roles.md) | Source-role vocabulary and anti-collapse guidance. | Workspace artifact; repo merge NEEDS VERIFICATION. |
+| [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) | Descriptor field standard. | PROPOSED. |
+| [`docs/sources/catalog/README.md`](./README.md) | Catalog lane orientation. | Workspace artifact v0.4; repo merge NEEDS VERIFICATION. |
+| `docs/sources/catalog/local_upload/README.md` | `local_upload` family governance. | PROPOSED preferred path. |
+| [`docs/sources/catalog/local_upload/user-file-upload.md`](./local_upload/user-file-upload.md) | User-file-upload product page. | PROPOSED. |
+| [`docs/sources/catalog/loc/iiif-presentations.md`](./loc/iiif-presentations.md) | LOC IIIF Presentations product page. | PROPOSED. |
+| `docs/architecture/contract-schema-policy-split.md` | Contracts / schemas / policy responsibility split. | PROPOSED. |
+| `docs/architecture/review/README.md` | Review queues and decision envelopes. | PROPOSED. |
+| `docs/governance/separation-of-duties.md` | Full separation-of-duties matrix. | PROPOSED. |
+| `docs/registers/DRIFT_REGISTER.md` | Placement and authority drift log. | PROPOSED. |
+| `docs/adr/ADR-0001-schema-home.md` | Schema-home authority. | PROPOSED path; doctrine confirmed by Directory Rules. |
+| `docs/standards/STAC.md`, `docs/standards/DCAT.md`, `docs/standards/PROV.md` | Catalog standards used by closure. | PROPOSED / NEEDS VERIFICATION. |
 
 [Back to top](#manual-curation--sources-to-catalog)
 
 ---
 
-## Verification backlog
+## 16. Verification backlog
 
-The items below are explicitly **not** verified by this guide and should be checked against mounted-repo evidence before any of them are quoted as fact:
+The items below are not verified by this guide and should be checked before quoting as repo fact:
 
-- Existence and exact path of `docs/sources/catalog/` and this file.
-- Existence and field shape of `SourceDescriptor`, `SourceActivationDecision`, `SourceIntakeRecord`, `EvidenceBundle`, `CatalogRecord`, and `ReviewRecord` schemas under `schemas/contracts/v1/...`.
-- Existence and contents of `policy/sources/`, `policy/sensitivity/`, and `policy/catalog/` packages.
+- Exact canonical home for this guide: `docs/sources/catalog/manual_curation.md` vs `docs/sources/catalog/guides/manual-curation.md` or another accepted path.
+- Whether a `manual_curation/` source-family folder exists and conflicts with this guide's filename.
+- Existence and field shape of `SourceDescriptor`, `SourceActivationDecision`, `SourceIntakeRecord`, `EvidenceBundle`, `CatalogRecord`, `ReviewRecord`, `PolicyDecision`, and `DecisionEnvelope` schemas under `schemas/contracts/v1/...`.
+- Existence and content of `policy/sources/`, `policy/sensitivity/`, and `policy/catalog/`.
 - Existence and behavior of validators under `tools/validators/`.
-- Existence and contents of `data/registry/`, `data/proofs/`, `data/receipts/`, `data/catalog/`.
-- Existence and contents of ADR-0001 (schema home), ADR-S-04 (source-role enum), ADR-S-05 (sensitivity tier scheme), ADR-S-09 (reviewer role separation).
-- Whether the implemented pipeline names curation stages, gates, and reason codes as proposed here.
+- Existence and content of `data/registry/`, `data/receipts/`, `data/proofs/`, `data/catalog/`, and `release/candidates/`.
+- Current disposition of ADR-0001, ADR-S-04, ADR-S-05, ADR-S-09, and any ADR governing manual curation / source-family docs.
+- Whether pipeline tools use the stage and reason-code names proposed here.
 - Whether tooling enforces separation of duties for sensitive-lane curation.
-- Whether the sibling docs (`local_upload.md`, `local_upload/user-file-upload.md`, `loc/iiif-presentations.md`) exist at the paths referenced or under a flat-naming alternative *(see `local_upload.md` §13.1 / product-page **OPEN-LU-UFU-01**)*.
+- Whether sibling docs referenced in §15 exist at the preferred folder paths or under flat-file alternatives.
 
 <details>
-<summary><strong>Evidence basis (this guide) — click to expand</strong></summary>
+<summary><strong>Evidence basis for this guide</strong></summary>
 
-- **CONFIRMED doctrine** — Directory Rules v1.2 §0 (lifecycle invariant), §7.3 (`connectors/`, watcher-as-non-publisher invariant), §7.4 (schema home per ADR-0001), §9 (`data/` and `release/`).
-- **CONFIRMED doctrine** — *KFM Domains v1.1 + Pass 23/32 Consolidated Atlas* §24.1.3 (source-role anti-collapse register), §24.5 (sensitivity / rights tier reference T0–T4), §24.7 (reviewer role and separation-of-duties matrix), §24.9.1 (placement / authority anti-patterns), §24.9.2 (trust-membrane anti-patterns), §24.9.3 (governance-process anti-patterns).
-- **CONFIRMED doctrine** — *KFM Connected Dots Architecture Brief* §3 (inspectable claim), §4 (lifecycle law); canonical-evidence vs delivery vs runtime vs AI-interpretation layer separation.
-- **Atlas cards directly cited** — **KFM-P1-PROG-0007** (source descriptors and source-role registry), **KFM-P1-PROG-0008** (pre-RAW events and watcher intake), **KFM-P1-PROG-0021** (STAC/DCAT/PROV profile mapping), **KFM-P4-PROG-0001** (`SourceIntakeRecord` envelope), **KFM-P26-PROG-0025** (catalog closure writers), **KFM-P27-FEAT-0003** (STAC Projection lint report), **KFM-P27-FEAT-0004** (Catalog QA CI result surface).
-- **Pass-10 idea index** — **C4-01** (STAC Item with `kfm:provenance`), **C4-02** (STAC Collection with KFM governance description), **C4-04** (evidence-bundle JSON-LD), **C4-05** (DCAT Dataset/Distribution).
-- **Out of scope** — current state of `connectors/local_upload/`, `schemas/contracts/v1/...`, `policy/...`, or `tools/validators/...` at any specific commit; current ADR-S-04 / ADR-S-05 / ADR-S-09 disposition; runtime / CI behavior of any curation pipeline; live release-authority assignments.
+- **Directory Rules doctrine** — placement responsibility, schema-home convention, lifecycle invariant, ADR requirement for root/schema/lifecycle/parallel-authority changes, and drift-register handling.
+- **Source-role doctrine** — source-role anti-collapse: source roles are not quality scores and cannot be upgraded by convenience or promotion.
+- **KFM atlas doctrine** — EvidenceBundle outranks generated language; master atlases and summaries are navigation aids, not substitutes for evidence, policy, review, or release state.
+- **Watcher doctrine** — watchers and connectors produce candidates and receipts; they are not publishers.
+- **Trust membrane doctrine** — public clients use governed APIs and released artifacts, not RAW, WORK, QUARANTINE, candidate records, internal stores, direct source APIs, or direct model runtime outputs.
 
 </details>
 
@@ -529,4 +536,18 @@ The items below are explicitly **not** verified by this guide and should be chec
 
 ---
 
-<sub>**Last updated:** 2026-05-22 · **Status:** draft · **Version:** v2 · **Owners:** Source steward · Docs steward · **Evidence basis:** docs-only (no mounted repo this session) · [Back to top](#manual-curation--sources-to-catalog)</sub>
+## 17. Changelog
+
+| Edition | Date | Change |
+|---|---|---|
+| **v3** | 2026-06-11 | Polished wording, updated metadata, aligned with `docs/sources/catalog/README.md` v0.4 and `docs/sources/source-roles.md`, clarified docs-standard authority, added naming-collision warning for `manual_curation.md` vs `manual_curation/`, changed sibling `local_upload` reference to folder-README preferred form, tightened trust membrane language, added public-state distinction between CATALOG and PUBLISHED, expanded reason-code table, and normalized verification backlog. |
+| v2 | 2026-05-22 | Added sibling cross-links to `local_upload` and product examples, added evidence-basis appendix, preserved section anchors, and tightened docs-only truth labels. |
+| v1 | 2026-05-13 | Initial manual-curation standard draft. |
+
+Removal of v3 changes should restore v2 by reverting the metadata version/date, the naming-collision note, the source-roles alignment, the folder-README sibling paths, the expanded reason-code and verification tables, and this changelog row.
+
+[Back to top](#manual-curation--sources-to-catalog)
+
+---
+
+<sub>**Last updated:** 2026-06-11 · **Status:** draft · **Version:** v3 · **Owners:** Source steward · Docs steward · **Evidence basis:** docs-only in this polishing pass · [Back to top](#manual-curation--sources-to-catalog)</sub>
