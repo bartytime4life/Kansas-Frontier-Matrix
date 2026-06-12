@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-sources-catalog-profiles
 title: Source catalog profiles register
 type: register
-version: v0.2
+version: v0.3
 status: draft
-owners: <PLACEHOLDER — Docs steward · Source steward · Catalog profile owner>
+owners: Docs steward · Source steward · Catalog profile owner
 created: 2026-05-20
-updated: 2026-05-23
+updated: 2026-06-12
 policy_label: public
 related:
   - docs/sources/catalog/README.md
@@ -14,329 +14,491 @@ related:
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/GLOSSARY.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
+  - docs/sources/catalog/CARE-COMPLIANCE.md
   - docs/standards/STAC.md
   - docs/standards/DCAT.md
   - docs/standards/PROV.md
   - docs/doctrine/directory-rules.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/architecture/contract-schema-policy-split.md
   - schemas/contracts/v1/source/
-tags: [kfm, docs, sources, catalog, register, profiles, stac, dcat, prov]
+tags: [kfm, docs, sources, catalog, register, profiles, stac, dcat, prov, provenance, care, attestation]
 notes:
-  - "v0.2 — doctrinal correction: type changed from `profile` to `register`. Per `directory-rules.md` §6.1.a, external-standards profile content lives in `docs/standards/`, not in `docs/sources/catalog/`. This file is reframed as a pointer register identifying the three external profiles the catalog lane relies on, plus the KFM-namespaced extensions (kfm:provenance, kfm:care, KFM attestation rel) that ARE this lane's legitimate scope."
-  - "v0.2 corrects ADR-0014 reference (cited in v0.1 for temporal vocabulary) — not located in the doctrine corpus this session. The six time-kinds (source, observed, valid, retrieval, release, correction) ARE CONFIRMED doctrine; the ADR-0014 specific identifier is NEEDS VERIFICATION. Doctrine synthesis ADR backlog uses ADR-S-NN identifiers."
-  - "v0.2 strengthens the kfm:provenance field set per Pass-10 C4-01 (spec_hash, evidence_bundle_ref, run_record_ref, audit_ref, policy_digest; per-asset file:checksum) and adds the KFM `attestation` link rel per KFM-P7-PROG-0001."
-  - "PROPOSED scaffold; sibling-link presence verified in a prior Claude Code session, not in this session."
-  - "Atlas anchors: KFM-P31-PROG-0004 (KFM-STAC profile contract files — STAC 1.1 version pinning, conformance, extension set, collection IDs, item identity, asset roles, MIME types); KFM-P14-IDEA-0002 (STAC/DCAT/PROV distribution contract as harvest surface); KFM-P14-PROG-0008 (STAC → DCAT JSON-LD emitter); KFM-P7-PROG-0001 (STAC attestation hook); KFM-P10-PROG-0003 (PROV-O → Neo4j lineage); Pass-10 C4-01..05, C8-03, C15-02."
+  - "v0.3 — optimized authority boundary. This file is a pointer register and catalog-lane coordination surface, not the authoritative source for external standard profile content, object meaning, machine-checkable schema shape, policy decisions, or release decisions."
+  - "External standards profile content belongs in docs/standards/. KFM object meaning belongs in contracts/. Machine-checkable shape belongs in schemas/. Policy/admissibility decisions belong in policy/ and release/. This register points across those homes and records catalog-lane obligations."
+  - "v0.3 downgrades unverified repo-path and sibling-link claims to NEEDS VERIFICATION unless supported by mounted-repo evidence, current repo scan, accepted ADR, or generated artifact."
+  - "v0.3 retains the v0.2 doctrinal correction: type remains register, not profile."
+  - "v0.3 keeps ADR-0014 for temporal vocabulary as NEEDS VERIFICATION. The six time-kinds vocabulary remains doctrine-supported; the specific ADR identifier must be reconciled against the active ADR ledger."
+  - "Atlas anchors retained: KFM-P31-PROG-0004, KFM-P14-IDEA-0002, KFM-P14-PROG-0008, KFM-P7-PROG-0001, KFM-P10-PROG-0003, Pass-10 C4-01..05, C8-03, C15-01..03."
 [/KFM_META_BLOCK_V2] -->
 
-# Source catalog profiles register
+Source catalog profiles register
 
-> Pointer register identifying the external metadata-standard profiles the source-catalog lane relies on (STAC, DCAT, PROV-O) — a register, not the profiles themselves.
+Pointer register for the external metadata-standard profiles the source-catalog lane relies on — STAC, DCAT, and PROV-O — plus the KFM-namespaced extension obligations that must be carried through catalog, evidence, policy, release, and UI surfaces.
 
-![status](https://img.shields.io/badge/status-draft%20·%20scaffold-yellow)
-![type](https://img.shields.io/badge/type-register%20%28v0.2%20correction%29-blueviolet)
-![profiles](https://img.shields.io/badge/profiles-3%20pointed--at-1f6feb)
-![authority](https://img.shields.io/badge/profile%20authority-docs%2Fstandards%2F-green)
-![placement](https://img.shields.io/badge/lane%20placement-OPEN--DSC--06-red)
-![reviewed](https://img.shields.io/badge/last%20reviewed-2026--05--23-green)
+Status: draft scaffold
+Type: register, not profile
+Last reviewed: 2026-06-12
+Truth posture: doctrine-supported register · implementation paths NEEDS VERIFICATION unless separately confirmed
 
-**Status:** scaffold (PROPOSED) · **Type:** register *(docs lane; not authority)* · **Last reviewed:** 2026-05-23
+⸻
 
----
+Quick jump
 
-## Quick jump
+* Purpose
+* Non-authority boundary
+* Authority map
+* Profiles register
+* KFM-namespaced extension obligations
+* Temporal vocabulary: six time-kinds
+* Placement model
+* Maintenance rules
+* Validation checklist
+* Open questions
+* Related docs
 
-- [Purpose](#purpose)
-- [Authority pointer](#authority-pointer)
-- [Profiles register](#profiles-register)
-- [KFM-namespaced extensions](#kfm-namespaced-extensions)
-- [Temporal vocabulary (six time-kinds)](#temporal-vocabulary-six-time-kinds)
-- [Where this register sits](#where-this-register-sits)
-- [Maintenance rules](#maintenance-rules)
-- [Open questions](#open-questions)
-- [Related docs](#related-docs)
+⸻
 
----
+Purpose
 
-## Purpose
+This register answers one operational question:
 
-This register answers one question:
+For each external metadata standard used by the source-catalog lane, where is the authoritative KFM profile, and which KFM extension obligations must travel with catalog records, evidence references, receipts, policy decisions, release manifests, and public UI payloads?
 
-> **For each external metadata standard the source-catalog lane relies on, where is the authoritative KFM profile, and what KFM-namespaced extensions sit on top of that base profile?**
+This file exists so catalog maintainers do not have to rediscover the same crosswalk every time a STAC Item, DCAT Dataset, PROV-O graph, EvidenceBundle, ReleaseManifest, or MapLibre layer payload is created.
 
-> [!IMPORTANT]
-> The v0.1 of this file was declared `type: profile`. **That was a doctrine error.** Per `directory-rules.md` §6.1.a: *"`docs/standards/` is the canonical home for external standards profiles that KFM conforms to or crosswalks against — never for KFM's own object meaning (which lives in `contracts/`), shape (which lives in `schemas/`), or admissibility decisions (which live in `policy/`)."* The v0.2 corrects this: this file is a **pointer register** in the catalog lane; the authoritative profile *content* lives under `docs/standards/`. This change is the same doctrinal posture used by [`CROSSWALKS.md`](./CROSSWALKS.md) v0.2 and tracked by **OPEN-DSC-06**.
+It records:
 
-> [!NOTE]
-> What this file legitimately covers: (a) pointers to the three external-standards profiles; (b) the **KFM-namespaced extensions** (`kfm:provenance`, `kfm:care`, KFM `attestation` link rel) that sit on top of those profiles and are catalog-lane concerns; (c) the **six time-kinds temporal vocabulary** that applies across all three profiles.
+1. Which external standards are in scope: STAC, DCAT, and PROV-O.
+2. Where their authoritative KFM profile documents should live.
+3. Which KFM extension obligations must be carried consistently.
+4. Which claims are CONFIRMED doctrine, which are PROPOSED, and which require mounted-repo or ADR verification.
+5. Which open questions block promotion from scaffold to stable register.
 
-[Back to top](#quick-jump)
+⸻
 
----
+Non-authority boundary
 
-## Authority pointer
+This register is deliberately narrow.
 
-| Concern | Where authority lives | Status |
-|---|---|---|
-| External-standards profile content (STAC, DCAT, PROV-O) | [`docs/standards/<STANDARD>.md`](../../../standards/) | **CONFIRMED root** *(directory-rules.md §6.1.a)* |
-| KFM-STAC profile contract files (machine-readable) | `docs/standards/STAC.md` + *(PROPOSED home)* `schemas/contracts/v1/catalog/` or under the STAC profile folder | **PROPOSED** — Pass-10 C4-01 / KFM-P31-PROG-0004 |
-| `kfm:provenance` field set | Pass-10 C4-01 *(CONFIRMED — `spec_hash`, `evidence_bundle_ref`, `run_record_ref`, `audit_ref`, `policy_digest`; per-asset `file:checksum`)* | **CONFIRMED doctrine** |
-| `kfm:care` extension fields | Pass-10 C15-01 / C15-02 *(CARE namespace surfacing CARE fields in catalog vocabularies)* | **CONFIRMED doctrine** |
-| KFM `attestation` link rel | KFM-P7-PROG-0001 *(STAC attestation hook → EvidenceBundle)* | **CONFIRMED doctrine** *(rel registration NEEDS VERIFICATION)* |
-| Six time-kinds temporal vocabulary | Atlas v1.1 per-domain dossiers §C/E *(CONFIRMED across every domain — Hydrology, Soil, Habitat, Fauna, Flora, Archaeology, People/DNA/Land, etc.)* | **CONFIRMED doctrine** |
-| Source-descriptor schema home | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **CONFIRMED — ADR-0001** *(per directory-rules.md §7.4)* |
-| Placement question (this lane vs `docs/standards/`) | [`OPEN-DSC-06`](./OPEN-QUESTIONS.md) | **OPEN — cross-cutting** |
+It does not define external standards.
+It points to the KFM profile docs under docs/standards/.
 
-> [!CAUTION]
-> The v0.1 cited `ADR-0014` as the authority for the temporal-vocabulary "six time-kinds". The specific identifier `ADR-0014` was **not located** in the doctrine corpus this session. Only `ADR-0001` is confirmed. The doctrine synthesis ADR backlog uses `ADR-S-NN` identifiers (`ADR-S-01..15`). The **six time-kinds vocabulary itself** is CONFIRMED across the Atlas; only the specific ADR identifier is NEEDS VERIFICATION. Reconcile against the active ADR ledger.
+It does not define KFM object meaning.
+Meaning belongs in contracts/.
 
-[Back to top](#quick-jump)
+It does not define machine-checkable JSON Schema shape.
+Shape belongs in schemas/contracts/v1/....
 
----
+It does not decide allow, deny, restrict, redact, delay, or publish.
+Admissibility and release decisions belong in policy/ and release/.
 
-## Profiles register
+It does not prove current implementation.
+Any route name, file existence, validator behavior, CI enforcement, release artifact, or runtime behavior is NEEDS VERIFICATION unless confirmed by mounted-repo evidence, generated receipts, logs, tests, dashboards, or accepted ADRs.
 
-The catalog lane relies on three external standards. For each, the **authoritative profile content** lives under `docs/standards/`. This table summarizes what each profile must cover and where the canonical doc is.
+This file is a coordination register. It keeps the catalog lane aligned with the standards lane, schema lane, policy lane, evidence lane, release lane, and public UI lane.
 
-### 1 · KFM-STAC profile
+⸻
 
-| Field | Value (CONFIRMED unless noted) | Authority |
-|---|---|---|
-| Base standard | **STAC** | external — [stacspec.org](https://stacspec.org) |
-| Version pin | **STAC 1.1** *(PROPOSED `1.1.x` per v0.1; NEEDS VERIFICATION against mounted KFM-STAC profile contract files)* | KFM-P31-PROG-0004 *(Pass-10 C4-01)* |
-| Conformance classes | NEEDS VERIFICATION — enumerate in [`docs/standards/STAC.md`](../../../standards/STAC.md) | KFM-P31-FEAT-0004 *(STAC Conformance Inspector — must display conformance classes, extension use, item identity rules, MIME types, collection-contract completeness)* |
-| Required extensions | `projection`, `processing`, `file` *(per Pass-10 C4-01 example shape)* | Pass-10 C4-01 |
-| KFM extension | `kfm:provenance` block — see [KFM-namespaced extensions](#kfm-namespaced-extensions) | Pass-10 C4-01 |
-| Collection-id convention | `kfm-<org>-<product>` | Pass-10 C4-02; [`IDENTITY.md`](./IDENTITY.md) |
-| Item identity | Deterministic — `f(source identity, spec_hash)`; spec_hash = `jcs:sha256:<hex>` | Pass-10 C1-02; [`IDENTITY.md`](./IDENTITY.md) |
-| Asset roles | Include `data` (canonical), `thumbnail`, `metadata`; KFM-specific roles for `pmtiles`, `cog`, `mvt`, `geoparquet` | ML-062-008 / ML-062-030 *(Master MapLibre v2.1)*; PROPOSED enumeration in `docs/standards/STAC.md` |
-| MIME types | `application/json` (Item), `application/vnd.pmtiles` (PMTiles asset), `image/tiff; application=geotiff; profile=cloud-optimized` (COG), `application/vnd.mapbox-vector-tile` (MVT), `application/vnd.apache.parquet` (GeoParquet) — PROPOSED enumeration | PROPOSED in `docs/standards/STAC.md`; NEEDS VERIFICATION |
-| Catalog lane | [`data/catalog/stac/`](../../../../data/catalog/stac/) | CONFIRMED root *(KFM Repository Structure Guiding Document)* |
-| Authoritative profile doc | [`docs/standards/STAC.md`](../../../standards/STAC.md) *(PROPOSED — informally `STAC_KFM_PROFILE.md` per Pass-10 C4-01 expansion direction)* | `directory-rules.md` §6.1.a |
+Authority map
 
-### 2 · KFM-DCAT profile
+Concern	Canonical owner	This file’s role	Status
+External profile prose for STAC, DCAT, PROV-O	docs/standards/	Points to profile docs	CONFIRMED doctrine / file existence NEEDS VERIFICATION
+KFM object meaning	contracts/	Points to contract owner	CONFIRMED doctrine
+Machine-checkable object shape	schemas/contracts/v1/...	Points to schema owner	CONFIRMED doctrine
+Source identity, rights, sensitivity	data/registry/ + source descriptors + policy review	Records catalog dependency	CONFIRMED doctrine / specific paths NEEDS VERIFICATION
+Policy decisions	policy/	Records required policy linkage	CONFIRMED doctrine
+Release, rollback, correction	release/	Records required release linkage	CONFIRMED doctrine
+STAC/DCAT/PROV catalog outputs	data/catalog/... lifecycle lane	Records expected catalog lanes	CONFIRMED lifecycle phase / specific folder shape NEEDS VERIFICATION
+EvidenceBundle and receipts	evidence/proof/receipt homes per accepted repo convention	Records required references	CONFIRMED doctrine / exact homes NEEDS VERIFICATION
+Public MapLibre/UI payloads	governed API + released artifacts	Records downstream obligations	CONFIRMED doctrine / implementation UNKNOWN
 
-| Field | Value (CONFIRMED unless noted) | Authority |
-|---|---|---|
-| Base standard | **DCAT** | external — [W3C DCAT](https://www.w3.org/TR/vocab-dcat-3/) |
-| Version pin | DCAT 3 *(PROPOSED; NEEDS VERIFICATION against mounted profile)* | Pass-10 C4-05 |
-| Distribution model | Dataset → Distribution(s), each Distribution carrying checksums, `byteSize`, `mediaType`, table-schema conformity, versions, PROV links | KFM-P14-IDEA-0002 *(STAC/DCAT/PROV distribution contract as harvest surface)*; KFM-P14-PROG-0008 *(STAC → DCAT JSON-LD emitter)* |
-| KFM extension | `kfm:care` block attaches at **Dataset** level; `kfm:provenance` may attach at **Distribution** level — NEEDS VERIFICATION | Pass-10 C15-02 |
-| Required fields | DOI, harvest date, dataset version, license, `rightsHolder`, `datasetID`, EvidenceBundle references | KFM-P26-PROG-0025 *(catalog closure writers)* |
-| Catalog lane | [`data/catalog/dcat/`](../../../../data/catalog/dcat/) | CONFIRMED root |
-| Authoritative profile doc | [`docs/standards/DCAT.md`](../../../standards/DCAT.md) *(PROPOSED)* | `directory-rules.md` §6.1.a |
+Placement correction inherited from v0.2
 
-### 3 · KFM-PROV profile
+Earlier versions risked treating this file as a profile. That was corrected.
 
-| Field | Value (CONFIRMED unless noted) | Authority |
-|---|---|---|
-| Base standard | **W3C PROV-O** + PAV *(Provenance, Authoring, Versioning)* | external — [W3C PROV-O](https://www.w3.org/TR/prov-o/); PAV |
-| Version pin | PROV-O 1.0 *(PROPOSED; NEEDS VERIFICATION against mounted profile)* | Pass-10 C8-03 |
-| Core mapping | `RunReceipt` → PROV-O `Activity`; `EvidenceBundle` → PROV-O `Entity`; tooling/operator → PROV-O `Agent`; relationships: `USED`, `GENERATED`, `WAS_ASSOCIATED_WITH`, `WAS_ATTRIBUTED_TO` | KFM-P10-PROG-0003 *(PROV-O → Neo4j lineage mapping)*; Pass-10 C8-03 |
-| Serialization | JSON-LD; canonicalization via JCS *(default)* or URDNA2015 *(reserved for RDF semantic equivalence)* | Pass-10 C8-05 |
-| KFM extension | `kfm:provenance` fields embedded in STAC properties resolve to PROV-O via the round-trip `prov:wasGeneratedBy` edge | Pass-10 C8-03; C4-01 |
-| Temporal vocabulary | **Six time-kinds** — see [Temporal vocabulary (six time-kinds)](#temporal-vocabulary-six-time-kinds) | Atlas v1.1 per-domain dossiers *(CONFIRMED across every domain)* |
-| Catalog lane | [`data/catalog/prov/`](../../../../data/catalog/prov/) | CONFIRMED root |
-| Authoritative profile doc | [`docs/standards/PROV.md`](../../../standards/PROV.md) *(see OPEN-DR-01 re. `PROV.md` vs `PROVENANCE.md`; ADR-S-06 in doctrine synthesis backlog)* | `directory-rules.md` §6.1.a |
+This document is a register in the source-catalog docs lane. External standards profile content belongs in docs/standards/. KFM object contracts and schemas remain under their own governance roots.
 
-> [!NOTE]
-> The three profile docs in `docs/standards/` are **PROPOSED authored** per Andy's prior-session work. Their existence is NEEDS VERIFICATION this session. If `docs/standards/STAC.md` / `DCAT.md` / `PROV.md` do not exist as expected, the open authoring tasks remain.
+⸻
 
-[Back to top](#quick-jump)
+Profiles register
 
----
+The catalog lane relies on three external standards. Each profile below is a pointer entry, not a full profile definition.
 
-## KFM-namespaced extensions
+1. KFM-STAC profile
 
-The KFM-specific extension blocks that sit on top of the three base profiles are catalog-lane concerns and ARE covered authoritatively here (since they are not "external standards" content per §6.1.a — they are KFM-specific).
+Field	Register value	Status
+Base standard	STAC	CONFIRMED external standard dependency
+Intended version pin	STAC 1.1.x	PROPOSED / NEEDS VERIFICATION
+Authoritative KFM profile doc	docs/standards/STAC.md	PROPOSED file / placement doctrine-supported
+Machine-readable schema home	schemas/contracts/v1/catalog/stac/... or accepted repo equivalent	PROPOSED / NEEDS ADR or repo verification
+Catalog output lane	data/catalog/stac/...	PROPOSED path / lifecycle phase supported
+Collection ID convention	kfm-<org>-<product>	PROPOSED / verify against IDENTITY.md
+Item identity	deterministic identity from source identity + spec_hash	PROPOSED / doctrine-supported
+Required external extensions	projection, processing, file	PROPOSED / verify against STAC profile
+KFM extension obligations	kfm:provenance, kfm:care when applicable, attestation link	PROPOSED register obligation
+Required public posture	STAC is catalog metadata, not publication approval	CONFIRMED doctrine
 
-### `kfm:provenance` block *(STAC properties; embedded in STAC Item)*
+Minimum profile coverage expected in docs/standards/STAC.md:
 
-**Required fields** (CONFIRMED — Pass-10 C4-01):
+* version pin and migration rule;
+* conformance classes;
+* extension list;
+* Collection ID rules;
+* Item identity and spec_hash rules;
+* asset role vocabulary;
+* MIME/media-type policy;
+* file:checksum and per-asset integrity;
+* kfm:provenance carriage;
+* kfm:care carriage where applicable;
+* attestation link relation posture;
+* validation fixtures and expected failure cases.
 
-| Field | Type | Meaning |
-|---|---|---|
-| `spec_hash` | `jcs:sha256:<hex>` | Content identity of the Item via RFC 8785 JCS + SHA-256 |
-| `evidence_bundle_ref` | URI | Resolves to a content-addressed `EvidenceBundle` (typically `kfm://evidence/<digest>`) |
-| `run_record_ref` | URI | Resolves to a `RunReceipt` for the pipeline run that produced this Item |
-| `audit_ref` | URI | Resolves to SLSA/OPA attestations (DSSE bundle) |
-| `policy_digest` | `sha256:<hex>` | Records the OPA policy bundle used at promotion |
+2. KFM-DCAT profile
 
-**Per-asset integrity:** `file:checksum` from the STAC `file` extension (CONFIRMED — Pass-10 C4-01).
+Field	Register value	Status
+Base standard	W3C DCAT	CONFIRMED external standard dependency
+Intended version pin	DCAT 3	PROPOSED / NEEDS VERIFICATION
+Authoritative KFM profile doc	docs/standards/DCAT.md	PROPOSED file / placement doctrine-supported
+Machine-readable schema home	schemas/contracts/v1/catalog/dcat/... or accepted repo equivalent	PROPOSED / NEEDS ADR or repo verification
+Catalog output lane	data/catalog/dcat/...	PROPOSED path / lifecycle phase supported
+Core model	Dataset → Distribution(s)	CONFIRMED standard pattern / KFM mapping PROPOSED
+Distribution obligations	checksum, byte size, media type, version, license, rights holder, provenance links	PROPOSED
+KFM extension obligations	kfm:care at Dataset level where applicable; provenance at Dataset or Distribution level per profile	PROPOSED / NEEDS VERIFICATION
+Required public posture	DCAT is harvest/discovery metadata, not publication approval	CONFIRMED doctrine
 
-### `kfm:care` block *(STAC properties + DCAT Dataset)*
+Minimum profile coverage expected in docs/standards/DCAT.md:
 
-**Required fields** when `authority_to_control` is non-empty (CONFIRMED — Pass-10 C15-01 + C15-02):
+* Dataset and Distribution mapping;
+* version and release mapping;
+* license and rights-holder rules;
+* DOI or persistent identifier posture;
+* EvidenceBundle and ReleaseManifest references;
+* STAC → DCAT JSON-LD mapping;
+* distribution checksums and byte sizes;
+* kfm:care exposure rule;
+* policy and sensitivity warning fields;
+* harvest and correction timestamps.
 
-| Field | Meaning |
-|---|---|
-| `steward_org` | Indigenous nation, community, or named cultural steward |
-| `authority_to_control` | Asserted authority; non-empty triggers **default-deny on publication** (C15-03) |
-| `consent` | Reference to the `ConsentSidecar` *(implementation NEEDS VERIFICATION)* |
-| `obligations` | Steward-imposed obligations |
-| `benefit_commitments` | Benefit-sharing commitments |
+3. KFM-PROV profile
 
-See [`CARE-COMPLIANCE.md`](./CARE-COMPLIANCE.md) for full surfacing rules and the default-deny posture.
+Field	Register value	Status
+Base standard	W3C PROV-O	CONFIRMED external standard dependency
+Adjacent vocabulary	PAV where useful	PROPOSED / NEEDS VERIFICATION
+Intended version pin	PROV-O 1.0	PROPOSED / NEEDS VERIFICATION
+Authoritative KFM profile doc	docs/standards/PROV.md	PROPOSED file / placement doctrine-supported
+Machine-readable schema home	schemas/contracts/v1/catalog/prov/... or accepted repo equivalent	PROPOSED / NEEDS ADR or repo verification
+Catalog output lane	data/catalog/prov/...	PROPOSED path / lifecycle phase supported
+Core mapping	RunReceipt → Activity; EvidenceBundle → Entity; tool/operator/system → Agent	PROPOSED / doctrine-supported
+Key relations	prov:used, prov:generated, prov:wasAssociatedWith, prov:wasAttributedTo, prov:wasGeneratedBy	PROPOSED
+Serialization	JSON-LD	PROPOSED
+Canonicalization	JCS by default for KFM object hashing; URDNA2015 reserved for RDF semantic equivalence	PROPOSED / NEEDS ADR
+Required public posture	PROV lineage explains evidence flow; it does not override policy or release state	CONFIRMED doctrine
 
-### KFM `attestation` link rel *(STAC `links` array)*
+Minimum profile coverage expected in docs/standards/PROV.md:
 
-A STAC link with `rel: "attestation"` (under a KFM-namespaced rel until upstream registration) pointing at the `EvidenceBundle` whose `spec_hash` certifies the Item (CONFIRMED — KFM-P7-PROG-0001).
+* KFM object-family mapping;
+* activity/entity/agent identity;
+* JSON-LD context strategy;
+* canonicalization and hash discipline;
+* relation vocabulary;
+* time-kind mapping;
+* EvidenceBundle, RunReceipt, AIReceipt, ReleaseManifest, and CorrectionNotice linkage;
+* Neo4j/triplet projection constraints;
+* round-trip checks between STAC/DCAT/PROV.
 
-> [!NOTE]
-> `attestation` is **not yet a standard STAC link relation**. KFM uses either a registered rel via the STAC extension process *(future work)* or a custom rel under the `kfm:` namespace *(current PROPOSED posture)*. Affected by **OPEN-DSC-03** *(namespace pin)*.
+⸻
 
-### Namespace pin (`kfm:` vs `ks-kfm:`)
+KFM-namespaced extension obligations
 
-All three extension blocks above use the `kfm:` provisional prefix; the pin is **UNRESOLVED** per **OPEN-DSC-03** *(Pass-10 C4-01 Open Question)*. Adoption of the final pin requires a sweep of every product page, Collection summary, JSON-LD context, and STAC linter rule.
+The following are KFM-specific extension obligations. This register records their catalog-lane carriage requirements, but their meaning, schema, and policy effects must be defined in the appropriate authority roots.
 
-[Back to top](#quick-jump)
+Extension ownership table
 
----
+Extension	Catalog carriage	Meaning owner	Shape owner	Policy owner	Status
+kfm:provenance	STAC Item properties; DCAT Distribution or Dataset; PROV linkage	contracts/	schemas/contracts/v1/...	policy/ + release/	PROPOSED / doctrine-supported
+kfm:care	STAC properties and DCAT Dataset where applicable	contracts/	schemas/contracts/v1/...	policy/sensitivity/ or accepted equivalent	PROPOSED / default-deny doctrine-supported
+KFM attestation link relation	STAC links[]; DCAT distribution relation; release/proof linkage	contracts/	schemas/contracts/v1/...	release/ + proof policy	PROPOSED / rel registration NEEDS VERIFICATION
 
-## Temporal vocabulary (six time-kinds)
+kfm:provenance carriage obligation
 
-**CONFIRMED doctrine** — applies across all three profiles. Every per-domain dossier in Atlas v1.1 includes the line: *"CONFIRMED source, observed, valid, retrieval, release, and correction times stay distinct where material."*
+When a catalog object depends on evidence or emitted artifacts, it should carry or resolve to the following provenance fields.
 
-| # | Time-kind | What it pins | Example |
-|---|---|---|---|
-| 1 | **`source` time** | When the source publisher recorded the data | Storm event report filed at NOAA NCEI |
-| 2 | **`observed` time** | When the underlying real-world event occurred / was sensed | Storm formed on the ground |
-| 3 | **`valid` time** | The interval during which the asserted fact holds | A regulatory zone effective 2020-01-01 to 2025-12-31 |
-| 4 | **`retrieval` time** | When KFM fetched the source artifact | `fetch_time` in the run receipt |
-| 5 | **`release` time** | When KFM published the derived artifact | `release_time` in the ReleaseManifest |
-| 6 | **`correction` time** | When a correction notice was issued | `CorrectionNotice.time` |
+Field	Expected value	Register posture
+spec_hash	canonical hash of the record or governed artifact	PROPOSED
+evidence_bundle_ref	resolvable EvidenceBundle URI	PROPOSED
+run_record_ref	RunReceipt or pipeline run record URI	PROPOSED
+audit_ref	audit/proof/attestation reference	PROPOSED
+policy_digest	digest of policy bundle used for decision or promotion	PROPOSED
+per-asset checksum	file:checksum or asset-specific checksum field	PROPOSED
 
-> [!IMPORTANT]
-> These six are **not collapsible**. Treating any pair as the same is a doctrinal violation *(Atlas §24.1.2 anti-collapse failure modes)*. KFM-PROV serializes the relevant subset as PROV-O `time:` properties on the corresponding entities and activities; KFM-STAC carries them in `properties` as `datetime`, `start_datetime`, `end_datetime`, plus `kfm:provenance.run_record_ref.fetch_time` and the `release_time` in the linked ReleaseManifest.
+Required guardrail:
 
-The v0.1's "six time-kinds tracked per ADR-0014" is **partially correct**: the six time-kinds ARE confirmed doctrine; the specific `ADR-0014` identifier is **NEEDS VERIFICATION** — see [Authority pointer](#authority-pointer) CAUTION callout.
+A catalog record carrying kfm:provenance must not imply public release. It only records provenance linkage. Public release still depends on validation, policy, review, release manifest, correction path, and rollback target.
 
-[Back to top](#quick-jump)
+kfm:care carriage obligation
 
----
+When a source, dataset, feature, layer, or evidence bundle carries Indigenous, cultural, community, stewardship, consent, or authority-to-control concerns, catalog records must preserve that signal without exposing restricted details.
 
-## Where this register sits
+Expected fields:
 
-```mermaid
+Field	Meaning	Publication posture
+steward_org	community, nation, organization, or steward body	restrict/redact if sensitive
+authority_to_control	asserted authority/control interest	non-empty triggers default-deny review
+consent	ConsentSidecar or consent record reference	never infer consent from absence
+obligations	stewardship or use obligations	preserve through release
+benefit_commitments	benefit-sharing or return obligations	preserve through release
+access_tier	public, staged, restricted, denied, or steward-review	policy-owned
+redaction_reason	reason exact data is withheld/generalized	required when transformed
+
+Required guardrail:
+
+kfm:care is not decorative metadata. If it indicates authority-to-control, cultural sensitivity, consent requirements, or community obligations, publication must fail closed until policy and review state permit release.
+
+KFM attestation link relation
+
+A catalog object may include a KFM attestation link relation that points to an EvidenceBundle, proof bundle, DSSE/cosign-style attestation, or ReleaseManifest entry.
+
+Proposed STAC link shape:
+
+{
+  "rel": "kfm:attestation",
+  "href": "kfm://evidence/<digest-or-id>",
+  "type": "application/json",
+  "title": "KFM attestation and evidence bundle"
+}
+
+Notes:
+
+* rel: "attestation" without a namespace is NEEDS VERIFICATION against upstream STAC link relation registration.
+* Until registration is confirmed, prefer kfm:attestation.
+* The namespace prefix itself remains open under the namespace-pin question.
+* The link must not bypass evidence, policy, review, or release checks.
+
+Namespace pin
+
+Current provisional namespace: kfm:.
+
+Open alternative: ks-kfm:.
+
+The final namespace decision affects:
+
+* STAC extension fields;
+* DCAT JSON-LD context;
+* PROV JSON-LD context;
+* schema property names;
+* validators;
+* public API payloads;
+* layer manifests;
+* Evidence Drawer fields;
+* Focus Mode citations;
+* docs examples;
+* released catalog records.
+
+No mass rename should occur without an accepted ADR and migration plan.
+
+⸻
+
+Temporal vocabulary: six time-kinds
+
+KFM keeps six time-kinds distinct where material.
+
+#	Time-kind	What it pins	Example
+1	source time	When the publisher/source recorded or issued the data	date on agency source record
+2	observed time	When the real-world event, condition, or measurement occurred	stream gauge measurement time
+3	valid time	Interval during which the assertion applies	regulatory boundary effective dates
+4	retrieval time	When KFM fetched or received the artifact	connector fetch receipt timestamp
+5	release time	When KFM released the derived artifact	ReleaseManifest timestamp
+6	correction time	When a correction notice was issued	CorrectionNotice timestamp
+
+Required rule:
+
+These time-kinds are not interchangeable. Collapsing them weakens evidence, rollback, correction, source drift detection, temporal filtering, and public explanation.
+
+Register posture:
+
+* The six time-kinds are doctrine-supported.
+* The specific historical reference to ADR-0014 remains NEEDS VERIFICATION.
+* A future accepted ADR should pin field names, JSON-LD mappings, STAC/DCAT/PROV placement, and UI vocabulary.
+
+Recommended carriage by profile:
+
+Time-kind	STAC	DCAT	PROV-O	KFM receipt/release object
+source	source-specific property or provider metadata	issued/modified/source note	Entity attribution metadata	SourceDescriptor / RetrievalReceipt
+observed	datetime, start_datetime, end_datetime	temporal coverage	Entity time or qualified relation	Observation record
+valid	temporal interval properties	temporal coverage	validity interval extension	Assertion / rule record
+retrieval	kfm:provenance.run_record_ref	harvest metadata	Activity time	RunReceipt
+release	linked ReleaseManifest	distribution issued date	generated activity time	ReleaseManifest
+correction	linked CorrectionNotice	modified/correction note	invalidation/revision relation	CorrectionNotice
+
+⸻
+
+Placement model
+
 flowchart LR
-  subgraph Authority["Authority (CONFIRMED doctrine)"]
-    DR["directory-rules.md §6.1.a<br/>(docs/standards/ for external profiles)"]
-    P10["Pass-10 C4-01, C4-02, C8-03, C15-02"]
-    SR["schemas/contracts/v1/source/<br/>(machine schema)"]
+  subgraph Doctrine["Doctrine and authority"]
+    DR["docs/doctrine/directory-rules.md"]
+    SPLIT["contract-schema-policy split"]
+    LIFE["lifecycle law"]
   end
-
-  subgraph Standards["docs/standards/ (CONFIRMED home)"]
-    STAC["STAC.md<br/>(KFM-STAC profile)"]
-    DCAT["DCAT.md<br/>(KFM-DCAT profile)"]
-    PROV["PROV.md<br/>(KFM-PROV profile)"]
+  subgraph Standards["External profile docs"]
+    STAC["docs/standards/STAC.md"]
+    DCAT["docs/standards/DCAT.md"]
+    PROV["docs/standards/PROV.md"]
   end
-
-  subgraph DocsLane["Docs lane (this register)"]
-    PR["PROFILES.md<br/>(this file — pointer register)"]
-    KE["KFM-namespaced extensions<br/>(kfm:provenance · kfm:care ·<br/>attestation rel)"]
-    TV["Six time-kinds<br/>vocabulary"]
+  subgraph Register["This register"]
+    REG["docs/sources/catalog/PROFILES.md"]
+    EXT["extension obligations"]
+    TIME["six time-kinds"]
+    OPEN["open questions"]
   end
-
-  subgraph CatalogLane["data/catalog/ (CONFIRMED lanes)"]
+  subgraph AuthorityRoots["Authority roots"]
+    CONTRACTS["contracts/"]
+    SCHEMAS["schemas/contracts/v1/"]
+    POLICY["policy/"]
+    RELEASE["release/"]
+  end
+  subgraph DataLifecycle["Catalog lifecycle outputs"]
     CSTAC["data/catalog/stac/"]
     CDCAT["data/catalog/dcat/"]
     CPROV["data/catalog/prov/"]
   end
+  DR --> Register
+  DR --> Standards
+  SPLIT --> AuthorityRoots
+  LIFE --> DataLifecycle
+  REG --> STAC
+  REG --> DCAT
+  REG --> PROV
+  REG --> EXT
+  REG --> TIME
+  REG --> OPEN
+  EXT --> CONTRACTS
+  EXT --> SCHEMAS
+  EXT --> POLICY
+  EXT --> RELEASE
+  STAC --> CSTAC
+  DCAT --> CDCAT
+  PROV --> CPROV
+  CONTRACTS -. meaning .-> EXT
+  SCHEMAS -. shape .-> EXT
+  POLICY -. admissibility .-> EXT
+  RELEASE -. publication state .-> EXT
 
-  DR -.governs placement.-> Standards
-  P10 -.defines extension shapes.-> KE
-  PR -. points at .-> STAC
-  PR -. points at .-> DCAT
-  PR -. points at .-> PROV
-  PR --> KE
-  PR --> TV
-  STAC -.produces records under.-> CSTAC
-  DCAT -.produces records under.-> CDCAT
-  PROV -.produces records under.-> CPROV
-  KE -.embeds in.-> CSTAC
-  KE -.embeds in.-> CDCAT
-  TV -.applies to.-> STAC
-  TV -.applies to.-> DCAT
-  TV -.applies to.-> PROV
-  SR -.machine schema for.-> KE
+Interpretation:
 
-  classDef confirmed fill:#e6ffed,stroke:#1a7f37;
-  classDef proposed stroke-dasharray: 5 5;
-  class DR,P10,SR,CSTAC,CDCAT,CPROV,TV confirmed;
-  class STAC,DCAT,PROV,PR,KE proposed;
-```
+* docs/standards/ owns external profile prose.
+* This register points at those profiles.
+* This register records cross-profile catalog obligations.
+* contracts/, schemas/, policy/, and release/ remain the authority roots for meaning, shape, decisions, and publication state.
+* data/catalog/... carries lifecycle outputs after validation and promotion gates.
 
-> [!NOTE]
-> Solid green = CONFIRMED doctrine. Dashed = PROPOSED (the standards profiles are PROPOSED-authored; this register and the extension catalogs are PROPOSED scaffolds). The diagram shows that this register **points at** the authoritative profiles in `docs/standards/` and **owns** the KFM-namespaced extension content + temporal vocabulary.
+⸻
 
-[Back to top](#quick-jump)
+Maintenance rules
 
----
+This register must be updated whenever one of the following changes lands.
 
-## Maintenance rules
+Trigger	Required update
+STAC, DCAT, or PROV version pin changes	Update profile row, add migration note, link accepted ADR or drift entry
+docs/standards/STAC.md, DCAT.md, or PROV.md lands or moves	Update profile status and related links
+kfm:provenance field changes	Update extension obligation table; link contract/schema/policy changes
+kfm:care field changes	Coordinate with CARE-COMPLIANCE.md; update policy linkage
+namespace pin resolves	Replace provisional prefix; add migration checklist
+attestation rel is registered upstream	Update link relation rule and validator expectation
+six time-kinds ADR lands	Replace ADR NEEDS VERIFICATION note with accepted ADR reference
+schema home changes	Do not edit this file alone; require ADR and update schema-home references
+policy gate changes	Update policy owner references and validation checklist
+catalog output lanes move	Record drift, ADR, migration, and rollback path
 
-> [!IMPORTANT]
-> Docs are part of the working system. This register MUST update when version pins advance, when KFM-namespaced extensions change, or when the placement question (OPEN-DSC-06) is resolved.
+Version rule:
 
-| Trigger | Action |
-|---|---|
-| **External standard version advances** (STAC 1.1 → 1.2, DCAT 3 → 4, PROV-O update) | Bump the version-pin row; cross-reference to the updated `docs/standards/<STANDARD>.md`; raise as a `DRIFT-PROF-NN` entry if the change is breaking. |
-| **`kfm:provenance` field added/removed** | Update the [KFM-namespaced extensions](#kfm-namespaced-extensions) table; bump version; reference the resolving ADR; coordinate sweep with all product pages. |
-| **`kfm:care` extension surface changes** | Coordinate update with [`CARE-COMPLIANCE.md`](./CARE-COMPLIANCE.md). |
-| **OPEN-DSC-03 (namespace pin) resolved** | Sweep all `kfm:` references; bump version; reference the resolving ADR. |
-| **OPEN-DSC-06 (catalog-lane vs `docs/standards/` placement) resolved** | If `docs/standards/` is confirmed canonical, ensure all profile content has migrated; this file remains as the pointer register. If a different posture is chosen, bump version and document. |
-| **`docs/standards/STAC.md` / `DCAT.md` / `PROV.md` authoring lands** | Update the Status column for each row in [Profiles register](#profiles-register) from PROPOSED to CONFIRMED. |
-| **`ADR-0014` (or successor) for temporal vocabulary lands** | Replace the NEEDS VERIFICATION annotation under [Temporal vocabulary](#temporal-vocabulary-six-time-kinds) with the resolving ADR identifier. |
-| **STAC `attestation` rel registered upstream** | Update [KFM `attestation` link rel](#kfm-attestation-link-rel-stac-links-array) note; remove "until upstream registration" qualifier. |
+* Keep v0.x while namespace pin, profile doc existence, and ADR references remain unresolved.
+* Move to v1.0 only after:
+    * the three standards profile docs exist and are reviewed;
+    * namespace pin is accepted;
+    * attestation relation posture is accepted;
+    * the schema/contract/policy split is reflected in actual files;
+    * validators and fixtures exist for at least one STAC, one DCAT, and one PROV example.
 
-**Versioning.** KFM Meta Block v2 semver-lite: `v0.x` while OPEN-DSC-03 and OPEN-DSC-06 are open; `v1.x` once both close and the three `docs/standards/` profile docs are authored at `status: published`.
+⸻
 
-[Back to top](#quick-jump)
+Validation checklist
 
----
+Before promoting this register beyond draft, run or complete the following checks.
 
-## Open questions
+Check	Expected result	Status
+Confirm docs/standards/STAC.md exists	profile doc present and reviewed	NEEDS VERIFICATION
+Confirm docs/standards/DCAT.md exists	profile doc present and reviewed	NEEDS VERIFICATION
+Confirm docs/standards/PROV.md exists	profile doc present and reviewed	NEEDS VERIFICATION
+Confirm PROV.md vs PROVENANCE.md naming	one canonical name or ADR	NEEDS VERIFICATION
+Confirm source catalog sibling links	README, CROSSWALKS, IDENTITY, GLOSSARY, OPEN-QUESTIONS, CARE-COMPLIANCE	NEEDS VERIFICATION
+Confirm schema homes for catalog profiles	under accepted schema root	NEEDS VERIFICATION
+Confirm source descriptor schema home	under accepted source schema root	NEEDS VERIFICATION
+Confirm kfm:provenance fixture	valid and invalid fixture present	NEEDS VERIFICATION
+Confirm kfm:care fixture	default-deny case present	NEEDS VERIFICATION
+Confirm attestation fixture	link relation and evidence resolution tested	NEEDS VERIFICATION
+Confirm six time-kind fixture	source/observed/valid/retrieval/release/correction distinction tested	NEEDS VERIFICATION
+Confirm STAC → DCAT mapping fixture	JSON-LD output validates	NEEDS VERIFICATION
+Confirm STAC/DCAT/PROV round trip	no evidence or release reference lost	NEEDS VERIFICATION
+Confirm no public UI bypass	public payload resolves through governed API and released artifacts	NEEDS VERIFICATION
 
-This register references existing `OPEN-DSC-*` entries in [`OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md). The numbering canonical authority lives there *(per the numbering rule established in OPEN-QUESTIONS.md v0.2)*. The questions below either reference existing entries or are PROPOSED ALLOCATIONS that need canonical confirmation in `OPEN-QUESTIONS.md` v0.3.
+⸻
 
-| ID | Question | Status |
-|---|---|---|
-| **OPEN-DSC-03** | Namespace pin — `kfm:` (KFM-global) vs `ks-kfm:` (Kansas-scoped). Affects every extension block listed in [KFM-namespaced extensions](#kfm-namespaced-extensions). | **OPEN — corpus-wide** |
-| **OPEN-DSC-05** | STAC vs DCAT disposition for spatiotemporal datasets that could go either way. | **NEEDS VERIFICATION** |
-| **OPEN-DSC-06** | Canonical placement for this kind of pointer content — `docs/sources/catalog/` (current) vs `docs/standards/<STANDARD>/`. Candidate resolution: this pointer register stays here, profile content stays in `docs/standards/`. | **OPEN — pending ADR** |
-| **OPEN-DSC-12-NV** | `ADR-0014` for temporal vocabulary — not located in corpus this session; reconcile against active ADR ledger. *(Same flavor as OPEN-DSC-12-NV for ADR-0010, which OPEN-QUESTIONS.md v0.2 flagged.)* | **NEEDS VERIFICATION** |
-| **OPEN-DSC-29** *(PROPOSED ALLOCATION — needs OPEN-QUESTIONS.md v0.3 canonical assignment)* | STAC version-pin lifecycle — when STAC 1.1 → 1.2 lands, what is the migration discipline? Coordinated bump across all product pages, or per-Collection? | **PROPOSED** |
-| **OPEN-DSC-30** *(PROPOSED ALLOCATION)* | Asset-role and MIME-type enumeration — should the canonical list live in `docs/standards/STAC.md` only, or also be mirrored as a machine artifact under `schemas/contracts/v1/catalog/`? | **PROPOSED** |
-| **OPEN-DSC-31** *(PROPOSED ALLOCATION)* | KFM `attestation` rel — pursue STAC extension-registry submission, or keep KFM-local indefinitely? *(Pass-10 C4 also flags `kfm:care` as a candidate for upstream submission — Pass-10 §C.3 "Low Priority" item: "Pilot the kfm:care namespace as a STAC extension submission".)* | **PROPOSED** |
-| **OPEN-DSC-32** *(PROPOSED ALLOCATION)* | PROV-O ↔ CIDOC E13 demarcation — the corpus explicitly flags this boundary as unsettled *(Pass-10 C8-03)*. Resolve before STAC × PROV-O and STAC × CIDOC-CRM crosswalks both promote *(intersects [`CROSSWALKS.md`](./CROSSWALKS.md) OPEN-DSC-09)*. | **PROPOSED** |
+Open questions
 
-> [!NOTE]
-> OPEN-DSC-29..32 are **PROPOSED ALLOCATIONS**, not yet entered into the canonical register. They MUST be confirmed in `OPEN-QUESTIONS.md` v0.3 before being referenced from other docs. Per the numbering reconciliation already in flight (OPEN-QUESTIONS.md v0.2 reserves 16..28 for collision reconciliation), OPEN-DSC-29 is the next free identifier — but coordinate with the canonical register before allocating.
+Canonical numbering lives in docs/sources/catalog/OPEN-QUESTIONS.md. IDs below are retained as register-local references until confirmed there.
 
-[Back to top](#quick-jump)
+ID	Question	Status
+OPEN-DSC-03	Namespace pin: kfm: vs ks-kfm:	OPEN
+OPEN-DSC-05	STAC vs DCAT disposition for spatiotemporal datasets that can fit either model	NEEDS VERIFICATION
+OPEN-DSC-06	Pointer register placement: keep this file in docs/sources/catalog/ while profiles live in docs/standards/?	OPEN
+OPEN-DSC-12-NV	Reconcile ADR-0014 temporal-vocabulary reference against active ADR ledger	NEEDS VERIFICATION
+OPEN-DSC-29	STAC version-pin migration: all-at-once or per-Collection migration?	PROPOSED ALLOCATION
+OPEN-DSC-30	Asset-role and MIME/media-type enumeration: prose only, schema artifact, or both?	PROPOSED ALLOCATION
+OPEN-DSC-31	KFM attestation rel: upstream registration, KFM-local namespace, or both?	PROPOSED ALLOCATION
+OPEN-DSC-32	PROV-O ↔ CIDOC CRM / CIDOC E13 boundary for cultural-heritage lineage	PROPOSED ALLOCATION
+OPEN-DSC-33	Which catalog fields must be mirrored into public API payloads versus only resolvable through Evidence Drawer?	PROPOSED ALLOCATION
+OPEN-DSC-34	Which KFM extension obligations are mandatory for context-only layers?	PROPOSED ALLOCATION
 
----
+Allocation warning:
 
-## Related docs
+Proposed IDs must not be treated as canonical until entered into OPEN-QUESTIONS.md and checked for collisions.
 
-- [`docs/sources/catalog/README.md`](./README.md) — lane root *(PROPOSED)*
-- [`docs/sources/catalog/CROSSWALKS.md`](./CROSSWALKS.md) — cross-format mappings register *(same OPEN-DSC-06 placement posture)*
-- [`docs/sources/catalog/IDENTITY.md`](./IDENTITY.md) — Collection-id / item-id / namespace / `promoteId` conventions
-- [`docs/sources/catalog/GLOSSARY.md`](./GLOSSARY.md) — term definitions including `EvidenceBundle`, `RunReceipt`, `spec_hash`, `kfm:provenance`, `kfm:care`
-- [`docs/sources/catalog/CARE-COMPLIANCE.md`](./CARE-COMPLIANCE.md) — full CARE field surfacing rules
-- [`docs/sources/catalog/OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md) — canonical numbering authority for `OPEN-DSC-*`
-- [`docs/standards/STAC.md`](../../../standards/STAC.md) — **authoritative KFM-STAC profile** *(PROPOSED authored)*
-- [`docs/standards/DCAT.md`](../../../standards/DCAT.md) — **authoritative KFM-DCAT profile** *(PROPOSED authored)*
-- [`docs/standards/PROV.md`](../../../standards/PROV.md) — **authoritative KFM-PROV profile** *(see OPEN-DR-01 re. PROV.md vs PROVENANCE.md; ADR-S-06 in doctrine synthesis backlog)*
-- [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — ISO 19115 profile *(adjacent — crosswalk target)*
-- [`docs/standards/OGC-API-TILES.md`](../../../standards/OGC-API-TILES.md) — OGC API Tiles profile *(adjacent)*
-- [`docs/standards/PMTILES.md`](../../../standards/PMTILES.md) — PMTiles governance profile *(adjacent — asset-role consumer)*
-- [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — machine shapes *(per ADR-0001)*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(§6.1.a `docs/standards/` placement; §6.4 schema home; §8.3 compatibility roots)*
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries
-- [`docs/adr/`](../../adr/) — ADRs *(active ledger needed to resolve ADR-0014 / ADR-S-06 references)*
+⸻
 
----
+Related docs
 
-*Doc status: **draft · register (v0.2)** · Last reviewed: **2026-05-23** · Provenance: revised against `directory-rules.md` §6.1.a; Pass-10 C4-01 / C4-02 / C4-05 / C8-03 / C8-05 / C15-01 / C15-02; KFM-P31-PROG-0004 (KFM-STAC profile contract files); KFM-P7-PROG-0001 (STAC attestation hook); KFM-P10-PROG-0003 (PROV-O lineage); Atlas v1.1 per-domain dossiers for the six time-kinds vocabulary; no mounted-repo evidence in this session.*
+* docs/sources/catalog/README.md — catalog lane overview
+* docs/sources/catalog/CROSSWALKS.md — cross-format mapping register
+* docs/sources/catalog/IDENTITY.md — source, collection, item, namespace, and promotion identity guidance
+* docs/sources/catalog/GLOSSARY.md — catalog vocabulary
+* docs/sources/catalog/CARE-COMPLIANCE.md — CARE and stewardship surfacing rules
+* docs/sources/catalog/OPEN-QUESTIONS.md — canonical OPEN-DSC-* register
+* docs/standards/STAC.md — KFM-STAC profile
+* docs/standards/DCAT.md — KFM-DCAT profile
+* docs/standards/PROV.md — KFM-PROV profile
+* docs/standards/ISO-19115.md — adjacent profile / crosswalk target
+* docs/standards/OGC-API-TILES.md — adjacent tile-service profile
+* docs/standards/PMTILES.md — adjacent artifact/profile consumer
+* contracts/ — object-family meaning
+* schemas/contracts/v1/ — machine-checkable shapes
+* policy/ — allow/deny/restrict/abstain controls
+* release/ — release, correction, rollback, and publication state
+* data/catalog/ — lifecycle catalog outputs
+* docs/doctrine/directory-rules.md — placement authority
+* docs/registers/DRIFT_REGISTER.md — drift tracking
+* docs/adr/ — accepted and proposed architecture decisions
 
-[↑ Back to top](#source-catalog-profiles-register)
+⸻
+
+Final status
+
+Document status: draft register, v0.3
+Primary correction: authority boundary clarified
+Primary remaining blockers: repo verification, profile doc existence, namespace pin, attestation rel posture, schema fixture coverage, temporal ADR reconciliation
+Publication posture: public docs scaffold only; not a release artifact, not implementation proof, not profile authority, not policy authority
+
+Back to top
