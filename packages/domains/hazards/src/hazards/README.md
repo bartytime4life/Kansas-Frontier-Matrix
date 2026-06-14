@@ -280,4 +280,74 @@ Tests should be deterministic, no-network, and small enough to run in ordinary C
 | --- | --- |
 | Role classification | One good fixture for each known source role and one `unknown_unclassified` fixture. |
 | Anti-collapse | Declaration is not observation; regulatory area is not event; warning is not KFM alert; model output is not observation. |
-| Evidence closure | Valid EvidenceRef pass
+| Evidence closure | Valid EvidenceRef passes; unresolved EvidenceRef returns `ABSTAIN` or `ERROR`. |
+| Freshness | Expired operational context cannot render as current. |
+| Public safety | Evacuation/shelter/safety-instruction requests return `DENY`. |
+| Geometry | Exact restricted geometry is denied; generalized geometry requires transform metadata. |
+| Time semantics | Distinct time fields stay distinct in normalized output. |
+| Deterministic identity | Same normalized digest inputs produce same ID; changed source/time/geometry/version changes ID. |
+| Receipt metadata | Output includes run ID/spec hash/input digest/output digest/reason code where expected. |
+| Drawer fragments | Required label fields are present: what-this-is, what-this-is-not, source role, time basis, spatial basis, evidence, rights, review, correction. |
+
+---
+
+## Definition of done
+
+- [ ] Package metadata confirms `src/` layout and `hazards` import namespace.
+- [ ] Every public helper has typed inputs and finite outcomes.
+- [ ] No helper fetches live source URLs, reads RAW/WORK/QUARANTINE directly, or writes release/proof/receipt files.
+- [ ] Source-role anti-collapse fixtures pass.
+- [ ] EvidenceRef/EvidenceBundle failure cases return `ABSTAIN`, `DENY`, or `ERROR` with reason codes.
+- [ ] Operational-warning-family helpers require contextual-only and not-for-life-safety labels.
+- [ ] Public-safe geometry helpers require policy context and transform metadata.
+- [ ] Tests use deterministic no-network fixtures.
+- [ ] Adjacent docs link this module README where useful.
+- [ ] A rollback/correction path exists for any helper that affects released payloads.
+
+---
+
+## Verification checklist
+
+- [ ] Confirm the mounted repo contains or should contain `packages/domains/hazards/src/hazards/`.
+- [ ] Confirm package manager and build metadata (`pyproject.toml`, workspace config, or repo-native equivalent).
+- [ ] Confirm import namespace and whether `hazards` conflicts with any existing package.
+- [ ] Confirm adjacent READMEs and package docs reference this file.
+- [ ] Confirm authoritative schema home and contract home for hazards objects.
+- [ ] Confirm policy engine and hazards policy-pack location.
+- [ ] Confirm source registry homes and source-role vocabulary.
+- [ ] Confirm tests and fixtures homes.
+- [ ] Confirm public API/UI layers consume governed DTOs only.
+- [ ] Confirm no public path bypasses governed APIs, released artifacts, EvidenceBundle resolution, review state, or policy state.
+- [ ] Confirm rollback target and correction-notice behavior for released hazard payload changes.
+
+---
+
+## Rollback
+
+Rollback is required if this module introduces or normalizes any of the following:
+
+- live-source fetches or raw source proxying inside package helpers;
+- public UI/API access to RAW, WORK, QUARANTINE, canonical/internal stores, or direct model runtime output;
+- emergency instructions, life-safety advice, or KFM-as-alert-authority language;
+- source-role collapse across warnings, declarations, observations, regulations, detections, models, and historical events;
+- exact restricted geometry publication without policy approval, review, and transform receipt metadata;
+- unresolved EvidenceRef treated as an answerable claim;
+- receipt/proof/release objects written inside package source code;
+- schema/contract/policy authority duplicated inside the module.
+
+Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
+
+Rollback action should remove or revert the offending helper, preserve evidence and test fixtures, add or update a correction/rollback note in the owning release path when public payloads were affected, and record any placement drift in the repo’s drift register.
+
+---
+
+<details>
+<summary>Maintainer notes</summary>
+
+- This README intentionally treats package code as implementation support, not authority.
+- The module should prefer pure functions, typed data structures, deterministic digests, and explicit reason codes.
+- Examples are illustrative until code exists.
+- Keep public-safety language visible in every README that touches hazards operational context.
+- Keep operational warning/advisory/watch outputs contextual-only and not-for-life-safety.
+
+</details>
