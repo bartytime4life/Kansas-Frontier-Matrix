@@ -28,7 +28,7 @@ notes:
   - "Canonical declarative pipeline configuration belongs in pipeline_specs/, not pipelines/specs/."
   - "pipelines/ is executable pipeline logic — the how. pipeline_specs/ is declarative configuration — the what."
   - "Do not place authoritative specs here unless an accepted ADR or migration note changes the root contract."
-  - "If files already appear here later, treat them as drift candidates until reviewed against Directory Rules and pipeline_specs/ authority."
+  - "If files appear here later, treat them as drift candidates until reviewed against Directory Rules and pipeline_specs/ authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -75,8 +75,7 @@ Its purpose is to prevent a common drift pattern: putting declarative pipeline s
 Use this README to make the boundary explicit:
 
 ```text
-pipelines/       = executable pipeline logic, adapters, runners, helpers, and receipts emitters
-a
+pipelines/       = executable pipeline logic, adapters, runners, helpers, and receipt emitters
 pipeline_specs/  = declarative pipeline configuration, schedules, profiles, source scopes, and run contracts
 ```
 
@@ -162,7 +161,7 @@ A good placement test:
 | Fixtures | `fixtures/` |
 | Receipts | `data/receipts/` |
 | EvidenceBundles / proof data | `data/proofs/evidence_bundle/` |
-| Runtime config with secrets | never commit secrets; use approved config/runtime secret paths |
+| Runtime private configuration | approved config/runtime private configuration paths only |
 | Policy | `policy/` |
 | Release decisions / manifests | `release/` |
 | Public API/UI code | `apps/governed-api/`, `apps/explorer-web/`, packages |
