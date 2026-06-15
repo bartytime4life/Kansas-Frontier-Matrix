@@ -4,7 +4,7 @@
 doc_id: kfm://package/temporal/src/temporal
 title: Temporal module README
 type: package-readme
-version: v0.1
+version: v0.2
 status: draft
 owners: <PLACEHOLDER — Temporal steward · Schema steward · Validation steward>
 created: 2026-06-15
@@ -20,30 +20,56 @@ related:
   - docs/architecture/contract-schema-policy-split.md
 tags: [kfm, temporal, bitemporal, valid-time, transaction-time, correction, release, evidence]
 notes:
+  - "v0.2 polish pass: tightened navigation, added maintainer guidance, clarified public-boundary language, and improved GitHub readability."
   - "Implementation depth is UNKNOWN until this module is inspected in a mounted repository."
   - "This README defines the intended package boundary; it is not proof that all named helpers exist."
 ] -->
 
 > Shared temporal primitives for KFM evidence, observations, releases, corrections, rollback, and historical state.
 
-## README impact block
+| Status | Package role | Public path |
+|---|---|---|
+| `DRAFT / NEEDS VERIFICATION` | Shared implementation support for time semantics | Governed API / released artifact payloads, not direct public imports |
+
+## At a glance
+
+`packages/temporal/src/temporal/` is the importable module home for shared KFM time semantics.
+
+KFM is map-first, but it is also time-aware. A claim, source record, observation, release, correction, and user view can all have different timestamps. This module exists so those distinctions stay explicit instead of collapsing into a generic `date` field.
+
+This README is a boundary contract and maintainer guide. It does not prove that every illustrative helper, export, or downstream consumer already exists.
+
+## Quick navigation
+
+- [Boundary](#boundary)
+- [What belongs here](#what-belongs-here)
+- [What does not belong here](#what-does-not-belong-here)
+- [Temporal vocabulary](#temporal-vocabulary)
+- [Temporal profiles](#temporal-profiles)
+- [Golden rules](#golden-rules)
+- [Expected helper surface](#expected-helper-surface)
+- [Examples](#examples)
+- [Validation expectations](#validation-expectations)
+- [Testing checklist](#testing-checklist)
+- [Maintenance checklist](#maintenance-checklist)
+- [Open verification items](#open-verification-items)
+
+## Boundary
 
 | Field | Value |
 |---|---|
 | Path | `packages/temporal/src/temporal/README.md` |
 | Responsibility root | `packages/` — shared reusable implementation package |
-| Package scope | Temporal semantics, interval handling, bitemporal vocabulary, freshness helpers, and validation support |
-| Current status | `DRAFT / NEEDS VERIFICATION` |
-| Implementation evidence | `UNKNOWN` until source files, tests, package metadata, and downstream imports are inspected |
+| Module scope | Temporal semantics, interval handling, bitemporal vocabulary, freshness helpers, and validation support |
 | Public authority | None. This module supports contracts, validators, APIs, and release tools; it is not the authority for claims |
 | Trust posture | Evidence-bound, time-aware, correction-aware, rollback-aware |
 | Normal public path | Public clients consume governed API outputs and released artifacts, not this module directly |
 
 ## Purpose
 
-The `temporal` module is the shared code home for KFM time semantics.
+The `temporal` module should provide reusable temporal vocabulary and helpers so domains do not invent incompatible time fields, interval conventions, freshness rules, or correction semantics.
 
-KFM is not only spatial. It is also time-aware. The system must be able to distinguish:
+KFM must be able to distinguish:
 
 - when something was true in the world
 - when a source observed or reported it
@@ -52,12 +78,9 @@ KFM is not only spatial. It is also time-aware. The system must be able to disti
 - when KFM released it
 - when KFM corrected it
 - when a prior public statement was superseded
-
-This module should provide reusable temporal vocabulary and helpers so domains do not invent incompatible time fields, interval conventions, freshness rules, or correction semantics.
+- which temporal lens a user or API query is asking from
 
 ## What belongs here
-
-This module may contain shared implementation support for:
 
 | Area | Belongs here |
 |---|---|
@@ -72,7 +95,7 @@ This module may contain shared implementation support for:
 
 ## What does not belong here
 
-This module must not become a parallel authority for:
+This module must not become a parallel authority for contracts, schemas, policies, releases, or public truth.
 
 | Does not belong | Correct home |
 |---|---|
@@ -81,7 +104,7 @@ This module must not become a parallel authority for:
 | Policy allow / deny / redact decisions | `policy/` |
 | Release decisions | `release/` |
 | Raw, processed, catalog, proof, receipt, or published data | `data/` |
-| Domain-specific business rules | The owning domain package or contract |
+| Domain-specific business rules | Owning domain package or contract |
 | Public UI rendering | `packages/ui/`, `packages/maplibre/`, or deployable apps |
 | Direct public claims | Governed API / release surfaces only |
 
@@ -89,7 +112,7 @@ This module must not become a parallel authority for:
 
 `packages/temporal` should be a reusable implementation package. The nested `src/temporal/` module should contain importable code, internal documentation, and module-level examples.
 
-This README is intentionally module-focused. Broader package setup, packaging metadata, test commands, and cross-package dependency notes should live in `packages/temporal/README.md` once verified.
+Broader package setup, packaging metadata, test commands, and cross-package dependency notes belong in `packages/temporal/README.md` once verified.
 
 ## Temporal vocabulary
 
@@ -122,11 +145,17 @@ Not every object family needs every time kind. Each contract or schema should de
 | `release_time` | Publication, rollback, or correction depends on release state | `release_time`, `correction_time` |
 | `view_time` | A client or analysis asks from a particular temporal lens | `view_time` |
 
-## Core rule
+## Golden rules
 
-A KFM record should not use a generic `date` field when the type of time matters.
+1. Do not use a generic `date` field when the type of time matters.
+2. Do not collapse valid time, transaction time, release time, correction time, and generated time into one timestamp.
+3. Prefer explicit field names over overloaded labels.
+4. Prefer half-open intervals for interval logic unless a contract says otherwise.
+5. Keep open-ended, unknown-ended, and not-applicable intervals distinct.
+6. Treat corrections and supersessions as first-class temporal facts.
+7. Keep public display labels conservative when temporal support is missing or stale.
 
-Prefer explicit names:
+Preferred field names:
 
 ```text
 valid_start
@@ -142,8 +171,6 @@ corrected_at
 superseded_at
 generated_at
 ```
-
-Use generic names only when a schema or contract explicitly defines them.
 
 ## Interval conventions
 
@@ -194,7 +221,7 @@ valid_time:
   end_status: unknown
 ```
 
-## Expected module responsibilities
+## Expected helper surface
 
 The implementation may eventually expose helpers such as:
 
@@ -212,7 +239,9 @@ from temporal import (
 
 These names are illustrative until source inspection confirms actual exports.
 
-## Example: valid-time record
+## Examples
+
+### Valid-time record
 
 ```yaml
 claim_id: kfm-example-claim-001
@@ -227,7 +256,7 @@ retrieval_time:
   retrieved_at: "2026-05-02T14:18:00Z"
 ```
 
-## Example: bitemporal correction
+### Bitemporal correction
 
 ```yaml
 claim_id: kfm-example-claim-002
@@ -242,6 +271,14 @@ correction:
   corrected_at: "2026-06-01T10:00:00Z"
   correction_reason: "source_revision"
   supersedes: kfm-example-claim-002-v1
+```
+
+### Stale public payload label
+
+```yaml
+status: NEEDS_VERIFICATION
+reason: stale_source_time
+message: "Source timestamp is older than the freshness window for this claim family."
 ```
 
 ## Validation expectations
@@ -300,6 +337,17 @@ Before changing this module, verify:
 5. Add regression tests.
 6. Update API / UI examples if public labels change.
 7. Record migration or rollback notes when existing data is affected.
+
+## Reviewer checklist
+
+A review is not complete until the reviewer can answer yes to these checks:
+
+- Are all temporal field names specific enough to avoid ambiguity?
+- Are interval semantics documented?
+- Are correction and supersession cases represented?
+- Are public-facing stale states labelable?
+- Are contract, schema, validator, and package responsibilities still separated?
+- Can the change be rolled back without losing temporal meaning?
 
 ## Open verification items
 
