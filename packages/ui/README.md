@@ -4,7 +4,7 @@
 doc_id: kfm://package/ui
 title: UI package README
 type: package-readme
-version: v0.1
+version: v0.2
 status: draft
 owners: <PLACEHOLDER — UI steward · Design-system steward · Evidence UI steward>
 created: 2026-06-15
@@ -20,13 +20,43 @@ related:
   - docs/architecture/contract-schema-policy-split.md
 tags: [kfm, ui, components, trust-visible-ui, evidence-drawer, focus-mode, design-system]
 notes:
+  - "v0.2 polish pass: tightened navigation, added maintainer guidance, clarified component boundaries, and improved GitHub readability."
   - "Implementation depth is UNKNOWN until package files and downstream imports are inspected."
   - "This package is the shared UI component home, not the deployable app shell and not a truth source."
 ] -->
 
 > Shared KFM UI components for trust-visible, evidence-aware, policy-aware application surfaces.
 
-## README impact block
+| Status | Package role | Public data path |
+|---|---|---|
+| `DRAFT / NEEDS VERIFICATION` | Shared component and design-system support | Governed API → released artifact / EvidenceBundle-backed payload → UI component |
+
+## At a glance
+
+`packages/ui` is the shared UI component package for KFM.
+
+It should help deployable apps present evidence, policy posture, release state, validation state, uncertainty, corrections, and rollback visibility without duplicating UI logic across app surfaces.
+
+This package is not a deployable application, not a truth store, not a policy engine, not a source connector, and not a renderer boundary. It renders governed data passed to it by apps, fixtures, or API clients.
+
+## Quick navigation
+
+- [Boundary](#boundary)
+- [Repo fit](#repo-fit)
+- [What belongs here](#what-belongs-here)
+- [What does not belong here](#what-does-not-belong-here)
+- [Trust membrane rule](#trust-membrane-rule)
+- [Component posture](#component-posture)
+- [Accepted inputs](#accepted-inputs)
+- [Excluded inputs](#excluded-inputs)
+- [Expected component families](#expected-component-families)
+- [Trust-state display vocabulary](#trust-state-display-vocabulary)
+- [Examples](#examples)
+- [Accessibility expectations](#accessibility-expectations)
+- [Testing expectations](#testing-expectations)
+- [Open verification items](#open-verification-items)
+
+## Boundary
 
 | Field | Value |
 |---|---|
@@ -38,14 +68,6 @@ notes:
 | Deployable app? | No. Deployable shells belong under `apps/` |
 | Truth authority? | No. UI components render governed data; they do not decide truth, evidence, policy, or release state |
 | Normal public data path | Governed API → released artifact / EvidenceBundle-backed payload → UI component |
-
-## Purpose
-
-`packages/ui` is the shared component package for KFM user interfaces.
-
-It should help deployable apps present evidence, policy posture, release state, validation state, uncertainty, corrections, and rollback visibility without duplicating UI logic across app surfaces.
-
-This package exists to make KFM interfaces consistent, inspectable, accessible, and difficult to misuse.
 
 ## Repo fit
 
@@ -94,7 +116,7 @@ This package may contain shared components and utilities for:
 | Policy rules | `policy/` |
 | Contract meaning | `contracts/` |
 | Machine-readable schema authority | `schemas/contracts/v1/` |
-| AI answer generation | governed AI runtime package or service |
+| AI answer generation | Governed AI runtime package or service |
 | Direct source connectors | `connectors/` |
 
 ## Trust membrane rule
@@ -122,6 +144,7 @@ Components in this package should be:
 - evidence-aware
 - policy-aware
 - release-aware
+- correction-aware
 - accessible
 - deterministic where practical
 - easy to test with static fixtures
@@ -140,7 +163,7 @@ Components may accept:
 - ReviewDecision summaries
 - CorrectionNotice summaries
 - Rollback target summaries
-- Layer metadata already cleared for display
+- layer metadata already cleared for display
 - synthetic fixtures for tests and docs
 - design tokens and semantic component props
 
@@ -196,7 +219,9 @@ Use stable labels for trust-bearing state.
 | `SUPERSEDED` | Older material retained but no longer current |
 | `WITHDRAWN` | Prior release or claim removed from active public use |
 
-## Evidence-aware component example
+## Examples
+
+### Evidence-aware component
 
 Illustrative API shape:
 
@@ -208,7 +233,7 @@ Illustrative API shape:
 />
 ```
 
-## Policy-aware component example
+### Policy-aware component
 
 Illustrative API shape:
 
@@ -220,7 +245,7 @@ Illustrative API shape:
 />
 ```
 
-## Release-aware component example
+### Release-aware component
 
 Illustrative API shape:
 
@@ -230,6 +255,19 @@ Illustrative API shape:
   state="published"
   corrected={false}
   rollbackAvailable={true}
+/>
+```
+
+### Fail-closed missing-evidence state
+
+Illustrative API shape:
+
+```tsx
+<ClaimCard
+  title="County boundary claim"
+  status="ABSTAIN"
+  reason="missing_evidence_ref"
+  message="This claim cannot be displayed as confirmed until evidence is resolved."
 />
 ```
 
@@ -374,6 +412,18 @@ Before changing this package, verify:
 5. Update consuming apps after component behavior is stable.
 6. Document any breaking prop changes.
 7. Keep rollback simple by avoiding broad component rewrites when a smaller change works.
+
+## Reviewer checklist
+
+A review is not complete until the reviewer can answer yes to these checks:
+
+- Does the component render trust labels as visible text, not color alone?
+- Does it fail closed when evidence, policy, release, or correction state is missing?
+- Does it avoid reading lifecycle data directly?
+- Does it avoid generating or treating AI text as authoritative?
+- Does it preserve the MapLibre/package boundary?
+- Does it include synthetic fixtures or tests for denied, abstained, and unknown states?
+- Can consuming apps roll back the component change cleanly?
 
 ## Open verification items
 
