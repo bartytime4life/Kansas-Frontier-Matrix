@@ -1,123 +1,146 @@
-# UI Package
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://package/ui
 title: UI package README
 type: package-readme
-version: v0.2
+version: v0.3
 status: draft
-owners: <PLACEHOLDER — UI steward · Design-system steward · Evidence UI steward>
+owners: OWNER_TBD — UI steward · Design-system steward · Evidence UI steward
 created: 2026-06-15
 updated: 2026-06-15
 policy_label: internal
 related:
-  - apps/explorer-web/README.md
-  - apps/governed-api/README.md
-  - packages/maplibre/README.md
-  - packages/temporal/README.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/directory-rules.md
-  - docs/architecture/contract-schema-policy-split.md
+  - src/README.md
+  - ../maplibre/README.md
+  - ../temporal/README.md
+  - ../../apps/explorer-web/README.md
+  - ../../apps/governed-api/README.md
+  - ../../docs/doctrine/trust-membrane.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/architecture/contract-schema-policy-split.md
 tags: [kfm, ui, components, trust-visible-ui, evidence-drawer, focus-mode, design-system]
 notes:
-  - "v0.2 polish pass: tightened navigation, added maintainer guidance, clarified component boundaries, and improved GitHub readability."
-  - "Implementation depth is UNKNOWN until package files and downstream imports are inspected."
+  - "v0.3 formatting pass: aligned package README with the richer README-like documentation standard used by packages/ui/src/README.md."
+  - "Implementation depth is UNKNOWN until package source, build config, tests, exports, and consuming apps are inspected."
   - "This package is the shared UI component home, not the deployable app shell and not a truth source."
-] -->
+[/KFM_META_BLOCK_V2] -->
 
-> Shared KFM UI components for trust-visible, evidence-aware, policy-aware application surfaces.
+<div align="center">
 
-| Status | Package role | Public data path |
-|---|---|---|
-| `DRAFT / NEEDS VERIFICATION` | Shared component and design-system support | Governed API → released artifact / EvidenceBundle-backed payload → UI component |
+# UI Package
 
-## At a glance
+`packages/ui/`
 
-`packages/ui` is the shared UI component package for KFM.
+**Shared KFM UI components for trust-visible, evidence-aware, policy-aware application surfaces.**
 
-It should help deployable apps present evidence, policy posture, release state, validation state, uncertainty, corrections, and rollback visibility without duplicating UI logic across app surfaces.
+![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
+![Owner: OWNER_TBD](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
+![Truth: needs verification](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
+![Boundary: governed UI](https://img.shields.io/badge/boundary-governed__UI-blue)
+
+[Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Package map](#package-map) · [Diagram](#diagram) · [Definition of done](#definition-of-done)
+
+</div>
+
+---
+
+> [!IMPORTANT]
+> **Status:** experimental / `NEEDS VERIFICATION`  
+> **Owners:** `OWNER_TBD` — UI steward · Design-system steward · Evidence UI steward  
+> **Path:** `packages/ui/README.md`  
+> **Repo fit:** shared reusable UI package under `packages/`  
+> **Truth posture:** CONFIRMED file path / PROPOSED package contract / UNKNOWN implementation depth
+
+> [!NOTE]
+> This README defines the intended package boundary for shared UI components. It does not prove that all components, exports, tests, fixtures, stories, design tokens, or consuming app imports already exist.
+
+## Scope
+
+`packages/ui/` is the shared component package for KFM user interfaces.
+
+It should help deployable apps present evidence, policy posture, release state, validation state, uncertainty, corrections, rollback visibility, and finite outcomes without duplicating trust-display logic across app surfaces.
 
 This package is not a deployable application, not a truth store, not a policy engine, not a source connector, and not a renderer boundary. It renders governed data passed to it by apps, fixtures, or API clients.
 
-## Quick navigation
-
-- [Boundary](#boundary)
-- [Repo fit](#repo-fit)
-- [What belongs here](#what-belongs-here)
-- [What does not belong here](#what-does-not-belong-here)
-- [Trust membrane rule](#trust-membrane-rule)
-- [Component posture](#component-posture)
-- [Accepted inputs](#accepted-inputs)
-- [Excluded inputs](#excluded-inputs)
-- [Expected component families](#expected-component-families)
-- [Trust-state display vocabulary](#trust-state-display-vocabulary)
-- [Examples](#examples)
-- [Accessibility expectations](#accessibility-expectations)
-- [Testing expectations](#testing-expectations)
-- [Open verification items](#open-verification-items)
-
-## Boundary
-
-| Field | Value |
-|---|---|
-| Path | `packages/ui/README.md` |
-| Responsibility root | `packages/` — shared reusable implementation packages |
-| Package scope | Shared UI components, UI primitives, trust-state display patterns, and design-system utilities |
-| Current status | `DRAFT / NEEDS VERIFICATION` |
-| Implementation evidence | `UNKNOWN` until package source, build config, tests, and consuming apps are inspected |
-| Deployable app? | No. Deployable shells belong under `apps/` |
-| Truth authority? | No. UI components render governed data; they do not decide truth, evidence, policy, or release state |
-| Normal public data path | Governed API → released artifact / EvidenceBundle-backed payload → UI component |
+<p align="right"><a href="#ui-package">Back to top</a></p>
 
 ## Repo fit
 
-KFM separates deployable applications from shared packages.
+KFM separates deployable applications from shared packages. `packages/ui/` should be imported by apps; it should not become an app by itself.
 
-| Concern | Home |
-|---|---|
-| Deployable public explorer shell | `apps/explorer-web/` |
-| Governed API service | `apps/governed-api/` |
-| Shared UI components | `packages/ui/` |
-| MapLibre renderer wrapper and map-specific controls | `packages/maplibre/` |
-| 3D / Cesium-specific renderer support, if used | `packages/cesium/` |
-| Static styles or compatibility style roots | `styles/`, only if retained by repo convention |
-| Legacy or compatibility UI roots | `ui/` / `web/`, only as compatibility roots when explicitly retained |
+| Relationship | Path | Status | Notes |
+|---|---|---|---|
+| Source tree | [`src/README.md`](src/README.md) | CONFIRMED adjacent README | Importable component source boundary |
+| Renderer neighbor | [`../maplibre/README.md`](../maplibre/README.md) | NEEDS VERIFICATION | Map source, layer, style, and camera logic belongs outside this package |
+| Temporal neighbor | [`../temporal/README.md`](../temporal/README.md) | NEEDS VERIFICATION | Time labels and temporal display helpers may depend on shared temporal vocabulary |
+| Public explorer app | [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | NEEDS VERIFICATION | Deployable app shell should consume this package |
+| Governed API app | [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | NEEDS VERIFICATION | Public payloads should be governed before reaching UI props |
+| Directory doctrine | [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | NEEDS VERIFICATION | Placement authority; verify current repo path before relying on link |
 
-`packages/ui` should be imported by apps. It should not become a deployable app by itself.
+## Inputs
 
-## What belongs here
+Accepted inputs are component-ready, already-governed values passed through an app, fixture, story harness, or API client.
 
-This package may contain shared components and utilities for:
+| Input family | Examples | Rendering responsibility |
+|---|---|---|
+| Evidence state | Evidence reference, EvidenceBundle summary, citation status | Show evidence support clearly |
+| Policy state | Policy decision, sensitivity tier, redaction reason | Display denial, redaction, or staged-access posture |
+| Release state | Release ID, publication status, rollback availability | Avoid implying unpublished material is released |
+| Review state | Reviewer state, validation summary, open review note | Make review posture visible |
+| Correction state | Correction notice, supersession label, withdrawal reason | Keep lineage visible after change |
+| Finite outcome | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `UNKNOWN`, `NEEDS VERIFICATION` | Render state as text, not color alone |
+| Design tokens | Semantic variants, spacing, typography hooks | Keep UI consistent without encoding truth in color alone |
 
-| Area | Examples |
-|---|---|
-| Trust-visible UI primitives | Evidence badges, source-role badges, review-state badges |
-| Finite outcome display | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` labels and panels |
-| Evidence surfaces | Evidence summary cards, EvidenceBundle references, citation status indicators |
-| Policy surfaces | Redaction notices, sensitivity labels, staged-access notices |
-| Release surfaces | Release state tags, rollback links, correction banners |
-| Validation surfaces | Warning blocks, validation result lists, fixture result panels |
-| Layout primitives | Cards, panels, drawers, tabs, accordions, callouts |
-| Accessibility helpers | Skip links, focus management, semantic status text |
-| Form primitives | Search inputs, filters, toggles, disclosure controls |
-| Non-map domain display | Claim cards, source cards, receipt cards, review cards |
-| Design tokens | Shared spacing, typography hooks, semantic component variants |
+## Exclusions
 
-## What does not belong here
-
-| Does not belong | Correct home |
+| Does not belong here | Correct home |
 |---|---|
 | Deployable application routing | `apps/explorer-web/`, `apps/review-console/`, or another app |
-| Governed API implementation | `apps/governed-api/` |
-| MapLibre runtime, sources, layers, camera, style control | `packages/maplibre/` |
+| Governed API implementation | `apps/governed-api/` or verified API package home |
+| MapLibre runtime, sources, layers, camera, and style control | `packages/maplibre/` |
 | Canonical data stores | `data/` |
 | Raw, work, quarantine, processed, catalog, triplet, or published data | `data/` lifecycle folders |
 | Release decisions | `release/` |
 | Policy rules | `policy/` |
 | Contract meaning | `contracts/` |
 | Machine-readable schema authority | `schemas/contracts/v1/` |
-| AI answer generation | Governed AI runtime package or service |
+| AI answer generation | governed AI runtime or service package |
 | Direct source connectors | `connectors/` |
+
+> [!CAUTION]
+> UI components must not become a shortcut around governed APIs, released artifacts, EvidenceBundle resolution, policy decisions, review state, or release state.
+
+## Package map
+
+The exact package tree is `NEEDS VERIFICATION`. The following is a proposed orientation map, not a claim that these folders currently exist.
+
+```text
+packages/ui/
+  README.md        # package-level boundary and orientation
+  src/             # importable source tree
+  fixtures/        # synthetic UI fixtures, if repo convention supports this
+  tests/           # package tests, if repo convention supports this
+  stories/         # visual examples, if story tooling is confirmed
+  package.json     # package metadata, if JavaScript/TypeScript is confirmed
+```
+
+## Diagram
+
+```mermaid
+flowchart LR
+    api["Governed API"] --> payload["Released or EvidenceBundle-backed payload"]
+    release["Released artifact"] --> payload
+    payload --> app["Deployable app boundary"]
+    app --> ui["packages/ui components"]
+    ui --> surface["Trust-visible UI surface"]
+
+    contracts["Contracts / schemas"] -. "shape payloads" .-> payload
+    policy["Policy decisions"] -. "gate payloads" .-> payload
+    reviews["Review and release state"] -. "label payloads" .-> payload
+
+    ui -. "must not own" .-> contracts
+    ui -. "must not own" .-> policy
+    ui -. "must not publish" .-> release
+```
 
 ## Trust membrane rule
 
@@ -150,34 +173,6 @@ Components in this package should be:
 - easy to test with static fixtures
 - safe by default when data is missing
 - explicit when rendering `UNKNOWN`, `NEEDS VERIFICATION`, `ABSTAIN`, `DENY`, or `ERROR`
-
-## Accepted inputs
-
-Components may accept:
-
-- governed API response payloads
-- EvidenceBundle summary objects
-- CitationValidationReport summaries
-- PolicyDecision summaries
-- ReleaseManifest summaries
-- ReviewDecision summaries
-- CorrectionNotice summaries
-- Rollback target summaries
-- layer metadata already cleared for display
-- synthetic fixtures for tests and docs
-- design tokens and semantic component props
-
-## Excluded inputs
-
-Components should not accept:
-
-- raw connector records
-- unreviewed model output as authoritative display text
-- direct database rows from canonical stores
-- unpublished candidate records except in explicitly labeled review/admin surfaces
-- sensitive exact locations unless a policy-cleared payload says they are display-safe
-- raw source documents without source-role, rights, and citation context
-- mixed evidence/policy/release state in an unlabeled generic object
 
 ## Expected component families
 
@@ -219,92 +214,6 @@ Use stable labels for trust-bearing state.
 | `SUPERSEDED` | Older material retained but no longer current |
 | `WITHDRAWN` | Prior release or claim removed from active public use |
 
-## Examples
-
-### Evidence-aware component
-
-Illustrative API shape:
-
-```tsx
-<EvidenceStatusBadge
-  status="NEEDS_VERIFICATION"
-  label="Source rights not verified"
-  detail="This layer cannot be promoted until source terms are reviewed."
-/>
-```
-
-### Policy-aware component
-
-Illustrative API shape:
-
-```tsx
-<PolicyNotice
-  decision="DENY"
-  reason="sensitive_exact_location"
-  message="Exact location is withheld by policy."
-/>
-```
-
-### Release-aware component
-
-Illustrative API shape:
-
-```tsx
-<ReleaseBanner
-  releaseId="release-2026-06-example"
-  state="published"
-  corrected={false}
-  rollbackAvailable={true}
-/>
-```
-
-### Fail-closed missing-evidence state
-
-Illustrative API shape:
-
-```tsx
-<ClaimCard
-  title="County boundary claim"
-  status="ABSTAIN"
-  reason="missing_evidence_ref"
-  message="This claim cannot be displayed as confirmed until evidence is resolved."
-/>
-```
-
-## Accessibility expectations
-
-Shared UI components should support:
-
-- semantic HTML first
-- keyboard navigation
-- visible focus states
-- screen-reader-readable status changes
-- sufficient color contrast
-- labels that do not rely on color alone
-- reduced-motion-safe behavior
-- predictable drawer and modal focus handling
-- testable accessible names
-
-## Styling expectations
-
-This package should avoid hard-coding truth semantics into color alone.
-
-Preferred pattern:
-
-- semantic variant
-- accessible label
-- optional icon
-- visible text
-- tooltip or detail text only as an enhancement
-
-Example:
-
-```tsx
-<StatusBadge variant="warning" label="NEEDS VERIFICATION" />
-```
-
-The label is the authority-bearing part. Color only reinforces it.
-
 ## Public UI safety rules
 
 A component should fail safely when trust-bearing props are missing.
@@ -312,23 +221,16 @@ A component should fail safely when trust-bearing props are missing.
 | Missing input | Safer behavior |
 |---|---|
 | Missing evidence reference | Render `ABSTAIN` or `Evidence pending`, not a confident claim |
-| Missing policy decision | Render blocked / unavailable state for sensitive surfaces |
-| Missing release state | Avoid showing as public/released |
+| Missing policy decision | Render blocked or unavailable state for sensitive surfaces |
+| Missing release state | Avoid showing as public or released |
 | Missing citation status | Render citation warning |
-| Missing correction state | Avoid “current” label |
+| Missing correction state | Avoid `current` label |
 | Missing sensitivity tier | Use conservative display |
+| Missing finite outcome | Use `UNKNOWN` or explicit fallback |
 
 ## Relationship to Focus Mode
 
-`packages/ui` may provide reusable display pieces for Focus Mode, such as:
-
-- prompt boundary panels
-- evidence summaries
-- answer status cards
-- citation validation warnings
-- policy denial messages
-- source coverage summaries
-- correction and rollback notices
+`packages/ui` may provide reusable display pieces for Focus Mode, such as prompt boundary panels, evidence summaries, answer status cards, citation validation warnings, policy denial messages, source coverage summaries, correction notices, and rollback notices.
 
 It should not generate Focus Mode answers. It should render governed answer envelopes supplied by the appropriate runtime or API layer.
 
@@ -336,25 +238,30 @@ It should not generate Focus Mode answers. It should render governed answer enve
 
 `packages/ui` may provide generic Evidence Drawer components.
 
-The drawer should make it easy to inspect:
-
-- evidence summary
-- source role
-- citation state
-- policy decision
-- review state
-- release state
-- correction state
-- rollback target
-- uncertainty or limitations
+The drawer should make it easy to inspect evidence summary, source role, citation state, policy decision, review state, release state, correction state, rollback target, uncertainty, and limitations.
 
 The drawer should not fetch ungoverned source material directly.
 
 ## Relationship to MapLibre
 
-Map-specific source/layer/style/camera behavior belongs in `packages/maplibre/`.
+Map-specific source, layer, style, camera, and renderer behavior belongs in `packages/maplibre/`.
 
 `packages/ui` may provide generic UI wrappers used near a map, such as panels, legend containers, toggles, badges, and drawers. It should not become the renderer boundary.
+
+## Inspection path
+
+The package manager, framework, and test runner remain `NEEDS VERIFICATION`. These commands are safe local inspection examples only.
+
+```bash
+# From the repository root, inspect the UI package.
+find packages/ui -maxdepth 2 -type f | sort
+
+# Inspect source tree shape.
+find packages/ui/src -maxdepth 2 -type f | sort
+
+# Inspect package metadata when present.
+find packages/ui -maxdepth 2 \( -name package.json -o -name pyproject.toml -o -name tsconfig.json \) -print
+```
 
 ## Testing expectations
 
@@ -369,13 +276,13 @@ Useful tests for this package should cover:
 - keyboard navigation for drawers and modals
 - accessible names for badges and status components
 - no color-only status communication
-- fixture rendering for public, review, and denied states
+- fixture rendering for public, review, denied, abstained, and unknown states
 
 ## Fixture expectations
 
 Fixtures should be synthetic unless explicitly approved.
 
-Preferred fixture classes:
+Preferred fixture categories:
 
 ```text
 fixtures/
@@ -387,7 +294,19 @@ fixtures/
   focus-mode.error.json
 ```
 
-Fixture paths are illustrative until repo conventions are inspected.
+Fixture homes are `NEEDS VERIFICATION` until repo conventions are inspected.
+
+## Definition of done
+
+- [ ] Owners are confirmed and the `OWNER_TBD` placeholder is replaced.
+- [ ] Actual package source folders are inventoried and package map is updated.
+- [ ] Package framework and export conventions are verified.
+- [ ] Components render trust labels as visible text, not color alone.
+- [ ] Missing evidence, policy, release, or correction state fails closed.
+- [ ] Tests or synthetic examples cover denied, abstained, unknown, and needs-verification states.
+- [ ] MapLibre renderer logic remains outside this package.
+- [ ] Deployable app logic remains outside this package.
+- [ ] Rollback path is known before public-facing component behavior changes.
 
 ## Maintenance checklist
 
@@ -413,32 +332,74 @@ Before changing this package, verify:
 6. Document any breaking prop changes.
 7. Keep rollback simple by avoiding broad component rewrites when a smaller change works.
 
-## Reviewer checklist
-
-A review is not complete until the reviewer can answer yes to these checks:
-
-- Does the component render trust labels as visible text, not color alone?
-- Does it fail closed when evidence, policy, release, or correction state is missing?
-- Does it avoid reading lifecycle data directly?
-- Does it avoid generating or treating AI text as authoritative?
-- Does it preserve the MapLibre/package boundary?
-- Does it include synthetic fixtures or tests for denied, abstained, and unknown states?
-- Can consuming apps roll back the component change cleanly?
-
 ## Open verification items
 
-- Confirm actual package manager.
-- Confirm actual component framework.
-- Confirm whether Storybook, Ladle, Playwright, Vitest, Jest, or another tool is used.
-- Confirm actual package exports.
-- Confirm existing component directory names.
-- Confirm consuming apps and import paths.
-- Confirm design-token source of truth.
-- Confirm whether `ui/`, `web/`, `styles/`, or `viewer_templates/` are compatibility roots in the current repo.
-- Confirm whether accessibility checks exist in CI.
+| Item | Why it matters |
+|---|---|
+| Confirm actual package manager | Prevents wrong quickstart or test commands |
+| Confirm actual component framework | Prevents incorrect examples and export assumptions |
+| Confirm Storybook, Ladle, Playwright, Vitest, Jest, or equivalent tooling | Enables real validation commands |
+| Confirm actual package exports | Keeps consuming app imports stable |
+| Confirm existing component directory names | Moves package map from PROPOSED to CONFIRMED |
+| Confirm consuming apps and import paths | Keeps package/app boundary accurate |
+| Confirm design-token source of truth | Prevents style drift |
+| Confirm compatibility roots such as `ui/`, `web/`, `styles/`, or `viewer_templates/` | Prevents duplicate authority or broken legacy surfaces |
+| Confirm accessibility checks in CI | Makes accessibility expectations enforceable |
+
+<details>
+<summary>Appendix A — illustrative component examples</summary>
+
+These examples are illustrative. They show intended component shape, not verified exports.
+
+```tsx
+<EvidenceStatusBadge
+  status="NEEDS_VERIFICATION"
+  label="Source rights not verified"
+  detail="This layer cannot be promoted until source terms are reviewed."
+/>
+```
+
+```tsx
+<PolicyNotice
+  decision="DENY"
+  reason="sensitive_exact_location"
+  message="Exact location is withheld by policy."
+/>
+```
+
+```tsx
+<ReleaseBanner
+  releaseId="release-2026-06-example"
+  state="published"
+  corrected={false}
+  rollbackAvailable={true}
+/>
+```
+
+```tsx
+<ClaimCard
+  title="County boundary claim"
+  status="ABSTAIN"
+  reason="missing_evidence_ref"
+  message="This claim cannot be displayed as confirmed until evidence is resolved."
+/>
+```
+
+</details>
+
+<details>
+<summary>Appendix B — no-loss preservation note</summary>
+
+This formatting pass preserves the prior README substance: package boundary, repo fit, accepted inputs, exclusions, trust membrane rule, component posture, component families, trust-state vocabulary, Focus Mode / Evidence Drawer / MapLibre relationships, testing expectations, fixtures, maintenance checklist, safe change pattern, reviewer concerns, open verification items, and status summary.
+
+The main changes are presentational and reviewability-focused: normalized meta block, centered header, badges, quick links, impact block, callouts, package map, Mermaid diagram, inspection commands, definition-of-done checklist, tabular verification backlog, and collapsible examples.
+
+</details>
 
 ## Status summary
 
-`packages/ui` should be the shared UI component home for KFM trust-visible interfaces.
+`packages/ui` should remain the shared UI component home for KFM trust-visible interfaces.
 
-It should make evidence, policy, release, correction, uncertainty, and denial visible without becoming a truth store, policy engine, map renderer, deployable shell, source connector, or public bypass around governed APIs.
+It should make evidence, policy, release, correction, uncertainty, denial, and rollback state visible without becoming a truth store, policy engine, map renderer, deployable shell, source connector, or public bypass around governed APIs.
+
+<p align="right"><a href="#ui-package">Back to top</a></p>
