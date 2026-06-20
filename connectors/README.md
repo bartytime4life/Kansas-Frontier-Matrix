@@ -2,7 +2,7 @@
 doc_id: kfm://doc/connectors-readme
 title: connectors/ — Source Admission Connectors
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · Data steward · Policy steward · Validation steward · Docs steward
 created: 2026-06-20
@@ -23,7 +23,8 @@ related:
   - ../release/
 tags: [kfm, connectors, source-admission, implementation-root, raw, quarantine, receipts, source-descriptor, trust-membrane, governance]
 notes:
-  - "Expanded from the root connector stub into a governed connector-root contract."
+  - "v0.3 applies the uploaded KFM Repository Markdown Authoring Agent v2 README guidance to the connector-root contract."
+  - "No-loss preservation: v0.2 authority, lifecycle, admission, rollback, and definition-of-done language is retained and expanded."
   - "Directory Rules identify connectors/ as an implementation root for source admission."
   - "Connectors may support external-source fetch/probe/admission behavior, but they do not own source doctrine, SourceDescriptor records, schemas, policy, catalog/triplet records, proofs, release decisions, public API behavior, or public UI behavior."
   - "Connector outputs are limited to raw, quarantine, and receipt handoffs unless an accepted ADR says otherwise."
@@ -48,7 +49,7 @@ notes:
 
 ## Quick jumps
 
-[Status](#status) · [Purpose](#purpose) · [Authority boundary](#authority-boundary) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Connector lane patterns](#connector-lane-patterns) · [Admission contract](#admission-contract) · [Lifecycle boundary](#lifecycle-boundary) · [Required child README contract](#required-child-readme-contract) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
+[Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current inspected snapshot](#current-inspected-snapshot) · [Directory tree](#directory-tree) · [Connector lane patterns](#connector-lane-patterns) · [Admission contract](#admission-contract) · [Lifecycle boundary](#lifecycle-boundary) · [Inspection path](#inspection-path) · [Required child README contract](#required-child-readme-contract) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done) · [Related surfaces](#related-surfaces)
 
 ---
 
@@ -57,13 +58,13 @@ notes:
 > [!IMPORTANT]
 > **Status:** `draft` / root contract  
 > **Owner:** `OWNER_TBD`  
-> **Root:** `connectors/`  
+> **Path:** `connectors/`  
 > **Authority level:** implementation root for source admission  
 > **Truth posture:** `CONFIRMED` current README content and replacement README content; actual connector inventories, source activations, schedules, tests, fixtures, CI coverage, and runtime behavior remain `NEEDS VERIFICATION` unless proven in each child lane.
 
 ---
 
-## Purpose
+## Scope
 
 `connectors/` contains source-specific implementation support for external-source fetch, probe, packaging, verification, and admission into KFM.
 
@@ -79,42 +80,37 @@ A connector must not answer whether admitted material is ready for processed sta
 
 ---
 
-## Authority boundary
+## Repo fit
+
+`connectors/` is an implementation root in the KFM authority map. It sits between external source surfaces and governed lifecycle data roots.
 
 ```text
-CONNECTORS MAY SUPPORT:
-  external source probes
-  endpoint/package clients
-  descriptor-gated fetch helpers
-  manifest and response parsing
-  source field preservation
-  source-role preservation
-  rights/sensitivity preflight hooks
-  raw/quarantine handoff helpers
-  receipt payload helpers
-  no-network test fixtures
-
-CONNECTORS MUST NOT OWN:
-  source-family doctrine
-  product doctrine
-  SourceDescriptor records
-  source schemas or contracts
-  rights policy
-  sensitivity policy
-  lifecycle data authority
-  processed records
-  catalog records
-  triplet records
-  EvidenceBundle closure
-  release decisions
-  public API behavior
-  public UI behavior
-  public map behavior
+External source
+  -> connectors/<source-or-product>/
+  -> data/raw/ or data/quarantine/ + data/receipts/
+  -> pipelines/ or downstream validators
+  -> data/work/
+  -> data/processed/
+  -> data/catalog/ + data/triplets/
+  -> release/
+  -> data/published/
 ```
+
+Adjacent responsibility roots:
+
+| Root | Relationship to `connectors/` |
+|---|---|
+| `docs/sources/catalog/` | Source-family and product doctrine. Connectors must not duplicate or replace it. |
+| `data/registry/sources/` | SourceDescriptor and activation authority. Connectors consume or reference descriptors; they do not own them. |
+| `policy/rights/`, `policy/sensitivity/` | Rights and sensitivity gates. Connectors must fail closed when these are unresolved. |
+| `schemas/contracts/`, `contracts/` | Machine shape and object meaning. Connectors do not create parallel schema authority. |
+| `data/raw/`, `data/quarantine/`, `data/receipts/` | Allowed connector handoff surfaces. |
+| `data/work/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Downstream lifecycle surfaces outside connector ownership. |
+| `release/` | Release decisions and rollback state, outside connector ownership. |
 
 ---
 
-## What belongs here
+## Accepted inputs
 
 | Belongs in `connectors/` | Required posture |
 |---|---|
@@ -129,7 +125,7 @@ CONNECTORS MUST NOT OWN:
 
 ---
 
-## What does not belong here
+## Exclusions
 
 | Does not belong in `connectors/` | Correct responsibility root |
 |---|---|
@@ -144,6 +140,49 @@ CONNECTORS MUST NOT OWN:
 | Published artifacts | `../data/published/` after release gates |
 | Release decisions and rollback state | `../release/` |
 | Public API or UI behavior | governed app/UI roots after release and policy gates |
+
+---
+
+## Current inspected snapshot
+
+> [!NOTE]
+> This is a current-session documentation snapshot, not a full connector implementation inventory. It records connector README surfaces that were directly edited or inspected during this documentation pass. Code modules, tests, workflows, schedules, emitted receipts, and runtime behavior remain `NEEDS VERIFICATION` unless separately cited in child lanes.
+
+| Snapshot item | Status | What it proves | What it does not prove |
+|---|---|---|---|
+| `connectors/README.md` | `CONFIRMED` | Root README exists and is now a governed source-admission contract. | Does not prove connector implementation completeness. |
+| Source-family lanes such as `connectors/usgs/`, `connectors/usfws/`, `connectors/nrcs/` | `CONFIRMED where README files exist` | Family-lane documentation exists for some sources. | Does not prove source activation or endpoint health. |
+| Product lanes such as `connectors/wzdx/`, `connectors/viirs_hotspot/`, `connectors/usgs/water_data/` | `CONFIRMED where README files exist` | Product-lane boundary docs exist. | Does not settle path convention or implementation readiness. |
+| Compound lanes such as `connectors/usgs_mrds/`, `connectors/usgs_ngmdb/` | `CONFIRMED where README files exist` | Compound-lane docs exist and preserve unresolved path posture. | Does not ratify the compound pattern. |
+| `connectors/usgs/src/` and `connectors/usgs/tests/` | `CONFIRMED where README files exist` | Source-root and test-root boundary docs exist. | Does not prove package metadata, tests, fixtures, or CI wiring. |
+
+---
+
+## Directory tree
+
+This tree is a partial, documentation-pass-oriented map. It is not a complete repository inventory.
+
+```text
+connectors/
+├── README.md
+├── usgs/
+│   ├── README.md
+│   ├── 3dep/
+│   ├── nhdplus_hr/
+│   ├── nlcd/
+│   ├── padus/
+│   ├── src/
+│   ├── tests/
+│   ├── water_data/
+│   └── wbd_huc/
+├── usgs_mrds/
+├── usgs_ngmdb/
+├── viirs_hotspot/
+└── wzdx/
+```
+
+> [!IMPORTANT]
+> Treat this as an inspected/adjacent-doc snapshot. A complete connector inventory should be generated by repository tooling before stronger claims are made.
 
 ---
 
@@ -207,6 +246,23 @@ Promotion is a governed state transition outside `connectors/`. Connectors may p
 
 ---
 
+## Inspection path
+
+Use this root README to inspect connector posture without overclaiming implementation:
+
+1. Start at `connectors/README.md` to confirm the root boundary.
+2. Open the relevant source-family or product-lane README.
+3. Check `docs/sources/catalog/<family>/` for product/source doctrine.
+4. Check `data/registry/sources/` for the SourceDescriptor and activation decision.
+5. Check `policy/rights/` and `policy/sensitivity/` for gates.
+6. Check connector tests and fixtures for offline validation.
+7. Check emitted receipts, manifests, proofs, and release records before relying on any public or downstream claim.
+
+> [!CAUTION]
+> Do not run live source activation, publish outputs, or expose connector material to public clients merely because a connector README exists.
+
+---
+
 ## Required child README contract
 
 Every non-trivial child connector README should include:
@@ -250,7 +306,8 @@ Before relying on a connector root or lane, verify:
 
 | Source | Status | Supports | Limits |
 |---|---|---|---|
-| Existing `connectors/README.md` before this edit | `CONFIRMED` | Root purpose as source-specific fetch/admission code, raw/quarantine-only output, and no direct processed/published output. | Stub was too short to encode child-lane boundaries. |
+| Existing `connectors/README.md` v0.2 | `CONFIRMED` | Root purpose, source-admission authority boundary, lifecycle boundary, validation, rollback, and definition-of-done structure. | Needed fuller application of the uploaded README authoring standard. |
+| Uploaded `KFM Repository Markdown Authoring Agent — Full Operating Prompt v2` | `CONFIRMED` | README-like docs should be evidence-grounded, preserve strong material, include repo fit, accepted inputs, exclusions, impact block, diagrams/tables where useful, verification, and rollback. | Does not prove connector implementation exists. |
 | `docs/doctrine/directory-rules.md` | `CONFIRMED` | `connectors/` is shown as an implementation root for source admission, with connectors feeding the governed data lifecycle. | Directory Rules do not prove any connector implementation is complete. |
 | `docs/sources/ADMISSION_PROCESS.md` | `CONFIRMED` | Admission decides whether material may enter under identity, role, rights, sensitivity, and cadence before touching `data/raw/`; admission is not promotion or publication. | Standard doc does not activate sources or prove connector tests. |
 
@@ -260,14 +317,16 @@ Before relying on a connector root or lane, verify:
 
 Rollback is required if this README is used to justify direct publication, direct public-client access, bypass of SourceDescriptor/policy/schema gates, or connector ownership of processed/catalog/triplet/proof/release authority.
 
-Rollback target: prior stub content SHA `465b004a56b1119e5cf7e00a34e3f9a7cb132dbb`.
+Rollback target: v0.2 content SHA `01953f857db053dccd83b8de1c81177e5fd609d0`.
+
+Prior stub rollback target: `465b004a56b1119e5cf7e00a34e3f9a7cb132dbb`.
 
 ---
 
 ## Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Connector inventory is generated and reviewed.
+- [ ] Complete connector inventory is generated and reviewed.
 - [ ] Child README files are complete or marked `NEEDS VERIFICATION`.
 - [ ] Path-pattern drift is recorded in an ADR, path map, or drift register.
 - [ ] SourceDescriptor references are verified for activated sources.
@@ -276,6 +335,20 @@ Rollback target: prior stub content SHA `465b004a56b1119e5cf7e00a34e3f9a7cb132db
 - [ ] Output-boundary tests prove no processed/catalog/triplet/published/release/API/UI writes occur from connectors.
 - [ ] Run/probe receipts are emitted for success, failure, denial, no-op, skipped, and rate-limited cases where applicable.
 - [ ] CI behavior is verified or marked `NEEDS VERIFICATION`.
+
+---
+
+## Related surfaces
+
+| Surface | Why it matters |
+|---|---|
+| `../docs/doctrine/directory-rules.md` | Placement, lifecycle, and authority-root doctrine. |
+| `../docs/sources/ADMISSION_PROCESS.md` | Source admission gate sequence and membrane. |
+| `../docs/sources/catalog/README.md` | Source-family and product doctrine index. |
+| `../data/registry/sources/` | SourceDescriptor and activation decisions. |
+| `../policy/rights/`, `../policy/sensitivity/` | Rights and sensitivity policy gates. |
+| `../data/receipts/`, `../data/proofs/` | Run evidence and proof/evidence families. |
+| `../release/` | Release decisions and rollback posture. |
 
 ---
 
