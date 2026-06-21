@@ -192,7 +192,7 @@ The Atmosphere/Air object-family roster is 15 objects plus a resolver-envelope s
 | [`SmokeContext.md`](./SmokeContext.md) | `REMOTE_SENSING_MASK` / `ATMOSPHERIC_MODEL_FIELD` | Expanded semantic contract; source-dependent smoke context, not PM2.5 and not hazards/event/impact proof. |
 | [`AODRaster.md`](./AODRaster.md) | `REMOTE_SENSING_MASK` | Expanded semantic contract; AOD is not PM2.5. |
 | [`WeatherStation.md`](./WeatherStation.md) | `NETWORK_AND_SITE_CONTEXT` | `NEEDS VERIFICATION` in this README unless expanded contract is inspected. |
-| [`WeatherObservation.md`](./WeatherObservation.md) | `OBSERVED_SENSOR` / `METEOROLOGICAL_CONTEXT` | Observed scaffold during this README task; needs expansion. |
+| [`WeatherObservation.md`](./WeatherObservation.md) | `OBSERVED_SENSOR` / `METEOROLOGICAL_CONTEXT` | Expanded semantic contract; general meteorological observation, context-vs-primary role tagged. |
 | [`WindField.md`](./WindField.md) | `OBSERVED_SENSOR` / `ATMOSPHERIC_MODEL_FIELD` | `NEEDS VERIFICATION` in this README unless expanded contract is inspected. |
 | [`PrecipitationObservation.md`](./PrecipitationObservation.md) | `OBSERVED_SENSOR` / `METEOROLOGICAL_CONTEXT` | Expanded semantic contract; precipitation-specific, canonical units required. |
 | [`TemperatureObservation.md`](./TemperatureObservation.md) | `OBSERVED_SENSOR` / `METEOROLOGICAL_CONTEXT` | Expanded semantic contract; temperature-specific, canonical units required. |
