@@ -8,7 +8,7 @@ owners: OWNER_TBD — Atmosphere steward · Air-quality steward · Station/netwo
 created: 2026-06-21
 updated: 2026-06-21
 policy_label: public; contracts; domains; atmosphere; compatibility; air-station; no-parallel-authority; station-siting
-stags: [kfm, contracts, atmosphere, air, air-station, compatibility, casing, slug, no-parallel-authority, station-siting, authoring-boundary, governance]
+tags: [kfm, contracts, atmosphere, air, air-station, compatibility, casing, slug, no-parallel-authority, station-siting, authoring-boundary, governance]
 related:
   - ./AirStation.md
   - ./AirObservation.md
