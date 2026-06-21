@@ -8,7 +8,7 @@ owners: OWNER_TBD — Atmosphere steward · Climate steward · Baseline steward 
 created: 2026-06-21
 updated: 2026-06-21
 policy_label: public; contracts; domains; atmosphere; compatibility; climate-normal; no-parallel-authority; baseline
-stags: [kfm, contracts, atmosphere, air, climate-normal, ClimateNormal, compatibility, casing, slug, no-parallel-authority, climate-anomaly-context, baseline, reference-period, authoring-boundary, governance]
+tags: [kfm, contracts, atmosphere, air, climate-normal, ClimateNormal, compatibility, casing, slug, no-parallel-authority, climate-anomaly-context, baseline, reference-period, authoring-boundary, governance]
 related:
   - ./ClimateNormal.md
   - ./ClimateAnomaly.md
