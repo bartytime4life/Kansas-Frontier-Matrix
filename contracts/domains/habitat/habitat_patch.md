@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-domains-habitat-habitat-patch
 title: HabitatPatch Contract — Habitat
- type: semantic-contract
+type: semantic-contract
 version: v0.2
 status: draft; PROPOSED; NEEDS VERIFICATION before promotion
 owners:
@@ -181,18 +181,7 @@ Until schema fields are added and the sibling-path conflict is resolved, this fi
 
 ## Assertions
 
-A reviewed `HabitatPatch` should semantically assert:
-
-1. **Patch identity** — stable patch ID, object role, source role, temporal scope, spatial scope, and digest basis.
-2. **Geometry role** — exact internal geometry, public-safe generalized geometry, or aggregate-only scope is explicit.
-3. **Source support** — SourceDescriptor refs, source record refs, rights, citation, source role, source vintage, and authority limits are visible.
-4. **Classification support** — land-cover observation refs, ecological-system refs, class scheme refs, crosswalk refs, and uncertainty refs are linked where material.
-5. **Temporal support** — source, observed, valid, retrieval, release, and correction times remain distinct where material.
-6. **Evidence support** — EvidenceRef/EvidenceBundle refs are present before consequential use.
-7. **Policy support** — sensitivity, rights, source-role, geometry exposure, and release policy decisions are linked where material.
-8. **Review support** — steward review and validation support are visible before promotion.
-9. **Release support** — ReleaseManifest, public artifact refs, correction path, and rollback target are present before public use.
-10. **Correction support** — supersession, replacement patch, stale-state, and rollback lineage are auditable.
+A reviewed `HabitatPatch` should semantically assert patch identity, geometry role, source support, classification support, temporal support, evidence support, policy support, review support, release support, correction support, and rollback support. Every consequential patch claim should preserve source role, evidence, sensitivity, public-safe geometry posture, and release state.
 
 ---
 
@@ -244,15 +233,9 @@ The following fields are **PROPOSED** targets for future schema expansion. They 
 | `suitability_model_refs` | SuitabilityModel refs that inform but do not define patch truth. |
 | `connectivity_edge_refs` | Connectivity relations using this patch. |
 | `corridor_refs` | Corridor relations using this patch. |
-| `source_time` | Source publication/assertion time. |
-| `observed_time` | Observation/acquisition time where applicable. |
-| `valid_time` | Valid interval for patch claim. |
-| `retrieval_time` | KFM retrieval/harvest time. |
-| `release_time` | Public-safe release time, if released. |
-| `correction_time` | Correction/supersession time, if corrected. |
+| `source_time` / `observed_time` / `valid_time` / `retrieval_time` / `release_time` / `correction_time` | Distinct time dimensions; do not collapse. |
 | `uncertainty_refs` | UncertaintySurface or uncertainty summary refs. |
-| `evidence_refs` | EvidenceRef links. |
-| `evidence_bundle_refs` | EvidenceBundle refs behind consequential use. |
+| `evidence_refs` / `evidence_bundle_refs` | Evidence closure refs behind consequential use. |
 | `validation_report_ref` | ValidationReport for schema, geometry, time, identity, evidence, sensitivity, and release readiness. |
 | `policy_decision_ref` | PolicyDecision where material. |
 | `redaction_receipt_refs` | Generalization/redaction/aggregation receipts for public-safe geometry. |
@@ -332,8 +315,7 @@ Before this contract is promoted beyond draft:
 - [ ] Decide whether `habitat_patch.md` supersedes, mirrors, or coexists with `habitat-patch.contract.md`; update docs and redirects accordingly.
 - [ ] Expand `schemas/contracts/v1/domains/habitat/habitat_patch.schema.json` beyond an empty scaffold.
 - [ ] Confirm canonical source-role enum spelling, including `model` vs `modeled` and `authority` vs `regulatory`.
-- [ ] Add valid fixtures for observed patch, land-cover-derived patch, ecological-system-classified patch, public-safe generalized patch, model-derived candidate patch, regulatory-context patch, and aggregate patch.
-- [ ] Add invalid fixtures for missing source, missing evidence, invalid geometry, exact sensitive geometry released publicly, modeled-as-observed, modeled-as-regulatory, species-occurrence-as-patch-truth, vegetation-community-as-Habitat-owned, style-only redaction, candidate-as-public, missing release, and missing rollback target.
+- [ ] Add valid/invalid fixtures for patch geometry, source roles, evidence closure, public-safe geometry, and rollback.
 - [ ] Add validator checks for geometry validity, geometry role, source role, spatial/temporal scope, artifact digest, evidence refs, policy refs, redaction receipt refs, release refs, and correction lineage.
 - [ ] Add tests proving public map/UI/AI surfaces cannot treat patch tiles, popups, graph projections, vector indexes, or generated text as source truth.
 - [ ] Confirm release tests proving public clients consume released public-safe patch artifacts only.
@@ -367,17 +349,7 @@ Recommended finite outcomes:
 
 Rollback is required when a released or review-authorized patch weakens geometry integrity, source-role separation, evidence support, sensitivity posture, or release integrity.
 
-Rollback triggers include:
-
-- exact or public geometry changes;
-- source, source role, source vintage, class scheme, ecological-system classification, crosswalk, temporal scope, artifact digest, evidence ref, policy decision, or release ref changes;
-- modeled or candidate patch was presented as observed or regulatory;
-- patch was presented as species occurrence, Flora vegetation-community ownership, regulatory critical habitat, suitability score, corridor, or management instruction;
-- sensitive exact patch or occurrence-linked habitat leaked publicly;
-- style-only redaction was used instead of pre-publication transformation;
-- candidate patch appeared in public API/UI/AI path;
-- public map tile, popup, AI answer, graph projection, or vector index was treated as patch truth;
-- release, correction, or rollback refs were missing for public use.
+Rollback triggers include exact/public geometry changes; source-role, source-vintage, class-scheme, ecological-system, crosswalk, temporal-scope, artifact-digest, evidence, policy, or release corrections; modeled/candidate patch shown as observed/regulatory; patch shown as occurrence, vegetation-community ownership, regulatory critical habitat, suitability score, corridor, or management instruction; sensitive exact patch or occurrence-linked habitat leaked publicly; style-only redaction; candidate public exposure; tile/popup/AI/vector-index-as-truth; or missing release/correction/rollback refs.
 
 Rollback artifacts should include affected patch IDs, exact/public geometry refs, geometry fingerprints, source refs, source-role refs, temporal-scope refs, artifact digests, evidence refs, validation reports, policy decisions, redaction receipts, release refs, correction notices, rollback cards, replacement patches, and public-cache/style invalidation instructions.
 
