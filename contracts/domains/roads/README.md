@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-domains-roads-readme
 title: Roads Contracts README
- type: readme
+type: readme
 version: v0.1
 status: draft; compatibility-orientation; PROPOSED; NEEDS VERIFICATION before promotion
 owners:
