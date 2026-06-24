@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-evidence-evidence-ref
 title: EvidenceRef Contract — Evidence
- type: semantic-contract; evidence-pointer-profile
+type: semantic-contract; evidence-pointer-profile
 version: v0.2
 status: draft; PROPOSED; schema-confirmed; evidence-family; governed-pointer; pre-closure-unless-bundle-bound; NEEDS VERIFICATION before promotion
 owners:
