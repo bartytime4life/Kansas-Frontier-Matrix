@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-evidence-kfm-geo-manifest
 title: KFM Geo Manifest Contract — Evidence
- type: semantic-contract; geospatial-artifact-manifest-profile
+type: semantic-contract; geospatial-artifact-manifest-profile
 version: v0.2
 status: draft; PROPOSED; schema-stub-confirmed; evidence-family; geospatial-manifest; artifact-metadata; release-gated; NEEDS VERIFICATION before promotion
 owners:
