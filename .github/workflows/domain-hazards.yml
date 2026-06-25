@@ -11,15 +11,15 @@ jobs:
   validate-hazards:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO validate-hazards'
   build-proof-hazards:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO build-proof-hazards'
   publish-dry-run-hazards:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO publish-dry-run-hazards'

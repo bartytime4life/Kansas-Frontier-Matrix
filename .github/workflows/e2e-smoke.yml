@@ -11,10 +11,10 @@ jobs:
   spin-up-mock-runtime:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO spin-up-mock-runtime'
   run-e2e-smoke:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO run-e2e-smoke'

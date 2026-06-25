@@ -11,15 +11,15 @@ jobs:
   validate-soil:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO validate-soil'
   build-proof-soil:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO build-proof-soil'
   publish-dry-run-soil:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO publish-dry-run-soil'

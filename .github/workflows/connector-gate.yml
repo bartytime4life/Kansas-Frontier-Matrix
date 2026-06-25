@@ -11,10 +11,10 @@ jobs:
   connector-output-gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO connector-output-gate'
   ingest-receipt-presence:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO ingest-receipt-presence'

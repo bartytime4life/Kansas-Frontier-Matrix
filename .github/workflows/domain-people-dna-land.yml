@@ -11,15 +11,15 @@ jobs:
   validate-people-dna-land:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO validate-people-dna-land'
   build-proof-people-dna-land:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO build-proof-people-dna-land'
   publish-dry-run-people-dna-land:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO publish-dry-run-people-dna-land'

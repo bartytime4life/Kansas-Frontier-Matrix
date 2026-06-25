@@ -11,15 +11,15 @@ jobs:
   validate-hydrology:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO validate-hydrology'
   build-proof-hydrology:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO build-proof-hydrology'
   publish-dry-run-hydrology:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO publish-dry-run-hydrology'

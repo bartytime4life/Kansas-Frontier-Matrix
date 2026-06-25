@@ -11,15 +11,15 @@ jobs:
   validate-roads-rail-trade:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO validate-roads-rail-trade'
   build-proof-roads-rail-trade:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO build-proof-roads-rail-trade'
   publish-dry-run-roads-rail-trade:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO publish-dry-run-roads-rail-trade'

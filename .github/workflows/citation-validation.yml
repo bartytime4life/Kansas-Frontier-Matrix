@@ -11,10 +11,10 @@ jobs:
   citation-resolves:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO citation-resolves'
   abstain-on-missing-evidence:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO abstain-on-missing-evidence'

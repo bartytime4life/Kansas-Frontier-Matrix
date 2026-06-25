@@ -11,10 +11,10 @@ jobs:
   resolve-bundles:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO resolve-bundles'
   denied-bundles-fail-closed:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO denied-bundles-fail-closed'

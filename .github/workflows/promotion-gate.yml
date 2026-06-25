@@ -11,25 +11,25 @@ jobs:
   doctrine-artifact-prereq:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: python scripts/maintenance/check_required_doctrine_artifacts.py
 
   doctrine-artifact-schema:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: python tools/validators/source/validate_doctrine_artifact_descriptor.py --fixtures
 
   promotion-prerequisites:
     needs: [doctrine-artifact-prereq, doctrine-artifact-schema]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: python tools/validators/release/validate_promotion_decision.py --fixtures
 
   review-records-present:
     needs: [promotion-prerequisites]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: python pipelines/domains/hydrology/promote.py
