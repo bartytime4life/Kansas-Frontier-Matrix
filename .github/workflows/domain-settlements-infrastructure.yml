@@ -11,15 +11,15 @@ jobs:
   validate-settlements-infrastructure:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO validate-settlements-infrastructure'
   build-proof-settlements-infrastructure:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO build-proof-settlements-infrastructure'
   publish-dry-run-settlements-infrastructure:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO publish-dry-run-settlements-infrastructure'

@@ -11,10 +11,10 @@ jobs:
   validate-control-plane-yaml:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO validate-control-plane-yaml'
   registers-schema:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO registers-schema'

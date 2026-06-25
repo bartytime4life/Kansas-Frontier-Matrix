@@ -11,10 +11,10 @@ jobs:
   mock-focus-flows:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO mock-focus-flows'
   finite-envelope-shape:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: 'echo TODO finite-envelope-shape'
