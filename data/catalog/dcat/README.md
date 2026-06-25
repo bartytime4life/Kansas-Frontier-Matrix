@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-catalog-dcat-readme
 title: data/catalog/dcat/README.md — DCAT Catalog Sublane README
-version: v0.1
+version: v0.2
 type: readme; data-lifecycle-sublane; dcat-catalog-guide
 status: draft; PROPOSED; data-root; catalog-stage; dcat; release-gated
 owners: OWNER_TBD — Data steward · Catalog steward · DCAT steward · Evidence steward · Policy steward · Release steward · Schema steward · Docs steward
@@ -19,19 +19,28 @@ related:
   - ../../../policy/
   - ../../../release/
 notes:
-  - "Expanded from a greenfield stub at `data/catalog/dcat/README.md`."
+  - "v0.2 adds the required README impact block, quick jumps, lifecycle diagram, evidence ledger, and stronger GitHub navigation."
   - "DCAT records are catalog carriers and do not replace SourceDescriptor, EvidenceBundle, RunReceipt, PolicyDecision, or ReleaseManifest."
   - "ADR-0022 requires STAC, DCAT, and PROV-O catalog records to agree by identifier, digest, and release reference for promoted releases."
-  - "Rollback target for this expansion is previous stub blob SHA `47704f9c29000e8fbef71e334d21ce595f2f9ba0`."
+  - "Rollback target for this expansion is previous v0.1 blob SHA `6a0e1c6ea92d1353cc25cf0a4b4698fcfd28cc1f`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # data/catalog/dcat
 
-> DCAT catalog sublane for governed `dcat:Dataset` and `dcat:Distribution` records inside the `CATALOG / TRIPLET` lifecycle stage. DCAT supports catalog discovery and interoperability. It is not source truth, proof storage, policy authority, schema authority, or release authority.
+> DCAT catalog sublane for governed `dcat:Dataset` and `dcat:Distribution` records inside the `CATALOG / TRIPLET` lifecycle stage.
+
+<p>
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Root: data/catalog/dcat" src="https://img.shields.io/badge/root-data%2Fcatalog%2Fdcat-blue">
+  <img alt="Lifecycle: CATALOG" src="https://img.shields.io/badge/lifecycle-CATALOG-purple">
+  <img alt="Standard: DCAT v3" src="https://img.shields.io/badge/standard-DCAT_v3-informational">
+  <img alt="Exposure: released only" src="https://img.shields.io/badge/exposure-RELEASED__ONLY-critical">
+</p>
 
 **Status:** draft / PROPOSED  
+**Owners:** OWNER_TBD — Data steward · Catalog steward · DCAT steward · Evidence steward · Policy steward · Release steward · Schema steward · Docs steward  
 **Path:** `data/catalog/dcat/README.md`  
 **Owning root:** `data/catalog/`  
 **Lifecycle stage:** `CATALOG / TRIPLET`  
@@ -39,16 +48,25 @@ notes:
 **Exposure posture:** RELEASED ONLY  
 **Truth posture:** CONFIRMED target was a greenfield stub · CONFIRMED parent catalog lane is RELEASED ONLY · CONFIRMED DCAT profile targets W3C DCAT v3 and names `data/catalog/dcat/` as catalog data home · CONFIRMED ADR-0022 says STAC, DCAT, and PROV must agree for promoted releases · NEEDS VERIFICATION for concrete inventory, schemas, validators, policy gates, receipts, release manifests, and routed access behavior.
 
+**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Record requirements](#record-requirements) · [Guardrails](#guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+
+---
+
 ## Purpose
 
 `data/catalog/dcat/` stores or stages governed DCAT catalog records for KFM datasets and distributions.
 
-A DCAT record can help users and systems discover catalog metadata. It cannot make a dataset true, public, policy-admitted, evidence-supported, or released by itself.
+A DCAT record supports catalog discovery and interoperability. It does **not** make a dataset true, public, policy-admitted, evidence-supported, or released by itself.
 
 ## Lifecycle boundary
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```mermaid
+flowchart LR
+  RAW[RAW] --> WORK[WORK / QUARANTINE]
+  WORK --> PROCESSED[PROCESSED]
+  PROCESSED --> CATALOG[CATALOG / TRIPLET]
+  CATALOG --> PUBLISHED[PUBLISHED]
+  DCAT[data/catalog/dcat] --> CATALOG
 ```
 
 `data/catalog/dcat/` is a CATALOG-stage sublane. Public exposure applies only to records tied to an approved release and governed access path.
@@ -97,7 +115,7 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 | Policy rules | `policy/` |
 | Validators/tests/code | `tools/validators/`, `tests/`, implementation roots |
 
-## DCAT record requirements
+## Record requirements
 
 PROPOSED until schema and validator are verified:
 
@@ -118,6 +136,16 @@ PROPOSED until schema and validator are verified:
 - EvidenceBundle, SourceDescriptor, RunReceipt, PolicyDecision, and ReleaseManifest remain separate authority objects.
 - Unreleased DCAT records are not public merely because they exist under `data/catalog/dcat/`.
 
+## Evidence ledger
+
+| Source | Status | Supports | Limits |
+|---|---|---|---|
+| `data/catalog/dcat/README.md` prior version | CONFIRMED | Existing v0.1 DCAT sublane boundaries. | Did not include full README impact block required by the authoring standard. |
+| `data/catalog/README.md` | CONFIRMED | Parent catalog lane and RELEASED ONLY posture. | Does not prove DCAT record inventory. |
+| `docs/standards/DCAT.md` | CONFIRMED | DCAT v3 target and `data/catalog/dcat/` catalog data home. | Implementation paths and validators remain NEEDS VERIFICATION. |
+| `ADR-0022` | CONFIRMED doctrine / PROPOSED implementation | STAC/DCAT/PROV agreement invariant. | Does not prove emitted CatalogMatrix or CI enforcement. |
+| Uploaded Markdown authoring prompt | CONFIRMED instruction context | README minimums, badges, quick jumps, repo fit, exclusions, verification, rollback. | Does not prove repository implementation. |
+
 ## Validation checklist
 
 - [ ] Confirm actual child directories and DCAT record files.
@@ -133,6 +161,6 @@ PROPOSED until schema and validator are verified:
 
 Rollback is required if this lane becomes a source-data root, proof store, release-decision root, published-output root, schema root, policy root, validator root, or implementation root.
 
-Rollback target for this expansion: previous stub blob SHA `47704f9c29000e8fbef71e334d21ce595f2f9ba0`.
+Rollback target for this expansion: previous v0.1 blob SHA `6a0e1c6ea92d1353cc25cf0a4b4698fcfd28cc1f`.
 
 <p align="right"><a href="#top">Back to top</a></p>
