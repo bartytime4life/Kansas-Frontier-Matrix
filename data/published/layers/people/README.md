@@ -1,16 +1,19 @@
 # People Published Layers
 
-Status: draft.
+Released public-safe layer-artifact placeholder for the requested `people/` lane.
 
-Path: `data/published/layers/people/`
+<p>
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Placement: needs verification" src="https://img.shields.io/badge/placement-NEEDS%20VERIFICATION-orange">
+  <img alt="Lifecycle: published" src="https://img.shields.io/badge/lifecycle-published-success">
+  <img alt="Policy: restricted review" src="https://img.shields.io/badge/policy-restricted--review-critical">
+  <img alt="Truth: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-blueviolet">
+</p>
 
-This requested path is documented as a restricted-review placeholder.
+**Quick links:** [Purpose](#purpose) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
 
-Current placement status: **NEEDS VERIFICATION**.
-
-Nearest confirmed related lane: `data/published/layers/people-dna-land/`.
-
-Known child placeholder: `data/published/layers/people/dna/`.
+> [!CAUTION]
+> **NEEDS VERIFICATION:** this requested path uses `people/`. Current repo-facing evidence uses `people-dna-land/` as the nearest confirmed related published-layer lane. Treat this file as a restricted-review placeholder until a directory-rule decision, ADR, or migration note confirms whether this path is canonical or compatibility-only.
 
 ## Purpose
 
@@ -18,15 +21,46 @@ This directory may hold only released public-safe layer artifacts and direct sid
 
 This file does not make the path canonical. It records the requested path and keeps the lane bounded until a directory-rule decision, ADR, or migration note confirms the correct long-term home.
 
-## Authority boundary
+## Repo fit
 
-| Authority | Home |
+| Field | Value |
 |---|---|
-| Release decisions | `release/` |
+| Path | `data/published/layers/people/` |
+| Responsibility root | `data/` |
+| Lifecycle phase | `published/` |
+| Placement status | **NEEDS VERIFICATION** |
+| Nearest confirmed related lane | `data/published/layers/people-dna-land/` |
+| Known child placeholder | `data/published/layers/people/dna/` |
+
+## Inputs
+
+Accepted content is limited to:
+
+- released public-safe layer artifacts;
+- release-linked layer sidecars;
+- field allowlists and digests;
+- release-local notes;
+- generated pointers derived from release state.
+
+## Exclusions
+
+| Do not place here | Correct authority home |
+|---|---|
+| Source, work, quarantine, processed, and catalog material | Their lifecycle homes |
 | Proof bundles | `data/proofs/` |
 | Receipts | `data/receipts/` |
 | Registry records | `data/registry/` |
-| Source, work, quarantine, processed, and catalog material | Their lifecycle homes, not this directory |
+| Release decisions | `release/` |
+| Direct model-generated claims | Governed answer/provenance paths only |
+
+## Directory map
+
+```text
+data/published/layers/people/
+├── README.md
+└── dna/
+    └── README.md
+```
 
 ## Public access rule
 
