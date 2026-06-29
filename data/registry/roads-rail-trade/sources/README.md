@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/roads-rail-trade/sources/readme
 name: Roads Rail Trade Source Registry README
 path: data/registry/roads-rail-trade/sources/README.md
 type: data-registry-roads-rail-trade-sources-readme
-version: v0.2.0
+version: v0.2.1
 status: draft
 owners:
   - <registry-steward>
@@ -15,6 +15,7 @@ owners:
   - <policy-steward>
   - <proof-steward>
   - <release-steward>
+  - <docs-steward>
 created: 2026-06-28
 updated: 2026-06-28
 policy_label: restricted-review
@@ -23,8 +24,8 @@ responsibility_root: data/
 artifact_family: registry
 registry_scope: roads-rail-trade-source-descriptor-records
 domain: roads-rail-trade
-path_posture: existing-thin-readme-replaced; domain-first-registry-path-confirmed; canonical-source-registry-pattern-points-to-data-registry-sources-domain; domain-specific-source-registry-doc-not-found-in-this-edit; layout-needs-verification
-sensitivity_posture: registry-internal; no-public-path; not-navigation-authority; not-current-operational-status; source-role-preserving; rights-aware; access-and-restriction-context-fail-closed; infrastructure-and-sensitive-route-context-reviewed; evidence-aware; policy-aware; release-blocked-until-gates-close
+path_posture: existing-source-readme-refreshed; domain-first-registry-path-confirmed; domain-first-parent-readme-confirmed; cross-domain-source-registry-parent-supports-data-registry-sources-domain-pattern; domain-specific-source-registry-doctrine-not-found-in-current-search; final-topology-needs-verification
+sensitivity_posture: registry-internal; no-public-path; not-navigation-authority; not-current-operational-status; not-legal-access-advice; not-railroad-operating-instructions; source-role-preserving; rights-aware; access-and-restriction-context-fail-closed; infrastructure-and-sensitive-route-context-reviewed; evidence-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
   - ../../README.md
@@ -33,6 +34,9 @@ related:
   - ../../datasets/README.md
   - ../../domains/README.md
   - ../../crosswalks/README.md
+  - ../../rights/README.md
+  - ../../sensitivity/README.md
+  - ../../layers/README.md
   - ../../../raw/roads-rail-trade/
   - ../../../work/roads-rail-trade/
   - ../../../quarantine/roads-rail-trade/
@@ -54,6 +58,7 @@ related:
   - ../../../../schemas/contracts/v1/domains/roads-rail-trade/
   - ../../../../policy/domains/roads-rail-trade/
   - ../../../../policy/rights/
+  - ../../../../policy/sensitivity/
   - ../../../../release/
 tags:
   - kfm
@@ -79,11 +84,12 @@ tags:
   - evidence
   - provenance
   - release-gated
+  - rollback
   - no-public-path
 notes:
-  - "This README expands the thin README at `data/registry/roads-rail-trade/sources/README.md`."
+  - "This README refreshes the expanded `data/registry/roads-rail-trade/sources/README.md` after the parent `data/registry/roads-rail-trade/README.md` was expanded from a stub."
   - "Roads/Rail/Trade source registry records are admission and authority-control records. They do not store source payloads, prove route/current-status/access/navigation claims, define contracts, enforce schemas, hold policy, close catalogs, or publish artifacts."
-  - "No domain-specific Roads/Rail/Trade source-registry doctrine was found during this edit; package READMEs confirm adjacent implementation boundaries and keep source registry, policy, proofs, receipts, release, and public interfaces separate."
+  - "Current search found the domain-first parent and this child README, but no separate domain-specific Roads/Rail/Trade SOURCE_REGISTRY or DATA_LIFECYCLE doctrine file. Keep final registry topology NEEDS VERIFICATION until an ADR, migration note, Directory Rules update, or repository inventory resolves it."
   - "KFM transport records are evidence context and governed publication material, not emergency alerts, navigation instructions, legal access advice, current road-condition authority, or railroad-operating instructions."
 [/KFM_META_BLOCK_V2] -->
 
@@ -98,11 +104,12 @@ Domain-first registry lane for Roads / Rail / Trade source descriptor and source
   <img alt="Family: registry" src="https://img.shields.io/badge/family-registry-blueviolet">
   <img alt="Domain: roads-rail-trade" src="https://img.shields.io/badge/domain-roads--rail--trade-2f6f4e">
   <img alt="Lane: sources" src="https://img.shields.io/badge/lane-sources-blue">
+  <img alt="Topology: needs verification" src="https://img.shields.io/badge/topology-NEEDS%20VERIFICATION-orange">
   <img alt="Boundary: not navigation" src="https://img.shields.io/badge/boundary-not%20navigation-critical">
   <img alt="Exposure: no public path" src="https://img.shields.io/badge/exposure-no%20public%20path-critical">
 </p>
 
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Roads/Rail/Trade source boundary](#roadsrailtrade-source-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Suggested descriptor shape](#suggested-descriptor-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Source boundary](#source-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Suggested descriptor shape](#suggested-descriptor-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
 
 > [!CAUTION]
 > `data/registry/roads-rail-trade/sources/` is a source-registry lane for Roads / Rail / Trade admission and authority-control records. It is not RAW source storage, WORK staging, QUARANTINE, PROCESSED data, catalog output, proof, receipt storage, semantic contract authority, schema authority, policy, release authority, public API/UI material, current navigation guidance, legal access advice, operational transport instruction, or generated-answer authority.
@@ -136,15 +143,21 @@ The requested and existing lane is:
 data/registry/roads-rail-trade/sources/
 ```
 
-This is a domain-first registry path. The cross-domain source registry parent also supports a subtype-first source registry pattern:
+This is a domain-first registry path under the now-expanded domain-first parent:
+
+```text
+data/registry/roads-rail-trade/
+```
+
+The cross-domain source registry parent also supports a subtype-first source registry pattern:
 
 ```text
 data/registry/sources/<domain>/
 ```
 
-During this edit, no domain-specific Roads / Rail / Trade `SOURCE_REGISTRY.md` or `DATA_LIFECYCLE.md` equivalent was found through repository search. Package READMEs for network, identity, and graph projection do reference `data/registry/roads-rail-trade/` or source-registry homes as governance data, but they mark implementation depth as `NEEDS VERIFICATION`.
+Current search found the domain-first parent and child README but did not find a separate domain-specific Roads / Rail / Trade `SOURCE_REGISTRY.md` or `DATA_LIFECYCLE.md` doctrine file. The parent README treats `data/registry/roads-rail-trade/` as a compatibility/routing lane until registry topology is reconciled.
 
-Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS VERIFICATION topology**. If `data/registry/sources/roads-rail-trade/` is later accepted as canonical, this domain-first path should either redirect to that lane or be migrated with a clear manifest, retained history, and rollback target.
+Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS VERIFICATION topology**. If `data/registry/sources/roads-rail-trade/` is later accepted as canonical, this domain-first path should either redirect to that lane or be migrated with a clear manifest, retained history, and rollback target. Do not maintain divergent descriptor sets.
 
 ---
 
@@ -153,15 +166,15 @@ Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS V
 | Responsibility | Home | Boundary |
 |---|---|---|
 | Roads / Rail / Trade source descriptor/admission records | `data/registry/roads-rail-trade/sources/` and/or reconciled `data/registry/sources/roads-rail-trade/` | Source identity, role, rights, terms, cadence, activation, authority limits, and caveats. |
-| Domain-first registry parent | `data/registry/roads-rail-trade/` | Parent currently exists as a stub; topology remains NEEDS VERIFICATION. |
+| Domain-first registry parent | `data/registry/roads-rail-trade/` | Expanded routing/compatibility parent for existing domain-first registry lanes. |
 | Cross-domain source registry parent | `data/registry/sources/README.md` | General SourceDescriptor and admission-control doctrine. |
 | Roads / Rail / Trade source payloads | `data/raw/roads-rail-trade/`, `data/work/roads-rail-trade/`, `data/quarantine/roads-rail-trade/`, `data/processed/roads-rail-trade/` | Actual data belongs in lifecycle lanes, not registry records. |
 | Network helper code | `packages/domains/roads-rail-trade/network/` | Implementation helpers only; not source registry, data, policy, proof, release, or public authority. |
 | Identity helper code | `packages/domains/roads-rail-trade/identity/` | Deterministic IDs and digests only; not proof, source authority, release, or public route truth. |
 | Graph projection helper code | `packages/domains/roads-rail-trade/graph_projection/` | Derived graph candidate support only; not source truth, release decision, proof, or public routing authority. |
 | Semantic meaning | `contracts/domains/roads-rail-trade/` or accepted equivalent | Object meaning and invariants. |
-| Machine shape | `schemas/contracts/v1/source/`, `schemas/contracts/v1/domains/roads-rail-trade/`, or ADR-selected schema lane | Schema enforcement; exact domain schema state remains NEEDS VERIFICATION. |
-| Policy and rights | `policy/domains/roads-rail-trade/`, `policy/rights/`, and accepted sensitivity/access policy lanes | Access, rights, stale-state, restrictions, sensitivity, and release rules. |
+| Machine shape | `schemas/contracts/v1/source/`, `schemas/contracts/v1/domains/roads-rail-trade/`, or ADR-selected schema lane | Schema enforcement; exact domain/source schema state remains NEEDS VERIFICATION. |
+| Policy, sensitivity, and rights | `policy/domains/roads-rail-trade/`, `policy/sensitivity/`, `policy/rights/`, and accepted access-policy lanes | Access, rights, stale-state, restrictions, sensitivity, and release rules. |
 | Validation/topology/generalization receipts | `data/receipts/roads-rail-trade/` and accepted receipt lanes | Process memory for checks and public-safe transforms. |
 | Proof/evidence | `data/proofs/roads-rail-trade/` or accepted proof lanes | EvidenceBundle closure, proof packs, signatures, and citation validation. |
 | Catalog and graph projections | `data/catalog/domain/roads-rail-trade/`, `data/triplets/`, and accepted graph/catalog lanes | Catalog/discovery carriers and derived relationship projections after catalog closure. |
@@ -170,7 +183,7 @@ Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS V
 
 ---
 
-## Roads/Rail/Trade source boundary
+## Source boundary
 
 | Rule | Handling |
 |---|---|
@@ -182,7 +195,7 @@ Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS V
 | Geometry is not legal access | Road, rail, parcel, PLSS, bridge, ferry, crossing, route, and corridor geometry does not prove legal access, safety, current passability, ownership, or operating status by itself. |
 | Graph edges are derived | Graph projection outputs are analytic candidates under stated evidence and policy conditions; they are not source truth or public routing authority. |
 | Rights and restrictions travel | License, attribution, redistribution, source terms, access restrictions, private-road restrictions, and sensitive infrastructure caveats must remain attached downstream. |
-| Infrastructure-sensitive context fails closed | Sensitive facilities, restricted access, critical infrastructure, private access notes, and safety-relevant details require policy review before exposure. |
+| Sensitive route/access context fails closed | Sensitive facilities, restricted access, private access notes, and safety-relevant details require policy review before exposure. |
 | Registry is not validation | Validation receipts, topology receipts, run receipts, and generalization receipts remain separate process-memory objects. |
 | Registry is not proof | EvidenceBundle/proof support remains separate. |
 | Registry is not catalog | STAC/DCAT/PROV/domain catalog records and graph/triplet projections live under catalog/triplet lanes. |
@@ -201,7 +214,7 @@ Accepted content is limited to Roads / Rail / Trade source registry records and 
 - source-family README files and local indexes;
 - source-role review notes and role-assignment records;
 - rights, license, attribution, redistribution, cadence, access, endpoint, terms, steward, authority-scope, and caveat metadata;
-- source vintage, route-status basis, jurisdiction, operator/owner assertion scope, infrastructure context, scale/accuracy notes, retrieval refs, and stale-state notes;
+- source vintage, route-status basis, jurisdiction, operator/owner assertion scope, transport context, scale/accuracy notes, retrieval refs, and stale-state notes;
 - supersession, withdrawal, correction, embargo, stale-state, quarantine, and rollback references;
 - registry-local manifests, checksums, signatures, and index sidecars;
 - pointers to validation/topology receipts, generalization receipts, proof packs, catalog records, release candidates, release manifests, correction notices, and rollback cards.
@@ -214,13 +227,14 @@ Keep records compact and pointer-based. Do not embed source payloads, full netwo
 
 | Do not place here | Correct authority home |
 |---|---|
-| Raw transportation payloads, road centerlines, rail datasets, route inventories, closure feeds, WZDx-like feeds, GTFS-like feeds, TIGER/transport extracts, HPMS-like records, rail crossing files, historic map scans, survey plats, geocoded route tables, rasters, shapefiles, GeoParquet, COG, PMTiles, or source-native tables | `data/raw/roads-rail-trade/`, `data/work/roads-rail-trade/`, `data/quarantine/roads-rail-trade/`, or `data/processed/roads-rail-trade/` depending on lifecycle state |
+| Raw transportation payloads, road centerlines, rail datasets, route inventories, closure feeds, WZDx-like feeds, TIGER/transport extracts, HPMS-like records, rail crossing files, historic map scans, survey plats, geocoded route tables, rasters, shapefiles, GeoParquet, COG, PMTiles, or source-native tables | `data/raw/roads-rail-trade/`, `data/work/roads-rail-trade/`, `data/quarantine/roads-rail-trade/`, or `data/processed/roads-rail-trade/` depending on lifecycle state |
 | Source fetchers, endpoint clients, credentials, watchers, or automation | `connectors/`, `pipelines/`, `pipeline_specs/`, `configs/`, `infra/`, or accepted implementation roots |
 | Network helper code, identity helper code, or graph-projection helper code | `packages/domains/roads-rail-trade/` |
 | Dataset identity records | `data/registry/datasets/` |
 | Crosswalk mapping records | `data/registry/crosswalks/` |
-| Domain-state records | `data/registry/domains/` |
+| Domain-state records | `data/registry/domains/` or accepted domain registry lane |
 | Rights registry records | `data/registry/rights/` after accepted rights-registry topology |
+| Sensitivity registry records | `data/registry/sensitivity/` after accepted sensitivity-registry topology |
 | Layer registry records | `data/registry/layers/` after accepted layer-registry topology |
 | Semantic object contracts | `contracts/domains/roads-rail-trade/` |
 | JSON Schema | `schemas/contracts/v1/source/` or `schemas/contracts/v1/domains/roads-rail-trade/` |
@@ -236,7 +250,7 @@ Keep records compact and pointer-based. Do not embed source payloads, full netwo
 
 ## Suggested directory shape
 
-The map below is **PROPOSED** documentation guidance, not proof that child folders or records exist.
+The map below is **PROPOSED** documentation guidance, not proof that child folders or records exist beyond this README.
 
 ```text
 data/registry/roads-rail-trade/sources/
@@ -283,7 +297,7 @@ The exact schema remains **NEEDS VERIFICATION**. A Roads / Rail / Trade source r
   "domain": "roads-rail-trade",
   "source_family": "road_network | rail_network | crossings_bridges_ferries | route_membership | historic_frontier_routes | trade_corridors | restrictions_access_context | operators_ownership_context | other",
   "source_name": "Human-readable source name",
-  "source_role": "observed | regulatory | administrative | modeled | aggregate | candidate | context | synthetic | restricted",
+  "source_role": "observed | regulatory | administrative | modeled | aggregate | candidate | context | synthetic | restricted | needs-review",
   "authority_scope": "What this source may and may not support",
   "rights_posture": "open | attribution-required | restricted | unknown | denied | needs-review",
   "sensitivity_posture": "public-safe | generalized | restricted | denied | needs-review",
@@ -319,7 +333,7 @@ Do not treat this JSON block as a live schema. It is a maintainer-facing sketch 
 ## Required checks before use
 
 - [ ] Confirm whether `data/registry/roads-rail-trade/sources/` or `data/registry/sources/roads-rail-trade/` is the accepted canonical descriptor lane before adding real descriptor payloads.
-- [ ] Confirm the object is a source registry record, not source data, dataset registry record, crosswalk, domain registry record, rights record, layer record, proof, receipt, catalog record, release decision, policy, schema, validator, fixture, or test.
+- [ ] Confirm the object is a source registry record, not source data, dataset registry record, crosswalk, domain registry record, rights record, sensitivity record, layer record, proof, receipt, catalog record, release decision, policy, schema, validator, fixture, or test.
 - [ ] Confirm source identity, source role, rights posture, terms, cadence, source head, source vintage, source scale, jurisdiction, retrieval time, valid/effective time, and authority limits are preserved.
 - [ ] Confirm source role is not upgraded by normalization, topology validation, graph projection, cataloging, release review, API shaping, map rendering, or generated explanation.
 - [ ] Confirm road, rail, crossing, bridge, ferry, route, corridor, restriction, access, ownership/operator, and current-status contexts are not collapsed.
@@ -339,15 +353,14 @@ Do not treat this JSON block as a live schema. It is a maintainer-facing sketch 
 
 | Claim | Status |
 |---|---:|
-| This README expands the thin README at `data/registry/roads-rail-trade/sources/README.md`. | CONFIRMED authored |
-| The target path existed in the live repository with a short source-descriptor note before this edit. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/roads-rail-trade/README.md` exists and is currently a greenfield stub. | CONFIRMED by GitHub contents API during this edit |
-| Cross-domain `data/registry/sources/README.md` says source registry records are admission and authority-control records, not raw data, schemas, policy decisions, receipts, proofs, releases, or bibliographic prose. | CONFIRMED by GitHub contents API during this edit |
-| Roads/Rail/Trade network package README states network helpers do not publish data, activate sources, decide policy, approve routing claims, replace EvidenceBundle support, or turn derived graph edges into source truth. | CONFIRMED by GitHub contents API during this edit |
-| Roads/Rail/Trade identity package README states deterministic IDs are not proof that a route, road, rail line, crossing, restriction, or corridor is true, current, legally accessible, public-safe, complete, or reviewed. | CONFIRMED by GitHub contents API during this edit |
-| Roads/Rail/Trade graph projection README states graph projection is derived analytic carrier, not source truth, release decision, proof, or public-routing authority. | CONFIRMED by GitHub contents API during this edit |
+| This README was refreshed after the parent `data/registry/roads-rail-trade/README.md` was expanded. | CONFIRMED authored |
+| The target path existed in the live repository with an expanded source-registry README before this update. | CONFIRMED by GitHub contents API during this edit |
+| `data/registry/roads-rail-trade/README.md` exists as an expanded domain-first registry parent. | CONFIRMED by GitHub contents API during this edit |
+| The parent README treats the domain-first path as a compatibility/routing lane until registry topology is reconciled. | CONFIRMED by GitHub contents API during this edit |
+| Current repository search found the domain-first parent and this child README, but not a separate domain-specific Roads/Rail/Trade `SOURCE_REGISTRY.md` or `DATA_LIFECYCLE.md` doctrine file. | CONFIRMED search result / NOT FOUND |
+| Cross-domain `data/registry/sources/README.md` says source registry records are admission and authority-control records, not raw data, schemas, policy decisions, receipts, proofs, releases, or bibliographic prose. | CONFIRMED by GitHub contents API in this sequence |
+| Roads/Rail/Trade package READMEs inspected in the earlier source-registry edit keep network, identity, and graph-projection helpers separate from source registry, source truth, proof, policy, release, and public-routing authority. | CONFIRMED in earlier source-registry edit; not re-fetched in this update |
 | Concrete Roads / Rail / Trade source descriptor payloads exist under this requested lane. | UNKNOWN |
-| A domain-specific Roads / Rail / Trade source-registry doctrine file was found during this edit. | UNKNOWN / NOT FOUND |
 | The final accepted topology between domain-first and subtype-first source registry lanes is resolved. | NEEDS VERIFICATION |
 | A canonical Roads / Rail / Trade source descriptor schema is enforced. | NEEDS VERIFICATION |
 | CI validates Roads / Rail / Trade source registry records. | UNKNOWN |
