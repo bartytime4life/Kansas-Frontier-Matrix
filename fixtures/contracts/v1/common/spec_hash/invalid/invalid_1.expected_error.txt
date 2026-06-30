@@ -1,1 +1,1 @@
-required
+'value' is a required property
