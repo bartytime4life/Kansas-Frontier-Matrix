@@ -2,7 +2,7 @@
 doc_id: kfm://example/focus-flow/hydrology-huc12-question
 title: Hydrology HUC12 Focus Question Example
 type: example
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners: TODO(owner): examples steward; TODO(owner): Focus Mode steward; TODO(owner): governed API steward; TODO(owner): hydrology steward; TODO(owner): evidence steward; TODO(owner): policy steward; TODO(owner): UI steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - greenfield placeholder existed before 2026-06-30 expansion
@@ -10,7 +10,7 @@ updated: 2026-06-30
 policy_label: public-review
 related: [README.md, ../evidence_bundles/README.md, ../../docs/architecture/governed-ai/FOCUS_FLOW.md, ../../docs/architecture/governed-api.md, ../../apps/explorer-web/src/features/focus_panel/README.md, ../../apps/governed-api/README.md, ../../docs/domains/hydrology/README.md, ../../data/proofs/evidence_bundle/README.md, ../../data/catalog/domain/hydrology/README.md, ../../data/proofs/hydrology/README.md, ../../data/published/layers/hydrology/README.md, ../../policy/focus/README.md]
 tags: [kfm, examples, focus-flow, focus-mode, hydrology, huc12, watershed, governed-api, governed-ai, evidence-ref, evidence-bundle, citation-validation, finite-outcomes, abstain, deny, no-public-path, non-authoritative, cite-or-abstain]
-notes: ["This file replaces a greenfield placeholder at `examples/focus_flows/hydrology_huc12_question.md`.", "This example is synthetic and non-authoritative. It does not assert real HUC12 facts, water conditions, flood status, regulatory determinations, emergency guidance, or source truth.", "The expected outcome is `ABSTAIN` because the example EvidenceRef and EvidenceBundle are illustrative and not operationally resolved in this file.", "Hydrology source roles must not collapse: HUC/WBD context, observed gauge readings, NFHL regulatory context, modeled hydrographs, and emergency warnings are different truth classes."]
+notes: ["This file replaces a greenfield placeholder at `examples/focus_flows/hydrology_huc12_question.md`.", "This example is synthetic and non-authoritative. It does not assert real HUC12 facts, water conditions, flood status, regulatory determinations, emergency guidance, or source truth.", "The expected outcome is `ABSTAIN` because the example EvidenceRef and EvidenceBundle are illustrative and not operationally resolved in this file.", "Hydrology source roles must not collapse: HUC/WBD context, observed gauge readings, NFHL regulatory context, modeled hydrographs, and emergency warnings are different truth classes.", "v0.1.1 fixes the Mermaid sequence diagram for GitHub rich rendering by replacing unsupported crossed arrows with notes."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -129,23 +129,23 @@ This request sketch is intentionally non-runtime. It demonstrates shape and gate
 ```mermaid
 sequenceDiagram
     autonumber
-    participant U as User / Focus Panel
+    participant User as User and Focus Panel
     participant API as Governed API
-    participant POL as Policy
-    participant ER as Evidence Resolver
-    participant ADP as Model Adapter
-    participant CIT as Citation Validator
-    participant OUT as Runtime Envelope
+    participant Policy as Policy
+    participant Evidence as Evidence Resolver
+    participant Adapter as Model Adapter
+    participant Citation as Citation Validator
+    participant Envelope as Runtime Envelope
 
-    U->>API: Synthetic FocusModeRequest for HUC12 context
-    API->>POL: Precheck request, role, release/sensitivity context
-    POL-->>API: Example allow_to_resolve_evidence
-    API->>ER: Resolve EvidenceRef to EvidenceBundle
-    ER-->>API: Unresolved synthetic EvidenceBundle
-    API--xADP: Adapter not called for substantive answer
-    API--xCIT: Citation validation not run
-    API->>OUT: ABSTAIN with reason code
-    OUT-->>U: Non-substantive response; no hydrology claim emitted
+    User->>API: Synthetic FocusModeRequest for HUC12 context
+    API->>Policy: Precheck role and release context
+    Policy-->>API: Allow evidence resolution
+    API->>Evidence: Resolve EvidenceRef to EvidenceBundle
+    Evidence-->>API: Synthetic EvidenceBundle unresolved
+    Note over API,Adapter: Adapter is not called because evidence is unresolved
+    Note over API,Citation: Citation validation is not run because no cited spans exist
+    API->>Envelope: Build ABSTAIN response with reason code
+    Envelope-->>User: Non-substantive response with no Hydrology claim
 ```
 
 ---
