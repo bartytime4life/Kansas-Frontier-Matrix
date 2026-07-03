@@ -1,4 +1,4 @@
-# release/candidates/habitat
+# `release/candidates/habitat/` — Habitat Candidate Review Lane
 
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/release-candidates-habitat-readme
@@ -10,8 +10,24 @@ owners:
   - <habitat-domain-steward>
   - <release-steward>
   - <data-steward>
-tags: [kfm, release, candidates, habitat]
+updated: 2026-07-03
+tags: [kfm, release, candidates, habitat, pre-publication, review, validation, rollback]
 [/KFM_META_BLOCK_V2] -->
+
+![status](https://img.shields.io/badge/status-draft-yellow)
+![root](https://img.shields.io/badge/root-release%2F-blue)
+![lane](https://img.shields.io/badge/lane-candidates-blueviolet)
+![domain](https://img.shields.io/badge/domain-habitat-green)
+![publication](https://img.shields.io/badge/publication-not_yet-orange)
+![review](https://img.shields.io/badge/review-required-red)
+
+---
+
+## Quick jump
+
+[Purpose](#purpose) · [Status & authority](#status--authority) · [Repo fit](#repo-fit) · [Current sublanes](#current-sublanes) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Required review fields](#required-review-fields) · [Minimal candidate record](#minimal-candidate-record) · [Open verification](#open-verification)
+
+---
 
 ## Purpose
 
@@ -25,9 +41,40 @@ Promotion must preserve the KFM lifecycle boundary:
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-## Authority
+Promotion is a governed state transition, not a file move.
+
+---
+
+## Status & authority
+
+| Field | Value |
+|---|---|
+| Document type | Habitat release-candidate README |
+| Owning root | `release/` |
+| Candidate lane | `release/candidates/habitat/` |
+| Status | Draft |
+| Authority level | Release guidance. Directory Rules, release discipline, policy, contracts, schemas, manifests, and final release records outrank this README. |
+| Default posture | Candidate is not public until release gates pass and release steward approves promotion. |
+| Required reviewers | Habitat steward, release steward, and data steward; policy/sensitivity reviewer when needed. |
+
+---
+
+## Repo fit
+
+```text
+release/
+├── candidates/
+│   └── habitat/       # you are here
+│       ├── ecoregions/
+│       └── habitat_fauna_thin_slice/
+├── manifests/
+├── corrections/
+└── rollbacks/
+```
 
 This path belongs under the `release/` responsibility root. Release records are separate from data artifacts. Candidate payloads belong in the appropriate lifecycle data path. Published payloads belong under `data/published/` only after release approval.
+
+---
 
 ## Current sublanes
 
@@ -35,6 +82,8 @@ This path belongs under the `release/` responsibility root. Release records are 
 |---|---|---|
 | `ecoregions/` | Candidate notes for habitat ecoregion releases. | Draft sublane README exists. |
 | `habitat_fauna_thin_slice/` | Candidate notes for a habitat + fauna proof slice. | Draft sublane README exists. |
+
+---
 
 ## What belongs here
 
@@ -45,6 +94,8 @@ This path belongs under the `release/` responsibility root. Release records are 
 - Promote, defer, repair, or withdraw notes.
 - Sublane indexes for habitat candidate families.
 
+---
+
 ## What does not belong here
 
 - Raw, work, quarantine, processed, catalog, triplet, or published data payloads.
@@ -52,6 +103,8 @@ This path belongs under the `release/` responsibility root. Release records are 
 - Source descriptors, schemas, contracts, policy rules, or validator code.
 - Final release approval without release-steward review.
 - Generated text used as release evidence.
+
+---
 
 ## Required review fields
 
@@ -67,6 +120,8 @@ This path belongs under the `release/` responsibility root. Release records are 
 - Correction path
 - Rollback or supersession path
 - Steward decision
+
+---
 
 ## Minimal candidate record
 
@@ -88,12 +143,20 @@ PROPOSED / READY_FOR_REVIEW / APPROVED_FOR_MANIFEST / PROMOTED / DEFERRED / WITH
 ## Evidence and source closure
 <references and status>
 
+## Rights and policy status
+<status and blockers>
+
 ## Validation summary
 <summary and receipt reference>
+
+## Correction and rollback
+<paths or notes>
 
 ## Decision
 <decision and reason>
 ```
+
+---
 
 ## Open verification
 
@@ -104,6 +167,12 @@ PROPOSED / READY_FOR_REVIEW / APPROVED_FOR_MANIFEST / PROMOTED / DEFERRED / WITH
 - [ ] Confirm correction and rollback record paths.
 - [ ] Expand this README into the full KFM candidate template once connector filtering allows it.
 
-## Status
+---
 
-Draft README replacing greenfield stub.
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Last reviewed | 2026-07-03 |
+| Review status | Polished README replacing greenfield stub |
+| Next review trigger | First habitat candidate dossier, new sublane, manifest handoff, or release decision |
