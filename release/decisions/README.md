@@ -1,1 +1,3 @@
+# release/decisions
 
+Draft index.
