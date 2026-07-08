@@ -2,11 +2,11 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Root README
 type: standard
-version: v1.1
+version: v1.2
 status: draft
 owners: <repo steward · docs steward · subsystem owners — placeholder, confirm via CODEOWNERS>
 created: 2026-05-11
-updated: 2026-05-22
+updated: 2026-07-08
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
@@ -19,12 +19,17 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - .github/README.md
+  - tools/README.md
+  - tools/validators/README.md
+  - tools/watchers/README.md
+  - tools/watchers/plants_watch/README.md
   - policy/README.md
   - release/README.md
 tags: [kfm, root-readme, doctrine, governance, evidence-first, map-first, time-aware]
 notes:
   - "Doctrine claims throughout this file are CONFIRMED by attached project corpus (Directory Rules, KFM Encyclopedia, Domains Atlas v1.1, Unified Implementation Manual, Whole-UI + Governed-AI Expansion, Master MapLibre, Pass-10 / Pass-23 / Pass-32 Idea Index, AI Build Operating Contract)."
-  - "Implementation maturity is PROPOSED / NEEDS VERIFICATION — no mounted repository was inspected when this revision was drafted."
+  - "Implementation maturity is mixed: selected README surfaces were verified through the GitHub app in the 2026-07-08 update; executable behavior, CI, runtime, deployment, routes, DTOs, emitted receipts, branch protection, and end-to-end enforcement remain NEEDS VERIFICATION unless separately checked."
+  - "This v1.2 update makes the root README repo-aware by reflecting confirmed README surfaces for README.md, tools/README.md, tools/validators/README.md, tools/watchers/README.md, and tools/watchers/plants_watch/README.md."
   - "MetaBlock v2 fields follow atlas card KFM-P22-PROG-0002; presentation follows KFM-P7-PROG-0008 (META / BADGES / DESCRIPTION / FILES / ACCEPTANCE)."
 [/KFM_META_BLOCK_V2] -->
 
@@ -36,7 +41,7 @@ notes:
 
 > A governed, evidence-first, map-first, time-aware spatial knowledge system for Kansas and the surrounding frontier.
 
-[![Status: doctrine CONFIRMED · implementation PROPOSED](https://img.shields.io/badge/status-doctrine_confirmed_·_implementation_proposed-blue)](docs/doctrine/)
+[![Status: doctrine CONFIRMED · implementation MIXED](https://img.shields.io/badge/status-doctrine_confirmed_·_implementation_mixed-blue)](docs/doctrine/)
 [![Lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW→WORK%2FQUARANTINE→PROCESSED→CATALOG%2FTRIPLET→PUBLISHED-1f6feb)](docs/doctrine/lifecycle-law.md)
 [![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth_posture-cite--or--abstain-2da44e)](docs/doctrine/truth-posture.md)
 [![Public path: governed API only](https://img.shields.io/badge/public_path-governed_API_only-8957e5)](docs/architecture/governed-api.md)
@@ -45,22 +50,23 @@ notes:
 [![Watcher-as-non-publisher](https://img.shields.io/badge/invariant-watcher--as--non--publisher-d97706)](#core-invariants)
 [![Build: TODO](https://img.shields.io/badge/build-TODO-lightgrey)](#status-and-maturity)
 [![License: TODO](https://img.shields.io/badge/license-TODO-lightgrey)](LICENSE)
-[![Docs last updated: 2026-05-22](https://img.shields.io/badge/docs_updated-2026--05--22-informational)](#last-updated)
+[![Docs last updated: 2026-07-08](https://img.shields.io/badge/docs_updated-2026--07--08-informational)](#last-updated)
 
 > [!NOTE]
-> **Status & posture.** KFM doctrine, invariants, and governance contracts are **CONFIRMED** in attached project sources. **Implementation maturity is PROPOSED / NEEDS VERIFICATION** in this session: the repository was not mounted while drafting, so all per-path, per-route, per-test, and per-workflow claims below must be verified against actual repo state before treated as fact. Badge targets shown as `TODO` are placeholders awaiting first-pass verification.
+> **Status & posture.** KFM doctrine, invariants, and governance contracts are **CONFIRMED** in attached project sources. This 2026-07-08 update also verifies selected repository README surfaces through the GitHub app: the root README plus `tools/`, `tools/validators/`, `tools/watchers/`, and `tools/watchers/plants_watch/`. **Executable behavior, CI, runtime, deployment, routes, DTOs, emitted receipts, branch protection, and end-to-end enforcement remain NEEDS VERIFICATION** unless separately checked. Badge targets shown as `TODO` are placeholders awaiting first-pass verification.
 
 | Field | Value |
 |---|---|
-| **Status** | doctrine CONFIRMED · implementation PROPOSED / NEEDS VERIFICATION |
+| **Status** | doctrine CONFIRMED · selected README surfaces CONFIRMED · implementation behavior NEEDS VERIFICATION |
 | **Owners** | TODO — Repo steward · Docs steward · Subsystem owners (per `CODEOWNERS`) |
-| **Last reviewed** | 2026-05-22 |
+| **Last reviewed** | 2026-07-08 |
 | **Authoritative placement rules** | [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) |
 | **Authoritative AI-build contract** | [`docs/doctrine/ai-build-operating-contract.md`](docs/doctrine/ai-build-operating-contract.md) (`CONTRACT_VERSION = "3.0.0"`) |
 | **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
 | **Truth posture** | Cite-or-abstain. EvidenceRef must resolve to EvidenceBundle before consequential claims. |
 | **Public path** | Standard clients consume **governed APIs and released artifacts only.** No public access to RAW / WORK / QUARANTINE / candidate / internal stores / model runtimes. |
 | **Promotion** | A governed state transition, **not** a file move. Gates A–G (Pass-10 C5-01) fail-closed by default. |
+| **Current repo evidence** | Root and tools README surfaces verified in this update; executable behavior remains bounded. |
 
 ---
 
@@ -69,6 +75,7 @@ notes:
 - [What KFM is](#what-kfm-is)
 - [Why it works this way](#why-it-works-this-way)
 - [Core invariants](#core-invariants)
+- [Current repo evidence from this update](#current-repo-evidence-from-this-update)
 - [Governance enforcement at a glance](#governance-enforcement-at-a-glance)
 - [Repository layout](#repository-layout)
 - [How a claim travels through KFM](#how-a-claim-travels-through-kfm)
@@ -77,7 +84,7 @@ notes:
 - [Domains](#domains)
 - [Public surfaces](#public-surfaces)
 - [Getting oriented (no install yet)](#getting-oriented-no-install-yet)
-- [Quickstart (when the repo is mounted)](#quickstart-when-the-repo-is-mounted)
+- [Quickstart (when working locally)](#quickstart-when-working-locally)
 - [Contributing](#contributing)
 - [Status and maturity](#status-and-maturity)
 - [FAQ](#faq)
@@ -139,7 +146,26 @@ The system holds these invariants by default. A change that bends one requires a
 | 10 | **Policy parity (CI = runtime)** | The same OPA bundle digest gates merges in CI and admissions at runtime (Pass-10 C5-03). Drift between the two is a class of bug, not a configuration choice. |
 | 11 | **Separation of duties** | Policy-significant release duties are separated from authoring when materiality justifies it. |
 
-Primary doctrine: [`docs/doctrine/lifecycle-law.md`](docs/doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](docs/doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](docs/doctrine/truth-posture.md), [`docs/doctrine/authority-ladder.md`](docs/doctrine/authority-ladder.md), [`docs/doctrine/ai-build-operating-contract.md`](docs/doctrine/ai-build-operating-contract.md). All paths PROPOSED until mounted-repo inspection confirms.
+Primary doctrine: [`docs/doctrine/lifecycle-law.md`](docs/doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](docs/doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](docs/doctrine/truth-posture.md), [`docs/doctrine/authority-ladder.md`](docs/doctrine/authority-ladder.md), [`docs/doctrine/ai-build-operating-contract.md`](docs/doctrine/ai-build-operating-contract.md). Repo-state claims remain bounded to the files explicitly verified in the current update.
+
+---
+
+## Current repo evidence from this update
+
+This root README is no longer a purely corpus-drafted scaffold. During the 2026-07-08 update, the GitHub app verified and/or updated the following repository surfaces:
+
+| Surface | Current-session status | What it proves | What it does **not** prove |
+|---|---|---|---|
+| `README.md` | **CONFIRMED README** | The root README exists and has been updated to v1.2. | Runtime maturity, CI wiring, deployed routes, branch protection, receipts, or release behavior. |
+| `tools/README.md` | **CONFIRMED README** | The `tools/` root now documents validators, watchers, generators, builders, proof-pack, release, QA, attest, and CI helper boundaries. | Presence or behavior of every named tooling family. |
+| `tools/validators/README.md` | **CONFIRMED README** | Validator root exists and defines fail-closed checker posture. | Executable validator scripts, registry ids, fixtures, or CI invocation. |
+| `tools/watchers/README.md` | **CONFIRMED README** | Watcher root exists and defines watchers as non-publishing candidate emitters. | Scheduler/network behavior, activation records, generated candidates, or runtime enforcement. |
+| `tools/watchers/plants_watch/README.md` | **CONFIRMED README** | The Flora plant-source watcher lane documents PLANTS taxa drift and source-head watcher posture. | Actual watcher implementation, live source access, fixture coverage, or generated `SourceIntakeRecord`s. |
+
+> [!IMPORTANT]
+> **README presence is not implementation proof.** The updated docs are governance surfaces. Executable behavior remains **NEEDS VERIFICATION** until checked by files, tests, workflows, logs, receipts, or generated artifacts.
+
+[Back to top](#kansas-frontier-matrix)
 
 ---
 
@@ -213,7 +239,7 @@ Kansas-Frontier-Matrix/
 ├── policy/                      # admissibility, sensitivity, release policy (allow / deny / restrict / abstain)
 ├── tests/                       # enforceability proof
 ├── fixtures/                    # golden / valid / invalid test inputs
-├── tools/                       # repo-wide validators, generators, builders
+├── tools/                       # repo-wide validators, watchers, generators, builders
 ├── scripts/                     # small operational helpers (incl. dev/verify.sh)
 ├── apps/                        # deployable applications (governed-api, explorer-web)
 ├── packages/                    # shared libraries (ui, maplibre, evidence-resolver, …)
@@ -246,7 +272,7 @@ Kansas-Frontier-Matrix/
 | Decides allow / deny / restrict / abstain | `policy/` |
 | Proves a rule is enforceable | `tests/` |
 | Golden / valid / invalid sample data for tests | `fixtures/` |
-| Repo-wide validator, generator, builder, checker | `tools/` |
+| Repo-wide validator, watcher, generator, builder, checker | `tools/` |
 | Deployable application | `apps/` |
 | Shared library used by multiple deployables | `packages/` |
 | Source-specific fetcher / admitter | `connectors/` |
@@ -411,10 +437,10 @@ If you're new to KFM and the repo isn't checked out, read in this order. Each li
 
 ---
 
-## Quickstart (when the repo is mounted)
+## Quickstart (when working locally)
 
 > [!NOTE]
-> **Illustrative — not a verified pipeline.** The package manager, app entry points, and validator commands are PROPOSED until the actual repo is inspected. Treat this block as a placeholder for the eventual `runbooks/`-backed flow. The `verify.sh` invocation reflects the five-file starter pack (Pass-10 **C14-01**, CONFIRMED doctrine).
+> **Illustrative — not a verified pipeline.** The package manager, app entry points, and validator commands are PROPOSED until the actual toolchain, scripts, workflows, and package metadata are inspected. Treat this block as a placeholder for the eventual `runbooks/`-backed flow. The `verify.sh` invocation reflects the five-file starter pack (Pass-10 **C14-01**, CONFIRMED doctrine).
 
 ```bash
 # 1) Clone (PROPOSED URL)
@@ -467,22 +493,26 @@ Security disclosures and exposure-posture concerns: [`SECURITY.md`](SECURITY.md)
 ## Status and maturity
 
 > [!CAUTION]
-> **Implementation maturity is bounded by what the mounted repository proves.** The attached corpus is CONFIRMED **doctrine** with PROPOSED implementation patterns. Without a mounted repo, routes, DTOs, branch protections, CI workflows, emitted receipts, deployment posture, and runtime behavior remain **UNKNOWN**. Do not infer maturity from the polish of this document.
+> **Implementation maturity is bounded by current-session evidence.** The attached corpus is CONFIRMED **doctrine** with PROPOSED implementation patterns. The GitHub app has verified selected README surfaces in this update, but routes, DTOs, branch protections, CI workflows, emitted receipts, deployment posture, executable tooling, and runtime behavior remain **UNKNOWN / NEEDS VERIFICATION** unless separately checked. Do not infer maturity from the polish of this document.
 
 | Area | Doctrine | Implementation evidence (this session) |
 |---|---|---|
-| Lifecycle law | CONFIRMED | UNKNOWN — no mounted repo proof |
-| Trust membrane (public clients use governed APIs only) | CONFIRMED | UNKNOWN — route names, branch state, CI proof not verified |
+| Lifecycle law | CONFIRMED | NEEDS VERIFICATION — docs state the invariant; end-to-end pipeline behavior not checked |
+| Trust membrane (public clients use governed APIs only) | CONFIRMED | UNKNOWN — route names, branch state, CI proof, and runtime access controls not verified |
 | Cite-or-abstain | CONFIRMED | UNKNOWN — runtime/citation-validator state not verified |
-| Sensitivity tiers (T0–T4) | CONFIRMED scheme | PROPOSED per-source assignments |
+| Sensitivity tiers (T0–T4) | CONFIRMED scheme | PROPOSED per-source assignments unless policy files/review records are verified |
 | Governed AI finite outcomes (`ANSWER / ABSTAIN / DENY / ERROR`) | CONFIRMED | UNKNOWN — adapter/runtime not verified |
 | Seven-gate matrix A–G | CONFIRMED (Pass-10 C5-01) | NEEDS VERIFICATION — branch-protection check names not inspected |
 | Policy parity (CI = runtime, same OPA digest) | CONFIRMED (Pass-10 C5-03) | NEEDS VERIFICATION — CI/`infra/` digest match not inspected |
-| Five-file starter pack + `integrity.yml` + `verify.sh` | CONFIRMED (Pass-10 C14-01) | NEEDS VERIFICATION — file presence not inspected |
+| Five-file starter pack + `integrity.yml` + `verify.sh` | CONFIRMED (Pass-10 C14-01) | NEEDS VERIFICATION — file presence and behavior not fully inspected |
 | AI-build operating contract (`CONTRACT_VERSION = "3.0.0"`) | CONFIRMED authored | NEEDS VERIFICATION — adoption checklist §48 not exercised |
 | `GENERATED_RECEIPT.json` gate on AI-authored merges | CONFIRMED requirement (§34) | UNKNOWN — CI gate wiring not verified |
-| Directory Rules canonical roots | CONFIRMED | PROPOSED presence in live repo |
-| ADR discipline | CONFIRMED | UNKNOWN — `docs/adr/` contents not verified |
+| Directory Rules canonical roots | CONFIRMED | SELECTED README SURFACES CONFIRMED; full root inventory still NEEDS VERIFICATION |
+| `tools/README.md` | Root tooling doctrine | CONFIRMED README in current update; executable behavior NEEDS VERIFICATION |
+| `tools/validators/README.md` | Validator root posture | CONFIRMED README; scripts, registry ids, fixtures, and CI NEEDS VERIFICATION |
+| `tools/watchers/README.md` | Watcher root posture | CONFIRMED README; scheduler, source activation, generated candidates, and CI NEEDS VERIFICATION |
+| `tools/watchers/plants_watch/README.md` | Flora watcher posture | CONFIRMED README; actual PLANTS watcher implementation NEEDS VERIFICATION |
+| ADR discipline | CONFIRMED | UNKNOWN — `docs/adr/` contents not fully verified |
 | Domain dossiers | CONFIRMED doctrine per domain | PROPOSED implementation per domain |
 
 The current-session evidence limit applies: doctrine speaks confidently because attached sources support it; implementation claims are bounded until the repo can be inspected.
@@ -556,6 +586,7 @@ Watchers, CI workflows, and intake jobs may *detect* change, *emit* candidate de
 - **Sources & standards** — [`docs/sources/`](docs/sources/), [`docs/standards/`](docs/standards/)
 - **Runbooks** — [`docs/runbooks/`](docs/runbooks/) (`ui_LOCAL_DEV`, `ui_VALIDATION`, `ui_ROLLBACK`, `governed_ai_*`)
 - **Governance hooks** — [`.github/README.md`](.github/README.md) (workflows, CODEOWNERS, gate matrix)
+- **Tools** — [`tools/README.md`](tools/README.md), [`tools/validators/README.md`](tools/validators/README.md), [`tools/watchers/README.md`](tools/watchers/README.md)
 - **Policy** — [`policy/README.md`](policy/README.md) (OPA bundle home; digest-pinned)
 - **Release** — [`release/README.md`](release/README.md) (manifests, rollback cards, correction notices)
 - **Contributing & security** — [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), [`CODEOWNERS`](CODEOWNERS)
@@ -646,8 +677,8 @@ Tier upgrades (toward more public) require both a transform receipt **and** a re
 
 ### Last updated
 
-`2026-05-22` — v1.1 revision. Added KFM Meta Block v2, brand seal at top center (`docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png`), Governance-enforcement-at-a-glance section with starter-pack diagram, explicit Promotion-Gates-A–G section, watcher-as-non-publisher and policy-parity invariants, AI-build operating-contract references throughout, and several FAQ entries. All repo-state claims remain **PROPOSED / NEEDS VERIFICATION** until a mounted repository is inspected.
+`2026-07-08` — v1.2 revision. Updated the root README from the uploaded v1.1 scaffold to current repo-aware status language; added Current repo evidence section; reflected confirmed README surfaces for `tools/`, `tools/validators/`, `tools/watchers/`, and `tools/watchers/plants_watch/`; kept executable behavior, CI, runtime, receipts, release, and deployment as NEEDS VERIFICATION. Prior v1.1 added KFM Meta Block v2, brand seal at top center (`docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png`), Governance-enforcement-at-a-glance section with starter-pack diagram, explicit Promotion-Gates-A–G section, watcher-as-non-publisher and policy-parity invariants, AI-build operating-contract references throughout, and several FAQ entries. All repo-state claims remain bounded to current-session evidence.
 
-Previous edition: `2026-05-11` — initial polished draft authored from project doctrine (Directory Rules, KFM Encyclopedia, Domains Culmination Atlas v1.1, Unified Implementation Architecture Build Manual, Whole-UI + Governed AI Expansion Report, Master MapLibre Components Manual, Pass-18 Idea Index).
+Previous editions: `2026-05-22` — v1.1 polished root README revision. `2026-05-11` — initial polished draft authored from project doctrine (Directory Rules, KFM Encyclopedia, Domains Culmination Atlas v1.1, Unified Implementation Architecture Build Manual, Whole-UI + Governed AI Expansion Report, Master MapLibre Components Manual, Pass-18 Idea Index).
 
 [Back to top ↑](#kansas-frontier-matrix)
