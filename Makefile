@@ -1,5 +1,12 @@
 # KFM Makefile — greenfield scaffold.
 # Commands should be repo-native; replace placeholders as packages land.
+#
+# Status: repo-facing convenience surface. Targets with TODO output are
+# intentionally non-authoritative placeholders until the corresponding
+# package, validator, watcher, pipeline, test, release, or CI evidence is
+# verified in the repository.
+
+.DEFAULT_GOAL := help
 
 .PHONY: help validate test schemas policy fixtures release-dry-run proof-slice catalog publish-check deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
@@ -11,11 +18,15 @@ help:
 	@echo "  fixtures              Refresh deterministic fixtures"
 	@echo "  test                  Run full test suite"
 	@echo "  proof-slice           Build the hydrology proof slice end-to-end"
+	@echo "  catalog               Build catalog records from validated outputs"
 	@echo "  release-dry-run       Assemble a candidate release manifest without publishing"
 	@echo "  publish-check         Run promotion gates without side effects"
 	@echo "  deny-test             Verify public boundary deny tests"
 	@echo "  ui-build              Build apps/explorer-web"
 	@echo "  api-run               Start apps/governed-api locally"
+	@echo "  governed-api-dev      Start governed-api module directly"
+	@echo "  governed-api-smoke    Run governed-api smoke tests"
+	@echo "  governed-api-verify   Run governed-api tests and boundary grep"
 	@echo "  boundary-guards       Run boundary policy + governed-api guard tests"
 	@echo "  boundary-guards-ci    Run boundary suite with JUnit output"
 	@echo "  maplibre-perf         Run MapLibre perf smoke + artifacts"
@@ -40,6 +51,9 @@ test:
 
 proof-slice:
 	@echo "TODO: pipelines/hydrology proof slice"
+
+catalog:
+	@echo "TODO: tools/catalog_builders build catalog records from validated processed outputs"
 
 release-dry-run:
 	@echo "TODO: tools/release dry-run"
