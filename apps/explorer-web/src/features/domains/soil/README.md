@@ -6,7 +6,7 @@ version: v0.1
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Soil steward · Governed API steward · Policy steward · Evidence steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-09
 policy_label: public
 related:
   - ../../README.md
@@ -32,6 +32,7 @@ notes:
   - "Soil UI features may compose governed soil envelopes into public/semi-public views, but they must not become source truth, soil survey authority, station truth, raster truth, policy authority, lifecycle storage, release authority, or direct model-output truth."
   - "Feature implementation files, route wiring, tests, fixtures, governed API envelopes, support-type labels, ReleaseManifests, RollbackCards, and package scripts remain NEEDS VERIFICATION."
   - "The current docs/domains/soil/README.md is a greenfield placeholder; this README relies on current repo evidence from the soil package README for support-type and trust-boundary posture while keeping implementation maturity bounded."
+  - "2026-07-09 revision checked current GitHub repo evidence for this README path, parent Explorer Web/feature boundaries, the soil package README, and the soil domain-doc placeholder before updating."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -50,7 +51,7 @@ notes:
 ![support](https://img.shields.io/badge/support__type-required-0a7ea4)
 ![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
 
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-soil-feature-map) · [Definition of done](#14-definition-of-done)
+[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-soil-feature-map) · [Definition of done](#14-definition-of-done)
 
 </div>
 
@@ -61,7 +62,7 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Soil steward · Governed API steward · Policy steward · Evidence steward · Docs steward  
 > **Path:** `apps/explorer-web/src/features/domains/soil/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path / CONFIRMED soil package support-type and trust-boundary posture / PROPOSED domain-feature contract / UNKNOWN implementation files, route wiring, tests, fixtures, and runtime behavior
+> **Truth posture:** CONFIRMED current GitHub target README path / CONFIRMED parent Explorer Web and feature-boundary README posture / CONFIRMED soil package support-type and trust-boundary posture / CONFIRMED soil domain-doc placeholder / PROPOSED domain-feature contract / UNKNOWN implementation files, route wiring, tests, fixtures, package scripts, and runtime behavior
 
 > [!CAUTION]
 > Soil UI must preserve support type. Static survey records, station readings, satellite grids, raster derivatives, pedon/profile evidence, and interpretations are not interchangeable truth classes. Soil data may also become sensitive when it involves private field observations, farm-level submissions, partner station metadata, proprietary agronomic data, or exact locations that expose operations or private property patterns.
@@ -70,6 +71,7 @@ notes:
 
 ## Quick jump
 
+- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
 - [1. Purpose](#1-purpose)
 - [2. Repo fit](#2-repo-fit)
 - [3. Authority boundary](#3-authority-boundary)
@@ -85,6 +87,24 @@ notes:
 - [13. Safe change pattern](#13-safe-change-pattern)
 - [14. Definition of done](#14-definition-of-done)
 - [15. Open verification items](#15-open-verification-items)
+
+---
+
+## 0. Evidence basis for this revision
+
+This README is a documentation boundary, not runtime proof. The 2026-07-09 revision uses the attached Markdown as the baseline and applies the KFM repository Markdown authoring prompt in `revise-existing-doc` mode: preserve strong content, repair weak evidence posture, and keep implementation maturity bounded.
+
+Current GitHub connector evidence checked for this revision:
+
+| Evidence item | Status | What it supports | What it does not prove |
+|---|---|---|---|
+| `apps/explorer-web/src/features/domains/soil/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove route modules, panels, hooks, fixtures, tests, or runtime behavior exist. |
+| `apps/explorer-web/README.md` exists and identifies Explorer Web as the map-first public/semi-public shell. | CONFIRMED | Soil UI belongs under the Explorer Web application boundary when it is app-local UI composition. | It does not prove Soil feature wiring. |
+| `apps/explorer-web/src/features/README.md` exists and defines feature modules as UI composition surfaces. | CONFIRMED | Soil feature code should compose governed results and stay downstream of evidence, policy, and release. | It does not prove the specific Soil feature family is implemented. |
+| `packages/domains/soil/README.md` exists and documents soil support-type / helper boundaries. | CONFIRMED | Soil UI must preserve support type and not collapse static survey, station, satellite, raster, profile, interpretation, or change evidence. | It does not prove the helper package has executable implementation beyond README evidence. |
+| `docs/domains/soil/README.md` currently contains only a greenfield placeholder. | CONFIRMED | This README must not claim mature Soil doctrine in the docs lane yet. | It does not prove the intended final Soil doctrine is absent forever. |
+
+[Back to top](#top)
 
 ---
 
@@ -152,7 +172,7 @@ release/                                     = publication, correction, rollback
 
 ## 4. Default posture
 
-Soil feature modules should fail closed, preserve support-type labels, preserve source role and time basis, and keep static survey, station, satellite, raster, profile, interpretation, and derived-change evidence distinct.
+Soil feature modules should fail closed, preserve support-type labels, preserve source role and time basis, and keep static survey, station, satellite, raster, profile, interpretation, and derived-change evidence distinct. Public map labels, popups, drawers, exports, and Focus Mode answers are downstream carriers; they are not soil truth unless the governed envelope carries evidence, support type, policy, release, correction, and rollback state.
 
 A view should not render claim-bearing soil content when any of these are unresolved:
 
@@ -300,6 +320,7 @@ Useful validation for this feature boundary should cover:
 - denial messages do not leak private field, farm/operator, partner metadata, or transform hints;
 - Evidence Drawer handoff preserves EvidenceRef/EvidenceBundle handles without exposing protected content;
 - Focus Mode renders finite outcomes and never direct model output as soil truth;
+- README links, target homes, and relative paths remain consistent with parent Explorer Web boundaries;
 - export handoff requires citation, support type, disclaimer, rights, release, correction, and rollback support.
 
 ## 13. Safe change pattern
@@ -315,6 +336,7 @@ For Soil feature changes:
 ## 14. Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
+- [ ] Evidence basis is refreshed when parent README, soil package, soil docs, governed API, policy, schema, release, or fixture evidence changes.
 - [ ] Soil feature file inventory and route ownership are documented.
 - [ ] Governed API and adapter dependencies are explicit.
 - [ ] Support type, source-role, time/depth/unit/QC, privacy, release, stale-state, and rollback states are represented in UI fixtures.
@@ -339,6 +361,7 @@ For Soil feature changes:
 | Confirm Focus Mode and Evidence Drawer behavior | Required before claim-bearing UI claims |
 | Confirm export handoff | Required before public download workflows |
 | Confirm package scripts beyond TODO | Required before build/test claims |
+| Confirm relative links after recursive inventory | Required before treating all related paths as current implementation evidence |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
