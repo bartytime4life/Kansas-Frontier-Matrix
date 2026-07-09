@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/features/domains/agriculture/readme
 title: Explorer Web Agriculture Domain Feature README
 type: app-readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Agriculture steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-09
 policy_label: public
 related:
   - ../../README.md
@@ -15,20 +15,27 @@ related:
   - ../../../../README.md
   - ../../../../../README.md
   - ../../../../../governed-api/README.md
+  - ../../../../../../README.md
+  - ../../../../../../SECURITY.md
   - ../../../../../../docs/domains/agriculture/README.md
   - ../../../../../../docs/domains/agriculture/SENSITIVITY.md
   - ../../../../../../policy/domains/agriculture/README.md
   - ../../../../../../packages/ui/README.md
   - ../../../../../../packages/maplibre/README.md
+  - ../../../../../../packages/cesium/README.md
   - ../../../../../../policy/access/README.md
   - ../../../../../../policy/decision/README.md
   - ../../../../../../release/README.md
   - ../../../../../../data/README.md
-tags: [kfm, apps, explorer-web, domains, agriculture, feature, aggregate-only, redaction, evidence-drawer, focus-mode, map-first]
+  - ../../../../../../tools/validators/README.md
+  - ../../../../../../tools/watchers/README.md
+tags: [kfm, apps, explorer-web, domains, agriculture, feature, aggregate-only, redaction, evidence-drawer, focus-mode, map-first, no-direct-data-root, most-restrictive-wins]
 notes:
-  - "Replaces the greenfield agriculture domain feature stub with a governed feature README."
-  - "Agriculture UI features may compose governed agriculture envelopes into public/semi-public views, but they must not become domain doctrine, policy authority, source truth, lifecycle storage, release authority, or field/operator exposure path."
-  - "Feature implementation files, route wiring, tests, fixtures, governed API envelopes, aggregation receipts, redaction receipts, and package scripts remain NEEDS VERIFICATION."
+  - "v0.2 updates the uploaded Agriculture domain-feature README into a current repo-aware feature contract."
+  - "apps/explorer-web/src/features/domains/agriculture/README.md, apps/explorer-web/src/features/README.md, apps/explorer-web/src/adapters/README.md, apps/explorer-web/src/README.md, apps/explorer-web/README.md, docs/domains/agriculture/README.md, docs/domains/agriculture/SENSITIVITY.md, and policy/domains/agriculture/README.md were verified through the GitHub app in this update."
+  - "Feature implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, aggregation receipts, redaction receipts, export handoff, Focus Mode behavior, Evidence Drawer behavior, package scripts, runtime behavior, and deployment behavior remain NEEDS VERIFICATION."
+  - "Agriculture UI features may compose governed agriculture envelopes into public/semi-public views, but they must not become domain doctrine, policy authority, source truth, lifecycle storage, release authority, field/operator exposure path, or public-data shortcut."
+  - "Public Agriculture UI must fail closed for field-level, operator-resolved, parcel-adjacent, private-join, NASS-confidential, quarantine-adjacent, or cross-lane-sensitive material unless a reviewed policy path explicitly allows transformed, aggregated, generalized, redacted, restricted, delayed, or otherwise bounded output."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,42 +53,44 @@ notes:
 ![domain](https://img.shields.io/badge/domain-agriculture-2e7d32)
 ![surface](https://img.shields.io/badge/surface-public--safe__aggregate-0a7ea4)
 ![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
+![posture](https://img.shields.io/badge/posture-fail--closed-critical)
 
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-agriculture-feature-map) · [Definition of done](#14-definition-of-done)
+[Purpose](#1-purpose) · [Current evidence](#2-current-repo-evidence) · [Repo fit](#3-repo-fit) · [Boundary](#4-authority-boundary) · [Inputs](#6-inputs) · [Exclusions](#7-exclusions) · [Feature map](#8-agriculture-feature-map) · [Definition of done](#15-definition-of-done)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
+> **Status:** draft / current README surface confirmed / implementation behavior `NEEDS VERIFICATION`  
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Agriculture steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/features/domains/agriculture/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path / CONFIRMED agriculture doctrine and sensitivity docs / PROPOSED domain-feature contract / UNKNOWN implementation files, route wiring, tests, fixtures, and runtime behavior
+> **Truth posture:** CONFIRMED README path and supporting Agriculture docs/policy README surfaces / PROPOSED domain-feature contract / UNKNOWN implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, aggregation receipts, redaction receipts, export handoff, Focus Mode behavior, Evidence Drawer behavior, package scripts, runtime behavior, and deployment behavior
 
 > [!CAUTION]
-> Agriculture is rights- and privacy-sensitive. Public UI must fail closed for field-level, operator-resolved, parcel-adjacent, private-join, NASS-confidential, or quarantine-adjacent material unless a reviewed policy path explicitly allows a transformed, aggregated, generalized, redacted, restricted, or delayed output.
+> Agriculture is rights- and privacy-sensitive. Public UI must fail closed for field-level, operator-resolved, parcel-adjacent, private-join, NASS-confidential, quarantine-adjacent, or cross-lane-sensitive material unless a reviewed policy path explicitly allows a transformed, aggregated, generalized, redacted, restricted, delayed, or otherwise bounded output.
 
 ---
 
 ## Quick jump
 
 - [1. Purpose](#1-purpose)
-- [2. Repo fit](#2-repo-fit)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Inputs](#5-inputs)
-- [6. Exclusions](#6-exclusions)
-- [7. Agriculture feature map](#7-agriculture-feature-map)
-- [8. Diagram](#8-diagram)
-- [9. Agriculture UI obligations](#9-agriculture-ui-obligations)
-- [10. Per-view contract](#10-per-view-contract)
-- [11. Inspection path](#11-inspection-path)
-- [12. Validation expectations](#12-validation-expectations)
-- [13. Safe change pattern](#13-safe-change-pattern)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open verification items](#15-open-verification-items)
+- [2. Current repo evidence](#2-current-repo-evidence)
+- [3. Repo fit](#3-repo-fit)
+- [4. Authority boundary](#4-authority-boundary)
+- [5. Default posture](#5-default-posture)
+- [6. Inputs](#6-inputs)
+- [7. Exclusions](#7-exclusions)
+- [8. Agriculture feature map](#8-agriculture-feature-map)
+- [9. Diagram](#9-diagram)
+- [10. Agriculture UI obligations](#10-agriculture-ui-obligations)
+- [11. Per-view contract](#11-per-view-contract)
+- [12. Inspection path](#12-inspection-path)
+- [13. Validation expectations](#13-validation-expectations)
+- [14. Safe change pattern](#14-safe-change-pattern)
+- [15. Definition of done](#15-definition-of-done)
+- [16. Open verification items](#16-open-verification-items)
 
 ---
 
@@ -100,46 +109,90 @@ It may eventually hold route modules, panels, view models, hooks, and feature or
 - Focus Mode bounded agriculture prompts and finite outcomes;
 - compare/export handoffs that preserve aggregation, redaction, rights, and release state.
 
-This directory is not proof that any route, panel, hook, map layer, adapter, test, fixture, package script, or governed API envelope is implemented.
+This directory is not proof that any route, panel, hook, map layer, adapter, test, fixture, package script, governed API envelope, aggregation receipt, redaction receipt, Evidence Drawer behavior, Focus Mode behavior, export handoff, or runtime wiring is implemented.
 
 [Back to top](#top)
 
 ---
 
-## 2. Repo fit
+## 2. Current repo evidence
+
+| Surface | Status | What it proves | What it does **not** prove |
+|---|---|---|---|
+| `apps/explorer-web/src/features/domains/agriculture/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.2. | Agriculture UI implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, receipts, export handoff, or runtime behavior. |
+| `apps/explorer-web/src/features/README.md` | **CONFIRMED parent features README** | Parent feature boundary exists and says feature modules must not treat map features, tiles, local files, model text, or lifecycle data as claim truth. | That domain feature modules, route inventory, tests, fixtures, or runtime wiring exist. |
+| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED adapter README** | Adapter boundary exists and denies direct lifecycle/canonical/model-output reads. | That agriculture adapters, governed API client adapters, or renderer adapters are implemented. |
+| `apps/explorer-web/src/README.md` | **CONFIRMED parent source README** | Explorer Web source tree denies direct lifecycle/canonical/model reads and requires governed API envelopes for claim-bearing UI. | That agriculture routes, adapters, map layers, renderer wiring, or tests are implemented. |
+| `apps/explorer-web/README.md` | **CONFIRMED parent app README** | Explorer Web is the map-first public/semi-public shell and must use governed API envelopes instead of direct lifecycle/canonical/internal-store reads. | That app routes, clients, adapters, tests, package scripts, or deployment exist. |
+| `docs/domains/agriculture/README.md` | **CONFIRMED domain-doc surface** | Agriculture domain lane describes aggregate/permissioned publication posture and field/operator detail denial by default. | That app UI behavior, schemas, validators, policy bundles, source descriptors, or releases are implemented. |
+| `docs/domains/agriculture/SENSITIVITY.md` | **CONFIRMED sensitivity-doc surface** | Agriculture sensitivity posture requires safest representation and fails closed for private farm/operator × parcel joins. | That executable policy or UI enforcement is wired. |
+| `policy/domains/agriculture/README.md` | **CONFIRMED policy-lane README** | Agriculture policy lane exists as restricted policy surface for field/operator exposure, aggregate release posture, rights, sensitivity, redaction, aggregation, review, and release-adjacent gates. | That concrete policy files, bundle syntax, tests, fixtures, CI binding, or runtime enforcement are wired. |
+| `apps/explorer-web/src/features/domains/README.md` | **NOT VERIFIED** | Direct fetch did not confirm a parent domain-feature README at that path in this update. | Does not prove absence across all refs; a future index remains useful if accepted. |
+| Uploaded Agriculture Markdown | **CONFIRMED source text for this update** | Provided the base Agriculture domain-feature contract updated here. | Does not prove live implementation. |
+| Implementation beyond README | **NEEDS VERIFICATION** | Checkable by repo scan, route inventory, fixtures, tests, package scripts, governed API envelopes, receipts, and runtime evidence. | Not claimed by this README. |
+
+[Back to top](#top)
+
+---
+
+## 3. Repo fit
 
 | Concern | Owning root | Expected relationship |
 |---|---|---|
-| Agriculture domain feature source | `apps/explorer-web/src/features/domains/agriculture/` | App-local Agriculture UI feature modules, if implemented and tested |
-| Feature boundary | `apps/explorer-web/src/features/` | Parent feature/root contract |
-| Adapter boundary | `apps/explorer-web/src/adapters/` | Governed API, evidence, layer, map, export, and diagnostics adapters |
-| Explorer Web app | `apps/explorer-web/` | Map-first public/semi-public shell |
-| Governed API | `apps/governed-api/` | Trust membrane and normal data path |
-| Agriculture doctrine | `docs/domains/agriculture/` | Domain scope, language, sensitivity, policy intent, and backlog |
-| Agriculture policy | `policy/domains/agriculture/` | Agriculture admissibility and exposure policy, if executable wiring is accepted |
-| Shared UI components | `packages/ui/` | Reusable cards, badges, drawers, panels, and legends when shared |
-| Renderer wrappers | `packages/maplibre/`, `packages/cesium/` | Renderer behavior stays behind adapter/wrapper boundaries |
-| Release authority | `release/` | Publication, correction, rollback control |
-| Lifecycle artifacts | `data/` | Receipts, proofs, registry, catalog, triplets, and published artifacts |
+| Agriculture domain feature source | `apps/explorer-web/src/features/domains/agriculture/` | App-local Agriculture UI feature modules, if implemented and tested. |
+| Feature boundary | `apps/explorer-web/src/features/` | Parent feature/root contract. |
+| Domain-feature parent index | `apps/explorer-web/src/features/domains/` | **NEEDS VERIFICATION**; parent README was not confirmed in this update. |
+| Adapter boundary | `apps/explorer-web/src/adapters/` | Governed API, evidence, layer, map, export, and diagnostics adapters. |
+| Explorer Web source tree | `apps/explorer-web/src/` | Parent source-layout boundary. |
+| Explorer Web app | `apps/explorer-web/` | Map-first public/semi-public shell. |
+| Governed API | `apps/governed-api/` | Trust membrane and normal claim-bearing data path. |
+| Agriculture doctrine | `docs/domains/agriculture/` | Domain scope, language, sensitivity, policy intent, and backlog. |
+| Agriculture policy | `policy/domains/agriculture/` | Agriculture admissibility and exposure policy lane, if executable wiring is accepted. |
+| Shared UI components | `packages/ui/` | Reusable cards, badges, drawers, panels, and legends when shared. |
+| Renderer wrappers | `packages/maplibre/`, `packages/cesium/` | Renderer behavior stays behind adapter/wrapper boundaries. |
+| Release authority | `release/` | Publication, correction, rollback control. |
+| Lifecycle artifacts | `data/` | Receipts, proofs, registry, catalog, triplets, and published artifacts. |
+| Security posture | `SECURITY.md`, `docs/security/` | Secrets, sensitive-output, incident, exposure, and audit posture. |
 
-## 3. Authority boundary
+[Back to top](#top)
 
-This feature renders governed Agriculture UI. It does not own Agriculture doctrine, source admission, source rights, policy decisions, schemas, contracts, lifecycle artifacts, release decisions, evidence truth, renderer authority, or AI output.
+---
+
+## 4. Authority boundary
+
+This feature renders governed Agriculture UI. It does not own Agriculture doctrine, source admission, source rights, policy decisions, schemas, contracts, lifecycle artifacts, release decisions, evidence truth, renderer authority, export authority, or AI output.
 
 ```text
 apps/explorer-web/src/features/domains/agriculture/ = app-local Agriculture UI feature
 apps/explorer-web/src/features/                     = feature boundary
 apps/explorer-web/src/adapters/                     = adapter boundary
+apps/explorer-web/src/                              = Explorer Web implementation source
+apps/explorer-web/                                  = map-first public/semi-public app boundary
 apps/governed-api/                                  = trust membrane and normal data path
 docs/domains/agriculture/                           = Agriculture doctrine and policy intent
 policy/domains/agriculture/                         = Agriculture policy lane
 packages/ui/                                        = shared UI primitives
+packages/maplibre/                                  = renderer wrapper
+packages/cesium/                                    = optional gated renderer wrapper
 policy/                                             = finite policy decisions
+schemas/                                            = machine-readable shape
+contracts/                                          = object meaning
 data/                                               = lifecycle artifacts, receipts, proofs, registries
 release/                                            = publication, correction, rollback authority
 ```
 
-## 4. Default posture
+Safe interpretation:
+
+- **CONFIRMED:** this README surface, parent Explorer Web feature/adapter/source/app READMEs, Agriculture domain docs, Agriculture sensitivity doc, and Agriculture policy-lane README exist.
+- **PROPOSED:** Agriculture feature modules may live here when they preserve governed API, aggregation, redaction, source-role, evidence, sensitivity, rights, release, cross-lane, export, and public-boundary constraints.
+- **NEEDS VERIFICATION:** Agriculture modules, route wiring, domain-view inventory, adapter dependencies, fixtures, tests, package scripts, governed API envelopes, aggregation/redaction receipts, export handoff, Evidence Drawer behavior, Focus Mode behavior, runtime behavior, and deployment behavior.
+- **DENY:** using this feature as Agriculture truth, policy authority, source authority, release authority, lifecycle store, schema/contract home, direct canonical/internal store client, direct model-output surface, field/operator exposure path, renderer authority, export authority, or public-data shortcut.
+
+[Back to top](#top)
+
+---
+
+## 5. Default posture
 
 Agriculture feature modules should fail safe, aggregate by default, and preserve the most restrictive applicable posture.
 
@@ -154,24 +207,35 @@ A view should not render claim-bearing agriculture content when any of these are
 - parcel-adjacent or private join risk;
 - cross-lane People, Land, Soil, Hydrology, Habitat, Infrastructure, or Economy join posture;
 - EvidenceRef or EvidenceBundle support;
-- aggregation, generalization, redaction, or delay receipt;
+- aggregation, generalization, redaction, suppression, or delay receipt;
 - release state and rollback target;
+- correction or supersession state;
 - required steward review.
 
-## 5. Inputs
+[Back to top](#top)
+
+---
+
+## 6. Inputs
 
 | Input family | Examples | Required posture |
 |---|---|---|
-| Agriculture view state | aggregate crop, rotation, yield, suitability, irrigation, conservation, stress, economy | Explicit finite states |
-| API envelope | answer, abstain, deny, error, hold, restricted, decision envelope, evidence payload | Runtime-validated before render |
-| Layer state | layer manifest, source role, legend, trust badges, valid time, selected feature id | Released or bounded-safe source only |
-| Evidence state | EvidenceRef, EvidenceBundle summary, citation validation, proof visibility | Required for claim-bearing detail |
-| Sensitivity state | T0 aggregate, T1 field-candidate, T4 operator/private join, quarantine-adjacent | Most restrictive posture wins |
-| Transform state | AggregationReceipt, RedactionReceipt, generalization, suppression, delayed release | Required when reducing exposure risk |
-| Cross-lane state | soil, hydrology, habitat, people/land, infrastructure joins | Inherits strictest lane posture |
-| Export state | selected layers, bounds, citations, aggregation/redaction profile, output mode | Governed export only |
+| Agriculture view state | aggregate crop, rotation, yield, suitability, irrigation, conservation, stress, economy | Explicit finite states. |
+| API envelope | answer, abstain, deny, error, hold, restricted, decision envelope, evidence payload | Runtime-validated before render. |
+| Layer state | layer manifest, source role, legend, trust badges, valid time, selected feature id | Released or bounded-safe source only. |
+| Evidence state | EvidenceRef, EvidenceBundle summary, citation validation, proof visibility | Required for claim-bearing detail. |
+| Sensitivity state | aggregate, field-candidate, operator/private join, quarantine-adjacent, cross-lane-sensitive | Most restrictive posture wins. |
+| Transform state | AggregationReceipt, RedactionReceipt, generalization, suppression, delayed release | Required when reducing exposure risk. |
+| Cross-lane state | soil, hydrology, habitat, people/land, infrastructure, economy joins | Inherits strictest lane posture. |
+| Release/correction state | release ref, rollback target, correction notice, supersession state | Required for public-facing claim and export support. |
+| Export state | selected layers, bounds, citations, aggregation/redaction profile, output mode | Governed export only. |
+| Focus Mode state | prompt class, finite outcome, evidence handles, policy result | No direct model output as truth. |
 
-## 6. Exclusions
+[Back to top](#top)
+
+---
+
+## 7. Exclusions
 
 | Does not belong here | Correct home |
 |---|---|
@@ -185,30 +249,42 @@ A view should not render claim-bearing agriculture content when any of these are
 | Lifecycle artifacts, receipts, proofs, catalog, triplets | `data/` |
 | Release manifests, rollback cards, correction notices | `release/` |
 | Source acquisition or source registry records | `connectors/`, `data/registry/`, source catalog lanes |
-| Field/operator exact public exposure | Denied unless reviewed transformed output is explicitly allowed |
+| Field/operator exact public exposure | denied unless reviewed transformed output is explicitly allowed |
+| Direct RAW / WORK / QUARANTINE / PROCESSED / CATALOG / TRIPLET / PUBLISHED reads | governed API, released artifacts, layer manifests, and bounded public-safe envelopes only |
 | Direct model runtime behavior | `runtime/` behind governed API only |
-| Secrets, credentials, tokens, private keys | Secret manager / deployment environment |
+| Secrets, credentials, tokens, private keys, exact private-farm/operator joins | secret manager / deployment environment, not UI feature source or examples |
+| Public-sensitive exports, exact restricted locations, living-person/DNA details, source-restricted records, prompt/model traces | denied unless separately governed and public-safe |
 
-## 7. Agriculture feature map
+[Back to top](#top)
 
-Exact modules remain `NEEDS VERIFICATION`. Candidate views should be introduced only with route inventory, fixtures, and tests.
+---
+
+## 8. Agriculture feature map
+
+Exact modules remain `NEEDS VERIFICATION`. Candidate views should be introduced only with route inventory, fixtures, governed API envelopes, aggregation/redaction support, and tests.
 
 | Candidate view | Purpose | Required safeguard | Status |
 |---|---|---|---|
-| `aggregate-crops` | Show crop observations at approved aggregation level | County/HUC/grid threshold and release state | PROPOSED |
-| `rotation-summary` | Show rotation or temporal crop-pattern summaries | Explicit valid-time and source-role badges | PROPOSED |
-| `yield-summary` | Show aggregate yield or production indicators | No field/operator inference | PROPOSED |
-| `irrigation-context` | Show public-safe irrigation context | Hydrology lane relation and rights check | PROPOSED |
-| `suitability` | Show suitability or conservation outputs | Derived-layer evidence and assumptions visible | PROPOSED |
-| `stress-summary` | Show remote-sensing or stress indicators | Interpretive-derivative label and evidence support | PROPOSED |
-| `ag-economy` | Show agriculture-economy indicators | Aggregate only; no private operator joins | PROPOSED |
-| `domain-focus` | Agriculture Focus Mode UI | Finite outcomes; no direct model truth | PROPOSED |
-| `domain-export` | Agriculture export handoff | Citation, aggregation, redaction, rights, release checks | PROPOSED |
+| `aggregate-crops` | Show crop observations at approved aggregation level. | Approved aggregation, release state, source-role metadata. | PROPOSED |
+| `rotation-summary` | Show rotation or temporal crop-pattern summaries. | Explicit valid-time and source-role badges. | PROPOSED |
+| `yield-summary` | Show aggregate yield or production indicators. | No field/operator inference. | PROPOSED |
+| `irrigation-context` | Show public-safe irrigation context. | Hydrology lane relation, rights check, no water-rights overclaim. | PROPOSED |
+| `suitability` | Show suitability or conservation outputs. | Derived-layer evidence and assumptions visible. | PROPOSED |
+| `stress-summary` | Show remote-sensing or stress indicators. | Interpretive-derivative label and evidence support. | PROPOSED |
+| `ag-economy` | Show agriculture-economy indicators. | Aggregate only; no private operator joins. | PROPOSED |
+| `domain-focus` | Agriculture Focus Mode UI. | Finite outcomes; no direct model truth. | PROPOSED |
+| `domain-export` | Agriculture export handoff. | Citation, aggregation, redaction, rights, release checks. | PROPOSED |
+| `domain-compare` | Agriculture compare handoff. | Time, release, aggregation/redaction, and provenance preserved. | PROPOSED |
+| `correction-status` | Show public-safe correction/supersession status for agriculture layers. | Release/correction refs only; no restricted payloads. | PROPOSED |
 
 > [!WARNING]
-> Candidate view names are not implementation proof. Do not document a view as runnable until files, route wiring, tests, fixtures, package scripts, and governed API envelopes confirm it.
+> Candidate view names are not implementation proof. Do not document a view as runnable until files, route wiring, tests, fixtures, package scripts, receipts, and governed API envelopes confirm it.
 
-## 8. Diagram
+[Back to top](#top)
+
+---
+
+## 9. Diagram
 
 ```mermaid
 flowchart TD
@@ -221,25 +297,38 @@ flowchart TD
     policy -->|allow/restrict| envelope{"ANSWER / RESTRICT / ABSTAIN / ERROR"}
     envelope --> view["aggregate/redacted agriculture view"]
     view --> evidence["Evidence Drawer affordance"]
+    view --> compare["Compare handoff if allowed"]
     view --> export["safe export handoff if allowed"]
     feature -. DENY .-> exact["field/operator/private joins"]
+    feature -. DENY .-> data["direct lifecycle/canonical/model reads"]
 ```
 
-## 9. Agriculture UI obligations
+[Back to top](#top)
+
+---
+
+## 10. Agriculture UI obligations
 
 | Obligation | Example effect |
 |---|---|
-| `governed_api_only` | Agriculture feature state comes through governed API envelopes |
-| `aggregate_first` | Public views default to aggregate or generalized outputs |
-| `most_restrictive_wins` | Any sensitive join or operator risk narrows or blocks the view |
-| `evidence_required` | Claim-bearing details link to EvidenceBundle-derived payloads |
-| `redaction_preserved` | Redacted/generalized detail is never re-expanded client-side |
-| `source_role_visible` | NASS/NRCS/USDA/remote-sensing/local-upload/manual source roles stay visible where relevant |
-| `finite_states_required` | Views render answer, restrict, abstain, deny, error, hold, loading, and empty states safely |
-| `safe_export_required` | Export handoff preserves citations, aggregation/redaction, rights, and release constraints |
-| `no_authority_fork` | Feature code does not redefine Agriculture policy, schema, contract, source, release, or evidence logic |
+| `governed_api_only` | Agriculture feature state comes through governed API envelopes. |
+| `aggregate_first` | Public views default to aggregate or generalized outputs. |
+| `most_restrictive_wins` | Any sensitive join or operator risk narrows or blocks the view. |
+| `evidence_required` | Claim-bearing details link to EvidenceBundle-derived payloads. |
+| `redaction_preserved` | Redacted/generalized detail is never re-expanded client-side. |
+| `source_role_visible` | NASS/NRCS/USDA/remote-sensing/local-upload/manual source roles stay visible where relevant. |
+| `finite_states_required` | Views render answer, restrict, abstain, deny, error, hold, loading, and empty states safely. |
+| `safe_export_required` | Export handoff preserves citations, aggregation/redaction, rights, and release constraints. |
+| `safe_compare_required` | Compare handoff preserves time semantics, aggregation/redaction, provenance, and release state. |
+| `no_authority_fork` | Feature code does not redefine Agriculture policy, schema, contract, source, release, or evidence logic. |
+| `no_data_root_shortcut` | Feature code does not read lifecycle data roots, canonical/internal stores, local source files, or model output as claim sources. |
+| `local_parity_preferred` | Agriculture fixtures/tests should be runnable locally and in CI with the same inputs where practical. |
 
-## 10. Per-view contract
+[Back to top](#top)
+
+---
+
+## 11. Per-view contract
 
 Every long-lived Agriculture domain view should document or encode:
 
@@ -249,12 +338,17 @@ Every long-lived Agriculture domain view should document or encode:
 - aggregation/redaction/generalization obligations;
 - expected finite outcomes;
 - evidence/citation display behavior;
-- sensitivity, rights, release, valid-time, and cross-lane inheritance behavior;
+- sensitivity, rights, release, valid-time, correction, and cross-lane inheritance behavior;
 - loading, empty, deny, abstain, error, hold, restricted states;
-- export behavior, if any;
+- direct lifecycle/canonical/model-output denial posture;
+- compare, Focus Mode, Evidence Drawer, or export behavior, if any;
 - tests and fixtures proving trust-membrane and exposure-boundary behavior.
 
-## 11. Inspection path
+[Back to top](#top)
+
+---
+
+## 12. Inspection path
 
 Agriculture feature implementation files, route wiring, tests, fixtures, governed API envelopes, aggregation/redaction receipts, package scripts, and export handoff remain `NEEDS VERIFICATION`.
 
@@ -264,20 +358,30 @@ find apps/explorer-web/src apps/governed-api docs/domains/agriculture policy/dom
 find data/raw data/work data/quarantine data/processed data/catalog data/triplets data/published data/receipts data/proofs -maxdepth 2 -type f 2>/dev/null | sort
 ```
 
-## 12. Validation expectations
+[Back to top](#top)
+
+---
+
+## 13. Validation expectations
 
 Useful validation for this feature boundary should cover:
 
 - no Agriculture feature imports or reads lifecycle data roots directly;
 - claim-bearing Agriculture views consume governed API envelopes only;
 - malformed Agriculture envelopes render safe error or abstain states;
-- field-level, operator-resolved, parcel-adjacent, or private-join content is denied or restricted by default;
-- aggregate views preserve aggregation threshold, valid-time, source-role, rights, release, and citation metadata;
+- field-level, operator-resolved, parcel-adjacent, private-join, NASS-confidential, or quarantine-adjacent content is denied or restricted by default;
+- cross-lane sensitive joins inherit the most restrictive posture;
+- aggregate views preserve aggregation support, valid-time, source-role, rights, release, and citation metadata;
 - Evidence Drawer handoff preserves EvidenceRef/EvidenceBundle handles;
 - Focus Mode renders finite outcomes and never direct model output as truth;
-- export handoff requires citation, aggregation/redaction, rights, and release support.
+- compare and export handoffs require citation, aggregation/redaction, rights, and release support;
+- UI output does not expose secrets, exact restricted locations, source-restricted records, private data, or prompt/model traces.
 
-## 13. Safe change pattern
+[Back to top](#top)
+
+---
+
+## 14. Safe change pattern
 
 For Agriculture feature changes:
 
@@ -285,9 +389,15 @@ For Agriculture feature changes:
 2. Add fixtures for aggregate, restricted, denied, held, abstained, malformed, loading, and empty states.
 3. Test lifecycle-data denial and governed API-only behavior.
 4. Preserve aggregation, redaction, valid-time, source-role, release, rights, sensitivity, and citation fields through UI state.
-5. Update this README, parent `features/README.md`, domain docs, and parent app README when public behavior changes.
+5. Verify cross-lane joins inherit the strictest applicable policy posture.
+6. Verify compare, export, Focus Mode, and Evidence Drawer handoffs cannot bypass policy or release checks.
+7. Update this README, parent `features/README.md`, adapter README, domain docs, policy README, and parent app README when public behavior changes.
 
-## 14. Definition of done
+[Back to top](#top)
+
+---
+
+## 15. Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Agriculture feature file inventory and route ownership are documented.
@@ -296,33 +406,44 @@ For Agriculture feature changes:
 - [ ] Aggregation/redaction/generalization obligations survive feature composition.
 - [ ] Direct lifecycle-data import/read checks are covered.
 - [ ] Field/operator/private-join denial states are tested.
+- [ ] Cross-lane sensitivity inheritance is tested.
 - [ ] Finite states cover answer, restrict, abstain, deny, error, hold, loading, and empty cases.
-- [ ] Export and Focus Mode handoffs are tested for safe output if present.
+- [ ] Evidence Drawer, Focus Mode, Compare, and Export handoffs are tested for safe output if present.
+- [ ] Parent feature/adapter/source/app READMEs and Agriculture docs/policy surfaces are updated when public behavior changes.
 
-## 15. Open verification items
+[Back to top](#top)
+
+---
+
+## 16. Open verification items
 
 | Item | Why it matters |
 |---|---|
-| Confirm Agriculture feature implementation files beyond README | Prevents overclaiming feature maturity |
-| Confirm route inventory | Required for public/semi-public UI boundary review |
-| Confirm governed API Agriculture envelopes | Required for trust membrane enforcement |
-| Confirm aggregation/redaction receipt linkage | Required before field-risk reduction claims |
-| Confirm fixtures and tests | Required before implementation claims |
-| Confirm Focus Mode and Evidence Drawer behavior | Required before claim-bearing Agriculture UI claims |
-| Confirm export handoff | Required before public download workflows |
-| Confirm package scripts beyond TODO | Required before build/test claims |
+| Confirm Agriculture feature implementation files beyond README | Prevents overclaiming feature maturity. |
+| Confirm route inventory | Required for public/semi-public UI boundary review. |
+| Confirm governed API Agriculture envelopes | Required for trust membrane enforcement. |
+| Confirm adapter dependency shape | Required so Agriculture UI does not bypass governed adapters. |
+| Confirm aggregation/redaction receipt linkage | Required before field-risk reduction claims. |
+| Confirm fixtures and tests | Required before implementation claims. |
+| Confirm Focus Mode and Evidence Drawer behavior | Required before claim-bearing Agriculture UI claims. |
+| Confirm Compare handoff | Required before visual-difference claims. |
+| Confirm export handoff | Required before public download workflows. |
+| Confirm direct data-root denial | Required for public client trust membrane. |
+| Confirm cross-lane sensitivity inheritance | Required when People/Land, Soil, Hydrology, Habitat, Infrastructure, or Economy joins are in scope. |
+| Confirm package scripts beyond TODO | Required before build/test claims. |
+| Confirm executable Agriculture policy binding | Required before enforcement claims. |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README was a greenfield stub. This replacement adds a bounded Agriculture domain-feature contract without claiming Agriculture routes, panels, hooks, adapters, fixtures, tests, package scripts, governed API envelopes, aggregation receipts, redaction receipts, Focus Mode, Evidence Drawer, or export handoff are implemented.
+The uploaded README replaced a greenfield Agriculture domain-feature stub with a bounded Agriculture feature contract without claiming Agriculture routes, panels, hooks, adapters, fixtures, tests, package scripts, governed API envelopes, aggregation receipts, redaction receipts, Focus Mode, Evidence Drawer, Compare, or export handoff are implemented. This v0.2 update preserves that structure while adding current repo evidence, parent feature/adapter/source/app linkage, supporting Agriculture docs/policy evidence, stronger no-direct-data-root language, cross-lane inheritance posture, compare/correction/export handoff posture, local-parity expectations, and expanded verification items.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/features/domains/agriculture/` should contain Agriculture-specific Explorer Web feature modules only after route contracts, governed API envelopes, aggregation/redaction posture, fixtures, tests, Evidence Drawer behavior, Focus Mode behavior, and export handoff are verified.
+`apps/explorer-web/src/features/domains/agriculture/` should contain Agriculture-specific Explorer Web feature modules only after route contracts, governed API envelopes, aggregation/redaction posture, fixtures, tests, Evidence Drawer behavior, Focus Mode behavior, Compare behavior, and export handoff are verified.
 
-It must preserve the trust membrane and Agriculture sensitivity posture: the feature may show aggregate, generalized, redacted, or restricted Agriculture knowledge, but it must not expose field/operator/private joins, become Agriculture truth, bypass policy, publish, read lifecycle/canonical stores directly, or turn map features into unsupported claims.
+It must preserve the trust membrane and Agriculture sensitivity posture: the feature may show aggregate, generalized, redacted, delayed, or restricted Agriculture knowledge, but it must not expose field/operator/private joins, become Agriculture truth, bypass policy, publish, read lifecycle/canonical stores directly, or turn map features into unsupported claims.
 
 <p align="right"><a href="#top">Back to top</a></p>
