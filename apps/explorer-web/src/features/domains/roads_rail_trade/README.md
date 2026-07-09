@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/features/domains/roads_rail_trade/readme
 title: Explorer Web Roads Rail Trade Domain Feature README
 type: app-readme
-version: v0.1
+version: v0.2
 status: draft
-owners: OWNER_TBD — Apps steward · UI steward · Roads-Rail-Trade steward · Governed API steward · Policy steward · Docs steward
+owners: OWNER_TBD — Apps steward · UI steward · Roads-Rail-Trade steward · Transport steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-09
 policy_label: public
 related:
   - ../../README.md
@@ -15,24 +15,31 @@ related:
   - ../../../../README.md
   - ../../../../../README.md
   - ../../../../../governed-api/README.md
+  - ../../../../../../README.md
+  - ../../../../../../SECURITY.md
   - ../../../../../../docs/domains/roads-rail-trade/README.md
   - ../../../../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md
   - ../../../../../../docs/domains/roads-rail-trade/PIPELINE.md
   - ../../../../../../policy/domains/roads-rail-trade/README.md
-  - ../../../../../../contracts/transport/
-  - ../../../../../../schemas/contracts/v1/transport/
+  - ../../../../../../contracts/transport/README.md
+  - ../../../../../../schemas/contracts/v1/transport/README.md
   - ../../../../../../packages/ui/README.md
   - ../../../../../../packages/maplibre/README.md
+  - ../../../../../../packages/cesium/README.md
   - ../../../../../../policy/access/README.md
   - ../../../../../../policy/decision/README.md
   - ../../../../../../release/README.md
   - ../../../../../../data/README.md
-tags: [kfm, apps, explorer-web, domains, roads-rail-trade, transport, roads, rail, trade-routes, network, feature]
+  - ../../../../../../tools/validators/README.md
+  - ../../../../../../tools/watchers/README.md
+tags: [kfm, apps, explorer-web, domains, roads-rail-trade, transport, roads, rail, trade-routes, network, graph-projection, feature, no-direct-data-root, slug-conflict-visible]
 notes:
-  - "Replaces the greenfield roads-rail-trade domain feature stub with a governed feature README."
-  - "This app path uses the requested underscore directory `roads_rail_trade`; governing docs use `roads-rail-trade` for most domain-lane roots and `transport` for schema/contract homes. This README does not resolve that ADR-level naming split."
-  - "Roads/Rail/Trade UI features may compose governed transport envelopes into public/semi-public views, but they must not become route authority, emergency closure authority, settlement/infrastructure truth, hydrology truth, archaeology truth, living-person/land truth, or direct model-output truth."
-  - "Feature implementation files, route wiring, tests, fixtures, governed API envelopes, graph projections, ReleaseManifests, RollbackCards, and package scripts remain NEEDS VERIFICATION."
+  - "v0.2 updates the uploaded Roads/Rail/Trade domain-feature README into a current repo-aware feature contract."
+  - "apps/explorer-web/src/features/domains/roads_rail_trade/README.md, docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, docs/domains/roads-rail-trade/PIPELINE.md, policy/domains/roads-rail-trade/README.md, contracts/transport/README.md, schemas/contracts/v1/transport/README.md, and apps/explorer-web/src/features/README.md were verified through the GitHub app in this update. Prior related Explorer Web adapter/source/app boundaries remain relevant, but adapter files, routes, runtime wiring, tests, and envelopes remain NEEDS VERIFICATION."
+  - "This app path uses the requested underscore directory roads_rail_trade; governing docs use roads-rail-trade for most domain-lane roots and transport for compatibility schema/contract references. This README does not resolve the ADR-level naming split."
+  - "contracts/transport/README.md and schemas/contracts/v1/transport/README.md are treated here as compatibility guards/indexes, not proof of canonical transport contract/schema authority."
+  - "Feature implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, graph projections, NetworkProjectionReceipts, RedactionReceipts, AggregationReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, export handoff, Focus Mode behavior, Evidence Drawer behavior, package scripts, runtime behavior, and deployment behavior remain NEEDS VERIFICATION."
+  - "Roads/Rail/Trade UI features may compose governed transport envelopes into public/semi-public views, but they must not become route authority, emergency closure authority, current navigation, bridge safety determination, rail operating authority, settlement/infrastructure truth, hydrology truth, archaeology truth, living-person/land truth, legal/title truth, or direct model-output truth."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -43,49 +50,51 @@ notes:
 
 `apps/explorer-web/src/features/domains/roads_rail_trade/`
 
-**Domain-specific Explorer Web feature boundary for public-safe roads, rail, historic route, trade corridor, facility, restriction, network-edge, movement-story, Evidence Drawer, Focus Mode, and release-aware map surfaces rendered only through governed envelopes.**
+**Domain-specific Explorer Web feature boundary for public-safe roads, rail, historic route, trade corridor, facility, restriction, network-edge, movement-story, Evidence Drawer, Focus Mode, compare/export, and release-aware map surfaces rendered only through governed envelopes.**
 
 ![status](https://img.shields.io/badge/status-draft-blue)
 ![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
 ![domain](https://img.shields.io/badge/domain-roads--rail--trade-795548)
-![schema](https://img.shields.io/badge/schema__contract-transport-0a7ea4)
+![schema](https://img.shields.io/badge/schema__contract-transport__compatibility-0a7ea4)
 ![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
+![posture](https://img.shields.io/badge/posture-fail--closed-critical)
 
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-roads-rail-trade-feature-map) · [Definition of done](#14-definition-of-done)
+[Purpose](#1-purpose) · [Current evidence](#2-current-repo-evidence) · [Repo fit](#3-repo-fit) · [Boundary](#4-authority-boundary) · [Inputs](#6-inputs) · [Exclusions](#7-exclusions) · [Feature map](#8-roads-rail-trade-feature-map) · [Definition of done](#15-definition-of-done)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Owners:** `OWNER_TBD` — Apps steward · UI steward · Roads-Rail-Trade steward · Governed API steward · Policy steward · Docs steward  
+> **Status:** draft / current README surface confirmed / implementation behavior `NEEDS VERIFICATION`  
+> **Owners:** `OWNER_TBD` — Apps steward · UI steward · Roads-Rail-Trade steward · Transport steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/features/domains/roads_rail_trade/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path / CONFIRMED Roads-Rail-Trade doctrine docs / PROPOSED domain-feature contract / UNKNOWN implementation files, route wiring, tests, fixtures, and runtime behavior
+> **Truth posture:** CONFIRMED README path and supporting Roads/Rail/Trade docs/policy/schema-contract compatibility README surfaces / PROPOSED domain-feature contract / UNKNOWN implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, graph projections, NetworkProjectionReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, export handoff, Focus Mode behavior, Evidence Drawer behavior, package scripts, runtime behavior, and deployment behavior
 
 > [!CAUTION]
-> Roads/Rail/Trade UI is a governed transport-context surface, not current navigation, legal routing, emergency closure authority, bridge safety determination, rail operating authority, or title/land ownership authority. Public views must preserve source role, valid time, release state, and cross-lane ownership.
+> Roads/Rail/Trade UI is a governed transport-context surface, not current navigation, legal routing, emergency closure authority, bridge safety determination, rail operating authority, title/land ownership authority, or a replacement for official transportation data. Public views must preserve source role, valid time, release state, graph-derived labels, and cross-lane ownership.
 
 ---
 
 ## Quick jump
 
 - [1. Purpose](#1-purpose)
-- [2. Repo fit](#2-repo-fit)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Inputs](#5-inputs)
-- [6. Exclusions](#6-exclusions)
-- [7. Roads-Rail-Trade feature map](#7-roads-rail-trade-feature-map)
-- [8. Diagram](#8-diagram)
-- [9. Roads-Rail-Trade UI obligations](#9-roads-rail-trade-ui-obligations)
-- [10. Per-view contract](#10-per-view-contract)
-- [11. Inspection path](#11-inspection-path)
-- [12. Validation expectations](#12-validation-expectations)
-- [13. Safe change pattern](#13-safe-change-pattern)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open verification items](#15-open-verification-items)
+- [2. Current repo evidence](#2-current-repo-evidence)
+- [3. Repo fit](#3-repo-fit)
+- [4. Authority boundary](#4-authority-boundary)
+- [5. Default posture](#5-default-posture)
+- [6. Inputs](#6-inputs)
+- [7. Exclusions](#7-exclusions)
+- [8. Roads-Rail-Trade feature map](#8-roads-rail-trade-feature-map)
+- [9. Diagram](#9-diagram)
+- [10. Roads-Rail-Trade UI obligations](#10-roads-rail-trade-ui-obligations)
+- [11. Per-view contract](#11-per-view-contract)
+- [12. Inspection path](#12-inspection-path)
+- [13. Validation expectations](#13-validation-expectations)
+- [14. Safe change pattern](#14-safe-change-pattern)
+- [15. Definition of done](#15-definition-of-done)
+- [16. Open verification items](#16-open-verification-items)
 
 ---
 
@@ -96,59 +105,107 @@ notes:
 It may eventually hold route modules, panels, view models, hooks, and feature orchestration for public-safe transport experiences such as:
 
 - road segment, historic route, rail segment, bridge, ferry, crossing, depot, siding, and yard views;
-- freight corridor, trade route, movement-story, and route-event context;
-- access restriction and operator-status displays with source role and valid-time labels;
-- network-edge and graph projection views that remain derived and non-canonical;
+- freight corridor, trade route, movement-story, route-event, and corridor-membership context;
+- access restriction, status event, operator assignment, and closure context with source-role and valid-time labels;
+- network-edge and graph projection views that remain derived, labeled, and non-canonical;
+- cross-lane relation views that preserve settlement, infrastructure, hydrology, archaeology, hazards, and people/land ownership;
 - Evidence Drawer handoffs that show governed, role-typed, time-aware payloads;
 - Focus Mode bounded transport answers with citation discipline and AIReceipt support;
-- compare/export handoffs that preserve source role, evidence, rights, release, correction, and rollback state.
+- compare/export handoffs that preserve source role, evidence, rights, release, correction, stale-state, and rollback state.
 
-This directory is not proof that any route, panel, hook, map layer, adapter, test, fixture, package script, graph projection, or governed API envelope is implemented.
+This directory is not proof that any route, panel, hook, map layer, adapter, test, fixture, package script, graph projection, governed API envelope, release manifest, rollback card, Evidence Drawer behavior, Focus Mode behavior, export handoff, or runtime wiring is implemented.
 
 [Back to top](#top)
 
 ---
 
-## 2. Repo fit
+## 2. Current repo evidence
+
+| Surface | Status | What it proves | What it does **not** prove |
+|---|---|---|---|
+| `apps/explorer-web/src/features/domains/roads_rail_trade/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.2. | Roads/Rail/Trade UI implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, graph projections, release manifests, rollback cards, export handoff, or runtime behavior. |
+| `apps/explorer-web/src/features/README.md` | **CONFIRMED parent features README** | Parent feature boundary says feature modules must not treat map features, tiles, local files, model text, or lifecycle data as claim truth. | That domain feature modules, route inventory, tests, fixtures, or runtime wiring exist. |
+| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED prior related boundary** | Adapter README was previously verified in this session as the governed API / renderer / evidence / layer / export / diagnostics adapter boundary. | That transport adapters or governed API client adapters are implemented. |
+| `docs/domains/roads-rail-trade/README.md` | **CONFIRMED domain-doc surface** | Domain docs define Roads/Rail/Trade scope and document that schema/contract homes use `transport/` while most other lane roots use `roads-rail-trade`. | That app UI behavior, schemas, validators, policy bundles, source descriptors, releases, or routes are implemented. |
+| `docs/domains/roads-rail-trade/OBJECT_FAMILIES.md` | **CONFIRMED object-family doc surface** | Object-family docs define the vocabulary spine and source-role/time/sensitivity discipline, while field realization remains proposed/needs verification. | That schemas, DTOs, validators, graph logic, or UI routes implement those objects. |
+| `docs/domains/roads-rail-trade/PIPELINE.md` | **CONFIRMED pipeline doctrine surface** | Pipeline docs define RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED and say promotion is a governed state transition, not a file move. | That Roads/Rail/Trade pipeline routes, schema bodies, validator IDs, release candidates, or runtime gates are implemented. |
+| `policy/domains/roads-rail-trade/README.md` | **CONFIRMED policy-lane scaffold** | Domain policy-lane README exists. | It is still a greenfield scaffold and does not prove concrete policy files, tests, fixtures, CI binding, release integration, or runtime enforcement. |
+| `contracts/transport/README.md` | **CONFIRMED compatibility guard** | The top-level `contracts/transport/` path exists as a compatibility guard and must not become a parallel transport contract root without ADR/migration review. | It does not prove canonical transport semantic-contract authority. |
+| `schemas/contracts/v1/transport/README.md` | **CONFIRMED compatibility index** | The flat `schemas/contracts/v1/transport/` path exists as a compatibility index and records unresolved `roads-rail-trade` vs `transport` / flat-vs-domain path drift. | It does not resolve canonical schema placement or prove field-complete schemas. |
+| `apps/explorer-web/src/features/domains/README.md` | **NOT VERIFIED** | A parent domain-feature README was not confirmed in this update. | Does not prove absence across all refs; a future index remains useful if accepted. |
+| Uploaded Roads/Rail/Trade Markdown | **CONFIRMED source text for this update** | Provided the base Roads/Rail/Trade domain-feature contract updated here. | Does not prove live implementation. |
+| Implementation beyond README | **NEEDS VERIFICATION** | Checkable by repo scan, route inventory, fixtures, tests, package scripts, governed API envelopes, graph receipts, release records, and runtime evidence. | Not claimed by this README. |
+
+[Back to top](#top)
+
+---
+
+## 3. Repo fit
 
 | Concern | Owning root | Expected relationship |
 |---|---|---|
-| Roads/Rail/Trade domain feature source | `apps/explorer-web/src/features/domains/roads_rail_trade/` | App-local Roads/Rail/Trade UI feature modules, if implemented and tested |
-| Feature boundary | `apps/explorer-web/src/features/` | Parent feature/root contract |
-| Adapter boundary | `apps/explorer-web/src/adapters/` | Governed API, evidence, layer, map, export, and diagnostics adapters |
-| Explorer Web app | `apps/explorer-web/` | Map-first public/semi-public shell |
-| Governed API | `apps/governed-api/` | Trust membrane and normal data path |
-| Domain doctrine | `docs/domains/roads-rail-trade/` | Domain scope, object families, source roles, transport slug split, publication, and verification backlog |
-| Domain policy | `policy/domains/roads-rail-trade/` | Domain admissibility and exposure policy, if executable wiring is accepted |
-| Transport contracts | `contracts/transport/` | Object meaning for network identity governance; presence remains `NEEDS VERIFICATION` |
-| Transport schemas | `schemas/contracts/v1/transport/` | Machine shape for transport surfaces; presence remains `NEEDS VERIFICATION` |
-| Shared UI components | `packages/ui/` | Reusable cards, badges, drawers, panels, route legends, and network widgets when shared |
-| Renderer wrappers | `packages/maplibre/`, `packages/cesium/` | Renderer behavior stays behind adapter/wrapper boundaries |
-| Release authority | `release/` | Publication, correction, supersession, rollback control |
-| Lifecycle artifacts | `data/` | Receipts, proofs, registry, catalog, triplets, and published artifacts |
+| Roads/Rail/Trade domain feature source | `apps/explorer-web/src/features/domains/roads_rail_trade/` | App-local Roads/Rail/Trade UI feature modules, if implemented and tested. |
+| Feature boundary | `apps/explorer-web/src/features/` | Parent feature/root contract. |
+| Domain-feature parent index | `apps/explorer-web/src/features/domains/` | **NEEDS VERIFICATION**; parent README was not confirmed in this update. |
+| Adapter boundary | `apps/explorer-web/src/adapters/` | Governed API, evidence, layer, map, export, and diagnostics adapters. |
+| Explorer Web source tree | `apps/explorer-web/src/` | Parent source-layout boundary. |
+| Explorer Web app | `apps/explorer-web/` | Map-first public/semi-public shell. |
+| Governed API | `apps/governed-api/` | Trust membrane and normal claim-bearing data path. |
+| Domain doctrine | `docs/domains/roads-rail-trade/` | Domain scope, object families, source roles, transport slug split, publication, pipeline, and verification backlog. |
+| Domain policy | `policy/domains/roads-rail-trade/` | Domain admissibility and exposure policy lane, if executable wiring is accepted. |
+| Transport contracts | `contracts/transport/` | Compatibility guard only unless ADR/migration review accepts it as canonical. |
+| Transport schemas | `schemas/contracts/v1/transport/` | Compatibility index only unless ADR/migration review accepts it as canonical. |
+| Working semantic contracts | `contracts/domains/roads-rail-trade/` | Current inspected working lane referenced by the compatibility guard; **NEEDS VERIFICATION** in this UI update. |
+| Shared UI components | `packages/ui/` | Reusable cards, badges, drawers, panels, route legends, and network widgets when shared. |
+| Renderer wrappers | `packages/maplibre/`, `packages/cesium/` | Renderer behavior stays behind adapter/wrapper boundaries. |
+| Release authority | `release/` | Publication, correction, supersession, rollback control. |
+| Lifecycle artifacts | `data/` | Receipts, proofs, registry, catalog, triplets, and published artifacts. |
+| Security posture | `SECURITY.md`, `docs/security/` | Secrets, sensitive-output, incident, exposure, and audit posture. |
 
-## 3. Authority boundary
+[Back to top](#top)
 
-This feature renders governed Roads/Rail/Trade UI. It does not own current navigation authority, emergency closure authority, settlement/infrastructure truth, hydrology truth, archaeology truth, hazard authority, living-person or land-ownership truth, schemas, contracts, lifecycle artifacts, release decisions, evidence truth, renderer authority, source admission, or AI output.
+---
+
+## 4. Authority boundary
+
+This feature renders governed Roads/Rail/Trade UI. It does not own current navigation authority, emergency closure authority, legal routing, bridge safety determinations, rail operating authority, settlement/infrastructure truth, hydrology truth, archaeology truth, hazards truth, living-person or land-ownership truth, schemas, contracts, lifecycle artifacts, release decisions, evidence truth, renderer authority, source admission, or AI output.
 
 ```text
 apps/explorer-web/src/features/domains/roads_rail_trade/ = app-local Roads/Rail/Trade UI feature
 apps/explorer-web/src/features/                         = feature boundary
 apps/explorer-web/src/adapters/                         = adapter boundary
+apps/explorer-web/src/                                  = Explorer Web implementation source
+apps/explorer-web/                                      = map-first public/semi-public app boundary
 apps/governed-api/                                      = trust membrane and normal data path
 docs/domains/roads-rail-trade/                          = Roads/Rail/Trade doctrine and lane posture
 policy/domains/roads-rail-trade/                        = domain policy lane
-contracts/transport/                                    = transport object meaning, if present and accepted
-schemas/contracts/v1/transport/                         = transport machine shape, if present and accepted
+contracts/transport/                                    = compatibility guard, not parallel authority
+schemas/contracts/v1/transport/                         = compatibility index, not resolved canonical schema home
 packages/ui/                                            = shared UI primitives
+packages/maplibre/                                      = renderer wrapper
+packages/cesium/                                        = optional gated renderer wrapper
 policy/                                                 = finite policy decisions
+schemas/                                                = machine-readable shape
+contracts/                                              = object meaning
 data/                                                   = lifecycle artifacts, receipts, proofs, registries
 release/                                                = publication, correction, rollback authority
 ```
 
-## 4. Default posture
+Safe interpretation:
 
-Roads/Rail/Trade feature modules should fail closed, preserve source-role and time labels, keep historic, modern, regulatory, operational, administrative, modeled, and graph-projection claims distinct, and avoid treating derived route geometry as canonical truth.
+- **CONFIRMED:** this README surface, parent Explorer Web feature README, Roads/Rail/Trade domain README, object-family doc, pipeline doc, policy-lane scaffold, `contracts/transport` compatibility guard, and `schemas/contracts/v1/transport` compatibility index exist.
+- **PROPOSED:** Roads/Rail/Trade feature modules may live here when they preserve governed API, source-role, time-kind, graph-derived labeling, evidence, sensitivity, rights, review, release, stale-state, rollback, correction, export, and public-boundary constraints.
+- **CONFLICTED / NEEDS ADR:** app path uses `roads_rail_trade`; docs/policy/lifecycle lanes use `roads-rail-trade`; some schema/contract references use `transport`; compatibility README surfaces do not settle canonical authority.
+- **NEEDS VERIFICATION:** modules, route wiring, domain-view inventory, adapter dependencies, fixtures, tests, package scripts, governed API envelopes, graph projections, NetworkProjectionReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, export handoff, Evidence Drawer behavior, Focus Mode behavior, runtime behavior, and deployment behavior.
+- **DENY:** using this feature as route authority, emergency closure authority, current navigation, bridge safety determination, rail operating authority, legal/title authority, cross-lane truth owner, release authority, lifecycle store, schema/contract home, direct canonical/internal store client, direct model-output surface, renderer authority, export authority, or public-data shortcut.
+
+[Back to top](#top)
+
+---
+
+## 5. Default posture
+
+Roads/Rail/Trade feature modules should fail closed, preserve source-role and time labels, keep historic, modern, regulatory, operational, administrative, modeled, synthetic, and graph-projection claims distinct, and avoid treating derived route geometry as canonical truth.
 
 A view should not render claim-bearing transport content when any of these are unresolved:
 
@@ -158,70 +215,94 @@ A view should not render claim-bearing transport content when any of these are u
 - rights or license posture;
 - valid time, source time, retrieval time, release time, correction time, freshness, or stale-state posture;
 - operator-status, restriction, route-event, closure, or hazard-derived context;
-- graph projection, network-edge, or derived route-generalization support;
+- graph projection, network-edge, movement-story node, routing-cost, or derived route-generalization support;
 - cross-lane settlement, hydrology, archaeology, hazards, infrastructure, roads/rail, or people/land ownership;
 - EvidenceRef or EvidenceBundle support;
 - PolicyDecision, ReleaseManifest, RollbackCard, CorrectionNotice, or stale-state rule;
 - sensitivity, aggregation, redaction, private-property, infrastructure, cultural-resource, or safety exposure posture;
 - public audience or export destination.
 
-## 5. Inputs
+[Back to top](#top)
+
+---
+
+## 6. Inputs
 
 | Input family | Examples | Required posture |
 |---|---|---|
-| Transport view state | road segment, historic route, rail segment, depot, siding, yard, crossing, bridge, ferry, freight corridor, route event, operator status, access restriction, network edge | Explicit finite states |
-| API envelope | answer, abstain, deny, error, hold, restricted, decision envelope, evidence payload | Runtime-validated before render |
-| Layer state | layer manifest, source role, legend, trust badges, valid/effective time, selected feature id | Released or bounded-safe source only |
-| Evidence state | EvidenceRef, EvidenceBundle summary, citation validation, proof visibility | Required for claim-bearing detail |
-| Graph state | network edge, route generalization, graph projection, routing cost, movement story node | Derived and labeled; not canonical truth |
-| Transform state | generalization, aggregation, redaction, suppression, stale-state label | Required when reducing exposure risk |
-| Cross-lane state | settlements, hydrology, archaeology, hazards, infrastructure, people/land joins | Context only; inherits strictest lane posture |
-| Export state | selected public-safe layer, bounds, citations, disclaimer, release state, output mode | Governed export only |
+| Transport view state | road segment, historic route, rail segment, depot, siding, yard, crossing, bridge, ferry, freight corridor, route event, operator status, access restriction, network edge | Explicit finite states. |
+| API envelope | answer, abstain, deny, error, hold, restricted, decision envelope, evidence payload | Runtime-validated before render. |
+| Layer state | layer manifest, source role, legend, trust badges, valid/effective time, selected feature id | Released or bounded-safe source only. |
+| Evidence state | EvidenceRef, EvidenceBundle summary, citation validation, proof visibility | Required for claim-bearing detail. |
+| Graph state | network edge, route generalization, graph projection, routing cost, movement story node | Derived and labeled; not canonical truth. |
+| Transform state | generalization, aggregation, redaction, suppression, stale-state label | Required when reducing exposure risk. |
+| Cross-lane state | settlements, hydrology, archaeology, hazards, infrastructure, people/land joins | Context only; inherits strictest lane posture. |
+| Release/correction state | release ref, rollback target, correction notice, stale-state, supersession, withdrawal | Required for public-facing claim and export support. |
+| Export state | selected public-safe layer, bounds, citations, disclaimer, release state, output mode | Governed export only. |
+| Focus Mode state | prompt class, finite outcome, evidence handles, policy result | No direct model output as route, closure, title, network, or operational truth. |
 
-## 6. Exclusions
+[Back to top](#top)
+
+---
+
+## 7. Exclusions
 
 | Does not belong here | Correct home |
 |---|---|
 | Roads/Rail/Trade doctrine and scope | `docs/domains/roads-rail-trade/` |
 | Domain policy bundles or admission decisions | `policy/domains/roads-rail-trade/`, `policy/` |
-| Transport contracts and schemas | `contracts/transport/`, `schemas/contracts/v1/transport/` |
-| Current navigation, emergency routing, or real-time closure authority | Official issuing/operational authorities; Hazards context where appropriate |
-| Settlement and infrastructure canonical truth | Settlements/Infrastructure lane; transport may cite governed context |
-| Hydrology canonical water evidence | Hydrology lane; transport may cite river/ferry/crossing context |
-| Archaeology site identity or exact protected coordinates | Archaeology lane; transport may cite governed context only |
-| Living-person residency or land-ownership history | People/DNA/Land lane; transport may cite governed context only |
+| Transport contracts and schemas | `contracts/transport/`, `schemas/contracts/v1/transport/`, or ADR-selected canonical homes; this feature README does not decide the slug split. |
+| Current navigation, emergency routing, or real-time closure authority | Official issuing/operational authorities; Hazards context where appropriate. |
+| Settlement and infrastructure canonical truth | Settlements/Infrastructure lane; transport may cite governed context. |
+| Hydrology canonical water evidence | Hydrology lane; transport may cite river/ferry/crossing context. |
+| Archaeology site identity or exact protected coordinates | Archaeology lane; transport may cite governed context only. |
+| Living-person residency or land-ownership history | People/DNA/Land lane; transport may cite governed context only. |
 | Governed API implementation | `apps/governed-api/` |
 | Adapter logic shared across feature families | `apps/explorer-web/src/adapters/` |
 | Shared reusable UI primitives | `packages/ui/` |
 | Renderer wrapper authority | `packages/maplibre/`, `packages/cesium/` |
 | Lifecycle artifacts, receipts, proofs, catalog, triplets | `data/` |
 | Release manifests, rollback cards, correction notices | `release/` |
-| Source acquisition or source registry records | `connectors/`, `data/registry/`, source catalog lanes |
-| Direct model runtime behavior | `runtime/` behind governed API only |
-| Secrets, credentials, tokens, private keys | Secret manager / deployment environment |
+| Source acquisition or source registry records | `connectors/`, `data/registry/`, source catalog lanes. |
+| Direct RAW / WORK / QUARANTINE / PROCESSED / CATALOG / TRIPLET / PUBLISHED reads | governed API, released artifacts, layer manifests, and bounded public-safe envelopes only. |
+| Direct model runtime behavior | `runtime/` behind governed API only. |
+| Secrets, credentials, tokens, private keys, operational feed credentials, critical-infrastructure details, private operator data | secret manager / deployment environment, not UI feature source or examples. |
+| Public-sensitive exports, exact restricted locations, source-restricted records, private data, prompt/model traces, navigation instructions, legal routing advice | denied unless separately governed and public-safe. |
 
-## 7. Roads-Rail-Trade feature map
+[Back to top](#top)
 
-Exact modules remain `NEEDS VERIFICATION`. Candidate views should be introduced only with route inventory, fixtures, and tests.
+---
+
+## 8. Roads-Rail-Trade feature map
+
+Exact modules remain `NEEDS VERIFICATION`. Candidate views should be introduced only with route inventory, fixtures, governed API envelopes, graph projection receipts, source-role fixtures, release manifests, rollback cards, and tests.
 
 | Candidate view | Purpose | Required safeguard | Status |
 |---|---|---|---|
-| `road-segments` | Show road segment context | Source role, valid time, release state | PROPOSED |
-| `historic-routes` | Show wagon, military, mail, stage, cattle, emigrant, or trade route context | Historic-source caveats and evidence labels | PROPOSED |
-| `rail-network` | Show rail segments, depots, sidings, yards, crossings | Operator-status and time labels | PROPOSED |
-| `bridges-crossings-ferries` | Show transport crossing context | Hydrology/settlement cross-lane ownership preserved | PROPOSED |
-| `access-restrictions` | Show restrictions or closures as context | Source, effective time, and not-authority caveats | PROPOSED |
-| `freight-corridors` | Show freight/trade corridor context | Derived status and release state | PROPOSED |
-| `network-edges` | Show graph projection edges | Derived label; not source geometry truth | PROPOSED |
-| `movement-story` | Show narrative spatial-temporal route nodes | Evidence, provenance, and sensitivity checks | PROPOSED |
-| `domain-focus` | Roads/Rail/Trade Focus Mode UI | Finite outcomes; no direct model truth or route authority | PROPOSED |
-| `domain-evidence` | Evidence Drawer handoff | Audience-appropriate payload only | PROPOSED |
-| `domain-export` | Domain export handoff | Citation, disclaimer, rights, release checks | PROPOSED |
+| `road-segments` | Show road segment context. | Source role, valid time, release state. | PROPOSED |
+| `historic-routes` | Show wagon, military, mail, stage, cattle, emigrant, or trade route context. | Historic-source caveats and evidence labels. | PROPOSED |
+| `rail-network` | Show rail segments, depots, sidings, yards, crossings. | Operator-status and time labels. | PROPOSED |
+| `bridges-crossings-ferries` | Show transport crossing context. | Hydrology/settlement cross-lane ownership preserved. | PROPOSED |
+| `access-restrictions` | Show restrictions or closures as context. | Source, effective time, and not-authority caveats. | PROPOSED |
+| `freight-corridors` | Show freight/trade corridor context. | Derived status and release state. | PROPOSED |
+| `network-edges` | Show graph projection edges. | Derived label; not source geometry truth. | PROPOSED |
+| `movement-story` | Show narrative spatial-temporal route nodes. | Evidence, provenance, and sensitivity checks. | PROPOSED |
+| `operator-status` | Show public-safe operator/status context. | Source role, valid time, no operating authority. | PROPOSED |
+| `sensitive-denial` | Explain unavailable restriction, infrastructure, or cultural-resource detail. | Safe reason code; no exposure hints. | PROPOSED |
+| `domain-focus` | Roads/Rail/Trade Focus Mode UI. | Finite outcomes; no direct model truth or route authority. | PROPOSED |
+| `domain-evidence` | Evidence Drawer handoff. | Audience-appropriate payload only. | PROPOSED |
+| `domain-export` | Domain export handoff. | Citation, disclaimer, rights, release checks. | PROPOSED |
+| `domain-compare` | Domain compare handoff. | Source role, graph-derived labels, time, release, review, provenance, and stale-state preserved. | PROPOSED |
+| `correction-status` | Public-safe stale/supersession/correction/rollback status. | Release/correction/rollback refs only; no operational instruction. | PROPOSED |
 
 > [!WARNING]
-> Candidate view names are not implementation proof. Do not document a view as runnable until files, route wiring, tests, fixtures, package scripts, governed API envelopes, graph projections, and release artifacts confirm it.
+> Candidate view names are not implementation proof. Do not document a view as runnable until files, route wiring, tests, fixtures, package scripts, governed API envelopes, graph projections, release artifacts, and public-boundary checks confirm it.
 
-## 8. Diagram
+[Back to top](#top)
+
+---
+
+## 9. Diagram
 
 ```mermaid
 flowchart TD
@@ -234,26 +315,41 @@ flowchart TD
     policy -->|allow/restrict| envelope{"ANSWER / RESTRICT / ABSTAIN / ERROR"}
     envelope --> view["public-safe transport context"]
     view --> evidence["Evidence Drawer affordance"]
+    view --> compare["Compare handoff if allowed"]
     view --> export["safe export handoff if allowed"]
-    feature -. DENY .-> authority["navigation authority / emergency closure authority / cross-lane truth overwrite"]
+    feature -. DENY .-> authority["navigation authority / emergency closure authority / rail operating authority"]
+    feature -. DENY .-> crosslane["cross-lane truth overwrite"]
+    feature -. DENY .-> direct["direct lifecycle/canonical/model reads"]
 ```
 
-## 9. Roads-Rail-Trade UI obligations
+[Back to top](#top)
+
+---
+
+## 10. Roads-Rail-Trade UI obligations
 
 | Obligation | Example effect |
 |---|---|
-| `governed_api_only` | Feature state comes through governed API envelopes |
-| `transport_slug_acknowledged` | UI docs acknowledge `roads-rail-trade` lane vs `transport` schema/contract split |
-| `source_role_preserved` | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles remain distinct |
-| `time_kind_visible` | Source, valid, retrieval, release, correction, freshness, and stale states remain visible where material |
-| `graph_projection_labeled` | Network edges and route projections are derived layers, not canonical source truth |
-| `cross_lane_truth_preserved` | Settlement, hydrology, archaeology, hazards, infrastructure, and people/land truth stay with owning lanes |
-| `evidence_required` | Claim-bearing details link to EvidenceBundle-derived payloads |
-| `finite_states_required` | Views render answer, restrict, abstain, deny, error, hold, loading, stale, and empty states safely |
-| `safe_export_required` | Export handoff preserves citations, disclaimers, rights, release, correction, and rollback constraints |
-| `no_authority_fork` | Feature code does not redefine transport policy, schema, contract, source, release, routing authority, or evidence logic |
+| `governed_api_only` | Feature state comes through governed API envelopes. |
+| `transport_slug_acknowledged` | UI docs acknowledge `roads_rail_trade` app path, `roads-rail-trade` lane roots, and `transport` compatibility schema/contract references. |
+| `source_role_preserved` | Observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, and historic assertion roles remain distinct. |
+| `time_kind_visible` | Source, valid, retrieval, release, correction, freshness, and stale states remain visible where material. |
+| `graph_projection_labeled` | Network edges, route projections, route costs, and movement-story nodes are derived layers, not canonical source truth. |
+| `cross_lane_truth_preserved` | Settlement, hydrology, archaeology, hazards, infrastructure, and people/land truth stay with owning lanes. |
+| `evidence_required` | Claim-bearing details link to EvidenceBundle-derived payloads. |
+| `no_operational_authority` | UI does not render current navigation, emergency closure, bridge safety, or rail operating authority. |
+| `finite_states_required` | Views render answer, restrict, abstain, deny, error, hold, loading, stale, corrected, rollback, and empty states safely. |
+| `safe_compare_required` | Compare handoff preserves source role, graph-derived labels, release, review, provenance, time, stale-state, and finite-state posture. |
+| `safe_export_required` | Export handoff preserves citations, disclaimers, rights, release, correction, and rollback constraints. |
+| `no_authority_fork` | Feature code does not redefine transport policy, schema, contract, source, release, routing authority, graph truth, or evidence logic. |
+| `no_data_root_shortcut` | Feature code does not read lifecycle data roots, canonical/internal stores, local source files, or model output as claim sources. |
+| `local_parity_preferred` | Transport fixtures/tests should be runnable locally and in CI with the same inputs where practical. |
 
-## 10. Per-view contract
+[Back to top](#top)
+
+---
+
+## 11. Per-view contract
 
 Every long-lived Roads/Rail/Trade domain view should document or encode:
 
@@ -261,89 +357,128 @@ Every long-lived Roads/Rail/Trade domain view should document or encode:
 - transport object families and source families consumed;
 - governed API envelope or adapter dependency;
 - source-role, temporal-role, freshness, stale-state, and valid-time behavior;
-- graph-projection, route-generalization, and derived-layer labels;
+- graph-projection, route-generalization, route-cost, and derived-layer labels;
 - cross-lane ownership, sensitivity, redaction, aggregation, and exposure behavior;
-- release, correction, supersession, and rollback behavior;
+- release, correction, supersession, withdrawal, and rollback behavior;
 - expected finite outcomes;
 - evidence/citation display behavior;
-- loading, empty, deny, abstain, error, hold, restricted, and stale states;
-- export behavior, if any;
-- tests and fixtures proving trust-membrane, source-role anti-collapse, and cross-lane ownership boundaries.
+- loading, empty, deny, abstain, error, hold, restricted, stale, corrected, and rollback states;
+- direct lifecycle/canonical/model-output denial posture;
+- compare, Focus Mode, Evidence Drawer, or export behavior, if any;
+- tests and fixtures proving trust-membrane, source-role anti-collapse, graph-derived labeling, and cross-lane ownership boundaries.
 
-## 11. Inspection path
+[Back to top](#top)
+
+---
+
+## 12. Inspection path
 
 Roads/Rail/Trade feature implementation files, route wiring, tests, fixtures, governed API envelopes, graph projections, release manifests, rollback cards, stale-state rules, package scripts, and export handoff remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src/features/domains/roads_rail_trade -maxdepth 5 -type f | sort
-find apps/explorer-web/src apps/governed-api docs/domains/roads-rail-trade policy/domains/roads-rail-trade contracts/transport schemas/contracts/v1/transport packages/ui packages/maplibre tests fixtures -maxdepth 6 -type f 2>/dev/null | grep -Ei 'roads|rail|trade|transport|route|corridor|segment|bridge|ferry|crossing|depot|siding|yard|restriction|operator|network|graph|evidence|release|rollback|governed' | sort
+find apps/explorer-web/src apps/governed-api docs/domains/roads-rail-trade policy/domains/roads-rail-trade contracts/transport contracts/domains/roads-rail-trade schemas/contracts/v1/transport schemas/contracts/v1/domains/roads-rail-trade packages/ui packages/maplibre tests fixtures -maxdepth 6 -type f 2>/dev/null | grep -Ei 'roads|rail|trade|transport|route|corridor|segment|bridge|ferry|crossing|depot|siding|yard|restriction|operator|network|graph|evidence|release|rollback|governed' | sort
 find data/raw data/work data/quarantine data/processed data/catalog data/triplets data/published data/receipts data/proofs -maxdepth 2 -type f 2>/dev/null | sort
 ```
 
-## 12. Validation expectations
+[Back to top](#top)
+
+---
+
+## 13. Validation expectations
 
 Useful validation for this feature boundary should cover:
 
 - no Roads/Rail/Trade feature imports or reads lifecycle data roots directly;
 - claim-bearing transport views consume governed API envelopes only;
 - malformed transport envelopes render safe error or abstain states;
-- `roads-rail-trade` app/domain segment and `transport` schema/contract segment are documented and not silently mixed;
-- road, rail, historic route, route event, operator status, access restriction, and network-edge claims remain distinct;
+- `roads_rail_trade`, `roads-rail-trade`, and `transport` path forms are documented and not silently mixed;
+- road, rail, historic route, route event, operator status, access restriction, network-edge, and movement-story claims remain distinct;
 - graph projections and movement-story nodes are visibly derived and evidence-bound;
+- current navigation, emergency closure, bridge safety, and rail operating authority are not rendered as KFM authority;
 - settlement, hydrology, archaeology, hazards, infrastructure, people/land, and other cross-lane truth is not overwritten by transport UI;
+- denial messages do not leak sensitive infrastructure, private-property, cultural-resource, restricted-source, or operational details;
 - Evidence Drawer handoff preserves EvidenceRef/EvidenceBundle handles without exposing protected content;
-- Focus Mode renders finite outcomes and never direct model output as route, closure, title, or operational truth;
-- export handoff requires citation, disclaimer, rights, release, correction, and rollback support.
+- Focus Mode renders finite outcomes and never direct model output as route, closure, title, graph, or operational truth;
+- compare and export handoffs require citation, disclaimer, rights, release, correction, stale-state, and rollback support;
+- UI output does not expose secrets, exact restricted locations, critical-infrastructure details, source-restricted records, private data, prompt/model traces, or navigation instructions.
 
-## 13. Safe change pattern
+[Back to top](#top)
+
+---
+
+## 14. Safe change pattern
 
 For Roads/Rail/Trade feature changes:
 
 1. Add or update route inventory and per-view contract.
-2. Add fixtures for open, historical, regulatory, modeled, derived, restricted, denied, held, abstained, malformed, loading, stale, corrected, rolled-back, and empty states.
+2. Add fixtures for open, historical, regulatory, modeled, synthetic, derived, restricted, denied, held, abstained, malformed, loading, stale, corrected, rolled-back, and empty states.
 3. Test lifecycle-data denial and governed API-only behavior.
 4. Preserve source role, time-kind, graph/derived labels, cross-lane ownership, review, release, rollback, rights, and citation fields through UI state.
-5. Update this README, parent `features/README.md`, roads/rail/trade docs, and parent app README when public behavior changes.
+5. Verify denial messaging does not reveal exposure hints, operational authority, restricted infrastructure, cultural-resource detail, transform parameters, or reconstruction clues.
+6. Verify compare, export, Focus Mode, and Evidence Drawer handoffs cannot bypass policy, source-role discipline, graph-derived labeling, release, correction, stale-state, or rollback checks.
+7. Update this README, parent `features/README.md`, adapter README, roads/rail/trade docs, transport compatibility docs, policy README, and parent app README when public behavior changes.
 
-## 14. Definition of done
+[Back to top](#top)
+
+---
+
+## 15. Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Roads/Rail/Trade feature file inventory and route ownership are documented.
 - [ ] Governed API and adapter dependencies are explicit.
 - [ ] Source-role, graph-projection, cross-lane ownership, release, stale-state, and rollback states are represented in UI fixtures.
-- [ ] Transport slug split is handled intentionally.
+- [ ] Transport slug split is handled intentionally and linked to ADR/migration posture.
 - [ ] Direct lifecycle-data import/read checks are covered.
-- [ ] Navigation/closure-authority denial states are tested.
-- [ ] Source-role and object-family anti-collapse states are tested.
+- [ ] Navigation/closure/bridge-safety/rail-operating authority denial states are tested.
+- [ ] Source-role, object-family, and graph-derived anti-collapse states are tested.
+- [ ] Denial messaging is tested for no exposure hints.
+- [ ] Cross-lane ownership inheritance is tested.
 - [ ] Finite states cover answer, restrict, abstain, deny, error, hold, loading, stale, corrected, rollback, and empty cases.
-- [ ] Export, Focus Mode, and Evidence Drawer handoffs are tested for safe output if present.
+- [ ] Evidence Drawer, Focus Mode, Compare, and Export handoffs are tested for safe output if present.
+- [ ] Parent feature/adapter/source/app READMEs and Roads/Rail/Trade docs/policy/schema-contract compatibility surfaces are updated when public behavior changes.
 
-## 15. Open verification items
+[Back to top](#top)
+
+---
+
+## 16. Open verification items
 
 | Item | Why it matters |
 |---|---|
-| Confirm Roads/Rail/Trade feature implementation files beyond README | Prevents overclaiming feature maturity |
-| Confirm route inventory | Required for public/semi-public UI boundary review |
-| Confirm governed API transport envelopes | Required for trust membrane enforcement |
-| Confirm `roads-rail-trade` vs `transport` slug handling | Prevents schema/contract path drift |
-| Confirm source-role and object-family fixtures | Required before claim-bearing transport UI claims |
-| Confirm graph projection and movement-story behavior | Required before derived network claims |
-| Confirm release, correction, stale-state, and rollback states | Required before public map-layer claims |
-| Confirm Focus Mode and Evidence Drawer behavior | Required before claim-bearing UI claims |
-| Confirm export handoff | Required before public download workflows |
-| Confirm package scripts beyond TODO | Required before build/test claims |
+| Confirm Roads/Rail/Trade feature implementation files beyond README | Prevents overclaiming feature maturity. |
+| Confirm route inventory | Required for public/semi-public UI boundary review. |
+| Confirm governed API transport envelopes | Required for trust membrane enforcement. |
+| Confirm `roads_rail_trade` vs `roads-rail-trade` vs `transport` slug handling | Prevents app/schema/contract/policy path drift. |
+| Confirm schema/contract canonical authority after ADR or migration note | Prevents parallel transport authority. |
+| Confirm source-role and object-family fixtures | Required before claim-bearing transport UI claims. |
+| Confirm graph projection and movement-story behavior | Required before derived network claims. |
+| Confirm graph projection receipts or equivalent provenance | Required before graph-derived map claims. |
+| Confirm release, correction, stale-state, supersession, withdrawal, and rollback states | Required before public map-layer claims. |
+| Confirm release manifest and rollback-card linkage | Required before publication-support claims. |
+| Confirm fixtures and tests | Required before implementation claims. |
+| Confirm Focus Mode and Evidence Drawer behavior | Required before claim-bearing UI claims. |
+| Confirm Compare handoff | Required before visual-difference claims. |
+| Confirm export handoff | Required before public download workflows. |
+| Confirm direct data-root denial | Required for public client trust membrane. |
+| Confirm executable Roads/Rail/Trade policy binding | Required before enforcement claims. |
+| Confirm no exposure-hint messaging | Required before denial-state UI claims. |
+| Confirm package scripts beyond TODO | Required before build/test claims. |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README was a greenfield stub. This replacement adds a bounded Roads/Rail/Trade domain-feature contract without claiming routes, panels, hooks, adapters, fixtures, tests, package scripts, governed API envelopes, graph projections, ReleaseManifests, RollbackCards, Focus Mode, Evidence Drawer, or export handoff are implemented.
+The uploaded README replaced a greenfield Roads/Rail/Trade domain-feature stub with a bounded feature contract without claiming routes, panels, hooks, adapters, fixtures, tests, package scripts, governed API envelopes, graph projections, NetworkProjectionReceipts, ReleaseManifests, RollbackCards, Focus Mode, Evidence Drawer, Compare, or export handoff are implemented. This v0.2 update preserves that structure while adding current repo evidence, supporting Roads/Rail/Trade docs/policy/schema-contract compatibility evidence, stronger no-direct-data-root language, source-role/object-family anti-collapse posture, graph-derived labeling posture, no-exposure-hints posture, cross-lane ownership posture, release/correction/rollback posture, compare/export handoff posture, local-parity expectations, and expanded verification items.
+
+The app path `roads_rail_trade` is documented here because it is the requested Explorer Web feature path. It does not decide the unresolved ADR-level naming split between `roads_rail_trade`, `roads-rail-trade`, `transport`, and related compatibility/domain schema-contract forms.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/features/domains/roads_rail_trade/` should contain Roads/Rail/Trade-specific Explorer Web feature modules only after route contracts, governed API envelopes, graph-projection posture, fixtures, tests, Evidence Drawer behavior, Focus Mode behavior, release/stale/rollback handling, and export handoff are verified.
+`apps/explorer-web/src/features/domains/roads_rail_trade/` should contain Roads/Rail/Trade-specific Explorer Web feature modules only after route contracts, governed API envelopes, graph-projection posture, fixtures, tests, Evidence Drawer behavior, Focus Mode behavior, Compare behavior, release/stale/rollback handling, and export handoff are verified.
 
-It must preserve the trust membrane and transport boundary: the feature may show roads, rail, historic routes, trade corridors, transport facilities, restrictions, operator status, graph projections, and movement-story context, but it must not become route authority, emergency closure authority, settlement/infrastructure truth, hydrology truth, archaeology truth, land ownership truth, release authority, lifecycle storage, or a direct model-output surface.
+It must preserve the trust membrane and transport boundary: the feature may show roads, rail, historic routes, trade corridors, transport facilities, restrictions, operator status, graph projections, and movement-story context, but it must not become route authority, emergency closure authority, settlement/infrastructure truth, hydrology truth, archaeology truth, land ownership truth, legal/title truth, release authority, lifecycle storage, direct model-output surface, or a source of unsupported navigation or operational claims.
 
 <p align="right"><a href="#top">Back to top</a></p>
