@@ -2,16 +2,19 @@
 doc_id: kfm://app/admin/readme
 title: Admin App README
 type: app-readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Apps steward · Security steward · Access steward · Release steward · Audit steward · Docs steward
 created: 2026-06-15
-updated: 2026-06-15
+updated: 2026-07-09
 policy_label: restricted
 related:
   - ../README.md
+  - src/README.md
   - ../governed-api/README.md
   - ../review-console/README.md
+  - ../../README.md
+  - ../../SECURITY.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/doctrine/trust-membrane.md
   - ../../docs/security/AUDIT_INVARIANTS.md
@@ -23,11 +26,14 @@ related:
   - ../../policy/data/README.md
   - ../../release/README.md
   - ../../data/README.md
-tags: [kfm, apps, admin, restricted, least-privilege, audit, break-glass, trust-membrane, deny-by-default]
+  - ../../tools/validators/README.md
+  - ../../tools/watchers/README.md
+tags: [kfm, apps, admin, restricted, least-privilege, audit, break-glass, trust-membrane, deny-by-default, fail-closed, no-public-path]
 notes:
-  - "Replaces the short apps/admin stub with a governed app README."
-  - "Admin is a restricted deployable surface and must not become the normal public path or a bypass around governed-api, release, data lifecycle, policy, evidence, or audit controls."
-  - "Implementation files, routes, auth providers, deployment posture, tests, CI, audit sinks, and break-glass workflow remain NEEDS VERIFICATION."
+  - "v0.2 updates the uploaded Admin app README into a current repo-aware app-lane contract."
+  - "apps/admin/README.md, apps/admin/src/README.md, and apps/README.md were verified through the GitHub app in this update. Implementation files, routes, auth providers, deployment posture, tests, CI, audit sinks, secrets posture, and break-glass workflow remain NEEDS VERIFICATION."
+  - "Admin is a restricted deployable surface and must not become the normal public path or a bypass around governed-api, release, data lifecycle, policy, evidence, audit, correction, or rollback controls."
+  - "Admin actions must be justified, constrained, role-gated, purpose-bound, audited, reviewable, and reversible where they affect trust-bearing state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -44,43 +50,45 @@ notes:
 ![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
 ![root](https://img.shields.io/badge/root-apps%2F-0a7ea4)
 ![surface](https://img.shields.io/badge/surface-restricted__admin-d62728)
+![posture](https://img.shields.io/badge/posture-fail--closed-critical)
 ![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
 
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Admin capabilities](#7-admin-capabilities) · [Definition of done](#14-definition-of-done)
+[Purpose](#1-purpose) · [Current evidence](#2-current-repo-evidence) · [Repo fit](#3-repo-fit) · [Boundary](#4-authority-boundary) · [Inputs](#6-inputs) · [Exclusions](#7-exclusions) · [Admin capabilities](#8-admin-capabilities) · [Definition of done](#15-definition-of-done)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
+> **Status:** draft / current README surface confirmed / implementation behavior `NEEDS VERIFICATION`  
 > **Owners:** `OWNER_TBD` — Apps steward · Security steward · Access steward · Release steward · Audit steward · Docs steward  
 > **Path:** `apps/admin/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED file path / CONFIRMED restricted-admin role from `apps/README.md` / UNKNOWN implementation routes, auth, tests, and deployment state
+> **Truth posture:** CONFIRMED README path and source-tree README / PROPOSED restricted-admin contract / UNKNOWN implementation files, routes, auth, tests, CI, audit sinks, deployment, and break-glass state
 
 > [!CAUTION]
-> `apps/admin/` is not a public client, not the public trust membrane, and not a shortcut around `apps/governed-api/`, `policy/`, `release/`, `data/`, or EvidenceBundle closure. Admin actions must be justified, constrained, role-gated, logged, reviewable, and reversible where they affect trust-bearing state.
+> `apps/admin/` is not a public client, not the public trust membrane, and not a shortcut around `apps/governed-api/`, `policy/`, `release/`, `data/`, EvidenceBundle closure, correction, rollback, or audit controls. Admin actions must be justified, constrained, role-gated, purpose-bound, logged, reviewable, and reversible where they affect trust-bearing state.
 
 ---
 
 ## Quick jump
 
 - [1. Purpose](#1-purpose)
-- [2. Repo fit](#2-repo-fit)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Inputs](#5-inputs)
-- [6. Exclusions](#6-exclusions)
-- [7. Admin capabilities](#7-admin-capabilities)
-- [8. Diagram](#8-diagram)
-- [9. Decision vocabulary](#9-decision-vocabulary)
-- [10. Admin obligations](#10-admin-obligations)
-- [11. Break-glass posture](#11-break-glass-posture)
-- [12. Inspection path](#12-inspection-path)
-- [13. Validation expectations](#13-validation-expectations)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open verification items](#15-open-verification-items)
+- [2. Current repo evidence](#2-current-repo-evidence)
+- [3. Repo fit](#3-repo-fit)
+- [4. Authority boundary](#4-authority-boundary)
+- [5. Default posture](#5-default-posture)
+- [6. Inputs](#6-inputs)
+- [7. Exclusions](#7-exclusions)
+- [8. Admin capabilities](#8-admin-capabilities)
+- [9. Diagram](#9-diagram)
+- [10. Decision vocabulary](#10-decision-vocabulary)
+- [11. Admin obligations](#11-admin-obligations)
+- [12. Break-glass posture](#12-break-glass-posture)
+- [13. Inspection path](#13-inspection-path)
+- [14. Validation expectations](#14-validation-expectations)
+- [15. Definition of done](#15-definition-of-done)
+- [16. Open verification items](#16-open-verification-items)
 
 ---
 
@@ -99,43 +107,78 @@ It must not become:
 - a policy bypass;
 - a secret store;
 - an evidence or source-authority substitute;
-- an unreviewed manual mutation console.
+- an unreviewed manual mutation console;
+- a break-glass bypass;
+- a route around governed API, release, correction, rollback, or audit controls.
 
 [Back to top](#top)
 
 ---
 
-## 2. Repo fit
+## 2. Current repo evidence
+
+| Surface | Status | What it proves | What it does **not** prove |
+|---|---|---|---|
+| `apps/admin/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.2. | App implementation, auth, routes, audit sinks, tests, CI, deployment, or break-glass workflow. |
+| `apps/admin/src/README.md` | **CONFIRMED source-tree README** | The source-tree boundary exists and requires restricted, audited, fail-closed admin implementation if code lands there. | That source files, route inventory, auth wiring, audit sinks, or tests exist. |
+| `apps/README.md` | **CONFIRMED apps-root README** | `apps/` is the deployable applications root and `apps/governed-api/` is the public trust path in doctrine. | That every named app or route is implemented or deployed. |
+| Uploaded Admin app Markdown | **CONFIRMED source text for this update** | Provided the base Admin app contract updated here. | Does not prove live implementation. |
+| Implementation files beyond README | **NEEDS VERIFICATION** | Checkable by repo scan, tests, workflow logs, and deployment evidence. | Not claimed by this README. |
+
+[Back to top](#top)
+
+---
+
+## 3. Repo fit
 
 | Concern | Owning root | Expected relationship |
 |---|---|---|
-| Admin deployable surface | `apps/admin/` | This README and future restricted admin app code, if accepted |
-| App-root boundary | `apps/README.md` | Defines `apps/` as deployable surface and marks `admin/` restricted, not public |
-| Public trust membrane | `apps/governed-api/` | Sole normal public trust path; admin must not replace it |
-| Steward review surface | `apps/review-console/` | Normal role-gated review and promotion workspace |
-| Access policy | `policy/access/` | Who may use bounded admin capabilities |
-| Decision policy | `policy/decision/` | Finite outcomes and safe reason-code posture |
-| Release authority | `release/` | Publication, correction, rollback control |
-| Lifecycle artifacts | `data/` | Data, receipts, proofs, catalog, triplets, published artifacts |
-| Security doctrine | `docs/security/` | Audit, threat model, incident response, secrets, exposure posture |
+| Admin deployable surface | `apps/admin/` | This README and future restricted admin app code, if accepted. |
+| Admin source tree | `apps/admin/src/` | Implementation source for restricted admin code, if implemented. |
+| App-root boundary | `apps/README.md` | Defines `apps/` as deployable surface and marks public clients through governed API. |
+| Public trust membrane | `apps/governed-api/` | Sole normal public trust path; admin must not replace it. |
+| Steward review surface | `apps/review-console/` | Normal role-gated review and promotion workspace. |
+| Access policy | `policy/access/` | Who may use bounded admin capabilities. |
+| Decision policy | `policy/decision/` | Finite outcomes and safe reason-code posture. |
+| Release authority | `release/` | Publication, correction, rollback control. |
+| Lifecycle artifacts | `data/` | Data, receipts, proofs, catalog, triplets, published artifacts. |
+| Security doctrine | `docs/security/` | Audit, threat model, incident response, secrets, exposure posture. |
+| Validators | `tools/validators/` | Admin may display or request validator status; it does not own validator truth. |
+| Deployment/exposure posture | `infra/` | Network, host, auth, secret, and deny-by-default exposure posture. |
 
-## 3. Authority boundary
+[Back to top](#top)
+
+---
+
+## 4. Authority boundary
 
 The admin app may provide a restricted operational interface. It must not own the governance authorities it touches.
 
 ```text
-apps/admin/        = restricted admin deployable surface
-apps/governed-api/ = normal public trust membrane
+apps/admin/          = restricted admin deployable surface
+apps/admin/src/      = restricted admin app implementation source
+apps/governed-api/   = normal public trust membrane
 apps/review-console/ = role-gated steward review surface
-policy/access/     = access and capability decisions
-policy/decision/   = finite outcome / reason-code posture
-release/           = publication, correction, rollback authority
-data/              = lifecycle artifacts, receipts, proofs, registries
-infra/             = deployment, network, host, and deny-by-default exposure posture
-configs/           = non-secret config templates only
+policy/access/       = access and capability decisions
+policy/decision/     = finite outcome / reason-code posture
+release/             = publication, correction, rollback authority
+data/                = lifecycle artifacts, receipts, proofs, registries
+infra/               = deployment, network, host, and deny-by-default exposure posture
+configs/             = non-secret config templates only
 ```
 
-## 4. Default posture
+Safe interpretation:
+
+- **CONFIRMED:** the README surface exists.
+- **PROPOSED:** admin capabilities may be implemented only when least-privilege, purpose-bound, audited, policy-bound, and safe-by-default.
+- **NEEDS VERIFICATION:** implementation files, route inventory, auth provider, access policy integration, audit sink, tests, fixtures, CI, deployment, secrets posture, and break-glass workflow.
+- **DENY:** using this app as the public path, release authority, policy root, lifecycle store, evidence authority, source registry, secret store, or unreviewed mutation console.
+
+[Back to top](#top)
+
+---
+
+## 5. Default posture
 
 Admin access should fail closed.
 
@@ -146,26 +189,36 @@ An admin route, command, panel, or action should return `DENY`, `HOLD`, `ABSTAIN
 - purpose and ticket/reference;
 - target object or service;
 - environment and deployment scope;
-- policy context;
+- access-policy result;
+- decision envelope or reason code;
 - sensitivity and rights context where relevant;
-- audit sink;
+- audit sink and correlation id;
 - rollback or correction target;
 - separation-of-duties requirement;
-- break-glass approval and expiry where applicable.
+- break-glass approval, expiry, and post-action review where applicable.
 
-## 5. Inputs
+[Back to top](#top)
+
+---
+
+## 6. Inputs
 
 | Input family | Examples | Required posture |
 |---|---|---|
-| Subject | user id, service id, role claim, steward assignment | Authenticated and authorized |
-| Capability | view audit, inspect config, rotate operational state, trigger dry-run, lock release candidate | Explicit finite action |
-| Purpose | incident id, review ticket, maintenance window, release-support task | Required for consequential action |
-| Target | service, release candidate, receipt, policy bundle, config template, audit query | Governed object reference |
-| Context | environment, tenant/project, sensitivity tier, release state, time window | Scoped and auditable |
-| Policy state | access decision, sensitivity result, rights result, release/review state | Resolved before action |
-| Audit metadata | request id, actor, outcome, reason code, before/after hash where safe | Required for consequential action |
+| Subject | user id, service id, role claim, steward assignment | Authenticated and authorized. |
+| Capability | view audit, inspect config, rotate operational state, trigger dry-run, lock release candidate | Explicit finite action. |
+| Purpose | incident id, review ticket, maintenance window, release-support task | Required for consequential action. |
+| Target | service, release candidate, receipt, policy bundle, config template, audit query | Governed object reference. |
+| Context | environment, tenant/project, sensitivity tier, release state, time window | Scoped and auditable. |
+| Policy state | access decision, sensitivity result, rights result, release/review state | Resolved before action. |
+| Audit metadata | request id, actor, outcome, reason code, before/after hash where safe | Required for every admin request. |
+| Rollback/correction context | rollback card, correction notice, release ref, receipt ref, steward approval | Required for consequential mutation. |
 
-## 6. Exclusions
+[Back to top](#top)
+
+---
+
+## 7. Exclusions
 
 | Does not belong here | Correct home |
 |---|---|
@@ -178,24 +231,34 @@ An admin route, command, panel, or action should return `DENY`, `HOLD`, `ABSTAIN
 | Lifecycle artifacts, receipts, proofs, catalog, triplets | `data/` |
 | Release manifests, rollback cards, correction notices | `release/` |
 | Deployment/network/firewall posture | `infra/` |
-| Secrets, tokens, credentials, private keys | Secret manager / environment-specific secure store |
-| One-off maintenance scripts | `scripts/` until promoted with review |
+| Secrets, tokens, credentials, private keys, signing material | Secret manager / environment-specific secure store. |
+| One-off maintenance scripts | `scripts/` until promoted with review. |
+| Public-sensitive exports, exact sensitive locations, living-person/DNA details, or source-restricted records | denied unless separately governed and public-safe. |
 
-## 7. Admin capabilities
+[Back to top](#top)
+
+---
+
+## 8. Admin capabilities
 
 Capability names below are proposed examples, not implementation proof.
 
 | Capability | Purpose | Default posture |
 |---|---|---|
-| `view_health` | Inspect service health and dependency status | Read-only, audited |
-| `view_audit` | Inspect audit events and receipt presence | Restricted, purpose-bound |
-| `view_config` | Inspect non-secret active configuration and template diffs | Redact sensitive values |
-| `run_dry_run` | Trigger validation or release dry-run without publishing | No side effects beyond receipt |
-| `hold_candidate` | Apply or recommend hold on a candidate | Requires policy reason and audit record |
-| `request_rollback` | Initiate rollback workflow request | Release authority still owns decision |
-| `break_glass` | Emergency bounded maintenance action | Time-limited, dual-reviewed, fully audited |
+| `view_health` | Inspect service health and dependency status. | Read-only, audited. |
+| `view_audit` | Inspect audit events and receipt presence. | Restricted, purpose-bound. |
+| `view_config` | Inspect non-secret active configuration and template diffs. | Redact sensitive values. |
+| `run_dry_run` | Trigger validation or release dry-run without publishing. | No side effects beyond approved report/receipt. |
+| `hold_candidate` | Apply or recommend hold on a candidate. | Requires policy reason and audit record. |
+| `request_rollback` | Initiate rollback workflow request. | Release authority still owns decision. |
+| `request_correction` | Initiate correction workflow request. | Correction authority still owns decision. |
+| `break_glass` | Emergency bounded maintenance action. | Time-limited, purpose-bound, dual-reviewed, fully audited. |
 
-## 8. Diagram
+[Back to top](#top)
+
+---
+
+## 9. Diagram
 
 ```mermaid
 flowchart TD
@@ -209,34 +272,48 @@ flowchart TD
     action -->|read-only| audit1["ALLOW with audit"]
     action -->|state-changing| review{"SOD + rollback/correction support?"}
     review -->|no| hold2["HOLD"]
-    review -->|yes| audit2["ALLOW / RESTRICT with receipt"]
+    review -->|yes| audit2["ALLOW / RESTRICT with audit + receipt"]
 ```
 
-## 9. Decision vocabulary
+[Back to top](#top)
+
+---
+
+## 10. Decision vocabulary
 
 | Decision | Meaning | Required behavior |
 |---|---|---|
-| `ALLOW` | Scoped admin action may proceed | Record actor, purpose, target, scope, time, and reason |
-| `DENY` | Access or action is blocked | Return safe reason code; do not leak protected detail |
-| `RESTRICT` | Action may proceed with reduced scope, read-only mode, redaction, or time limit | Preserve obligations |
-| `HOLD` | Review, approval, rollback, audit sink, or context is missing | Do not perform consequential action |
-| `ABSTAIN` | System cannot decide because support is unresolved | Preserve unresolved handles where safe |
-| `ERROR` | Auth, policy, audit, dependency, or runtime machinery failed | Fail closed and record diagnostic safely |
+| `ALLOW` | Scoped admin action may proceed. | Record actor, purpose, target, scope, time, and reason. |
+| `DENY` | Access or action is blocked. | Return safe reason code; do not leak protected detail. |
+| `RESTRICT` | Action may proceed with reduced scope, read-only mode, redaction, or time limit. | Preserve obligations. |
+| `HOLD` | Review, approval, rollback, audit sink, or context is missing. | Do not perform consequential action. |
+| `ABSTAIN` | System cannot decide because support is unresolved. | Preserve unresolved handles where safe. |
+| `ERROR` | Auth, policy, audit, dependency, or runtime machinery failed. | Fail closed and record diagnostic safely. |
 
-## 10. Admin obligations
+[Back to top](#top)
+
+---
+
+## 11. Admin obligations
 
 | Obligation | Example effect |
 |---|---|
-| `least_privilege_required` | Grant only the named capability for the named scope |
-| `purpose_required` | Require ticket, incident, or maintenance-window reference |
-| `audit_required` | Emit action record for every admin request |
-| `redaction_required` | Hide secrets, protected source details, sensitive geometry, or private fields |
-| `dual_review_required` | Require separation of duties for material state changes |
-| `rollback_required` | Require rollback target before public-impacting or release-adjacent action |
-| `time_limit_required` | Expire elevated access automatically |
-| `no_public_path` | Admin must not serve as normal public or semi-public surface |
+| `least_privilege_required` | Grant only the named capability for the named scope. |
+| `purpose_required` | Require ticket, incident, or maintenance-window reference. |
+| `audit_required` | Emit action record for every admin request or fail closed. |
+| `redaction_required` | Hide secrets, protected source details, sensitive geometry, or private fields. |
+| `dual_review_required` | Require separation of duties for material state changes. |
+| `rollback_required` | Require rollback target before public-impacting or release-adjacent action. |
+| `correction_required` | Require correction path when trust-bearing state may change. |
+| `time_limit_required` | Expire elevated access automatically. |
+| `no_public_path` | Admin must not serve as normal public or semi-public surface. |
+| `route_inventory_required` | Admin routes must be inventoried and classified before deployment claims. |
 
-## 11. Break-glass posture
+[Back to top](#top)
+
+---
+
+## 12. Break-glass posture
 
 Break-glass is a constrained exception, not a normal operating path.
 
@@ -248,9 +325,16 @@ A break-glass action should require:
 - narrow target scope;
 - pre-action and post-action audit records;
 - rollback or recovery target where applicable;
-- follow-up review and correction notice when trust-bearing state changes.
+- follow-up review and correction notice when trust-bearing state changes;
+- post-incident review before the exception pattern is reused.
 
-## 12. Inspection path
+Break-glass must not become a hidden permanent role, default admin path, public-path bypass, or release shortcut.
+
+[Back to top](#top)
+
+---
+
+## 13. Inspection path
 
 Implementation files, routes, auth providers, audit sinks, tests, deployment posture, and CI remain `NEEDS VERIFICATION`.
 
@@ -260,7 +344,11 @@ find apps/governed-api apps/review-console policy/access docs/security infra con
 find release data/receipts data/proofs -maxdepth 5 -type f 2>/dev/null | grep -Ei 'admin|audit|rollback|correction|release|receipt' | sort
 ```
 
-## 13. Validation expectations
+[Back to top](#top)
+
+---
+
+## 14. Validation expectations
 
 Useful validation for this app should cover:
 
@@ -269,39 +357,52 @@ Useful validation for this app should cover:
 - missing purpose or target returns `HOLD`;
 - missing audit sink returns `ERROR` or `HOLD`;
 - state-changing action without rollback/correction support returns `HOLD`;
+- break-glass request without approval, expiry, scope, or post-review returns `DENY` or `HOLD`;
 - sensitive fields and secrets are never rendered;
 - admin cannot become the normal public path;
-- admin cannot bypass `apps/governed-api/`, policy gates, release decisions, or lifecycle boundaries.
+- admin cannot bypass `apps/governed-api/`, policy gates, release decisions, lifecycle boundaries, or EvidenceBundle closure;
+- reusable logic is extracted to `packages/` where appropriate rather than copied into app-private code.
 
-## 14. Definition of done
+[Back to top](#top)
+
+---
+
+## 15. Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Implementation files, routes, and deployment surface are inventoried.
+- [ ] Implementation files, routes, source tree, and deployment surface are inventoried.
 - [ ] Authentication and authorization provider is documented.
 - [ ] Admin capabilities are finite and policy-bound.
 - [ ] Audit sink and receipt strategy are linked and tested.
-- [ ] Break-glass workflow is documented, time-limited, and tested.
+- [ ] Break-glass workflow is documented, time-limited, purpose-bound, dual-reviewed, and tested.
 - [ ] State-changing actions require separation of duties and rollback/correction support.
 - [ ] Secret redaction and sensitive-field redaction are tested.
 - [ ] Public-path bypass checks are covered by tests or route inventory.
+- [ ] Parent/source READMEs, runbooks, policy docs, and deployment docs are updated when behavior changes.
 
-## 15. Open verification items
+[Back to top](#top)
+
+---
+
+## 16. Open verification items
 
 | Item | Why it matters |
 |---|---|
-| Confirm whether app implementation exists beyond README | Prevents overclaiming admin maturity |
-| Confirm auth provider and role model | Required for least-privilege access |
-| Confirm route inventory | Required to prove no public-path bypass |
-| Confirm audit event schema and sink | Required for accountability |
-| Confirm deployment exposure posture | Required for deny-by-default operations |
-| Confirm break-glass process | Required before emergency admin claims |
-| Confirm tests and fixtures | Required before enforcement claims |
-| Confirm secrets scanning and redaction | Required before admin deployment |
+| Confirm whether app implementation exists beyond README | Prevents overclaiming admin maturity. |
+| Confirm auth provider and role model | Required for least-privilege access. |
+| Confirm route inventory | Required to prove no public-path bypass. |
+| Confirm source-tree files under `apps/admin/src/` | Required before implementation claims. |
+| Confirm audit event schema and sink | Required for accountability. |
+| Confirm deployment exposure posture | Required for deny-by-default operations. |
+| Confirm break-glass process | Required before emergency admin claims. |
+| Confirm tests and fixtures | Required before enforcement claims. |
+| Confirm secrets scanning and redaction | Required before admin deployment. |
+| Confirm CI/workflow gates | Required before automated enforcement claims. |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README was a short stub: `Restricted admin surface. Not on the normal public path. Justified, constrained, audited.` This replacement preserves that intent while adding governance boundaries, access posture, audit expectations, capability constraints, break-glass discipline, and open verification items.
+The uploaded README already replaced a short stub: `Restricted admin surface. Not on the normal public path. Justified, constrained, audited.` This v0.2 update preserves that intent while adding current repo evidence, source-tree linkage, stronger no-shortcut language, correction/rollback/break-glass obligations, and bounded implementation status.
 
 It does not claim that admin routes, auth, deployment, audit sinks, tests, CI, or break-glass workflow are implemented.
 
@@ -311,6 +412,6 @@ It does not claim that admin routes, auth, deployment, audit sinks, tests, CI, o
 
 `apps/admin/` should remain a restricted, audited, least-privilege administrative surface.
 
-It must not become the normal public path, release authority, lifecycle store, policy authority, secret store, or shortcut around governed APIs, EvidenceBundle closure, release controls, correction, rollback, or audit.
+It must not become the normal public path, release authority, lifecycle store, policy authority, secret store, evidence authority, source registry, or shortcut around governed APIs, EvidenceBundle closure, release controls, correction, rollback, or audit.
 
 <p align="right"><a href="#top">Back to top</a></p>
