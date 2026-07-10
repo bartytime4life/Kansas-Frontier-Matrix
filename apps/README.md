@@ -1,404 +1,492 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/apps-readme
 title: apps/ — Deployable Applications
-type: standard
-version: v1
+type: root-readme
+version: v0.2
 status: draft
-owners: TBD-apps-steward
+owners: OWNER_TBD — Apps steward · API steward · UI steward · Review steward · CLI steward · Worker steward · Admin steward · Security steward · Release steward · Docs steward
 created: 2026-05-10
-updated: 2026-05-10
+updated: 2026-07-09
 policy_label: public
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/map-shell.md
-  - docs/adr/ADR-0001-schema-home.md
+  - ../README.md
+  - ../docs/doctrine/directory-rules.md
+  - ../docs/doctrine/trust-membrane.md
+  - ../docs/architecture/map-shell.md
+  - ../docs/architecture/governed-api/README.md
+  - governed-api/README.md
+  - explorer-web/README.md
+  - review-console/README.md
+  - cli/README.md
+  - workers/README.md
+  - admin/README.md
   - packages/README.md
-  - data/README.md
-  - release/README.md
-tags: [kfm, apps, deployables, trust-membrane]
+  - ../packages/README.md
+  - ../data/README.md
+  - ../release/README.md
+  - ../runtime/README.md
+  - ../policy/README.md
+  - ../schemas/contracts/v1/
+  - ../contracts/
+  - ../infra/README.md
+  - ../configs/README.md
+tags: [kfm, apps, deployables, trust-membrane, governed-api, explorer-web, review-console, cli, workers, admin, fail-closed, finite-outcomes]
 notes:
-  - Authority for this folder derives from Directory Rules §7.1.
-  - Per-app subfolders are PROPOSED until verified against mounted repo state.
+  - "Refreshes the apps root README into a current repo-aware deployables boundary contract."
+  - "apps/ is the canonical deployable-application root. It is not a schema, contract, policy, lifecycle-data, release, proof, receipt, runtime-adapter, shared-package, source-admission, pipeline, config, infra, or artifact authority root."
+  - "The normal public trust path is apps/governed-api/. Public and semi-public clients must not read RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, canonical/internal stores, or model runtime output directly."
+  - "Current app README surfaces verified in this revision include governed-api, explorer-web, review-console, cli, workers, admin, and the unusual apps/packages drift-guard README. Implementation files, routes, tests, deployments, logs, dashboards, workflow pass state, and runtime behavior remain NEEDS VERIFICATION unless separately cited."
+  - "v0.2 adds a current evidence basis, Directory Rules placement basis, updated app-lane map, apps/packages drift signal, minimum safe apps-root slice, runtime anti-bypass matrix, safe change pattern, validation expectations, and bounded implementation truth posture."
 [/KFM_META_BLOCK_V2] -->
 
-# `apps/` — Deployable Applications
+<a id="top"></a>
 
-> The deployable surface of KFM. Every public client, every steward console, every operator CLI, every background worker lives here — and every one of them respects the trust membrane.
+<div align="center">
 
-<!-- impact block -->
+# Deployable Applications
 
-[![status: active](https://img.shields.io/badge/status-active-2ea44f)](#status)
-[![authority: canonical](https://img.shields.io/badge/authority-canonical-3a82f6)](#authority-level)
-[![directory rules: §7.1](https://img.shields.io/badge/directory--rules-%C2%A77.1-6f42c1)](../docs/doctrine/directory-rules.md)
-[![public trust path: apps%2Fgoverned--api](https://img.shields.io/badge/public%20trust%20path-apps%2Fgoverned--api-orange)](#the-apps-and-their-roles)
-[![review: codeowners + apps steward](https://img.shields.io/badge/review-CODEOWNERS%20%2B%20apps%20steward-lightgrey)](#review-burden)
+`apps/`
 
-**Owners:** apps steward · subsystem owners per sub-app *(TBD — see CODEOWNERS)*  
-**Status:** active (canonical root)  
-**Last reviewed:** 2026-05-10
+**Canonical deployable-application root for Kansas Frontier Matrix: governed API, map-first Explorer Web, review console, operator CLI, background workers, and restricted admin surfaces — all constrained by the trust membrane, finite outcomes, policy/evidence/release gates, and reversible change discipline.**
 
-**Jump to:** [Purpose](#purpose) · [What belongs](#what-belongs-here) · [What does NOT belong](#what-does-not-belong-here) · [Directory tree](#directory-tree) · [Apps & roles](#the-apps-and-their-roles) · [Trust membrane](#trust-membrane-invariant) · [Diagram](#diagram) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Related folders](#related-folders) · [ADRs](#adrs) · [Open questions](#open-questions--needs-verification)
+![status](https://img.shields.io/badge/status-draft-blue)
+![root](https://img.shields.io/badge/root-apps%2F-0a7ea4)
+![authority](https://img.shields.io/badge/authority-canonical-2ea44f)
+![trust path](https://img.shields.io/badge/public__trust__path-apps%2Fgoverned--api-df7e00)
+![outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-2ea44f)
+![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
 
----
+[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Belongs](#5-what-belongs-here) · [Exclusions](#6-what-does-not-belong-here) · [App map](#7-app-lane-map) · [Trust membrane](#10-trust-membrane-invariant) · [Definition of done](#18-definition-of-done)
 
-## Purpose
-
-`apps/` is the **deployable** surface of the Kansas Frontier Matrix. It holds the runnable applications — services, UIs, consoles, CLIs, and workers — that turn governed contracts, schemas, policies, packages, pipelines, and lifecycle data into something a person, machine, or external client can actually use.
-
-It is the *only* root where a deployable application belongs. Shared library code lives in [`packages/`](../packages/). Source-specific fetchers live in [`connectors/`](../connectors/). Pipeline logic lives in [`pipelines/`](../pipelines/). Local AI runtime adapters live in [`runtime/`](../runtime/). `apps/` *composes* these into the things that ship.
+</div>
 
 ---
-
-## Authority level
-
-**Canonical.** `apps/` is a canonical responsibility root per Directory Rules §3 and §5. The public trust path of KFM — the boundary across which any external or semi-external client must travel — is operationalized inside `apps/governed-api/`. No other folder may take that role.
-
----
-
-## Status
-
-| Field | Value |
-|---|---|
-| Authority | **Canonical** |
-| Conformance | Subject to Directory Rules §7.1 and §15 |
-| Doctrine source | `docs/doctrine/directory-rules.md` §7.1 — *CONFIRMED in doctrine* |
-| Per-app presence | **PROPOSED until verified** against mounted repo state |
-| Trust-membrane status | Public clients **MUST** transit `apps/governed-api/` |
 
 > [!IMPORTANT]
-> The role table below is **CONFIRMED in doctrine** (Directory Rules §7.1). Whether each named sub-app exists today, and in what shape, is **PROPOSED / NEEDS VERIFICATION** until checked against current repo evidence. Do not treat this README as proof of implementation maturity.
-
----
-
-## Repo fit
-
-```text
-Kansas-Frontier-Matrix/
-└── apps/        ← you are here (deployable applications)
-```
-
-**Reads from (typical):**
-
-- [`packages/`](../packages/) — shared libraries (evidence-resolver, policy-runtime, schema-registry, ui, maplibre, cesium, …)
-- [`runtime/`](../runtime/) — model adapters, envelope helpers, mock adapter
-- [`schemas/contracts/v1/`](../schemas/) — machine shape contracts (per ADR-0001)
-- [`contracts/`](../contracts/) — object meaning
-- [`policy/`](../policy/) — admissibility and release policy
-- [`configs/`](../configs/) — non-secret config defaults and templates
-- [`data/published/`](../data/) — public-safe outputs (read *only* through the governed API surface, not by bypass)
-
-**Writes to (typical):**
-
-- [`data/receipts/`](../data/) — run, validation, AI, ingest, release receipts
-- [`data/proofs/`](../data/) — evidence bundles, proof packs (via packages)
-- [`release/`](../release/) — release decisions, manifests, rollback cards, correction notices (via authorized apps only)
-- *(workers may emit candidate records and receipts; they MUST NOT publish — see [Trust membrane](#trust-membrane-invariant))*
-
-**Deployed and operated through:** [`infra/`](../infra/) (deny-by-default, least privilege, audit).
-
----
-
-## What belongs here
-
-A folder under `apps/` belongs here if and only if it is **a deployable application** — something that runs as a service, UI, console, CLI, daemon, or batch worker, and is the unit of release.
-
-Concretely, the following file/folder kinds belong under each sub-app:
-
-- Application source code that composes `packages/` and consumes `contracts/`, `schemas/`, `policy/`, `runtime/`.
-- Application-level entry points, manifests, and process definitions.
-- Application-specific configuration *templates* and example values (real values live in [`configs/`](../configs/) or environment-specific secret stores).
-- Application-scoped tests that exercise the deployable surface end-to-end *(unit tests for shared libraries still live in [`tests/`](../tests/) and [`packages/`](../packages/))*.
-- Application-scoped documentation: a `README.md` per sub-app describing role, public/internal boundary, finite outcomes, and operator notes.
-
-## What does NOT belong here
-
-The most useful list in this README. If you are about to add something to `apps/`, check this list **first**.
-
-- **Shared library code.** → [`packages/`](../packages/) (reusable across deployables).
-- **Source-specific fetchers and admitters.** → [`connectors/`](../connectors/).
-- **Executable pipeline logic.** → [`pipelines/`](../pipelines/). Declarative pipeline config → [`pipeline_specs/`](../pipeline_specs/).
-- **Repo-wide validators, generators, builders.** → [`tools/`](../tools/).
-- **One-off operational scripts.** → [`scripts/`](../scripts/) (graduate long-lived, trust-bearing logic to `tools/`, `pipelines/`, or `packages/`).
-- **Lifecycle data of any phase.** → [`data/`](../data/) (`raw/`, `work/`, `quarantine/`, `processed/`, `catalog/`, `triplets/`, `published/`, `receipts/`, `proofs/`, `rollback/`, `registry/`).
-- **Release decisions and manifests.** → [`release/`](../release/). *Released artifacts* live in [`data/published/`](../data/) — see Directory Rules §9.2.
-- **Schemas (machine shape).** → [`schemas/contracts/v1/...`](../schemas/) per ADR-0001.
-- **Contracts (object meaning).** → [`contracts/`](../contracts/).
-- **Policy bundles, sensitivity rules, rights enforcement.** → [`policy/`](../policy/).
-- **Local AI runtime adapters or harnesses.** → [`runtime/`](../runtime/) — kept *behind* `apps/governed-api/`, never a public surface.
-- **Deployment, host, firewall, reverse-proxy, VPN posture.** → [`infra/`](../infra/).
-- **Build outputs, generated docs, QA reports, temporary files.** → [`artifacts/`](../artifacts/) (compatibility root, tightly scoped per Directory Rules §8.2).
-- **Domain-named root folders.** → Domains live as **lanes** inside responsibility roots (Directory Rules §12), never as roots and never as direct `apps/<domain>/` children.
-- **Anything trust-bearing presented as the canonical home.** Receipts, proofs, evidence bundles, release manifests, promotion decisions, rollback cards, and correction notices live under [`data/receipts/`](../data/), [`data/proofs/`](../data/), or [`release/`](../release/) — not inside `apps/`.
-
----
-
-## Directory tree
-
-> **Status:** *Tree shape is CONFIRMED in doctrine (Directory Rules §7.1). Specific sub-app presence in the current repo is **PROPOSED / NEEDS VERIFICATION**.*
-
-```text
-apps/
-├── README.md            # this file
-├── governed-api/        # PUBLIC TRUST PATH — trust membrane, finite-outcome envelopes
-├── explorer-web/        # map-first public/semi-public UI; reads only via governed-api
-├── review-console/      # steward review, promotion, correction, sensitivity decisions
-├── cli/                 # operator CLI — validation, release dry-runs, reports
-├── workers/             # background workers; watcher-as-non-publisher (receipts + candidates only)
-└── admin/               # restricted admin; NOT a normal public path
-```
-
-Each sub-app **MUST** carry its own `README.md` satisfying Directory Rules §15 (purpose, authority, status, what belongs / does not, inputs, outputs, validation, review burden, related folders, ADRs, last reviewed).
-
----
-
-## The apps and their roles
-
-> Role assignments below are **CONFIRMED in doctrine** (Directory Rules §7.1, role table). Implementation presence and maturity remain **PROPOSED / NEEDS VERIFICATION** until checked in-repo.
-
-| App | Role | Public-facing? | Notes |
-|---|---|---|---|
-| [`governed-api/`](./governed-api/) | The trust membrane in executable form. Returns `RuntimeResponseEnvelope` with finite outcomes — **ANSWER**, **ABSTAIN**, **DENY**, **ERROR**. **MUST** be the public trust path. | **Yes — sole public trust path** | Schema home for envelopes: [`schemas/contracts/v1/runtime/`](../schemas/). |
-| [`explorer-web/`](./explorer-web/) | Map-first public/semi-public UI. Reads via `governed-api/`; **never** directly from `data/raw\|work\|quarantine`. | Yes (semi-public) | Renderer libs are shared: [`packages/maplibre/`](../packages/), [`packages/cesium/`](../packages/), [`packages/ui/`](../packages/). |
-| [`review-console/`](./review-console/) | Steward / reviewer surface for promotion, correction, sensitivity, rights review. Role-gated and audited. | No — internal, audited | Calls go through `governed-api/` with elevated, audited roles. |
-| [`cli/`](./cli/) | Operator CLI: validation runs, release dry-runs, reports, maintenance flows. | No | Long-lived, trust-bearing CLI commands; one-offs belong in [`scripts/`](../scripts/). |
-| [`workers/`](./workers/) | Background workers: ingestion, validation, cataloging, tiling, receipts. **Watcher-as-non-publisher** applies: workers emit *receipts* and *candidate* decisions, **never** publish or rewrite catalog. | No | Output paths: [`data/receipts/`](../data/), candidate records under appropriate lifecycle phase. |
-| [`admin/`](./admin/) | Restricted admin. **MUST NOT** become the normal public path. Justified, constrained, documented, audited. | No — restricted | Admin shortcuts are documented exceptions per Directory Rules §10.2 & §13. |
-
-> [!WARNING]
-> **Two-API rule.** If both `apps/api/` and `apps/governed-api/` exist in the repo, the canonical boundary **MUST** be explicit. `apps/governed-api/` is the public trust path; `apps/api/` is either deprecated, internal-only, or a narrowly documented service. This boundary is currently **OPEN / NEEDS VERIFICATION** (Directory Rules §18).
-
----
-
-## Trust membrane invariant
-
-The trust membrane is the boundary that prevents raw, unreviewed, model-generated, or internal-state material from becoming public truth. In `apps/`, it has one operational form: **`apps/governed-api/`**.
-
-The invariants that flow from this:
-
-1. **Public clients MUST transit `apps/governed-api/`.** UI surfaces (including `apps/explorer-web/`) **MUST NOT** read directly from `data/raw/`, `data/work/`, or `data/quarantine/`. They consume governed responses only.
-2. **Responses are finite-outcome.** `apps/governed-api/` returns a `RuntimeResponseEnvelope` whose outcome is one of: **ANSWER**, **ABSTAIN**, **DENY**, **ERROR**. There is no fifth outcome and no silent partial.
-3. **Cite-or-abstain.** When a response carries claims, those claims resolve through `EvidenceRef → EvidenceBundle` via [`packages/evidence-resolver/`](../packages/). When evidence cannot support the claim, the outcome is **ABSTAIN**, not a fluent guess.
-4. **Watcher-as-non-publisher.** `apps/workers/` **emit** receipts and candidate decisions to [`data/receipts/`](../data/) and to the appropriate lifecycle phase. They **do not** publish to [`data/catalog/`](../data/) or [`data/published/`](../data/), and they do not rewrite canonical records.
-5. **Admin shortcuts are not the public path.** `apps/admin/` is justified, constrained, documented, audited — and kept out of normal public traffic.
-6. **Local AI stays behind the membrane.** Local model adapters (e.g., Ollama) live in [`runtime/`](../runtime/) and are reached *only* via `apps/governed-api/`. They never receive direct public client traffic and never read canonical or raw stores directly.
+> **Status:** draft / `NEEDS VERIFICATION`  
+> **Owners:** `OWNER_TBD` — Apps steward · API steward · UI steward · Review steward · CLI steward · Worker steward · Admin steward · Security steward · Release steward · Docs steward  
+> **Path:** `apps/README.md`  
+> **Responsibility root:** `apps/` — deployable application surfaces  
+> **Directory Rules basis:** `apps/` is the canonical implementation root for deployable applications. File location encodes ownership, governance, and lifecycle; deployable app code belongs here, while schemas, contracts, policy, lifecycle data, releases, receipts, proofs, shared packages, source connectors, pipelines, runtime adapters, infrastructure, configs, tests, and artifacts stay in their owning roots.  
+> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED Directory Rules document exists and defines `apps/` as deployable root / CONFIRMED README paths for `apps/governed-api/`, `apps/explorer-web/`, `apps/review-console/`, `apps/cli/`, `apps/workers/`, `apps/admin/`, and `apps/packages/` / PROPOSED apps-root contract / UNKNOWN app source inventory, route wiring, UI files, command inventory, worker jobs, auth providers, test coverage, deployment, logs, dashboards, and CI pass state.
 
 > [!CAUTION]
-> A public route that reads `data/processed/`, `data/raw/`, or any other canonical/internal store directly is a **trust-membrane violation** (Directory Rules §13.5). It does not become acceptable by being convenient.
+> `apps/` is not a place to hide authority. Apps may compose governed behavior, but they must not become schema authority, contract authority, policy authority, lifecycle storage, release authority, proof/receipt storage, shared-package root, runtime-adapter authority, source-admission root, deployment authority, or artifact store. Public and semi-public traffic must cross `apps/governed-api/` and receive finite governed envelopes or released public-safe artifacts only.
 
 ---
 
-## Diagram
+## Quick jump
 
-The trust-membrane shape of `apps/`:
+- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
+- [1. Purpose](#1-purpose)
+- [2. Repo fit](#2-repo-fit)
+- [3. Authority boundary](#3-authority-boundary)
+- [4. Default posture](#4-default-posture)
+- [5. What belongs here](#5-what-belongs-here)
+- [6. What does not belong here](#6-what-does-not-belong-here)
+- [7. App lane map](#7-app-lane-map)
+- [8. Current app README evidence](#8-current-app-readme-evidence)
+- [9. Minimum safe apps-root slice](#9-minimum-safe-apps-root-slice)
+- [10. Trust membrane invariant](#10-trust-membrane-invariant)
+- [11. Diagram](#11-diagram)
+- [12. Inputs](#12-inputs)
+- [13. Outputs](#13-outputs)
+- [14. Runtime anti-bypass matrix](#14-runtime-anti-bypass-matrix)
+- [15. Inspection path](#15-inspection-path)
+- [16. Validation expectations](#16-validation-expectations)
+- [17. Safe change pattern](#17-safe-change-pattern)
+- [18. Definition of done](#18-definition-of-done)
+- [19. Open verification items](#19-open-verification-items)
+
+---
+
+## 0. Evidence basis for this revision
+
+This README is a documentation boundary, not runtime proof. The 2026-07-09 revision updates an existing apps-root README and keeps implementation maturity bounded while aligning the deployables root with verified app README surfaces and Directory Rules placement posture.
+
+| Evidence item | Status | What it supports | What it does not prove |
+|---|---|---|---|
+| `apps/README.md` exists on `main`. | CONFIRMED | This is an existing root README update, not a new path proposal. | It does not prove all app source, routes, tests, workflows, deployments, or runtime behavior exist. |
+| `docs/doctrine/directory-rules.md` exists and states that file location encodes ownership, governance, and lifecycle. It lists `apps/` as the deployables root and identifies `apps/governed-api/` as the public trust path. | CONFIRMED placement doctrine | `apps/` is the canonical deployable-application root and should not absorb other authority roots. | It does not prove app implementation maturity or current pass state. |
+| `apps/governed-api/README.md` exists and describes Governed API as the executable trust membrane for finite `RuntimeResponseEnvelope` outcomes. | CONFIRMED README path and app posture | The normal public trust path is represented by a documented app lane. | It does not prove route handlers, DTOs, middleware, auth, deployment, or CI pass state. |
+| `apps/explorer-web/README.md` exists and states Explorer Web must read through governed API only and must not directly read lifecycle or canonical/internal stores. | CONFIRMED README path and UI boundary posture | The map-first public/semi-public UI lane is documented. | It does not prove UI routes, shell wiring, tests, or deployment behavior. |
+| `apps/review-console/README.md` exists and describes a role-gated steward review surface. | CONFIRMED README path and review posture | The internal review app lane is documented. | It does not prove mutating review workflows, schemas, fixtures, audits, or separation-of-duty enforcement. |
+| `apps/cli/README.md` exists and describes a restricted operator CLI for validation, dry-runs, reports, diffs, and governed maintenance. | CONFIRMED README path and CLI posture | The operator CLI lane is documented. | It does not prove command inventory, package metadata, workflows, or pass state. |
+| `apps/workers/README.md` exists and states workers are non-publishing background executors. | CONFIRMED README path and worker posture | The workers lane is documented as watcher-as-non-publisher. | It does not prove job definitions, queues, schedules, tests, or deployment state. |
+| `apps/admin/README.md` exists and states Admin is restricted, fail-closed, and not the normal public path. | CONFIRMED README path and admin posture | The restricted admin lane is documented. | It does not prove auth providers, break-glass flows, audit sinks, or deployment posture. |
+| `apps/packages/README.md` exists and treats `apps/packages/` as an unusual path / drift guard, not the shared package root. | CONFIRMED drift-guard README path | The apps root currently contains a documented anomaly that must not harden into a package root. | It does not prove contents beyond that README, migration intent, imports, or retention decision. |
+
+[Back to top](#top)
+
+---
+
+## 1. Purpose
+
+`apps/` is the deployable surface of KFM. It contains application units that can run as services, user interfaces, internal consoles, operator CLIs, background workers, or restricted admin surfaces.
+
+An app may compose:
+
+- schemas from `schemas/contracts/v1/`;
+- semantic contracts from `contracts/`;
+- policy and admissibility from `policy/`;
+- reusable implementation from `packages/`;
+- runtime adapters from `runtime/` behind the governed API;
+- released public-safe artifacts through governed access paths;
+- receipts, proofs, release records, and lifecycle data only through the responsibilities assigned to their owning roots.
+
+This directory is not proof that any application is deployable, tested, configured, monitored, or production-ready. Runtime behavior, endpoint inventories, routes, worker schedules, command inventories, dashboards, deployment state, and CI pass state remain `NEEDS VERIFICATION` unless separately cited from current evidence.
+
+[Back to top](#top)
+
+---
+
+## 2. Repo fit
+
+| Concern | Owning root | Expected relationship |
+|---|---|---|
+| Deployable apps | `apps/` | This root. App-local source, app-local tests, app-local docs, entry points, and deployable composition. |
+| Shared reusable implementation | `packages/` | Reusable libraries consumed by apps; not nested under `apps/` by default. |
+| Runtime/model adapters | `runtime/` | Behind `apps/governed-api/`; never a direct public surface. |
+| Machine shape | `schemas/contracts/v1/` | Apps consume schemas; apps do not author schema authority. |
+| Object meaning | `contracts/` | Apps consume contracts; apps do not redefine object meaning. |
+| Policy/admissibility | `policy/` | Apps call policy/evaluator support; apps do not become policy roots. |
+| Lifecycle data | `data/` | Apps must not bypass lifecycle boundaries or treat data paths as public truth. |
+| Receipts/proofs | `data/receipts/`, `data/proofs/` | Apps may emit or reference through governed lanes; not stored in app folders. |
+| Release decisions | `release/` | Authorized apps may support release workflows; release authority stays in `release/`. |
+| Source acquisition | `connectors/` | Connectors fetch/admit sources; they are not apps and do not publish. |
+| Pipeline execution | `pipelines/`, `pipeline_specs/` | Pipelines run lifecycle transformations; apps may trigger or report, not absorb pipeline roots. |
+| Repo-wide validators/builders | `tools/`, `scripts/` | Long-lived validators and generators live outside apps. |
+| Deployment/exposure | `infra/`, `configs/` | Deny-by-default infra and non-secret config stay outside app source. |
+| Tests/fixtures | `tests/`, `fixtures/`, app-local tests | Repo-wide proof belongs in test roots; app-local tests may live with the app when scoped to that deployable. |
+| Build/QA/temp outputs | `artifacts/` | Compatibility output root; never trust-bearing authority. |
+
+## 3. Authority boundary
+
+`apps/` owns deployable application composition. It does not own sovereign truth.
+
+```text
+apps/                    = deployable application surfaces
+apps/governed-api/       = normal public trust path
+apps/explorer-web/       = public/semi-public map-first UI consumer
+apps/review-console/     = role-gated steward review surface
+apps/cli/                = operator/maintainer command surface
+apps/workers/            = non-publishing background workers
+apps/admin/              = restricted admin surface, not public path
+apps/packages/           = drift guard / anomaly unless justified by ADR or migration note
+```
+
+Owning roots that must not be collapsed into `apps/`:
+
+```text
+schemas/     = machine shape
+contracts/   = object meaning
+policy/      = admissibility and release rules
+data/        = lifecycle data, receipts, proofs, registry, published artifacts
+release/     = publication decisions, rollback, correction
+packages/    = shared libraries
+runtime/     = local adapters behind governed API
+connectors/  = source admitters
+pipelines/   = executable lifecycle logic
+infra/       = deployment and exposure posture
+configs/     = non-secret configuration templates
+```
+
+## 4. Default posture
+
+The default posture for every app is fail-closed.
+
+A trust-bearing app response should not be public or semi-public unless it can preserve:
+
+- finite outcome grammar: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`;
+- caller role, audience, and authorization posture;
+- policy decision and reason code;
+- EvidenceRef / EvidenceBundle support for claim-bearing answers;
+- source role, rights, sensitivity, release, correction, rollback, stale/freshness, and review state where material;
+- redaction, generalization, aggregation, delay, suppression, or transform receipts where material;
+- safe error behavior with no internal route, stack trace, filesystem, prompt, secret, protected geometry, or source-system leakage;
+- audit-safe request, decision, evidence, release, transform, and correction references.
+
+## 5. What belongs here
+
+A folder belongs under `apps/` when it is a deployable application or application-specific subtree for one deployable.
+
+Accepted app-local content includes:
+
+- app source code and entry points;
+- app-local route registration and handler composition;
+- app-local UI surface code;
+- app-local command surfaces;
+- app-local worker runners and job wiring;
+- app-local tests and fixtures scoped to that deployable;
+- app-local README and operator notes;
+- app-local configuration examples that contain no secrets and do not replace `configs/`;
+- app-local deployment metadata only when it is not the deployment authority and does not replace `infra/`.
+
+## 6. What does not belong here
+
+| Does not belong here | Correct home | Reason |
+|---|---|---|
+| Shared libraries | `packages/` | Reuse belongs in a shared package root, not hidden under an app. |
+| Runtime/model adapters | `runtime/` | Adapters remain behind the governed API and are not public surfaces. |
+| Schemas | `schemas/contracts/v1/` | Machine shape has a dedicated authority root. |
+| Contracts | `contracts/` | Object meaning has a dedicated authority root. |
+| Policy rules/bundles | `policy/` | Apps consume policy; they do not define policy authority. |
+| RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED data | `data/` | Lifecycle data stays in lifecycle roots. |
+| Receipts and proofs | `data/receipts/`, `data/proofs/` | Trust support records are not app files. |
+| Release manifests, rollback cards, correction notices | `release/` | Release decisions are separate from deployable code. |
+| Source fetchers/admitters | `connectors/` | Source admission is not app authority. |
+| Pipeline logic/specs | `pipelines/`, `pipeline_specs/` | Lifecycle transformations stay in pipeline roots. |
+| Repo-wide validators/builders | `tools/` | Validators and generators are not app-local unless scoped to one app. |
+| One-off scripts | `scripts/` | Do not hide operational scripts inside app lanes. |
+| Infrastructure/network/host posture | `infra/` | Exposure and deployment controls stay outside app source. |
+| Secrets | Secret manager / environment references only | Never commit secrets in app source or examples. |
+| Generated artifacts | `artifacts/` when appropriate | Apps are not output stores. |
+| Domain as app root | Domain lanes under correct responsibility roots | Domain topic does not justify `apps/<domain>/`. |
+
+## 7. App lane map
+
+| App lane | Role | Exposure posture | Current README status | Critical boundary |
+|---|---|---|---|---|
+| `apps/governed-api/` | Executable trust membrane; finite governed envelopes and safe projections. | Public/semi-public trust path | CONFIRMED README path | Ordinary clients must not receive lifecycle paths, unpublished candidates, internal records, stack traces, or filesystem refs. |
+| `apps/explorer-web/` | Map-first public/semi-public UI shell. | Public/semi-public client | CONFIRMED README path | Must use governed API envelopes, released artifacts, safe layer manifests, tiles, and evidence payloads; no direct lifecycle/canonical reads. |
+| `apps/review-console/` | Role-gated steward review and decision surface. | Internal / audited | CONFIRMED README path | Review support must not become publication authority or public data editor. |
+| `apps/cli/` | Operator/maintainer command surface for validation, dry-runs, reports, diffs, and maintenance. | Restricted / operator | CONFIRMED README path | Commands must not bypass policy, evidence, release, correction, or rollback controls. |
+| `apps/workers/` | Background workers for ingest-adjacent jobs, validation, catalog/build support, receipts, candidates, stale signals. | Internal / background | CONFIRMED README path | Watcher-as-non-publisher: workers emit receipts/candidates, never publish or rewrite catalog/canonical truth. |
+| `apps/admin/` | Restricted administrative surface. | Restricted / fail-closed | CONFIRMED README path | Admin is not the normal public path and must not bypass governed API, policy, evidence, release, correction, rollback, or audit controls. |
+| `apps/packages/` | Unusual path / drift guard. | Not a deployable by default | CONFIRMED README path | Must not become a shadow `packages/` root or convenience package bucket. |
+
+## 8. Current app README evidence
+
+This table tracks README surfaces verified during this revision. It is not implementation maturity proof.
+
+| Path | Status in this revision | Maturity boundary |
+|---|---|---|
+| `apps/governed-api/README.md` | CONFIRMED path and app contract | Unknown route handlers, DTOs, middleware, authorization, runtime behavior, deployment, dashboards, CI pass state. |
+| `apps/explorer-web/README.md` | CONFIRMED path and UI trust-boundary contract | Unknown implementation files, routes, tests, build state, deployment. |
+| `apps/review-console/README.md` | CONFIRMED path and review app boundary contract | Unknown app source, decision recorder, audit sinks, tests, fixtures, CI, deployment. |
+| `apps/cli/README.md` | CONFIRMED path and operator CLI contract | Unknown command inventory, framework, packaging, tests, workflow integration. |
+| `apps/workers/README.md` | CONFIRMED path and worker non-publisher contract | Unknown worker source, job definitions, queues, schedules, tests, deployment. |
+| `apps/admin/README.md` | CONFIRMED path and restricted admin contract | Unknown auth providers, break-glass flow, audit sinks, tests, deployment. |
+| `apps/packages/README.md` | CONFIRMED path and drift-guard contract | Unknown contents beyond README, imports, package metadata, migration/retention decision. |
+
+## 9. Minimum safe apps-root slice
+
+A smallest safe `apps/` root should provide:
+
+| Slice item | Minimum requirement | Why it matters |
+|---|---|---|
+| Root README | States deployable-app boundary and trust membrane | Prevents apps from absorbing other authority roots |
+| App README per lane | Every app has purpose, boundary, inputs, exclusions, validation, and open items | Keeps app responsibilities inspectable |
+| Governed API boundary | Public trust path is explicit | Prevents public clients from bypassing governance |
+| Explorer Web boundary | UI reads governed surfaces only | Prevents raw/canonical/internal reads from client surfaces |
+| Worker boundary | Workers cannot publish or rewrite catalog/canonical truth | Preserves promotion as governed transition |
+| Admin/CLI boundary | Restricted tools are not public paths or release shortcuts | Prevents operator convenience from becoming authority |
+| Drift guards | Unusual app-root paths are classified | Prevents `apps/packages/`-style drift from hardening |
+| Verification backlog | Unknown source/test/deploy/pass state remains visible | Prevents docs from pretending runtime maturity |
+
+## 10. Trust membrane invariant
+
+The operational trust membrane for normal public/semi-public traffic is `apps/governed-api/`.
+
+The invariant means:
+
+1. Public and semi-public clients use governed API envelopes and released public-safe artifacts, not lifecycle stores or internal canonical stores.
+2. Claim-bearing `ANSWER` outputs require evidence support, policy allowance, release/correction/rollback context where material, and citation/limitation posture.
+3. Missing support returns `ABSTAIN`, not generated filler.
+4. Policy or exposure risk returns `DENY`, not partial leaked detail.
+5. Runtime faults return safe `ERROR`, not stack traces or internal object handles.
+6. Workers emit receipts and candidates only; they do not publish or rewrite canonical catalog records.
+7. Admin and CLI actions are role-gated, audited, reversible where possible, and not the normal public path.
+8. AI/model adapters are server-side and downstream of policy/evidence gates; model output is never root truth.
+
+## 11. Diagram
 
 ```mermaid
 flowchart LR
-  subgraph Public["Public / semi-public clients"]
-    EW["apps/explorer-web/<br/>(map-first UI)"]
-    EXT["External clients<br/>(API consumers)"]
-  end
+    subgraph Public["Public / semi-public clients"]
+        EW["apps/explorer-web\nmap-first UI"]
+        EXT["external clients"]
+    end
 
-  subgraph Trust["apps/governed-api/ — trust membrane"]
-    GAPI["governed-api<br/>finite outcomes:<br/>ANSWER · ABSTAIN · DENY · ERROR"]
-  end
+    subgraph Trust["apps/governed-api/\ntrust membrane"]
+        GAPI["finite RuntimeResponseEnvelope\nANSWER · ABSTAIN · DENY · ERROR"]
+    end
 
-  subgraph Internal["Internal & restricted apps"]
-    RC["apps/review-console/"]
-    CLI["apps/cli/"]
-    WK["apps/workers/<br/>(watcher-as-non-publisher)"]
-    ADM["apps/admin/<br/>(restricted)"]
-  end
+    subgraph Restricted["Restricted / internal apps"]
+        RC["apps/review-console\nreview + decisions"]
+        CLI["apps/cli\noperator commands"]
+        ADM["apps/admin\nrestricted admin"]
+        WK["apps/workers\nnon-publishing jobs"]
+    end
 
-  subgraph Behind["Behind the membrane"]
-    RT["runtime/<br/>(model adapters, envelopes)"]
-    PKG["packages/<br/>(evidence-resolver,<br/>policy-runtime, ui, …)"]
-    POL["policy/"]
-    SCH["schemas/contracts/v1/"]
-    CON["contracts/"]
-  end
+    subgraph Authority["Authority roots outside apps"]
+        SCH["schemas/"]
+        CON["contracts/"]
+        POL["policy/"]
+        PKG["packages/"]
+        RT["runtime/"]
+        REL["release/"]
+        DATA["data/\nRAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED"]
+        REC["data/receipts + data/proofs"]
+    end
 
-  subgraph Lifecycle["data/ (lifecycle)"]
-    RAW["raw/ · work/ · quarantine/"]
-    PROC["processed/ · catalog/ · triplets/"]
-    PUB["published/"]
-    REC["receipts/ · proofs/"]
-  end
+    EW --> GAPI
+    EXT --> GAPI
+    RC --> GAPI
+    CLI --> GAPI
+    ADM -. "restricted, audited" .-> GAPI
 
-  REL["release/<br/>(decisions, manifests,<br/>rollback, corrections)"]
+    GAPI --> SCH
+    GAPI --> CON
+    GAPI --> POL
+    GAPI --> PKG
+    GAPI --> RT
+    GAPI --> REL
+    GAPI --> DATA
+    GAPI --> REC
 
-  EW --> GAPI
-  EXT --> GAPI
-  RC --> GAPI
-  CLI --> GAPI
-
-  GAPI --> RT
-  GAPI --> PKG
-  GAPI --> POL
-  GAPI --> SCH
-  GAPI --> CON
-  GAPI --> PUB
-
-  WK --> REC
-  WK --> RAW
-  WK --> PROC
-  WK -. "candidates only<br/>no publish" .-> REL
-
-  ADM -. "audited, restricted" .-> GAPI
-
-  classDef trust fill:#fff4e6,stroke:#d97706,stroke-width:2px;
-  classDef public fill:#eef6ff,stroke:#3a82f6;
-  classDef internal fill:#f3f4f6,stroke:#6b7280;
-  class GAPI trust;
-  class EW,EXT public;
-  class RC,CLI,WK,ADM internal;
+    WK --> REC
+    WK -. "candidates / signals only" .-> DATA
+    WK -. "no publish / no rewrite" .-> REL
 ```
 
-> *Diagram is doctrine-grounded (Directory Rules §7.1 + §13.5). Edge directionality reflects authoritative responsibility, not implementation wiring; specific call paths are **NEEDS VERIFICATION** in the current repo.*
-
----
-
-## Inputs
-
-`apps/` does not invent material. Each sub-app composes inputs that originate elsewhere:
-
-- **Object meaning** from [`contracts/`](../contracts/).
-- **Machine shape** from [`schemas/contracts/v1/`](../schemas/) (per ADR-0001).
-- **Admissibility, sensitivity, rights, release gates** from [`policy/`](../policy/).
-- **Reusable behavior** from [`packages/`](../packages/) — evidence resolver, policy runtime, schema registry, source registry, hashing, geo, temporal, catalog, release, ui, maplibre, cesium.
-- **Local runtime wiring** from [`runtime/`](../runtime/) — model adapters, envelope helpers, mock adapter, service configs.
-- **Lifecycle data** from [`data/`](../data/), accessed *through the trust membrane*, not by direct file reads from public clients.
-- **Non-secret configuration** from [`configs/`](../configs/). Real secrets resolve via environment-specific secret stores referenced by name.
-
-## Outputs
-
-Apps emit governed outputs only:
-
-- **`RuntimeResponseEnvelope`** responses from `apps/governed-api/` — finite-outcome wrappers consumed by clients and other apps.
-- **Receipts** under [`data/receipts/`](../data/) — run, validation, AI, ingest, release receipts emitted by workers and authorized apps.
-- **Candidate records** under the appropriate lifecycle phase, emitted by `apps/workers/`. *Promotion to the next phase is a governed state transition, not a workers write.*
-- **Decisions** under [`release/`](../release/) — release manifests, promotion decisions, rollback cards, correction notices, withdrawal notices — recorded by authorized apps (typically `review-console/` and `cli/`).
-- **UI surfaces** rendered by `apps/explorer-web/` consuming governed responses only.
-- **Operator output** from `apps/cli/` — reports, validation summaries, release dry-runs.
-
-Apps **do not** emit canonical truth directly into `data/processed/`, `data/catalog/`, or `data/published/` outside the governed promotion path.
-
----
-
-## Validation
-
-How `apps/` is checked. *Specific tooling names below are **NEEDS VERIFICATION** against current repo state; the categories of check are CONFIRMED by Directory Rules and KFM doctrine.*
-
-- **Contract conformance** — apps that emit envelopes are checked against `schemas/contracts/v1/runtime/` (per ADR-0001). *Validator location: PROPOSED — likely [`tools/validators/`](../tools/) per Directory Rules §7.5.*
-- **Policy conformance** — runtime gate policy (Focus Mode, evidence resolution, abstain rules) lives in [`policy/runtime/`](../policy/); promotion gate policy in [`policy/promotion/`](../policy/); release gate policy in [`policy/release/`](../policy/). Apps consume these via [`packages/policy-runtime/`](../packages/).
-- **Trust-membrane checks** — automated checks that no public route reads canonical/internal stores directly (Directory Rules §13.5). *Check location: PROPOSED.*
-- **Watcher-as-non-publisher checks** — verifies `apps/workers/` does not write to `data/catalog/` or `data/published/` (Directory Rules §13.5).
-- **End-to-end tests** — live in [`tests/api/`](../tests/), [`tests/ui/`](../tests/), [`tests/e2e/`](../tests/), and [`tests/runtime_proof/`](../tests/) (finite-outcome and abstain proof). *Per Directory Rules §6.6.*
-- **CI workflow names and badges** — **NEEDS VERIFICATION** against `.github/workflows/`.
-
 > [!NOTE]
-> Replace the badge URLs in the impact block with the actual CI workflow names once verified. Until then they are placeholders.
+> The diagram is responsibility-oriented, not runtime proof. Specific call paths, services, routes, queues, workers, permissions, deployment topology, and logs remain `NEEDS VERIFICATION` until checked from implementation and operational evidence.
 
----
+## 12. Inputs
 
-## Review burden
+Apps may consume these inputs through governed boundaries:
 
-Per Directory Rules §15 and §2.4:
+| Input | Owning root | Required posture |
+|---|---|---|
+| Runtime/request envelopes | `schemas/contracts/v1/runtime/`, `contracts/runtime/` | Validated finite outcome grammar |
+| Evidence refs and bundles | `packages/evidence-resolver/`, `data/proofs/` | Claim-bearing answers require evidence closure |
+| Policy decisions | `policy/`, `packages/policy-runtime/` | Policy gate before public trust-bearing output |
+| Release/correction/rollback state | `release/` | Public outputs reference current release posture where material |
+| Public-safe artifacts | `data/published/` | Released and accessed through governed paths only |
+| Lifecycle candidates | `data/` phases | No direct public reads; worker/operator access is role-gated and audited |
+| Source metadata | `data/registry/`, `docs/sources/`, source descriptors | Source role, rights, sensitivity, and provenance preserved |
+| Runtime/model outputs | `runtime/` behind `governed-api/` | Server-side, bounded, policy/evidence checked, never sovereign truth |
+| Non-secret configs | `configs/` or app-local examples | No secrets, no deployment authority substitution |
 
-- **Per-app changes:** sub-app `CODEOWNERS` + the apps steward.
-- **Cross-app structural changes** (adding, removing, renaming a sub-app; promoting `apps/api/` ↔ `apps/governed-api/` boundary; introducing a new public surface): **ADR required** (Directory Rules §2.4). Reviewers must include the apps steward and at least one subsystem owner (governance, policy, or runtime).
-- **Trust-membrane-affecting changes** (anything that could let a public client read canonical stores directly, or let a worker publish): require explicit sign-off from the governance steward in addition to apps and subsystem owners.
-- **Admin scope changes** (anything that widens what `apps/admin/` can do or who can reach it): require security review and a runbook entry under [`docs/runbooks/`](../docs/runbooks/).
+## 13. Outputs
 
-`CODEOWNERS` references — **NEEDS VERIFICATION** against `.github/CODEOWNERS` or root `CODEOWNERS`.
+Apps may produce or trigger only bounded outputs:
 
----
+| Output | Correct home / channel | Guardrail |
+|---|---|---|
+| `RuntimeResponseEnvelope` | `apps/governed-api/` response | Exactly one finite outcome |
+| UI rendering | `apps/explorer-web/` | Downstream carrier only; not truth source |
+| Review decisions | Governed decision/audit/release paths | Role-gated, policy-bound, auditable, reversible where possible |
+| CLI reports/dry-runs | Operator output / reports | No public publication shortcut |
+| Worker receipts/candidates | `data/receipts/`, appropriate lifecycle candidate lanes | Non-publishing; no catalog rewrite |
+| Release manifests/corrections/rollback cards | `release/` | Authorized release workflow only |
+| Logs/metrics/telemetry | Observability systems | No raw evidence, prompts, secrets, restricted geometry, provider traces, or full protected payloads |
 
-## Related folders
+Apps do not emit canonical truth directly into `data/processed/`, `data/catalog/`, `data/triplets/`, or `data/published/` outside governed promotion and release paths.
 
-| Folder | Relationship |
+## 14. Runtime anti-bypass matrix
+
+| Bypass risk | Required behavior | Review signal |
+|---|---|---|
+| Public client reads `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, or canonical/internal stores directly | Deny; route through governed API and released public-safe projections | Client import/fetch scan blocks direct reads |
+| App returns plain dict/string for trust-bearing response | Wrap/validate `RuntimeResponseEnvelope` or block | Envelope tests reject untyped success |
+| Missing evidence produces generated answer | Return `ABSTAIN` | Missing-evidence fixture blocks answer |
+| Policy denial leaks protected detail | Return safe `DENY` | Sensitive-denial fixture hides blocked payload |
+| Worker publishes or rewrites catalog/published truth | Deny; emit receipt/candidate only | Worker write tests block catalog/published writes |
+| Admin or CLI bypasses release/correction/rollback | Deny; require governed release path and audit refs | Operator tests require release refs |
+| Runtime/model adapter exposed directly to browser | Deny; server-side governed API only | Network/import scan blocks client provider calls |
+| `apps/packages/` accumulates reusable package code | Migrate or justify through ADR; prefer top-level `packages/` | Drift review flags app-root package growth |
+| App embeds schemas, policy tables, release records, proofs, or receipts as authority | Move to owning roots | Directory review blocks parallel authority |
+| Logs/telemetry/cache keys include raw evidence, prompts, secrets, restricted geometry, or full protected payloads | Redact/hash/bucket/omit | Safe-observability tests block leakage |
+| App-local test/readme claims pass state without evidence | Mark `NEEDS VERIFICATION` | PR cites current local/CI run before pass claim |
+
+## 15. Inspection path
+
+Use these commands from the repository root when auditing `apps/`. They are inspection aids, not proof by themselves.
+
+```bash
+find apps -maxdepth 4 -type f | sort
+find apps -maxdepth 2 -name README.md -type f | sort
+find apps -maxdepth 5 -type f 2>/dev/null | grep -Ei 'RuntimeResponseEnvelope|EvidenceBundle|EvidenceRef|PolicyDecision|ReleaseManifest|CorrectionNotice|RollbackCard|AIReceipt|raw|quarantine|processed|catalog|published|model|provider|secret|telemetry|audit|receipt|proof|worker|route|handler|test|fixture' | sort
+find .github/workflows tests fixtures apps -maxdepth 6 -type f 2>/dev/null | grep -Ei 'apps|governed.?api|explorer|review|cli|worker|admin|envelope|abstain|deny|error|no.?raw|no.?publish|safe.?log|telemetry' | sort
+```
+
+## 16. Validation expectations
+
+Useful validation for `apps/` should cover:
+
+- every trust-bearing public/semi-public response returns exactly one `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`;
+- public and semi-public clients cannot directly read lifecycle/canonical/internal stores;
+- Explorer Web uses governed API envelopes, released artifacts, safe layer manifests, tiles, and evidence payloads only;
+- Governed API never leaks lifecycle paths, unpublished candidates, internal records, stack traces, filesystem references, secrets, provider traces, prompt text, or raw model output;
+- Review Console mutation paths are role-gated, policy-bound, auditable, and separated from publication authority;
+- CLI commands are dry-run-first where material, fail-closed, and unable to bypass release/correction/rollback requirements;
+- workers cannot write directly to `data/catalog/` or `data/published/` as publication authority;
+- Admin cannot become the normal public path or bypass governed API/policy/release/evidence controls;
+- `apps/packages/` remains classified as a drift guard unless an accepted ADR/migration note gives it a narrow purpose;
+- app-local tests do not replace repo-wide proof where repo-wide proof is required;
+- CI/pass/deployment/logging claims cite current evidence before being marked confirmed.
+
+## 17. Safe change pattern
+
+For changes under `apps/`:
+
+1. Confirm the target is a deployable app or app-local subtree.
+2. If adding a new app lane, require an ADR or migration note when it changes public surface, trust membrane, admin scope, worker role, route authority, or deployment topology.
+3. Add or update the app README before or with material behavior changes.
+4. Keep schemas, contracts, policy, receipts, proofs, release records, lifecycle data, runtime adapters, shared packages, and infra in their owning roots.
+5. Add negative tests for bypass risks: direct lifecycle reads, missing evidence, policy denial, unsafe errors, unsafe logs, worker publication, direct model/browser path, admin shortcut, and CLI release shortcut.
+6. Preserve audit-safe request, decision, evidence, release, transform, correction, and rollback references.
+7. Update `apps/README.md`, child app READMEs, affected docs, schemas/contracts, policy, tests, fixtures, release docs, and runbooks when behavior materially changes.
+8. Cite current implementation/test/CI/operational evidence before claiming runtime maturity or pass state.
+
+## 18. Definition of done
+
+- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
+- [ ] Each app lane has a README with purpose, boundary, inputs, exclusions, validation, and open items.
+- [ ] Current app source inventory is documented.
+- [ ] Public trust path boundary is verified from route/config evidence.
+- [ ] Explorer Web direct-read denial is tested.
+- [ ] Governed API finite-envelope behavior is tested.
+- [ ] Review Console role/audit/separation-of-duty behavior is tested where mutating.
+- [ ] CLI command inventory, dry-run posture, and release-safety gates are documented and tested.
+- [ ] Workers pass watcher-as-non-publisher tests.
+- [ ] Admin access, audit, and break-glass posture are documented and tested.
+- [ ] `apps/packages/` retention/migration decision is resolved or tracked as drift.
+- [ ] App-local tests and repo-wide tests are reconciled.
+- [ ] CI workflow names and latest pass state are cited before being claimed.
+- [ ] Deployment, logs, dashboards, telemetry, and audit sinks are verified before operational claims.
+
+## 19. Open verification items
+
+| Item | Why it matters |
 |---|---|
-| [`packages/`](../packages/) | Shared libraries consumed by every app. Reusable; one-off workflow steps belong in [`tools/`](../tools/) or [`pipelines/`](../pipelines/) instead. |
-| [`runtime/`](../runtime/) | Local runtime adapters and harnesses. Always **behind** `apps/governed-api/`; never a public surface. |
-| [`connectors/`](../connectors/) | Source-specific fetchers. Output goes to `data/raw/` or `data/quarantine/`; connectors do **not** publish, and are not apps. |
-| [`pipelines/`](../pipelines/) · [`pipeline_specs/`](../pipeline_specs/) | Executable pipeline logic and declarative pipeline configuration. Apps may *trigger* pipelines via governed paths; apps are not pipelines. |
-| [`schemas/`](../schemas/) · [`contracts/`](../contracts/) · [`policy/`](../policy/) | Shape, meaning, and admissibility consumed by apps. Apps must not redefine these. |
-| [`data/`](../data/) | Lifecycle data. Apps consume `data/published/` through governed responses; workers write to `data/receipts/` and candidate lifecycle locations. |
-| [`release/`](../release/) | Release **decisions**. `data/published/` is released **artifacts**. Authorized apps (`review-console/`, `cli/`) write release records. |
-| [`infra/`](../infra/) | Deployment, host, network, exposure posture. Deny-by-default and audit are non-negotiable. |
-| [`configs/`](../configs/) | Non-secret config defaults and templates. No real secrets — ever — even for "test" or "local". |
-| [`tests/`](../tests/) · [`fixtures/`](../fixtures/) | Proof that the doctrine is enforceable, including the trust-membrane checks. |
-| [`docs/`](../docs/) | Human-facing control plane. Architecture and doctrine that explain *why* `apps/` is shaped this way. |
-| [`artifacts/`](../artifacts/) | Compatibility root. Build / docs / QA / temporary only — **never** the canonical home for receipts, proofs, manifests, or release decisions. |
-
----
-
-## ADRs
-
-- **ADR-0001 — Schema home** ([`docs/adr/ADR-0001-schema-home.md`](../docs/adr/ADR-0001-schema-home.md)) — `schemas/contracts/v1/...` is the default machine-schema home consumed by apps in this folder.
-- *Future ADRs that touch `apps/` (e.g., `apps/api/` ↔ `apps/governed-api/` boundary; new sub-app; deprecation of an existing sub-app) MUST be added here.* — Directory Rules §2.4.
-
-ADR presence list — **NEEDS VERIFICATION** against [`docs/adr/`](../docs/adr/).
-
----
-
-## Open questions / NEEDS VERIFICATION
-
-These items track unresolved or unverified state for `apps/` and should be carried into [`docs/registers/VERIFICATION_BACKLOG.md`](../docs/registers/VERIFICATION_BACKLOG.md) until closed:
-
-- **NEEDS VERIFICATION** — Which of the six sub-apps (`governed-api/`, `explorer-web/`, `review-console/`, `cli/`, `workers/`, `admin/`) actually exist in the current repo, and at what maturity. Directory Rules §7.1 defines the role table; current presence is unverified.
-- **OPEN** — Co-existence and boundary between `apps/api/` and `apps/governed-api/`. Directory Rules §18 flags this as an open item; if both exist, the public-trust-path boundary must be made explicit, with the other deprecated, internal-only, or narrowly documented.
-- **NEEDS VERIFICATION** — Whether public routes anywhere in `apps/` currently read from `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, or any other canonical/internal store directly. Any such read is a trust-membrane violation (Directory Rules §13.5).
-- **NEEDS VERIFICATION** — Whether `apps/workers/` currently writes anywhere into `data/catalog/` or `data/published/`. Watcher-as-non-publisher forbids it.
-- **NEEDS VERIFICATION** — CI workflow names that gate `apps/` (referenced by the badge placeholders above) and CODEOWNERS coverage for each sub-app.
-- **NEEDS VERIFICATION** — Whether application-scoped tests live under [`tests/api/`](../tests/), [`tests/ui/`](../tests/), [`tests/e2e/`](../tests/), and [`tests/runtime_proof/`](../tests/) as the per-root convention assumes, or whether competing test homes have grown.
-- **PROPOSED** — Sub-app README scaffolds (one per sub-app, satisfying Directory Rules §15) — not yet drafted in this README's scope.
-
----
-
-## Definition of done — per sub-app
-
-A sub-app under `apps/` is *done enough to ship* when:
-
-- [ ] Sub-app `README.md` exists and satisfies Directory Rules §15.
-- [ ] CODEOWNERS entry exists and is current.
-- [ ] Consumed contracts and schemas are pinned (ADR-0001 home).
-- [ ] Consumed policy bundles are pinned and tested under [`policy/tests/`](../policy/).
-- [ ] End-to-end tests cover finite outcomes for any governed response surface.
-- [ ] Trust-membrane checks pass (no direct canonical/internal store reads from public routes).
-- [ ] Workers (if applicable) pass watcher-as-non-publisher checks.
-- [ ] Release path is wired through [`release/`](../release/) — manifests, rollback cards, correction notices reachable.
-- [ ] Operator runbook exists under [`docs/runbooks/`](../docs/runbooks/) for incidents, rollback drills, validation runs.
-- [ ] No new canonical or compatibility root introduced without an accepted ADR (Directory Rules §2.4).
-
----
+| Confirm app source inventory below each app lane | Prevents docs from overclaiming implementation maturity |
+| Confirm public trust path routing | Required before public API behavior claims |
+| Confirm Explorer Web has no direct lifecycle/canonical reads | Required for trust membrane safety |
+| Confirm Governed API route/DTO/middleware/auth implementation | Required before API maturity claims |
+| Confirm Review Console mutating decision workflow | Required before stewardship/release flow claims |
+| Confirm CLI command inventory and packaging | Required before operator guidance claims |
+| Confirm Workers job inventory, queues, schedules, and write targets | Required before worker safety claims |
+| Confirm Admin auth, audit, and break-glass posture | Required before restricted admin claims |
+| Confirm `apps/packages/` contents and migration/retention decision | Required to prevent package-root drift |
+| Confirm `apps/api/` existence/absence and boundary if present | Required by two-API open question |
+| Confirm CODEOWNERS/app owners | Required for review burden enforcement |
+| Confirm app CI workflow names and current pass state | Required before CI claims |
+| Confirm deployment, logs, dashboards, telemetry, and audit sinks | Required before operational claims |
 
 <details>
-<summary><b>Appendix A — Doctrine excerpts referenced by this README</b></summary>
+<summary>Appendix A — no-loss preservation note</summary>
 
-This appendix preserves the exact doctrine clauses this README depends on, so reviewers can verify alignment without leaving the file. Source: `docs/doctrine/directory-rules.md` (§7.1, §13.5, §15, §18). Treat the source file as authoritative if it ever diverges from this excerpt.
-
-**Directory Rules §7.1 — `apps/` role table (excerpt):**
-
-> `apps/governed-api/` — Trust membrane in executable form. Returns `RuntimeResponseEnvelope` with finite outcomes (ANSWER, ABSTAIN, DENY, ERROR). MUST be the public trust path.  
-> `apps/explorer-web/` — Map-first public UI. Reads via `governed-api/`; never directly from `data/raw|work|quarantine`.  
-> `apps/review-console/` — Steward / reviewer surface. Role-gated and audited.  
-> `apps/cli/` — Operator CLI. Validation, release dry-runs, reports.  
-> `apps/workers/` — Background pipeline workers. Watcher-as-non-publisher applies: workers emit receipts and candidate decisions, never publish or rewrite catalog.  
-> `apps/admin/` — Restricted admin. MUST NOT become the normal public path. Justified, constrained, documented, audited.
-
-**Directory Rules §13.5 — relevant anti-patterns:**
-
-> **Public route reads canonical store** — `apps/explorer-web/` reading `data/processed/` directly. *Fix:* Route reads MUST go through `apps/governed-api/`. Trust membrane (§7.1).  
-> **Connector publishes** — A connector writes to `data/processed/` or `data/published/`. *Fix:* Connectors emit to `data/raw/` or `data/quarantine/`; pipelines promote.  
-> **Watcher publishes** — A worker writes to `data/catalog/` or `data/published/`. *Fix:* Watcher-as-non-publisher invariant: workers emit receipts and candidate decisions only.
-
-**Directory Rules §18 — open question relevant here:**
-
-> **OPEN:** Whether `apps/api/` and `apps/governed-api/` co-exist in the current repo and what the boundary is.
+The previous README already established `apps/` as the deployable root, named the trust membrane, documented the role table, and warned against public direct reads and worker publication. This revision preserves those core invariants, refreshes metadata, adds current evidence basis, adds explicit Directory Rules placement posture, records verified child README surfaces, adds `apps/packages/` as a drift signal, strengthens minimum safe root slice, anti-bypass, validation, safe-change, and definition-of-done sections, and keeps implementation/test/deployment claims bounded.
 
 </details>
 
----
+## Status summary
 
-[⬆ Back to top](#apps--deployable-applications)
+`apps/` is the canonical deployable-application root. `apps/governed-api/` is the normal public trust path. `apps/explorer-web/` is the map-first client surface that must consume governed outputs only. `apps/review-console/`, `apps/cli/`, `apps/workers/`, and `apps/admin/` are bounded internal/restricted deployable lanes. `apps/packages/` is an unusual path and should remain a drift guard unless an accepted decision gives it a narrow purpose.
+
+The root must preserve KFM’s trust membrane: apps may compose governed behavior, but they must not become schema authority, contract authority, policy authority, lifecycle storage, release authority, proof/receipt storage, shared-package root, direct source access, public model-output surface, unsafe observability channel, or unsupported generated-answer surface.
+
+<p align="right"><a href="#top">Back to top</a></p>
