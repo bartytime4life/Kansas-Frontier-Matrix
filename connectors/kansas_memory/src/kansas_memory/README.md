@@ -1,231 +1,260 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/connectors-kansas-memory-src-package-readme
-title: connectors/kansas_memory/src/kansas_memory/ — Kansas Memory Compatibility Package Boundary
+title: Kansas Memory compatibility package boundary
 type: readme
-version: v0.1
+version: v0.2
 status: draft
-owners: OWNER_TBD — Connector steward · Kansas source steward · Archives steward · Rights reviewer · Sensitivity reviewer · CARE/cultural review steward · Validation steward · Package maintainer · Docs steward
+owners: OWNER_TBD — Connector steward · Kansas source steward · Archives steward · Rights reviewer · Sensitivity reviewer · Cultural-care reviewer · Validation steward · Package maintainer · Docs steward
 created: 2026-06-19
-updated: 2026-06-19
-policy_label: public-doctrine; package-boundary; compatibility-lane; no-network-default; rights-gated; sensitivity-gated; no-publication
-proposed_path: connectors/kansas_memory/src/kansas_memory/README.md
-truth_posture: CONFIRMED path exists / NONCANONICAL compatibility package README / MODULE INVENTORY NEEDS VERIFICATION
+updated: 2026-07-12
+policy_label: public-doctrine; compatibility-package; no-network-default; rights-gated; sensitivity-gated; no-publication
+path: connectors/kansas_memory/src/kansas_memory/README.md
+truth_posture: CONFIRMED package path and current file inventory / NONCANONICAL compatibility namespace / NEEDS VERIFICATION implementation and migration state
 related:
+  - ../README.md
   - ../../README.md
   - ../../tests/README.md
   - ../../../kansas/README.md
   - ../../../kansas/kansas-memory/README.md
   - ../../../../docs/sources/catalog/kansas/kansas-memory.md
-  - ../../../../docs/standards/oai-pmh.md
-  - ../../../../docs/standards/iiif.md
-  - ../../../../docs/standards/snac-eac-cpf.md
   - ../../../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - ../../../../data/registry/sources/archives/kansas-memory/
+  - ../../../../schemas/contracts/v1/source/
+  - ../../../../policy/rights/
+  - ../../../../policy/sensitivity/
   - ../../../../data/raw/archives/
   - ../../../../data/quarantine/archives/
-  - ../../../../fixtures/
-  - ../../../../schemas/contracts/v1/source/
-  - ../../../../policy/sensitivity/
-  - ../../../../policy/rights/
   - ../../../../release/
-tags: [kfm, connectors, kansas-memory, package, python, archives, compatibility, no-network, rights, sensitivity, care, source-admission, raw, quarantine, governance]
+tags: [kfm, connectors, kansas-memory, archives, python-package, compatibility, source-admission, raw, quarantine, rights, sensitivity, cultural-care, governance]
 notes:
-  - "This README fills a blank package-boundary README under the legacy-style Kansas Memory connector path."
-  - "The parent connector README documents `connectors/kansas_memory/` as a noncanonical compatibility path; canonical connector work should converge under `connectors/kansas/kansas-memory/` unless an ADR says otherwise."
-  - "This README describes allowed implementation responsibilities only; it does not prove parser modules, fixtures, tests, endpoint access, or CI wiring exist."
-  - "Package code must be no-network by default and may only emit RAW or QUARANTINE handoff envelopes after SourceDescriptor and activation gates are satisfied."
-  - "Kansas Memory rights terms, API/access surface, item-count denominator, activation, fixture inventory, tests, CI wiring, and public-release classes remain NEEDS VERIFICATION."
+  - "Current-session repository evidence confirms this README and an empty __init__.py in the package directory."
+  - "No parser, fetcher, normalizer, validator, handoff, fixture, or runtime module is claimed by this README."
+  - "The parent README classifies connectors/kansas_memory/ as a noncanonical compatibility lane; canonical placement remains governed by repository evidence and an ADR or migration record."
+  - "Any future implementation must remain source-admission-only and may hand off only to governed RAW or QUARANTINE intake."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Kansas Memory Compatibility Package Boundary
+# Kansas Memory compatibility package boundary
 
-> Implementation-boundary README for the legacy `kansas_memory` package namespace. This package may support source-admission parsing and validation helpers only; it is **not** a live harvester, truth store, release engine, public API, or canonical connector home.
+> Package-level contract for the existing `kansas_memory` Python namespace. The namespace is a **noncanonical compatibility surface** and currently provides no verified connector behavior.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Canonicality: noncanonical package path" src="https://img.shields.io/badge/canonicality-noncanonical__package-orange">
-  <img alt="Network: disabled by default" src="https://img.shields.io/badge/network-disabled__by__default-critical">
+  <img alt="Inventory: README plus empty init" src="https://img.shields.io/badge/inventory-README%20%2B%20empty%20__init__-blue">
+  <img alt="Canonicality: compatibility" src="https://img.shields.io/badge/canonicality-compatibility-orange">
+  <img alt="Network: disabled by default" src="https://img.shields.io/badge/network-disabled%20by%20default-critical">
   <img alt="Lifecycle: RAW or QUARANTINE only" src="https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE%20only-orange">
-  <img alt="Publication: none" src="https://img.shields.io/badge/publication-none-critical">
 </p>
 
 > [!IMPORTANT]
-> **Status:** `draft` compatibility package README · **Owner:** `OWNER_TBD`  
-> **Path:** `connectors/kansas_memory/src/kansas_memory/README.md`  
-> **Truth posture:** `CONFIRMED` file exists · `NONCANONICAL` compatibility package path · `NEEDS VERIFICATION` actual modules, fixtures, and CI wiring  
-> **Boundary:** parser/validation helpers only; no live-network default, no source activation, no release artifact, no public archive claim.
+> **CONFIRMED:** this directory contains `README.md` and an empty `__init__.py`.  
+> **UNKNOWN:** no executable connector behavior, fixture set, test implementation, activation wiring, or CI coverage was verified for this package.  
+> **BOUNDARY:** this namespace must not become a truth store, policy authority, release engine, public API, or publication path.
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Allowed responsibilities](#allowed-responsibilities) · [Forbidden responsibilities](#forbidden-responsibilities) · [Expected module map](#expected-module-map) · [Evidence ledger](#evidence-ledger) · [Runtime posture](#runtime-posture) · [Validation contract](#validation-contract) · [Rollback](#rollback) · [Verification backlog](#verification-backlog)
-
----
-
-## Scope
-
-`connectors/kansas_memory/src/kansas_memory/` is a compatibility package namespace for Kansas Memory source-admission helpers.
-
-It may contain parser, normalizer, fixture loader, validation, and handoff-envelope helpers for archive metadata after SourceDescriptor and activation gates are satisfied.
-
-It must not become a live ingestion job, public service, canonical connector home, SourceDescriptor authority, schema authority, policy authority, catalog/triplet authority, proof authority, release authority, or publication authority.
-
-[Back to top ↑](#top)
+**Quick jumps:** [Purpose](#purpose) · [Current evidence](#current-evidence) · [Ownership boundary](#ownership-boundary) · [Permitted future work](#permitted-future-work) · [Prohibited behavior](#prohibited-behavior) · [Admission contract](#admission-contract) · [Validation and tests](#validation-and-tests) · [Graduation gate](#graduation-gate) · [Rollback](#rollback) · [Verification backlog](#verification-backlog)
 
 ---
 
-## Repo fit
+## Purpose
 
-| Surface | Role | Status |
-|---|---|---:|
-| `connectors/kansas_memory/src/kansas_memory/` | Compatibility package namespace. | **CONFIRMED path / NEEDS VERIFICATION modules** |
-| `connectors/kansas_memory/README.md` | Parent compatibility connector README. | **CONFIRMED** |
-| `connectors/kansas_memory/tests/README.md` | Compatibility-path test contract. | **CONFIRMED** |
-| `connectors/kansas/` | Canonical Kansas connector-family lane. | **CONFIRMED** |
-| `connectors/kansas/kansas-memory/` | Proposed canonical Kansas Memory connector home. | **PROPOSED / NEEDS VERIFICATION** |
-| `docs/sources/catalog/kansas/kansas-memory.md` | Human-facing Kansas Memory source profile. | **CONFIRMED** |
-| `data/registry/sources/archives/kansas-memory/` | Proposed SourceDescriptor registry home. | **PROPOSED / NEEDS VERIFICATION** |
-| `data/raw/archives/`, `data/quarantine/archives/` | Candidate handoff targets. | **PROPOSED / NEEDS VERIFICATION** |
-| `release/` | Release and publication controls. | **Out of scope for this package** |
+`connectors/kansas_memory/src/kansas_memory/` is the Python package directory under the existing top-level Kansas Memory compatibility connector.
 
-[Back to top ↑](#top)
+Its responsibility is deliberately narrow:
+
+1. preserve a package namespace while canonical placement is resolved;
+2. document the source-admission boundary for any later compatibility code;
+3. prevent this path from silently becoming a parallel connector authority.
+
+The package does **not** establish that Kansas Memory access is active, lawful for a particular use, technically available, schema-stable, or approved for publication.
 
 ---
 
-## Allowed responsibilities
+## Current evidence
 
-Package code may support:
+| Evidence | Status | What it proves | What it does not prove |
+|---|---:|---|---|
+| `README.md` | **CONFIRMED** | This package contract exists. | Runtime behavior or implementation maturity. |
+| `__init__.py` | **CONFIRMED — empty** | The Python package marker exists. | Public exports, adapter behavior, or supported API. |
+| `connectors/kansas_memory/README.md` | **CONFIRMED** | The parent path is documented as a noncanonical compatibility lane. | Final migration outcome or canonical child implementation. |
+| `connectors/kansas/README.md` | **CONFIRMED** | Kansas sources are coordinated through the Kansas source-family admission lane. | That a `kansas-memory/` implementation is complete or active. |
+| Parser, fetch, normalization, validation, handoff, or error modules | **NOT VERIFIED** | Nothing beyond the package marker is claimed. | Presence, behavior, tests, or CI coverage. |
 
-- fixture-only parser tests;
-- archive metadata shape normalization;
-- source URI and item identity preservation;
-- collection/item identity helpers;
-- rights statement extraction or preservation;
-- sensitivity/CARE flag preservation for downstream policy review;
-- source-role and activation precondition checks;
-- RAW or QUARANTINE handoff-envelope construction;
-- deterministic error objects for quarantine/abstention;
-- compatibility shims that point toward the canonical Kansas connector lane.
+> [!NOTE]
+> Earlier wording described a proposed module tree. That proposal is removed from the package inventory because repository evidence does not confirm those modules.
 
 ---
 
-## Forbidden responsibilities
+## Ownership boundary
 
-Package code must not:
+This package may eventually own **source-specific compatibility code** needed to interpret Kansas Memory responses or fixtures before governed handoff.
 
-- fetch live source material by default;
-- store credentials, tokens, cookies, or session state;
-- decide source activation;
-- decide rights, sensitivity, CARE/cultural review, release class, or public visibility;
-- write directly to processed, catalog, triplet, published, proof, receipt, or release roots;
-- emit public claims, public summaries, public maps, public timelines, or public artifacts;
-- silently treat `connectors/kansas_memory/` as canonical;
-- collapse generated summaries, OCR text, archive metadata, and verified historical claims;
-- bypass SourceDescriptor, validation, EvidenceBundle, policy, release, correction, or rollback gates.
+It does not own:
 
-[Back to top ↑](#top)
+- source registration or activation decisions;
+- canonical schemas or contract definitions;
+- rights, sensitivity, cultural-care, sovereignty, or living-person policy;
+- domain truth or historical interpretation;
+- EvidenceBundle closure;
+- processed records, catalog/triplet projection, proof, release, or publication;
+- public routes, public search, public timelines, public maps, or AI answers.
+
+Where placement or authority is disputed, the package must remain inert and the question must be resolved through current repository evidence, Directory Rules, and an ADR or migration record.
 
 ---
 
-## Expected module map
+## Permitted future work
 
-The following module map is **PROPOSED**, not confirmed implementation:
+After placement and governance review, compatibility code in this namespace may support:
+
+- deterministic parsing of approved fixtures;
+- preservation of collection, item, source URI, and source-native identifiers;
+- loss-minimizing metadata normalization without semantic or evidentiary upgrade;
+- preservation of source dates, retrieval dates, rights statements, access notes, and review flags;
+- explicit detection of missing or ambiguous identity, rights, sensitivity, or metadata fields;
+- construction of caller-owned RAW or QUARANTINE admission candidates;
+- deterministic error results that support deny, abstain, or quarantine outcomes;
+- temporary import shims during an approved migration.
+
+These are **allowed responsibilities**, not claims that the implementation exists.
+
+---
+
+## Prohibited behavior
+
+Code in this package must not:
+
+- perform live network access by default;
+- embed credentials, tokens, cookies, private URLs, or session material;
+- activate a source merely because configuration or code exists;
+- infer rights or public-domain status from accessibility alone;
+- suppress sensitivity, cultural-care, sovereignty, or living-person concerns;
+- convert OCR, generated text, metadata, or an archival item into an authoritative historical claim;
+- write directly to `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`, proof, receipt, or release stores;
+- expose a normal public-client path to RAW, QUARANTINE, canonical stores, or connector internals;
+- treat this compatibility namespace as canonical without an accepted migration decision;
+- publish, promote, or approve its own output.
+
+---
+
+## Admission contract
+
+Any later implementation must preserve the KFM lifecycle:
 
 ```text
-connectors/kansas_memory/src/kansas_memory/
-├── README.md              # CONFIRMED — this package-boundary README
-├── __init__.py            # NEEDS VERIFICATION
-├── descriptors.py         # PROPOSED — SourceDescriptor gate helpers
-├── fetch.py               # PROPOSED — opt-in source access only; no-network default
-├── parse.py               # PROPOSED — metadata parser helpers
-├── normalize.py           # PROPOSED — field normalization without truth upgrade
-├── rights.py              # PROPOSED — rights metadata preservation helpers
-├── sensitivity.py         # PROPOSED — sensitivity/CARE flag preservation helpers
-├── handoff.py             # PROPOSED — RAW/QUARANTINE handoff envelope helpers
-└── errors.py              # PROPOSED — deterministic fail-closed errors
+source material
+  -> SourceDescriptor and activation checks
+  -> compatibility parsing or validation
+  -> RAW candidate | QUARANTINE candidate | DENY | ABSTAIN | ERROR
+  -> downstream validation and evidence work
+  -> PROCESSED
+  -> CATALOG / TRIPLET
+  -> governed release
+  -> PUBLISHED
 ```
 
-Do not create these modules from this README alone; verify repo conventions, tests, and migration plan first.
+The connector boundary ends at a caller-owned admission candidate or a finite failure outcome. A handoff is not promotion, publication, proof, or evidence closure.
 
----
+Minimum candidate metadata should remain explicit where available:
 
-## Evidence ledger
+- source and collection identity;
+- item identifier and source URI;
+- retrieval time and source-provided temporal fields;
+- source-native metadata payload or a lossless reference to it;
+- access method and parser/version identity;
+- rights statement and unresolved-rights flag;
+- sensitivity, cultural-care, sovereignty, and living-person review flags;
+- validation findings and quarantine reasons;
+- deterministic content or payload digest where repository contracts require it.
 
-| Source | Status | Supports | Limits |
-|---|---:|---|---|
-| `connectors/kansas_memory/src/kansas_memory/README.md` | **CONFIRMED** | Target package README exists and was blank before this update. | Does not prove modules, tests, or CI. |
-| `connectors/kansas_memory/README.md` | **CONFIRMED** | Parent path is documented as noncanonical compatibility lane. | Does not prove canonical migration status. |
-| `connectors/kansas_memory/tests/README.md` | **CONFIRMED** | Test posture is no-network by default and source-admission only. | Does not prove tests exist or pass. |
-| `docs/sources/catalog/kansas/kansas-memory.md` | **CONFIRMED** | Kansas Memory source profile identifies rights/access/item-count verification needs and proposed canonical connector home under `connectors/kansas/`. | Does not prove endpoint availability or implementation. |
-| Package modules below this path | **NEEDS VERIFICATION** | This README defines expected implementation boundaries. | Actual files, behavior, and CI status remain unverified. |
+Exact field names and schema homes remain **NEEDS VERIFICATION** until confirmed from accepted contracts and tests.
 
 ---
 
 ## Runtime posture
 
-Default runtime posture for this package:
+Default behavior must be fail-safe:
 
-- no network unless explicitly enabled by reviewed configuration;
-- no activation without SourceDescriptor and SourceActivationDecision;
+- network disabled unless explicitly enabled by reviewed configuration;
+- no activation without accepted source registration and activation evidence;
 - no public output;
-- no direct writes beyond RAW or QUARANTINE handoff envelopes;
-- no secrets in source, fixtures, logs, or test outputs;
-- deterministic failure when rights, sensitivity, CARE review, item identity, source role, metadata shape, or activation state is unresolved.
+- no direct lifecycle advancement beyond RAW or QUARANTINE admission;
+- no secrets in source, fixtures, logs, errors, or receipts;
+- deterministic handling of malformed, ambiguous, or policy-incomplete material;
+- quarantine or abstention when identity, rights, sensitivity, cultural-care, source role, or metadata shape cannot be resolved safely.
 
-A live-source path, if later approved, must be opt-in, source-steward reviewed, credential-safe, terms-reviewed, rate-limited, auditable, and excluded from default tests unless governance explicitly permits it.
+A future live-source mode requires separate source-steward, rights, security, and policy review, plus rate limits, observability, replay-safe receipts, and non-network default tests.
 
 ---
 
-## Validation contract
+## Validation and tests
 
-The package should provide or support validation for:
+Implementation maturity must not be claimed until repository evidence demonstrates at least:
 
-- SourceDescriptor and activation preconditions;
-- collection identity and item identity;
-- source URI and retrieval timestamp preservation;
-- title, creator, date, description, and collection metadata preservation where present;
-- rights statement presence and preservation;
-- sensitivity and CARE/cultural review flag preservation;
-- archive access-method metadata, when verified;
-- fail-closed quarantine/abstention errors;
-- RAW/QUARANTINE-only handoff envelopes;
-- refusal to emit release/public artifacts.
+- fixture-only deterministic parsing tests;
+- malformed and incomplete record tests;
+- identity and source-URI preservation tests;
+- rights and sensitivity metadata preservation tests;
+- unresolved cultural-care or living-person routing tests;
+- no-network-by-default tests;
+- secret-redaction tests;
+- RAW/QUARANTINE-only output tests;
+- refusal tests for processed, catalog, release, or public output;
+- schema or contract validation against the accepted source-admission envelope;
+- CI execution for the relevant connector gate.
 
-Validation must be paired with tests before any implementation maturity is claimed.
+Tests must validate behavior, not merely README wording.
 
-[Back to top ↑](#top)
+---
+
+## Graduation gate
+
+This package may move beyond an inert compatibility marker only when all applicable evidence is present:
+
+- [ ] canonical placement is resolved by current repo convention, ADR, or migration record;
+- [ ] a Kansas Memory source identity and SourceDescriptor are accepted;
+- [ ] activation state is explicit and reviewable;
+- [ ] current access method and source terms are verified;
+- [ ] rights, sensitivity, cultural-care, sovereignty, and living-person handling are approved;
+- [ ] input and output contracts are accepted;
+- [ ] deterministic fixtures and negative cases exist;
+- [ ] no-network and no-publication defaults are tested;
+- [ ] CI runs the connector-specific validation path;
+- [ ] migration and rollback targets are recorded.
+
+Until then, the package remains **documentation plus an empty package marker**.
 
 ---
 
 ## Rollback
 
-Rollback is required if this README is used to justify live harvesting, source activation, canonical status, public release, rights/sensitivity/CARE bypass, or implementation maturity without tests.
-
-Rollback target:
+This documentation-only change is reversible by restoring the prior README blob:
 
 ```text
-commit prior to this update: SHA_TBD_AFTER_GIT_HISTORY_CHECK
+c61a5bc9b0e1e45df33020816ff9949d66421dc2
 ```
 
-Because the file was blank before this update, a safe rollback is to restore the blank placeholder or replace this document with a shorter package-compatibility note until canonical placement and implementation are verified.
+Use a normal revert commit or follow-up pull request. Do not rewrite shared history.
+
+Rollback is required if this README is used to justify canonical status, live harvesting, source activation, policy bypass, implementation maturity, direct lifecycle promotion, or public release without the evidence listed above.
 
 ---
 
 ## Verification backlog
 
-| Item | Status | Needed evidence |
+| Item | Status | Evidence needed |
 |---|---:|---|
-| Confirm actual package module inventory. | **NEEDS VERIFICATION** | Repo tree or mounted workspace. |
-| Confirm canonical Kansas Memory package path. | **NEEDS VERIFICATION** | Directory Rules, ADR, migration note, or repo convention. |
-| Confirm SourceDescriptor and activation gate wiring. | **NEEDS VERIFICATION** | Source registry entry, code, and tests. |
-| Confirm current access method and metadata shape. | **NEEDS VERIFICATION** | Source steward review and current source documentation. |
-| Confirm rights/sensitivity/CARE handling. | **NEEDS VERIFICATION** | Policy references, code, and tests. |
-| Confirm RAW/QUARANTINE handoff envelope shape. | **NEEDS VERIFICATION** | Schemas/contracts and tests. |
-| Confirm fixture strategy and CI wiring. | **NEEDS VERIFICATION** | Fixture registry, workflow files, and test logs. |
+| Resolve the canonical Kansas Memory implementation home. | **NEEDS VERIFICATION** | Current repo tree, Directory Rules, ADR, or migration record. |
+| Confirm whether this compatibility package should remain, redirect, or be removed. | **NEEDS VERIFICATION** | Migration plan and dependency search. |
+| Confirm source identity, SourceDescriptor, and activation state. | **NEEDS VERIFICATION** | Accepted registry records and activation evidence. |
+| Confirm current source access method and terms. | **NEEDS VERIFICATION** | Source-steward and rights review. |
+| Confirm accepted admission envelope and schema home. | **NEEDS VERIFICATION** | Contracts, schemas, validators, and tests. |
+| Confirm fixture inventory and CI wiring. | **NEEDS VERIFICATION** | Repository files and successful workflow evidence. |
+| Confirm cultural-care, sovereignty, sensitivity, and living-person controls. | **NEEDS VERIFICATION** | Policy references, code, tests, and review receipts. |
 
 ---
 
-## Maintainer note
+## Maintainer rule
 
-Keep this package small, deterministic, and reversible. It should parse and preserve archive source material for governed admission only. Public truth, policy decisions, release approval, correction, and rollback live outside this package.
+Keep this namespace inert, small, deterministic, and easy to remove. Compatibility is not authority. Source access is not activation. Metadata is not verified history. Connector output is not publication.
 
 [Back to top ↑](#top)
