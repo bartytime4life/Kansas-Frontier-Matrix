@@ -10,7 +10,7 @@ updated: 2026-07-13
 policy_label: public-doctrine; connector-boundary; greenfield-scaffold; compatibility-path; path-and-surface-conflict; source-admission; rights-fail-closed; sensitivity-fail-closed; care-review; no-network; no-activation; no-publication
 current_path: connectors/kansas_state_archives/README.md
 truth_posture: CONFIRMED repository-present 0.0.0 scaffold, one Python package, README-only local test lane, placeholder descriptor, and TODO-only connector workflows / CONFLICTED compatibility class, final connector path, package scope, KSHS umbrella-versus-surface topology, SourceDescriptor authority, registry migration, and fixture routing / PROPOSED future bounded source-admission contract / UNKNOWN executable runtime, source access, activation, substantive CI coverage, deployment, and release
- evidence_snapshot:
+evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 18f18960ae35155a823053466e7fce039e716c4f
@@ -364,7 +364,7 @@ No one reviewer or successful connector operation may collapse source access, ev
 | Connector workflow files | **CONFIRMED** | TODO-only workflow content. | Substantive test coverage or policy enforcement. |
 | Uploaded KFM doctrine, including Directory Rules | **CONFIRMED doctrine** | Responsibility-root placement, lifecycle law, default-deny posture, and reversible migration requirements. | Current repository behavior by itself. |
 
-Directory Rules place source-specific implementation under `connectors/` while preserving contracts, schemas, policy, registries, tests, fixtures, lifecycle data, and release decisions in their owning responsibility roots. fileciteturn45file9
+Directory Rules place source-specific implementation under `connectors/` while preserving contracts, schemas, policy, registries, tests, fixtures, lifecycle data, and release decisions in their owning responsibility roots.
 
 [Back to top](#top)
 
