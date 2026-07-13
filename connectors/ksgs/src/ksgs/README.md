@@ -1,232 +1,329 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/connectors-ksgs-src-package-readme
-title: connectors/ksgs/src/ksgs/ — KSGS Slug Compatibility Package Boundary
+title: connectors/ksgs/src/ksgs/ — KSGS Greenfield Package Scaffold
 type: readme
-version: v0.1
+version: v0.2
 status: draft
-owners: OWNER_TBD — Connector steward · Package maintainer · Kansas source steward · Geology steward · Hydrology steward · Rights reviewer · Sensitivity reviewer · Validation steward · Docs steward
+owners: OWNER_TBD — Connector steward · Package maintainer · KGS source steward · Geology steward · Hydrology steward · Rights reviewer · Sensitivity reviewer · Security reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-06-19
-policy_label: public-doctrine; package-boundary; compatibility-lane; noncanonical-path; slug-compatibility; no-network-default; fixture-safe; rights-gated; sensitivity-gated; no-publication
+updated: 2026-07-12
+policy_label: public-doctrine; greenfield-scaffold; noncanonical-path; path-and-slug-conflict; source-admission; no-network; no-activation; no-publication
 proposed_path: connectors/ksgs/src/ksgs/README.md
-truth_posture: CONFIRMED path exists / NONCANONICAL compatibility package README / MODULE INVENTORY NEEDS VERIFICATION
+truth_posture: CONFIRMED 0.0.0 greenfield scaffold and placeholder package files / KGS connector path CONFLICTED / connector-local descriptor NONCONFORMING and non-authoritative / executable fetch, admission, validation, lifecycle handoff, tests, and CI ABSENT or UNKNOWN
 related:
+  - ../README.md
   - ../../README.md
+  - ../../pyproject.toml
   - ../../tests/README.md
   - ../../../kgs/README.md
+  - ../../../geology/kgs/README.md
   - ../../../kansas/README.md
-  - ../../../kansas/kgs/README.md
   - ../../../../docs/sources/catalog/kansas/ksgs.md
-  - ../../../../docs/domains/geology/README.md
-  - ../../../../docs/domains/hydrology/README.md
-  - ../../../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - ../../../../data/registry/sources/
-  - ../../../../fixtures/
-  - ../../../../schemas/contracts/v1/source/
-  - ../../../../policy/sensitivity/
-  - ../../../../policy/rights/
-  - ../../../../release/
-tags: [kfm, connectors, ksgs, kgs, package, python, geology, hydrology, slug-compatibility, source-admission, no-network, raw, quarantine, governance]
+  - ../../../../contracts/source/source_descriptor.md
+  - ../../../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../../../control_plane/source_authority_register.yaml
+  - ../../../../data/registry/sources/README.md
+  - ../../../../policy/rights/README.md
+  - ../../../../policy/sensitivity/README.md
+tags: [kfm, connectors, ksgs, kgs, package, python, greenfield, compatibility, path-conflict, geology, hydrology, source-admission, rights, sensitivity, no-network, no-publication]
 notes:
-  - "This README fills a blank package-boundary README under the top-level KSGS slug-compatibility connector path."
-  - "The KGS source profile preserves the `ksgs.md` catalog slug while canonical connector work belongs under `connectors/kansas/kgs/`."
-  - "This README describes allowed implementation responsibilities only; it does not prove parser modules, fixtures, tests, endpoint access, or CI wiring exist."
-  - "Package code must be no-network by default and may only emit RAW or QUARANTINE handoff envelopes after SourceDescriptor and activation gates are satisfied."
+  - "Direct reads at base commit 52f90317a1d3cc54010ae862d6f7f92ff2d18105 confirm package version 0.0.0, an empty __init__.py, one-line fetch.py and admit.py placeholders, and a four-field descriptor.yaml placeholder."
+  - "The proposed connectors/kansas/kgs/ child is absent at the inspected base; repository documents conflict among connectors/kgs/, connectors/ksgs/, connectors/geology/kgs/, proposed connectors/kansas/kgs/, and product-specific top-level KGS lanes."
+  - "The connector-local descriptor uses legacy/minimal fields and does not satisfy the richer SourceDescriptor v1 schema; it is not a registry record or activation decision."
+  - "No live KGS source, current terms, credentials, payload, fixture, executable test, runtime log, lifecycle artifact, or deployment state was inspected for this revision."
+  - "This package performs no fetch, admission decision, lifecycle write, release, or publication in its current state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# KSGS Slug Compatibility Package Boundary
+# KSGS Greenfield Package Scaffold
 
-> Implementation-boundary README for the legacy `ksgs` package namespace under the top-level slug-compatibility connector. This package may support source-admission parsing and validation helpers only; it is **not** a live harvester, truth store, release engine, public API, canonical connector home, or publication path.
+> Repository-grounded boundary for the import namespace at `connectors/ksgs/src/ksgs/`. The package exists, but it is a non-operational `0.0.0` scaffold inside an unresolved KGS connector topology. It is not an active connector, a SourceDescriptor authority, a lifecycle writer, or a publication surface.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Canonicality: noncanonical package path" src="https://img.shields.io/badge/canonicality-noncanonical__package-orange">
-  <img alt="Slug: ksgs preserved" src="https://img.shields.io/badge/slug-ksgs__preserved-blue">
-  <img alt="Network: disabled by default" src="https://img.shields.io/badge/network-disabled__by__default-critical">
-  <img alt="Fixtures: required" src="https://img.shields.io/badge/fixtures-required-blue">
-  <img alt="Lifecycle: RAW or QUARANTINE only" src="https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE%20only-orange">
-</p>
+**Status:** `draft` · `CONFIRMED greenfield scaffold` · `CONFLICTED connector placement` · `no supported command` · `no live-network behavior` · `no activation` · `no publication`
 
 > [!IMPORTANT]
-> **Status:** `draft` compatibility package README · **Owner:** `OWNER_TBD`  
-> **Path:** `connectors/ksgs/src/ksgs/README.md`  
-> **Truth posture:** `CONFIRMED` file exists · `NONCANONICAL` compatibility package path · `NEEDS VERIFICATION` actual modules, fixtures, and CI wiring  
-> **Boundary:** parser/validation helpers only; no live-network default, no source activation, no release artifact, no public claim.
+> At the pinned evidence base, `fetch.py` and `admit.py` contain comments only, `__init__.py` is empty, and `descriptor.yaml` is a nonconforming placeholder. Nothing in this package fetches KGS material, makes an admission decision, emits a candidate envelope, or writes to a KFM lifecycle root.
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Allowed responsibilities](#allowed-responsibilities) · [Forbidden responsibilities](#forbidden-responsibilities) · [Expected module map](#expected-module-map) · [Evidence ledger](#evidence-ledger) · [Runtime posture](#runtime-posture) · [Validation contract](#validation-contract) · [Rollback](#rollback) · [Verification backlog](#verification-backlog)
+> [!CAUTION]
+> Do not add operational code here merely because the import package exists. The repository has not settled the canonical KGS connector path or the `kgs` versus `ksgs` identity. Resolve placement, descriptor authority, product boundaries, ownership, and migration before this package gains behavior.
 
----
+## Quick links
 
-## Scope
-
-`connectors/ksgs/src/ksgs/` is a compatibility package namespace for KSGS/KGS source-admission helpers.
-
-It may contain parser, normalizer, fixture loader, validation, source-role, sub-product identity, rights, sensitivity, geometry, scale/depth context, and handoff-envelope helpers for KGS source metadata after SourceDescriptor and activation gates are satisfied.
-
-It must not become a live ingestion job, public service, canonical connector home, SourceDescriptor authority, schema authority, policy authority, catalog/triplet authority, proof authority, release authority, or publication authority.
-
-[Back to top ↑](#top)
+[Purpose](#purpose) · [Current package](#current-package) · [Repository fit](#repository-fit) · [Descriptor conflict](#descriptor-conflict) · [Product boundaries](#product-boundaries) · [Inputs and outputs](#inputs-and-outputs) · [Implementation boundary](#implementation-boundary) · [Validation](#validation) · [Evidence](#evidence) · [Review and rollback](#review-and-rollback) · [Definition of done](#definition-of-done)
 
 ---
 
-## Repo fit
+## Purpose
 
-| Surface | Role | Status |
-|---|---|---:|
-| `connectors/ksgs/src/ksgs/` | Compatibility package namespace. | **CONFIRMED path / NEEDS VERIFICATION modules** |
-| `connectors/ksgs/README.md` | Parent slug-compatibility connector README. | **CONFIRMED** |
-| `connectors/ksgs/tests/README.md` | Compatibility-path test contract. | **CONFIRMED** |
-| `connectors/kgs/README.md` | Sibling top-level KGS compatibility README. | **CONFIRMED** |
-| `connectors/kansas/kgs/` | Canonical KGS connector path named by source profile. | **CONFIRMED by source profile / NEEDS VERIFICATION implementation depth** |
-| `docs/sources/catalog/kansas/ksgs.md` | KGS source catalog entry using preserved slug. | **CONFIRMED** |
-| `release/` | Release and publication controls. | **Out of scope for this package** |
+This README describes what the current Python namespace is, what it demonstrably does not do, and which gates must close before implementation can begin.
 
-[Back to top ↑](#top)
+Today the package is useful only as:
 
----
+- a visible marker for the live `ksgs` scaffold;
+- a place to document the unresolved connector-path and slug conflict;
+- a fail-closed boundary around placeholder code and metadata;
+- a migration input for a future KGS connector decision.
 
-## Allowed responsibilities
-
-Package code may support:
-
-- fixture-only parser tests;
-- KGS metadata shape normalization;
-- `ksgs` slug compatibility helpers;
-- source-role preservation;
-- KGS sub-product identity helpers;
-- source URI and retrieval timestamp preservation;
-- rights statement extraction or preservation;
-- sensitivity and review-state preservation helpers;
-- geometry, scale, depth, or datum context preservation helpers;
-- SourceDescriptor and activation precondition checks;
-- RAW or QUARANTINE handoff-envelope construction;
-- deterministic error objects for quarantine or abstention;
-- compatibility shims that point toward the canonical `connectors/kansas/kgs/` lane.
+It does not prove that the `ksgs` package name should survive, that this directory is canonical, or that any KGS product is approved for access or admission.
 
 ---
 
-## Forbidden responsibilities
+## Current package
 
-Package code must not:
-
-- fetch live source surfaces by default;
-- store credentials, tokens, cookies, or session state;
-- decide source activation;
-- decide rights, sensitivity, redaction, release class, or public visibility;
-- collapse KGS sub-products into each other or into peer-source records;
-- write directly to processed, catalog, triplet, published, proof, receipt, or release roots;
-- emit public geology, hydrology, production, well-record, or release claims;
-- silently treat `connectors/ksgs/` as canonical;
-- bypass SourceDescriptor, validation, EvidenceBundle, policy, release, correction, or rollback gates.
-
-[Back to top ↑](#top)
-
----
-
-## Expected module map
-
-The following module map is **PROPOSED**, not confirmed implementation:
+Direct file reads at base commit `52f90317a1d3cc54010ae862d6f7f92ff2d18105` confirm this inspected surface:
 
 ```text
-connectors/ksgs/src/ksgs/
-├── README.md              # CONFIRMED — this package-boundary README
-├── __init__.py            # NEEDS VERIFICATION
-├── descriptors.py         # PROPOSED — SourceDescriptor gate helpers
-├── fetch.py               # PROPOSED — opt-in source access only; no-network default
-├── parse.py               # PROPOSED — metadata parser helpers
-├── normalize.py           # PROPOSED — field normalization without truth upgrade
-├── roles.py               # PROPOSED — source-role separation helpers
-├── identity.py            # PROPOSED — sub-product identity helpers
-├── geometry.py            # PROPOSED — geometry/scale/depth preservation helpers
-├── handoff.py             # PROPOSED — RAW/QUARANTINE handoff envelope helpers
-└── errors.py              # PROPOSED — deterministic fail-closed errors
+connectors/ksgs/
+├── pyproject.toml                  # project kfm-connector-ksgs, version 0.0.0
+├── src/
+│   ├── README.md                   # source-layout documentation
+│   └── ksgs/
+│       ├── README.md               # this package boundary
+│       ├── __init__.py             # empty
+│       ├── fetch.py                # one-line greenfield comment
+│       ├── admit.py                # one-line greenfield comment
+│       └── descriptor.yaml         # four-field greenfield placeholder
+└── tests/
+    └── README.md                   # test-boundary documentation
 ```
 
-Do not create these modules from this README alone; verify repo conventions, tests, and migration plan first.
+| Surface | Confirmed state | Consequence |
+|---|---|---|
+| [`pyproject.toml`](../../pyproject.toml) | Declares `kfm-connector-ksgs` at `0.0.0`; no build system, dependencies, Python constraint, package-discovery rule, or command is declared. | Buildability, installability, supported runtime, and public API are `UNKNOWN`. |
+| [`__init__.py`](./__init__.py) | Empty file. | No package API or import-time behavior is implemented. |
+| [`fetch.py`](./fetch.py) | Comment-only placeholder. | No transport, endpoint, authentication, retry, timeout, rate-limit, pagination, caching, or source-head behavior exists. |
+| [`admit.py`](./admit.py) | Comment-only placeholder. | No validation, quarantine, admission, receipt, or handoff behavior exists. |
+| [`descriptor.yaml`](./descriptor.yaml) | `name: ksgs`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Placeholder is incomplete, internally unsafe as an activation basis, and not authoritative. |
+| [`tests/README.md`](../../tests/README.md) | Documentation contract only in the directly inspected path. | Executable package tests and package-specific CI remain absent or `UNKNOWN`. |
+
+The inspected file set is not a substitute for a recursive tree receipt. Any additional inventory claim must be regenerated from the repository at the commit under review.
 
 ---
 
-## Evidence ledger
+## Repository fit
 
-| Source | Status | Supports | Limits |
-|---|---:|---|---|
-| `connectors/ksgs/src/ksgs/README.md` | **CONFIRMED** | Target package README exists and was blank before this update. | Does not prove modules, tests, or CI. |
-| `connectors/ksgs/README.md` | **CONFIRMED** | Parent path is documented as noncanonical slug-compatibility lane. | Does not prove canonical migration status. |
-| `connectors/ksgs/tests/README.md` | **CONFIRMED** | Test posture is no-network by default, fixture-safe, and source-admission only. | Does not prove tests exist or pass. |
-| `docs/sources/catalog/kansas/ksgs.md` | **CONFIRMED** | KGS source profile preserves the `ksgs` slug, confirms canonical connector path `connectors/kansas/kgs/`, and defers slug reconciliation to OPEN-KSGS-13. | Does not prove endpoint availability, rights clearance, activation, or implementation. |
-| Package modules below this path | **NEEDS VERIFICATION** | This README defines expected implementation boundaries. | Actual files, behavior, and CI status remain unverified. |
+KFM's connector root owns source-specific fetch, probe, packaging, and admission support. Source doctrine, registry records, schemas, policy decisions, evidence closure, release decisions, and public-client behavior live elsewhere.
 
----
+The KGS connector topology is currently conflicted:
 
-## Runtime posture
+| Surface | Observed posture | Package implication |
+|---|---|---|
+| `connectors/ksgs/` | Live `0.0.0` greenfield scaffold; its existing READMEs call it noncanonical. | Presence does not grant canonical status or permission to implement. |
+| `connectors/kgs/` | Top-level compatibility README. | Competing source-first name; no package behavior was established by this review. |
+| `connectors/geology/kgs/` | Newer README-only compatibility pointer; rejects domain-scoped implementation and marks canonical placement conflicted. | Useful conflict evidence, not an implementation home. |
+| `connectors/kansas/kgs/` | Proposed by the KGS source catalog, but an exact read returned `404` at the pinned base. | Do not describe it as a present or confirmed canonical child. |
+| `connectors/kgs_surficial/`, `connectors/kgs_bedrock/`, `connectors/kgs_oil_gas_wells/`, `connectors/kgs_kdhe_wwc5/`, `connectors/kgs_las/` | Product-specific compatibility README paths are indexed. | Their existence adds migration scope; it does not activate products or settle packaging. |
+| `docs/sources/catalog/kansas/ksgs.md` | Draft catalog entry retains the `ksgs` document slug and proposes a `kgs` connector child. | Human-facing doctrine input; not source registry or activation authority. |
 
-Default runtime posture for this package:
+> [!NOTE]
+> Directory-level documentation is inconsistent in age and certainty. The newer repository-grounded `connectors/geology/kgs/README.md` and direct path probes outrank stale claims that `connectors/kansas/kgs/` already exists or is conclusively canonical.
 
-- no network unless explicitly enabled by reviewed configuration;
-- no activation without SourceDescriptor and SourceActivationDecision;
-- no public output;
-- no direct writes beyond RAW or QUARANTINE handoff envelopes;
-- no secrets in source, fixtures, logs, or test outputs;
-- deterministic failure when rights, sensitivity, review state, source role, sub-product identity, geometry/scale/depth context, source shape, or activation state is unresolved.
-
-A live-source path, if later approved, must be opt-in, reviewed, credential-safe, terms-reviewed, rate-limited, auditable, and excluded from default tests unless governance explicitly permits it.
+Choosing, renaming, consolidating, or deleting a KGS connector lane affects imports, source IDs, descriptors, fixtures, receipts, and lineage. That decision requires an accepted ADR or explicit migration plan; this README does not make it.
 
 ---
 
-## Validation contract
+## Descriptor conflict
 
-The package should provide or support validation for:
+`descriptor.yaml` is not a usable `SourceDescriptor`.
 
-- SourceDescriptor and activation preconditions;
-- `ksgs` slug versus canonical `kgs/` path separation;
-- source-role preservation;
-- KGS sub-product identity preservation;
-- source URI and retrieval timestamp preservation;
-- rights statement presence and preservation;
-- sensitivity and review-state preservation;
-- geometry, scale, depth, or datum context preservation;
-- fail-closed quarantine or abstention errors;
-- RAW/QUARANTINE-only handoff envelopes;
-- refusal to emit release/public artifacts.
+| Connector-local field | Current value | Current contract posture |
+|---|---|---|
+| `name` | `ksgs` | Not the canonical required `source_id`; the publisher abbreviation and package slug are themselves conflicted. |
+| `role` | `TBD` | Legacy alias; `TBD` is not an accepted source role. KGS products require independent role decisions. |
+| `rights` | `TBD` | Unresolved rights must fail closed. |
+| `sensitivity_floor` | `public` | Legacy alias and unsafe as a permissive default while rights, product, geometry, and review state are unresolved. |
 
-Validation must be paired with tests before any implementation maturity is claimed.
+The inspected SourceDescriptor v1 schema requires a much richer, closed object including identity, descriptor version, source type and role, authority rank, publisher, steward, rights, sensitivity, cadence, access, citation, source head, admissibility limits, public-release posture, review state, release state, and lifecycle state.
 
-[Back to top ↑](#top)
+The same schema declares connector-local minimal fields as deprecated migration aliases. It also requires public release to remain false when rights are unknown, unasserted, or denied, and requires review for restricted or unknown sensitivity.
 
----
+Therefore:
 
-## Rollback
+- do not load `descriptor.yaml` as activation authority;
+- do not infer that `sensitivity_floor: public` makes any KGS record public-safe;
+- do not fill `role` once at publisher level for every KGS product;
+- do not place the authoritative registry instance in this package;
+- do not activate a connector until a conforming product-specific descriptor, review state, and activation decision exist in accepted authority surfaces.
 
-Rollback is required if this README is used to justify live harvesting, source activation, canonical status, public release, rights/sensitivity bypass, source-role collapse, or implementation maturity without tests.
-
-Rollback target:
-
-```text
-commit prior to this update: SHA_TBD_AFTER_GIT_HISTORY_CHECK
-```
-
-Because the file was blank before this update, a safe rollback is to restore the blank placeholder or replace this document with a shorter package-compatibility note until canonical placement and implementation are verified.
+The machine-readable source authority register is currently `PROPOSED` with `entries: []`. The rights and sensitivity policy READMEs are greenfield stubs. Those facts reinforce a default-deny posture; they do not authorize local substitutes.
 
 ---
 
-## Verification backlog
+## Product boundaries
 
-| Item | Status | Needed evidence |
-|---|---:|---|
-| Confirm actual package module inventory. | **NEEDS VERIFICATION** | Repo tree or mounted workspace. |
-| Confirm canonical KGS package path. | **NEEDS VERIFICATION** | Directory Rules, ADR, migration note, or repo convention. |
-| Confirm SourceDescriptor and activation gate wiring. | **NEEDS VERIFICATION** | Source registry entry, code, and tests. |
-| Resolve or retain `ksgs.md` versus `kgs/` slug discrepancy. | **NEEDS VERIFICATION** | OPEN-KSGS-13, ADR, or repo convention. |
-| Confirm rights/sensitivity/review-state handling. | **NEEDS VERIFICATION** | Policy references, code, and tests. |
-| Confirm RAW/QUARANTINE handoff envelope shape. | **NEEDS VERIFICATION** | Schemas/contracts and tests. |
-| Confirm fixture strategy and CI wiring. | **NEEDS VERIFICATION** | Fixture registry, workflow files, and test logs. |
+KGS is a publisher family, not one interchangeable payload. A future accepted connector must preserve product identity and independently govern at least these documented families:
+
+| Product family | Required distinctions | Denied collapse |
+|---|---|---|
+| Surficial and bedrock geologic maps | Map/unit identity, compilation role, scale, vintage, CRS/datum, geometry, source URI. | Map compilation presented as direct observation or current site condition. |
+| Oil-and-gas wells and production | Well, lease/field, reporting period, record type, source role, geometry and uncertainty. | KGS observation or aggregate presented as KCC regulatory determination, reserve, forecast, or per-place truth. |
+| WWC5 water-well records | Joint-program identity, well/completion identity, PLSS derivation, coordinate precision, disclaimer, vintage. | Completion record presented as current water quality, aquifer condition, safe supply, or exact public location by default. |
+| LAS logs and well tops | Well/log/curve/top identity, units, depth reference and datum, interpretation lineage, vintage. | Interpreted top presented as measured curve, canonical geology, or engineering/drilling advice. |
+| Geoportal resources | Resource-specific identity, access method, schema, role, rights, cadence, and geometry. | Mixed portal resources admitted under one publisher-wide role or descriptor. |
+
+One governed capture may serve multiple downstream domains, but Geology, Hydrology, and Environment consumers must not independently recapture the same source product or erase shared provenance.
+
+Exact wells, boreholes, samples, logs, private locations, and harmful cross-source joins must fail closed. PLSS-derived coordinates must retain derivation level and uncertainty. Public availability upstream is not equivalent to KFM rights clearance, sensitivity clearance, or release approval.
 
 ---
 
-## Maintainer note
+## Inputs and outputs
 
-Keep this package small, deterministic, and reversible. It should parse and preserve KGS source material for governed admission only. Public truth, sensitivity policy decisions, release approval, correction, and rollback live outside this package.
+### Current inputs
 
-[Back to top ↑](#top)
+None. The package declares no supported function, class, command, configuration contract, endpoint, credential variable, or fixture format.
+
+### Current outputs
+
+None. The package emits no payload, candidate envelope, receipt, validation report, RAW record, QUARANTINE record, or public artifact.
+
+### Future admissible inputs
+
+Only after placement and activation gates are accepted, a narrow package contract may accept:
+
+- a conforming, reviewed, product-specific SourceDescriptor reference;
+- an explicit activation decision and approved access configuration;
+- caller-supplied bytes, files, or approved transport results;
+- synthetic or rights-cleared fixtures for offline tests;
+- explicit run identity, retrieval time, source-head evidence, and destination intent.
+
+### Future admissible outputs
+
+A future package may return deterministic parse results, validation failures, or RAW/QUARANTINE **candidate envelopes** to governed orchestration. It must not select public release, persist directly into lifecycle roots, or convert connector success into evidence or truth.
+
+---
+
+## Implementation boundary
+
+### Allowed only after the path decision
+
+- narrow, product-dispatched parsing and source-head helpers;
+- explicit opt-in transport behind reviewed configuration;
+- deterministic normalization that preserves source-native values and uncertainty;
+- product, role, rights, sensitivity, geometry, datum, scale, depth, vintage, and disclaimer checks;
+- structured errors suitable for abstention, denial, hold, or quarantine;
+- side-effect-free candidate-envelope construction;
+- offline, synthetic, negative-first fixtures and tests;
+- a migration shim if the accepted ADR retains `ksgs` as a compatibility import.
+
+### Forbidden
+
+- network calls on import or by default;
+- credentials, tokens, cookies, account data, or private endpoints in source, fixtures, docs, logs, or exceptions;
+- publisher-wide default roles or permissive rights/sensitivity assumptions;
+- authoritative SourceDescriptor instances or activation decisions inside the package;
+- direct writes to RAW, QUARANTINE, receipts, processed, catalog, triplet, proof, release, or published roots;
+- silent aliasing among `kgs`, `ksgs`, or product-specific paths;
+- duplicate capture for separate consumer domains;
+- reconstruction or exposure of withheld geometry;
+- operational engineering, drilling, water-supply, hazard, reserve, investment, legal, or safety conclusions;
+- claims of implementation, coverage, validation, activation, or CI maturity without current evidence.
+
+There is intentionally no quickstart. A runnable example would imply an API and behavior that do not exist.
+
+---
+
+## Failure contract
+
+A future implementation must fail deterministically and without sensitive payload echo. Minimum reason families include:
+
+- unresolved connector path or source identity;
+- missing, nonconforming, unreviewed, or inactive descriptor;
+- unknown product or unsupported source shape;
+- unresolved role, rights, attribution, disclaimer, or sensitivity;
+- missing well/log/map/unit identity or source vintage;
+- lost PLSS derivation, coordinate uncertainty, scale, CRS/datum, units, or depth reference;
+- role collapse among observation, aggregate, regulatory, modeled, administrative, candidate, or interpreted material;
+- denied network posture or unapproved host;
+- attempted lifecycle persistence or public-release target.
+
+Unknowns route to `DENY`, `ABSTAIN`, `HOLD`, or a QUARANTINE candidate. They never receive permissive defaults.
+
+---
+
+## Validation
+
+No package build or test command is documented because none is supported by the inspected project metadata.
+
+Before implementation maturity can be claimed, evidence must cover:
+
+1. accepted KGS connector path, package/import name, source-ID convention, and losing-path migration;
+2. complete recursive package and backlink inventory;
+3. build backend, package discovery, supported Python versions, dependency policy, and clean install/import;
+4. product-specific conforming descriptors and explicit activation decisions;
+5. reviewed access methods, current terms, attribution, redistribution, cadence, and source schemas;
+6. no-network default and host/credential controls for opt-in transport;
+7. synthetic or rights-cleared fixtures with negative-path coverage;
+8. source-role, product-identity, KGS/KCC, geometry, PLSS, datum, scale, depth, disclaimer, rights, and sensitivity tests;
+9. deterministic candidate-envelope and lifecycle-boundary tests;
+10. CI discovery and passing package-specific evidence.
+
+Documentation checks for this revision should include one H1, balanced fences, working repository-relative links, no remote badge images, no credential-like strings, a final newline, and an exact one-file diff.
+
+---
+
+## Evidence
+
+Evidence for this revision is bounded to repository `bartytime4life/Kansas-Frontier-Matrix` at commit `52f90317a1d3cc54010ae862d6f7f92ff2d18105`.
+
+| Evidence | Status | Supports | Does not support |
+|---|---|---|---|
+| [`connectors/ksgs/pyproject.toml`](../../pyproject.toml) | `CONFIRMED` | Project name and version `0.0.0`. | Buildability, dependencies, installability, API, or command. |
+| Package files under this path | `CONFIRMED` for exact reads | Empty initializer; comment-only fetch/admit placeholders; four-field descriptor placeholder. | Executable behavior, exhaustive recursive inventory, validation, or activation. |
+| [`connectors/ksgs/tests/README.md`](../../tests/README.md) | `CONFIRMED` | Intended offline compatibility-test posture. | Executable tests or CI success. |
+| [`connectors/geology/kgs/README.md`](../../../geology/kgs/README.md) | `CONFIRMED` | Newer repository-grounded path-conflict and source-first compatibility analysis. | Accepted canonical path or migration. |
+| [`docs/sources/catalog/kansas/ksgs.md`](../../../../docs/sources/catalog/kansas/ksgs.md) | `CONFIRMED draft` | KGS product-family and slug/path proposal context. | Registry authority, current upstream behavior, rights clearance, or activation. |
+| [`contracts/source/source_descriptor.md`](../../../../contracts/source/source_descriptor.md) and [paired singular-path schema](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) | `CONFIRMED draft/PROPOSED` | Richer descriptor contract, legacy-field migration, and fail-closed constraints. | Accepted plural-path migration, persisted KGS descriptor, or runtime enforcement. |
+| [`control_plane/source_authority_register.yaml`](../../../../control_plane/source_authority_register.yaml) | `CONFIRMED` | Register is `PROPOSED` and contains `entries: []`. | Any KGS activation decision. |
+| [Rights](../../../../policy/rights/README.md) and [sensitivity](../../../../policy/sensitivity/README.md) README files | `CONFIRMED` | Both are greenfield stubs. | Executable or reviewed KGS policy. |
+| Exact `connectors/kansas/kgs/README.md` probe | `CONFIRMED absent at base` | Proposed child README was not present at the pinned commit. | Permanent nonexistence or final path decision. |
+
+Not inspected: live KGS services, current terms, credentials, source payloads, private locations, runtime logs, deployed configuration, emitted receipts, or public clients. Treat all associated claims as `UNKNOWN` or `NEEDS VERIFICATION`.
+
+---
+
+## Review and rollback
+
+Review changes here as connector-placement, source-identity, packaging, source-role, rights, sensitivity, subsurface-location, geometry, and lifecycle-boundary changes—even when the diff is documentation-only.
+
+Rollback this README revision if it is used to:
+
+- treat this package or any competing path as canonical without an accepted decision;
+- activate the placeholder descriptor;
+- infer public safety from `sensitivity_floor: public`;
+- claim working fetch, admission, tests, fixtures, CI, or lifecycle output;
+- collapse KGS products or KGS observations into regulatory or generated truth;
+- bypass rights, sensitivity, descriptor, activation, evidence, release, correction, or rollback gates.
+
+Before merge, close the draft change and abandon its scoped branch. After merge, create a transparent revert of the documentation commit; do not rewrite shared history. The baseline target blob is `e5f0501777f22ccaf3003d628b1f225e2b1a251d` at base commit `52f90317a1d3cc54010ae862d6f7f92ff2d18105`.
+
+---
+
+## Definition of done
+
+### Documentation boundary
+
+- [x] Current package files and `0.0.0` maturity are explicit.
+- [x] Placeholder fetch, admit, and descriptor behavior is not overstated.
+- [x] Path and slug conflicts are visible.
+- [x] Descriptor/schema conflict and default-deny result are explicit.
+- [x] Product, role, geometry, rights, sensitivity, and KGS/KCC anti-collapse rules are explicit.
+- [x] Current inputs, outputs, API, commands, tests, activation, and publication are stated as absent or unknown.
+- [x] Evidence limits and rollback target are recorded.
+
+### Implementation readiness
+
+- [ ] Connector-path and slug ADR or migration plan is accepted.
+- [ ] One package/import/source-ID strategy is accepted and losing paths are dispositioned.
+- [ ] Owners and reviewers are assigned.
+- [ ] Product-specific conforming descriptors and activation decisions exist.
+- [ ] Current source access, schemas, terms, rights, attribution, disclaimers, cadence, and corrections are reviewed.
+- [ ] Sensitive-location, PLSS, geometry, datum, scale, depth, and cross-source join policy is executable.
+- [ ] Build, install, import, fixture, test, candidate-envelope, and lifecycle-boundary contracts are implemented.
+- [ ] Default tests are offline, deterministic, negative-first, and CI-discovered.
+- [ ] Correction, invalidation, migration, and rollback are tested.
+
+Until every applicable implementation-readiness item closes, keep this package inert and fail closed.
+
+<p align="right"><a href="#top">Back to top</a></p>
