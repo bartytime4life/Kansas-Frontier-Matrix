@@ -9,7 +9,7 @@ created: 2026-06-16
 updated: 2026-07-13
 policy_label: public; config-sublane; local-overrides; ignored-by-default; non-authoritative; no-secret-store; no-runtime-authority; no-deployment-authority; no-release-authority
 current_path: configs/local/README.md
-truth_posture: CONFIRMED target README, parent configs contract, .gitignore local-lane rules, root .env.example guidance, tracked sibling configuration boundaries, secrets doctrine, and v0.1 introduction lineage / PROPOSED local-override contract, consumer metadata, naming posture, validation matrix, migration rules, and minimum safe local slice / UNKNOWN ignored workstation files, exhaustive local inventories, consumers, loaders, merge precedence, schema bindings, secret-store integration, validators, CI enforcement, deployment integration, owner assignments, and runtime behavior
+truth_posture: CONFIRMED target README, parent configs contract, .gitignore local-lane rules, root .env.example guidance, tracked sibling configuration boundaries, secrets and incident-response doctrine, and v0.1 introduction lineage / PROPOSED local-override contract, consumer metadata, naming posture, validation matrix, migration rules, and minimum safe local slice / UNKNOWN ignored workstation files, exhaustive local inventories, consumers, loaders, merge precedence, schema bindings, secret-store integration, validators, CI enforcement, deployment integration, owner assignments, and runtime behavior
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
@@ -28,7 +28,7 @@ related:
   - ../../.env.example
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/security/SECRETS.md
-  - ../../docs/runbooks/SECRET_LEAK_RUNBOOK.md
+  - ../../docs/security/INCIDENT_RESPONSE.md
   - ../../apps/README.md
   - ../../packages/README.md
   - ../../pipelines/README.md
@@ -47,6 +47,7 @@ notes:
   - "The root .env.example also states that configs/local/ is ignored and forbids committing real secrets."
   - "A path-scoped repository search returned this README but no additional tracked configs/local files. Ignored workstation files are not observable through GitHub and remain UNKNOWN by design."
   - "v0.1 called the lane commit-safe local templates. v0.2 corrects that boundary: commit-safe examples and reusable templates belong in configs/examples/, configs/templates/, configs/dev/, or another reviewed tracked lane; configs/local/ is for uncommitted local overrides."
+  - "docs/security/INCIDENT_RESPONSE.md is confirmed at the pinned base. The separately referenced docs/runbooks/SECRET_LEAK_RUNBOOK.md path was not found and remains NEEDS VERIFICATION; this README does not publish a broken link to it."
   - "Only this Markdown file changes. No local override, example, template, .gitignore rule, .env file, consumer, loader, schema, policy, secret, test, workflow, runtime behavior, deployment binding, release record, or public artifact is created or modified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -184,7 +185,7 @@ The local lane must remain distinct from adjacent configuration responsibilities
 | [`../examples/README.md`](../examples/README.md) | Commit-safe illustrative configuration for named consumers. | Use when reviewers and other contributors should see the file. |
 | [`../templates/README.md`](../templates/README.md) | Reusable tracked configuration templates. | Use when a template is shared rather than workstation-specific. |
 | [`../dev/README.md`](../dev/README.md) | Shared safe development defaults and tracked development templates. | Use when all developers should receive the same development posture. |
-| `configs/test/` | Test-specific configuration inputs. | Use for tracked deterministic test configuration. |
+| [`../test/README.md`](../test/README.md) | Test-specific configuration defaults and templates. | Use for tracked deterministic test configuration. |
 | [`.env.example`](../../.env.example) | Root environment-variable names and safe example values. | Copy or translate into local environment state; never commit the resulting secret-bearing file. |
 | `runtime/` | Runtime adapters and harnesses. | A runtime may consume local config only through verified code. |
 | `infra/` | Deployment, host, network, and exposure controls. | Local files cannot replace infrastructure authority. |
@@ -261,7 +262,7 @@ For local overrides:
 4. Prevent local loaders, loggers, exception handlers, tracing, telemetry, screenshots, and support bundles from echoing secret values.
 5. Never expose local secrets to browser bundles or client-readable environment variables.
 6. Never put a secret-bearing URL in a tracked example, issue, PR, test snapshot, README, or generated report.
-7. Treat accidental tracking or disclosure as an incident: stop use, rotate/revoke, audit access, remove from history where appropriate, and follow the secret-leak runbook.
+7. Treat accidental tracking or disclosure as an incident: stop use, rotate or revoke, audit access, remove from history where appropriate, and follow [`docs/security/INCIDENT_RESPONSE.md`](../../docs/security/INCIDENT_RESPONSE.md).
 8. Use obvious mock markers in tracked examples; never use values that merely "look fake" but are actually active.
 
 ### Git safeguards
@@ -391,7 +392,7 @@ Because local files are ignored, repository CI cannot inspect their values direc
 | Precedence | Merge order with defaults, env, CLI, and secret injection is deterministic and tested. | Fail test. |
 | Redaction | Secrets and private values never appear in logs, errors, telemetry, snapshots, or support bundles. | Security failure. |
 | Policy boundary | Local toggles cannot disable evidence, rights, sensitivity, validation, release, or access-control gates. | `DENY`; fail test. |
-| Exposure boundary | Local bind/host settings cannot silently expose internal services publicly. | Fail closed. |
+| Exposure boundary | Local bind or host settings cannot silently expose internal services publicly. | Fail closed. |
 | Shared reproducibility | Any required local shape has a sanitized tracked example and documented setup. | Incomplete implementation. |
 
 ### Local operator checks
@@ -425,7 +426,7 @@ A verified consumer should cover:
 - unsafe bind or public-exposure attempt;
 - path traversal or destination escape attempt;
 - precedence conflict between local, environment, and CLI values;
-- stale/deprecated field;
+- stale or deprecated field;
 - local value attempting to disable a mandatory governance gate.
 
 [Back to top](#top)
@@ -439,11 +440,11 @@ A verified consumer should cover:
 | Optional local file is absent | Continue with tracked safe defaults and record no false error. |
 | Required local file is absent | Stop with a clear local setup error; do not invent values. |
 | File is malformed | `ERROR`; no partial application unless explicitly designed and tested. |
-| Unknown field appears | Reject or warn according to the verified schema/consumer contract; never silently repurpose it. |
-| Secret reference is unresolved | `DENY` or `ERROR`; do not log the secret name with sensitive context unnecessarily. |
-| File contains a likely real secret | Stop use, remove exposure, rotate/revoke if necessary, and follow incident procedure. |
+| Unknown field appears | Reject or warn according to the verified schema or consumer contract; never silently repurpose it. |
+| Secret reference is unresolved | `DENY` or `ERROR`; do not expose secret-bearing context. |
+| File contains a likely real secret | Stop use, remove exposure, rotate or revoke if necessary, and follow incident procedure. |
 | Local override weakens policy or evidence gates | `DENY`; local configuration cannot override governance. |
-| Local override binds an internal service publicly | `DENY` unless a reviewed infra/security posture explicitly authorizes exposure. |
+| Local override binds an internal service publicly | `DENY` unless a reviewed infra and security posture explicitly authorizes exposure. |
 | Local file conflicts with deployment configuration | Deployment authority wins; surface the conflict rather than merging silently. |
 | Local file is stale or references removed fields | Fail validation or emit an actionable deprecation error. |
 | Consumer behavior is not verified | Mark `NEEDS VERIFICATION`; do not claim the override works. |
@@ -462,7 +463,7 @@ For documentation or code changes that affect `configs/local/`:
 3. Do not add or force-add workstation-specific override values.
 4. Put shared examples, templates, or defaults in their tracked configuration lanes.
 5. Identify every verified consumer and loader path affected by the change.
-6. Document precedence, safe absence behavior, schema/contract references, and redaction.
+6. Document precedence, safe absence behavior, schema or contract references, and redaction.
 7. Add or update tracked tests for loader, precedence, path confinement, redaction, and governance boundaries.
 8. Keep local values out of commits, PR descriptions, issue comments, test snapshots, and generated artifacts.
 9. Explain migration for renamed fields or paths without exposing local values.
@@ -484,7 +485,7 @@ If an ignored local setting needs to become visible to other contributors or CI:
 2. Remove all real secrets, personal paths, private endpoints, sensitive identifiers, and workstation state.
 3. Convert values to obvious placeholders or safe defaults.
 4. Place the sanitized artifact in `configs/examples/`, `configs/templates/`, `configs/dev/`, `configs/test/`, or the consumer-owned tracked lane.
-5. Add schema/contract references and validation.
+5. Add schema or contract references and validation.
 6. Add tracked tests and documentation.
 7. Keep the real local override ignored.
 8. Record compatibility and rollback when field names or precedence change.
@@ -497,9 +498,9 @@ Because `.gitignore` normally blocks tracked children, investigate any tracked n
 
 1. Determine whether it was force-added or predates the ignore rule.
 2. Inspect for secrets and sensitive workstation details before moving or displaying content.
-3. Rotate/revoke exposed credentials where necessary.
+3. Rotate or revoke exposed credentials where necessary.
 4. Move sanitized shared material to its owning tracked lane.
-5. Remove the local file from tracking while preserving the contributor's local copy only when safe.
+5. Remove the local file from tracking while preserving a contributor's local copy only when safe.
 6. Record drift if a consumer or workflow depended on the tracked path.
 
 [Back to top](#top)
@@ -539,10 +540,13 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 | [`.env.example`](../../.env.example) | **CONFIRMED** | Local config is ignored; real secrets must not be committed; example variables use safe local values. | Does not prove a specific consumer or precedence chain. |
 | [`../examples/README.md`](../examples/README.md) | **CONFIRMED** | Commit-safe examples are a distinct tracked lane and are non-authoritative. | Does not prove actual examples or consumer binding beyond its evidence snapshot. |
 | [`../templates/README.md`](../templates/README.md) | **CONFIRMED** | Reusable tracked templates are distinct from local overrides. | Current template inventory and validation remain bounded by that README. |
-| [`../dev/README.md`](../dev/README.md) | **CONFIRMED** | Shared development defaults/templates are a tracked configuration sublane with no secret or deployment authority. | Does not prove this local lane's loaders. |
-| [`../../docs/security/SECRETS.md`](../../docs/security/SECRETS.md) | **CONFIRMED doctrine** | Repository is not a secret store; references-by-name and secret injection are preferred; real secrets in local/test material must not be committed. | Concrete secret store, rotation, and enforcement remain implementation-specific. |
+| [`../dev/README.md`](../dev/README.md) | **CONFIRMED** | Shared development defaults and templates are a tracked configuration sublane with no secret or deployment authority. | Does not prove this local lane's loaders. |
+| [`../test/README.md`](../test/README.md) | **CONFIRMED** | Test configuration has a separate tracked lane and remains subordinate to `tests/` and `fixtures/`. | Does not prove local consumer behavior. |
+| [`../../docs/security/SECRETS.md`](../../docs/security/SECRETS.md) | **CONFIRMED doctrine** | Repository is not a secret store; references-by-name and secret injection are preferred; real secrets in local or test material must not be committed. | Concrete secret store, rotation, and enforcement remain implementation-specific. |
+| [`../../docs/security/INCIDENT_RESPONSE.md`](../../docs/security/INCIDENT_RESPONSE.md) | **CONFIRMED draft** | A tracked security incident-response surface exists. | Detailed secret-leak runbook path remains `NEEDS VERIFICATION`. |
+| `docs/runbooks/SECRET_LEAK_RUNBOOK.md` | **NOT FOUND at pinned base** | The path is referenced by secrets doctrine as proposed procedural detail. | Do not publish it as a working link until created or relocated. |
 | Repository search for `configs/local/` | **BOUNDED RESULT** | Returned this README and no additional tracked local file. | Search is not a recursive workstation inventory; ignored files remain invisible. |
-| v0.1 introduction commit `5b458ab970cbda8966dc5c799d560a64ed086804` | **CONFIRMED lineage** | Preserves the original intent to keep personal/machine-specific overrides outside repository authority. | Its commit-safe-template wording conflicted with current ignore evidence and is corrected here. |
+| v0.1 introduction commit `5b458ab970cbda8966dc5c799d560a64ed086804` | **CONFIRMED lineage** | Preserves the original intent to keep personal and machine-specific overrides outside repository authority. | Its commit-safe-template wording conflicted with current ignore evidence and is corrected here. |
 | Actual local overrides, consumers, loaders, precedence, validators, CI, deployments, and runtime behavior | **UNKNOWN / NEEDS VERIFICATION** | Required before implementation claims. | This README is not executable proof. |
 
 [Back to top](#top)
@@ -556,11 +560,12 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 | Confirm accountable owners. | **NEEDS VERIFICATION** | CODEOWNERS, maintainer decision, or accepted ownership record. |
 | Inventory consumers that support local override files. | **NEEDS VERIFICATION** | Code search, consumer docs, config loaders, and tests. |
 | Confirm supported local filenames and formats. | **NEEDS VERIFICATION** | Loader implementations and parser contracts. |
-| Confirm merge/precedence rules. | **NEEDS VERIFICATION** | Consumer code and deterministic tests. |
+| Confirm merge and precedence rules. | **NEEDS VERIFICATION** | Consumer code and deterministic tests. |
 | Confirm safe absence behavior. | **NEEDS VERIFICATION** | Tests with an empty `configs/local/` lane. |
 | Confirm schema and contract bindings. | **NEEDS VERIFICATION** | Schema references, validation results, and consumer docs. |
-| Confirm secret injection, redaction, rotation, and revocation posture. | **NEEDS VERIFICATION** | Security config, tests, and operational runbooks. |
-| Confirm public-exposure protections for local bind/host overrides. | **NEEDS VERIFICATION** | Infra/security tests and runtime evidence. |
+| Confirm secret injection, redaction, rotation, and revocation posture. | **NEEDS VERIFICATION** | Security config, tests, and operational evidence. |
+| Confirm the canonical detailed secret-leak runbook path. | **NEEDS VERIFICATION** | Create or locate the runbook and update `docs/security/SECRETS.md` references. |
+| Confirm public-exposure protections for local bind and host overrides. | **NEEDS VERIFICATION** | Infra and security tests plus runtime evidence. |
 | Confirm path confinement and traversal protection. | **NEEDS VERIFICATION** | Negative tests for loader paths and output destinations. |
 | Confirm tracked examples exist for every required local shape. | **NEEDS VERIFICATION** | `configs/examples/`, `.env.example`, or consumer-owned example inventory. |
 | Confirm CI boundary checks for ignore rules, loader behavior, redaction, and governance bypass. | **NEEDS VERIFICATION** | Workflow files and passing run evidence. |
@@ -574,15 +579,15 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 
 - [ ] `OWNER_TBD` is replaced with accountable config, security, developer-experience, operations, consumer, validation, and docs owners.
 - [ ] `.gitignore` continues to ignore local payloads and track only the README unless an accepted, security-reviewed change says otherwise.
-- [ ] Every consumer that supports local overrides documents the path, format, optionality, precedence, schema/contract, validation, redaction, and safe absence behavior.
+- [ ] Every consumer that supports local overrides documents the path, format, optionality, precedence, schema or contract, validation, redaction, and safe absence behavior.
 - [ ] Shared workflows do not depend solely on ignored workstation files.
 - [ ] Every required local shape has a sanitized tracked example or template.
 - [ ] No local override can bypass policy, evidence, validation, release, access-control, or exposure gates.
-- [ ] Secret references, injection, redaction, rotation, and revocation are documented and tested.
+- [ ] Secret references, injection, redaction, rotation, revocation, and incident response are documented and tested.
 - [ ] Loader tests cover absence, validity, malformed syntax, unknown fields, wrong types, unsupported versions, precedence conflicts, path escape, unsafe exposure, and governance-bypass attempts.
 - [ ] Local diagnostics can expose effective non-secret configuration without leaking secrets or sensitive workstation state.
 - [ ] Tracked configuration lanes clearly distinguish examples, templates, shared development defaults, tests, and local-only overrides.
-- [ ] CI/review evidence is cited before enforcement or implementation maturity is claimed.
+- [ ] CI and review evidence is cited before enforcement or implementation maturity is claimed.
 - [ ] Stale field names, paths, loaders, and local setup notes have migration and rollback guidance.
 
 [Back to top](#top)
@@ -595,10 +600,11 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 - [`../examples/README.md`](../examples/README.md) — commit-safe configuration examples.
 - [`../templates/README.md`](../templates/README.md) — reusable tracked templates.
 - [`../dev/README.md`](../dev/README.md) — shared development defaults and templates.
+- [`../test/README.md`](../test/README.md) — tracked test configuration defaults and templates.
 - [`.gitignore`](../../.gitignore) — local-lane ignore contract.
 - [`.env.example`](../../.env.example) — tracked environment-variable example.
 - [`../../docs/security/SECRETS.md`](../../docs/security/SECRETS.md) — secret handling doctrine.
-- [`../../docs/runbooks/SECRET_LEAK_RUNBOOK.md`](../../docs/runbooks/SECRET_LEAK_RUNBOOK.md) — response path when a secret is exposed.
+- [`../../docs/security/INCIDENT_RESPONSE.md`](../../docs/security/INCIDENT_RESPONSE.md) — confirmed security incident-response surface.
 - [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) — placement and responsibility-root doctrine.
 - `apps/`, `packages/`, `pipelines/`, `pipeline_specs/`, `runtime/`, and `tools/` — possible consumers only when verified.
 - `schemas/`, `contracts/`, `policy/`, `infra/`, `data/`, and `release/` — separate authority roots that local overrides cannot replace.
