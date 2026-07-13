@@ -13,7 +13,7 @@ truth_posture: CONFIRMED current source-layout and package scaffold / CONFLICTED
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 8df2275382850b805c9ebc83a3dc7f4a2dd2169a
+  base_commit: 7f3a42fd87b5a33264014f8cfa5d9833d8bf3d1a
   prior_blob: 560f32827da03a8b052e47d10d7e694788574ee3
 related:
   - ../../README.md
@@ -112,7 +112,7 @@ This README records the real scaffold. It does not ratify the underscore slug, c
 | Item | Status | Meaning |
 |---|---:|---|
 | This README | **DRAFT v0.2** | Reviewable source-layout boundary; not source activation or KFM publication. |
-| Source-layout directory | **CONFIRMED** | Current path exists at base `8df2275382850b805c9ebc83a3dc7f4a2dd2169a`. |
+| Source-layout directory | **CONFIRMED** | Current path exists at base `7f3a42fd87b5a33264014f8cfa5d9833d8bf3d1a`. |
 | Child package | **CONFIRMED SCAFFOLD** | The `kansas_memory/` directory and five directly inspected package files exist. |
 | Package code | **GREENFIELD PLACEHOLDERS** | No executable admission or fetch behavior is established by the inspected files. |
 | Package metadata | **PLACEHOLDER** | Project name and version exist; build backend, dependencies, package discovery, entry points, and supported Python version were not verified. |
@@ -131,7 +131,7 @@ This README records the real scaffold. It does not ratify the underscore slug, c
 
 ## Current repository snapshot and directory map
 
-The following map is bounded to repository `bartytime4life/Kansas-Frontier-Matrix` at base commit `8df2275382850b805c9ebc83a3dc7f4a2dd2169a` and the exact paths inspected for this update.
+The following map is bounded to repository `bartytime4life/Kansas-Frontier-Matrix` at base commit `7f3a42fd87b5a33264014f8cfa5d9833d8bf3d1a` and the exact paths inspected for this update.
 
 ```text
 connectors/kansas_memory/src/
@@ -356,7 +356,7 @@ Documentation readiness does not imply package readiness, source activation, evi
 |---|---|---:|
 | [`../../README.md`](../../README.md) | Connector-root admission and lifecycle boundary. | **CONFIRMED file** |
 | [`../README.md`](../README.md) | Parent Kansas Memory compatibility lane. | **CONFIRMED / noncanonical** |
-| [`kansas_memory/README.md`](kansas_memory/README.md) | Child package boundary. | **CONFIRMED file / v0.1 at base** |
+| [`kansas_memory/README.md`](kansas_memory/README.md) | Child package admission boundary. | **CONFIRMED file / v0.2 at base** |
 | [`../tests/README.md`](../tests/README.md) | Intended no-network test contract. | **CONFIRMED README / tests unverified** |
 | [`../pyproject.toml`](../pyproject.toml) | Package metadata scaffold. | **CONFIRMED placeholder / version 0.0.0** |
 | [`../../kansas/README.md`](../../kansas/README.md) | Kansas source-family coordination lane. | **CONFIRMED / child topology provisional** |
@@ -404,7 +404,7 @@ Rollback is required if this README is used to justify live harvesting, source a
 
 Before merge, rollback is to leave the review branch unmerged and abandon the proposed change. Closing the pull request or deleting its branch requires separate authorization.
 
-After merge, restore prior README blob `560f32827da03a8b052e47d10d7e694788574ee3` from base `8df2275382850b805c9ebc83a3dc7f4a2dd2169a` through a transparent revert commit or revert pull request, then rerun applicable documentation and connector-boundary validation. Do not reset, force-push, or rewrite shared history.
+After merge, restore prior README blob `560f32827da03a8b052e47d10d7e694788574ee3` from base `7f3a42fd87b5a33264014f8cfa5d9833d8bf3d1a` through a transparent revert commit or revert pull request, then rerun applicable documentation and connector-boundary validation. Do not reset, force-push, or rewrite shared history.
 
 [Back to top](#top)
 
