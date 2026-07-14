@@ -2,11 +2,11 @@
 doc_id: kfm://doc/configs-readme
 title: configs/ — Safe Configuration Defaults and Templates
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Ops steward · Security steward · Config steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-13
 policy_label: public
 related:
   - ../docs/doctrine/directory-rules.md
@@ -24,7 +24,8 @@ notes:
   - "configs/ is the canonical root for safe non-secret configuration defaults and templates."
   - "Deployment-only confidential values must not be committed here."
   - "Runtime adapters, infra definitions, policy rules, schemas, source data, release records, and lifecycle data belong in their own roots."
-  - "Specific current config inventory, consumers, validation coverage, and CI enforcement remain NEEDS VERIFICATION."
+  - "Recursive tracked inventory is CONFIRMED at main commit 55a84f06216effd8e3ae5d51450bbf9f3d160417. Consumers, validation coverage, CI enforcement, deployment integration, and owners remain mixed or NEEDS VERIFICATION."
+  - "This revision aligns all confirmed MapLibre performance consumers with configs/maplibre/perf-envelope.v1.json and creates no singular config root."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -41,7 +42,7 @@ notes:
 ![authority](https://img.shields.io/badge/authority-canonical-green)
 ![scope](https://img.shields.io/badge/scope-defaults%20%2F%20templates-blue)
 ![sensitive](https://img.shields.io/badge/confidential_values-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
+![truth](https://img.shields.io/badge/truth-CONFIRMED__inventory%20%2F%20mixed__maturity-yellow)
 
 [Purpose](#1-purpose) · [Authority](#2-authority) · [Allowed contents](#5-allowed-contents) · [Forbidden contents](#6-forbidden-contents) · [Validation](#9-validation-expectations) · [Definition of done](#12-definition-of-done)
 
@@ -53,7 +54,7 @@ notes:
 > **Status:** draft / `NEEDS VERIFICATION`  
 > **Path:** `configs/README.md`  
 > **Responsibility root:** canonical configuration defaults and templates  
-> **Truth posture:** CONFIRMED README path / CONFIRMED Directory Rules list `configs/` as canonical / PROPOSED expanded README contract / UNKNOWN current config inventory, consumers, validation coverage, CI enforcement, deployment integration, and owner assignments
+> **Truth posture:** CONFIRMED recursive tracked inventory at `main@55a84f062…` / CONFIRMED Directory Rules list `configs/` as canonical / CONFIRMED bounded MapLibre performance consumer migration / UNKNOWN or NEEDS VERIFICATION for most consumers, validation coverage, CI run evidence, deployment integration, and owner assignments
 
 > [!CAUTION]
 > `configs/` is for safe defaults, examples, and templates only. It must not contain deployment-only confidential values, site-local credentials, host-specific material, private endpoints, sensitive source material, or operational state. Use environment-specific deployment systems and `infra/` controls for real deployment binding.
@@ -137,22 +138,36 @@ NOT HERE:
 | Release decisions, release manifests, rollback/correction records | `release/` |
 | Generated build/QA artifacts | `artifacts/` |
 
-## 7. Suggested directory shape
+## 7. Current tracked directory shape
 
-Current inventory remains `NEEDS VERIFICATION`.
+Recursive inspection at `main@55a84f06216effd8e3ae5d51450bbf9f3d160417` confirms:
 
 ```text
 configs/
 ├── README.md
-├── local/                   # PROPOSED local-development defaults/templates
-├── apps/                    # PROPOSED app config examples, if shared across apps
-├── pipelines/               # PROPOSED safe pipeline parameter templates
-├── runtime/                 # PROPOSED adapter config templates only, not adapters
-└── validation/              # PROPOSED config validation notes/examples
+├── dev/README.md
+├── domains/
+│   ├── README.md
+│   └── habitat/
+│       ├── .gitkeep
+│       └── README.md
+├── examples/README.md
+├── local/README.md
+├── maplibre/
+│   ├── README.md
+│   └── perf-envelope.v1.json
+├── templates/
+│   ├── README.md
+│   ├── dataset_manifest.template.yaml
+│   ├── layer_manifest.template.yaml
+│   ├── release_manifest.template.yaml
+│   ├── source_descriptor.template.yaml
+│   └── viewer_style.template.json
+└── test/README.md
 ```
 
 > [!WARNING]
-> Do not treat this suggested shape as repo fact. Verify existing contents before making inventory or migration claims.
+> This is a commit-pinned tracked-tree claim, not proof of consumer behavior, ignored local files, generated output, other branches, or deployment state. Re-run the inventory when the lane changes.
 
 ## 8. Diagram
 
@@ -203,9 +218,9 @@ For changes under `configs/`:
 ## 12. Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual `configs/` contents are inventoried.
-- [ ] Every committed config is safe for the repo.
-- [ ] No deployment-only confidential values, lifecycle data, release records, receipts, proofs, catalog records, source data, or generated artifacts live here.
+- [x] Actual tracked `configs/` contents are inventoried at the pinned base.
+- [x] Every committed config at the pinned base was inspected and contains only public-safe placeholders/defaults.
+- [x] No deployment-only confidential values, lifecycle data, release records, receipts, proofs, catalog records, source data, or generated artifacts were found in the tracked lane.
 - [ ] Config templates identify the owning consumer and validation path.
 - [ ] Consumers, tests, and tools are verified or marked `NEEDS VERIFICATION`.
 - [ ] Stale or unowned config examples are migrated, deleted, or documented as drift.
@@ -214,10 +229,10 @@ For changes under `configs/`:
 
 | Item | Why it matters |
 |---|---|
-| Inventory current `configs/` files | Required before claims about coverage or ownership |
+| Re-run the tracked inventory after changes | Prevents this commit-pinned snapshot from becoming stale |
 | Confirm app/pipeline/runtime consumers | Required before behavior claims |
 | Confirm validation tooling and CI checks | Required before enforcement claims |
-| Confirm no deployment-only confidential values are present | Required before safe-sharing claims |
+| Re-run content and secret review after config changes | Preserves the commit-pinned safe-sharing claim |
 | Confirm config/schema alignment | Required before machine-shape claims |
 | Confirm config/policy separation | Required before governance claims |
 | Confirm owner assignments | Required before maintenance claims |

@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import { chromium } from "playwright";
 
 const ARTIFACT_DIR = "artifacts/perf";
-const ENVELOPE_PATH = "config/maplibre/perf-envelope.v1.json";
+const ENVELOPE_PATH = "configs/maplibre/perf-envelope.v1.json";
 const RENDER_DIFF_REPORT_PATH =
   "artifacts/perf/render-diff/render-diff-report.json";
 
@@ -157,8 +157,9 @@ async function main() {
 </html>
 `);
 
-    const metrics = await page.evaluate(async (scenario) => {
-      const style = (${buildStyle.toString()})(scenario);
+    const style = buildStyle(scenario);
+
+    const metrics = await page.evaluate(async ({ scenario, style }) => {
 
       const frameTimes = [];
       let lastFrame = performance.now();
@@ -222,7 +223,7 @@ async function main() {
         p95FrameMs: Number(p95FrameMs.toFixed(2)),
         frameTimes: frameTimes.map((v) => Number(v.toFixed(4)))
       };
-    }, scenario);
+    }, { scenario, style });
 
     const frameTimesPath =
       `${ARTIFACT_DIR}/frame-times/${scenario.name}.csv`;

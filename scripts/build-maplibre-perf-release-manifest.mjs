@@ -29,7 +29,7 @@ const artifacts = [
   },
   {
     name: "perf-envelope",
-    path: "config/maplibre/perf-envelope.v1.json",
+    path: "configs/maplibre/perf-envelope.v1.json",
     role: "perf_envelope"
   },
   {
