@@ -1,153 +1,162 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/configs-domains-hydrology-readme
-title: configs/domains/hydrology/ — Hydrology Configuration Boundary
+title: configs/domains/hydrology/ — Governed Hydrology Configuration Boundary
 type: readme
-version: v0.2
-status: draft
+version: v0.3
+status: draft; repository-grounded; documentation-only
 owners: OWNER_TBD — Config steward · Hydrology steward · Measurement/identity reviewer · Public-safety reviewer · Consumer owner · Validation steward
 created: 2026-07-13
 updated: 2026-07-14
+supersedes: v0.2
 policy_label: public; config-sublane; hydrology; evidence-bound; source-role-aware; measurement-aware; freshness-aware; not-for-life-safety; private-property-aware; non-secret; non-authoritative; no-live-binding
 current_path: configs/domains/hydrology/README.md
-truth_posture: CONFIRMED canonical hydrology slug, repository-present parent config contract, repository-present Hydrology doctrine, NFHL-as-regulatory-context-only rule, observed/regulatory/modeled/aggregate/administrative/candidate anti-collapse posture, ambiguous-reach ABSTAIN rule, operational-warning non-authority, watcher-as-non-publisher rule, and documentation-only lane / CONFLICTED Directory-Rules domain-segment form versus Atlas flat-form navigation and canonical role-class mapping versus older authority-observation-context-model wording / PROPOSED future consumer-bound templates and governed profile selectors / UNKNOWN consumers, loader behavior, precedence, deployment binding, and enforcement / NEEDS VERIFICATION owners, executable validation, source rights, role-vocabulary mapping, freshness thresholds, measurement-conversion profiles, identity-crosswalk rules, public-safe well and infrastructure parameters, official-source redirect profiles, and runtime binding
+truth_posture: CONFIRMED current target and parent config boundary, Hydrology doctrine and semantic-contract indexes, draft schema/policy/test/fixture/source-registry surfaces, empty machine domain-lane register, source-role anti-collapse rules, NFHL regulatory-only posture, ambiguous-reach abstention, non-alert boundary, and placeholder documentation workflows / PROPOSED future named-consumer templates and accepted profile selectors / UNKNOWN loader, precedence, consumer wiring, deployment binding, executable validation, runtime behavior, release integration, and production use / NEEDS VERIFICATION owners, concrete Hydrology schema inventory, policy enforcement, test payloads and pass results, source rights, freshness profiles, measurement conversions, identity crosswalks, public-safe geometry thresholds, and official-source redirect profiles
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b46db8e827d1ba851534568cbb16f76e78af5072
-  prior_blob: 7bc5e829a374d9ace13bb7341d57d778b7cfc80a
-  bounded_search_result: configs/domains/hydrology/README.md only
+  base_commit: 14b59b6b84ee2b9fa46e002b60e922c97cab2761
+  prior_blob: cd932bb068c3131a7629e07613a3ab83fb6656bc
+  bounded_lane_search: configs/domains/hydrology/README.md only
+  workflow_posture: docs-build, link-check, and citation-validation are pull-request-triggered TODO scaffolds
 related:
   - ../README.md
   - ../../README.md
   - ../../../docs/domains/hydrology/README.md
-  - ../../../docs/registers/DOMAIN_LANE.md
-  - ../../../docs/registers/DRIFT_REGISTER.md
+  - ../../../contracts/domains/hydrology/README.md
+  - ../../../schemas/contracts/v1/domains/hydrology/README.md
+  - ../../../policy/domains/hydrology/README.md
+  - ../../../tests/domains/hydrology/README.md
+  - ../../../fixtures/domains/hydrology/README.md
+  - ../../../data/registry/sources/hydrology/README.md
+  - ../../../control_plane/domain_lane_register.yaml
   - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../../../docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md
+  - ../../../docs/registers/DRIFT_REGISTER.md
   - ../../../docs/security/SECRETS.md
 notes:
-  - "This lane contains documentation only in the bounded path search. No executable Hydrology configuration payload, consumer, loader, source activation, network fetch, warning function, model execution, or publication binding is established."
-  - "A bounded repository search for configs/domains/hydrology returned this README and no indexed executable consumer. This is bounded evidence, not proof that no differently named or unindexed consumer exists."
-  - "v0.2 expands the Hydrology-specific source-role, NFHL, measurement, reach-identity, freshness, private-property, infrastructure, validation, correction, and rollback contract without creating policy, schema, source, model, warning, release, or public-surface authority."
+  - "v0.3 replaces stale commit-pinned metadata with current main-branch evidence and records the maturity of adjacent authority surfaces without upgrading draft or scaffold material."
+  - "The bounded repository search found only this README inside configs/domains/hydrology/. It did not identify an executable payload, loader, consumer, or activation path. This is bounded evidence, not proof of exhaustive absence."
+  - "The revision preserves v0.2 hydrology-specific role, measurement, identity, temporal, NFHL, sensitivity, validation, correction, and rollback controls while reducing repetition and clarifying verified versus proposed surfaces."
+  - "No executable configuration, schema, contract, policy, fixture, test, workflow, source record, lifecycle object, release object, runtime behavior, or public artifact is created or changed by this README."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Hydrology Domain Configuration
+# Governed Hydrology Configuration Boundary
 
 `configs/domains/hydrology/`
 
-> Safe-to-commit, Hydrology-specific configuration documentation and future consumer-bound templates. This lane does not own hydrologic truth, source admission, flood-warning authority, measurement validity, identity resolution, sensitivity, evidence, release, or publication.
+> Safe-to-commit Hydrology configuration documentation and future named-consumer templates. This lane may select already-governed profiles; it cannot create hydrologic truth, admit sources, resolve identity, define measurement meaning, issue warnings, decide sensitivity, close evidence, or authorize release.
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Scope](#scope) · [Repository fit](#repository-fit) · [Inputs](#inputs) · [Outputs](#outputs) · [File contract](#minimum-configuration-contract) · [Consumer binding](#consumer-binding-precedence-and-discovery) · [Source roles](#hydrology-semantic-and-source-role-guardrails) · [Measurements](#measurement-spatial-and-identity-contract) · [Time and freshness](#temporal-freshness-and-stale-state-contract) · [NFHL and warnings](#nfhl-flood-context-and-life-safety-boundary) · [Cross-lane rules](#cross-lane-ownership-and-context-rules) · [Sensitivity](#private-property-infrastructure-and-reconstruction-risk) · [Validation](#validation) · [Failure behavior](#failure-behavior) · [AI](#governed-ai-and-generated-language) · [Review](#review-burden) · [Maintenance](#maintenance-and-safe-change-pattern) · [Migration](#migration-and-anti-bypass-posture) · [Done](#definition-of-done-for-the-first-payload) · [Related](#related-folders) · [ADRs](#adrs-and-drift-triggers) · [Rollback](#rollback-and-correction) · [Language](#safe-language-rules)
+![status](https://img.shields.io/badge/status-draft-blue)
+![version](https://img.shields.io/badge/version-v0.3-informational)
+![authority](https://img.shields.io/badge/authority-config__supporting-green)
+![inventory](https://img.shields.io/badge/lane-README__only-yellow)
+![life-safety](https://img.shields.io/badge/life--safety-not__an__alert__system-critical)
+![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
+
+**Quick links:** [Purpose](#purpose) · [Authority](#authority-and-supersession) · [Status](#current-status) · [Scope](#scope) · [Repo fit](#repository-fit) · [File contract](#minimum-file-contract) · [Consumer binding](#consumer-binding-and-precedence) · [Source roles](#source-role-and-semantic-guardrails) · [Measurements](#measurement-spatial-and-identity-integrity) · [Time](#temporal-freshness-and-stale-state) · [NFHL](#nfhl-flood-context-and-life-safety) · [Cross-lane](#cross-lane-and-sensitivity-boundaries) · [Validation](#validation-and-finite-failures) · [AI](#governed-ai-and-public-surfaces) · [Change](#review-change-and-migration-discipline) · [Done](#definition-of-done-for-the-first-payload) · [Rollback](#rollback-and-correction) · [Language](#safe-language)
 
 > [!IMPORTANT]
-> **Document lifecycle:** draft `v0.2`  
-> **Observed lane maturity:** README-only in the bounded path search; no executable Hydrology configuration payload is established  
-> **Authority:** implementation-supporting configuration sublane; non-authoritative for truth and governance  
-> **Runtime posture:** no loader, consumer binding, source activation, polling, model execution, warning delivery, public layer, release, or publication is established by this README
+> **Evidence snapshot:** `main@14b59b6b84ee2b9fa46e002b60e922c97cab2761`  
+> **Target blob before this revision:** `cd932bb068c3131a7629e07613a3ab83fb6656bc`  
+> **Observed lane maturity:** README-only in the bounded indexed search; no executable Hydrology config payload or consumer binding was found  
+> **Runtime effect:** none by directory or file presence
 
 > [!CAUTION]
-> **NFHL is regulatory flood context, not observed inundation.** An observed gauge reading is not a forecast, a modeled hydrograph is not an observation, an aggregate HUC summary is not site truth, and KFM is not an emergency flood-warning system. Configuration must preserve those distinctions and fail closed when role, identity, time, rights, or sensitivity is unresolved.
+> **NFHL is regulatory flood context, not observed inundation.** A gauge reading is not a forecast, a modeled hydrograph is not an observation, a HUC aggregate is not site truth, a source outage is not an all-clear, and KFM is not an emergency flood-warning system.
 
 ---
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical Hydrology lane.
+This directory is the Hydrology segment under the canonical `configs/` responsibility root. It exists to make small, public-safe, non-secret configuration choices inspectable for a **named and verified consumer**.
 
-It may eventually hold small defaults, templates, examples, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should parse, display, validate, or select already-governed Hydrology material, but they cannot decide:
+A future file here may select an accepted profile for presentation, freshness disclosure, measurement display, identity ambiguity, public-safe geometry, review routing, or stale-state behavior. It must remain subordinate to Hydrology doctrine, semantic contracts, machine schemas, source registry records, policy decisions, evidence, tests, and release state.
 
-- whether a watershed, HUC unit, reach, gauge, well, observation, hydrograph, flood zone, flood event, or cross-lane link is true;
-- whether a source is authoritative, admissible, licensed, current, or active;
-- whether an NFHL polygon represents observed or forecast flooding;
-- whether a reach identity crosswalk is defensible;
-- whether a parameter, unit conversion, qualifier, datum, or no-data value is valid;
-- whether a modeled or reconstructed series may be represented as observed;
-- whether stale or unavailable data supports a current claim;
-- whether private-well, water-right, dam, utility, or infrastructure detail may be exposed;
-- whether evidence supports a hydrologic claim;
-- whether a user should take emergency action; or
-- whether an artifact may be promoted, released, or published.
+This README is for:
 
-This README is intended for:
-
-- Hydrology domain stewards;
-- configuration and developer-experience maintainers;
-- source-role, measurement, identity, freshness, rights, sensitivity, policy, security, public-safety, and release reviewers;
-- package, pipeline, app, runtime, test, watcher, connector, and tooling owners that may consume Hydrology configuration; and
+- Hydrology and configuration stewards;
+- package, pipeline, application, runtime, test, and tool owners that may consume Hydrology settings;
+- measurement, datum, identity, time, freshness, rights, sensitivity, public-safety, and release reviewers; and
 - reviewers checking Directory Rules placement and trust-membrane integrity.
 
 [Back to top](#top)
 
 ---
 
-## Authority level
+## Authority and supersession
 
-**Configuration-supporting and non-authoritative.**
+### Authority level
 
-| Concern | Authority in this lane |
-|---|---|
-| Hydrology domain meaning | **None.** Domain doctrine remains in [`docs/domains/hydrology/`](../../../docs/domains/hydrology/README.md). |
-| Watershed, HUC, reach, site, or object identity | **None.** Configuration cannot create canonical identity or resolve ambiguity by convenience. |
-| Gauge, flow, level, water-quality, or aquifer observation truth | **None.** Configuration cannot establish evidentiary status or alter source qualifiers. |
-| NFHL or regulatory status | **None.** Configuration cannot turn regulatory context into observed inundation, forecast flooding, or a current warning. |
-| Model or reconstruction truth | **None.** Configuration cannot convert a modeled hydrograph, terrain-derived surface, estimate, or candidate into an observation. |
-| Emergency warning or life-safety guidance | **Permanently none.** KFM cannot become a flood-warning or evacuation authority through configuration. |
-| Source identity, role, rights, cadence, and activation | **None.** These require applicable registry, connector, rights, policy, and review surfaces. |
-| Parameter, unit, datum, qualifier, or conversion authority | **None.** A file may select an accepted profile; it cannot invent scientific meaning or silently convert values. |
-| Freshness or expiry decision | **Supporting only.** A verified consumer may select an accepted per-source profile; configuration cannot extend source validity or hide stale state. |
-| Schema or contract shape | **None.** Configuration may reference verified schemas and contracts but must not duplicate or redefine them. |
-| Sensitivity, redaction, aggregation, or public-safe geometry | **None.** A value may select an accepted profile; it cannot create, weaken, or approve a rule. |
-| Evidence or claim truth | **None.** Configuration cannot create an `EvidenceBundle`, validate a claim, or make generated interpretation sovereign truth. |
-| Release or publication | **None.** Configuration cannot authorize promotion, release, public display, or KFM publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may read a validated file under an explicit binding and precedence rule. |
+**Implementation-supporting and non-authoritative.**
 
-A configuration value may point to an authority surface. It does not become authority through repetition, proximity, successful parsing, operational convenience, apparent freshness, or use by a map, hydrograph, dashboard, Evidence Drawer, Focus Mode, export, or AI surface.
+| Concern | Authority here | Governing surface |
+|---|---:|---|
+| Hydrology meaning and boundary | None | [`docs/domains/hydrology/`](../../../docs/domains/hydrology/README.md) |
+| Object meaning | None | [`contracts/domains/hydrology/`](../../../contracts/domains/hydrology/README.md) |
+| Machine-checkable shape | None | [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/README.md) |
+| Source identity, role, rights, cadence, and activation | None | [`data/registry/sources/hydrology/`](../../../data/registry/sources/hydrology/README.md) and source governance |
+| Policy, sensitivity, admissibility, and warning restrictions | None | [`policy/domains/hydrology/`](../../../policy/domains/hydrology/README.md) and applicable cross-cutting policy |
+| Enforceability | None | [`tests/domains/hydrology/`](../../../tests/domains/hydrology/README.md), [`fixtures/domains/hydrology/`](../../../fixtures/domains/hydrology/README.md), and validators |
+| Evidence and claim support | None | `EvidenceRef` / `EvidenceBundle` systems |
+| Promotion, release, correction, and rollback | None | `release/` and governed lifecycle records |
+| Consumer behavior | Supporting only | A verified consumer may read a validated file through an explicit binding |
+
+A configuration value may **reference** authority. It does not acquire authority through proximity, successful parsing, apparent freshness, repeated use, or rendering in a map, hydrograph, dashboard, Evidence Drawer, Focus Mode answer, export, or AI response.
+
+### Document authority graph
+
+```mermaid
+flowchart LR
+  D["Hydrology doctrine\ndocs/domains/hydrology/"] --> C["Semantic contracts\ncontracts/domains/hydrology/"]
+  C --> S["Machine schemas\nschemas/contracts/v1/domains/hydrology/"]
+  R["Source registry\ndata/registry/sources/hydrology/"] --> P["Policy / evidence / validation"]
+  S --> P
+  P --> X["Named consumer"]
+  CFG["This lane\nconfigs/domains/hydrology/"] -. "selects accepted profiles only" .-> X
+  X --> G["Governed API / released artifacts"]
+```
+
+This `v0.3` revision supersedes `v0.2` **at the same path and document ID**. Repository search found no duplicate document carrying `kfm://doc/configs-domains-hydrology-readme`. Older content remains recoverable through Git history; no parallel canonical README is created.
 
 [Back to top](#top)
 
 ---
 
-## Status
+## Current status
 
-### Evidence snapshot
+### Repository-grounded maturity matrix
 
-| Field | Value |
-|---|---|
-| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Repository ID | `1059091169` |
-| Visibility | public |
-| Base ref | `main` |
-| Base commit | `b46db8e827d1ba851534568cbb16f76e78af5072` |
-| Prior README blob | `7bc5e829a374d9ace13bb7341d57d778b7cfc80a` |
-| Bounded path-search result | `configs/domains/hydrology/README.md` only |
+| Surface | Current-session evidence | Safe conclusion |
+|---|---|---|
+| Target lane | Search returned only `configs/domains/hydrology/README.md`. | **CONFIRMED bounded README-only lane.** No executable config payload or consumer was identified by the indexed path search. |
+| Parent config contract | [`configs/domains/README.md`](../README.md) is `v0.4`. | **CONFIRMED** domain config is non-secret, non-authoritative, and inactive unless explicitly bound. |
+| Root config contract | [`configs/README.md`](../../README.md) defines safe defaults/templates only. | **CONFIRMED** no policy, schema, lifecycle, release, runtime, or secret authority. |
+| Hydrology doctrine | [`docs/domains/hydrology/README.md`](../../../docs/domains/hydrology/README.md) exists. | **CONFIRMED repository document** for scope, roles, objects, lifecycle, NFHL, and non-alert boundaries. |
+| Semantic contracts | [`contracts/domains/hydrology/README.md`](../../../contracts/domains/hydrology/README.md) exists and indexes several contract files. | **CONFIRMED contract index; completeness and acceptance remain unverified.** |
+| Machine schemas | [`schemas/contracts/v1/domains/hydrology/README.md`](../../../schemas/contracts/v1/domains/hydrology/README.md) exists. | **CONFIRMED draft index; concrete Hydrology `.schema.json` inventory was not confirmed by that README.** |
+| Policy | [`policy/domains/hydrology/README.md`](../../../policy/domains/hydrology/README.md) is a 33-line greenfield scaffold. | **CONFIRMED scaffold only; substantive policy and enforcement are not proven.** |
+| Tests | [`tests/domains/hydrology/README.md`](../../../tests/domains/hydrology/README.md) indexes documented child lanes. | **CONFIRMED documentation; executable modules, CI coverage, and pass results remain `NEEDS VERIFICATION`.** |
+| Fixtures | [`fixtures/domains/hydrology/README.md`](../../../fixtures/domains/hydrology/README.md) indexes synthetic fixture families. | **CONFIRMED documentation; payload inventory and consumer use remain `NEEDS VERIFICATION`.** |
+| Source registry | [`data/registry/sources/hydrology/README.md`](../../../data/registry/sources/hydrology/README.md) exists and records topology drift. | **CONFIRMED draft registry lane; descriptor instances and final registry topology remain `NEEDS VERIFICATION`.** |
+| Machine lane register | [`control_plane/domain_lane_register.yaml`](../../../control_plane/domain_lane_register.yaml) contains `entries: []`. | **CONFIRMED empty register; machine registration is not established.** |
+| ADR-0001 | The repository file exists with `status: proposed`. | **CONFIRMED proposed governance handle; not an accepted decision record.** |
+| Hydrology-first ADR | The repository file is draft/proposed and records an ADR-number conflict. | **CONFIRMED proposal; not binding sequencing authority.** |
+| Documentation workflows | `docs-build`, `link-check`, and `citation-validation` trigger on pull requests but only echo TODO steps. | **CONFIRMED workflow scaffolds; substantive validation is not proven.** |
+| Runtime, deployment, release, and publication | No binding evidence was found in the config-lane search. | **UNKNOWN / not authorized by this README.** |
 
-### Maturity matrix
+### Evidence limits
 
-| Item | State | Safe conclusion |
-|---|---:|---|
-| Canonical domain slug | **CONFIRMED** | `hydrology` is a repository-present canonical domain lane. |
-| Parent configuration contract | **CONFIRMED** | [`configs/domains/README.md`](../README.md) defines this path as a non-secret, non-authoritative configuration sublane. |
-| Hydrology doctrine | **CONFIRMED repository-present** | The domain README establishes evidence-bound time semantics, NFHL role separation, identity ambiguity handling, freshness, publication gates, and non-alert authority. |
-| NFHL role | **CONFIRMED — REGULATORY CONTEXT ONLY** | NFHL may not be labeled as observed inundation, forecast flooding, or current conditions. |
-| Ambiguous reach identity | **CONFIRMED — ABSTAIN** | Multiple or unsupported reach mappings cannot be resolved by a default or “first match” rule. |
-| Life-safety posture | **CONFIRMED — DENY** | KFM cannot provide flood warnings, evacuation instructions, or other life-safety replacement. |
-| Current lane content | **README ONLY IN BOUNDED SEARCH** | No executable payload, consumer, or activation path was found by the path-scoped search. Exhaustive inventory remains `NEEDS VERIFICATION`. |
-| Indexed executable consumer | **NOT FOUND IN BOUNDED SEARCH** | Differently named or unindexed consumers remain `UNKNOWN`. |
-| Consumer and loader | **UNKNOWN** | No parser, auto-discovery mechanism, merge order, precedence, or unknown-key behavior is established here. |
-| Role vocabulary mapping | **CONFLICTED / NEEDS VERIFICATION** | Repository-wide classes and older Hydrology `authority / observation / context / model` wording must be reconciled by governance, not configuration. |
-| Path form | **CONFLICTED / GOVERNED BY DIRECTORY RULES FOR THIS README** | Directory Rules uses a `domains/hydrology/` segment; Atlas flat-form navigation remains a drift/ADR matter. |
-| Source rights and terms | **NEEDS VERIFICATION** | Source-specific rights, attribution, redistribution, cadence, rate limits, and access restrictions require verified source records. |
-| Freshness profiles | **NEEDS VERIFICATION** | Per-source latency, stale, partial, outage, and supersession thresholds require source-owner review. |
-| Measurement and conversion profiles | **NEEDS VERIFICATION** | Parameter, unit, datum, qualifier, rounding, and conversion behavior must be governed and tested. |
-| Identity crosswalk rules | **NEEDS VERIFICATION** | HUC and reach-vintage crosswalks require explicit methods, evidence, confidence, and ambiguity outcomes. |
-| Public-safe well and infrastructure parameters | **NEEDS VERIFICATION** | Aggregation, masking, suppression, and precision limits must come from policy and steward review. |
-| Validation and CI enforcement | **NEEDS VERIFICATION** | Expectations are documented; substantive executable enforcement is not proven by this README. |
-| Runtime, release, and publication | **NOT ESTABLISHED** | Nothing in this lane authorizes operational use, source access, warnings, release, or publication. |
+- The target-lane search is bounded to indexed repository results and exact named paths.
+- Absence from that search does not prove that a differently named, generated, ignored, or unindexed consumer does not exist.
+- Repository documents establish declared boundaries; they do not prove runtime enforcement.
+- No live source call, hydrologic model, deployment, warning service, release, dashboard, or public route was exercised.
 
-Directory presence must not trigger config discovery, source activation, polling, network access, model execution, identity resolution, unit conversion, warning delivery, geofencing, map-layer creation, lifecycle promotion, or publication.
+Directory presence must not trigger config discovery, source activation, polling, network access, model execution, identity resolution, unit conversion, warning delivery, geofencing, layer creation, lifecycle promotion, or publication.
 
 [Back to top](#top)
 
@@ -157,40 +166,33 @@ Directory presence must not trigger config discovery, source activation, polling
 
 ### What belongs here
 
-Only safe, non-secret, Hydrology-specific configuration material for a named or explicitly proposed consumer belongs here.
+Only safe, non-secret, Hydrology-specific material for a named or explicitly proposed consumer belongs here.
 
-| Material | Permitted purpose | Minimum posture |
+| Material | Permitted purpose | Required posture |
 |---|---|---|
-| `README.md` | Define this configuration boundary. | Preserve non-authority, role separation, measurement integrity, freshness, sensitivity, evidence, and release controls. |
-| `*.template.yaml` or `*.template.yml` | Placeholder-based template for a verified Hydrology consumer. | Parseable, versioned, consumer-bound, no secrets, no live binding, no network activation. |
-| `*.example.yaml`, `*.example.json`, or `*.example.toml` | Tiny illustrative configuration. | Clearly synthetic values; impossible IDs, coordinates, site numbers, and observations; no automatic activation. |
-| Conservative review defaults | Select an existing hold, abstain, deny, stale, contextual, or review profile. | Cannot waive policy, rights, evidence, or release burden. |
-| Source-role profile selectors | Select an already-governed role-display or validation profile. | Cannot upgrade or relabel a claim. |
-| Freshness-profile selectors | Select an accepted per-source freshness profile. | Cannot override source timestamps, silently extend validity, or suppress stale state. |
-| Measurement-display profile selectors | Select accepted unit, precision, datum-label, qualifier, or no-data presentation behavior. | Cannot alter source values or perform hidden scientific conversion. |
-| Identity-resolution profile selectors | Select a verified crosswalk or ambiguity policy. | Ambiguity must remain visible; no convenience fallback. |
-| Public-safe display profile selectors | Select accepted generalization or aggregation for wells, dams, infrastructure, or private-property implications. | Cannot contain protected detail or authorize exposure. |
-| Presentation hints | Configure role badges, vintages, time labels, stale banners, uncertainty, caveats, or provenance display. | Must not change evidence status, validity, sensitivity, or authority. |
-| Migration notes | Document a real key, version, consumer, or path transition. | Time-bounded, owner-linked, reversible, and not a parallel authority. |
-| Validation notes | Describe verified checks and finite outcomes. | Commands and workflows must resolve or remain labeled `PROPOSED` / `NEEDS VERIFICATION`. |
-
-Synthetic examples must not resemble a real private well, water-right holder, dam interior, utility asset, active gauge event, warning polygon, regulated facility, or sensitive property closely enough to support confusion or reconstruction.
+| `README.md` | Define the boundary and review contract. | Preserve non-authority and fail-closed behavior. |
+| `*.template.yaml` / `*.template.yml` | Placeholder-based template for a verified consumer. | Parseable, versioned, no live binding, no credentials, no automatic activation. |
+| `*.example.yaml` / `*.example.json` / `*.example.toml` | Tiny illustrative configuration. | Synthetic and impossible values; no real sites, owners, warnings, coordinates, or endpoints. |
+| Profile selectors | Select accepted role, freshness, measurement, identity, public-safe geometry, review, or stale-state profiles. | Must reference an existing governed profile; cannot define or weaken it. |
+| Presentation hints | Role badges, vintages, caveats, time labels, stale banners, uncertainty, accessibility. | Cannot change evidence, validity, sensitivity, or authority. |
+| Migration notes | Document a real consumer/key/version transition. | Owner-linked, time-bounded, reversible, and not a second authority. |
+| Validation notes | Describe expected checks. | Commands and workflows must be verified or labeled honestly. |
 
 ### What does not belong here
 
-- real gauge, flow, water-level, water-quality, aquifer, well, hydrograph, flood-event, NFHL, source, or lifecycle payloads;
-- credentials, API keys, private endpoints, signed URLs, internal hostnames, workstation paths, deployment bindings, or environment-specific secrets;
-- current flood warnings, watches, emergency alerts, evacuation instructions, road-closure directions, protective-action guidance, or all-clear language;
-- exact or reconstructable private-well, well-owner, water-right owner, dam-internal, utility, treatment, intake, outfall, or resilience-critical infrastructure detail;
-- settings that label NFHL as observed inundation, a forecast, or a current warning;
-- settings that label a modeled or reconstructed hydrograph as observed;
-- settings that treat an HUC aggregate as per-site truth;
-- settings that resolve ambiguous reaches by first match, nearest geometry, or silent best effort;
-- settings that silently change units, datums, qualifiers, parameter meanings, provisional status, or no-data values;
-- settings that treat missing, delayed, or unavailable data as safety or normal conditions;
-- source admission, activation, cadence, rights, redistribution, or role decisions;
-- schemas, contracts, policy rules, registry rows, receipts, proofs, evidence bundles, release records, correction notices, or publication decisions;
-- package code, pipeline logic, connector or watcher code, runtime adapters, infrastructure definitions, generated artifacts, caches, exports, screenshots, or reports.
+- real gauge, flow, water-level, water-quality, groundwater, well, hydrograph, flood-event, NFHL, or lifecycle payloads;
+- API keys, credentials, private endpoints, signed URLs, internal hostnames, personal paths, or deployment bindings;
+- current warnings, watches, evacuation instructions, protective-action guidance, all-clear language, dispatch, or escalation settings;
+- exact or reconstructable private-well, owner, water-right, dam-internal, utility, treatment, intake, outfall, storage, or resilience-critical detail;
+- source admission, activation, cadence, rights, role, or redistribution decisions;
+- machine schemas, semantic contracts, policy rules, registry records, receipts, proofs, EvidenceBundles, release records, or correction notices;
+- connector, watcher, pipeline, package, application, runtime, infrastructure, or model implementation;
+- map tiles, layer manifests, caches, reports, screenshots, indexes, generated narratives, or public exports;
+- settings that relabel NFHL as observed flooding, models as observations, aggregates as site truth, or candidates as resolved identity;
+- settings that silently change parameters, units, datums, qualifiers, provisional state, precision, or no-data values; or
+- settings that interpret missing or unavailable data as safe or normal conditions.
+
+Synthetic examples must not resemble a real private well, water-right holder, active gauge event, regulated facility, warning polygon, dam interior, utility asset, or sensitive property closely enough to enable confusion or reconstruction.
 
 [Back to top](#top)
 
@@ -198,720 +200,343 @@ Synthetic examples must not resemble a real private well, water-right holder, da
 
 ## Repository fit
 
-`configs/domains/hydrology/` is the Hydrology segment under the `configs/` responsibility root.
+The path follows Directory Rules: the **responsibility root** is `configs/`; the **domain segment** is `hydrology`.
 
-| Responsibility | Canonical or proposed home | Relationship to this lane |
+| Responsibility | Verified or governing home | Relationship to this lane |
 |---|---|---|
-| Repository-wide configuration boundary | [`configs/README.md`](../../README.md) | Parent no-secrets and no-live-binding contract. |
-| Domain configuration boundary | [`configs/domains/README.md`](../README.md) | Parent no-authority and consumer-binding contract. |
-| Human-facing Hydrology doctrine | [`docs/domains/hydrology/`](../../../docs/domains/hydrology/README.md) | Defines lane meaning and governance posture. |
-| Semantic object meaning | `contracts/domains/hydrology/` | Referenced only after exact paths and authority are verified. |
-| Machine shape | `schemas/contracts/v1/domains/hydrology/` | Referenced only after exact paths and versions are verified. |
-| Admissibility and exposure policy | `policy/domains/hydrology/` | Owns allow, restrict, deny, abstain, role, freshness, and sensitivity decisions. |
-| Source identity and activation | `data/registry/sources/hydrology/`, connectors, pipeline specs | Configuration cannot admit or activate sources. |
-| Reusable implementation | `packages/domains/hydrology/` | May consume config after explicit binding; configuration does not replace code. |
-| Pipeline implementation | `pipelines/domains/hydrology/`, `pipeline_specs/hydrology/` | May consume config after explicit binding; presence does not imply execution. |
-| Tests and fixtures | `tests/domains/hydrology/`, `fixtures/domains/hydrology/` | Own enforceability and deterministic examples. |
-| Lifecycle data | `data/<phase>/hydrology/` | Never stored in this configuration lane. |
-| Receipts and proofs | `data/receipts/`, `data/proofs/` | Trust-bearing objects remain outside configuration. |
-| Release and rollback | `release/candidates/hydrology/`, canonical release homes | Configuration cannot create a release decision. |
-| Public delivery | governed API and released public artifacts | Public clients must not read this directory as a data surface. |
+| Safe repository configuration | [`configs/`](../../README.md) | Parent responsibility root. |
+| Domain-scoped configuration | [`configs/domains/`](../README.md) | Immediate parent boundary. |
+| Hydrology doctrine | [`docs/domains/hydrology/`](../../../docs/domains/hydrology/README.md) | Human-facing scope and operating law. |
+| Object meaning | [`contracts/domains/hydrology/`](../../../contracts/domains/hydrology/README.md) | Semantic authority; configuration may reference only. |
+| Machine shape | [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/README.md) | Draft schema index; configuration may reference only. |
+| Policy | [`policy/domains/hydrology/`](../../../policy/domains/hydrology/README.md) | Current scaffold; configuration cannot substitute for policy. |
+| Source admission | [`data/registry/sources/hydrology/`](../../../data/registry/sources/hydrology/README.md) | Draft source-registry lane; config cannot admit or activate. |
+| Enforceability | [`tests/domains/hydrology/`](../../../tests/domains/hydrology/README.md) and [`fixtures/domains/hydrology/`](../../../fixtures/domains/hydrology/README.md) | Tests and synthetic examples, not release authority. |
+| Lifecycle data | `data/<phase>/hydrology/` | Never stored here. |
+| Receipts and proofs | `data/receipts/`, `data/proofs/` | Trust-bearing outputs remain separate. |
+| Release and rollback | `release/`, accepted rollback/correction lanes | Configuration cannot create release state. |
+| Public delivery | governed API and released artifacts | Public clients must not read this directory as a data surface. |
 
-### Path-form conflict
+### Path and topology posture
 
-Directory Rules uses the domain-segment form, including `contracts/domains/hydrology/` and `schemas/contracts/v1/domains/hydrology/`. Older Atlas navigation uses flat forms such as `contracts/hydrology/`.
+Current repository surfaces use the domain-segment forms `contracts/domains/hydrology/` and `schemas/contracts/v1/domains/hydrology/`. Older atlas/crosswalk material recorded flat alternatives. This README follows the current repository plus Directory Rules and must not:
 
-This README follows Directory Rules for references and records the disagreement as `CONFLICTED`. A future configuration change must not:
-
-- create both path forms;
-- add compatibility aliases without an accepted migration decision;
-- infer that a path is authoritative because a similarly named directory exists; or
-- resolve the conflict through consumer precedence.
+- create flat aliases or duplicate authorities;
+- resolve registry topology drift by consumer precedence;
+- treat proposed ADR language as accepted solely because a matching path exists; or
+- create compatibility paths without an ADR or explicit migration note.
 
 [Back to top](#top)
 
 ---
 
-## Inputs
+## Inputs and outputs
 
-A future Hydrology configuration file may consume only explicit, safe, inspectable configuration inputs such as:
+### Accepted configuration inputs
 
-- a named consumer ID and owning component;
-- a format and configuration version;
+A future file may consume only explicit, inspectable configuration inputs:
+
+- named consumer ID, owner, and component path;
+- format and configuration version;
 - verified contract, schema, policy, registry, and doctrine references;
-- accepted profile IDs for role display, freshness, measurements, identity ambiguity, public-safe geometry, review, or stale-state handling;
+- accepted role, freshness, measurement, identity, public-safe geometry, review, and stale-state profile IDs;
 - source-independent presentation defaults;
-- synthetic fixture IDs and impossible example values;
-- local-override placeholders that contain no real path, endpoint, credential, site ID, owner identity, or sensitive geometry; and
-- migration and rollback metadata.
+- synthetic fixture IDs and impossible example values; and
+- migration, deactivation, and rollback metadata.
 
-A configuration input is not a source record, observation, warning, forecast, model output, identity decision, policy decision, receipt, proof, or release record.
+A configuration input is not a source record, observation, forecast, warning, model output, identity decision, policy decision, receipt, proof, or release record.
 
-[Back to top](#top)
+### Permitted output
 
----
-
-## Outputs
-
-This lane currently outputs **documentation only**.
-
-A future verified file may provide:
-
-- validated settings for one named consumer;
-- a conservative profile selection;
-- display and caveat preferences;
-- an explicit hold, abstain, or stale-state default;
-- a deterministic parser input; or
-- migration metadata.
-
-A file here must not output or trigger:
-
-- a source fetch or network request;
-- a gauge observation, hydrograph, flood polygon, HUC object, reach match, or well record;
-- a warning, alert, notification, evacuation instruction, or all-clear message;
-- an identity, unit, datum, or scientific validity decision;
-- a redaction, aggregation, evidence, review, promotion, release, correction, or publication record;
-- a public API response, map tile, layer manifest, index, cache, report, or export; or
-- durable writes outside the verified consumer's configuration state.
+The lane currently outputs **documentation only**. A future validated file may produce deterministic settings for one named consumer. It must not output or trigger a source request, hydrologic record, warning, identity decision, scientific conversion, redaction decision, EvidenceBundle, release record, API response, layer, tile, cache, report, or durable lifecycle write.
 
 [Back to top](#top)
 
 ---
 
-## Minimum configuration contract
+## Minimum file contract
 
-Before the first non-README file is accepted, it should document or encode the following fields. Exact key names remain `PROPOSED` until a schema and consumer are verified.
+Before the first non-README payload is accepted, it must document or encode the following. Exact keys remain `PROPOSED` until a schema and consumer are verified.
 
 | Contract item | Required information |
 |---|---|
-| Status | Draft, example, template, or active-for-named-consumer state. |
-| Owner | Named configuration owner and consumer owner; no placeholder at activation. |
-| Intended consumer | Exact package, pipeline, app, runtime, test, or tool expected to read the file. |
-| Binding evidence | Loader path, parser entrypoint, deployment selection, or test proving explicit use. |
-| Format and version | YAML, JSON, TOML, or other format plus configuration version. |
-| Contract and schema references | Exact verified IDs or paths; no copied machine authority. |
-| Policy references | Exact role, freshness, sensitivity, public-safe geometry, rights, and life-safety controls. |
-| Source-role handling | Accepted role profile and behavior for unknown, conflicting, or missing role. |
-| Measurement handling | Parameter, unit, datum, qualifier, precision, no-data, and conversion profile references. |
-| Identity handling | HUC/reach/site identifier rules, source vintage, crosswalk method, confidence, and ambiguity outcome. |
-| Spatial handling | CRS, source scale/resolution, geometry type, precision, and generalization-profile reference. |
-| Temporal handling | Source, observed, valid, issue, expiry, retrieval, release, correction, and supersession semantics. |
-| Freshness handling | Accepted profile ID, stale/partial/outage behavior, and visible disclosure requirements. |
-| Sensitivity handling | Private-property, well, owner, dam, utility, infrastructure, join, and reconstruction controls. |
-| Warning boundary | Explicit non-alert posture and behavior for operational-warning context. |
-| Unknown-key behavior | Reject or hold by default; never silently ignore consequential keys. |
-| Missing-file behavior | Fail closed, remain disabled, or use a verified safe built-in default. |
-| Duplicate-key behavior | Deterministic rejection unless the parser contract explicitly governs duplicates. |
-| Precedence | Complete order among built-in, repository, environment, local, CLI, and deployment layers. |
-| Local override | Ignored, documented mechanism for real local values; never commit them here. |
-| Network behavior | Disabled during validation and disabled by file presence. |
+| Status and owner | Draft/example/template/active state; named config owner and consumer owner. |
+| Intended consumer | Exact app, package, pipeline, runtime, test, or tool. |
+| Binding evidence | Parser/loader entrypoint, supported path, selection mechanism, and tests. |
+| Format and version | YAML, JSON, TOML, or another explicit format and config version. |
+| Authority references | Exact contract, schema, policy, registry, doctrine, and source-profile references. |
+| Source-role handling | Canonical role profile and fail-closed behavior for missing/conflicting role. |
+| Measurement handling | Parameter, source/display units, datum, qualifier, provisional, precision, no-data, and conversion profile. |
+| Identity handling | HUC digit level, source vintage, reach/site namespace, crosswalk method, confidence, and ambiguity outcome. |
+| Spatial handling | CRS, axis order, geometry type, scale/resolution, accuracy, clipping, simplification, and public-safe profile. |
+| Temporal handling | Source, observed, valid, issue, expiry, retrieval, processing, release, correction, and supersession semantics. |
+| Freshness handling | Source-specific profile, stale/partial/outage behavior, and disclosure requirements. |
+| Sensitivity handling | Well, owner, water-right, dam, utility, facility, private-property, join, low-count, differencing, and reconstruction controls. |
+| Warning boundary | Explicit non-alert posture and official-source redirect profile reference. |
+| Parser behavior | Missing file, unknown key, duplicate key, unsupported version, and malformed value outcomes. |
+| Precedence | Complete deterministic order among built-in, repository, environment, local, CLI, and deployment layers. |
+| Network behavior | Disabled by file presence and disabled during validation. |
 | Validation | Deterministic parse, shape, semantic, negative, sensitivity, and no-network checks. |
-| Finite failures | Recorded hold, abstain, deny, or error behavior; no permissive fallback. |
-| Deactivation | How the consumer stops selecting the file without deletion or history rewriting. |
-| Migration | Compatibility window, old/new keys, owner, removal condition, and rollback. |
-| Rollback | Prior known-good version, restoration steps, dependent cache/output review, and correction path. |
+| Deactivation | How the consumer stops selecting the file without history rewriting. |
+| Migration and rollback | Compatibility window, prior known-good version, restore steps, cache/output review, and correction path. |
 
-### Safe placeholders
+Safe placeholders include `<HYDROLOGY_CONSUMER_ID>`, `<VERIFIED_SCHEMA_REF>`, `<VERIFIED_POLICY_PROFILE>`, `<ACCEPTED_FRESHNESS_PROFILE>`, `<ACCEPTED_MEASUREMENT_PROFILE>`, `<ACCEPTED_IDENTITY_PROFILE>`, `<PUBLIC_SAFE_GEOMETRY_PROFILE>`, and `<LOCAL_ONLY_OVERRIDE>`.
 
-Use unmistakably synthetic placeholders such as:
-
-```text
-<HYDROLOGY_CONSUMER_ID>
-<VERIFIED_SCHEMA_REF>
-<VERIFIED_POLICY_PROFILE>
-<ACCEPTED_FRESHNESS_PROFILE>
-<ACCEPTED_MEASUREMENT_PROFILE>
-<ACCEPTED_IDENTITY_PROFILE>
-<PUBLIC_SAFE_GEOMETRY_PROFILE>
-<LOCAL_ONLY_OVERRIDE>
-```
-
-Do not use realistic gauge IDs, COMIDs, HUC codes tied to a sensitive example, private-well IDs, owner names, active warning IDs, coordinates, endpoints, or credentials as placeholders.
+Do not use realistic gauge IDs, COMIDs, HUC codes tied to sensitive examples, private-well IDs, owner names, warning IDs, coordinates, endpoints, or credentials as placeholders.
 
 [Back to top](#top)
 
 ---
 
-## Consumer binding, precedence, and discovery
+## Consumer binding and precedence
 
-No configuration file in this directory is active merely because it exists.
+A file is not active merely because it exists. A verified binding must establish:
 
-A verified consumer binding must establish:
+1. exact path and supported format/version;
+2. parser/loader and owning component;
+3. load timing, mandatory/optional behavior, and reload atomicity;
+4. complete precedence order;
+5. duplicate-key and unknown-key behavior;
+6. missing, unreadable, invalid, stale, and unsupported-version behavior;
+7. deactivation, migration, and rollback; and
+8. tests proving that directory presence activates no source, network call, model, warning, or public output.
 
-1. the exact file path;
-2. the parser and supported format/version;
-3. the component and owner;
-4. when loading occurs;
-5. whether loading is mandatory or optional;
-6. the complete precedence order;
-7. duplicate-key and unknown-key behavior;
-8. missing, unreadable, invalid, and stale-file behavior;
-9. whether reload is supported and how atomicity is preserved;
-10. deactivation and rollback behavior; and
-11. tests proving that directory presence alone does not activate sources, network calls, models, warnings, or public outputs.
+Until that evidence exists:
 
-### Required defaults before verification
-
-Until binding is verified:
-
-- auto-discovery is **off**;
-- recursive loading is **off**;
-- network access is **off**;
-- source activation is **off**;
-- model execution is **off**;
-- public exposure is **off**;
-- unknown keys cause hold or rejection;
-- invalid values cause hold or rejection;
+- auto-discovery, recursive loading, network access, source activation, model execution, and public exposure are **off**;
+- unknown or invalid consequential keys produce hold or rejection;
 - missing configuration leaves the proposed feature disabled; and
-- no fallback may weaken role, rights, evidence, freshness, sensitivity, or warning controls.
+- no fallback may weaken source role, rights, evidence, freshness, sensitivity, measurement integrity, identity ambiguity, or the warning boundary.
 
-Environment variables, CLI arguments, local overrides, and deployment values do not automatically outrank repository configuration. Precedence must be explicit, deterministic, documented, and tested.
+Environment variables, local overrides, CLI arguments, or deployment values do not automatically outrank repository configuration. Precedence must be explicit and tested.
 
 [Back to top](#top)
 
 ---
 
-## Hydrology semantic and source-role guardrails
+## Source-role and semantic guardrails
 
-Hydrology must preserve source role as a first-class claim attribute. Promotion, display convenience, consumer preference, and model confidence do not upgrade role.
-
-### Role vocabulary boundary
-
-Repository-wide doctrine uses role classes such as `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, `candidate`, and `synthetic`. Older Hydrology text also uses `authority`, `observation`, `context`, and `model` wording.
-
-The exact machine mapping is `NEEDS VERIFICATION` and may be `CONFLICTED`. Configuration must not:
-
-- invent aliases;
-- map `authority` to `regulatory` or `observed` without an accepted contract;
-- treat `context` as a weaker validation state rather than a claim role;
-- upgrade a candidate through successful parsing; or
-- create a second role vocabulary.
-
-### Anti-collapse matrix
+The Hydrology source registry currently names the canonical roles `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, `candidate`, and `synthetic`. Older materials also use `authority`, `observation`, `context`, and `model` wording. Configuration must not invent aliases or perform an ungoverned mapping between those vocabularies.
 
 | Claim or product | Must not become | Required posture |
 |---|---|---|
-| USGS gauge reading | Forecast, regulatory zone, model, or warning | Preserve parameter, unit, qualifier, provisional status, site, and observed time. |
-| NFHL zone | Observed inundation, current condition, forecast, or warning | Label as regulatory context with source vintage and evidence. |
-| Modeled or reconstructed hydrograph | Observed time series | Preserve model version, inputs, method, intended use, uncertainty, and run evidence. |
-| HUC or watershed aggregate | Per-site or per-property truth | Preserve aggregation unit, support, time, source set, and receipt reference. |
-| Administrative water-right or well roster | Observed flow, use, ownership proof, or event timeline | Preserve administrative status and applicable privacy/rights limits. |
-| Candidate reach crosswalk | Resolved `ReachIdentity` | Record candidates, evidence, confidence, and `ABSTAIN` when ambiguous. |
-| Terrain-derived drainage or inundation product | Official hydrography, observation, or regulatory designation | Preserve derived/modeled role, source resolution, method, and limitations. |
-| Historical observed flood evidence | Current warning or forecast | Preserve historical time and explicit non-current status. |
-| Synthetic fixture | Real site, observation, event, or source record | Use impossible values and synthetic labeling on every surface. |
-| Operational warning context | KFM-issued alert or life-safety instruction | Context only, time-bounded, cited, and redirected to official authorities. |
+| Gauge reading | Forecast, regulatory zone, model, or warning | Preserve parameter, unit, datum, qualifier, provisional status, site, and observed time. |
+| NFHL zone | Observed inundation, current flooding, forecast, or warning | Preserve regulatory role, vintage, effective date, citation, and limits. |
+| Modeled/reconstructed hydrograph | Observed series | Preserve model identity, version, inputs, method, uncertainty, and run evidence. |
+| HUC/watershed aggregate | Per-site or per-property truth | Preserve aggregation unit, support, time, source set, and receipt reference. |
+| Administrative well/water-right roster | Observed flow/use, ownership proof, or event timeline | Preserve administrative role and applicable privacy/rights limits. |
+| Candidate reach crosswalk | Resolved `ReachIdentity` | Record candidates, method, evidence, confidence, and `ABSTAIN` when ambiguous. |
+| Terrain-derived drainage/inundation | Official hydrography, observation, or regulatory designation | Preserve derived/modeled role, resolution, method, and limitations. |
+| Historical flood evidence | Current warning or forecast | Preserve historical time and explicit non-current status. |
+| Synthetic fixture | Real site, event, source, or observation | Use impossible values and synthetic labeling. |
+| Operational-warning context | KFM-issued alert or life-safety instruction | Context only; cited, time-bounded, and redirected to official authorities. |
 
-Role mismatch is a **publication-blocking condition**, not a cosmetic quality issue.
+Role mismatch is a **publication-blocking condition**, not a display preference.
 
 [Back to top](#top)
 
 ---
 
-## Measurement, spatial, and identity contract
+## Measurement, spatial, and identity integrity
 
 ### Measurement integrity
 
-A future measurement-related configuration must reference governed behavior for:
+A future profile must preserve source-native parameter, value, unit, datum, qualifier, provisional/approval state, censoring/estimated state, method, precision, uncertainty, support interval, and no-data semantics.
 
-- source parameter code and human label;
-- source unit and display unit;
-- conversion formula and version, when conversion is permitted;
-- significant figures and rounding;
-- vertical datum and reference datum;
-- site datum and datum offsets;
-- qualifiers, approvals, provisional status, censoring, and estimated values;
-- no-data, missing, ice, equipment, and invalid-value codes;
-- method and instrument context where material;
-- uncertainty, precision, and support interval; and
-- source-native value preservation.
+It must never:
 
-Configuration must never:
-
-- change a parameter's scientific meaning;
-- assume unit compatibility from a field name;
+- infer unit compatibility from a field name;
 - perform an undocumented conversion;
-- discard qualifiers or provisional state;
-- convert a no-data sentinel into zero;
+- discard qualifiers or provisional status;
+- convert no-data to zero;
 - mix stage, discharge, elevation, depth, concentration, or withdrawal values;
-- hide datum differences; or
-- present converted precision beyond source support.
+- hide vertical or site datum differences; or
+- display precision beyond source support.
 
 ### Spatial integrity
 
-A future spatial configuration must preserve:
+Preserve source/output CRS, axis order, geometry type, source scale/resolution, horizontal/vertical accuracy, HUC digit level, source vintage, topology expectations, clipping boundary, simplification/generalization profile, and public-safe geometry class.
 
-- source CRS and output CRS;
-- axis order;
-- geometry type;
-- source scale and resolution;
-- horizontal and vertical accuracy;
-- HUC digit level;
-- source vintage;
-- generalization or simplification profile;
-- clipping boundary;
-- topology expectations; and
-- public-safe geometry class.
-
-Client-side style, opacity, zoom, clustering, hidden properties, or popup omission is not a sensitivity control and does not change the underlying geometry class.
+Client-side style, opacity, zoom, clustering, hidden fields, or popup omission is **not** a sensitivity transform.
 
 ### Identity integrity
 
-A future identity configuration must preserve:
+Preserve source ID and vintage, HUC level, reach/feature namespace, site namespace, crosswalk method/version, candidate set, confidence/reason, topology/geometry checks, temporal validity, supersession lineage, and ambiguity outcome.
 
-- source identifier and source vintage;
-- HUC code and declared digit level;
-- reach or feature identifier namespace;
-- site identifier namespace;
-- crosswalk method and version;
-- candidate set;
-- confidence or decision reason;
-- topology and geometry checks;
-- temporal validity;
-- supersession lineage; and
-- ambiguity outcome.
-
-When multiple reach mappings remain defensible, the correct outcome is `ABSTAIN` or hold for review. Configuration must not select the first, nearest, longest, newest, or most convenient candidate unless that decision rule is separately governed, evidence-backed, and tested.
+When multiple mappings remain defensible, return `ABSTAIN` or hold for review. Do not select the first, nearest, longest, newest, or most convenient candidate unless a separately governed and tested rule authorizes it.
 
 [Back to top](#top)
 
 ---
 
-## Temporal, freshness, and stale-state contract
+## Temporal, freshness, and stale state
 
-Hydrology is time-aware. The following times remain distinct where material:
+Hydrology is time-aware. Do not collapse these into one timestamp:
 
-| Time field | Meaning |
+| Time | Meaning |
 |---|---|
-| `source_time` | When the upstream source asserted or versioned the record. |
-| `observed_time` | When a measurement or event occurred. |
-| `valid_time` | Window for which a model, forecast, or context is valid. |
-| `issue_time` | When an operational or regulatory product was issued. |
-| `expiry_time` | When a time-bounded product ceased to be current. |
-| `retrieval_time` | When KFM obtained the source. |
-| `processing_time` | When a governed process transformed it. |
-| `release_time` | When a public-safe artifact was released. |
-| `correction_time` | When a correction was issued. |
-| `superseded_time` | When a newer source or release replaced it. |
+| `source_time` | Upstream assertion or version time. |
+| `observed_time` | Measurement or event time. |
+| `valid_time` | Window for a model, forecast, or context. |
+| `issue_time` / `expiry_time` | Issue and expiration of a time-bounded product. |
+| `retrieval_time` / `processing_time` | KFM acquisition and processing time. |
+| `release_time` | Public-safe release time. |
+| `correction_time` / `superseded_time` | Correction and replacement lineage. |
 
-Configuration must not collapse these fields into one generic timestamp.
+A source-specific freshness profile should define cadence, latency allowance, fresh/delayed/stale/expired/partial/unavailable/corrected/superseded states, source-head requirements, disclosure, historical visibility, abstention/denial behavior, and recovery after outage.
 
-### Freshness profiles
+Required fail-closed behavior:
 
-A file may select an accepted source-specific freshness profile. It may not invent universal thresholds or imply that all hydrologic sources have the same cadence.
-
-A profile should define:
-
-- source family and product class;
-- expected cadence;
-- latency allowance;
-- fresh, delayed, stale, expired, partial, unavailable, corrected, and superseded states;
-- behavior when source-head metadata is missing;
-- display and API disclosure requirements;
-- whether a stale artifact may remain visible as historical context;
-- when a consumer must `ABSTAIN`, hold, or deny; and
-- recovery behavior after source service resumes.
-
-### Required fail-closed behavior
-
-- Stale does not mean wrong, but stale must be visible.
-- Missing or unavailable data is not an all-clear and not evidence of zero flow, no flooding, or safe conditions.
-- A cached last-known value must retain its original observation and retrieval times.
-- A correction must not silently overwrite prior lineage.
-- A superseded source or release must not remain labeled current.
-- Timezone and UTC offset must be explicit where local-time rendering occurs.
-- Forecast or warning validity may not be extended by configuration.
-- A successful source request does not prove data completeness.
+- stale may remain useful, but stale must be visible;
+- missing or unavailable data is not evidence of zero flow, no flooding, or safety;
+- cached values retain original observation and retrieval times;
+- corrections do not overwrite lineage silently;
+- superseded material is not labeled current;
+- timezone/offset is explicit when local time is rendered;
+- warning/forecast validity is never extended by configuration; and
+- a successful request does not prove completeness.
 
 [Back to top](#top)
 
 ---
 
-## NFHL, flood context, and life-safety boundary
+## NFHL, flood context, and life safety
 
 ### NFHL contract
 
-NFHL is regulatory flood-hazard context. A future configuration may control public-safe presentation only through an accepted profile and must preserve:
+A future presentation profile must preserve regulatory role, source/map vintage, zone/designation code, effective/publication date, citation, geometry/scale limits, caveats, evidence, and release state.
 
-- regulatory role;
-- source and map vintage;
-- zone or designation code;
-- effective or publication date;
-- source citation;
-- geometry and scale limitations;
-- applicable caveats; and
-- evidence and release state.
+It must not label NFHL as observed inundation, current flooding, a gauge observation, a forecast, a warning/watch/advisory, a parcel-level legal/insurance determination, or KFM emergency guidance.
 
-It must not label NFHL as:
+### Composite flood context
 
-- observed inundation;
-- current flooding;
-- a gauge observation;
-- a forecast;
-- a hydraulic model run unless the source specifically is one and is role-typed accordingly;
-- a warning, watch, or advisory;
-- a parcel-level insurance or legal determination; or
-- KFM emergency guidance.
+Regulatory, observed, modeled, historical, and operational-context material may appear together only when every constituent remains separately role-typed, time-stamped, cited, and sensitivity-filtered. A consumer must not flatten the result into one “flood” truth flag.
 
-### Flood-context composition
+### Permanent life-safety boundary
 
-A composite flood-context view may contain regulatory, observed, modeled, historical, and operational-context material only when each constituent remains separately role-typed, time-stamped, cited, and sensitivity-filtered.
+Hydrology configuration must never issue, modify, suppress, extend, cancel, or replace official warnings; generate evacuation, shelter, rescue, travel, medical, or protective-action instructions; emit an all-clear; trigger dispatch/escalation/incident command; or infer safety from missing data.
 
-A consumer must not flatten those constituents into a single “flood” truth flag.
+When a governed surface displays operational-warning context, it must identify the official source and jurisdiction, preserve issue/expiry times, display current/stale/expired/historical state, retain a not-for-life-safety disclaimer, route to an accepted official-source profile, and return `DENY` or `ABSTAIN` when authority, freshness, or official-link state is unresolved.
 
-### Life-safety boundary
-
-KFM is not an emergency warning system. Hydrology configuration must never:
-
-- issue, rank, modify, suppress, extend, cancel, or replace official warnings;
-- generate evacuation, shelter, travel, rescue, medical, or protective-action instructions;
-- emit an all-clear;
-- trigger sirens, pagers, phone trees, text messages, dispatch, escalation, or incident command;
-- infer safety from missing data; or
-- represent KFM as the current authority for flood conditions.
-
-When a governed Hydrology surface displays operational-warning context, it must:
-
-- identify the official source and jurisdiction;
-- preserve issue and expiry times;
-- make current, stale, expired, and historical states explicit;
-- retain a not-for-life-safety disclaimer;
-- direct the user to a verified jurisdiction-appropriate official-source profile; and
-- return a finite deny or abstain outcome when freshness, authority, or official-link state is unresolved.
-
-Exact disclaimer text and official-source profiles are policy and product decisions, not configuration authority, and remain `NEEDS VERIFICATION`.
+Exact disclaimer text and redirect profiles remain product/policy decisions and `NEEDS VERIFICATION`.
 
 [Back to top](#top)
 
 ---
 
-## Cross-lane ownership and context rules
+## Cross-lane and sensitivity boundaries
 
-Hydrology may join other lanes, but the join must preserve ownership, source role, sensitivity, time, and evidence.
+Hydrology may join neighboring lanes only while preserving ownership, role, time, evidence, and sensitivity.
 
-| Related lane | Hydrology relationship | Boundary |
+| Related lane | Hydrology contribution | Boundary |
 |---|---|---|
-| Hazards | Observed flow/level, regulatory NFHL, drought and flood context | Hazards owns event, warning, declaration, exposure, and resilience claims. Hydrology does not issue warnings. |
-| Soil | HUC/watershed, infiltration, runoff, hydrologic-group context | Soil owns soil units, horizons, and properties. |
-| Agriculture | Irrigation, water-use, drought, crop-water context | Agriculture owns crops, fields, yield, and production; observed flow is not yield without a governed model. |
-| Settlements / Infrastructure | Bridges, dams, utilities, intakes, treatment, floodplain exposure | Infrastructure owns facility identity and operational status; sensitive precision fails closed. |
-| Geology | Aquifer and hydrostratigraphic context | Geology owns physical geologic units; Hydrology owns observations and water-system relationships. |
-| Habitat | Wetland, riparian, watershed, and reach context | Habitat owns habitat objects; sensitive joins retain Habitat and species controls. |
-| Fauna | Aquatic and occurrence context | Fauna owns animal occurrences and sensitive sites. |
-| Flora | Wetland, riparian, and vegetation context | Flora owns plant occurrences, specimens, and sensitive locations. |
-| Roads, Rail, and Trade | Bridges, crossings, closures, detours, and flood exposure | Transport owns network and closure truth; Hydrology supplies water context only. |
-| People, DNA, Land | Well ownership, water rights, parcels, and private-property implications | People/Land owns identity, title, ownership, and parcel claims; joins default to minimum necessary detail. |
-| Spatial Foundation | CRS, geometry, scale, and generalization | Hydrology consumes shared spatial rules and does not override them. |
+| Hazards | Flow/level, NFHL, drought and flood context | Hazards owns warnings, events, declarations, exposure, and resilience claims. |
+| Soil | Watershed, infiltration, runoff, hydrologic-group context | Soil owns soil units, horizons, and properties. |
+| Agriculture | Irrigation, water-use, drought, crop-water context | Agriculture owns crops, fields, yield, and production. |
+| Settlements / Infrastructure | Bridges, dams, utilities, intakes, treatment, exposure context | Infrastructure owns facility identity and operational status; sensitive precision fails closed. |
+| Geology | Aquifer and hydrostratigraphic context | Geology owns geologic units; Hydrology owns water observations/relationships. |
+| Habitat / Fauna / Flora | Wetland, riparian, aquatic, occurrence, and vegetation context | Biological lanes retain taxonomy, occurrence, and sensitive-location authority. |
+| Roads / Rail / Trade | Crossings, closures, detours, and flood exposure context | Transport owns network and closure truth. |
+| People / DNA / Land | Well ownership, water rights, parcels, private-property implications | People/Land owns identity, title, ownership, and parcel claims. |
+| Spatial Foundation | CRS, geometry, scale, and generalization | Hydrology consumes shared spatial rules. |
 
-Join-induced sensitivity is evaluated on the resulting product, not only on each input. A harmless gauge, parcel, owner, well, dam, facility, or infrastructure record may become sensitive when combined with other data.
+Join-induced sensitivity is evaluated on the **resulting product**, not only its inputs. Review exact well locations, owner/water-right identity, low counts, isolated facilities, dam internals, treatment/intake/outfall/pumping/storage details, emergency resources, resilience dependencies, repeated-query differencing, cached tiles/exports, alternate IDs, temporal changes, and metadata/URL leakage.
 
-[Back to top](#top)
-
----
-
-## Private property, infrastructure, and reconstruction risk
-
-Hydrology's sensitive surface concentrates in private-property implications and infrastructure exposure.
-
-### Protected or review-required context
-
-Examples include:
-
-- exact private-well locations;
-- well-owner or water-right holder identity;
-- domestic or vulnerable water-supply details;
-- dam internals, control systems, or condition detail;
-- treatment, intake, outfall, pumping, storage, utility, or communications detail;
-- emergency water resources;
-- resilience-critical dependencies;
-- precise facility exposure derived from flood or drought joins;
-- low-count or isolated well, facility, or owner summaries;
-- restricted source attributes; and
-- repeated-query combinations that reconstruct suppressed detail.
-
-### Required posture
-
-A future file may select only accepted sensitivity and public-safe profiles. It must not define ad hoc coordinates, buffer distances, masking, suppression, aggregation thresholds, jitter, delay, access tiers, or owner-redaction rules.
-
-Validation and review must consider:
-
-- exact geometry and attribute disclosure;
-- low counts and small-area aggregates;
-- differencing across releases;
-- repeated query and zoom behavior;
-- cached tiles and exports;
-- alternate IDs and labels;
-- temporal changes that reveal a hidden feature;
-- joins with parcels, owners, facilities, roads, or emergency resources;
-- metadata, media, filenames, and URLs; and
-- residual risk after generalization.
-
-When rights or sensitivity remains unresolved, the safe outcome is hold, restrict, deny, or abstain—not a more permissive default.
+A file may select only an accepted sensitivity profile. It must not define ad hoc masking, jitter, delay, buffers, aggregation thresholds, suppression, access tiers, or owner-redaction rules.
 
 [Back to top](#top)
 
 ---
 
-## Validation
+## Validation and finite failures
 
-### Documentation-only validation for this revision
+### Performed for this documentation revision
 
-- Markdown structure and final newline are present.
-- Relative links are repository-plausible and authority-labeled.
-- No secrets, private endpoints, personal paths, source payloads, real site values, warning content, private-property details, or exact protected geometry are included.
-- NFHL, observations, models, aggregates, administrative records, candidates, and warnings remain distinct.
-- No source, network, model, public route, release, or publication behavior is introduced.
+- Verified repository identity, permissions, `main` head, target blob, and absence of an open target PR.
+- Inspected parent/root config contracts, Directory Rules, PR template, CODEOWNERS, drift register, Hydrology doctrine, contract/schema/policy/test/fixture/source-registry indexes, machine lane register, and relevant workflow stubs.
+- Confirmed the target document ID resolves only to this README in repository search.
+- Confirmed no executable config, policy, schema, workflow, runtime, source record, lifecycle object, release object, or public artifact is changed.
+- Reviewed the text for secrets, live bindings, real hydrologic records, warning instructions, protected owner/infrastructure detail, and role collapse.
 
-### Required validation before a future payload
+### Required before a future payload
 
-A payload should pass deterministic, no-network checks for:
+A payload must pass deterministic, no-network checks for parsing/versioning, required and unknown keys, owner/consumer binding, authority-reference resolution, role semantics, NFHL misuse, identity ambiguity, measurement/unit/datum/qualifier/no-data handling, CRS/scale/precision, all material time kinds, stale/partial/outage/correction states, rights/attribution, private-property and infrastructure risk, warning denial, no-side-effects, deactivation, migration, and rollback.
 
-1. syntax and parser compatibility;
-2. format and configuration version;
-3. required keys and type constraints;
-4. duplicate and unknown keys;
-5. consumer and owner binding;
-6. canonical reference resolution;
-7. source-role presence and allowed use;
-8. NFHL misuse and role-collapse negative cases;
-9. HUC, reach, site, and source-vintage identity semantics;
-10. ambiguous-reach abstention;
-11. parameter, unit, datum, qualifier, provisional, and no-data handling;
-12. CRS, scale, resolution, geometry, and precision;
-13. source, observed, valid, issue, expiry, retrieval, release, correction, and supersession times;
-14. fresh, stale, partial, unavailable, corrected, and superseded states;
-15. rights, attribution, redistribution, and rate-limit references;
-16. private-property, well, owner, infrastructure, join, low-count, differencing, and reconstruction risk;
-17. emergency-alert and action-guidance denial;
-18. no-network and no-side-effect behavior;
-19. deactivation, migration, correction, and rollback; and
-20. proof that directory presence alone activates nothing.
+Essential negative cases include:
 
-### Essential negative cases
+- NFHL-as-observed; model-as-observation; aggregate-as-site-truth;
+- ambiguous reach auto-selection;
+- parameter/unit/datum mismatch; discarded qualifier/provisional state; no-data-to-zero;
+- stale-as-current; outage-as-safe;
+- KFM-generated warning, action instruction, or all-clear;
+- unresolved rights accepted; exact well/owner/infrastructure exposed; repeated-query reconstruction;
+- unknown consequential key ignored; permissive fallback; network access during validation; or
+- connector/watcher/consumer writing directly to catalog, published, or release state.
 
-- NFHL labeled as observed flood;
-- modeled hydrograph labeled as observed;
-- aggregate used as site truth;
-- administrative roster treated as observation or ownership proof;
-- ambiguous reach auto-selected;
-- unit or parameter mismatch;
-- datum omitted where material;
-- qualifier or provisional status discarded;
-- no-data converted to zero;
-- stale value shown as current;
-- outage interpreted as safe conditions;
-- warning context treated as KFM authority;
-- emergency instruction or all-clear generation;
-- unresolved rights accepted;
-- exact private-well or infrastructure detail exposed;
-- repeated-query reconstruction possible;
-- unknown consequential key ignored;
-- invalid config falling back to permissive behavior;
-- network access during validation; and
-- connector, watcher, or consumer writing directly to catalog, published, or release state.
-
-Repository workflows that only echo TODO messages are scaffolds, not proof of substantive Hydrology validation.
-
-[Back to top](#top)
-
----
-
-## Failure behavior
-
-Failures must be finite, visible, deterministic, and non-permissive. Exact machine enums and exit codes remain `NEEDS VERIFICATION`.
+### Finite failure behavior
 
 | Condition | Required behavior |
 |---|---|
-| Missing optional file | Keep the proposed feature disabled or use a separately verified safe built-in default. |
-| Missing required file | Recorded error or hold; do not continue with partial assumptions. |
-| Unreadable or malformed file | Recorded error; no best-effort parsing. |
-| Unsupported version | Hold or error with migration guidance. |
-| Unknown consequential key | Reject or hold. |
-| Duplicate key | Reject unless explicitly governed by the parser contract. |
-| Missing consumer or owner | Hold; no activation. |
-| Unresolved schema, contract, policy, or registry reference | Hold or error. |
-| Missing or conflicting source role | Deny or hold. |
-| NFHL used as observed/forecast/current flood | Deny. |
-| Modeled series used as observation | Deny. |
-| Ambiguous reach identity | Abstain or hold for review. |
-| Parameter, unit, datum, qualifier, or no-data mismatch | Deny or hold; preserve source-native value. |
-| Stale source or release | Visible stale state; abstain from current claims as required. |
-| Partial source response | Mark partial; do not imply completeness. |
-| Source outage | Preserve last-known lineage with stale disclosure or return unavailable; never imply safety. |
-| Unresolved rights | Deny public use or hold. |
-| Unresolved private-property or infrastructure sensitivity | Restrict, deny, or hold. |
-| Life-safety or emergency-warning use | Deny and redirect to official authority through the accepted product/policy path. |
-| Network request attempted during no-network validation | Error. |
-| Consumer side effect during validation | Error and rollback test state. |
-| Rollback target unavailable | Hold activation or release-dependent use. |
+| Missing optional file | Feature remains disabled or uses a separately verified safe built-in default. |
+| Missing required, unreadable, malformed, or unsupported file | `ERROR` or hold; no best-effort continuation. |
+| Unknown consequential or duplicate key | Reject or hold unless explicitly governed. |
+| Missing owner/consumer/reference | Hold; no activation. |
+| Missing/conflicting source role | `DENY` or hold. |
+| NFHL used as observed/current/forecast flood | `DENY`. |
+| Model used as observation | `DENY`. |
+| Ambiguous identity | `ABSTAIN` or review hold. |
+| Measurement/datum/qualifier/no-data mismatch | `DENY` or hold; preserve source-native value. |
+| Stale/partial/outage state | Visible state; `ABSTAIN` from unsupported current claims. |
+| Unresolved rights or sensitivity | Restrict, `DENY`, or hold. |
+| Life-safety use | `DENY` and route through the accepted official-authority path. |
+| Network or side effect during no-network validation | `ERROR`. |
+| Missing rollback target | Hold activation or release-dependent use. |
 
-No failure path may silently:
-
-- widen exposure;
-- lower review burden;
-- relabel a claim;
-- resolve identity ambiguity;
-- extend validity;
-- erase stale state;
-- drop qualifiers;
-- fabricate zero or normal conditions;
-- activate a source or network request;
-- publish an artifact; or
-- generate life-safety advice.
+The repository’s docs, link, and citation workflows are currently TODO scaffolds. Their successful execution would not prove substantive Hydrology configuration validation.
 
 [Back to top](#top)
 
 ---
 
-## Governed AI and generated language
+## Governed AI and public surfaces
 
-Configuration may support presentation preferences for an already-governed AI or Focus Mode consumer. It cannot authorize AI to become Hydrology truth or an emergency authority.
+Configuration may support presentation preferences for an already-governed AI or Focus Mode consumer. It cannot authorize AI to become Hydrology truth, policy, release authority, or emergency authority.
 
-Generated language must:
+Generated language must use released resolvable evidence, preserve source role and ownership, distinguish NFHL from observed flooding, distinguish observations from models/aggregates, disclose units/qualifiers/uncertainty/time where material, show stale/partial/corrected/superseded state, `ABSTAIN` when support is insufficient, and `DENY` sensitive or life-safety replacement requests.
 
-- use released, resolvable evidence only;
-- preserve source roles and object ownership;
-- distinguish NFHL regulatory context from observed flooding;
-- distinguish observations from models and aggregates;
-- disclose measurement units, qualifiers, uncertainty, and time where material;
-- disclose stale, partial, unavailable, corrected, and superseded state;
-- abstain when reach identity, evidence, time, rights, or measurement semantics are insufficient;
-- deny sensitive owner, well, infrastructure, or protected-detail exposure;
-- deny flood-warning, evacuation, all-clear, and other life-safety replacement; and
-- remain subordinate to policy, evidence, review, and release state.
+Configuration must not instruct a model to infer current flooding from NFHL, forecast without a governed product, suppress caveats, choose an ambiguous reach, convert scientific values without an accepted method, expose protected well/owner/infrastructure detail, or answer authoritatively when evidence requires abstention.
 
-Configuration must not contain prompts or text that instruct a model to:
-
-- infer current flooding from NFHL;
-- predict flooding without a governed forecasting product and evidence;
-- suppress caveats or stale-state disclosure;
-- choose an ambiguous reach;
-- convert units or datums without an accepted method;
-- expose private owner or infrastructure detail; or
-- answer authoritatively when evidence requires abstention.
-
-Any AI output is interpretive and requires the applicable runtime receipt and finite outcome. This README does not establish those runtime surfaces.
+Public clients must use the governed API and released artifacts. They must not read this directory as a data source or authority surface.
 
 [Back to top](#top)
 
 ---
 
-## Review burden
+## Review, change, and migration discipline
 
-README changes require:
+### Review burden
 
-- configuration or documentation review; and
-- Hydrology domain review.
+README changes require configuration/documentation and Hydrology-domain review. A future payload additionally requires the applicable consumer, source, measurement, datum, identity, freshness, rights, sensitivity, public-safety, schema/contract, validation, security, accessibility, policy, evidence, and release reviewers.
 
-A future payload also requires the applicable:
+CODEOWNERS currently has only a wildcard placeholder for this path; do not infer effective review coverage from that file. Owners remain `OWNER_TBD` until verified.
 
-- named consumer owner;
-- measurement, parameter, unit, datum, and qualifier reviewer;
-- reach/HUC/site identity and crosswalk reviewer;
-- source-role and evidence reviewer;
-- source-owner and freshness reviewer;
-- rights and attribution reviewer;
-- private-property and infrastructure sensitivity reviewer;
-- public-safety and warning-boundary reviewer;
-- schema or contract reviewer;
-- validation and test reviewer;
-- security and privacy reviewer;
-- accessibility and caveat-presentation reviewer; and
-- policy and release reviewer.
-
-No reviewer may approve NFHL as observed flooding, ambiguous identity as resolved without evidence, or KFM as a warning authority through this lane.
-
-Do not infer acceptance from a missing reviewer rule or placeholder `CODEOWNERS` entry. Owners remain `OWNER_TBD` until verified.
-
-[Back to top](#top)
-
----
-
-## Maintenance and safe change pattern
-
-When a Hydrology configuration file is added or changed:
+### Safe change sequence
 
 1. identify the exact consumer and owner;
-2. re-read the parent config contract and Hydrology doctrine;
-3. verify canonical contract, schema, policy, registry, source, measurement, and identity references;
-4. preserve NFHL, observed, modeled, aggregate, administrative, candidate, synthetic, and warning distinctions;
-5. verify parameter, unit, datum, qualifier, provisional, no-data, and conversion semantics;
-6. verify HUC digit level, reach/site namespace, source vintage, crosswalk, confidence, and ambiguity behavior;
-7. verify spatial CRS, scale, resolution, geometry, precision, and public-safe profile;
-8. verify source, observed, valid, issue, expiry, retrieval, release, correction, supersession, and timezone semantics;
-9. review stale, partial, unavailable, corrected, superseded, and outage behavior;
-10. review rights, private-property, well, owner, infrastructure, join, low-count, differencing, and reconstruction risk;
-11. verify non-alert and official-source redirect behavior where warning context is displayed;
-12. run deterministic parse, shape, semantic, negative, and no-network checks;
-13. document precedence, unknown-key behavior, migration, deactivation, correction, and rollback;
-14. inspect the complete diff for secrets, live bindings, real observations, current warnings, owner/infrastructure detail, and protected clues;
-15. verify remote read-back and changed paths; and
-16. keep configuration, source admission, evidence, policy, warning authority, release, and publication as separate governed concerns.
+2. verify canonical doctrine, contract, schema, policy, source, measurement, identity, and profile references;
+3. preserve all source-role distinctions;
+4. verify scientific, spatial, temporal, freshness, rights, and sensitivity semantics;
+5. run deterministic parse, semantic, negative, and no-network tests;
+6. document precedence, deactivation, migration, correction, and rollback;
+7. inspect the diff for secrets, live bindings, real records, warnings, protected detail, and reconstruction clues;
+8. verify remote read-back and changed paths; and
+9. keep configuration, source admission, evidence, policy, release, and publication separate.
 
-### Change-budget discipline
+A config PR must not silently add source activation, polling, warning/notification behavior, contracts, schemas, role mappings, scientific conversions, identity algorithms, freshness thresholds, sensitivity rules, connectors, pipelines, models, lifecycle records, receipts/proofs, releases, or public routes/layers.
 
-A configuration PR should not silently add or alter:
+### Misplaced material
 
-- source activation, polling, or network behavior;
-- warning, notification, dispatch, escalation, or incident behavior;
-- contracts or schemas;
-- source-role vocabulary or mapping;
-- scientific parameter meaning;
-- unit or datum conversions;
-- reach or HUC identity algorithms;
-- freshness thresholds without source-owner review;
-- sensitivity or public-safe geometry policy;
-- connectors, watchers, pipelines, models, or package logic;
-- lifecycle data;
-- receipts or proofs;
-- release decisions; or
-- public routes, layers, tiles, hydrographs, reports, or exports.
-
-Those changes require separate scoped implementation and review surfaces.
-
-[Back to top](#top)
-
----
-
-## Migration and anti-bypass posture
-
-If misplaced material is found here:
-
-1. do not treat it as authoritative merely because it is committed;
-2. classify it as safe config, warning/action material, secret/live binding, contract, schema, policy, registry, source payload, measurement data, identity decision, package code, pipeline/connector/watcher code, runtime/infra, lifecycle object, trust artifact, release record, public artifact, generated output, or sensitive detail;
-3. remove or quarantine credentials, live bindings, current operational instructions, private-owner detail, exact infrastructure detail, and protected context immediately;
-4. rotate or revoke exposed credentials as required;
-5. move machine shape to `schemas/`;
-6. move semantic meaning to `contracts/`;
-7. move admissibility, role, freshness, sensitivity, and warning rules to `policy/`;
-8. move source identity and activation state to registry/connector governance;
-9. move implementation to packages, pipelines, connectors, runtime, apps, tools, or infrastructure as appropriate;
-10. move lifecycle, catalog, receipt, proof, and published material to canonical `data/` lanes;
-11. move release, correction, withdrawal, supersession, and rollback decisions to `release/`;
-12. preserve provenance, source-native values, consumer impact, migration reason, exposure assessment, and rollback instructions; and
-13. create a drift, correction, or incident record when misplaced material was consumed or exposed.
-
-### Anti-bypass matrix
-
-| Bypass risk | Required response |
-|---|---|
-| Config treated as Hydrology truth | Reject; evidence and contracts remain authoritative. |
-| Config treats NFHL as observed flood | Deny. |
-| Config treats model as observation | Deny. |
-| Config resolves ambiguous reach by convenience | Abstain or hold. |
-| Config silently converts units or datums | Reject and route to governed measurement logic. |
-| Config discards qualifier, provisional, or no-data state | Reject. |
-| Config extends stale or expired data | Reject; preserve stale/historical state. |
-| Config treats outage as safety | Reject. |
-| Config treated as warning authority | Deny; KFM remains contextual only. |
-| Config triggers source fetch, warning, or notification | Reject and move implementation out of scope. |
-| Config duplicates contract or schema | Move meaning/shape to the canonical root and keep only references here. |
-| Directory presence activates a source or model | Reject; require explicit verified binding. |
-| Config contains exact well, owner, or infrastructure context | Remove, assess exposure, and route through sensitivity/correction governance. |
-| Client-side style hides protected geometry | Reject; aggregate, redact, restrict, or deny before public artifact generation. |
-| Config writes catalog, receipt, proof, or release records | Reject and move to canonical trust/release homes. |
-| Public client reads this directory | Reject; public access must cross the governed API and released artifacts. |
-| Watcher publishes from config | Reject; watchers and connectors may propose candidates and receipts only. |
+If misplaced content appears here, classify it, remove/quarantine secrets or protected material, route meaning to `contracts/`, shape to `schemas/`, admissibility to `policy/`, source records to registry governance, implementation to its responsibility root, lifecycle objects to `data/`, and release/correction/rollback decisions to `release/`. Preserve provenance, consumer impact, exposure assessment, migration reason, and rollback instructions.
 
 [Back to top](#top)
 
@@ -919,74 +544,48 @@ If misplaced material is found here:
 
 ## Definition of done for the first payload
 
-- [ ] A named consumer and accepted owners are verified.
-- [ ] The file format, version, parser, and explicit load path are verified.
-- [ ] Canonical schema, contract, policy, registry, doctrine, and source references resolve.
-- [ ] Precedence, duplicate-key, missing-file, and unknown-key behavior are documented and tested.
-- [ ] Network, polling, model execution, warning, notification, dispatch, and escalation behavior remain disabled by file presence.
-- [ ] Role-vocabulary mapping is governed and does not create aliases by configuration.
-- [ ] NFHL cannot be labeled or queried as observed, forecast, or current flooding.
-- [ ] Observations, models, aggregates, administrative records, candidates, synthetic fixtures, and warning context remain distinct.
+- [ ] Named consumer and accepted owners are verified.
+- [ ] File format, version, parser, exact load path, and precedence are verified.
+- [ ] Canonical doctrine, contract, schema, policy, registry, source, and profile references resolve.
+- [ ] Directory presence alone activates nothing.
+- [ ] Role vocabulary and anti-collapse behavior are governed and tested.
+- [ ] NFHL cannot become observed/current/forecast flooding or warning authority.
 - [ ] Parameter, unit, datum, qualifier, provisional, precision, conversion, and no-data semantics are explicit.
-- [ ] HUC digit level, source vintage, reach/site namespace, crosswalk, confidence, and ambiguity behavior are explicit.
-- [ ] Ambiguous reach identity produces abstention or review hold.
-- [ ] CRS, scale, resolution, geometry, precision, and public-safe spatial semantics are explicit.
-- [ ] Source, observed, valid, issue, expiry, retrieval, release, correction, supersession, and timezone semantics are explicit.
-- [ ] Stale, partial, unavailable, corrected, superseded, and unknown states remain visible.
-- [ ] Rights, attribution, redistribution, and source-rate-limit terms are reviewed.
-- [ ] Private-well, owner, water-right, dam, utility, infrastructure, and private-property controls come from accepted policy profiles.
-- [ ] Join-induced sensitivity, low counts, differencing, repeated-query, and reconstruction risks are tested.
-- [ ] Operational-warning context cannot become KFM warning authority or action guidance.
-- [ ] Synthetic fixtures cover valid, invalid, held, denied, abstained, stale, partial, unavailable, corrected, superseded, ambiguous, and error cases.
-- [ ] No-network tests pass.
-- [ ] Secret, private-endpoint, personal-path, warning, measurement, owner, infrastructure, and protected-context scans pass.
-- [ ] Migration, deactivation, correction, withdrawal, and rollback behavior are tested.
-- [ ] No source, model, warning, public layer, API route, release, or publication is activated by file presence.
-- [ ] Repository-native checks are substantive or their scaffold limitations are stated explicitly.
+- [ ] HUC level, source vintage, identity namespaces, crosswalk method, confidence, and ambiguity behavior are explicit.
+- [ ] Ambiguous identity produces `ABSTAIN` or review hold.
+- [ ] CRS, geometry, scale/resolution, precision, and public-safe spatial behavior are explicit.
+- [ ] Time kinds and stale/partial/outage/correction/supersession states remain distinct and visible.
+- [ ] Rights, attribution, redistribution, cadence, and rate-limit terms are reviewed.
+- [ ] Well/owner/water-right/dam/utility/private-property and reconstruction risks use accepted policy profiles.
+- [ ] Operational-warning context cannot become KFM action guidance.
+- [ ] Synthetic valid, invalid, stale, partial, unavailable, corrected, ambiguous, denied, abstained, and error cases exist.
+- [ ] No-network and no-side-effect tests pass.
+- [ ] Secret/live-binding/protected-context scans pass.
+- [ ] Migration, deactivation, correction, withdrawal, and rollback are tested.
+- [ ] Repository-native checks are substantive or their scaffold limitations are stated.
 
 [Back to top](#top)
 
 ---
 
-## Related folders
+## Related folders and ADR posture
 
 - [`../README.md`](../README.md) — parent domain-configuration contract.
-- [`../../README.md`](../../README.md) — repository-wide configuration boundary.
-- [`../../../docs/domains/hydrology/README.md`](../../../docs/domains/hydrology/README.md) — Hydrology doctrine, source roles, object families, identity, freshness, sensitivity, and lifecycle posture.
-- [`../../../docs/registers/DOMAIN_LANE.md`](../../../docs/registers/DOMAIN_LANE.md) — canonical lane and sensitivity register.
-- [`../../../docs/registers/DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) — unresolved path and authority drift.
-- [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) — placement and responsibility law.
-- [`../../../docs/security/SECRETS.md`](../../../docs/security/SECRETS.md) — credential and sensitive-value handling.
+- [`../../README.md`](../../README.md) — root configuration boundary.
+- [`../../../docs/domains/hydrology/README.md`](../../../docs/domains/hydrology/README.md) — Hydrology doctrine.
+- [`../../../contracts/domains/hydrology/README.md`](../../../contracts/domains/hydrology/README.md) — semantic-contract index.
+- [`../../../schemas/contracts/v1/domains/hydrology/README.md`](../../../schemas/contracts/v1/domains/hydrology/README.md) — draft schema index.
+- [`../../../policy/domains/hydrology/README.md`](../../../policy/domains/hydrology/README.md) — current policy scaffold.
+- [`../../../tests/domains/hydrology/README.md`](../../../tests/domains/hydrology/README.md) — Hydrology test-lane index.
+- [`../../../fixtures/domains/hydrology/README.md`](../../../fixtures/domains/hydrology/README.md) — synthetic fixture index.
+- [`../../../data/registry/sources/hydrology/README.md`](../../../data/registry/sources/hydrology/README.md) — draft source-registry lane.
+- [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) — placement doctrine.
+- [`../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — repository-present **proposed** schema-home ADR.
+- [`../../../docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md`](../../../docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md) — repository-present **draft/proposed** sequencing ADR with an unresolved ID conflict.
+- [`../../../docs/registers/DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) — drift log; it currently contains no Hydrology-config-specific entry.
+- [`../../../docs/security/SECRETS.md`](../../../docs/security/SECRETS.md) — secret and sensitive-value handling.
 
-Future files should link to verified Hydrology contracts, schemas, policies, source descriptors, measurement profiles, identity crosswalks, freshness profiles, tests, fixtures, receipts, proofs, and release records only after those exact paths and authority relationships are confirmed.
-
-[Back to top](#top)
-
----
-
-## ADRs and drift triggers
-
-No ADR is introduced by this README.
-
-Separate governance is required for changes that would:
-
-- add, rename, merge, or retire a canonical domain slug;
-- change Hydrology ownership or cross-lane boundaries;
-- change or map the source-role vocabulary;
-- permit NFHL to be treated as observed flooding, forecast flooding, or warning authority;
-- alter measurement meaning, unit conversion, datum handling, qualifier behavior, or no-data semantics;
-- define or change reach/HUC/site identity algorithms, crosswalk thresholds, or ambiguity resolution;
-- define or alter freshness thresholds, stale-state rules, warning-boundary language, official-source profiles, sensitivity tiers, private-property rules, infrastructure aggregation, low-count rules, or public-safe geometry policy;
-- decide source rights, source authority, live-source activation, or connector cadence;
-- establish emergency warning, notification, dispatch, escalation, or incident-command behavior;
-- resolve segment-versus-flat lane paths;
-- establish universal config discovery, precedence, or unknown-key behavior;
-- create a parallel contract, schema, policy, registry, receipt, proof, warning, or release authority;
-- authorize direct public access to internal or canonical stores;
-- change lifecycle, evidence, correction, withdrawal, promotion, or release separation; or
-- introduce a direct public route to configuration material.
-
-Configuration must not be used to settle these decisions indirectly.
+This README introduces no ADR and resolves no existing ADR. Separate governance is required before changing root structure, schema-home authority, role vocabulary, identity algorithms, measurement semantics, freshness thresholds, source rights, sensitivity rules, warning boundaries, lifecycle phases, public access, or release/proof/receipt separation.
 
 [Back to top](#top)
 
@@ -994,62 +593,74 @@ Configuration must not be used to settle these decisions indirectly.
 
 ## Rollback and correction
 
-Before merge, rollback means closing the unmerged pull request and abandoning the scoped branch when separately authorized.
+Before merge, rollback means closing the draft pull request and abandoning the scoped branch.
 
-After merge, create a transparent revert commit or revert pull request that restores the prior known-good README or configuration version. Do not force-push or rewrite shared history.
+After merge, restore the prior README through a transparent revert commit or revert pull request. Do not force-push shared history.
 
 For a future payload correction:
 
-1. disable or stop selecting the affected configuration through the verified consumer mechanism;
-2. stop any connector, watcher, model, renderer, scheduled process, or public-output workflow that depends on the faulty selection;
-3. preserve the faulty version, source-native values, and evidence needed for review;
-4. identify affected objects, observations, identities, crosswalks, conversions, models, joins, caches, tiles, hydrographs, indexes, exports, screenshots, and narratives without exposing protected details;
-5. assess whether NFHL, observation, model, aggregate, administrative, candidate, synthetic, or warning roles were collapsed;
-6. assess whether measurement meaning, units, datums, qualifiers, provisional status, or no-data values were altered;
-7. assess whether reach/HUC/site identity was incorrectly resolved;
-8. assess whether stale, partial, unavailable, corrected, or superseded state was hidden;
-9. assess whether exact or reconstructable private-property, well, owner, dam, utility, or infrastructure information was exposed;
-10. restore the prior known-good version or safe disabled state;
-11. re-run validation and negative cases;
-12. create any required correction, redaction, aggregation, withdrawal, release, or rollback records in their canonical homes; and
-13. verify that no public surface continues to serve an unauthorized, stale, misclassified, incorrectly converted, wrongly identified, or reconstructable derivative.
+1. stop selecting the affected config through the verified consumer mechanism;
+2. stop dependent source/model/render/public-output processes where necessary;
+3. preserve the faulty version and review evidence;
+4. identify affected observations, identities, conversions, joins, caches, tiles, exports, screenshots, and narratives without exposing protected detail;
+5. assess role collapse, measurement corruption, identity error, hidden stale state, and sensitivity exposure;
+6. restore the prior known-good version or safe disabled state;
+7. rerun validation and negative cases;
+8. create required correction, withdrawal, redaction, release, and rollback records in canonical homes; and
+9. verify that no public surface continues to serve an unauthorized, stale, misclassified, wrongly converted, wrongly identified, or reconstructable derivative.
 
-A Git revert does not itself revoke exposed data, correct released artifacts, restore scientific meaning, undo an identity decision, invalidate caches, or establish KFM publication lineage.
+A Git revert does not itself revoke exposed data, invalidate caches, correct scientific meaning, undo an identity decision, or establish publication lineage.
 
 [Back to top](#top)
 
 ---
 
-## Safe language rules
+## Safe language
 
-Use language such as:
+Use:
 
 - “safe Hydrology configuration template for a named consumer”;
 - “intended consumer — `NEEDS VERIFICATION`”;
-- “synthetic placeholder”;
 - “NFHL regulatory context, not observed inundation”;
-- “observed gauge reading with source time, unit, qualifier, and provisional state”;
+- “observed reading with source time, unit, qualifier, and provisional state”;
 - “modeled hydrograph, not observation”;
-- “candidate reach mapping — ambiguous; abstain”;
+- “candidate reach mapping — ambiguous; `ABSTAIN`”;
 - “stale historical context, not current conditions”;
-- “public-safe display profile selector, subject to policy and release review”;
 - “configuration aid, not authority”; and
 - “bounded search found no indexed executable consumer.”
 
 Avoid unsupported claims such as:
 
 - “the Hydrology pipeline uses this config”;
-- “this file activates the gauge source”;
-- “this config is validated by CI” when the workflow is only scaffolding;
+- “this file activates a source”;
+- “CI validates this config” while workflows remain scaffolds;
 - “NFHL shows where flooding is happening”;
-- “the hydrograph is observed” when it is modeled or reconstructed;
-- “the nearest reach is the correct reach”;
-- “missing data means no flood risk”;
-- “this value is zero” when the source uses a no-data sentinel;
-- “this conversion is exact” without governed method and precision;
-- “this setting authorizes public display”;
-- “this configuration replaces policy”; or
+- “the nearest reach is correct”;
+- “missing data means no risk”;
+- “no-data is zero”;
+- “this conversion is exact” without a governed method;
+- “this setting authorizes public display”; or
 - “this folder contains the complete operational Hydrology configuration.”
+
+[Back to top](#top)
+
+---
+
+<details>
+<summary>Appendix A — v0.2 preservation and no-loss assessment</summary>
+
+This revision preserves the material safeguards from v0.2:
+
+- configuration is non-secret, non-authoritative, consumer-bound, and inactive by presence;
+- source roles remain distinct, including NFHL regulatory context, observations, models, aggregates, administrative records, candidates, synthetic fixtures, and operational-warning context;
+- measurement, unit, datum, qualifier, provisional, precision, no-data, spatial, identity, and ambiguity rules remain fail closed;
+- source, observed, valid, issue, expiry, retrieval, processing, release, correction, and supersession times remain distinct;
+- private-property, well, owner, water-right, dam, utility, infrastructure, join, low-count, differencing, and reconstruction risks remain review-gated;
+- validation, finite failures, governed AI, review, migration, correction, rollback, and safe-language requirements remain explicit.
+
+The revision removes only repetition, stale commit-pinned evidence, and wording that treated adjacent paths as merely hypothetical after their README indexes were verified. It does not upgrade those adjacent surfaces beyond their observed draft, scaffold, documentation-only, or `NEEDS VERIFICATION` states.
+
+</details>
 
 [Back to top](#top)
 
@@ -1057,6 +668,6 @@ Avoid unsupported claims such as:
 
 ## Last reviewed
 
-**2026-07-14**, against `main@b46db8e827d1ba851534568cbb16f76e78af5072`.
+**2026-07-14**, against `main@14b59b6b84ee2b9fa46e002b60e922c97cab2761`.
 
-Review again before the first non-README payload, consumer binding, loader or precedence decision, source-role mapping, measurement profile, identity-crosswalk profile, freshness profile, sensitivity profile, source or model activation, warning-context integration, or public-output integration.
+Review again before the first non-README payload, consumer binding, loader or precedence decision, source-role mapping, measurement profile, identity-crosswalk profile, freshness profile, sensitivity profile, source/model activation, warning-context integration, or public-output integration.
