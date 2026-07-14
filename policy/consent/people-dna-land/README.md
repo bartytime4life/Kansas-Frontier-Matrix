@@ -1,354 +1,810 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/consent/people-dna-land
-title: People-DNA-Land Consent Policy README
+title: policy/consent/people-dna-land/ — Restricted-Domain Consent Gate
 type: policy-readme
-version: v0.1
+version: v0.2
 status: draft
-owners: OWNER_TBD — Consent steward · Privacy steward · Domain steward · Policy steward · Docs steward
+owners: OWNER_TBD — Consent steward · Privacy steward · People-DNA-Land domain steward · Policy steward · Policy-runtime steward · Evidence steward · Release steward · Docs steward
 created: 2026-06-15
-updated: 2026-06-15
-policy_label: restricted
+updated: 2026-07-14
+policy_label: "restricted-review; consent; living-person; genealogy; dna-genomic; land-linked-person; purpose-bound; revocable; finite-outcomes; explicit-inputs; no-hidden-fetches; fail-closed; evidence-aware; rights-aware; sensitivity-aware; release-gated; cache-invalidation; replayable; rollback-aware; no-reidentification; no-secrets"
+current_path: policy/consent/people-dna-land/README.md
+truth_posture: CONFIRMED repository path, parent and sibling consent READMEs, People-DNA-Land consent doctrine, PolicyInputBundle and PolicyDecision semantic contracts, paired policy schemas, canonical PolicyDecision outcome and policy-family enums, policy-runtime package placeholder version, and TODO-only policy workflow / PROPOSED restricted-domain consent rule family, engine-result normalization, reason-code registry, obligation registry, consent token or sidecar binding, revocation introspection, multi-party consent, receipt emission, cache invalidation, and governed API integration / CONFLICTED top-level policy/consent placement versus domain-nested consent placement, duplicate CONSENT.md versus CONSENT_MODEL.md doctrine carriers, and engine-native ALLOW-RESTRICT-HOLD vocabulary versus canonical ANSWER-ABSTAIN-DENY-ERROR PolicyDecision vocabulary / UNKNOWN executable consent policy modules, accepted credential format, evaluator binding, active policy bundle, runtime enforcement, deployed revocation service, production caches, release integration, and branch-protection enforcement / NEEDS VERIFICATION accepted owners, placement ADR, supersession records, schema hardening, validators, fixtures, tests, CI, reason codes, obligation interpreter, receipt/proof links, retention and purge rules, multi-party consent, death-of-holder handling, and rollback automation
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 8bb1d0b8b288781169e5592d60962cd7537fc37c
+  prior_blob: cdf3795f1c9c0a467084d078bb6b039ae52bc506
+  bounded_path_search: target lane, parent and sibling consent lanes, People-DNA-Land consent doctrine, policy contracts and schemas, policy runtime package, policy workflow, Directory Rules, and drift/verification registers
 related:
   - ../README.md
   - ../people/README.md
   - ../../../docs/domains/people-dna-land/CONSENT_MODEL.md
+  - ../../../docs/domains/people-dna-land/CONSENT.md
   - ../../../docs/domains/people-dna-land/CONSENT_REGISTER.md
+  - ../../../docs/domains/people-dna-land/CANONICAL_PATHS.md
   - ../../../docs/domains/people-dna-land/SENSITIVITY_PROFILE.md
-  - ../../../docs/doctrine/trust-membrane.md
-  - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/domains/people-dna-land/API_CONTRACTS.md
+  - ../../../docs/standards/CONSENT_TOKENS.md
+  - ../../../docs/standards/DUO_PROFILE.md
+  - ../../../contracts/policy/policy_input_bundle.md
+  - ../../../contracts/policy/policy_decision.md
+  - ../../../schemas/contracts/v1/policy/policy_input_bundle.schema.json
+  - ../../../schemas/contracts/v1/policy/policy_decision.schema.json
   - ../../../packages/policy-runtime/README.md
+  - ../../../packages/policy-runtime/pyproject.toml
   - ../../../apps/governed-api/README.md
-tags: [kfm, policy, consent, restricted-domain, privacy, revocation, render-gate, fail-closed]
+  - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/doctrine/trust-membrane.md
+  - ../../../docs/registers/DRIFT_REGISTER.md
+  - ../../../docs/registers/VERIFICATION_BACKLOG.md
+  - ../../../.github/workflows/policy-test.yml
+tags: [kfm, policy, consent, people-dna-land, living-person, genealogy, dna, genomics, land, privacy, revocation, render-gate, policy-input-bundle, policy-decision, obligations, reason-codes, fail-closed, rollback]
 notes:
-  - "Initial README for this domain consent policy lane."
-  - "Consent constrains render-time materialization; it does not publish data and does not replace rights, sensitivity, evidence, review, release, correction, or rollback gates."
-  - "Placement remains PROPOSED until the consent-policy placement ADR resolves top-level and domain-scoped consent homes."
-  - "Runtime enforcement, schemas, fixtures, tests, revocation infrastructure, consent-decision receipts, and consent-register binding remain NEEDS VERIFICATION."
+  - "This revision changes only policy/consent/people-dna-land/README.md."
+  - "The path is CONFIRMED repository-present, but its authority remains CONFLICTED because current People-DNA-Land path doctrine says the placement ADR is unresolved and prefers domain-nested consent rules pending that ADR."
+  - "Bounded repository search did not surface executable consent Rego, a ConsentSidecar schema, domain consent fixtures, or domain consent tests. This is search-limited and not proof of permanent absence."
+  - "PolicyDecision is repository-present with canonical outcomes ANSWER, ABSTAIN, DENY, and ERROR and policy_family consent. Engine-native ALLOW, RESTRICT, and HOLD require explicit normalization before public or runtime use."
+  - "PolicyInputBundle is repository-present, but its paired schema remains a permissive placeholder requiring only id; the consent context described here is not yet machine-enforced."
+  - "The policy runtime package is version 0.0.0 and the policy-test workflow currently contains TODO echo steps, so runtime and CI enforcement remain unproved."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
-# People-DNA-Land Consent Policy
+# Restricted-Domain Consent Gate
 
 `policy/consent/people-dna-land/`
 
-**Consent-policy lane for a restricted KFM domain where person-linked records and derived relationships require purpose-bound, revocable, fail-closed consent checks.**
+> Consent-policy boundary for living-person, genealogy, DNA/genomic, derivative-relationship, and land-linked person operations. This lane may decide whether consent blocks a precisely scoped action; it cannot establish identity truth, relationship truth, land-title truth, evidence closure, rights clearance, sensitivity clearance, review approval, release approval, or publication.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
-![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
-![policy](https://img.shields.io/badge/policy-domain__consent-0a7ea4)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-![default](https://img.shields.io/badge/default-deny__closed-d62728)
+![version](https://img.shields.io/badge/version-v0.2-informational)
+![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
+![placement](https://img.shields.io/badge/placement-CONFLICTED-orange)
+![policy](https://img.shields.io/badge/policy-consent-0a7ea4)
+![canonical outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0b7285)
+![default](https://img.shields.io/badge/default-fail__closed-critical)
+![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-[Scope](#1-scope) · [Repo fit](#2-repo-fit) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Lifecycle](#7-consent-lifecycle) · [Diagram](#8-diagram) · [Definition of done](#14-definition-of-done)
-
-</div>
-
----
+**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Scope](#scope-and-bounded-context) · [Invariants](#keystone-invariants) · [Repo fit](#repository-fit-and-directory-rules-basis) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#explicit-policy-input) · [Decisions](#decision-vocabulary-and-normalization) · [Lifecycle](#consent-lifecycle) · [Evaluation](#evaluation-order) · [Revocation](#revocation-correction-and-cache-invalidation) · [Validation](#validation-and-test-matrix) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Rollback](#rollback-correction-and-supersession)
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Owners:** `OWNER_TBD` — Consent steward · Privacy steward · Domain steward · Policy steward · Docs steward  
-> **Path:** `policy/consent/people-dna-land/README.md`  
-> **Responsibility root:** `policy/` — policy-as-code and policy documentation  
-> **Truth posture:** CONFIRMED file path / PROPOSED domain consent policy lane / UNKNOWN runtime enforcement
+> **Consent is necessary where policy requires it, but never sufficient.** A consent result may only say that consent does or does not block the exact operation, audience, purpose, field or relation, temporal window, precision, and subject binding that were evaluated. Public or restricted materialization still requires evidence, source-role, rights, sensitivity, review, release, correction, and rollback gates.
 
 > [!CAUTION]
-> **Consent does not publish data.** A consent decision only says whether consent blocks a scoped render or review. It never substitutes for evidence closure, rights, sensitivity, validation, review state, release state, correction path, or rollback support.
+> **Repository presence is not policy activation.** This README exists, but current evidence does not establish executable rules, an accepted bundle, evaluator wiring, consent schemas, domain fixtures, tests, receipt emission, deployed revocation introspection, cache invalidation, or production enforcement.
 
 ---
 
-## Quick jump
+## Purpose
 
-- [1. Scope](#1-scope)
-- [2. Repo fit](#2-repo-fit)
-- [3. Consent boundary](#3-consent-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Inputs](#5-inputs)
-- [6. Exclusions](#6-exclusions)
-- [7. Consent lifecycle](#7-consent-lifecycle)
-- [8. Diagram](#8-diagram)
-- [9. Decision vocabulary](#9-decision-vocabulary)
-- [10. Domain obligations](#10-domain-obligations)
-- [11. Revocation and correction posture](#11-revocation-and-correction-posture)
-- [12. Inspection path](#12-inspection-path)
-- [13. Validation expectations](#13-validation-expectations)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open verification items](#15-open-verification-items)
+This lane documents the restricted-domain consent gate for People / Genealogy / DNA / Land operations.
 
----
+It exists to make consent decisions:
 
-## 1. Scope
+- purpose-bound;
+- audience-bound;
+- subject- or holder-bound;
+- field-, relation-, derivative-, precision-, export-, and operation-specific;
+- time-bounded;
+- revocation- and dispute-aware;
+- finite in outcome;
+- obligation-bearing;
+- auditable and replayable;
+- correctable;
+- fail-closed.
 
-`policy/consent/people-dna-land/` is a proposed consent-policy lane for a restricted domain that combines person-linked, relationship-linked, derivative, and land-linked records.
+The lane must prevent a valid consent record from being misused as:
 
-It should describe and eventually bind consent checks for whether a governed render, review, export, join, relationship display, derivative summary, or land-linked person claim may be materialized under a valid consent grant and within its purpose, audience, retention, precision, and revocation constraints.
-
-In scope:
-
-- consent posture for person-linked records
-- consent posture for relationship and derivative summaries
-- land-linked person claim consent posture
-- consent-register and consent-decision expectations
-- purpose, audience, retention, and revocation checks
-- obligations such as redact, generalize, restrict audience, withhold relation, suppress derivative detail, or require review
-- audit and receipt expectations for consequential consent decisions
-
-Out of scope:
-
-- legal advice
-- source acquisition
-- rights/licensing policy
-- sensitivity tier policy
-- schema definitions
-- contract meaning
-- release approval
-- public UI implementation
-- lifecycle data storage
-- identity-provider credentials or secrets
+- a general publication license;
+- an identity, relationship, occupancy, ownership, title, or boundary proof;
+- a source-rights grant;
+- a sensitivity downgrade;
+- a release approval;
+- a waiver of citation;
+- permission to reconstruct revoked or withheld information;
+- permission to expose raw DNA kit/vendor identifiers or segments;
+- permission to bypass governed APIs.
 
 [Back to top](#top)
 
 ---
 
-## 2. Repo fit
+## Authority level
 
-| Concern | Owning root | Expected relationship |
-|---|---|---|
-| Domain consent policy lane | `policy/consent/people-dna-land/` | This README; active policy files remain `NEEDS VERIFICATION` |
-| Consent policy parent | `policy/consent/` | Parent consent posture and shared gate vocabulary |
-| People consent sublane | `policy/consent/people/` | Narrow person-linked consent posture |
-| Domain consent doctrine | `docs/domains/people-dna-land/CONSENT_MODEL.md` | Human-facing consent model and domain guidance |
-| Consent register docs | `docs/domains/people-dna-land/CONSENT_REGISTER.md` | Human-facing register guidance; not executable policy authority |
-| Runtime policy evaluation | `packages/policy-runtime/` or governed API policy runtime | Implementation home remains `NEEDS VERIFICATION` |
-| Public / reviewer API boundary | `apps/governed-api/` | Consent checks should be enforced through governed interfaces |
-| Consent schemas | `schemas/contracts/v1/` or verified consent schema home | Machine shape remains `NEEDS VERIFICATION` |
-| Stored receipts and proofs | `data/receipts/`, `data/proofs/`, or verified homes | Exact homes remain `NEEDS VERIFICATION` |
+This lane is **policy-authoritative only after placement, ownership, review, bundle, and activation controls are accepted**.
 
-> [!WARNING]
-> Existing domain consent doctrine records consent-lane placement as an open ADR between top-level `policy/consent/` and a domain-scoped consent policy home. This sublane must remain draft until that placement is resolved.
+| Concern | Authority in this lane |
+|---|---|
+| Consent admissibility | Potential authority after accepted executable rules and review. |
+| Policy input meaning | None. `contracts/policy/policy_input_bundle.md` owns meaning. |
+| Policy decision meaning | None. `contracts/policy/policy_decision.md` owns the canonical result. |
+| Machine shape | None. `schemas/contracts/v1/` owns shape. |
+| Runtime execution | None. `packages/policy-runtime/` is the executor boundary. |
+| Evidence or source authority | None. Evidence and source registries remain independent. |
+| Rights and sensitivity | None. Independent policy families must also pass. |
+| Identity, relationship, or land truth | None. Consent cannot prove a claim. |
+| Review and release | None. `release/` and review artifacts retain authority. |
+| Receipts and proofs | None. Emitted trust artifacts live outside this lane. |
+| Public API/UI behavior | None. Governed applications consume normalized decisions. |
 
-## 3. Consent boundary
+A consent rule can block an operation. It cannot publish, prove, or authorize beyond its exact gate.
 
-Consent is one independent gate. It is not identity truth, relationship truth, land-title truth, rights clearance, sensitivity clearance, evidence closure, review approval, release approval, correction, or rollback.
+[Back to top](#top)
 
-Short rule:
+---
+
+## Status and evidence
+
+### Current repository state
+
+| Surface | Status | Safe conclusion |
+|---|---:|---|
+| This README | **CONFIRMED** | The target lane exists and previously documented a draft consent boundary. |
+| Parent and sibling consent READMEs | **CONFIRMED** | `policy/consent/README.md` and `policy/consent/people/README.md` exist. |
+| Placement | **CONFLICTED** | `CANONICAL_PATHS.md` records an open ADR and prefers domain-nested rules pending resolution. |
+| Domain consent doctrine | **CONFIRMED DRAFT DOCS** | `CONSENT_MODEL.md` and `CONSENT.md` exist; the model says it supersedes the older filename, but both remain. |
+| `PolicyInputBundle` contract/schema | **CONFIRMED / PLACEHOLDER SHAPE** | Meaning is documented; the paired schema requires only `id` and permits additional properties. |
+| `PolicyDecision` contract/schema | **CONFIRMED / PROPOSED SHAPE** | Canonical outcomes are `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `policy_family` includes `consent`. |
+| Consent executable modules | **NOT SURFACED IN BOUNDED SEARCH** | No consent Rego or equivalent evaluator was established. |
+| Consent-specific schema, fixtures, tests | **NOT SURFACED IN BOUNDED SEARCH** | No `ConsentSidecar` schema or domain consent test suite was established. |
+| Policy runtime package | **CONFIRMED PLACEHOLDER** | Package version is `0.0.0`; runtime behavior remains unproved. |
+| Policy workflow | **CONFIRMED TODO-ONLY** | OPA and fixture-coverage jobs currently echo TODO. Green CI would not prove policy behavior. |
+| Deployment, receipts, cache invalidation | **UNKNOWN** | No runtime or operational evidence was inspected. |
+
+### Evidence boundary
+
+This README may confidently describe verified paths, files, and schema surfaces. It must not claim:
+
+- active consent enforcement;
+- legal sufficiency;
+- accepted VC/token format;
+- current revocation service availability;
+- complete cache invalidation;
+- public-safe deployment;
+- release integration;
+- receipt emission;
+- complete test coverage;
+- branch-protection enforcement.
+
+Those remain `UNKNOWN` or `NEEDS VERIFICATION` until implementation evidence proves them.
+
+[Back to top](#top)
+
+---
+
+## Scope and bounded context
+
+### In scope
+
+- consent checks for living-person records;
+- genealogy and family/household relations;
+- DNA/genomic source use and DNA-derived relationships;
+- person-to-land, residence, occupancy, and property-linked operations;
+- purpose, audience, precision, retention, and export scope;
+- suspension, revocation, dispute, correction, and supersession;
+- obligation propagation;
+- finite consent decision normalization;
+- fail-closed handling of unavailable support;
+- audit and replay metadata requirements;
+- cache/derivative invalidation requirements.
+
+### Out of scope
+
+- legal advice;
+- identity resolution or personhood truth;
+- relationship or title adjudication;
+- source acquisition;
+- raw DNA/genotype storage;
+- rights and licensing decisions;
+- sensitivity classification;
+- evidence closure;
+- semantic contracts or JSON Schemas;
+- runtime adapters;
+- release approval;
+- public UI implementation;
+- secrets, credentials, private keys, access tokens, or real sensitive fixtures.
+
+[Back to top](#top)
+
+---
+
+## Keystone invariants
+
+1. **Consent does not publish data.**
+2. **Consent is one independent gate; every other required gate still runs.**
+3. **Missing, stale, unverifiable, expired, suspended, revoked, disputed, or ambiguous consent fails closed.**
+4. **Consent is checked for every consequential render, answer, export, join, derivation, or release-adjacent action.**
+5. **Consent is operation-, purpose-, audience-, field/relation-, precision-, export-, and time-specific.**
+6. **Consent by one person does not automatically authorize disclosure about another living person.**
+7. **Consent to source data does not automatically authorize a new inference, aggregate, relationship, map layer, or export.**
+8. **Consent cannot convert assessor/tax records into title truth or parcel geometry into title-boundary proof.**
+9. **Raw DNA kit/vendor identifiers, raw genotype, segments, credentials, and private status material never appear in public artifacts, logs, URLs, screenshots, or fixtures.**
+10. **A caller must enforce every returned obligation or fail closed.**
+11. **Consent decisions are immutable events; later decisions supersede rather than rewrite prior decisions.**
+12. **Public clients use governed interfaces and released artifacts, never direct canonical stores or policy internals.**
+13. **Inputs are explicit; hidden fetches, model inference, operator memory, or UI state cannot silently fill missing policy facts.**
+14. **Correction and rollback remain available even after an allow-like evaluation.**
+15. **The lifecycle remains `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`; consent may gate a step but does not move artifacts.**
+
+[Back to top](#top)
+
+---
+
+## Repository fit and Directory Rules basis
+
+The primary responsibility is policy admissibility, so the owning root is `policy/`. The unresolved issue is the lane shape:
 
 ```text
-policy/consent/people-dna-land/ = domain-scoped consent gate, if accepted
-policy/consent/                 = shared consent gate posture
-policy/sensitivity/             = sensitivity, geoprivacy, and exposure policy
-contracts/                      = object meaning
-schemas/contracts/v1/            = machine-readable shape
-release/                        = publication, correction, rollback control
-data/                           = lifecycle state, receipts, proofs, artifacts
+current repository path:
+policy/consent/people-dna-land/
+
+domain-nested alternative preferred by current CANONICAL_PATHS.md pending ADR:
+policy/domains/people-dna-land/consent/
 ```
 
-## 4. Default posture
+Until an accepted ADR resolves this conflict:
 
-Consent policy should fail closed.
+- do not create duplicate executable rule families in both homes;
+- do not treat file presence as final authority;
+- do not copy rules between lanes without migration and supersession records;
+- keep implementation work bounded behind the placement decision;
+- record a future move as a governed, reversible migration.
 
-A render, review, export, join, relationship display, derivative summary, or land-linked person request should return `DENY`, `ABSTAIN`, or `HOLD` when any of these are missing, stale, ambiguous, expired, revoked, disputed, or unsupported:
-
-- consent grant reference
-- subject or holder binding
-- requested purpose
-- requested audience
-- requested field, relationship, derivative, or land-linked claim
-- retention window
-- revocation status
-- evidence reference
-- sensitivity context
-- rights context
-- release or candidate state
-- audit context
-
-## 5. Inputs
-
-| Input family | Examples | Required posture |
-|---|---|---|
-| Consent record | ConsentGrant, ConsentSidecar reference, consent receipt, status-list reference | Verified, scoped, revocation-checkable |
-| Subject context | subject pseudonym, holder reference, record reference | Minimized and privacy-preserving |
-| Domain derivative context | derived relationship, inferred link, sensitive derivative flag | Opaque and minimized |
-| Land context | parcel/person relation, chain-of-title relation, ownership/occupancy claim | Evidence-backed and purpose-bound |
-| Request context | actor, audience, purpose, scope, field/relation requested, timestamp | Explicit and auditable |
-| Revocation state | RevocationReceipt, tombstone, status-list bit, invalidation event | Checked before consequential render |
-| Evidence / release context | EvidenceRef, EvidenceBundle status, release state, citation validation | Required for consequential claim display |
-| Sensitivity / rights context | domain-sensitive flags and rights status | Fail closed when unresolved |
-
-## 6. Exclusions
-
-| Does not belong here | Correct home |
+| Responsibility | Owning path or authority |
 |---|---|
-| Consent schemas | `schemas/contracts/v1/` |
-| Domain object semantic contracts | `contracts/` |
-| Protected source data | `data/` lifecycle roots with policy controls |
-| Sensitive external identifiers or secrets | Secret manager / deployment config, not repo docs |
-| Consent receipts and proof storage | `data/receipts/`, `data/proofs/`, or verified homes |
-| Release manifests and rollback authority | `release/` |
-| Rights/licensing policy | accepted rights policy lane |
-| Sensitivity and geoprivacy policy | `policy/sensitivity/` |
-| Public UI or API implementation | `apps/` or governed UI/API packages |
-| Runtime helper code | `packages/policy-runtime/` |
-| Legal advice | Outside repository policy docs |
+| Human consent doctrine | `docs/domains/people-dna-land/CONSENT_MODEL.md` |
+| Consent register guidance | `docs/domains/people-dna-land/CONSENT_REGISTER.md` |
+| Path governance | Directory Rules, `CANONICAL_PATHS.md`, accepted ADRs |
+| Policy input meaning | `contracts/policy/policy_input_bundle.md` |
+| Policy decision meaning | `contracts/policy/policy_decision.md` |
+| Policy shapes | `schemas/contracts/v1/policy/` |
+| Token/credential standards | `docs/standards/CONSENT_TOKENS.md`, `DUO_PROFILE.md` |
+| Policy execution | `packages/policy-runtime/` |
+| Governed boundary | `apps/governed-api/` |
+| Receipts and proofs | `data/receipts/`, `data/proofs/`, or accepted homes |
+| Release and rollback | `release/` |
+| Tests and fixtures | `tests/`, `fixtures/` |
+| Drift and verification | `docs/registers/DRIFT_REGISTER.md`, `VERIFICATION_BACKLOG.md` |
 
-## 7. Consent lifecycle
+```mermaid
+flowchart LR
+    REQUEST["Governed request"] --> INPUT["PolicyInputBundle<br/>explicit refs and context"]
+    INPUT --> CONSENT["Consent rule family<br/>placement unresolved"]
+    CONSENT --> ENGINE["Policy runtime<br/>PROPOSED / unproved"]
+    ENGINE --> NORMALIZE["Normalize engine result"]
+    NORMALIZE --> DECISION["PolicyDecision<br/>policy_family: consent"]
+    DECISION --> OTHER["Evidence + rights + sensitivity<br/>review + release gates"]
+    OTHER -->|all pass and obligations enforced| OUTPUT["Governed response / render / export"]
+    OTHER -->|missing or blocked| BLOCK["ABSTAIN / DENY / ERROR"]
+```
 
-Domain consent state must remain explicit, revocable, auditable, purpose-bound, and join-aware.
+[Back to top](#top)
+
+---
+
+## What belongs here
+
+After placement acceptance, this lane may contain:
+
+- restricted-domain consent rule modules;
+- consent reason-code and obligation definitions owned by policy;
+- safe, non-secret, reviewed policy data documents;
+- policy bundle source references;
+- rule-level documentation;
+- migration and compatibility notes;
+- synthetic, generalized, or redacted examples.
+
+Potential rule families include:
+
+- consent reference presence and integrity;
+- pseudonymous subject/holder binding;
+- purpose and audience matching;
+- field, relation, derivative, precision, operation, and export scope;
+- retention and expiration;
+- suspension and revocation;
+- status availability and freshness;
+- multi-party or affected-party review;
+- dispute and correction hold;
+- no-reidentification;
+- obligation enforcement capability;
+- cache invalidation;
+- consent-does-not-publish separation.
+
+[Back to top](#top)
+
+---
+
+## What does not belong here
+
+| Do not put here | Correct owner |
+|---|---|
+| Semantic contracts | `contracts/` |
+| JSON Schemas | `schemas/contracts/v1/` |
+| Runtime adapters | `packages/policy-runtime/` |
+| Lifecycle records | `data/<phase>/` |
+| Consent/evaluation receipts and proof packs | `data/receipts/`, `data/proofs/`, or accepted homes |
+| Release manifests, correction notices, withdrawal decisions, rollback cards | `release/` |
+| Public routes, serializers, UI/map code | `apps/` or accepted implementation roots |
+| Rights or sensitivity rules | Independent accepted policy lanes |
+| Real identifiers, DNA data, tokens, credentials, keys, status-list secrets | Never in public docs or fixtures |
+| AI-generated relationship claims | Governed AI/evidence surfaces |
+| Duplicate executable rules in both possible consent homes | Nowhere without ADR/migration |
+
+[Back to top](#top)
+
+---
+
+## Explicit policy input
+
+Consent evaluation should consume an explicit `PolicyInputBundle` snapshot and must not fetch missing facts from source systems, RAW stores, hidden globals, model context, UI state, operator memory, or network services without a separately governed and recorded resolution step.
+
+| Input family | Minimum content | Fail-closed condition |
+|---|---|---|
+| Bundle identity | id, version/profile, `spec_hash` when accepted | Missing stable identity |
+| Operation | render, review, answer, export, join, derive, correct, withdraw, rollback | Unknown or generic operation |
+| Actor and audience | actor/ref, role, public/restricted/steward/partner/export surface | Unknown audience |
+| Subject/holder binding | pseudonymous refs, binding method/status | Raw PII, ambiguous binding |
+| Consent reference | grant/token/receipt/sidecar refs, issuer, integrity status | Missing or unverifiable |
+| Scope | purpose, audience, field/relation, derivative, precision, export class | Request exceeds grant |
+| Time | issued, not-before, expiry, retention, evaluation time | Missing/inconsistent/expired |
+| Revocation/status | status pointer, purpose, freshness, current result | Revoked, stale, unreachable |
+| Multi-party context | affected-party refs or review status where required | Required party unresolved |
+| Evidence | EvidenceRef/EvidenceBundle refs and resolver state | Consequential claim unsupported |
+| Source role | descriptor refs, authority role, caveats | Role missing or collapsed |
+| Rights | terms, redistribution/export limits, embargo | Rights unresolved |
+| Sensitivity | living-person, genomic, family, land, location, cultural/safety flags | Posture unknown |
+| Release/review | release state, review refs, rollback target | Required support absent |
+| Evaluator | bundle id/hash/version and evaluator profile | Missing, stale, unapproved |
+| Obligation capability | proof caller can enforce each obligation | Obligation cannot be enforced |
+| Prior decisions | supersession, dispute/correction refs, cache state | Stale decision treated as current |
+
+> [!WARNING]
+> The repository-present `PolicyInputBundle` schema does not enforce these fields today. A syntactically valid placeholder bundle is not proof that a request is consent-ready.
+
+Policy inputs should use references and minimized state. Do not embed raw names, addresses, DNA segments, kit IDs, access tokens, credentials, or private notes.
+
+[Back to top](#top)
+
+---
+
+## Decision vocabulary and normalization
+
+### Canonical repository-facing decision
+
+The repository-present `PolicyDecision` schema defines:
+
+```text
+outcome = ANSWER | ABSTAIN | DENY | ERROR
+policy_family = consent
+```
+
+A consent evaluator may use lower-level engine results, but governed callers should consume the canonical surface.
+
+| Engine/native result | Canonical outcome | Required posture |
+|---|---|---|
+| `ALLOW` | `ANSWER` only for the evaluated consent gate | Preserve obligations; all non-consent gates still run. |
+| `RESTRICT` or `LIMITED` | `ANSWER` only when every restriction is machine-enforceable | Emit every obligation; otherwise `DENY` or `ERROR`. |
+| `HOLD` | `ABSTAIN` | Add `review_required`; public materialization stays blocked. |
+| `ABSTAIN` | `ABSTAIN` | Name missing support safely. |
+| `DENY` | `DENY` | Block without leaking protected detail. |
+| `ERROR` | `ERROR` | Fail closed and preserve process failure. |
+
+> [!IMPORTANT]
+> `ANSWER` with `policy_family: consent` means only that consent did not block this exact request and every obligation can be enforced. It is not evidence closure, rights clearance, sensitivity clearance, review approval, or release approval.
+
+Illustrative schema-aligned decision:
+
+```json
+{
+  "decision_id": "poldec:20260714:consent:restricted-render",
+  "outcome": "DENY",
+  "policy_family": "consent",
+  "reasons": ["consent.revoked"],
+  "obligations": ["cache_invalidate"],
+  "evaluated_at": "2026-07-14T17:00:00Z"
+}
+```
+
+### Proposed reason codes
+
+- `consent.missing`
+- `consent.subject_binding_unresolved`
+- `consent.integrity_invalid`
+- `consent.status_unavailable`
+- `consent.revoked`
+- `consent.suspended`
+- `consent.expired`
+- `consent.not_yet_valid`
+- `consent.purpose_mismatch`
+- `consent.audience_mismatch`
+- `consent.scope_exceeded`
+- `consent.no_reidentification_required`
+- `consent.multiparty_unresolved`
+- `consent.relationship_disputed`
+- `consent.land_link_disputed`
+- `consent.obligation_unenforceable`
+- `consent.evidence_unresolved`
+- `consent.rights_unresolved`
+- `consent.sensitivity_unresolved`
+- `consent.release_unavailable`
+- `consent.evaluator_error`
+
+### Proposed obligations
+
+- `redact_person_attribute`
+- `redact_relation`
+- `suppress_sensitive_derivative`
+- `generalize_person`
+- `generalize_land_link`
+- `generalize_geometry`
+- `restrict_audience`
+- `purpose_limit`
+- `retention_limit`
+- `review_required`
+- `attach_citation`
+- `attach_consent_notice`
+- `block_export`
+- `no_reidentification`
+- `cache_invalidate`
+- `rollback_check_required`
+
+A caller that cannot prove it applied every obligation must fail closed.
+
+[Back to top](#top)
+
+---
+
+## Consent lifecycle
+
+Consent state must remain explicit and event-based.
 
 | State | Meaning | Runtime posture |
 |---|---|---|
-| `draft` | Consent record is being prepared | Not usable for public or reviewer materialization |
-| `granted` | Consent grant exists and can be evaluated | Check purpose, scope, audience, retention, revocation, and obligations |
-| `limited` | Consent allows constrained fields, relations, derivatives, purpose, or audience only | Enforce obligations and restrictions |
-| `disputed` | Consent, relation, or identity binding is challenged | `HOLD` for review; do not render publicly |
-| `expired` | Retention or validity window has ended | `DENY` unless renewed and verified |
-| `revoked` | Consent was withdrawn | `DENY` and invalidate dependent caches |
-| `unknown` | Consent cannot be verified | `ABSTAIN` or `DENY`, never implicit allow |
+| `draft` | Being prepared; not enforceable | Block consequential use |
+| `granted` | Grant exists and may be evaluated | Evaluate complete scope/status |
+| `limited` | Only constrained use is permitted | Apply all obligations |
+| `suspended` | Temporarily blocked | `DENY` or `ABSTAIN`; require review |
+| `disputed` | Binding, relation, land link, or grant is challenged | `ABSTAIN`; no public materialization |
+| `expired` | Validity/retention ended | `DENY` |
+| `revoked` | Grant withdrawn | `DENY`; invalidate and assess prior releases |
+| `superseded` | New grant replaces prior grant | Evaluate new immutable grant |
+| `unknown` | State cannot be verified | `ABSTAIN` or `ERROR`, never allow |
 
-## 8. Diagram
+Rules:
+
+- transitions create new events/receipts; do not mutate audit history;
+- revocation is checked at every consequential access;
+- unavailable status fails closed;
+- suspension and dispute remain distinct from final revocation;
+- renewal or supersession creates a new grant identity;
+- affected caches and derivatives are tracked by dependency references, not guessed.
+
+[Back to top](#top)
+
+---
+
+## Evaluation order
+
+The evaluator should use a deterministic, inspectable order:
+
+1. validate input shape and evaluator/bundle identity;
+2. confirm requested operation and audience;
+3. confirm pseudonymous subject/holder binding;
+4. verify consent reference integrity;
+5. resolve current suspension/revocation status;
+6. check validity and retention windows;
+7. compare purpose, audience, field, relation, derivative, precision, export, and operation scope;
+8. evaluate multi-party/affected-party requirements;
+9. verify caller obligation capability;
+10. evaluate independent evidence, source-role, rights, sensitivity, review, and release context;
+11. normalize engine result into `PolicyDecision`;
+12. emit or reference receipt-ready metadata;
+13. materialize only after every independent gate and obligation passes.
 
 ```mermaid
 flowchart TD
-    request["Domain render / review / join request"] --> minimized{"Identifiers minimized?"}
-    minimized -->|no| abstain1["ABSTAIN / HOLD"]
-    minimized -->|yes| consent{"Consent reference present?"}
-    consent -->|no| deny0["DENY or ABSTAIN"]
-    consent -->|yes| valid{"Consent receipt valid?"}
-    valid -->|no| deny1["DENY"]
-    valid -->|yes| revoked{"Revoked, expired, suspended, or disputed?"}
-    revoked -->|yes| deny2["DENY / HOLD"]
-    revoked -->|no| scope{"Purpose, audience, field, relation, derivative allowed?"}
-    scope -->|no| deny3["DENY"]
-    scope -->|yes| gates{"Evidence + rights + sensitivity + release gates clear?"}
-    gates -->|no| hold["ABSTAIN / HOLD / DENY"]
-    gates -->|yes| allow["ALLOW with domain obligations"]
-
-    allow --> audit["ConsentDecision + audit metadata"]
-    deny0 --> audit
-    deny1 --> audit
-    deny2 --> audit
-    deny3 --> audit
-    abstain1 --> audit
-    hold --> audit
-
-    classDef deny fill:#ffd7d7,stroke:#9b1d1d,color:#000;
-    classDef abstain fill:#fff4ce,stroke:#8a6d00,color:#000;
-    classDef allow fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
-    class deny0,deny1,deny2,deny3 deny;
-    class abstain1,hold abstain;
-    class allow allow;
+    A["Explicit PolicyInputBundle"] --> B{"Input and evaluator valid?"}
+    B -->|no| E["ERROR"]
+    B -->|yes| C{"Consent binding and integrity valid?"}
+    C -->|no| D["DENY / ABSTAIN"]
+    C -->|yes| S{"Current status resolvable and active?"}
+    S -->|no| D
+    S -->|yes| P{"Purpose, audience, scope, time allowed?"}
+    P -->|no| D
+    P -->|yes| M{"Affected-party and obligations satisfied?"}
+    M -->|no| D
+    M -->|yes| G{"Evidence, source role, rights, sensitivity, review, release pass?"}
+    G -->|no| D
+    G -->|yes| R["ANSWER for consent gate only"]
 ```
 
-## 9. Decision vocabulary
+[Back to top](#top)
 
-| Decision | Meaning | Required behavior |
+---
+
+## Joins, derivatives, and land-linked claims
+
+Consent policy must preserve these anti-collapse rules:
+
+- one person’s consent does not authorize disclosure about another living person;
+- consent to a DNA source does not establish a derived relationship;
+- relationship hypotheses remain hypotheses until evidence/review supports stronger status;
+- source consent does not automatically authorize an aggregate, score, model, or AI inference;
+- render consent does not imply export consent;
+- assessor/tax records remain administrative context, not title truth;
+- parcel geometry remains a carrier, not title-boundary proof;
+- consent cannot cure unresolved title, occupancy, ownership, or boundary evidence;
+- historical deceased-person material may still affect living persons and can remain restricted;
+- public AI must not reconstruct revoked, withheld, or consent-limited information from other sources.
+
+[Back to top](#top)
+
+---
+
+## Revocation, correction, and cache invalidation
+
+Revocation and correction must take effect at runtime and must not wait for a release cycle.
+
+A complete revocation path should:
+
+1. verify the revocation event and affected grant;
+2. issue an immutable `RevocationReceipt` or accepted equivalent;
+3. make the current status observable to the evaluator;
+4. deny the next consequential operation;
+5. invalidate response, search, graph, tile, export, and model-context caches that depend on the grant;
+6. block recomputation from revoked inputs;
+7. create tombstone or withdrawal pointers where silent deletion would break lineage;
+8. identify affected published releases;
+9. trigger correction, withdrawal, or rollback review;
+10. preserve minimized audit evidence without retaining prohibited payloads.
+
+> [!CAUTION]
+> A revocation implementation that changes a status bit but leaves derived caches, exports, tiles, indexes, or AI retrieval material available is incomplete.
+
+Open operational questions include status-cache TTL, purge versus tombstone, downstream export recall, multi-party withdrawal, holder death, and emergency invalidation.
+
+[Back to top](#top)
+
+---
+
+## Audit, replay, and data minimization
+
+A consequential evaluation should be replayable from minimized metadata:
+
+- decision ID and evaluation time;
+- policy family;
+- canonical outcome;
+- stable reason codes and obligations;
+- policy bundle id/hash/version;
+- evaluator profile/version;
+- input bundle id/hash;
+- pseudonymous subject/holder refs;
+- grant/token/receipt/sidecar refs or digests;
+- revocation/status result and freshness;
+- operation, purpose, audience, and scope;
+- EvidenceRef/EvidenceBundle refs;
+- source-role, rights, sensitivity, review, and release states;
+- superseded decision refs;
+- correction/withdrawal/rollback refs.
+
+Do not log or receipt raw names, addresses, emails, phone numbers, DNA kit/vendor IDs, genotype/segments, credentials, bearer tokens, private keys, unrestricted status credentials, exact private location, or steward-only narrative.
+
+[Back to top](#top)
+
+---
+
+## Threat model
+
+| Threat | Required control |
+|---|---|
+| Missing consent treated as allow | Default deny/abstain/error; explicit input requirement |
+| Stale revocation state | Freshness policy, bounded cache, fail closed |
+| Token/receipt forgery | Signature, issuer, audience, expiry, status, digest verification |
+| Scope escalation | Operation/purpose/audience/field/relation/precision/export matching |
+| Hidden facts fetched during evaluation | No-hidden-fetch contract and receipt-visible resolution |
+| Obligation dropped downstream | Typed obligations and consumer conformance tests |
+| Reidentification by joins | No-reidentification and join-policy denial |
+| Consent used as evidence or release | Independent-gate tests |
+| DNA/PII leakage in logs or fixtures | Synthetic fixtures and leak scans |
+| Cache survives revocation | Dependency index, invalidation receipts, bounded SLO |
+| AI reconstructs withheld facts | Evidence/release-only retrieval plus consent gate |
+| Parallel policy homes drift | ADR, migration plan, no duplicate authority |
+| Workflow passes without tests | Replace TODO workflow with executable checks |
+
+[Back to top](#top)
+
+---
+
+## Validation and test matrix
+
+| Test | Expected result |
+|---|---|
+| README/meta/link/code-fence validation | PASS |
+| Missing consent | `ABSTAIN` or `DENY`, never answer |
+| Invalid integrity/signature/digest | `DENY` or `ERROR` |
+| Revoked consent | `DENY` + `cache_invalidate` |
+| Status unavailable/stale | `ABSTAIN` or `ERROR` |
+| Expired/not-yet-valid | `DENY` |
+| Purpose/audience/scope mismatch | `DENY` |
+| Multi-party requirement unresolved | `ABSTAIN` + review obligation |
+| Valid consent but missing evidence | `ABSTAIN` |
+| Valid consent but rights/sensitivity blocked | `DENY` or `ABSTAIN` |
+| Valid consent but no release | no public materialization |
+| Restriction with unsupported obligation | `DENY` or `ERROR` |
+| Relation/land-link disputed | `ABSTAIN` |
+| Assessor used as title proof | `DENY` |
+| Parcel geometry used as boundary proof | `DENY` |
+| Raw DNA/PII in logs/fixtures | FAIL |
+| Revocation invalidates all dependent caches | PASS within accepted SLO |
+| Old decision replay after supersession | rejected as stale |
+| Engine `ALLOW/RESTRICT/HOLD` normalization | canonical outcome + obligations |
+| Evaluator timeout/error | `ERROR`, fail closed |
+| Public client bypasses governed API | FAIL |
+
+> [!WARNING]
+> `.github/workflows/policy-test.yml` currently contains TODO echo steps. Workflow success is not evidence for these behaviors until executable policy and fixture checks replace those stubs.
+
+Fixtures must be synthetic, generalized, or redacted. Do not choose a final fixture path until the placement ADR and repository test convention are verified.
+
+[Back to top](#top)
+
+---
+
+## Smallest sound implementation sequence
+
+### PR 1 — Authority and vocabulary
+
+- resolve consent-lane placement by ADR;
+- record migration/supersession for the losing path;
+- resolve `CONSENT.md` versus `CONSENT_MODEL.md`;
+- define accepted owners and reviewers;
+- accept canonical reason-code and obligation registries;
+- accept engine-to-`PolicyDecision` normalization.
+
+### PR 2 — Contracts, schemas, fixtures
+
+- harden `PolicyInputBundle` shape;
+- define or link consent-specific object shapes;
+- add synthetic positive and negative fixtures;
+- add schema and semantic validators;
+- add no-PII/no-DNA leak checks.
+
+### PR 3 — Executable policy and CI
+
+- implement rules in the accepted lane;
+- bind an approved evaluator and immutable policy bundle;
+- replace TODO workflow steps with real tests;
+- verify fail-closed behavior and normalization.
+
+### PR 4 — Revocation and governed integration
+
+- implement status/revocation resolution;
+- emit receipt-ready evaluation metadata;
+- implement dependency-aware cache invalidation;
+- integrate governed API, review, correction, withdrawal, and rollback;
+- run a revocation drill before activation.
+
+No PR should activate public behavior merely because a README, schema, policy file, or green workflow exists.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+- [ ] Owners and CODEOWNERS coverage are confirmed.
+- [ ] Placement ADR is accepted.
+- [ ] Losing path has migration, deprecation, and rollback records.
+- [ ] `CONSENT_MODEL.md` supersession is reconciled with remaining `CONSENT.md`.
+- [ ] Canonical input and decision contracts are accepted.
+- [ ] Schema enforces required consent context.
+- [ ] Reason-code and obligation registries are accepted.
+- [ ] Engine results normalize to canonical outcomes.
+- [ ] Policy rules are implemented in one authoritative lane.
+- [ ] Policy bundle and evaluator identities are immutable and reviewable.
+- [ ] Synthetic fixtures cover positive and negative paths.
+- [ ] Validators and executable CI checks pass.
+- [ ] No raw DNA, PII, secrets, or credentials appear in logs/fixtures.
+- [ ] Governed callers enforce every obligation.
+- [ ] Revocation/status checks are fail-closed.
+- [ ] Cache invalidation is dependency-aware and drill-tested.
+- [ ] Receipts support replay without leaking protected data.
+- [ ] Evidence, rights, sensitivity, review, and release remain independent.
+- [ ] Correction, withdrawal, supersession, and rollback paths are verified.
+- [ ] Public clients cannot bypass governed interfaces.
+- [ ] Runtime/deployment evidence is attached before activation claims.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+| ID | Item | Evidence that would settle it |
 |---|---|---|
-| `ALLOW` | Consent permits this scoped domain action | Enforce obligations and still require other gates |
-| `DENY` | Consent blocks the action | Do not reveal protected details beyond safe denial text |
-| `ABSTAIN` | Consent cannot be evaluated due to missing support | Block action and name missing support where safe |
-| `HOLD` | Human review, dispute resolution, or steward check is required | Do not render publicly |
-| `ERROR` | Runtime, schema, signature, status-list, or evaluator failure | Fail closed and record failure |
+| `CONSENT-PDL-01` | Top-level versus domain-nested consent home | Accepted ADR |
+| `CONSENT-PDL-02` | Parent/sibling lane ownership and overlap | ADR + policy inventory |
+| `CONSENT-PDL-03` | `CONSENT_MODEL.md` supersession completion | Drift/supersession record |
+| `CONSENT-PDL-04` | Accepted consent object vocabulary and schema home | Contracts/schema ADR or review |
+| `CONSENT-PDL-05` | `PolicyInputBundle` hardening | Schema + fixtures + validator |
+| `CONSENT-PDL-06` | Engine-result normalization | Contract + tests |
+| `CONSENT-PDL-07` | Reason-code registry | Accepted registry + messages |
+| `CONSENT-PDL-08` | Obligation interpreter | Consumer contract + conformance tests |
+| `CONSENT-PDL-09` | VC/token/receipt/sidecar format | Standards decision + implementation |
+| `CONSENT-PDL-10` | Status-list/introspection architecture | ADR + runtime evidence |
+| `CONSENT-PDL-11` | Multi-party consent | Contract/schema/policy decision |
+| `CONSENT-PDL-12` | Holder death and consent ambiguity | Policy/ADR |
+| `CONSENT-PDL-13` | Retention after revocation | Rights/privacy policy + drill |
+| `CONSENT-PDL-14` | Purge versus tombstone | ADR + lifecycle tests |
+| `CONSENT-PDL-15` | Cache dependency index and invalidation SLO | Runtime tests/receipts |
+| `CONSENT-PDL-16` | Evaluation receipt/proof linkage | Accepted object/path + replay test |
+| `CONSENT-PDL-17` | Governed API integration | Code/tests/runtime traces |
+| `CONSENT-PDL-18` | Policy workflow replacement | Executable CI logs |
+| `CONSENT-PDL-19` | Separation of duties and review authority | CODEOWNERS + review evidence |
+| `CONSENT-PDL-20` | Production enforcement | Deployment config, logs, receipts, drill |
 
-## 10. Domain obligations
+[Back to top](#top)
 
-| Obligation | Example effect |
-|---|---|
-| `redact_attribute` | Withhold protected field or private note |
-| `redact_relation` | Withhold family, household, derivative, or property relation |
-| `suppress_sensitive_derivative` | Suppress derivative inference or relation until consent clears |
-| `generalize_land_link` | Show non-identifying land-linked summary only |
-| `restrict_audience` | Limit to steward, reviewer, named party, or authenticated surface |
-| `purpose_limit` | Permit review but deny public map rendering |
-| `review_required` | Route sensitive or disputed material to privacy / domain review |
-| `cache_invalidate` | Remove cached derivatives after revocation, correction, or withdrawal |
+---
 
-## 11. Revocation and correction posture
+## Review burden and change discipline
 
-Revocation and correction must take effect at render time.
+Trust-bearing changes require consent/privacy/domain/policy review. Also require:
 
-Required posture:
+- contracts/schema reviewers for object or field changes;
+- security/runtime reviewers for token, signature, evaluator, or status changes;
+- evidence/source reviewers for evidence or source-role inputs;
+- release reviewers for correction, withdrawal, or rollback behavior;
+- an ADR before creating parallel policy, schema, contract, receipt, proof, or release authority;
+- synthetic fixtures only;
+- explicit change budget and rollback plan;
+- no merge based solely on documentation completeness.
 
-- check revocation before consequential render
-- treat unavailable revocation state as fail-closed
-- invalidate derivative, relation, land-link, and summary caches when consent is revoked or disputed
-- preserve correction lineage when a relationship, land link, or derived assertion is withdrawn or corrected
-- avoid logging direct identifiers or sensitive relationship details
-- retain audit records with minimized subject references
+[Back to top](#top)
 
-## 12. Inspection path
+---
 
-Policy modules, schemas, fixtures, receipts, and tests remain `NEEDS VERIFICATION`. Use these local inspection commands before treating this lane as implemented.
+## Rollback, correction, and supersession
 
-```bash
-# From the repository root, inspect this policy lane.
-find policy/consent/people-dna-land -maxdepth 4 -type f | sort
+### Documentation rollback
 
-# Inspect parent consent policy and domain consent docs.
-find policy/consent docs/domains/people-dna-land -maxdepth 4 -type f | grep -Ei 'consent|people|land|privacy|sensitivity|release' | sort
+This change is one-file and can be reverted by restoring the prior blob:
 
-# Inspect likely domain-consent tests and fixtures.
-find tests fixtures -maxdepth 5 -type f 2>/dev/null | grep -E 'consent|people|land|privacy|revocation' | sort
+```text
+cdf3795f1c9c0a467084d078bb6b039ae52bc506
 ```
 
-## 13. Validation expectations
+### Future policy rollback
 
-Useful validation for this lane should cover:
+A future active consent policy must support:
 
-- missing consent returns `DENY` or `ABSTAIN`
-- protected render with no consent returns `DENY`
-- sensitive derivative render with no consent returns `DENY`
-- expired consent returns `DENY`
-- revoked consent returns `DENY`
-- disputed relationship, derivative, or land-linked identity claim returns `HOLD`
-- requested field, relationship, derivative, or land-linked claim outside scope returns `DENY`
-- unresolved rights, sensitivity, evidence, or release state still blocks render even when consent is valid
-- obligations are preserved in the output decision
-- revocation invalidates dependent caches or derivatives
-- direct identifiers and private relation details are not leaked in logs
+- immutable versioned bundles;
+- prior known-good bundle reference;
+- decision/input/bundle hash linkage;
+- evaluator compatibility checks;
+- withdrawal of unsafe versions;
+- replay comparison;
+- correction notice when public behavior was affected;
+- dependency-aware cache invalidation;
+- no mutation of historical decisions.
 
-## 14. Definition of done
+### Supersession
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Parent consent placement ADR is resolved.
-- [ ] Domain consent policy runtime language and bundle location are confirmed.
-- [ ] Domain-specific ConsentDecision shape is created or linked where accepted.
-- [ ] Consent register binding is documented or linked.
-- [ ] Revocation, dispute, relation-withdrawal, and cache-invalidation handling are documented or linked.
-- [ ] Tests and fixtures cover allow, deny, abstain, hold, error, expired, revoked, disputed, derivative, land-linked, and out-of-scope paths.
-- [ ] Consent decisions are auditable and replayable with minimized subject references.
-- [ ] Public renders use governed interfaces and check consent every time.
-- [ ] Release approval remains separate from consent decisions.
+Later changes should issue a new version, preserve lineage, identify what is superseded, and never erase evidence needed to explain prior decisions. A path move must preserve history and leave a clear forward pointer.
 
-## 15. Open verification items
+[Back to top](#top)
 
-| Item | Why it matters |
-|---|---|
-| Confirm accepted placement for `policy/consent/people-dna-land/` | Prevents duplicate consent policy homes |
-| Confirm sublane split with `policy/consent/people/` | Keeps overlap controlled and reviewable |
-| Confirm schemas and contracts | Required for machine-checkable decisions |
-| Confirm consent-register binding | Required for consistent grant lookup and revocation |
-| Confirm revocation and dispute handling | Required for effective runtime consent |
-| Confirm tests and fixtures | Required before active enforcement |
-| Confirm audit event shape | Required for accountability and replay |
-| Confirm cache invalidation path | Required for revocation effectiveness |
-| Confirm identifier handling | Prevents privacy leakage |
-
-<details>
-<summary>Appendix A — no-loss preservation note</summary>
-
-The target file was an empty placeholder. This README adds a bounded domain consent policy lane without claiming runtime enforcement, legal sufficiency, schemas, fixtures, tests, consent-register implementation, revocation infrastructure, consent receipts, or CI coverage.
-
-It preserves the domain consent doctrine's keystone rule: consent constrains render-time materialization and does not publish data.
-
-</details>
+---
 
 ## Status summary
 
-`policy/consent/people-dna-land/` should define this restricted domain consent policy only if the parent consent-policy placement is accepted.
+`policy/consent/people-dna-land/` is a **CONFIRMED repository-present but placement-CONFLICTED README-only policy lane**.
 
-It should enforce purpose-bound, revocable, retention-aware, fail-closed consent checks while preserving separate rights, sensitivity, evidence, review, release, correction, rollback, schema, contract, and lifecycle boundaries.
+Its safe current role is to document the restricted-domain consent boundary and the evidence required before activation. It must not be presented as proof of executable consent enforcement.
+
+The next smallest governed step is not more policy prose. It is an ADR-backed placement and vocabulary decision, followed by hardened schemas, synthetic fixtures, executable policy tests, fail-closed runtime wiring, revocation/cache drills, receipt/replay support, and release/rollback integration.
 
 <p align="right"><a href="#top">Back to top</a></p>
