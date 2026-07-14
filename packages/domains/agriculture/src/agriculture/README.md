@@ -1,348 +1,462 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/packages-domains-agriculture-src-agriculture-readme
-title: Agriculture Domain Package Source Module README
+title: Governed Agriculture Helper Source Module
 type: readme
-version: v0.1
-status: draft
+version: v0.2
+status: draft; repository-grounded; python-scaffold
 owners:
-  - <package-owner>
-  - <agriculture-domain-steward>
-  - <schema-steward>
-  - <evidence-steward>
-  - <policy-steward>
-  - <docs-steward>
+  - OWNER_TBD — Agriculture package/domain steward
+  - OWNER_TBD — Contract/schema/policy/evidence steward
+  - OWNER_TBD — Validation/security/docs steward
 created: 2026-06-13
-updated: 2026-06-13
-policy_label: public
+updated: 2026-07-14
+supersedes: v0.1
+policy_label: public; packages; agriculture; no-network; field-level-deny-by-default; non-authoritative
 path: packages/domains/agriculture/src/agriculture/README.md
+truth_posture: CONFIRMED target and prior blob, package name/version, empty __init__.py, bounded absent helper paths, adjacent governance READMEs, Directory Rules v1.4, proposed ADR-0001, placeholder CODEOWNERS, and query-limited workflow evidence / PROPOSED future pure mapping, normalization, temporal, aggregation-support, and schema-adapter helpers / CONFLICTED contract/schema compatibility paths, aggregation-receipt naming, policy/runtime outcome vocabulary, and stale parent inventory / UNKNOWN exports, build backend, dependencies, consumers, executable helpers beyond tested paths, validators, CI, runtime, evidence, release, and production behavior
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 8bb1d0b8b288781169e5592d60962cd7537fc37c
+  prior_blob: 036767399c356a59a0f8c674e8f9a1da2aa0d79f
 related:
-  - packages/README.md
-  - packages/domains/README.md
-  - packages/domains/agriculture/README.md
-  - docs/domains/agriculture/README.md
-  - pipelines/domains/agriculture/README.md
-  - pipeline_specs/agriculture/README.md
-  - contracts/domains/agriculture/
-  - schemas/contracts/v1/domains/agriculture/
-  - policy/domains/agriculture/
-  - tests/packages/domains/agriculture/
-  - fixtures/packages/domains/agriculture/
-  - data/proofs/evidence_bundle/
-  - release/manifests/
-tags: [kfm, packages, domains, agriculture, src, agriculture-module, shared-library, crop, field-identity, yield, rotation, irrigation, suitability, aggregation, governance]
+  - ./__init__.py
+  - ../README.md
+  - ../../README.md
+  - ../../pyproject.toml
+  - ../../../../../docs/domains/agriculture/README.md
+  - ../../../../../contracts/domains/agriculture/README.md
+  - ../../../../../schemas/contracts/v1/domains/agriculture/README.md
+  - ../../../../../policy/domains/agriculture/README.md
+  - ../../../../../tests/domains/agriculture/README.md
+  - ../../../../../fixtures/domains/agriculture/README.md
+  - ../../../../../docs/doctrine/directory-rules.md
+  - ../../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+tags: [kfm, agriculture, python, package, source-module, evidence, governance]
 notes:
-  - "This README fills the empty packages/domains/agriculture/src/agriculture README with a governed source-module contract."
-  - "packages/domains/agriculture/src/agriculture/ may contain internal source code for shared Agriculture helpers only; it must remain subordinate to packages/domains/agriculture/."
-  - "Agriculture source-module helpers can normalize, parse, map, aggregate, and preserve refs. They cannot decide crop, yield, field, or producer-facing truth; write lifecycle data; decide policy; create EvidenceBundles; or approve release."
-  - "Restricted agricultural detail and field-level products are denied by default for public use unless governed rights, review, and release controls are satisfied elsewhere."
-  - "Concrete language runtime, module exports, build scripts, and CI coverage remain NEEDS VERIFICATION until repository evidence proves them."
+  - "v0.2 replaces planning-only language with commit-pinned repository evidence."
+  - "Only this Markdown file changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Agriculture Source Module
+# Governed Agriculture Helper Source Module
 
-> Internal source-code module area for the `packages/domains/agriculture/` shared helper package. This directory may hold reusable Agriculture helpers, but it must not become Agriculture doctrine, crop/yield/field truth authority, schema authority, policy engine, lifecycle writer, EvidenceBundle authority, release authority, or public trust membrane.
+`packages/domains/agriculture/src/agriculture/`
+
+> Reusable Agriculture helper-code boundary. The current surface is a **greenfield Python scaffold**, not an implemented library: the package is version `0.0.0`, `__init__.py` is empty, and the exact tested helper paths were not found.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
-![root](https://img.shields.io/badge/root-packages%2Fdomains%2Fagriculture%2Fsrc%2Fagriculture%2F-0a7ea4)
-![authority](https://img.shields.io/badge/authority-package%20source%20module-0a7ea4)
-![domain](https://img.shields.io/badge/domain-doctrine%20in%20docs%2Fdomains%2Fagriculture%2F-d62728)
-![sensitivity](https://img.shields.io/badge/restricted%20detail-deny%20by%20default-d62728)
+![implementation](https://img.shields.io/badge/helpers-NOT%20IMPLEMENTED-yellow)
+![sensitivity](https://img.shields.io/badge/field%20%2F%20operator-deny%20by%20default-critical)
+![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
 
-**Status:** Draft  
-**Path:** `packages/domains/agriculture/src/agriculture/README.md`  
-**Parent package:** `packages/domains/agriculture/`  
-**Responsibility root:** `packages/` — shared libraries used by apps, workers, pipelines, and tools  
-**Domain doctrine root:** `docs/domains/agriculture/`  
-**Executable domain-pipeline root:** `pipelines/domains/agriculture/`  
-**Declarative pipeline-spec root:** `pipeline_specs/agriculture/`  
-**Contract/schema/policy roots:** `contracts/domains/agriculture/`, `schemas/contracts/v1/domains/agriculture/`, and `policy/domains/agriculture/`  
-**Placement posture:** source code for reusable Agriculture helpers only. Runtime, exports, package manifest, and active tests are `NEEDS VERIFICATION` until checked by current repo evidence.
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Placement and authority](#2-placement-and-authority)
-- [3. Agriculture sensitivity boundary](#3-agriculture-sensitivity-boundary)
-- [4. Module anti-collapse rules](#4-module-anti-collapse-rules)
-- [5. What belongs here](#5-what-belongs-here)
-- [6. What does not belong here](#6-what-does-not-belong-here)
-- [7. Expected module families](#7-expected-module-families)
-- [8. Inputs and outputs](#8-inputs-and-outputs)
-- [9. Minimal module contract shape](#9-minimal-module-contract-shape)
-- [10. Tests and fixtures](#10-tests-and-fixtures)
-- [11. Definition of done](#11-definition-of-done)
-- [12. Open questions](#12-open-questions)
-
----
-
-## 1. Purpose
-
-`packages/domains/agriculture/src/agriculture/` may hold internal source modules for the shared Agriculture helper package.
-
-It may support reusable helpers for:
-
-- crop observation mapping and normalization;
-- crop code/name crosswalks that preserve native values;
-- field or management-unit identity helpers that preserve uncertainty and provenance;
-- yield, rotation, irrigation, stress, suitability, conservation, and economics DTO adapters;
-- source role, source time, valid time, limitation, caveat, aggregation, and redaction helper fields;
-- public-safe aggregation helper functions that do not approve publication;
-- schema-bound validation adapters;
-- no-network fixture builders for package tests.
-
-It does **not** define Agriculture objects, decide crop/yield truth, decide policy, create EvidenceBundles, write lifecycle data, publish artifacts, or approve release.
-
-[⬆ Back to top](#top)
-
----
-
-## 2. Placement and authority
-
-| Question | Answer | Status |
-|---|---|---|
-| Why under `packages/domains/agriculture/`? | Parent package is the shared Agriculture helper-code lane. | CONFIRMED parent package contract |
-| Why `src/agriculture/`? | This is a plausible internal module path for Agriculture-specific helper source. | PROPOSED / NEEDS VERIFICATION |
-| Is this Agriculture doctrine? | No. Agriculture doctrine and scope belong under `docs/domains/agriculture/`. | CONFIRMED boundary posture |
-| Is this executable Agriculture pipeline logic? | No. Executable domain transformation logic belongs under `pipelines/domains/agriculture/`. | CONFIRMED boundary posture |
-| Can this define schemas or contracts? | No. It may consume generated types, but schema and contract authority stay in their roots. | CONFIRMED authority separation |
-| Can this decide policy, evidence, or release? | No. It may preserve refs and validation results only. | CONFIRMED policy/evidence/release separation |
+**Quick links:** [Purpose](#purpose) · [Authority](#authority) · [Status](#current-status) · [Language](#bounded-context-and-language) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Objects](#object-family-boundary) · [Trust](#trust-lifecycle-and-public-safety) · [Validation](#validation-and-admission) · [Rollback](#compatibility-correction-and-rollback) · [Backlog](#open-verification-register) · [Ledger](#evidence-ledger)
 
 > [!IMPORTANT]
-> Source modules here can normalize, parse, map, and aggregate. They cannot turn helper output into crop truth, yield truth, field identity truth, policy approval, EvidenceBundle closure, or release approval.
+> **Snapshot:** `main@8bb1d0b8b288781169e5592d60962cd7537fc37c`<br>
+> **Package:** `kfm-domain-agriculture` `0.0.0`<br>
+> **Verified module:** empty `agriculture/__init__.py`<br>
+> **Not found at exact tested paths:** `package.json`, `core.py`, `crop.py`, `field_identity.py`, `aggregation.py`, and `tests/packages/domains/agriculture/README.md`
 
-[⬆ Back to top](#top)
-
----
-
-## 3. Agriculture sensitivity boundary
-
-Agriculture helper code must preserve the Agriculture domain's deny-by-default posture for restricted agricultural material:
-
-- field-level joins are not public by default;
-- source-rights-limited datasets are denied by default for public surfaces;
-- public products require approved aggregation or generalization outside this module;
-- crop, yield, stress, suitability, irrigation, conservation, and economics helper output must preserve source role, source time, valid time, limitations, and confidence state;
-- generated or helper-derived values are not evidence;
-- release requires evidence, policy, review, ReleaseManifest, correction path, and rollback posture outside this module.
-
-[⬆ Back to top](#top)
+> [!CAUTION]
+> A mapped crop code is not a `CropObservation`; a geometry key is not a confirmed field; a yield adapter is not yield truth; and an aggregation helper is not an `AggregationReceipt`, policy approval, EvidenceBundle, or release authorization.
 
 ---
 
-## 4. Module anti-collapse rules
+## Purpose
 
-Disallowed collapses:
+A future implementation may provide deterministic, side-effect-minimal helpers for:
+
+- preserving source-native crop codes, labels, units, IDs, and timestamps;
+- adapting governed inputs into **candidate** Agriculture DTOs;
+- preserving source role, uncertainty, geometry lineage, and distinct time kinds;
+- normalizing yield, rotation, irrigation, conservation, suitability, stress, and economy inputs;
+- computing local keys only under an accepted identity profile;
+- preparing aggregation/redaction candidates from caller-authorized inputs;
+- validating local shape against accepted schemas;
+- returning explicit missing, malformed, ambiguous, stale, restricted, or conflicted issues;
+- supporting synthetic, no-network tests.
+
+It must not fetch sources, admit data, write lifecycle state, decide truth or policy, close evidence, approve release, serve public routes, render maps, or generate authoritative claims.
+
+[Back to top](#top)
+
+---
+
+## Authority
+
+| Concern | Authority here |
+|---|---|
+| Agriculture doctrine/scope | None — `docs/domains/agriculture/`. |
+| Object meaning | None — `contracts/domains/agriculture/` or accepted contract home. |
+| Machine shape | None — `schemas/contracts/v1/domains/agriculture/` under proposed ADR-0001. |
+| Source role/rights/cadence | None — source descriptors and registries. |
+| Crop/field/yield/rotation/irrigation/suitability/stress/economy truth | None — candidate adaptation only. |
+| Identity/time authority | None — apply accepted profiles; never invent them silently. |
+| Policy/sensitivity | None — policy roots and steward review. |
+| Evidence closure | None — EvidenceRef/EvidenceBundle systems. |
+| Lifecycle writes | None — authorized connectors/pipelines/workers/tools. |
+| Release/correction/rollback | None — `release/` and accepted records. |
+| Public API/UI/map/AI | None — governed application/runtime roots. |
+| Helper behavior | Supporting only — normalize, adapt, validate local shape, return explicit results. |
+
+Using a trusted type, schema, hash, or app does not transfer upstream authority into this module.
+
+[Back to top](#top)
+
+---
+
+## Current status
+
+| Surface | Evidence | Status |
+|---|---|---:|
+| Target README | Existing v0.1, revised in place. | **CONFIRMED** |
+| Parent package/source READMEs | Exist; source-root inventory is partly stale. | **CONFIRMED** |
+| `pyproject.toml` | Name and `0.0.0` only. | **CONFIRMED placeholder** |
+| `agriculture/__init__.py` | Empty. | **CONFIRMED scaffold** |
+| `package.json` | Missing at exact path. | **CONFIRMED bounded absence** |
+| Selected proposed helpers | `core.py`, `crop.py`, `field_identity.py`, `aggregation.py` missing at exact paths. | **CONFIRMED bounded absence** |
+| Domain README | Twelve object families and field/operator deny-default posture. | **CONFIRMED repository document** |
+| Contract/schema/policy READMEs | Indexes exist; coverage, enforcement, compatibility, and naming drift remain. | **CONFIRMED indexes / incomplete** |
+| Domain test/fixture READMEs | README-backed lanes exist; executable inventory/results unverified. | **CONFIRMED indexes / NOT RUN** |
+| Package-specific test README | Missing at exact tested path. | **CONFIRMED bounded absence** |
+| CODEOWNERS | Placeholder; no Agriculture package rule. | **CONFIRMED placeholder** |
+| Workflow evidence | No PR-triggered base runs surfaced; proposed workflow paths tested absent. | **QUERY-LIMITED** |
+| Build, exports, consumers, runtime, evidence, release | Not established. | **UNKNOWN** |
+
+Bounded inspected shape:
 
 ```text
-source module -> Agriculture doctrine
-crop helper -> crop truth
-field identity helper -> field identity authority
-yield adapter -> yield truth
-rotation parser -> management history truth
-irrigation helper -> water-right truth
-suitability helper -> land-use decision authority
-aggregation helper -> public release approval
-successful module test -> validation pass or lifecycle promotion
+packages/domains/agriculture/
+├── README.md
+├── pyproject.toml
+└── src/
+    ├── README.md
+    └── agriculture/
+        ├── README.md
+        └── __init__.py   # empty
 ```
 
-Required separations:
+This is not a recursive tree proof.
 
-- reusable helper source stays under `packages/domains/agriculture/src/agriculture/`;
-- Agriculture doctrine stays under `docs/domains/agriculture/`;
-- Agriculture meaning stays under `contracts/domains/agriculture/`;
-- Agriculture schemas stay under `schemas/contracts/v1/domains/agriculture/`;
-- Agriculture policy stays under `policy/domains/agriculture/` and sensitivity/source policy roots;
-- executable transformations stay under `pipelines/domains/agriculture/`;
-- declarative run profiles stay under `pipeline_specs/agriculture/`;
-- lifecycle records and receipts stay under `data/`;
-- EvidenceBundles stay under proof homes;
-- release decisions stay under `release/`.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 5. What belongs here
+## Bounded context and language
 
-Appropriate source modules include helpers for:
+| Term | Meaning here | Not equivalent to |
+|---|---|---|
+| Candidate DTO | Helper output for validation/review. | Canonical object or promotion. |
+| Native value | Source-provided code/label/unit/ID/time. | Normalized authority. |
+| Crosswalk result | Versioned mapping candidate with ambiguity. | Silent source replacement. |
+| Field candidate | Potential management unit with lineage/uncertainty. | Parcel/operator truth or public geometry. |
+| Aggregation candidate | Derived result under a named method. | Receipt, policy approval, released layer. |
+| Helper issue | Structured local finding. | PolicyDecision, ValidationReport, runtime envelope. |
+| Source role | Role supplied by source governance. | Role inferred from filename/content. |
+| Time kind | Named source/observed/valid/retrieval/release/correction time. | Generic timestamp. |
+| Local helper key | Deterministic key under accepted profile. | Canonical identity unless contract says so. |
 
-- crop/source mapping;
-- crop code/name normalization;
-- field identity normalization with uncertainty;
-- yield, rotation, stress, irrigation, conservation, suitability, and economics DTO adapters;
-- aggregation and redaction support that does not approve publication;
-- crosswalk helpers that preserve native classifications and source roles;
-- schema-bound validation adapters and safe errors;
-- deterministic helper ids when policy and schema allow;
-- package-only fixture builders.
+Agriculture combines statistics, remote sensing, soil/weather context, modeled products, candidates, and aggregates. Helpers must preserve those knowledge characters.
 
-A good placement test:
-
-> If the module is reusable Agriculture helper code and does not decide crop/yield/field truth, write lifecycle data, decide policy, or approve release, it may belong here.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 6. What does not belong here
+## What belongs here
 
-| Do not place here | Correct responsibility home |
+- crop-code/name mappings that preserve native values and vocabulary version;
+- candidate adapters for crop, field, yield, rotation, irrigation, conservation, suitability, stress, economy;
+- identity/time parsers under accepted profiles;
+- cross-lane reference preservation;
+- aggregation/suppression/generalization support under caller obligations;
+- local schema adapters against accepted versions;
+- immutable result/issue types and safe error formatting;
+- synthetic fixture factories when fixture policy permits.
+
+Placement test: reusable across consumers, no hidden IO, preserves governance refs, and cannot decide truth, disclosure, promotion, evidence closure, or release.
+
+[Back to top](#top)
+
+---
+
+## What does not belong here
+
+| Does not belong | Correct home |
 |---|---|
-| Agriculture doctrine and source scope docs | `docs/domains/agriculture/` |
-| Agriculture object contracts | `contracts/domains/agriculture/` |
-| Agriculture schemas | `schemas/contracts/v1/domains/agriculture/` |
-| Agriculture policy decisions/rules | `policy/domains/agriculture/` and accepted policy roots |
-| Executable Agriculture pipelines | `pipelines/domains/agriculture/` |
-| Declarative Agriculture specs | `pipeline_specs/agriculture/` |
-| Source descriptors | `data/registry/sources/agriculture/` |
-| Lifecycle data | `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, `data/published` |
-| Runtime receipts | `data/receipts/` |
-| EvidenceBundles | `data/proofs/evidence_bundle/` |
-| Release decisions/manifests/corrections/rollback cards | `release/` |
-| Public API routes | `apps/governed-api/` |
-| UI-only rendering components | `apps/explorer-web/` or accepted UI package roots |
-| Tests | `tests/packages/domains/agriculture/` |
-| Fixtures | `fixtures/packages/domains/agriculture/` unless package-local convention is accepted |
+| Doctrine/source strategy | `docs/domains/agriculture/` |
+| Contracts | `contracts/domains/agriculture/` |
+| JSON Schemas | `schemas/contracts/v1/domains/agriculture/` |
+| Executable policy | `policy/domains/agriculture/` |
+| Source descriptors/admission | source registry roots |
+| Source fetchers | `connectors/<source>/` |
+| Executable transforms/specs | `pipelines/domains/agriculture/`, workers, tools, `pipeline_specs/agriculture/` |
+| Lifecycle records | `data/<phase>/agriculture/` |
+| Receipts/proofs | accepted `data/receipts/`, `data/proofs/` |
+| Release/correction/rollback | `release/` |
+| Public API/UI/map/AI | governed app/runtime roots |
+| Secrets/restricted live payloads | secret manager or governed lifecycle stores |
+| Validators/tests/fixtures | `tools/validators/`, `tests/domains/agriculture/`, `fixtures/domains/agriculture/` |
 
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 7. Expected module families
+## Interface rules
 
-| Module family | Responsibility | Status |
+`__init__.py` is empty, so no public API or compatibility promise exists.
+
+Future interfaces must:
+
+1. export reviewed symbols deliberately;
+2. use typed documented inputs/outputs;
+3. default to pure or side-effect-minimal behavior;
+4. avoid import-time network, filesystem/database writes, secret loading, policy/evidence/model calls, telemetry, or global configuration;
+5. preserve native values and governance references;
+6. return explicit issues rather than guessing;
+7. keep callers responsible for admission, policy, evidence, lifecycle, and release;
+8. use migration notes/tests for breaking changes;
+9. avoid misleading operations named `publish`, `approve`, `admit`, or `prove`.
+
+No accepted package result contract was verified.
+
+[Back to top](#top)
+
+---
+
+## Object-family boundary
+
+| Object family | Potential helper role | Must not collapse into |
 |---|---|---|
-| `crop` | Crop code/name mapping and source-role-preserving crop observation helpers. | PROPOSED |
-| `field_identity` | Field/management-unit identity helpers with uncertainty and provenance. | PROPOSED |
-| `yield` | Yield DTO adapters and limitation preservation. | PROPOSED |
-| `rotation` | Crop rotation and temporal sequence helpers. | PROPOSED |
-| `irrigation` | Irrigation observation adapters, not water-right truth. | PROPOSED |
-| `suitability` | Suitability/stress/conservation helper adapters with caveats. | PROPOSED |
-| `aggregation` | Public-safe aggregation/redaction support, not publication approval. | PROPOSED |
-| `validation` | Schema-bound validation adapters and safe errors. | PROPOSED |
-| `fixtures` | Package-only fixture builders, if accepted by package convention. | NEEDS VERIFICATION |
+| `CropObservation` | Preserve crop/source/geography/period. | Confirmed observation. |
+| `FieldCandidate` | Preserve geometry precision, uncertainty, lineage. | Parcel/operator truth or public geometry. |
+| `CropRotation` | Parse ordered periods and gaps. | Invented management history. |
+| `YieldObservation` | Normalize unit/period/geography/suppression. | Evidence or farm claim. |
+| `IrrigationLink` | Preserve irrigation relation. | Water right/ownership/permit. |
+| `ConservationPractice` | Preserve practice/program/effective period. | Proof of on-ground implementation. |
+| `SoilCropSuitability` | Adapt interpretation while citing Soil refs. | Agriculture-owned Soil truth. |
+| `AgriculturalEconomyObservation` | Preserve measure/geography/period/suppression. | Operator-level inference. |
+| `SupplyChainNode` | Normalize candidate node/relation. | Unrestricted operational disclosure. |
+| `DroughtStressIndicator` | Preserve method/input roles/uncertainty. | Official warning or loss fact. |
+| `PestStressIndicator` | Preserve method/source/limitations. | Diagnosis/treatment/occurrence truth. |
+| `AggregationReceipt` | Prepare deterministic inputs for authorized emitter. | Receipt or approval. |
 
-[⬆ Back to top](#top)
+Cross-lane refs to Soil, Hydrology, Atmosphere, Hazards, People/Land, Flora/Habitat, Infrastructure, and Frontier Matrix must preserve ownership and source role.
 
----
-
-## 8. Inputs and outputs
-
-| Class | Correct home | Notes |
-|---|---|---|
-| Module source | `packages/domains/agriculture/src/agriculture/` | Shared helper source only. |
-| Package entrypoint | `packages/domains/agriculture/` | Language-specific entrypoint is not verified. |
-| Domain doctrine | `docs/domains/agriculture/` | Scope, sensitivity, and human-facing control plane. |
-| Domain contracts | `contracts/domains/agriculture/` | Object meaning authority. |
-| Domain schemas | `schemas/contracts/v1/domains/agriculture/` | Machine shape authority. |
-| Domain policy | `policy/domains/agriculture/` | Admissibility/exposure authority. |
-| Executable pipeline | `pipelines/domains/agriculture/` | Runs transformations. |
-| Declarative spec | `pipeline_specs/agriculture/` | Configures pipeline runs. |
-| Lifecycle data | `data/<phase>/agriculture/` | Not written by helpers as hidden behavior. |
-| Evidence proof | `data/proofs/evidence_bundle/` | Referenced, not fabricated. |
-| Release refs | `release/` | Referenced, not approved. |
-| Tests | `tests/packages/domains/agriculture/` | Package validation. |
-| Fixtures | `fixtures/packages/domains/agriculture/` | No-network synthetic or sanitized fixtures. |
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 9. Minimal module contract shape
+## Identity and time
+
+Until accepted profiles exist:
+
+- preserve source IDs and native values;
+- keep normalized values alongside native values;
+- do not hash private IDs to make them public;
+- do not treat geometry digest as field identity;
+- do not merge on similarity alone;
+- return ambiguity;
+- keep decisions reversible.
+
+An identity profile must specify fields, normalization, null behavior, geometry precision, namespace, temporal scope, canonicalization/hash, version, collisions, and migration.
+
+Preserve source, observed, valid, retrieval/processing, release, and correction times distinctly. Do not substitute retrieval time for observed/valid time or set release time as approval.
+
+[Back to top](#top)
+
+---
+
+## Trust, lifecycle, and public safety
+
+```mermaid
+flowchart LR
+  IN["Governed input + refs + obligations"] --> H["Pure Agriculture helper"]
+  H --> R["Candidate + issues + profile + refs"]
+  R --> C["Validator / pipeline / governed API"]
+  C --> G["Evidence + policy + review + release gates"]
+  G -->|approved elsewhere| P["Released public-safe artifact"]
+  G -->|insufficient| A["ABSTAIN / HOLD"]
+  G -->|blocked| D["DENY / RESTRICT"]
+  G -->|failure| E["ERROR"]
+```
+
+Required invariants:
 
 ```yaml
-module_id: kfm.packages.domains.agriculture.src.agriculture
-status: draft
-authority: package_source_module
-not_authority_for:
-  - agriculture_doctrine
-  - crop_truth
-  - field_identity_authority
-  - yield_truth
-  - object_contract
-  - schema_home
-  - policy_decision
-  - lifecycle_write
-  - evidence_bundle
-  - release_decision
-allowed_responsibilities:
-  - crop mapping helpers
-  - field identity normalizers
-  - observation parsers
-  - yield and suitability adapters
-  - aggregation helper utilities
-  - schema-bound adapters
-  - safe fixture builders
-required_invariants:
-  no_hidden_lifecycle_writes: true
-  no_policy_bypass: true
-  no_evidence_fabrication: true
-  no_release_approval: true
-  restricted_agriculture_public_denied_by_default: true
-  helper_output_is_not_truth: true
+no_import_time_io: true
+no_hidden_network_or_writes: true
+no_secret_loading: true
+no_source_admission_or_lifecycle_promotion: true
+no_policy_decision: true
+no_evidence_fabrication_or_closure: true
+no_release_approval_or_public_bypass: true
+native_values_source_roles_time_kinds_uncertainty_preserved: true
+restricted_precision_not_expanded: true
+helper_output_is_not_truth: true
 ```
 
-[⬆ Back to top](#top)
+Public-safety rules:
+
+- field/operator/parcel-adjacent detail is denied by default;
+- unclear rights, NASS-confidential, license-limited, and suppressed data fail closed;
+- no small-cell re-identification or suppression reversal;
+- hashing private IDs does not make them public;
+- remote-sensing/model output must not masquerade as observation;
+- logs/errors minimize source payload and restricted geometry;
+- fixtures are synthetic or sanitized;
+- aggregation requires explicit geography/version, thresholds, suppression/rounding/generalization, attribute allowlist, obligations, profile version, and deterministic ordering.
+
+[Back to top](#top)
 
 ---
 
-## 10. Tests and fixtures
+## Failure semantics
 
-Recommended validation coverage:
+Future helpers distinguish:
+
+`MISSING_REQUIRED` · `MALFORMED_VALUE` · `UNSUPPORTED_VALUE` · `AMBIGUOUS_MAPPING` · `STALE_PROFILE` · `RESTRICTED_PRECISION` · `CONFLICTED_AUTHORITY` · `INTERNAL_ERROR`
+
+These are **PROPOSED** local classes pending an accepted registry. Helpers must not silently coerce meaning or leak restricted values.
+
+Policy docs use `ALLOW`, `DENY`, `RESTRICT`, `HOLD`, `ABSTAIN`, `ERROR`; runtime docs use outcomes such as `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. This module must not choose or normalize that difference without an accepted adapter and parity tests.
+
+[Back to top](#top)
+
+---
+
+## Validation and admission
+
+| Area | Positive proof | Negative proof | Status |
+|---|---|---|---:|
+| Import/exports | Side-effect-free import; reviewed exports. | Detect network/write/secret/global config. | **NOT RUN** |
+| Crop mapping | Native value retained under pinned vocabulary. | Unknown/ambiguous returns issue. | **NOT IMPLEMENTED** |
+| Field candidate | Source/precision/lineage/uncertainty retained. | Cannot promote to confirmed/public geometry. | **NOT IMPLEMENTED** |
+| Yield/rotation | Deterministic unit/sequence/method/gaps. | No suppressed-value or missing-year guesses. | **NOT IMPLEMENTED** |
+| Identity/time | Stable under accepted profiles. | No similarity merge or time collapse. | **NOT IMPLEMENTED** |
+| Aggregation | Deterministic and method-bound. | Small-cell/operator/restricted detail blocked. | **NOT IMPLEMENTED** |
+| Policy/evidence/release | Caller refs/obligations preserved. | Cannot self-authorize/prove/promote/publish. | **NOT IMPLEMENTED** |
+| Security/determinism | Safe errors; stable repeated output. | No restricted logging or environment drift. | **NOT IMPLEMENTED** |
+
+Proposed future test/fixture child lanes, subject to parent review:
 
 ```text
-tests/packages/domains/agriculture/
-├── test_agriculture_module_boundaries.py   # PROPOSED
-├── test_crop_mapping_preserves_source.py   # PROPOSED
-├── test_field_identity_uncertainty.py      # PROPOSED
-├── test_yield_adapter_not_truth.py         # PROPOSED
-├── test_aggregation_not_release.py         # PROPOSED
-├── test_restricted_detail_not_public.py    # PROPOSED
-├── test_no_hidden_lifecycle_writes.py      # PROPOSED
-├── test_no_policy_or_release_decisions.py  # PROPOSED
-├── test_generated_types_match_schema.py    # PROPOSED
-└── test_root_boundary.py                   # PROPOSED
+tests/domains/agriculture/package_helpers/
+fixtures/domains/agriculture/package_helpers/
 ```
 
-Fixture material should live in `fixtures/packages/domains/agriculture/` unless a package-local fixture convention is explicitly accepted. Fixtures should be synthetic or sanitized and must not contain restricted field-level or source-rights-limited material unless fixture policy explicitly permits it.
+Implementation order:
 
-[⬆ Back to top](#top)
+1. owners, CODEOWNERS, build backend, Python versions, src discovery, install/import test;
+2. immutable result/issues with stable codes and no data leakage;
+3. one low-risk crop mapping helper with synthetic no-network fixtures;
+4. schema-bound adapter only after paired contract and field-complete schema;
+5. field candidate last, after privacy/geometry/identity review and negative fixtures;
+6. aggregation support with explicit caller obligations, not receipt/release;
+7. one verified consumer at a time behind governed boundaries.
+
+Review commands, not pass claims:
+
+```bash
+python -m compileall packages/domains/agriculture/src/agriculture
+python -m pytest tests/domains/agriculture
+python tools/validate_all.py
+```
+
+[Back to top](#top)
 
 ---
 
-## 11. Definition of done
+## Compatibility, correction, and rollback
 
-This README is done when it:
+README rollback blob:
 
-- fills the empty `packages/domains/agriculture/src/agriculture/README.md` file;
-- identifies this directory as package source for shared Agriculture helpers;
-- keeps Agriculture doctrine, contracts, schemas, policy, pipelines, pipeline specs, data, evidence, and release in their own authority roots;
-- blocks helper modules from becoming doctrine, crop truth, yield truth, field identity authority, policy engine, lifecycle writer, EvidenceBundle creator, release approver, schema authority, contract authority, or public trust membrane;
-- defines expected module families, sensitivity posture, inputs/outputs, tests, fixtures, and open questions.
+```text
+036767399c356a59a0f8c674e8f9a1da2aa0d79f
+```
 
-Future source files in this module are done only when they are schema-aligned, test-covered, steward-reviewed, deterministic where practical, and unable to bypass Agriculture sensitivity, lifecycle, evidence, policy, and release controls.
+Unresolved drift:
 
-[⬆ Back to top](#top)
+- `contracts/domains/agriculture/` vs `contracts/agriculture/`;
+- `schemas/contracts/v1/domains/agriculture/` vs `schemas/contracts/v1/agriculture/`;
+- `aggregation-receipt` vs `aggregation_receipt`;
+- policy vs runtime outcome vocabulary;
+- parent source-root README inventory vs confirmed empty child `__init__.py`.
+
+Do not settle these by code convention. Use the owning steward, ADR, drift, and migration process.
+
+Any mapping, identity, temporal, aggregation, or suppression change needs a version/changelog, before/after fixtures, downstream impact, migration/recompile plan, correction/invalidation path, and rollback target.
+
+[Back to top](#top)
 
 ---
 
-## 12. Open questions
+## Definition of done
+
+### README v0.2
+
+- [x] Pinned target/ref/blob and scaffold evidence.
+- [x] Directory Rules and authority separation preserved.
+- [x] Object families, interfaces, identity/time, public safety, failures, tests, correction, rollback covered.
+- [x] Build, exports, consumers, tests, CI, runtime, evidence, release kept bounded.
+- [x] No code/schema/policy/data/release/path change implied.
+
+### First helper
+
+- [ ] Owners and package mechanics accepted.
+- [ ] Contract/schema or explicit local-only scope accepted.
+- [ ] Source-role, identity, and time profiles pinned.
+- [ ] Positive, negative, ambiguous, restricted, no-network fixtures/tests pass.
+- [ ] Determinism, import safety, and no hidden authority proved.
+- [ ] Security/sensitivity and consumer review complete.
+- [ ] Correction/migration/rollback documented.
+- [ ] Meaningful CI gate exists.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
 
 | ID | Question | Status |
 |---|---|---|
-| `PKG-DOM-AG-SRC-001` | Which language/runtime owns `packages/domains/agriculture/src/agriculture/`? | UNKNOWN |
-| `PKG-DOM-AG-SRC-002` | Which module names are actually exported by the package? | UNKNOWN |
-| `PKG-DOM-AG-SRC-003` | Should fixture builders live in source, tests, or `fixtures/packages/domains/agriculture/` only? | NEEDS VERIFICATION |
-| `PKG-DOM-AG-SRC-004` | Which canonical schemas own crop, field, yield, rotation, irrigation, suitability, and stress helper shapes? | NEEDS VERIFICATION |
-| `PKG-DOM-AG-SRC-005` | Which CI workflow validates helper determinism, sensitivity posture, and no hidden lifecycle writes? | UNKNOWN |
-| `PKG-DOM-AG-SRC-006` | Should field identity helpers live here, in a privacy package, or in a domain pipeline lane? | NEEDS VERIFICATION / ADR |
+| `PKG-AG-SRC-001` | Owners, CODEOWNERS, enforced review? | **UNKNOWN** |
+| `PKG-AG-SRC-002` | Build backend, Python versions, install behavior? | **UNKNOWN** |
+| `PKG-AG-SRC-003` | Complete tree, exports, consumers? | **NEEDS VERIFICATION** |
+| `PKG-AG-SRC-004` | Result/issue, source-role, identity, time contracts? | **UNKNOWN** |
+| `PKG-AG-SRC-005` | Accepted Agriculture contracts/schemas? | **NEEDS VERIFICATION** |
+| `PKG-AG-SRC-006` | Policy-to-runtime outcome mapping? | **CONFLICTED** |
+| `PKG-AG-SRC-007` | Test/fixture/validator/workflow binding? | **UNKNOWN** |
+| `PKG-AG-SRC-008` | Generated-code admission? | **NEEDS VERIFICATION** |
+| `PKG-AG-SRC-009` | Aggregation/suppression thresholds and rights? | **UNKNOWN** |
+| `PKG-AG-SRC-010` | Safe field-candidate admission? | **NEEDS VERIFICATION** |
+| `PKG-AG-SRC-011` | Correction replay/deprecation policy? | **UNKNOWN** |
+| `PKG-AG-SRC-012` | Public path blocks direct internal access? | **NEEDS VERIFICATION** |
+
+[Back to top](#top)
 
 ---
 
-## Maintainer note
+## Evidence ledger
 
-Keep this module helper-focused and subordinate to Agriculture governance. Do not add Agriculture doctrine, source descriptors, schema authority, contract authority, policy decisions, lifecycle writers, EvidenceBundle writers, release decisions, public API routes, UI behavior, restricted field examples, or generated truth claims here.
+| Source | Status | Supports | Limits |
+|---|---|---|---|
+| Current request/authoring contract | **CONFIRMED task authority** | Scope and one-file evidence-first implementation. | Not repo proof. |
+| Prior target, parent READMEs | **CONFIRMED** | Existing boundaries and rollback. | Some planning/stale inventory. |
+| `pyproject.toml`, `__init__.py`, exact path checks | **CONFIRMED** | Package identity and bounded scaffold state. | Not recursive/runtime proof. |
+| Domain/contract/schema/policy/test/fixture READMEs | **CONFIRMED docs/indexes** | Object families, sensitivity, authority splits, scaffolds/drift. | Not executable closure. |
+| Directory Rules v1.4 | **CONFIRMED doctrine** | Package placement, Domain Placement Law, trust/lifecycle split. | Some paths/ADRs proposed. |
+| ADR-0001 | **CONFIRMED file / proposed** | Proposed schema home and four-layer split. | Not accepted. |
+| Drift/CODEOWNERS/workflow evidence | **CONFIRMED files / query-limited** | Drift process and review/workflow boundaries. | No target resolution or CI pass proof. |
+| Domain-Driven Design reference | **REFERENCE** | Bounded context and language. | Does not override KFM doctrine. |
+
+[Back to top](#top)
+
+---
+
+## Status summary
+
+This is a verified Python source-module path with an empty `__init__.py` in a `kfm-domain-agriculture` `0.0.0` scaffold. It is not yet a verified helper library, connector, pipeline, schema authority, policy engine, EvidenceBundle resolver, lifecycle writer, release authority, public API, UI package, or map/AI trust surface.
+
+<p align="right"><a href="#top">Back to top</a></p>
