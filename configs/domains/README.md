@@ -2,23 +2,23 @@
 doc_id: kfm://doc/configs-domains-readme
 title: configs/domains/ — Governed Domain Configuration Defaults and Templates
 type: readme
-version: v0.3
+version: v0.4
 status: draft
 owners: OWNER_TBD — Config steward · Security steward · Domain stewards · Consumer owners · Validation steward · Policy steward · Release steward · Docs steward
 created: 2026-06-16
 updated: 2026-07-13
 policy_label: "public; config-sublane; domain-scoped; non-secret; non-authoritative; no-live-binding; no-policy-authority; no-schema-authority; no-release-authority"
 current_path: configs/domains/README.md
-truth_posture: CONFIRMED repository-present README, parent configs boundary, one named child README, canonical 13-lane human register, empty machine lane register, named-path probes, proposed ADR status, placeholder workflow state, and prior revision lineage / PROPOSED folder contract, per-file metadata contract, validation matrix, review dispositions, child-lane admission checks, and minimum safe slice / UNKNOWN exhaustive recursive inventory, differently named files, unindexed content, accepted owners, consumer wiring, loader precedence, schema binding, policy enforcement, CI enforcement, secret scanning, deployment integration, runtime behavior, and publication behavior
+truth_posture: CONFIRMED repository-present parent README, canonical 13-lane human register, all thirteen documentation-boundary child READMEs in this revision, empty machine lane register, proposed ADR status, placeholder workflow state, and prior revision lineage / PROPOSED future consumer-bound payloads / UNKNOWN accepted owners, consumer wiring, loader precedence, schema binding, policy enforcement, CI enforcement, deployment integration, runtime behavior, and publication behavior
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8
-  prior_blob: 223320b6914c86bdac26b111f1263b7def804a25
-  prior_revision_commit: b89a92f5543337915a62700eff807701bf128bee
-  prior_merge_commit: 7c11424a72604f66dfeac82ef9db9ee1b2d7cf8a
+  base_commit: 10c82654c8ac2d039c3e6d1f7e31a1f074a3b6d1
+  prior_blob: 154ab1ef8c7858a8ee66ae522d6fc7d042ebe0ef
+  prior_revision_commit: dba2d140ac7d38fef5f7b9ef6c45432ae13a1a13
+  prior_merge_commit: 55a84f06216effd8e3ae5d51450bbf9f3d160417
 related:
   - ../README.md
   - ../dev/README.md
@@ -55,11 +55,11 @@ related:
   - ../../.github/PULL_REQUEST_TEMPLATE.md
 tags: [kfm, configs, domains, bounded-contexts, defaults, templates, placeholders, consumer-binding, validation, source-role, sensitivity, geoprivacy, no-secrets, non-authoritative, governance]
 notes:
-  - "v0.3 preserves the v0.2 no-secrets, no-authority, source-role, geoprivacy, migration, rollback, and safe-language controls while reorganizing the README to satisfy the Directory Rules folder README contract."
-  - "At the pinned base, configs/domains/README.md and configs/domains/habitat/README.md were directly fetched. Exact probes for the other twelve canonical domain README paths returned Not Found. This is a bounded named-path result, not an exhaustive recursive tree receipt."
+  - "v0.4 preserves the v0.3 no-secrets, no-authority, source-role, geoprivacy, migration, rollback, validation, and safe-language controls while materializing documentation boundaries for every canonical domain slug."
+  - "At the pinned base, configs/domains/README.md and configs/domains/habitat/README.md existed; the other twelve canonical child README paths were absent. This revision creates those twelve README-backed lanes under explicit user authorization."
   - "The human-facing domain register lists thirteen canonical domain lanes. The machine register at control_plane/domain_lane_register.yaml currently contains entries: []. No config discovery, validation, or activation behavior should depend on machine registration until the register is populated and validated."
   - "ADR-0001 and ADR-0003 are repository-present but status: proposed. This README references them as proposed governance handles and does not upgrade them to accepted authority."
-  - "Only this Markdown file changes. No configuration payload, consumer, schema, contract, policy, registry, validator, test, fixture, workflow, runtime, deployment, lifecycle object, release object, or public artifact is created or modified."
+  - "This revision changes the parent README and creates twelve child boundary READMEs. No executable configuration payload, consumer, schema, contract, policy, registry, validator, test, fixture, workflow, runtime, deployment, lifecycle object, release object, or public artifact is created or modified."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -71,7 +71,7 @@ notes:
 > Domain-scoped configuration may make safe defaults and templates inspectable. It must never make domain truth, source admission, policy, schema, evidence, release, or publication decisions.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.3-informational)
+![version](https://img.shields.io/badge/version-v0.4-informational)
 ![authority](https://img.shields.io/badge/authority-config__sublane-green)
 ![inventory](https://img.shields.io/badge/inventory-bounded__named--path__snapshot-yellow)
 ![secrets](https://img.shields.io/badge/secrets-forbidden-red)
@@ -80,9 +80,9 @@ notes:
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Domain matrix](#canonical-domain-configuration-matrix) · [File contract](#minimum-per-file-contract) · [Security](#secret-live-binding-and-sensitive-value-rules) · [Rollback](#rollback-and-correction-posture) · [FAQ](#faq)
 
 > [!IMPORTANT]
-> **Document status:** draft `v0.3`  
+> **Document status:** draft `v0.4`
 > **Owning responsibility root:** `configs/`  
-> **Observed lane maturity at the pinned base:** parent README plus one confirmed child README (`habitat`); twelve other canonical child README paths were absent at exact named probes  
+> **Observed lane maturity in this revision:** parent README plus one README-backed child lane for each of the thirteen canonical domain slugs; no executable domain config payloads or consumers are established
 > **Authority:** safe, non-secret, domain-scoped configuration defaults, templates, examples, and config-facing documentation only  
 > **Lifecycle effect:** none by itself; configuration is not promotion, release, publication, or evidence  
 > **Default runtime posture:** not loaded, not active, and not safe to assume consumed unless a current consumer and validation path are verified
@@ -132,7 +132,7 @@ A domain config may describe **how a verified consumer should be configured**. I
 | Folder placement | **CONFIRMED** | `configs/domains/README.md` exists under `configs/`, whose parent README defines safe non-secret defaults and templates as the root responsibility. |
 | Domain set | **CONFIRMED human-facing doctrine** | `docs/domains/README.md` and `docs/registers/DOMAIN_LANE.md` identify thirteen canonical domain lanes. |
 | Config content | **NON-AUTHORITATIVE** | Files may express safe defaults and placeholders; they cannot own domain meaning, machine shape, policy, source identity, evidence, lifecycle state, or release state. |
-| Current child inventory | **BOUNDED** | One child README was fetched at `configs/domains/habitat/README.md`; twelve other canonical child README paths returned `Not Found` at exact probes. |
+| Current child inventory | **CONFIRMED FOR README BOUNDARIES** | This revision contains one README-backed child directory for every canonical domain slug. Only Habitat existed at the pinned base; twelve are created here. |
 | Machine domain registration | **NOT ESTABLISHED** | `control_plane/domain_lane_register.yaml` is repository-present but currently contains `entries: []`. |
 | Consumer behavior | **UNKNOWN** | No general auto-discovery, loading, merge order, precedence, or unknown-key behavior is established by this README. |
 | Validation enforcement | **NEEDS VERIFICATION** | Validation expectations are defined here; the inspected docs/link workflows remain TODO scaffolds rather than proof of enforcement. |
@@ -157,37 +157,32 @@ The evidence snapshot for this revision is pinned to:
 | Repository ID | `1059091169` |
 | Visibility | public |
 | Base ref | `main` |
-| Base commit | `b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8` |
-| Prior target blob | `223320b6914c86bdac26b111f1263b7def804a25` |
-| Prior content revision | `b89a92f5543337915a62700eff807701bf128bee` |
-| Prior merge commit | `7c11424a72604f66dfeac82ef9db9ee1b2d7cf8a` |
+| Base commit | `10c82654c8ac2d039c3e6d1f7e31a1f074a3b6d1` |
+| Prior target blob | `154ab1ef8c7858a8ee66ae522d6fc7d042ebe0ef` |
+| Prior content revision | `dba2d140ac7d38fef5f7b9ef6c45432ae13a1a13` |
+| Prior merge commit | `55a84f06216effd8e3ae5d51450bbf9f3d160417` |
 
 ### Directly observed named paths
 
 ```text
 configs/domains/
-├── README.md                  # CONFIRMED
-└── habitat/README.md          # CONFIRMED
+├── README.md
+├── agriculture/README.md
+├── archaeology/README.md
+├── atmosphere/README.md
+├── fauna/README.md
+├── flora/README.md
+├── geology/README.md
+├── habitat/README.md
+├── hazards/README.md
+├── hydrology/README.md
+├── people-dna-land/README.md
+├── roads-rail-trade/README.md
+├── settlements-infrastructure/README.md
+└── soil/README.md
 ```
 
-Exact `README.md` probes returned `Not Found` for:
-
-```text
-agriculture
-archaeology
-atmosphere
-fauna
-flora
-geology
-hazards
-hydrology
-people-dna-land
-roads-rail-trade
-settlements-infrastructure
-soil
-```
-
-Additional exact probes returned `Not Found` for:
+The following proposed payload/validation paths remain absent:
 
 ```text
 configs/domains/validation.md
@@ -196,15 +191,14 @@ configs/domains/habitat/default.template.yaml
 configs/domains/habitat/review.template.yaml
 ```
 
-These are **bounded named-path findings**, not a recursive filesystem receipt. Differently named files, branch-only work, generated content, unindexed content, and future additions remain `UNKNOWN` until directly inspected.
+The child inventory is complete for the canonical README boundaries authorized in this revision. It is not evidence of consumer wiring, executable payloads, validation enforcement, deployment integration, or runtime/publication behavior.
 
 ### Maturity matrix
 
 | Capability | Status | Safe conclusion |
 |---|---:|---|
 | Parent boundary README | **CONFIRMED** | The lane has a documented parent contract. |
-| Habitat child README | **CONFIRMED** | One domain-specific configuration boundary exists. |
-| Twelve other canonical child README paths | **ABSENT AT NAMED PROBES** | Do not cite those paths as current files on the pinned base. |
+| Canonical child READMEs | **CONFIRMED IN REVISION** | All thirteen canonical slugs have a documentation-only configuration boundary. |
 | Domain configuration payloads | **NOT ESTABLISHED** | No general defaults, templates, or validation file was verified in the named probes. |
 | Machine domain-lane entries | **EMPTY** | The current machine register does not enumerate domain lanes. |
 | Auto-discovery | **NOT ESTABLISHED** | Folder presence must not trigger activation or loading by assumption. |
@@ -500,24 +494,24 @@ Review again when any of the following occurs:
 
 The human-facing domain register identifies thirteen canonical domain lanes. The table below distinguishes **domain standing** from **config child presence**.
 
-| Canonical slug | Domain posture carried into config | Config child README at pinned base | Default config caution |
+| Canonical slug | Domain posture carried into config | Config child README in this revision | Default config caution |
 |---|---|---:|---|
-| `hydrology` | Preserve observed, regulatory, modeled, forecast, and historical roles. | Absent at exact probe | Never become emergency-warning or live-status authority. |
-| `soil` | Preserve static survey, gridded derivative, station, satellite, pedon, and interpretation support types. | Absent at exact probe | Do not flatten support types or expose private production/land context. |
+| `hydrology` | Preserve observed, regulatory, modeled, forecast, and historical roles. | **CONFIRMED** | Never become emergency-warning or live-status authority. |
+| `soil` | Preserve static survey, gridded derivative, station, satellite, pedon, and interpretation support types. | **CONFIRMED** | Do not flatten support types or expose private production/land context. |
 | `habitat` | Preserve landscape ownership, model-vs-observation, stewardship, and public-safe geometry controls. | **CONFIRMED** | Rare-species and stewardship joins require fail-closed handling. |
-| `fauna` | Preserve restricted/public occurrence separation and taxonomic/source uncertainty. | Absent at exact probe | Never expose nests, dens, roosts, telemetry, or exact protected sites by config. |
-| `flora` | Preserve specimen/occurrence/range/model distinctions and rare/cultural plant protections. | Absent at exact probe | Exact rare or culturally sensitive locations fail closed. |
-| `agriculture` | Preserve aggregate, field-candidate, survey, model, and private producer distinctions. | Absent at exact probe | Private joins and producer-identifying context are denied by default. |
-| `geology` | Preserve occurrence, deposit, resource estimate, extraction, permit, and physical geology distinctions. | Absent at exact probe | Resource and infrastructure-sensitive detail may require restriction/generalization. |
-| `atmosphere` | Preserve observed, regulatory, modeled, forecast, climatological, and aggregate roles. | Absent at exact probe | Configuration must not turn forecast/model context into observed fact. |
-| `hazards` | Preserve event, observation, warning/advisory context, declaration, exposure, and model distinctions. | Absent at exact probe | KFM is never an alert or incident-command authority. |
-| `roads-rail-trade` | Preserve physical network, administrative route, historic route, condition, and inferred graph roles. | Absent at exact probe | Operational or sensitive infrastructure detail requires governed review. |
-| `settlements-infrastructure` | Preserve settlement, jurisdiction, facility, service area, dependency, and critical-asset distinctions. | Absent at exact probe | Critical infrastructure and private facility detail fail closed. |
-| `archaeology` | Preserve observed site, survey, interpretation, candidate, reconstruction, and cultural authority distinctions. | Absent at exact probe | Exact sites, human remains, sacred places, and sovereignty-sensitive context remain restricted. |
-| `people-dna-land` | Preserve assertion-first identity, consent, living/deceased status, genealogy, DNA, title, and land-claim distinctions. | Absent at exact probe | Living-person, DNA, consent, title, and cultural-rights controls are mandatory. |
+| `fauna` | Preserve restricted/public occurrence separation and taxonomic/source uncertainty. | **CONFIRMED** | Never expose nests, dens, roosts, telemetry, or exact protected sites by config. |
+| `flora` | Preserve specimen/occurrence/range/model distinctions and rare/cultural plant protections. | **CONFIRMED** | Exact rare or culturally sensitive locations fail closed. |
+| `agriculture` | Preserve aggregate, field-candidate, survey, model, and private producer distinctions. | **CONFIRMED** | Private joins and producer-identifying context are denied by default. |
+| `geology` | Preserve occurrence, deposit, resource estimate, extraction, permit, and physical geology distinctions. | **CONFIRMED** | Resource and infrastructure-sensitive detail may require restriction/generalization. |
+| `atmosphere` | Preserve observed, regulatory, modeled, forecast, climatological, and aggregate roles. | **CONFIRMED** | Configuration must not turn forecast/model context into observed fact. |
+| `hazards` | Preserve event, observation, warning/advisory context, declaration, exposure, and model distinctions. | **CONFIRMED** | KFM is never an alert or incident-command authority. |
+| `roads-rail-trade` | Preserve physical network, administrative route, historic route, condition, and inferred graph roles. | **CONFIRMED** | Operational or sensitive infrastructure detail requires governed review. |
+| `settlements-infrastructure` | Preserve settlement, jurisdiction, facility, service area, dependency, and critical-asset distinctions. | **CONFIRMED** | Critical infrastructure and private facility detail fail closed. |
+| `archaeology` | Preserve observed site, survey, interpretation, candidate, reconstruction, and cultural authority distinctions. | **CONFIRMED** | Exact sites, human remains, sacred places, and sovereignty-sensitive context remain restricted. |
+| `people-dna-land` | Preserve assertion-first identity, consent, living/deceased status, genealogy, DNA, title, and land-claim distinctions. | **CONFIRMED** | Living-person, DNA, consent, title, and cultural-rights controls are mandatory. |
 
 > [!NOTE]
-> This matrix does not create missing directories. A child lane should be added only with a real configuration responsibility, named consumer, review owner, validation plan, and rollback path—not to make the tree look complete.
+> This revision materializes documentation-only boundaries for every canonical slug under explicit scoped authorization. The matrix does not authorize payloads: a non-README config still requires a real consumer, review owner, validation plan, and rollback path.
 
 [Back to top](#top)
 
@@ -691,7 +685,7 @@ When a secret or protected value is committed:
 Create `configs/domains/<slug>/` only when all of the following are true:
 
 - the slug is canonical or has an accepted domain ADR;
-- at least one named consumer has a real domain-specific configuration need;
+- a documentation-only boundary is explicitly authorized, or a named consumer has a real domain-specific configuration need;
 - shared config cannot reasonably live in a non-domain sibling lane;
 - the child README preserves this parent contract;
 - secret and sensitivity risks are identified;
@@ -699,7 +693,7 @@ Create `configs/domains/<slug>/` only when all of the following are true:
 - ownership and review burden are named or explicitly unresolved;
 - no parallel schema, policy, registry, data, release, package, or pipeline authority is created.
 
-Do **not** create empty directories or speculative templates solely for symmetry.
+Do **not** create empty directories or speculative templates solely for symmetry. Explicit authorization for a README boundary does not authorize a payload; every non-README file still requires a verified consumer and format.
 
 ### Suggested shape, not current inventory
 
@@ -852,7 +846,7 @@ For this README revision, the prior blob is recorded in the meta block so restor
 
 | Avoid saying | Prefer saying |
 |---|---|
-| “This folder contains every domain config.” | “The pinned snapshot confirms the parent README and one named child README; exhaustive inventory remains unverified.” |
+| “This folder contains every domain config.” | “This revision confirms README boundaries for all thirteen canonical slugs; executable payload and consumer coverage is not established.” |
 | “The API uses this file.” | “This file names the API as an intended consumer; wiring is `NEEDS VERIFICATION` unless cited.” |
 | “This setting makes the output public-safe.” | “This setting references or supports a public-safe profile; policy, transform, review, release, and rollback remain required.” |
 | “The source is active.” | “The template contains a source reference or placeholder; activation belongs to registry governance.” |
@@ -873,7 +867,7 @@ No. Domain standing comes from doctrine, registers, ADRs, and review. Config pla
 
 ### Should every canonical domain have an empty config folder?
 
-No. Create a child lane only for a real domain-specific configuration need with a consumer, owner, validation plan, and rollback path.
+No. This revision creates non-empty, documentation-only boundaries for all canonical slugs under explicit authorization. It does not justify placeholder payloads. Future child lanes or non-README files still require explicit authority or a real consumer, owner, validation plan, and rollback path.
 
 ### Can a config contain a source URL?
 
@@ -905,10 +899,10 @@ No. It means the configuration-support review passed. Publication still requires
 
 | Evidence | Blob / state | Supports | Does not prove |
 |---|---|---|---|
-| `configs/domains/README.md` | prior blob `223320b6…` | Existing v0.2 boundary and lineage. | Current payload inventory or consumers. |
+| `configs/domains/README.md` | prior blob `154ab1ef…` | Existing v0.3 boundary and lineage. | Current payload inventory or consumers. |
 | `configs/README.md` | blob `b960a83c…` | Parent safe non-secret configuration responsibility. | Domain-specific behavior. |
 | `configs/domains/habitat/README.md` | blob `1fbe41b1…` | One confirmed child boundary. | Habitat payload files or consumer wiring. |
-| Twelve child README probes | `Not Found` | Named paths absent at pinned base. | Exhaustive absence of all domain config content. |
+| Twelve new child READMEs | created in this revision | Explicitly authorized boundaries for the remaining canonical slugs. | Payload need, consumer wiring, or runtime activation. |
 | `docs/domains/README.md` | blob `5ee0df96…` | Thirteen canonical domain slugs and Domain Placement Law. | Config child presence. |
 | `docs/registers/DOMAIN_LANE.md` | blob `7cd641d9…` | Human-facing domain lane register and sensitivity posture. | Machine enforcement. |
 | `control_plane/domain_lane_register.yaml` | blob `81b23beb…`; `entries: []` | Machine register currently empty. | Future population or validator behavior. |
@@ -927,7 +921,7 @@ No. It means the configuration-support review passed. Publication still requires
 
 The v0.2 README established the parent domain-config boundary, no-secrets rule, no-live-binding rule, protected-domain cautions, source-role and geoprivacy guardrails, child-lane posture, consumer/validator expectations, minimum safe slice, anti-bypass matrix, migration guidance, rollback guidance, open verification items, and safe-language rules.
 
-v0.3 preserves those controls and adds:
+v0.3 preserved those controls and added:
 
 - Directory Rules §15 folder-README section order;
 - pinned repository, commit, blob, and prior-revision lineage;
@@ -944,12 +938,14 @@ v0.3 preserves those controls and adds:
 
 No previous boundary is intentionally weakened. Where wording is consolidated, the stricter no-authority, no-secrets, no-sensitive-values, fail-closed, and reversible-change posture controls.
 
+v0.4 adds the twelve missing canonical child README boundaries, updates the inventory, and separates explicit documentation-lane authorization from the stricter consumer evidence required for executable payloads.
+
 </details>
 
 <details>
 <summary><strong>Appendix B — documentation-only change boundary</strong></summary>
 
-This README does not create or modify:
+This README revision accompanies twelve new child boundary READMEs. It does not create or modify:
 
 - domain config payloads;
 - source descriptors or registries;
@@ -969,6 +965,6 @@ Any future behavior change must be implemented and validated in its owning respo
 
 ## Status summary
 
-`configs/domains/` is a governed configuration-support lane under `configs/`. At the pinned base, the parent README and the Habitat child README are confirmed, twelve other canonical child README paths are absent at exact probes, and the machine domain register contains no entries. This lane may carry safe, non-secret defaults and templates for explicit consumers. It cannot create domain truth, source admission, policy, schema, evidence, lifecycle, release, publication, deployment, or runtime authority.
+`configs/domains/` is a governed configuration-support lane under `configs/`. This revision provides a README-backed configuration boundary for each of the thirteen canonical domain slugs; only Habitat existed at the pinned base. No executable domain config payload, loader, or consumer is created, and the machine domain register still contains no entries. These lanes cannot create domain truth, source admission, policy, schema, evidence, lifecycle, release, publication, deployment, or runtime authority.
 
 <p align="right"><a href="#top">Back to top</a></p>
