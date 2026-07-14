@@ -10,7 +10,7 @@ const baselineDir = "tests/fixtures/maplibre/baselines";
 const diffDir = "artifacts/perf/render-diff";
 
 const envelope = JSON.parse(
-  await fs.readFile("config/maplibre/perf-envelope.v1.json", "utf8")
+  await fs.readFile("configs/maplibre/perf-envelope.v1.json", "utf8")
 );
 
 const threshold = envelope.thresholds.render_pixel_delta_ratio;

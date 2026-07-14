@@ -2,11 +2,11 @@
 doc_id: kfm://doc/configs-templates-readme
 title: configs/templates/ — Configuration Templates
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Config steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-13
 policy_label: public
 related:
   - ../README.md
@@ -26,7 +26,7 @@ notes:
   - "configs/templates/ is for commit-safe configuration templates only."
   - "Templates describe shape and placeholders; they do not prove runtime behavior."
   - "Authoritative schemas, policy rules, implementation code, lifecycle records, release records, and generated outputs belong in their own roots."
-  - "Current inventory, consumers, validation coverage, and CI enforcement remain NEEDS VERIFICATION."
+  - "Current tracked inventory is CONFIRMED at main commit 55a84f06216effd8e3ae5d51450bbf9f3d160417. Consumers, semantic adequacy, validation coverage, and CI enforcement remain NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -43,7 +43,7 @@ Templates in this folder may show expected structure, placeholder fields, and in
 > **Status:** draft / `NEEDS VERIFICATION`  
 > **Owning root:** `configs/`  
 > **Responsibility:** configuration templates only  
-> **Truth posture:** README path CONFIRMED; parent `configs/` root CONFIRMED as config home; current template inventory, consumers, validation coverage, and CI enforcement remain UNKNOWN / NEEDS VERIFICATION.
+> **Truth posture:** README path and five template files CONFIRMED at `main@55a84f062…`; parent `configs/` root CONFIRMED as config home; consumers, semantic adequacy, validation coverage, and CI enforcement remain UNKNOWN / NEEDS VERIFICATION.
 
 ## Purpose
 
@@ -56,7 +56,12 @@ A template here does not prove that an app, package, pipeline, runtime adapter, 
 ```text
 configs/
 └── templates/
-    └── README.md
+    ├── README.md
+    ├── dataset_manifest.template.yaml
+    ├── layer_manifest.template.yaml
+    ├── release_manifest.template.yaml
+    ├── source_descriptor.template.yaml
+    └── viewer_style.template.json
 ```
 
 Related roots:
@@ -103,13 +108,18 @@ artifacts/         # generated outputs
 | Generated outputs | `artifacts/` |
 | Worked examples and walkthroughs | `examples/` |
 
-## Suggested directory shape
+## Current inventory and proposed expansion
 
-Current inventory remains `NEEDS VERIFICATION`.
+The five template payloads shown below are `CONFIRMED` in the tracked tree. No verified runtime consumer or validator was found for them; `SKELETON_MAP.md` is a structural reference, not consumption evidence.
 
 ```text
 configs/templates/
 ├── README.md
+├── dataset_manifest.template.yaml
+├── layer_manifest.template.yaml
+├── release_manifest.template.yaml
+├── source_descriptor.template.yaml
+├── viewer_style.template.json
 ├── apps/                    # PROPOSED app templates
 ├── pipelines/               # PROPOSED pipeline templates
 ├── runtime/                 # PROPOSED runtime config templates
@@ -118,7 +128,7 @@ configs/templates/
 ```
 
 > [!WARNING]
-> Do not treat this suggested shape as repo fact. Verify actual files before making inventory or migration claims.
+> Do not create the proposed subdirectories or `validation.md` without a verified consumer or validation responsibility.
 
 ## Validation expectations
 
@@ -153,13 +163,13 @@ For changes under `configs/templates/`:
 ## Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual `configs/templates/` contents are inventoried.
+- [x] Actual tracked `configs/templates/` contents are inventoried at the pinned base.
 - [ ] Templates identify consumers and validation paths.
 - [ ] Misplaced files are migrated to the correct owning root.
 - [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
 
 ## Status summary
 
-`configs/templates/` is for commit-safe configuration templates only. It is not a source of runtime truth, release truth, schema truth, policy truth, lifecycle truth, implementation truth, or generated-output authority.
+`configs/templates/` contains five commit-safe template payloads plus this README. Their presence is confirmed; consumer binding and validation remain unverified. This lane is not a source of runtime truth, release truth, schema truth, policy truth, lifecycle truth, implementation truth, or generated-output authority.
 
 <p align="right"><a href="#top">Back to top</a></p>

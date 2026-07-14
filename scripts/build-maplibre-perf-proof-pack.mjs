@@ -8,7 +8,7 @@ const manifestPath =
 const receiptPath =
   "artifacts/perf/run-receipt.json";
 const envelopePath =
-  "config/maplibre/perf-envelope.v1.json";
+  "configs/maplibre/perf-envelope.v1.json";
 const outPath =
   "artifacts/perf/proof-pack.maplibre-perf.json";
 

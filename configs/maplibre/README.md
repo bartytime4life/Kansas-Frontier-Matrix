@@ -1,22 +1,22 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/configs-maplibre-readme
-title: configs/maplibre/ — MapLibre README-Only Configuration, Drift, and Consumer-Binding Boundary
+title: configs/maplibre/ — MapLibre Configuration, Drift, and Consumer-Binding Boundary
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Config steward · Map steward · MapLibre adapter steward · Explorer Web steward · Governed API steward · Security steward · Policy steward · Release steward · Validation steward · Test steward · Docs steward
 created: 2026-06-16
 updated: 2026-07-13
-policy_label: public; configs; maplibre; readme-only; commit-safe; non-secret; non-authoritative; consumer-bound; renderer-downstream; released-artifacts-only; no-direct-publication; drift-visible
+policy_label: public; configs; maplibre; commit-safe; non-secret; non-authoritative; consumer-bound; renderer-downstream; released-artifacts-only; no-direct-publication; drift-visible
 current_path: configs/maplibre/README.md
-truth_posture: CONFIRMED repository-present README-only configs/maplibre lane at the inspected path search and named conventional probes, canonical configs root contract, MapLibre architecture and renderer-boundary documents, packages/maplibre README, Explorer Web map-runtime README, proposed sole-renderer ADR, existing MapLibre performance workflow and scripts, absent packages/maplibre-runtime README, absent named policy/maplibre and schemas/contracts/v1/maplibre READMEs, missing config/maplibre/perf-envelope.v1.json, permissive legacy schemas/maplibre/perf-envelope.schema.json, and singular config/maplibre references in workflow/scripts / CONFLICTED configs/ versus config/ path authority, MapLibre performance-envelope home, schema home, workflow trigger coverage, current app path, trust-artifact output homes, and hermetic-network posture / PROPOSED commit-safe MapLibre configuration contract, consumer-binding metadata, precedence rules, validation matrix, migration sequence, and minimum safe implementation slice / UNKNOWN exhaustive recursive inventory, differently named config files, config loader behavior, actual consumers, accepted config DTOs, schema enforcement, policy wiring, runtime binding, deployment binding, complete CI coverage, release use, and owner assignments
+truth_posture: CONFIRMED recursive configs/maplibre inventory at the current base, existing perf-envelope payload under the canonical configs root, all executable repository references to the envelope, and migration of those references from the nonexistent singular config root / CONFLICTED schema home, current app path, trust-artifact output homes, and hermetic-network posture / PROPOSED broader config contract, precedence rules, validation matrix, and later implementation phases / UNKNOWN successful workflow runs, meaningful schema enforcement, deployment binding, release use, and owner assignments
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8
-  prior_blob: bdf6bc8deb4a1c6cefdb2631b9db3234624f9b7d
+  base_commit: 55a84f06216effd8e3ae5d51450bbf9f3d160417
+  prior_blob: 62061a1530f3bf3e26dc7c23526a3f3a9b0e7459
 related:
   - ../README.md
   - ../examples/README.md
@@ -52,23 +52,24 @@ related:
   - ../../data/published/
 tags: [kfm, configs, maplibre, renderer, defaults, templates, consumer-binding, map-runtime, styles, layers, tiles, performance, security, secrets, validation, release, rollback, governance]
 notes:
-  - "At the pinned base, a path-scoped repository search returned configs/maplibre/README.md but no additional file in that lane. Exact probes for viewer.example.yaml, style.example.json, layers.example.yaml, and validation.md returned Not Found."
-  - "The existing MapLibre performance workflow and scripts reference singular config/maplibre/perf-envelope.v1.json. That payload was not found, and the workflow path filters do not include configs/maplibre/**."
+  - "At the pinned base, recursive inspection confirmed configs/maplibre/README.md and configs/maplibre/perf-envelope.v1.json. Exact probes for viewer.example.yaml, style.example.json, layers.example.yaml, and validation.md returned Not Found."
+  - "At the pinned base, the MapLibre performance workflow and four scripts referenced singular config/maplibre/perf-envelope.v1.json even though the payload exists under the canonical plural configs root. This revision migrates every confirmed executable reference to configs/maplibre/perf-envelope.v1.json and does not create a singular compatibility root."
+  - "Static validation also found a pre-existing syntax error in maplibre-smoke-perf.mjs. This revision computes the serializable style before page.evaluate and passes it as data, preserving the intended scenario behavior while making the script parse."
   - "The performance validator reads schemas/maplibre/perf-envelope.schema.json, which is an open permissive object scaffold, while MapLibre doctrine proposes schemas/contracts/v1/maplibre/ as the governed schema family. Final schema authority remains conflicted."
-  - "The performance workflow watches apps/web/**, schemas/maplibre/**, and config/maplibre/**, while current app documentation uses apps/explorer-web/ and Directory Rules identify configs/ as the canonical safe-config root. This README records the drift and does not silently choose a migration."
+  - "The performance workflow still watches apps/web/** and schemas/maplibre/**, while current app documentation uses apps/explorer-web/ and doctrine proposes schemas/contracts/v1/maplibre/. Those separate conflicts remain visible and deferred."
   - "The smoke script loads MapLibre and glyph assets from public external URLs. Therefore current performance tooling is not proven hermetic or no-network, and endpoint/admission posture remains NEEDS VERIFICATION."
   - "packages/maplibre/README.md exists as a bounded helper-package document. packages/maplibre-runtime/README.md, policy/maplibre/README.md, and schemas/contracts/v1/maplibre/README.md returned Not Found at named probes."
-  - "Only this Markdown file changes. No config payload, schema, contract, policy, package code, app code, workflow, script, validator, fixture, test, artifact, lifecycle object, release record, endpoint, secret, path move, or public behavior is created or modified."
+  - "This revision updates this README, the MapLibre performance workflow, and four scripts. It does not change threshold values, schema authority, policy, package/app code, fixtures, lifecycle objects, release records, endpoints, secrets, or public behavior."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# MapLibre README-Only Configuration, Drift, and Consumer-Binding Boundary
+# MapLibre Configuration, Drift, and Consumer-Binding Boundary
 
-> `configs/maplibre/` is the canonical-root sublane intended for commit-safe MapLibre defaults and templates. At the inspected repository state, the lane contains this README but no verified configuration payload. It is documentation, not a live viewer configuration, style manifest, layer registry, endpoint allowlist, performance envelope, policy decision, release manifest, or runtime binding.
+> `configs/maplibre/` is the canonical-root sublane for commit-safe MapLibre defaults and templates. At the inspected repository state, it contains this README and one performance-envelope payload. That payload is a bounded input to named performance tooling; it is not a live viewer configuration, style manifest, layer registry, endpoint allowlist, policy decision, release manifest, or runtime authority.
 
-**Document lifecycle:** `draft v0.2`  
-**Observed lane maturity:** `CONFIRMED` README-only at the inspected search and named probes  
+**Document lifecycle:** `draft v0.3`
+**Observed lane maturity:** `CONFIRMED` README plus one JSON performance-envelope payload; executable path binding corrected in this revision
 **Owning responsibility root:** `configs/` — safe, non-secret configuration defaults and templates  
 **Authority:** configuration-boundary documentation only; no truth, schema, contract, policy, source, evidence, lifecycle, release, deployment, renderer, or publication authority  
 **Default posture:** commit-safe · non-secret · consumer-bound · versioned · explicit precedence · fail closed · renderer downstream · no public binding by presence alone
@@ -77,9 +78,9 @@ notes:
 > A configuration file can influence renderer behavior, performance, network access, visual emphasis, and public exposure. That influence does **not** make configuration an authority surface. MapLibre may render only governed and released artifacts through accepted consumers; configuration cannot activate a source, admit a plugin, approve a style, release a layer, resolve evidence, override sensitivity, or publish a map.
 
 > [!CAUTION]
-> The repository currently contains a path conflict. The canonical root is `configs/`, but MapLibre performance workflow and script bodies refer to `config/maplibre/` in the singular. The expected `config/maplibre/perf-envelope.v1.json` payload was not found, and the workflow does not watch `configs/maplibre/**`. Do not copy files between the paths or treat either spelling as runtime authority without a reviewed migration.
+> The pinned base contained a path conflict: the payload existed at `configs/maplibre/perf-envelope.v1.json`, while the workflow and four scripts read nonexistent singular `config/maplibre/`. This revision resolves that bounded consumer-path drift in favor of the canonical plural root and intentionally creates no alias or duplicate payload. Schema, app-filter, network, and trust-artifact conflicts remain unresolved.
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current state](#current-repository-state) · [Repository fit](#repository-fit) · [Path conflict](#config-versus-configs-path-conflict) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Config classes](#configuration-classes) · [Consumer binding](#consumer-binding-contract) · [Precedence](#precedence-overrides-and-environments) · [Security](#secrets-endpoints-and-network-posture) · [Map trust](#map-trust-release-and-sensitive-geometry-boundaries) · [Styles](#styles-layers-tiles-sprites-and-glyphs) · [Plugins](#plugins-protocols-and-renderer-capabilities) · [Performance](#maplibre-performance-configuration-drift) · [Formats](#formats-naming-and-versioning) · [Validation](#validation) · [Negative cases](#required-negative-cases) · [Tests and CI](#tests-workflows-and-ci) · [Review](#review-burden) · [Change pattern](#safe-change-pattern) · [Implementation sequence](#smallest-safe-implementation-sequence) · [Definition of done](#definition-of-done) · [Evidence](#evidence-basis) · [Open decisions](#open-decisions-and-adr-triggers) · [Rollback](#rollback) · [Backlog](#verification-backlog)
+**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current state](#current-repository-state) · [Repository fit](#repository-fit) · [Path migration](#config-versus-configs-path-migration) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Config classes](#configuration-classes) · [Consumer binding](#consumer-binding-contract) · [Precedence](#precedence-overrides-and-environments) · [Security](#secrets-endpoints-and-network-posture) · [Map trust](#map-trust-release-and-sensitive-geometry-boundaries) · [Styles](#styles-layers-tiles-sprites-and-glyphs) · [Plugins](#plugins-protocols-and-renderer-capabilities) · [Performance](#maplibre-performance-configuration-drift) · [Formats](#formats-naming-and-versioning) · [Validation](#validation) · [Negative cases](#required-negative-cases) · [Tests and CI](#tests-workflows-and-ci) · [Review](#review-burden) · [Change pattern](#safe-change-pattern) · [Implementation sequence](#smallest-safe-implementation-sequence) · [Definition of done](#definition-of-done) · [Evidence](#evidence-basis) · [Open decisions](#open-decisions-and-adr-triggers) · [Rollback](#rollback) · [Backlog](#verification-backlog)
 
 ---
 
@@ -129,8 +130,8 @@ A config file documents or supplies bounded inputs to a consumer. It does not pr
 |---|---:|---|
 | Parent root | **CONFIRMED** | `configs/README.md` identifies `configs/` as the canonical root for safe, non-secret defaults and templates. |
 | Current path | **CONFIRMED** | `configs/maplibre/README.md` exists at the pinned base. |
-| Current payload inventory | **BOUNDED README-ONLY FINDING** | Path search returned this README; four conventional candidate files were absent at exact probes. Differently named or unindexed files remain `UNKNOWN`. |
-| Config consumer | **NOT ESTABLISHED** | No loader, import, route, package binding, merge order, or runtime use is proven by this lane. |
+| Current payload inventory | **CONFIRMED RECURSIVE FINDING** | The lane contains this README and `perf-envelope.v1.json`; four conventional candidate files are absent at exact paths. |
+| Config consumer | **CONFIRMED BOUNDED TOOLING** | One workflow and four scripts reference the performance envelope after the canonical-path migration. No general app/runtime loader, merge order, or deployment use is established. |
 | MapLibre renderer doctrine | **CONFIRMED DOCUMENTED / IMPLEMENTATION MIXED** | Architecture documents establish the renderer-downstream posture; current runtime implementation remains only partly evidenced. |
 | Shared helper package | **README PRESENT / IMPLEMENTATION UNKNOWN** | `packages/maplibre/README.md` exists as a proposed bounded helper-package contract. |
 | Runtime package | **NOT FOUND AT NAMED PATH** | `packages/maplibre-runtime/README.md` was absent at the current probe. |
@@ -140,7 +141,7 @@ A config file documents or supplies bounded inputs to a consumer. It does not pr
 | MapLibre policy home | **NOT FOUND AT NAMED README** | `policy/maplibre/README.md` was absent at the named probe. |
 | Governed MapLibre schema family | **NOT FOUND AT NAMED README** | `schemas/contracts/v1/maplibre/README.md` was absent at the named probe. |
 | Legacy performance schema | **CONFIRMED PERMISSIVE SCAFFOLD** | `schemas/maplibre/perf-envelope.schema.json` accepts any object because `additionalProperties` is true and no fields are required. |
-| Performance workflow | **CONFIRMED PRESENT / PATH-CONFLICTED** | The workflow exists but watches singular `config/maplibre/**`, not this plural lane, and expects a missing payload. |
+| Performance workflow | **CONFIRMED PRESENT / PATH MIGRATED** | This revision makes the workflow watch and validate `configs/maplibre/perf-envelope.v1.json`. Successful runs and broader governance remain unverified. |
 | Release or publication authority | **NONE** | A config file cannot approve a style, layer, tile, plugin, release, or public exposure. |
 
 A canonical config location grants placement responsibility. It does not establish field semantics, consumer behavior, policy, release, or renderer authority.
@@ -153,18 +154,13 @@ A canonical config location grants placement responsibility. It does not establi
 
 ### Bounded snapshot
 
-Direct repository inspection at base commit `b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8` supports this lane snapshot:
+Recursive repository inspection at base commit `55a84f06216effd8e3ae5d51450bbf9f3d160417` supports this lane snapshot:
 
 ```text
-configs/
-├── README.md                              # canonical safe-config root contract
-├── examples/
-│   └── README.md                          # commit-safe examples boundary v0.2
-└── maplibre/
-    └── README.md                          # this file; v0.1 before revision
+configs/maplibre/
+├── README.md
+└── perf-envelope.v1.json                  # bounded performance thresholds
 ```
-
-A path-scoped repository search returned `configs/maplibre/README.md` and no additional file in the lane.
 
 Exact probes returned `Not Found` for:
 
@@ -175,7 +171,7 @@ configs/maplibre/layers.example.yaml
 configs/maplibre/validation.md
 ```
 
-These are bounded findings. They do not prove the absolute absence of every differently named, ignored, generated, branch-only, or unindexed file.
+The mounted recursive tree confirms the tracked lane inventory at this base. Ignored workstation files, generated outputs, and other branches remain outside that claim.
 
 ### Adjacent MapLibre surfaces
 
@@ -203,25 +199,27 @@ schemas/contracts/v1/maplibre/README.md
 config/maplibre/perf-envelope.v1.json
 ```
 
+The singular path is absent. At the pinned base, the workflow and four scripts nevertheless referenced it. This revision migrates those references to the existing plural path.
+
 ### Current maturity table
 
 | Surface | Confirmed state | Safe conclusion |
 |---|---|---|
-| `configs/maplibre/README.md` | Existing v0.1 boundary before this revision | Documentation existed; no payload or consumer proof followed. |
-| MapLibre config payloads | Not established in plural lane | No supported defaults, templates, style config, layer config, or performance envelope can be claimed here. |
+| `configs/maplibre/README.md` | Existing v0.2 boundary before this revision | Documentation existed but its inventory was stale. |
+| `configs/maplibre/perf-envelope.v1.json` | Present JSON payload | Threshold values exist; semantic adequacy, owner approval, and release authority are not implied. |
 | `configs/README.md` | v0.2 canonical config-root contract | Placement and non-secret posture are established; lane behavior is not. |
 | `packages/maplibre/README.md` | Bounded helper-package README | A helper boundary is documented; package code and APIs remain unverified. |
 | Explorer Web map-runtime README | Governed app-feature boundary | The intended consumer seam is documented; runtime loading remains unverified. |
-| Performance workflow | Executable YAML present | Its path contract conflicts with this lane and its required config payload is absent. |
+| Performance workflow | Executable YAML present | This revision aligns its config trigger, validation argument, and uploaded path with the plural payload. Successful runs remain unverified. |
 | Performance validator | Python entry point present | It validates against a legacy permissive schema and requires a caller-supplied path. |
 | Legacy perf schema | Open object | It does not provide meaningful field enforcement. |
-| Perf smoke script | Node/Playwright script present | It expects the missing singular-path envelope and performs external network loads. |
+| Perf smoke script | Node/Playwright script present | This revision aligns its envelope path; it still performs external network loads. |
 | MapLibre policy bundle | Not found at named README path | No MapLibre-specific policy authority is established through that path. |
 | Governed MapLibre schema README | Not found at named path | Final schema family and contents remain unresolved. |
-| CI coverage for this README lane | Not established | The MapLibre perf workflow does not watch `configs/maplibre/**`. |
+| CI coverage for this config lane | Statically aligned | The workflow now watches `configs/maplibre/**`; required-check status and successful runs remain unverified. |
 | Deployment use | Unknown | No production, staging, local, test, or review binding is proven. |
 
-There is no supported quickstart for this lane because there is no verified config payload, loader, accepted schema, precedence contract, or consumer invocation.
+There is no supported general application quickstart for this lane. The performance payload has bounded script/workflow consumers, but the schema remains permissive and no deployment or public-runtime binding is established.
 
 [Back to top](#top)
 
@@ -261,9 +259,9 @@ A MapLibre style JSON, source list, layer definition, tile endpoint, sprite URL,
 
 ---
 
-## `config/` versus `configs/` path conflict
+## `config/` versus `configs/` path migration
 
-### Confirmed conflict
+### Confirmed base-state conflict
 
 The canonical root documented by Directory Rules and `configs/README.md` is:
 
@@ -271,13 +269,13 @@ The canonical root documented by Directory Rules and `configs/README.md` is:
 configs/
 ```
 
-The existing MapLibre performance workflow and scripts instead refer to:
+At the pinned base, the MapLibre performance workflow and four scripts instead referred to:
 
 ```text
 config/maplibre/perf-envelope.v1.json
 ```
 
-The inspected workflow also uses these path filters:
+The base workflow also used these path filters:
 
 ```text
 apps/web/**
@@ -294,6 +292,16 @@ schemas/contracts/v1/maplibre/
 configs/maplibre/
 ```
 
+### Resolution in this revision
+
+The bounded migration updates every confirmed executable reference to:
+
+```text
+configs/maplibre/perf-envelope.v1.json
+```
+
+It also updates the workflow path filter to `configs/maplibre/**`. No singular root, duplicate payload, symlink, fallback search, or compatibility alias is created.
+
 ### Why this matters
 
 The mismatch creates several failure modes:
@@ -309,18 +317,15 @@ The mismatch creates several failure modes:
 
 ### Current safe posture
 
-Until a migration is reviewed:
-
-- do not create a duplicate payload under both `config/maplibre/` and `configs/maplibre/`;
-- do not add symlink, copy, fallback search, or silent alias behavior merely to make the workflow pass;
-- do not state that `configs/maplibre/` is consumed;
-- do not state that `config/maplibre/` is accepted or canonical;
-- keep the path conflict visible in documentation and review;
-- require a migration plan that updates consumers, validators, workflows, tests, docs, and rollback together.
+- do not reintroduce singular `config/maplibre/` references;
+- do not create a duplicate payload, symlink, fallback search, or silent alias;
+- state only that the four named scripts and one workflow reference the plural payload;
+- do not infer a general app/runtime loader, deployment binding, or release authority;
+- keep the separate app-filter, schema-home, network, and trust-artifact conflicts visible.
 
 ### Migration decision requirements
 
-A path decision should identify:
+Any future path migration should identify:
 
 - canonical target;
 - all readers and writers;
@@ -334,7 +339,7 @@ A path decision should identify:
 - drift-register or ADR need;
 - owner and reviewer assignments.
 
-This README does not make that decision.
+For the performance-envelope path, this revision follows the already documented canonical `configs/` root and existing tracked payload. It does not settle the remaining schema, app, network, or trust-artifact decisions.
 
 [Back to top](#top)
 
@@ -821,41 +826,49 @@ ADR-0007 proposes MapLibre GL JS as the sole browser-side renderer. Because its 
 
 `.github/workflows/maplibre-perf-governance.yml` is an executable workflow file with Node, Python, Playwright, validators, report builders, attestations, release-manifest builders, proof-pack builders, artifact uploads, and failure handling.
 
-Its current MapLibre config contract is:
+At the pinned base, its MapLibre config contract incorrectly used:
 
 ```text
 config/maplibre/perf-envelope.v1.json
 ```
 
-The workflow and smoke script both reference that path.
+Four scripts and the workflow referenced that path even though the tracked payload existed under `configs/maplibre/`.
 
-### Missing payload
+### Payload and consumer-path correction
 
-The expected file returned `Not Found` at the pinned base.
+The tracked payload is:
 
-Consequences:
+```text
+configs/maplibre/perf-envelope.v1.json
+```
 
-- the workflow cannot validate or read the declared envelope unless another step creates it;
-- no active threshold values are established by the inspected repository;
+This revision updates the workflow and all four confirmed script readers/writers to that path.
+
+Supported conclusions:
+
+- one committed threshold payload exists;
+- the named performance workflow and scripts now agree on its path;
+- the workflow path filter now includes the canonical MapLibre config lane;
+- the existing validator parses the payload against the current permissive schema;
 - no performance baseline or release eligibility can be inferred;
 - workflow presence is not proof of successful execution;
-- copying a proposed example from documentation would not create authority.
+- the committed threshold values and schema adequacy still require maintainer review.
 
 ### Trigger mismatch
 
-The workflow watches:
+At the pinned base, the workflow watched:
 
 ```text
 config/maplibre/**
 ```
 
-It does not watch:
+This revision changes that filter to:
 
 ```text
 configs/maplibre/**
 ```
 
-Therefore a change to the canonical-root lane may not trigger the specific MapLibre performance workflow.
+Static workflow inspection now confirms that a change to the canonical-root lane is in scope for this workflow. Branch-protection status and successful trigger execution remain `NEEDS VERIFICATION`.
 
 ### App-path mismatch
 
@@ -927,9 +940,7 @@ A workflow artifact upload may be a convenient transport or QA output. It is not
 
 ### Current safe conclusion
 
-The MapLibre performance lane contains substantive-looking workflow and script scaffolding, but the inspected path, payload, schema, trigger, network, and trust-artifact relationships are not coherent enough to claim an active governed performance configuration.
-
-This README does not fix those executable surfaces. It records the required reconciliation.
+The path, payload, and trigger now agree on the canonical plural config lane. The schema remains permissive, the smoke run remains network-dependent, the app filter remains conflicted, and QA/trust-shaped outputs remain under `artifacts/perf/`. Those gaps prevent a claim of fully governed performance enforcement.
 
 [Back to top](#top)
 
@@ -1028,6 +1039,8 @@ ERROR
 
 Exact contract names remain proposed. A `PASS` means the validator's checks passed. It does not authorize release, plugin admission, source activation, or publication.
 
+For this revision, the existing validator returned `OK` for `configs/maplibre/perf-envelope.v1.json` under Python 3.12 with `jsonschema` 4.25.1. Because the referenced legacy schema accepts any object, that result confirms only path access, JSON parsing, and permissive schema compatibility; it does not establish a meaningful envelope contract.
+
 ### Effective-config receipt
 
 A mature consumer may emit a non-authoritative audit record containing:
@@ -1083,9 +1096,9 @@ Before a MapLibre config is treated as supported, tests should cover at least:
 | Missing attribution | Reject public-ready state. |
 | Accessibility options disable required alternative | Block public-ready state. |
 | Telemetry includes sensitive properties | Redact and fail test. |
-| Workflow watches wrong config path | CI coverage marked failed/absent. |
+| Workflow watches wrong config path | CI coverage marked failed/absent; fixed by migrating all readers and filters together. |
 | Validator uses permissive empty schema | Governance validation fails. |
-| Required config payload absent | Workflow fails finitely; no release claim. |
+| Required config payload absent | Workflow fails finitely; no release claim. The tracked v1 payload is present at the inspected base. |
 
 [Back to top](#top)
 
@@ -1095,19 +1108,18 @@ Before a MapLibre config is treated as supported, tests should cover at least:
 
 ### Current state
 
-The repository contains a MapLibre performance workflow and several scripts/validators, but no lane payload was verified under `configs/maplibre/`.
+The repository contains one MapLibre performance payload, a performance workflow, and several scripts/validators. This revision aligns the workflow and four confirmed script references with the payload's canonical path.
 
-The workflow currently:
+After this revision, the workflow:
 
-- does not watch `configs/maplibre/**`;
-- watches singular `config/maplibre/**`;
-- expects a missing `perf-envelope.v1.json`;
+- watches `configs/maplibre/**`;
+- validates and uploads `configs/maplibre/perf-envelope.v1.json`;
 - uses `schemas/maplibre/` rather than an accepted `schemas/contracts/v1/maplibre/` family;
 - watches `apps/web/**` rather than the documented `apps/explorer-web/**` path;
 - uses external network resources in the smoke script;
 - writes QA/trust-shaped output under `artifacts/perf/`.
 
-This is implementation evidence of drift, not evidence that the requested lane is validated.
+The path correction is implementation evidence that the named consumers agree on the existing config. It is not evidence of a successful workflow run, meaningful schema enforcement, branch protection, or release approval.
 
 ### Required test layers
 
@@ -1298,15 +1310,15 @@ A mature `configs/maplibre/` lane should satisfy all applicable items.
 
 ### Ownership and placement
 
-- [ ] `configs/maplibre/` is accepted as the canonical lane.
-- [ ] Singular `config/maplibre/` references are migrated, intentionally retained with bounded compatibility, or removed.
-- [ ] No parallel active config payload exists.
+- [x] `configs/maplibre/` is the canonical lane under Directory Rules and the parent README.
+- [x] Confirmed singular `config/maplibre/` executable references are migrated.
+- [x] No parallel active config payload exists in the inspected tree.
 - [ ] Owners and reviewers are assigned.
 - [ ] Drift/ADR/migration records exist where required.
 
 ### Inventory
 
-- [ ] Recursive lane inventory is verified.
+- [x] Recursive tracked lane inventory is verified at the pinned base.
 - [ ] Every file has a config class.
 - [ ] Every file names a consumer.
 - [ ] Stale, orphaned, or duplicate files are removed or deprecated.
@@ -1351,8 +1363,8 @@ A mature `configs/maplibre/` lane should satisfy all applicable items.
 ### Tests and CI
 
 - [ ] Parser, schema, consumer, precedence, security, network, trust, plugin, performance, accessibility, migration, and rollback tests exist as applicable.
-- [ ] Canonical path changes trigger required workflows.
-- [ ] Required payloads exist before the workflow starts.
+- [x] The MapLibre workflow path filter includes `configs/maplibre/**`.
+- [x] The required v1 payload exists before the workflow starts.
 - [ ] CI reports collection and substantive results.
 - [ ] External network behavior is hermetic or explicitly governed.
 - [ ] QA artifact uploads are not treated as canonical release state.
@@ -1366,7 +1378,7 @@ A mature `configs/maplibre/` lane should satisfy all applicable items.
 - [ ] Operational failure and recovery paths are documented.
 - [ ] Last review dates are current.
 
-Until these are verified, the lane remains README-only and implementation maturity remains unestablished.
+Until the remaining items are verified, the lane remains a bounded performance-config scaffold rather than a fully governed MapLibre configuration surface.
 
 [Back to top](#top)
 
@@ -1376,8 +1388,8 @@ Until these are verified, the lane remains README-only and implementation maturi
 
 | Evidence | Status | Supports | Limits |
 |---|---:|---|---|
-| `configs/maplibre/README.md` prior blob `bdf6bc8deb4a1c6cefdb2631b9db3234624f9b7d` | **CONFIRMED** | Target existed as v0.1 config-boundary README. | Did not establish inventory or consumers. |
-| Path-scoped repository search | **CONFIRMED BOUNDED RESULT** | Returned this README and no additional lane file. | Not an exhaustive recursive tree receipt. |
+| `configs/maplibre/README.md` prior blob `62061a1530f3bf3e26dc7c23526a3f3a9b0e7459` | **CONFIRMED** | Target existed as v0.2 config-boundary README. | Its bounded search missed the tracked performance payload. |
+| Recursive tracked-tree inspection at `55a84f062…` | **CONFIRMED** | The lane contains this README and `perf-envelope.v1.json`. | Does not reveal ignored files or other branches. |
 | Four exact candidate probes | **CONFIRMED NOT FOUND** | Suggested viewer/style/layer/validation files were absent at named paths. | Differently named files remain unknown. |
 | `configs/README.md` v0.2 | **CONFIRMED** | `configs/` owns safe non-secret defaults/templates. | Does not prove MapLibre lane consumption. |
 | `configs/examples/README.md` v0.2 | **CONFIRMED** | Establishes commit-safe example/secret/consumer-binding posture. | Example lane does not settle MapLibre defaults. |
@@ -1389,23 +1401,23 @@ Until these are verified, the lane remains README-only and implementation maturi
 | `packages/maplibre/README.md` | **CONFIRMED README** | Proposed helper/adapter package boundary. | Package implementation and active runtime role remain unknown. |
 | `packages/maplibre-runtime/README.md` probe | **CONFIRMED NOT FOUND** | Earlier runtime-package refs cannot be treated as current repo fact. | Another runtime home may exist. |
 | `.github/workflows/maplibre-perf-governance.yml` | **CONFIRMED EXECUTABLE YAML** | Current path filters, commands, artifacts, and permissions. | Does not prove successful runs or correct governance. |
-| `config/maplibre/perf-envelope.v1.json` probe | **CONFIRMED NOT FOUND** | Required perf config payload is absent at named path. | Another branch/generated payload remains outside claim. |
+| `configs/maplibre/perf-envelope.v1.json` | **CONFIRMED** | Existing threshold payload under the canonical config root. | Does not prove threshold adequacy, approval, or release authority. |
+| `config/maplibre/perf-envelope.v1.json` probe | **CONFIRMED NOT FOUND** | Singular compatibility payload is absent. | This revision intentionally does not create it. |
 | `tools/validators/maplibre/validate_perf_envelope.py` | **CONFIRMED** | Validator points to legacy `schemas/maplibre/` schema. | Does not prove schema adequacy or workflow success. |
 | `schemas/maplibre/perf-envelope.schema.json` | **CONFIRMED PERMISSIVE SCAFFOLD** | Current legacy schema accepts any object. | Does not establish meaningful perf-envelope contract. |
 | `schemas/contracts/v1/maplibre/README.md` probe | **CONFIRMED NOT FOUND** | Named governed schema-family README is absent. | Individual schemas or different docs may exist. |
 | `policy/maplibre/README.md` probe | **CONFIRMED NOT FOUND** | Named MapLibre policy README is absent. | Other policy files or families may exist. |
-| `scripts/maplibre-smoke-perf.mjs` | **CONFIRMED** | Missing envelope path, external asset URLs, local fixture server, and result paths. | No run was executed in this revision. |
+| Four MapLibre performance scripts | **CONFIRMED** | All pinned-base singular envelope references were inventoried and migrated to the plural path. | No browser/performance run was executed in this revision. |
+| Local static validation | **PASS WITH LIMITS** | Four scripts pass `node --check`; the existing envelope validator returns `OK` for the plural payload. | The full network-dependent browser run was not executed, and the legacy schema is permissive. |
 | MapLibre performance governance doc | **CONFIRMED DOCUMENT / PROPOSED FLOW** | Identifies proposed perf config and canonical trust-artifact separation. | Runtime and exact paths remain mixed. |
 
 ### Evidence limits
 
 This revision did not:
 
-- recursively enumerate the Git tree;
 - execute any config loader;
 - run the performance workflow;
 - inspect historical workflow runs or logs;
-- validate a performance envelope;
 - import MapLibre;
 - launch Explorer Web;
 - inspect all package files;
@@ -1425,8 +1437,8 @@ Future file names, metadata shapes, contracts, validators, test cases, and migra
 
 | Decision | Current status | Trigger |
 |---|---:|---|
-| Canonical `config/` versus `configs/` path | **CONFLICTED** | Any new payload, loader, alias, symlink, or migration. |
-| MapLibre performance-envelope home | **CONFLICTED / ABSENT** | Creating the missing envelope or changing workflow/script paths. |
+| Canonical `config/` versus `configs/` path | **RESOLVED FOR CONFIRMED PERF CONSUMERS** | Reintroduction of a singular path, alias, or fallback. |
+| MapLibre performance-envelope home | **CONFIRMED AT `configs/maplibre/`** | Moving or duplicating the existing payload. |
 | Perf-envelope contract and schema | **PERMISSIVE LEGACY SCAFFOLD / NEEDS DESIGN** | Adding required fields, closed shape, versions, or consumers. |
 | Canonical MapLibre schema family | **NEEDS VERIFICATION** | Moving from `schemas/maplibre/` to `schemas/contracts/v1/maplibre/` or another accepted home. |
 | Current app path in workflow | **CONFLICTED** | Changing `apps/web/**` to `apps/explorer-web/**` or retaining compatibility. |
@@ -1435,9 +1447,9 @@ Future file names, metadata shapes, contracts, validators, test cases, and migra
 | Plugin admission policy | **NOT ESTABLISHED AT NAMED PATH** | Enabling a plugin/protocol through config. |
 | Config loader and precedence | **ABSENT / UNKNOWN** | Introducing auto-loading, profile merging, or overrides. |
 | External network posture | **NOT HERMETIC / NEEDS VERIFICATION** | Running smoke/perf in protected CI or release gates. |
-| Performance thresholds | **ABSENT** | Creating values that can block or permit candidate progression. |
+| Performance thresholds | **PRESENT / ADEQUACY NEEDS VERIFICATION** | Changing values that can block or permit candidate progression. |
 | Trust-artifact output homes | **CONFLICTED** | Treating `artifacts/perf/` output as receipts, proofs, or release state. |
-| Workflow trigger coverage | **INCOMPLETE FOR PLURAL LANE** | Claiming CI enforcement for `configs/maplibre/`. |
+| Workflow trigger coverage | **STATICALLY ALIGNED / RUNS UNKNOWN** | Claiming required-check enforcement or successful execution. |
 | Style/layer config versus released artifacts | **NEEDS VERIFICATION** | Adding style JSON, layer lists, endpoint lists, or public defaults. |
 | Endpoint allowlist and secrets binding | **UNKNOWN** | Adding any non-local endpoint or credential reference. |
 | Owner assignments | **OWNER_TBD** | Moving beyond documentation-only maturity. |
@@ -1479,22 +1491,22 @@ Do not settle an open decision because:
 
 ## Rollback
 
-This revision changes one Markdown file and no runtime behavior.
+This revision changes one Markdown file plus the static path references in one workflow and four scripts. It also repairs the smoke runner's pre-existing invalid interpolation by passing a precomputed style into the browser callback. Thresholds, schemas, policy, and release behavior do not change.
 
 ### Before merge
 
-Close or abandon the review branch or pull request. No config payload, consumer, workflow, schema, policy, artifact, release, or deployment state is changed.
+Close or abandon the review branch or pull request. No deployment or release occurs from the draft branch.
 
 ### After merge
 
 Restore the prior README through a reviewed commit using:
 
 ```text
-base commit: b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8
-prior blob: bdf6bc8deb4a1c6cefdb2631b9db3234624f9b7d
+base commit: 55a84f06216effd8e3ae5d51450bbf9f3d160417
+prior README blob: 62061a1530f3bf3e26dc7c23526a3f3a9b0e7459
 ```
 
-or revert the commit that introduces this v0.2 revision.
+or revert the commit that introduces this v0.3 revision. Reverting restores the stale singular-path consumers; if a rollback is needed after merge, follow it with a corrective commit rather than creating a duplicate `config/` root.
 
 ### Rollback triggers
 
@@ -1502,9 +1514,9 @@ Correct or roll back this README if it:
 
 - claims a config payload exists when it does not;
 - claims a consumer binding without code or test evidence;
-- declares singular or plural path authority without a reviewed decision;
+- reintroduces singular `config/maplibre/` as an active or compatibility root;
 - treats a permissive schema as substantive validation;
-- states the MapLibre performance workflow validates this lane when it does not watch the path;
+- claims successful MapLibre performance enforcement without workflow-run evidence;
 - treats `artifacts/perf/` as canonical proof or release state;
 - authorizes public endpoints, styles, layers, plugins, or tiles;
 - implies style filtering is sufficient sensitivity protection;
@@ -1524,16 +1536,16 @@ Reverting this README will not revert any later config payload, workflow, script
 
 | Item | Status | Needed evidence |
 |---|---:|---|
-| Recursively inventory `configs/maplibre/`. | **NEEDS VERIFICATION** | Commit-pinned tree or mounted workspace. |
-| Recursively inventory singular `config/maplibre/`. | **NEEDS VERIFICATION** | Commit-pinned tree and ignore/generated-file review. |
-| Decide canonical config path. | **CONFLICTED** | Directory Rules review, consumer inventory, migration plan. |
-| Identify all readers/writers. | **NEEDS VERIFICATION** | Code search, workflow search, runtime traces, tests. |
+| Recursively inventory `configs/maplibre/`. | **CONFIRMED AT PINNED BASE** | Re-run after tracked lane changes. |
+| Recursively inventory singular `config/maplibre/`. | **CONFIRMED ABSENT AT PINNED BASE** | Re-run if any singular reference reappears. |
+| Keep canonical config path aligned. | **CONFIRMED FOR PERF CONSUMERS** | Static reference scan and workflow review. |
+| Identify all performance-envelope readers/writers. | **CONFIRMED STATIC SET** | Four scripts and one workflow at the pinned base; runtime traces remain unverified. |
 | Confirm active app path. | **NEEDS VERIFICATION** | App manifests, build scripts, routes, deployment evidence. |
 | Confirm MapLibre adapter/runtime home. | **UNKNOWN** | Package inventory, imports, build/tests, ADR acceptance. |
-| Define performance-envelope contract. | **PROPOSED / ABSENT** | Contract review and consumer requirements. |
+| Define performance-envelope contract. | **PAYLOAD PRESENT / CONTRACT PROPOSED** | Contract review and consumer requirements. |
 | Replace permissive legacy schema. | **NEEDS VERIFICATION** | Accepted closed schema, fixtures, validator, migration. |
-| Create or migrate performance envelope. | **ABSENT** | Reviewed canonical path, values, owners, tests. |
-| Align workflow path filters. | **CONFLICTED** | Workflow patch and trigger tests. |
+| Create or migrate performance envelope. | **NO-OP / PRESENT** | Threshold adequacy, owners, and tests still need review. |
+| Align workflow path filters. | **PASS (STATIC)** | Workflow now watches `configs/maplibre/**`; run evidence remains unknown. |
 | Align validator schema path. | **CONFLICTED** | Schema-home decision and validator patch. |
 | Verify workflow runs. | **UNKNOWN** | Actions runs, jobs, logs, artifacts, conclusions. |
 | Verify no-network/hermetic posture. | **NOT ESTABLISHED** | Vendored/mocked assets, allowlist, offline tests. |
@@ -1545,7 +1557,7 @@ Reverting this README will not revert any later config payload, workflow, script
 | Define released style/layer reference behavior. | **NEEDS VERIFICATION** | Manifest contracts, governed API, release tests. |
 | Verify sensitive-geometry safeguards. | **NEEDS VERIFICATION** | Upstream transform receipts and no-style-filter tests. |
 | Reconcile QA artifacts with canonical receipts/proofs/releases. | **CONFLICTED** | Data/release owner decision and workflow changes. |
-| Add canonical-path CI coverage. | **NOT ESTABLISHED** | Path filters, substantive jobs, branch-protection evidence. |
+| Add canonical-path CI coverage. | **PATH FILTER PRESENT / ENFORCEMENT UNKNOWN** | Workflow-run and branch-protection evidence. |
 | Assign owners/CODEOWNERS. | **OWNER_TBD** | Reviewed repository ownership changes. |
 | Keep docs aligned after migration. | **ONGOING** | Parent/sibling docs and link checks. |
 
@@ -1554,7 +1566,7 @@ Reverting this README will not revert any later config payload, workflow, script
 ## Maintainer checklist
 
 - [ ] Keep `configs/maplibre/` limited to commit-safe configuration defaults/templates.
-- [ ] Keep singular/plural path drift visible until resolved.
+- [ ] Keep the plural path canonical and reject reintroduced singular references.
 - [ ] Never create duplicate active payloads to satisfy stale readers.
 - [ ] Name the consumer for every payload.
 - [ ] Define class, version, schema, contract, precedence, owner, and rollback.
