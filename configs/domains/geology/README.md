@@ -1,71 +1,142 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/configs-domains-geology-readme
-title: configs/domains/geology/ — Geology Configuration Boundary
+title: configs/domains/geology/ — Governed Geology and Natural Resources Configuration Boundary
 type: readme
-version: v0.2
+version: v0.3
 status: draft
-owners: OWNER_TBD — Config steward · Geology steward · Resource/infrastructure sensitivity reviewer · Consumer owner · Validation steward
+owners: OWNER_TBD — Config steward · Geology steward · Stratigraphy/interpretation steward · Natural-resources steward · Source and rights steward · Subsurface/infrastructure sensitivity steward · Consumer owner · Validation steward · Policy steward · Release steward · Docs steward
 created: 2026-07-13
-updated: 2026-07-13
-policy_label: public; config-sublane; geology; natural-resources; anti-collapse; sensitive-location-aware; infrastructure-aware; source-role-aware; non-secret; non-authoritative; no-live-binding
+updated: 2026-07-14
+policy_label: "public; config-sublane; geology; natural-resources; object-role-aware; source-role-aware; observation-interpretation-model-aware; resource-anti-collapse; time-aware; scale-aware; datum-aware; depth-aware; uncertainty-aware; rights-aware; sensitive-location-aware; join-risk-aware; reconstruction-resistant; non-secret; non-authoritative; no-live-binding; no-source-activation; no-watcher-activation; no-interpretation-authority; no-exact-sensitive-location; no-release-authority"
 current_path: configs/domains/geology/README.md
-truth_posture: CONFIRMED canonical geology slug, repository-present parent config contract, repository-present Geology and Natural Resources doctrine, occurrence/deposit/estimate/permit/production/reserve anti-collapse rule, exact borehole/private-well/sensitive-resource restriction default, and documentation-only lane / CONFLICTED object-family naming and segment-versus-flat lane-path forms / PROPOSED future consumer-bound templates and governed profile selectors / UNKNOWN consumers, precedence, loader behavior, and enforcement / NEEDS VERIFICATION owners, executable validation, source rights, canonical object-family names, public-safe geometry parameters, and runtime binding
+truth_posture: CONFIRMED canonical Geology config lane, parent configuration contract, repository-present Geology and Natural Resources doctrine and implementation-shaped surfaces, README-only bounded config inventory, source-first connector placement, noncanonical connectors/geology compatibility index, canonical contracts/domains/geology lane with contracts/geology compatibility guard, canonical schemas/contracts/v1/domains/geology lane with schemas/contracts/v1/geology alias guardrail, subtype-first versus domain-first source-registry topology conflict, singular versus plural release-manifest topology conflict, package version 0.0.0 placeholder, PROPOSED pipeline specification files, PROPOSED public-safe-geometry policy placeholder, generic greenfield policy README, permissive schema scaffolds, fixture README lanes with behavioral coverage unverified, release-candidate documentation, absent geology manifest child in the inspected plural lane, and TODO-only domain workflow / PROPOSED future consumer-bound templates and accepted profile references / CONFLICTED short versus Reference object names, CamelCase versus snake_case contract and schema names, domain-segment versus flat compatibility paths, source-registry topology, connector aliases, and release-manifest topology / UNKNOWN direct consumers, loader behavior, precedence, deployment binding, exhaustive recursive inventory, runtime behavior, policy-runtime wiring, source or watcher activation, generated interpretations, public derivatives, and publication use / NEEDS VERIFICATION accepted owners, canonical object vocabulary, source roles and rights, map and interpretation lineage, temporal semantics, scale/depth/datum handling, resource classification, public-safe geometry parameters, executable validation, branch protection, review enforcement, correction propagation, and rollback/invalidation integration
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 28db8aa8cadeed83d33ce6c48dde9fdcefe6d8dd
+  prior_blob: 094c6a096bcf4b3dce893bd28729fd7d49d3c1c7
+  bounded_path_search: configs/domains/geology/README.md only
 related:
   - ../README.md
   - ../../README.md
   - ../../../docs/domains/geology/README.md
+  - ../../../docs/domains/geology/ARCHITECTURE.md
+  - ../../../docs/domains/geology/CANONICAL_PATHS.md
+  - ../../../docs/domains/geology/DATA_LIFECYCLE.md
+  - ../../../docs/domains/geology/OBJECT_FAMILIES.md
+  - ../../../docs/domains/geology/IDENTITY_MODEL.md
+  - ../../../docs/domains/geology/SOURCE_REGISTRY.md
+  - ../../../docs/domains/geology/SOURCES.md
+  - ../../../docs/domains/geology/SOURCE_ROLE_MATRIX.md
+  - ../../../docs/domains/geology/SENSITIVITY.md
+  - ../../../docs/domains/geology/POLICY.md
+  - ../../../docs/domains/geology/PRESERVATION_MATRIX.md
+  - ../../../docs/domains/geology/API_CONTRACTS.md
+  - ../../../docs/domains/geology/MAP_UI_CONTRACTS.md
+  - ../../../docs/domains/geology/RELEASE_INDEX.md
+  - ../../../docs/domains/geology/MISSING_OR_PLANNED_FILES.md
+  - ../../../docs/domains/geology/sublanes/natural_resources.md
   - ../../../docs/registers/DOMAIN_LANE.md
   - ../../../docs/registers/DRIFT_REGISTER.md
   - ../../../docs/doctrine/directory-rules.md
   - ../../../docs/security/SECRETS.md
+  - ../../../contracts/domains/geology/
+  - ../../../contracts/geology/README.md
+  - ../../../schemas/contracts/v1/domains/geology/
+  - ../../../schemas/contracts/v1/geology/README.md
+  - ../../../policy/domains/geology/
+  - ../../../policy/sensitivity/geology/
+  - ../../../policy/rights/
+  - ../../../data/registry/sources/geology/
+  - ../../../data/registry/geology/sources/
+  - ../../../data/registry/sensitivity/geology/
+  - ../../../packages/domains/geology/
+  - ../../../pipelines/domains/geology/
+  - ../../../pipeline_specs/geology/
+  - ../../../tools/validators/domains/geology/
+  - ../../../tools/validators/geology/
+  - ../../../tests/domains/geology/
+  - ../../../fixtures/domains/geology/
+  - ../../../apps/explorer-web/src/features/domains/geology/
+  - ../../../connectors/geology/README.md
+  - ../../../data/raw/geology/
+  - ../../../data/work/geology/
+  - ../../../data/quarantine/geology/
+  - ../../../data/processed/geology/
+  - ../../../data/catalog/domain/geology/
+  - ../../../data/triplets/geology/
+  - ../../../data/published/layers/geology/
+  - ../../../data/receipts/geology/
+  - ../../../data/proofs/geology/
+  - ../../../data/rollback/geology/
+  - ../../../release/candidates/geology/
+  - ../../../release/manifest/
+  - ../../../release/manifests/
+  - ../../../.github/workflows/domain-geology.yml
+tags: [kfm, configs, geology, natural-resources, bedrock, surficial, stratigraphy, lithology, structures, boreholes, well-logs, cores, geophysics, geochemistry, mineral-occurrences, resource-deposits, estimates, extraction, reclamation, source-role, sensitivity, public-safe-geometry, rights, time, scale, datum, depth, uncertainty, no-secrets, governance]
 notes:
-  - "This lane contains documentation only. It does not create, load, activate, interpret, expose, or publish a Geology configuration payload."
-  - "v0.2 expands the Geology-specific source-role, object-family, anti-collapse, temporal, resource-sensitivity, public-safe geometry, validation, correction, and rollback contract without creating a new policy, schema, registry, estimate, permit, redaction, or release authority."
+  - "The bounded repository search for configs/domains/geology returned this README only. No executable Geology configuration payload or indexed direct consumer was found."
+  - "The prior v0.2 README already carried strong object-role, source-role, resource anti-collapse, temporal, unit, datum, sensitivity, public-safe-geometry, validation, correction, and rollback controls. v0.3 preserves them and adds current repository evidence, implementation maturity, path conflicts, consumer-binding rules, cache/log invalidation, and stricter first-payload gates."
+  - "The repository contains many Geology implementation-shaped files, but inspected package metadata, pipeline specs, policy files, schemas, fixtures, release lanes, and workflow jobs remain version-0.0.0, PROPOSED placeholders, permissive scaffolds, README-only guidance, or TODO-only and do not prove production behavior."
+  - "Source-specific connector implementations remain source-first under connectors/<source-or-family>/. connectors/geology/ is a noncanonical compatibility index and must not become a parallel implementation hierarchy."
+  - "The repository contains both data/registry/sources/geology/ and data/registry/geology/sources/, plus contract/schema alias paths and singular/plural release-manifest lanes. This README surfaces those conflicts and does not resolve or duplicate them by convenience."
+  - "Only this Markdown file changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Geology Domain Configuration
+# Governed Geology and Natural Resources Domain Configuration
 
 `configs/domains/geology/`
 
-> Safe-to-commit, Geology-specific configuration documentation and future consumer-bound templates. This lane does not own geologic truth, natural-resource claims, permit or production truth, source admission, sensitivity, evidence, release, or publication.
+> Safe-to-commit configuration documentation and future consumer-bound templates for geologic units, stratigraphy, structures, subsurface references, geophysical and geochemical observations, mineral occurrences, resource deposits and estimates, extraction and reclamation context, public-safe derivatives, and review routing. This lane is not geologic truth, regulatory authority, mineral-rights authority, engineering guidance, source admission, sensitivity policy, evidence, release, or publication authority.
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Scope](#scope) · [Repository fit](#repository-fit) · [Inputs](#inputs) · [Outputs](#outputs) · [Configuration contract](#minimum-configuration-contract) · [Anti-collapse](#geology-and-resource-claim-anti-collapse) · [Sensitive locations](#sensitive-locations-resource-context-and-public-safe-geometry) · [Validation](#validation) · [Failure behavior](#failure-behavior) · [Review](#review-burden) · [Maintenance](#maintenance) · [Related](#related-folders) · [ADRs](#adrs) · [Rollback](#rollback-and-correction)
+![status](https://img.shields.io/badge/status-draft-blue)
+![version](https://img.shields.io/badge/version-v0.3-informational)
+![authority](https://img.shields.io/badge/authority-config__sublane-green)
+![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
+![anti-collapse](https://img.shields.io/badge/resource__claims-no__collapse-critical)
+![sensitivity](https://img.shields.io/badge/subsurface__locations-fail__closed-critical)
+![secrets](https://img.shields.io/badge/secrets-forbidden-red)
+![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
+
+**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs-and-drift-triggers) · [Last reviewed](#last-reviewed) · [Scope](#scope-and-bounded-context) · [Classes](#configuration-classes) · [Contract](#minimum-configuration-contract) · [Binding](#consumer-binding-precedence-and-discovery) · [Objects](#geology-object-family-boundaries) · [Roles](#observation-interpretation-model-and-aggregate-boundaries) · [Resources](#geology-and-resource-claim-anti-collapse) · [Time](#time-vintage-freshness-and-correction) · [Space](#spatial-support-scale-depth-datum-and-uncertainty) · [Sensitivity](#sensitivity-public-safe-geometry-and-join-induced-risk) · [Rights](#source-rights-attribution-and-regulatory-boundaries) · [Connectors](#connector-source-registry-and-watcher-boundaries) · [Rendering](#cross-sections-3d-scenes-and-renderer-boundaries) · [Logging](#logging-telemetry-caches-and-derived-indexes) · [Failure](#failure-behavior) · [AI](#governed-ai-and-generated-interpretation) · [Migration](#migration-and-anti-bypass-posture) · [Rollback](#rollback-correction-supersession-and-invalidation) · [Done](#definition-of-done-for-the-first-payload)
 
 > [!IMPORTANT]
-> **Document lifecycle:** draft `v0.2`  
-> **Component maturity:** documentation boundary only  
-> **Authority:** implementation-supporting configuration sublane; non-authoritative for truth and governance  
-> **Runtime posture:** no Geology payload, loader, consumer binding, source activation, interpretation, public-safe transform, or public exposure is established by this README
+> **Document lifecycle:** draft `v0.3`<br>
+> **Observed lane maturity:** README-only in the bounded config-path search; no executable Geology configuration payload or direct consumer binding is established<br>
+> **Authority:** implementation-supporting configuration sublane; non-authoritative for geology meaning, observation status, interpretation, resource classification, regulatory status, rights, sensitivity, evidence, policy, review, release, or publication<br>
+> **Runtime posture:** no loader, precedence rule, network fetch, source activation, watcher activation, map interpretation, cross-section build, 3D scene, public-layer generation, release, or publication is established by this README
 
 > [!CAUTION]
-> Exact or reconstructable borehole, core, sample, well-log, private-well, sensitive-resource, geophysics, geochemistry, operator, and infrastructure detail fails closed unless governed policy and review authorize a public-safe derivative. Directory presence, a future configuration file, or a parsed value must never convert an occurrence into a deposit, a deposit into an estimate, a permit into production, an interpretation into an observation, or a model into geologic truth.
+> Exact or reconstructable boreholes, cores, well logs, private wells, samples, geophysical or geochemical observations, mineral targets, exploration detail, extraction or storage infrastructure, operator or parcel joins, and culturally or archaeologically sensitive locations fail closed. A configuration value cannot convert an occurrence into a deposit, a deposit into an estimate, a permit into production, production into a reserve, an interpretation into an observation, or a model into geologic truth. Missing source role, object role, time, scale, depth, datum, rights, evidence, policy, review, release, correction, or rollback support must not become implicit permission.
 
 ---
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical Geology and Natural Resources lane.
+This directory defines the safe-to-commit configuration boundary for the canonical `geology` domain segment under `configs/domains/`.
 
-It may eventually hold small defaults, templates, examples, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should behave, but they cannot decide:
+It may eventually hold small defaults, templates, examples, profile references, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should parse, validate, route, label, qualify, generalize, render, cache, or package already-governed Geology material, but they cannot decide:
 
-- which geologic map, stratigraphic interpretation, or source authority is controlling;
-- whether a feature is an observation, occurrence, deposit, estimate, permit, production record, reserve claim, or model;
-- whether a borehole, well log, sample, geophysical survey, or geochemical result is admissible or releasable;
-- whether a resource estimate or reserve statement is valid;
-- whether exact or generalized geometry may be exposed;
-- whether rights, operator, parcel, infrastructure, or private-well restrictions have been satisfied;
-- whether evidence supports a geologic or resource claim; or
-- whether an artifact may be promoted, released, or published.
+- which geologic map, map edition, stratigraphic correlation, nomenclature, interpretation, or source authority controls;
+- whether a feature is measured, observed, inferred, interpreted, modeled, aggregated, or synthetic;
+- whether an object is an occurrence, deposit, estimate, permit, production record, reserve statement, extraction site, or reclamation record;
+- whether two borehole, well-log, sample, unit, boundary, structure, resource, extraction, or reclamation records refer to the same real-world entity or event;
+- whether a historical map or well log represents current conditions;
+- whether a permit is active, an operation is producing, a reclamation obligation is satisfied, or a resource estimate is valid;
+- whether source material is admitted, active, rights-cleared, redistributable, current, or authoritative for a requested claim;
+- whether exact or generalized geometry is safe to expose;
+- whether a public-safe geometry, suppression, aggregation, delay, or restricted-view transform is adequate;
+- whether a coordinate or elevation uses the declared horizontal CRS, vertical datum, depth reference, unit, sign convention, and uncertainty;
+- whether a cross-section, 3D scene, interpolated surface, inversion, model, or AI narrative may be presented as observation;
+- whether a public map, API, export, cache, log, tile, scene, or generated answer resists reconstruction;
+- whether evidence supports a geologic, resource, regulatory, operational, or ownership-adjacent claim;
+- whether an artifact may be promoted, released, rendered, indexed, exported, summarized, or published.
 
-This README is intended for:
-
-- Geology and Natural Resources domain stewards;
-- configuration and developer-experience maintainers;
-- source-role, resource, infrastructure, rights, sensitivity, policy, security, and release reviewers;
-- package, pipeline, app, runtime, test, and tooling owners that may consume Geology configuration; and
-- reviewers checking Directory Rules placement, anti-collapse discipline, and trust-membrane integrity.
+This README is intended for configuration maintainers, Geology stewards, stratigraphy and interpretation reviewers, source and rights stewards, natural-resource and regulatory reviewers, subsurface and infrastructure sensitivity reviewers, Hydrology, Soil, Hazards, Archaeology, and People/Land liaisons, consumer owners, validation and test owners, policy and release reviewers, security reviewers, and contributors checking Directory Rules placement.
 
 [Back to top](#top)
 
@@ -77,19 +148,22 @@ This README is intended for:
 
 | Concern | Authority in this lane |
 |---|---|
-| Geology domain meaning | **None.** Domain doctrine remains in [`docs/domains/geology/`](../../../docs/domains/geology/README.md). |
-| Geologic observation or interpretation truth | **None.** Configuration cannot establish evidentiary status or convert an interpretation, cross-section, generalized polygon, or model into an observation. |
-| Resource classification | **None.** Configuration cannot convert `Occurrence`, `Deposit`, `Estimate`, `Permit`, `Production`, or `Reserve` claims into one another. |
-| Permit, extraction, production, or reclamation status | **None.** Regulatory and operational claims require their own authority sources, evidence, and review. |
-| Ownership, lease, title, or parcel truth | **None.** Geology may reference People/Land context but cannot establish ownership or title. |
-| Source identity, role, rights, cadence, and activation | **None.** These require the applicable source registry, connector, policy, rights, and review surfaces. |
-| Schema or contract shape | **None.** Configuration may reference a verified schema or contract but must not duplicate or redefine it. |
-| Sensitivity or public-safe geometry decision | **None.** A value may select an already-governed profile; it cannot create, weaken, or approve a sensitivity or geometry rule. |
-| Evidence or claim truth | **None.** Configuration cannot create an `EvidenceBundle`, validate a claim, or make generated interpretation sovereign truth. |
-| Release or publication | **None.** Configuration cannot authorize promotion, release, public display, or KFM publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may read a validated file under an explicit binding and precedence rule. |
+| Geology domain meaning | **None.** Human doctrine remains under [`docs/domains/geology/`](../../../docs/domains/geology/README.md); semantic meaning remains in accepted contract homes. |
+| Object identity and vocabulary | **None.** Config cannot settle short versus `Reference` naming, CamelCase versus snake_case files, sublane membership, or identity rotation. |
+| Observation, interpretation, and model status | **None.** Config cannot convert a cross-section, generalized polygon, model, inversion, interpolation, or AI narrative into an observation. |
+| Resource classification | **None.** `Occurrence`, `Deposit`, `Estimate`, `Permit`, `Production`, `Reserve`, `ExtractionSite`, and `ReclamationRecord` remain distinct. |
+| Regulatory or operational status | **None.** Permit, compliance, production, reclamation, and closure claims require controlling regulatory or operational evidence. |
+| Mineral rights, title, lease, parcel, or operator identity | **None.** Geology may reference People/Land or regulatory context but cannot establish ownership or legal interest. |
+| Source identity and activation | **None.** Config may reference reviewed source IDs or profiles; it cannot admit, activate, suspend, retire, or supersede a source. |
+| Rights and redistribution | **None.** Public accessibility, a successful fetch, or a source label does not establish redistribution or derivative rights. |
+| Scale, units, CRS, vertical datum, depth reference, and uncertainty | **None.** Config may select an accepted profile; it cannot invent measurement semantics or hide uncertainty. |
+| Sensitivity and public-safe geometry | **None.** Config may select an accepted profile; it cannot define, weaken, approve, or receipt a transform. |
+| Evidence and claim truth | **None.** Config cannot create an `EvidenceBundle`, close proof, validate a claim, or convert a candidate into truth. |
+| Policy and review | **None.** Config cannot substitute for accepted executable policy, a `PolicyDecision`, source review, sensitivity review, or release review. |
+| Release and publication | **None.** Config cannot authorize lifecycle promotion, public map/API/UI use, export, AI response, or publication. |
+| Consumer behavior | **Supporting only.** A verified consumer may read a validated file through explicit binding and deterministic precedence. |
 
-A configuration value may point to an authority surface. It does not become authority through repetition, proximity, successful parsing, operational convenience, or use by a map, dashboard, 3D scene, cross-section renderer, or AI surface.
+A configuration value may point to authority. It cannot acquire authority through naming, file placement, parsing, repetition, successful validation, a passing scaffold workflow, or use by a renderer.
 
 [Back to top](#top)
 
@@ -97,21 +171,40 @@ A configuration value may point to an authority surface. It does not become auth
 
 ## Status
 
-| Item | State | Safe conclusion |
-|---|---:|---|
-| Canonical domain slug | **CONFIRMED** | `geology` is a repository-present canonical domain lane. |
-| Parent configuration contract | **CONFIRMED** | [`configs/domains/README.md`](../README.md) defines this path as a non-secret, non-authoritative configuration sublane. |
-| Geology doctrine | **CONFIRMED repository-present** | The domain README establishes evidence-first geologic handling, resource anti-collapse, and exact-location restriction defaults. |
-| Anti-collapse rule | **CONFIRMED doctrine** | `Occurrence`, `Deposit`, `Estimate`, `Permit`, `Production`, and `Reserve` remain distinct in storage, evidence, graph projections, and public summaries. |
-| Sensitive-location posture | **CONFIRMED doctrine** | Exact borehole, core, sample, well-log, private-well, sensitive-resource, geophysics, and geochemistry locations default to restricted or generalized public geometry. |
-| Current lane content | **README ONLY** | This lane establishes documentation, not executable configuration. |
-| Consumer and loader | **UNKNOWN** | No consumer, parser, discovery mechanism, merge order, or unknown-key behavior is established here. |
-| Object-family names | **CONFLICTED** | Short conceptual names and `…Reference` schema-candidate names coexist in doctrine; configuration must not silently choose a canonical vocabulary. |
-| Lane-path form | **CONFLICTED** | Segment and flat responsibility-path forms are documented; configuration must not create both or resolve the conflict by convention. |
-| Source rights and redistribution | **NEEDS VERIFICATION** | Source-specific terms, attribution, redistribution classes, and access restrictions require verified `SourceDescriptor` evidence. |
-| Public-safe geometry parameters | **NEEDS VERIFICATION** | Generalization, withholding, aggregation, delay, and restricted-view parameters must come from policy and steward review. |
-| Validation and CI enforcement | **NEEDS VERIFICATION** | Expectations are documented; executable enforcement is not proven by this README. |
-| Runtime, release, and publication | **NOT ESTABLISHED** | Nothing in this lane authorizes operational use, release, or publication. |
+### Repository snapshot
+
+| Surface | Confirmed repository evidence | Safe conclusion |
+|---|---|---|
+| Target lane | `configs/domains/geology/README.md` is the only file found in the bounded config-lane inspection. | **README ONLY.** No payload or direct consumer is established. |
+| Parent contract | `configs/domains/README.md` exists. | The lane inherits non-secret, non-authoritative configuration rules. |
+| Domain doctrine | `docs/domains/geology/` contains the lane README, architecture, canonical paths, lifecycle, object-family, source, sensitivity, API/UI, release, and backlog documentation. | Doctrine and implementation guidance exist; they do not prove runtime maturity. |
+| Canonical semantic lane | `contracts/domains/geology/` contains many object contracts and sublane indexes. | Contract presence does not prove accepted vocabulary, schema parity, validators, or runtime use. |
+| Contract compatibility lane | `contracts/geology/README.md` is a pointer/guardrail. | Do not create parallel semantic authority there. |
+| Canonical schema lane | `schemas/contracts/v1/domains/geology/` contains object and governance schemas. | Many inspected schemas remain permissive or status-marked scaffolds; field completeness and enforcement require verification. |
+| Schema alias lane | `schemas/contracts/v1/geology/README.md` is an alias guardrail. | Do not add canonical schemas there without ADR-backed migration. |
+| Package | `packages/domains/geology/pyproject.toml` declares `kfm-domain-geology` version `0.0.0`. | Greenfield placeholder; package behavior is not proven. |
+| Pipeline specs | `pipeline_specs/geology/` contains bedrock, surficial, borehole, well-log, cross-section, and mineral-occurrence spec files. | An inspected spec is `status: PROPOSED` and points back to documentation; execution is unproven. |
+| Pipeline lanes | `pipelines/domains/geology/` and child README lanes exist. | Documentation and path presence do not prove executable stages or successful runs. |
+| Policy root | `policy/domains/geology/README.md` is a generic greenfield scaffold. | It does not establish accepted policy vocabulary or enforcement. |
+| Public-safe geometry policy | `policy/domains/geology/public_safe_geometry.policy.json` is `PROPOSED`. | No operational geometry rule or parameter set is established. |
+| Source registries | Both `data/registry/sources/geology/` and `data/registry/geology/sources/` exist. | **CONFLICTED topology.** Do not duplicate descriptor authority. |
+| Connector compatibility | `connectors/geology/` is a documentation-only compatibility index with a KGS child pointer. | Source implementations remain source-first; no runtime connector family belongs here. |
+| Source connector paths | KGS/KSGS, product-specific `kgs_*`, KCC, USGS, NGMDB, and MRDS path variants coexist. | Connector naming and family topology remain conflicted; config cannot choose by convenience. |
+| Fixtures | Geology valid, invalid, golden, cross-section, map/UI, and tier-transition README lanes exist. | Behavioral payload coverage and consumer linkage remain **NEEDS VERIFICATION**. |
+| Release candidate | `release/candidates/geology/README.md` exists. | Candidate guidance is not a release decision. |
+| Manifest topology | Both `release/manifest/` and `release/manifests/` exist; the plural parent records the conflict. No `release/manifests/geology/README.md` was found in the pinned check. | A Geology manifest home is not established by this README. |
+| Workflow | `.github/workflows/domain-geology.yml` exists. | Jobs currently echo TODO commands; workflow success would not prove Geology behavior. |
+| Runtime, public API, layers, or publication | No behavior was established by this README-only inspection. | **UNKNOWN / NOT ESTABLISHED.** |
+
+### Truth labels applied
+
+| Label | Current use |
+|---|---|
+| **CONFIRMED** | Path presence and inspected file contents at the pinned commit. |
+| **PROPOSED** | Future config classes, payload keys, consumer behavior, finite failure codes, and adoption gates. |
+| **CONFLICTED** | Object naming, contract/schema aliases, source registries, connector paths, and release manifest topology. |
+| **UNKNOWN** | Deployed behavior, direct consumers, runtime loading, public output, and production use. |
+| **NEEDS VERIFICATION** | Owners, accepted vocabularies, policy execution, restrictive schemas, fixtures/tests, source rights, review enforcement, and rollback integration. |
 
 Directory presence must not trigger discovery, source activation, network access, indexing, interpretation generation, cross-section construction, 3D scene creation, map-layer creation, geometry exposure, lifecycle promotion, or publication.
 
@@ -119,85 +212,43 @@ Directory presence must not trigger discovery, source activation, network access
 
 ---
 
-## Scope
+## What belongs here
 
-### What belongs here
-
-Only safe, non-secret, Geology-specific configuration material for a named or explicitly proposed consumer belongs here.
+Only safe, non-secret, Geology-specific configuration material for a **named consumer** belongs here.
 
 | Material | Permitted purpose | Minimum posture |
 |---|---|---|
-| `README.md` | Define this configuration boundary. | Preserve non-authority, anti-collapse, sensitivity, rights, evidence, and release controls. |
-| `*.template.yaml` or `*.template.yml` | Placeholder-based template for a verified Geology consumer. | Parseable, versioned, consumer-bound, no secrets, no live binding. |
-| `*.example.yaml`, `*.example.json`, or `*.example.toml` | Tiny illustrative configuration. | Clearly synthetic values; impossible identifiers and geometry; no automatic activation. |
-| Conservative review defaults | Select an existing hold, abstain, restrict, generalize, redact, or review profile. | Cannot weaken policy, rights, or release burden. |
-| Public-safe display profile selectors | Select an already-governed generalized display profile. | Cannot contain exact protected geometry or authorize exposure. |
-| Interpretation presentation hints | Configure labels, uncertainty display, or version visibility for a verified consumer. | Must not change evidentiary status or hide interpretation uncertainty. |
-| Migration notes | Document a real key, version, or consumer transition. | Time-bounded, owner-linked, reversible, and not a parallel authority. |
+| `README.md` | Define the configuration boundary. | Preserve non-authority, anti-collapse, rights, sensitivity, evidence, review, release, correction, and rollback controls. |
+| `*.template.yaml` or `*.template.yml` | Placeholder-based template for a verified consumer. | Parseable, versioned, consumer-bound, synthetic, no secrets, no live binding. |
+| `*.example.yaml`, `*.example.json`, or `*.example.toml` | Tiny illustrative configuration. | Fictional IDs and geometry; explicitly non-operational; no automatic discovery. |
+| Conservative profile selectors | Select an accepted hold, abstain, restrict, generalize, aggregate, suppress, delay, redact, or review profile. | Profile authority remains outside config and cannot be weakened locally. |
+| Interpretation presentation hints | Select accepted labels, uncertainty display, scale warnings, section version, or datum display. | Cannot alter object role, evidence state, confidence, or release state. |
+| Public-safe display hints | Select a verified released-display profile. | Must not contain protected geometry, hidden identifiers, or exposure authority. |
+| Migration notes | Document a real key, filename, version, alias, or consumer transition. | Time-bounded, owner-linked, reversible, and not a parallel authority. |
+| Validation notes | Explain verified parser, schema, semantic, rights, sensitivity, anti-collapse, and no-network checks. | Commands and tools must be repository-grounded. |
 
-Synthetic examples must not resemble a real borehole, well, operator, permit, resource occurrence, extraction site, mine, pipeline, storage facility, parcel, sample, or sensitive infrastructure location closely enough to support reconstruction.
-
-### What does not belong here
-
-- real borehole, well-log, core, sample, geophysics, geochemistry, cross-section, or source payloads;
-- real mineral occurrence, deposit, estimate, reserve, permit, production, extraction, reclamation, operator, lease, parcel, or infrastructure records;
-- exact or reconstructable private-well, sensitive-resource, subsurface, extraction, storage, pipeline, mine, or facility locations;
-- credentials, tokens, private endpoints, signed URLs, workstation paths, internal deployment bindings, or environment-specific secrets;
-- settings that present estimates, interpretations, generalized maps, AI summaries, synthetic surfaces, or models as observations;
-- settings that treat a permit as production, a production record as a reserve, an occurrence as a deposit, or a deposit as an estimate;
-- settings that treat geology as ownership, title, lease, regulatory, hazard, or hydrologic measurement authority;
-- source admission, activation, cadence, rights, redistribution, or source-role decisions;
-- schemas, contracts, policy, registries, receipts, proofs, evidence bundles, release records, correction notices, or publication decisions;
-- lifecycle data from RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED stores;
-- duplicate segment and flat path authorities created to bypass unresolved repository drift.
-
-### Explicit non-ownership
-
-This lane may reference verified outputs from other responsibility roots, but it must not redefine them. In particular, it does not own:
-
-- soil map units, horizons, or soil-property surfaces;
-- streamflow, groundwater measurements, water-quality measurements, flood truth, or hydrologic observations;
-- hazard-event or risk truth;
-- ownership, title, lease, parcel, operator identity, or living-person truth;
-- archaeological sensitivity or cultural-resource review;
-- regulatory permit authority outside verified regulatory sources;
-- source descriptors, policy decisions, receipts, proofs, manifests, promotion decisions, releases, or public publication state.
+Synthetic examples must not resemble a real borehole, well, operator, permit, lease, resource occurrence, estimate, extraction site, mine, quarry, pipeline, storage facility, parcel, sample, or sensitive infrastructure location closely enough to support reconstruction.
 
 [Back to top](#top)
 
 ---
 
-## Repository fit
+## What does not belong here
 
-This directory is a child of the canonical domain-configuration boundary:
-
-```text
-configs/
-└── domains/
-    ├── README.md
-    └── geology/
-        └── README.md
-```
-
-The responsibility split is:
-
-- [`configs/`](../../README.md): repository-wide safe configuration boundary;
-- [`configs/domains/`](../README.md): common rules for domain-scoped defaults and templates;
-- `configs/domains/geology/`: Geology-specific configuration support;
-- [`docs/domains/geology/`](../../../docs/domains/geology/README.md): Geology and Natural Resources doctrine, terminology, source families, sensitivity, lifecycle, and anti-collapse expectations;
-- `contracts/domains/geology/`: semantic object meaning, when verified;
-- `schemas/contracts/v1/domains/geology/`: machine-checkable shape, subject to the unresolved lane-path and object-name conflicts;
-- `policy/domains/geology/`: admissibility, rights, sensitivity, anti-collapse, and public-safe geometry rules, when verified;
-- source registries, connectors, tests, fixtures, receipts, proofs, catalogs, lifecycle stores, and release surfaces: their own canonical responsibility roots.
-
-This README must not duplicate those authorities. It should link to them only after exact paths and authority relationships are verified.
-
-The repository doctrine records two unresolved forms:
-
-1. short conceptual object names versus `…Reference` schema-candidate names; and
-2. domain-segment responsibility paths versus flatter crosswalk paths.
-
-A configuration file must not settle either conflict by creating aliases, duplicate keys, duplicate files, or parallel authority homes.
+- real borehole, well-log, LAS, core, sample, geophysics, geochemistry, map, cross-section, seismic, or source payloads;
+- real mineral occurrences, deposits, estimates, reserves, permits, production, extraction, reclamation, operator, lease, title, parcel, or infrastructure records;
+- exact or reconstructable private-well, sensitive-resource, subsurface, extraction, storage, pipeline, mine, quarry, cave, fossil, or facility locations;
+- credentials, tokens, cookies, connection strings, private endpoints, workstation paths, signed URLs, account identifiers, or deployment bindings;
+- settings that present an interpretation, generalized map, cross-section, inversion, interpolation, model, AI summary, or synthetic surface as observation;
+- settings that present an aggregate as an individual record;
+- settings that treat a permit as production, production as reserve truth, occurrence as deposit, deposit as estimate, or operator as owner;
+- settings that treat geology as title, mineral-rights, regulatory, engineering, hazard-event, archaeology, or hydrologic-measurement authority;
+- settings that suppress map edition, source vintage, method, scale, depth, datum, confidence, or uncertainty;
+- source admission, activation, cadence, rights, redistribution, source-role, or source-head decisions;
+- schemas, contracts, policy, registries, receipts, proofs, EvidenceBundles, review records, release records, correction notices, or publication decisions;
+- lifecycle data from RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED stores;
+- duplicate flat and domain-segment files created to bypass unresolved placement drift;
+- auto-discovery based only on directory or filename presence.
 
 [Back to top](#top)
 
@@ -205,24 +256,27 @@ A configuration file must not settle either conflict by creating aliases, duplic
 
 ## Inputs
 
-A future Geology configuration payload requires all of the following before it may be treated as implementation-supporting:
+A future Geology configuration payload requires all of the following before it may be treated as consumer-ready:
 
-1. **Named consumer** — exact package, app, pipeline, service, runtime, test harness, renderer, or tool.
-2. **Accepted owner** — accountable owner for the consumer and the configuration file.
-3. **Declared format** — file type, format version, parser, encoding, and canonical load path.
-4. **Authority references** — verified contract, schema, policy, source registry, domain documentation, and ADR or drift references where applicable.
-5. **Object-role model** — explicit distinction among observation, occurrence, unit, deposit, estimate, permit, production, reserve, extraction, reclamation, interpretation, and model roles.
-6. **Source-role model** — explicit authority, observation, context, and model roles that cannot be changed per query.
-7. **Temporal semantics** — source, observed, valid, retrieval, model, permit, production, release, supersession, and correction times remain distinct where material.
-8. **Spatial semantics** — coordinate reference system, dimensionality, geometry class, uncertainty, resolution, scale, and public-safe geometry profile are explicit.
-9. **Units and measurement semantics** — physical units, datum, analyte, confidence class, estimate method, and uncertainty are explicit where applicable.
-10. **Rights and sensitivity review** — redistribution, private-well, operator, parcel, infrastructure, resource, and cross-lane risks are reviewed.
-11. **Synthetic fixtures** — no-network examples cover valid, invalid, held, denied, abstained, stale, and error states.
-12. **Precedence contract** — merge order, override rules, environment interaction, unknown-key behavior, and missing-file behavior are explicit.
-13. **Failure contract** — parsing, semantic, rights, sensitivity, stale-state, and source-outage failures produce finite reason-coded outcomes.
-14. **Rollback contract** — deactivation, prior-known-good version, migration reversal, affected-output assessment, correction path, and verification steps are documented.
+1. **Named consumer** — exact package, app, pipeline, service, runtime, renderer, test harness, or tool.
+2. **Accepted owners** — accountable consumer owner and applicable domain, config, policy, validation, and release stewards.
+3. **Declared format** — filename, media type, encoding, format version, parser, duplicate-key behavior, and load path.
+4. **Authority references** — verified contract, restrictive schema, policy, source registry, domain documentation, and ADR or drift references.
+5. **Safe values** — synthetic placeholders or already-public, non-sensitive defaults only.
+6. **Object-role model** — observation, interpretation, model, aggregate, map unit, occurrence, deposit, estimate, permit, production, reserve, extraction, and reclamation remain distinct.
+7. **Source-role model** — source role and originating publisher remain explicit and cannot be upgraded by aggregation or display.
+8. **Temporal posture** — source, observed, valid, retrieval, model, permit, production, release, supersession, and correction times remain distinct where material.
+9. **Spatial posture** — horizontal CRS, vertical datum, elevation or depth reference, sign convention, geometry class, dimensionality, scale, resolution, precision, and uncertainty are explicit.
+10. **Measurement posture** — units, analyte, method, laboratory or instrument lineage, confidence class, detection limit, estimate method, and assumptions are explicit where applicable.
+11. **Rights review** — access, attribution, redistribution, derivative, commercial, proprietary, and embargo restrictions resolve.
+12. **Sensitivity review** — private wells, boreholes, resource targets, operator/parcel joins, infrastructure, archaeology/cultural context, and reconstruction risk are reviewed.
+13. **Cross-domain review** — Hydrology, Soil, Hazards, Archaeology, Environment, Infrastructure, or People/Land ownership remains visible where joined.
+14. **Validation path** — deterministic parsing, schema, semantic, anti-collapse, rights, sensitivity, negative-case, and no-network checks.
+15. **Precedence contract** — interaction with repository defaults, environment settings, local overrides, deployment config, and runtime values is explicit.
+16. **Failure contract** — malformed, stale, conflicting, unauthorized, ambiguous, or unavailable inputs produce finite reason-coded outcomes.
+17. **Rollback and correction** — deactivation, prior known-good version, migration reversal, affected-output assessment, invalidation, and rollback verification are named.
 
-Missing authority, rights, source role, object role, sensitivity, geometry, or consumer evidence must not be filled in by configuration convention.
+A missing requirement leaves the payload **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**. It does not become active by convention.
 
 [Back to top](#top)
 
@@ -230,25 +284,88 @@ Missing authority, rights, source role, object role, sensitivity, geometry, or c
 
 ## Outputs
 
-This lane currently outputs **documentation only**.
+This lane currently outputs documentation only.
 
-A future verified configuration file may produce:
+A future validated file may support a verified consumer by selecting conservative, already-governed behavior such as:
 
-- a parseable configuration object for one named consumer;
-- a selected reference to an already-governed validation, interpretation-display, sensitivity, review, or public-safe geometry profile;
-- deterministic validation results;
-- explicit hold, deny, abstain, error, or stale-state behavior; and
-- migration and rollback metadata.
+- an accepted object-vocabulary profile;
+- a source-role mapping profile;
+- an interpretation-display and uncertainty profile;
+- a CRS, vertical-datum, depth-reference, or unit display profile;
+- a hold, deny, abstain, restricted-view, generalization, aggregation, suppression, delay, or review route;
+- a public-safe released-layer display profile;
+- freshness and stale-state handling;
+- a field allowlist for an already-approved public derivative;
+- cache or index invalidation hints defined by the consumer contract;
+- a migration compatibility window.
 
-It must not produce or imply:
+A configuration output cannot:
 
-- a geologic observation, unit, boundary, occurrence, deposit, estimate, reserve, permit, production, extraction, reclamation, or ownership claim;
-- a source activation or admission decision;
-- a public-safe geometry transform or `RedactionReceipt`;
-- an `EvidenceBundle`, validation proof, policy decision, release manifest, or rollback card;
-- a public map layer, cross-section, 3D scene, API route, alert, release, or KFM publication state.
+- admit or activate a source;
+- create geologic, resource, regulatory, operational, ownership, or engineering truth;
+- create or approve a public-safe geometry transform;
+- emit a valid `RedactionReceipt`, `PolicyDecision`, `ReviewRecord`, `ReleaseManifest`, or `RollbackCard` merely by naming one;
+- lower sensitivity or expose exact restricted detail;
+- write lifecycle data directly to a later phase;
+- authorize a public map, API response, cross-section, 3D scene, export, AI answer, release, or publication.
 
-Successful parsing means only that a file is syntactically readable. It does not prove that a consumer used it, that its values are authorized, or that resulting outputs are publishable.
+Successful parsing proves only syntax. It does not prove consumer use, semantic validity, source rights, evidence closure, policy approval, or release readiness.
+
+[Back to top](#top)
+
+---
+
+## Scope and bounded context
+
+### Geology-owned configuration topics
+
+A verified configuration may support already-governed behavior for:
+
+- bedrock and surficial unit presentation;
+- lithology and geologic-age display;
+- stratigraphic interval and correlation presentation;
+- structures, contacts, faults, and boundary-version display;
+- borehole and well-log reference routing;
+- core, sample, geophysical, and geochemical observation handling;
+- cross-section and interpretation version display;
+- mineral occurrence, deposit, estimate, extraction, and reclamation classification labels;
+- hydrostratigraphic context references;
+- natural-resource summary and public-safe geometry profiles;
+- source freshness, stale-state, correction, and supersession behavior.
+
+### Explicit non-ownership
+
+This lane does not own:
+
+- Hydrology water-level, flow, aquifer, water-quality, or groundwater observation truth;
+- Soil map units, horizons, laboratory properties, or soil-property surfaces;
+- Hazards event, probability, emergency, or life-safety truth;
+- Archaeology, paleontology, cave, sacred-site, or cultural-resource sensitivity decisions;
+- land title, mineral rights, lease, parcel, operator identity, or living-person truth;
+- infrastructure security, operational control, facility access, or engineering-safety decisions;
+- environmental compliance, remediation, or regulatory conclusions outside controlling authority records;
+- source descriptors, activation decisions, policies, receipts, proofs, manifests, release decisions, or published artifacts.
+
+Cross-lane joins must preserve ownership, source role, object role, temporal scope, scale, precision, sensitivity, and `EvidenceBundle` support.
+
+[Back to top](#top)
+
+---
+
+## Configuration classes
+
+| Class | May select | Must not decide |
+|---|---|---|
+| Parsing | Parser, encoding, format version, duplicate-key behavior. | Semantic truth or authority. |
+| Vocabulary | Accepted versioned vocabulary/profile reference. | Canonicalize unresolved naming by convenience. |
+| Source role | Mapping to an accepted source-role profile. | Upgrade distributor, aggregate, model, or context to authority. |
+| Object role | Accepted object-role labels and rejection behavior. | Collapse observation, interpretation, model, resource, permit, or production classes. |
+| Time | Freshness profile, stale marker, correction window. | Rewrite source, observed, valid, production, or release time. |
+| Units and datum | Accepted unit/CRS/datum/depth-reference profile. | Infer missing measurement semantics. |
+| Sensitivity | Reference to accepted review, restriction, or public-safe profile. | Lower a tier, approve exposure, or issue receipts. |
+| Rendering | Labels, legend order, scale warnings, uncertainty display. | Hide uncertainty, change evidence state, or create truth. |
+| Caching | TTL or invalidation profile accepted by the consumer. | Preserve superseded, denied, or withdrawn data. |
+| Migration | Alias window and deprecation behavior. | Create parallel truth-bearing homes. |
 
 [Back to top](#top)
 
@@ -256,81 +373,133 @@ Successful parsing means only that a file is syntactically readable. It does not
 
 ## Minimum configuration contract
 
-Every future non-README file in this directory should document or encode the following contract.
+Every future non-README file should document or carry the following in the repository-approved form.
 
-### Identity and ownership
-
-| Field | Requirement |
+| Field | Required meaning |
 |---|---|
-| `config_id` | Stable identifier unique within the verified consumer. |
-| `config_version` | Explicit version; no implicit latest behavior. |
-| `consumer` | Exact consuming component, not a generic domain label. |
-| `owner` | Accountable human or accepted team. |
-| `purpose` | One bounded behavior the file controls. |
-| `status` | Proposed, active, deprecated, or retired for that consumer. |
-| `authority_refs` | Links to verified contract, schema, policy, source, doctrine, or ADR surfaces. |
-| `supersedes` | Prior version where applicable. |
-| `rollback_target` | Prior known-good version or safe disabled state. |
+| Consumer | Exact component that reads the file. |
+| Owner | Accountable consumer and domain owner; no invented team. |
+| Format version | Version of the config shape and parser. |
+| Contract/schema reference | Canonical semantic and machine-shape authority. |
+| Domain | `geology`; config cannot create a new slug or alias authority. |
+| Object vocabulary | Accepted version, including explicit treatment of short versus `Reference` names. |
+| Source-role profile | Stable identifier and non-collapse rules. |
+| Resource-class profile | Stable vocabulary preserving occurrence/deposit/estimate/permit/production/reserve distinctions. |
+| Interpretation profile | Rules for version, author, method, evidence, uncertainty, and visible caveats. |
+| Spatial profile | Horizontal CRS, vertical datum, depth reference, units, scale, precision, dimensionality, and uncertainty. |
+| Sensitivity profile | Stable policy reference; never inline policy substitution. |
+| Public-safe profile | Stable approved transform or released-display profile reference. |
+| Rights profile | Stable source-rights decision or approved rights-class reference. |
+| Temporal semantics | Applicable times, timezone/calendar, freshness, expiry, correction, and supersession behavior. |
+| Unknown-key behavior | Reject, warn, or ignore; explicit and tested. |
+| Precedence | Exact merge and override order for the named consumer. |
+| Discovery | Explicit filenames and binding; directory presence alone is inert. |
+| Network posture | No network by default unless separately authorized. |
+| Failure posture | Finite fail-closed outcomes for malformed, stale, conflicting, or unauthorized inputs. |
+| Logging posture | Redaction and minimization rules for protected values and locations. |
+| Migration | Deprecated keys, compatibility window, replacement, and correction path. |
+| Rollback | Prior known-good version, safe disabled state, and invalidation method. |
 
-### Parsing and loading
+Do not add schema-invalid placeholders to a machine-parsed file. Keep unresolved ownership or authority outside the payload until the repository supplies an accepted sentinel or value.
 
-A consumer contract must define:
+[Back to top](#top)
 
-- the canonical parser and supported format version;
+---
+
+## Consumer binding, precedence, and discovery
+
+A Geology config is inert until one named consumer has an explicit binding.
+
+The binding must specify:
+
+- exact repository path and filename;
+- parser implementation and supported format versions;
 - whether the file is required or optional;
-- the exact load path;
-- whether environment substitution is allowed;
-- precedence relative to root, domain, development, test, local, deployment, and runtime settings;
-- unknown-key behavior;
-- duplicate-key behavior;
-- missing-file behavior;
-- partial-application behavior;
-- caching and reload behavior; and
-- deterministic rejection of unsupported versions.
+- startup, build-time, request-time, or scheduled load behavior;
+- reload and cache behavior;
+- precedence across root, domain, environment, deployment, local, and runtime settings;
+- missing-file, malformed-file, unknown-key, duplicate-key, and unsupported-version behavior;
+- whether partial application is prohibited;
+- no-network behavior for validation;
+- deactivation and rollback commands or mechanisms.
 
-No consumer may infer universal precedence from directory depth or filename convention.
+Recommended safe precedence is **PROPOSED**, not established:
 
-### Semantic controls
+```text
+compiled safe defaults
+  < reviewed repository config
+  < reviewed deployment config
+  < narrowly scoped runtime input
+```
 
-A file must preserve:
+Higher-precedence input must not weaken policy, rights, sensitivity, anti-collapse, evidence, review, or release constraints.
 
-- object-family identity and unresolved naming conflicts;
-- source-role identity;
-- physical observation versus interpretation versus model distinctions;
-- occurrence, deposit, estimate, permit, production, reserve, extraction, and reclamation distinctions;
-- source, observed, valid, retrieval, release, supersession, and correction times;
-- units, datum, coordinate reference system, dimensionality, scale, resolution, and uncertainty;
-- rights, sensitivity, public-safe geometry, and restricted-view boundaries;
-- ownership and regulatory non-authority; and
-- provenance links to the controlling surfaces.
+Discovery must be allowlist-based. The consumer must not scan `configs/domains/geology/` and activate every file it can parse.
 
-### Safety controls
+[Back to top](#top)
 
-A file must:
+---
 
-- contain no credential, token, signed URL, private endpoint, workstation path, or secret;
-- contain no real protected geometry, identifiers, operator detail, private-well detail, or reconstructable clue;
-- use synthetic values for examples;
-- fail closed when rights, source role, object role, sensitivity, or authority is unresolved;
-- avoid automatic network access during validation;
-- avoid source, watcher, renderer, or public-route activation by file presence;
-- preserve finite reason-coded failures; and
-- remain reversible without rewriting shared history.
+## Geology object-family boundaries
 
-### Change record
+Repository doctrine and current contracts surface a union of object families rather than one fully reconciled vocabulary.
 
-Each substantive change should record:
+### Foundational geology
 
-- why the change is needed;
-- affected consumer and keys;
-- authority references;
-- prior behavior and new behavior;
-- validation and negative cases;
-- rights, sensitivity, reconstruction, and cross-lane risk review;
-- migration and compatibility period;
-- deactivation and rollback steps;
-- affected-output assessment; and
-- reviewer roles.
+- `GeologicUnit`
+- `SurficialUnit`
+- `Lithology`
+- `StratigraphicInterval`
+- `GeologicAge`
+- `StructureFeature` / `FaultStructure`
+- `CrossSection`
+- `GeologyBoundaryVersion`
+
+### Subsurface references and observations
+
+- `BoreholeReference` / `Borehole`
+- `WellLogReference` / `WellLog`
+- `CoreSample`
+- `GeophysicalObservation`
+- `GeochemistrySample` / `GeochemistrySampleReference`
+
+### Natural-resource and operational context
+
+- `MineralOccurrence`
+- `ResourceDeposit`
+- `ResourceEstimate`
+- `ExtractionSite`
+- `ReclamationRecord`
+
+### Cross-domain context
+
+- `HydrostratigraphicUnit`
+
+The config lane must not settle roster drift. Until an accepted contract/ADR/migration does so:
+
+- preserve the exact vocabulary and version expected by the verified consumer;
+- reject ambiguous names rather than silently aliasing;
+- do not emit duplicate objects under alternate names;
+- preserve deterministic identity through an explicit rename map if a migration is approved;
+- treat CamelCase, snake_case, short-form, `Reference`, and sublane variants as compatibility questions, not interchangeable truth.
+
+[Back to top](#top)
+
+---
+
+## Observation, interpretation, model, and aggregate boundaries
+
+| Evidence character | Minimum handling | Forbidden upgrade |
+|---|---|---|
+| Measured/observed | Preserve method, instrument/lab, time, location support, units, uncertainty, source, and corrections. | Timeless or universal truth. |
+| Mapped interpretation | Preserve map edition, author/publisher, scale, method, boundary confidence, version, and evidence. | Direct measurement or exact subsurface fact. |
+| Cross-section interpretation | Preserve section line, vertical exaggeration, author, assumptions, evidence, version, and uncertainty. | Attestation of actual subsurface conditions. |
+| Model/inversion/interpolation | Preserve method, training/input sources, resolution, validation scope, uncertainty, and valid time. | Observation or regulatory finding. |
+| Aggregate | Preserve aggregation unit, period, coverage, suppressed counts, and upstream roles. | Individual site, well, sample, or operation. |
+| Candidate | Preserve unconfirmed status and review requirements. | Confirmed occurrence, deposit, estimate, or operation. |
+| Synthetic | Mark synthetic and isolate from source evidence. | Real observation, evidence, or published fact. |
+
+Rendering, ranking, thresholding, or repeated use must not upgrade evidence character.
 
 [Back to top](#top)
 
@@ -338,114 +507,284 @@ Each substantive change should record:
 
 ## Geology and resource-claim anti-collapse
 
-The Geology lane's central configuration invariant is that **physical geology, interpretation, regulatory status, operational activity, and resource classification remain distinct**.
+The central invariant is that **physical geology, interpretation, regulatory status, operational activity, ownership context, and resource classification remain distinct**.
 
-### Resource-claim classes
-
-| Claim class | What it may mean | What it must not imply |
+| Claim class | May mean | Must not imply |
 |---|---|---|
-| `Occurrence` | Documented presence of a mineral, material, structure, or feature. | A delineated deposit, economic viability, an estimate, reserve status, permit, or production. |
-| `Deposit` | Characterized geologic body or concentration. | Quantity, grade, economic viability, permit status, production, or reserve classification. |
-| `Estimate` | Quantitative calculation with method, confidence, date, and assumptions. | Observation, reserve classification, permit, production, or guaranteed recoverability. |
-| `Permit` | Regulatory authorization or application state from a verified authority. | Physical occurrence, production, compliance, ownership, or reserve status. |
-| `Production` | Reported extraction or output for a defined source and period. | Reserve size, future production, ownership, permit compliance, or resource truth outside its scope. |
-| `Reserve` | Classified recoverable quantity under a defined standard, date, assumptions, and authority. | Raw occurrence, general deposit, permit, production, or timeless truth. |
-| `ExtractionSite` | Location or facility associated with past or present extraction. | Current operation, legal status, ownership, permit compliance, production, or reserve quantity. |
-| `ReclamationRecord` | Recorded reclamation plan, status, or observation. | Closure certification, environmental compliance, completed restoration, or absence of future liability. |
+| `Occurrence` | Documented presence of a material, mineral, feature, or indication. | Deposit delineation, economic viability, estimate, reserve, permit, or production. |
+| `Deposit` | Characterized geologic body or concentration. | Quantity, grade, economics, permit, production, or reserve status. |
+| `Estimate` | Quantitative result with method, assumptions, date, standard, confidence, and authority. | Observation, reserve classification, permit, production, or guaranteed recoverability. |
+| `Permit` | Regulatory application or authorization state from a controlling authority. | Physical occurrence, production, compliance, ownership, or reserve. |
+| `Production` | Reported extraction/output for a source, facility, commodity, and period. | Reserve size, future output, ownership, compliance, or geology outside scope. |
+| `Reserve` | Classified recoverable quantity under a defined standard, date, assumptions, and authority. | Raw occurrence, generic deposit, permit, production, or timeless truth. |
+| `ExtractionSite` | Place associated with past or present extraction. | Current operation, legal status, owner, compliance, production, or reserve quantity. |
+| `ReclamationRecord` | Plan, status, inspection, or observation relating to reclamation. | Closure certification, completed restoration, compliance, or absence of liability. |
 
-A configuration key must not:
+Configuration must not:
 
-- rename one class as another;
-- merge classes into a generic `resource` truth field;
-- choose a stronger class as a fallback;
-- infer estimate or reserve status from a polygon label;
+- merge these into a generic `resource` truth field;
+- choose a stronger class as fallback;
+- infer deposit or estimate from a map label;
 - infer production from a permit;
-- infer ownership from an operator, lease, parcel, or extraction record; or
-- hide the source, method, date, uncertainty, and authority of an estimate.
-
-### Observation, interpretation, and model classes
-
-- `GeologicUnit` and mapped boundaries are source- and version-bound, not timeless ground truth.
-- `CrossSection` is an interpretation with authorship, version, uncertainty, and evidence; it is not an attestation of subsurface conditions.
-- `GeophysicalObservation` and `GeochemistrySample` are observations; inversions, interpolations, surfaces, and classifications derived from them are models or interpretations.
-- A model field, synthetic surface, generalized map, or AI summary is not an observation.
-- A `HydrostratigraphicUnit` provides geology context to Hydrology; it does not replace water-level, flow, quality, or aquifer measurements.
-- A fault or structure feature can provide context to Hazards; it does not itself establish risk, event probability, or emergency truth.
-- Geology can relate to People/Land records; it does not establish title, ownership, lease rights, or legal interest.
-
-### Naming conflicts
-
-The repository doctrine records short conceptual names and `…Reference` forms for several object families. Until resolved by contract, schema, or ADR:
-
-- preserve the exact identifier expected by the verified consumer;
-- include an authority reference and version;
-- do not provide silent aliases;
-- do not write both forms as separate truth-bearing objects;
-- reject ambiguous or unsupported names; and
-- record migration explicitly when a canonical vocabulary is accepted.
+- infer reserve from production;
+- infer ownership from operator, lease, parcel, mineral-rights, or facility records;
+- hide method, date, standard, assumptions, uncertainty, or authority;
+- mix regulatory and physical claims without distinct evidence references.
 
 [Back to top](#top)
 
 ---
 
-## Sensitive locations, resource context, and public-safe geometry
+## Time, vintage, freshness, and correction
 
-Exact geology and natural-resource geometry may expose private property, private wells, subsurface infrastructure, extraction assets, restricted source records, economically sensitive resource information, or security-relevant clues.
+Where material, preserve separate times for:
 
-### Deny or restrict by default
+- source publication or edition;
+- observation, collection, logging, drilling, sampling, analysis, or survey;
+- interpretation/model creation;
+- valid interval;
+- permit application, issuance, amendment, suspension, expiration, and revocation;
+- production period;
+- retrieval/ingestion;
+- release;
+- correction, supersession, withdrawal, and rollback.
 
-The following require policy-backed review before any public use:
+Rules:
+
+- an old map may remain useful but must retain edition and scale;
+- a historical well log does not prove current well status or groundwater conditions;
+- a permit record does not prove present production;
+- a production total applies only to its reporting period and reporting scope;
+- a model run does not rewrite observations;
+- a correction must supersede affected derivatives and trigger invalidation;
+- stale, partial, provisional, embargoed, withdrawn, or superseded states remain visible.
+
+Config may select an accepted product-specific freshness profile. It cannot make stale data current or suppress correction state.
+
+[Back to top](#top)
+
+---
+
+## Spatial support, scale, depth, datum, and uncertainty
+
+Geology configuration must preserve the support on which a claim is valid.
+
+### Required spatial semantics
+
+- horizontal CRS and axis order;
+- vertical datum and elevation reference;
+- depth reference, zero point, sign convention, and measured/true vertical depth where applicable;
+- coordinate dimensionality;
+- geometry type and topology expectations;
+- source map scale and intended display scale;
+- raster/grid resolution or survey spacing;
+- horizontal and vertical uncertainty;
+- generalized versus source precision;
+- coordinate derivation method, including PLSS, geocoding, digitization, interpolation, or survey;
+- section-line and vertical-exaggeration metadata for cross-sections.
+
+### Non-equivalences
+
+- a map-unit polygon is not exact contact geometry;
+- a generalized borehole point is not the source location;
+- a grid cell is not a point observation;
+- a county or field aggregate is not a facility record;
+- depth below ground is not elevation above datum;
+- a source map scale cannot be improved by zooming;
+- a 3D extrusion does not add subsurface evidence;
+- interpolation does not create observed values between samples.
+
+Unknown or incompatible CRS, datum, units, depth reference, scale, or uncertainty must produce `HOLD`, `ABSTAIN`, or `ERROR`, not silent coercion.
+
+[Back to top](#top)
+
+---
+
+## Sensitivity, public-safe geometry, and join-induced risk
+
+### Fail-closed material
+
+Review and policy are required before public use of:
 
 - exact private-well and water-well locations;
-- exact borehole, well-log, core, sample, geophysics, and geochemistry locations;
-- sensitive mineral occurrence, deposit, estimate, reserve, and exploration detail;
-- extraction, mine, quarry, storage, pipeline, processing, or related infrastructure detail where exposure creates risk;
-- operator, permit, lease, and parcel joins;
-- rights-controlled LAS, log, core, geophysics, geochemistry, and commercial datasets;
-- low-count or uniquely identifying aggregate outputs;
-- cross-sections or 3D scenes that permit reverse inference of protected locations; and
-- combinations of otherwise public datasets that create new reconstruction risk.
+- borehole, well-log, LAS, core, sample, geophysics, and geochemistry locations;
+- sensitive mineral occurrences, deposits, estimates, reserves, and exploration targets;
+- extraction, mine, quarry, processing, storage, pipeline, injection, or related infrastructure detail;
+- operator, permit, lease, mineral-rights, title, parcel, address, and private-person joins;
+- proprietary, commercial, embargoed, steward-controlled, or access-restricted datasets;
+- caves, fossils, paleontology, archaeological, sacred, or culturally sensitive locations;
+- low-count or uniquely identifying aggregates;
+- cross-sections, models, or 3D scenes that permit reverse inference;
+- combinations of public inputs that create new reconstruction risk.
 
-### Public-safe profiles
+### Public-safe outcomes
 
-A future configuration may select a **verified** profile name, but the profile itself must be governed elsewhere. Possible governed outcomes include:
+A future config may reference, but not define or approve, an accepted outcome such as:
 
-- suppress geometry;
-- generalize to an approved grid, county, watershed, geologic region, or other public-safe unit;
-- withhold protected attributes;
-- delay publication;
-- restrict exact detail to steward views;
-- aggregate low-count records;
-- publish a derived range or summary rather than source locations; or
-- deny the output.
+- geometry suppression;
+- approved grid, county, watershed, basin, field, geologic region, or generalized unit;
+- protected-attribute withholding;
+- minimum-count aggregation;
+- delay or embargo;
+- steward-only exact view;
+- derived summary rather than source locations;
+- denial.
 
-This README does not define radii, cell sizes, zoom thresholds, jitter, buffering, delay periods, minimum counts, or tier transitions. Those parameters remain policy and steward decisions.
+This README defines no radius, cell size, zoom threshold, jitter, buffer, delay, minimum count, or tier transition.
 
 ### Join-induced sensitivity
 
-The resulting product may be more sensitive than any input. Examples include:
+The output inherits the strongest applicable restriction. Examples include:
 
-- joining a mineral occurrence to a private parcel;
-- joining a borehole to operator, permit, lease, or infrastructure records;
-- combining generalized wells with high-resolution imagery or address data;
-- combining resource estimates with extraction or storage infrastructure;
-- rendering cross-sections or 3D volumes that expose restricted coordinates; or
-- combining low-count samples with descriptive text that enables re-identification.
+- mineral occurrence plus parcel or title;
+- borehole plus operator, permit, lease, or infrastructure;
+- generalized wells plus high-resolution imagery, address, PLSS, or route detail;
+- estimates plus extraction, storage, or processing assets;
+- geophysics or cross-sections plus exact section geometry;
+- low-count samples plus descriptive text;
+- cave, fossil, or geological-feature context plus archaeology or cultural data.
 
-A joined product must inherit the strongest applicable restriction and pass its own reconstruction-risk review.
+Every joined public derivative requires its own reconstruction-risk review.
 
-### Rights and redistribution
+[Back to top](#top)
 
-Rights, attribution, redistribution, derivative, and access restrictions are source-specific evidence. A configuration value cannot:
+---
 
-- declare a dataset public-domain or redistributable;
-- downgrade a rights class;
-- bypass a source-specific license;
-- convert restricted access into public release;
-- hide required attribution; or
-- authorize a derivative that the verified source terms do not allow.
+## Source rights, attribution, and regulatory boundaries
 
-Unclear rights or missing source-role evidence blocks promotion and public use.
+Rights are source-specific evidence. Config cannot:
+
+- declare material public-domain or redistributable;
+- infer rights from unauthenticated access or a public portal;
+- erase originating publisher, provider, or record-level terms;
+- downgrade a rights or access class;
+- bypass download, API, bulk, derivative, commercial, or attribution terms;
+- convert restricted logs, LAS, cores, samples, models, or reports into public artifacts;
+- authorize a derivative that source terms do not permit.
+
+Regulatory and operational records require scope discipline:
+
+- KCC or another regulator may be authoritative for its own filing or status fields, not physical geology beyond that scope;
+- KGS/KSGS and USGS products retain edition, scale, product, and interpretation roles;
+- NGMDB or another catalog/portal is not automatically the originating geological authority;
+- MRDS or another mineral-resource compilation requires record-level source and vintage preservation;
+- WWC5/private-well records may have privacy, location, and use constraints;
+- an operator report is not title, compliance, or independent geologic proof.
+
+Unclear rights or authority blocks public use.
+
+[Back to top](#top)
+
+---
+
+## Connector, source-registry, and watcher boundaries
+
+### Source-first connector placement
+
+Connector implementations belong under one reviewed source or source-family lane under `connectors/`, not under `connectors/geology/<source>/`.
+
+`connectors/geology/` is a compatibility and navigation index. It must not host source clients, credentials, package code, tests, activation decisions, payloads, caches, or lifecycle writers.
+
+Repository evidence currently shows mixed source paths including:
+
+- `connectors/kgs/`;
+- `connectors/ksgs/`;
+- product-oriented `connectors/kgs_*` lanes;
+- `connectors/kcc_oil_gas_reg/`;
+- `connectors/usgs/`;
+- `connectors/usgs_ngmdb/`;
+- `connectors/usgs_mrds/`;
+- `connectors/usgs-earthquake/`;
+- proposed Kansas-family paths documented elsewhere.
+
+Config cannot select a canonical connector path by convenience. Resolve through source identity, ADR/migration, and registry evidence.
+
+### Source-registry topology
+
+Both of these paths exist:
+
+```text
+data/registry/sources/geology/
+data/registry/geology/sources/
+```
+
+Do not maintain divergent descriptor sets. One must eventually become canonical and the other a pointer, compatibility lane, mirror with explicit semantics, or migration record.
+
+### Watchers and scheduled consumers
+
+A watcher may detect change and emit a candidate, receipt, or review request. It must not:
+
+- activate a source by directory presence;
+- promote lifecycle state;
+- mutate canonical records silently;
+- publish;
+- turn changed source content into accepted geology truth;
+- bypass rights, policy, review, correction, or rollback.
+
+[Back to top](#top)
+
+---
+
+## Cross-sections, 3D scenes, and renderer boundaries
+
+Cross-sections, block diagrams, profiles, fence diagrams, volumes, and 3D scenes are interpretation carriers.
+
+A verified consumer must preserve:
+
+- author or producing process;
+- source and evidence references;
+- section line or volume extent;
+- horizontal and vertical scale;
+- vertical exaggeration;
+- datum and depth reference;
+- interpolation or modeling method;
+- interpretation version;
+- uncertainty and unsupported zones;
+- source vintage;
+- public-safe geometry state;
+- release and correction state.
+
+Renderer configuration may control style, labels, legend, opacity, camera, exaggeration, and visible caveats. It must not change evidence role, hide uncertainty, infer contacts, claim engineering suitability, or establish subsurface truth.
+
+Every synthetic or interpretive carrier needs a visible reality-boundary note.
+
+[Back to top](#top)
+
+---
+
+## Logging, telemetry, caches, and derived indexes
+
+Logs and caches are potential disclosure surfaces.
+
+Do not record:
+
+- exact restricted coordinates or depth/location combinations;
+- unredacted well, borehole, sample, operator, parcel, lease, or infrastructure identifiers;
+- proprietary source values or signed URLs;
+- sensitive query parameters, map bounds, section lines, export requests, or hover payloads;
+- full policy inputs where protected values are not required for diagnosis.
+
+Record instead:
+
+- stable config version and hash;
+- consumer version;
+- profile IDs;
+- source and object role codes;
+- reason codes;
+- validation outcome;
+- redacted pointer IDs;
+- cache generation and invalidation state.
+
+Correction, withdrawal, sensitivity escalation, rights change, source supersession, policy change, or rollback must invalidate affected:
+
+- caches;
+- search/vector indexes;
+- map tiles;
+- generalized derivatives;
+- cross-sections and scenes;
+- exports;
+- screenshots and reports where tracked;
+- generated-answer caches.
 
 [Back to top](#top)
 
@@ -453,80 +792,63 @@ Unclear rights or missing source-role evidence blocks promotion and public use.
 
 ## Validation
 
-### Documentation-only validation
+### Documentation validation
 
 For this README:
 
-- [x] KFM metadata block is present and balanced.
-- [x] The required folder-README sequence is represented.
-- [x] Relative links point to repository-present parent, doctrine, register, drift, and secrets surfaces.
-- [x] No real geology payload, protected location, credential, private endpoint, or deployment binding is included.
-- [x] Anti-collapse, rights, source-role, sensitivity, review, and release boundaries are explicit.
-- [x] A final newline is present.
+- one H1 is present;
+- headings are ordered and linkable;
+- code fences are balanced;
+- relative links remain within repository responsibility roots;
+- the existing `doc_id` and `created` value are preserved;
+- no real geology payload, exact protected location, person, operator record, credential, private endpoint, or proprietary value is included;
+- doctrine, repository evidence, proposals, conflicts, unknowns, and verification needs remain distinct.
 
 ### Future payload validation
 
-A future non-README file requires deterministic validation covering:
+| Layer | Required checks |
+|---|---|
+| Parse | Encoding, syntax, duplicate keys, media type, and format version. |
+| Shape | Restrictive canonical schema; permissive placeholder schema is insufficient for production. |
+| Consumer binding | Named consumer, filename, parser, version, and load path. |
+| Unknown keys | Explicit behavior and negative coverage. |
+| Precedence | Deterministic merge and override tests. |
+| Object vocabulary | Supported names, versions, aliases, and conflict behavior. |
+| Source roles | Originating publisher and admitted role cannot collapse or upgrade. |
+| Evidence character | Observation, interpretation, model, aggregate, candidate, and synthetic remain distinct. |
+| Resource classes | Occurrence, deposit, estimate, permit, production, reserve, extraction, and reclamation remain distinct. |
+| Time | Source, observed, valid, retrieval, production, release, correction, and supersession semantics. |
+| Space | CRS, vertical datum, depth reference, units, scale, resolution, precision, and uncertainty. |
+| Rights | Access, attribution, redistribution, derivative, commercial, proprietary, and embargo rules. |
+| Sensitivity | Exact locations and reconstruction-risk joins fail closed; policy references resolve. |
+| Cross-domain | Ownership and authority remain with Hydrology, Soil, Hazards, Archaeology, Infrastructure, and People/Land. |
+| Network | Deterministic tests use no live network. |
+| Secrets | Credentials, signed URLs, private paths, and sensitive identifiers are absent. |
+| Logs/caches | Protected values are minimized and denied/superseded state invalidates derivatives. |
+| Rollback | Prior config and safe disabled state are documented and tested. |
 
-#### Syntax and shape
+### Minimum negative cases
 
-- parser succeeds under the declared format version;
-- duplicate keys are rejected or handled explicitly;
-- required keys are present;
-- unknown keys follow the declared rule;
-- unsupported versions fail;
-- authority references resolve;
-- no secret-like values or private endpoints are present.
-
-#### Semantic checks
-
-- consumer and owner are known;
-- object-family identifiers are supported and unambiguous;
-- source role is explicit and immutable per admitted source;
-- observation, interpretation, model, and aggregate roles remain distinct;
-- occurrence, deposit, estimate, permit, production, reserve, extraction, and reclamation classes remain distinct;
-- temporal fields and scopes are explicit;
-- units, datum, coordinate reference system, dimensionality, scale, resolution, confidence, and uncertainty are valid;
-- estimate method, assumptions, date, and authority are present when estimates are configured;
-- rights and redistribution evidence exists;
-- sensitivity and public-safe geometry profiles resolve to governed policy;
-- cross-lane ownership is preserved;
-- watcher, source, network, public route, release, and publication activation are absent unless independently authorized.
-
-#### Negative cases
-
-Tests should prove rejection or safe handling of:
-
-- an occurrence presented as a deposit;
-- a deposit presented as an estimate;
-- a permit presented as production;
-- production presented as reserve truth;
-- an interpretation or cross-section presented as observation;
-- a model or generalized polygon presented as direct observation;
-- an ambiguous short versus `…Reference` object name;
-- an unverified source role;
+- occurrence presented as deposit;
+- deposit presented as estimate;
+- permit presented as production;
+- production presented as reserve;
+- operator presented as owner;
+- interpretation, map polygon, cross-section, model, or AI narrative presented as observation;
+- aggregate presented as site-level record;
+- ambiguous short versus `Reference` object name;
+- CamelCase/snake_case or flat/domain path alias used as parallel authority;
+- unverified source role or originating publisher;
 - unclear rights or redistribution;
-- exact private-well or restricted borehole geometry requested for public use;
-- operator, permit, or parcel joins without cross-lane review;
-- unsupported coordinate reference systems or units;
-- missing temporal scope or confidence class;
-- unknown keys, duplicate keys, and unsupported versions;
-- source outage, stale data, or incomplete inputs;
-- partial application after a failed key;
-- network access during no-network validation; and
-- rollback to an unavailable or invalid target.
+- exact private-well, borehole, sample, target, or infrastructure geometry requested for public use;
+- operator, permit, parcel, title, archaeology, or infrastructure join without review;
+- unsupported CRS, unit, vertical datum, or depth reference;
+- missing scale, vintage, temporal scope, confidence, or uncertainty;
+- malformed file, unknown key, duplicate key, unsupported version, or ambiguous precedence;
+- stale, partial, embargoed, withdrawn, or superseded source state;
+- missing rollback or invalidation target.
 
-#### Structural behavior
-
-- validation runs without live network access;
-- repeated validation is deterministic;
-- failures are finite and reason-coded;
-- no partial configuration is applied after a failure;
-- logs do not expose protected values or locations;
-- caches and reloads do not preserve rejected configuration;
-- the prior known-good configuration remains recoverable.
-
-Executable config validation remains `NOT APPLICABLE` until a payload and consumer exist.
+Executable config validation remains **NOT APPLICABLE** while this lane contains no payload and no verified consumer.
 
 [Back to top](#top)
 
@@ -534,22 +856,26 @@ Executable config validation remains `NOT APPLICABLE` until a payload and consum
 
 ## Failure behavior
 
+A verified consumer must use finite, reason-coded, fail-closed outcomes. Exact implementation remains **PROPOSED** until code and tests confirm it.
+
 | Condition | Expected safe disposition |
 |---|---|
-| Valid, authorized, non-sensitive configuration | `PASS` for internal validation; continue to ordinary governed processing. |
-| Malformed file, unsupported version, duplicate key, or contract violation | `FAIL` or `ERROR`; do not partially apply. |
-| Unknown or conflicted object-family name | `HOLD` or `ERROR`; preserve the conflict and do not alias silently. |
-| Missing source role, rights, policy, review, or authority reference | `HOLD`, `DENY`, or `ABSTAIN`; do not infer permission. |
-| Occurrence/deposit/estimate/permit/production/reserve collapse | `FAIL` and `DENY` for consequential or public use. |
-| Interpretation, cross-section, generalized polygon, or model presented as observation | `FAIL`; preserve its actual role. |
-| Exact restricted geology location requested for public use | `DENY` by default. |
-| Missing or stale evidence with no released alternative | `ABSTAIN`; do not substitute a model, cache, or estimate silently. |
-| Unauthorized sensitivity reduction or public-safe geometry bypass | `FAIL` and `DENY`; record the reason without exposing protected values. |
-| Source outage or incomplete data | Preserve stale or partial state explicitly; do not fabricate completeness. |
+| Valid, authorized, non-sensitive config | `PASS` for internal validation; continue through ordinary governed processing. |
+| Malformed, unsupported, duplicate-key, or schema-invalid file | `FAIL` or `ERROR`; do not partially apply. |
+| Unknown or conflicted object name/path | `HOLD` or `ERROR`; do not alias silently. |
+| Missing source role, rights, policy, review, or authority | `HOLD`, `DENY`, or `ABSTAIN`; do not infer permission. |
+| Resource-class collapse | `FAIL` and `DENY` for consequential/public use. |
+| Interpretation/model/aggregate presented as observation | `FAIL` and `ABSTAIN`; preserve actual role. |
+| Exact restricted location requested publicly | `DENY` by default. |
+| Unknown CRS, datum, depth reference, unit, scale, or uncertainty | `HOLD`, `ABSTAIN`, or `ERROR`; do not coerce silently. |
+| Missing/stale evidence with no released alternative | `ABSTAIN`; do not substitute a model, cache, or estimate. |
+| Unauthorized sensitivity reduction or bypass key | `FAIL` and `DENY`; log only safe reason codes. |
+| Source outage or incomplete data | Preserve stale/partial state; do not fabricate completeness. |
 | Consumer cannot determine precedence | `ERROR` or `HOLD`; do not merge unpredictably. |
-| Cross-lane ownership conflict | `HOLD`; route to the owning domain and preserve source references. |
+| Cross-domain ownership conflict | `HOLD`; route to the owning lane. |
+| Correction or withdrawal cannot invalidate derivatives | `ERROR` and disable affected output. |
 
-`PASS` and `FAIL` are validator outcomes, not publication decisions. A valid configuration still requires evidence, policy, review, and release support for consequential outputs.
+`PASS` and `FAIL` are validator outcomes, not publication decisions.
 
 [Back to top](#top)
 
@@ -559,61 +885,111 @@ Executable config validation remains `NOT APPLICABLE` until a payload and consum
 
 README changes require:
 
-- config or documentation review; and
+- configuration or documentation review;
 - Geology and Natural Resources domain review.
 
 A future payload also requires the applicable:
 
 - named consumer owner;
-- object-model or contract reviewer;
+- object-model/contract and schema reviewer;
+- stratigraphy, mapping, or interpretation reviewer;
 - source and rights reviewer;
-- resource and infrastructure sensitivity reviewer;
-- public-safe geometry or geoprivacy reviewer;
-- regulatory-data reviewer where permits or production are implicated;
-- People/Land reviewer where operator, lease, title, or parcel context is joined;
-- Hydrology, Soil, Hazards, or Archaeology reviewer where cross-lane truth or sensitivity is implicated;
-- schema or contract reviewer;
+- natural-resource and regulatory reviewer;
+- subsurface, private-well, resource, and infrastructure sensitivity reviewer;
+- public-safe geometry reviewer;
+- People/Land reviewer for title, lease, parcel, operator, or living-person joins;
+- Hydrology, Soil, Hazards, Archaeology, Environment, or Infrastructure reviewer where those truths or sensitivities are implicated;
 - validation and test reviewer;
-- security and privacy reviewer; and
+- security/privacy reviewer;
 - policy and release reviewer.
 
-Do not infer acceptance from a missing reviewer rule or placeholder `CODEOWNERS` entry. Owners remain `OWNER_TBD` until verified.
+Do not infer acceptance from a missing reviewer rule or placeholder `CODEOWNERS` entry.
 
 [Back to top](#top)
 
 ---
 
-## Maintenance
+## Governed AI and generated interpretation
 
-When a Geology configuration file is added or changed:
+AI is interpretive and must remain downstream of evidence, policy, review, and release.
 
-1. identify the exact consumer and owner;
-2. re-read the parent config contract and Geology doctrine;
-3. verify the canonical contract, schema, policy, source, ADR, and drift references;
-4. preserve object-family, source-role, anti-collapse, temporal, units, and spatial semantics;
-5. review rights, resource, infrastructure, private-well, operator, parcel, reconstruction, and cross-lane risk;
-6. run deterministic parse, shape, semantic, negative, and no-network checks;
-7. document precedence, unknown-key behavior, stale-state handling, migration, deactivation, and rollback;
-8. inspect the complete diff for secrets, protected locations, and infrastructure clues;
-9. verify remote read-back and changed paths; and
-10. keep source activation, interpretation, public-safe transformation, release, and publication as separate governed decisions.
+A governed AI consumer must:
 
-### Definition of done for the first payload
+1. identify the requested claim and object role;
+2. retrieve released or review-authorized material through governed interfaces;
+3. resolve `EvidenceRef` to `EvidenceBundle` when claims depend on evidence;
+4. preserve map edition, source vintage, role, time, scale, units, datum, depth, method, and uncertainty;
+5. enforce resource anti-collapse;
+6. apply rights, sensitivity, and reconstruction checks;
+7. cite supported claims or return `ABSTAIN`, `DENY`, or `ERROR`;
+8. label interpretations, models, cross-sections, and synthetic carriers visibly;
+9. avoid engineering, legal, regulatory, ownership, reserve, compliance, or life-safety conclusions beyond evidence scope;
+10. emit applicable AI/citation receipts without treating generated language as proof.
 
-- [ ] A named consumer and accepted owners are verified.
-- [ ] The file format, version, parser, and load path are verified.
-- [ ] Canonical schema or contract references resolve.
-- [ ] Object-family naming conflicts are resolved or explicitly rejected by the consumer.
-- [ ] Source-role, resource-class, temporal, units, spatial, and uncertainty semantics are explicit.
-- [ ] Rights and redistribution terms are verified.
-- [ ] Public-safe geometry parameters come from accepted policy, not the config file.
-- [ ] Cross-lane ownership and sensitivity reviews are complete.
-- [ ] Synthetic fixtures cover valid, invalid, held, denied, abstained, stale, and error cases.
-- [ ] Anti-collapse tests pass.
-- [ ] No-network tests pass.
-- [ ] Secret, private-location, and reconstruction-risk scans pass.
-- [ ] Precedence, unknown-key, migration, deactivation, correction, and rollback behavior are tested.
-- [ ] No source, watcher, interpretation, public layer, release, or publication is activated by file presence.
+Configuration may select an accepted answer mode or caveat profile. It cannot make generated language authoritative.
+
+[Back to top](#top)
+
+---
+
+## Migration and anti-bypass posture
+
+Migration is required when:
+
+- a canonical object vocabulary is accepted;
+- short and `Reference` names are reconciled;
+- CamelCase and snake_case files are consolidated;
+- `contracts/geology/` or `schemas/contracts/v1/geology/` compatibility paths are retired;
+- source-registry topology is resolved;
+- KGS/KSGS/KCC/USGS connector aliases are resolved;
+- release manifest topology is accepted;
+- a consumer filename, parser, or precedence changes.
+
+A migration plan must include:
+
+- old and new identifiers/paths;
+- authority and ADR references;
+- compatibility window;
+- deterministic identity and alias handling;
+- affected consumers, schemas, validators, fixtures, policies, indexes, releases, and docs;
+- correction and rollback steps;
+- no silent duplication;
+- no safety downgrade.
+
+Forbidden bypasses include:
+
+- an `allow_exact_geometry`, `skip_policy`, `trust_model`, `assume_production`, `prefer_latest`, or equivalent key;
+- environment variables that weaken policy or rights;
+- local files that silently override repository controls;
+- alternate filenames used to evade validation;
+- direct canonical-store or source-store access by public clients;
+- using a compatibility path as new authority.
+
+[Back to top](#top)
+
+---
+
+## Rollback, correction, supersession, and invalidation
+
+Before merge, rollback means closing the PR and abandoning the branch.
+
+After merge, use a transparent revert commit or revert PR. Do not rewrite shared history.
+
+For a future payload correction:
+
+1. disable the affected config through the verified consumer mechanism;
+2. stop dependent watchers, scheduled processes, renderers, cross-section jobs, scene builds, exports, or answer routes;
+3. preserve the faulty version and review evidence;
+4. identify affected objects, joins, resource claims, interpretations, caches, indexes, tiles, sections, scenes, exports, reports, and generated narratives;
+5. assess whether object role, source role, resource class, regulatory state, ownership context, scale, datum, depth, or uncertainty was misrepresented;
+6. assess whether protected or reconstructable information was exposed;
+7. restore the prior known-good version or safe disabled state;
+8. rerun parse, schema, semantic, anti-collapse, rights, sensitivity, cross-domain, and negative-case checks;
+9. create required correction, redaction, withdrawal, review, release, or rollback records in canonical homes;
+10. invalidate/rebuild every affected derivative;
+11. verify governed public surfaces no longer serve unauthorized, stale, superseded, misclassified, or reconstructable material.
+
+A Git revert does not itself revoke exposed data, correct releases, invalidate caches, reverse a regulatory/operational claim, or establish publication lineage.
 
 [Back to top](#top)
 
@@ -623,61 +999,86 @@ When a Geology configuration file is added or changed:
 
 - [`../README.md`](../README.md) — parent domain-configuration contract.
 - [`../../README.md`](../../README.md) — repository-wide configuration boundary.
-- [`../../../docs/domains/geology/README.md`](../../../docs/domains/geology/README.md) — Geology and Natural Resources doctrine, terminology, anti-collapse rules, and sensitivity posture.
-- [`../../../docs/registers/DOMAIN_LANE.md`](../../../docs/registers/DOMAIN_LANE.md) — canonical lane and sensitivity register.
-- [`../../../docs/registers/DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) — unresolved repository drift and authority conflicts.
-- [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) — placement and responsibility law.
-- [`../../../docs/security/SECRETS.md`](../../../docs/security/SECRETS.md) — credential and sensitive-value handling.
-
-Future files should link to verified Geology contracts, schemas, policies, source descriptors, tests, fixtures, receipts, proofs, and release records only after those exact paths and authority relationships are confirmed.
+- [`../../../docs/domains/geology/README.md`](../../../docs/domains/geology/README.md) — Geology and Natural Resources doctrine.
+- [`../../../docs/domains/geology/ARCHITECTURE.md`](../../../docs/domains/geology/ARCHITECTURE.md) — lane architecture.
+- [`../../../docs/domains/geology/CANONICAL_PATHS.md`](../../../docs/domains/geology/CANONICAL_PATHS.md) — placement and drift register.
+- [`../../../docs/domains/geology/DATA_LIFECYCLE.md`](../../../docs/domains/geology/DATA_LIFECYCLE.md) — lifecycle and promotion guidance.
+- [`../../../docs/domains/geology/OBJECT_FAMILIES.md`](../../../docs/domains/geology/OBJECT_FAMILIES.md) — object roster and anti-collapse boundaries.
+- [`../../../docs/domains/geology/IDENTITY_MODEL.md`](../../../docs/domains/geology/IDENTITY_MODEL.md) — deterministic identity.
+- [`../../../docs/domains/geology/SOURCE_REGISTRY.md`](../../../docs/domains/geology/SOURCE_REGISTRY.md) — source authority orientation.
+- [`../../../docs/domains/geology/SENSITIVITY.md`](../../../docs/domains/geology/SENSITIVITY.md) — sensitivity posture.
+- [`../../../docs/domains/geology/POLICY.md`](../../../docs/domains/geology/POLICY.md) — policy orientation.
+- [`../../../docs/domains/geology/API_CONTRACTS.md`](../../../docs/domains/geology/API_CONTRACTS.md) — governed API expectations.
+- [`../../../docs/domains/geology/MAP_UI_CONTRACTS.md`](../../../docs/domains/geology/MAP_UI_CONTRACTS.md) — map and UI carrier rules.
+- [`../../../docs/domains/geology/RELEASE_INDEX.md`](../../../docs/domains/geology/RELEASE_INDEX.md) — release documentation index.
+- [`../../../contracts/domains/geology/`](../../../contracts/domains/geology/) — canonical semantic contract lane.
+- [`../../../contracts/geology/README.md`](../../../contracts/geology/README.md) — compatibility guard.
+- [`../../../schemas/contracts/v1/domains/geology/`](../../../schemas/contracts/v1/domains/geology/) — canonical machine-shape lane.
+- [`../../../schemas/contracts/v1/geology/README.md`](../../../schemas/contracts/v1/geology/README.md) — schema alias guard.
+- [`../../../policy/domains/geology/`](../../../policy/domains/geology/) — Geology policy lane.
+- [`../../../data/registry/sources/geology/`](../../../data/registry/sources/geology/) — subtype-first source registry.
+- [`../../../data/registry/geology/sources/`](../../../data/registry/geology/sources/) — conflicting domain-first source registry.
+- [`../../../connectors/geology/README.md`](../../../connectors/geology/README.md) — connector compatibility index.
+- [`../../../packages/domains/geology/`](../../../packages/domains/geology/) — package scaffold.
+- [`../../../pipelines/domains/geology/`](../../../pipelines/domains/geology/) — executable pipeline responsibility lane.
+- [`../../../pipeline_specs/geology/`](../../../pipeline_specs/geology/) — declarative spec lane.
+- [`../../../fixtures/domains/geology/`](../../../fixtures/domains/geology/) — synthetic fixture lanes.
+- [`../../../tests/domains/geology/`](../../../tests/domains/geology/) — test responsibility lane.
+- [`../../../release/candidates/geology/`](../../../release/candidates/geology/) — release candidate lane.
+- [`../../../release/manifests/README.md`](../../../release/manifests/README.md) — plural manifest parent and topology note.
+- [`../../../docs/registers/DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) — unresolved drift.
+- [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) — placement law.
+- [`../../../docs/security/SECRETS.md`](../../../docs/security/SECRETS.md) — secret handling.
 
 [Back to top](#top)
 
 ---
 
-## ADRs
+## ADRs and drift triggers
 
 No ADR is introduced by this README.
 
-Separate governance is required for changes that would:
+Separate governance is required to:
 
-- add, rename, merge, or retire a canonical domain slug;
-- select canonical Geology object-family names or resolve short-form versus `…Reference` drift;
-- select the segment or flat lane-path form;
-- define or alter source-role, resource-class, sensitivity, public-safe geometry, or infrastructure-exposure rules;
-- decide source rights, redistribution, or live-source activation;
-- create a parallel contract, schema, policy, registry, taxonomy, receipt, proof, or release authority;
+- add, rename, merge, or retire a domain slug;
+- select canonical object-family names or roster membership;
+- resolve short versus `Reference` names;
+- reconcile CamelCase/snake_case contract and schema files;
+- resolve `contracts/geology/` or `schemas/contracts/v1/geology/` compatibility paths;
+- select source-registry topology;
+- select canonical KGS/KSGS/KCC/USGS connector paths;
+- select singular/plural release-manifest topology or create a Geology manifest sublane;
+- define source-role, resource-class, rights, sensitivity, public-safe geometry, infrastructure-exposure, scale, datum, depth, or uncertainty rules;
 - establish universal config discovery, precedence, or unknown-key behavior;
-- authorize direct public access to internal or canonical stores;
-- change the separation among physical geology, regulatory status, ownership, interpretation, model, evidence, release, correction, and publication; or
-- authorize direct public exposure of exact restricted geology or infrastructure detail.
+- authorize live-source, watcher, renderer, cross-section, scene, public API, release, or publication behavior;
+- change separation among physical geology, interpretation, model, regulatory status, ownership, evidence, release, correction, and publication.
 
-Configuration must not be used to settle those decisions indirectly.
+Configuration must not settle these decisions indirectly.
 
 [Back to top](#top)
 
 ---
 
-## Rollback and correction
+## Definition of done for the first payload
 
-Before merge, rollback means closing the unmerged pull request and abandoning the scoped branch when separately authorized.
-
-After merge, create a transparent revert commit or revert pull request that restores the prior known-good README or configuration version. Do not force-push or rewrite shared history.
-
-For a future payload correction:
-
-1. disable or stop selecting the affected configuration through the verified consumer mechanism;
-2. stop any watcher, renderer, scheduled process, or interpretation workflow that depends on the faulty selection;
-3. preserve the faulty version and evidence needed for review;
-4. identify affected objects, joins, estimates, interpretations, caches, tiles, cross-sections, 3D scenes, exports, and narratives without exposing protected locations;
-5. assess whether physical, regulatory, ownership, resource-class, or source-role claims were collapsed;
-6. assess whether exact or reconstructable sensitive information was exposed;
-7. restore the prior known-good version or safe disabled state;
-8. re-run validation and negative cases;
-9. create any required correction, redaction, withdrawal, release, or rollback records in their canonical homes; and
-10. verify that no public surface continues to serve an unauthorized, stale, misclassified, or reconstructable derivative.
-
-A Git revert does not itself revoke exposed data, correct released artifacts, reverse a regulatory or operational claim, or establish KFM publication lineage.
+- [ ] A real named consumer and accepted owners are verified.
+- [ ] Filename, format, encoding, parser, duplicate-key behavior, version, and load path are verified.
+- [ ] Canonical semantic contract and restrictive schema references resolve; compatibility paths are not used as authority.
+- [ ] Object vocabulary and alias behavior are accepted or fail closed.
+- [ ] Observation, interpretation, model, aggregate, occurrence, deposit, estimate, permit, production, reserve, extraction, and reclamation semantics are explicit.
+- [ ] Source role, originating publisher, rights, attribution, redistribution, vintage, and source-head posture are verified.
+- [ ] Time, scale, horizontal CRS, vertical datum, depth reference, units, dimensionality, precision, method, confidence, and uncertainty are explicit.
+- [ ] Public-safe geometry parameters come from accepted policy, not config.
+- [ ] Cross-domain ownership, regulatory, infrastructure, archaeology/cultural, private-person, and reconstruction risks are reviewed.
+- [ ] Source-registry, connector, contract/schema, and release-manifest topology conflicts are resolved or bounded by reviewed compatibility rules.
+- [ ] Synthetic fixtures cover valid, invalid, held, denied, abstained, error, stale, embargoed, withdrawn, corrected, superseded, and rollback cases.
+- [ ] Anti-collapse tests pass.
+- [ ] No-network tests pass.
+- [ ] Secret, private-person, rights, infrastructure, and protected-location scans pass.
+- [ ] Precedence, unknown-key, migration, deactivation, watcher stop, correction, rollback, and invalidation behavior are tested.
+- [ ] Policy execution and input assembly are tested; placeholder policy files are replaced or explicitly retained as non-production guards.
+- [ ] Workflow jobs execute meaningful checks rather than TODO echoes.
+- [ ] No source, watcher, interpretation, public layer, release, or publication is activated by file presence.
 
 [Back to top](#top)
 
@@ -685,6 +1086,6 @@ A Git revert does not itself revoke exposed data, correct released artifacts, re
 
 ## Last reviewed
 
-**2026-07-13**, against `main@787d2fce458230eb556d205203b563adea2a9717`.
+**2026-07-14**, against `main@28db8aa8cadeed83d33ce6c48dde9fdcefe6d8dd`.
 
-Review again before the first non-README payload, consumer binding, object-name selection, source-role profile, resource-class profile, public-safe geometry profile, source activation, interpretation workflow, or public-output integration.
+Review again before the first non-README payload, consumer binding, object-vocabulary migration, source-role or rights profile, scale/datum/depth profile, resource-class profile, public-safe geometry profile, source or watcher activation, interpretation workflow, manifest placement decision, or public-output integration.
