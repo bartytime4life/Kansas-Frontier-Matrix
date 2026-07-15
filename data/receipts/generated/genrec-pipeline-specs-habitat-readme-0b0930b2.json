@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-pipeline-specs-habitat-readme-0b0930b2",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/habitat/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/habitat/README.md": "sha256:0b0930b2fa26b418caed47e9be1e9826f61a95ed63281509a52edb3d3e9c700e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-15-session"
+  },
+  "prompt_or_contract": "sha256:45cc75a006d25672767067e9898ec4dc87030fc6e1c046944a950a2ad2a292bb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "python",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/49392f54b1e994164000c083366daddf68a6a38a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/nlcd_landcover.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/nwi_wetlands.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/connectivity.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/suitability_model.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/critical_habitat.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/ecoregions/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/land_cover/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/docs/domains/habitat/MISSING_OR_PLANNED_FILES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipelines/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/configs/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/contracts/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/schemas/contracts/v1/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/registry/sources/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/control_plane/source_authority_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/policy/sensitivity/habitat_classes.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/tests/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/fixtures/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/tools/validators/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/receipts/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/proofs/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/catalog/domain/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/release/candidates/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/.github/workflows/domain-habitat.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/habitat/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected latest main, target blob, direct Habitat spec inventory, child boundaries, planning origin, executable/config, contracts/schemas, sources/activation, policy, tests/fixtures, validators, receipts/proofs/catalog/release, workflow, ownership, and Directory Rules."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Kept declarative intent under pipeline_specs/ and generated provenance under data/receipts/generated/; no authority root, lifecycle boundary, source admission, or public path changed."
+    },
+    {
+      "gate": "direct-habitat-inventory",
+      "outcome": "PASS",
+      "reason": "Classified five flat YAMLs as seven-line PROPOSED planning placeholders and two child READMEs as grounded documentation boundaries; no active profile was established."
+    },
+    {
+      "gate": "consumer-and-activation-search",
+      "outcome": "PASS",
+      "reason": "Bounded searches surfaced documentation and placeholder references, not a verified Habitat pipeline-spec schema, parser, registry, scheduler, activation record, executable consumer, or spec-specific executable test binding."
+    },
+    {
+      "gate": "habitat-anti-collapse",
+      "outcome": "PASS",
+      "reason": "Preserved land-cover, wetland, ecoregion, suitability, connectivity, critical-habitat, occurrence, neighboring-domain, receipt, proof, catalog, release, and generated-language boundaries."
+    },
+    {
+      "gate": "sensitivity-no-leak",
+      "outcome": "PASS",
+      "reason": "No real sensitive coordinates, occurrence clues, private identities, restricted join keys, cultural knowledge, operational geoprivacy parameters, credentials, private endpoints, or reconstruction recipes were introduced."
+    },
+    {
+      "gate": "markdown-yaml-structure",
+      "outcome": "PASS",
+      "reason": "Checked final newline, heading uniqueness, balanced fences, resolved internal anchors, tables, KFM meta block, inactive YAML parsing, and common secret/private-endpoint patterns."
+    },
+    {
+      "gate": "runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no active profile, parser, scheduler, source activation, consumer, pipeline, policy rule, lifecycle record, or public surface changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {"id": "EV-01", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/49392f54b1e994164000c083366daddf68a6a38a"},
+    {"id": "EV-02", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/README.md"},
+    {"id": "EV-03", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/nlcd_landcover.yaml"},
+    {"id": "EV-04", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/nwi_wetlands.yaml"},
+    {"id": "EV-05", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/connectivity.yaml"},
+    {"id": "EV-06", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/suitability_model.yaml"},
+    {"id": "EV-07", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/critical_habitat.yaml"},
+    {"id": "EV-08", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/ecoregions/README.md"},
+    {"id": "EV-09", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/habitat/land_cover/README.md"},
+    {"id": "EV-10", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipeline_specs/README.md"},
+    {"id": "EV-11", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/docs/domains/habitat/MISSING_OR_PLANNED_FILES.md"},
+    {"id": "EV-12", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/pipelines/domains/habitat/README.md"},
+    {"id": "EV-13", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/configs/domains/habitat/README.md"},
+    {"id": "EV-14", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/contracts/domains/habitat/README.md"},
+    {"id": "EV-15", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/schemas/contracts/v1/domains/habitat/README.md"},
+    {"id": "EV-16", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/registry/sources/habitat/README.md"},
+    {"id": "EV-17", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/control_plane/source_authority_register.yaml"},
+    {"id": "EV-18", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/policy/sensitivity/habitat_classes.yaml"},
+    {"id": "EV-19", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/tests/domains/habitat/README.md"},
+    {"id": "EV-20", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/fixtures/domains/habitat/README.md"},
+    {"id": "EV-21", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/tools/validators/domains/habitat/README.md"},
+    {"id": "EV-22", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/receipts/habitat/README.md"},
+    {"id": "EV-23", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/proofs/habitat/README.md"},
+    {"id": "EV-24", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/data/catalog/domain/habitat/README.md"},
+    {"id": "EV-25", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/release/candidates/habitat/README.md"},
+    {"id": "EV-26", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/.github/workflows/domain-habitat.yml"},
+    {"id": "EV-27", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/.github/CODEOWNERS"},
+    {"id": "EV-28", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/docs/doctrine/directory-rules.md"},
+    {"id": "EV-29", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49392f54b1e994164000c083366daddf68a6a38a/schemas/contracts/v1/receipts/generated_receipt.schema.json"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-15T21:04:24Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated-work provenance only. This receipt does not authorize merge, source admission, specification activation, source-role or object-family authority, sensitive joins, lifecycle promotion, catalog closure, release, publication, or public use. Human review is pending."
+}
