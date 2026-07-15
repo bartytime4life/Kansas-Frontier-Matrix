@@ -12,7 +12,7 @@
     "model": "GPT-5.6 Thinking",
     "version": "2026-07-15-session"
   },
-  "prompt_or_contract": "sha256:bf4da26c3620c00894767bf9c46affba58a5bef26560259c563ac866e081358b",
+  "prompt_or_contract": "sha256:8987d21f2c142965189584c140c2e05d3089a7eee0a5771aef558b6c0cf4adf2",
   "parameters": {
     "seed": null,
     "temperature": null,
