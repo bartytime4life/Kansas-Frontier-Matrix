@@ -1,340 +1,410 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/connectors-newspapers-src-package-readme
-title: connectors/newspapers/src/newspapers/ — Newspaper Connector Python Package
-type: readme
-version: v0.1
+doc_id: kfm://connectors/newspapers/src/newspapers/readme
+title: Newspaper Connector Python Package
+path: connectors/newspapers/src/newspapers/README.md
+type: connector-package-readme
+version: v0.2
+prior_version: v0.1
+prior_blob: b725cf66a235d03037829592b1a2be31a8d2b057
+base_commit: af951ea2b4991f6b5fb66ac47ad16bbad587b49f
 status: draft
-owners: OWNER_TBD — Source steward · Connector steward · Archives steward · Genealogy steward · People-DNA-Land steward · Settlements steward · Validation steward · Data steward · Docs steward
+owners: OWNER_TBD — source steward · connector steward · archives steward · genealogy steward · people-dna-land steward · settlements steward · validation steward · data steward · rights steward · sensitivity steward
 created: 2026-06-19
-updated: 2026-06-19
-policy_label: public-doctrine; rights-privacy-sensitivity-gated
-proposed_path: connectors/newspapers/src/newspapers/README.md
-truth_posture: CONFIRMED path exists / PROPOSED package contract / UNKNOWN implementation depth
+updated: 2026-07-14
+policy_label: restricted-review
+truth_posture: cite-or-abstain
+responsibility_root: connectors/
+lifecycle_phase: source-admission
+source_family: newspapers
+package_name: newspapers
+distribution_name: kfm-connector-newspapers
 related:
   - ../../README.md
-  - ../../../README.md
+  - ../README.md
   - ../../tests/README.md
-  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../README.md
+  - ../../../../docs/sources/catalog/newspapers/README.md
+  - ../../../../docs/sources/catalog/newspapers/ocr-full-text.md
+  - ../../../../docs/sources/catalog/newspapers/event-reporting.md
+  - ../../../../docs/sources/catalog/newspapers/legal-notices.md
+  - ../../../../docs/sources/catalog/newspapers/obituaries.md
   - ../../../../docs/sources/catalog/loc/README.md
-  - ../../../../docs/sources/catalog/README.md
-  - ../../../../docs/domains/genealogy/README.md
-  - ../../../../docs/domains/people-dna-land/README.md
-  - ../../../../docs/domains/settlements/README.md
-  - ../../../../data/registry/sources/
-  - ../../../../data/raw/
-  - ../../../../data/quarantine/
-  - ../../../../fixtures/
-  - ../../../../schemas/contracts/v1/source/
-  - ../../../../policy/rights/
-  - ../../../../policy/sensitivity/
-  - ../../../../release/
-tags: [kfm, connectors, newspapers, python-package, archives, chronicling-america, loc, ocr, iiif, genealogy, settlements, privacy, source-admission, raw, quarantine, governance]
+  - ../../../../docs/architecture/source-roles.md
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../data/registry/sources/README.md
+  - ../../../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../../../fixtures/README.md
+tags:
+  - kfm
+  - connectors
+  - newspapers
+  - python-package
+  - archives
+  - ocr
+  - iiif
+  - genealogy
+  - settlements
+  - privacy
+  - source-admission
+  - raw
+  - quarantine
+  - rights-review
 notes:
-  - "This README documents the connector implementation package boundary, not newspaper source truth, OCR truth, person identity truth, event truth, rights authority, privacy authority, or publication authority."
-  - "Package code may prepare source material for RAW or QUARANTINE admission only."
-  - "Import behavior, live access, descriptors, endpoint coverage, OCR/page-image parsing, tests, fixtures, CI wiring, rights, privacy, and source terms remain NEEDS VERIFICATION until inspected in the mounted repo."
-  - "OCR text and NER/event extraction output are candidate source material only, not authoritative fact."
+  - "At the pinned base, the package contains this README and an empty __init__.py; proposed runtime modules are not implemented."
+  - "The distribution metadata is a greenfield 0.0.0 placeholder; installability and public imports are unverified."
+  - "Neighboring source-root and tests READMEs exist, but dedicated test modules and newspaper fixtures did not surface."
+  - "Newspaper source-catalog and product pages exist; they are draft documentation and do not activate this package."
+  - "OCR, extraction, person/event/place resolution, rights, privacy, sensitivity, proof, release, and publication authority remain outside this package."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Newspaper Connector Python Package
+# Newspaper connector Python package
 
-> Python package boundary for newspaper source-intake helpers inside `connectors/newspapers/`.
+Implementation boundary for newspaper source-admission code under `connectors/newspapers/`.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Scope: source admission" src="https://img.shields.io/badge/scope-source__admission-blue">
-  <img alt="OCR: candidate only" src="https://img.shields.io/badge/OCR-candidate__only-orange">
-  <img alt="Rights: fail closed" src="https://img.shields.io/badge/rights-fail__closed-red">
-  <img alt="Privacy: fail closed" src="https://img.shields.io/badge/privacy-fail__closed-red">
-  <img alt="Lifecycle: raw or quarantine only" src="https://img.shields.io/badge/lifecycle-raw%20%7C%20quarantine%20only-orange">
+  <img alt="Implementation: empty package" src="https://img.shields.io/badge/implementation-empty%20package-lightgrey">
+  <img alt="Version: 0.0.0 placeholder" src="https://img.shields.io/badge/version-0.0.0%20placeholder-lightgrey">
+  <img alt="Output: RAW or QUARANTINE only" src="https://img.shields.io/badge/output-RAW%20%7C%20QUARANTINE-orange">
+  <img alt="OCR: derived candidate" src="https://img.shields.io/badge/OCR-derived%20candidate-orange">
+  <img alt="Rights and privacy: fail closed" src="https://img.shields.io/badge/rights%20%2F%20privacy-fail%20closed-red">
 </p>
 
-`connectors/newspapers/src/newspapers/`
-
-## Quick jumps
-
-[Scope](#scope) · [Package boundary](#package-boundary) · [Authority boundary](#authority-boundary) · [Expected modules](#expected-modules) · [Runtime posture](#runtime-posture) · [Inputs and outputs](#inputs-and-outputs) · [OCR and extraction behavior](#ocr-and-extraction-behavior) · [Rights, privacy, and sensitivity behavior](#rights-privacy-and-sensitivity-behavior) · [Errors](#errors) · [Tests](#tests) · [Definition of done](#definition-of-done) · [Verification backlog](#verification-backlog)
+> [!CAUTION]
+> This package may eventually fetch, parse, preserve, and route newspaper source material. It is not newspaper truth, authoritative transcription, entity/person/event/place truth, genealogy truth, rights or privacy policy, SourceDescriptor authority, schema authority, proof or receipt authority, release authority, a public API, or generated-answer evidence.
 
 ---
 
-## Scope
+## Quick contract
 
-`connectors/newspapers/src/newspapers/` is the Python implementation package for newspaper connector helpers.
+| Question | Answer |
+|---|---|
+| What is implemented now? | An empty `__init__.py` and documentation. No runtime module or public import surface was verified. |
+| What is the package version? | `0.0.0` in a greenfield-placeholder `pyproject.toml`; release/install readiness is not implied. |
+| Is live source access implemented or enabled? | **No verified implementation or activation.** |
+| What may future package code emit? | Bounded admission material for `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/<domain>/<source_id>/<run_id>/` only. |
+| Is OCR authoritative text? | **No.** Preserve the page artifact, raw OCR, engine/run identity, quality, and uncertainty separately. |
+| Are names, dates, places, relationships, or events facts? | **No.** Extraction results are candidates until downstream resolution and evidence closure. |
+| Does public availability clear copyright, privacy, or reuse? | **No.** Source/product/use-specific review is required. |
+| Can UI or AI read package/RAW output directly? | **No.** Public surfaces consume governed released artifacts only. |
 
-It may contain code that:
+---
 
-- reads connector-local configuration;
-- prepares reviewed newspaper source requests only when live access is explicitly allowed;
-- parses newspaper-shaped source responses or synthetic fixtures;
-- preserves provider, collection, newspaper title, issue, date, page, article, clipping, image, OCR, and retrieval metadata;
-- preserves page-image, IIIF, manifest, bounding-box, and digest metadata where available;
-- treats OCR text, names, places, dates, events, and article segments as candidate source material;
-- normalizes connector output into a bounded source-admission envelope;
-- routes rights-unclear, privacy-unclear, OCR-ambiguous, malformed, culturally sensitive, exact-location, or source-drift material toward deny/quarantine/review-required outcomes;
-- exposes small, testable functions used by `connectors/newspapers/tests/`.
+## Verified repository state
 
-It must not become newspaper truth, OCR correction authority, named-entity truth, person identity truth, event truth, genealogy truth, settlement truth, source registry authority, schema authority, policy authority, catalog authority, release authority, or publication authority.
+The table records observations at base commit `af951ea2b4991f6b5fb66ac47ad16bbad587b49f`. Expected-path probes and targeted search show what surfaced during this update; they are not exhaustive proof that no other file exists.
+
+| Surface | Observed state | Consequence |
+|---|---|---|
+| This README | Existing v0.1 at blob `b725cf66a235d03037829592b1a2be31a8d2b057`. | v0.2 replaces unknown inventory claims with pinned evidence. |
+| [`connectors/newspapers/README.md`](../../README.md) | Parent connector-family boundary exists and remains draft/placement-unratified. | This package inherits RAW/QUARANTINE-only and no-publication rules. |
+| [`connectors/newspapers/src/README.md`](../README.md) | Source-root README exists. | It documents the source tree; it does not prove code. |
+| [`connectors/newspapers/tests/README.md`](../../tests/README.md) | Test-lane README exists. | It defines proposed tests/fixtures, not passing coverage. |
+| `connectors/newspapers/pyproject.toml` | Greenfield placeholder with distribution `kfm-connector-newspapers`, version `0.0.0`. | Build/install/dependency/entry-point behavior remains unverified. |
+| `__init__.py` | Exists as the empty Git blob `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391`. | No public imports or import-time behavior are implemented at the pinned base. |
+| `config.py`, `client.py`, `parser.py`, `ocr.py`, `iiif.py`, `extraction.py`, `sensitivity.py`, `envelope.py`, `errors.py` | Absent at the expected package paths. | Their contracts below are proposed activation requirements, not implemented APIs. |
+| Expected connector-local test modules | Absent at the checked paths; no `test_newspapers` result surfaced. | No package test coverage is claimed. |
+| Newspaper-specific fixtures | No payload fixture surfaced in targeted search. | Fixture design remains proposed; fixture docs elsewhere are not payload evidence. |
+| [`docs/sources/catalog/newspapers/README.md`](../../../../docs/sources/catalog/newspapers/README.md) | Dedicated newspaper source-family profile exists, with product pages for OCR, event reporting, legal notices, and obituaries. | Product distinctions are documented but remain draft and non-activating. |
+| [`docs/sources/catalog/loc/README.md`](../../../../docs/sources/catalog/loc/README.md) | LOC source-family catalog exists and references newspaper/Chronicling America lineage. | LOC doctrine remains outside this connector package. |
+| Expected newspaper/ChronAm SourceDescriptor instances | None surfaced at checked `data/registry/sources/` paths. | Live activation is not established. |
+| SourceDescriptor schemas | `source_descriptor.schema.json` exists; a separate `source-descriptor.json` is a proposed placeholder. | Schema-home/filename drift is outside this package; use only the accepted validator path. |
+| `.github/CODEOWNERS` | No newspapers-specific ownership rule surfaced. | Owners remain `OWNER_TBD`. |
 
 > [!IMPORTANT]
-> This package is an intake adapter. It does not decide whether newspaper-derived material is true, rights-cleared, privacy-safe, public-safe, culturally appropriate, or publishable. Publication requires downstream validation, EvidenceBundle closure, rights and sensitivity policy, review, release decision, receipts, proofs, correction path, and rollback support.
+> Empty package scaffolding plus prose is not an implementation. This README intentionally separates verified files from the future contract so code, tests, descriptors, rights decisions, and activation cannot be inferred from directory presence.
 
 ---
 
-## Package boundary
+## Placement and package boundary
 
-```text
-connectors/
-└── newspapers/
-    ├── README.md                    # connector-lane overview
-    ├── src/
-    │   └── newspapers/
-    │       ├── README.md            # this file
-    │       ├── __init__.py          # PROPOSED / NEEDS VERIFICATION
-    │       ├── config.py            # PROPOSED / NEEDS VERIFICATION
-    │       ├── client.py            # PROPOSED / NEEDS VERIFICATION
-    │       ├── parser.py            # PROPOSED / NEEDS VERIFICATION
-    │       ├── ocr.py               # PROPOSED / NEEDS VERIFICATION
-    │       ├── iiif.py              # PROPOSED / NEEDS VERIFICATION
-    │       ├── extraction.py        # PROPOSED / NEEDS VERIFICATION
-    │       ├── sensitivity.py       # PROPOSED / NEEDS VERIFICATION
-    │       ├── envelope.py          # PROPOSED / NEEDS VERIFICATION
-    │       └── errors.py            # PROPOSED / NEEDS VERIFICATION
-    └── tests/
-        └── README.md
-```
+Directory Rules §7.3 confirms `connectors/` as the source fetch/admission root and limits connector output to RAW or QUARANTINE. It does not ratify `connectors/newspapers/` in its example spine or define this exact Python `src/` layout.
 
-The exact module layout is **PROPOSED**. Use the mounted repo's actual code, package manager, imports, and CI conventions before treating any filename above as implemented.
+Treat this path as:
 
----
+- **CONFIRMED repository path** — the package directory, README, and empty `__init__.py` exist;
+- **CONFIRMED responsibility fit** — future newspaper fetch/parse/admit code belongs under a connector responsibility root;
+- **PROPOSED package layout** — `src/newspapers/` is supported by local scaffolding but not proven buildable;
+- **non-authoritative** — this README cannot settle connector placement, packaging, schema, policy, or lifecycle authority.
 
-## Authority boundary
+Do not create parallel `connectors/newspaper/`, `connectors/chronam/`, top-level `newspapers/`, or domain-owned fetch packages to work around placement questions. Resolve relocations through an ADR or migration note with import redirects, owner review, and rollback instructions.
 
-```text
-THIS PACKAGE MAY:
-  parse synthetic, minimized, redacted, public-domain-approved, or steward-approved newspaper-shaped payloads
-  prepare reviewed source requests when live access is explicitly enabled
-  preserve issue/page/article/clipping/image/OCR metadata
-  preserve rights, provider, collection, retrieval, source-role, digest, and parser metadata
-  emit connector-local source-admission envelopes
-  return finite failure, deny, abstain, quarantine, or needs-verification outcomes
-  support RAW or QUARANTINE admission
+Package-local code may own:
 
-THIS PACKAGE MUST NOT:
-  claim newspaper accounts are true
-  silently correct OCR into authoritative transcription
-  resolve named entities as truth
-  assert person identity, family relationship, event, or place truth
-  publish living-person, minor, medical/legal/crime, reputational, tribal, sacred/burial, archaeology, or exact-location material
-  write directly to PROCESSED, CATALOG, TRIPLET, PUBLISHED, proof, receipt, or release stores
-  bypass source descriptors, source rights, privacy/sensitivity policy, or review gates
-  embed credentials, tokens, cookies, private archive exports, or session material
-  treat generated summaries, OCR, or NER/event extraction as evidence by itself
-```
+- source-specific request construction after activation;
+- transport response handling and bounded retries;
+- newspaper/issue/page/article/clipping/image/OCR parsing;
+- immutable provenance and digest preparation;
+- product-aware admission-envelope construction;
+- finite connector errors and quarantine reasons.
 
-KFM lifecycle discipline remains:
+It may not own:
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
-
-This package participates only at the source-admission edge.
+- source-family or domain doctrine;
+- canonical SourceDescriptor/schema/policy definitions;
+- authoritative OCR correction, entity resolution, relationship resolution, or event adjudication;
+- downstream normalization, catalog/triplet construction, proof closure, redaction receipts, release decisions, publication, UI, or AI answers.
 
 ---
 
-## Expected modules
+## Current and proposed module inventory
 
-The module names below are a recommended package contract, not a verified implementation inventory.
+| Module | Current state | Future bounded responsibility |
+|---|---|---|
+| `__init__.py` | **CONFIRMED empty** | Eventually expose a small, stable, side-effect-free public import surface. |
+| `config.py` | **ABSENT / PROPOSED** | Parse explicit connector configuration and activation flags without reading secrets at import. |
+| `client.py` | **ABSENT / PROPOSED** | Execute an approved source request with finite timeout, retry, paging, rate-limit, and no-network controls. |
+| `parser.py` | **ABSENT / PROPOSED** | Preserve upstream newspaper/product structure and create candidate admission records without asserting truth. |
+| `ocr.py` | **ABSENT / PROPOSED** | Keep raw OCR, transcription corrections, engine/version/run, confidence, layout, and uncertainty distinct. |
+| `iiif.py` | **ABSENT / PROPOSED** | Preserve manifest/canvas/image-service identity, sequence, dimensions, regions, rights, and digests where applicable. |
+| `extraction.py` | **ABSENT / PROPOSED** | Emit names, dates, places, relationships, events, and article segments as reviewable candidates with tool/run lineage. |
+| `sensitivity.py` | **ABSENT / PROPOSED** | Produce package-local risk signals; canonical policy decisions remain in `policy/`. |
+| `envelope.py` | **ABSENT / PROPOSED** | Build a bounded RAW/QUARANTINE handoff with source, product, rights, sensitivity, role, and digest metadata. |
+| `errors.py` | **ABSENT / PROPOSED** | Define finite, secret-safe failure classes/codes for callers and tests. |
 
-| Module | Status | Responsibility |
-|---|---:|---|
-| `config.py` | **PROPOSED** | Read connector configuration, feature flags, endpoint keys, timeout defaults, no-network posture, and live-test opt-in flags. |
-| `client.py` | **PROPOSED** | Hold bounded newspaper source request behavior; no live call unless explicitly enabled. |
-| `parser.py` | **PROPOSED** | Convert newspaper-shaped responses or fixtures into candidate source records without asserting truth. |
-| `ocr.py` | **PROPOSED** | Preserve OCR text, OCR quality/confidence markers, and transcription uncertainty without correction authority. |
-| `iiif.py` | **PROPOSED** | Preserve page-image, manifest, canvas, sequence, bounding-box, and image-service metadata where applicable. |
-| `extraction.py` | **PROPOSED** | Represent names, places, dates, and events as extraction candidates with tool/config/confidence/review metadata. |
-| `sensitivity.py` | **PROPOSED** | Detect living-person, minor, medical/legal/crime, reputational, tribal, sacred/burial, archaeology, exact-location, and rights-unclear markers and return safe outcomes. |
-| `envelope.py` | **PROPOSED** | Build source-admission envelopes with source metadata, lifecycle target, digests, review flags, and quarantine reasons. |
-| `errors.py` | **PROPOSED** | Define finite connector errors safe for logs and steward review. |
-| `__init__.py` | **PROPOSED** | Expose a small public import surface; avoid importing live clients or reading secrets at module import time. |
-
-Keep the import surface narrow. Downstream code should receive a governed connector output, not raw archive-session behavior or public UI payloads.
+Do not add a module merely to satisfy this table. Add it with an accepted responsibility, tests, fixtures, and no competing home. If the implementation chooses fewer modules, update this README rather than preserving a fictional architecture.
 
 ---
 
-## Runtime posture
+## Import and runtime safety
 
-Default runtime behavior must be safe without special environment setup.
+The current empty `__init__.py` contains no verified import-time network, filesystem, environment, or credential access. Package installability and import execution were not tested from the remote-only workspace.
 
-| Concern | Required posture |
+Future import/runtime rules:
+
+| Concern | Required behavior |
 |---|---|
-| Network access | Disabled or mock-only by default in tests and local dry runs. |
-| Archive access | Disabled by default; no private archive account required for default tests. |
-| Credentials | Never required for import, parsing fixtures, or no-network tests. |
-| Secrets | Never committed and never printed in exceptions. |
-| Source descriptors | Required before live source activation. |
-| Rights/citation | Unknown copyright, reuse, citation, or platform terms fail closed. |
-| OCR uncertainty | Preserved as uncertainty, not silently corrected. |
-| Living-person material | Denied, restricted, or quarantine/review-required by default. |
-| Sensitive locations/content | Tribal, sacred/burial, archaeology, and exact-location material fails closed. |
-| Writes | No direct writes outside allowed RAW or QUARANTINE handoff paths. |
-| Publication | Not allowed from this package. |
+| Import | Importing `newspapers` performs no network call, credential lookup, cache mutation, source activation, file write, or logging setup. |
+| Network | Disabled in unit tests and dry runs unless an explicit approved live mode exists. |
+| Credentials | Passed at call/runtime boundary through approved secret handling; never required for import or fixture parsing. |
+| Timeouts/retries | Finite and configuration-bound; retry state is inspectable and never converts partial results into success. |
+| Rate limits | Preserve provider headers/state; stop or quarantine rather than evade upstream limits. |
+| Cache | Content-addressed or run-scoped; no silent overwrite of source artifacts. |
+| Writes | Restricted to a resolved RAW/QUARANTINE handoff controlled by the caller. |
+| Logs | Structured and secret-safe; no full copyrighted OCR dump or sensitive-person/location detail. |
+| Publication | Impossible from this package. |
 
-Optional live behavior should require explicit opt-in, for example a repo-approved equivalent of:
-
-```bash
-KFM_ALLOW_LIVE_NEWSPAPER_TESTS=1
-```
-
-The exact flag name is **NEEDS VERIFICATION** against repo convention.
+Any future live flag name must be defined by accepted package/repository configuration and tested. The v0.1 example `KFM_ALLOW_LIVE_NEWSPAPER_TESTS` was illustrative and is not claimed as implemented configuration.
 
 ---
 
-## Inputs and outputs
+## Product separation and source roles
 
-### Inputs
+Newspaper artifacts are not one semantic product. At minimum keep separate:
 
-Expected input classes:
+| Product | Preserve separately | Anti-collapse rule |
+|---|---|---|
+| Page/image artifact | Provider, collection/publication, issue/date/edition, page/sequence, image/manifest identity, rights, retrieval, digest. | The page is a source artifact, not proof that every printed statement is true. |
+| OCR full text | Page linkage, OCR engine/version/run, raw text, layout/regions, confidence/quality, language/script, digest. | OCR is a derived reading, not authoritative transcription or the page itself. |
+| Corrected transcription | Correction method, reviewer/tool, changed spans, source OCR/page refs, correction receipt. | Never overwrite raw OCR; correction still does not adjudicate reported facts. |
+| Article/clipping segment | Page/region linkage, segmentation method, headline/byline when present, boundaries, source identifiers. | A segment is not a resolved event/person/place claim. |
+| Event reporting | Exact wording/context, publication/time, article/page refs, extraction lineage, ambiguity and contradiction. | A report is not direct observation of the event unless downstream evidence supports that role. |
+| Legal notice | Issuing/publishing body, notice type, jurisdiction, publication dates, page/region, legal-source cross-reference. | Printed notice is not automatically final title, court, election, or regulatory truth. |
+| Obituary | Publication/date/page, attributed submitter/source when available, extracted assertions and uncertainty. | Family-submitted claims and relationships remain candidates pending corroboration. |
+| NER/event extraction | Tool/model/config/run, inputs, spans, confidence, candidates, abstention/review state. | Generated extraction is not source evidence by itself. |
 
-- source descriptor reference;
-- connector configuration;
-- newspaper endpoint, collection, issue, page, article, clipping, manifest, or image identifier approved by source steward;
-- request parameters allowed by source policy;
-- synthetic local fixture payload for tests;
-- optional live response body only when source-steward, rights, privacy, sensitivity, and security approvals exist.
+The canonical source-role enum is:
 
-### Outputs
+`observed | regulatory | modeled | aggregate | administrative | candidate | synthetic`
 
-Expected output classes:
-
-- parsed candidate newspaper source record;
-- OCR text bundle marked as raw OCR / uncertain transcription;
-- page-image or IIIF metadata bundle;
-- extraction-candidate bundle for names, places, dates, events, article segments, or clipping references;
-- source-admission envelope;
-- rights/privacy/sensitivity gate result;
-- finite error outcome;
-- quarantine-safe drift signal;
-- metadata bundle containing retrieval time, source label, endpoint key or source reference, digest, parser version, fixture/live status, and review flags where applicable.
-
-Outputs should be shaped for downstream governance. They should not be shaped as direct UI payloads, public claims, authoritative transcriptions, or truth assertions.
+Assign roles per admitted product and intended claim in the SourceDescriptor. Do not hardcode a family-wide role. Draft product pages use terms such as `observation`; that is not the canonical enum value `observed`, and the correct role for OCR versus page artifacts remains an admission/ADR question. Until resolved, preserve product identity and quarantine rather than coercing a role.
 
 ---
 
-## OCR and extraction behavior
+## Admission envelope
 
-This package must keep source text and interpretation separate.
+Every future successful or quarantined parse should preserve these field groups:
 
-Minimum behavior:
-
-1. Raw OCR must remain distinguishable from corrected transcription.
-2. OCR confidence, quality, source engine/version, or uncertainty fields should be preserved where available.
-3. Article/clipping segmentation must preserve source identifiers and page context.
-4. Extracted names, places, dates, and events must remain candidates until downstream evidence resolution.
-5. Model-assisted extraction must preserve tool/model/config/prompt lineage where applicable.
-6. Conflicting newspaper accounts must remain separate source records unless downstream review resolves them.
-7. Long excerpts must not be emitted as public-ready content without rights review.
-
----
-
-## Rights, privacy, and sensitivity behavior
-
-This package must make risky cases visible instead of smoothing them over.
-
-Minimum behavior:
-
-1. Unknown copyright, license, citation, provider, collection, or platform terms must produce review-required outcomes.
-2. Living-person indicators must produce deny/quarantine/review-required outcomes.
-3. Minors, medical/legal/crime, reputational, and family-sensitive material must fail closed.
-4. Tribal, sacred/burial, archaeology, and culturally sensitive material must fail closed.
-5. Exact-location references that could expose sensitive people, sites, or resources must route to redaction/generalization review.
-6. Private archive credentials, cookies, tokens, session files, and account exports must never be committed, logged, or embedded in fixtures.
-7. Public-source availability does not automatically mean public-release eligibility.
-
----
-
-## Errors
-
-Connector errors should be finite, reviewable, and safe to log.
-
-Recommended error categories:
-
-| Error | Meaning |
+| Field group | Minimum content |
 |---|---|
-| `MissingSourceDescriptor` | Source activation attempted without an approved descriptor. |
-| `LiveAccessDisabled` | Live source request attempted without explicit opt-in. |
-| `RightsReviewRequired` | Rights, citation, reuse, platform terms, or provider constraints are missing or unclear. |
-| `PrivacyReviewRequired` | Living-person, minor, medical/legal/crime, reputational, or family-sensitive markers are present or unclear. |
-| `SensitivityReviewRequired` | Tribal, sacred/burial, archaeology, cultural, or exact-location risks are present or unclear. |
-| `MalformedSourcePayload` | Payload shape is incomplete, ambiguous, or not parseable under current parser rules. |
-| `OcrUncertaintyRequired` | OCR was supplied without uncertainty metadata where the parser requires it. |
-| `AdmissionEnvelopeError` | Candidate output cannot be bounded to RAW or QUARANTINE admission. |
+| Source identity | Stable `source_id`, provider, collection, source surface/product, access tier, SourceDescriptor reference, and source role. |
+| Request identity | Method/path or local-artifact reference, parameters/body digest, query, page/job/cursor identity, retry lineage, and redacted URL. |
+| Publication identity | Newspaper title, edition when available, issue date, volume/number, page/sequence, article/clipping/segment identity, and upstream identifiers. |
+| Media identity | Page image/manifest/canvas/image-service reference, region/bounding box, dimensions, media type, and content digest where applicable. |
+| OCR/transcription | Raw OCR, engine/version/run, quality/confidence, language/script, layout refs, correction state, and text digest. |
+| Extraction | Tool/model/config/run, input refs, spans, candidate type/value, confidence, ambiguity, abstention, and review state. |
+| Rights/citation | Product/collection terms, rights statement, copyright/reuse status, citation/attribution, excerpt limits, intended use, reviewer, and re-review trigger. |
+| Privacy/sensitivity | Living-person/minor/medical/legal/crime/reputational/cultural/tribal/sacred/burial/archaeology/exact-location signals and decision reference. |
+| Retrieval | Retrieval time, upstream/source time, response status, media type, parser/package version, payload/reference digest, fixture/live status. |
+| Routing | Owning domain, RAW/QUARANTINE destination, run ID, split-package lineage, decision reason, and quarantine code. |
+| Failure | Finite error code, safe detail, retryability, partial state, and steward disposition. |
 
-Do not include secrets, private archive URLs with tokens, cookies, full copyrighted OCR dumps, or sensitive living-person details in error messages.
+Never place credentials, cookies, signed URLs, private archive exports, unbounded copyrighted OCR, or sensitive person/location content in logs, exceptions, fixtures, PRs, or public receipts.
 
 ---
 
-## Tests
+## OCR, correction, and extraction rules
 
-Package code should be covered by connector-local tests under:
+1. Preserve the page/image artifact independently of OCR.
+2. Preserve raw OCR independently of corrected transcription.
+3. Pin OCR engine/version/config/run and confidence/quality when known; use `UNKNOWN`, not invented metadata, when absent.
+4. Corrections must be span-level or otherwise inspectable and link back to raw OCR and page evidence.
+5. Article/clipping segmentation must preserve page context and method/run identity.
+6. Extracted people, organizations, places, dates, relationships, events, and quotations remain candidates.
+7. Conflicting reports remain separate source assertions; the package does not reconcile them into truth.
+8. Search relevance, OCR match, or model confidence is not an evidence score or release decision.
+9. Generated summaries remain downstream carriers and must cite released evidence; they do not become inputs to this package as authority.
+
+---
+
+## Rights, privacy, and sensitivity
+
+Public discoverability does not equal permission to download, retain, reproduce, transform, quote, redistribute, or publish. Review is required per provider, collection, item/product, access method, intended use, audience, and excerpt/derivative class.
+
+Fail-closed cases include:
+
+- unknown copyright, rights statement, license, platform/API terms, provider authority, citation, or excerpt limits;
+- living-person or minor content;
+- medical, legal, crime, abuse, reputational, adoption, parentage, or other family-sensitive claims;
+- private address/contact/identity data or account-derived material;
+- tribal, sacred, burial, archaeology, culturally restricted, or repatriation-sensitive material;
+- exact locations that could expose people, sites, graves, collections, or vulnerable resources;
+- a join that creates sensitivity not visible in an individual record;
+- long OCR/article excerpts without explicit reuse approval.
+
+The package may preserve risk signals and propose a quarantine reason. Canonical allow/deny/restrict/abstain decisions, redaction/generalization, proof, and release occur outside this package.
+
+---
+
+## Finite outcomes and proposed errors
+
+Runtime outcomes must be finite and inspectable:
+
+`ADMIT_RAW | QUARANTINE | DENY | ABSTAIN | RETRYABLE_ERROR | TERMINAL_ERROR`
+
+These names are a proposed package contract, not current code. If implemented, error classes/codes should cover:
+
+| Proposed code | Condition | Safe outcome |
+|---|---|---|
+| `missing_source_descriptor` | No complete/current descriptor or activation reference. | DENY or QUARANTINE. |
+| `live_access_disabled` | Network access requested outside approved live mode. | DENY without attempting request. |
+| `rights_review_required` | Rights/citation/reuse/provider conditions unresolved. | QUARANTINE or ABSTAIN. |
+| `privacy_review_required` | Living-person/minor/family-sensitive risk unresolved. | QUARANTINE or DENY. |
+| `sensitivity_review_required` | Cultural, tribal, burial, archaeology, or exact-location risk unresolved. | QUARANTINE or DENY. |
+| `malformed_source_payload` | Payload is incomplete, ambiguous, or unsupported. | QUARANTINE or terminal error with digest. |
+| `ocr_provenance_missing` | OCR lacks required page/engine/run/quality provenance. | QUARANTINE; never silently treat as transcription. |
+| `partial_retrieval` | Paging/job/media retrieval is incomplete. | Retry boundedly or quarantine the whole package. |
+| `admission_envelope_invalid` | Output cannot satisfy RAW/QUARANTINE envelope/schema requirements. | Terminal error; no fallback write. |
+
+Error messages must not contain secrets, private URLs, full OCR/article text, or sensitive person/location detail.
+
+---
+
+## Test and fixture contract
+
+[`connectors/newspapers/tests/README.md`](../../tests/README.md) documents the intended local guardrails. At the pinned base, expected test modules and newspaper fixture payloads did not surface, so every item below is required future evidence rather than current coverage.
+
+Minimum no-network fixture families:
+
+- synthetic valid page/image + OCR admission;
+- missing/invalid SourceDescriptor and activation;
+- unknown/restricted rights and citation;
+- empty, malformed, partial, paged, duplicate, and drifted source responses;
+- OCR without page linkage, engine/run, quality, language, or digest;
+- corrected transcription that attempts to overwrite raw OCR;
+- ambiguous segmentation and conflicting article reports;
+- extraction candidates with missing tool/run/span/confidence/review metadata;
+- living-person, minor, medical/legal/crime/reputational, family-sensitive, tribal/cultural, sacred/burial, archaeology, and exact-location risks;
+- secret-bearing headers/URLs/errors;
+- attempted writes outside resolved RAW/QUARANTINE run paths;
+- public/UI/AI shortcut attempts.
+
+Minimum assertions:
+
+- import and fixture parsing require no network or credentials;
+- package code cannot activate without a complete descriptor and decision;
+- page, OCR, correction, article, and extraction products remain distinct;
+- original identifiers, provider, collection, issue/page/article, retrieval, rights, sensitivity, source role, and digests survive;
+- failures are finite, secret-safe, and do not produce partial success;
+- output targets only RAW or QUARANTINE;
+- no connector code creates processed/catalog/triplet/published/proof/receipt/release/API/UI/AI authority.
+
+Use `tests/fixtures/` for deterministic test-only payloads or another accepted test-local location. Use [`fixtures/`](../../../../fixtures/README.md) only for reviewed runtime/synthetic corpora consistent with its root contract. Do not duplicate one fixture corpus across competing homes.
+
+---
+
+## Activation gates
+
+Keep runtime behavior absent or disabled until all applicable gates close:
+
+- [ ] Package placement, owners, distribution/build configuration, and public import surface are accepted.
+- [ ] Actual modules replace the proposed inventory and remain import-side-effect-free.
+- [ ] A complete SourceDescriptor and SourceActivationDecision exist for every source surface/product/access tier.
+- [ ] Source roles use the canonical enum and are resolved per product/claim.
+- [ ] Provider terms, rights, citation, excerpt limits, privacy, sensitivity, retention, deletion, and intended-use decisions are current.
+- [ ] Network, timeout, retry, paging/cursor/job, rate-limit, caching, and drift behavior are implemented and tested.
+- [ ] Page/image, OCR, correction, segmentation, and extraction provenance is lossless and hash-bound.
+- [ ] Finite failure codes and secret-safe logging are implemented.
+- [ ] Valid/invalid/sensitive/partial/drift no-network fixtures and tests exist.
+- [ ] Output escape and public-shortcut tests prove RAW/QUARANTINE-only behavior.
+- [ ] Rollback disables activation without deleting descriptor, RAW, quarantine, receipt, proof, correction, or release history.
+
+---
+
+## Evidence and change ledger
+
+| Claim | Status | Evidence / limit |
+|---|---|---|
+| The package path exists. | **CONFIRMED** | README plus empty `__init__.py` at the pinned base. |
+| Runtime modules are implemented. | **DENY** | Only the empty initializer surfaced; named modules were absent at expected paths. |
+| The distribution is release-ready. | **DENY** | `pyproject.toml` is a greenfield `0.0.0` placeholder. |
+| Dedicated package tests exist and pass. | **UNKNOWN / not surfaced** | Tests README exists; expected test modules and `test_newspapers` results did not surface. |
+| Newspaper fixture payloads exist. | **UNKNOWN / not surfaced** | Targeted search surfaced fixture guidance, not a dedicated payload corpus. |
+| Newspaper source-family/product docs exist. | **CONFIRMED** | Newspaper catalog README and four product pages exist; all are draft documentation. |
+| A complete active newspaper SourceDescriptor exists. | **NEEDS VERIFICATION** | No checked newspaper/ChronAm descriptor path existed. |
+| OCR is authoritative transcription. | **DENY** | It is a derived reading that must retain run/provenance/uncertainty and page linkage. |
+| Extraction candidates are person/event/place truth. | **DENY** | Downstream evidence resolution and policy review are required. |
+| Public availability implies release permission. | **DENY** | Rights/privacy/sensitivity are product/use-specific. |
+| Package output is public-ready. | **DENY** | Connector output is limited to RAW/QUARANTINE admission. |
+
+### What changed from v0.1
+
+- replaced unknown package inventory with the confirmed empty initializer and absent proposed-module state;
+- recorded the `0.0.0` greenfield package metadata without claiming build/install readiness;
+- confirmed neighboring source-root/test READMEs and newspaper/LOC source-catalog coverage;
+- recorded that expected dedicated tests, fixtures, and SourceDescriptor instances did not surface;
+- converted illustrative module, live-flag, error, and test text into explicitly proposed activation contracts;
+- added product separation for page/image, OCR, corrected transcription, article/clipping, event reporting, legal notices, obituaries, and extraction outputs;
+- aligned role guidance to the canonical enum and surfaced draft `observation`/OCR-role drift instead of hardcoding it;
+- strengthened admission metadata, finite outcome, secret safety, rights/privacy/sensitivity, fixture placement, activation, evidence, and rollback rules;
+- preserved v0.1's intake-only, RAW/QUARANTINE-only, OCR-is-not-truth, candidate-extraction, no-public-shortcut, and fail-closed boundaries.
+
+---
+
+## Rollback
+
+This is a documentation-only update. Restore the exact prior README from blob:
 
 ```text
-connectors/newspapers/tests/
+b725cf66a235d03037829592b1a2be31a8d2b057
 ```
 
-Expected test coverage:
-
-- import safety;
-- no-network defaults;
-- no-secret defaults;
-- descriptor gate behavior;
-- rights/citation/reuse gate behavior;
-- OCR uncertainty preservation;
-- page-image / IIIF metadata preservation;
-- provider, collection, issue, page, article, clipping, retrieval, and digest provenance;
-- extraction-candidate metadata and abstention/review state;
-- privacy and sensitivity fail-closed behavior;
-- malformed payload handling;
-- RAW or QUARANTINE envelope targeting;
-- refusal to write processed/catalog/triplet/published/proof/receipt/release/API/UI outputs.
+Rolling back this document does not implement, activate, or disable a connector and must not alter any package code, SourceDescriptor, rights/privacy/sensitivity decision, RAW capture, quarantine record, receipt, proof, correction, or release history.
 
 ---
 
-## Definition of done
+## Related files
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual modules are inventoried and this README is updated from `PROPOSED` layout to implementation-aware layout.
-- [ ] Importing `newspapers` performs no network, secret, archive-cache, or filesystem side effects beyond safe package import.
-- [ ] Source descriptors and activation decisions are required before live access.
-- [ ] Rights, citation, reuse, platform terms, privacy, and sensitivity gates fail closed.
-- [ ] OCR text remains uncertain source material unless downstream correction records exist.
-- [ ] Issue/page/article/clipping/image/provenance metadata survives parsing.
-- [ ] Extraction candidates preserve tool/config/confidence/review metadata and remain non-authoritative.
-- [ ] Output is limited to RAW or QUARANTINE admission envelopes.
-- [ ] Tests cover DENY, ABSTAIN, ERROR, and quarantine paths, not only happy paths.
-- [ ] CI behavior is verified or marked `NEEDS VERIFICATION`.
-
----
-
-## Verification backlog
-
-| Item | Status | Needed evidence |
-|---|---:|---|
-| Confirm actual Python package files below this path. | **NEEDS VERIFICATION** | Repo tree or mounted workspace. |
-| Confirm package manager and import path. | **NEEDS VERIFICATION** | `pyproject.toml`, workspace config, Makefile, or CI workflow. |
-| Confirm source descriptor IDs and activation state. | **NEEDS VERIFICATION** | `data/registry/sources/` entries and accepted source schema. |
-| Confirm newspaper source surfaces covered by this package. | **NEEDS VERIFICATION** | Source-catalog entries, ADR, connector inventory, and tests. |
-| Confirm rights, privacy, and sensitivity gate implementation. | **NEEDS VERIFICATION** | Policy docs, parser code, tests, and steward review. |
-| Confirm OCR/page-image/IIIF parser behavior. | **NEEDS VERIFICATION** | Parser code, fixtures, and test logs. |
-| Confirm CI wiring. | **NEEDS VERIFICATION** | Workflow files and current CI logs. |
+- [`connectors/newspapers/README.md`](../../README.md)
+- [`connectors/newspapers/src/README.md`](../README.md)
+- [`connectors/newspapers/tests/README.md`](../../tests/README.md)
+- [`connectors/README.md`](../../../README.md)
+- [`docs/sources/catalog/newspapers/README.md`](../../../../docs/sources/catalog/newspapers/README.md)
+- [`docs/sources/catalog/newspapers/ocr-full-text.md`](../../../../docs/sources/catalog/newspapers/ocr-full-text.md)
+- [`docs/sources/catalog/newspapers/event-reporting.md`](../../../../docs/sources/catalog/newspapers/event-reporting.md)
+- [`docs/sources/catalog/newspapers/legal-notices.md`](../../../../docs/sources/catalog/newspapers/legal-notices.md)
+- [`docs/sources/catalog/newspapers/obituaries.md`](../../../../docs/sources/catalog/newspapers/obituaries.md)
+- [`docs/sources/catalog/loc/README.md`](../../../../docs/sources/catalog/loc/README.md)
+- [`docs/architecture/source-roles.md`](../../../../docs/architecture/source-roles.md)
+- [`docs/doctrine/directory-rules.md`](../../../../docs/doctrine/directory-rules.md)
+- [`data/registry/sources/README.md`](../../../../data/registry/sources/README.md)
+- [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../../../schemas/contracts/v1/source/source_descriptor.schema.json)
+- [`fixtures/README.md`](../../../../fixtures/README.md)
 
 ---
 
-## Maintainer note
+KFM rule: `connectors/newspapers/src/newspapers/` is a bounded source-admission implementation package. It does not decide newspaper truth, transcription truth, identity, relationship, event, place, rights, privacy, sensitivity, proof, release, publication, public presentation, or generated-answer truth.
 
-This package is a governed source-admission adapter. Keep the implementation small, import-safe, fixture-testable, and conservative. If a change makes claims true, publishes records, resolves people, corrects OCR authoritatively, chooses release posture, or bypasses rights/privacy/sensitivity review, it belongs outside this package or behind downstream governance.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
