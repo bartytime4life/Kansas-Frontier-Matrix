@@ -1,346 +1,427 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/connectors-natureserve-explorer-readme
-title: connectors/natureserve/explorer/ — NatureServe Explorer Connector Lane
-type: readme
-version: v0.1
+doc_id: kfm://connectors/natureserve/explorer/readme
+title: NatureServe Explorer Connector Lane
+path: connectors/natureserve/explorer/README.md
+type: connector-lane-readme
+version: v0.2
+prior_version: v0.1
+prior_blob: ffc10af7ba9bdc757dceba4feb40077f2694b4ef
+base_commit: d6c6556e2e20a06d12b49d4c94ed6fe996e003d7
 status: draft
-owners: OWNER_TBD — Source steward · Connector steward · Flora steward · Fauna steward · Habitat steward · Data steward · Docs steward
+owners: OWNER_TBD — source steward · connector steward · flora steward · fauna steward · habitat steward · data steward · rights steward · sensitivity steward
 created: 2026-06-19
-updated: 2026-06-19
-policy_label: restricted
+updated: 2026-07-14
+policy_label: restricted-review
+truth_posture: cite-or-abstain
+responsibility_root: connectors/
+lifecycle_phase: source-admission
+source_family: natureserve
+source_surface: explorer
 related:
+  - ../README.md
   - ../../README.md
+  - ../../../docs/sources/catalog/natureserve/README.md
+  - ../../../docs/architecture/source-roles.md
   - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/domains/flora/SOURCE_REGISTRY.md
-  - ../../../docs/domains/flora/README.md
-  - ../../../docs/domains/fauna/README.md
-  - ../../../docs/architecture/ecology-cross-domain.md
-  - ../../../docs/standards/Darwin_Core.md
-  - ../../../data/registry/sources/
-  - ../../../data/raw/
-  - ../../../data/quarantine/
-  - ../../../data/receipts/
-  - ../../../data/proofs/
-  - ../../../policy/rights/
-  - ../../../policy/sensitivity/
-  - ../../../release/
-tags: [kfm, connectors, natureserve, explorer, biodiversity, conservation-status, flora, fauna, habitat, source-admission, raw, quarantine, governance]
+  - ../../../data/registry/sources/README.md
+  - ../../../data/registry/sources/habitat/natureserve.yaml
+  - ../../../data/raw/fauna/natureserve/README.md
+  - ../../../data/raw/habitat/natureserve/README.md
+  - ../../../policy/rights/flora/natureserve_explorer_pro.md
+tags:
+  - kfm
+  - connectors
+  - natureserve
+  - explorer
+  - biodiversity
+  - conservation-status
+  - flora
+  - fauna
+  - habitat
+  - source-admission
+  - raw
+  - quarantine
+  - sensitivity
+  - rights-review
 notes:
-  - "Connector lane for NatureServe Explorer source intake and admission helpers."
-  - "Placement is draft: Directory Rules §7.3 does not list natureserve/ or natureserve/explorer/ in the canonical connector spine; keep placement unresolved until ADR or migration note."
-  - "Connector output may enter raw or quarantine admission lanes only."
-  - "NatureServe Explorer API facts are descriptive source-interface notes, not implementation proof."
-  - "Rights, citation, data sensitivity, provider authority, and public-release posture fail closed until verified."
+  - "This lane admits NatureServe Explorer source material; it does not establish biodiversity, occurrence, policy, catalog, proof, release, or public truth."
+  - "The parent NatureServe README documents this child lane, while Directory Rules defines only the connector-root responsibility and RAW/QUARANTINE output boundary. Exact nested placement remains draft."
+  - "The source catalog is present; the Explorer Pro rights file is only a PROPOSED scaffold and is not rights clearance."
+  - "A Habitat SourceDescriptor placeholder and Fauna/Habitat RAW lane READMEs are present; activation, payloads, implementation, fixtures, tests, and receipts remain unverified."
+  - "Official interface and terms references were rechecked on 2026-07-14; runtime behavior and product-specific permissions must be rechecked at activation and each governed retrieval."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# NatureServe Explorer Connector
+# NatureServe Explorer connector lane
 
-> Source-specific intake and admission lane for NatureServe Explorer biodiversity, conservation-status, taxonomy, ecosystem, data-sensitivity, and rank/source-provider material.
+Source-admission boundary for NatureServe Explorer material used by KFM Flora, Fauna, Habitat, and governed cross-domain workflows.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
   <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Connector scope" src="https://img.shields.io/badge/scope-source__admission-blue">
-  <img alt="Placement: needs ADR" src="https://img.shields.io/badge/placement-NEEDS__ADR-orange">
-  <img alt="Rights: needs verification" src="https://img.shields.io/badge/rights-NEEDS__VERIFICATION-red">
-  <img alt="Sensitivity: fail closed" src="https://img.shields.io/badge/sensitivity-fail__closed-red">
-  <img alt="Lifecycle: raw or quarantine only" src="https://img.shields.io/badge/lifecycle-raw%20%7C%20quarantine%20only-orange">
+  <img alt="Lifecycle: source admission" src="https://img.shields.io/badge/lifecycle-source%20admission-orange">
+  <img alt="Output: RAW or QUARANTINE only" src="https://img.shields.io/badge/output-RAW%20%7C%20QUARANTINE-orange">
+  <img alt="Rights: product-specific review" src="https://img.shields.io/badge/rights-product--specific%20review-red">
+  <img alt="Sensitivity: fail closed" src="https://img.shields.io/badge/sensitivity-fail%20closed-red">
 </p>
 
-`connectors/natureserve/explorer/`
-
-## Quick jumps
-
-[Scope](#scope) · [Repo fit](#repo-fit) · [Lifecycle sketch](#lifecycle-sketch) · [Authority boundary](#authority-boundary) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Source interface notes](#source-interface-notes) · [Admission posture](#admission-posture) · [Sensitivity posture](#sensitivity-posture) · [Placement status](#placement-status) · [Validation](#validation) · [Definition of done](#definition-of-done)
+> [!CAUTION]
+> This directory may fetch, preserve, and route source material. It is not NatureServe doctrine, Flora/Fauna/Habitat truth, occurrence proof, taxonomic final authority, KFM policy, a SourceDescriptor registry, schema authority, catalog/triplet authority, proof or receipt authority, release authority, a public API, a public map source, or generated-answer evidence.
 
 ---
 
-## Scope
+## Quick contract
 
-`connectors/natureserve/explorer/` is the connector lane for NatureServe Explorer source intake and admission helpers.
+| Question | Answer |
+|---|---|
+| What belongs here? | Connector-local documentation and, after activation, source-specific request, parsing, fixture, and RAW/QUARANTINE adapter code for the NatureServe Explorer surface. |
+| What may this lane write? | `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/<domain>/<source_id>/<run_id>/` only. |
+| What may it publish? | Nothing. |
+| Is the connector active? | **NEEDS VERIFICATION**. No activation decision was verified in this update. |
+| Are rights cleared? | **No blanket clearance.** Product, surface, access tier, intended use, attribution, and redistribution must be reviewed. |
+| Are sensitive or precise locations public-ready? | **No.** Hold or quarantine until sensitivity, provider-permission, redaction/generalization, proof, and release gates close. |
+| Does a rank or status prove an occurrence? | **No.** Rank/status context and occurrence evidence are different claim types. |
+| Can public UI or AI read connector output directly? | **No.** Public surfaces consume only governed released artifacts. |
 
-This folder may contain connector-local documentation, source-admission helpers, API-request builders, no-network fixture pointers, and raw/quarantine output adapters for NatureServe Explorer products used by KFM Flora, Fauna, Habitat, ecology cross-domain reasoning, and public-safe conservation-status context.
+---
 
-It must not become biodiversity truth, conservation-status authority, flora truth, fauna truth, habitat truth, source-family authority, policy authority, schema authority, catalog/triplet authority, proof authority, release authority, pipeline authority, or publication authority.
+## Purpose and responsibility boundary
+
+This lane is the source-specific intake edge for NatureServe Explorer. Its responsibility ends when a governed, immutable admission package has been written to the owning domain's RAW lane or held in QUARANTINE.
+
+Allowed responsibilities include:
+
+- build requests for an approved Explorer service family;
+- capture the exact request criteria, retrieval time, response status, and source-interface observation;
+- preserve upstream identifiers, record type, provider, citation, rights/access, rank/status, and data-sensitivity fields without semantic promotion;
+- hash-bind admitted payloads or payload references;
+- route each record or package to an explicit Flora, Fauna, Habitat, or quarantine destination;
+- emit connector-local diagnostics that do not become proof, release, or catalog authority.
+
+This lane must not:
+
+- decide that a species or ecosystem is present or absent at a place;
+- convert a conservation rank, listing, or jurisdictional status into occurrence proof;
+- assign a public-safe geometry class by convenience;
+- overwrite prior RAW runs or silently replace a provider/source identity;
+- create processed, catalog, triplet, published, proof, release, policy, schema, or registry authority;
+- serve an Explorer feature service or response directly to a public map, API, report, search index, vector index, or generated answer.
+
+---
+
+## Repository fit and verified state
+
+The table below records what was observed at base commit `d6c6556e2e20a06d12b49d4c94ed6fe996e003d7`. Repository search is evidence of what surfaced during this update, not proof that no other implementation exists.
+
+| Surface | Observed state | Connector consequence |
+|---|---|---|
+| [`connectors/README.md`](../../README.md) | Connector root is for source admission; outputs stop at RAW or QUARANTINE. | This lane cannot publish or promote. |
+| [`connectors/natureserve/README.md`](../README.md) | Parent family README points to `explorer/`. | The child is repository-documented, but still draft. |
+| [`docs/sources/catalog/natureserve/README.md`](../../../docs/sources/catalog/natureserve/README.md) | NatureServe source profile exists and is draft/restricted-by-default pending rights review. | The v0.1 claim that this catalog was unknown is retired. |
+| [`policy/rights/flora/natureserve_explorer_pro.md`](../../../policy/rights/flora/natureserve_explorer_pro.md) | File exists as a short `PROPOSED scaffold`. | It is a placeholder, not permission, license review, or activation evidence. |
+| [`data/registry/sources/habitat/natureserve.yaml`](../../../data/registry/sources/habitat/natureserve.yaml) | Proposed inventory-derived placeholder. | It is not a complete or active SourceDescriptor. |
+| Expected Flora/Fauna descriptor paths | No `data/registry/sources/{flora,fauna}/natureserve.yaml` surfaced. | Do not infer activation for those domains. |
+| [`data/raw/fauna/natureserve/README.md`](../../../data/raw/fauna/natureserve/README.md) | Documented restricted-review RAW lane; actual payload presence remains unknown. | Fauna routing has a documented boundary, not proof of data or readiness. |
+| [`data/raw/habitat/natureserve/README.md`](../../../data/raw/habitat/natureserve/README.md) | Documented restricted-review RAW lane; actual payload presence remains unknown. | Habitat routing has a documented boundary, not proof of data or readiness. |
+| Expected Flora RAW README | No `data/raw/flora/natureserve/README.md` surfaced. | Quarantine Flora material until a governed destination is confirmed. |
+| Pipeline specifications | No expected `pipeline_specs/{flora,fauna,habitat}/natureserve.yaml` surfaced. | No pipeline activation is claimed. |
+| Connector implementation, dedicated tests, and fixtures | None surfaced under the searched NatureServe connector/test/fixture terms. | Implementation and enforcement remain **NEEDS VERIFICATION**. |
+| `.github/CODEOWNERS` | No NatureServe-specific rule surfaced. | Owners remain `OWNER_TBD`. |
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Owner:** `OWNER_TBD`  
-> **Path:** `connectors/natureserve/explorer/`  
-> **Truth posture:** the path exists in the repository as this README; source activation, endpoint behavior, credentials, tests, fixtures, CI wiring, rights status, data-sensitivity handling, and placement ratification remain `NEEDS VERIFICATION`.
+> A README, placeholder descriptor, or empty RAW lane documents a boundary. It does not prove connector activation, payload existence, validation, provider permission, rights clearance, sensitivity handling, downstream promotion, or public release.
 
 ---
 
-## Repo fit
+## Placement posture
 
-```text
-connectors/
-└── natureserve/
-    └── explorer/
-        └── README.md
-```
+`connectors/natureserve/explorer/` is consistent with the parent NatureServe family README and the connector root's source-admission responsibility. Directory Rules §7.3 confirms that connectors are source-specific fetchers/admitters whose output goes only to RAW or QUARANTINE, but its example connector spine does not ratify this exact nested family/product path.
 
-Related responsibility roots:
+Treat placement as:
 
-```text
-connectors/                                # source-specific fetch and admission code
-docs/sources/catalog/natureserve/          # PROPOSED source-family documentation home; NEEDS VERIFICATION
-docs/domains/flora/                        # flora domain context and rare-plant posture
-docs/domains/fauna/                        # fauna domain context and sensitive-occurrence posture
-docs/domains/habitat/                      # habitat/community/ecology context where present
-data/registry/sources/                     # authoritative SourceDescriptors and activation state
-data/raw/flora/                            # raw staged flora outputs
-data/raw/fauna/                            # raw staged fauna outputs
-data/raw/habitat/                          # raw staged habitat/ecosystem outputs where present
-data/quarantine/flora/                     # held flora material requiring review
-data/quarantine/fauna/                     # held fauna material requiring review
-data/quarantine/habitat/                   # held habitat/ecosystem material requiring review where present
-data/receipts/                             # ingest, run, validation, and sensitivity receipts
-data/proofs/                               # EvidenceBundles and proof packs
-policy/rights/                             # rights, terms, and citation checks
-policy/sensitivity/                        # rare taxa, sensitive location, and redaction rules
-release/                                   # release decisions, manifests, rollback, correction state
-apps/governed-api/                         # downstream public trust membrane, not connector-owned
-apps/explorer-web/                         # downstream map UI, never direct RAW/QUARANTINE access
-```
+- **CONFIRMED repository path** — the directory and README exist;
+- **CONFIRMED parent-child documentation** — `connectors/natureserve/README.md` names the Explorer child;
+- **PROPOSED nested convention** — no placement ADR or Directory Rules entry was verified;
+- **non-authoritative** — this README does not settle the canonical connector taxonomy.
+
+Do not create a parallel `connectors/natureserve_explorer/`, `connectors/explorer/`, or domain-owned NatureServe connector to work around that open placement question. Resolve any relocation through an ADR or migration note with redirects, owner review, and rollback instructions.
 
 ---
 
-## Lifecycle sketch
+## Upstream interface reference
+
+The official [NatureServe Explorer REST API](https://explorer.natureserve.org/api-docs/index.html) page observed on 2026-07-14 labels the documentation `version 1.1.87`, describes public Explorer web services, requires citation, and documents paths relative to `https://explorer.natureserve.org/`. The v0.1 README's `1.1.88` observation is not retained as current.
+
+The version label and endpoint behavior are operationally unstable. A future connector must capture the interface observation used for each run and re-verify request/response behavior with no-network fixtures before activation.
+
+| Service family | Upstream purpose | KFM admission rule |
+|---|---|---|
+| Taxon | Retrieve a record by Element Global UID; the documented path includes `/api/data/taxon/{ouSeqUid}`. | Preserve the UID, record type, concept/taxonomy fields, status/rank fields, sensitivity fields, provider fields, and response digest. |
+| Alternate-key lookup | Resolve a supported alternate identifier. | Preserve both the alternate key and returned canonical identifier; never merge identities silently. |
+| Search | Find species or ecosystem records using text, status, location, record-type, taxonomy, and paging criteria. | Preserve the complete criteria object and paging/result-count context. Search results are candidates for downstream review, not proof of occurrence or absence. |
+| Export/job | Support larger or asynchronous result retrieval where the current interface permits it. | Preserve job identity, state transitions, retrieval metadata, partial/failure state, and artifact digest; quarantine incomplete or ambiguous jobs. |
+| Domain values | Supply nations, subnations, taxonomy/status, sensitivity, and related code lists. | Pin retrieval time and observed interface version. Domain values aid interpretation but are not claim evidence by themselves. |
+| Data sensitivity | Return sensitivity indicators and sensitive taxa by subnation/category. | Preserve `dataSensitive`, `dataSensitiveCategory`, jurisdiction, and category metadata; fail closed if missing, unknown, or inconsistent. |
+| Data providers | Identify contributing provider/source context. | Preserve provider lineage and attribution. Provider metadata does not itself authorize redistribution. |
+| Feature services | Supply individual-taxon or subnational-rank map support where available. | Treat URLs and geometry as restricted references until product rights, precision, provider permission, redaction/generalization, and release gates close. |
+
+Documented record-type values include `SPECIES` and `ECOSYSTEM`. Do not normalize an upstream value to a KFM domain or object family without preserving the original value and recording the explicit routing decision.
+
+---
+
+## Admission record
+
+Every attempted retrieval must produce or contribute to an inspectable admission record. At minimum preserve:
+
+| Field group | Required content |
+|---|---|
+| Source identity | KFM `source_id`, NatureServe surface/product, upstream provider identity, access tier, and SourceDescriptor reference. |
+| Request identity | Method, path/service family, parameters or body digest, search criteria, identifiers, page/job identity, and retry lineage. |
+| Time and version | Retrieval timestamp, source time when supplied, documentation/interface version observed, connector version, and clock/timezone basis. |
+| Response identity | HTTP/job state, media type, record count when meaningful, parse status, immutable content digest, and payload/reference location. |
+| Semantics | Original record type, Element Global UID/alternate keys, taxon/ecosystem concept fields, rank/status jurisdiction and date, and code-list version. |
+| Rights and citation | Terms/product reference, intended-use class, license/access review state, required citation/attribution, provider restrictions, and review owner. |
+| Sensitivity | Data-sensitive indicator/category, precision or geometry class, provider restriction, derived-sensitivity warning, and quarantine/redaction requirement. |
+| Routing | Owning domain, source role, RAW/QUARANTINE destination, run ID, decision reason, and any split-package lineage. |
+| Failure | Error class, retryability, partial-result state, quarantine reason, and operator/steward disposition. |
+
+Credentials, tokens, cookies, signed URLs, license documents containing secrets, and precise sensitive coordinates must not be written to this README, logs, fixtures, PR bodies, or public receipts.
+
+---
+
+## Cross-domain routing
+
+NatureServe Explorer spans species and ecosystems; the source family is not itself a KFM domain. Route by admitted product and claim, not by connector location or name matching.
 
 ```mermaid
 flowchart LR
-  SRC[NatureServe Explorer source surface] --> CONN[connectors/natureserve/explorer]
-  CONN --> RAWF[data/raw/flora]
-  CONN --> RAWA[data/raw/fauna]
-  CONN --> RAWH[data/raw/habitat]
-  CONN --> QUAR[data/quarantine/*]
-
-  RAWF --> NEXT[downstream governed stages]
-  RAWA --> NEXT
-  RAWH --> NEXT
-  QUAR --> REVIEW[source / rights / sensitivity review]
-
-  NEXT -. outside this connector .-> WORK[data/work]
-  NEXT -. outside this connector .-> PROC[data/processed]
-  NEXT -. outside this connector .-> CAT[data/catalog + data/triplets]
-  NEXT -. outside this connector .-> PUB[data/published]
-
-  PUB -. served only through .-> API[apps/governed-api]
-  API -. public/semi-public rendering .-> UI[apps/explorer-web]
+  NS["NatureServe Explorer response"] --> CHECK{"Descriptor, rights, sensitivity, and shape resolved?"}
+  CHECK -->|"no or unclear"| Q["data/quarantine/<domain>/<source_id>/<run_id>/"]
+  CHECK -->|"yes"| SPLIT{"Owning domain/product"}
+  SPLIT -->|"plant"| F["data/raw/flora/<source_id>/<run_id>/"]
+  SPLIT -->|"animal"| A["data/raw/fauna/<source_id>/<run_id>/"]
+  SPLIT -->|"ecosystem/habitat"| H["data/raw/habitat/<source_id>/<run_id>/"]
+  F --> DOWN["governed downstream lifecycle"]
+  A --> DOWN
+  H --> DOWN
+  DOWN -. "never direct" .-> PUB["public API, map, report, or AI"]
 ```
 
-> [!CAUTION]
-> Connector code admits source material. It does not normalize, catalog, publish, answer public claims, decide conservation truth, or decide release safety. Promotion remains a governed state transition, not a file move.
+Routing rules:
+
+1. Preserve one stable upstream identity and digest even when a package is split across domains.
+2. Record each domain route and parent-package lineage; do not duplicate records without a traceable split decision.
+3. Mixed or unresolved records go to QUARANTINE, not the most convenient domain.
+4. A Flora, Fauna, or Habitat lane may add domain interpretation downstream, but it cannot rewrite upstream identity or source role in place.
+5. Cross-domain joins require governed downstream evidence; they are not a connector responsibility.
 
 ---
 
-## Authority boundary
+## Source-role discipline
 
-```text
-OUTPUT LIMIT:
-  data/raw/flora/<source_id>/<run_id>/
-  data/raw/fauna/<source_id>/<run_id>/
-  data/raw/habitat/<source_id>/<run_id>/
-  data/quarantine/<domain>/<source_id>/<run_id>/
+[`docs/architecture/source-roles.md`](../../../docs/architecture/source-roles.md) defines seven canonical role values:
 
-NOT HERE:
-  source-family truth
-  NatureServe rank methodology authority
-  flora, fauna, or habitat doctrine
-  SourceDescriptor authority
-  rights or sensitivity policy
-  public-safe geometry decisions
-  processed data
-  catalog records
-  triplet records
-  receipts/proofs as authority
-  release decisions
-  published artifacts
-  schemas/contracts
-  generated reports
-  public API behavior
-  public UI behavior
-```
+`observed | regulatory | modeled | aggregate | administrative | candidate | synthetic`
+
+`authority`, `context`, `authority-context`, and `administrative-aggregate-context` are descriptive phrases found in adjacent draft docs, not values in that canonical enum. Do not emit them as `source_role` unless the authoritative schema or an accepted ADR later changes the vocabulary.
+
+There is no safe lane-wide role for all NatureServe products. The reviewed SourceDescriptor must assign a role per admitted product and intended claim:
+
+| Product/claim shape | Role question to resolve | Anti-collapse rule |
+|---|---|---|
+| Taxon or conservation-rank compilation | Often administrative context; verify whether any particular status has regulatory force. | Do not label an assessment or compilation `regulatory` merely because it is authoritative or important. |
+| Jurisdictional legal designation | May be `regulatory` when the issuing body and legal determination are preserved. | Do not turn a regulatory designation into an observed occurrence. |
+| Summary map or generalized unit | May be `aggregate` when the aggregation unit and method are preserved. | Do not infer a precise site or individual record from an aggregate. |
+| Location/occurrence-like material | Role depends on the underlying record, provider, time/place evidence, and access terms. | Do not call it `observed` without first-hand evidentiary support and a compatible descriptor. |
+| Unresolved connector output | `candidate` with pending/quarantined disposition may be appropriate. | Candidate material cannot cross into PUBLISHED without promotion. |
+
+Corrections create a new descriptor and lineage record. They do not mutate role, rights, sensitivity, or provider identity in place.
 
 ---
 
-## Inputs
+## Rights, terms, and citation
 
-| Accepted item | Required posture |
-|---|---|
-| Source adapter | Preserve source identity, request path, request body, retrieval time, response status, and review posture. |
-| Taxon request builder | Build bounded taxon requests by Element Global UID or approved alternate key; do not invent taxonomic authority. |
-| Search request builder | Preserve search criteria object, paging options, status/location/taxonomy filters, and result-count context. |
-| Export/job helper | Preserve asynchronous job identity and retrieval metadata; route unfinished or failed jobs to quarantine/retry review. |
-| Domain-values helper | Preserve code-list source time and endpoint family; do not treat domain values as claim evidence by themselves. |
-| Data-sensitivity helper | Preserve data-sensitive flags and categories; route sensitive or unclear records to quarantine/policy review. |
-| Feature-service helper | Preserve feature-service URL, taxon identity, map/generalization context, and release restrictions. |
-| Connector docs | Do not claim source admission, validation, release, or policy state unless verified. |
-| Test references | Point to owning fixture/test roots; fixtures do not become source authority. |
+NatureServe's official [Data Use Terms and Citations](https://www.natureserve.org/nsexplorer/about-the-data/use-guidelines-citation) distinguishes open Explorer data from licensed or specialized data and gives product-specific citation guidance. The general [NatureServe Terms and Conditions](https://www.natureserve.org/terms) also notes that particular products can carry separate terms and citation requirements.
 
----
+KFM therefore uses a product-specific decision, not either of these unsafe shortcuts:
 
-## Exclusions
+- “Everything retrievable from Explorer is unrestricted.”
+- “Every NatureServe product has the same restricted license.”
 
-| Do not store here | Correct home |
-|---|---|
-| NatureServe source-family documentation | `docs/sources/catalog/natureserve/` once ratified; otherwise source-catalog open question register |
-| Authoritative `SourceDescriptor` records | `data/registry/sources/` |
-| Flora, Fauna, Habitat, or ecology doctrine | `docs/domains/flora/`, `docs/domains/fauna/`, `docs/domains/habitat/`, `docs/architecture/ecology-cross-domain.md` |
-| Rights, terms, sensitivity, redaction, or release policy | `policy/rights/`, `policy/sensitivity/`, `policy/` |
-| Processed taxon/status/occurrence/community records | `data/processed/` |
-| Catalog or triplet records | `data/catalog/`, `data/triplets/` |
-| Receipts and proof packs as authority | `data/receipts/`, `data/proofs/` |
-| Release decisions or rollback/correction records | `release/` |
-| Published artifacts or public layers | `data/published/` after governed release |
-| Schemas or semantic contracts | `schemas/`, `contracts/` |
-| Generated reports | `artifacts/` |
-| Public UI or API behavior | `apps/governed-api/`, `apps/explorer-web/` |
+Before activation, the rights review must record:
+
+- exact product and access surface (`Explorer`, `Explorer Pro`, export, feature service, licensed delivery, or another named surface);
+- current terms/license reference and review date;
+- public, semi-public, restricted, or internal use class;
+- intended use, derivative/redistribution limits, provider permissions, attribution text, and citation date;
+- expiration, deletion, renewal, or access-control duties where applicable;
+- whether derived outputs may be displayed and at what geometry/aggregation precision;
+- rights reviewer, decision, and re-review trigger.
+
+The repository source profile's restricted-by-default posture remains the KFM admission default until those facts are recorded. The Explorer Pro policy file currently contributes no clearance because it is only a scaffold.
 
 ---
 
-## Source interface notes
+## Sensitivity and public-safety boundary
 
-These notes describe the external source surfaces this connector may support. They are not implementation proof.
+NatureServe sensitivity signals are inputs to KFM review, not substitutes for KFM policy. Preserve them exactly and treat ambiguity as restrictive.
 
-At authoring time, the official NatureServe Explorer REST API page reported API documentation version `1.1.88`, described the services as publicly available web services for NatureServe Explorer, and stated that paths are relative to `https://explorer.natureserve.org/`. Treat that as a `NEEDS VERIFICATION` version-sensitive fact before package pinning, tests, or source activation.
+Required rules:
 
-| Source surface | Example path or family | KFM use | Connector posture |
-|---|---|---|---|
-| Get Taxon | `/api/data/taxon/{ouSeqUid}` | Retrieve a taxon record by Element Global UID for taxonomy, rank, national/subnational status, and sensitivity context. | `NEEDS VERIFICATION`; source material only. |
-| Get Taxon by alternate key | API-documented alternate-key service | Retrieve records by supported alternate identifiers where allowed. | Preserve alternate key and resolver path. |
-| Search services | combined/species/ecosystems search criteria | Discover candidate records by text, status, location, record type, taxonomy, and paging criteria. | Preserve search criteria object and paging context. |
-| Export and Job services | export/job families | Retrieve larger result sets through job-mediated workflows where supported. | Preserve job state and route failed/partial jobs to review. |
-| Domain values | nations, subnations, taxonomy, statuses, sensitivity lists | Resolve code lists used to interpret API responses. | Treat as support metadata, not claim proof. |
-| Data sensitivity | sensitive taxa by subnation and category | Detect or corroborate sensitivity routing requirements. | Fail closed when sensitivity is unclear. |
-| Data providers | data-provider service | Preserve source-provider attribution and authority chain. | Required for attribution/review, not publication by itself. |
-| Feature services | individual-taxon feature services, species subnational ranks | Candidate map/support services for released public-safe layers. | Do not expose directly to public UI without governed release. |
-
-NatureServe Explorer facts to preserve at admission time where applicable:
-
-- request path, method, and query/body criteria;
-- API documentation version observed at authoring or test time;
-- retrieval time and response status;
-- response digest and source headers when available;
-- Element Global UID, alternate key, or search criteria object;
-- record type (`SPECIES`, `ECOSYSTEMS`, or API-provided equivalent);
-- taxonomy, common/scientific name, concept reference, and rank fields when present;
-- global, national, and subnational rank fields when present;
-- jurisdiction fields such as nation, subnation, or subnation code when present;
-- data-sensitive flag and data-sensitive category when present;
-- data provider / attribution fields when present;
-- feature-service URL or job identifier when present;
-- terms/citation review state;
-- quarantine reason if rights, sensitivity, provider authority, result shape, or endpoint behavior is unclear.
+- never drop or default `dataSensitive`, `dataSensitiveCategory`, jurisdiction, provider, precision, or limitation fields;
+- never infer “not sensitive” from a missing field, empty list, endpoint error, or unsupported jurisdiction;
+- do not place exact or reversibly precise rare-taxon locations in public fixtures, logs, PRs, map sources, search indexes, or generated answers;
+- treat individual-taxon feature-service URLs and derived coordinates as restricted until provider permission and release review explicitly allow the intended precision;
+- record generalization, suppression, aggregation, and redaction outside this connector with inspectable receipts;
+- account for mosaic and inference risk: individually coarse outputs can become sensitive when joined;
+- fail closed when source terms, provider rules, sensitivity category, location precision, or downstream audience is unclear.
 
 > [!WARNING]
-> API use is subject to NatureServe Explorer Terms of Use. Any display or use of data obtained through the API must preserve citation/attribution requirements through downstream release review. This connector must not strip provider, citation, sensitivity, or limitation fields.
+> Conservation rank, sensitive-taxa status, or a feature-service response does not prove presence at a location. Conversely, a missing Explorer record does not prove absence. Public claims require claim-appropriate downstream evidence and release closure.
 
 ---
 
-## Admission posture
+## Lifecycle and output contract
 
-NatureServe Explorer intake should preserve:
-
-- source identity and source surface;
-- API service family (`taxon`, `search`, `export`, `job`, `domain-values`, `data-sensitivity`, `feature-service`, or another explicit family if later approved);
-- request criteria, paging, filters, and identifiers;
-- retrieval timestamp;
-- API documentation version or source-interface version observed during the run when available;
-- response status, parse status, and content digest;
-- source role and limitation notes;
-- record type and domain-lane routing hint;
-- conservation-status/rank fields as source fields, not downstream truth;
-- data-sensitive flags, categories, provider fields, and citation fields;
-- public-safe geometry limitation notes;
-- quarantine reason when review is required.
-
-NatureServe Explorer may inform Flora, Fauna, Habitat, ecology cross-domain reasoning, public-safe status displays, and Focus Mode summaries. Connector output remains admission material. Confirmation, transformation, redaction/generalization, EvidenceBundle production, catalog closure, public claims, publication, correction, and rollback belong to governed downstream stages.
-
----
-
-## Sensitivity posture
-
-NatureServe Explorer can expose records and metadata that matter for rare species, sensitive taxa, proprietary data, or jurisdiction-specific rank/status interpretation. KFM must treat that as policy-significant.
-
-| Rule | Connector implication |
-|---|---|
-| Preserve data-sensitive fields. | Do not drop `dataSensitive`, `dataSensitiveCategory`, sensitive-taxa-by-subnation responses, or related limitation fields. |
-| Treat exact or feature-service geometry as restricted until released. | Direct feature-service output is not public-ready just because it is retrievable. |
-| Preserve provider authority. | Data provider and source lineage must remain inspectable for downstream citation and review. |
-| Separate rank/status from occurrence proof. | A conservation status, rank, or jurisdiction list is not an occurrence observation unless a downstream source role and evidence bundle support that claim. |
-| Fail closed on sensitive taxa and rare-location inference. | Route unclear, sensitive, or precise-location material to quarantine or downstream policy review. |
-| Keep AI downstream and evidence-subordinate. | Connector output is not a Focus Mode answer and cannot be cited directly by public AI surfaces. |
-
-```mermaid
-flowchart TB
-  NS[NatureServe Explorer response] --> RAW[raw admission record]
-  RAW --> RANK[rank/status fields]
-  RAW --> SENS[data-sensitive fields]
-  RAW --> PROVIDER[provider/citation fields]
-  RAW --> REVIEW{review needed?}
-  REVIEW -->|no| DOWN[downstream validation]
-  REVIEW -->|yes| QUAR[quarantine]
-
-  NS -. denied in connector posture .-> PUBLIC[direct public layer or AI answer]
-  NS -. not occurrence proof by itself .-> OCC[occurrence claim]
+```text
+SourceDescriptor + activation + product-specific rights/sensitivity review
+  -> connector request
+  -> immutable RAW capture or QUARANTINE hold
+  -> WORK / normalization
+  -> PROCESSED validation
+  -> CATALOG / TRIPLET / proof closure
+  -> release decision, redaction/generalization, and manifest
+  -> PUBLISHED artifact
+  -> governed API / public UI / report / generated answer
 ```
 
+Connector-permitted destinations:
+
+```text
+data/raw/<domain>/<source_id>/<run_id>/
+data/quarantine/<domain>/<source_id>/<run_id>/
+```
+
+Forbidden direct destinations include:
+
+```text
+data/work/
+data/processed/
+data/catalog/
+data/triplets/
+data/published/
+data/proofs/
+data/receipts/ as self-issued authority
+release/
+policy/
+schemas/
+contracts/
+apps/
+artifacts/
+```
+
+The connector may reference downstream receipts or policies after they exist. It cannot manufacture them, declare their gates closed, or promote by copying files.
+
 ---
 
-## Placement status
+## Activation gates
 
-`connectors/natureserve/explorer/README.md` is intentionally conservative because NatureServe placement is not yet fully ratified by Directory Rules.
+Keep the connector inactive until all applicable items are evidenced:
 
-| Claim | Status | Notes |
+- [ ] Placement and owners are accepted or the draft placement is explicitly approved for implementation.
+- [ ] A complete, current SourceDescriptor exists for each product/surface and domain route.
+- [ ] `source_role` uses the canonical vocabulary and matches the admitted product and claim.
+- [ ] A SourceActivationDecision authorizes the exact connector/product scope.
+- [ ] Official API/service behavior, version observation, paging, rate limits, export/job state, retries, and errors are verified.
+- [ ] Product-specific terms, provider permissions, attribution, redistribution, expiration, and intended-use restrictions are reviewed.
+- [ ] Sensitivity fields, exact-location handling, inference risk, and public precision limits are mapped to KFM policy.
+- [ ] Request and response schemas preserve upstream identifiers, record type, rank/status jurisdiction, provider, citation, and sensitivity fields.
+- [ ] Valid, invalid, sensitive, partial, empty, paged, rate-limited, failed-job, and changed-interface no-network fixtures exist.
+- [ ] Tests prove RAW/QUARANTINE-only writes, immutable run IDs, hash binding, domain routing, quarantine behavior, and secret scrubbing.
+- [ ] Receipts and downstream gates are produced by their owning systems, not asserted by connector code.
+- [ ] Rollback disables activation without deleting prior RAW, quarantine, descriptor, or review history.
+
+---
+
+## Validation matrix
+
+| Risk | Minimum test/evidence | Failure posture |
 |---|---|---|
-| `connectors/natureserve/explorer/README.md` contains this connector README | `CONFIRMED` after this update | The file itself now carries the connector-lane boundary. |
-| `connectors/natureserve/explorer/` is a source-admission lane only | `PROPOSED / draft` | Consistent with `connectors/` responsibility, but not yet listed in the canonical §7.3 connector spine. |
-| NatureServe source-catalog docs exist under `docs/sources/catalog/natureserve/` | `UNKNOWN` | No source-catalog NatureServe file was verified during this update. |
-| NatureServe connector placement is ADR-ratified | `NEEDS VERIFICATION` | Directory Rules §7.3 should be updated or an ADR/migration note should justify this nested lane. |
-| A live NatureServe Explorer `SourceDescriptor` exists and is active | `NEEDS VERIFICATION` | Must be checked under `data/registry/sources/`. |
-| API endpoint behavior, tests, fixtures, and CI are implemented | `UNKNOWN` | Not proven by this README. |
-| NatureServe outputs are validated, cataloged, redacted, generalized, and published | `UNKNOWN` | Connector README does not prove downstream promotion. |
+| Interface drift | Pinned request/response fixtures plus a documented live-contract recheck at activation. | Disable or quarantine; do not coerce unknown shapes. |
+| Identity drift | Alternate-key and Element Global UID fixtures with explicit merge/split cases. | Quarantine unresolved identity. |
+| Paging/export loss | Multi-page, zero-result, duplicate-page, partial-job, expired-job, and retry fixtures. | Hold incomplete package; preserve job lineage. |
+| Source-role collapse | Descriptor validation against canonical role enum and product-specific role tests. | Reject invalid role or quarantine. |
+| Rights mismatch | Product/access-tier matrix with allowed and denied intended-use fixtures. | Deny or hold for rights review. |
+| Sensitivity loss | Sensitive, conditional, missing, unknown, provider-restricted, and exact-geometry cases. | Fail closed and quarantine. |
+| Cross-domain leakage | Species/ecosystem and mixed-package routing fixtures. | Quarantine unresolved or misrouted records. |
+| Secret leakage | Redaction tests for headers, tokens, cookies, signed URLs, and error payloads. | Abort write; rotate exposed credentials if necessary. |
+| Output escape | Filesystem tests restricting writes to the resolved RAW/QUARANTINE run path. | Reject and alert; never fall back to another lifecycle root. |
+| Public shortcut | Integration test showing no connector/RAW/QUARANTINE dependency from public app surfaces. | Block release. |
+
+No implementation, dedicated fixtures, or dedicated tests were verified during this documentation update; this matrix is an activation requirement, not a claim of passing coverage.
 
 ---
 
-## Validation
+## Evidence and change ledger
 
-Before relying on this connector, verify:
+| Claim | Status | Evidence / limit |
+|---|---|---|
+| The requested connector README exists. | **CONFIRMED** | Prior blob `ffc10af7ba9bdc757dceba4feb40077f2694b4ef`. |
+| The parent README documents this Explorer child. | **CONFIRMED** | `connectors/natureserve/README.md`. |
+| NatureServe source-catalog documentation exists. | **CONFIRMED** | `docs/sources/catalog/natureserve/README.md`; draft and restricted-by-default pending review. |
+| The Explorer Pro rights file clears use. | **DENY** | The file is only a `PROPOSED scaffold`. |
+| Fauna and Habitat NatureServe RAW boundaries exist. | **CONFIRMED** | Their READMEs exist; payloads and activation remain unknown. |
+| A complete active SourceDescriptor exists. | **NEEDS VERIFICATION** | Only a proposed Habitat placeholder surfaced at the checked path. |
+| Connector code, fixtures, tests, and pipeline specs are implemented. | **UNKNOWN** | None surfaced in the targeted repository search; absence was not exhaustively proven. |
+| Official Explorer API documentation currently shows `1.1.87`. | **EXTERNAL observation** | Official API page checked 2026-07-14; must be rechecked before use. |
+| Explorer and precise/licensed products share one blanket permission. | **DENY** | Official terms distinguish products/surfaces and product-specific conditions. |
+| NatureServe rank/status is occurrence proof. | **DENY** | Source-role and claim-type boundaries prohibit the collapse. |
+| Connector output is public-ready. | **DENY** | Directory Rules and connector lifecycle forbid direct publication. |
 
-- placement is intentional and documented by ADR, migration note, or updated Directory Rules;
-- source descriptors exist and are active for NatureServe Explorer services;
-- Terms of Use and required citation/attribution are captured in the source descriptor and release review;
-- endpoint behavior, API documentation version, request/response shapes, paging, export/job behavior, and error cases are fixture-tested;
-- tests use no-network fixtures where practical;
-- output paths are limited to raw/quarantine admission lanes;
-- source-role, rank/status, provider, citation, and sensitivity metadata survive parsing;
-- exact-location, sensitive taxa, proprietary-data, and rare-species inference paths fail closed;
-- downstream receipts, proofs, catalog/triplet records, redaction/generalization records, and release records are produced only outside this connector;
-- public products are released only through governed publication controls.
+### What changed from v0.1
 
----
-
-## Definition of done
-
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Directory placement is ratified or the conflict is recorded in the drift/open-question register.
-- [ ] Actual connector contents are inventoried.
-- [ ] NatureServe Explorer `SourceDescriptor` IDs and source-family activation are verified.
-- [ ] NatureServe Explorer Terms of Use, citation/attribution, provider authority, and sensitivity posture are documented.
-- [ ] Request builders preserve request path, service family, search criteria, paging, identifiers, and response status.
-- [ ] Data-sensitive flags, sensitive categories, provider fields, feature-service references, ranks, and jurisdiction fields survive parsing.
-- [ ] Outputs are verified to enter only raw or quarantine admission lanes.
-- [ ] No source-family, domain, processed, catalog, triplet, published, release, schema, policy, proof, receipt, registry, fixture, report, API, or UI authority lives here.
-- [ ] Tests, fixtures, and CI behavior are verified or marked `NEEDS VERIFICATION`.
+- corrected the stale “source catalog unknown” claim;
+- recorded the confirmed Fauna/Habitat RAW boundaries and proposed Habitat descriptor placeholder;
+- distinguished repository-documented placement from formal placement ratification;
+- replaced the old API version observation with the official `1.1.87` observation dated 2026-07-14;
+- separated open Explorer terms from licensed/precise product review without granting blanket permission;
+- aligned `source_role` guidance to the seven canonical enum values;
+- made cross-domain routing, admission metadata, sensitivity, activation, validation, and rollback requirements explicit;
+- preserved the v0.1 source-admission-only, RAW/QUARANTINE-only, no-public-shortcut, provider/citation-preservation, and rank-is-not-occurrence boundaries.
 
 ---
 
-## Status summary
+## Rollback
 
-`connectors/natureserve/explorer/` is for NatureServe Explorer source-admission code only. It is not source-family truth, conservation-status authority, flora truth, fauna truth, habitat truth, policy authority, schema authority, catalog/triplet authority, proof closure, release authority, publication authority, public API behavior, public UI behavior, or pipeline authority.
+This is a documentation-only update. To restore the exact prior README, recover blob:
 
-<p align="right"><a href="#top">Back to top</a></p>
+```text
+ffc10af7ba9bdc757dceba4feb40077f2694b4ef
+```
+
+Rollback of this document does not activate or deactivate a connector and must not delete or rewrite any SourceDescriptor, rights review, RAW capture, quarantine record, receipt, proof, correction, or release history.
+
+---
+
+## Related files
+
+- [`connectors/natureserve/README.md`](../README.md)
+- [`connectors/README.md`](../../README.md)
+- [`docs/sources/catalog/natureserve/README.md`](../../../docs/sources/catalog/natureserve/README.md)
+- [`docs/architecture/source-roles.md`](../../../docs/architecture/source-roles.md)
+- [`docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md)
+- [`data/registry/sources/README.md`](../../../data/registry/sources/README.md)
+- [`data/registry/sources/habitat/natureserve.yaml`](../../../data/registry/sources/habitat/natureserve.yaml)
+- [`data/raw/fauna/natureserve/README.md`](../../../data/raw/fauna/natureserve/README.md)
+- [`data/raw/habitat/natureserve/README.md`](../../../data/raw/habitat/natureserve/README.md)
+- [`policy/rights/flora/natureserve_explorer_pro.md`](../../../policy/rights/flora/natureserve_explorer_pro.md)
+- [NatureServe Explorer REST API](https://explorer.natureserve.org/api-docs/index.html)
+- [NatureServe Data Use Terms and Citations](https://www.natureserve.org/nsexplorer/about-the-data/use-guidelines-citation)
+- [NatureServe Terms and Conditions](https://www.natureserve.org/terms)
+
+---
+
+KFM rule: `connectors/natureserve/explorer/` admits source material into governed RAW or QUARANTINE lanes only. It does not decide biodiversity truth, occurrence truth, rights, sensitivity, source role, proof, release, publication, public presentation, or generated-answer truth.
+
+[Back to top](#top)
