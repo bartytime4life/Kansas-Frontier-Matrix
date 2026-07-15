@@ -1,0 +1,270 @@
+{
+  "receipt_id": "genrec-pipeline-specs-geology-readme-f8cfb118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/geology/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/geology/README.md": "sha256:f8cfb11818900c5b1704db3aec8608eac9d1f43686fd2061603bf938683d37a9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-15-session"
+  },
+  "prompt_or_contract": "sha256:831281887789290a8a32b2931381f391f9fec2623076ca29f454f672c7004f87",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "python"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM Geology & Natural Resources Architecture PDF-Only Report (2026-04-21)"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/28de9ef2710d978a5c00f3057cc33868cbedd698",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/bedrock_units.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/surficial_units.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/boreholes.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/well_logs.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/cross_sections.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/mineral_occurrences.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipelines/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/configs/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/data/registry/sources/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/docs/domains/geology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/sensitivity/borehole_exact_geometry.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/sensitivity/well_log_disclosure.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/sensitivity/extraction_site_exposure.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/schemas/contracts/v1/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/contracts/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/tests/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/fixtures/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/data/receipts/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/data/proofs/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/release/candidates/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/.github/workflows/domain-geology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/geology/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Latest main, target blob, duplicate branch/PR state, direct spec inventory, consumer/test searches, executable/config/source/policy/schema/test/fixture/receipt/proof/release/workflow/ownership surfaces were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "README remains under pipeline_specs/ as declarative intent; generated provenance uses data/receipts/generated/. No authority root, lifecycle shortcut, or public path is introduced."
+    },
+    {
+      "gate": "direct-geology-inventory",
+      "outcome": "PASS",
+      "reason": "Six direct YAML files were opened and confirmed as seven-line PROPOSED documentation-inventory placeholders, not active specs."
+    },
+    {
+      "gate": "consumer-and-activation-search",
+      "outcome": "PASS",
+      "reason": "Indexed schema-ID, test-path, and filename searches surfaced placeholders and documentation references, not a verified parser, scheduler, consumer, activation record, or spec-specific executable test."
+    },
+    {
+      "gate": "source-receipt-policy-topology",
+      "outcome": "PASS",
+      "reason": "The README surfaces source-registry, receipt, sensitivity-policy, schema-sublane, naming, and release-manifest conflicts without selecting or duplicating authority."
+    },
+    {
+      "gate": "geology-anti-collapse",
+      "outcome": "PASS",
+      "reason": "Observation, interpretation, model, map unit, borehole, cross-section, occurrence, deposit, estimate, permit, production, reserve, extraction, reclamation, title, and ownership roles remain distinct."
+    },
+    {
+      "gate": "sensitivity-no-leak",
+      "outcome": "PASS",
+      "reason": "No exact subsurface/private-well/sample/resource/infrastructure/archaeological/cultural detail, transform parameter, credential, private endpoint, or reconstructive example was introduced."
+    },
+    {
+      "gate": "markdown-and-yaml-structure",
+      "outcome": "PASS",
+      "reason": "Final newline, heading hierarchy and uniqueness, balanced fences, internal anchors, tables, KFM meta block, and explicitly inactive illustrative YAML were checked."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no active spec, parser, scheduler, source activation, consumer, pipeline, policy rule, runtime, lifecycle object, or public surface changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "EV-01",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/28de9ef2710d978a5c00f3057cc33868cbedd698"
+    },
+    {
+      "id": "EV-02",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/README.md"
+    },
+    {
+      "id": "EV-03",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/bedrock_units.spec.yaml"
+    },
+    {
+      "id": "EV-04",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/surficial_units.spec.yaml"
+    },
+    {
+      "id": "EV-05",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/boreholes.spec.yaml"
+    },
+    {
+      "id": "EV-06",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/well_logs.spec.yaml"
+    },
+    {
+      "id": "EV-07",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/cross_sections.spec.yaml"
+    },
+    {
+      "id": "EV-08",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipeline_specs/geology/mineral_occurrences.spec.yaml"
+    },
+    {
+      "id": "EV-09",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/pipelines/domains/geology/README.md"
+    },
+    {
+      "id": "EV-10",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/configs/domains/geology/README.md"
+    },
+    {
+      "id": "EV-11",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/data/registry/sources/geology/README.md"
+    },
+    {
+      "id": "EV-12",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/docs/domains/geology/SENSITIVITY.md"
+    },
+    {
+      "id": "EV-13",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/README.md"
+    },
+    {
+      "id": "EV-14",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/sensitivity/borehole_exact_geometry.rego"
+    },
+    {
+      "id": "EV-15",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/sensitivity/well_log_disclosure.rego"
+    },
+    {
+      "id": "EV-16",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/policy/domains/geology/sensitivity/extraction_site_exposure.rego"
+    },
+    {
+      "id": "EV-17",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/schemas/contracts/v1/domains/geology/README.md"
+    },
+    {
+      "id": "EV-18",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/contracts/domains/geology/README.md"
+    },
+    {
+      "id": "EV-19",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/tests/domains/geology/README.md"
+    },
+    {
+      "id": "EV-20",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/fixtures/domains/geology/README.md"
+    },
+    {
+      "id": "EV-21",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/data/receipts/geology/README.md"
+    },
+    {
+      "id": "EV-22",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/data/proofs/geology/README.md"
+    },
+    {
+      "id": "EV-23",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/release/candidates/geology/README.md"
+    },
+    {
+      "id": "EV-24",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/.github/workflows/domain-geology.yml"
+    },
+    {
+      "id": "EV-25",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/.github/CODEOWNERS"
+    },
+    {
+      "id": "EV-26",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "EV-27",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "EV-28",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/28de9ef2710d978a5c00f3057cc33868cbedd698/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-15T19:20:53Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated-work provenance only. This receipt is not evidence of geology truth, source admission, policy approval, sensitivity clearance, schema implementation, executable pipeline behavior, specification activation, catalog closure, release approval, merge authorization, or public use. Human review is pending."
+}
