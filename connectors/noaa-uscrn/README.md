@@ -1,308 +1,596 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/connectors-noaa-uscrn-readme
-title: connectors/noaa-uscrn/ — NOAA USCRN Connector Lane
+title: connectors/noaa-uscrn/ — NOAA USCRN README-Only Connector Boundary
 type: readme
-version: v0.1
+version: v0.2
 status: draft
-owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Atmosphere steward · Soil steward · Data steward · Validation steward · Docs steward
+owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Atmosphere steward · Soil steward · Agriculture liaison · Rights reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-06-19
-policy_label: public; observation-source; not-life-safety
+updated: 2026-07-14
+policy_label: public-doctrine; connector-boundary; noaa; uscrn; station-observation; depth-aware; placement-open; not-life-safety; no-publication
+truth_posture: CONFIRMED README-only sibling / PROPOSED placement / INACTIVE source authority / IMPLEMENTATION NEEDS VERIFICATION
+evidence_snapshot: main@92ddac60a5dd7ec4c1f4704c651bd173423afbaf
 related:
   - ../README.md
-  - ../../docs/doctrine/directory-rules.md
+  - ../noaa/README.md
+  - ../noaa/src/README.md
+  - ../noaa/tests/README.md
+  - ../noaa/uscrn/README.md
+  - ../../docs/sources/catalog/noaa/README.md
   - ../../docs/sources/catalog/noaa/noaa-uscrn.md
   - ../../docs/sources/catalog/noaa/station-climate-products.md
-  - ../../docs/sources/catalog/noaa/README.md
-  - ../../docs/domains/atmosphere/README.md
-  - ../../docs/domains/soil/README.md
-  - ../../data/registry/sources/
-  - ../../data/raw/
-  - ../../data/quarantine/
-  - ../../data/receipts/
-  - ../../data/proofs/
-  - ../../policy/rights/
-  - ../../policy/sensitivity/
-  - ../../release/
-tags: [kfm, connectors, noaa, ncei, uscrn, climate-reference-network, atmosphere, soil, weather-station, observation, sensor-depth, source-admission, raw, quarantine, governance]
+  - ../../docs/architecture/source-roles.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/architecture/directory-rules.md
+  - ../../control_plane/source_authority_register.yaml
+  - ../../data/registry/sources/soil/noaa-uscrn.yaml
+  - ../../data/registry/sources/agriculture/noaa-uscrn.yaml
+  - ../../pipelines/domains/soil/uscrn_ingest/README.md
+  - ../../contracts/domains/soil/soil_moisture_observation.md
+tags: [kfm, connectors, noaa, uscrn, climate-reference-network, weather-station, observation, depth-aware, cadence-aware, source-admission, raw, quarantine, governance]
 notes:
-  - "Connector lane for NOAA U.S. Climate Reference Network source intake and admission helpers."
-  - "Placement is draft / open: Directory Rules §7.3 lists noaa/ as canonical but does not settle this noaa-uscrn sibling versus a nested connectors/noaa/ lane."
-  - "Source-product doctrine belongs under docs/sources/catalog/noaa/noaa-uscrn.md and source descriptors, not here."
-  - "Connector output may enter raw or quarantine admission lanes only."
-  - "USCRN records are reference-grade station observations, not county/regional truth, regulatory determinations, forecasts, or alerts."
-  - "Station ID, variable, cadence, timestamp, quality flags, sensor depth, units, file vintage, source URL, and digest must be preserved."
+  - "This file documents a proposed connector boundary; it does not prove executable NOAA USCRN connector code."
+  - "The repository also contains connectors/noaa/uscrn/ under the declared NOAA family lane; this README does not settle sibling versus nested placement."
+  - "The two domain-specific noaa-uscrn registry YAMLs are PROPOSED inventory placeholders, not mature active SourceDescriptors."
+  - "USCRN station records remain point observations with station, variable, unit, time, cadence, quality, depth, product-vintage, and raw/derived distinctions intact."
+  - "A station observation is not county, watershed, regional, raster, soil-column, regulatory, forecast, alert, or life-safety truth."
+  - "Connector output is limited to RAW or QUARANTINE handoff and never grants downstream publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# NOAA USCRN Connector
+# NOAA USCRN README-Only Connector Boundary
 
-> Source-specific intake and admission lane for NOAA U.S. Climate Reference Network station-observation products used by KFM Atmosphere, Soil, Hydrology-adjacent, Agriculture-adjacent, and Focus Mode workflows.
+> Boundary for proposed NOAA U.S. Climate Reference Network (USCRN) source admission at `connectors/noaa-uscrn/`. Repository evidence at the pinned snapshot proves this README, not a runnable product connector. Final placement between this sibling and `connectors/noaa/uscrn/` remains unresolved.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Connector scope" src="https://img.shields.io/badge/scope-source__admission-blue">
-  <img alt="Placement: needs ADR" src="https://img.shields.io/badge/placement-NEEDS__ADR-orange">
-  <img alt="Source role: observation" src="https://img.shields.io/badge/source--role-observation-green">
-  <img alt="Depth aware" src="https://img.shields.io/badge/soil-depth__aware-blue">
-  <img alt="Lifecycle: raw or quarantine only" src="https://img.shields.io/badge/lifecycle-raw%20%7C%20quarantine%20only-orange">
+  <img alt="Implementation: not proven" src="https://img.shields.io/badge/implementation-not__proven-lightgrey">
+  <img alt="Placement: open" src="https://img.shields.io/badge/placement-open-orange">
+  <img alt="Scope: station observations" src="https://img.shields.io/badge/scope-station__observations-blue">
+  <img alt="Area truth: denied" src="https://img.shields.io/badge/area__truth-denied-red">
+  <img alt="Lifecycle: RAW or QUARANTINE only" src="https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE%20only-orange">
 </p>
 
-`connectors/noaa-uscrn/`
-
-## Quick jumps
-
-[Scope](#scope) · [Repo fit](#repo-fit) · [Lifecycle sketch](#lifecycle-sketch) · [Authority boundary](#authority-boundary) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Source interface notes](#source-interface-notes) · [Admission posture](#admission-posture) · [Anti-collapse posture](#anti-collapse-posture) · [Placement status](#placement-status) · [Validation](#validation) · [Definition of done](#definition-of-done)
-
----
-
-## Scope
-
-`connectors/noaa-uscrn/` is the connector lane for NOAA USCRN source intake and admission helpers.
-
-This folder may contain connector-local documentation, source-admission helpers, product-directory manifest builders, station metadata parsers, observation-table parsers, quality-flag handling helpers, no-network fixture pointers, checksum/digest helpers, and raw/quarantine output adapters for USCRN products.
-
-It must not become NOAA source-family truth, USCRN product doctrine, county climate truth, regional surface truth, regulatory determination authority, forecast authority, alert authority, policy authority, schema authority, catalog/triplet authority, proof authority, release authority, pipeline authority, or publication authority.
-
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Owner:** `OWNER_TBD`  
-> **Path:** `connectors/noaa-uscrn/`  
-> **Truth posture:** the path exists in the repository as this README; source activation, endpoint behavior, product-directory coverage, tests, fixtures, CI wiring, rights status, parser behavior, quality-flag handling, and placement ratification remain `NEEDS VERIFICATION`.
-
----
-
-## Repo fit
-
-```text
-connectors/
-└── noaa-uscrn/
-    └── README.md
-```
-
-Related responsibility roots:
-
-```text
-connectors/                                  # source-specific fetch and admission code
-docs/sources/catalog/noaa/noaa-uscrn.md     # USCRN source-product doctrine and product boundary
-docs/sources/catalog/noaa/                  # NOAA source-family catalog
-docs/domains/atmosphere/                    # atmosphere/air/weather observation context
-docs/domains/soil/                          # soil moisture and soil temperature depth-aware context
-data/registry/sources/                      # source descriptors and activation state
-data/raw/atmosphere/                        # possible raw station-observation source outputs
-data/raw/soil/                              # possible raw soil-depth observation source outputs
-data/quarantine/                            # held material requiring source/role/quality/cadence review
-data/receipts/                              # ingest, checksum, station metadata, transform, and aggregation receipts
-data/proofs/                                # EvidenceBundles and proof packs
-policy/rights/                              # terms, attribution, and source-use review
-policy/sensitivity/                         # public-safety, infrastructure, and location-release rules
-release/                                    # release decisions, manifests, rollback, correction state
-apps/governed-api/                          # downstream public trust membrane, not connector-owned
-apps/explorer-web/                          # downstream map UI, never direct RAW/QUARANTINE access
-```
-
----
-
-## Lifecycle sketch
-
-```mermaid
-flowchart LR
-  SRC[NOAA/NCEI USCRN source surface] --> CONN[connectors/noaa-uscrn]
-  CONN --> RAWA[data/raw/atmosphere]
-  CONN --> RAWS[data/raw/soil]
-  CONN --> QUAR[data/quarantine/<domain>]
-
-  RAWA --> NEXT[downstream governed stages]
-  RAWS --> NEXT
-  QUAR --> REVIEW[source / quality / cadence / depth review]
-
-  NEXT -. outside this connector .-> WORK[data/work]
-  NEXT -. outside this connector .-> PROC[data/processed]
-  NEXT -. outside this connector .-> CAT[data/catalog + data/triplets]
-  NEXT -. outside this connector .-> PUB[data/published]
-
-  PUB -. served only through .-> API[apps/governed-api]
-  API -. public rendering .-> UI[apps/explorer-web]
-```
+> **Truth posture:** `CONFIRMED` README-only sibling · `PROPOSED` placement · source authority `INACTIVE / NOT ESTABLISHED` · product-specific runtime `NEEDS VERIFICATION`.
 
 > [!CAUTION]
-> Connector code admits source material. It does not interpolate stations into surfaces, turn point observations into county truth, aggregate cadence levels, publish layers, answer public claims, or decide release state. Promotion remains a governed state transition, not a file move.
+> A USCRN record is a station-, variable-, time-, cadence-, unit-, quality-, and, where applicable, depth-scoped observation. Reference-grade station data is not automatically area truth, soil-column truth, a regulatory determination, a forecast, an alert, or life-safety guidance.
+
+**Quick jumps:** [Purpose](#1-purpose) · [Status](#3-status) · [Validation](#8-validation) · [Topology](#connector-topology-and-placement) · [Observation boundary](#station-observation-boundary) · [Runtime contract](#proposed-runtime-contract) · [Evidence](#evidence-ledger) · [Backlog](#verification-backlog)
 
 ---
 
-## Authority boundary
+## 1. Purpose
+
+`connectors/noaa-uscrn/` defines a conservative source-admission boundary for USCRN station metadata, observation products, source-defined calculated or aggregate products, and their provenance.
+
+If executable code is later approved here, it may discover or retrieve an explicitly configured source object, preserve its native bytes and station/product identity, validate only admission preconditions, and hand the result to a domain-owned `RAW` or `QUARANTINE` lane. This README does not activate a source, select a live endpoint, establish current variables/depths/cadences/formats, or prove that product-specific code exists.
+
+The boundary is narrow:
 
 ```text
-OUTPUT LIMIT:
-  data/raw/<domain>/<source_id>/<run_id>/
-  data/quarantine/<domain>/<source_id>/<run_id>/
-
-NOT HERE:
-  source-family truth
-  USCRN product doctrine
-  station-as-area truth
-  climate-normal authority
-  forecast or alert authority
-  regulatory determination authority
-  source descriptor authority
-  rights or sensitivity policy
-  processed station derivatives
-  catalog records
-  triplet records
-  public tiles or map artifacts
-  receipts/proofs as authority
-  release decisions
-  published artifacts
-  public API behavior
-  public UI behavior
+configured USCRN source object
+           |
+           v
+bounded retrieval and integrity checks
+           |
+           v
+station/product-preserving admission
+  station + variable + time + cadence + unit + QC + depth + vintage
+           |
+           +----> RAW         only when admission preconditions pass
+           |
+           `----> QUARANTINE  when identity, structure, depth, cadence,
+                              integrity, quality, rights, or routing is unresolved
 ```
 
+[Back to top ↑](#top)
+
 ---
 
-## Inputs
+## 2. Authority level
 
-| Accepted item | Required posture |
+**Authority: IMPLEMENT boundary documentation; no source, scientific-interpretation, or publication authority.**
+
+This README may describe what a future connector at this path is allowed to do. It may not:
+
+- ratify this sibling as the canonical USCRN implementation home;
+- override `connectors/noaa/` as the declared NOAA family lane;
+- supersede the nested `connectors/noaa/uscrn/` README;
+- activate either domain-specific registry placeholder;
+- promote the NOAA family scaffold into a working USCRN connector by declaration;
+- choose Soil, Agriculture, Atmosphere, or another domain registry path as source authority;
+- select between conflicting SourceDescriptor schema locations;
+- define variable, unit, quality, missing-value, station, cadence, or depth semantics independently of accepted source and domain contracts;
+- interpolate, aggregate, gap-fill, compare, or normalize records into area or soil-column truth;
+- decide regulatory, forecast, alert, drought, crop, hydrologic, or life-safety meaning;
+- promote data beyond source admission;
+- create release authority or public behavior.
+
+The two Directory Rules copies agree on the connector lifecycle limit but differ in version and status. This README relies only on their shared rule: connectors fetch and parse source material and may write to `RAW` or `QUARANTINE`, not later lifecycle stages. It does not decide which Directory Rules file is authoritative.
+
+---
+
+## 3. Status
+
+| Question | Evidence-backed status |
 |---|---|
-| Product manifest helper | Preserve source URL, product directory, cadence, filename, station ID, year or period, size, checksum, and retrieval time. |
-| Station metadata parser | Preserve station ID, name, latitude, longitude, elevation, state, commissioning status, and source metadata. |
-| Observation-table parser | Preserve timestamp, timezone convention, station ID, variable, value, units, quality flags, and missing-value codes. |
-| Soil-depth parser | Preserve soil moisture or soil temperature depth as a required dimension; never collapse depths. |
-| Cadence helper | Preserve sub-hourly, hourly, daily, monthly, or derived-product cadence as source-significant metadata. |
-| Quality-flag helper | Preserve raw observations, calculated values, and quality-control flags separately. |
-| Derived-product helper | Preserve source-defined derived product identity, algorithm/version notes, and source documentation references. |
-| Rights/citation helper | Preserve source terms, citation, attribution posture, and review status. |
-| Test references | Point to owning fixture/test roots; fixtures do not become source authority. |
+| Does `connectors/noaa-uscrn/README.md` exist? | **CONFIRMED.** |
+| Is executable code proven in this exact lane? | **No.** Bounded probes found no package file, source root, client, parser, initializer, or test README. |
+| Does a nested USCRN connector boundary exist? | **Yes.** `connectors/noaa/uscrn/README.md` exists and is also README-only in bounded implementation probes. |
+| Is the NOAA family lane canonical? | **Yes, as repository doctrine.** `connectors/noaa/README.md` declares the family lane canonical while preserving this sibling as migration-pending. |
+| Does the NOAA package prove USCRN runtime support? | **No.** It is version `0.0.0`; the initializer is empty, fetch/admit files are placeholder comments, the local descriptor has `TBD` role and rights, and the proposed `products/uscrn.py` file was not found. |
+| Are USCRN registry records present? | **Two placeholders are present.** Soil and Agriculture each contain a minimal `PROPOSED` `noaa-uscrn.yaml`; neither carries mature descriptor fields or establishes activation. |
+| Is USCRN active in the source-authority register? | **No.** The register is `PROPOSED` and its `entries` list is empty. |
+| Is the named Soil ingest pipeline implemented? | **Not proven.** Its README describes an intended executable lane, but bounded probes found no initializer, pipeline module, or documented declarative spec. |
+| Is an enforceable Soil moisture schema proven? | **No.** The draft soil-moisture observation contract explicitly reports its paired schema missing. |
+| Are RAW captures, fixtures, product-specific tests, CI, receipts, and release wiring proven? | **No.** Named RAW/fixture probes returned no README files, and documentation does not prove operational evidence. |
+
+Absence statements above are limited to named repository paths inspected at `main@92ddac60a5dd7ec4c1f4704c651bd173423afbaf`; they are not claims of an exhaustive recursive inventory.
 
 ---
 
-## Exclusions
+## 4. What belongs
 
-| Do not store here | Correct home |
+If this path is ratified, it may contain product-specific connector artifacts such as:
+
+- request, directory, manifest, or object-discovery adapters that take an approved SourceDescriptor reference;
+- bounded retrieval helpers with explicit timeouts, retries, redirect policy, and maximum size;
+- checksum, content-length, source-file, and source-fingerprint verification;
+- lossless capture of source files, headers, documentation references, change metadata, and station metadata;
+- observation parsing that preserves station, variable, value, unit, timestamp, timezone, cadence, quality, and missing-value state;
+- depth-aware parsing that retains the source-exposed depth coordinate and units without substitution;
+- product classification that keeps native observation, calculated, corrected, and aggregate products distinct;
+- deterministic RAW or QUARANTINE handoff envelopes;
+- sanitized process receipts that reference, rather than redefine, governing records;
+- no-network fixtures representing approved structural cases;
+- unit and contract tests for source admission and anti-collapse behavior.
+
+Every artifact must preserve source and station identity and fail closed when required evidence is missing or contradictory.
+
+---
+
+## 5. What does NOT belong
+
+| Excluded responsibility | Governing surface or next decision |
 |---|---|
-| USCRN source-product doctrine | `docs/sources/catalog/noaa/noaa-uscrn.md` |
-| NOAA source-family documentation | `docs/sources/catalog/noaa/` |
-| Authoritative `SourceDescriptor` records | `data/registry/sources/` |
-| Atmosphere or Soil doctrine | `docs/domains/atmosphere/`, `docs/domains/soil/` |
-| Alerting, public-safety, sensitivity, or release policy | `policy/`, `policy/sensitivity/`, `release/` |
-| Processed station derivatives or interpolations | `data/processed/` |
-| Catalog or triplet records | `data/catalog/`, `data/triplets/` |
-| Tile packages or public map artifacts | `data/published/` after governed release |
-| Receipts and proof packs as authority | `data/receipts/`, `data/proofs/` |
-| Schemas or semantic contracts | `schemas/`, `contracts/` |
-| Generated reports | `artifacts/` |
-| Public UI or API behavior | `apps/governed-api/`, `apps/explorer-web/` |
+| Canonical connector placement | Directory decision or accepted ADR with migration and rollback; do not infer it from duplicate README paths. |
+| NOAA family or USCRN product doctrine | `docs/sources/catalog/noaa/` and the USCRN product page. |
+| Source activation | `control_plane/source_authority_register.yaml` plus approved descriptors and review. |
+| Registry topology authority | Resolve Soil/Agriculture/Atmosphere or source-family placement outside this connector. |
+| SourceDescriptor schema authority | Resolve the documented source-schema conflict outside this README. |
+| Station, observation, or soil-moisture contract authority | Accepted domain contracts and schemas. |
+| Interpolation, gap-fill, gridding, or area aggregation | Downstream modeled/aggregate pipelines with method and scope receipts. |
+| Climate normals, anomalies, drought indices, or derived trends | Source-defined or downstream aggregate/model artifacts with distinct identity. |
+| Cross-source comparison or validation result | Downstream comparison artifacts with their own evidence and receipts. |
+| Regulatory, compliance, forecast, warning, or life-safety decisions | Official authorities; never this connector. |
+| Crop, yield, irrigation, watershed, or regional condition truth | Domain pipelines and evidence after governed derivation. |
+| Normalized or processed station products | Downstream domain pipelines after admission. |
+| Catalog, triplet, tile, or published artifacts | Governed lifecycle and release surfaces. |
+| Rights, sensitivity, or public-safety decisions | `policy/` and release review. |
+| EvidenceBundle closure | Downstream proof processes; connector receipts are process evidence only. |
+| Public API, UI, map, notification, or generated-answer behavior | Governed application surfaces after release. |
 
 ---
 
-## Source interface notes
+## 6. Inputs
 
-These notes describe external source surfaces this connector may support. They are not implementation proof.
+A future connector invocation should accept only explicit, governed inputs. At minimum:
 
-NOAA/NCEI describes USCRN as a sustained network of high-quality weather monitoring stations across the contiguous U.S., Alaska, and Hawaii that measure temperature, precipitation, wind speed, soil conditions, and related variables. NCEI says the program provides quality-controlled observations and that NCEI maintains and distributes USCRN observations and derived products.
+| Input | Required treatment |
+|---|---|
+| SourceDescriptor reference and revision | Required before retrieval; must resolve to an approved source identity, product scope, and activation posture. |
+| Product identity | Preserve source family, product family, cadence/product class, period or file vintage, and any source-exposed version. |
+| Approved source locator | Treat as configuration, not a hard-coded claim in this README. Redact credentials and sensitive query material. |
+| Expected object identity | Preserve filename/object key, station or product scope, expected size when known, checksum algorithm/digest when known, and source metadata. |
+| Retrieval policy | Bound schemes, hosts, redirects, timeouts, retries, pagination/listing, maximum object size, and resume behavior. |
+| Station identity policy | Preserve source station ID and station-metadata vintage; do not silently remap, merge, or split stations. |
+| Observation interpretation | Preserve variable, unit, time basis, cadence, quality/missing state, depth coordinate, and raw/calculated/aggregate classification as exposed. |
+| Routing context | Name the owning domain and proposed RAW/QUARANTINE destination without granting downstream promotion. |
+| Rights and attribution reference | Carry governing record identifiers and unresolved review state; do not decide rights locally. |
 
-NCEI USCRN products include monthly, daily, hourly, and sub-hourly text files. NCEI describes variables including air temperature, precipitation, solar radiation, surface temperature, relative humidity, soil moisture, and soil temperature. The product page also documents quality flags, calculated variables, snapshots, updates, product documentation, headers, and citation expectations. Derived soil products include layer-specific values for 5, 10, 20, 50, and 100 cm where applicable.
+Live endpoints, product directories, file formats, headers, variables, units, missing codes, quality flags, cadence values, available depths, station inventory, coverage, access requirements, rights, and citation details are version-sensitive external facts. They must be verified in product-specific evidence before implementation or activation; this README intentionally does not pin them.
 
-| Source surface | KFM use | Connector posture |
+---
+
+## 7. Outputs
+
+The connector may emit only an atomic source-admission handoff to one of:
+
+```text
+data/raw/<owning-domain>/<source-id>/<run-id>/
+data/quarantine/<owning-domain>/<source-id>/<run-id>/
+```
+
+The exact layout remains subject to governing repository contracts. Conceptually, a handoff should include:
+
+- byte-preserving source payload or an immutable reference permitted by policy;
+- source headers, documentation/change references, and station metadata as applicable;
+- a sanitized request/retrieval manifest;
+- source, product, cadence/product class, period/file, station, and record identity;
+- native timestamp/timezone fields and normalized parse candidates kept distinguishable;
+- variable, value, unit, quality flag, missing-value state, and raw/calculated/aggregate status;
+- source-exposed depth coordinate and units for depth-aware variables;
+- station location/elevation/status and metadata vintage where exposed and permitted;
+- source and content fingerprints;
+- observed size and checksum results;
+- retrieval, correction, supersession, and product-vintage metadata;
+- rights, attribution, sensitivity, and public-safety references or unresolved flags;
+- validation results and deterministic quarantine reasons;
+- owning-domain routing and run identity.
+
+The connector must not emit directly to `WORK`, `PROCESSED`, `CATALOG`, `TRIPLETS`, `PUBLISHED`, release, API, UI, notification, or generated-answer surfaces.
+
+---
+
+## 8. Validation
+
+Validation is source admission validation, not scientific interpretation, spatial representativeness, regulatory validation, or publication approval.
+
+### Required checks
+
+- source identity and SourceDescriptor revision resolve and are approved for use;
+- product, cadence/product class, period/file, station, and record identity are present where applicable;
+- retrieval follows configured scheme, host, redirect, timeout, retry, listing/pagination, and size constraints;
+- payload is complete, expected headers/columns are understood, and content digest is recorded;
+- archives and multi-file packages are bounded and safe to materialize;
+- station ID and station-metadata vintage are retained without silent remapping;
+- timestamps, timezone conventions, cadence, and aggregation interval remain explicit;
+- variables, values, units, quality flags, and missing-value states remain source-traceable;
+- depth-aware values carry depth coordinate and units and cannot substitute one depth for another;
+- native observations, source-calculated values, corrections, summaries, and aggregates remain distinct;
+- source-file vintage, correction, and supersession information is preserved;
+- station records cannot become county, watershed, regional, raster, or soil-column truth during admission;
+- rights, attribution, sensitivity, and routing references are present or the object is quarantined;
+- output destination is limited to RAW or QUARANTINE;
+- logs and receipts contain no credentials, signed URLs, unsafe payload excerpts, or sensitive station/operational detail beyond approved policy.
+
+### Quarantine conditions
+
+Quarantine on missing, ambiguous, or conflicting evidence, including:
+
+- unresolved source, product, cadence, period/file, station, or record identity;
+- checksum, size, member-list, header, row-count, or package mismatch;
+- unreadable, truncated, structurally unsafe, or partially retrieved content;
+- unexpected header, column, variable, unit, quality-flag, missing-code, or source-schema drift;
+- missing, unsupported, contradictory, or unit-ambiguous depth metadata;
+- stale, future-dated, timezone-ambiguous, conflicting, or unsupported timestamps;
+- silent cadence or interval substitution;
+- unresolved raw/calculated/aggregate/corrected product classification;
+- station metadata conflict or unreviewed station identity change;
+- unresolved rights, attribution, sensitivity, or domain routing;
+- duplicate identity with different bytes;
+- any attempt to treat the connector as interpolation, alert, regulatory, promotion, or publication authority.
+
+An empty, missing, delayed, or partial source object is not proof of zero precipitation, normal conditions, no soil moisture, no drought, or safe conditions.
+
+### No-network test posture
+
+Tests should be deterministic and no-network by default. Fixtures should cover, at minimum:
+
+- a structurally valid station observation with units, quality, cadence, and time metadata;
+- a valid depth-aware soil observation and a non-depth variable;
+- checksum, size, header, row-count, and archive-safety failures;
+- missing or conflicting source/product/station/file identity;
+- unknown or changed columns, units, quality flags, and missing codes;
+- timezone ambiguity, cadence mismatch, correction, and supersession;
+- missing depth, depth-unit ambiguity, and attempted depth substitution;
+- attempted hourly/daily/monthly substitution without an aggregation receipt;
+- raw observation versus calculated/aggregate product confusion;
+- station-as-county, station-as-watershed, station-as-raster, and soil-column collapse attempts;
+- empty or partial products that must not become zero or all-clear claims;
+- duplicate source identity with identical bytes and with conflicting bytes;
+- rights, sensitivity, or routing state that forces quarantine;
+- credential and signed-URL redaction;
+- rejection of every output destination beyond RAW or QUARANTINE;
+- rejection of regulatory, warning, forecast, or life-safety output.
+
+---
+
+## 9. Review burden
+
+Changes here require review proportional to their effect:
+
+| Change | Minimum review burden |
+|---|---|
+| README clarification with no authority change | Connector steward, NOAA source steward, and docs review. |
+| Placement, rename, merge, redirect, or removal of either USCRN lane | Architecture/governance review and accepted migration decision. |
+| Registry placement or descriptor change | Source governance plus Atmosphere, Soil, and affected domain review. |
+| New endpoint, access method, credential flow, or retrieval behavior | Source steward, security review, rights review, and no-network tests. |
+| New format, header, variable, unit, quality flag, cadence, depth, or station metadata behavior | Source, Atmosphere, Soil, spatial, and validation review with versioned fixtures. |
+| Source-role or raw/calculated/aggregate mapping | Source-role governance and domain contract review; never connector-only approval. |
+| Hash, deduplication, replay, correction, or quarantine change | Data/validation review with deterministic regression tests. |
+| Aggregation, interpolation, gap-fill, comparison, trend, or cross-domain use | Downstream pipeline, evidence, policy, and domain review. |
+| Activation, promotion, public display, or operational use | Source authority, rights, proof, and release review outside this lane. |
+
+`OWNER_TBD` must be replaced before operational activation. The global CODEOWNERS file does not establish a NOAA USCRN-specific owner at the pinned snapshot.
+
+---
+
+## 10. Related folders
+
+| Path | Relationship |
+|---|---|
+| [`../README.md`](../README.md) | Root connector boundary and RAW/QUARANTINE limit. |
+| [`../noaa/README.md`](../noaa/README.md) | Declared canonical NOAA connector-family boundary. |
+| [`../noaa/src/README.md`](../noaa/src/README.md) | Proposed NOAA source-root contract; not product implementation proof. |
+| [`../noaa/tests/README.md`](../noaa/tests/README.md) | Proposed no-network family test contract; not passing-test proof. |
+| [`../noaa/uscrn/README.md`](../noaa/uscrn/README.md) | Parallel nested README-only USCRN connector boundary. |
+| [`../../docs/sources/catalog/noaa/README.md`](../../docs/sources/catalog/noaa/README.md) | NOAA source-family catalog context. |
+| [`../../docs/sources/catalog/noaa/noaa-uscrn.md`](../../docs/sources/catalog/noaa/noaa-uscrn.md) | Draft USCRN product doctrine and open questions. |
+| [`../../docs/sources/catalog/noaa/station-climate-products.md`](../../docs/sources/catalog/noaa/station-climate-products.md) | Broader draft station/climate product boundary; distinct from USCRN. |
+| [`../../docs/architecture/source-roles.md`](../../docs/architecture/source-roles.md) | Source-role vocabulary and anti-collapse context. |
+| [`../../data/registry/sources/soil/noaa-uscrn.yaml`](../../data/registry/sources/soil/noaa-uscrn.yaml) | Minimal `PROPOSED` Soil inventory placeholder, not active descriptor proof. |
+| [`../../data/registry/sources/agriculture/noaa-uscrn.yaml`](../../data/registry/sources/agriculture/noaa-uscrn.yaml) | Minimal `PROPOSED` Agriculture inventory placeholder, not active descriptor proof. |
+| [`../../pipelines/domains/soil/uscrn_ingest/README.md`](../../pipelines/domains/soil/uscrn_ingest/README.md) | Draft downstream Soil ingest boundary; executable behavior remains unproven. |
+| [`../../contracts/domains/soil/soil_moisture_observation.md`](../../contracts/domains/soil/soil_moisture_observation.md) | Draft depth/unit/QC-aware semantic contract; paired schema reported missing. |
+| [`../../contracts/domains/atmosphere/WeatherObservation.md`](../../contracts/domains/atmosphere/WeatherObservation.md) | Draft Atmosphere observation semantics; not connector authority. |
+| [`../../contracts/domains/atmosphere/WeatherStation.md`](../../contracts/domains/atmosphere/WeatherStation.md) | Draft station semantics; not source activation proof. |
+
+---
+
+## 11. ADRs
+
+- [`../../docs/adr/README.md`](../../docs/adr/README.md) is the ADR index and process surface.
+- [`../../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md`](../../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md) records the connector-output proposal; its draft/proposed state does not independently create authority.
+- No accepted USCRN connector-placement or registry-topology ADR was identified in the bounded evidence review.
+- [`../../docs/registers/DRIFT_REGISTER.md`](../../docs/registers/DRIFT_REGISTER.md) had no `noaa-uscrn`, `NOAA USCRN`, or `uscrn` text match in a bounded scan. That does not mean the path/registry drift is resolved or exhaustively audited.
+
+Required decisions before product-specific implementation or activation:
+
+1. Choose the canonical USCRN connector topology and define redirects or deprecation for the non-canonical path.
+2. Choose the canonical source registry ownership or establish one source-family descriptor referenced by domain projections.
+3. Resolve SourceDescriptor schema authority and activation records.
+4. Define accepted station/observation/soil contracts and enforceable schemas.
+5. Define current access, product/header, station identity, time, cadence, quality, missing-value, depth, correction, rights, and routing rules.
+6. Define owner, fixture, validator, pipeline, comparison, correction, and rollback responsibilities.
+
+This README does not pre-decide any of those outcomes.
+
+---
+
+## 12. Last reviewed
+
+**2026-07-14**, against repository snapshot `main@92ddac60a5dd7ec4c1f4704c651bd173423afbaf`.
+
+Review scope was bounded to the named connector, nested connector README, NOAA family scaffold, source catalog, rules, source authority, the two domain registry placeholders, source-schema contract, named Soil pipeline paths, Soil observation contract, named RAW/fixture paths, drift, ownership, and workflow surfaces cited here. Re-review after any topology decision, source activation, descriptor/schema migration, source-interface change, station/header/cadence/depth change, rights change, or executable implementation.
+
+---
+
+## Connector topology and placement
+
+Repository evidence exposes two connector homes:
+
+| Path | Observed state | Safe interpretation |
 |---|---|---|
-| Monthly products | Candidate monthly station observations and aggregates. | Preserve station, period, variable, units, and product directory. |
-| Daily products | Candidate daily station observations. | Preserve station/year file identity, quality flags, variables, and missing-value codes. |
-| Hourly products | Candidate hourly station observations. | Preserve timestamp, station, variable, units, quality flags, and retrieval metadata. |
-| Sub-hourly products | Candidate 5-minute station observations where available. | Preserve cadence and fields; do not aggregate silently. |
-| Soil anomaly/climatology products | Candidate derived soil moisture/temperature products. | Preserve depth, layer, algorithm/version, and derived-product status. |
-| Drought or heat products | Candidate derived station-based products. | Preserve derived-product identity and caveats; do not recast as alerts. |
-| Documentation and headers | Parser contract references. | Preserve header version and parser-version assumptions. |
-| Dataset change log | Correction/version context. | Treat changes as source-vintage updates requiring receipts. |
+| `connectors/noaa/` | Declared canonical NOAA family lane; package is a `0.0.0` greenfield scaffold. | Family coordination and future implementation root, not current USCRN runtime proof. |
+| `connectors/noaa-uscrn/` | This README exists; named implementation probes found no code or tests. | Proposed hyphenated product sibling. |
+| `connectors/noaa/uscrn/` | A parallel README exists; named implementation probes found no code or tests. | Proposed nested product lane under the NOAA family. |
+| `connectors/noaa/src/noaa/products/uscrn.py` | Bounded probe returned no file. | Proposed module named by source-root docs, not implemented evidence. |
 
----
+Directory Rules §7.3 lists the `noaa/` family. The NOAA family README calls its family lane canonical while treating this sibling as draft and migration-pending. Do not copy code across lanes, split variables/domains by connector path, create import aliases, delete either README, or move descriptors until an accepted decision covers lineage, redirects, deprecation, tests, activation, correction, and rollback.
 
-## Admission posture
+### Registry topology
 
-USCRN intake should preserve:
+Two domain-specific YAML paths exist:
 
-- source identity and source surface;
-- source descriptor reference and source activation state;
-- product directory, cadence, product type, year/period, and file vintage;
-- station ID, station metadata, location, elevation, and status fields;
-- timestamp, timezone convention, variable, value, units, missing-value code, and quality flag;
-- soil depth and soil layer where applicable;
-- raw observation versus calculated/derived value status;
-- retrieval timestamp, response status, file identity, and content digest;
-- rights/citation/attribution posture;
-- domain-lane routing hint such as atmosphere or soil;
-- public-safety limitation notes;
-- quarantine reason when review is required.
-
----
-
-## Anti-collapse posture
-
-USCRN has several high-risk interpretation boundaries. Keep them visible at connector admission time.
-
-| Rule | Connector implication |
-|---|---|
-| Station reading is not area truth. | Do not emit county, watershed, region, or raster values without downstream aggregation or modeling receipts. |
-| Depth matters. | Soil moisture/temperature at 5 cm, 10 cm, 20 cm, 50 cm, and 100 cm must stay distinct. |
-| Cadence matters. | Sub-hourly, hourly, daily, monthly, and derived products are distinct artifacts. |
-| Quality flags matter. | Do not drop QC flags, missing codes, or calculated-value conditions. |
-| Reference-grade is not regulatory. | Do not treat USCRN as legal compliance or alert authority. |
-| Derived products are not raw observations. | Preserve source-defined derived-product identity and algorithm/version context. |
-| Public display is downstream. | The connector must not build public tiles, UI layers, climate claims, or alert payloads. |
-
----
-
-## Placement status
-
-`connectors/noaa-uscrn/README.md` is intentionally conservative because connector placement is not yet fully ratified.
-
-| Claim | Status | Notes |
+| Registry path | Observed content | Safe interpretation |
 |---|---|---|
-| `connectors/noaa-uscrn/README.md` contains this connector README | `CONFIRMED` after this update | The file itself now carries the connector-lane boundary. |
-| `connectors/noaa-uscrn/` is a source-admission lane only | `PROPOSED / draft` | Consistent with `connectors/` responsibility, but Directory Rules §7.3 lists `noaa/` rather than this sibling lane. |
-| USCRN source-product docs exist under `docs/sources/catalog/noaa/noaa-uscrn.md` | `CONFIRMED` in repo evidence | Product/source doctrine belongs there, not here. |
-| A live NOAA USCRN `SourceDescriptor` exists and is active | `NEEDS VERIFICATION` | Must be checked under `data/registry/sources/`. |
-| Endpoint behavior, tests, fixtures, and CI are implemented | `UNKNOWN` | Not proven by this README. |
-| USCRN outputs are validated, cataloged, tiled, and published | `UNKNOWN` | Connector README does not prove downstream promotion. |
+| `data/registry/sources/soil/noaa-uscrn.yaml` | `PROPOSED` plus path/source-doc/placeholder notes. | Inventory scaffold, not a conforming active descriptor. |
+| `data/registry/sources/agriculture/noaa-uscrn.yaml` | `PROPOSED` plus path/source-doc/placeholder notes. | Inventory scaffold, not a conforming active descriptor. |
+
+Neither record contains mature identity, source role, rights, cadence, retrieval, citation, hash, review, or activation fields. Their coexistence does not establish separate source truth by domain. Resolve whether USCRN has one source-family descriptor with domain projections or another governed topology; do not duplicate source authority in this connector.
 
 ---
 
-## Validation
+## Station observation boundary
 
-Before relying on this connector, verify:
+### Point scope, not area truth
 
-- placement is intentional and documented by ADR, migration note, or updated Directory Rules;
-- source descriptors exist and are active for USCRN source surfaces;
-- NOAA/NCEI rights, citation, attribution, endpoint, and distribution posture are captured in source descriptors;
-- current product directories, product docs, headers, change log, cadence, field names, units, quality flags, and file naming conventions are re-verified;
-- parsers preserve station ID, timestamp, cadence, variable, units, quality flags, missing codes, and derived/raw status;
-- soil-depth parsing preserves depth and layer metadata without collapse;
-- product-vintage changes are handled as source changes requiring receipt and diff handling;
-- tests use no-network fixtures where practical;
-- output paths are limited to raw/quarantine admission lanes;
-- downstream receipts, proofs, catalog/triplet records, tile artifacts, and release records are produced only outside this connector;
-- public products are released only through governed publication controls and never as alerts or area truth without downstream receipts.
+Every admitted native record must remain attached to its source station, variable, time, and measurement support. A station point does not by itself represent a county, watershed, farm, habitat, road segment, raster cell, region, or state.
+
+Any spatial interpolation, nearest-station assignment, areal average, gap-fill, or gridded surface is a separate modeled or aggregate artifact with its own method, scope, validation, uncertainty, evidence, and receipt. Rendering a point value on a map does not change this boundary.
+
+### Depth distinctness
+
+For depth-aware variables, preserve the source-exposed depth value, unit, reference convention, sensor/variable identity, and quality state. A value at one depth must not substitute for another or become an unqualified soil-column value. If depth is required but missing, ambiguous, unsupported, or conflicting, quarantine.
+
+This README intentionally does not pin a current depth set; available depths and their conventions are product-specific external facts requiring current verification.
+
+### Cadence and time distinctness
+
+Do not collapse:
+
+```text
+source observation time
+!= source aggregation interval or product period
+!= source issue/file vintage
+!= KFM retrieval time
+!= processing/catalog/release time
+!= correction or supersession time
+```
+
+Sub-hourly, hourly, daily, monthly, normal, anomaly, or other product classes are distinct artifacts when supplied. Aggregating or disaggregating them requires downstream methods and receipts; filename labels alone are insufficient to infer semantics.
+
+### Quality, units, and missingness
+
+- preserve native variable identifiers and source headers;
+- preserve units with every value and never infer conversions silently;
+- preserve quality flags, calculated-value markers, and source status fields;
+- preserve missing-value codes as missingness, never as zero;
+- distinguish raw/native observations from source-calculated, corrected, summary, or aggregate products;
+- retain parser/header/source-document version assumptions;
+- quarantine unknown flags, units, headers, or missing codes until reviewed.
+
+### Station identity and change
+
+Preserve source station ID and metadata vintage. Station relocation, instrument/sensor changes, siting changes, calibration changes, commissioning/decommissioning, metadata corrections, or identifier remapping—when exposed—must create visible lineage, not silent historical rewriting.
+
+### Required anti-collapse rules
+
+- reference-grade does not mean ubiquitous spatial coverage;
+- observation does not mean area, regulatory, forecast, or alert authority;
+- a comparison target does not make USCRN the comparison result;
+- station validation use does not transfer USCRN’s source role to another source;
+- soil moisture/temperature does not by itself establish drought, crop stress, irrigation need, yield, or watershed condition;
+- empty, missing, delayed, or quality-rejected records do not prove zero or normal conditions;
+- RAW presence does not imply validation, release, or public eligibility.
+
+---
+
+## Proposed runtime contract
+
+No product-specific runtime is proven at either connector path. If implementation is approved, it should follow these fail-closed phases:
+
+1. **Resolve** an approved SourceDescriptor revision, product scope, and source locator.
+2. **Plan** a bounded request/listing without exposing credentials, signed material, or unsafe parameters.
+3. **Retrieve** into temporary storage with size, timeout, redirect, pagination/listing, and retry limits.
+4. **Verify** response identity, byte length, digest, archive members, headers, and source metadata.
+5. **Parse** station/product records while preserving native identifiers, time, cadence, units, quality, missingness, depth, and product class.
+6. **Inspect** structural and semantic admission invariants without interpolation, aggregation, or source-role rewriting.
+7. **Decide** RAW versus QUARANTINE using deterministic admission rules.
+8. **Commit** the handoff atomically so partial objects never appear complete.
+9. **Record** sanitized process evidence and source/content fingerprints.
+
+Retry only transient, bounded failures. Do not retry authentication failure, forbidden access, station/header/unit/quality/depth contradiction, unsafe archive structure, deterministic checksum mismatch, unsupported source drift, or unresolved policy state as though those were network transients.
+
+### Idempotency, deduplication, correction, and replay
+
+- source identity is not only a URL, filename, station ID, or date;
+- a locator with changed bytes must create a new reviewable identity or correction lineage;
+- identical verified bytes may be deduplicated only through a governed immutable-reference mechanism;
+- duplicate source identity with conflicting bytes must quarantine;
+- corrected, revised, or superseded files must not overwrite prior captures;
+- replay must pin descriptor revisions, retrieval policy, header/parser assumptions, validation version, and output target;
+- replay must preserve prior outcomes and quarantine reasons;
+- caches may accelerate retrieval but never substitute for integrity, freshness, or provenance checks.
+
+---
+
+## Evidence ledger
+
+| Evidence surface | Observed state | What it supports | What it does not support |
+|---|---|---|---|
+| This README | Prior v0.1 draft exists. | A documented hyphenated product boundary. | Code, activation, source access, or canonical placement. |
+| Nested USCRN README | Draft README exists under `connectors/noaa/uscrn/`. | A parallel nested boundary. | A resolved topology or runnable connector. |
+| NOAA family README | Calls `connectors/noaa/` canonical and this lane draft/migration-pending. | Source-family-first placement posture. | A final product home or working implementation. |
+| NOAA package files | `0.0.0` placeholder; empty initializer; placeholder fetch/admit; descriptor role/rights `TBD`. | Greenfield family scaffolding exists. | USCRN parser, package readiness, active descriptor, or endpoint behavior. |
+| Draft USCRN product page | Station/depth/cadence/quality anti-collapse doctrine and open questions. | Required semantic caution and proposed native observation role. | Current endpoints, station inventory, depths, cadence, rights, or accepted implementation. |
+| Source-authority register | `PROPOSED`; `entries: []`. | No repository-level USCRN activation at snapshot. | Future activation status. |
+| Soil registry YAML | Minimal `PROPOSED` inventory placeholder. | A candidate domain registry path. | Mature SourceDescriptor or activation. |
+| Agriculture registry YAML | Minimal `PROPOSED` inventory placeholder. | A second candidate domain registry path. | Mature SourceDescriptor or separate source authority. |
+| Soil USCRN pipeline README | Detailed draft pipeline boundary. | Intended downstream normalization separation. | Pipeline code, spec, schedule, tests, CI, or release wiring. |
+| Soil moisture observation contract | Draft semantics; paired schema reported missing. | Depth/unit/QC requirements have a candidate contract home. | Enforceable schema validation. |
+| Connector/source-descriptor workflows | Inspected workflows are TODO echo-only stubs. | No meaningful automated connector/descriptor gate is proven. | Runtime or activation readiness. |
+| CODEOWNERS | Global placeholder; no NOAA USCRN-specific rule identified. | Owner remains unresolved. | Operational accountability. |
+
+---
+
+## Rights, sensitivity, and public safety
+
+Repository documentation is not a substitute for current source terms. Before activation, governing records must verify licensing or terms, attribution, redistribution, caching, service constraints, access method, intended use, and product-specific restrictions.
+
+The connector must:
+
+- carry rights, attribution, sensitivity, and review record identifiers;
+- quarantine when terms, retention, redistribution, or attribution are unresolved;
+- keep credentials, tokens, cookies, signed URLs, and sensitive query strings out of commits, manifests, logs, receipts, and exceptions;
+- preserve station scope, uncertainty, quality, and not-life-safety limitations with every handoff;
+- avoid presenting station data as property-specific, household-specific, farm-specific, county-wide, watershed-wide, regional, or statewide conditions without governed derivation;
+- avoid joins or location detail that create unreviewed private-network, infrastructure, landowner, crop, health, or operational claims;
+- defer aggregation, generalization, suppression, notification, and public-safe rendering to governed downstream policy and release controls.
+
+Public availability or reference-grade source status does not mean connector output is automatically approved for KFM publication, regulatory use, or life-safety use.
+
+---
+
+## Activation, promotion, and rollback
+
+### Activation prerequisites
+
+Do not activate this connector until all of the following are true:
+
+- topology, package/import identity, ownership, and compatibility plan are ratified;
+- authoritative SourceDescriptor, registry, and source-schema paths are resolved;
+- the source-authority register records approved USCRN activation;
+- accepted station, observation, and depth-aware domain contracts/schemas exist where required;
+- current endpoint/access, file/header, variables/units, quality/missing codes, cadence, depth, station metadata, corrections, and citation evidence is verified;
+- rights, attribution, sensitivity, and not-life-safety reviews are complete;
+- integrity, parsing, station identity, time, cadence, units, quality, depth, redaction, quarantine, replay, correction, and no-network tests pass;
+- RAW/QUARANTINE paths and downstream domain ownership are approved;
+- downstream pipeline code/spec/tests cannot fetch directly, bypass admission, or publish;
+- correction, deactivation, and rollback procedures have named owners.
+
+### Promotion boundary
+
+Successful admission means only that source material entered RAW with required evidence. It does not mean a station represents an area, a soil depth represents a column, a daily or monthly value can be inferred, a regulatory or drought conclusion exists, a cross-source comparison is valid, a product is scientifically validated for a new use, or anything is public. Every later transition belongs to downstream governed stages.
+
+### Correction and deactivation
+
+If source identity, station metadata, bytes, time, cadence, header, variable, unit, quality, missingness, depth, rights, or validation are later found wrong:
+
+1. stop new admissions for the affected configuration;
+2. preserve prior immutable bytes, manifests, and receipts;
+3. mark affected runs, aggregates, comparisons, and downstream dependencies for review;
+4. quarantine new or replayed material until the contradiction is resolved;
+5. issue correction and release actions only through their governing surfaces;
+6. reactivate only with a new reviewed configuration or SourceDescriptor revision.
+
+Do not rewrite history, silently replace source files, delete evidence, or publish zero/normal/all-clear claims to simulate rollback.
+
+---
+
+## Verification backlog
+
+- [ ] Ratify one canonical USCRN connector home and document migration, redirect, and deprecation for the other path.
+- [ ] Record connector and registry topology drift or the accepted decision in the appropriate governance surface.
+- [ ] Replace `OWNER_TBD` with accountable reviewers and NOAA USCRN CODEOWNERS coverage.
+- [ ] Replace NOAA family greenfield placeholders with reviewed package/runtime decisions or keep them explicitly inactive.
+- [ ] Resolve SourceDescriptor schema authority and the Soil/Agriculture/source-family registry topology.
+- [ ] Create a conforming descriptor and add approved USCRN activation to the source-authority register.
+- [ ] Resolve accepted station, Atmosphere observation, Soil moisture, depth, unit, quality, and missingness contracts/schemas.
+- [ ] Verify current source endpoints, access, formats/headers, station inventory/metadata, variables, units, quality/missing codes, cadences, depths, corrections, terms, attribution, and citation.
+- [ ] Implement bounded retrieval, station/product preservation, credential redaction, integrity checks, atomic handoff, and deterministic quarantine.
+- [ ] Add no-network fixtures and executable tests for station identity, time, cadence, units, quality, missingness, depth, source drift, replay, and failure cases.
+- [ ] Replace documentation-only pipeline and TODO connector/descriptor gates with meaningful code/spec/tests before treating them as readiness evidence.
+- [ ] Verify RAW captures, downstream normalization, aggregates, comparisons, receipts, proofs, release, correction, API/UI, and public-safe caveats independently.
 
 ---
 
 ## Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Directory placement is ratified or the conflict is recorded in the drift/open-question register.
-- [ ] Actual connector contents are inventoried.
-- [ ] NOAA USCRN `SourceDescriptor` IDs and source-family activation are verified.
-- [ ] NOAA/NCEI rights, citation, attribution, source terms, endpoint, and current product-directory posture are documented.
-- [ ] Manifest builders preserve source URL, product directory, cadence, station ID, data year/period, file identity, size, and digest.
-- [ ] Parsers preserve station metadata, timestamp, variable, value, units, quality flags, missing codes, soil depth, raw/derived status, and product vintage.
-- [ ] Tests prevent silent conversion of station readings into area truth, depth-collapsed soil values, cadence-collapsed values, regulatory determinations, or alert claims.
-- [ ] Outputs are verified to enter only raw or quarantine admission lanes.
-- [ ] No source-family, domain, processed, catalog, triplet, published, release, schema, policy, proof, receipt, registry, fixture, report, API, UI, tile, alert, area-truth, or regulatory authority lives here.
-- [ ] Tests, fixtures, and CI behavior are verified or marked `NEEDS VERIFICATION`.
+This README update is complete when it accurately preserves the current boundary without claiming implementation. The connector itself is not done until every activation prerequisite and verification item above is resolved through its governing surface.
+
+In all states:
+
+- source, station, product, variable, unit, quality, missingness, time, cadence, depth, and file-vintage identity remain intact;
+- station readings never become area truth without a separate governed derivative;
+- one depth never substitutes for another or for a soil column;
+- one cadence/product class never silently substitutes for another;
+- missing values never become zero, normal, or all-clear claims;
+- native observations remain distinct from calculated, corrected, aggregate, interpolated, and comparison artifacts;
+- reference-grade never becomes regulatory, forecast, alert, or life-safety authority;
+- connector output stops at RAW or QUARANTINE;
+- placement, schema, registry, policy, pipeline, proof, release, alert, API, and UI authority remain outside this folder.
 
 ---
 
-## Status summary
+## Changelog
 
-`connectors/noaa-uscrn/` is for NOAA/NCEI USCRN source-admission code only. It is not source-family truth, regional climate truth, soil-column truth, forecast authority, alert authority, regulatory authority, policy authority, schema authority, catalog/triplet authority, proof closure, release authority, tile publication authority, public API behavior, public UI behavior, or pipeline authority.
+### v0.2 — 2026-07-14
+
+- Reframed the path as a README-only proposed product connector boundary.
+- Surfaced the parallel nested lane, canonical NOAA family posture, and greenfield NOAA package state.
+- Added evidence-pinned status for duplicate registry placeholders, source activation, pipeline implementation/spec, contracts/schemas, RAW/fixtures, tests, workflows, and ownership.
+- Tightened station-scope, depth, cadence, time, unit, quality, missingness, source-vintage, correction, reference-grade, zero/all-clear, and not-life-safety rules.
+- Removed version-sensitive live-source specifics from the connector contract and moved them into the verification backlog.
+- Added fail-closed retrieval, quarantine, no-network testing, replay, correction, activation, deactivation, and rollback requirements.
+- Preserved the RAW/QUARANTINE-only lifecycle limit and prohibited regulatory/alert/publication authority.
+
+### v0.1 — 2026-06-19
+
+- Established the initial NOAA USCRN connector-lane documentation.
 
 <p align="right"><a href="#top">Back to top</a></p>
