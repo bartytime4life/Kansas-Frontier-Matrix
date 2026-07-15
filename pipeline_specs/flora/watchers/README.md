@@ -10,7 +10,7 @@ updated: 2026-07-15
 supersedes: v0.1
 policy_label: public; pipeline-specs; flora; watchers; declarative-only; metadata-first; taxonomy-aware; specimen-aware; cultural-rights-aware; rare-plant-deny-default; no-secrets; no-live-activation; no-direct-fetch; no-direct-admission; no-direct-raw; no-direct-release; source-role-preserving; rights-aware; stale-state-aware; review-gated
 current_path: pipeline_specs/flora/watchers/README.md
-truth_posture: CONFIRMED current target, README-only direct watcher-spec sublane, two seven-line PROPOSED plants-drift placeholders outside this sublane, draft shared/domain executable watcher READMEs with unresolved ownership, README-only Flora config lane, draft source registry with unresolved topology, draft receipt lane with unresolved subtype layout, conflicted human-facing sensitivity docs, scaffold binding policy lanes, README-backed tests with unknown executable coverage, populated synthetic fixture lanes with unverified payload/consumer alignment, TODO-only Flora workflow, and placeholder CODEOWNERS / PROPOSED minimum active watcher-spec contract, placement reconciliation, deterministic consumer binding, metadata-first comparison, taxonomy/specimen/occurrence role preservation, cultural-rights and sensitive-diff controls, finite outcomes, activation/deactivation, correction, and rollback / UNKNOWN accepted schema, parser, registry, discovery, scheduler, active sources, executable consumer, network behavior, substantive CI, emitted receipts, production review integration, and runtime use / NEEDS VERIFICATION owners, canonical spec and executable placement, source-registry topology, admitted SourceDescriptors, rights/source-role/cultural-authority vocabularies, taxonomy authorities, source terms, cadence budgets, report/receipt schemas, fixture payloads, executable tests, validators, policy implementation, correction propagation, and rollback execution
+truth_posture: CONFIRMED current target, README-only direct watcher-spec sublane, two seven-line PROPOSED plants-drift placeholders outside this sublane, draft shared/domain executable watcher READMEs with unresolved ownership, README-only Flora config lane, draft source registry with unresolved topology, draft receipt lane with unresolved subtype layout, conflicted sensitivity docs, scaffold binding policy lanes, README-backed tests with unknown executable coverage, populated synthetic fixture lanes with unverified payload/consumer alignment, TODO-only Flora workflow, and placeholder CODEOWNERS / PROPOSED minimum active watcher-spec contract, canonical placement reconciliation, deterministic consumer binding, metadata-first comparison, taxonomy/specimen/occurrence role preservation, cultural-rights and sensitive-diff controls, finite outcomes, activation/deactivation, correction, and rollback / UNKNOWN accepted schema, parser, registry, discovery, scheduler, active sources, executable consumer, substantive CI, emitted receipts, production review integration, and runtime use / NEEDS VERIFICATION owners, source-registry topology, admitted SourceDescriptors, rights/source-role/cultural-authority vocabularies, taxonomy authorities, source terms, cadence budgets, report/receipt schemas, fixture payloads, executable tests, validators, policy implementation, correction propagation, and rollback execution
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
@@ -118,8 +118,6 @@ This README is not a watcher schema, parser, registry, scheduler, executable wat
 
 ## Authority and anti-collapse
 
-### Responsibility roots
-
 ```text
 pipeline_specs/  = declarative intent: WHAT may be checked and under which gates
 pipelines/       = executable behavior: HOW comparisons and handoffs occur
@@ -138,8 +136,7 @@ A watcher spec may require a gate. Naming the gate does not satisfy it.
 ### Disallowed collapses
 
 ```text
-watcher spec                 -> executable watcher
-watcher spec                 -> source activation
+watcher spec                 -> executable watcher or source activation
 source list                  -> source authority
 schedule                     -> proof of freshness
 ETag/checksum change         -> botanical material change
@@ -152,15 +149,7 @@ fixture pass                 -> implementation proof
 watcher success              -> catalog or release approval
 ```
 
-Required separations include:
-
-- specimen evidence, field occurrence, community-science report, survey, range, model, aggregate, habitat context, vegetation classification, restoration record, phenology record, and candidate inference remain distinct;
-- source role is fixed through governed admission and cannot be upgraded by watcher prose or generated language;
-- source access path does not become source authority;
-- taxonomy identity, nomenclatural status, occurrence support, rights, cultural authority, sensitivity, freshness, evidence, and release are independent gates;
-- exact or reconstructable sensitive details fail closed;
-- watcher outputs remain bounded candidates, process memory, quarantine, or review handoffs;
-- only governed later stages may admit, normalize, validate, catalog, publish, correct, or roll back.
+Specimen evidence, field occurrence, community-science report, survey, range, model, aggregate, habitat context, vegetation classification, restoration record, phenology record, and candidate inference remain distinct. Source role, taxonomy, rights, cultural authority, sensitivity, freshness, evidence, and release remain independent gates. Watcher outputs remain bounded candidates, process memory, quarantine, or review handoffs.
 
 [Back to top](#top)
 
@@ -170,19 +159,18 @@ Required separations include:
 
 | Surface | Inspected status | What it does **not** prove |
 |---|---|---|
-| Direct `pipeline_specs/flora/watchers/` sublane | README only in bounded search | No concrete profile, accepted schema, parser, discovery, schedule, activation, or consumer. |
+| Direct `pipeline_specs/flora/watchers/` sublane | README only in bounded search | No concrete profile, accepted schema, parser, schedule, activation, or consumer. |
 | `pipeline_specs/flora/plants_drift_watcher.yaml` | Seven-line `PROPOSED` inventory placeholder | Not active or consumer-bound. |
-| `pipeline_specs/watchers/plants_drift.yaml` | Seven-line `PROPOSED` inventory placeholder | Not canonical, active, or reconciled with the Flora path. |
+| `pipeline_specs/watchers/plants_drift.yaml` | Seven-line `PROPOSED` inventory placeholder | Not canonical, active, or reconciled. |
 | Flora executable watcher README | Detailed draft documentation under `pipelines/domains/flora/watchers/` | No verified code, source activation, schedule, runtime, or CI enforcement. |
 | Shared plants watcher README | Detailed draft documentation under `pipelines/watchers/plants/` | No settled ownership or verified implementation. |
-| Shared watcher implementation README | Draft implementation boundary | No production watcher framework proven. |
-| Flora config lane | README-only | No loader, precedence, direct consumer, source activation, or runtime binding. |
+| Flora config lane | README-only | No loader, precedence, consumer, source activation, or runtime binding. |
 | Flora source registry | Draft, with subtype-first/domain-first topology conflict | No canonical active descriptor inventory or production admission proof. |
 | Flora receipt lane | Draft parent; redaction child documented | No emitted receipt instances, final subtype layout, signing, or enforcement. |
-| Flora sensitivity documentation | Detailed but overlapping/conflicted human-facing documents | No binding policy implementation by prose. |
+| Flora sensitivity documentation | Detailed but overlapping/conflicted documents | No binding policy implementation by prose. |
 | Flora policy lanes | `PROPOSED` scaffolds | No executable rights, cultural-authority, geoprivacy, or release policy. |
 | Flora tests | README coverage map; executable completeness unknown | No spec-specific test pass or enforcement proof. |
-| Flora fixtures | Many populated README lanes, including `plants_drift/` | No verified payload inventory or consumer alignment by README alone. |
+| Flora fixtures | Populated README lanes, including `plants_drift/` | No verified payload inventory or consumer alignment by README alone. |
 | Domain Flora workflow | Three `echo TODO` jobs | No Flora watcher validation, proof build, or publish dry run. |
 | CODEOWNERS | Placeholder | No enforced Flora watcher review ownership. |
 | Runtime/public use | Not established | No production or public-surface behavior. |
@@ -202,8 +190,6 @@ pipeline_specs/flora/watchers/
 └── README.md
 ```
 
-No concrete watcher profile was found directly under this sublane in the bounded search.
-
 ### External watcher-shaped placeholders
 
 ```text
@@ -211,32 +197,11 @@ pipeline_specs/flora/plants_drift_watcher.yaml
 pipeline_specs/watchers/plants_drift.yaml
 ```
 
-Both files are seven-line `PROPOSED` placeholders created from documentation inventory. Neither is an accepted active specification.
+Both are seven-line `PROPOSED` placeholders created from documentation inventory. Neither is an accepted active specification.
 
-### Placement question
+Three possible declarative homes now appear: this domain watcher sublane, the parent Flora spec lane, and the shared watcher lane. Two possible executable homes appear: `pipelines/domains/flora/watchers/` and `pipelines/watchers/plants/`. This README does not select one by assertion. Before an active profile is added, canonical placement and delegation require a governed decision or migration note. Duplicate active specifications are prohibited.
 
-Three possible declarative homes now appear in repository evidence:
-
-1. `pipeline_specs/flora/watchers/` — domain-specific watcher sublane;
-2. `pipeline_specs/flora/` — current location of one plants-drift placeholder;
-3. `pipeline_specs/watchers/` — shared watcher home containing a second placeholder.
-
-Two possible executable homes also appear:
-
-1. `pipelines/domains/flora/watchers/` — Flora-specific pre-RAW watcher lane;
-2. `pipelines/watchers/plants/` — shared plants watcher lane.
-
-This README does not select one by assertion. Before an active profile is added, maintainers must document canonical placement and delegation through an accepted ADR, Directory Rules-compatible migration note, or equally governed decision. Duplicate active specifications are prohibited.
-
-### Receipts
-
-The verified Flora receipt parent is:
-
-```text
-data/receipts/flora/
-```
-
-The former v0.1 reference to `data/receipts/pipeline/flora/watchers/` was not established by the inspected evidence. Final watcher receipt subtype layout remains **NEEDS VERIFICATION**.
+The verified Flora receipt parent is `data/receipts/flora/`. Final watcher receipt subtype layout remains **NEEDS VERIFICATION**.
 
 [Back to top](#top)
 
@@ -244,34 +209,21 @@ The former v0.1 reference to `data/receipts/pipeline/flora/watchers/` was not es
 
 ## Flora watcher scope
 
-A future profile may monitor bounded change signals for:
-
 | Profile family | Allowed observation intent | Required distinction |
 |---|---|---|
-| Plant taxonomy and nomenclature | Version, accepted-name, synonym, authority-list, or crosswalk drift | Drift is not accepted taxonomy. |
-| Herbarium/specimen sources | Dataset/package/manifest/schema/terms drift | Specimen locality is not current occurrence and may be sensitive. |
+| Plant taxonomy/nomenclature | Version, accepted-name, synonym, authority-list, or crosswalk drift | Drift is not accepted taxonomy. |
+| Herbarium/specimen | Dataset/package/manifest/schema/terms drift | Specimen locality is not current occurrence and may be sensitive. |
 | Occurrence/community science | Source-head, schema, metadata, terms, or controlled update notice | Reported observation is not verified occurrence. |
 | Rare/protected plants | Public-safe metadata or reviewed source-state changes only | Never copy exact locality or reconstructive detail. |
 | Vegetation communities | Classification, legend, schema, version, or source-package drift | Community polygon is not taxon occurrence. |
 | Invasive plants | Listing/status/schema/source update signals | Status and occurrence remain separate. |
-| Phenology | Method, station, schema, season, and source-version drift | Observation time, valid time, and retrieval time remain distinct. |
+| Phenology | Method, station, schema, season, and source-version drift | Observation, valid, and retrieval time remain distinct. |
 | Restoration | Plan/version/status metadata under rights and stewardship controls | Planned planting is not established occurrence. |
-| Remote-sensing vegetation products | Product version, collection, algorithm, scene manifest, or model-card drift | Modeled signal is not field observation. |
-| Public indicators | Source and methodology drift | Indicator changes do not directly refresh public products. |
+| Remote-sensing vegetation | Product version, collection, algorithm, manifest, or model-card drift | Modeled signal is not field observation. |
+| Public indicators | Source and methodology drift | Changes do not directly refresh public products. |
 | Source descriptors | Identity, role, rights, cadence, sensitivity, endpoint, or correction drift | Registry review precedes watcher action. |
 
-### Out of scope
-
-Watcher specs must not:
-
-- contain credentials, private endpoints, or live payloads;
-- grant source admission or activation;
-- retrieve full payloads as connector authority;
-- write RAW, WORK, QUARANTINE, PROCESSED, catalog, triplet, or published data;
-- decide taxonomy, occurrence, cultural permission, sensitivity, rights, evidence, policy, or release;
-- expose rare-plant or culturally restricted detail;
-- notify the public as an official alert or authority;
-- silently trigger downstream publication.
+Watcher specs must not contain credentials, private endpoints, live payloads, protected localities, cultural knowledge, or operational geoprivacy parameters; grant source admission; retrieve full payloads as connector authority; write lifecycle data; decide taxonomy, rights, sensitivity, evidence, policy, or release; or notify the public as an official authority.
 
 [Back to top](#top)
 
@@ -279,81 +231,15 @@ Watcher specs must not:
 
 ## Minimum active watcher specification contract
 
-A future active profile must be machine-validated and include the following fields or accepted equivalents.
+A future active profile must be machine-validated and include accepted equivalents for:
 
-### Identity and lifecycle
-
-- `schema_version`
-- stable `spec_id`
-- immutable semantic `version`
-- content digest
-- finite `status`
-- owner and required reviewers
-- created/effective/retired times
-- supersedes/superseded-by references
-- correction and rollback references
-
-### Parser, consumer, and activation
-
-- accepted parser/registry/discovery reference;
-- exactly one verified executable consumer or explicit delegation chain;
-- consumer version and interface contract;
-- separate activation record with approvers, effective time, schedule, kill switch, prior active version, and rollback target;
-- precedence and conflict behavior;
-- no implicit activation from merge or file presence.
-
-### Source governance
-
-For each source:
-
-- stable `SourceDescriptor` reference;
-- canonical source role and claim limits;
-- activation/admission state;
-- rights, license, terms, attribution, redistribution, expiration, and steward contact;
-- cultural authority or consent posture where relevant;
-- sensitivity and public-exposure posture;
-- endpoint/access method named by reference rather than secret value;
-- permitted metadata checks;
-- cadence/freshness expectations;
-- correction, withdrawal, and supersession references.
-
-### Taxonomy and knowledge character
-
-- controlling taxonomy/nomenclatural authority and version;
-- identifier namespace, accepted-name/synonym posture, and crosswalk version;
-- whether the watched source carries specimen, occurrence, survey, range, model, aggregate, vegetation, invasive, phenology, restoration, or contextual knowledge;
-- prohibition on role upgrades;
-- materiality rules for taxonomy or schema drift;
-- review route for collisions and unresolved identity.
-
-### Checks and prior state
-
-- metadata-first comparison strategy;
-- prior baseline reference and digest;
-- allowed checks such as availability, ETag, Last-Modified, version, manifest, checksum, package metadata, DOI metadata, terms notice, schema fingerprint, taxonomy-list digest, correction, or withdrawal notice;
-- retry/backoff, timeout, outage, and stale-state behavior;
-- deterministic comparison and idempotency key;
-- maximum response metadata and log allowlist;
-- ban on payload capture unless a separate connector/intake decision authorizes it.
-
-### Outputs and receipts
-
-- finite outcome vocabulary;
-- material-change classes and reason codes;
-- allowed candidate/report/quarantine/review handoffs;
-- no-op receipt requirements;
-- watcher-run and material-change receipt references;
-- output hash and lineage requirements;
-- no-direct-admission and no-direct-release assertions.
-
-### Sensitivity, security, and correction
-
-- exact and reconstructable sensitive-detail deny rules;
-- cultural/stewardship restrictions;
-- log, notification, issue, artifact, and generated-summary field allowlists;
-- secret and private-endpoint prohibition;
-- correction, suspension, withdrawal, baseline replacement, invalidation, and rollback procedure;
-- affected-surface inventory and reviewer requirements.
+1. **Identity:** schema version, stable ID, immutable version/digest, finite status, owner, effective/retired time, supersession, correction, and rollback references.
+2. **Binding:** accepted parser, registry/discovery reference, exactly one executable consumer or delegation chain, precedence, conflict behavior, and separate activation record.
+3. **Sources:** admitted `SourceDescriptor` refs, role, claim limits, rights, terms, attribution, cultural authority, stewardship, sensitivity, permitted checks, cadence, correction, and withdrawal refs.
+4. **Taxonomy/knowledge character:** controlling nomenclatural authority, identifier namespace, crosswalk version, and explicit specimen/occurrence/survey/range/model/aggregate/vegetation/invasive/phenology/restoration/context role.
+5. **Checks:** metadata-first strategy, prior baseline and digest, allowed checks, retry/backoff, timeout, outage, stale state, idempotency, log allowlist, and payload-capture prohibition.
+6. **Outcomes:** finite outcomes, materiality classes, reason codes, candidate/quarantine/review handoffs, no-op/run/change receipts, hashes, lineage, and no-direct-admission/no-direct-release assertions.
+7. **Safety:** sensitive-detail deny rules, cultural/stewardship restrictions, secret/private-endpoint prohibition, field allowlists, correction, suspension, withdrawal, invalidation, and rollback procedure.
 
 [Back to top](#top)
 
@@ -362,7 +248,7 @@ For each source:
 ## Illustrative inactive YAML
 
 > [!WARNING]
-> This example is incomplete, non-canonical, unregistered, inactive, and unsafe for production. It activates no source or watcher.
+> Incomplete, non-canonical, unregistered, inactive, and unsafe for production. It activates no source or watcher.
 
 ```yaml
 schema_version: kfm.pipeline_spec.flora.watcher.PROPOSED
@@ -373,7 +259,6 @@ activation: disabled
 owner: OWNER_TBD
 implementation:
   target: NEEDS_VERIFICATION
-  consumer_version: NEEDS_VERIFICATION
 sources:
   - source_descriptor_ref: NEEDS_VERIFICATION
     expected_role: NEEDS_VERIFICATION
@@ -383,22 +268,12 @@ sources:
 watch:
   mode: metadata_only
   cadence: manual
-  checks:
-    - source_version
-    - manifest_digest
-    - source_vintage
+  checks: [source_version, manifest_digest, source_vintage]
   payload_capture: false
 prior_state:
   baseline_ref: NEEDS_VERIFICATION
 materiality:
-  classes:
-    - no_material_change
-    - metadata_change
-    - taxonomy_change
-    - schema_change
-    - rights_or_terms_change
-    - sensitivity_or_stewardship_change
-    - unknown_change
+  classes: [no_material_change, metadata_change, taxonomy_change, schema_change, rights_or_terms_change, sensitivity_or_stewardship_change, unknown_change]
 outputs:
   admit_to_raw: false
   publish: false
@@ -409,10 +284,8 @@ receipts:
   material_change_required: true
 security:
   log_sensitive_values: false
-  log_endpoint_secrets: false
 rollback:
   kill_switch: NEEDS_VERIFICATION
-  prior_active_spec_ref: null
 ```
 
 [Back to top](#top)
@@ -421,75 +294,22 @@ rollback:
 
 ## Materiality and finite outcomes
 
-### Materiality classes
-
 | Class | Meaning | Default handoff |
 |---|---|---|
-| `NO_MATERIAL_CHANGE` | Compared metadata is equivalent under the reviewed rules. | No-op receipt. |
+| `NO_MATERIAL_CHANGE` | Compared metadata is equivalent. | No-op receipt. |
 | `AVAILABILITY_CHANGE` | Availability or endpoint state changed. | Candidate/review; no blind fetch. |
-| `METADATA_CHANGE` | Non-payload source metadata changed. | Candidate/review. |
-| `PAYLOAD_DIGEST_CHANGE` | Reviewed digest or manifest changed. | Candidate intake review; not admission. |
-| `SCHEMA_OR_FORMAT_CHANGE` | Shape, field, encoding, package, or manifest format changed. | Hold or quarantine review. |
+| `METADATA_CHANGE` | Non-payload metadata changed. | Candidate/review. |
+| `PAYLOAD_DIGEST_CHANGE` | Reviewed digest or manifest changed. | Intake review; not admission. |
+| `SCHEMA_OR_FORMAT_CHANGE` | Shape, field, encoding, package, or manifest format changed. | Hold/quarantine review. |
 | `TAXONOMY_CHANGE` | Taxonomy/nomenclature/crosswalk signal changed. | Taxonomy steward review. |
 | `RIGHTS_OR_TERMS_CHANGE` | License, terms, access, attribution, or redistribution changed. | Suspend and rights review. |
-| `SENSITIVITY_OR_STEWARDSHIP_CHANGE` | Sensitivity, cultural authority, stewardship, embargo, or consent posture changed. | Suspend; fail closed. |
-| `CORRECTION_OR_WITHDRAWAL` | Upstream correction, withdrawal, or supersession notice found. | Suspend affected downstream use and open correction review. |
-| `UNKNOWN_CHANGE` | Change cannot be safely classified. | Hold or quarantine; no automatic intake. |
+| `SENSITIVITY_OR_STEWARDSHIP_CHANGE` | Sensitivity, cultural authority, stewardship, embargo, or consent changed. | Suspend; fail closed. |
+| `CORRECTION_OR_WITHDRAWAL` | Correction, withdrawal, or supersession notice found. | Suspend downstream use and review. |
+| `UNKNOWN_CHANGE` | Change cannot be safely classified. | Hold/quarantine. |
 
-A taxonomy change, schema change, or digest change is only a **candidate signal**. It does not prove biological, taxonomic, legal, or public meaning.
+Finite outcomes should include `NO_OP`, `CANDIDATE_CHANGE`, `NEEDS_REVIEW`, `HOLD`, `QUARANTINE`, `ABSTAIN`, `DENY`, `SOURCE_STALE`, `SOURCE_UNAVAILABLE`, `SUSPENDED`, or `ERROR`. Empty results must not silently replace negative states.
 
-### Finite outcomes
-
-A watcher run should return exactly one finite outcome, such as:
-
-- `NO_OP`
-- `CANDIDATE_CHANGE`
-- `NEEDS_REVIEW`
-- `HOLD`
-- `QUARANTINE`
-- `ABSTAIN`
-- `DENY`
-- `SOURCE_STALE`
-- `SOURCE_UNAVAILABLE`
-- `SUSPENDED`
-- `ERROR`
-
-Recommended reason-code families include:
-
-```text
-SOURCE_DESCRIPTOR_MISSING
-SOURCE_NOT_ACTIVE
-SOURCE_ROLE_UNRESOLVED
-RIGHTS_UNKNOWN
-TERMS_STALE
-CULTURAL_AUTHORITY_UNRESOLVED
-SENSITIVITY_UNRESOLVED
-TAXONOMY_AUTHORITY_UNRESOLVED
-BASELINE_MISSING
-BASELINE_CONFLICT
-SOURCE_STALE
-SOURCE_UNAVAILABLE
-CHANGE_UNCLASSIFIED
-SCHEMA_DRIFT
-TAXONOMY_DRIFT
-CORRECTION_NOTICE_DETECTED
-WITHDRAWAL_NOTICE_DETECTED
-REVIEW_PATH_MISSING
-RECEIPT_WRITE_FAILED
-SENSITIVE_DIFF_BLOCKED
-DIRECT_ADMISSION_ATTEMPT
-DIRECT_PUBLICATION_ATTEMPT
-KILL_SWITCH_ACTIVE
-```
-
-No empty result may silently replace a deny, hold, abstention, stale state, or error.
-
-### Idempotency and change storms
-
-- The same spec digest, source state, baseline, and comparison result should produce the same logical outcome and idempotency key.
-- Duplicate notifications and candidate records should be suppressed or linked.
-- Rapid upstream churn should trigger debounce/rate controls and review, not repeated publication work.
-- Baseline updates require a receipt and must not hide an unresolved change.
+The same spec digest, source state, baseline, and comparison result should produce the same logical outcome and idempotency key. Duplicate notifications should be linked or suppressed, and rapid upstream churn should trigger debounce/rate controls and review.
 
 [Back to top](#top)
 
@@ -497,40 +317,21 @@ No empty result may silently replace a deny, hold, abstention, stale state, or e
 
 ## Sensitivity, cultural rights, and no-leak boundary
 
-### Deny-by-default classes
+The following must not appear at exact or reconstructable detail in watcher artifacts:
 
-The following must not appear at exact or reconstructable detail in watcher artifacts unless a separately governed restricted process explicitly permits it:
-
-- rare, protected, threatened, endangered, medicinal, ceremonial, culturally significant, or stewardship-controlled plant locations;
-- herbarium locality descriptions, collection notes, collector/landowner identities, accession details, or timestamps that reveal a protected site;
+- rare, protected, threatened, medicinal, ceremonial, culturally significant, or stewardship-controlled plant locations;
+- herbarium locality descriptions, collection notes, collector/landowner identities, accession details, or revealing timestamps;
 - restoration planting sites, seed-source locations, private parcels, monitoring plots, or rehabilitation locations;
 - precise phenology observations or repeated timing that reveals a vulnerable population;
-- small counts, small cells, map screenshots, file names, object-store paths, URLs, query strings, source identifiers, or diffs that enable reconstruction;
-- cultural or traditional ecological knowledge, consent restrictions, embargoes, reviewer notes, or stewardship contacts;
-- transform parameters, seeds, grid sizes, radii, masking rules, or other operational geoprivacy details;
-- credentials, tokens, private endpoints, request headers, signed URLs, or secret-manager paths.
+- small counts, cells, screenshots, file names, paths, URLs, query strings, source identifiers, or diffs that enable reconstruction;
+- cultural or traditional ecological knowledge, consent restrictions, embargoes, private reviewer notes, or stewardship contacts;
+- transform parameters, seeds, grid sizes, radii, masking rules, credentials, tokens, request headers, or signed URLs.
 
-### Watcher artifact minimization
+Watcher artifacts should contain only stable governed references, allowlisted non-sensitive metadata, digests, bounded change classes/reason codes, public-safe source-role labels, handoff refs, outcomes, and audit timestamps.
 
-Watcher logs, reports, receipts, notifications, PRs, issues, dashboards, and generated summaries should contain only:
+Even public inputs can become sensitive when joined. Hold rather than summarize when a source change could combine with parcel, habitat, soil, hydrology, archaeology, road, settlement, land-management, phenology, specimen, or restoration data to reveal protected locations or knowledge.
 
-- stable governed references;
-- allowlisted non-sensitive metadata;
-- digests rather than payloads;
-- bounded change class and reason code;
-- public-safe source family and role labels;
-- review and handoff references;
-- outcome and timestamps necessary for audit.
-
-They should not contain source payload fragments, unreviewed diffs, exact geometry, free-text locality, private identities, cultural knowledge, or hidden operational parameters.
-
-### Join-induced sensitivity
-
-Even public inputs can become sensitive when joined. A watcher must hold rather than summarize when a changed source could combine with parcel, habitat, soil, hydrology, archaeology, road, settlement, land-management, phenology, specimen, or restoration data to reveal protected locations or knowledge.
-
-### AI boundary
-
-AI may help classify bounded metadata or draft a review summary only after policy-safe retrieval. Generated language cannot determine source role, taxonomy authority, cultural consent, sensitivity, materiality, admission, evidence closure, or release. Any generated summary must use allowlisted fields and be invalidated when underlying source, policy, or review state changes.
+AI may draft a bounded review summary only from policy-safe fields. Generated language cannot decide source role, taxonomy authority, cultural consent, sensitivity, materiality, admission, evidence closure, or release.
 
 [Back to top](#top)
 
@@ -538,52 +339,25 @@ AI may help classify bounded metadata or draft a review summary only after polic
 
 ## Validation, review, and activation
 
-### Required validation matrix
-
 | Gate | Positive case | Required negative cases |
 |---|---|---|
-| Shape | Valid profile parses under accepted schema. | Unknown fields, malformed IDs, unsupported version, missing digest. |
-| Placement | One canonical declarative path resolves. | Duplicate active profile, ambiguous shared/domain precedence. |
+| Shape/placement | Accepted schema and one canonical path resolve. | Unknown fields, unsupported version, duplicate active profile, ambiguous precedence. |
 | Consumer | Parser and executable target resolve. | Missing consumer, version mismatch, multiple writers. |
-| Source | Admitted descriptor and expected role resolve. | Missing/inactive source, role mismatch, registry conflict. |
-| Rights/cultural authority | Terms, attribution, stewardship, and consent are current. | Unknown/expired terms, restricted redistribution, unresolved cultural authority. |
+| Source | Admitted descriptor and role resolve. | Missing/inactive source, role mismatch, registry conflict. |
+| Rights/cultural authority | Terms, attribution, stewardship, and consent are current. | Unknown/expired terms, restricted redistribution, unresolved authority. |
 | Taxonomy | Authority/version/crosswalk resolve. | Collision, unknown namespace, stale authority, synonym ambiguity. |
-| Time/freshness | Cadence, source vintage, stale state, and outage rules are deterministic. | Missing baseline, clock ambiguity, stale source, future timestamps. |
-| Checks | Metadata-first comparisons are allowed and deterministic. | Forbidden payload fetch, unsupported header, excessive metadata, hidden endpoint. |
-| Materiality | Each change maps to one class/outcome/reason. | Unknown or conflicting class, direct admission/publication attempt. |
-| Sensitivity | Logs and outputs contain no protected or reconstructable detail. | Rare-plant locality, herbarium clue, cultural knowledge, small-cell or join leak. |
-| Receipts | Run/no-op/change/abort lineage and hashes are emitted. | Missing receipt, missing refs, inconsistent digest, receipt write failure. |
+| Time/freshness | Cadence, vintage, stale state, and outage rules are deterministic. | Missing baseline, clock ambiguity, stale source, future timestamps. |
+| Checks/materiality | Allowed metadata checks map to one finite outcome. | Forbidden payload fetch, excessive metadata, unknown/conflicting class. |
+| Sensitivity | Logs and outputs contain no protected or reconstructable detail. | Rare-plant locality, herbarium clue, cultural knowledge, small-cell/join leak. |
+| Receipts | Run/no-op/change/abort lineage and hashes emit. | Missing receipt/ref, inconsistent digest, receipt write failure. |
 | No-network | Fixtures replay without live services. | Network access, credentials, production endpoint dependency. |
-| Correction | Correction/withdrawal suspends affected profile and opens review. | Stale baseline retained, unsafe notification/cache not invalidated. |
-| Rollback | Prior version/baseline or disabled state restores deterministically. | Missing rollback target, pending candidates continue, leakage remains. |
+| Correction/rollback | Correction suspends use and prior state restores deterministically. | Stale baseline retained, candidates continue, unsafe derivative remains. |
 
-### Fixture posture
+`fixtures/domains/flora/plants_drift/` documents synthetic dry-run scenarios, but payload inventory and consumer alignment remain unverified and tests/validators were not run. Before reliance, inspect payloads, prove they are synthetic/public-safe, bind them to named validators, pair stable expected outputs, and prove no-network/no-leak behavior.
 
-`fixtures/domains/flora/plants_drift/` documents synthetic watcher dry-run scenarios, but its README says payload inventory was not verified and tests/validators were not run. Before relying on it:
+An active profile requires pipeline-spec/executable owner, Flora steward, taxonomy/herbarium steward, source-rights/cultural-stewardship reviewer, sensitivity reviewer, temporal/validation reviewer, evidence/policy/release reviewer, and security review where endpoints/logging/notifications change.
 
-- inspect actual payloads;
-- ensure every example is synthetic and public-safe;
-- bind each fixture to a named validator or consumer;
-- pair stable inputs with expected outputs;
-- prove no network and no sensitive-detail leakage;
-- keep fixture success separate from source authority, policy, evidence, and release.
-
-### Review burden
-
-At minimum, an active Flora watcher profile requires review from:
-
-- pipeline-spec and executable watcher owner;
-- Flora domain steward;
-- plant taxonomy/nomenclature or herbarium steward;
-- source, rights, cultural-authority, and stewardship reviewer;
-- sensitivity/geoprivacy reviewer;
-- temporal/freshness and validation reviewer;
-- evidence/policy/release reviewer for consequential downstream use;
-- security reviewer when credentials, endpoints, logging, or notifications change.
-
-### Governed activation
-
-Activation must record profile ID/version/digest, authoritative path, parser and executable versions, source refs, fixture/test evidence, reviewers, effective time, schedule, baseline, monitoring owner, kill switch, prior active version, and rollback target. Any trust-bearing change requires renewed review and a new immutable version.
+Activation must record profile ID/version/digest, authoritative path, parser/consumer versions, source refs, fixture/test evidence, reviewers, effective time, schedule, baseline, monitoring owner, kill switch, prior active version, and rollback target.
 
 [Back to top](#top)
 
@@ -593,21 +367,21 @@ Activation must record profile ID/version/digest, authoritative path, parser and
 
 ### This README change
 
-Before merge, close the draft PR and abandon the branch. After merge, use a transparent revert commit or revert PR restoring v0.1 and removing the generated receipt. No runtime rollback is expected because no active profile or runtime changes.
+Before merge, close the draft PR and abandon the branch. After merge, use a transparent revert restoring v0.1 and removing the generated receipt. No runtime rollback is expected because no active profile or runtime changes.
 
-### Future active-profile rollback
+### Future active profile
 
 1. suspend discovery and scheduling;
-2. preserve exact profile/version/digest/activation/run lineage;
+2. preserve profile/version/digest/activation/run lineage;
 3. stop new checks and hold pending candidates;
 4. restore a reviewed prior profile and baseline, or remain disabled;
 5. re-evaluate source role, rights, cultural authority, taxonomy, sensitivity, freshness, and correction state;
-6. inventory affected work/quarantine records, receipts, caches, issues, notifications, indexes, exports, tiles, search, embeddings, and generated summaries;
-7. issue correction, withdrawal, supersession, or rollback records where required;
-8. invalidate unsafe or stale derivatives and verify no protected detail remains exposed;
+6. inventory affected records, receipts, caches, issues, notifications, indexes, exports, tiles, search, embeddings, and generated summaries;
+7. issue correction, withdrawal, supersession, or rollback records;
+8. invalidate unsafe/stale derivatives and verify no protected detail remains exposed;
 9. record reviewer decisions and rollback outcome.
 
-A source correction, rights change, cultural/stewardship revocation, taxonomy revision, sensitivity reclassification, or discovered leak must suspend affected profiles until downstream impact is reviewed.
+A source correction, rights change, cultural/stewardship revocation, taxonomy revision, sensitivity reclassification, or discovered leak must suspend affected profiles until impact is reviewed.
 
 [Back to top](#top)
 
@@ -615,17 +389,7 @@ A source correction, rights change, cultural/stewardship revocation, taxonomy re
 
 ## Definition of done
 
-A watcher profile is not active-ready until:
-
-- authoritative placement, identity, immutable version/digest, parser, consumer, activation record, and rollback target resolve;
-- admitted source refs, roles, rights, terms, attribution, cultural authority, stewardship, taxonomy, sensitivity, cadence, and baseline resolve;
-- comparison methods are metadata-minimizing and source-approved;
-- materiality, outcomes, reason codes, outputs, and no-op/idempotency behavior are deterministic;
-- no-network positive, negative, no-leak, no-admission, correction, suspension, and rollback tests pass;
-- only candidate/quarantine/review/receipt handoffs are possible;
-- exact/reconstructable rare-plant, herbarium, restoration, cultural, private, and collection-security detail is absent;
-- substantive CI, CODEOWNERS, separation of duties, monitoring, correction, and deactivation are enforced;
-- documentation and generated-work provenance are current.
+A profile is not active-ready until canonical placement, identity, immutable version/digest, parser, consumer, activation record, source/rights/cultural/taxonomy/sensitivity/cadence/baseline refs, metadata-minimizing checks, deterministic outcomes, receipts, no-network/no-leak/no-admission/correction/rollback tests, substantive CI, CODEOWNERS, separation of duties, monitoring, correction, deactivation, rollback, and generated-work provenance all resolve. Only candidate/quarantine/review/receipt handoffs may be possible.
 
 [Back to top](#top)
 
@@ -635,24 +399,24 @@ A watcher profile is not active-ready until:
 
 | ID | Question | Status |
 |---|---|---:|
-| `PIPE-SPEC-FLORA-WATCH-001` | Which watcher-spec schema, parser, state vocabulary, and validation entrypoint are canonical? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-002` | Should canonical Flora watcher specs live in this sublane, at `pipeline_specs/flora/`, or under shared `pipeline_specs/watchers/`? | `NEEDS VERIFICATION / ADR` |
-| `PIPE-SPEC-FLORA-WATCH-003` | Should either seven-line plants-drift placeholder be migrated, replaced by a pointer, or retired? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-004` | Is executable ownership domain-specific, shared-plants, or a documented delegation? | `NEEDS VERIFICATION / ADR` |
+| `PIPE-SPEC-FLORA-WATCH-001` | Which schema, parser, state vocabulary, and validation entrypoint are canonical? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-002` | Should canonical specs live here, at `pipeline_specs/flora/`, or under shared `pipeline_specs/watchers/`? | `NEEDS VERIFICATION / ADR` |
+| `PIPE-SPEC-FLORA-WATCH-003` | Should either plants-drift placeholder migrate, become a pointer, or retire? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-004` | Is executable ownership domain-specific, shared-plants, or delegated? | `NEEDS VERIFICATION / ADR` |
 | `PIPE-SPEC-FLORA-WATCH-005` | Which registry/discovery/precedence/scheduler binds profiles? | `UNKNOWN` |
-| `PIPE-SPEC-FLORA-WATCH-006` | Which Flora SourceDescriptors are admitted and active for watcher checks? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-007` | Which source roles, rights, terms, cultural-authority, stewardship, and attribution rules are current? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-006` | Which Flora SourceDescriptors are admitted and active? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-007` | Which roles, rights, terms, cultural-authority, stewardship, and attribution rules are current? | `NEEDS VERIFICATION` |
 | `PIPE-SPEC-FLORA-WATCH-008` | Which taxonomy/nomenclatural authorities control each profile? | `NEEDS VERIFICATION` |
 | `PIPE-SPEC-FLORA-WATCH-009` | Which metadata checks and cadence/freshness budgets are allowed per source? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-010` | Which materiality classes and watcher report/receipt schemas are canonical? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-011` | Where is comparison baseline/state stored, versioned, and restored? | `UNKNOWN` |
-| `PIPE-SPEC-FLORA-WATCH-012` | Which rare-plant, locality, cultural-knowledge, restoration-site, small-count, and join-risk rules are binding? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-013` | Which `plants_drift/` payloads and dry-run/test consumers actually exist? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-014` | Which executable tests and substantive CI prove no-network, no-admission, no-leak, and rollback? | `NEEDS VERIFICATION`; current workflow is TODO-only |
+| `PIPE-SPEC-FLORA-WATCH-010` | Which materiality and watcher report/receipt schemas are canonical? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-011` | Where is baseline/state stored, versioned, and restored? | `UNKNOWN` |
+| `PIPE-SPEC-FLORA-WATCH-012` | Which rare-plant, locality, cultural-knowledge, restoration-site, count, and join-risk rules are binding? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-013` | Which `plants_drift/` payloads and consumers actually exist? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-014` | Which executable tests and substantive CI prove no-network, no-admission, no-leak, and rollback? | `NEEDS VERIFICATION`; workflow is TODO-only |
 | `PIPE-SPEC-FLORA-WATCH-015` | Which CODEOWNERS and separation-of-duties rules govern activation? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-016` | How are taxonomy, rights, cultural authority, sensitivity, source-role, and schema corrections propagated? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-017` | Which caches, issues, notifications, indexes, embeddings, and summaries are invalidated after correction or leakage? | `NEEDS VERIFICATION` |
-| `PIPE-SPEC-FLORA-WATCH-018` | Has any Flora watcher deactivation or rollback drill been executed? | `UNKNOWN` |
+| `PIPE-SPEC-FLORA-WATCH-016` | How are taxonomy, rights, cultural authority, sensitivity, role, and schema corrections propagated? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-017` | Which caches, notifications, indexes, embeddings, and summaries invalidate after correction or leakage? | `NEEDS VERIFICATION` |
+| `PIPE-SPEC-FLORA-WATCH-018` | Has a Flora watcher deactivation or rollback drill run? | `UNKNOWN` |
 
 [Back to top](#top)
 
@@ -662,38 +426,28 @@ A watcher profile is not active-ready until:
 
 | Evidence | Blob / status | Relevance |
 |---|---|---|
-| `pipeline_specs/flora/watchers/README.md` | `e70461b6...` | Prior target and v0.1 controls. |
+| `pipeline_specs/flora/watchers/README.md` | `e70461b6...` | Prior target. |
 | `pipeline_specs/flora/README.md` | `857f1cf4...` | Parent Flora spec boundary. |
 | `pipeline_specs/watchers/README.md` | `4a1f642d...` | Shared watcher-spec boundary. |
-| `pipeline_specs/flora/plants_drift_watcher.yaml` | `efc75e02...` | Seven-line Flora placeholder. |
-| `pipeline_specs/watchers/plants_drift.yaml` | `fa8ab22f...` | Seven-line shared placeholder. |
-| `pipelines/watchers/README.md` | `a3157c70...` | Shared executable watcher boundary. |
-| `pipelines/domains/flora/watchers/README.md` | `ca41b4fc...` | Flora pre-RAW watcher documentation; implementation unverified. |
-| `pipelines/watchers/plants/README.md` | `fc523e15...` | Shared plants watcher documentation; ownership unresolved. |
+| `pipeline_specs/flora/plants_drift_watcher.yaml` | `efc75e02...` | Flora placeholder. |
+| `pipeline_specs/watchers/plants_drift.yaml` | `fa8ab22f...` | Shared placeholder. |
+| `pipelines/domains/flora/watchers/README.md` | `ca41b4fc...` | Flora watcher documentation; implementation unverified. |
+| `pipelines/watchers/plants/README.md` | `fc523e15...` | Shared plants watcher; ownership unresolved. |
 | `configs/domains/flora/README.md` | `3215a5ee...` | README-only config lane. |
-| `data/registry/sources/flora/README.md` | `356cd29c...` | Source controls, topology conflict, rare/cultural sensitivity. |
-| `data/receipts/flora/README.md` | `c28c454b...` | Receipt parent and process-memory boundary. |
-| `docs/domains/flora/SENSITIVITY.md` | `5143fe3b...` | Deny-by-default doctrine and sensitivity-doc conflict. |
+| `data/registry/sources/flora/README.md` | `356cd29c...` | Source controls and topology conflict. |
+| `data/receipts/flora/README.md` | `c28c454b...` | Receipt parent/process-memory boundary. |
+| `docs/domains/flora/SENSITIVITY.md` | `5143fe3b...` | Deny-by-default doctrine and doc conflict. |
 | `policy/domains/flora/README.md` | `b040bff1...` | Broad scaffold. |
 | `policy/sensitivity/flora/README.md` | `4c65abec...` | Sensitivity scaffold. |
 | `tests/domains/flora/README.md` | `40411105...` | Coverage map; executable coverage unknown. |
-| `fixtures/domains/flora/README.md` | `c7c3d770...` | Fixture-lane index; payload/consumer alignment unverified. |
-| `fixtures/domains/flora/plants_drift/README.md` | `f2e79efa...` | Synthetic drift scenarios; tests/validators not run. |
+| `fixtures/domains/flora/README.md` | `c7c3d770...` | Fixture index. |
+| `fixtures/domains/flora/plants_drift/README.md` | `f2e79efa...` | Synthetic scenarios; tests not run. |
 | `.github/workflows/domain-flora.yml` | `c7737001...` | Three TODO-only jobs. |
 | `.github/CODEOWNERS` | `6adabefc...` | Placeholder ownership. |
-| generated-receipt schema | `fba21ed2...` | AI-authorship provenance contract. |
-| Directory Rules | `2affb080...` | Responsibility-root and lifecycle governance. |
+| generated-receipt schema | `fba21ed2...` | AI provenance contract. |
+| Directory Rules | `2affb080...` | Placement/lifecycle governance. |
 
-### Search evidence
-
-- direct search for `pipeline_specs/flora/watchers` found no concrete profile inside the requested sublane;
-- searches for `flora.watchers`, `kfm.pipeline_spec.flora.watcher`, and `tests/pipeline_specs/flora/watchers` found no active profile, accepted schema, or spec-specific executable tests;
-- the two external watcher-shaped files were opened and confirmed as seven-line `PROPOSED` inventory placeholders;
-- no matching open PR or scoped branch existed before mutation.
-
-### Limitations
-
-This was a bounded repository inspection. It did not prove a full recursive inventory, deployed scheduler/runtime state, secret-manager state, current upstream terms, branch protection, or off-repository configuration.
+Searches found no concrete profile in the requested sublane, no accepted Flora watcher schema, and no spec-specific executable tests. The two external watcher-shaped files were opened and confirmed as seven-line `PROPOSED` placeholders. This was a bounded repository inspection; deployed runtime state, secret-manager state, current upstream terms, branch protection, and off-repository configuration were not proven.
 
 [Back to top](#top)
 
@@ -707,7 +461,7 @@ This was a bounded repository inspection. It did not prove a full recursive inve
 - Classified the direct sublane as README-only and inactive.
 - Surfaced two external plants-drift placeholders and unresolved declarative/executable ownership.
 - Added taxonomy, specimen/occurrence, cultural-rights, sensitivity, metadata-first, finite-outcome, validation, activation, correction, and rollback controls.
-- Corrected receipt guidance to the verified `data/receipts/flora/` parent without selecting a final subtype layout.
+- Corrected receipt guidance to `data/receipts/flora/` without selecting a final subtype layout.
 - Preserved v0.1 watcher families, non-publication, lifecycle, receipt, review, fixture, test, and open-question concerns.
 
 ### v0.1 — 2026-06-13
