@@ -1,315 +1,851 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/connectors-nrcs-readme
-title: connectors/nrcs/ — NRCS Connector Family Lane
+title: connectors/nrcs/ — NRCS Connector Family and Source-Admission Boundary
 type: readme
-version: v0.1
-status: draft
-owners: OWNER_TBD — Source steward · Connector steward · NRCS steward · Soil steward · Agriculture steward · Hydrology steward · Ecology steward · Climate steward · Data steward · Validation steward · Docs steward
-created: 2026-06-19
-updated: 2026-06-19
-policy_label: public; multi-product; source-admission-only
+version: v0.2
+status: draft; repository-grounded; connector-family-boundary; implementation-placeholder; source-inactive; non-authoritative
+owners: OWNER_TBD — Connector steward · Source steward · NRCS steward · Package steward · Soil steward · Agriculture liaison · Hydrology liaison · Atmosphere/Climate liaison · Tribal/sovereignty reviewer · Rights reviewer · Sensitivity reviewer · Security steward · Validation steward · Contract steward · Schema steward · Receipt steward · Migration steward · CI steward · Docs steward
+created: 2026-06-20
+updated: 2026-07-15
+supersedes: v0.1 planning-oriented NRCS connector-family guide
+policy_label: "public-doctrine; connector-family-boundary; nrcs; source-inactive; implementation-placeholder; product-isolated; descriptor-gated; no-network-by-default; fixture-first; rights-aware; sensitivity-aware; sovereignty-aware; raw-quarantine-only; watcher-non-publisher; no-publication; migration-required; rollback-aware"
+current_path: connectors/nrcs/README.md
+truth_posture: CONFIRMED repository-present NRCS family README, merged source-root/namespace/test v0.2 boundaries, grounded SDA/SCAN/SSURGO/gSSURGO/gNATSGO boundaries, kfm-connector-nrcs 0.0.0 placeholder metadata, empty initializer, empty PROPOSED source-authority register, proposed source-admission ADR, TODO-only connector workflow, SCAN/SSURGO topology conflicts, and bounded absence of shared/product modules, named tests, fixture root, package-local test configuration, and dedicated NRCS workflows / PROPOSED family contract, shared-kernel limits, product-adapter admission, finite outcomes, runner handoff, tests, CI, correction, migration, and rollback / CONFLICTED documentation-rich product contracts versus empty executable package, SCAN and SSURGO placement, source-role versus support-type vocabularies, and root pytest availability versus absent package build/discovery / UNKNOWN accepted owners, canonical topology, active SourceDescriptors, approved source surfaces, dependencies, exports, consumers, fixtures, substantive CI, schedules, receipts, deployment, and runtime health
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 96ae9619f3d38daeb7a2881c0ae691e31314177c
+  prior_blob: 888236f218fc0892c54c947c0c2651b34ca5137b
+  source_root_blob: 7edac87aec3ff4ed5621dedd5c31ebaa2b04759a
+  namespace_blob: 00d12e0f07e53cff877e9ea4d396c96b3fb03658
+  tests_blob: 929ca9a819e40f1b95d829e35d573603a2407b94
+  package_metadata_blob: c6bb1565db7df490bee52a597d04d694e2b9f8a4
+  namespace_initializer_blob: e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+  sda_blob: 6f3ba95d70ae0779d00e26ad360f7b8737dbf77a
+  scan_blob: 76eb5a0683e571d045d01d7e8dc387ef497ba958
+  ssurgo_blob: 357efa694fb059ed91eed3bc2b78829b673f14c3
+  gssurgo_blob: 3ad1db6721224232f4e5eb99440a7b031bdb7afa
+  gnatsgo_blob: 83b3816033fc558fd552480edefdde978488ccfd
+  flat_scan_blob: e4e5ffe1a64ec533f4ff15503270e7cd570432b6
+  flat_ssurgo_blob: a161b2aa80fa3192c0a007a04e000a43c07eba49
+  standalone_ssurgo_alias_blob: bc6370b9206e22ce4f2657d9ce8fb28111244f40
+  source_authority_register_blob: 82c23722520922f5ca0dad7f37ed794d1c2edf81
+  source_admission_adr_blob: 0e8d03786bcc99b19f179680890df9e30a27633a
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  connector_gate_workflow_blob: fc36ecced55bb0b4002d551cb28addfff0be918a
+  bounded_path_checks:
+    - source-root, namespace, tests, SDA, SCAN, SSURGO, gSSURGO, and gNATSGO READMEs are grounded at v0.2
+    - pyproject.toml contains only project name kfm-connector-nrcs and version 0.0.0
+    - src/nrcs/__init__.py is empty
+    - selected shared modules and all five product modules were not found
+    - selected safety/product tests and fixture-root README were not found
+    - package-local pytest/tox configuration was not found
+    - dedicated NRCS workflows were not found
+    - source-authority register is PROPOSED with entries []
+    - connector-gate workflow contains TODO echo steps
 related:
   - ../README.md
+  - ./src/README.md
+  - ./src/nrcs/README.md
+  - ./tests/README.md
+  - ./pyproject.toml
+  - ./sda/README.md
+  - ./scan/README.md
+  - ./ssurgo/README.md
+  - ./gssurgo/README.md
+  - ./gnatsgo/README.md
+  - ../nrcs-scan/README.md
+  - ../nrcs-ssurgo/README.md
+  - ../ssurgo/README.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0017-source-descriptor-admission-process.md
   - ../../docs/sources/catalog/nrcs.md
   - ../../docs/sources/catalog/nrcs/README.md
-  - ../../docs/sources/catalog/nrcs/web-soil-survey.md
-  - ../nrcs-ssurgo/README.md
-  - ../nrcs-scan/README.md
-  - ../../pipelines/domains/soil/ssurgo_ingest/README.md
-  - ../../pipelines/domains/soil/scan_awdb_ingest/README.md
-  - ../../docs/domains/soil/README.md
-  - ../../docs/domains/agriculture/README.md
-  - ../../docs/domains/hydrology/README.md
-  - ../../docs/domains/atmosphere/README.md
-  - ../../data/registry/sources/
+  - ../../control_plane/source_authority_register.yaml
   - ../../data/raw/
   - ../../data/quarantine/
   - ../../data/receipts/
   - ../../data/proofs/
+  - ../../contracts/
+  - ../../schemas/
   - ../../policy/rights/
   - ../../policy/sensitivity/
   - ../../release/
-tags: [kfm, connectors, nrcs, usda, ssurgo, gssurgo, statsgo, soil-data-access, web-soil-survey, scan, snotel, nwcc, ecological-sites, conservation, soil, agriculture, hydrology, climate, source-admission, raw, quarantine, governance]
+  - ../../.github/workflows/connector-gate.yml
+tags: [kfm, connectors, nrcs, connector-family, source-admission, product-isolation, sda, scan, ssurgo, gssurgo, gnatsgo, soil, agriculture, hydrology, atmosphere, no-network, fixture-first, raw, quarantine, provenance, rights, sensitivity, sovereignty, migration, correction, rollback]
 notes:
-  - "Parent connector-family lane for NRCS source intake and admission helpers."
-  - "Directory Rules §7.3 lists nrcs/ in the canonical connector spine; this README defines the connector-family boundary, not source or product truth."
-  - "NRCS products are multi-product and role-specific; do not admit all NRCS material under one source role, cadence, scale, or release posture."
-  - "Source-family and source-product doctrine belong under docs/sources/catalog/nrcs.md, docs/sources/catalog/nrcs/, and source descriptors, not here."
-  - "Connector output may enter raw or quarantine admission lanes only."
-  - "NRCS material must not become parcel ownership truth, private landowner truth, conservation-compliance truth, legal access truth, water-rights truth, field verification, policy authority, or public release by itself."
+  - "This revision changes only connectors/nrcs/README.md."
+  - "Current evidence establishes grounded documentation and an empty 0.0.0 package scaffold, not an operational connector family."
+  - "The family coordinates product boundaries; it does not replace source descriptors, doctrine, schemas, contracts, policy, tests, pipelines, receipts, proofs, release records, or public interfaces."
+  - "Connector code may return RAW or QUARANTINE candidates and receipt-ready facts; orchestration owns persistence and receipt emission."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# NRCS Connector Family
-
-> Parent source-specific fetch and admission lane for USDA Natural Resources Conservation Service source material used by KFM Soil, Agriculture, Hydrology, Ecology, Climate, Conservation, and Focus Mode workflows.
-
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Connector family" src="https://img.shields.io/badge/scope-connector__family-blue">
-  <img alt="Placement: canonical" src="https://img.shields.io/badge/placement-canonical__connector-green">
-  <img alt="Source role: multi-product" src="https://img.shields.io/badge/source--role-multi--product-purple">
-  <img alt="Private land: not authority" src="https://img.shields.io/badge/private__land-not__authority-red">
-  <img alt="Lifecycle: raw or quarantine only" src="https://img.shields.io/badge/lifecycle-raw%20%7C%20quarantine%20only-orange">
-</p>
+# NRCS Connector Family and Source-Admission Boundary
 
 `connectors/nrcs/`
 
-## Quick jumps
+> Repository-present coordination and implementation boundary for candidate USDA Natural Resources Conservation Service connector work. Current evidence establishes grounded documentation, a minimal `0.0.0` package shell, and an empty namespace—not an active source family, approved acquisition surface, executable adapter suite, collected test suite, substantive connector gate, deployment, or release-ready data path.
 
-[Scope](#scope) · [Repo fit](#repo-fit) · [NRCS product lanes](#nrcs-product-lanes) · [Lifecycle sketch](#lifecycle-sketch) · [Authority boundary](#authority-boundary) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Admission posture](#admission-posture) · [Anti-collapse posture](#anti-collapse-posture) · [Sibling placement posture](#sibling-placement-posture) · [Validation](#validation) · [Definition of done](#definition-of-done)
+![status](https://img.shields.io/badge/status-draft-yellow)
+![version](https://img.shields.io/badge/version-v0.2-informational)
+![maturity](https://img.shields.io/badge/maturity-documentation__scaffold-lightgrey)
+![source](https://img.shields.io/badge/source__family-inactive-critical)
+![package](https://img.shields.io/badge/package-0.0.0__shell-orange)
+![network](https://img.shields.io/badge/network-off__by__default-critical)
+![lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE-blue)
+![publication](https://img.shields.io/badge/publication-DENIED-red)
 
----
-
-## Scope
-
-`connectors/nrcs/` is the canonical connector-family lane for NRCS source intake and admission helpers.
-
-This folder may contain connector-family documentation, shared NRCS request helpers, source-admission conventions, product-lane indexes, fixture pointers, no-network test guidance, and raw/quarantine output adapters for NRCS products. It may also host nested product-specific connector lanes if Directory Rules, ADRs, or a migration note consolidate sibling NRCS connectors under this family.
-
-It must not become NRCS source-family truth, product doctrine, Soil domain doctrine, conservation policy, private landowner truth, parcel truth, water-rights truth, regulatory determination authority, field verification, source descriptor authority, schema authority, catalog/triplet authority, proof authority, release authority, pipeline authority, public API behavior, or public UI behavior.
+**Quick links:** [Purpose](#purpose) · [Evidence](#status-and-evidence) · [Authority](#authority-and-directory-rules-basis) · [Tree](#confirmed-bounded-tree) · [Products](#product-lane-index) · [Invariants](#keystone-invariants) · [Activation](#source-activation-and-admission) · [Shared code](#shared-family-kernel-boundary) · [Isolation](#product-isolation-contract) · [Operations](#configuration-network-and-resource-boundary) · [Semantics](#identity-time-quality-scale-and-lineage) · [Rights](#rights-sensitivity-sovereignty-and-disclosure) · [Lifecycle](#raw-quarantine-runner-and-receipt-handoff) · [Outcomes](#finite-outcomes-and-reason-codes) · [Domains](#domain-and-consumer-boundaries) · [Tests](#tests-fixtures-and-ci) · [Topology](#topology-conflicts-and-migration) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Ledger](#evidence-ledger) · [Rollback](#rollback-correction-deprecation-and-migration)
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Owner:** `OWNER_TBD`  
-> **Path:** `connectors/nrcs/`  
-> **Truth posture:** the path exists in the repository as this README; actual modules, endpoints, tests, fixtures, source descriptors, credentials, CI wiring, product-lane inventory, parser behavior, and release behavior remain `NEEDS VERIFICATION`.
+> **This README is not a source activation or implementation decision.** Path presence does not establish an admitted `SourceDescriptor`, approved source surface, buildable package, supported API, product adapter, fixtures, tests, schedule, receipt flow, deployment, or publication readiness.
+
+> [!CAUTION]
+> **NRCS is a source family, not a single data product or authority role.** SDA results, SCAN observations, SSURGO packages, gSSURGO grids, and gNATSGO grids must retain separate identity, cadence, scale, quality, support type, lineage, and public-use constraints.
+
+> [!WARNING]
+> **Connector success is not evidence closure or release.** A connector may preserve source material and return an admission candidate. It may not approve policy, resolve an `EvidenceBundle`, create a released layer, answer a public claim, or bypass the KFM lifecycle.
 
 ---
 
-## Repo fit
+<a id="purpose"></a>
+
+## Purpose
+
+This README governs the NRCS connector-family boundary.
+
+It defines:
+
+1. the family responsibility root;
+2. the verified current maturity;
+3. the product-lane split;
+4. the limits of shared family code;
+5. the prerequisites for source activation;
+6. the connector-to-runner handoff;
+7. topology, test, correction, and rollback expectations.
+
+A future conforming family may support:
+
+- accepted source and product profile resolution;
+- bounded read-only retrieval;
+- deterministic no-network fixtures;
+- source-native parsing;
+- product-specific identity, time, quality, scale, rights, sensitivity, and lineage;
+- finite connector outcomes;
+- RAW or QUARANTINE candidate construction;
+- receipt-ready facts;
+- correction, supersession, migration, and rollback.
+
+It must not become:
+
+- source or product doctrine;
+- a SourceDescriptor or source-authority register;
+- a schema, semantic contract, policy, or release home;
+- a lifecycle, receipt, proof, catalog, triplet, or published-data store;
+- a scheduler or pipeline;
+- a public API, UI, map, notification, or AI-answer surface;
+- a generic soil connector that erases product distinctions.
+
+[Back to top](#top)
+
+---
+
+<a id="status-and-evidence"></a>
+
+## Status and evidence
+
+| Surface | Status | Safe conclusion |
+|---|---:|---|
+| Family README | **CONFIRMED v0.1 before revision** | A planning-oriented family guide existed. |
+| [`src/README.md`](./src/README.md) | **CONFIRMED v0.2** | Source placement and package-discovery rules are documented. |
+| [`src/nrcs/README.md`](./src/nrcs/README.md) | **CONFIRMED v0.2** | Proposed import and package behavior are documented. |
+| [`tests/README.md`](./tests/README.md) | **CONFIRMED v0.2** | Test and fixture admission rules are documented. |
+| Package metadata | **CONFIRMED minimal** | `kfm-connector-nrcs` is version `0.0.0`. |
+| Namespace initializer | **CONFIRMED empty** | No exports or runtime behavior are established. |
+| Shared modules | **NOT FOUND at checked paths** | No shared family implementation is established. |
+| Product modules | **NOT FOUND at checked paths** | No executable SDA, SCAN, SSURGO, gSSURGO, or gNATSGO adapter is established. |
+| Named tests and fixture root | **NOT FOUND at checked paths** | No connector test coverage is established. |
+| Dedicated NRCS workflow | **NOT FOUND** | No package-specific CI gate is established. |
+| Generic connector workflow | **CONFIRMED TODO-only** | Green status proves orchestration only. |
+| Source authority register | **CONFIRMED empty / PROPOSED** | No active NRCS source is established. |
+
+### Truth labels
+
+| Label | Meaning here |
+|---|---|
+| **CONFIRMED** | Verified from repository content or exact path checks. |
+| **PROPOSED** | Candidate design requiring implementation and review. |
+| **CONFLICTED** | Current paths or vocabularies express competing choices. |
+| **UNKNOWN** | Runtime or governance state was not established. |
+| **NEEDS VERIFICATION** | Checkable before implementation or reliance, but unresolved. |
+
+This revision does not establish package buildability, supported Python versions, dependencies, exports, active sources, approved operations, current source formats, fixtures, tests, schedules, receipts, deployments, consumers, runtime health, or release approval.
+
+[Back to top](#top)
+
+---
+
+<a id="authority-and-directory-rules-basis"></a>
+
+## Authority and Directory Rules basis
+
+Directory Rules place source-specific fetch, probe, parse, and admission implementation under `connectors/`. `connectors/nrcs/` is therefore the sound responsibility root for an NRCS family implementation.
+
+Placement does not confer broader authority.
+
+| Concern | Owning surface |
+|---|---|
+| Family coordination and implementation | `connectors/nrcs/` |
+| Source layout | `connectors/nrcs/src/` |
+| Python namespace | `connectors/nrcs/src/nrcs/` |
+| Product source edge | Product lane and eventual product adapter |
+| Connector tests | `connectors/nrcs/tests/` |
+| Source doctrine | `docs/sources/catalog/nrcs*` |
+| Source activation | SourceDescriptor, authority register, activation decision |
+| Semantic contracts | `contracts/` |
+| Machine schemas | `schemas/` |
+| Rights and sensitivity | `policy/` and review records |
+| Lifecycle stores | `data/` responsibility roots |
+| Receipts and proofs | `data/receipts/`, `data/proofs/` |
+| Transformation | `pipelines/` |
+| Release | `release/` |
+| Public access | Governed APIs and released artifacts |
+
+A file belongs here only when its primary responsibility is NRCS-family connector coordination, safely shared connector implementation, a ratified product adapter, connector tests, package metadata, or documentation governing those responsibilities.
+
+[Back to top](#top)
+
+---
+
+<a id="confirmed-bounded-tree"></a>
+
+## Confirmed bounded tree
+
+This is a **bounded verified surface**, not a complete-tree claim:
 
 ```text
-connectors/
-└── nrcs/
+connectors/nrcs/
+├── README.md
+├── pyproject.toml
+├── src/
+│   ├── README.md
+│   └── nrcs/
+│       ├── README.md
+│       └── __init__.py
+├── tests/
+│   └── README.md
+├── sda/
+│   └── README.md
+├── scan/
+│   └── README.md
+├── ssurgo/
+│   └── README.md
+├── gssurgo/
+│   └── README.md
+└── gnatsgo/
     └── README.md
 ```
 
-Related responsibility roots:
+The product and package surfaces are documentation-led. Selected implementation modules, tests, fixtures, package-local test configuration, and dedicated workflows were absent at the checked paths.
 
-```text
-connectors/                                  # source-specific fetch and admission code
-docs/sources/catalog/nrcs.md                # NRCS source-family profile
-docs/sources/catalog/nrcs/                  # NRCS source-family and product-page doctrine
-docs/domains/soil/                          # soil domain context
-docs/domains/agriculture/                   # agriculture and conservation context
-docs/domains/hydrology/                     # hydrology and water-context interpretation
-docs/domains/atmosphere/                    # climate and station-observation context
-pipelines/domains/soil/                     # downstream executable soil pipelines, not connector-owned
-data/registry/sources/                      # source descriptors and activation state
-data/raw/                                   # raw staged source outputs by owning domain
-data/quarantine/                            # held material requiring source/role/rights/sensitivity review
-data/receipts/                              # ingest, checksum, transform, aggregation, and review receipts
-data/proofs/                                # EvidenceBundles and proof packs
-policy/rights/                              # terms, attribution, and source-use review
-policy/sensitivity/                         # tribal, private-land, ecology, cultural, exact-location, and release rules
-release/                                    # release decisions, manifests, rollback, correction state
-apps/governed-api/                          # downstream public trust membrane, not connector-owned
-apps/explorer-web/                          # downstream map UI, never direct RAW/QUARANTINE access
-```
+[Back to top](#top)
 
 ---
 
-## NRCS product lanes
+<a id="product-lane-index"></a>
 
-NRCS is a multi-product source family. Do not create a single NRCS-wide source role, cadence, scale, schema, or release posture.
+## Product lane index
 
-| Product or sub-source | Product doctrine | Default posture | Connector placement status |
+| Product | Evidence form | Required preservation | Current posture |
 |---|---|---|---|
-| SSURGO | `docs/sources/catalog/nrcs.md`; `docs/sources/catalog/nrcs/` | Primary for official soil-survey spatial/tabular source material within intended scale and coverage. | Parent family is `connectors/nrcs/`; sibling `connectors/nrcs-ssurgo/` exists as draft and may need ADR/migration. |
-| gSSURGO | `docs/sources/catalog/nrcs.md`; product doc if present | Derived gridded/statewide soil product; preserve derivative lineage and generalization notes. | `NEEDS VERIFICATION`. |
-| STATSGO2 | `docs/sources/catalog/nrcs.md` | Broad regional context only; too coarse for parcel or detailed county-feature claims. | `NEEDS VERIFICATION`. |
-| Soil Data Access | `docs/sources/catalog/nrcs.md`; product doc if present | Query-backed soil attributes; query and response must be receipted. | `NEEDS VERIFICATION`. |
-| Web Soil Survey | `docs/sources/catalog/nrcs/web-soil-survey.md` | Disposition open for WSS as ingest surface; WSS may be link-out, candidate-evidence, or full ingest only after ADR. | `UNRESOLVED / ADR-needed`. |
-| SCAN | `docs/sources/catalog/nrcs.md` | Primary for station observations; station is not area truth; Tribal SCAN requires extra review. | Parent family is `connectors/nrcs/`; sibling `connectors/nrcs-scan/` exists as draft and may need ADR/migration. |
-| SNOTEL / snow survey | `docs/sources/catalog/nrcs.md` | Station/product records for snowpack and water-supply context; freshness matters. | `NEEDS VERIFICATION`. |
-| Ecological Site Descriptions | `docs/sources/catalog/nrcs.md`; product doc if present | Public ecological-site records with sensitive ecology review. | `NEEDS VERIFICATION`. |
-| Conservation practice standards | `docs/sources/catalog/nrcs.md`; product doc if present | Public technical standards/guidance; does not prove local implementation. | `NEEDS VERIFICATION`. |
+| [`sda/`](./sda/README.md) | Bounded query request and result set | Query-profile identity, parameters, result shape, ordering, keys, limits, digest, correction | README-only; source inactive; free-form live SQL denied |
+| [`scan/`](./scan/README.md) | Station observation | Network, station, variable, time, cadence, units, sensor depth, quality, freshness, Tribal posture | README-only; placement conflicted; source inactive |
+| [`ssurgo/`](./ssurgo/README.md) | Static survey-area package | Survey area, package/assets, archive safety, CRS, geometry, tables, relationships, MUKEY/COKEY/CHKEY, scale, vintage | README-only; three-lane topology conflict; source inactive |
+| [`gssurgo/`](./gssurgo/README.md) | Gridded derivative | Grid, CRS, transform, resolution, bands, nodata, joins, source-survey vintage, rasterization lineage | README-only; descriptor identity conflicted; source inactive |
+| [`gnatsgo/`](./gnatsgo/README.md) | National soil-grid candidate | Accepted product identity, grid, resolution, attributes, modeled/fill/generalization lineage, vintage | README-only; product identity unsettled; source inactive |
 
-> [!CAUTION]
-> An NRCS product mentioned here is not admitted just because it appears in this table. Admission requires an active SourceDescriptor, rights and sensitivity posture, source-role assignment, fixture/test coverage, and governed raw/quarantine handoff.
-
----
-
-## Lifecycle sketch
-
-```mermaid
-flowchart LR
-  SRC[NRCS source surface] --> CONN[connectors/nrcs]
-  CONN --> RAW[data/raw/<domain>/<source_id>/<run_id>]
-  CONN --> QUAR[data/quarantine/<domain>/<source_id>/<run_id>]
-
-  RAW --> NEXT[downstream governed stages]
-  QUAR --> REVIEW[source / role / rights / sensitivity review]
-
-  NEXT -. outside this connector .-> WORK[data/work]
-  NEXT -. outside this connector .-> PROC[data/processed]
-  NEXT -. outside this connector .-> CAT[data/catalog + data/triplets]
-  NEXT -. outside this connector .-> PUB[data/published]
-
-  PUB -. served only through .-> API[apps/governed-api]
-  API -. public rendering .-> UI[apps/explorer-web]
-```
-
-> [!CAUTION]
-> Connector code admits source material. It does not normalize soil records, publish soil layers, decide public release, prove parcel or ownership claims, certify conservation compliance, or answer public claims. Promotion remains a governed state transition, not a file move.
-
----
-
-## Authority boundary
+Required separation:
 
 ```text
-OUTPUT LIMIT:
-  data/raw/<domain>/<source_id>/<run_id>/
-  data/quarantine/<domain>/<source_id>/<run_id>/
-
-NOT HERE:
-  NRCS source-family truth
-  product-page doctrine
-  Soil or Agriculture domain truth
-  private landowner, parcel, access, or ownership truth
-  conservation-compliance authority
-  farm-program authority
-  water-rights authority
-  field verification
-  source descriptor authority
-  rights or sensitivity policy
-  processed derivatives
-  catalog records
-  triplet records
-  public tiles or map artifacts
-  receipts/proofs as authority
-  release decisions
-  published artifacts
-  public API behavior
-  public UI behavior
+SDA query result
+  != SSURGO survey package
+  != gSSURGO grid
+  != gNATSGO national grid
+  != SCAN station observation
+  != normalized Soil object
+  != current field verification
+  != parcel or ownership truth
+  != regulatory determination
+  != released public claim
 ```
 
----
+Other NRCS programs or documents do not become connector lanes merely because they exist in source documentation. A new lane requires verified identity, Directory Rules review, source doctrine, descriptor and activation, rights/sensitivity review, fixture-first tests, CI, and migration notes where paths overlap.
 
-## Inputs
-
-| Accepted item | Required posture |
-|---|---|
-| Family README and index | Orient NRCS connector work without claiming source activation, rights, release, or publication state. |
-| Shared request helper | Preserve endpoint family, product lane, request path, parameters, retrieval time, response status, and source descriptor reference. |
-| Product manifest helper | Preserve product, cadence, scale, survey area, station, issue/update time, file name, file vintage, size, digest, and source URL where applicable. |
-| Parser helper | Preserve product-specific fields and source-role distinctions; do not collapse NRCS-wide semantics. |
-| Freshness helper | Preserve source date, package date, observation time, report period, retrieval time, file vintage, and correction/update markers where applicable. |
-| Rights/citation helper | Preserve USDA/NRCS terms, citation, attribution posture, and review status. |
-| Sensitivity helper | Route tribal, private-land, ecology, cultural, exact-location, compliance, producer, or program-participation material to review. |
-| Test references | Point to owning fixture/test roots; fixtures do not become source authority. |
-| Migration notes | Explain if sibling product connectors move under `connectors/nrcs/`; preserve redirects and rollback path. |
+[Back to top](#top)
 
 ---
 
-## Exclusions
+<a id="keystone-invariants"></a>
 
-| Do not store here | Correct home |
-|---|---|
-| NRCS source-family doctrine | `docs/sources/catalog/nrcs.md`, `docs/sources/catalog/nrcs/` |
-| Authoritative `SourceDescriptor` records | `data/registry/sources/` |
-| Soil, Agriculture, Hydrology, Ecology, or Atmosphere doctrine | `docs/domains/` under owning domain lanes |
-| Executable soil normalization pipelines | `pipelines/domains/soil/` or accepted pipeline home |
-| Rights, sensitivity, or release policy | `policy/`, `policy/sensitivity/`, `release/` |
-| Processed NRCS derivatives | `data/processed/` |
-| Catalog or triplet records | `data/catalog/`, `data/triplets/` |
-| Public map artifacts | `data/published/` after governed release |
-| Receipts and proof packs as authority | `data/receipts/`, `data/proofs/` |
-| Schemas or semantic contracts | `schemas/`, `contracts/` |
-| Generated reports | `artifacts/` |
-| Public UI or API behavior | `apps/governed-api/`, `apps/explorer-web/` |
-| Credentials, tokens, cookies, or account/session material | Nowhere in the repo unless a separate secrets policy explicitly allows an encrypted external secret reference. |
+## Keystone invariants
 
----
+### Lifecycle
 
-## Admission posture
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
 
-NRCS intake should preserve:
+Connector code may support entry into RAW or QUARANTINE. It does not own later promotion.
 
-- source identity and source surface;
-- active source descriptor reference;
-- product lane and source-role candidate;
-- request URL/path, query/body parameters, and redacted request metadata;
-- retrieval timestamp, response status, content digest, and source file identity;
-- source date, package date, observation time, report period, file vintage, and correction/update markers where applicable;
-- native product fields, units, geometry, coordinate system, scale, quality flags, station metadata, map-unit/component/horizon lineage, and product version metadata;
-- product-specific caveats and anti-collapse rules;
-- rights/citation/attribution posture;
-- domain-lane routing hint such as soil, agriculture, hydrology, ecology, atmosphere, or conservation;
-- sensitivity limitation notes;
-- quarantine reason when review is required.
+### Watcher non-publisher
+
+A connector may retrieve approved source material, preserve source-native structure, return a finite result, and provide receipt-ready facts. It may not write published data, approve release, mutate domain truth, or emit public claims.
+
+### Cite or abstain
+
+Generated language is not source truth. Where evidence, identity, rights, sensitivity, sovereignty, time, scale, quality, or release state is unresolved, downstream systems narrow, abstain, restrict, quarantine, or deny.
+
+### Product isolation
+
+Shared code must preserve product-specific identity, time, quality, units, depth, scale, CRS, keys, rights, sensitivity, sovereignty, correction, and lineage.
+
+### Fail-safe defaults
+
+Unclear configuration, activation, product identity, schema, rights, sensitivity, quality, scale, lineage, or correction state must not silently become an outward-facing result.
+
+[Back to top](#top)
 
 ---
 
-## Anti-collapse posture
+<a id="source-activation-and-admission"></a>
 
-NRCS products carry different epistemic roles. The connector family must preserve those differences.
+## Source activation and admission
 
-| Risk | Connector implication |
-|---|---|
-| NRCS-wide role collapse | Do not admit all NRCS material under one source role. Use product-specific SourceDescriptors. |
-| Source package as processed truth | SSURGO and related products are admitted source material; domain normalization and release happen downstream. |
-| Map unit as parcel | Do not imply ownership, tax, legal access, zoning, public-road status, or parcel boundary truth. |
-| Soil interpretation as legal determination | Hydric, farmland, limitation, flooding-frequency, and engineering ratings need context and downstream gates. |
-| Station as area truth | SCAN/SNOTEL station readings must not become county, watershed, or raster truth without downstream receipts. |
-| Tribal or private-land context as public by default | Tribal SCAN, producer, program, compliance, and conservation-plan contexts require fail-closed review. |
-| Conservation standard as local implementation proof | Practice standards do not prove a practice exists on private land. |
-| WSS session output as canonical source | WSS disposition remains unresolved unless an ADR/source descriptor accepts a narrow posture. |
-| Public display as publication | Public map/API/UI products require governed release outside this connector family. |
+Before live source access, a product lane requires:
+
+- accepted source and product identity;
+- canonical path or explicit compatibility classification;
+- active SourceDescriptor;
+- non-empty authority-register entry;
+- activation decision;
+- approved read-only operation profile;
+- rights, attribution, retention, sensitivity, and sovereignty posture;
+- source-role and support-type mapping;
+- request, query, station, package, or grid profile;
+- resource limits;
+- correction and supersession model;
+- safe fixture and negative tests;
+- substantive CI;
+- rollback target.
+
+Activation permits only the approved internal source-admission path. It is not release approval.
+
+Until activation is established, future executable code should return a finite inactive/configuration outcome without attempting network access.
+
+[Back to top](#top)
 
 ---
 
-## Sibling placement posture
+<a id="shared-family-kernel-boundary"></a>
 
-`connectors/nrcs/` is the canonical NRCS connector family lane. Several product-specific sibling connector lanes may exist or may be requested as draft scaffolds. Treat them as temporary or product-lane-specific homes until Directory Rules, ADRs, or a migration note decides whether they remain siblings or move under this parent.
+## Shared family kernel boundary
 
-| Sibling connector lane | Status | Recommended posture |
+A shared family kernel is **PROPOSED** and not implemented.
+
+Behavior may be shared only when materially identical across accepted products, such as:
+
+- immutable configuration loading;
+- profile-reference resolution;
+- no-network default enforcement;
+- bounded read-only transport;
+- timeout and retry mechanics;
+- content digests;
+- temporary-storage management;
+- safe diagnostics;
+- connector result-envelope primitives;
+- receipt-ready transport facts.
+
+These semantics must remain product-specific:
+
+- SDA query profiles, parameters, result shape, cardinality, and ordering;
+- SCAN station/network identity, units, depth, cadence, quality, and Tribal review;
+- SSURGO archive, survey-area, spatial/table inventory, relationships, and source keys;
+- gSSURGO grid, resolution, bands, nodata, source-survey vintage, and rasterization lineage;
+- gNATSGO product identity, national-scale caveats, modeled/fill lineage, and native joins.
+
+A helper should be shared only when it preserves typed product inputs and outputs, avoids parser guessing, fails closed without a profile, remains testable offline, and does not redefine source, contract, schema, or policy authority.
+
+[Back to top](#top)
+
+---
+
+<a id="product-isolation-contract"></a>
+
+## Product isolation contract
+
+Future dispatch must use an accepted typed product profile. It must not infer a product from URL fragments, filename extensions, response headers, archive contents, generic NRCS labels, model guesses, or parser fallback.
+
+A parser mismatch must produce a finite mismatch or quarantine result. It must not fall through to another product parser merely because parsing succeeds.
+
+Cache, idempotency, retry, and deduplication identities must include product and profile identity. Query responses, station records, survey packages, and grids must never collide because they share an NRCS publisher or a field such as `MUKEY`.
+
+A successful parse does not promote across products. An SDA result does not replace SSURGO, SCAN does not validate a grid, and SSURGO parsing does not authorize a gSSURGO layer.
+
+[Back to top](#top)
+
+---
+
+<a id="configuration-network-and-resource-boundary"></a>
+
+## Configuration, network, and resource boundary
+
+Future runtime configuration should provide explicit references to source, product, operation, rights, sensitivity, resource, correction, and output-candidate profiles.
+
+Imports, constructors, and default tests must not access the network. Live operations require explicit activation and approved read-only profiles.
+
+Each operation profile should define applicable limits for timeouts, redirects, retries, pagination, rows, cells, bytes, archive members, expansion, raster dimensions, bands, temporary storage, memory, and concurrency.
+
+Transport must constrain destinations and revalidate redirects. Package and raster parsers must fail safely on malformed, oversized, unsupported, or ambiguous inputs.
+
+Environment variables may provide deployment values, but they must not silently define source role, support type, activation, rights, sensitivity, schema authority, release permission, or public visibility.
+
+No credential requirement is established. Any future credential mechanism must remain outside repository content and test fixtures.
+
+[Back to top](#top)
+
+---
+
+<a id="identity-time-quality-scale-and-lineage"></a>
+
+## Identity, time, quality, scale, and lineage
+
+A future implementation must distinguish, where applicable:
+
+- publisher, source, product, collection, descriptor, and operation profile;
+- query, request, response, station, survey area, package, asset, table, grid, band, record, and correction identities.
+
+Do not collapse:
+
+- source publication, product release, source vintage, survey-area vintage, observation time, report period, request, retrieval, valid, correction, processing, and release times.
+
+Preserve source-native:
+
+- quality flags;
+- nulls and sentinels;
+- units and sensor depth;
+- incomplete joins;
+- missing tables or bands;
+- coverage gaps;
+- stale state;
+- source-native identifiers.
+
+SSURGO, gSSURGO, and gNATSGO scale or resolution must not imply parcel precision, point observation, current field condition, ownership, legal boundary, engineering-site verification, or regulatory determination.
+
+`MUKEY`, `COKEY`, `CHKEY`, station IDs, product-native join fields, and source-native record IDs must remain inspectable. Missing keys or relationships must not be silently invented or repaired.
+
+[Back to top](#top)
+
+---
+
+<a id="rights-sensitivity-sovereignty-and-disclosure"></a>
+
+## Rights, sensitivity, sovereignty, and disclosure
+
+Before live retrieval or fixture inclusion, verify terms, attribution, redistribution, retention, derivative permissions, automated-access restrictions, citation, and review dates.
+
+Public availability does not automatically establish unrestricted reuse.
+
+NRCS materials may intersect private land, agriculture, ecology, infrastructure, cultural resources, or precise locations. Connector code preserves review inputs and does not decide public disclosure.
+
+SCAN and related materials may include Tribal program context. Public technical access does not automatically permit broader aggregation, republication, or reinterpretation. Where sovereignty or cultural sensitivity is unresolved, prefer quarantine, narrower scope, staged access, review, or denial.
+
+Diagnostics should use profile IDs, digests, bounded counts, and reason codes rather than full source payloads, exact sensitive locations, private identifiers, or access material.
+
+[Back to top](#top)
+
+---
+
+<a id="raw-quarantine-runner-and-receipt-handoff"></a>
+
+## RAW, QUARANTINE, runner, and receipt handoff
+
+A future adapter may return:
+
+- finite outcome;
+- product-qualified candidate;
+- source/profile references;
+- request and retrieval facts;
+- digests and bounded counts;
+- review signals;
+- reason codes;
+- suggested RAW or QUARANTINE disposition;
+- receipt-ready facts.
+
+It must not directly write lifecycle stores, authority records, receipts, proofs, catalogs, triplets, release records, or published artifacts.
+
+The owning runner should validate activation, call the connector, select the governed disposition, persist atomically, emit the receipt, schedule allowed downstream work, and preserve retry/idempotency state.
+
+| Condition | Suggested result | Runner posture |
 |---|---|---|
-| `connectors/nrcs-ssurgo/` | Draft sibling lane if present. | Preserve product-specific README; consider migration to `connectors/nrcs/ssurgo/` only with ADR/migration note. |
-| `connectors/nrcs-scan/` | Draft sibling lane if present. | Preserve product-specific README; consider migration to `connectors/nrcs/scan/` only with ADR/migration note. |
-| `connectors/nrcs/*` nested lanes | `PROPOSED`. | Preferred for new NRCS sub-lanes if a future migration consolidates under the canonical family. |
+| Source inactive or profile missing | Configuration outcome | No network |
+| Retrieval and integrity clear | RAW candidate | Persist through runner and emit receipt |
+| Rights, identity, schema, quality, scale, lineage, sensitivity, or correction unclear | QUARANTINE candidate | Preserve with reason codes for review |
+| Source unchanged | No-change result | Avoid duplicate payload |
+| Retryable source failure | Retryable result | Bounded retry outside connector |
+| Policy-blocked or permanent failure | Denied/permanent result | No downstream candidate |
+| Internal invariant failure | Internal error | Fail closed |
 
-No move, delete, or rename is implied by this README.
+The persistence-and-receipt transaction mechanism remains **NEEDS VERIFICATION**.
+
+[Back to top](#top)
+
+---
+
+<a id="finite-outcomes-and-reason-codes"></a>
+
+## Finite outcomes and reason codes
+
+No accepted NRCS result enum was verified. This **PROPOSED** family is illustrative:
+
+```text
+NOT_CONFIGURED
+SOURCE_INACTIVE
+PROFILE_INVALID
+DENIED
+NO_CHANGE
+RAW_CANDIDATE
+QUARANTINE_CANDIDATE
+RETRYABLE_SOURCE_ERROR
+PERMANENT_SOURCE_ERROR
+INTERNAL_ERROR
+```
+
+Proposed reason-code namespaces:
+
+```text
+NRCS.CONFIG.*
+NRCS.ACTIVATION.*
+NRCS.RIGHTS.*
+NRCS.SENSITIVITY.*
+NRCS.SOVEREIGNTY.*
+NRCS.PROFILE.*
+NRCS.NETWORK.*
+NRCS.RESOURCE.*
+NRCS.INTEGRITY.*
+NRCS.SCHEMA.*
+NRCS.IDENTITY.*
+NRCS.TIME.*
+NRCS.QUALITY.*
+NRCS.SCALE.*
+NRCS.LINEAGE.*
+NRCS.CORRECTION.*
+NRCS.SDA.*
+NRCS.SCAN.*
+NRCS.SSURGO.*
+NRCS.GSSURGO.*
+NRCS.GNATSGO.*
+NRCS.INTERNAL.*
+```
+
+Adoption requires a semantic contract, machine schema, registry, product mappings, tests, compatibility rules, and documentation.
+
+[Back to top](#top)
 
 ---
 
-## Validation
+<a id="domain-and-consumer-boundaries"></a>
 
-Before relying on this connector family, verify:
+## Domain and consumer boundaries
 
-- actual files, modules, tests, fixtures, and CI wiring below `connectors/nrcs/`;
-- whether product-specific sibling lanes should remain siblings or be migrated under `connectors/nrcs/`;
-- source descriptors exist and are active for each admitted NRCS product;
-- rights, citation, attribution, terms, and sensitivity posture are captured per product;
-- source-role, freshness, cadence, geometry, scale, quality flags, units, station metadata, and product/version fields survive parsing;
-- no-network tests exist for each product parser;
-- outputs are limited to raw/quarantine admission lanes;
-- downstream receipts, proofs, catalog/triplet records, public map artifacts, release records, public API responses, and UI layers are produced only outside this connector family;
-- public products are released only through governed publication controls and never as parcel, compliance, program-participation, field-verification, water-rights, or legal-access truth without separate authority.
+NRCS products may support several domains, but the connector family does not own their truth.
+
+- **Soil:** does not define map-unit, component, horizon, property, or interpretation meaning.
+- **Agriculture:** does not prove current practice, yield, management effectiveness, compliance, or private-land conditions.
+- **Hydrology and hazards:** does not establish streamflow, flood determination, water rights, groundwater status, warning, or life-safety guidance.
+- **Atmosphere and climate:** does not create normals, forecasts, gridded weather, drought determinations, or advisories.
+- **People and land:** survey geometry is not parcel, ownership, access, title, easement, or legal boundary.
+- **Engineering and regulation:** ratings and standards do not become design, permit, compliance, or regulatory decisions.
+
+Public clients use governed APIs and released artifacts. They must not import this package, read RAW/QUARANTINE data directly, execute arbitrary queries, expose unreleased payloads, or treat generated summaries as evidence.
+
+[Back to top](#top)
 
 ---
+
+<a id="tests-fixtures-and-ci"></a>
+
+## Tests, fixtures, and CI
+
+The merged [`tests/README.md`](./tests/README.md) governs test and fixture admission.
+
+Current evidence:
+
+- no named NRCS tests at checked paths;
+- no fixture-root README;
+- no `conftest.py`;
+- no package-local pytest or tox configuration;
+- no dedicated NRCS workflow;
+- generic connector workflow is echo-only;
+- root pytest availability does not prove collection or installation.
+
+Before implementation claims, a substantive suite should prove:
+
+- clean build and wheel installation;
+- side-effect-free imports;
+- no-network defaults;
+- descriptor and activation gates;
+- rights, sensitivity, and sovereignty gates;
+- product dispatch isolation;
+- finite outcomes;
+- temporary-filesystem-only behavior;
+- resource limits;
+- deterministic digests;
+- malformed/adversarial input handling;
+- product-specific positive and negative matrices;
+- RAW/QUARANTINE boundaries;
+- receipt-ready fact completeness;
+- correction, migration, and rollback.
+
+Fixtures must be synthetic, minimized, redacted, or explicitly approved, with product/profile identity, version, purpose, origin, date, digest, rights, review posture, expected result, and retirement path.
+
+A future workflow must install from build output, collect a nonzero suite, deny network, run product matrices, validate fixture manifests, emit reports, and fail on zero tests or unexpected skips.
+
+[Back to top](#top)
+
+---
+
+<a id="topology-conflicts-and-migration"></a>
+
+## Topology conflicts and migration
+
+### SCAN
+
+```text
+connectors/nrcs/scan/
+connectors/nrcs-scan/
+```
+
+The nested path is the strongest family-root candidate. No migration or deprecation is ratified here.
+
+### SSURGO
+
+```text
+connectors/nrcs/ssurgo/
+connectors/nrcs-ssurgo/
+connectors/ssurgo/
+```
+
+The nested path is the strongest family-root candidate. The other lanes require an ADR or migration note before implementation, redirect, tombstone, deprecation, or removal.
+
+### Topology freeze
+
+Until accepted decisions exist:
+
+- do not create duplicate implementations, descriptors, schedules, fixtures, caches, receipts, or adapter registrations;
+- do not silently import across compatibility lanes;
+- do not allow one source run to enter multiple canonical paths.
+
+Any migration record must identify old/new paths, ownership, source/product IDs, compatibility, import/configuration/test impact, provenance continuity, deprecation period, rollback, and documentation changes.
+
+[Back to top](#top)
+
+---
+
+<a id="smallest-sound-implementation-sequence"></a>
+
+## Smallest sound implementation sequence
+
+### 0. Governance
+
+- confirm owners;
+- resolve path conflicts;
+- pin source and product identity;
+- accept role/support-type vocabulary;
+- record rights, sensitivity, sovereignty, correction, and rollback.
+
+### 1. Package
+
+- choose build backend and supported Python versions;
+- define dependencies and package discovery;
+- build and install in a clean environment;
+- prove side-effect-free imports;
+- define public exports or intentionally keep none.
+
+### 2. Tests
+
+- add deterministic test controls;
+- deny network by default;
+- add fixture manifest and one synthetic fixture;
+- require nonzero collection;
+- wire substantive CI.
+
+### 3. Minimal shared primitives
+
+Implement only immutable configuration, profile references, finite result envelopes, digests, bounded transport, temporary storage, and safe diagnostics needed by one product.
+
+### 4. First adapter
+
+Choose based on governance readiness. Write negative tests first, implement fixture-only parsing, return RAW/QUARANTINE candidates and receipt-ready facts, and keep live access disabled.
+
+### 5. Live dry run
+
+After activation and fixture tests, allow one approved read-only operation, persist through the runner, emit a receipt, review quarantine behavior, and keep publication denied.
+
+### 6. Additional products
+
+Add each product independently. Generalize shared code only after at least two implemented adapters prove the behavior is truly common.
+
+[Back to top](#top)
+
+---
+
+<a id="definition-of-done"></a>
 
 ## Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual connector-family contents are inventoried.
-- [ ] Sibling NRCS connector placement is recorded in an ADR, migration note, or drift/open-question register.
-- [ ] Active `SourceDescriptor` IDs are verified for each admitted NRCS product lane.
-- [ ] NRCS rights, citation, attribution, terms, source-role, endpoint, cadence, freshness, scale, and sensitivity posture are documented per product lane.
-- [ ] Request/download/service helpers preserve source URL, product lane, source role, cadence, scale, time fields, file identity, and digest.
-- [ ] Parsers preserve product-native fields and do not collapse official soil survey data, query responses, station readings, snow products, ecological site records, conservation standards, and human-facing portal exports into one role.
-- [ ] Outputs are verified to enter only raw or quarantine admission lanes.
-- [ ] No source-family, domain, processed, catalog, triplet, published, release, schema, policy, proof, receipt, registry, fixture, report, API, UI, tile, parcel, ownership, access, compliance, program-participation, water-rights, field-verification, or regulatory authority lives here.
-- [ ] Tests, fixtures, and CI behavior are verified or marked `NEEDS VERIFICATION`.
+This README is documentation-complete when:
+
+- [ ] owners are confirmed or tracked;
+- [x] current maturity is recorded;
+- [x] product boundaries are explicit;
+- [x] lifecycle and publication boundaries are explicit;
+- [x] topology conflicts are visible;
+- [x] rollback is documented.
+
+The connector family is not implementation-complete until:
+
+- [ ] topology is accepted;
+- [ ] package metadata and discovery are complete;
+- [ ] clean build/install passes;
+- [ ] imports are tested;
+- [ ] source/product profiles and active descriptors exist;
+- [ ] rights, sensitivity, and sovereignty decisions are current;
+- [ ] fixtures are approved;
+- [ ] tests collect and pass;
+- [ ] no-network and resource controls are enforced;
+- [ ] adapters preserve product semantics;
+- [ ] outcomes and reason codes are contracted;
+- [ ] runner handoff and receipt pairing are tested;
+- [ ] CI is substantive;
+- [ ] correction, migration, deprecation, and rollback are tested;
+- [ ] deployment and runtime health are verified;
+- [ ] public consumers use governed interfaces only.
+
+[Back to top](#top)
+
+---
+
+<a id="open-verification-register"></a>
+
+## Open verification register
+
+| ID | Question | Status |
+|---|---|---|
+| NRCS-FAM-001 | Who owns the family? | NEEDS VERIFICATION |
+| NRCS-FAM-002 | Is this the accepted canonical family root? | PROPOSED / strong fit |
+| NRCS-FAM-003 | What is the canonical SCAN path? | CONFLICTED |
+| NRCS-FAM-004 | What is the canonical SSURGO path? | CONFLICTED |
+| NRCS-FAM-005 | What compatibility behavior applies to other lanes? | UNKNOWN |
+| NRCS-FAM-006 | What are canonical source and product IDs? | UNKNOWN |
+| NRCS-FAM-007 | Which products are activated? | UNKNOWN |
+| NRCS-FAM-008 | Which operations are approved? | UNKNOWN |
+| NRCS-FAM-009 | What rights, sensitivity, and sovereignty rules apply? | NEEDS VERIFICATION |
+| NRCS-FAM-010 | How are source role and support type separated? | CONFLICTED |
+| NRCS-FAM-011 | Which build backend and Python versions are supported? | UNKNOWN |
+| NRCS-FAM-012 | What dependencies and package discovery are accepted? | UNKNOWN |
+| NRCS-FAM-013 | What public exports are accepted? | UNKNOWN |
+| NRCS-FAM-014 | What is truly shared across products? | PROPOSED |
+| NRCS-FAM-015 | What result and reason-code contracts are accepted? | UNKNOWN |
+| NRCS-FAM-016 | What network and resource limits apply? | UNKNOWN |
+| NRCS-FAM-017 | What cache and idempotency rules apply? | UNKNOWN |
+| NRCS-FAM-018 | How are corrections and supersession modeled? | UNKNOWN |
+| NRCS-FAM-019 | What fixture home and rights posture are accepted? | UNKNOWN |
+| NRCS-FAM-020 | What deterministic test command and marker policy apply? | UNKNOWN |
+| NRCS-FAM-021 | What substantive CI matrix applies? | UNKNOWN |
+| NRCS-FAM-022 | How are RAW/QUARANTINE writes paired with receipts? | UNKNOWN |
+| NRCS-FAM-023 | Which downstream pipelines consume each product? | UNKNOWN |
+| NRCS-FAM-024 | What schedules and deployment exist? | UNKNOWN |
+| NRCS-FAM-025 | What runtime health evidence exists? | UNKNOWN |
+| NRCS-FAM-026 | How are stale or retired sources blocked? | UNKNOWN |
+| NRCS-FAM-027 | Is connector CI release-blocking? | UNKNOWN |
+| NRCS-FAM-028 | Are schemas enforceable rather than permissive scaffolds? | NEEDS VERIFICATION |
+| NRCS-FAM-029 | Do downstream EvidenceRefs resolve to EvidenceBundles? | UNKNOWN |
+| NRCS-FAM-030 | Are generated answers evidence-subordinate? | NEEDS VERIFICATION |
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-ledger"></a>
+
+## Evidence ledger
+
+| Evidence | Blob/state | Conclusion |
+|---|---|---|
+| Family README before revision | `888236f218fc0892c54c947c0c2651b34ca5137b` | Parent boundary required reconciliation. |
+| Source root | `7edac87aec3ff4ed5621dedd5c31ebaa2b04759a` | Source layout documented; implementation empty. |
+| Namespace | `00d12e0f07e53cff877e9ea4d396c96b3fb03658` | Proposed import/package behavior documented. |
+| Tests | `929ca9a819e40f1b95d829e35d573603a2407b94` | Test requirements documented; suite absent. |
+| Package metadata | `c6bb1565db7df490bee52a597d04d694e2b9f8a4` | Only name and `0.0.0` declared. |
+| Initializer | empty blob | No exports or runtime behavior. |
+| SDA | `6f3ba95d70ae0779d00e26ad360f7b8737dbf77a` | Profile-gated query boundary. |
+| SCAN | `76eb5a0683e571d045d01d7e8dc387ef497ba958` | Station/depth/cadence/Tribal boundary and path conflict. |
+| SSURGO | `357efa694fb059ed91eed3bc2b78829b673f14c3` | Package/key-lineage boundary and three-lane conflict. |
+| gSSURGO | `3ad1db6721224232f4e5eb99440a7b031bdb7afa` | Grid/vintage/raster-lineage boundary. |
+| gNATSGO | `83b3816033fc558fd552480edefdde978488ccfd` | Product identity and modeled/fill lineage unresolved. |
+| Authority register | empty entries | No source activation. |
+| Source-admission ADR | proposed | Process guidance, not runtime proof. |
+| Connector workflow | TODO echo-only | Does not prove connector or receipt behavior. |
+| Directory Rules | verified | `connectors/` owns source-specific implementation. |
+
+This evidence supports the boundary and maturity assessment only. It does not support implementation, activation, testing, deployment, consumer, or release claims.
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-correction-deprecation-and-migration"></a>
+
+## Rollback, correction, deprecation, and migration
+
+### Documentation rollback
+
+Before merge, close or abandon the branch.
+
+After merge, revert the merge or restore prior blob:
+
+```text
+888236f218fc0892c54c947c0c2651b34ca5137b
+```
+
+No runtime, source, fixture, lifecycle, receipt, proof, pipeline, release, deployment, or public artifact rollback is required for this README-only revision.
+
+### Future implementation rollback
+
+Consider package version, imports, profile versions, source activation, cached material, idempotency, RAW/QUARANTINE records, receipts, schedules, consumers, correction state, compatibility lanes, and deployment manifests.
+
+### Correction
+
+Record what changed, why, affected products and runs, prior/replacement identity, review or receipt references, public impact, and rollback target. Do not silently rewrite released evidence.
+
+### Deprecation and migration
+
+Require a replacement, compatibility posture, warning period, consumer inventory, tests, documentation, removal criteria, provenance continuity, and rollback. No SCAN or SSURGO lane may be moved or deleted solely because another path appears cleaner.
+
+[Back to top](#top)
 
 ---
 
 ## Status summary
 
-`connectors/nrcs/` is for NRCS source-admission code and connector-family coordination only. It is not NRCS source-family truth, product doctrine, Soil domain truth, private land truth, parcel truth, field verification, conservation-compliance authority, water-rights authority, legal access authority, policy authority, schema authority, catalog/triplet authority, proof closure, release authority, public map authority, public API behavior, public UI behavior, or pipeline authority.
+`connectors/nrcs/` is the coordination and implementation boundary for a future governed NRCS connector family. Current evidence establishes grounded documentation and an empty package scaffold only.
+
+The family is **not source-active, build-proven, adapter-complete, test-proven, CI-enforced, deployed, or publication-authoritative**.
+
+> Preserve each NRCS product as its own source-, profile-, identity-, time-, quality-, scale-, rights-, sensitivity-, sovereignty-, lineage-, correction-, and lifecycle-scoped evidence path; return only governed admission candidates; and let downstream evidence, policy, review, release, correction, and rollback machinery decide what may become public.
 
 <p align="right"><a href="#top">Back to top</a></p>
