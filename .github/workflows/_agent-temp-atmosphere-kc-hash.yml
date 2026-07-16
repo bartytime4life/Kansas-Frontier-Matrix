@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Post committed README integrity
+      - name: Append committed README integrity to draft PR body
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -27,16 +27,21 @@ jobs:
           h1=$(grep -Ec '^# ' "$path")
           fences=$(grep -Ec '^```' "$path")
           final_newline=$(python -c "from pathlib import Path; print(Path('$path').read_bytes().endswith(b'\\n'))")
+          current=$(gh pr view "$PR_NUMBER" --repo "${{ github.repository }}" --json body --jq .body)
           body=$(cat <<EOF
-          TEMPORARY_ATMOSPHERE_KC_INTEGRITY
-          ARTIFACT_PATH=$path
-          SHA256=$sha256
-          GIT_BLOB=$git_blob
-          BYTES=$bytes
-          LINES=$lines
-          H1_COUNT=$h1
-          FENCE_LINES=$fences
-          FINAL_NEWLINE=$final_newline
+          $current
+
+          <!-- TEMPORARY_ATMOSPHERE_KC_INTEGRITY -->
+          ## Temporary committed README integrity
+
+          - ARTIFACT_PATH: \`$path\`
+          - SHA256: \`$sha256\`
+          - GIT_BLOB: \`$git_blob\`
+          - BYTES: \`$bytes\`
+          - LINES: \`$lines\`
+          - H1_COUNT: \`$h1\`
+          - FENCE_LINES: \`$fences\`
+          - FINAL_NEWLINE: \`$final_newline\`
           EOF
           )
-          gh pr comment "$PR_NUMBER" --repo "${{ github.repository }}" --body "$body"
+          gh pr edit "$PR_NUMBER" --repo "${{ github.repository }}" --body "$body"
