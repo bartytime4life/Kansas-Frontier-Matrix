@@ -1,320 +1,690 @@
+# `tests/fixtures/domains/archaeology/source/` — Archaeology Source Test-Local Fixture and Admission-Safety Boundary
+
+> Repository-grounded routing and safety contract for test-local Archaeology source-shaped examples. This lane may hold small synthetic wrappers and expectation manifests owned by named tests, but it does not register sources, resolve rights, confer cultural authority, activate connectors, admit lifecycle data, prove evidence, approve release, or publish public outputs.
+
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-fixtures-domains-archaeology-source-readme
-title: Archaeology Source Test Fixtures README
-type: test-fixture-readme
-version: v0.1
-status: draft; empty-placeholder-replaced; archaeology-source-test-fixture-lane; PROPOSED / NEEDS VERIFICATION before promotion
-owners:
-  - OWNER_TBD - Archaeology domain steward
-  - OWNER_TBD - Source steward
-  - OWNER_TBD - Fixture steward
-  - OWNER_TBD - QA steward
-  - OWNER_TBD - Evidence steward
-  - OWNER_TBD - Policy steward
-  - OWNER_TBD - Release steward
+title: tests/fixtures/domains/archaeology/source/README.md — Archaeology Source Test-Local Fixture and Admission-Safety Boundary
+type: readme; directory-readme; test-local-fixture-lane; archaeology-source-routing-boundary
+version: v0.2
+status: draft; repository-grounded; README-only-direct-lane; archaeology-parent-confirmed; executable-source-admission-lane-readme-only; SourceDescriptor-contract-schema-validator-confirmed; generic-source-descriptor-fixtures-confirmed; SourceActivationDecision-placeholder-only; registry-path-drift-visible; schema-path-and-filename-drift-visible; executable-archaeology-admission-enforcement-unestablished; non-authoritative
+owners: OWNER_TBD — Archaeology steward · Source steward · Test steward · Fixture steward · Registry steward · Rights steward · Sensitivity reviewer · Cultural-review liaison · Sovereignty/CARE reviewer · Contract/schema steward · Evidence steward · Policy steward · Release steward · Security reviewer · CI steward · Docs steward
 created: 2026-07-06
-updated: 2026-07-06
-policy_label: public-doc; tests; fixtures; archaeology; source-fixtures; source-admission; synthetic-only; no-network; deny-by-default; source-role-fixed; rights-aware; evidence-bound; policy-gated; review-gated; release-gated; rollback-aware
-tags: [kfm, tests, fixtures, archaeology, source-fixtures, source-admission, SourceDescriptor, SourceActivationDecision, source-role, rights-status, steward-authority, watcher-non-publisher, EvidenceBundle, EvidenceRef, PolicyDecision, ReviewRecord, RedactionReceipt, ReleaseManifest, RollbackCard, ABSTAIN, DENY, ERROR]
-related:
-  - ../README.md
-  - ../api/README.md
-  - ../promotion/README.md
-  - ../review/README.md
-  - ../sensitive_geometry/README.md
-  - ../sites/README.md
-  - ../../README.md
-  - ../../../README.md
-  - ../../../../README.md
-  - ../../../../domains/archaeology/README.md
-  - ../../../../domains/archaeology/fixtures/README.md
-  - ../../../../domains/archaeology/fixtures/source_admission/README.md
-  - ../../../../../fixtures/domains/archaeology/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_candidate_feature/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_archaeological_site/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_publication_transform_receipt/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_steward_review/README.md
-  - ../../../../../fixtures/domains/archaeology/valid/README.md
-  - ../../../../../fixtures/domains/archaeology/invalid/README.md
-  - ../../../../../docs/domains/archaeology/SOURCES.md
-  - ../../../../../docs/domains/archaeology/SOURCE_REGISTRY.md
-  - ../../../../../docs/domains/archaeology/CANONICAL_PATHS.md
-  - ../../../../../docs/domains/archaeology/SENSITIVITY.md
-  - ../../../../../docs/domains/archaeology/PUBLICATION_AND_POLICY.md
-  - ../../../../../contracts/domains/archaeology/
-  - ../../../../../schemas/contracts/v1/domains/archaeology/
-  - ../../../../../schemas/contracts/v1/source/
-  - ../../../../../data/registry/sources/archaeology/
-  - ../../../../../policy/domains/archaeology/
-  - ../../../../../release/candidates/archaeology/
+updated: 2026-07-16
+supersedes: v0.1
+policy_label: public-doc; tests; fixtures; archaeology; source-fixtures; test-local-only; synthetic-only; no-network-default; deny-by-default; source-role-fixed; watcher-non-publisher; rights-aware; sensitivity-aware; cultural-authority-deferred; evidence-required; quarantine-aware; release-subordinate; correction-aware; rollback-aware; no-publication
+current_path: tests/fixtures/domains/archaeology/source/README.md
+truth_posture:
+  CONFIRMED:
+    - target README v0.1 and prior blob
+    - tests/fixtures parent README
+    - tests/fixtures/domains/archaeology parent README and source child index
+    - tests/domains/archaeology/fixtures/source_admission README v0.2
+    - SourceDescriptor semantic contract v0.3
+    - detailed PROPOSED SourceDescriptor schema
+    - one generic valid and one generic invalid SourceDescriptor fixture
+    - working SourceDescriptor JSON Schema validator entry point
+    - generic positive SourceDescriptor fixture is Hydrology-focused, not Archaeology-specific
+    - source schema index records singular/plural and hyphen/underscore drift
+    - SourceActivationDecision checked artifact is a PROPOSED placeholder
+    - checked absence of SourceActivationDecision semantic contract and paired .schema.json at named paths
+    - Archaeology registry lane and registry path-order conflict
+    - checked absence of tests/fixtures/domains/README.md
+    - checked absence of direct-lane conftest.py, manifest_expectations.json, and representative test module
+  CONFLICTED:
+    - v0.1 claim that tests/fixtures/domains/archaeology/README.md was absent
+    - v0.1 proposed executable test modules inside a fixture directory
+    - schema file under singular source/ declares plural sources/ as canonical
+    - hyphenated and underscored SourceDescriptor schema surfaces coexist
+    - schema-declared fixture root differs from observed contract fixture root
+    - Archaeology registry docs name two lane orders
+    - SourceActivationDecision terminology is broad while checked machine shape is placeholder-only
+  UNKNOWN:
+    - exhaustive direct-lane inventory outside checked paths
+    - active Archaeology source descriptors and activation decisions
+    - runtime source resolver, policy evaluator, connector activation, watcher execution, and production registry consumers
+    - branch-protection significance, current pass rates, and production use
+  NEEDS_VERIFICATION:
+    - lane-retention decision and accepted test-local fixture threshold
+    - canonical SourceDescriptor schema path, filename, fixture root, and registry path
+    - SourceActivationDecision contract, schema, validator, and outcome vocabulary
+    - Archaeology-specific non-placeholder source fixtures and active consumers
+    - policy, cultural review, watcher, connector activation, CI, correction, and rollback enforcement
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 52275a5710400a9f794a8fcf8e0945e0c21544e4
+  target_prior_blob: 2d871be1cf34b67312aa8c4cf121ab96a615655e
+  related_repository_blobs:
+    directory_rules: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+    tests_fixtures_parent_readme: 2d0147e85eae86f687e85c5bea0d3e61f9c3a8f7
+    archaeology_test_fixtures_parent: 34b8aa536aa19c234f30f939ed1c06fa428b57dc
+    source_admission_test_readme: 3695fc65d60eb455b375b065d62c6749aac8af7c
+    source_schema_index: 691e5f76ba800404fff26fabd120b7f42791e79a
+    source_descriptor_contract: b57ae5ccc042c1423b75c168438800384c9b6713
+    source_descriptor_schema: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+    source_descriptor_fixture_readme: 4df8a264ef6f8ba48dbfcf313d3d6390b557f5c5
+    source_descriptor_validator: 9d0538e727b5eb49c043998a3550972349d2e790
+    source_activation_placeholder: 886965fca543ecba660827890e2ddf45efb90fab
+    archaeology_registry_lane: 42032fdcee7670628320a2ba5a0951e27536f972
+    archaeology_policy_readme: 8d03cdb11361739e7ad33214f76a0cfe4836ff9b
+    archaeology_validator_readme: bae2eabb5d29bf7099ed74a66a17c0071ae98557
+    archaeology_workflow: b6a2869314efe2e34890baa5bbbe41d656629dd3
+    makefile: 4dc8cf633581893d83fba53219c6ea847992e6be
+  checked_absent_paths:
+    - tests/fixtures/domains/README.md
+    - tests/fixtures/domains/archaeology/source/conftest.py
+    - tests/fixtures/domains/archaeology/source/manifest_expectations.json
+    - tests/fixtures/domains/archaeology/source/test_source_fixture_manifest_shape.py
+    - contracts/source/source_activation_decision.md
+    - schemas/contracts/v1/source/source_activation_decision.schema.json
 notes:
-  - "This README replaces the empty placeholder content at tests/fixtures/domains/archaeology/source/README.md."
-  - "This lane documents test-local expectations for archaeology source-shaped fixtures. Canonical reusable archaeology fixtures live under fixtures/domains/archaeology/ unless an ADR or parent README says otherwise."
-  - "The confirmed source-admission test lane observed during authoring is tests/domains/archaeology/fixtures/source_admission/README.md. This requested tests/fixtures/.../source/ path must remain test-local and must not create parallel source-admission authority."
-  - "No parent README was found at tests/fixtures/domains/archaeology/README.md during authoring. This lane is self-contained until that parent index is authored."
-  - "Source-shaped fixtures are not SourceDescriptor authority, SourceActivationDecision authority, source registry records, source exports, EvidenceBundles, PolicyDecisions, ReviewRecords, ReleaseManifests, watcher outputs, public data, or publication approval."
-  - "Executable tests, source fixture payload inventory, source schema bindings, harness wiring, CI jobs, and pass rates remain NEEDS VERIFICATION."
+  - "The direct source fixture lane is README-only in bounded evidence."
+  - "Executable tests belong in an owning tests lane and consume declarative fixtures by reference."
+  - "SourceDescriptor has real shape coverage; that does not prove Archaeology admission behavior."
+  - "SourceActivationDecision is placeholder-only at the checked machine path."
+  - "The generic positive SourceDescriptor fixture is Hydrology-focused and cannot substitute for Archaeology rights, sensitivity, cultural-review, or source-role coverage."
+  - "This revision changes documentation only and creates no fixture payload, test, descriptor, activation decision, registry record, schema, contract, policy, validator, workflow, connector, watcher, lifecycle object, receipt, proof, release record, map artifact, AI output, or public artifact."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Archaeology source test fixtures
-
-> Test-lane documentation for Archaeology source-shaped fixtures referenced from `tests/fixtures/domains/archaeology/source/`. This path describes safe synthetic SourceDescriptor, SourceActivationDecision, source-role, rights, steward, watcher, quarantine, evidence, policy, review, and release-gate expectations without turning examples into source authority.
-
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: tests" src="https://img.shields.io/badge/root-tests%2F-blue">
-  <img alt="Lane: source test fixtures" src="https://img.shields.io/badge/lane-source__test__fixtures-purple">
-  <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-brown">
-  <img alt="Network: disabled by default" src="https://img.shields.io/badge/network-disabled__by__default-critical">
-  <img alt="Boundary: fixtures not sources" src="https://img.shields.io/badge/boundary-fixtures__not__sources-success">
+  <img alt="Direct inventory: README only" src="https://img.shields.io/badge/direct__inventory-README__only-lightgrey">
+  <img alt="Scope: test local" src="https://img.shields.io/badge/scope-test__local-blue">
+  <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-8a6d3b">
+  <img alt="Watcher: non publisher" src="https://img.shields.io/badge/watcher-non__publisher-purple">
+  <img alt="Authority: fixture only" src="https://img.shields.io/badge/authority-fixture__only-red">
 </p>
 
-**Path:** `tests/fixtures/domains/archaeology/source/README.md`  
-**Status:** draft / empty placeholder replaced / Archaeology source test-fixture lane / PROPOSED until executable tests are verified  
-**Owning root:** `tests/`  
-**Lane family:** `fixtures/domains/archaeology/source`  
-**Canonical reusable fixture root:** `fixtures/domains/archaeology/`  
-**Confirmed related source-admission test lane:** `tests/domains/archaeology/fixtures/source_admission/`  
-**Default execution posture:** deterministic, synthetic, no-network, public-safe fixture envelopes only  
-**Truth posture:** CONFIRMED target file existed as an empty placeholder before replacement; CONFIRMED `tests/fixtures/domains/archaeology/README.md` was not found during authoring; CONFIRMED sibling `api/`, `promotion/`, `review/`, `sensitive_geometry/`, and `sites/` README lanes exist as test-local fixture lanes; CONFIRMED `tests/domains/archaeology/fixtures/source_admission/README.md` exists and defines source-admission fixture-test boundaries; CONFIRMED `docs/domains/archaeology/SOURCES.md` and `SOURCE_REGISTRY.md` document source families, SourceDescriptor posture, role-fixed-at-admission discipline, deny-by-default sensitivity, watcher non-publisher posture, and SourceActivationDecision gating; NEEDS VERIFICATION for executable source-fixture tests, fixture payload inventory, accepted schemas, CI coverage, and pass rates.
+**Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose-and-scope) · [Authority](#authority-and-directory-rules-basis) · [Surfaces](#three-source-fixture-and-test-surfaces) · [Object model](#source-object-model-and-anti-collapse-rules) · [SourceDescriptor](#sourcedescriptor-maturity-and-drift) · [Activation](#sourceactivationdecision-gap) · [Registry](#registry-path-and-instance-boundary) · [Admission](#test-local-fixture-admission-rules) · [Manifest](#minimum-source-fixture-manifest) · [Cases](#required-fixture-families-and-case-matrix) · [Rights](#source-role-rights-sensitivity-and-cultural-authority) · [Watchers](#watcher-freshness-and-supersession-boundary) · [Security](#no-network-security-and-side-effects) · [Coverage](#inventory-consumers-and-vacuous-pass-risk) · [Commands](#validation-commands) · [CI](#ci-and-promotion-boundary) · [Failure meaning](#failure-interpretation) · [Passing limits](#what-a-passing-suite-does-not-prove) · [Maintenance](#maintenance-migration-and-deprecation) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Rollback](#documentation-rollback)
 
 ---
 
-## Purpose
+## Status and evidence boundary
 
-`tests/fixtures/domains/archaeology/source/` is a test-local documentation lane for Archaeology source-shaped fixture expectations.
+> [!IMPORTANT]
+> **Evidence snapshot:** `main@52275a5710400a9f794a8fcf8e0945e0c21544e4`
+>
+> **Prior target blob:** `2d871be1cf34b67312aa8c4cf121ab96a615655e`
+>
+> **Direct lane:** README-only in bounded path checks
+>
+> **Generic SourceDescriptor shape coverage:** confirmed
+>
+> **Archaeology source-admission semantic coverage:** not established
 
-This lane should describe how tests may use synthetic source-admission examples for SourceDescriptor-like envelopes, SourceActivationDecision-like envelopes, source-role preservation, rights posture, steward authority, sensitivity classification, access-method posture, watcher metadata, quarantine decisions, stale-source decisions, supersession decisions, correction refs, withdrawal refs, and rollback refs.
+This directory is a routing and fixture-safety README. It is not a fixture corpus, executable suite, source registry, SourceDescriptor store, activation queue, rights registry, watcher store, connector configuration, EvidenceBundle store, release queue, or public surface.
 
-A passing fixture check here should not mean that a source is admitted, a source export is present, rights are resolved, a steward approved use, a candidate is confirmed, a protected detail is releasable, evidence is proven, policy allows release, a release manifest is valid, a public layer is published, or an AI answer is authoritative. It should mean only that a bounded synthetic source-shaped fixture supports a bounded test expectation.
+Safe conclusions:
+
+- **CONFIRMED:** the target and Archaeology test-fixture parent exist.
+- **CONFIRMED:** the direct source lane has no checked manifest, `conftest.py`, or representative test module.
+- **CONFIRMED:** SourceDescriptor has a detailed schema, semantic contract, generic valid/invalid fixtures, and a working JSON Schema runner entry point.
+- **CONFIRMED:** SourceActivationDecision has only a planning placeholder at the checked machine path.
+- **CONFIRMED:** source schema, fixture, and registry path drift remains visible.
+- **UNKNOWN:** actual Archaeology fixture consumption, policy execution, activation behavior, runtime registry use, and current pass rates.
 
 [Back to top](#top)
 
 ---
 
-## Placement Basis
+## Purpose and scope
 
-Directory Rules place enforceability proof under `tests/`. The canonical reusable fixture root is `fixtures/`. Source registries and SourceDescriptors belong in their accepted registry/source homes, not in test fixture lanes. This requested path sits under `tests/fixtures/`, so it must remain test-scoped and subordinate to source, fixture, registry, schema, contract, policy, evidence, receipt, release, map, API, and public artifact roots.
+This lane documents small source-shaped wrappers that are local to Archaeology tests and unsuitable for a reusable fixture corpus.
 
-| Responsibility | Correct home | This lane's relationship |
+Its durable question is:
+
+> Can a synthetic source example preserve identity, role, rights, sensitivity, stewardship, cultural authority, access, freshness, watcher, activation, quarantine, evidence, correction, and rollback expectations without becoming a real source decision?
+
+In scope:
+
+- test-local wrappers around reusable source fixtures;
+- expectation manifests and parametrization maps owned by named tests;
+- synthetic SourceDescriptor-shaped metadata;
+- synthetic activation, quarantine, stale, retirement, correction, and rollback expectations;
+- canaries for source-role upcast, rights overclaim, watcher/publisher collapse, protected-detail leakage, and release bypass;
+- no-network loader inputs and sanitized expected errors.
+
+Out of scope:
+
+- real source descriptors, registry records, payloads, exports, endpoints, credentials, terms, consultation records, or watcher outputs;
+- executable tests;
+- schema, contract, policy, registry, evidence, review, release, connector, watcher, pipeline, map, API, or AI authority.
+
+A pass proves only the bounded behavior named by the consumer. It does not admit a source, resolve rights, approve access, confer cultural authority, activate a connector, create evidence, or authorize publication.
+
+[Back to top](#top)
+
+---
+
+## Authority and Directory Rules basis
+
+Directory Rules separate responsibility roots. This existing path is correctly placed as a test-local fixture lane.
+
+| Responsibility | Authority home | Relationship |
 |---|---|---|
-| Source-shaped fixture-test expectations | `tests/fixtures/domains/archaeology/source/` | This directory. |
-| Parent test-fixture lane | `tests/fixtures/domains/archaeology/` | Parent README missing at authoring time; NEEDS VERIFICATION. |
-| Source-admission fixture tests | `tests/domains/archaeology/fixtures/source_admission/` | Confirmed related test lane; not replaced here. |
-| Reusable archaeology fixtures | `fixtures/domains/archaeology/` | Canonical fixture root; referenced, not replaced. |
-| Source registry and descriptors | `data/registry/sources/archaeology/` and accepted source catalog homes | Authority lives there; not here. |
-| Archaeology source-family doctrine | `docs/domains/archaeology/SOURCES.md`, `SOURCE_REGISTRY.md` | Explains posture; not authored here. |
-| Source schemas | `schemas/contracts/v1/source/` or ADR-selected equivalent | Define machine shape; not owned here. |
-| Archaeology object contracts | `contracts/domains/archaeology/` | Define object meaning; not owned here. |
-| Policy authority | `policy/domains/archaeology/` or accepted policy roots | Referenced by expected outcomes; not defined here. |
-| Evidence, receipts, and proof | `data/proofs/`, `data/receipts/`, and accepted trust roots | Referenced through synthetic refs; not stored here. |
-| Release decisions | `release/` roots | Referenced through synthetic refs; not decided here. |
+| Test-local source wrappers | `tests/fixtures/domains/archaeology/source/` | This lane. |
+| Executable source-admission tests | `tests/domains/archaeology/fixtures/source_admission/` | Consumers; not stored here. |
+| Reusable SourceDescriptor fixtures | `fixtures/contracts/v1/source/source_descriptor/` | Shared schema-shape examples. |
+| Reusable Archaeology fixtures | `fixtures/domains/archaeology/` | Domain fixture corpus when accepted. |
+| Source semantics | `contracts/source/` | Meaning. |
+| Source shape | accepted source schema lane | Machine shape; drift remains open. |
+| Source registry records | accepted `data/registry/` layout | Real instances. |
+| Rights, sensitivity, source, and domain policy | `policy/` | Admissibility and obligations. |
+| Evidence and receipts | `data/proofs/`, `data/receipts/` | Trust support and process memory. |
+| Release/correction/rollback | `release/` | Publication authority. |
+| Connectors and watchers | implementation roots | Runtime behavior. |
 
-> [!IMPORTANT]
-> Do not use this directory as a source registry, source export cache, SourceDescriptor store, watcher output store, provenance ledger, review queue, policy decision store, release candidate folder, map-layer source, or public artifact home. It is a documentation and test-fixture expectation lane only.
+This README creates no parallel authority. No ADR or drift-register mutation is required for this one-file correction because conflicts are recorded rather than resolved.
+
+[Back to top](#top)
 
 ---
 
-## Invariant Under Test
+## Three source fixture and test surfaces
 
-> **Source-shaped fixtures are synthetic admission examples, not source authority.** Test fixture success proves only that the source-admission guardrail behaved as expected for a bounded example.
-
-Core checks:
-
-| Check | Required behavior | Failure outcome |
+| Surface | Intended responsibility | Current checked maturity |
 |---|---|---|
-| Fixture-root boundary | Reusable payloads live under `fixtures/domains/archaeology/`; test-local wrappers require a documented reason. | validation failure. |
-| Source-authority boundary | SourceDescriptor, SourceActivationDecision, source registry records, source descriptors, and watcher receipts are not authored or stored here. | promotion block. |
-| Synthetic-only boundary | Source fixtures use fake IDs, mock markers, fake access metadata, and reviewable payloads. | quarantine / validation failure. |
-| No-network boundary | Fixture loaders do not call live source systems, restricted APIs, web harvesters, geocoders, map services, release services, public APIs, or AI runtimes. | `ERROR`. |
-| Source-role boundary | Source role is explicit and cannot be upcast by fixtures, validators, catalog helpers, maps, API wording, or generated text. | `DENY` / `ABSTAIN`. |
-| Rights boundary | Rights, license, attribution, redistribution, embargo, and use constraints are explicit or the fixture fails closed. | `DENY` / `ABSTAIN`. |
-| Sensitivity boundary | Sensitive source families and protected details fail closed unless synthetic policy, review, redaction, and release refs are present. | `DENY` / `ABSTAIN`. |
-| Watcher boundary | Watcher-shaped fixture data is non-publisher metadata and cannot admit, promote, release, or publish source material. | validation failure. |
-| Evidence boundary | Source-shaped fixtures can reference evidence expectations but do not become EvidenceBundles or proof closure. | `ABSTAIN`. |
-| Release boundary | Fixture success does not become source admission, release approval, map publication, correction approval, or rollback approval. | promotion block. |
+| `tests/fixtures/domains/archaeology/source/` | Wrappers and expectation manifests local to Archaeology tests. | README-only. |
+| `tests/domains/archaeology/fixtures/source_admission/` | Executable Archaeology admission guardrail tests. | README-only in bounded evidence. |
+| `fixtures/contracts/v1/source/source_descriptor/` | Reusable generic SourceDescriptor schema fixtures. | One valid, one invalid, and validator wiring confirmed. |
+
+The generic positive fixture models USGS NWIS Hydrology. It proves generic shape only—not Archaeology handling of protected sites, cultural sources, oral history, rights-holder authority, consent, source-role restrictions, exact-location denial, activation, quarantine, or release.
+
+Do not copy generic fixtures here merely to make this lane nonempty. A wrapper must add an explicit consumer, Archaeology-specific expectation, and non-authority reason.
+
+[Back to top](#top)
 
 ---
 
-## Expected Source Fixture Families
+## Source object model and anti-collapse rules
 
-| Family | Purpose | Boundary |
+| Object or surface | Meaning | Must not become |
 |---|---|---|
-| SourceDescriptor-shaped fixtures | Verify source identity, role, rights, cadence, steward, sensitivity, and access fields are present where expected. | Fixture is not a real SourceDescriptor. |
-| SourceActivationDecision-shaped fixtures | Verify admit, quarantine, restrict, deny, abstain, stale, supersede, and error-like decisions are finite and reasoned. | Fixture is not admission authority. |
-| Source-role fixtures | Verify candidate, administrative, observed, modeled, aggregate, regulatory, context, and synthetic roles do not collapse. | Role cannot be upgraded by tests. |
-| Rights and access fixtures | Verify unresolved rights, license, embargo, or access terms deny or abstain. | Fixture is not legal clearance. |
-| Steward authority fixtures | Verify steward refs and reviewer roles are explicit where material. | Ref is synthetic, not approval. |
-| Sensitivity fixtures | Verify exact location, restricted context, and protected-detail examples fail closed. | Negative examples must still be synthetic. |
-| Watcher metadata fixtures | Verify ETag, Last-Modified, checksum, content length, cadence, and stale-state markers are treated as metadata. | Watcher is not publisher. |
-| Quarantine fixtures | Verify incomplete or conflicting source posture routes to quarantine or abstention. | Quarantine is not deletion. |
-| Supersession and rollback fixtures | Verify stale, superseded, withdrawn, corrected, and rollback refs remain auditable. | No silent edit. |
-| No-network fixtures | Verify local deterministic loading and no live source calls. | Integration tests require separate gates. |
+| `SourceDescriptor` | Metadata governing how a source may be treated. | Source truth, evidence, activation, or release. |
+| `SourceActivationDecision` | Proposed consequential admission/activation decision. | Inferred from shape, filename, path, or watcher freshness. |
+| Registry record | Persisted source control record. | Source payload, catalog record, proof, or public output. |
+| Source intake record | Candidate entering admission review. | Activation or lifecycle promotion. |
+| `IngestReceipt` | Process memory for capture/ingest. | Source authority or claim proof. |
+| Watcher metadata | Availability and content-identity observations. | Publisher or admission authority. |
+| Connector configuration | Access implementation under controls. | Permission to use or publish. |
+| `EvidenceBundle` | Support for claims. | Source admission or source-role upgrade. |
+| `PolicyDecision` | Admissibility result. | Evidence, review, registry record, or release. |
+| `ReviewRecord` | Recorded review process. | Cultural authority, consent, or release by itself. |
+| `ReleaseManifest` | Released-artifact authority. | Registry entry or fixture result. |
+
+Core invariants:
+
+1. source metadata is not source truth;
+2. source admission is not record admission;
+3. admission is not lifecycle promotion;
+4. activation is not connector success;
+5. watcher freshness is not authorization;
+6. source role cannot be silently upgraded;
+7. rights metadata is not legal clearance without current reviewed evidence;
+8. KFM defers to named cultural authority;
+9. schema validity is not evidence, review, policy, or release closure;
+10. fixture success is not production approval.
+
+[Back to top](#top)
 
 ---
 
-## Relationship to Source-Admission Tests
+## SourceDescriptor maturity and drift
 
-The confirmed `tests/domains/archaeology/fixtures/source_admission/README.md` lane describes tests that verify archaeology source-admission fixtures are safe, synthetic, reviewable, and bounded before default test runs. This `tests/fixtures/.../source/` lane is narrower: it documents test-local source-shaped fixture wrappers and expectation manifests.
+Confirmed SourceDescriptor assets:
 
-| Question | Preferred answer |
-|---|---|
-| Need executable source-admission guardrail tests? | Use `tests/domains/archaeology/fixtures/source_admission/`. |
-| Need reusable fixture payloads? | Use `fixtures/domains/archaeology/` or an accepted canonical fixture child lane. |
-| Need a test-only source wrapper, expectation map, or parametrization file? | This lane may be appropriate if it is clearly test-local. |
-| Need a real source descriptor or registry record? | Do not put it here. Use accepted source registry/catalog roots. |
-| Need source data or a source export? | Do not put it here. Use governed lifecycle roots with rights, sensitivity, and quarantine handling. |
-| Need policy, schema, evidence, receipt, or release authority? | Do not put it here. Use the owning root. |
+- semantic contract `contracts/source/source_descriptor.md` v0.3;
+- detailed schema `schemas/contracts/v1/source/source_descriptor.schema.json`;
+- one generic valid fixture and one invalid missing-`source_id` fixture;
+- validator entry point `tools/validators/validate_source_descriptor.py`.
 
----
+The schema requires identity, descriptor version, type, role, authority rank, publisher, steward, rights, sensitivity, cadence, access, citation, source-head identity, admissibility limits, public-release posture, review state, release state, and lifecycle state.
 
-## Accepted Inputs
+A validator pass proves current `PROPOSED` schema shape only. It does not prove source existence, truth, current rights, cultural review, role correctness, registry admission, connector authorization, activation, or release.
 
-Only bounded, synthetic, reviewable material belongs in this lane:
+### Confirmed drift
 
-- references to canonical Archaeology fixtures under `fixtures/domains/archaeology/`
-- test-local source fixture manifests with fake IDs, mock markers, finite outcomes, and expected reason codes
-- synthetic SourceDescriptor-shaped and SourceActivationDecision-shaped envelopes
-- synthetic source-family cases such as state inventory, public listing, field survey, excavation packet, collection record, lab report, historic map, and oral-history/cultural-knowledge placeholders
-- synthetic source-role, rights-status, access-method, steward-authority, sensitivity, sovereignty-label, watcher-metadata, stale-state, supersession, quarantine, correction, withdrawal, and rollback refs
-- synthetic EvidenceRef, EvidenceBundle-stub, RedactionReceipt, PolicyDecision, ReviewRecord, ReleaseManifest, CorrectionNotice, WithdrawalNotice, and RollbackCard refs
-- canary values that make source-role upcast, source-admission bypass, rights overclaiming, steward-approval leakage, protected-detail exposure, watcher-publisher collapse, map-truth leakage, AI-truth leakage, or release approval obvious
-- local validation envelopes emitted by test helpers
+| Drift | Evidence | Posture |
+|---|---|---|
+| Singular/plural schema path | File is under `source/`; metadata names `sources/` as canonical. | Preserve conflict. |
+| Hyphen/underscore filename | Detailed underscore schema and empty hyphen scaffold coexist. | Pin exact schema. |
+| Fixture root | Schema names `tests/fixtures/sources/source_descriptor/`; observed fixtures are under `fixtures/contracts/v1/source/source_descriptor/`. | Record source and consumer. |
+| Generic/domain coverage | Positive fixture is Hydrology-focused. | Do not count as Archaeology coverage. |
+| Registry prose lag | Parts of the registry README suggest older field names. | Prefer paired contract/schema for current shape. |
 
-Safe outputs may include public-safe references and operational fields such as fixture ID, fixture family, source family, source role, rights posture, sensitivity posture, access posture, steward ref, watcher metadata ref, evidence ref, policy decision ID, review record ID, finite outcome, reason code, correction ref, withdrawal ref, and rollback ref.
+[Back to top](#top)
 
 ---
 
-## Exclusions
+## SourceActivationDecision gap
 
-Do not place these materials in this lane:
-
-| Excluded material | Why it does not belong here |
-|---|---|
-| Real source records, source descriptors, source registry YAML, source-system exports, live source responses, production payloads, or public payloads | Default tests must stay synthetic, deterministic, and no-network. |
-| Direct reads from RAW, WORK, QUARANTINE, internal stores, unpublished candidates, or runtime outputs | Bypasses the trust membrane. |
-| Real coordinates, protected site details, restricted source terms, reviewer notes, consultation records, rights-holder communications, or collection-security details | Sensitive material requires governed policy, review, redaction, and release controls. |
-| Secrets, credentials, private endpoints, production logs, or telemetry | Security and exposure risk. |
-| Real EvidenceBundles, ProofPacks, production receipts, release manifests, rollback cards, correction notices, withdrawal notices, public artifacts, or audit ledgers | Governed trust records and release artifacts belong in their own roots. |
-| Binding policy rules, schema definitions, contract prose, source descriptors, release procedures, API implementation, map implementation, pipeline implementation, watcher implementation, or AI runtime implementation | Authority and implementation belong in their own responsibility roots. |
-
----
-
-## Suggested Layout
+The checked artifact:
 
 ```text
-tests/fixtures/domains/archaeology/source/
-|-- README.md
-|-- manifest_expectations.json
-|-- test_source_fixture_manifest_shape.py
-|-- test_source_fixture_no_network.py
-|-- test_source_descriptor_fixture_not_source_authority.py
-|-- test_source_role_fixture_no_upcast.py
-|-- test_rights_and_sensitivity_fixture_fail_closed.py
-|-- test_watcher_metadata_fixture_not_publisher.py
-|-- test_quarantine_supersession_rollback_refs.py
-`-- test_source_fixture_canaries.py
+schemas/contracts/v1/source/source-activation-decision.json
 ```
 
-This layout is PROPOSED until executable files exist in the repository.
+contains only planning metadata. It is neither a JSON Schema nor a decision instance.
+
+At checked paths:
+
+- `contracts/source/source_activation_decision.md` was not found;
+- `schemas/contracts/v1/source/source_activation_decision.schema.json` was not found;
+- no accepted activation validator or Archaeology activation fixture family was established.
+
+Do not invent a canonical shape or state machine. A future contract must distinguish admission review, registry state, connector activation, watcher state, quarantine, stale/retired/superseded state, ingest permission, and public-release posture.
+
+[Back to top](#top)
 
 ---
 
-## Run Posture
+## Registry path and instance boundary
 
-No executable runner was verified while authoring this README. Once tests exist, the expected local command should be documented and verified here.
+Two layouts are documented:
 
-```bash
-: "PROPOSED / NEEDS VERIFICATION"
-pytest tests/fixtures/domains/archaeology/source
+```text
+data/registry/archaeology/sources/
+data/registry/sources/archaeology/
 ```
 
-Required run posture: no network access, no live source calls, no direct lifecycle-store reads, no geocoding, no real secrets, no production logs, no production trust artifacts, no protected location detail, no source exports, no public artifact writes, deterministic fixture inputs, and finite outcomes only: `PASS`, `DENY`, `ABSTAIN`, or `ERROR`.
+The existing Archaeology registry README records this as a real path-order conflict. This fixture README does not choose a winner.
+
+Rules:
+
+- registry paths appear only as synthetic references;
+- fixtures are never written into registry lanes;
+- placement does not prove admission;
+- migration requires inventory, checksums, consumer updates, deprecation, and rollback;
+- registry records must not contain payloads, credentials, protected locations, or culturally restricted substance.
+
+[Back to top](#top)
 
 ---
 
-## Minimal Source Fixture Manifest
+## Test-local fixture admission rules
 
-Synthetic test-local manifests should describe source fixture expectations without carrying real source data or source authority.
+A file belongs here only when:
+
+1. a named Archaeology test owns it;
+2. it is too local for reusable fixtures;
+3. it contains only synthetic, public-safe metadata;
+4. it identifies a reusable fixture or explains why none exists;
+5. it declares expected finite behavior and prohibited claims;
+6. it has a consumer backlink;
+7. it does not duplicate contract fixtures, registry records, or source payloads;
+8. deleting it cannot affect runtime, registry, policy, release, or public state.
+
+| Need | Preferred home |
+|---|---|
+| Reusable SourceDescriptor shape | `fixtures/contracts/v1/source/source_descriptor/` |
+| Reusable Archaeology source examples | accepted child under `fixtures/domains/archaeology/` |
+| Executable admission tests | `tests/domains/archaeology/fixtures/source_admission/` |
+| Real descriptor/activation instances | accepted registry layout |
+| Source payloads | governed lifecycle roots |
+| Meaning, shape, policy, receipts, proofs, release | owning roots |
+
+[Back to top](#top)
+
+---
+
+## Minimum source fixture manifest
+
+Illustrative only:
 
 ```json
 {
-  "fixture_manifest_id": "archaeology-source-test-fixture-manifest-example",
+  "fixture_manifest_id": "kfm://fixture-test/archaeology/source/example",
+  "fixture_version": "v1",
   "domain": "archaeology",
-  "fixture_family": "source_admission_guardrail_envelope",
-  "source_descriptor_ref": "source-descriptor-fixture-arch-source-001",
-  "source_activation_decision_ref": null,
-  "source_family": "public_listing_placeholder",
-  "source_role": "candidate",
-  "rights_status": "needs_verification",
-  "access_method": "fixture_only",
-  "watcher_metadata_present": true,
-  "mock_marker": true,
-  "evidence_ref": "evidence-ref-fixture-arch-source-001",
-  "policy_decision_ref": "policy-decision-fixture-arch-source-001",
-  "review_record_ref": "review-record-fixture-arch-source-001",
-  "redaction_receipt_ref": "redaction-receipt-fixture-arch-source-001",
+  "fixture_scope": "test_local",
+  "fixture_authority": "non_authoritative",
+  "synthetic": true,
+  "consumer_refs": [
+    "tests/domains/archaeology/fixtures/source_admission/test_source_role_no_upcast.py"
+  ],
+  "object_family": "SourceDescriptor",
+  "source_id": "src:fixture-archaeology-example",
+  "source_family": "synthetic_public_listing",
+  "source_role": "candidate_signal",
+  "authority_rank": "fixture_only",
+  "rights_status": "unknown",
+  "sensitivity_default": "cultural_sensitive",
+  "access_posture": "fixture_only",
+  "watcher_posture": "metadata_only_non_publisher",
+  "activation_posture": "not_activated",
+  "registry_posture": "not_persisted",
+  "contains_source_payload": false,
+  "contains_exact_geometry": false,
+  "contains_restricted_cultural_content": false,
+  "evidence_ref": "evidence-ref:fixture:arch-source-example",
+  "review_ref": null,
+  "policy_decision_ref": null,
   "release_manifest_ref": null,
-  "rollback_card_ref": "rollback-card-fixture-arch-source-001",
-  "expected_outcome": "ABSTAIN",
-  "reason_code": "SOURCE_FIXTURE_TEST_DOES_NOT_AUTHORIZE_ADMISSION_OR_PUBLICATION",
+  "rollback_card_ref": "rollback-card:fixture:arch-source-example",
+  "expected_test_outcome": "PASS",
+  "expected_admission_outcome": "ABSTAIN",
+  "reason_code": "SOURCE_FIXTURE_REQUIRES_RIGHTS_AND_CULTURAL_REVIEW",
   "must_not_claim": [
-    "SOURCE_ADMITTED_CANARY",
-    "SOURCE_AUTHORITY_CANARY",
-    "RIGHTS_RESOLVED_CANARY",
-    "STEWARD_APPROVAL_CANARY",
-    "CONFIRMED_SITE_CANARY",
-    "PROTECTED_DETAIL_CANARY",
-    "WATCHER_PUBLISHER_CANARY",
-    "RELEASE_APPROVAL_CANARY"
+    "SOURCE_ADMITTED",
+    "SOURCE_ACTIVATED",
+    "RIGHTS_RESOLVED",
+    "CULTURAL_AUTHORITY_GRANTED",
+    "WATCHER_PUBLISHED",
+    "EVIDENCE_PROVED",
+    "RELEASED"
   ]
 }
 ```
 
-The JSON above is illustrative. Accepted schema, field names, fixture homes, source-family vocabulary, source-role vocabulary, reason codes, and CI wiring remain NEEDS VERIFICATION.
+Future schema work must settle identity, versioning, roles, rights, sensitivity, activation versus registry state, watcher state, outcomes, reason codes, governance refs, and invalidation lineage.
+
+[Back to top](#top)
 
 ---
 
-## Evidence Ledger
+## Required fixture families and case matrix
 
-| Source | Status | Supports | Limits |
+| Family | Positive case | Fail-closed case |
+|---|---|---|
+| SourceDescriptor shape | Complete synthetic descriptor validates against pinned schema. | Missing identity, role, rights, sensitivity, access, citation, or lifecycle fields. |
+| Source role | Candidate/context role remains bounded. | Map, API, catalog, helper, or prose upcasts role. |
+| Authority rank | Explicit fixture/context authority stays bounded. | Authority inferred from publisher, domain, filename, or registry path. |
+| Rights | Synthetic reviewed-open posture. | Unknown, denied, expired, contradictory, or redistribution-restricted rights. |
+| Sensitivity | Public-safe metadata with no protected content. | Exact location, sacred/burial/human-remains, collection-security, private-owner, looting-risk, or restricted-cultural detail. |
+| Cultural review | Explicit synthetic review ref without restricted substance. | Consent, consultation, or authority inferred from a label. |
+| Access/auth | Fixture-only or safe public metadata. | Credentials, private endpoint, secret name, or bypass. |
+| Citation | Explicit synthetic citation duty. | Missing attribution or unsafe disclosure in citation. |
+| Freshness | Stable toy ETag/checksum/last-modified. | Stale source treated as current or watcher status used as approval. |
+| Activation | Explicit held/quarantined/not-activated expectation. | Descriptor validation activates a connector or admits records. |
+| Watcher | Metadata-only non-publisher behavior. | Watcher admits, promotes, releases, or publishes. |
+| Quarantine | Unresolved rights/sensitivity routes to quarantine. | Unresolved source enters ordinary lifecycle/public paths. |
+| Registry | Synthetic registry ref only. | Fixture writes state or path placement implies admission. |
+| Evidence | Toy EvidenceRef within test scope. | Descriptor or registry metadata treated as proof. |
+| Correction/retirement | Supersession and rollback invalidate consumers. | Stale or withdrawn source remains active silently. |
+| Hermeticity | Local deterministic loading. | Network, connector, watcher, AI, registry, or governed-root write. |
+
+Do not collapse test, policy, review, registry, activation, connector, watcher, quarantine, lifecycle, and release states into one enum.
+
+[Back to top](#top)
+
+---
+
+## Source role, rights, sensitivity, and cultural authority
+
+Tests must prove downstream code cannot upgrade `candidate_signal`, `aggregator`, `citation_source`, `fixture_only`, or contextual material into stronger claim authority.
+
+Unknown, `noassertion`, denied, permission-required, expired, or contradictory rights fail closed. Never include real credentials, private endpoints, private correspondence, restricted terms, or protected identities.
+
+Archaeology fixtures must not include exact site geometry, burial/human-remains context, sacred-place detail, collection-security information, private-owner detail, looting-risk exposure, restricted oral history, or community-controlled knowledge.
+
+A synthetic review reference does not prove consultation, consent, or authority. KFM records and defers to named authority.
+
+[Back to top](#top)
+
+---
+
+## Watcher, freshness, and supersession boundary
+
+Watcher/source-head fields may record ETag, last-modified, content length, checksum, upstream version, revision ID, observation time, cadence, and stale reason.
+
+They may not admit or activate a source, change source role, clear rights/sensitivity, approve review, ingest records, create evidence, promote, release, or publish.
+
+| Condition | Bounded behavior |
+|---|---|
+| Source unchanged | Record observation only. |
+| Source changed | Route to review/validation; preserve prior state. |
+| Freshness exceeded | Mark stale, abstain, deny publication, or require review under pinned policy. |
+| Source withdrawn/terms changed | Disable consequential use and trigger invalidation review. |
+| Descriptor superseded | Preserve lineage and prevent superseded use. |
+| Watcher failure | `ERROR` or bounded unknown; fail closed. |
+
+[Back to top](#top)
+
+---
+
+## No-network, security, and side effects
+
+Default execution is hermetic:
+
+- no live endpoints, connectors, watchers, APIs, archives, databases, file shares, or cloud buckets;
+- no geocoding, map/tile services, public APIs, or AI runtimes;
+- no direct reads from lifecycle, registry, catalog, proof, receipt, release, or published stores;
+- no writes outside test-owned temporary directories;
+- no credentials, private endpoints, production logs, or telemetry;
+- stable clock, seed, ordering, identifiers, versions, and hashes;
+- deterministic replay;
+- sanitized errors with no protected source/location detail.
+
+Unknown network or write behavior is `ERROR` and fails closed.
+
+[Back to top](#top)
+
+---
+
+## Inventory, consumers, and vacuous-pass risk
+
+Required traceability:
+
+```text
+fixture manifest -> consumer test
+consumer test -> fixture manifest
+```
+
+A mature lane must prove:
+
+- every wrapper has an active consumer;
+- every reference resolves and is version-pinned;
+- duplicate payloads require migration justification;
+- Archaeology positive and fail-closed cases are nonempty;
+- generic Hydrology coverage is not counted as Archaeology coverage;
+- placeholder activation artifacts do not count as cases;
+- zero discovered cases is a failure;
+- skips carry reason, owner, and expiry;
+- paths are never interpreted as registry, activation, lifecycle, or release state.
+
+[Back to top](#top)
+
+---
+
+## Validation commands
+
+Confirmed generic shape validation:
+
+```bash
+python tools/validators/validate_source_descriptor.py --fixtures
+```
+
+This validates `fixtures/contracts/v1/source/source_descriptor/`. It does not execute Archaeology admission semantics.
+
+Future commands remain `PROPOSED` because the direct executable lane is README-only:
+
+```bash
+python -m pytest tests/domains/archaeology/fixtures/source_admission -q
+```
+
+A future runner must fail on zero cases, generic-only coverage, placeholders, missing backlinks, unpinned schemas/policies, unknown vocabularies, protected content, admission/activation collapse, network, or governed-root writes.
+
+[Back to top](#top)
+
+---
+
+## CI and promotion boundary
+
+| Surface | Current status |
+|---|---|
+| Direct source wrapper lane | README-only. |
+| Executable Archaeology source-admission lane | README-only in bounded evidence. |
+| Generic SourceDescriptor validator | Implemented schema runner entry point. |
+| Generic SourceDescriptor fixtures | One valid and one invalid case. |
+| SourceActivationDecision | Placeholder-only. |
+| Archaeology policy | Draft/greenfield implementation posture. |
+| Broad Archaeology validator lane | README-only in bounded evidence. |
+| `make fixtures` | TODO/scaffold posture. |
+| `domain-archaeology` workflow | Trigger exists; checked behavior is TODO-only. |
+| Required-check significance | UNKNOWN. |
+
+A green schema/CI result is not admission, rights clearance, cultural review, activation, promotion, evidence closure, release, or publication.
+
+[Back to top](#top)
+
+---
+
+## Failure interpretation
+
+| Failure | Meaning | Safe response |
+|---|---|---|
+| Manifest invalid | Wrapper cannot be trusted. | Reject case. |
+| Descriptor invalid | Shape fails pinned schema. | Reject/correct fixture. |
+| Rights unresolved | Consequential use unsupported. | Hold, deny, abstain, or quarantine. |
+| Sensitivity unresolved | Exposure unsupported. | Deny and escalate. |
+| Cultural authority missing | KFM lacks authority. | Hold/deny; do not infer consent. |
+| Source role upcast | Anti-collapse failed. | Deny with safe reason. |
+| Activation placeholder-only | Behavior is not testable. | Keep `NEEDS VERIFICATION`. |
+| Watcher publishes | Non-publisher invariant failed. | Block action. |
+| Network/write attempted | Hermeticity failed. | `ERROR`; fail closed. |
+| Zero cases | Collection is vacuous. | Fail suite. |
+| Registry path conflict | Placement unresolved. | Require migration decision. |
+
+Failures must not print endpoints, tokens, protected identifiers, payload excerpts, exact coordinates, restricted cultural context, or private reviewer data.
+
+[Back to top](#top)
+
+---
+
+## What a passing suite does not prove
+
+A pass would not prove that a source is admitted or active; claims are true; rights, consent, consultation, or cultural authority are current; a connector/watcher is authorized; source data are safe; evidence is sufficient; exact detail may be exposed; policy/review/release records exist; or production correction/rollback has propagated.
+
+Passing means only that tested fixture behavior matched pinned expectations.
+
+[Back to top](#top)
+
+---
+
+## Maintenance, migration, and deprecation
+
+For each wrapper:
+
+1. name the consumer;
+2. verify the fixture home;
+3. pin schema, fixture, policy, and versions;
+4. keep content synthetic and public-safe;
+5. preserve role and non-authority markings;
+6. add positive and fail-closed behavior;
+7. update outcome, reason code, and prohibited claims;
+8. run schema, no-network, no-write, no-leak, role, rights, sensitivity, watcher, activation, correction, and rollback checks.
+
+Migration of schema paths, filenames, fixture roots, registry paths, activation placeholders, or this lane requires inventory, inbound-reference audit, declared source/destination authority, checksums, consumer updates, compatibility/breaking-change note, deprecation, and rollback.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+This lane is not mature until:
+
+- [ ] owners and CODEOWNERS are confirmed;
+- [ ] lane-retention and fixture-home decisions are accepted;
+- [ ] a machine-checkable wrapper manifest exists;
+- [ ] SourceDescriptor path/filename/fixture-root drift is resolved or bridged;
+- [ ] SourceActivationDecision has a contract, schema, validator, and fixtures;
+- [ ] Archaeology-specific fixtures are substantive and non-placeholder;
+- [ ] executable consumers and two-way backlinks exist;
+- [ ] positive, invalid, denied, held, abstained, quarantined, stale, retired, superseded, correction, and rollback cases are nonempty;
+- [ ] role, rights, sensitivity, cultural authority, watcher, and activation tests fail closed;
+- [ ] no-network and no-governed-root-write controls are enforced;
+- [ ] CI fails on zero cases and reports finite outcomes;
+- [ ] correction, revocation, invalidation, and rollback are exercised;
+- [ ] documentation and migration notes are current.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+| ID | Question | Status |
+|---|---|---|
+| ARCH-SOURCE-FIX-001 | Should this wrapper lane be retained? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-002 | Who owns it and which CODEOWNERS applies? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-003 | Should `tests/fixtures/domains/README.md` be created? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-004 | What threshold admits a wrapper here? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-005 | What is the canonical wrapper manifest schema? | UNKNOWN |
+| ARCH-SOURCE-FIX-006 | What are stable fixture identity/version/hash rules? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-007 | Is `source/` or `sources/` canonical? | CONFLICTED |
+| ARCH-SOURCE-FIX-008 | Is hyphen or underscore canonical? | CONFLICTED |
+| ARCH-SOURCE-FIX-009 | Which SourceDescriptor fixture root is canonical? | CONFLICTED |
+| ARCH-SOURCE-FIX-010 | Which Archaeology registry path is canonical? | CONFLICTED |
+| ARCH-SOURCE-FIX-011 | What contract defines SourceActivationDecision? | UNKNOWN |
+| ARCH-SOURCE-FIX-012 | What schema/validator enforces activation? | UNKNOWN |
+| ARCH-SOURCE-FIX-013 | What activation/quarantine/stale/retirement vocabularies apply? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-014 | Which Archaeology reusable source fixtures exist? | UNKNOWN |
+| ARCH-SOURCE-FIX-015 | Which tests consume this lane? | UNKNOWN |
+| ARCH-SOURCE-FIX-016 | How are backlinks/orphans enforced? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-017 | Which role/authority vocabularies are accepted? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-018 | Which policy bundle/version governs admission? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-019 | How are cultural authority, rights, consent, and consultation represented safely? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-020 | How is watcher non-publisher enforced? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-021 | How is connector activation separated from admission? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-022 | How are source changes and stale states propagated? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-023 | How are corrections and contradictions propagated? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-024 | How are retirement, revocation, invalidation, and rollback propagated? | NEEDS VERIFICATION |
+| ARCH-SOURCE-FIX-025 | Are protected-content, endpoint, token, and payload scans enforced? | UNKNOWN |
+| ARCH-SOURCE-FIX-026 | Are no-network and no-governed-root-write rules enforced? | UNKNOWN |
+| ARCH-SOURCE-FIX-027 | Which workflows trigger for this path? | UNKNOWN |
+| ARCH-SOURCE-FIX-028 | Is any source suite required by branch protection? | UNKNOWN |
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | Status | Supports | Does not prove |
 |---|---|---|---|
-| `Directory Rules.pdf` and repo directory-rule docs | CONFIRMED doctrine | `tests/` is the enforceability root; `fixtures/` is the fixture responsibility root; source registry, schemas, policy, evidence, receipts, release, map, API, and public artifacts remain separate. | Does not prove executable tests, fixture inventory, CI, or pass rates. |
-| `tests/domains/archaeology/fixtures/source_admission/README.md` | CONFIRMED repo evidence | Defines a source-admission fixture-test lane and states fixtures must be safe, synthetic, reviewable, bounded, and non-authoritative. | Does not prove this `tests/fixtures/.../source/` lane has executable tests. |
-| `docs/domains/archaeology/SOURCES.md` | CONFIRMED repo evidence | Defines archaeology source-family catalogue, SourceDescriptor posture, role-fixed-at-admission discipline, deny-by-default admission, watcher non-publisher posture, and source-admission flow. | It marks many path and implementation claims PROPOSED. |
-| `docs/domains/archaeology/SOURCE_REGISTRY.md` | CONFIRMED repo evidence | Defines archaeology source registry as admission and authority-control surface, not bibliography; names SourceDescriptor fields, source roles, rights, access, cadence, steward, sensitivity, release class, and SourceActivationDecision posture. | Machine truth lives in registry YAML and schemas; implementation remains NEEDS VERIFICATION where not inspected. |
-| `fixtures/domains/archaeology/README.md` | CONFIRMED repo evidence | Defines the canonical Archaeology fixture root, child fixture lanes, accepted synthetic examples, exclusions, and verification status. | Payload inventory and test wiring remain NEEDS VERIFICATION. |
-| `tests/fixtures/domains/archaeology/api/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local API fixture posture and notes missing immediate parent index. | Does not prove source-fixture tests exist. |
-| `tests/fixtures/domains/archaeology/promotion/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local promotion fixture posture and release-boundary discipline. | Does not prove source-fixture tests exist. |
-| `tests/fixtures/domains/archaeology/review/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local review fixture posture and review-approval boundary. | Does not prove source-fixture tests exist. |
-| `tests/fixtures/domains/archaeology/sensitive_geometry/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local sensitive-geometry fixture posture and no-protected-coordinate boundary. | Does not prove source-fixture tests exist. |
-| `tests/fixtures/domains/archaeology/sites/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local site fixture posture and candidate-not-confirmed boundary. | Does not prove source-fixture tests exist. |
-| GitHub target file before update | CONFIRMED repo evidence | `tests/fixtures/domains/archaeology/source/README.md` existed as an empty placeholder before replacement. | Placeholder proves path existence only. |
-| `tests/fixtures/domains/archaeology/README.md` | CONFIRMED not found in GitHub fetch | Parent index was missing during authoring. | Missing parent should be created before treating this subtree as mature. |
+| Directory Rules | CONFIRMED doctrine | Placement and no parallel authority. | Implementation maturity. |
+| Target v0.1 | CONFIRMED prior content | Safety intent and stale claims. | Executable coverage. |
+| Test-fixture parents | CONFIRMED | Test-local/reusable split and child index. | Child maturity. |
+| Source-admission test README v0.2 | CONFIRMED | Three-surface split and fail-closed intent. | Executable tests. |
+| Source schema index | CONFIRMED | Mixed maturity and path/filename drift. | Migration winner. |
+| SourceDescriptor contract | CONFIRMED draft v0.3 | Rich semantics and anti-collapse. | Admission/runtime behavior. |
+| SourceDescriptor schema | CONFIRMED detailed PROPOSED | Required shape and conditionals. | Truth, rights, review, activation, release. |
+| Generic fixture README | CONFIRMED | One valid/invalid and fixture-root mismatch. | Archaeology semantics. |
+| SourceDescriptor validator | CONFIRMED entry point | JSON Schema fixture validation. | Archaeology policy/admission. |
+| Activation placeholder | CONFIRMED planning artifact | Named planned path. | Contract, schema, or valid decision. |
+| Activation 404 checks | CONFIRMED bounded | Named contract/schema absent. | Permanent absence. |
+| Archaeology registry README | CONFIRMED draft | Instance boundary and path conflict. | Canonical path/active records. |
+| Policy/validator READMEs | CONFIRMED drafts | Intended fail-closed checks. | Executable enforcement. |
+| Makefile/workflow | CONFIRMED scaffolding | Current CI posture. | Substantive admission gate. |
+| Direct-lane 404 checks | CONFIRMED bounded | Named files absent. | Permanent absence. |
+
+[Back to top](#top)
 
 ---
 
-## Validation Checklist
+## Documentation rollback
 
-- [ ] Confirm whether `tests/fixtures/` is intended as a supported test-local fixture lane or only a compatibility surface.
-- [ ] Create or confirm parent indexes at `tests/fixtures/README.md`, `tests/fixtures/domains/README.md`, and `tests/fixtures/domains/archaeology/README.md`.
-- [ ] Confirm accepted rules for when source fixture wrappers may live here instead of `fixtures/domains/archaeology/` or `tests/domains/archaeology/fixtures/source_admission/`.
-- [ ] Confirm source fixture manifest schema, source-family vocabulary, source-role vocabulary, rights-status vocabulary, reason-code vocabulary, mock-marker requirements, and canary conventions.
-- [ ] Confirm fixture payload inventory under `fixtures/domains/archaeology/` before linking tests to payloads.
-- [ ] Add executable checks for manifest shape, no-network fixture loading, SourceDescriptor shape, SourceActivationDecision shape, source-role no-upcast, rights fail-closed behavior, sensitivity fail-closed behavior, watcher non-publisher behavior, quarantine refs, supersession refs, correction refs, withdrawal refs, rollback refs, and public-surface canaries.
-- [ ] Confirm tests do not use real source feeds, live systems, secrets, production logs, production trust artifacts, restricted details, direct lifecycle-store reads, geocoders, map services, or public artifact writes.
-- [ ] Wire this lane into CI only after executable tests and safe fixtures exist.
+This is a documentation-only revision.
 
----
+Before merge, leave the draft PR unmerged or add a transparent revert commit. After merge, use a transparent revert commit or revert PR; do not reset shared history.
 
-## Rollback
+Rollback is required if this README:
 
-Rollback is required if this lane starts to store real source records, source descriptors, source registry records, source-system exports, watcher outputs, restricted source terms, protected-location material, production source payloads, trust-bearing records, release records, public artifacts, secrets, production logs, binding policy, contract/schema authority, map implementation, API implementation, pipeline implementation, watcher implementation, or AI runtime behavior.
+- is mistaken for source, descriptor, activation, registry, rights, review, policy, evidence, release, or publication authority;
+- directs executable tests into a fixture directory;
+- encourages storage of payloads, endpoints, credentials, protected locations, or restricted cultural content;
+- treats schema success, generic fixtures, filenames, registry placement, watcher freshness, or generated prose as admission;
+- collapses descriptor, activation, intake, ingest, watcher, connector, lifecycle, or release states;
+- silently selects a migration winner;
+- weakens rights, sensitivity, cultural authority, consent, correction, retirement, revocation, or rollback safeguards;
+- hides path drift, placeholder activation shape, missing consumers, README-only validators, or TODO-only CI.
 
-Rollback is also required if this lane treats a source-shaped fixture pass as source admission, source authority, rights resolution, steward approval, evidence proof, policy approval, review approval, release approval, publication approval, map truth, AI truth, correction approval, withdrawal approval, or rollback approval.
-
-Rollback target: restore the previous safe README revision or remove this lane until parent fixture-test indexes, fixture homes, manifest schema, source vocabulary, source-role behavior, rights expectations, sensitivity expectations, evidence expectations, policy expectations, release relationship, correction behavior, rollback behavior, and CI integration are reverified.
+**No-loss assessment:** v0.2 preserves the v0.1 synthetic-only, no-network, source-role-fixed, rights-aware, watcher-non-publisher, deny-by-default, evidence, review, policy, release, correction, withdrawal, and rollback boundaries. It corrects the stale parent claim, removes misleading executable-test placement, grounds SourceDescriptor maturity in current evidence, separates generic shape coverage from Archaeology semantics, surfaces activation and registry gaps, and makes future implementation requirements inspectable.
 
 [Back to top](#top)
