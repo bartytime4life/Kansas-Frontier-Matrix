@@ -1,444 +1,1040 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/artifacts-build-readme
-title: artifacts/build/ — Compiled Build Outputs and Distributables
-type: readme
-version: v1
-status: draft
-owners: @kfm-docs-steward, @kfm-build-steward
+title: artifacts/build/ — Governed Build-Staging Parent and Mixed-Maturity Output Matrix
+type: readme; directory-readme; build-staging-parent; compatibility-boundary; reproducibility-index; release-handoff-index
+version: v1.1
+status: draft; repository-grounded; compatibility-root; transitional; mixed-maturity; parent-readme-and-gitkeep-tracked; env-scaffolds-tracked-incomplete; pdf-readme-only; dist-readme-only-generated-contents-ignored; no-parent-producer; no-parent-manifest; no-parent-schema; no-parent-validator; no-parent-workflow; reproducibility-unproven; release-binding-unestablished; non-authoritative
+owners: OWNER_TBD — Build steward · Reproducibility steward · Packaging steward · PDF/document steward · Application/package stewards · Supply-chain steward · Security/privacy steward · Rights/accessibility stewards · Receipt/proof steward · Release steward · CI steward · Docs steward
 created: 2026-05-20
-updated: 2026-05-20
-policy_label: public
-related: [
-  docs/doctrine/directory-rules.md,
-  artifacts/README.md,
-  data/receipts/README.md,
-  data/proofs/README.md,
-  release/README.md,
-  data/published/README.md,
-  docs/doctrine/ai-build-operating-contract.md
-]
-tags: [kfm, artifacts, build, compatibility-root, reproducibility, ARTIFACT_DIGEST]
-notes: [
-  "Authored doctrine-only; no mounted repo inspected.",
-  "Subfolder of compatibility root artifacts/ per Directory Rules §8.2.",
-  "Class transitional inherited from parent artifacts/."
-]
+updated: 2026-07-16
+supersedes: v1 doctrine-only build-output README
+policy_label: public-doc; artifacts; build; compatibility-root; generated-output; reproducibility; deterministic-builds; no-secrets; no-trust-authority; no-release-authority; correction-aware; rollback-aware
+current_path: artifacts/build/README.md
+truth_posture: CONFIRMED target README and prior blob, Directory Rules classification of artifacts as a transitional compatibility root, root artifacts README boundary, tracked parent README and .gitkeep, tracked env README/build-env.json/tool-versions.yaml, tracked pdf README, tracked dist README, current child maturity statements, root package and Explorer Web build commands remaining TODO-only, Makefile lacking parent/PDF/dist/environment build targets, docs-build workflow remaining TODO-only, root gitignore applying dist/ to nested distribution directories while not protecting pdf/ or env/ generally, MapLibre artifact commands writing to artifacts/perf rather than artifacts/build, bounded search surfacing no parent producer or consumer, and checked absence of artifacts/build/build-manifest.json, schemas/artifacts/build-manifest.schema.json, scripts/build-artifacts.sh, and .github/workflows/build-artifacts.yml / PROPOSED parent build manifest, source-to-output registry, producer registry, output-class routing rules, immutable build-run identity, normalized environment contract, deterministic PDF and archive profiles, repeated-build comparisons, digest and SBOM sidecars, structured validation reports, CI artifact retention, canonical receipt/proof/release binding, correction and rollback propagation, and migration or retirement / CONFLICTED parent v1 claims of pinned deterministic PDF/A-2u and digest production versus no verified producer or validator; env files tracked and mutable-looking versus immutable per-run evidence needs; pdf output not ignored versus dist output ignored; compatibility staging versus canonical receipt/proof/release homes; local sidecars versus governed records; parent "build" name versus substantive MapLibre outputs written to artifacts/perf; and generated-output convenience versus repository-binary growth / UNKNOWN untracked local outputs, ignored dist contents, CI-only artifacts, external build systems, release assets, object stores, complete recursive inventory, installed tools, reproducibility rate, security scan state, rights/accessibility review state, active consumers, branch-protection significance, operational retention, deployment behavior, and production use / NEEDS VERIFICATION accepted owners, CODEOWNERS, retain/migrate/retire decision, complete child registry, generated-output commit policy, producer and consumer contracts, manifest/schema homes, toolchain pins, source-date derivation, no-network policy, secret/path redaction, PDF conformance profile, archive normalization profile, SBOM/signature policy, CI ownership, retention classes, release handoff, correction consumers, and rollback execution
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3
+  target_prior_blob: 6444fca11743ffff6256fd24ba775b4b29c13e1f
+  confirmed_parent_files:
+    - artifacts/build/README.md
+    - artifacts/build/.gitkeep
+  confirmed_child_lanes:
+    - artifacts/build/env/README.md
+    - artifacts/build/env/build-env.json
+    - artifacts/build/env/tool-versions.yaml
+    - artifacts/build/pdf/README.md
+    - artifacts/build/dist/README.md
+  checked_absent_paths:
+    - artifacts/build/build-manifest.json
+    - schemas/artifacts/build-manifest.schema.json
+    - scripts/build-artifacts.sh
+    - .github/workflows/build-artifacts.yml
+  execution_surfaces:
+    - package.json
+    - apps/explorer-web/package.json
+    - Makefile
+    - .github/workflows/docs-build.yml
+    - .gitignore
+  bounded_inventory_note: tracked repository evidence cannot establish ignored distribution contents, uncommitted local files, CI workspaces, external builders, historical outputs, release assets, object stores, registries, or uninspected subprojects
+related:
+  - ../README.md
+  - ./env/README.md
+  - ./pdf/README.md
+  - ./dist/README.md
+  - ./env/build-env.json
+  - ./env/tool-versions.yaml
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/runbooks/DOCTRINE_ARTIFACT_PREFLIGHT.md
+  - ../../package.json
+  - ../../apps/explorer-web/package.json
+  - ../../Makefile
+  - ../../.github/workflows/docs-build.yml
+  - ../../.gitignore
+  - ../../data/receipts/README.md
+  - ../../data/proofs/README.md
+  - ../../data/published/README.md
+  - ../../release/README.md
+tags: [kfm, artifacts, build, compatibility, environment, pdf, dist, reproducibility, deterministic-builds, digests, sbom, accessibility, security, retention, release-handoff, correction, rollback]
+notes:
+  - "v1.1 replaces doctrine-only and over-specific implementation claims with a commit-pinned parent inventory and mixed-maturity child matrix."
+  - "The parent has no established producer, manifest, schema, validator, workflow, or consumer."
+  - "The environment lane contains tracked incomplete scaffolds; the PDF lane is README-only; distribution bytes are normally ignored by the root dist/ rule."
+  - "MapLibre performance artifacts are a separate artifacts/perf lane and do not establish artifacts/build maturity."
+  - "This revision changes documentation only."
 [/KFM_META_BLOCK_V2] -->
-
-# `artifacts/build/`
-
-> Compiled, byte-deterministic build outputs and distributables — staged here for hash-pinning and citation, never as a trust surface.
-
-[![authority: compatibility](https://img.shields.io/badge/authority-compatibility-orange)](../../docs/doctrine/directory-rules.md#8-compatibility-roots)
-[![class: transitional](https://img.shields.io/badge/class-transitional-yellow)](../../docs/doctrine/directory-rules.md#81-common-compatibility-roots-and-their-canonical-homes)
-[![status: PROPOSED](https://img.shields.io/badge/status-PROPOSED-lightgrey)](../../docs/doctrine/directory-rules.md#82-the-artifacts-rule)
-[![reproducibility: deterministic](https://img.shields.io/badge/reproducibility-deterministic-blue)](#11-validation)
-[![last reviewed: 2026-05-20](https://img.shields.io/badge/last%20reviewed-2026--05--20-informational)](#12-last-reviewed)
-
-<sub><strong>Status:</strong> PROPOSED &nbsp;·&nbsp; <strong>Owners:</strong> <code>@kfm-docs-steward</code> · <code>@kfm-build-steward</code> &nbsp;·&nbsp; <strong>Updated:</strong> 2026-05-20</sub>
-
-> [!NOTE]
-> **Truth posture.** This README was authored against the attached KFM doctrine corpus (Directory Rules v1.1; Pass-10 Idea Index Category C13; Domains v1.1 + Pass 23–32 Atlas; AI Build Operating Contract; Unified Implementation Architecture Build Manual). **No mounted repository, CI run, build log, or generated artifact was inspected.** Doctrine claims are `CONFIRMED`. Path, tool-version, file-presence, and orchestration claims are `PROPOSED` or `NEEDS VERIFICATION`.
-
----
 
 <a id="top"></a>
 
-## Quick jump
+# `artifacts/build/` — Governed Build-Staging Parent and Mixed-Maturity Output Matrix
 
-1. [Purpose](#1-purpose)
-2. [Boundary diagram](#2-boundary-diagram)
-3. [Authority level](#3-authority-level)
-4. [Status](#4-status)
-5. [What belongs here](#5-what-belongs-here)
-6. [What does NOT belong here](#6-what-does-not-belong-here)
-7. [Directory shape (PROPOSED)](#7-directory-shape-proposed)
-8. [Inputs](#8-inputs)
-9. [Outputs](#9-outputs)
-10. [Validation](#10-validation)
-11. [Review burden](#11-review-burden)
-12. [Related folders](#12-related-folders)
-13. [ADRs and open questions](#13-adrs-and-open-questions)
-14. [Anti-patterns to watch for](#14-anti-patterns-to-watch-for)
-15. [Appendix — reproducibility & toolchain reference](#15-appendix--reproducibility--toolchain-reference)
-16. [Last reviewed](#16-last-reviewed)
+> **Purpose.** Route derived build context and generated bytes into narrowly scoped staging lanes while preserving reproducibility, security, accessibility, rights, evidence, release, correction, and rollback boundaries. A build command, generated file, digest, validation log, CI artifact, or successful workflow never becomes source authority, evidence closure, release approval, publication, or production truth.
+
+<p>
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Root: artifacts compatibility" src="https://img.shields.io/badge/root-artifacts__compatibility-orange">
+  <img alt="Maturity: mixed scaffolds" src="https://img.shields.io/badge/maturity-MIXED__SCAFFOLDS-red">
+  <img alt="Parent producer: not established" src="https://img.shields.io/badge/producer-not__established-critical">
+  <img alt="Trust authority: none" src="https://img.shields.io/badge/trust__authority-none-purple">
+  <img alt="Release: governed elsewhere" src="https://img.shields.io/badge/release-governed__elsewhere-blue">
+</p>
+
+**Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose-and-audience) · [Authority](#authority-and-directory-rules-basis) · [Inventory](#confirmed-current-inventory) · [Lane matrix](#child-lane-maturity-and-routing-matrix) · [Build model](#governed-build-staging-model) · [Inputs](#input-and-source-contract) · [Outputs](#output-classification-and-routing) · [Environment](#environment-and-toolchain-contract) · [PDF](#pdf-build-contract) · [Distribution](#distribution-build-contract) · [Reproducibility](#reproducibility-and-determinism) · [Security](#security-rights-accessibility-and-sensitive-content) · [Digests](#digests-sboms-signatures-and-provenance) · [Lifecycle](#lifecycle-receipt-proof-and-release-boundary) · [Producer](#producer-and-consumer-contracts) · [Validation](#validation-and-finite-outcomes) · [CI](#ci-artifact-and-retention-boundary) · [Correction](#correction-withdrawal-and-rollback) · [Review](#review-burden-and-change-control) · [Done](#definition-of-done) · [Plan](#smallest-sound-implementation-sequence) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Rollback](#documentation-correction-and-rollback)
 
 ---
 
-## 1. Purpose
+## Status and evidence boundary
 
-`artifacts/build/` is the staging home for **compiled, byte-deterministic build outputs** — primarily PDFs and other distributables — produced by KFM build pipelines from sources elsewhere in the repository.
+> [!IMPORTANT]
+> **Snapshot:** `main@d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3`<br>
+> **Prior README blob:** `6444fca11743ffff6256fd24ba775b4b29c13e1f`<br>
+> **Confirmed parent files:** `README.md`, `.gitkeep`<br>
+> **Confirmed children:** `env/`, `pdf/`, `dist/`<br>
+> **Parent producer / manifest / schema / validator / workflow / consumer:** not established<br>
+> **Reproducibility and release binding:** not established
 
-It is a **build-scratch lane**, not a trust surface:
+`artifacts/build/` is a repository-confirmed transitional compatibility parent. It is **not** an operational build platform.
 
-- Files here are the *bytes* that a downstream receipt will pin by `ARTIFACT_DIGEST`.
-- Files here do **not** themselves prove provenance, validation, policy posture, or release state.
-- Files here may be regenerated at any time by re-running the pinned toolchain against the source `git_sha`.
+The prior README correctly protected the trust boundary, but it presented a detailed Pandoc → XeLaTeX → Ghostscript → qpdf chain, PDF/A-2u output, linearization, and `ARTIFACT_DIGEST` sidecars as if current implementation supported them. Current repository evidence does not establish those behaviors.
 
-The folder exists so the build chain has a predictable place to write output **before** that output is digested, cited by a receipt under `data/receipts/`, attested under `data/proofs/`, and (when applicable) bound into a `ReleaseManifest` under `release/`.
+### Safe conclusion
+
+| Capability | Status | Evidence-bounded conclusion |
+|---|---:|---|
+| Parent README and `.gitkeep` | `CONFIRMED` | The parent boundary and directory retention marker exist. |
+| Child lane structure | `CONFIRMED` | `env/`, `pdf/`, and `dist/` are documented children. |
+| Environment context | `SCAFFOLD ONLY` | Two tracked machine files are incomplete and `PROPOSED`. |
+| PDF output system | `NOT ESTABLISHED` | Direct lane is README-only; no producer or conformance chain is verified. |
+| Distribution system | `NOT ESTABLISHED` | Direct lane is README-only; generated contents are normally ignored. |
+| Parent build producer | `NOT ESTABLISHED` | No parent writer or orchestration command surfaced. |
+| Parent manifest/schema/validator | `NOT ESTABLISHED` | Checked candidate paths are absent. |
+| Parent CI workflow | `NOT ESTABLISHED` | No build-artifact workflow surfaced. |
+| Root package build | `TODO-ONLY` | The root `build` script only echoes a TODO. |
+| Explorer Web build | `TODO-ONLY` | The app-local `build` script only echoes TODO. |
+| Documentation build | `TODO-ONLY` | `docs-build.yml` does not build or publish. |
+| MapLibre artifact chain | `SEPARATE LANE` | Substantive commands write to `artifacts/perf/`, not this parent. |
+| Repeated-build proof | `NOT ESTABLISHED` | No equality or normalized-equivalence report was verified. |
+| Canonical receipt/proof/release refs | `NOT ESTABLISHED` | No governed record is bound to this parent. |
+| Production/public use | `UNKNOWN` | Repository staging documentation does not prove deployment. |
+
+### Truth labels
+
+| Label | Meaning in this README |
+|---|---|
+| `CONFIRMED` | Verified from current repository files, exact paths, or bounded search. |
+| `PROPOSED` | A recommended contract, path, command, manifest, or gate not established as current implementation. |
+| `CONFLICTED` | Current files or documentation create incompatible expectations. |
+| `UNKNOWN` | Not observable or not established from inspected evidence. |
+| `NEEDS VERIFICATION` | Checkable, but not sufficiently proven for reliance, release, or public claims. |
+| `DENY` | A prohibited trust, security, rights, release, publication, or lifecycle interpretation. |
 
 [Back to top](#top)
 
 ---
 
-## 2. Boundary diagram
+## Purpose and audience
+
+This README is the parent operating contract for maintainers who generate, inspect, retain, package, validate, upload, sign, release, delete, or reference build outputs.
+
+It is intended for:
+
+- build and reproducibility stewards;
+- application, package, documentation, PDF, and packaging maintainers;
+- CI and artifact-retention maintainers;
+- supply-chain, security, privacy, rights, and accessibility reviewers;
+- receipt, proof, release, correction, and rollback stewards;
+- reviewers deciding whether generated material is safe to retain or hand off;
+- documentation maintainers correcting maturity and path claims.
+
+The durable question is:
+
+> Can KFM generate and inspect build material without allowing staging files, metadata, logs, hashes, workflow artifacts, or generated prose to become authority?
+
+A correct build result is always scoped. It may still be unsupported, unreproducible, inaccessible, rights-restricted, sensitive, stale, unreleased, or unsafe to publish.
+
+[Back to top](#top)
+
+---
+
+## Authority and Directory Rules basis
+
+Directory Rules classify `artifacts/` as a compatibility root for derived, regenerable, non-authoritative material. This parent inherits that classification.
+
+```text
+source and implementation roots          authoritative inputs and build logic
+configs/                                 stable non-secret configuration
+artifacts/build/env/                     sanitized build-context staging
+artifacts/build/pdf/                     generated PDF staging
+artifacts/build/dist/                    generated non-PDF distribution staging
+data/receipts/                           canonical process memory
+data/proofs/                             canonical proof and evidence support
+release/                                 promotion, correction, withdrawal, rollback
+data/published/                          governed published copies
+```
+
+This parent may organize staging lanes and human contracts. It must not become:
+
+- a second source-code or documentation root;
+- a schema, contract, or policy authority;
+- a secret or deployment-configuration store;
+- a package registry or container registry;
+- a receipt, proof, EvidenceBundle, or attestation store;
+- a release-manifest or promotion-decision directory;
+- a catalog or published-artifact root;
+- a public download surface.
+
+### Authority matrix
+
+| Responsibility | Authority home | Role of `artifacts/build/` |
+|---|---|---|
+| Source meaning and identity | owning source root | Reference only. |
+| Build logic | `tools/`, `pipelines/`, `packages/`, or app-owned implementation | Never implement here. |
+| Stable build configuration | `configs/` or implementation-owned configuration | Reference only. |
+| Sanitized environment context | `artifacts/build/env/` | Transitional staging. |
+| PDF bytes | `artifacts/build/pdf/` | Transitional staging. |
+| Other distributables | `artifacts/build/dist/` | Transitional staging. |
+| Validation implementation | `tools/validators/` or accepted package | External executable. |
+| Receipts and proofs | `data/receipts/`, `data/proofs/` | Canonical binding. |
+| Release and publication | `release/`, `data/published/` | Governed decisions and released copies. |
+| Secrets and signing keys | protected CI or secret manager | Never serialize here. |
+
+No file under this parent gains trust merely by existing, being tracked, being uploaded by CI, or receiving a digest.
+
+[Back to top](#top)
+
+---
+
+## Confirmed current inventory
+
+Bounded tracked evidence supports:
+
+```text
+artifacts/build/
+├── README.md
+├── .gitkeep
+├── env/
+│   ├── README.md
+│   ├── build-env.json
+│   └── tool-versions.yaml
+├── pdf/
+│   └── README.md
+└── dist/
+    └── README.md
+```
+
+Checked absent at representative parent contract paths:
+
+```text
+artifacts/build/build-manifest.json
+schemas/artifacts/build-manifest.schema.json
+scripts/build-artifacts.sh
+.github/workflows/build-artifacts.yml
+```
+
+This is not an exhaustive recursive inventory. Ignored distribution output, local developer files, CI workspaces, external build services, historical artifacts, release assets, and object-store contents remain `UNKNOWN`.
+
+### Current parent observations
+
+- `.gitkeep` confirms an intentional retained directory, not an operational system.
+- `env/` contains two tracked machine-readable scaffolds.
+- `pdf/` contains no confirmed PDF payload or manifest.
+- `dist/` contains no confirmed tracked distributable payload or manifest.
+- the root package build command is TODO-only;
+- the Explorer Web build command is TODO-only;
+- the Makefile has no parent, PDF, distribution, or environment build target;
+- `docs-build.yml` is TODO-only;
+- no parent build producer or consumer surfaced;
+- the repository does contain substantive MapLibre performance artifact commands, but they write to `artifacts/perf/`, a separate lane.
+
+[Back to top](#top)
+
+---
+
+## Child-lane maturity and routing matrix
+
+| Lane | Confirmed tracked state | Current maturity | Parent routing rule |
+|---|---|---|---|
+| [`env/`](env/README.md) | README, `build-env.json`, `tool-versions.yaml` | Incomplete scaffolds; no generator, validator, workflow, or consumer | Use only for minimal sanitized build context. |
+| [`pdf/`](pdf/README.md) | README only | No producer, PDF/A/linearization/accessibility validator, digest, workflow, or consumer | Use only for generated PDF staging after a producer exists. |
+| [`dist/`](dist/README.md) | README only in bounded tracked evidence | No producer, manifest, digest, CI upload, or release binding | Use for non-PDF generated outputs; ordinary generated contents are normally ignored by `dist/`. |
+
+### Parent-to-child routing
+
+Use the primary output responsibility:
+
+- environment/toolchain context → `env/`;
+- PDF bytes → `pdf/`;
+- archives, application bundles, package archives, generated clients, and other non-PDF distributables → `dist/`;
+- generated documentation sites whose primary responsibility is rendered documentation → `artifacts/docs/`;
+- QA, lint, coverage, static-analysis, and inspection reports → `artifacts/qa/`;
+- transient intermediate work → `artifacts/temporary/`;
+- MapLibre performance evidence-shaped temporary outputs → the existing `artifacts/perf/` lane until its own migration decision is resolved;
+- receipts, proofs, release records, catalogs, and published copies → canonical roots, never this parent.
+
+Do not introduce another child lane without:
+
+1. proving that `env/`, `pdf/`, `dist/`, `docs/`, `qa/`, or `temporary/` cannot own the responsibility;
+2. consulting Directory Rules;
+3. checking current repository paths and ADRs;
+4. documenting migration and rollback;
+5. avoiding parallel schema, receipt, proof, release, or publication homes.
+
+[Back to top](#top)
+
+---
+
+## Governed build-staging model
 
 ```mermaid
 flowchart LR
-  subgraph SRC["Sources (canonical)"]
-    DOCS["docs/<br/>schemas/<br/>contracts/<br/>policy/"]
-  end
-
-  subgraph TOOL["Build chain (tools/ + pipelines/)"]
-    PIN["tool-versions.yaml<br/>pinned: Pandoc · XeLaTeX<br/>Ghostscript · qpdf"]
-    BUILD["build script<br/>SOURCE_DATE_EPOCH<br/>LC_ALL=C.UTF-8<br/>Noto embedded"]
-  end
-
-  subgraph SCR["artifacts/build/ — this folder<br/>(compatibility · transitional)"]
-    PDF["compiled PDF/A-2u (linearized)"]
-    SIDE["ARTIFACT_DIGEST sidecar<br/>SHA-256(linearized PDF)"]
-    DIST["other distributables"]
-  end
-
-  subgraph TRUST["Trust surfaces (canonical) — NOT here"]
-    REC["data/receipts/<br/>RunReceipt · TransformReceipt<br/>AIReceipt · ValidationReport"]
-    PROOF["data/proofs/<br/>EvidenceBundle · attestations"]
-    REL["release/<br/>ReleaseManifest · RollbackCard"]
-    PUB["data/published/<br/>released tiles / layers"]
-  end
-
-  DOCS --> BUILD
-  PIN --> BUILD
-  BUILD --> PDF
-  BUILD --> SIDE
-  BUILD --> DIST
-  SIDE -. cited by .-> REC
-  PDF  -. pinned in .-> REL
-  REC  --> PROOF
-  REL  --> PUB
-
-  classDef scratch fill:#fff8e1,stroke:#c79100,color:#5d4037
-  classDef trust   fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
-  classDef src     fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
-  class SCR,PDF,SIDE,DIST scratch
-  class TRUST,REC,PROOF,REL,PUB trust
-  class SRC,DOCS,TOOL,PIN,BUILD src
+    S["Authoritative source and config"] --> P["Versioned producer<br/>PROPOSED"]
+    E["Sanitized environment context"] --> P
+    P --> O{"Output class"}
+    O -->|PDF| PDF["artifacts/build/pdf/"]
+    O -->|non-PDF distribution| DIST["artifacts/build/dist/"]
+    P --> M["Parent/child build manifest<br/>PROPOSED"]
+    PDF --> V["Validation and digest"]
+    DIST --> V
+    M --> V
+    V --> R["Canonical receipt / proof refs"]
+    R --> G["Policy · review · release gates"]
+    G --> PUB["Governed published copy"]
+    PDF -. "presence is not release" .-> PUB
+    DIST -. "presence is not release" .-> PUB
 ```
 
-> [!IMPORTANT]
-> The arrows from `artifacts/build/` to trust surfaces are **one-way**. Build output flows *into* receipts and release manifests by hash reference; receipts and manifests do **not** flow back into `artifacts/build/`.
+The intended sequence is:
+
+1. resolve authoritative sources and stable configuration;
+2. identify a versioned producer;
+3. capture minimal sanitized build context;
+4. generate output into the correct staging child;
+5. validate format, security, rights, accessibility, and policy-relevant properties;
+6. compute final-byte digests;
+7. compare independent builds where reproducibility is claimed;
+8. write canonical receipts and proofs elsewhere;
+9. apply review and release policy;
+10. publish an immutable governed copy;
+11. retain correction and rollback targets.
+
+Skipping a step does not silently promote the output. It yields a failure, hold, abstention, or denied release posture according to the governing contract.
 
 [Back to top](#top)
 
 ---
 
-## 3. Authority level
+## Input and source contract
 
-| Dimension | Value | Basis |
+Every material build requires declared inputs.
+
+### Minimum input identity
+
+| Field | Requirement |
+|---|---|
+| `source_ref` | Immutable source commit, tag, or content digest. |
+| `source_paths` | Explicit relative paths or a governed input manifest. |
+| `source_status` | Clean, dirty, generated, or externally supplied. |
+| `producer_ref` | Versioned script, package, image, or workflow identity. |
+| `config_refs` | Stable non-secret configuration and templates. |
+| `dependency_refs` | Lockfile, image, package, font, and plugin digests where material. |
+| `policy_profile` | Rights, sensitivity, audience, accessibility, and release profile where applicable. |
+| `expected_outputs` | Nonempty declared output set and child-lane routing. |
+
+### Input prohibitions
+
+Do not:
+
+- build from an unidentified dirty workspace without recording the state;
+- rely on mutable branch heads as the only identity;
+- copy source files into this parent as an alternate source home;
+- infer rights or sensitivity from successful compilation;
+- treat an AI-generated source or summary as evidence without its governing support;
+- include secrets, credentials, signing keys, private endpoints, or unrestricted environment dumps;
+- read directly from protected lifecycle stores merely because the output is temporary.
+
+[Back to top](#top)
+
+---
+
+## Output classification and routing
+
+### Accepted output classes
+
+| Output class | Staging home | Required posture |
 |---|---|---|
-| Authority level | **Compatibility** | Directory Rules §8.1 lists `artifacts/` as a compatibility root. |
-| Class | **`transitional`** | Directory Rules §8.1 default class for `artifacts/`. |
-| Inherited from | `artifacts/` | This folder sits inside the `artifacts/` compatibility root; class flows down unless overridden. |
-| Public trust surface? | **No** | The public trust path is `apps/governed-api/`. Build outputs are inputs to that path, not outputs of it. |
-| Canonical home for trust content | **Elsewhere** — see §6 | Per Directory Rules §8.2, trust-bearing material belongs in `data/receipts/`, `data/proofs/`, `release/`, `data/catalog/`, `data/published/`. |
+| Sanitized environment snapshot | `env/` | Minimal, allowlisted, non-secret, digestable. |
+| Toolchain declaration/observation | `env/` | Declared and observed values separated. |
+| PDF document | `pdf/` | Derived bytes; conformance and accessibility claims independently tested. |
+| Application/static bundle | `dist/` | Deterministic where practical; archive and supply-chain controls applied. |
+| Package archive | `dist/` | Source/lock identity, SBOM/license review, digest. |
+| Generated client/reference archive | `dist/` or `artifacts/docs/` | Route by primary responsibility. |
+| Parent/child inventory manifest | child lane or proposed parent manifest | Non-authoritative; references canonical records elsewhere. |
+| Temporary digest/SBOM/signature copy | child lane when justified | Staging aid only; canonical trust record elsewhere. |
 
-> [!NOTE]
-> A future ADR may retire `artifacts/` entirely in favor of canonical trust homes plus a true scratch surface (e.g., under `tools/`). Directory Rules §18.a lists the open question. Until that ADR is accepted, this folder remains a `transitional` compatibility surface.
+### Forbidden output classes
+
+Never store these under `artifacts/build/`:
+
+- source-of-record documents or implementation;
+- canonical schemas, semantic contracts, or policy bundles;
+- source descriptors, registries, or source-head records;
+- `RunReceipt`, `TransformReceipt`, `ValidationReport`, `AIReceipt`, or other canonical receipts;
+- `EvidenceBundle`, ProofPack, DSSE/in-toto attestation, or canonical signature record;
+- `ReleaseManifest`, `PromotionDecision`, `CorrectionNotice`, `WithdrawalNotice`, or `RollbackCard`;
+- STAC, DCAT, PROV, triplet, or catalog authority records;
+- governed published copies;
+- secrets, private keys, credentials, tokens, or live deployment configuration;
+- non-regenerable assets whose owning responsibility is elsewhere.
 
 [Back to top](#top)
 
 ---
 
-## 4. Status
+## Environment and toolchain contract
 
-`PROPOSED` — pending mounted-repo verification.
+The `env/` lane has the only confirmed machine-readable build scaffolds, but both remain incomplete.
 
-| Claim | Label | Why |
+### Required separation
+
+A mature implementation should separate:
+
+1. **declared toolchain policy** — intended versions, images, fonts, plugins, and deterministic controls;
+2. **observed build snapshot** — what the runner actually resolved and used;
+3. **canonical build receipt** — what ran, against which inputs, producing which digests and outcomes.
+
+`CONFIRMED_BY_DOCTRINE` in a tool declaration is not proof that the executable:
+
+- is installed;
+- resolves on `PATH`;
+- matches the declared version;
+- matches an approved package or image digest;
+- was invoked;
+- produced the output;
+- is safe or supported.
+
+### Environment safeguards
+
+- collect through an explicit allowlist;
+- redact usernames, hostnames, home paths, tokens, private endpoints, and runner identifiers;
+- never dump the ambient process environment;
+- normalize locale and timezone;
+- record source-date derivation;
+- record container/image and dependency-lock digests;
+- use immutable per-run identifiers rather than silently overwriting a generic snapshot;
+- bind snapshots to outputs by digest;
+- scan both field names and values for secrets.
+
+See [`env/README.md`](env/README.md) for the detailed lane contract.
+
+[Back to top](#top)
+
+---
+
+## PDF build contract
+
+A PDF staging file must not be described as PDF/A, linearized, accessible, reproducible, secure, signed, or released unless each claim has specific evidence.
+
+### Required PDF layers
+
+| Layer | Example checks |
+|---|---|
+| Syntax/readability | Parser opens file; page tree and cross references are valid. |
+| Deterministic production | Stable source/date/locale/fonts/templates/options; repeated-build comparison. |
+| PDF/A or other profile | Named profile, validator, validator version, and report. |
+| Linearization | Explicit check after the final byte transform. |
+| Accessibility | Tags, language, title, reading order, headings, alternate text, tables, links, forms, bookmarks, and manual review where material. |
+| Security/privacy | Metadata scrub, no active JavaScript, no unintended attachments, secrets, private paths, or hidden sensitive content. |
+| Fonts/color/images | Embedding, substitution, licensing, color profile, image provenance, and quality controls. |
+| Final digest | Computed after all normalization, signing, or approved final transforms. |
+| Release handoff | Canonical receipt/proof/release references and published-copy identity. |
+
+A visually correct PDF is not necessarily accessible, conformant, reproducible, evidence-backed, rights-cleared, released, or safe.
+
+See [`pdf/README.md`](pdf/README.md) for the detailed lane contract.
+
+[Back to top](#top)
+
+---
+
+## Distribution build contract
+
+Non-PDF distributables include archives, application bundles, package archives, generated clients, static assets, and similar generated bytes.
+
+### Required archive and bundle controls
+
+- deterministic file ordering;
+- normalized timestamps, ownership, group, permissions, and path separators;
+- stable compression settings and tool versions;
+- no absolute paths or path traversal;
+- explicit symlink policy;
+- no device nodes or special files;
+- extraction size and file-count limits;
+- dependency and lockfile identity;
+- SBOM and license/attribution review where material;
+- secret, malware, vulnerability, and private-path scans;
+- nonempty expected output assertions;
+- final-byte digests and repeated-build comparison when claimed;
+- explicit external publishing and retention policy.
+
+The root `dist/` ignore rule normally suppresses ordinary generated files under the child lane. Force-adding output requires an explicit reviewed retention decision; ignore bypass is never the default release mechanism.
+
+See [`dist/README.md`](dist/README.md) for the detailed lane contract.
+
+[Back to top](#top)
+
+---
+
+## Reproducibility and determinism
+
+Reproducibility is a measured property, not a badge or intention.
+
+### Deterministic control matrix
+
+| Concern | Required control |
+|---|---|
+| Source | Immutable commit/content identity and dirty-tree state. |
+| Time | Declared `SOURCE_DATE_EPOCH`; no uncontrolled wall-clock fields. |
+| Locale/timezone | Explicit stable values. |
+| Ordering | Stable traversal, manifest, archive, and object ordering. |
+| Paths | Repository-relative or normalized logical paths. |
+| Ownership/permissions | Stable numeric or canonical values. |
+| Toolchain | Declared and observed versions plus digests where possible. |
+| Dependencies | Lockfile, package, font, plugin, image, and template identity. |
+| Randomness | Fixed seed or randomness disabled. |
+| Parallelism | Stable output or deterministic merge strategy. |
+| Compression | Pinned algorithm, implementation, level, and metadata behavior. |
+| Network | Disabled by default or fully declared, cached, digested, and separately reviewed. |
+| Encoding/newlines | Explicit and normalized. |
+| Environment | Minimal allowlisted snapshot, not ambient dump. |
+
+### Repeated-build proof
+
+A credible reproducibility claim requires at least two isolated builds from the same declared inputs.
+
+Possible outcomes:
+
+- `BYTE_IDENTICAL`;
+- `NORMALIZED_EQUIVALENT` with accepted normalization profile and report;
+- `DIFFERENT_EXPECTED` with documented non-deterministic fields and no stronger claim;
+- `FAIL`;
+- `ERROR`;
+- `NOT_RUN`.
+
+A single successful build is never reproducibility proof.
+
+[Back to top](#top)
+
+---
+
+## Security, rights, accessibility, and sensitive content
+
+Build success does not clear safety or publication obligations.
+
+### Security controls
+
+- scan source and generated bytes for secrets and credentials;
+- scan metadata, manifests, logs, archive entries, embedded files, and serialized environment values;
+- reject private absolute paths and internal endpoints;
+- reject unsafe archive paths and extraction bombs;
+- validate dependency, package, and container provenance;
+- perform vulnerability and malware checks where material;
+- keep signing keys outside the repository and staging directories;
+- record signatures and attestations in canonical trust homes;
+- ensure cleanup removes sensitive temporary files.
+
+### Rights and licensing
+
+- identify source and dependency licenses;
+- preserve required notices and attribution;
+- verify font, image, icon, dataset, and embedded-asset rights;
+- do not infer redistribution rights from repository presence;
+- route unclear rights to hold, restricted access, redaction, substitution, or denial.
+
+### Accessibility
+
+Accessibility applies to the output class:
+
+- PDF accessibility and tagged structure;
+- generated documentation navigation and semantics;
+- application bundle keyboard, screen-reader, contrast, and reduced-motion behavior;
+- alternate formats where required;
+- manual review for consequential public artifacts.
+
+### Sensitive content
+
+For living-person data, DNA/genomics, archaeology, rare species, infrastructure, land/ownership, sovereignty, and culturally sensitive material:
+
+- use public-safe transformed inputs;
+- deny precise or protected values by default;
+- scan generated files, metadata, thumbnails, indexes, and archives;
+- preserve transform and review receipts elsewhere;
+- require explicit audience and release policy;
+- invalidate and correct all downstream copies when needed.
+
+[Back to top](#top)
+
+---
+
+## Digests, SBOMs, signatures, and provenance
+
+These objects have distinct meanings.
+
+| Object | What it proves | What it does not prove |
 |---|---|---|
-| `artifacts/build/` MAY exist as a `transitional` compatibility subfolder for "compiled outputs, distributables". | **CONFIRMED** doctrine | Directory Rules §8.2. |
-| The repository currently contains `artifacts/build/`. | **NEEDS VERIFICATION** | No mounted repo inspected. |
-| The build chain emits PDFs into this folder under the pinned toolchain. | **PROPOSED** | Pass-10 C13 describes the chain; runtime presence not verified. |
-| `ARTIFACT_DIGEST` sidecars accompany each compiled PDF. | **PROPOSED** | Pass-10 C13-04 describes the convention; sidecar placement here vs. alongside the citing receipt is `NEEDS VERIFICATION`. |
-| No receipts, proofs, evidence bundles, release manifests, promotion decisions, rollback cards, correction notices, catalog records, or published layers live here. | **CONFIRMED** rule | Directory Rules §8.2 forbids them. |
+| Byte digest | Identity/integrity of exact bytes | Source truth, safety, rights, accessibility, policy approval, or release |
+| Build manifest | Declared relationship among inputs, producer, context, and outputs | That the declaration is accurate or approved |
+| SBOM | Declared component inventory | Absence of vulnerabilities or license issues |
+| Signature | A key signed bytes or a statement | Signer authority, semantic truth, policy approval, or release |
+| Provenance statement | Declared build process and materials | Evidence closure or publication permission |
+| Validation report | Named checks ran with named outcomes | Checks not included, production parity, or release |
+| Receipt | Canonical process memory when emitted under accepted contracts | Claim truth by itself |
+| EvidenceBundle/proof | Support under its evidence scope | Release approval unless release gates also pass |
+| ReleaseManifest | Governed release decision and bound identities | Future correctness or immunity from correction |
+
+### Final-byte rule
+
+Compute the release-bound digest only after all approved transformations that change bytes, including:
+
+- metadata normalization;
+- font embedding;
+- PDF linearization;
+- archive normalization;
+- minification;
+- source map inclusion/exclusion;
+- signing when the signed object is the release identity;
+- packaging or compression.
+
+Any byte-changing correction creates a new digest and must not silently reuse an earlier release identity.
 
 [Back to top](#top)
 
 ---
 
-## 5. What belongs here
+## Lifecycle, receipt, proof, and release boundary
 
-Each accepted artifact belongs to the **build output** family — bytes that are content-addressable, regenerable from source plus toolchain pins, and **never** a substitute for a receipt.
-
-| Accepted artifact | Form | Notes |
-|---|---|---|
-| Compiled PDF documents | `.pdf` (PDF/A-2u, linearized) | Produced from `docs/` sources via the pinned Pandoc → XeLaTeX → Ghostscript → qpdf chain (Pass-10 C13-01). |
-| `ARTIFACT_DIGEST` sidecars | sidecar manifest, e.g. `<name>.digest.json` | SHA-256 of the linearized PDF; convention from Pass-10 C13-04. Cited by receipts under `data/receipts/`. |
-| Build-environment fingerprint | `tool-versions.yaml` snapshot, optional `build-env.json` | Records the toolchain pin in effect for this build (Pass-10 C13-01). |
-| Other deterministic distributables | tarballs, generated HTML bundles, API reference bundles | Long-form HTML site outputs SHOULD live under the sibling `artifacts/docs/` per Directory Rules §8.2. |
-| Build-time logs *that are part of provenance, not a receipt* | `.log`, `.txt` | Only the deterministic portions; non-deterministic noise (wall-clock timestamps, hostnames) must be neutralized per `SOURCE_DATE_EPOCH` discipline (Pass-10 C13-02). |
-
-> [!TIP]
-> If you are unsure whether something is a *build output* or a *receipt*, ask: **"Does this file record a decision, a validation, a policy check, a review, or a promotion?"** If yes → it is a receipt, proof, or release object, and it belongs elsewhere — never here.
-
-[Back to top](#top)
-
----
-
-## 6. What does NOT belong here
-
-This list is at least as important as §5. Placing any of the following in `artifacts/build/` is a **CONFIRMED** anti-pattern under Directory Rules §13 and Atlas §24.9.1 ("Artifacts directory holding receipts").
-
-| Forbidden content | Canonical home | Why |
-|---|---|---|
-| `RunReceipt`, `TransformReceipt`, `AggregationReceipt`, `RedactionReceipt`, `RepresentationReceipt`, `ModelRunReceipt`, `AIReceipt`, `EventRunReceipt`, `SourceIntakeRecord`, `CitationValidationReport`, `PromotionReceipt`, `ValidationReport` | `data/receipts/` | Receipts are **process memory** with audit weight; storing them in scratch collapses governance. |
-| `EvidenceBundle`, `EvidenceRef` resolution objects, proof packs, DSSE/in-toto/cosign attestations | `data/proofs/` | Proofs are the evidence-side trust object and must not be regenerable scratch. |
-| `ReleaseManifest`, `MapReleaseManifest`, released `LayerManifest`, `PolicyDecision`, `RollbackCard`, `CorrectionNotice` | `release/` | Release decisions are governed state transitions, not file moves. |
-| Catalog records, STAC/DCAT items, triplets, vector indexes | `data/catalog/`, `data/triplets/` | Catalog publication is a separate lifecycle phase. |
-| Published map layers, PMTiles archives, COGs intended for public consumption | `data/published/` | `PUBLISHED` is a lifecycle phase bound by a `ReleaseManifest`. |
-| `SourceDescriptor` records, source registry entries | `data/registry/` | Source admission is the upstream `RAW` boundary. |
-| Source documents under active authoring | `docs/`, `contracts/`, `schemas/`, `policy/`, etc. | Sources are not artifacts; authoring is not building. |
-| Secrets, credentials, signing keys, cosign keying material | secrets manager · `infra/` (deny-by-default) | Never in any repo-checked-in artifact. |
-| Anything non-regenerable from current sources + pinned toolchain | The lane that owns it | If you cannot rebuild it, it is not a build artifact. |
-
-> [!WARNING]
-> The **"artifacts directory holding receipts"** anti-pattern is explicitly catalogued at Atlas §24.9.1 and Directory Rules §13. It collapses build output, process memory, and trust-bearing records into a single drift-prone surface. Reviewers MUST reject PRs that place any of the items above under `artifacts/build/` (or any other subfolder of `artifacts/`).
-
-[Back to top](#top)
-
----
-
-## 7. Directory shape (`PROPOSED`)
-
-> [!NOTE]
-> The tree below is `PROPOSED` under Directory Rules §8.2. Subfolder names and presence are `NEEDS VERIFICATION` against a mounted repo.
+The KFM lifecycle remains:
 
 ```text
-artifacts/
-└── build/                          # this folder — compatibility · transitional
-    ├── README.md                   # this file
-    ├── pdf/                        # PROPOSED — linearized PDF/A-2u outputs of docs/ sources
-    │   ├── <doc-id>.pdf
-    │   └── <doc-id>.digest.json    # PROPOSED — ARTIFACT_DIGEST sidecar (Pass-10 C13-04)
-    ├── dist/                       # PROPOSED — other deterministic distributables (tarballs, bundles)
-    └── env/                        # PROPOSED — per-build toolchain fingerprint
-        ├── tool-versions.yaml      # NEEDS VERIFICATION — canonical home in policy bundle vs here
-        └── build-env.json
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Sibling subfolders of `artifacts/` (for reference; not governed by this README):
+`artifacts/build/` does not create another lifecycle phase. It is temporary derived staging.
 
-```text
-artifacts/
-├── README.md     # declares class of artifacts/ as a whole
-├── build/        # ← this folder
-├── docs/         # generated documentation (mkdocs site, API ref) — Directory Rules §8.2
-├── qa/           # QA reports, lint output, test coverage — Directory Rules §8.2
-└── temporary/    # ephemeral; gitignored or pruned regularly — Directory Rules §8.2
-```
+### Required trust handoff
 
-[Back to top](#top)
+A material build output should have, as applicable:
 
----
+1. immutable source identity;
+2. producer identity;
+3. sanitized environment/toolchain identity;
+4. input and output manifests;
+5. validation outcomes;
+6. final-byte digest;
+7. reproducibility outcome;
+8. security, rights, sensitivity, and accessibility review;
+9. canonical receipt and proof references;
+10. review record;
+11. release decision;
+12. published-copy identity;
+13. correction and rollback targets.
 
-## 8. Inputs
+### Denied interpretations
 
-| Input | Origin | Notes |
-|---|---|---|
-| Markdown / LaTeX source for documentation builds | `docs/` | The authoring surface; never modified by the build. |
-| Schemas, contracts, policy text for embedded reference | `schemas/`, `contracts/`, `policy/` | Read-only inputs. |
-| Build scripts and Pandoc filters | `tools/` (or `pipelines/publish/`) | Long-lived, trust-bearing build logic graduates to `tools/` or `pipelines/`, never `scripts/one_off/` (Directory Rules §7.5). `PROPOSED` exact path. |
-| Toolchain pins | `policy/build/tool-versions.yaml` (`PROPOSED`) | The pin file is part of the policy bundle per Pass-10 C13-01. Path is `NEEDS VERIFICATION`. |
-| Fonts | `assets/fonts/noto/` (`PROPOSED`) | Noto family embedded in the build image, not the repo, in most patterns. `NEEDS VERIFICATION`. |
-| `SOURCE_DATE_EPOCH` | derived from `git` commit time | Pass-10 C13-02. |
-
-[Back to top](#top)
-
----
-
-## 9. Outputs
-
-| Output | Downstream consumer | How it is bound |
-|---|---|---|
-| Compiled PDF | A `RunReceipt` recorded under `data/receipts/` | The receipt cites the linearized PDF by `ARTIFACT_DIGEST`. |
-| `ARTIFACT_DIGEST` sidecar | Any receipt or `ReleaseManifest` that cites the PDF | The digest is the citation anchor (Pass-10 C13-04). |
-| Build-environment fingerprint | The same receipt | Documents which pinned toolchain produced the bytes. |
-| Other distributables (tarballs, bundles) | Release process (`release/`) and/or consumer download | Only after digest, receipt, and release-manifest binding. |
-
-> [!IMPORTANT]
-> Outputs from this folder become trusted **only** by reference — i.e., when a receipt under `data/receipts/` or a manifest under `release/` records their `ARTIFACT_DIGEST`. A file's presence in `artifacts/build/` confers no trust on its own.
+- “It is under `artifacts/build/`, therefore it is released.”
+- “CI uploaded it, therefore it is authoritative.”
+- “It has a SHA-256, therefore it is safe.”
+- “It passed schema validation, therefore it is true.”
+- “It is signed, therefore it is approved.”
+- “It looks correct, therefore it is accessible.”
+- “It builds twice, therefore the source is authoritative.”
+- “It is in a release archive, therefore rights and sensitivity are cleared.”
 
 [Back to top](#top)
 
 ---
 
-## 10. Validation
+## Producer and consumer contracts
 
-The folder is validated by checks on the build process and on the regenerable property of its contents. Doctrine claims are `CONFIRMED`; named tool / validator presence is `PROPOSED`.
+### Producer contract
 
-| Check | What it verifies | Status |
-|---|---|---|
-| Tool-pin check | Discovered toolchain matches `tool-versions.yaml`; fails closed on mismatch. | `CONFIRMED` doctrine · `PROPOSED` implementation (Pass-10 C13-01) |
-| `SOURCE_DATE_EPOCH` + locale + font-embed determinism | Two builds of the same `git_sha` produce byte-identical output. | `CONFIRMED` doctrine · `PROPOSED` implementation (Pass-10 C13-02) |
-| `ARTIFACT_DIGEST` recomputation | A consumer can recompute SHA-256 of the linearized PDF and match the sidecar. | `CONFIRMED` doctrine · `PROPOSED` implementation (Pass-10 C13-04) |
-| Font-embed coverage | Every referenced font is embedded; build fails otherwise. | `PROPOSED` (Pass-10 C13-02 expansion direction) |
-| PDF/UA accessibility preflight | Tagged structure, alt-text, table headers; result recorded in sidecar. | `PROPOSED` · `NEEDS VERIFICATION` for tool choice (Pass-10 C13-03) |
-| "Nothing forbidden" scan of `artifacts/build/` | No receipt, proof, manifest, catalog record, or published layer file types present here. | `PROPOSED` validator (no mounted repo) |
-| Validator orchestrator integration | `tools/validators/validate_all.py` includes the above checks where applicable. | `PROPOSED` — see Directory Rules §7.5.a and §18 OPEN-DR-03 |
+A producer should declare:
 
-> [!TIP]
-> Validators MUST exercise their **negative** paths — a build that fails the pin check, an over-embedded sidecar, a forbidden file dropped into `artifacts/build/` — not only the success path. See Directory Rules §7.5.a negative-state rule.
+- producer name, version, source path, and digest;
+- source refs and configuration refs;
+- expected output class and child lane;
+- deterministic controls;
+- network and side-effect policy;
+- sanitized environment-capture rules;
+- validation commands;
+- final digest timing;
+- cleanup behavior;
+- finite exit outcomes;
+- receipt/proof/release handoff behavior.
+
+A producer must fail if the expected output set is empty unless the contract explicitly permits a no-op.
+
+### Consumer contract
+
+A consumer should declare:
+
+- accepted output class and manifest version;
+- digest verification;
+- required validation outcomes;
+- rights, sensitivity, accessibility, and policy requirements;
+- canonical receipt/proof/release refs;
+- retention and cache rules;
+- correction, withdrawal, supersession, and rollback behavior.
+
+No normal public or internal consumer should treat a mutable staging path as the authoritative lookup key.
+
+### Parent manifest proposal
+
+A future parent manifest may index child build runs, but it must remain non-authoritative and should include:
+
+- manifest version and immutable run ID;
+- source and producer refs;
+- environment snapshot ref/digest;
+- child-lane output manifests;
+- final output paths and digests;
+- validation and reproducibility outcomes;
+- canonical receipt/proof/release refs;
+- retention class and expiry;
+- correction/supersession state.
+
+A parent manifest must not duplicate the full contents of canonical receipts, proofs, or release records.
 
 [Back to top](#top)
 
 ---
 
-## 11. Review burden
+## Validation and finite outcomes
 
-| Role | Scope |
+### Validation layers
+
+1. directory placement and allowed child-lane checks;
+2. source, producer, configuration, and environment identity;
+3. output presence and nonempty expected inventory;
+4. format-specific syntax and conformance;
+5. deterministic metadata and repeated-build comparison;
+6. digest and manifest consistency;
+7. secret, path, malware, vulnerability, and active-content checks;
+8. rights, license, attribution, sensitivity, and accessibility checks;
+9. receipt/proof/release reference integrity;
+10. retention, correction, withdrawal, and rollback readiness.
+
+### Finite validation outcomes
+
+| Outcome | Meaning |
 |---|---|
-| `@kfm-build-steward` *(placeholder)* | Toolchain pins, build scripts, pin advancements (Pass-10 C13-01). |
-| `@kfm-docs-steward` *(placeholder)* | Source-to-PDF authoring discipline; this README. |
-| `@kfm-policy-steward` *(placeholder)* | Confirms no trust-bearing content has drifted into this folder. |
-| `CODEOWNERS` entry | `PROPOSED` — `artifacts/build/  @kfm-docs-steward @kfm-build-steward`. Verify in mounted repo. |
+| `PASS` | All checks in the declared profile passed. |
+| `FAIL` | A declared invariant or expected property failed. |
+| `HOLD` | Review, rights, sensitivity, accessibility, or release evidence is incomplete. |
+| `ABSTAIN` | The validator lacks enough evidence to make the stronger claim. |
+| `DENY` | The output or requested handoff violates a governing boundary. |
+| `ERROR` | The validator or dependency could not complete reliably. |
+| `NOT_RUN` | The check was not executed and must not be implied. |
 
-> [!NOTE]
-> Owners listed above are **placeholders** for review and not asserted as the current `CODEOWNERS` of the mounted repo.
+A green workflow that only echoes TODO commands is not a substantive pass.
 
-[Back to top](#top)
+### Anti-tautology requirements
 
----
+Validation must not pass merely because:
 
-## 12. Related folders
-
-| Path | Relationship | Status |
-|---|---|---|
-| [`../README.md`](../README.md) | Parent `artifacts/` README — declares class and what does NOT belong | `PROPOSED` presence |
-| [`../docs/`](../docs/) | Sibling — generated documentation (mkdocs site, API ref) | `PROPOSED` |
-| [`../qa/`](../qa/) | Sibling — QA reports, lint output, test coverage | `PROPOSED` |
-| [`../temporary/`](../temporary/) | Sibling — ephemeral; gitignored or pruned | `PROPOSED` |
-| [`../../data/receipts/`](../../data/receipts/) | Canonical home for receipts that cite outputs here | `PROPOSED` path; doctrine `CONFIRMED` |
-| [`../../data/proofs/`](../../data/proofs/) | Canonical home for `EvidenceBundle`s and attestations | `PROPOSED` path; doctrine `CONFIRMED` |
-| [`../../release/`](../../release/) | Canonical home for `ReleaseManifest`, `RollbackCard`, `CorrectionNotice` | `PROPOSED` path; doctrine `CONFIRMED` |
-| [`../../data/published/`](../../data/published/) | Released map layers / artifacts (the `PUBLISHED` phase) | `PROPOSED` path; doctrine `CONFIRMED` |
-| [`../../tools/`](../../tools/) | Build scripts, validators, the `validate_all.py` orchestrator | `PROPOSED` |
-| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | Authoritative placement contract | `CONFIRMED` doctrine |
+- no outputs were discovered;
+- no fixtures were discovered;
+- a manifest listed itself;
+- a digest was compared only with its own copied value;
+- a scanner examined zero files;
+- a path filter skipped the workflow;
+- expected invalid cases were absent;
+- the producer and validator share the same unchecked assumption;
+- ignored local content was invisible to repository inspection.
 
 [Back to top](#top)
 
 ---
 
-## 13. ADRs and open questions
+## CI, artifact, and retention boundary
 
-| Reference | Topic | State |
-|---|---|---|
-| Directory Rules §8.1 + §8.2 | The `artifacts/` rule and the `build/` subfolder | `CONFIRMED` |
-| Directory Rules §18.a — fate of `artifacts/` | Whether `artifacts/` is kept as compatibility or fully retired in favor of `data/receipts/`, `data/proofs/`, `release/`, `data/published/` | **OPEN** |
-| Atlas Open-ADR Backlog **ADR-S-15** — doctrine artifact lifecycle | Cadence of revisions, deprecation rule, supersession path for doctrine artifacts (PDFs built here) | **OPEN** |
-| Pass-10 C13-01 — pin-advancement playbook | Cadence (security-driven only? scheduled?), interaction with migration receipts (C11-04) | **OPEN** |
-| Pass-10 C13-03 — accessibility preflight tool selection | Which preflight tool, what conformance level for publication | **OPEN · NEEDS VERIFICATION** |
-| `ARTIFACT_DIGEST` sidecar placement | Whether the sidecar lives here next to the PDF, or alongside the citing receipt in `data/receipts/`, or both | **OPEN · NEEDS VERIFICATION** |
-| `tool-versions.yaml` canonical home | `policy/build/` vs `artifacts/build/env/` vs both | **OPEN · NEEDS VERIFICATION** |
+No parent build workflow is currently established.
 
-[Back to top](#top)
+A mature workflow should:
 
----
+- install pinned tools from declared sources;
+- run in a clean isolated workspace;
+- disable network by default;
+- capture a sanitized environment snapshot;
+- build expected outputs;
+- fail on empty output sets;
+- validate child-specific profiles;
+- run security, rights, accessibility, and policy checks;
+- run independent repeated builds where reproducibility is claimed;
+- emit structured validation results;
+- upload temporary CI artifacts with explicit retention;
+- write canonical receipts/proofs through governed tooling;
+- require human or policy review before release;
+- publish only immutable digest-bound copies;
+- clean staging files on completion or failure.
 
-## 14. Anti-patterns to watch for
+### Retention classes
 
-> [!CAUTION]
-> Each row below has happened often enough in similar repos that doctrine names it. Treat any PR matching one of these as a drift candidate.
-
-| Anti-pattern | Symptom | Counter-rule |
-|---|---|---|
-| Artifacts directory holding receipts | A `RunReceipt`, `AIReceipt`, or `ValidationReport` lands under `artifacts/build/` to be "near the build". | Receipts go to `data/receipts/`. The receipt references the build artifact by `ARTIFACT_DIGEST`. *(Atlas §24.9.1 · Directory Rules §13)* |
-| Release manifest in `artifacts/` | A `ReleaseManifest` is written here because it was "produced by the build". | `ReleaseManifest` is a release **decision**, not a build output. It lives in `release/`. |
-| Published layer in `artifacts/` | A PMTiles archive is staged here and consumed publicly from this path. | Published layers live in `data/published/`, bound by a `ReleaseManifest`. |
-| Build that depends on wall-clock time | Two builds of the same `git_sha` produce different bytes; `ARTIFACT_DIGEST` chain breaks. | Use `SOURCE_DATE_EPOCH` from `git` commit time; pin locale; embed fonts. *(Pass-10 C13-02)* |
-| Tool pin drift | The build runs on whatever Pandoc/XeLaTeX/Ghostscript/qpdf is installed. | The build verifier MUST fail closed when discovered tool versions do not match the pin. *(Pass-10 C13-01)* |
-| Source files committed under `artifacts/build/` | Authoring drifts into the build-output folder. | Sources live in `docs/`, `schemas/`, `contracts/`, `policy/`. |
-| Trust by location | "It's in `artifacts/build/`, so it's official." | Trust is by reference: a receipt or release manifest must cite the artifact by `ARTIFACT_DIGEST`. Location confers nothing. |
-
-[Back to top](#top)
-
----
-
-## 15. Appendix — reproducibility & toolchain reference
-
-<details>
-<summary><strong>Pinned toolchain (Pass-10 C13-01)</strong></summary>
-
-| Tool | Pinned version (per corpus) | Role |
-|---|---|---|
-| Pandoc | `3.1.12.3` (`CONFIRMED` doctrine pin) | Source → intermediate transformation |
-| XeLaTeX | named TeX Live release (`PROPOSED` exact tag) | Typesetting engine |
-| Ghostscript | named version (`PROPOSED` exact tag) | PDF post-processing |
-| qpdf | named version (`PROPOSED` exact tag) | Linearization → PDF/A-2u |
-
-The pinned tool set is captured in `tool-versions.yaml`, **shipped as part of the policy bundle** per Pass-10 C13-01. The build script fails closed when the discovered tool versions do not match the pin. The pin file's canonical home (`policy/build/` vs `artifacts/build/env/` vs both) is `NEEDS VERIFICATION`.
-
-</details>
-
-<details>
-<summary><strong>Determinism inputs (Pass-10 C13-02)</strong></summary>
-
-| Input | Convention |
+| Class | Meaning |
 |---|---|
-| `SOURCE_DATE_EPOCH` | Exported from the build's `git` commit time so PDF timestamps and metadata are stable. Pandoc and PDF metadata respect it. |
-| Fonts | Noto family **embedded** in the build image; no reliance on system fonts. |
-| Locale | `LC_ALL=C.UTF-8` (or equivalent) pinned at build time to neutralize locale-dependent number/date/sort formatting. |
-| Linearization | `qpdf --linearize` is the final byte-shaping step; the digest is taken over its output. |
+| `ephemeral` | Delete after the local or CI run. |
+| `ci-short` | Retain temporarily for review; not a release asset. |
+| `investigation` | Retain under an incident or correction process with explicit owner. |
+| `release-candidate` | Retain until promotion or rejection; still not published. |
+| `externally-published` | Copy to a governed immutable destination and reference from release records. |
 
-Tradeoff (Pass-10 C13-02): embedded fonts increase output size; the corpus accepts the cost as the price of reproducibility but warns the convention must be applied uniformly so no artifact silently relies on system fonts.
-
-</details>
-
-<details>
-<summary><strong>ARTIFACT_DIGEST contract (Pass-10 C13-04)</strong></summary>
-
-- `ARTIFACT_DIGEST = SHA-256(linearized PDF/A-2u output of the pinned chain)`.
-- The digest is published in a sidecar manifest alongside the PDF, in catalog metadata, and in any receipt that cites the document.
-- A consumer fetches the PDF, computes SHA-256, and verifies the match **before** treating the content as authoritative.
-- On mismatch: the document has been tampered with, the wrong version was fetched, or the build chain has drifted. In all three cases, the consumer MUST NOT treat the content as authoritative.
-
-Without the digest, receipts that reference documentation point at moving content. With the digest, the citation is a hash-pin equivalent to every other content-addressed reference in KFM (`spec_hash`, source heads, content digests).
-
-</details>
-
-<details>
-<summary><strong>Reviewer checklist (PROPOSED) for any change touching <code>artifacts/build/</code></strong></summary>
-
-- [ ] No new file under `artifacts/build/` matches a forbidden content type from §6.
-- [ ] Any new compiled PDF is accompanied by an `ARTIFACT_DIGEST` sidecar (or the receipt that cites it carries the digest).
-- [ ] The toolchain pin file (`tool-versions.yaml`) is unchanged, **or** the pin advance includes the playbook entry called out in §13.
-- [ ] The PR description names the Directory Rules sections that justify any new placement.
-- [ ] No content drifts from this scratch lane into the public path (`apps/governed-api/`) without a receipt under `data/receipts/` and (where applicable) a `ReleaseManifest` under `release/`.
-- [ ] Build is deterministic on a clean image — same `git_sha` produces identical bytes.
-
-</details>
+Repository retention of generated binaries requires an explicit policy and review. The parent README and scaffolds may be tracked; generated outputs should not be committed merely because they are convenient.
 
 [Back to top](#top)
 
 ---
 
-## 16. Last reviewed
+## Correction, withdrawal, and rollback
 
-| Field | Value |
-|---|---|
-| Last reviewed | `2026-05-20` |
-| Next review due | `2026-11-20` (six-month default per Directory Rules §15) |
-| Reviewer roles | `@kfm-docs-steward`, `@kfm-build-steward` *(placeholders)* |
-| Authoring posture | Doctrine-only (no mounted repo) — see top-of-file Truth posture |
+Generated artifacts can become stale, unsafe, rights-conflicted, or incorrect after creation.
+
+A correction process should:
+
+1. identify affected source, producer, environment, output, and release identities;
+2. stop new handoffs;
+3. invalidate mutable staging copies and caches;
+4. preserve audit metadata without preserving restricted payloads unnecessarily;
+5. issue canonical correction or withdrawal records;
+6. rebuild from corrected inputs;
+7. generate new output digests;
+8. rerun validation and review;
+9. bind the new release;
+10. retain rollback targets and supersession links;
+11. notify downstream consumers.
+
+Never overwrite a released artifact while preserving its old digest or release identity.
+
+### Documentation rollback
+
+This README can be rolled back independently of runtime behavior because this revision changes documentation only. Any future behavioral rollback must also address producers, schemas, validators, workflows, manifests, receipts, proofs, release records, caches, published copies, and downstream consumers.
+
+[Back to top](#top)
 
 ---
 
-### Related docs
+## Review burden and change control
 
-- [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) — placement contract (canonical authority for this README) · *CONFIRMED doctrine*
-- [`../README.md`](../README.md) — parent `artifacts/` README (declares class, lists what does NOT belong) · *PROPOSED presence*
-- [`../../data/receipts/README.md`](../../data/receipts/README.md) — canonical home for receipts that cite outputs here · *PROPOSED presence*
-- [`../../data/proofs/README.md`](../../data/proofs/README.md) — canonical home for `EvidenceBundle`s and attestations · *PROPOSED presence*
-- [`../../release/README.md`](../../release/README.md) — canonical home for `ReleaseManifest`, `RollbackCard`, `CorrectionNotice` · *PROPOSED presence*
-- [`../../docs/doctrine/ai-build-operating-contract.md`](../../docs/doctrine/ai-build-operating-contract.md) — operating contract for AI-authored builds · *PROPOSED path*
-- [Pass-10 Idea Index — Category C13 (Reproducible Documentation and Build Artifacts)](../../docs/atlases/) — reproducibility doctrine for this folder · *NEEDS VERIFICATION on atlas path*
+| Change | Required review |
+|---|---|
+| Parent README only | Docs steward + build steward |
+| New child lane | Directory steward + build steward + affected subsystem owner |
+| Producer or build command | Build/reproducibility + owning implementation + security |
+| Environment capture | Security/privacy + CI/platform + reproducibility |
+| PDF profile | PDF/document + accessibility + security + rights |
+| Distribution/archive profile | Packaging + supply chain + security + rights |
+| Manifest/schema/validator | Contract/schema/validator owners + build steward |
+| Generated binary committed | Build + security + repository steward + release/retention owner |
+| Receipt/proof binding | Evidence/receipt steward + subsystem owner |
+| Release/publication | Release + policy + rights/sensitivity + rollback owner |
+| Retention or deletion | Build + CI/storage + audit/release owner |
+| Migration or retirement | Directory steward + ADR or migration note when required |
 
-**Last updated:** 2026-05-20 &nbsp;·&nbsp; [Back to top ↑](#top)
+### Change discipline
+
+Prefer the smallest reversible change:
+
+- documentation before speculative implementation;
+- schema and contract before producer lock-in;
+- validator before release dependency;
+- one output class before a generic all-build framework;
+- explicit migration over parallel homes;
+- immutable identities over mutable filenames;
+- deny or hold over unsupported publication.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+The parent build system is not mature until all applicable items are satisfied.
+
+- [ ] Owners and CODEOWNERS are accepted.
+- [ ] Retain, migrate, or retire posture is decided.
+- [ ] Child lane registry is complete.
+- [ ] Generated-output commit and ignore policy is accepted.
+- [ ] At least one versioned producer is implemented.
+- [ ] Parent or child manifests have accepted contracts and schemas.
+- [ ] Sanitized environment generation and validation are implemented.
+- [ ] Declared and observed toolchains are compared.
+- [ ] PDF profile and validators are implemented where PDFs are built.
+- [ ] Distribution/archive profile and validators are implemented where bundles are built.
+- [ ] Expected nonempty output sets are enforced.
+- [ ] Final-byte digest timing is defined.
+- [ ] Repeated-build comparison is implemented for reproducibility claims.
+- [ ] Secret, path, dependency, malware, rights, sensitivity, and accessibility checks are implemented as applicable.
+- [ ] Structured validation reports are emitted.
+- [ ] CI workflow and retention are implemented.
+- [ ] Canonical receipt/proof/release refs are bound.
+- [ ] Correction, withdrawal, supersession, and rollback are tested.
+- [ ] Public consumers use governed immutable copies, not staging paths.
+- [ ] Documentation matches current behavior and logs.
+
+[Back to top](#top)
+
+---
+
+## Smallest sound implementation sequence
+
+### Phase 1 — Parent inventory and policy
+
+- accept owners;
+- confirm complete tracked child inventory;
+- decide generated-output commit/ignore policy;
+- record retain/migrate/retire decision.
+
+### Phase 2 — Contracts and schemas
+
+- define a minimal build-run contract;
+- define environment snapshot and child manifest schemas;
+- define finite validation outcomes and reason codes.
+
+### Phase 3 — One producer slice
+
+- choose one bounded output;
+- implement a versioned producer;
+- generate environment context and manifest;
+- enforce nonempty output.
+
+### Phase 4 — Validation and security
+
+- implement placement, schema, digest, secret, and path validators;
+- add output-specific conformance, rights, sensitivity, and accessibility checks.
+
+### Phase 5 — Reproducibility
+
+- run two isolated builds;
+- compare bytes or accepted normalized representations;
+- emit a structured report.
+
+### Phase 6 — Canonical handoff
+
+- emit receipts and proofs through governed tooling;
+- bind review and release records;
+- publish an immutable digest-bound copy.
+
+### Phase 7 — Correction and scale
+
+- test correction, withdrawal, supersession, and rollback;
+- add additional output classes only after the first slice is stable;
+- prevent parallel build, proof, and release homes.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+| ID | Question | Status |
+|---|---|---|
+| BUILD-01 | Who owns the parent and each child lane? | `NEEDS VERIFICATION` |
+| BUILD-02 | Is `artifacts/build/` retained, migrated, or retired long-term? | `NEEDS VERIFICATION` |
+| BUILD-03 | Is the confirmed tracked inventory complete? | `NEEDS VERIFICATION` |
+| BUILD-04 | Should `.gitkeep` remain after child files exist? | `NEEDS VERIFICATION` |
+| BUILD-05 | What generated outputs may be committed, if any? | `NEEDS VERIFICATION` |
+| BUILD-06 | Should PDF outputs receive an ignore rule? | `NEEDS VERIFICATION` |
+| BUILD-07 | When may ignored distribution outputs be force-added? | `NEEDS VERIFICATION` |
+| BUILD-08 | What is the first accepted producer? | `UNKNOWN` |
+| BUILD-09 | Where does the producer implementation belong? | `NEEDS VERIFICATION` |
+| BUILD-10 | Is a parent build manifest needed? | `PROPOSED` |
+| BUILD-11 | What is the manifest contract and schema home? | `NEEDS VERIFICATION` |
+| BUILD-12 | What immutable build-run ID format is accepted? | `NEEDS VERIFICATION` |
+| BUILD-13 | What source and dirty-tree identity is required? | `NEEDS VERIFICATION` |
+| BUILD-14 | What environment variable allowlist is accepted? | `NEEDS VERIFICATION` |
+| BUILD-15 | What secret and private-path redaction rules apply? | `NEEDS VERIFICATION` |
+| BUILD-16 | What declared and observed toolchain format is accepted? | `NEEDS VERIFICATION` |
+| BUILD-17 | What tool/package/image digests are required? | `NEEDS VERIFICATION` |
+| BUILD-18 | How is `SOURCE_DATE_EPOCH` derived? | `NEEDS VERIFICATION` |
+| BUILD-19 | What no-network policy applies to builds? | `NEEDS VERIFICATION` |
+| BUILD-20 | What PDF/A profile, if any, is required? | `NEEDS VERIFICATION` |
+| BUILD-21 | What PDF accessibility baseline is required? | `NEEDS VERIFICATION` |
+| BUILD-22 | What PDF metadata, attachment, font, and color policy applies? | `NEEDS VERIFICATION` |
+| BUILD-23 | What archive normalization and extraction-safety profile applies? | `NEEDS VERIFICATION` |
+| BUILD-24 | What SBOM, vulnerability, malware, and license checks apply? | `NEEDS VERIFICATION` |
+| BUILD-25 | When are signatures or attestations required? | `NEEDS VERIFICATION` |
+| BUILD-26 | What final-byte digest format is canonical? | `NEEDS VERIFICATION` |
+| BUILD-27 | What repeated-build comparison qualifies as reproducibility? | `NEEDS VERIFICATION` |
+| BUILD-28 | What structured validation report is accepted? | `NEEDS VERIFICATION` |
+| BUILD-29 | Which workflow owns parent build validation? | `UNKNOWN` |
+| BUILD-30 | Which checks are required by branch protection? | `UNKNOWN` |
+| BUILD-31 | What CI artifact retention classes and durations apply? | `NEEDS VERIFICATION` |
+| BUILD-32 | What canonical receipt and proof families bind outputs? | `NEEDS VERIFICATION` |
+| BUILD-33 | What release and published-copy paths are accepted? | `NEEDS VERIFICATION` |
+| BUILD-34 | How do corrections invalidate staging and published copies? | `NEEDS VERIFICATION` |
+| BUILD-35 | Which consumers currently read build outputs? | `UNKNOWN` |
+| BUILD-36 | How are caches and external registries invalidated? | `UNKNOWN` |
+| BUILD-37 | Does `artifacts/perf/` remain separate or migrate? | `NEEDS VERIFICATION` |
+| BUILD-38 | What storage and cleanup budgets apply? | `NEEDS VERIFICATION` |
+| BUILD-39 | What production or external build services exist? | `UNKNOWN` |
+| BUILD-40 | What operational rollback drills have run successfully? | `UNKNOWN` |
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | What it supports | What it does not support |
+|---|---|---|
+| `artifacts/build/README.md` prior blob | Prior doctrine and trust boundary | Current implementation claims |
+| `artifacts/build/.gitkeep` | Parent retention marker exists | Build execution |
+| `env/README.md` | Current environment-lane contract | Generator or runtime use |
+| `env/build-env.json` | Proposed empty scaffold exists | A build ran |
+| `env/tool-versions.yaml` | Partial declared toolchain scaffold exists | Executables are installed or used |
+| `pdf/README.md` | Current PDF staging contract | PDF payload, conformance, accessibility, or release |
+| `dist/README.md` | Current distribution staging contract | Distributable payload or release |
+| `package.json` | Root build command is TODO; separate MapLibre commands exist | Parent build orchestration |
+| `apps/explorer-web/package.json` | App build command is TODO | Explorer build output |
+| `Makefile` | No parent/PDF/dist/env target; separate MapLibre artifact commands | Complete build inventory |
+| `docs-build.yml` | Workflow exists but runs TODO echoes | Documentation or PDF build success |
+| `.gitignore` | `dist/` ignored; `.env` names ignored; PDF/env generally not protected | Safety of tracked JSON/YAML or binaries |
+| Directory Rules | Compatibility-root and authority boundaries | Specific producer or runtime behavior |
+| bounded search and exact-path checks | Representative current tracked state and absences | Ignored, external, historical, dynamic, or uninspected systems |
+
+### No-loss assessment
+
+This v1.1 revision preserves the prior README's strongest material:
+
+- `artifacts/build/` remains compatibility/transitional staging;
+- generated outputs never become trust surfaces;
+- receipts, proofs, evidence, release records, catalogs, and published artifacts remain forbidden here;
+- outputs should be regenerable and digestable;
+- source, toolchain, environment, validation, rights, release, correction, and rollback remain explicit;
+- canonical trust records live elsewhere;
+- migration or retirement remains open.
+
+It corrects over-specific implementation implications by labeling the detailed PDF/A, linearization, toolchain, digest, workflow, and release chain as proposed until executable evidence exists.
+
+[Back to top](#top)
+
+---
+
+## Documentation correction and rollback
+
+This revision changes only `artifacts/build/README.md`.
+
+Before merge:
+
+- close the draft pull request; or
+- restore prior blob `6444fca11743ffff6256fd24ba775b4b29c13e1f` in a transparent follow-up commit.
+
+After merge:
+
+- revert the documentation commit; or
+- publish a corrective repository-grounded revision with updated evidence.
+
+No build, data, policy, release, deployment, or production rollback is required for this documentation-only change.
+
+---
+
+*Last updated: 2026-07-16 · Status: draft · Authority: compatibility boundary only · [Back to top](#top)*
