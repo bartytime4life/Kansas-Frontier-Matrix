@@ -1,227 +1,591 @@
-# `tests/api/deny/` — Governed API Deny-Test Lane
-
-Negative API tests for KFM governed API behavior. This lane proves that deny, restrict, abstain, and fail-closed API outcomes are enforceable; it does not define policy rules, API implementation, fixtures, schemas, contracts, lifecycle data, or release decisions.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-api-deny-readme
-title: tests/api/deny/README.md — Governed API Deny-Test Lane
-type: readme; directory-readme; negative-test-guardrail; api-deny-test-index
-version: v0.1
-status: draft; placeholder-expanded; no-direct-deny-tests-confirmed; NEEDS VERIFICATION
-owners: OWNER_TBD — QA steward · API steward · Policy steward · Runtime steward · Security steward · Docs steward
-created: NEEDS VERIFICATION — placeholder content existed before v0.1 expansion
-updated: 2026-07-05
-policy_label: public; tests; api; deny; fail-closed; no-policy-authority
-tags: [kfm, tests, api, deny, restrict, abstain, fail-closed, runtime-envelope, policy, trust-spine]
+title: tests/api/deny/ — Governed API Deny, Abstain, Error, and Leakage Test Lane
+type: readme; directory-readme; negative-api-test-index; trust-membrane-proof-guardrail
+version: v0.2
+status: draft; canonical-test-sublane; readme-only; workflow-placeholder; executable-proof-absent; NEEDS VERIFICATION
+policy_label: public
+owners: OWNER_TBD — QA steward · Governed API steward · Policy steward · Runtime steward · Evidence steward · Security steward · Release steward · Docs steward
+updated: 2026-07-16
+current_path: tests/api/deny/README.md
+truth_posture: CONFIRMED target README and prior blob, tests/api parent boundary, deny-test doctrine, TODO-only deny workflow, finite runtime outcomes, trust-membrane rule, and bounded absence of direct test modules at the pinned snapshot / UNKNOWN governed route inventory, accepted denial response profile, active fixtures, validator wiring, production behavior, and current pass state / NEEDS VERIFICATION implementation, negative fixtures, executable CI, leakage assertions, route coverage, ownership, correction coverage, and rollback proof
+base_commit: 7855938a308f967a51b7dce0d023db39ca20eca0
+prior_blob: d7b5a7a9ec1044f137aceb426086636b3707f604
 related:
-  - ../../README.md
   - ../README.md
-  - ../../../policy/README.md
-  - ../../../runtime/README.md
+  - ../../README.md
+  - ../../../docs/security/DENY_TESTS.md
+  - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/doctrine/trust-membrane.md
+  - ../../../docs/doctrine/truth-posture.md
+  - ../../../docs/doctrine/lifecycle-law.md
+  - ../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - ../../../runtime/envelopes/README.md
-  - ../../../contracts/
-  - ../../../schemas/
-  - ../../../fixtures/
-  - ../../../tools/validators/
-  - ../../../apps/
-  - ../../../data/
-  - ../../../release/
+  - ../../../contracts/runtime/policy_decision.md
+  - ../../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../../.github/workflows/deny-test.yml
+tags: [kfm, tests, api, deny, abstain, error, fail-closed, leakage, trust-membrane, governed-api, finite-outcomes, negative-tests]
 notes:
-  - "Expanded from placeholder content in tests/api/deny/README.md."
-  - "Current-session search found no direct files under tests/api/deny beyond this README."
-  - "tests/ is confirmed as the canonical enforceability-proof root; it includes governed API envelope tests and negative policy/API behavior."
-  - "policy/ is confirmed as the canonical policy root for allow / deny / restrict / abstain / redaction / public release / promotion / sensitivity."
-  - "runtime/ is confirmed as subordinate to evidence, policy, release, and finite outcomes."
-  - "This README does not prove actual API routes, deny-test files, fixtures, CI coverage, policy bundles, runtime envelope schemas, or implementation behavior."
+  - "v0.2 replaces a generic deny-test placeholder index with an evidence-bounded executable-proof contract."
+  - "The lane is canonical for negative governed API surface tests but currently contains no confirmed test module beyond this README."
+  - "The deny-test workflow is TODO-only and must not be cited as executable deny coverage."
+  - "This revision changes documentation only."
 [/KFM_META_BLOCK_V2] -->
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: tests" src="https://img.shields.io/badge/root-tests%2F-blue">
-  <img alt="Lane: api deny" src="https://img.shields.io/badge/lane-api__deny-purple">
-  <img alt="Posture: fail closed" src="https://img.shields.io/badge/posture-fail__closed-red">
-  <img alt="Boundary: no policy authority" src="https://img.shields.io/badge/boundary-no__policy__authority-critical">
-</p>
+<a id="top"></a>
 
-**Status:** draft / negative API test guardrail
-**Path:** `tests/api/deny/`
-**Current role:** README-only deny-test lane until test files are added and verified
-**Truth posture:** CONFIRMED placeholder file existed before this update; CONFIRMED no direct test files found in current search; CONFIRMED `tests/`, `policy/`, and `runtime/` root boundaries; NEEDS VERIFICATION for actual API routes, deny fixtures, policy fixtures, schemas, validators, CI, and pass/fail behavior.
+# `tests/api/deny/` — Governed API Deny, Abstain, Error, and Leakage Test Lane
 
-## Purpose
+> **Purpose.** Prove that governed API surfaces fail closed, return the correct finite non-answer outcome, and do not leak protected state when evidence, policy, rights, sensitivity, lifecycle, release, correction, runtime, or validation prerequisites are not satisfied.
 
-`tests/api/deny/` is the lane for negative governed API tests that prove API callers cannot bypass KFM policy, evidence, release, privacy, sensitivity, lifecycle, or runtime-envelope boundaries.
-
-These tests should exercise cases where the API must return a finite non-answer outcome, especially:
-
-- `DENY` when policy or governance state forbids response;
-- `ABSTAIN` when evidence, citation support, source authority, freshness, or scope is insufficient;
-- `ERROR` when validation, adapter, envelope, dependency, or configuration failure prevents completion;
-- restricted/redacted responses where policy allows only limited output.
-
-## Authority boundary
-
-| Responsibility | Correct home | This lane's role |
-|---|---|---|
-| Negative API tests | `tests/api/deny/` | Proves deny/fail-closed behavior through tests. |
-| Policy rules and policy decisions | `policy/` | Referenced by tests; not defined here. |
-| API route implementation | accepted app/API root | Tested here; not implemented here. |
-| Runtime outcomes and envelopes | `runtime/`, `runtime/envelopes/`, contracts/schemas | Expected by tests; not authored here unless test-only assertions. |
-| Fixtures and golden examples | `fixtures/` or accepted test fixture home | Referenced by tests; not duplicated here unless test-scoped fixture rule is documented. |
-| Contracts and schemas | `contracts/`, `schemas/` | Referenced by tests; not redefined here. |
-| Lifecycle data, receipts, proofs, catalog, published artifacts | `data/` and accepted trust-object roots | May be referenced by safe synthetic pointers; not stored here. |
-| Release decisions, correction, rollback | `release/` | May be tested; not decided here. |
+![status](https://img.shields.io/badge/status-draft-yellow)
+![lane](https://img.shields.io/badge/lane-negative__API__tests-blue)
+![implementation](https://img.shields.io/badge/tests-README__only-orange)
+![workflow](https://img.shields.io/badge/workflow-TODO__only-critical)
 
 > [!IMPORTANT]
-> A deny test proves that a boundary is enforceable. It does not create the policy, approve a release, define a public API route, or authorize exposure.
+> `tests/api/deny/` is a **test authority lane**, not policy authority, API implementation, contract or schema authority, fixture authority, evidence authority, receipt storage, or release authority.
 
-## Current inventory
+> [!WARNING]
+> `.github/workflows/deny-test.yml` currently runs only `echo TODO ...` jobs. A green workflow result therefore proves workflow execution only; it does **not** prove public-boundary denial, RAW-leak prevention, model-runtime isolation, route coverage, response-envelope conformance, or absence of sensitive leakage.
 
-| Path | Status | Notes |
+## Quick navigation
+
+[Status](#status-and-evidence-boundary) · [Placement](#placement-and-authority) · [Outcome semantics](#finite-outcome-semantics) · [Coverage](#required-deny-test-families) · [Leakage](#leakage-and-side-channel-assertions) · [Fixtures](#fixture-and-test-data-rules) · [Proof](#current-proof-and-ci-boundary) · [Authoring](#test-authoring-contract) · [Validation](#validation) · [Done](#definition-of-done) · [Rollback](#correction-and-rollback) · [Backlog](#open-verification-backlog) · [Evidence](#evidence-basis)
+
+---
+
+## Status and evidence boundary
+
+| Surface | Status at the pinned snapshot | Safe conclusion |
 |---|---|---|
-| `tests/api/deny/README.md` | present | Placeholder content replaced by this README. |
-| `tests/api/deny/*` | no files found in current search | No deny-test modules, fixtures, snapshots, or configs confirmed under this path. |
-| `tests/README.md` | present | Canonical tests root; tests prove enforceability of the KFM trust spine. |
-| `policy/README.md` | present | Canonical policy root for allow / deny / restrict / abstain / redaction / release / promotion / sensitivity. |
-| `runtime/README.md` | present | Runtime root; finite outcomes and policy/evidence/release subordination. |
+| `tests/api/deny/README.md` | **CONFIRMED** | Target exists; prior blob is pinned in metadata. |
+| Direct executable files below `tests/api/deny/` | **NOT SURFACED in bounded search** | Treat the lane as README-only until recursive inventory proves otherwise. |
+| `tests/api/README.md` | **CONFIRMED** | Defines the governed API test parent lane and identifies `deny/` as its negative child. |
+| `docs/security/DENY_TESTS.md` | **CONFIRMED draft doctrine/catalog** | Defines fail-closed obligations and gate families, but several implementation paths remain proposed or stale. |
+| `.github/workflows/deny-test.yml` | **CONFIRMED TODO-only scaffold** | Three jobs echo TODO text; green status is not executable proof. |
+| Governed API route inventory | **UNKNOWN** | No complete, accepted route-to-deny-test matrix is established here. |
+| Canonical denial response profile | **NEEDS VERIFICATION** | Runtime, policy, and API envelope documents contain related but not automatically interchangeable vocabularies. |
+| Test fixtures and snapshots | **UNKNOWN** | No accepted fixture or snapshot family is confirmed under this lane. |
+| Current pass state | **UNKNOWN** | Repository source inspection is not test execution. |
+| Production enforcement | **UNKNOWN** | Documentation, schemas, and CI names do not prove deployed behavior. |
 
-## Repo fit
+**Authority of this README:** lane purpose, proof expectations, negative-case taxonomy, leakage assertions, and review discipline. Executable tests, accepted contracts and schemas, policy bundles, fixtures, validators, route implementations, workflow definitions, test reports, release records, and steward decisions outrank this document.
+
+---
+
+## Placement and authority
+
+Directory Rules place enforceability proof under `tests/`. The parent API test lane is therefore the correct responsibility root for negative governed API behavior.
 
 ```text
-tests/
-├── README.md                         # canonical enforceability-proof root
-└── api/
-    └── deny/
-        └── README.md                 # this file; deny/fail-closed API test lane
-
-policy/                               # allow / deny / restrict / abstain rules
-runtime/                              # finite runtime outcomes and envelopes
-contracts/                            # semantic meaning
-schemas/                              # machine-checkable shape
-fixtures/                             # deterministic examples
-tools/validators/                     # validator implementation
-data/                                 # lifecycle records, receipts, proofs, catalogs, emitted data
-release/                              # release, correction, rollback authority
-apps/                                 # governed API and UI implementation roots
+tests/api/deny/                 negative governed API surface proof
+apps/governed-api/              API implementation and route wiring
+policy/                         policy rules and admissibility
+contracts/                      semantic object and response meaning
+schemas/                        machine-checkable shape
+runtime/envelopes/              runtime envelope wiring
+fixtures/                       deterministic valid and invalid examples
+tools/validators/               reusable validator implementation
+data/receipts/ and data/proofs/ emitted audit/proof records
+release/                        promotion, correction, withdrawal, rollback authority
 ```
 
-## Deny-test responsibilities
+This lane must not:
 
-| Responsibility | Requirement |
+- implement routes or middleware;
+- define policy outcomes;
+- invent response fields or enums;
+- store canonical evidence, receipts, or release records;
+- call RAW, WORK, QUARANTINE, canonical stores, source systems, model providers, or private services as the normal public test path;
+- use real sensitive geometry, living-person data, genomic data, credentials, or private infrastructure details;
+- treat a test fixture as source truth;
+- treat a passing response-shape test as release approval.
+
+### Test-layer boundary
+
+A deny test should prove observable API behavior:
+
+```text
+synthetic governed request
+  -> route / handler
+  -> evidence + policy + lifecycle + release checks
+  -> finite outcome
+  -> safe response body
+  -> no protected leakage
+```
+
+A unit test of a helper may support this lane, but it does not replace at least one route- or handler-level assertion where a public or semi-public surface exists.
+
+---
+
+## Finite outcome semantics
+
+`DENY`, `ABSTAIN`, and `ERROR` are not synonyms.
+
+| Outcome | Use when | Must not be used as |
+|---|---|---|
+| `DENY` | A policy, access, rights, sensitivity, consent, lifecycle, release, or governance rule forbids the requested exposure or action. | A generic substitute for missing evidence or internal exceptions. |
+| `ABSTAIN` | Evidence, citation support, source authority, freshness, or bounded scope is insufficient to produce a supported answer. | A way to hide a known policy prohibition. |
+| `ERROR` | Validation, dependency, configuration, adapter, envelope, or internal processing failure prevents a governed result. | A substitute for an expected policy denial. |
+| restricted or redacted result | Policy permits a bounded derivative while prohibiting exact or full output. | An untracked partial `ANSWER` with omitted governance context. |
+
+### Required outcome assertions
+
+Every executable negative API test should assert, where the accepted response profile supports it:
+
+- finite outcome;
+- stable reason code or reason family;
+- HTTP status mapping, if one is accepted;
+- no answer payload on `DENY`, `ABSTAIN`, or `ERROR`;
+- no protected field leakage;
+- correction or release posture when material;
+- evidence or policy pointers when permitted and safe;
+- deterministic response shape;
+- no raw exception trace, filesystem path, SQL detail, provider response, prompt, token, or model internals.
+
+### HTTP status is not enough
+
+The following is incomplete:
+
+```python
+assert response.status_code == 403
+```
+
+A governed deny test should also prove the accepted finite outcome and safe body. Conversely, the README does not prescribe a universal HTTP mapping until the API contract accepts one.
+
+---
+
+## Required deny-test families
+
+### 1. Public trust-membrane tests
+
+| Case | Required result |
 |---|---|
-| Verify fail-closed behavior | Missing policy, evidence, release, consent, rights, or sensitivity state must not fall through to `ANSWER`. |
-| Verify finite outcomes | API response must resolve to `DENY`, `ABSTAIN`, `ERROR`, or allowed restricted output. |
-| Verify no leakage | Denied responses must not expose RAW, WORK, QUARANTINE, internal store paths, private IDs, sensitive geometry, private runtime output, or model internals. |
-| Verify policy linkage | Test cases should point to the policy rule, policy fixture, or policy decision family they exercise. |
-| Verify evidence posture | Unsupported EvidenceRef or missing EvidenceBundle must produce `ABSTAIN` or `DENY`, not invented support. |
-| Verify release posture | Unreleased, withdrawn, corrected, held, stale, or review-pending material must not be exposed as published truth. |
-| Verify receipts/envelopes | Response shape should preserve reason codes, support pointers, and receipt/envelope posture where applicable. |
+| Public route attempts to read RAW data | `DENY` or hard test failure before data exposure |
+| Public route attempts to read WORK or QUARANTINE | `DENY` or hard test failure |
+| Public route attempts direct canonical/internal-store access | blocked and no protected body content |
+| Browser/public client attempts direct model-provider access | blocked |
+| Unauthenticated request reaches an administrative surface | `DENY` |
+| Public route receives an unpublished candidate identifier | no candidate payload exposure |
 
-## Required negative cases
+### 2. Policy and access tests
 
 | Case | Expected posture |
 |---|---|
-| Missing authentication or access role, where route requires it | `DENY` |
-| Policy decision missing for sensitive request | `DENY` |
-| Policy decision explicitly denies request | `DENY` |
-| Rights or license state missing for public output | `DENY` or `ABSTAIN` |
-| Sensitivity state unknown for people, DNA, rare species, archaeology, infrastructure, or exact private-location material | `DENY` or restricted/generalized output |
-| EvidenceRef cannot resolve to EvidenceBundle | `ABSTAIN` |
-| Citation-required output has no valid citation support | `ABSTAIN` |
-| Release state is missing, held, withdrawn, corrected, superseded, or stale-sensitive | `DENY` or `ABSTAIN` |
-| API tries to read RAW, WORK, QUARANTINE, unpublished candidates, or internal stores directly | test failure |
-| Runtime/model output appears without governed envelope and support state | `ERROR` or test failure |
-| Route returns unbounded free text instead of finite envelope posture | test failure |
+| Required policy decision missing | `DENY` |
+| Explicit policy denial | `DENY` |
+| Required role or capability absent | `DENY` |
+| Requested purpose exceeds granted scope | `DENY` |
+| Unknown policy version where version is required | fail closed |
+| Obligation cannot be satisfied | `DENY` or accepted held/restricted state |
 
-## What belongs here
+### 3. Rights and consent tests
 
-- This README.
-- Deny/fail-closed API test modules.
-- Negative API-envelope assertions.
-- Snapshot expectations for safe `DENY`, `ABSTAIN`, and `ERROR` bodies, if snapshots are accepted by the repo.
-- Test-only pointers to policy fixtures, evidence fixtures, runtime envelope fixtures, API route fixtures, and release-state fixtures.
-- Notes explaining why a route must deny, abstain, restrict, redact, or fail closed.
-
-## What does not belong here
-
-| Do not put this in `tests/api/deny/` | Correct home |
+| Case | Expected posture |
 |---|---|
-| API implementation code | accepted app/API root |
-| Policy rules or policy decisions | `policy/` |
-| Canonical contracts | `contracts/` |
-| JSON Schema definitions | `schemas/` |
-| Validator implementation | `tools/validators/` |
-| General fixture libraries or golden source data | `fixtures/` or accepted test fixture home |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data | `data/` lifecycle roots |
-| EvidenceBundles, SourceDescriptors, receipts, proofs, catalogs, release manifests | accepted `data/`, registry, proof, receipt, catalog, or release roots |
-| Release decisions, correction notices, rollback records, publication approvals | `release/` |
-| Real exact sensitive geometry, living-person identifiers, DNA/genomic data, private addresses, private landowner details, or infrastructure details | never in default test suite; use synthetic/redacted/generalized fixtures |
-| Live network calls, live credentials, private provider config, or model internals | never in default deterministic tests |
-| Generated text treated as evidence, policy, review, release, correction, rollback, legal/title conclusion, or publication authority | nowhere |
+| Rights status missing or ambiguous | `DENY` or `ABSTAIN`, according to accepted contract |
+| Redistribution prohibited | `DENY` |
+| Consent missing for consent-dependent material | `DENY` |
+| Consent revoked after prior release | deny current exposure and test correction propagation |
+| Purpose limitation violated | `DENY` |
+| License expired or re-review overdue | fail closed |
 
-## Test note template
+### 4. Sensitivity and precision tests
 
-```markdown
-# <api-deny-test-id>
+Synthetic cases must cover, where relevant:
 
-## Status
-DRAFT / READY_FOR_REVIEW / ACTIVE_TEST / VALIDATION_REQUIRED / HELD / SUPERSEDED / RETIRED
+- exact rare-species locations;
+- exact archaeology locations;
+- living-person addresses or identifiers;
+- DNA or genomic material;
+- private landowner details;
+- vulnerable infrastructure;
+- culturally sensitive or sovereignty-restricted material;
+- sensitive geometry returned through vector tiles, 3D scenes, downloads, search, or generated narrative.
 
-## Route or surface
-<api route, handler, envelope family, or N/A>
+Expected behavior may be `DENY`, generalized geometry, redacted attributes, staged access, or another accepted restricted profile. The test must identify the accepted policy basis rather than inventing one.
 
-## Deny reason family
-policy / access / rights / sensitivity / evidence / citation / release / runtime / validation / other
+### 5. Evidence and citation tests
 
-## Expected outcome
-DENY / ABSTAIN / ERROR / RESTRICTED / REDACTED
+| Case | Expected posture |
+|---|---|
+| `EvidenceRef` cannot resolve | `ABSTAIN` |
+| EvidenceBundle is missing required source or provenance support | `ABSTAIN` or `DENY` when policy requires denial |
+| Citation-required response lacks valid citation support | `ABSTAIN` |
+| Source role is insufficient for the requested claim | `ABSTAIN` or `DENY` according to policy |
+| Evidence is stale beyond accepted cadence | `ABSTAIN`, held, or denied |
+| Generated text is the only support | `ABSTAIN` |
 
-## Governed support pointers
-- Policy: <path or N/A>
-- Contract: <path or N/A>
-- Schema: <path or N/A>
-- Fixture: <path or N/A>
-- Validator: <path or N/A>
-- Runtime envelope: <path or N/A>
-- Release/correction/rollback: <path or N/A>
+### 6. Lifecycle and release tests
 
-## Assertion summary
-<what must be denied, abstained, redacted, restricted, or failed closed>
+Test that the API does not expose material as published truth when it is:
 
-## Leakage checks
-<fields, stores, paths, identifiers, or details that must not appear>
+- RAW;
+- in WORK;
+- quarantined;
+- merely processed;
+- cataloged but unreleased;
+- review-pending;
+- held;
+- withdrawn;
+- superseded;
+- correction-pending;
+- stale-sensitive;
+- missing a required release manifest, receipt, proof, or rollback target.
 
-## Reviewer
-<steward or maintainer>
+A file path under `data/published/` is not sufficient by itself; the accepted release state must be checked.
+
+### 7. Runtime and envelope tests
+
+| Case | Required posture |
+|---|---|
+| Model output arrives without governed envelope | `ERROR` or test failure |
+| Runtime returns unknown outcome enum | schema/contract failure |
+| Adapter returns provider-specific internal fields | redact or fail |
+| Policy state is missing from a policy-required result | fail closed |
+| Unsupported evidence is paired with `ANSWER` | test failure |
+| `DENY` body includes answer payload | test failure |
+| Raw stack trace or provider error leaks | test failure |
+
+### 8. Correction and rollback tests
+
+At least one negative route family should prove:
+
+- withdrawn content is no longer exposed;
+- superseded content is not presented as current;
+- corrected identifiers or geometry do not remain in stale caches;
+- revoked consent or changed sensitivity reaches the public response path;
+- rollback restores the last accepted release rather than RAW or candidate state;
+- denial reason and correction state remain inspectable without exposing protected content.
+
+---
+
+## Leakage and side-channel assertions
+
+A denied response can still violate policy through metadata or side channels.
+
+### Response-body leakage
+
+Assert absence of:
+
+- RAW, WORK, or QUARANTINE paths;
+- canonical database names or internal table names;
+- private object identifiers;
+- source credentials or signed URLs;
+- exact protected coordinates;
+- private addresses;
+- genomic sequences;
+- policy engine internals;
+- prompt text or chain-of-thought;
+- provider request/response bodies;
+- stack traces and local filesystem paths;
+- internal service hostnames;
+- unreleased titles, filenames, or catalog labels where existence itself is sensitive.
+
+### Header and status leakage
+
+Review:
+
+- `Location`;
+- `Link`;
+- debugging headers;
+- trace identifiers;
+- cache headers;
+- timing variation;
+- response size;
+- retry hints;
+- exception-class names;
+- internal correlation IDs.
+
+The test should not require eliminating all diagnostics. It should verify that diagnostics follow the accepted public logging and trace contract.
+
+### Cache and persistence leakage
+
+Where a route uses caches or derived artifacts, test that a later denial cannot be bypassed through:
+
+- stale browser/API caches;
+- tile caches;
+- search indexes;
+- generated summaries;
+- downloaded artifacts;
+- vector stores;
+- graph projections;
+- public aliases;
+- previously issued URLs.
+
+---
+
+## Fixture and test-data rules
+
+Default deny tests must be:
+
+- deterministic;
+- offline;
+- synthetic;
+- minimal;
+- public-safe;
+- versioned;
+- independently reviewable;
+- free of credentials and live endpoints.
+
+### Fixture ownership
+
+```text
+fixtures/                       reusable deterministic fixture authority
+tests/api/deny/                 test code and test-scoped expectations
 ```
+
+Do not create a second general fixture authority under this lane. Small inline objects are acceptable when they are test-specific and contain no sensitive material.
+
+### Required fixture metadata
+
+A reusable negative fixture should identify:
+
+- fixture ID;
+- object or request family;
+- expected outcome;
+- reason family;
+- policy profile;
+- evidence state;
+- lifecycle/release state;
+- sensitivity and rights posture;
+- synthetic-data declaration;
+- schema/contract version;
+- expected leakage assertions.
+
+### No live dependencies
+
+The default suite must not require:
+
+- internet access;
+- live databases;
+- live model providers;
+- real credentials;
+- production secrets;
+- actual sensitive records;
+- mutable external state.
+
+Integration tests requiring controlled services must be separately marked and must retain deterministic negative assertions.
+
+---
+
+## Current proof and CI boundary
+
+The present workflow is:
+
+```yaml
+public-boundary-deny:
+  run: echo TODO public-boundary-deny
+
+raw-leak-deny:
+  run: echo TODO raw-leak-deny
+
+model-runtime-deny:
+  run: echo TODO model-runtime-deny
+```
+
+Therefore:
+
+- workflow existence is **CONFIRMED**;
+- executable deny coverage is **NOT CONFIRMED**;
+- route coverage is **UNKNOWN**;
+- fail-closed behavior is **UNKNOWN**;
+- leakage coverage is **UNKNOWN**;
+- CI should not be described as enforcing deny tests until real commands run and fail on violations.
+
+### Required CI characteristics
+
+An accepted deny-test workflow should:
+
+1. install pinned dependencies;
+2. run deterministic offline tests;
+3. fail when any negative assertion fails;
+4. publish bounded test reports without protected fixture contents;
+5. identify the tested contract/schema/policy profile;
+6. avoid `|| true`, ignored exit codes, and echo-only success;
+7. cover route-level and leakage assertions;
+8. run on pull requests that modify governed API, policy, envelope, release, sensitivity, evidence, or public-client boundaries;
+9. retain an auditable failure signal;
+10. not publish or mutate lifecycle or release state.
+
+### Relationship to repository-wide checks
+
+A successful `schema-validation`, `policy-test`, `api-test`, or `deny-test` workflow does not automatically prove this lane's coverage. The workflow command and collected tests must be inspected.
+
+---
+
+## Test authoring contract
+
+Each test or parametrized case should declare:
+
+| Field | Requirement |
+|---|---|
+| Test ID | Stable identifier |
+| Route/surface | Exact handler or route under test |
+| Threat or failure condition | What prerequisite is absent, invalid, prohibited, stale, or revoked |
+| Expected finite outcome | `DENY`, `ABSTAIN`, `ERROR`, or accepted restricted/redacted profile |
+| Expected reason | Stable code or bounded family |
+| Policy/evidence basis | Accepted pointer or explicit `NEEDS VERIFICATION` during draft |
+| Lifecycle/release state | Explicit when material |
+| Response schema/profile | Exact accepted version |
+| Leakage assertions | Protected fields, paths, identifiers, and side channels that must not appear |
+| Fixture posture | Synthetic/offline declaration |
+| Correction behavior | Required when withdrawal, revocation, correction, or supersession is involved |
+
+### Example test shape
+
+```python
+def test_unresolved_evidence_abstains(client, synthetic_request):
+    response = client.post("/governed/example", json=synthetic_request)
+
+    assert response.status_code == 200  # only when accepted API contract says so
+    body = response.json()
+    assert body["outcome"] == "ABSTAIN"
+    assert body["reason_code"] == "EVIDENCE_UNRESOLVED"
+    assert "answer" not in body
+    assert "data/raw/" not in response.text
+    assert "Traceback" not in response.text
+```
+
+The example is illustrative. Route, status code, field names, and reason code remain **PROPOSED** until verified against accepted API contracts and implementation.
+
+---
+
+## Review burden
+
+Ordinary QA review is insufficient when a test changes the expected public disclosure boundary.
+
+Require relevant steward review when a test covers:
+
+- living-person or genomic data;
+- Indigenous, cultural, archaeological, or sovereignty-sensitive information;
+- rare species or exact habitat locations;
+- private landownership;
+- vulnerable infrastructure;
+- rights or license restrictions;
+- public model/AI output;
+- release, withdrawal, correction, or rollback;
+- authentication, authorization, or privileged administration.
+
+A test weakening a denial expectation must be treated as a policy- and release-significant change, not a routine snapshot update.
+
+---
 
 ## Validation
 
+Recommended bounded checks:
+
 ```bash
-find tests/api/deny -maxdepth 4 -type f | sort
-find tests/api tests/policy tests/runtime fixtures policy runtime contracts schemas tools/validators -maxdepth 5 -type f 2>/dev/null | sort
-pytest tests/api/deny tests/api tests/policy tests/runtime || true
+find tests/api/deny -maxdepth 5 -type f | sort
+python -m pytest -q tests/api/deny
+python -m pytest -q tests/api
 ```
 
-Replace `|| true` with fail-closed CI behavior once accepted API deny-test commands are confirmed.
+Workflow inspection:
 
-## Review checklist
+```bash
+sed -n '1,220p' .github/workflows/deny-test.yml
+```
 
-- [ ] Test proves a governed API boundary, not only local function behavior.
-- [ ] Expected outcome is finite: `DENY`, `ABSTAIN`, `ERROR`, restricted, or redacted.
-- [ ] Policy reference is explicit when policy causes the denial.
-- [ ] Evidence or citation gap is explicit when the expected outcome is `ABSTAIN`.
-- [ ] Release/correction/rollback state is explicit when publication state causes denial.
-- [ ] Test uses synthetic, redacted, or generalized fixtures only.
-- [ ] Denied response does not leak internal stores, sensitive identifiers, private config, raw lifecycle paths, or direct model output.
-- [ ] Test does not define policy, schema, contract, fixture authority, lifecycle data, release state, or API implementation.
+Static source checks may supplement, but not replace, executable tests:
 
-## Open questions
+```bash
+git grep -nE 'data/(raw|work|quarantine)|ollama|Traceback' -- \
+  apps tests/api runtime
+```
 
-| Question | Status |
-|---|---|
-| Which governed API routes currently exist and require deny tests? | NEEDS VERIFICATION |
-| Which envelope schema defines the expected API denial body? | NEEDS VERIFICATION |
-| Which policy fixtures are canonical for deny/restrict/abstain API tests? | NEEDS VERIFICATION |
-| Should snapshots live under `tests/api/deny/` or a central fixture/snapshot lane? | NEEDS VERIFICATION |
-| Which CI workflow blocks promotion when API deny tests fail? | NEEDS VERIFICATION |
+Do not append `|| true` to promotion-significant test commands. When no executable tests exist, record `NO TESTS COLLECTED` or fail according to the accepted bootstrap policy; do not report coverage as green.
+
+---
+
+## Definition of done
+
+This lane is operationally complete only when:
+
+- [ ] accepted governed API routes are inventoried;
+- [ ] each public or semi-public route has required negative cases;
+- [ ] an accepted response-envelope profile is pinned;
+- [ ] `DENY`, `ABSTAIN`, and `ERROR` are tested distinctly;
+- [ ] restricted and redacted profiles are tested where allowed;
+- [ ] reusable synthetic fixtures exist in an accepted fixture home;
+- [ ] response-body, header, cache, and side-channel leakage checks exist;
+- [ ] rights, consent, sensitivity, evidence, lifecycle, release, correction, and rollback cases are covered where applicable;
+- [ ] public clients cannot reach RAW, WORK, QUARANTINE, canonical stores, or model providers directly;
+- [ ] the workflow executes real tests and fails closed;
+- [ ] no echo-only job is represented as proof;
+- [ ] test reports are inspectable and public-safe;
+- [ ] owners and reviewers are assigned;
+- [ ] correction and rollback behavior are tested;
+- [ ] CI pass state is observed from the exact implementation commit.
+
+---
+
+## Correction and rollback
+
+### Correcting a test expectation
+
+When an expected denial changes:
+
+1. identify the accepted contract, schema, policy, ADR, release, or correction record authorizing the change;
+2. update fixtures and tests together;
+3. preserve the previous case when backward compatibility or regression risk exists;
+4. document whether the change broadens or narrows disclosure;
+5. require appropriate policy/security/release review;
+6. run leakage and cache invalidation checks;
+7. retain a transparent commit history.
+
+### Documentation rollback
+
+Before merge, leave the draft PR unmerged or restore the prior blob in a transparent follow-up commit.
+
+After merge, revert the documentation commit or PR. Do not reset or rewrite shared history.
+
+### Test rollback
+
+Do not delete a failing deny test merely to recover green CI. Either:
+
+- fix the implementation;
+- fix a demonstrably incorrect test using accepted evidence;
+- hold the affected release;
+- document a temporary, reviewed exception with expiry and rollback.
+
+---
+
+## Open verification backlog
+
+- [ ] Recursively inventory `tests/api/deny/`.
+- [ ] Inventory actual governed API routes and handlers.
+- [ ] Identify accepted public and semi-public response profiles.
+- [ ] Resolve RuntimeResponseEnvelope, DecisionEnvelope, PolicyDecision, and HTTP mapping boundaries.
+- [ ] Identify canonical fixtures and snapshot home.
+- [ ] Add route-level public-boundary tests.
+- [ ] Add RAW, WORK, and QUARANTINE leakage tests.
+- [ ] Add direct model-runtime denial tests.
+- [ ] Add exact sensitive geometry denial/generalization tests.
+- [ ] Add rights, consent, and sensitivity cases.
+- [ ] Add evidence-resolution and citation abstention cases.
+- [ ] Add release, withdrawal, correction, supersession, and rollback cases.
+- [ ] Add header, cache, search-index, tile, and generated-summary leakage checks.
+- [ ] Replace echo-only workflow jobs with real fail-closed commands.
+- [ ] Verify workflow path filters and required-check status.
+- [ ] Assign owners and CODEOWNERS.
+- [ ] Record test-report and artifact retention policy.
+- [ ] Verify current pass state from the exact commit.
+- [ ] Add a rollback drill for a deliberately introduced leakage regression.
+
+---
+
+## Evidence basis
+
+| Evidence | Status | Supports | Limit |
+|---|---|---|---|
+| Prior `tests/api/deny/README.md` | **CONFIRMED** | Existing lane intent and prior blob | Previously overstated proof purpose relative to implementation |
+| `tests/api/README.md` | **CONFIRMED** | Parent API test boundary and child-lane placement | Also reports no direct API test modules confirmed |
+| `docs/security/DENY_TESTS.md` | **CONFIRMED draft** | Fail-closed doctrine, gate families, and negative-test taxonomy | Contains proposed/stale implementation path claims |
+| `.github/workflows/deny-test.yml` | **CONFIRMED** | Workflow name and three job families | Jobs are echo-only |
+| Runtime and policy schema/contract surfaces | **CONFIRMED related evidence** | Finite-outcome and policy decision concepts | Exact API response profile remains unresolved |
+| Bounded repository search | **CONFIRMED bounded result** | No direct executable file surfaced under the lane | Not a substitute for recursive tree inventory |
+| Repository test execution | **NOT RUN** | — | Markdown-only API update |
+
+[Back to top](#top)
