@@ -1,6 +1,7 @@
 name: agent-temp-atmosphere-kc-hash
 
 on:
+  pull_request:
   push:
     branches:
       - agent/tests-domains-atmosphere-knowledge-character-readme-v3-1-20260716
