@@ -1,320 +1,634 @@
+# `tests/fixtures/domains/archaeology/sites/` — Archaeology Sites Test-Local Fixture and Site-Identity Boundary
+
+> Repository-grounded routing and safety contract for test-local Archaeology site-shaped examples. This lane may describe small synthetic manifests and expectations owned by specific tests, but it does not create site records, confirm candidates, define object authority, prove evidence, approve review or policy, release geometry, publish map/API/AI artifacts, or expose protected archaeological detail.
+
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-fixtures-domains-archaeology-sites-readme
-title: Archaeology Sites Test Fixtures README
-type: test-fixture-readme
-version: v0.1
-status: draft; empty-placeholder-replaced; archaeology-sites-test-fixture-lane; PROPOSED / NEEDS VERIFICATION before promotion
-owners:
-  - OWNER_TBD - Archaeology domain steward
-  - OWNER_TBD - Fixture steward
-  - OWNER_TBD - QA steward
-  - OWNER_TBD - Sensitivity steward
-  - OWNER_TBD - Evidence steward
-  - OWNER_TBD - Policy steward
-  - OWNER_TBD - Release steward
+title: tests/fixtures/domains/archaeology/sites/README.md — Archaeology Sites Test-Local Fixture and Site-Identity Boundary
+type: readme; directory-readme; test-local-fixture-lane; archaeology-sites-routing-boundary; site-identity-test-boundary
+version: v0.2
+status: draft; repository-grounded; README-only-direct-lane; tests-fixtures-parent-confirmed; archaeology-parent-confirmed; domains-parent-index-absent; singular-reusable-site-lane-readme-only; reusable-site-and-candidate-placeholders-confirmed; primary-site-schemas-permissive; site-name-conflict-visible; public-safe-fixture-home-conflict-visible; executable-enforcement-unestablished; non-authoritative
+owners: OWNER_TBD — Archaeology domain steward · Test steward · Fixture steward · Site-identity steward · GIS steward · Sensitivity reviewer · Cultural-review liaison · Rights-holder representative · Evidence steward · Contract/schema steward · Policy steward · Review steward · Release steward · Correction/rollback steward · Security reviewer · CI steward · Docs steward
 created: 2026-07-06
-updated: 2026-07-06
-policy_label: public-doc; tests; fixtures; archaeology; sites-fixtures; synthetic-only; no-network; deny-by-default; candidate-aware; exact-location-denied; evidence-bound; policy-gated; review-gated; release-gated; rollback-aware
-tags: [kfm, tests, fixtures, archaeology, sites, site-fixtures, ArchaeologicalSite, CandidateFeature, SiteComponent, StewardReview, CulturalReview, RedactionReceipt, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, EvidenceBundle, EvidenceRef, ABSTAIN, DENY, ERROR]
-related:
-  - ../README.md
-  - ../api/README.md
-  - ../promotion/README.md
-  - ../review/README.md
-  - ../sensitive_geometry/README.md
-  - ../../README.md
-  - ../../../README.md
-  - ../../../../README.md
-  - ../../../../domains/archaeology/README.md
-  - ../../../../domains/archaeology/fixtures/README.md
-  - ../../../../domains/archaeology/fixtures/source_admission/README.md
-  - ../../../../../fixtures/domains/archaeology/README.md
-  - ../../../../../fixtures/domains/archaeology/site/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_archaeological_site/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_candidate_feature/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_publication_transform_receipt/README.md
-  - ../../../../../fixtures/domains/archaeology/synthetic_steward_review/README.md
-  - ../../../../../fixtures/domains/archaeology/valid/README.md
-  - ../../../../../fixtures/domains/archaeology/invalid/README.md
-  - ../../../../../docs/domains/archaeology/CANONICAL_PATHS.md
-  - ../../../../../docs/domains/archaeology/SENSITIVITY.md
-  - ../../../../../docs/domains/archaeology/PUBLICATION_AND_POLICY.md
-  - ../../../../../docs/domains/archaeology/OBJECT_FAMILIES.md
-  - ../../../../../docs/domains/archaeology/MAP_UI_CONTRACTS.md
-  - ../../../../../contracts/domains/archaeology/archaeological_site.md
-  - ../../../../../contracts/domains/archaeology/candidate_feature.md
-  - ../../../../../contracts/domains/archaeology/site_component.md
-  - ../../../../../contracts/domains/archaeology/steward_review.md
-  - ../../../../../schemas/contracts/v1/domains/archaeology/
-  - ../../../../../policy/domains/archaeology/
-  - ../../../../../release/candidates/archaeology/
+updated: 2026-07-16
+supersedes: v0.1
+policy_label: public-doc; tests; fixtures; archaeology; sites-fixtures; test-local-only; synthetic-only; no-network-default; deny-by-default; candidate-not-confirmed; component-not-site; exact-location-denied; cultural-authority-deferred; evidence-required; review-gated; policy-gated; release-subordinate; correction-aware; revocation-aware; rollback-aware; no-publication
+current_path: tests/fixtures/domains/archaeology/sites/README.md
+truth_posture:
+  CONFIRMED:
+    - target README v0.1 and prior blob
+    - tests/fixtures parent README and test-local fixture-home rule
+    - tests/fixtures/domains/archaeology parent README and sites child index
+    - singular fixtures/domains/archaeology/site README is the observed reusable site-shaped lane
+    - direct sites lane and singular reusable site lane are README-only in bounded evidence
+    - checked synthetic ArchaeologicalSite and CandidateFeature JSON files are four-field PROPOSED placeholders
+    - ArchaeologicalSite, CandidateFeature, SiteComponent, and Site compatibility semantic contracts
+    - ArchaeologicalSite, CandidateFeature, and SiteComponent paired permissive PROPOSED schemas
+    - OBJECT_MAP expects ArchaeologicalSite, CandidateFeature, and SiteComponent and marks all NEEDS VERIFICATION
+    - Site short-name contract is compatibility/lineage only and is not current object-map authority
+    - two public-safe Archaeology fixture lanes coexist with unresolved compatibility
+    - Archaeology validator lane is README-only in bounded evidence and sampled enforcement remains scaffolded
+    - checked absence of tests/fixtures/domains/README.md
+    - checked absence of direct-lane conftest.py, manifest_expectations.json, and representative test module
+    - checked absence of tests/domains/archaeology/fixtures/sites/README.md
+  CONFLICTED:
+    - v0.1 claim that tests/fixtures/domains/archaeology/README.md was absent
+    - v0.1 proposed executable test modules inside a fixture directory versus parent guidance
+    - plural test-local sites path versus singular reusable site path
+    - Site compatibility name versus object-map ArchaeologicalSite family
+    - corpus term Feature may map to SiteComponent or CandidateFeature
+    - root-level and domain-facing public-safe Archaeology fixture lanes coexist without a final canonical decision
+    - fixture filenames imply valid, deny, or generalized behavior while payloads are only placeholders
+    - rich object semantics versus permissive empty-property schemas
+  UNKNOWN:
+    - exhaustive fixture inventory outside checked paths
+    - generated, ignored, branch-local, dynamic, or externally stored fixtures
+    - real evidence, review, cultural-authority, rights, consent, policy, release, and production workflows
+    - branch-protection significance, current pass rates, and production use
+  NEEDS_VERIFICATION:
+    - lane-retention decision and accepted test-local fixture threshold
+    - canonical Site versus ArchaeologicalSite migration decision
+    - Feature-to-SiteComponent/CandidateFeature reconciliation
+    - accepted site, candidate, component, source-role, geometry, reason-code, and obligation vocabularies
+    - substantive payloads, schemas, validators, consumer tests, and backlinks
+    - accepted public-safe fixture-home relationship
+    - policy, cultural review, candidate promotion, CI, correction, revocation, cache invalidation, and rollback enforcement
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 0d0f8109486763c7b4099a7a7b8b4c9fbed7219d
+  target_prior_blob: 3db34077e8736f9d42bb9a471dfda3ae98ee0437
+  related_repository_blobs:
+    directory_rules: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+    schema_home_adr: ab0010a278d766356845c23055f882f328abb418
+    drift_register: 97a775522dcd058299f752ac7862d0fc56c13280
+    tests_fixtures_parent_readme: 2d0147e85eae86f687e85c5bea0d3e61f9c3a8f7
+    archaeology_test_fixtures_parent: 34b8aa536aa19c234f30f939ed1c06fa428b57dc
+    singular_site_fixture_readme: 01562c74ff68b7cb9e3cdf15f89771236eb45339
+    synthetic_site_readme: 7411bf141b1c9aca24f0dd2c804871dd1222e967
+    synthetic_site_generalized_placeholder: 99a71c7326062db7c8f7fcd0c48ca42ddef6edf8
+    synthetic_candidate_readme: c713b9803bc2b092fc9e25c3e07576878babea41
+    synthetic_candidate_valid_placeholder: 33433a22afd41bd0e685f3d30d81b2a528d941ba
+    synthetic_candidate_deny_placeholder: 6e4f6b65bef0272b41ece51e23e0a57340825b94
+    archaeological_site_contract: 2bd6729c7e4c118958f4de7f6f81a0425bea1216
+    archaeological_site_schema: 5a1371a2fb4dc6d1a5c7b13f7c5198823ae89b40
+    candidate_feature_contract: 8167e1e3be69c177a069249b597947f1ef529695
+    candidate_feature_schema: 103fa2d86448490f83a0b9918fcd1c2d445fe269
+    site_component_contract: e10ba89b19a88df64c21ab7a40c1914926a1754c
+    site_component_schema: 096a572bc2ebdfed8f5d9ff5a7ce5114e07e4b67
+    site_compatibility_contract: 841ef554709218ae4c1029e493ad152cc7a219d4
+    archaeology_object_map: 69da4c6eb259ba5e41149ff0cde4c825f5290e10
+    root_public_safe_fixture_readme: 1611242b09ec089b4c9312846f49a7fdfb2b2b5f
+    domain_public_safe_fixture_readme: 621b85912ceba3e1e6169318788ad130da7baac5
+    archaeology_validator_readme: bae2eabb5d29bf7099ed74a66a17c0071ae98557
+    archaeology_policy_readme: 8d03cdb11361739e7ad33214f76a0cfe4836ff9b
+    archaeology_sensitivity_doc: ca7888f2d43f022faeef5e1a6e16ab00526cf7aa
+    archaeology_publication_policy_doc: 835bd3afb1b6a41de8f598d16b794873df0b6f75
+    makefile: 4dc8cf633581893d83fba53219c6ea847992e6be
+    domain_archaeology_workflow: b6a2869314efe2e34890baa5bbbe41d656629dd3
+  direct_lane_files_confirmed:
+    - tests/fixtures/domains/archaeology/sites/README.md
+  checked_absent_paths:
+    - tests/fixtures/domains/README.md
+    - tests/fixtures/domains/archaeology/sites/conftest.py
+    - tests/fixtures/domains/archaeology/sites/manifest_expectations.json
+    - tests/fixtures/domains/archaeology/sites/test_site_fixture_manifest_shape.py
+    - tests/domains/archaeology/fixtures/sites/README.md
 notes:
-  - "This README replaces the empty placeholder content at tests/fixtures/domains/archaeology/sites/README.md."
-  - "This lane documents test-local expectations for archaeology site-shaped fixtures. Canonical reusable archaeology fixtures live under fixtures/domains/archaeology/ unless an ADR or parent README says otherwise."
-  - "The canonical reusable site fixture lane observed during authoring is singular: fixtures/domains/archaeology/site/. This plural tests/fixtures/.../sites/ path must not become parallel site authority."
-  - "No parent README was found at tests/fixtures/domains/archaeology/README.md during authoring. This lane is self-contained until that parent index is authored."
-  - "Site-shaped fixtures are not ArchaeologicalSite authority, CandidateFeature confirmation, source records, protected-location records, review approval, policy approval, release approval, or publication approval."
-  - "Executable tests, site fixture payload inventory, schema bindings, harness wiring, CI jobs, and pass rates remain NEEDS VERIFICATION."
+  - "v0.2 corrects the stale missing-parent claim and keeps this direct lane documentation-only."
+  - "Executable tests belong in an owning tests lane and consume declarative fixtures by reference."
+  - "The singular reusable site lane is also README-only in bounded search."
+  - "Primary site-family contracts are semantically rich, but their checked schemas are permissive scaffolds."
+  - "The checked synthetic site and candidate JSON files are planned-file placeholders; filenames do not prove behavior."
+  - "This README preserves naming and fixture-home conflicts instead of selecting a silent winner."
+  - "This revision changes documentation only and creates no site record, candidate record, fixture payload, test, schema, contract, policy, validator, workflow, receipt, proof, release record, map artifact, AI output, or public artifact."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Archaeology sites test fixtures
-
-> Test-lane documentation for Archaeology site-shaped fixtures referenced from `tests/fixtures/domains/archaeology/sites/`. This path describes safe synthetic site and candidate expectations without turning examples into real site records, candidate confirmation, protected-location storage, review approval, policy approval, map truth, or release authority.
-
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: tests" src="https://img.shields.io/badge/root-tests%2F-blue">
-  <img alt="Lane: sites test fixtures" src="https://img.shields.io/badge/lane-sites__test__fixtures-purple">
-  <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-brown">
-  <img alt="Network: disabled by default" src="https://img.shields.io/badge/network-disabled__by__default-critical">
-  <img alt="Boundary: fixtures not site records" src="https://img.shields.io/badge/boundary-fixtures__not__site__records-success">
+  <img alt="Direct inventory: README only" src="https://img.shields.io/badge/direct__inventory-README__only-lightgrey">
+  <img alt="Scope: test local" src="https://img.shields.io/badge/scope-test__local-blue">
+  <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-8a6d3b">
+  <img alt="Candidate: not confirmed" src="https://img.shields.io/badge/candidate-not__confirmed-critical">
+  <img alt="Authority: fixture only" src="https://img.shields.io/badge/authority-fixture__only-red">
 </p>
 
-**Path:** `tests/fixtures/domains/archaeology/sites/README.md`  
-**Status:** draft / empty placeholder replaced / Archaeology sites test-fixture lane / PROPOSED until executable tests are verified  
-**Owning root:** `tests/`  
-**Lane family:** `fixtures/domains/archaeology/sites`  
-**Canonical reusable fixture root:** `fixtures/domains/archaeology/`  
-**Canonical reusable site fixture lane observed:** `fixtures/domains/archaeology/site/`  
-**Default execution posture:** deterministic, synthetic, no-network, public-safe fixture envelopes only  
-**Truth posture:** CONFIRMED target file existed as an empty placeholder before replacement; CONFIRMED `tests/fixtures/domains/archaeology/README.md` was not found during authoring; CONFIRMED sibling `api/`, `promotion/`, `review/`, and `sensitive_geometry/` README lanes exist as test-local fixture lanes; CONFIRMED canonical `fixtures/domains/archaeology/site/README.md` exists and identifies site-shaped fixtures as fixture-only, not real site records, source data, exact-location data, policy authority, release authority, or published-layer authority; CONFIRMED `fixtures/domains/archaeology/synthetic_archaeological_site/README.md` exists and says examples are synthetic and not authoritative project records; NEEDS VERIFICATION for executable site-fixture tests, fixture payload inventory, accepted schemas, CI coverage, and pass rates.
+**Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose-and-scope) · [Authority](#authority-and-directory-rules-basis) · [Object model](#site-object-model-and-anti-collapse-rules) · [Fixture homes](#fixture-home-and-compatibility-rules) · [Admission](#test-local-fixture-admission-contract) · [Manifest](#minimum-sites-fixture-manifest) · [Cases](#required-fixture-families-and-case-matrix) · [Safety](#sensitivity-location-and-public-surface-safety) · [Execution](#determinism-no-network-and-side-effects) · [Coverage](#inventory-consumers-and-vacuous-pass-risk) · [Commands](#validation-commands) · [CI](#ci-and-promotion-boundary) · [Maintenance](#maintenance-migration-and-rollback) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Rollback](#documentation-rollback)
 
 ---
 
-## Purpose
+## Status and evidence boundary
 
-`tests/fixtures/domains/archaeology/sites/` is a test-local documentation lane for Archaeology site-shaped fixture expectations.
+> [!IMPORTANT]
+> **Evidence snapshot:** `main@0d0f8109486763c7b4099a7a7b8b4c9fbed7219d`  
+> **Prior target blob:** `3db34077e8736f9d42bb9a471dfda3ae98ee0437`  
+> **Direct lane:** README-only in bounded evidence  
+> **Parent state:** `tests/fixtures/README.md` and `tests/fixtures/domains/archaeology/README.md` exist; `tests/fixtures/domains/README.md` was not found  
+> **Reusable site lane:** `fixtures/domains/archaeology/site/README.md` exists; no direct payload surfaced in bounded search  
+> **Executable consumer child:** not established at `tests/domains/archaeology/fixtures/sites/`
 
-This lane should describe how tests may use synthetic site, site-component, candidate-feature, redacted-site-card, denied-detail, withheld-geometry, review-needed, policy-needed, evidence-needed, release-needed, correction, withdrawal, and rollback examples.
+This directory is a routing README. It is not a fixture corpus, executable suite, site registry, candidate queue, schema family, validator, policy bundle, evidence store, review registry, release queue, map source, API source, AI source, or publication surface.
 
-A passing fixture check here should not mean that a site exists, a candidate is confirmed, a site boundary is known, a protected location is public, a reviewer approved release, a policy decision allows exposure, a map layer is published, or an AI answer is authoritative. It should mean only that a bounded synthetic site-shaped fixture supports a bounded test expectation.
+| Label | Meaning here |
+|---|---|
+| `CONFIRMED` | Verified from repository files or bounded connector search at the pinned snapshot. |
+| `PROPOSED` | A recommended contract, path, fixture, test, command, or gate not established as current implementation. |
+| `UNKNOWN` | Not resolved by inspected evidence. |
+| `NEEDS VERIFICATION` | Checkable, but not sufficiently verified to act as fact. |
+| `CONFLICTED` | Repository sources preserve incompatible or unresolved alternatives; no silent winner is selected. |
+| `DENY` | A prohibited confirmation, authority, exposure, or publication interpretation. |
 
 [Back to top](#top)
 
 ---
 
-## Placement Basis
+## Purpose and scope
 
-Directory Rules place enforceability proof under `tests/`. The canonical reusable fixture root is `fixtures/`. This requested path sits under `tests/fixtures/`, so it must remain test-scoped and subordinate to fixture, contract, schema, policy, evidence, receipt, release, map, API, and public artifact roots.
+`tests/fixtures/domains/archaeology/sites/` documents test-local expectations for site-shaped Archaeology fixtures.
 
-| Responsibility | Correct home | This lane's relationship |
-|---|---|---|
-| Site-shaped fixture-test expectations | `tests/fixtures/domains/archaeology/sites/` | This directory. |
-| Parent test-fixture lane | `tests/fixtures/domains/archaeology/` | Parent README missing at authoring time; NEEDS VERIFICATION. |
-| Reusable site-shaped fixtures | `fixtures/domains/archaeology/site/` | Canonical observed fixture lane; referenced, not replaced. |
-| Reusable synthetic site fixtures | `fixtures/domains/archaeology/synthetic_archaeological_site/` | Canonical observed fixture lane; referenced, not replaced. |
-| Reusable candidate fixtures | `fixtures/domains/archaeology/synthetic_candidate_feature/` | Candidate examples; not confirmed sites. |
-| Archaeology domain tests | `tests/domains/archaeology/` | Consumers and validators; not fixture authority. |
-| Archaeology fixture tests | `tests/domains/archaeology/fixtures/` | Confirmed test fixture parent lane. |
-| API, promotion, review, and sensitive-geometry fixture tests | `tests/fixtures/domains/archaeology/api/`, `promotion/`, `review/`, `sensitive_geometry/` | Confirmed sibling lanes. |
-| Site semantic contracts | `contracts/domains/archaeology/archaeological_site.md`, `candidate_feature.md`, `site_component.md` | Define object meaning; not owned here. |
-| Machine schemas | `schemas/contracts/v1/domains/archaeology/` or ADR-selected equivalent | Define accepted shape; not owned here. |
-| Policy authority | `policy/domains/archaeology/` or accepted policy roots | Referenced by expected outcomes; not defined here. |
-| Evidence, receipts, and proof | `data/proofs/`, `data/receipts/`, and accepted trust roots | Referenced through synthetic refs; not stored here. |
-| Release and public map decisions | `release/`, map/API/artifact roots | Referenced through synthetic refs; not decided here. |
+Its durable question is:
 
-> [!IMPORTANT]
-> Do not use this directory as a site registry, candidate-confirmation queue, protected-location fixture cache, source export cache, review record store, policy decision store, release candidate folder, map-layer source, or public artifact home. It is a documentation and test-fixture expectation lane only.
+> Can a bounded synthetic fixture exercise site, candidate, component, evidence, review, policy, sensitivity, release, correction, and rollback behavior without becoming a real site record, confirming a candidate, leaking protected detail, or creating public authority?
 
----
+A mature lane should prove that:
 
-## Invariant Under Test
+- `CandidateFeature` remains a candidate until governed promotion closes evidence, review, policy, and sensitivity requirements;
+- `SiteComponent` remains a part or sub-unit and does not become a whole site by naming or aggregation;
+- `ArchaeologicalSite` fixture shape does not prove that a site exists;
+- the short `Site` compatibility name cannot create a second canonical object family;
+- exact and reverse-engineerable location detail is denied before public carriers are produced;
+- fixture success cannot substitute for EvidenceBundle support, ReviewRecord, PolicyDecision, PromotionDecision, ReleaseManifest, or RollbackCard;
+- correction, withdrawal, revocation, supersession, cache invalidation, and rollback remain inspectable.
 
-> **Site-shaped fixtures are synthetic bounded examples, not ArchaeologicalSite truth.** Test fixture success proves only that the fixture expectation it was designed to exercise behaved as expected.
+### In scope
 
-Core checks:
+- small synthetic test-local manifests and expectation maps;
+- valid, invalid, denied, abstained, quarantined, superseded, withdrawn, correction, and rollback cases;
+- candidate-not-confirmed, component-not-site, exact-detail-denied, generalized, and withheld-state examples;
+- local no-network and public-no-leak inputs owned by named consumer tests.
 
-| Check | Required behavior | Failure outcome |
-|---|---|---|
-| Fixture-root boundary | Reusable payloads live under `fixtures/domains/archaeology/`; test-local wrappers require a documented reason. | validation failure. |
-| Singular/plural boundary | `fixtures/domains/archaeology/site/` remains the observed canonical reusable lane; this plural test path must not create parallel site authority. | promotion block. |
-| Synthetic-only boundary | Site fixtures use fake IDs, mock markers, generalized descriptions, and reviewable payloads. | quarantine / validation failure. |
-| Candidate boundary | CandidateFeature-shaped fixtures remain candidates and cannot be upgraded into confirmed sites by labels, helpers, API wording, maps, or generated text. | `DENY` / `ABSTAIN`. |
-| No-coordinate boundary | Fixtures do not carry exact protected coordinates, raw geometries, precise footprints, or reverse-geocodable hints. | `DENY` / validation failure. |
-| Site-component boundary | SiteComponent examples do not create a whole-site record or imply site confirmation. | validation failure. |
-| Evidence boundary | Claim-like site summaries cite synthetic EvidenceRef and EvidenceBundle-stub expectations or abstain. | `ABSTAIN`. |
-| Review boundary | Steward, cultural, sensitivity, and rights-holder review refs are explicit where materiality requires them. | `DENY` / `ABSTAIN`. |
-| Policy boundary | Missing policy, missing review, missing receipt, missing release state, or exact-detail attempts fail closed. | `DENY` / `ABSTAIN`. |
-| Release boundary | Fixture success does not become release approval, map publication, correction approval, or rollback approval. | promotion block. |
+### Out of scope
+
+- real site or candidate records;
+- exact coordinates, raw geometry, private-owner detail, cultural knowledge, collection-security detail, or looting-risk information;
+- source exports, lifecycle data, production payloads, logs, secrets, or telemetry;
+- schema, contract, policy, evidence, review, receipt, release, map, API, pipeline, or AI authority.
+
+[Back to top](#top)
 
 ---
 
-## Expected Site Fixture Families
+## Authority and Directory Rules basis
 
-| Family | Purpose | Boundary |
+Directory Rules treat root folders as responsibility boundaries. This path is already under `tests/`, so the smallest sound change is to keep it in place and clarify its test-local routing role.
+
+| Responsibility | Owning home | Relationship to this lane |
 |---|---|---|
-| Site-shaped valid fixtures | Verify safe synthetic ArchaeologicalSite-shaped examples satisfy expected test shape. | Valid fixture is not a real site. |
-| Candidate-not-confirmed fixtures | Verify candidate examples retain candidate posture. | Candidate is not a confirmed site. |
-| Site-component fixtures | Verify component examples do not imply whole-site truth. | Component is not site authority. |
-| Exact-detail denial fixtures | Verify exact or protected detail requests deny or abstain. | Negative examples must still be synthetic. |
-| Generalized public-safe fixtures | Verify public-safe site cards use generalized or withheld posture. | Generalized fixture is not publication. |
-| Evidence and receipt fixtures | Verify EvidenceRef, RedactionReceipt, and transform refs are present where material. | Refs are synthetic. |
-| Review and policy fixtures | Verify review and policy refs are required for allow-like examples. | Fixture is not review or policy authority. |
-| API and map fixtures | Verify public-surface carriers cannot expose protected detail or imply confirmation. | Map-shaped fixture is not map truth. |
-| Correction and withdrawal fixtures | Verify supersession and withdrawal refs invalidate site carriers. | No silent edit. |
-| Rollback fixtures | Verify rollback refs point to synthetic prior safe state and preserve audit posture. | Rollback fixture is not rollback approval. |
-| No-network fixtures | Verify local deterministic loading and no live source, geocoding, map, or AI calls. | Integration tests require separate gates. |
+| Test-local fixture wrappers | `tests/fixtures/domains/archaeology/sites/` | This README; direct payload admission requires a named consumer. |
+| Executable assertions | `tests/domains/archaeology/fixtures/sites/` or another verified test lane | PROPOSED consumer child; not established here. |
+| Reusable site-shaped fixtures | `fixtures/domains/archaeology/site/` | Observed singular reusable lane; referenced, not copied. |
+| Synthetic site/candidate examples | `fixtures/domains/archaeology/synthetic_archaeological_site/`, `synthetic_candidate_feature/` | Reusable examples; checked files are placeholders. |
+| Object meaning | `contracts/domains/archaeology/` | Contracts define semantics. |
+| Machine shape | `schemas/contracts/v1/domains/archaeology/` | Schemas define shape; checked site-family schemas are permissive scaffolds. |
+| Admissibility | `policy/` | Policy decides allow, restrict, hold, deny, or abstain. |
+| Evidence and review | governed evidence/review roots | Fixtures may carry toy refs only. |
+| Release and rollback | `release/` | Fixtures never approve publication. |
+| Public map/API/AI carriers | governed released surfaces | Must consume released public-safe derivatives only. |
+
+> [!CAUTION]
+> Do not create a second site registry, schema home, policy home, review store, evidence store, release queue, or public map source under this path.
+
+[Back to top](#top)
 
 ---
 
-## Relationship to Canonical Archaeology Fixtures
+## Site object model and anti-collapse rules
 
-The canonical Archaeology fixture root documents site-shaped and synthetic site lanes. This `tests/fixtures/.../sites/` lane should avoid duplicating those payloads.
+| Object or term | Verified semantic posture | Fixture rule |
+|---|---|---|
+| `ArchaeologicalSite` | Reviewed site identity; current object-map expected site family. | Shape is not truth; requires evidence/review/policy lineage. |
+| `CandidateFeature` | Possible archaeology-relevant feature requiring review and governed promotion. | Must remain visibly candidate; no label, filename, map symbol, or prose may confirm it. |
+| `SiteComponent` | Reviewed part or sub-unit associated with a site. | A component is not a whole site and does not prove its association. |
+| `Site` | Compatibility/lineage short name; not current object-map authority. | Must not become a parallel canonical contract or fixture vocabulary. |
+| `Feature` | May map to `SiteComponent` or `CandidateFeature`; conflict unresolved. | Fixture must name the intended object family explicitly. |
 
-| Question | Preferred answer |
+Core invariants:
+
+1. Candidate-to-site promotion is a governed state transition, not a rename.
+2. Component-to-site aggregation does not prove a site identity.
+3. Schema acceptance does not prove truth, source authority, review completion, policy allowance, geometry safety, or release.
+4. Maps, tiles, screenshots, exports, indexes, graph edges, embeddings, and generated text are carriers, not evidence.
+5. Source role, object family, lifecycle state, sensitivity, and uncertainty must not be silently upgraded.
+6. Unknown or conflicting object-family vocabulary fails closed for consequential use.
+
+[Back to top](#top)
+
+---
+
+## Fixture home and compatibility rules
+
+### Singular reusable lane versus plural test-local lane
+
+- `fixtures/domains/archaeology/site/` is the observed reusable site-shaped fixture lane.
+- `tests/fixtures/domains/archaeology/sites/` is a plural test-local routing path.
+- The plural path must not become a duplicate reusable fixture registry.
+- A test-local wrapper must point to a named consumer and explain why the reusable lane is insufficient.
+
+### Public-safe fixture lanes
+
+Two public-safe Archaeology fixture READMEs exist:
+
+- `fixtures/archaeology-public-safe/`
+- `fixtures/domains/archaeology-public-safe/`
+
+Their canonical relationship is unresolved. This README does not select a winner. Do not duplicate payloads across them without:
+
+- a migration note;
+- source and destination checksums;
+- a declared canonical owner;
+- consumer updates;
+- a deprecation period;
+- a rollback path.
+
+### Fixture-home decision law
+
+| Need | Preferred route |
 |---|---|
-| Need a reusable site-shaped fixture payload? | Put it under `fixtures/domains/archaeology/site/` or another accepted canonical fixture lane. |
-| Need a test-only site wrapper, expectation map, or parametrization file? | This lane may be appropriate if it is clearly test-local. |
-| Need exact site geometry or protected coordinates? | Do not put it here. Use governed sensitive lifecycle roots and policy gates; public tests should use synthetic generalized placeholders. |
-| Need a real `ArchaeologicalSite`, `CandidateFeature`, or `SiteComponent` record? | Do not put it here. Use governed lifecycle and catalog roots. |
-| Need policy, schema, contract, evidence, receipt, or release authority? | Do not put it here. Use the owning root. |
-| Need a public map layer, tile, screenshot, API response, or release artifact? | Do not put it here. Use governed release and public-surface roots. |
+| Reusable site fixture shared by multiple consumers | `fixtures/domains/archaeology/site/` after fixture-owner review. |
+| Test-only wrapper or expectation manifest | This lane, only with a named consumer backlink. |
+| Executable test module | Owning `tests/` lane, not this fixture directory. |
+| Renderer/runtime public-safe corpus | Existing public-safe lane chosen through a documented compatibility decision. |
+| Real site, candidate, component, or lifecycle record | Governed data lifecycle—not any fixture lane. |
+
+[Back to top](#top)
 
 ---
 
-## Accepted Inputs
+## Test-local fixture admission contract
 
-Only bounded, synthetic, reviewable material belongs in this lane:
+A file may enter this direct lane only when all requirements below are met.
 
-- references to canonical Archaeology fixtures under `fixtures/domains/archaeology/`
-- test-local site fixture manifests with fake IDs, mock markers, finite outcomes, and expected reason codes
-- synthetic ArchaeologicalSite-shaped, CandidateFeature-shaped, SiteComponent-shaped, denied-detail, withheld-detail, generalized-site-card, and no-geometry envelopes
-- synthetic EvidenceRef, EvidenceBundle-stub, RedactionReceipt, PolicyDecision, ReviewRecord, ReleaseManifest, CorrectionNotice, WithdrawalNotice, and RollbackCard refs
-- synthetic map/API/tile/Focus Mode/public summary envelopes that are already generalized or expected to deny/abstain
-- canary values that make candidate-confirmed collapse, exact-detail leakage, protected-location hints, site-registry behavior, review-approval leakage, map-truth leakage, AI-truth leakage, or release approval obvious
-- local validation envelopes emitted by test helpers
-
-Safe outputs may include public-safe references and operational fields such as fixture ID, fixture family, object family, candidate/site posture, geometry posture, evidence ref, redaction receipt ref, policy decision ID, review record ID, release ref, finite outcome, reason code, correction ref, withdrawal ref, and rollback ref.
-
----
-
-## Exclusions
-
-Do not place these materials in this lane:
-
-| Excluded material | Why it does not belong here |
+| Requirement | Required evidence |
 |---|---|
-| Real site records, real candidate records, source-system exports, production payloads, or public payloads | Default tests must stay synthetic, deterministic, and no-network. |
-| Real coordinates, raw geometry, precise site footprints, reverse-geocodable hints, collection-security detail, or restricted cultural context | Sensitive material requires governed policy, review, redaction, and release controls. |
-| Direct reads from pre-public lifecycle stores, internal stores, unpublished candidates, or runtime outputs | Bypasses the trust membrane. |
-| Secrets, credentials, private endpoints, production logs, or telemetry | Security and exposure risk. |
-| Real EvidenceBundles, ProofPacks, production receipts, release manifests, rollback cards, correction notices, withdrawal notices, public artifacts, or audit ledgers | Governed trust records and release artifacts belong in their own roots. |
-| Binding policy rules, schema definitions, contract prose, source descriptors, release procedures, API implementation, map implementation, pipeline implementation, or AI runtime implementation | Authority and implementation belong in their own responsibility roots. |
+| Test-local need | A named consuming test, validator test, renderer test, or policy test. |
+| No reusable duplication | Explanation of why a reusable fixture reference is insufficient. |
+| Synthetic marker | Explicit fixture/non-authoritative marker and fake identity. |
+| Object family | One explicit family: `ArchaeologicalSite`, `CandidateFeature`, `SiteComponent`, or compatibility test. |
+| Source role | Explicit primary/corroborating/context/restricted/toy posture as applicable; no silent upcast. |
+| Geometry safety | No exact protected geometry or reverse-geocodable hint. |
+| Expected result | Finite outcome and safe reason code. |
+| Prohibited claims | Canary list for site confirmation, exact location, review, policy, release, map truth, and AI truth. |
+| Consumer backlink | Consumer points to fixture; fixture manifest points back to consumer. |
+| Lifecycle | Correction, withdrawal, revocation, supersession, or rollback behavior when material. |
+
+A filename such as `valid.json`, `deny.json`, or `public_generalized_tile.json` does not satisfy this contract by itself.
+
+[Back to top](#top)
 
 ---
 
-## Suggested Layout
+## Minimum sites fixture manifest
 
-```text
-tests/fixtures/domains/archaeology/sites/
-|-- README.md
-|-- manifest_expectations.json
-|-- test_sites_fixture_manifest_shape.py
-|-- test_sites_fixture_no_network.py
-|-- test_candidate_fixture_not_confirmed_site.py
-|-- test_site_fixture_denies_exact_detail.py
-|-- test_site_fixture_requires_evidence_policy_review_refs.py
-|-- test_site_fixture_does_not_authorize_publication.py
-|-- test_correction_withdrawal_rollback_site_refs.py
-`-- test_sites_fixture_canaries.py
-```
-
-This layout is PROPOSED until executable files exist in the repository.
-
----
-
-## Run Posture
-
-No executable runner was verified while authoring this README. Once tests exist, the expected local command should be documented and verified here.
-
-```bash
-: "PROPOSED / NEEDS VERIFICATION"
-pytest tests/fixtures/domains/archaeology/sites
-```
-
-Required run posture: no network access, no live service calls, no direct lifecycle-store reads, no geocoding, no real secrets, no production logs, no production trust artifacts, no protected location detail, no public artifact writes, deterministic fixture inputs, and finite outcomes only: `PASS`, `DENY`, `ABSTAIN`, or `ERROR`.
-
----
-
-## Minimal Sites Fixture Manifest
-
-Synthetic test-local manifests should describe site fixture expectations without carrying real site material or release authority.
+The following is illustrative and `PROPOSED`; it is not an accepted schema.
 
 ```json
 {
-  "fixture_manifest_id": "archaeology-sites-test-fixture-manifest-example",
+  "fixture_manifest_id": "kfm://fixture-test/archaeology/sites/example",
+  "fixture_version": "v1",
   "domain": "archaeology",
-  "canonical_fixture_ref": "fixtures/domains/archaeology/site/example-fixture.json",
-  "fixture_family": "site_guardrail_envelope",
+  "fixture_scope": "test_local",
+  "fixture_authority": "non_authoritative",
+  "synthetic": true,
+  "consumer_refs": [
+    "tests/domains/archaeology/fixtures/sites/test_candidate_not_site.py"
+  ],
+  "canonical_fixture_ref": "fixtures/domains/archaeology/synthetic_candidate_feature/example.json",
   "object_family": "CandidateFeature",
-  "site_posture": "candidate_not_confirmed",
-  "geometry_posture": "withheld_or_generalized_placeholder",
-  "raw_geometry_present": false,
-  "mock_marker": true,
-  "evidence_ref": "evidence-ref-fixture-arch-sites-001",
-  "redaction_receipt_ref": "redaction-receipt-fixture-arch-sites-001",
-  "policy_decision_ref": "policy-decision-fixture-arch-sites-001",
-  "review_record_ref": "review-record-fixture-arch-sites-001",
+  "object_posture": "candidate_not_confirmed",
+  "source_role": "toy_context",
+  "geometry_posture": "withheld_or_generalized",
+  "contains_exact_geometry": false,
+  "contains_reconstruction_hint": false,
+  "evidence_ref": "evidence-ref:fixture:example",
+  "review_ref": null,
+  "policy_decision_ref": null,
   "release_manifest_ref": null,
-  "rollback_card_ref": "rollback-card-fixture-arch-sites-001",
-  "expected_outcome": "ABSTAIN",
-  "reason_code": "SITES_FIXTURE_TEST_DOES_NOT_AUTHORIZE_PUBLICATION",
+  "rollback_card_ref": "rollback-card:fixture:example",
+  "expected_test_outcome": "ABSTAIN",
+  "expected_domain_outcome": "candidate_retained",
+  "reason_code": "SITE_FIXTURE_DOES_NOT_CONFIRM_CANDIDATE",
   "must_not_claim": [
-    "CONFIRMED_SITE_CANARY",
-    "EXACT_COORDINATE_CANARY",
-    "PROTECTED_LOCATION_CANARY",
-    "REVIEW_APPROVAL_CANARY",
-    "MAP_TRUTH_CANARY",
-    "AI_TRUTH_CANARY",
-    "RELEASE_APPROVAL_CANARY"
+    "SITE_EXISTS",
+    "CANDIDATE_CONFIRMED",
+    "EXACT_LOCATION_PUBLIC",
+    "REVIEW_COMPLETE",
+    "POLICY_ALLOWED",
+    "RELEASED",
+    "MAP_TRUTH",
+    "AI_TRUTH"
   ]
 }
 ```
 
-The JSON above is illustrative. Accepted schema, field names, fixture homes, site posture vocabulary, geometry posture vocabulary, reason codes, and CI wiring remain NEEDS VERIFICATION.
+Required future schema decisions include identity, versioning, object-family enums, source-role enums, geometry posture, expected outcomes, safe reason codes, evidence/review/policy/release refs, and lifecycle invalidation fields.
+
+[Back to top](#top)
 
 ---
 
-## Evidence Ledger
+## Required fixture families and case matrix
 
-| Source | Status | Supports | Limits |
+| Family | Minimum positive case | Minimum negative or fail-closed case |
+|---|---|---|
+| ArchaeologicalSite shape | Synthetic reviewed-site envelope with explicit non-authority and safe geometry posture. | Missing evidence/review/policy refs; exact-detail request; unsupported site claim. |
+| CandidateFeature | Candidate remains candidate in API/map/AI wording. | Candidate renamed, styled, summarized, or promoted as confirmed site. |
+| SiteComponent | Component remains linked part with bounded uncertainty. | Component treated as whole site or component association treated as proof. |
+| Naming compatibility | `Site` routes to compatibility warning and `ArchaeologicalSite` contract. | Parallel canonical `Site` authority or schema selected silently. |
+| Feature terminology | Explicit mapping to candidate or component. | Ambiguous `Feature` accepted for consequential use. |
+| Geometry | Withheld/generalized synthetic carrier. | Exact, reverse-geocodable, side-channel, or reconstruction-bearing detail. |
+| Evidence | Resolvable toy EvidenceRef with bounded support. | Missing, unresolved, contradictory, or scope-mismatched evidence. |
+| Review and rights | Explicit synthetic review/right posture where required. | Review, consultation, consent, or cultural authority inferred from filename or role label. |
+| Policy | Explicit allow/restrict/hold/deny/abstain expectation. | Missing bundle/version/obligation or unknown decision value. |
+| Public carrier | Released public-safe synthetic derivative only. | Direct lifecycle read, unreleased fixture, style-only hiding, or public exact detail. |
+| Correction/rollback | Prior safe state and invalidation refs. | Stale carrier remains active after withdrawal, revocation, or correction. |
+| Hermeticity | Local deterministic fixture loading. | Network, geocoder, live map service, secret, production log, or governed-root write. |
+
+### Finite vocabulary separation
+
+Do not collapse these into one enum:
+
+- test result: `PASS | FAIL | SKIP | ERROR`;
+- policy result: `ALLOW | RESTRICT | HOLD | DENY | ABSTAIN | ERROR`;
+- candidate state: intake/review/retained/rejected/promoted/quarantined/superseded;
+- review disposition;
+- promotion decision;
+- release state;
+- lifecycle state.
+
+Adapters between vocabularies must be explicit and tested.
+
+[Back to top](#top)
+
+---
+
+## Sensitivity, location, and public-surface safety
+
+Archaeology is deny-by-default for exact site geometry, burials, sacred places, human remains, collection-security information, private-owner detail, looting-risk exposure, and unresolved cultural or sovereignty-bearing information.
+
+Fixtures must not include:
+
+- real coordinates or recognizable geometry;
+- precise footprints, parcel clues, road-distance clues, imagery references, or location joins;
+- real site identifiers, registry keys, restricted source identifiers, or collection-security references;
+- sensitive cultural content, participant identity, consultation detail, or consent tokens;
+- transform parameters or side-channel clues that enable reconstruction.
+
+Public-surface tests must prove that:
+
+1. exact/internal geometry never reaches normal clients;
+2. style, zoom, opacity, filtering, or hidden fields are not treated as geoprivacy;
+3. candidate status stays visible in labels, popups, legends, search, exports, and generated prose;
+4. evidence, review, policy, transform/receipt, release, correction, and rollback refs are checked before exposure;
+5. withheld and denied states expose safe reason codes without sensitive detail;
+6. cache keys, filenames, logs, bounds, counts, labels, screenshots, graph relations, and error messages do not leak location or confirmation.
+
+[Back to top](#top)
+
+---
+
+## Determinism, no-network, and side effects
+
+Default fixture execution must be hermetic.
+
+- no live source APIs;
+- no geocoding or reverse geocoding;
+- no map/tile service calls;
+- no public API or AI runtime calls;
+- no direct reads from RAW, WORK, QUARANTINE, PROCESSED, catalog, proof, receipt, release, or published stores;
+- no writes outside test-owned temporary directories;
+- no real secrets, private endpoints, production logs, or telemetry;
+- stable clock, seed, ordering, identifiers, versions, and hashes;
+- deterministic replay from the same fixture and configuration.
+
+Unknown network or write behavior is `ERROR` and fails closed.
+
+[Back to top](#top)
+
+---
+
+## Inventory, consumers, and vacuous-pass risk
+
+A mature lane must maintain two-way traceability:
+
+```text
+fixture manifest -> consumer test
+consumer test -> fixture manifest
+```
+
+Required inventory checks:
+
+- every direct fixture has at least one active consumer;
+- every consumer reference resolves;
+- reusable fixtures are not copied into the test-local lane without justification;
+- every object family has nonempty positive and fail-closed coverage;
+- placeholder-only payloads do not count as semantic coverage;
+- zero discovered cases is a failure, not a green result;
+- skipped cases include a reason, owner, and expiry;
+- no fixture path is interpreted as current release or lifecycle state.
+
+The checked placeholder files do not satisfy nonempty semantic coverage because they contain only `status`, `source_doc`, `path`, and planning notes.
+
+[Back to top](#top)
+
+---
+
+## Validation commands
+
+No dedicated sites-fixture runner was established in the checked snapshot. The following commands are `PROPOSED` until the consumer lane exists and repository tooling is verified:
+
+```bash
+python -m pytest tests/domains/archaeology/fixtures/sites -q
+python -m pytest tests/domains/archaeology/fixtures/sites -q --disable-warnings
+```
+
+A future runner must fail when:
+
+- no cases are collected;
+- only placeholder payloads are present;
+- consumer backlinks are missing;
+- unknown object-family or outcome values occur;
+- exact/protected/reconstructable detail is detected;
+- candidate/site/component boundaries collapse;
+- required evidence, review, policy, receipt, release, correction, or rollback refs are absent;
+- network or governed-root writes occur.
+
+[Back to top](#top)
+
+---
+
+## CI and promotion boundary
+
+Current checked maturity:
+
+| Surface | Status |
+|---|---|
+| Direct sites fixture lane | README-only in bounded evidence. |
+| Singular reusable site lane | README-only in bounded search. |
+| Site-family schemas | Present, `PROPOSED`, empty-property, permissive. |
+| Broad Archaeology validator lane | README-only in bounded evidence. |
+| Dedicated sites consumer tests | Not established at checked path. |
+| `make fixtures` | TODO/scaffold behavior in checked Makefile. |
+| `domain-archaeology` workflow | Trigger exists; checked jobs are TODO-only scaffolding. |
+| Required branch-protection significance | UNKNOWN. |
+
+A CI success must never be treated as site confirmation, review approval, policy approval, release approval, or publication. Promotion remains a separate governed transition.
+
+[Back to top](#top)
+
+---
+
+## Maintenance, migration, and rollback
+
+When adding or changing a fixture:
+
+1. identify the consuming test;
+2. verify the correct fixture home;
+3. keep the case synthetic and public-safe;
+4. preserve object-family and source-role labels;
+5. add both positive and fail-closed behavior where material;
+6. update manifest, consumer backlink, expected outcome, and safe reason code;
+7. run no-network, no-write, no-leak, candidate-not-site, evidence, review, policy, and release-boundary checks;
+8. document corrections, supersession, withdrawal, revocation, and rollback impacts;
+9. update this README when the lane’s actual maturity changes.
+
+### Migration discipline
+
+Any consolidation of plural/singular site paths, `Site`/`ArchaeologicalSite`, `Feature` mappings, or public-safe fixture homes requires:
+
+- inventory and inbound-reference audit;
+- declared source and destination authority;
+- compatibility period or explicit breaking-change note;
+- checksums and consumer updates;
+- deprecation notice;
+- rollback target;
+- ADR or migration note when authority or compatibility changes materially.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+This lane is not mature until all applicable rows are satisfied.
+
+- [ ] owners and CODEOWNERS are confirmed;
+- [ ] lane-retention and fixture-home decisions are accepted;
+- [ ] a machine-checkable manifest contract exists;
+- [ ] substantive site, candidate, and component schemas exist;
+- [ ] validators enforce semantics beyond permissive shape acceptance;
+- [ ] reusable fixtures are non-placeholder and reviewable;
+- [ ] consumer tests and two-way backlinks exist;
+- [ ] positive and fail-closed families are nonempty;
+- [ ] candidate-to-site and component-to-site anti-collapse tests pass;
+- [ ] exact-location, side-channel, and reconstruction tests pass;
+- [ ] evidence, review, policy, receipt, release, correction, and rollback closure is tested;
+- [ ] no-network and no-governed-root-write controls are enforced;
+- [ ] CI fails on zero cases and produces finite outcomes;
+- [ ] branch-protection significance is verified;
+- [ ] documentation, migration, correction, and rollback instructions are current.
+
+Until then, this README is a routing and safety contract, not proof of implemented fixture coverage.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+| ID | Question | Status |
+|---|---|---|
+| ARCH-SITES-FIX-001 | Should this direct plural lane be retained? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-002 | Who owns it and which CODEOWNERS rule applies? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-003 | Should `tests/fixtures/domains/README.md` be created? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-004 | What threshold admits a test-local fixture here? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-005 | What is the canonical manifest schema? | UNKNOWN |
+| ARCH-SITES-FIX-006 | What are stable fixture identity/version/hash rules? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-007 | Is `ArchaeologicalSite` the final canonical site name? | CONFLICTED / NEEDS VERIFICATION |
+| ARCH-SITES-FIX-008 | What is the retirement or alias plan for `Site`? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-009 | How is `Feature` mapped to candidate versus component? | CONFLICTED |
+| ARCH-SITES-FIX-010 | When will the primary site-family schemas become substantive? | UNKNOWN |
+| ARCH-SITES-FIX-011 | Which validators enforce site-family semantics? | UNKNOWN |
+| ARCH-SITES-FIX-012 | Are placeholder payloads retained, replaced, or removed? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-013 | Which executable tests consume these fixtures? | UNKNOWN |
+| ARCH-SITES-FIX-014 | Where should the executable child lane live? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-015 | How are consumer backlinks and orphan checks enforced? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-016 | Which public-safe fixture lane is canonical for each use? | CONFLICTED |
+| ARCH-SITES-FIX-017 | What is the canonical source-role vocabulary? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-018 | How is candidate-to-site promotion represented and tested? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-019 | How are cultural authority, rights, consent, and consultation represented safely? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-020 | Which exact policy bundle/version governs site exposure? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-021 | How is separation of duties enforced? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-022 | What no-leak and reconstruction suite is required? | UNKNOWN |
+| ARCH-SITES-FIX-023 | How are corrections and contradictions propagated? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-024 | How are withdrawal, revocation, cache invalidation, and rollback propagated? | NEEDS VERIFICATION |
+| ARCH-SITES-FIX-025 | Are coordinate-like and protected-canary scans enforced? | UNKNOWN |
+| ARCH-SITES-FIX-026 | Are no-network and no-governed-root-write rules enforced? | UNKNOWN |
+| ARCH-SITES-FIX-027 | Which workflows trigger for this path? | UNKNOWN |
+| ARCH-SITES-FIX-028 | Is any sites suite required by branch protection? | UNKNOWN |
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | Status | Supports | Does not prove |
 |---|---|---|---|
-| `Directory Rules.pdf` and repo directory-rule docs | CONFIRMED doctrine | `tests/` is the enforceability root; `fixtures/` is the fixture responsibility root; contracts, schemas, policy, evidence, receipts, release, map, API, and public artifacts remain separate. | Does not prove executable tests, fixture inventory, CI, or pass rates. |
-| `fixtures/domains/archaeology/README.md` | CONFIRMED repo evidence | Defines the canonical Archaeology fixture root, child fixture lanes, accepted synthetic examples, exclusions, and verification status. | Payload inventory and test wiring remain NEEDS VERIFICATION. |
-| `fixtures/domains/archaeology/site/README.md` | CONFIRMED repo evidence | Defines the observed canonical site fixture lane as fixture-only, safe, synthetic/generalized, not real site records, source data, exact-location data, policy authority, release authority, or published-layer authority. | Payload inventory and tests remain NEEDS VERIFICATION. |
-| `fixtures/domains/archaeology/synthetic_archaeological_site/README.md` | CONFIRMED repo evidence | Defines synthetic archaeology site examples and says fixtures are not authoritative project records, evidence, approval, release state, or published artifacts. | Payload inventory and validators remain NEEDS VERIFICATION. |
-| `docs/domains/archaeology/SENSITIVITY.md` | CONFIRMED repo evidence | Defines deny-by-default handling for exact site geometry and requires named redaction profiles, RedactionReceipt, review, and release controls for public-safe transforms. | Machine-readable enforcement remains in schemas, policy, release, and CI. |
-| `tests/fixtures/domains/archaeology/api/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local API fixture posture and notes missing immediate parent index. | Does not prove site-fixture tests exist. |
-| `tests/fixtures/domains/archaeology/promotion/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local promotion fixture posture and release-boundary discipline. | Does not prove site-fixture tests exist. |
-| `tests/fixtures/domains/archaeology/review/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local review fixture posture and review-approval boundary. | Does not prove site-fixture tests exist. |
-| `tests/fixtures/domains/archaeology/sensitive_geometry/README.md` | CONFIRMED sibling lane README | Establishes sibling test-local sensitive-geometry fixture posture and no-protected-coordinate boundary. | Does not prove site-fixture tests exist. |
-| GitHub target file before update | CONFIRMED repo evidence | `tests/fixtures/domains/archaeology/sites/README.md` existed as an empty placeholder before replacement. | Placeholder proves path existence only. |
-| `tests/fixtures/domains/archaeology/README.md` | CONFIRMED not found in GitHub fetch | Parent index was missing during authoring. | Missing parent should be created before treating this subtree as mature. |
+| Directory Rules | CONFIRMED repository doctrine | Responsibility-root placement and no parallel authority. | Current implementation maturity. |
+| Target v0.1 README | CONFIRMED prior content | Safety intent and stale claims to correct. | Executable coverage. |
+| `tests/fixtures/README.md` | CONFIRMED | Test-local versus reusable fixture split. | Lane retention or payload validity. |
+| Archaeology test-fixture parent | CONFIRMED | Parent exists and indexes `sites/`. | Child maturity. |
+| Singular site fixture README | CONFIRMED | Reusable site-shaped fixture boundary. | Payload inventory or tests. |
+| Synthetic site/candidate READMEs | CONFIRMED | Non-authoritative fixture posture. | Semantic payload validity. |
+| Checked site/candidate JSON files | CONFIRMED placeholders | Planned path lineage. | Validity, denial, generalization, confirmation, or release. |
+| ArchaeologicalSite contract/schema | CONFIRMED draft + permissive schema | Site semantics and candidate boundary. | Machine enforcement or truth. |
+| CandidateFeature contract/schema | CONFIRMED draft + permissive schema | Candidate-not-site semantics. | Promotion enforcement. |
+| SiteComponent contract/schema | CONFIRMED draft + permissive schema | Component semantics and Feature conflict. | Component confirmation or site truth. |
+| Site compatibility contract | CONFIRMED draft | Naming/alias conflict. | Canonical migration decision. |
+| Archaeology object map | CONFIRMED draft | Expected object families and unresolved mappings. | Complete implementation. |
+| Two public-safe fixture READMEs | CONFIRMED | Existing compatibility lanes. | Canonical winner or payload parity. |
+| Archaeology validator README | CONFIRMED | README-only maturity and intended checks. | Executable validator behavior. |
+| Archaeology policy and sensitivity docs | CONFIRMED drafts | Deny-by-default and release-boundary intent. | Runtime policy enforcement. |
+| Makefile and domain workflow | CONFIRMED scaffolding | Current target/workflow posture. | Substantive CI or required checks. |
+| Checked 404 paths | CONFIRMED bounded checks | Named direct/consumer files absent at pinned ref. | Permanent or exhaustive absence. |
+
+[Back to top](#top)
 
 ---
 
-## Validation Checklist
+## Documentation rollback
 
-- [ ] Confirm whether `tests/fixtures/` is intended as a supported test-local fixture lane or only a compatibility surface.
-- [ ] Create or confirm parent indexes at `tests/fixtures/README.md`, `tests/fixtures/domains/README.md`, and `tests/fixtures/domains/archaeology/README.md`.
-- [ ] Confirm accepted rules for when site fixture wrappers may live here instead of `fixtures/domains/archaeology/site/`.
-- [ ] Confirm whether this plural `sites/` path should remain, crosswalk to singular `site/`, or be retired after migration.
-- [ ] Confirm sites fixture manifest schema, site posture vocabulary, geometry posture vocabulary, reason-code vocabulary, mock-marker requirements, and canary conventions.
-- [ ] Confirm fixture payload inventory under `fixtures/domains/archaeology/` before linking tests to payloads.
-- [ ] Add executable checks for manifest shape, no-network fixture loading, candidate-not-confirmed behavior, exact-detail denial, evidence refs, policy refs, review refs, redaction receipt refs, release refs, correction refs, withdrawal refs, rollback refs, and public-surface canaries.
-- [ ] Confirm tests do not use real source feeds, live systems, secrets, production logs, production trust artifacts, restricted details, direct lifecycle-store reads, geocoders, map services, or public artifact writes.
-- [ ] Wire this lane into CI only after executable tests and safe fixtures exist.
+This is a documentation-only revision.
 
----
+Before merge, rollback means leaving the draft pull request unmerged or adding a transparent revert commit to the feature branch. Do not reset or force-push shared history.
 
-## Rollback
+After merge, rollback means a transparent revert commit or revert pull request, followed by documentation validation.
 
-Rollback is required if this lane starts to store real site records, candidate-confirmation records, exact coordinates, raw geometry, protected-location material, source data, production site payloads, trust-bearing records, release records, public artifacts, secrets, production logs, binding policy, contract/schema authority, map implementation, API implementation, pipeline implementation, or AI runtime behavior.
+Rollback is required if this README:
 
-Rollback is also required if this lane treats a site-shaped fixture pass as site truth, candidate confirmation, site boundary proof, geometry accuracy, policy approval, review approval, redaction approval, release approval, publication approval, map truth, AI truth, correction approval, withdrawal approval, or rollback approval.
+- is mistaken for site, candidate, component, evidence, review, policy, release, or publication authority;
+- directs executable tests into a fixture directory;
+- encourages storage of real coordinates or protected archaeology detail;
+- treats placeholders, filenames, schema acceptance, map styling, or generated prose as semantic proof;
+- collapses candidate, component, site, short-name compatibility, or Feature vocabularies;
+- silently selects a fixture home or canonical contract without migration governance;
+- weakens evidence, rights, cultural, consent, sensitivity, correction, withdrawal, revocation, or rollback safeguards;
+- hides permissive schemas, missing consumers, README-only validators, or TODO-only CI behavior.
 
-Rollback target: restore the previous safe README revision or remove this lane until parent fixture-test indexes, fixture homes, manifest schema, site vocabulary, geometry vocabulary, evidence expectations, policy expectations, release relationship, correction behavior, rollback behavior, and CI integration are reverified.
+**No-loss assessment:** v0.2 preserves the v0.1 synthetic-only, no-network, candidate-aware, exact-location-denied, evidence, review, policy, release, correction, withdrawal, rollback, map, API, and AI boundaries. It corrects the stale parent claim, removes misleading executable-test placement, grounds object and fixture maturity in current evidence, exposes placeholder and compatibility risks, and makes future implementation requirements inspectable.
 
 [Back to top](#top)
