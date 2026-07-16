@@ -1,224 +1,387 @@
-# `scripts/maintenance/` — Maintenance Script Lane
-
-Maintenance CLIs for doctrine-artifact preflight, registry hygiene, normalized-summary readiness, and bounded repository maintenance tasks.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/scripts-maintenance-readme
-title: scripts/maintenance/README.md — Maintenance Script Lane
-type: readme; directory-readme; maintenance-script-index; governance-guardrail
-version: v0.2
-status: draft; operational-maintenance-lane; doctrine-preflight-tools-present; mixed-maturity; NEEDS VERIFICATION
-owners: OWNER_TBD — Maintenance tooling steward · Doctrine steward · Registry steward · QA steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — README existed before v0.2 expansion
-updated: 2026-07-04
-policy_label: public; maintenance-scripts; doctrine-preflight; registry-hygiene; local-and-ci-helper
-tags: [kfm, scripts, maintenance, doctrine-artifacts, registry, provenance, preflight, receipts, readiness, release-gates]
+title: scripts/maintenance/ — Governed Maintenance and Doctrine-Preflight Lane
+type: readme; directory-readme; maintenance-script-index; graduation-guardrail
+version: v0.3
+status: draft; canonical-script-sublane; promotion-sensitive; mixed-maturity; graduation-review-required; NEEDS VERIFICATION
+policy_label: public
+owners: OWNER_TBD — Maintenance tooling steward · Doctrine steward · Registry steward · Validation steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-15
+current_path: scripts/maintenance/README.md
+truth_posture: CONFIRMED current README and prior blob, scripts-root graduation rule, required-artifact checker, preflight orchestrator, test wrapper, promotion-gate caller, and output-path conflict at the pinned snapshot / UNKNOWN exhaustive callers, accepted receipt authority, production use, and current pass state / NEEDS VERIFICATION ownership, graduation, output-home migration, mutation rollback, and substantive published-alias audit
+base_commit: 799ebba5934358b9dd2098779575ef52495e197d
+prior_blob: e9872db30569bec7222274c0828abe9b35e39685
 related:
   - ../README.md
-  - ../dev/README.md
   - ../../tools/README.md
-  - ../../tools/validators/
-  - ../../control_plane/
+  - ../../pipelines/README.md
+  - ../../packages/README.md
+  - ../../control_plane/README.md
   - ../../docs/runbooks/DOCTRINE_ARTIFACT_PREFLIGHT.md
-  - ../../docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md
-  - ../../tests/policy/
-  - ../../tests/source/
-  - ../../receipts/doctrine_artifacts/
-notes:
-  - "Expanded from an existing maintenance README that already listed doctrine artifact preflight scripts and normalized-summary migration notes."
-  - "Current-session search confirms maintenance helper modules, doctrine preflight CLIs, sync/check scripts, readiness checks, a test-suite wrapper, and one published-alias audit placeholder."
-  - "This README documents script lane boundaries; it does not prove release readiness, CI wiring, runtime deployment, or policy approval by itself."
+  - ../../docs/doctrine/directory-rules.md
+  - ../../data/receipts/validation/doctrine_artifact_check/README.md
+  - ../../.github/workflows/promotion-gate.yml
 [/KFM_META_BLOCK_V2] -->
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: scripts/maintenance" src="https://img.shields.io/badge/root-scripts%2Fmaintenance-blue">
-  <img alt="Authority: maintenance helpers" src="https://img.shields.io/badge/authority-maintenance__helpers-purple">
-  <img alt="Maturity: mixed" src="https://img.shields.io/badge/maturity-mixed-orange">
-  <img alt="Boundary: not release authority" src="https://img.shields.io/badge/boundary-not__release__authority-critical">
-</p>
+<a id="top"></a>
 
-**Status:** draft / maintenance helper lane / mixed maturity  
-**Path:** `scripts/maintenance/`  
-**Primary lane:** doctrine-artifact preflight and registry hygiene  
-**Truth posture:** CONFIRMED current script files by repository search; CONFIRMED selected behavior for the preflight runner, required-artifact checker, consumer-readiness checker, test-suite wrapper, and published-alias placeholder; NEEDS VERIFICATION for CI wiring, full command coverage, release integration, and operational ownership.
+# `scripts/maintenance/` — Governed Maintenance and Doctrine-Preflight Lane
 
-## Quick jumps
+> Bounded repository-maintenance commands for doctrine-artifact checks, provenance and registry alignment, normalized-summary readiness, and promotion-prerequisite support. This lane is operational support—not validator, policy, receipt, pipeline, or release authority.
 
-[Purpose](#purpose) · [Boundary](#boundary) · [Current inventory](#current-inventory) · [Doctrine artifact tooling](#doctrine-artifact-tooling) · [Repo fit](#repo-fit) · [Quick start](#quick-start) · [Test bundle](#test-bundle) · [Normalized summary migration](#normalized-summary-migration) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Promotion rules](#promotion-rules) · [Validation](#validation) · [Open questions](#open-questions)
+![status](https://img.shields.io/badge/status-draft-yellow)
+![root](https://img.shields.io/badge/root-scripts%2Fmaintenance-blue)
+![maturity](https://img.shields.io/badge/maturity-mixed-orange)
+![graduation](https://img.shields.io/badge/graduation-review__required-critical)
+
+> [!IMPORTANT]
+> `scripts/maintenance/` is a valid child of the canonical `scripts/` root, but working code is not automatically permanent code. Directory Rules and `scripts/README.md` require repeated or trust-bearing behavior to graduate to `tools/`, `pipelines/`, or `packages/` when its responsibility stabilizes.
+
+> [!WARNING]
+> The lane is already promotion-sensitive: `.github/workflows/promotion-gate.yml` directly runs `check_required_doctrine_artifacts.py`. That proves operational significance, not final placement authority or release approval.
+
+## Quick navigation
+
+[Status](#status-and-evidence-boundary) · [Authority](#authority-and-placement) · [Inventory](#current-inventory) · [Commands](#command-contracts) · [Outputs](#outputs-and-receipt-path-conflict) · [Safety](#mutation-and-safety-posture) · [Proof](#tests-workflows-and-proof-boundary) · [Graduation](#graduation-and-migration) · [Operations](#operator-runbook) · [Validation](#validation) · [Rollback](#correction-and-rollback) · [Backlog](#open-verification-backlog) · [Evidence](#evidence-basis)
 
 ---
 
-## Purpose
+## Status and evidence boundary
 
-`scripts/maintenance/` contains bounded repository-maintenance CLIs and wrappers.
+| Surface | Status | Safe conclusion |
+|---|---|---|
+| Target README | **CONFIRMED** | Existing lane index; prior blob is pinned above. |
+| Required-artifact checker | **CONFIRMED executable** | Checks presence, registry status mismatch, minimum size, duplicate SHA-256 groups, and optional JSON output. |
+| Preflight orchestrator | **CONFIRMED executable** | Runs child checks, builds normalized output, validates a summary schema, and supports strict gates. |
+| Strict shell wrapper | **CONFIRMED present** | Provides a fail-closed invocation profile. |
+| Test-suite wrapper | **CONFIRMED executable** | Runs source validators, normalized-only shadow checks, readiness checks, and bounded policy/source tests. |
+| Promotion workflow caller | **CONFIRMED** | Promotion prerequisite invokes the checker directly. |
+| Published-alias audit | **PLACEHOLDER / NEEDS VERIFICATION** | No substantive implementation is established here. |
+| Output receipt home | **CONFLICTED** | Orchestrator defaults to `receipts/doctrine_artifacts/`; a governed lane is documented under `data/receipts/validation/doctrine_artifact_check/`. |
+| Current pass state and production use | **UNKNOWN** | Source inspection does not prove successful current execution or deployment. |
+| Long-term placement | **NEEDS VERIFICATION** | Repeated, trust-adjacent behavior requires command-by-command graduation review. |
 
-The current confirmed focus is doctrine-artifact preflight: checking required doctrine artifacts, provenance registries, registry alignment, normalized summary readiness, and the receipt/summary payloads used by policy or release-adjacent consumers.
+This README provides routing, operating guidance, and drift disclosure only. Source code, contracts, schemas, policy, registries, tests, workflow definitions, emitted records, release decisions, and accepted ADRs outrank it.
 
-The parent `scripts/README.md` says `scripts/` is for small operational scripts and that long-lived trust-bearing scripts graduate to `tools/`, `pipelines/`, or `packages/`. This lane therefore stays narrow: maintenance scripts may help operators inspect and reconcile repository state, but they do not become canonical schema, policy, release, proof, or lifecycle authority.
+---
 
-## Boundary
+## Authority and placement
 
-This directory is not the doctrine source of truth, policy engine, validator authority, release authority, proof root, receipt root, source registry root, data lifecycle root, or CI proof by itself.
+```text
+scripts/maintenance/             bounded wrappers and maintenance CLIs
+tools/validators/                long-lived validator implementations
+tools/release/ or tools/qa/      long-lived release or QA tooling when accepted
+pipelines/                       repeatable multi-stage orchestration
+packages/                        reusable imported libraries
+control_plane/                   machine-readable governance registries
+schemas/                         machine-checkable shapes
+contracts/                       semantic meaning
+policy/                          admissibility and policy authority
+tests/ and fixtures/             enforceability proof and examples
+data/receipts/ and data/proofs/  governed emitted audit/proof artifacts
+release/                         promotion, correction, withdrawal, rollback authority
+```
 
-Maintenance scripts may emit JSON summaries or receipts, but emitted objects must still land in accepted receipt, proof, artifact, or release-support locations and remain subject to schemas, validators, tests, policy, review, and rollback rules.
+This lane may inspect and reconcile repository state. It must not silently become the policy engine, schema or contract authority, doctrine registry, permanent validator home, receipt root, release-gate definition, correction or rollback authority, publisher, or public client.
 
-> [!IMPORTANT]
-> A successful maintenance command is not publication. It may support a gate, but it does not replace EvidenceBundle resolution, policy decisions, steward review, release manifests, correction records, rollback targets, or public-client trust boundaries.
+A workflow call proves use, not canonicity. A JSON file named `receipt` is not governed merely because a script emitted it.
+
+---
 
 ## Current inventory
 
-| File | Current status | Notes |
+The inventory is bounded to checked repository evidence.
+
+| File | Role | Maturity |
 |---|---|---|
-| `README.md` | present | This directory index. |
-| `_cli_errors.py` | present by search | Shared structured-error helper; not inspected in this pass. |
-| `_doctrine_registry.py` | present by search | Shared doctrine-registry helper; not inspected in this pass. |
-| `audit_published_aliases.py` | placeholder confirmed | Contains only a greenfield placeholder comment for auditing `data/published/<domain>/current` aliases. |
-| `check_required_doctrine_artifacts.py` | inspected | Checks required artifact presence, status mismatches, minimum size, duplicate hashes, and optional JSON receipt output. |
-| `check_doctrine_artifact_provenance.py` | present by search | Provenance checker; summarized by existing README, not reopened in this pass. |
-| `check_doctrine_registry_alignment.py` | present by search | Registry-alignment checker invoked by preflight runner. |
-| `check_normalized_summary_consumer_readiness.py` | inspected | Validates normalized-summary consumer registry fields and optional all-validated gate. |
-| `render_doctrine_presence_input.py` | present by search | Renders presence input from checker receipt; summarized by existing README. |
-| `run_doctrine_artifact_preflight.py` | inspected | Orchestrates required-artifact check, provenance check, provenance sync, registry alignment, readiness check, presence rendering, summary schema validation, and strict gates. |
-| `enforce_doctrine_preflight_gates.sh` | present by search | Strict shell wrapper for preflight gates; summarized by existing README. |
-| `sync_doctrine_artifact_registry_status.py` | present by search | Reconciles required registry status against artifact files; summarized by existing README. |
-| `sync_doctrine_artifact_provenance_status.py` | present by search | Reconciles provenance status when required artifacts are present; summarized by existing README. |
-| `run_doctrine_artifact_test_suite.sh` | inspected | Runs preflight summary validators, normalized-only shadow checks, readiness checks, and related policy/source pytest bundle. |
+| `_cli_errors.py` | Structured CLI error helper | NEEDS VERIFICATION |
+| `_doctrine_registry.py` | Shared required-registry parsing | Substantive helper; reuse scope NEEDS VERIFICATION |
+| `check_required_doctrine_artifacts.py` | Presence, status, minimum-size, duplicate-digest check | Substantive; directly inspected |
+| `check_doctrine_artifact_provenance.py` | Provenance-registry check | NEEDS VERIFICATION |
+| `check_doctrine_registry_alignment.py` | Required/provenance registry alignment | NEEDS VERIFICATION |
+| `check_normalized_summary_consumer_readiness.py` | Consumer-readiness check | Substantive / NEEDS VERIFICATION |
+| `render_doctrine_presence_input.py` | Render policy-consumer presence input | Substantive / NEEDS VERIFICATION |
+| `sync_doctrine_artifact_registry_status.py` | Reconcile required-registry statuses | Mutation-sensitive |
+| `sync_doctrine_artifact_provenance_status.py` | Reconcile provenance status | Mutation-sensitive |
+| `run_doctrine_artifact_preflight.py` | Multi-command orchestration and summary-schema validation | Trust-adjacent graduation candidate |
+| `enforce_doctrine_preflight_gates.sh` | Strict wrapper | Promotion-sensitive |
+| `run_doctrine_artifact_test_suite.sh` | Validator and pytest bundle | Substantive; directly inspected |
+| `audit_published_aliases.py` | Intended published-alias audit | Placeholder / no authority |
 
-## Doctrine artifact tooling
+Presence does not prove correctness, ownership, safe defaults, exhaustive tests, stable CLI compatibility, accepted output homes, release readiness, or production use.
 
-| Script | Purpose | Exit codes |
-|---|---|---|
-| `check_required_doctrine_artifacts.py` | Validate required doctrine artifacts against registry + filesystem and emit JSON receipt (`present`, `status_mismatches`, integrity checks). | `0=pass`, `1=fail`, `2=registry/error path via structured error` |
-| `check_doctrine_artifact_provenance.py` | Validate canonical source-link provenance registry shape for required doctrine artifacts. | `0=pass`, `1=fail`, `2=registry error` |
-| `render_doctrine_presence_input.py` | Render `{ "present": ... }` from a checker receipt for policy consumers. | `0=success`, `1=invalid receipt` |
-| `sync_doctrine_artifact_registry_status.py` | Reconcile registry `status:` fields (`present`/`missing`) against artifact files and emit sync receipt. | `0=success`, `1=changes needed (with --fail-on-change)`, `2=registry error` |
-| `sync_doctrine_artifact_provenance_status.py` | Reconcile provenance `status` (`pending` → `verified`) when required artifact files are present; optional in-place write. | `0=success` |
-| `check_doctrine_registry_alignment.py` | Check alignment between required doctrine artifact registry and provenance registry. | NEEDS VERIFICATION from script help/tests |
-| `check_normalized_summary_consumer_readiness.py` | Validate normalized-summary consumer readiness registry and optionally require all consumers to be validated. | `0=pass`, `1=fail` |
-| `run_doctrine_artifact_preflight.py` | Orchestrate checker + provenance + sync + alignment + readiness + renderer and print a single summary payload for CI/operator use. Supports timestamped receipts by default, `--stable-filenames`, `--presence-output`, `--strict`, `--strict-provenance`, `--emit-normalized-only`, and `--require-consumer-readiness`. | `0=preflight executed/pass under selected gates`, `1=strict missing/provenance/readiness fail`, `2=execution/validation error` |
-| `enforce_doctrine_preflight_gates.sh` | Strict wrapper for release/promotion automation (`--strict`, `--strict-provenance`, `--require-consumer-readiness`); forwards additional CLI args to preflight unchanged. | mirrors underlying preflight exit code |
+---
 
-## Repo fit
+## Command contracts
+
+### Required-artifact checker
+
+`check_required_doctrine_artifacts.py` accepts a registry, artifacts directory, and optional output path.
+
+Confirmed checks:
+
+- required filename presence;
+- registry status mismatch;
+- minimum size of `10,000` bytes;
+- duplicate SHA-256 digest groups.
+
+| Exit | Meaning |
+|---|---|
+| `0` | No configured check failed. |
+| `1` | One or more configured checks failed. |
+| `2` | Structured registry or operating-system error. |
+
+These are integrity signals, not proof of authoritative content, rights, provenance sufficiency, review, or release approval.
+
+### Preflight orchestrator
+
+`run_doctrine_artifact_preflight.py` invokes:
+
+1. required-artifact check;
+2. provenance check;
+3. provenance-status synchronization;
+4. registry-alignment check;
+5. normalized-summary consumer-readiness check;
+6. presence-input renderer;
+7. JSON Schema validation of the combined summary.
+
+Checked options include `--registry`, `--provenance-registry`, `--artifacts-dir`, `--output-dir`, `--presence-output`, `--stable-filenames`, `--strict`, `--strict-provenance`, `--emit-normalized-only`, and `--require-consumer-readiness`.
+
+| Exit | Meaning |
+|---|---|
+| `0` | Orchestration completed and selected strict gates passed. |
+| `1` | A selected strict missing/provenance/readiness gate failed. |
+| `2` | Execution, rendering, alignment, or summary-schema error. |
+
+> [!CAUTION]
+> Without strict flags, a normal child-check failure can still produce an overall zero after the summary is emitted. Operators and workflows must select the intended fail-closed profile explicitly.
+
+### Strict and test wrappers
+
+`enforce_doctrine_preflight_gates.sh` must remain a thin wrapper that exposes its strict flags, inputs, output paths, and underlying exit code.
+
+`run_doctrine_artifact_test_suite.sh` uses `set -euo pipefail`, creates and cleans a normalized-only temporary summary, runs source validators and readiness checks, and invokes a bounded policy/source pytest set. This proves intended coverage, not a current pass result.
+
+---
+
+## Outputs and receipt-path conflict
+
+The checked orchestrator defaults to:
 
 ```text
-scripts/
-├── README.md
-└── maintenance/
-    ├── README.md
-    ├── _cli_errors.py
-    ├── _doctrine_registry.py
-    ├── audit_published_aliases.py
-    ├── check_required_doctrine_artifacts.py
-    ├── check_doctrine_artifact_provenance.py
-    ├── check_doctrine_registry_alignment.py
-    ├── check_normalized_summary_consumer_readiness.py
-    ├── render_doctrine_presence_input.py
-    ├── run_doctrine_artifact_preflight.py
-    ├── enforce_doctrine_preflight_gates.sh
-    ├── sync_doctrine_artifact_registry_status.py
-    ├── sync_doctrine_artifact_provenance_status.py
-    └── run_doctrine_artifact_test_suite.sh
-
-control_plane/                         # doctrine artifact registries and readiness registries
-docs/doctrine/artifacts/                # doctrine artifact files checked by preflight
-receipts/doctrine_artifacts/            # default preflight receipt output path
-tools/validators/source/                # validators invoked by the test-suite wrapper
-tests/policy/ and tests/source/         # pytest coverage invoked by test-suite wrapper
-release/                                # release authority; not owned by scripts/maintenance
+receipts/doctrine_artifacts/
 ```
 
-## Quick start
+Repository documentation also identifies:
 
-Run the doctrine artifact preflight:
+```text
+data/receipts/validation/doctrine_artifact_check/
+```
+
+This conflict is unresolved.
+
+| Question | Required resolution |
+|---|---|
+| Is `receipts/` canonical, legacy, or compatibility? | Check Directory Rules, root READMEs, and accepted ADRs. |
+| Are outputs receipts, validation reports, or temporary artifacts? | Resolve through contract/schema and governance review. |
+| May local runs write into a governed receipt root? | Require explicit mode, identity, collision policy, and rollback. |
+| May stable filenames overwrite prior outputs? | Define lineage and immutability rules first. |
+| Should CI use ephemeral workflow artifacts? | NEEDS VERIFICATION. |
+
+Safe interim posture:
+
+- treat outputs as candidate maintenance artifacts;
+- do not infer release state from them;
+- prefer explicit temporary output paths during investigation;
+- inspect generated files and `git diff`;
+- do not commit outputs until the owning lane is confirmed;
+- never delete prior governed records merely to make a run pass.
+
+---
+
+## Mutation and safety posture
+
+Maintenance commands should default to inspection or dry-run behavior, require explicit flags for in-place writes, print target paths, use deterministic serialization, preserve pre-change digests, provide finite exits, emit structured errors, avoid network access by default, avoid secrets, and be idempotent where practical.
+
+Registry-mutating commands must define input schema, pre-change digest, proposed changes, dry-run output, atomic-write strategy, post-write validation, correction procedure, rollback target, reviewer requirements, and whether CI may mutate or only inspect.
+
+Output writers must define destination root, identity, overwrite behavior, timestamp, digest, schema version, source inputs, tool version, redaction posture, retention, correction, and supersession.
+
+Do not add commands here that publish, mutate catalog truth as a routine side effect, approve release, suppress failed checks, rewrite shared Git history, delete audit material without correction, ingest restricted data without admission, log credentials, or expose sensitive payloads in public CI.
+
+---
+
+## Tests, workflows, and proof boundary
+
+The checked promotion workflow runs:
 
 ```bash
-python scripts/maintenance/run_doctrine_artifact_preflight.py
+python scripts/maintenance/check_required_doctrine_artifacts.py
 ```
 
-Run strict preflight gates through the wrapper when release/promotion automation needs fail-closed behavior:
+as `doctrine-artifact-prereq`. Downstream jobs depend on that prerequisite and a separate schema validator.
+
+Safe conclusion:
+
+- checker failure can block downstream jobs;
+- the checker is operationally significant;
+- the workflow remains labeled a proposed scaffold;
+- workflow success does not establish release approval;
+- CI use strengthens the case for graduation review.
+
+Still NEEDS VERIFICATION: complete per-script tests, branch-current pass results, mutation-path tests, concurrent-run behavior, stable-filename collisions, all workflow consumers, output schema coverage, and release rollback drills.
+
+Required negative cases should cover malformed registries, missing/undersized/duplicate artifacts, status mismatch, missing provenance, alignment failure, unreadable inputs, unwritable outputs, malformed child JSON, child execution errors, summary-schema failure, unreadiness, strict/non-strict differences, interrupted writes, unintended mutations, and sensitive log leakage.
+
+---
+
+## Graduation and migration
+
+| Signal | Current evidence | Implication |
+|---|---|---|
+| CI use | Promotion workflow calls a checker | Validator/tool review |
+| Multi-step orchestration | Preflight composes checks and renderers | Tool or pipeline review |
+| Schema validation | Orchestrator validates its summary | Stable command-contract review |
+| Receipt-shaped output | JSON outputs are written | Output-home and receipt review |
+| Registry reconciliation | Sync commands change governance state | Mutation and rollback review |
+| Release-adjacent dependency | Downstream jobs depend on prerequisite | Release-steward review |
+| Shared helpers | Parsing/error helpers serve multiple commands | Package or internal tool-library review |
+
+Candidate destinations:
+
+| Responsibility | Candidate home | Status |
+|---|---|---|
+| Required-artifact validator | `tools/validators/source/` or accepted doctrine-validator lane | PROPOSED |
+| Preflight orchestration | `tools/validators/`, `tools/release/`, or `pipelines/` | NEEDS VERIFICATION |
+| Registry synchronization | `tools/maintenance/` or governance-specific tooling | PROPOSED |
+| Reusable registry parsing | `packages/` only if reused broadly | NEEDS VERIFICATION |
+| Thin operator wrappers | May remain in `scripts/maintenance/` | PROPOSED |
+| Validation receipts | Accepted `data/receipts/validation/...` lane or explicit temporary profile | NEEDS VERIFICATION |
+
+Do not bulk-move the directory. Classify each command as validator, orchestrator, mutator, renderer, thin wrapper, test wrapper, or placeholder. Migrate with caller inventory, compatibility wrappers, tests, workflow updates, output-path migration, documentation, and rollback.
+
+---
+
+## Operator runbook
+
+Inspect help first:
+
+```bash
+python scripts/maintenance/check_required_doctrine_artifacts.py --help
+python scripts/maintenance/run_doctrine_artifact_preflight.py --help
+python scripts/maintenance/check_normalized_summary_consumer_readiness.py --help
+```
+
+Use an explicit temporary output directory for investigation:
+
+```bash
+tmp_dir="$(mktemp -d)"
+python scripts/maintenance/run_doctrine_artifact_preflight.py \
+  --output-dir "$tmp_dir"
+```
+
+Review stdout, stderr, exit code, written files, input registries, and repository diff.
+
+Run strict gates and the bounded test suite:
 
 ```bash
 bash scripts/maintenance/enforce_doctrine_preflight_gates.sh
-```
-
-Detailed operator flow: `docs/runbooks/DOCTRINE_ARTIFACT_PREFLIGHT.md`.
-
-## Test bundle
-
-Run the maintenance test bundle:
-
-```bash
 bash scripts/maintenance/run_doctrine_artifact_test_suite.sh
 ```
 
-The current wrapper runs source validators, a normalized-only preflight shadow summary, normalized-summary consistency validation, consumer-readiness validation, and a policy/source pytest bundle.
+A strict failure should be investigated, not bypassed. These commands do not sign, publish, grant access, approve sensitivity downgrades, or replace review.
 
-## Normalized summary migration
-
-- **Current compatibility mode:** preflight emits both standalone fields and normalized maps (`artifact_paths`, `artifact_digests`).
-- **Shadow validation mode:** run preflight with `--emit-normalized-only` and validate with:
-
-```bash
-python tools/validators/source/validate_doctrine_preflight_summary_consistency.py <summary.json> --require-normalized-only
-```
-
-- **Cutover gate:** only enable normalized-only by default after all consumers read from normalized maps and CI shadow checks are green over time.
-- **Readiness checklist:** `docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md`.
-
-## What belongs here
-
-- Bounded maintenance CLIs that inspect, reconcile, or summarize repo maintenance state.
-- Doctrine-artifact preflight helpers and wrappers.
-- Registry hygiene scripts for required doctrine artifacts, provenance records, alignment checks, and readiness ledgers.
-- Local or CI-invoked wrappers that support, but do not replace, governed release/promotion gates.
-- Shared helper modules used only by this maintenance lane.
-
-## What does not belong here
-
-| Do not put this in `scripts/maintenance/` | Correct home |
-|---|---|
-| Long-lived validators, generators, builders, proof-pack tools, release tools, or QA tools | `tools/` |
-| Pipeline orchestration | `pipelines/` |
-| Reusable libraries imported by multiple systems | `packages/` |
-| Policy rules, sensitivity decisions, rights approvals, or release approvals | `policy/`, review, and release roots |
-| Source records, lifecycle data, emitted receipts, proofs, catalogs, or published payloads | accepted `data/` lifecycle, receipt, proof, catalog, or published roots |
-| Release manifests, rollback cards, correction notices, or publication decisions | `release/` |
-| Fixtures, golden outputs, or generated examples | `fixtures/` unless an accepted migration says otherwise |
-| Secrets, credentials, signing keys, tokens, or local `.env` contents | not in repo |
-| Runtime/API/UI implementation | accepted package, app, service, or UI roots |
-
-## Promotion rules
-
-Move or redesign a maintenance script when any of the following become true:
-
-| Signal | Required action |
-|---|---|
-| The script becomes a long-lived validator or gate implementation | Promote to `tools/validators/` or another accepted `tools/` lane with tests. |
-| The script orchestrates multi-step production flow | Promote orchestration to `pipelines/`; keep this script as a wrapper only if useful. |
-| The script emits trust-bearing receipts or proof packs | Confirm schema, validator, receipt/proof home, tests, and rollback notes. |
-| The script changes registries in-place | Require dry-run/default-safe behavior, review notes, and rollback instructions. |
-| The script becomes release-critical | Add release steward review, CI evidence, strict exit-code contract, and rollback target. |
+---
 
 ## Validation
 
+Suggested lane checks:
+
 ```bash
 find scripts/maintenance -maxdepth 2 -type f | sort
-python -m py_compile scripts/maintenance/*.py
-bash -n scripts/maintenance/*.sh
-python scripts/maintenance/run_doctrine_artifact_preflight.py --stable-filenames
+find scripts/maintenance -name '*.py' -print0 | xargs -0 -r python -m py_compile
+find scripts/maintenance -name '*.sh' -print0 | xargs -0 -r bash -n
+python scripts/maintenance/check_required_doctrine_artifacts.py --help
+python scripts/maintenance/run_doctrine_artifact_preflight.py --help
 bash scripts/maintenance/run_doctrine_artifact_test_suite.sh
 ```
 
-> [!WARNING]
-> Commands that reconcile registry status or write receipts may create or update files depending on options. Review command help, output paths, and git diff before committing generated changes.
+> [!CAUTION]
+> Preflight creates an output directory and may write JSON. Synchronization commands may have write modes. Use temporary paths and inspect help before running them in a working tree.
 
-## Open questions
+Validation is not release. Provenance, policy, review, correction, rollback, and release can remain unresolved after tests pass.
 
-| Question | Status |
+---
+
+## Correction and rollback
+
+### Documentation rollback
+
+Before merge, leave the draft PR unmerged or restore prior blob `e9872db30569bec7222274c0828abe9b35e39685` in a transparent commit. After merge, revert the documentation commit or PR; do not reset shared history.
+
+### Incorrect output
+
+1. Stop downstream promotion use.
+2. Preserve the incorrect output for audit when required.
+3. Identify affected inputs, callers, outputs, and decisions.
+4. Emit correction or supersession material in the accepted home.
+5. Invalidate affected derived summaries.
+6. Correct the root cause before rerunning.
+7. Record the corrected tool version and digest.
+8. Confirm release state independently.
+
+### Registry rollback
+
+Retain the pre-change blob or commit, validate the rollback, use a normal revert or corrective commit, rerun alignment and schema checks, preserve the reason and reviewer, and never force-push away the failed change.
+
+### Output-home migration rollback
+
+Retain old-reader compatibility for a bounded window, define deterministic mapping and duplicate detection, prevent double counting, preserve rollback to the prior writer/reader pair, and require retirement evidence before deleting the old path.
+
+---
+
+## Open verification backlog
+
+- [ ] Confirm CODEOWNERS and command owners.
+- [ ] Produce a recursive inventory with hashes.
+- [ ] Inventory imports, subprocess callers, workflows, Make targets, and runbooks.
+- [ ] Decide which commands remain wrappers and which graduate.
+- [ ] Classify preflight as validator tool, release tool, or pipeline.
+- [ ] Resolve `receipts/doctrine_artifacts/` versus `data/receipts/validation/doctrine_artifact_check/`.
+- [ ] Confirm schemas, identity, overwrite, retention, correction, and supersession for every output.
+- [ ] Confirm dry-run defaults, atomic writes, interruption safety, and collision behavior.
+- [ ] Verify logs redact sensitive paths and values.
+- [ ] Run the bounded suite on the current branch and record results.
+- [ ] Confirm all required-check dependencies and flaky history.
+- [ ] Decide whether integrity thresholds belong in policy or implementation.
+- [ ] Confirm current state and future home of `audit_published_aliases.py`.
+- [ ] Obtain release-steward acceptance before treating any command as release-critical authority.
+
+---
+
+## Evidence basis
+
+| Evidence | Status | Supports | Limits |
+|---|---|---|---|
+| Prior lane README | CONFIRMED | Existing scope, inventory, commands, and questions | Some claims were earlier bounded observations |
+| `scripts/README.md` | CONFIRMED | Root boundary and graduation rule | Does not decide each command's final home |
+| `check_required_doctrine_artifacts.py` | CONFIRMED direct read | Checks, output, and exit behavior | Does not prove rights, provenance, or release readiness |
+| `run_doctrine_artifact_preflight.py` | CONFIRMED direct read | Orchestration, options, output default, summary validation, exits | Current execution result not established |
+| `run_doctrine_artifact_test_suite.sh` | CONFIRMED direct read | Bounded validators and tests | Suite not run during this documentation update |
+| `promotion-gate.yml` | CONFIRMED direct read | Direct caller and dependency chain | Workflow is labeled a proposed scaffold |
+| Validation-receipt README | CONFIRMED surfaced path | Adjacent governed receipt lane | Relationship to legacy `receipts/` remains unresolved |
+| Directory Rules | CONFIRMED doctrine | Responsibility and graduation discipline | Migration requires caller and inventory evidence |
+
+---
+
+## Last reviewed
+
+| Field | Value |
 |---|---|
-| Which CI workflow invokes `run_doctrine_artifact_preflight.py`, `enforce_doctrine_preflight_gates.sh`, or `run_doctrine_artifact_test_suite.sh`? | NEEDS VERIFICATION |
-| Should doctrine-artifact preflight become a `tools/validators/` or `tools/release/` command if it is release-critical? | NEEDS VERIFICATION |
-| What is the accepted home for emitted doctrine-artifact receipts: `receipts/doctrine_artifacts/`, `data/receipts/`, or another governed receipt lane? | NEEDS VERIFICATION |
-| Should `audit_published_aliases.py` remain a placeholder, be implemented here, or move to `tools/validators/release/`? | NEEDS VERIFICATION |
-| Which owner signs off on normalized-summary consumer readiness cutover? | NEEDS VERIFICATION |
+| Last reviewed | 2026-07-15 |
+| Review posture | Draft, evidence-grounded maintenance-lane contract |
+| Implementation changes | None |
+| Tests run | None |
+| Next trigger | Script, CLI, workflow, output-home, registry mutation, normalized-summary, graduation, or release-gate change |
+
+[Back to top](#top)
