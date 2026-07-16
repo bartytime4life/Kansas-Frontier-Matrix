@@ -1,0 +1,37 @@
+name: agent-temp-atmosphere-kc-hash
+
+on:
+  push:
+    branches:
+      - agent/tests-domains-atmosphere-knowledge-character-readme-v3-1-20260716
+
+permissions:
+  contents: read
+
+jobs:
+  verify-committed-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Report committed artifact integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          path='tests/domains/atmosphere/knowledge-character/README.md'
+          echo "ARTIFACT_PATH=$path"
+          echo "SHA256=$(sha256sum "$path" | awk '{print $1}')"
+          echo "GIT_BLOB=$(git hash-object "$path")"
+          echo "BYTES=$(wc -c < "$path" | tr -d ' ')"
+          echo "LINES=$(wc -l < "$path" | tr -d ' ')"
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('tests/domains/atmosphere/knowledge-character/README.md')
+          text = path.read_text(encoding='utf-8')
+          h1 = sum(1 for line in text.splitlines() if re.match(r'^# ', line))
+          fences = sum(1 for line in text.splitlines() if line.startswith('```'))
+          print(f'H1_COUNT={h1}')
+          print(f'FENCE_LINES={fences}')
+          print(f'FINAL_NEWLINE={text.endswith(chr(10))}')
+          PY
