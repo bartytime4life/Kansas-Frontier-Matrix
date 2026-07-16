@@ -1,274 +1,391 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/artifacts-build-pdf-readme
-title: artifacts/build/pdf/ — Deterministic PDF Build Outputs
-type: readme
-version: v0.1
-status: draft
-owners: OWNER_TBD — Build steward · PDF steward · Release steward · Evidence steward · Docs steward
+title: artifacts/build/pdf/ — PDF Staging, Conformance, Accessibility, and Release-Handoff Boundary
+type: readme; directory-readme; pdf-build-staging; reproducibility-contract; accessibility-boundary; compatibility-boundary
+version: v0.2
+status: draft; repository-grounded; compatibility-root; transitional; tracked-readme-only; generated-pdf-ignore-rule-not-established; producer-not-established; validator-not-established; pdfa-conformance-not-established; linearization-not-established; accessibility-validation-not-established; digest-manifest-not-established; release-binding-unestablished; non-authoritative
+owners: OWNER_TBD — Build steward · PDF/document steward · Accessibility steward · Reproducibility steward · Security/privacy steward · Rights/licensing steward · Receipt/proof steward · Release steward · CI steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
-policy_label: public
+updated: 2026-07-16
+supersedes: v0.1 bounded PDF build-output contract
+policy_label: public-doc; artifacts; build; pdf; pdf-a; accessibility; reproducibility; metadata-scrubbing; no-trust-authority; no-release-authority; correction-aware; rollback-aware
+current_path: artifacts/build/pdf/README.md
+truth_posture: CONFIRMED target README and prior blob, Directory Rules classification of artifacts as a transitional compatibility root, parent build and sibling env/dist boundaries, current environment scaffolds, doctrine-artifact preflight expectation for PDF bytes plus digest and tool-version evidence, root Makefile without a PDF target, TODO-only docs-build workflow, root gitignore without a PDF-lane or *.pdf rule, bounded search surfacing no direct producer or consumer, and checked absence of pdf-build-manifest.json, pdf-build-env-ref.json, .gitkeep, scripts/build-pdf.sh, .github/workflows/pdf-build.yml, and schemas/artifacts/pdf-build-manifest.schema.json / PROPOSED deterministic producer, immutable manifest, PDF/A and linearization validation, accessibility review, metadata and attachment scrubbing, font controls, digest sidecars, repeated-build comparison, CI retention, release binding, correction, withdrawal, supersession, and migration or retirement / CONFLICTED tracked staging path versus no generated-PDF ignore rule; deterministic-PDF prose versus no producer; PDF/A/linearization claims versus no validator; local sidecars versus canonical receipts/proofs; source identity versus compiled-byte identity; and visual appearance versus accessibility / UNKNOWN local or CI-only PDFs, external builders, installed tools, actual conformance, reproducibility, accessibility, security, release, deployment, and retention state / NEEDS VERIFICATION owners, CODEOWNERS, generated-PDF commit policy, source-to-PDF registry, build command, toolchain pins, PDF/A profile, accessibility baseline, font and metadata policy, digest format, schema/validator locations, CI ownership, release handoff, correction consumers, and rollback execution
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 52792d12044acd2d1c4aab2c820b8c5a1dea8755
+  target_prior_blob: eae2b7dd44d54596bd82c3121ba89a975ca940e5
+  direct_lane_files_confirmed:
+    - artifacts/build/pdf/README.md
+  checked_absent_paths:
+    - artifacts/build/pdf/pdf-build-manifest.json
+    - artifacts/build/pdf/pdf-build-env-ref.json
+    - artifacts/build/pdf/.gitkeep
+    - scripts/build-pdf.sh
+    - .github/workflows/pdf-build.yml
+    - schemas/artifacts/pdf-build-manifest.schema.json
+  bounded_inventory_note: tracked repository evidence cannot establish uncommitted local PDFs, CI workspaces, external conversion services, release assets, object stores, historical artifacts, or uninspected subprojects
 related:
   - ../README.md
-  - ../dist/README.md
   - ../env/README.md
+  - ../dist/README.md
   - ../../README.md
   - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/runbooks/DOCTRINE_ARTIFACT_PREFLIGHT.md
+  - ../../../Makefile
+  - ../../../.github/workflows/docs-build.yml
+  - ../../../.gitignore
   - ../../../data/receipts/README.md
   - ../../../data/proofs/README.md
   - ../../../data/published/README.md
   - ../../../release/README.md
-  - ../../../tools/README.md
-  - ../../../pipelines/README.md
-tags: [kfm, artifacts, build, pdf, pdf-a, deterministic-bytes, artifact-digest, reproducibility, compatibility-root, transitional]
+tags: [kfm, artifacts, build, pdf, pdf-a, tagged-pdf, accessibility, linearization, metadata, fonts, digests, reproducibility, security, retention, release-handoff, correction, rollback]
 notes:
-  - "Replaces the short artifacts/build/pdf README with a bounded PDF build-output contract."
-  - "This directory is a compatibility/transitional PDF build-output lane, not a source documentation home, trust surface, release surface, evidence store, receipt store, proof store, published artifact home, or canonical documentation authority."
-  - "Specific PDFs, digest sidecars, PDF/A validation results, build workflows, toolchain fingerprints, artifact retention rules, and CI pass state remain NEEDS VERIFICATION."
+  - "Only the README is confirmed in the direct lane; local or CI-only PDF files remain UNKNOWN."
+  - "No producer, conformance/accessibility validator, digest manifest, workflow, or consumer was established."
+  - "The root gitignore does not protect this lane from accidental generated-PDF commits."
+  - "A visually correct PDF is not necessarily accessible, conformant, reproducible, evidence-backed, rights-cleared, released, or safe."
+  - "This revision changes documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
+# `artifacts/build/pdf/` — PDF Staging, Conformance, Accessibility, and Release-Handoff Boundary
 
-# Deterministic PDF Build Outputs
+> Stage generated PDF bytes only long enough to validate, compare, digest, inspect, and hand them to governed records. A filename, successful export, visual match, PDF/A label, accessibility claim, signature, or digest never becomes source authority, evidence closure, release approval, publication, or production truth.
 
-`artifacts/build/pdf/`
+<p>
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Root: artifacts compatibility" src="https://img.shields.io/badge/root-artifacts__compatibility-orange">
+  <img alt="Direct inventory: README only" src="https://img.shields.io/badge/direct__inventory-README__only-lightgrey">
+  <img alt="Producer: not established" src="https://img.shields.io/badge/producer-not__established-red">
+  <img alt="Conformance: unverified" src="https://img.shields.io/badge/PDF__conformance-UNVERIFIED-critical">
+  <img alt="Accessibility: unverified" src="https://img.shields.io/badge/accessibility-UNVERIFIED-purple">
+</p>
 
-**Compatibility/transitional staging lane for compiled PDF bytes — especially reproducible, linearized PDF/PDF-A outputs — while they are prepared for digesting, citation, review, packaging, or later governed release binding.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![root](https://img.shields.io/badge/root-artifacts%2F-orange)
-![class](https://img.shields.io/badge/class-transitional-yellow)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority boundary](#3-authority-boundary) · [Allowed contents](#5-allowed-contents) · [Forbidden contents](#6-forbidden-contents) · [Validation](#10-validation-expectations) · [Definition of done](#12-definition-of-done)
-
-</div>
+**Quick navigation:** [Status](#status-and-evidence-boundary) · [Authority](#authority-and-repository-fit) · [Inventory](#confirmed-current-inventory) · [Requirements](#pdf-build-and-validation-contract) · [Lifecycle](#trust-release-and-publication-boundary) · [Operations](#producer-ci-retention-and-correction) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger)
 
 ---
+
+## Status and evidence boundary
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `artifacts/build/pdf/README.md`  
-> **Responsibility root:** `artifacts/` — compatibility root, transitional build-output lane  
-> **Truth posture:** CONFIRMED README path / CONFIRMED parent `artifacts/` compatibility-root boundary / CONFIRMED `artifacts/build/` build-output boundary / PROPOSED PDF build-output contract / UNKNOWN actual PDFs, digest sidecars, PDF/A validation results, build jobs, CI workflows, retention policy, release binding, and generated artifact inventory
+> **Snapshot:** `main@52792d12044acd2d1c4aab2c820b8c5a1dea8755`<br>
+> **Prior README blob:** `eae2b7dd44d54596bd82c3121ba89a975ca940e5`<br>
+> **Confirmed direct lane:** `artifacts/build/pdf/README.md` only<br>
+> **Producer / validator / workflow / consumer:** not established<br>
+> **PDF/A, linearization, accessibility, reproducibility, digest, and release binding:** not established<br>
+> **Generated-PDF ignore protection:** not established
 
-> [!CAUTION]
-> `artifacts/build/pdf/` is not canonical documentation, not an evidence store, not a receipt store, not a release store, and not a publication store. A PDF staged here becomes relevant to trust only when a canonical receipt, proof, or release record elsewhere references its digest.
+`artifacts/build/pdf/` is a repository-confirmed compatibility path, not an operational PDF build system.
 
----
+| Capability | Status | Safe conclusion |
+|---|---:|---|
+| README | `CONFIRMED` | The human staging boundary exists. |
+| Tracked PDF bytes | `NOT SURFACED` | No direct PDF payload was established. |
+| Local or CI-only PDFs | `UNKNOWN` | GitHub cannot enumerate uncommitted workspaces. |
+| Producer / manifest / digest | `NOT ESTABLISHED` | No accepted writer or output record was verified. |
+| Toolchain context | `SCAFFOLD ONLY` | Sibling environment files remain incomplete. |
+| PDF/A / linearization | `NOT ESTABLISHED` | No target profile, validator, or report was verified. |
+| Accessibility / security | `NOT ESTABLISHED` | No tagged-PDF, metadata, active-content, or manual review report was verified. |
+| Release binding | `NOT ESTABLISHED` | No receipt, proof, release, or published-copy reference was linked. |
+| Production/public use | `UNKNOWN` | Staging documentation does not prove publication. |
 
-## 1. Purpose
-
-`artifacts/build/pdf/` holds **compiled PDF outputs** while they are being staged for digesting, citation, review, packaging, or later release binding.
-
-Typical accepted material includes:
-
-- compiled PDFs generated from source Markdown, documentation, reports, or build scripts elsewhere;
-- linearized PDF outputs where deterministic linearization is part of the build chain;
-- PDF/A outputs where conformance is part of the documented build process;
-- PDF digest sidecars such as `<doc-id>.digest.json` when emitted here as staging aids;
-- non-secret PDF build metadata that directly supports reproducibility and digest citation.
-
-This folder exists so build tooling has a predictable staging location for PDF bytes before those bytes are pinned by digest and referenced by canonical trust records in `data/receipts/`, `data/proofs/`, or `release/` where applicable.
-
-This README does not prove any PDF currently exists, any build job writes here, any digest sidecar is present, any PDF/A validation passed, or any release process consumes this directory.
+Truth labels: `CONFIRMED`, `PROPOSED`, `CONFLICTED`, `UNKNOWN`, `NEEDS VERIFICATION`, and `DENY`.
 
 [Back to top](#top)
 
 ---
 
-## 2. Repo fit
+## Authority and repository fit
 
-| Concern | Owning root | Expected relationship |
-|---|---|---|
-| PDF staging | `artifacts/build/pdf/` | Derived, reproducible, non-authoritative PDF byte-output lane |
-| Build output parent | `artifacts/build/` | Compiled byte outputs and distributables before digest/release binding |
-| Build environment fingerprints | `artifacts/build/env/` | Non-secret toolchain/environment context |
-| Distributables | `artifacts/build/dist/` | Non-PDF deterministic distributable build outputs |
-| Compatibility root | `artifacts/` | Transitional compatibility root; trust content forbidden |
-| Source documentation | `docs/` | Hand-authored source documentation; not stored here |
-| Source code/build logic | `apps/`, `packages/`, `tools/`, `pipelines/` | Inputs and build implementation; not stored here |
-| Receipts | `data/receipts/` | Canonical process-memory and receipt home |
-| Proofs / EvidenceBundles | `data/proofs/` | Canonical evidence/proof home |
-| Release records | `release/` | ReleaseManifest, RollbackCard, CorrectionNotice, release decisions |
-| Published artifacts | `data/published/` | Released artifact home after governed publication |
-| Schemas/contracts/policy | `schemas/`, `contracts/`, `policy/` | Authority roots, never staged here |
-
-## 3. Authority boundary
-
-`artifacts/build/pdf/` has **compatibility authority only**. It may hold derived PDF bytes; it does not establish source truth, documentation truth, provenance, evidence, validation, policy posture, review state, release state, publication state, or source authority.
+Directory Rules classify `artifacts/` as a **transitional compatibility root** for derived, regenerable, non-authoritative material.
 
 ```text
-SOURCE + BUILD INPUTS          PDF BUILD OUTPUT STAGING       TRUST / RELEASE HOMES
-docs/ apps/ packages/  --->    artifacts/build/pdf/     --->  data/receipts/
-tools/ pipelines/              compiled PDF bytes only        data/proofs/
-schemas/ contracts/ policy/    not authoritative              release/
-                                                             data/published/
+source roots                         authored source and meaning
+tools/ pipelines/ packages/          build implementation
+artifacts/build/env/                  sanitized build context
+artifacts/build/pdf/                  generated PDF staging
+artifacts/build/dist/                 non-PDF distribution staging
+data/receipts/ and data/proofs/       canonical process memory and support
+release/ and data/published/          governed decision and released copy
 ```
 
-A PDF file in this folder may be referenced by digest from a receipt or release record. The digest reference is the governed bridge; the PDF's mere presence here is not evidence, proof, validation, release approval, or publication.
+This lane may stage PDF bytes. It must not become a second documentation root, evidence store, receipt store, release directory, signing authority, or public download surface.
 
-## 4. Default posture
-
-PDF build outputs in this folder should be treated as **untrusted until pinned and reviewed**.
-
-A PDF should not be treated as ready for citation, publication, release, deployment, or downstream consumption unless the relevant canonical records exist and pass review:
-
-- source document/path and source `git_sha`;
-- reproducible build command and toolchain/version fingerprint;
-- normalized build environment context from `artifacts/build/env/` or canonical receipt refs where material;
-- content digest or digest manifest;
-- PDF/A or equivalent validation report where claimed;
-- receipt in `data/receipts/` where material;
-- proof/EvidenceBundle or attestation in `data/proofs/` where material;
-- policy/sensitivity/rights review where content exposure is material;
-- ReleaseManifest, RollbackCard, or CorrectionNotice linkage where release is involved;
-- rollback and correction path.
-
-## 5. Allowed contents
-
-| Allowed artifact | Examples | Required posture |
+| Responsibility | Authority home | Role here |
 |---|---|---|
-| Compiled PDF output | `<doc-id>.pdf` | Derived, reproducible, digestable |
-| Linearized PDF output | `<doc-id>.linearized.pdf` | Build output only, not canonical documentation |
-| PDF/A output | `<doc-id>.pdf` with PDF/A target where validated elsewhere | Validation record belongs elsewhere |
-| Digest sidecar | `<doc-id>.digest.json`, `<doc-id>.sha256` | Staging only; receipts remain in `data/receipts/` |
-| PDF build metadata | source path/ref, toolchain snapshot ref, build command ref | Non-secret and non-authoritative |
-| Dist relation manifest | PDF-to-dist/package relation listing | Non-authoritative; release binding elsewhere |
+| Source identity/meaning | Owning source root | Reference only. |
+| Producer/profile | Implementation/config roots | External and versioned. |
+| Build context | `artifacts/build/env/` or canonical receipt | Sanitized reference only. |
+| PDF bytes | This lane | Temporary derived staging. |
+| Validation | `tools/validators/` or accepted package | External executable. |
+| Receipts/proofs | `data/receipts/`, `data/proofs/` | Canonical binding. |
+| Release/publication | `release/`, `data/published/` | Governed decision and copy. |
+| Keys/secrets | Protected CI or secret manager | Never stored here. |
 
-## 6. Forbidden contents
+[Back to top](#top)
 
-| Forbidden here | Correct home |
-|---|---|
-| Source Markdown or source documentation | `docs/` or other source doc roots |
-| RunReceipt, TransformReceipt, ValidationReport, AIReceipt, RedactionReceipt | `data/receipts/` |
-| EvidenceBundle, proof bundles, attestations | `data/proofs/` |
-| ReleaseManifest, RollbackCard, CorrectionNotice | `release/` |
-| Published PDF copies or public release bundles | `data/published/` after governed release |
-| Catalog records, STAC/DCAT/PROV records | `data/catalog/` |
-| Source descriptors and registry records | `data/registry/` or governed source registry home |
-| Source code, scripts, packages, build logic | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/` |
-| Schemas, contracts, policy rules | `schemas/`, `contracts/`, `policy/` |
-| Secrets, tokens, private keys, deployment-only values | Never commit; use deployment secret/config channels |
-| Hand-authored source documentation | `docs/` |
-| Long-lived QA reports | `artifacts/qa/` |
+---
 
-## 7. Directory shape
+## Confirmed current inventory
 
-Current implementation inventory remains `NEEDS VERIFICATION`.
+Bounded evidence supports:
 
 ```text
 artifacts/build/pdf/
-├── README.md
-├── <doc-id>.pdf                    # PROPOSED compiled PDF output
-├── <doc-id>.digest.json            # PROPOSED digest metadata sidecar
-├── <doc-id>.sha256                 # PROPOSED digest sidecar
-├── pdf-build-manifest.json         # PROPOSED non-authoritative listing
-└── pdf-build-env-ref.json          # PROPOSED reference to artifacts/build/env/ snapshot
+└── README.md
 ```
+
+Checked absent:
+
+```text
+artifacts/build/pdf/pdf-build-manifest.json
+artifacts/build/pdf/pdf-build-env-ref.json
+artifacts/build/pdf/.gitkeep
+scripts/build-pdf.sh
+.github/workflows/pdf-build.yml
+schemas/artifacts/pdf-build-manifest.schema.json
+```
+
+Also confirmed:
+
+- the Makefile has no PDF target;
+- `docs-build.yml` contains TODO-only steps;
+- sibling environment files are incomplete scaffolds;
+- `.gitignore` has no `artifacts/build/pdf/` or `*.pdf` rule;
+- no direct producer or consumer surfaced in bounded search.
 
 > [!WARNING]
-> Do not treat this suggested shape as repo fact. Verify actual PDFs, build outputs, PDF/A conformance reports, digests, workflows, and release records before making implementation claims.
+> Generated PDFs here are not protected by an established ignore rule. Committing binary outputs requires an explicit retention and review decision; it must never happen merely because a tool wrote them here.
 
-## 8. Diagram
+[Back to top](#top)
+
+---
+
+## PDF build and validation contract
+
+### Governed flow
 
 ```mermaid
-flowchart TD
-    source["source documentation / report inputs"] --> build["PDF build command / CI job"]
-    env["artifacts/build/env\nnon-secret build fingerprints"] --> build
-    build --> pdf["artifacts/build/pdf\ncompiled PDF bytes"]
-    pdf --> digest["digest sidecar / pdf build inventory"]
-    digest --> receipt["data/receipts\ncanonical receipt"]
-    receipt --> proof["data/proofs\nproof / attestation"]
-    receipt --> release["release\nReleaseManifest if applicable"]
-    release --> published["data/published\nreleased copy"]
-    pdf -. "never by presence alone" .-> published
+flowchart LR
+    S["Authoritative source"] --> P["Deterministic producer<br/>PROPOSED"]
+    E["Sanitized build context"] --> P
+    P --> B["Staged PDF bytes"]
+    B --> V["Syntax · conformance · accessibility · security"]
+    V --> D["Final digest + build manifest"]
+    D --> R["Canonical receipt / proof refs"]
+    R --> G["Governed release"]
+    G --> U["Published immutable copy"]
+    B -. "presence never promotes" .-> U
 ```
 
-## 9. Obligations
+### Identity
 
-| Obligation | Example effect |
+A material build should bind:
+
+- source path, `doc_id`, version, status, exact `git_sha`, clean/dirty state, and dependency digests;
+- immutable `build_id`, producer identity/version, profile ID, observed toolchain reference;
+- final PDF path or external locator, SHA-256, size, page count, and source-to-byte relationship.
+
+A filename is not identity. A digest identifies bytes but not meaning, rights, validation, or release state.
+
+### Determinism
+
+| Control | Required behavior |
 |---|---|
-| `derived_only` | PDFs here are build outputs, not canonical source docs |
-| `reproducible_bytes` | Outputs should be reproducible from source ref plus toolchain pins |
-| `digest_required` | Material PDFs should be hash-pinned before trust use |
-| `validation_elsewhere` | PDF/A or build validation records go to canonical receipt/report homes |
-| `receipt_elsewhere` | Trust-bearing receipts go to `data/receipts/`, not here |
-| `proof_elsewhere` | Evidence/proof support goes to `data/proofs/`, not here |
-| `release_elsewhere` | Release decisions and manifests go to `release/`, not here |
-| `published_elsewhere` | Public released copies go to `data/published/`, not here |
-| `no_secrets` | PDF metadata/build metadata must not contain secrets or deployment-only values |
-| `no_parallel_authority` | This folder must not become a second docs, release, evidence, or catalog root |
+| Time/locale/zone | Pin `SOURCE_DATE_EPOCH`, locale, and timezone. |
+| Ordering/paths | Sort inputs and remove user-home, temporary, workspace, and absolute paths. |
+| IDs/metadata | Normalize document IDs, dates, producer fields, and nonessential host data. |
+| Fonts/templates | Pin exact files/package digests; fail on missing glyphs. |
+| Compression/post-processing | Pin tools, versions, and arguments. |
+| Randomness/parallelism | Disable, seed, or pin where output order may change. |
+| Network | Default deny; remote assets must be vendored or digest-pinned. |
 
-## 10. Validation expectations
+A reproducibility claim needs at least two builds. Outcomes: `BYTE_IDENTICAL`, `SEMANTICALLY_EQUIVALENT`, `DIFFERENT`, `INCONCLUSIVE`, or `ERROR`.
 
-Useful validation for this folder should cover:
+### Syntax, PDF/A, and linearization
 
-- every retained PDF has a reproducible source ref;
-- material PDFs have deterministic digests;
-- digest sidecars do not replace receipts;
-- PDF metadata contains no secrets, private paths, protected details, or deployment-only values;
-- PDF/A or other conformance claims are supported by canonical validation records where material;
-- no receipts, proofs, release records, catalog records, source descriptors, schemas, contracts, policy rules, or published artifacts are stored here;
-- outputs are either temporary/regenerable or referenced by governed records outside this directory;
-- retention/pruning behavior is documented;
-- release binding, if any, happens through `release/` and `data/published/`, not by treating this folder as public.
+Required syntax checks should validate header, objects, cross-references, pages, corruption recovery, and incremental-update state.
 
-## 11. Safe change pattern
+A PDF/A claim requires an exact profile, validator/version/ruleset, machine-readable findings, report digest, and explicit exceptions. A filename, XMP field, producer option, or visual inspection is insufficient.
 
-For changes under `artifacts/build/pdf/`:
+Describe a file as linearized only after final-byte validation. Compute the digest after every byte-changing step, including remediation, linearization, and signing.
 
-1. Confirm the file is a derived PDF build output and not source or trust content.
-2. Confirm the source refs, build command, and toolchain versions are known.
-3. Produce deterministic PDF bytes where practical.
-4. Generate digest sidecars only as staging aids.
-5. Write canonical receipts/proofs/release records to their owning roots, not here.
-6. Verify no secrets, private paths, protected details, or deployment-only values are embedded in PDF metadata or sidecars.
-7. Update this README, parent `artifacts/build/` docs, build tooling docs, receipts/proofs/release docs, and tests when behavior materially changes.
+### Accessibility
 
-## 12. Definition of done
+A release candidate should be checked for title, language, tags, reading order, headings, lists, tables, links, image alt text/artifact marking, bookmarks, searchable text, Unicode mapping, form labels, contrast, and non-color cues.
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual PDF build-output inventory is verified.
-- [ ] Build commands and toolchain pins are documented.
-- [ ] Digest format and sidecar convention are documented.
-- [ ] PDF metadata scrubbing and PDF/A/conformance validation are documented where claimed.
-- [ ] Retention and pruning behavior are documented.
-- [ ] Canonical receipt/proof/release homes are linked where material.
-- [ ] No trust-bearing records live here.
-- [ ] No source docs, source files, schemas, contracts, policy rules, secrets, or published artifacts live here.
-- [ ] CI/workflow behavior is verified or marked `NEEDS VERIFICATION`.
+Automated checks are necessary but not sufficient. Reading order, alt text, table semantics, and comprehension may require human review.
 
-## 13. Open verification items
+### Metadata, active content, and security
 
-| Item | Why it matters |
+Inspect Info/XMP metadata, producer/creator, dates, IDs, paths, embedded files, JavaScript, launch actions, forms, external links, annotations, hidden layers, encryption, signatures, incremental updates, comments, hidden/off-page text, attachments, and recoverable redactions.
+
+Default-deny secrets, private infrastructure, unreviewed attachments, active code, recoverable redactions, protected data, and unlicensed assets.
+
+### Fonts, color, and rights
+
+Record font identity/digest, embedding/subsetting, Unicode mapping, fallback, glyph coverage, and redistribution rights. Where material, record color space, ICC intent, image resolution, transparency, page boxes, and rendering comparison.
+
+A visual match does not prove accessibility, semantic equivalence, rights, or release approval.
+
+### Proposed manifest
+
+A future non-authoritative build manifest should contain:
+
+```json
+{
+  "schema_version": "PROPOSED",
+  "build_id": "immutable-id",
+  "source": {"path": "docs/example.md", "git_sha": "sha", "doc_id": "kfm://doc/example"},
+  "producer": {"id": "producer-id", "git_sha": "sha", "profile_id": "pdf-profile"},
+  "environment_ref": {"path": "artifacts/build/env/build-env.<id>.json", "sha256": "hex"},
+  "output": {"path": "artifacts/build/pdf/example.pdf", "sha256": "hex", "size_bytes": 0, "page_count": 0},
+  "validation": {"syntax": "PASS", "pdfa": "NOT_ESTABLISHED", "linearization": "NOT_ESTABLISHED", "accessibility": "NOT_ESTABLISHED", "security": "NOT_ESTABLISHED"},
+  "canonical_refs": {"receipt_ref": null, "proof_ref": null, "release_ref": null, "published_ref": null}
+}
+```
+
+The manifest is staging metadata, not a receipt, EvidenceBundle, policy decision, or ReleaseManifest. A signature may prove signer and byte integrity under its certificate policy; it does not prove truth, accessibility, rights, policy approval, or release state.
+
+[Back to top](#top)
+
+---
+
+## Trust, release, and publication boundary
+
+The KFM lifecycle remains:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+A PDF is a derived representation and cannot skip lifecycle or publication gates.
+
+A release candidate should have, where material:
+
+1. source identity/status and dependency digests;
+2. observed build environment and producer/profile identity;
+3. final PDF digest;
+4. syntax, conformance, accessibility, security, and rights results;
+5. canonical receipt and proof references;
+6. explicit release decision;
+7. immutable published location;
+8. correction and rollback target.
+
+A PDF under this path is never public merely because the repository is public. Public links should resolve to an explicitly released copy.
+
+The doctrine-artifact preflight expects built bytes, an artifact digest, and tool-version evidence when a PDF is produced. That expectation is not proof that the preflight ran.
+
+[Back to top](#top)
+
+---
+
+## Producer, CI, retention, and correction
+
+A future producer should deny unidentified/dirty release inputs and live network access, use pinned profiles/tools, capture observed build context without dumping ambient variables, scrub metadata/paths, fail on missing fonts/glyphs, write atomically, validate final bytes, compute final digest, emit staging metadata, and return nonzero on material failure.
+
+Validation outcomes:
+
+| Outcome | Meaning |
 |---|---|
-| Confirm actual files under `artifacts/build/pdf/` | Prevents overclaiming PDF inventory |
-| Confirm build jobs that write here | Required before CI/workflow claims |
-| Confirm digest sidecar convention | Required before hash-pinning claims |
-| Confirm PDF/A or validation reports | Required before conformance claims |
-| Confirm PDF metadata scrubbing | Required before safe publication claims |
-| Confirm retention/pruning policy | Required before storage-lifecycle claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm release handoff, if any | Required before publication claims |
-| Confirm artifact reproducibility | Required before deterministic-byte claims |
-| Confirm source-document linkage | Required before citation/rebuild claims |
+| `PASS` | Declared checks passed for the exact bytes/profile. |
+| `FAIL` | A required check failed. |
+| `ABSTAIN` | Evidence is insufficient for a conformance, accessibility, rights, or release claim. |
+| `DENY` | Unsafe content, leakage, rights failure, or governance bypass is present. |
+| `ERROR` | Tooling or execution failed. |
 
-<details>
-<summary>Appendix A — no-loss preservation note</summary>
+Fail or abstain when output is absent/empty, validators did not run, PDF/A lacks a profile/report, accessibility lacks accepted checks, the digest predates a byte change, repeated-build proof ran once, or release names another digest.
 
-The previous README established that compiled PDF outputs belong here while staged for digesting and citation, expected `<doc-id>.pdf` and `<doc-id>.digest.json`, and prohibited source Markdown, receipts, proofs, EvidenceBundles, release manifests, and published copies. This replacement preserves those constraints and expands the governed directory contract.
+No PDF-specific workflow is established. A future workflow should build from a clean checkout, use pinned tools, deny network, emit sanitized context, run material checks, upload short-lived non-sensitive artifacts, and block release on incomplete outcomes.
 
-</details>
+| Class | Retention posture |
+|---|---|
+| PR preview | Short-lived CI artifact. |
+| Failed sample | Retain only when safe and necessary. |
+| Reproducibility pair | Retain for the comparison window. |
+| Release candidate | Retain until published copy and rollback target are confirmed. |
+| Published bytes | Canonical published home, not this lane. |
 
-## Status summary
+For correction: identify old source/PDF digests, fix the owning source or producer, rebuild from a clean pinned environment, rerun checks, issue new digests, update canonical correction records, invalidate old links/caches/indexes, and preserve supersession lineage.
 
-`artifacts/build/pdf/` is a transitional compatibility lane for deterministic PDF build outputs. It is useful as a staging location, but it does not carry trust by itself.
+Withdraw for secrets, sensitive data, private paths, unlicensed assets, active content, recoverable redactions, or materially incorrect content. Rollback targets an accepted prior release digest; copying an old file into staging is not rollback.
 
-A PDF here becomes relevant to KFM trust only when a canonical receipt, proof, or release record elsewhere references it by digest and passes appropriate validation, policy, review, publication, correction, and rollback gates.
+[Back to top](#top)
 
-<p align="right"><a href="#top">Back to top</a></p>
+---
+
+## Definition of done
+
+- [ ] Owners and CODEOWNERS accepted.
+- [ ] Generated-PDF retain/ignore/externalize/retire policy accepted.
+- [ ] Source-to-PDF identity contract, producer, and deterministic profile implemented.
+- [ ] Observed toolchain capture, manifest schema, and validator implemented.
+- [ ] Syntax, corruption, PDF/A, and linearization checks implemented where claimed.
+- [ ] Accessibility profile and manual review process implemented.
+- [ ] Metadata, active-content, redaction, secret, font, and rights checks implemented.
+- [ ] Final digest and repeated-build comparison implemented.
+- [ ] CI triggers, artifacts, and retention implemented.
+- [ ] Canonical receipt, proof, release, and published-copy handoffs implemented.
+- [ ] Correction, withdrawal, supersession, invalidation, and rollback exercised.
+- [ ] Passing checks are not described as truth, authority, or publication.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+| ID | Question | Status |
+|---|---|---|
+| PDF-01 | Should PDFs be ignored, externally stored, selectively tracked, or the lane retired? | `NEEDS VERIFICATION` |
+| PDF-02 | Who owns PDF build and accessibility governance? | `NEEDS VERIFICATION` |
+| PDF-03 | Is there an uninspected producer or consumer? | `UNKNOWN` |
+| PDF-04 | What source-to-PDF registry, producer home, and deterministic profile are accepted? | `PROPOSED` |
+| PDF-05 | What toolchain versions/digests, PDF version, and PDF/A profile apply? | `NEEDS VERIFICATION` |
+| PDF-06 | Which PDF/A, linearization, accessibility, active-content, and redaction validators are accepted? | `PROPOSED` |
+| PDF-07 | What font, color, image, metadata, attachment, form, encryption, and licensing rules apply? | `NEEDS VERIFICATION` |
+| PDF-08 | What manifest schema, digest sidecar, signing, and repeated-build rules apply? | `PROPOSED` |
+| PDF-09 | Which CI workflow, triggers, retention periods, and release-blocking checks apply? | `PROPOSED` |
+| PDF-10 | Where does the immutable published PDF live? | `NEEDS VERIFICATION` |
+| PDF-11 | Which consumers invalidate old digests after correction or withdrawal? | `UNKNOWN` |
+| PDF-12 | Has PDF rollback been exercised? | `UNKNOWN` |
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | Supports | Limit |
+|---|---|---|
+| Prior lane README | Target identity and durable boundary | Documentation only. |
+| Directory Rules | Compatibility-root separation | Does not prove producer. |
+| Parent build README | Build-output intent | Planning-heavy. |
+| Environment lane/files | Scaffold maturity | No executed build. |
+| Distribution sibling | Staging/handoff discipline | Different output class. |
+| Makefile | No PDF target in current surface | External tooling may exist. |
+| `docs-build.yml` | TODO-only docs workflow | Not PDF production. |
+| `.gitignore` | No PDF-lane ignore protection | Local excludes may differ. |
+| Doctrine preflight runbook | Expected PDF bytes/digest/tool evidence | Not proof that preflight ran. |
+| Exact path checks/search | Named candidates and producer not surfaced | Not exhaustive absence. |
+
+### No-loss assessment
+
+v0.1 correctly established that PDF bytes are derived, source documents remain elsewhere, staging does not create evidence or release authority, deterministic context and digests matter, trust records belong in canonical homes, and secrets/private paths are forbidden. v0.2 preserves those rules while grounding inventory and adding accessibility, security, conformance, reproducibility, CI, retention, and governed handoff requirements.
+
+### Documentation correction and rollback
+
+This change is documentation-only. Before merge, restore prior blob if needed:
+
+```text
+eae2b7dd44d54596bd82c3121ba89a975ca940e5
+```
+
+After merge, revert the documentation commit or publish a corrective evidence-grounded revision. No PDF, build, release, deployment, data, or production rollback is implied.
+
+[Back to top](#top)
