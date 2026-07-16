@@ -1,30 +1,34 @@
 name: agent-temp-atmosphere-kc-hash
 
 on:
-  pull_request:
   push:
     branches:
       - agent/tests-domains-atmosphere-knowledge-character-readme-v3-1-20260716
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify-committed-readme:
+    if: ${{ !contains(github.event.head_commit.message, 'ci(temp): record Atmosphere KC integrity') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Report committed artifact integrity
+        with:
+          ref: agent/tests-domains-atmosphere-knowledge-character-readme-v3-1-20260716
+      - name: Record committed artifact integrity
         shell: bash
         run: |
           set -euo pipefail
           path='tests/domains/atmosphere/knowledge-character/README.md'
-          echo "ARTIFACT_PATH=$path"
-          echo "SHA256=$(sha256sum "$path" | awk '{print $1}')"
-          echo "GIT_BLOB=$(git hash-object "$path")"
-          echo "BYTES=$(wc -c < "$path" | tr -d ' ')"
-          echo "LINES=$(wc -l < "$path" | tr -d ' ')"
-          python - <<'PY'
+          mkdir -p .agent-tmp
+          {
+            echo "ARTIFACT_PATH=$path"
+            echo "SHA256=$(sha256sum "$path" | awk '{print $1}')"
+            echo "GIT_BLOB=$(git hash-object "$path")"
+            echo "BYTES=$(wc -c < "$path" | tr -d ' ')"
+            echo "LINES=$(wc -l < "$path" | tr -d ' ')"
+            python - <<'PY'
           from pathlib import Path
           import re
 
@@ -36,3 +40,9 @@ jobs:
           print(f'FENCE_LINES={fences}')
           print(f'FINAL_NEWLINE={text.endswith(chr(10))}')
           PY
+          } > .agent-tmp/atmosphere-kc-integrity.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .agent-tmp/atmosphere-kc-integrity.txt
+          git commit -m 'ci(temp): record Atmosphere KC integrity'
+          git push
