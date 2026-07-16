@@ -1,48 +1,42 @@
 name: agent-temp-atmosphere-kc-hash
 
 on:
-  push:
-    branches:
-      - agent/tests-domains-atmosphere-knowledge-character-readme-v3-1-20260716
+  pull_request:
 
 permissions:
-  contents: write
+  contents: read
+  pull-requests: write
 
 jobs:
   verify-committed-readme:
-    if: ${{ !contains(github.event.head_commit.message, 'ci(temp): record Atmosphere KC integrity') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: agent/tests-domains-atmosphere-knowledge-character-readme-v3-1-20260716
-      - name: Record committed artifact integrity
+      - name: Post committed README integrity
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
           path='tests/domains/atmosphere/knowledge-character/README.md'
-          mkdir -p .agent-tmp
-          {
-            echo "ARTIFACT_PATH=$path"
-            echo "SHA256=$(sha256sum "$path" | awk '{print $1}')"
-            echo "GIT_BLOB=$(git hash-object "$path")"
-            echo "BYTES=$(wc -c < "$path" | tr -d ' ')"
-            echo "LINES=$(wc -l < "$path" | tr -d ' ')"
-            python - <<'PY'
-          from pathlib import Path
-          import re
-
-          path = Path('tests/domains/atmosphere/knowledge-character/README.md')
-          text = path.read_text(encoding='utf-8')
-          h1 = sum(1 for line in text.splitlines() if re.match(r'^# ', line))
-          fences = sum(1 for line in text.splitlines() if line.startswith('```'))
-          print(f'H1_COUNT={h1}')
-          print(f'FENCE_LINES={fences}')
-          print(f'FINAL_NEWLINE={text.endswith(chr(10))}')
-          PY
-          } > .agent-tmp/atmosphere-kc-integrity.txt
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .agent-tmp/atmosphere-kc-integrity.txt
-          git commit -m 'ci(temp): record Atmosphere KC integrity'
-          git push
+          sha256=$(sha256sum "$path" | awk '{print $1}')
+          git_blob=$(git hash-object "$path")
+          bytes=$(wc -c < "$path" | tr -d ' ')
+          lines=$(wc -l < "$path" | tr -d ' ')
+          h1=$(grep -Ec '^# ' "$path")
+          fences=$(grep -Ec '^```' "$path")
+          final_newline=$(python -c "from pathlib import Path; print(Path('$path').read_bytes().endswith(b'\\n'))")
+          body=$(cat <<EOF
+          TEMPORARY_ATMOSPHERE_KC_INTEGRITY
+          ARTIFACT_PATH=$path
+          SHA256=$sha256
+          GIT_BLOB=$git_blob
+          BYTES=$bytes
+          LINES=$lines
+          H1_COUNT=$h1
+          FENCE_LINES=$fences
+          FINAL_NEWLINE=$final_newline
+          EOF
+          )
+          gh pr comment "$PR_NUMBER" --repo "${{ github.repository }}" --body "$body"
