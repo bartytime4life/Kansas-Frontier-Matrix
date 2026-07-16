@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-tests-domains-atmosphere-no-network-fixtures-readme-159f4d27",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/atmosphere/no-network-fixtures/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/atmosphere/no-network-fixtures/README.md": "sha256:159f4d27649e9534dfa2f4962a5a6ba9261b9ec3d4065a59b5e5d71f1c33835a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container/Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/tests/domains/atmosphere/no-network-fixtures/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/tests/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/tests/domains/atmosphere/no-network/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/fixtures/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/docs/runbooks/atmosphere/NO_NETWORK_TEST_RUNBOOK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d4da1d8bd25fac0255c87ea4d05e2e4c2f5a2fd3/Makefile"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/atmosphere/no-network-fixtures/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the enforceability root; reusable Atmosphere fixture payloads remain under fixtures/, and source, evidence, policy, lifecycle, release, and public authority remain separate."
+    },
+    {
+      "gate": "target-precondition-and-drift",
+      "outcome": "PASS",
+      "reason": "The authoring base and target prior blob were rechecked; no matching task branch or duplicate document ID surfaced. The open-PR search endpoint was unavailable and is recorded as a bounded limitation."
+    },
+    {
+      "gate": "no-network-fixture-responsibility-split",
+      "outcome": "PASS",
+      "reason": "The README assigns broad egress denial to the no-network sibling and fixture routing, provenance, determinism, safety, consumer traceability, and remote-reference rejection to this lane."
+    },
+    {
+      "gate": "current-maturity",
+      "outcome": "PASS",
+      "reason": "The direct lane is recorded as README-only; named probes found no direct test, conftest, manifest, parent-level test, or test-local Atmosphere fixture parent at the checked paths."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The committed README has one H1, 78 unique heading anchors, 32 fenced-block delimiter lines, a final newline, and all 52 internal fragment links resolve."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "The committed Git blob aecabb196f0c88ff4d0fab2ada30f2ca4f79a703 exactly matches the validated local artifact; SHA-256, byte count, and line count are bound above and in the notes."
+    },
+    {
+      "gate": "secret-sensitive-and-life-safety-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, real source payloads, private endpoints, protected-location data, living-person data, current official alerts, medical guidance, emergency instructions, or production trust artifacts were introduced."
+    },
+    {
+      "gate": "executable-no-network-fixture-tests",
+      "outcome": "SKIPPED",
+      "reason": "This change is documentation-only; no direct executable test module was established or modified."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request workflows had not run when this receipt was emitted; final status must be read from the PR head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/atmosphere/no-network-fixtures/README.md@d4da1d8b",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/atmosphere/no-network/README.md@d4da1d8b",
+      "validated": true
+    },
+    {
+      "id": "fixtures/domains/atmosphere/README.md@d4da1d8b",
+      "validated": true
+    },
+    {
+      "id": "docs/runbooks/atmosphere/NO_NETWORK_TEST_RUNBOOK.md@d4da1d8b",
+      "validated": true
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md@d4da1d8b",
+      "validated": true
+    },
+    {
+      "id": ".github/workflows/domain-atmosphere.yml@d4da1d8b",
+      "validated": true
+    },
+    {
+      "id": "Makefile@d4da1d8b",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T23:24:32Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Atmosphere no-network-fixtures README. The committed README is 1,291 lines and 59,367 bytes with Git blob aecabb196f0c88ff4d0fab2ada30f2ca4f79a703. It records README-only lane maturity, separates fixture governance from broad egress denial, preserves reusable fixture authority, defines deterministic/public-safe/consumer-traceable expectations, and changes no test code, fixture payload, source record, schema, contract, policy, validator, workflow, lifecycle object, release object, alert, or public output. Human review remains pending."
+}
