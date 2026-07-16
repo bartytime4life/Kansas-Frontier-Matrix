@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-tests-domains-archaeology-readme-d2d3fa64",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/archaeology/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/archaeology/README.md": "sha256:d2d3fa64b7ea68cf9b5d8034b48d637957fd0ea3951ea3f1b466ecd75a852cc3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/da40c9b4e55b2851556ec19ca57e40af41203a6a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/tests/domains/archaeology/fixtures/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/tests/domains/archaeology/fixtures/source_admission/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/tests/fixtures/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/tests/fixtures/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/fixtures/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/docs/domains/archaeology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/docs/domains/archaeology/CULTURAL_REVIEW.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/docs/domains/archaeology/PUBLICATION_AND_POLICY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/tools/validators/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/da40c9b4e55b2851556ec19ca57e40af41203a6a/pyproject.toml"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/archaeology/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the canonical enforceability root; contracts, schemas, policy, fixtures, source records, evidence, lifecycle data, and release authority remain separate."
+    },
+    {
+      "gate": "target-precondition-and-drift",
+      "outcome": "PASS",
+      "reason": "Pinned base and prior blob were rechecked; no matching open PR, task branch, or duplicate document ID surfaced."
+    },
+    {
+      "gate": "direct-test-inventory",
+      "outcome": "PASS",
+      "reason": "Bounded repository search surfaced thirteen named direct test modules, and the README lists them without claiming exhaustive history or current collection."
+    },
+    {
+      "gate": "placeholder-maturity",
+      "outcome": "PASS",
+      "reason": "Three sampled direct test modules contain only one PROPOSED placeholder docstring; the README separates filename presence from executable enforcement."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The committed README has one H1, balanced fenced blocks, unique heading anchors, a final newline, and all internal fragment links resolve."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "The committed Git blob 229113afacc6acc0839e92318082ccce9e2ceab3 was reconstructed exactly; the artifact SHA-256 is bound above."
+    },
+    {
+      "gate": "secret-and-sensitive-content-scan",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, plausible site coordinates, protected Archaeology details, real source exports, or production trust artifacts were introduced."
+    },
+    {
+      "gate": "executable-archaeology-tests",
+      "outcome": "SKIPPED",
+      "reason": "This change is documentation-only; sampled direct modules are placeholders and no executable behavior was modified."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "PR workflows had not run when this receipt was emitted; final status must be read from the pull-request head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/archaeology/README.md@da40c9b4",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/archaeology/fixtures/README.md@da40c9b4",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/archaeology/fixtures/source_admission/README.md@da40c9b4",
+      "validated": true
+    },
+    {
+      "id": "tests/README.md@da40c9b4",
+      "validated": true
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md@da40c9b4",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/archaeology/SENSITIVITY.md@da40c9b4",
+      "validated": true
+    },
+    {
+      "id": "policy/domains/archaeology/README.md@da40c9b4",
+      "validated": true
+    },
+    {
+      "id": "tools/validators/archaeology/README.md@da40c9b4",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T22:24:51Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Archaeology domain-test README. The README inventories thirteen named modules, records sampled placeholder-only maturity, integrates grounded fixture lanes, preserves no-network and protected-detail denial, and changes no executable tests, fixture payloads, source records, schemas, contracts, policy, validators, lifecycle artifacts, releases, or public outputs. Human review remains pending."
+}
