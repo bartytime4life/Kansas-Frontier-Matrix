@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-tests-domains-atmosphere-policy-deny-aqi-vs-concentration-readme-3ef71bc8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md": "sha256:3ef71bc858f234b22db0cb0a8d7692b9e7221c4fef447163773e2e269ad1ceb7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container/Python validation",
+      "temporary readable-fragment transfer workflow"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b22a43297c76248c174e15bfd6d5b2c75c563e92",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/tests/domains/atmosphere/policy-deny/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/tests/domains/atmosphere/test_aqi_as_concentration_denied.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/docs/domains/atmosphere/POLICY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/contracts/domains/atmosphere/knowledge_character.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/policy/domains/atmosphere/aqi_is_not_concentration.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/contracts/domains/atmosphere/AirObservation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/contracts/domains/atmosphere/PM25Observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/contracts/domains/atmosphere/OzoneObservation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/contracts/domains/atmosphere/pm25-observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/contracts/domains/atmosphere/ozone-observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/schemas/contracts/v1/domains/atmosphere/AirObservation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/schemas/contracts/v1/domains/atmosphere/OzoneObservation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/fixtures/domains/atmosphere/objects/AirObservation.invalid.aqi_as_concentration.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/docs/sources/catalog/epa/airnow-api.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b22a43297c76248c174e15bfd6d5b2c75c563e92/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the enforceability root; policy, contracts, schemas, fixtures, source authority, evidence, lifecycle data, release state, health guidance, and public implementation remain in their owning roots."
+    },
+    {
+      "gate": "target-precondition-and-competing-work",
+      "outcome": "PASS",
+      "reason": "The target prior blob was rechecked at the pinned evidence base. No matching task branch, duplicate document ID, or open pull request surfaced before mutation."
+    },
+    {
+      "gate": "aqi-concentration-authority-split",
+      "outcome": "PASS",
+      "reason": "The README distinguishes PUBLIC_AQI_REPORT from concentration/observation roles, canonical CamelCase contracts from lowercase compatibility pointers, source documentation from admitted source authority, and tests from policy, evidence, release, regulatory, and health authority."
+    },
+    {
+      "gate": "current-maturity",
+      "outcome": "PASS",
+      "reason": "The child lane is recorded as README-only; the adjacent test is a one-line placeholder; the Rego file is default-deny scaffold text; the three schemas are permissive; and the invalid fixture is metadata-only."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The committed README has one H1, seventy-six unique headings, thirty-eight fenced-block delimiter lines, a final newline, and all internal fragment links resolve."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "Nine readable line-boundary fragments were individually Git-blob verified and then reconstructed by a checksum-gated temporary workflow. The committed README is Git blob 08fb2678c963de27bd8f1e5d2bfe55eb7749bb27, 53815 bytes, 1167 lines, and SHA-256 3ef71bc858f234b22db0cb0a8d7692b9e7221c4fef447163773e2e269ad1ceb7. All temporary transfer files and workflow were removed."
+    },
+    {
+      "gate": "secret-sensitive-health-and-alert-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, real source payloads, private endpoints, protected-location data, living-person data, current official alerts, medical guidance, protective-action instructions, or production trust artifacts were introduced."
+    },
+    {
+      "gate": "executable-aqi-concentration-tests",
+      "outcome": "SKIPPED",
+      "reason": "This change is documentation-only; no substantive direct test, policy adapter, fixture payload, schema closure, or validator was established or modified."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request workflows were still running when this receipt was emitted; final status must be read from the pull-request head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md@b22a4329",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/atmosphere/test_aqi_as_concentration_denied.py@b22a4329",
+      "validated": true
+    },
+    {
+      "id": "policy/domains/atmosphere/aqi_is_not_concentration.rego@b22a4329",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/AirObservation.md@b22a4329",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/PM25Observation.md@b22a4329",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/OzoneObservation.md@b22a4329",
+      "validated": true
+    },
+    {
+      "id": "fixtures/domains/atmosphere/objects/AirObservation.invalid.aqi_as_concentration.json@b22a4329",
+      "validated": true
+    },
+    {
+      "id": "docs/sources/catalog/epa/airnow-api.md@b22a4329",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T01:14:17Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": 1344,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Atmosphere AQI-versus-concentration policy-deny README. The README records README-only child maturity, a one-line adjacent test placeholder, one default-deny Rego scaffold plus planning/live path drift, canonical observation contracts and compatibility pointers, permissive schemas, a metadata-only fixture, AirNow/AQS source-role separation, required negative and positive controls, inversion boundaries, finite outcomes, carrier preservation, CI, correction, and rollback. No executable test, policy bundle, fixture payload, schema, contract, validator, workflow behavior, lifecycle object, evidence object, release object, health guidance, alert, or public output was changed. Human review remains pending."
+}
