@@ -1,11 +1,147 @@
+# Kansas Frontier Matrix Dependabot configuration
+# Version: v1.0
+# Updated: 2026-07-17
+#
+# Authority boundary:
+# - Dependabot proposes dependency changes through pull requests.
+# - It does not approve, merge, release, publish, change policy, or establish
+#   that an update is compatible, secure, rights-cleared, or production-ready.
+# - Security updates stay on the default branch because no target-branch is set.
+# - Group rules below apply only to version updates; security updates remain
+#   isolated for focused review.
+# - Labels are intentionally omitted until the repository label inventory is
+#   verified. CODEOWNERS remains the review-routing surface.
+# - Docker base-image monitoring is not enabled here because the current files
+#   use custom Dockerfile.* placeholder names; supported discovery and intended
+#   activation remain NEEDS VERIFICATION.
+
 version: 2
+
 updates:
-  - package-ecosystem: pip
+  # Python monorepo: root app, application, package, domain-package, pipeline,
+  # and connector manifests. Globs are intentionally bounded to known
+  # responsibility roots rather than scanning every repository directory.
+  - package-ecosystem: "pip"
+    directories:
+      - "/"
+      - "/apps/*"
+      - "/packages/*"
+      - "/packages/domains/*"
+      - "/pipelines/*"
+      - "/connectors/*"
+      - "/connectors/*/*"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 6
+    assignees:
+      - "bartytime4life"
+    commit-message:
+      prefix: "deps(python)"
+      prefix-development: "deps(python-dev)"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "-"
+    groups:
+      python-minor-patch:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+        group-by: "dependency-name"
+      python-major:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+        group-by: "dependency-name"
+
+  # The root package.json declares the apps/* and packages/* workspaces.
+  - package-ecosystem: "npm"
     directory: "/"
-    schedule: { interval: weekly }
-  - package-ecosystem: npm
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 4
+    assignees:
+      - "bartytime4life"
+    commit-message:
+      prefix: "deps(node)"
+      prefix-development: "deps(node-dev)"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "-"
+    groups:
+      node-minor-patch:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      node-major:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+
+  # GitHub Actions references in .github/workflows and repository-local actions.
+  - package-ecosystem: "github-actions"
     directory: "/"
-    schedule: { interval: weekly }
-  - package-ecosystem: github-actions
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 3
+    assignees:
+      - "bartytime4life"
+    commit-message:
+      prefix: "ci(actions)"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "-"
+    groups:
+      actions-minor-patch:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      actions-major:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+
+  # Root .pre-commit-config.yaml hook revisions.
+  - package-ecosystem: "pre-commit"
     directory: "/"
-    schedule: { interval: weekly }
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 2
+    assignees:
+      - "bartytime4life"
+    commit-message:
+      prefix: "chore(pre-commit)"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "-"
+    groups:
+      pre-commit-hooks:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
