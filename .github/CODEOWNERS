@@ -1,13 +1,69 @@
-# KFM CODEOWNERS — greenfield placeholder.
-# Add domain stewards as the project staffs up.
-*                       @kfm/maintainers
-/docs/doctrine/         @kfm/doctrine-stewards
-/contracts/             @kfm/contract-stewards
-/schemas/               @kfm/schema-stewards
-/policy/                @kfm/policy-stewards
-/release/               @kfm/release-stewards
-/data/published/        @kfm/release-stewards
-/apps/governed-api/     @kfm/api-stewards
-/apps/review-console/   @kfm/governance-stewards
-/docs/domains/hydrology/         @kfm/hydrology-stewards
-/docs/domains/people-dna-land/   @kfm/sensitivity-stewards
+# Kansas Frontier Matrix CODEOWNERS
+# Version: v1.0
+# Updated: 2026-07-17
+#
+# Authority boundary
+# - CODEOWNERS routes GitHub review requests. It is not a StewardshipAssignment,
+#   ReviewRecord, PolicyDecision, release approval, publication authority, or
+#   proof that review occurred.
+# - @bartytime4life is the only owner identity asserted here because that
+#   account was verified with repository admin permission during this update.
+# - Add or replace owners only after verifying that each user or team exists,
+#   has explicit write access, and has an approved responsibility assignment.
+# - Governance role names such as docs steward, policy steward, sensitivity
+#   reviewer, or release authority are not GitHub identities. Do not encode
+#   placeholder roles or unverified teams as executable owners.
+# - Branch protection, rulesets, required code-owner review, and independent
+#   author/approver separation remain separate controls and NEEDS VERIFICATION.
+#
+# Pattern order matters: the last matching pattern takes precedence.
+
+# Default review route
+* @bartytime4life
+
+# Protect GitHub governance hooks and repository entrypoints
+/.github/ @bartytime4life
+/.github/CODEOWNERS @bartytime4life
+/SECURITY.md @bartytime4life
+/CONTRIBUTING.md @bartytime4life
+
+# Human governance, doctrine, decisions, and registers
+/docs/doctrine/ @bartytime4life
+/docs/adr/ @bartytime4life
+/docs/governance/ @bartytime4life
+/docs/registers/ @bartytime4life
+/control_plane/ @bartytime4life
+
+# Trust-bearing semantic, machine, policy, provenance, and release roots
+/contracts/ @bartytime4life
+/schemas/ @bartytime4life
+/policy/ @bartytime4life
+/release/ @bartytime4life
+/data/registry/ @bartytime4life
+/data/receipts/ @bartytime4life
+/data/proofs/ @bartytime4life
+/data/published/ @bartytime4life
+
+# Public delivery, runtime, configuration, validation, and automation boundaries
+/apps/governed-api/ @bartytime4life
+/apps/explorer-web/ @bartytime4life
+/infra/ @bartytime4life
+/runtime/ @bartytime4life
+/configs/ @bartytime4life
+/tools/validators/ @bartytime4life
+/tools/watchers/ @bartytime4life
+/tests/ @bartytime4life
+/fixtures/ @bartytime4life
+
+# Source admission, transformation, and shared implementation lanes
+/connectors/ @bartytime4life
+/pipelines/ @bartytime4life
+/pipeline_specs/ @bartytime4life
+/packages/ @bartytime4life
+
+# Explicit sensitive-domain review routes
+/docs/domains/archaeology/ @bartytime4life
+/docs/domains/fauna/ @bartytime4life
+/docs/domains/flora/ @bartytime4life
+/docs/domains/people-dna-land/ @bartytime4life
+/docs/domains/settlements-infrastructure/ @bartytime4life
