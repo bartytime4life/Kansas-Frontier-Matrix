@@ -1,0 +1,153 @@
+{
+  "receipt_id": "genrec-geology-source-namespace-readme-dc8de036",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/domains/geology/src/geology/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/domains/geology/src/geology/README.md": "sha256:32a1b8337f4e233f1ead991f030d0f7472ff8b82295e63a428949c70673a196b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-07-17-work-mode"
+  },
+  "prompt_or_contract": "sha256:ac9a3bf2b28a7a373cf62c3d387ce6e3e168cf1f34d73af5d280903bc2225978",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository inventory",
+      "repository validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(28).txt",
+      "docs/doctrine/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/src/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/src/geology/__init__.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/src/geology/identity.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/src/geology/layers.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/src/geology/observations.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/soil/src/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/tests/domains/geology/test_geology_smoke.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/.github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "truth_labels": {
+    "packages/domains/geology/src/geology/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "The default branch, pinned base commit, clean starting worktree, 2,245 tracked README files, repository instructions, three conflicting Directory Rules copies, proposed ADRs, drift register, security policy, CODEOWNERS, PR template, and overlapping branches and pull requests were inspected before editing."
+    },
+    {
+      "gate": "missing-path-classification",
+      "outcome": "PASS",
+      "reason": "The immediate geology source README explicitly links to the absent namespace README, and 12 of 13 sibling domain Python namespaces already had a README while all 13 share the same four-file module scaffold. The target directory already existed."
+    },
+    {
+      "gate": "scope-and-directory-rules",
+      "outcome": "PASS",
+      "reason": "The documentation stays inside the existing packages/domains/geology source namespace and adds provenance to the existing generated-receipt lane. It creates no root, live integration, lifecycle path, or parallel contract, schema, policy, registry, proof, catalog, release, or public authority."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "The namespace README has one H1, one KFM metadata block, balanced fences, a final newline, all twelve Directory Rules sections in order, and resolving repository-relative link destinations."
+    },
+    {
+      "gate": "namespace-import-and-compile",
+      "outcome": "PASS",
+      "reason": "With the package source directory supplied explicitly on PYTHONPATH and bytecode writes disabled or redirected outside the repository, geology plus identity, layers, and observations imported and the namespace compiled successfully."
+    },
+    {
+      "gate": "geology-placeholder-tests",
+      "outcome": "PASS",
+      "reason": "The current tests/domains/geology lane completed with one passing smoke test. That test is a placeholder assertion and does not verify helper, packaging, policy, evidence, sensitivity, release, or production behavior; those remain UNKNOWN."
+    },
+    {
+      "gate": "repository-native-validation",
+      "outcome": "PASS",
+      "reason": "With temporary validation dependencies isolated outside the repository, PYTHONDONTWRITEBYTECODE=1, cacheprovider disabled, and PYTHONPATH=/tmp/kfm-validation-deps, make validate completed successfully: valid fixtures passed, invalid fixtures were rejected as expected, and 16 schema and contract tests passed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hashes",
+      "outcome": "PASS",
+      "reason": "This receipt parses as JSON, conforms to the repository generated-receipt schema with Draft 2020-12 format checking, and its artifact hash and prompt hash were recomputed from final bytes."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Common private-key, GitHub token, AWS key, and OpenAI token patterns were not found in the authored artifacts; no payload, exact sensitive location, credential, live source, runtime endpoint, release, deployment, or publication was added."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no source implementation, schema shape, fixture payload, policy module, pipeline, workflow, runtime, release object, or public artifact changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "package-domain-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "geology-namespace-readme-reference",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/src/README.md"
+    },
+    {
+      "id": "geology-package-and-module-scaffold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/geology/pyproject.toml"
+    },
+    {
+      "id": "sibling-domain-namespace-readme-pattern",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/packages/domains/soil/src/soil/README.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "ai-authored-pr-receipt-requirement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cadc7ebc81e29b863ea29fd78f4a1c7d2d23a16/.github/PULL_REQUEST_TEMPLATE.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T14:50:53Z",
+  "emitter": "openai-codex/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored packages-root documentation completion on a scoped review branch. The evidence-supported Geology Python namespace README was added to an existing directory; broader stale-document repair and executable validator candidates were deferred to separate batches. Human review remains pending; this receipt is provenance evidence, not package behavior, source admission, policy permission, evidence closure, proof, catalog closure, release approval, or publication authority."
+}
