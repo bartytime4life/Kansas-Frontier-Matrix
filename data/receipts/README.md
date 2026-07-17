@@ -3,7 +3,7 @@ doc_id: kfm://data/receipts/readme
 name: Receipts README
 path: data/receipts/README.md
 type: data-receipts-root-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners:
   - <receipt-steward>
@@ -13,13 +13,13 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-17
 policy_label: internal-governance
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: receipts
 receipt_scope: process-memory
-path_posture: existing-root-stub-replaced; child-lanes-observed-by-github-search; exact-receipt-layout-needs-verification
+path_posture: existing-root-stub-replaced; child-lanes-observed-in-repository; generated-lane-documented; exact-receipt-layout-needs-verification
 sensitivity_posture: receipt-internal; no-public-path; process-memory-not-proof; receipt-not-catalog; receipt-not-release; policy-aware; release-blocked-until-gates-close
 related:
   - validation/README.md
@@ -30,6 +30,7 @@ related:
   - ai/README.md
   - fauna/README.md
   - soil/README.md
+  - generated/README.md
   - ../proofs/README.md
   - ../catalog/README.md
   - ../registry/README.md
@@ -60,6 +61,7 @@ notes:
   - "ADR-0011 is proposed and states the core boundary: receipt != proof != catalog != publication."
   - "RunReceipt standard states receipts live under `data/receipts/` and that a receipt does not prove factual correctness, legal admissibility, historical truth, scientific certainty, or public-safety suitability."
   - "Child-lane presence is README/path evidence only; emitted payloads, schemas, validators, CI checks, signing, release integration, correction hooks, and rollback hooks remain NEEDS VERIFICATION unless separately proven."
+  - "v0.3 documents the populated generated-receipt lane; it does not retroactively validate or approve existing receipt payloads."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -119,6 +121,7 @@ data/receipts/validation/
 data/receipts/telemetry/
 data/receipts/flora/
 data/receipts/redaction/flora/
+data/receipts/generated/
 ```
 
 Exact subtype/domain ordering remains **NEEDS VERIFICATION** until accepted receipt-layout governance or ADR review confirms the pattern.
@@ -184,6 +187,7 @@ The lanes below were observed through current GitHub reads/searches while replac
 | [`ai/`](ai/README.md) | CONFIRMED PATH | Governed-AI receipt lane. | AI receipts are not sovereign truth and do not replace EvidenceBundle resolution. |
 | [`fauna/`](fauna/README.md) | CONFIRMED PATH | Fauna domain receipt lane. | Sensitive species and geoprivacy controls still govern downstream use. |
 | [`soil/`](soil/README.md) | CONFIRMED PATH | Soil domain receipt lane. | Soil process memory is not source payload, proof, catalog closure, or release approval. |
+| [`generated/`](generated/README.md) | CONFIRMED README + JSON PAYLOADS | AI-authored artifact provenance lane; 59 direct-child JSON receipts were observed at the recorded base snapshot. | Generated receipts are process memory, not human approval, factual proof, policy permission, catalog closure, release authority, or publication authority. |
 
 ---
 
@@ -267,6 +271,9 @@ data/receipts/
 ├── ai/
 ├── fauna/
 ├── soil/
+├── generated/
+│   ├── README.md
+│   └── genrec-<scope>-<digest>.json
 ├── <domain-or-lane>/
 │   ├── <run_id>/
 │   │   ├── receipt.json
@@ -304,7 +311,8 @@ data/receipts/
 | Directory Rules state that file location encodes responsibility root, lifecycle phase, and governance posture. | CONFIRMED from repo documentation |
 | ADR-0011 states the intended boundary `receipt != proof != catalog != publication`. | CONFIRMED proposed ADR text; acceptance remains proposed unless separately verified |
 | RunReceipt standard states receipt storage belongs under `data/receipts/` and that receipts do not prove factual correctness or public-safety suitability. | CONFIRMED from repo documentation |
-| Child README/path evidence exists for validation, atmosphere validation, doctrine artifact check, flora validation, telemetry, flora, redaction/flora, aggregation, ai, fauna, and soil lanes. | CONFIRMED by current GitHub reads/searches |
+| Child README/path evidence exists for validation, atmosphere validation, doctrine artifact check, flora validation, telemetry, flora, redaction/flora, aggregation, ai, fauna, soil, and generated lanes. | CONFIRMED by current repository inspection |
+| Fifty-nine direct-child JSON receipts existed under `generated/` at the recorded base commit. | CONFIRMED by bounded repository inventory; individual validity and approval remain unverified |
 | Emitted receipt payloads exist across all listed lanes. | UNKNOWN |
 | CI currently emits receipts into all relevant lanes. | UNKNOWN |
 | A canonical receipt schema is fully enforced across all child lanes. | NEEDS VERIFICATION |

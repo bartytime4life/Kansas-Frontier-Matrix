@@ -3,7 +3,7 @@ doc_id: kfm://data/published/layers/soil/suitability/readme
 name: Soil Suitability Published Layer README
 path: data/published/layers/soil/suitability/README.md
 type: data-lane-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <soil-domain-steward>
@@ -11,7 +11,7 @@ owners:
   - <map-layer-steward>
   - <policy-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-07-17
 policy_label: public-with-review
 truth_posture: cite-or-abstain
 lifecycle_phase: published
@@ -228,15 +228,15 @@ RAW / WORK / QUARANTINE / processed candidate / direct source record / direct mo
 - [`../satellite_grid/README.md`](../satellite_grid/README.md)
 - [`../../README.md`](../../README.md)
 - [`../../../README.md`](../../../README.md)
-- [`../../../../docs/domains/soil/ARCHITECTURE.md`](../../../../docs/domains/soil/ARCHITECTURE.md)
-- [`../../../../docs/domains/soil/DATA_LIFECYCLE.md`](../../../../docs/domains/soil/DATA_LIFECYCLE.md)
-- [`../../../../docs/domains/soil/CANONICAL_PATHS.md`](../../../../docs/domains/soil/CANONICAL_PATHS.md)
-- [`../../../../docs/domains/soil/API_CONTRACTS.md`](../../../../docs/domains/soil/API_CONTRACTS.md)
-- [`../../../../contracts/domains/soil/suitability_rating.md`](../../../../contracts/domains/soil/suitability_rating.md)
-- [`../../../../contracts/domains/soil/domain_layer_descriptor.md`](../../../../contracts/domains/soil/domain_layer_descriptor.md)
-- [`../../../../contracts/domains/soil/soil_time_caveat.md`](../../../../contracts/domains/soil/soil_time_caveat.md)
-- [`../../../proofs/soil/README.md`](../../../proofs/soil/README.md)
-- [`../../../../release/manifests/README.md`](../../../../release/manifests/README.md)
+- [`../../../../../docs/domains/soil/ARCHITECTURE.md`](../../../../../docs/domains/soil/ARCHITECTURE.md)
+- [`../../../../../docs/domains/soil/DATA_LIFECYCLE.md`](../../../../../docs/domains/soil/DATA_LIFECYCLE.md)
+- [`../../../../../docs/domains/soil/CANONICAL_PATHS.md`](../../../../../docs/domains/soil/CANONICAL_PATHS.md)
+- [`../../../../../docs/domains/soil/API_CONTRACTS.md`](../../../../../docs/domains/soil/API_CONTRACTS.md)
+- [`../../../../../contracts/domains/soil/suitability_rating.md`](../../../../../contracts/domains/soil/suitability_rating.md)
+- [`../../../../../contracts/domains/soil/domain_layer_descriptor.md`](../../../../../contracts/domains/soil/domain_layer_descriptor.md)
+- [`../../../../../contracts/domains/soil/soil_time_caveat.md`](../../../../../contracts/domains/soil/soil_time_caveat.md)
+- [`../../../../proofs/soil/README.md`](../../../../proofs/soil/README.md)
+- [`../../../../../release/manifests/README.md`](../../../../../release/manifests/README.md)
 
 ---
 

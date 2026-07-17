@@ -3,7 +3,7 @@ doc_id: kfm://data/triplet/readme
 name: Triplet Data Compatibility README
 path: data/triplet/README.md
 type: data-compatibility-lane-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <data-steward>
@@ -17,7 +17,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-29
-updated: 2026-06-29
+updated: 2026-07-17
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -284,7 +284,7 @@ If any payload-like file appears here, classify it immediately and move it to th
 |---|---|---|---|
 | Previous target file | CONFIRMED | `data/triplet/README.md` existed as an empty file. | Did not define boundaries. |
 | [`../triplets/README.md`](../triplets/README.md) | CONFIRMED README | Canonical plural triplets lane, graph projection posture, suggested child shape, and no-public-path boundary. | Does not prove payload inventory. |
-| [`../triplet(s)/README.md`](../triplet(s)/README.md) | CONFIRMED compatibility README | Literal parentheses path is compatibility-only and points to `data/triplets/`. | Does not authorize singular `data/triplet/`. |
+| [`../triplet(s)/README.md`](<../triplet(s)/README.md>) | CONFIRMED compatibility README | Literal parentheses path is compatibility-only and points to `data/triplets/`. | Does not authorize singular `data/triplet/`. |
 | [`habitat/README.md`](habitat/README.md) | CONFIRMED compatibility README | Singular Habitat child path is compatibility-only and points to plural `data/triplets/`. | Does not prove canonical Habitat triplet child placement or payloads. |
 | [`../README.md`](../README.md) | CONFIRMED README | `data/` owns lifecycle data and lists `triplets`. | Data root README is short and status `PROPOSED`. |
 | [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | `data/triplets/`, `graph_deltas/`, `exports/`, lifecycle invariant, and no canonical replacement semantics. | Does not authorize singular `data/triplet/` as canonical. |
