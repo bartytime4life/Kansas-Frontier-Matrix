@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-source-admission-template-48a31ddd",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/source_admission.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/source_admission.md": "sha256:48a31dddc9617fbf146938c71c1a531f697af941582a2cdb7f6ad598a662edeb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Markdown issue-template validation",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7af05fc50e5a1bab28b314532b0a66d2839a229b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/ISSUE_TEMPLATE/source_admission.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/sources/ADMISSION_PROCESS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/sources/SOURCE_DESCRIPTOR_STANDARD.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/data/registry/sources/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/contracts/source/source_descriptor.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/adr/ADR-0017-source-descriptor-admission-process.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6288f139a528de4d5aa6a812e5ac6b0ba954914e"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/source_admission.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity and admin permission, default-branch base 7af05fc50e5a1bab28b314532b0a66d2839a229b, target source-admission stub and blob, issue-intake boundary, security policy, source-admission process, SourceDescriptor standard and contract, source registry README, proposed ADR-0017, receipt schema, and absence of overlapping open work."
+    },
+    {
+      "gate": "no-loss-and-admission-model-alignment",
+      "outcome": "PASS",
+      "reason": "Preserved the original proposal to admit a source under data/registry/sources while adding descriptor-level and record-level admission, identity, role, authority, rights, sensitivity, cadence, access, citation, source-head, validation, quarantine, activation, disable, and downstream-boundary requirements."
+    },
+    {
+      "gate": "markdown-front-matter-and-structure",
+      "outcome": "PASS",
+      "reason": "Parsed front matter with name/about/title/labels/assignees; verified balanced comments and code fences, final newline, required section inventory, empty unverified labels, and assignment to verified repository owner bartytime4life."
+    },
+    {
+      "gate": "security-rights-and-public-intake-boundary",
+      "outcome": "PASS",
+      "reason": "The template prohibits secrets, restricted payloads, exact sensitive locations, private records, unauthorized scraping, access-control bypass, and unapproved live tests; routes security-sensitive details to SECURITY.md; and keeps the issue separate from rights, sensitivity, consent, access, and activation authority."
+    },
+    {
+      "gate": "source-role-lifecycle-and-watcher-boundary",
+      "outcome": "PASS",
+      "reason": "The template fixes source role at admission, separates admission from promotion/publication, requires fixture-before-connector, routes invalid or unresolved material to quarantine/deny/hold, preserves watcher-as-non-publisher, and requires finite triage plus disable/rollback posture."
+    },
+    {
+      "gate": "schema-vocabulary-and-path-conflict-posture",
+      "outcome": "PASS",
+      "reason": "The template points reviewers to current contract/schema vocabulary without silently reconciling older role vocabularies, the source versus sources schema-path conflict, or the data/registry/sources versus source_descriptors relationship; those remain visible verification items."
+    },
+    {
+      "gate": "artifact-hash-and-remote-readback",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 48a31dddc9617fbf146938c71c1a531f697af941582a2cdb7f6ad598a662edeb and Git blob SHA 0536d87840a0cf087673197dcf49a07708bff82b; GitHub returned the same blob SHA after the update."
+    },
+    {
+      "gate": "issue-chooser-render-and-platform-settings",
+      "outcome": "SKIPPED",
+      "reason": "The template is not yet on the default branch. Issue chooser rendering, project automation, live labels, verified source-reviewer teams, branch/review enforcement, and source-admission workflow automation remain NEEDS VERIFICATION after merge."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-source-admission-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/ISSUE_TEMPLATE/source_admission.md"
+    },
+    {
+      "id": "issue-intake-authority-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "source-admission-process",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/sources/ADMISSION_PROCESS.md"
+    },
+    {
+      "id": "source-descriptor-standard",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/sources/SOURCE_DESCRIPTOR_STANDARD.md"
+    },
+    {
+      "id": "source-registry-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/data/registry/sources/README.md"
+    },
+    {
+      "id": "source-descriptor-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/contracts/source/source_descriptor.md"
+    },
+    {
+      "id": "private-first-security-routing",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/SECURITY.md"
+    },
+    {
+      "id": "proposed-source-admission-adr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/adr/ADR-0017-source-descriptor-admission-process.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:12:08Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored replacement of the public source-admission issue-template stub on a scoped review branch. The artifact structures proposal intake and triage only. It does not admit a source, create or approve a SourceDescriptor, decide rights, sensitivity, sovereignty, consent, or access, activate a connector, authorize a fetch or RAW write, approve promotion or release, or prove source claims. ADR-0017 remains proposed. Human review remains pending."
+}
