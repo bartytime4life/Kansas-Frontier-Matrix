@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-tests-domains-atmosphere-policy-deny-low-cost-sensor-caveat-readme-925fa3ba",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "sha256:925fa3ba16c0c7e8bc0c092f8e5f08300aeecc834e5fc941c3cf1361c2e1ed58"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container/Python validation",
+      "temporary transparent PR integrity workflow"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ebdf9332c096facff23ff4379b576b6ae01c72b4",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/policy/domains/atmosphere/low_cost_sensor_caveats_required.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/contracts/domains/atmosphere/knowledge_character.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/contracts/domains/atmosphere/AirObservation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/contracts/domains/atmosphere/PM25Observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/schemas/contracts/v1/domains/atmosphere/AirObservation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/domains/atmosphere/SOURCE_REGISTRY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/sources/catalog/epa/barkjohn-correction.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/fixtures/domains/atmosphere/objects/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/fixtures/domains/atmosphere/invalid/air-observation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/Makefile"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the enforceability root; source admission, correction models, policy, contracts, schemas, fixtures, evidence, lifecycle state, release authority, health guidance, and public implementation remain in their owning roots."
+    },
+    {
+      "gate": "target-precondition-and-competing-work",
+      "outcome": "PASS",
+      "reason": "The target prior blob was rechecked at the pinned base. No matching task branch or open pull request surfaced before mutation."
+    },
+    {
+      "gate": "low-cost-sensor-authority-split",
+      "outcome": "PASS",
+      "reason": "The README distinguishes LOW_COST_SENSOR observations from reference and regulatory sources, correction/model artifacts, EvidenceBundles, PolicyDecisions, ReleaseManifests, and public or health authority."
+    },
+    {
+      "gate": "current-maturity",
+      "outcome": "PASS",
+      "reason": "The child lane is recorded as README-only; the adjacent test is a one-line placeholder; the Rego file is default-deny scaffold text; the paired schemas are permissive; and fixture payload inventory remains unverified."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The committed README has one H1, sixty-eight headings, thirty-two fenced-block delimiter lines, a final newline, and all thirty-four internal fragment links resolve."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "A temporary transparent PR workflow measured Git blob 0453b27bb007fab5fbe1b80b05749dcba25f9824, 45460 bytes, 947 lines, and SHA-256 925fa3ba16c0c7e8bc0c092f8e5f08300aeecc834e5fc941c3cf1361c2e1ed58; the workflow and report were then removed."
+    },
+    {
+      "gate": "secret-sensitive-health-and-alert-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, real source payloads, private endpoints, device-owner data, protected-location data, current official alerts, medical guidance, protective-action instructions, or production trust artifacts were introduced."
+    },
+    {
+      "gate": "executable-low-cost-sensor-tests",
+      "outcome": "SKIPPED",
+      "reason": "This change is documentation-only; no substantive direct test, policy adapter, fixture payload, schema closure, correction runtime, source admission, or validator was established or modified."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request workflows were still running when this receipt was emitted; final status must be read from the pull-request head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md@ebdf9332",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py@ebdf9332",
+      "validated": true
+    },
+    {
+      "id": "policy/domains/atmosphere/low_cost_sensor_caveats_required.rego@ebdf9332",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/AirObservation.md@ebdf9332",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/PM25Observation.md@ebdf9332",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/atmosphere/SOURCE_REGISTRY.md@ebdf9332",
+      "validated": true
+    },
+    {
+      "id": "docs/sources/catalog/epa/barkjohn-correction.md@ebdf9332",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/atmosphere/MAP_UI_CONTRACTS.md@ebdf9332",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T02:07:12Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": 1349,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Atmosphere low-cost-sensor qualification README. The README records README-only child maturity, a one-line adjacent test placeholder, default-deny policy scaffold, permissive schemas, unverified fixture payload inventory, draft PurpleAir rights posture, draft Barkjohn correction/version/pair posture, carrier-preservation requirements, finite outcomes, CI, correction, and rollback. No executable test, policy bundle, fixture payload, schema, contract, source descriptor, correction algorithm, validator, workflow behavior, lifecycle object, evidence object, release object, health guidance, alert, or public output was changed. Human review remains pending."
+}
