@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-pipeline-specs-settlement-readme-b8fde70d",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/settlement/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/settlement/README.md": "sha256:b8fde70d3f592494e172f6736c0c547ae8af552dbeba756d30268df887ddc444"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:9bd485d842f3bc569bed6a8e2be973298501eb617985ead3810bdabeea0108cf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9bd485d842f3bc569bed6a8e2be973298501eb617985ead3810bdabeea0108cf"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7af05fc50e5a1bab28b314532b0a66d2839a229b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlement/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b7fda02c6953b7c11ae0294d6a631842210607e2/pipeline_specs/settlement/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlements-infrastructure/ingest.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlements-infrastructure/normalize.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlements-infrastructure/validate.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlements-infrastructure/catalog.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlements-infrastructure/publish.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipelines/domains/settlement/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipelines/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/domains/settlements-infrastructure/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/.github/workflows/domain-settlements-infrastructure.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/settlement/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, target, current base, write permissions, change budget, delivery route, and non-goals were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 8b016972c1509d2f618cf72ce259e925ec537d0a to 7af05fc50e5a1bab28b314532b0a66d2839a229b; the target blob remained 53d6e17502aea437cdc8f580dc75618b02ca4c6c."
+    },
+    {
+      "gate": "directory-adr-and-drift-preflight",
+      "outcome": "PASS",
+      "reason": "Both live Directory Rules copies, the domain canonical-path register, proposed ADR-0001, drift register, root README, and adjacent alias/canonical lanes were inspected; unresolved placement conflicts remain visible."
+    },
+    {
+      "gate": "repository-inventory",
+      "outcome": "PASS",
+      "reason": "The settlement alias was bounded as README-only; five canonical companion YAMLs were read and each contained stages: []; checked alias test/fixture/spec paths were absent."
+    },
+    {
+      "gate": "markdown-metadata-and-navigation",
+      "outcome": "PASS",
+      "reason": "One H1, parseable KFM Meta Block, unique heading slugs, balanced fences, valid internal anchors, final newline, and repository-relative links were verified. Four intentional Markdown hard-break markers are present in the evidence callout."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The artifact contains no credentials, private keys, source payloads, exact sensitive locations, private records, restricted facility details, or operational vulnerability data; examples remain abstract and fail-closed."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 3d35b64b0259fc1befa0cc6d58878d109c1f1ab1 for the branch file, matching the prepared remote-equivalent bytes and SHA-256 b8fde70d3f592494e172f6736c0c547ae8af552dbeba756d30268df887ddc444."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API-only execution profile; the repository was not cloned and repository-native tests were not run locally. Pull-request workflow outcomes remain separate evidence."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request",
+      "validated": true,
+      "evidence_ref": "prompt://sha256/9bd485d842f3bc569bed6a8e2be973298501eb617985ead3810bdabeea0108cf"
+    },
+    {
+      "id": "settlement-alias-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlement/README.md"
+    },
+    {
+      "id": "settlements-infrastructure-governing-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/pipeline_specs/settlements-infrastructure/README.md"
+    },
+    {
+      "id": "domain-canonical-path-register",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/domains/settlements-infrastructure/CANONICAL_PATHS.md"
+    },
+    {
+      "id": "directory-rules-conflict",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7af05fc50e5a1bab28b314532b0a66d2839a229b/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:11:35Z",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped review branch. The receipt records process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}
