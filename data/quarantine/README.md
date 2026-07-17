@@ -3,7 +3,7 @@ doc_id: kfm://data/quarantine/readme
 name: Data Quarantine README
 path: data/quarantine/README.md
 type: data-lifecycle-index-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <data-steward>
@@ -11,7 +11,7 @@ owners:
   - <sensitivity-reviewer>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-07-17
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: quarantine
@@ -244,14 +244,14 @@ flowchart LR
 ## Related files
 
 - [`../README.md`](../README.md)
-- [`raw/README.md`](raw/README.md)
-- [`work/README.md`](work/README.md)
-- [`processed/README.md`](processed/README.md)
-- [`catalog/README.md`](catalog/README.md)
-- [`published/README.md`](published/README.md)
-- [`proofs/README.md`](proofs/README.md)
-- [`receipts/README.md`](receipts/README.md)
-- [`registry/README.md`](registry/README.md)
+- [`../raw/README.md`](../raw/README.md)
+- [`../work/README.md`](../work/README.md)
+- [`../processed/README.md`](../processed/README.md)
+- [`../catalog/README.md`](../catalog/README.md)
+- [`../published/README.md`](../published/README.md)
+- [`../proofs/README.md`](../proofs/README.md)
+- [`../receipts/README.md`](../receipts/README.md)
+- [`../registry/README.md`](../registry/README.md)
 - [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md)
 - [`../../release/manifests/README.md`](../../release/manifests/README.md)
 

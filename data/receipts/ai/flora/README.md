@@ -3,7 +3,7 @@ doc_id: kfm://data/receipts/ai/flora/readme
 name: Flora AI Receipts README
 path: data/receipts/ai/flora/README.md
 type: data-receipts-ai-domain-lane-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <receipt-steward>
@@ -14,7 +14,7 @@ owners:
   - <proof-steward>
   - <release-steward>
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-17
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -281,8 +281,8 @@ This is forbidden unless each governed family transition has actually happened a
 - [`../../../../docs/standards/RUN_RECEIPT.md`](../../../../docs/standards/RUN_RECEIPT.md)
 - [`../../../../docs/domains/flora/README.md`](../../../../docs/domains/flora/README.md)
 - [`../../../../docs/domains/flora/PUBLICATION_AND_ROLLBACK.md`](../../../../docs/domains/flora/PUBLICATION_AND_ROLLBACK.md)
-- [`../../../../docs/domains/flora/source-families.md`](../../../../docs/domains/flora/source-families.md)
-- [`../../../../docs/domains/flora/sensitivity-posture.md`](../../../../docs/domains/flora/sensitivity-posture.md)
+- [`../../../../docs/domains/flora/SOURCE_FAMILIES.md`](../../../../docs/domains/flora/SOURCE_FAMILIES.md)
+- [`../../../../docs/domains/flora/SENSITIVITY_POSTURE.md`](../../../../docs/domains/flora/SENSITIVITY_POSTURE.md)
 - [`../../../../docs/architecture/directory-rules.md`](../../../../docs/architecture/directory-rules.md)
 
 ---

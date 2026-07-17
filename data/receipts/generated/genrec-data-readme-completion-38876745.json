@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-data-readme-completion-38876745",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/published/layers/soil/gridded_derivative/README.md",
+    "data/published/layers/soil/satellite_grid/README.md",
+    "data/published/layers/soil/static_survey/README.md",
+    "data/published/layers/soil/suitability/README.md",
+    "data/quarantine/README.md",
+    "data/quarantine/archaeology/exact_geometry/README.md",
+    "data/receipts/README.md",
+    "data/receipts/ai/README.md",
+    "data/receipts/ai/flora/README.md",
+    "data/receipts/generated/README.md",
+    "data/triplet/README.md",
+    "data/triplet/habitat/README.md"
+  ],
+  "artifact_hashes": {
+    "data/published/layers/soil/gridded_derivative/README.md": "sha256:a48ed805345a404ec8b029597e2c2364830011ce6f740b0b0eaabde4ed0a9755",
+    "data/published/layers/soil/satellite_grid/README.md": "sha256:c0b653c9c56c135066bb4d94a7ed80157473ea02cea2eda82d154853509691eb",
+    "data/published/layers/soil/static_survey/README.md": "sha256:6c890301aaba5f7024477699a45db3ec3626df54b6da368a9e5708b47023954a",
+    "data/published/layers/soil/suitability/README.md": "sha256:c9d59f570f594bde555fb302cb72606654a23fffd408fdd0bc3bd14c9996cd6b",
+    "data/quarantine/README.md": "sha256:f9964e67a63b66dcfa98993fbdcdd2f35a36bcb5a2ec2059e3b73b16b22acbc5",
+    "data/quarantine/archaeology/exact_geometry/README.md": "sha256:aafad66d657359bf8f40b1e20844a2bd7cf88fe6b34aa1e64f5c248101eb7443",
+    "data/receipts/README.md": "sha256:e2bff18d8af5c92d2e1e82ec25d0ee84cf959d95fd7dcac8b331427a4988e5d2",
+    "data/receipts/ai/README.md": "sha256:89136b7d664947dfdd39684b2261adaaa804150ddde4a8f2e21f1a2f282ec61c",
+    "data/receipts/ai/flora/README.md": "sha256:e38f3cb4eea03e8bb791cd25dc09b9e548738d79be52b01c95af9371d41d64b7",
+    "data/receipts/generated/README.md": "sha256:31c152295b918e6e760526643857911bead790839b8d310d6ccc9678b34295b7",
+    "data/triplet/README.md": "sha256:c16e6a0c53270c17340a1b2ba01c0506337bb58c9d460894d1586bfb2386460c",
+    "data/triplet/habitat/README.md": "sha256:547d250833ae910e2b81b57c71065ec8ebb6900b65b7445f990c84ceef5fcc87"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-07-17-work-mode"
+  },
+  "prompt_or_contract": "sha256:ac9a3bf2b28a7a373cf62c3d387ce6e3e168cf1f34d73af5d280903bc2225978",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository inventory",
+      "repository validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(28).txt",
+      "docs/doctrine/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2e31e0cf51c08d792cc1f301ceb21b235424cb40",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/docs/reports/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/receipts/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/quarantine/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/quarantine/archaeology/exact_geometry/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/receipts/ai/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/receipts/ai/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/published/layers/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/triplet(s)/README.md"
+    ]
+  },
+  "truth_labels": {
+    "data/published/layers/soil/gridded_derivative/README.md": "CONFIRMED",
+    "data/published/layers/soil/satellite_grid/README.md": "CONFIRMED",
+    "data/published/layers/soil/static_survey/README.md": "CONFIRMED",
+    "data/published/layers/soil/suitability/README.md": "CONFIRMED",
+    "data/quarantine/README.md": "CONFIRMED",
+    "data/quarantine/archaeology/exact_geometry/README.md": "CONFIRMED",
+    "data/receipts/README.md": "CONFIRMED",
+    "data/receipts/ai/README.md": "CONFIRMED",
+    "data/receipts/ai/flora/README.md": "CONFIRMED",
+    "data/receipts/generated/README.md": "CONFIRMED",
+    "data/triplet/README.md": "CONFIRMED",
+    "data/triplet/habitat/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "The default branch, pinned base commit, clean worktree, 2,245 tracked README files, repository instructions, three conflicting Directory Rules copies, proposed ADRs, drift register, security policy, CODEOWNERS, PR template, and overlapping branches and pull requests were inspected before editing."
+    },
+    {
+      "gate": "missing-path-classification",
+      "outcome": "PASS",
+      "reason": "The generated lane was the only one of 23 populated direct receipt child directories without a direct README at the base snapshot; it contained 59 tracked JSON receipts, had a repository schema and PR-template requirement, and was selected without creating a new root or authority."
+    },
+    {
+      "gate": "scope-and-directory-rules",
+      "outcome": "PASS",
+      "reason": "The implementation is limited to documentation and provenance inside the existing data responsibility root. It creates no lifecycle phase, public path, parallel schema, contract, policy, proof, catalog, registry, release, or report authority."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Twelve changed Markdown files have one H1, one KFM metadata block, balanced fences, final newlines, and resolving repository-relative destinations; the new lane README contains all twelve required sections in order."
+    },
+    {
+      "gate": "repository-native-validation",
+      "outcome": "PASS",
+      "reason": "With temporary validation dependencies isolated outside the repository, PYTHONPATH=/tmp/kfm-validation-deps make validate completed successfully: valid fixtures passed, invalid fixtures were rejected as expected, and 16 schema and contract tests passed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hashes",
+      "outcome": "PASS",
+      "reason": "This receipt parses as JSON, conforms to the repository generated-receipt schema with Draft 2020-12 format checking, and its artifact hashes were recomputed from final Markdown bytes."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Common private-key, GitHub token, AWS key, and OpenAI token patterns were not found in the authored Markdown; no payload, exact sensitive location, credential, live source, runtime endpoint, release, deployment, or publication was added."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no source code, schema shape, fixture payload, policy module, pipeline, workflow, runtime, release object, or public artifact changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "data-receipt-placement-and-separation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "ai-authored-pr-receipt-requirement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "receipt-parent-boundary-and-child-pattern",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2e31e0cf51c08d792cc1f301ceb21b235424cb40/data/receipts/README.md"
+    },
+    {
+      "id": "canonical-link-target-existence",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/2e31e0cf51c08d792cc1f301ceb21b235424cb40"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T14:25:30Z",
+  "emitter": "openai-codex/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored data-root documentation completion on a scoped review branch. One populated receipt-lane README was added and confirmed broken links in existing data READMEs were retargeted to verified current files. Structural conflicts, executable candidates, and changes outside data/ were deferred to separate batches. Human review remains pending; this receipt is provenance evidence, not merge authorization, source admission, policy permission, evidence closure, proof, catalog closure, release approval, or publication authority."
+}

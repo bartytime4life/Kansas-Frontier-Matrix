@@ -3,7 +3,7 @@ doc_id: kfm://data/receipts/ai/readme
 name: AI Receipts README
 path: data/receipts/ai/README.md
 type: data-receipts-ai-family-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <receipt-steward>
@@ -13,7 +13,7 @@ owners:
   - <proof-steward>
   - <release-steward>
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-17
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -251,7 +251,7 @@ This is forbidden unless each governed family transition has actually happened a
 ## Related files
 
 - [`../README.md`](../README.md)
-- [`aggregation/README.md`](aggregation/README.md)
+- [`../aggregation/README.md`](../aggregation/README.md)
 - [`atmosphere/README.md`](atmosphere/README.md)
 - [`flora/README.md`](flora/README.md)
 - [`../../README.md`](../../README.md)

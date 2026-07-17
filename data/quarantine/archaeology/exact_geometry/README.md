@@ -3,7 +3,7 @@ doc_id: kfm://data/quarantine/archaeology/exact-geometry/readme
 name: Archaeology Exact Geometry Quarantine README
 path: data/quarantine/archaeology/exact_geometry/README.md
 type: data-quarantine-lane-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <archaeology-domain-steward>
@@ -12,7 +12,7 @@ owners:
   - <rights-holder-representative>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-07-17
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: quarantine
@@ -265,9 +265,9 @@ flowchart LR
 - [`../README.md`](../README.md)
 - [`../../README.md`](../../README.md)
 - [`../../../README.md`](../../../README.md)
-- [`../../processed/archaeology/README.md`](../../processed/archaeology/README.md)
-- [`../../catalog/domain/archaeology/README.md`](../../catalog/domain/archaeology/README.md)
-- [`../../proofs/archaeology/README.md`](../../proofs/archaeology/README.md)
+- [`../../../processed/archaeology/README.md`](../../../processed/archaeology/README.md)
+- [`../../../catalog/domain/archaeology/README.md`](../../../catalog/domain/archaeology/README.md)
+- [`../../../proofs/archaeology/README.md`](../../../proofs/archaeology/README.md)
 - [`../../../../docs/domains/archaeology/SENSITIVITY.md`](../../../../docs/domains/archaeology/SENSITIVITY.md)
 - [`../../../../docs/domains/archaeology/CULTURAL_REVIEW.md`](../../../../docs/domains/archaeology/CULTURAL_REVIEW.md)
 - [`../../../../docs/domains/archaeology/DATA_LIFECYCLE.md`](../../../../docs/domains/archaeology/DATA_LIFECYCLE.md)

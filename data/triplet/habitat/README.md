@@ -3,7 +3,7 @@ doc_id: kfm://data/triplet/habitat/readme
 name: Habitat Triplet Compatibility README
 path: data/triplet/habitat/README.md
 type: data-compatibility-lane-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <data-steward>
@@ -18,7 +18,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-29
-updated: 2026-06-29
+updated: 2026-07-17
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -268,7 +268,7 @@ Any allowed file here must say that it is not source data, not processed data, n
 |---|---|---|---|
 | Previous target file | CONFIRMED | `data/triplet/habitat/README.md` existed as an empty file. | Did not define boundaries. |
 | [`../../triplets/README.md`](../../triplets/README.md) | CONFIRMED README | Canonical plural triplets lane, graph projection posture, suggested child shape, and no-public-path boundary. | Does not prove Habitat child triplet inventory. |
-| [`../../triplet(s)/README.md`](../../triplet(s)/README.md) | CONFIRMED compatibility README | Literal parentheses triplet path is compatibility-only and should not receive payloads. | Does not govern this singular path directly. |
+| [`../../triplet(s)/README.md`](<../../triplet(s)/README.md>) | CONFIRMED compatibility README | Literal parentheses triplet path is compatibility-only and should not receive payloads. | Does not govern this singular path directly. |
 | [`../../README.md`](../../README.md) | CONFIRMED README | `data/` owns lifecycle data and lists `triplets`. | Data root README is short and status `PROPOSED`. |
 | [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | `data/triplets/`, `graph_deltas/`, `exports/`, lifecycle invariant, and no canonical replacement semantics. | Does not authorize singular `data/triplet/` as canonical. |
 | [`../../../docs/domains/habitat/README.md`](../../../docs/domains/habitat/README.md) | CONFIRMED doctrine / PROPOSED implementation | Habitat owns landscape/habitat context, not species occurrence truth; source-role anti-collapse and sensitivity-redacted posture apply. | Implementation maturity remains NEEDS VERIFICATION in parts. |
