@@ -1,0 +1,52 @@
+| AirNow source profile | CONFIRMED draft docs | AQI/report, provisional raw value, and AQS distinction. | No source admission. |
+| Workflow + Makefile | CONFIRMED scaffolds | Current execution limits. | No focused suite. |
+| PRs #1338 and #1341 | CONFIRMED merged | Related current-main documentation state. | No AQI implementation. |
+
+[Back to top](#top)
+
+---
+
+## Changelog, correction, and rollback
+
+### Changelog
+
+| Date | Version | Change |
+|---|---:|---|
+| 2026-07-05 | v0.1 | Initial governed README for the Atmosphere AQI-versus-concentration policy-deny lane. |
+| 2026-07-16 | v0.2 | Repository-grounded evidence snapshot; explicit README-only maturity; policy-path drift; canonical-contract versus compatibility-pointer split; permissive schema and metadata-only fixture posture; source-role/AirNow-AQS boundary; focused test, fixture, carrier, CI, correction, and rollback contracts. |
+
+### Correction triggers
+
+Correct or supersede this README when:
+
+- a claimed absent path is found;
+- the canonical policy path/package is accepted;
+- a substantive test or fixture lands;
+- AQI object-family treatment changes;
+- observation contracts or schemas close;
+- AirNow/AQS source-role policy changes;
+- a reason code is accepted with different meaning;
+- CI becomes substantive;
+- a path or authority statement conflicts with an accepted ADR.
+
+### Rollback
+
+Rollback this revision if it:
+
+- is mistaken for executable policy;
+- is used to authorize AQI-to-concentration conversion;
+- becomes a parallel contract/schema/policy authority;
+- overstates AirNow or AQS admission;
+- is treated as health, regulatory, or release authority;
+- weakens cite-or-abstain or correction controls.
+
+Mechanical rollback target:
+
+```text
+README blob: 75f2cd07f4ac833f005d9741e3b5aebd58b1fde5
+paired generated receipt: remove through reviewed Git history
+```
+
+No executable test, policy bundle, fixture payload, schema, contract, validator, workflow, lifecycle object, release object, health guidance, alert, or public artifact requires rollback for this documentation-only change.
+
+[Back to top](#top)
