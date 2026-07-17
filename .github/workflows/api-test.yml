@@ -1,29 +1,120 @@
 # KFM CI workflow: api-test
-# Status: PROPOSED trust-membrane CI wiring.
+# Status: command-bearing trust-membrane CI wiring.
+#
+# Responsibility:
+# - Execute the repository-owned Governed API smoke suite and the focused
+#   RuntimeResponseEnvelope / ABSTAIN route contract check.
+# Authority:
+# - This workflow is orchestration and test evidence only. A green result does
+#   not authorize release, publication, source admission, policy override, or
+#   direct access to canonical/internal stores.
+# Trigger:
+# - Existing pull-request and push-to-main triggers are preserved because
+#   required-check and branch-protection dependencies remain unverified.
+# - workflow_dispatch supports explicit maintainer re-runs.
+# Untrusted-code posture:
+# - pull_request runs execute submitted repository code with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
+# Network:
+# - Dependency installation may reach configured Python package indexes.
+# - Tests must not call source systems, production services, model providers, or
+#   private endpoints.
+# Outputs:
+# - GitHub job conclusions, logs, annotations, and step summaries only.
+# - No receipt, proof, release record, deployment, or published artifact is
+#   emitted by this workflow.
+# Compatibility:
+# - Workflow name `api-test` and job ids `governed-api-tests` and
+#   `envelope-shape-tests` are preserved.
 name: api-test
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUNBUFFERED: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  TZ: UTC
 
 jobs:
   governed-api-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - name: Check out tested revision
+        uses: actions/checkout@v7
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      - run: pip install -e ".[test]"
-      - run: make governed-api-smoke
+
+      - name: Install repository test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run Governed API smoke suite
+        run: make governed-api-smoke
+
+      - name: Record governed-api scope
+        if: always()
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Governed API smoke suite"
+            echo
+            echo "- Command: `make governed-api-smoke`"
+            echo "- Scope: `apps/governed-api/tests`"
+            echo "- Authority: test signal only; not release or publication approval"
+            echo "- Network: dependency installation only; tests must remain source-system independent"
+          } >> "${GITHUB_STEP_SUMMARY}"
 
   envelope-shape-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - name: Check out tested revision
+        uses: actions/checkout@v7
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      - run: pip install -e ".[test]"
-      - run: python -m pytest apps/governed-api/tests/test_abstain_routes.py
+
+      - name: Install repository test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused ABSTAIN envelope contract test
+        run: >-
+          python -m pytest
+          apps/governed-api/tests/test_abstain_routes.py
+          -q
+          --strict-config
+          --strict-markers
+
+      - name: Record envelope-check scope
+        if: always()
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Governed API envelope-shape check"
+            echo
+            echo "- Test: `apps/governed-api/tests/test_abstain_routes.py`"
+            echo "- Expected bounded behavior: scaffolded routes return schema-valid `ABSTAIN` envelopes"
+            echo "- This check does not prove complete route, policy, evidence, security, or release coverage"
+          } >> "${GITHUB_STEP_SUMMARY}"
