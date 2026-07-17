@@ -1,0 +1,171 @@
+|---|---|---|
+| AirNow AQI/index/category | Aggregate/context and `PUBLIC_AQI_REPORT` | Label as AQI/report, preserve issuer, time, freshness, and preliminary posture. |
+| AirNow raw pollutant value | Provisional observed value | Preserve pollutant, units, station/context, observed time, provisional QA, and evidence separately from AQI. |
+| AQS/AirData archive | Regulatory/archive posture | Do not infer from AirNow; preserve later review/revision and supersession relationships. |
+| Advisory/context carrier | Referral/context only | Do not convert to KFM life-safety instruction. |
+
+### Required source tests
+
+A mature suite should prove that:
+
+- one source payload may carry distinct AQI and concentration fields without collapse;
+- preliminary AirNow values do not become AQS regulatory/archive evidence;
+- issuer, pollutant, units, report/observed time, freshness, and source role remain explicit;
+- later corrections or AQS revisions preserve supersession rather than rewriting provenance;
+- overall AQI, pollutant-specific AQI, category, color, and concentration remain distinguishable.
+
+An overall AQI cannot identify a unique pollutant concentration without additional governed context.
+
+[Back to top](#top)
+
+---
+
+## Policy file and naming drift
+
+### Confirmed current policy file
+
+```text
+policy/domains/atmosphere/aqi_is_not_concentration.rego
+package kfm.generated.policy.domains.atmosphere.aqi_is_not_concentration
+default allow := false
+```
+
+This proves only:
+
+- the path exists;
+- a package name exists;
+- the scaffold defaults to deny.
+
+It does not prove:
+
+- accepted input shape;
+- AQI detection;
+- concentration detection;
+- pollutant or units validation;
+- source-role checks;
+- reason codes;
+- positive controls;
+- policy adapter wiring;
+- OPA invocation in CI;
+- public-carrier enforcement.
+
+### Planning-name drift
+
+The prior README and planning documents refer to:
+
+```text
+policy/domains/atmosphere/aqi-not-concentration.rego
+```
+
+That path was not found at the checked location. The live underscored path and planning hyphenated path must not be treated as equivalent implicitly.
+
+### Required canonicalization decision
+
+Before executable tests bind to policy:
+
+1. select one canonical file path;
+2. select one canonical Rego package;
+3. define an accepted input contract;
+4. define an accepted result envelope;
+5. define stable reason codes;
+6. define compatibility/migration handling for stale path references;
+7. update docs, tests, workflows, adapters, fixture manifests, and registries together;
+8. add a test proving only the canonical package is loaded;
+9. add a test proving missing or duplicate policy selection fails setup;
+10. record the decision in an ADR or drift/migration record when required.
+
+### Positive-control requirement
+
+A default-deny policy can appear safe while denying every input. The substantive suite must include:
+
+- negative AQI-as-concentration cases;
+- valid AQI/report cases;
+- valid concentration cases;
+- valid source payloads carrying both distinct fields;
+- setup failure when policy is missing;
+- setup failure when multiple packages match;
+- a positive control that proves an admissible concentration can pass;
+- a positive control that proves admissible AQI/report context can pass as AQI/report.
+
+[Back to top](#top)
+
+---
+
+## Governed concentration boundary
+
+### Concentration object requirements
+
+A governed concentration record must retain a separate stable identity plus the pollutant, value, units, method, spatial/station context, material time and averaging basis, source role, knowledge character, QA/freshness, evidence, rights/sensitivity state, review/policy state, and correction/release lineage required by its canonical contract.
+
+### Attempted AQI-to-concentration inversion
+
+AQI may be calculated outside KFM from concentration plus pollutant-specific reporting rules. That does not make a reverse calculation automatically admissible.
+
+A reverse or reconstructed concentration claim should fail closed when any material input is missing, including:
+
+- pollutant;
+- AQI standard or jurisdiction;
+- table/version;
+- averaging basis;
+- breakpoint range;
+- rounding/truncation behavior;
+- report vintage;
+- source method;
+- quality state;
+- applicability domain;
+- uncertainty;
+- evidence;
+- review state.
+
+A category or color alone cannot support a concentration claim. An integer AQI may correspond to a range or rounded result rather than a unique source concentration.
+
+### Separate-object rule
+
+When a governed derivation is allowed, the output must:
+
+- receive a separate identity;
+- retain the AQI/report input as an input, not mutate it;
+- record method and version;
+- record assumptions and applicability;
+- record uncertainty or range;
+- retain the original AQI/report value;
+- avoid claiming observed-sensor or regulatory-archive posture unless separately supported;
+- carry evidence and review;
+- remain correctable and withdrawable;
+- pass release gates independently.
+
+This README does not decide whether such inverse derivation should be implemented.
+
+[Back to top](#top)
+
+---
+
+## Required test matrix
+
+### Policy setup and positive controls
+
+| Test | Expected result |
+|---|---|
+| Canonical package loads once | PASS setup. |
+| Policy missing, duplicated, or mismatched | `ERROR`; do not skip. |
+| Decision or reason code missing | Fail closed. |
+| Default-deny policy rejects valid AQI and valid concentration controls | Test failure; deny-all is not substantive. |
+| Valid AQI report remains `PUBLIC_AQI_REPORT` | Conditional allow as report context. |
+| Valid PM2.5 or ozone concentration retains pollutant, units, time, source role, QA, and evidence | Conditional allow as concentration. |
+| One source payload contains distinct AQI and concentration fields | Allow only when semantics remain separate. |
+
+### Direct collapse cases
+
+| Scenario | Expected result |
+|---|---|
+| AQI value/category/color placed in concentration field | `DENY`. |
+| Overall AQI labeled pollutant-specific concentration | `DENY`. |
+| AQI assigned concentration units | `DENY`. |
+| `PUBLIC_AQI_REPORT` relabeled `OBSERVED_SENSOR` or `REGULATORY_ARCHIVE` | `DENY`. |
+| AQI report changed to PM25/Ozone observation by name or slug | `DENY`. |
+| AirNow AQI labeled AQS regulatory measurement | `DENY`. |
+| Historical/preliminary report labeled current/final | `RESTRICT`, `HOLD`, or `DENY`. |
+| Pollutant, units, method, or required time basis missing | `DENY` or `ABSTAIN`. |
+
+### AQI inversion and derived-output cases
+
