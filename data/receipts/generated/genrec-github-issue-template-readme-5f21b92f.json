@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-github-issue-template-readme-5f21b92f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/README.md": "sha256:5f21b92fe98af782c473662c0771b7f60ad0c04fb8a106f32966eab326fdabd3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:83139110a5a6db88b328fd0ba52dc683100dd34fe3bdc8a62324d5253af52450",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "repository validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(40).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/ISSUE_TEMPLATE/adr.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a758f4b000fdb799750134476f6b0de893eb693a"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, public visibility, push authority, default branch, immutable base commit, target path, parent .github governance, Directory Rules, contribution guidance, security policy, CODEOWNERS placeholder, pull-request template, generated-receipt schema, and absence of overlapping open PRs or similarly named branches."
+    },
+    {
+      "gate": "target-and-template-inventory",
+      "outcome": "PASS",
+      "reason": "Confirmed the target README was a one-line blank placeholder and adr.md exists. Direct exact-path reads did not find bug_report.yml, drift_entry.yml, verification_item.yml, or config.yml; the README preserves the complete-inventory limitation as NEEDS VERIFICATION."
+    },
+    {
+      "gate": "scope-and-directory-rules",
+      "outcome": "PASS",
+      "reason": "The change stays within the existing .github/ GitHub-platform intake lane and existing generated-receipt lane, creates no root or parallel authority home, and includes the required folder-README sections in Directory Rules order."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, one bounded KFM Meta Block, balanced code fences, a final newline, ordered required sections, and repository-relative links to confirmed adjacent governance surfaces."
+    },
+    {
+      "gate": "security-and-sensitive-intake-boundary",
+      "outcome": "PASS",
+      "reason": "The README routes security-sensitive reporting to SECURITY.md's private-first path, prohibits secrets and exact sensitive locations in public issues, and states that issue intake is not evidence, policy, ADR acceptance, release, correction, or publication authority."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "The GitHub contents API returned blob SHA 413425344eb1c4aab015074bb52256aa1f4514aa, matching the Git blob SHA computed from the final README bytes; SHA-256 recomputed as 5f21b92fe98af782c473662c0771b7f60ad0c04fb8a106f32966eab326fdabd3."
+    },
+    {
+      "gate": "runtime-and-issue-settings",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only. No issue form, label, assignee, repository setting, project automation, private vulnerability reporting setting, workflow, policy, runtime, release, or publication behavior changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github-issue-template-current-state",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "adr-issue-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/ISSUE_TEMPLATE/adr.md"
+    },
+    {
+      "id": "github-platform-root-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/.github/README.md"
+    },
+    {
+      "id": "directory-rules-readme-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "private-first-security-routing",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/SECURITY.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70cda3ba3d3d635fdc1ba8688b726aa89d55fa27/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T16:14:38Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update on a scoped review branch. The README documents issue-intake governance and current evidence boundaries only. Human review remains pending; this receipt is provenance evidence, not proof of issue settings, label existence, CODEOWNERS enforcement, private vulnerability reporting, ADR acceptance, policy permission, release approval, correction completion, or publication authority."
+}
