@@ -66,7 +66,7 @@ jobs:
           }
           report.write_text(json.dumps(payload, indent=2, sort_keys=True) + '\n', encoding='utf-8')
           PY
-          if git diff --quiet -- "$report"; then
+          if [[ -z "$(git status --porcelain -- "$report")" ]]; then
             exit 0
           fi
           git config user.name 'github-actions[bot]'
