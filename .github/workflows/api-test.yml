@@ -77,8 +77,8 @@ jobs:
           {
             echo "## Governed API smoke suite"
             echo
-            echo "- Command: `make governed-api-smoke`"
-            echo "- Scope: `apps/governed-api/tests`"
+            echo '- Command: `make governed-api-smoke`'
+            echo '- Scope: `apps/governed-api/tests`'
             echo "- Authority: test signal only; not release or publication approval"
             echo "- Network: dependency installation only; tests must remain source-system independent"
           } >> "${GITHUB_STEP_SUMMARY}"
@@ -114,7 +114,7 @@ jobs:
           {
             echo "## Governed API envelope-shape check"
             echo
-            echo "- Test: `apps/governed-api/tests/test_abstain_routes.py`"
-            echo "- Expected bounded behavior: scaffolded routes return schema-valid `ABSTAIN` envelopes"
+            echo '- Test: `apps/governed-api/tests/test_abstain_routes.py`'
+            echo '- Expected bounded behavior: scaffolded routes return schema-valid `ABSTAIN` envelopes'
             echo "- This check does not prove complete route, policy, evidence, security, or release coverage"
           } >> "${GITHUB_STEP_SUMMARY}"
