@@ -1,414 +1,947 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/readme
-title: Atmosphere Policy-Deny Test Lane — Low-Cost Sensor Caveat README
-type: test-lane-readme
-version: v0.1
-status: draft
-owners:
-  - <PLACEHOLDER — Atmosphere steward>
-  - <PLACEHOLDER — Policy steward>
-  - <PLACEHOLDER — Test steward>
-  - <PLACEHOLDER — Evidence/governance reviewer>
+title: tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/ — Low-Cost Sensor Qualification Denial Test Boundary
+type: readme; directory-readme; domain-test-lane; atmosphere; policy-deny; low-cost-sensor; caveat; correction; non-authoritative
+version: v0.2
+status: draft; repository-grounded; direct-lane-readme-only; adjacent-test-placeholder; executable-policy-test-not-established; rego-default-deny-scaffold; planning-name-drift; canonical-contracts-confirmed; schemas-permissive; fixture-inventory-unverified; purpleair-rights-needs-verification; barkjohn-runtime-unverified; workflow-todo-only; make-test-excludes-lane; fail-closed; cite-or-abstain
+owners: OWNER_TBD — Atmosphere · air-quality · low-cost-sensor · source/rights · policy · test/QA · contract/schema · fixture/evidence · correction/model · API/UI/AI · release · CI/docs stewards
 created: 2026-07-05
-updated: 2026-07-05
-policy_label: public
-implementation_status: scaffold
-verification_status: current-session path verified; implementation not verified
+updated: 2026-07-16
+supersedes: v0.1 Atmosphere Policy-Deny Test Lane — Low-Cost Sensor Caveat README
+policy_label: "public-review; tests; atmosphere; policy-deny; low-cost-sensor; correction-required; caveat-required; confidence-required; limitations-required; rights-aware; no-network; restrict-or-deny; correction-aware; rollback-aware; no-policy-or-release-authority"
+current_path: tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md
+truth_posture: >
+  CONFIRMED target v0.1 README and prior blob; tests-root placement; parent policy-deny lane;
+  low_cost_sensor_caveats_required.rego containing only package declaration and default deny;
+  hyphenated planning policy path not found at the checked location; AirObservation and
+  PM25Observation contracts requiring low-cost source-role, correction, caveat, confidence,
+  limitations, policy, review, and release controls; permissive paired schemas; one-line adjacent
+  placeholder test; no child conftest or direct test at named paths; fixture indexes with payload
+  inventory unverified; draft source registry describing PurpleAir as community observed and never
+  regulatory with rights needing verification; draft Barkjohn page describing versioned correction
+  and corrected/uncorrected preservation while runtime/version remain unverified; draft map/UI
+  requirements treating qualification as load-bearing; TODO-only workflow and root make test
+  excluding this lane / PROPOSED substantive fixtures, policy adapter, reason codes, correction
+  version/pair tests, rights and carrier tests, nonzero collection, CI, correction, and rollback /
+  UNKNOWN active policy/validator/correction runtime, accepted mandatory fields, current Barkjohn
+  version, source admission, consumers, metrics, promotion dependency, and operational rollback
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  base_commit: ebdf9332c096facff23ff4379b576b6ae01c72b4
+  prior_blob: 799e505df14da05e3e52ffab29b1b904a4f8bd8a
+  adjacent_test_blob: 7e4c52207b38686f00f22e05391a808813260b57
+  policy_blob: 6981e5953b586372790322998cad08559d9c5024
+  air_contract_blob: d2c1c36cb9c68584ded1bbe9a827d352b3e42311
+  pm25_contract_blob: dabc318f6dcf4267858cb4953c3379ac2a60879d
+  knowledge_character_blob: d38eb867122f5c36d1d8e004b99d856f3ef1f200
+  air_schema_blob: 31e70d688dcc536f250eb17f37c2330e5f42f252
+  pm25_schema_blob: 4b04e1fc128f56345f4ab180c84c10f98a78e921
+  source_registry_blob: 55ce7ce85a5c48dcacb0b8c3763141321cbd3420
+  barkjohn_doc_blob: 479d4131e04abee6b700124781bf4e701bc65b11
+  map_ui_blob: 5f2a4b49f9b2e3350b10c3901f651dd98b61fcca
+  workflow_blob: a3c6a21db798b02202c87f76bfba5f45c5f08c9b
+  makefile_blob: 4dc8cf633581893d83fba53219c6ea847992e6be
+  checked_absent:
+    - tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/conftest.py
+    - tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/test_low_cost_sensor_caveat.py
+    - policy/domains/atmosphere/low-cost-sensor-caveat.rego
 related:
-  - tests/README.md
-  - tests/domains/atmosphere/README.md
-  - tests/domains/atmosphere/policy-deny/README.md
-  - docs/doctrine/directory-rules.md
-  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md
-  - docs/domains/atmosphere/POLICY.md
-  - docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md
-  - policy/domains/atmosphere/low_cost_sensor_caveats_required.rego
-  - contracts/domains/atmosphere/AirObservation.md
-  - fixtures/domains/atmosphere/
-  - tools/validators/
-tags:
-  - kfm
-  - tests
-  - atmosphere
-  - policy-deny
-  - low-cost-sensor
-  - caveat
-  - confidence
-  - limitations
-  - fail-closed
-] -->
+  - ../README.md
+  - ../../test_low_cost_sensor_caveat_required.py
+  - ../../../../../docs/doctrine/directory-rules.md
+  - ../../../../../docs/domains/atmosphere/SOURCE_REGISTRY.md
+  - ../../../../../docs/domains/atmosphere/MAP_UI_CONTRACTS.md
+  - ../../../../../contracts/domains/atmosphere/knowledge_character.md
+  - ../../../../../contracts/domains/atmosphere/AirObservation.md
+  - ../../../../../contracts/domains/atmosphere/PM25Observation.md
+  - ../../../../../policy/domains/atmosphere/low_cost_sensor_caveats_required.rego
+  - ../../../../../docs/sources/catalog/epa/barkjohn-correction.md
+  - ../../../../../fixtures/domains/atmosphere/invalid/air-observation/README.md
+  - ../../../../../.github/workflows/domain-atmosphere.yml
+  - ../../../../../Makefile
+tags: [kfm, tests, atmosphere, policy-deny, low-cost-sensor, PurpleAir, Barkjohn, correction, caveat, confidence, limitations, rights, evidence, no-network, rollback]
+notes:
+  - "This revision changes only this README; a generated provenance receipt is paired separately."
+  - "Documentation is not proof of current source admission, correction runtime, regulatory equivalence, or publication authority."
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Atmosphere Policy-Deny Tests — Low-Cost Sensor Caveat
+# Low-Cost Sensor Qualification Denial Test Boundary
 
-> Test-lane contract for proving KFM keeps low-cost sensor records qualified, caveated, evidence-linked, and separate from uncaveated or higher-authority observation claims.
+`tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/`
 
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![lane: tests%2Fdomains%2Fatmosphere%2Fpolicy--deny-informational](https://img.shields.io/badge/lane-tests%2Fdomains%2Fatmosphere%2Fpolicy--deny-informational)
-![rule: caveats--required](https://img.shields.io/badge/rule-caveats--required-red)
-![policy: fail--closed](https://img.shields.io/badge/policy-fail--closed-blue)
-![implementation: scaffold](https://img.shields.io/badge/implementation-scaffold-yellow)
+> **Purpose.** Define the focused negative-test boundary proving that a community or consumer-grade air sensor record cannot be promoted, rendered, cited, summarized, or generated as uncaveated, reference-grade, regulatory, or public-safe truth when required source-role, correction, confidence, limitation, evidence, rights, review, and release controls are absent.
 
-**Status:** `draft`  
-**Authority:** test-lane README; not a schema, policy implementation, validator, source registry, release decision, receipt, proof, or fixture inventory  
-**Owning root:** `tests/`  
-**Domain segment:** `domains/atmosphere/`  
-**Lane:** `policy-deny/low-cost-sensor-caveat/`  
-**Default posture:** restrict or deny when required caveat controls are missing  
-**Last reviewed:** 2026-07-05
+<p>
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Version: v0.2" src="https://img.shields.io/badge/version-v0.2-informational">
+  <img alt="Inventory: README only" src="https://img.shields.io/badge/inventory-README__only-lightgrey">
+  <img alt="Adjacent test: placeholder" src="https://img.shields.io/badge/adjacent__test-placeholder-orange">
+  <img alt="Policy: default-deny scaffold" src="https://img.shields.io/badge/policy-default--deny__scaffold-orange">
+  <img alt="Rule: qualification required" src="https://img.shields.io/badge/rule-qualification__required-critical">
+  <img alt="Authority: tests only" src="https://img.shields.io/badge/authority-tests__only-purple">
+</p>
 
----
+> [!IMPORTANT]
+> **Low-cost sensor qualification is part of the claim, not decoration.** The source role, knowledge character, correction method and version, caveat, confidence or uncertainty, limitations, QA state, time, rights, evidence, review, and release posture must travel with the value wherever policy requires them.
 
-## Contents
+> [!CAUTION]
+> **Current executable enforcement is not established.** The child lane contains this README only. The adjacent parent-level test is a one-line `PROPOSED` placeholder. The Rego file contains only a package declaration and `default allow := false`; the paired schemas accept arbitrary properties; and fixture indexes leave payload inventory unverified.
 
-1. [Purpose](#1-purpose)
-2. [Directory fit and authority](#2-directory-fit-and-authority)
-3. [Rule statement](#3-rule-statement)
-4. [Status and evidence boundary](#4-status-and-evidence-boundary)
-5. [What belongs here](#5-what-belongs-here)
-6. [What does not belong here](#6-what-does-not-belong-here)
-7. [Policy-deny proof matrix](#7-policy-deny-proof-matrix)
-8. [Allowed claim boundary](#8-allowed-claim-boundary)
-9. [Fixture contract](#9-fixture-contract)
-10. [Expected outcomes](#10-expected-outcomes)
-11. [Lifecycle gates](#11-lifecycle-gates)
-12. [Suggested local commands](#12-suggested-local-commands)
-13. [Review burden](#13-review-burden)
-14. [Related folders and files](#14-related-folders-and-files)
-15. [Open questions](#15-open-questions)
-16. [Definition of done](#16-definition-of-done)
-17. [Changelog](#17-changelog)
-18. [Last reviewed](#18-last-reviewed)
+> [!WARNING]
+> **KFM is not a regulatory monitor, health, exposure, medical, emergency, or protective-action authority.** This lane may prove that unsupported low-cost-sensor claims are restricted, denied, held, or abstained. It cannot establish regulatory equivalence, exposure, health effects, exceedance, protective action, or official warnings.
+
+**Quick links:** [Purpose](#purpose-and-scope) · [Status](#current-evidence-and-maturity) · [Authority](#authority-and-directory-rules-basis) · [Rule](#governing-rule) · [Correction](#correction-calibration-and-version-boundary) · [Matrix](#required-test-matrix) · [Fixtures](#fixture-and-case-contract) · [Outcomes](#finite-outcomes-and-reason-code-posture) · [CI](#ci-and-promotion-boundary) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Rollback](#changelog-correction-and-rollback)
 
 ---
 
-## 1. Purpose
+## Purpose and scope
 
-This directory is the Atmosphere / Air test sublane for the **low-cost sensor caveat policy-deny / restrict rule**.
+This lane exists to prove one Atmosphere anti-overclaim invariant:
 
-It exists to prove that KFM preserves qualification and evidence boundaries for records carrying the `LOW_COST_SENSOR` knowledge character.
+```text
+LOW_COST_SENSOR
+    without required qualification
+    is not
+reference-grade, regulatory, uncaveated, or release-ready observation truth
+```
 
-A passing suite should support these claims:
+The durable question is:
 
-1. Required caveat, confidence, correction, and limitation fields remain attached to low-cost sensor records.
-2. Missing qualification fields produce a finite denial, restriction, hold, abstention, or validation failure.
-3. API, UI, AI, catalog, and graph projections do not strip qualification fields.
-4. Derived or corrected products retain lineage from the original candidate record.
-5. Test fixtures are local, deterministic, public-safe, and no-network by default.
+> Can every ingest, normalize, catalog, graph, map, API, export, search, AI, evidence, and release path preserve low-cost-sensor qualification—and fail closed when correction, caveats, confidence, limitations, rights, evidence, review, or release state is missing or stripped?
+
+A mature suite should prove that:
+
+1. `LOW_COST_SENSOR` remains explicit and cannot silently become `OBSERVED_SENSOR`, `REGULATORY_ARCHIVE`, or generic high-authority observation;
+2. required caveat, correction, confidence or uncertainty, limitation, QA, source, time, and rights fields travel with the value;
+3. uncorrected and corrected values remain distinguishable and auditable where correction policy requires both;
+4. a correction model is separately identified, versioned, evidenced, and reviewable;
+5. a correction does not transform a low-cost sensor into a regulatory monitor;
+6. unknown rights, terms, correction version, policy, or evidence fail closed;
+7. UI, API, map, export, search, graph, vector-index, and AI carriers preserve qualification and safe trust state;
+8. default tests are deterministic, local, synthetic, public-safe, and no-network;
+9. a green suite remains bounded enforcement evidence, not source admission, scientific validation, regulatory equivalence, health guidance, policy approval, or release approval.
+
+This lane does not define sensor science, source admission, correction coefficients, schemas, policy bundles, validators, EvidenceBundles, release decisions, or public products.
+
+[Back to top](#top)
 
 ---
 
-## 2. Directory fit and authority
+## Current evidence and maturity
 
-Directory Rules place enforceability proof under `tests/`. Domain-specific test material uses the domain as a segment inside the responsibility root:
+### Safe conclusion
+
+KFM has detailed low-cost-sensor governance documentation, but substantive executable caveat enforcement is not established.
+
+| Surface | Inspected status | Safe conclusion |
+|---|---|---|
+| This child lane | **README-only** | Intent exists; direct executable coverage is not established. |
+| Child `conftest.py` | **Not found at checked path** | No child-local fixture or policy hook was established. |
+| Child test module | **Not found at checked path** | No direct substantive test was established. |
+| Parent-level test | **One-line placeholder** | File presence is planning evidence, not assertions or collection proof. |
+| Rego file | **Default-deny scaffold** | Does not prove low-cost-sensor-specific decisions or obligations. |
+| Hyphenated planning policy path | **Not found at checked path** | Naming drift remains visible. |
+| `AirObservation` contract | **Expanded draft** | Requires caveat/correction/confidence/limitation and source-role controls for low-cost use. |
+| `PM25Observation` contract | **Expanded draft** | Low-cost PM2.5 remains distinct from reference-grade and regulatory postures. |
+| Paired schemas | **Permissive scaffolds** | Empty properties and `additionalProperties: true`; no qualification enforcement. |
+| Object fixture index | **README present** | Payload inventory remains unverified. |
+| Invalid-air-observation fixture index | **README present** | Describes source-role/caveat failures, but payload inventory remains unverified. |
+| Atmosphere source registry | **Draft doctrine** | PurpleAir is community observed, never regulatory; rights/terms need verification. |
+| Barkjohn product page | **Draft doctrine** | Describes required versioning and corrected/uncorrected preservation; runtime not established. |
+| Map/UI contracts | **Draft doctrine** | Qualification labels and correction state are load-bearing; machine binding unverified. |
+| Atmosphere workflow | **TODO-only** | Green execution cannot prove caveat enforcement. |
+| Root `make test` | **Excludes this lane** | Runs schema and contract tests only. |
+
+### Maturity ladder
+
+| Level | Requirement | Current status |
+|---|---|---|
+| L0 | Directory exists | `CONFIRMED` |
+| L1 | Governed README | `THIS REVISION` |
+| L2 | Accepted owner, policy path/package, input/result profile | `NEEDS VERIFICATION` |
+| L3 | Real synthetic fixtures with IDs, digests, consumers, outcomes | `NOT ESTABLISHED` |
+| L4 | Substantive policy adapter and negative/positive tests | `NOT ESTABLISHED` |
+| L5 | Correction/version, pair, rights, time, and source-role coverage | `PROPOSED` |
+| L6 | API/UI/map/search/AI preservation coverage | `PROPOSED` |
+| L7 | Nonzero collection and safe structured report | `PROPOSED` |
+| L8 | Substantive required CI | `NOT ESTABLISHED` |
+| L9 | Accepted promotion significance and correction cascade | `UNKNOWN` |
+| L10 | Operational rollback rehearsal and production parity | `UNKNOWN` |
+
+### Truth labels
+
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified from current repository files or named-path probes. |
+| `PROPOSED` | Recommended test, fixture, field, reason code, or workflow not implemented here. |
+| `UNKNOWN` | Not resolved by inspected evidence. |
+| `NEEDS VERIFICATION` | Checkable, but not verified strongly enough for reliance. |
+| `CONFLICTED` | Documents, names, or authority surfaces overlap or disagree. |
+
+[Back to top](#top)
+
+---
+
+## Authority and Directory Rules basis
+
+The existing path is correctly placed under the tests responsibility root:
 
 ```text
 tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/
 ```
 
-This path is correct because:
-
-| Placement question | Answer |
-|---|---|
-| Primary responsibility | Prove a specific Atmosphere policy restriction/denial. |
-| Owning root | `tests/` |
-| Domain segment | `domains/atmosphere/` |
-| Parent lane | `policy-deny/` |
-| Sublane | `low-cost-sensor-caveat/` |
-| Policy home | `policy/domains/atmosphere/` |
-| Validator home | `tools/validators/` |
-| Object meaning home | `contracts/domains/atmosphere/` |
-| Fixture home | `fixtures/domains/atmosphere/` unless tiny local test-only samples are documented. |
-| Release home | `release/` |
-| Receipts/proofs home | `data/receipts/` and `data/proofs/` |
+| Concern | Governing home | This lane may do |
+|---|---|---|
+| Human doctrine | `docs/domains/atmosphere/` | Cite it and test derived obligations. |
+| Source admission, role, rights, terms | `data/registry/sources/atmosphere/` and source governance | Assert required state; never invent approval. |
+| Object meaning | `contracts/domains/atmosphere/` | Test semantic boundaries. |
+| Machine shape | `schemas/contracts/v1/domains/atmosphere/` | Validate shape once schemas close. |
+| Policy logic | `policy/domains/atmosphere/` | Invoke canonical policy; never duplicate it. |
+| Correction model/configuration | Accepted correction/model and pipeline roots | Test pinned identity, version, inputs, outputs, and obligations. |
+| Reusable fixtures | `fixtures/domains/atmosphere/` | Consume hashed synthetic cases. |
+| Validator implementation | `tools/validators/...` | Invoke it; do not reimplement it locally. |
+| Evidence and proofs | `data/proofs/` and evidence contracts | Assert resolvability and claim scope. |
+| Receipts | `data/receipts/` | Verify references; tests are not trust receipts. |
+| Release/correction/rollback | `release/` and correction object families | Exercise dry-runs; never approve release. |
+| Public carriers | Governed API/UI/map roots | Assert preservation and fail-closed behavior. |
 
 > [!WARNING]
-> This directory must not become a second policy home. It tests policy behavior; policy definitions stay under `policy/domains/atmosphere/`.
+> This directory must not become a second policy, contract, schema, source registry, correction-model, fixture, evidence, receipt, or release home.
 
-[↑ Back to top](#top)
-
----
-
-## 3. Rule statement
-
-**Rule:** Low-cost sensor records require governed qualification fields before strong public-facing claims or promotion.
-
-Restrict, deny, hold, or abstain by default when any of the following occur:
-
-- `knowledge_character = LOW_COST_SENSOR` is present but required caveat fields are missing.
-- Confidence, uncertainty, correction, calibration, or limitation fields are missing where policy requires them.
-- A projected record removes caveat or confidence fields.
-- A derived output lacks lineage from the original candidate record.
-- A release candidate lacks source role, evidence linkage, review state, or public-release posture.
-
-Allow only when the test subject is explicitly governed as a caveated, corrected, restricted, or otherwise policy-approved object and passes required contract, schema, policy, evidence, and release checks.
+[Back to top](#top)
 
 ---
 
-## 4. Status and evidence boundary
+## Governing rule
 
-| Item | Status |
+### Core rule
+
+A low-cost-sensor value may be used only under the source role, knowledge character, qualification, evidence, rights, review, and release posture supported by its governed object.
+
+The lane should restrict, deny, hold, abstain, or fail validation when:
+
+- `LOW_COST_SENSOR` is missing, replaced, or contradicted;
+- the record is labeled regulatory, reference-grade, or authoritative without support;
+- required correction or calibration state is missing;
+- the correction method or version is missing, unresolved, stale, or inconsistent;
+- caveat, confidence or uncertainty, limitations, QA, pollutant, units, time, source, or station/network context is missing where required;
+- corrected and uncorrected values cannot be distinguished or audited;
+- lineage from raw reading through correction to candidate output is missing;
+- source rights or terms are unknown;
+- a public carrier strips qualification;
+- a generated answer states the value as uncaveated truth;
+- a catalog or release candidate lacks evidence, review, correction, or rollback support.
+
+### Rule does not imply
+
+The rule does not mean:
+
+- every low-cost-sensor record is always unusable;
+- every corrected value is regulatory-grade;
+- every source uses Barkjohn;
+- a documentation statement chooses a current correction version;
+- a correction badge is proof;
+- a passing schema proves policy or science;
+- a passing test approves public release.
+
+### Allow/restrict posture
+
+A qualified low-cost-sensor record may be eligible for contextual, restricted, or public-with-caveat use only when the governing policy and release process explicitly permit it.
+
+[Back to top](#top)
+
+---
+
+## Object, source-role, and knowledge-character boundaries
+
+| Boundary | Required distinction |
 |---|---|
-| Target README path exists in repo | CONFIRMED in this session before this README update. |
-| Directory Rules basis for `tests/domains/<domain>/` | CONFIRMED from current repo doctrine. |
-| Parent test root allows policy negative cases | CONFIRMED from `tests/README.md`. |
-| Atmosphere file-system plan names `low-cost-sensor-caveat.rego` | CONFIRMED; planning path is marked PROPOSED in the plan. |
-| `policy/domains/atmosphere/low_cost_sensor_caveats_required.rego` exists | CONFIRMED; scaffold only in current evidence. |
-| Doctrine says `LOW_COST_SENSOR` requires correction/caveats/confidence/limitations for public release | CONFIRMED from current Atmosphere policy/knowledge-character docs. |
-| `contracts/domains/atmosphere/AirObservation.md` discusses low-cost sensor caveats | CONFIRMED from current repo evidence. |
-| Actual tests in this directory | UNKNOWN in this README. |
-| Canonical policy module/file name | NEEDS VERIFICATION due to plan/file-name drift. |
-| Canonical object schemas and runtime validator names | NEEDS VERIFICATION. |
-| CI job names / pytest markers | NEEDS VERIFICATION. |
+| Low-cost sensor vs. observed/reference sensor | Community/consumer-grade posture remains explicit; correction does not silently grant reference status. |
+| Low-cost sensor vs. regulatory archive | Regulatory posture requires separate authority, QA/QC, vintage, and evidence. |
+| Low-cost PM2.5 vs. generic AirObservation | PM2.5 specialization retains pollutant, units, method, QA, correction, and role. |
+| Low-cost sensor vs. AQI report | Sensor concentration is not automatically an AQI/index/report object. |
+| Low-cost sensor vs. model | Correction/model output is not the observation source. |
+| Low-cost sensor vs. derived fusion | Fusion carries separate identity, inputs, uncertainty, and inherited limitations. |
+| Low-cost sensor vs. station/site context | Observation value and station/network metadata remain distinct; public siting may require generalization. |
+| Low-cost sensor vs. EvidenceBundle | The record may be evidence-backed; it is not the proof object. |
+| Low-cost sensor vs. PolicyDecision | Qualification state may drive policy; it is not the decision. |
+| Low-cost sensor vs. ReleaseManifest | A corrected record is not release approval. |
+| Low-cost sensor vs. health or exposure claim | A concentration value alone does not prove exposure, effect, action, or medical significance. |
 
-This README is a lane contract. It does not claim that the full policy logic, fixtures, validators, schemas, or CI gates are implemented.
+### Required role preservation
 
----
+A mature suite should reject:
 
-## 5. What belongs here
+- `LOW_COST_SENSOR → OBSERVED_SENSOR` mutation without a governed new object and accepted policy;
+- `LOW_COST_SENSOR → REGULATORY_ARCHIVE` mutation under any label-only transform;
+- `LOW_COST_SENSOR → authority` source-role escalation without separate authoritative evidence;
+- corrected value presented without its original low-cost source role;
+- correction artifact presented as the observation source.
 
-This directory may contain:
-
-- README and lane contract material for low-cost sensor caveat tests.
-- Tests that reject or restrict records missing required caveat/confidence/limitation fields.
-- Tests that verify projection surfaces preserve qualification fields.
-- Tests that verify corrected/derived products retain source lineage and caveat fields.
-- Tests that call policy/validator implementations from their canonical homes.
-- Tests that use deterministic, public-safe invalid fixtures for missing-caveat cases.
-- Tiny local test-only examples when they are not reusable fixtures and the reason is documented.
+[Back to top](#top)
 
 ---
 
-## 6. What does not belong here
+## Policy file and naming drift
 
-This directory must not contain:
+### Confirmed current file
 
-- Policy implementation files.
-- Production validators, correction algorithms, calibration pipelines, or adapters.
-- Source fetchers, scrapers, live platform pulls, vendor API calls, or downloaded source caches.
-- Raw records, processed datasets, catalog records, triplets, or published layers.
-- Real credentials, API keys, service accounts, cookies, signed URLs, private endpoints, or device-owner details.
-- Schema, contract, source registry, release, receipt, or proof definitions.
-- Reusable fixture inventories that belong under `fixtures/domains/atmosphere/`.
-- Tests that run live network calls by default.
+```text
+policy/domains/atmosphere/low_cost_sensor_caveats_required.rego
+package kfm.generated.policy.domains.atmosphere.low_cost_sensor_caveats_required
+default allow := false
+```
 
-[↑ Back to top](#top)
+The checked file contains no low-cost-specific input rules, obligations, reason codes, or positive cases.
+
+### Planning-name drift
+
+The prior README and planning register reference:
+
+```text
+policy/domains/atmosphere/low-cost-sensor-caveat.rego
+```
+
+That path was not found at the checked commit.
+
+### Required canonicalization
+
+Before substantive tests depend on policy:
+
+1. accept one canonical file and package;
+2. define an input contract;
+3. define decision and obligation fields;
+4. define stable reason codes;
+5. define fail-closed behavior for missing policy;
+6. reject duplicate or stale packages;
+7. document migration from planning names;
+8. add positive controls so default deny cannot masquerade as correct logic;
+9. bind CI and runtime to the same policy digest.
+
+> [!IMPORTANT]
+> `default allow := false` is a safe scaffold posture but not proof of the required restriction/allow logic.
+
+[Back to top](#top)
 
 ---
 
-## 7. Policy-deny proof matrix
+## Correction, calibration, and version boundary
 
-| Scenario | Expected result | Rationale |
-|---|---|---|
-| LOW_COST_SENSOR record lacks caveat field | `RESTRICT`, `DENY`, or validation failure | Required caveat missing. |
-| LOW_COST_SENSOR record lacks confidence/uncertainty | `RESTRICT`, `DENY`, or validation failure | False precision risk. |
-| LOW_COST_SENSOR record lacks correction/calibration metadata | `RESTRICT`, `DENY`, or validation failure | Quality pathway unknown. |
-| LOW_COST_SENSOR record lacks limitation field | `RESTRICT`, `DENY`, or validation failure | Interpretation boundary missing. |
-| Projection omits caveat/confidence text | Trust-state failure or `DENY` | Surface overclaim. |
-| Generated answer treats a low-cost sensor value as uncaveated truth | `ABSTAIN`, corrected answer, or `DENY` | Generated language cannot overrule policy. |
-| Catalog candidate promotes uncaveated low-cost sensor layer | `DENY` or `HOLD` | Publication gate must fail closed. |
-| Corrected product lacks lineage from original reading | `DENY` or `ABSTAIN` | Missing transformation trace. |
-| Record is displayed as caveated context with evidence and limitations | Allowed if policy permits | Contextual use with caveats is not overclaiming. |
+### Correction is a governed transform
 
----
-
-## 8. Allowed claim boundary
-
-A valid public-safe or restricted-release low-cost sensor object should make these visible when required by the governing contract and policy:
+A correction or calibration step should expose, where accepted contracts require it:
 
 | Requirement | Purpose |
 |---|---|
-| Separate stable ID | Prevents raw/candidate data from becoming a public product by mutation. |
-| Sensor/network/source context | Shows where the value came from and what type of source it is. |
-| Source role | Prevents primary/corroborating/context/restricted collapse. |
-| Knowledge character | Distinguishes `LOW_COST_SENSOR` from other characters. |
-| Correction/calibration status | Shows whether the value was adjusted and how. |
-| Caveat text | Preserves interpretation limits. |
-| Confidence/uncertainty | Prevents false precision. |
-| Limitation fields | Shows known constraints. |
-| EvidenceRef / EvidenceBundle linkage | Allows cite-or-abstain behavior. |
-| Review state | Shows whether release is allowed, restricted, denied, or pending. |
-| Release metadata | Provides correction and rollback paths if published. |
+| `input_observation_ref` | Identifies the low-cost source reading. |
+| `output_observation_id` | Prevents in-place mutation from hiding transform history. |
+| `correction_method_id` | Names the method without relying on display text. |
+| `correction_version` | Pins the exact method release. |
+| `parameter_digest` or equivalent | Prevents silent coefficient drift. |
+| `model_run_ref` / transform receipt | Records inputs, parameters, execution, and output. |
+| `uncorrected_value` | Preserves original source value. |
+| `corrected_value` | Carries the transformed value distinctly. |
+| `applicability_state` | Shows whether the method is valid for pollutant, range, environment, and source. |
+| `confidence` / `uncertainty` | Prevents false precision. |
+| `limitations` | Carries known constraints and out-of-domain conditions. |
+| `correction_time` | Distinguishes observation time from transform time. |
+| `supersedes` / correction lineage | Supports reprocessing and withdrawal. |
 
-Without those controls, the safest result is restriction, denial, hold, or abstention.
+These names are `PROPOSED`; accepted contracts and schemas must choose the actual fields.
+
+### Barkjohn-specific posture
+
+The repository’s Barkjohn page is a draft product/method document. It supports the intended governance that:
+
+- Barkjohn is a modeled correction, not an observation source;
+- PurpleAir publication requires a correction version pin under the documented doctrine;
+- corrected and uncorrected values remain paired for audit and reversibility;
+- exact current version, coefficients, smoke/high-value guards, meteorology-aware extensions, and runtime binding remain `NEEDS VERIFICATION`.
+
+Tests must not paste or freeze regression coefficients from documentation.
+
+### Required correction tests
+
+A mature suite should cover:
+
+- method missing;
+- version missing;
+- version mismatch between policy and runtime;
+- parameter digest missing;
+- output overwrites input identity;
+- uncorrected value missing;
+- corrected value missing;
+- corrected/uncorrected values swapped;
+- applicability unknown;
+- correction applied to unsupported pollutant/source;
+- correction result outside declared domain;
+- uncertainty or limitation missing;
+- correction receipt missing or unresolved;
+- superseded method still treated as current;
+- correction failure silently falls back to uncorrected public output.
+
+[Back to top](#top)
 
 ---
 
-## 9. Fixture contract
+## Source rights, credentials, and sensitivity
 
-Reusable fixtures should normally live under:
+### PurpleAir/source posture
 
-```text
-fixtures/domains/atmosphere/
+The Atmosphere source registry draft describes PurpleAir as:
+
+- a low-cost/community sensor network;
+- `observed` community posture, never regulatory;
+- API terms requiring verification before bulk ingestion;
+- credentials prohibited from catalog metadata.
+
+This is draft governance evidence, not source admission.
+
+### Fail-closed rights posture
+
+The suite should deny or hold when:
+
+- source terms are unknown or stale;
+- redistribution/public-display permission is unresolved;
+- attribution obligations are absent;
+- bulk-ingestion rights are not recorded;
+- a credential or signed URL appears in fixture, log, report, receipt, or public object;
+- device-owner or private-site information is exposed;
+- exact station placement requires generalization but no transform/review exists.
+
+### Sensitivity and location
+
+Low-cost-sensor observations may be public-safe only after source rights, station/site sensitivity, and public geometry posture are reviewed. A measurement value does not authorize disclosure of private-property, household, or device-owner context.
+
+[Back to top](#top)
+
+---
+
+## Required test matrix
+
+### Setup and false-green controls
+
+| Scenario | Expected result |
+|---|---|
+| Canonical policy missing, ambiguous, or duplicated | Test setup `ERROR`; no silent skip. |
+| Policy denies every input | Positive controls fail; deny-all is not success. |
+| Policy allows every input | Negative controls fail. |
+| Zero tests, zero cases, or placeholder-only fixtures | Test failure. |
+| Accepted reason code or obligation missing | Test failure. |
+
+### Classification and qualification
+
+| Scenario | Expected result |
+|---|---|
+| Low-cost record labeled regulatory/reference-grade | `DENY`. |
+| `LOW_COST_SENSOR` or source role missing/changed | `DENY` or validation failure. |
+| Caveat, confidence/uncertainty, limitations, QA, pollutant, units, or source context missing where required | `RESTRICT`, `HOLD`, `DENY`, or validation failure. |
+| Qualification exists only in UI prose, not governed fields | `DENY`. |
+| Valid caveated low-cost record preserves role, character, evidence, and obligations | Eligible only for policy-approved qualified use. |
+
+### Correction, rights, time, and lineage
+
+| Scenario | Expected result |
+|---|---|
+| Required correction method/version/config digest missing | `DENY` or `HOLD`. |
+| Policy/runtime correction digests disagree | `ERROR` or `DENY`. |
+| Correction receipt or applicability unresolved | `ABSTAIN`, `HOLD`, or `DENY`. |
+| Corrected output overwrites source identity or loses original/corrected pair | Test failure. |
+| Correction fails and public output silently falls back to uncorrected value | `DENY` and test failure. |
+| Rights/terms/attribution/public-display posture unresolved | `DENY` or `HOLD`. |
+| Credential, signed URL, private owner/site detail, or protected location leaks | Test failure. |
+| Observed, retrieval, correction, freshness, or supersession time is missing or collapsed | `RESTRICT`, `DENY`, or validation failure. |
+
+### Evidence, carriers, release, and correction
+
+| Scenario | Expected result |
+|---|---|
+| EvidenceRef missing or unresolved | `ABSTAIN`, `DENY`, or `ERROR`. |
+| Evidence supports a value but not reference/regulatory or health claim | `DENY` or narrowed answer. |
+| API/UI/map/export/search/graph/AI strips low-cost, correction, caveat, confidence, limitations, or freshness state | Test failure. |
+| Release candidate omits qualification, evidence, review, correction, or rollback target | `DENY` or `HOLD`. |
+| Correction notice cannot identify affected outputs, or withdrawn/superseded output remains public | Test failure. |
+| Passing tests are presented as source, scientific, regulatory, health, policy, or release approval | Governance failure. |
+
+[Back to top](#top)
+
+---
+
+## Fixture and case contract
+
+### Current fixture boundary
+
+The object and invalid-air-observation fixture indexes are present, but payload inventory and active consumers remain unverified. Do not count README rows as cases.
+
+### Required fixture families
+
+| Family | Purpose |
+|---|---|
+| Invalid missing caveat | Proves qualification cannot be omitted. |
+| Invalid missing confidence/uncertainty | Proves false precision is blocked. |
+| Invalid missing limitations | Proves interpretation boundary is required. |
+| Invalid missing source role/character | Proves anti-collapse state is required. |
+| Invalid uncorrected public claim | Proves correction obligation is enforced. |
+| Invalid correction method/version | Proves transform identity is pinned. |
+| Invalid missing original/corrected pair | Proves auditability and reversibility. |
+| Invalid unresolved rights | Proves source admission/public use fails closed. |
+| Invalid stripped carrier | Proves API/UI/map/AI preservation. |
+| Valid caveated low-cost observation | Positive control for qualified contextual use. |
+| Valid corrected low-cost PM2.5 candidate | Positive control with separate identity, pinned correction, uncertainty, caveats, evidence, review, and release posture. |
+| Valid denial/abstention envelope | Proves safe runtime behavior when support is incomplete. |
+
+### Proposed case manifest
+
+```yaml
+case_id: LCS-CASE-001
+fixture_id: LCS-FIXTURE-001
+fixture_version: 1
+fixture_path: fixtures/domains/atmosphere/invalid/air-observation/example.json
+fixture_sha256: "<sha256>"
+scenario: missing_caveat
+source_role: observed-community
+knowledge_character: LOW_COST_SENSOR
+correction_required: true
+expected_outcome: RESTRICT
+expected_reason_code: ATMO_LCS_CAVEAT_MISSING
+consumers:
+  - tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py
+rights_posture: synthetic-public-safe
+sensitivity_posture: synthetic-no-owner-data
 ```
 
-Expected fixture families for this lane include:
+All names and fields above are `PROPOSED`.
 
-| Fixture kind | Example purpose |
-|---|---|
-| Invalid low-cost sensor missing caveat | Proves caveat field is required. |
-| Invalid low-cost sensor missing confidence | Proves confidence/uncertainty is required where policy applies. |
-| Invalid low-cost sensor missing correction status | Proves correction/calibration state is required. |
-| Invalid projection without caveat | Proves projection overclaim fails. |
-| Invalid corrected product missing lineage | Proves transformation claims require provenance. |
-| Valid caveated low-cost sensor context | Proves qualified contextual use can pass. |
-| Valid corrected/reviewed product | Proves a policy-approved product can pass under separate governed identity. |
+### Manifest invariants
 
-Fixture records should be deterministic, public-safe, no-network, and visibly test-only or governed fixture data. They must not be raw source payloads or release artifacts.
+- unique stable case and fixture IDs;
+- version and SHA-256 required;
+- local relative paths only;
+- no HTTP, cloud, database, cache, or developer-profile references;
+- no credentials, owner data, private endpoints, or precise private-site details;
+- explicit expected outcome and reason;
+- at least one negative and one positive control;
+- consumer backlink required;
+- orphan and duplicate detection required;
+- placeholder-only metadata fails;
+- zero-case families fail.
+
+[Back to top](#top)
 
 ---
 
-## 10. Expected outcomes
+## Public and derived surface tests
 
-Policy-deny tests should prefer finite, inspectable outcomes:
+Qualification must survive every carrier.
+
+| Surface | Required assertion |
+|---|---|
+| Governed API | Emits role, knowledge character, correction state, caveat, confidence/uncertainty, limitations, time, evidence, and decision obligations where required. |
+| Evidence Drawer | Shows low-cost status, correction method/version, limitations, freshness, and evidence resolution without implying regulatory equivalence. |
+| Map layer/tooltip | Keeps “low-cost sensor” and correction/limitation state visible; no generic observation label. |
+| Search/index | Preserves qualification fields and does not rank a low-cost value as authority without policy. |
+| Graph/triplet projection | Keeps source, observation, correction model/run, and release identities distinct. |
+| Export/download | Includes qualification and provenance or refuses export. |
+| AI/Focus Mode | Answers only within cited scope; otherwise narrows, abstains, or denies. |
+| Summary/dashboard | Does not remove uncertainty, caveats, correction state, or source-role distinction. |
+| Notification | Does not convert a low-cost value into health or protective-action instruction. |
+| Correction view | Shows superseded/current relationship and affected releases. |
+
+### Carrier anti-patterns
+
+Reject:
+
+- caveat visible only on hover while exported value is bare;
+- “corrected” badge without method/version/evidence;
+- low-cost marker removed in aggregation;
+- map symbology identical to regulatory monitor without explicit qualification;
+- AI text saying “official,” “regulatory,” “safe,” “unhealthy,” or equivalent beyond cited authority;
+- vector/search metadata dropping correction state;
+- dashboard averaging corrected and uncorrected variants as if equivalent;
+- correction notice hidden from cached or derived outputs.
+
+[Back to top](#top)
+
+---
+
+## Finite outcomes and reason-code posture
+
+### Runtime envelope
 
 ```text
 ANSWER | ABSTAIN | DENY | ERROR
 ```
 
-Policy/review pipelines may also use review or promotion outcomes such as:
+### Policy/review envelope
 
 ```text
 ALLOW | RESTRICT | DENY | HOLD | ERROR
 ```
 
-| Condition | Preferred outcome |
+### Proposed reason codes
+
+| Code | Meaning |
 |---|---|
-| Missing caveat/confidence/limitation | `RESTRICT`, `DENY`, `HOLD`, or validation failure. |
-| EvidenceRef missing | `ABSTAIN` or validation failure. |
-| Policy module missing or ambiguous | `ERROR` in test setup, not silent pass. |
-| Fixture missing | Test failure with clear path. |
-| Corrected product evidence incomplete | `DENY`, `HOLD`, or `ABSTAIN`. |
-| Valid governed caveated product | Allowed only as caveated/reviewed product with separate identity. |
+| `ATMO_LCS_ROLE_MISSING` | Source role or low-cost character missing/contradictory. |
+| `ATMO_LCS_CAVEAT_MISSING` | Required caveat absent. |
+| `ATMO_LCS_CONFIDENCE_MISSING` | Confidence or uncertainty absent. |
+| `ATMO_LCS_LIMITATIONS_MISSING` | Limitations absent. |
+| `ATMO_LCS_CORRECTION_MISSING` | Required correction state absent. |
+| `ATMO_LCS_CORRECTION_VERSION_MISSING` | Method version not pinned. |
+| `ATMO_LCS_CORRECTION_DIGEST_MISMATCH` | Policy/runtime or receipt/config digest differs. |
+| `ATMO_LCS_PAIR_MISSING` | Corrected/uncorrected pair incomplete. |
+| `ATMO_LCS_LINEAGE_MISSING` | Source-to-correction-to-output lineage unresolved. |
+| `ATMO_LCS_APPLICABILITY_UNKNOWN` | Correction domain not established. |
+| `ATMO_LCS_RIGHTS_UNRESOLVED` | Rights/terms/public-display status unresolved. |
+| `ATMO_LCS_REFERENCE_GRADE_OVERCLAIM` | Low-cost value presented as reference/regulatory truth. |
+| `ATMO_LCS_CARRIER_STRIPPED` | Qualification lost on a downstream surface. |
+| `ATMO_LCS_STALE` | Reading or correction version outside accepted freshness. |
+| `ATMO_LCS_POLICY_UNAVAILABLE` | Canonical policy could not be evaluated. |
+| `ATMO_LCS_FIXTURE_PLACEHOLDER` | Metadata-only or non-substantive fixture used as coverage. |
+| `ATMO_LCS_ZERO_CASES` | Required family collected no cases. |
+
+These codes are `PROPOSED`; they are not an accepted registry.
+
+### Outcome discipline
+
+- missing support must never become implicit `ALLOW`;
+- policy/setup failure should be `ERROR`, not an empty green suite;
+- evidence insufficiency should become `ABSTAIN` where a claim can safely be withheld;
+- unresolved rights or public-release posture should become `DENY` or `HOLD`;
+- `RESTRICT` must carry explicit obligations and cannot mean silent public allow.
+
+[Back to top](#top)
 
 ---
 
-## 11. Lifecycle gates
+## Evidence, policy, release, and correction boundary
 
-This lane supports the KFM lifecycle but does not move records through it:
+### Required order
 
-```text
-RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
+```mermaid
+flowchart LR
+    S["SourceDescriptor + rights + role"] --> O["Low-cost observation"]
+    O --> C["Correction/model run if required"]
+    C --> Q["Qualification + QA + uncertainty"]
+    Q --> E["EvidenceRef → EvidenceBundle"]
+    E --> P["PolicyDecision"]
+    P --> R["Review / PromotionDecision"]
+    R --> M["ReleaseManifest + rollback target"]
+    M --> U["Governed API/UI/map/AI"]
+    U --> X["Correction / supersession / withdrawal"]
 ```
 
-| Gate | Low-cost sensor caveat rule |
-|---|---|
-| RAW | Source payloads remain raw source material; do not publish from this lane. |
-| WORK / QUARANTINE | Missing caveats/confidence/correction should remain work/quarantine until resolved. |
-| PROCESSED | Processed output must preserve source role, quality, caveat, and evidence lineage. |
-| CATALOG / TRIPLET | Catalog/graph projection must preserve caveats and knowledge character. |
-| PUBLISHED | Published claims must carry correct identity, caveat, evidence, policy, correction, and rollback. |
-| RECEIPTS / PROOFS | Tests may check references but do not store trust-bearing receipts/proofs here. |
-| RELEASE | Release decisions remain under `release/`, not `tests/`. |
+### Authority separation
 
-Publication is a governed state transition. A passing test is not a release approval.
+- A `SourceDescriptor` establishes identity, role, rights, cadence, and obligations; it does not prove a reading or authorize release.
+- An observation carries a value under a governed role; it is not a PolicyDecision, EvidenceBundle, or ReleaseManifest.
+- A correction/model receipt records method identity, version, inputs, parameters, and output; it does not establish regulatory equivalence.
+- An EvidenceBundle supports bounded claims; policy and release remain separate.
+- Tests prove checked behavior only. They do not admit sources, approve corrections, establish health effects, or publish artifacts.
+
+[Back to top](#top)
 
 ---
 
-## 12. Suggested local commands
+## No-network, secrets, and safe diagnostics
+
+Default tests must not:
+
+- call PurpleAir, EPA, OpenAQ, or any live source;
+- read real API keys, cookies, signed URLs, keychains, cloud profiles, or developer caches;
+- depend on current sensor values, current weather, or provider uptime;
+- reveal private endpoints, device-owner identity, precise private-property context, or raw source payloads;
+- log full untrusted payloads;
+- write lifecycle, proof, receipt, release, or public artifact state.
+
+Safe diagnostics may include:
+
+- synthetic case ID;
+- fixture ID/version/digest;
+- policy package/digest;
+- expected and actual finite outcome;
+- safe reason code;
+- missing semantic category;
+- sanitized relative path;
+- test and tool versions;
+- deterministic timestamp/seed profile if governed.
+
+Do not print:
+
+- secrets or credentials;
+- full source payloads;
+- private hostnames or URLs;
+- owner/contact details;
+- precise sensitive coordinates;
+- unbounded model output;
+- health or emergency instructions.
+
+[Back to top](#top)
+
+---
+
+## Inventory, collection, and execution
 
 > [!NOTE]
-> Command names, policy test runners, marker names, and CI job names are **NEEDS VERIFICATION** until checked against the actual repository configuration.
+> Current commands expose inventory and scaffold status. They do not prove a substantive suite.
 
-Likely lane check:
-
-```bash
-pytest tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat
-```
-
-Likely parent policy-deny check:
+### Inventory
 
 ```bash
-pytest tests/domains/atmosphere/policy-deny
+find tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat \
+  -maxdepth 3 -type f -print | sort
+
+find fixtures/domains/atmosphere \
+  -maxdepth 4 -type f -print | sort
 ```
 
-Possible policy engine check if configured:
+### Placeholder detection
 
 ```bash
-opa test policy/domains/atmosphere tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat
+grep -RInE \
+  'PROPOSED placeholder|placeholder created|TODO|pass$|NotImplemented|default allow := false' \
+  tests/domains/atmosphere \
+  fixtures/domains/atmosphere \
+  policy/domains/atmosphere
 ```
 
-Possible repo-wide validation command if implemented:
+### Collection
 
 ```bash
-python tools/validate_all.py
+python -m pytest \
+  tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat \
+  --collect-only -q
 ```
+
+The current child lane is expected to collect no substantive tests; that is a maturity finding, not success.
+
+### Adjacent placeholder probe
+
+```bash
+python -m pytest \
+  tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py \
+  --collect-only -q
+```
+
+A file containing only a module docstring should not be counted as coverage.
+
+### Proposed focused execution
+
+```bash
+python -m pytest \
+  tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat \
+  -q
+```
+
+### Proposed policy check
+
+```bash
+opa test policy/domains/atmosphere -v
+```
+
+The current Rego scaffold’s default deny does not prove correct case behavior.
+
+### Current root boundary
+
+```bash
+make test
+```
+
+Current `make test` runs `tests/schemas` and `tests/contracts`; it excludes this lane. Root policy, fixtures, and deny targets remain TODOs.
+
+[Back to top](#top)
 
 ---
 
-## 13. Review burden
+## Failure interpretation
 
-Reviewers should be able to answer:
-
-- Does the test fail or restrict when required caveat fields are missing?
-- Does the test require confidence/uncertainty, limitation, and correction/calibration status where policy applies?
-- Are source role, knowledge character, and evidence visible where required?
-- Are projection surfaces prevented from dropping caveats?
-- Does the test call policy/validator code from canonical homes rather than reimplementing it here?
-- Are fixtures local, deterministic, public-safe, and no-network?
-- Are receipts, proofs, release decisions, and source data kept out of this directory?
-- Are policy scaffold gaps and filename drift marked NEEDS VERIFICATION rather than hidden?
-
----
-
-## 14. Related folders and files
-
-| Path | Relationship | Status from current evidence |
+| Failure | Likely meaning | Safe response |
 |---|---|---|
-| `tests/domains/atmosphere/policy-deny/` | Parent policy-deny test lane. | NEEDS VERIFICATION beyond this README. |
-| `policy/domains/atmosphere/low_cost_sensor_caveats_required.rego` | Proposed policy scaffold for this denial/restriction. | CONFIRMED present; scaffold only. |
-| `policy/domains/atmosphere/low-cost-sensor-caveat.rego` | Planning-name variant from file-system plan. | NEEDS VERIFICATION; planning path confirmed, file presence not verified as canonical. |
-| `contracts/domains/atmosphere/AirObservation.md` | Object-meaning contract that discusses low-cost sensor caveats. | CONFIRMED present; implementation depth remains bounded. |
-| `contracts/domains/atmosphere/PM25Observation.md` | Specific pollutant observation contract often affected by low-cost source posture. | Present in search results; content not verified in this README. |
-| `contracts/domains/atmosphere/OzoneObservation.md` | Specific pollutant observation contract often affected by low-cost source posture. | Present in search results; content not verified in this README. |
-| `fixtures/domains/atmosphere/` | Reusable valid/invalid fixture home. | Fixture families for this lane NEED VERIFICATION. |
-| `tools/validators/` | Validator implementation home. | Specific module names NEEDS VERIFICATION. |
-| `docs/domains/atmosphere/FILE_SYSTEM_PLAN.md` | Planning source naming low-cost sensor caveat policy lane. | CONFIRMED; plan language includes PROPOSED paths. |
-| `docs/domains/atmosphere/POLICY.md` | Human-facing policy doctrine naming low-cost sensor caveats. | CONFIRMED in current evidence. |
-| `docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md` | Knowledge-character documentation for `LOW_COST_SENSOR`. | CONFIRMED in current evidence. |
+| Policy file/package missing | Canonical policy unresolved. | `ERROR`; do not skip. |
+| Every case denied | Default-deny scaffold or overbroad policy. | Fail positive controls. |
+| Missing caveat/confidence/limitations accepted | Qualification gap. | Block promotion and correct policy/schema/adapter. |
+| Uncorrected value reaches public carrier | Correction obligation bypass. | Deny, invalidate candidate, trace consumers. |
+| Correction version/digest mismatch | Configuration drift. | Fail closed and reconcile pin. |
+| Corrected/uncorrected pair lost | Audit/reversibility failure. | Block candidate and restore lineage. |
+| Rights unresolved but allowed | Source admission failure. | Hold/deny and open rights review. |
+| Carrier strips low-cost state | Trust-membrane failure. | Block carrier/release and add regression. |
+| Health/regulatory claim emitted | Claim-scope violation. | Deny/abstain, correct output, inspect consumers. |
+| Zero cases collected | False green. | Fail CI after lane activation. |
+| Placeholder fixture used | Non-substantive coverage. | Fail fixture gate. |
+
+### Passing tests do not establish
+
+Source admission, current terms, current correction version, scientific or regulatory equivalence, exposure or health effects, evidence closure outside checked cases, release approval, production parity, or operational rollback success remain outside this suite.
+
+[Back to top](#top)
 
 ---
 
-## 15. Open questions
+## CI and promotion boundary
 
-| Question | Status | Notes |
+### Substantive CI requirements
+
+A mature job should:
+
+1. install pinned policy and test dependencies;
+2. run no-network;
+3. verify the canonical policy package and digest;
+4. reject stale/duplicate packages and deny-all false greens;
+5. validate fixture IDs, versions, digests, consumers, and non-placeholder payloads;
+6. collect a nonzero minimum of negative and positive cases;
+7. run role/character/qualification tests;
+8. run correction/version/pair/applicability tests;
+9. run rights, time, freshness, and source-obligation tests;
+10. run API/UI/map/search/AI preservation tests;
+11. emit a safe structured report;
+12. retain it for review;
+13. fail on missing reason codes or obligations after registry acceptance;
+14. expose correction and rollback targets when release significance requires them.
+
+### Current CI boundary
+
+`domain-atmosphere.yml` contains TODO echo steps. A successful run does not prove caveat enforcement.
+
+The root `make test` excludes this lane.
+
+### Promotion significance
+
+This suite may become a prerequisite for review, but it cannot itself:
+
+- admit PurpleAir or another source;
+- approve a correction method/version;
+- establish regulatory equivalence;
+- approve policy;
+- approve release;
+- issue health or protective-action guidance.
+
+[Back to top](#top)
+
+---
+
+## Smallest sound implementation sequence
+
+1. accept one canonical policy path/package;
+2. define minimal input/result/obligation contracts;
+3. define one synthetic invalid missing-caveat fixture;
+4. add one valid caveated low-cost positive control;
+5. add one valid corrected low-cost positive control;
+6. implement the focused adapter/test;
+7. add stable reason codes;
+8. add correction version and pair preservation;
+9. add rights/source-role/time cases;
+10. add carrier preservation;
+11. add nonzero collection and safe report;
+12. add substantive CI;
+13. add correction, supersession, withdrawal, and rollback tests.
+
+Each step should be independently reviewable and reversible.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+- [ ] Owners, reviewers, canonical policy path/package, and CODEOWNERS are accepted.
+- [ ] Policy input/result/obligation and reason-code contracts are accepted.
+- [ ] Mandatory qualification categories are represented in contracts and closed schemas.
+- [ ] Metadata-only or absent fixtures are replaced with hashed synthetic fixtures and consumer backlinks.
+- [ ] Negative cases and positive caveated/corrected controls are substantive and nonzero.
+- [ ] Tests invoke canonical policy/validator/correction bindings and run no-network.
+- [ ] Role, character, caveat, confidence, limitations, correction, version, pair, rights, time, evidence, carrier, and release failures are covered.
+- [ ] Safe QA artifacts expose case count, outcomes, reasons, policy digest, and fixture digests.
+- [ ] CI is substantive and promotion significance is accepted.
+- [ ] Correction, supersession, withdrawal, and rollback paths are tested.
+- [ ] A green suite remains necessary but not sufficient for source, scientific, regulatory, health, policy, or release approval.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+| ID | Question | Status |
 |---|---|---|
-| Which policy filename is canonical: `low_cost_sensor_caveats_required.rego` or `low-cost-sensor-caveat.rego`? | NEEDS VERIFICATION | The underscored scaffold exists; the hyphenated planning path appears in the file-system plan. |
-| What is the canonical policy package name? | NEEDS VERIFICATION | Must align with final OPA/Rego conventions. |
-| Which object families may carry `LOW_COST_SENSOR`? | NEEDS VERIFICATION | Likely `AirObservation`, PM2.5, and ozone objects; confirm contracts/schemas. |
-| What fields are mandatory: caveat, confidence, limitations, correction, calibration, QA, or method? | NEEDS VERIFICATION | Should be defined by contracts/schemas/policy. |
-| Are low-cost sensor records denied, restricted, held, or allowed with warning by default? | NEEDS VERIFICATION | Exact runtime mapping must be tested. |
-| Should API/UI/AI trust-state tests live here or in API/UI lanes? | OPEN | This lane may own policy unit tests; UI/API lanes may own surface rendering. |
-| Are approved fixtures synthetic, transformed public samples, or source-derived fixture records? | NEEDS VERIFICATION | Prefer public-safe transformed or synthetic fixtures by default. |
+| LCS-CAVEAT-001 | Which policy file/package is canonical? | NEEDS VERIFICATION |
+| LCS-CAVEAT-002 | What is the accepted policy input/result/obligation contract? | NEEDS VERIFICATION |
+| LCS-CAVEAT-003 | Which qualification fields are mandatory by object/source role? | OPEN |
+| LCS-CAVEAT-004 | Which sources are admitted as `LOW_COST_SENSOR`, with what rights? | NEEDS VERIFICATION |
+| LCS-CAVEAT-005 | Is PurpleAir admitted, and under what current terms/public-display class? | NEEDS VERIFICATION |
+| LCS-CAVEAT-006 | What correction methods and versions are accepted, and where are they pinned? | NEEDS VERIFICATION |
+| LCS-CAVEAT-007 | Is corrected/uncorrected pair preservation mandatory for all corrections? | OPEN |
+| LCS-CAVEAT-008 | What applicability, uncertainty, and limitation fields are required? | NEEDS VERIFICATION |
+| LCS-CAVEAT-009 | Should executable tests live in the child or parent lane? | OPEN |
+| LCS-CAVEAT-010 | What fixtures, validators, and carrier consumers are canonical? | UNKNOWN |
+| LCS-CAVEAT-011 | Is this a required promotion check? | UNKNOWN |
+| LCS-CAVEAT-012 | Who owns correction cascade and rollback rehearsal? | UNKNOWN |
+
+[Back to top](#top)
 
 ---
 
-## 16. Definition of done
+## Evidence ledger
 
-This lane is mature when:
+| Evidence | Status | Supports | Limit |
+|---|---|---|---|
+| Target README + Directory Rules | `CONFIRMED` | Existing lane and test-root placement. | Not executable proof. |
+| Parent lane, policy scaffold, adjacent test | `CONFIRMED draft/scaffold` | Intended denial and planned test location. | No substantive rules or assertions. |
+| AirObservation + PM25Observation contracts | `CONFIRMED draft` | Low-cost role, correction, caveat, confidence, limitations, and non-regulatory boundaries. | Runtime enforcement unverified. |
+| KnowledgeCharacter contract | `CONFIRMED draft` | `LOW_COST_SENSOR` is distinct and load-bearing. | Machine registry binding unresolved. |
+| Air/PM2.5 schemas | `CONFIRMED permissive scaffolds` | Paths and contract pointers. | Do not enforce qualification. |
+| Fixture indexes | `CONFIRMED draft` | Governed homes and expected negative categories. | Payload inventory unverified. |
+| Source registry + Barkjohn page | `CONFIRMED draft docs` | PurpleAir community/non-regulatory posture; rights uncertainty; correction version/pair intent. | No source admission or runtime proof. |
+| Map/UI contracts | `CONFIRMED draft docs` | Qualification and correction state must survive carriers. | Machine binding unverified. |
+| Workflow + Makefile | `CONFIRMED scaffolds` | Current execution limits. | No focused suite. |
 
-- [ ] A canonical low-cost sensor caveat policy module is selected.
-- [ ] Tests restrict or deny records missing required caveat/confidence/limitation/correction fields.
-- [ ] Tests preserve caveats in API/UI/AI/catalog outputs or delegate those checks to appropriate lanes with links.
-- [ ] Tests allow low-cost sensor data only as caveated/reviewed context or a policy-approved corrected product.
-- [ ] Fixtures are deterministic, public-safe, no-network, and stored in the governed fixture lane unless test-local.
-- [ ] Tests call canonical validators/policies rather than redefining them.
-- [ ] CI or local validation exposes the restriction/denial clearly enough for reviewers.
-- [ ] Open questions are resolved or tracked in a verification backlog.
+[Back to top](#top)
 
 ---
 
-## 17. Changelog
+## Changelog, correction, and rollback
+
+### Changelog
 
 | Date | Version | Change |
 |---|---:|---|
-| 2026-07-05 | v0.1 | Initial governed README for the Atmosphere low-cost sensor caveat policy-deny test lane. |
+| 2026-07-05 | v0.1 | Initial governed README for the low-cost-sensor caveat policy-deny lane. |
+| 2026-07-16 | v0.2 | Repository-grounded maturity boundary; policy naming drift; observation/PM2.5/source-role distinction; correction/version/pair, rights, fixture, carrier, CI, correction, and rollback test contracts. |
 
----
+### Correction triggers
 
-## 18. Last reviewed
+Correct or supersede this README when:
 
-**2026-07-05** — Initial README scaffold. Target path was present but empty before update. Current evidence confirms the underscored policy scaffold, low-cost sensor caveat doctrine, and AirObservation contract notes; policy implementation depth, canonical module name, tests, schemas, validators, fixtures, and CI enforcement remain **NEEDS VERIFICATION**.
+- a claimed absent path is found;
+- the policy path/package is accepted;
+- a substantive test, fixture, schema, validator, source descriptor, or correction runtime lands;
+- PurpleAir/source rights or public-display posture changes;
+- the accepted correction method/version model changes;
+- mandatory qualification fields or reason codes change;
+- public carrier obligations change;
+- CI becomes substantive;
+- a statement conflicts with an accepted ADR or current implementation evidence.
 
-[↑ Back to top](#top)
+### Rollback
+
+Rollback this revision if it:
+
+- is mistaken for executable policy;
+- authorizes a source or correction method;
+- treats corrected low-cost values as reference/regulatory truth;
+- becomes a parallel contract/schema/source/policy/correction authority;
+- weakens caveat, evidence, rights, review, correction, or rollback controls;
+- is treated as health, regulatory, alert, or release authority.
+
+Mechanical rollback target:
+
+```text
+README blob: 799e505df14da05e3e52ffab29b1b904a4f8bd8a
+paired generated receipt: remove through reviewed Git history
+```
+
+No executable test, policy bundle, fixture payload, schema, contract, validator, source descriptor, workflow, lifecycle object, release object, health guidance, alert, or public artifact requires rollback for this documentation-only change.
+
+[Back to top](#top)
