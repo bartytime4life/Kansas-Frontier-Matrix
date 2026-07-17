@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-sensitivity-concern-template-f4396afe",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/sensitivity_concern.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/sensitivity_concern.md": "sha256:f4396afed3b658994ff9ea795e69227bda1163c2456cd6e78e2c441b4f1e888c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Markdown issue-template validation",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8b016972c1509d2f618cf72ce259e925ec537d0a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/.github/ISSUE_TEMPLATE/sensitivity_concern.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/docs/architecture/sensitivity.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/docs/runbooks/SENSITIVITY_ESCALATION.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/policy/sensitivity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5becb24184da5aed4314950e2d420f2bf6d8aa6f"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/sensitivity_concern.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity and admin permission, default-branch base 8b016972c1509d2f618cf72ce259e925ec537d0a, target file and blob, issue-intake authority boundary, private-first security policy, sensitivity architecture and escalation runbook, CODEOWNERS, receipt schema, and absence of overlapping open work."
+    },
+    {
+      "gate": "no-loss-and-review-routing",
+      "outcome": "PASS",
+      "reason": "Preserved the original rights, sovereignty, cultural sensitivity, living-person, DNA, rare-species, archaeology, infrastructure, and precise-location concern families while replacing the unverified @kfm/sensitivity-stewards route with the only verified repository owner."
+    },
+    {
+      "gate": "markdown-front-matter-and-structure",
+      "outcome": "PASS",
+      "reason": "Parsed front matter with name/about/title/labels/assignees; verified balanced comments and code fences, final newline, required section inventory, empty unverified labels, and assignment to verified repository owner bartytime4life."
+    },
+    {
+      "gate": "public-private-and-security-boundary",
+      "outcome": "PASS",
+      "reason": "The template requires generalized public-safe summaries, routes active exposure and security-sensitive details to SECURITY.md, prohibits restricted payloads and reconstructable locations, and treats the issue as non-authoritative intake rather than a policy, review, access, correction, release, or rollback decision."
+    },
+    {
+      "gate": "sensitivity-governance-and-reversibility",
+      "outcome": "PASS",
+      "reason": "The template captures lifecycle and exposure state, existing sensitivity notation without resolving the 0–5 versus proposed T0–T4 conflict, rights/consent/sovereignty, source role, EvidenceRef-to-EvidenceBundle resolution, inference risk, containment, governed artifacts, derivative closure, reviewer authority, finite triage outcomes, correction lineage, and rollback."
+    },
+    {
+      "gate": "artifact-hash-and-remote-readback",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 f4396afed3b658994ff9ea795e69227bda1163c2456cd6e78e2c441b4f1e888c and Git blob SHA 6e91526f7b88a40506969faf90117f149790fb55; GitHub returned the same blob SHA after the update."
+    },
+    {
+      "gate": "issue-chooser-render-and-platform-settings",
+      "outcome": "SKIPPED",
+      "reason": "The template is not yet on the default branch. Issue chooser rendering, project automation, live label vocabulary, private vulnerability reporting enablement, reviewer enforcement, and any verified sensitivity team remain NEEDS VERIFICATION after merge."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-sensitivity-concern-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/.github/ISSUE_TEMPLATE/sensitivity_concern.md"
+    },
+    {
+      "id": "issue-intake-authority-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "private-first-security-routing",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/SECURITY.md"
+    },
+    {
+      "id": "sensitivity-architecture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/docs/architecture/sensitivity.md"
+    },
+    {
+      "id": "sensitivity-escalation-runbook",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/docs/runbooks/SENSITIVITY_ESCALATION.md"
+    },
+    {
+      "id": "codeowners-routing",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/.github/CODEOWNERS"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b016972c1509d2f618cf72ce259e925ec537d0a/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:01:08Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored replacement of the public sensitivity/right concern issue-template stub on a scoped review branch. The artifact structures public-safe intake and triage only. It does not establish sensitivity, decide rights, consent, sovereignty, or access, authorize redaction or disclosure, create policy or review authority, approve correction, withdrawal, release, or rollback, or prove resolution. Human review remains pending."
+}
