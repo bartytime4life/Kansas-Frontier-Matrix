@@ -88,8 +88,8 @@
     },
     {
       "gate": "github-actions-run-and-check-observation",
-      "outcome": "SKIPPED",
-      "reason": "The workflow has not yet run from the proposed branch in this session. GitHub Actions syntax acceptance, job conclusions, warnings, summaries, runner behavior, and any branch-protection interaction remain NEEDS VERIFICATION."
+      "outcome": "PASS",
+      "reason": "Observed pull-request workflow run 29603959301 for the authored workflow blob. Jobs keyboard-navigation and axe both completed successfully, and their reporting steps completed successfully. This proves GitHub parsed and executed the scaffold; it does not prove accessibility, axe, keyboard, WCAG, release, or publication correctness."
     }
   ],
   "policy_decisions": [],
@@ -134,9 +134,9 @@
   "created_at": "2026-07-17T18:25:57Z",
   "emitter": "openai/gpt-5.6-thinking",
   "links": {
-    "pr_number": null,
+    "pr_number": 1383,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored hardening of the accessibility workflow scaffold on a scoped review branch. The workflow remains deliberately non-enforcing because current repository evidence does not establish a reviewed executable axe command, keyboard-navigation command, deterministic browser fixture set, lockfile, or non-placeholder explorer-web test script. The change prevents TODO-only output from being described as accessibility validation while preserving existing workflow and job identities. Human review remains pending."
+  "notes": "AI-authored hardening of the accessibility workflow scaffold on a scoped review branch. The workflow remains deliberately non-enforcing because current repository evidence does not establish a reviewed executable axe command, keyboard-navigation command, deterministic browser fixture set, lockfile, or non-placeholder explorer-web test script. Pull-request run 29603959301 confirmed both scaffold reporting jobs execute successfully; that success is not an accessibility pass. Human review remains pending."
 }
