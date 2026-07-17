@@ -1,0 +1,215 @@
+| WORK | Parse AQI and concentration separately; unresolved mappings stay work. |
+| QUARANTINE | Place collapsed, ambiguous, rights-unclear, or policy-unclear records here. |
+| PROCESSED | Emit governed report and concentration objects/fields with separate meaning. |
+| CATALOG/TRIPLET | Preserve object family, character, units, source role, and evidence links. |
+| PUBLISHED | Require release, correction, and rollback controls; never publish unsupported conversion. |
+
+### Evidence closure
+
+A test may assert that evidence resolves. It does not create an EvidenceBundle.
+
+Required negative states include:
+
+- missing EvidenceRef;
+- unresolved EvidenceRef;
+- EvidenceBundle supporting AQI only while claim asserts concentration;
+- evidence supporting concentration but carrier displays AQI incorrectly;
+- source report cited as scientific conversion method;
+- stale or superseded source evidence;
+- conflicting AQI and concentration values;
+- rights or review gaps.
+
+### Correction and supersession
+
+When an invalid AQI-as-concentration representation is found:
+
+1. stop promotion or public serving where governed controls allow;
+2. preserve the prior artifact and audit trail;
+3. emit a correction/withdrawal/supersession object through the accepted root;
+4. identify affected API, UI, map, export, search, graph, vector, AI, catalog, and release consumers;
+5. regenerate derived artifacts;
+6. retain the original AQI/report evidence;
+7. do not rewrite source history to resemble concentration evidence;
+8. validate the corrected representation;
+9. record rollback target.
+
+[Back to top](#top)
+
+---
+
+## No-network, sensitivity, and safe diagnostics
+
+### No-network default
+
+Focused tests should not depend on:
+
+- live AirNow endpoints;
+- live AQS/AirData endpoints;
+- geocoding;
+- map tiles/styles/sprites/glyphs;
+- cloud storage;
+- remote databases;
+- message buses;
+- external model or AI services;
+- package downloads;
+- remote schemas;
+- developer caches;
+- credentials.
+
+The sibling `no-network/` lane owns broad egress-denial enforcement. This lane should consume that enforcement and prove AQI/concentration tests remain hermetic.
+
+### Sensitivity and rights
+
+Although AQI reports are usually public-oriented, tests should still fail closed for:
+
+- private or unpublished sensor feeds;
+- exact sensitive station/site details;
+- living-person or household associations;
+- unresolved source rights;
+- sensitive cross-lane joins;
+- current official alert text presented as KFM authority;
+- health records or exposure inference;
+- credentials, tokens, cookies, signed URLs, or private endpoints.
+
+### Safe diagnostics
+
+Failure reports may include:
+
+- case ID;
+- synthetic object ID;
+- expected/actual outcome;
+- reason code;
+- fixture path and digest;
+- policy package/version;
+- contract/schema identifiers;
+- safe field names;
+- bounded mismatch summary.
+
+Failure reports should not include:
+
+- secrets;
+- raw headers;
+- private URLs;
+- full source payloads;
+- sensitive coordinates;
+- living-person data;
+- current official warning text as KFM instruction;
+- internal infrastructure detail not needed for review.
+
+### Canary controls
+
+Use conspicuous synthetic canaries to prove:
+
+- AQI category cannot become concentration;
+- AQI integer cannot acquire concentration units;
+- AirNow cannot become AQS;
+- evidence mismatch is detected;
+- secret-like values are rejected;
+- public carriers preserve reason codes and trust state.
+
+[Back to top](#top)
+
+---
+
+## Inventory, collection, and execution
+
+### Deterministic inventory
+
+```bash
+find tests/domains/atmosphere/policy-deny/aqi-vs-concentration \
+  -type f -print | LC_ALL=C sort
+
+find fixtures/domains/atmosphere \
+  -type f \( -iname '*aqi*' -o -iname '*concentration*' -o -iname '*pm25*' -o -iname '*ozone*' \) \
+  -print | LC_ALL=C sort
+
+git grep -n -E \
+  'aqi_is_not_concentration|aqi-not-concentration|test_aqi_as_concentration_denied|AQI.*concentration|PUBLIC_AQI_REPORT'
+```
+
+### Placeholder detection
+
+```bash
+git grep -n -E \
+  'PROPOSED placeholder|Status: PROPOSED scaffold|default allow := false|properties.: \{\}|additionalProperties.: true' \
+  -- \
+  tests/domains/atmosphere \
+  policy/domains/atmosphere \
+  fixtures/domains/atmosphere \
+  schemas/contracts/v1/domains/atmosphere
+```
+
+### Collection
+
+```bash
+python -m pytest \
+  --collect-only -q \
+  tests/domains/atmosphere/policy-deny/aqi-vs-concentration \
+  tests/domains/atmosphere/test_aqi_as_concentration_denied.py
+```
+
+Collection must fail or alert when the substantive case count is zero.
+
+### Focused execution
+
+```bash
+python -m pytest -q \
+  tests/domains/atmosphere/policy-deny/aqi-vs-concentration \
+  tests/domains/atmosphere/test_aqi_as_concentration_denied.py
+```
+
+The current repository evidence does not establish that these paths contain runnable tests.
+
+### Proposed policy execution
+
+```bash
+opa test \
+  policy/domains/atmosphere \
+  tests/domains/atmosphere/policy-deny/aqi-vs-concentration
+```
+
+This command is `PROPOSED` until OPA tooling, test layout, package selection, and input contracts are verified.
+
+### Root targets
+
+The current Makefile:
+
+- leaves `make policy` as a TODO echo;
+- leaves `make fixtures` as a TODO echo;
+- runs `make test` only against `tests/schemas` and `tests/contracts`;
+- leaves `make deny-test` as a TODO echo.
+
+Therefore none of those targets currently proves this lane.
+
+[Back to top](#top)
+
+---
+
+## Failure interpretation
+
+| Failure | Correct response |
+|---|---|
+| Policy missing or ambiguous | `ERROR`; resolve setup rather than skip. |
+| Negative case allowed | Block promotion and fix policy/adapter. |
+| Valid AQI or concentration positive control denied | Detect deny-all or adapter defect. |
+| Placeholder fixture used as coverage | Replace with governed synthetic payload. |
+| Pollutant, units, time, or role missing | `DENY` or `ABSTAIN`. |
+| AirNow labeled AQS | `DENY`. |
+| Unsupported AQI inversion | `ABSTAIN` or `DENY`. |
+| Evidence supports AQI only | Do not answer concentration. |
+| Carrier changes label/meaning | Fail carrier contract. |
+| Zero cases, missing reason code, or unsafe diagnostics | Fail CI and correct the report. |
+| Correction cannot identify consumers | Hold release. |
+
+### Passing limits
+
+A passing focused suite would not prove:
+
+- AQI standard correctness;
+- scientific validity of any inverse calculation;
+- completeness of source coverage;
+- AirNow admission;
+- AQS regulatory authority;
+- exposure or health effect;
+- current official AQI;
+- policy approval;
