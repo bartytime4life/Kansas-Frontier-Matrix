@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-accessibility-workflow-91933f04",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/accessibility.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/accessibility.yml": "sha256:91933f048ab37279c2bc9636dce8841ea65afaac50be466cdf26b73756d8df66"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "workflow YAML structure validation",
+      "shell-step execution validation",
+      "official GitHub workflow-syntax verification",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/25be8016c3b221e427a4eb18568489b07a0a88c2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/accessibility.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/domains/fauna/a11y/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/architecture/ui/ACCESSIBILITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/apps/explorer-web/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0e6ee7e308a09a77da660f749fba717754601b8e",
+      "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/accessibility.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity and admin permission, main base 25be8016c3b221e427a4eb18568489b07a0a88c2, target blob 62ede945862baf6e9629a843d3c2a122b5912541, workflow governance, accessibility doctrine, test maturity, package scripts, CODEOWNERS, receipt schema, and no overlapping open pull request or branch."
+    },
+    {
+      "gate": "workflow-authoring-contract-and-no-loss",
+      "outcome": "PASS",
+      "reason": "Preserved workflow name accessibility, job ids axe and keyboard-navigation, pull_request trigger, and push-to-main trigger while documenting responsibility, authority, untrusted-code posture, permissions, network, outputs, finite outcomes, graduation criteria, and rollback posture."
+    },
+    {
+      "gate": "yaml-structure",
+      "outcome": "PASS",
+      "reason": "Parsed the complete workflow as YAML and verified name, on events, empty permissions, concurrency, both stable jobs, hosted runners, timeouts, steps, and final newline."
+    },
+    {
+      "gate": "least-privilege-and-untrusted-pull-request-posture",
+      "outcome": "PASS",
+      "reason": "Set permissions to an empty map, removed repository checkout and action dependencies, executed no pull-request code, referenced no secrets, installed no dependencies, contacted no external endpoint, uploaded no artifact, and granted no write or identity-token scope."
+    },
+    {
+      "gate": "honest-accessibility-maturity",
+      "outcome": "PASS",
+      "reason": "Replaced bare TODO-success output with explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD summaries and warnings. The workflow still identifies itself as a PROPOSED greenfield scaffold and does not claim axe, keyboard, WCAG, accessibility, proof, release, or publication validation."
+    },
+    {
+      "gate": "shell-step-smoke",
+      "outcome": "PASS",
+      "reason": "Executed both shell bodies with a temporary GITHUB_STEP_SUMMARY under bash strict mode and confirmed warnings and Markdown summaries were emitted without error."
+    },
+    {
+      "gate": "artifact-hash-and-remote-readback",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 91933f048ab37279c2bc9636dce8841ea65afaac50be466cdf26b73756d8df66 and Git blob SHA 3b2fc53fb686bfd8c2628e01e77c067857460c78; GitHub returned the same blob SHA after the update."
+    },
+    {
+      "gate": "github-actions-run-and-check-observation",
+      "outcome": "SKIPPED",
+      "reason": "The workflow has not yet run from the proposed branch in this session. GitHub Actions syntax acceptance, job conclusions, warnings, summaries, runner behavior, and any branch-protection interaction remain NEEDS VERIFICATION."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-accessibility-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/accessibility.yml"
+    },
+    {
+      "id": "workflow-governance-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/README.md"
+    },
+    {
+      "id": "test-root-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/README.md"
+    },
+    {
+      "id": "fauna-accessibility-lane-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/domains/fauna/a11y/README.md"
+    },
+    {
+      "id": "accessibility-architecture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/architecture/ui/ACCESSIBILITY.md"
+    },
+    {
+      "id": "github-workflow-syntax",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:25:57Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored hardening of the accessibility workflow scaffold on a scoped review branch. The workflow remains deliberately non-enforcing because current repository evidence does not establish a reviewed executable axe command, keyboard-navigation command, deterministic browser fixture set, lockfile, or non-placeholder explorer-web test script. The change prevents TODO-only output from being described as accessibility validation while preserving existing workflow and job identities. Human review remains pending."
+}
