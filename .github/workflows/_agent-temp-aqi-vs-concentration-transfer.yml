@@ -1,0 +1,62 @@
+name: agent-temp-aqi-vs-concentration-transfer
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  reconstruct-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: agent/tests-domains-atmosphere-policy-deny-aqi-vs-concentration-readme-v3-1-20260716
+          fetch-depth: 0
+      - name: Verify fragments and commit exact README
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md'
+          expected='3ef71bc858f234b22db0cb0a8d7692b9e7221c4fef447163773e2e269ad1ceb7'
+          current=$(sha256sum "$target" | awk '{print $1}')
+          if [ "$current" = "$expected" ]; then
+            exit 0
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          root = Path('.agent-staging/aqi-vs-concentration')
+          expected = [
+              'c8b5e622ff842d3726436054bf5c98da8becdbbb',
+              'eb82d41aa250614ad86b548e18d4f2b750bc9964',
+              'f4dd91d71c636decf3a7ea0a686f336d75ff96df',
+              '499d8fddf00155a6a643214f421f905c6bbbd0f5',
+              'b7958dcc5741d28117169426b0333b8c47477245',
+              '3f24586f992d00b590bb34f3fa516fa1e664946b',
+              '4c16af7fc1eacd6713f5ef9f34dcbacc60d60d88',
+              'c195842e99854fd72c2b944683bac98ce46702cd',
+              '3abad76038ad0123f9ef1919bbc15861fab4a3b1',
+          ]
+          parts = sorted(root.glob('chunk-*.md.part'))
+          if len(parts) != len(expected):
+              raise SystemExit(f'expected {len(expected)} fragments, found {len(parts)}')
+          assembled = bytearray()
+          for path, blob_expected in zip(parts, expected):
+              data = path.read_bytes()
+              blob = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+              if blob != blob_expected:
+                  raise SystemExit(f'{path}: blob {blob} != {blob_expected}')
+              assembled.extend(data)
+          digest = hashlib.sha256(assembled).hexdigest()
+          if digest != '3ef71bc858f234b22db0cb0a8d7692b9e7221c4fef447163773e2e269ad1ceb7':
+              raise SystemExit(f'assembled SHA-256 mismatch: {digest}')
+          Path('tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md').write_bytes(assembled)
+          PY
+          test "$(sha256sum "$target" | awk '{print $1}')" = "$expected"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$target"
+          git commit -m 'docs(tests): ground Atmosphere AQI-vs-concentration denial boundary'
+          git push
