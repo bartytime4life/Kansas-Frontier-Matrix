@@ -1,0 +1,29 @@
+name: agent-temp-rollback-atmosphere-no-network
+
+on:
+  push:
+    branches:
+      - agent/rollback-atmosphere-no-network-pre-review-20260716
+
+permissions:
+  contents: write
+
+jobs:
+  restore-pre-review-state:
+    if: ${{ !contains(github.event.head_commit.message, 'revert: restore pre-review Atmosphere no-network state') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: agent/rollback-atmosphere-no-network-pre-review-20260716
+          fetch-depth: 0
+      - name: Restore pre-merge README and remove pending-review receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout 745d27b0b95767751dafd9e4d88c48364e566cec -- tests/domains/atmosphere/no-network/README.md
+          git rm data/receipts/generated/genrec-tests-domains-atmosphere-no-network-readme-1f5158d1.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'revert: restore pre-review Atmosphere no-network state'
+          git push
