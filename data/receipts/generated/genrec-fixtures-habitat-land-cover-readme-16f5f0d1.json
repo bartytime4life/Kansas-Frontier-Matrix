@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-fixtures-habitat-land-cover-readme-16f5f0d1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/domains/habitat/land_cover/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/domains/habitat/land_cover/README.md": "sha256:16f5f0d116418eebf361770790ea757914fb34da1cbb8cd3b797f60bfe1d0893"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-07-16-work-mode"
+  },
+  "prompt_or_contract": "sha256:a067837a1f1446d02e34ed5ed2b85eefe1fe1eeafca074842d1a12f6876d811d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "parallel audit",
+      "git",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/change_summary/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/class_scheme/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/crosswalk/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/layer_manifest/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/model_run/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/observation/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/uncertainty/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/watcher/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:tests/domains/habitat/land_cover/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:schemas/contracts/v1/domains/habitat/land_cover/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:contracts/domains/habitat/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:docs/doctrine/directory-rules.md#15-required-readme-contract",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:.github/CODEOWNERS"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/domains/habitat/land_cover/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "The existing parent, all eight child directories, their direct file inventories, related test/schema/contract lanes, validators, workflow, and ownership rules were inspected at the pinned main commit."
+    },
+    {
+      "gate": "directory-rules-readme-contract",
+      "outcome": "PASS",
+      "reason": "The README contains the required Directory Rules section 15 headings in order and includes bounded rollback guidance."
+    },
+    {
+      "gate": "fixture-inventory-closure",
+      "outcome": "PASS",
+      "reason": "All eight child lanes named by the Habitat fixture parent are indexed; each contained only README.md and .gitkeep at the pinned base, and the README claims no payload coverage."
+    },
+    {
+      "gate": "markdown-structure-and-relative-links",
+      "outcome": "PASS",
+      "reason": "The document has one H1, one KFM meta block, balanced fences, a final newline, and all repository-relative Markdown targets resolve in the working tree."
+    },
+    {
+      "gate": "whitespace-and-secret-scan",
+      "outcome": "PASS",
+      "reason": "Git whitespace checks and a bounded high-risk credential-pattern scan found no issue in the authored artifact."
+    },
+    {
+      "gate": "repository-validation",
+      "outcome": "PASS",
+      "reason": "PYTHONPATH=/tmp/kfm-validation-deps make validate completed successfully for the authored documentation change."
+    },
+    {
+      "gate": "fixture-payload-or-executable-coverage",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no fixture payload exists in the eight child lanes, and executable Habitat land-cover fixture consumption remains unknown."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-readme-contract",
+      "validated": true,
+      "evidence_ref": "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:docs/doctrine/directory-rules.md#15-required-readme-contract"
+    },
+    {
+      "id": "habitat-land-cover-fixture-inventory",
+      "validated": true,
+      "evidence_ref": "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:fixtures/domains/habitat/land_cover/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T04:16:53Z",
+  "emitter": "openai-codex/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only fixture parent index. No fixture payloads were added or found in the eight child lanes; any future Habitat or land-cover example must be synthetic/public-safe by default and independently reviewed for sensitivity and precision."
+}
