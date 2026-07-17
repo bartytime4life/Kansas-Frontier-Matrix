@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-github-workflows-readme-cbd75db2",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:cbd75db2f3903e0e625f47f01b45991e1fe429ca31c9476e6e821e9fde9d71ff"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(40).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/66610a2ee8bdc15713d1e5a5b0350081a1d7771c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/docs/adr/ADR-0018-promotion-gate-sequence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/tools/ci/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, default branch, immutable base commit, write permission, target blob SHA, Directory Rules, proposed workflow-related ADRs, drift register, CODEOWNERS, PR template, receipt schema, overlapping branches, and open pull requests were inspected before mutation."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Indexed workflow searches found no pull_request_target, workflow_run, self-hosted, secrets., or ordinary write-scope matches. The only observed id-token: write permission is in the path-scoped MapLibre workflow, which is not triggered by this README path. Broad pull_request workflows and floating action major tags are documented as current risks."
+    },
+    {
+      "gate": "repository-grounded-inventory",
+      "outcome": "PASS",
+      "reason": "The README records a bounded indexed inventory of 41 runnable-job workflows: 34 files with the explicit PROPOSED greenfield scaffold marker and seven command-bearing workflows whose triggers and commands were inspected. The inventory explicitly does not claim byte-complete directory enumeration."
+    },
+    {
+      "gate": "directory-rules-and-readme-contract",
+      "outcome": "PASS",
+      "reason": "The file remains under the existing .github/workflows subtree, creates no authority root, preserves the existing doc_id and creation date, and contains the required README headings in Directory Rules order."
+    },
+    {
+      "gate": "markdown-structure-and-inventory-consistency",
+      "outcome": "PASS",
+      "reason": "The final document has one H1, balanced code fences, a final newline, all required headings in order, exactly 34 named stub workflows, exactly seven named command-bearing workflows, and a total inventory of 41."
+    },
+    {
+      "gate": "scope-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change is documentation plus provenance only. It adds no workflow YAML, secret, token, endpoint, sensitive location, source payload, policy decision, release object, deployment change, or publication path."
+    },
+    {
+      "gate": "workflow-execution-and-branch-protection",
+      "outcome": "SKIPPED",
+      "reason": "No workflow run history, branch-protection settings, or effective repository-level token defaults were modified or asserted as verified. These remain explicit open verification items."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-authoring-operating-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(40).txt#sha256=b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "directory-rules-readme-contract-and-placement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "target-readme-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/.github/workflows/README.md"
+    },
+    {
+      "id": "workflow-command-and-trigger-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/.github/workflows"
+    },
+    {
+      "id": "local-parity-make-targets",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/Makefile"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/66610a2ee8bdc15713d1e5a5b0350081a1d7771c/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T15:56:22Z",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation revision on a scoped review branch. The update replaces speculative workflow planning with a pinned, evidence-bounded inventory and threat preflight. It does not change workflow behavior, branch protection, policy, schemas, contracts, tests, runtime, release, publication, or KFM evidence authority. Human review remains pending; this receipt is provenance evidence, not workflow success, proof closure, release approval, or publication authority."
+}
