@@ -1,20 +1,95 @@
-# KFM CI workflow stub: accessibility
-# Status: PROPOSED greenfield scaffold.
+# KFM CI workflow scaffold: accessibility
+# Status: PROPOSED greenfield scaffold; governance-visible but non-enforcing.
+#
+# Responsibility:
+# - Preserve the stable `accessibility`, `axe`, and `keyboard-navigation` check
+#   surfaces while the repository lacks reviewed executable accessibility commands.
+# Authority:
+# - This workflow is orchestration only. It does not prove WCAG conformance,
+#   approve UI behavior, authorize release, or publish any artifact.
+# Trigger:
+# - Existing broad pull-request and main-push triggers are retained because
+#   branch-protection dependencies are not verified. `workflow_dispatch` permits
+#   an explicit maintainer run.
+# Untrusted-code posture:
+# - No repository checkout or pull-request code execution occurs in this scaffold.
+# Permissions:
+# - All GITHUB_TOKEN permissions are disabled.
+# Network and secrets:
+# - No actions, dependency installation, external endpoints, credentials, or
+#   repository secrets are used.
+# Outputs:
+# - GitHub warnings and step summaries only; no uploaded artifacts, receipts,
+#   proofs, release records, or public-surface changes.
+# Outcome:
+# - Jobs report WORKFLOW_SKIPPED_EXPLICIT and a readiness HOLD. A green scaffold
+#   run must not be represented as an accessibility pass.
+# Graduation:
+# - Replace each reporting step only after a repository-owned command,
+#   deterministic public-safe fixtures, positive and negative tests, no-network
+#   posture, reviewer ownership, and rollback/disable path are verified.
 name: accessibility
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: accessibility-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   axe:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO axe'
+      - name: Report axe readiness hold
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Accessibility — axe"
+            echo
+            echo "**Outcome:** \`WORKFLOW_SKIPPED_EXPLICIT\`"
+            echo
+            echo "**Readiness:** \`WORKFLOW_HOLD\`"
+            echo
+            echo "No reviewed repository-owned axe command, deterministic fixture set,"
+            echo "or executable browser accessibility harness is established."
+            echo
+            echo "This scaffold did not check accessibility and did not emit a proof,"
+            echo "receipt, release decision, or publication artifact."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "::warning title=Accessibility axe check not implemented::WORKFLOW_HOLD — this scaffold did not run axe or validate accessibility."
+          echo "TODO axe: add a reviewed repository-owned command and deterministic public-safe fixtures before graduation."
+
   keyboard-navigation:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO keyboard-navigation'
+      - name: Report keyboard-navigation readiness hold
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Accessibility — keyboard navigation"
+            echo
+            echo "**Outcome:** \`WORKFLOW_SKIPPED_EXPLICIT\`"
+            echo
+            echo "**Readiness:** \`WORKFLOW_HOLD\`"
+            echo
+            echo "No reviewed repository-owned keyboard/focus command, deterministic"
+            echo "fixture set, or executable browser navigation harness is established."
+            echo
+            echo "This scaffold did not check keyboard operation, focus order, focus"
+            echo "visibility, focus restoration, escape behavior, or non-map parity."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "::warning title=Keyboard-navigation check not implemented::WORKFLOW_HOLD — this scaffold did not validate keyboard or focus behavior."
+          echo "TODO keyboard-navigation: add a reviewed repository-owned command and deterministic public-safe fixtures before graduation."
