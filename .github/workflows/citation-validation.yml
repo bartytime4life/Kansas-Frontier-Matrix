@@ -1,20 +1,98 @@
-# KFM CI workflow stub: citation-validation
-# Status: PROPOSED greenfield scaffold.
+# KFM CI workflow scaffold: citation-validation
+# Status: PROPOSED greenfield scaffold; governance-visible but non-enforcing.
+#
+# Responsibility:
+# - Preserve the stable `citation-validation`, `citation-resolves`, and
+#   `abstain-on-missing-evidence` check surfaces until repository-owned citation
+#   validators, fixtures, and commands are verified.
+# Authority:
+# - This workflow is orchestration only. It does not prove citation closure,
+#   EvidenceRef resolution, EvidenceBundle sufficiency, release readiness, or
+#   publication authority.
+# Trigger:
+# - Existing pull-request and push-to-main triggers are retained because
+#   branch-protection dependencies are not verified. Manual dispatch is added
+#   for explicit maintainer inspection.
+# Untrusted-code posture:
+# - No repository checkout or pull-request code execution occurs in this scaffold.
+# Permissions:
+# - All GITHUB_TOKEN permissions are disabled.
+# Network and secrets:
+# - No actions, dependency installation, external endpoints, credentials, or
+#   repository secrets are used.
+# Outcome:
+# - Jobs report WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD. A green scaffold
+#   run must not be represented as citation validation.
+# Graduation:
+# - Replace reporting steps only after repository-owned commands, deterministic
+#   valid/invalid fixtures, EvidenceRef-to-EvidenceBundle resolution tests,
+#   missing/stale/conflicting/restricted evidence tests, no-network posture,
+#   reviewer ownership, and rollback/disable behavior are verified.
 name: citation-validation
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: citation-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   citation-resolves:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO citation-resolves'
+      - name: Report citation-resolution readiness hold
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Citation validation — resolution"
+            echo
+            echo '**Outcome:** `WORKFLOW_SKIPPED_EXPLICIT`'
+            echo
+            echo '**Readiness:** `WORKFLOW_HOLD`'
+            echo
+            echo "No reviewed repository-owned citation-resolution command,"
+            echo "deterministic fixture set, or executable EvidenceRef-to-EvidenceBundle"
+            echo "validation harness is established."
+            echo
+            echo "This scaffold did not validate citation closure, source role,"
+            echo "rights, sensitivity, freshness, release state, correction lineage,"
+            echo "or rollback linkage."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "::warning title=Citation resolution not implemented::WORKFLOW_HOLD — this scaffold did not resolve or validate citations."
+          echo "TODO citation-resolves: add a reviewed repository-owned command and deterministic governed fixtures before graduation."
+
   abstain-on-missing-evidence:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO abstain-on-missing-evidence'
+      - name: Report missing-evidence abstention readiness hold
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Citation validation — missing evidence"
+            echo
+            echo '**Outcome:** `WORKFLOW_SKIPPED_EXPLICIT`'
+            echo
+            echo '**Readiness:** `WORKFLOW_HOLD`'
+            echo
+            echo "No reviewed repository-owned negative-path command or fixture"
+            echo "proves that missing, stale, conflicting, restricted, or unresolved"
+            echo "evidence produces ABSTAIN, DENY, HOLD, or ERROR as required."
+            echo
+            echo "This scaffold did not approve an answer, proof, release, or"
+            echo "publication artifact."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "::warning title=Missing-evidence abstention not implemented::WORKFLOW_HOLD — this scaffold did not test cite-or-abstain behavior."
+          echo "TODO abstain-on-missing-evidence: add reviewed negative fixtures and a repository-owned command before graduation."
