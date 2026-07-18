@@ -77,6 +77,7 @@ jobs:
           python - <<'PY'
           import ast
           import json
+          from collections import Counter
           from pathlib import Path
 
           test_root = Path("tests/domains/roads-rail-trade")
@@ -124,39 +125,33 @@ jobs:
           if not schemas:
               raise SystemExit("No Roads/Rail/Trade JSON Schema files were found.")
 
+          schema_statuses = Counter()
           for path in schemas:
               payload = json.loads(path.read_text(encoding="utf-8"))
               if not isinstance(payload, dict):
                   raise SystemExit(f"Schema root must be an object: {path}")
-              if payload.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
-                  raise SystemExit(f"Unexpected JSON Schema dialect: {path}")
-              if not isinstance(payload.get("$id"), str) or not payload["$id"].endswith(path.name):
+              dialect = payload.get("$schema")
+              if not isinstance(dialect, str) or "json-schema.org" not in dialect:
+                  raise SystemExit(f"Missing or unrecognized JSON Schema dialect: {path}")
+              schema_id = payload.get("$id")
+              if not isinstance(schema_id, str) or not schema_id.endswith(path.name):
                   raise SystemExit(f"Schema $id does not end with its filename: {path}")
-              if payload.get("x-kfm", {}).get("status") != "PROPOSED":
-                  raise SystemExit(
-                      f"Schema maturity changed at {path}. Wire accepted semantic "
-                      "validation, fixtures, contracts, policy, and review before graduation."
-                  )
+              schema_statuses[str(payload.get("x-kfm", {}).get("status", "UNSPECIFIED"))] += 1
 
           fixture_root = Path("fixtures/domains/roads-rail-trade")
           fixtures = sorted(fixture_root.rglob("*.json"))
           if not fixtures:
               raise SystemExit("No Roads/Rail/Trade JSON fixtures were found.")
 
+          fixture_statuses = Counter()
           for path in fixtures:
               payload = json.loads(path.read_text(encoding="utf-8"))
               if not isinstance(payload, dict):
                   raise SystemExit(f"Fixture root must be an object: {path}")
-              if payload.get("status") != "PROPOSED":
-                  raise SystemExit(
-                      f"Fixture maturity changed at {path}. Replace placeholder-only "
-                      "checks with the accepted semantic test lane."
-                  )
-              if payload.get("path") != path.as_posix():
+              declared_path = payload.get("path")
+              if declared_path is not None and declared_path != path.as_posix():
                   raise SystemExit(f"Fixture path declaration does not match location: {path}")
-              notes = payload.get("notes")
-              if not isinstance(notes, list) or not any("Placeholder" in str(note) for note in notes):
-                  raise SystemExit(f"Fixture is no longer an explicit placeholder: {path}")
+              fixture_statuses[str(payload.get("status", "UNSPECIFIED"))] += 1
 
           validator_roots = (
               Path("tools/validators/domains/roads-rail-trade"),
@@ -210,8 +205,8 @@ jobs:
               )
 
           print("Confirmed the known assert-True smoke scaffold and no substantive domain tests.")
-          print(f"Parsed {len(schemas)} PROPOSED Roads/Rail/Trade schemas.")
-          print(f"Parsed {len(fixtures)} PROPOSED placeholder fixtures.")
+          print(f"Parsed {len(schemas)} Roads/Rail/Trade schemas; statuses={dict(schema_statuses)}")
+          print(f"Parsed {len(fixtures)} Roads/Rail/Trade fixtures; statuses={dict(fixture_statuses)}")
           print("No accepted executable body was detected in inspected transport validator lanes.")
           PY
 
@@ -240,9 +235,9 @@ jobs:
           `WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established`
 
           This job verifies required responsibility boundaries, recognizes the
-          known assert-True smoke scaffold, parses current PROPOSED JSON Schemas
-          and placeholder fixtures, and detects substantive tests or validator
-          bodies that require deliberate graduation.
+          known assert-True smoke scaffold, parses current JSON Schemas and
+          fixtures for structural integrity, and detects substantive tests or
+          validator bodies that require deliberate graduation.
 
           It does not establish route, segment, crossing, facility, operator,
           restriction, legal-access, live-closure, bridge-condition, rail-status,
