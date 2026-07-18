@@ -1,0 +1,62 @@
+{
+  "receipt_id": "genrec-domain-agriculture-workflow-f3486cf8",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T10:33:19-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "3442a813cd51261dfc8b3239348e72e459f5302e",
+  "branch": "agent/domain-agriculture-workflow-20260718",
+  "target_path": ".github/workflows/domain-agriculture.yml",
+  "previous_blob": "a9f5f212ef61d72fdc209d9f8b173bbf87fb1803",
+  "new_blob": "1dd9938b92de61c7d905f30170cf6394e6c06ea1",
+  "sha256": "f3486cf8ca13c1f632d1a3e0549d5edb204323537979af0cbffb73a56f995674",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-agriculture, build-proof-agriculture, and publish-dry-run-agriculture jobs only executed TODO echo commands.",
+      "Baseline run 29649918701 completed successfully without Agriculture validation, proof construction, or release dry-run execution.",
+      "The inspected Agriculture test lane contains only a placeholder Python file and no collected Agriculture pytest test.",
+      "The direct tools/validators/agriculture lane is README-only in bounded repository evidence.",
+      "The inspected county_year_panel_v0 candidate is PROPOSED and the Agriculture release index records BLOCKED_FOR_EVIDENCE_AND_VALIDATION.",
+      "The current Makefile has no Agriculture validation, Agriculture proof, or Agriculture release dry-run target.",
+      "Workflow name domain-agriculture and job ids validate-agriculture, build-proof-agriculture, and publish-dry-run-agriculture are preserved."
+    ],
+    "proposed": [
+      "Explicit fail-closed readiness holds are the safest current implementation until executable Agriculture validation, proof, and release-dry-run contracts are accepted.",
+      "The graduation detectors should be replaced by repository-owned deterministic commands when implementation evidence appears."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Agriculture validator topology and executable no-network test suite.",
+      "Canonical Agriculture proof producer, EvidenceRef-to-EvidenceBundle closure, proof manifest, fixtures, and rollback-tested command.",
+      "Accepted Agriculture release dry-run manifest assembly, policy, rights, sensitivity, review, correction, and rollback contracts.",
+      "Branch-protection dependencies and independent Agriculture, policy, evidence, security, and release review ownership.",
+      "Whether action references should be pinned to immutable commit SHAs."
+    ]
+  },
+  "changes": [
+    "Preserved workflow and three job identities.",
+    "Added workflow_dispatch, contents: read, concurrency cancellation, and five-minute timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Replaced validate-agriculture TODO success with an explicit maturity and boundary hold.",
+    "Replaced build-proof-agriculture TODO success with an explicit candidate and proof-producer hold.",
+    "Replaced publish-dry-run-agriculture TODO success with an explicit release-readiness hold.",
+    "Added fail-closed graduation checks that require deliberate CI wiring when implementation or release posture changes.",
+    "Added bounded always-run summaries for all three jobs."
+  ],
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and tools remain the test and validator responsibility roots.",
+    "data/proofs remains the proof support root; release remains the release-decision root; data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane.",
+    "No new schema, contract, policy, validator, proof, release, publication, or root-level authority is created."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Agriculture validation, proof, source admission, EvidenceBundle resolution, policy approval, lifecycle promotion, release approval, publication, scientific endorsement, or agronomic advice.",
+  "rollback": {
+    "strategy": "Revert the receipt commit and workflow commit in reverse order or close the pull request without merge.",
+    "restores_blob": "a9f5f212ef61d72fdc209d9f8b173bbf87fb1803"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}
