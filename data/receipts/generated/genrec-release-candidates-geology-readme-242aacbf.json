@@ -1,0 +1,53 @@
+{
+  "receipt_id": "genrec-release-candidates-geology-readme-242aacbf",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T12:26:29-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "9f1fccb0a8eb40dfe49eaf01bb4756475725150d",
+  "branch": "agent/release-candidates-geology-readme-20260718",
+  "target_path": "release/candidates/geology/README.md",
+  "previous_blob": "9dd4665578364dfb0862b6666cbff411151f8ede",
+  "new_blob": "f0313cafc641c049d367af82418212e0bad1fc35",
+  "sha256": "242aacbfcb0f3f84e6d7de7107e1b5abf5d9a704eaa4c60efb4a0fedf0006beb",
+  "truth_labels": {
+    "confirmed": [
+      "The Geology candidate-lane README existed at the pinned base and was updated in place.",
+      "The bounded repository search surfaced the parent README but no child Geology candidate dossier.",
+      "The Geology release index is a draft navigation surface with placeholder candidate and layer rows rather than verified release instances.",
+      "The domain-geology workflow checks that this lane contains no non-README candidate record and retains explicit validation, proof, and release-dry-run holds.",
+      "The Geology proof lane is a draft guide; concrete proof inventory, producers, validators, access controls, and release linkage remain unverified.",
+      "The Geology domain policy README remains a greenfield scaffold rather than proof of executable enforcement.",
+      "The Geology source and sensitivity registry READMEs define fail-closed source-role, rights, exact-subsurface, private-well, resource, operator-parcel, and reality-boundary controls while concrete record inventories remain unresolved.",
+      "Five surfaced direct Geology test modules contain only PROPOSED placeholder docstrings.",
+      "The published Geology README defines a release-gated, interpretation-aware public-carrier boundary while emitted release-linked artifacts remain unverified.",
+      "CODEOWNERS routes release review to bartytime4life while explicitly denying that routing is stewardship, independent review, engineering certification, release approval, or publication authority."
+    ],
+    "proposed": [
+      "release/candidates/geology/ should operate as a repository-grounded, claim-class-aware Geology candidate index and pre-publication review contract without becoming geologic interpretation, resource certification, mineral or property-rights authority, engineering opinion, legal, investment, extraction, safety, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic public-safe candidate-index generation.",
+      "Candidate identity, artifact manifest, object-family, claim-class, source-role, CRS, datum, vertical-reference, depth, scale, time, source-admission, rights, sensitivity, and EvidenceBundle contracts.",
+      "Executable policy, public-safe transform profiles, receipt binding, synthetic fixtures, no-network and no-leak tests, validator ownership, and proof behavior.",
+      "RealityBoundaryNote or equivalent contract for cross-sections, 3D scenes, inversions, interpolations, models, and generated explanations.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, rollback, cache-invalidation, branch-protection, and independent-review topology."
+    ]
+  },
+  "changes": [
+    "Replaced generic Geology candidate-lane guidance with a repository-grounded, claim-class-aware candidate index and pre-publication review contract.",
+    "Recorded that no child candidate dossier or active candidate is established by the bounded inspection.",
+    "Preserved the exact A candidate is not a release workflow compatibility sentence and publication-not_yet marker.",
+    "Separated candidate review from source, evidence, policy, geologic interpretation, resource and reserve certification, mineral and property rights, engineering, legal, investment, extraction, safety, release, and publication authority.",
+    "Added finite candidate states and holds, admission and identity rules, source-role and claim-class anti-collapse, subsurface sensitivity and rights controls, reality-boundary requirements, time-vintage-scale discipline, release gates, a public-safe dossier structure, validation and automation posture, review handoff, correction and rollback discipline, public API-map-export-AI boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a Geology candidate, SourceDescriptor, sensitivity record, EvidenceBundle, PolicyDecision, ReviewRecord, ValidationReport, geologic interpretation, resource or reserve estimate, mineral-rights or property-rights record, engineering opinion, legal or investment advice, extraction recommendation, safety determination, PromotionDecision, ReleaseManifest, CorrectionNotice, WithdrawalNotice, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "9dd4665578364dfb0862b6666cbff411151f8ede"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}
