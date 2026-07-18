@@ -1,12 +1,63 @@
+# KFM contract and schema validation workflow.
+# This is executable CI evidence, not release or publication authority.
 name: contracts-validate
-on: [push, pull_request]
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contracts-validate-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  TZ: UTC
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - name: Check out validated revision
+        uses: actions/checkout@v7
         with:
-          python-version: '3.11'
-      - run: pip install -e ".[test]"
-      - run: make test
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install repository test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate contract and schema test lane
+        run: make test
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Contracts validation"
+            echo
+            echo "- Repository command: make test"
+            echo "- Current Makefile scope: tests/schemas and tests/contracts"
+            echo "- Result: ${{ job.status }}"
+            echo
+            echo "A green result means the selected repository-owned tests passed for this revision."
+            echo "It does not prove complete semantic equivalence across every Markdown contract, schema, API, fixture, policy, or published projection."
+            echo "It does not authorize release, deployment, lifecycle promotion, source admission, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
