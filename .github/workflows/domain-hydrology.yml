@@ -1,25 +1,382 @@
-# KFM CI workflow stub: domain-hydrology
-# Status: PROPOSED greenfield scaffold.
+# KFM Hydrology domain CI readiness workflow.
+# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
+# executable Hydrology validation, proof, and release-dry-run producers are not
+# established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow performs no live source requests and does not act as flood
+#   warning, emergency-response, navigation, engineering, insurance, or
+#   regulatory-determination authority.
+# - It does not validate real Hydrology truth, build an EvidenceBundle or
+#   ProofPack, admit sources, apply policy, promote lifecycle artifacts, approve
+#   release, write published data, deploy, or publish.
 name: domain-hydrology
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-hydrology-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-hydrology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-hydrology'
+      - name: Check out Hydrology boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Hydrology validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/hydrology/README.md"
+            "docs/domains/hydrology/BOUNDARY.md"
+            "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+            "docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md"
+            "contracts/domains/hydrology/README.md"
+            "schemas/contracts/v1/domains/hydrology/README.md"
+            "fixtures/domains/hydrology/README.md"
+            "policy/domains/hydrology/README.md"
+            "tests/domains/hydrology/README.md"
+            "tools/validators/domains/hydrology/README.md"
+            "tools/validators/hydrology/README.md"
+            "tools/validators/hydro/README.md"
+            "data/registry/sources/hydrology/README.md"
+            "release/candidates/hydrology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Hydrology boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          test_root = Path("tests/domains/hydrology")
+          collected = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected.append(f"{path}:{node.name}")
+
+          if collected:
+              raise SystemExit(
+                  "Executable Hydrology tests surfaced. Graduate validate-hydrology "
+                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+              )
+
+          valid_fixture_paths = (
+              Path("fixtures/domains/hydrology/valid/huc12_kansas_sample.json"),
+              Path("fixtures/domains/hydrology/valid/nfhl_context_sample.json"),
+          )
+          for path in valid_fixture_paths:
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              if not isinstance(payload, (dict, list)):
+                  raise SystemExit(f"Hydrology valid fixture must be a JSON object or array: {path}")
+
+          placeholder_yaml_paths = (
+              Path("data/registry/sources/hydrology/usgs_nwis.yaml"),
+              Path("data/registry/sources/hydrology/wbd.source.yaml"),
+              Path("pipeline_specs/hydrology/ingest_wbd.yaml"),
+              Path("pipeline_specs/hydrology/wbd_huc12_ingest.yaml"),
+          )
+          for path in placeholder_yaml_paths:
+              text = path.read_text(encoding="utf-8")
+              if "status: PROPOSED" not in text or "Placeholder" not in text:
+                  raise SystemExit(
+                      f"Hydrology source/spec posture changed at {path}. "
+                      "Replace this readiness hold with accepted descriptor/spec validation."
+                  )
+              declared_path = f"path: {path}"
+              quoted_declared_path = f'path: "{path}"'
+              if declared_path not in text and quoted_declared_path not in text:
+                  raise SystemExit(f"Hydrology placeholder path declaration does not match file location: {path}")
+
+          print("Hydrology placeholder tests remain non-executable.")
+          print("Inspected valid Hydrology JSON fixtures parse successfully.")
+          print("Inspected Hydrology source/spec YAML remains explicitly PROPOSED placeholder material.")
+          PY
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          validator_roots = (
+              Path("tools/validators/domains/hydrology"),
+              Path("tools/validators/hydrology"),
+              Path("tools/validators/hydro"),
+              Path("tools/validators/hydrology-hazards"),
+              Path("tools/validators/flood-context"),
+              Path("tools/validators/atmosphere_hydrology"),
+          )
+          executable = []
+
+          for root in validator_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
+                      continue
+                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
+                      continue
+
+                  suffix = path.suffix.lower()
+                  text = path.read_text(encoding="utf-8", errors="replace")
+                  if suffix == ".py":
+                      tree = ast.parse(text, filename=str(path))
+                      meaningful = [
+                          node for node in tree.body
+                          if not (
+                              isinstance(node, ast.Expr)
+                              and isinstance(node.value, ast.Constant)
+                              and isinstance(node.value.value, str)
+                          )
+                      ]
+                      if any(
+                          isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                          for node in ast.walk(tree)
+                      ) or meaningful:
+                          executable.append(str(path))
+                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
+                      meaningful_lines = [
+                          line.strip()
+                          for line in text.splitlines()
+                          if line.strip()
+                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
+                      ]
+                      if meaningful_lines:
+                          executable.append(str(path))
+
+          if executable:
+              raise SystemExit(
+                  "Hydrology validator implementation surfaced. Resolve ownership and wire "
+                  "the accepted command deliberately:\n" + "\n".join(executable)
+              )
+
+          print("No accepted executable body was detected in inspected Hydrology validator lanes.")
+          PY
+
+          if grep -Eq '^(hydrology-validate|validate-hydrology):' Makefile; then
+            echo "::error::A Hydrology validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-readiness"
+          echo "WORKFLOW_HOLD: accepted executable Hydrology validation suite is not established"
+
+      - name: Record Hydrology validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Hydrology validation status
+
+          `WORKFLOW_CHECK_EXECUTED: hydrology-readiness`
+
+          `WORKFLOW_HOLD: accepted executable Hydrology validation suite is not established`
+
+          This job verifies required responsibility boundaries, confirms sampled
+          valid fixtures parse as JSON, confirms inspected source/spec files remain
+          explicitly PROPOSED placeholders, and detects newly executable tests or
+          validator bodies.
+
+          It does not establish source admission, HUC/reach/gauge identity,
+          observation accuracy, units, freshness, NFHL interpretation, regulatory
+          status, public-safe geometry, EvidenceBundle closure, flood-warning
+          authority, engineering suitability, policy approval, or release readiness.
+          EOF
+
   build-proof-hydrology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-hydrology'
+      - name: Check out Hydrology proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Hydrology proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/hydrology/README.md"
+            "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+            ".github/workflows/hydrology-proof-slice.yml"
+            "release/candidates/hydrology/README.md"
+            "tests/domains/hydrology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Hydrology proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "Implementation depth remains UNKNOWN" "data/proofs/hydrology/README.md"; then
+            echo "::error::The Hydrology proof posture changed. Review proof schemas, producers, source-role controls, access controls, receipts, and release linkage before accepting this workflow."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/hydrology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Hydrology proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if ! grep -Fq "echo TODO build-proof-slice" ".github/workflows/hydrology-proof-slice.yml"; then
+            echo "::error::The dedicated Hydrology proof-slice workflow changed. Coordinate the accepted proof command and avoid parallel proof authority."
+            exit 1
+          fi
+
+          if grep -Eq '^(hydrology-proof|proof-hydrology):' Makefile; then
+            echo "::error::A Hydrology proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find tools pipelines packages scripts -type f \( -iname '*hydrology*proof*.py' -o -iname '*proof*hydrology*.py' -o -iname '*hydrology*proof*.mjs' -o -iname '*proof*hydrology*.mjs' \) -print -quit 2>/dev/null || true)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Hydrology proof implementation surfaced at $proof_implementation. Establish its contract, synthetic fixtures, source-role controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-hydrology"
+          echo "WORKFLOW_HOLD: no accepted Hydrology proof producer or deterministic proof command"
+
+      - name: Record Hydrology proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Hydrology proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Hydrology proof producer or deterministic proof command`
+
+          Hydrology is designated as the first proof-bearing lane, but its domain
+          proof guide and the dedicated proof-slice workflow remain documentation
+          or TODO scaffolds. Concrete proof inventory, EvidenceRef-to-EvidenceBundle
+          resolution, source-role closure, schemas, validators, access controls,
+          receipts, and release linkage remain unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, flood-warning product,
+          engineering determination, regulatory determination, release decision,
+          or publication authority.
+          EOF
+
   publish-dry-run-hydrology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-hydrology'
+      - name: Check out Hydrology release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Hydrology release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/hydrology/README.md"
+            "docs/domains/hydrology/RELEASE_INDEX.md"
+            "data/published/hydrology/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Hydrology release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/hydrology/README.md"; then
+            echo "::error::The documented Hydrology candidate posture changed. Re-evaluate source, evidence, rights, time, policy, public-safe geometry, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/hydrology -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Hydrology candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(hydrology-release-dry-run|release-dry-run-hydrology):' Makefile; then
+            echo "::error::A Hydrology release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-hydrology"
+          echo "WORKFLOW_HOLD: no accepted Hydrology release dry-run command or candidate manifest contract"
+
+      - name: Record Hydrology release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Hydrology release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Hydrology release dry-run command or candidate manifest contract`
+
+          This lane performs no live fetch, source admission, flood-warning or
+          advisory generation, release, promotion, manifest assembly, deployment,
+          publication, or write to processed, catalog, proof, receipt, release, or
+          published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, time validity and stale-state
+          rules, source-role separation, public-safe geometry, policy result,
+          steward review, validation receipts, independent approval, correction
+          path, withdrawal path, and rollback target are accepted.
+
+          A green held result does not mean Hydrology data is accurate, current,
+          flood-warning-authoritative, suitable for navigation, insurance,
+          engineering, legal, regulatory, emergency, or operational use,
+          approved, released, or published.
+          EOF
