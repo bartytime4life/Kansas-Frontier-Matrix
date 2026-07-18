@@ -1,0 +1,56 @@
+{
+  "receipt_id": "genrec-release-candidates-habitat-fauna-thin-slice-readme-78da44fd",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T13:03:36-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "527ac01444c23046f0406dbb9e4cf5b2a74cd4cc",
+  "branch": "agent/release-candidates-habitat-fauna-thin-slice-readme-20260718",
+  "target_path": "release/candidates/habitat/habitat_fauna_thin_slice/README.md",
+  "previous_blob": "38cf93f4261e47bb031b88f5477d45915efb730f",
+  "new_blob": "d5c3990bfdf8563721724d1e885022f28ba3f1df",
+  "sha256": "78da44fd41624624aa0330ccea0a34cd5584046e550e3cbb61a5b611dca38377",
+  "truth_labels": {
+    "confirmed": [
+      "The Habitat Fauna thin-slice candidate-lane README existed at the pinned base and was updated in place.",
+      "Bounded indexed search surfaced the parent README but no child Habitat Fauna thin-slice candidate dossier.",
+      "The Habitat release index contains an explicitly illustrative thin-slice row and says it is not evidence that a release exists.",
+      "The Habitat Fauna proof-harness lane is a draft README whose concrete executable behavior, CI, fixture coverage, release wiring, and public behavior remain unverified.",
+      "The thin-slice fixture README reports that no fixture payload files were verified.",
+      "The dedicated thin-slice test lane is README-backed and the direct Habitat thin-slice test module contains only a PROPOSED placeholder docstring.",
+      "The Habitat Fauna relation-schema lane is README-only and no direct relation schema files were established.",
+      "The existing habitat-fauna join schema is a PROPOSED scaffold with empty properties, additionalProperties true, and no contract document.",
+      "The Habitat proof lane states implementation depth remains UNKNOWN and no accepted thin-slice proof inventory was established.",
+      "The Habitat and Fauna domain policy READMEs remain greenfield scaffolds rather than proof of executable policy enforcement.",
+      "Habitat sensitivity guidance identifies join-induced sensitivity and requires resulting products to inherit the most restrictive applicable posture.",
+      "Fauna cross-lane guidance requires ownership, source role, sensitivity, and EvidenceBundle support to survive Habitat relations.",
+      "The Habitat and Fauna domain workflows are maturity checks and the general release-dry-run remains TODO-only."
+    ],
+    "proposed": [
+      "release/candidates/habitat/habitat_fauna_thin_slice/ should operate as a repository-grounded cross-domain candidate index and deny-by-default pre-publication review contract without becoming Habitat truth, Fauna truth, relation-schema authority, proof closure, geoprivacy authority, policy, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic public-safe candidate-index generation.",
+      "Candidate identity, artifact-manifest, Habitat endpoint, Fauna endpoint, neutral relation, direction, cardinality, source-role, rights, time, evidence, sensitivity, geoprivacy, public-representation, correction, and rollback contracts.",
+      "Resolution of the relation-lane versus join-schema overlap and replacement or formal retirement of the permissive scaffold.",
+      "Synthetic fixtures, executable tests, accepted validators, bounded proof-harness behavior, EvidenceBundle resolution, policy enforcement, no-leak checks, and catalog closure.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, rollback, cache-invalidation, branch-protection, and independent-review topology."
+    ]
+  },
+  "changes": [
+    "Replaced minimal Habitat Fauna thin-slice candidate notes with a repository-grounded cross-domain candidate index and pre-publication review contract.",
+    "Recorded that no child candidate dossier or active thin-slice candidate is established by bounded inspection.",
+    "Preserved the exact A candidate is not a release sentence and added the publication_not_yet posture.",
+    "Separated Habitat-owned context and suitability from Fauna-owned taxon, occurrence, range, status, sensitive-site, and animal-event truth, with neutral relations transferring no ownership.",
+    "Added finite states and holds, admission fields, relation identity, source-role and model-observation anti-collapse, most-restrictive sensitivity, geoprivacy and no-leak controls, time and stale-state discipline, release gates, a public-safe dossier structure, validation and automation posture, review handoff, correction and rollback discipline, public API-map-export-graph-AI boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a Habitat object, Fauna object, cross-domain relation, SourceDescriptor, semantic contract, schema, proof-harness result, EvidenceBundle, geoprivacy transform, RedactionReceipt, AggregationReceipt, PolicyDecision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, public artifact, CorrectionNotice, WithdrawalNotice, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "38cf93f4261e47bb031b88f5477d45915efb730f"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}
