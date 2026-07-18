@@ -1,25 +1,386 @@
-# KFM CI workflow stub: domain-roads-rail-trade
-# Status: PROPOSED greenfield scaffold.
+# KFM Roads/Rail/Trade domain CI readiness workflow.
+# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
+# executable semantic validation, proof, and release-dry-run producers are not
+# established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow performs no live source requests and does not provide routing,
+#   safe-passage, closure, detour, legal-access, bridge-condition, rail-status,
+#   emergency, regulatory, or operational guidance.
+# - It does not create route/network truth, EvidenceBundles, proofs, policy
+#   decisions, lifecycle promotion, release approval, or published artifacts.
 name: domain-roads-rail-trade
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-roads-rail-trade-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-roads-rail-trade:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-roads-rail-trade'
+      - name: Check out Roads Rail Trade boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Roads Rail Trade validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/roads-rail-trade/README.md"
+            "docs/domains/roads-rail-trade/CANONICAL_PATHS.md"
+            "docs/domains/roads-rail-trade/HISTORIC_ROUTES.md"
+            "contracts/domains/roads-rail-trade/README.md"
+            "contracts/transport/README.md"
+            "schemas/contracts/v1/domains/roads-rail-trade/README.md"
+            "fixtures/domains/roads-rail-trade/README.md"
+            "policy/domains/roads-rail-trade/README.md"
+            "tests/domains/roads-rail-trade/README.md"
+            "tools/validators/domains/roads-rail-trade/README.md"
+            "tools/validators/crossings/README.md"
+            "tools/validators/bridge_river_crossing/README.md"
+            "data/registry/sources/roads-rail-trade/README.md"
+            "release/candidates/roads-rail-trade/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Roads/Rail/Trade boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          test_root = Path("tests/domains/roads-rail-trade")
+          collected = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected.append(f"{path}:{node.name}")
+
+          if collected:
+              raise SystemExit(
+                  "Executable Roads/Rail/Trade tests surfaced. Graduate the domain "
+                  "job to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+              )
+
+          schema_root = Path("schemas/contracts/v1/domains/roads-rail-trade")
+          schemas = sorted(schema_root.glob("*.schema.json"))
+          if not schemas:
+              raise SystemExit("No Roads/Rail/Trade JSON Schema files were found.")
+
+          for path in schemas:
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              if not isinstance(payload, dict):
+                  raise SystemExit(f"Schema root must be an object: {path}")
+              if payload.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+                  raise SystemExit(f"Unexpected JSON Schema dialect: {path}")
+              if not isinstance(payload.get("$id"), str) or not payload["$id"].endswith(path.name):
+                  raise SystemExit(f"Schema $id does not end with its filename: {path}")
+              if payload.get("x-kfm", {}).get("status") != "PROPOSED":
+                  raise SystemExit(
+                      f"Schema maturity changed at {path}. Wire accepted semantic "
+                      "validation, fixtures, contracts, policy, and review before graduation."
+                  )
+
+          fixture_root = Path("fixtures/domains/roads-rail-trade")
+          fixtures = sorted(fixture_root.rglob("*.json"))
+          if not fixtures:
+              raise SystemExit("No Roads/Rail/Trade JSON fixtures were found.")
+
+          for path in fixtures:
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              if not isinstance(payload, dict):
+                  raise SystemExit(f"Fixture root must be an object: {path}")
+              if payload.get("status") != "PROPOSED":
+                  raise SystemExit(
+                      f"Fixture maturity changed at {path}. Replace placeholder-only "
+                      "checks with the accepted semantic test lane."
+                  )
+              if payload.get("path") != path.as_posix():
+                  raise SystemExit(f"Fixture path declaration does not match location: {path}")
+              notes = payload.get("notes")
+              if not isinstance(notes, list) or not any("Placeholder" in str(note) for note in notes):
+                  raise SystemExit(f"Fixture is no longer an explicit placeholder: {path}")
+
+          print(f"Parsed {len(schemas)} PROPOSED Roads/Rail/Trade schemas.")
+          print(f"Parsed {len(fixtures)} PROPOSED placeholder fixtures.")
+          print("No collected Roads/Rail/Trade test functions or classes were found.")
+          PY
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          validator_roots = (
+              Path("tools/validators/domains/roads-rail-trade"),
+              Path("tools/validators/crossings"),
+              Path("tools/validators/bridge_river_crossing"),
+              Path("tools/validators/transport-facility-topology"),
+              Path("tools/validators/facilities"),
+          )
+          executable = []
+
+          for root in validator_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
+                      continue
+                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
+                      continue
+
+                  suffix = path.suffix.lower()
+                  text = path.read_text(encoding="utf-8", errors="replace")
+                  if suffix == ".py":
+                      tree = ast.parse(text, filename=str(path))
+                      meaningful = [
+                          node for node in tree.body
+                          if not (
+                              isinstance(node, ast.Expr)
+                              and isinstance(node.value, ast.Constant)
+                              and isinstance(node.value.value, str)
+                          )
+                      ]
+                      if any(
+                          isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                          for node in ast.walk(tree)
+                      ) or meaningful:
+                          executable.append(str(path))
+                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
+                      meaningful_lines = [
+                          line.strip()
+                          for line in text.splitlines()
+                          if line.strip()
+                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
+                      ]
+                      if meaningful_lines:
+                          executable.append(str(path))
+
+          if executable:
+              raise SystemExit(
+                  "Roads/Rail/Trade validator implementation surfaced. Resolve "
+                  "ownership, slug topology, fixtures, policy binding, and report "
+                  "semantics before wiring CI:\n" + "\n".join(executable)
+              )
+
+          print("No accepted executable body was detected in inspected transport validator lanes.")
+          PY
+
+          if ! grep -Fq "PROPOSED (greenfield scaffold)" "policy/domains/roads-rail-trade/README.md"; then
+            echo "::error::The Roads/Rail/Trade policy posture changed. Verify executable rules, fixtures, tests, ownership, and activation before accepting this workflow."
+            exit 1
+          fi
+
+          if grep -Eq '^(roads-rail-trade-validate|validate-roads-rail-trade):' Makefile; then
+            echo "::error::A Roads/Rail/Trade validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: roads-rail-trade-readiness"
+          echo "WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established"
+
+      - name: Record Roads Rail Trade validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Roads/Rail/Trade validation status
+
+          `WORKFLOW_CHECK_EXECUTED: roads-rail-trade-readiness`
+
+          `WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established`
+
+          This job verifies required responsibility boundaries, parses the current
+          PROPOSED JSON Schemas and placeholder fixtures, and detects newly
+          executable tests or validator bodies.
+
+          It does not establish route, segment, crossing, facility, operator,
+          restriction, legal-access, live-closure, bridge-condition, rail-status,
+          graph, EvidenceBundle, policy, public-safety, or release truth.
+          EOF
+
   build-proof-roads-rail-trade:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-roads-rail-trade'
+      - name: Check out Roads Rail Trade proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Roads Rail Trade proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/roads-rail-trade/README.md"
+            "data/registry/sources/roads-rail-trade/README.md"
+            "release/candidates/roads-rail-trade/README.md"
+            "tests/domains/roads-rail-trade/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Roads/Rail/Trade proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "NEEDS VERIFICATION for emitted proof objects" "data/proofs/roads-rail-trade/README.md"; then
+            echo "::error::The Roads/Rail/Trade proof posture changed. Review proof schemas, producers, source-role controls, access controls, receipts, and release linkage."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/roads-rail-trade -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Roads/Rail/Trade proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(roads-rail-trade-proof|proof-roads-rail-trade):' Makefile; then
+            echo "::error::A Roads/Rail/Trade proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find tools pipelines packages scripts -type f \( -iname '*roads*rail*trade*proof*.py' -o -iname '*proof*roads*rail*trade*.py' -o -iname '*roads*rail*trade*proof*.mjs' -o -iname '*proof*roads*rail*trade*.mjs' \) -print -quit 2>/dev/null || true)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Roads/Rail/Trade proof implementation surfaced at $proof_implementation. Establish its contract, fixtures, source-role controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-roads-rail-trade"
+          echo "WORKFLOW_HOLD: no accepted Roads/Rail/Trade proof producer or deterministic proof command"
+
+      - name: Record Roads Rail Trade proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Roads/Rail/Trade proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Roads/Rail/Trade proof producer or deterministic proof command`
+
+          The proof lane is documented, but emitted proof objects, proof schemas,
+          source-role closure, validators, access controls, receipt linkage,
+          catalog closure, release linkage, and rollback drills remain unverified.
+
+          A green held result is not an EvidenceBundle, ProofPack, route proof,
+          safe-passage determination, live-closure product, legal-access decision,
+          graph truth, release decision, or publication authority.
+          EOF
+
   publish-dry-run-roads-rail-trade:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-roads-rail-trade'
+      - name: Check out Roads Rail Trade release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Roads Rail Trade release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/roads-rail-trade/README.md"
+            "docs/domains/roads-rail-trade/RELEASE_INDEX.md"
+            "data/published/roads-rail-trade/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Roads/Rail/Trade release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/roads-rail-trade/README.md"; then
+            echo "::error::The documented Roads/Rail/Trade candidate posture changed. Re-evaluate evidence, rights, source role, time, sensitivity, policy, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/roads-rail-trade -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Roads/Rail/Trade candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(roads-rail-trade-release-dry-run|release-dry-run-roads-rail-trade):' Makefile; then
+            echo "::error::A Roads/Rail/Trade release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-roads-rail-trade"
+          echo "WORKFLOW_HOLD: no accepted Roads/Rail/Trade release dry-run command or candidate manifest contract"
+
+      - name: Record Roads Rail Trade release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Roads/Rail/Trade release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Roads/Rail/Trade release dry-run command or candidate manifest contract`
+
+          This lane performs no live fetch, routing, closure or detour generation,
+          source admission, release, promotion, manifest assembly, deployment,
+          publication, or write to lifecycle, graph, proof, receipt, release, or
+          published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, time validity, source-role
+          separation, sensitivity/generalization, policy result, validation
+          receipts, independent review, correction, withdrawal, and rollback
+          targets are accepted.
+
+          A green held result does not mean Roads/Rail/Trade material is accurate,
+          current, legally authoritative, operationally safe, approved, released,
+          or published.
+          EOF
