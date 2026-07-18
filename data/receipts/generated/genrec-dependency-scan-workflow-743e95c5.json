@@ -1,0 +1,53 @@
+{
+  "receipt_id": "genrec-dependency-scan-workflow-743e95c5",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "fdb3b9651828733364d8c257bfc6c0ef33280ae6",
+  "branch": "agent/dependency-scan-workflow-20260718",
+  "target_path": ".github/workflows/dependency-scan.yml",
+  "previous_blob": "e0437e5ae0e2941a4bc56f2e3d882d67cc504afe",
+  "new_blob": "df1de90d289ddfde3a0f505a703b55ededf6cc7d",
+  "sha256": "743e95c59546023f1c60408350c8b00b68980017a8a3e7e316d2fd2729a537cb",
+  "truth_labels": {
+    "confirmed": [
+      "The prior pip-audit and npm-audit jobs only executed TODO echo commands.",
+      "The root pyproject.toml declares Python dependencies and Python 3.11 support.",
+      "The root package.json declares JavaScript workspaces and devDependencies.",
+      "No root package-lock.json or pnpm-lock.yaml was found during this update.",
+      "Workflow name dependency-scan and job ids pip-audit and npm-audit are preserved."
+    ],
+    "proposed": [
+      "The pinned pip-audit project scan is the current executable Python vulnerability lane.",
+      "The explicit Node lockfile hold is safer than a nondeterministic unlocked npm audit."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Branch-protection dependencies.",
+      "Independent security review and vulnerability triage ownership.",
+      "Whether Python dependencies should be locked and audited with hashes.",
+      "The authoritative JavaScript package manager and committed lockfile.",
+      "Whether additional package manifests under apps, packages, pipelines, and connectors require separate audit lanes.",
+      "Whether action references should be pinned to immutable commit SHAs."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch and a weekly scheduled scan.",
+    "Added contents: read permission, concurrency cancellation, and job timeouts.",
+    "Added deterministic Python and pip environment settings.",
+    "Disabled persisted checkout credentials.",
+    "Pinned pip-audit to version 2.10.1 and audited the root Python project.",
+    "Converted npm-audit from a TODO success to an explicit lockfile readiness hold.",
+    "Added bounded always-run summaries."
+  ],
+  "authority_boundary": "A green or held result is CI evidence for the selected point-in-time checks only. It is not proof of dependency safety, compatibility, provenance completeness, release readiness, deployment approval, or publication authority.",
+  "rollback": {
+    "strategy": "Revert the receipt commit and workflow commit in reverse order or close the pull request without merge.",
+    "restores_blob": "e0437e5ae0e2941a4bc56f2e3d882d67cc504afe"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

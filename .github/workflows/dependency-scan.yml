@@ -1,20 +1,141 @@
-# KFM CI workflow stub: dependency-scan
-# Status: PROPOSED greenfield scaffold.
+# KFM dependency vulnerability scanning workflow.
+# Status: PROPOSED executable Python audit plus explicit Node lockfile hold.
+#
+# Authority boundary:
+# - This workflow queries public vulnerability advisory services and reports
+#   point-in-time dependency findings for the checked revision.
+# - It does not prove that dependencies are vulnerability-free, compatible,
+#   provenance-complete, rights-cleared, or approved for release/publication.
+# - It never modifies dependency manifests, lockfiles, source data, lifecycle
+#   artifacts, releases, deployments, or publication state.
 name: dependency-scan
 
 on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    # Advisory databases change independently of repository commits.
+    - cron: "17 11 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-scan-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
 
 jobs:
   pip-audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO pip-audit'
+      - name: Check out scanned revision
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install pinned audit tool
+        run: python -m pip install "pip-audit==2.10.1"
+
+      - name: Audit root Python project dependencies
+        run: >-
+          python -m pip_audit .
+          --progress-spinner off
+          --desc off
+          --format columns
+
+      - name: Record Python audit boundary
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Python dependency audit boundary
+
+          This lane audits dependencies resolved from the root `pyproject.toml`
+          with pinned scanner version `pip-audit==2.10.1`.
+
+          A green result means no known vulnerability was reported for the
+          dependency resolution produced during this run. The repository does
+          not currently provide a committed Python lockfile at this root, so
+          this is a point-in-time resolution rather than a reproducible locked
+          dependency attestation.
+
+          The result is not proof of vulnerability absence, compatibility,
+          source integrity, release readiness, deployment approval, or
+          publication authority.
+          EOF
+
   npm-audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO npm-audit'
+      - name: Check out dependency manifests
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate deterministic Node audit readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ ! -f package.json ]]; then
+            echo "::error::Root package.json is missing."
+            exit 1
+          fi
+
+          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
+            echo "::error::A root npm lockfile now exists. Graduate this lane to a real locked npm audit before accepting the change."
+            exit 1
+          fi
+
+          if [[ -f pnpm-lock.yaml || -f yarn.lock ]]; then
+            echo "::error::A non-npm root lockfile now exists. Confirm the package-manager contract and replace this npm-specific lane."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: npm-audit"
+          echo "WORKFLOW_HOLD: no committed root JavaScript lockfile"
+          echo "A nondeterministic --no-package-lock audit is intentionally not used."
+
+      - name: Record Node audit hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Node dependency audit status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no committed root JavaScript lockfile`
+
+          The root `package.json` declares workspaces and dependencies, but no
+          root `package-lock.json`, `npm-shrinkwrap.json`, `pnpm-lock.yaml`, or
+          `yarn.lock` is currently committed. This workflow intentionally does
+          not use npm's nondeterministic `--no-package-lock` mode.
+
+          Graduate this lane only after the repository records its package
+          manager and commits the authoritative lockfile. Then run the matching
+          locked audit with fail-closed severity policy and deterministic
+          fixtures or evidence where practical.
+
+          This hold does not establish dependency safety, compatibility,
+          release readiness, deployment approval, or publication authority.
+          EOF
