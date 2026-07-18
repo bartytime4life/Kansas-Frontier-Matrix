@@ -1,20 +1,145 @@
-# KFM CI workflow stub: docs-build
-# Status: PROPOSED greenfield scaffold.
+# KFM documentation build and preview readiness workflow.
+# Status: PROPOSED explicit hold until an accepted generator and preview contract exist.
+#
+# Authority boundary:
+# - This workflow may inspect repository documentation build readiness.
+# - It does not create authored doctrine, publish documentation, approve release,
+#   or make generated previews authoritative.
+# - Rendered documentation belongs only in a non-authoritative generated lane and
+#   requires an explicit publication handoff before public use.
 name: docs-build
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   mkdocs-build:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO mkdocs-build'
+      - name: Check out documentation sources
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate documentation generator readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ ! -d docs ]]; then
+            echo "::error::Canonical docs/ responsibility root is missing."
+            exit 1
+          fi
+
+          if [[ -f mkdocs.yml || -f mkdocs.yaml ]]; then
+            echo "::error::An MkDocs configuration now exists. Graduate this job to a pinned, strict build before accepting the change."
+            exit 1
+          fi
+
+          if [[ -f docusaurus.config.js || -f docusaurus.config.ts || -f docusaurus.config.mjs ]]; then
+            echo "::error::A Docusaurus configuration now exists. Confirm the generator contract and replace this MkDocs-specific readiness hold."
+            exit 1
+          fi
+
+          if [[ -f docs/requirements.txt || -f requirements-docs.txt ]]; then
+            echo "::error::Documentation build dependencies now exist. Wire the accepted generator and deterministic build command before accepting the change."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: mkdocs-build"
+          echo "WORKFLOW_HOLD: no accepted documentation generator configuration or build command"
+
+      - name: Record documentation build hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Documentation build status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted documentation generator configuration or build command`
+
+          Repository evidence currently establishes the canonical `docs/` source
+          root and the non-authoritative `artifacts/docs/` compatibility lane, but
+          does not establish `mkdocs.yml`, Docusaurus configuration, pinned docs
+          dependencies, a deterministic build command, or a generated-site
+          manifest.
+
+          Graduate this lane only after the generator, dependency pins, strict
+          build command, output directory, manifest/digest, no-network posture,
+          link/citation/accessibility responsibilities, and rollback behavior are
+          reviewed and recorded.
+
+          A green held result does not mean documentation was rendered, complete,
+          accessible, citation-valid, reproducible, release-approved, or published.
+          EOF
+
   publish-preview:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-preview'
+      - name: Check out preview boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate preview publication readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ ! -d artifacts/docs ]]; then
+            echo "::error::The documented generated-preview compatibility lane artifacts/docs/ is missing."
+            exit 1
+          fi
+
+          if [[ -f artifacts/docs/docs-build-manifest.json ]]; then
+            echo "::error::A documentation build manifest now exists. Graduate this lane to explicit artifact validation and preview handoff before accepting the change."
+            exit 1
+          fi
+
+          if [[ -f .github/workflows/pages.yml || -f .github/workflows/deploy-docs.yml ]]; then
+            echo "::error::A documentation deployment workflow now exists. Confirm hosting, permissions, release, correction, and rollback contracts before accepting the change."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-preview"
+          echo "WORKFLOW_HOLD: no built preview artifact, manifest, hosting target, or publication handoff"
+
+      - name: Record preview publication hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Documentation preview status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no built preview artifact, manifest, hosting target, or publication handoff`
+
+          `artifacts/docs/` is a transitional, non-authoritative staging lane. No
+          generated site, immutable build manifest, preview artifact upload,
+          hosting configuration, release binding, correction consumer, or rollback
+          target is established by the inspected repository evidence.
+
+          This job intentionally does not upload, deploy, expose, or publish
+          documentation. A future preview lane must remain separate from authored
+          `docs/` authority and from governed public-release decisions.
+
+          A green held result does not authorize hosting, release, deployment,
+          publication, or public reliance.
+          EOF
