@@ -1,25 +1,357 @@
-# KFM CI workflow stub: domain-people-dna-land
-# Status: PROPOSED greenfield scaffold.
+# KFM People/DNA/Land domain CI readiness workflow.
+# Status: PROPOSED bounded readiness checks plus explicit holds; accepted
+# executable validation, proof, consent, revocation, and release-dry-run
+# producers are not established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow inspects repository structure and executable maturity only. It
+#   does not open real person, genealogy, DNA/genomic, consent, revocation,
+#   parcel, deed, title, assessor, tax, or private person-land payloads.
+# - It does not establish identity, kinship, consent validity, title, boundary,
+#   rights, sensitivity, EvidenceBundle closure, release approval, or public use.
 name: domain-people-dna-land
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-people-dna-land-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-people-dna-land:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-people-dna-land'
+      - name: Check out People DNA Land boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate People DNA Land validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/people-dna-land/README.md"
+            "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md"
+            "docs/domains/people-dna-land/SENSITIVITY.md"
+            "docs/domains/people-dna-land/DNA_HANDLING.md"
+            "contracts/domains/people-dna-land/README.md"
+            "schemas/contracts/v1/domains/people-dna-land/README.md"
+            "fixtures/domains/people-dna-land/README.md"
+            "policy/domains/people-dna-land/README.md"
+            "policy/consent/people-dna-land/README.md"
+            "tests/domains/people-dna-land/README.md"
+            "tests/domains/people-dna-land/consent/revocation/README.md"
+            "tools/validators/domains/people-dna-land/README.md"
+            "tools/validators/genealogy/README.md"
+            "data/registry/sources/people-dna-land/README.md"
+            "release/candidates/people-dna-land/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required People/DNA/Land boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          test_root = Path("tests/domains/people-dna-land")
+          collected = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected.append(f"{path}:{node.name}")
+
+          if collected:
+              raise SystemExit(
+                  "Executable People/DNA/Land tests surfaced. Graduate the domain "
+                  "job to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+              )
+
+          print("No collected People/DNA/Land test functions or classes were found.")
+          PY
+
+          fixture_payload="$(find fixtures/domains/people-dna-land -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$fixture_payload" ]]; then
+            echo "::error::A People/DNA/Land fixture payload surfaced at $fixture_payload. Review it as synthetic and public-safe before wiring any automated consumer; this workflow intentionally does not open it."
+            exit 1
+          fi
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          validator_roots = (
+              Path("tools/validators/domains/people-dna-land"),
+              Path("tools/validators/genealogy"),
+          )
+          executable = []
+
+          for root in validator_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
+                      continue
+                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
+                      continue
+
+                  suffix = path.suffix.lower()
+                  text = path.read_text(encoding="utf-8", errors="replace")
+                  if suffix == ".py":
+                      tree = ast.parse(text, filename=str(path))
+                      meaningful = [
+                          node for node in tree.body
+                          if not (
+                              isinstance(node, ast.Expr)
+                              and isinstance(node.value, ast.Constant)
+                              and isinstance(node.value.value, str)
+                          )
+                      ]
+                      if any(
+                          isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                          for node in ast.walk(tree)
+                      ) or meaningful:
+                          executable.append(str(path))
+                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
+                      meaningful_lines = [
+                          line.strip()
+                          for line in text.splitlines()
+                          if line.strip()
+                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
+                      ]
+                      if meaningful_lines:
+                          executable.append(str(path))
+
+          if executable:
+              raise SystemExit(
+                  "People/DNA/Land validator implementation surfaced. Resolve "
+                  "ownership, policy binding, fixtures, and report semantics before "
+                  "wiring CI:\n" + "\n".join(executable)
+              )
+
+          print("No accepted executable body was detected in inspected People/DNA/Land validator lanes.")
+          PY
+
+          if ! grep -Fq "PROPOSED (greenfield scaffold)" "policy/domains/people-dna-land/README.md"; then
+            echo "::error::The domain policy posture changed. Verify executable rules, policy ownership, fixtures, tests, and activation before accepting this workflow."
+            exit 1
+          fi
+
+          if ! grep -Fq "Repository presence is not policy activation." "policy/consent/people-dna-land/README.md"; then
+            echo "::error::The consent-policy posture changed. Verify placement, bundle activation, evaluator wiring, revocation, receipts, cache invalidation, and release integration."
+            exit 1
+          fi
+
+          if grep -Eq '^(people-dna-land-validate|validate-people-dna-land):' Makefile; then
+            echo "::error::A People/DNA/Land validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-readiness"
+          echo "WORKFLOW_HOLD: executable People/DNA/Land validation and consent enforcement are not established"
+
+      - name: Record People DNA Land validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### People/DNA/Land validation status
+
+          `WORKFLOW_CHECK_EXECUTED: people-dna-land-readiness`
+
+          `WORKFLOW_HOLD: executable People/DNA/Land validation and consent enforcement are not established`
+
+          This job verifies responsibility boundaries, checks for newly executable
+          tests and validator bodies, confirms current policy scaffolding, and
+          refuses to open newly surfaced fixture payloads automatically.
+
+          It does not establish person identity, relationship or kinship truth,
+          DNA/genomic support, consent validity, revocation execution, land title,
+          parcel boundary truth, rights, privacy, public-safe transformation,
+          EvidenceBundle closure, policy approval, legal sufficiency, or release
+          readiness.
+          EOF
+
   build-proof-people-dna-land:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-people-dna-land'
+      - name: Check out People DNA Land proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate People DNA Land proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/people-dna-land/README.md"
+            "policy/consent/people-dna-land/README.md"
+            "tests/domains/people-dna-land/consent/revocation/README.md"
+            "release/candidates/people-dna-land/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required People/DNA/Land proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "NEEDS VERIFICATION for emitted proof files" "data/proofs/people-dna-land/README.md"; then
+            echo "::error::The People/DNA/Land proof posture changed. Review schemas, producers, access controls, consent/revocation binding, receipts, and release linkage."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/people-dna-land -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::People/DNA/Land proof material surfaced at $proof_artifact. Replace this hold with an independently reviewed proof validator; this workflow intentionally does not open the artifact."
+            exit 1
+          fi
+
+          if grep -Eq '^(people-dna-land-proof|proof-people-dna-land):' Makefile; then
+            echo "::error::A People/DNA/Land proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find tools pipelines packages scripts -type f \( -iname '*people*dna*land*proof*.py' -o -iname '*proof*people*dna*land*.py' -o -iname '*people*dna*land*proof*.mjs' -o -iname '*proof*people*dna*land*.mjs' \) -print -quit 2>/dev/null || true)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential People/DNA/Land proof implementation surfaced at $proof_implementation. Establish its contract, synthetic fixtures, consent/revocation controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-people-dna-land"
+          echo "WORKFLOW_HOLD: no accepted People/DNA/Land proof producer or deterministic proof command"
+
+      - name: Record People DNA Land proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### People/DNA/Land proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted People/DNA/Land proof producer or deterministic proof command`
+
+          The proof lane is documented, but emitted proof files, schemas,
+          validators, consent and revocation binding, public-safe fixtures, access
+          controls, receipt linkage, cache invalidation, and release linkage remain
+          unverified.
+
+          A green held result is not an EvidenceBundle, ProofPack, consent proof,
+          revocation execution, kinship finding, DNA finding, title opinion, legal
+          determination, release decision, or publication authority.
+          EOF
+
   publish-dry-run-people-dna-land:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-people-dna-land'
+      - name: Check out People DNA Land release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate People DNA Land release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/people-dna-land/README.md"
+            "docs/domains/people-dna-land/RELEASE_INDEX.md"
+            "data/published/people-dna-land/README.md"
+            "policy/consent/people-dna-land/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required People/DNA/Land release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/people-dna-land/README.md"; then
+            echo "::error::The documented People/DNA/Land candidate posture changed. Re-evaluate evidence, consent, revocation, rights, sensitivity, privacy, review, correction, withdrawal, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/people-dna-land -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A People/DNA/Land candidate record surfaced at $candidate_record. Replace this hold with an independently reviewed domain dry-run path; this workflow intentionally does not open the record."
+            exit 1
+          fi
+
+          if grep -Eq '^(people-dna-land-release-dry-run|release-dry-run-people-dna-land):' Makefile; then
+            echo "::error::A People/DNA/Land release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-people-dna-land"
+          echo "WORKFLOW_HOLD: no accepted People/DNA/Land release dry-run command or candidate manifest contract"
+
+      - name: Record People DNA Land release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### People/DNA/Land release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted People/DNA/Land release dry-run command or candidate manifest contract`
+
+          This lane performs no source access, identity resolution, consent or
+          revocation operation, public-safe transform, release, promotion, manifest
+          assembly, deployment, publication, or write to lifecycle, proof, receipt,
+          release, cache, graph, search, vector, AI, or published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, consent and revocation state,
+          privacy and sensitivity review, public-safe transformation, validation
+          receipts, independent approval, correction, withdrawal, downstream cache
+          invalidation, and rollback targets are accepted.
+
+          A green held result does not mean People/DNA/Land material is accurate,
+          legally sufficient, consented, privacy-safe, title-correct, approved,
+          released, or published.
+          EOF
