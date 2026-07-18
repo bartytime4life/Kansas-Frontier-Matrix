@@ -1,20 +1,168 @@
-# KFM CI workflow stub: docs-control-plane
-# Status: PROPOSED greenfield scaffold.
+# KFM machine control-plane validation workflow.
+# Status: PROPOSED executable YAML and register meta-contract checks.
+#
+# Authority boundary:
+# - This workflow validates repository syntax and the currently implemented
+#   control-plane register meta contract for the checked revision.
+# - It does not make register entries authoritative, resolve contradictions,
+#   approve policy, change release state, promote lifecycle artifacts, or publish.
 name: docs-control-plane
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-control-plane-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
 
 jobs:
   validate-control-plane-yaml:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-control-plane-yaml'
+      - name: Check out control-plane sources
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install pinned YAML parser
+        run: python -m pip install "PyYAML==6.0.3"
+
+      - name: Parse every control-plane YAML file
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          import yaml
+          from yaml.constructor import ConstructorError
+          from yaml.resolver import BaseResolver
+
+
+          class UniqueKeyLoader(yaml.SafeLoader):
+              """Safe YAML loader that rejects duplicate mapping keys."""
+
+
+          def construct_unique_mapping(loader, node, deep=False):
+              mapping = {}
+              for key_node, value_node in node.value:
+                  key = loader.construct_object(key_node, deep=deep)
+                  if key in mapping:
+                      raise ConstructorError(
+                          "while constructing a mapping",
+                          node.start_mark,
+                          f"found duplicate key: {key!r}",
+                          key_node.start_mark,
+                      )
+                  mapping[key] = loader.construct_object(value_node, deep=deep)
+              return mapping
+
+
+          UniqueKeyLoader.add_constructor(
+              BaseResolver.DEFAULT_MAPPING_TAG,
+              construct_unique_mapping,
+          )
+
+          root = Path("control_plane")
+          if not root.is_dir():
+              raise SystemExit("control_plane/ is missing")
+
+          files = sorted(root.glob("*.yaml"))
+          if not files:
+              raise SystemExit("control_plane/ contains no .yaml files")
+
+          for path in files:
+              with path.open("r", encoding="utf-8") as handle:
+                  document = yaml.load(handle, Loader=UniqueKeyLoader)
+
+              if not isinstance(document, dict):
+                  raise SystemExit(f"{path} must have a mapping at the document root")
+
+              print(f"validated YAML syntax and unique keys: {path}")
+
+          print(f"validated {len(files)} control-plane YAML file(s)")
+          PY
+
+      - name: Record YAML validation boundary
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Control-plane YAML validation boundary
+
+          This lane parses every tracked `control_plane/*.yaml` file with
+          `PyYAML==6.0.3`, rejects duplicate mapping keys, and requires each
+          document root to be a mapping.
+
+          A green result does not prove that every field has the correct
+          semantics, that register entries agree with doctrine or implementation,
+          or that any entry is approved for policy, release, promotion, or
+          publication.
+          EOF
+
   registers-schema:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO registers-schema'
+      - name: Check out register contracts
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install repository test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Enforce register meta contract
+        run: >-
+          python -m pytest
+          tests/policy/test_control_plane_register_meta_contract.py
+          -q
+          --strict-config
+          --strict-markers
+
+      - name: Record register contract boundary
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Control-plane register contract boundary
+
+          This lane runs the repository-owned register meta-contract tests for
+          the required control-plane files. The current checks cover required
+          files, top-level metadata, entries presence, review dates, owner,
+          status vocabulary, and related-doctrine paths.
+
+          The preserved job id is `registers-schema`, but this lane does not
+          claim that a dedicated machine JSON Schema governs every register
+          field. A green result is bounded test evidence only; it is not policy,
+          release, lifecycle-promotion, or publication authority.
+          EOF
