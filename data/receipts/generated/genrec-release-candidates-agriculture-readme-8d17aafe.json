@@ -1,0 +1,50 @@
+{
+  "receipt_id": "genrec-release-candidates-agriculture-readme-8d17aafe",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T11:03:35-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "3c0b8f0fa2d9d2a490701d72a5a5b3bc448b02e0",
+  "branch": "agent/release-candidates-agriculture-readme-20260718",
+  "target_path": "release/candidates/agriculture/README.md",
+  "previous_blob": "02bd65e2e3785bfdbf3922ba16dc79afadc84ee9",
+  "new_blob": "5bb185c70d04a24a972b4d3b8d93f721889b7419",
+  "sha256": "8d17aafe3d2aeb59a9015ba7390864754286875383c4f9c83dcdb1ec2febb9cc",
+  "truth_labels": {
+    "confirmed": [
+      "The Agriculture candidate-lane README existed at the pinned base and was updated in place.",
+      "The bounded candidate-lane search established the parent README and the county_year_panel_v0 child as the indexed Agriculture candidate paths inspected for this revision.",
+      "The merged county_year_panel_v0 dossier remains PROPOSED, BLOCKED_FOR_EVIDENCE_AND_VALIDATION, unreleased, and not approved for manifest preparation.",
+      "The Agriculture release index routes manifests, promotion decisions, correction notices, rollback records, withdrawal notices, and published carriers to shared responsibility lanes.",
+      "Agriculture planning documents proposed candidate-local release objects, while current release guidance uses shared record-type lanes; that topology remains conflicted and unresolved.",
+      "The domain-agriculture workflow is a read-only readiness-hold workflow and release-dry-run remains a TODO-only scaffold.",
+      "The inspected Agriculture tests, release tests, release fixtures, proof lane, schemas, and policy lane remain placeholder, README-only, permissive-scaffold, draft, or otherwise not established as substantive release proof."
+    ],
+    "proposed": [
+      "release/candidates/agriculture/ should operate as the repository-grounded Agriculture candidate index and pre-publication review contract without becoming release, evidence, policy, validation, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic candidate-index generation.",
+      "Candidate naming, identity, versioning, artifact-manifest, schema, and validator contracts.",
+      "Admitted source records, rights, source roles, EvidenceBundle closure, aggregation and suppression profiles, typed receipts, executable policy, and deterministic fixtures and tests.",
+      "Canonical manifest, correction, withdrawal, supersession, and rollback topology and candidate-to-release handoff.",
+      "Correction consumers, rollback targets and drills, branch protection, required checks, immutable action pinning, independent stewardship assignments, and domain-agriculture placeholder-detection behavior."
+    ]
+  },
+  "changes": [
+    "Replaced generic Agriculture candidate-lane guidance with a repository-grounded candidate index and pre-publication review contract.",
+    "Indexed the merged county_year_panel_v0 dossier and preserved its blocked, unreleased posture.",
+    "Separated candidate review from artifact, source, evidence, contract, schema, policy, validation, manifest, correction, rollback, publication, and public-client authority.",
+    "Marked candidate-local release-object paths from planning material as LINEAGE / CONFLICTED rather than creating parallel homes.",
+    "Added finite candidate states and holds, admission rules, release gates, required dossier structure, source-role and sensitivity controls, validation and automation posture, handoff routing, review burden, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a candidate artifact, SourceDescriptor, EvidenceBundle, PolicyDecision, ValidationReport, PromotionDecision, ReleaseManifest, CorrectionNotice, WithdrawalNotice, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "02bd65e2e3785bfdbf3922ba16dc79afadc84ee9"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}
