@@ -1,25 +1,297 @@
-# KFM CI workflow stub: domain-geology
-# Status: PROPOSED greenfield scaffold.
+# KFM Geology domain CI readiness workflow.
+# Status: PROPOSED explicit holds; executable Geology validation, proof, and
+# release-dry-run producers are not established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow inspects repository maturity without opening restricted
+#   subsurface, private-well, well-log, parcel, operator, or resource payloads.
+# - It does not validate Geology truth, certify reserves or engineering claims,
+#   build an EvidenceBundle or ProofPack, admit sources, apply policy, perform a
+#   public-safe geometry transform, promote lifecycle artifacts, approve release,
+#   write published data, deploy, or publish.
 name: domain-geology
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-geology-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-geology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-geology'
+      - name: Check out Geology boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Geology validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/geology/README.md"
+            "contracts/domains/geology/README.md"
+            "schemas/contracts/v1/domains/geology/README.md"
+            "fixtures/domains/geology/README.md"
+            "policy/domains/geology/README.md"
+            "tests/domains/geology/README.md"
+            "tools/validators/domains/geology/README.md"
+            "tools/validators/geology/README.md"
+            "data/registry/sources/geology/README.md"
+            "data/registry/sensitivity/geology/README.md"
+            "release/candidates/geology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Geology boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          test_root = Path("tests/domains/geology")
+          collected = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected.append(f"{path}:{node.name}")
+
+          if collected:
+              raise SystemExit(
+                  "Executable Geology tests surfaced. Graduate validate-geology "
+                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+              )
+
+          print("No collected Geology test functions or classes were found.")
+          PY
+
+          validator_roots=(
+            "tools/validators/domains/geology"
+            "tools/validators/geology"
+          )
+
+          for validator_root in "${validator_roots[@]}"; do
+            validator_file="$(find "$validator_root" -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+            if [[ -n "$validator_file" ]]; then
+              echo "::error::Geology validator implementation surfaced at $validator_file. Resolve validator ownership and wire the accepted command."
+              exit 1
+            fi
+          done
+
+          if grep -Eq '^(geology-validate|validate-geology):' Makefile; then
+            echo "::error::A Geology validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-geology"
+          echo "WORKFLOW_HOLD: executable Geology validation is not established"
+
+      - name: Record Geology validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Geology validation status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: executable Geology validation is not established`
+
+          Current repository evidence is documentation-heavy: sampled Geology
+          test modules are placeholders, and the inspected per-domain and broad
+          Geology validator lanes are README-backed rather than accepted
+          executable validators.
+
+          This check does not establish geologic interpretation, resource class,
+          reserve or estimate validity, permit or production status, mineral or
+          property rights, exact subsurface safety, evidence closure, policy
+          approval, engineering suitability, or release readiness.
+          EOF
+
   build-proof-geology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-geology'
+      - name: Check out Geology proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Geology proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/geology/README.md"
+            "data/registry/sources/geology/README.md"
+            "data/registry/sensitivity/geology/README.md"
+            "release/candidates/geology/README.md"
+            "tests/domains/geology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Geology proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "**Status:** draft / PROPOSED" "data/proofs/geology/README.md"; then
+            echo "::error::The Geology proof posture changed. Review proof schemas, claim-class controls, producers, access controls, receipts, and release linkage before accepting this workflow."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/geology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Geology proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(geology-proof|proof-geology):' Makefile; then
+            echo "::error::A Geology proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find . -path './.git' -prune -o -type f \( -iname '*geology*proof*.py' -o -iname '*proof*geology*.py' -o -iname '*geology*proof*.mjs' -o -iname '*proof*geology*.mjs' \) -print -quit)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Geology proof implementation surfaced at $proof_implementation. Establish its contract, synthetic fixtures, sensitivity controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-geology"
+          echo "WORKFLOW_HOLD: no accepted Geology proof producer or deterministic proof command"
+
+      - name: Record Geology proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Geology proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Geology proof producer or deterministic proof command`
+
+          The Geology proof lane is documented, but concrete proof inventory,
+          EvidenceRef-to-EvidenceBundle resolution, schemas, validators,
+          synthetic fixtures, access controls, occurrence/deposit/estimate/
+          permit/production/reserve anti-collapse proof, review binding, receipt
+          linkage, and release linkage remain unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, reserve estimate,
+          mineral-rights record, property-rights record, engineering
+          certification, extraction recommendation, release decision, or
+          publication authority.
+          EOF
+
   publish-dry-run-geology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-geology'
+      - name: Check out Geology release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Geology release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/geology/README.md"
+            "docs/domains/geology/RELEASE_INDEX.md"
+            "data/published/geology/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Geology release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/geology/README.md"; then
+            echo "::error::The documented Geology candidate posture changed. Re-evaluate source, evidence, rights, sensitivity, claim class, policy, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/geology -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Geology candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(geology-release-dry-run|release-dry-run-geology):' Makefile; then
+            echo "::error::A Geology release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-geology"
+          echo "WORKFLOW_HOLD: no accepted Geology release dry-run command or candidate manifest contract"
+
+      - name: Record Geology release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Geology release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Geology release dry-run command or candidate manifest contract`
+
+          This lane performs no source access, geometry transform, resource
+          classification, release, promotion, manifest assembly, deployment,
+          publication, or write to processed, catalog, proof, receipt, release,
+          or published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, sensitivity, public-safe
+          geometry, claim-class separation, policy result, steward review,
+          validation receipts, independent approval, correction path,
+          withdrawal path, and rollback target are accepted.
+
+          A green held result does not mean Geology data is accurate, complete,
+          suitable for engineering, investment, extraction, legal, regulatory,
+          emergency, or operational use, approved, released, or published.
+          EOF
