@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-connector-gate-workflow-d2a8b63d",
+  "receipt_type": "generated_change",
+  "status": "PROPOSED",
+  "task_id": "kfm-connector-gate-workflow-20260718",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_ref": "main",
+  "base_sha": "ba8fa740a40ddf379b8e08b9534145ca4626067f",
+  "branch": "agent/connector-gate-workflow-20260718",
+  "target_paths": [
+    ".github/workflows/connector-gate.yml",
+    "data/receipts/generated/genrec-connector-gate-workflow-d2a8b63d.json"
+  ],
+  "authority": {
+    "workflow": "CI test orchestration only",
+    "not_authority_for": [
+      "source admission",
+      "source acquisition",
+      "promotion",
+      "catalog",
+      "triplet",
+      "release",
+      "publication",
+      "policy",
+      "EvidenceBundle closure",
+      "authoritative receipts"
+    ]
+  },
+  "evidence": [
+    {
+      "path": ".github/workflows/connector-gate.yml",
+      "blob_sha": "fc36ecced55bb0b4002d551cb28addfff0be918a",
+      "finding": "Prior workflow only checked out the repository and echoed TODO for both jobs."
+    },
+    {
+      "path": "tests/policy/test_pipeline_connector_non_publisher.py",
+      "blob_sha": "c6164787bc848eb2347c347af203d76afae37a2b",
+      "finding": "Executable static boundary test rejects connector/pipeline write contexts targeting data/catalog, data/published, or release/."
+    },
+    {
+      "workflow_run_id": 29635823936,
+      "finding": "Baseline connector-gate jobs succeeded while only executing TODO echo steps."
+    }
+  ],
+  "changes": [
+    "Preserved workflow and job identities.",
+    "Added manual dispatch, contents-read permission, concurrency cancellation, deterministic Python environment, and timeouts.",
+    "Graduated connector-output-gate to the repository-owned non-publisher pytest.",
+    "Converted ingest-receipt-presence to an explicit hold because no verified validator and deterministic fixtures were found.",
+    "Added bounded step summaries and disabled persisted checkout credentials."
+  ],
+  "validation": [
+    {
+      "gate": "scope",
+      "outcome": "PASS",
+      "reason": "Workflow and generated receipt only."
+    },
+    {
+      "gate": "identity-preservation",
+      "outcome": "PASS",
+      "reason": "connector-gate, connector-output-gate, and ingest-receipt-presence retained."
+    },
+    {
+      "gate": "workflow-hash",
+      "outcome": "PASS",
+      "sha256": "d2a8b63d8e5052817ff945b79acc0695058ba10b39addd48415f8348a291774a"
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "git_blob": "b89aba5fa5709873c8e36899c74a8806ffbc405c"
+    },
+    {
+      "gate": "final-head-actions",
+      "outcome": "PENDING"
+    },
+    {
+      "gate": "human-review",
+      "outcome": "PENDING"
+    }
+  ],
+  "rollback": {
+    "restore_blob": "fc36ecced55bb0b4002d551cb28addfff0be918a",
+    "remove_receipt": "data/receipts/generated/genrec-connector-gate-workflow-d2a8b63d.json"
+  },
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-07-18T00:00:00-05:00",
+  "emitter": "openai/gpt-5.6-thinking",
+  "contract_version": "3.0.0"
+}
