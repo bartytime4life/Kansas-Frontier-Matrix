@@ -1,25 +1,297 @@
-# KFM CI workflow stub: domain-atmosphere
-# Status: PROPOSED greenfield scaffold.
+# KFM Atmosphere domain CI readiness workflow.
+# Status: PROPOSED explicit holds; executable Atmosphere validation, proof, and
+# release-dry-run producers are not established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow inspects repository maturity without performing live source
+#   requests or issuing AQI, medical, regulatory, emergency, or life-safety advice.
+# - It does not validate Atmosphere truth, build an EvidenceBundle or ProofPack,
+#   admit sources, apply policy, promote lifecycle artifacts, approve release,
+#   write published data, deploy, or publish.
 name: domain-atmosphere
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-atmosphere-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-atmosphere:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-atmosphere'
+      - name: Check out Atmosphere boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Atmosphere validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/atmosphere/README.md"
+            "contracts/domains/atmosphere/README.md"
+            "schemas/contracts/v1/domains/atmosphere/README.md"
+            "fixtures/domains/atmosphere/README.md"
+            "policy/domains/atmosphere/README.md"
+            "tests/domains/atmosphere/README.md"
+            "tools/validators/domains/atmosphere/README.md"
+            "data/registry/sources/atmosphere/README.md"
+            "release/candidates/atmosphere/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Atmosphere boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          test_root = Path("tests/domains/atmosphere")
+          collected = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected.append(f"{path}:{node.name}")
+
+          if collected:
+              raise SystemExit(
+                  "Executable Atmosphere tests surfaced. Graduate validate-atmosphere "
+                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+              )
+
+          print("No collected Atmosphere test functions or classes were found.")
+          PY
+
+          validator_roots=(
+            "tools/validators/domains/atmosphere"
+            "tools/validators/air-hazards"
+            "tools/validators/atmosphere_agriculture"
+            "tools/validators/atmosphere_biodiversity"
+            "tools/validators/atmosphere_hazards"
+            "tools/validators/atmosphere_hydrology"
+          )
+
+          for validator_root in "${validator_roots[@]}"; do
+            if [[ -d "$validator_root" ]]; then
+              validator_file="$(find "$validator_root" -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+              if [[ -n "$validator_file" ]]; then
+                echo "::error::Atmosphere validator implementation surfaced at $validator_file. Resolve validator ownership and wire the accepted command."
+                exit 1
+              fi
+            fi
+          done
+
+          if grep -Eq '^(atmosphere-validate|validate-atmosphere):' Makefile; then
+            echo "::error::An Atmosphere validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-atmosphere"
+          echo "WORKFLOW_HOLD: executable Atmosphere validation is not established"
+
+      - name: Record Atmosphere validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Atmosphere validation status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: executable Atmosphere validation is not established`
+
+          Current repository evidence is documentation-heavy: sampled Atmosphere
+          test modules are placeholders, and the inspected per-domain and
+          cross-domain Atmosphere validator lanes are README-backed rather than
+          accepted executable validators.
+
+          This check performs no live source request. It does not establish
+          observation accuracy, AQI or concentration equivalence, model-as-observed
+          validity, source-role closure, health advice, regulatory status,
+          emergency-alert authority, evidence closure, or release readiness.
+          EOF
+
   build-proof-atmosphere:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-atmosphere'
+      - name: Check out Atmosphere proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Atmosphere proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/atmosphere/README.md"
+            "data/proofs/atmosphere/pm25_2026/README.md"
+            "data/registry/sources/atmosphere/README.md"
+            "release/candidates/atmosphere/README.md"
+            "tests/domains/atmosphere/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Atmosphere proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "**Status:** draft / PROPOSED" "data/proofs/atmosphere/README.md"; then
+            echo "::error::The Atmosphere proof posture changed. Review proof schemas, producers, access controls, receipts, and release linkage before accepting this workflow."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/atmosphere -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Atmosphere proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(atmosphere-proof|proof-atmosphere):' Makefile; then
+            echo "::error::An Atmosphere proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find . -path './.git' -prune -o -type f \( -iname '*atmosphere*proof*.py' -o -iname '*proof*atmosphere*.py' -o -iname '*atmosphere*proof*.mjs' -o -iname '*proof*atmosphere*.mjs' \) -print -quit)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Atmosphere proof implementation surfaced at $proof_implementation. Establish its contract, fixtures, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-atmosphere"
+          echo "WORKFLOW_HOLD: no accepted Atmosphere proof producer or deterministic proof command"
+
+      - name: Record Atmosphere proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Atmosphere proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Atmosphere proof producer or deterministic proof command`
+
+          The Atmosphere proof lane and its PM2.5 child are documented, but
+          concrete proof inventory, source manifests, schemas, validators,
+          fixtures, access controls, EvidenceRef-to-EvidenceBundle resolution,
+          and release linkage remain unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, AQI advisory, medical or
+          exposure claim, regulatory determination, emergency alert, release
+          decision, or publication authority.
+          EOF
+
   publish-dry-run-atmosphere:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-atmosphere'
+      - name: Check out Atmosphere release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Atmosphere release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/atmosphere/README.md"
+            "docs/domains/atmosphere/RELEASE_INDEX.md"
+            "data/published/atmosphere/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Atmosphere release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/atmosphere/README.md"; then
+            echo "::error::The documented Atmosphere candidate posture changed. Re-evaluate evidence, rights, time validity, policy, validation, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/atmosphere -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::An Atmosphere candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(atmosphere-release-dry-run|release-dry-run-atmosphere):' Makefile; then
+            echo "::error::An Atmosphere release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-atmosphere"
+          echo "WORKFLOW_HOLD: no accepted Atmosphere release dry-run command or candidate manifest contract"
+
+      - name: Record Atmosphere release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Atmosphere release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Atmosphere release dry-run command or candidate manifest contract`
+
+          This lane performs no live fetch, source admission, alert generation,
+          release, promotion, manifest assembly, deployment, publication, or
+          write to processed, catalog, proof, receipt, release, or published
+          stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and evidence closure, rights, time validity and stale-state
+          rules, policy result, validation receipts, independent review,
+          correction path, and rollback target are accepted.
+
+          A green held result does not mean Atmosphere data is accurate, current,
+          medically actionable, regulatory, emergency-authoritative, safe,
+          released, or published.
+          EOF
