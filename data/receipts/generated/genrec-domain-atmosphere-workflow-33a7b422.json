@@ -1,0 +1,69 @@
+{
+  "receipt_id": "genrec-domain-atmosphere-workflow-33a7b422",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "a672640dceb55edb0c570549becf48056dea5a79",
+  "branch": "agent/domain-atmosphere-workflow-20260718",
+  "target_path": ".github/workflows/domain-atmosphere.yml",
+  "previous_blob": "a3c6a21db798b02202c87f76bfba5f45c5f08c9b",
+  "new_blob": "9d38e1b292d4907e9d910b7a96f1bef9a00f6c84",
+  "sha256": "33a7b422e23110d662dd48462822eeb9adcc9afc53a1afc560087f97a0f557fc",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-atmosphere, build-proof-atmosphere, and publish-dry-run-atmosphere jobs only executed TODO echo commands.",
+      "Baseline workflow run 29650601288 completed successfully without Atmosphere validation, proof construction, or release dry-run execution.",
+      "Sampled Atmosphere test modules contain only PROPOSED placeholder docstrings.",
+      "The per-domain Atmosphere validator index records executable behavior as unverified and README-backed.",
+      "The Atmosphere proof lane is draft and PROPOSED, with concrete proof inventory and enforcement unresolved.",
+      "The Atmosphere release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-atmosphere and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Explicit fail-closed readiness holds are the safest current CI behavior until accepted executable Atmosphere lanes exist.",
+      "AST-based test detection and implementation-presence checks are appropriate graduation signals for the current scaffold maturity."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Atmosphere validator ownership and deterministic no-network suite.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, fixtures, access controls, manifests, and receipts.",
+      "Accepted Atmosphere candidate, release dry-run, time-validity, stale-state, correction, and rollback contracts.",
+      "Branch-protection dependencies, independent review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted all three TODO-only jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added required-boundary checks across Atmosphere docs, contracts, schemas, fixtures, policy, tests, validators, registry, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable Atmosphere tests.",
+    "Added fail-closed graduation checks for validators, proof artifacts or producers, candidate records, Make targets, and changed release posture.",
+    "Added bounded summaries that deny AQI, medical, regulatory, emergency, and life-safety authority."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Atmosphere validation, observation accuracy, AQI or concentration equivalence, medical or regulatory advice, emergency authority, EvidenceBundle resolution, proof construction, lifecycle promotion, release approval, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain the test and bounded test-data roots.",
+    "tools remains the validator and helper root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "exact_changed_paths": [
+      ".github/workflows/domain-atmosphere.yml",
+      "data/receipts/generated/genrec-domain-atmosphere-workflow-33a7b422.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "a3c6a21db798b02202c87f76bfba5f45c5f08c9b"
+  }
+}
