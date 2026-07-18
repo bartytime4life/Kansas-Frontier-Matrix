@@ -1,25 +1,300 @@
-# KFM CI workflow stub: domain-fauna
-# Status: PROPOSED greenfield scaffold.
+# KFM Fauna domain CI readiness workflow.
+# Status: PROPOSED explicit holds; executable Fauna validation, proof, and
+# release-dry-run producers are not established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow inspects repository maturity without opening restricted Fauna
+#   payloads or exposing exact or reverse-engineerable sensitive locations.
+# - It does not validate Fauna truth, make taxonomic or stewardship decisions,
+#   build an EvidenceBundle or ProofPack, admit sources, apply policy, perform a
+#   geoprivacy transform, promote lifecycle artifacts, approve release, write
+#   published data, deploy, or publish.
 name: domain-fauna
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-fauna-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-fauna:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-fauna'
+      - name: Check out Fauna boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Fauna validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/fauna/README.md"
+            "contracts/domains/fauna/README.md"
+            "schemas/contracts/v1/domains/fauna/README.md"
+            "fixtures/domains/fauna/README.md"
+            "policy/domains/fauna/README.md"
+            "policy/sensitivity/fauna/README.md"
+            "tests/domains/fauna/README.md"
+            "tools/validators/fauna/README.md"
+            "tools/validators/domains/fauna/README.md"
+            "data/registry/sources/fauna/README.md"
+            "release/candidates/fauna/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Fauna boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          test_root = Path("tests/domains/fauna")
+          collected = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected.append(f"{path}:{node.name}")
+
+          if collected:
+              raise SystemExit(
+                  "Executable Fauna tests surfaced. Graduate validate-fauna "
+                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+              )
+
+          print("No collected Fauna test functions or classes were found.")
+          PY
+
+          validator_roots=(
+            "tools/validators/fauna"
+            "tools/validators/domains/fauna"
+            "tools/validators/geoprivacy/habitat-fauna"
+            "tools/validators/habitat_fauna"
+            "tools/validators/habitat/fauna-geoprivacy"
+            "tools/validators/habitat-fauna"
+          )
+
+          for validator_root in "${validator_roots[@]}"; do
+            if [[ -d "$validator_root" ]]; then
+              validator_file="$(find "$validator_root" -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+              if [[ -n "$validator_file" ]]; then
+                echo "::error::Fauna validator implementation surfaced at $validator_file. Resolve validator ownership and wire the accepted command."
+                exit 1
+              fi
+            fi
+          done
+
+          if grep -Eq '^(fauna-validate|validate-fauna):' Makefile; then
+            echo "::error::A Fauna validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-fauna"
+          echo "WORKFLOW_HOLD: executable Fauna validation is not established"
+
+      - name: Record Fauna validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Fauna validation status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: executable Fauna validation is not established`
+
+          Current repository evidence is documentation-heavy: sampled Fauna test
+          modules are placeholders, and the inspected per-domain, broad, and
+          cross-domain Fauna validator lanes are README-backed rather than
+          accepted executable validators.
+
+          This check does not establish taxonomic identity, occurrence validity,
+          source-role closure, rights, sensitivity, geoprivacy, public-safe
+          geometry, evidence closure, policy approval, stewardship approval,
+          release readiness, or safe public use.
+          EOF
+
   build-proof-fauna:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-fauna'
+      - name: Check out Fauna proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Fauna proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/fauna/README.md"
+            "data/registry/sources/fauna/README.md"
+            "release/candidates/fauna/README.md"
+            "tests/domains/fauna/README.md"
+            "policy/sensitivity/fauna/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Fauna proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "**Status:** draft / PROPOSED" "data/proofs/fauna/README.md"; then
+            echo "::error::The Fauna proof posture changed. Review proof schemas, geoprivacy controls, producers, access controls, receipts, and release linkage before accepting this workflow."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/fauna -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Fauna proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(fauna-proof|proof-fauna):' Makefile; then
+            echo "::error::A Fauna proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find . -path './.git' -prune -o -type f \( -iname '*fauna*proof*.py' -o -iname '*proof*fauna*.py' -o -iname '*fauna*proof*.mjs' -o -iname '*proof*fauna*.mjs' \) -print -quit)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Fauna proof implementation surfaced at $proof_implementation. Establish its contract, public-safe fixtures, geoprivacy controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-fauna"
+          echo "WORKFLOW_HOLD: no accepted Fauna proof producer or deterministic proof command"
+
+      - name: Record Fauna proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Fauna proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Fauna proof producer or deterministic proof command`
+
+          The Fauna proof lane is documented, but concrete proof inventory,
+          EvidenceRef-to-EvidenceBundle resolution, schemas, validators,
+          public-safe fixtures, access controls, geoprivacy proof, review
+          binding, receipt linkage, and release linkage remain unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, RedactionReceipt,
+          AggregationReceipt, stewardship decision, hunting or legal guidance,
+          release decision, or publication authority.
+          EOF
+
   publish-dry-run-fauna:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-fauna'
+      - name: Check out Fauna release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Fauna release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/fauna/README.md"
+            "docs/domains/fauna/RELEASE_INDEX.md"
+            "data/published/fauna/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Fauna release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/fauna/README.md"; then
+            echo "::error::The documented Fauna candidate posture changed. Re-evaluate source, evidence, rights, sensitivity, geoprivacy, policy, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/fauna -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Fauna candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(fauna-release-dry-run|release-dry-run-fauna):' Makefile; then
+            echo "::error::A Fauna release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-fauna"
+          echo "WORKFLOW_HOLD: no accepted Fauna release dry-run command or candidate manifest contract"
+
+      - name: Record Fauna release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Fauna release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Fauna release dry-run command or candidate manifest contract`
+
+          This lane performs no source access, geoprivacy transform, release,
+          promotion, manifest assembly, deployment, publication, or write to
+          processed, catalog, proof, receipt, release, or published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, sensitivity, public-safe
+          transformation, policy result, steward review, validation receipts,
+          independent approval, correction path, withdrawal path, and rollback
+          target are accepted.
+
+          A green held result does not mean Fauna data is accurate, legally or
+          ethically releasable, safe for species or site exposure, approved,
+          released, or published.
+          EOF
