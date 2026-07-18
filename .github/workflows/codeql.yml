@@ -1,15 +1,93 @@
-# KFM CI workflow stub: codeql
-# Status: PROPOSED greenfield scaffold.
+# KFM CI workflow: CodeQL static analysis
+# Status: implementation-bearing security analysis; non-authoritative for release.
+#
+# Responsibility:
+# - Run GitHub CodeQL analysis for repository-owned Python and
+#   JavaScript/TypeScript source on pull requests, main pushes, a weekly schedule,
+#   and explicit maintainer dispatch.
+# Authority:
+# - A successful run means the configured CodeQL queries completed for the
+#   checked revision. It is not proof that the repository is vulnerability-free,
+#   release approval, publication authority, or a substitute for threat modeling,
+#   dependency scanning, secret scanning, runtime controls, or human review.
+# Pull-request posture:
+# - Uses pull_request, never pull_request_target. Untrusted code is analyzed with
+#   the minimum token permissions required to upload code-scanning results.
+# Network:
+# - GitHub-hosted actions and CodeQL bundles may use GitHub-managed network
+#   access. This workflow does not call KFM source systems or public APIs.
+# Outputs:
+# - Code-scanning SARIF/results managed by GitHub. No KFM proof, receipt, release,
+#   lifecycle, catalog, triplet, or published artifact is created by this workflow.
+# Compatibility:
+# - Workflow name `codeql` and job id `codeql-scan` are retained because
+#   branch-protection dependencies have not been verified.
 name: codeql
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  schedule:
+    - cron: "23 9 * * 3"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  packages: read
+  pull-requests: read
+  security-events: write
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   codeql-scan:
+    name: codeql-scan (${{ matrix.language }})
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - python
+          - javascript-typescript
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO codeql-scan'
+      - name: Check out analyzed revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+          queries: security-extended
+
+      - name: Analyze source
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
+
+      - name: Record analysis boundary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## CodeQL — ${LANGUAGE}"
+            echo
+            echo "CodeQL was configured for the security-extended query suite."
+            echo
+            echo "A successful job means analysis completed for this language and revision."
+            echo "It does not prove vulnerability absence or authorize release or publication."
+          } >> "${GITHUB_STEP_SUMMARY}"
+        env:
+          LANGUAGE: ${{ matrix.language }}
