@@ -1,0 +1,72 @@
+{
+  "receipt_id": "genrec-domain-hazards-workflow-79233e4d",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "eaeebdafeea381ec5532acfd5cc43091f9e81b28",
+  "branch": "agent/domain-hazards-workflow-20260718",
+  "target_path": ".github/workflows/domain-hazards.yml",
+  "previous_blob": "ada4e42302667488316fd0ca96137c76e1d6d4f5",
+  "new_blob": "9dfc3e88c02ce69adcbf93b1d24acd08783672b4",
+  "sha256": "79233e4ddcf63ed452c6534d88dbea84d829c08008f814770c86fe81a3b25122",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-hazards, build-proof-hazards, and publish-dry-run-hazards jobs only executed TODO echo commands.",
+      "Baseline workflow run 29652350877 completed successfully without Hazards validation, proof construction, or release dry-run execution.",
+      "A sampled Hazards test module contains only a PROPOSED placeholder docstring.",
+      "The Hazards test index records executable tests, validators, policy runtime, release integration, CI coverage, and pass rates as unverified.",
+      "The per-domain and related cross-domain Hazards validator lanes are README-backed, with executable behavior unverified.",
+      "The Hazards proof lane records implementation depth as UNKNOWN and prohibits alert or life-safety authority.",
+      "The Hazards release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-hazards and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Explicit fail-closed readiness holds are the safest current CI behavior until accepted executable Hazards lanes exist.",
+      "AST-based test detection and executable-body detection are appropriate graduation signals for the current scaffold maturity."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Hazards validator ownership and deterministic no-network suite.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, freshness and expiry controls, official-referral proof, life-safety-boundary proof, fixtures, access controls, manifests, and receipts.",
+      "Accepted Hazards candidate, release dry-run, time-validity, stale-state, correction, withdrawal, and rollback contracts.",
+      "Branch-protection dependencies, independent review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted all three TODO-only jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added required-boundary checks across Hazards docs, contracts, schemas, fixtures, policy, tests, validators, source registry, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable Hazards tests.",
+    "Added executable-body detection for per-domain and related cross-domain Hazards validator lanes without treating README files as code.",
+    "Added fail-closed graduation checks for proof artifacts or producers, candidate records, Make targets, and changed release posture.",
+    "Added bounded summaries preserving source role, freshness, expiry, official referral, not-for-life-safety, evidence, policy, correction, withdrawal, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Hazards validation, current-condition confirmation, alert or warning authority, regulatory determination, emergency guidance, EvidenceBundle resolution, proof construction, lifecycle promotion, release approval, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain the test and bounded test-data roots.",
+    "tools remains the validator and helper root.",
+    "data/registry remains the source-registry root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "exact_changed_paths": [
+      ".github/workflows/domain-hazards.yml",
+      "data/receipts/generated/genrec-domain-hazards-workflow-79233e4d.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "ada4e42302667488316fd0ca96137c76e1d6d4f5"
+  }
+}

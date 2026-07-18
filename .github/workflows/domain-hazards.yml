@@ -1,25 +1,320 @@
-# KFM CI workflow stub: domain-hazards
-# Status: PROPOSED greenfield scaffold.
+# KFM Hazards domain CI readiness workflow.
+# Status: PROPOSED explicit holds; executable Hazards validation, proof, and
+# release-dry-run producers are not established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow inspects repository maturity without consuming live hazard
+#   feeds or issuing warnings, evacuation instructions, regulatory decisions,
+#   emergency guidance, or other life-safety direction.
+# - It does not validate current conditions, build an EvidenceBundle or
+#   ProofPack, admit sources, apply policy, promote lifecycle artifacts, approve
+#   release, write published data, deploy, or publish.
 name: domain-hazards
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-hazards-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-hazards:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-hazards'
+      - name: Check out Hazards boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Hazards validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/hazards/README.md"
+            "docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md"
+            "docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md"
+            "contracts/domains/hazards/README.md"
+            "schemas/contracts/v1/domains/hazards/README.md"
+            "fixtures/domains/hazards/README.md"
+            "policy/domains/hazards/README.md"
+            "tests/domains/hazards/README.md"
+            "tools/validators/domains/hazards/README.md"
+            "data/registry/sources/hazards/README.md"
+            "release/candidates/hazards/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Hazards boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          test_root = Path("tests/domains/hazards")
+          collected = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected.append(f"{path}:{node.name}")
+
+          if collected:
+              raise SystemExit(
+                  "Executable Hazards tests surfaced. Graduate validate-hazards "
+                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+              )
+
+          validator_roots = [
+              Path("tools/validators/domains/hazards"),
+              Path("tools/validators/air-hazards"),
+              Path("tools/validators/atmosphere_hazards"),
+              Path("tools/validators/hydrology-hazards"),
+          ]
+
+          implementations = []
+          for root in validator_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
+                      continue
+                  if path.suffix == ".py":
+                      tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+                      if any(
+                          isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                          for node in ast.walk(tree)
+                      ):
+                          implementations.append(str(path))
+                  elif path.suffix in {".js", ".mjs", ".cjs", ".ts", ".tsx", ".sh"}:
+                      meaningful = [
+                          line.strip()
+                          for line in path.read_text(encoding="utf-8").splitlines()
+                          if line.strip()
+                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
+                      ]
+                      if meaningful:
+                          implementations.append(str(path))
+
+          if implementations:
+              raise SystemExit(
+                  "Hazards validator implementation surfaced. Resolve ownership and wire "
+                  "the accepted command:\n" + "\n".join(implementations)
+              )
+
+          print("No collected Hazards tests or executable Hazards validator bodies were found.")
+          PY
+
+          if grep -Eq '^(hazards-validate|validate-hazards):' Makefile; then
+            echo "::error::A Hazards validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-hazards"
+          echo "WORKFLOW_HOLD: executable Hazards validation is not established"
+
+      - name: Record Hazards validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Hazards validation status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: executable Hazards validation is not established`
+
+          Current repository evidence is documentation-heavy: sampled Hazards
+          test modules are placeholders, and the inspected per-domain and
+          cross-domain validator lanes are README-backed rather than accepted
+          executable validators.
+
+          This check does not establish current hazard conditions, warning
+          validity, regulatory status, source freshness, EvidenceBundle closure,
+          policy approval, release readiness, or emergency/life-safety authority.
+          EOF
+
   build-proof-hazards:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-hazards'
+      - name: Check out Hazards proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Hazards proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/hazards/README.md"
+            "data/registry/sources/hazards/README.md"
+            "release/candidates/hazards/README.md"
+            "tests/domains/hazards/README.md"
+            "docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Hazards proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "Implementation depth remains UNKNOWN" "data/proofs/hazards/README.md"; then
+            echo "::error::The Hazards proof maturity statement changed. Review proof schemas, freshness/expiry controls, producers, access controls, receipts, and release linkage before accepting this workflow."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/hazards -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Hazards proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(hazards-proof|proof-hazards):' Makefile; then
+            echo "::error::A Hazards proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find . -path './.git' -prune -o -type f \( -iname '*hazards*proof*.py' -o -iname '*proof*hazards*.py' -o -iname '*hazards*proof*.mjs' -o -iname '*proof*hazards*.mjs' \) -print -quit)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Hazards proof implementation surfaced at $proof_implementation. Establish its contract, synthetic fixtures, time/freshness controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-hazards"
+          echo "WORKFLOW_HOLD: no accepted Hazards proof producer or deterministic proof command"
+
+      - name: Record Hazards proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Hazards proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Hazards proof producer or deterministic proof command`
+
+          The Hazards proof lane is documented, but concrete proof inventory,
+          EvidenceRef-to-EvidenceBundle resolution, source-role checks,
+          freshness/expiry proof, official-referral proof, life-safety-boundary
+          proof, schemas, validators, fixtures, access controls, receipt linkage,
+          and release linkage remain unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, warning, alert, regulatory
+          decision, emergency instruction, release decision, or publication
+          authority.
+          EOF
+
   publish-dry-run-hazards:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-hazards'
+      - name: Check out Hazards release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Hazards release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/hazards/README.md"
+            "docs/domains/hazards/RELEASE_INDEX.md"
+            "docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md"
+            "data/published/hazards/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Hazards release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/hazards/README.md"; then
+            echo "::error::The documented Hazards candidate posture changed. Re-evaluate source, evidence, rights, freshness, expiry, official referral, policy, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/hazards -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Hazards candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(hazards-release-dry-run|release-dry-run-hazards):' Makefile; then
+            echo "::error::A Hazards release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-hazards"
+          echo "WORKFLOW_HOLD: no accepted Hazards release dry-run command or candidate manifest contract"
+
+      - name: Record Hazards release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Hazards release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Hazards release dry-run command or candidate manifest contract`
+
+          This lane performs no live-source access, alert ingestion, warning
+          issuance, release, promotion, manifest assembly, deployment,
+          publication, or write to processed, catalog, proof, receipt, release,
+          or published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, source role, validity, expiry,
+          retrieval and release times, official-source referral, not-for-life-
+          safety policy result, validation receipts, independent review,
+          correction path, withdrawal path, and rollback target are accepted.
+
+          A green held result does not mean Hazards data is current, accurate,
+          operationally actionable, regulatory, safe for emergency use, approved,
+          released, or published.
+          EOF
