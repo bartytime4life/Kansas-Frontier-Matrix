@@ -1,0 +1,63 @@
+{
+  "receipt_id": "genrec-domain-archaeology-workflow-a9fad32e",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "e0cf911663e5dd37d72a90ea549923ed3a8bc31d",
+  "branch": "agent/domain-archaeology-workflow-20260718",
+  "target_path": ".github/workflows/domain-archaeology.yml",
+  "previous_blob": "b6a2869314efe2e34890baa5bbbe41d656629dd3",
+  "new_blob": "41e377f50ca310eccdc4b716ba8374c4fa8181db",
+  "sha256": "a9fad32e3404389c164846bcca57c733a0e1dc656457b060c824959152cc9343",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-archaeology, build-proof-archaeology, and publish-dry-run-archaeology jobs only executed TODO echo commands.",
+      "Baseline run 29650270897 completed successfully without Archaeology validation, proof construction, or release dry-run execution.",
+      "The Archaeology test lane contains thirteen named direct test modules, while sampled modules are placeholder docstrings and executable enforcement is not established.",
+      "The broad and child Archaeology validator lanes are README-only in bounded repository evidence.",
+      "The Archaeology proof lane remains draft and PROPOSED, with concrete proof schemas, validators, fixtures, and route behavior needing verification.",
+      "The Archaeology release-candidate lane is pre-publication and no candidate dossier beyond its README surfaced in bounded search.",
+      "Workflow name domain-archaeology and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Explicit readiness holds are the safest current CI behavior for this T4-sensitive domain until accepted executable lanes exist.",
+      "Fail-closed graduation detectors should force deliberate review when tests, validators, proof artifacts, proof producers, candidate dossiers, or domain commands appear."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Archaeology validator ownership and deterministic no-network test suite.",
+      "Concrete EvidenceBundle and ProofPack schemas, fixtures, access controls, producer commands, and rollback-tested proof path.",
+      "Accepted release candidate dossier, manifest assembly, cultural and sovereignty review, rights, sensitivity, policy, correction, withdrawal, and rollback contracts.",
+      "Branch-protection dependencies and independent Archaeology, cultural-review, sensitivity, evidence, security, and release ownership.",
+      "Whether action references should be pinned to immutable commit SHAs."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, and five-minute timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted all three TODO successes to explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD outcomes.",
+    "Added required-boundary checks for Archaeology docs, contracts, schemas, fixtures, policy, tests, validators, proof, release candidates, and published lanes.",
+    "Added AST-based detection of newly executable direct Archaeology tests without reading protected payloads.",
+    "Added fail-closed graduation checks for validator implementations, proof artifacts and producers, candidate dossiers, domain Make targets, and release posture changes.",
+    "Added bounded always-run summaries that preserve the deny-by-default T4 sensitivity posture."
+  ],
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain validation and test-data responsibility roots.",
+    "tools remains the validator and helper responsibility root.",
+    "data/proofs remains the proof-support root and data/published remains the released-payload root.",
+    "release remains the release-decision root.",
+    "data/receipts/generated remains the existing generated process-memory lane.",
+    "No new schema, contract, policy, validator, proof, release, publication, or root-level authority is created."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Archaeology validation, site confirmation, cultural or sovereignty approval, rights clearance, sensitivity approval, EvidenceBundle resolution, ProofPack construction, lifecycle promotion, release approval, public safety, or publication authority.",
+  "rollback": {
+    "strategy": "Revert the receipt commit and workflow commit in reverse order or close the pull request without merge.",
+    "restores_blob": "b6a2869314efe2e34890baa5bbbe41d656629dd3"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}
