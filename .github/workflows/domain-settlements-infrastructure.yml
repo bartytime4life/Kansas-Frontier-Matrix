@@ -1,25 +1,408 @@
-# KFM CI workflow stub: domain-settlements-infrastructure
-# Status: PROPOSED greenfield scaffold.
+# KFM Settlements/Infrastructure domain CI readiness workflow.
+# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
+# executable semantic validation, proof, and release-dry-run producers are not
+# established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow performs no live source requests and does not provide legal
+#   municipal-status, facility-condition, service-availability, dependency,
+#   emergency, safety, security, planning, or regulatory guidance.
+# - It does not create settlement or infrastructure truth, EvidenceBundles,
+#   proofs, policy decisions, lifecycle promotion, release approval, or
+#   published artifacts.
 name: domain-settlements-infrastructure
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-settlements-infrastructure-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-settlements-infrastructure:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-settlements-infrastructure'
+      - name: Check out Settlements Infrastructure boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Settlements Infrastructure validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/settlements-infrastructure/README.md"
+            "docs/domains/settlements-infrastructure/CANONICAL_PATHS.md"
+            "docs/domains/settlements-infrastructure/IDENTITY_MODEL.md"
+            "docs/domains/settlements-infrastructure/SENSITIVITY.md"
+            "contracts/domains/settlements-infrastructure/README.md"
+            "schemas/contracts/v1/domains/settlements-infrastructure/README.md"
+            "fixtures/domains/settlements-infrastructure/README.md"
+            "fixtures/domains/settlements-infrastructure/valid/PLACEHOLDER.md"
+            "fixtures/domains/settlements-infrastructure/invalid/PLACEHOLDER.md"
+            "fixtures/domains/settlements-infrastructure/golden/PLACEHOLDER.md"
+            "policy/domains/settlements-infrastructure/README.md"
+            "tests/domains/settlements-infrastructure/README.md"
+            "tests/domains/settlements-infrastructure/identity/README.md"
+            "tools/validators/domains/settlements-infrastructure/README.md"
+            "tools/validators/facilities/README.md"
+            "tools/validators/hazard-exposure/README.md"
+            "data/registry/sources/settlements-infrastructure/README.md"
+            "release/candidates/settlements-infrastructure/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Settlements/Infrastructure boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          test_root = Path("tests/domains/settlements-infrastructure")
+          substantive_tests = []
+          placeholder_modules = 0
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              tests = []
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      tests.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          tests.append(f"{path}:{node.name}")
+              if tests:
+                  substantive_tests.extend(tests)
+              else:
+                  placeholder_modules += 1
+
+          if substantive_tests:
+              raise SystemExit(
+                  "Executable Settlements/Infrastructure tests surfaced. Graduate "
+                  "this job to the accepted deterministic no-network suite:\n" +
+                  "\n".join(substantive_tests)
+              )
+
+          schema_root = Path("schemas/contracts/v1/domains/settlements-infrastructure")
+          schemas = sorted(schema_root.glob("*.schema.json"))
+          if not schemas:
+              raise SystemExit("No Settlements/Infrastructure JSON Schema files were found.")
+
+          schema_statuses = Counter()
+          for path in schemas:
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              if not isinstance(payload, dict):
+                  raise SystemExit(f"Schema root must be an object: {path}")
+              dialect = payload.get("$schema")
+              if not isinstance(dialect, str) or "json-schema.org" not in dialect:
+                  raise SystemExit(f"Missing or unrecognized JSON Schema dialect: {path}")
+              schema_id = payload.get("$id")
+              if not isinstance(schema_id, str) or not schema_id.endswith(path.name):
+                  raise SystemExit(f"Schema $id does not end with its filename: {path}")
+              schema_statuses[str(payload.get("x-kfm", {}).get("status", "UNSPECIFIED"))] += 1
+
+          fixture_root = Path("fixtures/domains/settlements-infrastructure")
+          json_fixtures = sorted(fixture_root.rglob("*.json"))
+          fixture_statuses = Counter()
+          for path in json_fixtures:
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              if not isinstance(payload, (dict, list)):
+                  raise SystemExit(f"Fixture root must be an object or array: {path}")
+              if isinstance(payload, dict):
+                  declared_path = payload.get("path")
+                  if declared_path is not None and declared_path != path.as_posix():
+                      raise SystemExit(f"Fixture path declaration does not match location: {path}")
+                  fixture_statuses[str(payload.get("status", "UNSPECIFIED"))] += 1
+              else:
+                  fixture_statuses["ARRAY"] += 1
+
+          def is_not_implemented_scaffold(tree: ast.Module) -> bool:
+              body = [
+                  node
+                  for node in tree.body
+                  if not (
+                      isinstance(node, ast.Expr)
+                      and isinstance(node.value, ast.Constant)
+                      and isinstance(node.value.value, str)
+                  )
+              ]
+              if len(body) != 1 or not isinstance(body[0], (ast.FunctionDef, ast.AsyncFunctionDef)):
+                  return False
+              function = body[0]
+              if function.name != "main" or function.decorator_list or function.args.args:
+                  return False
+              if len(function.body) != 1 or not isinstance(function.body[0], ast.Raise):
+                  return False
+              exc = function.body[0].exc
+              if isinstance(exc, ast.Name):
+                  return exc.id == "NotImplementedError"
+              return (
+                  isinstance(exc, ast.Call)
+                  and isinstance(exc.func, ast.Name)
+                  and exc.func.id == "NotImplementedError"
+              )
+
+          validator_roots = (
+              Path("tools/validators/domains/settlements-infrastructure"),
+              Path("tools/validators/facilities"),
+              Path("tools/validators/hazard-exposure"),
+          )
+          validator_scaffolds = []
+          executable_validators = []
+
+          for root in validator_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
+                      continue
+                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
+                      continue
+                  suffix = path.suffix.lower()
+                  text = path.read_text(encoding="utf-8", errors="replace")
+                  if suffix == ".py":
+                      tree = ast.parse(text, filename=str(path))
+                      if is_not_implemented_scaffold(tree):
+                          validator_scaffolds.append(str(path))
+                      else:
+                          executable_validators.append(str(path))
+                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
+                      meaningful_lines = [
+                          line.strip()
+                          for line in text.splitlines()
+                          if line.strip()
+                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
+                      ]
+                      if meaningful_lines:
+                          executable_validators.append(str(path))
+
+          if executable_validators:
+              raise SystemExit(
+                  "Settlements/Infrastructure validator implementation surfaced. "
+                  "Resolve ownership, slug topology, policy binding, fixtures, and "
+                  "report semantics before wiring CI:\n" +
+                  "\n".join(executable_validators)
+              )
+
+          print(f"Inspected {placeholder_modules} non-executable domain test modules.")
+          print(f"Parsed {len(schemas)} Settlements/Infrastructure schemas; statuses={dict(schema_statuses)}")
+          print(f"Parsed {len(json_fixtures)} JSON fixtures; statuses={dict(fixture_statuses)}")
+          print(f"Recognized {len(validator_scaffolds)} main/NotImplementedError validator scaffolds.")
+          print("No accepted executable validator body was detected in inspected lanes.")
+          PY
+
+          if ! grep -Fq "PROPOSED (greenfield scaffold)" "policy/domains/settlements-infrastructure/README.md"; then
+            echo "::error::The Settlements/Infrastructure policy posture changed. Verify executable rules, sensitivity topology, fixtures, tests, ownership, and activation before accepting this workflow."
+            exit 1
+          fi
+
+          if grep -Eq '^(settlements-infrastructure-validate|validate-settlements-infrastructure):' Makefile; then
+            echo "::error::A Settlements/Infrastructure validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: settlements-infrastructure-readiness"
+          echo "WORKFLOW_HOLD: semantic Settlements/Infrastructure validation is not established"
+
+      - name: Record Settlements Infrastructure validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Settlements/Infrastructure validation status
+
+          `WORKFLOW_CHECK_EXECUTED: settlements-infrastructure-readiness`
+
+          `WORKFLOW_HOLD: semantic Settlements/Infrastructure validation is not established`
+
+          This job verifies responsibility boundaries, parses current JSON Schemas
+          and any JSON fixtures for structural integrity, recognizes docstring-only
+          tests and exact `main(): raise NotImplementedError` validator scaffolds,
+          and fails closed when substantive tests or validator bodies appear.
+
+          It does not establish place, municipal, census, townsite, facility,
+          operator, condition, service-area, dependency, critical-infrastructure,
+          EvidenceBundle, policy, legal, safety, emergency, or release truth.
+          EOF
+
   build-proof-settlements-infrastructure:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-settlements-infrastructure'
+      - name: Check out Settlements Infrastructure proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Settlements Infrastructure proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/settlements-infrastructure/README.md"
+            "data/registry/sources/settlements-infrastructure/README.md"
+            "release/candidates/settlements-infrastructure/README.md"
+            "tests/domains/settlements-infrastructure/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Settlements/Infrastructure proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "NEEDS VERIFICATION for emitted proof objects" "data/proofs/settlements-infrastructure/README.md"; then
+            echo "::error::The Settlements/Infrastructure proof posture changed. Review proof schemas, producers, sensitivity controls, access controls, receipts, and release linkage."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/settlements-infrastructure -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Settlements/Infrastructure proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(settlements-infrastructure-proof|proof-settlements-infrastructure):' Makefile; then
+            echo "::error::A Settlements/Infrastructure proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find tools pipelines packages scripts -type f \( -iname '*settlements*infrastructure*proof*.py' -o -iname '*proof*settlements*infrastructure*.py' -o -iname '*settlements*infrastructure*proof*.mjs' -o -iname '*proof*settlements*infrastructure*.mjs' \) -print -quit 2>/dev/null || true)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Settlements/Infrastructure proof implementation surfaced at $proof_implementation. Establish its contract, public-safe fixtures, sensitivity controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-settlements-infrastructure"
+          echo "WORKFLOW_HOLD: no accepted Settlements/Infrastructure proof producer or deterministic proof command"
+
+      - name: Record Settlements Infrastructure proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Settlements/Infrastructure proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Settlements/Infrastructure proof producer or deterministic proof command`
+
+          The proof lane is documented, but emitted proof objects, proof schemas,
+          deterministic identity proof, critical-asset review, dependency-graph
+          controls, cultural/sovereignty review, validators, access controls,
+          receipt linkage, release linkage, and rollback drills remain unverified.
+
+          A green held result is not an EvidenceBundle, ProofPack, municipal-status
+          determination, infrastructure condition finding, service guarantee,
+          dependency disclosure approval, emergency/planning decision, release
+          decision, or publication authority.
+          EOF
+
   publish-dry-run-settlements-infrastructure:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-settlements-infrastructure'
+      - name: Check out Settlements Infrastructure release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Settlements Infrastructure release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/settlements-infrastructure/README.md"
+            "docs/domains/settlements-infrastructure/RELEASE_INDEX.md"
+            "data/published/settlements-infrastructure/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Settlements/Infrastructure release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/settlements-infrastructure/README.md"; then
+            echo "::error::The documented Settlements/Infrastructure candidate posture changed. Re-evaluate evidence, rights, source role, time, sensitivity, policy, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/settlements-infrastructure -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Settlements/Infrastructure candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(settlements-infrastructure-release-dry-run|release-dry-run-settlements-infrastructure):' Makefile; then
+            echo "::error::A Settlements/Infrastructure release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-settlements-infrastructure"
+          echo "WORKFLOW_HOLD: no accepted Settlements/Infrastructure release dry-run command or candidate manifest contract"
+
+      - name: Record Settlements Infrastructure release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Settlements/Infrastructure release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Settlements/Infrastructure release dry-run command or candidate manifest contract`
+
+          This lane performs no live fetch, source admission, facility or dependency
+          exposure, emergency/planning output, release, promotion, manifest
+          assembly, deployment, publication, or write to lifecycle, graph, proof,
+          receipt, release, cache, or published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, time validity, object-family
+          separation, critical-infrastructure and cultural/sovereignty review,
+          public-safe transformation, policy result, validation receipts,
+          independent approval, correction, withdrawal, and rollback targets are
+          accepted.
+
+          A green held result does not mean Settlements/Infrastructure material is
+          accurate, current, legally authoritative, operationally safe, approved,
+          released, or published.
+          EOF
