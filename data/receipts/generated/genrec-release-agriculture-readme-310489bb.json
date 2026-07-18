@@ -1,0 +1,50 @@
+{
+  "receipt_id": "genrec-release-agriculture-readme-310489bb",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T10:19:45-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "ecbf3d7110559ce59f1a0afda7772bd543a0f6c3",
+  "branch": "agent/release-agriculture-readme-20260718",
+  "target_path": "release/agriculture/README.md",
+  "previous_blob": "b483ee9f91a3ae3c0f77cbaa9729e55b552fb696",
+  "new_blob": "fd913433cd1d2ac4a1602aa60bca3089e58f3a27",
+  "sha256": "310489bb5f9b26e6b74a7a86c65ef8344bd5d870dbe72e35984f8968689e12c6",
+  "truth_labels": {
+    "confirmed": [
+      "release/agriculture/README.md existed at the pinned base and was updated in place.",
+      "release/candidates/agriculture/county_year_panel_v0/README.md records the candidate as PROPOSED and BLOCKED_FOR_EVIDENCE_AND_VALIDATION.",
+      "release/manifests/agriculture/README.md is a draft lane and leaves manifest-lane convention unresolved.",
+      ".github/CODEOWNERS routes /release/ review to @bartytime4life.",
+      ".github/workflows/domain-agriculture.yml and .github/workflows/release-dry-run.yml are ordinary pull-request-triggered TODO-only scaffolds."
+    ],
+    "proposed": [
+      "release/agriculture/ should operate as an Agriculture release index and authority router rather than a parallel home for record families owned by shared release lanes."
+    ],
+    "needs_verification": [
+      "Canonical manifest, correction, and rollback topology.",
+      "Authoritative Directory Rules repository location and supersession graph.",
+      "Accepted status of ADR-0001.",
+      "Concrete Agriculture release schemas, validators, fixtures, tests, source descriptors, evidence bundles, policy decisions, manifests, and published artifacts.",
+      "Branch-protection and required-check enforcement.",
+      "Independent stewardship and release-approval assignments."
+    ]
+  },
+  "changes": [
+    "Reframed the README as a repository-grounded Agriculture release index and authority router.",
+    "Added a bounded repository snapshot and safe no-release-overclaim conclusion.",
+    "Routed candidates, manifests, decisions, notices, rollback/review cards, changelog entries, and published artifacts to their owning lanes.",
+    "Preserved unresolved release topology and proposed-ADR conflicts instead of silently normalizing them.",
+    "Added Agriculture-specific source-role, privacy, rights, aggregation, cross-domain, workflow, correction, withdrawal, and rollback controls.",
+    "Added validation, review/separation-of-duties, evidence ledger, maintenance, definition-of-done, and open-verification sections."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not Agriculture evidence, policy approval, steward approval, release approval, publication authority, a ReleaseManifest, a PromotionDecision, a rollback record, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "b483ee9f91a3ae3c0f77cbaa9729e55b552fb696"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}
