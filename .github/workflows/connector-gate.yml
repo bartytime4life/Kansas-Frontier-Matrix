@@ -1,20 +1,103 @@
-# KFM CI workflow stub: connector-gate
-# Status: PROPOSED greenfield scaffold.
+# KFM CI workflow: connector-gate
+# Status: PARTIAL enforcement. The connector non-publisher boundary is executable;
+# ingest-receipt presence remains a visible readiness hold until a repository-owned
+# validator and deterministic fixtures are verified.
+#
+# Authority boundary:
+# - This workflow may test repository code and report CI evidence.
+# - It does not admit sources, authorize acquisition, promote lifecycle artifacts,
+#   approve policy, release data, publish outputs, or create authoritative receipts.
+# - Connectors and pipelines remain upstream producers; they must not write directly
+#   to catalog, published, or release authority surfaces.
+
 name: connector-gate
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: connector-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
 
 jobs:
   connector-output-gate:
+    name: connector-output-gate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO connector-output-gate'
+      - name: Check out tested revision
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependency
+        run: python -m pip install -e ".[test]"
+
+      - name: Enforce connector and pipeline non-publisher boundary
+        run: >-
+          python -m pytest
+          tests/policy/test_pipeline_connector_non_publisher.py
+          -q
+          --strict-config
+          --strict-markers
+
+      - name: Record connector-output gate boundary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## connector-output-gate"
+            echo
+            echo "- Executed: tests/policy/test_pipeline_connector_non_publisher.py"
+            echo "- Scope: static write-context checks for connectors/ and pipelines/."
+            echo "- Forbidden targets checked by the test: data/catalog, data/published, and release/."
+            echo "- A pass does not prove connector correctness, source rights, sensitivity handling, receipt completeness, promotion readiness, release approval, or publication safety."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   ingest-receipt-presence:
+    name: ingest-receipt-presence
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO ingest-receipt-presence'
+      - name: Report ingest-receipt validator readiness hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::warning title=WORKFLOW_HOLD::No repository-owned ingest-receipt presence validator and deterministic connector fixtures were verified. This job does not validate receipt presence."
+          {
+            echo "## ingest-receipt-presence — WORKFLOW_HOLD"
+            echo
+            echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT"
+            echo "- Ingest-receipt presence was not validated."
+            echo "- No source was fetched, admitted, promoted, released, or published."
+            echo "- No authoritative receipt, proof, review, correction, or rollback object was produced."
+            echo
+            echo "### Graduation requirements"
+            echo
+            echo "1. A repository-owned validator with a stable command."
+            echo "2. Deterministic positive and negative connector fixtures."
+            echo "3. Checks binding connector runs to the required receipt schema and source-head identity."
+            echo "4. Fail-closed cases for missing, malformed, mismatched, stale, or unauthorized receipts."
+            echo "5. No live source-system dependency in pull-request CI."
+            echo "6. Verified ownership, review, rollback, and required-check compatibility."
+          } >> "$GITHUB_STEP_SUMMARY"
