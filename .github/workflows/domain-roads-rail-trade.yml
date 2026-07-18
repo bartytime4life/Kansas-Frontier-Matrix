@@ -59,6 +59,7 @@ jobs:
             "fixtures/domains/roads-rail-trade/README.md"
             "policy/domains/roads-rail-trade/README.md"
             "tests/domains/roads-rail-trade/README.md"
+            "tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py"
             "tools/validators/domains/roads-rail-trade/README.md"
             "tools/validators/crossings/README.md"
             "tools/validators/bridge_river_crossing/README.md"
@@ -79,25 +80,43 @@ jobs:
           from pathlib import Path
 
           test_root = Path("tests/domains/roads-rail-trade")
-          collected = []
+          expected_placeholder = test_root / "test_roads_rail_trade_smoke.py"
+          placeholder_confirmed = False
+          substantive_tests = []
 
           for path in sorted(test_root.rglob("test_*.py")):
               tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
               for node in ast.walk(tree):
                   if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
+                      trivial = (
+                          path == expected_placeholder
+                          and node.name == "test_placeholder"
+                          and len(node.body) == 1
+                          and isinstance(node.body[0], ast.Assert)
+                          and isinstance(node.body[0].test, ast.Constant)
+                          and node.body[0].test.value is True
+                      )
+                      if trivial:
+                          placeholder_confirmed = True
+                      else:
+                          substantive_tests.append(f"{path}:{node.name}")
                   elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
                       if any(
                           isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
                           and child.name.startswith("test_")
                           for child in node.body
                       ):
-                          collected.append(f"{path}:{node.name}")
+                          substantive_tests.append(f"{path}:{node.name}")
 
-          if collected:
+          if not placeholder_confirmed:
               raise SystemExit(
-                  "Executable Roads/Rail/Trade tests surfaced. Graduate the domain "
-                  "job to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+                  "The known Roads/Rail/Trade assert-True smoke scaffold changed. "
+                  "Review and wire the intended test behavior deliberately."
+              )
+          if substantive_tests:
+              raise SystemExit(
+                  "Substantive Roads/Rail/Trade tests surfaced. Graduate this job "
+                  "to the accepted deterministic no-network suite:\n" + "\n".join(substantive_tests)
               )
 
           schema_root = Path("schemas/contracts/v1/domains/roads-rail-trade")
@@ -139,15 +158,6 @@ jobs:
               if not isinstance(notes, list) or not any("Placeholder" in str(note) for note in notes):
                   raise SystemExit(f"Fixture is no longer an explicit placeholder: {path}")
 
-          print(f"Parsed {len(schemas)} PROPOSED Roads/Rail/Trade schemas.")
-          print(f"Parsed {len(fixtures)} PROPOSED placeholder fixtures.")
-          print("No collected Roads/Rail/Trade test functions or classes were found.")
-          PY
-
-          python - <<'PY'
-          import ast
-          from pathlib import Path
-
           validator_roots = (
               Path("tools/validators/domains/roads-rail-trade"),
               Path("tools/validators/crossings"),
@@ -165,7 +175,6 @@ jobs:
                       continue
                   if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
                       continue
-
                   suffix = path.suffix.lower()
                   text = path.read_text(encoding="utf-8", errors="replace")
                   if suffix == ".py":
@@ -200,6 +209,9 @@ jobs:
                   "semantics before wiring CI:\n" + "\n".join(executable)
               )
 
+          print("Confirmed the known assert-True smoke scaffold and no substantive domain tests.")
+          print(f"Parsed {len(schemas)} PROPOSED Roads/Rail/Trade schemas.")
+          print(f"Parsed {len(fixtures)} PROPOSED placeholder fixtures.")
           print("No accepted executable body was detected in inspected transport validator lanes.")
           PY
 
@@ -227,9 +239,10 @@ jobs:
 
           `WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established`
 
-          This job verifies required responsibility boundaries, parses the current
-          PROPOSED JSON Schemas and placeholder fixtures, and detects newly
-          executable tests or validator bodies.
+          This job verifies required responsibility boundaries, recognizes the
+          known assert-True smoke scaffold, parses current PROPOSED JSON Schemas
+          and placeholder fixtures, and detects substantive tests or validator
+          bodies that require deliberate graduation.
 
           It does not establish route, segment, crossing, facility, operator,
           restriction, legal-access, live-closure, bridge-condition, rail-status,
