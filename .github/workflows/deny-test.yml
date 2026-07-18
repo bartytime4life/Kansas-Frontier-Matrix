@@ -1,25 +1,131 @@
-# KFM CI workflow stub: deny-test
-# Status: PROPOSED greenfield scaffold.
+# KFM governed deny-path verification.
+#
+# This workflow executes narrow repository-owned denial and boundary tests.
+# A green run proves only that the named checks passed for the checked revision.
+# It does not prove complete policy coverage, authorize publication, or replace
+# runtime authorization, evidence, sensitivity, rights, and human review gates.
 name: deny-test
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deny-test-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  TZ: UTC
+  PYTHONPATH: apps/governed-api/src
 
 jobs:
   public-boundary-deny:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO public-boundary-deny'
+      - name: Check out tested revision
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Verify public route rejection behavior
+        run: >-
+          python -m pytest -q --strict-config --strict-markers
+          apps/governed-api/tests/test_boundary_guards.py::test_unknown_route_returns_404
+          apps/governed-api/tests/test_boundary_guards.py::test_non_get_methods_rejected_for_scaffolded_routes
+          apps/governed-api/tests/test_boundary_guards.py::test_api_surface_manifest
+
+      - name: Record public-boundary scope
+        if: always()
+        run: |
+          {
+            echo "## public-boundary-deny"
+            echo
+            echo "Checks unknown-route rejection, method rejection, and the current API surface manifest."
+            echo "It does not prove authentication, authorization, policy, sensitivity, or publication safety for every route."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   raw-leak-deny:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO raw-leak-deny'
+      - name: Check out tested revision
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Verify governed API avoids internal-store literals
+        run: >-
+          python -m pytest -q --strict-config --strict-markers
+          apps/governed-api/tests/test_boundary_guards.py::test_no_internal_data_store_path_literals_in_api_code
+
+      - name: Record raw-leak scope
+        if: always()
+        run: |
+          {
+            echo "## raw-leak-deny"
+            echo
+            echo "Checks the governed API source for the repository's forbidden internal-store path literals."
+            echo "It does not inspect runtime payloads, generated artifacts, logs, caches, databases, or external services."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   model-runtime-deny:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO model-runtime-deny'
+      - name: Check out tested revision
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Verify forbidden runtime imports remain absent
+        run: >-
+          python -m pytest -q --strict-config --strict-markers
+          apps/governed-api/tests/test_boundary_guards.py::test_forbidden_runtime_imports_absent
+
+      - name: Record model-runtime scope
+        if: always()
+        run: |
+          {
+            echo "## model-runtime-deny"
+            echo
+            echo "Checks governed API Python source for direct MapLibre, Cesium, and Ollama import prefixes."
+            echo "It does not prove complete dependency isolation, subprocess isolation, network denial, or model policy enforcement."
+          } >> "$GITHUB_STEP_SUMMARY"
