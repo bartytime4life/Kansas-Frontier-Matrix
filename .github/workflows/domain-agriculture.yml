@@ -1,25 +1,253 @@
-# KFM CI workflow stub: domain-agriculture
-# Status: PROPOSED greenfield scaffold.
+# KFM Agriculture domain CI readiness workflow.
+# Status: PROPOSED explicit holds; executable Agriculture validation, proof, and
+# release-dry-run producers are not established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow inspects repository state and reports whether Agriculture CI
+#   lanes are ready to graduate from documentation-backed scaffolds.
+# - It does not validate Agriculture truth, build an EvidenceBundle or ProofPack,
+#   admit sources, apply policy, promote lifecycle artifacts, approve release,
+#   write published data, deploy, or publish.
 name: domain-agriculture
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-agriculture-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
 
 jobs:
   validate-agriculture:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-agriculture'
+      - name: Check out Agriculture boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Agriculture validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/agriculture/DOMAIN.md"
+            "contracts/domains/agriculture/README.md"
+            "schemas/contracts/v1/domains/agriculture/README.md"
+            "fixtures/domains/agriculture/README.md"
+            "policy/domains/agriculture/README.md"
+            "tests/domains/agriculture/README.md"
+            "tools/validators/agriculture/README.md"
+            "release/agriculture/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Agriculture boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          placeholder="tests/domains/agriculture/test_nass_aggregate_only.py"
+          if [[ ! -f "$placeholder" ]]; then
+            echo "::error::Expected documented Agriculture placeholder is missing: $placeholder"
+            exit 1
+          fi
+
+          if ! grep -Fq "PROPOSED placeholder" "$placeholder"; then
+            echo "::error::The Agriculture placeholder changed. Replace this readiness hold with the accepted executable test lane."
+            exit 1
+          fi
+
+          implemented_test="$(find tests/domains/agriculture -type f -name 'test_*.py' ! -path "$placeholder" -print -quit)"
+          if [[ -n "$implemented_test" ]]; then
+            echo "::error::Executable Agriculture test surfaced at $implemented_test. Graduate validate-agriculture to the accepted deterministic suite."
+            exit 1
+          fi
+
+          validator_file="$(find tools/validators/agriculture -type f ! -name 'README.md' -print -quit)"
+          if [[ -n "$validator_file" ]]; then
+            echo "::error::Agriculture validator implementation surfaced at $validator_file. Resolve validator topology and wire the accepted command."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-agriculture"
+          echo "WORKFLOW_HOLD: Agriculture executable validation is not established"
+
+      - name: Record Agriculture validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Agriculture validation status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: Agriculture executable validation is not established`
+
+          Current repository evidence is documentation-heavy: the inspected
+          Agriculture test lane contains a placeholder rather than a collected
+          pytest test, and the direct Agriculture validator lane is README-only.
+
+          This result confirms only that the known boundaries still match that
+          maturity posture. It does not validate Agriculture contracts, schemas,
+          source roles, rights, sensitivity, evidence, policy, lifecycle state,
+          cross-domain joins, public aggregation, or release readiness.
+          EOF
+
   build-proof-agriculture:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-agriculture'
+      - name: Check out Agriculture proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Agriculture proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/README.md"
+            "release/agriculture/README.md"
+            "release/candidates/agriculture/county_year_panel_v0/README.md"
+            "tests/domains/agriculture/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Agriculture proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "BLOCKED_FOR_EVIDENCE_AND_VALIDATION" "release/agriculture/README.md"; then
+            echo "::error::The documented Agriculture candidate posture changed. Review proof and release gates before accepting this workflow."
+            exit 1
+          fi
+
+          if ! grep -Fq 'Candidate status:** `PROPOSED`' "release/candidates/agriculture/county_year_panel_v0/README.md"; then
+            echo "::error::The Agriculture candidate is no longer documented as PROPOSED. Replace this hold with the governed proof path before proceeding."
+            exit 1
+          fi
+
+          if grep -Eq '^(agriculture-proof|proof-agriculture):' Makefile; then
+            echo "::error::An Agriculture proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find . -path './.git' -prune -o -type f \( -iname '*agriculture*proof*.py' -o -iname '*proof*agriculture*.py' -o -iname '*agriculture*proof*.mjs' -o -iname '*proof*agriculture*.mjs' \) -print -quit)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Agriculture proof implementation surfaced at $proof_implementation. Establish its contract, tests, receipts, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-agriculture"
+          echo "WORKFLOW_HOLD: no accepted Agriculture proof producer or deterministic proof command"
+
+      - name: Record Agriculture proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Agriculture proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Agriculture proof producer or deterministic proof command`
+
+          The inspected county-year candidate remains proposed and blocked for
+          evidence and validation. No accepted Agriculture proof builder,
+          deterministic fixture-backed command, EvidenceRef-to-EvidenceBundle
+          closure, proof manifest, or rollback-tested proof path is established.
+
+          A green held result is readiness evidence only. It is not a ProofPack,
+          EvidenceBundle, validation receipt, promotion decision, release
+          approval, scientific endorsement, or publication authority.
+          EOF
+
   publish-dry-run-agriculture:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-agriculture'
+      - name: Check out Agriculture release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Agriculture release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/agriculture/README.md"
+            "release/candidates/agriculture/county_year_panel_v0/README.md"
+            "data/published/agriculture/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Agriculture release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "BLOCKED_FOR_EVIDENCE_AND_VALIDATION" "release/agriculture/README.md"; then
+            echo "::error::The documented Agriculture release posture changed. Re-evaluate candidate, manifest, policy, evidence, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          if ! grep -Fq "No concrete Agriculture release approval" "release/agriculture/README.md"; then
+            echo "::error::Concrete Agriculture release evidence may now exist. Replace this hold with an independently reviewed dry-run implementation."
+            exit 1
+          fi
+
+          if grep -Eq '^(agriculture-release-dry-run|release-dry-run-agriculture):' Makefile; then
+            echo "::error::An Agriculture release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-agriculture"
+          echo "WORKFLOW_HOLD: no accepted Agriculture release dry-run command or manifest assembly contract"
+
+      - name: Record Agriculture release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Agriculture release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Agriculture release dry-run command or manifest assembly contract`
+
+          This lane performs no release, promotion, publication, deployment,
+          manifest generation, source access, network acquisition, or write to
+          processed, catalog, proof, receipt, release, or published stores.
+
+          Graduate it only after an accepted candidate identity, immutable
+          artifact pointer, evidence closure, rights and sensitivity review,
+          policy result, validation receipts, release manifest contract,
+          separation of duties, correction path, and rollback target exist.
+
+          A green held result does not mean Agriculture data is safe, approved,
+          released, published, or suitable for operational or agronomic use.
+          EOF
