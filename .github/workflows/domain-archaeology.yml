@@ -1,25 +1,286 @@
-# KFM CI workflow stub: domain-archaeology
-# Status: PROPOSED greenfield scaffold.
+# KFM Archaeology domain CI readiness workflow.
+# Status: PROPOSED explicit holds; executable Archaeology validation, proof, and
+# release-dry-run producers are not established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow inspects repository maturity without opening protected
+#   Archaeology payloads or exposing exact or reverse-engineerable locations.
+# - It does not validate Archaeology truth, resolve cultural or sovereignty
+#   authority, build an EvidenceBundle or ProofPack, admit sources, apply policy,
+#   promote lifecycle artifacts, approve release, write published data, or publish.
 name: domain-archaeology
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-archaeology-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-archaeology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-archaeology'
+      - name: Check out Archaeology boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Archaeology validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/archaeology/README.md"
+            "docs/domains/archaeology/SENSITIVITY.md"
+            "docs/domains/archaeology/CULTURAL_REVIEW.md"
+            "contracts/domains/archaeology/README.md"
+            "schemas/contracts/v1/domains/archaeology/README.md"
+            "fixtures/domains/archaeology/README.md"
+            "policy/domains/archaeology/README.md"
+            "tests/domains/archaeology/README.md"
+            "tools/validators/archaeology/README.md"
+            "tools/validators/domains/archaeology/README.md"
+            "release/candidates/archaeology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Archaeology boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          root = Path("tests/domains/archaeology")
+          modules = sorted(root.glob("test_*.py"))
+          if not modules:
+              raise SystemExit("No direct Archaeology test modules were found.")
+
+          executable_nodes = 0
+          for module in modules:
+              tree = ast.parse(module.read_text(encoding="utf-8"), filename=str(module))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      executable_nodes += 1
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      executable_nodes += 1
+
+          if executable_nodes:
+              raise SystemExit(
+                  "Executable Archaeology tests now exist. Graduate validate-archaeology "
+                  "to the accepted deterministic, no-network suite before accepting this change."
+              )
+
+          print(f"Confirmed placeholder-only direct test topology across {len(modules)} module(s).")
+          PY
+
+          broad_validator="$(find tools/validators/archaeology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          child_validator="$(find tools/validators/domains/archaeology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$broad_validator" || -n "$child_validator" ]]; then
+            echo "::error::An Archaeology validator implementation surfaced. Resolve validator ownership and wire the accepted command."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-archaeology"
+          echo "WORKFLOW_HOLD: executable Archaeology validation is not established"
+
+      - name: Record Archaeology validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Archaeology validation status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: executable Archaeology validation is not established`
+
+          Current repository evidence contains named test modules, but sampled and
+          collected topology remains placeholder-backed, and both Archaeology
+          validator lanes are README-only.
+
+          This lane inspects structure only. It does not read protected payloads,
+          validate site identity, expose geometry, resolve rights or cultural
+          authority, apply sensitivity policy, establish evidence closure, or
+          prove public-surface safety.
+          EOF
+
   build-proof-archaeology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-archaeology'
+      - name: Check out Archaeology proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Archaeology proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/archaeology/README.md"
+            "docs/domains/archaeology/RELEASE_INDEX.md"
+            "docs/domains/archaeology/CULTURAL_REVIEW.md"
+            "release/candidates/archaeology/README.md"
+            "tests/domains/archaeology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Archaeology proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "PROPOSED until concrete proof schemas" "data/proofs/archaeology/README.md"; then
+            echo "::error::The Archaeology proof maturity statement changed. Review proof schemas, validators, fixtures, and route behavior."
+            exit 1
+          fi
+
+          if grep -Eq '^(archaeology-proof|proof-archaeology):' Makefile; then
+            echo "::error::An Archaeology proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_payload="$(find data/proofs/archaeology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_payload" ]]; then
+            echo "::error::An Archaeology proof artifact surfaced. Establish access, schema, evidence, sensitivity, review, receipt, and rollback contracts before CI adoption."
+            exit 1
+          fi
+
+          proof_implementation="$(
+            find tools scripts pipelines packages -type f \
+              \( -iname '*archaeology*proof*.py' -o -iname '*proof*archaeology*.py' \
+                 -o -iname '*archaeology*proof*.mjs' -o -iname '*proof*archaeology*.mjs' \) \
+              -print -quit 2>/dev/null || true
+          )"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::A potential Archaeology proof producer surfaced. Establish its governed contract and tests before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-archaeology"
+          echo "WORKFLOW_HOLD: no accepted Archaeology proof producer or deterministic proof command"
+
+      - name: Record Archaeology proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Archaeology proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Archaeology proof producer or deterministic proof command`
+
+          The Archaeology proof lane remains a draft guide. No concrete proof
+          schema, validator, fixture-backed producer, EvidenceRef-to-EvidenceBundle
+          closure, proof manifest, access contract, or rollback-tested command is
+          established.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, cultural-review decision, policy decision,
+          validation receipt, release approval, or publication authority.
+          EOF
+
   publish-dry-run-archaeology:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-archaeology'
+      - name: Check out Archaeology release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Archaeology release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/archaeology/README.md"
+            "docs/domains/archaeology/RELEASE_INDEX.md"
+            "data/published/archaeology/README.md"
+            "policy/domains/archaeology/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Archaeology release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "publication-not_yet" "release/candidates/archaeology/README.md"; then
+            echo "::error::The Archaeology candidate publication posture changed. Re-evaluate evidence, rights, sensitivity, review, and release gates."
+            exit 1
+          fi
+
+          if ! grep -Fq "rows are placeholders until release plane is inspected" "docs/domains/archaeology/RELEASE_INDEX.md"; then
+            echo "::error::The Archaeology release index maturity changed. Replace this hold with independently reviewed release-plane validation."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/archaeology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::An Archaeology candidate dossier surfaced. Establish the governed dry-run, review, correction, and rollback path before accepting this workflow."
+            exit 1
+          fi
+
+          if grep -Eq '^(archaeology-release-dry-run|release-dry-run-archaeology):' Makefile; then
+            echo "::error::An Archaeology release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-archaeology"
+          echo "WORKFLOW_HOLD: no accepted Archaeology release dry-run command or reviewed candidate dossier"
+
+      - name: Record Archaeology release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Archaeology release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Archaeology release dry-run command or reviewed candidate dossier`
+
+          This lane performs no release, promotion, manifest generation, source
+          access, network acquisition, proof construction, deployment, or write to
+          processed, catalog, proof, receipt, release, or published stores.
+
+          Archaeology is deny-by-default for exact site geometry, human remains,
+          sacred or culturally restricted material, collection-security detail,
+          looting-risk information, and reverse-engineerable derivatives.
+
+          A green held result does not mean Archaeology material is validated,
+          culturally approved, rights-cleared, safe, released, or published.
+          EOF
