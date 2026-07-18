@@ -1,476 +1,530 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/pipeline-specs-readme
-title: Pipeline Specs Root README
-type: readme
-version: v0.2
-status: draft
+title: pipeline_specs/ — Governed Declarative Pipeline Specification Root
+type: readme; directory-readme; declarative-pipeline-spec-root; compatibility-and-activation-boundary
+version: v0.3
+status: draft; repository-grounded; placeholder-heavy; mixed-lane-maturity; no-active-root-spec-system-established
 owners:
-  - <pipeline-spec-steward>
-  - <pipeline-owner>
-  - <domain-stewards>
-  - <source-steward>
-  - <evidence-steward>
-  - <policy-steward>
-  - <release-steward>
-  - <docs-steward>
+  - OWNER_TBD — Pipeline-spec steward
+  - OWNER_TBD — Pipeline owner
+  - OWNER_TBD — Domain stewards
+  - OWNER_TBD — Source and rights steward
+  - OWNER_TBD — Contract and schema steward
+  - OWNER_TBD — Validation and CI steward
+  - OWNER_TBD — Evidence and receipt steward
+  - OWNER_TBD — Policy and sensitivity steward
+  - OWNER_TBD — Release steward
+  - OWNER_TBD — Security reviewer
+  - OWNER_TBD — Docs steward
 created: 2026-06-13
-updated: 2026-06-13
-policy_label: public
-path: pipeline_specs/README.md
+updated: 2026-07-18
+supersedes: v0.2
+policy_label: public-doc; pipeline-specs; declarative-only; no-secrets; no-live-activation; no-direct-fetch; no-direct-admission; no-direct-lifecycle-write; no-direct-release; source-role-aware; rights-aware; sensitivity-aware; evidence-bound; policy-gated; review-gated; correction-aware; rollback-aware
+current_path: pipeline_specs/README.md
+truth_posture: CONFIRMED target README, declarative pipeline_specs responsibility root, executable pipelines companion root, pipelines/specs compatibility guardrail, bounded seventeen direct child README lanes, representative empty-stage YAML scaffolds, representative short PROPOSED documentation-inventory placeholders, README-only compatibility aliases, checked absence of root AGENTS.md and pipeline_specs/AGENTS.md, checked absence of tests/pipeline_specs/README.md and fixtures/pipeline_specs/README.md, tests/pipelines repository-grounded boundary, CODEOWNERS routing, and no open PR targeting this README / PROPOSED accepted pipeline-spec schema, deterministic canonicalization and hashing, parser and consumer registry, activation state model, source binding, lifecycle grammar, finite outcomes, reason-code vocabulary, no-network fixtures, spec-to-consumer tests, receipt bindings, correction propagation, and rollback / CONFLICTED air versus atmosphere, people versus people-dna-land, settlement versus settlements-infrastructure, shared versus domain watcher placement, historical pipeline_specs/domains references, child README inventory freshness, and pipeline_specs versus pipelines/specs compatibility semantics / UNKNOWN exhaustive recursive inventory, active specifications, parser discovery, consumers, scheduler, source activation, runtime execution, emitted receipts, substantive spec CI, promotion dependency, branch protection, production use, and public effects / NEEDS VERIFICATION named owners, accepted Directory Rules copy, schema and ID vocabularies, alias and migration decisions, source-registry topology, rights and sensitivity policy, fixtures and tests, correction behavior, and rollback execution
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 527ac01444c23046f0406dbb9e4cf5b2a74cd4cc
+  target_prior_blob: 3a6599898606126604298a281de53e39fdba98ce
+  bounded_direct_child_readmes: 17
+  bounded_nested_readmes: 5
+  checked_absent_paths:
+    - AGENTS.md
+    - pipeline_specs/AGENTS.md
+    - tests/pipeline_specs/README.md
+    - fixtures/pipeline_specs/README.md
+  inventory_method: GitHub connector exact reads and bounded code-index queries; counts and absence claims are not full-history or all-branch assertions
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/truth-posture.md
-  - docs/architecture/release-discipline.md
-  - pipelines/README.md
-  - pipelines/ingest/README.md
-  - pipelines/normalize/README.md
-  - pipelines/validate/README.md
-  - pipelines/catalog/README.md
-  - pipelines/triplets/README.md
-  - pipelines/publish/README.md
-  - pipelines/rollback/README.md
-  - pipelines/watchers/README.md
-  - pipelines/domains/README.md
-  - data/registry/sources/
-  - data/receipts/pipeline/
-  - data/proofs/evidence_bundle/
-  - tests/pipeline_specs/
-  - fixtures/pipeline_specs/
-tags: [kfm, pipeline-specs, declarative-config, pipeline-profiles, lifecycle, evidence, receipts, release-gates, governance]
+  - ../CONTRIBUTING.md
+  - ../SECURITY.md
+  - ../docs/architecture/directory-rules.md
+  - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../docs/adr/ADR-0017-source-descriptor-admission-process.md
+  - ../docs/registers/DRIFT_REGISTER.md
+  - ../pipelines/README.md
+  - ../pipelines/specs/README.md
+  - ../tests/pipelines/README.md
+  - agriculture/README.md
+  - air/README.md
+  - archaeology/README.md
+  - atmosphere/README.md
+  - fauna/README.md
+  - flora/README.md
+  - geology/README.md
+  - habitat/README.md
+  - hazards/README.md
+  - hydrology/README.md
+  - people-dna-land/README.md
+  - people/README.md
+  - roads-rail-trade/README.md
+  - settlement/README.md
+  - settlements-infrastructure/README.md
+  - soil/README.md
+  - watchers/README.md
+  - ../data/receipts/generated/README.md
+  - ../schemas/contracts/v1/receipts/generated_receipt.schema.json
+  - ../.github/workflows/README.md
+  - ../.github/CODEOWNERS
+  - ../.github/PULL_REQUEST_TEMPLATE.md
 notes:
-  - "This README upgrades the previous short pipeline_specs root stub into a governed root contract."
-  - "pipeline_specs/ is declarative pipeline configuration — the what. pipelines/ is executable logic — the how."
-  - "Specs configure intent, source scope, lifecycle gates, policy/evidence/review requirements, receipt expectations, fixtures, and release-readiness checks. They do not execute pipeline logic or store lifecycle outputs."
-  - "Specs are not source admission, RAW capture, validation pass, EvidenceBundle closure, catalog truth, public truth, release approval, or UI/API authority."
-  - "Concrete schema validation, CI coverage, source activation, and run behavior remain NEEDS VERIFICATION until implemented and tested."
+  - "v0.3 replaces the planning-oriented root tree with a commit-pinned maturity and routing boundary."
+  - "Representative YAML payloads are either empty-stage scaffolds or short PROPOSED inventory placeholders."
+  - "A file, parse result, merge, schedule string, or workflow conclusion activates nothing without accepted schema, parser, consumer, source decision, fixtures, tests, and review state."
+  - "This documentation-only revision changes no pipeline-spec YAML, executable behavior, source activation, policy, schema, test, workflow, lifecycle record, release object, runtime, or public artifact."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Pipeline Specs
+# `pipeline_specs/` — Governed Declarative Pipeline Specification Root
 
-> Canonical declarative configuration root for KFM pipeline profiles: source scopes, schedules, lifecycle gates, source-role boundaries, evidence requirements, fixtures, receipt expectations, policy/review blockers, release-readiness checks, and rollback/correction posture — separate from executable pipeline logic.
+> Declarative boundary for stating **what** a KFM pipeline may attempt, against which admitted sources, through which lifecycle and governance gates, with which deterministic outcomes, receipts, correction obligations, and rollback targets—without becoming executable code, source authority, lifecycle data, evidence, policy, release approval, or a public serving surface.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![root](https://img.shields.io/badge/root-pipeline__specs%2F-0a7ea4)
-![authority](https://img.shields.io/badge/authority-declarative%20config-0a7ea4)
-![implementation](https://img.shields.io/badge/implementation-pipelines%2F-d62728)
-![release](https://img.shields.io/badge/release-governed-d62728)
+![status](https://img.shields.io/badge/status-repository--grounded%20draft-yellow)
+![lanes](https://img.shields.io/badge/direct__README__lanes-17-informational)
+![maturity](https://img.shields.io/badge/payload__maturity-placeholder--heavy-orange)
+![activation](https://img.shields.io/badge/active__spec__system-not__established-critical)
+![publication](https://img.shields.io/badge/publication-DENIED-red)
 
-**Status:** Draft  
-**Path:** `pipeline_specs/README.md`  
-**Responsibility root:** `pipeline_specs/` — declarative pipeline configuration, the **what**  
-**Companion root:** `pipelines/` — executable pipeline logic, the **how**  
-**Data root:** `data/` — lifecycle state, source registries, receipts, proofs, catalog/triplets, and published artifacts  
-**Release root:** `release/` — release decisions, manifests, correction notices, and rollback cards  
-**Truth posture:** spec existence does not prove implementation, activation, runtime behavior, validation, publication, or release maturity.
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Root authority](#2-root-authority)
-- [3. What a spec may configure](#3-what-a-spec-may-configure)
-- [4. Anti-collapse rules](#4-anti-collapse-rules)
-- [5. What belongs here](#5-what-belongs-here)
-- [6. What does not belong here](#6-what-does-not-belong-here)
-- [7. Lifecycle posture](#7-lifecycle-posture)
-- [8. Required gates](#8-required-gates)
-- [9. Directory contract](#9-directory-contract)
-- [10. Domain and shared spec lanes](#10-domain-and-shared-spec-lanes)
-- [11. Inputs and outputs](#11-inputs-and-outputs)
-- [12. Minimal pipeline spec profile shape](#12-minimal-pipeline-spec-profile-shape)
-- [13. Tests, fixtures, and validation](#13-tests-fixtures-and-validation)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open questions](#15-open-questions)
-
----
-
-## 1. Purpose
-
-`pipeline_specs/` owns declarative configuration for KFM pipelines.
-
-A pipeline spec may define:
-
-- profile identity, version, owner, status, and target lane;
-- source descriptor references and source roles;
-- schedule, cadence, freshness, and source-vintage expectations;
-- lifecycle input and output states;
-- policy, rights, sensitivity, review, and public-safe representation gates;
-- EvidenceBundle and EvidenceRef requirements;
-- receipt requirements;
-- fixture expectations;
-- dry-run behavior;
-- release-readiness checks;
-- rollback and correction posture.
-
-A pipeline spec does **not** implement the pipeline. Executable behavior belongs under `pipelines/`.
-
-Short rule:
-
-```text
-pipeline_specs/  = declarative pipeline configuration, the WHAT
-pipelines/       = executable pipeline logic, the HOW
-data/            = lifecycle state, source registries, receipts, proofs, catalog/triplets, and artifacts
-release/         = release decisions, release manifests, correction notices, and rollback control
-```
-
-[⬆ Back to top](#top)
-
----
-
-## 2. Root authority
-
-| Question | Answer | Status |
-|---|---|---|
-| What does `pipeline_specs/` own? | Declarative profiles, scopes, schedules, source refs, gates, receipt expectations, and run contracts. | CONFIRMED root contract |
-| What does `pipelines/` own? | Executable pipeline logic. | CONFIRMED companion-root contract |
-| Does `pipeline_specs/` own source connectors? | No. Source access and connector logic belongs under `connectors/` or accepted connector homes. | CONFIRMED separation |
-| Does `pipeline_specs/` own lifecycle data? | No. Lifecycle outputs belong under `data/`. | CONFIRMED lifecycle posture |
-| Does `pipeline_specs/` own schemas, contracts, or policy? | No. These live under their responsibility roots. | CONFIRMED authority separation |
-| Does `pipeline_specs/` approve release? | No. Release decisions and manifests belong under `release/`. | CONFIRMED release separation |
-| Can public clients use specs directly? | No. Public clients use governed APIs and released artifacts. | CONFIRMED trust-membrane posture |
+**Path:** `pipeline_specs/README.md`
+**Version:** `v0.3`
+**Owning root:** `pipeline_specs/` — declarative configuration, the **what**
+**Executable companion:** [`pipelines/`](../pipelines/README.md) — implementation, the **how**
+**Compatibility guardrail:** [`pipelines/specs/`](../pipelines/specs/README.md) — not an alternate authoritative spec root
+**Evidence snapshot:** `main@527ac01444c23046f0406dbb9e4cf5b2a74cd4cc`
 
 > [!IMPORTANT]
-> A spec can require a gate; it cannot satisfy that gate merely by existing. Validation, evidence, review, receipts, release, correction, and rollback must remain separately auditable.
+> Bounded inspection found many files but did not establish an accepted root schema, active parser, consumer registry, scheduler, source-activation binding, dedicated spec-test suite, or substantive root CI gate. File presence is evidence of repository state—not activation, implementation, or release proof.
 
-[⬆ Back to top](#top)
+> [!CAUTION]
+> Two placeholder shapes recur: empty-stage scaffolds with `stages: []`, and short `status: PROPOSED` files created from documentation inventories. Neither is an active specification.
 
----
+> [!WARNING]
+> Never place credentials, private endpoints, restricted payloads, exact sensitive locations, living-person or DNA data, owner-resolved private-land joins, infrastructure vulnerability detail, or reconstructive cultural/ecological information in specs, examples, logs, receipts, issues, or pull requests.
 
-## 3. What a spec may configure
+## Quick navigation
 
-Pipeline specs may declare:
-
-- target executable lane;
-- source descriptor refs;
-- admitted source family and source role expectations;
-- lifecycle stage inputs and outputs;
-- cadence, issue time, valid time, source vintage, and stale-source behavior;
-- data-quality, geometry, topology, class-map, temporal, or support-type checks;
-- domain-specific anti-collapse gates;
-- sensitivity and rights gates;
-- review requirements;
-- expected outputs and their responsibility roots;
-- required receipts and proof refs;
-- release-readiness and rollback-readiness criteria;
-- no-op behavior when no material change exists;
-- quarantine routing when unresolved risk exists.
-
-Specs should be deterministic, reviewable, fixture-testable, and reversible. They should avoid hidden defaults for risk-bearing behavior.
-
-[⬆ Back to top](#top)
+[Purpose](#purpose) · [Authority](#authority-boundary) · [Current state](#current-state) · [Inventory](#bounded-root-inventory) · [Payloads](#payload-taxonomy) · [Lanes](#direct-lane-registry) · [Conflicts](#compatibility-and-placement-conflicts) · [Contract](#minimum-active-spec-contract) · [Lifecycle](#lifecycle-source-and-release-gates) · [Outcomes](#finite-outcomes) · [Validation](#validation-and-ci) · [Review](#review-versioning-and-migration) · [Rollback](#correction-deactivation-and-rollback) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger)
 
 ---
 
-## 4. Anti-collapse rules
+## Purpose
 
-Disallowed collapses:
+A mature pipeline specification may declare:
+
+- stable identity, semantic version, state, owners, and content digest;
+- the exact parser and executable consumer allowed to interpret it;
+- admitted `SourceDescriptor` references and fixed source roles;
+- cadence, freshness, valid-time, source-vintage, and stale-state behavior;
+- allowed lifecycle inputs and candidate outputs;
+- contract and schema references;
+- domain anti-collapse and cross-lane boundaries;
+- rights, sensitivity, evidence, policy, review, and release prerequisites;
+- deterministic no-network fixtures, replay, idempotency, retry, cancellation, quarantine, and no-op behavior;
+- expected reports, receipts, hashes, correction, supersession, deactivation, and rollback behavior;
+- finite outcomes and stable reason codes.
+
+A spec does not execute itself. Code belongs under [`pipelines/`](../pipelines/README.md), a verified package, or another responsibility-rooted implementation home.
+
+This README does not activate any current YAML, define an accepted schema, create a parser or scheduler, admit a source, prove a claim, approve release, or publish a product.
+
+[Back to top](#top)
+
+---
+
+## Authority boundary
 
 ```text
-pipeline spec -> executable pipeline
-pipeline spec -> source admission
-source list -> source authority
-schedule -> freshness proof
-successful spec validation -> data validation pass
-watcher spec -> RAW capture
-material-change report -> EvidenceBundle
-catalog spec -> catalog truth
-triplet spec -> graph truth
-publish-readiness spec -> ReleaseManifest
-release-ready flag -> release approval
-rollback spec -> rollback execution
-spec summary -> evidence
-public profile -> public publication
+pipeline_specs/  = WHAT may run and under which gates
+pipelines/       = HOW governed execution occurs
+connectors/      = HOW an approved source is accessed or staged
+data/registry/   = WHICH source is admitted, in which role, under which rights
+contracts/       = WHAT objects mean
+schemas/         = WHAT accepted objects look like
+policy/          = WHETHER use or exposure is allowed
+tests/fixtures/  = WHETHER bounded behavior is enforceable
+data/            = WHERE lifecycle records, receipts, proofs, catalogs, and artifacts live
+release/         = WHETHER public state changes
 ```
 
-Required separations:
+| Concern | Correct authority | Spec role |
+|---|---|---|
+| Executable behavior | `pipelines/` | References a verified consumer; never implements it. |
+| Source access | `connectors/` | Declares source refs only after admission. |
+| Source identity/activation | `data/registry/sources/` or accepted control home | Resolves stable IDs; never self-activates. |
+| Meaning and shape | `contracts/`, `schemas/` | References accepted versions. |
+| Admissibility | `policy/` | Requires decisions; never creates permission. |
+| Tests and fixtures | `tests/`, `fixtures/` | Supplies deterministic proof cases. |
+| Lifecycle data | `data/<phase>/` | Declares candidate transitions; stores nothing here. |
+| Receipts/proofs | `data/receipts/`, `data/proofs/` | Requires emitted records; is neither record type. |
+| Release/correction/rollback | `release/` | Declares readiness prerequisites only. |
+| Public delivery | governed apps and released artifacts | Specs are never public truth sources. |
 
-- declarative specs stay in `pipeline_specs/`;
-- executable code stays in `pipelines/`;
-- upstream access logic stays in `connectors/` or accepted connector homes;
-- source descriptors stay in `data/registry/sources/` or accepted registry homes;
-- lifecycle outputs stay in `data/` lifecycle homes;
-- receipts stay in receipt homes;
-- EvidenceBundles stay in proof homes;
-- schemas, contracts, and policy stay in their roots;
-- release decisions stay in `release/`;
-- public clients use governed APIs and released artifacts, not specs directly.
+A spec may require a gate. Naming the gate does not satisfy it.
 
-[⬆ Back to top](#top)
-
----
-
-## 5. What belongs here
-
-Appropriate contents include declarative specs and README contracts for:
-
-- ingest/source-intake profiles;
-- normalization profiles;
-- validation profiles;
-- catalog closure profiles;
-- triplet/graph projection profiles;
-- publish-readiness profiles;
-- rollback-readiness profiles;
-- watcher/source-change profiles;
-- proof or dry-run profiles;
-- domain-specific run profiles;
-- shared profile templates;
-- source-family profile variants;
-- fixture-facing spec examples that do not contain lifecycle data.
-
-A good placement test:
-
-> If the file answers “what should run, against which source descriptors, under which gates, and with which receipts?”, it may belong in `pipeline_specs/`. If it answers “how does the pipeline run?”, it belongs in `pipelines/`.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 6. What does not belong here
+## Current state
 
-| Do not place here | Correct responsibility home |
-|---|---|
-| Executable pipeline code | `pipelines/` |
-| Source access clients/connectors | `connectors/` or accepted connector home |
-| Source descriptors | `data/registry/sources/` or accepted registry home |
-| Runtime output | `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, `data/published` |
-| Receipts emitted by execution | `data/receipts/pipeline/` or accepted receipt home |
-| EvidenceBundles | `data/proofs/evidence_bundle/` |
-| Object meaning | `contracts/` |
-| Machine schemas | `schemas/` |
-| Policy decisions | `policy/` |
-| Release decisions, manifests, corrections, rollback cards | `release/` |
-| Tests | `tests/pipeline_specs/` or accepted test home |
-| Fixtures | `fixtures/pipeline_specs/` or accepted fixture home |
-| Public API/UI code | `apps/governed-api/`, `apps/explorer-web/`, packages |
-| Secrets or credentials | never in repo; use approved secret management |
+### Confirmed
 
-[⬆ Back to top](#top)
+- `pipeline_specs/` is the declarative root and `pipelines/` is the executable companion.
+- `pipelines/specs/` is documented as a compatibility guardrail.
+- Bounded search surfaced seventeen direct child README lanes and five nested README sublanes.
+- Representative YAMLs are empty-stage scaffolds or short documentation-inventory placeholders.
+- `air/`, `people/`, and `settlement/` are compatibility-oriented rather than proven parallel authorities.
+- Checked `tests/pipeline_specs/README.md` and `fixtures/pipeline_specs/README.md` do not exist.
+- [`tests/pipelines/README.md`](../tests/pipelines/README.md) records no dedicated executable pipeline suite at its evidence snapshot.
+- Bounded search did not surface a canonical `pipeline_spec` schema or active YAML source-descriptor binding.
+- CODEOWNERS routes this root to `@bartytime4life`; routing is not approval.
 
----
+### Not established
 
-## 7. Lifecycle posture
+| Capability | Status |
+|---|---:|
+| Accepted pipeline-spec schema | `UNKNOWN` |
+| Canonicalization and digest algorithm | `UNKNOWN` |
+| Parser, discovery, and active-spec registry | `UNKNOWN` |
+| Deterministic consumer binding | `UNKNOWN` |
+| Source activation binding | `NOT ESTABLISHED` |
+| Root fixtures and spec tests | `NOT ESTABLISHED` |
+| Substantive root CI | `NOT ESTABLISHED` |
+| Current active specifications | `NOT ESTABLISHED` |
+| Runtime use, receipts, promotion dependency, production effects | `UNKNOWN` |
 
-Specs may target lifecycle stages, but do not create lifecycle transitions themselves:
-
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
-
-A spec may declare:
-
-- accepted input state;
-- intended output state;
-- quarantine routing;
-- promotion prerequisites;
-- EvidenceBundle requirements;
-- receipt requirements;
-- release blockers;
-- rollback target expectations;
-- correction support.
-
-Only governed pipeline execution and release authority can perform transitions.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 8. Required gates
-
-Every non-trivial pipeline spec should declare or explicitly mark not applicable:
-
-1. **Profile identity gate** — stable `spec_id`, owner, lane, version, and status.
-2. **Implementation gate** — target executable lane under `pipelines/`.
-3. **Source gate** — source descriptor refs and source roles.
-4. **Lifecycle gate** — allowed input and output lifecycle states.
-5. **Evidence gate** — EvidenceRef/EvidenceBundle requirements.
-6. **Receipt gate** — required run, transform, validation, review, policy, source-vintage, release-readiness, or rollback-readiness receipts.
-7. **Policy gate** — rights, sensitivity, admissibility, review, and public-safe representation posture.
-8. **Domain anti-collapse gate** — domain-specific proof boundaries and source-role distinctions.
-9. **Fixture gate** — no-network fixture profile for validation where feasible.
-10. **Release gate** — ReleaseManifest input requirements, correction path, and rollback target where output can publish.
-11. **Failure gate** — fail-closed, quarantine, abstain, or no-op behavior for unresolved risk.
-
-[⬆ Back to top](#top)
-
----
-
-## 9. Directory contract
-
-Recommended root shape:
+## Bounded root inventory
 
 ```text
 pipeline_specs/
-├── README.md
-├── watchers/
 ├── agriculture/
-├── air/
+├── air/                         # compatibility guardrail
 ├── archaeology/
-├── atmosphere/
+├── atmosphere/                  # preferred Atmosphere/Air lane
 ├── fauna/
 ├── flora/
 ├── geology/
 ├── habitat/
 ├── hazards/
 ├── hydrology/
-├── people-dna-land/
-├── people/                         # alias / compatibility lane
+├── people-dna-land/             # governing sensitive-domain lane
+├── people/                      # compatibility alias
 ├── roads-rail-trade/
-├── settlement/                     # alias / compatibility lane
-├── settlements-infrastructure/
-└── soil/
+├── settlement/                  # compatibility alias
+├── settlements-infrastructure/  # governing lane
+├── soil/
+└── watchers/                    # shared intent; placement-sensitive
 ```
 
-Additional domain or shared spec lanes should be added only when they match a responsibility-rooted domain segment, have an implementation target, have source/fixture/test posture, and do not create a parallel authority home.
+Bounded nested READMEs also surfaced under Fauna/Flora watchers, Habitat ecoregions/land-cover, and People/DNA/Land land-ownership.
 
-[⬆ Back to top](#top)
+This is not a recursive manifest. Before activation or migration, generate a pinned recursive tree and compare it with affected READMEs, registries, consumers, workflows, and release dependencies.
 
----
-
-## 10. Domain and shared spec lanes
-
-| Lane | Purpose | Notes |
-|---|---|---|
-| `watchers/` | Shared source-change watcher profiles. | Shared, no source admission. |
-| `agriculture/` | Agriculture run profiles. | Crop/yield/field claims need source-role care. |
-| `air/` | Air-quality-oriented profile alias/lane. | Keep air/atmosphere posture explicit. |
-| `archaeology/` | Archaeology profiles. | Exact locations and cultural sensitivity fail closed. |
-| `atmosphere/` | Weather/climate/atmospheric profiles. | Not life-safety/advisory authority. |
-| `fauna/` | Fauna profiles. | Sensitive species and exact locations fail closed. |
-| `flora/` | Flora profiles. | Sensitive plants and exact locations fail closed. |
-| `geology/` | Geology/resource profiles. | Occurrence, deposit, reserve, permit, production, title, and extraction remain distinct. |
-| `habitat/` | Habitat/context profiles. | Habitat context is not species or plant occurrence truth. |
-| `hazards/` | Hazards profiles. | Not emergency alerting or life-safety instruction. |
-| `hydrology/` | Hydrology profiles. | NFHL/regulatory context is not observed inundation. |
-| `people-dna-land/` | People/Genealogy/DNA/Land profiles. | Living-person/DNA/title/privacy gates are strict. |
-| `people/` | Alias-gated People sublane profiles. | No parallel authority. |
-| `roads-rail-trade/` | Roads/Rail/Trade profiles. | Schemas/contracts use `transport/` segment. |
-| `settlements-infrastructure/` | Settlements/Infrastructure profiles. | Whole-domain lane. |
-| `settlement/` | Alias-gated Settlement sublane profiles. | No parallel authority. |
-| `soil/` | Soil profiles. | Support-type separation is mandatory. |
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 11. Inputs and outputs
+## Payload taxonomy
 
-| Class | Correct home | Notes |
-|---|---|---|
-| Spec file | `pipeline_specs/<lane>/` | Declarative config only. |
-| Executable target | `pipelines/<lane>/` or `pipelines/domains/<domain>/` | The spec references it; it does not implement it. |
-| Source descriptor | `data/registry/sources/<domain>/` | Stable source ref. |
-| Fixture | `fixtures/pipeline_specs/<lane>/` or accepted fixture home | Supports no-network validation. |
-| Spec validation test | `tests/pipeline_specs/<lane>/` | Verifies shape and root boundaries. |
-| Runtime output | `data/` lifecycle homes | Never beside the spec. |
-| Receipts | `data/receipts/pipeline/<domain-or-lane>/` | Emitted by execution, not by the spec file alone. |
-| Evidence proof | `data/proofs/evidence_bundle/` | Referenced by spec; not created here. |
-| Release material | `release/candidates/<domain>/`, `release/manifests/<domain>/` | Release authority owns final state. |
-
-[⬆ Back to top](#top)
-
----
-
-## 12. Minimal pipeline spec profile shape
+### Empty-stage scaffold
 
 ```yaml
-schema_version: kfm.pipeline_spec.v1
-spec_id: <lane>.<profile>
-version: 0.1.0
-status: draft
-owner: <pipeline-spec-steward>
-implementation:
-  target_pipeline: pipelines/<accepted-target>
-  execution_mode: dry_run_first
-applicability:
-  domains: []
-sources:
-  source_descriptor_refs: []
-lifecycle:
-  input_state: WORK
-  output_state: PROCESSED
-requirements:
-  evidence_bundle_required: true
-  source_role_required: true
-  policy_check_required: true
-  receipts_required: []
-  fixture_required: true
-  release_ready: false
-anti_collapse:
-  spec_is_executable: false
-  spec_is_source_admission: false
-  spec_is_validation_pass: false
-  spec_is_evidence_bundle: false
-  spec_is_catalog_truth: false
-  spec_is_release_approval: false
-failure_posture:
-  unresolved_source: quarantine
-  unresolved_rights: quarantine
-  unresolved_sensitivity: quarantine
-  unsupported_shape: fail_closed
+name: agriculture-normalize
+version: 1
+stages: []
 ```
 
-[⬆ Back to top](#top)
+This proves only a path and minimal shell. It declares no operation graph, source, lifecycle transition, contract, schema, policy, evidence, receipt, consumer, schedule, or release behavior.
+
+### Documentation-inventory placeholder
+
+```yaml
+status: PROPOSED
+source_doc: docs/domains/example/MISSING_OR_PLANNED_FILES.md
+path: pipeline_specs/example/example.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.
+```
+
+This preserves planning lineage. It must not be discovered or executed as active merely because it parses.
+
+### Compatibility or README-only lane
+
+A README may preserve routing, safety, or migration guidance without containing active profiles. Compatibility paths must not duplicate IDs, schedules, consumers, source refs, or release semantics.
+
+### Proposed state vocabulary
+
+`inventory_placeholder` → `stage_scaffold` → `proposed` → `candidate` → `active_internal` or `active_public_candidate` → `deprecated` / `disabled` / `retired`.
+
+These labels are guidance until an accepted schema and activation contract exist.
+
+[Back to top](#top)
 
 ---
 
-## 13. Tests, fixtures, and validation
+## Direct lane registry
 
-Recommended validation coverage:
+| Lane | Bounded posture | Governing issue |
+|---|---|---|
+| [`agriculture/`](agriculture/README.md) | Placeholder payloads and empty-stage scaffolds. | Aggregate versus field/operator specificity; inventory drift. |
+| [`air/`](air/README.md) | Compatibility guardrail. | Avoid parallel authority with Atmosphere. |
+| [`archaeology/`](archaeology/README.md) | Sensitive-domain boundary with planning placeholders. | Sovereignty, cultural review, exact locations, rights. |
+| [`atmosphere/`](atmosphere/README.md) | Preferred Atmosphere/Air lane; scaffold maturity. | Observation/model/advisory and life-safety separation. |
+| [`fauna/`](fauna/README.md) | Sensitive-domain lane with nested watcher guidance. | Rare-species geoprivacy. |
+| [`flora/`](flora/README.md) | Sensitive-domain lane with watcher/path conflicts. | Rare plants, cultural/stewardship rights. |
+| [`geology/`](geology/README.md) | Stage scaffolds and inventory placeholders. | Occurrence/deposit/reserve/permit/production distinctions. |
+| [`habitat/`](habitat/README.md) | Nested lanes and placeholders. | Habitat context is not species occurrence. |
+| [`hazards/`](hazards/README.md) | Source-oriented placeholders. | Not emergency or official-alert authority. |
+| [`hydrology/`](hydrology/README.md) | Mixed scaffolds and source placeholders. | Observation/model/regulatory-context separation. |
+| [`people-dna-land/`](people-dna-land/README.md) | Governing lane with empty-stage scaffolds. | Living-person, consent/revocation, DNA, title boundaries. |
+| [`people/`](people/README.md) | README-only alias. | No lighter or parallel sensitive-data path. |
+| [`roads-rail-trade/`](roads-rail-trade/README.md) | Scaffolds and placeholders. | Network identity, operating status, infrastructure sensitivity. |
+| [`settlement/`](settlement/README.md) | README-only alias. | No parallel authority. |
+| [`settlements-infrastructure/`](settlements-infrastructure/README.md) | Governing lane with empty-stage scaffolds. | Legal/operational status and infrastructure sensitivity. |
+| [`soil/`](soil/README.md) | Five empty-stage scaffolds. | Survey/grid/station/satellite/pedon/interpretation separation. |
+| [`watchers/`](watchers/README.md) | Shared placeholder-only boundary. | Shared/domain delegation and non-publisher rule. |
+
+Do not add a lane unless its responsibility, consumer, source, rights, sensitivity, fixtures, tests, receipts, owners, migration, and rollback posture are known.
+
+[Back to top](#top)
+
+---
+
+## Compatibility and placement conflicts
+
+- **`pipeline_specs/` versus `pipelines/specs/`:** authoritative declarations belong here; the latter is a guardrail.
+- **`air/` versus `atmosphere/`:** current documentation prefers Atmosphere; prevent duplicate active authority.
+- **`people/` versus `people-dna-land/`:** People is an alias; sensitive governance remains in People/DNA/Land.
+- **`settlement/` versus `settlements-infrastructure/`:** Settlement is an alias; governing behavior remains in Settlements/Infrastructure.
+- **Shared versus domain watchers:** use shared specs only for truly cross-domain behavior; domain roles, rights, sensitivity, or materiality favor domain sublanes.
+- **Historical `pipeline_specs/domains/...` references:** checked root evidence did not establish a parent README there; treat references as drift signals.
+- **Directory Rules copies:** this README follows the shared responsibility-root rule without resolving the doctrine file's own placement conflict.
+
+Conflict handling: freeze activation, inventory IDs/paths/consumers/schedules, preserve history, record drift, decide authority through ADR or migration review, test compatibility and rollback, then retire aliases only after consumers move.
+
+[Back to top](#top)
+
+---
+
+## Minimum active spec contract
+
+An active spec requires at least:
+
+| Area | Requirement |
+|---|---|
+| Identity | Stable ID, semantic version, state, owners, immutable digest. |
+| Shape | Accepted schema and canonicalization rules. |
+| Binding | Exact parser and compatible executable consumer. |
+| Sources | Admitted SourceDescriptor refs, roles, activation, rights, versions. |
+| Support | Spatial/temporal support, scale, uncertainty, domain knowledge character. |
+| Lifecycle | Allowed inputs, candidate outputs, quarantine/no-op, prohibited transitions. |
+| References | Resolvable contracts, schemas, evidence, policy, review, receipt, release, rollback refs. |
+| Execution | Dry-run/network posture, resource limits, side effects, idempotency, retry, cancellation. |
+| Outcomes | Finite outcomes and stable reason codes. |
+| Migration | Supersession, correction, deactivation, withdrawal, rollback. |
+
+Directory scanning alone is unsafe activation because the tree contains placeholders and aliases. Activation requires an explicit governed registry or decision record.
+
+[Back to top](#top)
+
+---
+
+## Lifecycle, source, and release gates
 
 ```text
-tests/pipeline_specs/
-├── test_spec_shape.py                  # PROPOSED
-├── test_no_executable_code.py           # PROPOSED
-├── test_implementation_refs.py          # PROPOSED
-├── test_source_descriptor_refs.py       # PROPOSED
-├── test_lifecycle_states.py             # PROPOSED
-├── test_policy_and_evidence_gates.py    # PROPOSED
-├── test_required_receipts.py            # PROPOSED
-├── test_alias_boundaries.py             # PROPOSED
-├── test_release_not_approved_by_spec.py # PROPOSED
-└── test_root_boundary.py                # PROPOSED
+source decision -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-A spec is not ready for execution until it has schema validation, fixture coverage, owner review, source descriptor refs, lifecycle-state assertions, policy/evidence gates, receipt requirements, and explicit release/correction/rollback posture where applicable.
+A spec may declare prerequisites and candidate transitions. It cannot grant source authority, store data, create evidence closure, approve policy, or write `PUBLISHED`.
 
-[⬆ Back to top](#top)
+Required gates for non-trivial activation:
 
----
+1. identity, version, digest;
+2. parser and consumer binding;
+3. source activation, role, rights, sensitivity;
+4. contract/schema resolution;
+5. lifecycle allow/deny validation;
+6. domain anti-collapse checks;
+7. deterministic fixtures and validation;
+8. evidence and policy resolution;
+9. receipt emission;
+10. catalog/triplet closure where applicable;
+11. independent review and release decision;
+12. correction and rollback readiness.
 
-## 14. Definition of done
+Default CI is no-network. Live network use needs explicit activation, reviewed connector, least privilege, rate limits, timeouts, safe logs, bounded lifecycle writes, and a kill switch. It can never directly publish.
 
-This README is done when it:
-
-- replaces the short `pipeline_specs/README.md` stub;
-- identifies `pipeline_specs/` as the canonical declarative configuration root;
-- preserves the `pipeline_specs/` versus `pipelines/` split;
-- blocks specs from becoming executable logic, source admission, lifecycle storage, proof storage, catalog truth, release approval, or public API/UI authority;
-- defines root placement, anti-collapse rules, domain/shared lanes, lifecycle posture, inputs/outputs, minimal spec shape, tests, and open questions.
-
-Future spec files are done only when they validate, point to executable lanes, use stable source descriptors, declare lifecycle states, require receipts, preserve evidence/policy/anti-collapse posture, and document release/correction/rollback expectations.
-
-[⬆ Back to top](#top)
-
----
-
-## 15. Open questions
-
-| ID | Question | Status |
-|---|---|---|
-| `PIPE-SPECS-ROOT-001` | Which shared pipeline spec schema is canonical? | NEEDS VERIFICATION |
-| `PIPE-SPECS-ROOT-002` | Which CI workflow validates all pipeline specs? | UNKNOWN |
-| `PIPE-SPECS-ROOT-003` | Which receipt vocabulary is canonical across ingest, normalize, validate, catalog, triplets, publish-readiness, rollback, and watchers? | NEEDS VERIFICATION |
-| `PIPE-SPECS-ROOT-004` | Which aliases should remain compatibility lanes versus migrate to canonical paths? | NEEDS VERIFICATION / ADR |
-| `PIPE-SPECS-ROOT-005` | Should shared profile templates live directly under this root or under a dedicated `_templates/` segment? | NEEDS VERIFICATION / ADR |
-| `PIPE-SPECS-ROOT-006` | Which validators should run before a spec can be used by executable pipelines? | NEEDS VERIFICATION |
+[Back to top](#top)
 
 ---
 
-## Maintainer note
+## Finite outcomes
 
-Keep this root declarative. Do not add executable code, source clients, source descriptors, schemas, contracts, policy decisions, lifecycle outputs, receipts, EvidenceBundles, release decisions, public API code, UI code, secrets, credentials, or generated summaries here. Add those to their responsibility roots and reference them from specs by stable path or identifier.
+| Outcome | Meaning |
+|---|---|
+| `PASS` | Bounded operation completed; not release approval. |
+| `NO_OP` | No authorized delta. |
+| `ABSTAIN` | Evidence, role, time, or claim support is insufficient. |
+| `DENY` | Rights, sensitivity, policy, security, or transition blocks action. |
+| `HOLD` | Resolvable prerequisite or review is pending. |
+| `QUARANTINE` | Isolated review is required. |
+| `ERROR` | Parser, consumer, validator, storage, receipt, or other operation failed. |
+| `CANCELLED` | Operator, policy, timeout, supersession, or kill switch stopped execution. |
+
+Candidate reason-code families include schema/digest failure, unresolved consumer, inactive source, role mismatch, unresolved rights/sensitivity, denied lifecycle transition, unresolved evidence/policy, validation failure, missing receipt/catalog closure/review/release manifest/rollback target.
+
+[Back to top](#top)
+
+---
+
+## Validation and CI
+
+Current root limitations:
+
+- no checked root spec-test or spec-fixture README;
+- no accepted schema, canonicalization algorithm, parser, discovery registry, active-spec registry, or substantive root CI gate established;
+- no verified current pass rate, coverage, mutation score, runtime, flake rate, receipt emission, or promotion dependency.
+
+An active system needs deterministic cases for schema/canonicalization, duplicate IDs and aliases, parser/consumer agreement, source activation and roles, lifecycle transitions, sensitive-domain denials, no-direct-publish, no-network default, replay/idempotency/retry/cancellation, receipt hashes, correction, supersession, deactivation, and rollback.
+
+A substantive workflow should use safe PR events, least-privilege permissions, repository-owned commands, changed-spec dependency closure, positive and negative fixtures, stable check names, bounded artifacts, and a disable/rollback path.
+
+A green check proves only the declared check completed.
+
+[Back to top](#top)
+
+---
+
+## Review, versioning, and migration
+
+Material changes require the pipeline-spec owner, affected domain/source owner, contract/schema/validation reviewer, evidence/receipt reviewer, rights/sensitivity/security reviewer, and release reviewer where applicable. CODEOWNERS routing is not a `ReviewRecord` or release decision.
+
+Rules:
+
+- do not reuse versions for changed semantics;
+- preserve immutable digests and supersession lineage;
+- separate file, schema, and implementation versions;
+- document consumer compatibility;
+- never auto-activate an alias;
+- keep merge, activation, execution, promotion, and publication separate;
+- require migration and rollback plans for moves, renames, aliases, or authority changes;
+- require an accepted ADR before changing the canonical root or authority model.
+
+[Back to top](#top)
+
+---
+
+## Correction, deactivation, and rollback
+
+Disable active specs through explicit records, not silent deletion. Preserve ID, version, digest, reason, effective time, affected sources/consumers/schedules/runs, lifecycle and release refs, correction obligations, rollback target, and reviewer state.
+
+A corrected or superseded source, spec, contract, schema, policy, or implementation may invalidate queued/completed runs, lifecycle candidates, receipts, EvidenceBundles, catalogs/triplets, release candidates, and public derivatives. Dependency and invalidation machinery remains `UNKNOWN` until verified.
+
+Documentation rollback for this README is ordinary Git rollback. No runtime, data, release, or public state is changed by this revision.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+An active specification must have:
+
+- [ ] stable identity, version, state, owners, digest;
+- [ ] accepted schema and canonicalization;
+- [ ] accepted parser and deterministic discovery;
+- [ ] verified consumer/version binding;
+- [ ] admitted sources, roles, rights, sensitivity, scale, time, uncertainty;
+- [ ] allowed lifecycle inputs and candidate outputs, with direct publication denied;
+- [ ] resolvable contract/schema/evidence/policy/review/receipt/release/rollback refs;
+- [ ] valid, invalid, denied, held, abstain, no-op, sensitive, and migration fixtures;
+- [ ] spec-to-consumer agreement tests;
+- [ ] deterministic no-network CI;
+- [ ] replay, idempotency, retry, cancellation, quarantine, and partial-state tests;
+- [ ] correction, deactivation, withdrawal, supersession, and rollback procedures;
+- [ ] independent human review separate from generation, validation, merge, activation, and release.
+
+Until then, label the file as placeholder, scaffold, proposed, or candidate—not active.
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+| Item | Status |
+|---|---:|
+| Exhaustive recursive inventory | `NEEDS VERIFICATION` |
+| Canonical schema, canonicalization, digest | `UNKNOWN` |
+| Parser, discovery, consumer registry | `UNKNOWN` |
+| Active-spec inventory | `NOT ESTABLISHED` |
+| Meaning of `version: 1` in scaffolds | `UNKNOWN` |
+| Air/People/Settlement alias decisions | `NEEDS VERIFICATION` |
+| Shared/domain watcher placement | `CONFLICTED` |
+| Historical `pipeline_specs/domains/...` references | `CONFLICTED` |
+| Child README inventory freshness | `NEEDS VERIFICATION` |
+| Source activation vocabulary/topology | `NEEDS VERIFICATION` |
+| Root fixtures, tests, substantive CI | `NOT ESTABLISHED` |
+| Rights/sensitivity policy enforcement | `NEEDS VERIFICATION` |
+| Pipeline receipt bindings and promotion dependency | `UNKNOWN` |
+| Correction propagation and rollback drills | `UNKNOWN` |
+| Named owners and independent reviewers | `NEEDS VERIFICATION` |
+| Production execution and public effects | `UNKNOWN` |
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | Observation | Status |
+|---|---|---:|
+| This README at the pinned base | Existing v0.2 contract; target blob recorded above. | `CONFIRMED` |
+| [`pipelines/README.md`](../pipelines/README.md) | Executable behavior belongs under `pipelines/`. | `CONFIRMED` |
+| [`pipelines/specs/README.md`](../pipelines/specs/README.md) | Compatibility guardrail, not alternate authority. | `CONFIRMED` |
+| Bounded README search | Seventeen direct and five nested README lanes. | `CONFIRMED bounded result` |
+| Agriculture/Soil stage YAML samples | Empty-stage scaffold shape. | `CONFIRMED` |
+| Archaeology/Geology/Hazards/Hydrology/Roads samples | Short `PROPOSED` inventory-placeholder shape. | `CONFIRMED` |
+| [`air/`](air/README.md), [`people/`](people/README.md), [`settlement/`](settlement/README.md) | Compatibility boundaries. | `CONFIRMED` |
+| [`watchers/README.md`](watchers/README.md) | Shared placeholder-only, placement-conflicted watcher lane. | `CONFIRMED` |
+| [`tests/pipelines/README.md`](../tests/pipelines/README.md) | Shared pipeline-test lane README-only; dedicated suite not established. | `CONFIRMED` |
+| Checked root fixture/test paths | Both absent. | `CONFIRMED checked-path absence` |
+| Search for pipeline-spec schema/source bindings | No accepted schema or active YAML binding surfaced. | `CONFIRMED bounded no-result` |
+| Directory Rules and [`ADR-0017`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | Responsibility placement and proposed source-admission process. | `CONFIRMED files / decisions not accepted here` |
+| [`.github/CODEOWNERS`](../.github/CODEOWNERS) | Root review routing; enforcement and role separation unverified. | `CONFIRMED routing` |
+| [`data/receipts/generated/README.md`](../data/receipts/generated/README.md) | AI receipts are process provenance, not proof or approval. | `CONFIRMED` |
+
+### Evidence limits
+
+Search is bounded and may lag branch-local content. Checked absence is not a full-history claim. Child READMEs can be stale. No clone, recursive tree, repository-native tests, branch settings, deployment, source system, dashboard, or production runtime was inspected.
+
+[Back to top](#top)
+
+---
+
+## Change history
+
+### v0.3 — 2026-07-18
+
+- replaced the planning tree with a repository-grounded maturity and routing boundary;
+- recorded seventeen direct README lanes and five nested lanes;
+- classified placeholder and compatibility shapes;
+- surfaced alias, watcher, historical path, and inventory-freshness conflicts;
+- strengthened source, lifecycle, parser/consumer, sensitive-domain, validation, correction, and rollback requirements;
+- added lane registry, definition of done, open verification register, and evidence ledger;
+- changed documentation only.
+
+### v0.2 — 2026-06-13
+
+- expanded the root stub into a governed declarative configuration contract;
+- defined declarative/executable separation, lifecycle gates, anti-collapse rules, a recommended tree, minimal profile example, and open questions.
+
+[Back to top](#top)
