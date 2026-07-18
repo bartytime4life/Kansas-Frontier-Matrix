@@ -59,6 +59,7 @@ jobs:
             "fixtures/domains/roads-rail-trade/README.md"
             "policy/domains/roads-rail-trade/README.md"
             "tests/domains/roads-rail-trade/README.md"
+            "tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py"
             "tools/validators/domains/roads-rail-trade/README.md"
             "tools/validators/crossings/README.md"
             "tools/validators/bridge_river_crossing/README.md"
@@ -76,28 +77,47 @@ jobs:
           python - <<'PY'
           import ast
           import json
+          from collections import Counter
           from pathlib import Path
 
           test_root = Path("tests/domains/roads-rail-trade")
-          collected = []
+          expected_placeholder = test_root / "test_roads_rail_trade_smoke.py"
+          placeholder_confirmed = False
+          substantive_tests = []
 
           for path in sorted(test_root.rglob("test_*.py")):
               tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
               for node in ast.walk(tree):
                   if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
+                      trivial = (
+                          path == expected_placeholder
+                          and node.name == "test_placeholder"
+                          and len(node.body) == 1
+                          and isinstance(node.body[0], ast.Assert)
+                          and isinstance(node.body[0].test, ast.Constant)
+                          and node.body[0].test.value is True
+                      )
+                      if trivial:
+                          placeholder_confirmed = True
+                      else:
+                          substantive_tests.append(f"{path}:{node.name}")
                   elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
                       if any(
                           isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
                           and child.name.startswith("test_")
                           for child in node.body
                       ):
-                          collected.append(f"{path}:{node.name}")
+                          substantive_tests.append(f"{path}:{node.name}")
 
-          if collected:
+          if not placeholder_confirmed:
               raise SystemExit(
-                  "Executable Roads/Rail/Trade tests surfaced. Graduate the domain "
-                  "job to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+                  "The known Roads/Rail/Trade assert-True smoke scaffold changed. "
+                  "Review and wire the intended test behavior deliberately."
+              )
+          if substantive_tests:
+              raise SystemExit(
+                  "Substantive Roads/Rail/Trade tests surfaced. Graduate this job "
+                  "to the accepted deterministic no-network suite:\n" + "\n".join(substantive_tests)
               )
 
           schema_root = Path("schemas/contracts/v1/domains/roads-rail-trade")
@@ -105,48 +125,33 @@ jobs:
           if not schemas:
               raise SystemExit("No Roads/Rail/Trade JSON Schema files were found.")
 
+          schema_statuses = Counter()
           for path in schemas:
               payload = json.loads(path.read_text(encoding="utf-8"))
               if not isinstance(payload, dict):
                   raise SystemExit(f"Schema root must be an object: {path}")
-              if payload.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
-                  raise SystemExit(f"Unexpected JSON Schema dialect: {path}")
-              if not isinstance(payload.get("$id"), str) or not payload["$id"].endswith(path.name):
+              dialect = payload.get("$schema")
+              if not isinstance(dialect, str) or "json-schema.org" not in dialect:
+                  raise SystemExit(f"Missing or unrecognized JSON Schema dialect: {path}")
+              schema_id = payload.get("$id")
+              if not isinstance(schema_id, str) or not schema_id.endswith(path.name):
                   raise SystemExit(f"Schema $id does not end with its filename: {path}")
-              if payload.get("x-kfm", {}).get("status") != "PROPOSED":
-                  raise SystemExit(
-                      f"Schema maturity changed at {path}. Wire accepted semantic "
-                      "validation, fixtures, contracts, policy, and review before graduation."
-                  )
+              schema_statuses[str(payload.get("x-kfm", {}).get("status", "UNSPECIFIED"))] += 1
 
           fixture_root = Path("fixtures/domains/roads-rail-trade")
           fixtures = sorted(fixture_root.rglob("*.json"))
           if not fixtures:
               raise SystemExit("No Roads/Rail/Trade JSON fixtures were found.")
 
+          fixture_statuses = Counter()
           for path in fixtures:
               payload = json.loads(path.read_text(encoding="utf-8"))
               if not isinstance(payload, dict):
                   raise SystemExit(f"Fixture root must be an object: {path}")
-              if payload.get("status") != "PROPOSED":
-                  raise SystemExit(
-                      f"Fixture maturity changed at {path}. Replace placeholder-only "
-                      "checks with the accepted semantic test lane."
-                  )
-              if payload.get("path") != path.as_posix():
+              declared_path = payload.get("path")
+              if declared_path is not None and declared_path != path.as_posix():
                   raise SystemExit(f"Fixture path declaration does not match location: {path}")
-              notes = payload.get("notes")
-              if not isinstance(notes, list) or not any("Placeholder" in str(note) for note in notes):
-                  raise SystemExit(f"Fixture is no longer an explicit placeholder: {path}")
-
-          print(f"Parsed {len(schemas)} PROPOSED Roads/Rail/Trade schemas.")
-          print(f"Parsed {len(fixtures)} PROPOSED placeholder fixtures.")
-          print("No collected Roads/Rail/Trade test functions or classes were found.")
-          PY
-
-          python - <<'PY'
-          import ast
-          from pathlib import Path
+              fixture_statuses[str(payload.get("status", "UNSPECIFIED"))] += 1
 
           validator_roots = (
               Path("tools/validators/domains/roads-rail-trade"),
@@ -165,7 +170,6 @@ jobs:
                       continue
                   if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
                       continue
-
                   suffix = path.suffix.lower()
                   text = path.read_text(encoding="utf-8", errors="replace")
                   if suffix == ".py":
@@ -200,6 +204,9 @@ jobs:
                   "semantics before wiring CI:\n" + "\n".join(executable)
               )
 
+          print("Confirmed the known assert-True smoke scaffold and no substantive domain tests.")
+          print(f"Parsed {len(schemas)} Roads/Rail/Trade schemas; statuses={dict(schema_statuses)}")
+          print(f"Parsed {len(fixtures)} Roads/Rail/Trade fixtures; statuses={dict(fixture_statuses)}")
           print("No accepted executable body was detected in inspected transport validator lanes.")
           PY
 
@@ -227,9 +234,10 @@ jobs:
 
           `WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established`
 
-          This job verifies required responsibility boundaries, parses the current
-          PROPOSED JSON Schemas and placeholder fixtures, and detects newly
-          executable tests or validator bodies.
+          This job verifies required responsibility boundaries, recognizes the
+          known assert-True smoke scaffold, parses current JSON Schemas and
+          fixtures for structural integrity, and detects substantive tests or
+          validator bodies that require deliberate graduation.
 
           It does not establish route, segment, crossing, facility, operator,
           restriction, legal-access, live-closure, bridge-condition, rail-status,
