@@ -1,15 +1,74 @@
-# KFM CI workflow stub: contract-drift
-# Status: PROPOSED greenfield scaffold.
+# KFM CI workflow: contract-drift
+# Status: PROPOSED executable contract/schema consistency gate.
+#
+# Authority boundary:
+# - This workflow tests repository-owned contract and schema checks.
+# - A green run is CI evidence for the checked revision, not release,
+#   publication, policy, evidence, or lifecycle authority.
 name: contract-drift
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-drift-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
 
 jobs:
   detect-contract-vs-schema-drift:
+    name: detect-contract-vs-schema-drift
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO detect-contract-vs-schema-drift'
+      - name: Check out tested revision
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install repository test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run contract and schema consistency tests
+        run: >-
+          python -m pytest
+          tests/schemas
+          tests/contracts
+          -q
+          --strict-config
+          --strict-markers
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Contract drift gate"
+            echo
+            echo "- Outcome: ${{ job.status }}"
+            echo "- Checked revision: ${GITHUB_SHA}"
+            echo "- Command: python -m pytest tests/schemas tests/contracts -q --strict-config --strict-markers"
+            echo "- Scope: repository-owned tests under tests/schemas and tests/contracts."
+            echo "- A success means only that the selected tests passed for this revision."
+            echo "- It does not prove complete semantic equivalence between every Markdown contract and machine schema."
+            echo "- It does not authorize release, deployment, publication, source admission, policy approval, or lifecycle promotion."
+          } >> "${GITHUB_STEP_SUMMARY}"
