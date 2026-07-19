@@ -1,58 +1,369 @@
+# KFM PMTiles partial-attestation gate.
+# Status: command-bearing header/Merkle/shape checks with fail-closed publication
+# posture; cryptographic signature, RunReceipt, policy, release, correction, and
+# rollback closure are not established by the current repository implementation.
+#
+# Responsibility:
+# - Validate available PMTiles candidate structure and integrity without treating
+#   partial checks as a complete attestation or publication decision.
+# Trigger:
+# - Pull requests and pushes to main are path-scoped to candidate PMTiles bytes,
+#   sidecars, validator/attestation tools, policy, and this workflow.
+# - workflow_dispatch supports explicit maintainer inspection when no candidate
+#   artifacts are present.
+# Untrusted-code posture:
+# - Pull requests execute submitted repository code with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
+# Runner and network:
+# - GitHub-hosted Ubuntu and Python 3.12 are used. No dependencies are installed;
+#   checks are standard-library-only and no-network after action bootstrap.
+# Commands:
+# - tools/validators/pmtiles/validate_header.py
+# - tools/validators/pmtiles/verify_merkle.py
+# - tools/attest/verify_cose.py --shape-only
+# Inputs:
+# - Candidate artifacts under the compatibility `artifacts/` lane and governed
+#   `data/published/pmtiles/` lane, plus the repository-owned PMTiles tools,
+#   schemas, policy, standard, and lifecycle documentation.
+# Outputs:
+# - GitHub job conclusion, logs, annotations, and step summary only. No signing,
+#   receipt, proof, release record, promotion, deployment, or publication occurs.
+# Outcome:
+# - No candidate inputs: WORKFLOW_SKIPPED_EXPLICIT + WORKFLOW_HOLD.
+# - Malformed, incomplete, orphaned, or mismatched candidates: WORKFLOW_FAIL.
+# - Structurally valid candidate with shape-only PMSIG: WORKFLOW_DENY because
+#   cryptographic verification and the remaining governed chain are unavailable.
+# Compatibility:
+# - Workflow name `PMTiles Attestation` and job id
+#   `validate-pmtiles-attestation` are preserved.
+# Rollback / disable:
+# - Revert this workflow revision. Do not restore silent-success skips, weaken
+#   candidate completeness, or disable a required check without branch-protection,
+#   PMTiles, security, policy, and release review.
+# Authority boundary:
+# - PMTiles are derived delivery artifacts, not canonical truth. Passing any
+#   available check does not establish evidence, policy, release, or public safety.
 name: PMTiles Attestation
 
-on:
+"on":
   pull_request:
     paths:
+      - ".github/workflows/pmtiles-attestation.yml"
       - "artifacts/**/*.pmtiles"
       - "artifacts/**/*.pmidx"
       - "artifacts/**/*.pmsig"
+      - "artifacts/**/*.runreceipt.json"
+      - "data/published/pmtiles/**/*.pmtiles"
+      - "data/published/pmtiles/**/*.pmidx"
+      - "data/published/pmtiles/**/*.pmsig"
+      - "data/published/pmtiles/**/*.runreceipt.json"
+      - "tools/validators/pmtiles/**"
+      - "tools/attest/**"
+      - "policy/rego/tiles_publish.rego"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/pmtiles-attestation.yml"
+      - "artifacts/**/*.pmtiles"
+      - "artifacts/**/*.pmidx"
+      - "artifacts/**/*.pmsig"
+      - "artifacts/**/*.runreceipt.json"
+      - "data/published/pmtiles/**/*.pmtiles"
+      - "data/published/pmtiles/**/*.pmidx"
+      - "data/published/pmtiles/**/*.pmsig"
+      - "data/published/pmtiles/**/*.runreceipt.json"
       - "tools/validators/pmtiles/**"
       - "tools/attest/**"
       - "policy/rego/tiles_publish.rego"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: pmtiles-attestation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
 jobs:
   validate-pmtiles-attestation:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - name: Check out PMTiles candidate boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Validate PMTiles headers when artifacts exist
+
+      - name: Verify validator and attestation readiness
         shell: bash
         run: |
-          shopt -s globstar nullglob
-          files=(artifacts/**/*.pmtiles)
-          if (( ${#files[@]} == 0 )); then
-            echo "No PMTiles artifacts found; skipping header validation."
-            exit 0
-          fi
-          python tools/validators/pmtiles/validate_header.py "${files[@]}"
-      - name: Validate PMIDX sidecars when artifacts exist
-        shell: bash
-        run: |
-          shopt -s globstar nullglob
-          files=(artifacts/**/*.pmtiles.pmidx)
-          if (( ${#files[@]} == 0 )); then
-            echo "No PMIDX sidecars found; skipping sidecar validation."
-            exit 0
-          fi
-          for f in "${files[@]}"; do
-            base="${f%.pmidx}"
-            if [[ -f "$base" ]]; then
-              python tools/validators/pmtiles/verify_merkle.py "$f" --pmtiles "$base"
-            else
-              python tools/validators/pmtiles/verify_merkle.py "$f"
+          set -euo pipefail
+
+          required_paths=(
+            "artifacts"
+            "data/published/pmtiles/README.md"
+            "docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md"
+            "docs/standards/pmtiles/PMIDX_SPEC_V1.md"
+            "policy/rego/tiles_publish.rego"
+            "tools/attest/verify_cose.py"
+            "tools/validators/pmtiles/validate_header.py"
+            "tools/validators/pmtiles/verify_merkle.py"
+            "tools/validators/pmtiles/fixtures/valid/README.md"
+            "tools/validators/pmtiles/fixtures/invalid/README.md"
+            "tools/validators/pmtiles/schemas/pmidx.schema.json"
+            "tools/validators/pmtiles/schemas/pmsig.schema.json"
+            "tools/validators/pmtiles/schemas/runreceipt.schema.json"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required PMTiles attestation boundary is missing: $required_path"
+              exit 1
             fi
           done
-      - name: Validate PMSIG bundle shape only
+
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          scripts = (
+              Path("tools/validators/pmtiles/validate_header.py"),
+              Path("tools/validators/pmtiles/verify_merkle.py"),
+              Path("tools/attest/verify_cose.py"),
+          )
+          for path in scripts:
+              ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+
+          schema_expectations = {
+              Path("tools/validators/pmtiles/schemas/pmidx.schema.json"):
+                  "kfm.pmidx.v1",
+              Path("tools/validators/pmtiles/schemas/pmsig.schema.json"):
+                  "kfm.pmsig.v1",
+              Path("tools/validators/pmtiles/schemas/runreceipt.schema.json"):
+                  "kfm.runreceipt.pmtiles.v1",
+          }
+          for path, version in schema_expectations.items():
+              schema = json.loads(path.read_text(encoding="utf-8"))
+              serialized = json.dumps(schema, sort_keys=True)
+              if version not in serialized:
+                  raise SystemExit(
+                      f"{path} no longer identifies {version}. Reconcile the accepted "
+                      "attestation profile before changing CI."
+                  )
+
+          fixture_root = Path("tools/validators/pmtiles/fixtures")
+          fixture_payloads = [
+              path
+              for path in fixture_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          ]
+          if fixture_payloads:
+              raise SystemExit(
+                  "Executable PMTiles fixture payloads surfaced. Wire their deterministic "
+                  "valid/invalid expectations before retaining the no-fixture posture:\n"
+                  + "\n".join(str(path) for path in sorted(fixture_payloads))
+              )
+
+          cose_path = Path("tools/attest/verify_cose.py")
+          cose_text = cose_path.read_text(encoding="utf-8")
+          for marker in (
+              "--shape-only",
+              "cryptographic COSE verification not wired",
+              "development only; skips cryptographic verification",
+          ):
+              if marker not in cose_text:
+                  raise SystemExit(
+                      "COSE verifier maturity changed. Reassess cryptographic verification, "
+                      f"key registry, and workflow outcome before proceeding; missing: {marker}"
+                  )
+
+          policy_text = Path("policy/rego/tiles_publish.rego").read_text(
+              encoding="utf-8"
+          )
+          for marker in (
+              "default allow := false",
+              "input.pmsig.signature_verified == true",
+              "input.release.rollback_manifest_present == true",
+              "not input.release.state == \"CATALOG\"",
+          ):
+              if marker not in policy_text:
+                  raise SystemExit(
+                      "PMTiles publication policy changed. Reconcile policy tests and "
+                      f"workflow scope deliberately; missing marker: {marker}"
+                  )
+
+          print("PMTiles validator and attestation scripts parse as Python.")
+          print("PMIDX, PMSIG, and RunReceipt schemas parse as JSON.")
+          print("The validator fixture lanes remain README-only.")
+          print("COSE verification remains explicitly shape-only and non-cryptographic.")
+          print("Publication policy remains deny-by-default and requires signature plus rollback closure.")
+          PY
+
+      - name: Validate PMTiles headers and candidate completeness
         shell: bash
         run: |
-          shopt -s globstar nullglob
-          files=(artifacts/**/*.pmtiles.pmsig)
-          if (( ${#files[@]} == 0 )); then
-            echo "No PMSIG bundles found; skipping signature validation."
+          # Bash 3.2 treats an initialized empty array as unset under `set -u`.
+          # Keep strict error and pipeline handling while permitting zero candidates.
+          set -eo pipefail
+
+          candidate_roots=("artifacts" "data/published/pmtiles")
+          archives=()
+          sidecars=()
+          signatures=()
+          receipts=()
+          while IFS= read -r -d '' path; do archives+=("$path"); done < <(
+            find "${candidate_roots[@]}" -type f -name '*.pmtiles' -print0
+          )
+          while IFS= read -r -d '' path; do sidecars+=("$path"); done < <(
+            find "${candidate_roots[@]}" -type f -name '*.pmidx' -print0
+          )
+          while IFS= read -r -d '' path; do signatures+=("$path"); done < <(
+            find "${candidate_roots[@]}" -type f -name '*.pmsig' -print0
+          )
+          while IFS= read -r -d '' path; do receipts+=("$path"); done < <(
+            find "${candidate_roots[@]}" -type f -name '*.runreceipt.json' -print0
+          )
+
+          for sidecar in "${sidecars[@]}"; do
+            archive="${sidecar%.pmidx}"
+            if [[ ! -f "$archive" ]]; then
+              echo "::error::Orphan PMIDX sidecar has no PMTiles archive: $sidecar"
+              exit 1
+            fi
+          done
+
+          for signature in "${signatures[@]}"; do
+            archive="${signature%.pmsig}"
+            if [[ ! -f "$archive" ]]; then
+              echo "::error::Orphan PMSIG bundle has no PMTiles archive: $signature"
+              exit 1
+            fi
+          done
+
+          for receipt in "${receipts[@]}"; do
+            archive="${receipt%.runreceipt.json}"
+            if [[ ! -f "$archive" ]]; then
+              echo "::error::Orphan RunReceipt has no PMTiles archive: $receipt"
+              exit 1
+            fi
+          done
+
+          if (( ${#archives[@]} == 0 )); then
+            echo "WORKFLOW_SKIPPED_EXPLICIT: no PMTiles candidate archives found"
+            echo "WORKFLOW_HOLD: attestation chain was not evaluated"
             exit 0
           fi
-          python tools/attest/verify_cose.py --shape-only "${files[@]}"
+
+          for archive in "${archives[@]}"; do
+            for companion in \
+              "${archive}.pmidx" \
+              "${archive}.pmsig" \
+              "${archive}.runreceipt.json"
+            do
+              if [[ ! -f "$companion" ]]; then
+                echo "::error::Incomplete PMTiles candidate; required companion is missing: $companion"
+                exit 1
+              fi
+            done
+          done
+
+          python tools/validators/pmtiles/validate_header.py "${archives[@]}"
+
+      - name: Verify PMIDX Merkle commitments and archive digests
+        shell: bash
+        run: |
+          set -eo pipefail
+
+          candidate_roots=("artifacts" "data/published/pmtiles")
+          archives=()
+          while IFS= read -r -d '' path; do archives+=("$path"); done < <(
+            find "${candidate_roots[@]}" -type f -name '*.pmtiles' -print0
+          )
+
+          if (( ${#archives[@]} == 0 )); then
+            echo "WORKFLOW_SKIPPED_EXPLICIT: no PMIDX commitments evaluated"
+            exit 0
+          fi
+
+          for archive in "${archives[@]}"; do
+            python tools/validators/pmtiles/verify_merkle.py \
+              "${archive}.pmidx" \
+              --pmtiles "$archive"
+          done
+
+      - name: Validate PMSIG shape and fail closed without cryptographic verification
+        shell: bash
+        run: |
+          set -eo pipefail
+
+          candidate_roots=("artifacts" "data/published/pmtiles")
+          archives=()
+          while IFS= read -r -d '' path; do archives+=("$path"); done < <(
+            find "${candidate_roots[@]}" -type f -name '*.pmtiles' -print0
+          )
+
+          if (( ${#archives[@]} == 0 )); then
+            echo "WORKFLOW_SKIPPED_EXPLICIT: no PMSIG bundles evaluated"
+            exit 0
+          fi
+
+          signatures=()
+          for archive in "${archives[@]}"; do
+            signatures+=("${archive}.pmsig")
+          done
+
+          python tools/attest/verify_cose.py --shape-only "${signatures[@]}"
+
+          echo "::error title=PMTiles attestation denied::PMSIG shape passed, but cryptographic COSE verification and approved key-registry validation are not wired."
+          echo "WORKFLOW_DENY: partial PMTiles checks cannot authorize attestation or publication"
+          exit 1
+
+      - name: Record PMTiles attestation scope
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          candidate_count="$({
+            find artifacts data/published/pmtiles -type f -name '*.pmtiles' -print
+          } | wc -l | tr -d ' ')"
+
+          if [[ "$candidate_count" == "0" ]]; then
+            outcome='`WORKFLOW_SKIPPED_EXPLICIT`'
+            readiness='`WORKFLOW_HOLD` — no PMTiles candidate chain was evaluated'
+          else
+            outcome='`WORKFLOW_DENY` unless every required step completed, including cryptographic verification'
+            readiness='Partial structural and integrity checks are not publication attestation'
+          fi
+
+          {
+            echo "## PMTiles partial-attestation gate"
+            echo
+            echo "- Candidate archives discovered: ${candidate_count}"
+            echo "- Outcome posture: ${outcome}"
+            echo "- Readiness posture: ${readiness}"
+            echo
+            echo "Available commands check PMTiles v3 header/metadata, required"
+            echo "companion presence, PMTiles digest, PMIDX Merkle commitments, and"
+            echo "PMSIG JSON shape. The workflow deliberately denies a candidate after"
+            echo "shape-only PMSIG validation because cryptographic COSE verification"
+            echo "and approved key-registry validation are not wired."
+            echo
+            echo "This workflow does not validate RunReceipt semantics, reconcile every"
+            echo "spec_hash across the chain, execute publication policy, prove evidence"
+            echo "closure, confirm rights/sensitivity/review/release/correction/rollback,"
+            echo "sign artifacts, promote lifecycle state, deploy, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"
