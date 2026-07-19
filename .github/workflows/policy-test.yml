@@ -1,20 +1,389 @@
-# KFM CI workflow stub: policy-test
-# Status: PROPOSED greenfield scaffold.
+# KFM policy-test readiness workflow.
+#
+# Responsibility:
+#   Guard the currently confirmed policy-test boundary without presenting a
+#   placeholder command, schema fixture, or static inventory as policy-engine
+#   evaluation. Policy behavior remains unproved until the repository accepts
+#   an evaluator, test modules, a bundle/selection contract, and a real command.
+#
+# Trigger and trust boundary:
+#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
+#   is untrusted. The workflow has read-only repository permission, uses a
+#   hosted runner, installs no repository dependencies, and performs no network
+#   access after checkout/setup-python.
+#
+# Inputs:
+#   Tracked policy sources, the policy-runtime placeholder, Makefile policy
+#   target, bundle/validator inventories, PolicyDecision contract/schema and
+#   fixtures, and the common schema harness.
+#
+# Outputs and outcomes:
+#   Job summaries only. The jobs either confirm that the documented readiness
+#   holds remain explicit, or fail on drift so a real test/evaluator lane can be
+#   wired deliberately. They emit no PolicyDecision, receipt, proof, bundle,
+#   release decision, or publication authority.
+#
+# Compatibility:
+#   Keep workflow name `policy-test` and job ids `opa-test` and
+#   `policy-fixture-coverage`; repository rules may refer to those check names.
+#
+# Rollback:
+#   Revert this workflow file. Do not replace these holds with an echo-only
+#   green check; accept and test the evaluator/bundle contract first.
+#
+# Placement:
+#   `.github/workflows/` is the repository CI orchestration boundary. Canonical
+#   policy remains under singular `policy/`; this workflow creates no parallel
+#   policy, schema, validator, fixture, proof, or release authority.
+
 name: policy-test
 
-on:
+"on":
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
 
 jobs:
   opa-test:
+    name: OPA test readiness hold
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO opa-test'
+      - name: Check out repository without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Select deterministic Python runtime
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Confirm OPA lane remains an explicit hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import tomllib
+
+          required = [
+              Path("Makefile"),
+              Path("policy/README.md"),
+              Path("policy/bundles/README.md"),
+              Path("policy/fixtures/README.md"),
+              Path("policy/tests/README.md"),
+              Path("packages/policy-runtime/README.md"),
+              Path("packages/policy-runtime/pyproject.toml"),
+              Path("packages/policy-runtime/src/policy_runtime/__init__.py"),
+              Path("packages/policy-runtime/src/policy_runtime/core.py"),
+              Path("tools/validators/policy/README.md"),
+              Path("docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required policy readiness evidence is missing: {missing}"
+
+          rego_files = sorted(Path("policy").rglob("*.rego"))
+          assert rego_files, "policy/ contains no Rego sources; review the policy lane explicitly"
+          rego_tests = [
+              path for path in rego_files
+              if path.name.endswith("_test.rego") or "tests" in path.parts
+          ]
+          assert not rego_tests, (
+              "Rego test modules have appeared; replace this readiness hold with the accepted "
+              f"OPA test command and reviewed assertions: {[p.as_posix() for p in rego_tests]}"
+          )
+
+          bundle_files = {
+              path.relative_to("policy/bundles").as_posix()
+              for path in Path("policy/bundles").rglob("*")
+              if path.is_file()
+          }
+          assert bundle_files == {"README.md"}, (
+              "policy/bundles is no longer README-only; validate the new bundle, manifest, "
+              f"selection, signing, replay, and rollback contract before wiring CI: {sorted(bundle_files)}"
+          )
+
+          namespace = Path("packages/policy-runtime/src/policy_runtime")
+          python_files = {
+              path.relative_to(namespace).as_posix()
+              for path in namespace.rglob("*.py")
+          }
+          assert python_files == {"__init__.py", "core.py"}, (
+              "policy-runtime Python implementation has changed; wire package tests and the "
+              f"accepted evaluator boundary deliberately: {sorted(python_files)}"
+          )
+          assert (namespace / "__init__.py").read_text(encoding="utf-8") == "", (
+              "policy_runtime exports have appeared without a verified policy-test lane"
+          )
+          assert (namespace / "core.py").read_text(encoding="utf-8").strip() == (
+              "# policy-runtime core — greenfield placeholder"
+          ), "policy_runtime/core.py is no longer the confirmed comment-only placeholder"
+
+          package = tomllib.loads(
+              Path("packages/policy-runtime/pyproject.toml").read_text(encoding="utf-8")
+          )
+          assert package == {
+              "project": {"name": "kfm-policy-runtime", "version": "0.0.0"}
+          }, (
+              "policy-runtime packaging metadata has changed; establish build, dependency, "
+              "API, evaluator, and package-test evidence before treating it as executable"
+          )
+
+          validator_files = {
+              path.relative_to("tools/validators/policy").as_posix()
+              for path in Path("tools/validators/policy").rglob("*")
+              if path.is_file()
+          }
+          assert validator_files == {".gitkeep", "README.md"}, (
+              "policy validators have appeared; review and invoke their accepted entry point "
+              f"instead of preserving the hold: {sorted(validator_files)}"
+          )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          target = re.search(r"(?m)^policy:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
+          assert target, "Makefile policy target is missing"
+          assert target.group("body").splitlines() == [
+              '\t@echo "TODO: opa test policy/ -v"'
+          ], (
+              "Makefile policy target has changed; invoke and verify the accepted command "
+              "instead of leaving this readiness hold green"
+          )
+
+          forbidden_candidates = [
+              Path("opa"),
+              Path("bin/opa"),
+              Path("tools/opa"),
+              Path(".opa/config.yaml"),
+              Path("policy/.manifest"),
+              Path("policy/bundles/.manifest"),
+          ]
+          surfaced = [path.as_posix() for path in forbidden_candidates if path.exists()]
+          assert not surfaced, (
+              "an evaluator/configuration candidate has appeared; review its provenance and "
+              f"wire a real policy test lane: {surfaced}"
+          )
+
+          bundle_readme = Path("policy/bundles/README.md").read_text(encoding="utf-8")
+          markers = [
+              "| Policy runtime package | **CONFIRMED PLACEHOLDER** |",
+              "| Policy-test workflow | **CONFIRMED TODO-ONLY** |",
+              "| Accepted bundle format | **UNKNOWN** |",
+          ]
+          absent_markers = [marker for marker in markers if marker not in bundle_readme]
+          assert not absent_markers, (
+              "policy bundle evidence posture changed; reconcile the workflow before claiming "
+              f"readiness: {absent_markers}"
+          )
+
+          print(f"CONFIRMED: {len(rego_files)} Rego source files are present.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no Rego test modules or accepted OPA command exist.")
+          print("WORKFLOW_HOLD: no bundle artifact, evaluator binding, or executable runtime is accepted.")
+          print("No policy rule was evaluated and no PolicyDecision was emitted.")
+          PY
+
+      - name: Record OPA readiness outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### OPA test readiness"
+            echo
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** repository evidence still has Rego source files, but no Rego test modules, accepted OPA command, bundle artifact/manifest, evaluator binding, or executable policy runtime."
+            echo "- This job is a drift guard for that bounded state. It did not evaluate policy and emitted no PolicyDecision, receipt, proof, or release authority."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   policy-fixture-coverage:
+    name: Policy fixture coverage readiness hold
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO policy-fixture-coverage'
+      - name: Check out repository without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Select deterministic Python runtime
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Confirm PolicyDecision fixture boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          schema_path = Path("schemas/contracts/v1/policy/policy_decision.schema.json")
+          fixture_root = Path("fixtures/contracts/v1/policy/policy_decision")
+          common_harness = Path("tests/schemas/test_common_contracts.py")
+          required = [
+              Path("contracts/policy/policy_decision.md"),
+              schema_path,
+              fixture_root / "README.md",
+              fixture_root / "valid/README.md",
+              fixture_root / "valid/valid_1.json",
+              fixture_root / "valid/valid_2.json",
+              fixture_root / "invalid/README.md",
+              fixture_root / "invalid/invalid_1.json",
+              fixture_root / "invalid/invalid_1.expected_error.txt",
+              fixture_root / "invalid/invalid_2.json",
+              fixture_root / "invalid/invalid_2.expected_error.txt",
+              fixture_root / "invalid/invalid_3.json",
+              fixture_root / "invalid/invalid_3.expected_error.txt",
+              common_harness,
+              Path("policy/fixtures/README.md"),
+              Path("policy/tests/README.md"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required PolicyDecision fixture evidence is missing: {missing}"
+
+          expected_inventory = {
+              path.relative_to(fixture_root).as_posix() for path in required
+              if fixture_root in path.parents
+          }
+          actual_inventory = {
+              path.relative_to(fixture_root).as_posix()
+              for path in fixture_root.rglob("*")
+              if path.is_file()
+          }
+          assert actual_inventory == expected_inventory, (
+              "PolicyDecision fixture inventory changed; extend the reviewed schema and semantic "
+              f"coverage deliberately. expected={sorted(expected_inventory)} actual={sorted(actual_inventory)}"
+          )
+
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          assert schema["x-kfm"] == {
+              "contract_doc": "contracts/policy/policy_decision.md",
+              "fixtures_root": "fixtures/contracts/v1/policy/policy_decision/",
+              "validator": "tools/validators/validate_policy_decision.py",
+              "policy": "policy/policy/",
+              "status": "PROPOSED",
+          }, "PolicyDecision x-kfm metadata changed; reconcile validator and policy bindings"
+          assert schema["required"] == [
+              "decision_id",
+              "outcome",
+              "policy_family",
+              "reasons",
+              "obligations",
+              "evaluated_at",
+          ], "PolicyDecision required-field contract changed"
+          assert schema["additionalProperties"] is False
+          assert schema["properties"]["outcome"]["enum"] == [
+              "ANSWER", "ABSTAIN", "DENY", "ERROR"
+          ]
+          assert schema["properties"]["policy_family"]["enum"] == [
+              "promotion", "access", "render", "capability", "consent", "sensitivity"
+          ]
+
+          def load(relative):
+              return json.loads((fixture_root / relative).read_text(encoding="utf-8"))
+
+          valid_1 = load("valid/valid_1.json")
+          valid_2 = load("valid/valid_2.json")
+          invalid_1 = load("invalid/invalid_1.json")
+          invalid_2 = load("invalid/invalid_2.json")
+          invalid_3 = load("invalid/invalid_3.json")
+          assert valid_1 == {
+              "decision_id": "pd1",
+              "outcome": "ABSTAIN",
+              "policy_family": "access",
+              "reasons": ["none"],
+              "obligations": [],
+              "evaluated_at": "2026-05-09T00:00:00Z",
+          }
+          assert valid_2 == {
+              "decision_id": "pd2",
+              "outcome": "DENY",
+              "policy_family": "sensitivity",
+              "reasons": ["restricted"],
+              "obligations": ["notify"],
+              "evaluated_at": "2026-05-09T00:00:00Z",
+          }
+          assert "decision_id" not in invalid_1
+          assert invalid_2.get("extra_field") == 1
+          assert invalid_3.get("decision_id") == "BAD"
+          assert {
+              name: (fixture_root / f"invalid/{name}.expected_error.txt").read_text(
+                  encoding="utf-8"
+              ).strip()
+              for name in ("invalid_1", "invalid_2", "invalid_3")
+          } == {
+              "invalid_1": "required",
+              "invalid_2": "additional properties",
+              "invalid_3": "enum|pattern|date-time",
+          }
+
+          declared_validator = Path(schema["x-kfm"]["validator"])
+          declared_policy = Path(schema["x-kfm"]["policy"])
+          assert not declared_validator.exists(), (
+              "the schema-declared PolicyDecision validator has appeared; invoke and test it "
+              "instead of preserving this readiness hold"
+          )
+          assert not declared_policy.exists(), (
+              "the schema-declared policy path has appeared; reconcile canonical singular "
+              "policy placement and wire evaluated fixture cases deliberately"
+          )
+
+          harness_text = common_harness.read_text(encoding="utf-8")
+          for marker in (
+              'FAMILIES = ["evidence", "runtime", "common", "policy", "source", "governance", "release"]',
+              "def _schema_cases():",
+              '@pytest.mark.parametrize("family,name,schema_path,fixture_dir", _schema_cases())',
+          ):
+              assert marker in harness_text, f"common schema fixture harness marker missing: {marker}"
+
+          for placeholder_root, expected in (
+              (
+                  Path("policy/fixtures"),
+                  {"README.md", "domains/fauna/.gitkeep", "living_persons/.gitkeep"},
+              ),
+              (
+                  Path("policy/tests"),
+                  {"README.md", "domains/fauna/.gitkeep", "flora/.gitkeep"},
+              ),
+          ):
+              actual = {
+                  path.relative_to(placeholder_root).as_posix()
+                  for path in placeholder_root.rglob("*")
+                  if path.is_file()
+              }
+              assert actual == expected, (
+                  f"{placeholder_root} is no longer placeholder-only; wire the surfaced "
+                  f"fixture/test cases into an accepted evaluator lane: {sorted(actual)}"
+              )
+
+          print("CONFIRMED: two valid and three invalid PolicyDecision JSON fixtures are inventoried.")
+          print("CONFIRMED: the common schema harness discovers the policy schema-fixture directory.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: dedicated validator and evaluator-backed fixtures are absent.")
+          print("WORKFLOW_HOLD: shape fixtures do not prove policy inputs, rules, reasons, obligations, or bundle identity.")
+          print("No policy rule was evaluated and no PolicyDecision was emitted.")
+          PY
+
+      - name: Record fixture readiness outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Policy fixture coverage readiness"
+            echo
+            echo "- **CONFIRMED (shape only):** the PolicyDecision schema has two valid and three invalid JSON fixtures discoverable by the separate common schema harness."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no dedicated PolicyDecision validator, canonical evaluator binding, policy input matrix, reason/obligation semantics, bundle identity, or evaluated policy cases are established."
+            echo "- This job inventories the bounded readiness state. It did not evaluate policy and emitted no PolicyDecision, receipt, proof, or release authority."
+          } >> "$GITHUB_STEP_SUMMARY"
