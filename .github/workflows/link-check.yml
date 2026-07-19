@@ -1,15 +1,239 @@
-# KFM CI workflow stub: link-check
-# Status: PROPOSED greenfield scaffold.
+# KFM documentation link-check readiness workflow.
+# Status: explicit governed hold. The repository does not yet contain an
+# accepted link-check executable, deterministic fixture suite, configuration,
+# or repository-native command that this workflow can invoke truthfully.
+#
+# Responsibility:
+# - Detect whether the assumptions supporting the documentation-link-check hold
+#   have changed without implementing validator logic inside workflow YAML.
+# Trigger:
+# - Pull requests and pushes to main retain the original broad coverage because
+#   the workflow/job names may be branch-protection compatibility surfaces.
+# - workflow_dispatch supports explicit maintainer readiness inspection.
+# Untrusted-code posture:
+# - Pull requests execute submitted repository text with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
+# Runner and network:
+# - GitHub-hosted Ubuntu and Python 3.12 are used. No dependencies are installed;
+#   readiness checks are standard-library-only and no-network after bootstrap.
+# Commands:
+# - No link-check command is accepted yet. The README's check_links.py and pytest
+#   examples are explicitly proposed and their referenced paths do not exist.
+# Inputs:
+# - Documentation responsibility roots, the proposed validator lane, root command
+#   manifests, workflow governance documentation, and candidate config/test paths.
+# Outputs:
+# - GitHub job conclusion, logs, annotations, and step summary only. No docs,
+#   QA report, receipt, proof, ignore rule, generated site, or release state is written.
+# Outcome:
+# - Unchanged README-only state: WORKFLOW_SKIPPED_EXPLICIT plus WORKFLOW_HOLD.
+# - Missing boundaries or newly surfaced implementation/config/tests: WORKFLOW_FAIL
+#   until the accepted command, fixtures, scope, outcomes, and network posture are wired.
+# Compatibility:
+# - Workflow name `link-check` and job id `docs-link-check` are preserved.
+# Rollback / disable:
+# - Revert this workflow revision. Do not restore an executable TODO step or add
+#   an unreviewed third-party network checker without docs/tooling/CI review.
+# Authority boundary:
+# - Link resolution is documentation QA only. A passing future check cannot prove
+#   a linked claim, source, policy posture, evidence closure, or release approval.
 name: link-check
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: link-check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   docs-link-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO docs-link-check'
+      - name: Check out documentation QA boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Evaluate link-check readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            ".github/workflows/README.md"
+            "Makefile"
+            "docs"
+            "docs/doctrine/directory-rules.md"
+            "package.json"
+            "pyproject.toml"
+            "tools/docs/README.md"
+            "tools/validators/docs/README.md"
+            "tools/validators/docs/link-check/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required documentation link-check boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import json
+          import re
+          import tomllib
+          from pathlib import Path
+
+          lane = Path("tools/validators/docs/link-check")
+          allowed_lane_files = {lane / ".gitkeep", lane / "README.md"}
+          actual_lane_files = {
+              path for path in lane.rglob("*") if path.is_file()
+          }
+          unexpected_lane_files = sorted(actual_lane_files - allowed_lane_files)
+          missing_lane_files = sorted(allowed_lane_files - actual_lane_files)
+          if missing_lane_files:
+              raise SystemExit(
+                  "Reviewed link-check lane boundary is incomplete:\n"
+                  + "\n".join(str(path) for path in missing_lane_files)
+              )
+          if unexpected_lane_files:
+              raise SystemExit(
+                  "Link-check implementation or configuration surfaced. Review its "
+                  "ownership, deterministic fixtures, outcome contract, network posture, "
+                  "and accepted entrypoint before changing CI:\n"
+                  + "\n".join(str(path) for path in unexpected_lane_files)
+              )
+
+          readme_path = lane / "README.md"
+          readme = readme_path.read_text(encoding="utf-8")
+          for marker in (
+              "Link-check validator executables | **PROPOSED / NEEDS VERIFICATION**",
+              "CI wiring | **PROPOSED / NEEDS VERIFICATION**",
+              "External-link status | **NEEDS VERIFICATION**",
+              "Suggested future command pattern:",
+              "This is a proposed interface, not proof that `check_links.py` or the test path exists.",
+              "Tests use synthetic fixtures and do not require network access by default.",
+          ):
+              if marker not in readme:
+                  raise SystemExit(
+                      "The link-check lane maturity contract changed. Reconcile the "
+                      f"accepted implementation and workflow deliberately; missing: {marker}"
+                  )
+
+          proposed_test_root = Path("tests/validators/docs/link-check")
+          if proposed_test_root.exists():
+              surfaced = sorted(
+                  path for path in proposed_test_root.rglob("*") if path.is_file()
+              )
+              details = "\n".join(str(path) for path in surfaced) or str(
+                  proposed_test_root
+              )
+              raise SystemExit(
+                  "The proposed deterministic link-check test lane surfaced. Review valid, "
+                  "invalid, anchor, ignore-expiry, and no-network expectations before wiring:\n"
+                  + details
+              )
+
+          candidate_configs = (
+              Path(".markdown-link-check.json"),
+              Path(".markdown-link-check.jsonc"),
+              Path(".lycheeignore"),
+              Path(".remarkrc"),
+              Path(".remarkrc.json"),
+              Path("lychee.toml"),
+          )
+          surfaced_configs = [path for path in candidate_configs if path.exists()]
+          if surfaced_configs:
+              raise SystemExit(
+                  "A candidate link-check configuration surfaced. Confirm its tool, scope, "
+                  "ignore ownership/expiry, external-network behavior, and command before wiring:\n"
+                  + "\n".join(str(path) for path in surfaced_configs)
+              )
+
+          package = json.loads(Path("package.json").read_text(encoding="utf-8"))
+          scripts = package.get("scripts", {})
+          link_scripts = sorted(
+              name
+              for name in scripts
+              if re.search(r"(?:^|[-_:])(?:link|links)(?:$|[-_:])", name, re.I)
+          )
+          if link_scripts:
+              raise SystemExit(
+                  "A root package link-check script surfaced. Review dependency pins and "
+                  "fixture behavior before invoking it: " + ", ".join(link_scripts)
+              )
+
+          pyproject = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+          project = pyproject.get("project", {})
+          dependency_text = "\n".join(
+              str(item)
+              for item in (
+                  list(project.get("dependencies", []))
+                  + [
+                      dependency
+                      for group in project.get("optional-dependencies", {}).values()
+                      for dependency in group
+                  ]
+              )
+          )
+          if re.search(r"markdown[-_]?link|linkcheck|lychee", dependency_text, re.I):
+              raise SystemExit(
+                  "A Python link-check dependency surfaced. Confirm its accepted entrypoint, "
+                  "pins, fixtures, and network posture before changing CI."
+              )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          if re.search(
+              r"(?m)^(?:docs[-_])?(?:link|links)(?:[-_]check)?\s*:", makefile
+          ):
+              raise SystemExit(
+                  "A Make link-check target surfaced. Review and wire the accepted command "
+                  "instead of retaining this readiness hold."
+              )
+
+          proposed_entrypoint = lane / "check_links.py"
+          if proposed_entrypoint.exists():
+              raise SystemExit(
+                  "The README-proposed check_links.py entrypoint now exists. Wire it only "
+                  "after deterministic valid/invalid fixtures and outcomes are established."
+              )
+
+          print("The link-check validator lane remains README-only.")
+          print("The proposed test and check_links.py paths remain absent.")
+          print("No reviewed root config, package script, Python dependency, or Make target surfaced.")
+          print("No internal or external documentation links were checked.")
+          PY
+
+      - name: Record explicit link-check hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "### Documentation link check"
+            echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT"
+            echo "- Gate: WORKFLOW_HOLD"
+            echo "- Reason: no accepted executable, configuration, deterministic fixture suite, or repository-native command exists."
+            echo "- Scope: no local paths, anchors, images, citations, redirects, or external URLs were checked."
+            echo "- Authority: link resolution would be QA only, not truth, evidence, policy, or release approval."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::WORKFLOW_HOLD — documentation link checking is not implemented."
