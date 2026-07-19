@@ -1,165 +1,466 @@
+# KFM MapLibre performance-governance readiness workflow.
+# Status: command-bearing static syntax/negative-path checks plus an explicit
+# governed hold on browser performance, render comparison, attestation, proof,
+# release-manifest, correction, rollback, and failure-bundle claims.
+#
+# Responsibility:
+# - Run the deterministic MapLibre checks currently supported by repository
+#   evidence and detect when the held runtime/governance assumptions change.
+# Trigger:
+# - Path-scoped pull requests and pushes cover the actual explorer, transitional
+#   renderer package, configs, scripts, schemas, validators, tests, fixtures,
+#   governance docs, command manifests, and this workflow.
+# - workflow_dispatch supports explicit maintainer readiness inspection.
+# Untrusted-code posture:
+# - Pull requests execute submitted code with read-only contents permission and
+#   no secrets, write scopes, OIDC, deployment, signing, or publication authority.
+# Runner and network:
+# - GitHub-hosted Ubuntu, Node 22, and Python 3.12 are used. No packages or
+#   browsers are installed; checks are no-network after action bootstrap.
+# Commands:
+# - `node --check` for the seven repository-owned MapLibre scripts.
+# - Three repository-owned pure-Python negative-path test functions are invoked
+#   directly because the repository has no dependency lockfile for pytest setup.
+# - Readiness inspection is standard-library-only and does not replace validators.
+# Inputs:
+# - MapLibre scripts, placeholder schemas/validators, config, fixture/test lanes,
+#   package/Make commands, renderer/docs boundaries, and candidate trust builders.
+# Outputs:
+# - GitHub job conclusion, logs, annotations, and step summary only. No screenshot,
+#   receipt, attestation, proof, release record, correction, rollback, or artifact upload.
+# Outcome:
+# - Static syntax/negative tests pass and held assumptions remain: explicit HOLD.
+# - Static failure, missing boundary, or surfaced runtime/governance maturity:
+#   WORKFLOW_FAIL until commands, fixtures, schemas, policy, and authority are reviewed.
+# Compatibility:
+# - Workflow name `MapLibre Perf Governance`, job id
+#   `maplibre-perf-governance`, and job name `MapLibre perf governance` are preserved.
+# Rollback / disable:
+# - Revert this workflow revision. Do not restore unused OIDC, unlocked installs,
+#   live-CDN rendering, unsigned attestation, or trust-shaped artifact generation
+#   without MapLibre, security, evidence, policy, release, and CI review.
+# Authority boundary:
+# - Renderer metrics and screenshots are derived QA signals, not canonical truth.
+#   Passing this readiness gate does not prove performance, visual equivalence,
+#   evidence closure, signing, release eligibility, or publication safety.
 name: MapLibre Perf Governance
 
-on:
+"on":
   pull_request:
     paths:
-      - "apps/web/**"
-      - "scripts/*maplibre*"
-      - "schemas/maplibre/**"
-      - "tools/validators/maplibre/**"
-      - "configs/maplibre/**"
-      - "tests/fixtures/maplibre/**"
       - ".github/workflows/maplibre-perf-governance.yml"
-
+      - "Makefile"
+      - "package.json"
+      - "package-lock.json"
+      - "npm-shrinkwrap.json"
+      - "pnpm-lock.yaml"
+      - "yarn.lock"
+      - "apps/explorer-web/**"
+      - "apps/web/**"
+      - "artifacts/perf/**"
+      - "configs/maplibre/**"
+      - "data/proofs/maplibre-perf/**"
+      - "docs/quality/maplibre-perf-governance.md"
+      - "fixtures/heavy/**"
+      - "fixtures/slim/**"
+      - "packages/maplibre/**"
+      - "packages/maplibre-runtime/**"
+      - "release/maplibre-perf/**"
+      - "schemas/maplibre/**"
+      - "schemas/contracts/v1/maplibre/**"
+      - "scripts/*maplibre*"
+      - "tests/fixtures/maplibre/**"
+      - "tests/maplibre/**"
+      - "tools/validators/maplibre/**"
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
-      - "apps/web/**"
-      - "scripts/*maplibre*"
-      - "schemas/maplibre/**"
-      - "tools/validators/maplibre/**"
-      - "configs/maplibre/**"
-      - "tests/fixtures/maplibre/**"
       - ".github/workflows/maplibre-perf-governance.yml"
-
+      - "Makefile"
+      - "package.json"
+      - "package-lock.json"
+      - "npm-shrinkwrap.json"
+      - "pnpm-lock.yaml"
+      - "yarn.lock"
+      - "apps/explorer-web/**"
+      - "apps/web/**"
+      - "artifacts/perf/**"
+      - "configs/maplibre/**"
+      - "data/proofs/maplibre-perf/**"
+      - "docs/quality/maplibre-perf-governance.md"
+      - "fixtures/heavy/**"
+      - "fixtures/slim/**"
+      - "packages/maplibre/**"
+      - "packages/maplibre-runtime/**"
+      - "release/maplibre-perf/**"
+      - "schemas/maplibre/**"
+      - "schemas/contracts/v1/maplibre/**"
+      - "scripts/*maplibre*"
+      - "tests/fixtures/maplibre/**"
+      - "tests/maplibre/**"
+      - "tools/validators/maplibre/**"
   workflow_dispatch:
 
 permissions:
   contents: read
-  actions: read
-  id-token: write
+
+concurrency:
+  group: maplibre-perf-governance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   maplibre-perf-governance:
     name: MapLibre perf governance
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    env:
-      CI: "true"
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout
+      - name: Check out MapLibre governance boundaries
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-      - name: Setup Node
+      - name: Set up Node 22
         uses: actions/setup-node@v7
         with:
           node-version: "22"
-          cache: "npm"
 
-      - name: Setup Python
+      - name: Set up Python 3.12
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
-      - name: Install Node dependencies
+      - name: Check MapLibre script and validator syntax
+        shell: bash
         run: |
-          npm ci
+          set -euo pipefail
 
-      - name: Install Playwright Chromium
+          scripts=(
+            "scripts/attest-maplibre-perf.mjs"
+            "scripts/build-maplibre-perf-correction-and-rollback.mjs"
+            "scripts/build-maplibre-perf-failure-bundle.mjs"
+            "scripts/build-maplibre-perf-proof-pack.mjs"
+            "scripts/build-maplibre-perf-release-manifest.mjs"
+            "scripts/build-maplibre-render-diff.mjs"
+            "scripts/maplibre-smoke-perf.mjs"
+          )
+
+          for script in "${scripts[@]}"; do
+            node --check "$script"
+          done
+
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          python_paths = sorted(Path("tools/validators/maplibre").glob("*.py"))
+          python_paths.extend(sorted(Path("tests/maplibre").glob("*.py")))
+          if not python_paths:
+              raise SystemExit("No MapLibre Python validator/test files were found.")
+
+          for path in python_paths:
+              ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              print(f"parsed Python syntax: {path}")
+          PY
+
+      - name: Run deterministic MapLibre negative-path tests
+        shell: bash
         run: |
-          npx playwright install --with-deps chromium
+          set -euo pipefail
 
-      - name: Install Python validator dependencies
+          python - <<'PY'
+          from tests.maplibre.test_perf_governance_negative_paths import (
+              test_rejects_negative_memory_budget,
+              test_rejects_out_of_range_tile_error_rate,
+              test_rejects_zero_frame_budget,
+          )
+
+          tests = (
+              test_rejects_zero_frame_budget,
+              test_rejects_negative_memory_budget,
+              test_rejects_out_of_range_tile_error_rate,
+          )
+          for test in tests:
+              test()
+              print(f"passed deterministic negative path: {test.__name__}")
+          PY
+
+      - name: Evaluate governed runtime readiness
+        shell: bash
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install jsonschema pytest
+          set -euo pipefail
 
-      - name: Validate MapLibre perf envelope
+          required_paths=(
+            "Makefile"
+            "apps/explorer-web"
+            "configs/maplibre/README.md"
+            "configs/maplibre/perf-envelope.v1.json"
+            "docs/doctrine/directory-rules.md"
+            "docs/quality/maplibre-perf-governance.md"
+            "fixtures/heavy/README.md"
+            "fixtures/slim/README.md"
+            "package.json"
+            "packages/maplibre/README.md"
+            "schemas/maplibre/perf-correction-notice.schema.json"
+            "schemas/maplibre/perf-envelope.schema.json"
+            "schemas/maplibre/perf-failure-bundle.schema.json"
+            "schemas/maplibre/perf-proof-pack.schema.json"
+            "schemas/maplibre/perf-receipt.schema.json"
+            "schemas/maplibre/perf-release-manifest.schema.json"
+            "schemas/maplibre/perf-rollback-plan.schema.json"
+            "schemas/maplibre/render-diff-report.schema.json"
+            "tests/fixtures/maplibre/README.md"
+            "tests/maplibre/README.md"
+            "tests/maplibre/perf_fixture_builder.py"
+            "tests/maplibre/test_perf_governance_negative_paths.py"
+            "tools/validators/maplibre/README.md"
+            "tools/validators/maplibre/validate_perf_governance.py"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required MapLibre governance boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          lockfiles = (
+              Path("package-lock.json"),
+              Path("npm-shrinkwrap.json"),
+              Path("pnpm-lock.yaml"),
+              Path("yarn.lock"),
+          )
+          surfaced_lockfiles = [path for path in lockfiles if path.exists()]
+          if surfaced_lockfiles:
+              raise SystemExit(
+                  "A dependency lockfile surfaced. Review the accepted package manager, "
+                  "browser install, cache, and no-network split before restoring runtime CI:\n"
+                  + "\n".join(str(path) for path in surfaced_lockfiles)
+              )
+
+          fixture_root = Path("tests/fixtures/maplibre")
+          fixture_payloads = sorted(
+              path
+              for path in fixture_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          )
+          if fixture_payloads:
+              raise SystemExit(
+                  "Executable MapLibre fixture payloads surfaced. Wire deterministic valid, "
+                  "invalid, baseline, and bad-baseline expectations deliberately:\n"
+                  + "\n".join(str(path) for path in fixture_payloads)
+              )
+
+          missing_runtime_fixtures = (
+              Path("fixtures/slim/style.json"),
+              Path("fixtures/heavy/style.json"),
+          )
+          if any(path.exists() for path in missing_runtime_fixtures):
+              raise SystemExit(
+                  "A runtime style fixture surfaced. Review local tiles, glyphs, sprites, "
+                  "network denial, expected metrics, and browser tests before restoring the run."
+              )
+
+          if Path("apps/web").exists():
+              raise SystemExit(
+                  "Legacy apps/web surfaced. Resolve it against the accepted "
+                  "apps/explorer-web responsibility root before changing workflow scope."
+              )
+          for future_root in (
+              Path("packages/maplibre-runtime"),
+              Path("schemas/contracts/v1/maplibre"),
+          ):
+              if future_root.exists():
+                  raise SystemExit(
+                      f"Canonical migration target surfaced at {future_root}. Reconcile the "
+                      "transitional package/schema homes before changing CI."
+                  )
+
+          schema_paths = sorted(Path("schemas/maplibre").glob("*.schema.json"))
+          expected_schema_names = {
+              "perf-correction-notice.schema.json",
+              "perf-envelope.schema.json",
+              "perf-failure-bundle.schema.json",
+              "perf-proof-pack.schema.json",
+              "perf-receipt.schema.json",
+              "perf-release-manifest.schema.json",
+              "perf-rollback-plan.schema.json",
+              "render-diff-report.schema.json",
+          }
+          if {path.name for path in schema_paths} != expected_schema_names:
+              raise SystemExit(
+                  "MapLibre perf schema inventory changed. Review contract/schema placement "
+                  "and deterministic fixtures before changing CI."
+              )
+          placeholder_schema = {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "additionalProperties": True,
+          }
+          for path in schema_paths:
+              if json.loads(path.read_text(encoding="utf-8")) != placeholder_schema:
+                  raise SystemExit(
+                      f"{path} is no longer the reviewed accept-any-object placeholder. "
+                      "Wire its contract, valid/invalid fixtures, and validator deliberately."
+                  )
+
+          schema_wrappers = {
+              "validate_perf_correction_notice.py",
+              "validate_perf_envelope.py",
+              "validate_perf_failure_bundle.py",
+              "validate_perf_proof_pack.py",
+              "validate_perf_receipt.py",
+              "validate_perf_release_manifest.py",
+              "validate_perf_rollback_plan.py",
+              "validate_render_diff_report.py",
+          }
+          placeholder_validators = {
+              "validate_perf_governance.py",
+              "verify_perf_artifact_hashes.py",
+              "verify_perf_manifest_coverage.py",
+              "verify_perf_metrics_from_frames.py",
+              "verify_perf_subject_links.py",
+              "verify_perf_thresholds.py",
+              "verify_render_diff_coverage.py",
+          }
+          validator_root = Path("tools/validators/maplibre")
+          actual_validators = {path.name for path in validator_root.glob("*.py")}
+          if actual_validators != schema_wrappers | placeholder_validators:
+              raise SystemExit(
+                  "MapLibre validator inventory changed. Review the accepted aggregate command, "
+                  "inputs, fixtures, and exit outcomes before changing CI."
+              )
+          for name in schema_wrappers:
+              text = (validator_root / name).read_text(encoding="utf-8")
+              if "tools.validators._common.jsonschema_runner" not in text:
+                  raise SystemExit(f"Schema-validator wrapper changed: {name}")
+          for name in placeholder_validators:
+              text = (validator_root / name).read_text(encoding="utf-8")
+              if "Placeholder" not in text or "No files provided" not in text:
+                  raise SystemExit(
+                      f"Placeholder validator maturity changed: {name}. Wire it deliberately."
+                  )
+
+          envelope = json.loads(
+              Path("configs/maplibre/perf-envelope.v1.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          if envelope.get("object_type") != "PerfEnvelope" or not isinstance(
+              envelope.get("thresholds"), dict
+          ):
+              raise SystemExit(
+                  "MapLibre performance envelope identity/threshold shape changed. Review its "
+                  "contract and meaningful schema before changing CI."
+              )
+
+          package = json.loads(Path("package.json").read_text(encoding="utf-8"))
+          dev_dependencies = package.get("devDependencies", {})
+          for dependency in ("pixelmatch", "playwright", "pngjs"):
+              if dependency not in dev_dependencies:
+                  raise SystemExit(
+                      f"Expected unlocked MapLibre dependency changed or disappeared: {dependency}"
+                  )
+          govern_command = package.get("scripts", {}).get("maplibre:govern", "")
+          if govern_command.strip() != (
+              "python3 tools/validators/maplibre/validate_perf_governance.py"
+          ):
+              raise SystemExit(
+                  "The root MapLibre governance command changed. Review accepted arguments, "
+                  "outcomes, and fixtures before invoking it."
+              )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          if not re.search(
+              r"(?m)^maplibre-govern:\s*\n\s*python3 "
+              r"tools/validators/maplibre/validate_perf_governance\.py\s*$",
+              makefile,
+          ):
+              raise SystemExit(
+                  "The Make MapLibre governance target changed. Review and wire its accepted "
+                  "inputs instead of retaining the no-argument hold."
+              )
+
+          smoke_text = Path("scripts/maplibre-smoke-perf.mjs").read_text(
+              encoding="utf-8"
+          )
+          for marker in (
+              "https://unpkg.com/maplibre-gl@5.5.0/",
+              "https://demotiles.maplibre.org/font/",
+              "http://localhost:8080/fixtures/slim/style.json",
+              "http://localhost:8080/fixtures/heavy/style.json",
+          ):
+              if marker not in smoke_text:
+                  raise SystemExit(
+                      "MapLibre smoke network/fixture posture changed. Reassess browser "
+                      f"determinism and source activation deliberately; missing: {marker}"
+                  )
+
+          trust_markers = {
+              Path("scripts/attest-maplibre-perf.mjs"): (
+                  "signatures: []",
+                  'signing_status: "unsigned"',
+              ),
+              Path("scripts/build-maplibre-perf-proof-pack.mjs"): (
+                  'object_type: "ProofPack"',
+                  'validation_outcome: "ANSWER"',
+              ),
+              Path("scripts/build-maplibre-perf-release-manifest.mjs"): (
+                  'object_type: "ReleaseManifest"',
+                  "artifacts/perf/release-manifest.maplibre-perf.json",
+              ),
+              Path("scripts/build-maplibre-perf-correction-and-rollback.mjs"): (
+                  'object_type: "CorrectionNotice"',
+                  'object_type: "RollbackPlan"',
+              ),
+          }
+          for path, markers in trust_markers.items():
+              text = path.read_text(encoding="utf-8")
+              for marker in markers:
+                  if marker not in text:
+                      raise SystemExit(
+                          f"Trust-shaped candidate builder changed at {path}. Reassess "
+                          f"authority and accepted output roots; missing: {marker}"
+                      )
+
+          artifact_root = Path("artifacts/perf")
+          if artifact_root.exists() and any(
+              path.is_file() for path in artifact_root.rglob("*")
+          ):
+              raise SystemExit(
+                  "Tracked MapLibre perf artifacts surfaced. Classify QA versus trust-bearing "
+                  "content and move it to accepted roots before changing CI."
+              )
+
+          print("No dependency lockfile or executable MapLibre fixture payloads exist.")
+          print("All eight MapLibre perf schemas remain accept-any-object placeholders.")
+          print("Governance verifiers remain placeholders and the aggregate command remains no-argument.")
+          print("Browser smoke remains live-CDN-dependent and lacks its referenced local style fixtures.")
+          print("Attestation remains unsigned; proof/release outcomes remain candidate builders in artifacts/.")
+          PY
+
+      - name: Record explicit MapLibre governance hold
+        shell: bash
         run: |
-          python3 tools/validators/maplibre/validate_perf_envelope.py \
-            configs/maplibre/perf-envelope.v1.json
-
-      - name: Start fixture server
-        run: |
-          python3 -m http.server 8080 &
-          echo $! > /tmp/kfm-maplibre-fixture-server.pid
-
-      - name: Run MapLibre smoke perf
-        run: |
-          node scripts/maplibre-smoke-perf.mjs
-
-      - name: Build MapLibre render diff report
-        run: |
-          node scripts/build-maplibre-render-diff.mjs
-
-      - name: Validate MapLibre render diff report
-        run: |
-          python3 tools/validators/maplibre/validate_render_diff_report.py \
-            artifacts/perf/render-diff/render-diff-report.json
-
-      - name: Attest MapLibre perf receipt
-        run: |
-          node scripts/attest-maplibre-perf.mjs
-
-      - name: Build MapLibre perf release manifest
-        run: |
-          node scripts/build-maplibre-perf-release-manifest.mjs
-
-      - name: Validate MapLibre perf governance
-        run: |
-          python3 tools/validators/maplibre/validate_perf_governance.py
-
-      - name: Build MapLibre perf ProofPack
-        run: |
-          node scripts/build-maplibre-perf-proof-pack.mjs
-
-      - name: Validate MapLibre perf ProofPack
-        run: |
-          python3 tools/validators/maplibre/validate_perf_proof_pack.py \
-            artifacts/perf/proof-pack.maplibre-perf.json
-
-      - name: Rebuild MapLibre perf release manifest with ProofPack
-        run: |
-          node scripts/build-maplibre-perf-release-manifest.mjs
-
-      - name: Final validate MapLibre perf governance
-        run: |
-          python3 tools/validators/maplibre/validate_perf_governance.py
-
-      - name: Build correction and rollback artifacts on failure
-        if: failure()
-        run: |
-          node scripts/build-maplibre-perf-correction-and-rollback.mjs || true
-
-      - name: Build failure bundle on failure
-        if: failure()
-        run: |
-          node scripts/build-maplibre-perf-failure-bundle.mjs || true
-
-      - name: Validate failure bundle on failure
-        if: failure()
-        run: |
-          python3 tools/validators/maplibre/validate_perf_failure_bundle.py \
-            artifacts/perf/failure-bundle.maplibre-perf.json || true
-
-      - name: Upload MapLibre perf ProofPack artifacts
-        if: success()
-        uses: actions/upload-artifact@v7
-        with:
-          name: maplibre-perf-proofpack
-          path: |
-            artifacts/perf/
-            configs/maplibre/perf-envelope.v1.json
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Upload MapLibre perf failure artifacts
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: maplibre-perf-failure-bundle
-          path: |
-            artifacts/perf/
-            configs/maplibre/perf-envelope.v1.json
-          if-no-files-found: warn
-          retention-days: 30
-
-      - name: Stop fixture server
-        if: always()
-        run: |
-          if [ -f /tmp/kfm-maplibre-fixture-server.pid ]; then
-            kill "$(cat /tmp/kfm-maplibre-fixture-server.pid)" || true
-          fi
+          set -euo pipefail
+          {
+            echo "### MapLibre performance governance"
+            echo "- Executed: Node syntax checks and three deterministic negative-path unit tests."
+            echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
+            echo "- Gate: WORKFLOW_HOLD"
+            echo "- Blockers: no lockfile; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
+            echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::WORKFLOW_HOLD — MapLibre runtime performance governance is not release-grade."
