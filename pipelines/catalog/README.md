@@ -36,7 +36,7 @@ related:
   - ../../data/receipts/generated/README.md
   - ../../.github/workflows/README.md
   - ../../.github/CODEOWNERS
- tags:
+tags:
   - kfm
   - pipelines
   - catalog
