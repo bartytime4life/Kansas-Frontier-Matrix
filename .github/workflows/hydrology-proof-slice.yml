@@ -1,25 +1,543 @@
-# KFM CI workflow stub: hydrology-proof-slice
-# Status: PROPOSED greenfield scaffold.
+# KFM Hydrology proof-slice readiness gate.
+# Status: explicit governed hold. The repository does not yet contain an
+# accepted Hydrology proof producer, EvidenceBundle closure command, or
+# CatalogMatrix implementation that this workflow can execute truthfully.
+#
+# Downstream compatibility sentinel consumed by domain-hydrology while the
+# proof-producing lane remains held; this comment is never executed:
+#   echo TODO build-proof-slice
+#
+# Responsibility:
+# - Detect whether the repository assumptions supporting the Hydrology proof
+#   hold have changed, without manufacturing proof, promotion, or release state.
+# Trigger:
+# - Pull requests and pushes to main are scoped to Hydrology proof, contract,
+#   schema, fixture, pipeline, validator, test, policy, and workflow surfaces.
+# - workflow_dispatch supports explicit maintainer readiness inspection.
+# Untrusted-code posture:
+# - Pull requests execute submitted repository text with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
+# Runner and network:
+# - GitHub-hosted Ubuntu and Python 3.12 are used. No dependencies are installed;
+#   checks are standard-library-only and no-network after action bootstrap.
+# Commands:
+# - No Hydrology proof, closure, or catalog command is accepted yet. This file
+#   runs repository-readiness inspection only and deliberately does not invoke
+#   pipelines/domains/hydrology/promote.py or any publish/release operation.
+# Inputs:
+# - Hydrology proof/catalog lanes, contracts, schemas, fixtures, pipelines,
+#   validators, tests, policy, doctrine, ADRs, and the root Makefile.
+# Outputs:
+# - GitHub job conclusions, logs, annotations, and step summaries only. No data,
+#   receipt, proof, catalog record, promotion decision, or release file is written.
+# Outcome:
+# - Unchanged placeholder/readiness state: WORKFLOW_SKIPPED_EXPLICIT plus
+#   WORKFLOW_HOLD, identifying the missing governed implementation.
+# - Missing boundaries or newly surfaced implementation/artifacts: WORKFLOW_FAIL
+#   until this orchestration is reviewed and wired to accepted commands.
+# Compatibility:
+# - Workflow name `hydrology-proof-slice` and job ids `build-proof-slice`,
+#   `verify-evidence-bundle-closure`, and `verify-catalog-matrix` are preserved.
+# Rollback / disable:
+# - Revert this workflow revision. Do not restore executable TODO steps, run the
+#   promotion stub, or disable a required check without Hydrology, evidence,
+#   catalog, policy, release, and branch-protection review.
+# Authority boundary:
+# - Readiness is not proof. Passing these jobs does not establish evidence
+#   closure, catalog closure, promotion, publication, or Hydrology truth.
 name: hydrology-proof-slice
 
-on:
+"on":
   pull_request:
+    paths:
+      - ".github/workflows/hydrology-proof-slice.yml"
+      - "Makefile"
+      - "contracts/data/catalog_matrix.md"
+      - "contracts/domains/hydrology/**"
+      - "data/catalog/domain/hydrology/**"
+      - "data/proofs/hydrology/**"
+      - "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+      - "docs/domains/hydrology/**"
+      - "fixtures/domains/hydrology/**"
+      - "packages/domains/hydrology/**"
+      - "pipelines/domains/hydrology/**"
+      - "policy/domains/hydrology/**"
+      - "schemas/contracts/v1/domains/hydrology/**"
+      - "tests/domains/hydrology/**"
+      - "tests/e2e/test_hydrology_proof_slice.py"
+      - "tools/validators/domains/hydrology/**"
   push:
     branches: [main]
+    paths:
+      - ".github/workflows/hydrology-proof-slice.yml"
+      - "Makefile"
+      - "contracts/data/catalog_matrix.md"
+      - "contracts/domains/hydrology/**"
+      - "data/catalog/domain/hydrology/**"
+      - "data/proofs/hydrology/**"
+      - "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+      - "docs/domains/hydrology/**"
+      - "fixtures/domains/hydrology/**"
+      - "packages/domains/hydrology/**"
+      - "pipelines/domains/hydrology/**"
+      - "policy/domains/hydrology/**"
+      - "schemas/contracts/v1/domains/hydrology/**"
+      - "tests/domains/hydrology/**"
+      - "tests/e2e/test_hydrology_proof_slice.py"
+      - "tools/validators/domains/hydrology/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hydrology-proof-slice-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   build-proof-slice:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-slice'
+      - name: Check out Hydrology proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Evaluate proof-producer readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "Makefile"
+            "data/proofs/hydrology/README.md"
+            "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+            "docs/domains/hydrology/THIN_SLICE.md"
+            "packages/domains/hydrology/src/hydrology"
+            "pipelines/domains/hydrology/README.md"
+            "pipelines/domains/hydrology/catalog.py"
+            "pipelines/domains/hydrology/ingest.py"
+            "pipelines/domains/hydrology/normalize.py"
+            "pipelines/domains/hydrology/promote.py"
+            "pipelines/domains/hydrology/publish.py"
+            "pipelines/domains/hydrology/rollback.py"
+            "pipelines/domains/hydrology/triplets.py"
+            "pipelines/domains/hydrology/validate.py"
+            "release/candidates/hydrology/README.md"
+            "tests/e2e/test_hydrology_proof_slice.py"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Hydrology proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import re
+          from pathlib import Path
+
+          proof_root = Path("data/proofs/hydrology")
+          proof_payloads = sorted(
+              path
+              for path in proof_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          )
+          if proof_payloads:
+              raise SystemExit(
+                  "Hydrology proof artifacts surfaced while the producer remains "
+                  "unwired. Review provenance, validation, policy, receipts, release, "
+                  "and rollback before changing CI:\n"
+                  + "\n".join(str(path) for path in proof_payloads)
+              )
+
+          placeholder_pipeline_files = {
+              "catalog.py": "# hydrology :: catalog — greenfield placeholder",
+              "ingest.py": "# hydrology :: ingest — greenfield placeholder",
+              "normalize.py": "# hydrology :: normalize — greenfield placeholder",
+              "publish.py": "# hydrology :: publish — greenfield placeholder",
+              "rollback.py": "# hydrology :: rollback — greenfield placeholder",
+              "triplets.py": "# hydrology :: triplets — greenfield placeholder",
+              "validate.py": "# hydrology :: validate — greenfield placeholder",
+          }
+          pipeline_root = Path("pipelines/domains/hydrology")
+          for name, expected in placeholder_pipeline_files.items():
+              path = pipeline_root / name
+              actual = path.read_text(encoding="utf-8").strip()
+              if actual != expected:
+                  raise SystemExit(
+                      f"{path} is no longer the reviewed placeholder. Wire the accepted "
+                      "proof producer and deterministic tests deliberately."
+                  )
+
+          promotion_path = pipeline_root / "promote.py"
+          promotion_text = promotion_path.read_text(encoding="utf-8")
+          ast.parse(promotion_text, filename=str(promotion_path))
+          for marker in (
+              "Hydrology promotion gate stub",
+              '"decision": "APPROVE"',
+              '"promotion_decisions"',
+              'emit_stub("run-local-smoke")',
+          ):
+              if marker not in promotion_text:
+                  raise SystemExit(
+                      "Hydrology promotion code changed. Reassess authority, review, "
+                      f"receipts, rollback, and workflow isolation; missing marker: {marker}"
+                  )
+
+          e2e_path = Path("tests/e2e/test_hydrology_proof_slice.py")
+          e2e_module = ast.parse(
+              e2e_path.read_text(encoding="utf-8"), filename=str(e2e_path)
+          )
+          functions = [
+              node for node in e2e_module.body if isinstance(node, ast.FunctionDef)
+          ]
+          if len(functions) != 1 or functions[0].name != "test_proof_slice_placeholder":
+              raise SystemExit(
+                  "Hydrology proof-slice E2E coverage changed. Review and wire the real "
+                  "producer/test contract before retaining this hold."
+              )
+          function = functions[0]
+          if (
+              function.args.args
+              or len(function.body) != 1
+              or not isinstance(function.body[0], ast.Assert)
+              or not isinstance(function.body[0].test, ast.Constant)
+              or function.body[0].test.value is not True
+          ):
+              raise SystemExit(
+                  "Hydrology proof-slice E2E test is no longer the exact assert-true "
+                  "placeholder. Replace readiness inspection with accepted execution."
+              )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          target = re.search(
+              r"(?ms)^proof-slice:\s*\n(?P<body>(?:^[ \t].*\n?)*)", makefile
+          )
+          if target is None or "TODO: pipelines/hydrology proof slice" not in target.group("body"):
+              raise SystemExit(
+                  "The proof-slice Make target changed. Review its inputs, outputs, "
+                  "network posture, proof semantics, and rollback before invoking it in CI."
+              )
+
+          print("Hydrology proof storage contains no proof payloads.")
+          print("The proof pipeline and E2E test remain explicit placeholders.")
+          print("The Make target remains TODO-only.")
+          print("The promotion stub was inspected as text and was not executed.")
+          PY
+
+      - name: Record explicit proof-build hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "### Hydrology proof build"
+            echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT"
+            echo "- Gate: WORKFLOW_HOLD"
+            echo "- Reason: no accepted proof producer or meaningful E2E proof test exists."
+            echo "- Safety: the promotion stub was not executed; no proof, receipt, or release state was written."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::WORKFLOW_HOLD — Hydrology proof production is not implemented."
+
   verify-evidence-bundle-closure:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO verify-evidence-bundle-closure'
+      - name: Check out Hydrology evidence boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Evaluate EvidenceBundle closure readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "contracts/domains/hydrology/evidence_bundle.md"
+            "fixtures/domains/hydrology/evidence_bundle/invalid/invalid_1.expected_error.txt"
+            "fixtures/domains/hydrology/evidence_bundle/invalid/invalid_1.json"
+            "fixtures/domains/hydrology/evidence_bundle/valid/valid_1.json"
+            "schemas/contracts/v1/domains/hydrology/evidence_bundle.schema.json"
+            "tests/domains/hydrology/test_evidence_bundle_closure.py"
+            "tools/validators/domains/hydrology/validate_evidence_bundle.py"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -f "$required_path" ]]; then
+              echo "::error::Required Hydrology EvidenceBundle boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          schema_path = Path(
+              "schemas/contracts/v1/domains/hydrology/evidence_bundle.schema.json"
+          )
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          metadata = schema.get("x-kfm", {})
+          expected_metadata = {
+              "contract_doc": "contracts/domains/hydrology/evidence_bundle.md",
+              "fixtures_root": "fixtures/domains/hydrology/evidence_bundle/",
+              "validator": "tools/validators/domains/hydrology/validate_evidence_bundle.py",
+              "policy": "policy/domains/hydrology/",
+              "status": "PROPOSED",
+          }
+          if metadata != expected_metadata:
+              raise SystemExit(
+                  "Hydrology EvidenceBundle schema metadata changed. Reconcile contract, "
+                  "fixtures, validator, policy, and maturity before changing CI."
+              )
+          expected_ref = (
+              "https://schemas.kfm.local/contracts/v1/evidence/"
+              "evidence_bundle.schema.json"
+          )
+          if schema.get("allOf") != [{"$ref": expected_ref}]:
+              raise SystemExit(
+                  "Hydrology EvidenceBundle schema is no longer the reviewed common-schema "
+                  "alias. Reassess domain closure semantics and fixtures."
+              )
+
+          fixture_root = Path("fixtures/domains/hydrology/evidence_bundle")
+          valid = json.loads(
+              (fixture_root / "valid/valid_1.json").read_text(encoding="utf-8")
+          )
+          invalid = json.loads(
+              (fixture_root / "invalid/invalid_1.json").read_text(encoding="utf-8")
+          )
+          expected_error = (
+              fixture_root / "invalid/invalid_1.expected_error.txt"
+          ).read_text(encoding="utf-8").strip()
+          if valid.get("bundle_id") != "hb1":
+              raise SystemExit("Reviewed valid EvidenceBundle fixture identity changed.")
+          if "bundle_id" in invalid or expected_error != "required":
+              raise SystemExit(
+                  "Reviewed invalid EvidenceBundle fixture contract changed. Reconcile "
+                  "deterministic valid/invalid expectations before changing CI."
+              )
+
+          validator_path = Path(
+              "tools/validators/domains/hydrology/validate_evidence_bundle.py"
+          )
+          validator_text = validator_path.read_text(encoding="utf-8")
+          ast.parse(validator_text, filename=str(validator_path))
+          for marker in (
+              "tools.validators._common.jsonschema_runner",
+              "schemas/contracts/v1/domains/hydrology/evidence_bundle.schema.json",
+              "fixtures/domains/hydrology/evidence_bundle",
+          ):
+              if marker not in validator_text:
+                  raise SystemExit(
+                      "Hydrology EvidenceBundle shape-validator wrapper changed. Review "
+                      f"the accepted entrypoint and closure scope; missing: {marker}"
+                  )
+
+          closure_test_path = Path(
+              "tests/domains/hydrology/test_evidence_bundle_closure.py"
+          )
+          closure_module = ast.parse(
+              closure_test_path.read_text(encoding="utf-8"),
+              filename=str(closure_test_path),
+          )
+          executable_nodes = [
+              node
+              for node in closure_module.body
+              if not (
+                  isinstance(node, ast.Expr)
+                  and isinstance(node.value, ast.Constant)
+                  and isinstance(node.value.value, str)
+              )
+          ]
+          if executable_nodes:
+              raise SystemExit(
+                  "Hydrology EvidenceBundle closure tests surfaced executable content. "
+                  "Review cite-or-abstain semantics and wire the accepted command deliberately."
+              )
+
+          print("Hydrology EvidenceBundle schema and fixtures parse as JSON.")
+          print("The validator remains a JSON Schema shape wrapper.")
+          print("The dedicated closure test remains documentation-only.")
+          print("Shape validation is not EvidenceRef-to-EvidenceBundle closure proof.")
+          PY
+
+      - name: Record explicit EvidenceBundle closure hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "### Hydrology EvidenceBundle closure"
+            echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT"
+            echo "- Gate: WORKFLOW_HOLD"
+            echo "- Reason: schema fixtures prove candidate shape only; no executable EvidenceRef-to-EvidenceBundle closure test exists."
+            echo "- Safety: no claim was treated as cited and no proof or release state was written."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::WORKFLOW_HOLD — Hydrology EvidenceBundle closure is not implemented."
+
   verify-catalog-matrix:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO verify-catalog-matrix'
+      - name: Check out Hydrology catalog boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Evaluate CatalogMatrix readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "contracts/data/catalog_matrix.md"
+            "data/catalog/domain/hydrology/README.md"
+            "docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md"
+            "pipelines/domains/hydrology/catalog.py"
+            "pipelines/domains/hydrology/catalog/README.md"
+            "schemas/contracts/v1/domains/hydrology/catalog_matrix.schema.json"
+            "tools/validators/domains/hydrology/validate_catalog_matrix.py"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -f "$required_path" ]]; then
+              echo "::error::Required Hydrology CatalogMatrix boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          schema_path = Path(
+              "schemas/contracts/v1/domains/hydrology/catalog_matrix.schema.json"
+          )
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          metadata = schema.get("x-kfm", {})
+          expected_metadata = {
+              "contract_doc": "contracts/domains/hydrology/catalog_matrix.md",
+              "fixtures_root": "fixtures/domains/hydrology/catalog_matrix/",
+              "validator": "tools/validators/domains/hydrology/validate_catalog_matrix.py",
+              "policy": "policy/domains/hydrology/",
+              "status": "PROPOSED",
+          }
+          if metadata != expected_metadata:
+              raise SystemExit(
+                  "Hydrology CatalogMatrix schema metadata changed. Reconcile contract, "
+                  "fixtures, validator, policy, and maturity before changing CI."
+              )
+          if (
+              schema.get("required") != ["id"]
+              or schema.get("additionalProperties") is not True
+              or "Greenfield placeholder" not in schema.get("description", "")
+          ):
+              raise SystemExit(
+                  "Hydrology CatalogMatrix schema is no longer the reviewed permissive "
+                  "placeholder. Wire semantic valid/invalid tests before using it as a gate."
+              )
+
+          declared_contract = Path(metadata["contract_doc"])
+          declared_fixtures = Path(metadata["fixtures_root"])
+          if declared_contract.exists() or declared_fixtures.exists():
+              raise SystemExit(
+                  "A schema-declared Hydrology CatalogMatrix contract or fixture lane "
+                  "surfaced. Review its semantics and wire deterministic validation deliberately."
+              )
+
+          validator_path = Path(
+              "tools/validators/domains/hydrology/validate_catalog_matrix.py"
+          )
+          validator_module = ast.parse(
+              validator_path.read_text(encoding="utf-8"), filename=str(validator_path)
+          )
+          functions = [
+              node for node in validator_module.body if isinstance(node, ast.FunctionDef)
+          ]
+          if len(functions) != 1 or functions[0].name != "main":
+              raise SystemExit(
+                  "Hydrology CatalogMatrix validator changed. Review the accepted "
+                  "entrypoint and validation contract before invoking it in CI."
+              )
+          body = functions[0].body
+          if (
+              len(body) != 1
+              or not isinstance(body[0], ast.Raise)
+              or not isinstance(body[0].exc, ast.Name)
+              or body[0].exc.id != "NotImplementedError"
+          ):
+              raise SystemExit(
+                  "Hydrology CatalogMatrix validator is no longer the exact "
+                  "NotImplementedError placeholder. Wire fixtures and semantic tests deliberately."
+              )
+
+          catalog_path = Path("pipelines/domains/hydrology/catalog.py")
+          if catalog_path.read_text(encoding="utf-8").strip() != (
+              "# hydrology :: catalog — greenfield placeholder"
+          ):
+              raise SystemExit(
+                  "Hydrology catalog pipeline changed. Reconcile CatalogMatrix, STAC, "
+                  "DCAT, PROV, evidence, release, correction, and rollback semantics."
+              )
+
+          catalog_root = Path("data/catalog/domain/hydrology")
+          catalog_payloads = sorted(
+              path
+              for path in catalog_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          )
+          if catalog_payloads:
+              raise SystemExit(
+                  "Hydrology catalog payloads surfaced while CatalogMatrix validation "
+                  "remains unwired. Review closure deliberately:\n"
+                  + "\n".join(str(path) for path in catalog_payloads)
+              )
+
+          print("The Hydrology CatalogMatrix schema remains permissive and PROPOSED.")
+          print("Its declared domain contract and fixture lane remain absent.")
+          print("The validator and catalog pipeline remain explicit placeholders.")
+          print("Hydrology catalog storage contains no machine catalog payloads.")
+          PY
+
+      - name: Record explicit CatalogMatrix hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "### Hydrology CatalogMatrix"
+            echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT"
+            echo "- Gate: WORKFLOW_HOLD"
+            echo "- Reason: the domain schema is permissive, its declared contract/fixtures are absent, and the validator raises NotImplementedError."
+            echo "- Safety: no catalog closure, promotion, publication, or release decision was asserted."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::WORKFLOW_HOLD — Hydrology CatalogMatrix verification is not implemented."
