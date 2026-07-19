@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-review-console-correction-readme-e5e127eb",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/review-console/src/features/correction/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/review-console/src/features/correction/README.md": "sha256:e5e127eb25a7556b2845a58b3d313c872fe0d4c450dd6a3fbe6e26e39357dbad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1 — prior project prompt"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/correction/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/package.json@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/audit_log/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/rollback/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/promotion/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/ui/REVIEW_CONSOLE.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/publication/CORRECTION.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/dashboards/governance/RELEASE_CORRECTION_ROLLBACK.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/governance/REVIEW_DUTIES.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/correction_notice.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/supersession_notice.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/release/rollback_card.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/governance/ReviewRecord.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/policy/policy_decision.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/correction/correction_notice.schema.json@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/correction/supersession_notice.schema.json@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/release/rollback_card.schema.json@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/governance/review_record.schema.json@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/decision/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:release/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    ]
+  },
+  "truth_labels": {
+    "apps/review-console/src/features/correction/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-meta-block-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block v2, balanced code fences, unique explicit anchors, final newline, and no trailing whitespace."
+    },
+    {
+      "gate": "authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Existing app-local feature path retained; no new authority root, path move, overlapping matching branch, or open pull request surfaced."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Claims are bounded to exact file reads and searches at main@73aae8bff1e5f8e1d41889283bba85fcb70429f4."
+    },
+    {
+      "gate": "correction-contract-shape-preflight",
+      "outcome": "PASS",
+      "reason": "CorrectionNotice, SupersessionNotice, and RollbackCard thin permissive schemas and richer semantic-contract boundaries are explicitly separated and labeled."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Documentation contains no credentials, private payloads, exact protected locations, living-person records, genomic data, or unpublished exploit details."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation workflow has no mounted checkout; no local repository test result is claimed."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt includes required v3.0 fields, approved truth labels, SHA-256 artifact hash, PASS/SKIPPED validation outcomes, and pending human review."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:correction-feature-readme",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/correction/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "repo:correction-notice-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/correction_notice.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "repo:correction-notice-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/correction/correction_notice.schema.json@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "repo:supersession-notice-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/supersession_notice.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "repo:rollback-card-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/release/rollback_card.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "repo:release-readme",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:release/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "repo:correction-architecture",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/publication/CORRECTION.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T17:06:21Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. This receipt records AI-authored provenance and bounded validation; it is not a CorrectionNotice, SupersessionNotice, RollbackCard, ReviewRecord, PolicyDecision, evidence, proof, release approval, correction execution, rollback execution, deployment, publication, or human review."
+}
