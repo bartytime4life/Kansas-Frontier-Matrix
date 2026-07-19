@@ -1,34 +1,265 @@
+# KFM policy and trust-membrane boundary guards.
+# Status: command-bearing structural/static suite with a non-authoritative JUnit
+# report. The four test modules currently collect 15 tests.
+#
+# Responsibility:
+# - Enforce the implemented control-plane meta contract, explorer adapter/store
+#   boundary, connector/pipeline non-publisher rule, and governed API boundary.
+# Trigger:
+# - Path-scoped pull requests and pushes to main cover the exact code, tests,
+#   doctrine references, command/dependency manifests, and this workflow.
+# - workflow_dispatch supports explicit maintainer verification.
+# Untrusted-code posture:
+# - Pull requests execute submitted tests/code with read-only contents permission
+#   and no secrets, write scopes, OIDC, deployment, or publication authority.
+# Runner and network:
+# - GitHub-hosted Ubuntu and Python 3.11 are used. Network is limited to installing
+#   the observed repository-declared pytest 9.1.1 dependency; tests are no-network.
+# Command:
+# - `make boundary-guards-ci` is the repository-native orchestration surface.
+# Inputs:
+# - Four named test modules plus the control-plane registers, related doctrine,
+#   explorer/app code, connectors, pipelines, constants, Makefile, and pyproject.
+# Outputs:
+# - GitHub job conclusion, logs, step summary, and a 14-day JUnit QA artifact.
+#   The report is not a receipt, proof, policy decision, or release record.
+# Outcome:
+# - PASS requires the Make target to succeed and a nonempty, zero-failure JUnit
+#   report. Test, setup, missing-report, or malformed-report errors fail the job.
+# Compatibility:
+# - Workflow name `policy-boundary-guards`, job id `boundary-tests`, and artifact
+#   name `policy-boundary-guards-junit` are preserved.
+# Rollback / disable:
+# - Revert this workflow revision. Do not remove a required check or narrow its
+#   trigger surface without CI, policy, API, connector, pipeline, and branch review.
+# Authority boundary:
+# - These are bounded structural guards. Passing them does not prove policy bundle
+#   evaluation, rights/sensitivity decisions, evidence closure, or release approval.
 name: policy-boundary-guards
 
-on:
+"on":
   pull_request:
     paths:
-      - 'tests/policy/**'
-      - 'apps/governed-api/tests/**'
-      - 'apps/governed-api/src/**'
-      - 'apps/explorer-web/src/**'
-      - 'connectors/**'
-      - 'pipelines/**'
-      - 'control_plane/**'
+      - ".github/workflows/policy-boundary-guards.yml"
+      - "Makefile"
+      - "pyproject.toml"
+      - "apps/governed-api/src/**"
+      - "apps/governed-api/tests/**"
+      - "apps/explorer-web/src/**"
+      - "connectors/**"
+      - "control_plane/**"
+      - "docs/doctrine/**"
+      - "pipelines/**"
+      - "tests/policy/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/policy-boundary-guards.yml"
+      - "Makefile"
+      - "pyproject.toml"
+      - "apps/governed-api/src/**"
+      - "apps/governed-api/tests/**"
+      - "apps/explorer-web/src/**"
+      - "connectors/**"
+      - "control_plane/**"
+      - "docs/doctrine/**"
+      - "pipelines/**"
+      - "tests/policy/**"
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-boundary-guards-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   boundary-tests:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
+    timeout-minutes: 10
 
-      - name: Setup Python
+    steps:
+      - name: Check out boundary inputs
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.11
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Install pytest
-        run: python -m pip install --upgrade pip pytest
+      - name: Install pinned test runner
+        run: python -m pip install "pytest==9.1.1"
+
+      - name: Verify boundary-suite wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "Makefile"
+            "pyproject.toml"
+            "apps/governed-api/src/governed_api/main.py"
+            "apps/governed-api/tests/conftest.py"
+            "apps/governed-api/tests/test_boundary_guards.py"
+            "apps/explorer-web/src"
+            "connectors"
+            "control_plane"
+            "docs/doctrine/directory-rules.md"
+            "pipelines"
+            "tests/policy/boundary_constants.py"
+            "tests/policy/test_control_plane_register_meta_contract.py"
+            "tests/policy/test_explorer_web_adapter_boundary.py"
+            "tests/policy/test_pipeline_connector_non_publisher.py"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required boundary-suite input is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import re
+          import tomllib
+          from pathlib import Path
+
+          test_paths = (
+              Path("tests/policy/test_control_plane_register_meta_contract.py"),
+              Path("tests/policy/test_explorer_web_adapter_boundary.py"),
+              Path("tests/policy/test_pipeline_connector_non_publisher.py"),
+              Path("apps/governed-api/tests/test_boundary_guards.py"),
+          )
+          discovered = []
+          for path in test_paths:
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              functions = sorted(
+                  node.name
+                  for node in tree.body
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                  and node.name.startswith("test_")
+              )
+              if not functions:
+                  raise SystemExit(f"Boundary test module collected no tests: {path}")
+              discovered.extend(f"{path}:{name}" for name in functions)
+
+          if len(discovered) != 15:
+              raise SystemExit(
+                  "Boundary-suite inventory changed from the reviewed 15 tests. "
+                  "Update scope, documentation, and JUnit expectations deliberately:\n"
+                  + "\n".join(discovered)
+              )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          target = re.search(
+              r"(?ms)^boundary-guards-ci:\s*\n"
+              r"(?P<body>(?:^[ \t].*\n?)*)",
+              makefile,
+          )
+          if target is None:
+              raise SystemExit("Make target boundary-guards-ci is missing.")
+          body = target.group("body")
+          required_command_markers = (
+              "python -m pytest -q",
+              "--junitxml=artifacts/qa/policy-boundary-guards.xml",
+              "tests/policy/test_control_plane_register_meta_contract.py",
+              "tests/policy/test_explorer_web_adapter_boundary.py",
+              "tests/policy/test_pipeline_connector_non_publisher.py",
+              "apps/governed-api/tests/test_boundary_guards.py",
+          )
+          for marker in required_command_markers:
+              if marker not in body:
+                  raise SystemExit(
+                      "Boundary Make target changed. Reconcile the accepted suite and "
+                      f"report contract; missing: {marker}"
+                  )
+
+          pyproject = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+          test_dependencies = pyproject.get("project", {}).get(
+              "optional-dependencies", {}
+          ).get("test", [])
+          if "pytest>=9.1.1,<10" not in test_dependencies:
+              raise SystemExit(
+                  "Repository pytest constraint changed. Reconcile the workflow pin and "
+                  "dependency policy before running the suite."
+              )
+
+          print("Boundary-suite wiring is complete and non-vacuous: 15 tests in four modules.")
+          print("The Make target and JUnit output path match the reviewed contract.")
+          print("The workflow pin is compatible with the repository pytest constraint.")
+          PY
 
       - name: Run boundary policy tests
+        id: boundary
         run: make boundary-guards-ci
+
+      - name: Validate boundary JUnit report
+        if: ${{ !cancelled() && steps.boundary.outcome != 'skipped' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          report="artifacts/qa/policy-boundary-guards.xml"
+          if [[ ! -s "$report" ]]; then
+            echo "::error::Boundary test JUnit report is missing or empty: $report"
+            exit 1
+          fi
+
+          python - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          path = Path("artifacts/qa/policy-boundary-guards.xml")
+          root = ET.parse(path).getroot()
+          suites = [root] if root.tag == "testsuite" else root.findall(".//testsuite")
+          if not suites:
+              raise SystemExit("JUnit report contains no testsuite element.")
+
+          tests = sum(int(suite.attrib.get("tests", "0")) for suite in suites)
+          failures = sum(int(suite.attrib.get("failures", "0")) for suite in suites)
+          errors = sum(int(suite.attrib.get("errors", "0")) for suite in suites)
+          skipped = sum(int(suite.attrib.get("skipped", "0")) for suite in suites)
+
+          if tests < 1:
+              raise SystemExit("JUnit report is vacuous: zero tests recorded.")
+          if failures or errors:
+              raise SystemExit(
+                  f"JUnit report records failures={failures}, errors={errors}."
+              )
+
+          print(
+              f"validated JUnit report: tests={tests}, failures={failures}, "
+              f"errors={errors}, skipped={skipped}"
+          )
+          PY
+
+      - name: Record bounded boundary result
+        if: always()
+        shell: bash
+        env:
+          BOUNDARY_OUTCOME: ${{ steps.boundary.outcome }}
+        run: |
+          set -euo pipefail
+          {
+            echo "### Policy boundary guards"
+            echo "- Test-step outcome: ${BOUNDARY_OUTCOME}"
+            echo "- Command: make boundary-guards-ci"
+            echo "- Scope: 15 structural/static/API tests in four named modules."
+            echo "- Artifact: policy-boundary-guards-junit (14-day non-authoritative QA report)."
+            echo "- Limit: this suite does not evaluate policy bundles, rights/sensitivity matrices, evidence closure, or release decisions."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload boundary test report
         if: always()
@@ -36,3 +267,5 @@ jobs:
         with:
           name: policy-boundary-guards-junit
           path: artifacts/qa/policy-boundary-guards.xml
+          if-no-files-found: warn
+          retention-days: 14
