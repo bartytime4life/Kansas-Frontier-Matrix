@@ -1,20 +1,311 @@
-# KFM CI workflow stub: e2e-smoke
-# Status: PROPOSED greenfield scaffold.
+# KFM end-to-end smoke readiness workflow.
+# Status: PROPOSED bounded readiness checks plus explicit holds; an accepted
+# executable Explorer Web + Governed API + deterministic mock-runtime E2E suite
+# is not established in current repository evidence.
+#
+# Responsibility:
+# - Preserve the existing mock-runtime and E2E check names while making the
+#   repository's actual implementation boundary visible.
+# Trigger:
+# - Existing pull-request and push-to-main triggers are preserved because
+#   required-check and branch-protection dependencies remain unverified.
+# - workflow_dispatch supports explicit maintainer re-runs.
+# Untrusted-code posture:
+# - Pull requests execute submitted repository code with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
+# Network:
+# - Readiness checks are no-network after checkout and action setup.
+# Inputs:
+# - Repository-owned runtime/UI READMEs, package manifests, Makefile, example
+#   environment, and neighboring mock/API workflow definitions.
+# Outputs:
+# - GitHub job conclusions, logs, and step summaries only; no receipt, proof,
+#   release record, deployment, or published artifact is emitted.
+# Outcome:
+# - Current documentation/TODO scaffolds produce an explicit WORKFLOW_HOLD.
+# - Newly surfaced implementation fails the readiness check until an accepted,
+#   deterministic, no-live-source E2E command and negative fixtures are wired.
+# Compatibility:
+# - Workflow name `e2e-smoke` and job ids `spin-up-mock-runtime` and
+#   `run-e2e-smoke` are preserved.
+# Rollback / disable:
+# - Revert this workflow revision. Do not replace it with TODO-success jobs or
+#   disable a required check without branch-protection review.
 name: e2e-smoke
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-smoke-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   spin-up-mock-runtime:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO spin-up-mock-runtime'
+      - name: Check out mock-runtime boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate mock-runtime readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            ".env.example"
+            ".github/workflows/focus-mock-test.yml"
+            "runtime/mock/README.md"
+            "runtime/model_adapters/mock/README.md"
+            "apps/governed-api/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required mock-runtime boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Eq '^KFM_MODEL_RUNTIME=mock$' ".env.example"; then
+            echo "::error::The example environment no longer selects the bounded mock runtime. Reassess runtime and E2E posture deliberately."
+            exit 1
+          fi
+
+          if ! grep -Fq "README-only; implementation-unconfirmed" "runtime/mock/README.md"; then
+            echo "::error::The canonical mock-runtime maturity statement changed. Inspect implementation, fixtures, envelopes, receipts, policy, and tests before wiring E2E."
+            exit 1
+          fi
+
+          if ! grep -Fq "no-direct-implementation-confirmed" "runtime/model_adapters/mock/README.md"; then
+            echo "::error::The mock-adapter maturity statement changed. Inspect the accepted adapter boundary before wiring E2E."
+            exit 1
+          fi
+
+          runtime_implementation="$(
+            find runtime/mock runtime/model_adapters/mock \
+              -type f \
+              ! -name 'README.md' \
+              ! -name '.gitkeep' \
+              -print \
+              -quit
+          )"
+          if [[ -n "$runtime_implementation" ]]; then
+            echo "::error::Mock-runtime implementation surfaced at $runtime_implementation. Replace this hold with its accepted deterministic no-network startup and health check."
+            exit 1
+          fi
+
+          if ! grep -Fq "echo TODO mock-focus-flows" ".github/workflows/focus-mock-test.yml"; then
+            echo "::error::The neighboring mock-focus workflow changed. Coordinate one accepted mock-runtime command rather than creating parallel runtime authority."
+            exit 1
+          fi
+
+          if ! grep -Fq "echo TODO finite-envelope-shape" ".github/workflows/focus-mock-test.yml"; then
+            echo "::error::The neighboring finite-envelope workflow changed. Coordinate its accepted command and fixtures before wiring E2E."
+            exit 1
+          fi
+
+          if grep -Eq '^(mock-runtime|runtime-mock|mock-runtime-smoke):' Makefile; then
+            echo "::error::A mock-runtime target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: spin-up-mock-runtime"
+          echo "WORKFLOW_HOLD: no accepted executable deterministic mock runtime or startup command"
+
+      - name: Record mock-runtime hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ## Mock-runtime readiness
+
+          `WORKFLOW_SKIPPED_EXPLICIT: spin-up-mock-runtime`
+
+          `WORKFLOW_HOLD: no accepted executable deterministic mock runtime or startup command`
+
+          The repository currently establishes a canonical mock-runtime lane,
+          a mock-adapter documentation lane, and a safe example environment.
+          It does not establish an executable mock adapter, fixture registry,
+          deterministic startup command, health check, receipt stream, or
+          substantive mock-focus workflow.
+
+          No service was started. A green held result is readiness evidence
+          only; it is not runtime, policy, evidence, release, deployment, or
+          publication proof.
+          EOF
+
   run-e2e-smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO run-e2e-smoke'
+      - name: Check out E2E boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate E2E suite readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "package.json"
+            "apps/explorer-web/package.json"
+            "apps/explorer-web/README.md"
+            "apps/governed-api/README.md"
+            ".github/workflows/api-test.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required E2E boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root_manifest = json.loads(Path("package.json").read_text(encoding="utf-8"))
+          explorer_manifest = json.loads(
+              Path("apps/explorer-web/package.json").read_text(encoding="utf-8")
+          )
+
+          root_scripts = root_manifest.get("scripts", {})
+          explorer_scripts = explorer_manifest.get("scripts", {})
+
+          expected_root_placeholders = {"lint", "test", "build"}
+          changed_root_placeholders = sorted(
+              name
+              for name in expected_root_placeholders
+              if "TODO" not in str(root_scripts.get(name, ""))
+          )
+          if changed_root_placeholders:
+              raise SystemExit(
+                  "Root package scripts changed. Inspect and wire the accepted E2E "
+                  "command deliberately: " + ", ".join(changed_root_placeholders)
+              )
+
+          expected_explorer_placeholders = {"dev", "build", "test"}
+          changed_explorer_placeholders = sorted(
+              name
+              for name in expected_explorer_placeholders
+              if "TODO" not in str(explorer_scripts.get(name, ""))
+          )
+          if changed_explorer_placeholders:
+              raise SystemExit(
+                  "Explorer Web scripts changed. Inspect runtime startup, build, tests, "
+                  "and governed-API boundaries before wiring E2E: "
+                  + ", ".join(changed_explorer_placeholders)
+              )
+
+          surfaced_e2e_scripts = sorted(
+              f"root:{name}"
+              for name in root_scripts
+              if "e2e" in name.lower()
+          ) + sorted(
+              f"explorer-web:{name}"
+              for name in explorer_scripts
+              if "e2e" in name.lower()
+          )
+          if surfaced_e2e_scripts:
+              raise SystemExit(
+                  "E2E package script surfaced. Replace this hold with the accepted "
+                  "deterministic suite: " + ", ".join(surfaced_e2e_scripts)
+              )
+
+          candidate_roots = (
+              Path("tests"),
+              Path("apps/explorer-web"),
+              Path("packages"),
+          )
+          surfaced_e2e_files = []
+          for root in candidate_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file():
+                      continue
+                  lower_parts = [part.lower() for part in path.parts]
+                  lower_name = path.name.lower()
+                  if (
+                      "e2e" in lower_parts
+                      or "e2e" in lower_name
+                      or lower_name.startswith("playwright.config.")
+                  ):
+                      surfaced_e2e_files.append(str(path))
+
+          if surfaced_e2e_files:
+              raise SystemExit(
+                  "E2E files surfaced. Establish their owner, fixtures, network posture, "
+                  "finite negative outcomes, and repository-native command before wiring CI:\n"
+                  + "\n".join(surfaced_e2e_files)
+              )
+
+          print("Root and Explorer Web package manifests parse as JSON.")
+          print("The inspected root and Explorer Web scripts remain explicit TODO placeholders.")
+          print("No accepted E2E package script, test lane, or Playwright config was detected.")
+          PY
+
+          if ! grep -Fq "make governed-api-smoke" ".github/workflows/api-test.yml"; then
+            echo "::error::The Governed API smoke command changed. Reconcile API-test and E2E ownership before wiring a composed suite."
+            exit 1
+          fi
+
+          if grep -Eq '^(e2e|e2e-smoke|test-e2e):' Makefile; then
+            echo "::error::An E2E Make target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke"
+          echo "WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite"
+
+      - name: Record E2E hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ## E2E smoke readiness
+
+          `WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke`
+
+          `WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite`
+
+          The Governed API has a separate repository-owned smoke workflow, but
+          Explorer Web build/test scripts and the composed E2E surface remain
+          TODO scaffolds. This job verifies that boundary and detects newly
+          surfaced E2E commands or files.
+
+          No E2E browser journey ran. Graduate this hold only with deterministic
+          valid and negative fixtures covering `ANSWER`, `ABSTAIN`, `DENY`, and
+          `ERROR`; governed-API-only access; no direct lifecycle-store reads;
+          evidence/citation handling; safe error redaction; and explicit network,
+          secret, artifact-retention, correction, and rollback posture.
+
+          A green held result is not end-to-end, UI, runtime, evidence, policy,
+          release, deployment, or publication proof.
+          EOF
