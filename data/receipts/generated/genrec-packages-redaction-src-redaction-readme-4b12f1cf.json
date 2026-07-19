@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-packages-redaction-src-redaction-readme-4b12f1cf",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/redaction/src/redaction/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/redaction/src/redaction/README.md": "sha256:4b12f1cf300312ae31e5730c6f15fef1e3fbbf48934f512996dcd2d38b04b672"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(30).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/packages/redaction/src/redaction/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/packages/redaction/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/packages/redaction/src/redaction/__init__.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/packages/redaction/src/redaction/core.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/contracts/shared/redaction_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/schemas/contracts/v1/receipts/redaction_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/policy/redaction/profiles.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a0d9c124805b4e367408a3db4eeaeaa8f61a643a"
+    ]
+  },
+  "truth_labels": {
+    "packages/redaction/src/redaction/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated push permission, target path, immutable base, target blob, review-branch route, API-only execution, two-file change budget, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "directory-adr-drift-and-path-instruction-preflight",
+      "outcome": "PASS",
+      "reason": "Canonical Directory Rules, the schema-home ADR, the drift register, parent package documentation, CODEOWNERS, and path-scoped instruction locations were inspected. No AGENTS.md applied and no path move or parallel authority was introduced."
+    },
+    {
+      "gate": "document-authority-and-supersession-graph",
+      "outcome": "PASS",
+      "reason": "The target doc_id was unique in bounded repository search, no open pull request targeted the file, and the existing document identity and placement were preserved."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Direct reads confirmed kfm-redaction version 0.0.0, an empty __init__.py, and a one-line core.py placeholder. The README removes speculative module and import claims and records the bounded-search limitation."
+    },
+    {
+      "gate": "no-loss-and-sensitive-boundary",
+      "outcome": "PASS",
+      "reason": "The prior fail-closed, no-client-side-only-redaction, no-policy-authority, no-receipt-writing, no-release-authority, no-sensitive-fixtures, correction, and rollback controls were preserved and grounded more precisely."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The inspected CodeQL workflow uses pull_request rather than pull_request_target, GitHub-hosted runners, bounded permissions, and no persisted checkout credentials. Broader branch protection and every workflow trigger remain NEEDS VERIFICATION and are not reported as passing."
+    },
+    {
+      "gate": "markdown-meta-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, a consecutive heading hierarchy, balanced fenced blocks, no trailing whitespace, a final newline, preserved KFM Meta Block identity, and explicit truth-state boundaries."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "Every repository-relative link in the README was resolved through direct GitHub file reads or exact repository search at the pinned base."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, private source payloads, real living-person or genomic data, protected coordinates, reversal secrets, or release/publication action."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob bb9bf99f9b9384bf30a75acab51a4c61a05238d0 on commit a0d9c124805b4e367408a3db4eeaeaa8f61a643a; it matches the locally recomputed Git blob SHA and SHA-256 artifact hash."
+    },
+    {
+      "gate": "multi-file-atomicity",
+      "outcome": "SKIPPED",
+      "reason": "The available connector exposed safe serialized Contents API writes but not an expected-head atomic multi-file commit primitive with a readable base tree. The README and its generated receipt are therefore two sequential commits on a scoped review branch; remote state is re-read between and after writes."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API-only execution was used. The repository was not cloned and repository scripts were not executed. Pull-request checks are reported separately and are not inferred from static inspection."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(30).txt#sha256=b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "target-baseline-and-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/a0d9c124805b4e367408a3db4eeaeaa8f61a643a"
+    },
+    {
+      "id": "redaction-package-scaffold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/packages/redaction/src/redaction/core.py"
+    },
+    {
+      "id": "directory-rules-packages-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "redaction-contract-schema-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/aebbca0f18fe8cd907b36b267cc5372a636830d8/contracts/shared/redaction_receipt.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T14:51:43Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-packages-redaction-namespace-readme-20260719. Documentation-only review-branch change. The receipt records provenance and validation boundaries; it is not approval, proof, policy permission, release authority, or publication authority."
+}
