@@ -137,8 +137,6 @@ The feature must not answer these questions by inference from a green badge, pat
 
 ### Evidence posture
 
-The most important current distinction is:
-
 ```text
 PromotionDecision shape validation = executable
 Promotion policy evaluation        = not established
@@ -157,60 +155,32 @@ Publication                        = not authorized
 
 ## Authority and Directory Rules basis
 
-This path is correctly placed as an app-local feature lane because its responsibility is reviewer-facing presentation and bounded recommendation handoff.
+This path is an app-local presentation and recommendation-handoff lane.
 
-```text
-apps/review-console/src/features/promotion/
-    presentation, interaction, safe state, recommendation handoff
+| Responsibility | Owning root |
+|---|---|
+| Feature presentation and safe interaction | `apps/review-console/src/features/promotion/` |
+| Trusted API projection | `apps/governed-api/` |
+| PromotionDecision, ReleaseManifest, RollbackCard meaning | `contracts/release/` |
+| Machine shape | `schemas/contracts/v1/` |
+| Promotion/release policy | `policy/promotion/`, `policy/release/` |
+| Validators and tests | `tools/validators/`, `tests/` |
+| Evidence, proofs, and receipts | governed evidence/data roots |
+| Actual promotion-decision records | `release/promotion_decisions/` |
+| Release binding and publication decisions | `release/` |
+| Lifecycle execution | `pipelines/` |
 
-contracts/release/
-    PromotionDecision, ReleaseManifest, RollbackCard meaning
+The feature may render governed projections, show unresolved support, compare shape state with closure state, and collect a bounded recommendation intent.
 
-schemas/contracts/v1/
-    machine-checkable shapes
+It must not:
 
-policy/promotion/ and policy/release/
-    admissibility and gate rules
-
-tools/validators/ and tests/
-    enforceability and regression proof
-
-data/proofs/ and data/receipts/
-    evidence/proof and process memory
-
-release/promotion_decisions/
-    actual promotion-decision records
-
-release/manifests/ and release governance lanes
-    release binding and publication decisions
-
-pipelines/
-    governed lifecycle execution
-
-apps/governed-api/
-    trusted API boundary
-```
-
-### Feature authority
-
-The feature may:
-
-- render governed projections;
-- display missing, stale, incompatible, unresolved, denied, or restricted support;
-- compare PromotionDecision shape state with external closure state;
-- show release, rollback, correction, and review references;
-- collect a bounded recommendation intent;
-- submit that intent to an external governed recorder when implemented.
-
-The feature must not:
-
-- create or edit a PromotionDecision locally;
-- run or embed policy as authoritative browser logic;
-- write ReviewRecord, ReleaseManifest, RollbackCard, receipt, proof, or release files;
+- create or edit PromotionDecision, ReviewRecord, PolicyDecision, ReleaseManifest, or RollbackCard;
+- execute authoritative policy in the browser;
+- write release, proof, receipt, evidence, or lifecycle files;
 - move files between lifecycle directories;
-- invoke the hydrology promoter directly;
+- invoke the hydrology promoter;
 - treat fixture, smoke, CI, or schema success as approval;
-- expose raw, work, quarantine, canonical, restricted, or internal stores;
+- expose canonical/internal or restricted stores;
 - publish or repoint public aliases.
 
 [Back to top](#top)
@@ -221,31 +191,18 @@ The feature must not:
 
 ## Hydrology smoke path
 
-The current hydrology promoter is explicitly a stub.
+The current hydrology promoter is explicitly a stub. It writes a hard-coded `APPROVE` record with automation review, path-shaped evidence/rollback refs, and a policy-bundle identifier.
 
-It generates:
+The promotion-gate workflow confirms that:
 
-- `domain: hydrology`;
-- `decision: APPROVE`;
-- an automation reviewer and smoke ticket;
-- an EvidenceBundle path;
-- a RollbackCard path;
-- a policy bundle identifier;
-- a tracked record under `release/promotion_decisions/hydrology/`.
-
-The promotion-gate workflow intentionally proves that:
-
-- the promoter still contains hard-coded `APPROVE`;
-- the reviewer is still `automation-smoke`;
-- the evidence-bundle path is unresolved;
-- the rollback-card path is unresolved;
-- no accountable release review record has appeared;
-- the broader gate validator remains a placeholder;
+- `APPROVE` remains hard-coded;
+- reviewer remains `automation-smoke`;
+- evidence and rollback paths are unresolved;
+- accountable release review is absent;
+- broader gate and ReviewRecord validators are placeholders;
 - CI must not execute the promoter.
 
 ### Required UI treatment
-
-A future feature must display the tracked record as:
 
 ```text
 SHAPE_VALID
@@ -257,26 +214,7 @@ TRANSITION_HELD
 NOT_RELEASED
 ```
 
-It must not display:
-
-```text
-APPROVED FOR RELEASE
-READY TO PUBLISH
-PROMOTED
-PUBLISHED
-```
-
-### Promotion smoke anti-pattern
-
-The following implication is forbidden:
-
-```text
-decision == APPROVE
-therefore
-promotion_ready == true
-```
-
-The safe relationship is:
+Forbidden labels include `APPROVED FOR RELEASE`, `READY TO PUBLISH`, `PROMOTED`, and `PUBLISHED`.
 
 ```text
 decision == APPROVE
@@ -294,54 +232,25 @@ promotion_state == HELD
 
 ## Current PromotionDecision shape
 
-The current closed schema requires:
-
 | Field | Required | Current shape |
 |---|---:|---|
-| `id` | yes | non-empty string; hydrology-specific pattern when `domain == hydrology` |
+| `id` | yes | non-empty; hydrology pattern when applicable |
 | `version` | yes | exactly `v1` |
-| `domain` | yes | non-empty string |
-| `run_id` | yes | non-empty string |
-| `decision` | yes | `APPROVE`, `DENY`, or `ABSTAIN` |
-| `evidence_ref` | yes | non-empty string |
-| `evidence_bundle_uri` | yes | non-empty string |
-| `rollback_card_uri` | yes | non-empty string |
-| `policy_bundle` | yes | non-empty string |
+| `domain` | yes | non-empty |
+| `run_id` | yes | non-empty |
+| `decision` | yes | `APPROVE`, `DENY`, `ABSTAIN` |
+| `evidence_ref` | yes | non-empty reference string |
+| `evidence_bundle_uri` | yes | non-empty reference string |
+| `rollback_card_uri` | yes | non-empty reference string |
+| `policy_bundle` | yes | non-empty identifier |
 | `decided_at` | yes | date-time |
-| `review` | yes | closed object with `reviewer` and `ticket` |
+| `review` | yes | closed object: `reviewer`, `ticket` |
 
-This shape is comparatively strong, but several fields are **reference strings**, not proof of resolution.
+`additionalProperties` is false. Several required fields are references, not proof of resolution.
 
-### Shape-validity limits
+Schema validation does not establish support resolution, policy execution, reviewer authority/independence, ticket validity, freshness, candidate validation, rights/sensitivity closure, manifest completeness, lifecycle transition, or release.
 
-Schema validation does not establish that:
-
-- `evidence_ref` resolves;
-- `evidence_bundle_uri` exists or matches the candidate;
-- `rollback_card_uri` exists or points to a safe target;
-- `policy_bundle` exists, is active, or was evaluated;
-- the reviewer is authorized or independent;
-- the ticket exists;
-- the decision is fresh;
-- the candidate passed validation;
-- rights and sensitivity permit release;
-- the release manifest is complete;
-- the lifecycle transition occurred.
-
-### Minimal review binding is not a ReviewRecord
-
-`review.reviewer` and `review.ticket` provide a minimal accountability binding. They do not carry:
-
-- subject-bound review findings;
-- reviewer role;
-- reasons and obligations;
-- evidence and policy basis;
-- separation-of-duty proof;
-- approval conditions;
-- review expiry;
-- supersession lineage.
-
-Where materiality or policy requires a full ReviewRecord, the feature must show the minimal binding and the full review object as separate surfaces.
+The nested review binding is not a full ReviewRecord. Where a full ReviewRecord is required, the feature must show both objects separately.
 
 [Back to top](#top)
 
@@ -351,31 +260,17 @@ Where materiality or policy requires a full ReviewRecord, the feature must show 
 
 ## Separate decision and state axes
 
-The repository currently contains multiple vocabularies. They must not be silently normalized.
+| Axis | Current vocabulary |
+|---|---|
+| PromotionDecision | `APPROVE`, `DENY`, `ABSTAIN` |
+| Release operational outcome | `PROMOTE_TO_MANIFEST`, evidence/validation/policy holds, `REPAIR_REQUIRED`, `SUPERSEDE_CANDIDATE`, `NO_ACTION` |
+| ReviewRecord | `approve`, `reject`, `request_changes` |
+| PolicyDecision | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` |
+| Release state | `DRAFT`, `READY_FOR_REVIEW`, `HELD`, `READY_FOR_MANIFEST`, `APPROVED`, `RELEASED`, `CORRECTED`, `SUPERSEDED`, `WITHDRAWN`, `NO_ACTION` |
+| UI state | `loading`, `ready`, `blocked`, `denied`, `abstained`, `stale`, `malformed`, `unavailable`, `error` |
+| Recommendation intent | `recommend_route`, `recommend_hold`, `recommend_repair`, `recommend_deny`, `recommend_escalate`, `request_evidence` |
 
-| Axis | Current vocabulary | Meaning |
-|---|---|---|
-| PromotionDecision schema | `APPROVE`, `DENY`, `ABSTAIN` | Release-transition decision record |
-| Release promotion lane README | `PROMOTE_TO_MANIFEST`, `HOLD_FOR_EVIDENCE`, `HOLD_FOR_VALIDATION`, `HOLD_FOR_POLICY`, `REPAIR_REQUIRED`, `SUPERSEDE_CANDIDATE`, `NO_ACTION` | Operational release-handling outcomes |
-| ReviewRecord schema | `approve`, `reject`, `request_changes` | Review disposition |
-| PolicyDecision schema | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Policy finite outcome |
-| Release root status | `DRAFT`, `READY_FOR_REVIEW`, `HELD`, `READY_FOR_MANIFEST`, `APPROVED`, `RELEASED`, `CORRECTED`, `SUPERSEDED`, `WITHDRAWN`, `NO_ACTION` | Release governance state |
-| Feature UI state | `loading`, `ready`, `blocked`, `denied`, `abstained`, `stale`, `malformed`, `unavailable`, `error` | Presentation state |
-| Recommendation intent | `recommend_route`, `recommend_hold`, `recommend_repair`, `recommend_deny`, `recommend_escalate`, `request_evidence` | Proposed user intent, not an authority record |
-
-### Vocabulary rules
-
-- Never render a PolicyDecision `ANSWER` as PromotionDecision `APPROVE`.
-- Never render ReviewRecord `approve` as release `RELEASED`.
-- Never convert `PROMOTE_TO_MANIFEST` into publication.
-- Never treat `HELD` as `DENY` without a governed classification.
-- Never use UI `ready` as a release state.
-- Unknown values fail closed.
-- Mapping requires a versioned, tested adapter or accepted ADR.
-
-### Current conflict
-
-The PromotionDecision contract and schema use `APPROVE | DENY | ABSTAIN`, while the release promotion lane README uses a richer operational outcome set. This README does not choose one as canonical. The UI must preserve both axes until governance reconciles them.
+Do not silently normalize these vocabularies. Mapping requires a versioned tested adapter or accepted ADR. Unknown values fail closed.
 
 [Back to top](#top)
 
@@ -385,38 +280,27 @@ The PromotionDecision contract and schema use `APPROVE | DENY | ABSTAIN`, while 
 
 ## Promotion readiness closure
 
-A promotion recommendation is safe only when all material closure families are explicit.
-
-| Closure family | Required evidence | Failure posture |
+| Closure family | Required posture | Failure posture |
 |---|---|---|
-| Candidate identity | stable candidate/run ref, domain/lane, lifecycle state, intended boundary | block |
-| Source identity and role | SourceDescriptor/source-role refs and non-upcast posture | deny or abstain |
-| Validation | applicable ValidationReports and transform receipts | hold |
-| Evidence | resolvable EvidenceRef → EvidenceBundle support | abstain |
-| Policy | evaluated, versioned policy bundle and PolicyDecision refs | deny, abstain, or error |
-| Rights and sensitivity | resolved rights, consent, sovereignty, privacy, location exposure, redaction/generalization | deny or hold |
-| Review | authorized reviewer, role, ticket, ReviewRecord where required, separation-of-duty state | hold |
-| PromotionDecision | schema-valid, candidate-bound, fresh, non-superseded decision | hold |
-| Rollback | resolvable RollbackCard/target and compatibility check | hold |
-| Correction | named correction path and public-safe notice posture | hold |
-| Manifest | ReleaseManifest readiness with content/digest/support closure | hold |
-| Receipts and proofs | required validation, build, transformation, promotion, release, signature, and proof refs | hold |
-| Freshness and time | decision, policy, evidence, source, validation, and release times compatible | stale/hold |
-| Public-safe derivative | released projection with no restricted/internal data leakage | deny/hold |
-
-### Readiness levels
-
-| Level | Meaning | May feature show? | Authority effect |
-|---|---|---:|---|
-| `SHAPE_VALID` | PromotionDecision passes JSON Schema. | yes | none |
-| `SUPPORT_RESOLVED` | Required references resolve and are compatible. | yes | none |
-| `REVIEW_READY` | Candidate has enough context for reviewer assessment. | yes | none |
-| `RECOMMENDATION_ELIGIBLE` | Current reviewer may submit a recommendation intent. | yes | external handoff only |
-| `TRANSITION_AUTHORIZED` | Governed evaluator/recorder authorizes lifecycle transition. | only from authoritative response | does not equal release |
-| `READY_FOR_MANIFEST` | Manifest assembly may proceed. | only from release authority | does not equal published |
-| `RELEASED` | Governed release complete and public/restricted aliases bound. | only from released state | public effect as policy allows |
-
-The feature must always show which level is being asserted.
+| Candidate identity/lifecycle | exact run, domain, current state, intended boundary | block |
+| Source identity/role | resolvable source role; no upcast | deny/abstain |
+| Validation | applicable current reports/receipts | hold |
+| Evidence | EvidenceRef resolves to compatible EvidenceBundle | abstain |
+| Policy | evaluated versioned policy and PolicyDecision | deny/abstain/error |
+| Rights/sensitivity | rights, consent, sovereignty, privacy, redaction/generalization resolved | deny/hold |
+| Review | authorized role, ticket, ReviewRecord and separation where required | hold |
+| PromotionDecision | valid, candidate-bound, fresh, current | hold |
+| Rollback | resolvable valid RollbackCard/target | hold |
+| Correction | named correction/public-notice path | hold |
+| Manifest Meaning | Authority effect |
+|---|---|---|
+| `SHAPE_VALID` | PromotionDecision passes JSON Schema. | none |
+| `SUPPORT_RESOLVED` | Required refs resolve and bind to candidate. | none |
+| `REVIEW_READY` | Enough context exists for assessment. | none |
+| `RECOMMENDATION_ELIGIBLE` | Current role may submit external intent. | handoff only |
+| `TRANSITION_AUTHORIZED` | Governed evaluator authorizes transition. | not release |
+| `READY_FOR_MANIFEST` | Release authority permits manifest assembly. | not published |
+| `RELEASED` | Governed release and alias binding complete. | public effect as allowed |
 
 [Back to top](#top)
 
@@ -426,55 +310,17 @@ The feature must always show which level is being asserted.
 
 ## Proposed governed read model
 
-No accepted Review Console promotion DTO was established. The following is a **PROPOSED view model**, not a schema or API contract.
+No accepted Review Console promotion DTO was established. A future versioned server projection should carry candidate identity, PromotionDecision shape/currentness, separate closure states for evidence, validation, policy, review, rollback, correction, manifest, proofs and receipts, explicit operational readiness, safe reasons, and permitted actions.
 
-```yaml
-promotion_review_projection:
-  projection_version: v0
-  candidate:
-    ref: string
-    domain: string
-    run_id: string
-    lifecycle_state: string
-    proposed_transition: string
-  promotion_decision:
-    ref: string
-    schema_status: valid | invalid | unavailable
-    decision: APPROVE | DENY | ABSTAIN | unknown
-    decided_at: date-time
-    supersession_state: current | superseded | unknown
-  closure:
-    evidence: resolved | unresolved | stale | restricted | unavailable
-    validation: pass | fail | incomplete | stale | unavailable
-    policy: allow | deny | abstain | error | unevaluated | stale
-    review: satisfied | missing | insufficient | conflicted | unavailable
-    rollback: resolved | unresolved | invalid | unavailable
-    correction: ready | missing | incomplete | unavailable
-    manifest: ready | incomplete | unavailable
-    receipts_and_proofs: complete | incomplete | unavailable
-  operational_state:
-    shape_valid: boolean
-    review_ready: boolean
-    recommendation_eligible: boolean
-    transition_held: boolean
-    release_state: string
-  safe_reasons:
-    - code: string
-      public_summary: string
-  permitted_actions:
-    - string
-```
+Rules:
 
-### Read-model rules
-
-- Every reference-bearing status must come from a governed resolver or authoritative record.
-- The browser must not infer resolution from a path-shaped string.
-- The server must minimize fields by role and sensitivity.
-- Missing sections are not treated as success.
-- Unknown enum values produce a safe blocked state.
-- Projection version must be explicit.
-- Cache keys must include subject, role/audience, projection version, policy context, and release context.
-- Logout, role change, item change, supersession, correction, or policy refresh must invalidate relevant cached data.
+- status comes from authoritative records or governed resolvers;
+- a path-shaped string is never treated as resolved;
+- missing sections are not success;
+- unknown enums block;
+- fields are minimized by role and sensitivity;
+- cache keys include candidate, role/audience, projection version, policy, and release context;
+- logout, role change, candidate change, supersession, correction, and policy refresh invalidate protected cache.
 
 [Back to top](#top)
 
@@ -484,103 +330,11 @@ promotion_review_projection:
 
 ## Recommendation handoff
 
-The feature is not the PromotionDecision writer.
+The feature is not the PromotionDecision writer. A future handoff may submit candidate ref, bounded proposed action, reviewer-context ref, safe rationale code, supporting refs, and an optimistic concurrency token.
 
-A future handoff may submit a bounded intent such as:
+The governed recorder must revalidate authorization, freshness, policy, candidate binding, support refs, and separation of duties; return a finite authoritative response; create any PromotionDecision or ReviewRecord outside the feature; and reject duplicate or stale submissions safely.
 
-```yaml
-promotion_recommendation_intent:
-  candidate_ref: string
-  proposed_action: recommend_route | recommend_hold | recommend_repair | recommend_deny | recommend_escalate | request_evidence
-  reviewer_context_ref: string
-  rationale_code: string
-  supporting_refs:
-    - string
-  optimistic_concurrency_token: string
-```
-
-This shape is illustrative only.
-
-### Handoff requirements
-
-Before submission:
-
-- reviewer identity, role, assignment, and clearance are resolved;
-- the projection is fresh;
-- the candidate has not changed;
-- the current policy context permits the action;
-- required rationale and support refs are present;
-- the feature displays that a recommendation is not final authority.
-
-After submission:
-
-- the governed recorder validates inputs again;
-- policy and review separation run server-side;
-- the recorder returns a finite authoritative response;
-- any PromotionDecision or ReviewRecord is created outside the feature;
-- the feature refreshes from authoritative state;
-- failed writes do not leave an optimistic success state;
-- duplicate submissions are idempotent or visibly rejected.
-
-### No direct execution
-
-The feature must not:
-
-- invoke `pipelines/domains/hydrology/promote.py`;
-- write under `release/promotion_decisions/`;
-- call a file-system mutation endpoint;
-- create a ReleaseManifest;
-- repoint aliases;
-- execute a pipeline transition;
-- bypass the release authority.
-
-[Back to top](#top)
-
----
-
-<a id="freshness-identity-and-supersession"></a>
-
-## Freshness, identity, and supersession
-
-Promotion readiness is time-sensitive.
-
-The feature should distinguish:
-
-- source time;
-- retrieval time;
-- validation time;
-- policy evaluation time;
-- review time;
-- promotion decision time;
-- manifest build time;
-- release time;
-- correction/supersession time.
-
-### Freshness rules
-
-- A schema-valid decision may still be stale.
-- A policy bundle identifier is insufficient without accepted version/freshness semantics.
-- Evidence and validation must apply to the same candidate/run.
-- A later decision does not mutate the earlier decision.
-- Superseded decisions remain inspectable where policy permits.
-- A current candidate must not reuse an old decision without explicit compatibility proof.
-- Clock skew or missing time-kind context produces a safe stale/unknown state.
-
-### Deterministic identity
-
-Where practical, the projection should expose stable refs for:
-
-- candidate;
-- run;
-- PromotionDecision;
-- ReviewRecord;
-- PolicyDecision;
-- EvidenceBundle;
-- RollbackCard;
-- ReleaseManifest;
-- correction/supersession record.
-
-It must not invent canonical IDs in the browser.
+The feature must not invoke `pipelines/domains/hydrology/promote.py`, write under `release/promotion_decisions/`, call filesystem mutation endpoints, create ReleaseManifest, repoint aliases, execute pipeline transitions, or bypass release authority.
 
 [Back to top](#top)
 
@@ -590,76 +344,35 @@ It must not invent canonical IDs in the browser.
 
 ## Access, sensitivity, and security
 
-Promotion review may expose unreleased artifacts, policy reasons, reviewer identities, source limitations, exact sensitive geometry, rights disputes, living-person data, archaeological information, rare-species locations, infrastructure detail, or internal paths.
+Promotion review may expose unreleased artifacts, policy reasons, reviewer identities, source limitations, exact sensitive locations, rights disputes, living-person data, archaeology, rare species, infrastructure, or internal paths.
 
-### Minimum controls
+Minimum controls:
 
 - server-side role and item authorization;
 - deny-by-default field projection;
-- no direct lifecycle-store access;
-- no raw evidence-bundle payload by default;
-- no secret, token, internal path, stack trace, or policy source leakage;
-- safe reason summaries separated from restricted detail;
-- field-level minimization;
-- export and copy restrictions;
-- cache partitioning by role/audience and item;
-- explicit stale and partial-data indicators;
-- audit of read and recommendation events where policy requires it;
-- protection against cross-item and cross-tenant reference substitution;
-- accessibility without hidden privileged detail in labels or tooltips.
-
-### Threat matrix
+- no direct lifecycle-store or raw EvidenceBundle access;
+- no secret, token, internal path, stack trace, or policy-source leakage;
+- safe reason summaries separated from restricted details;
+- export/copy restrictions;
+- role/audience-partitioned cache;
+- stale and partial-data indicators;
+- cross-candidate ref binding;
+- concurrency and replay protection;
+- accessible rendering without hidden privileged details.
 
 | Threat | Required response |
 |---|---|
-| Forged `APPROVE` object | validate signature/provenance/authority when adopted; otherwise mark untrusted |
-| Path-shaped unresolved reference | never treat as resolved |
-| Browser changes decision value | server ignores client authority fields |
-| Role downgrade with cached page | clear protected cache and rerun authorization |
-| Candidate changes during review | reject stale concurrency token |
-| Unsupported enum | block with safe malformed state |
-| Sensitive reason leakage | show safe code/summary only |
-| Cross-candidate ref substitution | verify all refs bind to candidate/run |
-| Replay of old recommendation | idempotency and freshness checks |
-| Hard-coded smoke artifact shown as release | label smoke/held/not released |
-| Policy stub interpreted as allow | display `POLICY_UNEVALUATED`, not allow |
-| Manifest `id`-only schema treated as readiness | display `MANIFEST_INCOMPLETE` |
-
-[Back to top](#top)
-
----
-
-<a id="finite-ui-states"></a>
-
-## Finite UI states
-
-The feature should use explicit presentation states:
-
-| State | Meaning |
-|---|---|
-| `loading` | governed projection is loading |
-| `ready_for_review` | enough context exists for inspection |
-| `recommendation_eligible` | current role may submit an external recommendation |
-| `blocked` | one or more closure requirements are incomplete |
-| `denied` | authoritative policy or release gate denies access/action |
-| `abstained` | authoritative evaluator cannot decide safely |
-| `stale` | time or supersession invalidates current view |
-| `restricted` | user may know an item exists but cannot inspect details |
-| `malformed` | projection or referenced object violates accepted shape |
-| `unavailable` | authoritative dependency cannot be reached |
-| `error` | safe bounded failure |
-
-These are UI states, not PromotionDecision, PolicyDecision, ReviewRecord, or release status values.
-
-### Safe rendering
-
-Each non-ready state should show:
-
-- safe reason code;
-- bounded summary;
-- affected closure family;
-- whether retry, refresh, escalation, or evidence request is permitted;
-- no restricted payload or internal implementation detail.
+| Forged `APPROVE` | verify provenance/authority or mark untrusted |
+| Unresolved path | never mark resolved |
+| Browser edits authority fields | server ignores them |
+| Role downgrade | purge cache and reauthorize |
+| Candidate changes | reject stale token |
+| Unknown enum | block safely |
+| Sensitive reason | show safe code/summary only |
+| Cross-candidate ref | reject binding mismatch |
+| Smoke artifact shown as release | label smoke/held/not released |
+| Policy stub shown as allow | display `POLICY_UNEVALUATED` |
+| `id`-only manifest shown ready | display `MANIFEST_INCOMPLETE` |
 
 [Back to top](#top)
 
@@ -671,78 +384,21 @@ Each non-ready state should show:
 
 ### Current executable proof
 
-| Check | Current status | Proven scope |
+| Check | Status | Proven scope |
 |---|---:|---|
-| PromotionDecision JSON Schema validator | executable | shape only |
-| PromotionDecision fixture test | executable | fixture runner exits successfully |
-| Promotion-gate workflow fixture inventory | executable | non-empty valid/invalid sets and pinned schema metadata |
-| Hydrology smoke hold assertions | executable | confirms hard-coded stub, unresolved refs, absent real reviews, placeholder validators |
-| Promotion policy behavior | not established | no real rules |
+| PromotionDecision schema validator | executable | shape only |
+| PromotionDecision fixture test | executable | fixture runner succeeds |
+| Workflow fixture inventory | executable | non-empty sets and pinned metadata |
+| Hydrology smoke hold assertions | executable | stub, unresolved refs, absent review, placeholders |
+| Promotion policy | not established | no real rules |
 | Gate validator | placeholder | no gate semantics |
 | ReviewRecord validator | placeholder | no review validation |
-| Support-reference resolution | not established | no closure proof |
+| Support resolver | not established | no closure proof |
 | UI tests | not surfaced | no feature proof |
 
-### Minimum negative cases
+Minimum negative coverage includes unauthorized or restricted access; missing/malformed/stale candidate or decision; unresolved/mismatched evidence; failed/missing validation; unevaluated/deny/abstain/error/stale policy; missing/conflicted review; missing/invalid rollback or correction; incomplete/mismatched manifest; missing proofs; superseded decision; hard-coded smoke `APPROVE`; extra property; invalid hydrology ID; cross-candidate substitution; duplicate/replayed intent; API failure; safe errors; and cache purge on logout or role change.
 
-A mature feature/test suite should cover:
-
-1. unauthorized reviewer;
-2. restricted candidate;
-3. missing candidate identity;
-4. lifecycle state mismatch;
-5. invalid PromotionDecision shape;
-6. missing PromotionDecision;
-7. unknown PromotionDecision decision value;
-8. unresolved EvidenceRef;
-9. missing EvidenceBundle;
-10. EvidenceBundle candidate mismatch;
-11. stale evidence;
-12. validation failure;
-13. missing validation report;
-14. policy unevaluated;
-15. policy deny;
-16. policy abstain;
-17. policy error;
-18. policy bundle stale or unknown;
-19. missing reviewer binding;
-20. missing full ReviewRecord where required;
-21. self-review conflict;
-22. reviewer role mismatch;
-23. missing rollback target;
-24. invalid rollback target;
-25. missing correction path;
-26. incomplete ReleaseManifest;
-27. manifest candidate mismatch;
-28. missing proof/receipt;
-29. superseded PromotionDecision;
-30. stale projection;
-31. concurrent candidate change;
-32. hard-coded smoke `APPROVE`;
-33. extra field rejected by PromotionDecision schema;
-34. invalid hydrology ID;
-35. cross-candidate reference substitution;
-36. sensitive reason minimization;
-37. duplicate recommendation submission;
-38. API unavailable;
-39. safe error without stack trace;
-40. logout or role-change cache purge.
-
-### Required proof layers
-
-- schema tests;
-- semantic validator tests;
-- policy tests;
-- evidence-resolution tests;
-- review/separation tests;
-- rollback/correction tests;
-- release-manifest tests;
-- API contract tests;
-- component tests;
-- accessibility tests;
-- security-negative tests;
-- integration tests;
-- end-to-end held/deny/abstain/error/recommendation paths.
+Required proof layers include schema, semantic validator, policy, evidence resolution, review/separation, rollback/correction, release manifest, API contract, component, accessibility, security-negative, integration, and end-to-end held/deny/abstain/error/recommendation paths.
 
 [Back to top](#top)
 
@@ -752,21 +408,19 @@ A mature feature/test suite should cover:
 
 ## Smallest sound implementation sequence
 
-1. **Reconcile vocabularies.** Decide and document how PromotionDecision, release operational outcomes, ReviewRecord, PolicyDecision, and UI states relate.
-2. **Implement promotion policy.** Replace comment-only stubs with tested fail-closed rules for evidence, rollback, review, rights, sensitivity, validation, and freshness.
-3. **Replace hard-coded hydrology approval.** Make the promoter consume governed inputs and produce finite outcomes based on actual evaluation—or keep it disabled.
-4. **Resolve support refs.** Add deterministic resolution and candidate-binding checks for evidence, rollback, review, policy, and validation.
-5. **Implement the promotion-gate validator.** Validate semantic closure beyond JSON shape.
-6. **Implement accountable review.** Complete ReviewRecord validation and separation-of-duty checks.
-7. **Harden ReleaseManifest and RollbackCard.** Move beyond `id`-only schemas before claiming release or rollback readiness.
-8. **Define the governed read DTO.** Version, schema, authorize, minimize, and test the Review Console projection.
-9. **Build read-only feature rendering.** Render explicit axes and safe states without mutation.
-10. **Add typed recommendation handoff.** Server revalidation, concurrency control, idempotency, and audit.
-11. **Add security, accessibility, observability, and cache controls.**
-12. **Bind CI to the accepted implementation.** Replace readiness holds deliberately; never execute a hard-coded promoter as a shortcut.
-13. **Document correction and rollback.** Include safe-disable and supersession paths before operational use.
-
-Each step should be independently reviewable and reversible.
+1. Reconcile PromotionDecision, operational release, ReviewRecord, PolicyDecision, UI, and recommendation vocabularies.
+2. Replace comment-only promotion policy with tested fail-closed rules.
+3. Replace hard-coded hydrology `APPROVE` with governed evaluation or keep promoter disabled.
+4. Resolve and candidate-bind evidence, rollback, review, policy, and validation refs.
+5. Implement semantic promotion-gate validation beyond JSON shape.
+6. Implement ReviewRecord validation and separation of duties.
+7. Harden ReleaseManifest and RollbackCard beyond `id`-only schemas.
+8. Define a versioned, authorized, minimized API projection.
+9. Build read-only feature rendering with explicit axes.
+10. Add typed handoff with server revalidation, concurrency, idempotency, and audit.
+11. Add security, accessibility, observability, and cache controls.
+12. Replace CI holds only after accepted implementation exists.
+13. Document correction, supersession, safe disablement, and rollback.
 
 [Back to top](#top)
 
@@ -776,30 +430,24 @@ Each step should be independently reviewable and reversible.
 
 ## Definition of done
 
-This feature is not done until:
-
-- [ ] named owners are confirmed;
-- [ ] direct feature implementation inventory is documented;
-- [ ] decision and state vocabularies are reconciled;
-- [ ] PromotionDecision schema and semantic contract are accepted or versioned;
-- [ ] promotion policy contains real tested rules;
-- [ ] hard-coded `APPROVE` is removed or the promoter remains disabled;
-- [ ] evidence, rollback, review, policy, validation, and manifest refs resolve;
-- [ ] PromotionDecision semantic validator exists;
-- [ ] ReviewRecord validation and separation of duties exist;
-- [ ] ReleaseManifest and RollbackCard readiness are machine-checkable;
-- [ ] governed API read model is versioned and authorized;
-- [ ] feature remains read-only outside typed handoff;
-- [ ] recommendation handoff revalidates server-side;
-- [ ] no local lifecycle or release writes exist;
-- [ ] stale, denied, abstained, malformed, restricted, unavailable, and error states are tested;
-- [ ] sensitive and internal data minimization is tested;
-- [ ] accessibility is tested;
-- [ ] audit and observability are bounded and non-authoritative;
-- [ ] safe disablement, correction, supersession, and rollback are documented;
-- [ ] CI proves the intended negative and positive paths;
-- [ ] generated receipts and human review are complete for trust-significant changes;
-- [ ] no README claim exceeds current executable proof.
+- [ ] Owners and feature inventory are confirmed.
+- [ ] Vocabularies are reconciled and versioned.
+- [ ] PromotionDecision contract/schema status is accepted.
+- [ ] Promotion policy contains real tested rules.
+- [ ] Hard-coded `APPROVE` is removed or promoter stays disabled.
+- [ ] Evidence, rollback, review, policy, validation, and manifest refs resolve.
+- [ ] Semantic PromotionDecision validator exists.
+- [ ] ReviewRecord validation and separation exist.
+- [ ] Manifest and rollback readiness are machine-checkable.
+- [ ] Governed API projection is versioned, authorized, and minimized.
+- [ ] Feature is read-only outside typed handoff.
+- [ ] Handoff revalidates server-side and is idempotent.
+- [ ] No local lifecycle or release writes exist.
+- [ ] Negative, sensitive, stale, inaccessible, malformed, and error states are tested.
+- [ ] Accessibility, observability, safe disablement, correction, and rollback are covered.
+- [ ] CI proves positive and negative paths.
+- [ ] Generated receipt and human review are complete.
+- [ ] Documentation claims remain bounded to executable evidence.
 
 [Back to top](#top)
 
@@ -809,77 +457,25 @@ This feature is not done until:
 
 ## Open verification register
 
-| ID | Item | Status | Why it matters |
-|---|---|---:|---|
-| PROMO-UI-01 | Recursive feature inventory | NEEDS VERIFICATION | Direct search is bounded. |
-| PROMO-UI-02 | Accepted PromotionDecision authority/version | NEEDS VERIFICATION | Schema remains PROPOSED. |
-| PROMO-UI-03 | Vocabulary reconciliation | CONFLICTED | Multiple incompatible decision/state sets exist. |
-| PROMO-UI-04 | Real promotion policy | NEEDS VERIFICATION | Current Rego files have no real rules. |
-| PROMO-UI-05 | Hydrology promoter disposition | NEEDS VERIFICATION | Hard-coded `APPROVE` must not become production behavior. |
-| PROMO-UI-06 | Evidence/rollback ref resolution | NEEDS VERIFICATION | Smoke refs are unresolved. |
-| PROMO-UI-07 | Promotion-gate validator | NEEDS VERIFICATION | Current file is a placeholder. |
-| PROMO-UI-08 | ReviewRecord validator and records | NEEDS VERIFICATION | Accountable review is not established. |
-| PROMO-UI-09 | ReleaseManifest completeness | NEEDS VERIFICATION | Current schema is `id`-only. |
-| PROMO-UI-10 | RollbackCard completeness | NEEDS VERIFICATION | Current schema is `id`-only. |
-| PROMO-UI-11 | Governed API route/DTO | UNKNOWN | Feature data source is not established. |
-| PROMO-UI-12 | Recommendation writer/recorder | UNKNOWN | No accepted handoff exists. |
-| PROMO-UI-13 | Cross-domain promotion behavior | UNKNOWN | Confirmed implementation evidence is hydrology-specific. |
-| PROMO-UI-14 | Rights/sensitivity policy | NEEDS VERIFICATION | Public exposure must fail closed. |
-| PROMO-UI-15 | Branch protection and required checks | UNKNOWN | Platform controls not inspected. |
-| PROMO-UI-16 | Deployment and telemetry | UNKNOWN | No runtime claim is supported. |
-| PROMO-UI-17 | Full-suite pass state | UNKNOWN | Not established by this documentation update. |
-
-[Back to top](#top)
-
----
-
-<a id="evidence-ledger"></a>
-
-## Evidence ledger
-
-| Evidence | Status | Supports | Limits |
-|---|---|---|---|
-| Prior promotion feature README | CONFIRMED | Existing intent and path. | Broadly greenfield. |
-| Review Console parent READMEs/package manifest | CONFIRMED | App-local role-gated placement and placeholder maturity. | No feature runtime. |
-| PromotionDecision contract | CONFIRMED file / PROPOSED semantics | Object boundaries, fields, outcomes. | Not policy or execution. |
-| PromotionDecision schema | CONFIRMED / PROPOSED | Closed eleven-field shape and hydrology rule. | Does not resolve refs. |
-| PromotionDecision validator/test | CONFIRMED executable | Shape fixture validation. | Not gate readiness. |
-| PromotionDecision fixtures | CONFIRMED minimum cases | Valid and missing-evidence examples. | Incomplete coverage. |
-| Promotion policy README/Rego | CONFIRMED stubs | Files and proposed homes. | No real rules. |
-| Hydrology promoter | CONFIRMED stub | Current code writes hard-coded `APPROVE`. | Not governed evaluation. |
-| Hydrology smoke decision | CONFIRMED | Tracked schema-shaped smoke record. | Unresolved support and no accountable review. |
-| Promotion-gate workflow | CONFIRMED | Explicit read-only holds and negative assertions. | Does not promote. |
-| Release promotion lane README | CONFIRMED | Release-root placement and operational vocabulary. | Conflicts with schema vocabulary. |
-| ReleaseManifest contract/schema | CONFIRMED thin pair | Separation from PromotionDecision. | Manifest readiness not enforceable. |
-| RollbackCard contract/schema | CONFIRMED thin pair | Rollback semantic boundary. | Rollback readiness not enforceable. |
-| ReviewRecord schema | CONFIRMED / PROPOSED | Review vocabulary and closed shape. | Validator placeholder. |
-| PolicyDecision schema | CONFIRMED / PROPOSED | Policy outcome vocabulary. | Policy runtime not proven. |
-| Directory Rules | CONFIRMED live file / review status | Responsibility-root placement. | Does not prove feature implementation. |
-
-[Back to top](#top)
-
----
-
-<a id="maintenance-triggers"></a>
-
-## Maintenance triggers
-
-Update this README when any of these change:
-
-- PromotionDecision contract, schema, fixtures, or validator;
-- promotion or release policy;
-- hydrology promoter or another domain promoter;
-- tracked promotion decision records;
-- support-reference resolution;
-- ReviewRecord contract, schema, validator, or records;
-- ReleaseManifest or RollbackCard schema;
-- promotion-gate workflow;
-- release promotion-decision vocabulary or lane structure;
-- governed API route/DTO;
-- feature source, tests, dependencies, accessibility, or deployment;
-- rights, sensitivity, source-role, correction, rollback, or release doctrine;
-- accepted ADRs;
-- branch protection or required checks.
+| ID | Item | Status |
+|---|---|---:|
+| PROMO-UI-01 | Recursive feature inventory | NEEDS VERIFICATION |
+| PROMO-UI-02 | Accepted PromotionDecision version/authority | NEEDS VERIFICATION |
+| PROMO-UI-03 | Vocabulary reconciliation | CONFLICTED |
+| PROMO-UI-04 | Real promotion policy | NEEDS VERIFICATION |
+| PROMO-UI-05 | Hydrology promoter disposition | NEEDS VERIFICATION |
+| PROMO-UI-06 | Evidence/rollback resolution | NEEDS VERIFICATION |
+| PROMO-UI-07 | Semantic promotion-gate validator | NEEDS VERIFICATION |
+| PROMO-UI-08 | ReviewRecord validation and records | NEEDS VERIFICATION |
+| PROMO-UI-09 | ReleaseManifest completeness | NEEDS VERIFICATION |
+| PROMO-UI-10 | RollbackCard completeness | NEEDS VERIFICATION |
+| PROMO-UI-11 | Governed API route/DTO | UNKNOWN |
+| PROMO-UI-12 | Recommendation recorder | UNKNOWN |
+| PROMO-UI-13 | Cross-domain promotion behavior | UNKNOWN |
+| PROMO-UI-14 | Rights/sensitivity rules | NEEDS VERIFICATION |
+| PROMO-UI-15 | Branch protection/check requirements | UNKNOWN |
+| PROMO-UI-16 | Deployment/telemetry | UNKNOWN |
+| PROMO-UI-17 | Full-suite pass state | UNKNOWN |
 
 [Back to top](#top)
 
@@ -889,39 +485,13 @@ Update this README when any of these change:
 
 ## Rollback, correction, and supersession
 
-### Documentation rollback
+Before merge, close the draft PR or reset/delete the scoped branch. After merge, revert the generated receipt and README commits or revert the PR merge, then restore prior blob `eee28922e3e74019fd2d35a2a03da3f9cd9c81ef`.
 
-Before merge:
+A future feature should allow recommendation actions, individual panels, exports, cross-domain views, or the entire route to be disabled without mutating PromotionDecision, ReviewRecord, PolicyDecision, ReleaseManifest, RollbackCard, evidence, receipts, proofs, or release state.
 
-- close the draft PR; or
-- reset/delete the scoped branch.
+A wrong or stale PromotionDecision is corrected by a new governed decision or supersession record, never by editing history in place.
 
-After merge:
-
-1. revert the generated receipt commit;
-2. revert the README commit;
-3. restore prior target blob `eee28922e3e74019fd2d35a2a03da3f9cd9c81ef`;
-4. record why the stronger evidence boundary was reverted.
-
-### Feature safe disablement
-
-A future feature should support disabling:
-
-- recommendation actions while retaining safe read-only state;
-- individual closure panels when their upstream contract changes;
-- exports/copy actions;
-- cross-domain promotion views;
-- the entire feature route without affecting release records.
-
-Disabling the UI must not mutate PromotionDecision, ReviewRecord, PolicyDecision, ReleaseManifest, RollbackCard, evidence, receipt, proof, or release state.
-
-### Correction of promotion decisions
-
-A wrong or stale PromotionDecision must be corrected by a new governed decision or supersession record. Do not edit the old decision in place.
-
-### No-loss preservation note
-
-The previous v0.1 README was substantive. This revision preserves its core boundaries—review support only, no publication authority, no file movement, evidence/policy/review/rollback/correction requirements—while replacing generic uncertainty with current repository evidence and explicit conflicts.
+The previous v0.1 README was substantive. This revision preserves its core boundaries while replacing generic uncertainty with current repository evidence and explicit conflicts.
 
 [Back to top](#top)
 
@@ -929,6 +499,6 @@ The previous v0.1 README was substantive. This revision preserves its core bound
 
 ## Status summary
 
-`apps/review-console/src/features/promotion/` remains an app-local documentation boundary. PromotionDecision shape validation is executable; promotion authorization, accountable review, policy evaluation, support closure, lifecycle transition, release-manifest readiness, and publication remain held or unverified.
+PromotionDecision shape validation is executable. Promotion authorization, accountable review, policy evaluation, reference closure, lifecycle transition, ReleaseManifest readiness, and publication remain held or unverified.
 
-**Current safe conclusion:** inspectable promotion review is a valid design target, but the tracked hydrology `APPROVE` smoke record is not release authority and must remain visibly held until its evidence, rollback, policy, review, validation, manifest, correction, and release dependencies are governed and resolved.
+**Current safe conclusion:** the tracked hydrology `APPROVE` smoke record is not release authority. It must remain visibly held until evidence, rollback, policy, review, validation, manifest, correction, and release dependencies are governed and resolved.
