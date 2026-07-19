@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-ui-build-workflow-9563fee1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/ui-build.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/ui-build.yml": "sha256:9563fee118b0cf078b1ae30cf2f7729da4a1d61b19ebe5b1ea7b8209baab8334"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:cf0de72ca9cb3cb6c3fa790378153d449015d16f143cfa38f629f7380a36f9fc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "local YAML parsing",
+      "local readiness-guard execution",
+      "official GitHub Actions documentation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/52192ad4f13033a70deec62917743bc6eec470fe",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/.github/workflows/ui-build.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/apps/explorer-web/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/apps/explorer-web/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/actions/checkout/releases/tag/v6.0.2",
+      "https://github.com/actions/setup-node/releases/tag/v6.4.0"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/ui-build.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, default branch, target path, authenticated push permission, immutable base commit, and current target blob before mutation."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "The existing GitHub Actions workflow remains under the canonical .github/workflows orchestration responsibility root; no path was added, moved, or renamed for the workflow itself."
+    },
+    {
+      "gate": "yaml-structure",
+      "outcome": "PASS",
+      "reason": "Parsed the replacement YAML locally and verified workflow name, explicit contents:read permission, and preserved build-explorer-web/test-explorer-web job ids."
+    },
+    {
+      "gate": "fail-closed-readiness",
+      "outcome": "PASS",
+      "reason": "Executed the embedded readiness logic against the current package manifests and confirmed it exits non-zero for TODO scripts, missing pnpm-lock.yaml, and an unpinned packageManager instead of producing a false green result."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "Read the updated workflow back from branch ci/update-ui-build-workflow-20260719 and verified the remote content structure and blob SHA after commit d4629714f8c0a2793cabf4d1031089e479e55f39."
+    },
+    {
+      "gate": "workflow-runtime",
+      "outcome": "SKIPPED",
+      "reason": "A GitHub Actions run was not available before PR creation. The workflow is expected to fail on the documented readiness blockers until real UI scripts, exact pnpm pinning, and pnpm-lock.yaml land."
+    },
+    {
+      "gate": "immutable-action-pinning",
+      "outcome": "SKIPPED",
+      "reason": "Official version-specific tags v6.0.2 and v6.4.0 replace the prior floating/nonexistent-looking major reference, but full commit-SHA pinning remains NEEDS VERIFICATION."
+    },
+    {
+      "gate": "branch-protection-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Required-check names, branch protection, rulesets, and independent approval enforcement remain NEEDS VERIFICATION; human review is pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-ui-workflow-stub",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/.github/workflows/ui-build.yml"
+    },
+    {
+      "id": "workflow-governance-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/.github/workflows/README.md"
+    },
+    {
+      "id": "explorer-web-placeholder-scripts",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/apps/explorer-web/package.json"
+    },
+    {
+      "id": "root-package-manager-state",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/package.json"
+    },
+    {
+      "id": "ui-make-target-placeholder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/Makefile"
+    },
+    {
+      "id": "directory-rules-workflow-root",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52192ad4f13033a70deec62917743bc6eec470fe/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "official-checkout-release",
+      "validated": true,
+      "evidence_ref": "https://github.com/actions/checkout/releases/tag/v6.0.2"
+    },
+    {
+      "id": "official-setup-node-release",
+      "validated": true,
+      "evidence_ref": "https://github.com/actions/setup-node/releases/tag/v6.4.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T15:48:07Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored fail-closed hardening of the existing ui-build workflow on a scoped review branch. The workflow preserves its name and two job ids, adds explicit read-only permissions, concurrency and timeouts, version-qualified official setup actions, deterministic pnpm readiness requirements, and visible summaries. It intentionally does not claim the Explorer Web app currently builds or tests: current TODO scripts, absent pnpm lockfile, and missing exact packageManager pin remain blockers. Human review is pending; this receipt is provenance, not approval or release authority."
+}

@@ -1,20 +1,237 @@
 # KFM CI workflow stub: ui-build
 # Status: PROPOSED greenfield scaffold.
+#
+# Responsibility:
+# - Build and test the canonical apps/explorer-web workspace once its package
+#   scripts and dependency lock are implementation-bearing.
+# Authority:
+# - CI signal only. This workflow cannot authorize evidence, policy, release,
+#   publication, deployment, or access to canonical/internal stores.
+# Trigger:
+# - Existing pull-request and push-to-main triggers are preserved because
+#   required-check and branch-protection dependencies remain unverified.
+# - workflow_dispatch supports explicit maintainer verification.
+# Untrusted-code posture:
+# - Pull requests execute submitted code with read-only repository permission,
+#   no secrets, no write scopes, no OIDC, and no deployment/publication path.
+# Network:
+# - Dependency installation may reach the package registry. Build and test
+#   commands must not call source systems, model providers, private endpoints,
+#   production services, or publication targets.
+# Current blocker:
+# - apps/explorer-web/package.json still contains TODO build/test commands;
+#   package.json does not pin pnpm; and pnpm-lock.yaml is absent. Readiness
+#   checks fail closed instead of returning a misleading green echo result.
+# Compatibility:
+# - Workflow name ui-build and job ids build-explorer-web and
+#   test-explorer-web are preserved as potential required-check surfaces.
 name: ui-build
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  NODE_VERSION: "22"
+  UI_MANIFEST: apps/explorer-web/package.json
+  UI_WORKSPACE: explorer-web
+  TZ: UTC
 
 jobs:
   build-explorer-web:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-explorer-web'
+      - name: Check out tested revision
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Validate Explorer Web build readiness
+        env:
+          REQUIRED_SCRIPT: build
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require("node:fs");
+
+          const errors = [];
+          const uiPath = process.env.UI_MANIFEST;
+          const scriptName = process.env.REQUIRED_SCRIPT;
+
+          for (const path of ["package.json", uiPath]) {
+            if (!fs.existsSync(path)) errors.push(`${path} is missing`);
+          }
+
+          let root = {};
+          let ui = {};
+          try {
+            root = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          } catch (error) {
+            errors.push(`package.json is invalid JSON: ${error.message}`);
+          }
+          try {
+            ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
+          } catch (error) {
+            errors.push(`${uiPath} is invalid JSON: ${error.message}`);
+          }
+
+          const command = ui.scripts?.[scriptName];
+          if (!command) {
+            errors.push(`${uiPath} has no scripts.${scriptName}`);
+          } else if (/\bTODO\b|^\s*(echo|printf)\b/i.test(command)) {
+            errors.push(`${uiPath} scripts.${scriptName} is a placeholder: ${command}`);
+          }
+
+          if (!fs.existsSync("pnpm-lock.yaml")) {
+            errors.push("pnpm-lock.yaml is missing");
+          }
+          if (!/^pnpm@[0-9]+\.[0-9]+\.[0-9]+(?:[-+].+)?$/.test(root.packageManager || "")) {
+            errors.push("package.json must pin packageManager as pnpm@<exact-version>");
+          }
+
+          if (errors.length) {
+            console.error(
+              `::error file=${uiPath},title=Explorer Web ${scriptName} readiness failed::${errors.join("; ")}`,
+            );
+            errors.forEach((error) => console.error(`- ${error}`));
+            process.exit(1);
+          }
+          NODE
+
+      - name: Install locked workspace dependencies
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Build Explorer Web
+        run: pnpm --filter "${UI_WORKSPACE}" build
+
+      - name: Record Explorer Web build scope
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## Explorer Web build"
+            echo
+            echo "- Result: \`${{ job.status }}\`"
+            echo "- Command: \`pnpm --filter ${UI_WORKSPACE} build\`"
+            echo "- Readiness: real build script, exact pnpm pin, and pnpm-lock.yaml"
+            echo "- Authority: CI signal only; not evidence, policy, release, publication, or deployment approval"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
   test-explorer-web:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO test-explorer-web'
+      - name: Check out tested revision
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Validate Explorer Web test readiness
+        env:
+          REQUIRED_SCRIPT: test
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require("node:fs");
+
+          const errors = [];
+          const uiPath = process.env.UI_MANIFEST;
+          const scriptName = process.env.REQUIRED_SCRIPT;
+
+          for (const path of ["package.json", uiPath]) {
+            if (!fs.existsSync(path)) errors.push(`${path} is missing`);
+          }
+
+          let root = {};
+          let ui = {};
+          try {
+            root = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          } catch (error) {
+            errors.push(`package.json is invalid JSON: ${error.message}`);
+          }
+          try {
+            ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
+          } catch (error) {
+            errors.push(`${uiPath} is invalid JSON: ${error.message}`);
+          }
+
+          const command = ui.scripts?.[scriptName];
+          if (!command) {
+            errors.push(`${uiPath} has no scripts.${scriptName}`);
+          } else if (/\bTODO\b|^\s*(echo|printf)\b/i.test(command)) {
+            errors.push(`${uiPath} scripts.${scriptName} is a placeholder: ${command}`);
+          }
+
+          if (!fs.existsSync("pnpm-lock.yaml")) {
+            errors.push("pnpm-lock.yaml is missing");
+          }
+          if (!/^pnpm@[0-9]+\.[0-9]+\.[0-9]+(?:[-+].+)?$/.test(root.packageManager || "")) {
+            errors.push("package.json must pin packageManager as pnpm@<exact-version>");
+          }
+
+          if (errors.length) {
+            console.error(
+              `::error file=${uiPath},title=Explorer Web ${scriptName} readiness failed::${errors.join("; ")}`,
+            );
+            errors.forEach((error) => console.error(`- ${error}`));
+            process.exit(1);
+          }
+          NODE
+
+      - name: Install locked workspace dependencies
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Test Explorer Web
+        run: pnpm --filter "${UI_WORKSPACE}" test
+
+      - name: Record Explorer Web test scope
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## Explorer Web tests"
+            echo
+            echo "- Result: \`${{ job.status }}\`"
+            echo "- Command: \`pnpm --filter ${UI_WORKSPACE} test\`"
+            echo "- Readiness: real test script, exact pnpm pin, and pnpm-lock.yaml"
+            echo "- Authority: CI signal only; not evidence, policy, release, publication, or deployment approval"
+          } >> "${GITHUB_STEP_SUMMARY}"
