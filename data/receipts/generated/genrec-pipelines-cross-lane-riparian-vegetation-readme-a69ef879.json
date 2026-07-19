@@ -1,0 +1,182 @@
+{
+  "receipt_id": "genrec-pipelines-cross-lane-riparian-vegetation-readme-a69ef879",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/cross_lane/riparian_vegetation/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/cross_lane/riparian_vegetation/README.md": "sha256:a69ef87916bfdce791fdd5b767455945b084587100f9950ff41aff2b26803e7d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text.txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/1b38ec3cf372f04f828bcb1abf35be77365b9bdb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipelines/cross_lane/riparian_vegetation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipelines/cross_lane/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipelines/domains/flora/riparian/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipelines/biodiversity/vegetation_stress/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/docs/architecture/ecology-cross-domain.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/docs/domains/flora/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/.github/workflows/validator-suite.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/cross_lane/riparian_vegetation/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Scope is limited to one existing README plus the required generated-work receipt; no executable, schema, contract, policy, fixture, test, workflow, lifecycle, release, runtime, or public-surface behavior is changed."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced to 5cf7386b17a85feeadbb82a0eb9ec92bded68279 through an unrelated validator-suite workflow update. The target retained blob 4b1af6368df16fc1b77a49eea54014da54639b20, so the prepared revision was re-pinned without overwriting related work."
+    },
+    {
+      "gate": "directory-authority-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "Existing pipelines/cross_lane/riparian_vegetation placement and document identity were retained. Directory Rules, parent and adjacent pipeline boundaries, canonical-path doctrine, open branch/PR state, specs, tests, workflows, and review routing were inspected without creating parallel authority."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The README distinguishes verified documentation from unverified runner, contract, candidate schema, declarative spec, fixtures, dedicated tests, workflow, receipts, production execution, release integration, and public behavior."
+    },
+    {
+      "gate": "cross-lane-ownership-conflict",
+      "outcome": "PASS",
+      "reason": "Competing cross_lane, Flora riparian, vegetation-stress, and ecology composition responsibilities remain explicitly CONFLICTED; the README does not select a canonical executable home by assertion."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, one closed KFM Meta Block v2, unique heading slugs, resolved internal anchors, balanced code fences, no trailing whitespace, a final newline, and plausible Mermaid decision-node syntax."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "Every repository-relative link added or retained in the revision points to a file fetched at the pinned base."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Broad pull-request workflows may run. The updated validator-suite uses GitHub-hosted runners, read-only contents permission, no persisted checkout credentials, and no secrets, OIDC, write, release, deployment, or publication authority; floating major action refs remain a disclosed repository-level hardening gap."
+    },
+    {
+      "gate": "security-privacy-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The revision contains no credentials, private source payloads, living-person or genomic records, exact protected ecological coordinates, parcel/operator examples, redaction reversal details, or source-term assertions. Sensitive examples remain categorical and fail closed."
+    },
+    {
+      "gate": "no-loss-preservation",
+      "outcome": "PASS",
+      "reason": "Useful v0.1 purpose, lifecycle, ownership, input, output, gate, sensitivity, dry-run, review, correction, rollback, and no-direct-publish obligations were retained. Proposal-as-fact trees and pseudo-machine candidate YAML were reclassified or replaced with semantic obligations."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 274bdb2f72766f715ded1bfc46d6478c868266bf on commit 1b38ec3cf372f04f828bcb1abf35be77365b9bdb, matching the locally recomputed Git blob SHA and SHA-256 artifact hash a69ef87916bfdce791fdd5b767455945b084587100f9950ff41aff2b26803e7d."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "The API-only workflow did not clone or execute repository code, and no riparian runner or dedicated test command was verified. Pull-request checks are observed separately and are never inferred as passing."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The receipt payload satisfies the fetched generated-receipt required fields, enums, hash patterns, date-time format, and additional-property restrictions in local structural validation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and separate from generation, static validation, mergeability, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text.txt#sha256=b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "riparian-vegetation-readme-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipelines/cross_lane/riparian_vegetation/README.md"
+    },
+    {
+      "id": "flora-riparian-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipelines/domains/flora/riparian/README.md"
+    },
+    {
+      "id": "vegetation-stress-placement-conflict",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipelines/biodiversity/vegetation_stress/README.md"
+    },
+    {
+      "id": "ecology-cross-domain-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/docs/architecture/ecology-cross-domain.md"
+    },
+    {
+      "id": "pipeline-spec-and-test-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf7386b17a85feeadbb82a0eb9ec92bded68279/pipeline_specs/README.md"
+    },
+    {
+      "id": "final-readme-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/1b38ec3cf372f04f828bcb1abf35be77365b9bdb"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T16:11:19Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-pipelines-cross-lane-riparian-vegetation-readme-v0-2-20260719. Documentation-only update. This receipt records provenance and bounded validation outcomes; it is not ecological evidence, policy approval, human review, lifecycle promotion, release approval, regulatory authority, or publication authority."
+}
