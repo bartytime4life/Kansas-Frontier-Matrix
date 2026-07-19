@@ -2,7 +2,7 @@
 #
 # Responsibility:
 #   Check repository schema JSON structure, canonical v1 schema identity, the
-#   five configured aggregate-validator fixture families, and the executable
+#   six configured aggregate-validator fixture families, and the executable
 #   schema/contract test lane without treating shape validity as truth.
 #
 # Trigger and trust boundary:
@@ -97,6 +97,10 @@ jobs:
               "validate_source_descriptor.py": (
                   Path("schemas/contracts/v1/source/source_descriptor.schema.json"),
                   Path("fixtures/contracts/v1/source/source_descriptor"),
+              ),
+              "validate_evidence_ref.py": (
+                  Path("schemas/contracts/v1/evidence/evidence_ref.schema.json"),
+                  Path("fixtures/contracts/v1/evidence/evidence_ref"),
               ),
               "validate_evidence_bundle.py": (
                   Path("schemas/contracts/v1/evidence/evidence_bundle.schema.json"),

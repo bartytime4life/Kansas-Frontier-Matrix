@@ -7,6 +7,7 @@ from pathlib import Path
 # Placeholder validator stubs intentionally raising NotImplementedError are excluded.
 RUNNER_VALIDATORS = [
     "validate_source_descriptor.py",
+    "validate_evidence_ref.py",
     "validate_evidence_bundle.py",
     "validate_runtime_response_envelope.py",
     "validate_decision_envelope.py",

@@ -6,11 +6,11 @@ version: v0.1.0
 status: draft
 owners: TODO(owner): schema steward; TODO(owner): evidence contracts steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-06-30 expansion
-updated: 2026-06-30
+updated: 2026-07-19
 policy_label: public-review
 related: [invalid_1.json, invalid_1.expected_error.txt, ../valid/valid_1.json, ../../../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json, ../../../../../../contracts/evidence/evidence_ref.md, ../../../../../../tests/schemas/test_common_contracts.py, ../../../../../../docs/doctrine/directory-rules.md]
 tags: [kfm, fixtures, contracts, v1, evidence, evidence-ref, invalid-fixtures, json-schema, expected-error, negative-tests, non-authoritative]
-notes: ["This README replaces a blank file at `fixtures/contracts/v1/evidence/evidence_ref/invalid/README.md`.", "Invalid fixtures are schema test inputs only; schema shape, contract meaning, validator implementation, and policy rules stay in their owning roots.", "The active schema evidence is `schemas/contracts/v1/evidence/evidence_ref.schema.json`, whose `x-kfm.fixtures_root` points to `fixtures/contracts/v1/evidence/evidence_ref/`.", "The current invalid fixture omits required `ref`; the expected-error file currently contains the broad matcher text `required`.", "The schema metadata declares `tools/validators/validate_evidence_ref.py`, but that file was not found during this check."]
+notes: ["This README replaces a blank file at `fixtures/contracts/v1/evidence/evidence_ref/invalid/README.md`.", "Invalid fixtures are schema test inputs only; schema shape, contract meaning, validator implementation, and policy rules stay in their owning roots.", "The active schema evidence is `schemas/contracts/v1/evidence/evidence_ref.schema.json`, whose `x-kfm.fixtures_root` points to `fixtures/contracts/v1/evidence/evidence_ref/`.", "The invalid lane covers a missing required ref, an extra property, and an unsupported kind with matching expected-error sidecars.", "The schema-declared validator now exists and is aggregate-wired; it remains shape-only."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -50,8 +50,10 @@ Use this lane to verify that malformed or incomplete EvidenceRef-like objects ar
 | Fixture | Invalid because | Expected error |
 |---|---|---|
 | [`invalid_1.json`](invalid_1.json) | Contains `kind: measurement` but omits required `ref`. | [`invalid_1.expected_error.txt`](invalid_1.expected_error.txt): `required` |
+| [`invalid_2.json`](invalid_2.json) | Adds a property forbidden by the closed schema. | [`invalid_2.expected_error.txt`](invalid_2.expected_error.txt): `additional properties` |
+| [`invalid_3.json`](invalid_3.json) | Uses an unsupported `kind`; its `ref` remains an unconstrained string under the current schema. | [`invalid_3.expected_error.txt`](invalid_3.expected_error.txt): enum matcher |
 
-The expected-error file currently uses a broad matcher. A future fixture-quality pass may tighten it to the exact missing-`ref` message after confirming the JSON Schema error wording.
+The expected-error sidecars use bounded but intentionally broad matchers. A future fixture-quality pass may tighten them after confirming stable JSON Schema error wording.
 
 ---
 
@@ -97,7 +99,7 @@ Observed harness expectations:
 | `invalid/invalid_*.json` | at least one JSON Schema error |
 | `invalid/invalid_*.expected_error.txt` | expected text appears in combined error messages |
 
-This README documents fixture behavior only. It does not claim that pytest, CI, or a dedicated EvidenceRef validator was run during this update.
+This README documents fixture behavior and confirmed validator wiring. Remote CI status and referential resolver behavior remain separately verified.
 
 ---
 
@@ -123,8 +125,8 @@ Before changing invalid fixtures here:
 | Valid sibling fixture | CONFIRMED | `../valid/valid_1.json` exists and includes `ref` and `kind`. |
 | Schema | CONFIRMED | `evidence_ref.schema.json` defines required `ref` and `kind`. |
 | Contract doc | CONFIRMED | `contracts/evidence/evidence_ref.md` exists and defines EvidenceRef as a governed pointer. |
-| Declared validator wrapper | NOT FOUND | `tools/validators/validate_evidence_ref.py` is declared in schema metadata but was not found in this repo check. |
-| Test execution | NOT RUN | No validators, pytest, or CI were run during this README update. |
+| Declared validator wrapper | CONFIRMED / SHAPE ONLY | `tools/validators/validate_evidence_ref.py` targets this schema and fixture family. |
+| Focused validator test | CONFIRMED | `tests/schemas/test_evidence_ref_validator.py` checks missing-`ref` CLI exit polarity. |
 
 ---
 
@@ -135,10 +137,10 @@ Before changing invalid fixtures here:
 | Previous target file | CONFIRMED | Target existed as a blank file. | Did not define invalid fixture guidance. |
 | [`invalid_1.json`](invalid_1.json) | CONFIRMED | Current negative fixture omits required `ref`. | Only one invalid fixture is currently verified. |
 | [`invalid_1.expected_error.txt`](invalid_1.expected_error.txt) | CONFIRMED | Current expected-error matcher is `required`. | Broad matcher; may be tightened later. |
-| [`../valid/valid_1.json`](../valid/valid_1.json) | CONFIRMED | Positive comparison fixture includes `ref` and `kind`. | No valid README was found during this check. |
+| [`../valid/valid_1.json`](../valid/valid_1.json) | CONFIRMED | Positive comparison fixture includes `ref` and `kind`. | The sibling [`../valid/README.md`](../valid/README.md) documents the valid lane. |
 | [`../../../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json`](../../../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json) | CONFIRMED | Schema shape, required fields, enum values, fixture root, and declared validator path. | Schema status is `PROPOSED`. |
 | [`../../../../../../contracts/evidence/evidence_ref.md`](../../../../../../contracts/evidence/evidence_ref.md) | CONFIRMED | Semantic contract and EvidenceRef boundary. | Runtime behavior remains separately verified. |
-| [`../../../../../../tests/schemas/test_common_contracts.py`](../../../../../../tests/schemas/test_common_contracts.py) | CONFIRMED | Fixture discovery and expected-error matching behavior. | Tests were not run during this update. |
+| [`../../../../../../tests/schemas/test_common_contracts.py`](../../../../../../tests/schemas/test_common_contracts.py) | CONFIRMED / TEST-COVERED | Fixture discovery and expected-error matching behavior. | Shape behavior only; not resolver or policy proof. |
 | [`../../../../../../docs/doctrine/directory-rules.md`](../../../../../../docs/doctrine/directory-rules.md) | CONFIRMED | `fixtures/` is a canonical root for valid/invalid test inputs. | Specific fixture coverage still requires tests or inventory. |
 
 [Back to top](#top)

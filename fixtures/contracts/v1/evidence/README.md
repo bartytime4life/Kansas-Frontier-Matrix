@@ -6,11 +6,11 @@ version: v0.1.0
 status: draft
 owners: TODO(owner): schema steward; TODO(owner): evidence contracts steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-06-30 expansion
-updated: 2026-06-30
+updated: 2026-07-19
 policy_label: public-review
 related: [evidence_bundle/README.md, evidence_ref/README.md, ../../../../schemas/contracts/v1/evidence/README.md, ../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json, ../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json, ../../../../contracts/evidence/evidence_bundle.md, ../../../../contracts/evidence/evidence_ref.md, ../../../../tests/schemas/test_common_contracts.py, ../../../../docs/doctrine/directory-rules.md]
 tags: [kfm, fixtures, contracts, v1, evidence, evidence-bundle, evidence-ref, json-schema, valid-fixtures, invalid-fixtures, schema-tests, non-authoritative]
-notes: ["This README replaces a blank file at `fixtures/contracts/v1/evidence/README.md`.", "This directory groups evidence-family contract fixtures under the discovery shape used by `tests/schemas/test_common_contracts.py`.", "Fixture content is schema-test input only; contract meaning, schema shape, validator code, policy rules, release decisions, and operational proof support stay in their owning roots.", "Verified child fixture families in this pass are `evidence_bundle/` and `evidence_ref/`; broader evidence-family coverage is PARTIAL until a full recursive inventory or test run is performed.", "`tools/validators/validate_evidence_bundle.py` exists and points to its schema and fixture root. `tools/validators/validate_evidence_ref.py` is declared by schema metadata but was not found during this check."]
+notes: ["This README replaces a blank file at `fixtures/contracts/v1/evidence/README.md`.", "This directory groups evidence-family contract fixtures under the discovery shape used by `tests/schemas/test_common_contracts.py`.", "Fixture content is schema-test input only; contract meaning, schema shape, validator code, policy rules, release decisions, and operational proof support stay in their owning roots.", "Verified child fixture families in this pass are `evidence_bundle/` and `evidence_ref/`; broader evidence-family coverage remains PARTIAL.", "Both schema-declared validator wrappers now exist and delegate to the shared JSON Schema runner; the EvidenceRef wrapper is aggregate-wired and has focused CLI polarity tests."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -65,8 +65,8 @@ This inventory is **PARTIAL / CONFIRMED WHERE FETCHED**. It is not a complete re
 
 | Fixture family | Current positive case | Current negative case | Validator posture | Status |
 |---|---|---|---|---|
-| [`evidence_bundle/`](evidence_bundle/README.md) | `valid/valid_1.json` includes `bundle_id` and required top-level fields. | `invalid/invalid_1.json` omits required `bundle_id`; expected error matcher is `required`. | `tools/validators/validate_evidence_bundle.py` exists; not run. | CONFIRMED fixture family / schema status `PROPOSED` |
-| [`evidence_ref/`](evidence_ref/README.md) | `valid/valid_1.json` includes required `ref` and `kind`. | `invalid/invalid_1.json` omits required `ref`; expected error matcher is `required`. | `tools/validators/validate_evidence_ref.py` is declared in schema metadata but was not found. | CONFIRMED fixture family / schema status `PROPOSED` |
+| [`evidence_bundle/`](evidence_bundle/README.md) | `valid/valid_1.json` includes `bundle_id` and required top-level fields. | `invalid/invalid_1.json` omits required `bundle_id`; expected error matcher is `required`. | `tools/validators/validate_evidence_bundle.py` exists and is aggregate-wired. | CONFIRMED fixture family / schema status `PROPOSED` |
+| [`evidence_ref/`](evidence_ref/README.md) | Two valid fixtures cover a minimal measurement ref and a dataset ref with `bundle_ref`. | Three invalid fixtures cover missing `ref`, an extra property, and an unsupported `kind`. | `tools/validators/validate_evidence_ref.py` exists, is aggregate-wired, and remains shape-only. | CONFIRMED validator slice / schema status `PROPOSED` |
 
 ---
 
@@ -97,7 +97,7 @@ Observed harness expectations:
 | `invalid/invalid_*.json` | at least one JSON Schema error |
 | `invalid/invalid_*.expected_error.txt` | expected text appears in combined error messages |
 
-This README documents expected fixture behavior only. It does not claim that pytest, CI, or the validator suite was run during this update.
+This README documents expected fixture behavior and confirmed validator wiring. Remote CI status and resolver behavior remain separately verified.
 
 ---
 
@@ -138,10 +138,10 @@ Before adding or changing evidence fixtures here:
 | Evidence schema parent | CONFIRMED README | `schemas/contracts/v1/evidence/README.md` exists and identifies evidence schemas. |
 | Verified child families | CONFIRMED PARTIAL | `evidence_bundle/` and `evidence_ref/` are documented. No full recursive inventory was performed. |
 | Directory Rules fixture root | CONFIRMED doctrine | `fixtures/` is a canonical root for valid/invalid test inputs. |
-| Schema harness | CONFIRMED / NOT RUN | `tests/schemas/test_common_contracts.py` includes `evidence` and discovers this fixture shape. |
-| `evidence_bundle` validator wrapper | CONFIRMED / NOT RUN | Wrapper exists and targets the bundle schema and fixture root. |
-| `evidence_ref` validator wrapper | NOT FOUND | Schema metadata declares the wrapper path, but the file was not found during this check. |
-| Runtime validation results | NOT RUN | This README update did not run validators, pytest, or CI. |
+| Schema harness | CONFIRMED / TEST-COVERED | `tests/schemas/test_common_contracts.py` includes `evidence` and discovers this fixture shape. |
+| `evidence_bundle` validator wrapper | CONFIRMED / AGGREGATE-WIRED | Wrapper exists and targets the bundle schema and fixture root. |
+| `evidence_ref` validator wrapper | CONFIRMED / SHAPE ONLY | Wrapper exists, targets the declared schema and fixture root, and is aggregate-wired. |
+| Resolver and runtime behavior | NOT IMPLEMENTED / NOT PROVEN | Shape validation does not resolve refs or establish EvidenceBundle closure. |
 
 ---
 
@@ -151,11 +151,11 @@ Before adding or changing evidence fixtures here:
 |---|---|---|---|
 | Previous target file | CONFIRMED | Target existed as a blank file. | Did not define evidence fixture-family guidance. |
 | [`evidence_bundle/README.md`](evidence_bundle/README.md) | CONFIRMED | Bundle fixture family inventory and schema/harness linkage. | Its parent README is intentionally compact; richer lane details live under `valid/` and `invalid/`. |
-| [`evidence_ref/README.md`](evidence_ref/README.md) | CONFIRMED | EvidenceRef fixture family inventory, schema basis, and validator-path issue. | Does not prove tests were run. |
+| [`evidence_ref/README.md`](evidence_ref/README.md) | CONFIRMED | EvidenceRef fixture inventory, schema basis, and validator binding. | Shape-only; does not prove referential resolution. |
 | [`../../../../schemas/contracts/v1/evidence/README.md`](../../../../schemas/contracts/v1/evidence/README.md) | CONFIRMED README | Evidence schema family exists. | It is short and does not inventory all evidence schemas. |
-| [`../../../../tests/schemas/test_common_contracts.py`](../../../../tests/schemas/test_common_contracts.py) | CONFIRMED | Evidence-family fixture discovery and valid/invalid behavior. | Tests were not run during this update. |
+| [`../../../../tests/schemas/test_common_contracts.py`](../../../../tests/schemas/test_common_contracts.py) | CONFIRMED / TEST-COVERED | Evidence-family fixture discovery and valid/invalid behavior. | Shape behavior only; not resolver or policy proof. |
 | [`../../../../docs/doctrine/directory-rules.md`](../../../../docs/doctrine/directory-rules.md) | CONFIRMED | `fixtures/` is canonical and paired with `tests/`. | Specific fixture coverage still requires tests or inventory. |
-| [`../../../../tools/validators/validate_evidence_bundle.py`](../../../../tools/validators/validate_evidence_bundle.py) | CONFIRMED | Bundle validator wrapper exists and points to the bundle schema and fixture root. | Wrapper was not executed during this update. |
-| `../../../../tools/validators/validate_evidence_ref.py` | NOT FOUND | EvidenceRef schema declares this path. | File was not found during this check. |
+| [`../../../../tools/validators/validate_evidence_bundle.py`](../../../../tools/validators/validate_evidence_bundle.py) | CONFIRMED / AGGREGATE-WIRED | Bundle validator wrapper exists and points to the bundle schema and fixture root. | Shape behavior only; not resolver or policy proof. |
+| [`../../../../tools/validators/validate_evidence_ref.py`](../../../../tools/validators/validate_evidence_ref.py) | CONFIRMED | EvidenceRef validator wrapper targets the declared schema and fixture root. | Shape validation only; no referential resolution or closure. |
 
 [Back to top](#top)

@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — v0.1 flat contract existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-07-19
 policy_label: public; contracts; evidence; evidence-ref; governed-pointer; evidence-kind; bundle-ref; pre-closure; resolver-needed; release-gated; rollback-aware; not-evidence-bundle; not-proof-closure; not-policy-decision; not-release-manifest; not-proof-storage; not-source-registry; not-runtime-proof; not-ai-answer
 tags: [kfm, contracts, evidence, EvidenceRef, evidence_ref, EvidenceBundle, ref, kind, bundle_ref, measurement, record, dataset, artifact, SourceDescriptor, CitationValidationReport, EvidenceDrawerPayload, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, AIReceipt, data-proofs, data-receipts, data-catalog, trust-membrane]
 related:
@@ -36,7 +36,7 @@ related:
 notes:
   - "Expanded from the prior flat evidence_ref contract while preserving its core meaning and schema-aligned field list."
   - "The paired schema at schemas/contracts/v1/evidence/evidence_ref.schema.json is confirmed and declares ref, kind, optional bundle_ref, required ref/kind, enum kind values, and additionalProperties false."
-  - "The schema metadata points to validator tools/validators/validate_evidence_ref.py and policy/evidence/; the prior flat contract stated validator wiring is PROPOSED and not yet wired. Current runtime/CI behavior still needs verification before broad implementation claims."
+  - "The schema-declared validator now exists at tools/validators/validate_evidence_ref.py, delegates to the shared JSON Schema runner, is included in the aggregate fixture runner, and has focused CLI polarity tests. This is shape validation only; resolver, policy, release, and runtime behavior remain unimplemented or separately verified."
   - "EvidenceRef is a governed pointer. It is not EvidenceBundle closure, not policy permission, not release approval, not proof storage, and not AI answer authority."
 [/KFM_META_BLOCK_V2] -->
 
@@ -70,7 +70,7 @@ notes:
 > **Owner:** `OWNER_TBD`  
 > **Contract path:** `contracts/evidence/evidence_ref.md`  
 > **Schema path checked:** `schemas/contracts/v1/evidence/evidence_ref.schema.json` — **confirmed fielded schema**  
-> **Truth posture:** target path, prior flat contract, paired schema, evidence-family README, and EvidenceBundle contract are confirmed from current repo evidence. Validator path metadata is confirmed in the schema, but the prior contract marks validator wiring as PROPOSED/not yet wired; actual validator behavior, current CI status, fixture coverage, resolver behavior, policy enforcement, release behavior, public API behavior, Evidence Drawer behavior, and runtime/AI behavior remain **NEEDS VERIFICATION** unless separately tested.
+> **Truth posture:** target path, paired schema, fixtures, dedicated validator wrapper, aggregate-runner wiring, focused CLI polarity tests, evidence-family README, and EvidenceBundle contract are confirmed from current repository evidence. This proves bounded EvidenceRef JSON Schema conformance only; current remote CI status, referential resolution, EvidenceBundle closure, policy enforcement, release behavior, public API behavior, Evidence Drawer behavior, and runtime/AI behavior remain **NEEDS VERIFICATION** unless separately tested.
 
 > [!CAUTION]
 > `EvidenceRef` is a pointer. It is **not** an EvidenceBundle, not evidence closure, not citation completeness, not policy clearance, not release approval, not proof storage, not source registry authority, not public API response by itself, and not AI answer authority.
@@ -100,8 +100,8 @@ EvidenceRef supports traceability. It can point to measurements, records, datase
 | Citation checking | `contracts/evidence/citation_validation_report.md` | Checks support; does not make refs closed. |
 | Evidence Drawer projection | `contracts/evidence/evidence_drawer_payload.md` and/or `contracts/ui/evidence_drawer_payload.md` | Public trust projection; does not create evidence. |
 | Machine shape | `schemas/contracts/v1/evidence/evidence_ref.schema.json` | Confirmed JSON Schema for required fields and enum. |
-| Fixtures | `fixtures/contracts/v1/evidence/evidence_ref/` | Valid/invalid/golden examples. |
-| Validator implementation | `tools/validators/validate_evidence_ref.py` | Executable validation, not semantic authority. Wiring still needs verification. |
+| Fixtures | `fixtures/contracts/v1/evidence/evidence_ref/` | Valid and invalid schema examples. |
+| Validator implementation | `tools/validators/validate_evidence_ref.py` | Executable JSON Schema validation, aggregate-runner wired; not resolver, policy, or semantic authority. |
 | Policy/admissibility | `policy/evidence/` | Rights, sensitivity, allow/deny/restrict/abstain, release gating. |
 | Materialized proof records | `data/proofs/` | EvidenceBundles/proof packs when stored as governed lifecycle data. |
 | Receipts | `data/receipts/` | Validation, redaction, transform, and review receipts. |
@@ -132,7 +132,7 @@ Confirmed schema posture:
 - root `additionalProperties: false`.
 
 > [!WARNING]
-> Schema confirmation does not prove current validator execution, fixture coverage, CI enforcement, resolver behavior, policy enforcement, source-rights evaluation, release state, public API behavior, Evidence Drawer behavior, or runtime/AI behavior. Those remain **NEEDS VERIFICATION** until checked.
+> Schema and validator confirmation do not prove current remote CI status, referential resolution, EvidenceBundle closure, policy enforcement, source-rights evaluation, release state, public API behavior, Evidence Drawer behavior, or runtime/AI behavior. Those remain **NEEDS VERIFICATION** until checked.
 
 ---
 
@@ -249,8 +249,8 @@ flowchart LR
 
 Before this contract is treated as implementation-mature, maintainers should verify:
 
-- [ ] schema and this contract agree on all fields and enum values;
-- [ ] `tools/validators/validate_evidence_ref.py` exists and is wired in current CI/tooling before claiming validator enforcement;
+- [x] schema and this contract agree on the current fields and enum values;
+- [x] `tools/validators/validate_evidence_ref.py` exists, delegates to the shared runner, is aggregate-wired, and has focused valid/missing-`ref` CLI polarity tests;
 - [ ] fixtures cover valid measurement, valid record, valid dataset, valid artifact, missing `ref`, missing `kind`, invalid `kind`, extra property, unresolved `ref`, invalid `bundle_ref`, superseded `bundle_ref`, and release-ready closed ref;
 - [ ] resolver behavior is defined when `ref` cannot resolve;
 - [ ] resolver behavior is defined when `bundle_ref` cannot resolve to an EvidenceBundle;
@@ -295,7 +295,8 @@ Rollback target: revert `contracts/evidence/evidence_ref.md` to prior blob `7f2b
 | Evidence | Status | Supports | Limits |
 |---|---|---|---|
 | Prior `contracts/evidence/evidence_ref.md` | CONFIRMED | Existing contract already defined EvidenceRef as governed pointer and listed schema-aligned fields. | Needed stronger KFM Meta Block v2, boundary, lifecycle, validation, and rollback posture. |
-| `schemas/contracts/v1/evidence/evidence_ref.schema.json` | CONFIRMED fielded schema | Confirms `ref`, `kind`, optional `bundle_ref`, required `ref`/`kind`, enum values, validator/policy metadata, and `additionalProperties: false`. | Does not prove validator execution, CI, resolver, policy, or runtime behavior. |
+| `schemas/contracts/v1/evidence/evidence_ref.schema.json` | CONFIRMED fielded schema | Confirms `ref`, `kind`, optional `bundle_ref`, required `ref`/`kind`, enum values, validator/policy metadata, and `additionalProperties: false`. | Does not prove resolver, policy, release, or runtime behavior. |
+| `tools/validators/validate_evidence_ref.py` and `tests/schemas/test_evidence_ref_validator.py` | CONFIRMED shape-validator slice | Bind the declared schema and fixture root and test valid versus missing-`ref` CLI exit polarity. | Do not resolve refs, establish EvidenceBundle closure, evaluate policy, or authorize release. |
 | `contracts/evidence/README.md` | CONFIRMED evidence-family guide | Confirms EvidenceRef/EvidenceBundle separation and public/AI cite-or-abstain posture. | Root guide, not fielded payload schema. |
 | `contracts/evidence/evidence_bundle.md` | CONFIRMED sibling contract | Defines EvidenceBundle as claim-scope evidence closure and says EvidenceRef is a pointer that does not guarantee closure. | Resolver/runtime behavior remains NEEDS VERIFICATION. |
 | Uploaded KFM authoring prompt v2 | CONFIRMED user-supplied guidance | Requires evidence-first, implementation-honest, visually polished Markdown with visible verification and rollback posture. | Authoring guidance, not implementation proof. |
