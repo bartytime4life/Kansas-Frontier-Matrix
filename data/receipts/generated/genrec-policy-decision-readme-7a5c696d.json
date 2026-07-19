@@ -1,0 +1,148 @@
+{
+  "receipt_id": "genrec-policy-decision-readme-7a5c696d",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/decision/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/decision/README.md": "sha256:7a5c696d3819f18c399bf627392bf64b80bb837c7b6f9cf11e7a72c6b41f1ce4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(47).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/decision/README.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/policy/policy_decision.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/runtime/decision_envelope.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/policy/policy_decision.schema.json@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/policy/policy_input_bundle.schema.json@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/policy/policy_decision/@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/schemas/test_common_contracts.py@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0020-abstain-is-a-first-class-decision.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/registers/POLICY_GATE.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:control_plane/policy_gate_register.yaml@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/bundles/README.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:packages/policy-runtime/README.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@52192ad4f13033a70deec62917743bc6eec470fe",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@52192ad4f13033a70deec62917743bc6eec470fe"
+    ]
+  },
+  "truth_labels": {
+    "policy/decision/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-meta-block-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block v2, balanced code fences, resolved internal anchors, unique heading slugs, final newline, and no trailing whitespace."
+    },
+    {
+      "gate": "authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Existing policy/decision path retained under singular policy root; no overlapping open pull request, matching branch, or competing document identity surfaced."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Current-state claims are bounded to pinned repository files and searches at main@52192ad4f13033a70deec62917743bc6eec470fe."
+    },
+    {
+      "gate": "decision-vocabulary-reconciliation",
+      "outcome": "PASS",
+      "reason": "README distinguishes schema-confirmed ANSWER|ABSTAIN|DENY|ERROR from engine-native ALLOW|RESTRICT|HOLD and separate operational states; unresolved mapping remains explicitly PROPOSED."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected policy-test uses a hosted runner and read-only contents permission and emits no policy, receipt, release, deployment, or publication authority; major-tag action pinning and required-check settings remain disclosed gaps."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Documentation contains no credentials, private payloads, exact protected locations, living-person records, genomic data, or reversal details."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation workflow has no mounted checkout; remote CI is observed separately and no local repository test result is claimed."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt validates against the GENERATED_RECEIPT Draft 2020-12 schema with the final README SHA-256 and pending human review."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:policy/decision/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/decision/README.md@52192ad4f13033a70deec62917743bc6eec470fe"
+    },
+    {
+      "id": "repo:contracts/policy/policy_decision.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/policy/policy_decision.md@52192ad4f13033a70deec62917743bc6eec470fe"
+    },
+    {
+      "id": "repo:schemas/contracts/v1/policy/policy_decision.schema.json",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/policy/policy_decision.schema.json@52192ad4f13033a70deec62917743bc6eec470fe"
+    },
+    {
+      "id": "repo:.github/workflows/policy-test.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@52192ad4f13033a70deec62917743bc6eec470fe"
+    },
+    {
+      "id": "repo:docs/adr/ADR-0020-abstain-is-a-first-class-decision.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0020-abstain-is-a-first-class-decision.md@52192ad4f13033a70deec62917743bc6eec470fe"
+    },
+    {
+      "id": "repo:control_plane/policy_gate_register.yaml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:control_plane/policy_gate_register.yaml@52192ad4f13033a70deec62917743bc6eec470fe"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T15:46:59Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0020-abstain-is-a-first-class-decision.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. This receipt records AI-authored provenance and bounded preflight outcomes; it is not a PolicyDecision, policy approval, evidence, proof, review approval, release approval, publication authority, or human review."
+}
