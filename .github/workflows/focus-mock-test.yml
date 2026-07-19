@@ -1,20 +1,532 @@
-# KFM CI workflow stub: focus-mock-test
-# Status: PROPOSED greenfield scaffold.
+# KFM Focus mock readiness workflow.
+# Status: PROPOSED bounded static readiness checks plus explicit holds; an
+# accepted deterministic mock Focus runtime, fixture suite, and mock-generated
+# finite-envelope test command are not established in current repository evidence.
+#
+# Responsibility:
+# - Preserve the existing mock Focus and finite-envelope check surfaces while
+#   making their actual repository maturity and trust boundaries visible.
+# Trigger:
+# - Existing pull-request and push-to-main triggers are preserved because
+#   required-check and branch-protection dependencies remain unverified.
+# - workflow_dispatch supports explicit maintainer inspection.
+# Untrusted-code posture:
+# - Pull requests execute submitted repository code with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
+# Runner and network:
+# - GitHub-hosted Ubuntu and pinned major action versions are used. Checks are
+#   no-network after checkout and Python action setup; no packages are installed.
+# Command:
+# - No mock Focus command exists. Inline standard-library checks inspect only
+#   documented scaffolds and stop succeeding when executable behavior, fixtures,
+#   or an accepted repository-native command appears.
+# Inputs:
+# - Mock runtime/adapter boundaries, Focus examples, schemas, contracts, policy
+#   scaffolds, runtime-envelope fixtures, placeholder tests, and the Makefile.
+# Outputs:
+# - GitHub job conclusions, logs, and step summaries only; no model output,
+#   RuntimeResponseEnvelope, receipt, proof, release record, or published artifact.
+# Outcome:
+# - Current scaffolds report WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD.
+# - Missing boundaries or newly surfaced implementation fail readiness until
+#   owners wire reviewed deterministic commands and valid/negative fixtures.
+# Compatibility:
+# - Workflow name `focus-mock-test` and job ids `mock-focus-flows` and
+#   `finite-envelope-shape` are preserved.
+# - e2e-smoke currently detects the two held lanes with these legacy text
+#   sentinels. They are comments only and are never executed:
+#     echo TODO mock-focus-flows
+#     echo TODO finite-envelope-shape
+# Rollback / disable:
+# - Revert this workflow revision. Do not restore TODO-success jobs or disable a
+#   required check without branch-protection and governed-runtime review.
+# Authority boundary:
+# - Mock output is synthetic test material. This workflow does not establish
+#   evidence, policy, citation, release, correction, or publication authority.
 name: focus-mock-test
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: focus-mock-test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   mock-focus-flows:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO mock-focus-flows'
+      - name: Check out mock Focus boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate mock Focus readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            ".env.example"
+            "runtime/mock/README.md"
+            "runtime/model_adapters/AdapterContract.md"
+            "runtime/model_adapters/MockAdapter.py"
+            "runtime/model_adapters/mock/README.md"
+            "examples/focus_flows/README.md"
+            "examples/focus_flows/hydrology_huc12_question.md"
+            "contracts/ui/focus_request.md"
+            "contracts/ui/focus_response.md"
+            "schemas/contracts/v1/focus/focus_request.schema.json"
+            "schemas/contracts/v1/focus/focus_response.schema.json"
+            "policy/focus/citation_validation_required.rego"
+            "policy/focus/finite_envelope_required.rego"
+            "policy/focus/focus_request.rego"
+            "policy/focus/focus_response.rego"
+            "tests/fixtures/focus/README.md"
+            "Makefile"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required mock Focus boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Eq '^KFM_MODEL_RUNTIME=mock$' ".env.example"; then
+            echo "::error::The example environment no longer selects the bounded mock runtime. Reassess runtime and Focus posture deliberately."
+            exit 1
+          fi
+
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          runtime_mock_root = Path("runtime/mock")
+          adapter_mock_root = Path("runtime/model_adapters/mock")
+
+          expected_runtime_mock = {runtime_mock_root / "README.md"}
+          observed_runtime_mock = {
+              path for path in runtime_mock_root.rglob("*") if path.is_file()
+          }
+          if observed_runtime_mock != expected_runtime_mock:
+              additions = sorted(observed_runtime_mock - expected_runtime_mock)
+              removals = sorted(expected_runtime_mock - observed_runtime_mock)
+              detail = [f"added: {path}" for path in additions]
+              detail.extend(f"removed: {path}" for path in removals)
+              raise SystemExit(
+                  "The bounded mock-runtime inventory changed. Establish the accepted "
+                  "profile, fixtures, no-network controls, tests, and startup command:\n"
+                  + "\n".join(detail)
+              )
+
+          expected_adapter_mock = {
+              adapter_mock_root / ".gitkeep",
+              adapter_mock_root / "README.md",
+          }
+          observed_adapter_mock = {
+              path for path in adapter_mock_root.rglob("*") if path.is_file()
+          }
+          if observed_adapter_mock != expected_adapter_mock:
+              additions = sorted(observed_adapter_mock - expected_adapter_mock)
+              removals = sorted(expected_adapter_mock - observed_adapter_mock)
+              detail = [f"added: {path}" for path in additions]
+              detail.extend(f"removed: {path}" for path in removals)
+              raise SystemExit(
+                  "The bounded mock-adapter child inventory changed. Resolve its "
+                  "relationship to runtime/mock and wire the accepted suite:\n"
+                  + "\n".join(detail)
+              )
+
+          adapter_path = Path("runtime/model_adapters/MockAdapter.py")
+          expected_adapter = "# MockAdapter — finite envelopes only — greenfield placeholder"
+          if adapter_path.read_text(encoding="utf-8").strip() != expected_adapter:
+              raise SystemExit(
+                  "MockAdapter.py is no longer the exact placeholder. Inspect its API, "
+                  "hidden-I/O posture, finite outcomes, fixtures, tests, and consumers "
+                  "before wiring mock Focus CI."
+              )
+
+          focus_example_root = Path("examples/focus_flows")
+          expected_examples = {
+              focus_example_root / "README.md",
+              focus_example_root / "hydrology_huc12_question.md",
+          }
+          observed_examples = {
+              path for path in focus_example_root.rglob("*") if path.is_file()
+          }
+          if observed_examples != expected_examples:
+              additions = sorted(observed_examples - expected_examples)
+              removals = sorted(expected_examples - observed_examples)
+              detail = [f"added: {path}" for path in additions]
+              detail.extend(f"removed: {path}" for path in removals)
+              raise SystemExit(
+                  "Focus example inventory changed. Keep examples non-authoritative and "
+                  "promote operational fixtures through their accepted test root:\n"
+                  + "\n".join(detail)
+              )
+
+          hydrology_example = (
+              focus_example_root / "hydrology_huc12_question.md"
+          ).read_text(encoding="utf-8")
+          for marker in (
+              "synthetic / illustrative / non-authoritative",
+              "Expected finite outcome:** `ABSTAIN`",
+              "This is an **example**, not a runtime fixture or API response.",
+          ):
+              if marker not in hydrology_example:
+                  raise SystemExit(
+                      "The bounded Hydrology Focus example changed authority or outcome "
+                      f"posture; missing marker: {marker}"
+                  )
+
+          for name in ("focus_request", "focus_response"):
+              schema_path = Path(
+                  f"schemas/contracts/v1/focus/{name}.schema.json"
+              )
+              schema = json.loads(schema_path.read_text(encoding="utf-8"))
+              placeholder_shape = (
+                  schema.get("x-kfm", {}).get("status") == "PROPOSED"
+                  and schema.get("properties") == {}
+                  and schema.get("additionalProperties") is True
+                  and schema.get("x-kfm", {}).get("contract_doc") is None
+              )
+              if not placeholder_shape:
+                  raise SystemExit(
+                      f"{schema_path} is no longer the exact open placeholder profile. "
+                      "Reconcile the accepted Focus contract, fixtures, and adapter tests."
+                  )
+
+          focus_fixture_root = Path("tests/fixtures/focus")
+          expected_focus_fixtures = {
+              focus_fixture_root / ".gitkeep",
+              focus_fixture_root / "README.md",
+          }
+          observed_focus_fixtures = {
+              path for path in focus_fixture_root.rglob("*") if path.is_file()
+          }
+          if observed_focus_fixtures != expected_focus_fixtures:
+              additions = sorted(observed_focus_fixtures - expected_focus_fixtures)
+              removals = sorted(expected_focus_fixtures - observed_focus_fixtures)
+              detail = [f"added: {path}" for path in additions]
+              detail.extend(f"removed: {path}" for path in removals)
+              raise SystemExit(
+                  "Executable Focus fixture candidates surfaced. Review synthetic-data, "
+                  "finite-outcome, citation, evidence, policy, correction, and rollback "
+                  "coverage before wiring them:\n" + "\n".join(detail)
+              )
+
+          expected_policy_markers = {
+              Path("policy/focus/citation_validation_required.rego"):
+                  "Status: PROPOSED greenfield stub. No real rules yet.",
+              Path("policy/focus/finite_envelope_required.rego"):
+                  "Status: PROPOSED greenfield stub. No real rules yet.",
+              Path("policy/focus/focus_request.rego"):
+                  "Status: PROPOSED scaffold.",
+              Path("policy/focus/focus_response.rego"):
+                  "Status: PROPOSED scaffold.",
+          }
+          for path, marker in expected_policy_markers.items():
+              text = path.read_text(encoding="utf-8")
+              if marker not in text:
+                  raise SystemExit(
+                      f"{path} changed from its documented scaffold. Review policy "
+                      "ownership and wire accepted policy tests deliberately."
+                  )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          if re.search(
+              r"^(?:focus-mock|mock-focus|test-focus-mock):",
+              makefile,
+              re.MULTILINE,
+          ):
+              raise SystemExit(
+                  "A repository-native mock Focus target surfaced. Verify deterministic "
+                  "fixtures, finite outcomes, no-network behavior, and rollback before "
+                  "wiring it."
+              )
+
+          print("runtime/mock and runtime/model_adapters/mock remain README-only lanes.")
+          print("MockAdapter.py remains the exact one-line greenfield placeholder.")
+          print("Focus request/response schemas remain open PROPOSED scaffolds.")
+          print("The only Focus flow payload is a non-runtime ABSTAIN example.")
+          print("No Focus fixture payload or repository-native mock Focus target surfaced.")
+          PY
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: mock-focus-flows"
+          echo "WORKFLOW_HOLD: no accepted deterministic mock Focus runtime, fixture suite, or command"
+
+      - name: Record mock Focus readiness hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ## Mock Focus readiness
+
+          `WORKFLOW_SKIPPED_EXPLICIT: mock-focus-flows`
+
+          `WORKFLOW_HOLD: no accepted deterministic mock Focus runtime, fixture suite, or command`
+
+          This job checks the documented mock runtime/adapter lanes, placeholder
+          adapter, Focus schemas, policy scaffolds, examples, fixture inventory,
+          and command surface. It stops succeeding when implementation or
+          operational fixtures surface so they must be wired deliberately.
+
+          No mock Focus request ran and no adapter or model was called. A green
+          held result is readiness evidence only; it does not prove Focus flow,
+          evidence resolution, citation validation, policy enforcement, finite
+          runtime behavior, receipt emission, release, or publication.
+          EOF
+
   finite-envelope-shape:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO finite-envelope-shape'
+      - name: Check out finite-envelope boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate mock envelope readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "contracts/runtime/runtime_response_envelope.md"
+            "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+            "schemas/contracts/v1/focus/runtime_response_envelope.schema.json"
+            "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_1.json"
+            "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_2.json"
+            "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_1.json"
+            "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_2.json"
+            "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_3.json"
+            "tools/validators/validate_runtime_response_envelope.py"
+            "tests/runtime_proof/test_envelope_finite_outcomes.py"
+            "tests/fixtures/focus/README.md"
+            "Makefile"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required finite-envelope boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import json
+          import re
+          from pathlib import Path
+
+          runtime_schema_path = Path(
+              "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+          )
+          runtime_schema = json.loads(
+              runtime_schema_path.read_text(encoding="utf-8")
+          )
+          expected_outcomes = ["ANSWER", "ABSTAIN", "DENY", "ERROR"]
+          expected_required = [
+              "id",
+              "spec_hash",
+              "version",
+              "issued_at",
+              "outcome",
+              "reason_code",
+              "evidence_refs",
+              "policy_state",
+              "freshness",
+              "correction_state",
+          ]
+          runtime_shape = (
+              runtime_schema.get("x-kfm", {}).get("status") == "PROPOSED"
+              and runtime_schema.get("properties", {})
+                  .get("outcome", {}).get("enum") == expected_outcomes
+              and runtime_schema.get("required") == expected_required
+              and runtime_schema.get("additionalProperties") is False
+          )
+          if not runtime_shape:
+              raise SystemExit(
+                  "The RuntimeResponseEnvelope schema profile changed. Reconcile the "
+                  "accepted contract, clients, fixtures, and validator before mock CI."
+              )
+
+          focus_schema_path = Path(
+              "schemas/contracts/v1/focus/runtime_response_envelope.schema.json"
+          )
+          focus_schema = json.loads(focus_schema_path.read_text(encoding="utf-8"))
+          focus_placeholder = (
+              focus_schema.get("x-kfm", {}).get("status") == "PROPOSED"
+              and focus_schema.get("properties") == {}
+              and focus_schema.get("additionalProperties") is True
+              and focus_schema.get("x-kfm", {}).get("contract_doc") is None
+          )
+          if not focus_placeholder:
+              raise SystemExit(
+                  "The Focus-local runtime envelope schema changed. Reconcile it with "
+                  "the paired runtime contract/schema instead of silently choosing one."
+              )
+
+          fixture_root = Path(
+              "fixtures/contracts/v1/runtime/runtime_response_envelope"
+          )
+          expected_fixture_files = {
+              fixture_root / "README.md",
+              fixture_root / "valid/README.md",
+              fixture_root / "valid/valid_1.json",
+              fixture_root / "valid/valid_2.json",
+              fixture_root / "invalid/README.md",
+              fixture_root / "invalid/invalid_1.json",
+              fixture_root / "invalid/invalid_1.expected_error.txt",
+              fixture_root / "invalid/invalid_2.json",
+              fixture_root / "invalid/invalid_2.expected_error.txt",
+              fixture_root / "invalid/invalid_3.json",
+              fixture_root / "invalid/invalid_3.expected_error.txt",
+          }
+          observed_fixture_files = {
+              path for path in fixture_root.rglob("*") if path.is_file()
+          }
+          if observed_fixture_files != expected_fixture_files:
+              additions = sorted(observed_fixture_files - expected_fixture_files)
+              removals = sorted(expected_fixture_files - observed_fixture_files)
+              detail = [f"added: {path}" for path in additions]
+              detail.extend(f"removed: {path}" for path in removals)
+              raise SystemExit(
+                  "Runtime envelope fixture inventory changed. Review whether fixtures "
+                  "are generic schema cases or mock Focus outputs before wiring CI:\n"
+                  + "\n".join(detail)
+              )
+
+          fixture_outcomes = set()
+          for path in sorted((fixture_root / "valid").glob("valid_*.json")):
+              fixture = json.loads(path.read_text(encoding="utf-8"))
+              fixture_outcomes.add(fixture.get("outcome"))
+          if fixture_outcomes != {"ANSWER", "ABSTAIN"}:
+              raise SystemExit(
+                  "The bounded generic valid-envelope outcome coverage changed. Inspect "
+                  "DENY/ERROR and mock-marker coverage before workflow graduation."
+              )
+
+          test_path = Path("tests/runtime_proof/test_envelope_finite_outcomes.py")
+          test_text = test_path.read_text(encoding="utf-8")
+          tree = ast.parse(test_text, filename=str(test_path))
+          tests = [
+              node
+              for node in ast.walk(tree)
+              if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+              and node.name.startswith("test_")
+          ]
+          placeholder_shape = (
+              "greenfield placeholder" in test_text
+              and len(tests) == 1
+              and tests[0].name == "test_envelope_outcomes_placeholder"
+              and len(tests[0].body) == 1
+              and isinstance(tests[0].body[0], ast.Assert)
+              and isinstance(tests[0].body[0].test, ast.Constant)
+              and tests[0].body[0].test.value is True
+          )
+          if not placeholder_shape:
+              raise SystemExit(
+                  "The finite-envelope runtime-proof placeholder changed. Inspect and "
+                  "wire the accepted deterministic mock envelope suite deliberately."
+              )
+
+          validator_path = Path(
+              "tools/validators/validate_runtime_response_envelope.py"
+          )
+          validator_text = validator_path.read_text(encoding="utf-8")
+          ast.parse(validator_text, filename=str(validator_path))
+          if "runtime_response_envelope.schema.json" not in validator_text:
+              raise SystemExit(
+                  "The generic RuntimeResponseEnvelope validator target changed. "
+                  "Reconcile its profile before wiring mock Focus envelope tests."
+              )
+
+          focus_fixture_root = Path("tests/fixtures/focus")
+          focus_payloads = [
+              path
+              for path in focus_fixture_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          ]
+          if focus_payloads:
+              raise SystemExit(
+                  "Mock Focus fixture payloads surfaced. Establish their schema bindings, "
+                  "synthetic-data controls, all finite outcomes, evidence/citation/policy "
+                  "expectations, and repository-native command:\n"
+                  + "\n".join(str(path) for path in sorted(focus_payloads))
+              )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          if re.search(
+              r"^(?:focus-envelope|mock-envelope|finite-envelope-shape):",
+              makefile,
+              re.MULTILINE,
+          ):
+              raise SystemExit(
+                  "A mock/Focus envelope target surfaced. Verify all finite outcomes, "
+                  "invalid fixtures, no-network behavior, and safe diagnostics before "
+                  "wiring it."
+              )
+
+          print("The paired runtime envelope schema remains closed and PROPOSED.")
+          print("Its generic fixtures cover ANSWER/ABSTAIN shape plus three invalid cases.")
+          print("The Focus-local envelope schema remains an open competing placeholder.")
+          print("The runtime-proof test remains an assert-true placeholder.")
+          print("No mock Focus envelope fixture payload or Make target surfaced.")
+          PY
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: finite-envelope-shape"
+          echo "WORKFLOW_HOLD: no mock-generated envelope suite covering ANSWER, ABSTAIN, DENY, and ERROR"
+
+      - name: Record finite-envelope readiness hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ## Mock finite-envelope readiness
+
+          `WORKFLOW_SKIPPED_EXPLICIT: finite-envelope-shape`
+
+          `WORKFLOW_HOLD: no mock-generated envelope suite covering ANSWER, ABSTAIN, DENY, and ERROR`
+
+          The repository has a paired generic RuntimeResponseEnvelope schema,
+          generic shape fixtures, and a validator, but the Focus-local envelope
+          schema remains an open scaffold and the runtime-proof test is still an
+          assert-true placeholder. No mock Focus envelope was produced here.
+
+          Graduate this hold only with an accepted envelope profile and
+          deterministic mock fixtures for all four finite outcomes, invalid
+          shapes, evidence/citation gaps, policy denial, sensitive-data denial,
+          correction/withdrawal state, adapter errors, no-network enforcement,
+          safe diagnostics, receipts, and rollback.
+
+          A green held result is not runtime behavior, evidence closure, policy
+          approval, citation validation, release approval, or publication authority.
+          EOF
