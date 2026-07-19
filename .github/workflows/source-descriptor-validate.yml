@@ -1,20 +1,341 @@
-# KFM CI workflow stub: source-descriptor-validate
-# Status: PROPOSED greenfield scaffold.
+# KFM source-descriptor validation workflow.
+#
+# Responsibility:
+#   Exercise the currently wired SourceDescriptor schema/fixture validator,
+#   require non-vacuous positive and negative fixtures, and verify the schema's
+#   bounded rights-presence and fail-closed conditional behavior.
+#
+# Trigger and trust boundary:
+#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
+#   is untrusted. The workflow has read-only repository permission. Network use
+#   is limited to installing root-project dependencies; no source, policy,
+#   registry, review, release, signing, deployment, or publication secret is
+#   available.
+#
+# Inputs:
+#   The detailed singular source schema and its declared plural placeholder,
+#   semantic SourceDescriptor contract, proposed admission ADR, current generic
+#   validator, observed contract fixtures, shared schema test, and relevant
+#   source/rights policy stubs.
+#
+# Outputs and outcomes:
+#   Process output and job summaries only. No source is admitted, fetched, or
+#   activated. No descriptor, registry row, policy/rights decision, receipt,
+#   proof, release decision, lifecycle record, or published artifact is emitted.
+#
+# Compatibility:
+#   Preserve workflow name `source-descriptor-validate` and job ids/check names
+#   `validate-descriptors` and `rights-presence`; repository rules may refer to
+#   them.
+#
+# Rollback:
+#   Revert this file. Do not restore echo-only green checks or silently treat the
+#   unresolved singular/plural schema, validator, fixture, and policy paths as
+#   accepted source-admission authority.
+#
+# Placement:
+#   Directory Rules §5 assigns workflows and governance hooks to `.github/`.
+#   Contracts, schemas, fixtures, validator code, policy, registries, tests, and
+#   release decisions remain in their separate responsibility roots.
+
 name: source-descriptor-validate
 
-on:
+"on":
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-descriptor-validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   validate-descriptors:
+    name: validate-descriptors
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-descriptors'
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Require non-vacuous fixtures and expose unresolved path drift
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          detailed_schema_path = Path(
+              "schemas/contracts/v1/source/source_descriptor.schema.json"
+          )
+          declared_schema_path = Path(
+              "schemas/contracts/v1/sources/source_descriptor.schema.json"
+          )
+          validator_path = Path("tools/validators/validate_source_descriptor.py")
+          fixture_root = Path("fixtures/contracts/v1/source/source_descriptor")
+          required = [
+              detailed_schema_path,
+              declared_schema_path,
+              Path("contracts/source/source_descriptor.md"),
+              Path("docs/adr/ADR-0017-source-descriptor-admission-process.md"),
+              validator_path,
+              fixture_root / "README.md",
+              Path("tests/schemas/test_common_contracts.py"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required SourceDescriptor evidence is missing: {missing}"
+
+          detailed = json.loads(detailed_schema_path.read_text(encoding="utf-8"))
+          metadata = detailed["x-kfm"]
+          assert detailed["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+          assert detailed["$id"] == (
+              "https://schemas.kfm.local/contracts/v1/source/"
+              "source_descriptor.schema.json"
+          )
+          assert detailed["title"] == "source_descriptor"
+          assert detailed["additionalProperties"] is False
+          assert metadata["status"] == "PROPOSED"
+          assert metadata["contract_doc"] == "contracts/source/source_descriptor.md"
+          assert metadata["canonical_schema_path"] == declared_schema_path.as_posix()
+          assert metadata["legacy_schema_path"] == detailed_schema_path.as_posix()
+          assert metadata["fixtures_root"] == "tests/fixtures/sources/source_descriptor/"
+          assert metadata["validator"] == (
+              "tools/validators/sources/validate_source_descriptor.py"
+          )
+          assert metadata["policy"] == "policy/source/"
+
+          assert not Path(metadata["fixtures_root"]).exists(), (
+              "the schema-declared fixture path has appeared; reconcile fixture authority "
+              "instead of retaining the observed compatibility wiring"
+          )
+          assert not Path(metadata["validator"]).exists(), (
+              "the schema-declared validator has appeared; reconcile and test the accepted "
+              "entry point before retaining the current compatibility wiring"
+          )
+
+          declared = json.loads(declared_schema_path.read_text(encoding="utf-8"))
+          assert declared == {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "kfm://schemas/contracts/v1/sources/source_descriptor.schema.json",
+              "title": "Source Descriptor",
+              "description": (
+                  "PROPOSED scaffold created from the current docs/domains "
+                  "markdown inventory."
+              ),
+              "type": "object",
+              "additionalProperties": True,
+              "properties": {},
+              "x-kfm": {
+                  "status": "PROPOSED",
+                  "path": declared_schema_path.as_posix(),
+                  "source_docs": [
+                      "docs/domains/atmosphere/IDENTITY_MODEL.md",
+                      "docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
+                      "docs/domains/people-dna-land/MAP_UI_CONTRACTS.md",
+                  ],
+                  "contract_doc": None,
+              },
+          }, "declared plural schema changed; reconcile schema authority deliberately"
+
+          validator = validator_path.read_text(encoding="utf-8")
+          assert str(detailed_schema_path) in validator
+          assert str(fixture_root) in validator
+
+          valid = sorted((fixture_root / "valid").glob("valid_*.json"))
+          invalid = sorted((fixture_root / "invalid").glob("invalid_*.json"))
+          assert valid, "SourceDescriptor valid fixture lane is empty"
+          assert invalid, "SourceDescriptor invalid fixture lane is empty"
+          missing_expectations = [
+              path.as_posix()
+              for path in invalid
+              if not path.with_suffix(".expected_error.txt").is_file()
+          ]
+          assert not missing_expectations, (
+              f"invalid fixtures lack expected-error evidence: {missing_expectations}"
+          )
+
+          test_source = Path(
+              "tests/schemas/test_common_contracts.py"
+          ).read_text(encoding="utf-8")
+          assert '"source"' in test_source
+          assert "test_contract_fixtures" in test_source
+
+          print(f"CONFIRMED: observed validator is paired with {len(valid)} valid and {len(invalid)} invalid fixtures.")
+          print("CONFIRMED: the detailed PROPOSED singular schema is closed and paired with the semantic contract.")
+          print("WORKFLOW_HOLD: the schema-declared plural schema is permissive scaffolding, and its declared validator and fixture paths are absent.")
+          print("BOUNDARY: this job validates the currently wired fixture family only; it does not scan registry descriptors or admit, activate, review, release, or publish a source.")
+          PY
+
+      - name: Validate the currently wired SourceDescriptor fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::notice::The shared runner labels expected-invalid fixtures as FAIL in line output; its final polarity checks and process exit determine this step."
+          python tools/validators/validate_source_descriptor.py --fixtures
+
+      - name: Run the repository-owned SourceDescriptor schema test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/schemas/test_common_contracts.py -k source_descriptor
+
+      - name: Record descriptor-validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### SourceDescriptor validation"
+            echo
+            echo "- Validated the currently wired detailed singular schema against non-empty positive and negative fixture lanes, including expected-error evidence, then ran the repository-owned targeted schema test."
+            echo "- **WORKFLOW_HOLD:** the detailed schema remains PROPOSED and declares a plural schema, validator, and fixture path that are currently permissive or absent; this job does not resolve that authority drift."
+            echo "- Result: ${{ job.status }}. No registry records were scanned and no source was admitted, fetched, activated, reviewed, released, or published."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   rights-presence:
+    name: rights-presence
+    needs:
+      - validate-descriptors
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO rights-presence'
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared schema dependency
+        shell: bash
+        run: python -m pip install -e .
+
+      - name: Verify required rights fields and implemented fail-closed states
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from copy import deepcopy
+          from pathlib import Path
+          import json
+
+          from tools.validators._common.jsonschema_runner import load_validator
+
+          schema_path = Path(
+              "schemas/contracts/v1/source/source_descriptor.schema.json"
+          )
+          fixture_root = Path("fixtures/contracts/v1/source/source_descriptor")
+          contract_path = Path("contracts/source/source_descriptor.md")
+          adr_path = Path("docs/adr/ADR-0017-source-descriptor-admission-process.md")
+          policy_stubs = [
+              Path("policy/source/descriptor_required_before_ingest.rego"),
+              Path("policy/rights/attribution_required.rego"),
+              Path("policy/rights/license_compatibility.rego"),
+          ]
+          required = [schema_path, contract_path, adr_path, *policy_stubs]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required rights-boundary evidence is missing: {missing}"
+
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          rights_required = schema["properties"]["rights"]["required"]
+          assert rights_required == [
+              "rights_status",
+              "license_or_terms",
+              "attribution_required",
+              "redistribution_allowed",
+              "commercial_use_allowed",
+              "last_verified_at",
+              "verified_by",
+          ]
+
+          valid_paths = sorted((fixture_root / "valid").glob("valid_*.json"))
+          assert valid_paths, "no valid SourceDescriptor fixtures are available"
+          validator = load_validator(schema_path)
+          descriptors = []
+          for path in valid_paths:
+              descriptor = json.loads(path.read_text(encoding="utf-8"))
+              errors = list(validator.iter_errors(descriptor))
+              assert not errors, f"valid fixture failed schema validation: {path}"
+              rights = descriptor.get("rights")
+              assert isinstance(rights, dict), f"rights object missing: {path}"
+              missing_rights = [field for field in rights_required if field not in rights]
+              assert not missing_rights, (
+                  f"required rights fields are absent in {path}: {missing_rights}"
+              )
+              descriptors.append(descriptor)
+
+          blocked_statuses = ["unknown", "noassertion", "denied"]
+          for status in blocked_statuses:
+              candidate = deepcopy(descriptors[0])
+              candidate["rights"]["rights_status"] = status
+              candidate["public_release"]["allowed"] = True
+              errors = list(validator.iter_errors(candidate))
+              assert errors, f"rights status {status!r} did not fail closed"
+              assert any(
+                  list(error.absolute_path) == ["public_release", "allowed"]
+                  for error in errors
+              ), f"rights status {status!r} failed for an unexpected reason"
+
+          contract = contract_path.read_text(encoding="utf-8")
+          assert (
+              "Unknown, noassertion, denied, or restricted rights must fail closed "
+              "for public release"
+          ) in contract
+          adr = adr_path.read_text(encoding="utf-8")
+          assert "status: proposed" in adr
+          assert "No source enters the lifecycle without an admitted descriptor" in adr
+
+          for path in policy_stubs:
+              policy = path.read_text(encoding="utf-8")
+              assert "Status: PROPOSED greenfield stub. No real rules yet." in policy
+              assert "default deny := false" in policy
+
+          covered_statuses = sorted(
+              {descriptor["rights"]["rights_status"] for descriptor in descriptors}
+          )
+          print(f"CONFIRMED: {len(descriptors)} valid fixtures contain every schema-required rights field; fixture statuses={covered_statuses}.")
+          print(f"CONFIRMED: the detailed schema rejects public_release.allowed=true for rights statuses {blocked_statuses}.")
+          print("WORKFLOW_HOLD: source-admission ADR is proposed and the directly relevant source/rights policy files remain allow-by-default greenfield stubs.")
+          print("BOUNDARY: rights presence and schema conditionals are not a rights decision, current license verification, registry admission, policy evaluation, review, or release authority.")
+          PY
+
+      - name: Record rights-presence boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### SourceDescriptor rights presence"
+            echo
+            echo "- Required every valid fixture to carry the schema's rights fields and exercised the implemented fail-closed conditional for unknown, noassertion, and denied rights."
+            echo "- **WORKFLOW_HOLD:** ADR-0017 remains proposed and the directly relevant source/rights policy files remain allow-by-default greenfield stubs. This check does not evaluate current licenses, registry records, sensitivity, policy, review, or release state."
+            echo "- Result: ${{ job.status }}. No rights decision, policy decision, source admission, registry mutation, receipt, proof, release record, or publication authority was emitted."
+          } >> "$GITHUB_STEP_SUMMARY"
