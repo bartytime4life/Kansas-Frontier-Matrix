@@ -41,7 +41,7 @@ evidence_snapshot:
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 52192ad4f13033a70deec62917743bc6eec470fe
+  base_commit: 5cf7386b17a85feeadbb82a0eb9ec92bded68279
   prior_blob: acc7d7b4edcd52bb01303bda117f2969be4121f1
   parent_policy_blob: ba73c387e16f70895f32444e489d6d55dd577b75
   sensitivity_policy_placeholder_blob: 31947ca3e468a967aed3fc5d44699130b7d588fd
@@ -97,6 +97,7 @@ notes:
   - "No numeric threshold, executable policy, schema, contract, fixture, test, validator, workflow, receipt instance, release artifact, or public behavior is created or changed."
   - "Aggregation adequacy is necessary but never sufficient for public release."
   - "The most restrictive applicable source, rights, sensitivity, audience, join, and release rule wins."
+  - "Base drift from 52192ad to 5cf7386 was inspected; no target or cited Agriculture aggregation boundary file changed in that range."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -213,7 +214,7 @@ A lower-ranked artifact must not weaken a higher-ranked denial, restriction, rev
 
 ### Confirmed repository state
 
-At `main@52192ad4f13033a70deec62917743bc6eec470fe`:
+At `main@5cf7386b17a85feeadbb82a0eb9ec92bded68279`:
 
 ```text
 policy/
@@ -866,7 +867,7 @@ A new ADR or accepted migration note is required if the resolution creates or re
 | Date | **2026-07-19** |
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
 | Base ref | `main` |
-| Pinned evidence commit | `52192ad4f13033a70deec62917743bc6eec470fe` |
+| Pinned evidence commit | `5cf7386b17a85feeadbb82a0eb9ec92bded68279` |
 | Review type | Repository-grounded README revision; policy/runtime behavior not changed |
 | Current maturity | README and placeholder scaffolds; executable threshold enforcement unconfirmed |
 | Next review trigger | Any threshold value/profile, policy module, schema, contract, fixture, test, validator, receipt, workflow, release-gate, or path-placement change; otherwise six months |
