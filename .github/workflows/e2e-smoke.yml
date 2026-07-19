@@ -187,6 +187,7 @@ jobs:
           done
 
           python - <<'PY'
+          import ast
           import json
           from pathlib import Path
 
@@ -238,11 +239,61 @@ jobs:
                   "deterministic suite: " + ", ".join(surfaced_e2e_scripts)
               )
 
-          candidate_roots = (
-              Path("tests"),
-              Path("apps/explorer-web"),
-              Path("packages"),
+          accepted_e2e_inventory = {
+              Path("tests/e2e/README.md"),
+              Path("tests/e2e/__init__.py"),
+              Path("tests/e2e/agriculture/.gitkeep"),
+              Path("tests/e2e/agriculture/README.md"),
+              Path("tests/e2e/test_hydrology_proof_slice.py"),
+          }
+          observed_e2e_inventory = {
+              path
+              for path in Path("tests/e2e").rglob("*")
+              if path.is_file()
+          }
+          if observed_e2e_inventory != accepted_e2e_inventory:
+              additions = sorted(observed_e2e_inventory - accepted_e2e_inventory)
+              removals = sorted(accepted_e2e_inventory - observed_e2e_inventory)
+              detail = [f"added: {path}" for path in additions]
+              detail.extend(f"removed: {path}" for path in removals)
+              raise SystemExit(
+                  "The bounded E2E inventory changed. Inspect ownership, fixtures, harness, "
+                  "network posture, finite outcomes, and runner before wiring CI:\n"
+                  + "\n".join(detail)
+              )
+
+          init_path = Path("tests/e2e/__init__.py")
+          if init_path.read_text(encoding="utf-8").strip():
+              raise SystemExit(
+                  "tests/e2e/__init__.py is no longer empty. Inspect the E2E harness "
+                  "and command deliberately."
+              )
+
+          placeholder_path = Path("tests/e2e/test_hydrology_proof_slice.py")
+          placeholder_text = placeholder_path.read_text(encoding="utf-8")
+          placeholder_tree = ast.parse(placeholder_text, filename=str(placeholder_path))
+          placeholder_tests = [
+              node
+              for node in ast.walk(placeholder_tree)
+              if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+              and node.name.startswith("test_")
+          ]
+          placeholder_shape = (
+              "greenfield placeholder" in placeholder_text
+              and len(placeholder_tests) == 1
+              and placeholder_tests[0].name == "test_proof_slice_placeholder"
+              and len(placeholder_tests[0].body) == 1
+              and isinstance(placeholder_tests[0].body[0], ast.Assert)
+              and isinstance(placeholder_tests[0].body[0].test, ast.Constant)
+              and placeholder_tests[0].body[0].test.value is True
           )
+          if not placeholder_shape:
+              raise SystemExit(
+                  "The Hydrology E2E placeholder changed. Inspect and wire the accepted "
+                  "deterministic suite deliberately."
+              )
+
+          candidate_roots = (Path("apps/explorer-web"), Path("packages"))
           surfaced_e2e_files = []
           for root in candidate_roots:
               if not root.exists():
@@ -268,7 +319,8 @@ jobs:
 
           print("Root and Explorer Web package manifests parse as JSON.")
           print("The inspected root and Explorer Web scripts remain explicit TODO placeholders.")
-          print("No accepted E2E package script, test lane, or Playwright config was detected.")
+          print("The exact bounded tests/e2e documentation and placeholder inventory remains non-executable.")
+          print("No accepted E2E package script, composed test lane, or Playwright config was detected.")
           PY
 
           if ! grep -Fq "make governed-api-smoke" ".github/workflows/api-test.yml"; then
