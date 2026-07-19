@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-policy-data-readme-ca6cbd60",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/data/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/data/README.md": "sha256:ca6cbd608f4cfdbcac862c68e5c7f9807e62ce414c77867b44e12445b1fa3d56"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(47).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/data/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/lifecycle-law.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:release/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/lifecycle/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/policy/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:packages/policy-runtime/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-boundary-guards.yml@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/policy/test_pipeline_connector_non_publisher.py@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/policy/test_explorer_web_adapter_boundary.py@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/governed-api/tests/test_boundary_guards.py@144d10ff4ac87dc37566ad608fe6b002f9250d1a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@144d10ff4ac87dc37566ad608fe6b002f9250d1a"
+    ]
+  },
+  "truth_labels": {
+    "policy/data/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-meta-block-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block v2, balanced code fences, resolved internal anchors, unique heading slugs, final newline, and no trailing whitespace."
+    },
+    {
+      "gate": "authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Existing policy/data path retained under singular policy root; no overlapping open pull request, matching branch, or competing document identity surfaced."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Current-state claims are bounded to pinned repository files and searches at main@144d10ff4ac87dc37566ad608fe6b002f9250d1a."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected policy-test and policy-boundary-guards use hosted runners and read-only contents permission; major-tag action pinning and required-check status remain disclosed gaps."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Documentation contains no credentials, private payloads, exact protected locations, living-person records, or genomic data."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation workflow has no mounted checkout; remote CI is observed separately and no local test result is claimed."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt includes all required v3.0 fields, valid core truth labels, PASS/FAIL/SKIPPED gate outcomes, SHA-256 hashes, and pending human review."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:policy/data/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/data/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a"
+    },
+    {
+      "id": "repo:data/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:data/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a"
+    },
+    {
+      "id": "repo:docs/doctrine/lifecycle-law.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/lifecycle-law.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a"
+    },
+    {
+      "id": "repo:release/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:release/README.md@144d10ff4ac87dc37566ad608fe6b002f9250d1a"
+    },
+    {
+      "id": "repo:policy-test.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@144d10ff4ac87dc37566ad608fe6b002f9250d1a"
+    },
+    {
+      "id": "repo:policy-boundary-guards.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-boundary-guards.yml@144d10ff4ac87dc37566ad608fe6b002f9250d1a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T15:24:07Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. This receipt records AI-authored provenance and bounded preflight outcomes; it is not policy approval, evidence, proof, release approval, publication authority, or human review."
+}
