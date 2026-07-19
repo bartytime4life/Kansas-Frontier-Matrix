@@ -1,25 +1,360 @@
-# KFM CI workflow stub: domain-soil
-# Status: PROPOSED greenfield scaffold.
+# KFM Soil domain CI readiness workflow.
+# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
+# executable Soil validation, proof, and release-dry-run producers are not
+# established in current repository evidence.
+#
+# Authority boundary:
+# - This workflow performs no live source requests and does not provide
+#   agronomic, engineering, conservation-compliance, land-value, or regulatory
+#   determinations.
+# - It does not validate Soil truth, build an EvidenceBundle or ProofPack, admit
+#   sources, apply policy, promote lifecycle artifacts, approve release, write
+#   published data, deploy, or publish.
 name: domain-soil
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-soil-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-soil:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO validate-soil'
+      - name: Check out Soil boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate Soil validation readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/soil/README.md"
+            "contracts/domains/soil/README.md"
+            "schemas/contracts/v1/domains/soil/README.md"
+            "fixtures/domains/soil/README.md"
+            "policy/domains/soil/README.md"
+            "tests/domains/soil/README.md"
+            "tools/validators/domains/soil/README.md"
+            "data/registry/sources/soil/README.md"
+            "release/candidates/soil/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Soil boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          test_root = Path("tests/domains/soil")
+          collected_tests = []
+
+          for path in sorted(test_root.rglob("test_*.py")):
+              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+              for node in ast.walk(tree):
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
+                      collected_tests.append(f"{path}:{node.name}")
+                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+                      if any(
+                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+                          and child.name.startswith("test_")
+                          for child in node.body
+                      ):
+                          collected_tests.append(f"{path}:{node.name}")
+
+          if collected_tests:
+              raise SystemExit(
+                  "Executable Soil tests surfaced. Graduate validate-soil to the "
+                  "accepted deterministic no-network suite:\n" + "\n".join(collected_tests)
+              )
+
+          validator_roots = (
+              Path("tools/validators/domains/soil"),
+              Path("tools/validators/soil"),
+              Path("tools/validators/soil_integrity"),
+              Path("tools/validators/soil_moisture"),
+          )
+          executable_validators = []
+
+          for root in validator_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
+                      continue
+                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
+                      continue
+
+                  suffix = path.suffix.lower()
+                  text = path.read_text(encoding="utf-8", errors="replace")
+                  if suffix == ".py":
+                      tree = ast.parse(text, filename=str(path))
+                      meaningful = [
+                          node
+                          for node in tree.body
+                          if not (
+                              isinstance(node, ast.Expr)
+                              and isinstance(node.value, ast.Constant)
+                              and isinstance(node.value.value, str)
+                          )
+                      ]
+                      if meaningful:
+                          executable_validators.append(str(path))
+                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
+                      meaningful_lines = [
+                          line.strip()
+                          for line in text.splitlines()
+                          if line.strip()
+                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
+                      ]
+                      if meaningful_lines:
+                          executable_validators.append(str(path))
+
+          if executable_validators:
+              raise SystemExit(
+                  "Soil validator implementation surfaced. Resolve ownership and wire "
+                  "the accepted command deliberately:\n" + "\n".join(executable_validators)
+              )
+
+          parsed_json = []
+          for root in (
+              Path("schemas/contracts/v1/domains/soil"),
+              Path("fixtures/domains/soil"),
+          ):
+              for path in sorted(root.rglob("*.json")):
+                  json.loads(path.read_text(encoding="utf-8"))
+                  parsed_json.append(str(path))
+
+          print("No collected Soil test functions or classes were found.")
+          print("No accepted executable body was detected in inspected Soil validator lanes.")
+          print(f"Parsed {len(parsed_json)} Soil schema/fixture JSON file(s).")
+          PY
+
+          if ! grep -Fq "Greenfield placeholder" "docs/domains/soil/README.md"; then
+            echo "::error::The Soil domain landing page changed. Reassess workflow maturity and replace this readiness hold deliberately."
+            exit 1
+          fi
+
+          if ! grep -Fq "Greenfield stub" "fixtures/domains/soil/README.md"; then
+            echo "::error::The Soil fixture posture changed. Wire accepted fixture validation instead of retaining this readiness hold."
+            exit 1
+          fi
+
+          if grep -Eq '^(soil-validate|validate-soil):' Makefile; then
+            echo "::error::A Soil validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: soil-readiness"
+          echo "WORKFLOW_HOLD: accepted executable Soil validation suite is not established"
+
+      - name: Record Soil validation hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Soil validation status
+
+          `WORKFLOW_CHECK_EXECUTED: soil-readiness`
+
+          `WORKFLOW_HOLD: accepted executable Soil validation suite is not established`
+
+          This job verifies required responsibility boundaries, parses available
+          Soil schema and fixture JSON, and detects newly executable tests,
+          validator bodies, or a repository-owned validation target.
+
+          It does not establish source admission, MUKEY/COKEY/CHKEY lineage,
+          horizon integrity, units, depth, time, freshness, source role,
+          support-type separation, rights, sensitivity, EvidenceBundle closure,
+          policy approval, agronomic fitness, or release readiness.
+          EOF
+
   build-proof-soil:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO build-proof-soil'
+      - name: Check out Soil proof boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Soil proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/soil/README.md"
+            "docs/runbooks/soil/PROMOTION_RUNBOOK.md"
+            "release/candidates/soil/README.md"
+            "tests/domains/soil/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Soil proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "Support-type separation is mandatory" "data/proofs/soil/README.md"; then
+            echo "::error::The Soil proof invariant changed. Reassess proof schemas, source-role controls, sensitivity, receipts, release linkage, and rollback before accepting this workflow."
+            exit 1
+          fi
+
+          proof_artifact="$(find data/proofs/soil -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Soil proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(soil-proof|proof-soil):' Makefile; then
+            echo "::error::A Soil proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find tools pipelines packages scripts -type f \( -iname '*soil*proof*.py' -o -iname '*proof*soil*.py' -o -iname '*soil*proof*.mjs' -o -iname '*proof*soil*.mjs' \) -print -quit 2>/dev/null || true)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Soil proof implementation surfaced at $proof_implementation. Establish its contracts, synthetic fixtures, source-role and support-type controls, receipts, sensitivity controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-soil"
+          echo "WORKFLOW_HOLD: no accepted Soil proof producer or deterministic proof command"
+
+      - name: Record Soil proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Soil proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT: build-proof-soil`
+
+          `WORKFLOW_HOLD: no accepted Soil proof producer or deterministic proof command`
+
+          The Soil proof lane is currently documentation-backed. Concrete proof
+          inventory, EvidenceRef-to-EvidenceBundle resolution, source-role and
+          support-type closure, schemas, validators, receipts, sensitivity
+          controls, review state, and release linkage remain unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, agronomic or engineering
+          determination, conservation-compliance record, release decision, or
+          publication authority.
+          EOF
+
   publish-dry-run-soil:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO publish-dry-run-soil'
+      - name: Check out Soil release boundaries
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Soil release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/soil/README.md"
+            "docs/domains/soil/RELEASE_INDEX.md"
+            "docs/runbooks/soil/PROMOTION_RUNBOOK.md"
+            "docs/runbooks/soil/ROLLBACK_RUNBOOK.md"
+            "data/published/layers/soil/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Soil release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/soil/README.md"; then
+            echo "::error::The documented Soil candidate posture changed. Re-evaluate source, evidence, rights, sensitivity, time, support type, policy, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/soil -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Soil candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if ! grep -Fq "Greenfield placeholder" "docs/domains/soil/RELEASE_INDEX.md"; then
+            echo "::error::The Soil release index changed. Wire the accepted fail-closed release dry-run instead of retaining this hold."
+            exit 1
+          fi
+
+          if ! grep -Fq "echo TODO assemble-candidate" ".github/workflows/release-dry-run.yml"; then
+            echo "::error::The shared release dry-run workflow changed. Coordinate the accepted Soil command and avoid parallel release authority."
+            exit 1
+          fi
+
+          if grep -Eq '^(soil-release-dry-run|release-dry-run-soil):' Makefile; then
+            echo "::error::A Soil release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-soil"
+          echo "WORKFLOW_HOLD: no accepted Soil release dry-run command or candidate manifest contract"
+
+      - name: Record Soil release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Soil release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-soil`
+
+          `WORKFLOW_HOLD: no accepted Soil release dry-run command or candidate manifest contract`
+
+          This lane performs no live fetch, source admission, release, promotion,
+          manifest assembly, deployment, publication, or write to processed,
+          catalog, proof, receipt, release, or published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, sensitivity, time validity,
+          source-role and support-type separation, public-safe scale, policy
+          result, steward review, validation receipts, independent approval,
+          correction path, withdrawal path, and rollback target are accepted.
+
+          A green held result does not mean Soil data is accurate, current,
+          agronomically fit, suitable for engineering or conservation compliance,
+          approved, released, or published.
+          EOF
