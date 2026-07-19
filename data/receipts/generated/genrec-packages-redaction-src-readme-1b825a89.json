@@ -56,7 +56,9 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/144d10ff4ac87dc37566ad608fe6b002f9250d1a/policy/redaction/profiles.yaml",
       "github://bartytime4life/Kansas-Frontier-Matrix/commit/63ddb7293ed61ff39c0fdfa54b2283726e29c63a",
       "attachment://Directory Rules.pdf",
-      "attachment://Kansas Frontier Matrix — AI Build Operating Contract.md"
+      "attachment://Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b57da43e20486de87b9b1e3e90eb8f22611658fc",
+      "github://bartytime4life/Kansas-Frontier-Matrix/compare/144d10ff4ac87dc37566ad608fe6b002f9250d1a...b57da43e20486de87b9b1e3e90eb8f22611658fc"
     ]
   },
   "truth_labels": {
@@ -77,6 +79,11 @@
       "gate": "base-drift-reconciliation",
       "outcome": "PASS",
       "reason": "Main remained at 144d10ff4ac87dc37566ad608fe6b002f9250d1a from preparation through branch creation."
+    },
+    {
+      "gate": "post-authoring-base-drift",
+      "outcome": "PASS",
+      "reason": "After the two scoped writes, main advanced to b57da43e20486de87b9b1e3e90eb8f22611658fc through policy/data/README.md and its generated receipt only. The old-base-to-new-base comparison showed no overlap with the target, linked redaction authority files, or validation configuration, so the review branch remains valid without force-updating history."
     },
     {
       "gate": "repository-inventory-and-no-overclaim",
@@ -165,5 +172,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Task kfm-packages-redaction-src-readme-v1-1-20260719. Documentation-only source-envelope revision. The receipt records provenance and validation boundaries; it is not factual proof, policy approval, human review, release approval, or publication authority."
+  "notes": "Task kfm-packages-redaction-src-readme-v1-1-20260719. Documentation-only source-envelope revision. The receipt records provenance and validation boundaries; it is not factual proof, policy approval, human review, release approval, or publication authority. Main advanced after authoring through an unrelated policy/data documentation merge; overlap checks passed and the branch was not force-rewritten."
 }
