@@ -25,7 +25,7 @@ evidence_snapshot:
   base_ref: main
   base_commit: 860ccaececd0562dad22694a046215807495f1dc
   prior_blob: 15fa7d8282c72c6f54984ea853e1e06e6cd525c1
-  spec_hash_schema_blob: 80b496b01bde8c0e8ba67bf020977e6b1f3c652
+  spec_hash_schema_blob: 80b496b01b8de8c0e8ba67bf020977e6b1f3c652
   identity_token_schema_blob: f3eace84a75c2dd97cfabfa7661a098e4353e825
   temporal_window_schema_blob: 70b96839615551164d3964596dea238c33709616
   spatial_geometry_schema_blob: 97921f5f98cb34a84caaf4df7a594f5af6d57fba
