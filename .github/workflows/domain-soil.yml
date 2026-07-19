@@ -127,6 +127,13 @@ jobs:
               Path("tools/validators/soil_integrity"),
               Path("tools/validators/soil_moisture"),
           )
+          accepted_validator_placeholders = {
+              Path("tools/validators/domains/soil/validate_catalog_matrix.py"),
+              Path("tools/validators/domains/soil/validate_evidence_bundle.py"),
+              Path("tools/validators/domains/soil/validate_schema.py"),
+              Path("tools/validators/domains/soil/validate_source_descriptor.py"),
+          }
+          seen_validator_placeholders = set()
           executable_validators = []
 
           for root in validator_roots:
@@ -151,6 +158,24 @@ jobs:
                               and isinstance(node.value.value, str)
                           )
                       ]
+                      if path in accepted_validator_placeholders:
+                          placeholder_shape = (
+                              "greenfield placeholder" in text
+                              and len(meaningful) == 1
+                              and isinstance(meaningful[0], ast.FunctionDef)
+                              and meaningful[0].name == "main"
+                              and len(meaningful[0].body) == 1
+                              and isinstance(meaningful[0].body[0], ast.Raise)
+                              and isinstance(meaningful[0].body[0].exc, ast.Name)
+                              and meaningful[0].body[0].exc.id == "NotImplementedError"
+                          )
+                          if placeholder_shape:
+                              seen_validator_placeholders.add(path)
+                          else:
+                              executable_validators.append(
+                                  f"{path} (documented placeholder changed)"
+                              )
+                          continue
                       if meaningful:
                           executable_validators.append(str(path))
                   elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
@@ -162,6 +187,16 @@ jobs:
                       ]
                       if meaningful_lines:
                           executable_validators.append(str(path))
+
+          missing_validator_placeholders = (
+              accepted_validator_placeholders - seen_validator_placeholders
+          )
+          if missing_validator_placeholders:
+              raise SystemExit(
+                  "The documented Soil validator placeholder set changed. Inspect and "
+                  "wire the accepted command deliberately:\n"
+                  + "\n".join(str(path) for path in sorted(missing_validator_placeholders))
+              )
 
           if executable_validators:
               raise SystemExit(
@@ -180,7 +215,8 @@ jobs:
 
           print("The exact Soil greenfield smoke placeholder remains non-authoritative.")
           print("No additional collected Soil test functions or classes were found.")
-          print("No accepted executable body was detected in inspected Soil validator lanes.")
+          print("The four exact Soil validator greenfield placeholders remain non-executable.")
+          print("No accepted executable body was detected in the remaining Soil validator lanes.")
           print(f"Parsed {len(parsed_json)} Soil schema/fixture JSON file(s).")
           PY
 
