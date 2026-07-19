@@ -1,0 +1,200 @@
+{
+  "receipt_id": "genrec-policy-contract-readme-0e5b50b3",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/contract/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/contract/README.md": "sha256:0e5b50b38dc6dddf82a1434990d451a59b92e441da5bb82e798246848ea64144"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(47).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/contract/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0002-contracts-vs-schemas-split.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/contracts/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/schemas/test_common_contracts.py@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/bundles/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:packages/policy-runtime/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/policy/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/contracts-validate.yml@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:Makefile@aebbca0f18fe8cd907b36b267cc5372a636830d8",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    ]
+  },
+  "truth_labels": {
+    "policy/contract/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-meta-block-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block v2, balanced code fences, unique heading slugs, and no trailing whitespace."
+    },
+    {
+      "gate": "authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Existing policy/contract path retained under the singular policy responsibility root; no competing identity, matching open PR, or matching branch surfaced."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Current-state claims were bounded to pinned repository files and connector searches at the recorded base commit."
+    },
+    {
+      "gate": "relative-link-target-preflight",
+      "outcome": "PASS",
+      "reason": "All newly referenced high-signal repository paths were verified at the pinned base or already fetched as repository evidence."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Relevant pull-request workflows use hosted runners and read-only contents permission; action pinning and branch-protection gaps are disclosed."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation workflow had no mounted checkout; remote CI is expected to run make test. No test result is claimed."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt validated locally against schemas/contracts/v1/receipts/generated_receipt.schema.json."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:policy/contract/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/contract/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:CONTRIBUTING.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:policy/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:contracts/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:docs/architecture/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:docs/adr/ADR-0002-contracts-vs-schemas-split.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0002-contracts-vs-schemas-split.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:tests/contracts/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/contracts/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:tests/schemas/test_common_contracts.py",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/schemas/test_common_contracts.py@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:policy/bundles/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/bundles/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:packages/policy-runtime/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:packages/policy-runtime/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:tools/validators/policy/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/policy/README.md@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:.github/workflows/contracts-validate.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/contracts-validate.yml@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:.github/workflows/policy-test.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:Makefile",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:Makefile@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    },
+    {
+      "id": "repo:.github/CODEOWNERS",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@aebbca0f18fe8cd907b36b267cc5372a636830d8"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T09:55:06-05:00",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. The receipt records AI-authored provenance and local preflight outcomes; it is not factual proof, policy approval, human review, release approval, or publication authority."
+}
