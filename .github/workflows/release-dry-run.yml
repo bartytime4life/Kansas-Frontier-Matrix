@@ -1,25 +1,357 @@
-# KFM CI workflow stub: release-dry-run
-# Status: PROPOSED greenfield scaffold.
+# KFM release-dry-run readiness workflow.
+#
+# Responsibility:
+#   Inspect whether a release candidate can be assembled, exercise the concrete
+#   PromotionDecision shape-fixture test, and verify rollback-card readiness
+#   without writing release records or presenting placeholders as a dry run.
+#
+# Trigger and trust boundary:
+#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
+#   is untrusted. The workflow has read-only repository permission. Network use
+#   is limited to installing dependencies declared by the root pyproject for
+#   the one repository-owned test; no release, signing, or deployment secret is
+#   available.
+#
+# Inputs:
+#   Release candidate inventory, release-support tooling and Make target,
+#   ReleaseManifest/PromotionDecision/RollbackCard contracts and schemas,
+#   PromotionDecision fixtures/test, rollback-card records, validator/fixture
+#   inventories, and release/promotion policy routing surfaces.
+#
+# Outputs and outcomes:
+#   Test output and job summaries only. Jobs either confirm the bounded current
+#   holds or fail on drift so newly surfaced implementation can be wired and
+#   reviewed deliberately. No candidate, decision, receipt, proof, manifest,
+#   rollback card, signature, release, or published artifact is emitted.
+#
+# Compatibility:
+#   Preserve workflow name `release-dry-run` and job ids `assemble-candidate`,
+#   `promotion-gate-check`, and `rollback-card-presence`; repository rules may
+#   refer to those check names.
+#
+# Rollback:
+#   Revert this file. Do not restore echo-only green jobs or run placeholder
+#   helpers as though they assemble, approve, or reverse a release.
+#
+# Placement:
+#   `.github/workflows/` owns CI orchestration. Release governance remains under
+#   `release/`; all contracts, schemas, policies, fixtures, validators, tests,
+#   evidence, receipts, proofs, lifecycle artifacts, and public outputs remain
+#   in their owning responsibility roots.
+
 name: release-dry-run
 
-on:
+"on":
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-dry-run-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   assemble-candidate:
+    name: assemble-candidate
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO assemble-candidate'
+      - name: Check out inspected revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up inspection Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Confirm candidate assembly remains an explicit hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+
+          required = [
+              Path("Makefile"),
+              Path("tools/release/README.md"),
+              Path("tools/release/release_dry_run.py"),
+              Path("release/candidates/README.md"),
+              Path("contracts/release/release_manifest.md"),
+              Path("schemas/contracts/v1/release/release_manifest.schema.json"),
+              Path("policy/release/README.md"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required release dry-run evidence is missing: {missing}"
+
+          candidate_files = [
+              path for path in Path("release/candidates").rglob("*") if path.is_file()
+          ]
+          candidate_payloads = [
+              path.as_posix() for path in candidate_files
+              if path.name not in {"README.md", ".gitkeep"}
+          ]
+          assert not candidate_payloads, (
+              "candidate packet material has appeared; validate its identity, evidence, "
+              "rights, sensitivity, policy, review, correction, and rollback support before "
+              f"assembling a dry run: {candidate_payloads}"
+          )
+
+          helper = Path("tools/release/release_dry_run.py").read_text(
+              encoding="utf-8"
+          ).strip()
+          assert helper == "# Release dry-run — greenfield placeholder", (
+              "the release dry-run helper has changed; wire its accepted CLI, deterministic "
+              "outputs, negative fixtures, and no-write tests deliberately"
+          )
+
+          makefile = Path("Makefile").read_text(encoding="utf-8")
+          target = re.search(r"(?m)^release-dry-run:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
+          assert target, "Makefile release-dry-run target is missing"
+          assert target.group("body").splitlines() == [
+              '\t@echo "TODO: tools/release dry-run"'
+          ], "release-dry-run target changed; invoke and verify the accepted command deliberately"
+
+          schema = json.loads(
+              Path(
+                  "schemas/contracts/v1/release/release_manifest.schema.json"
+              ).read_text(encoding="utf-8")
+          )
+          assert schema["x-kfm"] == {
+              "contract_doc": "contracts/release/release_manifest.md",
+              "fixtures_root": "fixtures/release/release_manifest/",
+              "validator": "tools/validators/release/validate_release_manifest.py",
+              "policy": "policy/release/",
+              "status": "PROPOSED",
+          }, "ReleaseManifest schema metadata changed; reconcile the dry-run boundary"
+          assert schema["required"] == ["id"]
+          assert schema["additionalProperties"] is True
+          assert not Path(schema["x-kfm"]["fixtures_root"]).exists(), (
+              "ReleaseManifest fixtures have appeared; add non-vacuous schema and governance "
+              "tests before retaining this hold"
+          )
+          assert not Path(schema["x-kfm"]["validator"]).exists(), (
+              "the schema-declared ReleaseManifest validator has appeared; wire and test it "
+              "instead of retaining this hold"
+          )
+
+          print(
+              f"CONFIRMED: {len(candidate_files)} candidate-lane guidance/placeholder files "
+              "exist and no candidate packet payload is present."
+          )
+          print("CONFIRMED: ReleaseManifest remains a permissive PROPOSED id-only schema.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no candidate was assembled.")
+          print("WORKFLOW_HOLD: no accepted dry-run command, manifest fixture, or declared validator exists.")
+          print("No release record, artifact, or publication authority was created.")
+          PY
+
+      - name: Record candidate assembly outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Candidate assembly"
+            echo
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** candidate lanes contain guidance/placeholders, the release-dry-run helper is comment-only, and the Make target remains TODO-only."
+            echo "- ReleaseManifest is still a permissive PROPOSED id-only schema with no declared fixture directory or validator implementation."
+            echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   promotion-gate-check:
+    name: promotion-gate-check
+    needs:
+      - assemble-candidate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO promotion-gate-check'
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Require non-vacuous PromotionDecision fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          schema_path = Path("schemas/contracts/v1/release/promotion_decision.schema.json")
+          fixture_root = Path("fixtures/release/promotion_decision")
+          valid = sorted((fixture_root / "valid").glob("*.json"))
+          invalid = sorted((fixture_root / "invalid").glob("*.json"))
+          assert valid, "PromotionDecision valid fixture set is empty"
+          assert invalid, "PromotionDecision invalid fixture set is empty"
+
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          assert schema["x-kfm"]["status"] == "PROPOSED"
+          assert schema["properties"]["decision"]["enum"] == [
+              "APPROVE", "DENY", "ABSTAIN"
+          ]
+          assert schema["additionalProperties"] is False
+
+          print(
+              f"CONFIRMED: {len(valid)} valid and {len(invalid)} invalid "
+              "PromotionDecision fixtures are discoverable."
+          )
+          print("CONFIRMED: the PromotionDecision schema remains PROPOSED.")
+          PY
+
+      - name: Validate PromotionDecision shape fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/release/test_promotion_decision_schema.py
+
+      - name: Record promotion check boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Promotion gate check"
+            echo
+            echo "- The repository-owned PromotionDecision fixture test ran after a non-empty fixture check."
+            echo "- **WORKFLOW_HOLD:** this is shape validation for a PROPOSED contract. It does not assemble a candidate, resolve EvidenceRefs, evaluate promotion policy, enforce accountable review, validate rollback, or bind another workflow result."
+            echo "- Result: ${{ job.status }}. No PromotionDecision, release transition, or publication authority was emitted."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   rollback-card-presence:
+    name: rollback-card-presence
+    needs:
+      - promotion-gate-check
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO rollback-card-presence'
+      - name: Check out inspected revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up inspection Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Confirm rollback-card readiness hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          schema_path = Path("schemas/contracts/v1/release/rollback_card.schema.json")
+          contract_path = Path("contracts/release/rollback_card.md")
+          root_validator = Path("tools/validators/validate_rollback_card.py")
+          rollback_helper = Path("tools/release/rollback_apply.py")
+          required = [
+              schema_path,
+              contract_path,
+              root_validator,
+              rollback_helper,
+              Path("release/rollback_cards/README.md"),
+              Path("release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"),
+              Path("release/rollback_cards/rel-atmosphere-pm25-2026-001.card.json"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required rollback readiness evidence is missing: {missing}"
+
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          assert schema["x-kfm"] == {
+              "contract_doc": "contracts/release/rollback_card.md",
+              "fixtures_root": "fixtures/release/rollback_card/",
+              "validator": "tools/validators/release/validate_rollback_card.py",
+              "policy": "policy/release/",
+              "status": "PROPOSED",
+          }, "RollbackCard schema metadata changed; reconcile the readiness boundary"
+          assert schema["required"] == ["id"]
+          assert schema["additionalProperties"] is True
+          assert not Path(schema["x-kfm"]["fixtures_root"]).exists(), (
+              "RollbackCard fixtures have appeared; add non-vacuous schema and governance "
+              "tests before retaining this hold"
+          )
+          assert not Path(schema["x-kfm"]["validator"]).exists(), (
+              "the schema-declared RollbackCard validator has appeared; wire and test it "
+              "instead of retaining this hold"
+          )
+
+          assert 'raise NotImplementedError("Greenfield placeholder")' in (
+              root_validator.read_text(encoding="utf-8")
+          ), "the root rollback-card validator is no longer the confirmed placeholder"
+          assert rollback_helper.read_text(encoding="utf-8").strip() == (
+              "# Apply a signed rollback_card — greenfield placeholder"
+          ), "rollback_apply.py changed; review its authority and tests before execution"
+
+          root_cards = sorted(Path("release/rollback_cards").glob("*.json"))
+          assert [path.name for path in root_cards] == [
+              "agri-county-crop-progress-2026Q2-001.json",
+              "rel-atmosphere-pm25-2026-001.card.json",
+          ], (
+              "root rollback-card JSON inventory changed; validate every new record's target, "
+              "invalidation, correction, review, signature, and restoration posture"
+          )
+          for path in root_cards:
+              card = json.loads(path.read_text(encoding="utf-8"))
+              assert card == {
+                  "status": "PROPOSED",
+                  "path": path.as_posix(),
+                  "source_docs": [
+                      "docs/domains/agriculture/RELEASE_INDEX.md"
+                      if path.name.startswith("agri-")
+                      else "docs/domains/atmosphere/RELEASE_INDEX.md"
+                  ],
+                  "notes": [
+                      "Placeholder created from the current docs/domains markdown inventory."
+                  ],
+              }, f"rollback-card placeholder changed: {path}"
+              assert "id" not in card, (
+                  f"{path} unexpectedly looks schema-admissible; add a governed validator and "
+                  "semantic tests before treating presence as rollback readiness"
+              )
+
+          print("CONFIRMED: RollbackCard remains a permissive PROPOSED id-only schema.")
+          print("CONFIRMED: two root JSON cards are explicitly PROPOSED placeholders without id.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback helper or validator was executed.")
+          print("WORKFLOW_HOLD: no rollback-card fixtures or implemented declared validator exist.")
+          print("No rollback, release mutation, or publication authority was created.")
+          PY
+
+      - name: Record rollback-card outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Rollback-card presence"
+            echo
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** RollbackCard remains a permissive PROPOSED id-only schema; its declared fixture lane and validator are absent, while the root validator and rollback helper are placeholders."
+            echo "- The two root JSON cards are PROPOSED documentation-inventory placeholders without the schema-required id. File presence is therefore not rollback readiness."
+            echo "- Result: ${{ job.status }}. No rollback, mutation, release decision, or publication authority was created."
+            echo "- **NEEDS VERIFICATION:** documentation that describes this workflow or release tooling as TODO-only must be reconciled separately."
+          } >> "$GITHUB_STEP_SUMMARY"
