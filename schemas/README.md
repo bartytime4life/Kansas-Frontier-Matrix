@@ -6,17 +6,18 @@ Machine-checkable shape root for KFM object families; pairs with `contracts/` an
 doc_id: kfm://doc/schemas-readme
 title: schemas/README.md — Schema Root README
 type: root-readme; schema-root; governance-index; json-schema-boundary
-version: v0.2
+version: v0.3
 status: draft; root-schema-index; canonical-root-name; mixed-maturity-child-lanes; NEEDS VERIFICATION
 owners: OWNER_TBD — Schema steward · Contract steward · Validation steward · Policy steward · Domain stewards · Docs steward
 created: NEEDS VERIFICATION — short root stub existed before v0.2 expansion
-updated: 2026-07-04
+updated: 2026-07-19
 policy_label: public; schemas; json-schema; schema-shape; no-parallel-authority
 tags: [kfm, schemas, json-schema, contracts, tests, validators, fixtures, policy, governance, no-parallel-authority]
 related:
   - ./contracts/v1/README.md
   - ./policy/README.md
   - ./tests/README.md
+  - ../.github/workflows/schema-validation.yml
   - ../contracts/README.md
   - ../policy/
   - ../fixtures/
@@ -28,7 +29,8 @@ notes:
   - "Expanded from a short root README that defined schemas as machine-checkable shape paired one-to-one with contracts."
   - "The previous README marked authority level canonical and status PROPOSED; this update preserves that distinction by treating the root responsibility as confirmed while child-lane maturity remains mixed and NEEDS VERIFICATION."
   - "Current-session evidence confirms direct child lanes for contracts/v1, policy, and tests. Additional child lanes may exist but are not asserted here without inspection."
-  - "This README does not prove schema completeness, validator wiring, fixture coverage, CI behavior, policy behavior, release readiness, or public client behavior."
+  - "On 2026-07-19, schema-validation commit 302287931a2ada824dc172755a5b7672dab8798c and successful Actions run 29674644561 confirmed the bounded CI scope documented below."
+  - "This README does not prove schema completeness, validator wiring beyond the configured lanes, policy behavior, release readiness, or public client behavior."
 [/KFM_META_BLOCK_V2] -->
 
 <p>
@@ -42,7 +44,7 @@ notes:
 **Status:** draft / root schema index / mixed child maturity  
 **Path:** `schemas/README.md`  
 **Authority posture:** `schemas/` owns machine-checkable shape; `contracts/` owns semantic meaning; policy, fixtures, validators, data, proof, and release remain separate.  
-**Truth posture:** CONFIRMED root responsibility from the previous README; CONFIRMED inspected child indexes for `contracts/v1/`, `policy/`, and `tests/`; NEEDS VERIFICATION for full schema inventory, executable test ownership, validator wiring, CI coverage, and release integration.
+**Truth posture:** CONFIRMED root responsibility and inspected child indexes for `contracts/v1/`, `policy/`, and `tests/`; CONFIRMED bounded `schema-validation` CI coverage at commit `302287931a2ada824dc172755a5b7672dab8798c`; NEEDS VERIFICATION for schema completeness, long-term executable-test ownership, validator coverage beyond configured lanes, authoritative registry status, and release integration.
 
 ## Quick jumps
 
@@ -158,14 +160,14 @@ This preserves alias strictness without false rejections because inherited prope
 ## Validation
 
 ```bash
-find schemas -maxdepth 4 -type f | sort
-find schemas -name '*.json' -print0 | xargs -0 -r -I{} python -m json.tool {} >/dev/null
-find schemas/contracts/v1 -maxdepth 5 -type f 2>/dev/null | sort
-find schemas/tests -maxdepth 5 -type f 2>/dev/null | sort
-pytest tests/schemas tests/contract || true
+python -m pip install -e ".[test]"
+make schemas
+python -m pytest -q tests/schemas tests/contracts
 ```
 
-Replace `|| true` with fail-closed CI behavior once the accepted schema-test command and CI owner are confirmed.
+The fail-closed CI owner is [`schema-validation.yml`](../.github/workflows/schema-validation.yml). It also parses every JSON file under `schemas/`, meta-schema checks every `*.schema.json` file, requires canonical v1 schemas to declare unique `$id` values, and rejects empty valid or invalid fixture lanes for each configured aggregate validator.
+
+The current aggregate runner prints expected-invalid fixtures with a `FAIL` label. Its final polarity checks, process exit status, and the pytest suite determine the job result. `schemas/tests/` remains a README-only compatibility index; executable schema tests currently run from `tests/schemas/`.
 
 ## Review burden
 
@@ -184,7 +186,7 @@ Before promoting a schema change, verify:
 
 | Question | Status |
 |---|---|
-| Which CI workflow currently validates `schemas/contracts/v1/` and `schemas/tests/`? | NEEDS VERIFICATION |
+| Which CI workflow validates the currently wired schema surface? | CONFIRMED — [`schema-validation.yml`](../.github/workflows/schema-validation.yml) checks schema JSON, canonical v1 identities, configured aggregate fixtures, and executable `tests/schemas` / `tests/contracts` coverage. `schemas/tests/` remains a README-only compatibility index. |
 | Should executable schema tests live under `schemas/tests/`, `tests/schemas/`, or both with a documented split? | NEEDS VERIFICATION |
 | Which schema registry, if any, is authoritative for current `$id`, version, and promotion state? | NEEDS VERIFICATION |
 | Which root-level schema compatibility lanes should be retired, migrated, or formalized by ADR? | NEEDS VERIFICATION |
