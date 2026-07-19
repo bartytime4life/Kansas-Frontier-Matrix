@@ -181,7 +181,6 @@ jobs:
           bundle_readme = Path("policy/bundles/README.md").read_text(encoding="utf-8")
           markers = [
               "| Policy runtime package | **CONFIRMED PLACEHOLDER** |",
-              "| Policy-test workflow | **CONFIRMED TODO-ONLY** |",
               "| Accepted bundle format | **UNKNOWN** |",
           ]
           absent_markers = [marker for marker in markers if marker not in bundle_readme]
@@ -189,6 +188,13 @@ jobs:
               "policy bundle evidence posture changed; reconcile the workflow before claiming "
               f"readiness: {absent_markers}"
           )
+
+          prior_workflow_marker = "| Policy-test workflow | **CONFIRMED TODO-ONLY** |"
+          if prior_workflow_marker in bundle_readme:
+              print(
+                  "NEEDS VERIFICATION: policy/bundles/README.md still describes the "
+                  "superseded echo-only workflow and needs a separately governed doc update."
+              )
 
           print(f"CONFIRMED: {len(rego_files)} Rego source files are present.")
           print("WORKFLOW_SKIPPED_EXPLICIT: no Rego test modules or accepted OPA command exist.")
@@ -205,6 +211,7 @@ jobs:
             echo
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** repository evidence still has Rego source files, but no Rego test modules, accepted OPA command, bundle artifact/manifest, evaluator binding, or executable policy runtime."
             echo "- This job is a drift guard for that bounded state. It did not evaluate policy and emitted no PolicyDecision, receipt, proof, or release authority."
+            echo "- **NEEDS VERIFICATION:** policy documentation that describes the predecessor as echo-only must be reconciled separately; this workflow does not require that stale description to remain."
           } >> "$GITHUB_STEP_SUMMARY"
 
   policy-fixture-coverage:
