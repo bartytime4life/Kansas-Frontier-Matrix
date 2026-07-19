@@ -1,20 +1,312 @@
-# KFM CI workflow stub: rollback-drill
-# Status: PROPOSED greenfield scaffold.
+# KFM rollback-drill readiness workflow.
+#
+# Responsibility:
+#   Inspect the repository's rollback-card, rollback-engine, drill-test, and
+#   published-alias surfaces without executing placeholders or mutating state.
+#
+# Trigger and trust boundary:
+#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
+#   is untrusted. The workflow has read-only repository permission, receives no
+#   release or signing secret, and performs no network-dependent installation.
+#
+# Inputs:
+#   Rollback pipeline/apply/audit placeholders, RollbackCard contracts and
+#   schemas, declared fixture and validator paths, placeholder rollback-card
+#   records, drill-test inventory, rollback data lanes, published alias
+#   inventory, policy routing, and the proposed alias ADR.
+#
+# Outputs and outcomes:
+#   Inspection output and job summaries only. Jobs confirm the bounded current
+#   holds or fail on drift so surfaced implementation can be wired and reviewed
+#   deliberately. No rollback target, card, receipt, proof, signature, alias,
+#   invalidation, release transition, or published artifact is emitted.
+#
+# Compatibility:
+#   Preserve workflow name `rollback-drill` and job ids `simulate-rollback` and
+#   `verify-published-aliases`; repository rules may refer to those check names.
+#
+# Rollback:
+#   Revert this file. Do not restore echo-only green jobs or invoke placeholder
+#   helpers as though they simulate a rollback or validate published aliases.
+#
+# Placement:
+#   `.github/workflows/` owns CI orchestration. Rollback contracts, schemas,
+#   policies, fixtures, validators, tests, records, evidence, receipts, proofs,
+#   lifecycle artifacts, aliases, and public outputs remain in their owning
+#   responsibility roots.
+
 name: rollback-drill
 
-on:
+"on":
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rollback-drill-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   simulate-rollback:
+    name: simulate-rollback
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO simulate-rollback'
+      - name: Check out inspected revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up inspection Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Confirm rollback simulation remains an explicit hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          required = [
+              Path("pipelines/rollback/main.py"),
+              Path("tools/release/rollback_apply.py"),
+              Path("tools/validators/validate_rollback_card.py"),
+              Path("contracts/release/rollback_card.md"),
+              Path("schemas/contracts/v1/release/rollback_card.schema.json"),
+              Path("schemas/contracts/v1/domains/agriculture/rollback_card.schema.json"),
+              Path("tests/domains/agriculture/rollback_drill/README.md"),
+              Path("release/rollback_cards/README.md"),
+              Path("policy/release/README.md"),
+              Path("policy/domains/agriculture/README.md"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required rollback-drill evidence is missing: {missing}"
+
+          placeholders = {
+              Path("pipelines/rollback/main.py"):
+                  "# rollback stage — greenfield placeholder",
+              Path("tools/release/rollback_apply.py"):
+                  "# Apply a signed rollback_card — greenfield placeholder",
+          }
+          for path, expected in placeholders.items():
+              actual = path.read_text(encoding="utf-8").strip()
+              assert actual == expected, (
+                  f"{path} has changed; wire its accepted interface, identity, target, "
+                  "signature/review, policy, receipt, invalidation, and no-write tests "
+                  "before retaining this readiness hold"
+              )
+
+          generic_validator = Path(
+              "tools/validators/validate_rollback_card.py"
+          ).read_text(encoding="utf-8")
+          assert 'raise NotImplementedError("Greenfield placeholder")' in generic_validator, (
+              "the generic RollbackCard validator is no longer the known placeholder; "
+              "reconcile it with the schema-declared validator paths and wire tests"
+          )
+
+          drill_root = Path("tests/domains/agriculture/rollback_drill")
+          drill_inventory = sorted(
+              path.name for path in drill_root.iterdir() if path.is_file()
+          )
+          assert drill_inventory == [".gitkeep", "README.md"], (
+              "executable agriculture rollback-drill material has appeared; run its "
+              f"accepted test entry point deliberately: {drill_inventory}"
+          )
+
+          schemas = {
+              "release": Path(
+                  "schemas/contracts/v1/release/rollback_card.schema.json"
+              ),
+              "agriculture": Path(
+                  "schemas/contracts/v1/domains/agriculture/rollback_card.schema.json"
+              ),
+          }
+          expected_metadata = {
+              "release": {
+                  "contract_doc": "contracts/release/rollback_card.md",
+                  "fixtures_root": "fixtures/release/rollback_card/",
+                  "validator": "tools/validators/release/validate_rollback_card.py",
+                  "policy": "policy/release/",
+                  "status": "PROPOSED",
+              },
+              "agriculture": {
+                  "contract_doc": "contracts/domains/agriculture/rollback_card.md",
+                  "fixtures_root": "fixtures/domains/agriculture/rollback_card/",
+                  "validator": "tools/validators/domains/agriculture/validate_rollback_card.py",
+                  "policy": "policy/domains/agriculture/",
+                  "status": "PROPOSED",
+              },
+          }
+          loaded = {
+              name: json.loads(path.read_text(encoding="utf-8"))
+              for name, path in schemas.items()
+          }
+          for name, schema in loaded.items():
+              assert schema["x-kfm"] == expected_metadata[name], (
+                  f"{name} RollbackCard metadata changed; reconcile the accepted profile"
+              )
+              assert schema["required"] == ["id"]
+              assert schema["additionalProperties"] is True
+
+          release_metadata = loaded["release"]["x-kfm"]
+          agriculture_metadata = loaded["agriculture"]["x-kfm"]
+          assert Path(release_metadata["contract_doc"]).is_file()
+          assert not Path(release_metadata["fixtures_root"]).exists()
+          assert not Path(release_metadata["validator"]).exists()
+          assert not Path(agriculture_metadata["contract_doc"]).exists()
+          assert not Path(agriculture_metadata["fixtures_root"]).exists()
+          assert not Path(agriculture_metadata["validator"]).exists()
+
+          card_root = Path("release/rollback_cards")
+          card_paths = sorted(card_root.glob("*.json"))
+          expected_cards = [
+              "agri-county-crop-progress-2026Q2-001.json",
+              "rel-atmosphere-pm25-2026-001.card.json",
+          ]
+          assert [path.name for path in card_paths] == expected_cards, (
+              "rollback-card root inventory changed; validate new records deliberately"
+          )
+          for path in card_paths:
+              card = json.loads(path.read_text(encoding="utf-8"))
+              assert card.get("status") == "PROPOSED"
+              assert card.get("path") == path.as_posix()
+              assert "id" not in card, (
+                  f"{path} may now satisfy the thin schema; replace this hold with "
+                  "accepted profile, fixture, validator, policy, and review checks"
+              )
+              assert card.get("notes") == [
+                  "Placeholder created from the current docs/domains markdown inventory."
+              ]
+
+          print("CONFIRMED: rollback pipeline and apply helper remain comment-only placeholders.")
+          print("CONFIRMED: direct agriculture drill inventory contains guidance only.")
+          print("CONFIRMED: release and agriculture RollbackCard schemas remain PROPOSED, permissive, and id-only.")
+          print("CONFIRMED: declared fixture/validator paths are absent; the agriculture contract path is also absent.")
+          print(f"CONFIRMED: {len(card_paths)} root rollback-card JSON files remain non-conforming placeholder records.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback was simulated.")
+          print("WORKFLOW_HOLD: no accepted rollback profile, fixture, validator, engine, target, signature/review, invalidation plan, or receipt flow exists.")
+          print("No rollback card, receipt, proof, signature, release transition, or publication authority was created.")
+          PY
+
+      - name: Record rollback simulation outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Rollback simulation"
+            echo
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** the rollback pipeline and apply helper remain comment-only, and the agriculture drill lane contains guidance rather than an executable test."
+            echo "- Both RollbackCard schemas remain permissive PROPOSED id-only scaffolds; declared fixtures and validators are absent, and the agriculture contract path is absent."
+            echo "- Result: ${{ job.status }}. No rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   verify-published-aliases:
+    name: verify-published-aliases
+    needs:
+      - simulate-rollback
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
-      - run: 'echo TODO verify-published-aliases'
+      - name: Check out inspected revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up inspection Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Confirm published-alias verification remains an explicit hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          required = [
+              Path("scripts/maintenance/audit_published_aliases.py"),
+              Path("docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md"),
+              Path("data/published/README.md"),
+              Path("data/rollback/README.md"),
+              Path("release/rollback_cards/README.md"),
+          ]
+          missing = [path.as_posix() for path in required if not path.is_file()]
+          assert not missing, f"required published-alias evidence is missing: {missing}"
+
+          auditor_path = Path("scripts/maintenance/audit_published_aliases.py")
+          auditor = auditor_path.read_text(encoding="utf-8").strip()
+          assert auditor == (
+              "# Audit data/published/<domain>/current aliases — greenfield placeholder"
+          ), (
+              "published-alias auditor has changed; wire its accepted CLI, governed "
+              "pointer/profile, receipt evidence, negative cases, and no-write tests"
+          )
+
+          published_root = Path("data/published")
+          aliases = sorted(
+              path.as_posix()
+              for path in published_root.rglob("*")
+              if path.name in {"current", "current.json"}
+              or path.name.endswith(".current.json")
+          )
+          assert not aliases, (
+              "published current aliases have appeared; replace this absence audit with "
+              f"accepted pointer and rollback-receipt verification: {aliases}"
+          )
+
+          rollback_root = Path("data/rollback")
+          rollback_files = sorted(
+              path for path in rollback_root.rglob("*") if path.is_file()
+          )
+          rollback_payloads = [
+              path.as_posix() for path in rollback_files
+              if path.name not in {"README.md", ".gitkeep"}
+          ]
+          assert not rollback_payloads, (
+              "rollback data material has appeared; validate identity, target, policy, "
+              f"review/signature, receipt, and invalidation evidence: {rollback_payloads}"
+          )
+
+          adr = required[1].read_text(encoding="utf-8")
+          adr_lower = adr.lower()
+          assert "status: draft" in adr_lower
+          assert "**adr status:** `proposed`" in adr_lower
+          assert "build — todo" in adr_lower, (
+              "alias ADR build marker changed; reconcile accepted implementation and tests"
+          )
+
+          print("CONFIRMED: published-alias auditor remains a comment-only placeholder.")
+          print("CONFIRMED: no current/current.json/*.current.json alias exists under data/published.")
+          print(f"CONFIRMED: {len(rollback_files)} rollback-lane guidance/placeholder files exist and no rollback payload or receipt is present.")
+          print("CONFIRMED: the current-alias ADR remains draft/PROPOSED with a TODO build marker.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no published alias was resolved, mutated, or behaviorally verified.")
+          print("WORKFLOW_HOLD: no accepted alias mechanism, auditor interface, rollback receipt, or invalidation evidence exists.")
+          print("File absence is readiness evidence only; it is not proof of rollback capability or authority.")
+          PY
+
+      - name: Record published-alias verification outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Published alias verification"
+            echo
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** the alias auditor remains comment-only, no current alias is present under data/published, and rollback data lanes contain guidance/placeholders rather than receipts."
+            echo "- ADR-0015 remains draft/PROPOSED with a TODO build marker; file absence is not behavioral proof of rollback capability."
+            echo "- Result: ${{ job.status }}. No alias was resolved or mutated, and no rollback receipt, invalidation, release transition, or publication authority was emitted."
+          } >> "$GITHUB_STEP_SUMMARY"
