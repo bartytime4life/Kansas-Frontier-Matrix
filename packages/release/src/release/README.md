@@ -1,240 +1,379 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION/packages-release-src-release-readme
-title: Release Import Namespace README
+title: packages/release/src/release/ — Python Namespace and Governed Release-Candidate Scaffold
 type: readme
-version: v1
+version: v1.1
+prior_version: v1
 status: draft
-owners: OWNER_TBD
-created: NEEDS VERIFICATION — target file existed before this repair but contained only placeholder text
-updated: 2026-06-15
-policy_label: public
-related: [packages/release/README.md, packages/release/src/README.md, packages/hashing/README.md, packages/identity/README.md, packages/pipelines-core/README.md, packages/policy-runtime/README.md, packages/envelopes/README.md, packages/README.md, docs/doctrine/directory-rules.md, docs/architecture/release-model.md, docs/architecture/release-discipline.md, docs/architecture/publication/release-state-machine.md, docs/architecture/publication/release-objects.md, docs/architecture/publication/RELEASE_GATES.md, docs/architecture/publication/rollback-and-correction.md, docs/standards/RELEASE_MANIFEST.md, docs/standards/SIGNING.md, docs/adr/ADR-0018-promotion-gate-sequence.md, docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md, release/, contracts/, schemas/contracts/v1/, policy/, data/receipts/, data/proofs/]
-tags: [kfm, packages, release, import-namespace, release-manifest, promotion, signing, rollback, correction, publication, audit, replay]
-notes: ["Namespace guide for importable release-support helper code.", "This namespace may expose release manifest candidate, preflight/gate, signing metadata, rollback, correction, receipt-metadata, replay, validation, and synthetic fixture helpers only.", "It must not own release decisions, release records, lifecycle data, policy rules, schemas, contracts, receipts, proofs, signing keys, API routes, UI surfaces, source records, model runtimes, or AI truth claims."]
+owners: OWNER_TBD — Release steward · Promotion steward · Rollback/correction steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Security/signing steward · Validation steward · Package steward · Runtime/API steward · CI steward · Docs steward
+created: NEEDS VERIFICATION — target file existed before this evidence-grounded revision
+updated: 2026-07-19
+policy_label: "public-doctrine; python-namespace; greenfield-placeholder; no-supported-api; candidate-only; fail-closed; release-authority-external; signing-key-external; no-publication-authority; correction-aware; rollback-aware"
+truth_posture: >
+  CONFIRMED kfm-release 0.0.0 metadata stub, empty __init__.py, comment-only core.py,
+  release-governance root, draft object contracts, uneven PROPOSED schema/validator/test
+  maturity, draft signing standard, proposed promotion-gate ADR, and explicit release-dry-run
+  holds / PROPOSED deterministic candidate mechanics only / CONFLICTED prior fictional API,
+  competing A–G gate vocabularies, and CorrectionNotice placement / UNKNOWN accepted import
+  name, API, build, dependencies, signer, consumer, tests, runtime binding, and health /
+  NEEDS VERIFICATION ownership, rulesets, package metadata, accepted contracts/schemas/policy,
+  validators, fixtures, signing review, compatibility, correction, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: 66adcd917bc77232f6eac2218849f812019631dd
+  prior_blob: b9d312c0ac4bcb58d1ecb4762a718eef9d0df257
+  package_metadata_blob: b50731922626e9eb12b69f62dd8e71b11f00068b
+  namespace_init_blob: e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+  namespace_core_blob: 1c98feb4fb83b956decc0f55171a732d4a3233c0
+  release_manifest_schema_blob: 727db0a781900aa3816dcdce723fe355fec2e786
+  promotion_decision_schema_blob: a2d087a46772cf60e4b9dfb394892690e8a88b31
+  promotion_decision_validator_blob: ead33d6c5c073f319627ee42d99c5933c0e370d1
+  promotion_decision_test_blob: 495c76aa9d3a016b7a60831e47c15d3a21efaa0c
+  rollback_card_schema_blob: 779ffcf282201ba4dba9689e622f92723db55b4e
+  rollback_validator_placeholder_blob: b80dd40e93733c7fa76f8f9a78e9ec55b6090b4b
+  correction_notice_schema_blob: 8f260eb5a5adba0b4966adfeffebfbcf6960277d
+  promotion_gate_adr_blob: d7604ab92b915abaec8d7d9bac3da5d40d51e7f3
+  signing_standard_blob: b719251e5f7d0abb954da4f043f8ea5d95e6283f
+  release_dry_run_workflow_blob: c91e794ae68a99edf6b618e9e3992c30ab0e4fe5
+related:
+  - ../../README.md
+  - ../README.md
+  - ../../pyproject.toml
+  - __init__.py
+  - core.py
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../docs/doctrine/trust-membrane.md
+  - ../../../../docs/doctrine/lifecycle-law.md
+  - ../../../../docs/architecture/release-discipline.md
+  - ../../../../docs/architecture/publication/RELEASE_GATES.md
+  - ../../../../docs/adr/ADR-0018-promotion-gate-sequence.md
+  - ../../../../docs/standards/SIGNING.md
+  - ../../../../contracts/release/release_manifest.md
+  - ../../../../contracts/release/promotion_decision.md
+  - ../../../../contracts/release/rollback_card.md
+  - ../../../../contracts/correction/correction_notice.md
+  - ../../../../schemas/contracts/v1/release/release_manifest.schema.json
+  - ../../../../schemas/contracts/v1/release/promotion_decision.schema.json
+  - ../../../../schemas/contracts/v1/release/rollback_card.schema.json
+  - ../../../../schemas/contracts/v1/correction/correction_notice.schema.json
+  - ../../../../tools/validators/release/validate_promotion_decision.py
+  - ../../../../tools/validators/validate_rollback_card.py
+  - ../../../../tests/release/test_promotion_decision_schema.py
+  - ../../../../release/README.md
+  - ../../../../.github/workflows/release-dry-run.yml
+tags: [kfm, packages, release, python, namespace, scaffold, promotion-decision, release-manifest, rollback-card, correction-notice, signing, fail-closed, rollback]
+notes:
+  - "v1.1 removes fictional modules/imports/exports and records the verified placeholder state."
+  - "Candidate mechanics do not approve promotion, mutate release state, hold keys, persist trust artifacts, or publish."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `release` Import Namespace
+# Release Python Namespace and Governed Release-Candidate Scaffold
 
-Importable helper namespace for KFM release-support primitives: release manifest candidates, promotion preflight checks, signing-envelope metadata, signature verification helpers, rollback/correction helpers, receipt-ready metadata, validation, replay, and synthetic fixtures.
+`packages/release/src/release/`
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Implementation: proposed" src="https://img.shields.io/badge/implementation-PROPOSED-orange">
-  <img alt="Root: packages" src="https://img.shields.io/badge/root-packages-blue">
-  <img alt="Namespace: release" src="https://img.shields.io/badge/namespace-release-blue">
-  <img alt="Publication: governed transition" src="https://img.shields.io/badge/publication-governed__transition-blue">
-  <img alt="Authority: helper only" src="https://img.shields.io/badge/authority-helper__only-lightgrey">
-</p>
+> Future namespace for reusable release-candidate mechanics. Current evidence proves only an empty initializer and comment-only `core.py`—not an installable package, supported API, release runner, signer, rollback executor, correction publisher, ledger, or publication authority.
+
+![status](https://img.shields.io/badge/status-draft-yellow)
+![maturity](https://img.shields.io/badge/maturity-greenfield__placeholder-lightgrey)
+![distribution](https://img.shields.io/badge/distribution-kfm--release-blue)
+![authority](https://img.shields.io/badge/publication__authority-none-red)
+
+**Quick links:** [Purpose](#purpose) · [Evidence](#status-and-evidence) · [Authority](#authority-boundary) · [Objects](#object-readiness) · [API](#candidate-api-boundary) · [Security](#security-signing-and-side-effects) · [Testing](#testing-and-ci) · [Implementation](#implementation-sequence) · [Open](#verification-register) · [Rollback](#correction-revocation-and-rollback)
 
 > [!IMPORTANT]
-> **Status:** PROPOSED import-namespace README  
-> **Path:** `packages/release/src/release/README.md`  
-> **Owning responsibility root:** `packages/`  
-> **Package lane:** `packages/release/`  
-> **Source envelope:** `packages/release/src/`  
-> **Import namespace:** `release` — NEEDS VERIFICATION against package metadata  
-> **Release authority:** `release/`, not this namespace  
-> **Schema authority:** `schemas/contracts/v1/`, not this namespace  
-> **Contract authority:** `contracts/`, not this namespace  
-> **Policy authority:** `policy/`, not this namespace  
-> **Receipt/proof authority:** `data/receipts/` and `data/proofs/`, not this namespace  
-> **Key-management authority:** external key-management/signing infrastructure or repo-confirmed security root, not this namespace  
-> **Repo implementation depth:** UNKNOWN for module files, exports, tests, package manager, CI workflows, release bindings, receipts, proof packs, release manifests, signing infrastructure, branch protections, and runtime behavior.
+> **This README is not implementation evidence.** It establishes no imports, exports, manifest construction, promotion evaluation, signing, rollback, correction publication, receipt persistence, release mutation, tests, deployment, or operational health.
 
-## Scope
+> [!CAUTION]
+> A valid schema, signature, promotion decision, pull request, workflow, or copied artifact does not create evidence or publication authority and cannot silently change `PUBLISHED` state.
 
-`packages/release/src/release/` is the proposed importable namespace for reusable release-support helper code.
+---
 
-It may contain pure, deterministic helpers for:
+## Purpose
 
-- assembling release manifest candidates from explicit artifact refs, manifest refs, evidence refs, policy refs, receipt refs, proof refs, hashes, version ids, audience metadata, and rollback refs;
-- validating release candidate completeness before a governed release workflow makes a release decision;
-- checking promotion-gate inputs such as schema validation, policy decision, EvidenceBundle closure, hash consistency, source rights, sensitivity posture, receipt/proof presence, review state, and rollback target presence;
-- preparing signing-envelope inputs, signature verification inputs, and signature-result metadata without storing private keys or becoming signing authority;
-- applying rollback-card logic to compute candidate alias/current pointers from explicit rollback records;
-- preparing correction, supersession, tombstone, deprecation, and withdrawal metadata from explicit caller inputs;
-- mapping helper outcomes into finite states such as `READY`, `INVALID`, `DENIED`, `HOLD`, `ABSTAIN`, `SIGNED`, `ROLLBACK_READY`, `DRIFT`, and `ERROR`;
-- supporting deterministic replay of release manifests, signatures, rollback cards, and correction metadata;
-- synthetic no-network fixtures for release, rollback, correction, signature, drift, and gate-failure paths.
+The namespace may eventually provide small, explicit-input, deterministic, fail-closed candidate helpers shared by governed release workflows or validators.
 
-This namespace must not approve release, publish artifacts, mutate `release/`, change `data/published`, write receipts, write proofs, store signing keys, decide policy, resolve evidence as truth, fetch source data, expose public routes, render UI, or generate truth claims.
+Confirmed current state:
 
-## Namespace contract
+- `pyproject.toml` declares only `kfm-release` `0.0.0`;
+- `__init__.py` is empty;
+- `core.py` is a one-line placeholder;
+- no build backend, Python range, discovery, dependencies, scripts, or entry points are declared;
+- no functional module, export, consumer import, namespace test lane, signer binding, release mutation, or deployment is established.
 
-The namespace is a release-support helper boundary, not the authoritative release ledger.
+The prior README's module tree, imports, exports, and helper outcomes are design lineage—not implementation or compatibility commitments.
 
-| Namespace concern | Expected behavior | Authority home |
-| --- | --- | --- |
-| Manifest candidates | Build deterministic candidates from explicit refs and hashes. | `release/`, schemas, and contracts define authoritative records. |
-| Gate checks | Check supplied preflight evidence, policy, receipts, proofs, hashes, review state, and rollback refs. | Governed release workflows make release decisions. |
-| Signing metadata | Prepare/verify signature context from explicit public-key/signature refs. | Key-management/signing infrastructure owns keys and trust roots. |
-| Rollback helpers | Compute rollback/correction candidate state from explicit rollback cards. | `release/` owns rollback records and current aliases. |
-| Correction helpers | Preserve correction, supersession, tombstone, withdrawal metadata. | Release governance owns correction publication. |
-| Receipt metadata | Build release receipt-ready carriers from explicit inputs. | `data/receipts/` stores receipts; proof homes store proof artifacts. |
-| Replay support | Compare expected and observed refs/hashes/signature context. | Receipt/proof/release workflows own replay authority. |
-| Fixtures | Produce synthetic stable examples for tests only. | `tests/` and `fixtures/`, not production release records. |
+[Back to top](#top)
 
-## Expected modules
+---
 
-> [!NOTE]
-> The tree below is PROPOSED. Confirm actual language, module names, package manager, and tests before treating these as implementation facts.
+## Status and evidence
+
+| Surface | Status | Safe conclusion |
+|---|---:|---|
+| Namespace | **CONFIRMED present** | Placement exists; usability is unproved. |
+| Distribution | **Placeholder** | `kfm-release` `0.0.0`; no installability. |
+| Code | **Empty/comment-only** | No API or behavior. |
+| Consumers/tests | **Not established** | No adoption or package proof. |
+| `ReleaseManifest` | **PROPOSED, thin schema** | `id` only required; release closure not enforced. |
+| `PromotionDecision` | **PROPOSED, concrete schema** | Closed eleven-field shape; validator and fixture test exist. |
+| `RollbackCard` | **PROPOSED, thin schema** | Declared validator absent; different validator is placeholder. |
+| `CorrectionNotice` | **Draft, thin schema** | Validator absent; family placement conflicted. |
+| Signing | **Draft standard** | Production keys/trust roots unproved. |
+| Release dry run | **Explicit hold** | Bounded checks only; no release emitted. |
+| Runtime health | **UNKNOWN** | No operational namespace. |
+
+### v1 corrections
+
+- Remove nonexistent `manifests.py`, `gates.py`, `signing.py`, `rollback.py`, `corrections.py`, `receipts.py`, `replay.py`, `validation.py`, and `fixtures.py`.
+- Remove `from release...` examples; the accepted import name remains unresolved.
+- Remove unratified `READY`, `SIGNED`, `ROLLBACK_READY`, and `DRIFT` compatibility claims.
+- Do not treat dry-run or PromotionDecision fixture success as release readiness.
+- Do not choose between competing draft A–G gate vocabularies while ADR-0018 remains proposed.
+
+[Back to top](#top)
+
+---
+
+## Authority boundary
+
+Directory Rules place reusable mechanics under `packages/`, one-off execution under `tools/` or `pipelines/`, and authoritative release records under `release/`.
+
+| Responsibility | Authority |
+|---|---|
+| Candidate computation | This namespace after implementation |
+| Package build | `packages/release/pyproject.toml` |
+| Release records/state | `release/` |
+| Object meaning | `contracts/release/`, `contracts/correction/` |
+| Machine shape | `schemas/contracts/v1/` |
+| Policy/gates/review | Policy and governed workflows |
+| Evidence | EvidenceRef/EvidenceBundle surfaces |
+| Receipts/proofs | `data/receipts/`, `data/proofs/` |
+| Lifecycle artifacts | `data/<phase>/` |
+| Keys/trust roots | Security/KMS/signing infrastructure |
+| Public surfaces | Governed APIs/UI/map/AI |
+
+This namespace must never approve, promote, publish, withdraw, revoke, set aliases, mutate release/lifecycle stores, write trust artifacts, evaluate policy as authority, resolve evidence as truth, store keys, or expose public authority.
+
+[Back to top](#top)
+
+---
+
+## Object readiness
+
+### `ReleaseManifest`
+
+The semantic contract is rich, but its PROPOSED schema requires only `id` and permits additional properties. A future adapter may normalize explicit inputs but must not persist manifests or equate schema validity with evidence, rights, sensitivity, policy, review, attestation, receipt/proof, correction, rollback, or publication closure.
+
+### `PromotionDecision`
+
+The PROPOSED schema is closed, requires eleven fields, and uses:
 
 ```text
-packages/release/src/release/
-├── README.md              # This file: namespace guide
-├── __init__.py            # PROPOSED export boundary
-├── manifests.py           # PROPOSED release manifest candidate helpers
-├── gates.py               # PROPOSED release preflight/gate helpers
-├── signing.py             # PROPOSED signing metadata and verification helpers
-├── rollback.py            # PROPOSED rollback-card application helpers
-├── corrections.py         # PROPOSED correction/supersession/tombstone helpers
-├── receipts.py            # PROPOSED release receipt-ready metadata carriers only
-├── replay.py              # PROPOSED replay/drift helpers
-├── validation.py          # PROPOSED manifest/output validation helpers
-├── fixtures.py            # PROPOSED synthetic fixtures
-└── py.typed               # PROPOSED if typed package convention is confirmed
+APPROVE | DENY | ABSTAIN
 ```
 
-Keep implementation smaller than this until schemas, tests, and callers prove the need.
+A validator and repository fixture test exist. This proves bounded shape validation—not policy evaluation, accountable review, release approval, or publication.
 
-## Allowed exports
+### `RollbackCard`
 
-| Export family | Examples | Rule |
-| --- | --- | --- |
-| Manifest helpers | `build_release_manifest_candidate`, `ReleaseManifestCandidate` | Build candidates only; do not write authoritative records. |
-| Gate helpers | `validate_release_preflight`, `ReleaseGateResult` | Check supplied refs and metadata; do not approve release. |
-| Signing helpers | `SignatureEnvelopeCandidate`, `verify_signature_metadata` | Use supplied public-key/signature refs; never store private keys. |
-| Rollback helpers | `apply_rollback_card_candidate`, `RollbackCandidate` | Compute candidate state; do not mutate current aliases. |
-| Correction helpers | `CorrectionMetadata`, `build_correction_candidate` | Preserve correction context; do not replace published records. |
-| Receipt metadata helpers | `ReleaseReceiptMetadata`, `build_release_receipt_metadata` | Prepare metadata only; do not write receipts. |
-| Replay helpers | `ReleaseReplayExpectation`, `compare_release_replay` | Return drift/match states; do not certify release. |
-| Validation helpers | `validate_release_candidate`, `check_required_release_refs` | Local helper validation only. |
-| Fixture helpers | `release_fixture`, `rollback_fixture`, `signature_error_fixture` | Synthetic and public-safe only. |
+The semantic contract exists; the schema is thin. The schema-declared validator is absent, while `tools/validators/validate_rollback_card.py` raises `NotImplementedError`. Do not claim rollback validation or execute alias movement, invalidation, restoration, or notice publication.
 
-## Disallowed exports
+### `CorrectionNotice`
 
-Do not export functions that turn this helper namespace into an authority surface.
+The semantic contract exists under `contracts/correction/`; the schema is thin and its validator is absent. Release-vs-correction family placement is unresolved. Preserve append-only history and do not expose restricted correction details.
 
-| Disallowed export | Why |
-| --- | --- |
-| `approve_release`, `publish`, `promote`, `rollback_release`, `set_current_alias` | Release authority belongs under `release/` and governed workflows. |
-| `write_release_manifest`, `write_rollback_card`, `write_correction_notice` | Authoritative release records must be stored by release governance. |
-| `read_raw`, `write_published`, `move_to_published`, `fetch_source` | Lifecycle and source access belong to data, pipelines, and connectors. |
-| `write_receipt`, `write_proof`, `store_evidence_bundle` | Receipts/proofs/evidence storage are separate trust homes. |
-| `store_private_key`, `sign_with_embedded_key`, `issue_key_policy` | Private keys and key policy never belong in this namespace. |
-| `evaluate_policy`, `resolve_truth`, `allow_public_without_review` | Policy, evidence, and truth authority are separate. |
-| `call_model`, `generate_release_claim`, `summarize_truth` | AI output is interpretive and belongs behind governed AI placement. |
-| `bypass_gates`, `ignore_drift`, `force_release` | Bypass violates release governance and rollback auditability. |
+[Back to top](#top)
 
-## Import posture
+---
 
-Preferred imports, subject to package metadata verification:
+## Candidate API boundary
 
-```python
-from release.manifests import build_release_manifest_candidate
-from release.gates import validate_release_preflight
-from release.rollback import apply_rollback_card_candidate
-from release.signing import verify_signature_metadata
+Future code may be admitted only when reusable, explicit-input, deterministic where promised, no-network by default, and candidate-only.
+
+Allowed future concerns:
+
+- normalize explicit manifest refs/digests;
+- invoke injected shape validators;
+- compare canonical hashes or public verification results;
+- assemble explicit PromotionDecision inputs without deciding them;
+- normalize rollback affected/target/invalidation metadata without executing;
+- preserve correction and supersession refs without publishing;
+- compare replay expectations;
+- build sanitized deterministic fixtures.
+
+Every function must receive explicit identity, artifacts, evidence, policy/review, receipt/proof, signing, rollback/correction, replay, and time context as applicable. It must not fetch missing facts from hidden globals, stores, UI state, logs, secrets, or generated prose.
+
+### Outcome separation
+
+| Vocabulary | Use |
+|---|---|
+| `APPROVE | DENY | ABSTAIN` | PromotionDecision |
+| `ANSWER | ABSTAIN | DENY | ERROR` | Runtime/policy envelope |
+| Release record states | `release/` governance |
+| `PASS | FAIL | SKIPPED` | Validation/workflow reporting |
+
+Unknown, stale, conflicted, or unverifiable support must fail closed. No proposed helper result may be treated as publication.
+
+[Back to top](#top)
+
+---
+
+## Lifecycle and trust membrane
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Callers should treat release namespace output as a candidate for schema validation, policy gates, evidence checks, receipt/proof persistence, release review, governed API envelope construction, and replay comparison. A `READY` or `SIGNED` helper result is not public release by itself.
+The namespace may support candidate computation near governed release transitions. It does not own lifecycle state.
 
-## Release helper outcomes
+A release still requires validated semantics, resolvable evidence, rights/sensitivity posture, policy, accountable review, receipts/proofs, integrity support, manifest and rollback/correction lineage, authoritative release records, and governed downstream interfaces.
 
-| Helper outcome | Use when | Runtime posture |
-| --- | --- | --- |
-| `READY` | Manifest candidate has required refs, hashes, and preflight support. | Candidate only; release workflow must still approve. |
-| `INVALID` | Manifest shape, ref set, hash, signature, or rollback metadata is malformed. | Fail closed with validation metadata. |
-| `DENIED` | Supplied policy posture blocks release or audience. | Deny with stable reason code. |
-| `HOLD` | Steward review, rights review, sensitivity review, proof review, or signature review is required. | Internal governance state; not public release. |
-| `ABSTAIN` | Required evidence, policy, receipt, proof, artifact, signature, or rollback support is missing. | Fail safe; do not publish. |
-| `SIGNED` | Signature metadata verifies for supplied manifest/hash and public-key context. | Integrity candidate only; not truth or release approval. |
-| `ROLLBACK_READY` | Rollback/correction candidate is locally coherent from explicit inputs. | Candidate only; release workflow must still apply. |
-| `DRIFT` | Replay or recompute differs from expected manifest, hashes, refs, or signature context. | Block promotion/release and require review. |
-| `ERROR` | Runtime or evaluator failure prevents a valid local helper result. | Fail closed with receipt-ready error metadata. |
+A file move, merge, deployment, signature, workflow success, or local helper result is not a release.
 
-`READY` and `SIGNED` are not proof of truth, evidence closure, publication, or release. They only mean the local helper checks found the candidate coherent enough for the next governed gate.
+[Back to top](#top)
 
-## Trust-boundary flow
+---
 
-```mermaid
-flowchart LR
-    A[Pipeline / release workflow caller] --> B[release namespace]
-    B --> C{Manifest / gate / signing / rollback check}
-    C -->|READY| D[Release candidate metadata]
-    C -->|SIGNED| E[Verified signature metadata]
-    C -->|ROLLBACK_READY| F[Rollback/correction candidate]
-    C -->|INVALID or ERROR| G[Fail-closed metadata]
-    C -->|DENIED| H[Deny result]
-    C -->|HOLD or ABSTAIN| I[Review or missing-support state]
-    D --> J[Schema + policy + evidence + receipt/proof checks]
-    E --> J
-    F --> J
-    J --> K[Governed release workflow]
-    K --> L[Authoritative release records]
-    L --> M[Governed API / publication / audit / replay]
+## Security, signing, and side effects
 
-    B -. must not own .-> N[Release ledger]
-    B -. must not write .-> O[Lifecycle data]
-    B -. must not store .-> P[Receipts / proofs]
-    B -. must not hold .-> Q[Private signing keys]
-```
+Private keys, KMS clients, OIDC credentials, certificate issuance, trust-root policy, and transparency-log authority do not belong here.
 
-## Development rules
+A future verifier adapter must accept explicit canonical payload and public verification context, bind digest/payload type/identity/issuer/policy, distinguish invalid/unverifiable/stale/revoked/error states, avoid leaking secrets, and fail closed.
 
-1. Keep the namespace no-network by default, except for ADR-approved constrained signing/verification calls if added later.
-2. Prefer pure functions with explicit input objects.
-3. Preserve release refs, artifact refs, evidence refs, policy refs, receipt refs, proof refs, hashes, signature refs, rollback refs, correction refs, review refs, and actor/timestamp metadata supplied by callers.
-4. Do not read from RAW, WORK, QUARANTINE, unpublished candidates, source systems, source credentials, canonical stores, private keys, or model runtimes.
-5. Do not write lifecycle data, release records, receipts, proofs, policy rules, source registries, catalog records, API responses, UI components, or signing keys.
-6. Do not approve release, publish artifacts, resolve evidence as truth, decide policy, or generate public claims.
-7. Do not create schemas, contracts, policy source rules, source registries, pipeline DAGs, API routes, public answers, release decisions, key policies, or connector behavior from this namespace.
-8. Do not store raw provider payloads, secrets, private keys, credentials, private source records, sensitive-location examples, living-person identifiers, DNA/genomic context, or unrestricted sensitive context.
-9. Return typed finite outcomes instead of implicit release, warning-only drift, skipped signature validation, hidden rollback failure, or public exposure of unreleased outputs.
-10. Add deterministic tests for every export and every negative path.
-11. Keep fixtures synthetic, sanitized, and public-safe.
-12. Preserve rollback and correction metadata supplied by callers when release output can affect downstream publication candidates.
+Core candidate mechanics must be pure and no-network by default. Forbidden hidden effects include release/lifecycle store access, KMS access, source retrieval, alias mutation, cache invalidation, receipt persistence, and environment-dependent decisions.
 
-## Validation checklist
+| Threat | Control |
+|---|---|
+| Package becomes release ledger | No authoritative writes |
+| Schema-valid but unsafe candidate | Separate shape from governance readiness |
+| Gate drift | Versioned mapping; no proposed enum hard-code |
+| Signature treated as truth | Integrity-only semantics |
+| Key leakage | No secrets in code, fixtures, logs, exceptions |
+| TOCTOU | Digest/version binding and authority-boundary reverification |
+| Stale evidence/policy/review | Explicit versions and time checks |
+| Rollback substitution | Digest-bound target and reviewed lineage |
+| Warning-only drift | Typed fail-closed result |
+| Resource exhaustion | Size, depth, count, time limits |
 
-- [ ] Confirm this namespace exists in package metadata.
-- [ ] Confirm the package import name is actually `release` or decide on a less collision-prone namespace such as `kfm_release` through package metadata/ADR.
-- [ ] Confirm `__init__` exports are intentional and minimal.
-- [ ] Confirm tests cover `READY`, `INVALID`, `DENIED`, `HOLD`, `ABSTAIN`, `SIGNED`, `ROLLBACK_READY`, `DRIFT`, and `ERROR` helper states if implemented.
-- [ ] Confirm tests cover missing evidence, missing policy, missing rights, missing receipts/proofs, unsigned manifest, invalid signature, hash mismatch, rollback mismatch, correction mismatch, replay drift, and no-public-RAW/WORK/QUARANTINE exposure.
-- [ ] Confirm helpers do not import connectors, data stores, policy engines, release writers, model providers, API routers, UI components, credential systems, private-key stores, or receipt/proof stores.
-- [ ] Confirm helpers do not access RAW/WORK/QUARANTINE, source systems, credentials, private keys, model runtimes, or unpublished candidate stores.
-- [ ] Confirm public-facing API routes serialize release-derived status through governed envelopes and do not expose lifecycle internals.
+Logs may include safe ids, result class, reason code, timing, and version—not payloads, evidence bodies, keys, tokens, signatures, protected locations, or personal data.
 
-Suggested inspection commands:
+[Back to top](#top)
 
-```bash
-find packages/release/src/release -maxdepth 3 -type f | sort
-git grep -n "from release\|import release" -- . 2>/dev/null || true
-git grep -n "ReleaseManifest\|MapReleaseManifest\|RollbackCard\|CorrectionNotice\|signature\|SIGNED\|DRIFT\|PromotionReceipt" -- packages/release tests fixtures docs schemas contracts policy pipelines connectors tools release 2>/dev/null || true
-```
+---
 
-## Rollback
+## Consumer contract
 
-Rollback is required if this namespace:
+The first consumer must be internal, governed, reviewable, and reversible. It must pin API version, supply explicit validated inputs, preserve all governance refs, handle every negative result, avoid release/lifecycle mutation through the package, persist authoritative objects only through release-owned workflows, add replay/rollback tests, and retain a kill switch.
 
-- becomes a parallel release ledger, schema, contract, policy, source-registry, lifecycle-data, evidence/proof, receipt, API, UI, credential, key-management, model-runtime, or source-data authority;
-- approves release, writes release records, mutates current aliases, writes lifecycle outputs, writes receipts/proofs, or stores signing keys as a helper namespace;
-- lets public clients or normal UI surfaces access RAW, WORK, QUARANTINE, unpublished candidates, source systems, direct model outputs, or unreleased artifacts;
-- treats signing success, run success, policy allow, or manifest assembly as proof of truth, evidence closure, admissibility, public safety, or release;
-- hides rollback, correction, drift, missing receipt/proof, missing rights, or signature failure behind warning-only logs;
-- stores secrets, private keys, credentials, private source records, real living-person identifiers, DNA/genomic context, or protected-location examples in fixtures.
+Public clients must consume governed release state through approved APIs and manifests, never this namespace directly.
 
-Rollback target: revert the namespace-source PR, keep generated audit notes as review evidence, and file any authority drift in `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md` if the mounted repo uses those registers.
+[Back to top](#top)
 
-## Evidence boundary
+---
 
-| Source | Status | Supports | Limits |
-| --- | --- | --- | --- |
-| Current target file | CONFIRMED | `packages/release/src/release/README.md` existed and required replacement from placeholder content. | Did not prove namespace implementation maturity. |
-| Parent source README | CONFIRMED repo doc | `packages/release/src/` is bounded to release-support helper source code. | Does not prove package metadata, imports, tests, or CI. |
-| Parent package README | CONFIRMED repo doc | `packages/release/` is a shared helper-code package for release manifest assembly, signing, rollback, and correction support. | Does not prove source files or runtime bindings. |
-| `packages/README.md` | CONFIRMED repo doc | `packages/` is for shared libraries used by apps, workers, pipelines, and tools. | Does not define this namespace. |
-| Current file-generation pass | CONFIRMED request | User-requested target path and README repair/replacement. | Does not inspect package metadata, tests, CI logs, dashboards, deployment posture, runtime behavior, key-management posture, or branch protection. |
+## Testing and CI
+
+Minimum tests:
+
+- intentional imports/exports and unknown export failure;
+- deterministic manifest normalization;
+- PromotionDecision valid/invalid shapes;
+- accepted outcome mapping and unknown outcome rejection;
+- hash/signature match, mismatch, stale, revoked, unverifiable, error;
+- rollback target/invalidation completeness;
+- correction append-only and public-summary safety;
+- replay drift;
+- no-network/no-store/no-KMS boundaries;
+- secret/key/personal/protected-location leakage;
+- oversize, depth/count, and timeout limits.
+
+`release-dry-run.yml` currently confirms no real candidate packet, a comment-only helper, TODO Make target, thin ReleaseManifest schema without validator/fixtures, PromotionDecision shape testing only, and incomplete rollback implementation. These holds document incompleteness; they do not prove release readiness.
+
+[Back to top](#top)
+
+---
+
+## Implementation sequence
+
+1. Resolve owners, import name, gate vocabulary, and CorrectionNotice family.
+2. Complete packaging and dependency policy.
+3. Ratify minimal candidate types and exhaustive result mapping.
+4. Implement pure normalization, canonicalization, hashing, and limits.
+5. Harden ReleaseManifest, RollbackCard, and CorrectionNotice enforcement.
+6. Add an injected public-key verifier after security review.
+7. Add positive, negative, replay, privacy, and authority-boundary tests.
+8. Integrate one governed internal consumer without release mutation.
+9. Prove evidence/policy/review/receipt/proof/rollback/correction handoff.
+10. Add compatibility, deprecation, correction, kill switch, and rollback drills.
+
+No stage may claim publication because the previous stage passed.
+
+[Back to top](#top)
+
+---
+
+## Verification register
+
+| Item | Status |
+|---|---|
+| Owners and independent ruleset/review enforcement | NEEDS VERIFICATION |
+| Import name and build/dependency policy | UNKNOWN / NEEDS VERIFICATION |
+| Accepted exports/result types and first consumer | UNKNOWN |
+| Parent README reconciliation | NEEDS VERIFICATION |
+| ReleaseManifest hardening/validator | NEEDS VERIFICATION |
+| PromotionDecision policy/review/runtime wiring | NEEDS VERIFICATION |
+| RollbackCard validator/fixtures | NEEDS VERIFICATION |
+| CorrectionNotice family/validator | CONFLICTED / NEEDS VERIFICATION |
+| Accepted A–G gate vocabulary | CONFLICTED / NEEDS VERIFICATION |
+| Canonicalization/hash profile | NEEDS VERIFICATION |
+| Verifier protocol, trust roots, revocation | UNKNOWN |
+| No-network, side-effect, resource, telemetry enforcement | NEEDS VERIFICATION |
+| Namespace tests/CI and receipt/proof handoff | UNKNOWN / NEEDS VERIFICATION |
+| Release mutation adapter and separation of duties | UNKNOWN |
+| Compatibility/deprecation/changelog | NEEDS VERIFICATION |
+| Correction, revocation, rollback drill | NEEDS VERIFICATION |
+| Public interface integration and runtime health | UNKNOWN |
+
+[Back to top](#top)
+
+---
+
+## Correction, revocation, and rollback
+
+Any future supported API change must include versioned contract/schema mapping, changelog, migration notes, consumer impact, deprecation window, negative/replay tests, correction path, rollback target, and kill switch.
+
+If package behavior emitted incorrect candidate metadata: stop consumers; identify affected versions/runs/releases; preserve prior records; issue governed correction/withdrawal where public state was affected; invalidate derivatives through release authority; patch or revert through review; rerun validation and rollback drills.
+
+**Documentation rollback:** before merge, close the PR and abandon the branch. After merge, use a revert PR and preserve history. This README changes no release state, artifact, receipt, proof, signature, correction, or public surface.
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | Finding | Limit |
+|---|---|---|
+| Namespace/package | Empty init, placeholder core, `0.0.0` manifest | No behavior/installability |
+| Release root | Governs release records | Lane conventions open |
+| ReleaseManifest | Rich draft meaning, thin schema | No production closure |
+| PromotionDecision | Concrete proposed shape and test | No authorization |
+| RollbackCard | Rich meaning, thin schema | Validator incomplete |
+| CorrectionNotice | Rich meaning, thin schema | Placement/validator unresolved |
+| Signing/ADR | Draft/proposed | No production authority |
+| Release dry run | Explicit holds | No release emitted |
+| CODEOWNERS | Review routing | Not independent approval |
+
+### Maintainer checklist
+
+- [ ] Verify base, owners, ADRs, and object maturity.
+- [ ] Keep release authority outside the package.
+- [ ] Add tests before exports.
+- [ ] Protect keys, sensitive data, and release payloads.
+- [ ] Record compatibility, correction, revocation, and rollback impact.
+- [ ] Update documentation and generated receipt.
+- [ ] Require human review separate from release/publication approval.
+
+[Back to top](#top)
