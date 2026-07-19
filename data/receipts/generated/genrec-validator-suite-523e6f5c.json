@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-validator-suite-523e6f5c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/validator-suite.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/validator-suite.yml": "sha256:523e6f5c64feb51683f9549c81bd046b4a4af8670dfdbf72d368d2cbc31b8eb2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:87412762392f5b425a8b06cf34a4fed2c68f063117e7d4f097ac3454a518e366",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:87412762392f5b425a8b06cf34a4fed2c68f063117e7d4f097ac3454a518e366"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/validator-suite.yml@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/README.md@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/schema-validation.yml@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:Makefile@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pyproject.toml@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/_common/run_all.py@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/_common/jsonschema_runner.py@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/_common/local_resolver.py@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/validate_evidence_bundle.py@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/evidence/evidence_bundle.schema.json@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.expected_error.txt@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/schemas/README.md@3d34f3e0d497e7eb99d55d34cb29fcee00939d49",
+      "github-actions:bartytime4life/Kansas-Frontier-Matrix:validator-suite:run:29693262911@31de805b1a45ffeb60c1b4fb8a2321c3f9f8c931"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/validator-suite.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "workflow-yaml-structure",
+      "outcome": "PASS",
+      "reason": "YAML parsed to the expected name, trigger, permission, concurrency, environment, and two-job structure; final newline, no tabs, and no trailing whitespace were confirmed."
+    },
+    {
+      "gate": "check-name-compatibility",
+      "outcome": "PASS",
+      "reason": "Workflow name validator-suite and job ids/names run-validators and ensure-fail-closed are preserved."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "The update is bounded to current repository validator, runner, fixture, schema, workflow-governance, and recent run evidence at the pinned base commit."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Pull-request execution remains on a hosted runner with explicit contents-read permission, no persisted checkout credentials, no secrets, no write scope, no OIDC, no deployment, and no publication side effect. Floating major action tags remain a disclosed hardening gap."
+    },
+    {
+      "gate": "aggregate-inventory-preflight",
+      "outcome": "PASS",
+      "reason": "The embedded preflight was executed against a reconstructed exact run_all inventory and confirmed a non-empty, unique five-validator list resolving to validator scripts and fixture-mode invocation."
+    },
+    {
+      "gate": "fail-closed-canary",
+      "outcome": "PASS",
+      "reason": "The embedded canary was executed against the exact current validator, local resolver, schemas, invalid fixture, and expected-error sidecar; it required exit code 1 and the missing-bundle_id required-property failure."
+    },
+    {
+      "gate": "full-repository-checkout",
+      "outcome": "SKIPPED",
+      "reason": "The execution container could not resolve github.com, so a full clone and repository-native make schemas run were not possible; remote CI must provide complete run evidence."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt validated against schemas/contracts/v1/receipts/generated_receipt.schema.json with format checking."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:.github/workflows/validator-suite.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/validator-suite.yml@3d34f3e0d497e7eb99d55d34cb29fcee00939d49"
+    },
+    {
+      "id": "repo:.github/workflows/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/README.md@3d34f3e0d497e7eb99d55d34cb29fcee00939d49"
+    },
+    {
+      "id": "repo:tools/validators/_common/run_all.py",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/_common/run_all.py@3d34f3e0d497e7eb99d55d34cb29fcee00939d49"
+    },
+    {
+      "id": "repo:tools/validators/validate_evidence_bundle.py",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/validate_evidence_bundle.py@3d34f3e0d497e7eb99d55d34cb29fcee00939d49"
+    },
+    {
+      "id": "repo:fixtures/evidence_bundle/invalid_1",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json@3d34f3e0d497e7eb99d55d34cb29fcee00939d49"
+    },
+    {
+      "id": "github-actions:validator-suite:29693262911",
+      "validated": true,
+      "evidence_ref": "github-actions:bartytime4life/Kansas-Frontier-Matrix:validator-suite:run:29693262911@31de805b1a45ffeb60c1b4fb8a2321c3f9f8c931"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T15:54:39Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Workflow-only behavioral hardening plus required generated-work provenance. The adjacent workflow and schema-test READMEs remain accurate because the command surface and single EvidenceBundle canary scope are preserved. This receipt is not validation proof, policy approval, release approval, publication authority, or human review."
+}
