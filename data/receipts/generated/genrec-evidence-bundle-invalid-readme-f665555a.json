@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-evidence-bundle-invalid-readme-f665555a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/contracts/v1/evidence/evidence_bundle/invalid/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/contracts/v1/evidence/evidence_bundle/invalid/README.md": "sha256:f665555a4fd451c6f97b80f35bffe396ecd7d115e184d15783eaba7634953eea"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:3fb7b8283fc46494ac827245f4e801be262fca16b1e84ab2bf0981e34cff138f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "python",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:3fb7b8283fc46494ac827245f4e801be262fca16b1e84ab2bf0981e34cff138f"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/evidence_bundle/invalid/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.expected_error.txt",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/evidence_bundle/valid/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/evidence_bundle/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:schemas/contracts/v1/evidence/evidence_ref.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:schemas/contracts/v1/policy/sensitivity_label.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:schemas/contracts/v1/common/spec_hash.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:contracts/evidence/evidence_bundle.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:tools/validators/validate_evidence_bundle.py",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:tools/validators/_common/jsonschema_runner.py",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:tools/validators/_common/local_resolver.py",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:tests/schemas/test_common_contracts.py",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/contracts/v1/evidence/evidence_bundle/invalid/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Existing invalid fixture lane retained under fixtures/contracts/v1/evidence/evidence_bundle/invalid; no authority root, lifecycle artifact, or file family moved."
+    },
+    {
+      "gate": "repository-evidence-and-maturity",
+      "outcome": "PASS",
+      "reason": "README distinguishes one confirmed invalid fixture, one broad expected-error sidecar, executable dedicated wrapper, shared runner semantics, generic pytest behavior, proposed schema status, and unverified production/release adoption."
+    },
+    {
+      "gate": "nested-schema-resolution",
+      "outcome": "PASS",
+      "reason": "Reconstructed Draft 2020-12 registry resolved EvidenceRef, SensitivityLabel, and SpecHash references for the exact current fixtures."
+    },
+    {
+      "gate": "fixture-schema-polarity",
+      "outcome": "PASS",
+      "reason": "The exact valid fixture produced zero errors; the exact invalid fixture produced only the missing-bundle_id required-property error."
+    },
+    {
+      "gate": "dedicated-wrapper-behavior",
+      "outcome": "PASS",
+      "reason": "Reconstructed --fixtures returned 0 for correct family polarity, single invalid-file mode returned 1, no-argument mode returned 2, and missing-file mode demonstrated that code 1 is not cause-specific."
+    },
+    {
+      "gate": "generic-pytest-harness",
+      "outcome": "PASS",
+      "reason": "The reconstructed tests/schemas/test_common_contracts.py EvidenceBundle case passed with the current broad expected-error token."
+    },
+    {
+      "gate": "format-enforcement-boundary",
+      "outcome": "PASS",
+      "reason": "The shared runner constructs Draft202012Validator without FormatChecker; invalid date-time syntax was not rejected in reconstructed validation and is disclosed as a coverage limitation."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "One H1, closed meta block, consecutive hierarchy, balanced fences, unique internal anchors, final newline, no tabs or trailing whitespace, and repository-relative targets resolved from inspected evidence."
+    },
+    {
+      "gate": "sensitive-content-and-secrets",
+      "outcome": "PASS",
+      "reason": "No credential, token, real source record, personal data, restricted evidence, operational citation, or production digest was introduced."
+    },
+    {
+      "gate": "repository-native-full-checkout",
+      "outcome": "SKIPPED",
+      "reason": "No full repository checkout was used; exact current files were reconstructed and remote CI will provide repository-level evidence."
+    },
+    {
+      "gate": "remote-ci",
+      "outcome": "SKIPPED",
+      "reason": "To be observed after draft pull request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "evidence-bundle-schema",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:schemas/contracts/v1/evidence/evidence_bundle.schema.json"
+    },
+    {
+      "id": "evidence-bundle-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:contracts/evidence/evidence_bundle.md"
+    },
+    {
+      "id": "dedicated-validator-and-runner",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:tools/validators/validate_evidence_bundle.py"
+    },
+    {
+      "id": "generic-schema-harness",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:tests/schemas/test_common_contracts.py"
+    },
+    {
+      "id": "invalid-fixture-and-sidecar",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@7bf8b8d6e797bb9930ae73830029dccfbbda3846:fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T18:44:41Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update for the EvidenceBundle invalid fixture lane. The receipt records provenance and bounded validation, not evidence closure, proof, policy approval, review approval, release approval, publication authority, or human review."
+}
