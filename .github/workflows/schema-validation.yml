@@ -1,17 +1,211 @@
+# KFM schema-validation workflow.
+#
+# Responsibility:
+#   Check repository schema JSON structure, canonical v1 schema identity, the
+#   five configured aggregate-validator fixture families, and the executable
+#   schema/contract test lane without treating shape validity as truth.
+#
+# Trigger and trust boundary:
+#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
+#   is untrusted. The workflow has read-only repository permission. Network use
+#   is limited to installing dependencies declared by the root project; no
+#   policy, release, signing, deployment, or publication secret is available.
+#
+# Inputs:
+#   `schemas/**/*.json`, canonical `schemas/contracts/v1/**/*.schema.json`, the
+#   shared local resolver/runner and aggregate validator list, paired valid and
+#   invalid fixtures for configured validators, and `tests/schemas` plus
+#   `tests/contracts`.
+#
+# Outputs and outcomes:
+#   Process output and a job summary only. The workflow emits no validation
+#   report, receipt, proof, policy decision, release decision, lifecycle record,
+#   schema mutation, fixture mutation, or published artifact.
+#
+# Compatibility:
+#   Preserve workflow name `schema-validation` and job id/check name
+#   `validate-fixtures-against-schemas`; repository rules may refer to it.
+#
+# Rollback:
+#   Revert this file. Do not restore a narrower green check that silently omits
+#   repository-owned schema tests or permits empty configured fixture lanes.
+#
+# Placement:
+#   Directory Rules §5 assigns workflows and governance hooks to `.github/`.
+#   Machine shape remains under canonical `schemas/`; fixtures, executable
+#   tests, and validator implementation remain in their separate responsibility
+#   roots. This workflow coordinates those surfaces but owns none of them.
+
 name: schema-validation
 
-on:
+"on":
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: schema-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   validate-fixtures-against-schemas:
+    name: validate-fixtures-against-schemas
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
         with:
-          python-version: '3.11'
-      - run: pip install -e .
-      - run: make schemas
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Require valid schema inventory and non-vacuous configured fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from collections import Counter
+          from pathlib import Path
+          import json
+
+          from jsonschema import Draft202012Validator
+          from tools.validators._common.run_all import RUNNER_VALIDATORS
+
+          configured = {
+              "validate_source_descriptor.py": (
+                  Path("schemas/contracts/v1/source/source_descriptor.schema.json"),
+                  Path("fixtures/contracts/v1/source/source_descriptor"),
+              ),
+              "validate_evidence_bundle.py": (
+                  Path("schemas/contracts/v1/evidence/evidence_bundle.schema.json"),
+                  Path("fixtures/contracts/v1/evidence/evidence_bundle"),
+              ),
+              "validate_runtime_response_envelope.py": (
+                  Path("schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"),
+                  Path("fixtures/contracts/v1/runtime/runtime_response_envelope"),
+              ),
+              "validate_decision_envelope.py": (
+                  Path("schemas/contracts/v1/runtime/decision_envelope.schema.json"),
+                  Path("fixtures/contracts/v1/runtime/decision_envelope"),
+              ),
+              "validate_run_receipt.py": (
+                  Path("schemas/contracts/v1/runtime/run_receipt.schema.json"),
+                  Path("fixtures/contracts/v1/runtime/run_receipt"),
+              ),
+          }
+          assert RUNNER_VALIDATORS == list(configured), (
+              "aggregate validator inventory changed; review schema, fixture, output, "
+              "and authority boundaries before changing CI coverage"
+          )
+
+          valid_total = 0
+          invalid_total = 0
+          for filename, (schema_path, fixture_root) in configured.items():
+              validator_path = Path("tools/validators") / filename
+              assert validator_path.is_file(), f"configured validator is missing: {validator_path}"
+              assert schema_path.is_file(), f"configured schema is missing: {schema_path}"
+              valid = sorted((fixture_root / "valid").glob("*.json"))
+              invalid = sorted((fixture_root / "invalid").glob("*.json"))
+              assert valid, f"configured valid fixture lane is empty: {fixture_root}"
+              assert invalid, f"configured invalid fixture lane is empty: {fixture_root}"
+              missing_expectations = [
+                  path.as_posix()
+                  for path in invalid
+                  if not path.with_suffix(".expected_error.txt").is_file()
+              ]
+              assert not missing_expectations, (
+                  f"invalid fixtures lack expected-error evidence: {missing_expectations}"
+              )
+              valid_total += len(valid)
+              invalid_total += len(invalid)
+
+          json_paths = sorted(Path("schemas").rglob("*.json"))
+          schema_paths = sorted(Path("schemas").rglob("*.schema.json"))
+          assert json_paths, "schema root contains no JSON files"
+          assert schema_paths, "schema root contains no *.schema.json files"
+          for path in json_paths:
+              json.loads(path.read_text(encoding="utf-8"))
+          for path in schema_paths:
+              schema = json.loads(path.read_text(encoding="utf-8"))
+              Draft202012Validator.check_schema(schema)
+
+          canonical_paths = sorted(
+              Path("schemas/contracts/v1").rglob("*.schema.json")
+          )
+          assert canonical_paths, "canonical v1 schema inventory is empty"
+          canonical = [
+              json.loads(path.read_text(encoding="utf-8"))
+              for path in canonical_paths
+          ]
+          assert all(
+              schema.get("$schema")
+              == "https://json-schema.org/draft/2020-12/schema"
+              for schema in canonical
+          ), "canonical v1 schemas must declare JSON Schema Draft 2020-12"
+          missing_ids = [
+              path.as_posix()
+              for path, schema in zip(canonical_paths, canonical)
+              if not schema.get("$id")
+          ]
+          assert not missing_ids, f"canonical v1 schemas lack $id: {missing_ids}"
+          id_counts = Counter(schema["$id"] for schema in canonical)
+          duplicate_ids = sorted(
+              schema_id for schema_id, count in id_counts.items() if count > 1
+          )
+          assert not duplicate_ids, f"duplicate canonical schema $id values: {duplicate_ids}"
+
+          print(f"CONFIRMED: parsed {len(json_paths)} JSON files under schemas/.")
+          print(f"CONFIRMED: {len(schema_paths)} *.schema.json files satisfy the Draft 2020-12 meta-schema check.")
+          print(f"CONFIRMED: {len(canonical_paths)} canonical v1 schemas declare unique $id values.")
+          print(f"CONFIRMED: {len(configured)} aggregate validators cover {valid_total} valid and {invalid_total} invalid fixtures.")
+          print("BOUNDARY: schema validity proves tested machine shape only, not meaning, evidence, policy, rights, sensitivity, release, or publication authority.")
+          PY
+
+      - name: Validate configured aggregate fixture families
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::notice::The current aggregate runner labels expected-invalid fixtures as FAIL in line output; its process exit and the following pytest suite enforce the expected polarity."
+          make schemas
+
+      - name: Run repository-owned schema and contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/schemas tests/contracts
+
+      - name: Record schema-validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Schema validation"
+            echo
+            echo "- Parsed every JSON file under schemas, meta-schema checked every *.schema.json file, and required canonical v1 schemas to declare unique IDs."
+            echo "- Required non-empty valid and invalid fixture lanes for every aggregate validator, ran make schemas, and ran the repository-owned schema/contract tests."
+            echo "- The current aggregate runner prints expected-invalid fixtures with a FAIL label; its final polarity checks, exit status, and the pytest suite determine the job result."
+            echo "- Result: ${{ job.status }}. This proves only the tested machine-shape behavior; it does not establish semantic truth, evidence closure, source authority, policy approval, rights or sensitivity clearance, release readiness, or publication authority."
+            echo "- No schema, fixture, validation report, receipt, proof, policy decision, release record, lifecycle record, or published artifact was emitted."
+          } >> "$GITHUB_STEP_SUMMARY"
