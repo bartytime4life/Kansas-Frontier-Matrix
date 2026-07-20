@@ -1,0 +1,198 @@
+{
+  "receipt_id": "genrec-fixtures-domains-agriculture-catalog-readme-1ea7f988",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/domains/agriculture/catalog/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/domains/agriculture/catalog/README.md": "sha256:1ea7f9883292290f8571c77b2f595140ce368cd58fdafc470ac7f90faa1a6ad2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-20-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "GitHub REST read operations",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "attached://Pasted text(64).txt#sha256-b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "attached://Directory Rules.pdf#sha256-759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/fixtures/domains/agriculture/catalog/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/9a29f659be82af7acbed4a2563ab8f96c1f84046/fixtures/domains/agriculture/catalog",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/fixtures/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/contracts/data/catalog_matrix.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/data/catalog_matrix.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/domains/agriculture/catalog_matrix.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tools/validators/domains/agriculture/validate_catalog_matrix.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tests/domains/agriculture/test_catalog_closure.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tests/domains/agriculture/catalog_closure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/domains/agriculture/catalog/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract",
+      "outcome": "PASS",
+      "reason": "Repository, pinned base, exact README target, generated-receipt companion, review-branch route, API-only mutation profile, two-file budget, acceptance criteria, non-goals, validation plan, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, admin/push permissions, main default branch, immutable base SHA, target blob, complete non-truncated tree, CODEOWNERS, PR template, workflows, matching open pull requests, and matching branch names were inspected."
+    },
+    {
+      "gate": "directory-rules-adr-drift",
+      "outcome": "PASS",
+      "reason": "The README remains in the existing fixtures responsibility root and Agriculture segment. Supplied and repository Directory Rules, relevant ADRs, and the drift register were inspected; the revision surfaces rather than resolves the competing CatalogMatrix and Directory Rules paths."
+    },
+    {
+      "gate": "bounded-inventory",
+      "outcome": "PASS",
+      "reason": "The complete Git tree at the pinned base proves that the direct lane contains only .gitkeep and README.md and no payloads or child directories. Related contract, schema, validator, test, workflow, and fixture-root declarations were also checked."
+    },
+    {
+      "gate": "readme-profile",
+      "outcome": "PASS",
+      "reason": "The revision states purpose, authority, verified maturity, current inventory, lifecycle boundary, admission contract, proposed case matrix, expected layout, naming/content rules, validation limits, workflow posture, maintenance, review, evidence, open verification, correction, rollback, and definition of done."
+    },
+    {
+      "gate": "no-loss-revision",
+      "outcome": "PASS",
+      "reason": "The prior fixture-only purpose, catalog authority warning, valid/invalid layout concept, maintenance guidance, lifecycle separation, and evidence boundary were retained and strengthened with current repository evidence."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The Agriculture workflow triggers on pull requests, uses contents: read, disables persisted checkout credentials, and records explicit validation/proof/release holds. No workflow, secret, permission, deployment, environment, release, or publication setting is changed."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The authored README has one H1, a final newline, balanced fenced blocks, resolved internal anchors, and no conflict markers or trailing-whitespace errors under the bounded checks."
+    },
+    {
+      "gate": "repository-link-check",
+      "outcome": "PASS",
+      "reason": "Every repository-relative Markdown link in the README resolves to a path present in the complete Git tree at the pinned base."
+    },
+    {
+      "gate": "sensitivity-and-secret-review",
+      "outcome": "PASS",
+      "reason": "The README contains no source payloads, credentials, tokens, private keys, living-person records, real field/operator/parcel records, proprietary measurements, or exact restricted locations; it requires synthetic public-safe fixtures and fail-closed private-adjacent joins."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The final authored README SHA-256 is 1ea7f9883292290f8571c77b2f595140ce368cd58fdafc470ac7f90faa1a6ad2 and matches the artifact hash recorded by this receipt."
+    },
+    {
+      "gate": "executable-fixture-tests",
+      "outcome": "SKIPPED",
+      "reason": "No fixture payload or executable behavior is changed. The inspected domain validator raises NotImplementedError, the catalog-closure module is docstring-only, and make fixtures is a TODO readiness marker."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Remote pull-request checks are unavailable until the branch and draft pull request exist. Relevant workflow success would remain readiness evidence unless substantive catalog-fixture enforcement is introduced separately."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The receipt is valid JSON and is checked against the repository generated-receipt schema, including required fields, hash formats, truth labels, gate outcomes, citations, and pending human-review state."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-REPOSITORY-DOC-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(64).txt#sha256-b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-PDF",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf#sha256-759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-REPOSITORY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "AGRICULTURE-CATALOG-FIXTURE-LANE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/9a29f659be82af7acbed4a2563ab8f96c1f84046/fixtures/domains/agriculture/catalog"
+    },
+    {
+      "id": "CATALOG-MATRIX-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/contracts/data/catalog_matrix.md"
+    },
+    {
+      "id": "AGRICULTURE-CATALOG-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/domains/agriculture/catalog_matrix.schema.json"
+    },
+    {
+      "id": "AGRICULTURE-CATALOG-VALIDATOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tools/validators/domains/agriculture/validate_catalog_matrix.py"
+    },
+    {
+      "id": "AGRICULTURE-CATALOG-CLOSURE-TEST",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tests/domains/agriculture/test_catalog_closure.py"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T17:25:14Z",
+  "emitter": "ai-builder/openai-codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision prepared against pinned main-branch evidence under a two-file change budget. The README records an existing empty fixture boundary and proposed admission guidance; it does not create fixture payloads, executable validation, source activation, evidence proof, policy approval, lifecycle promotion, release, rollback execution, or publication. Human review remains pending."
+}
