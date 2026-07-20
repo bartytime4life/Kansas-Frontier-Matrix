@@ -1,9 +1,9 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/pipelines-ingest-fauna-readme
-title: Fauna Shared Ingest Adapter README
+title: pipelines/ingest/fauna/ — Fauna Ingest Compatibility Boundary
 type: readme
-version: v0.1
-status: draft
+version: v0.2
+status: draft; repository-grounded; README-only compatibility boundary; placement conflicted for domain-owned executable logic
 owners:
   - <pipeline-owner>
   - <ingest-steward>
@@ -14,444 +14,592 @@ owners:
   - <policy-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-07-20
+supersedes: v0.1
 policy_label: public-with-fauna-ingest-geoprivacy-and-quarantine-gates
 path: pipelines/ingest/fauna/README.md
+truth_posture: CONFIRMED target README, pipelines and ingest parent contracts, canonical pipelines/domains/fauna lane, Fauna contracts/schemas/policy/tests/fixtures/source-registry/lifecycle README surfaces, repository-grounded pipeline_specs/fauna boundary, and bounded absence probes for the previously proposed adapter/spec/test/fixture files / PROPOSED compatibility-only role and future migration or removal / CONFLICTED use of pipelines/ingest/fauna for domain-owned executable logic because Directory Rules places domain-specific pipeline logic under pipelines/domains/fauna / UNKNOWN executable adapter behavior, accepted ingest contract and receipt schema, active source profiles, runtime consumers, CI enforcement, emitted receipts, proof closure, release integration, and public use
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0
+  prior_blob: a03934112656906712313436f93f92f0f49c84d1
+  inspection_method: GitHub connector file reads, exact-path absence probes, code-index queries, current repository doctrine, and supplied KFM doctrine/architecture sources
+  bounded_lane_observation: README confirmed; no proposed executable sibling, dedicated ingest spec, dedicated ingest test README, or dedicated ingest fixture README was verified by exact-path probes
 related:
   - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
   - pipelines/README.md
   - pipelines/ingest/README.md
-  - pipelines/normalize/fauna/README.md
   - pipelines/domains/fauna/README.md
+  - pipelines/normalize/fauna/README.md
   - docs/domains/fauna/ARCHITECTURE.md
-  - pipeline_specs/ingest/fauna.yaml
-  - pipeline_specs/fauna/
-  - contracts/domains/fauna/
-  - schemas/contracts/v1/domains/fauna/
-  - policy/domains/fauna/
-  - policy/sensitivity/fauna/
-  - data/registry/sources/fauna/
-  - data/raw/fauna/
-  - data/work/fauna/
-  - data/quarantine/fauna/
-  - data/receipts/pipeline/
-  - data/proofs/evidence_bundle/
-tags: [kfm, pipelines, ingest, fauna, adapter, source-admission, occurrence, monitoring, geoprivacy, quarantine, receipt, evidence-bundle, policy, governance]
+  - docs/domains/fauna/CANONICAL_PATHS.md
+  - pipeline_specs/fauna/README.md
+  - contracts/domains/fauna/README.md
+  - schemas/contracts/v1/domains/fauna/README.md
+  - policy/domains/fauna/README.md
+  - policy/sensitivity/fauna/README.md
+  - tests/domains/fauna/README.md
+  - fixtures/domains/fauna/README.md
+  - data/registry/sources/fauna/README.md
+  - data/receipts/ingest/README.md
+  - data/proofs/evidence_bundle/README.md
+  - release/candidates/fauna/README.md
+  - docs/registers/DRIFT_REGISTER.md
+tags: [kfm, pipelines, ingest, fauna, compatibility-boundary, source-admission, occurrence, monitoring, geoprivacy, quarantine, receipt, evidence-bundle, policy, governance]
 notes:
-  - "This README fills the blank pipelines/ingest/fauna path as a Fauna adapter/profile under the shared ingest lane."
-  - "This path is not the primary Fauna domain-ingest authority. Domain-owned behavior remains under pipelines/domains/fauna/ or an accepted domain ingest sublane."
-  - "Because pipelines/ingest/fauna creates a domain-named segment under a shared helper lane, long-term placement remains NEEDS VERIFICATION / ADR if it hardens beyond adapter/profile support."
-  - "Fauna ingest must preserve source roles, occurrence evidence, restricted/public split, geoprivacy preflight, SourceDescriptor refs, policy state, and receipts."
-  - "Concrete executable behavior, source activation, CI coverage, fixtures, schema paths, and release wiring remain NEEDS VERIFICATION until implemented and tested."
+  - "This revision preserves the requested path but does not normalize it into the canonical home for Fauna-owned executable behavior."
+  - "Directory Rules places domain-specific executable pipeline logic under pipelines/domains/fauna/; shared cross-domain ingest behavior may remain under pipelines/ingest/."
+  - "No accepted ADR was verified that authorizes pipelines/ingest/fauna/ as a parallel Fauna implementation authority."
+  - "ADR-0010, ADR-0012, and ADR-0018 are useful companion records but remain draft or proposed at the evidence snapshot; governing claims here rely on Directory Rules and core doctrine."
+  - "Exact source activation, rights, endpoints, cadence, schemas, fields, outcome enums, receipt shapes, tests, and runtime behavior remain outside this README unless verified in their owning roots."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Fauna Shared Ingest Adapter
+# `pipelines/ingest/fauna/` — Fauna Ingest Compatibility Boundary
 
-> Shared ingest adapter/profile for Fauna-specific source-admission checks, source-intake records, payload integrity, source-role preservation, occurrence/monitoring intake, restricted/public split preflight, geoprivacy blockers, and receipt-ready RAW/WORK/QUARANTINE handoffs — without replacing the Fauna domain pipeline, owning Fauna truth, creating EvidenceBundles, deciding policy, or publishing public artifacts.
-
-![status](https://img.shields.io/badge/status-draft-blue)
+![status](https://img.shields.io/badge/status-repository--grounded%20draft-orange)
 ![root](https://img.shields.io/badge/root-pipelines%2F-0a7ea4)
-![scope](https://img.shields.io/badge/scope-fauna%20ingest%20adapter-2e7d32)
-![authority](https://img.shields.io/badge/authority-shared%20adapter%20only-0a7ea4)
-![sensitivity](https://img.shields.io/badge/fauna%20sensitivity-fail%20closed-d62728)
-![publication](https://img.shields.io/badge/publication-no%20direct%20publish-d62728)
+![lane](https://img.shields.io/badge/lane-README--only%20boundary-lightgrey)
+![placement](https://img.shields.io/badge/placement-transitional%20%2F%20conflicted-d97706)
+![sensitivity](https://img.shields.io/badge/sensitive%20fauna-fail%20closed-d62728)
+![publisher](https://img.shields.io/badge/publisher-no-d62728)
 
-**Status:** Draft  
-**Path:** `pipelines/ingest/fauna/README.md`  
-**Responsibility root:** `pipelines/` — executable pipeline logic  
-**Sublane:** Shared ingest / Fauna adapter-profile support  
-**Placement posture:** `PROPOSED / NEEDS VERIFICATION`; use this only as a shared adapter/profile lane. Domain-owned Fauna ingest remains under `pipelines/domains/fauna/` unless an ADR or migration note says otherwise.  
-**Public posture:** no direct publication; outputs are RAW captures, WORK intake handoffs, QUARANTINE records, source-admission receipts, and blocker reports only.
+> **One-line purpose.** This README preserves and bounds the existing `pipelines/ingest/fauna/` path while routing Fauna-owned ingest implementation to the canonical domain pipeline lane and preventing intake helpers from becoming source, evidence, policy, release, or publication authority.
 
----
+**Audience:** Fauna maintainers, pipeline and connector owners, source and rights stewards, sensitivity/geoprivacy reviewers, test and validation owners, release reviewers, and coding agents.  
+**Current maturity:** documentation boundary only; no executable sibling, dedicated ingest spec, dedicated ingest test README, or dedicated ingest fixture README was verified by the bounded exact-path checks recorded above.  
+**Canonical implementation posture:** Fauna-owned executable logic belongs under [`pipelines/domains/fauna/`](../../domains/fauna/README.md). Shared, genuinely cross-domain ingest behavior may belong in [`pipelines/ingest/`](../README.md).  
+**Public posture:** no direct public output, catalog write, release decision, or publication authority.
 
-## Quick jump
+## Quick navigation
 
-- [1. Purpose](#1-purpose)
-- [2. Placement and authority](#2-placement-and-authority)
-- [3. Fauna ingest anti-collapse rules](#3-fauna-ingest-anti-collapse-rules)
-- [4. What belongs here](#4-what-belongs-here)
-- [5. What does not belong here](#5-what-does-not-belong-here)
-- [6. Adapter scope](#6-adapter-scope)
-- [7. Lifecycle contract](#7-lifecycle-contract)
-- [8. Required gates](#8-required-gates)
-- [9. Directory contract](#9-directory-contract)
-- [10. Inputs and outputs](#10-inputs-and-outputs)
-- [11. Minimal adapter receipt](#11-minimal-adapter-receipt)
-- [12. Tests, fixtures, receipts, and proofs](#12-tests-fixtures-receipts-and-proofs)
-- [13. Promotion, publication, correction, and rollback](#13-promotion-publication-correction-and-rollback)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open questions](#15-open-questions)
-
----
-
-## 1. Purpose
-
-`pipelines/ingest/fauna/` is a Fauna-specific adapter/profile under the shared ingest lane.
-
-It may support reusable source-admission behavior for:
-
-- Fauna source-intake records and connector-staged payload refs;
-- animal observation, occurrence, monitoring-event, range/context, status, mortality, disease, invasive-species, and derived-indicator intake packets;
-- SourceDescriptor lookup and source-role preservation;
-- payload hash, media type, manifest, retrieval context, source vintage, time fields, rights, and citation checks;
-- restricted/public split and geoprivacy preflight flags before RAW admission;
-- QUARANTINE routing for unresolved source role, rights, citation, payload hash, geoprivacy, evidence, policy, or steward-review state;
-- raw-capture receipt fragments used by the owning Fauna domain ingest process.
-
-This directory implements or will implement **adapter support** only. It does not replace `pipelines/domains/fauna/`, does not own Fauna object meaning, does not fetch upstream data as connector authority, does not define SourceDescriptors, does not normalize records, does not create EvidenceBundles, does not decide policy/geoprivacy/review state, does not write catalog truth, and does not release public artifacts.
-
-[⬆ Back to top](#top)
+- [Purpose and scope](#purpose-and-scope)
+- [Authority and placement decision](#authority-and-placement-decision)
+- [Current repository status](#current-repository-status)
+- [What belongs here](#what-belongs-here)
+- [What belongs elsewhere](#what-belongs-elsewhere)
+- [Fauna ingest boundary](#fauna-ingest-boundary)
+- [Lifecycle and trust membrane](#lifecycle-and-trust-membrane)
+- [Source, identity, time, rights, and sensitivity](#source-identity-time-rights-and-sensitivity)
+- [Finite dispositions and failure behavior](#finite-dispositions-and-failure-behavior)
+- [Directory and interface map](#directory-and-interface-map)
+- [Operations and quickstart](#operations-and-quickstart)
+- [Tests, fixtures, receipts, and evidence](#tests-fixtures-receipts-and-evidence)
+- [Validation and maintenance](#validation-and-maintenance)
+- [Correction and rollback](#correction-and-rollback)
+- [Evidence ledger](#evidence-ledger)
+- [Open verification items](#open-verification-items)
+- [Last reviewed](#last-reviewed)
 
 ---
 
-## 2. Placement and authority
+## Purpose and scope
 
-| Question | Answer | Status |
+This directory exists in the repository, but its long-term authority is unresolved. The README therefore serves three bounded purposes:
+
+1. preserve the existing path without pretending that it is an implemented adapter package;
+2. define the trust and sensitivity boundaries any compatibility shim at this path must obey; and
+3. route new implementation work to the correct responsibility root and domain lane.
+
+This document does **not** activate a Fauna source, define a source endpoint, create a pipeline spec, establish an ingest receipt schema, certify an executable, or authorize public release.
+
+The broader Fauna domain includes taxonomy, occurrence evidence, monitoring, range and seasonal range, mortality, disease, invasive-species records, and public-safe derivatives. Those meanings remain owned by the [Fauna contract lane](../../../contracts/domains/fauna/README.md), not by this compatibility boundary.
+
+[Back to top](#top)
+
+---
+
+## Authority and placement decision
+
+### Directory Rules basis
+
+The current [Directory Rules](../../../docs/doctrine/directory-rules.md) establish:
+
+- `pipelines/` as the canonical root for executable pipeline logic — the **how**;
+- `pipeline_specs/` as the canonical root for declarative pipeline configuration — the **what**;
+- `pipelines/domains/<domain>/` as the placement pattern for domain-specific executable logic; and
+- non-domain segments of a responsibility root for genuinely shared or cross-domain behavior.
+
+That makes the placement decision for this directory explicit:
+
+| Question | Decision | Evidence status |
 |---|---|---|
-| Why `pipelines/`? | This is executable pipeline/helper logic: the **how**. | CONFIRMED root responsibility |
-| Why `ingest/`? | Parent lane holds shared source-admission helpers and adapter profiles. | CONFIRMED parent-lane posture |
-| Why `fauna/` under shared ingest? | It can hold Fauna-specific adapter glue for shared helpers, but should not become the primary domain lane. | PROPOSED / NEEDS VERIFICATION |
-| Does this replace `pipelines/domains/fauna/`? | No. Fauna domain behavior remains under the domain pipeline lane. | CONFIRMED boundary posture |
-| Does this decide geoprivacy or policy? | No. It preserves and carries refs/state; policy and geoprivacy authority live in policy/review roots. | CONFIRMED authority separation |
-| Can this publish? | No. It returns RAW refs, WORK handoffs, QUARANTINE refs, blocker reports, and receipt fragments only. | CONFIRMED governance posture |
+| Is `pipelines/` the right responsibility root for executable ingest logic? | Yes. | **CONFIRMED** by Directory Rules and [`pipelines/README.md`](../../README.md). |
+| Is `pipelines/ingest/` valid for shared ingest behavior? | Yes, when behavior is genuinely cross-domain. | **CONFIRMED** parent-lane posture; implementation maturity remains separate. |
+| Is `pipelines/ingest/fauna/` the canonical home for Fauna-owned ingest logic? | No current authority was verified for a parallel domain implementation home. | **CONFLICTED** with the domain placement pattern. |
+| Where should new Fauna-owned executable ingest behavior go? | Under `pipelines/domains/fauna/`; an `ingest/` child remains **PROPOSED / NEEDS VERIFICATION** until accepted and created. | **CONFIRMED** parent domain lane; proposed child placement. |
+| May this path hold a compatibility shim? | Only with a documented consumer, migration or compatibility purpose, tests, and a non-authoritative posture. | **PROPOSED** bounded exception. |
+| Is an ADR already accepted for this exception? | None was verified during this review. | **UNKNOWN** beyond the inspected ADR and repository evidence set. |
 
 > [!IMPORTANT]
-> This folder is an adapter/profile lane, not a canonical Fauna domain pipeline. If it starts owning full domain ingest behavior, it should move to `pipelines/domains/fauna/ingest/` or be governed by an ADR.
+> Do not add new Fauna-owned executable modules here merely because the folder already exists. Existing structure is repo evidence, not placement authority. Use the canonical domain lane or obtain an accepted ADR/migration decision.
 
-[⬆ Back to top](#top)
+### Authority level
+
+This README is **documentation and compatibility guidance**. It may constrain accidental expansion of this path, but it does not define:
+
+- Fauna semantic objects;
+- machine schemas;
+- source roles, rights, or activation;
+- sensitivity or geoprivacy decisions;
+- lifecycle state;
+- evidence closure;
+- promotion or release decisions; or
+- public API, map, UI, or AI behavior.
+
+[Back to top](#top)
 
 ---
 
-## 3. Fauna ingest anti-collapse rules
+## Current repository status
 
-Disallowed collapses:
+The status below is bounded to the pinned evidence snapshot in the metadata block. A confirmed file or README does not prove executable behavior.
+
+| Surface | Observed status | What it proves | What it does not prove |
+|---|---|---|---|
+| This README | **CONFIRMED** existing file | The path and prior documentation exist. | Adapter implementation or canonical placement. |
+| [`pipelines/ingest/`](../README.md) | **CONFIRMED** parent README | Shared ingest has a documented responsibility boundary. | Runnable shared ingest helpers. |
+| [`pipelines/domains/fauna/`](../../domains/fauna/README.md) | **CONFIRMED** canonical domain-lane README | The repository has the Directory Rules-aligned Fauna pipeline documentation surface. | Executable Fauna pipeline behavior. |
+| [`pipeline_specs/fauna/`](../../../pipeline_specs/fauna/README.md) | **CONFIRMED** repository-grounded README and placeholder `refresh.yaml` | A declarative Fauna spec boundary and a proposed placeholder exist. | Active top-level spec, parser, scheduler, consumer, or activation record. |
+| Previously proposed files under this directory | **NOT FOUND by exact-path probes** | The named adapter contract, dry-run, validation, routing, and receipt-helper files were not verified. | Exhaustive recursive absence of every possible sibling name. |
+| `pipeline_specs/ingest/fauna.yaml` | **NOT FOUND by exact-path probe** | The previously cited dedicated spec was not present at that path. | Absence of all possible Fauna specs. |
+| Dedicated `tests/pipelines/ingest/fauna/README.md` and `fixtures/ingest/fauna/README.md` | **NOT FOUND by exact-path probes** | Those previously cited documentation lanes were not present. | Absence of all Fauna tests or fixtures elsewhere. |
+| Fauna domain tests and fixtures | **CONFIRMED README surfaces** at [`tests/domains/fauna/`](../../../tests/domains/fauna/README.md) and [`fixtures/domains/fauna/`](../../../fixtures/domains/fauna/README.md) | Canonical domain verification and fixture roots exist. | Ingest-specific coverage or current passing results. |
+| Runtime, CI, receipts, proofs, and release integration for this path | **UNKNOWN / NOT VERIFIED** | Nothing beyond the bounded documentation evidence. | Any current operational readiness or public safety. |
+
+### ADR posture
+
+The inspected companion ADRs do not override Directory Rules at this snapshot:
+
+- [ADR-0010 — deny-by-default for DNA, rare species, archaeology, and critical infrastructure](../../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) is draft/proposed and number-conflicted;
+- [ADR-0012 — connector outputs to RAW or QUARANTINE only](../../../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md) is draft/proposed and codifies an existing Directory Rules invariant; and
+- [ADR-0018 — promotion gate sequence](../../../docs/adr/ADR-0018-promotion-gate-sequence.md) is proposed.
+
+Use those records as design context, not as accepted authority.
+
+[Back to top](#top)
+
+---
+
+## What belongs here
+
+The safe default is deliberately narrow:
+
+- this README;
+- a compatibility note that points to the canonical implementation;
+- a temporary import or command shim only when a verified current consumer requires it;
+- a migration marker that identifies the canonical target, owner, removal condition, and rollback; and
+- tests specifically proving that a compatibility shim delegates without changing source, policy, evidence, lifecycle, or release semantics.
+
+A compatibility shim must remain thin. It must not become the place where Fauna ingest behavior quietly accumulates.
+
+### Admission test for any future file
+
+Before adding a file here, all answers must be explicit:
+
+1. Which current consumer requires this exact compatibility path?
+2. Why can the behavior not live in `pipelines/domains/fauna/` or the shared `pipelines/ingest/` parent?
+3. Is the file a shim or migration aid rather than a second implementation authority?
+4. Which contract, schema, policy, fixture, test, and receipt governs it?
+5. What is its removal or migration condition?
+6. How is rollback performed without losing audit history?
+
+If any answer is missing, hold the change for placement review.
+
+[Back to top](#top)
+
+---
+
+## What belongs elsewhere
+
+| Responsibility | Canonical or current governed home | Placement status |
+|---|---|---|
+| Fauna-owned executable pipeline behavior | [`pipelines/domains/fauna/`](../../domains/fauna/README.md) | **CONFIRMED** parent lane. |
+| Shared cross-domain ingest helpers | [`pipelines/ingest/`](../README.md) | **CONFIRMED** parent shared lane. |
+| Declarative Fauna configuration | [`pipeline_specs/fauna/`](../../../pipeline_specs/fauna/README.md) | **CONFIRMED** boundary; active profiles remain separately verified. |
+| Source-specific fetch and admission | `connectors/<source_id>/` | **CONFIRMED** root pattern; exact connector depends on source. |
+| Source identity, role, rights, cadence, and activation posture | [`data/registry/sources/fauna/`](../../../data/registry/sources/fauna/README.md) | **CONFIRMED** current registry README surface. |
+| Fauna semantic meaning | [`contracts/domains/fauna/`](../../../contracts/domains/fauna/README.md) | **CONFIRMED** current contract lane. |
+| Machine-checkable Fauna shapes | [`schemas/contracts/v1/domains/fauna/`](../../../schemas/contracts/v1/domains/fauna/README.md) | **CONFIRMED** current schema lane. |
+| Fauna admissibility | [`policy/domains/fauna/`](../../../policy/domains/fauna/README.md) | **CONFIRMED** current policy lane. |
+| Sensitivity and geoprivacy policy | [`policy/sensitivity/fauna/`](../../../policy/sensitivity/fauna/README.md) | **CONFIRMED** scaffold/readme surface; enforcement remains separately verified. |
+| Domain tests and public-safe fixtures | [`tests/domains/fauna/`](../../../tests/domains/fauna/README.md), [`fixtures/domains/fauna/`](../../../fixtures/domains/fauna/README.md) | **CONFIRMED** current roots; ingest sublanes remain proposed. |
+| RAW, WORK, QUARANTINE, and later lifecycle material | `data/<phase>/fauna/` | **CONFIRMED** lifecycle placement; state transition requires governed evidence. |
+| Ingest receipts | [`data/receipts/ingest/`](../../../data/receipts/ingest/README.md) | **CONFIRMED** receipt-family README; concrete receipt schema remains separately verified. |
+| EvidenceBundle records | [`data/proofs/evidence_bundle/`](../../../data/proofs/evidence_bundle/README.md) | **CONFIRMED** proof-family README. |
+| Fauna release review | [`release/candidates/fauna/`](../../../release/candidates/fauna/README.md) | **CONFIRMED** review lane; not publication by itself. |
+| Public API, map, UI, or AI behavior | Governed application/runtime roots | Exact path depends on the owning deployable; never this directory. |
+
+> [!CAUTION]
+> Do not create parallel homes for source descriptors, schemas, contracts, policy, receipts, proofs, catalog records, releases, or published artifacts under this directory.
+
+[Back to top](#top)
+
+---
+
+## Fauna ingest boundary
+
+This README does not define an executable contract. It records the minimum boundary that any future canonical Fauna ingest implementation must preserve.
+
+### Permitted responsibilities
+
+A canonical Fauna ingest step may:
+
+- accept references to connector-staged payloads or approved manual-intake artifacts;
+- require a resolvable source descriptor and preserve its declared source role;
+- verify payload digest, size, media type, capture context, and retrieval metadata;
+- distinguish taxonomy, occurrence evidence, monitoring events, range context, mortality, disease, invasive-species, and derived indicators;
+- preserve restricted/public classification without converting restricted occurrences into public occurrences;
+- route unresolved rights, source role, sensitivity, geoprivacy, integrity, or review state to a governed hold or quarantine path;
+- emit an ingest receipt through the accepted receipt contract; and
+- return references to lifecycle outputs owned by the Fauna domain pipeline.
+
+### Prohibited authority
+
+An ingest step must not:
 
 ```text
-adapter output -> Fauna truth
-connector output -> RAW without admission
-source-intake record -> SourceDescriptor
-RAW capture -> normalized record
-RAW capture -> EvidenceBundle
-RAW capture -> catalog record
+connector response -> canonical Fauna truth
+ingest success -> validation pass
+payload digest -> rights approval
+source descriptor -> evidence closure
 occurrence intake -> public occurrence
 OccurrenceRestricted -> OccurrencePublic
-ingest success -> validation pass
-payload hash -> rights approval
+range or model surface -> occurrence evidence
 geoprivacy preflight -> public-safe release
-generated ingest summary -> evidence
+receipt -> proof or ReleaseManifest
+generated summary -> evidence
 ```
 
-Required distinctions:
+It also must not normalize beyond the accepted intake contract, approve taxonomy, resolve policy by implication, fabricate an EvidenceBundle, write catalog/triplet truth, construct a public DTO, or publish.
 
-- connector output, SourceDescriptor, source-intake record, RAW capture, WORK handoff, QUARANTINE record, raw-capture receipt, ValidationReport, EvidenceBundle, catalog record, triplet projection, ReleaseManifest, CorrectionNotice, RollbackCard, and public artifact remain separate;
-- Fauna object families stay under Fauna domain ownership;
-- occurrence evidence, restricted occurrence, public occurrence, range, sensitive-site class, monitoring event, mortality, disease, invasive-species, and derived indicators remain separately labeled;
-- source roles are read from governed descriptors and cannot be invented at ingest time;
-- unresolved rights, sensitivity, evidence, policy, or steward-review state fails closed.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 4. What belongs here
+## Lifecycle and trust membrane
 
-Appropriate contents include:
-
-- Fauna ingest adapter README files;
-- fixture-only adapter dry-run entrypoints;
-- Fauna SourceDescriptor lookup wrappers;
-- source-intake packet shape checks for fauna source families;
-- payload-integrity, media type, manifest, retrieval-context, and source-vintage helpers;
-- source-role and rights/citation preservation helpers;
-- restricted/public split and geoprivacy preflight blockers;
-- QUARANTINE reason helpers for unresolved Fauna-specific ingest blockers;
-- raw-capture receipt fragments, if not already shared;
-- handoff helpers that return control to the Fauna domain ingest or normalize lane.
-
-A good placement test:
-
-> If the code adapts shared ingest helpers for Fauna while returning control to the Fauna domain pipeline, it may belong here. If it owns full Fauna ingest behavior, put it under `pipelines/domains/fauna/ingest/`. If it owns schema, policy, source descriptors, EvidenceBundle truth, catalog truth, release decisions, or public serving, it belongs somewhere else.
-
-[⬆ Back to top](#top)
-
----
-
-## 5. What does not belong here
-
-| Do not place here | Correct responsibility home |
-|---|---|
-| Primary Fauna domain workflow | `pipelines/domains/fauna/` or accepted Fauna sublane |
-| Full domain-specific ingest pipeline | `pipelines/domains/fauna/ingest/` if/when accepted |
-| Normalization mappers | `pipelines/domains/fauna/normalize/` or shared adapters under `pipelines/normalize/fauna/` |
-| Source fetchers and API clients | `connectors/<source_id>/` or accepted connector home |
-| Source descriptors | `data/registry/sources/fauna/` or accepted registry home |
-| Fauna doctrine and object meaning | `docs/domains/fauna/`, `contracts/domains/fauna/` |
-| JSON Schemas | `schemas/contracts/v1/domains/fauna/` or accepted schema home |
-| Policy / geoprivacy / review decisions | `policy/domains/fauna/`, `policy/sensitivity/fauna/`, review roots |
-| Fixtures | `fixtures/ingest/fauna/` or `fixtures/domains/fauna/` |
-| Tests | `tests/pipelines/ingest/fauna/` or domain test homes |
-| Lifecycle outputs | `data/raw/fauna/`, `data/work/fauna/`, `data/quarantine/fauna/`, `data/processed/fauna/`, `data/catalog/domain/fauna/`, `data/published/layers/fauna/` |
-| EvidenceBundles | `data/proofs/evidence_bundle/` |
-| Release decisions | `release/...` |
-| Public API/UI code | `apps/governed-api/`, `apps/explorer-web/`, packages |
-
-[⬆ Back to top](#top)
-
----
-
-## 6. Adapter scope
-
-| Scope area | Adapter responsibility | Failure behavior |
-|---|---|---|
-| Caller scope | Require an owning Fauna pipeline or approved proof harness. | Hold if ownerless. |
-| Source descriptor | Resolve source id, role, rights, citation, cadence, and source vintage refs. | Quarantine/hold if missing. |
-| Payload integrity | Verify hash, media type, manifest, retrieval context, and capture timestamp metadata. | Reject or quarantine. |
-| Source role | Preserve descriptor-provided source role; do not invent authority. | Fail on role ambiguity. |
-| Restricted/public split | Preserve restricted/public and geoprivacy preflight state. | Hold pending review/policy. |
-| Evidence | Carry EvidenceRef candidates forward; never fabricate EvidenceBundles. | Abstain if unresolved. |
-| Receipts | Emit shared receipt fragments or raw-capture receipt candidates. | Fail closed on missing refs/hashes. |
-| Handoff | Return RAW/WORK/QUARANTINE refs to the Fauna domain lane. | No validation/catalog/publish side effects. |
-
-[⬆ Back to top](#top)
-
----
-
-## 7. Lifecycle contract
-
-Every helper in this adapter must preserve KFM lifecycle posture:
+KFM's governing lifecycle remains:
 
 ```text
-PRE-RAW EVENT -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Normal stance:
+The source edge and Fauna domain lane interact as follows:
 
-1. **Read** fixture, source-intake, connector-staged, or approved manual-intake refs only when an owning Fauna pipeline or proof harness provides scope.
-2. **Check** source descriptor, source role, rights, citation, payload hash, media type, source vintage, observation time, restricted/public state, geoprivacy preflight, and evidence refs.
-3. **Return** RAW admission decisions, WORK handoff refs, QUARANTINE reason refs, and receipt fragments to the owning caller.
-4. **Never normalize, validate, catalog, create EvidenceBundles, approve geoprivacy, decide release, or publish.**
+```mermaid
+flowchart TD
+  S["Source-specific connector"] --> A{"Admission checks"}
+  A -->|"admissible candidate"| R["data/raw/fauna/"]
+  A -->|"unresolved or restricted"| Q["data/quarantine/fauna/"]
+  R --> F["pipelines/domains/fauna/"]
+  Q --> F
+  F --> G["Governed downstream gates"]
+```
 
-[⬆ Back to top](#top)
+The arrows represent governed handoffs, not automatic file moves. In particular:
 
----
+- connectors may write only to RAW or QUARANTINE under the governing Directory Rules invariant;
+- an ingest result does not establish PROCESSED state;
+- EvidenceBundle closure, policy review, sensitivity transforms, catalog/triplet closure, release review, correction, and rollback occur downstream in their owning roots; and
+- public clients use released, governed interfaces rather than RAW, WORK, or QUARANTINE stores.
 
-## 8. Required gates
-
-Every adapter run must check or explicitly fail closed on:
-
-1. **Caller ownership gate** — an owning Fauna domain pipeline or approved proof harness must provide scope.
-2. **Input lifecycle gate** — input is fixture, connector-staged, source-intake, RAW-candidate, or approved QUARANTINE remediation.
-3. **SourceDescriptor/source-role gate** — source identity, role, rights, citation, cadence, and source vintage are carried forward.
-4. **Payload-integrity gate** — payload hash, size, media type, manifest, capture timestamp, and retrieval context are recorded.
-5. **Taxon/occurrence boundary gate** — taxon, occurrence evidence, monitoring events, ranges, and derived indicators are not collapsed.
-6. **Restricted/public split gate** — restricted occurrence and public derivative remain separate.
-7. **Geoprivacy gate** — preflight state does not imply public-safe release.
-8. **Evidence gate** — EvidenceRef candidates are carried forward; EvidenceBundles are not fabricated here.
-9. **Policy/review gate** — unresolved geoprivacy, rights, sensitivity, or review state remains unresolved and blocks exposure.
-10. **Receipt gate** — ingest and adapter receipt metadata is produced where material.
-11. **No-direct-normalize gate** — adapter output does not rewrite object fields into normalized records.
-12. **No-direct-validation gate** — adapter output does not mark data as validated.
-13. **No-direct-catalog gate** — adapter output does not write catalog/triplet records.
-14. **No-direct-publish gate** — adapter output does not write public UI, public API, published layers, or release manifests.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 9. Directory contract
+## Source, identity, time, rights, and sensitivity
 
-Recommended shape:
+### Source role and authority
+
+Source roles come from governed source descriptors. An ingest implementation may preserve and validate a declared role; it must not invent one from provider reputation, file naming, record count, convenience, or agreement with another source.
+
+Aggregators, occurrence platforms, agency records, museum/specimen records, monitoring programs, citizen observations, model surfaces, and conservation-status sources can have different authority limits. Combining them does not erase those limits.
+
+### Deterministic identity
+
+Where contracts permit, ingest should anchor replay and deduplication to stable inputs such as:
+
+- governed `source_id`;
+- upstream record identifier and source version;
+- immutable payload digest;
+- retrieval or capture identifier;
+- accepted profile/spec digest; and
+- deterministic run or receipt identifier.
+
+Do not derive canonical identity from a mutable display label alone. Exact field names and algorithms belong to accepted contracts and schemas; this README does not define them.
+
+### Time
+
+Fauna intake may involve several distinct times: observation/event time, source publication or revision time, retrieval time, validity interval, seasonal interval, and correction/supersession time. Preserve the distinctions available from the source and accepted contract. Do not substitute retrieval time for observation time or flatten an interval into an unsupported instant.
+
+### Rights and attribution
+
+Unknown or incompatible rights block activation or route material to quarantine/review. A technically readable payload is not automatically admissible or redistributable. Preserve source citation and attribution requirements through every handoff.
+
+### Sensitivity and geoprivacy
+
+Exact locations for sensitive taxa, nests, dens, roosts, hibernacula, spawning sites, and steward-controlled occurrences fail closed. Ingest must retain restricted state and policy references without exposing restricted geometry in logs, receipts, fixtures, errors, PRs, or examples.
+
+A generalized geometry, redaction candidate, or geoprivacy transform is not public-safe merely because coordinates changed. Public use also requires policy, review, evidence, receipt, release, correction, and rollback closure.
+
+[Back to top](#top)
+
+---
+
+## Finite dispositions and failure behavior
+
+No accepted Fauna ingest disposition schema or enum was verified for this path. A future implementation must use the accepted repository contract and return a finite, machine-checkable result rather than ambiguous success text.
+
+At minimum, the contract must distinguish these semantic classes; the names below are **descriptive, not canonical enum values**:
+
+| Disposition class | Meaning | Required next state |
+|---|---|---|
+| Admitted candidate | Required intake checks passed for RAW admission. | Emit governed RAW reference and ingest receipt; no downstream approval implied. |
+| Quarantined or held | A remediable or review-dependent condition is unresolved. | Emit reason code, blocked gate, safe references, and review/remediation target. |
+| Denied | Policy, rights, sensitivity, or authority prohibits the requested intake/use. | Record a non-sensitive denial reason; do not retry as success. |
+| Error | The system could not evaluate the request reliably. | Fail closed, preserve diagnostics without sensitive payloads, and avoid partial publication side effects. |
+
+Conditions that must not silently pass include:
+
+- missing or unresolved source descriptor;
+- unknown source role;
+- missing or mismatched payload digest;
+- unverified rights or attribution obligations;
+- malformed, implausible, or unsupported temporal/spatial metadata;
+- restricted occurrence treated as public;
+- missing sensitivity/geoprivacy classification;
+- unsupported taxonomy or ambiguous identifier mapping;
+- missing caller/profile scope;
+- non-deterministic or incomplete receipt inputs; and
+- attempted writes beyond RAW/QUARANTINE or the accepted handoff boundary.
+
+[Back to top](#top)
+
+---
+
+## Directory and interface map
+
+### Bounded observed state
 
 ```text
 pipelines/ingest/fauna/
-├── README.md
-├── FAUNA_INGEST_ADAPTER_CONTRACT.md  # PROPOSED
-├── run_dry_fixture.py                # PROPOSED
-├── validate_source_descriptor.py     # PROPOSED
-├── validate_source_intake.py         # PROPOSED
-├── validate_payload_integrity.py     # PROPOSED
-├── validate_rights_citation.py       # PROPOSED
-├── preserve_source_role.py           # PROPOSED
-├── prepare_geoprivacy_preflight.py   # PROPOSED
-├── route_quarantine_reason.py        # PROPOSED
-├── emit_adapter_receipt_fragment.py  # PROPOSED
-└── adapters/                         # PROPOSED caller adapters only
+└── README.md    # CONFIRMED at the pinned evidence commit
 ```
 
-Declarative specs should live outside this directory:
+This is a bounded observation, not an exhaustive recursive tree guarantee. The exact-path probes named in the evidence snapshot did not verify the previously proposed sibling files.
 
-```text
-pipeline_specs/ingest/fauna.yaml # PROPOSED / NEEDS VERIFICATION
-```
+### Placement map for future work
 
-Generated outputs must not be written beside this code. Use the owning Fauna domain lifecycle homes under `data/raw/fauna/`, `data/work/fauna/`, `data/quarantine/fauna/`, and `data/receipts/pipeline/`.
-
-[⬆ Back to top](#top)
-
----
-
-## 10. Inputs and outputs
-
-| Class | Correct home | Notes |
+| Proposed work | Preferred location | Status |
 |---|---|---|
-| Adapter fixture | `fixtures/ingest/fauna/` or accepted fixture home | Synthetic/public-safe by default. |
-| Caller scope | `pipelines/domains/fauna/` or approved proof harness | Required; this adapter does not run ownerless. |
-| Source descriptor | `data/registry/sources/fauna/` or accepted registry home | Read-only source authority. |
-| Fauna intake refs | connector-staged, source-intake, or approved remediation refs | Read by stable refs only. |
-| RAW capture | `data/raw/fauna/` | Owned by the Fauna domain lane. |
-| WORK handoff | `data/work/fauna/` | Owned by the Fauna domain lane. |
-| QUARANTINE reason | `data/quarantine/fauna/` | Owned by the Fauna domain lane. |
-| Receipt fragment | `data/receipts/pipeline/fauna/ingest/` or accepted receipt home | Method, refs, hashes, and outputs. |
-| Evidence proof | `data/proofs/evidence_bundle/` | Referenced only; not created here. |
+| Fauna-owned ingest implementation | `pipelines/domains/fauna/ingest/` | Parent lane **CONFIRMED**; child sublane **PROPOSED / NEEDS VERIFICATION**. |
+| Shared cross-domain admission helper | `pipelines/ingest/` or a verified shared package/tool | **NEEDS VERIFICATION** by actual consumers and reuse. |
+| Fauna declarative profile | `pipeline_specs/fauna/` | Boundary **CONFIRMED**; profile activation separately governed. |
+| Fauna ingest tests | `tests/domains/fauna/ingest/` | **PROPOSED** child of the canonical domain test lane. |
+| Fauna ingest fixtures | `fixtures/domains/fauna/ingest/` | **PROPOSED** child; synthetic/public-safe default. |
+| Source adapter/client | `connectors/<source_id>/` | **CONFIRMED** source-organized pattern. |
+| Ingest receipt instance | `data/receipts/ingest/` under the accepted naming/layout contract | Receipt root **CONFIRMED**; exact instance layout **NEEDS VERIFICATION**. |
 
-[⬆ Back to top](#top)
+Any move, compatibility shim, or new sublane must update affected links, tests, specs, receipts, and the [drift register](../../../docs/registers/DRIFT_REGISTER.md) when required.
 
----
-
-## 11. Minimal adapter receipt
-
-The final schema is not defined here. This example shows the minimum information a Fauna ingest adapter receipt should preserve.
-
-```yaml
-schema_version: kfm.ingest.fauna_adapter_receipt.v1
-adapter_run_id: fauna_ingest_adapter_run_YYYYMMDDThhmmssZ
-pipeline_id: ingest.fauna
-status: HELD
-caller:
-  owner_pipeline: pipelines/domains/fauna/ingest
-  profile_ref: pipeline_specs/ingest/fauna.yaml
-source:
-  source_id: <source_id>
-  source_descriptor_ref: data/registry/sources/fauna/<source_id>.yml
-  source_role: <source_role>
-  rights_state: needs_review
-intake:
-  source_intake_record_ref: null
-  staged_payload_ref: null
-  payload_hash: sha256:<hash>
-checks:
-  caller_scope_resolved: false
-  source_descriptor_resolved: false
-  payload_integrity_passed: false
-  rights_citation_ready: false
-  source_role_preserved: false
-  restricted_public_split_preserved: false
-  geoprivacy_preflight_ready: false
-  raw_admission_allowed: false
-anti_collapse:
-  adapter_output_is_fauna_truth: false
-  connector_output_is_raw_without_admission: false
-  raw_capture_is_evidence_bundle: false
-  occurrence_restricted_is_occurrence_public: false
-  ingest_success_is_validation_pass: false
-outputs:
-  raw_ref: null
-  work_handoff_ref: null
-  quarantine_ref: null
-  receipt_fragment_ref: data/receipts/pipeline/fauna/ingest/run_YYYYMMDDThhmmssZ.yml
-rollback:
-  required_before_publication: true
-```
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 12. Tests, fixtures, receipts, and proofs
+## Operations and quickstart
 
-Recommended tests:
+There is no verified runnable command for this directory at the evidence snapshot. That absence is intentional in this README: a documentation example must not be mistaken for implementation.
 
-```text
-tests/pipelines/ingest/fauna/
-├── test_no_network_dry_run.py              # PROPOSED
-├── test_caller_scope_required.py           # PROPOSED
-├── test_source_descriptor_required.py      # PROPOSED
-├── test_payload_integrity_required.py      # PROPOSED
-├── test_source_role_preserved.py           # PROPOSED
-├── test_rights_citation_required.py        # PROPOSED
-├── test_taxon_occurrence_boundary.py       # PROPOSED
-├── test_restricted_public_split.py         # PROPOSED
-├── test_geoprivacy_preflight_not_release.py # PROPOSED
-├── test_evidence_refs_not_fabricated.py    # PROPOSED
-├── test_unclear_rights_quarantine.py       # PROPOSED
-├── test_no_normalize_side_effect.py        # PROPOSED
-├── test_no_validation_pass_side_effect.py  # PROPOSED
-├── test_no_catalog_side_effect.py          # PROPOSED
-└── test_no_direct_publish.py               # PROPOSED
-```
+Before adding a command, maintainers must verify all of the following in the resulting commit:
 
-A dry run should prove fixtures load without network access, caller scope is required, SourceDescriptors are required, source roles and payload integrity are preserved, rights/citation checks fail closed, taxon/occurrence boundaries hold, restricted/public split is maintained, geoprivacy preflight does not imply release, EvidenceRefs are not fabricated, receipts are deterministic, and no run writes directly to normalization, validation, catalog, triplet, public UI, public API, published layers, or release manifests.
+1. canonical implementation path and accepted migration posture;
+2. executable entrypoint and pinned declarative profile;
+3. no-network public-safe fixture path;
+4. source descriptor and rights/sensitivity dependencies;
+5. finite result contract and reason-code vocabulary;
+6. deterministic receipt schema and output location;
+7. negative tests for quarantine, deny, and error behavior;
+8. no writes beyond the allowed lifecycle boundary; and
+9. repository-native command and CI wiring.
 
-[⬆ Back to top](#top)
+Only then should this README or the canonical implementation README publish a copy-paste command.
+
+[Back to top](#top)
 
 ---
 
-## 13. Promotion, publication, correction, and rollback
+## Tests, fixtures, receipts, and evidence
 
-Fauna shared ingest adapters may prepare RAW capture refs, WORK handoff refs, QUARANTINE reasons, and receipt fragments. They do not normalize, validate, catalog, or publish.
+### Minimum future verification matrix
 
-Required chain:
+| Case | Expected proof obligation |
+|---|---|
+| Valid public-safe synthetic intake | Deterministic admitted-candidate result, RAW reference, and receipt; no network. |
+| Missing SourceDescriptor | Quarantine/hold or deny according to the accepted contract. |
+| Unknown source role | Fail closed; no authority inferred. |
+| Payload digest mismatch | Reject or quarantine; no partial lifecycle write. |
+| Rights unresolved | Hold or deny; no public-use path. |
+| Sensitive exact occurrence | Restricted state preserved; coordinates absent from public logs and outputs. |
+| Restricted/public collapse attempt | Deterministic failure. |
+| Observation time absent or confused with retrieval time | Contract-defined hold/error; no invented timestamp. |
+| Taxon identifier ambiguity | Quarantine/review; no silent accepted crosswalk. |
+| EvidenceRef absent or unresolved where required downstream | Preserve unresolved state; never fabricate EvidenceBundle closure. |
+| Retry/replay of identical input | Idempotent or explicitly deduplicated result under the accepted identity contract. |
+| Attempted PROCESSED/catalog/published write | Deterministic denial/failure. |
+| Network access in default fixture suite | Test failure. |
 
-```text
-Fauna domain caller
-  -> shared Fauna ingest adapter
-  -> RAW capture / WORK handoff / QUARANTINE reason / receipt fragment
-  -> Fauna domain normalization
-  -> Fauna domain validation
-  -> EvidenceBundle closure
-  -> catalog / triplet handoff
-  -> geoprivacy-reviewed release candidate
-  -> ReleaseManifest
-  -> RollbackCard
-  -> public-safe artifact
-```
+### Fixture posture
 
-Correction and rollback posture:
+- Default fixtures must be synthetic or demonstrably public-safe.
+- Do not store exact sensitive locations, private keys, tokens, credentials, restricted payloads, or rights-limited source extracts in fixtures.
+- Golden fixtures must pin source/profile/schema versions needed for deterministic replay.
+- Live-source tests, if ever justified, must be separate, opt-in, non-publishing, rate-limited, and governed by current rights and secret-handling controls.
 
-- failed adapter runs remain auditable;
-- receipts preserve source refs, source-role refs, original payload refs, taxon refs, occurrence refs, geoprivacy refs, EvidenceRef refs, policy refs, and failure reasons;
-- adapter outputs are superseded through governed state transitions, not hidden overwrite;
-- downstream artifacts are invalidated if source refs, source-role refs, payload hashes, geoprivacy refs, EvidenceBundle refs, policy refs, correction refs, or rollback refs drift;
-- rollback is owned by `release/`, not by this directory.
+### Receipt posture
 
-[⬆ Back to top](#top)
+An ingest receipt is process memory. It should preserve input refs, source descriptor ref, source role, payload digest, profile/spec digest, checks performed, finite disposition, reason codes, output refs, tool version, and replay/rollback information as required by the accepted schema.
 
----
+A receipt is not an EvidenceBundle, ValidationReport, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, catalog record, or public artifact.
 
-## 14. Definition of done
+### What a passing suite would not prove
 
-This README is done when it:
+Passing ingest tests would not by themselves prove source authority, current rights, EvidenceBundle closure, public geoprivacy safety, catalog closure, release approval, public API behavior, map safety, correction execution, or rollback execution.
 
-- fills the blank `pipelines/ingest/fauna/README.md` file;
-- identifies this directory as a Fauna adapter/profile under the shared ingest lane;
-- prevents primary Fauna domain logic, connectors, schemas, contracts, policy, source descriptors, lifecycle data, EvidenceBundles, release decisions, public API, UI, catalog, and publication authority from being placed here;
-- preserves caller scope, source descriptors, source roles, original payloads, taxon/occurrence/monitoring boundaries, restricted/public split, geoprivacy preflight, EvidenceRef, policy, lifecycle, quarantine, correction, and rollback boundaries;
-- blocks adapter-output-as-Fauna-truth, connector-output-as-RAW, RAW-as-normalized-record, RAW-as-EvidenceBundle, OccurrenceRestricted-as-OccurrencePublic, geoprivacy-preflight-as-release, ingest-success-as-validation-pass, generated-summary-as-evidence, catalog side effects, and direct publication writes;
-- gives maintainers a fixture-first, receipt-emitting, fail-closed expansion pattern.
-
-Future executable work in this adapter lane is done only when it has public-safe fixtures, no-network tests, caller-scope checks, SourceDescriptor and payload-integrity tests, source-role and rights tests, taxon/occurrence/monitoring-boundary tests, restricted/public split tests, geoprivacy preflight tests, deterministic receipts, CI coverage, Fauna steward handoff, and release/correction/rollback documentation.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 15. Open questions
+## Validation and maintenance
 
-| ID | Question | Status |
-|---|---|---|
-| `PIPE-INGEST-FAUNA-001` | Should this adapter remain under `pipelines/ingest/fauna/`, or should it move to `pipelines/domains/fauna/ingest/` once domain ingest scaffolding is accepted? | NEEDS VERIFICATION / ADR |
-| `PIPE-INGEST-FAUNA-002` | Which schema owns Fauna adapter ingest receipts and geoprivacy preflight fields? | NEEDS VERIFICATION |
-| `PIPE-INGEST-FAUNA-003` | Which Fauna source fixture set should be first-wave for no-network dry runs? | NEEDS VERIFICATION |
-| `PIPE-INGEST-FAUNA-004` | Which CI job owns shared Fauna ingest adapter invariant tests? | UNKNOWN |
-| `PIPE-INGEST-FAUNA-005` | Should this adapter emit receipt fragments only, or full Fauna ingest receipts? | NEEDS VERIFICATION |
-| `PIPE-INGEST-FAUNA-006` | Which source families should be accepted first for Fauna ingest proofing? | NEEDS VERIFICATION |
-| `PIPE-INGEST-FAUNA-007` | Which geoprivacy preflight vocabulary is canonical for Fauna intake? | NEEDS VERIFICATION / ADR |
+### Documentation validation for this README
+
+- [x] Existing `doc_id` and creation date preserved.
+- [x] One H1 and logical heading hierarchy used.
+- [x] Current path, parent lane, canonical Fauna lane, and responsibility root verified.
+- [x] Directory Rules, Fauna canonical paths, drift register, relevant ADR posture, and adjacent README conventions inspected.
+- [x] Previously proposed executable/spec/test/fixture paths checked directly and not presented as current files.
+- [x] Source, rights, sensitivity, lifecycle, evidence, release, correction, and rollback boundaries preserved.
+- [x] Illustrative disposition names labeled non-canonical.
+- [x] No source endpoint, credential, quota, license, active profile, schema, command, or runtime behavior invented.
+- [ ] Repository-native Markdown/link checks observed in CI after the pull request opens.
+
+### Maintenance triggers
+
+Review this README when any of the following occurs:
+
+- an accepted ADR resolves this directory's compatibility status;
+- a consumer, shim, or executable sibling is added or removed;
+- `pipelines/domains/fauna/ingest/` is accepted or created;
+- a Fauna ingest spec becomes active;
+- an ingest receipt or finite-disposition contract is accepted;
+- Fauna rights, sensitivity, geoprivacy, taxonomy, identity, or temporal contracts change;
+- CI begins enforcing Fauna ingest behavior; or
+- Directory Rules changes the domain placement pattern.
+
+### Definition of done for executable graduation
+
+This directory must not be described as implemented until current repository evidence proves:
+
+- accepted placement or compatibility authority;
+- executable code with verified consumers;
+- pinned contract, schema, source descriptor, and declarative profile;
+- deterministic identity, temporal, integrity, and receipt behavior;
+- public-safe no-network fixtures;
+- positive and negative finite-outcome tests;
+- rights, sensitivity, and geoprivacy fail-closed behavior;
+- no unauthorized lifecycle, catalog, release, API, UI, or publication side effects;
+- repository-native CI coverage; and
+- documented correction, migration, deactivation, and rollback paths.
+
+[Back to top](#top)
 
 ---
 
-## Maintainer note
+## Correction and rollback
 
-Start with synthetic/public-safe fixtures and negative tests. Do not add live source fetching, Fauna truth ownership, source-profile editing, schema authority, policy/geoprivacy authority, normalization shortcuts, validation shortcuts, catalog writes, public API code, UI code, release-manifest writes, published-layer writes, or generated summaries until caller scope, source descriptors, source roles, payload hashes, rights/citation checks, taxon/occurrence boundaries, restricted/public split, geoprivacy preflight, receipt hashes, EvidenceRef handling, policy state, deterministic receipts, and rollback expectations are proven.
+### Documentation correction
+
+If a claim in this README is disproved, correct it in place through a reviewable commit, preserve the `doc_id`, update the evidence snapshot, and record supersession or drift where the correction affects authority or placement.
+
+### Compatibility-path rollback
+
+If a future shim at this path causes regression:
+
+1. stop new activation or routing through the shim;
+2. revert the shim through a transparent commit without rewriting shared history;
+3. restore the prior verified canonical route;
+4. invalidate affected candidate outputs and receipts as required;
+5. re-run the bounded compatibility and no-side-effect tests; and
+6. retain the incident, correction, and rollback references.
+
+### This documentation change
+
+Rollback this README revision by reverting its implementation commit or pull-request merge commit, then re-run the same Markdown, link, and claim-boundary checks. Reversion changes documentation only; it must not be represented as operational rollback of Fauna data or releases.
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | Status | Supports | Limits |
+|---|---|---|---|
+| [Directory Rules](../../../docs/doctrine/directory-rules.md) | **CONFIRMED** repository doctrine | Responsibility-root split, domain placement pattern, connector RAW/QUARANTINE boundary, lifecycle, and drift handling. | Does not prove implementation. |
+| [`pipelines/README.md`](../../README.md) and [`pipelines/ingest/README.md`](../README.md) | **CONFIRMED** current docs | Executable-how versus declarative-what split and shared ingest boundary. | Their draft claims do not prove runnable code. |
+| [`pipelines/domains/fauna/README.md`](../../domains/fauna/README.md) | **CONFIRMED** current file | Canonical Fauna domain pipeline documentation surface. | Executable behavior remains separately verified. |
+| [Fauna canonical paths register](../../../docs/domains/fauna/CANONICAL_PATHS.md) | **CONFIRMED** current draft register | Fauna responsibility-lane mapping and sensitive-occurrence placement concerns. | The register itself labels many specific paths proposed and does not override Directory Rules. |
+| [`pipeline_specs/fauna/README.md`](../../../pipeline_specs/fauna/README.md) | **CONFIRMED** repository-grounded current doc | Placeholder profile posture and missing activation/runtime proof. | Evidence snapshot predates this review and must not be generalized beyond its claims. |
+| Direct exact-path probes at the pinned commit | **CONFIRMED bounded check** | Previously proposed sibling/spec/test/fixture paths were not found. | Not an exhaustive recursive tree proof. |
+| Inspected ADR-0010, ADR-0012, and ADR-0018 | **CONFIRMED current files; draft/proposed decisions** | Sensitivity, connector-output, and promotion design context. | Not accepted authority at the evidence snapshot. |
+| Supplied KFM pipeline and implementation architecture sources | **CONFIRMED source inputs / lineage** | Lifecycle, source-role, evidence, fail-closed, and sensitive-Fauna design baseline. | Do not prove repository or runtime implementation. |
+
+[Back to top](#top)
+
+---
+
+## Open verification items
+
+| ID | Question | Status | Resolution evidence |
+|---|---|---|---|
+| `PIPE-INGEST-FAUNA-001` | Should this path remain as a compatibility boundary, migrate to the canonical domain lane, or be removed after links are updated? | **CONFLICTED / NEEDS VERIFICATION** | Accepted ADR or migration decision plus consumer and inbound-link inventory. |
+| `PIPE-INGEST-FAUNA-002` | Is `pipelines/domains/fauna/ingest/` the accepted child path for Fauna-owned ingest code? | **NEEDS VERIFICATION** | Directory review, accepted lane decision, and implementation PR. |
+| `PIPE-INGEST-FAUNA-003` | Which contract and schema own Fauna ingest finite dispositions, reason codes, and receipts? | **UNKNOWN** | Accepted contracts/schemas and validator wiring. |
+| `PIPE-INGEST-FAUNA-004` | Which source profile should provide the first public-safe, no-network Fauna ingest proof? | **NEEDS VERIFICATION** | Admitted SourceDescriptor, rights review, fixture, and test plan. |
+| `PIPE-INGEST-FAUNA-005` | Which CI job and repository command will enforce Fauna ingest invariants? | **UNKNOWN** | Command-bearing workflow and observed check result. |
+| `PIPE-INGEST-FAUNA-006` | Which taxonomy, identity, temporal, and geoprivacy vocabularies are accepted for intake? | **NEEDS VERIFICATION** | Accepted domain contracts, schemas, policies, fixtures, and steward review. |
+| `PIPE-INGEST-FAUNA-007` | Does the current source-registry topology fully resolve admitted Fauna source roles, rights, cadence, and sensitivity? | **NEEDS VERIFICATION** | Recursive registry inventory and activation review. |
+| `PIPE-INGEST-FAUNA-008` | Should the placement conflict be added as a dedicated drift-register entry? | **NEEDS VERIFICATION** | Steward decision scoped to this compatibility path. |
+
+[Back to top](#top)
+
+---
+
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Date | 2026-07-20 |
+| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
+| Base ref | `main` |
+| Pinned evidence commit | `2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0` |
+| Prior target blob | `a03934112656906712313436f93f92f0f49c84d1` |
+| Review type | Repository-grounded revision of an existing README; no executable, spec, policy, schema, workflow, source activation, lifecycle artifact, or release state changed. |
+| Next review trigger | Placement decision, executable sibling, active Fauna ingest profile, accepted receipt/outcome contract, CI enforcement, or Directory Rules change. |
+
+## Changelog
+
+### v0.2 — 2026-07-20
+
+- Reclassified the path as a README-only compatibility boundary rather than an implied adapter implementation.
+- Grounded placement in current Directory Rules and routed Fauna-owned executable logic to `pipelines/domains/fauna/`.
+- Replaced speculative sibling trees and a canonical-looking receipt example with bounded repository observations and non-canonical interface requirements.
+- Added current evidence status, source/identity/time/rights/sensitivity boundaries, finite-disposition semantics, validation limits, correction/rollback guidance, and an evidence ledger.
+- Preserved the original `doc_id`, creation date, trust membrane, geoprivacy, quarantine, evidence, policy, release, and rollback boundaries.
+
+[Back to top](#top)
