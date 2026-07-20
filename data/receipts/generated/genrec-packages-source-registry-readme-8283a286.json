@@ -1,0 +1,195 @@
+{
+  "receipt_id": "genrec-packages-source-registry-readme-8283a286",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/source-registry/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/source-registry/README.md": "sha256:8283a286ee68c08e5129a3b91d0c04eff91f45c91ff9280fe23cec3d7356f45f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "Work Mode session 2026-07-20"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote review-branch and contents writes",
+      "local deterministic content validation",
+      "PDF text extraction for Directory Rules preflight"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "attached_docs": [
+      "Current user request — update packages/source-registry/README.md",
+      "Pasted text(54).txt — KFM GitHub Repository Documentation Implementation Agent v3.1",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/source-registry/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/source-registry/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/source-registry/src/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/source-registry/src/source_registry/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/source-registry/src/source_registry/__init__.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/source-registry/src/source_registry/core.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/contracts/source/source_descriptor.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/source/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/sources/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tools/validators/validate_source_descriptor.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/fixtures/contracts/v1/source/source_descriptor/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/source-descriptor-validate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/control_plane/source_authority_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/data/registry/sources/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/adr/ADR-0017-source-descriptor-admission-process.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/source/source-intake-record.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/source/source-activation-decision.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/receipts/source-activation-decision.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ccd7a61a4381dffc0132449ee2102502e5f24935",
+      "attachment://Pasted text(54).txt",
+      "attachment://Directory Rules.pdf"
+    ]
+  },
+  "truth_labels": {
+    "packages/source-registry/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, immutable base, target blob, two-file change budget, review branch, exact target, non-goals, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "directory-rules-adr-drift-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "The existing packages/source-registry shared-library path and document identity were retained. Directory Rules, proposed ADR-0017, the drift register, parent/source/namespace documentation, and relevant authority roots were inspected; no canonical root, schema home, registry home, or parallel authority was created or selected."
+    },
+    {
+      "gate": "base-drift-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Main remained at 2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0, the target blob remained 194831d4b5a827599bcae780147af0c9ccfaf9f5, and no matching open pull request or branch was found before branch creation."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Direct reads confirmed kfm-source-registry 0.0.0 placeholder metadata, empty __init__.py, one-line placeholder core.py, and no established package-local tests, supported API, consumers, registry adapter, policy handoff, deployment, or operational health."
+    },
+    {
+      "gate": "source-registry-profile-and-authority-separation",
+      "outcome": "PASS",
+      "reason": "The README covers stable source identity, provider/family, authority role, uses, rights/terms, sensitivity/access, cadence/freshness, citations, intake, validation/activation, deactivation, supersession, correction, and rollback while keeping contract, schema, registry, policy, evidence, receipt, release, and public-interface authority external."
+    },
+    {
+      "gate": "source-object-maturity-and-conflict-disclosure",
+      "outcome": "PASS",
+      "reason": "The README separates the detailed PROPOSED singular schema and observed validation wiring from the permissive plural schema, absent declared paths, empty authority register, proposed admission ADR, placeholder intake/activation objects, and package non-implementation."
+    },
+    {
+      "gate": "no-loss-revision",
+      "outcome": "PASS",
+      "reason": "The prior helper-only, fail-closed, non-authority intent and stable numbered headings were retained while unsupported function-name and maturity implications were removed or narrowed."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, 48 total headings with no hierarchy jumps, 47 unique non-H1 slugs, 37 resolved internal fragment links, two balanced fenced blocks, no trailing whitespace, a closed KFM Meta Block, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-preflight",
+      "outcome": "PASS",
+      "reason": "All eighteen repository-relative link targets used by the README were verified through pinned repository reads or already-inspected repository evidence."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Broad pull-request workflows may run for this docs change. Inspected command-bearing workflows use pull_request rather than pull_request_target, GitHub-hosted runners, no KFM source credentials, and read-only contents access; CodeQL alone has security-events write for SARIF upload. Full branch-protection and workflow-run history remain outside the evidence boundary."
+    },
+    {
+      "gate": "security-privacy-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, source payloads, exact sensitive locations, living-person or genomic data, registry authority rows, activation decisions, lifecycle mutation, release action, or publication action."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 6df77a248c72a17ddaeb5d701baf6e4d9db38eab on commit ccd7a61a4381dffc0132449ee2102502e5f24935; remote bytes matched the prepared README and its SHA-256 is 8283a286ee68c08e5129a3b91d0c04eff91f45c91ff9280fe23cec3d7356f45f."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "This receipt was parsed and validated locally against schemas/contracts/v1/receipts/generated_receipt.schema.json before remote creation."
+    },
+    {
+      "gate": "multi-file-atomicity",
+      "outcome": "SKIPPED",
+      "reason": "The connector exposes serialized Contents API writes. The README and receipt are committed sequentially on a scoped branch, with final base-to-head diff and remote read-back verification."
+    },
+    {
+      "gate": "repository-native-package-execution",
+      "outcome": "SKIPPED",
+      "reason": "The package remains a greenfield placeholder and exposes no build backend, supported API, or package-local test suite to execute. Existing trusted pull-request checks are observed separately."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and separate from generation, source admission, activation, policy, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "conversation://current#update-packages-source-registry-readme"
+    },
+    {
+      "id": "documentation-agent-prompt-v3.1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(54).txt"
+    },
+    {
+      "id": "directory-rules-doctrine",
+      "validated": true,
+      "evidence_ref": "attachment://Directory Rules.pdf"
+    },
+    {
+      "id": "source-registry-package-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/source-registry/README.md"
+    },
+    {
+      "id": "source-registry-package-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ccd7a61a4381dffc0132449ee2102502e5f24935"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T02:39:48-05:00",
+  "emitter": "OpenAI Codex (GPT-5) via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-packages-source-registry-readme-v0-2-20260720. Documentation-only package-boundary revision with a two-file change budget: the requested README and this required generated-work receipt. This receipt is provenance and operation-journal memory, not source truth, policy approval, human review, source admission, activation authority, evidence closure, release approval, or publication authority."
+}
