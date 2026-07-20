@@ -1,0 +1,207 @@
+{
+  "receipt_id": "genrec-packages-domains-archaeology-generalization-readme-93901b3f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/domains/archaeology/generalization/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/domains/archaeology/generalization/README.md": "sha256:93901b3ff8a0d7adbc74ad2f47922a3d5eb6bfa922167ce0b3b0c1220108c904"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-07-20-work-mode"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent - Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix - AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/4f46eaaa444bb66f1f37d5c83b8311375ce8e572",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/18ee0ae794037659989ea7acc87fba711a1d12ff",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/packages/domains/archaeology/generalization/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/packages/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/packages/domains/archaeology/evidence-projection/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/packages/redaction/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/docs/domains/archaeology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/docs/domains/archaeology/PRESERVATION_MATRIX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/docs/domains/archaeology/MAP_UI_CONTRACTS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/contracts/domains/archaeology/sensitivity_transform.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/contracts/domains/archaeology/publication_transform_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/contracts/shared/redaction_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/schemas/contracts/v1/domains/archaeology/sensitivity_transform.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/schemas/contracts/v1/domains/archaeology/publication_transform_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/schemas/contracts/v1/receipts/redaction_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/policy/redaction/profiles.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/docs/standards/REDACTION_DETERMINISM.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/fixtures/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(61).txt"
+    ]
+  },
+  "truth_labels": {
+    "packages/domains/archaeology/generalization/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, immutable main snapshot, target blob, duplicate pull-request search, Directory Rules, pull-request contract, generated-receipt schema, and relevant Archaeology/generalization surfaces were inspected."
+    },
+    {
+      "gate": "base-drift-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Main advanced after authoring from 4f46eaaa444bb66f1f37d5c83b8311375ce8e572 to 18ee0ae794037659989ea7acc87fba711a1d12ff. The intervening compare changed only fixtures/contracts/README.md and its generated receipt; the Archaeology generalization target remained at blob 3874ba04fb174c59a28b024bb74599252109943f."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains reusable domain-adapter documentation while shared mechanics, contracts, schemas, profiles, policy, restricted data, evidence, receipts, pipelines, tests, fixtures, release, API, map, UI, and AI stay in their owning roots."
+    },
+    {
+      "gate": "bounded-package-inventory",
+      "outcome": "PASS",
+      "reason": "The target and shared redaction package were read directly; common manifest, initializer, source, selected module, and stale package-specific test/fixture README paths were checked explicitly. Absence claims remain bounded."
+    },
+    {
+      "gate": "transform-receipt-schema-grounding",
+      "outcome": "PASS",
+      "reason": "SensitivityTransform, PublicationTransformReceipt, and shared RedactionReceipt contracts and schemas were inspected. Their semantic roles remain draft, schemas permissive scaffolds, and role/home conflicts visible."
+    },
+    {
+      "gate": "profile-and-precision-conflicts",
+      "outcome": "PASS",
+      "reason": "The placeholder redaction profile registry, proposed determinism standard, H3-r7 lane guidance, and county/region operating floor were inspected. No profile, algorithm, seed rule, or public precision is declared canonical."
+    },
+    {
+      "gate": "test-fixture-workflow-grounding",
+      "outcome": "PASS",
+      "reason": "The current Archaeology test and fixture roots, placeholder-heavy test maturity, and read-only readiness-hold workflow were inspected; no generalization test pass, validator, receipt flow, or runtime claim is made."
+    },
+    {
+      "gate": "authority-and-anti-collapse",
+      "outcome": "PASS",
+      "reason": "The README separates source classification, profile selection, transform mechanics, domain adaptation, receipt candidate, validation, evidence, review, policy, lifecycle, release, and public delivery."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No real location, identifier, access route, cultural detail, reviewer identity, protected payload, profile secret, seed, credential, private endpoint, or reconstructive example is introduced; exact and inferable Archaeology detail remains fail-closed."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fences, KFM meta block, internal anchors, final newline, no trailing whitespace or tabs, and repository-relative links were checked."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "The README and receipt were checked for common private-key and token prefixes; no credential material was introduced."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed properties, artifact hash closure, truth labels, validation outcomes, citations, timestamp, and pending human-review state were checked against the generated-receipt schema."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no generalizer, shared mechanics, profile, dependency, schema, contract, policy, receipt, proof, test, fixture payload, workflow, lifecycle record, release, API route, tile, map, UI, or runtime is changed."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "SKIPPED",
+      "reason": "Remote branch, commit, changed-path, and pull-request verification occurs after branch publication and is reported in pull-request metadata."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions checks are observed after draft pull-request creation and were unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-DOCUMENTATION-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(61).txt"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-SENSITIVITY-TRANSFORM",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/contracts/domains/archaeology/sensitivity_transform.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-PUBLICATION-TRANSFORM-RECEIPT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/contracts/domains/archaeology/publication_transform_receipt.md"
+    },
+    {
+      "id": "SHARED-REDACTION-RECEIPT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/contracts/shared/redaction_receipt.md"
+    },
+    {
+      "id": "REDACTION-PROFILE-PLACEHOLDER",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/policy/redaction/profiles.yaml"
+    },
+    {
+      "id": "ARCHAEOLOGY-SENSITIVITY-GUIDANCE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/docs/domains/archaeology/SENSITIVITY.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-TEST-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/tests/domains/archaeology/README.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-READINESS-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4f46eaaa444bb66f1f37d5c83b8311375ce8e572/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T16:18:08Z",
+  "emitter": "ai-builder/openai-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped review branch. It records bounded package absence, shared/domain transform-package overlap, scaffold transform and receipt schemas, placeholder profile posture, public-precision conflict, non-disclosure and cumulative-release threats, and sensitive-domain fail-closed rules. It introduces no generalizer, profile, shared mechanic, schema, contract, policy, receipt, proof, fixture payload, executable test, workflow, sensitive data, lifecycle artifact, release record, deployment, public route, tile, map, UI, or runtime behavior. Human review remains pending; this receipt records provenance and does not authorize merge, transform use, release, or publication."
+}
