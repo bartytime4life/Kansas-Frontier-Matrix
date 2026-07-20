@@ -5,7 +5,7 @@
     "release/candidates/hydrology/README.md"
   ],
   "artifact_hashes": {
-    "release/candidates/hydrology/README.md": "sha256:51f7820b5b8b1826cc25cfff40ed659c776a062bb2d4ba55a5f67d6e32a86399"
+    "release/candidates/hydrology/README.md": "sha256:6597f0c1618c4cd41c6f3bdd39c0ed912d5e92823b12697da019437a5028e014"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -67,6 +67,11 @@
       "gate": "repository_relative_links",
       "outcome": "PASS",
       "reason": "All 23 repository-relative link targets were read successfully at the pinned base commit."
+    },
+    {
+      "gate": "hydrology_workflow_compatibility",
+      "outcome": "PASS",
+      "reason": "Preserved the exact candidate-boundary sentence required by the domain-hydrology release-readiness workflow."
     },
     {
       "gate": "metadata_block",
