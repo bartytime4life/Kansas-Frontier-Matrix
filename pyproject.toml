@@ -1,5 +1,6 @@
-# KFM root pyproject — greenfield scaffold.
-# Sub-packages each carry their own pyproject under packages/<name>/.
+# KFM root Python distribution and repository test configuration.
+# This remains a scaffold dependency carrier with a minimal `kfm` namespace;
+# it does not establish a public API, release, or publication authority.
 
 [build-system]
 requires = ["hatchling"]
@@ -9,6 +10,7 @@ build-backend = "hatchling.build"
 name = "kfm"
 version = "0.0.0"
 description = "Kansas Frontier Matrix — governed, evidence-first spatial knowledge system."
+readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
 license = { text = "TBD" }
 authors = [{ name = "KFM Maintainers" }]
@@ -22,6 +24,12 @@ test = [
     "pytest>=9.1.1,<10",
 ]
 
+[project.urls]
+Homepage = "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+Documentation = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/docs"
+Issues = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues"
+Repository = "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+
 [tool.kfm]
 invariant = "RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED"
 schema_version = "v1"
@@ -31,3 +39,11 @@ pythonpath = ["."]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/kfm"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/LICENSE",
+    "/README.md",
+    "/pyproject.toml",
+    "/src/kfm",
+]
