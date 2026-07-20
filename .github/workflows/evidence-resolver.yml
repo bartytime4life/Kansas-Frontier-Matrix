@@ -18,9 +18,10 @@
 # - GitHub-hosted Ubuntu and pinned major action versions are used. Checks are
 #   no-network after checkout and Python action setup; no packages are installed.
 # Command:
-# - No resolver command exists. Inline standard-library checks inspect only the
-#   documented greenfield boundary and stop succeeding when executable resolver
-#   behavior, a consumer, or a repository-native command appears.
+# - No resolver command exists. Inline standard-library checks distinguish the
+#   executable EvidenceRef schema-shape validator from unresolved cross-record
+#   resolver behavior, and stop succeeding when a resolver, consumer, or
+#   repository-native resolver command appears.
 # Inputs:
 # - The resolver package scaffold, evidence contracts/schemas, deterministic
 #   schema fixtures, validator inventory, Makefile, and test boundaries.
@@ -29,8 +30,9 @@
 #   receipt, proof, policy result, release record, or published artifact.
 # Outcome:
 # - The current scaffold reports WORKFLOW_HOLD and WORKFLOW_SKIPPED_EXPLICIT.
-# - Missing boundaries or newly surfaced implementation fail the readiness check
-#   until owners wire reviewed commands and deterministic valid/denied fixtures.
+# - Missing boundaries or newly surfaced resolver implementation fail the
+#   readiness check until owners wire reviewed commands and deterministic
+#   valid/denied fixtures.
 # Compatibility:
 # - Workflow name `evidence-resolver` and job ids `resolve-bundles` and
 #   `denied-bundles-fail-closed` are preserved.
@@ -95,8 +97,11 @@ jobs:
             "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
             "fixtures/contracts/v1/evidence/evidence_ref/valid/valid_1.json"
             "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json"
+            "tools/validators/_common/run_all.py"
+            "tools/validators/validate_evidence_ref.py"
             "tools/validators/validate_evidence_bundle.py"
             "tests/schemas/test_common_contracts.py"
+            "tests/schemas/test_evidence_ref_validator.py"
             "Makefile"
           )
 
@@ -197,6 +202,42 @@ jobs:
                   "semantics and tests before wiring resolver CI."
               )
 
+          ref_validator_path = Path("tools/validators/validate_evidence_ref.py")
+          ref_validator_text = ref_validator_path.read_text(encoding="utf-8")
+          ast.parse(ref_validator_text, filename=str(ref_validator_path))
+          for marker in (
+              "tools.validators._common.jsonschema_runner import run",
+              "schemas/contracts/v1/evidence/evidence_ref.schema.json",
+              "fixtures/contracts/v1/evidence/evidence_ref",
+          ):
+              if marker not in ref_validator_text:
+                  raise SystemExit(
+                      "The EvidenceRef validator no longer delegates to the reviewed "
+                      f"schema/fixture boundary; missing marker: {marker}"
+                  )
+
+          aggregate_runner_path = Path("tools/validators/_common/run_all.py")
+          aggregate_runner = aggregate_runner_path.read_text(encoding="utf-8")
+          ast.parse(aggregate_runner, filename=str(aggregate_runner_path))
+          if '"validate_evidence_ref.py"' not in aggregate_runner:
+              raise SystemExit(
+                  "The EvidenceRef validator is not wired into the aggregate "
+                  "schema-fixture runner."
+              )
+
+          validator_test_path = Path("tests/schemas/test_evidence_ref_validator.py")
+          validator_test = validator_test_path.read_text(encoding="utf-8")
+          ast.parse(validator_test, filename=str(validator_test_path))
+          for marker in (
+              "test_evidence_ref_validator_accepts_valid_fixture",
+              "test_evidence_ref_validator_rejects_missing_ref",
+          ):
+              if marker not in validator_test:
+                  raise SystemExit(
+                      "The focused EvidenceRef validator polarity test changed; "
+                      f"missing marker: {marker}"
+                  )
+
           for fixture in (
               Path("fixtures/contracts/v1/evidence/evidence_ref/valid/valid_1.json"),
               Path("fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json"),
@@ -268,14 +309,10 @@ jobs:
 
           print("Resolver package metadata remains a 0.0.0 placeholder.")
           print("The initializer is empty and the exact core placeholder is unchanged.")
+          print("The EvidenceRef shape validator is aggregate-wired with focused CLI polarity tests.")
           print("EvidenceRef/EvidenceBundle schemas and positive fixtures parse as data.")
           print("No result contract, resolver tests, consumer import, or Make target surfaced.")
           PY
-
-          if [[ -e "tools/validators/validate_evidence_ref.py" ]]; then
-            echo "::error::The previously absent EvidenceRef validator surfaced. Review its profile and wire it with resolver tests deliberately."
-            exit 1
-          fi
 
           echo "WORKFLOW_SKIPPED_EXPLICIT: resolve-bundles"
           echo "WORKFLOW_HOLD: no accepted executable EvidenceRef-to-EvidenceBundle resolver command"
@@ -292,9 +329,11 @@ jobs:
           `WORKFLOW_HOLD: no accepted executable EvidenceRef-to-EvidenceBundle resolver command`
 
           This job inspects the documented package, contract, schema, fixture,
-          validator, test, consumer, and command boundaries. It is designed to
-          stop succeeding when resolver implementation surfaces so maintainers
-          must wire that implementation deliberately.
+          validator, test, consumer, and command boundaries. The dedicated
+          EvidenceRef validator proves only JSON Schema shape and fixture
+          polarity. This job is designed to stop succeeding when resolver
+          implementation surfaces so maintainers must wire that implementation
+          deliberately.
 
           No evidence was resolved. Parsing schemas and fixtures does not prove
           EvidenceBundle existence, membership, scope, integrity, freshness,
@@ -333,6 +372,8 @@ jobs:
             "fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json"
             "fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.expected_error.txt"
             "tests/schemas/test_common_contracts.py"
+            "tests/schemas/test_evidence_ref_validator.py"
+            "tools/validators/validate_evidence_ref.py"
             "tools/validators/validate_evidence_bundle.py"
           )
 
@@ -406,13 +447,30 @@ jobs:
                   "Reconcile validation ownership before resolver graduation."
               )
 
-          validator_path = Path("tools/validators/validate_evidence_bundle.py")
-          validator_text = validator_path.read_text(encoding="utf-8")
-          ast.parse(validator_text, filename=str(validator_path))
-          if "evidence_bundle.schema.json" not in validator_text:
+          for validator_path, expected_schema in (
+              (
+                  Path("tools/validators/validate_evidence_ref.py"),
+                  "evidence_ref.schema.json",
+              ),
+              (
+                  Path("tools/validators/validate_evidence_bundle.py"),
+                  "evidence_bundle.schema.json",
+              ),
+          ):
+              validator_text = validator_path.read_text(encoding="utf-8")
+              ast.parse(validator_text, filename=str(validator_path))
+              if expected_schema not in validator_text:
+                  raise SystemExit(
+                      f"{validator_path} target changed. Reconcile its profile "
+                      "before wiring negative resolver tests."
+                  )
+
+          focused_test_path = Path("tests/schemas/test_evidence_ref_validator.py")
+          focused_test = focused_test_path.read_text(encoding="utf-8")
+          ast.parse(focused_test, filename=str(focused_test_path))
+          if "test_evidence_ref_validator_rejects_missing_ref" not in focused_test:
               raise SystemExit(
-                  "The EvidenceBundle validator target changed. Reconcile its profile "
-                  "before wiring negative resolver tests."
+                  "The EvidenceRef missing-ref CLI polarity test is absent."
               )
 
           candidate_fixture_roots = (
@@ -433,9 +491,10 @@ jobs:
                   + "\n".join(str(path) for path in sorted(surfaced_resolver_fixtures))
               )
 
-          print("The exact valid/invalid schema fixture pairs remain unchanged.")
-          print("Both invalid fixtures remain single missing-required-field examples.")
-          print("The generic harness and bundle validator still target schema shape only.")
+          print("The selected valid/invalid schema fixture pairs remain unchanged.")
+          print("Both selected invalid fixtures remain single missing-required-field examples.")
+          print("The generic harness and both dedicated validators target schema shape only.")
+          print("The focused EvidenceRef CLI test checks valid and missing-ref exit polarity.")
           print("No resolver-specific denied-resolution fixture lane surfaced.")
           PY
 
@@ -459,8 +518,9 @@ jobs:
           `WORKFLOW_HOLD: no accepted resolver-specific denied-resolution suite or finite result contract`
 
           The repository has minimal valid/invalid EvidenceRef and EvidenceBundle
-          schema fixtures plus a generic shape-validation harness. Those fixtures
-          prove neither cross-record resolution nor fail-closed resolver behavior.
+          schema fixtures, dedicated schema-shape validators, and a focused
+          EvidenceRef CLI polarity test. Those checks prove neither cross-record
+          resolution nor fail-closed resolver behavior.
 
           No denied bundle was executed. Graduate this hold only with accepted
           resolver input/result contracts and deterministic cases for missing,
