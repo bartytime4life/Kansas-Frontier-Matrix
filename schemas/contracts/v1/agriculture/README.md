@@ -1,213 +1,324 @@
-# `schemas/contracts/v1/agriculture/` — Agriculture Schema Compatibility Index
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-contracts-v1-agriculture-readme
 title: schemas/contracts/v1/agriculture/ — Agriculture Schema Compatibility Index
-version: v1
-status: draft
+type: readme; directory-readme; schema-compatibility-index; non-authoritative-router
+authority_class: compatibility-index
+version: v1.1
+status: draft; compatibility; transitional; index-only; repository-grounded
 policy_label: public
 owners:
-  - <schema-steward>
-  - <agriculture-domain-steward>
-  - <contract-steward>
-  - <docs-steward>
-updated: 2026-07-03
-tags: [kfm, schemas, contracts, v1, agriculture, compatibility, json-schema]
+  - OWNER_TBD — Schema steward
+  - OWNER_TBD — Agriculture domain steward
+  - OWNER_TBD — Contract steward
+  - OWNER_TBD — Validation steward
+  - OWNER_TBD — Docs steward
+updated: 2026-07-20
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0
+  prior_blob: 716b3fd1e73feaeba678e6800606604e7d621d16
+related:
+  - ../../../README.md
+  - ../README.md
+  - ../domains/README.md
+  - ../domains/agriculture/README.md
+  - ../../../../contracts/domains/agriculture/README.md
+  - ../../../../fixtures/domains/agriculture/README.md
+  - ../../../../tests/domains/agriculture/README.md
+  - ../../../../tools/validators/domains/agriculture/README.md
+  - ../../../../docs/architecture/directory-rules.md
+  - ../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../../../../docs/registers/DRIFT_REGISTER.md
+tags: [kfm, schemas, contracts, v1, agriculture, compatibility, transitional, index-only, json-schema, no-parallel-authority]
+notes:
+  - "This directory contains only README.md and .gitkeep at the recorded evidence snapshot."
+  - "Agriculture machine-schema files currently live under schemas/contracts/v1/domains/agriculture/; that lane is doctrine-aligned but remains proposed because ADR-0001 is proposed."
+  - "This README is a router and drift guard. It does not make this flat lane or the domain lane accepted schema authority."
 [/KFM_META_BLOCK_V2] -->
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![root](https://img.shields.io/badge/root-schemas%2F-blue)
-![domain](https://img.shields.io/badge/domain-agriculture-green)
-![posture](https://img.shields.io/badge/posture-compatibility--index-orange)
-![canonical](https://img.shields.io/badge/canonical-NEEDS%20VERIFICATION-yellow)
+# `schemas/contracts/v1/agriculture/` — Agriculture Schema Compatibility Index
+
+`schemas/contracts/v1/agriculture/` is an index-only compatibility lane that routes maintainers to the Agriculture domain schema surface without creating a second schema authority.
+
+**Audience:** schema, Agriculture-domain, contract, validation, governance, and documentation maintainers.
+
+> [!IMPORTANT]
+> Do not add machine schemas to this flat lane. The current Directory Rules place domain-specific machine shape under `schemas/contracts/v1/domains/<domain>/`, while [ADR-0001](../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) is still `proposed`. Until that decision and any migration are closed, treat [`../domains/agriculture/`](../domains/agriculture/README.md) as the proposed domain lane and this directory as a compatibility pointer only.
+
+[Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence ledger](#evidence-ledger) · [Open verification](#open-verification) · [Rollback](#rollback)
 
 ## Purpose
 
-`schemas/contracts/v1/agriculture/` is a draft compatibility and index lane for Agriculture schema notes.
+This directory preserves discoverability for the older flat Agriculture schema path while preventing it from evolving independently.
 
-It should help maintainers decide whether this shorter path remains as an index, migrates into `schemas/contracts/v1/domains/agriculture/`, or is deprecated once canonical Agriculture schema placement is confirmed.
+It exists to:
 
-This README is documentation only. It is not a schema file, not contract prose, not policy, not validator code, and not lifecycle data.
+- point readers and legacy references toward the proposed Agriculture domain schema lane;
+- record the flat-path versus domain-path relationship;
+- expose material schema, contract, fixture, validator, and CI maturity gaps;
+- support a future ADR-backed migration, deprecation, or alias decision; and
+- prevent documentation from upgrading permissive schema scaffolds into implementation, policy, evidence, or release claims.
 
-## Status & authority
+This README documents repository state. It is not a JSON Schema, semantic contract, schema registry, migration manifest, policy decision, validation report, receipt, proof, release record, or publication authority.
 
-| Field | Value |
-|---|---|
-| Document type | Agriculture schema compatibility README |
-| Owning root | `schemas/` |
-| Requested path | `schemas/contracts/v1/agriculture/` |
-| Status | Draft |
-| Authority level | Compatibility/index guidance. Canonical schemas, contracts, schema registry records, validators, fixtures, tests, ADRs, and steward decisions outrank this README. |
-| Path posture | Current-session evidence confirms this README was blank before this update. |
-| Canonical schema home | NEEDS VERIFICATION. ADR-0001 says domain-specific schemas should nest under `schemas/contracts/v1/domains/<domain>/...`. |
-| Default posture | Do not create new canonical Agriculture schema definitions directly under `schemas/contracts/v1/agriculture/` unless an ADR or migration note explicitly changes the schema-home rule. |
-| Required reviewers | Schema steward, Agriculture domain steward, contract steward, and docs steward. |
+## Authority level
 
-## Placement basis
+**Compatibility / transitional / index-only.** The `schemas/` root owns machine-checkable shape. This flat lane owns no schema family and must not become a parallel Agriculture schema home.
 
-Current-session evidence confirms `schemas/README.md` defines `schemas/` as the root for machine-checkable shape and says schemas pair one-to-one with `contracts/`.
+The placement basis is:
 
-Current-session evidence confirms ADR-0001 says the default schema home is `schemas/contracts/v1/<family>/...`, and domain-specific schemas nest under `schemas/contracts/v1/domains/<domain>/...`.
+1. [Directory Rules](../../../../docs/architecture/directory-rules.md) assign machine shape to `schemas/` and apply the domain lane pattern `schemas/contracts/v1/domains/<domain>/` to Agriculture.
+2. [ADR-0001](../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) proposes `schemas/contracts/v1/` as the machine-schema home and `schemas/contracts/v1/domains/<domain>/` for domain-specific schemas.
+3. [`schemas/README.md`](../../../README.md) preserves the meaning/shape/policy/proof split and warns against parallel authority.
+4. The current repository contains this flat directory as a README-and-`.gitkeep` compatibility lane and contains Agriculture schema files in [`../domains/agriculture/`](../domains/agriculture/README.md).
 
-Current-session search did not confirm a canonical `schemas/contracts/v1/domains/agriculture/README.md` path during this edit. Search did confirm Agriculture surfaces under contracts, fixtures, packages, policy, and docs.
+The target path is therefore **CONFIRMED present**, but its long-term disposition remains **NEEDS VERIFICATION**. The proposed domain lane is not upgraded to accepted authority by this README.
 
-## Repo fit
+## Status
+
+### Compatibility status
+
+| Concern | Current state | Evidence posture |
+|---|---|---|
+| Flat directory | `README.md` plus `.gitkeep`; no machine schema files | **CONFIRMED** at `main@2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0` |
+| Lane class | Compatibility / transitional / index-only | **PROPOSED classification**, consistent with the prior README and Directory Rules anti-drift posture |
+| Proposed domain lane | `schemas/contracts/v1/domains/agriculture/` exists | **CONFIRMED path / PROPOSED authority** |
+| ADR status | ADR-0001 is `proposed`, not accepted | **CONFIRMED** from the ADR metadata and status block |
+| Migration or deprecation decision | No accepted decision was verified for this flat lane | **NEEDS VERIFICATION** |
+| Generated or mirrored status | No generator, synchronization command, or mirror notice was found for this README | **UNKNOWN** beyond the inspected paths; treat as manually maintained |
+| Public or release authority | None | **CONFIRMED boundary** |
+
+### Repository fit
 
 ```text
 schemas/
-├── README.md
 └── contracts/
     └── v1/
-        ├── agriculture/                # you are here; compatibility/index lane
+        ├── agriculture/
+        │   ├── .gitkeep
+        │   └── README.md                    # this compatibility index
         └── domains/
-            └── agriculture/            # likely canonical domain lane; NEEDS VERIFICATION
-
-contracts/
-└── domains/
-    └── agriculture/                    # observed contract surface
-
-fixtures/
-└── domains/
-    └── agriculture/                    # observed fixture surface
+            └── agriculture/
+                ├── README.md                # proposed domain schema index
+                ├── *.schema.json            # 19 direct schema scaffolds at the snapshot
+                ├── hydrology-ext/README.md  # extension-placement question remains open
+                └── receipts/README.md       # receipt-schema placement remains open
 ```
 
-## Current-session related evidence
+### Bounded domain-schema snapshot
 
-| Evidence | Status |
-|---|---|
-| `schemas/contracts/v1/agriculture/README.md` | Blank before this update. |
-| `schemas/README.md` | Confirms `schemas/` owns machine-checkable shape and pairs with `contracts/`. |
-| ADR-0001 | Confirms `schemas/contracts/v1/` as the proposed canonical schema home and says domain schemas nest under `schemas/contracts/v1/domains/<domain>/...`. |
-| Search for canonical Agriculture schema lane | Did not confirm `schemas/contracts/v1/domains/agriculture/README.md` in this edit. |
-| Search for Agriculture surfaces | Found Agriculture contracts, fixtures, package, policy, and docs surfaces outside this path. |
+The direct Agriculture domain lane contains 19 `*.schema.json` files at the recorded base commit. All declare JSON Schema Draft 2020-12, all have distinct `$id` values within that bounded set, all carry `x-kfm.status: PROPOSED`, and all permit unspecified properties.
 
-This README does not verify schema contents, registry entries, fixture coverage, validator wiring, CI behavior, or whether `schemas/contracts/v1/agriculture/` should remain as a compatibility path.
+| Shape group | Files | Observed structure | Interpretation |
+|---|---|---|---|
+| Empty-property scaffolds | `aggregation_receipt`, `agriculture_decision_envelope`, `agriculture_feature_dto`, `crop_observation` | No declared properties or required fields; `additionalProperties: true` | **PROPOSED scaffold**; not a meaningful payload contract |
+| ID-only scaffolds | `catalog_matrix`, `correction_notice`, `decision_envelope`, `domain_feature_identity`, `domain_layer_descriptor`, `domain_observation`, `domain_validation_report`, `evidence_bundle`, `evidence_drawer_payload`, `layer_manifest`, `promotion_decision`, `release_manifest`, `rollback_card`, `run_receipt`, `source_state_hash` | Requires `id`; exposes only `id`, `spec_hash`, and `version`; `additionalProperties: true` | **PROPOSED minimal scaffold**; not field-complete domain validation |
 
-## Compatibility-lane responsibilities
+The bounded inventory also exposes these conflicts and gaps:
 
-| Responsibility | Expectation |
-|---|---|
-| Canonical-home decision | Determine whether canonical Agriculture schemas belong under `schemas/contracts/v1/domains/agriculture/`. |
-| Drift prevention | Prevent duplicate canonical schemas under `schemas/contracts/v1/agriculture/`. |
-| Migration notes | Record migration notes if compatibility files need to move. |
-| Contract linkage | Point to paired Agriculture contract files when verified. |
-| Fixture linkage | Point to valid and invalid fixtures when verified. |
-| Validator linkage | Point to validators or CI checks when verified. |
-| Registry linkage | Point to schema registry records when verified. |
-| Review status | Mark unverified implementation claims as NEEDS VERIFICATION. |
+- `$id` uses two namespaces: four `kfm://schemas/...` identifiers and fifteen `https://schemas.kfm.local/...` identifiers. Namespace authority is **NEEDS VERIFICATION**.
+- Four schema-declared contract paths exist exactly. Fifteen exact targets are absent; one absent target, `aggregation_receipt.md`, has a hyphenated semantic-contract counterpart at [`contracts/domains/agriculture/aggregation-receipt.md`](../../../../contracts/domains/agriculture/aggregation-receipt.md).
+- None of the fifteen schema-declared family fixture directories exists. The Agriculture fixture root contains documentation and placeholders, not those declared fixture families.
+- Two schema-declared validator paths exist, but both are four-line `NotImplementedError` placeholders. Two additional Agriculture validator files in the same lane are also placeholders; no field-level Agriculture validator was established.
+- [`schema-validation.yml`](../../../../.github/workflows/schema-validation.yml) parses all schema JSON, checks Draft 2020-12 meta-schema validity, and requires unique canonical-v1 `$id` values. Its configured aggregate fixture validators cover six shared families, not the Agriculture schemas listed here.
+- [`domain-agriculture.yml`](../../../../.github/workflows/domain-agriculture.yml) reports explicit readiness holds. A green held job is not Agriculture schema, evidence, policy, release, or runtime proof.
+- The proposed domain-lane README currently describes only one known schema, while the pinned tree contains 19. Treat that README inventory as stale until it is regenerated and reviewed.
+
+No item above establishes source truth, semantic completeness, EvidenceBundle closure, policy approval, rights or sensitivity clearance, runtime use, release readiness, or publication.
 
 ## What belongs here
 
-- This compatibility README.
-- Short index notes that point to canonical Agriculture schema files once confirmed.
-- Migration notes for moving Agriculture schemas into the accepted schema-home path.
-- Drift notes about duplicate or stale Agriculture schema paths.
-- Links to canonical schemas, contracts, fixtures, validators, registry records, and tests.
+- `README.md` as the compatibility router and drift guard.
+- `.gitkeep` while the compatibility directory must remain addressable.
+- A short, reviewed migration, deprecation, or mirror notice when an accepted decision requires one.
+- Stable links to the proposed domain schema lane, semantic contracts, fixtures, validators, tests, workflows, ADRs, and drift records.
+- Evidence-bounded status notes that clearly distinguish path presence, schema shape, validation coverage, and release state.
 
-## What does not belong here
+Any additional file must keep this lane non-authoritative and must identify its canonical source, synchronization rule, owner, sunset or review trigger, and rollback path.
 
-- New canonical Agriculture schema definitions.
-- Duplicate copies of canonical schema files.
-- Contract prose.
-- Policy rules.
-- Validator implementation code.
-- Runtime code.
-- Lifecycle data payloads.
-- EvidenceBundle contents or source records.
-- Release records.
-- Claims that this path is canonical without ADR, registry, or steward confirmation.
+## What does NOT belong here
 
-## Compatibility status values
+- `*.schema.json`, JSON-LD contexts, or other machine-shape definitions.
+- Hand-maintained or generated copies of schemas from `../domains/agriculture/`.
+- Semantic contract prose or object-family definitions.
+- Policy rules, rights decisions, sensitivity decisions, redaction rules, or release decisions.
+- Valid, invalid, golden, live-source, or production payloads.
+- Validator or runtime implementation.
+- Schema registry records, source registry records, EvidenceBundles, proofs, receipts, catalogs, manifests, or lifecycle data.
+- Public API, map, UI, Focus Mode, export, search, graph, or model-runtime behavior.
+- Claims that schema presence, JSON validity, a green workflow, a commit, or a pull request proves correctness or publication.
 
-Use finite compatibility status values where possible:
+## Inputs
 
-| Status | Meaning |
-|---|---|
-| `INDEX_ONLY` | This path only indexes candidate canonical schema locations. |
-| `ALIAS_CANDIDATE` | This path may be an alias for `schemas/contracts/v1/domains/agriculture/`. |
-| `TRANSITIONAL` | Content is awaiting migration to canonical schema home. |
-| `DEPRECATED` | Content should no longer receive new files. |
-| `MIGRATE_TO_DOMAINS_AGRICULTURE` | Content should move under `schemas/contracts/v1/domains/agriculture/` if that lane is confirmed. |
-| `NEEDS_VERIFICATION` | Path, pairing, fixture, validator, or CI support has not been verified. |
+Changes to this index must be grounded in the smallest sufficient evidence set:
 
-## Minimal compatibility note
+- current [Directory Rules](../../../../docs/architecture/directory-rules.md) and any accepted amending ADR;
+- [ADR-0001](../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) and its current lifecycle state;
+- the exact flat-lane and proposed domain-lane tree at a pinned commit;
+- machine schema metadata, including `$schema`, `$id`, `required`, `properties`, `additionalProperties`, and `x-kfm` pointers;
+- paired semantic contracts under [`contracts/domains/agriculture/`](../../../../contracts/domains/agriculture/README.md);
+- fixtures, validators, tests, workflows, schema-registry records, migrations, and drift entries that actually exist; and
+- policy, evidence, review, release, correction, and rollback records only when a claim depends on them.
 
-```markdown
-# <agriculture-schema-compatibility-note-id>
+Lineage documents and proposed paths may guide review, but they do not prove implementation. Memory and README prose do not upgrade a schema or integration claim to **CONFIRMED**.
 
-## Status
-INDEX_ONLY / ALIAS_CANDIDATE / TRANSITIONAL / DEPRECATED / MIGRATE_TO_DOMAINS_AGRICULTURE / NEEDS_VERIFICATION
+## Outputs
 
-## Compatibility path
-<schemas/contracts/v1/agriculture/... or N/A>
+This lane emits no runtime or lifecycle object.
 
-## Proposed canonical path
-<schemas/contracts/v1/domains/agriculture/... or NEEDS VERIFICATION>
+Its only supported outputs are:
 
-## Paired contract
-<contracts/domains/agriculture/... or N/A>
+- a human-readable routing index;
+- a compatibility classification;
+- a bounded snapshot of observed drift and maturity;
+- review and validation instructions; and
+- pointers for a future ADR-backed migration or deprecation.
 
-## Fixtures
-<fixtures/domains/agriculture/... or N/A>
+It does not emit schemas, generated mirrors, registry entries, validation reports, policy decisions, evidence, receipts, proofs, catalogs, release records, published artifacts, or public responses.
 
-## Validator
-<tools/validators/... or N/A>
+## Validation
 
-## Notes
-<short note grounded in repo evidence>
+### Documentation checks
 
-## Follow-up
-<open items or none>
-```
+For this README:
 
-## Review checklist
+- verify one H1, consecutive heading levels, balanced fences, readable tables, and a final newline;
+- verify every repository-relative link against the resulting branch;
+- confirm the KFM Meta Block markers are balanced and the preserved `doc_id` remains unique;
+- confirm the flat lane still contains no machine schema files;
+- compare the pinned domain-schema inventory and maturity claims with the actual JSON files;
+- scan for credentials, restricted payloads, private identities, or exact sensitive locations; and
+- inspect the complete base-to-head diff for unrelated changes.
 
-- [ ] Canonical schema path is linked or marked NEEDS VERIFICATION.
-- [ ] Paired contract path is linked or marked NEEDS VERIFICATION.
-- [ ] Schema registry entry is linked or marked NEEDS VERIFICATION.
-- [ ] Valid fixtures are linked or marked NEEDS VERIFICATION.
-- [ ] Invalid fixtures are linked or marked NEEDS VERIFICATION.
-- [ ] Validator path is linked or marked NEEDS VERIFICATION.
-- [ ] CI/schema-test support is linked or marked NEEDS VERIFICATION.
-- [ ] No duplicate canonical schema definitions are placed under `schemas/contracts/v1/agriculture/`.
-- [ ] Any migration or compatibility claim cites an ADR, migration note, or verified repo evidence.
+### Repository checks and their limits
 
-## Naming guidance
+| Check | What it establishes | What it does not establish |
+|---|---|---|
+| JSON parsing of `schemas/contracts/v1/domains/agriculture/*.schema.json` | The inspected files are syntactically valid JSON | Semantic completeness or admissibility |
+| Draft 2020-12 meta-schema check | The inspected schema documents are legal Draft 2020-12 schemas | Useful Agriculture constraints, fixtures, or runtime enforcement |
+| Unique `$id` check in [`schema-validation.yml`](../../../../.github/workflows/schema-validation.yml) | No duplicate `$id` exists in the workflow's canonical-v1 scan when the job passes | Accepted namespace, stable identity, or registry activation |
+| `make schemas` | The configured aggregate validator runner completes | Agriculture-specific schema validation; the configured families are shared source/evidence/runtime families |
+| `python -m pytest -q tests/schemas tests/contracts` | The repository-owned schema/contract suite passes within its collected scope | Agriculture-domain test coverage unless those tests are collected there |
+| [`domain-agriculture.yml`](../../../../.github/workflows/domain-agriculture.yml) | Documented Agriculture boundaries and explicit readiness holds remain consistent | Executable Agriculture validation, proof, release readiness, or publication |
 
-Recommended compatibility-note pattern:
+Do not promote this lane, remove it, add schemas to it, or call the domain lane active solely because generic schema validation passes.
 
-```text
-<YYYY-MM-DD>_<schema-shortname>_compatibility-note.md
-```
+## Review burden
 
-Examples:
+[`.github/CODEOWNERS`](../../../../.github/CODEOWNERS) routes all `/schemas/` changes to `@bartytime4life`. That is review routing, not proof that independent schema, Agriculture, contract, validation, policy, or release review occurred.
 
-```text
-2026-07-03_domain-layer-descriptor_compatibility-note.md
-2026-07-03_aggregation-receipt_compatibility-note.md
-2026-07-03_crop-progress-panel_compatibility-note.md
-```
+Before approving a change here, reviewers must confirm:
 
-Use lowercase filenames and hyphenated schema short names.
+- [ ] the flat lane remains compatibility/index-only;
+- [ ] no schema definition or divergent mirror was added;
+- [ ] the Directory Rules and ADR-0001 status are represented accurately;
+- [ ] schema counts, `$id` namespaces, contract pointers, fixture roots, validator paths, and CI claims match the pinned tree;
+- [ ] unresolved schema-home, receipt-family, extension-lane, and naming conflicts remain visible;
+- [ ] schema validity is not presented as evidence, policy permission, release approval, or publication;
+- [ ] public clients remain downstream of governed interfaces and released artifacts;
+- [ ] the generated-work receipt is valid and remains pending human review until an authorized reviewer acts; and
+- [ ] rollback restores the prior blob without rewriting shared history.
 
-## Open verification
+A migration, deprecation, schema-home change, or new parallel definition requires the appropriate schema, Agriculture-domain, contract, validation, migration, and governance review in addition to GitHub code-owner routing.
 
-- [ ] Confirm CODEOWNERS for `schemas/contracts/v1/agriculture/`.
-- [ ] Confirm whether `schemas/contracts/v1/agriculture/` should remain an index-only compatibility lane.
-- [ ] Confirm whether canonical schema home should be `schemas/contracts/v1/domains/agriculture/`.
-- [ ] Confirm whether `schemas/contracts/v1/domains/agriculture/README.md` should be created or already exists elsewhere.
-- [ ] Confirm paired Agriculture contract paths.
-- [ ] Confirm Agriculture schema registry records.
-- [ ] Confirm valid fixture paths.
-- [ ] Confirm invalid fixture paths.
-- [ ] Confirm validator paths.
-- [ ] Confirm CI schema-test coverage.
-- [ ] Confirm whether `schemas/README.md` should index this compatibility lane.
+## Related folders
+
+| Path | Relationship | Current posture |
+|---|---|---|
+| [`../../../README.md`](../../../README.md) | Schema responsibility root | **CONFIRMED root boundary** |
+| [`../README.md`](../README.md) | v1 schema-family index | **CONFIRMED / mixed maturity** |
+| [`../domains/README.md`](../domains/README.md) | Parent domain-schema index | **CONFIRMED file / proposed lane model** |
+| [`../domains/agriculture/`](../domains/agriculture/README.md) | Agriculture machine-shape lane and direct schema files | **CONFIRMED path / PROPOSED authority / stale README inventory** |
+| [`../domains/agriculture/hydrology-ext/`](../domains/agriculture/hydrology-ext/README.md) | Agriculture-Hydrology extension index | **NEEDS VERIFICATION / cross-domain placement-sensitive** |
+| [`../domains/agriculture/receipts/`](../domains/agriculture/receipts/README.md) | Agriculture receipt-schema index | **NEEDS VERIFICATION / receipt-family placement-sensitive** |
+| [`../../../../contracts/domains/agriculture/`](../../../../contracts/domains/agriculture/README.md) | Agriculture semantic contracts | **CONFIRMED path / partial pairing** |
+| [`../../../../fixtures/domains/agriculture/`](../../../../fixtures/domains/agriculture/README.md) | Agriculture fixture index | **CONFIRMED documentation / declared schema-family fixtures absent** |
+| [`../../../../tests/domains/agriculture/`](../../../../tests/domains/agriculture/README.md) | Agriculture enforceability boundary | **CONFIRMED documentation / executable coverage unestablished** |
+| [`../../../../tools/validators/domains/agriculture/`](../../../../tools/validators/domains/agriculture/README.md) | Agriculture edge-validator lane | **CONFIRMED files / placeholder implementations** |
+| [`../../../../policy/domains/agriculture/`](../../../../policy/domains/agriculture/README.md) | Agriculture policy boundary | **Separate authority; not changed here** |
+| [`../../../../release/agriculture/`](../../../../release/agriculture/README.md) | Agriculture release orientation | **Separate authority; blocked/held posture** |
+
+## ADRs
+
+### ADR-0001 — schema home
+
+[ADR-0001](../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) proposes:
+
+- `schemas/contracts/v1/` for machine-checkable schemas;
+- `schemas/contracts/v1/domains/<domain>/` for domain-specific schemas;
+- `contracts/` for semantic meaning; and
+- no divergent machine definitions across `schemas/` and `contracts/`.
+
+Its current status is `proposed`. This README follows its anti-drift direction without claiming the decision is accepted.
+
+### Unresolved lane decision
+
+No accepted ADR or migration record was verified that classifies `schemas/contracts/v1/agriculture/` as a permanent alias, generated mirror, deprecated path, or removable directory. Until that decision exists:
+
+1. keep this lane index-only;
+2. place no schema files here;
+3. do not silently redirect or delete the path;
+4. record any migration mapping and downstream consumer impact; and
+5. preserve rollback to the prior path state.
+
+The inspected [`DRIFT_REGISTER.md`](../../../../docs/registers/DRIFT_REGISTER.md) does not yet contain an Agriculture flat-versus-domain schema-lane entry. Add one when a migration or deprecation decision enters scope; this documentation-only revision does not create that decision.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-03 |
-| Review status | Draft README replacing blank file |
-| Next review trigger | Canonical-home decision, new Agriculture schema, Agriculture schema migration, validator update, fixture update, schema registry update, ADR update, or compatibility-lane decision |
+| Review date | 2026-07-20 |
+| Repository snapshot | `bartytime4life/Kansas-Frontier-Matrix` `main@2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0` |
+| Flat-lane prior blob | `716b3fd1e73feaeba678e6800606604e7d621d16` |
+| Review state | Draft compatibility-index revision; human review pending |
+| Next review trigger | ADR-0001 status change; flat-lane migration/deprecation decision; Agriculture schema inventory change; `$id` namespace decision; contract/fixture/validator/test activation; child-lane placement decision; or schema workflow change |
+
+## Evidence ledger
+
+| Evidence | Observation supported | Truth status | Does not prove |
+|---|---|---|---|
+| `schemas/contracts/v1/agriculture/` at the pinned commit | Directory contains `README.md` and `.gitkeep`, with no schema definitions | **CONFIRMED** | Long-term alias policy |
+| [`Directory Rules`](../../../../docs/architecture/directory-rules.md) | `schemas/` owns machine shape; domains belong inside responsibility roots | **CONFIRMED doctrine / specific placement subject to stated limits** | Accepted ADR-0001 or implementation completeness |
+| [ADR-0001](../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Proposed schema-home and domain-lane decision | **CONFIRMED text / PROPOSED decision** | Accepted governance state |
+| [`../domains/agriculture/`](../domains/agriculture/README.md) plus direct schema JSON | Nineteen direct, permissive, `PROPOSED` schema scaffolds and two child indexes exist | **CONFIRMED bounded inventory** | Semantic completeness, fixture closure, validator enforcement, or runtime use |
+| [`contracts/domains/agriculture/`](../../../../contracts/domains/agriculture/README.md) | Four exact schema-declared contract targets and one hyphenated counterpart exist | **CONFIRMED bounded inventory** | Complete contract pairing |
+| [`fixtures/domains/agriculture/`](../../../../fixtures/domains/agriculture/README.md) | Agriculture fixture documentation exists; schema-declared family roots are absent | **CONFIRMED bounded inventory** | Complete recursive fixture or test coverage outside inspected scope |
+| Agriculture validator scripts and READMEs | Four per-domain Agriculture validator filenames are `NotImplementedError` placeholders | **CONFIRMED** | Future validator design or activation |
+| [`schema-validation.yml`](../../../../.github/workflows/schema-validation.yml) | Generic schema JSON, meta-schema, identity, configured-fixture, and shared schema/contract checks | **CONFIRMED workflow definition** | A passing run for this branch or Agriculture-specific conformance |
+| [`domain-agriculture.yml`](../../../../.github/workflows/domain-agriculture.yml) | Read-only readiness checks and explicit holds | **CONFIRMED workflow definition** | Agriculture validation, proof, release, or publication |
+
+## Open verification
+
+- [ ] Decide whether this flat lane is a permanent compatibility alias, temporary transition, deprecated path, or removal candidate.
+- [ ] Accept, revise, supersede, or reject ADR-0001 through authorized review.
+- [ ] Add or link the Agriculture flat-versus-domain lane decision in the drift and migration records.
+- [ ] Reconcile the proposed domain-lane README with the 19-file schema inventory.
+- [ ] Resolve the two `$id` namespace patterns and register accepted identities.
+- [ ] Resolve `aggregation-receipt.md` versus `aggregation_receipt.md` without silently changing object identity.
+- [ ] Decide whether receipt schemas belong in the Agriculture domain root, its `receipts/` child, or the shared receipt family.
+- [ ] Decide whether `hydrology-ext/` is an Agriculture-owned extension or a cross-domain schema concern.
+- [ ] Complete semantic contracts or explicitly profile shared contracts for every Agriculture schema.
+- [ ] Add deterministic valid and invalid fixtures for accepted Agriculture schema families.
+- [ ] Replace placeholder validators with reviewed implementations and wire targeted tests.
+- [ ] Confirm schema registry, policy, evidence, release, correction, and rollback integration before promoting any schema beyond scaffold status.
+
+## Rollback
+
+Before merge, rollback means closing or abandoning the draft pull request; deleting the review branch is a separate cleanup action.
+
+After merge, create a transparent revert of the implementation or merge commit, restoring prior blob `716b3fd1e73feaeba678e6800606604e7d621d16`, then re-run the same Markdown, link, schema-structure, and remote-diff checks. Do not force-push or rewrite shared history.
+
+## Changelog
+
+### v1.1 — 2026-07-20
+
+- Reclassified the flat path as a bounded compatibility/transitional index rather than a candidate schema home.
+- Added a pinned repository evidence snapshot and current two-file flat-lane inventory.
+- Recorded the 19-file proposed domain-schema inventory, permissive scaffold shapes, split `$id` namespaces, partial contract pairing, absent declared fixture roots, placeholder validators, and CI limits.
+- Added the Directory Rules README contract sections, review burden, evidence ledger, open verification, and transparent rollback.
+- Preserved the existing `doc_id`, Agriculture routing purpose, no-parallel-authority rule, compatibility boundary, review checklist intent, and unresolved migration posture.
+
+---
+
+**Compatibility rule:** keep this lane pointer-only until an accepted decision and verified migration establish a different role.

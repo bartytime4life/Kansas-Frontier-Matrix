@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-agriculture-schema-compat-readme-1e9809da",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "schemas/contracts/v1/agriculture/README.md"
+  ],
+  "artifact_hashes": {
+    "schemas/contracts/v1/agriculture/README.md": "sha256:1e9809dabe9e4aadb86a74ac70c40b06ee6d0fcee4e8ac54492b46fa75512325"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "Codex Work Mode 2026-07-20"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "isolated credential-free sparse checkout",
+      "PDF text extraction and visual inspection",
+      "static Markdown and JSON validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(58).txt",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/agriculture",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/domains/agriculture",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/contracts/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/fixtures/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tests/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tools/validators/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "schemas/contracts/v1/agriculture/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-ref-permission-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Verified public repository identity, admin/push permission, default branch main, immutable base 2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0, target blob, and no matching open pull request or task branch."
+    },
+    {
+      "gate": "directory-rules-adr-drift-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected Directory Rules, proposed ADR-0001, CONTRIBUTING.md, the drift register, the flat compatibility lane, the proposed domain lane, and adjacent schema/contract/fixture/test/validator boundaries; no new schema authority was created."
+    },
+    {
+      "gate": "repository-inventory-and-claim-grounding",
+      "outcome": "PASS",
+      "reason": "Credential-free sparse-tree inspection confirmed the two-file flat lane, nineteen direct PROPOSED domain schemas, two identifier namespaces, partial contract pairing, absent declared fixture-family roots, placeholder validators, and bounded workflow behavior."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "Verified one H1, balanced KFM Meta Block markers and code fences, consecutive section structure, final newline, no whitespace errors, and no unrelated modification in the local prepared diff."
+    },
+    {
+      "gate": "relative-links-and-internal-anchors",
+      "outcome": "PASS",
+      "reason": "Static validation resolved 36 repository-relative links and 15 internal navigation anchors against the pinned sparse checkout."
+    },
+    {
+      "gate": "json-and-bounded-schema-claim-checks",
+      "outcome": "PASS",
+      "reason": "Parsed all nineteen Agriculture domain schema files as JSON and verified the documented counts, distinct identifiers, 4/15 namespace split, PROPOSED status, permissive additional-properties posture, and 4 empty-property plus 15 id-only scaffold grouping."
+    },
+    {
+      "gate": "generated-receipt-bounded-schema-shape",
+      "outcome": "PASS",
+      "reason": "Parsed this receipt as JSON; checked required and permitted fields, enums, hash and version patterns, artifact-path/hash parity, final artifact digest, prompt digest, timestamp, and pending human-review state against the generated-receipt schema surface."
+    },
+    {
+      "gate": "local-draft-2020-12-meta-schema-check",
+      "outcome": "SKIPPED",
+      "reason": "The isolated runtime did not provide the jsonschema package; no dependency was installed. The existing read-only schema-validation workflow performs this check on pull requests."
+    },
+    {
+      "gate": "repository-native-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "No repository scripts or dependencies were executed from the untrusted checkout. Existing read-only pull-request workflows will provide remote check results."
+    },
+    {
+      "gate": "policy-decision-record",
+      "outcome": "SKIPPED",
+      "reason": "No PolicyDecision record was identified or created for this documentation-only compatibility-index revision; policy_decisions therefore remains empty and the draft must not be treated as merge-authorized."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-target-and-flat-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/agriculture"
+    },
+    {
+      "id": "agriculture-domain-schema-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/domains/agriculture"
+    },
+    {
+      "id": "schema-home-and-domain-placement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "proposed-schema-home-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "agriculture-contract-fixture-test-validator-boundaries",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/contracts/domains/agriculture/README.md"
+    },
+    {
+      "id": "schema-and-domain-workflow-boundaries",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/schema-validation.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T07:49:29Z",
+  "emitter": "openai/codex-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation revision on a scoped review branch. The receipt records provenance, not correctness, approval, schema activation, policy permission, release readiness, or publication. The flat Agriculture schema lane remains pointer-only; no schema, contract, fixture, validator, policy, workflow, lifecycle record, source record, proof, release artifact, public route, or runtime behavior was changed. Human review and a policy-significant-lane decision remain pending."
+}
