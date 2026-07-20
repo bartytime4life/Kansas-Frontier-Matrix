@@ -1,0 +1,175 @@
+{
+  "receipt_id": "genrec-release-candidates-pdl-land-ownership-readme-f9004695",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "release/candidates/people-dna-land/land-ownership/README.md"
+  ],
+  "artifact_hashes": {
+    "release/candidates/people-dna-land/land-ownership/README.md": "sha256:f90046955279b72ac2554a08721b6c4cd34ee50c7d8e0c67fe7a90db80a03a79"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "filesystem inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(57).txt"
+    ],
+    "evidence_refs": [
+      "release/candidates/people-dna-land/land-ownership/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "release/candidates/people-dna-land/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "release/candidates/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "release/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "release/people-dna-land/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/doctrine/directory-rules.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/architecture/domain-placement-law.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/registers/DRIFT_REGISTER.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/domains/people-dna-land/RELEASE_INDEX.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/domains/people-dna-land/LAND_OWNERSHIP.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/domains/people-dna-land/SENSITIVITY.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/domains/people-dna-land/CHAIN_OF_TITLE_NOTES.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "docs/runbooks/people-dna-land/ROLLBACK_RUNBOOK.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "contracts/domains/people-dna-land/land-ownership/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "contracts/domains/people-dna-land/LandInstrument.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "contracts/evidence/evidence_bundle.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "contracts/policy/policy_decision.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "contracts/release/promotion_decision.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "contracts/release/release_manifest.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "schemas/contracts/v1/release/promotion_decision.schema.json@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "schemas/contracts/v1/release/release_manifest.schema.json@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "schemas/contracts/v1/domains/people-dna-land/release_manifest.schema.json@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "data/processed/people-dna-land/land-ownership/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "data/catalog/domain/people-dna-land/land-ownership/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "data/published/layers/people-dna-land/land-ownership/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "tests/domains/people-dna-land/assessor_as_title_denial_test/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "tools/validators/joins/person-parcel/README.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      ".github/CODEOWNERS@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      ".github/PULL_REQUEST_TEMPLATE.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      ".github/workflows/domain-people-dna-land.yml@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    ]
+  },
+  "truth_labels": {
+    "release/candidates/people-dna-land/land-ownership/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown_structure",
+      "outcome": "PASS",
+      "reason": "One document H1 outside fenced examples, balanced code fences, valid heading hierarchy, no trailing whitespace or merge markers, and final newline confirmed."
+    },
+    {
+      "gate": "repository_relative_links",
+      "outcome": "PASS",
+      "reason": "All 32 repository-relative link targets were read successfully at the pinned base commit."
+    },
+    {
+      "gate": "metadata_block",
+      "outcome": "PASS",
+      "reason": "Existing KFM Meta Block v2 identity and owners were preserved; version and update date reflect the substantive revision without allocating a new document ID."
+    },
+    {
+      "gate": "no_loss_and_current_parent",
+      "outcome": "PASS",
+      "reason": "The prior candidate-not-release, lifecycle, fail-closed, scope, dossier-template, open-verification, and rollback substance remains; the stale parent-greenfield statement was corrected from pinned repository evidence."
+    },
+    {
+      "gate": "evidence_and_truth_posture",
+      "outcome": "PASS",
+      "reason": "Repository facts are commit-pinned; proposals, unknowns, readiness holds, manifest-schema conflict, and incomplete implementation depth remain visibly labeled."
+    },
+    {
+      "gate": "sensitivity_and_publication_boundary",
+      "outcome": "PASS",
+      "reason": "No real person, address, parcel, title, DNA, restricted payload, credential, release approval, or publication action was introduced; living-person and private person-parcel cases remain fail closed."
+    },
+    {
+      "gate": "workflow_trigger_preflight",
+      "outcome": "PASS",
+      "reason": "Ordinary pull-request workflows may run; no workflow file is modified, and targeted repository inspection did not identify an operational pull_request_target, workflow_run, or self-hosted trigger for this bounded documentation change."
+    },
+    {
+      "gate": "repository_native_ci",
+      "outcome": "SKIPPED",
+      "reason": "No local repository checkout was used under API_ONLY_STRICT; ordinary GitHub checks will be observed on the draft pull request without dispatch, rerun, approval, or bypass."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-candidate-placement",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5#92-release--release-decisions"
+    },
+    {
+      "id": "domain-placement-people-dna-land",
+      "validated": true,
+      "evidence_ref": "docs/architecture/domain-placement-law.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5#2-canonical-kfm-domain-inventory"
+    },
+    {
+      "id": "land-ownership-evidence-not-title",
+      "validated": true,
+      "evidence_ref": "docs/domains/people-dna-land/LAND_OWNERSHIP.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    },
+    {
+      "id": "people-dna-land-release-posture",
+      "validated": true,
+      "evidence_ref": "docs/domains/people-dna-land/RELEASE_INDEX.md@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    },
+    {
+      "id": "promotion-decision-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/release/promotion_decision.schema.json@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    },
+    {
+      "id": "release-manifest-authority-conflict",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/release/release_manifest.schema.json@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    },
+    {
+      "id": "people-dna-land-domain-release-manifest-stub",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/domains/people-dna-land/release_manifest.schema.json@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    },
+    {
+      "id": "domain-readiness-workflow",
+      "validated": true,
+      "evidence_ref": ".github/workflows/domain-people-dna-land.yml@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    },
+    {
+      "id": "github-review-route",
+      "validated": true,
+      "evidence_ref": ".github/CODEOWNERS@13e1b27bf8cc4fdd4d88305532e69c444c07a4b5"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T03:10:35-05:00",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only revision of the land-ownership release-candidate lane. The receipt records generation provenance and pending human review; it is not factual authority, title evidence, a policy decision, release approval, or publication authority. No schema, contract, policy, validator, workflow, candidate record, release object, or public artifact was changed."
+}
