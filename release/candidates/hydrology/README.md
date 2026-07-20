@@ -60,6 +60,8 @@ notes:
 
 `release/candidates/hydrology/` is the Hydrology domain lane for assembling and reviewing candidate release packets before a governed promotion decision or `ReleaseManifest` handoff.
 
+A candidate is not a release.
+
 The lane exists to let reviewers answer a bounded question:
 
 > Does this exact Hydrology candidate have enough identified, resolvable, policy-safe, validated, reversible support to advance toward manifest preparation, or must it remain held, be repaired, be superseded, or be withdrawn?
