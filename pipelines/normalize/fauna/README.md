@@ -57,8 +57,8 @@ notes:
 
 ![status](https://img.shields.io/badge/status-draft-blue)
 ![root](https://img.shields.io/badge/root-pipelines%2F-0a7ea4)
-![placement](https://img.shields.io/badge/placement-CONFLICTED-orange)
-![implementation](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-orange)
+![scope](https://img.shields.io/badge/scope-fauna%20normalize%20adapter-2e7d32)
+![authority](https://img.shields.io/badge/authority-shared%20adapter%20only-0a7ea4)
 ![sensitivity](https://img.shields.io/badge/fauna%20sensitivity-fail%20closed-d62728)
 ![publication](https://img.shields.io/badge/publication-no%20direct%20publish-d62728)
 

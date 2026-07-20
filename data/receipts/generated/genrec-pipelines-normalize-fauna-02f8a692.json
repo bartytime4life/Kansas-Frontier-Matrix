@@ -5,7 +5,7 @@
     "pipelines/normalize/fauna/README.md"
   ],
   "artifact_hashes": {
-    "pipelines/normalize/fauna/README.md": "sha256:02f8a692b6054b6bcd0250b0e63078c6d8858cc5fb4bc1440fe486ec0e891346"
+    "pipelines/normalize/fauna/README.md": "sha256:d9675d1fc33a1dd81bdcd05ae1e098478dc673fa374aff7dcf07373a109b3f2c"
   },
   "model_identity": {
     "provider": "OpenAI",
