@@ -1,0 +1,217 @@
+{
+  "receipt_id": "genrec-packages-domains-archaeology-identity-readme-29c1f807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/domains/archaeology/identity/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/domains/archaeology/identity/README.md": "sha256:29c1f807d3d01bffee4d7c3f625afcc6126e89efdea6232b46e9e346065ddea4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-07-20-work-mode"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent - Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix - AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/packages/domains/archaeology/identity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/packages/domains/archaeology/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/packages/domains/archaeology/src/archaeology/identity.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/packages/identity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/domains/archaeology/IDENTITY_MODEL.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/domains/archaeology/ubiquitous-language.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/standards/canonicalization.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/contracts/domains/archaeology/domain_feature_identity.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/domains/archaeology/domain_feature_identity.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/contracts/domains/archaeology/site.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/contracts/domains/archaeology/archaeological_site.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tools/validators/evidence/validate_identity.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/fixtures/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(61).txt"
+    ]
+  },
+  "truth_labels": {
+    "packages/domains/archaeology/identity/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, immutable main snapshot, target blob, duplicate pull-request search, Directory Rules, pull-request contract, generated-receipt schema, and relevant Archaeology identity surfaces were inspected."
+    },
+    {
+      "gate": "base-drift-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Authoring and delivery preflight both resolved main to 9a29f659be82af7acbed4a2563ab8f96c1f84046, and the target remained at blob 8cdfb15d3f4ddac781d9d0888b91063ede60ba5c."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README confines this boundary to reusable domain adaptation while shared mechanics, doctrine, contracts, schemas, registries, policy, evidence, review, lifecycle, release, API, map, graph, search, and AI remain in owning roots."
+    },
+    {
+      "gate": "implementation-home-conflict",
+      "outcome": "PASS",
+      "reason": "The existing parent archaeology.identity placeholder and this subdirectory package description are explicitly marked as overlapping claims; implementation is blocked pending one accepted topology."
+    },
+    {
+      "gate": "bounded-package-inventory",
+      "outcome": "PASS",
+      "reason": "The target, parent package, parent identity module, shared identity package, validator, and exact subdirectory manifest/source/test/fixture probes were inspected. Absence claims remain bounded."
+    },
+    {
+      "gate": "contract-schema-grounding",
+      "outcome": "PASS",
+      "reason": "DomainFeatureIdentity semantics and its paired schema were inspected; the README preserves the draft semantic role and the schema's minimal permissive PROPOSED posture."
+    },
+    {
+      "gate": "canonicalization-and-profile-posture",
+      "outcome": "PASS",
+      "reason": "The draft identity model, shared identity package, and proposed canonicalization standard were inspected; SHA-256 baseline is distinguished from unaccepted JCS wire form, profile registry, namespace, and field realization."
+    },
+    {
+      "gate": "domain-naming-and-lifecycle-conflicts",
+      "outcome": "PASS",
+      "reason": "CandidateFeature versus ArchaeologicalSite separation, Site versus ArchaeologicalSite naming conflict, and external merge/split/correction authority are preserved without inventing canonical mappings."
+    },
+    {
+      "gate": "test-fixture-workflow-grounding",
+      "outcome": "PASS",
+      "reason": "Current Archaeology test and fixture roots and the read-only readiness-hold workflow were inspected; no identity test pass, validator, runtime, registry integration, or production readiness is claimed."
+    },
+    {
+      "gate": "authority-and-anti-collapse",
+      "outcome": "PASS",
+      "reason": "The README separates syntax, normalization, deterministic derivation, matching candidates, identity decisions, registry writes, evidence, review, policy, lifecycle, release, and public delivery."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No real location, site or collection identifier, access route, protected relationship, cultural detail, reviewer identity, controlled crosswalk, credential, or reconstructive example is introduced; hashing is not represented as redaction."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fences, KFM meta block, internal anchors, final newline, no trailing whitespace or tabs, and repository-relative links were checked."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "The README and receipt were checked for common private-key and token prefixes; no credential material was introduced."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed properties, artifact hash closure, truth labels, validation outcomes, citations, timestamp, and pending human-review state were checked against the repository pattern and generated-receipt schema."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no identity helper, parent module, shared mechanic, identifier profile, schema, contract, policy, validator, fixture payload, executable test, workflow, registry, lifecycle record, release, public resolver, or runtime is changed."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "SKIPPED",
+      "reason": "Remote branch, commit, changed-path, and pull-request verification occurs after branch publication and is reported in pull-request metadata."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions checks are observed after draft pull-request creation and were unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-DOCUMENTATION-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(61).txt"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-PARENT-IDENTITY-MODULE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/packages/domains/archaeology/src/archaeology/identity.py"
+    },
+    {
+      "id": "ARCHAEOLOGY-DOMAIN-FEATURE-IDENTITY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/contracts/domains/archaeology/domain_feature_identity.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-IDENTITY-MODEL",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/domains/archaeology/IDENTITY_MODEL.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-SITE-COMPATIBILITY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/contracts/domains/archaeology/site.md"
+    },
+    {
+      "id": "SHARED-IDENTITY-PACKAGE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/packages/identity/README.md"
+    },
+    {
+      "id": "KFM-CANONICALIZATION-STANDARD",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/docs/standards/canonicalization.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-TEST-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/tests/domains/archaeology/README.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-READINESS-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9a29f659be82af7acbed4a2563ab8f96c1f84046/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T17:18:32Z",
+  "emitter": "ai-builder/openai-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped review branch. It records the parent-module versus subdirectory implementation-home conflict, shared/domain identity separation, draft contract and permissive schema posture, unaccepted canonicalization and identifier profiles, candidate/site and Site/ArchaeologicalSite distinctions, external merge/split/correction authority, and public/internal identifier disclosure threats. It introduces no identity implementation, profile, namespace, algorithm, schema, contract, policy, validator, proof, fixture payload, executable test, workflow, registry mapping, lifecycle artifact, release record, public resolver, deployment, or runtime behavior. Human review remains pending; this receipt records provenance and does not authorize merge, identity decisions, release, or publication."
+}
