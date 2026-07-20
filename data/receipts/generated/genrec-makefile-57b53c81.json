@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-makefile-57b53c81",
+  "contract_version": "3.1.0",
+  "artifact_paths": [
+    "Makefile"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:57b53c81a3609cc0a2832b385b41e4e4961b2e948c46f7e93e0089cf74bf64ad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-20"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "GNU Make parsing and dry runs",
+      "workflow compatibility assertions"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "Pasted text(54).txt",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/.github/workflows/policy-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/.github/workflows/release-dry-run.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/.github/workflows/promotion-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/.github/workflows/hydrology-proof-slice.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/.github/workflows/policy-boundary-guards.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/apps/governed-api/src/governed_api/main.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/apps/explorer-web/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8d0f1705dce214f4c0c0fdd0ca62a3740cddca0d"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the repository, default branch, immutable base commit, target blob, write capability, and absence of an overlapping open Makefile pull request before mutation."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "The existing root Makefile remains the repository orchestration surface; no responsibility root or authority boundary was added, moved, or renamed."
+    },
+    {
+      "gate": "makefile-parse-and-help",
+      "outcome": "PASS",
+      "reason": "GNU Make parsed the updated file and executed the default help target successfully."
+    },
+    {
+      "gate": "command-dry-runs",
+      "outcome": "PASS",
+      "reason": "Dry runs verified that api-run delegates to the confirmed governed API module and governed-api-verify expands to the test suite plus fail-closed import-boundary check."
+    },
+    {
+      "gate": "workflow-coupled-readiness-markers",
+      "outcome": "PASS",
+      "reason": "Local assertions preserved the exact policy, release-dry-run, publish-check, and hydrology proof-slice sentinel text and the boundary-guards-ci command markers consumed by current workflows."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "Read Makefile back from agent/update-makefile-command-surface-20260720 after commit 8d0f1705dce214f4c0c0fdd0ca62a3740cddca0d and verified exact content equality and SHA-256."
+    },
+    {
+      "gate": "repository-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "The API, schema, contract, boundary, and MapLibre runtime commands require the full repository and declared dependencies; pull-request workflows remain the remote execution evidence."
+    },
+    {
+      "gate": "branch-protection-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending; this receipt is provenance only and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "base-makefile",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/Makefile"
+    },
+    {
+      "id": "workflow-command-contracts",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/.github/workflows/README.md"
+    },
+    {
+      "id": "governed-api-entrypoint",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/apps/governed-api/src/governed_api/main.py"
+    },
+    {
+      "id": "directory-rules-root-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/11f18c28aa91e177c4faf0d3529dacde0d8bcfe7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T08:40:40.970Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored update of the root Makefile command surface on a scoped review branch. It separates implemented targets from non-enforcing readiness markers, corrects validate help text, makes api-run delegate to the confirmed WSGI module, makes governed-api-verify fail on forbidden renderer/model-client imports, and narrows MapLibre cleanup to its explicit artifact path. Workflow-coupled sentinel bodies remain exact. The attached architecture manual's broader command matrix remains future guidance where the repository has no accepted executable. Human review is pending; this receipt is not proof, policy approval, release authority, or publication authority."
+}
