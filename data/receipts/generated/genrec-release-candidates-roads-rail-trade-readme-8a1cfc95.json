@@ -1,0 +1,203 @@
+{
+  "receipt_id": "genrec-release-candidates-roads-rail-trade-readme-8a1cfc95",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "release/candidates/roads-rail-trade/README.md"
+  ],
+  "artifact_hashes": {
+    "release/candidates/roads-rail-trade/README.md": "sha256:8a1cfc95c4c51ceab4dae92e1fc59dc66faf20f2fa7aa0e17bc96fded5fb82ec"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "filesystem inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(63).txt"
+    ],
+    "evidence_refs": [
+      "release/candidates/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "release/candidates/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "release/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "release/promotion_decisions/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "release/manifests/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "release/rollback_cards/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "release/correction_notices/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/doctrine/directory-rules.md@9a29f659be82af7acbed4a2563ab8f96c1f84046#9-data-and-release-roots",
+      "docs/doctrine/directory-rules.md@9a29f659be82af7acbed4a2563ab8f96c1f84046#12-domain-placement-law",
+      "docs/doctrine/directory-rules.md@9a29f659be82af7acbed4a2563ab8f96c1f84046#15-required-readme-contract",
+      "docs/architecture/domain-placement-law.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "control_plane/registers/DRIFT_REGISTER.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/registers/DRIFT_REGISTER.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/domains/roads-rail-trade/SENSITIVITY.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/domains/roads-rail-trade/HISTORIC_ROUTES.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/domains/roads-rail-trade/SOURCES.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/domains/roads-rail-trade/RELEASE_INDEX.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "configs/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "pipeline_specs/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "contracts/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "contracts/transport/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "schemas/contracts/v1/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "schemas/contracts/v1/transport/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "policy/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "fixtures/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "tests/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "tools/validators/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "contracts/release/promotion_decision.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "contracts/release/release_manifest.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "schemas/contracts/v1/release/promotion_decision.schema.json@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "schemas/contracts/v1/release/release_manifest.schema.json@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/adr/ADR-0018-promotion-gate-sequence.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/adr/ADR-0024-steward-separation-of-duties-for-release.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      "docs/runbooks/roads-rail-trade/PROMOTION_RUNBOOK.md@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      ".github/CODEOWNERS@9a29f659be82af7acbed4a2563ab8f96c1f84046",
+      ".github/workflows/domain-roads-rail-trade.yml@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    ]
+  },
+  "truth_labels": {
+    "release/candidates/roads-rail-trade/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown_structure",
+      "outcome": "PASS",
+      "reason": "One document H1 outside fenced examples, required folder README sections in canonical order, consecutive heading hierarchy, unique heading slugs, balanced fences, no trailing whitespace, tabs, merge markers, or missing local anchors, and a final newline were confirmed."
+    },
+    {
+      "gate": "repository_relative_links",
+      "outcome": "PASS",
+      "reason": "All 31 repository-relative file targets in the revised README were read successfully at the pinned base commit; all 12 local fragment links resolved to document headings."
+    },
+    {
+      "gate": "metadata_block",
+      "outcome": "PASS",
+      "reason": "The existing doc_id and unresolved role placeholders were preserved; version, truth posture, evidence snapshot, tags, and update date now reflect the repository-grounded revision without inventing steward assignments."
+    },
+    {
+      "gate": "directory_rules_and_authority",
+      "outcome": "PASS",
+      "reason": "The README follows the required folder README contract, identifies release/ as the decision root, preserves data/published/ as the released-artifact root, and uses roads-rail-trade as the canonical release-lane segment."
+    },
+    {
+      "gate": "schema_contract_drift",
+      "outcome": "PASS",
+      "reason": "Parallel roads-rail-trade and transport schema/contract surfaces remain explicitly CONFLICTED / NEEDS VERIFICATION; the README does not select, mirror, rename, or migrate an authority path."
+    },
+    {
+      "gate": "evidence_and_truth_posture",
+      "outcome": "PASS",
+      "reason": "Repository facts are commit-pinned; proposals, scaffolds, path conflicts, ownership gaps, inventory gaps, semantic-validation holds, and release-enforcement gaps remain visibly labeled."
+    },
+    {
+      "gate": "sensitivity_and_publication_boundary",
+      "outcome": "PASS",
+      "reason": "The revision preserves cultural/sovereignty, critical-infrastructure, exact-location, legal-access, operational-status, uncertainty, source-role, and cross-domain fail-closed boundaries without including real payloads or sensitive operational detail."
+    },
+    {
+      "gate": "workflow_trigger_preflight",
+      "outcome": "PASS",
+      "reason": "The inspected domain workflow uses ordinary pull-request and push events with read-only repository permissions; it performs bounded static readiness checks and explicit holds. No workflow, code, dependency, release, deployment, or publication path is changed."
+    },
+    {
+      "gate": "generated_receipt_schema",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON, binds the exact README SHA-256 digest, and satisfies the current repository generated-receipt schema with human review pending."
+    },
+    {
+      "gate": "repository_native_ci",
+      "outcome": "SKIPPED",
+      "reason": "No pull request was created because recent draft documentation PRs, including PR 1481, were merged externally before independent review completed. The safe delivery stops at a remote review branch."
+    },
+    {
+      "gate": "human_review_and_mergeability",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending. This receipt is provenance but is not merge approval, release authority, or publication evidence."
+    }
+  ],
+  "policy_decisions": [
+    "documentation-only:no PolicyDecision or release decision was made; existing fail-closed Roads/Rail/Trade source-role, time, uncertainty, rights, sensitivity, legal-access, operational-status, evidence, release, correction, and rollback posture was preserved pending human review"
+  ],
+  "citations": [
+    {
+      "id": "directory-rules-release-candidate-placement",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@9a29f659be82af7acbed4a2563ab8f96c1f84046#9-data-and-release-roots"
+    },
+    {
+      "id": "domain-placement-roads-rail-trade-segment",
+      "validated": true,
+      "evidence_ref": "docs/architecture/domain-placement-law.md@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "roads-rail-trade-domain-boundary",
+      "validated": true,
+      "evidence_ref": "docs/domains/roads-rail-trade/README.md@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "roads-rail-trade-sensitivity",
+      "validated": true,
+      "evidence_ref": "docs/domains/roads-rail-trade/SENSITIVITY.md@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "roads-rail-trade-historic-route-posture",
+      "validated": true,
+      "evidence_ref": "docs/domains/roads-rail-trade/HISTORIC_ROUTES.md@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "roads-rail-trade-release-posture",
+      "validated": true,
+      "evidence_ref": "docs/domains/roads-rail-trade/RELEASE_INDEX.md@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "promotion-decision-contract-and-enum",
+      "validated": true,
+      "evidence_ref": "contracts/release/promotion_decision.md@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "release-manifest-thin-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/release/release_manifest.schema.json@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "domain-workflow-readiness-holds",
+      "validated": true,
+      "evidence_ref": ".github/workflows/domain-roads-rail-trade.yml@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    },
+    {
+      "id": "github-review-route",
+      "validated": true,
+      "evidence_ref": ".github/CODEOWNERS@9a29f659be82af7acbed4a2563ab8f96c1f84046"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T12:15:19-05:00",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only revision of the Roads/Rail/Trade release-candidate README. It expands the compact lane into a repository-grounded candidate contract; preserves release-versus-published, receipt-versus-proof, source-role, time, uncertainty, graph-derivative, cross-domain, legal-access, operational-status, cultural/sovereignty, critical-infrastructure, correction, and rollback boundaries; records schema/contract topology conflict and workflow readiness holds; and leaves human review pending. No candidate, payload, source, schema, contract, policy, validator, fixture, test, workflow, manifest, release, deployment, or public artifact was changed. No pull request was created because the repository has repeatedly merged draft documentation PRs externally before review completed."
+}
