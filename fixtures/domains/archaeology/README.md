@@ -16,6 +16,7 @@ This directory groups Archaeology-domain fixture lanes used by bounded tests, va
 | `synthetic_archaeological_site/` | Synthetic site-shaped examples. | README present; payload inventory NEEDS VERIFICATION. |
 | `synthetic_candidate_feature/` | Synthetic candidate-shaped examples. | README present; payload inventory NEEDS VERIFICATION. |
 | `synthetic_publication_transform_receipt/` | Synthetic transform-receipt-shaped examples. | README present; payload inventory NEEDS VERIFICATION. |
+| `synthetic_source_descriptor/` | Intended reusable synthetic SourceDescriptor examples. | README present; current `shpo_like.json` is a PROPOSED inventory placeholder, not a validated SourceDescriptor. |
 | `synthetic_steward_review/` | Synthetic review-shaped examples. | README present; payload inventory NEEDS VERIFICATION. |
 | `valid/` | Positive examples for bounded checks. | README present; payload inventory NEEDS VERIFICATION. |
 
@@ -69,6 +70,6 @@ Do not use this fixture root for:
 ## Verification status
 
 - Parent README: updated from a greenfield stub.
-- Child README coverage: PARTIAL; based on current search and recent updates.
+- Child README filename coverage: COMPLETE for the nine current direct child directories; §15 content conformance, payload coverage, and consumer coverage remain partial.
 - Payload inventory: NEEDS VERIFICATION.
 - Tests and validators: NOT RUN.
