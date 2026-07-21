@@ -1,144 +1,366 @@
 # Ecology fixtures
 
-`fixtures/ecology/`
+> **One-line purpose.** `fixtures/ecology/` holds small, synthetic, public-safe examples that intentionally exercise ecological behavior across more than one KFM domain without becoming a new domain, a truth store, or a publication surface.
 
-Status: draft / fixture root index / cross-domain synthetic ecology examples.
+**Path:** `fixtures/ecology/`  
+**Authority level:** implementation-supporting fixture directory under the canonical `fixtures/` responsibility root  
+**Document status:** draft, repository-grounded directory README  
+**Truth posture:** cite-or-abstain; fixture behavior is illustrative until a named consumer and executable check verify it  
+**Last reviewed:** 2026-07-21
 
-This directory is for small synthetic ecology fixture examples that cut across Habitat, Flora, Fauna, Hydrology, Soil, Hazards, and related map/UI surfaces. Use it for toy ecological context examples, public-safe derivative examples, expected-output pairs, governed API dry-runs, Evidence Drawer examples, Focus Mode examples, renderer checks, source-role checks, policy dry-runs, correction checks, rollback checks, and documentation examples when the fixture is broader than one domain-specific fixture lane.
+## Quick navigation
 
-These files are examples only. They are not source records, lifecycle data, SourceDescriptors, EvidenceBundles, RunReceipts, proof packs, policy decisions, review approvals, release state, public API material, public map material, public tiles, species occurrence truth, habitat truth, flora truth, fauna truth, hydrology truth, soil truth, source authority, evidence authority, policy authority, release authority, AI authority, or published artifacts.
+- [Purpose](#purpose)
+- [Authority level](#authority-level)
+- [Status](#status)
+- [Repository fit](#repository-fit)
+- [What belongs here](#what-belongs-here)
+- [What does not belong here](#what-does-not-belong-here)
+- [Inputs](#inputs)
+- [Outputs](#outputs)
+- [Cross-domain ownership model](#cross-domain-ownership-model)
+- [Directory map](#directory-map)
+- [Fixture design contract](#fixture-design-contract)
+- [Scenario and outcome matrix](#scenario-and-outcome-matrix)
+- [Validation](#validation)
+- [Review burden](#review-burden)
+- [Maintenance and correction](#maintenance-and-correction)
+- [Related folders and doctrine](#related-folders-and-doctrine)
+- [ADRs](#adrs)
+- [Verification status](#verification-status)
 
-## Fixture root posture
+## Purpose
 
-Use this lane as a cross-domain ecology fixture boundary, not as a new canonical domain. Domain-specific examples should normally live under `fixtures/domains/<domain>/`. This root is for synthetic ecology examples that intentionally exercise joins, context projections, combined map behavior, or public-safe derivative behavior across domain boundaries.
+Use this directory for bounded ecology examples whose value comes from exercising a relationship across domain boundaries, such as:
 
-Ecology fixtures may demonstrate context, evidence refs, source-role labels, rights posture, review posture, release posture, correction posture, rollback posture, finite outcomes, and renderer/API behavior. They do not create source authority, evidence closure, policy approval, release approval, public-map authority, tile authority, implementation proof, or published output.
+- Habitat context joined to a public-safe Flora or Fauna derivative;
+- Habitat and Hydrology context shown together in a governed map or Evidence Drawer example;
+- synthetic ecological source-role conflicts or missing-evidence states;
+- public-safe generalization, denial, hold, abstention, correction, or rollback scenarios that span multiple domain lanes;
+- renderer, governed-API, Evidence Drawer, Focus Mode, or documentation examples that cannot be owned accurately by one domain fixture lane.
 
-Habitat doctrine treats Habitat as a context lane that owns land cover, ecological systems, habitat patches, suitability surfaces, connectivity, restoration opportunity, stewardship zones, and public-safe derivatives. It explicitly does not own species occurrence truth, plant or animal taxonomy, watershed truth, soil identity, or land-management instruction. Ecology fixtures must preserve those ownership boundaries and must not collapse context into truth.
+This directory is a **cross-domain fixture boundary**, not a canonical Ecology domain. When one domain clearly owns an object, source family, policy context, or expected output, place the fixture under `fixtures/domains/<domain>/` instead.
 
-## Placement basis
+## Authority level
 
-This lane belongs under `fixtures/` because it contains synthetic examples and runtime/checking inputs. It is not a lifecycle data root, schema root, contract root, pipeline root, policy root, receipt root, proof root, release root, source-registry root, catalog root, triplet root, tile root, domain root, or publication root.
+`fixtures/ecology/` is **implementation-supporting and non-authoritative**.
 
-The root fixture README says `fixtures/` is for runtime fixture inputs and separates it from `tests/fixtures/`, `artifacts/`, and `data/`. It also says RAW, WORK, or QUARANTINE data, sensitive exact geometry, and canonical-truth treatment do not belong here.
+It may demonstrate intended behavior, but it does not define or prove:
 
-## Relationship to domain fixture lanes
+- object meaning;
+- machine shape;
+- source authority;
+- evidence closure;
+- policy approval;
+- review approval;
+- release state;
+- publication authority;
+- public map or API truth;
+- AI authority;
+- implementation completeness.
 
-| Lane | Relationship |
-|---|---|
-| `../domains/habitat/` | Primary adjacent fixture lane for habitat, land-cover, ecoregions, uncertainty, watcher, and habitat-fauna thin-slice examples. |
-| `../domains/flora/` | Primary adjacent fixture lane for plant taxa, occurrences, public-safe occurrence derivatives, vegetation communities, phenology, source descriptors, and Flora decision envelopes. |
-| `../domains/fauna/` | Expected adjacent fixture lane for animal occurrence, species, sensitivity, and habitat-fauna examples if present. |
-| `../domains/hydrology/` | Adjacent fixture lane for watershed, evidence-bundle, decision-envelope, RunReceipt, source, valid, invalid, negative, and golden Hydrology examples. |
-| `../domains/soil/` | Expected adjacent fixture lane for soil context and soil-map-unit examples if present. |
-| `../domains/hazards/` | Adjacent fixture lane for environmental hazard context, trust-membrane, drawer, Focus Mode, layer-manifest, and invalid examples. |
-| `../domains/` | Domain-specific fixture homes should be preferred when the object family has a clear owner. |
+Authority remains separated by responsibility root:
 
-## When to use this root vs domain-specific fixture lanes
-
-| Use case | Preferred lane | Reason |
+| Concern | Owning root | Fixture relationship |
 |---|---|---|
-| Habitat object, land-cover observation, ecoregion, uncertainty, watcher, or habitat-fauna thin slice | `../domains/habitat/` | Habitat already has a populated fixture root and child lanes. |
-| Flora object, plant taxon, plant occurrence, vegetation community, phenology, or Flora source example | `../domains/flora/` | Flora already has a populated fixture root and child lanes. |
-| Hydrology evidence, watershed, source, RunReceipt, or decision-envelope example | `../domains/hydrology/` | Hydrology has a populated fixture root and object-specific lanes. |
-| Cross-domain ecology example with no single owner yet | `./` | This root can stage bounded synthetic examples until ownership is clear. |
-| Stable expected output for a cross-domain ecology fixture | `./golden/` if added, or a documented expected-output pair | Expected outputs must remain synthetic and non-release. |
-| Real source material, lifecycle data, actual EvidenceBundle, actual RunReceipt, release manifest, public tile, or published map output | Not fixtures | Route through the governed responsibility root and lifecycle. |
+| Human doctrine and domain boundaries | `docs/` | This README cites and applies those boundaries. |
+| Object meaning | `contracts/` | Fixtures may illustrate contracts but do not define them. |
+| Machine shape | `schemas/` | Fixtures may exercise schemas but do not establish schema authority. |
+| Allow, deny, restrict, hold, or abstain rules | `policy/` | Fixtures may model policy inputs and expected outcomes only. |
+| Runtime or regression enforcement | `tests/`, validators under `tools/` | A named consumer must verify the fixture before behavior is called implemented. |
+| Lifecycle data | `data/` | Fixtures are never RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data. |
+| Receipts and proofs | governed receipt and proof homes | Toy receipt-shaped or proof-shaped examples are not actual receipts or proofs. |
+| Release decisions | `release/` | Fixtures cannot promote, publish, correct, withdraw, or roll back a real release. |
 
-## Related references
+## Status
 
-- `../README.md`
-- `../domains/habitat/README.md`
-- `../domains/flora/README.md`
-- `../domains/hydrology/README.md`
-- `../domains/hazards/README.md`
-- `../../docs/domains/habitat/README.md`
-- `../../docs/domains/habitat/ARCHITECTURE.md`
-- `../../docs/domains/habitat/sublanes/ecoregions.md`
-- `../../docs/domains/habitat/sublanes/land_cover.md`
-- `../../docs/domains/flora/API_CONTRACTS.md`
-- `../../docs/domains/flora/SENSITIVITY.md`
-- `../../docs/domains/fauna/ARCHITECTURE.md`
-- `../../docs/domains/hydrology/API_CONTRACTS.md`
-- `../../docs/domains/hazards/API_CONTRACTS.md`
-- `../../contracts/domains/habitat/`
-- `../../contracts/domains/flora/`
-- `../../contracts/domains/fauna/`
-- `../../contracts/domains/hydrology/`
-- `../../schemas/contracts/v1/domains/habitat/`
-- `../../schemas/contracts/v1/domains/flora/`
-- `../../schemas/contracts/v1/domains/fauna/`
-- `../../schemas/contracts/v1/domains/hydrology/`
-- `../../policy/domains/habitat/`
-- `../../policy/domains/flora/`
-- `../../policy/domains/fauna/`
-- `../../policy/sensitivity/habitat/`
-- `../../policy/sensitivity/flora/`
-- `../../policy/sensitivity/fauna/`
-- `../../data/registry/sources/habitat/`
-- `../../data/registry/sources/flora/`
-- `../../data/registry/sources/fauna/`
-- `../../release/manifests/habitat/`
-- `../../release/manifests/flora/`
-- `../../release/manifests/fauna/`
-- `../../docs/doctrine/directory-rules.md`
+| Surface | Status | Evidence-bounded interpretation |
+|---|---|---|
+| Directory path | **CONFIRMED** | `fixtures/ecology/README.md` exists on the inspected base commit. |
+| This README | **CONFIRMED file / draft guidance** | Revised in place as the directory boundary and routing document. |
+| Parent fixture boundary | **CONFIRMED** | `fixtures/README.md` distinguishes runtime and synthetic fixtures from lifecycle data, generated artifacts, and test-only fixtures. |
+| Adjacent Habitat, Flora, and Fauna fixture roots | **CONFIRMED** | Their directory READMEs exist and document domain-specific fixture ownership. |
+| Child files or child directories directly under `fixtures/ecology/` | **UNKNOWN** | No complete non-truncated directory listing was available in this update. Do not infer payload presence from this README. |
+| Named ecology validator or test consumer on the inspected base | **NEEDS VERIFICATION** | No current executable consumer was verified for this directory. |
+| Repository-wide validator entry point | **CONFIRMED placeholder only** | `tools/validate_all.py` exists but contains placeholder prose rather than an executable validation suite at the inspected base. |
+| CI execution, required checks, or branch protection | **UNKNOWN** | Workflow documentation exists, but current run results and required-check settings were not established by this README update. |
 
-## Accepted material
+## Repository fit
 
-This root may contain:
+Directory Rules place synthetic, golden, valid, and invalid examples under the canonical `fixtures/` responsibility root. They also require cross-domain material to remain under the lowest common responsibility root instead of being forced into an arbitrary domain lane.
+
+The relationship is:
+
+```text
+fixtures/
+├── README.md                 # parent fixture boundary
+├── ecology/
+│   └── README.md             # this cross-domain routing boundary
+└── domains/
+    ├── habitat/              # domain-owned Habitat examples
+    ├── flora/                # domain-owned Flora examples
+    └── fauna/                # domain-owned Fauna examples
+```
+
+The tree above shows only paths verified for this README update. It does not assert a complete recursive inventory.
+
+### `fixtures/` versus `tests/fixtures/`
+
+Use `fixtures/ecology/` for reusable runtime, documentation, renderer, governed-API, and cross-domain synthetic examples. Use `tests/fixtures/` for deterministic test-only inputs when the repository's test structure owns the fixture exclusively.
+
+Do not duplicate the same fixture in both homes without a documented canonical source and synchronization rule.
+
+## What belongs here
+
+This directory may contain:
 
 - small synthetic `*.input.json`, `*.valid.json`, `*.invalid.json`, `*.negative.json`, `*.expected.json`, `*.golden.json`, `*.json`, `*.geojson`, `*.jsonl`, `*.yaml`, `*.yml`, `*.svg`, or `*.md` examples;
-- toy ecological context refs, habitat refs, taxon refs, occurrence refs, watershed refs, soil refs, hazard refs, source refs, evidence refs, policy refs, review refs, release refs, correction refs, rollback refs, finite outcomes, and renderer/API examples;
-- toy cross-domain examples for habitat-flora, habitat-fauna, habitat-hydrology, habitat-soil, ecology-hazards, or map/UI ecology overlays;
-- toy public-safe derivatives where protected or restricted ecology details are withheld, generalized, delayed, denied, or routed to review;
-- expected-output examples when a synthetic input becomes stable enough to anchor a regression check;
-- README files documenting fixture intent, boundaries, consumer checks, and verification state.
+- toy cross-domain references among Habitat, Flora, Fauna, Hydrology, Soil, Hazards, Agriculture, or map/UI contexts;
+- synthetic source-role, evidence, rights, sensitivity, policy, review, freshness, release, correction, and rollback states;
+- public-safe generalized geometry or intentionally geometry-free cases;
+- paired synthetic input and expected-output examples;
+- finite outcome examples such as `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` when the expected reason is explicit;
+- README files that document a bounded child fixture family, its owner, consumer, expected outcome, and verification state.
 
-## Exclusions
+A fixture belongs here only while its **cross-domain nature is essential**. Stable domain-owned examples should move to the owning domain fixture lane.
 
-Do not use this root for real records, source exports, lifecycle data, actual EvidenceBundles, actual RunReceipts, actual source descriptors, proof packs, release manifests, implementation code, public API material, public map material, public tiles, direct model runtime output, source authority, evidence authority, policy authority, release authority, protected exact locations, restricted ecological joins, canonical ecology truth, Habitat truth, Flora truth, Fauna truth, Hydrology truth, Soil truth, Hazards truth, or published artifacts.
+## What does not belong here
 
-## Shared fixture design rules
+Do not place any of the following under `fixtures/ecology/`:
 
-- Keep examples synthetic, compact, deterministic, reviewable, and public-safe.
-- Prefer the most specific domain fixture lane when ownership is clear.
-- Use toy IDs, toy refs, toy taxa, toy sources, toy timestamps, toy hashes, toy evidence references, toy geometries, and toy expected outputs.
-- Make fixture posture explicit: valid, invalid, negative, expected output, context-only, proof-support, source-role-preserved, source-role-conflicted, evidence-resolved, evidence-missing, rights-visible, rights-missing, review-required, deny, hold, abstain, release-ready, release-blocked, correction-visible, rollback-ready, or blocked render.
-- Keep source role, evidence state, rights state, review state, release state, correction state, rollback state, and expected outcome explicit where material.
-- Pair each stable input with an expected output when practical.
-- Keep schema validity, semantic validity, source-role validity, evidence support, citation safety, policy admissibility, release posture, renderer safety, trust-membrane safety, correction posture, rollback posture, and expected-output state separate.
-- Do not treat fixture success as implementation proof, source authority, evidence closure, policy approval, release state, public-map authority, tile authority, or published output.
+- real source records, live upstream payloads, source exports, scraped material, or field observations;
+- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED lifecycle data;
+- authoritative taxonomic, occurrence, habitat, hydrologic, soil, hazard, agriculture, or land records;
+- actual `SourceDescriptor`, `EvidenceBundle`, `RunReceipt`, proof pack, `PolicyDecision`, review record, release manifest, rollback card, correction notice, or withdrawal notice;
+- contracts, schemas, policy rules, validator implementation, connector code, pipeline code, application code, or release tooling;
+- public API material, public map material, public tiles, direct model output, or published artifacts;
+- credentials, private data, restricted source content, protected exact locations, or reconstructive clues that could expose sensitive ecological information;
+- a second canonical home for any schema, contract, policy, source, registry, receipt, proof, release, catalog, or publication object.
 
-## Expected fixture families
+If a file is real, sensitive, rights-unclear, or lifecycle-bearing, remove it from the fixture path and route it through the governed intake or quarantine process.
 
-| Scenario family | Preferred lane | Expected posture |
+## Inputs
+
+Accepted inputs are intentionally bounded:
+
+- manually authored synthetic scenarios;
+- public-safe toy geometry created specifically for testing or documentation;
+- minimized and transformed examples whose source material is no longer present and whose transformation is documented;
+- expected-output pairs derived from an agreed contract, schema, policy, validator, renderer, or governed-API behavior;
+- cross-domain scenario definitions supplied by maintainers or reviewers.
+
+Each stable fixture should identify, in the file or its child README:
+
+1. whether it is entirely synthetic;
+2. the scenario owner or owning domains;
+3. its intended consumer;
+4. its expected outcome;
+5. any public-safety transform applied;
+6. the evidence, policy, review, release, correction, and rollback states it is designed to exercise.
+
+Do not copy real records into this lane merely to make a fixture realistic.
+
+## Outputs
+
+This directory may support downstream:
+
+- contract and schema checks;
+- policy dry-runs;
+- validator and regression tests;
+- governed-API dry-runs;
+- MapLibre renderer checks;
+- Evidence Drawer examples;
+- Focus Mode finite-outcome examples;
+- documentation and review examples;
+- correction and rollback drills;
+- expected-output comparisons.
+
+A fixture output remains an example. A passing consumer does not, by itself, prove source admissibility, evidence closure, public safety, release readiness, publication, or system-wide correctness.
+
+## Cross-domain ownership model
+
+KFM domain boundaries must remain visible inside a cross-domain fixture.
+
+| Information represented | Owning lane | Ecology fixture rule |
 |---|---|---|
-| Habitat ecoregion or land-cover context | `../domains/habitat/` | Validation pass, review-ready, or expected output. |
-| Flora occurrence or public-safe plant derivative | `../domains/flora/` | Validation pass, review-ready, generalized, denied, or review-required. |
-| Fauna occurrence or species-related public-safe derivative | `../domains/fauna/` if present; otherwise this root until sorted | Validation pass, generalized, denied, or review-required. |
-| Habitat-Flora cross-domain example | `./` until ownership is clear, then domain-specific lane | Context-only, evidence-resolved, or review-required. |
-| Habitat-Fauna thin slice | `../domains/habitat/habitat_fauna_thin_slice/` | Proof-support or review-ready where present. |
-| Habitat-Hydrology wetland/watershed context | `./` or `../domains/hydrology/` depending on owner | Context-only, evidence-resolved, or bounded answer. |
-| Restricted exact location appears | Domain-specific invalid lane or this root until sorted | `DENY`, blocked render, or validation failure. |
-| Stable expected cross-domain output | Future `golden/` or documented expected-output pair | Deterministic expected output, not release. |
+| Habitat patch, land cover, ecological system, suitability, connectivity, restoration opportunity | Habitat | May be the context backbone; must remain modeled or observed according to its source role. |
+| Plant taxon, specimen, plant occurrence, rare-plant or vegetation-community record | Flora | Reference only through a synthetic or public-safe Flora-shaped object; do not transfer Flora authority to Habitat. |
+| Animal taxon, occurrence, seasonal range, mortality, disease, or sensitive-species record | Fauna | Use toy or generalized data; preserve geoprivacy and deny reconstructive detail. |
+| Watershed, stream, wetland hydrology, gauge, or water observation | Hydrology | Use as context through explicit references; Habitat does not become hydrologic truth. |
+| Soil map unit, component, horizon, or property | Soil | Use as substrate context only; retain Soil ownership. |
+| Hazard observation, model, warning context, exposure, or resilience indicator | Hazards | Keep observed, modeled, regulatory, and operational roles distinct. |
+| Cross-domain relationship or composite public-safe presentation | The responsibility root that owns the artifact | `fixtures/ecology/` may hold the synthetic example when no single domain can own it accurately. |
 
-## Maintenance notes
+### Source-role anti-collapse
 
-- Update this README when child lanes, payload files, validators, tests, helper scripts, expected-output names, or consumer contracts are added.
-- Link each stable fixture to the exact check and consumer that uses it.
-- Move stable domain-specific examples to the owning domain fixture lane once ownership is clear.
-- If expected behavior stabilizes, update the paired input, expected output, consumer notes, and this root index together.
-- Keep payloads small enough for normal code review.
-- If a fixture accidentally includes real source material, protected exact locations, restricted ecology data, actual proof material, or release material, move it out of this root, quarantine it through the governed lifecycle or registry process, and record the correction path.
+Keep source roles explicit. A modeled suitability surface is not an occurrence. A habitat context layer is not a regulatory designation. A generalized derivative is not the exact source record. A rendered map feature is not evidence authority.
+
+## Directory map
+
+At the inspected base, this README is the only path under `fixtures/ecology/` verified in this update.
+
+Do not add a child directory merely because a scenario is ecological. Add one only when:
+
+- multiple related fixtures share one bounded purpose;
+- the child has a clear owner and consumer;
+- the expected outcomes are documented;
+- the child README preserves this directory's non-authoritative posture;
+- a domain-specific lane would be less accurate.
+
+Recommended child names, when evidence supports creating them, should describe the scenario rather than inventing a new authority family. Examples include `habitat_flora_join/`, `habitat_hydrology_context/`, `public_safe_overlay/`, or `golden/`. These names are examples, not claims that the directories exist.
+
+## Fixture design contract
+
+A reviewable ecology fixture should follow these rules:
+
+1. **Synthetic by default.** Use toy identifiers, toy taxa, toy sources, toy timestamps, toy hashes, and toy geometry.
+2. **Small and deterministic.** Keep files compact enough for ordinary code review and reproducible without a live network.
+3. **Ownership visible.** Identify which domain owns every consequential object or assertion.
+4. **Source role visible.** Preserve observed, modeled, regulatory, aggregate, administrative, candidate, or synthetic posture where material.
+5. **State dimensions separated.** Schema validity, semantic validity, evidence resolution, citation validity, rights, sensitivity, policy, review, freshness, release, renderer safety, correction, rollback, and expected output are separate checks.
+6. **Expected outcome explicit.** State the expected finite outcome and reason code or failure class when the consumer contract supports one.
+7. **Public safety first.** Prefer no geometry; otherwise use clearly toy or generalized geometry that cannot expose protected details.
+8. **Input and output paired.** Pair stable inputs with expected outputs when practical.
+9. **Consumer linked.** Do not call a fixture verified until its exact validator, test, renderer check, governed-API dry-run, or documentation consumer is identified.
+10. **No authority upgrade.** A fixture never becomes evidence, policy, review, release, or publication authority by repetition or test success.
+
+### Suggested naming
+
+Use names that reveal both scenario and role:
+
+```text
+<scenario>.input.json
+<scenario>.expected.json
+<scenario>.valid.json
+<scenario>.invalid.json
+<scenario>.geojson
+<scenario>.md
+```
+
+Avoid names such as `final.json`, `real.json`, `production.json`, or `authoritative.json` in this fixture lane.
+
+## Scenario and outcome matrix
+
+| Scenario | Expected posture | Preferred location |
+|---|---|---|
+| Habitat-only land-cover or ecoregion example | Valid, invalid, expected output, or watcher scenario | `../domains/habitat/` |
+| Flora-only occurrence, taxon, phenology, source, or public-safe plant derivative | Valid, generalized, denied, or review-required | `../domains/flora/` |
+| Fauna-only occurrence, range, stale-source, or sensitive-denial example | Valid, generalized, `DENY`, `ABSTAIN`, or review-required | `../domains/fauna/` |
+| Habitat × Flora synthetic context join | Context-only, evidence-resolved, or review-required | This directory until ownership becomes clear. |
+| Habitat × Fauna public-safe proof-support example | Proof-support, generalized, denied, or review-ready | Prefer Habitat's existing thin-slice lane when it owns the scenario. |
+| Habitat × Hydrology wetland or watershed context | Context-only, bounded `ANSWER`, or `ABSTAIN` | This directory or the Hydrology fixture lane, according to ownership. |
+| Ecology × Hazards overlay | Context-only, stale, modeled, denied, or review-required | This directory when the combined presentation is the subject. |
+| Missing evidence or unresolved citation | `ABSTAIN` | This directory or the owning domain's invalid lane. |
+| Rights or sensitivity unresolved | `DENY`, hold, or quarantine-required | Owning domain invalid lane when possible; this directory only for cross-domain behavior. |
+| Consumer or validator fails unexpectedly | `ERROR` | Pair the input with an expected failure artifact only after the failure contract is defined. |
+| Stable cross-domain expected output | Deterministic expected output, never release state | A verified child `golden/` lane or a documented sibling pair. |
+
+## Validation
+
+### Required content checks
+
+Before accepting a fixture or README change, verify:
+
+- the file is synthetic or demonstrably public-safe;
+- no credentials, private data, real source payload, protected location, or reconstructive clue is present;
+- the path is correct for the artifact's primary responsibility;
+- a domain-specific fixture lane is not the more accurate owner;
+- source role, evidence state, rights state, sensitivity state, review state, release state, correction state, and expected outcome are explicit where material;
+- JSON, GeoJSON, YAML, Markdown, or other syntax is valid for the file type;
+- stable inputs and expected outputs agree;
+- relative links in README files resolve;
+- the named consumer exists and exercises the intended success or failure path;
+- no fixture is described as proof of publication, source authority, or implementation completeness.
+
+### Repository-native validation posture
+
+No executable repository-wide validation command was confirmed for this lane at the inspected base. `tools/validate_all.py` is present only as a placeholder, so this README intentionally does not publish a command that would imply working validation.
+
+When an ecology fixture consumer is implemented, document its exact repository path and supported command here. Keep live-network checks separate from the no-network default.
+
+### What a passing check does not prove
+
+A passing fixture check proves only the behavior exercised by that check against those inputs. It does not prove:
+
+- source accuracy or currency;
+- rights or redistribution permission;
+- absence of sensitive joins outside the fixture;
+- policy completeness;
+- EvidenceBundle closure for real claims;
+- release approval;
+- public safety of unrelated records;
+- production runtime or deployment behavior.
+
+## Review burden
+
+`.github/CODEOWNERS` routes `/fixtures/` changes to `@bartytime4life` at the inspected base. CODEOWNERS is a review-routing mechanism, not proof that review occurred or that policy-significant separation of duties was satisfied.
+
+Additional review should be requested when a change affects:
+
+- **domain meaning:** the owner of every affected domain lane;
+- **sensitivity or geoprivacy:** the relevant policy or sensitivity reviewer;
+- **rights or source terms:** a source or rights reviewer;
+- **finite outcomes or public behavior:** governed-API, Evidence Drawer, Focus Mode, or UI maintainers;
+- **release, correction, or rollback semantics:** release-governance reviewers.
+
+Do not encode unverified role names or teams as executable CODEOWNERS entries.
+
+## Maintenance and correction
+
+- Update this README when verified child lanes, payload families, consumers, expected-output conventions, or validation commands change.
+- Keep child READMEs synchronized with this boundary.
+- Move stable domain-owned fixtures into `fixtures/domains/<domain>/` and update inbound links in the same change.
+- Record a canonical source and synchronization rule before mirroring a fixture into `tests/fixtures/` or another compatibility location.
+- Keep files small enough for ordinary review unless an explicit large-fixture storage decision exists.
+- Remove stale examples when their contract or consumer is retired, while preserving useful lineage in commit history or an approved deprecation note.
+- If real or sensitive material is discovered, stop using the fixture, remove it from ordinary review surfaces, route it to quarantine or the proper authority root, and record the correction path.
+
+### Rollback
+
+For a documentation-only mistake, revert the README commit or restore the previous content on the review branch. For a fixture mistake, revert the fixture and any paired output together. Do not delete a public correction history or pretend a sensitive-data incident was merely a documentation typo.
+
+## Related folders and doctrine
+
+Verified related files and lanes at the inspected base:
+
+- [`../README.md`](../README.md) — parent runtime and synthetic fixture boundary.
+- [`../domains/habitat/README.md`](../domains/habitat/README.md) — Habitat-owned fixture lane.
+- [`../domains/flora/README.md`](../domains/flora/README.md) — Flora-owned fixture lane.
+- [`../domains/fauna/README.md`](../domains/fauna/README.md) — Fauna-owned fixture lane.
+- [`../../docs/domains/habitat/README.md`](../../docs/domains/habitat/README.md) — Habitat domain boundary and non-ownership rules.
+- [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) — canonical placement doctrine.
+- [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) — current review-routing evidence.
+- [`../../.github/workflows/README.md`](../../.github/workflows/README.md) — workflow authority and verification boundaries.
+
+Other domain lanes such as Hydrology, Soil, Hazards, and Agriculture may participate in cross-domain ecology scenarios, but their exact fixture paths and consumers must be verified before being added as links here.
+
+## ADRs
+
+No target-specific accepted ADR was verified for `fixtures/ecology/` in this update.
+
+This README does not add, remove, rename, or reclassify a canonical root; it does not create a parallel schema, contract, policy, source, registry, receipt, proof, release, catalog, or publication home. Therefore this documentation-only revision does not require a new ADR under the inspected Directory Rules.
+
+A future change requires an ADR or explicit architecture decision when it would:
+
+- create or retire a canonical or compatibility root;
+- turn Ecology into a new authority-bearing domain rather than a cross-domain fixture concept;
+- create a parallel machine-schema, policy, source, registry, release, receipt, proof, or catalog home;
+- change the canonical lifecycle or trust membrane;
+- reverse an accepted placement rule.
 
 ## Verification status
 
-- Target README: replaced blank placeholder content.
-- Fixture payload inventory: no payload files verified under this root during this update.
-- Exact child-lane inventory under `fixtures/ecology/`: NOT VERIFIED during this update.
-- Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
-- Habitat fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/habitat/README.md`.
-- Flora fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/flora/README.md`.
-- Habitat architecture alignment: PARTIALLY VERIFIED against `docs/domains/habitat/ARCHITECTURE.md`.
-- Consumer alignment: NEEDS VERIFICATION against validators, ecology fixture checks, habitat checks, flora checks, fauna checks, hydrology joins, soil joins, hazards joins, source-role checks, evidence-bundle checks, citation-validation checks, rights checks, decision-envelope checks, drawer checks, Focus Mode checks, release-readiness checks, correction checks, rollback checks, schema checks, policy checks, renderer checks, and UI implementation.
-- Tests and validators: NOT RUN.
+| Acceptance item | Status | Evidence or limit |
+|---|---|---|
+| Target file read from immutable base | **PASS** | `fixtures/ecology/README.md` fetched at the pinned base commit. |
+| Placement under `fixtures/` | **PASS** | Confirmed against Directory Rules and the parent fixture README. |
+| Cross-domain, non-domain posture preserved | **PASS** | Aligned with Directory Rules' cross-domain placement rule and Habitat's explicit non-ownership boundary. |
+| Parent fixture relationship | **PASS** | `fixtures/README.md` inspected at the pinned base. |
+| Habitat, Flora, and Fauna fixture relationships | **PASS** | Their directory READMEs were inspected at the pinned base. |
+| Review route | **PASS** | `.github/CODEOWNERS` routes `/fixtures/` to `@bartytime4life`. |
+| Current child inventory under `fixtures/ecology/` | **UNKNOWN** | Complete directory listing was not available through the selected connector operations. |
+| Current payload inventory | **UNKNOWN** | No payload file is asserted by this README. |
+| Current consumer and validator alignment | **NEEDS VERIFICATION** | No executable ecology consumer was confirmed on the inspected base. |
+| Repository-wide validator command | **FAIL as an executable claim** | `tools/validate_all.py` is a placeholder; no command is documented here. |
+| CI, workflow-run, and branch-protection enforcement | **NOT RUN / UNKNOWN** | No current run or repository-settings evidence was used. |
+| Sensitive-data and rights review of future payloads | **NOT APPLICABLE to this README-only change** | Must be repeated for every added or changed fixture payload. |
