@@ -1,0 +1,192 @@
+{
+  "receipt_id": "genrec-packages-temporal-readme-52905c25",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/temporal/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/temporal/README.md": "sha256:52905c252700f3f4d5f90c7f8bd1f7bc877455b61b1dc086896ce5c583c59654"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file and commit reads",
+      "GitHub REST API fallback for Git object metadata",
+      "remote branch, Git object, ref, and pull request operations",
+      "local deterministic content validation",
+      "PDF extraction, rendering, and visual inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent - Full Operating Prompt v3.1",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/src/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/src/temporal/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/src/temporal/__init__.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/src/temporal/core.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/contracts/common/temporal_window.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/schemas/contracts/v1/common/temporal_window.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/tools/validators/validate_temporal_window.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/docs/doctrine/time-aware.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/.github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "truth_labels": {
+    "packages/temporal/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, admin permission, public visibility, immutable base, target blob, review-branch route, two-file change budget, acceptance criteria, and non-goals were resolved before mutation."
+    },
+    {
+      "gate": "directory-rules-and-path-authority",
+      "outcome": "PASS",
+      "reason": "Directory Rules was extracted, rendered, and visually inspected; the repository copy confirms packages/ as the canonical shared-library root. The existing package path is preserved and no parallel authority is introduced."
+    },
+    {
+      "gate": "adr-drift-and-document-authority",
+      "outcome": "PASS",
+      "reason": "ADR-0014, the drift register, parent package README, source README, and module README were inspected. Companion documents were distinguished from the package-level authority and no accepted temporal ADR was inferred."
+    },
+    {
+      "gate": "duplicate-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "No matching open pull request was found. Main was re-pinned at f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566 after an unrelated two-path Habitat/Fauna documentation change; the temporal target baseline remained blob 974a7137983aa8d88605fad07fbca2b6e0026e04."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The indexed workflow inventory and its unchanged state through the pinned base were checked. Broad pull_request jobs may run, but no pull_request_target, workflow_run, self-hosted runner, direct secret reference, or ordinary write scope was established for this path; required-check and effective-token settings remain unverified."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Direct reads confirmed kfm-temporal version 0.0.0, an empty __init__.py, a comment-only core.py, a placeholder validator, and no declared package-local test command. The README does not claim a runtime API."
+    },
+    {
+      "gate": "temporal-vocabulary-conflict",
+      "outcome": "PASS",
+      "reason": "The schema, proposed ADR-0014, and draft time-awareness doctrine use non-equivalent vocabularies. The README preserves the conflict and selects no new authority."
+    },
+    {
+      "gate": "readme-contract-and-no-loss",
+      "outcome": "PASS",
+      "reason": "The parent package README expectations, original six-time-kind and acceptance-check intent, implementation boundary, trust membrane, lifecycle discipline, validation burden, correction, and rollback posture are preserved with evidence labels."
+    },
+    {
+      "gate": "markdown-meta-and-structure",
+      "outcome": "PASS",
+      "reason": "The README has one H1, consecutive heading levels, unique slugs, a closed metadata wrapper, balanced fences, no trailing whitespace, a final newline, and no detected credential pattern."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "All twenty unique repository-relative link targets resolved by direct GitHub reads at the pinned base."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The documentation contains no credentials, restricted payloads, living-person or genomic data, protected locations, operational instructions, or release/publication action."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The receipt parsed as JSON and validated against the checked-in generated-receipt schema before remote mutation."
+    },
+    {
+      "gate": "multi-file-atomicity",
+      "outcome": "SKIPPED",
+      "reason": "Remote Git-object creation and ref advancement occur after this receipt is emitted; the pull request and operation journal record the resulting atomicity and remote readback."
+    },
+    {
+      "gate": "repository-native-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "This is an API-only documentation change, repository scripts were not executed, and the package declares no confirmed package-local test command."
+    },
+    {
+      "gate": "remote-mutation-and-readback",
+      "outcome": "SKIPPED",
+      "reason": "The receipt is emitted before remote writes; branch, commit, file hashes, changed paths, pull request metadata, and checks require post-mutation verification."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and separate from generation, static validation, merge, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request",
+      "validated": true,
+      "evidence_ref": "conversation://current#update-packages-temporal-readme"
+    },
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://pasted-text.txt#sha256=0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d"
+    },
+    {
+      "id": "directory-rules-pdf",
+      "validated": true,
+      "evidence_ref": "project-source://Directory Rules.pdf#sha256=759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "target-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/README.md"
+    },
+    {
+      "id": "temporal-package-scaffold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/packages/temporal/src/temporal/core.py"
+    },
+    {
+      "id": "temporal-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566/contracts/common/temporal_window.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T04:30:38Z",
+  "emitter": "OpenAI Codex (GPT-5) via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-temporal-package-readme-20260721. Documentation-only review-branch revision plus required provenance receipt. The receipt is process memory, not factual proof, policy permission, human approval, merge approval, release authority, or publication authority."
+}
