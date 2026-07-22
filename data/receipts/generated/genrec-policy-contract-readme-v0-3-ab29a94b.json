@@ -53,7 +53,8 @@
       "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/link-check.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
       "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/docs-control-plane.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
       "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
-      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "compare:bartytime4life/Kansas-Frontier-Matrix:91a2df5aa12c0a060167bc8b79716caf0f04ee35...459b41d7ec91240742d8b2d3e5d9eb4dbd248df7"
     ]
   },
   "truth_labels": {
@@ -84,6 +85,11 @@
       "gate": "workflow-trigger-threat-preflight",
       "outcome": "PASS",
       "reason": "Directly inspected workflows use hosted runners and explicit read-only contents permission; dependency execution, floating major tags, bounded search limits, and branch-protection unknowns are disclosed."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "After mutation, main advanced by two commits affecting only fixtures/invalid/README.md; no target, receipt, workflow, doctrine, ADR, or other evidence input overlapped, so the pinned branch remained safe without force-push or recomputation."
     },
     {
       "gate": "repository-native-test-run",
@@ -177,5 +183,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Documentation and provenance only. The repository's policy/ai_builder/operating_contract.rego remains a PROPOSED stub and would require a PolicyDecision reference for policy-significant artifacts; no accepted decision record was available or invented. This pending receipt is not factual proof, executable policy approval, human review, release approval, or publication authority."
+  "notes": "Documentation and provenance only. After mutation, main advanced from 91a2df5a to 459b41d7 by two commits affecting only fixtures/invalid/README.md; no scoped or evidence overlap was found. The repository's policy/ai_builder/operating_contract.rego remains a PROPOSED stub and would require a PolicyDecision reference for policy-significant artifacts; no accepted decision record was available or invented. This pending receipt is not factual proof, executable policy approval, human review, release approval, or publication authority."
 }
