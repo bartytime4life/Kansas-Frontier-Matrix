@@ -1,0 +1,214 @@
+{
+  "receipt_id": "genrec-pipelines-validate-readme-1156b73e",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/validate/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/validate/README.md": "sha256:1156b73ed4c375d515e6ce116fb2cbc0bcfdb97fce3615f1f47939f9444115ab"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-22"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection and bounded code search",
+      "PDF extraction, page rendering, and visual inspection",
+      "Directory Rules, ADR, drift, authority, duplicate, and workflow preflight",
+      "Markdown structure, anchor, link, hash, and JSON Schema validation",
+      "remote branch, read-back, comparison, pull-request, and check verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent - Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/pipelines/validate/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/pipelines/validate/main.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/pipeline_specs/archaeology/validate.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tools/validators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tests/policy/test_pipeline_connector_non_publisher.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/doctrine/lifecycle-law.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/adr/ADR-0018-promotion-gate-sequence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/.github/workflows/codeql.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/CONTRIBUTING.md"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/validate/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Bounded the task to the requested existing README and its required generated provenance receipt. No pipeline code, validator, spec, schema, contract, policy, fixture, test, workflow, lifecycle data, release object, runtime, or public artifact is changed."
+    },
+    {
+      "gate": "repository-and-concurrency-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the public repository, authenticated admin and push capability, main base d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0, target blob e6ed7beb4eb61b136ca830dc590d1a8574fa72af, and absence of a matching open pull request before mutation."
+    },
+    {
+      "gate": "directory-rules-adr-drift-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "The supplied and repository Directory Rules assign orchestration to pipelines/, declarative configuration to pipeline_specs/, reusable validators to tools/validators/, proof of behavior to tests/, and fixtures to fixtures/. Two live Directory Rules editions remain conflicted in canonical placement but agree on this split. Relevant promotion and artifact-separation ADRs are proposed, not accepted."
+    },
+    {
+      "gate": "repository-implementation-inventory",
+      "outcome": "PASS",
+      "reason": "Opened the shared placeholder main.py, parent roots, Makefile aggregate command, six-validator shared runner, pipeline test boundary, archaeology domain validation README and empty-stage spec, non-publisher test, generated receipt controls, workflow inventory, CodeQL workflow, contribution rules, CODEOWNERS, and checked missing shared spec/test/fixture README paths at the pinned base."
+    },
+    {
+      "gate": "attached-source-inspection",
+      "outcome": "PASS",
+      "reason": "Read the v3.1 operating prompt, extracted the supplied Directory Rules, visually inspected its pipeline/spec/tools pages, and searched the supplied implementation manual for relevant placement and validation boundaries. Uploaded doctrine was treated as intended behavior, not current repository implementation proof."
+    },
+    {
+      "gate": "no-loss-and-truth-posture",
+      "outcome": "PASS",
+      "reason": "Preserved v0.1 purpose, root split, anti-collapse rules, domain ownership, lifecycle gates, source/evidence/policy/review controls, finite outcomes, quarantine posture, receipts, correction, rollback, and no-publication posture while replacing the proposed helper tree with a commit-pinned current-state boundary."
+    },
+    {
+      "gate": "markdown-structure-and-anchors",
+      "outcome": "PASS",
+      "reason": "Prepared README has 784 lines, one H1, 52 headings, one closed KFM Meta Block, twelve balanced fence lines, 35 internal anchor references with no missing or duplicate-base anchors, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-links",
+      "outcome": "PASS",
+      "reason": "All 22 unique repository-relative Markdown link targets were fetched successfully at the pinned base commit."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "No workflow file changes are included. Bounded inspection found broad pull-request checks, no actual pull_request_target or self-hosted workflow surfaced, and the implementation-bearing CodeQL workflow uses pull_request with explicit permissions and hosted runners. Effective repository defaults, required checks, and complete trigger inventory remain unknown."
+    },
+    {
+      "gate": "security-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, restricted payloads, living-person records, genomic data, or exact sensitive locations and strengthens fail-closed handling for reports, logs, fixtures, receipts, CI artifacts, and public interfaces."
+    },
+    {
+      "gate": "artifact-hash",
+      "outcome": "PASS",
+      "reason": "SHA-256 1156b73ed4c375d515e6ce116fb2cbc0bcfdb97fce3615f1f47939f9444115ab matches the final prepared README bytes."
+    },
+    {
+      "gate": "generated-receipt-json-and-schema",
+      "outcome": "PASS",
+      "reason": "Receipt JSON parsed and validated against the pinned Draft 2020-12 generated-receipt schema with date-time checking; artifact path and SHA-256 match the prepared README."
+    },
+    {
+      "gate": "remote-readback-and-diff-scope",
+      "outcome": "SKIPPED",
+      "reason": "This pre-commit receipt does not claim a future remote result. Remote bytes, base drift, branch head, comparison, and exact changed paths are verified after branch mutation and reported in the pull-request handoff."
+    },
+    {
+      "gate": "repository-native-shared-stage-tests",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation task; pipelines/validate/main.py is a placeholder and no dedicated shared validation-stage test command was established. Aggregate validator and pull-request checks remain separate evidence."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-and-placeholder-entrypoint",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/pipelines/validate/README.md"
+    },
+    {
+      "id": "pipelines-executable-root",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/pipelines/README.md"
+    },
+    {
+      "id": "validator-authority-and-runner",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tools/validators/_common/run_all.py"
+    },
+    {
+      "id": "aggregate-validation-command",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/Makefile"
+    },
+    {
+      "id": "pipeline-test-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tests/pipelines/README.md"
+    },
+    {
+      "id": "pipeline-non-publisher-guard",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tests/policy/test_pipeline_connector_non_publisher.py"
+    },
+    {
+      "id": "directory-placement-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "lifecycle-and-promotion-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/doctrine/lifecycle-law.md"
+    },
+    {
+      "id": "generated-receipt-requirement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/data/receipts/generated/README.md"
+    },
+    {
+      "id": "workflow-and-review-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/.github/PULL_REQUEST_TEMPLATE.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T21:47:22Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded revision of pipelines/validate/README.md for a scoped review branch. This receipt records provenance and validation boundaries, not validator or pipeline implementation, evidence closure, policy permission, lifecycle promotion, release authority, merge approval, or publication. Remote branch, byte, diff, and pull-request verification are recorded separately after mutation. Human review remains pending."
+}
