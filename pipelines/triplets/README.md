@@ -1,438 +1,695 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/pipelines-triplets-readme
-title: Triplets Pipeline README
-type: readme
-version: v0.1
-status: draft
-owners:
-  - <pipeline-owner>
-  - <graph-steward>
-  - <catalog-steward>
-  - <evidence-steward>
-  - <policy-steward>
-  - <docs-steward>
+title: pipelines/triplets/ - Shared Triplet Projection Pipeline Boundary
+type: readme; directory-readme; executable-lane-contract; graph-projection-boundary
+version: v0.2
+status: draft; repository-grounded; placeholder-only-executable; no-active-shared-triplet-pipeline-established
+owners: OWNER_TBD - Pipeline steward · Graph steward · Domain stewards · Catalog steward · Evidence steward · Policy steward · Receipt steward · Release steward · Security reviewer · Docs steward
 created: 2026-06-13
-updated: 2026-06-13
-policy_label: public-with-graph-projection-and-release-gates
-path: pipelines/triplets/README.md
+updated: 2026-07-22
+policy_label: public-documentation; executable-boundary; graph-derived-not-truth; cite-or-abstain; sensitive-joins-fail-closed; no-direct-publication
+current_path: pipelines/triplets/README.md
+owning_root: pipelines/
+responsibility: shared executable triplet and graph-projection logic, if and when implemented; not declarative specification, semantic contract, machine schema, policy, canonical data, graph authority, evidence, proof, release decision, or public-serving authority
+truth_posture: CONFIRMED target README and one-line placeholder main.py, thirteen individually opened one-line domain triplets.py placeholders, canonical plural data/triplets lane, singular and root catalog compatibility lanes, README-only direct pipeline-test boundary, missing checked shared triplet spec/test/fixture paths, absent triplet-specific Make target, and placeholder graph-delta/export READMEs at the pinned snapshot / PROPOSED shared projection interface, accepted predicate and edge contracts, deterministic identity rules, receipt binding, fixture corpus, tests, CI, and domain-adapter protocol / UNKNOWN complete history, branch-local or external consumers, generated files, ignored files, graph-store integrations, deployed runtime behavior, current workflow conclusions, and release use / NEEDS VERIFICATION owners, accepted object families, canonical vocabularies, schema and receipt homes, active spec placement, migration decisions, and implementation graduation
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: b9d152106796fd2ec07f9ef3ea0c99125d01d1a6
+  prior_blob: 098c7e7d631a9a3642b106adf85f291600472114
+  inspection_method: commit-pinned GitHub connector reads and bounded repository code search; supplied PDF extraction plus visual inspection for placement and lifecycle doctrine
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - pipelines/README.md
-  - pipelines/catalog/README.md
-  - pipelines/validate/README.md
-  - pipeline_specs/triplets/
-  - pipelines/domains/
-  - data/processed/
-  - data/catalog/
-  - data/triplets/
-  - data/quarantine/
-  - data/receipts/pipeline/
-  - data/proofs/evidence_bundle/
-  - release/candidates/
-  - release/manifests/
-tags: [kfm, pipelines, triplets, graph-projection, provenance, evidence-bundle, catalog, receipts, governance]
+  - ../README.md
+  - main.py
+  - ../domains/README.md
+  - ../domains/hydrology/triplets/README.md
+  - ../../pipeline_specs/README.md
+  - ../../tests/pipelines/README.md
+  - ../../data/triplets/README.md
+  - ../../data/triplets/graph_deltas/README.md
+  - ../../data/triplets/exports/README.md
+  - ../../data/triplet/README.md
+  - ../../catalog/triplet/README.md
+  - ../../data/receipts/generated/README.md
+  - ../../docs/architecture/directory-rules.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/doctrine/lifecycle-law.md
+  - ../../docs/doctrine/derived-stays-derived.md
+  - ../../docs/architecture/identity-and-spec-hash.md
+  - ../../docs/standards/RUN_RECEIPT.md
+  - ../../.github/workflows/README.md
+tags: [kfm, pipelines, triplets, graph-projection, relationship-projection, derived-data, evidence-ref, provenance, deterministic-identity, receipts, correction, rollback, no-publication]
 notes:
-  - "This README replaces the greenfield stub at pipelines/triplets/README.md with a governed implementation-lane contract."
-  - "pipelines/ is executable logic; pipeline_specs/ is declarative configuration."
-  - "This path is shared graph/triplet projection support, not a graph truth store, catalog authority, schema home, contract home, policy home, proof store, or release authority."
-  - "Domain-specific triplet projection remains under domain lanes such as pipelines/domains/<domain>/triplets/ unless an ADR says otherwise."
-  - "Concrete executable behavior, graph schema, CI coverage, fixtures, release wiring, and public API/map behavior remain NEEDS VERIFICATION until implemented and tested."
+  - "v0.2 preserves the v0.1 anti-collapse, lifecycle, evidence, policy, receipt, correction, rollback, and no-direct-publication obligations while replacing a proposed implementation tree and pseudo-schema with a commit-pinned current-state boundary."
+  - "The shared executable at pipelines/triplets/main.py is a single comment identifying a greenfield placeholder; it defines no import, function, class, command, input, output, receipt, or failure contract."
+  - "Thirteen sampled domain triplets.py modules were individually opened and are also one-line greenfield placeholders; the separate Hydrology triplets README is documentation, not executable proof."
+  - "No shared pipeline_specs/triplets README, tests/pipelines/triplets README, fixtures/triplets README, or sampled agriculture/hydrology triplets.yaml was present at the checked paths."
+  - "This documentation-only revision does not activate a source, parser, pipeline, predicate, graph store, catalog write, receipt emitter, release path, API, UI, map, export, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Triplets Pipelines
+# `pipelines/triplets/` - Shared Triplet Projection Pipeline Boundary
 
-> Shared executable graph/triplet projection lane for relationship candidates, graph deltas, provenance-bound edges, catalog handoffs, receipts, and release-readiness blockers — without owning canonical truth, EvidenceBundle truth, catalog truth, release decisions, policy decisions, schemas, contracts, or public API/UI behavior.
+> Repository-grounded boundary for shared executable relationship-projection logic. The lane is correctly placed under `pipelines/`, but its inspected Python entrypoint is still a one-line greenfield placeholder. No active shared triplet pipeline is established by the current files.
 
-![status](https://img.shields.io/badge/status-draft-blue)
+![status](https://img.shields.io/badge/status-draft-yellow)
+![implementation](https://img.shields.io/badge/implementation-placeholder-lightgrey)
 ![root](https://img.shields.io/badge/root-pipelines%2F-0a7ea4)
-![scope](https://img.shields.io/badge/scope-shared%20triplets-2e7d32)
-![authority](https://img.shields.io/badge/authority-executable%20projection%20logic-0a7ea4)
 ![truth](https://img.shields.io/badge/triplet%20%E2%89%A0%20canonical%20truth-d62728)
-![publication](https://img.shields.io/badge/publication-no%20direct%20publish-d62728)
-
-**Status:** Draft  
-**Path:** `pipelines/triplets/README.md`  
-**Responsibility root:** `pipelines/` — executable pipeline logic  
-**Sublane:** Shared triplet / graph projection support  
-**Placement posture:** implementation sublane under `pipelines/`; exact long-term authority remains `NEEDS VERIFICATION / ADR` if this becomes a shared graph framework rather than a small helper lane  
-**Public posture:** no direct publication; triplet outputs are graph projections, receipts, relationship candidates, and release-readiness blockers only.
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Placement and authority](#2-placement-and-authority)
-- [3. Triplet anti-collapse rules](#3-triplet-anti-collapse-rules)
-- [4. What belongs here](#4-what-belongs-here)
-- [5. What does not belong here](#5-what-does-not-belong-here)
-- [6. Projection scope](#6-projection-scope)
-- [7. Lifecycle contract](#7-lifecycle-contract)
-- [8. Required gates](#8-required-gates)
-- [9. Directory contract](#9-directory-contract)
-- [10. Inputs and outputs](#10-inputs-and-outputs)
-- [11. Minimal triplet projection record](#11-minimal-triplet-projection-record)
-- [12. Tests, fixtures, receipts, and proofs](#12-tests-fixtures-receipts-and-proofs)
-- [13. Promotion, publication, correction, and rollback](#13-promotion-publication-correction-and-rollback)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open questions](#15-open-questions)
-
----
-
-## 1. Purpose
-
-`pipelines/triplets/` is the shared executable lane for relationship and graph-projection support that is useful across multiple KFM domain pipelines.
-
-It may support:
-
-- relationship candidate builders;
-- graph-delta and triplet projection helpers;
-- provenance, source-role, time, and evidence-reference preservation helpers;
-- catalog-to-triplet handoff helpers;
-- cross-domain relationship checks;
-- duplicate-edge and identity-stability checks;
-- graph invalidation and supersession helpers;
-- no-network fixture runners;
-- receipt and blocker builders;
-- shared adapters used by domain-specific triplet sublanes.
-
-This directory implements or will implement the **how** of shared graph projection support. It does not define graph truth, define domain object meaning, define graph schemas, decide policy, create EvidenceBundles, write catalog truth, approve release, or serve public clients.
-
-[⬆ Back to top](#top)
-
----
-
-## 2. Placement and authority
-
-| Question | Answer | Status |
-|---|---|---|
-| Why `pipelines/`? | Triplet helpers are executable projection logic: the **how**. | CONFIRMED root responsibility |
-| Why a shared `triplets/` lane? | It can hold reusable graph/triplet helpers that should not be duplicated across domain lanes. | PROPOSED / NEEDS VERIFICATION |
-| Does this replace domain triplet lanes? | No. Domain-owned relationship logic stays under `pipelines/domains/<domain>/triplets/` or accepted domain graph sublanes. | CONFIRMED boundary posture |
-| Is this a graph truth store? | No. Graph/triplet data belongs in accepted `data/triplets/` or graph-delta homes. | CONFIRMED authority separation |
-| Is this a schema or contract home? | No. Schemas and contracts remain in their own responsibility roots. | CONFIRMED authority separation |
-| Can public clients read this lane? | No. Public clients use governed APIs and released artifacts only. | CONFIRMED trust-membrane posture |
+![publication](https://img.shields.io/badge/direct%20publication-denied-d62728)
 
 > [!IMPORTANT]
-> A triplet projection is not canonical truth, not an EvidenceBundle, not catalog closure, and not release approval. It is a downstream carrier that must preserve evidence, source-role, review, time, correction, and rollback references.
+> A triplet or graph edge is a derived relationship projection. It is not a canonical record, `EvidenceBundle`, policy decision, review approval, catalog closure, release decision, or public claim. Shape-valid, deterministic, or internally consistent graph output still requires evidence, policy, review, release, correction, and rollback closure before public use.
 
-[⬆ Back to top](#top)
+> [!WARNING]
+> Do not treat [`main.py`](main.py), the proposed tree in the prior README, a domain README, a green workflow, or a successful merge as evidence that shared triplet execution exists. At the pinned snapshot, the shared entrypoint and sampled domain modules are placeholders.
+
+**Quick navigation:** [Purpose](#purpose) · [Status](#status-and-evidence-boundary) · [Authority](#authority-boundary) · [Current state](#confirmed-current-state) · [Placement](#placement-and-repository-fit) · [Lifecycle](#lifecycle-and-trust-boundary) · [Projection contract](#projection-contract-before-implementation) · [Identity](#identity-provenance-and-evidence) · [Outcomes](#finite-outcomes-and-failure-behavior) · [Tests](#tests-fixtures-receipts-and-ci) · [Security](#security-rights-and-sensitive-relationships) · [Release](#review-release-correction-and-rollback) · [No loss](#no-loss-preservation) · [Done](#definition-of-done) · [Open](#open-verification-backlog) · [Evidence](#evidence-ledger)
 
 ---
 
-## 3. Triplet anti-collapse rules
+## Purpose
 
-Disallowed collapses:
+`pipelines/triplets/` is reserved for executable logic that is genuinely shared across domain lanes and projects governed, evidence-bound relationships into triplet or graph-delta candidates.
+
+If implemented, this lane may provide reusable mechanics for:
+
+- deterministic relationship or edge identity;
+- subject, predicate, and object normalization after their owning domains establish meaning;
+- provenance, source-role, time-kind, review-state, and evidence-reference propagation;
+- duplicate, conflict, supersession, and invalidation detection;
+- candidate graph-delta construction;
+- no-network fixture execution;
+- deterministic receipt-candidate emission; and
+- bounded adapters used by more than one domain pipeline.
+
+It does not own the meaning of a subject, predicate, or object. It does not decide whether a relationship is admissible, true, safe, reviewed, released, or public.
+
+### Audience
+
+This README is for pipeline maintainers, domain stewards, graph and catalog reviewers, contract/schema maintainers, evidence and receipt reviewers, policy and sensitivity reviewers, release stewards, CI maintainers, and agents deciding where future triplet work belongs.
+
+### Non-goals of this revision
+
+This revision does not:
+
+- implement or activate triplet projection;
+- define an edge, graph-delta, predicate, or receipt schema;
+- select a graph database, RDF profile, serialization, or query language;
+- create a declarative triplet specification;
+- add fixtures, tests, validators, workflows, or Make targets;
+- move, rename, retire, or populate a data or compatibility lane;
+- change canonical records, lifecycle data, catalog records, evidence, policy, release objects, or public artifacts; or
+- resolve open governance decisions through documentation alone.
+
+[Back to top](#top)
+
+---
+
+## Status and evidence boundary
+
+### Safe conclusion
+
+The directory is an accepted executable-logic location in repository doctrine, but its current shared implementation is a placeholder. The README defines the boundary that a future implementation must satisfy; it does not certify that the behavior exists.
+
+| Surface | Evidence at `main@b9d15210` | Status |
+|---|---|---|
+| This README | Existing v0.1 governance draft. | **CONFIRMED** |
+| [`main.py`](main.py) | One comment: `triplets stage - greenfield placeholder`. | **CONFIRMED placeholder** |
+| Shared functions, classes, imports, CLI, or package API | None in the opened 42-byte entrypoint. | **NOT ESTABLISHED** |
+| Domain `triplets.py` modules | Thirteen individually opened modules contain only one greenfield-placeholder comment. | **CONFIRMED placeholders** |
+| Domain triplet documentation | [`pipelines/domains/hydrology/triplets/README.md`](../domains/hydrology/triplets/README.md) exists. | **CONFIRMED documentation; execution not proved** |
+| Shared declarative triplet lane | `pipeline_specs/triplets/README.md` returned not found; bounded search found no such lane. | **NOT FOUND AT CHECKED PATH** |
+| Sample domain triplet specs | `pipeline_specs/{agriculture,hydrology}/triplets.yaml` returned not found. | **NOT FOUND AT CHECKED PATHS** |
+| Dedicated shared tests | `tests/pipelines/triplets/README.md` returned not found. | **NOT FOUND AT CHECKED PATH** |
+| Dedicated shared fixtures | `fixtures/triplets/README.md` returned not found. | **NOT FOUND AT CHECKED PATH** |
+| Parent pipeline test boundary | [`tests/pipelines/README.md`](../../tests/pipelines/README.md) is README-only at its own bounded snapshot. | **CONFIRMED documentation** |
+| Triplet-specific Make target | No `triplet` token occurs in the inspected root `Makefile`. | **NOT ESTABLISHED** |
+| Triplet-specific CI | No dedicated command or workflow was established by the bounded reads and search. | **UNKNOWN / NEEDS VERIFICATION** |
+| Canonical data lane | [`data/triplets/README.md`](../../data/triplets/README.md) exists and declares relationship-projection authority under `data/`. | **CONFIRMED documentation** |
+| Graph-delta and export sublanes | Their READMEs exist and each says `Greenfield stub.` | **CONFIRMED placeholders** |
+| Runtime, deployed consumer, graph store, or release use | Not established by source inspection. | **UNKNOWN** |
+
+### Truth labels
+
+| Label | Meaning here |
+|---|---|
+| **CONFIRMED** | Verified from commit-pinned repository content, supplied doctrine, or generated validation output. |
+| **PROPOSED** | A future interface, rule, path, or implementation obligation not established as active. |
+| **UNKNOWN** | Available evidence does not establish the claim strongly enough. |
+| **NEEDS VERIFICATION** | A specific repository, governance, test, runtime, or release check remains open. |
+
+Bounded absence is not historical or global absence. Branch-local files, ignored or generated artifacts, external systems, unindexed content, and later commits were not exhaustively inspected.
+
+[Back to top](#top)
+
+---
+
+## Authority boundary
+
+`pipelines/triplets/` may eventually own shared executable projection mechanics only.
+
+| Concern | Owning responsibility | This lane's role |
+|---|---|---|
+| Executable shared projection logic | `pipelines/triplets/` | Own only after code, interface, tests, and receipts exist. |
+| Domain-specific relationship meaning and execution | Domain contracts and `pipelines/domains/<domain>/` | Consume shared mechanics without transferring domain authority. |
+| Declarative run intent | [`pipeline_specs/`](../../pipeline_specs/README.md) | Read an accepted spec; do not embed parallel configuration authority. |
+| Semantic meaning and invariants | `contracts/` | Implement accepted meaning; do not redefine it in code or this README. |
+| Machine-checkable shape | `schemas/` | Validate against accepted schemas; do not invent them here. |
+| Admissibility, rights, sensitivity, access | `policy/` | Enforce resolved decisions and fail closed; do not decide policy here. |
+| Lifecycle graph materialization | [`data/triplets/`](../../data/triplets/README.md) | Emit candidates only through an accepted writer and state transition. |
+| Catalog closure | `data/catalog/` plus catalog/release governance | Provide references or candidates; do not declare closure. |
+| Evidence and proof | `data/proofs/` and accepted evidence contracts | Preserve references; never fabricate or replace support. |
+| Process receipts | `data/receipts/` | Emit through accepted schemas and writers; receipts remain process memory. |
+| Release, correction, withdrawal, rollback | `release/` | Provide a reviewable handoff; never approve or publish. |
+| Public API, UI, map, search, or export | Governed applications and released artifacts | No direct consumer access to this source lane or unreleased outputs. |
+
+### Anti-collapse rules
+
+The following equivalences are always invalid:
 
 ```text
-triplet projection -> canonical truth
-graph edge -> EvidenceBundle
-relationship candidate -> confirmed fact
-catalog record -> graph truth
-EvidenceRef -> EvidenceBundle
-schema-valid edge -> public claim
-cross-domain edge -> new domain authority
-generated graph summary -> evidence
-pipeline run -> ReleaseManifest
+triplet projection == canonical record
+graph edge == EvidenceBundle
+relationship candidate == confirmed fact
+predicate allowlist == policy approval
+schema-valid edge == evidence closure
+deterministic edge ID == correct relationship
+graph-delta receipt == proof pack
+pipeline completion == catalog closure
+catalog closure == release approval
+merge or green CI == KFM publication
+generated graph summary == evidence
 ```
 
-Required distinctions:
+Triplet output remains derived even when it is useful, deterministic, signed, indexed, queried, rendered, or released.
 
-- processed object, catalog entry, triplet projection, graph delta, EvidenceBundle, ReviewRecord, validation report, release candidate, ReleaseManifest, CorrectionNotice, RollbackCard, and public artifact remain separate;
-- domain object ownership remains with the source domain lane;
-- edges carry source, evidence, provenance, predicate, time, confidence, and review context;
-- relationship candidates remain candidates until the owning process closes them;
-- release-facing graph claims resolve EvidenceBundle support or abstain.
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 4. What belongs here
+## Confirmed current state
 
-Appropriate contents include:
+### Shared lane
 
-- shared triplet README files;
-- fixture-only graph projection dry-run entrypoints;
-- predicate and relationship candidate helpers;
-- provenance and EvidenceRef propagation helpers;
-- graph-delta builders;
-- duplicate-edge and deterministic-id helpers;
-- cross-domain boundary checks;
-- catalog-to-triplet handoff helpers;
-- graph invalidation and supersession helpers;
-- triplet receipt builders;
-- shared adapters used by domain graph/triplet lanes.
+The checked shared implementation surface is:
 
-A good placement test:
+```text
+pipelines/triplets/
+├── README.md    # this boundary document
+└── main.py      # one-line greenfield placeholder
+```
 
-> If the code helps multiple domain pipelines project evidence-bound relationships without owning canonical truth, it may belong here. If it only belongs to one domain, place it in that domain's triplet lane. If it owns graph schemas, policy, catalog truth, release decisions, or public serving, it belongs somewhere else.
+The entrypoint contains no executable statement, import, function, class, command parser, data model, input reader, output writer, receipt emitter, policy call, evidence resolver, or failure behavior.
 
-[⬆ Back to top](#top)
+### Sampled domain lane
 
----
+Thirteen direct domain modules were individually opened at the pinned commit:
 
-## 5. What does not belong here
+```text
+pipelines/domains/{agriculture,archaeology,atmosphere,fauna,flora,geology,
+habitat,hazards,hydrology,people-dna-land,roads-rail-trade,soil,
+settlements-infrastructure}/triplets.py
+```
 
-| Do not place here | Correct responsibility home |
-|---|---|
-| Domain-specific graph workflows | `pipelines/domains/<domain>/triplets/` |
-| Ingest/source admission | `pipelines/ingest/` or domain ingest lanes |
-| Normalization or validation logic | `pipelines/normalize/`, `pipelines/validate/`, or domain lanes |
-| Catalog builders | `pipelines/catalog/` or domain catalog lanes |
-| Source access clients | `connectors/<source_id>/` or accepted connector home |
-| Domain doctrine | `docs/domains/<domain>/` |
-| Graph schemas | `schemas/...` accepted schema home |
-| Contracts/object meaning | `contracts/...` accepted contract home |
-| Declarative triplet specs | `pipeline_specs/triplets/` or domain-specific spec homes |
-| Fixtures | `fixtures/triplets/` or domain fixture homes |
-| Tests | `tests/pipelines/triplets/` or domain test homes |
-| EvidenceBundles | `data/proofs/evidence_bundle/` |
-| Graph data / triplet materialization | `data/triplets/` or accepted graph-delta home |
-| Release decisions | `release/...` |
-| Public API/UI code | `apps/governed-api/`, `apps/explorer-web/`, packages |
+Each is a one-line greenfield placeholder. Their presence establishes planned naming only. It does not establish domain projection behavior, shared-helper consumption, spec binding, schema validation, receipt emission, graph storage, or CI coverage.
 
-[⬆ Back to top](#top)
+### Adjacent data and compatibility surfaces
+
+The canonical plural lifecycle lane is [`data/triplets/`](../../data/triplets/README.md). Its direct [`graph_deltas/`](../../data/triplets/graph_deltas/README.md) and [`exports/`](../../data/triplets/exports/README.md) READMEs remain greenfield stubs.
+
+Two other paths require anti-drift handling:
+
+- [`data/triplet/`](../../data/triplet/README.md) declares itself a singular compatibility lane and routes new lifecycle data to `data/triplets/`.
+- [`catalog/triplet/`](../../catalog/triplet/README.md) declares itself a root-level compatibility redirect, not a graph, catalog, receipt, proof, or publication authority.
+
+This README does not change or independently validate their retention decisions.
+
+[Back to top](#top)
 
 ---
 
-## 6. Projection scope
+## Placement and repository fit
 
-| Scope area | Shared triplet responsibility | Failure behavior |
-|---|---|---|
-| Caller scope | Require an owning domain pipeline, catalog lane, or approved proof harness. | Hold if ownerless. |
-| Input lifecycle | Confirm input is processed, catalog-ready, cataloged, fixture, or approved recheck material. | Fail or hold. |
-| Predicate shape | Check predicate, subject, object, time, provenance, and source-role fields. | Fail projection. |
-| Evidence | Carry EvidenceRef/EvidenceBundle refs but do not create proof. | Hold or abstain if unresolved. |
-| Domain boundary | Preserve owning domain for subject/object records and cross-domain edges. | Fail on ownership collapse. |
-| Identity | Build deterministic edge ids and duplicate checks. | Hold on instability. |
-| Receipts | Emit deterministic projection receipts and graph-delta refs. | Fail closed on missing hashes. |
-| Handoff | Return graph/triplet outputs to caller. | No release or public-serving side effects. |
+The supplied Directory Rules and both live repository editions assign:
 
-[⬆ Back to top](#top)
+```text
+pipelines/       executable pipeline logic - HOW a governed stage runs
+pipeline_specs/  declarative pipeline configuration - WHAT should run
+data/triplets/   graph-compatible relationship projections - lifecycle data
+tests/           executable behavior proof
+fixtures/        controlled examples, synthetic/public-safe by default
+release/         promotion, correction, withdrawal, and rollback decisions
+```
+
+That makes the existing `pipelines/triplets/` placement appropriate for shared executable projection mechanics. It does not make every cross-domain graph concern appropriate here.
+
+### Admission test
+
+A future file belongs here only when all are true:
+
+1. its primary responsibility is executable triplet or graph-projection logic;
+2. at least two accepted domain consumers need the same mechanics, or an accepted architecture decision establishes shared ownership;
+3. subject, predicate, object, evidence, source-role, time, and policy semantics remain owned elsewhere;
+4. it reads accepted declarative configuration rather than becoming a hidden spec store;
+5. it writes only through accepted candidate, receipt, report, or lifecycle interfaces;
+6. it cannot publish, approve release, or silently mutate prior released meaning;
+7. tests and fixtures can prove deterministic positive and negative behavior; and
+8. correction, supersession, invalidation, and rollback effects are explicit.
+
+If behavior belongs to one domain, keep it in that domain's pipeline lane. If it is a reusable library independent of pipeline orchestration, evaluate `packages/`. If it validates machine shape, place it under the accepted validator responsibility. If it stores data or a governance decision, route it to that authority root.
+
+### Files that do not belong here
+
+- declarative YAML or JSON run profiles;
+- predicate or edge semantic contracts;
+- JSON Schema, SHACL, JSON-LD context, RDF vocabulary, or ontology authority;
+- policy rules, sensitivity classifications, rights decisions, or access grants;
+- raw, work, quarantine, processed, catalog, triplet, or published data;
+- EvidenceBundles, ProofPacks, review records, or release manifests;
+- fixtures, tests, generated reports, or workflow definitions;
+- graph database state, indexes, backups, or exports;
+- API, UI, MapLibre, search, Focus Mode, or AI-serving code; and
+- secrets, source credentials, restricted payloads, or exact sensitive locations.
+
+No ADR is required for this in-place documentation clarification. An ADR or accepted migration decision is required before changing a canonical root, creating parallel authority, changing lifecycle semantics, or promoting a compatibility path.
+
+[Back to top](#top)
 
 ---
 
-## 7. Lifecycle contract
+## Lifecycle and trust boundary
 
-Every shared triplet helper must preserve the KFM lifecycle:
+Shared triplet work must preserve:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Normal stance:
+The slash in `CATALOG / TRIPLET` represents paired closure and graph-projection concerns, not permission to build edges from arbitrary internal material.
 
-1. **Read** fixture, processed, catalog-ready, or catalog refs only when a domain or catalog pipeline authorizes the call.
-2. **Project** relationship candidates with provenance, source role, evidence refs, time, confidence, and review context.
-3. **Emit** graph deltas, triplet files, receipts, invalidation refs, or release-readiness blockers.
-4. **Return** to the owning domain/catalog/release lane for catalog closure, release, and public artifact decisions.
-5. **Never create EvidenceBundles, mutate canonical records, approve release, or publish.**
-
-[⬆ Back to top](#top)
-
----
-
-## 8. Required gates
-
-Every shared triplet component must check or explicitly fail closed on:
-
-1. **Caller ownership gate** — an owning domain pipeline, catalog lane, or approved proof harness must provide scope.
-2. **Input lifecycle gate** — input is fixture, processed, catalog-ready, cataloged, or approved recheck material.
-3. **Predicate gate** — relationship predicate and edge vocabulary are accepted for the caller scope.
-4. **Subject/object gate** — subject and object ids are stable and domain ownership is preserved.
-5. **Evidence gate** — EvidenceRefs are preserved and EvidenceBundle readiness is explicit.
-6. **Provenance gate** — source refs, run refs, transform refs, and catalog refs are carried forward.
-7. **Time/freshness gate** — valid time, observed time, run time, and stale state remain distinct.
-8. **Receipt gate** — every projection invocation emits deterministic receipt metadata.
-9. **No-direct-catalog gate** — shared triplet support does not close catalog state by itself.
-10. **No-direct-publish gate** — shared triplet support does not write public UI, public API, published layers, or release manifests.
-
-[⬆ Back to top](#top)
-
----
-
-## 9. Directory contract
-
-Recommended shape:
-
-```text
-pipelines/triplets/
-├── README.md
-├── TRIPLETS_SHARED_CONTRACT.md        # PROPOSED
-├── run_dry_fixture.py                 # PROPOSED
-├── build_edge_id.py                   # PROPOSED
-├── validate_predicate.py              # PROPOSED
-├── validate_subject_object.py         # PROPOSED
-├── propagate_evidence_refs.py         # PROPOSED
-├── build_graph_delta.py               # PROPOSED
-├── check_duplicate_edges.py           # PROPOSED
-├── emit_triplet_receipt.py            # PROPOSED only if not shared
-└── adapters/                          # PROPOSED domain/proof adapters only
-```
-
-Declarative specs should live outside this directory:
-
-```text
-pipeline_specs/triplets/<profile>.yaml # PROPOSED / NEEDS VERIFICATION
-```
-
-Generated outputs must not be written beside this code. Use accepted lifecycle homes under `data/triplets/`, `data/catalog/`, `data/quarantine/`, and `data/receipts/`, with domain-owned pipelines deciding the target domain lane.
-
-[⬆ Back to top](#top)
-
----
-
-## 10. Inputs and outputs
-
-| Class | Correct home | Notes |
+| Stage concern | Permitted role for a future shared triplet runner | Forbidden shortcut |
 |---|---|---|
-| Shared fixture | `fixtures/triplets/` or domain fixture home | Synthetic/public-safe by default. |
-| Declarative spec | `pipeline_specs/triplets/` or domain spec home | The what, not executable logic. |
-| Candidate input | `data/processed/<domain>/` or `data/catalog/domain/<domain>/` | Read by stable refs only. |
-| Graph delta / triplets | `data/triplets/<domain>/` or accepted graph-delta home | Projection output; not canonical truth. |
-| QUARANTINE reason | `data/quarantine/<domain>/` | Owned by calling domain lane. |
-| Receipt | `data/receipts/pipeline/<domain>/triplets/` or accepted receipt home | Records inputs, checks, outcomes, hashes, and output refs. |
-| Evidence proof | `data/proofs/evidence_bundle/` | Referenced only; not created here. |
+| Input admission | Accept pinned references from an authorized domain/catalog caller. | Fetch sources or read arbitrary RAW/WORK material. |
+| Candidate build | Derive relationship candidates from accepted records and resolved context. | Promote generated or inferred relationships to canonical truth. |
+| Validation | Return explicit validation, conflict, and blocker results. | Treat shape or syntax success as evidence or policy closure. |
+| Materialization | Hand candidate graph deltas to an accepted lifecycle writer. | Write directly to public or released aliases. |
+| Review | Preserve review state and required reviewer classes. | Self-approve or collapse author and release authority. |
+| Release | Supply immutable inputs, outputs, digests, and rollback references. | Create release approval or publish from the shared runner. |
+| Correction | Emit invalidation/supersession candidates and affected references. | Delete or silently overwrite prior released meaning. |
 
-[⬆ Back to top](#top)
+Normal public clients must use governed interfaces and released, policy-filtered artifacts. They must not read this source directory, candidate graph stores, internal graph indexes, or unreleased triplet outputs directly.
 
----
-
-## 11. Minimal triplet projection record
-
-The final schema is not defined here. This example shows the minimum information a shared triplet projection receipt should preserve.
-
-```yaml
-schema_version: kfm.shared_triplet_projection_receipt.v1
-triplet_run_id: triplet_run_YYYYMMDDThhmmssZ
-pipeline_id: triplets.<profile_id>
-status: HELD
-caller:
-  owner_pipeline: pipelines/domains/<domain>/triplets
-  domain: <domain>
-  profile_ref: pipeline_specs/triplets/<profile_id>.yaml
-input:
-  source_refs: []
-  catalog_refs: []
-  evidence_bundle_refs: []
-edge:
-  subject_id: null
-  predicate: null
-  object_id: null
-  edge_id: null
-checks:
-  caller_scope_resolved: false
-  predicate_allowed: false
-  subject_object_stable: false
-  domain_boundaries_preserved: false
-  evidence_refs_preserved: false
-  provenance_ready: false
-  duplicate_checked: false
-anti_collapse:
-  triplet_projection_is_canonical_truth: false
-  graph_edge_is_evidence_bundle: false
-  relationship_candidate_is_confirmed_fact: false
-  pipeline_run_is_release_decision: false
-outputs:
-  graph_delta_ref: null
-  triplet_ref: null
-  receipt_ref: data/receipts/pipeline/<domain>/triplets/run_YYYYMMDDThhmmssZ.yml
-rollback:
-  required_before_publication: true
-```
-
-[⬆ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 12. Tests, fixtures, receipts, and proofs
+## Projection contract before implementation
 
-Recommended tests:
+The v0.1 README included an illustrative YAML receipt. No adopted triplet projection schema or active shared interface was verified, so v0.2 does not preserve that example as a pseudo-contract.
 
-```text
-tests/pipelines/triplets/
-├── test_no_network_dry_run.py              # PROPOSED
-├── test_caller_scope_required.py           # PROPOSED
-├── test_input_lifecycle_required.py        # PROPOSED
-├── test_predicate_allowed.py               # PROPOSED
-├── test_subject_object_stable.py           # PROPOSED
-├── test_domain_boundaries_preserved.py     # PROPOSED
-├── test_evidence_refs_not_fabricated.py    # PROPOSED
-├── test_provenance_required.py             # PROPOSED
-├── test_duplicate_edges_checked.py         # PROPOSED
-├── test_no_catalog_closure_side_effect.py  # PROPOSED
-└── test_no_direct_publish.py               # PROPOSED
-```
+Before code graduates beyond the placeholder, an accepted contract must define at least these semantic obligations:
 
-A dry run should prove fixtures load without network access, caller scope is required, input lifecycle is checked, predicates are accepted for scope, subject/object ids are stable, EvidenceRefs are not fabricated, provenance is carried forward, duplicate edges are checked, receipts are deterministic, and no run writes directly to catalog closure, public UI, public API, published layers, or release manifests.
-
-[⬆ Back to top](#top)
-
----
-
-## 13. Promotion, publication, correction, and rollback
-
-Shared triplet helpers may prepare graph deltas, triplet outputs, invalidation hints, blockers, and receipts. They do not publish.
-
-Required chain:
-
-```text
-calling domain / catalog pipeline
-  -> shared triplet helper
-  -> graph delta / triplet projection / receipt
-  -> catalog or graph closure review
-  -> release candidate
-  -> ReleaseManifest
-  -> RollbackCard
-  -> public artifact
-```
-
-Correction and rollback posture:
-
-- failed triplet runs remain auditable;
-- receipts preserve input refs, catalog refs, predicate refs, subject/object ids, evidence refs, provenance refs, and failure reasons;
-- triplet outputs are superseded through governed state transitions, not hidden overwrite;
-- downstream artifacts are invalidated if catalog refs, EvidenceBundle refs, predicate vocabularies, review refs, correction refs, or rollback refs drift;
-- rollback is owned by `release/`, not by this directory.
-
-[⬆ Back to top](#top)
-
----
-
-## 14. Definition of done
-
-This README is done when it:
-
-- replaces the greenfield stub at `pipelines/triplets/README.md`;
-- identifies this directory as a shared executable graph/triplet projection support lane under `pipelines/`;
-- prevents domain-specific logic, schemas, contracts, source descriptors, lifecycle data, EvidenceBundles, release decisions, public API, UI, catalog authority, and publication authority from being placed here;
-- preserves caller scope, subject/object ownership, predicate vocabulary, EvidenceRef, EvidenceBundle-readiness, provenance, time, lifecycle, correction, and rollback boundaries;
-- blocks triplet-projection-as-canonical-truth, graph-edge-as-EvidenceBundle, relationship-candidate-as-confirmed-fact, generated-summary-as-evidence, catalog side effects, and direct publication writes;
-- gives maintainers a fixture-first, receipt-emitting, fail-closed expansion pattern.
-
-Future executable work in this lane is done only when it has public-safe fixtures, no-network tests, caller-scope checks, predicate tests, subject/object identity tests, domain-boundary tests, evidence/provenance tests, duplicate-edge tests, deterministic receipts, CI coverage, domain/catalog steward handoff, and release/correction/rollback documentation.
-
-[⬆ Back to top](#top)
-
----
-
-## 15. Open questions
-
-| ID | Question | Status |
+| Concern | Required decision | Why it matters |
 |---|---|---|
-| `PIPE-TRIPLET-001` | Is `pipelines/triplets/` the final accepted home for shared graph/triplet helpers, or should this move under `packages/`, `tools/graph/`, or domain lanes by ADR? | NEEDS VERIFICATION / ADR |
-| `PIPE-TRIPLET-002` | Which schema owns shared triplet projection receipts, graph deltas, predicates, and edge reason codes? | NEEDS VERIFICATION |
-| `PIPE-TRIPLET-003` | Should every domain triplet sublane call shared helpers, or only use them for common predicate, identity, and provenance checks? | NEEDS VERIFICATION |
-| `PIPE-TRIPLET-004` | Which CI job owns shared triplet invariant tests? | UNKNOWN |
-| `PIPE-TRIPLET-005` | Which predicate profiles belong in `pipeline_specs/triplets/` versus domain-specific specs? | NEEDS VERIFICATION |
-| `PIPE-TRIPLET-006` | Should shared triplet helpers emit graph deltas directly, or only return projection fragments to domain lanes? | NEEDS VERIFICATION |
+| Runner identity | Stable pipeline/component ID and version. | Reproducibility and ownership. |
+| Caller scope | Owning domain, source lane, catalog handoff, and authorization. | Prevent ownerless cross-domain edges. |
+| Input contract | Allowed lifecycle states, reference types, hashes, and schema versions. | Prevent raw or ambiguous input laundering. |
+| Relationship contract | Subject, predicate, object, qualifiers, direction, and assertion class. | Prevent ambiguous meaning. |
+| Predicate authority | Vocabulary/profile identity and compatibility rules. | Prevent locally invented predicates. |
+| Identity | Deterministic edge ID inputs, canonicalization, collision handling, and versioning. | Safe replay and deduplication. |
+| Evidence | `EvidenceRef` handling, resolution obligation, bundle linkage, and abstention behavior. | Cite-or-abstain compliance. |
+| Provenance | Source IDs and roles, transforms, agents, tools, run refs, and derivation lineage. | Auditability. |
+| Time | Observation, valid, retrieval, processing, release, correction, and other accepted time kinds. | Avoid temporal collapse. |
+| Policy | Rights, sensitivity, sovereignty, access, redaction/generalization, and decision refs. | Fail-closed handling. |
+| Review | Candidate, reviewed, rejected, superseded, and released states without inventing approval. | Separation of duties. |
+| Outputs | Candidate edge, graph delta, validation report, receipt, and affected-reference shapes. | Controlled handoff. |
+| Failures | Finite outcome and reason-code vocabulary. | No silent success. |
+| Replay | Spec/code/input/tool digests and deterministic or bounded-variance rules. | Reproducibility. |
+| Correction | Supersession, invalidation, withdrawal, and downstream impact links. | No hidden rewrite. |
+| Rollback | Last-known-good code/spec/data set and release-aware rollback target. | Reversibility. |
+
+The semantic contract belongs under `contracts/`; its machine shape belongs under `schemas/`; admissibility belongs under `policy/`; declarative run intent belongs under `pipeline_specs/`. This lane implements those decisions after they are accepted.
+
+### Consumer contract
+
+A domain adapter must not call shared mechanics anonymously. It should provide an accepted caller identity, domain ownership, pinned spec/profile references, input references and digests, policy/evidence state, and requested output class. The shared runner must return a bounded result and must not infer missing authority from the caller's filesystem location.
+
+[Back to top](#top)
 
 ---
 
-## Maintainer note
+## Identity, provenance, and evidence
 
-Start with synthetic/public-safe fixtures and negative tests. Do not add live source calls, domain truth ownership, schema authority, catalog-closure shortcuts, public API code, UI code, release-manifest writes, published-layer writes, or generated summaries until caller scope, input lifecycle, predicate vocabulary, subject/object identity, EvidenceRef handling, provenance, deterministic receipts, and rollback expectations are proven.
+Deterministic identity is necessary but insufficient.
+
+A future edge identity design must establish:
+
+- which normalized fields enter the identity calculation;
+- whether qualifiers, time bounds, assertion class, source role, evidence scope, and graph version affect identity;
+- canonicalization and digest algorithms;
+- collision and algorithm-version behavior;
+- stable domain/entity identifiers versus edge/version identifiers;
+- duplicate and semantically conflicting edge handling; and
+- correction and supersession linkage.
+
+Do not copy an illustrative hash format from documentation into production without an accepted contract and compatibility review. [`identity-and-spec-hash.md`](../../docs/architecture/identity-and-spec-hash.md) contains architecture guidance, but it also marks important paths and decisions as proposed.
+
+### Evidence discipline
+
+- Preserve source roles; do not collapse primary, corroborating, contextual, and restricted sources.
+- Preserve `EvidenceRef` as a reference; do not relabel it as an `EvidenceBundle`.
+- Resolve claim-bearing relationships to accepted evidence support or return an explicit negative outcome.
+- Record whether an edge is observed, asserted by a source, modeled, inferred, aggregated, generalized, or otherwise derived.
+- Keep confidence, uncertainty, review state, and release state distinct.
+- Invalidate downstream derivatives when supporting evidence, policy, identity, time, or source-role state changes.
+
+### Receipt discipline
+
+The lifecycle doctrine names a `GraphBuildReceipt`, while [`RUN_RECEIPT.md`](../../docs/standards/RUN_RECEIPT.md) documents a broader receipt direction and unresolved schema drift. The exact accepted receipt family, fields, schema path, and emitter for this lane remain **NEEDS VERIFICATION**.
+
+A receipt records process memory. It does not prove that an edge is true, policy-allowed, reviewed, released, or safe to expose.
+
+[Back to top](#top)
+
+---
+
+## Finite outcomes and failure behavior
+
+The future runner must not return an unqualified success. The accepted enum and reason-code schema remain open, but behavior must distinguish at least:
+
+- a candidate that is ready for the next named review gate;
+- abstention because evidence or scope is insufficient;
+- denial because policy, rights, sensitivity, or access forbids the operation;
+- hold/quarantine because review, identity, schema, provenance, time, or ownership is unresolved;
+- error because execution or integrity failed; and
+- no-op because pinned inputs produce no material graph delta.
+
+Until a contract freezes exact names, these are behavioral classes, not a normative enum.
+
+### Fail-closed conditions
+
+A future implementation must refuse or hold when any required item is missing or inconsistent, including:
+
+- caller or domain ownership;
+- accepted predicate profile;
+- stable subject or object identity;
+- allowed input lifecycle state;
+- required evidence support;
+- source identity or source role;
+- rights, sensitivity, sovereignty, or policy decision;
+- material time fields or freshness state;
+- spec, code, input, tool, or output digest;
+- duplicate/conflict/supersession evaluation;
+- review state;
+- receipt write or integrity check;
+- correction/invalidation linkage; or
+- release-aware rollback target when the output can affect released material.
+
+Partial output must remain non-public, identifiable, and recoverable. A retry must not duplicate edges or obscure the first failure.
+
+[Back to top](#top)
+
+---
+
+## Tests, fixtures, receipts, and CI
+
+### Current boundary
+
+The checked `tests/pipelines/` direct lane is documented but not an established executable suite, and the root `Makefile` has no triplet-specific target. No dedicated shared triplet fixture lane, test lane, active spec, or CI command was established by this inspection.
+
+### Graduation proof burden
+
+Before `main.py` becomes active, the implementation needs deterministic positive and negative coverage for:
+
+- one valid public-safe relationship candidate;
+- missing caller ownership;
+- unknown predicate or incompatible predicate version;
+- unstable subject/object identity and digest collision handling;
+- unresolved `EvidenceRef` or mismatched `EvidenceBundle` support;
+- missing or collapsed source role;
+- observation/model/inference class collapse;
+- temporal-field collapse or stale support;
+- duplicate, contradictory, superseded, or withdrawn edge;
+- unknown rights or policy state;
+- exact archaeology, rare-species, living-person, genomic, private-land, cultural, or infrastructure relationship exposure;
+- redaction/generalization transform linkage;
+- direct write to `data/published/` or a public service;
+- catalog/release authority impersonation;
+- receipt write failure or hash mismatch;
+- deterministic replay and repeated-run no-op;
+- cancellation and partial-output cleanup;
+- correction-driven invalidation; and
+- rollback to the last known-good code/spec/input combination.
+
+Default fixtures should be synthetic, minimal, no-network, and public-safe. Tests must not turn fixtures into evidence or duplicate production semantics inside the test harness.
+
+### CI boundary
+
+A future workflow should call a repository-owned command and fail visibly on negative controls. It must not embed a second implementation in YAML, upload sensitive graph material, use workflow success as release approval, or write directly to published authority.
+
+The current [workflow inventory](../../.github/workflows/README.md) reports broad repository checks and many greenfield stubs. Current run conclusions, branch-protection coupling, and triplet-specific enforcement remain **UNKNOWN**.
+
+### README-only validation
+
+This documentation revision should prove:
+
+- one H1 and one closed KFM Meta Block;
+- balanced fenced blocks and valid unique anchors;
+- repository-relative links resolve at the pinned or proposed head;
+- current implementation claims match exact opened files;
+- no pseudo-schema or invented accepted object family remains;
+- no loss of the v0.1 anti-collapse, lifecycle, evidence, policy, receipt, correction, rollback, and no-publication boundaries;
+- no secrets, restricted payloads, or sensitive locations; and
+- a valid generated-work receipt with the README content hash.
+
+[Back to top](#top)
+
+---
+
+## Security, rights, and sensitive relationships
+
+Graph joins can expose more than their inputs. A harmless-looking edge may reveal identity, location, association, ownership, access, vulnerability, or sensitive group membership.
+
+High-risk relationship classes include:
+
+- living people, families, land ownership, addresses, and contact or movement patterns;
+- DNA, genomic, kinship, health, consent, or re-identification relationships;
+- archaeology, burial, sacred, cultural, tribal, or repatriation-sensitive locations and associations;
+- rare species, nesting, denning, migration, collection, or exact habitat relationships;
+- critical infrastructure, facility dependencies, access routes, vulnerabilities, and operational state;
+- private-land access, easements, occupancy, disputes, and inferred ownership;
+- source-restricted identifiers, URLs, joins, and redistribution-limited fields; and
+- combinations that create a sensitive inference absent from each individual source.
+
+Required posture:
+
+- deny or hold unknown rights, consent, sovereignty, sensitivity, or policy state;
+- preserve restricted and public-safe graph views as separate release products;
+- generalize, aggregate, redact, delay, or deny before public materialization;
+- record each transform and reason in accepted receipts;
+- keep exact sensitive values out of logs, CI artifacts, receipts, PR text, and test fixtures;
+- treat a relationship's sensitivity as potentially higher than either endpoint's sensitivity; and
+- re-evaluate downstream graph products after correction, policy change, or source withdrawal.
+
+This README contains no sensitive payload and changes no access boundary.
+
+[Back to top](#top)
+
+---
+
+## Review, release, correction, and rollback
+
+### Review burden
+
+Future executable changes require review from the owners of the responsibilities actually affected: pipeline, domain semantics, graph/predicate vocabulary, schema/contract, evidence, source roles, identity, policy/sensitivity, receipts, tests/CI, release, and documentation.
+
+[`.github/CODEOWNERS`](../../.github/CODEOWNERS) routes `pipelines/` and trust-bearing roots to `@bartytime4life` at the pinned snapshot. That routing does not prove an independent stewardship assignment, policy approval, evidence closure, or release approval.
+
+### Release boundary
+
+The safe conceptual flow is:
+
+```text
+accepted processed or catalog-scoped input
+  -> domain-owned relationship request
+  -> shared projection mechanics
+  -> candidate edge / graph delta + validation + receipt
+  -> evidence, policy, identity, and domain review
+  -> catalog / graph closure
+  -> release candidate and governed release decision
+  -> public-safe released graph artifact
+  -> governed API / UI / map / export
+```
+
+A branch, commit, pull request, merge, successful workflow, graph receipt, catalog entry, or valid edge is not KFM publication.
+
+### Correction and supersession
+
+A correction must preserve:
+
+- the prior edge or immutable reference;
+- the corrected or superseding edge;
+- reason and effective time;
+- affected subject, object, predicate, evidence, source, policy, catalog, release, API, map, search, and export references;
+- prior and new digests;
+- reviewer and release decision references; and
+- rebuild, invalidation, withdrawal, and rollback status.
+
+Do not silently rewrite a released graph.
+
+### Rollback
+
+For this README-only change, rollback is a normal Git revert that restores prior README blob `098c7e7d631a9a3642b106adf85f291600472114`, removes the paired generated receipt introduced by the change, and repeats the same documentation and receipt checks. No pipeline, data, graph, release, or public artifact rollback is required because none is changed.
+
+For future executable work, rollback must pin the last-known-good code, spec, schema, policy bundle, fixtures, dependencies, input set, output set, and release references. It must preserve failed-run and correction history.
+
+[Back to top](#top)
+
+---
+
+## No-loss preservation
+
+The v0.1 README contained strong governance material. This revision preserves its substantive obligations while correcting its implementation posture.
+
+| v0.1 material | v0.2 disposition |
+|---|---|
+| Shared executable projection purpose | **Retained**, explicitly conditional on implementation graduation. |
+| `pipelines/` versus `pipeline_specs/` split | **Retained and grounded** in current Directory Rules and root READMEs. |
+| Triplet anti-collapse rules | **Retained and expanded.** |
+| Domain-specific logic remains in domain lanes | **Retained**, with thirteen placeholder modules identified. |
+| Evidence, source-role, identity, time, provenance, review, and policy gates | **Retained and strengthened.** |
+| No direct catalog closure or publication | **Retained and made explicit across lifecycle and consumer boundaries.** |
+| Proposed helper file tree | **Removed as current-shape implication**; replaced by the verified two-file shared surface and graduation criteria. |
+| Illustrative YAML projection receipt | **Removed as pseudo-schema** because no accepted shared triplet or receipt contract was verified. |
+| Proposed tests and fixtures | **Retained as proof obligations**, not claimed paths. |
+| Correction, invalidation, supersession, and rollback | **Retained and expanded.** |
+| Six open questions | **Retained and expanded** into a repository-grounded verification backlog. |
+
+The document ID and creation date remain unchanged.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+### Documentation acceptance
+
+This README revision is complete when:
+
+- [x] the existing file is revised in place without creating a parallel authority;
+- [x] current shared and domain placeholder code is distinguished from future design;
+- [x] canonical plural data and compatibility lanes are identified accurately;
+- [x] executable, declarative, semantic, machine-shape, policy, data, evidence, receipt, release, and public-serving responsibilities remain separate;
+- [x] anti-collapse, lifecycle, source-role, evidence, identity, time, review, security, correction, rollback, and no-publication controls remain visible;
+- [x] the proposed helper tree and illustrative receipt are no longer presented as implementation or schema;
+- [x] bounded absence claims are labeled and do not imply exhaustive historical absence;
+- [x] rollback is limited to documentation and its generated receipt; and
+- [x] no runtime, data, release, or public behavior is claimed from this documentation change.
+
+### Implementation graduation
+
+The shared triplet lane is not implementation-complete until repository evidence establishes:
+
+- an accepted shared-use case and at least two real consumers, or an accepted architecture decision;
+- semantic contracts for relationship and predicate meaning;
+- machine schemas and compatibility/versioning rules;
+- stable executable API or CLI and declared side effects;
+- accepted declarative spec placement and active profiles;
+- deterministic identity/canonicalization and collision behavior;
+- public-safe valid and invalid fixtures;
+- dedicated positive, negative, no-network, replay, idempotency, correction, and rollback tests;
+- evidence, source-role, time, rights, sensitivity, policy, and review gates;
+- deterministic receipts with accepted schema and writer;
+- controlled candidate output and lifecycle handoff;
+- no-direct-publish and no-authority-impersonation tests;
+- command-bearing CI with observed results;
+- downstream invalidation and correction propagation; and
+- safe disable and rollback procedures.
+
+[Back to top](#top)
+
+---
+
+## Open verification backlog
+
+| ID | Question | Evidence needed to close | Status |
+|---|---|---|---|
+| `TRIPPIPE-001` | Is a shared triplet runner required, or should all projection remain domain-owned? | Consumer inventory, duplication analysis, package/pipeline boundary review, accepted decision. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-002` | What command or API should replace the placeholder `main.py`? | Accepted interface contract, implementation, CLI help/API docs, tests, run receipt. | **UNKNOWN** |
+| `TRIPPIPE-003` | Where should shared declarative triplet profiles live? | `pipeline_specs/` inventory, placement review, accepted profile and loader. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-004` | Which semantic contract owns subject-predicate-object relationships and qualifiers? | Accepted contract and domain-steward review. | **UNKNOWN** |
+| `TRIPPIPE-005` | Which machine schema/profile governs edges and graph deltas? | Accepted schema, version policy, fixtures, validator, tests. | **UNKNOWN** |
+| `TRIPPIPE-006` | Which predicate vocabularies are allowed and who governs them? | Vocabulary registry, compatibility rules, review ownership. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-007` | Which deterministic edge-ID and canonicalization rules are accepted? | Identity contract, algorithm decision, collision fixtures, replay tests. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-008` | Is `GraphBuildReceipt` canonical, an alias, or a proposed lifecycle name? | Receipt contract/schema registry and accepted ADR or compatibility decision. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-009` | What finite outcome and reason-code vocabulary applies? | Contract, schema, negative fixtures, consumer tests. | **UNKNOWN** |
+| `TRIPPIPE-010` | Which checked domain modules will consume shared logic first? | Non-placeholder implementation and integration tests. | **UNKNOWN** |
+| `TRIPPIPE-011` | Where do candidate graph deltas live before release, and which writer owns them? | Data-lane contract, schema, writer implementation, receipt, release handoff. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-012` | Which shared tests, fixtures, and CI job enforce the lane? | Executable suite, public-safe fixtures, Make/CLI target, command-bearing workflow and observed run. | **UNKNOWN** |
+| `TRIPPIPE-013` | Are any graph stores, APIs, searches, maps, exports, or external consumers already bound to placeholder paths? | Complete code/config/history and deployment inventory. | **UNKNOWN** |
+| `TRIPPIPE-014` | How are sensitive cross-domain joins classified and transformed? | Policy bundle, relationship sensitivity rules, redaction/generalization contracts and tests. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-015` | How do corrections invalidate graph, catalog, search, map, export, and AI derivatives? | Dependency graph, correction contract, invalidation runner, rollback drill. | **UNKNOWN** |
+| `TRIPPIPE-016` | Which owners provide pipeline, domain, evidence, policy, graph, receipt, and release review? | Verified stewardship assignments and repository review controls. | **NEEDS VERIFICATION** |
+| `TRIPPIPE-017` | Should the singular `data/triplet/` and root `catalog/triplet/` compatibility paths be retained or retired? | Reference inventory, accepted migration plan, deprecation window, rollback. | **NEEDS VERIFICATION / ADR** |
+| `TRIPPIPE-018` | Which of the two Directory Rules editions is the canonical document home? | Accepted authority/supersession decision and reference migration. | **NEEDS VERIFICATION / ADR** |
+
+Open items belong in the appropriate contract, schema, policy, ADR, drift register, issue, test, or implementation work. This README must not silently close them.
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+| Evidence | Observation supported | Status |
+|---|---|---|
+| `pipelines/triplets/README.md@b9d15210` | Prior v0.1 boundary, anti-collapse rules, proposed tree, pseudo-receipt, tests, and open questions. | **CONFIRMED** |
+| [`main.py@b9d15210`](main.py) | Shared entrypoint is a 42-byte one-line greenfield placeholder. | **CONFIRMED** |
+| Thirteen `pipelines/domains/*/triplets.py@b9d15210` reads | Sampled domain modules are one-line greenfield placeholders. | **CONFIRMED bounded inventory** |
+| [`pipelines/README.md`](../README.md) | `pipelines/` owns executable logic and documents this lane as shared projection support. | **CONFIRMED documentation** |
+| [`pipeline_specs/README.md`](../../pipeline_specs/README.md) | Declarative root is placeholder-heavy and no active root spec system is established. | **CONFIRMED documentation** |
+| Checked shared/spec/test/fixture paths | Shared triplet spec/test/fixture READMEs and sampled domain triplet YAML files returned not found. | **CONFIRMED bounded absence** |
+| [`tests/pipelines/README.md`](../../tests/pipelines/README.md) | Direct pipeline test lane is README-only at its bounded snapshot; default test target excludes it. | **CONFIRMED documentation** |
+| [`data/triplets/README.md`](../../data/triplets/README.md) | Canonical plural lifecycle lane for relationship projections; projections are not canonical truth. | **CONFIRMED documentation** |
+| [`graph_deltas/README.md`](../../data/triplets/graph_deltas/README.md) and [`exports/README.md`](../../data/triplets/exports/README.md) | Each remains a greenfield stub. | **CONFIRMED** |
+| [`data/triplet/README.md`](../../data/triplet/README.md) and [`catalog/triplet/README.md`](../../catalog/triplet/README.md) | Singular data and root catalog paths declare compatibility/redirect roles. | **CONFIRMED documentation** |
+| [`docs/architecture/directory-rules.md`](../../docs/architecture/directory-rules.md) and [`docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | Executable/declarative split, lifecycle/data placement, no-parallel-authority rule; document-home conflict remains open. | **CONFIRMED files / authority conflict unresolved** |
+| [`lifecycle-law.md`](../../docs/doctrine/lifecycle-law.md) | `CATALOG / TRIPLET` is paired closure/projection; lifecycle names `GraphBuildReceipt`; unreleased triplets are non-public. | **CONFIRMED doctrine; implementation not implied** |
+| Supplied Directory Rules PDF, Pipeline Living Implementation Manual v0.3, Implementation Reference, and Greenfield Plan | Placement, derivative-not-truth, governed-interface, lifecycle, and no-direct-publication doctrine. | **CONFIRMED supplied evidence; current runtime not implied** |
+| Root `Makefile@b9d15210` and [workflow inventory](../../.github/workflows/README.md) | No triplet-specific Make target established; current triplet-specific CI and run conclusions remain unverified. | **CONFIRMED bounded source inspection / runtime UNKNOWN** |
+| [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [generated receipt lane](../../data/receipts/generated/README.md), and generated-receipt schema | AI-authored documentation requires a generated receipt and pending human review. | **CONFIRMED** |
+
+### Evidence limitations
+
+- The inspection used connector reads and bounded code search, not a complete mounted checkout or full Git history.
+- Exact branch-protection settings, required checks, current workflow conclusions, deployed services, external graph stores, and downstream consumers were not established.
+- Supplied doctrine and planning artifacts guide architecture; they do not prove repository implementation.
+- Search results and 404 checks support bounded statements only.
+
+[Back to top](#top)
+
+---
+
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Date | **2026-07-22** |
+| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
+| Base ref | `main` |
+| Pinned evidence commit | `b9d152106796fd2ec07f9ef3ea0c99125d01d1a6` |
+| Target path | `pipelines/triplets/README.md` |
+| Change type | Documentation-only, full in-place no-loss revision |
+| Shared triplet execution | **NOT RUN - inspected entrypoint is a placeholder** |
+| Repository-native triplet tests | **NOT RUN - no dedicated suite or command established** |
+| Human review | **Pending** |
+| Release/publication impact | **None; documentation and provenance only** |
+
+Re-review this README when shared or domain triplet code, specs, contracts, schemas, predicates, identities, policies, fixtures, tests, receipts, graph storage, workflows, correction behavior, release integration, or public consumers change.
+
+[Back to top](#top)
