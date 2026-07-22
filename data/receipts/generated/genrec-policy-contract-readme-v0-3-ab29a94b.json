@@ -1,0 +1,181 @@
+{
+  "receipt_id": "genrec-policy-contract-readme-v0-3-ab29a94b",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/contract/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/contract/README.md": "sha256:ab29a94b02806259763a7d5dba5504f73cc7fe1cd25e47f2fc264d0a9dc23cf2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 family · 2026-07-22"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "attached_docs": [
+      "Pasted text(72).txt — KFM GitHub Repository Documentation Implementation Agent v3.1",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/contract/README.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/ai-build-operating-contract.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/DIRECTORY_RULES.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/registers/DRIFT_REGISTER.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0002-contracts-vs-schemas-split.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/schemas/test_common_contracts.py@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/contracts/README.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:Makefile@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/contracts-validate.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-boundary-guards.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/validator-suite.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/link-check.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/docs-control-plane.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@91a2df5aa12c0a060167bc8b79716caf0f04ee35",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    ]
+  },
+  "truth_labels": {
+    "policy/contract/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-meta-block-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block v2, balanced code fences, unique heading slugs, no trailing whitespace, and final newline."
+    },
+    {
+      "gate": "authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "All three inspected Directory Rules copies assign admissibility to singular policy/; the existing path is retained and the three-copy authority conflict remains explicit."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Current-state claims are bounded to repository files, comparison data, and searches at the pinned base commit."
+    },
+    {
+      "gate": "related-path-preflight",
+      "outcome": "PASS",
+      "reason": "All 26 KFM Meta Block related paths resolved at the pinned base."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Directly inspected workflows use hosted runners and explicit read-only contents permission; dependency execution, floating major tags, bounded search limits, and branch-protection unknowns are disclosed."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "No trusted checkout was available and this documentation-only API workflow did not execute repository code; pull-request checks remain pending."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt parsed and passed a field-by-field conformance check for required fields, allowed keys, enums, hash/version patterns, uniqueness, artifact-hash closure, and RFC 3339 timestamps from the repository schema."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull-request review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:policy/contract/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/contract/README.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:Directory-Rules-lowercase-architecture",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:Directory-Rules-uppercase-architecture",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/DIRECTORY_RULES.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:Directory-Rules-doctrine",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:CONTRIBUTING.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:Makefile",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:Makefile@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:contracts-validate.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/contracts-validate.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:policy-test.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:policy-boundary-guards.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-boundary-guards.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:validator-suite.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/validator-suite.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:link-check.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/link-check.yml@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    },
+    {
+      "id": "repo:generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@91a2df5aa12c0a060167bc8b79716caf0f04ee35"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T20:19:34.353Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and provenance only. The repository's policy/ai_builder/operating_contract.rego remains a PROPOSED stub and would require a PolicyDecision reference for policy-significant artifacts; no accepted decision record was available or invented. This pending receipt is not factual proof, executable policy approval, human review, release approval, or publication authority."
+}
