@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-policy-genealogy-readme-074cfa13",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/genealogy/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/genealogy/README.md": "sha256:074cfa1318bcfb337987f277cd7decf9f8d9b82a01e1ab165196d36c10cfc59f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-22"
+  },
+  "prompt_or_contract": "sha256:faabbae602421253913fddfad83576a7b2dcad4ad2d3bc23e45a26f4b4634a27",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Directory Rules PDF extraction and visual inspection",
+      "Markdown, link, hash, and JSON Schema validation",
+      "remote branch, read-back, and diff verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/policy/genealogy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/policy/genealogy/publication.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/policy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/policy/domains/people-dna-land/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/policy/consent/people-dna-land/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/policy/sensitivity/people-dna-land/person_parcel_join.deny.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/docs/domains/people-dna-land/sublanes/genealogy.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/contracts/domains/people-dna-land/genealogy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/contracts/policy/policy_input_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/contracts/policy/policy_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/schemas/contracts/v1/policy/policy_decision.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/fixtures/domains/people-dna-land/genealogy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/tools/validators/genealogy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/tools/validators/genealogy/validate_gedcom.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/tools/validators/genealogy/screen_living_persons.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/tools/validators/genealogy/validate_consent_receipt.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/tools/validators/genealogy/validate_overlay_pointer.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/packages/policy-runtime/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/.github/workflows/policy-test.yml"
+    ]
+  },
+  "truth_labels": {
+    "policy/genealogy/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Bounded the implementation to the existing genealogy README and its required generated-work receipt; no Rego, schema, contract, fixture, validator, workflow, runtime, release, or public artifact is changed."
+    },
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, public visibility, default branch, admin/write capability, pinned main commit, blank target blob, existing publication rule, available branch name, and CODEOWNERS routing."
+    },
+    {
+      "gate": "directory-rules-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected the supplied Directory Rules PDF visually and as extracted text plus the repository doctrine. The README classifies policy/genealogy as repository-present but placement-CONFLICTED against the canonical policy/domains/people-dna-land lane and creates no new authority."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Directly inspected the target, publication rule, domain/consent/sensitivity lanes, genealogy doctrine/contracts/schema/fixtures/validator placeholders, policy contracts/schema, policy runtime, policy workflow, ADRs, and CODEOWNERS at the pinned base."
+    },
+    {
+      "gate": "no-loss-and-truth-posture",
+      "outcome": "PASS",
+      "reason": "The prior target contained only a newline. The revision records the existing rule without changing it, distinguishes CONFIRMED repository state from PROPOSED semantics, and does not claim an evaluator, active bundle, tests, governed API wiring, enforcement, release, or publication."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Confirmed 447 lines, one H1, one balanced metadata block, balanced code fences, no trailing whitespace, final newline, and successful resolution of all 28 repository-relative link targets at the pinned base."
+    },
+    {
+      "gate": "remote-readback-and-diff-scope",
+      "outcome": "PASS",
+      "reason": "Remote branch commit 70bf368adf8232fc167f60e8a2b38c6675b910a5 matched the prepared README exactly; blob b12f21e204bb753b745d49812798c6894d4f308c; branch was one commit ahead and zero behind the unchanged pinned base with only policy/genealogy/README.md modified before receipt creation."
+    },
+    {
+      "gate": "security-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The documentation contains no real person, family, DNA/genomic, consent, land, address, source payload, credential, or exact sensitive-location data and preserves fail-closed treatment without protected examples."
+    },
+    {
+      "gate": "executable-genealogy-policy",
+      "outcome": "SKIPPED",
+      "reason": "No genealogy rule logic, Rego test, accepted bundle, evaluator, input schema, obligation interpreter, governed API consumer, release integration, or public behavior was established or changed."
+    },
+    {
+      "gate": "repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "The API-only workspace has no repository checkout. The inspected policy workflow is an explicit readiness hold rather than an evaluator-backed conformance suite; trusted pull-request checks remain pending."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-and-publication-scaffold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/policy/genealogy/publication.rego"
+    },
+    {
+      "id": "directory-placement-and-domain-law",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "genealogy-assertion-and-sensitivity-posture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/docs/domains/people-dna-land/sublanes/genealogy.md"
+    },
+    {
+      "id": "policy-decision-shape-and-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/schemas/contracts/v1/policy/policy_decision.schema.json"
+    },
+    {
+      "id": "policy-runtime-and-test-readiness",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/640fc2f3c9720cf17d640f0267bf540328e973f0/.github/workflows/policy-test.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T14:53:06Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored, repository-grounded directory-contract revision for policy/genealogy/README.md. This receipt records provenance and validation boundaries, not approval, genealogy truth, policy permission, runtime enforcement, evidence closure, consent, release authority, or publication. The README SHA-256 is bound to the exact remote-read-back bytes. Human review remains pending."
+}
