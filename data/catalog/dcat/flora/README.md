@@ -1,176 +1,221 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-catalog-dcat-flora-readme
 title: data/catalog/dcat/flora/README.md — Flora DCAT Catalog Sublane README
-version: v0.1
+version: v0.2
 type: readme; data-lifecycle-sublane; dcat-domain-catalog-guide
-status: draft; PROPOSED; data-root; catalog-stage; dcat; flora; release-gated; sensitivity-aware
+status: draft; PROPOSED profile; CONFIRMED path; data-root; catalog-stage; dcat; flora; release-gated; sensitivity-aware
 owners: OWNER_TBD — Flora steward · Data steward · Catalog steward · DCAT steward · Evidence steward · Policy steward · Release steward · Schema steward · Docs steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-24
+created: NEEDS VERIFICATION — placeholder lineage predates v0.1
+updated: 2026-07-22
 policy_label: public-doc; data; catalog; dcat; flora; lifecycle; release-gated; sensitivity-aware
 tags: [kfm, data, catalog, dcat, flora, DCATv3, CATALOG, STAC, PROV, EvidenceBundle, SourceDescriptor, ReleaseManifest, CatalogBuildReceipt, geoprivacy]
 related:
   - ../README.md
   - ../../README.md
+  - ../../stac/flora/README.md
+  - ../../prov/flora/README.md
+  - ../../domain/flora/README.md
   - ../../../../docs/domains/flora/DATA_LIFECYCLE.md
   - ../../../../docs/domains/flora/SENSITIVITY.md
   - ../../../../docs/standards/DCAT.md
   - ../../../../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
-  - ../../../../docs/doctrine/lifecycle-law.md
-  - ../../../../contracts/domains/flora/
-  - ../../../../schemas/contracts/v1/domains/flora/
-  - ../../../../policy/domains/flora/
-  - ../../../../release/
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../schemas/contracts/v1/domains/flora/README.md
+  - ../../../../policy/domains/flora/README.md
+  - ../../../receipts/generated/README.md
 notes:
-  - "This file replaces a blank placeholder at `data/catalog/dcat/flora/README.md`."
-  - "Flora DATA_LIFECYCLE identifies `data/catalog/dcat/flora/` as a PROPOSED catalog path shape."
-  - "Flora rare-plant and join-sensitive records require deny/default or redaction/generalization handling before public release."
-  - "DCAT records are catalog carriers and do not replace SourceDescriptor, EvidenceBundle, RunReceipt, PolicyDecision, or ReleaseManifest."
-  - "Rollback target for this replacement is previous blank blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "Evidence snapshot: repository main at commit 459b41d7ec91240742d8b2d3e5d9eb4dbd248df7 (2026-07-22)."
+  - "This revision updates the prior v0.1 guide; it does not create DCAT records, schemas, validators, releases, or public routes."
+  - "ADR-0022 is proposed, not accepted; catalog-matrix closure is therefore a proposed promotion requirement until adopted and implemented."
+  - "Flora DCAT records are catalog carriers, never substitutes for source, evidence, policy, review, proof, or release authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/catalog/dcat/flora
+# Flora DCAT catalog sublane
 
-> Flora-specific DCAT catalog sublane for governed `dcat:Dataset` and `dcat:Distribution` records inside the `CATALOG / TRIPLET` lifecycle stage.
+> Governed `dcat:Dataset` and `dcat:Distribution` projections for Flora at the `CATALOG / TRIPLET` lifecycle stage. Nothing in this directory is public merely because it is catalogued.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/catalog/dcat/flora" src="https://img.shields.io/badge/root-data%2Fcatalog%2Fdcat%2Fflora-blue">
-  <img alt="Domain: flora" src="https://img.shields.io/badge/domain-flora-green">
-  <img alt="Standard: DCAT v3" src="https://img.shields.io/badge/standard-DCAT_v3-informational">
-  <img alt="Exposure: released only" src="https://img.shields.io/badge/exposure-RELEASED__ONLY-critical">
-  <img alt="Sensitivity: rare plants deny default" src="https://img.shields.io/badge/sensitivity-rare__plants__deny__default-red">
-</p>
-
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Flora steward · Data steward · Catalog steward · DCAT steward · Evidence steward · Policy steward · Release steward · Schema steward · Docs steward  
 **Path:** `data/catalog/dcat/flora/README.md`  
-**Owning root:** `data/catalog/dcat/`  
-**Domain segment:** `flora`  
-**Lifecycle stage:** `CATALOG / TRIPLET`  
-**Exposure posture:** RELEASED ONLY  
-**Truth posture:** CONFIRMED target was blank · CONFIRMED parent DCAT lane is a CATALOG-stage sublane · CONFIRMED Flora lifecycle docs list `data/catalog/dcat/flora/` as a PROPOSED catalog path · CONFIRMED Flora lifecycle docs mark rare-plant sensitivity as deny-default · NEEDS VERIFICATION for concrete DCAT records, schemas, validators, policy gates, receipts, ReleaseManifest linkage, and public route behavior.
+**Lane:** `data/catalog/dcat/` → `flora/`  
+**Lifecycle boundary:** `CATALOG / TRIPLET`  
+**Exposure posture:** release-gated; public clients consume governed release surfaces only  
+**Document status:** draft; the path and parent lane are CONFIRMED, while the Flora-specific DCAT profile and its implementation are PROPOSED  
+**Evidence snapshot:** `main@459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Flora DCAT requirements](#flora-dcat-requirements) · [Sensitivity guardrails](#sensitivity-guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick jumps:** [Purpose](#purpose) · [Status and truth boundary](#status-and-truth-boundary) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Flora DCAT requirements](#flora-dcat-requirements) · [Sensitivity guardrails](#sensitivity-guardrails) · [Promotion and correction](#promotion-and-correction) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
 
 ---
 
 ## Purpose
 
-`data/catalog/dcat/flora/` stores or stages Flora-specific DCAT catalog records for plant-related datasets and distributions.
+Use this sublane for Flora-specific DCAT catalog projections that make governed datasets discoverable without collapsing their source, evidence, policy, review, or release state.
 
-Likely Flora DCAT records include dataset-level metadata for plant taxa, specimen/occurrence datasets, vegetation-community datasets, invasive-plant datasets, phenology datasets, restoration-context datasets, and rights/sensitivity-aware distribution pointers.
+Candidate subject families include plant identity and taxonomy, specimen or occurrence observations, vegetation communities, invasive plants, phenology, restoration context, and public-safe distributions derived from those materials. This list is a PROPOSED scope guide, not a confirmed payload inventory.
 
-A Flora DCAT record supports discovery and interoperability. It does **not** make a Flora claim true, public, policy-admitted, evidence-supported, or released by itself.
+A DCAT record may describe a dataset or distribution. It does **not** by itself:
+
+- establish botanical, taxonomic, temporal, geographic, or legal truth;
+- admit a source or replace its `SourceDescriptor`;
+- supply an `EvidenceBundle`, proof, policy decision, or human review;
+- authorize exact rare-plant geometry or other sensitive joins;
+- prove STAC ↔ DCAT ↔ PROV closure; or
+- create a `ReleaseManifest`, public API response, map layer, tile, or published artifact.
+
+## Status and truth boundary
+
+| Statement | Label | Repository-grounded meaning |
+|---|---|---|
+| This path and its parent DCAT lane exist. | CONFIRMED | The target and `data/catalog/dcat/README.md` were read at the evidence snapshot. |
+| Flora has sibling STAC, PROV, and domain-catalog README lanes. | CONFIRMED | The four documentation paths exist; their presence does not prove record closure. |
+| The repository targets DCAT v3. | CONFIRMED draft doctrine | `docs/standards/DCAT.md` is present and marked draft. |
+| Each promoted release should close STAC, DCAT, and PROV through a Catalog Matrix. | PROPOSED | ADR-0022 is explicitly `proposed`; no accepted decision was located for this rule. |
+| Flora catalog outputs are release-gated and sensitivity-aware. | CONFIRMED doctrine / implementation NEEDS VERIFICATION | Flora lifecycle and sensitivity documents state this posture, but runtime enforcement was not established. |
+| Concrete DCAT payloads, a Flora DCAT profile schema, validators, contexts, build receipts, and release links exist. | NEEDS VERIFICATION | A bounded repository review did not establish those implementations. Absence is not asserted. |
+
+Use these labels in changes to this lane. Do not promote a PROPOSED field, path, vocabulary, or gate to CONFIRMED merely by copying it into a DCAT record.
 
 ## Lifecycle boundary
 
 ```mermaid
 flowchart LR
-  RAW[RAW flora source capture] --> WORK[WORK / QUARANTINE]
-  WORK --> PROCESSED[PROCESSED flora candidates]
-  PROCESSED --> CATALOG[CATALOG / TRIPLET]
-  CATALOG --> PUBLISHED[PUBLISHED public-safe flora artifacts]
-  DCAT[data/catalog/dcat/flora] --> CATALOG
+  A["RAW source capture"] --> B["WORK / QUARANTINE"]
+  B --> C["PROCESSED candidates"]
+  C --> D["CATALOG / TRIPLET"]
+  D --> E["PUBLISHED release"]
+  F["Flora DCAT projection"] --> D
 ```
 
-`data/catalog/dcat/flora/` is a CATALOG-stage sublane. Public exposure applies only to records tied to an approved release, governed route, and policy-safe representation.
+This directory belongs to the catalog stage. Promotion into or through the lane is a governed state transition, not a file copy. Public exposure requires the approved representation and the repository's release controls; a catalog record that lacks those links remains non-public.
 
 ## Repo fit
 
-| Responsibility | Correct home | Rule |
+| Responsibility | Correct home | Boundary |
 |---|---|---|
-| Flora DCAT catalog records | `data/catalog/dcat/flora/` | This lane. |
-| Parent DCAT catalog lane | `data/catalog/dcat/` | W3C DCAT v3 catalog sublane. |
-| Flora STAC records | `data/catalog/stac/flora/` | Spatiotemporal Flora catalog records. |
-| Flora PROV records | `data/catalog/prov/flora/` | Flora provenance catalog projection. |
-| Flora domain catalog records | `data/catalog/domain/flora/` | Domain-specific catalog records. |
-| Flora graph/triplet projections | `data/triplets/graph_deltas/flora/`, `data/triplets/exports/flora/` | Paired graph stage. |
-| Flora proof/evidence | `data/proofs/` or accepted proof roots | EvidenceBundle and ProofPack. |
-| Flora receipts | `data/receipts/` or accepted receipt roots | CatalogBuildReceipt, RunReceipt, validation receipts. |
-| Flora release decisions | `release/` | Publication authority. |
-| Flora schemas and policy | `schemas/contracts/v1/domains/flora/`, `policy/domains/flora/` | Separate roots; paths remain PROPOSED until verified. |
+| Flora DCAT records | `data/catalog/dcat/flora/` | This lane; dataset and distribution discovery projections. |
+| Parent DCAT conventions | `data/catalog/dcat/` | Cross-domain DCAT lane guidance. |
+| Flora STAC projections | `data/catalog/stac/flora/` | Spatial and spatiotemporal catalog representation. |
+| Flora PROV projections | `data/catalog/prov/flora/` | Provenance catalog representation. |
+| Flora domain catalog | `data/catalog/domain/flora/` | Domain-specific catalog view; not a replacement for DCAT. |
+| Source admission and source roles | `data/registry/sources/flora/` and governing contracts | Source authority stays outside catalog payloads. Exact role vocabulary is NEEDS VERIFICATION against current authority. |
+| Evidence and proofs | `data/proofs/` and accepted proof roots | EvidenceBundle and proof material remain separate. |
+| Generated work and run receipts | `data/receipts/` | Receipts document generation or execution; they do not authorize release. |
+| Schemas and contracts | `schemas/contracts/v1/domains/flora/`, `contracts/domains/flora/` | Machine and semantic contracts; a Flora DCAT profile schema was not established in this review. |
+| Policy | `policy/domains/flora/` | Admissibility and disclosure policy; the current lane is a minimal scaffold. |
+| Release authority | `release/` | ReleaseManifest, approval, supersession, withdrawal, and rollback state. |
+| Published artifacts | `data/published/` and governed public surfaces | Only approved public-safe representations. |
+
+The proposed Catalog Matrix is a closure object, not a substitute directory for STAC, DCAT, PROV, receipts, proofs, or release manifests. A Flora-specific matrix index was not established at the snapshot.
 
 ## Accepted contents
 
-| Content | Purpose |
+Subject to an adopted profile and verified validators, this lane may contain:
+
+| Content | Minimum posture |
 |---|---|
-| `dcat:Dataset` records for Flora datasets | Dataset-level catalog metadata. |
-| `dcat:Distribution` records | Distribution metadata and references. |
-| Release-linked Flora DCAT records | DCAT records tied to ReleaseManifest references. |
-| Evidence and source pointers | References to EvidenceBundle, SourceDescriptor, receipts, and validation reports. |
-| Policy and sensitivity pointers | References to policy posture, redaction/generalization, rights, consent, and sensitivity state. |
-| DCAT validation summaries | Pointers to validation reports and catalog build receipts. |
+| `dcat:Dataset` projections | Stable identity; title and description; publisher or steward context; temporal and subject scope; source/evidence pointers where required. |
+| `dcat:Distribution` projections | Stable identity; access or download semantics; media/format metadata; digest and rights/sensitivity posture appropriate to the representation. |
+| Release-linked catalog projections | Immutable artifact and `ReleaseManifest` references; validation and review state; supersession/withdrawal information. |
+| Public-safe generalized distributions | Explicitly derived from policy-approved generalization or redaction; never an implicit copy of restricted geometry. |
+| Validation summaries and references | Pointers to schema/profile, catalog-build receipt, and closure result; not unstructured claims of validation. |
+
+Filenames, JSON-LD contexts, KFM extension IRIs, exact required fields, and record packaging remain PROPOSED or NEEDS VERIFICATION until the relevant schema and validator are accepted.
 
 ## Exclusions
 
 | Do not put here | Correct home |
 |---|---|
-| Flora RAW source files | `data/raw/flora/` |
-| Flora WORK/intermediate data | `data/work/flora/` |
-| Flora quarantined data | `data/quarantine/flora/` |
-| Flora processed datasets | `data/processed/flora/` |
-| Flora STAC records | `data/catalog/stac/flora/` |
-| Flora PROV records | `data/catalog/prov/flora/` |
-| Flora graph/triplet edges | `data/triplets/.../flora/` |
-| Flora EvidenceBundle/proof records | `data/proofs/` or accepted proof roots |
-| Flora receipts | `data/receipts/` or accepted receipt roots |
-| Release decisions | `release/` |
-| Published Flora products | `data/published/.../flora/` |
-| Flora schemas | `schemas/contracts/v1/domains/flora/` |
-| Flora policy rules | `policy/domains/flora/` |
-| Validators/tests/code | `tools/validators/`, `tests/`, implementation roots |
+| RAW source files or live upstream payloads | `data/raw/flora/` or governed source intake |
+| Working, quarantined, or processed datasets | `data/work/flora/`, `data/quarantine/flora/`, `data/processed/flora/` |
+| Source authority or source-admission decisions | Source registry and governing contract/policy lanes |
+| Flora STAC or PROV records | Their sibling catalog lanes |
+| Graph edges or triplet exports | `data/triplets/` |
+| EvidenceBundle, ProofPack, or proof payloads | Accepted proof/evidence roots |
+| Run, catalog-build, validation, or generation receipts | `data/receipts/` |
+| Policy rules, schemas, validators, or implementation code | `policy/`, `schemas/`, `tools/`, `src/`, and `tests/` as governed |
+| Release decisions or manifests | `release/` |
+| Public API responses, tiles, map layers, or published products | Governed API, tile, and publication roots |
 
 ## Flora DCAT requirements
 
-PROPOSED until schema and validator are verified:
+The following is the minimum review contract for a proposed Flora DCAT record. It does not replace a machine schema.
 
-| Requirement | Meaning |
-|---|---|
-| Stable Flora dataset identifier | Identifier must match the artifact identity used by catalog closure. |
-| Distribution digest | Checksum must match the released artifact or referenced bundle digest. |
-| Release reference | Public or release-linked records must point to the immutable ReleaseManifest. |
-| Evidence reference | EvidenceBundle/proof context must be referenced when claims depend on evidence. |
-| Source reference | SourceDescriptor/source catalog must be referenced when source authority matters. |
-| Policy reference | Policy/admissibility posture must be available when release or sensitivity depends on it. |
-| Closure compatibility | Flora STAC ↔ DCAT ↔ PROV agreement must hold for promoted releases. |
-| Sensitivity representation | Rare-plant, culturally sensitive, join-sensitive, and rights-restricted details must use policy-approved representation. |
+| Concern | Required review evidence | Failure posture |
+|---|---|---|
+| Identity | Stable dataset/distribution identifier linked to the described artifact. | Reject or quarantine ambiguous identity. |
+| Artifact integrity | Digest for each referenced immutable artifact or bundle. | Do not promote on missing or mismatched digest. |
+| Source posture | Reference to admitted source metadata and the governing source role; do not embed a competing role vocabulary. | Hold for source reconciliation. |
+| Evidence | Evidence/proof reference for material claims and derivation lineage. | ABSTAIN from unsupported claims; block promotion where required. |
+| Rights and policy | Rights, consent, admissibility, and policy-decision references appropriate to the representation. | DENY or withhold when unresolved. |
+| Sensitivity | Explicit treatment of rare-plant, cultural, join, land-access, and other disclosure risks. | Generalize, redact, aggregate, withhold, or DENY. |
+| Validation | Profile/schema and validator result tied to the exact record digest. | Keep out of a release until validation passes. |
+| Catalog closure | STAC, DCAT, and PROV identities/digests agree when ADR-0022 or successor policy applies. | Do not claim closure; implementation remains PROPOSED. |
+| Release | Immutable ReleaseManifest and review linkage for any public projection. | Catalogued is not published. |
+| Correction | Supersedes/withdraws linkage and correction reason when a prior record changes. | Preserve auditability; never silently overwrite released meaning. |
 
 ## Sensitivity guardrails
 
-- Flora DCAT records are catalog carriers, not Flora source truth.
-- Rare-plant exact geometry must not be exposed through DCAT fields or distributions unless policy and release evidence explicitly allow the representation.
-- DCAT metadata should point to redacted/generalized public-safe outputs when exact source data is restricted.
-- Flora source-role, rights, taxonomic reconciliation, and temporal freshness remain separate governance concerns.
-- Watchers and source-head checks may propose candidates; they do not publish DCAT records.
-- Unreleased Flora DCAT records are not public merely because they exist under this directory.
+- Default to non-disclosure for exact rare-plant locations and any catalog field or distribution that could reconstruct them.
+- Treat generalized geometry, spatial resolution, collection dates, access URLs, identifiers, and cross-dataset joins as a single disclosure surface.
+- Point public DCAT records only to policy-approved, release-bound representations. Never point a public distribution at RAW, WORK, QUARANTINE, or restricted processed material.
+- Preserve taxonomic uncertainty, temporal validity, source role, rights, and review state; do not compress them into a confidence label.
+- A low-resolution geometry is not automatically public-safe. Re-identification and join risk still require review.
+- Watchers and source-head checks may create candidates or drift signals. They do not admit sources, approve policy, or publish records.
+- If required evidence or sensitivity disposition cannot be resolved, use `ABSTAIN` or `DENY` according to the governing contract; do not invent a safe answer.
+
+## Promotion and correction
+
+Before a Flora DCAT projection can participate in a release:
+
+1. Bind the record to immutable input and output identities and digests.
+2. Resolve source admission, evidence, rights, sensitivity, and policy references.
+3. Validate the exact record against the adopted DCAT/KFM profile.
+4. Verify cross-catalog identity and digest agreement where the accepted closure rule requires it.
+5. Obtain the required human review and immutable release linkage.
+6. Expose only the approved public-safe distribution through governed public surfaces.
+
+Corrections must be additive and auditable. Supersede or withdraw the affected catalog record and release linkage, record the reason and reviewer, preserve prior digests, and roll public consumers back to the last approved artifact when necessary.
 
 ## Evidence ledger
 
-| Source | Status | Supports | Limits |
+Evidence was read at `main@459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`.
+
+| Source | Label | Supports | Limits |
 |---|---|---|---|
-| `data/catalog/dcat/flora/README.md` previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define lane boundaries. |
-| `data/catalog/dcat/README.md` | CONFIRMED | Parent DCAT catalog sublane and authority boundaries. | Does not prove Flora record inventory. |
-| `docs/domains/flora/DATA_LIFECYCLE.md` | CONFIRMED doctrine / PROPOSED lane application | Flora lifecycle, catalog paths, sensitivity posture, watcher limits. | Many exact paths and implementation details remain NEEDS VERIFICATION. |
-| Uploaded Markdown authoring prompt | CONFIRMED instruction context | README minimums, repo fit, exclusions, verification, rollback, evidence labels. | Does not prove repository implementation. |
+| `docs/doctrine/directory-rules.md` | CONFIRMED draft doctrine | `data/` lifecycle placement and separation of catalogs, receipts, proofs, and release authority. | Draft doctrine; does not prove runtime enforcement. |
+| `data/catalog/dcat/README.md` | CONFIRMED file | Parent DCAT lane and catalog-stage boundary. | Does not prove Flora payloads or validators. |
+| `data/catalog/{stac,prov,domain}/flora/README.md` | CONFIRMED files | Sibling projection lanes exist. | README presence does not prove closure objects. |
+| `docs/standards/DCAT.md` | CONFIRMED draft standard | DCAT v3 target and draft KFM profile direction. | Exact extensions, contexts, schemas, and validators remain unverified here. |
+| `docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md` | CONFIRMED proposed ADR | Proposed cross-catalog closure rule. | Status is `proposed`, not accepted. |
+| `docs/domains/flora/DATA_LIFECYCLE.md` | CONFIRMED draft doctrine | Flora lifecycle and proposed catalog placement. | Many paths and implementation details remain verification-bound. |
+| `docs/domains/flora/SENSITIVITY.md` | CONFIRMED draft doctrine; CONFLICTED authority noted in source | Rare-plant and join-sensitive disclosure posture. | Runtime policy enforcement and final authority require verification. |
+| `schemas/contracts/v1/domains/flora/README.md` | CONFIRMED draft index | Current Flora schema index. | Does not establish a Flora DCAT profile schema. |
+| `policy/domains/flora/README.md` | CONFIRMED minimal scaffold | Policy root exists. | Does not establish implemented catalog policy gates. |
+
+No accepted ADR specific to this README revision was located. This documentation-only change preserves existing root responsibilities and introduces no new canonical path, schema, runtime behavior, or publication route.
 
 ## Validation checklist
 
-- [ ] Confirm actual child files and DCAT record inventory under this lane.
-- [ ] Confirm Flora DCAT schema/profile location.
-- [ ] Confirm Flora DCAT validator and CI checks.
-- [ ] Confirm Flora STAC/DCAT/PROV catalog matrix closure.
-- [ ] Confirm ReleaseManifest linkage for public Flora DCAT records.
-- [ ] Confirm EvidenceBundle, SourceDescriptor, RunReceipt, and PolicyDecision references.
-- [ ] Confirm rare-plant, culturally sensitive, join-sensitive, rights, and publication handling.
-- [ ] Confirm withdrawal/supersession behavior for stale or failed Flora DCAT records.
+For this README revision:
+
+- [x] Read the target, parent lane, sibling catalog guides, Directory Rules, DCAT standard, Flora lifecycle/sensitivity guides, proposed ADR-0022, schema index, and policy scaffold at the pinned snapshot.
+- [x] Corrected the prior claim that the target was still blank and labeled ADR-0022 as proposed.
+- [x] Preserved the separation among catalog, source, evidence, receipts, proofs, policy, release, and publication responsibilities.
+- [x] Added no DCAT payload, schema, validator, public route, release, or runtime assertion.
+
+Before promoting any payload:
+
+- [ ] Inventory the actual child records and their consumers.
+- [ ] Identify the accepted Flora DCAT profile, JSON-LD context, schema, and validator.
+- [ ] Validate identifiers, digests, evidence, rights, sensitivity, policy, review, and release links.
+- [ ] Verify STAC ↔ DCAT ↔ PROV closure under an accepted rule.
+- [ ] Exercise correction, withdrawal, supersession, and rollback behavior.
+- [ ] Confirm that governed public clients cannot reach unreleased or restricted material.
 
 ## Rollback
 
-Rollback is required if this lane becomes a Flora source-data root, proof store, release-decision root, published-output root, schema root, policy root, validator root, implementation root, or public exposure shortcut.
+Before merge, abandon or delete the feature branch to restore the base state. After merge, revert the README commit; do not rewrite shared history. The immediately preceding target blob at the evidence snapshot is `791a0f3ad0862f1bc9eeca3e9fd619be415fdbd7`.
 
-Rollback target for this replacement: previous blank blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+Rollback is mandatory if this lane begins acting as source authority, evidence/proof storage, policy authority, release authority, publication storage, schema/validator ownership, or a shortcut around the governed public trust membrane.
 
 <p align="right"><a href="#top">Back to top</a></p>
