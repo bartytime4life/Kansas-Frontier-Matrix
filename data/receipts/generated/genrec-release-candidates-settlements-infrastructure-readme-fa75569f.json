@@ -1,0 +1,212 @@
+{
+  "receipt_id": "genrec-release-candidates-settlements-infrastructure-readme-fa75569f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "release/candidates/settlements-infrastructure/README.md"
+  ],
+  "artifact_hashes": {
+    "release/candidates/settlements-infrastructure/README.md": "sha256:fa75569f7ba16a20be7f5a3476ac3a065062cd31fcc8c9ef155abadb84d581aa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "filesystem inspection",
+      "PDF extraction and rendering"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "attached_docs": [
+      "Pasted text(69).txt",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "release/candidates/settlements-infrastructure/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/candidates/settlement/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/candidates/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/promotion_decisions/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/manifests/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/rollback_cards/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/correction_notices/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "release/withdrawal_notices/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/architecture/directory-rules.md@640fc2f3c9720cf17d640f0267bf540328e973f0#9-data-and-release-roots",
+      "docs/architecture/directory-rules.md@640fc2f3c9720cf17d640f0267bf540328e973f0#12-domain-placement-law",
+      "docs/architecture/directory-rules.md@640fc2f3c9720cf17d640f0267bf540328e973f0#15-required-readme-contract",
+      "docs/architecture/domain-placement-law.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/domains/settlements-infrastructure/CANONICAL_PATHS.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/domains/settlements-infrastructure/DATA_LIFECYCLE.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/domains/settlements-infrastructure/IDENTITY_MODEL.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/domains/settlements-infrastructure/RELEASE_INDEX.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "tests/domains/settlements-infrastructure/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      ".github/workflows/domain-settlements-infrastructure.yml@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      ".github/CODEOWNERS@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "contracts/release/promotion_decision.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "contracts/release/release_manifest.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "schemas/contracts/v1/release/promotion_decision.schema.json@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "schemas/contracts/v1/release/release_manifest.schema.json@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "data/receipts/generated/README.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/adr/ADR-0018-promotion-gate-sequence.md@640fc2f3c9720cf17d640f0267bf540328e973f0",
+      "docs/adr/ADR-0024-steward-separation-of-duties-for-release.md@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    ]
+  },
+  "truth_labels": {
+    "release/candidates/settlements-infrastructure/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown_structure",
+      "outcome": "PASS",
+      "reason": "The 489-line README has one document H1 outside the illustrative fenced dossier, the required Directory Rules sections in order, consecutive heading hierarchy, unique quick-jump anchors, balanced fences, no trailing whitespace, no merge markers, and a final newline."
+    },
+    {
+      "gate": "repository_relative_links",
+      "outcome": "PASS",
+      "reason": "All 30 repository-relative targets were read at the pinned repository state; one transient bounded fetch was repeated successfully. All local quick-jump anchors resolved."
+    },
+    {
+      "gate": "directory_rules_pdf_review",
+      "outcome": "PASS",
+      "reason": "The attached 22-page Directory Rules PDF was text-extracted and visually checked at the release-root and required-README-contract pages. The revision preserves candidate placement under release/, artifact placement under data/published/, and the mandated README section order."
+    },
+    {
+      "gate": "directory_rules_and_authority",
+      "outcome": "PASS",
+      "reason": "The README keeps release decisions, schemas, contracts, policy, lifecycle data, proofs, receipts, and published artifacts in their established authority roots and does not create a parallel home."
+    },
+    {
+      "gate": "domain_segment_drift",
+      "outcome": "PASS",
+      "reason": "The settlement versus settlements-infrastructure conflict remains CONFLICTED / NEEDS VERIFICATION. The README uses the working long-form lane, preserves the short-name compatibility path, and accepts no ADR or migration."
+    },
+    {
+      "gate": "evidence_and_truth_posture",
+      "outcome": "PASS",
+      "reason": "Repository facts are commit-pinned; proposed dossier guidance, semantic-owner gaps, inventory gaps, static workflow limits, proof and dry-run holds, manifest-schema limitations, and enforcement gaps remain visibly labeled."
+    },
+    {
+      "gate": "sensitivity_and_publication_boundary",
+      "outcome": "PASS",
+      "reason": "The revision preserves critical-infrastructure, exact-location, dependency, operator, condition, cultural/sovereignty, archaeology, living-person, land, rights, source-role, time, public-carrier, correction, withdrawal, and rollback controls without including a real payload or sensitive operational detail."
+    },
+    {
+      "gate": "workflow_trigger_preflight",
+      "outcome": "PASS",
+      "reason": "The inspected domain workflow runs on ordinary pull_request, main push, and manual events with contents: read and persisted checkout credentials disabled. It records static semantic-validation, proof-producer, and release-dry-run holds and performs no release, deployment, or publication action."
+    },
+    {
+      "gate": "workflow_compatibility",
+      "outcome": "PASS",
+      "reason": "The exact workflow sentinel sentence 'A candidate is not a release.' is preserved. No candidate record, workflow, Make target, validator, proof producer, or release command is added by this documentation revision."
+    },
+    {
+      "gate": "release_contract_boundary",
+      "outcome": "PASS",
+      "reason": "The README distinguishes candidate state, PromotionDecision outcomes, runtime outcomes, and validation outcomes, and explicitly records that the current ReleaseManifest schema is a permissive PROPOSED stub that cannot prove closure."
+    },
+    {
+      "gate": "base_drift_and_overlap_preflight",
+      "outcome": "PASS",
+      "reason": "Main and the target blob were re-read after authoring; main remained at the pinned commit and the target remained at blob 8fbb7928f6f9b8caca5336c7fb977ff18fe36b57. Open pull requests were inspected and did not overlap the target or generated receipt path."
+    },
+    {
+      "gate": "generated_receipt_schema",
+      "outcome": "PASS",
+      "reason": "This receipt parses as JSON, binds the exact README SHA-256 digest, and satisfies the repository generated-receipt schema with human review pending."
+    },
+    {
+      "gate": "repository_native_ci",
+      "outcome": "SKIPPED",
+      "reason": "The API-only execution profile did not clone or run repository code. Ordinary pull-request checks must be observed separately; skipped execution is not reported as success."
+    },
+    {
+      "gate": "human_review_and_mergeability",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending. This receipt is provenance and is not merge approval, release authority, or publication evidence."
+    }
+  ],
+  "policy_decisions": [
+    "documentation-only:no PolicyDecision, PromotionDecision, ReleaseManifest, release decision, or path-migration decision was made; the existing fail-closed Settlements/Infrastructure evidence, source-role, time, rights, sensitivity, review, correction, withdrawal, and rollback posture was preserved pending human review"
+  ],
+  "citations": [
+    {
+      "id": "directory-rules-release-candidate-placement",
+      "validated": true,
+      "evidence_ref": "docs/architecture/directory-rules.md@640fc2f3c9720cf17d640f0267bf540328e973f0#9-data-and-release-roots"
+    },
+    {
+      "id": "directory-rules-readme-contract",
+      "validated": true,
+      "evidence_ref": "docs/architecture/directory-rules.md@640fc2f3c9720cf17d640f0267bf540328e973f0#15-required-readme-contract"
+    },
+    {
+      "id": "domain-placement-working-segment",
+      "validated": true,
+      "evidence_ref": "docs/domains/settlements-infrastructure/CANONICAL_PATHS.md@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    },
+    {
+      "id": "settlements-infrastructure-lifecycle",
+      "validated": true,
+      "evidence_ref": "docs/domains/settlements-infrastructure/DATA_LIFECYCLE.md@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    },
+    {
+      "id": "settlements-infrastructure-identity-boundary",
+      "validated": true,
+      "evidence_ref": "docs/domains/settlements-infrastructure/IDENTITY_MODEL.md@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    },
+    {
+      "id": "settlements-infrastructure-release-posture",
+      "validated": true,
+      "evidence_ref": "docs/domains/settlements-infrastructure/RELEASE_INDEX.md@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    },
+    {
+      "id": "promotion-decision-contract-and-enum",
+      "validated": true,
+      "evidence_ref": "contracts/release/promotion_decision.md@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    },
+    {
+      "id": "release-manifest-thin-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/release/release_manifest.schema.json@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    },
+    {
+      "id": "domain-workflow-readiness-holds",
+      "validated": true,
+      "evidence_ref": ".github/workflows/domain-settlements-infrastructure.yml@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    },
+    {
+      "id": "github-review-route",
+      "validated": true,
+      "evidence_ref": ".github/CODEOWNERS@640fc2f3c9720cf17d640f0267bf540328e973f0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T09:59:55-05:00",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only replacement of the Settlements/Infrastructure release-candidate README. It adds the required Directory Rules contract, repository-grounded authority and maturity boundaries, candidate lifecycle and finite vocabularies, a reviewable dossier contract, release-readiness gates, critical-infrastructure and cross-lane no-leak controls, manifest-handoff limits, open verification, and rollback. It preserves the exact workflow sentinel and the workflow's semantic-validation, proof-producer, and release-dry-run holds. No candidate, payload, source, schema, contract, policy, validator, fixture, test, workflow, proof, manifest, release, deployment, or public artifact was changed. Human review remains pending."
+}
