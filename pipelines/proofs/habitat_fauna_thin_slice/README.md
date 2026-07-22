@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-proofs-habitat-fauna-thin-slice-readme
 title: Habitat × Fauna Thin Slice Proof Pipeline README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <proof-pipeline-owner>
@@ -13,10 +13,11 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-07-21
 policy_label: public-with-sensitive-ecology-proof-and-release-gates
 path: pipelines/proofs/habitat_fauna_thin_slice/README.md
 related:
+  - docs/architecture/directory-rules.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-habitat-fauna-thin-slice.md
   - docs/domains/habitat/FILE_SYSTEM_PLAN.md
@@ -26,6 +27,10 @@ related:
   - pipelines/domains/fauna/README.md
   - pipelines/domains/habitat/land_cover/README.md
   - pipelines/domains/habitat/ecoregions/README.md
+  - fixtures/domains/habitat/habitat_fauna_thin_slice/README.md
+  - tests/domains/habitat/test_habitat_fauna_thin_slice.py
+  - tests/domains/habitat/thin-slice.habitat-fauna.test/README.md
+  - .github/workflows/domain-habitat.yml
   - data/catalog/domain/habitat/
   - data/catalog/domain/fauna/
   - data/triplets/
@@ -35,18 +40,20 @@ related:
   - release/candidates/fauna/
 tags: [kfm, pipelines, proofs, habitat, fauna, thin-slice, evidence-bundle, geoprivacy, policy, release-gate, governance]
 notes:
-  - "This README fills the blank pipelines/proofs/habitat_fauna_thin_slice path as a cross-domain executable proof-harness lane."
-  - "This directory is under pipelines/ because it describes executable proof orchestration. It is not the EvidenceBundle store; proof artifacts remain under data/proofs/evidence_bundle or accepted proof homes."
-  - "The Habitat × Fauna thin slice is a proof-bearing lane, not a new domain root and not a shortcut around Habitat or Fauna ownership."
-  - "Habitat owns habitat context and suitability/corridor surfaces; Fauna owns occurrence/taxon/sensitive-fauna truth. The proof harness must preserve that split."
-  - "Concrete executable behavior, CI coverage, fixture coverage, release wiring, and public API/map behavior remain NEEDS VERIFICATION until implemented and tested."
+  - "This README defines the proposed contract and placement boundary for a cross-domain proof harness; it does not establish an executable producer."
+  - "At main@2eb6ff628a4fd1514667c0155693558a58878cbc, the Habitat test module is a one-line PROPOSED placeholder and the domain-habitat workflow records explicit validation, proof, and release-dry-run holds."
+  - "This directory is under pipelines/ because executable proof orchestration, if accepted, is implementation responsibility. It is not the EvidenceBundle store; proof artifacts remain under accepted data/proofs or receipt homes."
+  - "The Habitat × Fauna thin slice is a proposed proof-bearing lane, not a new domain root and not a shortcut around Habitat or Fauna ownership."
+  - "Habitat owns habitat context and suitability/corridor surfaces; Fauna owns occurrence/taxon/sensitive-fauna truth. A future proof harness must preserve that split."
+  - "The repository contains conflicting Directory Rules authority surfaces, and the Habitat × Fauna ADR remains a PROPOSED scaffold; exact long-term placement is NEEDS VERIFICATION."
+  - "Concrete executable behavior, fixture payloads, accepted proof-receipt shape, CI execution, release wiring, and public API/map behavior remain PROPOSED or NEEDS VERIFICATION until implemented and tested."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Habitat × Fauna Thin Slice Proof Pipeline
 
-> Cross-domain executable proof harness for demonstrating that Habitat context and Fauna evidence can move through a governed thin slice without collapsing source roles, exposing sensitive fauna material, bypassing EvidenceBundle closure, or letting public clients read internal lifecycle stores.
+> Proposed contract for a cross-domain proof harness that would demonstrate how Habitat context and Fauna evidence can move through a governed thin slice without collapsing source roles, exposing sensitive fauna material, bypassing EvidenceBundle closure, or letting public clients read internal lifecycle stores.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
 ![root](https://img.shields.io/badge/root-pipelines%2F-0a7ea4)
@@ -57,17 +64,20 @@ notes:
 
 **Status:** Draft  
 **Path:** `pipelines/proofs/habitat_fauna_thin_slice/README.md`  
-**Responsibility root:** `pipelines/` — executable pipeline/proof orchestration  
+**Responsibility root:** `pipelines/` — proposed executable pipeline/proof orchestration  
 **Cross-domain lane:** Habitat × Fauna  
-**Sublane:** Thin-slice proof / governed integration harness  
-**Placement posture:** cross-domain executable proof lane under `pipelines/proofs/`; concrete behavior remains `PROPOSED / NEEDS VERIFICATION` unless backed by tests, fixtures, receipts, and CI evidence  
-**Public posture:** no direct publication; proof outputs are receipts, reports, fixture results, and release-readiness blockers only until catalog, release, correction, and rollback gates close.
+**Sublane:** Thin-slice proof contract / proposed governed integration harness  
+**Evidence snapshot:** `bartytime4life/Kansas-Frontier-Matrix` at `main@2eb6ff628a4fd1514667c0155693558a58878cbc`  
+**Implementation state:** `CONFIRMED` documentation and readiness holds · `PROPOSED` executable proof producer · no accepted proof command or emitted proof inventory established  
+**Placement posture:** existing cross-domain sublane under `pipelines/proofs/`; long-term placement is `PROPOSED / CONFLICTED / NEEDS VERIFICATION` because the lane ADR is a scaffold and Directory Rules authority is duplicated  
+**Public posture:** no direct publication; any future proof outputs remain receipts, reports, fixture results, and release-readiness blockers until evidence, policy, review, release, correction, and rollback gates close.
 
 ---
 
 ## Quick jump
 
 - [1. Purpose](#1-purpose)
+- [Current repository state](#current-repository-state)
 - [2. Placement and authority](#2-placement-and-authority)
 - [3. Proof anti-collapse rules](#3-proof-anti-collapse-rules)
 - [4. What belongs here](#4-what-belongs-here)
@@ -87,9 +97,9 @@ notes:
 
 ## 1. Purpose
 
-`pipelines/proofs/habitat_fauna_thin_slice/` is the executable proof-harness lane for the first Habitat × Fauna integration proof.
+`pipelines/proofs/habitat_fauna_thin_slice/` documents the boundary and graduation contract for a proposed Habitat × Fauna integration proof harness. The README is implementation guidance; it is not evidence that a runner, fixture payload set, proof receipt, or passing CI job exists.
 
-It should prove, with public-safe fixtures before live data, that KFM can:
+If implemented and accepted, the harness should prove with public-safe fixtures before live data that KFM can:
 
 - read released or fixture-scoped Habitat context and Fauna evidence without merging the two domain authorities;
 - join habitat patches, land-cover/ecoregion context, and fauna occurrence/range/suitability inputs through governed cross-lane relations;
@@ -98,7 +108,29 @@ It should prove, with public-safe fixtures before live data, that KFM can:
 - produce proof receipts that show no public client reads RAW, WORK, QUARANTINE, restricted lifecycle stores, direct source APIs, graph internals, or direct model output;
 - prove EvidenceBundle, policy, geoprivacy, release, correction, and rollback preconditions before any public-facing artifact can be considered.
 
-This directory implements or will implement the **how** of the proof harness. It does not own Habitat doctrine, Fauna doctrine, source descriptors, schemas, contracts, policy, EvidenceBundle truth, catalog truth, release decisions, or public API/map behavior.
+A future implementation in this directory would own only the **how** of proof orchestration. This directory does not own Habitat doctrine, Fauna doctrine, source descriptors, schemas, contracts, policy, EvidenceBundle truth, catalog truth, release decisions, or public API/map behavior.
+
+[⬆ Back to top](#top)
+
+---
+
+## Current repository state
+
+The following boundary is confirmed only for the pinned evidence snapshot above.
+
+| Surface | Repository evidence | Truth status |
+|---|---|---|
+| This lane | This README exists and defines the proposed proof boundary. | CONFIRMED documentation |
+| Executable test module | `tests/domains/habitat/test_habitat_fauna_thin_slice.py` contains only a PROPOSED placeholder string and no test function or class. | CONFIRMED placeholder |
+| Test-lane documentation | `tests/domains/habitat/thin-slice.habitat-fauna.test/README.md` is a draft, placeholder-expanded contract and marks executable tests, fixtures, proof behavior, CI coverage, and pass rates as needing verification. | CONFIRMED documentation / PROPOSED execution |
+| Fixture lane | `fixtures/domains/habitat/habitat_fauna_thin_slice/README.md` documents synthetic public-safe fixtures but reports no verified payload inventory and no tests or validators run. | CONFIRMED documentation / payloads NEEDS VERIFICATION |
+| Habitat CI | `.github/workflows/domain-habitat.yml` runs repository-readiness checks with read-only contents permission. Its validation, proof, and release-dry-run jobs emit explicit `WORKFLOW_HOLD` outcomes and state that no accepted producer or command exists. | CONFIRMED workflow definition / execution result NEEDS VERIFICATION |
+| Lane ADR | `docs/adr/ADR-habitat-fauna-thin-slice.md` is a 17-line PROPOSED scaffold and is not an accepted placement or behavior decision. | CONFIRMED scaffold / decision PROPOSED |
+| Directory Rules | `CONTRIBUTING.md` directs live preflight to `docs/architecture/directory-rules.md` and records a same-`doc_id` conflict with `docs/architecture/DIRECTORY_RULES.md`; the newer artifact also leaves its canonical home open. | CONFIRMED conflict / resolution NEEDS VERIFICATION |
+| Proof receipts and release state | No accepted thin-slice proof-receipt schema, emitted proof inventory, or release decision was established by the bounded inspection. | NEEDS VERIFICATION |
+
+> [!IMPORTANT]
+> A green Habitat readiness workflow currently means the documented holds still apply. It does not mean the thin slice executed, produced an EvidenceBundle or proof receipt, passed sensitive-fauna review, or became release-ready.
 
 [⬆ Back to top](#top)
 
@@ -108,12 +140,13 @@ This directory implements or will implement the **how** of the proof harness. It
 
 | Question | Answer | Status |
 |---|---|---|
-| Why `pipelines/`? | This is executable orchestration / proof-harness logic, not doctrine or lifecycle data. | CONFIRMED root responsibility |
-| Why `proofs/` under `pipelines/`? | This is an executable proof runner; emitted proof artifacts belong in `data/proofs/` or receipts, not beside code. | PROPOSED / NEEDS VERIFICATION |
-| Why not `pipelines/domains/habitat/`? | This is cross-domain Habitat × Fauna; Habitat does not own Fauna occurrence truth. | CONFIRMED domain-boundary posture |
-| Why not `pipelines/domains/fauna/`? | This also verifies Habitat context and join behavior; Fauna does not own Habitat truth. | CONFIRMED domain-boundary posture |
-| Does this create a new domain root? | No. It is a proof-harness folder under an implementation root. | CONFIRMED Directory Rules posture |
-| Can this publish? | No. It emits proof receipts and release-readiness blockers only. | CONFIRMED governance posture |
+| Why `pipelines/`? | The responsibility is proposed executable orchestration rather than doctrine or lifecycle data. | CONFIRMED responsibility rule / implementation PROPOSED |
+| Why `proofs/` under `pipelines/`? | The existing parent and target READMEs treat this as a proof-orchestration sublane; emitted proof or receipt artifacts must remain in their accepted data homes. | CONFIRMED existing placement / long-term placement NEEDS VERIFICATION |
+| Why not `pipelines/domains/habitat/`? | The proposed harness spans Habitat and Fauna; choosing Habitat as the authority owner would collapse the Fauna boundary. | CONFIRMED domain-boundary rule |
+| Why not `pipelines/domains/fauna/`? | The proposed harness also verifies Habitat context and join behavior; choosing Fauna as the authority owner would collapse the Habitat boundary. | CONFIRMED domain-boundary rule |
+| Does this create a new domain root? | No. The existing path is a sublane under an implementation root. | CONFIRMED repository path |
+| Is placement accepted? | No accepted lane ADR was established; the named ADR is a scaffold and Directory Rules authority remains conflicted. | PROPOSED / CONFLICTED / NEEDS VERIFICATION |
+| Can this publish? | No. A future harness may emit review inputs and blockers only; publication remains separately governed. | CONFIRMED governance rule / no current producer |
 
 > [!IMPORTANT]
 > Passing this proof means the thin-slice invariants were demonstrated for the scoped fixtures and implementation. It is not a release decision, not an EvidenceBundle by itself, and not proof that live Habitat or Fauna pipelines are complete.
@@ -191,8 +224,8 @@ A good placement test:
 | Schemas | `schemas/contracts/v1/...` accepted schema home |
 | Contracts / meaning | `contracts/domains/habitat/`, `contracts/domains/fauna/` |
 | Policy | `policy/domains/...`, `policy/sensitivity/...` |
-| Fixtures | `fixtures/proofs/habitat_fauna_thin_slice/` or accepted fixture home |
-| Tests | `tests/pipelines/proofs/habitat_fauna_thin_slice/` or accepted test home |
+| Fixtures | Existing documented lane: `fixtures/domains/habitat/habitat_fauna_thin_slice/`; payload inventory and final cross-domain placement remain NEEDS VERIFICATION. |
+| Tests | Existing documented lanes: `tests/domains/habitat/test_habitat_fauna_thin_slice.py` and `tests/domains/habitat/thin-slice.habitat-fauna.test/`; both remain placeholder-level and final cross-domain placement is NEEDS VERIFICATION. |
 | EvidenceBundles | `data/proofs/evidence_bundle/` or accepted proof data home |
 | Lifecycle records | `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, `data/published` |
 | Release decisions | `release/...` |
@@ -262,29 +295,31 @@ Every proof run must check or explicitly fail closed on:
 
 ## 9. Directory contract
 
-Recommended shape:
+At the pinned snapshot, this README is the only lane artifact established by the bounded inspection. The Habitat workflow separately states that no accepted Habitat proof producer or deterministic proof command exists.
+
+The following shape is illustrative and entirely **PROPOSED**. Do not add these paths until the lane ADR, executable ownership, test placement, receipt schema, and validation command are accepted:
 
 ```text
 pipelines/proofs/habitat_fauna_thin_slice/
-├── README.md                         # this file
-├── PROOF_CONTRACT.md                 # PROPOSED: proof harness contract
+├── README.md                         # CONFIRMED: this boundary document
+├── PROOF_CONTRACT.md                 # PROPOSED
 ├── run_dry_fixture.py                # PROPOSED no-network fixture proof
 ├── check_domain_boundaries.py        # PROPOSED
 ├── check_sensitive_fauna_gate.py     # PROPOSED
 ├── check_evidence_refs.py            # PROPOSED
 ├── check_catalog_triplets.py         # PROPOSED
 ├── check_release_blockers.py         # PROPOSED
-├── emit_proof_receipt.py             # PROPOSED only if not shared
-└── adapters/                         # PROPOSED thin refs to domain outputs, no domain ownership
+├── emit_proof_receipt.py             # PROPOSED; only if not shared
+└── adapters/                         # PROPOSED thin refs; no domain ownership
 ```
 
-Declarative specs should live outside this directory:
+A declarative spec location is also **PROPOSED / NEEDS VERIFICATION**:
 
 ```text
-pipeline_specs/proofs/habitat_fauna_thin_slice.yaml # PROPOSED / NEEDS VERIFICATION
+pipeline_specs/proofs/habitat_fauna_thin_slice.yaml
 ```
 
-Generated proof outputs must not be written beside this code. Use accepted lifecycle/proof homes under `data/receipts/pipeline/`, `data/proofs/evidence_bundle/`, `data/catalog/domain/habitat/`, `data/catalog/domain/fauna/`, `data/triplets/`, and `release/candidates/` as governed downstream locations.
+Generated proof outputs must never be written beside executable code. Exact output paths remain subject to accepted schemas, ADRs, and receipt/proof ownership; no path listed here authorizes a parallel proof, receipt, release, catalog, or publication home.
 
 [⬆ Back to top](#top)
 
@@ -294,11 +329,11 @@ Generated proof outputs must not be written beside this code. Use accepted lifec
 
 | Class | Correct home | Notes |
 |---|---|---|
-| Proof fixture | `fixtures/proofs/habitat_fauna_thin_slice/` or accepted fixture home | Synthetic/public-safe only by default. |
+| Proof fixture | `fixtures/domains/habitat/habitat_fauna_thin_slice/` currently documents the lane; final cross-domain fixture placement remains NEEDS VERIFICATION. | Synthetic/public-safe only; no verified payload inventory at the pinned snapshot. |
 | Habitat input | `data/processed/habitat/` or `data/catalog/domain/habitat/` | Stable refs only. |
 | Fauna input | `data/processed/fauna/` or `data/catalog/domain/fauna/` | Restricted material must not be public-facing. |
 | Evidence proof | `data/proofs/evidence_bundle/` | Required for claim-bearing outputs. |
-| Proof receipt | `data/receipts/pipeline/proofs/habitat_fauna_thin_slice/<run_id>.yml` or accepted receipt home | Records refs, gates, outcomes, and blockers. |
+| Proof receipt | Accepted receipt home and schema are NEEDS VERIFICATION. | Must record refs, gates, outcomes, and blockers without becoming an EvidenceBundle or release decision. |
 | Triplet proof | `data/triplets/` or accepted graph-delta home | Provenance-bound carrier only. |
 | Release blocker | `release/candidates/...` or accepted release-candidate home | Handoff only; no release decision. |
 
@@ -308,7 +343,7 @@ Generated proof outputs must not be written beside this code. Use accepted lifec
 
 ## 11. Minimal proof receipt
 
-The final schema is not defined here. This example shows the minimum information a thin-slice proof receipt should preserve.
+The final schema and storage path are not accepted here. This non-executable example shows the minimum information a future thin-slice receipt should preserve; it is not an emitted receipt, schema authority, EvidenceBundle, PolicyDecision, ReviewRecord, or release decision.
 
 ```yaml
 schema_version: kfm.proof.habitat_fauna_thin_slice.v1
@@ -349,28 +384,29 @@ rollback:
 
 ## 12. Tests, fixtures, receipts, and proofs
 
-Default execution is **fixture-only, synthetic/public-safe, and no-network** until domain fixtures, proof specs, evidence fixtures, policy fixtures, and CI coverage are approved.
+The default future execution posture is **fixture-only, synthetic/public-safe, and no-network** until fixtures, proof specs, receipt shapes, policy fixtures, and CI wiring are accepted.
 
-Recommended tests:
+Current repository evidence does not establish an executable test:
 
-```text
-tests/pipelines/proofs/habitat_fauna_thin_slice/
-├── test_no_network_dry_run.py              # PROPOSED
-├── test_domain_boundaries_preserved.py     # PROPOSED
-├── test_source_roles_preserved.py          # PROPOSED
-├── test_sensitive_fauna_public_safe.py     # PROPOSED
-├── test_habitat_context_not_fauna_truth.py # PROPOSED
-├── test_fauna_occurrence_not_habitat_truth.py # PROPOSED
-├── test_suitability_model_labeled.py       # PROPOSED
-├── test_evidence_bundle_required.py        # PROPOSED
-├── test_catalog_triplet_provenance.py      # PROPOSED
-├── test_release_blockers_emitted.py        # PROPOSED
-├── test_no_internal_store_exposure.py      # PROPOSED
-├── test_receipt_hashes.py                  # PROPOSED
-└── test_no_direct_publish.py               # PROPOSED
-```
+- `tests/domains/habitat/test_habitat_fauna_thin_slice.py` is a one-line placeholder with no test function or class;
+- `tests/domains/habitat/thin-slice.habitat-fauna.test/README.md` documents the intended invariant but explicitly leaves executable coverage and pass rates unverified;
+- the documented fixture lane reports no verified payload inventory; and
+- `domain-habitat` CI deliberately holds instead of running a proof producer.
 
-A dry run should prove fixtures load without network access, Habitat/Fauna boundaries are preserved, sensitive-fauna material does not leak into public-safe outputs, EvidenceBundle refs are required, catalog/triplet projections carry provenance, release blockers are explicit, receipts are deterministic, and no run writes directly to public UI, public API, published layers, or release manifests.
+Exact test placement is **CONFLICTED / NEEDS VERIFICATION**: current test scaffolds are Habitat-scoped, while cross-domain placement doctrine favors a non-domain segment under the owning responsibility root. Resolve that placement before creating another test tree.
+
+A future accepted suite must cover:
+
+- no-network deterministic execution and non-empty fixture collection;
+- Habitat/Fauna ownership and source-role preservation;
+- sensitive-fauna denial and public-safe generalization;
+- EvidenceRef-to-EvidenceBundle resolution or explicit abstention;
+- catalog/triplet provenance without authority collapse;
+- explicit release blockers, correction lineage, and rollback targets;
+- deterministic receipt hashes; and
+- denial of direct writes to public UI, public API state, published layers, or release manifests.
+
+A dry run may prove only that those guardrails behaved as expected for the pinned fixtures and implementation. It does not prove live-data truth, full source coverage, release approval, public safety outside the tested cases, or publication readiness.
 
 [⬆ Back to top](#top)
 
@@ -378,9 +414,9 @@ A dry run should prove fixtures load without network access, Habitat/Fauna bound
 
 ## 13. Promotion, publication, correction, and rollback
 
-This proof harness may prepare proof receipts, invariant reports, graph-projection checks, and release-readiness blockers. It does not publish.
+A future accepted proof harness may prepare proof receipts, invariant reports, graph-projection checks, and release-readiness blockers. No such producer or emitted inventory is established by the pinned evidence, and this lane never publishes.
 
-Required chain:
+Proposed chain:
 
 ```text
 fixture / processed / catalog Habitat refs
@@ -408,16 +444,28 @@ Correction and rollback posture:
 
 ## 14. Definition of done
 
-This README is done when it:
+### Documentation boundary
 
-- fills the blank `pipelines/proofs/habitat_fauna_thin_slice/README.md` file;
-- identifies this directory as a cross-domain executable proof harness under `pipelines/`;
-- prevents Habitat domain logic, Fauna domain logic, schemas, policy, source descriptors, lifecycle data, EvidenceBundles, release decisions, public API, and UI authority from being placed here;
-- preserves Habitat/Fauna ownership boundaries, source roles, EvidenceBundle refs, policy refs, sensitive-fauna gates, catalog/triplet provenance, release blockers, correction paths, and rollback boundaries;
-- blocks proof-pass-as-release, proof-receipt-as-EvidenceBundle, Habitat-context-as-Fauna-truth, Fauna-occurrence-as-Habitat-truth, suitability-model-as-observation, generated-summary-as-evidence, internal-store exposure, and direct publication writes;
-- gives maintainers a fixture-first, no-network, receipt-emitting, fail-closed expansion pattern.
+This README is complete for review when it:
 
-Future executable work in this proof lane is done only when it has public-safe fixtures, no-network tests, domain-boundary checks, sensitive-fauna denial tests, EvidenceBundle checks, catalog/triplet provenance tests, release-blocker checks, deterministic receipts, CI coverage, steward-review handoff, and release/correction/rollback documentation.
+- identifies the path as the proposed cross-domain proof-orchestration boundary under `pipelines/` without claiming an executable producer exists;
+- records the pinned placeholder, fixture, ADR, workflow-hold, and Directory Rules evidence;
+- prevents Habitat logic, Fauna logic, schemas, policy, source descriptors, lifecycle data, EvidenceBundles, release decisions, public API, and UI authority from being placed here;
+- preserves ownership, source roles, EvidenceBundle refs, policy refs, sensitive-fauna gates, catalog/triplet provenance, release blockers, correction paths, and rollback boundaries; and
+- keeps proposed paths, schemas, commands, receipts, and public behavior visibly unimplemented.
+
+### Executable graduation
+
+Executable work is ready only when:
+
+- the Habitat × Fauna ADR or equivalent accepted decision resolves ownership and placement;
+- synthetic public-safe fixture payloads and invalid/denied cases are reviewed;
+- a deterministic no-network runner and substantive tests exist;
+- an accepted proof-receipt schema and storage home exist;
+- domain-boundary, source-role, sensitive-fauna, EvidenceBundle, provenance, blocker, direct-publication-denial, correction, and rollback checks pass;
+- CI invokes the accepted command instead of the current explicit hold;
+- the resulting receipts and remote checks are read back and reviewed; and
+- human governance review remains separate from generation, test success, release, and publication.
 
 [⬆ Back to top](#top)
 
@@ -427,16 +475,18 @@ Future executable work in this proof lane is done only when it has public-safe f
 
 | ID | Question | Status |
 |---|---|---|
-| `HF-PROOF-001` | Is `pipelines/proofs/` the final accepted home for executable proof harnesses, or should this move under `tests/`, `tools/`, or a dedicated `proofs/` implementation root by ADR? | NEEDS VERIFICATION / ADR |
-| `HF-PROOF-002` | Which schema owns thin-slice proof receipts and proof invariant reports? | NEEDS VERIFICATION |
-| `HF-PROOF-003` | Which Habitat and Fauna fixtures are the first public-safe proof set? | NEEDS VERIFICATION |
-| `HF-PROOF-004` | Which CI job owns the Habitat × Fauna thin-slice proof run? | UNKNOWN |
-| `HF-PROOF-005` | Which release candidate, if any, should consume this proof's release blockers? | NEEDS VERIFICATION |
-| `HF-PROOF-006` | Should the proof include Flora-sensitive joins in a later pass, or remain Habitat × Fauna only? | NEEDS VERIFICATION |
-| `HF-PROOF-007` | What minimum proof is required before a public map layer demonstrates this thin slice? | NEEDS VERIFICATION |
+| `HF-PROOF-001` | Is the existing `pipelines/proofs/` placement final, given the proposed lane ADR and conflicting Directory Rules authority surfaces? | CONFLICTED / NEEDS VERIFICATION / ADR |
+| `HF-PROOF-002` | Which accepted schema and canonical receipt home own thin-slice proof receipts and invariant reports? | NEEDS VERIFICATION |
+| `HF-PROOF-003` | Which payloads populate the documented Habitat × Fauna fixture lane, including valid, invalid, denied, held, and abstained cases? | NEEDS VERIFICATION |
+| `HF-PROOF-004` | Which accepted CI job and repository-native command replace the current `domain-habitat` proof hold? | NEEDS VERIFICATION |
+| `HF-PROOF-005` | Which release candidate, if any, may consume this proof's blockers without turning proof success into release approval? | NEEDS VERIFICATION |
+| `HF-PROOF-006` | Should a later reviewed scope include Flora-sensitive joins, or remain Habitat × Fauna only? | NEEDS VERIFICATION |
+| `HF-PROOF-007` | What minimum evidence, policy, sensitivity, review, correction, and rollback closure is required before a public map layer may demonstrate this slice? | NEEDS VERIFICATION |
+| `HF-PROOF-008` | Should executable tests remain under the current Habitat-scoped paths or move to a non-domain cross-domain test segment? | CONFLICTED / NEEDS VERIFICATION |
+| `HF-PROOF-009` | Which generated-work receipt and proof-receipt validators are required before CI graduation? | NEEDS VERIFICATION |
 
 ---
 
 ## Maintainer note
 
-Start with synthetic/public-safe fixtures and negative tests. Do not add live source fetching, Habitat/Fauna domain ownership, source-profile editing, schema authority, policy authority, release-decision authority, public API code, UI code, release-manifest writes, published-layer writes, or generated ecology summaries until domain boundaries, source roles, sensitive-fauna controls, EvidenceBundle refs, policy decisions, review state, catalog/triplet provenance, deterministic receipts, and rollback expectations are proven.
+Start with synthetic/public-safe fixtures and negative tests. The current Habitat workflow intentionally holds and is designed to fail when an executable test, validator, proof producer, or release command surfaces without deliberate graduation; update the runner, tests, fixtures, workflow, and documentation coherently when that happens. Do not add live source fetching, Habitat/Fauna authority, schema or policy authority, release decisions, public API/UI code, release-manifest writes, published-layer writes, or generated ecology summaries until domain boundaries, source roles, sensitive-fauna controls, EvidenceBundle refs, policy decisions, review state, catalog/triplet provenance, deterministic receipts, correction paths, and rollback expectations are proven.
