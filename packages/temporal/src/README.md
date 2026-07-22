@@ -1,315 +1,252 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION/packages-temporal-src-readme
-title: Temporal Package Source README
+title: Temporal package source README
 type: readme
-version: v1
+version: v1.1
 status: draft
-owners: OWNER_TBD
-created: NEEDS VERIFICATION — target file existed before this repair but contained only placeholder text
-updated: 2026-06-15
-policy_label: public
-related: [packages/temporal/README.md, packages/identity/README.md, packages/hashing/README.md, packages/envelopes/README.md, packages/pipelines-core/README.md, packages/schema-registry/README.md, packages/README.md, docs/doctrine/directory-rules.md, contracts/, schemas/contracts/v1/, policy/, data/receipts/, data/proofs/, release/]
-tags: [kfm, packages, temporal, src, time, interval, chronology, six-time-kind, uncertainty, validation]
-notes: ["Source-directory guide for temporal helper code.", "This directory may contain source code for KFM six-time-kind temporal primitives, interval normalization, temporal uncertainty, chronology ordering, acceptance checks, replay support, and synthetic fixtures only.", "It must not own canonical temporal claims, source records, schemas, contracts, policy rules, lifecycle data, receipts, proofs, release decisions, API routes, UI surfaces, or AI truth claims."]
+owners: OWNER_TBD - Temporal steward - Package steward - Validation steward
+created: NEEDS_VERIFICATION
+updated: 2026-07-21
+policy_label: internal
+related:
+  - packages/temporal/README.md
+  - packages/temporal/src/temporal/README.md
+  - contracts/common/temporal_window.md
+  - schemas/contracts/v1/common/temporal_window.schema.json
+  - tools/validators/validate_temporal_window.py
+  - docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md
+  - docs/doctrine/time-aware.md
+tags: [kfm, packages, temporal, source, time-aware, validation]
+notes:
+  - "v1.1 replaces speculative files, imports, outcomes, and runtime claims with repository-grounded status."
+  - "The source envelope contains a greenfield Python module placeholder and exposes no confirmed runtime API."
+  - "Temporal vocabulary remains PROPOSED / CONFLICTED across the current schema, proposed ADR-0014, and draft doctrine."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Temporal Package Source
+# Temporal package source
 
-Source-code envelope for KFM temporal helper primitives: six-time-kind carriers, interval normalization, temporal uncertainty, chronology checks, acceptance checks, replay metadata, validation helpers, and synthetic fixtures.
-
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Implementation: proposed" src="https://img.shields.io/badge/implementation-PROPOSED-orange">
-  <img alt="Root: packages" src="https://img.shields.io/badge/root-packages-blue">
-  <img alt="Path: src" src="https://img.shields.io/badge/path-src-lightgrey">
-  <img alt="Authority: helper only" src="https://img.shields.io/badge/authority-helper__only-lightgrey">
-</p>
+Source-code envelope for the KFM temporal package, currently present as a greenfield Python scaffold.
 
 > [!IMPORTANT]
-> **Status:** PROPOSED source-directory README  
-> **Path:** `packages/temporal/src/README.md`  
-> **Owning responsibility root:** `packages/`  
-> **Package lane:** `packages/temporal/`  
-> **Import/package layout:** NEEDS VERIFICATION  
-> **Temporal truth authority:** evidence and admitted records, not this source tree  
-> **Schema authority:** `schemas/contracts/v1/`, not this source tree  
-> **Contract authority:** `contracts/`, not this source tree  
-> **Policy authority:** `policy/`, not this source tree  
-> **Receipt/proof authority:** `data/receipts/` and `data/proofs/`, not this source tree  
-> **Release authority:** `release/`, not this source tree  
-> **Repo implementation depth:** UNKNOWN for package metadata, import style, tests, CI workflows, temporal schemas, validation reports, runtime behavior, and branch protections.
+> - **Document status:** draft
+> - **Authority level:** implementation-bearing source envelope
+> - **Implementation status:** `CONFIRMED` placeholder; no runtime helper API is implemented
+> - **Vocabulary posture:** `PROPOSED / CONFLICTED`
+> - **Public path:** none; public clients use governed interfaces and released artifacts
 
-## Scope
+## Purpose
 
-`packages/temporal/src/` is the proposed source-code root for the Temporal package.
+`packages/temporal/src/` holds source files for the reusable temporal package declared by `packages/temporal/pyproject.toml`.
 
-This directory is for importable helper code used by pipelines, validators, catalog/triplet builders, governed APIs, map/time-slider adapters, evidence payload assemblers, release gates, replay tools, and tests when they need deterministic temporal handling.
+The folder may eventually contain implementation code for accepted temporal contracts. It does not define temporal meaning, schema shape, policy outcomes, evidence authority, lifecycle state, or release state.
 
-This source tree may support helpers for:
+## Authority level
 
-- representing KFM time-kind carriers, including event/valid time, observation/record time, source/publication time, processing/run time, review/release time, and correction/rollback time when supplied by contracts;
-- parsing and normalizing explicit dates, datetimes, periods, ranges, open intervals, approximate dates, and uncertainty windows;
-- validating temporal precision, calendar/profile support, timezone/offset posture, temporal bounds, and interval order;
-- checking chronology consistency across source records, evidence bundles, catalog objects, triplets, layer manifests, release candidates, and rollback/correction records;
-- preserving temporal provenance such as source timestamp, observed timestamp, acquired timestamp, processed timestamp, reviewed timestamp, released timestamp, corrected timestamp, and rollback target timestamp;
-- carrying uncertainty and confidence metadata without pretending approximate dates are exact;
-- producing finite validation results for missing, ambiguous, invalid, stale, future-dated, out-of-range, drifted, or unsupported temporal values;
-- supporting deterministic replay of temporal normalization and validation results;
-- building synthetic no-network fixtures for exact, approximate, interval, open-ended, missing, invalid, stale, and rollback/correction temporal paths.
+**Implementation-bearing source envelope.**
 
-This source tree must not decide historical truth, invent missing dates, fetch source records, store lifecycle data, write receipts or proofs, approve release, expose public routes, render UI, or generate claims.
+Directory Rules places shared reusable library code under `packages/`. This README preserves the existing path and creates no new responsibility root, lifecycle phase, or parallel contract, schema, policy, receipt, proof, or release authority.
+
+## Status
+
+| Claim | Status | Evidence |
+|---|---|---|
+| The source envelope and Python namespace exist. | `CONFIRMED` | Direct reads of this README and `src/temporal/`. |
+| The project is named `kfm-temporal` at version `0.0.0`. | `CONFIRMED` | [`pyproject.toml`](../pyproject.toml). |
+| A public or internal helper API is implemented. | `UNKNOWN` / not established | [`__init__.py`](./temporal/__init__.py) is empty and [`core.py`](./temporal/core.py) is comment-only. |
+| The temporal vocabulary is settled. | `PROPOSED / CONFLICTED` | The schema, proposed ADR-0014, and draft doctrine use non-equivalent vocabularies. |
+| Package-local tests, fixtures, consumers, and CI coverage exist. | `NEEDS VERIFICATION` | No package-local test command or test configuration is declared by the inspected package metadata. |
+
+This README does not promote the package from scaffold to functional implementation.
+
+## What belongs here
+
+Currently confirmed:
+
+- this source-envelope README;
+- the `temporal/` Python namespace;
+- module documentation tied to the actual namespace;
+- Python implementation files subordinate to accepted contracts and schemas.
+
+Future additions may include reusable temporal value objects, parsers, serializers, interval operations, comparison helpers, and low-level validation support after their vocabulary and behavior are accepted and tested.
+
+## What does NOT belong here
+
+| Excluded responsibility | Correct authority or home |
+|---|---|
+| Temporal field meaning and semantic invariants | [`contracts/`](../../../contracts/README.md) |
+| JSON Schema fields, formats, and enum authority | [`schemas/contracts/v1/`](../../../schemas/contracts/v1/README.md) |
+| Allow, deny, restrict, redact, freshness, or publication decisions | [`policy/`](../../../policy/README.md) |
+| Repository-wide validator entry points | [`tools/validators/`](../../../tools/validators/README.md) |
+| Lifecycle records and artifacts | The correct lane under [`data/`](../../../data/README.md) |
+| Evidence bundles, receipts, proofs, or audit records | Their governed lanes under `data/` |
+| Release, correction, withdrawal, or rollback authority | [`release/`](../../../release/README.md) |
+| Deployable API routes or UI surfaces | The appropriate governed application root |
+| Source fetching or admission logic | The appropriate connector or pipeline root |
+| AI-generated dates presented as canonical truth | Nowhere; generated interpretations remain evidence-subordinate and review-bound |
+
+Do not place secrets, restricted payloads, precise protected locations, living-person data, or genomic material in examples or fixtures here.
+
+## Inputs
+
+### Current input interface
+
+No runtime input interface is confirmed. The namespace exports no inspected symbols and the only inspected implementation file is a placeholder.
+
+### Future input boundary
+
+If implementation is approved, inputs should be explicit contract-shaped values plus versioned configuration required by the accepted temporal vocabulary. This source tree must not fetch missing facts or infer unknown dates as truth.
+
+Inputs must preserve, when required by the controlling contract:
+
+- temporal kind or dimension;
+- original value and precision;
+- timezone or calendar context;
+- uncertainty, open, unknown, and not-applicable states;
+- correction and supersession lineage;
+- owning record or evidence identity.
+
+## Outputs
+
+### Current output interface
+
+No runtime output, package export, validator result, receipt, proof, or public response is confirmed.
+
+### Future output boundary
+
+Future outputs may be deterministic values or finite local validation results. They must not be represented as proof of temporal truth, evidence closure, a policy decision, release approval, correction closure, rollback approval, or a public response envelope.
+
+Schema validity proves shape only. Parsing success proves syntax only. Evidence, policy, review, and release checks remain separate.
+
+## Validation
+
+### Current validation state
+
+| Check | Outcome | Evidence boundary |
+|---|---|---|
+| Package identity | `CONFIRMED` | `kfm-temporal`, version `0.0.0`. |
+| Namespace export surface | `CONFIRMED empty` | [`__init__.py`](./temporal/__init__.py). |
+| Core implementation | `CONFIRMED placeholder` | [`core.py`](./temporal/core.py) contains one greenfield-placeholder comment. |
+| Module boundary documentation | `CONFIRMED` | [`temporal/README.md`](./temporal/README.md). |
+| Common temporal schema | `CONFIRMED file; PROPOSED status` | [`temporal_window.schema.json`](../../../schemas/contracts/v1/common/temporal_window.schema.json). |
+| Declared temporal validator | `CONFIRMED placeholder` | [`validate_temporal_window.py`](../../../tools/validators/validate_temporal_window.py) raises `NotImplementedError`. |
+| Package-local runtime tests | `NOT RUN / not established` | No package-local test command is declared by the inspected metadata. |
+
+Before calling this source tree functional:
+
+- [ ] accept or explicitly version a controlling temporal vocabulary;
+- [ ] define package build configuration, supported Python versions, dependencies, and package discovery;
+- [ ] implement and document actual exports;
+- [ ] add valid and invalid fixtures for supported temporal kinds and boundaries;
+- [ ] test ordering, overlap, adjacency, timezone/calendar handling, uncertainty, correction, and supersession;
+- [ ] implement the repository validator beyond `NotImplementedError`;
+- [ ] prove deterministic behavior and governed public-boundary use.
+
+Do not invent a package test command until repository tooling defines one.
+
+## Review burden
+
+[`CODEOWNERS`](../../../.github/CODEOWNERS) routes `packages/` changes to `@bartytime4life`.
+
+That route is review metadata only. It does not prove temporal stewardship, independent approval, policy review, release approval, or separation of duties. Functional changes need the appropriate contract, schema, validation, policy, security, sensitivity, and release reviewers.
+
+## Related folders
+
+| Path | Relationship | Current posture |
+|---|---|---|
+| [`packages/README.md`](../../README.md) | Canonical shared-library root guidance. | `CONFIRMED` |
+| [`packages/temporal/README.md`](../README.md) | Package-level orientation. | `CONFIRMED` thin scaffold |
+| [`packages/temporal/src/temporal/`](./temporal/README.md) | Python namespace and module boundary. | `CONFIRMED` placeholder |
+| [`contracts/common/temporal_window.md`](../../../contracts/common/temporal_window.md) | Semantic contract for the common temporal window. | `CONFIRMED` draft |
+| [`temporal_window.schema.json`](../../../schemas/contracts/v1/common/temporal_window.schema.json) | Current machine shape and six-value `time_kind` enum. | `CONFIRMED` file; metadata says `PROPOSED` |
+| [`validate_temporal_window.py`](../../../tools/validators/validate_temporal_window.py) | Declared repository validator. | `CONFIRMED` placeholder |
+| [`time-aware.md`](../../../docs/doctrine/time-aware.md) | Draft time-awareness doctrine. | `CONFIRMED` file; vocabulary not reconciled |
+| [`DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) | Repository drift register. | No temporal-specific resolution is claimed here |
+
+## ADRs
+
+- [ADR-0014](../../../docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md) is `proposed`; its vocabulary is not an accepted package contract.
+- [ADR-0001](../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) is `proposed`. Directory Rules independently separates `schemas/` machine-shape authority from `packages/` implementation.
+- This documentation-only update adds no root, changes no authority boundary, and triggers no new ADR.
+
+## Last reviewed
+
+- Date: 2026-07-21
+- Repository: `bartytime4life/Kansas-Frontier-Matrix`
+- Evidence snapshot: `main@eac8668ca9786773fcb015f9ba099e0e1dadeb35`
+- Target baseline blob: `24c8a50d79f859ef3d01d4270bfa589c50cdfa29`
+- Runtime execution: not performed; repository content was inspected through the GitHub connector
+- Human review: pending
+
+## Current implementation inventory
 
 ```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+packages/temporal/
+|-- pyproject.toml
+`-- src/
+    |-- README.md
+    `-- temporal/
+        |-- README.md
+        |-- __init__.py
+        `-- core.py
 ```
 
-Temporal helpers may normalize and validate time-bearing candidate records during governed workflows. They do not own lifecycle state, source authority, evidence authority, semantic meaning, policy decisions, receipt state, proof state, release state, or public truth.
+| File | Confirmed state |
+|---|---|
+| [`pyproject.toml`](../pyproject.toml) | Project `kfm-temporal`, version `0.0.0`; no build backend, Python requirement, dependencies, entry point, or package-local test configuration is declared. |
+| [`temporal/__init__.py`](./temporal/__init__.py) | Empty; no confirmed exports. |
+| [`temporal/core.py`](./temporal/core.py) | One comment only; no parser, value object, interval operation, comparison, or validator is implemented. |
+| [`temporal/README.md`](./temporal/README.md) | Repository-grounded module boundary and open verification record. |
 
-[⬆ Back to top](#top)
+This is an inventory of directly inspected and indexed files, not proof that a concurrently added or unindexed file cannot exist.
 
----
+## Temporal vocabulary conflict
 
-## Repo fit
+| Surface | Vocabulary | Authority state |
+|---|---|---|
+| [`temporal_window.schema.json`](../../../schemas/contracts/v1/common/temporal_window.schema.json) | `observed`, `published`, `ingested`, `effective`, `corrected`, `superseded` | Checked-in schema with `x-kfm.status: PROPOSED` |
+| [ADR-0014](../../../docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md) | `source_time`, `observed_time`, `ingested_time`, `decision_time`, `published_time`, `retraction_time` | Proposed decision |
+| [`time-aware.md`](../../../docs/doctrine/time-aware.md) | Source, observed, valid, retrieval, release, correction, and transaction time | Draft doctrine |
 
-```text
-packages/temporal/src/
-```
+Until an accepted decision reconciles them:
 
-`packages/` is the responsibility root for shared reusable code. `temporal/` is the package segment. `src/` is the source-code envelope.
+1. Do not hard-code a new canonical enum here.
+2. Do not silently translate between vocabularies.
+3. Treat crosswalks as explicit, versioned, reviewable data.
+4. Keep schema acceptance separate from semantic correctness and policy permission.
 
-| Relationship | Expected home | Boundary rule |
-| --- | --- | --- |
-| Temporal source code | `packages/temporal/src/` | Time-kind carriers, interval helpers, uncertainty helpers, chronology checks, and validation helpers only. |
-| Importable module | `packages/temporal/src/temporal/` or repo-confirmed namespace | Package namespace, subject to repo package convention verification. |
-| Package entry README | `packages/temporal/README.md` | Explains the package as a whole. |
-| Canonical temporal claims | admitted records plus EvidenceBundle support | Truth comes from evidence and governed lifecycle records, not helpers. |
-| JSON Schemas | `schemas/contracts/v1/` | Define machine shape for temporal fields and validation results. |
-| Semantic contracts | `contracts/` | Define meaning of time kinds, precision, uncertainty, and acceptance checks. |
-| Policy rules | `policy/` | Own publication, sensitivity, rights, and retention decisions. |
-| Identity helpers | `packages/identity/` | Handle deterministic ids and refs. |
-| Hash helpers | `packages/hashing/` | Compute hashes for replay and drift checks. |
-| Runtime envelopes | `packages/envelopes/` | Map helper outcomes into finite governed response envelopes. |
-| Lifecycle data | `data/<phase>/` | Own RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED state. |
-| Receipts and proofs | `data/receipts/`, `data/proofs/` | Store validation receipts and proof artifacts. |
-| Release decisions | `release/` | Own promotion, publication, correction, rollback, and supersession. |
-| Public API and UI | `apps/`, `ui/`, `web/`, or repo-confirmed equivalents | Consume governed temporal status; source internals are not public authority. |
+The current schema requires `start`, `end`, and `time_kind`, rejects additional top-level properties, and uses JSON Schema `date-time` for both endpoints. It does not establish interval ordering, inclusivity, open intervals, timezone normalization, uncertainty, calendar handling, freshness, or bitemporal behavior.
 
-> [!WARNING]
-> A source-code directory is not a temporal truth source. It may normalize and validate explicit time values; it must not invent dates, silently coerce uncertainty into exactness, or publish time claims.
+## Trust boundaries
 
-[⬆ Back to top](#top)
+Future implementation must preserve:
 
----
+1. Different kinds of time remain semantically distinct.
+2. Unknown, approximate, open, and not-applicable states are not replaced with magic dates.
+3. Corrections and supersessions add auditable history rather than erasing prior facts.
+4. Package helpers do not bypass the lifecycle spine:
 
-## Accepted inputs
+   ```text
+   RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+   ```
 
-Functions in this source tree should accept explicit values from governed callers. They should not fetch missing facts from source systems, raw stores, hidden globals, UI state, operator memory, or generated language.
+5. Public clients receive temporal claims through governed interfaces and released artifacts.
+6. EvidenceBundle support outranks generated language or local helper output.
+7. Identical inputs, configuration, vocabulary version, and timezone/calendar rules produce deterministic results.
 
-| Input family | Accepted examples | Required handling |
-| --- | --- | --- |
-| Time value | date, datetime, interval, open interval, period, approximate value | Normalize without overstating precision. |
-| Time kind | event, valid, observed, recorded, acquired, processed, reviewed, released, corrected, rollback | Preserve supplied kind and contract meaning. |
-| Precision | year, month, day, minute, second, unknown, approximate | Keep precision visible. |
-| Uncertainty | earliest/latest bounds, confidence, qualifier, source note | Preserve uncertainty; do not collapse to exact date. |
-| Source/evidence context | source ref, EvidenceRef, EvidenceBundle ref, citation-validation ref | Preserve refs; do not fabricate evidence. |
-| Lifecycle/release context | input phase, release ref, correction ref, rollback ref | Prevent invalid public exposure or stale release use. |
-| Hash/replay context | input hash, normalized hash, expected result hash | Preserve refs; delegate hashing where applicable. |
-| Fixture context | synthetic exact/approximate/interval/missing/invalid examples | Keep fixtures deterministic and public-safe. |
+## Change, correction, and rollback
 
-[⬆ Back to top](#top)
+For behavior changes, update contracts, schemas, fixtures, validators, tests, compatibility, and rollback documentation together as their responsibilities require. Preserve provenance and correction lineage for affected released artifacts.
 
----
+For this documentation-only update, rollback is a transparent revert of the README commit and its generated receipt. No executable behavior changes.
 
-## Exclusions
+## Evidence limits and open verification
 
-| Do not put here | Correct home or owner | Reason |
-| --- | --- | --- |
-| Canonical temporal records or claims | lifecycle data and evidence bundles | Temporal helpers do not create truth. |
-| JSON Schemas | `schemas/contracts/v1/` | Schemas own machine shape. |
-| Semantic contracts | `contracts/` | Contracts define time-kind meaning and acceptance rules. |
-| Policy rules | `policy/` | Policy owns publication, rights, sensitivity, retention, and access decisions. |
-| Source descriptors and source registries | `data/registry/` or repo-confirmed registry homes | Source authority is not temporal helper authority. |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data | `data/<phase>/` | Lifecycle state must remain phase-visible. |
-| Receipts, proof packs, validation reports | `data/receipts/`, `data/proofs/` | Trust artifacts must remain separately auditable. |
-| Release manifests, rollback cards, correction notices | `release/` | Publication is a governed state transition. |
-| Public API routes, map controls, or time sliders | `apps/`, `ui/`, `web/`, or repo-confirmed app roots | Presentation is downstream from governed temporal status. |
-| AI-generated dates or inferred chronology as canonical truth | governed AI runtime plus evidence/review validation | Generated date guesses require evidence and review. |
-| Real sensitive examples in fixtures | Nowhere in package fixtures | Fixtures must remain synthetic or public-safe. |
+- **NEEDS VERIFICATION:** controlling vocabulary and any migration or crosswalk;
+- **NEEDS VERIFICATION:** interval, timezone, calendar, precision, uncertainty, and bitemporal semantics;
+- **NEEDS VERIFICATION:** package build configuration, Python versions, dependencies, exports, tests, CI, and consumers;
+- **NEEDS VERIFICATION:** policy behavior for stale, corrected, superseded, embargoed, or evidence-incomplete claims;
+- **OWNER_TBD:** temporal, package, schema, validation, and documentation stewardship.
 
-[⬆ Back to top](#top)
-
----
-
-## Expected source layout
-
-> [!NOTE]
-> The tree below is PROPOSED. Confirm package metadata, language conventions, import namespace, test layout, and CI before committing code beyond README files.
-
-```text
-packages/temporal/src/
-├── README.md                # This file: source-code boundary and trust rules
-└── temporal/
-    ├── README.md            # PROPOSED: importable namespace guide
-    ├── __init__.py          # PROPOSED export boundary
-    ├── kinds.py             # PROPOSED time-kind carriers
-    ├── intervals.py         # PROPOSED interval and open-range helpers
-    ├── precision.py         # PROPOSED temporal precision helpers
-    ├── uncertainty.py       # PROPOSED uncertainty and qualifier helpers
-    ├── chronology.py        # PROPOSED ordering/consistency checks
-    ├── validation.py        # PROPOSED acceptance and validation helpers
-    ├── replay.py            # PROPOSED replay/drift helpers
-    ├── fixtures.py          # PROPOSED synthetic fixtures
-    └── py.typed             # PROPOSED if typed package convention is confirmed
-```
-
-Preferred import posture, subject to package verification:
-
-```python
-from temporal.intervals import normalize_interval
-from temporal.kinds import TimeKind
-from temporal.validation import validate_temporal_candidate
-```
-
-[⬆ Back to top](#top)
-
----
-
-## Helper outcomes
-
-| Outcome | Use when | Runtime posture |
-| --- | --- | --- |
-| `VALID` | Time value and kind are accepted under supplied contract/profile. | Candidate for downstream validation; not proof of truth. |
-| `NORMALIZED` | Value was converted to canonical helper representation. | Preserve original value and precision. |
-| `APPROXIMATE` | Date/time has uncertainty or coarse precision. | Do not display as exact. |
-| `OPEN_INTERVAL` | Range has missing start or end. | Preserve open-bound semantics. |
-| `AMBIGUOUS` | Value has multiple possible interpretations. | Hold or abstain; do not choose silently. |
-| `STALE` | Temporal ref is superseded, expired, or older than allowed profile. | Hold or deny according to caller policy. |
-| `FUTURE_DATED` | Value is later than allowed by the supplied context. | Fail closed or hold for review. |
-| `INVALID` | Value, kind, precision, timezone, or interval order fails checks. | Fail closed with validation metadata. |
-| `UNSUPPORTED_PROFILE` | Calendar, precision, or format is not supported. | Abstain or hold; do not coerce silently. |
-| `DRIFT` | Replay normalization differs from expected result. | Block promotion/release and require review. |
-| `ERROR` | Runtime failure prevents valid local helper result. | Fail closed with error metadata. |
-
-`VALID` and `NORMALIZED` are not proof of truth, evidence closure, policy allow, publication, or release. They only mean local temporal helper checks succeeded for supplied values.
-
-[⬆ Back to top](#top)
-
----
-
-## Trust-boundary flow
-
-```mermaid
-flowchart LR
-    A[Validator / pipeline / API caller] --> B[packages/temporal/src]
-    B --> C[Importable temporal helpers]
-    C --> D{Time-kind / interval / precision check}
-    D -->|VALID or NORMALIZED| E[Temporal candidate metadata]
-    D -->|APPROXIMATE or OPEN_INTERVAL| F[Uncertainty-aware candidate metadata]
-    D -->|AMBIGUOUS or UNSUPPORTED_PROFILE| G[Hold / abstain metadata]
-    D -->|STALE or FUTURE_DATED| H[Review-required metadata]
-    D -->|INVALID or ERROR| I[Fail-closed metadata]
-    E --> J[Schema + contract + policy + evidence gates]
-    F --> J
-    J --> K[Receipt/proof/release workflows]
-    K --> L[Governed API / map / audit / replay]
-
-    C -. must not invent .-> M[Canonical temporal claims]
-    C -. must not define .-> N[Contracts]
-    C -. must not decide .-> O[Policy]
-    C -. must not write .-> P[Receipts / proofs]
-```
-
-[⬆ Back to top](#top)
-
----
-
-## Source anti-collapse rules
-
-| Boundary | Preserve as | Never collapse into |
-| --- | --- | --- |
-| Time-kind carrier | Explicit semantic time role | Generic timestamp blob |
-| Normalized time | Helper representation | Canonical truth claim |
-| Approximate date | Precision and uncertainty | Exact date display |
-| Open interval | Open-bound semantics | Fake start/end date |
-| Chronology check | Local consistency check | Evidence proof or policy allow |
-| Replay result | Deterministic comparison | Release approval |
-| Fixture time | Synthetic test example | Real sensitive record |
-
-[⬆ Back to top](#top)
-
----
-
-## Development rules
-
-1. Prefer pure functions with explicit input objects.
-2. Preserve original value, normalized value, time kind, precision, timezone/offset posture, uncertainty bounds, source/evidence refs, hash refs, release refs, rollback refs, and validation profile supplied by callers.
-3. Do not make network calls from `src` helpers.
-4. Do not read directly from RAW, WORK, QUARANTINE, unpublished candidates, source systems, source credentials, canonical stores, private keys, or model runtimes.
-5. Do not write lifecycle data, temporal claims, release records, receipts, proofs, policy rules, source registries, catalog records, API responses, UI components, or map controls.
-6. Do not approve release, decide policy, resolve evidence as truth, define contract meaning, infer missing dates as fact, or generate public claims.
-7. Do not create schemas, contracts, policy source rules, source registries, pipeline DAGs, API routes, public answers, release decisions, key policies, or connector behavior from this source tree.
-8. Do not store raw provider payloads, secrets, credentials, private source records, sensitive-location examples, living-person identifiers, DNA/genomic context, or unrestricted sensitive context.
-9. Return typed finite outcomes instead of implicit temporal allow, warning-only ambiguity, hidden precision loss, or silent exact-date coercion.
-10. Add deterministic tests for every behavior-changing helper and every negative path.
-11. Keep fixtures synthetic, sanitized, and public-safe.
-
-[⬆ Back to top](#top)
-
----
-
-## Validation checklist
-
-- [ ] Confirm `packages/temporal/src/` exists in the mounted repo with this README as its source-directory guide.
-- [ ] Confirm package manager and import convention (`pyproject.toml`, package.json, workspace config, or equivalent).
-- [ ] Confirm whether this source tree is Python-only, TypeScript-only, or mixed-language.
-- [ ] Confirm import namespace and whether it is `temporal`, `kfm_temporal`, or repo-specific.
-- [ ] Confirm owners and CODEOWNERS path coverage.
-- [ ] Confirm six-time-kind names and semantics from current contracts/doctrine.
-- [ ] Confirm schema homes for temporal values, precision, uncertainty, validation results, release/correction time refs, and replay expectations.
-- [ ] Confirm relationship with `packages/identity/`, `packages/hashing/`, `packages/envelopes/`, `packages/pipelines-core/`, receipt/proof homes, and release gates.
-- [ ] Confirm tests for `VALID`, `NORMALIZED`, `APPROXIMATE`, `OPEN_INTERVAL`, `AMBIGUOUS`, `STALE`, `FUTURE_DATED`, `INVALID`, `UNSUPPORTED_PROFILE`, `DRIFT`, and `ERROR` paths.
-- [ ] Confirm helpers do not invent missing dates, discard precision, or coerce uncertain dates into exact values.
-- [ ] Confirm helpers do not write lifecycle data, receipts, proofs, release manifests, catalog records, API responses, credentials, permissions, UI state, or temporal claims.
-
-Suggested inspection commands:
-
-```bash
-find packages/temporal/src -maxdepth 5 -type f | sort
-git grep -n "six-time\|TimeKind\|valid_time\|event_time\|observed_time\|recorded_time\|released_time\|rollback_time\|APPROXIMATE\|OPEN_INTERVAL\|FUTURE_DATED" -- packages docs contracts schemas policy tests fixtures tools apps data release 2>/dev/null || true
-git grep -n "from temporal\|import temporal\|packages/temporal/src" -- . 2>/dev/null || true
-```
-
-[⬆ Back to top](#top)
-
----
-
-## Rollback
-
-Rollback is required if this source tree:
-
-- creates a parallel authority home for temporal claims, canonical records, contracts, schemas, policy, registries, lifecycle data, receipts, proofs, releases, API routes, UI surfaces, credentials, key-management, model runtimes, or source data;
-- writes temporal claims, mutates source timestamps, silently coerces approximate dates into exact dates, emits receipts/proofs, approves release, or publishes artifacts as a source helper;
-- lets public clients or normal UI surfaces access RAW, WORK, QUARANTINE, unpublished candidates, source systems, direct model outputs, or unreleased artifacts;
-- treats temporal normalization as proof of truth, evidence closure, admissibility, public safety, policy allow, or release;
-- hides ambiguity, stale dates, future dates, invalid intervals, unsupported calendars/profiles, or replay drift behind warning-only logs;
-- stores secrets, credentials, private source records, real living-person identifiers, DNA/genomic context, or protected-location examples in fixtures.
-
-Rollback target: revert the temporal-source PR, keep any generated audit notes as review evidence, and file the affected behavior in `docs/registers/DRIFT_REGISTER.md` or `docs/registers/VERIFICATION_BACKLOG.md` if the mounted repo uses those registers.
-
-[⬆ Back to top](#top)
-
----
-
-## Evidence boundary
-
-| Source | Status | Supports | Limits |
-| --- | --- | --- | --- |
-| Current target file | CONFIRMED | `packages/temporal/src/README.md` existed and required replacement from placeholder content. | Did not prove source implementation maturity. |
-| Parent package README | CONFIRMED repo doc | `packages/temporal/` is intended for a six-time-kind temporal model and acceptance checks. | Parent file is still a short stub and does not prove implementation details. |
-| `packages/README.md` | CONFIRMED repo doc | `packages/` is for shared libraries used by apps, workers, pipelines, and tools. | Does not define temporal package behavior. |
-| GitHub search for temporal terms | CONFIRMED no direct result in this pass | No directly matching temporal implementation docs were found using the searched terms. | Search was not a full repository audit and does not prove absence of temporal-related files. |
-| Current file-generation pass | CONFIRMED request | User-requested target path and README repair/replacement. | Does not inspect package metadata, tests, CI logs, dashboards, temporal contracts, deployment posture, runtime behavior, or branch protection. |
-
-[⬆ Back to top](#top)
+<p align="right"><a href="#top">Back to top</a></p>
