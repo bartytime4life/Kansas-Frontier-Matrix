@@ -71,7 +71,7 @@
     {
       "gate": "base-drift-reconciliation",
       "outcome": "PASS",
-      "reason": "Main advanced after branch creation from f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566 to 37f15d8d9da06ca1da66f6f92c011f78fb23949b through an unrelated temporal package README and generated receipt. The proof-index target and material proof evidence did not overlap, so branch history was preserved without force rewrite."
+      "reason": "Main advanced after branch creation from f9c257b8f9ba9479bce69dfa2fd2411b9cdcf566 to 9e38544e3cde9b74895109c38f8ce128946a9c02 through unrelated temporal package documentation/provenance and generalized-infrastructure fixture documentation. The proof-index target and material proof evidence did not overlap, so branch history was preserved without force rewrite."
     },
     {
       "gate": "directory-authority-and-duplicate-preflight",
