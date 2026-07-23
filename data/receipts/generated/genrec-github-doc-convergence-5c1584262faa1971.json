@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-github-doc-convergence-5c1584262faa1971",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/README.md",
+    ".github/workflows/README.md",
+    ".github/ISSUE_TEMPLATE/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/README.md": "sha256:c07c55d9e8bb9ee201533dacf1cd5b457cd61ccd1ba24f34c4ee5e65398229f2",
+    ".github/workflows/README.md": "sha256:2cc839495b1087813852bce65f2c055ce5c41be6360f62c33283168b9bd4d67d",
+    ".github/ISSUE_TEMPLATE/README.md": "sha256:4063fbcfa09e3455f26ff2eb18a58029195fe7b4207945d543102538d5862a1f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 family Work Mode session; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "git",
+      "shell",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:8e5d61b464ef6d04b8ccb881b14c1ed063784fad585a25936c27d0ef18ebdd36",
+      "sha256:a89f0527052062ce0ae659a3e9b5f863b050bc6731a7a569c4c4403d3ff2f46c",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:bb88ad97cca9627407a36b922092e206ed30e1b91f7f5e4f0a95028664eeeda3"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "docs/doctrine/directory-rules.md",
+      "docs/architecture/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@1180cf7ec53d5acbbb859a39d93c1d129ec83df9",
+      "path:.github/CODEOWNERS@1180cf7ec53d5acbbb859a39d93c1d129ec83df9",
+      "path:.github/dependabot.yml@1180cf7ec53d5acbbb859a39d93c1d129ec83df9",
+      "tree:.github/workflows@1180cf7ec53d5acbbb859a39d93c1d129ec83df9",
+      "tree:.github/ISSUE_TEMPLATE@1180cf7ec53d5acbbb859a39d93c1d129ec83df9"
+    ]
+  },
+  "truth_labels": {
+    ".github/README.md": "CONFIRMED",
+    ".github/workflows/README.md": "CONFIRMED",
+    ".github/ISSUE_TEMPLATE/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdownlint-cli2 0.23.1 / markdownlint 0.41.1",
+      "outcome": "PASS",
+      "reason": "Zero issues under repository-compatible allowances for metadata-before-H1, inline anchors, long technical lines, and compact tables."
+    },
+    {
+      "gate": "README links, fragments, structure, and inventory",
+      "outcome": "PASS",
+      "reason": "All local links and fragments resolved; one H1 per README; balanced fences and HTML; all 41 workflows and six chooser templates represented."
+    },
+    {
+      "gate": "YAML 1.2 and issue-front-matter parsing",
+      "outcome": "PASS",
+      "reason": "Dependabot plus all 41 workflows parsed; all six chooser templates contain the required front-matter keys and array types."
+    },
+    {
+      "gate": "Mermaid 11.12.0 syntax",
+      "outcome": "PASS",
+      "reason": "Both flowcharts parsed successfully."
+    },
+    {
+      "gate": "Workflow static threat preflight",
+      "outcome": "PASS",
+      "reason": "All 41 workflows declare permissions; no pull_request_target trigger key, self-hosted runner, secret expression, or ordinary write scope; CodeQL security-events write is the only write grant."
+    },
+    {
+      "gate": "make validate",
+      "outcome": "PASS",
+      "reason": "Passed after installing declared test extras in an isolated temporary environment; schema validator completed and 18 contract/schema tests passed."
+    },
+    {
+      "gate": "actionlint",
+      "outcome": "SKIPPED",
+      "reason": "The binary is not installed; workflow YAML was not changed. YAML 1.2 parsing and targeted static workflow checks were used instead."
+    },
+    {
+      "gate": "GitHub settings and workflow-run verification",
+      "outcome": "SKIPPED",
+      "reason": "Branch protection, rulesets, token defaults, chooser rendering, labels, run results, and artifact retention are external state and remain NEEDS VERIFICATION."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "kfm-main-snapshot",
+      "validated": true,
+      "evidence_ref": "repository:bartytime4life/Kansas-Frontier-Matrix@1180cf7ec53d5acbbb859a39d93c1d129ec83df9"
+    },
+    {
+      "id": "directory-rules-pdf",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "github-codeowners",
+      "validated": true,
+      "evidence_ref": "path:.github/CODEOWNERS@1180cf7ec53d5acbbb859a39d93c1d129ec83df9"
+    },
+    {
+      "id": "github-dependabot",
+      "validated": true,
+      "evidence_ref": "path:.github/dependabot.yml@1180cf7ec53d5acbbb859a39d93c1d129ec83df9"
+    },
+    {
+      "id": "github-workflow-tree",
+      "validated": true,
+      "evidence_ref": "tree:.github/workflows@1180cf7ec53d5acbbb859a39d93c1d129ec83df9"
+    },
+    {
+      "id": "github-issue-template-tree",
+      "validated": true,
+      "evidence_ref": "tree:.github/ISSUE_TEMPLATE@1180cf7ec53d5acbbb859a39d93c1d129ec83df9"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T00:08:48Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only convergence of the .github parent and subtree inventories. No workflow YAML, issue template, GitHub setting, dependency configuration, release state, or publication path was changed. The receipt records process provenance and remains pending human review; it contains no prompt text, hidden reasoning, credentials, restricted payloads, or sensitive locations."
+}
