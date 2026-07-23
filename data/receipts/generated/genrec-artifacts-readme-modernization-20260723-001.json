@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-artifacts-readme-modernization-20260723-001",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "artifacts/README.md"
+  ],
+  "artifact_hashes": {
+    "artifacts/README.md": "sha256:1792fe292db52d277d172ec19f21766f2d355148fad669678d92752dcb96c24b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "GPT-5.6 Pro; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:028998b9caed5df18eed4d8531b007ff545432a0b0689097487e6310dae13bd8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "Python structural validation",
+      "container hashing"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:028998b9caed5df18eed4d8531b007ff545432a0b0689097487e6310dae13bd8",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59"
+    ],
+    "attached_docs": [
+      "# KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent.md",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:artifacts/README.md@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "compare:43f1d97954debda98691b2685c1bb75c4b63c872...1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:docs/doctrine/directory-rules.md@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:docs/architecture/directory-rules.md@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:.github/CODEOWNERS@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:docs/registers/DRIFT_REGISTER.md@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:docs/adr/INDEX.md@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:Makefile@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:.github/workflows/docs-build.yml@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:.github/workflows/maplibre-perf-governance.yml@1f093dfc7295f0c2e63c89c3573061ad08698a88",
+      "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@1f093dfc7295f0c2e63c89c3573061ad08698a88"
+    ]
+  },
+  "truth_labels": {
+    "artifacts/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository and target preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, admin/push permission, default branch, current base, target blob, Directory Rules copies, CODEOWNERS, drift register, ADR index, workflows, Makefile, and generated-receipt schema were inspected."
+    },
+    {
+      "gate": "complete baseline read and no-loss review",
+      "outcome": "PASS",
+      "reason": "All 373 lines of the v0.2 README were read in bounded ranges. The v0.3 candidate preserves the compatibility classification, four-lane allowlist, exact tracked inventory, trust-content prohibition, drift findings, generator and validation surfaces, migration alternatives, and rollback posture."
+    },
+    {
+      "gate": "base target and overlap concurrency",
+      "outcome": "PASS",
+      "reason": "No open pull request or branch matching artifacts README modernization surfaced. The branch was created from main@1f093dfc7295f0c2e63c89c3573061ad08698a88 with target blob d921f0789939b0789df84d55a3ddabe5d4dd3f5a."
+    },
+    {
+      "gate": "Directory Rules placement and compatibility boundary",
+      "outcome": "PASS",
+      "reason": "The existing artifacts/ compatibility-root README is updated in place; the generated provenance receipt uses the canonical data/receipts/generated/ lane. No root, child lane, trust authority, lifecycle phase, release path, or public route is created or changed."
+    },
+    {
+      "gate": "Directory Rules README order",
+      "outcome": "PASS",
+      "reason": "The first twelve H2 sections exactly match Purpose, Authority level, Status, What belongs here, What does NOT belong here, Inputs, Outputs, Validation, Review burden, Related folders, ADRs, and Last reviewed."
+    },
+    {
+      "gate": "tracked-tree continuity",
+      "outcome": "PASS",
+      "reason": "The compare from prior convergence merge 43f1d97954debda98691b2685c1bb75c4b63c872 through current base 1f093dfc7295f0c2e63c89c3573061ad08698a88 contains zero changed paths under artifacts/, so the prior 44-file, 734530-byte child-lane inventory remains applicable before this README edit."
+    },
+    {
+      "gate": "current evidence refresh",
+      "outcome": "PASS",
+      "reason": "Current Directory Rules, duplicate Directory Rules placement, CODEOWNERS limits, drift register entry, ADR index, docs readiness hold, MapLibre readiness workflow, Makefile commands, and generated-receipt schema were directly inspected at the pinned base."
+    },
+    {
+      "gate": "Markdown structure",
+      "outcome": "PASS",
+      "reason": "The candidate is UTF-8 with LF endings and a final newline; it has one H1, seventeen H2 sections, exact required H2 order, one balanced KFM meta block, balanced fences and HTML wrappers, unique custom anchors, and twenty-four resolved internal fragment references. Markdown-it parsed 1990 tokens."
+    },
+    {
+      "gate": "no-loss and presentation admission",
+      "outcome": "PASS",
+      "reason": "Eight static badges project documented status and link to evidence-bearing sections. The prior boundary table, exact lane counts, prohibited content, drift register, diagrams, validation limits, review burden, migration alternatives, and rollback instructions are retained or strengthened. No dynamic CI, coverage, release, or publication badge was added."
+    },
+    {
+      "gate": "secret and sensitive-content review",
+      "outcome": "PASS",
+      "reason": "The candidate contains no credential, private key, token value, private endpoint, row-level personal data, genomic data, protected coordinate, restricted payload, or hidden reasoning."
+    },
+    {
+      "gate": "GENERATED_RECEIPT schema preflight",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed truth label, validation outcomes, hashes, citations, pending human review, and optional links/notes conform to the inspected generated_receipt.schema.json structure."
+    },
+    {
+      "gate": "repository-relative links and host rendering",
+      "outcome": "SKIPPED",
+      "reason": "Existing repository-relative destinations were preserved or replaced with directly inspected repository paths; complete remote link traversal and GitHub host-render validation are delegated to pull-request checks."
+    },
+    {
+      "gate": "runtime, workflow, and executable tests",
+      "outcome": "SKIPPED",
+      "reason": "This session did not execute repository tests or workflows locally. The change is documentation/provenance-only and does not modify generators, workflows, schemas, policy, lifecycle data, release objects, deployment, or public behavior."
+    },
+    {
+      "gate": "human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request; the receipt is not approval or merge authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-MARKDOWN-ENGINEERING-V5",
+      "validated": true,
+      "evidence_ref": "sha256:028998b9caed5df18eed4d8531b007ff545432a0b0689097487e6310dae13bd8"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-PDF",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "KFM-AI-BUILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59"
+    },
+    {
+      "id": "KFM-MAIN-SNAPSHOT",
+      "validated": true,
+      "evidence_ref": "repository:bartytime4life/Kansas-Frontier-Matrix@1f093dfc7295f0c2e63c89c3573061ad08698a88"
+    },
+    {
+      "id": "ARTIFACTS-CONTINUITY-COMPARE",
+      "validated": true,
+      "evidence_ref": "compare:43f1d97954debda98691b2685c1bb75c4b63c872...1f093dfc7295f0c2e63c89c3573061ad08698a88"
+    },
+    {
+      "id": "ARTIFACTS-DRIFT-REGISTER",
+      "validated": true,
+      "evidence_ref": "path:docs/registers/DRIFT_REGISTER.md@1f093dfc7295f0c2e63c89c3573061ad08698a88"
+    },
+    {
+      "id": "DIRECTORY-RULES-DOCTRINE",
+      "validated": true,
+      "evidence_ref": "path:docs/doctrine/directory-rules.md@1f093dfc7295f0c2e63c89c3573061ad08698a88"
+    },
+    {
+      "id": "DIRECTORY-RULES-ARCHITECTURE",
+      "validated": true,
+      "evidence_ref": "path:docs/architecture/directory-rules.md@1f093dfc7295f0c2e63c89c3573061ad08698a88"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T20:19:33Z",
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": "docs/registers/DRIFT_REGISTER.md (2026-07-22 artifacts authority drift)"
+  },
+  "notes": "AI-authored documentation-only same-path modernization of artifacts/README.md. The compatibility boundary remains transitional and non-authoritative; tracked artifacts/release and generated artifacts/perf drift remain unresolved. No artifact lane, generator, workflow, schema, contract, policy, lifecycle record, receipt, proof, release, deployment, promotion, publication, or merge behavior is changed. Human review remains pending, and this generated receipt is process provenance rather than EvidenceBundle, PolicyDecision, ReviewRecord, release approval, or publication authority."
+}
