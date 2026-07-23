@@ -1,454 +1,439 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0005-apps-explorer-web-canonical-map-first-shell
-title: "ADR-0005 — apps/explorer-web is the canonical map-first shell"
-type: standard
-version: v1
+title: "ADR-0005 — `apps/explorer-web/` is the canonical map-first shell"
+type: adr
+adr_id: ADR-0005
+version: v1.1
 status: proposed
-owners: [kfm-architecture-stewards, kfm-ui-owner]
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — Explorer Web application owner"
+  - "NEEDS VERIFICATION — UI and map-runtime owner"
+owner_status: "CODEOWNERS routes docs/adr/ and apps/explorer-web/ to @bartytime4life; accepted stewardship, required-review rules, and independent approval controls were not verified"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Explorer Web / application steward
+  - Governed API maintainer
+  - UI accessibility reviewer
+  - Security / privacy reviewer
+  - Policy and evidence reviewer
+  - "at least one affected map-runtime or client owner"
 created: 2026-05-09
-updated: 2026-05-09
+updated: 2026-07-23
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: f7826223ae7c443647aae2206fb27e1e37d71d9d
+  inspection_origin_commit: 79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7
+  continuity_compare: 79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7...f7826223ae7c443647aae2206fb27e1e37d71d9d
+  relevant_path_changes_after_inspection: 0
+  target_prior_blob: 34f59c8b4729c35591344852ea17988c400f1846
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  directory_rules_doctrine_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  apps_readme_blob: 7ab9c8b9c507d8d17b72eec1344e593cbf0c91ec
+  explorer_readme_blob: 755dae3e175b103702caba573a5171d62ed710da
+  explorer_package_blob: ce981192e725483c747affb45ca3de36a22ce9ce
+  packages_ui_entry_blob: 2c9ea341d61bf4d1733b9982fda8a9b869a3a720
+  packages_maplibre_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  ui_build_workflow_blob: a4fec64dc445b060d334c2ae56886cc814cb0e61
+  explorer_boundary_test_blob: 97d44069b0a5ab4a82b1e1fc48665e905c08a287
+  packages_cesium_path_at_base: absent
+  pnpm_lock_path_at_base: absent
 related:
-  - docs/adr/ADR-0001-schema-home-schemas-contracts-v1-is-canonical.md
-  - docs/adr/ADR-0002-contracts-vs-schemas-split.md
-  - docs/adr/ADR-0003-policy-singular-is-canonical.md
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
   - docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - docs/adr/ADR-0006-maplibre-boundary-only-maplibreadapter-imports-maplibre.md
-  - docs/adr/ADR-0007-cesium-3d-is-conditional-and-gated.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
   - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
-  - directory-rules.md
-tags: [kfm, adr, ui, explorer-web, trust-membrane, map-first]
+  - docs/doctrine/directory-rules.md
+  - docs/architecture/map-shell.md
+  - docs/architecture/ui/BOUNDARIES.md
+  - apps/README.md
+  - apps/explorer-web/README.md
+  - packages/ui/README.md
+  - packages/maplibre/README.md
+  - .github/workflows/ui-build.yml
+  - tests/policy/test_explorer_web_adapter_boundary.py
+tags: [kfm, adr, explorer-web, map-first, shell, trust-membrane, governed-api, maplibre, ui, accessibility, static-delivery, fail-closed, rollback]
 notes:
-  - "Repo not mounted in authoring session — implementation paths PROPOSED / NEEDS VERIFICATION."
-  - "ADR number conflicts with one prior atlas suggestion (Pass 12 used ADR-0005 = ReleaseManifest); the working repo ADR registry assigns ADR-0005 to this decision and supersedes that suggestion."
+  - "v1.1 is a same-path repository-grounded modernization. It preserves effective decision status `proposed`; it does not accept ADR-0005 or change executable behavior."
+  - "Explorer Web is a broad documentation and placeholder tree. Its package scripts echo TODO, and ui-build intentionally fails readiness until real scripts, an exact pnpm pin, and pnpm-lock.yaml exist."
+  - "packages/ui/ and packages/maplibre/ are private 0.0.0 scaffolds with placeholder exports. packages/cesium/ is absent."
+  - "Directory Rules v1.4 proposes packages/maplibre-runtime/ while the repository contains packages/maplibre/. This ADR records the conflict but does not resolve renderer naming or accept ADR-0006/ADR-0007."
+  - "Dynamic trust-bearing responses belong behind apps/governed-api/. A governed static edge may serve released public-safe immutable artifacts, but it is not a second truth authority."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0005 — `apps/explorer-web` is the canonical map-first shell
 
-> **One-line decision.** The map-first public/semi-public KFM client is built and deployed from `apps/explorer-web/`, with shared UI in `packages/ui/`, the 2D renderer behind `packages/maplibre/`, and conditional 3D behind `packages/cesium/`. Every other historical shell home becomes a compatibility root with a migration plan.
+> **Proposed decision.** `apps/explorer-web/` is KFM's single canonical deployable composition root for the public and semi-public map-first browser shell. It renders governed finite outcomes and already released public-safe artifacts; it does not own truth, evidence, policy, release, correction, rollback, source admission, or model execution. Dynamic trust-bearing responses pass through `apps/governed-api/`. A governed static edge may serve immutable released artifacts with verified release and integrity context, but it is not a parallel API or publication authority.
 
-| Field | Value |
-| --- | --- |
-| **ID** | ADR-0005 |
-| **Status** | `proposed` |
-| **Date** | 2026-05-09 |
-| **Deciders** | Architecture stewards · UI owner · Governance steward |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Related** | ADR-0001 · ADR-0002 · ADR-0003 · **ADR-0004** · ADR-0006 · ADR-0007 · ADR-0025 |
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![Configured shell: present](https://img.shields.io/badge/apps%2Fexplorer--web-present-0969da?style=flat-square)](#evidence)
+[![Implementation: placeholders](https://img.shields.io/badge/implementation-placeholders-f59e0b?style=flat-square)](#evidence)
+[![UI build: readiness hold](https://img.shields.io/badge/ui%20build-readiness%20hold-b42318?style=flat-square)](#validation)
+[![Renderer seam: conflicted](https://img.shields.io/badge/renderer%20seam-CONFLICTED-b42318?style=flat-square)](#renderer-boundary)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary)
 
-[![Status: proposed](https://img.shields.io/badge/status-proposed-yellow)](#status)
-[![Type: ADR](https://img.shields.io/badge/type-ADR-informational)](#)
-[![Scope: UI shell](https://img.shields.io/badge/scope-UI%20shell-blue)](#decision)
-[![Trust path: governed-api only](https://img.shields.io/badge/trust%20path-governed--api%20only-success)](#decision)
+> [!IMPORTANT]
+> **Repository presence is not accepted decision authority.** The app, source tree, supporting packages, static boundary tests, and CI readiness workflow exist. The ADR index still records ADR-0005 as `proposed`. This revision describes current evidence and the proposed target without promoting the decision.
 
-**Quick links:** [Status](#status) · [Context](#context) · [Decision](#decision) · [Architecture](#canonical-architecture) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Migration plan](#migration-plan) · [Validation](#validation) · [Rollback](#rollback--supersession) · [Open questions](#open-questions)
+> [!CAUTION]
+> **A broad placeholder tree is not a working shell.** Explorer Web has placeholder scripts and modules, no verified app-local test lane, no pinned pnpm version, and no `pnpm-lock.yaml`. The workflow fails closed on those prerequisites. No browser route, governed client, renderer adapter, Evidence Drawer, Focus Mode, export flow, deployment, or production operation is established by the current tree.
+
+**Quick navigation:** [Status](#status) · [Evidence](#evidence) · [Context](#context) · [Decision](#decision) · [Architecture](#architecture) · [Invariants](#invariants) · [Consequences](#consequences) · [Alternatives](#alternatives) · [Migration](#migration) · [Validation](#validation) · [Rollback](#rollback) · [Open work](#open-work)
 
 ---
+
+<a id="status"></a>
 
 ## Status
 
-`proposed` — pending acceptance by the architecture stewards. Once accepted, status updates to `accepted` and supersession (if ever) follows the ADR template rules in `directory-rules.md` §2.4. ADRs are versioned and never deleted; they are only superseded.
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0005` — unique in [`INDEX.md`](./INDEX.md) |
+| **Source/effective status** | `proposed` / `proposed` — not binding until the record and index carry matching reviewed `accepted` status |
+| **Decision class** | Canonical shell placement, client authority boundary, dynamic/static delivery boundary, and no-parallel-shell rule |
+| **Tracked path** | `docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md` |
+| **Configured app path** | [`apps/explorer-web/`](../../apps/explorer-web/) |
+| **Current implementation** | Repository-present, documentation-rich source tree; executable behavior remains placeholder-only |
+| **Current enforcement** | Static path/import guards plus fail-closed build/test readiness workflow |
+| **Publication effect** | None. ADRs, routes, packages, tests, workflows, commits, PRs, merges, builds, and deployments do not publish KFM data or claims. |
 
-> [!NOTE]
-> The text below speaks in the present tense ("the shell does X") to describe the *decided posture*. Implementation maturity in the working repository is **PROPOSED / NEEDS VERIFICATION** — see [Open questions](#open-questions).
+The intent is stable: one map-first browser shell home. Implementation, package boundaries, acceptance, and operational maturity remain incomplete.
 
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+[Back to top](#top)
 
 ---
+
+<a id="evidence"></a>
+
+## Current repository evidence
+
+The findings below are **CONFIRMED at `main@f7826223ae7c443647aae2206fb27e1e37d71d9d`** unless marked otherwise. Inspection began at `79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7`; intervening commits changed only `data/README.md` and its generated receipt, so relevant evidence stayed unchanged.
+
+| Surface | Verified state | Limit |
+|---|---|---|
+| ADR index | Exact path and `proposed` status. | Identity/status, not acceptance. |
+| Directory Rules | Deployables under `apps/`; Explorer Web named as map-first shell. Duplicate Directory Rules placement remains conflicted. | Supports app home, not renderer naming. |
+| [`apps/README.md`](../../apps/README.md) | 87 Explorer files and 48 TypeScript/TSX files; implementation modules characterized as placeholders. | Broad scaffold, not functional app. |
+| [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) | Private `0.0.0`; `dev`, `build`, `test` echo `TODO`. | Explicit placeholder state. |
+| Root [`package.json`](../../package.json) and lockfile | Workspaces declared; root scripts remain placeholders; no exact package-manager pin; `pnpm-lock.yaml` absent. | Not reproducible install/build/test. |
+| Representative modules | Governed client, shell, export, soil FocusFlow, and soil EvidenceDrawer are greenfield placeholders. | Filenames/slots only. |
+| [`packages/ui/`](../../packages/ui/) and [`packages/maplibre/`](../../packages/maplibre/) | Private `0.0.0` scaffolds with placeholder exports. | No reusable UI, renderer seam, consumers, or deployment. |
+| `packages/cesium/` | Exact path absent. | Does not accept sole-renderer proposal. |
+| [Static boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py) | Constrains renderer imports to `src/adapters/`; rejects configured internal-store literals. | Not network/rendering/accessibility/deployment proof. |
+| [`ui-build.yml`](../../.github/workflows/ui-build.yml) | Rejects placeholder commands, missing lockfile, and missing exact pnpm pin before install/build/test. | Red readiness is expected while placeholders remain. |
+| Deployment, auth, CSP, observability, public operation | **UNKNOWN** | No deployed-system evidence inspected. |
+
+The negative evidence is useful: placeholders prevent false success, guards catch selected drift, and the next increment can remain small and testable.
+
+[Back to top](#top)
+
+---
+
+<a id="context"></a>
 
 ## Context
 
-KFM is map-first, time-aware, evidence-first, and policy-conscious. Its public UI is one of the most consequential surfaces in the system: it is where doctrine becomes product behavior, where the trust membrane meets the user, and where most of the project's perceived legitimacy is decided.
+KFM is map-first, time-aware, evidence-first, policy-aware, and correction-aware. The browser shell is where those commitments become visible, not where they become true.
 
-Three forces converge on the question of where this UI lives in the repository:
+1. **One composition root.** Routes, state, accessibility, clients, adapters, evidence views, and exports otherwise fragment across app and compatibility surfaces.
+2. **UI is not a data plane.** The browser is downstream of `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → governed release`.
+3. **Map interaction implies claims.** A tile, property, popup, selection, camera, or pixel is a candidate interaction, not evidence; claim detail resolves through governed evidence/policy.
+4. **Shell and renderer decisions diverge.** The repo has `packages/maplibre/`; Directory Rules proposes `packages/maplibre-runtime/`; ADR-0006/0007 remain proposed; `packages/cesium/` is absent.
 
-1. **Lifecycle and authority boundary.** Public clients MUST read through `apps/governed-api/` (the trust membrane), never directly from `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, or `data/published/`. The shell is the place this boundary is most often tempted to leak — it has the strongest pull toward "just import the layer directly."
-2. **Renderer discipline.** MapLibre is KFM's disciplined 2D renderer; Cesium is the conditional 3D path. Neither is a truth source. Both must remain swappable adapters, not authority centers. If shell code imports `maplibre-gl` directly, the boundary is dead; the same for `cesium`.
-3. **Drift pressure.** KFM has historically accumulated multiple plausible shell homes — `ui/`, `web/`, `styles/`, `viewer_templates/`, `apps/explorer-web/`, `packages/ui/`. `directory-rules.md` §13.3 names this exact drift as one of the four most consequential structural failures in the repo: *"`ui/`, `web/`, `apps/explorer-web/`, and `packages/ui/` becoming competing shell homes."*
+This ADR decides the **shell home and client authority boundary** without silently accepting a renderer decision or creating a new renderer package.
 
-Without a canonical decision, every PR pulls toward whichever home was edited last. Components fragment. Styles fork. Boundary enforcement becomes a series of one-off arguments instead of a structural property.
-
-The shell itself has substantial responsibilities (per the Whole-UI + Governed-AI Expansion Report):
-
-- Persistent map surface, time banner, trust/status header, route outlet, panel region, keyboard skip links.
-- Layer catalog with descriptors, toggles, legends, time filters, trust badges, manifest/proof visibility.
-- Evidence Drawer over `EvidenceBundle`-derived payloads.
-- Focus Mode (governed query surface, finite outcomes, citation validation, no direct model calls).
-- Story Node player (2D-first, evidence-continuous, optional 3D under gate).
-- Review console (read-only steward surface in first slice).
-- Compare, Export, Settings, Diagnostics.
-- Typed governed API client with runtime schema validation at the client boundary.
-
-The decision is not *whether* to centralize this surface but *where*, and what the supporting structure looks like.
-
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+[Back to top](#top)
 
 ---
+
+<a id="decision"></a>
 
 ## Decision
 
-The KFM repository adopts the following canonical structure for the map-first shell.
+### Single canonical shell
 
-### 1. `apps/explorer-web/` is the single canonical map-first shell
+**`apps/explorer-web/` is the single canonical deployable composition root for KFM's public and semi-public map-first browser experience.**
 
-**`apps/explorer-web/`** is the deployable map-first public/semi-public UI. It is the **only** canonical home for:
+It may compose bootstrap/routing; viewport/layer/time/selection/panel state; finite-response rendering; trust/time surfaces; Evidence Drawer; Focus Mode; story/compare/export/settings/safe diagnostics; accessibility; and app-local adapters.
 
-- The persistent governed shell (map + time banner + trust header + route outlet).
-- All route surfaces (Explore, Dossier, Story, Focus, Review (read-only), Compare, Export, Settings, Diagnostics).
-- The shell-owned state machine (`shellState`, `timeState`).
-- The typed governed API client (`governedClient`) and response validators.
-- Renderer-specific adapters (`maplibre/MapLibreAdapter`, optional `cesium/CesiumAdapter`).
-- Feature folders that compose those routes.
+It **must not** own source admission, canonical evidence, policy, release/correction/rollback, lifecycle storage, direct model invocation, semantic contract/schema authority, or publication.
 
-### 2. Supporting canonical homes (companion packages)
+<a id="authority-boundary"></a>
 
-| Package | Role |
-| --- | --- |
-| `packages/ui/` | Shared, reusable UI components — buttons, layout primitives, badges, drawer chrome, pickers. Reusable across `apps/explorer-web/`, `apps/review-console/`, and any future client. |
-| `packages/maplibre/` | The MapLibre renderer wrapper. **Only** this package and the in-shell `MapLibreAdapter` may import `maplibre-gl`. |
-| `packages/cesium/` | The Cesium 3D wrapper. Conditional, gated, and never the primary surface (per ADR-0007). |
+### Authority and delivery boundary
 
-### 3. `apps/governed-api/` is the only network path
+| Responsibility | Owner | Explorer Web relationship |
+|---|---|---|
+| Dynamic trust-bearing API | [`apps/governed-api/`](../../apps/governed-api/) | Consume validated finite responses; never replace policy/evidence/release work. |
+| Shared reusable UI | [`packages/ui/`](../../packages/ui/) | Consume reviewed exports once implemented. |
+| Renderer seam | **CONFLICTED; below** | Consume one accepted adapter; no ad hoc peer renderer. |
+| Evidence / policy / release | Owning contracts, resolvers, `policy/`, `release/` | Render projections/outcomes/lineage; do not author or decide. |
+| Lifecycle data | `data/` | No direct normal browser path. |
+| Model adapters | `runtime/` behind Governed API | No direct browser provider/model call. |
 
-`apps/explorer-web/` reads via `apps/governed-api/` and **never** directly from `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, or `data/published/`. The trust membrane is the boundary; the shell respects it (per ADR-0004 and ADR-0025).
+Dynamic claim-bearing requests **must** pass through `apps/governed-api/` and return the accepted client envelope. Public semantic outcomes remain:
 
-### 4. Compatibility roots replace prior shell homes
+```text
+ANSWER | ABSTAIN | DENY | ERROR
+```
 
-Per `directory-rules.md` §8.1, the following roots become compatibility roots, not parallel shell homes:
+Internal states such as `restrict`, `hold`, or `needs_review` travel as obligations, reason codes, state fields, or a versioned extension—not accidental extra public outcomes.
 
-| Compatibility root | Class | Migration target |
-| --- | --- | --- |
-| `ui/` | `legacy` or `transitional` | `apps/explorer-web/` (surface code) and `packages/ui/` (shared components) |
-| `web/` | `legacy` or `transitional` | `apps/explorer-web/` |
-| `styles/` | `legacy` | `packages/ui/`, `apps/explorer-web/`, or `docs/brand/` by usage class |
-| `viewer_templates/` | `legacy` | `apps/explorer-web/`, `examples/`, or `packages/maplibre/` |
+Explorer Web may load released public-safe static artifacts from a governed edge only when release binding, integrity, rights/sensitivity, stale/correction/withdrawal state, and cache invalidation are verifiable. The edge cannot expose internal lifecycle stores or become a second policy engine/API. Static bytes remain a **released carrier**, not truth authority.
 
-Each of these roots must declare its class in its own `README.md` and must not evolve independently.
+<a id="renderer-boundary"></a>
 
-### 5. Renderer discipline and citation discipline are enforced at the boundary
+### Renderer and UI package boundaries
 
-- Renderer imports (`maplibre-gl`, `cesium`) are confined to adapter modules. Component code talks to a `MapRuntimePort` (and, for 3D, a `Map3DPort`) — never directly to renderer APIs.
-- Feature clicks do not expose feature properties as claims. They issue a governed claim-resolution request that returns a `DecisionEnvelope` and an `EvidenceDrawerPayload` (or a finite negative state).
-- Layer descriptors carry proof/ref metadata, release state, valid-time semantics, sensitivity, rights, and source-role badges so that interpretation is available at the point of use.
+ADR-0005 does **not** decide the final renderer package name or accept the sole-renderer proposal.
 
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+| Surface | Current state | Posture |
+|---|---|---|
+| `packages/maplibre/` | Repository-present private `0.0.0` scaffold | **CONFIRMED path; incomplete** |
+| `packages/maplibre-runtime/` | Proposed by Directory Rules v1.4 | **PROPOSED; absent/unverified here** |
+| `packages/cesium/` | Exact path absent | **Do not create as a side effect** |
+| ADR-0006 / ADR-0007 | Single importer / sole renderer proposals | **Proposed; not accepted here** |
+
+Until reviewed renderer closure:
+
+1. Feature code introduces no direct renderer imports outside the existing adapter boundary.
+2. Do not create `packages/maplibre-runtime/`, `packages/cesium/`, or another peer merely to satisfy docs.
+3. Resolve naming through ADR/migration with imports, consumers, tests, workflows, and rollback together.
+4. No renderer package owns truth, policy, evidence, release, or publication.
+5. The current static test is a guard, not final-architecture proof.
+
+`packages/ui/` is the proposed reusable component home. Routing, shell state, and app integrations remain app-local. A component moves only when reuse, API, accessibility, trust-state semantics, tests, and consumers are reviewable. The current package is a scaffold.
+
+Compatibility families (`ui/`, `web/`, `styles/`, `viewer_templates/`) are not shell authorities. Inspect actual content/class before migration; do not create missing roots solely to deprecate them; preserve history, links, generator/mirror contracts, and rollback.
+
+### Finite states and accessibility
+
+Claim-bearing panels render finite outcomes, loading/retry, stale/corrected/superseded/withdrawn/rollback-affected state, and material obligations. Color, hidden styling, empty panels, or generic HTTP success are insufficient.
+
+The shell preserves keyboard/focus, skip links/landmarks, status announcements, textual labels, contrast, reduced motion, accessible map alternatives/non-pointer paths, and trust context in exports. An inaccessible trust state is not fully inspectable.
+
+[Back to top](#top)
 
 ---
+
+<a id="architecture"></a>
 
 ## Canonical architecture
 
 ```mermaid
 flowchart TB
-  subgraph Browser["Browser (public / semi-public)"]
-    Shell["apps/explorer-web · GovernedShell<br/>map · time banner · trust header · routes"]
-    Client["governedClient + responseValidators"]
-    MLA["map/maplibre/MapLibreAdapter"]
-    CSA["map/cesium/CesiumAdapter (conditional)"]
-    UIPKG["packages/ui<br/>(shared components)"]
-    MLPKG["packages/maplibre<br/>(renderer wrapper)"]
-    CSPKG["packages/cesium<br/>(3D, gated)"]
-    Shell --> Client
-    Shell --> UIPKG
-    Shell --> MLA
-    Shell -.gated.-> CSA
-    MLA --> MLPKG
-    CSA --> CSPKG
-  end
-
-  Client ==>|HTTPS · trust payloads only| GovAPI["apps/governed-api<br/>(trust membrane · ADR-0004)"]
-
-  subgraph Forbidden["Forbidden direct paths from explorer-web"]
-    direction LR
-    Raw["data/raw"]
-    Work["data/work"]
-    Quar["data/quarantine"]
-    Proc["data/processed"]
-    Cat["data/catalog"]
-    Pub["data/published"]
-  end
-
-  Shell -.->|❌ DENY| Forbidden
-
-  GovAPI --> Proc
-  GovAPI --> Cat
-  GovAPI --> Pub
-
-  classDef forbidden fill:#fee,stroke:#c33,color:#900
-  classDef canonical fill:#eef7ee,stroke:#3a3,color:#063
-  classDef membrane fill:#fff7e6,stroke:#e90,color:#630
-  class Forbidden,Raw,Work,Quar,Proc,Cat,Pub forbidden
-  class Shell,Client,MLA,CSA,UIPKG,MLPKG,CSPKG canonical
-  class GovAPI membrane
+    USER["Public / semi-public user"]
+    subgraph BROWSER["apps/explorer-web"]
+      SHELL["Map-first shell<br/>routes · time · selection · panels"]
+      VIEW["Evidence Drawer · Focus · Story · Compare · Export"]
+      CLIENT["Governed client<br/>full response validation"]
+      ADAPTER["Accepted map adapter<br/>package naming CONFLICTED"]
+      UI["packages/ui<br/>shared seam"]
+      SHELL --> VIEW
+      SHELL --> CLIENT
+      SHELL --> ADAPTER
+      SHELL --> UI
+    end
+    API["apps/governed-api<br/>dynamic trust membrane"]
+    STATIC["Governed static edge<br/>released + integrity-bound"]
+    ENVELOPE{"ANSWER · ABSTAIN · DENY · ERROR"}
+    RELEASE["Release / correction / rollback"]
+    EVIDENCE["EvidenceBundle resolution"]
+    POLICY["Policy / rights / sensitivity"]
+    FORBIDDEN["RAW · WORK · QUARANTINE · PROCESSED<br/>canonical DB · graph/vector internals<br/>direct sources · model providers"]
+    USER --> SHELL
+    CLIENT -->|dynamic| API
+    ADAPTER -->|released carrier| STATIC
+    API --> ENVELOPE
+    API --> EVIDENCE
+    API --> POLICY
+    API --> RELEASE
+    STATIC --> RELEASE
+    STATIC --> POLICY
+    ENVELOPE --> VIEW
+    SHELL -. "DENY direct path" .-> FORBIDDEN
 ```
 
-> [!IMPORTANT]
-> The dotted line marked **DENY** is enforced — not by hope, but by CI guards (see [Validation](#validation)). The shell has exactly one network door, and it leads to `apps/governed-api/`.
+This is responsibility/allowed traffic, not deployed topology. Routes, CDN, auth, package names, and runtime bindings remain separately governed.
 
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+[Back to top](#top)
 
 ---
+
+<a id="invariants"></a>
+
+## Operational invariants
+
+| ID | Invariant | Acceptance burden |
+|---|---|---|
+| `SHELL-01` | Explorer Web is the only canonical deployable public/semi-public map shell. | Reviewed acceptance; no parallel shell. |
+| `SHELL-02` | Shell owns no truth, evidence, policy, release, correction, rollback, or publication. | Contract/policy/integration evidence. |
+| `SHELL-03` | Dynamic claims use Governed API; static carriers use governed released edge. | Network/client and manifest/cache tests. |
+| `SHELL-04` | Outcomes remain `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. | Full envelope validation and UI tests. |
+| `SHELL-05` | Click/rendered properties are not evidence. | End-to-end selection-to-EvidenceBundle test. |
+| `SHELL-06` | One accepted renderer adapter; no peer package without ADR/migration. | Package decision, inventory, tests, guards. |
+| `SHELL-07` | Redaction cannot be reversed client-side; no direct model/source/internal path. | Sensitive fixtures plus import/network/CSP tests. |
+| `SHELL-08` | Accessibility, trust-preserving exports, and rollback are correctness requirements. | Automated/manual review and rollback drill. |
+
+[Back to top](#top)
+
+---
+
+<a id="consequences"></a>
 
 ## Consequences
 
-### Positive
+**Benefits:** one reviewable deployable boundary; honest placeholder maturity; no implied renderer decision; governed dynamic/static delivery; visible refusal/correction states; accessibility tied to inspectability; evidence-driven migration.
 
-- **One shell home.** Future PRs cannot ambiguously "land somewhere reasonable" — they land in `apps/explorer-web/` or in one of the named companion packages.
-- **Enforceable trust membrane.** With one shell, one client (`governedClient`), and one renderer adapter pair, the boundary becomes a CI property instead of a discipline.
-- **Stable URLs and anchors.** Routes (Explore, Dossier, Story, Focus, Review, Compare, Export, Settings, Diagnostics) and component locations stop drifting between PRs.
-- **Predictable testing.** Tests for the shell, layer catalog, evidence drawer, focus, and story player live in one place. Component, a11y, and contract tests all have a stable home.
-- **Doctrinal alignment.** Aligns with `directory-rules.md` §7.1, §8.1, §11, §13.3 and the Whole-UI + Governed-AI Expansion Report — there is no daylight between repo doctrine and the lived structure.
+**Costs:** first slice must close package pin/lock/scripts/config/tests; renderer naming needs separate governance; static caches need correction/withdrawal semantics; envelope-first UI handles negative states/obligations; shared-package extraction stays slow until reuse is proved; proof is cross-cutting.
 
-### Negative / costs
-
-- **Migration cost.** Existing content under `ui/`, `web/`, `styles/`, `viewer_templates/` (where present) needs to be reclassified, frozen for new writes, and migrated. Some imports break. Some downstream links need updating.
-- **Two-package discipline.** Shared UI must consciously land in `packages/ui/` rather than in `apps/explorer-web/src/components/`. Reviewers must enforce the distinction.
-- **Adapter overhead.** Every renderer feature is built twice: once at the renderer level, once at the port level. This is the price of swappability.
-- **CI cost.** New guard workflows must run on every PR. They are cheap individually but add up.
-
-### Risks if not adopted
-
-- The four-home anti-pattern recurs and trust-membrane enforcement decays into review-by-review judgment.
-- A single PR introduces a direct `maplibre-gl` import in a feature folder; six months later it is not removable without a refactor.
-- An admin shortcut becomes the normal public path; renderer becomes the truth source by accident.
-
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+[Back to top](#top)
 
 ---
+
+<a id="alternatives"></a>
 
 ## Alternatives considered
 
-| Alternative | Why rejected |
-| --- | --- |
-| Keep `ui/` as canonical | Conflicts with the `apps/` deployable convention; `ui/` was historically a mixed grab-bag of components, styles, and templates — its meaning is not stable. |
-| Keep `web/` as canonical | Same reason; `web/` reads as a generic surface bucket, not a deployable. KFM doctrine treats deployables as `apps/`. |
-| Multiple coequal shells (`apps/explorer-web/` + `apps/some-other-explorer/` for different audiences) | Premature; named in `directory-rules.md` §13.3 as the most consequential UI drift. Audiences differ in *features*, not in *shells*. |
-| Federated micro-frontends | Premature for current scope; introduces module-federation complexity and a second build path before the shell is even stable. Re-evaluate when audiences diverge enough to justify it. |
-| `packages/explorer-web/` (package, not app) | Confuses deployable with library. `apps/` carries the deployable contract; `packages/` carries the reusable contract. The shell is the deployable. |
-| Single mono-package with no `packages/ui/` split | Creates a hard coupling between the shell and any future review console / admin surface; precludes reuse of evidence/badge components across clients. |
+| Alternative | Disposition |
+|---|---|
+| Keep `apps/web/`, root `web/`, or root `ui/` as shell | Rejected: competing deployable/authority home. |
+| Make `packages/explorer-web/` the shell | Rejected: package is reusable implementation, not deployable composition. |
+| Split public micro-frontends now | Deferred: multiplies trust/state/accessibility/release boundaries before one slice works. |
+| Let each feature call API directly | Rejected: central client/validation seam required. |
+| Force static artifacts through dynamic byte streaming | Rejected: released immutable carriers may use governed edge. |
+| Let browser read `data/published/` directly | Rejected: directory alone is not audience/integrity/correction/cache/policy contract. |
+| Resolve renderer package naming here or create `packages/cesium/` | Rejected: belongs to renderer ADR/migration; path absent. |
+| Put policy/evidence/release/direct model calls in shell | Rejected: collapses responsibility roots/trust membrane. |
+| Keep placeholders indefinitely | Rejected as end state: honest hold, not product architecture. |
 
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+[Back to top](#top)
 
 ---
+
+<a id="migration"></a>
 
 ## Migration plan
 
-**PROPOSED / NEEDS VERIFICATION** — exact source paths depend on what the working repository actually contains. The plan below is the shape; a migration manifest under `migrations/` will record the concrete old → new mapping with `git_sha_before` / `git_sha_after` per `directory-rules.md` §14.2.
+The app path exists; next work is **graduation, not a broad move**.
 
-### Phase 1 — declare canonicals
+1. **Preserve hold.** Keep ADR proposed, placeholder scripts fail-closed, guards active, and no second shell/renderer/static edge/compatibility root.
+2. **Reproducible workspace.** Pin package manager/version, add lockfile, real scripts, minimal TS/build config, browser entrypoint, test home, deterministic public-safe no-network fixtures. Roll back the coherent package/config/lock/script change together.
+3. **One finite-response route.** Implement small shell/route and governed client; validate full envelope; render all outcomes plus loading/retry/invalid/offline; use deterministic mock/bounded API, no live sources/models. Roll back via feature flag/route selector to hold screen.
+4. **Renderer closure.** Resolve package naming through reviewed ADR/migration; preserve one package/adapter; implement minimal map lifecycle; expand guards; pin dependencies/protocols; no second renderer. Roll back map route/import graph together.
+5. **Proof-bearing interaction.** Low-sensitivity released layer → governed map source → selection → governed evidence request → EvidenceBundle-derived drawer → visible release/time/correction/limitations. Add keyboard flow, safe export, bounded telemetry, and cache/release rollback drill.
 
-1. Land this ADR as `proposed` in `docs/adr/`.
-2. Confirm or create `apps/explorer-web/README.md`, `packages/ui/README.md`, `packages/maplibre/README.md`, and (if applicable) `packages/cesium/README.md` per the README contract in `directory-rules.md` §15.
-3. Record the canonical decision in `control_plane/canonical_lineage.yaml` (or the repo's equivalent canonical lineage register).
+ADR-0005 may become accepted only when ADR/index transition together; owners/reviewers are verified; the slice passes validation below; renderer governance is visible; dynamic/static boundaries are tested; rollback/correction is rehearsed; deployment/exposure is reviewed.
 
-### Phase 2 — declare compatibility roots
-
-For each of `ui/`, `web/`, `styles/`, `viewer_templates/` *that exists in the repo*:
-
-1. Add a `README.md` declaring its compatibility class (`legacy`, `mirror`, `deprecated`, `external-export`, or `transitional`).
-2. Pin the migration target in the README header.
-3. Add a freeze-write rule (CODEOWNERS or a guard workflow) so new files cannot land there without an explicit override.
-
-### Phase 3 — content migration
-
-| From (compatibility root) | To (canonical home) | Notes |
-| --- | --- | --- |
-| `ui/components/*` (reusable) | `packages/ui/` | Re-exported; existing import paths become a thin compatibility shim until removal. |
-| `ui/screens/*`, `ui/routes/*` | `apps/explorer-web/src/...` | Surface code; lands in feature folders. |
-| `web/*` | `apps/explorer-web/` | Same as above; `web/` is typically a surface root. |
-| `styles/*` | `packages/ui/styles/` (shared) or `apps/explorer-web/src/styles/` (shell-only) or `docs/brand/` (brand guidance) | By usage class. |
-| `viewer_templates/*` | `apps/explorer-web/src/features/...`, `examples/`, or `packages/maplibre/` | By role; templates that demonstrate usage go to `examples/`. |
-
-Use `git mv` so history is preserved (per `directory-rules.md` §14.1). Update references in code, docs, schemas, fixtures, tests, and workflows. Add a one-line note in `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` (or the repo's equivalent register).
-
-### Phase 4 — boundary hardening
-
-1. Confine `maplibre-gl` imports to `packages/maplibre/` and `apps/explorer-web/src/map/maplibre/MapLibreAdapter.*`.
-2. Confine `cesium` imports to `packages/cesium/` and `apps/explorer-web/src/map/cesium/CesiumAdapter.*`.
-3. Confine network calls in `apps/explorer-web/` to `governedClient.*`.
-4. Land the CI guards described in [Validation](#validation).
-
-### Phase 5 — close the migration
-
-1. Verify the rollback dry-run passes.
-2. Wait the verification window (recommended: one full release cycle).
-3. Remove the compatibility roots once consumers no longer reference them, or convert them to permanent `external-export` mirrors if they remain useful for downstream tooling.
-
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+[Back to top](#top)
 
 ---
+
+<a id="validation"></a>
 
 ## Validation
 
-Validation is split between **structural guards** (CI proves the shape stays right) and **functional smoke** (a real shell boots and respects the boundary).
+Current enforcement is bounded: ADR index coherence, static renderer/import and internal-path checks, workspace declarations, and UI readiness hold. These do not prove a functional shell.
 
-### Structural guards (CI)
+Acceptance requires:
 
-> [!WARNING]
-> These guards are load-bearing. If they go red, do not paper over them — the membrane is leaking.
+- identity/status coherence;
+- exact package-manager pin, lockfile, clean install, real build/test;
+- browser entrypoint and one route;
+- full client envelope validation and finite/negative-state tests;
+- Governed API-only dynamic network and governed static-edge tests;
+- selection-to-EvidenceBundle continuity;
+- accepted renderer package/adapter with one consumer and no peer;
+- sensitive payload/tile/cache/export/diagnostic leakage tests;
+- no direct model client;
+- automated plus manual accessibility;
+- trust-preserving export and redacted observability;
+- reviewed TLS/CSP/CORS/origin/secrets/dependencies/cache/identity/incident/isolation;
+- rehearsed app/renderer/static/cache/release/correction rollback;
+- documentation closure without overclaiming.
 
-```yaml
-# Illustrative — actual workflow lands per repo's CI conventions.
-# PROPOSED / NEEDS VERIFICATION: paths and tooling.
-name: ui-boundary-guards
-on: [pull_request]
-jobs:
-  no-direct-renderer-imports:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Forbid maplibre-gl outside MapLibreAdapter / packages/maplibre
-        run: |
-          ! git grep -nE "from ['\"]maplibre-gl['\"]|require\(['\"]maplibre-gl['\"]\)" -- \
-            'apps/explorer-web/' \
-            ':(exclude)apps/explorer-web/src/map/maplibre/MapLibreAdapter*' \
-            ':(exclude)packages/maplibre/'
-      - name: Forbid cesium outside CesiumAdapter / packages/cesium
-        run: |
-          ! git grep -nE "from ['\"]cesium['\"]|require\(['\"]cesium['\"]\)" -- \
-            'apps/explorer-web/' \
-            ':(exclude)apps/explorer-web/src/map/cesium/CesiumAdapter*' \
-            ':(exclude)packages/cesium/'
-  no-direct-data-imports:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Forbid explorer-web reaching into data/, connectors/, pipelines/
-        run: |
-          ! git grep -nE "from ['\"](\.\./)+(data|connectors|pipelines)/" -- 'apps/explorer-web/'
+Suggested current checks:
+
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+python -m pytest tests/policy/test_explorer_web_adapter_boundary.py -q --strict-config --strict-markers
+make boundary-guards
+make validate
 ```
 
-### Functional smoke
+After workspace readiness:
 
-Per past architecture conversations and the Whole-UI report, a `make explorer-web-smoke` (or repo-equivalent) target should boot the shell against a running `governed-api`, render the persistent shell with an empty map, and surface an `ABSTAIN` state with a `reason_code` in the Evidence Drawer. The smoke target is the canonical signal that the boundary is wired and breathing.
-
-### Tests required (proposed minimums)
-
-| Layer | Test type | What it proves |
-| --- | --- | --- |
-| `apps/explorer-web/src/api/governedClient.ts` | Contract test against `RuntimeResponseEnvelope` schema | Client validates every response. |
-| `apps/explorer-web/src/api/responseValidators.ts` | Unit tests with valid + invalid fixtures | Invalid envelopes raise typed errors, never silently render. |
-| `apps/explorer-web/src/map/maplibre/MapLibreAdapter.tsx` | Integration test | Adapter is the only caller of MapLibre runtime APIs. |
-| `apps/explorer-web/src/app/GovernedShell.tsx` | Component + a11y test | Shell renders with finite negative states (no, never, the empty state isn't blank). |
-| `apps/explorer-web/src/features/focus/FocusOutcomeRenderer.tsx` | Component test per outcome | All four states render: ANSWER, ABSTAIN, DENY, ERROR. |
-| End-to-end | E2E against `governed-api` mock | Trust badges resolve from EvidenceBundles and never from raw stores. |
-
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
-
----
-
-## Rollback / supersession
-
-Per `directory-rules.md` §2.4 ADR rules:
-
-- ADRs are **versioned and never deleted**. A future ADR may supersede this one; the supersession must link both directions and explain the new decision.
-- If reverting the structural decision becomes necessary, the rollback path is:
-  1. Mark this ADR `superseded` with a link to the replacement.
-  2. Re-open the prior compatibility roots' `README.md` to declare them canonical again (an unusual move; expected only in catastrophic discovery of an unworkable assumption).
-  3. Restore content per the migration manifest's `git_sha_before` entries.
-  4. Issue a `CorrectionNotice` for any release artifact whose layer descriptors or shell routes referenced the now-superseded paths.
-
-Day-to-day rollbacks of *individual UI PRs* land via the standard PR-revert path with feature flags off (see "Rollback" column in the Whole-UI report's component table).
-
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
-
----
-
-## Open questions
-
-> [!NOTE]
-> Each item below is **NEEDS VERIFICATION** until checked against the working repository. None of them blocks acceptance of this ADR's *intent*; they refine its *concrete migration*.
-
-1. **Repo presence of compatibility roots.** Whether `ui/`, `web/`, `styles/`, `viewer_templates/` exist in the repo today, and which class each warrants. Proposed action: inventory in the migration manifest before Phase 2.
-2. **Package layout of `packages/ui/`.** Whether the shared package already exists, what it currently exports, and whether existing exports map cleanly to `packages/ui/` or need namespacing.
-3. **Cesium presence.** Whether `packages/cesium/` and a `CesiumAdapter` exist or remain deferred. ADR-0007 governs the gate; this ADR only reserves the location.
-4. **Build/tooling.** Build tool, package manager, monorepo orchestrator (workspaces, Nx, Turborepo, pnpm workspaces, etc.) — affects the migration's mechanical shape but not its decision shape.
-5. **Compatibility shim duration.** How long the `ui/` and `web/` re-export shims should remain before removal. Default proposed: one full release cycle after Phase 4 closes.
-6. **Existing route names.** Whether the proposed routes (Explore, Dossier, Story, Focus, Review, Compare, Export, Settings, Diagnostics) match repo reality, and where any divergence requires either a route rename or a doctrine update.
-7. **ADR numbering reconciliation.** The atlas dossier (Pass 12) at one point suggested `ADR-0005` for *ReleaseManifest envelope*. The working repo ADR registry assigns `ADR-0005` to *this* decision; the ReleaseManifest decision is recorded under a different ADR number. This ADR explicitly notes that conflict so the divergence is auditable.
-
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
-
----
-
-## Appendix
-
-<details>
-<summary><strong>A. Compatibility-root README header (template)</strong></summary>
-
-When `ui/`, `web/`, `styles/`, or `viewer_templates/` is present, its `README.md` should open with:
-
-```markdown
-# <folder-name>
-
-## Authority level
-Compatibility root — class: legacy | mirror | deprecated | external-export | transitional
-
-## Canonical home
-<absolute path to canonical home, per ADR-0005>
-
-## Migration plan
-- Pinned ADR: docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
-- Migration manifest: migrations/ui_consolidation/<id>.yaml
-- Sunset target: <semver release or date>
-- Status: open | in-progress | closed
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+pnpm --filter explorer-web build
+pnpm --filter explorer-web test
 ```
 
-</details>
+Validation is not release/publication approval.
 
-<details>
-<summary><strong>B. Forbidden patterns inside <code>apps/explorer-web/</code></strong></summary>
+[Back to top](#top)
 
-| Pattern | Forbidden because |
-| --- | --- |
-| `import 'maplibre-gl'` outside `MapLibreAdapter` / `packages/maplibre` | Renderer is not a truth source; adapter boundary preserves swappability and keeps clicks → governed claim resolution. |
-| `import 'cesium'` outside `CesiumAdapter` / `packages/cesium` | Same as above; 3D is conditional and gated (ADR-0007). |
-| Imports from `connectors/`, `pipelines/`, `data/`, `runtime/` | Public client never reads canonical/internal stores (ADR-0025). All reads flow through `apps/governed-api/`. |
-| Direct `fetch()` to anything other than the governed API base URL | The only allowed browser network path for trust payloads is `governedClient`. |
-| Treating tile attributes as claims | Click → governed claim-resolution request returning `DecisionEnvelope` + `EvidenceDrawerPayload`. Tile attrs are rendering hints, not evidence. |
+---
 
-</details>
+<a id="rollback"></a>
 
-<details>
-<summary><strong>C. Component family ↔ canonical path map (PROPOSED)</strong></summary>
+## Rollback and supersession
 
-Drawn from the Whole-UI + Governed-AI Expansion Report's component family table. **PROPOSED / NEEDS VERIFICATION** — confirm against repo on landing.
+Restore prior blob:
 
-| Component family | Canonical path |
-| --- | --- |
-| `GovernedShell` | `apps/explorer-web/src/app/GovernedShell.tsx` |
-| Routes | `apps/explorer-web/src/app/routes.tsx` |
-| Shell state | `apps/explorer-web/src/state/shellState.ts` |
-| Time state | `apps/explorer-web/src/state/timeState.ts` |
-| Governed client | `apps/explorer-web/src/api/governedClient.ts` |
-| Response validators | `apps/explorer-web/src/api/responseValidators.ts` |
-| Mock governed API | `apps/explorer-web/src/api/mockGovernedApi.ts` |
-| `MapRuntimePort` | `apps/explorer-web/src/map/MapRuntimePort.ts` |
-| `MapLibreAdapter` | `apps/explorer-web/src/map/maplibre/MapLibreAdapter.ts` |
-| `LayerCatalogPanel` | `apps/explorer-web/src/features/layers/LayerCatalogPanel.tsx` |
-| `EvidenceDrawer` | `apps/explorer-web/src/features/evidence/EvidenceDrawer.tsx` |
-| `TrustBadges` | `apps/explorer-web/src/features/evidence/TrustBadges.tsx` |
-| `FocusPanel` | `apps/explorer-web/src/features/focus/FocusPanel.tsx` |
-| `FocusOutcomeRenderer` | `apps/explorer-web/src/features/focus/FocusOutcomeRenderer.tsx` |
-| `StoryNodePlayer` | `apps/explorer-web/src/features/story/StoryNodePlayer.tsx` |
-| `ReviewConsole` (read-only) | `apps/explorer-web/src/features/review/ReviewConsole.tsx` |
-| `ComparePanel` | `apps/explorer-web/src/features/compare/ComparePanel.tsx` |
-| `ExportPanel` | `apps/explorer-web/src/features/export/ExportPanel.tsx` |
-| `SettingsPanel` | `apps/explorer-web/src/features/settings/SettingsPanel.tsx` |
-| `DiagnosticsPanel` | `apps/explorer-web/src/features/diagnostics/DiagnosticsPanel.tsx` |
-| `MapKeyboardControls` | `apps/explorer-web/src/accessibility/MapKeyboardControls.tsx` |
+```text
+34f59c8b4729c35591344852ea17988c400f1846
+```
 
-</details>
+or revert the v1.1 commit. No executable path requires rollback because this revision is documentation-only.
 
-<details>
-<summary><strong>D. Source corpus consulted</strong></summary>
+A future shell-home change requires a successor ADR, `superseded` status, same-change index update, reciprocal links, consumer/surface inventory, and migration/rollback plan.
 
-- `directory-rules.md` — §7.1 (apps/ roles), §8.1 (compatibility roots), §11 (UI and Map Roots), §13.3 (competing-shell-homes anti-pattern), §14 (migration discipline), §15 (README contract), §20 (final root policy).
-- `KFM_Whole_UI_Governed_AI_Expansion_Report.pdf` — component family table; MapLibre/runtime boundary plan; route map; trust-membrane posture.
-- `kfm_build_companion.pdf` — §14 (Governed API as trust membrane in executable form).
-- `Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0_3.pdf` — ADR registry section (note: lists a different ADR-0005 candidate; superseded by working repo registry).
-- `KFM_Pass_12_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` — ADR pattern, fields, and starter set proposal (note: also lists a different ADR-0005 candidate; superseded by working repo registry).
+Future package/build changes revert coherently; routes return to finite hold/error state; renderer rollback restores package/import graph; static rollback withdraws/invalidate/purges cache and exposes correction; deployment rollback verifies health/envelope versions. Code rollback must not erase release, correction, or audit history.
 
-</details>
+[Back to top](#top)
 
-[Back to top ↑](#adr-0005--appsexplorer-web-is-the-canonical-map-first-shell)
+---
+
+<a id="open-work"></a>
+
+## Open verification backlog
+
+| ID | Topic | Closure evidence |
+|---|---|---|
+| `ADR5-V01` | Owners/review/status and duplicate Directory Rules identity | Verified controls plus governed reconciliation and matching ADR/index transition. |
+| `ADR5-V02` | `packages/maplibre/` vs `packages/maplibre-runtime/`; ADR-0006/0007 disposition | Accepted renderer ADR and migration/connected-doc plan. |
+| `ADR5-V03` | Package manager/scripts/lockfile | Reviewed policy and clean install/build/test. |
+| `ADR5-V04` | Route/client/envelope/auth | Entry point, mapping contract, fixtures, tests, role/session proof. |
+| `ADR5-V05` | Static edge and evidence surfaces | Artifact/header/cache/withdrawal profile; Evidence Drawer/Focus API and evidence trace. |
+| `ADR5-V06` | Sensitive-domain hardening | Negative payload/tile/export/diagnostic fixtures. |
+| `ADR5-V07` | Shared UI, accessibility, performance | Package API/consumers/tests; automated/manual a11y; representative budgets. |
+| `ADR5-V08` | Observability, deployment, rollback, compatibility/doc drift | Redacted telemetry, reviewed infra, rehearsed rollback, pinned inventory and bounded doc convergence. |
+
+### Change log
+
+| Version | Date | Change |
+|---|---|---|
+| `v1.1` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity/status and Explorer scaffold; replaced repo-unavailable assumptions; separated shell placement from renderer decisions; documented placeholder/readiness state, static guards, dynamic/static delivery, finite outcomes, accessibility, acceptance gates, incremental graduation, rollback, and verification backlog; preserved proposed status. |
+| `v1` | 2026-05-09 | Initial proposal selecting `apps/explorer-web/` as canonical shell and naming companion packages, compatibility roots, migration phases, validation ideas, and rollback posture. |
+
+---
+
+**Last updated:** 2026-07-23 · **Source metadata:** `proposed` · **Effective decision status:** `proposed` · **Path:** `docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md` · [Back to top](#top)
