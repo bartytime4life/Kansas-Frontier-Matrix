@@ -1,47 +1,35 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/scripts-readme
 title: scripts/ — Governed Operational Helper and Graduation Root
-type: readme; root-readme; operational-helper-root; trust-adjacent-script-index; graduation-boundary
-version: v0.3
-status: draft; repository-grounded; mixed-maturity; active-ci-helper-chain-confirmed; placement-drift-visible; non-authoritative
-owners: OWNER_TBD — Developer tooling steward · Maintenance tooling steward · MapLibre quality steward · CI steward · Security steward · Evidence steward · Receipt and proof steward · Release steward · Migration steward · Docs steward
-created: NEEDS VERIFICATION — short root stub existed before v0.2
-updated: 2026-07-16
-supersedes: v0.2 operational script root guide
-policy_label: "public; scripts; operational-helpers; local-dev; maintenance; one-off; maplibre-perf; no-hidden-authority; no-direct-public-path; no-secrets; dry-run-first; graduation-required; rollback-aware"
-current_path: scripts/README.md
-truth_posture: >
-  CONFIRMED target v0.2 README and prior blob; current dev v0.2 placeholder-only lane;
-  current one_off v0.2 README-only empty-by-default lane; maintenance v0.3 mixed-maturity
-  doctrine tooling; current package.json MapLibre commands; current MapLibre performance
-  workflow invoking root-level scripts and validators; selected root-level MapLibre script
-  implementations and artifact write paths; draft MapLibre performance governance document /
-  PROPOSED root script admission contract, risk classes, execution modes, finite outcomes,
-  graduation ledger, mutation disclosure, generated-artifact handoff, correction and rollback /
-  CONFLICTED trust-adjacent MapLibre receipts, ProofPack, ReleaseManifest, correction, rollback,
-  and failure objects being written under artifacts/perf while doctrine identifies data/receipts/,
-  data/proofs/, and release/ as the trust-bearing homes; substantive release-adjacent behavior
-  remaining under scripts/ despite the root graduation rule /
-  UNKNOWN exhaustive script inventory beyond inspected and indexed surfaces, all workflow callers,
-  production use, operator-local copies, generated artifact retention, signing, release adoption,
-  correction propagation, and downstream consumers /
-  NEEDS VERIFICATION accepted owners, CODEOWNERS, graduation destination for MapLibre helpers,
-  canonical artifact migration, CI branch-protection significance, receipt/proof/release schemas,
-  network policy, cleanup automation, and rollback tests
+type: README
+version: v0.4
+status: draft; repository-grounded; canonical-helper-root; mixed-maturity; maplibre-runtime-held; trust-shaped-builders-present; non-authoritative
+owner: NEEDS VERIFICATION — default CODEOWNERS route is @bartytime4life; no explicit /scripts/ rule, accepted script-root stewardship assignment, required-review enforcement, or independent approval control was established
+created: NEEDS VERIFICATION — a short root stub existed before v0.2
+updated: 2026-07-23
+supersedes: v0.3 documentation at the same path; no script, workflow, command, validator, artifact, receipt, proof, release, runtime, deployment, or publication behavior is superseded
+policy_label: repository-facing; operational-helpers; dev; maintenance; one-off; dry-run-first; no-hidden-authority; no-direct-public-path; no-secrets; graduation-required; correction-aware; rollback-aware
+owning_root: scripts/
+responsibility: hold small operational wrappers and bounded repository helpers while making their reads, writes, network use, failure states, generated candidates, review burden, graduation triggers, correction path, and rollback path inspectable
+truth_posture: cite-or-abstain; script presence and successful execution prove only the bounded command behavior observed, not evidence sufficiency, policy approval, lifecycle promotion, release authority, publication, or production readiness
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
   base_ref: main
-  base_commit: 15d88fceced7050abac4493b9cf66f5bc288c1e6
-  prior_blob: 4000b70a60af0d0656a4343ac6ae7f951b5327e3
+  base_commit: fae69bb52e0ebc7670dc7d20c9eb05cb587520ff
+  prior_blob: f603cb013ff86511a65dae4799c54d77c029e082
+  prior_evidence_commit: 15d88fceced7050abac4493b9cf66f5bc288c1e6
+  intervening_commits: 854
   dev_readme_blob: 390687c80912d52def5909b66bec7bb08b9d0bfa
   maintenance_readme_blob: bd4ef697d7118074be44d00e6e77a8a311afe5f4
-  promotion_gate_workflow_blob: f335521df78940390d22d7e359d50f6c8591a451
   one_off_readme_blob: 46e85d9b2e9bba3dd48c697dfc020b456e4cae18
   package_json_blob: 62f45306aef7376a2d68042b0c9e7f556edf0e78
-  maplibre_workflow_blob: 49374af01e92973b54f690e4ab0af9e5e1e577f3
-  maplibre_governance_doc_blob: 67f57a9a0878801f83a13f3b1c6d80be3174036e
+  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
+  maplibre_workflow_blob: bfb36a84ba72bec68d964976dc7964cde7f5d603
+  promotion_gate_workflow_blob: c22941d5e1fad3317f46591705091ef2b6e7d265
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  drift_register_blob: 5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0
+  generated_receipt_schema_blob: fba21ed27ebccf1362fe397fe0c3ebd85e072685
   maplibre_smoke_blob: 699dd4cf42d355dd2ed7620852b7fd1f3000bbe2
   maplibre_render_diff_blob: ee24890c0e06bd941e0f1ead919e9e7b9bc37460
   maplibre_attest_blob: 0c8187e0c4d88926a7cd2de413564d2d942dd9b3
@@ -61,78 +49,77 @@ related:
   - ../fixtures/README.md
   - ../configs/README.md
   - ../artifacts/README.md
-  - ../data/README.md
   - ../data/receipts/README.md
   - ../data/proofs/README.md
   - ../release/README.md
   - ../package.json
+  - ../Makefile
   - ../.github/workflows/maplibre-perf-governance.yml
+  - ../.github/workflows/promotion-gate.yml
+  - ../.github/CODEOWNERS
   - ../docs/quality/maplibre-perf-governance.md
   - ../docs/doctrine/directory-rules.md
-  - ../docs/security/SECRETS.md
   - ../docs/registers/DRIFT_REGISTER.md
-tags: [kfm, scripts, operational-helpers, dev, maintenance, one-off, maplibre, performance, ci, artifacts, receipts, proofs, release, graduation, dry-run, rollback]
 notes:
-  - "This revision changes only scripts/README.md."
-  - "No script, workflow, package command, validator, artifact, receipt, proof, release record, configuration, fixture, test, or deployment behavior is changed."
-  - "The root graduation rule remains controlling: long-lived or trust-bearing behavior belongs in tools/, pipelines/, packages/, tests/, or another accepted responsibility lane."
-  - "Current MapLibre helper execution is confirmed through package.json and a dedicated workflow; artifact placement and long-term implementation ownership remain governance issues."
+  - "v0.4 is a same-path documentation modernization and evidence refresh after 854 intervening commits from the v0.3 evidence base."
+  - "The first twelve H2 sections follow the Directory Rules §15 folder-README contract exactly."
+  - "The seven root-level MapLibre scripts and local package/Make entry points remain present, but the current MapLibre workflow now performs syntax and three bounded negative-path checks, then records WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD without running a browser or emitting artifacts."
+  - "The MapLibre scripts remain trust-shaped candidate builders under artifacts/perf; the current drift register records this authority conflict as OPEN / BLOCKED_ADR."
+  - "The maintenance child README still states that promotion-gate directly invokes a maintenance checker; the current workflow instead runs repository tests and readiness inspection. Child-document correction is tracked separately to preserve this task's exact path scope."
+  - "No executable behavior, generated artifact, lifecycle state, release state, deployment, or public surface is changed by this README update."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `scripts/` — Governed Operational Helper and Graduation Root
 
-> **One-line purpose.** Hold small, explicit, inspectable operational wrappers while enforcing a visible graduation boundary so convenience scripts cannot become hidden validators, pipelines, policy engines, evidence authorities, release systems, or public execution paths.
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: helper root](https://img.shields.io/badge/authority-helper%20root-1f6feb?style=flat-square)](#authority-level)
+[![Maturity: mixed](https://img.shields.io/badge/maturity-mixed-8250df?style=flat-square)](#status)
+[![MapLibre CI: explicit hold](https://img.shields.io/badge/MapLibre%20CI-explicit%20hold-b42318?style=flat-square)](#root-level-maplibre-performance-chain)
+[![Trust-shaped builders: present](https://img.shields.io/badge/trust--shaped%20builders-present-f59e0b?style=flat-square)](#generated-artifact-and-trust-object-boundary)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Version: v0.3" src="https://img.shields.io/badge/version-v0.3-informational">
-  <img alt="Root: scripts" src="https://img.shields.io/badge/root-scripts%2F-blue">
-  <img alt="Maturity: mixed" src="https://img.shields.io/badge/maturity-mixed-orange">
-  <img alt="CI: MapLibre chain confirmed" src="https://img.shields.io/badge/CI-MapLibre__confirmed-success">
-  <img alt="Authority: none" src="https://img.shields.io/badge/authority-none-red">
-  <img alt="Rule: graduate trust logic" src="https://img.shields.io/badge/rule-graduate__trust__logic-critical">
-</p>
+> **One-line purpose.** `scripts/` holds small, explicit, reversible operational wrappers while enforcing a visible graduation boundary so convenience code cannot become hidden validation, pipeline, evidence, policy, release, or publication authority.
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Inventory](#confirmed-current-inventory) · [Child lanes](#child-lane-contracts) · [MapLibre](#root-level-maplibre-performance-chain) · [Execution](#safe-execution-contract) · [Artifact boundary](#generated-artifact-and-trust-object-boundary) · [Outcomes](#finite-outcomes-and-failure-semantics) · [Graduation](#graduation-and-promotion-rules) · [Rollback](#correction-and-rollback) · [Open verification](#open-verification-register)
 
 > [!IMPORTANT]
-> **A script may execute work, but successful execution grants no authority.** Script output is not automatically evidence, proof, policy approval, lifecycle promotion, release approval, correction authority, rollback authorization, or public truth.
-
-> [!CAUTION]
-> **Trust-adjacent behavior must not hide in convenience wrappers.** When a script becomes repeatedly relied upon, CI-critical, write-capable against governed roots, or responsible for receipts, proofs, release manifests, correction records, or publication gates, maintainers must review its graduation into the responsibility root that owns that behavior.
+> A script may execute work, but successful execution grants no KFM authority. Output is not automatically evidence, proof, policy approval, lifecycle promotion, release approval, correction authority, rollback authorization, or public truth.
 
 > [!WARNING]
-> **Scripts must not become secret, network, or mutation shortcuts.** Every write set, delete set, network endpoint, secret reference, generated artifact, retention rule, validation command, and rollback path must be explicit before a script is admitted for consequential use.
+> The current MapLibre workflow does **not** run the browser/performance/trust-object chain. It syntax-checks seven scripts, invokes three deterministic negative-path tests, and records an explicit governance hold. It emits no screenshot, receipt, attestation, proof, release record, correction, rollback object, failure bundle, or uploaded artifact.
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Inventory](#confirmed-current-inventory) · [Child lanes](#child-lane-contracts) · [MapLibre](#root-level-maplibre-performance-chain) · [Execution](#safe-execution-contract) · [Artifacts](#generated-artifact-and-trust-object-boundary) · [Failures](#finite-outcomes-and-failure-semantics) · [Graduation](#graduation-and-promotion-rules) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Rollback](#correction-and-rollback) · [Open](#open-verification-register) · [Last reviewed](#last-reviewed)
+> [!CAUTION]
+> Local `package.json` and `Makefile` entry points still expose the full MapLibre candidate-builder chain. Those commands depend on live network assets and currently missing runtime/baseline fixtures, permissive placeholder schemas, placeholder governance verifiers, and unsigned attestation. Command availability is not readiness.
 
 ---
 
 ## Purpose
 
-`scripts/` is the KFM responsibility root for **small operational wrappers and bounded repository helpers** that are useful but have not earned a durable home as a validator, generator, package, pipeline, test harness, deployment unit, or release tool.
+`scripts/` is the canonical KFM root for **small operational helpers, developer wrappers, bounded maintenance commands, and temporary one-off automation**.
 
 A script belongs here only while all of these remain true:
 
-1. its purpose is narrow and explicit;
-2. its inputs, outputs, side effects, and failure states are inspectable;
-3. its logic is not the sole source of trust-bearing behavior;
-4. it can be disabled, deleted, or graduated without changing public contracts;
-5. its outputs remain candidates until validated and routed to their owning roots;
-6. it does not bypass evidence, policy, rights, sensitivity, review, release, correction, or rollback gates.
+1. its purpose is narrow and named;
+2. its inputs, outputs, side effects, network calls, and failure states are inspectable;
+3. its logic is not the sole implementation of a trust-bearing rule;
+4. it can be disabled, deleted, or graduated without changing a public contract;
+5. its outputs remain temporary results or candidates until validated and routed to the owning responsibility root;
+6. it does not bypass source admission, evidence, policy, rights, sensitivity, review, promotion, correction, or rollback gates.
 
-The controlling rule is:
+The controlling pattern is:
 
 ```text
 small bounded helper
-  -> repeated or trust-bearing use detected
+  -> reliance, repetition, or trust burden appears
   -> responsibility and risk review
-  -> graduate logic to tools/, pipelines/, packages/, tests/, infra/, release/,
-     or another accepted authority root
-  -> optionally retain a thin script wrapper
+  -> graduate durable logic to tools/, pipelines/, packages/, tests/, infra/,
+     release/, or another accepted owning root
+  -> retain only a thin compatibility wrapper when justified
 ```
 
-This is a **PROPOSED operating discipline** grounded in the current parent and child documentation. It does not claim automated graduation enforcement.
+This README defines routing and review posture. It does not claim that graduation is automatically enforced.
 
 [Back to top](#top)
 
@@ -140,42 +127,41 @@ This is a **PROPOSED operating discipline** grounded in the current parent and c
 
 ## Authority level
 
-**Operational helper root / non-authoritative execution surface.**
+**Canonical operational-helper root; non-authoritative execution surface.**
+
+Directory Rules distinguish `scripts/` from the roots that own long-lived behavior and trust objects:
 
 | Concern | Authority home | `scripts/` role |
 |---|---|---|
-| Small local or operational wrapper | `scripts/` | Owns the thin command wrapper and bounded usage notes. |
-| Long-lived validator, generator, builder, proof assembler, or QA tool | `tools/` | Scripts may call it; they must not replace its accepted contract and tests. |
-| Repeatable lifecycle or production orchestration | `pipelines/` | Scripts may launch a pipeline; orchestration authority stays with the pipeline. |
-| Reusable implementation | `packages/` | Shared logic belongs in importable, versioned, tested code. |
-| Executable proof | `tests/` | A script exit code is not a substitute for tests. |
-| Fixtures and golden/negative cases | `fixtures/` | Scripts may read or regenerate through accepted generators; fixture authority remains separate. |
-| Semantic meaning | `contracts/` | Scripts consume contracts and cannot redefine object meaning. |
-| Machine-checkable shape | `schemas/` | Scripts may invoke validators; they cannot create parallel schema authority. |
-| Policy, rights, sensitivity, consent, access | `policy/` and governed review | Scripts obey decisions and cannot grant permission. |
-| Source identity and activation | registry/source-governance roots | Scripts cannot activate sources by writing files. |
-| Lifecycle data | `data/raw`, `work`, `quarantine`, `processed`, `catalog`, `triplet`, `published` | Scripts may produce candidates only through governed transitions. |
-| Receipts and proofs | governed `data/receipts/` and `data/proofs/` lanes | Scripts may emit through accepted contracts; output location alone grants no status. |
-| Release, correction, withdrawal, rollback | `release/` | Scripts may draft or assist; authority remains with governed records and reviewers. |
-| Deployment and network exposure | `infra/`, runtime, and app roots | Scripts cannot authorize a service or public route. |
-| Public API/UI behavior | accepted app/API/UI roots | Public clients never execute arbitrary repository scripts. |
-| Secrets | approved external mechanism | Scripts use references or injected values, never committed secrets. |
+| Small local or operational wrapper | `scripts/` | Owns the thin command and bounded usage contract. |
+| Long-lived validator, generator, builder, proof assembler, release helper, or QA tool | [`tools/`](../tools/) | May invoke it; must not replace its accepted implementation and tests. |
+| Repeatable lifecycle or production orchestration | [`pipelines/`](../pipelines/) | May launch it; orchestration remains with the pipeline. |
+| Reusable implementation | [`packages/`](../packages/) | Shared logic belongs in importable, versioned, tested code. |
+| Executable proof | [`tests/`](../tests/) | Script success is not a substitute for assertions. |
+| Fixtures and baselines | [`fixtures/`](../fixtures/) | May read or propose regeneration; fixture authority remains separate. |
+| Semantic meaning and machine shape | `contracts/`, `schemas/` | Consumes them; cannot create parallel contract or schema authority. |
+| Policy, rights, sensitivity, access | `policy/` plus governed review | Obeys decisions; cannot grant permission. |
+| Lifecycle state | governed `data/` phases | May produce candidates only through declared transitions. |
+| Receipts and proofs | [`data/receipts/`](../data/receipts/), [`data/proofs/`](../data/proofs/) | May emit candidates through accepted contracts; path or filename does not confer status. |
+| Release, correction, withdrawal, rollback | [`release/`](../release/) | May draft or assist; cannot approve or publish. |
+| Deployment and public behavior | `infra/`, runtime, apps | Cannot authorize service exposure or public routes. |
+| Secrets | approved external mechanism | Uses references or injected values; never stores committed secrets. |
 
 ### Anti-collapse rules
 
 `scripts/` must not collapse:
 
 - command convenience into canonical implementation;
-- generated JSON into accepted contract conformance;
+- generated JSON into contract conformance;
 - validator invocation into validator authority;
-- CI success into release approval;
-- artifact upload into publication;
-- a receipt-shaped object into a governed receipt;
-- a proof-shaped object into accepted proof;
-- a release-manifest-shaped object into a release;
+- CI success into runtime, release, or publication proof;
+- QA artifact upload into promotion;
+- receipt-, proof-, or manifest-shaped output into a governed trust object;
 - a draft correction or rollback object into an authorized state transition;
-- developer-local success into production readiness;
-- a one-off mutation into a durable system dependency.
+- local success into production readiness;
+- a one-off mutation into a durable dependency.
+
+Public clients and normal UI surfaces must never execute arbitrary repository scripts.
 
 [Back to top](#top)
 
@@ -183,36 +169,42 @@ This is a **PROPOSED operating discipline** grounded in the current parent and c
 
 ## Status
 
+<a id="status-and-evidence-boundary"></a>
+
 ### Repository-grounded maturity summary
 
-| Surface | Status at the pinned snapshot | Safe conclusion |
+| Surface | Current evidence | Safe conclusion |
 |---|---:|---|
-| `scripts/README.md` | **CONFIRMED v0.2** | Root guidance exists but predates the current child-lane revisions and verified CI wiring. |
-| `scripts/dev/` | **CONFIRMED v0.2; placeholder-only** | `bootstrap.sh` and `regen_fixtures.sh` print TODO messages and do not implement their advertised future behavior. |
-| `scripts/maintenance/` | **CONFIRMED v0.3; mixed maturity** | Substantive doctrine preflight, registry, readiness, synchronization, and test-bundle scripts exist beside at least one placeholder. |
-| `scripts/one_off/` | **CONFIRMED v0.2; README-only in bounded evidence** | Empty-by-default temporary quarantine lane; direct executable scripts were not established. |
-| Root-level MapLibre scripts | **CONFIRMED present and substantive** | They run smoke performance, render-diff, attestation-shaped, manifest-shaped, proof-shaped, correction/rollback, and failure-bundle work. |
-| Root `package.json` commands | **CONFIRMED** | Named `maplibre:*` commands invoke the helper chain and validators. |
-| MapLibre performance workflow | **CONFIRMED executable workflow definition** | A dedicated workflow installs dependencies, runs scripts and validators, handles failures, and uploads artifacts. |
-| Workflow run success or branch-protection requirement | **UNKNOWN in this edit** | Workflow definition is not proof of current run success or merge-gate significance. |
-| Canonical trust-object placement | **CONFLICTED** | Scripts write receipt/proof/release-shaped objects under `artifacts/perf`; doctrine identifies governed data/release homes for accepted objects. |
-| MapLibre helper long-term home | **NEEDS VERIFICATION** | Draft governance recommends graduation from `scripts/` to a tools-oriented lane. |
-| Ownership and CODEOWNERS | **OWNER_TBD / NEEDS VERIFICATION** | Current accepted owners and enforcement are not established here. |
-| Production/public use | **DENIED unless separately proven** | Repository scripts are not public or production interfaces. |
+| `scripts/README.md` | **CONFIRMED v0.3 baseline** | Strong guardrails exist, but the evidence snapshot and workflow description are stale. |
+| [`scripts/dev/`](./dev/) | **CONFIRMED placeholder-only** | `bootstrap.sh` and `regen_fixtures.sh` do not implement setup or fixture regeneration. |
+| [`scripts/maintenance/`](./maintenance/) | **CONFIRMED mixed maturity** | Substantive maintenance commands exist, but command-by-command ownership, output homes, and graduation remain unsettled. |
+| [`scripts/one_off/`](./one_off/) | **CONFIRMED README-only in bounded evidence** | Deletion-first temporary lane; no direct executable was established by inspected evidence. |
+| Seven root-level MapLibre scripts | **CONFIRMED substantive candidate builders** | They can perform browser smoke, render diff, unsigned attestation shaping, manifest/proof shaping, correction/rollback drafting, and failure capture when invoked locally. |
+| Root `package.json` and `Makefile` | **CONFIRMED command entry points** | Local commands exist; availability does not establish prerequisites, deterministic fixtures, or release readiness. |
+| `MapLibre Perf Governance` workflow | **CONFIRMED bounded checks plus explicit hold** | It syntax-checks scripts, runs three negative-path tests, inspects readiness, and emits only logs/summary. It does not run the browser chain or emit artifacts. |
+| `promotion-gate` workflow | **CONFIRMED test/readiness workflow** | It runs doctrine and PromotionDecision shape tests and records holds; it does not invoke the old maintenance checker path or create promotion authority. |
+| MapLibre schemas | **CONFIRMED eight accept-any-object placeholders** | Object names exist, but meaningful machine-shape proof is not established. |
+| MapLibre governance verifiers | **CONFIRMED placeholders** | Runtime/performance/release assertions remain held. |
+| Canonical trust-object placement | **CONFLICTED / open `BLOCKED_ADR` drift** | Candidate builders target `artifacts/perf/`; accepted receipts, proofs, and release records belong in governed data/release roots. |
+| Workflow success and branch-protection significance | **NEEDS VERIFICATION per run** | A workflow definition or green hold check is not runtime or release evidence. |
+| Production use and downstream consumers | **UNKNOWN** | No deployment, schedule, runtime, SLO, incident, or consumer evidence was inspected. |
+| Ownership | **NEEDS VERIFICATION** | Default CODEOWNERS routing exists; explicit script-root stewardship and review enforcement do not. |
 
 ### Maturity classes
 
 | Class | Meaning | Current examples |
 |---|---|---|
-| `PLACEHOLDER` | File exists but does not perform the advertised future action. | `dev/bootstrap.sh`, `dev/regen_fixtures.sh`, documented maintenance placeholders. |
-| `LOCAL_HELPER` | Bounded developer or operator convenience; non-authoritative. | Future reviewed scripts under `dev/`. |
-| `TEMPORARY` | Ticket-bound, expiry-bound helper that must be deleted or promoted. | `one_off/` lane. |
-| `OPERATIONAL_HELPER` | Substantive bounded maintenance or QA behavior with explicit contract. | Doctrine maintenance scripts. |
-| `CI_INVOKED` | Called by a verified workflow. | Root-level MapLibre helper chain. |
-| `TRUST_ADJACENT` | Writes or gates receipts, proofs, release-shaped records, correction, rollback, or publication-support artifacts. | MapLibre performance chain. |
-| `GRADUATION_REQUIRED` | Reliance or authority burden exceeds the script root's intended role. | **PROPOSED current posture for the MapLibre helper chain.** |
+| `PLACEHOLDER` | Exists but does not perform the advertised future action. | Dev helpers; selected MapLibre governance verifiers. |
+| `LOCAL_HELPER` | Bounded workstation/operator convenience. | Future reviewed `dev/` wrappers. |
+| `TEMPORARY` | Task- and expiry-bound helper. | `one_off/`. |
+| `OPERATIONAL_HELPER` | Substantive bounded maintenance or QA behavior. | Doctrine maintenance commands. |
+| `COMMAND_EXPOSED` | Reachable through a repository command surface. | MapLibre package/Make targets. |
+| `CI_CHECKED` | Syntax, static assumptions, or selected behavior is exercised by CI. | Seven MapLibre scripts and three negative-path tests. |
+| `CI_RUNTIME_EXECUTED` | Runtime command itself is exercised by CI. | **Not established for the MapLibre browser chain.** |
+| `TRUST_ADJACENT` | Produces or evaluates receipt-, proof-, release-, correction-, rollback-, or publication-support candidates. | MapLibre candidate builders; selected maintenance commands. |
+| `GRADUATION_REQUIRED` | Responsibility or reliance exceeds the intended script-root role. | **PROPOSED current posture for MapLibre candidate builders and selected maintenance commands.** |
 
-A file may occupy more than one class. `CI_INVOKED` does not mean canonical, and `TRUST_ADJACENT` does not mean accepted authority.
+A file may occupy more than one class. `CI_CHECKED` does not mean canonical; `TRUST_ADJACENT` does not mean accepted authority.
 
 [Back to top](#top)
 
@@ -221,57 +213,52 @@ A file may occupy more than one class. `CI_INVOKED` does not mean canonical, and
 ## What belongs here
 
 - This root README and child-lane indexes.
-- Small shell, Python, Node, or other wrappers with bounded contracts.
-- Local-development helpers under `dev/`.
-- Bounded maintenance CLIs and wrappers under `maintenance/`.
-- Temporary, expiry-bound one-off scripts under `one_off/`.
-- Thin launchers around accepted tools, validators, tests, or pipelines.
-- Read-only inspection and report-generation helpers.
-- Transitional trust-adjacent wrappers while a documented graduation decision is active.
-- Explicit migration, deprecation, cleanup, and rollback notes for scripts.
-- Script-local usage documentation that states exact inputs, outputs, side effects, exit codes, network behavior, secret posture, validation, and rollback.
+- Small shell, Python, Node, or other wrappers with bounded command contracts.
+- Workstation-focused helpers under [`dev/`](./dev/).
+- Bounded repository maintenance wrappers under [`maintenance/`](./maintenance/).
+- Temporary, expiry-bound task scripts under [`one_off/`](./one_off/).
+- Thin launchers around accepted tools, validators, tests, packages, or pipelines.
+- Read-only inspection, reporting, and planning helpers.
+- Transitional wrappers while a documented graduation or migration is active.
+- Script-local usage notes that state inputs, outputs, effects, network behavior, secret posture, finite outcomes, validation, retention, rollback, and graduation triggers.
 
 Every consequential script should carry or link:
 
-- stable command identity;
-- owner and reviewers;
-- purpose and bounded scope;
-- input and output paths;
-- read, write, and delete sets;
-- network and secret profile;
-- deterministic or recorded variability;
-- finite outcomes and exit-code mapping;
-- validation command;
-- generated-artifact classification;
-- retention and cleanup;
-- rollback or restoration procedure;
-- graduation trigger and target.
+- stable command identity and accountable maintenance route;
+- purpose and non-goals;
+- exact read, write, and delete sets;
+- network hosts and dependency-integrity posture;
+- secret references, never secret values;
+- deterministic inputs or recorded variability;
+- finite outcome and exit-code mapping;
+- generated-output classification and destination;
+- validation commands and limitations;
+- retention, cleanup, correction, rollback, and graduation rules.
 
 [Back to top](#top)
 
 ---
 
-## What does not belong here
+## What does NOT belong here
 
 | Do not place or retain here | Correct home or action |
 |---|---|
-| Long-lived validators, generators, builders, proof assemblers, release tools, or QA frameworks | `tools/` with accepted contracts and tests |
-| Repeatable lifecycle or production orchestration | `pipelines/` |
-| Shared or domain implementation logic | `packages/` |
-| Test cases, assertions, test harness authority | `tests/` |
-| Fixture payloads, baselines, golden outputs, invalid examples | `fixtures/` |
+| Long-lived validators, generators, builders, proof assemblers, release helpers, or QA frameworks | [`tools/`](../tools/) with accepted contracts, tests, and ownership |
+| Repeatable lifecycle or production orchestration | [`pipelines/`](../pipelines/) |
+| Shared or domain implementation logic | [`packages/`](../packages/) |
+| Tests and assertions | [`tests/`](../tests/) |
+| Fixtures, baselines, golden outputs, invalid examples | [`fixtures/`](../fixtures/) |
 | Semantic contracts or JSON Schema | `contracts/`, `schemas/` |
-| Policy rules, access grants, rights decisions, sensitivity decisions, consent approvals | `policy/` and governed review roots |
-| Source descriptors, source activation, or identity registries | accepted source/registry roots |
+| Policy rules, source activation, rights, sensitivity, consent, or access grants | `policy/`, registries, and governed review |
 | RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED payloads | governed `data/` lifecycle roots |
-| Governed receipt and proof instances retained as canonical records | accepted `data/receipts/` and `data/proofs/` lanes |
-| Release manifests, PromotionDecisions, CorrectionNotices, WithdrawalNotices, RollbackCards, or signatures as authoritative records | `release/` |
-| Shared configuration defaults or templates | `configs/` |
-| Deployment definitions, service units, firewall/proxy rules, production schedules | `infra/`, runtime, or app roots |
-| Credentials, tokens, private keys, passwords, private endpoints, secret-bearing `.env` files | approved external secret system |
-| Public API routes, UI components, browser bundles, or arbitrary script execution endpoints | accepted app/API/UI roots |
-| Unowned experiments or forgotten temporary scripts | delete, quarantine in a reviewed branch, or assign an explicit one-off contract |
-| Generated artifacts committed without classification, review, or rollback | classify, validate, route, or delete before merge |
+| Canonical receipts and accepted proofs | [`data/receipts/`](../data/receipts/), [`data/proofs/`](../data/proofs/) |
+| Authoritative release manifests, PromotionDecisions, CorrectionNotices, WithdrawalNotices, RollbackCards, or signatures | [`release/`](../release/) |
+| Shared configuration defaults or reusable templates | [`configs/`](../configs/) |
+| Deployment definitions, service units, production schedules, firewall/proxy rules | `infra/`, runtime, or apps |
+| Credentials, tokens, keys, passwords, private endpoints, secret-bearing `.env` files | approved external secret system |
+| Public API routes, UI components, browser bundles, arbitrary script-execution endpoints | accepted app/API/UI roots |
+| Unowned experiments or forgotten temporary scripts | delete, or admit to `one_off/` with expiry and rollback |
+| Generated files committed without classification, validation, review, and rollback | classify, route, or delete before merge |
 
 [Back to top](#top)
 
@@ -284,12 +271,12 @@ A script may consume only inputs appropriate to its declared scope.
 ### Permitted input classes
 
 - explicit CLI arguments;
-- tracked manifests, lockfiles, schemas, contracts, configuration examples, and fixtures;
+- tracked manifests, lockfiles, schemas, contracts, config examples, and fixtures;
 - accepted tool, validator, package, pipeline, and test entry points;
-- ignored workstation-local overrides where the consumer contract permits them;
+- ignored workstation-local overrides where the consumer contract allows them;
 - non-secret environment variables;
-- approved secret references or injected values;
-- local services or reviewed remote endpoints;
+- approved injected secret references;
+- reviewed local services or remote endpoints;
 - artifacts generated earlier in the same bounded run;
 - repository metadata such as commit SHA, branch, or changed paths.
 
@@ -298,15 +285,15 @@ A script may consume only inputs appropriate to its declared scope.
 A consequential script must:
 
 1. reject unknown arguments;
-2. validate required paths and versions;
+2. validate required paths and tool versions;
 3. distinguish tracked, ignored, generated, and external inputs;
-4. pin or record dependency and tool versions;
+4. pin or record dependencies;
 5. avoid broad scans of secrets or protected data;
 6. deny unreviewed network sources;
 7. resolve symlinks and path traversal safely before writes;
-8. record when input freshness, policy, rights, sensitivity, or release state affects execution;
-9. stop rather than invent defaults when authority-bearing inputs are missing;
-10. avoid reading public clients directly from internal or canonical stores outside accepted interfaces.
+8. record freshness, rights, sensitivity, policy, and release state when material;
+9. stop rather than invent authority-bearing defaults;
+10. avoid direct public-client access to canonical/internal stores.
 
 ### Forbidden assumptions
 
@@ -315,12 +302,12 @@ A script must not assume that:
 - path presence means an object is accepted;
 - schema validity means a claim is true;
 - a registry row means a source is active;
-- a receipt exists because a JSON file is named like one;
-- a release is approved because a manifest status says `candidate`;
-- a local or CI environment reflects production;
+- a JSON filename makes an object a governed receipt or proof;
+- a `candidate` manifest is release approval;
+- local or CI behavior equals production;
 - credentials exist or may be printed;
 - network access is harmless;
-- generated content is safe to commit or publish.
+- generated content is safe to commit, promote, or publish.
 
 [Back to top](#top)
 
@@ -328,23 +315,21 @@ A script must not assume that:
 
 ## Outputs
 
-Script outputs remain **candidates or operational results** until the owning root validates and accepts them.
+Script outputs remain **terminal results, temporary artifacts, or candidates** until the owning root validates and accepts them.
 
-### Output classes
-
-| Class | Examples | Required handling |
+| Output class | Examples | Required handling |
 |---|---|---|
-| Terminal-only | status, plan, warning, finite outcome | No secret or protected content; stable exit mapping. |
-| Local temporary | cache, scratch report, preview | Ignored or deleted; not evidence or release material. |
-| Build/QA artifact | screenshots, diffs, perf results, failure bundle | `artifacts/` may carry temporary QA output; classify retention and sensitivity. |
-| Fixture candidate | regenerated examples | Compare deterministically; validate; review before replacing fixture authority. |
-| Lifecycle candidate | transformed or derived data | Route to WORK/QUARANTINE and governed promotion, never directly to PUBLISHED. |
-| Receipt candidate | run or validation receipt-shaped object | Validate and route to accepted receipt lane before treating as process memory. |
-| Proof candidate | ProofPack or integrity object | Validate and route to accepted proof lane before treating as proof. |
-| Release candidate | manifest, correction, withdrawal, rollback object | Route to `release/` and governed review; scripts cannot approve it. |
-| Code/config mutation | source, docs, config, registry changes | Dry run, exact diff, tests, owner review, rollback. |
+| Terminal-only | status, plan, warning, finite outcome | No secret/protected content; stable outcome mapping. |
+| Local temporary | cache, scratch report, preview | Ignore or delete; not evidence or release material. |
+| Build/QA artifact | screenshots, diffs, performance diagnostics, failure bundle | Temporary `artifacts/` use may be valid; classify retention and sensitivity. |
+| Fixture candidate | regenerated examples | Compare deterministically; validate and review before replacing fixtures. |
+| Lifecycle candidate | transformed or derived data | Route to WORK/QUARANTINE; never directly to PUBLISHED. |
+| Receipt candidate | run- or validation-receipt-shaped object | Validate and route to an accepted receipt lane before treating as process memory. |
+| Proof candidate | ProofPack, integrity report, render comparison | Validate and route to the proof lane before treating as proof. |
+| Release candidate | manifest, correction, withdrawal, rollback-shaped record | Route to `release/`; scripts cannot approve it. |
+| Code/config mutation | source, docs, configs, registries | Dry run, exact diff, tests, owner review, correction, rollback. |
 
-### Minimum output declaration
+### Minimum effect declaration
 
 ```yaml
 command_id: <stable-id>
@@ -353,7 +338,7 @@ outcome: NOOP | PLANNED | APPLIED | PARTIAL | HELD | DENIED | ERROR
 reads: []
 writes: []
 deletes: []
-network_profile: none | reviewed-profile
+network_profile: none | <reviewed-profile>
 secret_refs: []
 generated_objects:
   - path: <path>
@@ -361,10 +346,231 @@ generated_objects:
 validation:
   - <command or check>
 rollback: <mechanical restoration>
-owner: <owner>
+maintenance_route: <verified route or NEEDS VERIFICATION>
 ```
 
-This is a **PROPOSED declaration profile**, not a confirmed schema.
+This declaration is **PROPOSED**, not a confirmed schema.
+
+[Back to top](#top)
+
+---
+
+## Validation
+
+Validation must match the claim being made.
+
+### Static inventory and syntax
+
+```bash
+find scripts -maxdepth 3 -type f | sort
+
+find scripts -name '*.sh' -print0 |
+  xargs -0 -r bash -n
+
+find scripts -name '*.py' -print0 |
+  xargs -0 -r python -m py_compile
+
+find scripts -name '*.mjs' -print0 |
+  xargs -0 -r -n1 node --check
+```
+
+Static syntax proves parseability only. It does not prove safe mutation, network behavior, fixture availability, deterministic output, schema meaning, or release eligibility.
+
+### Current MapLibre CI coverage
+
+The inspected workflow definition:
+
+1. runs `node --check` against the seven root-level MapLibre scripts;
+2. parses MapLibre Python validator and test syntax;
+3. directly invokes three deterministic negative-path test functions;
+4. verifies that runtime fixtures, canonical migration targets, meaningful schemas, substantive verifiers, signing, and tracked trust-shaped artifacts have **not** silently appeared;
+5. records `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD`.
+
+It does **not** install package dependencies or a browser, run Playwright, start the fixture server, execute performance smoke, compare render output, sign anything, build a proof/release candidate, or upload `artifacts/perf/`.
+
+### Current local command surfaces
+
+`package.json` and `Makefile` expose the candidate-builder commands. Before a maintainer runs the full chain, they must verify:
+
+- accepted package manager and lockfile;
+- browser and Node dependencies;
+- local slim/heavy style fixtures and baselines;
+- approved network hosts or mirrored assets;
+- meaningful schemas and valid/invalid fixtures;
+- substantive validators and finite outcomes;
+- output staging, cleanup, retention, and sensitivity;
+- signing posture;
+- canonical receipt/proof/release destinations;
+- rollback and correction behavior.
+
+<details>
+<summary><strong>Current command names — availability only, not a run recommendation</strong></summary>
+
+```bash
+npm run maplibre:perf
+npm run maplibre:render-diff
+npm run maplibre:attest
+npm run maplibre:manifest
+npm run maplibre:govern
+npm run maplibre:proof
+npm run maplibre:proof:validate
+npm run maplibre:failure-bundle
+npm run maplibre:correction
+npm run maplibre:perf:full
+npm run maplibre:clean
+
+make maplibre-perf
+make maplibre-govern
+make maplibre-proof
+make maplibre-clean
+```
+
+</details>
+
+### Child-lane checks
+
+```bash
+bash -n scripts/dev/bootstrap.sh
+bash -n scripts/dev/regen_fixtures.sh
+
+python -m py_compile scripts/maintenance/*.py
+bash -n scripts/maintenance/*.sh
+python scripts/maintenance/run_doctrine_artifact_preflight.py --help
+bash scripts/maintenance/run_doctrine_artifact_test_suite.sh
+```
+
+Review command help, strict flags, output paths, and write behavior before executing maintenance reconciliation.
+
+### Documentation and mutation review
+
+```bash
+git status --short
+git diff -- scripts package.json Makefile .github/workflows
+git diff -- artifacts data release configs fixtures tests tools
+```
+
+### Claim limits
+
+For this README modernization:
+
+- the complete Markdown baseline and current repository definitions were inspected;
+- executable script commands were not run in the authoring environment;
+- no generated MapLibre artifact was inspected as a current run product;
+- no package build, browser test, network call, signing operation, migration, graduation, or rollback drill was performed;
+- repository CI runs only after the draft PR is opened.
+
+[Back to top](#top)
+
+---
+
+## Review burden
+
+CODEOWNERS currently routes unmatched paths to `@bartytime4life`. No explicit `/scripts/` rule was found. That route is not proof of a stewardship assignment, review completion, required code-owner review, branch protection, or independent approval.
+
+| Change class | Minimum review posture |
+|---|---|
+| README-only clarification with no behavior claim | Default repository review route; verify links, anchors, claims, and rollback. |
+| Non-mutating local helper | Maintainer familiar with the affected command and operating environment. |
+| Write-capable script | Reviewer for every mutated responsibility root plus rollback review. |
+| Schema, contract, policy, source, registry, fixture, or lifecycle mutation | Owning-root reviewer and applicable governance review. |
+| Network, download, archive, shell-from-input, deletion, secrets, or protected logs | Security review plus affected owner. |
+| CI-required, scheduled, or monitored command | CI/operations review and a graduation decision. |
+| Receipt-, proof-, release-, correction-, rollback-, or signature-shaped output | Evidence/release review, canonical-home decision, validators, and separation-of-duty review. |
+| Sensitive-domain or precise-location handling | Applicable sensitivity/steward review before exposure. |
+
+The same implementation must not silently become generator, validator, approver, signer, and publisher.
+
+[Back to top](#top)
+
+---
+
+## Related folders
+
+| Path | Relationship |
+|---|---|
+| [`scripts/dev/`](./dev/) | Placeholder and future local-development wrappers. |
+| [`scripts/maintenance/`](./maintenance/) | Mixed-maturity maintenance and doctrine-preflight commands. |
+| [`scripts/one_off/`](./one_off/) | Temporary, deletion-first quarantine lane. |
+| [`tools/`](../tools/) | Long-lived validators, generators, builders, proof assemblers, release helpers, and governed tooling. |
+| [`tools/validators/`](../tools/validators/) | Validator implementation authority. |
+| [`pipelines/`](../pipelines/) | Repeatable lifecycle and production orchestration. |
+| [`packages/`](../packages/) | Reusable implementation. |
+| [`tests/`](../tests/) | Executable proof. |
+| [`fixtures/`](../fixtures/) | Valid, invalid, negative, and golden examples. |
+| [`configs/`](../configs/) | Shared safe defaults and configuration templates. |
+| [`artifacts/`](../artifacts/) | Compatibility root for build/docs/QA/temporary outputs—not sovereign truth. |
+| [`data/receipts/`](../data/receipts/) | Governed process-memory records. |
+| [`data/proofs/`](../data/proofs/) | Governed proof objects. |
+| [`release/`](../release/) | Promotion, release, correction, withdrawal, and rollback authority. |
+| [`package.json`](../package.json) | Root Node command surface, including local MapLibre candidate builders. |
+| [`Makefile`](../Makefile) | Root orchestration surface, including MapLibre targets. |
+| [MapLibre workflow](../.github/workflows/maplibre-perf-governance.yml) | Bounded syntax/negative-path/readiness check with explicit hold. |
+| [Promotion workflow](../.github/workflows/promotion-gate.yml) | Doctrine/shape/readiness checks; no promotion authority. |
+| [MapLibre governance draft](../docs/quality/maplibre-perf-governance.md) | Proposed graduation and artifact-placement design. |
+| [Directory Rules](../docs/doctrine/directory-rules.md) | Placement, root responsibility, migration, and §15 README doctrine. |
+| [Drift register](../docs/registers/DRIFT_REGISTER.md) | Current open artifacts/trust-object authority conflict. |
+| [CODEOWNERS](../.github/CODEOWNERS) | GitHub review routing, not stewardship or approval. |
+
+[Back to top](#top)
+
+---
+
+## ADRs
+
+### Governing doctrine and current decision state
+
+- Directory Rules make `scripts/` the small-helper root and require long-lived trust-bearing logic to graduate.
+- Directory Rules restrict `artifacts/` to build, docs, QA, and temporary material.
+- The current drift register records the MapLibre artifact-placement conflict as open and `BLOCKED_ADR`.
+- The MapLibre performance-governance document proposes graduation and canonical receipt/proof/release homes but is a draft, not an accepted decision.
+- No accepted ADR settling the final MapLibre script destination, canonical trust-object migration, generic script command contract, or script-risk model was surfaced in this review.
+
+### Decisions still required
+
+| Decision | Status |
+|---|---|
+| Assign script-root stewardship and explicit review enforcement. | NEEDS VERIFICATION |
+| Decide the final home for the seven MapLibre candidate builders. | ADR or reviewed migration decision required |
+| Decide whether `artifacts/perf/` remains ephemeral QA staging only. | Open / `BLOCKED_ADR` drift |
+| Define accepted schemas, contracts, fixtures, validators, and outcomes for MapLibre candidate objects. | NEEDS VERIFICATION |
+| Define dependency lock, browser/runtime fixture, network, and signing posture. | NEEDS VERIFICATION |
+| Classify each maintenance command as wrapper, validator, mutator, orchestrator, renderer, or placeholder. | NEEDS VERIFICATION |
+| Resolve maintenance output homes and stale child documentation. | NEEDS VERIFICATION |
+| Define one-off admission, expiry, cleanup, and delete-or-promote enforcement. | PROPOSED |
+| Define compatibility-wrapper and cleanup rules after graduation. | PROPOSED |
+
+No path is moved and no ADR is accepted by this README update.
+
+[Back to top](#top)
+
+---
+
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Last reviewed | 2026-07-23 |
+| Evidence base | `main@fae69bb52e0ebc7670dc7d20c9eb05cb587520ff` |
+| Target prior blob | `f603cb013ff86511a65dae4799c54d77c029e082` |
+| Prior evidence base | `15d88fceced7050abac4493b9cf66f5bc288c1e6` |
+| Evidence delta | 854 intervening commits |
+| Review mode | Complete-baseline, same-path, repository-grounded documentation modernization |
+| Implementation effect | None—Markdown and generated provenance only |
+| Runtime/CI effect | None—no script, workflow, command, dependency, fixture, validator, or artifact changed |
+| Rollback | Revert the documentation/provenance commits or restore the prior README blob |
+
+Re-review when:
+
+- a script is added, removed, moved, renamed, or made executable;
+- a child-lane README changes or conflicts with current callers;
+- a placeholder gains real behavior;
+- a script is added to CI, branch protection, a schedule, or production operation;
+- a lockfile, runtime fixture, baseline, meaningful schema, or substantive validator appears;
+- a script writes a new artifact family;
+- MapLibre scripts graduate or `artifacts/perf/` placement changes;
+- maintenance output homes or workflow callers change;
+- network, dependency, secret, logging, retention, correction, or rollback posture changes;
+- Directory Rules, the drift register, or an accepted ADR changes placement.
 
 [Back to top](#top)
 
@@ -384,12 +590,12 @@ scripts/
 ├── maintenance/
 │   ├── README.md
 │   ├── Python maintenance CLIs and helpers
-│   └── shell wrappers and test bundle
+│   └── shell wrappers and a bounded test bundle
 └── one_off/
     └── README.md
 ```
 
-### Root-level MapLibre performance helpers
+### Root-level MapLibre candidate builders
 
 ```text
 scripts/
@@ -402,23 +608,17 @@ scripts/
 └── build-maplibre-perf-failure-bundle.mjs
 ```
 
-### Supporting entry points and workflow
+### Bounded inventory limits
 
-- `package.json` exposes `maplibre:perf`, `maplibre:render-diff`, `maplibre:attest`, `maplibre:manifest`, `maplibre:proof`, `maplibre:govern`, `maplibre:proof:validate`, `maplibre:failure-bundle`, `maplibre:correction`, `maplibre:perf:full`, and `maplibre:clean`.
-- `.github/workflows/maplibre-perf-governance.yml` installs Node, Python, browser, and validator dependencies; starts a fixture server; runs the scripts and validators; builds failure artifacts on failure; and uploads the generated artifact tree.
-- The workflow definition is **CONFIRMED**. Current run success, required-check status, production use, signing, and release adoption are **UNKNOWN** unless separately verified.
-
-### Inventory limitations
-
-This is not a complete proof against:
+This inventory does not prove absence of:
 
 - ignored or untracked scripts;
 - branch-only or historical scripts;
 - local operator copies;
 - dynamically downloaded scripts;
 - generated executables;
-- workflow commands outside the inspected surfaces;
-- scripts nested deeper than the inspected and documented inventory.
+- workflow commands outside inspected definitions;
+- deeper files not surfaced by the inspected child documents.
 
 [Back to top](#top)
 
@@ -430,28 +630,24 @@ This is not a complete proof against:
 
 Current posture:
 
-- two six-line Bash placeholders;
-- no dependency installation;
-- no fixture regeneration;
-- no confirmed CI use;
-- no production authority;
-- no secret store;
-- future mutation must be inspectable, dry-run capable, tested, and reversible.
+- `bootstrap.sh` and `regen_fixtures.sh` are six-line TODO placeholders;
+- no dependency installation or fixture regeneration is implemented;
+- no CI or production authority is established;
+- future mutation must be explicit, dry-run capable, tested, and reversible.
 
-Use `dev/` for small workstation-oriented wrappers only. Graduate implementation when it becomes reliable infrastructure, a shared tool, a generator, or a test harness.
+Use `dev/` for small workstation-oriented wrappers only. Graduate behavior when it becomes shared setup infrastructure, a generator, validator, or test harness.
 
 ### `maintenance/` — bounded repository maintenance
 
 Current posture:
 
-- substantive doctrine-artifact preflight, registry, provenance, readiness, synchronization, and test-bundle behavior;
-- mixed maturity;
-- direct invocation by the repository promotion-gate workflow;
-- release- and promotion-adjacent use;
-- some scripts emit or write receipt/summary-shaped objects;
-- long-term placement and accepted receipt home remain unresolved.
+- substantive doctrine-artifact registry, provenance, readiness, synchronization, preflight, and test-bundle commands exist;
+- some commands are mutation-sensitive or trust-adjacent;
+- the current `promotion-gate` workflow no longer directly invokes the maintenance checker path described by the child README;
+- long-term placement and accepted output homes remain unresolved.
 
-Maintenance scripts may support gates but cannot become doctrine, policy, validator, receipt, or release authority. Release-critical logic requires stronger ownership, tests, output contracts, CI evidence, and likely graduation.
+> [!NOTE]
+> The stale caller statement in `scripts/maintenance/README.md` is a separate same-path correction target. This parent update records the discrepancy without editing a second README or masking the lineage.
 
 ### `one_off/` — temporary quarantine
 
@@ -459,10 +655,10 @@ Current posture:
 
 - README-only in bounded evidence;
 - empty by default;
-- deletion-first;
-- dry-run first;
+- deletion first;
+- dry run first;
 - network denied by default;
-- every temporary script requires task, owner, risk, inputs, outputs, rollback, expiry, and delete-or-promote decision.
+- every temporary script requires task, maintenance route, risk, inputs, outputs, rollback, expiry, and delete-or-promote decision.
 
 One-off scripts must never become the normal path for ingestion, validation, evidence resolution, policy enforcement, promotion, publication, correction, or rollback.
 
@@ -472,7 +668,9 @@ One-off scripts must never become the normal path for ingestion, validation, evi
 
 ## Root-level MapLibre performance chain
 
-### Confirmed execution chain
+### Local candidate-builder flow
+
+The current local command surfaces can invoke:
 
 ```text
 configs/maplibre/perf-envelope.v1.json
@@ -484,61 +682,45 @@ configs/maplibre/perf-envelope.v1.json
   -> build-maplibre-perf-proof-pack.mjs
   -> tools/validators/maplibre/validate_perf_proof_pack.py
   -> release-manifest rebuild
-  -> final governance validation
+  -> final governance-validator invocation
 ```
 
-On workflow failure:
+Failure-oriented helpers can draft:
 
 ```text
-failure
+candidate failure
   -> build-maplibre-perf-correction-and-rollback.mjs
   -> build-maplibre-perf-failure-bundle.mjs
-  -> failure-bundle validator
-  -> artifact upload
 ```
 
-### Confirmed generated paths
+### Current CI flow
 
-The inspected scripts write under `artifacts/perf/`, including:
+```mermaid
+flowchart LR
+    A["Checkout<br/>read-only token"] --> B["Node 22 + Python 3.12"]
+    B --> C["Syntax-check 7 scripts"]
+    C --> D["Run 3 deterministic<br/>negative-path tests"]
+    D --> E["Inspect readiness assumptions"]
+    E --> F["WORKFLOW_SKIPPED_EXPLICIT"]
+    F --> G["WORKFLOW_HOLD<br/>no runtime or artifact emission"]
+```
 
-- performance results;
-- frame-time CSV files;
-- screenshots;
-- render-diff reports and images;
-- run-receipt-shaped JSON;
-- unsigned DSSE-shaped envelope and checksum;
-- release-manifest-shaped JSON;
-- ProofPack-shaped JSON;
-- draft correction notice;
-- draft rollback plan;
-- failure bundle.
+This diagram reflects the inspected workflow definition. It is not a performance result.
 
-### Boundary determination
+### Why the hold exists
 
-**CONFIRMED:** the code and workflow implement a substantive CI-oriented artifact chain.
+The workflow confirms that:
 
-**CONFLICTED:** trust-bearing object families are represented under `artifacts/perf/`, while KFM doctrine treats `artifacts/` as build/docs/QA/temporary and assigns accepted receipts, proofs, and release records to governed data and release roots.
+- no supported dependency lockfile is present;
+- referenced runtime style fixtures and executable MapLibre fixture payloads are absent;
+- the eight MapLibre performance schemas remain permissive placeholders;
+- several governance verifiers remain placeholders;
+- the browser smoke depends on live CDN/glyph endpoints;
+- attestation is unsigned;
+- trust-shaped builders target `artifacts/perf/`;
+- tracked MapLibre performance artifacts must not silently appear.
 
-**PROPOSED:** retain `artifacts/perf/` as an ephemeral CI staging area only, then validate and deliberately promote accepted receipt/proof/release records to their owning roots through a governed process.
-
-**NEEDS VERIFICATION:** whether the root scripts should graduate to a structure such as `tools/maplibre/perf/`, whether the workflow should call a package or pipeline, and whether any generated object is currently consumed outside CI.
-
-> [!IMPORTANT]
-> A `RunReceipt`, `ProofPack`, `ReleaseManifest`, `CorrectionNotice`, or rollback object name inside `artifacts/perf/` does not make that file the canonical governed object. Placement, schema, validator, evidence, review, signature, release state, correction path, and rollback authority still apply.
-
-### Network posture
-
-The smoke script loads MapLibre assets and glyphs from public URLs while also reading local fixture-server content. The workflow installs package and browser dependencies from external sources. This is **CONFIRMED network use**, not a no-network test lane.
-
-The final governance contract should specify:
-
-- allowed hosts;
-- dependency lock and integrity behavior;
-- cache and outage handling;
-- reproducibility limits;
-- data-exfiltration safeguards;
-- whether release-grade runs require vendored or mirrored assets;
-- how remote-version drift is represented in receipts.
+A green run of this workflow therefore means the **hold contract behaved as designed**, not that performance, rendering, signing, proof closure, release eligibility, or publication safety passed.
 
 [Back to top](#top)
 
@@ -546,45 +728,37 @@ The final governance contract should specify:
 
 ## Safe execution contract
 
-Every consequential script should support a visible sequence:
+Every consequential script should expose this sequence:
 
 ```text
 inspect
   -> validate prerequisites
-  -> plan exact reads/writes/deletes/network calls
+  -> plan exact reads, writes, deletes, and network calls
   -> dry run
   -> explicit apply
   -> validate outputs
   -> emit finite outcome
   -> preserve review evidence
-  -> clean up or route outputs
+  -> route or clean outputs
 ```
 
-### Default rules
+Default rules:
 
-- No-argument mode should be read-only unless the command is inherently read-only.
-- Write mode should require `--apply`, `--write`, or an equally explicit action.
-- Destructive operations should require a narrower confirmation.
-- Unknown arguments and fields should fail.
-- Scripts should not automatically stage, commit, push, merge, release, or publish.
-- Scripts should not modify canonical records when the precondition state is stale or conflicted.
-- Partial writes should return `PARTIAL` or `ERROR`, not success.
-- Temporary output should be cleaned or retained under an explicit policy.
-- Governed output should be validated and routed through its owning root.
-- CI mode and local mode should declare any behavioral differences.
-- Network access should be denied unless the command contract lists approved endpoints.
-- Secrets should be injected through an approved mechanism and redacted from output.
+- no-argument mode is read-only unless the command is inherently read-only;
+- writes require `--apply`, `--write`, or an equally explicit action;
+- destructive changes require narrower confirmation;
+- unknown arguments and fields fail;
+- scripts do not automatically stage, commit, push, merge, release, or publish;
+- stale or conflicted preconditions block canonical mutation;
+- partial effects return `PARTIAL` or `ERROR`;
+- temporary output is cleaned or retained under explicit policy;
+- governed candidates are validated and routed to owning roots;
+- local and CI behavior differences are declared;
+- network access is denied unless the command contract lists approved endpoints;
+- secrets are injected through approved mechanisms and redacted;
+- incident evidence and prior recoverable state are preserved.
 
-### Idempotence and replay
-
-Where practical:
-
-- the same inputs and pinned versions should yield the same plan;
-- file ordering, locale, time, random identifiers, and environment should be controlled or recorded;
-- repeated apply after success should produce `NOOP` or a declared update;
-- generated object hashes should be stable when semantic inputs are unchanged;
-- a receipt or run record should identify the tool version, commit, parameters, and input digests;
-- rollback should identify the exact prior state or restoration target.
+Where practical, repeated execution with identical inputs should be deterministic or record the nondeterminism, and a second successful apply should produce `NOOP` or a declared update.
 
 [Back to top](#top)
 
@@ -595,58 +769,64 @@ Where practical:
 ### Staging is not promotion
 
 ```text
-script output
+script result
   -> temporary or WORK candidate
-  -> schema/contract validation
+  -> schema and contract validation
   -> policy, rights, sensitivity, and evidence checks
-  -> receipt/proof assembly in the correct authority root
-  -> steward review
+  -> receipt/proof/release assembly in the correct authority root
+  -> accountable review
   -> PromotionDecision and ReleaseManifest where applicable
   -> PUBLISHED
 ```
 
-A script must never shortcut this flow by writing directly to a path and treating the path as approval.
+A script must never shortcut this flow by writing directly to a path and treating placement as approval.
 
 ### `artifacts/` compatibility rule
 
-`artifacts/` may hold:
-
-- temporary QA output;
-- screenshots and render diffs;
-- build reports;
-- CI upload bundles;
-- disposable evidence candidates;
-- preview or diagnostic material.
-
-It must not silently become the sovereign home for:
+`artifacts/` may carry temporary QA output, screenshots, render diffs, build reports, CI bundles, and disposable candidates. It must not become the sovereign home for:
 
 - canonical receipts;
 - accepted proofs;
 - release manifests;
-- policy decisions;
+- policy or promotion decisions;
 - correction or withdrawal records;
 - rollback authority;
+- catalog records;
 - published material.
 
-### Required handoff record
+### MapLibre candidate outputs
+
+The inspected builders can target `artifacts/perf/` with:
+
+- performance results and frame-time CSVs;
+- screenshots and render-diff output;
+- `RunReceipt`-shaped JSON;
+- unsigned DSSE-shaped envelope and checksum;
+- `ReleaseManifest`-shaped candidate;
+- `ProofPack`-shaped candidate;
+- draft correction and rollback records;
+- failure bundle.
+
+These are **candidate shapes**, not accepted trust objects. The drift register records the placement conflict as open and `BLOCKED_ADR`.
+
+### Candidate handoff record
 
 When a script produces a trust-adjacent candidate, record:
 
 | Field | Purpose |
 |---|---|
-| Candidate path | Where the temporary object was written. |
-| Candidate class | Receipt, proof, release, correction, rollback, lifecycle, or other. |
+| Candidate path and class | Temporary location and object family claimed. |
 | Owning root | Canonical destination if admitted. |
 | Schema and contract | Shape and semantic authority. |
-| Validator | Executable check and version. |
-| Evidence refs | Support used by the object. |
-| Policy/review refs | Decisions and reviewers required. |
-| Digest | Integrity of the candidate. |
+| Validator and fixtures | Executable checks and representative cases. |
+| Evidence refs | Support used by the candidate. |
+| Policy and review refs | Decisions and accountable review required. |
+| Digest and tool identity | Integrity and reproducibility. |
 | Promotion status | `staged`, `held`, `denied`, `accepted`, or `superseded`. |
-| Correction/rollback | What invalidates or reverses the candidate. |
+| Correction and rollback | Invalidating or reversing path. |
 | Retention | Cleanup or preservation period. |
 
-This handoff profile is **PROPOSED**.
+This profile is **PROPOSED**.
 
 [Back to top](#top)
 
@@ -659,35 +839,27 @@ This handoff profile is **PROPOSED**.
 | Outcome | Meaning |
 |---|---|
 | `NOOP` | Preconditions were valid and no change was needed. |
-| `PLANNED` | A dry-run or review plan was produced; no mutation occurred. |
-| `APPLIED` | The declared bounded mutation completed and passed required verification. |
+| `PLANNED` | A reviewable no-write plan was produced. |
+| `APPLIED` | The bounded mutation completed and required verification passed. |
 | `PARTIAL` | Some effects occurred; reconciliation and review are required. |
-| `HELD` | Execution or output is held pending evidence, dependency, freshness, review, or placement. |
-| `DENIED` | Policy, rights, sensitivity, consent, access, release, or scope forbids the action. |
+| `HELD` | Execution or output waits on evidence, dependency, freshness, placement, or review. |
+| `DENIED` | Policy, rights, sensitivity, access, release, or scope forbids the action. |
 | `ERROR` | Technical execution failed. |
+
+These execution outcomes are not interchangeable with public API outcomes, policy enums, validation `PASS`/`FAIL`, workflow `HOLD`, or document truth labels.
 
 ### Mandatory failure behavior
 
-- `PARTIAL`, `HELD`, `DENIED`, and `ERROR` must not be converted to zero-success without an explicit wrapper contract.
-- A failed validator must block downstream trust claims.
+- `PARTIAL`, `HELD`, `DENIED`, and `ERROR` must not be converted to silent success.
+- A failed or placeholder validator cannot support a trust claim.
 - Missing receipts, proofs, review, signatures, or release records must not be invented.
-- A failure handler may capture diagnostics and draft correction/rollback candidates, but it cannot authorize correction or rollback.
-- Scripts must avoid printing secrets, protected context, exact sensitive locations, living-person data, or private reasoning in failures.
+- Failure handlers may capture diagnostics and draft correction/rollback candidates; they cannot authorize either.
+- Failures must not print secrets, protected context, precise sensitive locations, living-person data, or private reasoning.
 - Cleanup must not destroy incident evidence or the prior recoverable state.
-- Retry behavior must distinguish transient failures from deterministic invalid input.
-- A stale or superseded candidate must not be silently reused.
+- Retry logic distinguishes transient failure from deterministic invalid input.
+- Stale or superseded candidates are not silently reused.
 
-### Exit-code posture
-
-Exact numeric codes remain script-specific until accepted command contracts exist. Each script should document:
-
-- success/no-op;
-- planned/no-write;
-- validation or governance failure;
-- denied/held;
-- partial mutation;
-- technical error;
-- invalid invocation.
+Exact numeric exit codes remain command-specific until accepted contracts define them.
 
 [Back to top](#top)
 
@@ -695,246 +867,32 @@ Exact numeric codes remain script-specific until accepted command contracts exis
 
 ## Graduation and promotion rules
 
-A script must be reviewed for graduation when any of these becomes true:
+Review a script for graduation when any of these becomes true:
 
-| Trigger | Expected destination or action |
+| Trigger | Expected action |
 |---|---|
-| Reused by multiple apps, packages, or domains | Move reusable logic to `packages/`; keep a thin CLI if useful. |
+| Reused by multiple apps, packages, or domains | Move reusable logic to `packages/`; retain a thin CLI only when useful. |
 | Becomes a long-lived validator, generator, builder, or proof assembler | Move to `tools/` with tests, contracts, schemas, and ownership. |
 | Orchestrates repeatable lifecycle or production work | Move to `pipelines/`. |
-| Defines or enforces public/runtime behavior | Move to the owning app, package, runtime, or infra lane. |
-| Is required by CI or branch protection | Add command contract, tests, ownership, failure semantics, and decide whether `tools/` or pipeline placement is required. |
-| Writes or validates receipts, proofs, release records, corrections, or rollback objects | Establish canonical object homes, validators, reviews, receipts, and likely graduate implementation. |
-| Mutates schemas, contracts, policy, registries, fixtures, or release records | Require dry run, owner review, rollback, and move logic to the owning tool/pipeline when repeated. |
-| Requires secrets, broad network access, or production credentials | Normally graduate to governed infra/runtime/tooling; deny casual script use. |
+| Defines public/runtime behavior | Move to the owning app, package, runtime, or infra lane. |
+| Is required by CI or branch protection | Define command contract, tests, ownership, failure semantics, and placement. |
+| Writes or validates receipts, proofs, release records, corrections, rollback, or signatures | Establish canonical homes, validators, review, and likely graduate implementation. |
+| Mutates schemas, contracts, policy, registries, fixtures, or release records | Require dry run, owning-root review, and mechanical rollback; graduate repeated logic. |
+| Requires secrets, broad network access, or production credentials | Move to governed tooling/infra/runtime or deny casual use. |
 | Becomes scheduled or operationally monitored | Move to a durable service, pipeline, or maintenance tool. |
-| One-off task finishes | Delete the script or promote the useful logic. |
+| One-off task finishes | Delete the script or promote useful logic. |
 | Script and documentation disagree | Hold use, correct docs/code, and preserve rollback. |
 
-### Graduation record
+A graduation change should record callers, destination root, reason, stable interface, compatibility-wrapper plan, artifact migration, tests, CI, maintenance route, deprecation window, correction, rollback, and deletion date.
 
-A graduation PR should state:
+### Current determinations
 
-- source script and callers;
-- destination responsibility root;
-- reason for graduation;
-- stable command/interface contract;
-- compatibility wrapper plan;
-- input/output and artifact migration;
-- tests and CI;
-- ownership;
-- deprecation window;
-- correction and rollback;
-- deletion date for obsolete wrappers.
+- **MapLibre candidate builders:** graduation review is warranted because they are multi-step, networked, command-exposed, validator-integrated, and trust-adjacent. Current CI checks them but deliberately does not execute the runtime chain.
+- **Maintenance commands:** classify command by command. Do not bulk-move the directory; thin wrappers may remain while validators, mutators, shared helpers, and orchestration move to their owning roots.
+- **Dev helpers:** remain placeholders; graduation is premature until behavior exists.
+- **One-off lane:** delete or promote after the task; accumulation is drift.
 
-### Current MapLibre determination
-
-The MapLibre chain is **PROPOSED for graduation review now** because it is:
-
-- CI-invoked;
-- multi-step;
-- networked;
-- artifact-generating;
-- validator-integrated;
-- receipt/proof/release/correction/rollback adjacent;
-- relied upon by a named governance workflow.
-
-This README does not select the final destination or move any file.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-### Root inventory and syntax
-
-```bash
-find scripts -maxdepth 3 -type f | sort
-
-find scripts -name '*.sh' -print0 |
-  xargs -0 -r bash -n
-
-find scripts -name '*.py' -print0 |
-  xargs -0 -r python -m py_compile
-
-find scripts -name '*.mjs' -print0 |
-  xargs -0 -r -n1 node --check
-```
-
-### Development lane
-
-```bash
-bash -n scripts/dev/bootstrap.sh
-bash -n scripts/dev/regen_fixtures.sh
-bash scripts/dev/bootstrap.sh
-bash scripts/dev/regen_fixtures.sh
-```
-
-Expected current behavior is TODO output only.
-
-### Maintenance lane
-
-```bash
-python -m py_compile scripts/maintenance/*.py
-bash -n scripts/maintenance/*.sh
-python scripts/maintenance/run_doctrine_artifact_preflight.py --help
-bash scripts/maintenance/run_doctrine_artifact_test_suite.sh
-```
-
-Review help and write options before executing reconciliation commands.
-
-### MapLibre helper chain
-
-```bash
-npm run maplibre:perf:full
-```
-
-Or inspect syntax and individual steps first:
-
-```bash
-node --check scripts/maplibre-smoke-perf.mjs
-node --check scripts/build-maplibre-render-diff.mjs
-node --check scripts/attest-maplibre-perf.mjs
-node --check scripts/build-maplibre-perf-release-manifest.mjs
-node --check scripts/build-maplibre-perf-proof-pack.mjs
-node --check scripts/build-maplibre-perf-correction-and-rollback.mjs
-node --check scripts/build-maplibre-perf-failure-bundle.mjs
-```
-
-### Documentation and mutation review
-
-```bash
-git status --short
-git diff -- scripts package.json .github/workflows/maplibre-perf-governance.yml
-git diff -- artifacts data release configs fixtures tests tools
-```
-
-### Validation limitations
-
-For this README revision:
-
-- commands were not executed;
-- workflow runs were not evaluated;
-- no generated artifacts were inspected;
-- no production behavior was verified;
-- no migration or graduation test was performed.
-
-File and workflow presence is not runtime success.
-
-[Back to top](#top)
-
----
-
-## Review burden
-
-### Ordinary maintainer review
-
-Required for:
-
-- README-only changes;
-- comments;
-- non-mutating local helpers;
-- typo or help-text corrections;
-- narrow wrappers with no trust-adjacent output.
-
-### Owning steward review
-
-Required when a script touches:
-
-- schemas, contracts, policy, rights, sensitivity, consent, or access;
-- source activation, registries, identity, or provenance;
-- fixtures, tests, validators, or golden baselines;
-- lifecycle data;
-- receipts, proofs, catalogs, or release objects;
-- correction, withdrawal, rollback, or signatures;
-- sensitive domains or protected locations;
-- secret references or external services;
-- CI merge gates or scheduled operations.
-
-### Security review
-
-Required for:
-
-- credentials or secret injection;
-- remote mutation;
-- downloads or unpinned network content;
-- shell execution from external input;
-- path traversal or archive extraction;
-- deletion or recursive writes;
-- production endpoints;
-- logs or artifacts containing protected context.
-
-### Release and separation-of-duty review
-
-Required when a script or workflow:
-
-- generates a release candidate;
-- evaluates promotion eligibility;
-- produces or validates release manifests;
-- signs artifacts;
-- drafts correction, withdrawal, or rollback records;
-- can alter what public clients consume.
-
-The same script must not become generator, validator, approver, and publisher without an explicit accepted design and compensating controls.
-
-[Back to top](#top)
-
----
-
-## Related folders
-
-| Path | Relationship |
-|---|---|
-| [`scripts/dev/`](./dev/) | Placeholder and future local-development wrappers. |
-| [`scripts/maintenance/`](./maintenance/) | Mixed-maturity repository maintenance and doctrine preflight. |
-| [`scripts/one_off/`](./one_off/) | Temporary deletion-first quarantine lane. |
-| [`tools/`](../tools/) | Long-lived validators, generators, builders, proof assemblers, and governed tooling. |
-| [`tools/validators/`](../tools/validators/) | Validator implementation authority. |
-| [`pipelines/`](../pipelines/) | Repeatable lifecycle and production orchestration. |
-| [`packages/`](../packages/) | Reusable implementation. |
-| [`tests/`](../tests/) | Executable proof of behavior. |
-| [`fixtures/`](../fixtures/) | Valid, invalid, negative, and golden examples. |
-| [`configs/`](../configs/) | Shared safe defaults and configuration templates. |
-| [`artifacts/`](../artifacts/) | Build, docs, QA, preview, and temporary outputs; not sovereign truth. |
-| [`data/receipts/`](../data/receipts/) | Governed process-memory records. |
-| [`data/proofs/`](../data/proofs/) | Governed proof objects. |
-| [`release/`](../release/) | Promotion, release, correction, withdrawal, and rollback authority. |
-| [MapLibre workflow](../.github/workflows/maplibre-perf-governance.yml) | Confirmed CI caller for root-level MapLibre scripts. |
-| [MapLibre governance](../docs/quality/maplibre-perf-governance.md) | Draft architecture and migration guidance. |
-| [Directory Rules](../docs/doctrine/directory-rules.md) | Placement and authority-boundary doctrine. |
-
-[Back to top](#top)
-
----
-
-## ADRs
-
-### Existing related decisions and doctrine
-
-- Directory Rules — responsibility-root placement, compatibility, migration, and trust-bearing artifact boundaries.
-- Lifecycle law — promotion is a governed state transition, not a file move.
-- Receipt/proof/catalog/release separation doctrine.
-- MapLibre performance governance draft — proposes graduated tooling and canonical trust-object placement.
-- Telemetry, signing, security, and rollback standards where scripts emit operational or trust-adjacent material.
-
-### ADRs or decisions still needed
-
-| Decision | Status |
-|---|---|
-| Confirm `scripts/` root and child-lane ownership model. | NEEDS VERIFICATION |
-| Decide the final home for MapLibre performance scripts. | ADR or explicit placement decision recommended |
-| Decide whether MapLibre CI artifacts remain ephemeral only or are promoted to canonical receipt/proof/release roots. | NEEDS VERIFICATION |
-| Pin accepted schemas/contracts for MapLibre RunReceipt, ProofPack, ReleaseManifest, correction, rollback, and failure bundles. | NEEDS VERIFICATION |
-| Define a generic script command-effect declaration profile. | PROPOSED |
-| Define risk classification and review thresholds for scripts. | PROPOSED |
-| Define CI-required script graduation policy. | PROPOSED |
-| Define allowed network and dependency-integrity posture for release-grade script runs. | NEEDS VERIFICATION |
-| Define canonical receipt home for maintenance doctrine-artifact preflight output. | NEEDS VERIFICATION |
-| Define automated expiry enforcement for `one_off/`. | NEEDS VERIFICATION |
-| Define deprecation, compatibility-wrapper, and cleanup rules after graduation. | PROPOSED |
-
-No path is moved and no ADR is accepted by this README revision.
+This README does not select destinations or move files.
 
 [Back to top](#top)
 
@@ -944,49 +902,40 @@ No path is moved and no ADR is accepted by this README revision.
 
 ### Documentation rollback
 
-This README change is documentation-only. Roll back by reverting the update commit or restoring prior blob `4000b70a60af0d0656a4343ac6ae7f951b5327e3`.
+Before merge, close the draft PR and delete or abandon its review branch. After merge, revert the README and generated-receipt commits or restore README blob `f603cb013ff86511a65dae4799c54d77c029e082`.
 
 ### Script correction triggers
 
-Correct or hold a script when:
+Correct, hold, or retire a script when:
 
-- documented and actual side effects differ;
+- documented and actual effects differ;
 - an output uses the wrong authority root;
-- a generated object fails schema, contract, policy, or integrity checks;
-- secrets or protected context appear in output;
+- a candidate fails schema, contract, policy, integrity, or evidence checks;
+- secrets or protected context appear;
 - network dependencies drift;
 - a workflow silently ignores failure;
-- a script is relied upon beyond its reviewed maturity;
-- an owner or rollback target is missing;
-- a temporary script passes its expiry;
+- reliance exceeds reviewed maturity;
+- a maintenance route or rollback target is missing;
+- a one-off passes its expiry;
 - public clients or production systems depend directly on it;
-- generated receipt/proof/release claims overstate their authority.
+- generated receipt/proof/release claims overstate authority.
 
 ### Operational rollback expectations
 
 For a mutating script:
 
 1. stop further runs;
-2. preserve logs and bounded incident evidence without exposing secrets;
-3. record the exact partial state;
+2. preserve bounded logs and incident evidence without exposing secrets;
+3. record exact partial state;
 4. restore prior files, registry rows, configuration, fixtures, or artifacts;
-5. invalidate candidate outputs and caches;
+5. invalidate candidates and caches;
 6. rerun validators and tests;
-7. notify downstream consumers;
+7. notify known downstream consumers;
 8. issue correction, withdrawal, or rollback records through the owning authority root when required;
-9. document the cause and fix;
-10. decide whether to retire, restrict, or graduate the script.
+9. document cause and fix;
+10. decide whether to restrict, retire, or graduate the script.
 
-### MapLibre artifact rollback posture
-
-Until canonical promotion is defined:
-
-- treat `artifacts/perf/` as temporary CI staging;
-- do not infer that a manifest, proof, receipt, correction, or rollback object there is authoritative;
-- retain or upload failure evidence according to workflow policy;
-- prevent failed candidates from promotion;
-- restore the prior released renderer or artifact set through release authority;
-- migrate accepted trust objects only through a reviewed governed process.
+Until MapLibre promotion is resolved, treat `artifacts/perf/` as ephemeral staging and prevent its trust-shaped candidates from being cited as released objects.
 
 [Back to top](#top)
 
@@ -994,72 +943,90 @@ Until canonical promotion is defined:
 
 ## Open verification register
 
-| Item | Evidence needed |
-|---|---|
-| Exact recursive script inventory | Commit-pinned tree listing and classification. |
-| Accepted owners and CODEOWNERS | Current ownership rules plus steward confirmation. |
-| All workflow and Makefile callers | Search plus workflow execution evidence. |
-| MapLibre workflow health | Current runs, artifacts, failures, branch-protection status. |
-| MapLibre helper destination | Directory Rules review and accepted ADR or migration decision. |
-| Canonical MapLibre artifact homes | Accepted contracts, schemas, validators, receipts/proofs/release layouts. |
-| Artifact staging-to-promotion process | Implementation, receipts, reviews, correction, rollback tests. |
-| Signing posture | Accepted signer, keyless/keyed policy, verification, revocation, CI environment. |
-| Network reproducibility | Allowed hosts, locks, mirrors, caching, outage behavior, remote version receipts. |
-| Maintenance receipt home | Accepted data/receipt layout and migration from compatibility paths. |
-| Maintenance CI significance | Verified workflow callers, strict gates, current test results. |
-| Dev helper future behavior | Dependency manager, platforms, test harness, network and secret profile. |
-| One-off expiry enforcement | Schema/profile, CI check, cleanup cadence, owner. |
-| Generic script command contract | Contract/schema or documented standard. |
-| Generic risk classes | Accepted policy or ADR and reviewer matrix. |
-| Generated artifact retention | Retention, sensitivity, deletion, audit, and storage controls. |
-| Production use | Deployment, schedules, operators, logs, incidents, SLOs. |
-| Public boundary | Tests proving no normal public client invokes repository scripts. |
-| Graduation cleanup | Inbound-link inventory, compatibility wrappers, deletion and rollback plan. |
+| ID | Item | Evidence needed |
+|---|---|---|
+| KFM-SCR-01 | Complete recursive tracked/generated/ignored script inventory | Commit-pinned tree, ignore rules, history, and classification |
+| KFM-SCR-02 | Script-root stewardship and required review | Approved assignment, explicit CODEOWNERS/ruleset, separation-of-duty evidence |
+| KFM-SCR-03 | Every workflow, Make, package, and external caller | Search plus current run evidence |
+| KFM-SCR-04 | MapLibre local chain prerequisites | Accepted package manager/lockfile, browser setup, fixtures, baselines, mirrors |
+| KFM-SCR-05 | MapLibre runtime/performance behavior | Deterministic browser run, metrics, render comparisons, retained run evidence |
+| KFM-SCR-06 | Meaningful MapLibre schemas and fixtures | Typed schemas, nonempty valid/invalid fixtures, expected errors |
+| KFM-SCR-07 | Substantive MapLibre validators | Accepted CLI, finite outcomes, negative cases, aggregate command |
+| KFM-SCR-08 | MapLibre candidate-builder destination | Accepted ADR or migration decision |
+| KFM-SCR-09 | Canonical receipt/proof/release homes | Contracts, schemas, validators, review, promotion, correction, rollback |
+| KFM-SCR-10 | Signing posture | Signer, keyed/keyless policy, verification, revocation, protected environment |
+| KFM-SCR-11 | Network reproducibility | Allowed hosts, integrity, mirroring, cache/outage behavior, source-version receipts |
+| KFM-SCR-12 | `artifacts/perf/` retention and cleanup | Ignore/tracking state, TTL, sensitivity, deletion, incident preservation |
+| KFM-SCR-13 | Maintenance command classification and graduation | Per-command responsibility, callers, tests, outputs, rollback |
+| KFM-SCR-14 | Maintenance output home | Accepted temporary/validation-receipt contract and migration |
+| KFM-SCR-15 | Correct stale maintenance caller documentation | Same-path child README update grounded in current `promotion-gate.yml` |
+| KFM-SCR-16 | Dev helper future behavior | Platforms, package managers, network/secrets, tests, rollback |
+| KFM-SCR-17 | One-off admission and expiry enforcement | Metadata contract, CI scan, cleanup cadence, maintenance route |
+| KFM-SCR-18 | Public-boundary proof | Tests showing normal public clients cannot invoke repository scripts |
+| KFM-SCR-19 | Production use | Deployments, schedules, operators, logs, SLOs, incidents |
+| KFM-SCR-20 | Graduation cleanup | Inbound links, wrapper window, deletion, correction, rollback |
+| KFM-SCR-21 | Workflow and branch-protection significance | Current checks, rulesets, required names, bypass controls |
+| KFM-SCR-22 | Current workflow outcomes after this change | PR checks and job/step evidence |
 
 [Back to top](#top)
 
 ---
 
-## Last reviewed
+## No-loss ledger
 
-| Field | Value |
+| Baseline surface | v0.4 disposition |
 |---|---|
-| Last reviewed | 2026-07-16 |
-| Evidence base | `main@15d88fceced7050abac4493b9cf66f5bc288c1e6` |
-| Target prior blob | `4000b70a60af0d0656a4343ac6ae7f951b5327e3` |
-| Review mode | Repository-grounded documentation revision; one-file scope |
-| Implementation effect | None — documentation only |
-| Rollback | Revert the update commit or restore the prior blob |
-| Runtime/CI effect | None; no script or workflow changed |
+| Stable path, doc ID, H1, and root purpose | Preserved |
+| Operational-helper and non-authority boundary | Preserved and tightened |
+| Anti-collapse rules | Preserved |
+| Maturity classification | Preserved; CI runtime distinction added |
+| What belongs / does not belong | Preserved in required §15 order |
+| Input and output controls | Preserved and clarified |
+| Child-lane boundaries | Preserved |
+| Root-level MapLibre inventory | Preserved |
+| Local MapLibre builder chain | Preserved as command availability |
+| Workflow claim | Corrected from full-chain execution to static/negative checks plus explicit hold |
+| Artifacts-versus-trust-object boundary | Preserved and grounded in the current drift register |
+| Safe execution, finite outcomes, graduation | Preserved |
+| Validation commands and claim limits | Preserved and updated |
+| Review burden | Preserved; placeholder role list replaced with verified routing limits |
+| ADR and verification backlog | Preserved and refreshed |
+| Correction and rollback | Preserved |
+| Legacy fragments | Preserved with custom anchors |
+| Current child-document discrepancy | Newly disclosed without expanding path scope |
 
-### Maintenance triggers
+[Back to top](#top)
 
-Re-review when:
+---
 
-- a script is added, removed, moved, renamed, or made executable;
-- a child-lane README changes;
-- a placeholder gains real behavior;
-- a one-off script is admitted;
-- a script is added to CI or branch protection;
-- a script becomes scheduled or production-used;
-- a script writes a new artifact family;
-- a trust-adjacent object gains an accepted schema or canonical home;
-- MapLibre scripts graduate or artifact paths migrate;
-- maintenance preflight output homes or gates change;
-- network, dependency, secret, logging, or retention posture changes;
-- correction or rollback automation changes;
-- Directory Rules or an accepted ADR changes placement.
+## Evidence ledger
 
-### v0.2 → v0.3 change summary
+| Evidence | Observation supported | Status |
+|---|---|---:|
+| `scripts/README.md@fae69bb5…` / blob `f603cb01…` | Complete 1,067-line v0.3 baseline and no-loss surface | `CONFIRMED` |
+| `scripts/dev/README.md` / blob `390687c8…` | Placeholder dev lane | `CONFIRMED` |
+| `scripts/maintenance/README.md` / blob `bd4ef697…` | Mixed-maturity lane and stale direct-caller statement | `CONFIRMED` |
+| `scripts/one_off/README.md` / blob `46e85d9b…` | README-only deletion-first lane in bounded evidence | `CONFIRMED` |
+| `package.json` / blob `62f45306…` | Local MapLibre command surface | `CONFIRMED` |
+| `Makefile` / blob `51537af3…` | Local MapLibre targets and readiness-marker distinctions | `CONFIRMED` |
+| `maplibre-perf-governance.yml` / blob `bfb36a84…` | Static/negative checks and explicit runtime/trust hold; no artifact emission | `CONFIRMED definition` |
+| `promotion-gate.yml` / blob `c22941d5…` | Test/shape/readiness hold; no maintenance checker invocation or promotion authority | `CONFIRMED definition` |
+| Seven MapLibre scripts / pinned blobs | Substantive local candidate builders and `artifacts/perf/` outputs | `CONFIRMED source` |
+| `docs/doctrine/directory-rules.md` / blob `2affb080…` | Scripts graduation rule, artifacts boundary, §15 order | `CONFIRMED doctrine` |
+| `docs/registers/DRIFT_REGISTER.md` / blob `5c5078b9…` | Open `BLOCKED_ADR` artifact-authority conflict | `CONFIRMED` |
+| `.github/CODEOWNERS` / blob `dd2a84aa…` | Default review route; no explicit `/scripts/` route; routing is not approval | `CONFIRMED` |
+| Generated-receipt schema / blob `fba21ed2…` | Provenance record shape for this AI-authored change | `CONFIRMED schema file` |
 
-- Grounds the root against the merged `dev/` and `one_off/` v0.2 boundaries.
-- Preserves the maintenance lane's substantive mixed-maturity posture.
-- Confirms package and workflow wiring for the MapLibre performance chain.
-- Records selected root-level script implementations and generated paths.
-- Upgrades CI invocation from UNKNOWN to CONFIRMED workflow-definition evidence.
-- Makes the `artifacts/perf/` trust-object placement conflict explicit.
-- Adds authority routing, bounded inputs and outputs, finite outcomes, network and secret controls, artifact handoffs, graduation triggers, review burdens, correction, and rollback.
-- Proposes immediate graduation review for the CI-invoked MapLibre chain without moving files.
-- Preserves the controlling rule: scripts support governance but never replace it.
+[Back to top](#top)
+
+---
+
+## Changelog
+
+| Version | Date | Change | Rollback |
+|---|---|---|---|
+| v0.2 | 2026-07-16 or earlier lineage | Root helper/graduation guide before current child and workflow evidence | Retained in Git history |
+| v0.3 | 2026-07-16 | Added detailed child lanes, MapLibre chain, artifact boundary, finite outcomes, graduation, review, and rollback | Restore prior v0.2 blob recorded in v0.3 |
+| v0.4 | 2026-07-23 | Reordered to Directory Rules §15, refreshed current evidence, corrected MapLibre CI and promotion-workflow claims, replaced placeholder ownership with verified routing limits, preserved strong doctrine and legacy anchors, added no-loss/evidence ledgers | Restore blob `f603cb013ff86511a65dae4799c54d77c029e082` |
 
 <p align="right"><a href="#top">Back to top</a></p>
