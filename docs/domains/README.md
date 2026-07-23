@@ -1,143 +1,178 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-domains-readme
-title: docs/domains — Domain doctrine, scope, status, and verification index
-type: standard
-version: v0.2
-status: draft
-owners:
-  - <OWNER:docs-steward>
-  - <OWNER:domain-stewards>
+title: docs/domains/ — Domain Lane Documentation and Verification Index
+type: readme
+subtype: nested-directory-landing-page
+version: v0.3
+prior_version: v0.2
+status: draft; repository-grounded; documentation-only; non-authoritative
+owner: "NEEDS VERIFICATION — default CODEOWNERS routes this path to @bartytime4life and five sensitive-domain subtrees have explicit routes; no accepted domain-steward assignments, required-review rule, or independent approval control was verified"
 created: 2026-05-20
-updated: 2026-06-11
+updated: 2026-07-23
 policy_label: public
-authority: human-facing domain-lane control plane; Directory Rules §12 placement doctrine; Directory Rules §15 README contract
+current_path: docs/domains/README.md
+owning_root: docs/
+responsibility: orient readers to KFM domain lanes, expose current lane-document maturity and drift, and route enforceable concerns to their owning responsibility roots
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED]
+authority_class: directory landing page
+authority_rank: subordinate to Directory Rules, reviewed decisions, contracts, schemas, policy, evidence, lifecycle records, and release records
+canonical_relationship: same-path update; no sibling authority created
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 19670ca8e2c8a709fc69cd41173851f8359c8281
+  target_prior_blob: 5ee0df96f1beecc97ef385a8cadac6472597b9c4
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  domain_lane_register_blob: 7cd641d99e1e4e3b3823f608d63679a438590c3a
+  machine_domain_register_blob: 81b23beb3178b59d5c1fdb50edbc9f98f8664930
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  workflows_readme_blob: afb4f79ce2c5267cb1679f48186260e6edebf8b2
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  lane_readmes:
+    confirmed_paths: 13
+    substantive_drafts: 12
+    placeholders: [soil]
+    hydrology_blob: 57e5662e9481f8590238c21936b5d5e25f5176bb
+    soil_blob: cf05c89d97bce097170c5266d477a3721b1ca0f5
+    fauna_blob: ab08f2d63e03d37ff8cd9f308720c3503bfdb58f
+    flora_blob: 43a47d828c4926e539790a055a5e1034c6ce62bc
+    habitat_blob: 876d1fa41a00d94d7120c6ef065750748e6bf524
+    geology_blob: 24dea0085e25e41a2cf53f2fe7904b306436b3a5
+    atmosphere_blob: 005421a9a3851d8ddc64e79a6ad3653d65d57f78
+    roads_rail_trade_blob: b4e2d45f183986040622882f2fe2a090ef9a118d
+    settlements_infrastructure_blob: bccb04cd4f181ac5cc1c7935177bbd4977715e19
+    archaeology_blob: e44040a1a2b4fd4ce027e336a9c2fe81b8f29795
+    hazards_blob: 8aeff8396db3e38f71999a61c42fb94c39f2d579
+    agriculture_blob: a2cac517ad26ea9105d46b5a7472de25cb35da2b
+    people_dna_land_blob: 19a3ea59bab2d5e04c73f402a35048c1a55ab071
 related:
   - docs/doctrine/directory-rules.md
-  - docs/registers/DOMAIN_LANE.md
-  - docs/registers/DRIFT_REGISTER.md
-  - docs/registers/VERIFICATION_BACKLOG.md
   - docs/architecture/domain-placement-law.md
-  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
-tags: [kfm, docs, domains, directory-rules, domain-placement-law, governance, lifecycle]
-truth_labels: [CONFIRMED, PROPOSED, NEEDS VERIFICATION, UNKNOWN]
+  - docs/registers/DOMAIN_LANE.md
+  - control_plane/domain_lane_register.yaml
+  - .github/CODEOWNERS
+  - .github/workflows/README.md
+  - docs/adr/INDEX.md
 notes:
-  - "This README is a human-facing landing and navigation surface for domain lanes."
-  - "It does not create canonical truth, policy, schemas, release decisions, receipts, proofs, or lifecycle data."
-  - "Accessible repo evidence confirms this README path and selected domain-lane files; complete lane inventory, validators, CODEOWNERS, CI, and runtime maturity remain NEEDS VERIFICATION."
-  - "All domain lanes follow the responsibility-root pattern: docs, contracts, schemas, policy, tests, fixtures, packages, pipelines, pipeline_specs, data phases, registry, and release."
+  - "v0.3 is a repository-grounded same-path modernization; no domain, contract, schema, policy, workflow, lifecycle, release, promotion, or publication state changes."
+  - "All 13 Directory Rules §12 lane README paths were directly fetched. Twelve contain substantive draft documentation; soil/README.md remains a two-line greenfield placeholder."
+  - "The human Domain Lane Register lists 13 lanes, while control_plane/domain_lane_register.yaml currently has entries: []; this README records the conflict rather than claiming synchronization."
+  - "The 13 domain workflows are bounded readiness/hold surfaces. Workflow presence does not establish domain implementation, evidence closure, public safety, release, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `docs/domains/`
 
-> Human-facing landing for every KFM domain. Each subfolder is the **doctrine, scope, status, and verification index** for one domain: its boundary, sources, lifecycle posture, sensitivity rules, validation state, and open questions. Machine truth, schemas, code, fixtures, policy, receipts, proofs, lifecycle data, and release decisions live elsewhere.
+> **Human-facing entry point for KFM’s domain lanes: scope, boundaries, sensitivity posture, documentation maturity, and routes to the responsibility roots that carry enforceable state.**
 
-<p>
-  <img alt="Doc type" src="https://img.shields.io/badge/doc-README-lightgrey">
-  <img alt="Authority" src="https://img.shields.io/badge/authority-docs%20control%20plane-blue">
-  <img alt="Status" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Placement" src="https://img.shields.io/badge/Directory%20Rules-%C2%A712%20Domain%20Placement%20Law-6f42c1">
-  <img alt="README contract" src="https://img.shields.io/badge/README%20contract-Directory%20Rules%20%C2%A715-6f42c1">
-  <img alt="Truth posture" src="https://img.shields.io/badge/truth-cite--or--abstain-0b7285">
-  <img alt="Lifecycle" src="https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-2b8a3e">
-</p>
-
-| Owners | Reviewers | Trust posture | Lifecycle target |
-|---|---|---|---|
-| `<OWNER:docs-steward>` + named domain stewards | Docs steward + at least one affected domain steward; ADR for domain admission, rename, removal, or invariant changes | Doctrine and indexes only — never canonical truth | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
-
----
-
-## Quick jumps
-
-[Purpose](#1-purpose) ·
-[Authority](#2-authority-and-scope) ·
-[Status](#3-status-and-evidence-basis) ·
-[Belongs here](#4-what-belongs-here) ·
-[Does not belong here](#5-what-does-not-belong-here) ·
-[Domain Placement Law](#6-domain-placement-law) ·
-[Inventory](#7-domain-inventory) ·
-[Landing pattern](#8-per-domain-landing-pattern) ·
-[Validation](#11-validation) ·
-[Review burden](#12-review-burden) ·
-[Related folders](#13-related-folders) ·
-[ADRs](#14-adrs) ·
-[Backlog](#appendix-a--open-questions-and-verification-backlog)
-
----
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Role: domain documentation index](https://img.shields.io/badge/role-domain%20documentation%20index-1f6feb?style=flat-square)](#authority-level)
+[![Domain lanes: 13/13 READMEs](https://img.shields.io/badge/domain%20READMEs-13%2F13-2da44e?style=flat-square)](#domain-inventory)
+[![Maturity: 12 drafts + 1 placeholder](https://img.shields.io/badge/maturity-12%20drafts%20%2B%201%20placeholder-d4a72c?style=flat-square)](#status)
+[![Machine register: empty](https://img.shields.io/badge/machine%20register-empty-b42318?style=flat-square)](../../control_plane/domain_lane_register.yaml)
+[![Domain workflows: 13 readiness lanes](https://img.shields.io/badge/domain%20workflows-13%20readiness%20lanes-8250df?style=flat-square)](../../.github/workflows/README.md)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
+[![Reviewed: 2026-07-23](https://img.shields.io/badge/reviewed-2026--07--23-0969da?style=flat-square)](#last-reviewed)
 
 > [!IMPORTANT]
-> A page in `docs/domains/<slug>/` **explains** a domain. It does not **decide** for it. Object meaning lives in `contracts/`; machine shape lives in `schemas/`; admissibility lives in `policy/`; lifecycle data lives in `data/`; release decisions live in `release/`. If a `docs/domains/` page is treated as the canonical source of a release, schema, policy decision, or evidence claim, that is the **documentation-as-truth anti-pattern**. Move the decision to the proper responsibility root and leave only a link or index entry here.
+> **Domain documentation explains; it does not decide.** Object meaning belongs in `contracts/`, machine shape in `schemas/`, admissibility in `policy/`, enforceability evidence in `tests/` and `fixtures/`, lifecycle material in `data/`, and release/correction/rollback decisions in `release/`. A domain README, badge, diagram, workflow, or pull request is not canonical truth or publication authority.
 
 > [!CAUTION]
-> Public and semi-public clients must use governed interfaces and released/public-safe artifacts. `docs/domains/` is not an escape hatch around the trust membrane and must not point normal UI surfaces at `data/raw/`, `data/work/`, `data/quarantine/`, unpublished candidates, internal stores, or direct model output.
+> Exact rare-species, rare-plant, archaeological, sacred, living-person, DNA/genomic, land/title-like, and critical-infrastructure detail defaults to restriction, generalization, staged access, quarantine, or denial until rights, sovereignty, consent, sensitivity, policy, and review are resolved. KFM is not an emergency-alert authority.
+
+> [!WARNING]
+> The human [`DOMAIN_LANE.md`](../registers/DOMAIN_LANE.md) register describes 13 lanes, but [`control_plane/domain_lane_register.yaml`](../../control_plane/domain_lane_register.yaml) currently contains an empty `entries` array. Treat human/machine register synchronization as `CONFLICTED`, not complete.
+
+<a id="quick-jumps"></a>
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Placement law](#domain-placement-law) · [Inventory](#domain-inventory) · [Landing pattern](#per-domain-landing-pattern) · [Change discipline](#change-discipline) · [Open verification](#open-questions--needs-verification) · [Evidence basis](#evidence-basis)
 
 ---
 
-## 1. Purpose
+<a id="1-purpose"></a>
 
-`docs/domains/` is the human-readable control-plane lane for KFM domains. It is the front door for a reviewer, contributor, or steward to understand a domain's:
+## Purpose
 
-- scope and non-scope;
-- source families and authority split;
-- lifecycle path and promotion posture;
-- sensitivity, rights, and publication constraints;
-- validation and open verification work;
-- links into the responsibility roots that carry enforceable truth.
+`docs/domains/` is the human-readable documentation lane for KFM’s bounded domains. It gives reviewers, contributors, and stewards one place to find each lane’s scope, non-scope, source families, lifecycle posture, sensitivity constraints, documentation state, and links to the roots that own enforceable behavior.
 
-It exists so a domain can grow without becoming a new root folder. A domain's responsibility-bearing files live as segments inside their owning roots: `contracts/domains/<slug>/`, `schemas/contracts/v1/domains/<slug>/`, `policy/domains/<slug>/`, `tests/domains/<slug>/`, `fixtures/domains/<slug>/`, `packages/domains/<slug>/`, `pipelines/domains/<slug>/`, `pipeline_specs/<slug>/`, `data/<phase>/<slug>/`, and `release/candidates/<slug>/`.
+A domain grows as a **segment inside responsibility roots**, never as a new repository root. The landing pages here are indexes and explanations; they do not duplicate contracts, schemas, policy, fixtures, lifecycle records, evidence bundles, release decisions, or public routes.
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 2. Authority and scope
+<a id="2-authority-and-scope"></a>
 
-| Question | Answer |
-|---|---|
-| What is this folder? | A human-facing documentation and navigation surface for domain lanes. |
-| What authority does it have? | It explains domain scope, lineage, and placement; it does not supersede contracts, schemas, policy, data lifecycle records, release records, receipts, proofs, or ADRs. |
-| What rule governs placement? | Directory Rules §12, **Domain Placement Law**. |
-| What README contract applies? | Directory Rules §15, required README contract. |
-| What happens when this file conflicts with Directory Rules or an accepted ADR? | Directory Rules / accepted ADR wins; this file is updated or a drift entry is opened. |
-| What happens when a domain dossier conflicts with current repo evidence? | Current inspected repo evidence wins for implementation state; the dossier remains lineage/proposal evidence. |
+## Authority level
 
-[↑ back to top](#top)
-
----
-
-## 3. Status and evidence basis
-
-| Claim | Truth label | Basis |
+| Concern | Owning authority | `docs/domains/` role |
 |---|---|---|
-| `docs/domains/README.md` exists in accessible repo evidence. | CONFIRMED | Direct repo fetch in this update session. |
-| `docs/domains/` is part of the documented `docs/` domain-lane tree. | CONFIRMED doctrine | Directory Rules §6.1 and §12. |
-| The 13 canonical domain slugs are the current doctrine target. | CONFIRMED doctrine | Directory Rules §12 and `docs/registers/DOMAIN_LANE.md`. |
-| A domain must not become a root folder. | CONFIRMED doctrine | Directory Rules §12 / §13.4. |
-| Complete per-domain subtree presence and completeness. | NEEDS VERIFICATION | Search confirmed selected per-domain files, but no mounted checkout inventory or validator run was performed. |
-| Cross-root slug consistency across `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`, `pipeline_specs/`, `data/`, and `release/`. | NEEDS VERIFICATION | Requires mounted checkout scan and/or validator output. |
-| CODEOWNERS, CI workflow names, and exact validator IDs for this lane. | NEEDS VERIFICATION | Not inspected enough to claim. |
-| Runtime/publication maturity of any domain lane. | NEEDS VERIFICATION | This README does not inspect runtime deployments, release manifests, published artifacts, or rollback cards. |
+| Domain placement | [`Directory Rules §12`](../doctrine/directory-rules.md#12-domain-placement-law) and reviewed decisions | Explain and index the lane pattern |
+| Domain meaning | `contracts/` and reviewed domain contracts | Link and summarize without redefining |
+| Machine shape | `schemas/` | Link to reviewed schemas; never host schema authority |
+| Rights, sensitivity, consent, admissibility | `policy/` plus governed review | Explain outcomes and public-safe posture |
+| Evidence and source authority | EvidenceBundle / SourceDescriptor authorities | Point to evidence; do not elevate prose to proof |
+| Lifecycle state | governed `data/` phases | Describe movement; do not promote |
+| Release, correction, withdrawal, rollback | `release/` | Link to decisions and lineage; do not approve |
+| Public delivery | governed API and released/public-safe artifacts | Document the boundary; do not bypass it |
+| This file | directory landing page | Navigation, status disclosure, and drift visibility only |
 
-[↑ back to top](#top)
+When this README conflicts with current Directory Rules, a reviewed decision, or current repository evidence, use the owning authority, record the drift, and correct this file.
+
+[Back to top](#top)
 
 ---
 
-## 4. What belongs here
+<a id="3-status-and-evidence-basis"></a>
 
-A `docs/domains/<slug>/` subfolder may contain human-facing domain documentation such as:
+## Status
 
-- `README.md` — landing page for scope, boundary, status, and quick links.
-- Architecture and trust-path documents.
-- Human-readable indexes: source index, schema index, validator index, fixture index, file map, parameter registry.
-- Lineage and migration documents: preservation ledger, migration history, release lineage, compatibility matrix, supersession notes.
-- Review and planning artifacts: changelog, verification backlog, open questions, generated-artifact rules, change-surface matrix.
-- Per-domain ADRs where the repo chooses a domain-local ADR pattern; otherwise link to `docs/adr/`.
-- Sensitivity, rights, and publication notes that explain policy decisions without replacing `policy/`.
-- Roadmaps, expansion backlogs, glossaries, and idea-intake summaries that have been promoted past exploratory status.
+### Repository-grounded snapshot
 
-Canonical domain slugs are:
+| Surface | Current evidence at `main@19670ca8…` | Safe conclusion |
+|---|---|---|
+| `docs/domains/README.md` | **CONFIRMED** v0.2 baseline, blob `5ee0df9…` | Same-path v0.3 modernization |
+| Canonical lane README paths | **CONFIRMED 13/13 present** | Path coverage is complete for the §12 lane set |
+| Lane-document maturity | **12 substantive drafts; 1 placeholder (`soil`)** | Documentation maturity is mixed; no lane is promoted to implemented or released |
+| Human domain register | **CONFIRMED present**, v0.1 draft | Lists 13 lanes but carries stale “unverified path” language |
+| Machine domain register | **CONFIRMED present; `entries: []`** | Human/machine register synchronization is `CONFLICTED` |
+| CODEOWNERS | **CONFIRMED** default route to `@bartytime4life`; explicit routes for archaeology, fauna, flora, people-DNA-land, and settlements-infrastructure | Review routing exists; stewardship and required review remain separate |
+| Domain workflows | **CONFIRMED 13 definitions** | Bounded readiness/hold surfaces, not full domain validation or release proof |
+| Complete recursive lane inventory | **UNKNOWN** | This update verified root README paths and selected connected files, not every descendant |
+| Cross-root slug consistency | **CONFLICTED / NEEDS VERIFICATION** | Current lane docs surface `air`/`atmosphere`, `transport`/`roads-rail-trade`, and `people`/`people-dna-land` variants |
+| Runtime, evidence, policy, release, publication maturity | **UNKNOWN** | Not established by documentation presence |
+
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified from current repository bytes, workflow definitions, or direct comparisons in this update |
+| `PROPOSED` | Design, target state, future work, or unaccepted decision |
+| `UNKNOWN` | Evidence is insufficient for a stronger claim |
+| `NEEDS VERIFICATION` | A concrete check exists but is not closed |
+| `CONFLICTED` | Two relevant authority or implementation surfaces disagree |
+
+[Back to top](#top)
+
+---
+
+<a id="4-what-belongs-here"></a>
+
+## What belongs here
+
+A `docs/domains/<slug>/` lane may contain human-facing material such as:
+
+- a bounded `README.md` for scope, authority, status, exclusions, inputs, outputs, validation, review, and related roots;
+- domain architecture and trust-path explanations;
+- human source, schema, validator, fixture, and file indexes that link to—not replace—their owning roots;
+- rights, sensitivity, sovereignty, consent, public-safety, and publication guidance;
+- lineage, preservation, migration, supersession, correction, rollback, and release-history documentation;
+- verification backlogs, open questions, changelogs, glossaries, and promoted planning material;
+- domain-local decision records only when a reviewed repository decision establishes that pattern.
+
+The canonical Directory Rules §12 lane slugs are:
 
 ```text
 hydrology
@@ -155,315 +190,352 @@ agriculture
 people-dna-land
 ```
 
-Any new domain slug requires ADR admission and coordinated updates across this README, `docs/registers/DOMAIN_LANE.md`, the machine register if present, Directory Rules or a successor rule, and affected responsibility roots.
+A new, renamed, merged, or retired lane requires reviewed decision and coordinated register, navigation, compatibility, migration, and rollback work.
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 5. What does not belong here
+<a id="5-what-does-not-belong-here"></a>
 
-`docs/domains/` is **not** a parallel home for canonical objects.
+## What does NOT belong here
 
-| You have… | It belongs under… |
+| Material | Owning surface |
 |---|---|
-| Object-family meaning | `contracts/domains/<slug>/` |
-| JSON Schema, JSON-LD context, or other machine-checkable shape | `schemas/contracts/v1/domains/<slug>/` |
-| Admissibility / allow / deny / restrict / abstain logic | `policy/domains/<slug>/` |
-| Tests proving a rule is enforceable | `tests/domains/<slug>/` |
-| Golden, valid, invalid, or regression fixtures | `fixtures/domains/<slug>/` |
-| Domain shared library code | `packages/domains/<slug>/` |
-| Executable pipeline logic | `pipelines/domains/<slug>/` |
-| Declarative pipeline configuration | `pipeline_specs/<slug>/` |
-| Source-specific fetcher/admitter | `connectors/...` with output to `data/raw/<slug>/` or `data/quarantine/<slug>/` |
-| Lifecycle data | `data/raw/<slug>/`, `data/work/<slug>/`, `data/quarantine/<slug>/`, `data/processed/<slug>/`, `data/catalog/domain/<slug>/`, `data/triplets/<slug>/`, `data/published/layers/<slug>/` |
-| Machine source/dataset registries | `data/registry/sources/<slug>/`, `data/registry/<slug>/`, or `control_plane/` when the register governs tools |
-| Release decisions, manifests, rollback cards, correction notices | `release/...` |
-| Receipts, proofs, EvidenceBundles | `data/receipts/`, `data/proofs/`, or the governed evidence-bundle home chosen by schema/contract |
-| Cross-domain doctrine | `docs/architecture/<topic>.md` |
-| Repo-wide doctrine | `docs/doctrine/` |
-| Repo-wide ADRs | `docs/adr/` |
-| Running apps, public UI, or API routes | `apps/` |
-| Secrets, credentials, or private keys | Not in repo; templates only under approved config homes |
+| Semantic object contracts | [`contracts/`](../../contracts/README.md) |
+| JSON Schema or other machine-checkable shape | [`schemas/`](../../schemas/README.md) |
+| Allow / deny / restrict / hold / abstain logic | [`policy/`](../../policy/README.md) |
+| Executable tests | [`tests/`](../../tests/README.md) |
+| Golden, valid, invalid, negative, or runtime examples | [`fixtures/`](../../fixtures/README.md) |
+| Shared domain code | [`packages/`](../../packages/README.md) |
+| Executable transformations | [`pipelines/`](../../pipelines/README.md) |
+| Declarative pipeline specifications | [`pipeline_specs/`](../../pipeline_specs/README.md) |
+| Connectors and source admission code | [`connectors/`](../../connectors/README.md) |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED material | [`data/`](../../data/README.md) |
+| Machine governance or source/dataset registers | `control_plane/` or governed `data/registry/` lanes |
+| Release, correction, withdrawal, rollback, promotion, or publication decisions | [`release/`](../../release/README.md) |
+| Public application or API code | `apps/` |
+| Secrets, credentials, private keys, signed URLs, or restricted precise locations | Never in public documentation |
 
 > [!WARNING]
-> Common review refusal: a `docs/domains/<slug>/` folder that contains JSON Schemas, OPA bundles, fixtures, release manifests, evidence bundles, run receipts, pipeline code, or public UI code. Move those files to the correct responsibility root and leave an index entry behind.
+> A domain documentation folder containing schemas, OPA bundles, fixtures, executable pipelines, release manifests, evidence bundles, run receipts, proof packs, or public UI/API code is placement drift. Move the material to the owning responsibility root and leave only a descriptive link or index entry here.
 
-[↑ back to top](#top)
-
----
-
-## 6. Domain Placement Law
-
-A domain MUST NOT become a root folder. The lane appears as a segment inside each responsibility root.
-
-```mermaid
-flowchart LR
-  subgraph LANE["Domain lane <slug> — segments inside responsibility roots"]
-    direction TB
-    DOCS["docs/domains/<slug>/<br/>doctrine + index"]
-    CONTRACTS["contracts/domains/<slug>/<br/>object meaning"]
-    SCHEMAS["schemas/contracts/v1/domains/<slug>/<br/>machine shape"]
-    POLICY["policy/domains/<slug>/<br/>admissibility"]
-    TESTS["tests/domains/<slug>/<br/>enforceability"]
-    FIXTURES["fixtures/domains/<slug>/<br/>golden inputs"]
-    PACKAGES["packages/domains/<slug>/<br/>shared code"]
-    PIPELINES["pipelines/domains/<slug>/<br/>execution"]
-    PSPECS["pipeline_specs/<slug>/<br/>declarative config"]
-    DATA["data/<phase>/<slug>/<br/>lifecycle data"]
-    REGISTRY["data/registry/sources/<slug>/<br/>source registry"]
-    RELEASE["release/candidates/<slug>/<br/>release decisions"]
-  end
-
-  DOCS -. indexes .-> CONTRACTS
-  DOCS -. indexes .-> SCHEMAS
-  DOCS -. indexes .-> POLICY
-  DOCS -. indexes .-> TESTS
-  DOCS -. indexes .-> FIXTURES
-  DOCS -. indexes .-> PACKAGES
-  DOCS -. indexes .-> PIPELINES
-  DOCS -. indexes .-> PSPECS
-  DOCS -. indexes .-> DATA
-  DOCS -. indexes .-> REGISTRY
-  DOCS -. indexes .-> RELEASE
-```
-
-Lifecycle remains a governed state transition, not a file move:
-
-```mermaid
-flowchart LR
-  RAW["data/raw/<slug>/"] --> WORK["data/work/<slug>/"]
-  RAW --> QUAR["data/quarantine/<slug>/"]
-  WORK --> PROC["data/processed/<slug>/"]
-  PROC --> CAT["data/catalog/domain/<slug>/"]
-  PROC --> TRIP["data/triplets/<slug>/"]
-  CAT --> PUB["data/published/layers/<slug>/"]
-  TRIP --> PUB
-  PUB -. served through .-> API["apps/governed-api/"]
-```
-
-### Cross-domain and cross-cutting files
-
-Files that legitimately span multiple domains belong under the lowest common responsibility root **without** pretending one domain owns them.
-
-| Cross-domain file type | Correct pattern |
-|---|---|
-| Shared validator | `tools/validators/<topic>/...` |
-| Cross-domain schema | `schemas/contracts/v1/<topic>/...` |
-| Cross-domain doctrine | `docs/architecture/<topic>.md` |
-| Cross-domain policy | `policy/<topic>/...` or another policy-family home chosen by ADR |
-| Cross-domain app feature | `apps/<app>/...`, usually with governed API mediation |
-
-A pull request that puts a multi-domain file under one domain because "it has to go somewhere" should be redirected on review.
-
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 7. Domain inventory
+<a id="9-inputs"></a>
 
-Implementation status is bounded. A lane can be doctrine-confirmed while its current repo completeness remains `NEEDS VERIFICATION`.
+## Inputs
 
-| Slug | Domain | Doctrine status | Lane README path | Public/sensitivity notes |
-|---|---|---|---|---|
-| `hydrology` | Hydrology | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/hydrology/README.md` | Watershed, HUC, gauge, flow/level, water quality, NFHL context. Do not collapse regulatory zones, observed inundation, forecasts, and warnings. |
-| `soil` | Soil | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/soil/README.md` | SSURGO/gSSURGO map units, components, horizons, properties, HSG, suitability, and soil moisture. |
-| `fauna` | Fauna | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/fauna/README.md` | Sensitive-location redaction is mandatory; public layers must carry redaction/generalization receipts. |
-| `flora` | Flora | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/flora/README.md` | Rare-plant and culturally sensitive plant-location generalization required. |
-| `habitat` | Habitat | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/habitat/README.md` | Patch, suitability, connectivity, corridor, model-run receipts, and uncertainty surfaces. |
-| `geology` | Geology and Natural Resources | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/geology/README.md` | Geologic units, boreholes, resource context, and representation receipts for cross-section/3D outputs. |
-| `atmosphere` | Atmosphere, Air, and Climate | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/atmosphere/README.md` | Observed, regulatory, modeled, aggregate, and forecast contexts must remain source-role separated. |
-| `roads-rail-trade` | Roads, Rail, and Trade Routes | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/roads-rail-trade/README.md` | Network identity and corridor context; infrastructure-vulnerability detail must be policy-gated. |
-| `settlements-infrastructure` | Settlements, Cities, and Infrastructure | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/settlements-infrastructure/README.md` | Settlement identity, annexation, service-area, and infrastructure context; critical-asset exactness fails closed. |
-| `archaeology` | Archaeology and Cultural Heritage | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/archaeology/README.md` | Precise sites, burials, sacred places, and sovereignty-sensitive records require restriction, review, or denial. |
-| `hazards` | Hazards | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/hazards/README.md` | Non-emergency posture; KFM is not an alert authority. Warnings and incidents must be cited/contextual. |
-| `agriculture` | Agriculture | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/agriculture/README.md` | Aggregated/public-safe crop, livestock, irrigation, and land-use context; private joins and field-level exposure are denied unless rights and policy permit. |
-| `people-dna-land` | People, Genealogy, DNA, and Land Ownership | CONFIRMED doctrine / NEEDS VERIFICATION implementation | `docs/domains/people-dna-land/README.md` | Living-person, DNA/genomic, kinship, ownership, and title-like inference are restricted; assessor data is not title truth. |
+Admissible inputs include:
 
-### Related capability areas not admitted as §12 domain slugs
+- current KFM doctrine and reviewed decisions;
+- current repository bytes, tests, validators, workflows, manifests, logs, and generated artifacts tied to a known revision;
+- per-domain source dossiers, architecture references, source-role records, rights information, and sensitivity review;
+- contracts, schemas, policy, fixtures, lifecycle records, release/correction/rollback records, and public-client boundaries;
+- human and machine drift, verification, lineage, and domain registers.
 
-| Capability area | Default placement posture | Status |
+Generated language, planning artifacts, badges, workflow names, and repository convention alone do not become domain truth or reviewed authority.
+
+<a id="10-outputs"></a>
+
+## Outputs
+
+This folder supports:
+
+- navigable domain scope and boundary documentation;
+- links to responsibility-root segments that own enforceable state;
+- visible lane maturity, conflicts, unknowns, and verification backlogs;
+- reviewable sensitivity, rights, sovereignty, consent, and public-safe publication guidance;
+- migration, correction, supersession, and rollback context;
+- cross-domain coordination without creating new root authority.
+
+It emits no lifecycle artifact, policy approval, release object, deployment, or publication.
+
+[Back to top](#top)
+
+---
+
+<a id="11-validation"></a>
+
+## Validation
+
+| Check | Current state | Evidence / limit |
 |---|---|---|
-| Spatial foundation, cartography, reference systems | Cross-domain architecture under `docs/architecture/` unless admitted by ADR. | NEEDS VERIFICATION |
-| Frontier demography, economy, settlement, land, and time matrix | Composition lane crossing settlements, agriculture, people-land, time, and evidence; admit by ADR before using as domain slug. | NEEDS VERIFICATION |
-| Planetary, 3D, digital twin, synthetic spatial systems | Representation / architecture lane, usually `docs/architecture/`; domain admission requires ADR. | NEEDS VERIFICATION |
+| Root README same-path identity | **PASS** | Existing target retained; no sibling or replacement authority |
+| Directory Rules README order | **PASS** | First twelve H2 sections follow Purpose → Last reviewed |
+| Canonical lane README presence | **PASS: 13/13** | Direct fetch of every §12 lane path |
+| Lane-document maturity classification | **PASS, bounded** | Twelve substantive drafts; soil is a two-line placeholder |
+| Human/machine register parity | **CONFLICTED** | Human register lists 13; machine register has `entries: []` |
+| CODEOWNERS routing | **PASS, bounded** | Default route plus five explicit sensitive-domain routes |
+| Dedicated aggregate domain-index validator | **NOT ESTABLISHED in bounded search** | No complete root-lane parity command was verified |
+| Domain workflow definitions | **PASS: 13 present** | Classified by workflow inventory as bounded readiness/hold surfaces |
+| Per-lane §15 conformance | **NOT RUN / NEEDS VERIFICATION** | Requires complete file audits or accepted validator |
+| Cross-root slug consistency | **CONFLICTED / NOT RUN** | Known variants remain unresolved; no complete scan claimed |
+| Prohibited-file scan under `docs/domains/` | **NOT RUN** | Complete recursive file/type inventory was outside this one-file update |
+| Internal links and local anchors changed here | **PASS by bounded source inspection** | Host rendering and external endpoint reachability not run |
+| Repository `link-check` | **HOLD** | Workflow explicitly states that no documentation links or anchors are checked |
+| Repository `docs-build` | **HOLD** | No accepted documentation generator or preview publication handoff |
+| Current pull-request checks | **PENDING** | Must be read from the exact implementation commit |
 
-[↑ back to top](#top)
+Passing these checks does not prove source authority, evidence closure, rights clearance, policy approval, implementation completeness, release, public safety, or KFM publication.
 
----
-
-## 8. Per-domain landing pattern
-
-The exact filename set can vary by domain. Use the smallest set that makes the lane inspectable; do not pad a domain folder with empty boilerplate.
-
-```text
-docs/domains/<slug>/
-├── README.md                         # landing: scope, boundary, status, links
-├── ARCHITECTURE.md                   # lane architecture and trust path
-├── FILE_MAP.md                       # path-by-path map; equivalent names need README mapping
-├── SOURCE_INDEX.md                   # human source registry; machine registry lives elsewhere
-├── SCHEMA_INDEX.md                   # links to schemas/contracts/v1/domains/<slug>/
-├── VALIDATOR_INDEX.md                # links to validators touching this lane
-├── FIXTURE_INDEX.md                  # links to fixtures/domains/<slug>/
-├── INTAKE_AND_PROMOTION_RULES.md     # intake, promotion, abstain/deny/error posture
-├── ROLLBACK_AND_CORRECTION.md        # rollback, correction, supersession
-├── PUBLICATION_AND_POLICY.md         # rights, sensitivity, public-safe publication explanation
-├── UI_AND_EVIDENCE_DRAWER.md         # map UI / Evidence Drawer / Focus Mode notes
-├── CHANGELOG.md                      # human changelog
-├── MIGRATIONS.md                     # schema/data/document migrations
-├── RELEASE_LINEAGE.md                # release lineage and supersession state
-├── VERIFICATION_BACKLOG.md           # open checks, owners, closure criteria
-├── OPEN_QUESTIONS.md                 # unresolved authority/scope questions
-├── GLOSSARY.md                       # domain vocabulary
-└── ADR-XXXX-<topic>.md               # optional domain-local ADR; otherwise link docs/adr/
-```
-
-### Authoring rules
-
-1. **One accepted decision, one canonical home.** Domain README pages index decisions; they do not duplicate the authoritative object.
-2. **No machine truth in docs.** No JSON Schema, OPA bundle, fixture, manifest, receipt, proof, release decision, or executable pipeline belongs here.
-3. **Stable anchors.** Preserve existing anchors unless the improvement is worth link breakage. Note anchor changes in the PR.
-4. **Truth labels.** Use only: `CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`.
-5. **Evidence-first prose.** Cite the source or mark the claim as bounded. Do not let fluent summaries stand in for source authority.
-6. **Sensitivity-first publishing.** Sensitive ecology, archaeology, cultural, living-person, DNA/genomic, ownership, infrastructure, or public-safety detail defaults to redaction, generalization, staged access, or denial until reviewed.
-
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 9. Inputs
+<a id="12-review-burden"></a>
 
-- KFM doctrine: Directory Rules, lifecycle law, truth posture, trust membrane, authority ladder, governed-AI doctrine, and publication/rights/sensitivity doctrine.
-- Per-domain architecture dossiers and blueprints.
-- Accepted ADRs touching domain placement, schema home, source roles, sensitivity, release, or renderer/UI posture.
-- Per-root READMEs for `contracts/`, `schemas/`, `policy/`, `data/`, `release/`, `tests/`, `fixtures/`, `tools/`, `apps/`, and `packages/`.
-- Verification and drift registers.
-- Current repo evidence from mounted checkout, connector fetches, CI, validators, and release artifacts.
+## Review burden
 
-## 10. Outputs
-
-- A readable, navigable, governance-aware landing for each KFM domain.
-- Cross-links into the responsibility-root segments that carry enforceable truth.
-- Domain verification backlog entries that drive future ADRs, schema migrations, source admissions, and release candidates.
-- Per-domain or repo-wide ADR links for accepted domain decisions.
-- A clean review path for detecting and correcting drift before it becomes authority.
-
-[↑ back to top](#top)
-
----
-
-## 11. Validation
-
-| Check | Status | Closure evidence |
-|---|---|---|
-| Each canonical domain slug has `docs/domains/<slug>/README.md`. | NEEDS VERIFICATION | Mounted repo scan or validator output. |
-| Each domain README meets Directory Rules §15. | NEEDS VERIFICATION | README contract validator or steward review. |
-| Slugs match across docs, contracts, schemas, policy, tests, fixtures, packages, pipelines, pipeline specs, data phases, registries, and release candidates. | NEEDS VERIFICATION | Cross-root slug consistency scan. |
-| No schemas, OPA bundles, fixtures, manifests, receipts, proofs, pipeline code, or release decisions live under `docs/domains/`. | NEEDS VERIFICATION | Static path/type check. |
-| Cross-domain content lives under the correct responsibility root without a misleading single-domain segment. | NEEDS VERIFICATION | Reviewer check and/or validator. |
-| Domain README links to contract, schema, policy, fixture, test, data, release, and public-safe UI/API surfaces where applicable. | NEEDS VERIFICATION | Link check and owner review. |
-| Sensitive-lane documentation has matching policy references and redaction/generalization posture. | NEEDS VERIFICATION | Sensitivity reviewer signoff and policy reference. |
-| CODEOWNERS covers `docs/domains/` and affected domain subtrees. | NEEDS VERIFICATION | CODEOWNERS inspection. |
-| CI enforces README, link, slug, and prohibited-file checks. | NEEDS VERIFICATION | CI workflow evidence. |
-
-[↑ back to top](#top)
-
----
-
-## 12. Review burden
-
-| Change type | Review needed |
+| Change | Required posture |
 |---|---|
-| Typo, link repair, wording clarification inside an existing lane | Docs steward; domain steward if meaning changes. |
-| New documentation file inside an existing lane | Docs steward + domain steward; cite Directory Rules §12 / this README. |
-| New source family, source role, or evidence rule in a domain | Domain steward + source steward + policy reviewer as needed. |
-| New sensitivity or rights posture | Domain steward + sensitivity/rights reviewer; policy reference required. |
-| New domain slug | ADR required; update Directory Rules / domain register / machine register if accepted. |
-| Rename or merge a slug | ADR + migration plan + `git mv` discipline + deprecation/supersession note + rollback path. |
-| Any lifecycle, schema-home, policy-home, trust-membrane, or release-path exception | ADR + drift-register entry + rollback plan. |
+| Typo, stale-status correction, navigation, or dead-link repair | Scoped documentation review |
+| Domain meaning or source-role change | Domain, source, evidence, and contract review as applicable |
+| Rights, sensitivity, living-person, DNA, archaeology, ecology, infrastructure, or life-safety posture | Domain plus appropriate rights/sensitivity/sovereignty/public-safety review |
+| Add, rename, merge, or retire a lane | Reviewed ADR-class decision, compatibility map, migration plan, register updates, and rollback |
+| Change schema-home, policy-home, lifecycle, trust-membrane, or release boundaries | Owning authority and reviewed decision; this README cannot authorize it |
+| Merge or publication | Outside this file and outside ordinary documentation review |
 
-[↑ back to top](#top)
+`.github/CODEOWNERS` routes all paths through its default owner and adds explicit routes for five sensitive domain subtrees. That is GitHub review routing—not proof of stewardship assignment, independent approval, release authority, or completed review.
+
+[Back to top](#top)
 
 ---
 
-## 13. Related folders
+<a id="13-related-folders"></a>
 
-| Folder | Relationship |
+## Related folders
+
+| Path | Relationship |
 |---|---|
-| `docs/architecture/` | Cross-domain doctrine and architecture. |
-| `docs/doctrine/` | Repo-wide doctrine: Directory Rules, truth posture, trust membrane, lifecycle law, authority ladder. |
-| `docs/adr/` | Repo-wide ADRs and possible home for per-domain ADRs. |
-| `docs/registers/` | Drift register, verification backlog, domain-lane register, authority and lineage records. |
-| `control_plane/` | Machine-readable governance maps and registers. |
-| `contracts/domains/<slug>/` | Domain object meaning. |
-| `schemas/contracts/v1/domains/<slug>/` | Machine-checkable shape. |
-| `policy/domains/<slug>/` | Admissibility and release policy. |
-| `tests/domains/<slug>/` | Enforceability proof. |
-| `fixtures/domains/<slug>/` | Golden, valid, invalid, and negative-path examples. |
-| `packages/domains/<slug>/` | Shared domain code. |
-| `pipelines/domains/<slug>/` | Executable domain pipeline logic. |
-| `pipeline_specs/<slug>/` | Declarative pipeline configuration. |
-| `data/<phase>/<slug>/` | Lifecycle data from raw through published. |
-| `data/registry/sources/<slug>/` | Source registry material. |
-| `release/candidates/<slug>/` | Release candidates, manifests, rollback/correction material. |
-| `apps/governed-api/` | Public trust membrane. |
-| `apps/explorer-web/` | Map-first UI consuming governed API/public-safe artifacts. |
+| [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Placement doctrine, Domain Placement Law, README contract, anti-patterns |
+| [`../architecture/domain-placement-law.md`](../architecture/domain-placement-law.md) | Architecture-side elaboration; subordinate to Directory Rules |
+| [`../registers/DOMAIN_LANE.md`](../registers/DOMAIN_LANE.md) | Human domain-lane register; current content is draft and partly stale |
+| [`../../control_plane/domain_lane_register.yaml`](../../control_plane/domain_lane_register.yaml) | Machine register scaffold; currently empty |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflow maturity and safety inventory |
+| [`../../contracts/README.md`](../../contracts/README.md) | Semantic meaning |
+| [`../../schemas/README.md`](../../schemas/README.md) | Machine-checkable shape |
+| [`../../policy/README.md`](../../policy/README.md) | Admissibility and public-safety decisions |
+| [`../../tests/README.md`](../../tests/README.md) | Enforceability evidence |
+| [`../../fixtures/README.md`](../../fixtures/README.md) | Representative examples |
+| [`../../packages/README.md`](../../packages/README.md) | Shared implementation packages |
+| [`../../pipelines/README.md`](../../pipelines/README.md) | Executable transformations |
+| [`../../pipeline_specs/README.md`](../../pipeline_specs/README.md) | Declarative pipeline specifications |
+| [`../../data/README.md`](../../data/README.md) | Lifecycle material |
+| [`../../release/README.md`](../../release/README.md) | Promotion, release, correction, withdrawal, rollback |
+| [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | Governed client boundary |
+| [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Map-first client surface |
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 14. ADRs
+<a id="14-adrs"></a>
 
-Known ADR hooks for this README:
+## ADRs
 
-| ADR / decision area | Status | Notes |
+The current ADR index records every numbered ADR as effective status `proposed`. This README does not promote any of them.
+
+| ADR | Domain-lane relevance | Effective status |
 |---|---|---|
-| ADR-0001 — Schema home | CONFIRMED / NEEDS VERIFICATION for exact current filename | Machine-schema home is `schemas/contracts/v1/...`; domain docs point there for shape. |
-| Domain Placement Law | CONFIRMED doctrine | Directory Rules §12 currently governs domain-lane placement. |
-| Per-domain ADR home | NEEDS VERIFICATION | Normalize whether domain-local ADRs live under `docs/domains/<slug>/` or centrally under `docs/adr/`. |
-| Slug normalization | PROPOSED | Needed for any observed lineage variants such as shortened, underscored, or legacy domain names. |
-| Cross-domain capability admission | PROPOSED | Needed before capability areas become domain slugs instead of architecture/composition lanes. |
+| [`ADR-0001`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Default schema home | `proposed` |
+| [`ADR-0009`](../adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md) | Hydrology proof-lane proposal | `proposed` |
+| [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | Sensitive-domain deny-by-default proposal | `proposed` |
+| [`ADR-0025`](../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Public client trust boundary | `proposed` |
+| [`ADR-0027`](../adr/ADR-0027-county-focus-mode-control-plane.md) | Focus Mode is cross-domain, not a domain replacement | `proposed` |
+| [`ADR-0028`](<../adr/ADR-0028 — State-scale Focus Mode scope.md>) | State-scale Focus Mode and 13-domain coverage | `proposed` |
+| [`ADR index`](../adr/INDEX.md) | Numbered inventory and effective-status crosswalk | all numbered records `proposed` |
 
-[↑ back to top](#top)
+No accepted indexed ADR was verified that adds, removes, renames, merges, or retires a domain lane.
+
+[Back to top](#top)
 
 ---
 
 ## Last reviewed
 
-**2026-06-11** — v0.2 polish and governance refresh.
+**2026-07-23** — v0.3 repository-grounded same-path modernization.
 
-A README older than six months from its last reviewed date should be flagged for review. Review should verify current paths, per-domain completeness, links, CODEOWNERS, CI enforcement, drift register entries, and any ADR state that changed after this update.
+Older than six months: flag for review under [`Directory Rules §15`](../doctrine/directory-rules.md#15-required-readme-contract).
 
----
+| Edition | Date | Change |
+|---|---|---|
+| **v0.3** | 2026-07-23 | Verified all 13 lane README paths; classified twelve substantive drafts and one placeholder; aligned the first twelve H2 sections to the folder-README contract while retaining legacy anchors; confirmed CODEOWNERS and 13 workflow definitions; surfaced the empty machine register and slug conflicts; repaired current links and validation language. **No domain or governing behavior changed.** |
+| **v0.2** | 2026-06-11 | Expanded governance, placement, inventory, validation, and backlog guidance. |
+| **v0.1** | 2026-05-20 | Initial domain landing page. |
 
-## Appendix A — Open questions and verification backlog
-
-Track these in `docs/registers/VERIFICATION_BACKLOG.md` or the current verification backlog home:
-
-- **NEEDS VERIFICATION:** Which of the 13 canonical domain lanes have `README.md` files today?
-- **NEEDS VERIFICATION:** Which non-README documents exist under each `docs/domains/<slug>/` subtree?
-- **NEEDS VERIFICATION:** Whether any prohibited files have drifted into `docs/domains/`.
-- **NEEDS VERIFICATION:** Cross-root slug consistency for every domain lane.
-- **NEEDS VERIFICATION:** Exact current ADR filenames and acceptance state for schema home, domain placement, slug normalization, sensitivity, source roles, and publication boundary.
-- **NEEDS VERIFICATION:** Whether `control_plane/domain_lane_register.yaml` exists and is synchronized with `docs/registers/DOMAIN_LANE.md`.
-- **NEEDS VERIFICATION:** CODEOWNERS coverage for `docs/domains/`.
-- **NEEDS VERIFICATION:** CI/validator names for README contract, slug consistency, prohibited-file scan, and link checking.
-- **PROPOSED:** Decide whether capability areas absent from §12 remain under `docs/architecture/`, become composition lanes, or are admitted as new domains by ADR.
-- **PROPOSED:** Create a documented migration pattern for any legacy slug variants discovered in repo or dossier lineage.
-
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
-## Appendix B — Evidence basis for this README
+<a id="6-domain-placement-law"></a>
 
-This README was polished from the existing `docs/domains/README.md` draft and bounded by current-session evidence:
+## Domain Placement Law
 
-- `docs/domains/README.md` was fetched directly from the accessible repository.
-- `docs/doctrine/directory-rules.md` was fetched directly and used for root authority, `docs/`, Domain Placement Law, anti-patterns, and lifecycle placement.
-- `docs/registers/DOMAIN_LANE.md` was fetched directly as the human-facing domain-lane register.
-- Repository search confirmed selected existing files under `docs/domains/`, but this was not a complete mounted checkout inventory.
-- No validator run, CI run, CODEOWNERS check, release manifest, runtime deployment, or public UI/API behavior was verified by this README refresh.
+A domain must remain a lane segment inside responsibility roots:
 
-[↑ back to top](#top)
+```mermaid
+flowchart LR
+    DOCS["docs/domains/<slug>/<br/>human scope + index"]
+    CONTRACTS["contracts/domains/<slug>/<br/>meaning"]
+    SCHEMAS["schemas/contracts/v1/domains/<slug>/<br/>shape"]
+    POLICY["policy/domains/<slug>/<br/>admissibility"]
+    TESTS["tests/domains/<slug>/<br/>enforceability"]
+    FIXTURES["fixtures/domains/<slug>/<br/>examples"]
+    PACKAGES["packages/domains/<slug>/<br/>shared code"]
+    PIPELINES["pipelines/domains/<slug>/<br/>execution"]
+    PSPECS["pipeline_specs/<slug>/<br/>declarative config"]
+    TOOLS["tools/validators/domains/<slug>/<br/>checks"]
+    DATA["data/<phase>/<slug>/<br/>lifecycle"]
+    REGISTRY["data/registry/sources/<slug>/<br/>source registry"]
+    RELEASE["release/candidates/<slug>/<br/>review input"]
+
+    DOCS -. "indexes; never replaces" .-> CONTRACTS
+    DOCS -. "indexes; never replaces" .-> SCHEMAS
+    DOCS -. "indexes; never replaces" .-> POLICY
+    DOCS -. "indexes; never replaces" .-> TESTS
+    DOCS -. "indexes; never replaces" .-> FIXTURES
+    DOCS -. "indexes; never replaces" .-> PACKAGES
+    DOCS -. "indexes; never replaces" .-> PIPELINES
+    DOCS -. "indexes; never replaces" .-> PSPECS
+    DOCS -. "indexes; never replaces" .-> TOOLS
+    DOCS -. "indexes; never replaces" .-> DATA
+    DOCS -. "indexes; never replaces" .-> REGISTRY
+    DOCS -. "indexes; never replaces" .-> RELEASE
+```
+
+The lifecycle remains:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+Promotion is a governed state transition, not a file move. Public clients use governed APIs and released/public-safe artifacts. Cross-domain material belongs under the lowest common responsibility root without pretending one domain owns it. Focus Modes compose domains; they do not replace them.
+
+> [!NOTE]
+> Directory Rules supplies the target pattern. Current lane documents expose unresolved path variants for some families; this README records those as conflicts rather than silently normalizing implementation.
+
+[Back to top](#top)
+
+---
+
+<a id="7-domain-inventory"></a>
+
+## Domain inventory
+
+| Slug | README state | Current bounded finding | Public / sensitivity boundary |
+|---|---|---|---|
+| [`hydrology`](./hydrology/README.md) | Substantive draft, v2 | Early proof-lane language; flat-versus-`domains/` path conflict remains documented | Regulatory flood context is not observed flooding; not an alert system |
+| [`soil`](./soil/README.md) | **Placeholder** | Two-line greenfield README; domain workflow expects placeholder posture | No agronomic, engineering, conservation-compliance, land-value, or regulatory determination |
+| [`fauna`](./fauna/README.md) | Substantive draft, v1.1 | Sensitive occurrence and geoprivacy controls documented | Exact sensitive occurrences deny/restrict by default |
+| [`flora`](./flora/README.md) | Substantive draft, v2 | Rare/protected/culturally sensitive flora controls documented | Exact rare/culturally sensitive geometry fails closed |
+| [`habitat`](./habitat/README.md) | Substantive draft, v1.1 | Suitability/connectivity lane; Atlas flat-path variance documented | Stewardship zones and linked sensitive ecology require generalization/review |
+| [`geology`](./geology/README.md) | Substantive draft, v1 | Geology/natural-resources lane; object-name and path drift surfaced | Sensitive subsurface/resource detail requires policy gating |
+| [`atmosphere`](./atmosphere/README.md) | Substantive draft, v0.2 | `air` versus `atmosphere` schema/contract slug conflict documented | Context only; not emergency advisory or life-safety authority |
+| [`roads-rail-trade`](./roads-rail-trade/README.md) | Substantive draft, v1.1 | Contract/schema docs use `transport` while lane slug is `roads-rail-trade` | Infrastructure-vulnerability detail requires restriction |
+| [`settlements-infrastructure`](./settlements-infrastructure/README.md) | Substantive draft, v1 | Settlement and infrastructure scope documented | Critical-asset exactness fails closed |
+| [`archaeology`](./archaeology/README.md) | Substantive draft, v2 | Cultural review, CARE, and T4 posture documented | Sites, burials, sacred places, and sovereignty-sensitive records restrict/deny |
+| [`hazards`](./hazards/README.md) | Substantive draft, v2 | Historical/regulatory/observational/modeled context lane | KFM is never a life-safety alert authority |
+| [`agriculture`](./agriculture/README.md) | Substantive draft, v2 proposed | Rich doctrine draft still contains stale “no mounted repo” provenance language | Aggregate/public-safe posture; private joins and field-level exposure require rights/policy |
+| [`people-dna-land`](./people-dna-land/README.md) | Substantive draft, v1.1 | `people` versus `people-dna-land` segment conflict documented | Living-person, DNA/genomic, kinship, title-like, and person-parcel joins deny/restrict by default |
+
+**Inventory limit:** this table verifies the 13 lane README paths and their bounded landing-page posture. It does not claim complete descendant-file, contract, schema, policy, source, test, lifecycle, runtime, or release coverage.
+
+[Back to top](#top)
+
+---
+
+<a id="8-per-domain-landing-pattern"></a>
+
+## Per-domain landing pattern
+
+Use the smallest useful document set for each lane; do not create empty boilerplate merely to match a tree.
+
+```text
+docs/domains/<slug>/
+├── README.md
+├── ARCHITECTURE.md                 # optional, when the lane needs a trust-path model
+├── SOURCE_INDEX.md                 # human index; machine registry remains elsewhere
+├── SCHEMA_INDEX.md                 # links to schema authority
+├── VALIDATOR_INDEX.md              # links to executable checks
+├── PUBLICATION_AND_POLICY.md       # rights, sensitivity, public-safe posture
+├── ROLLBACK_AND_CORRECTION.md      # correction, supersession, rollback
+├── VERIFICATION_BACKLOG.md
+├── OPEN_QUESTIONS.md
+└── CHANGELOG.md
+```
+
+Authoring rules:
+
+1. One reviewed decision, one owning authority.
+2. No machine truth, policy bundles, fixtures, manifests, receipts, proofs, or executable code in domain docs.
+3. Preserve stable paths and anchors where practical.
+4. Separate path presence, document status, implementation state, review state, release state, and publication state.
+5. Cite evidence or narrow the claim.
+6. Sensitive and rights-unclear content fails closed.
+7. Record path aliases and migrations explicitly; do not let compatibility names evolve independently.
+
+[Back to top](#top)
+
+---
+
+## Change discipline
+
+| Change | Required treatment |
+|---|---|
+| Editorial clarification, status reconciliation, dead-link repair | Scoped documentation PR |
+| Add a human index or architecture note inside an existing lane | Domain/docs review; preserve owning-root boundaries |
+| Change domain scope, source role, sensitivity posture, or public boundary | Owning contract/policy/evidence review and decision record as applicable |
+| Add, rename, merge, or retire a lane | ADR-class decision, compatibility map, registry updates, migration, correction, rollback |
+| Move machine or lifecycle material into or out of docs | Directory Rules preflight; no parallel authority |
+| Promote a lane from draft/readiness to implemented/released/published | Evidence from the owning implementation, validation, policy, review, and release surfaces—not a README edit |
+
+Prefer the smallest reversible change. Documentation polish must project evidence, not manufacture maturity.
+
+[Back to top](#top)
+
+---
+
+<a id="appendix-a--open-questions-and-verification-backlog"></a>
+
+## Open questions / NEEDS VERIFICATION
+
+1. **CONFLICTED — human/machine register parity.** Populate or deliberately retire `control_plane/domain_lane_register.yaml`; do not describe empty `entries` as synchronized.
+2. **NEEDS VERIFICATION — soil documentation.** Replace the greenfield placeholder only after inspecting its connected contract, schema, policy, fixture, validator, data, and release lanes.
+3. **NEEDS VERIFICATION — per-lane README contract.** Audit all 13 files against Directory Rules §15 without forcing identical optional sections or deleting domain-specific safety guidance.
+4. **CONFLICTED — slug identity.** Resolve `air`/`atmosphere`, `transport`/`roads-rail-trade`, and `people`/`people-dna-land` through reviewed crosswalks, compatibility rules, and migrations.
+5. **NEEDS VERIFICATION — recursive inventory.** Scan `docs/domains/` for prohibited machine, policy, fixture, lifecycle, release, receipt, proof, and code files.
+6. **NEEDS VERIFICATION — cross-root parity.** Compare all 13 slugs across contracts, schemas, policy, tests, fixtures, packages, pipelines, pipeline specs, data phases, registries, and release candidates.
+7. **NEEDS VERIFICATION — workflow outcomes.** The 13 workflows are readiness surfaces; determine which failures are intentional holds, missing boundaries, or implementation drift at each exact revision.
+8. **NEEDS VERIFICATION — stewardship and separation of duties.** CODEOWNERS routing is not an accepted domain, rights, sensitivity, cultural, release, or publication assignment.
+9. **NEEDS VERIFICATION — source rights and public-safe transforms.** Close rights, attribution, freshness, sensitivity, and correction obligations per source family before release.
+10. **OPEN — non-domain capability areas.** Keep cross-cutting cartography, time, 3D/digital-twin, and Focus Mode composition under their responsibility roots unless a reviewed decision admits a new domain lane.
+
+Track closures in the owning register, ADR, domain backlog, contract, policy, validation artifact, or release record.
+
+[Back to top](#top)
+
+---
+
+<a id="appendix-b--evidence-basis-for-this-readme"></a>
+
+## Evidence basis
+
+This update directly inspected:
+
+- the complete v0.2 target;
+- Directory Rules §12 and §15;
+- all 13 canonical lane README paths;
+- the human Domain Lane Register and empty machine domain register;
+- current CODEOWNERS routing;
+- the workflow maturity inventory and Soil readiness workflow;
+- related root READMEs for contracts, schemas, policy, tests, fixtures, packages, pipelines, pipeline specs, data, release, and public clients;
+- the current ADR index.
+
+It did **not** perform a complete recursive repository tree export, execute every domain workflow, validate every lane’s links and anchors, inspect every contract/schema/policy/data/release descendant, observe runtime systems, or host-render this Markdown. Those remain bounded verification work.
+
+---
+
+<sub>This file is a domain documentation index. When it conflicts with Directory Rules, a reviewed decision, contract, schema, policy decision, evidence record, lifecycle record, or release record, use the owning authority, record the conflict, and correct this README.</sub>
