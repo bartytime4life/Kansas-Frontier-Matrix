@@ -58,10 +58,19 @@ evidence_snapshot:
   non_publisher_test_blob: c6164787bc848eb2347c347af203d76afae37a2b
   pipelines_core_blob: f1b069c91289890f371a2bd640dba31d7432659e
   run_receipt_contract_blob: 5592aa5e22bbdd0c668189f79b50c18f7d1b2479
+  run_receipt_schema_blob: 80d13bcb750d56c769da2f8871242388f7f50a69
   run_receipt_validator_blob: 9b59481e90c021f0f92b74511c43fcefbbe3a057
+  common_schema_test_blob: b04342cc034d7f1cc554e155fdd02d6e972976e6
   pipeline_receipts_blob: 6b714cd3b1501d61a83a9d52c82f7887f6c3b368
+  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
   workflows_readme_blob: afb4f79ce2c5267cb1679f48186260e6edebf8b2
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  adr_0011_blob: 158ad6d31946d7d32537d5278ec6d2828ec880b3
+  adr_0012_blob: e323ce42e82bdf93252fa0bd68bd86e3b7eedebf
+  adr_0017_blob: 0e8d03786bcc99b19f179680890df9e30a27633a
+  adr_0018_blob: d7604ab92b915abaec8d7d9bac3da5d40d51e7f3
+  adr_0021_blob: 95648b9967e02bfe662d4f6103de10ee5a467d21
+  adr_0022_blob: b09c1d7aaa39f3030afdcec419c58236fd324f17
 related:
   - ./ingest/README.md
   - ./normalize/README.md
@@ -91,7 +100,9 @@ related:
   - ../docs/architecture/directory-rules.md
   - ../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
   - ../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md
+  - ../docs/adr/ADR-0017-source-descriptor-admission-process.md
   - ../docs/adr/ADR-0018-promotion-gate-sequence.md
+  - ../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
   - ../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
   - ../docs/registers/DRIFT_REGISTER.md
   - ../.github/workflows/README.md
@@ -105,6 +116,7 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="pipelines"></a>
 
 # `pipelines/` — Governed Executable Pipeline and Orchestration Root
 
@@ -135,6 +147,8 @@ notes:
 | [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) | [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Lifecycle](#lifecycle-and-non-publisher-operating-model) · [Executable contract](#minimum-executable-pipeline-contract) | [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Migration](#lane-admission-migration-correction-and-rollback) · [No-loss](#v02-to-v03-no-loss-ledger) |
 
 ---
+
+<a id="1-purpose"></a>
 
 ## Purpose
 
@@ -193,6 +207,8 @@ Every pipeline change must preserve:
 [Back to top](#top)
 
 ---
+
+<a id="2-root-authority"></a>
 
 ## Authority level
 
@@ -326,6 +342,8 @@ These state names are **PROPOSED** and do not replace accepted contract, policy,
 
 ---
 
+<a id="5-what-belongs-here"></a>
+
 ## What belongs here
 
 Appropriate content includes:
@@ -368,6 +386,8 @@ A useful placement test:
 
 ---
 
+<a id="6-what-does-not-belong-here"></a>
+
 ## What does NOT belong here
 
 | Prohibited or misplaced material | Correct home or posture |
@@ -397,6 +417,8 @@ Generated prose, a green run, a schema-valid object, a receipt, a graph projecti
 [Back to top](#top)
 
 ---
+
+<a id="8-inputs-and-outputs"></a>
 
 ## Inputs
 
@@ -494,6 +516,8 @@ Do not emit a hybrid object that combines convenient terms from several layers. 
 
 ---
 
+<a id="9-required-gates"></a>
+
 ## Validation
 
 Validation must separate **presence, shape, behavior, integration, security, operational execution, and release readiness**.
@@ -560,6 +584,8 @@ Before relying on or modifying a workflow that touches pipelines, record:
 
 A held or readiness-only workflow must remain visibly held. A green hold is not implementation or release proof.
 
+<a id="11-definition-of-done"></a>
+
 ### Definition of done for an executable pipeline capability
 
 - [ ] Correct functional, domain, or reviewed cross-domain lane selected.
@@ -621,6 +647,8 @@ A pipeline author must not be the sole approver when a change can affect:
 ---
 
 ## Related folders
+
+<a id="7-lane-map"></a>
 
 ### Pipeline lanes
 
@@ -701,7 +729,9 @@ The diagram is a responsibility and governance model, not verified deployment to
 | [`docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) | v1.3.1 review copy; placement conflict is explicit | Do not let duplicate placement create two independently evolving authorities. |
 | [`ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation`](../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | Proposed; not accepted | A pipeline receipt, proof, catalog record, and release manifest remain distinct. |
 | [`ADR-0012 — Connector Outputs to RAW or QUARANTINE Only`](../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md) | Draft/proposed; Directory Rules carry the governing rule | Pipelines must not silently absorb connector source-edge authority. |
+| [`ADR-0017 — Source Descriptor Admission Process`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | Proposed | An active pipeline must bind admitted source descriptors rather than infer source authority from a URL, fixture, or parser result. |
 | [`ADR-0018 — Promotion Gate Sequence`](../docs/adr/ADR-0018-promotion-gate-sequence.md) | Proposed; doctrinal A–G sequence exists, exact canonical naming pending | Pipeline readiness and validation must hand off to independent promotion gates. |
+| [`ADR-0021 — Quarantine Has Structured Exit Paths`](../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md) | Proposed | Pipeline quarantine writes and remediation handoffs require named, auditable exits; no silent promotion or file-move shortcut. |
 | [`ADR-0022 — Catalog Matrix Agreement`](../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | Proposed | Catalog pipeline code may prepare candidates; accepted closure and release enforcement remain pending. |
 
 ### Decisions still needed
@@ -754,6 +784,8 @@ Re-review this README when:
 - branch protection or required checks change;
 - Directory Rules or a governing ADR changes pipeline placement or authority.
 
+<a id="12-open-questions"></a>
+
 ### Open verification register
 
 | Item | Evidence needed |
@@ -776,6 +808,8 @@ Re-review this README when:
 
 ---
 
+<a id="3-lifecycle-contract"></a>
+
 ## Lifecycle and non-publisher operating model
 
 ### Stage obligations by lifecycle boundary
@@ -788,6 +822,8 @@ Re-review this README when:
 | PROCESSED -> CATALOG / TRIPLET candidate | Build derived catalog/graph candidates and agreement reports. | Make catalog/triplet output sovereign truth or write final release state. |
 | Release readiness | Assemble evidence, validation, policy, integrity, correction, and rollback references. | Approve a release, issue a final manifest, or expose a public surface. |
 | Correction / rollback readiness | Identify affected refs, digests, caches, projections, and prior targets. | Rewrite history, conceal supersession, or execute unreviewed rollback. |
+
+<a id="4-anti-collapse-rules"></a>
 
 ### Anti-collapse rules
 
@@ -861,6 +897,8 @@ A pipeline may calculate, compare, normalize, project, and assemble candidates. 
 [Back to top](#top)
 
 ---
+
+<a id="10-expansion-rules"></a>
 
 ## Lane admission, migration, correction, and rollback
 
