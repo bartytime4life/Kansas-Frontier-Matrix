@@ -1,509 +1,797 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/root-catalog-readme
-title: catalog/ — Catalog Compatibility Redirect
-type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Catalog steward · Data steward · Source steward · Registry steward · Receipt steward · Proof steward · Release steward · Publication steward · Graph steward · Policy steward · Schema steward · Docs steward
+title: catalog/ — Root Catalog Drift Containment and Compatibility Redirect
+type: readme; root-readme; drift-containment-index; compatibility-redirect
+version: v0.3
+prior_version: v0.2
+status: draft; repository-grounded; severe-parallel-authority-drift; containment-only; retirement-pending-adr; non-authoritative
+owner: "NEEDS VERIFICATION — CODEOWNERS routes the repository catch-all to @bartytime4life; no accepted catalog-root steward, required-review rule, or independent approval control was verified"
 created: 2026-06-16
-updated: 2026-07-10
+updated: 2026-07-23
 policy_label: public
+current_path: catalog/README.md
+placement_class: "CONFIRMED root-level path; CONFLICTED with Directory Rules; PROPOSED transitional containment fence pending ADR-backed migration and retirement"
+responsibility: contain and redirect legacy or accidental root-level catalog-family paths without allowing this tree to evolve as catalog, graph, registry, receipt, proof, release, publication, schema, policy, producer, hosting, or UI authority
+truth_posture: >-
+  CONFIRMED same-path target, Directory Rules catalog anti-pattern, thirteen descendant
+  redirect README paths, canonical data and release counterpart READMEs, default CODEOWNERS
+  routing, TODO catalog Make target, workflow inventory, proposed ADR states, and documentation-
+  only catalog tooling and pipeline boundaries / PROPOSED transitional containment contract,
+  redirect inventory, migration sequence, anti-bypass review model, and retirement criteria /
+  CONFLICTED root-level catalog presence versus canonical data/catalog placement and duplicate
+  Directory Rules identities / UNKNOWN complete recursive non-README payload inventory,
+  historical producers and consumers, runtime reads and writes, hosting, ignored or generated
+  material, and operational release effects / NEEDS VERIFICATION accepted root-disposition ADR,
+  dedicated drift-register entry, allowlist validator, CI enforcement, migration closure,
+  stewardship, branch protection, and independent review
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 005aa64f6d42aa5961646e733289a2b857292357
+  target_prior_blob: 0ef249eaf2840a787fb1760354b94e311c2d5c8d
+  directory_rules_doctrine_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  directory_rules_architecture_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
+  data_root_blob: 9ae3439441aa8239a9e57496d4d896e20a21e43e
+  data_catalog_blob: 9cf67c4ce5308b9088466b023a244107e3863a48
+  data_triplets_blob: 222277e0ba00174ca88a3c1631a27f1ba7f86294
+  data_receipts_blob: 15f2608cfe3c692da2fdb8082b6f9d90f2a8bb9d
+  data_proofs_blob: 603dd71c5e0a4bd82e0228848514fd62d39b23c0
+  data_registry_blob: ebadb413a5ba1151f94b8c33eb61fe51786da0f3
+  data_published_blob: 585abdf7953bc270a15bcf80b4dd8d6af93e70ac
+  release_root_blob: 0752610b1df6d11143158f6f162f65ecd650e6a6
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  adr_0011_blob: 158ad6d31946d7d32537d5278ec6d2828ec880b3
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  drift_register_blob: 5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0
+  workflows_readme_blob: afb4f79ce2c5267cb1679f48186260e6edebf8b2
+  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
+  catalog_builders_readme_blob: 49d8d18f7da17c1a70b3fe693136972067bbc3c0
+  catalog_pipeline_readme_blob: 2c7f919272e7ecc6a713787460f6cd0e781b0641
+  direct_child_redirect_readmes: 9
+  nested_child_redirect_readmes: 4
+  total_descendant_redirect_readmes: 13
 related:
+  - ../README.md
+  - ../docs/doctrine/directory-rules.md
+  - ../docs/architecture/directory-rules.md
+  - ../docs/adr/INDEX.md
+  - ../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - ../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
+  - ../docs/registers/DRIFT_REGISTER.md
   - ../data/README.md
   - ../data/catalog/README.md
   - ../data/triplets/README.md
   - ../data/receipts/README.md
   - ../data/proofs/README.md
-  - ../data/published/README.md
   - ../data/registry/README.md
+  - ../data/published/README.md
   - ../release/README.md
-  - STAC/README.md
-  - index/README.md
-  - manifest/README.md
-  - proof/README.md
-  - proof/release/README.md
-  - proof/release-closure/README.md
-  - publication/README.md
-  - publish/README.md
-  - publish/rollback/README.md
-  - release/README.md
-  - triplet/README.md
-  - triplet/bundles/README.md
-  - ../schemas/contracts/v1/
-  - ../contracts/
-  - ../policy/
-  - ../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
-  - ../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, compatibility-root, redirect, drift-fence, data-catalog, data-triplets, data-receipts, data-proofs, data-published, release-plane, registry, stac, dcat, prov, receipt-proof-catalog-publication-separation, non-authoritative, no-public-use]
+  - ../tools/catalog_builders/README.md
+  - ../pipelines/catalog/README.md
+  - ../.github/workflows/README.md
+  - ../.github/CODEOWNERS
+  - ../data/receipts/generated/genrec-catalog-readme-modernization-20260723-001.json
+tags: [kfm, catalog, drift-root, parallel-authority, compatibility-redirect, containment, migration, data-catalog, data-triplets, receipts, proofs, registry, release, published, cite-or-abstain, rollback]
 notes:
-  - "Refreshes the root-level catalog/ compatibility-redirect fence."
-  - "Root-level catalog/ is compatibility and drift-control documentation only, not canonical catalog authority, STAC authority, manifest authority, index authority, triplet authority, proof authority, receipt authority, release authority, publication authority, registry authority, schema authority, policy authority, producer authority, hosting authority, or UI authority."
-  - "Canonical catalog-stage records belong under data/catalog/; graph-compatible relationship projections belong under data/triplets/; receipts belong under data/receipts/; proof support belongs under data/proofs/; source/rights/sensitivity registry rows belong under data/registry/; release-governance records belong under release/; published delivery artifacts belong under data/published/ after governed release."
-  - "Root-level catalog child directories are compatibility redirects and drift-control fences unless an accepted ADR or migration note says otherwise."
-  - "Child README refreshes may exist in separate draft PRs; do not treat branch state as merged main state until verified on the target ref."
-  - "ADR-0011 is proposed and is used here only as separation evidence, not accepted-rule proof."
-  - "Do not add catalog records, STAC/DCAT/PROV records, manifests, indexes, triplet payloads, proofs, receipts, release records, rollback records, publication artifacts, source registry rows, schemas, policy rules, generated outputs, public artifacts, or producer targets here without an ADR/migration note."
-  - "Actual current contents beyond README files, historical producers, workflow writes, migration status, CI/review enforcement, public-client/producer exclusion, hosting readiness, catalog schema maturity, STAC/profile maturity, release workflow maturity, and ADR disposition remain NEEDS VERIFICATION."
-  - "v0.2 adds current evidence basis, Directory Rules placement basis, child redirect family map, canonical data/catalog alignment, related-family separation, minimum safe redirect slice, anti-bypass matrix, migration/rollback posture, and safe language rules without claiming migration or enforcement maturity."
+  - "v0.3 is a same-path modernization of the v0.2 redirect README; it does not accept an ADR, migrate or retire the root, move any payload, or change producer, runtime, release, or publication behavior."
+  - "Directory Rules explicitly classify top-level catalog/ as severe parallel-authority drift, not as a normal canonical or listed compatibility root."
+  - "Thirteen exact descendant README paths are verified; complete recursive payload inventory beyond those exact reads remains UNKNOWN / NEEDS VERIFICATION."
+  - "The first twelve H2 sections follow the Directory Rules §15 folder-README contract. Legacy v0.2 numbered fragments are preserved with explicit anchors."
+  - "Static badges project inspected repository state only; they are not CI, migration, approval, release, or publication proof."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
 # Catalog Compatibility Redirect
 
-`catalog/`
+> **One-line purpose.** Root-level `catalog/` is a **drift-containment and compatibility redirect**, not a catalog system: it points catalog, triplet, registry, receipt, proof, release, and published-artifact families to their governed homes while an ADR-backed migration and retirement decision remains open.
 
-**Root-level compatibility and drift-control fence for legacy or accidental catalog-family placement. Canonical catalog records belong under `data/catalog/`; related triplet, receipt, proof, registry, release, and published artifact families stay in their own roots.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![catalog home](https://img.shields.io/badge/catalog__home-data%2Fcatalog-blue)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Canonical homes](#2-canonical-homes) · [Boundary](#3-authority-boundary) · [Child lanes](#8-child-redirect-lanes) · [Migration](#10-migration-posture) · [Definition of done](#17-definition-of-done)
-
-</div>
-
----
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Placement: severe drift](https://img.shields.io/badge/placement-severe%20drift-b42318?style=flat-square)](#authority-level)
+[![Containment: transitional](https://img.shields.io/badge/containment-transitional-d4a72c?style=flat-square)](#status)
+[![Redirect READMEs: 13](https://img.shields.io/badge/redirect%20READMEs-13-0969da?style=flat-square)](#current-redirect-inventory)
+[![Catalog home: data/catalog](https://img.shields.io/badge/catalog%20home-data%2Fcatalog-1f6feb?style=flat-square)](#related-folders)
+[![Catalog builder: TODO](https://img.shields.io/badge/catalog%20builder-TODO-d97706?style=flat-square)](#validation)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#outputs)
+[![Reviewed: 2026-07-23](https://img.shields.io/badge/reviewed-2026--07--23-1a7f37?style=flat-square)](#last-reviewed)
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `catalog/README.md`  
-> **Responsibility root:** compatibility redirect / drift fence only  
-> **Canonical catalog home:** `data/catalog/`  
-> **Triplet home:** `data/triplets/`  
-> **Receipt home:** `data/receipts/`  
-> **Proof home:** `data/proofs/`  
-> **Registry home:** `data/registry/`  
-> **Release-governance home:** `release/`  
-> **Published artifact home:** `data/published/`  
-> **Directory Rules basis:** file location encodes ownership, governance, and lifecycle. Root-level `catalog/` is a compatibility redirect only and must not become a parallel catalog, STAC, manifest, index, triplet, proof, receipt, release, publication, registry, schema, policy, source, pipeline, package, tool, search, hosting, or UI authority.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED `data/README.md` defines `data/` as canonical lifecycle root and names catalog, triplets, receipts, proofs, published, registry, and rollback families / CONFIRMED `data/catalog/README.md` exists and treats `data/catalog/` as catalog-stage lifecycle lane / CONFIRMED `data/triplets/README.md` exists and treats `data/triplets/` as graph-compatible relationship projection lane / CONFIRMED `data/receipts/README.md` exists and marks receipts as process memory / CONFIRMED `data/proofs/README.md` exists and treats proof artifacts as support objects, not public truth by placement / CONFIRMED `data/published/README.md` exists and treats published artifacts as downstream delivery carriers / CONFIRMED `data/registry/README.md` exists and treats registry rows as source/rights/sensitivity-aware internal governance records / CONFIRMED `release/README.md` exists and treats `release/` as release-governance root / CONFIRMED Directory Rules document exists / PROPOSED root-level `catalog/` redirect contract / UNKNOWN actual files beyond README files, historical producers, workflow writes, migration status, schema/profile maturity, CI/review guard, public-client/producer exclusion, hosting readiness, and ADR disposition
+> **Safe current conclusion:** `catalog/` exists, but Directory Rules explicitly classify a top-level `catalog/` root as severe parallel-authority drift. The path may be maintained only as a non-authoritative containment fence while a reviewed ADR, migration map, deprecation record, verification window, and rollback plan determine its retirement.
 
 > [!CAUTION]
-> Do not make `catalog/` a parallel catalog authority. KFM catalog records belong under `data/catalog/`; graph-compatible triplets belong under `data/triplets/`; receipts, proofs, registry rows, release records, published artifacts, schemas, contracts, policies, source code, generated previews, and unpublished lifecycle data stay in their own owning roots.
-
----
-
-## Quick jump
-
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Canonical homes](#2-canonical-homes)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Allowed contents](#5-allowed-contents)
-- [6. Forbidden contents](#6-forbidden-contents)
-- [7. Directory shape](#7-directory-shape)
-- [8. Child redirect lanes](#8-child-redirect-lanes)
-- [9. Minimum safe redirect slice](#9-minimum-safe-redirect-slice)
-- [10. Migration posture](#10-migration-posture)
-- [11. Runtime and producer anti-bypass matrix](#11-runtime-and-producer-anti-bypass-matrix)
-- [12. Diagram](#12-diagram)
-- [13. Inspection path](#13-inspection-path)
-- [14. Validation expectations](#14-validation-expectations)
-- [15. Safe change pattern](#15-safe-change-pattern)
-- [16. Rollback and correction posture](#16-rollback-and-correction-posture)
-- [17. Definition of done](#17-definition-of-done)
-- [18. Open verification items](#18-open-verification-items)
-- [19. Safe language rules](#19-safe-language-rules)
-
----
-
-## 0. Evidence basis for this revision
-
-This README is a documentation boundary, not migration proof, catalog-schema proof, STAC-profile proof, release approval proof, publication-hosting proof, or CI enforcement proof. The 2026-07-10 revision updates an existing compatibility README and keeps maturity bounded while aligning root-level `catalog/` with the canonical `data/catalog/` catalog-stage lane, the `data/triplets/` graph projection lane, the `data/receipts/` process-memory root, the `data/proofs/` proof-support root, the `data/registry/` registry root, the `release/` release-governance root, the `data/published/` published-artifact lane, and Directory Rules placement posture.
-
-| Evidence item | Status | What it supports | What it does not prove |
-|---|---|---|---|
-| `catalog/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove actual contents beyond README files, historical producers, migration status, CI enforcement, public-client exclusion, hosting readiness, or ADR disposition. |
-| `data/README.md` exists and treats `data/` as the canonical lifecycle root for catalog, triplets, receipts, proofs, published artifacts, registries, and rollback support. | CONFIRMED data-root posture | Canonical catalog-family data belongs under `data/`, not root-level `catalog/`. | It does not prove payload inventories, schema maturity, validators, policy automation, CI checks, hosting, or release readiness. |
-| `data/catalog/README.md` exists and treats `data/catalog/` as the catalog-stage lane for governed catalog records and indexes. | CONFIRMED catalog-root posture | Catalog records belong under `data/catalog/`. | It does not prove concrete catalog inventory, validators, receipts, route behavior, or public exposure approval. |
-| `data/triplets/README.md` exists and treats `data/triplets/` as graph-compatible relationship projections. | CONFIRMED triplets-lane posture | Triplets and graph projections are not root-level catalog files. | It does not prove concrete graph inventories, schemas, graph-build receipts, or release approvals. |
-| `data/receipts/README.md` exists and marks receipts as process memory, separate from proof, catalog, release, and publication. | CONFIRMED receipt-root posture | Receipts belong under `data/receipts/`. | It does not prove emitted receipt inventories, signing, validators, release integration, or CI enforcement. |
-| `data/proofs/README.md` exists and treats proof artifacts as support objects, not public truth by placement. | CONFIRMED proof-root posture | EvidenceBundle and ProofPack support belong under `data/proofs/`. | It does not prove emitted proof inventories, schemas, validators, fixtures, CI workflows, or release-gate enforcement. |
-| `data/published/README.md` exists and treats published artifacts as downstream delivery carriers after governed release. | CONFIRMED published-lane posture | Public-safe delivery artifacts belong under `data/published/` after release. | It does not prove artifact payload bytes, hosting, validators, release-manifest approval, or CI enforcement. |
-| `data/registry/README.md` exists and treats registry rows as source/rights/sensitivity-aware internal governance records. | CONFIRMED registry-root posture | Source, rights, sensitivity, dataset, domain, crosswalk, and layer registry rows belong under `data/registry/`. | It does not prove final taxonomy, row inventories, validators, or release integration. |
-| `release/README.md` exists and treats `release/` as release-governance root. | CONFIRMED release-root posture | Release decisions, manifests, correction, rollback, withdrawal, supersession, signatures, and release-state records belong under `release/`. | It does not prove release workflow maturity or active release approval. |
-| `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` exists and states the proposed separation rule `receipt ≠ proof ≠ catalog ≠ publication`. | CONFIRMED ADR document presence; PROPOSED decision status | Supports family-separation language while keeping ADR acceptance bounded. | It does not prove ADR acceptance or validator enforcement. |
-| `docs/doctrine/directory-rules.md` exists and states that file location encodes ownership, governance, and lifecycle. | CONFIRMED placement doctrine | Root-level `catalog/` must remain a compatibility fence; catalog, triplet, receipt, proof, registry, release, and published records belong under their owning roots. | It does not prove live repo drift has been fully audited. |
-
-[Back to top](#top)
-
----
-
-## 1. Purpose
-
-`catalog/` is a **root-level compatibility redirect** for catalog-family path drift.
-
-It exists only to prevent accidental, legacy, generated, copied, or externally imported catalog-family material from becoming a parallel authority outside KFM's governed lifecycle, registry, proof, receipt, release, and publication roots.
-
-This folder should not be used for canonical:
-
-- STAC, DCAT, PROV, CatalogMatrix, domain catalog, layer catalog, source catalog, catalog index, catalog manifest, or discovery records;
-- triplet records, graph assertion sets, relationship projection exports, graph deltas, graph bundles, or claim-support graph material;
-- process receipts, catalog-build receipts, validation receipts, migration receipts, rollback receipts, release dry-run receipts, AI receipts, or telemetry receipts;
-- EvidenceBundles, ProofPacks, citation-validation bundles, catalog-closure proof, release-readiness proof, graph integrity proof, rollback proof, correction proof, or claim-support records;
-- release manifests, promotion decisions, rollback cards, correction notices, withdrawal notices, supersession records, signatures, release-state records, public-safe artifacts, reports, stories, tiles, PMTiles, API payload snapshots, public indexes, allowlists, caveat summaries, or digest sidecars;
-- source descriptors, dataset rows, domain rows, crosswalks, rights rows, sensitivity rows, layer registry rows, schemas, contracts, policy rules, producer code, generated previews, build outputs, or unpublished lifecycle data.
-
-This README does not prove that catalog drift currently exists here, that migration has been completed, that producer tools avoid this path, that public clients exclude this path, that catalog schemas are implemented, that CI blocks writes here, or that any ADR has finalized long-term retention of this compatibility root.
-
-[Back to top](#top)
-
----
-
-## 2. Canonical homes
-
-Catalog-stage records and discovery/interchange carriers belong under:
-
-```text
-data/catalog/
-```
-
-Graph-compatible relationship projections belong under:
-
-```text
-data/triplets/
-```
-
-Process-memory receipts belong under:
-
-```text
-data/receipts/
-```
-
-Proof support belongs under:
-
-```text
-data/proofs/
-```
-
-Source, dataset, rights, sensitivity, crosswalk, domain, and layer registry rows belong under:
-
-```text
-data/registry/
-```
-
-Release-governance material belongs under:
-
-```text
-release/
-```
-
-Released public-safe delivery artifacts belong under:
-
-```text
-data/published/
-```
-
-The root-level `catalog/` directory is a redirect/fence only.
-
-```text
-catalog/          # compatibility redirect only; do not add catalog-family records here
-data/catalog/     # catalog-stage lifecycle records
-data/triplets/    # graph-compatible relationship projections
-data/receipts/    # process-memory records
-data/proofs/      # proof-support records
-data/registry/    # source, dataset, rights, sensitivity, domain, crosswalk, and layer rows
-release/          # release, correction, rollback, withdrawal, supersession, and governance records
-data/published/   # released public-safe delivery artifacts
-```
-
-If a future ADR or migration changes catalog placement, this README should be updated to cite the accepted target, producer-configuration evidence, validation evidence, and any migration, correction, or rollback records.
-
-## 3. Authority boundary
-
-`catalog/` has **no canonical catalog authority**, **no STAC authority**, **no manifest authority**, **no index authority**, **no triplet authority**, **no proof authority**, **no receipt authority**, **no release authority**, **no publication authority**, and **no registry authority**. It may hold only redirect guidance, child redirect READMEs, migration notes, drift logs, or temporary markers while misplaced material is reviewed and moved into its proper owning root.
-
-```text
-WRONG / LEGACY ROOT        CATALOG / GRAPH HOMES         SUPPORT AND RELEASE HOMES
-catalog/              -->  data/catalog/             --> data/receipts/
-compatibility fence        data/triplets/                data/proofs/
-not authoritative          data/registry/                release/
-                                                        data/published/
-```
-
-A catalog record outside `data/catalog/` should be treated as catalog-family drift. A triplet outside `data/triplets/`, a receipt outside `data/receipts/`, a proof outside `data/proofs/`, a registry row outside `data/registry/`, a release record outside `release/`, or a public artifact outside `data/published/` should be treated as family drift until reviewed and migrated.
-
-## 4. Default posture
-
-Anything found under root-level `catalog/` should be treated as **NEEDS VERIFICATION** and potentially misplaced.
-
-Do not expose, publish, index, cite, search, cache, export, tile, host, or depend on root-level catalog files as canonical catalog, graph, proof, release, registry, or published artifact records. First confirm object family, source, provenance, rights, sensitivity, evidence resolution, schema validity, policy decision, lifecycle state, receipt support, proof support, catalog closure, release state, digest/sidecar integrity, rollback path, correction path, and whether the object is actually a catalog record, triplet projection, registry row, receipt, proof, release-governance record, published artifact, or unpublished candidate.
-
-## 5. Allowed contents
-
-| Allowed item | Example | Required posture |
-|---|---|---|
-| README / redirect docs | `README.md` | Compatibility fence only |
-| Child redirect README | `STAC/README.md`, `triplet/README.md`, `proof/README.md` | Child compatibility guidance only |
-| Migration note | `MIGRATION.md` | Temporary and ADR/review-linked |
-| Drift note | `DRIFT.md`, `OPEN-QUESTIONS.md` | Must point to canonical homes and review steps |
-| Placeholder marker | `.gitkeep` | Does not authorize catalog, graph, proof, receipt, release, policy, schema, or public-output content |
-
-## 6. Forbidden contents
-
-| Forbidden here | Correct home |
-|---|---|
-| STAC, DCAT, PROV, CatalogMatrix, catalog records, catalog indexes, source catalog records, layer catalog records, catalog manifests | `data/catalog/` or accepted child lanes under it |
-| Triplet records, graph assertion sets, relationship projection exports, graph deltas, graph snapshots, graph export packages, or bundle payloads | `data/triplets/` or an accepted sublane under it |
-| Source descriptors, source registry rows, dataset rows, domain rows, crosswalks, rights rows, sensitivity rows, layer rows | `data/registry/` or governed registry homes |
-| Receipts, catalog-build receipts, validation receipts, redaction/generalization receipts, AI receipts, release dry-run receipts, rollback receipts, migration receipts | `data/receipts/` |
-| EvidenceBundles, ProofPacks, attestations, citation-validation bundles, release-readiness proof, rollback proof, correction proof, claim-support records | `data/proofs/` |
-| ReleaseManifest, PromotionDecision, release decision, RollbackCard, CorrectionNotice, withdrawal, supersession, signature, release-state record | `release/` |
-| Released artifacts, public-safe catalog exports, reports, stories, downloads, API payload snapshots, public indexes, allowlists, caveat summaries, digest sidecars, tiles, PMTiles | `data/published/` after governed release |
-| Schemas and machine-shape contracts | `schemas/contracts/v1/` |
-| Human contracts and object-meaning docs | `contracts/` |
-| Policy rules and policy decisions | `policy/` and governed policy-decision homes |
-| Source code, scripts, packages, pipelines, build tools, producers, preview generators | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, unpublished candidate, or restricted lifecycle data | `data/` lifecycle subtrees |
-
-## 7. Directory shape
-
-Current implementation inventory remains `NEEDS VERIFICATION`.
-
-```text
-catalog/
-├── README.md                 # compatibility redirect / drift fence
-├── STAC/README.md            # child compatibility redirect / drift fence when present
-├── index/README.md           # child compatibility redirect / drift fence when present
-├── manifest/README.md        # child compatibility redirect / drift fence when present
-├── proof/README.md           # child compatibility redirect / drift fence when present
-├── publication/README.md     # child compatibility redirect / drift fence when present
-├── publish/README.md         # child compatibility redirect / drift fence when present
-├── release/README.md         # child compatibility redirect / drift fence when present
-├── triplet/README.md         # child compatibility redirect / drift fence when present
-├── MIGRATION.md              # PROPOSED only if migration is active
-└── DRIFT.md                  # PROPOSED only if misplaced catalog-family material is found
-```
+> A STAC item, DCAT record, PROV record, index, manifest, triplet, receipt, proof, release record, published artifact, generated bundle, signature, or AI summary does not gain authority by appearing under `catalog/`. Do not read, write, host, cite, cache, export, tile, or publish this root as a canonical source.
 
 > [!WARNING]
-> Do not treat this suggested shape as complete repo inventory. Verify actual contents before making inventory, producer, enforcement, catalog-schema, hosting, or migration claims.
+> **Directory Rules identity is unresolved.** [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) and [`docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) are distinct live files with the same document identity and different blob SHAs. Both preserve the canonical `data/catalog/` boundary and the top-level `catalog/` drift finding. This README records the conflict; it does not choose a third authority.
 
-## 8. Child redirect lanes
+> [!NOTE]
+> This documentation change does not migrate files, retire the root, activate a catalog builder, establish STAC/DCAT/PROV closure, alter a release state, or publish KFM material. A pull request, merge, green check, catalog filename, or signed staging object is not promotion.
 
-Child lanes under root-level `catalog/` are compatibility guidance only unless an accepted ADR or migration note says otherwise.
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Redirect inventory](#current-redirect-inventory) · [Diagram](#containment-and-canonical-routing) · [Migration](#migration-and-retirement-posture) · [Anti-bypass](#runtime-and-producer-anti-bypass) · [Safe change](#safe-change-pattern) · [Rollback](#correction-and-rollback) · [No-loss](#v02-to-v03-no-loss-ledger) · [Done](#definition-of-done) · [Open verification](#open-verification-register) · [Language](#safe-language-rules)
 
-| Child lane | Status | Canonical target | Boundary |
-|---|---|---|---|
-| `catalog/STAC/` | Compatibility redirect path when present | `data/catalog/stac/` or accepted catalog STAC lane under `data/catalog/` | Must not store canonical STAC records, producer output, release approval, receipts, proofs, or public artifacts. |
-| `catalog/index/` | Compatibility redirect path when present | `data/catalog/` or accepted index lane under `data/catalog/` | Must not store canonical indexes or public discovery authority. |
-| `catalog/manifest/` | Compatibility redirect path when present | `data/catalog/` for catalog manifests; `release/` for release manifests | Must not collapse catalog manifests with release governance. |
-| `catalog/proof/` | Compatibility redirect path when present | `data/proofs/` | Must not store EvidenceBundles, ProofPacks, proof packs, receipts, catalog records, release decisions, or public artifacts. |
-| `catalog/publication/` | Compatibility redirect path when present | `data/published/` and `release/` | Must not store public artifacts or release decisions. |
-| `catalog/publish/` | Compatibility redirect path when present | `data/published/` and `release/` | Must not become producer target, hosting path, or release/publication authority. |
-| `catalog/release/` | Compatibility redirect path when present | `release/` | Must not store ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, or release state. |
-| `catalog/triplet/` | Compatibility redirect path when present | `data/triplets/` | Must not store graph projections, triplets, graph bundles, receipts, proofs, catalog records, release records, or public graph exports. |
+---
 
-A child redirect README may be updated in a separate PR before this parent is merged. Treat that as branch evidence only. Do not claim child v0.2 content is merged into `main` unless the target ref is verified.
+<a id="1-purpose"></a>
 
-## 9. Minimum safe redirect slice
+## Purpose
 
-A smallest safe `catalog/` state should prove only that the folder prevents drift; it should not contain trust-bearing catalog, graph, release, or public-delivery material.
+`catalog/` exists only to **contain and redirect root-level catalog-family drift** until the repository completes a governed disposition.
 
-| Slice item | Minimum requirement | Why it matters |
+It answers four narrow questions:
+
+1. Which object family has been found or proposed under this root?
+2. Which canonical responsibility or lifecycle root owns that family?
+3. What review, migration, correction, and rollback evidence is required before moving or deleting it?
+4. How do maintainers prevent producers and consumers from recreating or depending on the drift path?
+
+This root must not become a convenient umbrella for discovery metadata, graph projections, proof, release, or public delivery. Its long-term purpose is temporary: preserve path visibility, stop authority from hardening here, support reversible migration, and retire the root after an accepted decision and verification window.
+
+A file does not belong here merely because it contains the word “catalog.” Responsibility and lifecycle decide placement.
+
+[Back to top](#top)
+
+---
+
+<a id="3-authority-boundary"></a>
+
+## Authority level
+
+**CONFIRMED root-level path / CONFLICTED placement / PROPOSED transitional containment fence / non-authoritative.**
+
+`catalog/` is not in the canonical root tree. Directory Rules name it as severe parallel-authority drift and require its contents to be separated by object family into the canonical `data/`, `release/`, governance, and implementation roots. This README may describe that boundary; it cannot legitimize the root or accept the disposition ADR.
+
+| Concern | Authority owner | `catalog/` role |
 |---|---|---|
-| Redirect README | Points to `data/catalog/` for catalog records | Prevents parallel catalog authority |
-| Canonical-home map | Names `data/triplets/`, `data/receipts/`, `data/proofs/`, `data/registry/`, `release/`, and `data/published/` | Prevents family collapse |
-| No catalog records | No STAC, DCAT, PROV, CatalogMatrix, source descriptor, catalog manifest, or catalog index files | Preserves catalog lifecycle root |
-| No triplet records | No graph export packages, graph deltas, relationship projection bundles, triplet records, or graph snapshots | Preserves triplet lifecycle root |
-| No registry records | No source, dataset, rights, sensitivity, crosswalk, domain, or layer rows | Preserves registry root |
-| No receipt records | No CatalogBuildReceipt, RunReceipt, ValidationReceipt, AIReceipt, migration receipt, release dry-run receipt, rollback receipt, or redaction receipt | Preserves receipt/process-memory root |
-| No proof records | No EvidenceBundle, ProofPack, release attestation, citation validation, rollback proof, correction proof, or claim-support files | Preserves proof-support root |
-| No release/public artifacts | No ReleaseManifest, release decision, RollbackCard, published catalog export, public index, PMTiles, report, story, API snapshot, or digest | Preserves release and published roots |
-| Child-lane guard | Child folders remain compatibility-only | Prevents nested drift from hardening into authority |
-| Drift procedure | Explains how to inspect and migrate misplaced records | Keeps remediation reversible |
-| Producer guard | Producers, generators, scripts, and CI should not write durable catalog-family material here | Prevents reintroducing drift |
-| Public-use guard | Public clients, search services, map runtimes, exports, static hosting, and indexes must not read from this path as canonical | Preserves governed access path |
-| Verification backlog | Open items stay visible | Prevents documentation from pretending migration/enforcement is complete |
+| Catalog-stage records and indexes | [`data/catalog/`](../data/catalog/README.md) | Redirect only. |
+| Graph-compatible relationship projections | [`data/triplets/`](../data/triplets/README.md) | Redirect only; triplets remain derived projections. |
+| Process-memory receipts | [`data/receipts/`](../data/receipts/README.md) | Redirect only; a receipt is not proof or release. |
+| Evidence and proof support | [`data/proofs/`](../data/proofs/README.md) | Redirect only; proof support is not public truth by placement. |
+| Sources, datasets, rights, sensitivity, domains, crosswalks, layers | [`data/registry/`](../data/registry/README.md) | Redirect only; registry rows are governance records. |
+| Release decisions, manifests, corrections, withdrawals, signatures, rollback | [`release/`](../release/README.md) | Redirect only; release governance is not publication. |
+| Released public-safe delivery artifacts | [`data/published/`](../data/published/README.md) | Redirect only; released artifacts are downstream carriers. |
+| Semantic meaning | `contracts/` | No semantic contract authority here. |
+| Machine shape | `schemas/` | No schema authority here. |
+| Admissibility | `policy/` | No policy authority here. |
+| Builders, validators, pipelines, applications | `tools/`, `pipelines/`, `packages/`, `apps/` | No implementation or producer code here. |
+| Human placement doctrine and decisions | `docs/`, accepted ADRs | This README remains subordinate. |
 
-## 10. Migration posture
+A structural retirement, mirror window, or authority change must follow Directory Rules migration discipline. This document is not the required ADR.
 
-If catalog-family files are found here:
+[Back to top](#top)
 
-1. Do not publish, cite, index, search, cache, export, tile, host, or depend on them.
-2. Identify whether they are catalog records, STAC/DCAT/PROV records, CatalogMatrix records, indexes, manifests, source descriptors, registry rows, triplets, graph exports, receipts, proof support, release records, published-output material, schemas, policy records, unpublished lifecycle material, generated previews, temporary build artifacts, or producer outputs.
-3. Determine whether the file is historical drift, generated drift, copied output, unreviewed local work, or an intentional migration marker.
-4. Move catalog records into `data/catalog/`.
-5. Move triplet and graph-projection records into `data/triplets/` or an accepted sublane under it.
-6. Move source, dataset, rights, sensitivity, crosswalk, domain, and layer rows into `data/registry/`.
-7. Move receipts into `data/receipts/`.
-8. Move proof support into `data/proofs/`.
-9. Move release-governance records into `release/`.
-10. Move or regenerate released public-safe artifacts into `data/published/` only after governed release approval and required sidecar/digest/citation/caveat support.
-11. Move schemas, contracts, policy rules, code, and producer outputs into their owning roots.
-12. Preserve provenance, source refs, digests, catalog-build receipts, proof refs, catalog refs, review notes, producer identity, release refs, correction refs, and rollback path.
-13. Add a drift register, migration note, or correction note if the misplaced material was previously consumed.
-14. Add or update validation checks so producers do not recreate root-level catalog drift.
-15. Leave `catalog/` as a redirect/fence unless an accepted ADR explicitly changes the authority model.
+---
 
-## 11. Runtime and producer anti-bypass matrix
+<a id="0-evidence-basis-for-this-revision"></a>
+<a id="4-default-posture"></a>
 
-| Bypass risk | Required behavior | Review signal |
+## Status
+
+### Evidence basis and current bounded result
+
+| Surface | Current evidence at `main@005aa64f6d42…` | Safe conclusion |
 |---|---|---|
-| Producer writes catalog records to `catalog/` | Fail review/CI; write to `data/catalog/` instead | Producer config and output paths checked |
-| Producer writes triplet/graph records here | Fail review/CI; write to `data/triplets/` instead | Graph/triplet path check passes |
-| Producer writes registry rows here | Fail review/CI; write to `data/registry/` instead | Registry path check passes |
-| Producer writes receipts here | Fail review/CI; write to `data/receipts/` instead | Receipt path check passes |
-| Producer writes proofs here | Fail review/CI; write to `data/proofs/` instead | Proof path check passes |
-| Producer writes release records here | Fail review/CI; write to `release/` instead | Release path check passes |
-| Producer writes public catalog exports here | Fail review/CI; write to `data/published/` only after release | Published path and release-state checks pass |
-| Public client reads root-level catalog path | Deny; route through governed API/release/public-safe path | Client/search/index/hosting config excludes this path |
-| Root-level catalog file is treated as canonical truth | Mark as drift; resolve evidence/proof/catalog/release support before use | Migration note references canonical target |
-| Claim-bearing catalog entry lacks EvidenceBundle support | Hold, restrict, or abstain; do not cite root-level catalog material as evidence | EvidenceRef/proof validation passes |
-| Sensitive location or relationship join appears here | Deny, quarantine, redact, generalize, aggregate, or remove | Sensitivity/publication review passes |
-| AI-generated catalog summary appears here | Treat as candidate or generated carrier only; route to work/quarantine/review lanes | AI boundary and evidence-review checks pass |
-| Schema/profile file stored here | Move to `schemas/` or standards docs as appropriate | Schema-home review passes |
-| Policy rule stored here | Move to `policy/` | Policy-root review passes |
-| Search/cache/export/tile/static-hosting pipeline consumes this path | Deny as canonical; switch to governed catalog/release/published source | Producer and client config reviewed |
-| Drift file already consumed downstream | Add correction/migration note and rollback path | Correction path is auditable |
-| README claims CI enforcement without run/check evidence | Mark enforcement `NEEDS VERIFICATION` | Current CI evidence cited before pass claims |
+| Parent target | `catalog/README.md`, prior blob `0ef249eaf2840a787fb1760354b94e311c2d5c8d` | Existing same-path v0.3 modernization; not a new root proposal. |
+| Directory Rules | Doctrine copy explicitly identifies top-level `catalog/` as severe parallel-authority drift; architecture copy carries the same placement system while recording a duplicate identity | Root presence is `CONFLICTED`; containment does not confer canonicality. |
+| Descendant redirect documentation | 9 direct child READMEs and 4 nested READMEs were fetched successfully | **13 exact redirect README paths are CONFIRMED.** Complete non-README payload inventory is not established. |
+| Canonical data/release counterparts | Root READMEs exist for `data/`, catalog, triplets, receipts, proofs, registry, published artifacts, and release governance | Responsibility routing is repository-grounded; payload, schema, validator, and operational maturity remain separate questions. |
+| Catalog Make target | `make catalog` prints a `TODO` message | It is a readiness marker, not an executable builder or validation result. |
+| Catalog tooling | `tools/catalog_builders/README.md` documents proposed helper families | Executable inventory, CLI, fixtures, receipts, and CI remain `NEEDS VERIFICATION`. |
+| Shared catalog pipeline | `pipelines/catalog/README.md` is repository-grounded but documents no verified shared executable, catalog specs, dedicated tests, or dedicated workflow | Catalog-closure execution is not established. |
+| Workflow surface | Workflow index inventories 41 workflows but no dedicated catalog-builder or catalog-closure workflow | General checks must not be cited as catalog migration or closure enforcement. |
+| ADR posture | ADR-0011 and ADR-0022 are indexed with effective status `proposed`; all 28 numbered ADRs are effectively proposed in the inspected index | No accepted ADR was verified that retains, retires, or legitimizes root-level `catalog/`. |
+| Drift register | The current register contains no explicit top-level catalog entry in its inspected contents | Directory Rules records the drift; a dedicated drift-register entry remains `NEEDS VERIFICATION`. |
+| CODEOWNERS | Repository catch-all routes review to `@bartytime4life`; no `/catalog/` rule exists | GitHub review routing exists; stewardship, required review, and independent approval do not. |
+| Producers and consumers | No complete search of workflow output paths, runtime reads, hosting, ignored files, or external integrations was performed | Producer/public-client exclusion remains `UNKNOWN / NEEDS VERIFICATION`. |
 
-## 12. Diagram
+### Status split
 
-```mermaid
-flowchart TD
-    wrong["catalog/\nroot-level redirect"] --> review["review for catalog / graph / registry / receipt / proof / release / publication drift"]
-    review --> classify["classify object family"]
-    classify --> catalogData["data/catalog/\ncatalog-stage records"]
-    classify --> triplets["data/triplets/\ngraph-compatible projections"]
-    classify --> registry["data/registry/\nsource / dataset / rights / sensitivity rows"]
-    classify --> receipts["data/receipts/\nprocess memory"]
-    classify --> proofs["data/proofs/\nEvidenceBundle / ProofPack support"]
-    classify --> release["release/\nrelease / correction / rollback governance"]
-    classify --> published["data/published/\nreleased public-safe delivery artifacts"]
-    wrong --> stac["catalog/STAC/\nchild redirect only"]
-    wrong --> proof["catalog/proof/\nchild redirect only"]
-    wrong --> publish["catalog/publish/\nchild redirect only"]
-    wrong --> triplet["catalog/triplet/\nchild redirect only"]
-    stac -. "must not be catalog authority" .-> catalogData
-    proof -. "must not be proof authority" .-> proofs
-    publish -. "must not be publication authority" .-> published
-    triplet -. "must not be graph truth" .-> triplets
-    catalogData --> release
-    triplets --> catalogData
-    registry --> catalogData
-    receipts --> release
-    proofs --> release
-    release --> published
-    wrong -. "must not be public/canonical" .-> published
-```
+| Label | Applies to |
+|---|---|
+| **CONFIRMED** | Target path, prior blob, Directory Rules anti-pattern, 13 descendant redirect READMEs, counterpart root READMEs, TODO Make target, workflow inventory, CODEOWNERS route, and proposed ADR states. |
+| **CONFLICTED** | Top-level root presence versus canonical `data/catalog/` placement; duplicate Directory Rules identities. |
+| **PROPOSED** | Transitional containment classification, migration sequence, retirement criteria, and validation model. |
+| **UNKNOWN** | Complete recursive payload inventory, ignored/generated material, historical producers, runtime consumers, hosting, external mirrors, and current operational effects. |
+| **NEEDS VERIFICATION** | Accepted disposition ADR, drift entry, allowlist validator, CI enforcement, migration closure, owners, branch controls, and independent review. |
 
-## 13. Inspection path
+Default posture: treat every non-README object under `catalog/` as untrusted and potentially misplaced until its family, provenance, rights, sensitivity, lifecycle state, evidence support, policy posture, release state, correction lineage, and rollback target are verified.
 
-Actual root-level contents, child folder contents, producers, workflow writes, migration status, catalog schema maturity, STAC/profile maturity, graph-export maturity, hosting readiness, CI/review enforcement, public-client/index exclusion, and current ADR disposition remain `NEEDS VERIFICATION`.
+[Back to top](#top)
+
+---
+
+<a id="5-allowed-contents"></a>
+<a id="9-minimum-safe-redirect-slice"></a>
+
+## What belongs here
+
+Only containment and migration support belongs here.
+
+| Allowed item | Purpose | Required posture |
+|---|---|---|
+| Root redirect README | States the drift classification and canonical family routes | Must not claim the root is canonical, retained, or migration-complete. |
+| Child redirect README | Preserves a visible legacy path while pointing to the canonical family | Documentation only; no payload authority. |
+| Reviewed migration map | Records old → new path mappings and affected consumers | ADR/migration-linked, versioned, reversible, and temporary. |
+| Drift or verification note | Records discovered misplaced material, producer, consumer, or unresolved disposition | Must cite evidence and avoid exposing restricted contents. |
+| Deprecation marker or redirect metadata | Supports a bounded compatibility window | Must identify canonical target, sunset condition, and rollback. |
+| Empty placeholder marker | Keeps a path visible during migration when repository tooling requires it | Does not authorize payloads or new writes. |
+
+### Minimum safe containment slice
+
+A minimally acceptable root contains only:
+
+- this README;
+- verified child redirect READMEs;
+- an ADR-linked migration/deprecation record when migration is active;
+- no catalog, graph, registry, receipt, proof, release, published, schema, policy, source, code, build, or lifecycle payload;
+- no producer target and no public or internal runtime dependency;
+- a complete verification and rollback path.
+
+Anything beyond that slice is not admitted by this README.
+
+[Back to top](#top)
+
+---
+
+<a id="6-forbidden-contents"></a>
+
+## What does NOT belong here
+
+| Forbidden here | Correct home or action |
+|---|---|
+| STAC, DCAT, PROV, CatalogMatrix discovery records, catalog records, domain catalogs, indexes, catalog manifests, quality records | [`data/catalog/`](../data/catalog/README.md) or an accepted catalog sublane |
+| Triplets, graph assertion sets, graph deltas, relationship projections, graph snapshots, graph exports, graph bundles | [`data/triplets/`](../data/triplets/README.md) |
+| SourceDescriptor, dataset, domain, crosswalk, rights, sensitivity, or layer registry rows | [`data/registry/`](../data/registry/README.md) |
+| RunReceipt, CatalogBuildReceipt, validation, transform, AI, migration, correction, rollback, or release-support receipts | [`data/receipts/`](../data/receipts/README.md) |
+| EvidenceBundle, ProofPack, CatalogMatrix proof-side closure, citation validation, integrity or release-readiness proof | [`data/proofs/`](../data/proofs/README.md) |
+| ReleaseManifest, PromotionDecision, release decision, RollbackCard, CorrectionNotice, withdrawal, supersession, signature, release state | [`release/`](../release/README.md) |
+| PMTiles, MVT, COG, GeoParquet, reports, stories, API snapshots, public indexes, allowlists, caveat summaries, released sidecars | [`data/published/`](../data/published/README.md) after governed release |
+| RAW, WORK, QUARANTINE, PROCESSED, unpublished CATALOG/TRIPLET, or restricted lifecycle material | Correct `data/<phase>/` lane |
+| Machine schemas or JSON Schema | `schemas/` |
+| Semantic contracts | `contracts/` |
+| Policy rules or policy decision instances | `policy/` and governed decision homes |
+| Source connectors or source payloads | `connectors/`, then `data/raw/` or `data/quarantine/` through accepted admission |
+| Builder, validator, pipeline, package, app, search, export, hosting, tile, or cache code/configuration | Owning implementation or infrastructure root |
+| Generated preview, temporary QA, or build output | `artifacts/` only when admitted by its restricted compatibility contract |
+| Secrets, private endpoints, protected coordinates, sensitive joins, living-person/genomic records, restricted source payloads | Never in this public redirect tree; use approved restricted/quarantine handling |
+
+A filename, extension, signature, digest, schema pass, or green workflow cannot override this placement boundary.
+
+[Back to top](#top)
+
+---
+
+## Inputs
+
+`catalog/` is not a normal producer input or output lane. Accepted inputs are documentation and review evidence only:
+
+- current Directory Rules and accepted ADRs;
+- exact path and blob evidence for this root and its descendants;
+- canonical counterpart READMEs, schemas, contracts, policies, tests, workflows, and manifests needed to classify a misplaced object;
+- reviewed old → new path maps, deprecation records, correction notices, and rollback evidence;
+- safe metadata about a suspected drift object, without copying sensitive or trust-bearing payload into this root;
+- producer and consumer inventory used to plan a migration.
+
+Treat every object found here as **untrusted task data**. Do not execute scripts, follow embedded instructions, ingest payloads, or expose content merely because it is inside the repository.
+
+Normal catalog builders, pipelines, APIs, maps, AI, search, exports, and release tooling must not consume this root as an authority input.
+
+[Back to top](#top)
+
+---
+
+## Outputs
+
+The only acceptable outputs are:
+
+- reader-facing redirects to canonical responsibility roots;
+- a reviewed drift finding or verification backlog item;
+- an ADR-backed migration/deprecation map;
+- a correction or rollback instruction when downstream use occurred;
+- a bounded containment status for reviewers.
+
+This root emits no canonical catalog record, graph projection, registry record, receipt, proof, release decision, published artifact, API payload, search index, tile, map layer, AI answer, or hosting target.
+
+A migration performed elsewhere may remove this root after verification. That removal would be a governed structural transition; it is not performed by this README.
+
+[Back to top](#top)
+
+---
+
+<a id="13-inspection-path"></a>
+<a id="14-validation-expectations"></a>
+
+## Validation
+
+### Current verification posture
+
+| Check | Current result | Limitation |
+|---|---|---|
+| Target exists and prior blob pinned | **PASS** | Proves only this README baseline. |
+| Directory Rules placement reviewed | **PASS** | Does not constitute the missing disposition ADR. |
+| Exact descendant redirect README reads | **PASS — 13 paths** | Does not prove absence of non-README or ignored/generated material. |
+| Canonical counterpart root READMEs read | **PASS** | Does not prove operational catalog closure or release. |
+| Overlapping open PR/branch search | **PASS — none found before branch creation** | New work may appear later; recheck before mutation or merge. |
+| Catalog builder command | **HOLD / TODO** | `make catalog` is intentionally non-enforcing. |
+| Dedicated catalog closure workflow | **NOT ESTABLISHED** | General workflows do not prove catalog closure. |
+| Root allowlist or prohibited-payload validator | **NEEDS VERIFICATION** | No repository-owned executable root allowlist was verified. |
+| Producer and public-client exclusion | **NEEDS VERIFICATION** | Requires code/config/workflow/runtime inventory. |
+| Migration or retirement closure | **NOT PERFORMED** | Requires accepted ADR and reviewed migration. |
+| Current tests and workflow runs | **NOT RUN by this documentation authoring step** | Pull-request checks own their exact conclusions. |
+
+### Repository inspection commands
+
+Run in a trusted checkout and review results rather than treating grep as a verdict:
 
 ```bash
-find catalog -maxdepth 8 -type f | sort
-find data/catalog data/triplets data/receipts data/proofs data/published data/registry release schemas contracts policy docs tools scripts pipelines pipeline_specs .github/workflows -maxdepth 8 -type f 2>/dev/null | grep -Ei 'catalog|stac|dcat|prov|manifest|index|triplet|triple|graph|relationship|bundle|export|delta|registry|source|dataset|rights|sensitivity|receipt|proof|EvidenceBundle|ProofPack|ReleaseManifest|PromotionDecision|RollbackCard|CorrectionNotice|schema|policy|validator|workflow|migration|drift|published|api|search|host' | sort
+find catalog -type f -print | sort
+find catalog -type f ! -name README.md ! -name .gitkeep -print | sort
+
+git grep -nE '(^|[^[:alnum:]_])catalog/' -- . ':!catalog/**' ':!docs/**' ':!data/receipts/generated/**' || true
+
+git grep -nE 'catalog/(STAC|domain|index|manifest|proof|publication|publish|release|triplet)' --   . ':!catalog/**' ':!docs/**' ':!data/receipts/generated/**' || true
 ```
 
-## 14. Validation expectations
+Advisory `|| true` keeps discovery from terminating on zero matches; it must not mask a governing validator once one exists.
 
-Useful validation for this folder should cover:
+### Required future validation
 
-- no catalog records, STAC, DCAT, PROV, CatalogMatrix records, catalog manifests, catalog indexes, or source descriptors are stored here;
-- no triplet records, graph assertion sets, graph deltas, graph snapshots, relationship projections, graph export packages, or bundle payloads are stored here;
-- no registry rows, receipts, proofs, policy rules, schemas, source code, pipelines, tools, producer outputs, release records, public artifacts, or unpublished lifecycle data are stored here;
-- any non-README content is tied to an active migration, drift note, or placeholder marker;
-- child redirect lanes do not store canonical catalog, triplet, receipt, proof, release, publication, schema, policy, registry, or public-output records;
-- producer tools, scripts, generated outputs, workflows, indexes, search services, public clients, exports, tile jobs, static hosting, map runtimes, story/focus/evidence surfaces, and caches do not target `catalog/` as canonical;
-- links point users to `data/catalog/`, `data/triplets/`, `data/receipts/`, `data/proofs/`, `data/registry/`, `release/`, `data/published/`, and other owning roots;
-- CI or review checks flag root-level `catalog/` writes when enforcement exists;
-- CI/pass/enforcement state is not claimed without current evidence.
+- exact recursive tracked-tree classification by object family;
+- ignored and generated output review where operationally relevant;
+- inbound-link, import, workflow, producer, hosting, cache, search, export, map, API, and AI consumer inventory;
+- no-payload allowlist validator for root-level `catalog/`;
+- negative fixtures for STAC, catalog, triplet, receipt, proof, release, schema, policy, and published objects placed here;
+- migration-map completeness and digest continuity;
+- canonical-target validation and old/new consumer parity during a mirror window;
+- correction and rollback drill;
+- zero-consumer and zero-producer confirmation before retirement;
+- branch-protection and required-check verification.
 
-## 15. Safe change pattern
+### Reviewer quick check
 
-For changes under `catalog/`:
+- [ ] Is every changed file under `catalog/` documentation, migration metadata, or a reviewed marker?
+- [ ] Does the change avoid creating or strengthening parallel authority?
+- [ ] Are canonical family homes linked precisely?
+- [ ] Are unknown payloads quarantined from use rather than normalized by assumption?
+- [ ] Is any move or retirement backed by ADR, migration, correction, and rollback evidence?
+- [ ] Are producer and consumer claims supported by current code/config/run evidence?
+- [ ] Does the README retain the Directory Rules §15 heading order and legacy anchors?
+- [ ] Are all maturity, CI, release, and publication statements bounded?
 
-1. Confirm the change is redirect documentation, migration support, drift documentation, or a non-authoritative placeholder only.
-2. Confirm it does not create a parallel catalog, graph, registry, receipt, proof, release, publication, schema, policy, or public-hosting authority.
-3. Confirm durable catalog records are placed under `data/catalog/`.
-4. Confirm triplet projections remain under `data/triplets/`.
-5. Confirm registry rows remain under `data/registry/`.
-6. Confirm receipts remain under `data/receipts/`.
-7. Confirm proof support remains under `data/proofs/`.
-8. Confirm release-governance records remain under `release/`.
-9. Confirm released public-safe artifacts are placed under `data/published/` only after governed release approval.
-10. Confirm no public client, search index, map runtime, graph runtime, export job, tile job, story/focus/evidence surface, static host, publication producer, release producer, or cache reads this path as canonical.
-11. Document migration, correction, and rollback if any misplaced material was moved or previously consumed.
-12. Update docs and validation rules when behavior materially changes.
+[Back to top](#top)
 
-## 16. Rollback and correction posture
+---
 
-If material was added here by mistake, rollback should be small and auditable:
+## Review burden
 
-- remove or revert the misplaced file from `catalog/`;
-- move catalog records into `data/catalog/` through the appropriate catalog-build/review path;
-- move triplet projections into `data/triplets/`;
-- move registry rows, receipts, proofs, release records, published artifacts, schemas, contracts, policy rules, code, and producer material into their owning roots;
-- preserve digest/provenance notes for anything already referenced;
-- add a correction note if public, semi-public, generated downstream, search, export, cache, release, map, story, report, API, AI, or catalog artifacts consumed the misplaced path;
-- update producer configuration and tests so the drift is not recreated.
+### Current GitHub routing
 
-## 17. Definition of done
+[`.github/CODEOWNERS`](../.github/CODEOWNERS) routes the repository catch-all to `@bartytime4life`. No catalog-specific route was verified. This establishes a GitHub review destination only; it does not establish stewardship, required code-owner review, independent approval, an accepted ADR, or release authority.
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual root-level `catalog/` contents are verified.
-- [ ] Actual child folder contents are verified.
-- [ ] Any misplaced catalog, triplet, registry, receipt, proof, release, publication, schema, policy, code, generated, or lifecycle material is migrated or documented as drift.
-- [ ] `data/catalog/` is confirmed as the canonical catalog home in current docs.
-- [ ] `data/triplets/`, `data/receipts/`, `data/proofs/`, `data/registry/`, `release/`, and `data/published/` are confirmed as the related-family homes before cross-family claims are made.
-- [ ] No trust-bearing records live here.
-- [ ] No catalog records, triplet records, registry rows, receipts, proofs, release records, published artifacts, schemas, contracts, policy rules, source code, producer outputs, or lifecycle data live here.
-- [ ] Public clients, producers, caches, search, tiles, exports, static hosting, story/focus/evidence surfaces, and AI surfaces exclude root-level `catalog/` as canonical.
-- [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
-- [ ] Any accepted ADR or migration note affecting root-level catalog placement is cited.
+### Minimum review by change class
 
-## 18. Open verification items
-
-| Item | Why it matters |
+| Change class | Minimum review burden |
 |---|---|
-| Confirm actual files under root-level `catalog/` | Prevents overclaiming or missing drift |
-| Confirm actual files under child redirect lanes | Ensures nested drift has not hardened into authority |
-| Confirm whether any workflow writes here | Required before producer claims |
-| Confirm catalog/STAC/DCAT/PROV schema maturity | Required before implementation claims |
-| Confirm migration status to `data/catalog/` and related roots | Required before canonical-home claims beyond doctrine |
-| Confirm CI/review guard exists | Required before enforcement claims |
-| Confirm public clients, search, exports, hosting, map runtime, and AI surfaces exclude this path | Required before trust-membrane claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm ADR status for root-level `catalog/` and child redirect lanes | Required before long-term retention claims |
+| README clarification at an existing redirect path | Docs reviewer + catalog/data reviewer |
+| New redirect child or changed canonical target | Docs + architecture + data/catalog + affected family steward |
+| Discovery of trust-bearing or sensitive payload | Owning family steward + policy/sensitivity/security reviewer + correction/rollback reviewer |
+| Producer or consumer path change | Owning implementation reviewer + catalog/data + tests/validation + security where exposed |
+| Migration, mirror window, or deprecation | Architecture + docs + every affected family owner + operations/CI + correction/rollback |
+| Root retirement | Accepted ADR review, architecture/docs/data/release sign-off, consumer-owner sign-off, and independently verified rollback |
 
-<details>
-<summary>Appendix A — no-loss preservation note</summary>
+An author must not be the sole approver for a structural change that can affect evidence, rights, sensitivity, lifecycle placement, release, correction, rollback, or public exposure.
 
-The previous README established `catalog/` as a compatibility redirect and anti-parallel-authority fence. This update preserves that posture and expands it into a parent redirect map for observed child redirect lanes, without claiming inventory, migration, enforcement, producer behavior, schema maturity, hosting readiness, or ADR disposition.
+[Back to top](#top)
 
-</details>
+---
 
-## 19. Safe language rules
+<a id="2-canonical-homes"></a>
 
-Use language like:
+## Related folders
 
-- "root-level `catalog/` is a compatibility redirect";
-- "canonical catalog records belong under `data/catalog/`";
-- "related families must remain separate";
-- "child lanes are redirect guidance unless accepted by ADR/migration evidence";
-- "migration/enforcement remains `NEEDS VERIFICATION` unless checked."
+### Canonical family routing
 
-Avoid language like:
+| Family | Canonical home | Boundary |
+|---|---|---|
+| Catalog and discovery projections | [`data/catalog/`](../data/catalog/README.md) | CATALOG-stage records; not proof or release approval. |
+| Relationship and graph projections | [`data/triplets/`](../data/triplets/README.md) | Derived projections; not canonical truth. |
+| Receipts | [`data/receipts/`](../data/receipts/README.md) | Process memory; not proof. |
+| Proof support | [`data/proofs/`](../data/proofs/README.md) | Evidence and closure support; not release authority. |
+| Registry records | [`data/registry/`](../data/registry/README.md) | Governance handles; not source payloads or release. |
+| Released public-safe artifacts | [`data/published/`](../data/published/README.md) | Downstream carriers after governed release. |
+| Release governance | [`release/`](../release/README.md) | Decisions, manifests, corrections, withdrawal, signatures, rollback. |
+| Catalog builders | [`tools/catalog_builders/`](../tools/catalog_builders/README.md) | Proposed/reviewed builder helpers; not catalog data or release. |
+| Catalog execution | [`pipelines/catalog/`](../pipelines/catalog/README.md) | Candidate-building orchestration; no verified shared executable. |
+| Placement doctrine | [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) and the conflicted [`docs/architecture/` copy](../docs/architecture/directory-rules.md) | Governs placement; duplicate identity remains unresolved. |
+| Decisions and drift | [`docs/adr/INDEX.md`](../docs/adr/INDEX.md), [`DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) | Decision status and operational drift tracking. |
 
-- "catalog records live here";
-- "this folder is the catalog authority";
-- "STAC/DCAT/PROV is approved by being in `catalog/`";
-- "release/publication/proof/receipt is complete";
-- "CI blocks drift" without current CI evidence;
-- "public clients can read this path";
-- "AI can cite this folder as evidence."
+### Lifecycle relationship
+
+```text
+PROCESSED
+   |
+   +--> data/catalog/   ----+
+   |                         |
+   +--> data/triplets/ ------+--> release review --> data/published/
+                              |
+                    receipts + proofs + policy + accountable review
+
+catalog/  --x--> no canonical write, read, release, host, or publication path
+```
+
+[Back to top](#top)
+
+---
+
+## ADRs
+
+| Record | Current status | Consequence for this root |
+|---|---|---|
+| [Directory Rules — top-level `catalog/` anti-pattern](../docs/doctrine/directory-rules.md#13-anti-patterns-and-drift-prevention) | Doctrine records severe drift and OPEN-DR-09-class resolution | Root-level presence must not evolve as authority; migration and retirement require governed resolution. |
+| [ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation](../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | `proposed` | Supports family separation for review; does not yet supply accepted decision authority. |
+| [ADR-0022 — Catalog Matrix agreement](../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | `proposed` | Proposed catalog-closure semantics do not legitimize this root or prove runtime agreement. |
+| [ADR index](../docs/adr/INDEX.md) | All 28 numbered records effectively `proposed` in the inspected index | No accepted root-disposition or family-separation decision was verified. |
+| Root-level `catalog/` disposition ADR | **NEEDS VERIFICATION / not identified as accepted** | Must decide retirement, migration, mirror window, deprecation, rollback, and consumer transition. |
+
+This README does not accept, supersede, or implement an ADR.
+
+[Back to top](#top)
+
+---
+
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Last reviewed | 2026-07-23 |
+| Authoring evidence base | `main@005aa64f6d42aa5961646e733289a2b857292357` |
+| Prior target blob | `0ef249eaf2840a787fb1760354b94e311c2d5c8d` |
+| Review type | Repository-grounded same-path Markdown modernization |
+| Changed behavior | None — documentation and generated provenance only |
+| Root disposition | OPEN / ADR-backed migration and retirement required |
+| Rollback | Restore the prior blob and remove the generated receipt, or revert the scoped commits transparently |
+
+Re-review when:
+
+- any file is added below root-level `catalog/`;
+- a producer, workflow, runtime, public client, search, export, map, AI, cache, or host references this root;
+- a catalog, triplet, receipt, proof, registry, release, published, schema, policy, or source object is discovered here;
+- a root-disposition ADR is accepted, rejected, or superseded;
+- a migration/deprecation record is created or closed;
+- Directory Rules identity or placement changes;
+- `make catalog` becomes executable;
+- catalog-specific validation or CI is added;
+- six months pass without review.
+
+[Back to top](#top)
+
+---
+
+<a id="7-directory-shape"></a>
+<a id="8-child-redirect-lanes"></a>
+
+## Current redirect inventory
+
+The exact README paths below were fetched from `main` during this task. Their presence proves documentation surfaces only. It does not prove that each directory contains no additional payload, that a canonical counterpart is complete, or that migration and enforcement are active.
+
+| Redirect path | Verified role in its README | Canonical destination or bounded target |
+|---|---|---|
+| [`STAC/README.md`](STAC/README.md) | Uppercase STAC redirect | `data/catalog/stac/` |
+| [`domain/README.md`](domain/README.md) | Domain-catalog redirect | `data/catalog/domain/` |
+| [`index/README.md`](index/README.md) | Catalog-index redirect | `data/catalog/`; dedicated sublane `NEEDS VERIFICATION` |
+| [`manifest/README.md`](manifest/README.md) | Catalog-manifest redirect | `data/catalog/`; ReleaseManifest remains under `release/` |
+| [`proof/README.md`](proof/README.md) | Proof redirect | `data/proofs/` |
+| [`publication/README.md`](publication/README.md) | Publication redirect | `data/published/` + `release/` |
+| [`publish/README.md`](publish/README.md) | Publish redirect | `data/published/` + `release/` |
+| [`release/README.md`](release/README.md) | Release redirect | `release/` |
+| [`triplet/README.md`](triplet/README.md) | Singular triplet redirect | `data/triplets/` |
+| [`proof/release/README.md`](proof/release/README.md) | Release-proof redirect | `data/proofs/`; dedicated sublane `NEEDS VERIFICATION` |
+| [`proof/release-closure/README.md`](proof/release-closure/README.md) | Release-closure proof redirect | `data/proofs/`; dedicated sublane `NEEDS VERIFICATION` |
+| [`publish/rollback/README.md`](publish/rollback/README.md) | Publish/rollback redirect | `release/` |
+| [`triplet/bundles/README.md`](triplet/bundles/README.md) | Triplet-bundle redirect | `data/triplets/`; dedicated sublane `NEEDS VERIFICATION` |
+
+### Bounded directory picture
+
+```text
+catalog/                         # root drift; containment only
+├── README.md
+├── STAC/README.md
+├── domain/README.md
+├── index/README.md
+├── manifest/README.md
+├── proof/
+│   ├── README.md
+│   ├── release/README.md
+│   └── release-closure/README.md
+├── publication/README.md
+├── publish/
+│   ├── README.md
+│   └── rollback/README.md
+├── release/README.md
+└── triplet/
+    ├── README.md
+    └── bundles/README.md
+```
+
+This is a verified README map, not a complete recursive file inventory.
+
+[Back to top](#top)
+
+---
+
+<a id="12-diagram"></a>
+
+## Containment and canonical routing
+
+```mermaid
+flowchart LR
+    ROOT["catalog/<br/>root drift<br/>containment only"]
+
+    subgraph CANON["Canonical and governed homes"]
+      CAT["data/catalog/<br/>STAC · DCAT · PROV · domain · indexes"]
+      TRI["data/triplets/<br/>relationship projections"]
+      REG["data/registry/<br/>sources · datasets · rights · sensitivity · layers"]
+      REC["data/receipts/<br/>process memory"]
+      PROOF["data/proofs/<br/>evidence and closure support"]
+      REL["release/<br/>decisions · manifests · corrections · rollback"]
+      PUB["data/published/<br/>released public-safe carriers"]
+    end
+
+    ROOT -. "redirect catalog family" .-> CAT
+    ROOT -. "redirect graph family" .-> TRI
+    ROOT -. "redirect registry family" .-> REG
+    ROOT -. "redirect process memory" .-> REC
+    ROOT -. "redirect proof support" .-> PROOF
+    ROOT -. "redirect release governance" .-> REL
+    ROOT -. "redirect released bytes" .-> PUB
+
+    CAT --> REL
+    TRI --> REL
+    REG --> CAT
+    REC --> REL
+    PROOF --> REL
+    REL --> PUB
+
+    ROOT -. "DENIED as canonical/public source" .-> PUB
+```
+
+The diagram expresses responsibility routing, not verified runtime data flow or completed migration.
+
+[Back to top](#top)
+
+---
+
+<a id="10-migration-posture"></a>
+
+## Migration and retirement posture
+
+A safe structural resolution follows this sequence:
+
+1. **Freeze authority.** Record current Directory Rules, accepted ADRs, target tree, and root content identities.
+2. **Inventory completely.** Classify every tracked, ignored, generated, hosted, and externally referenced object that can affect the migration.
+3. **Open or identify the disposition ADR.** Decide whether the root is retired, temporarily mirrored, or retained for a strictly bounded compatibility purpose.
+4. **Record drift and deprecation.** Add the operational drift entry and deprecation/sunset record before moving authority-bearing paths.
+5. **Classify by family.** Catalog, triplet, registry, receipt, proof, release, published, schema, contract, policy, implementation, QA, and sensitive objects each route separately.
+6. **Map old → new.** Create a migration manifest with source blob/digest, canonical target, producer, consumers, review burden, correction impact, and rollback target.
+7. **Stop new writes.** Change producer configuration and add negative validation before or with the move.
+8. **Move or regenerate through governed paths.** Preserve Git history where appropriate; regenerate derived output rather than laundering stale state.
+9. **Validate parity.** Check identifiers, content digests, references, evidence links, release links, rights, sensitivity, policy, public-safe transforms, and consumer behavior.
+10. **Run a bounded mirror window only when needed.** Mark the old path as mirror/deprecated, prevent independent evolution, and define its sunset.
+11. **Correct downstream use.** Invalidate caches/indexes, issue correction records where public or semi-public consumers relied on the old path, and retain lineage.
+12. **Verify rollback.** Demonstrate restoration without recreating parallel authority or reintroducing withdrawn material.
+13. **Retire the root.** Remove redirect paths only after zero-producer, zero-consumer, link, host, and rollback checks pass.
+14. **Close registers and docs.** Update Directory Rules, ADR index, deprecation, drift, verification backlog, root READMEs, and release/correction records.
+
+This README performs none of those state transitions.
+
+[Back to top](#top)
+
+---
+
+<a id="11-runtime-and-producer-anti-bypass-matrix"></a>
+
+## Runtime and producer anti-bypass
+
+| Bypass risk | Required behavior | Evidence before claiming closure |
+|---|---|---|
+| Builder writes catalog records to `catalog/` | Fail and write to `data/catalog/` | Executable negative test + producer config |
+| Pipeline writes graph/triplet output here | Fail and write to `data/triplets/` | Pipeline test + output receipt |
+| Tool writes registry rows here | Fail and write to `data/registry/` | Registry path test |
+| Process writes receipts or proofs here | Fail and route by family | Receipt/proof validators and fixtures |
+| Release tooling writes decisions or manifests here | Fail and use `release/` | Release workflow/validator evidence |
+| Publisher writes public artifacts here | Fail and use release-approved `data/published/` | Release manifest + policy + host config |
+| Public client or governed API reads this root | Deny; use released artifacts and governed resolution | Boundary test + route/config evidence |
+| Search, cache, export, tile, map, story, or AI process consumes this root | Deny canonical use and migrate consumer | Consumer inventory + replacement test |
+| Catalog entry lacks EvidenceBundle support | Hold or abstain where the claim needs evidence | Resolver/citation test |
+| Sensitive geometry or relationship appears here | Quarantine, redact, generalize, aggregate, restrict, or deny | Policy decision + transform receipt |
+| AI-generated catalog text appears here | Treat as candidate text, never evidence or release | AI envelope/receipt + review |
+| Schema, policy, or implementation file appears here | Move to its responsibility root | Placement test and migration record |
+| README claims enforcement or release without run evidence | Downgrade to `NEEDS VERIFICATION` | Current run/job/step or release record |
+| Root is deleted before consumer closure | Block retirement | Zero-consumer proof + rollback drill |
+
+Fail-safe behavior matters more than path tidiness: uncertain rights, sensitivity, evidence, or downstream use must narrow or hold the migration.
+
+[Back to top](#top)
+
+---
+
+<a id="15-safe-change-pattern"></a>
+
+## Safe change pattern
+
+For any PR touching `catalog/`:
+
+1. Pin the base commit and exact target blobs.
+2. Search open PRs/branches for overlapping paths.
+3. Read Directory Rules, relevant ADRs, drift/deprecation registers, this parent README, and every affected child README.
+4. Identify the file's primary responsibility and canonical target.
+5. Keep the change documentation-only unless the user separately authorizes migration or non-Markdown implementation.
+6. Do not add a payload merely to preserve a legacy path.
+7. Preserve stable anchors and inbound links during README updates.
+8. Add or update producer/consumer tests when behavior changes.
+9. Record correction and rollback consequences before moving or deleting files.
+10. Validate the final remote bytes and exact PR file list.
+11. Keep human review pending; do not merge, release, deploy, or publish through this documentation workflow.
+12. State inherited drift separately from any failure introduced by the PR.
+
+[Back to top](#top)
+
+---
+
+<a id="16-rollback-and-correction-posture"></a>
+
+## Correction and rollback
+
+### Documentation-only rollback
+
+Restore `catalog/README.md` from prior blob `0ef249eaf2840a787fb1760354b94e311c2d5c8d` and remove the generated receipt added by this modernization. Use a transparent revert or corrective PR; do not rewrite shared history.
+
+### Structural migration rollback
+
+A future migration rollback must:
+
+- restore the last reviewed path map without restoring parallel authority;
+- preserve source blob/digest and destination identities;
+- restore producer and consumer configuration consistently;
+- invalidate or rebuild caches, indexes, tiles, exports, search, map, and AI derivatives;
+- preserve receipts, proofs, reviews, policy decisions, releases, corrections, withdrawals, and supersession history;
+- avoid re-exposing restricted or withdrawn material;
+- record why rollback occurred and which state remains controlling;
+- verify the trust membrane after restoration.
+
+If a misplaced root-level object was publicly or semi-publicly consumed, deletion alone is insufficient. Record correction and downstream invalidation.
+
+[Back to top](#top)
+
+---
+
+## v0.2 to v0.3 no-loss ledger
+
+| v0.2 material | v0.3 disposition |
+|---|---|
+| Root-level compatibility redirect purpose | Preserved and sharpened as drift containment, without legitimizing the root. |
+| Canonical homes for catalog, triplets, receipts, proofs, registry, release, and published artifacts | Preserved in the first twelve root-contract sections and canonical routing table. |
+| Catalog/graph/registry/receipt/proof/release/publication anti-collapse rules | Preserved and expanded with current repository evidence. |
+| Allowed redirect documentation and forbidden payload matrix | Preserved under `What belongs here` and `What does NOT belong here`. |
+| Suggested directory and child-lane map | Replaced with a verified 13-README inventory while retaining the limitation that complete payload inventory is unknown. |
+| Minimum safe redirect slice | Preserved as a bounded containment contract. |
+| Migration sequence | Preserved and expanded to ADR, deprecation, consumer parity, correction, and retirement closure. |
+| Runtime/producer anti-bypass matrix | Preserved with explicit evidence requirements. |
+| Mermaid boundary diagram | Preserved as a responsibility-routing diagram. |
+| Inspection commands and validation expectations | Preserved and clarified as advisory until an executable validator exists. |
+| Safe change and rollback posture | Preserved and expanded for documentation and structural cases. |
+| Definition of done, open verification, and safe language | Preserved below. |
+| Legacy numbered fragments | Preserved through explicit HTML anchors from `0-evidence-basis-for-this-revision` through `19-safe-language-rules`. |
+
+### v0.2 → v0.3 change summary
+
+- aligns the first twelve H2 sections with Directory Rules §15;
+- records the explicit Directory Rules finding that top-level `catalog/` is severe drift;
+- replaces stale generic inventory language with 13 exact descendant README reads;
+- separates confirmed path evidence from unknown payload, producer, consumer, hosting, and operational state;
+- records the TODO catalog Make target and lack of established catalog closure automation;
+- records that ADR-0011 and ADR-0022 remain proposed;
+- surfaces the missing catalog entry in the inspected drift register as a governance gap;
+- corrects ownership language from role placeholders to bounded CODEOWNERS routing;
+- preserves migration, correction, rollback, anti-bypass, and no-loss controls.
+
+[Back to top](#top)
+
+---
+
+<a id="17-definition-of-done"></a>
+
+## Definition of done
+
+### This README modernization
+
+- [x] Same target path and stable document identity retained.
+- [x] Complete v0.2 semantic baseline represented in the no-loss ledger.
+- [x] Directory Rules catalog anti-pattern and §15 README contract reflected.
+- [x] Thirteen exact descendant redirect README paths recorded.
+- [x] Canonical family homes linked.
+- [x] Legacy numbered fragments preserved.
+- [x] Static presentation tied to evidence-bearing sections.
+- [x] Documentation rollback target recorded.
+- [ ] Human review completed.
+- [ ] Pull-request checks interpreted at their actual scope.
+
+### Root disposition and migration
+
+- [ ] Accepted disposition ADR identifies retention, mirror, deprecation, or retirement.
+- [ ] Dedicated catalog drift entry and deprecation/sunset record exist.
+- [ ] Named stewards and independent review controls are established.
+- [ ] Complete tracked, ignored, generated, hosted, producer, and consumer inventory is pinned.
+- [ ] Every object is classified and mapped to one canonical responsibility/lifecycle home.
+- [ ] Root allowlist and negative placement tests fail closed.
+- [ ] Producers write only to accepted canonical lanes.
+- [ ] Public and internal consumers no longer use root-level `catalog/` as authority.
+- [ ] Rights, sensitivity, evidence, policy, review, correction, and rollback implications are resolved.
+- [ ] Migration parity, digest continuity, links, references, and release relationships pass.
+- [ ] Mirror/deprecation window, if any, is time-bounded and non-evolving.
+- [ ] Rollback drill passes.
+- [ ] Root is retired or explicitly retained according to the accepted decision.
+- [ ] Registers, docs, workflows, and validation are updated to match the final state.
+
+[Back to top](#top)
+
+---
+
+<a id="18-open-verification-items"></a>
+
+## Open verification register
+
+| Item | Evidence needed |
+|---|---|
+| Complete root inventory | Commit-pinned recursive tree plus ignored/generated/runtime output review where relevant |
+| Non-README payload classification | File contents, hashes, provenance, rights, sensitivity, lifecycle and family classification |
+| Producer inventory | Code/config/workflow search plus representative runs and emitted paths |
+| Consumer inventory | API, search, cache, map, UI, AI, export, tile, host, docs, and external link review |
+| Root-disposition authority | Accepted ADR with migration, deprecation, verification window, rollback, and consequences |
+| Drift/deprecation records | Dedicated register entries tied to current root identity and status |
+| Catalog closure maturity | Accepted contracts/schemas, STAC/DCAT/PROV profile, fixtures, validators, receipts, tests, and CI |
+| Catalog pipeline/tooling | Verified executable, command surface, deterministic fixtures, output paths, receipts, and failure modes |
+| Allowlist enforcement | Validator that rejects prohibited root-level payloads and fails on zero collection |
+| Public boundary | Tests proving governed clients and hosts cannot use this path as canonical |
+| Stewardship and review | Accepted assignments, CODEOWNERS/ruleset evidence, required reviews, and separation of duties |
+| Migration parity | Old/new identity map, content digests, redirects, link repair, consumer parity, and cache invalidation |
+| Correction and rollback | Correction triggers, withdrawal/supersession lineage, rollback card, and observed drill |
+| Directory Rules identity | Accepted placement for the two live Directory Rules copies |
+| Final retirement | Zero producer, zero consumer, zero authoritative payload, link closure, and post-removal verification |
+
+[Back to top](#top)
+
+---
+
+<a id="19-safe-language-rules"></a>
+
+## Safe language rules
+
+Use language such as:
+
+- “root-level `catalog/` is confirmed present and conflicts with Directory Rules”;
+- “this README contains the drift while an ADR-backed disposition remains open”;
+- “canonical catalog records belong under `data/catalog/`”;
+- “thirteen descendant redirect READMEs were verified; complete payload inventory remains unknown”;
+- “ADR-0011 and ADR-0022 remain proposed”;
+- “catalog automation, migration, enforcement, and producer/consumer exclusion need verification”;
+- “a catalog record, receipt, proof, manifest, map, or AI output is not public truth by location.”
+
+Avoid language such as:
+
+- “`catalog/` is a canonical or accepted compatibility root”;
+- “catalog records live here”;
+- “the migration is complete” without a reviewed inventory and closure record;
+- “CI blocks root drift” without an executable check and current run evidence;
+- “STAC/DCAT/PROV agreement is implemented” because a README, schema placeholder, or ADR exists;
+- “public clients can read this path”;
+- “a signed or schema-valid object is released”;
+- “AI can cite this root as evidence”;
+- “the pull request or merge retires the root.”
 
 ## Status summary
 
-`catalog/` is a root-level compatibility redirect and drift fence. It is not the canonical catalog, graph, registry, receipt, proof, release, publication, schema, policy, producer, hosting, or UI home.
+`catalog/` is a **confirmed root-level drift path under containment**, not the catalog authority. Canonical catalog records belong under `data/catalog/`; graph projections under `data/triplets/`; process memory under `data/receipts/`; proof support under `data/proofs/`; registry records under `data/registry/`; release decisions under `release/`; and released public-safe carriers under `data/published/`.
 
-Catalog authority belongs under `data/catalog/`; graph projection authority belongs under `data/triplets/`; process memory belongs under `data/receipts/`; proof support belongs under `data/proofs/`; registry rows belong under `data/registry/`; release decisions belong under `release/`; released public-safe products belong under `data/published/`.
+The current 13 descendant READMEs help prevent path ambiguity, but documentation does not replace an accepted ADR, complete inventory, producer and consumer migration, validation, correction, or rollback. Keep the root non-authoritative and fail closed until disposition is verified.
 
 <p align="right"><a href="#top">Back to top</a></p>
