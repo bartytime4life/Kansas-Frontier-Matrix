@@ -2,16 +2,17 @@
 doc_id: kfm://doc/root-artifacts-readme
 title: artifacts/ — Compatibility Root README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
-owners: ["@kfm-docs-steward", "@kfm-stewards"]  # PROPOSED placeholders; pin in CODEOWNERS
+owners: ["@bartytime4life"]
 created: 2026-05-10
-updated: 2026-05-10
+updated: 2026-07-22
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md          # §5, §8, §13, §15, §16, §18
-  - docs/adr/ADR-0001-schema-home.md          # referenced; not authoritative for artifacts/
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
+  - docs/quality/maplibre-perf-governance.md
   - data/proofs/                              # canonical home for trust content NOT placed here
   - data/receipts/
   - data/catalog/
@@ -22,14 +23,14 @@ notes:
   - "Compatibility root, class `transitional` per directory-rules.md §8.1 default."
   - "Trust-bearing content (receipts, proofs, manifests, releases) forbidden here per §8.2 / §13.2 / §13.5."
   - "Disposition (retain as compatibility, or fully retire) is the §18 OPEN question; ADR pending."
-  - "Owners list and Last reviewed date are PROPOSED until pinned in CODEOWNERS and accepted on first review."
-  - "Repository was not mounted at draft time; specific validator names, workflow names, and link targets remain PROPOSED / NEEDS VERIFICATION."
+  - "Current repository conformance is mixed: four allowed lanes exist, but tracked artifacts/release and generated artifacts/perf paths remain open drift."
+  - "Snapshot claims are pinned to main@86c039f9fda31eb2d4a75112911a5c400ae93a16."
 [/KFM_META_BLOCK_V2] -->
 
 <!-- KFM-DOC-GRAPH-HINT
 This README is parseable. Do not delete the META block above.
-Validators that consume it (PROPOSED): tools/docs/parse_meta_block.py,
-tools/validators/readme_contract/, tools/validators/directory_rules/.
+Keep the block synchronized with the visible status table and the generated-work
+receipt whenever this README changes materially.
 -->
 
 # `artifacts/`
@@ -39,18 +40,21 @@ tools/validators/readme_contract/, tools/validators/directory_rules/.
 [![Authority](https://img.shields.io/badge/authority-compatibility-orange)][dr-5]
 [![Class](https://img.shields.io/badge/class-transitional-yellow)][dr-8]
 [![Trust content](https://img.shields.io/badge/trust%20content-FORBIDDEN-red)][dr-82]
+[![Conformance](https://img.shields.io/badge/conformance-HOLD-red)][dr-13]
 [![Doctrine](https://img.shields.io/badge/doctrine-directory--rules%20%C2%A78.2-blue)][dr-82]
 [![README contract](https://img.shields.io/badge/README-%C2%A715%20contract-informational)][dr-15]
 [![Disposition](https://img.shields.io/badge/disposition-OPEN%20%C2%A718-lightgrey)][dr-18]
+[![Snapshot](https://img.shields.io/badge/tracked%20files-44-6e7781)](#verified-repository-snapshot)
 
 | Field | Value |
 |---|---|
 | **Authority level** | Compatibility |
 | **Class** | `transitional` *(default per [§8.1][dr-81]; see [Open questions](#adrs-and-open-questions))* |
-| **Status** | `NEEDS VERIFICATION` — pending ADR on retention vs. retirement[^retire] |
-| **Owners** | _PROPOSED — repo stewards; pin in `CODEOWNERS`_ |
-| **CODEOWNERS reference** | `CODEOWNERS` entry for `/artifacts/` *(PROPOSED)* |
-| **Last reviewed** | _YYYY-MM-DD — set on first acceptance_ |
+| **Status** | `CONFIRMED` root; **conformance `HOLD`** because `artifacts/release/` and generated `artifacts/perf/` conflict with the four-lane boundary |
+| **Owners** | `@bartytime4life` — the only repository owner identity currently verified in `.github/CODEOWNERS` |
+| **CODEOWNERS reference** | Inherits the repository-wide `* @bartytime4life` route; no more-specific `/artifacts/` rule is present |
+| **Pinned snapshot** | `main@86c039f9fda31eb2d4a75112911a5c400ae93a16` |
+| **Last reviewed** | 2026-07-22 |
 
 **Jump to:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs and open questions](#adrs-and-open-questions) · [Last reviewed](#last-reviewed)
 
@@ -97,12 +101,31 @@ Trust membrane
 
 ## Status
 
-`NEEDS VERIFICATION`.
+`CONFIRMED` root with **mixed conformance**.
 
-The root is governed by doctrine, but its long-term disposition is an **OPEN question** in Directory Rules [§18][dr-18]: kept as compatibility, or fully retired in favor of `data/receipts/`, `data/proofs/`, `release/`, and `data/published/`? Until that ADR lands, this folder operates under the `transitional` default and the strict `build/docs/qa/temporary` scope.
+The root is governed by doctrine, but its long-term disposition is an **OPEN question** in Directory Rules [§18][dr-18]: kept as compatibility, or fully retired in favor of `data/receipts/`, `data/proofs/`, `release/`, and `data/published/`?[^retire] Until that ADR lands, this folder operates under the `transitional` default and the strict `build/docs/qa/temporary` scope.
+
+The live tree does not fully meet that target. It contains the four allowed lanes plus tracked `artifacts/release/`; repository scripts and the MapLibre performance workflow also write an untracked `artifacts/perf/` staging tree with receipt-, proof-, correction-, rollback-, and release-shaped filenames. Those files do not become canonical trust objects merely because of their names. They remain outside the governed receipt, proof, and release homes unless separately admitted and reviewed.
+
+> [!CAUTION]
+> `artifacts/release/` and `artifacts/perf/` are **not publication evidence**. Do not cite either lane as proof that a release, promotion, correction, rollback, or publication occurred.
+
+### Verified repository snapshot
+
+The following inventory is `CONFIRMED` from Git at `main@86c039f9fda31eb2d4a75112911a5c400ae93a16`.
+
+| Tracked lane | Files | Bytes | Conformance | Current evidence |
+|---|---:|---:|---|---|
+| Root `README.md` | 1 | 20,290 | Allowed | Compatibility-root contract; stale before this update |
+| `build/` | 8 | 164,397 | Allowed lane | READMEs, ignore policy, and `PROPOSED` environment/tool-version scaffolds; no compiled payload is tracked |
+| `docs/` | 2 | 47,721 | Allowed lane | README plus `.gitkeep`; no generated docs-site payload or build manifest is tracked |
+| `qa/` | 26 | 410,757 | Allowed lane, mixed content maturity | README scaffolds plus small placeholder coverage/lint/validation samples; local JUnit output is ignored |
+| `release/` | 5 | 78,114 | **Nonconforming / `BLOCKED_ADR`** | Domain README scaffolds plus one `PROPOSED` `release_manifest.json` placeholder |
+| `temporary/` | 2 | 13,251 | Allowed lane | README plus `.gitkeep`; contents are expected to be ephemeral |
+| **Total** | **44** | **734,530** | **HOLD** | Inventory excludes generated, ignored, and untracked run output |
 
 > [!NOTE]
-> The **rules** that govern this folder are `CONFIRMED` (directory-rules.md §8). The **presence and contents** of any specific subdirectory below are `PROPOSED` until verified against mounted-repo evidence. This README was authored without a mounted repo.
+> `artifacts/perf/` is absent from the tracked snapshot, but it is an executable output target in the Makefile, MapLibre scripts, and `.github/workflows/maplibre-perf-governance.yml`. Its absence from Git does not resolve its placement conflict.
 
 ---
 
@@ -110,14 +133,14 @@ The root is governed by doctrine, but its long-term disposition is an **OPEN que
 
 Accepted contents — **derived, regenerable, non-authoritative** material only:
 
-| Subdir | Accepted contents | Examples |
+| Subdir | Accepted contents | Verified repository use |
 |---|---|---|
-| `build/` | Compiled outputs and distributables | Bundled `apps/explorer-web` site builds; packaged tarballs; compiled binaries; transpiled JS; SBOM staging copies prior to canonical placement |
-| `docs/` | **Generated** documentation outputs | Rendered MkDocs / Docusaurus site output; generated API reference; rendered ADR index; Markdown→HTML exports |
-| `qa/` | QA and inspection reports | Test coverage reports; lint output; static-analysis dumps; type-check reports; bundle-size reports; broken-link reports |
-| `temporary/` | Ephemeral working files | Scratch generations during a CI run; intermediate transcoded media; agent / tool scratchpads. **Gitignored or pruned regularly.** |
+| `build/` | Compiled outputs and distributables | Tracked scaffold and build-environment metadata; generated payloads are replaceable and ignored by the lane-local `.gitignore` |
+| `docs/` | **Generated** documentation outputs | `.github/workflows/docs-build.yml` checks the non-authoritative preview lane and rejects trust-bearing manifest fields if a docs-build manifest appears |
+| `qa/` | QA and inspection reports | `make boundary-guards-ci` and `.github/workflows/policy-boundary-guards.yml` write JUnit output here; the workflow uploads it only as a CI artifact |
+| `temporary/` | Ephemeral working files | Tracked scaffold only; run debris must be ignored or pruned and must never become an input to a governed decision |
 
-### Recommended structure
+### Governed target structure
 
 ```text
 artifacts/
@@ -152,6 +175,13 @@ artifacts/
 | Long-lived, trust-bearing scripts | Must graduate to a real home | `tools/`, `pipelines/`, or `packages/` |
 | Hand-authored source documentation | Authored, reviewed text is canonical | `docs/` |
 
+### Observed nonconforming lanes
+
+| Path | Truth status | Why it is held | Safe disposition now |
+|---|---|---|---|
+| `artifacts/release/` | `CONFIRMED` tracked | A fifth top-level lane exists and includes a `release_manifest.json` placeholder; Directory Rules records this as `OPEN-DR-09-b` | Keep non-authoritative, record drift, and do not move or delete until an accepted ADR and migration plan exist |
+| `artifacts/perf/` | `CONFIRMED` executable output target; absent from tracked snapshot | MapLibre tooling writes `RunReceipt`, `ProofPack`, `ReleaseManifest`, correction, rollback, and failure-bundle-shaped files here | Treat only as disposable CI staging; do not cite as canonical receipt, proof, or release; resolve with the MapLibre artifact-placement migration |
+
 ### The boundary diagram
 
 ```mermaid
@@ -169,31 +199,30 @@ flowchart LR
     REL["release/"]:::canon
   end
 
-  subgraph ART["artifacts/ — compatibility · transitional"]
+  subgraph ART["artifacts/ — compatibility"]
     direction TB
-    B["build/"]:::compat
-    D["docs/"]:::compat
-    Q["qa/"]:::compat
-    T["temporary/"]:::compat
+    OK["build · docs · qa · temporary"]:::compat
+    HOLD["release · generated perf"]:::rule
   end
 
-  RULE["§8.2 — trust content MUST NOT live in artifacts/"]:::rule
-  CANON -.->|enforced by| RULE
-  RULE -.->|denies content into| ART
+  RULE["§8.2 placement boundary"]:::rule
+  HOLD -->|ADR + migration required| RULE
+  RULE --> CANON
 ```
 
 > [!WARNING]
-> A release manifest in `artifacts/`, an evidence bundle in `artifacts/`, or a signed receipt in `artifacts/` is the named **drift anti-pattern** in [§13.2 / §13.5][dr-13]. Open a drift entry in `docs/registers/DRIFT_REGISTER.md` and migrate.
+> A release manifest in `artifacts/`, an evidence bundle in `artifacts/`, or a signed receipt in `artifacts/` is the named **drift anti-pattern** in [§13.2 / §13.5][dr-13]. This repository's confirmed instances are recorded in `docs/registers/DRIFT_REGISTER.md`; migration remains held for ADR-backed planning.
 
 ---
 
 ## Inputs
 
-Files arrive in `artifacts/` from **generators, not authors**:
+Payloads arrive in `artifacts/` from **generators, not authors**:
 
 - CI build steps that compile, bundle, or package source from `apps/`, `packages/`, and `tools/`.
-- Documentation generators (e.g., MkDocs, Docusaurus, TypeDoc-equivalents) reading hand-authored sources from `docs/`.
-- QA, lint, type-check, coverage, and static-analysis tools invoked from `tools/qa/` *(PROPOSED — verify presence)* or from CI workflows under `.github/workflows/`.
+- The docs-build workflow, which treats `artifacts/docs/` as a non-authoritative preview lane.
+- `make boundary-guards-ci` and the policy-boundary workflow, which emit a JUnit report under `artifacts/qa/`.
+- MapLibre performance scripts and `.github/workflows/maplibre-perf-governance.yml`, which currently stage outputs under conflicted `artifacts/perf/`.
 - Pipeline scratch space during runs that have not yet promoted output to canonical lifecycle phases.
 
 `artifacts/` does **not** accept hand-edited, hand-committed working files of record. If a human wants it preserved as authority, it goes to its responsibility root.
@@ -204,10 +233,11 @@ Files arrive in `artifacts/` from **generators, not authors**:
 
 Material under `artifacts/` is **terminal or transient**:
 
-- `build/` outputs may be **uploaded** as release assets (then referenced by `release/manifests/` — but the manifest itself lives in `release/`, not here).
-- `docs/` rendered output may be **deployed** to a docs site host (GitHub Pages, etc.). The deployment target is configured in `infra/` or `.github/workflows/` *(PROPOSED — verify)*.
-- `qa/` reports may be uploaded as CI run artifacts and surfaced on PRs.
+- `build/` outputs may be uploaded as replaceable build assets; this does not make them published KFM data.
+- `docs/` output is a generated preview only. The current docs-build workflow does not treat it as authoritative documentation or release evidence.
+- `qa/` reports may be uploaded as CI run artifacts; `.github/workflows/policy-boundary-guards.yml` does this for its JUnit report.
 - `temporary/` is pruned. Never relied on by downstream consumers.
+- `perf/` output is currently generated by MapLibre tooling, but its trust-shaped objects remain noncanonical and held pending placement resolution.
 
 Nothing under `artifacts/` is consumed by the **trust membrane** ([`apps/governed-api/`](../apps/governed-api/)) or by the public client. Public clients consume governed APIs and released artifacts in `data/published/` — never `artifacts/`.
 
@@ -215,17 +245,17 @@ Nothing under `artifacts/` is consumed by the **trust membrane** ([`apps/governe
 
 ## Validation
 
-The folder is checked at three levels. Specific tool and workflow names below are **PROPOSED / NEEDS VERIFICATION** until inspected in the mounted repo.
+Validation is split between executable checks and explicit gaps. A green schema or boundary suite does **not** resolve artifact-placement drift.
 
-| Check | What it asserts | Where it should live *(PROPOSED)* |
+| Gate | Current evidence | Status |
 |---|---|---|
-| Trust-content-not-in-`artifacts/` scan | No receipts, proofs, manifests, rollback cards, correction notices, STAC/DCAT/PROV records, or published layers reside under `artifacts/` | `tools/validators/directory_rules/` |
-| Substructure conformance | Only `build/`, `docs/`, `qa/`, `temporary/` (and `README.md`) appear as direct children | `tools/validators/directory_rules/` |
-| README §15 contract | This README contains the required sections in the required order | `tools/validators/readme_contract/` |
-| KFM Meta Block v2 presence | The HTML-comment META block at the top of this file parses against `schemas/docs/meta_block.v2.schema.json` *(PROPOSED schema home)* | `tools/docs/parse_meta_block.py` *(PROPOSED)* |
-| `temporary/` hygiene | `temporary/` is gitignored or pruned on schedule | repo `.gitignore` + a maintenance job |
-| Compatibility-root drift check | `artifacts/` is not evolving independently of canonical homes ([§8.3][dr-83]) | `tools/validators/drift_register/` |
-| CI workflow | The validators above run on every PR | `.github/workflows/` *(NEEDS VERIFICATION)* |
+| Aggregate schema/contract validation | `make validate` invokes configured schema validation and schema/contract tests | Executable |
+| Public-boundary invariants | `make boundary-guards` runs control-plane, Explorer adapter, connector/pipeline non-publisher, and Governed API boundary tests | Executable |
+| QA report emission | `make boundary-guards-ci` writes `artifacts/qa/policy-boundary-guards.xml`; the workflow verifies and uploads it | Executable, non-authoritative output |
+| Generated docs boundary | `.github/workflows/docs-build.yml` verifies `artifacts/docs/` and rejects a docs-build manifest carrying trust-bearing fields | Executable workflow guard |
+| MapLibre performance artifact governance | `.github/workflows/maplibre-perf-governance.yml` validates a generated bundle under `artifacts/perf/` | Executable but placement remains `CONFLICTED` |
+| Compatibility-root allowlist | No repository-owned executable validator was found that enforces only `build/docs/qa/temporary` | `NEEDS VERIFICATION` / gap |
+| Trust-content placement | Current tree and generators include held release-shaped paths under `artifacts/` | `FAIL` as placement conformance; no release claim follows |
 
 A failure on any of these checks SHOULD open an entry in `docs/registers/DRIFT_REGISTER.md`.
 
@@ -242,7 +272,7 @@ A failure on any of these checks SHOULD open an entry in `docs/registers/DRIFT_R
 ## Review burden
 
 - **Reviewers required:** repo steward + at least one subsystem owner for any structural change to `artifacts/` (adding a sibling, retiring a sibling, changing class).
-- **CODEOWNERS:** add `/artifacts/` and `/artifacts/README.md` to `CODEOWNERS` so changes route to the docs steward *(PROPOSED — set on first acceptance)*.
+- **CODEOWNERS:** the repository-wide catch-all currently routes this tree to `@bartytime4life`. A more-specific `/artifacts/` rule is optional unless ownership is delegated to another verified account or team.
 - **ADR required:** any of these MUST open an ADR (per §2.4 / §17 of Directory Rules):
   - Promoting `artifacts/` to canonical.
   - Retiring `artifacts/` entirely (the [§18][dr-18] open question).
@@ -263,8 +293,9 @@ A failure on any of these checks SHOULD open an entry in `docs/registers/DRIFT_R
 | [`apps/governed-api/`](../apps/governed-api/) | Trust membrane. Reads from canonical stores, **not** from `artifacts/`. |
 | [`docs/`](../docs/) | Hand-authored documentation source (input to `artifacts/docs/`). |
 | [`apps/`](../apps/) · [`packages/`](../packages/) · [`tools/`](../tools/) | Source code (input to `artifacts/build/`). |
-| [`tools/validators/`](../tools/validators/) | Validators that enforce the rules above *(PROPOSED — verify presence)*. |
+| [`tools/validators/`](../tools/validators/) | Validator root. Documentation-oriented lanes exist, but no executable compatibility-root allowlist was found in the pinned snapshot. |
 | [`docs/registers/DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) | Where violations are recorded. |
+| [`docs/quality/maplibre-perf-governance.md`](../docs/quality/maplibre-perf-governance.md) | Records the open `artifacts/perf/` trust-object placement conflict. |
 
 > [!NOTE]
 > Relative links above resolve against the repo root. Targets marked *PROPOSED* may not exist in every checkout; verify before relying on a link.
@@ -275,9 +306,10 @@ A failure on any of these checks SHOULD open an entry in `docs/registers/DRIFT_R
 
 | ID | Status | Topic |
 |---|---|---|
-| _Open question_ ([§18][dr-18]) | OPEN | Treatment of `artifacts/` — kept as compatibility (current state), or fully retired in favor of `data/receipts/`, `data/proofs/`, `release/`, and `data/published/`? An ADR is needed to close this. |
+| *Open question* ([§18][dr-18]) | OPEN | Treatment of `artifacts/` — kept as compatibility (current state), or fully retired in favor of `data/receipts/`, `data/proofs/`, `release/`, and `data/published/`? An ADR is needed to close this. |
+| `OPEN-DR-09-b` ([§18][dr-18]) | `BLOCKED_ADR` | Resolve the tracked `artifacts/release/` parallel release home through an accepted decision and one-pass migration with rollback. |
+| MapLibre performance placement | `CONFLICTED` | Rehome or explicitly stage `artifacts/perf/` receipt-, proof-, correction-, rollback-, and release-shaped outputs without treating staging as authority. |
 | ADR-0001 (schema home) | Referenced | Confirms canonical schema home is `schemas/contracts/v1/...`; reinforces that `artifacts/` is **not** a schema home. |
-| `docs/adr/ADR-XXXX-artifacts-disposition.md` | _PROPOSED, not yet authored_ | Decision: retain `transitional`, promote to `legacy`, or retire. |
 
 <details>
 <summary><strong>If the disposition ADR retires <code>artifacts/</code></strong> — outline of the structural-move plan</summary>
@@ -314,7 +346,7 @@ A retain-as-compatibility ADR would lock in the current scope:
 
 ## Last reviewed
 
-`YYYY-MM-DD` — _set when this README is first accepted into the repo. Older than 6 months → flag for review (per [§15][dr-15])._
+2026-07-22 — verified against `main@86c039f9fda31eb2d4a75112911a5c400ae93a16`. Re-review after an artifacts-disposition ADR, an `artifacts/release/` migration, a MapLibre artifact-path change, or six months of drift.
 
 ---
 
