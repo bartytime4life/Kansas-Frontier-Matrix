@@ -1,82 +1,89 @@
-<!--
-================================================================================
-KFM Meta Block v2
---------------------------------------------------------------------------------
-document_id:        kfm-adr-0007-maplibre-sole-browser-renderer
-title:              ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer
-class:              architecture decision record (ADR)
-adr_id:             ADR-0007
-adr_status:         PROPOSED
-truth_posture:      cite-or-abstain
-governance_layer:   UI/AI plane · Planetary/3D domain (Atlas §18)
-proposed_path:      docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md
-directory_rule:     directory-rules.md §5 (canonical roots — `docs/adr/`);
-                    directory-rules.md §2.4 (ADR required for reversing a
-                    previously canonical rule, and for bending a §3 invariant);
-                    directory-rules.md §17 (reversing a previously canonical
-                    rule requires ADR + supersession notice + drift register
-                    entry).
-supersedes:         KFM-P2-FEAT-0012 (Pass 23 / Pass 32 idea-index card —
-                    prior dual-renderer posture for 3D scene rendering).
-                    The card is retained in the register with
-                    `superseded_by: ADR-0007` and a forward link.
-related_adrs:       ADR-0001 — Schema home (NEEDS VERIFICATION of accepted
-                    text against the live ADR set);
-                    ADR-0003 — `policy/` singular is canonical (PROPOSED per
-                    user-memory; NEEDS VERIFICATION against the live ADR set);
-                    Build Manual §30 Recommended ADR Queue informally lists
-                    different topics under the ADR-0007 / ADR-0008 slots —
-                    see §10 Open Questions, OQ-A7-01.
-related_docs:       docs/architecture/maplibre-3d.md  (PROPOSED)
-                    docs/architecture/master-maplibre-components-functions-features.md
-                    KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas (§18)
-                    KFM_Unified_Implementation_Architecture_Build_Manual.md
-                    ai-build-operating-contract.md (§7 publication; §28 ADR
-                    skeleton; §29 object-family guardrails; §31 security)
-                    docs/doctrine/directory-rules.md (v1.2)
-spec_hash:          NEEDS VERIFICATION (emit via canonical JCS+SHA-256 at PR
-                    acceptance; do not invent before release).
-last_reviewed:      <YYYY-MM-DD — set on PR>
-owner:              <PLACEHOLDER — UI/AI plane steward; do not invent>
-================================================================================
--->
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/adr-0007-maplibre-sole-browser-renderer
+title: "ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer"
+type: adr
+adr_id: ADR-0007
+version: v1.1
+status: legacy-proposed
+effective_decision_status: proposed
+owners:
+  - "OWNER_TBD — architecture stewardship assignment is not verified"
+reviewers_required:
+  - Architecture steward
+  - Map/runtime steward
+  - Security and supply-chain reviewer
+  - Explorer Web subsystem owner
+  - Docs steward
+created: 2026-05-10
+updated: 2026-07-23
+policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+supersedes:
+  - "KFM-P2-FEAT-0012 — proposed dual-renderer planning posture; non-ADR lineage only"
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 9ab50d9a94e36320b12b1deb9035ea5a3d315815
+  target_prior_blob: c753f09db18e12081f99405b42cd79ebb89d0ac3
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  adr_0006_blob: 2e40267d80a474dc53ceda81e5bbf9fce3939149
+  maplibre_architecture_blob: ff4b4754e5dc7beae22620ee669d3fdc240c44d7
+  packages_root_blob: 154e1c9a8b841397bceb52e6b4933b241906ab9a
+  package_readme_blob: 3ba48e7d61b013a659ed51b9336eee788d06b8f2
+  package_metadata_blob: b0582955feeb51016327113692fa5c98ecad8816
+  package_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  root_package_blob: 62f45306aef7376a2d68042b0c9e7f556edf0e78
+  smoke_harness_blob: 699dd4cf42d355dd2ed7620852b7fd1f3000bbe2
+  app_boundary_test_blob: 97d44069b0a5ab4a82b1e1fc48665e905c08a287
+  maplibre_workflow_blob: bfb36a84ba72bec68d964976dc7964cde7f5d603
+  external_research_checked: 2026-07-23
+  upstream_maplibre_latest_release: v6.0.0
+  upstream_maplibre_latest_release_date: 2026-07-22
+related:
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - docs/doctrine/directory-rules.md
+  - docs/architecture/maplibre.md
+  - docs/architecture/map-shell.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
+  - packages/README.md
+  - packages/maplibre/README.md
+  - packages/maplibre/package.json
+  - packages/maplibre/src/index.ts
+  - scripts/maplibre-smoke-perf.mjs
+  - tests/policy/test_explorer_web_adapter_boundary.py
+  - .github/workflows/maplibre-perf-governance.yml
+tags: [kfm, adr, maplibre, browser-renderer, renderer-boundary, plugin-admission, 3d, globe, terrain, supply-chain, no-parallel-authority]
+notes:
+  - "v1.1 is a same-path, documentation-only, repository-grounded modernization; it does not accept the ADR or change runtime behavior."
+  - "ADR-0007 numbering and the exact tracked path are confirmed by docs/adr/INDEX.md; source metadata remains legacy-proposed and effective decision status remains proposed."
+  - "The current repository contains a private @kfm/maplibre 0.0.0 scaffold with a placeholder export, not a functioning renderer adapter or an accepted MapLibre version."
+  - "Current upstream MapLibre GL JS is v6.0.0, while the repository smoke harness still loads v5.5.0 from a public CDN; this is version and acquisition drift, not an implementation decision."
+  - "packages/cesium/ and packages/maplibre-runtime/ were absent at checked main paths; absence does not prove repository-wide conformance or acceptance."
+  - "The previously referenced docs/architecture/maplibre-3d.md path was absent at the checked main ref; docs/architecture/maplibre.md currently overstates the sole-renderer posture relative to this proposed ADR."
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer
 
-![adr](https://img.shields.io/badge/ADR-0007-blue?style=flat-square)
-![status](https://img.shields.io/badge/status-PROPOSED-orange?style=flat-square)
-![truth--posture](https://img.shields.io/badge/truth--posture-cite--or--abstain-success?style=flat-square)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-success?style=flat-square)
-![implementation](https://img.shields.io/badge/implementation-PROPOSED-orange?style=flat-square)
-![repo--depth](https://img.shields.io/badge/repo--depth-UNKNOWN-lightgrey?style=flat-square)
-![renderer](https://img.shields.io/badge/renderer-MapLibre%20GL%20JS-blueviolet?style=flat-square)
-![trust--membrane](https://img.shields.io/badge/trust%20membrane-single-success?style=flat-square)
-![supersedes](https://img.shields.io/badge/supersedes-KFM--P2--FEAT--0012-yellow?style=flat-square)
-![rollback](https://img.shields.io/badge/rollback-additive%20via%20exception--ADR-informational?style=flat-square)
-<!-- CI badge URL left as a placeholder; no mounted workflow was verified this session.
-![ci](https://img.shields.io/github/actions/workflow/status/<OWNER>/<REPO>/<WORKFLOW>.yml?branch=main)
--->
+> **Proposed decision.** KFM will use MapLibre GL JS as its default and sole browser-side renderer family. Native MapLibre capabilities and explicitly admitted plugins or custom-layer integrations may operate behind the governed MapLibre adapter seam. A second peer renderer requires a separately accepted, scoped exception ADR with dependency, policy, evidence, release, correction, and rollback treatment.
 
-> **One-line decision.** MapLibre GL JS is KFM's **default and sole browser-side renderer.** Every 2D, 2.5D, true-3D, point-cloud, globe, and visualization-overlay surface in KFM lives inside MapLibre's API surface — native capabilities plus an explicitly admitted plugin set governed by a `PluginAdmission` PolicyDecision. Any introduction of a browser-side rendering technology beyond the admitted plugin set requires an accepted **exception-ADR** with attached supply-chain attestation and an explicit, scoped use case.
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#1)
+[![Repository: scaffold](https://img.shields.io/badge/repository-renderer__scaffold-6e7781?style=flat-square)](#22-current-repository-evidence)
+[![Upstream: v6.0.0](https://img.shields.io/badge/upstream-MapLibre%20v6.0.0-1f6feb?style=flat-square)](#23-current-upstream-snapshot)
+[![Enforcement: incomplete](https://img.shields.io/badge/enforcement-incomplete-b42318?style=flat-square)](#81-current-enforcement-snapshot)
 
----
+> [!IMPORTANT]
+> **Repository configuration is not reviewed decision authority.** The tree contains MapLibre-oriented doctrine, a private package scaffold, an app-local boundary test, a CDN-based performance harness, and a readiness workflow. Those surfaces neither accept this ADR nor prove that a sole-renderer architecture, plugin admission system, package dependency boundary, or released browser runtime is implemented.
 
-## Mini Table of Contents
-
-- [1. Status](#1)
-- [2. Context](#2)
-- [3. Decision](#3)
-- [4. Evidence basis](#4)
-- [5. Directory Rules basis](#5)
-- [6. Consequences](#6)
-- [7. Alternatives considered](#7)
-- [8. Validation](#8)
-- [9. Rollback](#9)
-- [10. Open questions](#10)
-- [11. Migration plan](#11)
-- [12. Truth-label summary](#12)
+**Quick navigation:** [Status](#1) · [Context](#2) · [Decision](#3) · [Evidence](#4) · [Directory Rules](#5) · [Consequences](#6) · [Alternatives](#7) · [Validation](#8) · [Rollback](#9) · [Open work](#10) · [Migration](#11) · [Truth summary](#12) · [No-loss ledger](#appendix-a--no-loss-modernization-ledger)
 
 ---
 
@@ -84,19 +91,52 @@ owner:              <PLACEHOLDER — UI/AI plane steward; do not invent>
 
 ## 1. Status
 
-**PROPOSED.**
+### 1.1 Decision and document state
 
-Accepts when:
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0007` — unique and confirmed in the canonical human [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md` |
+| **Source metadata** | `legacy-proposed` |
+| **Effective decision status** | `proposed` — the repository index explicitly states that no numbered ADR is accepted at its recorded snapshot |
+| **Created** | 2026-05-10 |
+| **Updated** | 2026-07-23 |
+| **Decision scope** | Browser-side renderer-family selection and additional-renderer exception governance |
+| **Related seam decision** | [`ADR-0006`](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) — where renderer dependencies may be acquired or imported |
+| **Publication effect** | None. A Markdown edit, package scaffold, test, performance run, pull request, or upstream release does not publish KFM data or accept this ADR. |
 
-- the numbering conflict with the Build Manual §30 Recommended ADR Queue (OQ-A7-01) is resolved against the **live** `docs/adr/` set;
-- `KFM-P2-FEAT-0012` is marked `superseded_by: ADR-0007` in the Idea Index Master, with a forward link to this document;
-- a supersession entry is recorded in `docs/registers/DRIFT_REGISTER.md`;
-- the `PluginAdmission` contract is named in `contracts/` with a machine schema under `schemas/contracts/v1/...`;
-- `docs/architecture/maplibre-3d.md` updates its meta block to reference this ADR by accepted number.
+### 1.2 Current implementation posture
 
-Supersedes (per directory-rules §17): **`KFM-P2-FEAT-0012`** — Pass 23 / Pass 32 idea-index card carrying the prior dual-renderer posture for 3D scene rendering. The card is **retained** with `superseded_by: ADR-0007` and is **not deleted**.
+| Concern | Status | Safe conclusion |
+|---|---|---|
+| ADR number and filename | **CONFIRMED** | The exact record is indexed as ADR-0007. The old numbering-conflict question is closed. |
+| Sole-renderer decision | **PROPOSED** | The record exists but is not accepted. |
+| Current renderer package | **CONFIRMED scaffold** | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) declares private package `@kfm/maplibre` version `0.0.0`. |
+| Package implementation | **NOT ESTABLISHED** | [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) exports only `placeholder = true`. |
+| Package-home doctrine | **CONFLICTED** | Current implementation evidence uses `packages/maplibre/`; Directory Rules proposes `packages/maplibre-runtime/`. Do not create both as active peers. |
+| MapLibre version decision | **UNRESOLVED** | The repository does not pin MapLibre in the package scaffold. The root smoke harness loads `5.5.0`, while upstream released `6.0.0` on 2026-07-22. |
+| Cesium package at checked path | **ABSENT AT CHECKED PATH** | `packages/cesium/` was not found on `main`; this is not a complete import/dependency inventory. |
+| Renderer-family enforcement | **PARTIAL / INCOMPLETE** | Existing testing is app-local and import-text based; no repository-wide peer-renderer validator is established. |
+| Current released browser runtime | **UNKNOWN** | No accepted package pin, lockfile, build output, deployed app, released layer flow, or production log proves browser runtime behavior. |
 
-[↑ Back to top](#top)
+### 1.3 Acceptance gates
+
+ADR-0007 SHOULD NOT move to `accepted` until equivalent evidence closes every applicable gate.
+
+| Gate | Required evidence | Fail-closed result when missing |
+|---|---|---|
+| **A — Decision and index coherence** | Reviewed status transition in this ADR and matching canonical ADR index entry | Remain `proposed` |
+| **B — Renderer vocabulary** | A reviewed definition of `renderer`, `plugin`, `custom-layer integration`, `protocol`, and `peer renderer` | Treat ambiguous technologies as unadmitted |
+| **C — One physical adapter home** | Resolution of `packages/maplibre/` versus `packages/maplibre-runtime/`, with migration and compatibility posture | Do not create a second active package |
+| **D — Version and distribution decision** | Accepted MapLibre major/version range, package manager, lockfile, ESM/CSP/worker strategy, browser support matrix, and rollback | Do not claim buildability or support |
+| **E — Complete dependency inventory** | Recursive inventory of package manifests, imports, dynamic acquisition, workers, CDN scripts, globals, plugins, custom layers, examples, and tests | Treat sole-renderer conformance as unproven |
+| **F — Plugin and integration admission** | Per-dependency license, provenance, version, supply-chain, capability, policy, test, and removal evidence | DENY plugin/integration use |
+| **G — Structural enforcement** | Repository-wide deterministic validator, positive/negative fixtures, tests, and CI invocation | Direct review remains insufficient |
+| **H — Governed runtime proof** | At least one consumer builds through the accepted adapter and demonstrates released-input, negative-state, evidence, policy, correction, and rollback behavior | Hold operational acceptance |
+| **I — Documentation reconciliation** | Architecture lane, package docs, ADR-0006, test docs, and drift/backlog records agree with the accepted status and physical package home | Keep conflicting docs visibly proposed |
+| **J — Human review** | Required reviewers approve and acceptance evidence is recorded | Remain `proposed` |
+
+[Back to top](#top)
 
 ---
 
@@ -104,50 +144,83 @@ Supersedes (per directory-rules §17): **`KFM-P2-FEAT-0012`** — Pass 23 / Pass
 
 ## 2. Context
 
-### 2.1 The architectural commitment this ADR makes
+### 2.1 The problem this ADR addresses
 
-KFM's UI/AI plane has, in the corpus, more than one architectural sketch for how 3D scenes are rendered in the browser. Doctrine has not previously named a single renderer as the system's commitment. This ADR makes that commitment.
+KFM needs one explicit answer to this question:
 
-The choice is **MapLibre GL JS** — and only MapLibre GL JS, augmented by a small set of explicitly admitted plugins — as KFM's browser-side rendering surface. The decision rests on three things, in order:
+> **Which browser renderer family is the normal governed path, and what burden applies before another renderer can enter that path?**
 
-1. **MapLibre 5.x's capability surface is sufficient for every 3D need KFM has identified** at Kansas focus-mode and state-wide working scales. The capability matrix in §2.2 enumerates this.
-2. **A single renderer upholds the trust membrane by construction.** One `ViewState` model, one `CameraPath`, one `RepresentationReceipt` stream, one supply chain, one `PluginAdmission` surface, one set of plugin pins, one reviewer burden.
-3. **The corpus already classifies 3D rendering as a conditional overlay.** Master MapLibre v2.1 Category W normalizes 3D and globe surfaces as *conditional overlays that must preserve evidence identity and performance limits.* A single renderer is the most direct way to uphold that condition.
+Without a decision, a repository can accumulate multiple browser rendering SDKs, duplicated adapters, parallel camera and interaction models, multiple plugin/supply-chain inventories, and divergent release behavior. That fragmentation is especially risky for KFM because rendered surfaces are downstream carriers of evidence, policy, sensitivity transforms, review state, release state, correction lineage, and rollback—not independent truth systems.
 
-### 2.2 MapLibre 5.x capability map
+The decision is intentionally narrower than a complete MapLibre implementation:
 
-Every 3D capability KFM has identified in the Planetary/3D domain (Atlas §18) is reachable inside MapLibre's API surface — natively where possible, and through a small named plugin set otherwise. *(CONFIRMED at external-tech level against MapLibre's official documentation, plugins page, and the MapLibre 3D Tiles via three.js example dated 2026-03-03 — see `docs/architecture/maplibre-3d.md` §§2.4, 2.8.)*
+- It selects a renderer family.
+- It defines what counts as part of that family.
+- It defines the burden for a peer renderer or exception.
+- It does **not** admit a specific plugin, package version, endpoint, layer, dataset, or public release.
 
-| KFM 3D requirement | MapLibre 5.x path | Status |
+### 2.2 Current repository evidence
+
+The prior revision treated most implementation details as unknown. Current evidence allows a more precise statement.
+
+| Surface | Confirmed state | Boundary |
 |---|---|---|
-| 3D terrain mesh | `raster-dem` source + `Map.setTerrain` | **CONFIRMED native** |
-| Hillshade / shaded relief | `hillshade` layer | **CONFIRMED native** |
-| Globe projection + sky / atmosphere | `setProjection({type:'globe'})` + `sky` block (MapLibre 5.0+, Jan 2025) | **CONFIRMED native** |
-| 2.5D extruded geometry | `fill-extrusion` (evidence-bearing height attributes) | **CONFIRMED native** |
-| Camera control / cinematic ViewStates | `setPitch` / `setBearing` / `setVerticalFieldOfView` (`maxPitch ≈ 85°`) | **CONFIRMED native** |
-| Custom WebGL hosting | `type: 'custom'` layers (foundation for plugin paths) | **CONFIRMED native** |
-| OGC 3D Tiles (b3dm, i3dm, pnts) | `3d-tiles-renderer` via three.js custom layer | **CONFIRMED — MapLibre example dated 2026-03-03** |
-| glTF assets | `maplibre-three-plugin` or three.js custom layer | **CONFIRMED plugin ecosystem** |
-| LAS / LAZ / COPC point clouds | `maplibre-gl-lidar` (deck.gl-based) | **CONFIRMED plugin** |
-| EPT (Entwine) streaming point clouds | `maplibre-gl-lidar` | **CONFIRMED plugin** |
-| Massive vector / large-scale aggregation viz | `deck.gl` interleaved (`MapboxOverlay`, WebGL2, MapLibre ≥ 3) | **CONFIRMED integration** |
-| COG-as-source | `maplibre-cog-protocol` | **CONFIRMED plugin** |
-| PMTiles | `pmtiles` via `addProtocol` | **CONFIRMED plugin** |
-| Vector text protocols (CSV/TSV/Topojson/KML/GPX/TCX) | `maplibre-gl-vector-text-protocol` | **CONFIRMED plugin** |
-| Contour generation from vector | `maplibre-contourmap` | **CONFIRMED plugin** |
-| Babylon.js scenes (alternative to three.js) | MapLibre custom layer | **CONFIRMED advertised** |
+| [`docs/adr/INDEX.md`](./INDEX.md) | ADR-0007 is indexed at the exact current filename; effective status `proposed`, source metadata `legacy-proposed` | Inventory is not acceptance |
+| [`ADR-0006`](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Repository-grounded proposed import/acquisition seam | Does not choose or implement the renderer family |
+| [`packages/README.md`](../../packages/README.md) | Confirms `packages/maplibre/` scaffold and checked absence of `packages/cesium/` and `packages/maplibre-runtime/`; records path conflict | Bounded inventory, not exhaustive conformance |
+| [`packages/maplibre/README.md`](../../packages/maplibre/README.md) | Describes a private scaffold, unresolved dependency/API/distribution posture, and no functioning adapter | Documentation is not implementation |
+| [`packages/maplibre/package.json`](../../packages/maplibre/package.json) | `@kfm/maplibre`, private, `0.0.0`; no dependencies or scripts | No accepted MapLibre pin or build |
+| [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) | Placeholder export only | No renderer implementation |
+| [`package.json`](../../package.json) | Root lint/test/build are `echo TODO`; MapLibre performance commands live at repository root | Command presence is not package or release proof |
+| [`scripts/maplibre-smoke-perf.mjs`](../../scripts/maplibre-smoke-perf.mjs) | Loads `maplibre-gl@5.5.0` from UNPKG and uses the global runtime | Known test-harness divergence from the proposed package seam and current upstream v6 |
+| [`test_explorer_web_adapter_boundary.py`](../../tests/policy/test_explorer_web_adapter_boundary.py) | Scans Explorer Web only and permits MapLibre/Cesium imports anywhere under app-local `adapters/` | Does not enforce a sole renderer or package-only seam repo-wide |
+| [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | No-network syntax/negative checks plus an explicit HOLD on browser performance, proof, release, correction, and rollback claims | Not a renderer-family conformance gate |
+| [`docs/architecture/maplibre.md`](../architecture/maplibre.md) | Declares MapLibre sole renderer and Cesium retired while this ADR remains proposed; references missing `docs/architecture/maplibre-3d.md` | **CONFLICTED documentation posture** requiring reconciliation, not silent promotion |
 
-What MapLibre **does not** do, and what this ADR does **not** promise:
+### 2.3 Current upstream snapshot
 
-- **Subsurface volumetric stratigraphy** at production quality. This is **UNKNOWN regardless of approach** — no browser-side renderer covers this today. If it ever becomes in-scope it transits §3.5 (exception path).
-- **Planetary-scale terrain quality beyond zoom 18.** Irrelevant at Kansas focus-mode and state-wide scales (Atlas §18 working envelope).
-- **Free orbital camera beyond ~85° pitch.** No current KFM use case requires orbital views; if one emerges it transits §3.5.
+Current external research changes the baseline’s version framing:
 
-### 2.3 Why this needs to be an ADR, not an architecture note
+- MapLibre GL JS **v6.0.0** is the latest upstream release as of 2026-07-23 and was released on 2026-07-22.
+- v6 is **ESM-only**, removes the v5 UMD and separate CSP bundles, requires WebGL2, changes import and worker-handling expectations, and carries other breaking API changes.
+- The official MapLibre examples still demonstrate terrain, globe, custom layers, three.js models, and a 3D Tiles custom-layer integration.
+- The official plugins page lists integrations for deck.gl, three.js, LiDAR, COG, PMTiles, vector-text protocols, contours, and other extensions.
 
-Per directory-rules §2.4 / §17, naming a single renderer is an **architecturally canonical commitment** and reversing the prior multi-renderer posture (carried in `KFM-P2-FEAT-0012`) is an §17-class rule reversal. Both require an ADR + supersession notice + drift register entry. This document is that ADR.
+These facts support the availability of capability families. They do **not** establish KFM compatibility, package admission, license clearance, performance fitness, accessibility, sensitivity safety, evidence parity, or release readiness.
 
-[↑ Back to top](#top)
+### 2.4 Terminology
+
+| Term | Meaning in this ADR |
+|---|---|
+| **MapLibre GL JS** | The selected browser renderer library family. A major-version pin is a separate implementation decision. |
+| **Adapter seam** | The accepted package boundary implementing KFM-owned map runtime ports; governed by ADR-0006. |
+| **Native capability** | Functionality supplied by the accepted MapLibre package version without a third-party renderer integration. |
+| **Plugin / protocol** | A separately versioned dependency extending MapLibre sources, controls, protocols, or layer behavior. |
+| **Custom-layer integration** | A library such as three.js or Babylon.js hosted inside MapLibre’s custom-layer lifecycle. |
+| **Peer renderer** | A browser rendering SDK with its own primary map/scene lifecycle, camera, event, source/layer model, or public rendering authority parallel to MapLibre. |
+| **Admitted renderer set** | MapLibre plus explicitly approved plugins and custom-layer integrations. A documentation mention is not admission. |
+
+### 2.5 Scope
+
+**In scope**
+
+- Browser-side map and scene renderer-family selection.
+- 2D, 2.5D, terrain, globe, custom-layer, 3D Tiles, glTF, point-cloud, and visualization-overlay paths.
+- Additional-renderer and plugin admission burden.
+- Dependency, version, supply-chain, policy, test, documentation, migration, and rollback expectations.
+- Relationship to ADR-0006, Explorer Web, the package boundary, and public released artifacts.
+
+**Out of scope**
+
+- Selecting the accepted MapLibre major or exact version.
+- Admitting any specific plugin/version.
+- Authoring plugin contracts, schemas, Rego, validators, fixtures, or package code.
+- Declaring mobile/MapLibre Native support.
+- Declaring any layer, scene, point cloud, plugin, package, app, release, or public dataset operational.
+- Solving subsurface volumetric stratigraphy or every future visualization requirement.
+- Accepting this ADR through a documentation-only pull request.
+
+[Back to top](#top)
 
 ---
 
@@ -155,68 +228,106 @@ Per directory-rules §2.4 / §17, naming a single renderer is an **architectural
 
 ## 3. Decision
 
-### 3.1 Sole renderer
+### 3.1 Sole browser-renderer rule
 
-**MapLibre GL JS is KFM's default and sole browser-side renderer.** It hosts:
+If accepted:
 
-- 2D vector and raster layers (Master MapLibre v2.1 Categories K, M).
-- 2.5D `fill-extrusion` (evidence-bearing height attributes only; `geometry_label: '2.5D'` per Atlas §18 invariant `I-3D-4`).
-- 3D terrain (`raster-dem` + `setTerrain`) with hillshade as a context layer.
-- Globe projection and sky / atmosphere.
-- OGC 3D Tiles via `3d-tiles-renderer` + three.js custom layer.
-- glTF assets via `maplibre-three-plugin` or direct three.js custom layer.
-- LiDAR point clouds via `maplibre-gl-lidar`.
-- Visualization overlays via `deck.gl` interleaved (`MapboxOverlay`).
+> **MapLibre GL JS is KFM’s default and sole browser-side renderer family.** Browser map and scene behavior in the normal governed path runs through the accepted MapLibre adapter seam. Native capabilities and admitted plugins or custom-layer integrations remain subordinate to that seam. A peer renderer is denied unless a separately accepted exception ADR authorizes a precisely bounded use case.
 
-### 3.2 Admitted plugin set is the boundary of "the renderer"
+“Sole” means:
 
-The phrase *"the renderer"* in this ADR is defined as **MapLibre GL JS + the admitted plugin set.** The admitted plugin set is enumerated in `contracts/3d/plugin-dependencies.md` (PROPOSED) and pinned per-release by `PluginAdmission` PolicyDecisions emitted from `policy/maplibre/plugin-admission.rego` (PROPOSED).
+- one normal browser map/scene lifecycle;
+- one KFM-owned port and adapter family;
+- one accepted primary camera and interaction model;
+- one renderer dependency and supply-chain boundary;
+- one plugin/integration admission process;
+- one release-manifest renderer vocabulary;
+- no unreviewed peer renderer hidden in an app, package, test, example, CDN script, worker, custom element, or plugin wrapper.
 
-A plugin's appearance in this ADR's §2.2 capability map does **not** constitute admission. Admission is a per-plugin, per-version PolicyDecision, satisfying:
+“Sole” does **not** mean:
 
-- License clearance (`OQ-A7-02`).
-- Version pin in `packages/maplibre-runtime/src/plugin-registry.ts` (PROPOSED).
-- Supply-chain attestation (per AI Build Operating Contract §31).
-- Schema-checked round-trip of the plugin's contribution to `LayerManifest.plugin_dependencies` (per Atlas §18 invariant `I-3D-7`).
+- every capability must be native;
+- every plugin is automatically allowed;
+- MapLibre is truth, evidence, policy, review, release, or publication authority;
+- the renderer can fetch canonical/internal or unreleased stores;
+- an accepted ADR can be replaced by a README assertion or package scaffold.
 
-### 3.3 Default-path commitments
+### 3.2 Relationship to ADR-0006
 
-The following are **canonical** as of acceptance (PROPOSED locations; **NEEDS VERIFICATION** against a mounted repo):
-
-| Commitment | Surface |
+| ADR | Question answered |
 |---|---|
-| All default-path map components import MapLibre GL JS and never an alternative browser-side renderer SDK. | `apps/*`, `packages/*` |
-| All 3D-capable contracts are defined inside the MapLibre family of contracts. | `contracts/maplibre/`, `contracts/3d/` |
-| All 3D-capable schemas live under the MapLibre / 3D family. | `schemas/contracts/v1/maplibre/`, `schemas/contracts/v1/3d/` |
-| All 3D-capable policy bundles live under the MapLibre family. | `policy/maplibre/` |
-| All `MapReleaseManifest` layers carry `renderer: "maplibre"` by default. | `release/manifests/` |
+| **ADR-0006** | Where may renderer runtime dependencies be acquired, imported, initialized, and exposed? |
+| **ADR-0007** | Which renderer family is the normal browser path, what belongs inside its admitted set, and how is a peer renderer governed? |
 
-### 3.4 Default-deny on additional rendering technology
+Acceptance and implementation are independent:
 
-For any browser-side rendering technology **outside the admitted plugin set** — including any second WebGL/WebGPU rendering SDK, any alternative 3D engine, any external scene-streaming runtime, or any plugin not yet listed in `contracts/3d/plugin-dependencies.md`:
+- Accepting ADR-0007 would not prove ADR-0006 is implemented.
+- Implementing an adapter seam would not accept ADR-0007.
+- A test-only harness can be a bounded exception to ADR-0006 without becoming a peer renderer under ADR-0007, but the exception must be explicit and reviewed.
+- A plugin can remain inside the MapLibre renderer set while still requiring separate admission and supply-chain evidence.
 
-- **DENY** at `policy/maplibre/plugin-admission.rego` if the technology appears in a `LayerManifest.plugin_dependencies`, a `SceneManifest`, or a `MapReleaseManifest` without an accepted exception-ADR reference.
-- **DENY** at `policy/release/renderer-boundary.rego` for any `MapReleaseManifest` layer whose `renderer` field is not `maplibre` and which does not reference an accepted exception-ADR id.
-- **DENY** at lockfile validator (`tools/validators/validate_plugin_admission.py`, PROPOSED) for any package matching an unadmitted renderer-family identifier.
-- **DENY** in CI bundle-analyzer guardrail if a default-path bundle includes code paths from an unadmitted renderer family.
+### 3.3 Version independence and current v6 pressure
 
-These DENY surfaces are the operational meaning of *sole renderer*. They make the commitment in §3.1 testable rather than aspirational.
+This ADR selects the **MapLibre GL JS family**, not a permanent major version.
 
-### 3.5 Exception path
+An implementation decision MUST separately record:
 
-An additional browser-side rendering technology MAY be admitted by a **follow-on accepted ADR** that:
+- accepted major/version range and update policy;
+- package manager and lockfile;
+- ESM, worker, CSP, bundler, and asset-loading posture;
+- WebGL2/browser support matrix;
+- relevant breaking changes and migration tests;
+- plugin compatibility matrix;
+- deterministic build and rollback target;
+- license and supply-chain evidence;
+- public-network and self-hosting posture.
 
-1. Names the specific use case and dataset that requires it.
-2. Documents the alternative MapLibre + admitted-plugin paths considered and explains why each fails for that use case.
-3. Names the edition / variant of the technology, its license, and its rights posture.
-4. Pins versions and attaches supply-chain attestation (DSSE / cosign / Rekor or equivalent).
-5. Defines or references a `PluginAdmission` PolicyDecision for that admission.
-6. Defines a rollback path that does **not** break the MapLibre-only default-path deployment.
-7. Is scoped to the named use case and does **not** promote the additional technology to default-path status.
+The current repository does not satisfy that burden. The package scaffold has no dependency pin, while the smoke harness still acquires v5.5.0 from a public CDN and upstream has released v6.0.0.
 
-An admitted exception **does not modify this ADR.** It is a scoped, named amendment recorded in the register and forward-linked from this document.
+### 3.4 Admitted plugins and custom-layer integrations
 
-[↑ Back to top](#top)
+A plugin or custom-layer library is inside the renderer set only after a reviewed admission record establishes:
+
+1. package identity, version, source, maintainer, and license;
+2. role: source/protocol, control, native-style extension, custom layer, scene integration, analysis overlay, or test-only tool;
+3. why native MapLibre capability is insufficient;
+4. contract and manifest effects;
+5. policy and sensitivity effects;
+6. network, worker, CSP, asset, and endpoint behavior;
+7. supply-chain evidence and lockfile closure;
+8. positive, negative, performance, accessibility, and rollback tests;
+9. allowed consumers and runtime state;
+10. expiry/review date and removal path.
+
+The official plugin catalog or an upstream example is discovery evidence—not KFM admission.
+
+### 3.5 Additional-renderer exception path
+
+A peer renderer MAY enter only through a separately accepted exception ADR that:
+
+1. names a specific use case, dataset class, audience, and allowed environment;
+2. proves the accepted MapLibre and admitted-plugin paths cannot satisfy the use case;
+3. defines the peer renderer’s lifecycle, camera, interaction, event, source/layer, evidence, policy, and release boundaries;
+4. identifies exact dependencies, editions, versions, licenses, endpoints, workers, and assets;
+5. attaches supply-chain and vulnerability evidence;
+6. defines source-role, evidence, rights, sensitivity, review, and release obligations;
+7. preserves KFM-owned identity and finite negative states;
+8. proves no normal public path reads RAW, WORK, QUARANTINE, canonical/internal stores, or direct model output;
+9. defines telemetry, correction, cache invalidation, withdrawal, and rollback;
+10. remains scoped—an exception does not become the default renderer by implication.
+
+### 3.6 Default-deny behavior
+
+Until a dependency or peer renderer is admitted:
+
+- package introduction is denied;
+- direct/imported/CDN/worker acquisition is denied outside an approved bounded test exception;
+- public release manifests cannot claim it;
+- production runtime paths cannot load it;
+- docs must label it `PROPOSED`, `NEEDS VERIFICATION`, or `DENIED`, not implemented;
+- passing visual output cannot substitute for evidence, policy, review, or release state.
+
+[Back to top](#top)
 
 ---
 
@@ -224,40 +335,80 @@ An admitted exception **does not modify this ADR.** It is a scoped, named amendm
 
 ## 4. Evidence basis
 
-> *Priority order: corpus doctrine + workspace evidence first, then authoritative external research where versions or capabilities are version-sensitive.*
+### 4.1 Repository evidence
 
-### 4.1 Doctrine evidence (CONFIRMED)
+Repository evidence supports only the bounded implementation conclusions in §2.2:
 
-- **`KFM-P2-FEAT-0012`** — Pass 23 / Pass 32 idea-index card recording the prior dual-renderer posture for 3D scene rendering. The card itself carries `NEEDS VERIFICATION` on an unresolved edition-selection question and a `tension` entry on sustainable scene-authoring workflow. This ADR's supersession of the card resolves both by removing the dual-renderer posture from the default path. *(CONFIRMED in `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`, §8.6.30.)*
+- the ADR number/path and proposed status are confirmed;
+- a private MapLibre package scaffold exists;
+- the scaffold has no renderer dependency or functional adapter;
+- the checked Cesium and `maplibre-runtime` package paths are absent;
+- a root CDN harness uses MapLibre 5.5.0;
+- an app-local import test mentions MapLibre and Cesium;
+- a readiness workflow explicitly holds browser-runtime and trust-object claims;
+- the architecture lane currently overstates the renderer decision relative to the canonical ADR index.
 
-- **Master MapLibre v2.1, Category W** — entries `ML-W-072` through `ML-W-075` normalize 3D and globe surfaces as **conditional overlays that must preserve evidence identity and performance limits.** A single renderer is the most direct construction-level guarantee of evidence identity across all overlays. *(CONFIRMED in `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md`.)*
+No inspected repository artifact proves a complete renderer inventory, accepted version, admitted plugin set, buildable package, consumer migration, released browser runtime, or production sole-renderer behavior.
 
-- **Master MapLibre v2.1, Category W — `ML-W-006` through `ML-W-010`** — entries about shared artifacts, point clouds, terrain layers, and overlay synchronization are each marked as cumulative expansions requiring revalidation against mounted-repo tests, manifests, release receipts, and source-ledger checks. A single renderer reduces the number of such revalidation surfaces to one. *(CONFIRMED.)*
+### 4.2 Attached doctrine and lineage
 
-- **AI Build Operating Contract** — §§7 (publication, rights, sensitivity), 29 (object-family guardrails), 31 (security and exposure rules). Each of these is easier to satisfy with a single renderer's single supply chain than with two parallel chains. *(CONFIRMED in `ai-build-operating-contract.md`.)*
+The attached KFM corpus supports the governing posture that:
 
-- **Directory Rules v1.2** — §§2.4(2)/(5)/(6), §13.5, §17. The "two parallel schema / contract / policy / source / registry / release / proof homes" anti-pattern (§13.5) directly applies to dual-renderer architectures, which would require parallel contracts, schemas, policies, and release surfaces. This ADR closes that latent parallel-home risk. *(CONFIRMED in `directory-rules.md`.)*
+- renderers are downstream carriers, not truth authorities;
+- public clients use governed APIs and released artifacts;
+- 2D/2.5D/3D representations preserve evidence identity and reality-boundary labels;
+- sensitive geometry is transformed upstream, not hidden by style;
+- plugins and additional runtimes require policy, supply-chain, validation, review, release, correction, and rollback;
+- the prior dual-renderer idea is lineage that may be superseded by a reviewed ADR rather than deleted.
 
-- **`docs/architecture/maplibre-3d.md` (PROPOSED)** — the companion architecture document. This ADR is the canonical decision that the architecture document's recommendation depends on; the architecture document is the implementation reference. *(CONFIRMED at doctrine rank; implementation PROPOSED.)*
+The corpus does not prove current repository implementation or acceptance.
 
-### 4.2 External-tech evidence (CONFIRMED)
+### 4.3 Authoritative external evidence
 
-> *KFM's authoritative-research clause (operating-contract §1.3) permits and expects external research for version-sensitive capabilities. The following are CONFIRMED against MapLibre's own published documentation and examples, not asserted from memory.*
+The external snapshot is limited to official primary sources:
 
-- **MapLibre GL JS 5.0** released January 2025 — native globe projection (`Map.setProjection({type:'globe'})`) and `GlobeControl`. *(CONFIRMED — MapLibre release notes and docs.)*
-- **MapLibre Style Spec** — `terrain`, `hillshade`, `sky`, `light`, `fill-extrusion`, `projection` are first-class in the published style spec. *(CONFIRMED.)*
-- **MapLibre 3D Terrain example** — uses two `raster-dem` sources (one for `terrain`, one for `hillshade`) for render quality. *(CONFIRMED — `maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/`.)*
-- **MapLibre 3D Tiles via three.js example**, dated **2026-03-03** — `three@^0.183.0`, `3d-tiles-renderer@^0.4.21`, `GLTFLoader`, `DRACOLoader`. *(CONFIRMED — `maplibre.org/maplibre-gl-js/docs/examples/add-3d-tiles-using-threejs/`.)*
-- **MapLibre Plugins page** lists `maplibre-three-plugin`, `maplibre-gl-lidar`, `pmtiles`, `maplibre-cog-protocol`, `maplibre-gl-vector-text-protocol`, `maplibre-contourmap`. *(CONFIRMED — MapLibre plugins page.)*
-- **deck.gl `MapboxOverlay` interleaved mode** with WebGL2 supports MapLibre ≥ 3. *(CONFIRMED — deck.gl docs.)*
+- MapLibre GL JS releases and the v5-to-v6 migration guide;
+- MapLibre GL JS official examples and API documentation;
+- the MapLibre-maintained plugins catalog.
 
-### 4.3 What this ADR does **not** rely on
+External evidence answers “what the upstream project exposes.” It does not answer “what KFM has admitted, implemented, tested, or released.”
 
-- It does **not** rely on any performance benchmark beyond Kansas focus-mode and state-wide working envelopes. Performance is monitored via `RenderReceipt` budgets, not by this ADR.
-- It does **not** rely on any specific plugin version. Each plugin pin is the job of a per-release `PluginAdmission` PolicyDecision, not this ADR.
-- It does **not** rely on the maturity of any single plugin to be permanent. If a plugin regresses, it leaves the admitted set via the `PluginAdmission` flow; the renderer commitment remains.
+### 4.4 Capability map
 
-[↑ Back to top](#top)
+| Capability family | Upstream evidence | KFM status under this ADR |
+|---|---|---|
+| 2D vector and raster rendering | Core MapLibre GL JS and Style Specification | Selected renderer-family capability; implementation not established |
+| Terrain mesh | `raster-dem` plus `setTerrain` | Native upstream capability; KFM version/data/release tests required |
+| Hillshade | `hillshade` layer | Native upstream capability; context layer is not evidence by itself |
+| Globe, sky, atmosphere | Projection and style APIs | Native upstream capability; KFM view-state and evidence-parity tests required |
+| 2.5D extrusion | `fill-extrusion` | Native upstream capability; must be labeled 2.5D, not true 3D |
+| Camera and cinematic state | Map camera APIs | Native upstream capability; KFM-owned serializable state required |
+| Custom WebGL layers | Custom layer lifecycle | Native extension seam; every integration separately admitted |
+| 3D Tiles | Official three.js + `3d-tiles-renderer` example | Integration capability; not admitted or production-proven |
+| glTF models | Official three.js examples and plugin catalog | Integration capability; not admitted |
+| Point clouds / EPT | Plugin catalog entries | Plugin capability; not admitted |
+| deck.gl overlays | Plugin catalog / integration documentation | Overlay capability; not a peer renderer when admitted inside MapLibre |
+| COG | `maplibre-cog-protocol` in plugin catalog | Protocol capability; not admitted |
+| PMTiles | PMTiles protocol integration in plugin catalog/examples | Protocol capability; not admitted |
+| Vector-text protocols | Plugin catalog | Protocol capability; not admitted |
+| Contours | Plugin catalog | Plugin capability; not admitted |
+| Babylon.js custom scenes | Official examples | Integration capability; not admitted |
+| Subsurface volumetric stratigraphy | No accepted KFM implementation evidence | `UNKNOWN`; not promised by this ADR |
+
+### 4.5 Evidence limits
+
+This ADR does not claim:
+
+- current performance or accessibility;
+- compatibility between upstream v6 and any plugin;
+- a current license inventory for all plugins;
+- production suitability at Kansas, county, or focus-mode scale;
+- complete browser/device support;
+- package-manager or lockfile availability;
+- current CI success;
+- deployment or public release.
+
+[Back to top](#top)
 
 ---
 
@@ -265,26 +416,52 @@ An admitted exception **does not modify this ADR.** It is a scoped, named amendm
 
 ## 5. Directory Rules basis
 
-### 5.1 Why an ADR is required at all
+### 5.1 Why this belongs under `docs/adr/`
 
-- **§2.4(6) — Bending an invariant from §3.** Naming a single renderer reinforces the *single trust membrane* invariant. The reversal of `KFM-P2-FEAT-0012`'s prior posture is itself an §17-class rule reversal.
-- **§17 — "Reversing a previously canonical rule"** — requires ADR + supersession notice + drift register entry. All three are produced by this ADR.
+Directory Rules place human-facing decisions under `docs/adr/`. Renderer-family selection changes a cross-cutting implementation and governance commitment, affects package/dependency direction, and constrains future peer-renderer paths. That burden requires an ADR rather than an architecture note or package README.
 
-### 5.2 Why this ADR lives at `docs/adr/`
+The target path is confirmed by the canonical ADR index; this revision does not rename it.
 
-- **§5 canonical roots** — `docs/adr/` is the canonical home for accepted and superseded ADRs.
-- The filename pattern `ADR-NNNN-<kebab-case-decision>.md` matches the precedents of `ADR-0001-schema-home.md` and `ADR-0003-policy-singular-is-canonical.md`. *(PROPOSED — mounted ADR set NEEDS VERIFICATION.)*
+### 5.2 Responsibility-root routing
 
-### 5.3 Why `docs/architecture/maplibre-3d.md` is the companion document, not this ADR
+| Responsibility | Owning root | ADR-0007 relationship |
+|---|---|---|
+| Decision record | `docs/adr/` | This document |
+| Architecture explanation | `docs/architecture/` | Explains the accepted/proposed renderer posture; cannot accept it |
+| Reusable adapter implementation | `packages/` | Physical home must be resolved without parallel packages |
+| Browser shell | `apps/explorer-web/` | Consumer of KFM-owned port; not renderer authority |
+| Semantic meaning | `contracts/` | Plugin/admission/manifest meaning |
+| Machine shape | `schemas/` | Admission and manifest schemas |
+| Admissibility | `policy/` | Plugin, renderer, sensitivity, rights, release decisions |
+| Validation | `tools/validators/` | Reusable deterministic checks |
+| Enforceability | `tests/` and fixtures | Positive/negative proof |
+| Release decisions | `release/` | Promotion, correction, withdrawal, rollback |
+| Lifecycle artifacts | `data/` | Receipts/proofs/published artifacts; not defined by this ADR |
 
-- **§6 docs lane — `docs/architecture/<topic>.md`** is the canonical home for cross-domain architecture doctrine.
-- **§12 Domain Placement Law** — 3D is a cross-cutting carrier, not a domain root. The architecture document belongs at `docs/architecture/`; this decision document belongs at `docs/adr/`.
+### 5.3 Current path conflict
 
-### 5.4 Compatibility-root posture
+Directory Rules propose `packages/maplibre-runtime/`, while the repository contains `packages/maplibre/`. That conflict is not resolved by this ADR and MUST NOT be “fixed” by creating a second active package.
 
-This ADR does **not** create new compatibility roots, **does not** promote any compatibility root to canonical, **does not** change the schema-home rule, and **does not** add a lifecycle phase. It satisfies the §2.4 "no parallel home" anti-pattern by **closing** a latent parallel-renderer family rather than opening one.
+Resolution requires a reviewed migration or a later placement decision that:
 
-[↑ Back to top](#top)
+- selects one canonical implementation home;
+- inventories consumers and backlinks;
+- records compatibility treatment;
+- prevents independent evolution;
+- updates tests/workflows/docs atomically;
+- preserves rollback.
+
+### 5.4 No new authority roots
+
+This documentation-only revision:
+
+- creates no root;
+- changes no lifecycle phase;
+- creates no schema, contract, policy, test, fixture, validator, package, workflow, data, proof, receipt, or release object;
+- does not promote a compatibility root;
+- does not accept the renderer decision.
+
+[Back to top](#top)
 
 ---
 
@@ -292,32 +469,39 @@ This ADR does **not** create new compatibility roots, **does not** promote any c
 
 ## 6. Consequences
 
-### 6.1 Positive
+### 6.1 Positive consequences if accepted
 
-- **One trust membrane.** One renderer to govern; one set of receipts to emit; one `ViewState` and `CameraPath` model; no cross-renderer drift to specify, monitor, or test.
-- **Evidence identity by construction.** The same tiles drive 2D, 2.5D, globe, 3D Tiles, glTF, and point-cloud views. Master MapLibre v2.1 Category W's *evidence identity* requirement is structurally upheld.
-- **Single supply chain.** AI Build Operating Contract §31 attestation discipline applies to one chain, not two; SBOM, signing, and lockfile checks are simpler and more comprehensive.
-- **Smaller bundle, simpler stack.** No dual-renderer infrastructure, no cross-renderer camera sync, no shared-layer-manifest translation overhead, no reviewer burden duplication.
-- **Easier to test and to govern.** One `PluginAdmission` surface, one `RepresentationReceipt` schema, one lockfile guardrail, one bundle-analyzer rule.
-- **Reversible by exception.** The §3.5 exception path means this commitment is firm but not absolute — KFM keeps the ability to admit additional rendering technology under a scoped, attested ADR if a use case ever truly requires it.
+- **One normal rendering lifecycle.** Camera, selection, time, layer, and negative-state behavior have one primary browser seam.
+- **Lower authority fragmentation.** Fewer opportunities for parallel contracts, schemas, policies, release fields, or evidence handling.
+- **Centralized dependency governance.** Renderer and plugin acquisition can be inspected at one package boundary.
+- **Clearer tests.** A peer renderer, unadmitted plugin, direct CDN runtime, or raw renderer type has a deterministic review outcome.
+- **Renderer replacement remains possible.** A successor ADR can replace MapLibre, and a scoped exception ADR can admit a bounded peer without silently changing the default.
+- **AI and UI remain subordinate.** Renderer capability does not elevate map pixels, feature properties, scenes, or generated descriptions into proof.
 
-### 6.2 Negative / accepted risks
+### 6.2 Costs and accepted tradeoffs
 
-- **Maturity dependency on the admitted plugin set.** Some plugins in §2.2 are younger than the corresponding capabilities in mature alternative engines. KFM accepts this risk at Kansas-scale working envelopes; the risk is re-evaluated per use case via §3.5.
-- **`maxPitch ≈ 85°`.** Sufficient for all current KFM use cases; orbital cases transit §3.5.
-- **Plugin-version drift becomes a real governance surface.** Mitigated by `PluginAdmission` per-release and CI lockfile checks. *(PROPOSED implementation.)*
-- **An exception-ADR carries non-trivial cost.** This is a feature of the governance, not a bug — the cost of admitting an additional rendering technology is the same as the cost of upholding the trust membrane against it.
+- **Adapter and admission burden.** New capabilities require KFM-owned types, contracts, policy, fixtures, and tests rather than direct SDK use.
+- **Plugin maturity risk.** Some integrations may be less mature than peer-renderer equivalents.
+- **Version migration burden.** Upstream v6 introduces real breaking changes; the repository must not treat a v5 CDN harness as a current implementation plan.
+- **Reduced convenience for experiments.** Direct renderer imports and browser globals require a bounded test exception instead of ad hoc use.
+- **Potential capability gap.** A future use case may require a peer renderer; the exception ADR deliberately makes that decision costly and reviewable.
+- **Documentation reconciliation work.** Existing docs currently state stronger sole-renderer conclusions than the proposed ADR status supports.
 
-### 6.3 Carried-forward, **unchanged** by this ADR
+### 6.3 Unchanged KFM invariants
 
-- The **2.5D vs. true-3D label discipline** (`KFM-P9-FEAT-0011`, `KFM-P9-FEAT-0013`) remains in effect.
-- The Atlas §18 object families — **Scene Manifest, Layer Manifest, Style Manifest, Terrain Model, View State, Camera Path, Representation Receipt, 3D Admission Decision, Reality Boundary Note** — remain in effect.
-- The **CARE-grade generalization** rule for archaeology terrain-linked layers (`≥5 km`; `ML-059-055`) remains in effect.
-- The **cite-or-abstain** posture and **EvidenceBundle** discipline are untouched.
-- The **deny-by-default release gate** is untouched.
-- The 3D invariants `I-3D-1` through `I-3D-7` (governed tile-host endpoints; evidence parity; no cross-renderer drift; 2.5D ≠ true-3D; CARE / sensitivity generalization; living-person / DNA exclusion; pinned plugin admission) are upheld by construction.
+This ADR never relaxes:
 
-[↑ Back to top](#top)
+- `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`;
+- public-client use of governed interfaces and released artifacts;
+- cite-or-abstain;
+- EvidenceRef-to-EvidenceBundle resolution for consequential claims;
+- upstream sensitivity transformation;
+- 2D/2.5D/3D reality-boundary labeling;
+- correction, withdrawal, and rollback;
+- AI as interpretive rather than authoritative;
+- release review and separation of duties.
+
+[Back to top](#top)
 
 ---
 
@@ -325,27 +509,19 @@ This ADR does **not** create new compatibility roots, **does not** promote any c
 
 ## 7. Alternatives considered
 
-### 7.1 Multi-renderer architecture (the prior posture)
+| Alternative | Disposition | Reason |
+|---|---|---|
+| **A — Preserve an explicit MapLibre + Cesium dual-renderer default** | Rejected by the proposed decision | Duplicates lifecycle, dependency, camera, event, supply-chain, policy, release, and testing burdens; repository evidence does not establish a functional need or implementation. |
+| **B — Let each feature select a renderer** | Rejected | Recreates ambient authority and makes conformance impossible to reason about repo-wide. |
+| **C — Use deck.gl as the primary renderer** | Rejected | deck.gl can be an admitted MapLibre overlay, but a second primary lifecycle would fragment the normal path. |
+| **D — Use three.js or Babylon.js as the primary renderer** | Rejected | Those libraries may be custom-layer integrations; making either primary would create a separate scene lifecycle and governance surface. |
+| **E — Keep MapLibre as de facto default without an ADR** | Rejected | Convention cannot resolve prior dual-renderer lineage, package boundaries, exception burden, or future peer-renderer admission. |
+| **F — Ban all third-party rendering integrations** | Rejected | Native capability alone may not cover 3D Tiles, point clouds, or specialized overlays; explicit admission is safer than hidden workarounds. |
+| **G — Accept the ADR immediately because no Cesium package was found** | Rejected | Absence at checked paths is bounded evidence, not acceptance, complete inventory, runtime proof, or policy enforcement. |
+| **H — Defer all documentation until a functional package exists** | Rejected | The decision and acceptance gates should guide implementation, but documentation must remain visibly proposed. |
+| **I — Select a permanent MapLibre major in this ADR** | Rejected | Renderer-family selection should outlive one upstream major; version adoption belongs to implementation/package governance. |
 
-**Rejected.** A multi-renderer architecture requires parallel contracts, schemas, policy bundles, release surfaces, and supply chains — exactly the "two parallel homes" anti-pattern that directory-rules §13.5 names. It doubles the reviewer burden and creates a standing cross-renderer drift risk that the corpus's evidence-identity requirement (`ML-W-072`–`ML-W-075`) cannot tolerate without significant additional discipline that no architecture document has yet specified. The prior posture in `KFM-P2-FEAT-0012` also carried unresolved governance items (edition selection, sustainable authoring workflow) that this ADR does not attempt to resolve in-place; it resolves them by removing the multi-renderer posture from the default path.
-
-### 7.2 Use `deck.gl` as the primary renderer; treat MapLibre as a basemap host
-
-**Rejected.** `deck.gl` on its own does not provide the vector style spec, native terrain mesh, hillshade layer, globe projection, sky / atmosphere, or `fill-extrusion` API that KFM's 2D and 2.5D surfaces depend on (Master MapLibre v2.1 Categories K, M, Q). `deck.gl` **is** admitted as an interleaved overlay (`MapboxOverlay`, `interleaved: true`) per `docs/architecture/maplibre-3d.md` — that integration is consistent with this ADR. The rejected option is making `deck.gl` *primary*, not making it *admitted*.
-
-### 7.3 Adopt a hand-rolled three.js scene as the primary renderer
-
-**Rejected.** A hand-rolled three.js scene would lose the MapLibre style spec, the governed source families (`pmtiles`, `cog-protocol`, vector text protocols), the globe projection, the terrain-and-hillshade pair, and the existing `RepresentationReceipt` plumbing. three.js **is** admitted as the host for OGC 3D Tiles and glTF rendering inside MapLibre custom layers, which is consistent with this ADR. The rejected option is making three.js *primary*, not making it *admitted*.
-
-### 7.4 Adopt MapLibre as default but leave the renderer commitment unstated
-
-**Rejected.** Silence is not reversal. Per directory-rules §17, a previously canonical rule must be **explicitly** reversed; per §2.5, drift between doctrine and repo must be raised as a drift-register entry and resolved by ADR. An unstated commitment would leave the corpus in contradiction with the architecture and would leave the §13.5 anti-pattern latent rather than closed.
-
-### 7.5 Defer the decision until a mounted repo is inspected
-
-**Rejected as the default.** The decision is doctrine-level; it does not depend on mounted-repo evidence to be **correct**. It depends on mounted-repo evidence to be **operational** (file paths, validator names, CI workflows). The two concerns are separated in this ADR — the decision sits in §3, the operational paths sit in §3.3 and §8 as PROPOSED — so acceptance of the decision is not blocked on a mounted-repo inspection. The mounted-repo inspection drives §11 migration scope, not the §3 decision.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
@@ -353,45 +529,72 @@ This ADR does **not** create new compatibility roots, **does not** promote any c
 
 ## 8. Validation
 
-> *Per directory-rules §2.4 and operating-contract §28, every ADR carries a validation surface. Each item below is **PROPOSED** until backed by a mounted test, fixture, or CI run.*
+### 8.1 Current enforcement snapshot
 
-### 8.1 Contract / schema tests
+| Surface | Confirmed state | Boundary |
+|---|---|---|
+| ADR index validator | Canonical ADR inventory and status normalization exist | Does not accept the ADR |
+| ADR-0006 | Proposed import/acquisition seam with repository evidence | Does not establish a functional renderer or sole-renderer rule |
+| Explorer Web boundary test | Scans app source and confines “maplibre”/“cesium” import lines to app-local adapters | Does not scan packages, scripts, workers, HTML/CDN, manifests, globals, or peer SDKs |
+| Package manifests | MapLibre scaffold has no dependencies; root package has performance tooling dependencies only | No accepted renderer dependency or lockfile |
+| Smoke harness | Direct CDN acquisition of MapLibre 5.5.0 | Known version/acquisition divergence |
+| MapLibre readiness workflow | Static syntax/negative checks and explicit HOLD | No browser performance, proof, release, correction, or renderer-family conformance |
+| Architecture lane | States sole renderer and Cesium retired | Conflicts with proposed ADR status and missing companion path |
+| Cesium checked package path | Not found | Not a complete repository inventory |
 
-- `schemas/contracts/v1/policy/plugin_admission.schema.json` validates a `PluginAdmission` instance with `renderer: "maplibre"` (default) and accepts an `additional_renderer` field only when paired with an `exception_adr_id` referencing an accepted ADR. **PROPOSED.**
-- `schemas/contracts/v1/maplibre/scene_manifest.schema.json` defines a single-renderer `SceneManifest` with no cross-renderer bridge fields. **PROPOSED.**
-- `schemas/contracts/v1/release/map_release_manifest.schema.json` validates `MapReleaseManifest.layers[*].renderer == "maplibre"` by default and accepts other values only when paired with an `exception_adr_id`. **PROPOSED.**
-- `schemas/contracts/v1/maplibre/layer_manifest.schema.json` validates `plugin_dependencies[*]` against the admitted plugin set. **PROPOSED.**
+### 8.2 Required validation classes before acceptance
 
-### 8.2 Policy tests (Rego or chosen DSL)
+| Class | Minimum evidence |
+|---|---|
+| **Inventory** | Recursive file/import/manifest/worker/CDN/global/plugin/custom-layer scan with machine-readable results |
+| **Package boundary** | Accepted physical home, dependency pin, lockfile, exports, build, browser matrix, CSP/worker policy, consumer map |
+| **Renderer-family classification** | Finite vocabulary and classifier for native capability, plugin, protocol, custom-layer integration, test-only harness, and peer renderer |
+| **Negative tests** | Non-adapter import, unadmitted peer renderer, unadmitted plugin, CDN acquisition, worker acquisition, raw type leakage, missing exception ADR |
+| **Positive tests** | Accepted adapter imports MapLibre; admitted integration passes; test-only exception remains bounded; consumer uses KFM-owned port |
+| **Governed runtime** | Released manifest input, evidence lookup, policy negative states, correction/withdrawal, rollback, accessibility, telemetry |
+| **Supply chain** | License, provenance, lockfile, vulnerability posture, SBOM/attestation where required, deterministic rollback |
+| **Documentation** | ADR/index/package/architecture/tests/workflow docs agree and use correct truth labels |
 
-- `policy/maplibre/plugin-admission.rego` — DENIES `LayerManifest` whose `plugin_dependencies` include any identifier not in the admitted set and without an accepted `exception_adr_id`. **PROPOSED.**
-- `policy/release/renderer-boundary.rego` — DENIES `MapReleaseManifest` whose layers carry a `renderer` value outside the admitted set without an accepted `exception_adr_id`. **PROPOSED.**
-- CARE / sensitivity / archaeology / living-person / DNA policies remain in effect across all layers; admission via the §3.5 exception path does **not** relax sensitivity gates. **PROPOSED.**
+### 8.3 Proposed checks
 
-### 8.3 Validator tests
+The following names are **PROPOSED** until an existing equivalent is found or the path is reviewed under Directory Rules:
 
-- `tools/validators/validate_plugin_admission.py` — fails closed on missing or unknown `exception_adr_id` for any non-admitted renderer family. **PROPOSED.**
-- `tools/validators/validate_scene_manifest.py` — fails closed on any cross-renderer bridge field appearing in a `SceneManifest`. **PROPOSED.**
-- `tools/validators/validate_layer_manifest.py` — fails closed on unadmitted `plugin_dependencies` entries. **PROPOSED.**
+- `tools/validators/validate_renderer_family_boundary.*`
+- `tests/governance/test_renderer_family_boundary.*`
+- `tests/governance/test_renderer_exception_adr.*`
+- `tests/packages/maplibre/test_public_types_do_not_leak_renderer.*`
+- `tests/packages/maplibre/test_plugin_admission.*`
 
-### 8.4 Build / CI tests
+A proposed path is not implementation proof. Reuse existing validator/test homes when equivalent behavior exists.
 
-- Lockfile (`package-lock.json` or equivalent) check fails closed if a package matching an unadmitted renderer-family identifier appears without an accepted `exception_adr_id`. **PROPOSED.**
-- Bundle-analyzer guardrail flags any default-path bundle that includes code paths from an unadmitted renderer family. **PROPOSED.**
-- 3D smoke test: `setTerrain` succeeds, `terrain` event fires, `RenderReceipt` emitted within budget. **PROPOSED.**
-- 2D fallback test: terrain-admission failure → 2D render with visible reason. **PROPOSED.**
-- Globe toggle test: `setProjection({type:'globe'})` succeeds at MapLibre 5.0+. **PROPOSED.**
-- 3D Tiles via three.js smoke test: tileset loads, first tile renders within budget, `RenderReceipt` records `3d-tiles-renderer` version. **PROPOSED.**
-- LiDAR EPT smoke test: point cloud streams, point budget respected, classification filter passes. **PROPOSED.**
+### 8.4 Scoped commands
 
-### 8.5 Documentation tests
+Run from repository root on the proposed revision:
 
-- `docs/architecture/maplibre-3d.md` meta block references `ADR-0007` after acceptance (no `<NNNN>` placeholder remains). **PROPOSED.**
-- `docs/registers/DRIFT_REGISTER.md` carries an entry recording the supersession of `KFM-P2-FEAT-0012`. **PROPOSED.**
-- The `KFM-P2-FEAT-0012` card in the Idea Index Master gains `superseded_by: ADR-0007` and a forward link. **PROPOSED.**
-- Master MapLibre v2.1 Category W entries that referenced cross-renderer assumptions are refreshed to reference this ADR. **PROPOSED.**
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+python -m pytest tests/policy/test_explorer_web_adapter_boundary.py -q
+node --check scripts/maplibre-smoke-perf.mjs
+```
 
-[↑ Back to top](#top)
+When the package and dependency strategy becomes real, add repository-native locked install, build, typecheck, unit, browser, and no-network commands. Do not invent them while root scripts remain placeholders.
+
+### 8.5 Reviewer checklist
+
+- [ ] Is ADR-0007 still represented as `proposed` unless human acceptance evidence exists?
+- [ ] Does the change preserve ADR-0006’s distinct import/acquisition question?
+- [ ] Is one physical adapter package home selected without creating a parallel sibling?
+- [ ] Is the MapLibre major/version decision explicit and tested?
+- [ ] Are v6 ESM, worker, CSP, WebGL2, and breaking-change implications addressed?
+- [ ] Does every plugin/integration have an admission record and removal path?
+- [ ] Does the inventory include imports, manifests, workers, CDN scripts, globals, examples, and tests?
+- [ ] Are renderer outputs still downstream of evidence, policy, review, release, correction, and rollback?
+- [ ] Are sensitive geometry and restricted data transformed upstream?
+- [ ] Are architecture docs corrected so they do not state a proposed decision as accepted doctrine?
+- [ ] Can a peer renderer be denied deterministically without hiding an unsafe fallback?
+
+[Back to top](#top)
 
 ---
 
@@ -399,25 +602,55 @@ This ADR does **not** create new compatibility roots, **does not** promote any c
 
 ## 9. Rollback
 
-> *Per operating-contract §1.5 and §28, every ADR names a rollback path. KFM's preference is **reversible, additive** rollback whenever possible.*
+### 9.1 Document rollback
 
-### 9.1 Rollback is additive
+If this modernization is inaccurate, restore prior blob:
 
-If a future KFM use case demonstrates a genuine need for a browser-side rendering technology outside the admitted plugin set, this ADR is rolled back **by amendment**, not by deletion:
+`c753f09db18e12081f99405b42cd79ebb89d0ac3`
 
-1. Author a follow-on **exception-ADR** that satisfies the seven §3.5 conditions.
-2. Mark this ADR (`ADR-0007`) as **amended** (not superseded) with a forward link to the new ADR. The default-off, gated posture for everything outside the named exception remains in effect.
-3. Add an amendment entry to `docs/registers/DRIFT_REGISTER.md`.
+or revert the eventual implementation commit. The ADR remains in history; do not delete it.
 
-### 9.2 Full reversal
+### 9.2 Rollback before acceptance
 
-A full reversal — restoring a multi-renderer default-path posture — requires a superseding ADR (`status: accepted`, with this ADR's `status: superseded` and a forward link) and would itself be an §17-class rule reversal. This path is documented for completeness; it is not anticipated.
+Before acceptance, rollback means:
 
-### 9.3 What rollback never restores
+- leave the decision `proposed`;
+- close or abandon implementation branches through normal review controls;
+- retain the current package scaffold unless a separate reviewed change removes it;
+- preserve conflicting evidence and backlog records rather than rewriting history.
 
-- An exception-ADR **must** resolve the governance items that this ADR's supersession of `KFM-P2-FEAT-0012` left behind (edition selection, licensing posture, sustainable authoring workflow, sustainable supply-chain attestation). Rollback does **not** restore the prior posture *with those open items still open.*
+### 9.3 Scoped exception after acceptance
 
-[↑ Back to top](#top)
+A scoped exception does not automatically supersede ADR-0007. The exception ADR:
+
+- forward-links from this record;
+- names its exact scope;
+- preserves MapLibre as the normal path;
+- records dependency and release consequences;
+- contains a removal/rollback target.
+
+### 9.4 Full reversal after acceptance
+
+A future default-path peer or replacement renderer requires a superseding ADR that:
+
+- marks ADR-0007 `superseded` and links forward;
+- updates the canonical ADR index;
+- inventories contracts, schemas, policy, fixtures, tests, packages, apps, workflows, docs, receipts, proofs, and releases;
+- supplies old-to-new compatibility and migration maps;
+- preserves released-artifact correction, withdrawal, and rollback;
+- does not rewrite or delete this decision history.
+
+### 9.5 Runtime rollback
+
+Runtime rollback, if implementation later exists, must be governed through package/release controls:
+
+1. restore the last accepted package/version and lockfile;
+2. restore the last accepted manifest and adapter behavior;
+3. withdraw incompatible public artifacts where required;
+4. invalidate caches and derived outputs through release procedures;
+5. emit correction/rollback evidence appropriate to the affected scope.
+
+[Back to top](#top)
 
 ---
 
@@ -425,45 +658,51 @@ A full reversal — restoring a multi-renderer default-path posture — requires
 
 ## 10. Open questions
 
-### OQ-A7-01 — Numbering conflict (NEEDS VERIFICATION)
+The ADR number and tracked path are no longer open questions. Current open work is implementation, versioning, documentation reconciliation, and acceptance.
 
-The Build Manual §30 Recommended ADR Queue informally lists different topics under the ADR-0007 and ADR-0008 slots than this ADR uses. The user-supplied path for this decision is `docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md`.
+### OQ-A7-01 — Physical package home (`CONFLICTED`)
 
-**Treatment in this draft:** the user-supplied number is honored. The Build Manual queue is itself a recommendation table (PROPOSED), not an accepted ADR set. The numbering conflict is recorded here for resolution against the **live** `docs/adr/` directory at PR time.
+Which path becomes the accepted adapter package: current `packages/maplibre/` or proposed `packages/maplibre-runtime/`? Resolve through one reviewed migration; do not create both as independent authorities.
 
-**Resolution paths (any of):**
+### OQ-A7-02 — Accepted MapLibre version (`NEEDS VERIFICATION`)
 
-- **(a)** Accept this ADR as `0007` and renumber the Build Manual queue's reservations.
-- **(b)** Renumber this ADR to the lowest free slot in the live `docs/adr/` set (e.g., `0008` if `0007` is already taken in the accepted set).
-- **(c)** Renumber the Build Manual queue's reservations to align with this ADR.
+Upstream is now v6.0.0, the root harness still loads v5.5.0, and the package scaffold pins nothing. Decide version range, lockfile, ESM/CSP/worker strategy, browser/WebGL2 support, plugin compatibility, migration tests, and rollback.
 
-**Status:** NEEDS VERIFICATION against the mounted `docs/adr/` directory.
+### OQ-A7-03 — Complete renderer/dependency inventory (`NEEDS VERIFICATION`)
 
-### OQ-A7-02 — Admitted plugin licensing inventory (PROPOSED)
+Bounded search and checked paths do not establish a recursive inventory. Scan all manifests, source files, workers, HTML templates, scripts, examples, test harnesses, generated assets, CDN references, globals, and branches relevant to release.
 
-Several MapLibre plugins listed in §2.2 carry licenses marked `NEEDS VERIFICATION` in `docs/architecture/maplibre-3d.md` Appendix A. This ADR does not block on those entries — they are governed at `PluginAdmission` time — but the licensing inventory should be completed before the first release that depends on any of them. Plugins in scope: `3d-tiles-renderer`, `maplibre-three-plugin`, `maplibre-gl-lidar`, `maplibre-cog-protocol`, `maplibre-gl-vector-text-protocol`, `maplibre-contourmap`.
+### OQ-A7-04 — Companion architecture document (`CONFLICTED`)
 
-### OQ-A7-03 — `PluginAdmission` schema home (PROPOSED)
+`docs/architecture/maplibre.md` references `docs/architecture/maplibre-3d.md`, but the checked path is absent and the lane entry point states the sole-renderer decision more strongly than the ADR index permits. Decide whether to create, consolidate, or redirect that companion in a separately authorized documentation packet.
 
-`schemas/contracts/v1/policy/plugin_admission.schema.json` is the PROPOSED home. If `ADR-S-03` (Receipt schema layout) is decided in favor of per-domain schema homes, the path may move to `schemas/contracts/v1/maplibre/plugin_admission.schema.json`. **Resolution required by** `ADR-S-03` or a follow-on ADR.
+### OQ-A7-05 — Plugin and custom-layer admission contract (`OPEN`)
 
-### OQ-A7-04 — Pre-existing artifacts from the prior posture (NEEDS VERIFICATION)
+Define the finite object and status vocabulary for plugin/integration admission, including source, version, license, role, capabilities, policy effects, tests, review date, and removal path.
 
-If the mounted repo already contains artifacts authored under the prior dual-renderer posture (`KFM-P2-FEAT-0012`), they must be enumerated, evaluated, and either removed in the migration PR (§11) or admitted under an exception-ADR. **NEEDS VERIFICATION** against the live repo. Default treatment in the migration PR is removal with a drift-register entry; admission would require the §3.5 exception path.
+### OQ-A7-06 — Test-only runtime acquisition (`OPEN`)
 
-### OQ-A7-05 — Subsurface stratigraphy (UNKNOWN — independent of this ADR)
+Determine whether the root CDN smoke harness is migrated behind the adapter, replaced with a locked local package path, or retained as a tightly bounded test exception. The current v5.5.0 global runtime must not be mistaken for the accepted package or current upstream.
 
-Subsurface volumetric stratigraphy remains **UNKNOWN** for browser rendering at production quality. This ADR does not promise to solve that case; if it ever becomes in-scope it is handled under §3.5 exception path with a `geometry_label` outside the current 2D / 2.5D / 3D set.
+### OQ-A7-07 — Peer-renderer classifier (`OPEN`)
 
-### OQ-A7-06 — Effect on Master MapLibre v2.1 Category W (PROPOSED)
+Define how KFM distinguishes a plugin/overlay from a peer renderer. Camera ownership, map/scene lifecycle, source/layer model, event system, worker/runtime ownership, and direct public rendering authority are candidate dimensions.
 
-Category W entries `ML-W-006` through `ML-W-010` and `ML-W-072` through `ML-W-075` carry assumptions about multi-renderer artifacts and overlay synchronization. Once this ADR is accepted, Category W should be refreshed to align with the single-renderer commitment and mark the affected rows `superseded_by: ADR-0007`. This is a Master MapLibre v2.x edition concern, not a blocker on acceptance of this ADR.
+### OQ-A7-08 — Existing Cesium lineage (`NEEDS VERIFICATION`)
 
-### OQ-A7-07 — `RepresentationReceipt` schema completeness (PROPOSED)
+No `packages/cesium/` path was found, but docs and tests still mention Cesium. Inventory any contracts, schemas, policy, examples, fixtures, generated artifacts, or historical release references before claiming retirement is complete.
 
-`schemas/contracts/v1/maplibre/representation_receipt.schema.json` should carry `renderer`, `renderer_version`, `plugin_versions[]`, `view_state_id`, `camera_path_id`, and `spec_hashes[]` at minimum. A complete shape is the job of `ADR-S-03` and follow-on contract work, not this ADR.
+### OQ-A7-09 — Mobile and native (`UNKNOWN`)
 
-[↑ Back to top](#top)
+This ADR governs the browser. Decide separately whether MapLibre Native shares object contracts, manifests, plugin admission, evidence parity, and release controls without turning platform parity into an implied browser exception.
+
+### OQ-A7-10 — Subsurface volumetric representation (`UNKNOWN`)
+
+No production-quality KFM browser implementation is established. Keep reality-boundary labels and do not infer physical truth from 2.5D or scene reconstruction.
+
+Track implementation questions in [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) and confirmed structural/documentation conflicts in [`DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md).
+
+[Back to top](#top)
 
 ---
 
@@ -471,26 +710,26 @@ Category W entries `ML-W-006` through `ML-W-010` and `ML-W-072` through `ML-W-07
 
 ## 11. Migration plan
 
-> *PROPOSED migration steps. Each step lands as a separate PR or a clearly-scoped section of a single PR; none of these steps modifies trust-bearing receipts after the fact.*
+The migration is staged. This documentation-only revision performs none of the implementation steps below.
 
-| # | Step | Affected path (PROPOSED) | Type |
-|---|---|---|---|
-| 1 | Mark `KFM-P2-FEAT-0012` `superseded_by: ADR-0007` with a forward link. | Idea Index Master (location NEEDS VERIFICATION) | doctrine update |
-| 2 | Add drift register entry recording the supersession. | `docs/registers/DRIFT_REGISTER.md` | governance ledger |
-| 3 | Update `docs/architecture/maplibre-3d.md` meta block to reference `ADR-0007`; remove the `<NNNN>` placeholder; align §0.1 framing with this ADR. | `docs/architecture/maplibre-3d.md` | doctrine update |
-| 4 | Refresh Master MapLibre v2.1 Category W to align with single-renderer commitment. | `docs/architecture/master-maplibre-components-functions-features.md` (PROPOSED path) | doctrine update |
-| 5 | Author the `PluginAdmission` contract and machine schema. | `contracts/3d/plugin-dependencies.md`, `schemas/contracts/v1/policy/plugin_admission.schema.json` | contract + schema |
-| 6 | Author `policy/maplibre/plugin-admission.rego` and `policy/release/renderer-boundary.rego`. | `policy/maplibre/`, `policy/release/` | policy |
-| 7 | Author `tools/validators/validate_plugin_admission.py`, `validate_scene_manifest.py`, `validate_layer_manifest.py`. | `tools/validators/` | validator |
-| 8 | Author or extend `packages/maplibre-runtime/` with `terrain.ts`, `hillshade.ts`, `sky.ts`, `globe.ts`, `fill-extrusion.ts`, `camera-path.ts`, `custom-layer-host.ts`, `tiles3d-three.ts`, `gltf-three.ts`, `lidar-decklike.ts`, `deckgl-interleaved.ts`, `admission.ts`, `plugin-registry.ts`, `receipts.ts`. | `packages/maplibre-runtime/src/` | runtime |
-| 9 | Add CI lockfile guardrail (deny unadmitted renderer-family identifiers without exception-ADR). | `.github/workflows/` (PROPOSED) | CI |
-| 10 | Add CI bundle-analyzer guardrail. | `.github/workflows/` (PROPOSED) | CI |
-| 11 | Enumerate and act on any pre-existing artifacts from the prior posture (per OQ-A7-04). | repo-wide | cleanup |
-| 12 | Confirm no default-path package, contract, schema, policy, or release manifest references an unadmitted renderer family. | repo-wide | conformance check |
+| # | Step | Required result |
+|---|---|---|
+| 1 | Preserve ADR-0007 as proposed and reconcile its evidence snapshot | No status promotion by documentation edit |
+| 2 | Inventory renderer and integration dependencies repo-wide | Machine-readable current-state report with bounded exclusions |
+| 3 | Resolve `packages/maplibre/` versus `packages/maplibre-runtime/` | One canonical home, compatibility/migration map, rollback |
+| 4 | Decide the accepted MapLibre version and package strategy | Lockfile, ESM/worker/CSP/browser posture, build and rollback |
+| 5 | Define renderer/plugin vocabulary and admission record | Finite statuses and reason codes |
+| 6 | Classify current dependencies, scripts, examples, docs, and tests | Canonical, admitted, test-only exception, transitional, deprecated, conflicting |
+| 7 | Implement or complete ADR-0006 adapter seam | KFM-owned port/types; no raw renderer leakage |
+| 8 | Migrate at least one real consumer | Build/test through accepted adapter only |
+| 9 | Add structural validator and positive/negative tests | Deterministic repository-wide enforcement |
+| 10 | Reconcile architecture/package/test/workflow docs | No proposed decision stated as accepted |
+| 11 | Prove a governed runtime slice | Released input, evidence lookup, finite policy state, correction, rollback |
+| 12 | Review ADR-0007 for acceptance | ADR and index transition together with human evidence |
 
-Every step preserves reversibility per operating-contract §1.5.
+Every migration step is reversible, and no step treats generated output, successful rendering, or a passing import test as release or truth authority.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
@@ -498,18 +737,112 @@ Every step preserves reversibility per operating-contract §1.5.
 
 ## 12. Truth-label summary
 
-- **CONFIRMED at doctrine level.** The single-renderer commitment is supported by Master MapLibre v2.1 Category W's evidence-identity normalization (`ML-W-072`–`ML-W-075`), by directory-rules §13.5's "two parallel homes" anti-pattern, and by AI Build Operating Contract §§7, 29, 31. The supersession of `KFM-P2-FEAT-0012` is supported by the card's own unresolved governance items.
-- **CONFIRMED at external-tech level.** MapLibre GL JS 5.0 native globe (January 2025), MapLibre 3D Tiles via three.js example (2026-03-03), MapLibre plugins page entries, and deck.gl `MapboxOverlay` interleaved mode are each verified against MapLibre's own published documentation and examples.
-- **PROPOSED at implementation level.** Every file path, schema URI, package name, validator name, CI workflow name, plugin pin, owner, `spec_hash`, and `last_reviewed` date in this ADR is **PROPOSED** or a **PLACEHOLDER** until verified against a mounted repository.
-- **NEEDS VERIFICATION.** The ADR-0007 numbering conflict with the Build Manual Recommended ADR Queue (OQ-A7-01); any pre-existing artifacts from the prior posture in the live repo (OQ-A7-04); the live `docs/adr/` set and acceptance status of `ADR-0001` and `ADR-0003`; the location of the Idea Index Master for `superseded_by` updates.
-- **UNKNOWN.** Subsurface volumetric stratigraphy for browser rendering at production quality (OQ-A7-05) — independent of this ADR's renderer commitment.
+| Claim | Status |
+|---|---|
+| ADR-0007 number and exact path | **CONFIRMED** |
+| Effective decision status | **CONFIRMED `proposed`** |
+| Current `@kfm/maplibre` package scaffold | **CONFIRMED** |
+| Functional adapter or accepted consumer | **NOT ESTABLISHED / UNKNOWN** |
+| `packages/cesium/` at checked path | **CONFIRMED absent at checked path** |
+| Complete absence of Cesium or peer renderer references | **UNKNOWN** |
+| Current upstream MapLibre release v6.0.0 on 2026-07-22 | **CONFIRMED external fact** |
+| Accepted KFM MapLibre version | **UNKNOWN / NEEDS VERIFICATION** |
+| Current harness acquisition of MapLibre 5.5.0 | **CONFIRMED repository evidence** |
+| Complete renderer-family enforcement | **NOT ESTABLISHED** |
+| MapLibre capability families in upstream docs/examples | **CONFIRMED external capability evidence** |
+| KFM plugin admission, performance fitness, accessibility, public safety, or release readiness | **PROPOSED / UNKNOWN** |
+| Subsurface volumetric browser rendering | **UNKNOWN** |
+| This revision accepts or publishes anything | **False** |
 
-This ADR is a **doctrine-level** instrument. It does **not** imply that the contracts, schemas, policies, validators, CI workflows, or apps it names exist in the mounted repo; it specifies what **must** exist for the decision to be operational, and what **must not** exist (default-path artifacts from unadmitted renderer families) for the decision to remain in effect.
+> [!CAUTION]
+> **A sole-renderer policy is not proof of a renderer.** Until the package, dependency, adapter, consumer, validation, policy, and release gates are real, ADR-0007 remains a proposed governance decision over a scaffolded implementation surface.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-<sub>**Document control.** ADR id `ADR-0007` is treated as binding per the user-supplied path; numbering conflict with the Build Manual §30 Recommended ADR Queue is recorded in OQ-A7-01 and to be reconciled against the live `docs/adr/` set at PR time. `spec_hash` is `NEEDS VERIFICATION` — emit via canonical JCS+SHA-256 of the frontmatter + body once the hashing tool is wired. Owner is a `<PLACEHOLDER>` per operating-contract §28; do not invent. Acceptance moves this document from `PROPOSED` to `accepted` and emits a forward link from `KFM-P2-FEAT-0012`.</sub>
+## References
 
-[↑ Back to top](#top)
+### Repository evidence
+
+- [Canonical ADR index](./INDEX.md)
+- [ADR-0006 — MapLibre import/acquisition boundary](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md)
+- [Directory Rules](../doctrine/directory-rules.md)
+- [MapLibre architecture lane](../architecture/maplibre.md)
+- [Map shell architecture](../architecture/map-shell.md)
+- [Map runtime boundary](../architecture/ui/MAP_RUNTIME_BOUNDARY.md)
+- [Packages root](../../packages/README.md)
+- [MapLibre package boundary](../../packages/maplibre/README.md)
+- [MapLibre package metadata](../../packages/maplibre/package.json)
+- [MapLibre placeholder entry point](../../packages/maplibre/src/index.ts)
+- [Root package commands](../../package.json)
+- [MapLibre smoke harness](../../scripts/maplibre-smoke-perf.mjs)
+- [Explorer Web adapter-boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
+- [MapLibre readiness workflow](../../.github/workflows/maplibre-perf-governance.yml)
+- [MapLibre test-lane README](../../tests/maplibre/README.md)
+
+### Authoritative external sources
+
+- [MapLibre GL JS releases](https://github.com/maplibre/maplibre-gl-js/releases)
+- [MapLibre GL JS v5-to-v6 migration guide](https://github.com/maplibre/maplibre-gl-js/blob/v6.0.0/docs/guides/v5-to-v6-migration-guide.md)
+- [MapLibre GL JS documentation](https://maplibre.org/maplibre-gl-js/docs/)
+- [MapLibre GL JS examples](https://maplibre.org/maplibre-gl-js/docs/examples/)
+- [MapLibre GL JS plugins catalog](https://maplibre.org/maplibre-gl-js/docs/plugins/)
+- [Official 3D Tiles using three.js example](https://maplibre.org/maplibre-gl-js/docs/examples/add-3d-tiles-using-threejs/)
+
+The external links document upstream capabilities and migration facts. They are not KFM dependency approval, plugin admission, or release evidence.
+
+---
+
+<a id="appendix-a--no-loss-modernization-ledger"></a>
+
+<details>
+<summary><strong>Appendix A — No-loss modernization ledger</strong></summary>
+
+| Baseline element | v1.1 disposition |
+|---|---|
+| ADR identity, H1, `ADR-0007`, and exact tracked filename | Preserved |
+| Proposed sole-renderer decision | Preserved and made version-independent |
+| Prior dual-renderer lineage / `KFM-P2-FEAT-0012` | Preserved as non-ADR lineage; no claim that repository register updates are complete |
+| MapLibre capability matrix | Preserved, reorganized, and truth-bounded as upstream capability evidence rather than KFM admission |
+| Plugin admission concept | Preserved and expanded into a finite evidence burden |
+| Default-deny on peer renderers | Preserved and clarified |
+| Exception-ADR path | Preserved and expanded |
+| Directory Rules rationale | Preserved and reconciled with current path evidence |
+| Positive and negative consequences | Preserved and updated for v6/version drift |
+| Alternatives A–E | Preserved in substance; expanded to nine alternatives |
+| Contract/schema/policy/validator/build test ideas | Preserved as proposed validation classes and paths |
+| Additive exception and full-supersession rollback | Preserved |
+| OQ-A7 numbering conflict | Closed using canonical ADR index evidence |
+| Plugin licensing, pre-existing artifacts, subsurface, Category W, receipt-shape questions | Preserved and reorganized into current open questions |
+| Migration plan | Preserved and grounded in current package/version/documentation conflicts |
+| Truth-label summary | Preserved and made repository-specific |
+| Badge strip | Reduced to four evidence-bearing orientation badges; no CI badge claim |
+| Placeholder owner/spec hash | Replaced with visible `OWNER_TBD` and no invented hash |
+| Missing `maplibre-3d.md` reference | Preserved as a documented conflict, not silently treated as present |
+
+</details>
+
+<a id="appendix-b--beforeafter-upgrade-matrix"></a>
+
+<details>
+<summary><strong>Appendix B — Before/after upgrade matrix</strong></summary>
+
+| Area | Before | After |
+|---|---|---|
+| ADR slot/path | Marked as needing live-set verification | Confirmed through canonical index |
+| Repository posture | Broadly unknown | Package scaffold, placeholder implementation, root harness, partial test, readiness workflow, and documentation conflict are pinned |
+| Upstream version | Framed around MapLibre 5.x | Current v6.0.0 and v5-to-v6 migration pressure recorded; KFM pin remains unresolved |
+| Renderer decision | Conflated capability availability with sufficiency | Separates renderer-family selection, upstream capability, KFM admission, and implementation proof |
+| Plugin model | Named plugin set with illustrative future paths | Admission record burden, classifier, expiry, removal, network, accessibility, supply-chain, and negative tests |
+| Package placement | Assumed `packages/maplibre-runtime/` | Records conflict with current `packages/maplibre/`; forbids active siblings |
+| Enforcement | Mostly proposed per-file checks | Adds complete acquisition/dependency inventory and repository-wide classifier expectations |
+| Companion docs | Assumed `maplibre-3d.md` exists | Records missing path and overstatement in current lane entry point |
+| Rollback | General additive exception | Exact prior blob plus pre-acceptance, exception, full-reversal, and runtime rollback |
+| Presentation | Ten badges, stale placeholder CI badge | Four bounded badges, stable quick navigation, alerts, tables, and appendices |
+
+</details>
+
+---
+
+_Last updated 2026-07-23 · Source metadata: `legacy-proposed` · Effective decision status: `proposed` · Implementation maturity: renderer scaffold / enforcement incomplete · [Back to top](#top)_
