@@ -1,0 +1,88 @@
+{
+  "receipt_id": "genrec-github-readme-seal-9b727d4f45baf935",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/README.md": "sha256:9b727d4f45baf93550a135918ef3833794015d95c3df313d70a0b3b40b464c30"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 family Work Mode session; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:6aef7d457a6c5e5e4314e0d4bbbef830d61eedae1b11b96429b354d096d6d441",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "git",
+      "shell",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8d0d640666c307618632c3a987d05b79df87f4c8eff91928e39b2700aab0b8f7"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@83639a53a5b925ea9d9fe2c6f766aed0f95febe7",
+      "path:.github/README.md@1180cf7ec53d5acbbb859a39d93c1d129ec83df9",
+      "path:docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png@83639a53a5b925ea9d9fe2c6f766aed0f95febe7"
+    ]
+  },
+  "truth_labels": {
+    ".github/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "seal path and image metadata",
+      "outcome": "PASS",
+      "reason": "The repository-relative target resolves to a tracked 1313 x 1321 RGBA PNG; the restored markup preserves the original alt text and 240-pixel display width."
+    },
+    {
+      "gate": "markdownlint-cli2 0.23.1 / markdownlint 0.41.1",
+      "outcome": "PASS",
+      "reason": "Zero issues under the repository-compatible metadata, inline-HTML, long-line, duplicate-heading, and compact-table allowances."
+    },
+    {
+      "gate": "make validate",
+      "outcome": "PASS",
+      "reason": "Schema validation completed and all 18 contract/schema tests passed in an isolated environment containing the declared test dependencies."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-github-readme-seal-markup",
+      "validated": true,
+      "evidence_ref": "path:.github/README.md@1180cf7ec53d5acbbb859a39d93c1d129ec83df9"
+    },
+    {
+      "id": "current-seal-asset",
+      "validated": true,
+      "evidence_ref": "path:docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png@83639a53a5b925ea9d9fe2c6f766aed0f95febe7"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T00:27:28Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Restores the previously present KFM seal presentation to the .github README. The PNG asset itself is unchanged. No workflow, template, policy, release, GitHub setting, or publication behavior is modified. Human review remains pending."
+}

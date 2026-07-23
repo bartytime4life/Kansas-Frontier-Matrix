@@ -36,6 +36,10 @@ notes:
 
 <a id="top"></a>
 
+<p align="center">
+  <img src="../docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix Seal — transparent crop" width="240" />
+</p>
+
 # `.github/` — GitHub platform governance hooks
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b)](#status-and-evidence-boundary)
