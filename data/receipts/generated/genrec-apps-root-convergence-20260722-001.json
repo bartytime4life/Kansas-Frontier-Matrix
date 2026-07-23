@@ -1,0 +1,176 @@
+{
+  "receipt_id": "genrec-apps-root-convergence-20260722-001",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/README.md": "sha256:83c89fb13e9093f14ede430fb87d0541cb2974f9a4c1cd62acea9b3a287c5553"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 family Work Mode session; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:3eb3758943fe74f61e054197ab7f73a1658b4f7b542585fdccdc9e4a7eeee6a0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "git",
+      "shell",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:6812cb8e85f24296afdedf3a0dc103e765d9cb5d903bd2a850a0409dc45c9219",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:57b53c81a3609cc0a2832b385b41e4e4961b2e948c46f7e93e0089cf74bf64ad",
+      "sha256:cf9a36fcc440b75356f20128b8bf22289d1b0bcf6336f239da872ca708852fe4",
+      "sha256:ad69cd6f0f63bea1878e15cc0153989a90368eedc3fed3d0d1284810d5380bfc",
+      "sha256:f6e062a1133ebace18f1f95febb1d9ba9a2a9f399ec5ab558522b9f8b081f347",
+      "sha256:9302aceab500fe41266f888fba77fef6b1e2e5c01951429a2db66eed736d8d70",
+      "sha256:eff26fc621aaaccc264fe2f812b59b196689401fc101eb7157f5388048887871",
+      "sha256:e60f52d98aac55257ae257e5d0cb42da4238c1a46fea36885d28a6b9f75857c1",
+      "sha256:6e50296fcc9cad42a49eb08e91f8dadb2d4cff4f4414307e2649ec387700b46f"
+    ],
+    "attached_docs": [
+      "Pasted text(78).txt - KFM Whole-Project Workflow Discovery, Completion, and Data Convergence Agent",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@3a5667327e502bae39900646093de13a87f0cd6d",
+      "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#project-workflow-map-v1",
+      "path:apps/README.md@3a5667327e502bae39900646093de13a87f0cd6d",
+      "tree:apps/@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:.github/CODEOWNERS@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:Makefile@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:.github/workflows/api-test.yml@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:.github/workflows/ui-build.yml@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:tests/policy/test_explorer_web_adapter_boundary.py@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:apps/governed-api/src/governed_api/main.py@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:apps/governed-api/src/governed_api/stub.py@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:apps/governed-api/tests/test_abstain_routes.py@3a5667327e502bae39900646093de13a87f0cd6d",
+      "path:apps/governed-api/tests/test_boundary_guards.py@3a5667327e502bae39900646093de13a87f0cd6d"
+    ]
+  },
+  "truth_labels": {
+    "apps/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Directory Rules placement and root-contract preflight",
+      "outcome": "PASS",
+      "reason": "Directory Rules pages 9 and 19 were extracted and visually inspected; apps remains the canonical deployable root, governed-api remains the public trust path, and the README follows the required Purpose-through-Last-reviewed root contract order."
+    },
+    {
+      "gate": "apps tracked-tree and maturity reconciliation",
+      "outcome": "PASS",
+      "reason": "The README records 164 tracked app files and seven exact child-lane counts, distinguishes the executable three-route ABSTAIN slice from placeholder UI/CLI/worker/admin surfaces, and does not claim deployment or publication."
+    },
+    {
+      "gate": "Markdown, links, anchors, and structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced KFM meta block, balanced fences, resolved local links and fragments, and no diff whitespace errors; markdownlint-cli 0.46.0 reported zero issues with repository-compatible allowances for long technical lines, inline HTML, metadata before H1, and compact tables."
+    },
+    {
+      "gate": "make validate",
+      "outcome": "PASS",
+      "reason": "Aggregate validators accepted configured valid fixtures, rejected configured invalid fixtures as expected, and all 18 schema/contract tests passed."
+    },
+    {
+      "gate": "make governed-api-smoke",
+      "outcome": "PASS",
+      "reason": "All 6 bounded Governed API tests passed, including fail-closed ABSTAIN envelopes and route/method/import/store-path guards."
+    },
+    {
+      "gate": "make boundary-guards",
+      "outcome": "PASS",
+      "reason": "All 15 control-plane, Explorer adapter, connector/pipeline non-publisher, and Governed API boundary tests passed."
+    },
+    {
+      "gate": "secret and protected-content diff scan",
+      "outcome": "PASS",
+      "reason": "The scoped README diff contains no credential-token pattern, private key marker, protected value, row-level data, exact protected location, living-person record, or genomic payload."
+    },
+    {
+      "gate": "Explorer Web build and test",
+      "outcome": "SKIPPED",
+      "reason": "The repository's ui-build workflow intentionally holds because Explorer scripts are TODO placeholders, the root package manager is not exactly pinned, and pnpm-lock.yaml is absent. This documentation batch does not simulate a green empty build."
+    },
+    {
+      "gate": "deployment, operational health, and observability",
+      "outcome": "SKIPPED",
+      "reason": "Deployment, authorization, dashboards, audit sinks, service health, and production operation require external operational evidence and are not claimed."
+    },
+    {
+      "gate": "human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-pdf",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "kfm-main-snapshot",
+      "validated": true,
+      "evidence_ref": "repository:bartytime4life/Kansas-Frontier-Matrix@3a5667327e502bae39900646093de13a87f0cd6d"
+    },
+    {
+      "id": "campaign-workflow-map",
+      "validated": true,
+      "evidence_ref": "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#project-workflow-map-v1"
+    },
+    {
+      "id": "github-codeowners",
+      "validated": true,
+      "evidence_ref": "path:.github/CODEOWNERS@3a5667327e502bae39900646093de13a87f0cd6d"
+    },
+    {
+      "id": "repository-makefile",
+      "validated": true,
+      "evidence_ref": "path:Makefile@3a5667327e502bae39900646093de13a87f0cd6d"
+    },
+    {
+      "id": "governed-api-implementation",
+      "validated": true,
+      "evidence_ref": "path:apps/governed-api/src/governed_api/main.py@3a5667327e502bae39900646093de13a87f0cd6d"
+    },
+    {
+      "id": "governed-api-tests",
+      "validated": true,
+      "evidence_ref": "path:apps/governed-api/tests/test_boundary_guards.py@3a5667327e502bae39900646093de13a87f0cd6d"
+    },
+    {
+      "id": "explorer-ui-readiness-workflow",
+      "validated": true,
+      "evidence_ref": "path:.github/workflows/ui-build.yml@3a5667327e502bae39900646093de13a87f0cd6d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T01:01:02Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only convergence of the apps root contract against the pinned repository and durable workflow map. No app code, route, dependency, lockfile, workflow YAML, source, data, policy, release, promotion, publication, deployment, or merge behavior changed. The receipt records process provenance and bounded validation; it is not evidence, a policy decision, human approval, release authority, or publication authority."
+}
