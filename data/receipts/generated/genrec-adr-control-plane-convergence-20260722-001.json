@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-adr-control-plane-convergence-20260722-001",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/README.md",
+    "docs/adr/INDEX.md",
+    "docs/registers/ADR_INDEX.md",
+    "tools/validators/validate_adr_index.py",
+    "tests/validators/test_validate_adr_index.py",
+    ".github/workflows/docs-control-plane.yml"
+  ],
+  "artifact_hashes": {
+    "docs/adr/README.md": "sha256:b831771c08ce26842cb300dee2e3828cc921fc6e4f83ffc82b5e9d655c91f991",
+    "docs/adr/INDEX.md": "sha256:766e2642f2921e62674228aa8db9f952e880de0f89721b7ed9dcc512ed726a7f",
+    "docs/registers/ADR_INDEX.md": "sha256:1d794f0e2193e325a399b202eec20021986a083788e16cebfc2b90388985b3ae",
+    "tools/validators/validate_adr_index.py": "sha256:0a618e5042c57f194099c8790d427480f1b9743f95a9f67adcd1c247ec8a9e82",
+    "tests/validators/test_validate_adr_index.py": "sha256:d6fc418b8ca5065cc5d493b96db8fcfea7bd87377a8a3bc8e551f407528bd1e7",
+    ".github/workflows/docs-control-plane.yml": "sha256:59c10e9792803d51a79ae9c077beb182a5af69908b465d30f6d5bd19cc6d7038"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 family Work Mode session; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Personal Context connector",
+      "GitHub connector",
+      "git",
+      "shell",
+      "apply_patch",
+      "PDF extraction, rendering, and visual inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:8e5d61b464ef6d04b8ccb881b14c1ed063784fad585a25936c27d0ef18ebdd36",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:0fbfed26c487afcf695015283e0dcb3b181ca0af33709dac8a5368f366110885",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:75dc490df4e6a4c2a36531bd4fe0f3aee698bbc2df252353520cd2cb0c378c4f",
+      "sha256:f6962c272231ac92d2d206c4f4aa743ef2d94d1e1124dac78ab041cf338d3ac3",
+      "sha256:2d036d35e0f25e863dbd8169a47edb5e77b34cf639e961718126a45cdcb0342a",
+      "sha256:02ebcdb9c03e0f5ae1f1cf97874982d3d4d3d675f3d47dcf80a20eded9329fc9"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix Repository Structure Guiding Document.md",
+      "KFM Unified Doctrine Synthesis.md",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
+    ],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#adr-control-plane-discovery-and-claim-v1",
+      "tree:docs/adr/@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:docs/adr/README.md@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:docs/adr/INDEX.md@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:docs/registers/ADR_INDEX.md@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:docs/doctrine/directory-rules.md@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:docs/doctrine/ai-build-operating-contract.md@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:.github/CODEOWNERS@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:.github/workflows/docs-control-plane.yml@43f1d97954debda98691b2685c1bb75c4b63c872",
+      "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@43f1d97954debda98691b2685c1bb75c4b63c872"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/README.md": "CONFIRMED",
+    "docs/adr/INDEX.md": "CONFIRMED",
+    "docs/registers/ADR_INDEX.md": "CONFIRMED",
+    "tools/validators/validate_adr_index.py": "CONFIRMED",
+    "tests/validators/test_validate_adr_index.py": "CONFIRMED",
+    ".github/workflows/docs-control-plane.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Directory Rules placement preflight",
+      "outcome": "PASS",
+      "reason": "Directory Rules PDF page 6 was extracted, rendered, and visually inspected; repository doctrine assigns human ADRs and registers to docs/, repo-wide validators to tools/, enforceability proof to tests/, and GitHub orchestration to .github/workflows/."
+    },
+    {
+      "gate": "Live ADR inventory and status reconciliation",
+      "outcome": "PASS",
+      "reason": "The pinned tree contains 46 direct Markdown files: 28 unique numbered records from ADR-0001 through ADR-0028, 12 unassigned scaffolds, one template, and five index/support documents. No numbered record provides verified accepted, superseded, or rejected source status."
+    },
+    {
+      "gate": "ADR index validator and negative-path tests",
+      "outcome": "PASS",
+      "reason": "The standard-library validator accepted the live 28-record/12-scaffold inventory, and all 7 collision, missing-row, status-promotion, supersession, scaffold, and duplicate-register tests passed."
+    },
+    {
+      "gate": "Documentation control-plane workflow syntax and permissions",
+      "outcome": "PASS",
+      "reason": "All 41 workflow YAML files parsed; the new adr-index-coherence job is present with a 10-minute timeout and inherits only contents: read permission with no secret, OIDC, write, deployment, release, or publication authority."
+    },
+    {
+      "gate": "Markdown, links, structure, and Mermaid",
+      "outcome": "PASS",
+      "reason": "Markdown lint reported zero issues under the repository-compatible no-line-length profile; 111 local links and fragments resolved; all three documents have one H1 and balanced KFM meta blocks; Mermaid 11.12.0 parsed the lifecycle flowchart."
+    },
+    {
+      "gate": "make validate",
+      "outcome": "PASS",
+      "reason": "Aggregate validators accepted configured valid fixtures and rejected configured invalid fixtures as expected; all 18 schema and contract tests passed in an isolated environment using repository-declared dependency ranges."
+    },
+    {
+      "gate": "make boundary-guards",
+      "outcome": "PASS",
+      "reason": "All 15 control-plane, Explorer adapter, connector/pipeline non-publisher, and Governed API boundary tests passed."
+    },
+    {
+      "gate": "ADR status transition",
+      "outcome": "SKIPPED",
+      "reason": "This convergence batch inventories and validates existing records only. It does not accept, reject, supersede, renumber, rename, move, or substantively edit any ADR."
+    },
+    {
+      "gate": "Artifacts release or performance migration",
+      "outcome": "SKIPPED",
+      "reason": "ADR-0011 remains proposed, OPEN-DR-09-b remains unresolved, and this batch changes no artifacts path or payload."
+    },
+    {
+      "gate": "Secret, sensitive-content, and publication-boundary diff scan",
+      "outcome": "PASS",
+      "reason": "The seven-path governance diff contains no credential, private key, row-level personal or genomic data, protected location, source activation, release approval, publication payload, deployment action, or default-branch write."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-pdf",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "kfm-main-snapshot",
+      "validated": true,
+      "evidence_ref": "repository:bartytime4life/Kansas-Frontier-Matrix@43f1d97954debda98691b2685c1bb75c4b63c872"
+    },
+    {
+      "id": "campaign-state-and-claim",
+      "validated": true,
+      "evidence_ref": "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#adr-control-plane-discovery-and-claim-v1"
+    },
+    {
+      "id": "repository-directory-rules",
+      "validated": true,
+      "evidence_ref": "path:docs/doctrine/directory-rules.md@43f1d97954debda98691b2685c1bb75c4b63c872"
+    },
+    {
+      "id": "verified-codeowners-route",
+      "validated": true,
+      "evidence_ref": "path:.github/CODEOWNERS@43f1d97954debda98691b2685c1bb75c4b63c872"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@43f1d97954debda98691b2685c1bb75c4b63c872"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T02:40:07Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/INDEX.md",
+    "drift_register_entry": null
+  },
+  "notes": "ADR control-plane inventory, index, validator, proof, and CI convergence. This receipt records AI-authoring provenance and bounded validation only. It is not an ADR acceptance, ReviewRecord, EvidenceBundle, PolicyDecision, release approval, PromotionDecision, deployment instruction, or publication authority. ADR-0011, OPEN-DR-09-b, and artifacts/perf placement remain unresolved."
+}
