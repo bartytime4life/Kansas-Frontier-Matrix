@@ -1,598 +1,1499 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://adr/0006
 title: "ADR-0006 — MapLibre Boundary: Only MapLibreAdapter Imports MapLibre"
-type: standard
-version: v1.1
+type: adr
+adr_id: ADR-0006
+version: v1.2
 status: draft
-owners: OWNER_TBD(map-shell-owner), OWNER_TBD(docs-steward)
+effective_decision_status: proposed
+owners:
+  - "OWNER_TBD — architecture stewardship assignment is not verified"
+reviewers_required:
+  - Docs steward
+  - Map/runtime steward
+  - Explorer Web subsystem owner
+  - Package/tooling owner
 created: 2026-05-10
-updated: 2026-05-15
+updated: 2026-07-23
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7
+  target_prior_blob: fba9562322a263876bb5b1096b8093746dd43990
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  package_readme_blob: 3ba48e7d61b013a659ed51b9336eee788d06b8f2
+  package_metadata_blob: b0582955feeb51016327113692fa5c98ecad8816
+  package_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  root_package_blob: 62f45306aef7376a2d68042b0c9e7f556edf0e78
+  explorer_package_blob: ce981192e725483c747affb45ca3de36a22ce9ce
+  app_boundary_test_blob: 97d44069b0a5ab4a82b1e1fc48665e905c08a287
+  map_runtime_readme_blob: 4d3897eda64d11f84f4805cb9cc2bc30a2ee333c
+  map_runtime_boundary_blob: baf929fdca617ea95ea4ce5bde4c7b8abd9ac6d5
+  map_shell_blob: 9e1fa4e8293d26c62b9a323d5302ad9a01aa1979
+  maplibre_tests_readme_blob: b20a14eae605017b7d7f210f1c27768cacbd411a
+  maplibre_workflow_blob: bfb36a84ba72bec68d964976dc7964cde7f5d603
+  smoke_harness_blob: 699dd4cf42d355dd2ed7620852b7fd1f3000bbe2
+  sole_renderer_adr_blob: c753f09db18e12081f99405b42cd79ebb89d0ac3
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 related:
-  - docs/doctrine/directory-rules.md            # §11 UI and Map Roots, §13.3
-  - docs/architecture/map-shell.md              # PROPOSED canonical map-shell doctrine
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/adr/ADR-0001-schema-home.md            # schema-home context; not amended here
-tags: [kfm, adr, map-shell, renderer-boundary, dependency-rule, maplibre]
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
+  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/doctrine/directory-rules.md
+  - docs/architecture/map-shell.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
+  - packages/maplibre/README.md
+  - apps/explorer-web/src/features/map_runtime/README.md
+  - tests/policy/test_explorer_web_adapter_boundary.py
+  - tests/maplibre/README.md
+tags: [kfm, adr, map-shell, renderer-boundary, dependency-rule, maplibre, adapter, import-boundary, trust-membrane, no-parallel-authority]
 notes:
-  - "Updated 2026-05-15 to clarify evidence boundary, Directory Rules basis, enforcement gates, and acceptance checklist."
-  - "Repo not mounted in this session — implementation paths, tooling, package names, and CI behavior are PROPOSED / NEEDS VERIFICATION."
-  - "Cesium parity is acknowledged but governed by a sibling ADR, not this one."
+  - "v1.2 is a same-path, documentation-only, repository-grounded modernization; it does not accept the ADR or change runtime behavior."
+  - "ADR-0006 numbering and the tracked target path are confirmed by docs/adr/INDEX.md; source metadata remains draft and the effective decision status remains proposed."
+  - "The repository contains packages/maplibre/ as a private @kfm/maplibre 0.0.0 scaffold with a placeholder export, not a functioning MapLibreAdapter."
+  - "Directory Rules proposes packages/maplibre-runtime/ while current implementation evidence uses packages/maplibre/; this path/ownership split is CONFLICTED and must be resolved without creating two active renderer packages."
+  - "Existing Explorer Web boundary testing is partial: it permits renderer imports anywhere under apps/explorer-web/src/adapters/, which does not enforce this ADR's package-only seam."
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0006 — MapLibre Boundary: Only `MapLibreAdapter` Imports MapLibre
+<a id="top"></a>
 
-> **One rule:** No module in KFM imports `maplibre-gl` or a sibling `maplibre-*` runtime package **except** the `MapLibreAdapter` package. Everything else talks to the map through the adapter's typed, KFM-shaped surface.
+ADR-0006 — MapLibre Boundary: Only MapLibreAdapter Imports MapLibre
 
-[![Status](https://img.shields.io/badge/status-proposed-blue)](#1-status)
-[![Type](https://img.shields.io/badge/type-architecture-purple)](#3-context)
-[![Scope](https://img.shields.io/badge/scope-map--shell-orange)](#5-scope)
-[![Enforcement](https://img.shields.io/badge/enforcement-PROPOSED-lightgrey)](#7-enforcement)
-[![Repo evidence](https://img.shields.io/badge/repo%20evidence-UNKNOWN-red)](#1-status)
-[![Reversible](https://img.shields.io/badge/reversibility-medium-yellow)](#10-migration--rollback)
+Proposed decision. KFM will have one browser-renderer dependency seam. Only the accepted MapLibreAdapter implementation may acquire or import MapLibre runtime APIs and renderer-bound plugins; every consumer uses KFM-owned MapRuntimePort / adapter types and governed inputs.
 
-**Quick jump:** [Status](#1-status) · [Summary](#2-summary) · [Context](#3-context) · [Decision](#4-decision) · [Scope](#5-scope) · [Boundary contract](#6-boundary-contract) · [Enforcement](#7-enforcement) · [Consequences](#8-consequences) · [Alternatives](#9-alternatives-considered) · [Migration & rollback](#10-migration--rollback) · [Open questions](#11-open-questions) · [References](#12-references)
 
----
 
-## 0. ADR Header
+[!IMPORTANT]Repository configuration is not reviewed decision authority. The current tree contains a MapLibre package scaffold, map-runtime doctrine, a bounded Explorer Web import test, and a separate performance harness. Those surfaces do not accept this ADR, establish a functioning adapter, prove a complete import inventory, or authorize map/data publication.
 
-| Field | Value |
-|---|---|
-| **ID** | `ADR-0006` |
-| **Title** | MapLibre Boundary: only `MapLibreAdapter` imports MapLibre |
-| **ADR status** | `proposed` |
-| **Document status** | `draft` |
-| **Date** | 2026-05-10 |
-| **Last updated** | 2026-05-15 |
-| **Authors / drivers** | `OWNER_TBD(map-shell-owner)` |
-| **Reviewers required** | Docs steward · Map-shell owner · At least one subsystem owner from `apps/explorer-web/` |
-| **Proposed target path** | `docs/adr/ADR-0006-maplibre-boundary.md` — **PROPOSED / NEEDS VERIFICATION** |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Amends Directory Rules** | No. This ADR operationalizes §11 "UI and Map Roots" and §13.3 "competing shell homes" without changing root policy. |
-| **Related ADRs** | `ADR-0001` schema-home context; not amended here. |
-| **Primary affected roots** | `apps/`, `packages/`, `docs/`, `tests/`, and possibly `.github/` / `tools/` for enforcement — all presence remains **NEEDS VERIFICATION**. |
+Quick navigation: Header · Status · Summary · Context · Decision · Scope · Boundary contract · Enforcement · Consequences · Alternatives · Migration and rollback · Open questions · References
 
-> [!IMPORTANT]
-> **Evidence boundary:** This ADR is a doctrine-grounded architecture decision. Current implementation depth remains **UNKNOWN** until a mounted KFM repository, imports, package manifests, tests, workflows, and runtime behavior are inspected. Any path, package name, tool, or CI detail below is **PROPOSED** unless explicitly marked otherwise.
+0. ADR Header
 
-> **Template conformance.** This ADR keeps the fields required by Directory Rules §2.4: `id`, `title`, `status`, `date`, `context`, `decision`, `consequences`, and `alternatives`. Sections 5–11 elaborate on those fields; they do not replace them.
+Field
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+Current value
 
----
+ID
 
-## 1. Status
+ADR-0006 — unique and confirmed in the canonical human INDEX.md
 
-**ADR status:** `proposed`  
-**Implementation status:** **UNKNOWN**  
-**Promotion rule:** promote to `accepted` only after the verification checklist below is satisfied in a mounted repo.
+Title
 
-| Requirement before acceptance | Label | Acceptance evidence |
-|---|---:|---|
-| Confirm `packages/maplibre/` exists, or create it in the same change set with Directory Rules-compatible placement. | NEEDS VERIFICATION | `git ls-tree` / repo inspection, package manifest, README. |
-| Confirm `apps/explorer-web/` and `packages/ui/` import the adapter rather than `maplibre-gl` directly. | NEEDS VERIFICATION | Import inventory plus build/test evidence. |
-| Confirm no other package, app, example, script, or non-adapter test imports `maplibre-gl` or `@maplibre/maplibre-gl-style-spec`. | NEEDS VERIFICATION | Lint/dependency rule output or custom validator receipt. |
-| Confirm the workspace package name (`@kfm/maplibre` shown illustratively) matches the actual monorepo convention. | NEEDS VERIFICATION | Package manifest and import usage. |
-| Confirm CI tooling choice: ESLint, dependency-cruiser, custom validator, or equivalent. | NEEDS VERIFICATION | Workflow or command evidence. |
-| Confirm `docs/architecture/map-shell.md` and `packages/maplibre/README.md` link this ADR after acceptance. | NEEDS VERIFICATION | Repo links and docs review. |
+MapLibre Boundary: only MapLibreAdapter imports MapLibre
 
-Until those items are verified, treat **paths, file names, tool names, package names, and `package.json` contents in this ADR as PROPOSED**.
+Source metadata
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+draft
 
----
+Effective decision status
 
-## 2. Summary
+proposed — not binding until the ADR and index carry reviewed accepted status
 
-KFM doctrine treats **MapLibre as a downstream renderer and interaction runtime, not a sovereign truth source**. The KFM trust membrane requires public surfaces to consume governed interfaces, released artifacts, `EvidenceBundle` resolution, `DecisionEnvelope` / finite-outcome responses, `LayerManifest`, `StyleManifest`, and policy-reviewed release state — never raw renderer state, raw `Map` instances, or framework-specific event objects leaked across module boundaries.
+Created
 
-This ADR makes that doctrine **mechanical**:
+2026-05-10
 
-> **Only `packages/maplibre/` — the proposed `MapLibreAdapter` package — may import `maplibre-gl` or sibling runtime packages. All other code imports the adapter's typed surface.**
+Updated
 
-The adapter becomes the **single seam** at which renderer concerns are bound. The rest of the system stays renderer-agnostic by construction.
+2026-07-23
 
-### 2.1 Why this matters for KFM trust law
+Current tracked path
 
-| KFM concern | Boundary effect |
-|---|---|
-| Evidence-first claims | Clicks and map events resolve to KFM-shaped `EvidenceRef` / `EvidenceBundle` flows, not raw renderer event objects. |
-| Policy-aware publication | `addSource`, `addLayer`, and protocol registration become one enforceable gate instead of scattered caller behavior. |
-| Map-first UI | The shell can remain map-centered without letting the map runtime become the truth store. |
-| Reversibility | A renderer migration touches one adapter seam, not every app component. |
-| Auditability | Enforcement can be tested with import rules, dependency rules, and adapter contract tests. |
+docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+Logical boundary
 
----
+One MapRuntimePort and one MapLibreAdapter implementation seam
 
-## 3. Context
+Current physical package candidate
 
-### 3.1 Directory Rules basis
+packages/maplibre/ — repository-present private @kfm/maplibre 0.0.0 scaffold
 
-Directory Rules §11 names the clean UI/map layout as:
+Directory Rules target name
 
-```text
-apps/explorer-web/
-packages/ui/
-packages/maplibre/
-packages/cesium/
-docs/architecture/map-shell.md
-data/registry/layers/
-```
+packages/maplibre-runtime/ — PROPOSED / CONFLICTED with the current scaffold; no sibling may be created without migration resolution
 
-It also states that MapLibre is the disciplined 2D renderer and interaction runtime, not the truth store, publication authority, policy authority, citation authority, or AI authority. Directory Rules §13.3 identifies competing shell homes (`ui/`, `web/`, `apps/explorer-web/`, `packages/ui/`) as drift and names `packages/maplibre/` as the renderer package in the fix.
+Related renderer choice
 
-**Placement consequence:** this ADR does not create a new root and does not create a parallel schema, policy, release, receipt, proof, registry, or source home. It uses the existing responsibility roots:
+ADR-0007 — present, effective status proposed
 
-| Responsibility | Proposed home | Status |
-|---|---|---:|
-| Deployable web shell | `apps/explorer-web/` | NEEDS VERIFICATION |
-| Shared UI components | `packages/ui/` | NEEDS VERIFICATION |
-| MapLibre renderer adapter | `packages/maplibre/` | PROPOSED / NEEDS VERIFICATION |
-| Map shell doctrine | `docs/architecture/map-shell.md` | PROPOSED / NEEDS VERIFICATION |
-| ADR record | `docs/adr/ADR-0006-maplibre-boundary.md` | PROPOSED / NEEDS VERIFICATION |
-| Import-boundary validator | `.github/`, `tools/validators/`, or package lint config | PROPOSED / NEEDS VERIFICATION |
+Amends Directory Rules
 
-### 3.2 Doctrinal anchors
+No. This ADR operationalizes renderer dependency isolation; it does not create or rename a canonical root.
 
-| Source | Evidence status | Statement used by this ADR |
-|---|---:|---|
-| Directory Rules §11, §13.3 | CONFIRMED doctrine | UI/map roots should separate deployable shell, shared UI, MapLibre renderer, and optional Cesium renderer; MapLibre is not a truth authority. |
-| Master MapLibre Components-Functions-Features, Executive Determination | CONFIRMED doctrine / UNKNOWN implementation | MapLibre remains a downstream renderer and interaction runtime; tiles, styles, popups, screenshots, graph projections, and AI answers are carriers, not sovereign truth. |
-| Master MapLibre renderer-boundary idea records | LINEAGE / PROPOSED implementation | Sidecar verification before `addSource`, no direct DB handles in map UI, PMTiles protocol governance, and plugin admission are renderer-boundary concerns. |
-| KFM trust membrane doctrine | CONFIRMED doctrine | Public clients use governed APIs and released artifacts; raw, work, quarantine, candidate, and direct-model paths are not normal public routes. |
-| KFM Components Pass 11, E.2 | LINEAGE / NEEDS VERIFICATION | Preserved as existing ADR context for MapLibre client discipline; direct source section should be rechecked before acceptance. |
+Publication effect
 
-### 3.3 Operational problem this ADR solves
+None. A Markdown edit, package scaffold, import test, screenshot, performance run, commit, or pull request does not publish a KFM claim or map artifact.
 
-When `maplibre-gl` is importable from anywhere, three failure modes follow:
+[!NOTE]Template conformance. This record preserves the ADR fields required by the repository ADR operating contract: ID, title, status, date, context, decision, consequences, alternatives, migration, and rollback. It keeps its original identity, filename, H1, and major section anchors.
 
-1. **Renderer types leak upward.** UI components type their props in terms of `maplibregl.Map`, `LngLatBoundsLike`, or `MapMouseEvent`. The "renderer-agnostic" property of the upper layers becomes a fiction.
-2. **Trust membrane bypass.** A component can call `map.addSource(...)` against an unverified PMTiles URL, unreleased layer, or policy-unsafe source because the renderer handle is in reach.
-3. **Migration cost.** Future support for MLT, MapLibre Native, deck.gl interop, a server-side preview renderer, or a Cesium-parity shell requires touching every importer instead of one adapter.
+Back to top
 
-### 3.4 What is currently uncertain
+1. Status
 
-| Item | Label |
-|---|---:|
-| Mounted-repo presence of `packages/maplibre/` | NEEDS VERIFICATION |
-| Current importers of `maplibre-gl` across the tree | UNKNOWN |
-| Presence of an existing `MapLibreAdapter`, `MapShell`, `MapWrapper`, or package-local map wrapper | UNKNOWN |
-| Choice of enforcement tool: ESLint `no-restricted-imports`, dependency-cruiser, custom validator, or equivalent | PROPOSED |
-| Whether `packages/cesium/` exists today and how it is structured | UNKNOWN |
-| Whether `apps/api/` and `apps/governed-api/` both exist and how layer/evidence APIs are split | UNKNOWN |
+1.1 Current decision and implementation posture
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+Concern
 
----
+Status
 
-## 4. Decision
+Safe conclusion
 
-**KFM adopts a single-importer rule for the MapLibre runtime.** The rule has four parts.
+ADR inventory
 
-### 4.1 The single-importer rule
+CONFIRMED
 
-> **Only the `MapLibreAdapter` package — proposed canonical home `packages/maplibre/` per Directory Rules §11 — MAY import `maplibre-gl` or a `maplibre-*` runtime package. All other packages, apps, viewer templates, examples, scripts, and non-adapter tests MUST import only the adapter's published surface.**
+ADR-0006 is uniquely indexed at this exact filename.
 
-### 4.2 The adapter is the seam
+Decision authority
 
-`packages/maplibre/` exposes a KFM-shaped surface. The public entry point is **PROPOSED** as `packages/maplibre/src/index.ts`; the exact package layout must follow mounted-repo convention when verified.
+PROPOSED
 
-| Surface | Adapter responsibility | Raw renderer leakage allowed? |
-|---|---|---:|
-| Lifecycle | `createMapAdapter(opts) -> MapLibreAdapter`, `destroy()` | No |
-| Layer binding | `addLayer(LayerManifest, StyleManifest)`, `removeLayer(layerId)` with sidecar / manifest checks wired before runtime binding | No |
-| Camera and time | `setView`, `setBounds`, `setTimeSnapshot(releasedSnapshotId)` | No |
-| Events | `onLayerClick(EvidenceRef)`, `onCameraSettled(CameraState)`, KFM-shaped source/load events | No |
-| Runtime health | `RuntimeProbeResult`, stale/degraded/denied indicators, renderer capability state | No |
-| Plugin/protocol registration | PMTiles protocol and plugin setup performed once inside the adapter | No |
+The record is present but not accepted.
 
-Any future renderer path — MapLibre Native, MLT-first renderer, server-side preview renderer, or a constrained overlay strategy — implements the same surface or lands behind a typed strategy inside the renderer package. Consumers remain unaffected.
+MapLibre package path
 
-### 4.3 Forbidden imports (illustrative)
+CONFIRMED current / CONFLICTED target
 
-```ts
-// ❌ Forbidden anywhere outside packages/maplibre/
+packages/maplibre/ exists; Directory Rules proposes packages/maplibre-runtime/. The conflict is unresolved.
+
+Package identity
+
+CONFIRMED scaffold
+
+package.json declares @kfm/maplibre, private: true, version 0.0.0.
+
+Package implementation
+
+NOT ESTABLISHED
+
+src/index.ts exports only placeholder = true; no functioning adapter is proven.
+
+Package consumers
+
+NOT ESTABLISHED
+
+Bounded repository evidence found no established @kfm/maplibre consumer import. This is not a complete recursive inventory.
+
+Import enforcement
+
+PARTIAL / CONFLICTED
+
+A test scans only Explorer Web and allows renderer imports anywhere under its local adapters/ directory.
+
+Root build/lint/test
+
+PLACEHOLDER
+
+Root and Explorer Web scripts remain echo TODO; they are not enforcement evidence.
+
+Performance tooling
+
+CONFIRMED separate harness
+
+A root script loads MapLibre 5.5.0 from a public CDN and uses the global runtime outside the package seam.
+
+Runtime/public behavior
+
+UNKNOWN
+
+No deployed client, released layer flow, complete CI result, or production runtime evidence was used to accept this decision.
+
+1.2 Acceptance gates
+
+ADR-0006 SHOULD NOT move to accepted until equivalent evidence closes every gate below.
+
+Gate
+
+Required evidence
+
+Fail-closed result when missing
+
+A — One physical home
+
+Reviewed resolution of packages/maplibre/ versus packages/maplibre-runtime/, including migration/compatibility treatment and no independently evolving sibling
+
+Remain proposed; do not create a second package authority
+
+B — Functional seam
+
+A tested MapRuntimePort and one concrete MapLibreAdapter implementation with KFM-owned public types
+
+No consumer migration; package remains scaffold
+
+C — Complete acquisition inventory
+
+Recursive inventory of static imports, type imports, dynamic imports, require, re-exports, workers, CDN scripts, globals, plugin imports, and protocol registration
+
+Treat enforcement coverage as incomplete
+
+D — Dependency ownership
+
+Accepted package manifest owns approved MapLibre/runtime/plugin dependencies, with lockfile and supply-chain review appropriate to the repository
+
+DENY dependency introduction outside the accepted seam
+
+E — Consumer migration
+
+Explorer Web, shared UI, examples, tests, and other consumers use the KFM port; no public type leaks raw renderer types
+
+Hold acceptance
+
+F — Harness disposition
+
+Root performance/smoke runtime is moved behind the seam or recorded as a bounded test-only exception with owner, scope, expiry, network posture, and rollback
+
+Treat the harness as known divergence
+
+G — Structural enforcement
+
+Repository-wide deterministic validator plus positive/negative tests and CI invocation
+
+Direct imports remain review-only debt
+
+H — Reviewed transition
+
+Named reviewers approve; ADR and canonical index move together to accepted; acceptance evidence is recorded
+
+Remain proposed
+
+Back to top
+
+2. Summary
+
+KFM doctrine treats MapLibre as a downstream renderer and interaction runtime, not a truth store, source registry, policy engine, evidence resolver, citation authority, release authority, or AI authority. A renderer boundary is therefore not merely a dependency-style preference. It is the executable edge of the trust membrane.
+
+This ADR makes that boundary reviewable:
+
+One renderer dependency seam. MapLibre GL JS, its runtime types, its worker/runtime acquisition, and admitted renderer-bound plugins or protocols are reachable only inside the accepted MapLibreAdapter package. Upper layers depend on KFM-owned ports, handles, state, and events.
+
+The rule protects four separations:
+
+Separation
+
+Boundary effect
+
+Evidence versus rendering
+
+Clicks produce candidate identity and a governed resolution request; rendered feature properties never become proof by themselves.
+
+Policy/release versus loading
+
+Layer and asset loading consumes upstream decisions and released manifests; the adapter does not decide allow, release, or publication.
+
+KFM types versus renderer types
+
+maplibregl.Map, raw source/layer objects, raw events, and style-runtime types do not escape into UI/domain contracts.
+
+Runtime implementation versus consumers
+
+MapLibre/plugin/version changes remain behind one seam rather than spreading across apps and packages.
+
+2.1 Relationship to ADR-0007
+
+ADR-0006 and ADR-0007 answer different questions:
+
+Record
+
+Question
+
+ADR-0006
+
+Where may browser-renderer runtime dependencies be acquired, imported, initialized, and exposed?
+
+ADR-0007
+
+Which browser renderer is the proposed default/sole renderer, and how are additional renderer technologies governed?
+
+Neither record becomes accepted merely because the other exists. ADR-0006 does not silently accept ADR-0007, and ADR-0007 does not prove this import boundary is implemented.
+
+Back to top
+
+3. Context
+
+3.1 Current repository evidence
+
+The prior revision treated nearly every path and implementation claim as unverified. Current repository evidence supports a more precise boundary.
+
+Surface
+
+Confirmed repository state
+
+What it proves—and does not prove
+
+docs/adr/INDEX.md
+
+Exact ADR-0006 path is indexed; effective status proposed, source metadata draft
+
+Proves inventory and status normalization, not acceptance
+
+packages/maplibre/README.md
+
+Repository-present, evidence-grounded package boundary README
+
+Proves the package path and documented posture, not a functioning adapter
+
+packages/maplibre/package.json
+
+@kfm/maplibre, private, 0.0.0
+
+Proves current package identity only; no dependency, export, build, or distribution contract
+
+packages/maplibre/src/index.ts
+
+One placeholder export
+
+Proves implementation is scaffold-level
+
+package.json
+
+Workspaces include apps/* and packages/*; generic lint/test/build are TODO echoes
+
+Proves workspace enrollment and MapLibre command declarations, not a buildable adapter or full suite
+
+apps/explorer-web/package.json
+
+Private 0.0.0; dev/build/test are TODO echoes
+
+Proves app scaffold, not runtime wiring
+
+map_runtime/README.md
+
+App-local Map Runtime boundary is documented
+
+Proves proposed feature responsibility, not source modules or consumer imports
+
+MAP_RUNTIME_BOUNDARY.md
+
+MapRuntimePort / MapLibreAdapter doctrine exists
+
+Proves companion architecture language, not implementation
+
+test_explorer_web_adapter_boundary.py
+
+Scans Explorer Web source and allows map imports under app-local adapters/
+
+Proves one bounded test exists; conflicts with package-only enforcement and is not repo-wide
+
+tests/maplibre/README.md
+
+Documents limited executable scalar tests, but some workflow descriptions predate the current hold-oriented workflow
+
+Proves partial test infrastructure; current workflow details must be read from the workflow itself
+
+maplibre-smoke-perf.mjs
+
+Loads MapLibre GL JS 5.5.0 from unpkg.com into a page and uses global maplibregl.Map
+
+Proves a separate runtime acquisition path in test tooling; the current workflow syntax-checks it but deliberately does not execute browser/runtime claims
+
+maplibre-perf-governance.yml
+
+Runs no-network syntax checks, three deterministic scalar negative tests, and a readiness inspection that preserves explicit runtime/proof holds
+
+Proves current command-bearing CI intent and path coverage; it is not an import-boundary validator or renderer-performance proof
+
+ADR-0007
+
+Renderer-choice ADR exists and remains proposed
+
+Proves a related decision record is tracked; not acceptance or plugin admission
+
+3.2 Directory Rules basis and placement conflict
+
+Directory Rules place reusable renderer implementation under packages/, deployable shell code under apps/explorer-web/, reusable checks under tools/validators/, and enforceability under tests/. That responsibility split is sound.
+
+The package name is not settled:
+
+current repository evidence:  packages/maplibre/
+Directory Rules v1.3 target:   packages/maplibre-runtime/
+
+This ADR does not create a second package or silently rename the first. Until a reviewed migration resolves the conflict:
+
+packages/maplibre/ is the CONFIRMED current scaffold and current implementation candidate.
+
+packages/maplibre-runtime/ is a PROPOSED target name, not a second active home.
+
+New functional adapter work MUST use one reviewed physical home and a migration/rollback plan.
+
+Any compatibility path must be pointer-only, frozen, generated, or explicitly transitional; it must not evolve independently.
+
+3.3 Operational problem
+
+Without one renderer seam, the repository can accumulate several incompatible forms of renderer authority:
+
+Raw type leakage. UI props and state become coupled to maplibregl.Map, raw events, renderer source/layer objects, or plugin-specific classes.
+
+Trust-membrane bypass. Any component with a runtime handle can add a source, layer, protocol, endpoint, or plugin outside manifest/policy/release review.
+
+Multiple acquisition paths. Package imports, app-local adapters, dynamic imports, CDN scripts, workers, examples, and test harnesses can each initialize a different runtime/version.
+
+False enforcement confidence. A narrow source scan can pass while other apps, scripts, packages, generated files, or CDN/global runtime paths remain outside coverage.
+
+Migration and correction cost. Runtime upgrades, plugin removals, security corrections, and renderer rollback require touching every consumer rather than one package boundary.
+
+3.4 Truth and state vocabulary
+
+CONFIRMED — verified from the pinned repository evidence named in this revision.
+
+PROPOSED — the architectural decision or future implementation state.
+
+UNKNOWN — evidence is insufficient for a stronger claim.
+
+NEEDS VERIFICATION — a concrete check is identified but not closed.
+
+CONFLICTED — repository surfaces or doctrine currently imply incompatible ownership or enforcement.
+
+draft, proposed, accepted, superseded, and rejected are document/decision lifecycle states. They are not substitutes for the truth labels above.
+
+Back to top
+
+4. Decision
+
+If accepted, ADR-0006 makes the following rule binding.
+
+Only the accepted MapLibreAdapter implementation boundary MAY acquire, import, initialize, or expose the browser-side MapLibre runtime and renderer-bound plugins. All other repository code MUST depend on KFM-owned ports and types.
+
+4.1 Logical boundary before physical path
+
+MapLibreAdapter is a logical architectural role. Acceptance must bind it to exactly one physical package after resolving packages/maplibre/ versus packages/maplibre-runtime/.
+
+The implementation MUST NOT create both as active packages. During migration, one may be a compatibility pointer or generated bridge only when its status, source, consumers, sunset/review date, and rollback are explicit.
+
+4.2 Runtime acquisition is broader than an ES import
+
+The boundary applies to every mechanism that introduces or exposes the renderer:
+
+static import and type-only import;
+
+CommonJS require;
+
+dynamic import();
+
+package re-exports and barrel files;
+
+browser <script> and <link> tags that acquire MapLibre runtime assets;
+
+globals such as maplibregl;
+
+workers and worker URLs;
+
+direct construction of maplibregl.Map or equivalent renderer objects;
+
+MapLibre protocol registration;
+
+renderer-bound plugins and custom-layer hosts;
+
+test/example harnesses, unless a reviewed bounded exception applies.
+
+A rule that scans only import ... from "maplibre-gl" is insufficient.
+
+4.3 KFM-owned public surface
+
+The accepted package exposes renderer-agnostic, KFM-owned capabilities. Names below are architectural vocabulary; exact TypeScript signatures remain proposed until a semantic contract and implementation are reviewed.
+
+Capability
+
+KFM surface
+
+Raw renderer leakage allowed?
+
+Lifecycle
+
+create/initialize adapter; destroy and release resources
+
+No
+
+Layer binding
+
+bind/remove a released LayerManifest / style/artifact reference
+
+No
+
+Camera and view
+
+serializable CameraState, bounds, projection, time context
+
+No
+
+Interaction
+
+KFM MapInteractionEvent with candidate identity / evidence lookup ref
+
+No
+
+Runtime state
+
+loading, ready, stale, degraded, denied, withdrawn, rollback, error
+
+No
+
+Plugins/protocols
+
+admitted registry entries initialized inside the package
+
+No
+
+Testability
+
+fake/in-memory MapRuntimePort implementation
+
+No MapLibre dependency in consumers
+
+4.4 Forbidden consumer coupling
+
+// ❌ Forbidden outside the accepted renderer package.
 import maplibregl from "maplibre-gl";
-import type { Map, LngLatBoundsLike } from "maplibre-gl";
-import { Protocol } from "maplibre-gl";                    // protocol registration belongs in the adapter
-import * as Style from "@maplibre/maplibre-gl-style-spec"; // style-spec runtime/types belong in the adapter boundary
-```
+import type { Map, MapMouseEvent } from "maplibre-gl";
+import * as StyleSpec from "@maplibre/maplibre-gl-style-spec";
 
-### 4.4 Permitted import (illustrative)
+const map = new maplibregl.Map(/* ... */);
 
-```ts
-// ✅ Permitted in apps/explorer-web/, packages/ui/, examples/, etc.
-import { createMapAdapter, type LayerHandle, type CameraState } from "@kfm/maplibre";
-//                                                                    ^^^^^^^^^^^^^
-//                                                                    PROPOSED package name
-//                                                                    NEEDS VERIFICATION against
-//                                                                    actual workspace package id
-```
+// ✅ Illustrative consumer posture. Exact exports remain PROPOSED.
+import type { MapRuntimePort, CameraState, MapInteractionEvent } from "@kfm/maplibre";
 
-> [!IMPORTANT]
-> The public package name (`@kfm/maplibre` shown above) is **PROPOSED**. It MUST be aligned with the project's actual workspace package naming convention before this ADR is accepted.
-
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
-
----
-
-## 5. Scope
-
-### 5.1 In scope
-
-- Web client / `MapLibre GL JS` runtime imports in TypeScript and JavaScript source.
-- Style-spec imports from `@maplibre/maplibre-gl-style-spec` when they are used as runtime or TypeScript dependencies in app/UI code.
-- PMTiles protocol registration (`maplibregl.addProtocol`) and plugin setup that depends on the renderer runtime.
-- Re-exports: a barrel file that re-exports `maplibre-gl` from outside `packages/maplibre/` is treated as a violation.
-- Non-adapter tests and examples: they test or demonstrate the adapter surface unless they live inside the adapter package.
-
-### 5.2 Out of scope
-
-- **Cesium / 3D.** A parallel rule for `cesium` and `packages/cesium/` is expected as a separate ADR. This ADR intentionally does not amend that boundary; it only notes that Cesium MUST consume the same `EvidenceBundle` and `DecisionEnvelope` trust posture as MapLibre.
-- **Server-side tile build, PMTiles generation, COG processing.** Those live under `pipelines/`, `tools/`, or `packages/` outside the renderer adapter and should not import `maplibre-gl`.
-- **Style JSON authoring and storage.** Style JSON is data, not a runtime import. Its home is governed by tile/style artifact rules, release manifests, and registry policy, not this ADR.
-- **Schema definitions.** `schemas/contracts/v1/...` may define style/layer shapes without importing runtime packages. Type imports from style-spec packages in schema tooling remain **OPEN / NEEDS VERIFICATION**.
-- **Mobile / MapLibre Native.** PROPOSED to be governed by a sibling adapter package or strategy if and when mobile lands.
-
-### 5.3 Boundary diagram
-
-```mermaid
-flowchart LR
-  subgraph PublicSurfaces["Public surfaces — no maplibre-gl import"]
-    EW["apps/explorer-web/"]
-    UI["packages/ui/"]
-    EX["examples/"]
-    TST["tests/ outside adapter"]
-  end
-
-  subgraph GovernedAPI["Governed interfaces"]
-    GA["apps/governed-api/ — PROPOSED path"]
-    LM[("LayerManifest")]
-    SM[("StyleManifest")]
-    EB[("EvidenceBundle")]
-    DE[("DecisionEnvelope")]
-  end
-
-  subgraph Adapter["packages/maplibre/ — only importer of maplibre-gl"]
-    IDX["public adapter surface"]
-    IMPL["internal renderer wiring"]
-    PROTO["PMTiles protocol / plugin setup"]
-    HEALTH["RuntimeProbeResult"]
-  end
-
-  subgraph Runtime["External runtime"]
-    MGL[["maplibre-gl"]]
-    SS[["@maplibre/maplibre-gl-style-spec"]]
-  end
-
-  GA --> LM
-  GA --> SM
-  GA --> EB
-  GA --> DE
-  LM --> IDX
-  SM --> IDX
-  EB --> IDX
-  DE --> IDX
-
-  EW -->|"createMapAdapter / LayerHandle"| IDX
-  UI -->|"typed state + events"| IDX
-  EX -->|"adapter examples"| IDX
-  TST -->|"contract tests"| IDX
-
-  IDX --> IMPL
-  IMPL --> PROTO
-  IMPL --> HEALTH
-  IMPL --> MGL
-  IMPL --> SS
-
-  classDef forbidden stroke:#b00,stroke-width:2px,fill:#fff5f5;
-  class MGL,SS forbidden;
-```
-
-> **Diagram status:** Doctrine-grounded, implementation **PROPOSED**. Boxes outside `packages/maplibre/` are constrained by Directory Rules §11. Internal file names inside the adapter are intentionally abstract until repo inspection confirms package layout.
-
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
-
----
-
-## 6. Boundary Contract
-
-### 6.1 What `MapLibreAdapter` MUST do
-
-1. **Verify before bind.** No `addSource`, `addLayer`, or `addProtocol` call occurs without inputs shaped as released / governed `LayerManifest` and `StyleManifest` objects or an explicitly denied/abstained envelope.
-2. **Refuse raw handles.** The adapter MUST NOT return `maplibregl.Map`, renderer `Source`, renderer `Layer`, or raw renderer events to callers. It returns KFM-shaped opaque handles.
-3. **Translate events into KFM shapes.** Mouse, camera, source, and load events are mapped to `EvidenceRef`, `CameraState`, `RuntimeProbeResult`, or other KFM-owned event types. Raw renderer events do not cross the seam.
-4. **Surface release state.** The adapter renders released, stale, degraded, denied, and error states passed by governed services. It does not decide truth or release.
-5. **Expose runtime health separately from truth.** `RuntimeProbeResult` belongs to rendering/runtime state. It MUST NOT be treated as evidence for a domain claim.
-6. **Own renderer-dependent plugins and protocols.** PMTiles protocol registration and any renderer plugin admission live inside the adapter package.
-7. **Support contract tests.** A fake adapter or mock surface MUST be possible so upper layers can test map flows without importing the renderer.
-
-### 6.2 What `MapLibreAdapter` MUST NOT do
-
-| MUST NOT | Reason |
-|---|---|
-| Read from `data/raw/`, `data/work/`, or `data/quarantine/`. | Trust membrane: renderer consumes governed inputs only. |
-| Read canonical/internal stores directly as a normal public path. | Public clients use governed APIs, released artifacts, and evidence resolution. |
-| Call arbitrary public tile/data URLs that were not provided through governed configuration. | Tile delivery is governed by tile/style artifact policy and release state. |
-| Cache, persist, or originate authority decisions. | The adapter is a renderer; truth, policy, review, and release are upstream responsibilities. |
-| Re-export `maplibre-gl` symbols or style-spec symbols to consumers. | Re-exporting re-opens the boundary at a second hop. |
-| Convert generated language, popups, screenshots, or renderer state into source truth. | AI, UI text, and visual artifacts are downstream carriers, not sovereign truth. |
-
-### 6.3 What callers MUST do
-
-| Caller surface | Obligation |
-|---|---|
-| `apps/explorer-web/` | Import only from the adapter package. Pass governed responses, `LayerManifest`, `StyleManifest`, and released/candidate state; never pass raw URLs as authority. |
-| `packages/ui/` | Render adapter-issued state and KFM event objects. MUST NOT cast adapter handles to `maplibregl.Map`. |
-| `examples/` | Demonstrate adapter usage. Examples that touch `maplibre-gl` directly belong inside `packages/maplibre/` examples or tests. |
-| `tests/` outside adapter | Test the adapter surface or fake adapter. Renderer-internal tests live with the adapter. |
-| `docs/` | Document the boundary and link this ADR; docs do not become the enforcement mechanism. |
-
-### 6.4 Contract shape guardrails
-
-The adapter public surface SHOULD use KFM-owned types even when they mirror renderer concepts.
-
-| KFM-owned type | Purpose | Notes |
-|---|---|---|
-| `LayerHandle` | Opaque handle for a bound, governed layer. | No renderer ID leakage beyond KFM layer ID. |
-| `CameraState` | Serializable camera / viewport state. | Safe for URL state, review records, and story nodes. |
-| `MapTimeState` | Current released time snapshot / temporal filter. | Must distinguish UI state from evidence time. |
-| `RuntimeProbeResult` | Renderer capability / health / stale state. | Runtime health only; not evidence for domain claims. |
-| `MapInteractionEvent` | KFM-shaped event emitted by adapter. | Carries `EvidenceRef` or candidate feature identity, not raw renderer event. |
-
-All names are **PROPOSED** unless already present in the mounted repo.
-
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
-
----
-
-## 7. Enforcement
-
-All enforcement mechanisms are **PROPOSED** until a mounted repo confirms the package manager, lint stack, test stack, and CI workflow conventions. The rule should be enforced in three layers, from fastest local feedback to strongest structural guard.
-
-### 7.1 Linter rule (first enforceable gate)
-
-ESLint `no-restricted-imports` configured at the workspace root, scoped by path:
-
-```jsonc
-// PROPOSED — exact config file, package manager, and tool version NEED VERIFICATION.
-{
-  "overrides": [
-    {
-      "files": ["**/*.{ts,tsx,js,jsx}"],
-      "excludedFiles": ["packages/maplibre/**"],
-      "rules": {
-        "no-restricted-imports": ["error", {
-          "patterns": [
-            {
-              "group": ["maplibre-gl", "maplibre-gl/*"],
-              "message": "Only packages/maplibre/ may import maplibre-gl. See ADR-0006."
-            },
-            {
-              "group": ["@maplibre/maplibre-gl-style-spec", "@maplibre/maplibre-gl-style-spec/*"],
-              "message": "Style-spec runtime/types must stay behind the MapLibre adapter boundary. See ADR-0006."
-            }
-          ]
-        }]
-      }
-    }
-  ]
+export function bindMapRuntime(runtime: MapRuntimePort): void {
+  runtime.onInteraction((event: MapInteractionEvent) => {
+    // Forward candidate identity to governed claim resolution.
+    // Do not treat rendered feature properties as the claim.
+  });
 }
-```
 
-### 7.2 Dependency graph rule (structural)
+@kfm/maplibre is a CONFIRMED current scaffold name, not an accepted public API or distribution promise.
 
-A dependency-cruiser rule, custom `tools/validators/` script, or equivalent gate MUST fail if a non-adapter file resolves an import to `maplibre-gl` or a forbidden `@maplibre/*` runtime package.
+4.5 Style-spec and static-tooling exception
 
-**Why a second gate matters:** lint comments, dynamic imports, generated files, and editor-only settings can bypass a linter. A dependency graph or source validator gives the rule a repo-wide structural check.
+Runtime or UI imports from @maplibre/maplibre-gl-style-spec remain inside the accepted renderer package.
 
-### 7.3 `package.json` discipline
+A static schema/build/validation tool MAY receive a reviewed exception only when all of the following are true:
 
-Only `packages/maplibre/package.json` may list `maplibre-gl` and renderer-dependent `@maplibre/*` packages as `dependencies`.
+the tool is not browser/runtime code;
 
-| Package manifest location | `maplibre-gl` allowed? | Notes |
-|---|---:|---|
-| `packages/maplibre/package.json` | Yes | The single importer / adapter package. |
-| `apps/explorer-web/package.json` | No | Consumes adapter package. |
-| `packages/ui/package.json` | No | Consumes adapter types only. |
-| Root workspace manifest | NEEDS VERIFICATION | May hold workspace tooling only; must not normalize consumer runtime import. |
-| Test/example package manifests | No, unless inside adapter package | Direct renderer examples belong inside the adapter package. |
+the exception is in an explicit allowlist consumed by the structural validator;
 
-Exact dependency/devDependency/peerDependency handling depends on the real workspace package manager and must be verified before acceptance.
+no MapLibre runtime object or type is re-exported to consumers;
 
-### 7.4 What "violation" looks like in PR review
+dependency ownership and version pinning are explicit;
 
-> [!WARNING]
-> A PR that adds `import ... from "maplibre-gl"` outside `packages/maplibre/` MUST be rewritten to use the adapter, moved inside the adapter package, or paired with a superseding ADR. There is no "temporary direct import" exception.
+positive and negative tests prove the exception remains narrow;
 
-### 7.5 Exception process
+an owner, review date, and rollback/removal path are recorded.
 
-Exceptions are intentionally hard:
+4.6 No renderer authority by implication
 
-1. Record the proposed exception in `docs/registers/DRIFT_REGISTER.md` or the repo's equivalent drift register. **PROPOSED path.**
-2. Explain why the adapter surface cannot express the behavior.
-3. Either extend the adapter contract or open a superseding ADR.
-4. Keep any temporary compatibility path out of normal public routes.
-5. Add a rollback / removal date or acceptance gate.
+The adapter may reject malformed or unapproved inputs, but it does not originate truth, source authority, rights, sensitivity, evidence closure, review approval, release state, or publication.
 
-### 7.6 Contract tests
+Source / evidence / policy / review / release
+        -> governed API and released manifests
+        -> MapRuntimePort
+        -> MapLibreAdapter
+        -> MapLibre runtime and admitted plugins
 
-The implementation PR SHOULD add tests that prove:
+Back to top
 
-- a consumer can render or simulate the map shell using a fake adapter;
-- no raw renderer handle is visible in public adapter types;
-- `addLayer` / `addSource` pathways require governed manifest-shaped inputs;
-- denied, stale, degraded, and error states render without directly importing `maplibre-gl` in the caller;
-- direct imports fail in CI.
+5. Scope
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+5.1 In scope
 
----
+Browser-side MapLibre GL JS runtime acquisition and imports.
 
-## 8. Consequences
+Renderer-bound MapLibre packages, types, workers, protocols, and custom-layer/plugin hosts.
 
-### 8.1 Positive
+App, package, example, script, test, and documentation examples that initialize the browser renderer.
 
-- **Trust membrane has a runtime correlate.** The doctrinal claim "MapLibre is a downstream renderer" becomes enforceable in imports and package manifests.
-- **One seam to change renderers.** MLT readiness, MapLibre Native parity, server-side preview, and Cesium/MapLibre overlay sync become adapter-internal or sibling-adapter changes.
-- **Upper layers stay testable without the renderer.** UI and explorer-web can be tested against the adapter's typed surface and a fake adapter.
-- **`addSource` / `addProtocol` gates are reachable.** Sidecar verification and protocol registration can be enforced in one place rather than per-importer.
-- **Plugin allowlist becomes meaningful.** A MapLibre plugin admission list has one place to live and one place to enforce.
-- **Public route discipline is easier to review.** Any direct browser path to raw/candidate/canonical stores becomes suspicious because the map shell has no raw renderer handle to use.
+Re-exports or wrapper modules that expose MapLibre types indirectly.
 
-### 8.2 Negative / cost
+Package-manifest dependency ownership for the renderer and renderer-bound plugins.
 
-- **Adapter surface grows over time.** Every new capability the UI needs becomes a typed addition to the adapter. Mitigation: explicit capability types and contract tests.
-- **Migration cost for existing direct importers.** Any code that already imports `maplibre-gl` outside the adapter must be migrated. Mitigation: §10 migration plan.
-- **Risk of passthrough bloat.** The adapter could degenerate into a thin re-export. Mitigation: §6.2 forbids re-exporting renderer symbols; the adapter exposes KFM-shaped types only.
-- **Tooling setup may lag doctrine.** Lint and dependency graph enforcement remain PROPOSED until the actual repo stack is verified. Mitigation: mark acceptance blocked until enforcement proof exists.
+KFM-owned MapRuntimePort / adapter type boundary.
 
-### 8.3 Risk register
+Import/acquisition inventory, deterministic validation, negative tests, CI wiring, exceptions, migration, correction, and rollback.
 
-| Risk | Likelihood | Severity | Mitigation |
-|---|---:|---:|---|
-| Adapter becomes a leaky abstraction and returns raw renderer handles. | Medium | High | §6.2 prohibition plus contract tests. |
-| Lint rule is bypassed via dynamic import, generated code, or `eslint-disable`. | Medium | Medium | Dependency graph / source validator gate. |
-| Plugin package drags renderer types into upper layers. | Medium | Medium | Plugin allowlist and plugin setup live inside adapter. |
-| Existing repo uses `web/` or `ui/` compatibility roots heavily. | Unknown | Medium | Inventory and drift register before migration. |
-| Cesium parity ADR diverges from this one. | Medium | Low | Cesium ADR MUST cite this one and mirror trust-boundary structure. |
-| Package manager workspaces make dependency ownership ambiguous. | Unknown | Medium | Package manifest audit before acceptance. |
+5.2 Out of scope
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+Server-side tile generation, PMTiles/COG creation, spatial processing, or catalog emission that does not load a browser renderer.
 
----
+Style JSON as released data. The style artifact is governed by contracts, schemas, policy, manifests, and release state; the JSON file itself is not a runtime import.
 
-## 9. Alternatives Considered
+Selecting the sole renderer or admitting a plugin version; ADR-0007 and policy/release controls govern those questions.
 
-### 9.1 Alternative A — Soft convention only (rejected)
+Field-level object shapes, package implementation, dependency installation, or app migration in this documentation-only revision.
 
-Document the convention in `docs/architecture/map-shell.md` and rely on PR review.
+Changing lifecycle, schema, contract, policy, source, receipt, proof, or release homes.
 
-**Rejected:** the failure mode this ADR addresses — renderer types leaking into UI and `addSource` bypassing verification — is exactly the failure mode soft conventions fail to prevent at scale. KFM doctrine prefers operational governance over advisory convention where trust boundaries matter.
+Accepting ADR-0006 or ADR-0007.
 
-### 9.2 Alternative B — Allow renderer imports in `packages/ui/` (rejected)
+5.3 Boundary diagram
 
-Treat `packages/ui/` as a second renderer-aware layer, restricting only `apps/explorer-web/`.
+flowchart LR
+    subgraph Upstream["Governed upstream"]
+        API["Governed API"]
+        LM["Layer / style / artifact manifests"]
+        EB["EvidenceRef / EvidenceBundle"]
+        PD["Policy and release state"]
+    end
 
-**Rejected:** `packages/ui/` is meant to be reusable across apps and renderers. Anchoring it to MapLibre defeats reuse and weakens Directory Rules §11 layering.
+    subgraph Consumers["Consumers — no renderer dependency"]
+        EW["apps/explorer-web/"]
+        UI["packages/ui/"]
+        EX["examples/"]
+        CT["consumer tests"]
+    end
 
-### 9.3 Alternative C — One adapter per deployable (rejected for now)
+    PORT{{"MapRuntimePort<br/>KFM-owned types"}}
 
-Place adapters per deployable, for example `apps/explorer-web/src/map-adapter/`.
+    subgraph Seam["One accepted renderer package"]
+        ADAPTER["MapLibreAdapter"]
+        PLUGINS["admitted plugins / protocols"]
+        HEALTH["runtime state and diagnostics"]
+    end
 
-**Rejected:** this would block sharing between `apps/explorer-web/` and any other shell, story-mode embed, review console, notebook, or example. Directory Rules §11 names `packages/maplibre/` as the renderer package; this ADR honors that.
+    MGL[["MapLibre GL JS"]]
 
-### 9.4 Alternative D — Hide MapLibre behind a network / RPC boundary (deferred)
+    API --> LM
+    API --> EB
+    API --> PD
+    LM --> PORT
+    EB --> PORT
+    PD --> PORT
 
-Run MapLibre in a worker, iframe, or server-side preview process and expose only messages.
+    EW --> PORT
+    UI --> PORT
+    EX --> PORT
+    CT --> PORT
 
-**Deferred:** this may be useful for a headless preview renderer or high-integrity screenshot path. The adapter pattern remains compatible with that future, but this ADR does not require it.
+    PORT --> ADAPTER
+    ADAPTER --> PLUGINS
+    ADAPTER --> HEALTH
+    ADAPTER --> MGL
 
-### 9.5 Alternative E — Ban MapLibre-specific style-spec imports everywhere, including schemas (open)
+    classDef boundary fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef renderer fill:#fff3e0,stroke:#e65100,color:#bf360c
+    class PORT boundary
+    class ADAPTER,PLUGINS,HEALTH,MGL renderer
 
-Forbid all `@maplibre/maplibre-gl-style-spec` imports outside the adapter, including schema tooling.
+[!NOTE]The diagram describes the proposed responsibility flow. It does not claim the adapter, port, manifests, plugin registry, or consumer wiring is currently implemented.
 
-**Open:** runtime and app/UI imports should be banned outside the adapter. Schema generation and static validation may need a separate allowance if the repo uses style-spec types to build schemas. That exception must be reviewed by schema owners and must not create runtime coupling.
+Back to top
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+6. Boundary Contract
 
----
+6.1 What MapLibreAdapter must do
 
-## 10. Migration & Rollback
+Consume governed inputs. Accept released/validated manifest-shaped inputs and finite upstream states; do not infer release or policy from URLs, filenames, feature properties, or style visibility.
 
-### 10.1 Migration plan (proportional to scope)
+Keep raw handles private. Do not return or re-export maplibregl.Map, raw source/layer objects, raw worker handles, plugin classes, or raw renderer events.
 
-1. **Inventory direct importers.** Search the mounted workspace for `from "maplibre-gl"`, `require("maplibre-gl")`, dynamic imports, and renderer-dependent `@maplibre/*` imports. Record results in `docs/registers/DRIFT_REGISTER.md` or repo-equivalent register (**PROPOSED path**).
-2. **Verify target homes.** Confirm `packages/maplibre/`, `apps/explorer-web/`, `packages/ui/`, and `docs/architecture/map-shell.md`. If names differ, mark the conflict before creating siblings.
-3. **Land or normalize the adapter surface.** Create or update the adapter package entry point exposing the §4.2 surface. Exact file paths remain repo-convention dependent.
-4. **Move PMTiles protocol registration into the adapter.** `maplibregl.addProtocol` belongs in adapter initialization and should run exactly once.
-5. **Migrate direct consumers mechanically.** Replace direct imports outside the adapter with the adapter's typed surface. Preserve observable map UX in the same PR; do not combine behavior redesign with boundary migration.
-6. **Add fake-adapter tests.** Prove at least one consumer can run without importing the renderer.
-7. **Enable enforcement.** Land linter and structural import checks after the last direct importer is migrated.
-8. **Update docs.** Link this ADR from `docs/architecture/map-shell.md`, `packages/maplibre/README.md`, and any relevant app/package READMEs.
-9. **Close compatibility paths.** Remove temporary re-exports or legacy wrappers after acceptance gates pass.
+Translate events. Convert click, camera, source, load, and error events into KFM-owned serializable events and states.
 
-### 10.2 Definition of done
+Treat clicks as candidates. A click may carry feature/layer identity and an evidence lookup reference; it never becomes a supported claim without governed resolution.
 
-- [ ] Direct import inventory completed and reviewed.
-- [ ] No `maplibre-gl` import resolves outside `packages/maplibre/` in CI.
-- [ ] No forbidden `@maplibre/*` runtime/style-spec import resolves outside the approved boundary.
-- [ ] Adapter public API does not expose `maplibregl.Map`, renderer source/layer types, or raw renderer events.
-- [ ] `packages/maplibre/README.md` describes the boundary and links to this ADR.
-- [ ] At least one consumer, preferably `apps/explorer-web/`, builds and tests through the adapter only.
-- [ ] Sidecar / manifest verification before `addSource` is wired through the adapter or explicitly blocked pending a follow-up issue.
-- [ ] Enforcement gates are present in CI or an equivalent validator emits a reviewable failure.
-- [ ] `docs/architecture/map-shell.md` references this ADR.
+Surface negative states. Preserve stale, denied, abstained, conflict, degraded, withdrawn, rollback, invalid-payload, and error states supplied by governed services.
 
-### 10.3 Rollback path
+Own renderer effects. Initialize/destroy MapLibre, register protocols/workers/plugins, bind sources/layers, and remove all listeners/resources inside the package.
 
-- **Low-cost rollback:** disable lint and dependency-graph rules; the rule reverts to convention. No data, schema, release, receipt, proof, or policy artifact is affected. The adapter package can remain.
-- **Partial rollback:** relax a tool rule for a narrow, documented exception path through an ADR amendment. The structural rule in §4.1 remains.
-- **Full rollback:** open a superseding ADR with `status: superseded`, forward-link this ADR, and include a migration/rollback plan per Directory Rules §2.4.
+Keep sensitivity upstream. Render only public-safe or authorized derivatives. Style-only hiding is not sensitivity enforcement.
 
-### 10.4 Backward compatibility
+Support fakes. Consumers must be testable against a fake MapRuntimePort without a MapLibre dependency or network.
 
-- This ADR does **not** change schema, contract, policy, source, registry, release, receipt, proof, or lifecycle homes.
-- Public APIs of `apps/governed-api/` are not changed by this ADR.
-- On-disk layout of `data/`, `release/`, `policy/`, `schemas/`, and `contracts/` is not changed.
-- Any import migration should preserve visible map behavior unless a separate PR explicitly changes behavior.
+Keep runtime health separate from evidence. Diagnostics and performance state may support operations; they do not prove a domain claim.
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+Preserve correction and rollback visibility. A withdrawn or rolled-back artifact must be removable or visibly blocked through the same seam.
 
----
+6.2 What the adapter must not do
 
-## 11. Open Questions
+Must not
 
-> [!NOTE]
-> These belong in `docs/registers/VERIFICATION_BACKLOG.md` or the repo's equivalent verification backlog until resolved. Path is **PROPOSED** until repo inspection confirms the register home.
+Why
 
-| Question | Label | Why it matters |
-|---|---:|---|
-| Does `packages/maplibre/` currently exist in the mounted repo? | NEEDS VERIFICATION | Determines whether this ADR creates or normalizes a package. |
-| Is the target ADR path `docs/adr/ADR-0006-maplibre-boundary.md` consistent with repo ADR naming? | NEEDS VERIFICATION | Avoids ADR path drift. |
-| What is the canonical package name: `@kfm/maplibre`, `@kansas-frontier-matrix/maplibre`, or unscoped? | NEEDS VERIFICATION | Prevents invented import names. |
-| Are `apps/explorer-web/`, `apps/web/`, `web/`, or `ui/` all present, and are any compatibility roots entrenched? | NEEDS VERIFICATION | Determines migration and drift-register scope. |
-| Who owns the Cesium parity ADR? | NEEDS VERIFICATION | 3D must share the same evidence/policy path without duplicating truth. |
-| Should MapLibre Native / mobile share `packages/maplibre/` or live in a sibling package? | PROPOSED / OPEN | Sibling package is preferred unless repo architecture proves otherwise. |
-| Where should the plugin allowlist live: inside `packages/maplibre/` or as a `control_plane/` register? | PROPOSED / OPEN | Plugin admission may be package-local or governance-register driven. |
-| Where should a headless / server-side preview renderer live? | PROPOSED / OPEN | Candidate homes include package strategy, sibling package, or preview service. |
-| Are style-spec imports allowed in schema-generation tooling under `schemas/contracts/v1/...`? | OPEN | Avoids schema/tooling coupling drift while permitting static validation. |
-| Which CI/enforcement tool is already used in the repo? | UNKNOWN | Prevents prescribing ESLint/dependency-cruiser if the repo uses a different standard. |
+Read RAW, WORK, QUARANTINE, canonical stores, graph/vector stores, model runtimes, or credentials
 
-[Back to top](#adr-0006--maplibre-boundary-only-maplibreadapter-imports-maplibre)
+Public runtime uses governed interfaces and released artifacts
 
----
+Decide source authority, rights, sensitivity, review, evidence closure, or release
 
-## 12. References
+Those responsibilities belong upstream
 
-### 12.1 Internal doctrine
+Call arbitrary unregistered public tile/data/plugin URLs as the normal path
 
-- `docs/doctrine/directory-rules.md` — §11 *UI and Map Roots*, §13.3 *competing shell homes*, §2.4 *ADR template fields*, §14 *Migration Discipline*. **CONFIRMED doctrine; path presence still NEEDS VERIFICATION.**
-- Master MapLibre Components-Functions-Features — Executive Determination; renderer boundary / trust-law records; MapLibre GL JS shell records; PMTiles and protocol governance records. **CONFIRMED doctrine / LINEAGE; implementation depth UNKNOWN.**
-- KFM trust membrane / lifecycle doctrine — public clients use governed APIs and released artifacts; RAW / WORK / QUARANTINE are not normal public surfaces. **CONFIRMED doctrine.**
+Endpoint, dependency, and artifact admission must be inspectable
 
-### 12.2 Adjacent ADRs
+Treat a successful render, screenshot, popup, feature property, or runtime metric as truth
 
-- `ADR-0001-schema-home.md` — schema-home convention (`schemas/contracts/v1/...`). Referenced for context only; this ADR does not amend it.
-- Sibling Cesium renderer-boundary ADR — **PROPOSED / NOT YET VERIFIED**.
+Renderer output is a downstream carrier
 
-### 12.3 Adjacent architecture docs (targets to update on acceptance)
+Hide sensitive geometry only with style filters
 
-- `docs/architecture/map-shell.md` — should link this ADR as the operational import-boundary rule for Directory Rules §11.
-- `docs/architecture/contract-schema-policy-split.md` — unchanged by this ADR.
-- `packages/maplibre/README.md` — should describe the adapter boundary and permitted internal imports.
-- `apps/explorer-web/README.md` and `packages/ui/README.md` — should document adapter-only consumption once migrated.
+Underlying bytes may still disclose the geometry
 
-### 12.4 External references (version-sensitive; verify before pinning)
+Re-export renderer or plugin types
 
-- MapLibre GL JS — runtime under boundary control.
-- `@maplibre/maplibre-gl-style-spec` — style-spec package under boundary review.
-- PMTiles MapLibre protocol — registration belongs in the adapter.
+Re-exporting recreates a second dependency seam
 
----
+Persist authoritative decisions or claim publication
 
-<sub>This ADR operationalizes Directory Rules §11 and §13.3. It does not amend the canonical root tree, schema-home rule, lifecycle phases, release model, policy roots, receipt/proof homes, or public governed API. Status: <strong>proposed</strong> — promote to <code>accepted</code> only after §1 verification items resolve.</sub>
+The adapter is not a policy, evidence, proof, or release store
+
+Emit raw model language or use AI output as feature truth
+
+AI is interpretive and evidence-subordinate
+
+6.3 What callers must do
+
+Caller
+
+Obligation
+
+apps/explorer-web/
+
+Depend on the KFM port/package; pass governed inputs; send click candidates to governed resolution; render finite states honestly
+
+packages/ui/
+
+Render KFM-owned state/events; never cast handles to MapLibre types or assume style visibility equals access
+
+Other apps/packages
+
+Use the same port or a separately accepted non-browser contract; do not initialize another browser renderer seam
+
+Examples
+
+Demonstrate consumer usage; renderer-internal examples live with the accepted package
+
+Tests outside package
+
+Test port behavior/fakes and negative states; renderer-internal integration tests live with or target the accepted package
+
+Docs
+
+Explain and link the boundary; documentation never substitutes for the structural validator or runtime evidence
+
+6.4 Exception contract
+
+A temporary exception is not a comment or an eslint-disable. It requires a reviewed record containing at least:
+
+exception_id: stable-id
+scope: exact paths and acquisition mechanism
+reason: why the accepted seam cannot yet express the need
+owner: verified owner or role assignment
+allowed_state: test-only | migration-only | internal-preview
+forbidden_uses:
+  - public runtime
+  - release or publication authority
+expires_or_review_by: YYYY-MM-DD
+validation_refs: []
+remediation: extend seam | move harness | remove dependency
+rollback: exact removal/revert path
+
+Missing or expired exception evidence fails closed.
+
+Back to top
+
+7. Enforcement
+
+7.1 Current enforcement snapshot
+
+Current enforcement is partial and conflicted, not absent and not complete.
+
+Surface
+
+Confirmed behavior
+
+Gap relative to this ADR
+
+tests/policy/test_explorer_web_adapter_boundary.py
+
+Scans .ts/.tsx/.js/.jsx under apps/explorer-web/src; allows map/Cesium imports when the file is inside app-local adapters/
+
+Not package-only, not repo-wide, string-heuristic only, and permits Cesium language
+
+Root lint, test, build scripts
+
+Echo TODO messages
+
+No usable monorepo import gate
+
+tests/maplibre/
+
+Contains bounded performance fixture/negative scalar tests
+
+Does not prove adapter public API, import isolation, or consumer migration
+
+packages/maplibre/
+
+Private scaffold; no renderer dependency or functioning source
+
+Nothing yet to enforce as the accepted seam
+
+scripts/maplibre-smoke-perf.mjs
+
+Acquires MapLibre via external CDN/global
+
+Known runtime acquisition outside package; needs migration or exception disposition
+
+MapLibre performance workflow
+
+Performs no-network syntax checks, three scalar negative tests, and an explicit readiness HOLD
+
+Not an ADR-0006 import/acquisition validator; does not execute browser performance or emit proof/release artifacts
+
+7.2 Required inventory
+
+The implementation packet must generate a reviewable inventory for at least:
+
+maplibre-gl
+@maplibre/* runtime packages
+three
+3d-tiles-renderer
+@deck.gl/* / deck.gl
+maplibre-gl-lidar
+maplibre-three-plugin
+pmtiles protocol registration
+maplibregl globals
+unpkg/jsdelivr/CDN MapLibre script or stylesheet URLs
+new Worker(...) / workerUrl bindings
+re-exports of renderer types or objects
+
+The exact plugin list is governed by ADR-0007 and plugin admission. ADR-0006 requires the inventory mechanism to be extensible to that list.
+
+7.3 Structural validator
+
+Prefer extending the existing tools/validators/maplibre/ lane after checking for equivalent implementation. A candidate command and path are PROPOSED, not current facts:
+
+python tools/validators/maplibre/validate_import_boundary.py
+
+A sufficient validator should:
+
+parse relevant JavaScript/TypeScript imports rather than depend only on raw substring matching;
+
+inspect dynamic imports, CommonJS, re-exports, workers, and browser script/global acquisition where feasible;
+
+inspect package manifests for dependency ownership;
+
+read one explicit allowlist/exception source;
+
+reject paths outside the one accepted package;
+
+emit stable file, line, dependency, mechanism, and reason-code diagnostics;
+
+return deterministic success/failure/system-error outcomes;
+
+avoid network access;
+
+be exercised by positive and negative fixtures.
+
+7.4 Package-manifest rule
+
+After the package home is resolved:
+
+Manifest
+
+Renderer/runtime dependency posture
+
+Accepted renderer package
+
+Owns approved runtime/plugin dependencies and exports
+
+apps/explorer-web/package.json
+
+Depends on the KFM package/port, not MapLibre/runtime plugins directly
+
+packages/ui/package.json
+
+KFM types/port only; no renderer runtime dependency
+
+Root package
+
+Tooling/workspace coordination only unless an explicit dependency-management rule says otherwise
+
+Test/example manifests
+
+No direct runtime dependency unless inside the accepted renderer package or covered by a reviewed test-only exception
+
+Dependency, peerDependency, devDependency, workspace-protocol, lockfile, and bundle rules remain NEEDS VERIFICATION until the package manager and build are made substantive.
+
+7.5 Required tests
+
+At minimum:
+
+a valid package-internal runtime import passes;
+
+an Explorer Web feature import fails;
+
+an app-local adapters/ runtime import fails unless the accepted physical seam is deliberately app-local through a superseding decision;
+
+a type-only raw MapLibre import fails;
+
+a dynamic import fails;
+
+a re-export fails;
+
+a package-manifest dependency outside the seam fails;
+
+a CDN/global acquisition fixture fails or matches a reviewed test-only exception;
+
+a fake-port consumer passes with no MapLibre dependency;
+
+raw MapLibre types are absent from the accepted package's public API declaration surface.
+
+7.6 PR review rule
+
+[!WARNING]A change that introduces renderer acquisition outside the accepted seam must be moved, expressed through the KFM port, or accompanied by a reviewed exception/superseding ADR. “Temporary,” “test only,” or “already behind an adapter folder” is not sufficient evidence by itself.
+
+7.7 Validation commands
+
+Commands below are scoped recommendations for a future implementation revision. Only the ADR-index commands are currently repository-established by adjacent ADR governance evidence.
+
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+
+# PROPOSED after the import validator and tests exist:
+python tools/validators/maplibre/validate_import_boundary.py
+python -m pytest tests/maplibre/test_import_boundary.py -q --strict-config --strict-markers
+
+A green check proves only the declared import/acquisition boundary for the checked revision. It does not prove evidence closure, policy approval, rights/sensitivity clearance, release readiness, runtime correctness, performance, accessibility, security, or KFM publication.
+
+Back to top
+
+8. Consequences
+
+8.1 Positive consequences
+
+The trust membrane gains an executable dependency edge. Renderer effects become reachable through one audited package rather than ambient runtime handles.
+
+Consumer code stays testable. Explorer Web and shared UI can use a fake port without MapLibre, network, DOM, or WebGL.
+
+Dependency and plugin review becomes finite. Version, license, supply-chain, worker, endpoint, and protocol review converge on one package.
+
+Runtime correction is more reversible. A vulnerable runtime/plugin can be removed or rolled back without changing every consumer API.
+
+Rendered candidates remain distinct from supported claims. Event translation makes the EvidenceRef/EvidenceBundle path visible.
+
+Import drift becomes machine-detectable. Static, dynamic, re-export, package, CDN/global, and exception states can be inspected together.
+
+8.2 Costs and tradeoffs
+
+The port must evolve intentionally as renderer capabilities grow.
+
+Existing app-local adapter doctrine/testing may need migration and could expose hidden coupling.
+
+A complete validator is more work than a single ESLint pattern.
+
+Test/performance harnesses need a deliberate package or exception home.
+
+The physical package-name conflict must be resolved before implementation can be described as canonical.
+
+Strict isolation can make some MapLibre-specific optimization APIs harder to expose; the answer is a reviewed KFM capability, not a raw-handle escape hatch.
+
+8.3 Current operational effect
+
+This revision changes documentation only. It does not:
+
+create MapLibreAdapter or MapRuntimePort source;
+
+rename packages/maplibre/;
+
+create packages/maplibre-runtime/;
+
+add dependencies, a lockfile, exports, build scripts, tests, validators, or workflows;
+
+modify the existing Explorer Web boundary test;
+
+move or exempt the performance harness;
+
+accept ADR-0006 or ADR-0007;
+
+publish a map, layer, package, release, or claim.
+
+8.4 Risk register
+
+Risk
+
+Current signal
+
+Mitigation
+
+Package scaffold is mistaken for an implemented adapter
+
+0.0.0, placeholder export, no dependencies/consumers
+
+Keep maturity explicit; acceptance Gate B
+
+Two package homes emerge
+
+packages/maplibre/ exists while Directory Rules proposes packages/maplibre-runtime/
+
+Gate A; one migration, compatibility status, no parallel evolution
+
+App-local adapters become a second seam
+
+Existing test allows imports under Explorer Web adapters/
+
+Tighten test after physical home decision; require package-only rule
+
+CDN harness bypasses dependency ownership
+
+Root smoke script loads unpkg.com/maplibre-gl@5.5.0
+
+Move behind package or approve bounded exception with expiry
+
+Narrow scan misses dynamic/global/plugin acquisition
+
+Current test is substring-based and app-scoped
+
+AST/manifest/browser-acquisition validator plus negative fixtures
+
+Raw types leak through KFM package exports
+
+No functional public API exists yet
+
+Declaration/API tests and no-re-export rule
+
+Style-spec tooling exception grows into runtime coupling
+
+Exception need remains open
+
+Explicit allowlist, non-runtime constraint, tests, review date
+
+ADR-0006 and ADR-0007 diverge
+
+Both remain proposed
+
+Cross-review, shared package/exception vocabulary, no implicit acceptance
+
+Back to top
+
+9. Alternatives Considered
+
+9.1 Alternative A — Soft convention only (rejected)
+
+Document the rule in architecture pages and rely on review.
+
+Rejected: the decision exists specifically to make renderer isolation executable. A prose-only boundary cannot detect dynamic imports, re-exports, manifest drift, or CDN/global acquisition.
+
+9.2 Alternative B — Allow imports anywhere under apps/explorer-web/src/adapters/ (rejected under this ADR)
+
+Treat the app-local adapter directory as the allowed seam.
+
+Rejected: this is the current bounded test posture, but it creates an app-specific renderer seam rather than a reusable package seam and allows more than one module. It remains a possible competing design only through a superseding decision that explains reuse, tests, ownership, dependency, and migration consequences.
+
+9.3 Alternative C — Allow renderer imports in packages/ui/ (rejected)
+
+Treat shared UI as renderer-aware.
+
+Rejected: shared UI should remain reusable and KFM-type-oriented. Raw MapLibre coupling weakens separation and makes non-map consumers carry renderer dependencies.
+
+9.4 Alternative D — One adapter per deployable (rejected for the default path)
+
+Place a renderer wrapper in every app.
+
+Rejected: dependency/version/plugin/admission logic would repeat across Explorer Web, review surfaces, examples, and future clients. One accepted package remains the smaller governance surface.
+
+9.5 Alternative E — Network/RPC-isolated renderer (deferred)
+
+Run the renderer in an iframe, worker, browser service, or headless process and expose messages only.
+
+Deferred: useful for screenshots, previews, or stronger isolation, but it does not remove the need for one KFM port and one dependency owner.
+
+9.6 Alternative F — Permit root performance harness as a permanent parallel runtime (not selected)
+
+Treat the CDN/global smoke script as outside the rule.
+
+Not selected: test tooling is still software supply-chain and runtime acquisition. A bounded temporary exception may be appropriate, but permanent exemption would create unreviewed version/network drift.
+
+9.7 Alternative G — Ban all style-spec usage outside the renderer package (open)
+
+Apply the rule to runtime and static tooling with no exceptions.
+
+Open: runtime/UI coupling should be banned. Static schema/build validation may justify a narrow allowlist. Acceptance requires evidence from actual tooling rather than a blanket exception.
+
+Back to top
+
+10. Migration & Rollback
+
+10.1 Migration plan
+
+Freeze the decision surface. Recheck ADR-0006, ADR-0007, Directory Rules, open PRs/branches, and package READMEs at the implementation base.
+
+Resolve one package home. Choose packages/maplibre/ or migrate it to packages/maplibre-runtime/; document old-to-new mapping, consumers, compatibility class, sunset/review date, and rollback. Do not create an independently evolving sibling.
+
+Inventory every acquisition path. Include apps, packages, scripts, tests, examples, workers, package manifests, dynamic imports, re-exports, CDN/global loading, protocols, and plugins.
+
+Define the semantic port. Review the MapRuntimePort / public capability contract before raw renderer implementation details spread.
+
+Implement the adapter in the accepted package. Add package metadata, dependencies, exports, build/type configuration, KFM-owned public types, internal runtime wiring, and package-local tests.
+
+Migrate Explorer Web and other consumers. Replace direct/app-local runtime ownership with the accepted port; preserve visible behavior in the migration packet.
+
+Repair the current boundary test. Make it package-only or replace it with a shared structural validator; remove Cesium allowance unless a reviewed exception/ADR requires it.
+
+Disposition the smoke/performance harness. Move runtime acquisition into package-owned test support, or attach a time-bounded test-only exception and remove external-network assumptions where practical.
+
+Enforce dependency ownership. Establish the repository package manager/lockfile rule and reject renderer dependencies outside the accepted package.
+
+Add structural validation and CI. Run deterministic positive/negative tests; ensure path filters include the actual package and Explorer Web paths.
+
+Update connected docs. Repair links in map-shell, Map Runtime Boundary, package/app/test READMEs, and the ADR index only where the reviewed implementation changes status or terminology.
+
+Transition status deliberately. Move ADR-0006 and INDEX.md together only after all acceptance gates close.
+
+10.2 Definition of done
+
+One physical package home is reviewed and documented; no parallel active renderer package exists.
+
+A functional adapter implements a reviewed KFM port.
+
+The accepted package owns approved renderer/runtime/plugin dependencies.
+
+Complete acquisition inventory is stored or reproducible for review.
+
+No unexcepted renderer acquisition exists outside the accepted package.
+
+Consumer public types expose no raw MapLibre/plugin handles or events.
+
+Explorer Web and at least one fake-port test operate without direct renderer dependency.
+
+Current app-local boundary test is tightened/replaced and covers negative paths.
+
+CDN/global harness is migrated or governed by an unexpired bounded exception.
+
+Structural validator emits deterministic diagnostics and runs in CI.
+
+Package, app, test, and architecture docs agree on the accepted seam.
+
+ADR/index status transition carries reviewed evidence and no publication claim.
+
+10.3 Rollback of this document revision
+
+Restore prior target blob:
+
+fba9562322a263876bb5b1096b8093746dd43990
+
+That rollback returns the prior prose only. It does not change package code, dependencies, tests, workflows, runtime state, or ADR acceptance.
+
+10.4 Architectural rollback or supersession
+
+If the decision is later rejected or replaced:
+
+keep ADR-0006 as history;
+
+set its status to rejected or superseded with matching index state;
+
+link the successor in both directions;
+
+identify the replacement dependency seam and why it is smaller/safer;
+
+migrate consumers and dependencies through a reviewed old-to-new map;
+
+preserve security/correction records for released software or map artifacts affected by the change;
+
+remove compatibility paths only after consumer and rollback evidence closes.
+
+Do not rewrite shared history or silently convert app-local imports into accepted architecture.
+
+10.5 Backward compatibility
+
+This decision does not alter public data schemas, evidence contracts, policy decisions, source identities, lifecycle phases, release manifests, or published artifact identities. A later implementation may change internal imports and package paths while preserving consumer-visible KFM behavior through the port.
+
+Back to top
+
+11. Open Questions
+
+The target path and ADR number are confirmed. The unresolved work is architectural convergence and implementation evidence.
+
+Question
+
+Status
+
+Required evidence / decision
+
+Which physical package home wins: packages/maplibre/ or packages/maplibre-runtime/?
+
+CONFLICTED
+
+ADR-0006/ADR-0007/Directory Rules review plus migration and rollback plan
+
+Is @kfm/maplibre retained as the internal package name?
+
+NEEDS VERIFICATION
+
+Package API, naming, distribution, and migration decision
+
+What is the reviewed MapRuntimePort semantic contract and versioning rule?
+
+OPEN
+
+Contract review, implementation, consumer tests
+
+What role remains for apps/explorer-web/src/adapters/?
+
+CONFLICTED
+
+Decide governed service adapters versus renderer package seam; update test/docs
+
+Which renderer/plugin dependencies are admitted and where is the allowlist indexed?
+
+OPEN
+
+ADR-0007 plus policy/control-plane/package decision
+
+How is static style-spec tooling allowed without leaking runtime coupling?
+
+OPEN
+
+Actual tooling inventory and narrow exception tests
+
+What happens to the root CDN/global smoke harness?
+
+NEEDS VERIFICATION
+
+Move, hermetic rewrite, or reviewed test-only exception with expiry
+
+Which validator implementation and orchestration path is repository-standard?
+
+NEEDS VERIFICATION
+
+Existing tools/validators inventory, validator registration, CI definition
+
+Which package manager and lockfile rule governs JavaScript dependencies?
+
+UNKNOWN
+
+Repository decision and substantive build commands
+
+Which check becomes required before acceptance?
+
+NEEDS VERIFICATION
+
+Ruleset/branch-protection evidence plus stable workflow/job identity
+
+Who holds architecture, map-runtime, package, QA, and docs review responsibilities?
+
+NEEDS VERIFICATION
+
+Stewardship assignments; CODEOWNERS routing alone is insufficient
+
+Does a headless/server-side preview use this package, a sibling non-browser package, or a service boundary?
+
+OPEN
+
+Concrete use case, effect boundary, dependency and security review
+
+Track implementation gaps in VERIFICATION_BACKLOG.md and confirmed structural contradictions in DRIFT_REGISTER.md when the implementation packet is authorized. This documentation-only revision does not write those registers.
+
+Back to top
+
+12. References
+
+12.1 Repository decision and placement evidence
+
+ADR operating contract
+
+Canonical ADR index
+
+ADR-0005 — Explorer Web shell
+
+ADR-0007 — Sole browser-side renderer
+
+Directory Rules
+
+CODEOWNERS — review routing only, not acceptance evidence
+
+12.2 Current package, app, and enforcement evidence
+
+MapLibre package boundary README
+
+MapLibre package metadata
+
+MapLibre package placeholder entry
+
+Repository workspace metadata
+
+Explorer Web package metadata
+
+Explorer Web Map Runtime feature README
+
+Current Explorer Web adapter-boundary test
+
+MapLibre test-lane README
+
+MapLibre performance/smoke harness
+
+MapLibre performance workflow
+
+12.3 Companion architecture
+
+Map Shell architecture
+
+Map Runtime Boundary
+
+12.4 Source doctrine used for the decision intent
+
+The KFM MapLibre operating manual establishes the central doctrine used here: MapLibre is the disciplined rendering and interaction surface downstream of evidence, policy, review, and release—not the truth, policy, citation, publication, or AI authority. Version-sensitive package/plugin facts require separate current verification before implementation.
+
+Back to top
+
+<details>
+<summary><strong>Appendix A — No-loss modernization ledger</strong></summary>
+
+Baseline element
+
+v1.2 disposition
+
+ADR identity, filename, H1, and sections 0–12
+
+Preserved
+
+Single-importer decision
+
+Preserved; broadened from import syntax to all runtime acquisition mechanisms
+
+Trust-membrane rationale
+
+Preserved and strengthened with current package/app/test evidence
+
+packages/maplibre/ proposed home
+
+Corrected: current scaffold is confirmed, but Directory Rules target-name conflict is explicit
+
+@kfm/maplibre illustrative package name
+
+Corrected to confirmed current scaffold name; not promoted to accepted API/distribution
+
+Forbidden/permitted TypeScript examples
+
+Preserved and clarified as illustrative
+
+Scope / non-scope
+
+Preserved; ADR-0007 relationship and scripts/harnesses clarified
+
+Mermaid boundary diagram
+
+Preserved in updated responsibility form
+
+Adapter MUST / MUST NOT duties
+
+Preserved and expanded for sensitivity, corrections, fakes, plugins, and runtime health
+
+Linter / dependency / manifest enforcement
+
+Preserved as intent; replaced tool-specific optimism with current snapshot and structural requirements
+
+Consequences and risk register
+
+Preserved; current scaffold, package-name conflict, test gap, and CDN harness added
+
+Alternatives A–E
+
+Preserved in substance; current app-local-adapter and harness alternatives made explicit
+
+Migration, definition of done, rollback
+
+Preserved and repository-grounded; exact prior blob added
+
+Open questions
+
+Closed path/number/package-name questions where evidence permits; retained real architecture/implementation gaps
+
+References
+
+Replaced stale generic paths with exact current repository links
+
+</details>
+
+<details>
+<summary><strong>Appendix B — Before/after upgrade matrix</strong></summary>
+
+Area
+
+Before
+
+After
+
+Repository posture
+
+Package, imports, tests, workflows, and path treated as unknown
+
+Confirms exact ADR path, package scaffold, package name, placeholder source, partial test, TODO scripts, and CDN harness
+
+Package home
+
+Assumed packages/maplibre/ proposal
+
+Exposes packages/maplibre/ current scaffold versus packages/maplibre-runtime/ proposed target as CONFLICTED
+
+Enforcement
+
+Generic proposed ESLint/dependency-cruiser examples
+
+Current bounded test is analyzed; repo-wide acquisition validator requirements and negative cases are explicit
+
+Boundary definition
+
+Mostly static module imports
+
+Covers static/type/dynamic/CommonJS/re-export/worker/CDN/global/plugin/protocol acquisition
+
+Consumer seam
+
+Adapter package described abstractly
+
+Logical seam separated from unresolved physical path; current app-local adapter allowance identified
+
+Renderer choice
+
+Future Cesium parity ADR assumed
+
+Pairs explicitly with tracked, still-proposed ADR-0007
+
+Runtime harness
+
+Not identified
+
+External CDN/global MapLibre harness is a known divergence requiring migration or exception
+
+Acceptance
+
+General checklist
+
+Eight fail-closed gates from package-home resolution through reviewed status transition
+
+Rollback
+
+General successor-ADR guidance
+
+Exact prior blob plus architectural supersession/migration consequences
+
+</details>
+
+<details>
+<summary><strong>Appendix C — Evidence boundary</strong></summary>
+
+This revision is grounded in repository content at main@79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7 and the blob identities recorded in the KFM Meta Block. It does not claim:
+
+a complete recursive import/dependency inventory;
+
+a functioning MapLibre adapter or consumer;
+
+a current successful MapLibre workflow run;
+
+an accepted package path, public API, dependency/version, plugin set, or lockfile policy;
+
+runtime, deployment, release, publication, performance, accessibility, or security readiness;
+
+human review or ADR acceptance.
+
+The repository could change after the pinned snapshot. Re-run the inventory and concurrency checks before any implementation or status transition.
+
+</details>
+
+Last updated 2026-07-23 · Source metadata: draft · Effective decision status: proposed · Implementation: scaffold / partial / conflicted · Publication effect: none · Back to top
