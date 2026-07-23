@@ -116,7 +116,7 @@
     {
       "gate": "current evidence refresh",
       "outcome": "PASS",
-      "reason": "Current canonical data/release root READMEs, proposed ADR status, Directory Rules duplicate identity, CODEOWNERS limits, drift register entry, ADR index, docs readiness hold, MapLibre readiness workflow, Makefile commands, and generated-receipt schema were directly inspected at the pinned base."
+      "reason": "Current canonical data and release roots, proposed ADR status, duplicate Directory Rules identity, CODEOWNERS limits, the absent explicit catalog entry in the inspected drift register, the TODO catalog Make target, the 41-workflow inventory, proposed catalog-builder tooling, and the documentation-only shared catalog pipeline were reconciled."
     },
     {
       "gate": "Markdown structure and parsing",
@@ -126,7 +126,7 @@
     {
       "gate": "anchors, links, and navigation",
       "outcome": "PASS",
-      "reason": "Twenty legacy/custom anchors are retained, forty-three local fragment references resolve, ninety-eight Markdown links were parsed, and repository-relative paths remain within the repository boundary. Complete host-render and destination-fragment validation remains delegated to pull-request checks."
+      "reason": "Twenty numbered legacy anchors plus the top anchor are retained; forty-three local fragment references resolve, ninety-eight Markdown links were parsed, and repository-relative paths remain within the repository boundary. Complete host-render and destination-fragment validation remains delegated to pull-request checks."
     },
     {
       "gate": "legacy-fragment preservation",
