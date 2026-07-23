@@ -2437,52 +2437,52 @@ kfm_markdown_task:
     exclude_globs: []
 
   targets:
-- target_id: "doc-001"
-  path: null
-  placement_selector: null
-  operation: null
-  objectives: []
-  document_type: "AUTO"
-  renderer: "AUTO"
-  required: true
-  requested_change: null
-  source:
-  source_id: null
-  path_or_uri: null
-  role: null
-  content_identity: null
-  provenance: null
-  authority_status: null
-  rights_posture: null
-  sensitivity_posture: null
-  fidelity_mode: null
-  retrieved_at: null
-  destination:
-  path: null
-  policy: null
-  retirement:
-  disposition: null
-  survivor_path: null
-  archive_path: null
-  sunset_evidence_ref: null
-  reference_closure: []
-  acceptance_criteria: []
+    - target_id: "doc-001"
+      path: null
+      placement_selector: null
+      operation: null
+      objectives: []
+      document_type: "AUTO"
+      renderer: "AUTO"
+      required: true
+      requested_change: null
+      source:
+        source_id: null
+        path_or_uri: null
+        role: null
+        content_identity: null
+        provenance: null
+        authority_status: null
+        rights_posture: null
+        sensitivity_posture: null
+        fidelity_mode: null
+        retrieved_at: null
+      destination:
+        path: null
+        policy: null
+      retirement:
+        disposition: null
+        survivor_path: null
+        archive_path: null
+        sunset_evidence_ref: null
+      reference_closure: []
+      acceptance_criteria: []
 
   source_inputs:
-- source_id: "source-001"
-  path_or_uri: null
-  role: null
-  content_identity: null
-  provenance: null
-  authority_status: null
-  rights_posture: null
-  sensitivity_posture: null
-  retrieved_at: null
+    - source_id: "source-001"
+      path_or_uri: null
+      role: null
+      content_identity: null
+      provenance: null
+      authority_status: null
+      rights_posture: null
+      sensitivity_posture: null
+      retrieved_at: null
 
   mutation_policy:
     allowed_markdown_extensions:
-- ".md"
-- ".markdown"
+      - ".md"
+      - ".markdown"
     allow_mdx: false
     allow_non_markdown_repository_mutations: false
     authorized_non_markdown_paths: []
@@ -2503,11 +2503,11 @@ kfm_markdown_task:
     maximum_repair_cycles: 2
 
   constraints_and_non_goals:
-- "Do not merge."
-- "Do not create parallel documentation authority."
-- "Do not invent implementation, owner, review, license, policy, CI, or publication claims."
-- "Do not modify non-Markdown files unless separately authorized."
-- "Do not expose secrets or sensitive information."
+    - "Do not merge."
+    - "Do not create parallel documentation authority."
+    - "Do not invent implementation, owner, review, license, policy, CI, or publication claims."
+    - "Do not modify non-Markdown files unless separately authorized."
+    - "Do not expose secrets or sensitive information."
 
   campaign:
     campaign_id: null
