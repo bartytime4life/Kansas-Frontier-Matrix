@@ -1,634 +1,984 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr-0004
-title: ADR-0004 — apps/governed-api is the trust membrane
-type: standard
-version: v1.1
+doc_id: kfm://doc/adr-0004-apps-governed-api-trust-membrane
+title: "ADR-0004 — `apps/governed-api/` is the Trust Membrane"
+type: adr
+adr_id: ADR-0004
+version: v1.2
 status: draft
-owners: TODO — Architecture Steward; API owner; Security steward
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — governed API owner"
+  - "NEEDS VERIFICATION — security and policy owner"
+reviewers_required:
+  - Docs steward
+  - Architecture steward
+  - Governed API maintainer
+  - Security / policy reviewer
+  - Evidence / release reviewer
+  - "at least one affected client or subsystem owner"
 created: 2026-05-10
-updated: 2026-05-15
+updated: 2026-07-23
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 005aa64f6d42aa5961646e733289a2b857292357
+  target_prior_blob: c9047d3dbf1d0a50d1bdd456cba0a137196e59f9
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  apps_readme_blob: 7ab9c8b9c507d8d17b72eec1344e593cbf0c91ec
+  governed_api_readme_blob: 4f21150852f133ba919b11f4f8792185fa870dae
+  governed_api_main_blob: bcc8d3a0ddba4b225e962b594d548819df0cbb71
+  governed_api_routes_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
+  governed_api_stub_blob: 5d7c137d2e78ddfca35a1356a96333ac2e84952b
+  governed_api_route_test_blob: 6474cef4f7378515ab673c288fc9daea19e388a9
+  governed_api_boundary_test_blob: d84ccd2a93bdf786e8fca11ee596dcc47e543fc2
+  api_workflow_blob: 5ec0ff53cc874935ed8ef5de791b70a52635ef33
+  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
+  runtime_response_schema_blob: 5105d419432a27176a8ee10870d75400cfa2ab8c
+  decision_envelope_schema_blob: 349782c8760f77e432ed1e9239d5ddc2ffe1f9b8
+  runtime_response_contract_blob: b81d67dccdd8470e066ab8247eb93c5df67a6679
+  decision_envelope_contract_blob: b5120a208910f5e2907874b03af1fc8c7f43363d
+  runtime_response_validator_blob: 11ddc64c4299d103b0eef383c2f7bdd3bb12f1f9
+  schema_validation_workflow_blob: e6b26337aa1eea142b96560e041419f855c44d59
+  explorer_package_blob: ce981192e725483c747affb45ca3de36a22ce9ce
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  apps_api_at_base: absent
 related:
-  - docs/adr/ADR-0001-schema-home.md                 # NEEDS VERIFICATION — cited by Directory Rules as ADR-0001
-  - docs/adr/ADR-0002-finite-decision-outcomes.md    # PROPOSED — starter-set name
-  - docs/adr/ADR-0003-watcher-as-non-publisher.md    # PROPOSED — starter-set name
-  - docs/doctrine/directory-rules.md                 # PROPOSED canonical home per Directory Rules
-  - directory-rules.md                               # NEEDS VERIFICATION — existing path reference retained for continuity
-  - docs/architecture/runtime-envelope.md            # PROPOSED companion doc
-tags: [kfm, adr, governed-api, trust-membrane, runtime, governance]
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0002-contracts-vs-schemas-split.md
+  - docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md
+  - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
+  - docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md
+  - docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/trust-membrane.md
+  - docs/architecture/governed-api.md
+  - apps/README.md
+  - apps/governed-api/README.md
+  - contracts/runtime/decision_envelope.md
+  - contracts/runtime/runtime_response_envelope.md
+  - schemas/contracts/v1/runtime/decision_envelope.schema.json
+  - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - .github/workflows/api-test.yml
+tags: [kfm, adr, governance, governed-api, trust-membrane, runtime-envelope, finite-outcomes, evidence, policy, release, no-parallel-api]
 notes:
-  - "ADR decision status remains Proposed; meta status marks repository-document lifecycle as draft."
-  - "Resolves the Directory Rules OPEN item about apps/api/ vs apps/governed-api/ boundary."
-  - "Updated 2026-05-15 to sharpen evidence boundary, schema-home posture, validation gates, and migration discipline."
-  - "Starter-set numbering follows the user-supplied file path; alternate Pass 12 lineage proposed ADR-0004 = STAC profile. Surface retained in §11 Alternatives."
+  - "v1.2 is a same-path repository-grounded modernization; it does not accept the decision or change executable behavior."
+  - "ADR-0004 identity and tracked path are confirmed by docs/adr/INDEX.md; source metadata remains draft and effective decision status remains proposed."
+  - "The current app is a bounded WSGI scaffold with three GET routes that return ABSTAIN / NOT_IMPLEMENTED. This is fail-closed behavior, not a complete trust membrane."
+  - "The scaffolded routes are tested against a DecisionEnvelope-shaped subset, while the separate RuntimeResponseEnvelope contract and schema define the intended client-facing surface. Closing that integration gap is an acceptance blocker."
+  - "A governed static-delivery edge for already released public-safe artifacts may complement the dynamic API, but it cannot become a second trust authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0004 — `apps/governed-api/` is the Trust Membrane
 
-> **Purpose.** Declare `apps/governed-api/` the **single executable boundary** between Kansas Frontier Matrix's governed internals and every public / semi-public client. Public reads, AI answers, review-console payloads, Story Nodes, exports, and Evidence Drawer payloads cross this boundary; ordinary clients do not bypass it.
+> **Proposed decision.** KFM will use **`apps/governed-api/`** as the single dynamic public trust boundary for claim-bearing and trust-bearing responses. Ordinary clients will not read lifecycle, canonical, candidate, evidence-internal, model-runtime, graph, search, or release-internal stores directly. A separately governed static-delivery edge may serve already released public-safe artifacts, but it is not a second API, policy engine, or truth authority.
 
-<div align="left">
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#1-status)
+[![Configured app: present](https://img.shields.io/badge/configured%20app-present-1f6feb?style=flat-square)](#11-current-repository-evidence-snapshot)
+[![Implemented routes: 3](https://img.shields.io/badge/implemented%20routes-3%20ABSTAIN-2da44e?style=flat-square)](#61-current-scaffold-shape)
+[![Public envelope integration: partial](https://img.shields.io/badge/public%20envelope-partial-f59e0b?style=flat-square)](#62-decisionenvelope-vs-runtimeresponseenvelope)
+[![API CI: command-bearing](https://img.shields.io/badge/API%20CI-command--bearing-2da44e?style=flat-square)](../../.github/workflows/api-test.yml)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#33-authority-and-publication-boundary)
+[![Snapshot: 005aa64](https://img.shields.io/badge/snapshot-005aa64-6e7781?style=flat-square)](#11-current-repository-evidence-snapshot)
 
-![Status](https://img.shields.io/badge/status-proposed-yellow)
-![Type](https://img.shields.io/badge/type-ADR-blue)
-![Scope](https://img.shields.io/badge/scope-repo--wide-6f42c1)
-![Invariant](https://img.shields.io/badge/invariant-trust%20membrane-d97706)
-![Outcome](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0f766e)
-![Updated](https://img.shields.io/badge/updated-2026--05--15-lightgrey)
+> [!IMPORTANT]
+> **Repository configuration is not reviewed decision authority.** The repository already contains `apps/governed-api/`, three bounded routes, schemas, contracts, fixtures, validators, tests, and CI wiring. The canonical ADR index still records ADR-0004 as effectively `proposed`. This revision documents the current boundary without changing the ADR to `accepted`.
 
-</div>
+> [!CAUTION]
+> **Fail-closed scaffolding is not a complete trust membrane.** The current routes return `ABSTAIN` with `NOT_IMPLEMENTED`; they do not resolve evidence, evaluate an accepted policy bundle, authorize a caller, bind a release, emit a client-facing `RuntimeResponseEnvelope`, or prove deployed isolation. No route may graduate to `ANSWER` merely because the WSGI app, schema validator, or smoke test is green.
 
-| Field | Value |
-|---|---|
-| **ADR decision status** | Proposed |
-| **Document lifecycle status** | Draft |
-| **Owners** | `TODO` — Architecture Steward · API owner · Security steward |
-| **Last reviewed** | 2026-05-15 |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Primary decision** | `apps/governed-api/` is the public trust path. |
-| **Implementation depth** | **UNKNOWN** until mounted repo, tests, workflows, manifests, logs, and emitted artifacts are inspected. |
+<a id="quick-navigation"></a>
 
-> [!NOTE]
-> This ADR states KFM doctrine where supported by Project sources. Current implementation depth remains **UNKNOWN** where repo files, tests, workflows, dashboards, logs, or emitted artifacts were not inspected.
-
----
-
-## Quick Navigation
-
-- [1. Status](#1-status)
-- [2. Context](#2-context)
-- [3. Decision](#3-decision)
-- [4. Trust Membrane — Diagram](#4-trust-membrane--diagram)
-- [5. Operational Invariants](#5-operational-invariants)
-- [6. `RuntimeResponseEnvelope` Contract](#6-runtimeresponseenvelope-contract)
-- [7. Required Deny Cases](#7-required-deny-cases)
-- [8. Affected Paths](#8-affected-paths)
-- [9. Resolution of the `apps/api/` Question](#9-resolution-of-the-appsapi-question)
-- [10. Consequences](#10-consequences)
-- [11. Alternatives Considered](#11-alternatives-considered)
-- [12. Migration & Backward Compatibility](#12-migration--backward-compatibility)
-- [13. Validation & Compliance](#13-validation--compliance)
-- [14. Related ADRs and Docs](#14-related-adrs-and-docs)
-- [15. Open Questions / NEEDS VERIFICATION](#15-open-questions--needs-verification)
-- [Appendix A — Reason-code vocabulary](#appendix-a--reason-code-vocabulary)
-- [Appendix B — Anti-patterns this ADR forbids](#appendix-b--anti-patterns-this-adr-forbids)
-- [Related docs](#related-docs)
+**Quick navigation:** [Status](#1-status) · [Context](#2-context) · [Decision](#3-decision) · [Diagram](#4-trust-membrane--diagram) · [Invariants](#5-operational-invariants) · [Envelope contract](#6-runtimeresponseenvelope-contract) · [Negative outcomes](#7-required-deny-cases) · [Surfaces](#8-affected-paths) · [`apps/api/`](#9-resolution-of-the-appsapi-question) · [Consequences](#10-consequences) · [Alternatives](#11-alternatives-considered) · [Migration](#12-migration--backward-compatibility) · [Validation](#13-validation--compliance) · [Related](#14-related-adrs-and-docs) · [Open work](#15-open-questions--needs-verification) · [Reason codes](#appendix-a--reason-code-vocabulary) · [Anti-patterns](#appendix-b--anti-patterns-this-adr-forbids)
 
 ---
 
 ## 1. Status
 
-**Proposed.** This ADR codifies the KFM trust membrane as an addressable architectural decision and resolves the Directory Rules open question about whether `apps/api/` and `apps/governed-api/` co-exist and what the boundary is.
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0004` — unique and confirmed in the canonical [`INDEX.md`](./INDEX.md) |
+| **Source metadata** | `draft` |
+| **Effective decision status** | `proposed` — not binding as an accepted ADR until the record and index carry matching reviewed `accepted` status |
+| **Decision class** | Public trust-boundary selection, no-parallel-public-API rule, dynamic response-envelope requirement, and public-client store isolation |
+| **Tracked path** | `docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md` |
+| **Current configured app** | [`apps/governed-api/`](../../apps/governed-api/) |
+| **Current plural/parallel app state** | Exact `apps/api/` path absent at the pinned snapshot |
+| **Current implementation posture** | Minimal executable WSGI scaffold; three GET routes; fail-closed `ABSTAIN`; bounded structural tests; no proved production trust flow |
+| **Decision dependencies** | Evidence, policy, release/correction, finite-outcome contracts, client integration, static-delivery governance, security, observability, and rollback |
+| **Publication effect** | None. This ADR, a route, schema, test, workflow, commit, pull request, or merge is not a release or publication decision. |
 
-It does **not** prove that the target repository already contains the paths, schemas, policies, tests, or runtime behavior named below. Those remain **PROPOSED / NEEDS VERIFICATION** until a mounted-repo inspection confirms them.
+### 1.1 Current repository evidence snapshot
 
-### Decision posture
+The following findings are **CONFIRMED at `main@005aa64f6d42aa5961646e733289a2b857292357`** unless marked otherwise.
 
-| Item | Status | Meaning |
+| Surface | Verified state | What it proves—and does not prove |
 |---|---|---|
-| Trust membrane doctrine | **CONFIRMED doctrine** | Public clients must not become direct readers of raw, internal, unpublished, unreviewed, or model-generated truth. |
-| `apps/governed-api/` as canonical public trust path | **PROPOSED ADR decision** | This ADR makes the boundary explicit and supersession-aware. |
-| Current route handlers, DTOs, middleware, auth, logs, dashboards | **UNKNOWN** | No mounted repo/runtime evidence was inspected for this revision. |
-| Schema home for runtime envelopes | **PROPOSED under ADR-0001** | Default home is `schemas/contracts/v1/runtime/`; verify live repo convention before landing files. |
-| `apps/api/` current role | **NEEDS VERIFICATION** | If present, classify as deprecated, internal-only, or narrowly scoped and non-parallel to the trust membrane. |
+| [`docs/adr/INDEX.md`](./INDEX.md) | ADR-0004 is the unique tracked record for this decision; effective status is `proposed`; source metadata is `draft`. | Proves identity and conservative status normalization; does not accept the decision. |
+| [Directory Rules](../doctrine/directory-rules.md) | `apps/` is the deployable root; `apps/governed-api/` is named as the main public trust path; `apps/api/`, if present, must not be a parallel public authority. | Proves placement doctrine and intended app roles; does not prove runtime enforcement. |
+| [`apps/README.md`](../../apps/README.md) | Current root inventory records seven app lanes and 27 tracked files in the Governed API lane. Direct current reads confirm the WSGI entry point, route registry, stub, and two test modules. | Proves bounded repository structure; not deployment, auth, policy, or release maturity. |
+| [`apps/governed-api/README.md`](../../apps/governed-api/README.md) | Documents the trust-membrane role and explicitly bounds route, middleware, auth, deployment, and CI maturity. | Proves app-level intent and responsibility boundary; not accepted architecture or working production behavior. |
+| [`main.py`](../../apps/governed-api/src/governed_api/main.py) | Small WSGI app dispatches registered GET routes, returns `405` for unsupported methods on registered paths, and `404` for unknown paths. | Proves bounded dispatch behavior; not authentication, authorization, evidence resolution, policy evaluation, or network isolation. |
+| [`routes/registry.py`](../../apps/governed-api/src/governed_api/routes/registry.py) | Exactly three routes are registered: `/bootstrap`, `/layers`, `/evidence`. | Proves current surface manifest; not full endpoint catalogue or versioned public API. |
+| [`stub.py`](../../apps/governed-api/src/governed_api/stub.py) | Every registered route returns a deterministic-shape `ABSTAIN` object with `NOT_IMPLEMENTED`, empty evidence refs, and a zero SHA-256 placeholder. | Proves fail-closed scaffolding; not a valid evidence-backed answer, accepted digest, or release-bound response. |
+| [`test_abstain_routes.py`](../../apps/governed-api/tests/test_abstain_routes.py) | Iterates all registered routes, expects `200 OK`, `ABSTAIN`, `NOT_IMPLEMENTED`, empty evidence refs, fixed time, and a subset check against `decision_envelope.schema.json`. | Proves the current scaffold's bounded negative posture; it does not validate the separate client-facing RuntimeResponseEnvelope schema. |
+| [`test_boundary_guards.py`](../../apps/governed-api/tests/test_boundary_guards.py) | Checks unknown-route `404`, unsupported-method `405`, forbidden renderer/model imports, exact three-route manifest, and absence of hard-coded internal-store literals in API source. | Proves selected structural boundaries; not complete information-flow, auth, policy, deployment, or exfiltration proof. |
+| [`Makefile`](../../Makefile) | Provides `governed-api-dev`, `governed-api-smoke`, `governed-api-verify`, and cross-root `boundary-guards`; `deny-test` remains a readiness marker that prints a pending command. | Proves command-bearing bounded checks and an explicitly incomplete deny suite. |
+| [`api-test.yml`](../../.github/workflows/api-test.yml) | Runs the API smoke suite and the focused scaffolded-route contract test with read-only contents permission. | Proves CI orchestration exists; no current run result, release approval, or deployment evidence is inferred here. |
+| [`RuntimeResponseEnvelope` schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Separate proposed client-facing schema requires `id`, digest, version, time, finite outcome, reason, EvidenceRef objects, policy state, freshness, and correction state. | Proves a machine-shape proposal and aggregate fixture coverage; not app integration. |
+| [`DecisionEnvelope` schema](../../schemas/contracts/v1/runtime/decision_envelope.schema.json) | Separate proposed decision schema requires decision identity, outcome, policy family, reasons, obligations, and evaluation time. | Proves a distinct machine-shape proposal used by the scaffold test; not a public response envelope. |
+| [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | Configures both runtime schemas, paired fixture roots, and dedicated validators among six aggregate families. | Proves shape-validation wiring; not semantic agreement, runtime mapping, policy correctness, or release safety. |
+| [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) | `dev`, `build`, and `test` scripts still print pending markers. | No functional normal public client or governed-client integration is established. |
+| Exact `apps/api/` path | Contents lookup returned `404 Not Found`. | Proves no parallel app exists at this snapshot; not a permanent guarantee. |
+| [`CODEOWNERS`](../../.github/CODEOWNERS) | Routes `/docs/adr/`, `/apps/governed-api/`, schemas, policy, release, tests, and validators to `@bartytime4life`. | Proves GitHub review routing; not stewardship assignment, independent approval, or acceptance. |
+| Production exposure, auth, audit sink, dashboards, service health, rate limits, and network isolation | **UNKNOWN / NEEDS VERIFICATION** | No admissible operational evidence was inspected. |
 
-> [!IMPORTANT]
-> This ADR is a governance decision and implementation target. It is **not** a claim that any runtime path is currently deployed, tested, secured, or release-gated.
+### 1.2 Safe current conclusion
 
-[↑ Back to top](#quick-navigation)
+The repository has a **real but intentionally narrow fail-closed API scaffold**. It is stronger than documentation-only intent and weaker than an accepted, production-capable trust membrane.
+
+The safe claim is:
+
+> `apps/governed-api/` currently demonstrates route registration, finite negative behavior, selected import/path boundaries, and schema-adjacent CI. Evidence resolution, accepted policy evaluation, release binding, client-facing RuntimeResponseEnvelope integration, authentication, authorization, observability, deployed isolation, and substantive `ANSWER` behavior remain unproved.
+
+[Back to top](#top)
 
 ---
 
 ## 2. Context
 
-KFM is a governed, evidence-first, map-first, time-aware spatial knowledge system. Its lifecycle invariant is:
+KFM's governing lifecycle remains:
 
 ```text
-RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLETS  →  PUBLISHED
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Promotion between phases is a **governed state transition**, not a file move. Each phase carries different source, rights, sensitivity, validation, review, release, correction, and rollback posture. The system fails *closed*: when support is missing, stale, unresolved, rights-uncertain, or policy-blocked, KFM abstains or denies rather than emitting unsupported authority.
+Promotion is a governed state transition, not a file move. Public trust must therefore be enforced at the point where released state becomes a response, map payload, export, story, review projection, or AI-assisted explanation.
 
-The forces in play:
+### 2.1 Why a dedicated dynamic membrane is required
 
-- **Public exposure is asymmetric.** A leaked exact archaeology site, rare-species nesting location, restricted personal record, unreleased candidate, or internal file reference cannot be fully retracted once served.
-- **Generated text is not sovereign truth.** Tiles, mosaics, summaries, vector indexes, graph projections, generated answers, screenshots, and 3D scenes are presentation or acceleration surfaces. `EvidenceBundle`, policy, review state, source role, and release state outrank them.
-- **Direct client reads collapse the lifecycle.** A public route that reads `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, receipts, or model endpoints bypasses the gates KFM exists to enforce.
-- **Multiple consumers need one accountable contract.** `apps/explorer-web/`, external consumers, Focus Mode, Evidence Drawer, review-console payloads, Story Nodes, exports, screenshots, and downstream API clients need consistent semantics: same envelope, same evidence-resolution rule, same denial vocabulary, same review/release/correction state.
-- **A structural ambiguity exists.** Directory Rules lists as OPEN whether `apps/api/` and `apps/governed-api/` co-exist and what the boundary is. This ADR resolves that ambiguity at the doctrine level.
+Without one accountable dynamic boundary:
 
-Without an executable membrane that all ordinary public traffic crosses, every other governance commitment — `EvidenceBundle` closure, sensitivity policy, cite-or-abstain, watcher-as-non-publisher, release manifests, correction notices, rollback cards — has no single enforcement point where it matters most: the public surface.
+- public clients can accidentally become readers of canonical or lifecycle stores;
+- evidence resolution, source role, policy, rights, sensitivity, freshness, release, correction, and rollback checks fragment by client or route;
+- generated language can be rendered before evidence and citation closure;
+- `ABSTAIN`, `DENY`, and `ERROR` can be hidden as empty or partial success;
+- review, CLI, admin, and worker conveniences can harden into unreviewed public paths;
+- two public API deployables can evolve different denial vocabularies and audit trails;
+- a renderer, graph, search index, object store, or model runtime can become a de facto source of truth.
 
-[↑ Back to top](#quick-navigation)
+### 2.2 Dynamic API and governed static delivery are different concerns
+
+This ADR governs the **dynamic trust boundary**. It does not require every immutable public-safe byte to be proxied through the WSGI process.
+
+| Surface | Allowed posture | Trust requirement |
+|---|---|---|
+| Dynamic claim-bearing or trust-bearing request | `apps/governed-api/` | Finite response envelope, policy/evidence/release checks, safe errors, auditability |
+| Static PMTiles, COG, GeoParquet, report, story, JSON sidecar, or other released artifact | Governed static-delivery edge MAY serve it | Release manifest, digest/integrity metadata, public-safe classification, correction/rollback references, no hidden internal path |
+| Canonical, candidate, internal, model-runtime, graph, search, source, or lifecycle store | Direct public read is forbidden | Governed projection or explicit denial |
+| Review/admin/operator request | Governed and role-gated route | Authentication, authorization, audit, no self-approval, no direct browser file mutation |
+
+A static edge is a delivery mechanism, not a second policy substrate or public API authority. The membrane is operational: the artifact must already be released and verifiable.
+
+### 2.3 Relationship to adjacent decisions
+
+This ADR answers **where dynamic public trust is enforced**. Adjacent proposed ADRs answer narrower questions:
+
+- ADR-0005 identifies Explorer Web as the map-first client.
+- ADR-0008 and ADR-0019 place model runtimes and adapters behind the API.
+- ADR-0010 establishes deny-by-default sensitive-domain posture.
+- ADR-0020 makes abstention first-class.
+- ADR-0025 forbids public clients from reading canonical/internal stores and permits a governed static edge for released artifacts.
+
+All remain proposed; this ADR does not grant them accepted status.
+
+[Back to top](#top)
 
 ---
 
 ## 3. Decision
 
-**`apps/governed-api/` is the canonical public trust path for Kansas Frontier Matrix.**
+**If accepted, KFM adopts the following rules.**
 
-KFM commits to the following:
+### 3.1 Dynamic trust-boundary rule
 
-1. **Single executable membrane.** Public and normal UI traffic — reads, AI answers, Evidence Drawer payloads, Story Nodes, exports, screenshots, review-console retrieval payloads, and public-safe layer metadata — passes through `apps/governed-api/`.
-2. **Finite runtime outcomes.** Every trust-bearing response is a `RuntimeResponseEnvelope` with `status ∈ { ANSWER, ABSTAIN, DENY, ERROR }`. There is no fifth runtime outcome.
-3. **No public path to canonical / lifecycle stores.** Public clients **MUST NOT** read `data/raw/`, `data/work/`, `data/quarantine/`, internal `data/receipts/`, internal `data/proofs/`, `data/processed/`, source registries, graph internals, model endpoints, or unpublished candidate artifacts directly.
-4. **Released artifacts are still governed.** `data/published/`, public-safe catalog records, public tile services, public PMTiles/COG/GeoParquet artifacts, and release manifests are consumed through governed interfaces and release-aware manifests, not treated as unbounded truth.
-5. **No direct model client.** Focus Mode, Evidence Drawer reasoning, and any AI-assisted surface invoke model adapters **behind** the governed API. The browser never calls Ollama, OpenAI, local model runtimes, vector indexes, graph stores, object stores, or canonical databases directly.
-6. **Decision metadata travels with the answer.** Trust-bearing envelopes carry the material decision references: `policy_decision_ref`, `evidence_bundle_refs`, `release_manifest_refs`, `review_state`, `correction_notice_refs`, `citations`, `limitations`, `redaction_or_generalization_state`, and `reason_codes`.
-7. **The membrane is fail-closed.** Missing `EvidenceBundle` → `ABSTAIN`. Sensitivity-policy violation → `DENY`. Stale beyond endpoint policy → `ABSTAIN` with stale reason. Adapter or schema failure → `ERROR` with no leakage of prompt, secret, stack trace, or internal context.
-8. **Watcher-as-non-publisher is preserved at the boundary.** Workers (`apps/workers/`) emit receipts, validation reports, catalog candidates, and candidate decisions. They do not publish, mutate canonical truth, or speak directly to public clients. The governed API reads only what the lifecycle has promoted or what a role-gated review path is allowed to inspect.
+1. **Single dynamic public membrane.** `apps/governed-api/` is the sole normal dynamic boundary for public and semi-public trust-bearing responses.
+2. **Ordinary clients use governed interfaces.** Explorer Web, external API consumers, Evidence Drawer, Focus Mode, Story/Compare/Export surfaces, and role-gated review retrieval do not read internal stores or model providers directly.
+3. **Finite client-facing envelope.** Every dynamic trust-bearing public response is represented by a `RuntimeResponseEnvelope` with exactly one outcome: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
+4. **Decision objects stay distinct.** A `DecisionEnvelope` or `PolicyDecision` may feed the public response, but neither silently substitutes for the client-facing `RuntimeResponseEnvelope`.
+5. **Evidence before answer.** Claim-bearing `ANSWER` responses require resolvable evidence support and citations appropriate to the claim. Missing or inadequate support yields `ABSTAIN`, `DENY`, or `ERROR`.
+6. **Policy before exposure.** Rights, sensitivity, source terms, caller role, release state, freshness, correction, withdrawal, and rollback posture are evaluated before the response is exposed.
+7. **Released state only.** Dynamic public reads project released public-safe state and governed proof/release metadata. They do not expose RAW, WORK, QUARANTINE, PROCESSED, candidate, registry-internal, receipt-internal, graph-internal, search-internal, or direct source-system records.
+8. **No direct model client.** Browsers and ordinary clients do not call Ollama, OpenAI-compatible services, local model runtimes, embedding/vector services, or model caches directly.
+9. **No direct renderer authority.** MapLibre, tiles, scenes, screenshots, popups, and client feature state are downstream carriers. They do not authorize release or substitute for evidence.
+10. **Review/admin/operator boundaries remain governed.** Role-gated clients may have broader projections or submit actions, but they remain audited, policy-bound, separation-of-duties aware, and outside the normal public path.
+11. **Workers remain non-publishers.** Workers, connectors, and pipelines produce candidates, receipts, validation outputs, and release inputs; they do not speak directly to ordinary public clients or approve publication.
+12. **App boundary is non-sovereign.** `apps/governed-api/` applies contracts, schemas, policy, evidence, and release state from their owning roots; it does not redefine or own those authorities.
+
+### 3.2 Governed static-delivery rule
+
+A static edge MAY serve a released public-safe artifact without proxying all bytes through `apps/governed-api/` when all of the following are true:
+
+- a governed release record identifies the artifact;
+- integrity metadata identifies the exact bytes or representation;
+- public-safe rights and sensitivity posture are resolved;
+- release, correction, withdrawal, supersession, and rollback state are available;
+- client or edge behavior does not infer trust from location alone;
+- no canonical, candidate, internal, protected, or direct model/source path is exposed;
+- the edge cannot mint dynamic decisions or bypass policy.
+
+### 3.3 Authority and publication boundary
+
+`apps/governed-api/`:
+
+- **does own** app-local route dispatch, request handling, response construction, app-local guards, app-local tests, and deployable composition;
+- **does not own** object meaning, machine shape, policy source, evidence, canonical lifecycle state, release approval, correction approval, rollback authority, source admission, shared reusable libraries, deployment secrets, or publication state.
+
+A successful response, test, deployment, or uptime check does not promote data or authorize release.
+
+### 3.4 Current scaffold rule
+
+Until the acceptance gates in §13.2 are closed:
+
+- the three registered routes SHOULD remain fail-closed;
+- a route MAY return a schema-valid `ABSTAIN`/`NOT_IMPLEMENTED` hold;
+- no route may return a substantive `ANSWER` merely because a fixture, subset assertion, or smoke test passes;
+- replacing the scaffold with a real handler requires contract/schema mapping, negative tests, and rollback in the same bounded change.
 
 > [!IMPORTANT]
-> The trust membrane is **operational**, not aspirational. A code path that says “public client” but reads anything other than a governed API response or a release-approved public-safe artifact is a **MUST-fix violation** of this ADR — even if the read is convenient, fast, or “just for now.”
+> The safest current implementation is the one the repository already uses: explicit `ABSTAIN` rather than invented or weakly supported success. This ADR treats that behavior as a valid hold state, not as feature completion.
 
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## 4. Trust Membrane — Diagram
 
 ```mermaid
-flowchart TB
-    classDef public fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-    classDef membrane fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:3px
-    classDef governed fill:#dcfce7,stroke:#16a34a,color:#14532d
-    classDef internal fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
-    classDef review fill:#ede9fe,stroke:#7c3aed,color:#3b0764
-
-    subgraph Clients["Public / semi-public clients"]
-        direction LR
-        WEB["apps/explorer-web<br/>(map shell, UI)"]:::public
-        EXT["External API consumers"]:::public
-        EXP["Exports · Story Nodes · screenshots"]:::public
+flowchart LR
+    subgraph Current["CONFIRMED current scaffold"]
+        REG["3 registered GET routes<br/>/bootstrap · /layers · /evidence"]
+        STUB["DecisionEnvelope-shaped stub<br/>ABSTAIN · NOT_IMPLEMENTED"]
+        TESTS["route + boundary tests"]
+        REG --> STUB --> TESTS
     end
 
-    REVIEW["apps/review-console<br/>(role-gated stewardship)"]:::review
-
-    GAPI["apps/governed-api<br/>━━━━━━━━━━━━━━━━━━━━<br/>RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR<br/>━━━━━━━━━━━━━━━━━━━━<br/>policy · evidence · release · review · correction"]:::membrane
-
-    subgraph Allowed["Governed reads — released / proof / decision state"]
-        direction LR
-        PUB["data/published/"]:::governed
-        CAT["data/catalog/<br/>STAC · DCAT · PROV"]:::governed
-        PROOF["data/proofs/<br/>EvidenceBundle"]:::governed
-        REL["release/manifests/<br/>release/correction_notices/<br/>release/rollback_cards/"]:::governed
-        RTM["runtime/model_adapters/<br/>(behind the membrane)"]:::governed
+    subgraph Target["PROPOSED accepted dynamic trust path"]
+        CLIENTS["Explorer Web · external clients<br/>Evidence Drawer · Focus · review"]
+        API["apps/governed-api<br/>request + policy + evidence + release"]
+        DECISION["DecisionEnvelope / PolicyDecision<br/>internal decision posture"]
+        RESPONSE["RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR"]
+        CLIENTS --> API
+        API --> DECISION
+        DECISION --> RESPONSE
+        RESPONSE --> CLIENTS
     end
 
-    subgraph Denied["Internal lifecycle — NOT a public read path"]
-        direction LR
-        RAW["data/raw/"]:::internal
-        WORK["data/work/ · data/quarantine/"]:::internal
-        PROC["data/processed/"]:::internal
-        REC["data/receipts/"]:::internal
-        MODEL["model runtime · vector index · graph internals"]:::internal
+    subgraph Governed["Governed supporting authorities"]
+        POLICY["policy/"]
+        EVIDENCE["EvidenceRef -> EvidenceBundle"]
+        RELEASE["ReleaseManifest · correction · rollback"]
+        PUBLISHED["released public-safe artifacts"]
+        RUNTIME["runtime adapters"]
     end
 
-    WEB --> GAPI
-    EXT --> GAPI
-    EXP --> GAPI
-    REVIEW -->|role-gated review payloads| GAPI
+    subgraph Denied["Not a direct public path"]
+        INTERNAL["RAW · WORK · QUARANTINE · PROCESSED<br/>registries · receipts · graph/search internals<br/>source systems · model providers"]
+    end
 
-    GAPI -->|reads released layers| PUB
-    GAPI -->|resolves EvidenceRef| PROOF
-    GAPI -->|reads catalog records| CAT
-    GAPI -->|reads release / correction / rollback state| REL
-    GAPI -->|invokes adapter when allowed| RTM
+    POLICY --> API
+    EVIDENCE --> API
+    RELEASE --> API
+    PUBLISHED --> API
+    RUNTIME --> API
+    CLIENTS -. "DENY direct access" .-> INTERNAL
 
-    GAPI -.->|DENY · public_payload_exposes_internal_ref| RAW
-    GAPI -.->|DENY| WORK
-    GAPI -.->|DENY| PROC
-    GAPI -.->|DENY| REC
-    GAPI -.->|DENY| MODEL
+    STATIC["Governed static-delivery edge<br/>released + digest-bound only"]
+    PUBLISHED --> STATIC --> CLIENTS
 ```
 
 > [!NOTE]
-> Dotted arrows are **denial paths**, not access paths. A request that would resolve to a `RAW / WORK / QUARANTINE / PROCESSED / receipts / direct model / graph-internal` read returns a finite envelope with a reason code, not a filesystem error and not an empty `ANSWER`.
+> The current and target lanes are intentionally separate. Existing scaffold tests prove a bounded hold state. They do not prove the complete target flow. The static edge carries released bytes; it does not emit dynamic policy or evidence decisions.
 
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## 5. Operational Invariants
 
-| # | Invariant | Source posture |
+| ID | Invariant | Current evidence posture |
 |---|---|---|
-| I-1 | `apps/governed-api/` is the **only** normal public-facing application that serves trust-bearing payloads. | CONFIRMED doctrine / ADR decision |
-| I-2 | Every trust-bearing response is a `RuntimeResponseEnvelope` with one of four statuses: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. | CONFIRMED doctrine / PROPOSED schema |
-| I-3 | Public clients **never** read `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, internal `data/receipts/`, or direct model/runtime stores. | CONFIRMED doctrine |
-| I-4 | `EvidenceRef` → `EvidenceBundle` resolution happens **through** the governed API or an approved evidence resolver behind it. Clients receive resolved support, not internal paths. | CONFIRMED doctrine / PROPOSED implementation |
-| I-5 | Model adapters live **behind** the membrane; browsers and ordinary clients never call model runtimes directly. | CONFIRMED doctrine |
-| I-6 | Tiles, mosaics, generated text, vector indexes, graph projections, screenshots, and 3D scenes are **derived carriers**. They do not replace catalog/proof/release objects. | CONFIRMED doctrine |
-| I-7 | Sensitivity policy is enforced **before public exposure**: exact archaeology, rare-species nest/den/roost/spawning locations, living-person data, DNA inference, cultural sensitivity, and critical-infrastructure precision fail closed unless policy and review allow release. | CONFIRMED doctrine / domain-specific details NEED VERIFICATION |
-| I-8 | Stale-beyond-policy data returns `ABSTAIN` or a stale-labeled finite outcome per endpoint contract; it does not silently render as authoritative. | CONFIRMED doctrine / PROPOSED endpoint tests |
-| I-9 | `ERROR` responses **never leak** prompt text, secrets, internal stack traces, resolver internals, file paths, or adapter internals. | CONFIRMED doctrine |
-| I-10 | The governed API is a **read path** for released and proof-backed state and a **submit path** for steward-controlled decisions. It does **not** become a direct file-mutation shortcut for public clients. | CONFIRMED doctrine / PROPOSED implementation |
-| I-11 | Review-console retrievals and stewardship actions go through governed routes, not direct reads or writes of receipt/report/diff files from the browser. | PROPOSED implementation pattern |
-| I-12 | Public artifacts must remain rollback-addressable: response envelopes reference release manifests, correction notices, and rollback cards where material. | CONFIRMED doctrine / PROPOSED schema |
+| **I-1** | `apps/governed-api/` is the only normal dynamic public trust-bearing API. | Directory Rules + repository path CONFIRMED; ADR acceptance proposed |
+| **I-2** | Dynamic client-facing trust responses use `RuntimeResponseEnvelope` with exactly `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. | Contract/schema CONFIRMED present and PROPOSED; app integration partial |
+| **I-3** | `DecisionEnvelope` remains a distinct internal/runtime decision object and is not treated as the public response object without an explicit accepted mapping. | Two contracts/schemas CONFIRMED distinct; current scaffold uses decision shape |
+| **I-4** | Public clients do not read lifecycle, candidate, canonical, receipt-internal, proof-internal, registry-internal, graph, search, source, or model-runtime stores directly. | Doctrine + selected static tests CONFIRMED; complete flow proof absent |
+| **I-5** | Claim-bearing `ANSWER` requires resolvable evidence support and validated citations appropriate to the claim. | Doctrine/contract present; no current `ANSWER` route |
+| **I-6** | Rights, sensitivity, caller role, source terms, release, freshness, correction, withdrawal, and rollback posture are enforced before exposure. | Intended contract present; accepted evaluator/integration unproved |
+| **I-7** | `ABSTAIN`, `DENY`, and `ERROR` are first-class governed outcomes, not hidden exceptions or empty success. | Current route ABSTAIN behavior CONFIRMED |
+| **I-8** | `ERROR` responses do not expose prompts, credentials, private endpoints, stack traces, internal file paths, restricted detail, or hidden reasoning. | Required posture; representative implementation test absent |
+| **I-9** | Model adapters and providers remain behind the membrane; browser/provider direct traffic is forbidden. | Import guard exists; network/deployment isolation unproved |
+| **I-10** | Static delivery is allowed only for already released public-safe, integrity-bound artifacts with correction/rollback visibility. | Adjacent ADR/doctrine proposal; static edge implementation unproved |
+| **I-11** | Review, admin, and operator paths are role-gated, audited, and cannot approve their own policy-significant release effects. | Doctrine; current review/admin surfaces are scaffolded or unproved |
+| **I-12** | Workers, connectors, and pipelines are non-publishers and cannot become alternate public APIs. | Repository static tests CONFIRMED; complete runtime proof absent |
+| **I-13** | The app consumes contracts, schemas, policy, evidence, and release state; it does not redefine their authority. | Responsibility-root documentation and current structure CONFIRMED |
+| **I-14** | Every substantive route change has deterministic negative cases and a reversible rollback or forward-fix path. | Required acceptance posture; current routes remain stubs |
+| **I-15** | A green workflow, commit, PR, route, static edge, or deployed process does not make content KFM-published. | KFM core invariant |
 
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## 6. `RuntimeResponseEnvelope` Contract
 
-The canonical machine-schema home is **PROPOSED** at:
+The public response and internal decision surfaces are related but not interchangeable.
 
-```text
-schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+### 6.1 Current scaffold shape
+
+The current stub emits a `DecisionEnvelope`-shaped hold object. For `/layers`, the effective shape is:
+
+```json
+{
+  "id": "stub:layers",
+  "decision_id": "stub:layers",
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "version": "v1-stub",
+  "issued_at": "<time>",
+  "evaluated_at": "<time>",
+  "decision": "ABSTAIN",
+  "outcome": "ABSTAIN",
+  "policy_family": "capability",
+  "reason_code": "NOT_IMPLEMENTED",
+  "reasons": ["Route is scaffolded but not implemented"],
+  "obligations": [],
+  "evidence_refs": []
+}
 ```
 
-This follows the schema-home rule that machine-checkable shape belongs under `schemas/contracts/v1/...`. Object meaning belongs in `contracts/`; admissibility belongs in `policy/`; proof lives in `tests/` and emitted artifacts.
+The current route test checks this object against `decision_envelope.schema.json` through `assert_jsonschema_subset`.
 
-### Minimum field set
+This is a bounded hold object. It is not evidence closure and is not the same field surface as the client-facing runtime schema.
 
-| Field | Purpose |
-|---|---|
-| `envelope_id` | Deterministic or replayable identity for this response. |
-| `request_id` | Join key to client, audit, logs, and trace context. |
-| `schema_version` | Runtime envelope schema version. |
-| `status` | One of `ANSWER \| ABSTAIN \| DENY \| ERROR`. |
-| `domain` | Domain lane or cross-domain surface, e.g., `hydrology`, `archaeology`, `map`, `runtime`. |
-| `action` | Endpoint category, e.g., `evidence.resolve`, `layer.metadata`, `feature.explain`, `focus.answer`, `review.payload`. |
-| `access_role` | Caller’s resolved role, e.g., `public`, `registered`, `steward`, `domain_reviewer`, `admin`, `system`. |
-| `result_payload` | Status-specific payload: cited result for `ANSWER`; held-case rationale for `ABSTAIN`; refusal record for `DENY`; audit-safe fault ref for `ERROR`. |
-| `evidence_bundle_refs` | Resolved support set for the response. Empty only when status and reason explain why support is unavailable or blocked. |
-| `policy_decision_ref` | Policy decision object or decision envelope that governed the response. |
-| `release_manifest_refs` | Release manifests the response is bound to. |
-| `stale_state` | Freshness status against endpoint/source policy. |
-| `review_state` | Steward/reviewer state of bound release or review target. |
-| `correction_notice_refs` | Any active `CorrectionNotice` affecting cited claims or artifacts. |
-| `rollback_refs` | Rollback targets where response depends on a release artifact. |
-| `citations` | Validated citations attached to `ANSWER` payloads. |
-| `limitations` | Bounded caveats, generalization/redaction notes, uncertainty, and fitness-for-use limits. |
-| `reason_codes` | Machine-readable reasons; see [Appendix A](#appendix-a--reason-code-vocabulary). |
-| `redactions` | Public-safe transform or withheld-field metadata where applicable. |
-| `audit_ref` | Audit-safe reference for logs/receipts; no secrets or stack traces. |
-| `generated_at` | ISO-8601 timestamp for replay, supersession, and freshness reasoning. |
+### 6.2 `DecisionEnvelope` vs `RuntimeResponseEnvelope`
 
-### Status semantics
-
-| Status | Use | Required posture |
+| Concern | `DecisionEnvelope` | `RuntimeResponseEnvelope` |
 |---|---|---|
-| `ANSWER` | Sufficient released, policy-safe, review-supported evidence exists. | Must include evidence refs and citations where the response makes a claim requiring support. |
-| `ABSTAIN` | Evidence is missing, stale, unresolved, weak, conflicting, out of scope, or cannot be safely narrowed. | Must explain held-case reason without fabricating an answer. |
-| `DENY` | Rights, sensitivity, role, source terms, release state, or policy blocks the request. | Must avoid leaking the blocked material. |
-| `ERROR` | Technical or validation failure prevents reliable execution. | Must return audit-safe fault reference only; no prompt, secret, stack trace, or internal file path leakage. |
+| Primary role | Records finite runtime decision posture, policy family, reasons, obligations, and evaluation time | Carries client-facing finite response posture, evidence refs, policy state, freshness, and correction state |
+| Required identity | `decision_id` | `id` |
+| Required finite field | `outcome` | `outcome` |
+| Required policy context | `policy_family` | `policy_state` |
+| Required explanation | `reasons`, `obligations` | `reason_code`; state fields |
+| Required time | `evaluated_at` | `issued_at` |
+| Evidence shape | Optional array of strings | Required array of EvidenceRef objects |
+| Freshness/correction | Not required | `freshness` and `correction_state` required |
+| Current app use | Scaffold test target | Not yet the route test target |
+| Authority status | Contract/schema present; proposed | Contract/schema present; proposed |
 
-> [!TIP]
-> Consumers MAY write a `switch` over `status` and trust that there is no fifth branch. The four-valued grammar is the load-bearing property: it prevents “empty answers,” silent refusals, and generated filler from standing in for a governed outcome.
+### 6.3 Current integration gap
 
-[↑ Back to top](#quick-navigation)
+Direct comparison establishes a material gap:
+
+- the current stub includes decision-specific fields that the RuntimeResponseEnvelope schema does not admit;
+- the current stub omits RuntimeResponseEnvelope-required `policy_state`, `freshness`, and `correction_state`;
+- the route test selects the DecisionEnvelope schema, not the RuntimeResponseEnvelope schema;
+- the API README describes the intended RuntimeResponseEnvelope boundary, but the implementation remains a decision-shaped scaffold.
+
+This is not a reason to weaken either schema. It is an acceptance blocker requiring a deliberate mapping or wrapper contract.
+
+### 6.4 Required mapping before substantive `ANSWER`
+
+Before any route graduates from scaffolded `ABSTAIN` to substantive `ANSWER`, the implementation MUST establish and test this relationship:
+
+```text
+request context
+  -> authorization + policy + evidence + release/freshness/correction evaluation
+  -> DecisionEnvelope and/or PolicyDecision
+  -> endpoint payload projection
+  -> RuntimeResponseEnvelope
+  -> client
+```
+
+The accepted mapping must answer:
+
+- which decision fields are preserved, transformed, or referenced;
+- how obligations reach the client without leaking protected policy detail;
+- how EvidenceRef objects are resolved and represented;
+- how release, freshness, correction, withdrawal, and rollback state are encoded;
+- how endpoint-specific payloads are represented without reopening `additionalProperties`;
+- how `ANSWER` differs from non-claim bootstrap/config responses;
+- how schema versions and compatibility are negotiated;
+- how invalid or unmapped internal decisions fail closed.
+
+### 6.5 Minimum client-facing semantics
+
+The current RuntimeResponseEnvelope schema confirms these required fields:
+
+| Field | Current machine-shape role |
+|---|---|
+| `id` | Response identity |
+| `spec_hash` | SHA-256 contract/spec lineage hook |
+| `version` | Envelope version |
+| `issued_at` | Emission time |
+| `outcome` | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` |
+| `reason_code` | Safe primary reason |
+| `evidence_refs` | EvidenceRef objects |
+| `policy_state` | Policy-state summary |
+| `freshness` | Freshness/staleness posture |
+| `correction_state` | Correction/withdrawal/supersession posture |
+
+The schema closes additional properties. Endpoint payload representation therefore needs an explicit contract decision; it must not be smuggled in through undocumented fields.
+
+> [!WARNING]
+> A route that returns the current decision-shaped stub and labels it a `RuntimeResponseEnvelope` would erase a real object-family boundary. A route that adds arbitrary payload fields would violate the closed schema. Resolve the contract; do not rename around it.
+
+[Back to top](#top)
 
 ---
 
 ## 7. Required Deny Cases
 
-These are minimum fail-closed cases that any conformant `apps/governed-api/` implementation must enforce. Some triggers produce `ABSTAIN` or `ERROR` rather than `DENY`; they remain here because they are part of the boundary’s negative-outcome contract.
+This heading retains the original anchor, but the table distinguishes `DENY`, `ABSTAIN`, `ERROR`, and transport responses accurately.
 
-| Trigger | Outcome | Reason code (illustrative) |
+### 7.1 Minimum negative behavior
+
+| Trigger | Required outcome | Current coverage |
 |---|---|---|
-| Public request resolves a `RAW / WORK / QUARANTINE` path. | `DENY` | `public_payload_exposes_internal_ref` |
-| Public request resolves internal `data/receipts/`, internal proofs, direct graph internals, model runtime, or vector index. | `DENY` | `public_payload_exposes_internal_ref` |
-| Public request for an unreleased candidate layer, unpublished feature, or non-promoted tile artifact. | `DENY` | `release.unpublished` |
-| Public request for exact archaeology site, burial, sacred site, or human-remains location. | `DENY` | `sensitivity.archaeology_exact_denied` |
-| Public request for exact rare-species occurrence / nest / den / roost / spawning location. | `DENY` | `sensitivity.rare_species_exact_denied` |
-| Public exposure of living-person identifying data without lawful basis and review. | `DENY` | `sensitivity.living_person_denied` |
-| Public DNA / genomic inference about living persons or relatives. | `DENY` | `sensitivity.dna_inference_denied` |
-| Public exact critical-infrastructure geometry, condition, or exploitable dependency. | `DENY` / role-gated restriction | `sensitivity.critical_infrastructure_denied` |
-| Focus / AI answer without resolvable `EvidenceBundle` or validated citations. | `ABSTAIN` or `DENY` depending on policy. | `ai_missing_evidence_bundle_or_citations` |
-| Model-predicted candidate feature treated as confirmed observation. | `DENY` | `model_as_observation` |
-| Catalog closure mismatch or missing release-manifest digest in public artifact. | `DENY` | `catalog_matrix_not_closed` |
-| Unknown rights / unresolved license on requested release. | `DENY` or upstream `QUARANTINE`. | `rights.unknown` |
-| Operational alert / emergency-instruction replacement request. | `DENY` | `not_for_life_safety` |
-| Source stale beyond endpoint policy. | `ABSTAIN` | `freshness.stale` |
-| Adapter fault, schema failure, resolver exception, or invalid envelope. | `ERROR` | `adapter.fault` / `schema.validation_failed` |
-| Review-console route tries to mutate local receipt/report/diff files directly from browser intent. | `DENY` | `review.direct_file_mutation_denied` |
+| Unknown route | `404 Not Found` with safe body | **CONFIRMED** |
+| Unsupported method on a registered route | `405 Method Not Allowed` with safe body | **CONFIRMED** |
+| Registered route not implemented | Schema-bounded `ABSTAIN` / `NOT_IMPLEMENTED` | **CONFIRMED for current decision-shaped stub** |
+| Governed API imports renderer or direct model client | Test/build failure | **CONFIRMED bounded import guard** |
+| API or Explorer source hard-codes internal lifecycle/store paths | Test/build failure | **CONFIRMED bounded literal scan** |
+| Public request targets RAW, WORK, QUARANTINE, PROCESSED, candidate, registry-internal, receipt-internal, graph/search internal, direct source, or model provider | `DENY` with safe reason; never accidental filesystem error | **PROPOSED / not fully implemented** |
+| Evidence cannot resolve or citations cannot validate | `ABSTAIN` | **PROPOSED beyond scaffold hold** |
+| Rights, sensitivity, source terms, caller role, release state, or embargo blocks exposure | `DENY` or reviewed restricted projection | **PROPOSED / policy integration unproved** |
+| Source is stale beyond endpoint policy | `ABSTAIN` or stale-safe bounded response according to accepted contract | **PROPOSED** |
+| Adapter, resolver, schema, policy, or dependency fails | `ERROR` with safe audit reference and no internal leakage | **PROPOSED** |
+| Exact protected archaeology, rare-species, living-person, DNA/genomic, cultural, or critical-infrastructure detail requested | `DENY` or approved transformed/restricted projection | **PROPOSED / domain policy required** |
+| Unreleased layer or artifact requested | `DENY` | **PROPOSED / release integration unproved** |
+| Model candidate or generated text is presented as observation/evidence | `DENY` or `ABSTAIN` | **PROPOSED** |
+| Browser attempts direct model/provider call | Build/test/network denial | **Static import posture partly confirmed; deployed network denial unproved** |
+| Review/admin/CLI request attempts direct file mutation or self-approval | `DENY` plus audit-safe record | **PROPOSED** |
+| Static edge serves missing-digest, withdrawn, corrected-without-lineage, or non-public-safe artifact | Edge/client verification failure; do not render as trusted | **PROPOSED** |
+| Empty or unsupported payload is labeled `ANSWER` | Schema/semantic test failure | **PROPOSED** |
 
-[↑ Back to top](#quick-navigation)
+### 7.2 Current bounded tests are necessary but insufficient
+
+The current checks establish route, method, import, route-manifest, and path-literal boundaries. They do not prove:
+
+- identity or authentication;
+- role/capability authorization;
+- accepted policy bundle execution;
+- evidence resolution or citation validation;
+- release/correction/rollback integration;
+- response confidentiality or timing behavior;
+- dependency egress or provider isolation;
+- logging/redaction;
+- static-edge integrity verification;
+- deployment, ingress, CORS, CSP, rate-limit, or cache policy;
+- complete deny/abstain/error coverage.
+
+The `make deny-test` target remains an explicit readiness marker rather than an implemented suite.
+
+[Back to top](#top)
 
 ---
 
 ## 8. Affected Paths
 
-All paths below are **PROPOSED** until the repo is inspected. Path placement follows Directory Rules responsibility roots: deployables in `apps/`, semantic contracts in `contracts/`, machine schemas in `schemas/`, admissibility in `policy/`, proof in `tests/`, shared runtime helpers in `packages/` or `runtime/`, and release decisions in `release/`.
+This documentation change modifies only this ADR. The surfaces below are the verified implementation and authority neighborhood affected by eventual acceptance.
 
-If the actual repo uses a hyphen vs underscore variant (`apps/governed-api/` vs `apps/governed_api/`), preserve the entrenched form only after verification and record the decision in this ADR, a drift entry, or a migration note. Do **not** create divergent sibling APIs.
+### 8.1 Current verified surfaces
 
-| Path | Action | Purpose | Truth |
+| Surface | Current role | Current status | Decision impact |
 |---|---|---|---|
-| `apps/governed-api/` | create / adapt | Trust-membrane deployable; only normal public-facing app for trust payloads. | PROPOSED |
-| `apps/governed-api/README.md` | create / update | Boundary documentation; route categories; deny matrix; no-direct-store rule. | PROPOSED |
-| `apps/governed-api/src/routes/runtimeBootstrap.*` | create / adapt | Shell + route registry + feature-flag bootstrap. | PROPOSED |
-| `apps/governed-api/src/routes/layers.*` | create / adapt | Layer catalog / descriptor / release-manifest endpoints. | PROPOSED |
-| `apps/governed-api/src/routes/evidence.*` | create / adapt | `EvidenceBundle` resolution endpoint. | PROPOSED |
-| `apps/governed-api/src/routes/focus.*` | create / adapt | Focus Mode bounded-answer endpoint. | PROPOSED |
-| `apps/governed-api/src/routes/correction.*` | create / adapt | Public `CorrectionNotice` lookup. | PROPOSED |
-| `apps/governed-api/src/routes/review/*.*` | create / adapt | Steward / review-console surfaces; role-gated; audited. | PROPOSED |
-| `apps/explorer-web/src/api/governedClient.*` | adapt | Only allowed browser network path for trust payloads. | PROPOSED |
-| `apps/explorer-web/src/api/responseValidators.*` | adapt | Runtime schema validation at the client boundary. | PROPOSED |
-| `contracts/runtime/runtime_response_envelope.md` | create | Semantic meaning and status grammar for runtime envelopes. | PROPOSED |
-| `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | create | Machine-checkable envelope schema. | PROPOSED |
-| `schemas/contracts/v1/runtime/decision_envelope.schema.json` | create | Machine-checkable policy/decision reference schema. | PROPOSED |
-| `policy/runtime/finite_outcomes.rego` | create | Policy helper normalizing outputs to the four-valued grammar. | PROPOSED |
-| `policy/runtime/no_internal_path.rego` | create | Deny rule for routes referencing internal lifecycle or model paths. | PROPOSED |
-| `tests/api/no_raw_path_test.*` | create | Asserts public routes return `DENY`, not filesystem errors, for internal paths. | PROPOSED |
-| `tests/runtime_proof/finite_outcome_test.*` | create | Asserts every endpoint returns exactly one finite status. | PROPOSED |
-| `tests/runtime_proof/abstain_on_missing_evidence_test.*` | create | Asserts missing evidence resolves to `ABSTAIN`, not fabricated answer. | PROPOSED |
-| `docs/architecture/runtime-envelope.md` | create / update | Human-facing companion to runtime envelope schema. | PROPOSED |
-| `docs/registers/DRIFT_REGISTER.md` | update if needed | Records any active `apps/api/` vs `apps/governed-api/` drift. | PROPOSED |
-| `docs/registers/VERIFICATION_BACKLOG.md` | update | Tracks unresolved app path, schema home, tests, owners, route behavior. | PROPOSED |
-| Directory Rules §18 OPEN entry | edit | Mark the `apps/api/` vs `apps/governed-api/` question **resolved by ADR-0004**; link forward. | PROPOSED |
+| [`apps/governed-api/`](../../apps/governed-api/) | Dynamic trust-membrane deployable | Minimal executable scaffold | Canonical dynamic app if ADR is accepted |
+| [`apps/governed-api/src/governed_api/main.py`](../../apps/governed-api/src/governed_api/main.py) | WSGI dispatch | Executable bounded behavior | Preserve safe 404/405 and add accepted middleware/route composition incrementally |
+| [`routes/registry.py`](../../apps/governed-api/src/governed_api/routes/registry.py) | Route manifest | Three routes | Route additions require contract/policy/evidence/negative-test closure |
+| [`stub.py`](../../apps/governed-api/src/governed_api/stub.py) | Fail-closed route hold | `ABSTAIN/NOT_IMPLEMENTED` | Safe rollback baseline; not production response contract |
+| [`apps/governed-api/tests/`](../../apps/governed-api/tests/) | App-local route/boundary proof | Two bounded modules | Expand without replacing cross-root tests |
+| [`apps/explorer-web/`](../../apps/explorer-web/) | Normal public client | Placeholder package scripts | Future governed client must consume accepted response/static contracts only |
+| [`apps/review-console/`](../../apps/review-console/) | Role-gated review client | Documentation/scaffold maturity | Must not read or mutate receipt/report/diff files directly |
+| [`contracts/runtime/`](../../contracts/runtime/) | Decision and response meaning | Both contracts present, proposed | Preserve distinct object meanings and define mapping |
+| [`schemas/contracts/v1/runtime/`](../../schemas/contracts/v1/runtime/) | Machine shape | Both schemas present, proposed | Preserve closed shapes; version deliberate changes |
+| [`fixtures/contracts/v1/runtime/`](../../fixtures/contracts/v1/runtime/) | Positive/negative schema examples | Minimal coverage | Expand outcome, evidence, additional-property, and state cases |
+| [`tools/validators/`](../../tools/validators/) | Dedicated shape validators | Runtime validators present and aggregate-wired | Shape validation only; never substitute for policy/evidence/runtime proof |
+| [`policy/runtime/`](../../policy/runtime/) | Runtime admissibility | Policy root exists; accepted evaluator/bundle unproved | Required before substantive trust decisions |
+| [`packages/evidence-resolver/`](../../packages/evidence-resolver/) | Shared evidence resolution boundary | Maturity NEEDS VERIFICATION | Required for claim-bearing `ANSWER` |
+| [`runtime/`](../../runtime/) | Adapters behind API | Maturity NEEDS VERIFICATION | Provider/model details must not cross public boundary |
+| [`release/`](../../release/) | Release, correction, withdrawal, rollback authority | Separate root present | API consumes state; does not approve it |
+| [`api-test.yml`](../../.github/workflows/api-test.yml) | Bounded CI orchestration | Command-bearing | Keep read-only; expand representative checks deliberately |
+| [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | Shape/fixture CI | Both runtime families configured | Does not prove mapping or runtime behavior |
+| [`docs/architecture/governed-api.md`](../architecture/governed-api.md) | Architecture explainer | Present but implementation-depth language is stale | Follow-up documentation candidate, not changed here |
+| `apps/api/` | Potential parallel API | Absent at snapshot | No migration required now; future creation is governed by §9 |
 
-[↑ Back to top](#quick-navigation)
+### 8.2 Required implementation packet for the first substantive route
+
+The smallest sound implementation packet SHOULD include:
+
+- one route family and one bounded public-safe use case;
+- explicit request and response contracts;
+- DecisionEnvelope/PolicyDecision to RuntimeResponseEnvelope mapping;
+- valid and invalid fixtures for both internal decision and public response;
+- no-network evidence/resolver fixture or mock;
+- policy allow/deny/abstain/error cases;
+- release/freshness/correction fixture state;
+- app-local and cross-root negative tests;
+- safe logging and audit reference behavior;
+- client or static-edge integration test as applicable;
+- rollback to the `ABSTAIN/NOT_IMPLEMENTED` handler;
+- docs updated to match verified behavior.
+
+Do not implement all route families in one broad PR.
+
+[Back to top](#top)
 
 ---
 
 ## 9. Resolution of the `apps/api/` Question
 
-Directory Rules lists as OPEN whether `apps/api/` and `apps/governed-api/` co-exist in the current repo and what the boundary is. This ADR resolves the doctrine as follows:
+The exact `apps/api/` path is absent at the pinned snapshot. No current migration or deprecation record is required solely for a path that is not present.
 
-| Outcome | Rule |
+If `apps/api/` is introduced or discovered later:
+
+| Condition | Required disposition |
 |---|---|
-| **Default** | Only `apps/governed-api/` serves normal public trust traffic. It is the public trust path. |
-| **Co-existence** | If `apps/api/` exists, it MUST be one of: (a) frozen legacy / mirror, (b) internal-only and not exposed to public clients, or (c) a narrowly documented service whose scope and exposure are pinned in its README and reviewed against this ADR. |
-| **Forbidden** | `apps/api/` MAY NOT serve public clients in parallel with `apps/governed-api/`. Parallel public APIs split the membrane and split enforcement. |
-| **If both serve public traffic today** | Open a `docs/registers/DRIFT_REGISTER.md` entry, write a migration plan under `migrations/`, deprecate `apps/api/` for public traffic, and converge on `apps/governed-api/`. |
-| **If path naming differs** | Do not create both `apps/governed-api/` and `apps/governed_api/`. Verify entrenched convention, document the chosen form, and provide alias/migration notes where needed. |
+| It serves dynamic public trust traffic | **DENY architecture change** unless a new accepted ADR replaces this decision |
+| It is a frozen legacy path | Declare `legacy`, identify canonical replacement, forbid new public routes, and track retirement |
+| It is a generated mirror or external export | Declare class and deterministic source; it cannot execute independent policy or decisions |
+| It is internal-only | Document exact caller, network boundary, auth, data access, and why it is not a parallel public membrane |
+| It is a narrowly scoped service | Prove that it does not mint public trust outcomes, bypass the Governed API, or become a second denial/audit surface |
+| It is only a static artifact host | Treat it as governed static delivery, not an API authority; use a name and contract that do not imply parallel dynamic policy |
+| Hyphen/underscore naming differs | Do not create both `governed-api` and `governed_api`; use a reviewed migration if renaming is necessary |
 
 > [!WARNING]
-> Splitting public traffic between two deployables is the most common way the trust membrane silently dissolves. The choice “they each handle different routes” is equivalent to “we have two policy substrates, two denial vocabularies, two audit surfaces, and no single membrane.”
+> Route-prefix separation is not architectural separation. Two public deployables that each decide evidence, policy, release, or denial posture create two membranes, even when they use different URL prefixes.
 
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## 10. Consequences
 
-### Positive
+### 10.1 Positive
 
-- **Single point of enforcement.** Sensitivity, rights, freshness, citation, evidence-closure, and release-state checks live in one executable boundary.
-- **Auditable response path.** Each trust-bearing response carries decision metadata: `policy_decision_ref`, `evidence_bundle_refs`, `release_manifest_refs`, `reason_codes`, and correction/rollback references where material.
-- **Cite-or-abstain becomes operational.** `ABSTAIN` is a first-class response, not an empty payload pretending to be an answer.
-- **Generated text cannot outrank evidence.** Focus Mode and AI surfaces run through the same membrane and the same finite envelope grammar.
-- **Directory ambiguity is resolved.** The `apps/api/` vs `apps/governed-api/` question moves from OPEN to ADR-governed.
-- **Review-console retrieval becomes safer.** Steward surfaces can request review payloads through governed routes instead of reading receipts/reports/diffs directly from the browser.
+- **One accountable dynamic boundary.** Evidence, policy, release, freshness, correction, and safe-error behavior converge in one deployable.
+- **Current fail-closed work is preserved.** The existing `ABSTAIN/NOT_IMPLEMENTED` scaffold remains a valid hold and rollback baseline.
+- **Object-family boundaries become visible.** Internal decisions and client-facing responses remain distinct rather than being renamed into one another.
+- **Cite-or-abstain becomes operational.** Missing support is a typed outcome, not an empty success.
+- **Client and model paths remain subordinate.** Explorer Web, review surfaces, static delivery, and model adapters cannot silently become truth or policy authority.
+- **Static delivery stays efficient without weakening governance.** Already released public-safe bytes may use a verified edge without creating a parallel dynamic API.
+- **Review and rollback become testable.** A substantive route can be introduced as a small packet with a known fail-closed fallback.
 
-### Negative / Costs
+### 10.2 Costs and tradeoffs
 
-- **Latency and payload size grow.** Decision metadata, citation refs, release refs, and evidence pointers add overhead.
-- **Implementation cost increases early.** Routes that previously read `data/processed/` or candidate artifacts directly must be re-pointed through the governed API.
-- **Client code must consume finite outcomes.** UI states need explicit rendering for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
-- **Admin shortcuts must be constrained.** `apps/admin/` routes must be justified, role-gated, documented, audited, and kept out of the normal public path.
-- **3D / Cesium / alternate renderers must preserve the same trust path.** They cannot become alternate truth or release surfaces.
+- **More explicit contracts.** The repository must resolve the DecisionEnvelope/RuntimeResponseEnvelope relationship instead of relying on one permissive JSON object.
+- **Additional response metadata and validation.** Evidence, state, and audit fields add latency, payload, and implementation cost.
+- **More negative testing.** Success-path coverage is insufficient; each route needs abstain, deny, error, stale, correction, and leak-safe cases.
+- **Cross-root review burden.** Material changes touch app, contract, schema, policy, evidence, release, tests, security, and clients.
+- **Static-edge verification work.** Efficient direct artifact delivery still needs digest, release, correction, and rollback support.
+- **No convenience bypass.** Direct file/database/model reads and app-local policy shortcuts remain unavailable even during early development.
+- **Acceptance cannot be inferred from implementation.** The repository may continue to use the scaffold while the ADR remains proposed.
 
-### Risks if Not Adopted
+### 10.3 Risks if the decision is not accepted or enforced
 
-- Drift to “convenient” public routes that read `data/processed/` directly.
-- Sensitivity policy enforced inconsistently between routes.
-- Generated text emitted as authoritative without `EvidenceBundle` support.
-- `apps/api/` and `apps/governed-api/` diverging in denial vocabularies.
-- Review-console payloads becoming file-reader shortcuts instead of governed review surfaces.
+- the scaffold may evolve into ad-hoc route JSON without a client-facing contract;
+- public clients may bypass the app or read released/internal stores without release/correction context;
+- static artifact hosting may be mistaken for publication authority;
+- DecisionEnvelope and RuntimeResponseEnvelope may drift or collapse;
+- different clients may interpret `ABSTAIN`, `DENY`, and `ERROR` differently;
+- model, graph, search, or renderer shortcuts may become public truth paths;
+- review/admin routes may become self-approving mutation surfaces;
+- a green smoke test may be cited as production or release readiness.
 
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## 11. Alternatives Considered
 
-| Alternative | Why rejected |
-|---|---|
-| **No dedicated membrane** — let each app handle its own trust checks. | Distributes enforcement across every route; weakest enforcement defines the system. Sensitivity, freshness, citation, and release-state checks drift apart. |
-| **Membrane in `apps/explorer-web/` only** — UI enforces the boundary. | UI is a renderer and interaction surface, not a policy authority. External API consumers bypass it entirely. |
-| **Membrane in a `packages/` library** — every app imports a governed helper. | Libraries can be imported wrongly or bypassed. A deployable boundary is more enforceable than a helper package. |
-| **Per-domain governed APIs** — e.g., `apps/hydrology-api/`, `apps/fauna-api/`. | Multiplies enforcement surfaces and fragments cross-domain queries. Domain lanes belong inside the membrane, not as parallel public deployables. |
-| **Keep `apps/api/` and `apps/governed-api/` as public siblings distinguished by route prefix.** | Re-introduces the exact ambiguity this ADR resolves; doubles the public policy surface. |
-| **Use reverse proxy / WAF as the membrane.** | A proxy can enforce exposure and transport policy; it cannot resolve `EvidenceBundle`, validate citations, emit `DecisionEnvelope`, or apply KFM finite outcomes as application semantics. |
-| **Make model runtime the public interface.** | Direct model clients bypass evidence, release, rights, sensitivity, and citation gates. KFM treats AI as interpretive and evidence-subordinate. |
-| **Alternate ADR-0004 placement: STAC profile.** | Retained as lineage. The trust-membrane decision is more load-bearing and resolves an existing Directory Rules open question. STAC profile can be renumbered later. |
+<details>
+<summary>Expand alternatives and disposition</summary>
 
-[↑ Back to top](#quick-navigation)
+| Alternative | Benefit | Why rejected |
+|---|---|---|
+| Keep the current scaffold indefinitely without accepting a target architecture | Lowest immediate implementation cost | A safe hold is valuable, but it does not define how substantive routes, evidence, policy, release, clients, and static edges converge |
+| Let every app enforce its own trust rules | Local autonomy | The weakest app becomes the public boundary; denial vocabulary, evidence, and audit semantics drift |
+| Use a shared `packages/` helper as the membrane | Reuse across apps | A library can be bypassed or imported inconsistently; it supports the membrane but is not the deployable boundary |
+| Put the membrane in Explorer Web | Convenient for the map client | External clients bypass it; UI/rendering is not policy or release authority |
+| Keep `apps/api/` and `apps/governed-api/` as public siblings | Route specialization | Creates parallel policy, evidence, denial, and audit surfaces |
+| Use a reverse proxy, API gateway, or WAF as the entire membrane | Strong transport/exposure controls | Infrastructure cannot resolve EvidenceBundles, apply KFM semantic outcomes, or bind correction/release state by itself |
+| Serve all static bytes through the WSGI app | Simple conceptual rule | Unnecessary bottleneck; a governed static edge is safe when release/integrity/correction requirements are met |
+| Use static artifacts only and remove dynamic API | Efficient delivery | Cannot support governed evidence resolution, role-aware review, bounded AI, corrections, or dynamic finite outcomes |
+| Expose model runtime directly | Fast AI integration | Bypasses evidence, policy, citation, release, provider-neutrality, and safe-error boundaries |
+| Treat the current DecisionEnvelope stub as the permanent public response contract | Avoid mapping work | Erases the distinct RuntimeResponseEnvelope contract and omits freshness/correction/client-response semantics |
+| Make RuntimeResponseEnvelope permissive enough to accept the current stub and arbitrary payloads | Easy migration | Weakens closed-schema governance and hides object-family drift |
+| Per-domain public APIs | Domain ownership | Multiplies public membranes and makes cross-domain policy/evidence consistency harder |
+| Defer all decisions until production | Avoid premature architecture | By then routes, clients, and data paths may already have hardened into competing authorities |
+
+</details>
+
+[Back to top](#top)
 
 ---
 
 ## 12. Migration & Backward Compatibility
 
-This ADR is doctrinally compatible with KFM’s lifecycle and public-surface posture. The migration work is operational, not conceptual.
+Migration is incremental. This ADR does not authorize a broad rewrite or require changing the current safe scaffold in the documentation PR.
 
-### Backward compatibility posture
+### 12.1 Phase 0 — preserve the fail-closed baseline
 
-Existing external route URLs MAY be preserved while their handlers are re-pointed through `apps/governed-api/`. Breaking changes to envelope shape require a runtime schema version bump and a documented migration window.
+- Keep `/bootstrap`, `/layers`, and `/evidence` returning bounded `ABSTAIN/NOT_IMPLEMENTED`.
+- Preserve `404`, `405`, route-manifest, import-boundary, and path-literal tests.
+- Preserve the current route registry as the rollback surface.
+- Do not introduce live sources, model calls, public credentials, or deployment secrets.
 
-### Migration steps (PROPOSED)
+### 12.2 Phase 1 — resolve the internal/public envelope relationship
 
-1. Inspect the mounted repo. Confirm whether `apps/governed-api/`, `apps/governed_api/`, and/or `apps/api/` exist.
-2. Confirm which deployable currently serves public or semi-public trust traffic.
-3. If both `apps/api/` and `apps/governed-api/` serve public traffic, open a `docs/registers/DRIFT_REGISTER.md` entry.
-4. Verify schema-home convention before landing machine schemas; default is `schemas/contracts/v1/runtime/`.
-5. Land `contracts/runtime/runtime_response_envelope.md` and `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`.
-6. Land `policy/runtime/finite_outcomes.rego` and `policy/runtime/no_internal_path.rego` or equivalent policy files.
-7. Re-point public route families one at a time: catalog → evidence → layer metadata → feature explain → Focus Mode → correction → review payloads.
-8. For each route family, close with no-internal-path, finite-outcome, missing-evidence, and error-no-leak tests.
-9. Mark `apps/api/` as `legacy`, `internal-only`, or narrowly scoped if present; pin scope in its README.
-10. Update Directory Rules §18 OPEN item to **resolved by ADR-0004** with a forward link.
-11. Backfill `docs/architecture/runtime-envelope.md` and per-domain public-surface notes.
+- Review `DecisionEnvelope` and `RuntimeResponseEnvelope` contracts and schemas together.
+- Decide whether the public envelope references or embeds a decision, and how obligations/reasons are represented.
+- Define endpoint payload representation under the closed RuntimeResponseEnvelope schema.
+- Add reciprocal contract notes, fixtures, validators, and mapping tests.
+- Keep both object families distinct unless a successor ADR explicitly changes their meaning.
 
-### Rollback path
+### 12.3 Phase 2 — add no-network governed dependencies
 
-Each route migration SHOULD ship behind a feature flag or equivalent reversible handler selection. If `no_raw_path_test`, finite-outcome validation, or citation/evidence closure regresses, the flag is disabled and the prior handler returns only until the violation is fixed.
+- Introduce accepted interfaces or mocks for policy, evidence, release/correction, and audit.
+- Use deterministic public-safe fixtures.
+- Prove `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` without external services.
+- Add safe reason/obligation vocabularies or registry references.
 
-Rollback target:
+### 12.4 Phase 3 — graduate one route
 
-```text
-ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION
-```
+Choose one bounded route, preferably a public-safe released layer descriptor or bootstrap posture that does not require AI or sensitive geometry.
 
-A governed-API release rollback SHOULD be recorded through a `release/rollback_cards/` entry naming the affected envelope schema, route bundle, release manifest, and cache invalidation scope.
+The route PR must include:
 
-[↑ Back to top](#quick-navigation)
+- request and response shape;
+- internal-to-public envelope mapping;
+- evidence/release/policy fixtures;
+- negative tests;
+- no-leak behavior;
+- client or consumer contract;
+- metrics/audit posture;
+- rollback to the stub.
+
+### 12.5 Phase 4 — integrate the normal client
+
+- Replace Explorer Web placeholder scripts with a pinned, reproducible build only when a real slice exists.
+- Centralize dynamic trust calls through a governed client.
+- Verify released static artifacts before rendering.
+- Render all four finite outcomes as distinct UI states.
+- Do not treat popup text or tile properties as evidence.
+
+### 12.6 Phase 5 — add review, export, and AI surfaces
+
+- Add review retrieval with role, audit, and no-direct-file-mutation tests.
+- Add exports with citation/release/correction metadata.
+- Add model adapters only behind the API and only after evidence/citation/policy/receipt gates.
+- Keep providers replaceable and client-invisible.
+
+### 12.7 Phase 6 — deployment and operational hardening
+
+- Verify ingress, auth, CORS, CSP, rate limits, egress, secret handling, cache policy, and static-edge integrity.
+- Add redacted logs, metrics, tracing, alerting, and audit joins.
+- Perform rollback and correction drills.
+- Record required checks, review controls, and separation-of-duties enforcement.
+
+### 12.8 Backward compatibility
+
+- Existing route paths MAY be retained while handler semantics become versioned.
+- The current `ABSTAIN/NOT_IMPLEMENTED` object is a scaffold compatibility surface, not an accepted public v1 response.
+- A substantive envelope change requires an explicit version transition and client compatibility test.
+- Static artifact URLs MAY remain stable when the release/integrity metadata remains verifiable and correction/rollback state is propagated.
+- No compatibility alias may bypass the membrane or become a second dynamic authority.
+
+### 12.9 Rollback
+
+**Documentation rollback:** restore prior ADR blob `c9047d3dbf1d0a50d1bdd456cba0a137196e59f9`.
+
+**Runtime rollback target:** the current route registry and `make_abstain_envelope()` scaffold.
+
+For each substantive route migration:
+
+1. retain or be able to restore the prior stub handler;
+2. disable the new handler by a reviewed reversible selection mechanism;
+3. invalidate any unsafe cache or static pointer;
+4. preserve audit and correction history;
+5. record a rollback or forward-fix artifact in the accepted migration/release home;
+6. do not restore direct-store or direct-model access as a workaround.
+
+[Back to top](#top)
 
 ---
 
 ## 13. Validation & Compliance
 
-| Check | Expectation | Test home (PROPOSED) |
+### 13.1 Current repository-native checks
+
+| Check | Current command/surface | Current proof boundary |
 |---|---|---|
-| Envelope shape | Every trust-bearing response validates against `runtime_response_envelope.schema.json`; `status` is one of four enums. | `tests/api/envelope_shape_test.*` |
-| No public raw path | Public routes / layer manifests / Focus payloads do not reference `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, internal `data/receipts/`, direct model runtime, graph internals, or unpublished candidates. | `tests/api/no_raw_path_test.*` |
-| `ABSTAIN` on missing evidence | A request whose `EvidenceRef` does not resolve returns `ABSTAIN` with a held-case rationale. | `tests/runtime_proof/abstain_on_missing_evidence_test.*` |
-| `DENY` on sensitivity | Exact archaeology, rare-species, living-person, DNA-inference, cultural, and critical-infrastructure requests return `DENY` or role-gated restriction. | `tests/api/sensitivity_deny_test.*` |
-| `DENY` on unreleased | Unreleased candidate layer returns `DENY` with `release.unpublished`. | `tests/api/unreleased_deny_test.*` |
-| `ERROR` does not leak | Adapter faults, schema parse errors, and resolver exceptions return `ERROR` with `audit_ref` and no internal context. | `tests/api/error_no_leak_test.*` |
-| Decision metadata present | Every `ANSWER` carries `policy_decision_ref`, `evidence_bundle_refs`, release refs where material, and validated citations. | `tests/api/decision_metadata_test.*` |
-| Watcher-as-non-publisher preserved | Workers do not publish, mutate catalog truth, or serve public clients directly. | `tests/pipelines/watcher_non_publisher_test.*` |
-| Anti-parallel-API | If `apps/api/` exists, its README declares non-public or deprecated scope; no public trust routes register both there and in `apps/governed-api/`. | `tests/contracts/no_parallel_public_api_test.*` |
-| Review-console no direct file reads | Review-console payload retrieval goes through governed API; browser does not read receipt/report/diff JSON directly. | `tests/runtime_proof/review_console_no_direct_file_read_test.*` |
-| No direct model client | Browser code never calls Ollama/OpenAI/local model runtime directly. | `tests/ui/no_direct_model_client_test.*` |
-| No popup-as-proof | Material popup/export/Story Node claims require Evidence Drawer payload or envelope with citations. | `tests/ui/no_popup_as_evidence_test.*` |
+| Governed API smoke | `make governed-api-smoke` | Runs app-local tests for the current scaffold |
+| Governed API import boundary | `make governed-api-verify` | Runs tests and rejects direct MapLibre/Cesium/Ollama imports in the app |
+| Cross-root boundary guards | `make boundary-guards` | Checks selected Explorer/API store literals and connector/pipeline non-publisher boundaries |
+| Runtime schema/fixture validation | `make schemas`; `schema-validation` workflow | Validates configured schema families and fixtures, including both runtime envelope families |
+| Contract/schema tests | `make test`; `make validate` | Bounded schema/contract proof |
+| API CI | `.github/workflows/api-test.yml` | Runs smoke and focused scaffold route check |
+| ADR coherence | `python tools/validators/validate_adr_index.py` | Checks ADR identity/index coherence; does not accept this ADR |
+| ADR negative tests | `python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers` | Exercises validator rejection paths |
+| Full public deny suite | `make deny-test` | **Not implemented; readiness marker only** |
+| Explorer build/test | package scripts and `ui-build` workflow | **Held; package scripts remain pending markers** |
+
+### 13.2 Acceptance gates for ADR-0004
+
+ADR acceptance and implementation acceptance are related but separate. Acceptance SHOULD require reviewed evidence for each applicable gate.
+
+| Gate | Requirement | Current status at snapshot |
+|---|---|---|
+| **A — identity and placement** | ADR ID/path unique; `apps/governed-api/` present; no parallel public API | **PARTIAL PASS** — identity/path/app confirmed; ADR still proposed |
+| **B — contract separation** | DecisionEnvelope and RuntimeResponseEnvelope meanings, schemas, mapping, and versioning are explicit | **HOLD** — distinct contracts exist; app mapping is not implemented |
+| **C — finite runtime behavior** | Every substantive dynamic route emits validated `RuntimeResponseEnvelope` with one of four outcomes | **HOLD** — current routes emit decision-shaped ABSTAIN stubs |
+| **D — evidence and citation** | Claim-bearing `ANSWER` resolves admissible evidence and validated citations | **HOLD** — no substantive `ANSWER` route |
+| **E — policy, rights, sensitivity, and role** | Accepted evaluator/bundle, representative allow/deny/restrict/abstain cases, caller role enforcement | **HOLD** |
+| **F — release, freshness, correction, withdrawal, rollback** | Response/static edge binds current release and disposition state | **HOLD** |
+| **G — negative/security coverage** | Internal-path, sensitive, unreleased, stale, invalid, leaky error, direct model, review mutation, and empty-answer cases | **PARTIAL** — selected structural checks only |
+| **H — client/static-edge conformance** | Explorer/external clients use governed dynamic/static contracts and verify integrity | **HOLD** — Explorer is placeholder-only |
+| **I — operational controls** | Auth, ingress, egress, secrets, logs, metrics, rate limits, CORS/CSP, deployment isolation verified | **UNKNOWN / HOLD** |
+| **J — rollback and correction drill** | One route and one static artifact can be reverted/withdrawn without losing lineage | **HOLD** |
+| **K — reviewed status transition** | ADR and index move together to `accepted` with named review evidence | **HOLD** |
+
+### 13.3 Documentation validation for this revision
+
+The documentation implementation must pass:
+
+- complete baseline/no-loss review;
+- KFM metadata parsing;
+- one H1 and matching ADR ID;
+- preserved major numbered section anchors;
+- balanced fenced blocks, HTML, and `<details>`;
+- resolved internal fragments;
+- repository-relative link safety;
+- no unsupported owner, route, status, CI, deployment, release, or publication claim;
+- remote read-back and blob verification;
+- branch comparison showing only the intended ADR path;
+- repository-native documentation and ADR checks when GitHub Actions completes.
 
 > [!CAUTION]
-> A test that passes because the route returns `200 OK` with an empty payload is not a valid pass. `ABSTAIN`, `DENY`, and `ERROR` are first-class governed outcomes; tests must assert the envelope’s `status`, reason codes, and leak-safe payload shape.
+> `200 OK` with an empty or unsupported success payload is not a trust-membrane pass. Neither is schema validity alone. Tests must assert the correct finite outcome, safe reason/state, evidence/release obligations, and absence of protected leakage.
 
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## 14. Related ADRs and Docs
 
-| Reference | Relationship | Truth |
-|---|---|---|
-| `docs/doctrine/directory-rules.md` / `directory-rules.md` | Placement doctrine; source of the `apps/api/` vs `apps/governed-api/` open question this ADR resolves. | CONFIRMED doctrine; exact repo path NEEDS VERIFICATION |
-| `docs/adr/ADR-0001-schema-home.md` | Upstream schema-home decision: default machine-schema home is `schemas/contracts/v1/...`. | CONFIRMED reference in Directory Rules; file presence NEEDS VERIFICATION |
-| ADR-0002 — *Finite decision outcomes vocabulary* | Sibling ADR that formalizes `ANSWER / ABSTAIN / DENY / ERROR`. | PROPOSED starter-set name |
-| ADR-0003 — *Watcher-as-non-publisher invariant* | Sibling ADR that preserves upstream condition this ADR depends on. | PROPOSED starter-set name |
-| `contracts/runtime/runtime_response_envelope.md` | Semantic contract for finite runtime envelopes. | PROPOSED |
-| `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | Machine schema for runtime envelopes. | PROPOSED |
-| `docs/architecture/runtime-envelope.md` | Human-facing companion to this ADR. | PROPOSED |
-| `docs/domains/<domain>/PUBLIC_SURFACE.md` | Per-domain trust-membrane application notes. | PROPOSED |
-| KFM MapLibre operating architecture | Supports map renderer as downstream of governed API, Evidence Drawer, release manifests, and finite Focus Mode outcomes. | CONFIRMED doctrine / PROPOSED implementation |
-| KFM Ollama / governed AI guide | Supports no-direct-model-client, model adapters behind governed API, evidence-first generation, and finite outcomes. | CONFIRMED doctrine / PROPOSED implementation |
-| KFM domain lane reports | Support sensitivity-specific deny cases and public-safe geometry posture. | LINEAGE / PROPOSED unless repo evidence confirms implementation |
+All numbered ADRs below are currently effectively `proposed`.
 
-[↑ Back to top](#quick-navigation)
+| Reference | Relationship |
+|---|---|
+| [`ADR-0001`](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Default machine-schema home |
+| [`ADR-0002`](./ADR-0002-contracts-vs-schemas-split.md) | Meaning/shape/policy/fixture/test/validator responsibility split |
+| [`ADR-0003`](<./ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | Singular policy authority root |
+| [`ADR-0005`](./ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | Normal map-first client of the trust membrane |
+| [`ADR-0008`](./ADR-0008-ollama-subordinate-to-governed-api.md) | Local model runtime subordination |
+| [`ADR-0010`](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | Sensitive-domain fail-closed posture |
+| [`ADR-0012`](./ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md) | Source-edge non-publication boundary |
+| [`ADR-0019`](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Provider-neutral AI adapter and finite envelope intent |
+| [`ADR-0020`](./ADR-0020-abstain-is-a-first-class-decision.md) | First-class abstention semantics |
+| [`ADR-0025`](./ADR-0025-public-client-never-reads-canonical-internal-stores.md) | No-direct-store rule and governed static-delivery edge |
+| [Directory Rules](../doctrine/directory-rules.md) | Responsibility-root placement and app-role doctrine |
+| [Trust Membrane doctrine](../doctrine/trust-membrane.md) | Trust-warranty vocabulary; current document status remains draft |
+| [Governed API architecture](../architecture/governed-api.md) | Human architecture explainer; current-state reconciliation remains future work |
+| [`apps/README.md`](../../apps/README.md) | Repository-grounded app-root inventory and maturity map |
+| [`apps/governed-api/README.md`](../../apps/governed-api/README.md) | App-local responsibility boundary |
+| [`DecisionEnvelope` contract](../../contracts/runtime/decision_envelope.md) | Internal/runtime decision meaning |
+| [`RuntimeResponseEnvelope` contract](../../contracts/runtime/runtime_response_envelope.md) | Client-facing runtime response meaning |
+| [`DecisionEnvelope` schema](../../schemas/contracts/v1/runtime/decision_envelope.schema.json) | Current decision machine shape |
+| [`RuntimeResponseEnvelope` schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Intended client-facing machine shape |
+| [`api-test` workflow](../../.github/workflows/api-test.yml) | Bounded API CI |
+| [`schema-validation` workflow](../../.github/workflows/schema-validation.yml) | Shape/fixture CI for both runtime families |
+| [`CODEOWNERS`](../../.github/CODEOWNERS) | GitHub review routing only |
+
+[Back to top](#top)
 
 ---
 
 ## 15. Open Questions / NEEDS VERIFICATION
 
-Track these in `docs/registers/VERIFICATION_BACKLOG.md` unless the mounted repo already has an equivalent register.
+| ID | Question or gap | Required evidence / decision |
+|---|---|---|
+| **OQ-04-01** | Who owns and accepts this architectural decision? | Verified stewardship/decision record; CODEOWNERS alone is insufficient |
+| **OQ-04-02** | How exactly does DecisionEnvelope become or feed RuntimeResponseEnvelope? | Reviewed contract/schema mapping and representative tests |
+| **OQ-04-03** | How are endpoint-specific payloads represented under the closed RuntimeResponseEnvelope schema? | Contract and schema version decision |
+| **OQ-04-04** | Which outcomes/fields are required for non-claim bootstrap/config responses? | Contract semantics and client tests |
+| **OQ-04-05** | Which accepted policy evaluator, bundle, input contract, reason codes, and obligations govern runtime routes? | Policy source, tests, workflow, and decision artifacts |
+| **OQ-04-06** | Which EvidenceRef resolver and EvidenceBundle store/interface support claim-bearing answers? | Implementation, fixtures, tests, and no-network proof |
+| **OQ-04-07** | How are ReleaseManifest, correction, withdrawal, freshness, and rollback state joined to responses? | Accepted identifiers, adapters, schemas, and tests |
+| **OQ-04-08** | What identity, authentication, authorization, and capability model applies to public, registered, steward, admin, and system callers? | Security/identity architecture and negative tests |
+| **OQ-04-09** | What is the governed static-edge contract and integrity verification mechanism? | Release/static delivery profile, digest/signature policy, client/edge tests |
+| **OQ-04-10** | Which Explorer Web client wrapper consumes dynamic envelopes and static release metadata? | Working client slice with pinned dependencies and tests |
+| **OQ-04-11** | What ingress, egress, CORS, CSP, rate-limit, cache, secret, and network-isolation controls apply? | Infrastructure/config/deployment evidence |
+| **OQ-04-12** | What redacted logs, metrics, traces, audit joins, and retention limits are allowed? | Observability/privacy contract and deployed evidence |
+| **OQ-04-13** | What latency and response-size budgets apply to envelopes, evidence resolution, and mobile clients? | Performance budget and measured proof |
+| **OQ-04-14** | What is the canonical public reason-code and obligation registry? | Accepted policy/control-plane location, schema, and tests |
+| **OQ-04-15** | What is the audit/retention relationship among request, response, decision, policy, evidence, release, receipt, and correction IDs? | Identity/retention design and privacy review |
+| **OQ-04-16** | Which branch-protection and independent-review controls are actually enforced? | Repository ruleset evidence; not inferred from CODEOWNERS |
+| **OQ-04-17** | When may one route graduate from scaffolded `ABSTAIN` to `ANSWER`? | Closed §13.2 gates for that route packet |
+| **OQ-04-18** | Should the stale `docs/architecture/governed-api.md` and app README be reconciled after this ADR revision? | Separate scoped documentation task with current evidence |
+| **OQ-04-19** | What future condition, if any, would justify an internal `apps/api/` service? | Concrete consumer and reviewed no-parallel-authority proof |
+| **OQ-04-20** | Which rollback/forward-fix record home governs route-contract migrations? | Current migrations/release contracts and Directory Rules review |
 
-- **NEEDS VERIFICATION.** Whether `apps/governed-api/` exists in the mounted repo, and whether the entrenched naming is hyphenated or underscored.
-- **NEEDS VERIFICATION.** Whether `apps/api/` co-exists and what its current exposure scope is.
-- **NEEDS VERIFICATION.** Whether any public client currently reads `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, internal receipts, graph internals, model runtimes, or source systems directly.
-- **NEEDS VERIFICATION.** Whether runtime schemas already exist under `schemas/contracts/v1/runtime/` or another entrenched location.
-- **NEEDS VERIFICATION.** Whether ADR-0001, ADR-0002, ADR-0003 exist under starter-set names; if not, references here are forward-pointing.
-- **NEEDS VERIFICATION.** Whether route handlers currently return finite runtime envelopes or ad-hoc JSON.
-- **NEEDS VERIFICATION.** Whether UI code already centralizes browser calls through a governed client wrapper.
-- **NEEDS VERIFICATION.** Whether review-console retrieval currently reads receipts/reports/diffs directly.
-- **OPEN.** Retention / archival policy for `RuntimeResponseEnvelope` audit copies and joins among `envelope_id`, `decision_id`, `release_manifest_id`, and `run_receipt_id`.
-- **OPEN.** Whether public clients should refuse payloads lacking signed decision metadata.
-- **OPEN.** Concrete latency / response-size budgets for envelope overhead on mobile clients.
-- **OPEN.** Whether route-level feature flags or deployment-level release gates are the preferred rollback switch.
-
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## Appendix A — Reason-code vocabulary
 
-> Illustrative starter set. Canonical vocabulary is **PROPOSED** under `policy/runtime/reason_codes.yaml` or an equivalent policy root after repo inspection.
+This is an illustrative grouping for design and tests. It is not a canonical registry and does not create policy authority.
 
 <details>
-<summary>Click to expand reason-code groups</summary>
+<summary>Expand illustrative reason-code groups</summary>
 
-### Lifecycle / release
+### Routing and capability
 
-- `public_payload_exposes_internal_ref`
+- `route.not_found`
+- `method.not_allowed`
+- `capability.not_implemented`
+- `capability.unavailable`
+- `request.invalid`
+
+### Lifecycle and release
+
+- `public.internal_reference_denied`
 - `release.unpublished`
 - `release.stale`
-- `catalog_matrix_not_closed`
-- `proof_bundle_incomplete`
+- `release.withdrawn`
+- `release.superseded`
+- `catalog.not_closed`
+- `proof.incomplete`
 - `manifest.digest_missing`
-- `rollback_target_missing`
+- `rollback.target_missing`
 
-### Evidence / citation
+### Evidence and citation
 
 - `evidence.unresolved`
-- `evidence.weak_support`
+- `evidence.insufficient`
+- `evidence.conflicted`
 - `evidence.source_role_mismatch`
-- `ai_missing_evidence_bundle_or_citations`
 - `citation.unvalidated`
 - `citation.missing_for_claim`
 
-### Rights
+### Rights and sensitivity
 
 - `rights.unknown`
-- `rights.controlled_source`
 - `rights.no_public_redistribution`
 - `rights.attribution_missing`
-
-### Sensitivity
-
 - `sensitivity.archaeology_exact_denied`
 - `sensitivity.rare_species_exact_denied`
 - `sensitivity.living_person_denied`
 - `sensitivity.dna_inference_denied`
 - `sensitivity.critical_infrastructure_denied`
-- `sensitivity.sacred_or_cultural_denied`
-- `sensitivity.geometry_requires_generalization`
+- `sensitivity.cultural_or_sacred_denied`
+- `sensitivity.geometry_requires_transform`
 
-### AI / generation
+### AI and runtime
 
-- `model_as_observation`
-- `ai_uncited_assertion`
-- `ai_out_of_scope`
-- `ai_direct_client_forbidden`
-- `ai_context_not_release_scoped`
+- `ai.direct_client_forbidden`
+- `ai.missing_evidence_or_citations`
+- `ai.generated_as_observation_denied`
+- `ai.out_of_scope`
+- `adapter.fault`
+- `resolver.fault`
+- `schema.validation_failed`
+- `runtime.envelope_invalid`
 
-### Review / stewardship
+### Review and operations
 
 - `review.direct_file_read_denied`
 - `review.direct_file_mutation_denied`
 - `review.role_required`
-- `review.target_not_found`
-
-### Operational
-
-- `not_for_life_safety`
+- `review.self_approval_denied`
 - `freshness.stale`
-- `adapter.fault`
-- `schema.validation_failed`
-- `runtime.envelope_invalid`
-- `audit_ref_missing`
+- `audit.reference_missing`
+- `not_for_life_safety`
 
 </details>
 
-[↑ Back to top](#quick-navigation)
+Reason codes must be safe to expose at their intended surface. They must not encode protected facts, precise restricted locations, secrets, private prompts, raw evidence, internal file paths, or hidden reasoning.
+
+[Back to top](#top)
 
 ---
 
 ## Appendix B — Anti-patterns this ADR forbids
 
 <details>
-<summary>Click to expand anti-pattern list</summary>
+<summary>Expand anti-pattern register</summary>
 
-| Anti-pattern | Symptom | This ADR's response |
+| Anti-pattern | Symptom | Required response |
 |---|---|---|
-| **Public route reads canonical store** | `apps/explorer-web/` reading `data/processed/` directly. | MUST fix: route through `apps/governed-api/`. |
-| **Public route reads receipts or internal proof files** | Browser fetches receipt/report/diff JSON directly. | MUST fix: governed API resolves review-safe payloads. |
-| **Direct model client** | Browser code calls Ollama / OpenAI / local model runtime directly. | MUST fix: model adapters live behind the governed API. |
-| **Generated text as truth** | Focus Mode answer rendered without resolved `EvidenceBundle` or validated citations. | MUST fix: envelope returns `ABSTAIN` or `DENY`. |
-| **Parallel public API** | `apps/api/` and `apps/governed-api/` both serve public trust traffic. | MUST fix: deprecate or internalize the non-governed path; see §9. |
-| **Sensitive geometry hidden only by style** | Style filter hides exact archaeology / rare-species point that still ships in tile or payload. | MUST fix: generalize, redact, restrict, or deny before public artifact generation. |
-| **Popup-as-Evidence-Drawer** | Popup text presented as the claim’s evidence. | MUST fix: material claims resolve through Evidence Drawer payloads and `EvidenceBundle`. |
-| **Watcher publishes** | A worker writes to `data/catalog/` or `data/published/` as publication authority. | Forbidden upstream condition; preserve watcher-as-non-publisher. |
-| **Empty `ANSWER`** | Endpoint returns `status: ANSWER` with empty payload to avoid surfacing `ABSTAIN` / `DENY`. | MUST fix: answer payload requires support and status-appropriate content. |
-| **Leaky `ERROR`** | `ERROR` response reveals prompt text, secret, local path, or stack trace. | MUST fix: `ERROR` returns audit-safe reference only. |
-| **Schema authority split** | Runtime envelope shape diverges between `contracts/` and `schemas/`. | MUST fix: semantic meaning in `contracts/`, machine shape in `schemas/`, no divergent definitions. |
-| **Renderer as truth authority** | MapLibre layer toggle is treated as publication. | MUST fix: publication is a governed release state transition. |
+| **Decision envelope relabeled as public response** | Current stub or internal policy object is documented as RuntimeResponseEnvelope without mapping | Hold route graduation; resolve contract/schema relationship |
+| **Arbitrary payload in a closed envelope** | Handler adds undocumented fields to RuntimeResponseEnvelope | Version and update contract/schema/fixtures deliberately |
+| **Empty `ANSWER`** | Route avoids `ABSTAIN` by returning success with empty/placeholder payload | Fail test; use status-appropriate outcome |
+| **Public route reads canonical/internal store** | Client/API reads RAW, WORK, QUARANTINE, PROCESSED, registry, receipt, graph, search, source, or model store directly | Route through governed projection or deny |
+| **Static path treated as publication** | Artifact is trusted because it is under a public URL or `data/published/` | Require release/integrity/correction/rollback verification |
+| **Parallel public API** | `apps/api/` or another app serves independent trust-bearing routes | Deprecate/internalize or replace ADR through review |
+| **Direct model client** | Browser calls provider/model/vector endpoint | Move adapter behind API; deny network path |
+| **UI or renderer as policy** | Style filter, popup, tile attribute, or component state decides exposure | Apply policy and transforms before delivery |
+| **Generated text as evidence** | Focus/AI answer lacks resolved evidence and citations | `ABSTAIN` or `DENY` |
+| **Sensitive detail hidden only in presentation** | Exact protected data ships but is visually filtered | Redact/generalize/restrict before artifact generation |
+| **Leaky `DENY` or `ERROR`** | Reason body reveals protected detail, prompt, secret, stack trace, or internal path | Return safe reason/audit reference |
+| **Review console reads or writes files directly** | Browser retrieves/mutates receipts, reports, diffs, decisions, or release files | Governed role-gated API and separation of duties |
+| **Worker publishes** | Worker/connector/pipeline writes public/release state as authority | Emit candidate/receipt; require governed promotion |
+| **Smoke test used as release proof** | Green `api-test` badge cited as policy/security/release completion | Narrow claim to the exact tested scaffold |
+| **App defines policy/schema/contract authority** | App-local copy diverges from owning root | Consume canonical interfaces; remove parallel definition |
+| **Migration without rollback** | Handler/schema/client cutover has no stub fallback, cache invalidation, or lineage | Hold migration until rollback/forward-fix exists |
+| **Transport security treated as semantic governance** | WAF/proxy/auth is claimed to resolve evidence or release state | Keep transport and KFM semantic gates distinct |
+| **Permanent scaffold ambiguity** | Multiple docs call the scaffold both complete and unimplemented | Use repository-grounded status and explicit acceptance gates |
 
 </details>
 
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
 ## Related docs
 
-- `docs/doctrine/directory-rules.md` — PROPOSED canonical home for directory placement doctrine.
-- `directory-rules.md` — retained existing reference; path NEEDS VERIFICATION.
-- `docs/architecture/runtime-envelope.md` — `RuntimeResponseEnvelope` reference (PROPOSED).
-- `contracts/runtime/runtime_response_envelope.md` — semantic runtime-envelope contract (PROPOSED).
-- `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` — runtime-envelope machine schema (PROPOSED).
-- `docs/adr/ADR-0001-schema-home.md` — schema-home ADR (NEEDS VERIFICATION).
-- `docs/adr/ADR-0002-finite-decision-outcomes.md` — four-valued grammar (PROPOSED).
-- `docs/adr/ADR-0003-watcher-as-non-publisher.md` — upstream invariant (PROPOSED).
-- `docs/registers/VERIFICATION_BACKLOG.md` — open verification items.
-- `docs/registers/DRIFT_REGISTER.md` — drift entries, especially parallel public APIs or schema-home conflict.
+- [Canonical ADR index](./INDEX.md)
+- [ADR authoring contract](./README.md)
+- [Directory Rules](../doctrine/directory-rules.md)
+- [Trust Membrane doctrine](../doctrine/trust-membrane.md)
+- [Governed API architecture](../architecture/governed-api.md)
+- [Apps root README](../../apps/README.md)
+- [Governed API app README](../../apps/governed-api/README.md)
+- [DecisionEnvelope contract](../../contracts/runtime/decision_envelope.md)
+- [RuntimeResponseEnvelope contract](../../contracts/runtime/runtime_response_envelope.md)
+- [API test workflow](../../.github/workflows/api-test.yml)
+- [Schema-validation workflow](../../.github/workflows/schema-validation.yml)
+- [Drift register](../registers/DRIFT_REGISTER.md)
+- [Verification backlog](../registers/VERIFICATION_BACKLOG.md)
 
-**Last updated:** 2026-05-15 · **ADR status:** Proposed · **Owners:** `TODO` — Architecture Steward · API owner · Security steward
+---
 
-[↑ Back to top](#quick-navigation)
+## Change Log
+
+| Version | Date | Change |
+|---|---|---|
+| `v1.2` | 2026-07-23 | Same-path repository-grounded modernization. Confirmed ADR identity/path and current Governed API scaffold; recorded three fail-closed routes and bounded tests; distinguished DecisionEnvelope from RuntimeResponseEnvelope; added governed static-delivery nuance, acceptance gates, current surface map, migration phases, rollback, verification backlog, and exact related ADRs; preserved decision status as proposed. |
+| `v1.1` | 2026-05-15 | Tightened evidence boundary, schema-home posture, validation gates, migration discipline, finite outcomes, deny cases, and apps/api convergence guidance. |
+| `v1` | 2026-05-10 | Initial proposal selecting `apps/governed-api/` as the trust membrane. |
+
+---
+
+**Last updated:** 2026-07-23 · **Decision status:** `proposed` · **Source metadata:** `draft` · **Path:** `docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md` · [Back to top](#top)
