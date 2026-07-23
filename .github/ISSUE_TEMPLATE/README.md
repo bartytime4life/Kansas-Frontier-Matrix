@@ -2,462 +2,235 @@
 doc_id: kfm://doc/github-issue-template-readme
 title: .github/ISSUE_TEMPLATE README
 type: README
-version: v0.1
-status: draft; repository-grounded; issue-intake-governance
-owners:
-  - OWNER_TBD — Repository steward
-  - OWNER_TBD — Governance and documentation steward
-  - OWNER_TBD — Security steward for security-routing language
+version: v0.2
+status: draft; repository-grounded issue-intake governance
+owners: ["@bartytime4life"]
 created: 2026-07-17
-updated: 2026-07-17
-policy_label: public; github; issue-intake; governance; non-authoritative; security-private-first
+updated: 2026-07-22
+policy_label: public; issue-intake; governance; security-aware; non-authoritative
 owning_root: .github/
-path: .github/ISSUE_TEMPLATE/README.md
-responsibility: documents the GitHub issue-intake lane, template authority boundary, routing rules, security-private-first posture, evidence expectations, status-label discipline, validation obligations, review burden, and conversion paths from issues into governed ADRs, drift records, verification work, corrections, or implementation pull requests without treating an issue, label, assignee, bot action, or issue closure as evidence, policy, release, correction, or publication authority
-truth_posture: CONFIRMED blank target README at the pinned base, confirmed ADR issue template, confirmed parent target map, confirmed public security-policy boundary, confirmed global placeholder CODEOWNERS rule / NEEDS VERIFICATION complete issue-template inventory, label existence, issue-form rendering, config behavior, blank-issue settings, private vulnerability reporting, automation, project routing, and CODEOWNERS enforcement
+responsibility: GitHub public issue chooser templates and routing into governed KFM work
+truth_posture: filing, labeling, assigning, or closing an issue does not establish truth, authority, admission, release, or publication
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 70cda3ba3d3d635fdc1ba8688b726aa89d55fa27
+  base_commit: 1180cf7ec53d5acbbb859a39d93c1d129ec83df9
+  chooser_templates: 6 Markdown files
+  issue_forms: 0
+  chooser_config: absent
 related:
   - ../README.md
   - ../CODEOWNERS
   - ../PULL_REQUEST_TEMPLATE.md
-  - adr.md
   - ../../CONTRIBUTING.md
   - ../../SECURITY.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/doctrine/ai-build-operating-contract.md
+  - ../../docs/adr/
   - ../../docs/registers/DRIFT_REGISTER.md
   - ../../docs/registers/VERIFICATION_BACKLOG.md
-  - ../../docs/adr/README.md
-tags: [kfm, github, issues, issue-templates, governance, intake, security, adr, drift, verification]
 notes:
-  - "This README replaces a one-line blank placeholder created at the pinned base commit."
-  - "The bounded current inventory confirms README.md and adr.md. Exact target filenames bug_report.yml, drift_entry.yml, verification_item.yml, and config.yml were not found by direct fetch at the pinned base; the complete directory inventory remains NEEDS VERIFICATION because the connector does not expose a recursive directory listing."
-  - "Security-sensitive reports must not be filed as public issues. SECURITY.md is the public routing entrypoint and requires private-first reporting."
-  - "Issue templates structure intake only. They do not create evidence, approve ADRs, update registers, authorize source admission, decide policy, approve release, publish data, or close correction and rollback obligations."
+  - "The inventory is complete for tracked .github/ISSUE_TEMPLATE paths at the pinned commit."
+  - "Label existence, blank-issue behavior, private vulnerability reporting, project automation, and GitHub rendering remain external verification items."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `.github/ISSUE_TEMPLATE/`
 
-![status](https://img.shields.io/badge/status-repository--grounded%20draft-orange)
-![root](https://img.shields.io/badge/root-.github%2F-blue)
-![scope](https://img.shields.io/badge/scope-issue%20intake-informational)
-![authority](https://img.shields.io/badge/authority-routing%20only-lightgrey)
-![security](https://img.shields.io/badge/security-private--first-critical)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b)](#status)
+[![Templates: 6](https://img.shields.io/badge/templates-6-7c3aed)](#confirmed-template-inventory)
+[![Format: Markdown](https://img.shields.io/badge/format-Markdown-1f6feb)](#template-authoring-contract)
+[![Authority: intake only](https://img.shields.io/badge/authority-intake%20only-b91c1c)](#authority-boundary)
+[![Security: private first](https://img.shields.io/badge/security-private%20first-15803d)](#public-safety-boundary)
 
-> **One-line purpose.** `.github/ISSUE_TEMPLATE/` structures public GitHub issue intake for KFM while keeping evidence, policy, security, ADR acceptance, drift registers, release decisions, corrections, and publication in their governing homes.
+> Public-safe issue intake for bugs, features, ADR proposals, evidence corrections, sensitivity concerns, and source-admission proposals. Issues route work; they do not become KFM authority objects.
 
-> [!IMPORTANT]
-> An issue is a **work-intake record**, not proof that a claim is true, a defect is confirmed, a source is admissible, an ADR is accepted, a release is approved, or a correction is complete.
+## Quick navigation
 
----
+- [Purpose](#purpose)
+- [Authority boundary](#authority-boundary)
+- [Status](#status)
+- [Confirmed template inventory](#confirmed-template-inventory)
+- [Routing guide](#routing-guide)
+- [Public-safety boundary](#public-safety-boundary)
+- [Template authoring contract](#template-authoring-contract)
+- [Issue-to-governed-artifact flow](#issue-to-governed-artifact-flow)
+- [Validation](#validation)
+- [Review and maintenance](#review-and-maintenance)
+- [Open verification items](#open-verification-items)
+- [Changelog](#changelog)
 
 ## Purpose
 
-This folder owns GitHub issue templates and issue-form configuration for the Kansas Frontier Matrix repository.
+This subtree provides GitHub-compatible public issue templates that ask reporters for enough evidence, scope, uncertainty, impact, and safe handling information to support triage.
 
-Its job is to make reports reviewable at intake by asking for the smallest useful set of facts:
+The responsibility root is `.github/` because these files are GitHub-platform hooks. Accepted ADRs stay in `docs/adr/`; drift and verification obligations stay in governed registers; source identity and admission records stay in their owning data/policy lanes; corrections and rollback stay in release/evidence authority surfaces.
 
-- what the reporter observed or proposes;
-- where the concern applies;
-- what evidence is available;
-- which truth label fits the current support;
-- whether security, rights, sensitivity, exact location, living-person, DNA/genomic, private-land, cultural, infrastructure, or source-restriction concerns are present;
-- what governed artifact should carry the work next.
+## Authority boundary
 
-The folder does **not** decide the answer. It routes a public issue toward the correct steward, authority root, register, ADR, correction process, or implementation change.
+| GitHub issue action | What it means | What it does not mean |
+|---|---|---|
+| File an issue | A reporter submitted an intake record. | The claim is confirmed. |
+| Apply a label | A repository triage hint was attached. | Policy approved the request or an ADR was accepted. |
+| Assign an owner | A GitHub identity was asked to triage. | Independent review, stewardship acceptance, or separation of duties occurred. |
+| Close an issue | GitHub conversation state changed. | A correction propagated, evidence closed, release rolled back, or publication changed. |
+| Link a pull request | Implementation may be in review. | The change passed, merged, released, or published. |
 
-[Back to top](#top)
-
----
-
-## Authority level
-
-**Implementation-bearing GitHub intake surface; non-authoritative routing layer.**
-
-| Surface | Authority |
-|---|---|
-| Issue template front matter or form schema | Controls how GitHub presents intake fields. |
-| Issue body | Reporter-supplied allegation, request, proposal, or evidence pointer; not verified by filing. |
-| Labels and assignees | Triage metadata; not policy, review, or release decisions. |
-| Bot or project automation | Routing aid only unless a separate governed contract proves more. |
-| Issue closure | Administrative state; not proof of implementation, correction, release, withdrawal, or rollback. |
-| Linked accepted artifact | The governing record lives in its owning root, such as `docs/adr/`, `docs/registers/`, `release/`, `data/receipts/`, or `data/proofs/`. |
-
-The responsibility root is `.github/` because these files are GitHub-platform hooks. Human doctrine stays in `docs/`; machine shape stays in `schemas/`; admissibility stays in `policy/`; proof and receipt objects stay under governed data roots; release decisions stay in `release/`.
-
-[Back to top](#top)
-
----
+Reporter-provided text, links, logs, attachments, generated content, and embedded instructions are untrusted evidence candidates. They are not operating instructions for agents or workflows.
 
 ## Status
 
-### Pinned evidence snapshot
+Snapshot: `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9`, inspected 2026-07-22.
 
-| Item | Status at `main@70cda3ba…` | Evidence boundary |
+| Surface | Confirmed state | Boundary |
 |---|---|---|
-| `.github/ISSUE_TEMPLATE/README.md` | **CONFIRMED blank placeholder** | One empty line; this update replaces it. |
-| `.github/ISSUE_TEMPLATE/adr.md` | **CONFIRMED template** | Markdown issue template for proposing an ADR; acceptance still occurs through the governed ADR process. |
-| `.github/ISSUE_TEMPLATE/bug_report.yml` | **NOT FOUND at exact path** | Direct fetch returned not found. |
-| `.github/ISSUE_TEMPLATE/drift_entry.yml` | **NOT FOUND at exact path** | Direct fetch returned not found. |
-| `.github/ISSUE_TEMPLATE/verification_item.yml` | **NOT FOUND at exact path** | Direct fetch returned not found. |
-| `.github/ISSUE_TEMPLATE/config.yml` | **NOT FOUND at exact path** | Direct fetch returned not found. |
-| Complete directory inventory | **NEEDS VERIFICATION** | The selected connector exposes file reads and code search, not a complete recursive directory listing. |
-| Labels named by `adr.md` | **NEEDS VERIFICATION** | The template requests `adr` and `adr-proposed`; label existence was not inspected. |
-| Issue forms and blank-issue configuration | **NEEDS VERIFICATION** | No confirmed `config.yml`; repository settings were not inspected. |
-| GitHub private vulnerability reporting | **NEEDS VERIFICATION** | `SECURITY.md` names it as preferred if enabled but does not claim enablement. |
-| CODEOWNERS enforcement | **NEEDS VERIFICATION** | `.github/CODEOWNERS` exists with placeholder teams; team validity and required-review enforcement were not verified. |
+| Markdown chooser templates | **6 present** | GitHub rendering was not exercised in this pass. |
+| Issue-form YAML | **0 present** | No structured issue form is implemented. |
+| `config.yml` | **Absent** | Blank-issue behavior and external contact links depend on repository settings/defaults. |
+| Assignee routing | All six templates name `bartytime4life` | Assignment does not establish role separation or approval. |
+| Labels | `adr.md` requests `adr` and `adr-proposed`; the other templates request no labels | Label existence remains **NEEDS VERIFICATION**. |
+| Private vulnerability reporting | **NEEDS VERIFICATION** | [`SECURITY.md`](../../SECURITY.md) remains the public entrypoint for private-first reporting. |
+| CODEOWNERS | `.github/CODEOWNERS` exists and routes this subtree to `@bartytime4life` | Required-review enforcement remains **NEEDS VERIFICATION**. |
 
-### Confirmed current template
+## Confirmed template inventory
 
-`adr.md` currently:
-
-- presents an **ADR — Architecture Decision Record** intake option;
-- requests labels `adr` and `adr-proposed`;
-- asks for status, context, decision, evidence basis, Directory Rules basis, consequences, alternatives, validation, rollback, sensitive-domain impact, companion artifacts, contract-version implications, open questions, and references;
-- instructs maintainers to move an accepted decision into `docs/adr/ADR-XXXX-<slug>.md`.
-
-That template is an intake scaffold. Its wording does not by itself accept an ADR or prove that its referenced labels, reviewers, automation, or paths are enforced.
-
-[Back to top](#top)
-
----
-
-## What belongs here
-
-| File class | Expected form | Purpose |
+| Template | Intake responsibility | Governed follow-up |
 |---|---|---|
-| Issue forms | `*.yml` | Structured public intake with typed fields, required acknowledgements, labels, and routing metadata. |
-| Markdown issue templates | `*.md` | Narrative intake where GitHub issue forms are not a good fit. |
-| Template chooser configuration | `config.yml` | Controls blank issues and external contact links when intentionally configured. |
-| Folder README | `README.md` | Documents this authority boundary, current inventory, authoring contract, and security posture. |
+| [`adr.md`](adr.md) | One consequential architecture or governance decision proposal | Reviewed ADR under [`docs/adr/`](../../docs/adr/); issue text is not the accepted decision. |
+| [`bug.md`](bug.md) | Reproducible code, test, documentation, workflow, or behavior defect | Scoped PR, tests, validation, and rollback; drift/register update when applicable. |
+| [`evidence_correction.md`](evidence_correction.md) | Public or semi-public claim, layer, artifact, release, or AI answer that may be wrong | Evidence review, correction/withdrawal decision, propagation, and rollback in owning roots. |
+| [`feature.md`](feature.md) | Bounded capability or improvement proposal | Prioritized task or ADR when authority boundaries change. |
+| [`sensitivity_concern.md`](sensitivity_concern.md) | Public-safe rights, sovereignty, consent, cultural sensitivity, privacy, geoprivacy, or exposure concern | Private escalation, policy/sensitivity review, redaction/generalization, correction, or denial. |
+| [`source_admission.md`](source_admission.md) | Proposed external source with identity, role, rights, sensitivity, cadence, and validation posture | Governed source descriptor, policy review, deterministic fixtures, connector work, and admission decision. |
 
-Appropriate issue-intake families include:
+`README.md` documents the subtree and is not an issue chooser template.
 
-- reproducible software or documentation defects;
-- placement or authority drift;
-- verification-backlog items;
-- ADR proposals;
-- data or source concerns that can be discussed safely in public;
-- correction candidates that do not expose restricted details;
-- bounded feature or maintenance requests when a dedicated template is adopted.
+## Routing guide
 
-Each template should route the issue toward the governing artifact rather than pretending the issue is that artifact.
+| Report | Public issue? | Route |
+|---|---:|---|
+| Vulnerability, credential exposure, exploit path, or sensitive-location leak | **No** | Follow [`SECURITY.md`](../../SECURITY.md) and use a verified private channel. |
+| Architecture or governance decision | Yes, when public-safe | [`adr.md`](adr.md), then the reviewed ADR process. |
+| Reproducible defect | Yes, when public-safe | [`bug.md`](bug.md). |
+| Released or generated claim may be wrong | Usually, with minimized public detail | [`evidence_correction.md`](evidence_correction.md); escalate privately when evidence is restricted. |
+| Bounded capability proposal | Yes | [`feature.md`](feature.md). |
+| Rights, sovereignty, privacy, geoprivacy, or harmful exposure | Only when the report can be safely minimized | [`sensitivity_concern.md`](sensitivity_concern.md) or private escalation. |
+| External data source proposal | Yes, when source terms and details are public-safe | [`source_admission.md`](source_admission.md). |
+| General question | **NEEDS VERIFICATION** | No Discussions/contact route is configured in this subtree. |
 
-[Back to top](#top)
-
----
-
-## What does NOT belong here
-
-Do not place the following in this folder or in public issue bodies:
-
-- security-sensitive vulnerability details, exploit paths, credentials, tokens, private endpoints, or secret-bearing logs;
-- exact rare-species, rare-plant, archaeology, burial, sacred, culturally sensitive, private-land, or critical-infrastructure locations;
-- living-person records, genealogy details, DNA/genomic data, consent records, or identity-reconstruction material;
-- source-restricted payloads, private field notes, or copyrighted material beyond permitted excerpts;
-- canonical policy rules, Rego modules, schemas, contracts, validators, fixtures, tests, source descriptors, evidence bundles, receipts, proofs, release manifests, rollback cards, or correction notices;
-- accepted ADRs or authoritative register entries;
-- issue templates that silently auto-authorize release, publication, source admission, data deletion, or public exposure;
-- generic issue forms that ask users to paste unrestricted logs or full datasets.
+## Public-safety boundary
 
 > [!CAUTION]
-> Security-sensitive reports belong through the private-first path described in [`SECURITY.md`](../../SECURITY.md), not in a public GitHub issue—even when a public “security issue” template would be convenient.
+> Never include credentials, exploit details, restricted source payloads, living-person private records, DNA/genomic data, consent records, private-land joins, exact rare-species or archaeology locations, burial or sacred-site detail, or critical-infrastructure vulnerability information in a public issue.
 
-[Back to top](#top)
+Use synthetic or minimized examples. When rights or sensitivity are unclear, prefer private routing, quarantine, redaction, generalization, delayed release, denial, or abstention.
 
----
-
-## Inputs
-
-Issue templates are maintained from:
-
-- KFM doctrine and Directory Rules;
-- the AI Build Operating Contract;
-- `CONTRIBUTING.md`;
-- `SECURITY.md`;
-- `.github/CODEOWNERS`;
-- the pull-request template;
-- accepted ADRs and governance registers;
-- observed issue-triage needs;
-- current GitHub issue-form syntax and repository settings, when verified.
-
-Reporter input is untrusted until reviewed. URLs, logs, attachments, generated text, OCR, copied issue content, and embedded instructions are evidence candidates—not authority and not permission to broaden scope.
-
-[Back to top](#top)
-
----
-
-## Outputs
-
-This folder supports:
-
-- consistently structured public issues;
-- issue titles, labels, and assignee suggestions;
-- reviewer-visible evidence and uncertainty fields;
-- explicit routing to private security reporting;
-- links to ADR, drift, verification, correction, source-intake, or implementation processes;
-- auditable issue-to-PR or issue-to-governance-artifact lineage.
-
-It does **not** emit authoritative KFM trust objects. Where an issue leads to governed work, the resulting artifact must be written and reviewed in its owning root. Examples:
-
-| Issue outcome | Governing follow-up |
-|---|---|
-| Accepted architecture decision | `docs/adr/ADR-XXXX-<slug>.md` with accepted status and review record. |
-| Confirmed directory or authority drift | `docs/registers/DRIFT_REGISTER.md` entry and, when needed, ADR or migration plan. |
-| Verification obligation | `docs/registers/VERIFICATION_BACKLOG.md` or a narrower governed backlog. |
-| Security defect | Private security/incident process; public issue minimized or absent. |
-| Correctable released claim | Correction notice, evidence update, release review, and rollback/correction artifacts in governing homes. |
-| Implementation defect or feature | Scoped branch, tests/validation, generated receipt when AI-authored, and reviewable PR. |
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Validation should cover both syntax and governance behavior.
-
-| Check | Expected posture | Current status |
-|---|---|---|
-| Markdown front matter | Required keys render correctly and use existing labels only. | **NEEDS VERIFICATION** for automated lint. |
-| Issue-form YAML | GitHub-compatible schema, unique ids, valid input types, and required acknowledgements. | **NOT APPLICABLE to confirmed current `adr.md`; future forms NEEDS VERIFICATION.** |
-| Template chooser config | `blank_issues_enabled` and contact links match the intended intake posture. | **NEEDS VERIFICATION; exact `config.yml` not found.** |
-| Link validation | Relative links resolve to `SECURITY.md`, doctrine, registers, ADR guidance, and contribution guidance. | **Required.** |
-| Label validation | Every requested label exists and has an intended meaning. | **NEEDS VERIFICATION.** |
-| Security-routing test | No public template solicits secrets, exploit details, exact sensitive locations, or restricted payloads. | **Required.** |
-| Authority-boundary test | Templates do not claim that filing, labeling, assignment, bot action, or closure grants authority. | **Required.** |
-| CODEOWNERS coverage | Issue-template changes route to real maintainers. | **NEEDS VERIFICATION.** |
-| Template preview | Render each template in GitHub before adoption and verify required fields and chooser behavior. | **NEEDS VERIFICATION.** |
-| Drift check | Parent `.github/README.md`, this README, template inventory, and settings remain synchronized. | **Required.** |
-
-A missing field or unavailable governing artifact should produce a visible request for information, hold, or routing decision—not an optimistic assumption.
-
-[Back to top](#top)
-
----
-
-## Review burden
-
-Changes in this folder require review proportional to the routing impact:
-
-| Change | Review |
-|---|---|
-| README clarification or inventory correction | Repository/docs steward. |
-| New or changed bug, drift, verification, or ADR template | Repository steward + governance/docs reviewer. |
-| Labels, assignees, project automation, or bot routing | Repository maintainer who can verify the live GitHub configuration. |
-| Security-reporting language or contact links | Security steward + repository steward. |
-| Sensitive-domain intake fields | Relevant sensitivity, rights, or domain steward. |
-| Template that changes authority, lifecycle, schema home, release, proof/receipt separation, or public access posture | ADR review where triggered by Directory Rules or the AI Build Operating Contract. |
-
-`.github/CODEOWNERS` currently contains a global placeholder rule for `@kfm/maintainers`. Team validity and enforcement remain **NEEDS VERIFICATION**; do not present placeholder ownership as operational review coverage.
-
-[Back to top](#top)
-
----
-
-## Related folders
-
-| Path | Relationship |
-|---|---|
-| [`../README.md`](../README.md) | Parent GitHub-platform governance boundary. |
-| [`../CODEOWNERS`](../CODEOWNERS) | Path-to-reviewer routing; enforcement remains to be verified. |
-| [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) | Governed implementation and review handoff after issue triage. |
-| [`adr.md`](adr.md) | Confirmed ADR proposal template. |
-| [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contribution posture and smallest-reversible-change rule. |
-| [`../../SECURITY.md`](../../SECURITY.md) | Public entrypoint for private-first security reporting. |
-| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | Placement authority and required README contract. |
-| [`../../docs/doctrine/ai-build-operating-contract.md`](../../docs/doctrine/ai-build-operating-contract.md) | AI-assisted work, truth labels, ADR triggers, receipts, and PR discipline. |
-| [`../../docs/adr/`](../../docs/adr/) | Governing home for reviewed ADRs. |
-| [`../../docs/registers/DRIFT_REGISTER.md`](../../docs/registers/DRIFT_REGISTER.md) | Governing drift record. |
-| [`../../docs/registers/VERIFICATION_BACKLOG.md`](../../docs/registers/VERIFICATION_BACKLOG.md) | Governing verification backlog. |
-| [`../../release/`](../../release/) | Release, correction, withdrawal, and rollback authority. |
-| [`../../data/receipts/`](../../data/receipts/) | Receipt records; issues are not receipts. |
-| [`../../data/proofs/`](../../data/proofs/) | Proof records; issue attachments are not proof by default. |
-
-[Back to top](#top)
-
----
-
-## ADRs
-
-No issue-template-specific accepted ADR was verified in this change.
-
-The existing `adr.md` template is governed by the broader ADR discipline in the AI Build Operating Contract and `docs/adr/`. Creating or editing an issue template normally does not require an ADR. An ADR is required when the proposed intake behavior itself changes a protected authority boundary—for example:
-
-- accepting a new canonical root;
-- changing schema-home authority;
-- changing lifecycle phases;
-- creating a parallel policy, source, registry, proof, receipt, catalog, or release home;
-- changing public security-disclosure posture;
-- allowing direct public access to canonical/internal stores;
-- changing promotion, correction, rollback, or sensitive-location rules.
-
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-**2026-07-17**
-
-Review again when:
-
-- any issue template is added, removed, renamed, or materially revised;
-- `config.yml` or blank-issue behavior changes;
-- labels, assignees, CODEOWNERS, project automation, or private vulnerability reporting change;
-- `SECURITY.md`, `CONTRIBUTING.md`, ADR rules, or governance registers change;
-- this README is older than six months.
-
-[Back to top](#top)
-
----
-
-## Intake routing guide
-
-Use the narrowest safe route.
-
-| Report type | Public issue? | Route |
-|---|---:|---|
-| Security vulnerability, credential exposure, exploit, or sensitive-location leak | **No** | Follow `SECURITY.md`; use private vulnerability reporting if enabled or another verified private channel. |
-| ADR-class architectural decision | Yes, when public-safe | Use `adr.md`; acceptance and canonical text live in `docs/adr/`. |
-| Directory, authority, lifecycle, or documentation drift | Yes, when public-safe | Use a drift template when implemented; confirmed drift must be recorded in the governed drift register. |
-| Checkable unknown or verification obligation | Yes, when public-safe | Use a verification template when implemented; persistent obligations belong in the verification backlog. |
-| Reproducible code, test, documentation, or CI defect | Yes, when no sensitive details are required | Use a bug template when implemented; include minimal reproduction and evidence. |
-| Released claim or artifact may be wrong | Usually, only with public-safe detail | Route to evidence/correction stewards; do not paste restricted evidence. |
-| Feature idea | Yes, when bounded | State goal, evidence basis, non-goals, authority roots affected, and acceptance criteria. |
-| General question | Prefer Discussions or documentation when configured | Do not use an issue as a substitute for an implementation obligation unless triage accepts it. |
-
----
+Issue templates must not ask reporters to paste unrestricted logs, full datasets, raw source payloads, precise coordinates, or private evidence by default.
 
 ## Template authoring contract
 
-Every new template should define:
+Every template should define:
 
-1. **Purpose and scope.** One intake responsibility, not a catch-all.
-2. **Public-safety boundary.** Clear warning against secrets and sensitive data.
-3. **Evidence fields.** What was observed, where, when, and how it can be checked.
-4. **Truth posture.** `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` where relevant.
-5. **Affected roots and surfaces.** Exact paths when known; no guessed paths presented as fact.
-6. **Expected and actual behavior.** For defects, including finite failure state.
-7. **Governance impact.** Policy, rights, sensitivity, source role, release, correction, or rollback implications.
-8. **Minimal reproduction.** Prefer synthetic/no-network examples.
-9. **Routing outcome.** PR, ADR, drift entry, verification item, private security report, correction, or no action.
-10. **Acknowledgements.** Reporter confirms no secrets, restricted payloads, or exact sensitive locations are included.
+1. one bounded intake purpose;
+2. a public-safety warning;
+3. observed versus expected behavior or proposed outcome;
+4. evidence, date, scope, and reproducibility fields;
+5. applicable truth labels: `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`;
+6. affected paths and responsibility roots without guessing;
+7. policy, rights, sensitivity, source-role, release, correction, and rollback impact where relevant;
+8. synthetic/no-network reproduction when practical;
+9. a governed follow-up route;
+10. acknowledgement that no secret or restricted material is included.
 
-### Markdown template front matter
+### Markdown front matter
 
-A Markdown template should use GitHub-supported front matter:
+Chooser templates use GitHub-supported YAML front matter:
 
 ```yaml
 ---
 name: <chooser label>
 about: <one-sentence purpose>
-title: "<stable title prefix>"
-labels: ["<verified-label>"]
-assignees: []
+title: "<stable prefix>"
+labels: []
+assignees: ["bartytime4life"]
 ---
 ```
 
-### Issue-form YAML
+Verify labels before adding them. A missing label can degrade chooser behavior or routing.
 
-A future issue form should use stable field ids, valid input types, concise descriptions, and explicit required fields. Field ids become integration surfaces for automation; rename them deliberately and update dependent automation and docs.
+### Issue forms and chooser configuration
 
-### `config.yml`
+Before adding an issue-form `.yml` or `config.yml`, verify:
 
-Before adding `config.yml`, verify and document:
-
-- whether blank issues are allowed;
+- stable field ids and GitHub's current issue-form schema;
+- whether blank issues should be allowed;
 - where questions should go;
 - whether private vulnerability reporting is enabled;
-- which contact links are safe and operational;
-- that no placeholder email or dead link is presented as a real reporting channel.
+- that every contact link is real, public-safe, and operational;
+- dependent automation that consumes field ids, labels, titles, or assignees.
 
----
+Do not create `config.yml` only to fill an apparent gap. It changes user-visible GitHub behavior.
 
 ## Issue-to-governed-artifact flow
 
 ```mermaid
-flowchart LR
-    I["Public-safe issue intake"] --> T["Triage and evidence check"]
-    T -->|security-sensitive| S["Private security route"]
-    T -->|architecture decision| A["ADR proposal and review"]
-    T -->|confirmed drift| D["DRIFT_REGISTER entry"]
-    T -->|verification obligation| V["VERIFICATION_BACKLOG entry"]
-    T -->|implementation| P["Scoped PR + tests + receipt"]
-    T -->|released claim affected| C["Correction / withdrawal / rollback process"]
-    T -->|unsupported or duplicate| N["Close with reason and links"]
-
-    A --> R["Reviewed governing artifact"]
-    D --> R
-    V --> R
-    P --> R
-    C --> R
+flowchart TD
+    I["Public-safe issue"] --> T["Triage and evidence check"]
+    T -->|sensitive| S["Private route"]
+    T -->|decision| A["ADR review"]
+    T -->|drift or unknown| G["Governed register"]
+    T -->|implementation| P["Scoped draft PR"]
+    T -->|claim affected| C["Correction or rollback review"]
+    T -->|unsupported| N["Close with reason"]
 ```
 
-The issue can link the flow. It cannot replace the reviewed governing artifact at the end of the flow.
+The issue links the process; it does not replace the reviewed artifact created by that process.
 
----
+## Validation
 
-## Triage outcomes
+For any change in this subtree:
 
-The following vocabulary is **PROPOSED** for consistent human-readable triage; it is not a new policy or schema:
+- parse every chooser template's YAML front matter;
+- require `name`, `about`, `title`, `labels`, and `assignees` with GitHub-compatible types;
+- verify requested labels and assignee identities through current GitHub state;
+- verify every repository-relative link and fragment;
+- scan for secrets and exact sensitive-location material;
+- confirm public-safety language remains explicit;
+- preview changed chooser templates in GitHub when rendering behavior matters;
+- confirm `README.md` is not accidentally given chooser front matter;
+- inspect `git diff --check` and the exact changed-path budget.
 
-| Outcome | Meaning |
+Report each check as `PASS`, `FAIL`, `PARTIAL`, `NOT RUN`, `NOT APPLICABLE`, or `UNKNOWN`.
+
+## Review and maintenance
+
+| Change | Review burden |
 |---|---|
-| `NEEDS_INFORMATION` | The report is incomplete; no factual conclusion has been reached. |
-| `ROUTED_PRIVATE` | Public handling stopped because security or sensitivity requires a private path. |
-| `ACCEPTED_FOR_TRIAGE` | A steward accepted responsibility to investigate; the claim is not yet confirmed. |
-| `CONVERT_TO_ADR` | The issue raises a decision that belongs in the ADR process. |
-| `CONVERT_TO_DRIFT_RECORD` | Repository/doctrine divergence was confirmed and needs a governed drift entry. |
-| `CONVERT_TO_VERIFICATION_ITEM` | The issue is checkable but not yet verified strongly enough. |
-| `IMPLEMENTATION_CANDIDATE` | A bounded change and acceptance criteria are ready for a scoped PR. |
-| `DUPLICATE` | Another issue or artifact carries the same obligation. |
-| `OUT_OF_SCOPE` | The request does not belong in this repository or violates stated boundaries. |
-| `CLOSED_WITH_EVIDENCE` | The issue closes with links to the verifying artifact, PR, ADR, correction, or release record. |
+| README inventory or wording | Repository/docs owner. |
+| Template fields, titles, labels, or assignees | Repository owner plus affected governance/domain owner. |
+| Security route or contact | Security owner and repository owner. |
+| Sensitivity, rights, sovereignty, consent, or geoprivacy intake | Applicable policy/sensitivity/domain owner. |
+| Source admission fields | Source/governance owner and affected domain owner. |
+| `config.yml`, issue forms, or automation-consumed field ids | Repository maintainer who can verify live GitHub behavior and dependent automation. |
 
----
-
-## Maintenance checklist
-
-- [ ] Inventory the actual templates and update the Status table.
-- [ ] Verify every referenced label exists.
-- [ ] Verify assignees and CODEOWNERS identities are real and authorized.
-- [ ] Preview each template in GitHub.
-- [ ] Keep security-sensitive intake private-first.
-- [ ] Require synthetic/minimized evidence where possible.
-- [ ] Do not request raw logs, datasets, or coordinates by default.
-- [ ] Keep issue fields aligned with current doctrine and contribution guidance.
-- [ ] Link issue outcomes to governed artifacts in their owning roots.
-- [ ] Record material template/settings drift.
-- [ ] Update parent `.github/README.md` when the actual inventory changes.
-- [ ] Preserve a rollback path for template renames and automation field-id changes.
-
----
+Update this README whenever a template is added, removed, renamed, converted, or materially rerouted.
 
 ## Open verification items
 
-- **NEEDS VERIFICATION** — complete byte-level inventory of `.github/ISSUE_TEMPLATE/`.
-- **NEEDS VERIFICATION** — whether `adr.md` renders in the issue chooser as intended.
-- **NEEDS VERIFICATION** — existence and meaning of labels `adr` and `adr-proposed`.
-- **NEEDS VERIFICATION** — repository issue settings, blank-issue behavior, and template chooser configuration.
-- **NEEDS VERIFICATION** — whether GitHub private vulnerability reporting is enabled.
-- **NEEDS VERIFICATION** — real security contact and security-owner identity.
-- **NEEDS VERIFICATION** — CODEOWNERS team validity and required-review enforcement.
+- **NEEDS VERIFICATION** — GitHub chooser rendering for all six Markdown templates.
+- **NEEDS VERIFICATION** — existence and meaning of `adr` and `adr-proposed` labels.
+- **NEEDS VERIFICATION** — blank-issue behavior and repository issue settings.
+- **NEEDS VERIFICATION** — private vulnerability reporting enablement and verified private contact route.
 - **NEEDS VERIFICATION** — issue-to-project, issue-to-label, and issue-to-assignee automation.
-- **NEEDS VERIFICATION** — whether a bug, drift, verification, correction, source, or feature template already exists under an unverified filename.
-- **NEEDS VERIFICATION** — whether an issue-form lint or preview test exists in CI.
-- **UNKNOWN** — which proposed target templates should be created first and whether blank issues should remain enabled.
-
----
+- **NEEDS VERIFICATION** — CODEOWNERS enforcement and independent review routing.
+- **UNKNOWN** — intended route for general questions or discussions.
 
 ## Changelog
 
-| Date | Change | Status |
+| Date | Version | Change |
 |---|---|---|
-| 2026-07-17 | Replaced the blank placeholder with a repository-grounded issue-template governance and routing README. | **CONFIRMED documentation / live settings NEEDS VERIFICATION** |
+| 2026-07-22 | v0.2 | Reconciled the README to all six current chooser templates, verified the absence of issue forms and `config.yml`, corrected owner and CODEOWNERS claims, and bounded label/settings behavior. |
+| 2026-07-17 | v0.1 | Replaced the blank placeholder with the first issue-intake governance README; inventory was incomplete at that snapshot. |
+
+[Back to top](#top)
