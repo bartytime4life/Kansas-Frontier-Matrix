@@ -2,32 +2,35 @@
 doc_id: kfm://doc/runtime-readme
 title: runtime/ — Governed Runtime Wiring and Handoff Root
 type: readme; root-readme; canonical-runtime-root; trust-boundary-index; compatibility-drift-index
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; canonical-root-confirmed; mixed-maturity; compatibility-drift-visible; implementation-mixed-scaffold; deployment-unverified; non-authoritative
 owners: OWNER_TBD — Runtime steward · Governed-AI steward · Governed-API steward · Contract steward · Schema steward · Policy steward · Evidence steward · Citation steward · Security steward · Configuration steward · Infrastructure steward · Test steward · Release steward · Migration steward · Docs steward
 created: NEEDS VERIFICATION — compact root stub existed before v0.2 expansion
-updated: 2026-07-15
-supersedes: v0.2 runtime wiring root guide
+updated: 2026-07-23
+supersedes: v0.3 runtime wiring root guide
 policy_label: "public-doctrine; runtime-root; internal-execution-support; governed-api-subordinate; evidence-subordinate; policy-subordinate; release-subordinate; finite-outcomes; cite-or-abstain; mock-first; no-direct-public-runtime; no-secrets; no-lifecycle-authority; compatibility-drift-visible; rollback-aware"
 current_path: runtime/README.md
 truth_posture: >
-  CONFIRMED target v0.2 README; Directory Rules v1.4 canonical runtime root and six named
-  sublanes; current repository-present canonical and compatibility runtime READMEs; canonical
-  model-adapter lane plus legacy adapters compatibility lane; local, mock, Ollama, envelope,
-  and service-configuration boundaries; one-line OllamaAdapter placeholder; schema-paired
-  draft/PROPOSED DecisionEnvelope, RuntimeResponseEnvelope, and AIReceipt families; envelope
-  validators and minimal fixture/test harness; kfm-envelopes 0.0.0 package scaffold with empty
-  initializer; mock-first loopback .env.example; governed-api documentation; runtime-policy
-  stub; and bounded absence or incompleteness recorded by the child lane evidence /
+  CONFIRMED target v0.3 README; Directory Rules v1.4 canonical runtime root and six named
+  functional sublanes; current repository-present canonical and compatibility runtime READMEs;
+  current v1.1 local and mock lane guides; repository-present Flora and log compatibility lanes
+  omitted from the v0.3 root index; canonical model-adapter lane plus legacy adapters compatibility
+  lane; Ollama, envelope, and service-configuration boundaries; one-line OllamaAdapter placeholder;
+  schema-paired draft/PROPOSED DecisionEnvelope, RuntimeResponseEnvelope, and AIReceipt families;
+  envelope validators and minimal fixture/test harness; kfm-envelopes 0.0.0 package scaffold with
+  empty initializer; mock-first loopback .env.example; governed-api documentation; runtime-policy
+  stub; static workflow inventory and documentation-workflow holds; and bounded absence or
+  incompleteness recorded by the child lane evidence /
   PROPOSED governed runtime operating flow, root-level admission checklist, status progression,
   caller obligations, deterministic replay posture, compatibility disposition process, and
   cross-lane validation matrix /
   CONFLICTED runtime/adapters versus canonical runtime/model_adapters naming; repository-present
-  runtime/AI, runtime/people, runtime/pipelines, and runtime/release paths versus their omission
-  from the Directory Rules canonical runtime tree; runtime/people naming versus canonical
-  people-dna-land domain segment; governed-api envelope architecture prose versus current paired
-  schemas; AdapterContract stale evidence note; and reusable envelope implementation ownership
-  between runtime handoff notes and packages/envelopes /
+  runtime/AI, runtime/flora, runtime/log, runtime/people, runtime/pipelines, and runtime/release
+  paths versus their omission from the Directory Rules canonical runtime tree; runtime/flora and
+  runtime/people domain-lane naming versus functional-lane and canonical domain-segment rules;
+  runtime/log naming versus its safe compatibility-only, no-log-store role; governed-api envelope
+  architecture prose versus current paired schemas; AdapterContract stale evidence note; and
+  reusable envelope implementation ownership between runtime handoff notes and packages/envelopes /
   UNKNOWN executable adapter inventory beyond verified placeholders and scaffolds, accepted
   request contracts, approved providers/models, runtime policy execution, EvidenceRef resolution,
   citation validation, receipt persistence, service loaders, health checks, network/tool
@@ -35,26 +38,28 @@ truth_posture: >
   operational health /
   NEEDS VERIFICATION accepted owners, CODEOWNERS coverage, compatibility-lane disposition,
   canonical envelope profiles, contract/schema acceptance, reason/state registries, first
-  governed consumer, dedicated runtime tests, CI enforcement, secret-store integration,
-  correction propagation, migration receipts, and rollback automation
+  governed consumer, dedicated runtime tests, CI enforcement and current check results,
+  secret-store integration, correction propagation, migration receipts, and rollback automation
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: e22efab7b729bb6abfcac8b2b7cdcf9f437a853e
-  prior_blob: c8a0854af5c6ac4854ad5dcc880eb81251a211c3
+  base_commit: b960e0988a0365a35ab4eb405ff8d19a56a5f196
+  prior_blob: 894d15bb2e2d0185f433e35c690e0a6b42327fb9
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  local_readme_blob: 39772916a3fc25e7899570344d5c70a1cb2939c9
+  local_readme_blob: bab47e442500cd84d3e840373ac2a9fd6126d74b
   model_adapters_readme_blob: 16456452e03884dabb24c670c41c9e359f679769
   adapters_compatibility_readme_blob: 3b881e773f7283971fc4cc66f7e6ccbe92a5966d
   adapter_contract_note_blob: e371e5ca008ecbd0775bea9c2a31ef76131e7575
   ollama_adapter_placeholder_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
   model_adapters_mock_readme_blob: 18fdd7034f1e8768f813acc38209eef8688b78d3
-  mock_readme_blob: b48aa917319fd4b3fc458c7b5575eaaafcdc800d
+  mock_readme_blob: 2e304d3db3bfebc63de836c8fc496bfdcb9089f8
   ollama_readme_blob: b0708364fa002760383882f18843e31c6c4209c7
   envelopes_readme_blob: ec0d621cdfd342176fe20f7237ff113ace49e2a7
   service_configs_readme_blob: 90ffda75759b5b62db86aef190f2be19a8853915
+  flora_compatibility_readme_blob: 200c23382c2c2c32278a767f7147a1bd13aa77c7
+  log_compatibility_readme_blob: c369fd3081ead85352f6e503890d889efcb84ebd
   ai_compatibility_readme_blob: f2d38470f458ebe8775e069d251c88757dab07e5
   people_compatibility_readme_blob: 56401e30b25479a0ba5492e5d9edb4c79a59838f
   pipelines_compatibility_readme_blob: 08d50e84b9df765f564f92e6e7d4d9627ce90818
@@ -70,6 +75,10 @@ evidence_snapshot:
   runtime_policy_readme_blob: b9bfee731553c504b514f07a6862ef3e68328f02
   env_example_blob: 50e972a4c5c009ed89097753932fc328039c1aec
   adr_0019_blob: db55defa15fa709b20c613cf595adc334fe785ba
+  workflow_inventory_readme_blob: afb4f79ce2c5267cb1679f48186260e6edebf8b2
+  docs_build_workflow_blob: 202360a8bee431b50633e78c442cc70ca939206a
+  link_check_workflow_blob: c91477f6a6da84203e61b3151076eb46b3a65941
+  docs_control_plane_workflow_blob: 986fe1b4845c51f719bcfeeefe08729517ae543c
 related:
   - ./local/README.md
   - ./model_adapters/README.md
@@ -80,6 +89,8 @@ related:
   - ./ollama/README.md
   - ./envelopes/README.md
   - ./service_configs/README.md
+  - ./flora/README.md
+  - ./log/README.md
   - ./adapters/README.md
   - ./AI/README.md
   - ./people/README.md
@@ -110,11 +121,15 @@ related:
   - ../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
   - ../docs/security/SECRETS.md
   - ../docs/registers/DRIFT_REGISTER.md
-tags: [kfm, runtime, canonical-root, local-runtime, model-adapters, mock-first, ollama, envelopes, service-configs, finite-outcomes, governed-api, evidence, policy, citations, receipts, security, compatibility, migration, rollback]
+  - ../.github/workflows/README.md
+  - ../.github/workflows/docs-build.yml
+  - ../.github/workflows/link-check.yml
+  - ../.github/workflows/docs-control-plane.yml
+tags: [kfm, runtime, canonical-root, local-runtime, model-adapters, mock-first, ollama, envelopes, service-configs, flora-compatibility, log-compatibility, finite-outcomes, governed-api, evidence, policy, citations, receipts, security, compatibility, migration, rollback]
 notes:
-  - "This revision changes only runtime/README.md."
+  - "v0.4 changes runtime/README.md; repository delivery may add one generated provenance receipt under data/receipts/generated/. No runtime behavior is modified."
   - "The root remains canonical; compatibility and handoff lanes are documented rather than silently promoted."
-  - "No adapter, service, model, config, contract, schema, policy, fixture, test, workflow, receipt, deployment, release, or public route is created or modified."
+  - "No adapter, service, model, config, contract, schema, policy, fixture, test, workflow, runtime receipt, deployment, release decision, or public route is created or modified."
   - "The prior root README is preserved as lineage through the recorded prior blob and the changelog below."
 [/KFM_META_BLOCK_V2] -->
 
@@ -125,25 +140,26 @@ notes:
 > **One-line purpose.** Own KFM's internal runtime wiring, provider-neutral adapter handoffs, deterministic mocks, provider-specific local-runtime integration, finite-outcome envelope coordination, and runtime service-binding notes while remaining subordinate to governed evidence, policy, validation, citation, review, release, correction, rollback, and public-client controls.
 
 <p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Version: v0.3" src="https://img.shields.io/badge/version-v0.3-informational">
-  <img alt="Root: runtime" src="https://img.shields.io/badge/root-runtime%2F-blue">
-  <img alt="Authority: internal wiring" src="https://img.shields.io/badge/authority-internal__wiring-purple">
-  <img alt="Maturity: mixed and scaffolded" src="https://img.shields.io/badge/maturity-mixed__scaffold-orange">
-  <img alt="Public runtime access: denied" src="https://img.shields.io/badge/public__runtime__access-denied-red">
-  <img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite__or__abstain-success">
+  <a href="#status"><img alt="Document status: draft" src="https://img.shields.io/badge/status-draft-f59e0b?style=flat-square"></a>
+  <a href="#last-reviewed"><img alt="Document version: v0.4" src="https://img.shields.io/badge/version-v0.4-0969da?style=flat-square"></a>
+  <a href="#authority-level"><img alt="Responsibility root: runtime" src="https://img.shields.io/badge/root-runtime%2F-1f6feb?style=flat-square"></a>
+  <a href="#authority-level"><img alt="Authority: internal wiring only" src="https://img.shields.io/badge/authority-internal__wiring-8250df?style=flat-square"></a>
+  <a href="#status"><img alt="Implementation maturity: mixed and scaffolded" src="https://img.shields.io/badge/maturity-mixed__scaffold-f97316?style=flat-square"></a>
+  <a href="#what-does-not-belong-here"><img alt="Direct public runtime access: denied" src="https://img.shields.io/badge/public__runtime__access-denied-b91c1c?style=flat-square"></a>
+  <a href="../docs/doctrine/truth-posture.md"><img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-1f883d?style=flat-square"></a>
 </p>
 
 > [!IMPORTANT]
-> **`runtime/` is an internal execution-support root, not a truth or release authority.** A runtime result, successful provider call, valid JSON object, green test, service configuration, generated summary, adapter output, or deployed process does not create evidence, authorize disclosure, promote lifecycle state, approve release, or establish public truth.
+> **Critical runtime boundaries**
+> - **No truth or release authority.** A runtime result, provider call, valid JSON object, green test, service configuration, generated summary, adapter output, or deployed process does not create evidence, authorize disclosure, promote lifecycle state, approve release, or establish public truth.
+> - **No direct public runtime path.** Public and semi-public clients use the accepted application trust membrane, policy-safe evidence, finite response envelopes, and permitted obligations. Browser-to-model, browser-to-runtime, browser-to-secret-store, and browser-to-canonical-store paths are denied.
+> - **No secrets or protected context.** Credentials, tokens, private endpoints, signing material, secret-bearing `.env` files, private model paths, raw prompts, protected coordinates, restricted `EvidenceBundle` content, and private chain-of-thought must not be committed here or exposed through logs, screenshots, examples, fixtures, PR bodies, or diagnostics.
 
-> [!CAUTION]
-> **Public and semi-public clients must not call runtime providers directly.** Governed clients use the accepted application trust membrane, resolve policy-safe evidence, receive finite response envelopes, and render only permitted outcomes and obligations. Direct browser-to-model, browser-to-runtime, browser-to-secret-store, or browser-to-canonical-store paths are denied.
+**Quick navigation**
 
-> [!WARNING]
-> **Real secrets and protected context do not belong in this root.** Credentials, tokens, private endpoints, signing material, secret-bearing `.env` files, private model paths, raw prompts, protected coordinates, restricted EvidenceBundle content, and private chain-of-thought must not be committed here or exposed through logs, screenshots, examples, fixtures, PR bodies, or diagnostics.
-
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed)
+| Foundation | Responsibility boundaries | Operations and maintenance |
+|---|---|---|
+| [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) | [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) | [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) |
 
 ---
 
@@ -229,6 +245,8 @@ Repository evidence also confirms additional runtime paths. Those paths are **no
 | Provider-specific local Ollama wiring | `runtime/ollama/` | Own Ollama-specific local runtime and daemon handoff posture. |
 | Finite-outcome runtime helper coordination | `runtime/envelopes/` | Own envelope wiring, handoff, profile-selection, and drift coordination. |
 | Runtime service binding and activation notes | `runtime/service_configs/` | Own runtime-specific configuration handoff; shared templates stay under `configs/`. |
+| Flora-specific runtime notes | `runtime/flora/` | Compatibility and governed handoff only; domain authority stays in Flora responsibility lanes and functional runtime work routes to canonical runtime lanes. |
+| Logging and observability handoff notes | `runtime/log/` | Compatibility and review index only; no raw-log backend, receipt authority, dashboard authority, or public path. |
 | Reusable runtime/envelope code | `packages/` | Runtime references shared code; it does not duplicate package authority. |
 | Public or semi-public serving | `apps/governed-api/` or accepted app root | Runtime is called behind the trust membrane; it does not own public routes. |
 | Semantic object meaning | `contracts/` | Runtime consumes contracts; it does not define meaning here. |
@@ -252,6 +270,8 @@ Repository evidence also confirms additional runtime paths. Those paths are **no
 | `ollama/` | Canonical runtime lane | Provider-specific local Ollama posture; live binding remains deferred. |
 | `envelopes/` | Canonical runtime lane | Runtime handoff and envelope coordination; reusable code belongs in `packages/envelopes/`. |
 | `service_configs/` | Canonical runtime lane | Runtime binding handoff only; reusable defaults remain under `configs/`. |
+| `flora/` | Compatibility and domain-runtime handoff index | Do not accumulate Flora domain or adapter authority; route implementation to canonical domain and functional runtime lanes. |
+| `log/` | Compatibility and observability handoff index | Do not store raw logs or durable receipts; route to approved private operations, `data/receipts/`, and dashboard documentation. |
 | `adapters/` | Compatibility and migration index | Do not accumulate new adapter authority; route to `model_adapters/`. |
 | `AI/` | Compatibility and navigation index | Do not use as a catch-all AI implementation root. |
 | `people/` | Compatibility and restricted guardrail index | Canonical domain segment is `people-dna-land`; placement remains unresolved. |
@@ -268,18 +288,20 @@ A move, rename, deletion, or retirement of any compatibility path requires curre
 
 ### Evidence boundary
 
-The repository now has substantially stronger runtime documentation than the v0.2 root README recorded, but implementation maturity remains mixed.
+The repository now has stronger and more complete runtime documentation than the v0.3 root index recorded, including current v1.1 `local/` and `mock/` guides plus repository-present `flora/` and `log/` compatibility lanes. Implementation maturity remains mixed.
 
 | Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| `runtime/README.md` | Existing v0.2 target | The canonical root is documented, but its lane index and maturity statements are stale. |
+| `runtime/README.md` | Existing v0.3 target at blob `894d15b…` | The canonical root is documented; v0.4 refreshes stale evidence and adds omitted compatibility lanes without changing runtime behavior. |
 | Canonical six-lane tree | Directory Rules plus current child READMEs | Placement is documented; implementation is not uniformly established. |
-| `runtime/local/` | Detailed draft README | Local wiring responsibilities are described; executable inventory remains unverified. |
+| `runtime/local/` | Repository-grounded v1.1 README | Local wiring responsibilities and bounded absence are documented; executable harness, loader, health checks, tests, and deployment remain unverified. |
 | `runtime/model_adapters/` | Detailed v1.1 README | Canonical provider-neutral lane is confirmed; executable providers and accepted request contract remain unverified. |
-| `runtime/mock/` | Detailed draft README | Mock-first posture is documented; executable mock runtime is not established by the README. |
+| `runtime/mock/` | Repository-grounded v1.1 README | Mock-first and no-network posture are documented; bounded checks found no executable mock adapter, dedicated runtime/mock tests, or substantive focus-mock workflow. |
 | `runtime/ollama/` | Detailed v1.1 README | Canonical provider-specific lane is confirmed; live binding is deferred and operational state is unknown. |
 | `runtime/envelopes/` | Detailed v1.1 README | Runtime handoff lane, validators, schemas, fixtures, package scaffold, and drift are documented. |
 | `runtime/service_configs/` | Repository-grounded v0.2 README | Runtime binding handoff is clarified; the lane is README-only. |
+| `runtime/flora/` | Repository-grounded v1.1 compatibility README | The path is present but omitted from the canonical runtime tree; bounded checks found no executable Flora runtime implementation and the lane must remain sensitivity-aware and migration-bound. |
+| `runtime/log/` | Repository-grounded v1.1 compatibility README | The path is present but is not a log backend or receipt authority; raw operational material remains outside the public repository. |
 | `runtime/model_adapters/OllamaAdapter.py` | One-line greenfield placeholder | File presence does not prove an importable adapter or provider call. |
 | Runtime contracts and paired schemas | `DecisionEnvelope`, `RuntimeResponseEnvelope`, `AIReceipt` present with draft/PROPOSED status | Concrete shapes exist; acceptance and runtime emission remain unverified. |
 | Envelope validators and schema fixtures | Validator entry points, minimal valid/invalid fixtures, common schema harness | Some machine validation exists; coverage is narrow and does not prove runtime integration. |
@@ -304,6 +326,8 @@ runtime/
 ├── ollama/                           # canonical provider-specific local runtime lane
 ├── envelopes/                        # canonical finite-outcome handoff/helper lane
 ├── service_configs/                  # canonical runtime service-binding handoff
+├── flora/                            # compatibility Flora runtime handoff/index
+├── log/                              # compatibility observability handoff; no raw logs
 ├── adapters/                         # compatibility/migration index
 ├── AI/                               # compatibility/navigation index
 ├── people/                           # compatibility/restricted guardrail index
@@ -317,12 +341,14 @@ This map is an evidence-grounded orientation surface, not authorization to add n
 
 | Lane | Placement | Documentation | Implementation posture | Highest-priority next proof |
 |---|---|---:|---|---|
-| `local/` | Canonical | Detailed draft | UNKNOWN | Name one consumer/harness and add bounded tests. |
+| `local/` | Canonical | Repository-grounded v1.1 | README-only; executable local harness unconfirmed | Name one governed consumer/harness and add bounded tests. |
 | `model_adapters/` | Canonical | Detailed v1.1 | Mixed; placeholder and descriptive notes | Ratify request/adapter contract, implement deterministic mock first. |
-| `mock/` | Canonical | Detailed draft | Documentation-only in checked evidence | Executable deterministic adapter plus four-outcome fixtures. |
+| `mock/` | Canonical | Repository-grounded v1.1 | README-only; no executable mock adapter found in bounded checks | Executable deterministic adapter plus four-outcome fixtures. |
 | `ollama/` | Canonical | Detailed v1.1 | Scaffold-only; live binding deferred | Security/admission review after mock/evidence/citation/receipt gates. |
 | `envelopes/` | Canonical | Detailed v1.1 | Mixed schemas/validators/package scaffold | Resolve contract/schema/architecture profile conflict. |
 | `service_configs/` | Canonical | Repository-grounded v0.2 | README-only | Accepted profile shape, loader, validator, secret-reference contract. |
+| `flora/` | Compatibility | Repository-grounded v1.1 | README-only; path and domain ownership conflicted | Route any justified work to canonical functional/domain lanes; decide migration. |
+| `log/` | Compatibility | Repository-grounded v1.1 | README-only; no raw-log store or receipt authority | Decide retention/migration and verify private telemetry/redaction handoff. |
 | `adapters/` | Compatibility | Detailed v1.1 | Migration/index only | Inventory inbound links and plan governed disposition. |
 | `AI/` | Compatibility | Detailed v1.1 | Navigation/index only | Decide retention or migration; do not add catch-all implementation. |
 | `people/` | Compatibility | Detailed v1.1 | README-only guardrail | Resolve naming/placement; preserve deny-by-default controls. |
@@ -333,13 +359,14 @@ This map is an evidence-grounded orientation surface, not authorization to add n
 
 1. **Adapter path duplication.** `runtime/adapters/` and `runtime/model_adapters/` coexist; only `model_adapters/` is canonical.
 2. **Capitalized AI lane.** `runtime/AI/` exists but is not named in the Directory Rules canonical tree.
-3. **Domain and cross-root handoff lanes.** `runtime/people/`, `runtime/pipelines/`, and `runtime/release/` exist but are not canonical runtime sublanes.
-4. **People-domain naming.** `runtime/people/` conflicts with the canonical `people-dna-land` domain segment.
-5. **Envelope profile conflict.** Governed-API envelope architecture prose and paired runtime schemas differ in fields and vocabularies; hybrid emission is not authorized.
-6. **Adapter note staleness.** `runtime/model_adapters/AdapterContract.md` contains an older evidence note that does not reflect the now-present canonical `DecisionEnvelope` contract/schema.
-7. **Reusable implementation split.** `runtime/envelopes/` owns runtime handoff coordination, while reusable code belongs in `packages/envelopes/`; accepted API ownership remains unproved.
-8. **Runtime policy maturity.** `policy/runtime/README.md` remains a greenfield stub.
-9. **Root documentation drift.** The prior root README treated service templates as belonging here broadly and did not classify all compatibility lanes; current child evidence narrows those statements.
+3. **Domain and cross-root handoff lanes.** `runtime/flora/`, `runtime/people/`, `runtime/pipelines/`, and `runtime/release/` exist but are not canonical runtime sublanes.
+4. **Domain-lane naming.** `runtime/flora/` and `runtime/people/` risk parallel domain-runtime authority; `runtime/people/` also conflicts with the canonical `people-dna-land` domain segment.
+5. **Log-lane ambiguity.** `runtime/log/` is repository-present but omitted from the canonical runtime tree, and its name can be misread as a raw-log store even though its documented role is compatibility/review only.
+6. **Envelope profile conflict.** Governed-API envelope architecture prose and paired runtime schemas differ in fields and vocabularies; hybrid emission is not authorized.
+7. **Adapter note staleness.** `runtime/model_adapters/AdapterContract.md` contains an older evidence note that does not reflect the now-present canonical `DecisionEnvelope` contract/schema.
+8. **Reusable implementation split.** `runtime/envelopes/` owns runtime handoff coordination, while reusable code belongs in `packages/envelopes/`; accepted API ownership remains unproved.
+9. **Runtime policy maturity.** `policy/runtime/README.md` remains a greenfield stub.
+10. **Root evidence drift.** v0.3 omitted `flora/` and `log/` from the root map and retained earlier `local/` and `mock/` blob references; v0.4 repairs the index without deciding lane disposition.
 
 These conflicts are visible governance work. They must not be resolved by silently choosing whichever path is convenient.
 
@@ -570,6 +597,19 @@ make schemas
 
 These checks prove only the behavior they actually execute. Passing schema fixtures does not prove runtime adapters, policy execution, evidence resolution, citation validation, receipt persistence, public-client enforcement, or deployment.
 
+### Pull-request workflow preflight
+
+A static preflight of the repository's current workflow documentation and the three documentation-related workflow files linked below found no path that can publish, deploy, release, or mutate repository content from this README change. This is **workflow-definition evidence**, not proof of a complete current workflow inventory, branch protection, or current run results.
+
+| Workflow surface | Trigger and permission posture | Current bounded conclusion |
+|---|---|---|
+| [Workflow inventory](../.github/workflows/README.md) | Its pinned snapshot records 41 tracked workflows, explicit top-level permissions, no `pull_request_target`, no self-hosted runner, no direct `secrets.*` reference, and no ordinary write scope | Broad repository automation exists, but the inventory's completeness at the v0.4 base and current executions remain `NEEDS VERIFICATION`; action refs use mutable major-version tags. |
+| [`docs-build.yml`](../.github/workflows/docs-build.yml) | `pull_request`, push to `main`, and manual dispatch; `contents: read` | Explicit hold: no accepted documentation generator or preview publication handoff. It does not render or publish docs. |
+| [`link-check.yml`](../.github/workflows/link-check.yml) | `pull_request`, push to `main`, and manual dispatch; `contents: read` | Explicit hold: no accepted link-check executable, configuration, or deterministic fixture suite. A green hold does not mean links were checked. |
+| [`docs-control-plane.yml`](../.github/workflows/docs-control-plane.yml) | `pull_request`, push to `main`, and manual dispatch; `contents: read` | Runs bounded YAML/register/ADR checks. It does not authorize policy, lifecycle promotion, release, or publication. |
+
+**NEEDS VERIFICATION:** required-check rules, branch protection, current workflow runs, external repository settings, and any automation not represented by tracked workflow bytes.
+
 ### Required test families
 
 | Test family | Minimum negative cases |
@@ -599,7 +639,7 @@ These checks prove only the behavior they actually execute. Passing schema fixtu
 | Evidence/citation integration | UNKNOWN |
 | Receipt persistence | UNKNOWN |
 | Dedicated runtime integration tests | NEEDS VERIFICATION |
-| CI enforcement | Workflow definitions exist; complete runtime enforcement and current run status require separate verification |
+| CI enforcement | The pinned workflow inventory records 41 workflow files; documentation workflows include explicit holds; inventory freshness, required-check rules, current runs, and complete runtime enforcement remain unverified |
 | Deployment and operational health | UNKNOWN |
 
 ### Definition of done for a new runtime capability
@@ -672,6 +712,8 @@ Repository ownership placeholders and current CODEOWNERS coverage remain `NEEDS 
 | [`ollama/`](./ollama/) | Canonical provider-specific local Ollama lane. |
 | [`envelopes/`](./envelopes/) | Canonical runtime envelope handoff/helper lane. |
 | [`service_configs/`](./service_configs/) | Canonical runtime service-binding handoff. |
+| [`flora/`](./flora/) | Compatibility Flora runtime handoff; domain and functional-lane placement remains conflicted. |
+| [`log/`](./log/) | Compatibility observability handoff; not a raw-log store or receipt authority. |
 | [`adapters/`](./adapters/) | Compatibility/migration index; route new work to `model_adapters/`. |
 | [`AI/`](./AI/) | Compatibility/navigation index; not a catch-all authority. |
 | [`people/`](./people/) | Compatibility/restricted guardrail index; canonical domain segment differs. |
@@ -697,6 +739,7 @@ Repository ownership placeholders and current CODEOWNERS coverage remain `NEEDS 
 | [`release/`](../release/) | Release decisions, correction, withdrawal, and rollback authority. |
 | [`docs/security/`](../docs/security/) | Secrets, exposure, threat, and incident doctrine. |
 | [`docs/registers/DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) | Placement and implementation drift tracking. |
+| [`.github/workflows/`](../.github/workflows/) | Pull-request workflow definitions and explicit readiness holds; not release authority. |
 
 ### Dependency direction
 
@@ -742,6 +785,8 @@ The diagram is a governance and dependency-direction model, not verified deploym
 
 - disposition of `runtime/adapters/`;
 - retention or migration of `runtime/AI/`;
+- retention, migration, and domain/functional-lane routing for `runtime/flora/`;
+- retention or migration of `runtime/log/`, including the private telemetry and receipt handoff;
 - placement and naming resolution for `runtime/people/`;
 - retention or migration of `runtime/pipelines/`;
 - retention or migration of `runtime/release/`;
@@ -766,9 +811,9 @@ Do not create a new parallel authority path while these decisions remain open.
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-15 |
-| Evidence base | `main@e22efab7b729bb6abfcac8b2b7cdcf9f437a853e` |
-| Target prior blob | `c8a0854af5c6ac4854ad5dcc880eb81251a211c3` |
+| Last reviewed | 2026-07-23 |
+| Evidence base | `main@b960e0988a0365a35ab4eb405ff8d19a56a5f196` |
+| Target prior blob | `894d15bb2e2d0185f433e35c690e0a6b42327fb9` |
 | Review mode | Repository-grounded documentation revision; one-file scope |
 | Implementation effect | None — documentation only |
 | Rollback | Revert the update commit or restore the prior blob; no runtime state, config, secret, deployment, data, or release object changes |
@@ -794,7 +839,7 @@ Re-review this README when any of the following occurs:
 
 | Item | Evidence needed |
 |---|---|
-| Exact recursive runtime inventory | Commit-pinned tree listing and file classification. |
+| Exact recursive runtime inventory | Commit-pinned recursive tree listing and file classification; v0.4 confirms 13 README-bearing top-level child lanes but does not claim exhaustive nested implementation inventory. |
 | Accepted owners and CODEOWNERS | Current ownership rules plus steward confirmation. |
 | Canonical request/adapter profile | Accepted contract, schema, fixtures, validator, tests, and ADR. |
 | Envelope profile conflict | Accepted compatibility/profile decision plus parity tests. |
@@ -805,9 +850,20 @@ Re-review this README when any of the following occurs:
 | Service configuration | Accepted profile format, loader, validator, secret-reference integration, health checks. |
 | Runtime receipts | Accepted persistence location, schema/profile, join behavior, retention, redaction. |
 | Deployment and public boundary | Infra config, route inventory, network tests, public-client denial tests. |
-| Compatibility-lane disposition | Inbound-link inventory, ADR or migration record, deprecation and rollback plan. |
+| Compatibility-lane disposition | Inbound-link inventory for `adapters/`, `AI/`, `flora/`, `log/`, `people/`, `pipelines/`, and `release/`; ADR or migration record; deprecation and rollback plan. |
 | Correction and rollback | Invalidation, cache propagation, supersession, kill-switch, and rollback test evidence. |
 | Operational health | Current logs, metrics, dashboards, incident hooks, and service-level objectives. |
+
+### v0.3 → v0.4 change summary
+
+- Refreshes the evidence snapshot to `main@b960e09…` and records the v0.3 target blob.
+- Corrects the stale “target v0.2” statement to the actual v0.3 baseline.
+- Updates `local/` and `mock/` to their current repository-grounded v1.1 documentation state while preserving their implementation-unknown boundaries.
+- Adds repository-present `flora/` and `log/` as compatibility/handoff lanes; neither is promoted to canonical runtime authority.
+- Adds a bounded pull-request workflow preflight covering the pinned 41-workflow inventory and the documentation build, link-check, and control-plane checks.
+- Repairs the badge strip with verified destinations, consistent styling, and descriptive alt text; no dynamic workflow badge was admitted because current runs and required-check status are unverified.
+- Consolidates three consecutive critical alerts into one accessible boundary summary without weakening any prohibition.
+- Preserves every required Directory Rules §15 section, stable heading, custom top anchor, object-family term, conflict, unknown, and rollback statement.
 
 ### v0.2 → v0.3 change summary
 
