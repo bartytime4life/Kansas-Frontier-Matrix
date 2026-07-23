@@ -1,242 +1,385 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0003-policy-singular-canonical
 title: "ADR-0003 — `policy/` (singular) is canonical; `policies/` is compatibility"
-type: standard
-version: v1.1
+type: adr
+adr_id: ADR-0003
+version: v1.2
 status: proposed
-owners: Governance steward · Architecture steward · Policy substrate owner (TODO confirm CODEOWNERS)
+owners:
+  - Governance steward
+  - Architecture steward
+  - Policy steward
+owner_status: "NEEDS VERIFICATION — CODEOWNERS routes docs/adr/ and policy/ to @bartytime4life; no accepted role assignment or independent approval control was verified"
+reviewers_required:
+  - Docs steward
+  - Policy steward
+  - Architecture steward
+  - "Security, privacy, rights, sensitivity, or release reviewer when the affected policy class requires one"
 created: 2026-05-10
-updated: 2026-05-15
+updated: 2026-07-23
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 1f093dfc7295f0c2e63c89c3573061ad08698a88
+  target_prior_blob: cef5528d81cf3d67ff77f43a1cfece441a87bfe2
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  adr_0001_blob: 3c520ea8f2f8bcb3d478329a87d98b135ea335fd
+  adr_0002_blob: 2da10fcf5836a44d46186c233b6b9664c9ccfda5
+  policy_readme_blob: fa9378a6a699d0985fd018dbdb9f27c15efcb1c3
+  policy_test_workflow_blob: ba22e40b171b70a5e56fdbb35e44f6664e15487d
+  policy_boundary_workflow_blob: 6d442a6cdd0b146cd4003cbf1d7c619a455a16ae
+  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  migrations_readme_blob: 0485947aa72726bdde043a2570c2e28d2714f420
+  migrations_rollback_readme_blob: fdecd7e2c2308cb546706ab061730d14987bc586
+  deprecation_register_blob: 1fb7219dcdb7a437e38fa8ca92ba34e29667d3fa
+  drift_register_blob: 5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0
+  verification_backlog_blob: ec66084a9de71f569f2a8291776647f9bbbaef71
+  policy_root: present
+  policies_root: absent_from_pinned_tree
 related:
-  - docs/adr/ADR-0001-schema-home.md                  # NEEDS VERIFICATION (path/title)
-  - docs/adr/ADR-0002-*.md                             # NEEDS VERIFICATION (existence/title)
-  - docs/doctrine/directory-rules.md                   # PROPOSED canonical home per Directory Rules; verify repo path
-  - policy/README.md                                    # PROPOSED to exist; canonical policy root README
-  - policies/README.md                                  # PROPOSED if compatibility root exists
-  - control_plane/deprecation_register.yaml             # PROPOSED, per Directory Rules structural-move discipline
-  - docs/registers/DRIFT_REGISTER.md                    # PROPOSED, if mounted repo conflicts with this ADR
-  - docs/registers/VERIFICATION_BACKLOG.md              # PROPOSED, for unresolved repo-state checks
-tags: [kfm, adr, governance, policy, directory-rules, compatibility-root]
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0002-contracts-vs-schemas-split.md
+  - docs/doctrine/directory-rules.md
+  - docs/architecture/contract-schema-policy-split.md
+  - policy/README.md
+  - contracts/policy/README.md
+  - schemas/contracts/v1/policy/README.md
+  - fixtures/contracts/v1/policy/README.md
+  - tests/policy/README.md
+  - tools/validators/policy/README.md
+  - packages/policy-runtime/README.md
+  - .github/workflows/policy-test.yml
+  - .github/workflows/policy-boundary-guards.yml
+  - migrations/README.md
+  - migrations/rollback/README.md
+  - control_plane/deprecation_register.yaml
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+tags: [kfm, adr, governance, policy, directory-rules, compatibility-root, no-parallel-authority, migration, rollback]
 notes:
-  - "v1.1 preserves the ADR decision while tightening the repo-evidence boundary, validation gates, README contract, and rollback discipline."
-  - "Resolves the Directory Rules open question: ‘Whether policies/ or policy/ is canonical.’"
-  - "Numbering (ADR-0003), target path, owners, and live repo state remain NEEDS VERIFICATION."
+  - "v1.2 is a same-path repository-grounded modernization. It preserves the decision and proposed status; it does not accept ADR-0003 or change policy behavior."
+  - "At the pinned snapshot, tracked policy material is under singular policy/ and no tracked policies/ root is present. Absence of a plural root means no path migration is currently required."
+  - "The repository has nonempty Rego source and bounded policy-related checks, but no accepted evaluator, active bundle, native Rego test lane, complete PolicyInputBundle, dedicated PolicyDecision validator, decision receipt flow, or release integration is established."
+  - "If policies/ is introduced later, it remains compatibility-only and requires explicit class, provenance, parity or freeze controls, migration evidence where applicable, and a sunset or retention rationale."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0003 — `policy/` (singular) is canonical; `policies/` is compatibility
 
-**Pick one home for the OPA / Conftest / Rego policy substrate, freeze any plural mirror to a non-evolving compatibility role, and prevent the common KFM drift of two paths claiming the same policy authority.**
+> **Proposed decision.** KFM will use **`policy/`** as the single responsibility root for reviewed admissibility rules. A future or restored **`policies/`** path may exist only as a declared compatibility surface—never as independently authored policy authority.
 
-[![ADR](https://img.shields.io/badge/ADR-0003-1f6feb)](#)
-[![Status: proposed](https://img.shields.io/badge/status-proposed-f0ad4e)](#1-status)
-[![Doctrine: Directory Rules](https://img.shields.io/badge/doctrine-Directory%20Rules-6f42c1)](../doctrine/directory-rules.md)
-[![Truth posture](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%2F%20UNKNOWN%20repo%20depth-informational)](#13-evidence-boundary)
-[![Supersedes](https://img.shields.io/badge/supersedes-none-lightgrey)](#1-status)
-[![Last updated](https://img.shields.io/badge/last%20updated-2026--05--15-informational)](#)
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#1-status-and-scope)
+[![Tracked policy root: policy/](https://img.shields.io/badge/tracked%20policy%20root-policy%2F-1f6feb?style=flat-square)](#11-current-repository-evidence-snapshot)
+[![Tracked policies root: absent](https://img.shields.io/badge/tracked%20policies%20root-absent-2da44e?style=flat-square)](#11-current-repository-evidence-snapshot)
+[![Evaluator: unbound](https://img.shields.io/badge/evaluator-unbound-d97706?style=flat-square)](#11-current-repository-evidence-snapshot)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#34-authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Status:** PROPOSED · **Owners:** Governance steward · Architecture steward · Policy substrate owner *(TODO confirm CODEOWNERS)* · **Last updated:** 2026-05-15  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED migration and implementation gates / UNKNOWN live repo state.  
-> **Acceptance gates:** `policy/README.md` declares canonical authority; any `policies/README.md` declares a compatibility class; references and CI point to `policy/`; migration/deprecation/rollback records exist when content moves; no `.rego` rule evolves independently under `policies/`.
+> **Repository alignment is not reviewed decision authority.** The pinned tree already uses singular [`policy/`](../../policy/README.md), and no tracked `policies/` root was found. The canonical ADR index still records ADR-0003 with effective status `proposed`. This revision documents the observed state without promoting the decision to `accepted`.
+
+> [!CAUTION]
+> A path choice does not prove that policy is operational. The repository contains Rego source and bounded shape/boundary checks, but the accepted evaluator, active bundle, native policy tests, complete input contract, governed consumers, receipts, replay, release integration, and independent approval controls remain unestablished.
+
+**Quick navigation:** [Status](#1-status-and-scope) · [Context](#2-context) · [Decision](#3-decision) · [Authority flow](#4-authority-flow) · [Scope](#5-scope-of-policy) · [Consequences](#6-consequences) · [Alternatives](#7-alternatives-considered) · [Migration](#8-migration-compatibility-and-retirement) · [Rollback](#9-rollback-and-reversal) · [Validation](#10-validation-and-enforcement) · [Open work](#11-open-questions-and-needs-verification) · [Evidence](#12-evidence-basis-and-related-documents)
 
 ---
 
-## Contents
+## 1. Status and scope
 
-- [1. Status](#1-status)
-  - [1.1 Decision summary](#11-decision-summary)
-  - [1.2 Path basis](#12-path-basis)
-  - [1.3 Evidence boundary](#13-evidence-boundary)
-- [2. Context](#2-context)
-- [3. Decision](#3-decision)
-- [4. Authority diagram](#4-authority-diagram)
-- [5. Scope of `policy/` (what belongs, what does not)](#5-scope-of-policy-what-belongs-what-does-not)
-- [6. Consequences](#6-consequences)
-- [7. Alternatives considered](#7-alternatives-considered)
-- [8. Migration plan](#8-migration-plan)
-- [9. Rollback plan](#9-rollback-plan)
-- [10. Validation](#10-validation)
-- [11. Open questions and NEEDS VERIFICATION](#11-open-questions-and-needs-verification)
-- [12. Related docs and references](#12-related-docs-and-references)
-- [Appendix A — Proposed `policy/` subtree](#appendix-a--proposed-policy-subtree)
-- [Appendix B — Reviewer checklist](#appendix-b--reviewer-checklist)
-- [Appendix C — README skeletons](#appendix-c--readme-skeletons)
-
----
-
-## 1. Status
-
-| Field | Value |
+| Field | Current value |
 |---|---|
-| ADR ID | **ADR-0003** *(numbering NEEDS VERIFICATION against the live `docs/adr/` index)* |
-| Status | **proposed** |
-| Decision date | TBD on acceptance |
-| Supersedes | _none_ |
-| Superseded by | _none_ |
-| Target path | `docs/adr/ADR-0003-policy-singular-canonical.md` *(PROPOSED; verify repo convention and ADR index)* |
-| Decision class | Compatibility-root resolution; policy-authority root selection |
-| Migration class | Structural path migration if `policies/` currently carries policy content |
-| Authors / owners | Governance steward · Architecture steward · Policy substrate owner *(TODO confirm CODEOWNERS)* |
-| Reviewers | Docs steward · Schema steward · Release steward · Security / policy reviewer *(TODO confirm)* |
+| **ADR ID** | `ADR-0003` — unique and confirmed in the canonical [`INDEX.md`](./INDEX.md) |
+| **Source metadata** | `proposed` |
+| **Effective decision status** | `proposed` — not binding until the ADR and index carry reviewed `accepted` status |
+| **Decision class** | Directory Rules §2.4: canonical/compatibility-root authority and prevention of parallel policy homes |
+| **Canonical responsibility proposed here** | Reviewed policy source and admissibility rules under `policy/` |
+| **Compatibility treatment** | `policies/`, if introduced or restored, is `mirror`, `legacy`, `deprecated`, `external-export`, or `transitional` |
+| **Current repository posture** | `policy/` present; no tracked `policies/` root at the pinned commit |
+| **Migration required now** | No path migration identified for this documentation-only change |
+| **Publication effect** | None. A policy path, valid schema, green check, commit, pull request, or merge does not approve policy, release data, or publish KFM material. |
 
-### 1.1 Decision summary
+### 1.1 Current repository evidence snapshot
 
-This ADR formalizes the default already stated by KFM Directory Rules: **`policy/` is the canonical singular policy root**. If `policies/` exists, it is a compatibility root, not a second policy authority.
+The following findings are **CONFIRMED at `main@1f093dfc7295f0c2e63c89c3573061ad08698a88`** unless marked otherwise.
 
-What this ADR adds:
-
-- a ratified choice between `policy/` and `policies/`;
-- compatibility-class rules for any remaining `policies/` root;
-- migration and rollback discipline;
-- validation gates reviewers and CI can enforce;
-- README skeletons for both canonical and compatibility roots.
-
-### 1.2 Path basis
-
-Directory Rules place ADRs under the human-facing documentation control plane and list `docs/adr/` as the ADR home. Directory Rules also identify `policy/` as the canonical policy root and `policies/` as a compatibility root. The exact mounted-repo paths still need inspection before merge.
-
-| Path | Status | Basis |
+| Surface | Verified state | What it proves—and does not prove |
 |---|---|---|
-| `docs/adr/ADR-0003-policy-singular-canonical.md` | PROPOSED | ADRs belong under `docs/adr/`; exact filename and number need index verification. |
-| `policy/` | CONFIRMED doctrine / UNKNOWN repo presence | Canonical singular root for admissibility and release policy. |
-| `policies/` | CONFIRMED compatibility doctrine / UNKNOWN repo presence | Compatibility root if present; class must be declared by README. |
-| `docs/doctrine/directory-rules.md` | PROPOSED canonical doctrine path | Directory Rules state this as proposed canonical home; live repo path needs verification. |
-
-### 1.3 Evidence boundary
+| [`docs/adr/INDEX.md`](./INDEX.md) | ADR-0003 is uniquely indexed at this exact path; effective status is `proposed`. | Proves identity and inventory; does not accept the decision. |
+| [`directory-rules.md`](../doctrine/directory-rules.md) | Names singular `policy/` as canonical, `policies/` as compatibility, and parallel policy homes as ADR-class drift. | Establishes placement doctrine; does not establish active evaluator behavior. |
+| [`policy/`](../../policy/) | Tracked root exists. | Proves current repository placement. |
+| `policies/` | No tracked path was returned at the pinned tree; `policies/README.md` is absent. | Supports “no current plural-root migration”; does not prohibit a later reviewed compatibility export. |
+| [`policy/README.md`](../../policy/README.md) | Repository-grounded v0.2 README describes singular policy as the admissibility root, nonempty Rego source, mixed maturity, and an unbound evaluator. | Proves current root contract and bounded inventory; not policy activation or production enforcement. |
+| [`policy-test.yml`](../../.github/workflows/policy-test.yml) | Read-only readiness workflow requires singular policy paths, confirms Rego source is present, and intentionally holds while evaluator, bundle, native tests, validator, and runtime remain unaccepted. | Proves explicit readiness/drift guards; no policy rule is evaluated and no `PolicyDecision` is emitted. |
+| [`Makefile`](../../Makefile) | `policy` target prints `TODO: opa test policy/ -v`. | Proves singular path intent and a non-enforcing readiness marker; not an executable policy suite. |
+| [`policy-boundary-guards.yml`](../../.github/workflows/policy-boundary-guards.yml) | Runs 15 structural/static/API boundary tests in four modules. | Proves selected trust-membrane boundaries; not policy-engine evaluation, rights/sensitivity decisions, or release approval. |
+| [`CODEOWNERS`](../../.github/CODEOWNERS) | Routes `/docs/adr/` and `/policy/` to `@bartytime4life`. | Proves review routing only; not stewardship assignment, independent approval, or completed review. |
+| [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | Exists with `entries: []`. | No plural-policy retention, sunset, or deprecation record is currently registered. |
+| [`DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) and [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | No current entry closes or contests the singular/plural policy-root decision. | Does not remove the need for reviewed ADR acceptance or future drift registration if `policies/` appears. |
+| [`migrations/README.md`](../../migrations/README.md) | Defines database, schema, data, graph, and rollback lanes; no policy-specific migration lane is established. | A future policy-root move needs a reviewed migration-record placement decision rather than an invented `migrations/policy/` path. |
 
 > [!NOTE]
-> This document states placement doctrine where supported by KFM Directory Rules and the attached baseline ADR. It does **not** claim current repo contents, CI behavior, OPA / Conftest availability, branch state, workflows, CODEOWNERS, runtime paths, or release maturity. Those remain **UNKNOWN** until the target repository is mounted and inspected.
+> Git does not track empty directories. “`policies/` absent” means no tracked path was found at the pinned tree, not that no developer has ever used the name locally or in lineage documents.
+
+### 1.2 In scope
+
+- Selecting the single responsibility root for reviewed policy source.
+- Classifying any plural-root compatibility surface.
+- Preventing direct, independent policy authorship under `policies/`.
+- Defining how consumers, workflows, mirrors, migrations, deprecation, validation, and rollback must treat the two names.
+- Separating policy source from contracts, schemas, fixtures, tests, validator code, decision instances, receipts, proofs, release records, applications, and public output.
+- Naming the acceptance gates required before this proposed decision becomes binding.
+
+### 1.3 Out of scope
+
+- Accepting ADR-0003 or any related ADR.
+- Selecting or activating OPA, Conftest, another evaluator, or a bundle-distribution mechanism.
+- Defining policy semantics, rule packages, input fields, outward outcome mapping, reason codes, obligations, or consumer behavior.
+- Moving files, adding a `policies/` compatibility export, creating a policy migration lane, or populating deprecation/drift registers in this documentation-only revision.
+- Declaring a source, claim, release, API response, map layer, AI answer, or public artifact admissible.
+- Changing contracts, schemas, Rego source, fixtures, tests, workflows, validators, runtime code, release state, or publication state.
+
+### 1.4 Truth and state vocabulary
+
+- **CONFIRMED** — verified from the pinned repository evidence named above.
+- **PROPOSED** — the architectural decision, future compatibility posture, or migration design recorded here.
+- **UNKNOWN** — evidence is insufficient for a stronger statement.
+- **NEEDS VERIFICATION** — a concrete check exists but is not closed.
+- **CONFLICTED** — two authority surfaces or governing sources disagree.
+
+`proposed`, `accepted`, `superseded`, and `rejected` are ADR lifecycle states. They are not policy outcomes or truth labels.
+
+[Back to top](#top)
 
 ---
 
 ## 2. Context
 
-KFM treats **policy as executable substrate**, not narrative documentation. Policy decides allow / deny / restrict / abstain behavior for source admission, evidence release, sensitivity, rights, runtime responses, promotion, correction, and rollback. The policy substrate is therefore part of the trust membrane.
+### 2.1 The problem
 
-There is recurring ambiguity in KFM materials and implementation-shaped plans about where that substrate lives:
+KFM separates responsibilities that must interoperate without collapsing:
 
-- **`policy/`** — singular; the Directory Rules canonical root for admissibility and release policy.
-- **`policies/`** — plural; a familiar third-party OPA convention and an entrenched compatibility name in some project lineage, but not the canonical KFM authority.
+```text
+contracts/              -> policy-object meaning and invariants
+schemas/contracts/v1/   -> policy-object machine shape
+policy/                 -> reviewed admissibility rules
+fixtures/ + tests/      -> representative cases and executable proof
+tools/validators/       -> reusable checking
+packages/ or apps/      -> evaluator and governed consumer implementation
+data/receipts/          -> process memory
+data/proofs/            -> proof records
+release/                -> release, correction, withdrawal, and rollback decisions
+```
 
-Directory Rules frame the issue in four relevant ways:
+A second independently evolving `policies/` root would create ambiguity over which rule source, bundle digest, review trail, and rollback target produced a decision. That ambiguity is material because policy can gate source admission, evidence exposure, sensitive geometry, runtime responses, promotion, release, correction, and withdrawal.
 
-1. **Canonical root tree.** `policy/` is listed as **Canonical (singular)**, while `policies/` is listed as a compatibility mirror of `policy/`.
-2. **`policy/` responsibility.** The policy root owns admissibility and release policy: Rego / OPA bundles or equivalents, policy fixtures, policy tests, runtime policy, promotion policy, sensitivity, rights, domain policy, and release-gate policy.
-3. **Compatibility roots.** `policies/` maps to canonical `policy/`, with default class `mirror` or `legacy` and a recommended action to freeze writes and migrate.
-4. **Anti-patterns.** `policies/` and `policy/` evolving separately is the same class of drift as `schemas/` and `contracts/` evolving as parallel machine-schema authorities.
+### 2.2 Why the singular root matters
 
-> [!WARNING]
-> **The drift this ADR prevents is parallel authority.** If `policy/` and `policies/` both evolve, the Promotion Gate cannot identify the single policy bundle, reviewers cannot replay which rules produced a DENY or ABSTAIN, and policy decisions lose auditability.
+A governed decision must be replayable enough to answer:
 
-The forces in play:
+1. Which reviewed policy source was evaluated?
+2. Which bundle, version, digest, entrypoint, and evaluator were used?
+3. Which input and governed references were supplied?
+4. Which native result, outward outcome, reasons, and obligations were produced?
+5. Which review, receipt, correction, expiry, and rollback records apply?
 
-| Force | Pull toward `policy/` | Pull toward `policies/` |
-|---|---|---|
-| KFM Directory Rules | ✅ named canonical singular root | ❌ named compatibility root |
-| KFM trust membrane | ✅ one bundle, one policy decision source | ❌ ambiguous policy source |
-| External OPA examples | — | ✅ common convention outside KFM |
-| Migration cost | ❌ possible one-time move if plural exists | ✅ no rename if prior work used plural |
-| Reviewer discipline | ✅ simple rule: new policy goes singular | ❌ every PR can re-litigate placement |
-| Audit / rollback | ✅ one root to hash, test, and roll back | ❌ two roots can drift silently |
+Two authoring roots make those questions non-deterministic unless one root is explicitly subordinate.
 
-KFM’s responsibility-root discipline points to a single answer: keep the policy authority singular and treat any plural path as compatibility only.
+### 2.3 Current implementation pressure
+
+The pinned repository is already aligned with the proposed direction:
+
+- singular `policy/` is tracked and documented as the admissibility root;
+- no plural `policies/` tree is tracked;
+- the Makefile readiness marker and `policy-test` workflow both point to `policy/`;
+- policy-related contracts, schemas, fixtures, tests, validator lanes, and runtime placeholders live in their separate responsibility roots;
+- the evaluator and bundle are not accepted, so the repository is not yet relying on a mature runtime path that would make migration urgent.
+
+The unresolved governance gap is therefore **acceptance and operationalization**, not an observed singular-to-plural file migration.
+
+### 2.4 Forces
+
+| Force | Effect on the decision |
+|---|---|
+| Directory Rules | Favors singular `policy/`; classifies `policies/` as compatibility. |
+| Current tracked tree | Favors singular `policy/`; no plural-root content requires migration. |
+| External OPA examples | Often use varying directory names; useful as examples, not KFM placement authority. |
+| Audit and replay | Favors one reviewed rule source and one bundle lineage. |
+| Contributor ergonomics | A fixed rule avoids recurring singular/plural debates. |
+| Compatibility consumers | May justify a generated export, mirror, or temporary alias—never co-authority. |
+| Migration cost | Currently low because no tracked plural root was found; future cost rises if ambiguity is allowed to accumulate. |
+| Policy maturity | Evaluator and bundle remain unbound, making now the safest time to preserve one-root discipline. |
+
+[Back to top](#top)
 
 ---
 
 ## 3. Decision
 
-**`policy/` (singular) is the canonical home for the KFM policy substrate.**  
-**`policies/` (plural), if present, is a compatibility root and MUST NOT be a parallel policy authority.**
+### 3.1 Binding rule after acceptance
+
+RFC 2119 terms in this section become binding only after reviewed acceptance of ADR-0003.
+
+> **One policy-authoring authority.** `policy/` **MUST** be the canonical repository root for reviewed KFM policy source. `policies/`, if present, **MUST** be compatibility-only and **MUST NOT** evolve as an independent source of admissibility rules.
 
 Concretely:
 
-1. The executable policy bundle — OPA / Conftest / Rego or equivalent — lives under **`policy/`**.
-2. Promotion gates, runtime gates, validators, release checks, and CI policy invocations point to **`policy/`** as the single authoritative bundle root.
-3. Where `policies/` exists:
-   - it MUST carry a `README.md` declaring compatibility class;
-   - it MUST be `mirror`, `legacy`, `deprecated`, `external-export`, or `transitional` under Directory Rules compatibility language;
-   - this ADR’s default recommendation is **`mirror`** when generated from `policy/`, or **`legacy`** when frozen pending removal;
-   - it MUST NOT be edited directly as policy authority;
-   - it MUST NOT evolve independently;
-   - it MAY be checked by CI for mirror parity, but CI MUST NOT treat it as the canonical source of policy truth.
-4. New `.rego` files, policy fixtures, policy tests, policy README updates, and policy-gate changes land in `policy/` first.
-5. PRs touching either path cite **ADR-0003** and the applicable Directory Rules sections.
+1. Reviewed Rego, OPA-compatible, or equivalent declarative policy source lands under **`policy/`**.
+2. Evaluators, bundle builders, CI, promotion gates, runtime consumers, release checks, and replay tooling identify **`policy/`** or an immutable bundle derived from it as the source lineage.
+3. New policy packages, entrypoints, rule modules, native tests, and policy-lane documentation **MUST NOT** be authored first under `policies/`.
+4. A tracked `policies/` root **MUST** have a README declaring exactly one compatibility class and pointing to the canonical source.
+5. A `policies/` mirror or export **MUST** be generated, frozen, or explicitly transitional; direct independent edits are forbidden.
+6. A retained compatibility root **MUST** have provenance, parity or freeze controls, consumers, retention rationale, and sunset or review criteria.
+7. A migration involving policy paths **MUST** preserve history, update references, validate behavior, record old/new identity or digest effects, and define rollback or forward-fix posture.
+8. Pull requests touching either name **MUST** cite ADR-0003 and the applicable Directory Rules sections.
+9. This decision **MUST NOT** be interpreted as policy activation, source admission, release approval, public access, or publication authority.
 
-> [!TIP]
-> **Mental model.** `policy/` is the executable substrate the Promotion Gate consumes. `policies/`, if it exists, is a compatibility wrapper, mirror, export, or legacy lane — never a co-authority.
+### 3.2 Compatibility classes
+
+| Class | Permitted purpose | Required control | Forbidden behavior |
+|---|---|---|---|
+| `mirror` | Generated copy for tooling or downstream compatibility | Canonical source reference, generation command, digest/parity check | Direct authorship or divergent fields/rules |
+| `legacy` | Historical path retained during consumer migration | Frozen status, consumer inventory, migration owner | New policy development |
+| `deprecated` | Scheduled removal | Replacement path, deadline/review date, deprecation record | Silent indefinite retention |
+| `external-export` | Format or directory required by a downstream consumer | Export recipe, provenance, consumer contract | Treating export as source authority |
+| `transitional` | Bounded move between layouts | Migration record, owner, start/end criteria, rollback/forward-fix record | Unbounded dual-write state |
+
+### 3.3 Responsibility split
+
+| Concern | Owning surface | Policy-root boundary |
+|---|---|---|
+| Policy-object meaning | [`contracts/policy/`](../../contracts/policy/README.md) | `policy/` consumes meaning; it does not redefine semantic contracts. |
+| Policy-object shape | [`schemas/contracts/v1/policy/`](../../schemas/contracts/v1/policy/README.md) | `policy/` may require shapes; it is not schema authority. |
+| Reviewed admissibility rules | [`policy/`](../../policy/README.md) | Canonical responsibility proposed here. |
+| Reusable examples | [`fixtures/`](../../fixtures/README.md) and bounded policy fixture lanes | Examples do not decide policy. |
+| Executable proof | [`tests/`](../../tests/README.md) | Tests exercise rules; test code is not rule authority. |
+| Validator implementation | [`tools/validators/`](../../tools/validators/README.md) | Validators check; they do not own rule semantics. |
+| Evaluation runtime | [`packages/policy-runtime/`](../../packages/policy-runtime/README.md) or another accepted implementation surface | Runtime consumes accepted rules/bundles; no reusable evaluator code in `policy/`. |
+| Decision instances and receipts | Governed receipt/review/data roots | Emitted instances are not normative source. |
+| Release, correction, withdrawal, rollback | [`release/`](../../release/README.md) | Policy may gate; it does not approve or publish by itself. |
+| Public API/UI/map/AI behavior | Governed application/runtime roots | Public clients never load policy source or choose bundles directly. |
+
+### 3.4 Authority and publication boundary
+
+A policy result can constrain an operation. It cannot by itself:
+
+- make a claim true;
+- create an `EvidenceBundle`;
+- clear rights, consent, or sensitivity by assertion;
+- promote lifecycle state;
+- approve a release;
+- publish an artifact;
+- make generated language authoritative;
+- make client-side hiding a security control;
+- turn a path, badge, commit, pull request, workflow, or passing test into public truth.
+
+[Back to top](#top)
 
 ---
 
-## 4. Authority diagram
+## 4. Authority flow
 
 ```mermaid
 flowchart LR
-    subgraph CANON["policy/ — CANONICAL policy substrate"]
-        direction TB
-        BUNDLES["bundles/\nRego / OPA policy modules"]
-        RUNTIME["runtime/\nFocus Mode, evidence resolution, abstain"]
-        PROMOTION["promotion/\nPromotion Gate policy"]
-        SENSITIVITY["sensitivity/\nredaction and exposure rules"]
-        RIGHTS["rights/\nsource terms and license enforcement"]
-        DOMAINS["domains/\ndomain-specific policy"]
-        RELEASE["release/\nrelease-gate policy"]
-        TESTS["tests/ + fixtures/\npolicy proof inputs"]
-    end
+    C["contracts/policy/<br/>semantic meaning"]
+    S["schemas/contracts/v1/policy/<br/>machine shape"]
+    P["policy/<br/>reviewed rule source"]
+    B["immutable bundle / selector<br/>PROPOSED · not accepted"]
+    E["accepted evaluator<br/>PROPOSED · not established"]
+    D["PolicyDecision candidate<br/>reasons · obligations · refs"]
+    G["governed consumer / gate"]
+    R["release / correction / rollback<br/>separate authority"]
+    X["policies/<br/>compatibility only, if present"]
+    V["tests + fixtures + validators<br/>bounded proof"]
+    H["hold / abstain / deny / error<br/>when context or controls are missing"]
 
-    subgraph COMPAT["policies/ — COMPATIBILITY root, if present"]
-        direction TB
-        CLASS["README declares class\nmirror | legacy | deprecated | external-export | transitional"]
-        FROZEN["No direct policy authorship"]
-    end
+    C --> P
+    S --> P
+    P --> B
+    B --> E
+    E --> D
+    D --> G
+    G --> R
+    V --> P
+    V --> E
+    P -. "generate, freeze, or export" .-> X
+    X -. "must not author independently" .-> H
+    E -. "unbound at pinned snapshot" .-> H
 
-    GATE["Promotion / runtime policy gates"]
-    DECISION["PolicyDecision / DecisionEnvelope\nALLOW or ANSWER · ABSTAIN · DENY · ERROR"]
-    DRIFT["Drift or verification backlog entry"]
-
-    CANON --> GATE
-    GATE --> DECISION
-    CANON -. "may regenerate mirror" .-> COMPAT
-    COMPAT -. "direct edits forbidden" .-> DRIFT
+    classDef authority fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef proof fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+    classDef compat fill:#fff3e0,stroke:#ef6c00,color:#e65100
+    classDef hold fill:#ffebee,stroke:#c62828,color:#8e0000
+    class C,S,P,B,E,D,G,R authority
+    class V proof
+    class X compat
+    class H hold
 ```
 
 > [!NOTE]
-> **Diagram status:** the responsibility split is CONFIRMED as doctrine. Specific folders, filenames, package names, and CI routes remain **PROPOSED / NEEDS VERIFICATION** until inspected in the live repository.
+> The responsibility relationships are doctrine-aligned. Bundle, selector, evaluator, consumer, and decision-receipt maturity remain `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` as stated in the evidence snapshot.
+
+[Back to top](#top)
 
 ---
 
-## 5. Scope of `policy/` (what belongs, what does not)
+## 5. Scope of `policy/`
 
-The scope below aligns the ADR with Directory Rules’ `policy/` responsibility. Exact filenames remain implementation details.
+### 5.1 What belongs
 
-| Belongs in `policy/` | Notes |
+Material belongs under `policy/` when its primary responsibility is reviewed admissibility.
+
+| Belongs in `policy/` | Boundary |
 |---|---|
-| `README.md` | Declares canonical authority level and root contract. |
-| `bundles/` | Rego / OPA bundles or equivalent policy modules, including shared consent, revocation, obligation, and reason-object logic. |
-| `fixtures/` | Policy-specific fixtures distinct from broad `tests/fixtures/` unless repo README says otherwise. |
-| `tests/` | Policy tests that prove deny-by-default, label propagation, rights checks, and gate behavior. |
-| `runtime/` | Runtime gate policy: Focus Mode, EvidenceBundle resolution, abstain, no-direct-model-public-path. |
-| `promotion/` | Promotion Gate A–G or equivalent release-readiness policy. |
-| `sensitivity/` | Sensitivity classes, redaction, precise-location controls, public-safe transforms. |
-| `rights/` | Rights status, source terms, license recognition, derivative obligation checks. |
-| `domains/` | Domain-lane policy such as fauna, archaeology, people-DNA-land, hydrology, hazards, etc. |
-| `release/` | Release-gate policy distinct from release decision artifacts. |
+| Root and child-lane READMEs | Explain policy-source boundaries; do not accept ADRs or activate bundles. |
+| Declarative rule modules | Reviewed Rego, OPA-compatible, or equivalent policy source. |
+| Operation-specific packages and entrypoints | Access, evidence, consent, sensitivity, rights, render, export, AI, lifecycle, promotion, release-gate, correction, and rollback policy. |
+| Fail-closed defaults | Preserve missing, unknown, false, stale, conflicted, restricted, and error as distinct states. |
+| Domain policy under a domain segment | Domain-specific rules stay inside `policy/`, not a new root. |
+| Policy-native tests, only after convention is accepted | May be colocated when an accepted evaluator/test contract explicitly permits it. |
+| Bundle source and manifest inputs, only after acceptance | Immutable bundle construction remains governed and versioned. |
+| Cross-links | Contracts, schemas, fixtures, tests, validators, consumers, receipts, proofs, release gates, correction paths, and rollback targets. |
 
-| Does **NOT** belong in `policy/` | Lives in |
+The current README indexes selected lanes such as `access/`, `ai_builder/`, `bundles/`, `consent/`, `contract/`, `data/`, `decision/`, `domains/`, `evidence/`, and `focus/`. That list is orientation, not a complete recursive inventory or proof of runtime maturity.
+
+### 5.2 What does not belong
+
+| Does not belong in `policy/` | Owning responsibility |
 |---|---|
-| Policy decision outputs, run receipts, validation receipts | `data/receipts/` *(PROPOSED / verify repo convention)* |
-| EvidenceBundle proof objects | `data/proofs/` |
-| Release manifests, rollback cards, correction notices | `release/` |
-| Policy runtime evaluator code | `packages/policy-runtime/` |
-| EvidenceBundle resolution code | `packages/evidence-resolver/` |
-| Repo-wide validators that call policy | `tools/validators/` or `tools/promotion_gate/` |
-| Machine schemas for policy objects | `schemas/contracts/v1/policy/` |
-| Semantic contract docs for policy objects | `contracts/` |
-| Narrative explanation of policy design | `docs/architecture/` or `docs/doctrine/` |
-| Raw source data, candidate source payloads, or connector output | `data/raw/` or `data/quarantine/` |
+| Semantic definitions and field intent | `contracts/` |
+| JSON Schema, DTOs, enums, and field shape | `schemas/contracts/v1/` |
+| Raw source payloads, credentials, or registry instances | connectors, secure configuration, or accepted registry/lifecycle roots |
+| EvidenceBundles, proof packs, citations, or claim truth | evidence/proof roots |
+| RAW through PUBLISHED data | `data/<phase>/` |
+| Emitted decisions, receipts, reviews, validation reports, or proofs | accepted lifecycle, receipt, proof, review, or report roots |
+| Evaluator, adapter, CLI, server, or reusable package code | `packages/`, `apps/`, `runtime/`, or `tools/` by responsibility |
+| Generic fixtures and tests | `fixtures/` and `tests/` |
+| Release manifests, approvals, rollback cards, corrections, or withdrawals | `release/` |
+| Public routes, UI, MapLibre logic, exports, or AI responses | governed application/runtime roots |
+| Real protected locations, living-person records, DNA/genomic content, consent tokens, or secrets | denied; use synthetic/redacted references where testing is authorized |
+| A second independently evolving policy root | forbidden without an accepted ADR |
 
-> [!CAUTION]
-> A policy file can be domain-specific, but the root still stays `policy/`. Do not create root-level domain policy folders such as `fauna_policy/`, `archaeology_policy/`, or `people_policy/`.
+### 5.3 Domain placement
+
+Policy may be domain-specific, but domains remain segments inside the responsibility root:
+
+```text
+policy/domains/<domain>/
+```
+
+Do not create root-level policy homes such as `fauna_policy/`, `archaeology_policy/`, `people_policy/`, `rego/`, or `policy_rules/`.
+
+[Back to top](#top)
 
 ---
 
@@ -244,305 +387,447 @@ The scope below aligns the ADR with Directory Rules’ `policy/` responsibility.
 
 ### 6.1 Positive
 
-- **Single authority for executable policy.** The policy lane no longer has two homes that can both claim authority.
-- **Better audit and replay.** A policy decision can point to one bundle root, one policy digest, and one review chain.
-- **Cleaner Promotion Gate wiring.** CI, Conftest / OPA invocations, validators, and release checks do not choose between roots at runtime.
-- **Compatibility discipline.** `policies/`, where it exists, becomes an explicitly classified root with a README contract.
-- **Reviewer leverage.** Path-review can cite ADR-0003 rather than re-opening the singular/plural debate.
+- **Deterministic source lineage.** Reviewers and receipts can identify one reviewed policy source.
+- **No parallel authority.** A plural compatibility path cannot silently diverge.
+- **Simpler evaluator and bundle contracts.** Consumers do not choose between authoring roots.
+- **Better audit and replay.** Policy digest, bundle identity, rule review, and rollback lineage are easier to reconstruct.
+- **Lower current migration cost.** No tracked plural root was found at the pinned snapshot.
+- **Reviewer clarity.** Pull requests can cite one stable placement rule.
+- **Safer future compatibility.** Mirror/export requirements are explicit before a compatibility consumer appears.
 
-### 6.2 Negative / costs
+### 6.2 Costs and tradeoffs
 
-- **One-time migration.** If `policies/` currently carries content, history-preserving moves and reference updates are required.
-- **Contributor habit.** External examples often use `policies/`; KFM reviewers need to redirect new rules to `policy/`.
-- **Tooling updates.** Conftest, OPA, editor, CI, workflow, and package references that point to plural paths must be updated.
-- **Documentation churn.** READMEs, examples, architecture docs, and path references may need a cleanup pass.
+- External tools or examples that assume `policies/` may need configuration, an export, or a documented mirror.
+- A future compatibility root adds generator, parity, provenance, ownership, retention, and cleanup burden.
+- If file paths participate in policy hashes or bundle identity, path migration changes identity and requires explicit old/new mapping.
+- Acceptance does not solve evaluator, bundle, input-contract, outcome-normalization, receipt, consumer, or release-integration work.
+- Policy-significant changes need broader review than ordinary documentation changes.
 
-### 6.3 Neutral / bounded
+### 6.3 Bounded effects
 
-- **No schema-home change.** This ADR does not alter ADR-0001 or the `schemas/contracts/v1/...` default.
-- **No external API surface change.** Public clients still go through governed interfaces; they do not read policy files directly.
-- **No policy semantics change by itself.** Moving a rule path should not change the rule’s meaning. However, if `spec_hash` or bundle digest includes file paths, old/new digests MUST be recorded in migration receipts.
-- **No publication shortcut.** This ADR is a placement decision; it does not publish, approve, or relax any policy gate.
+- No schema-home change.
+- No contract/schema/policy split change.
+- No policy semantics change merely from selecting a root.
+- No public API or UI contract change.
+- No migration is performed by this ADR revision.
+- No release or publication is approved.
+- No compatibility root is created by documenting its allowed class.
+
+[Back to top](#top)
 
 ---
 
 ## 7. Alternatives considered
 
-| Alternative | Pros | Cons | Outcome |
-|---|---|---|---|
-| **A. `policy/` canonical; `policies/` compatibility** *(chosen)* | Aligns with Directory Rules; one policy substrate; simplest reviewer rule; supports mirror/legacy migration. | Requires migration if plural currently carries content. | **Selected.** |
-| B. `policies/` canonical; `policy/` compatibility | Familiar to many OPA users; may reduce friction with outside examples. | Conflicts with KFM Directory Rules; requires amending canonical root doctrine; perpetuates singular/plural ambiguity. | Rejected. |
-| C. Both paths allowed as parallel authorities | Lowest immediate migration cost. | Directly creates the drift this ADR prevents; breaks auditability and replay. | Rejected. |
-| D. Defer decision | No immediate action. | Keeps an open verification item alive; each policy PR re-litigates path placement. | Rejected. |
-| E. Collapse policy into `schemas/`, `contracts/`, or `tools/` | Co-locates related validation or tooling material. | Violates the contract/schema/policy split: `contracts/` means, `schemas/` shapes, `policy/` decides, `tests/` proves. | Rejected. |
+<details>
+<summary><strong>A. Use <code>policy/</code> as canonical and reserve <code>policies/</code> for compatibility — selected</strong></summary>
+
+Aligns with Directory Rules and the current tracked tree, minimizes migration, supports one review and bundle lineage, and allows a bounded mirror/export only when a real consumer requires it.
+
+</details>
+
+<details>
+<summary><strong>B. Make <code>policies/</code> canonical</strong></summary>
+
+This may resemble some external examples, but it conflicts with current Directory Rules, current repository placement, policy workflow paths, and the root README. It would require a reviewed doctrine/ADR change and migration.
+
+</details>
+
+<details>
+<summary><strong>C. Allow both roots as co-authority</strong></summary>
+
+Rejected because dual authorship breaks deterministic source, bundle, review, replay, drift, and rollback chains.
+
+</details>
+
+<details>
+<summary><strong>D. Defer the decision</strong></summary>
+
+Rejected because the current repository already needs a stable authoring rule before evaluator and bundle work matures.
+
+</details>
+
+<details>
+<summary><strong>E. Collapse policy into contracts, schemas, tests, tools, or applications</strong></summary>
+
+Rejected because meaning, shape, admissibility, proof, checking, and runtime implementation have different owners and review burdens.
+
+</details>
+
+[Back to top](#top)
 
 ---
 
-## 8. Migration plan
+## 8. Migration, compatibility, and retirement
 
-Migration only applies if live repo inspection finds `policies/` content, conflicting references, or plural-root CI wiring. If the repo already uses `policy/` only, this plan becomes a verification checklist.
+### 8.1 Current snapshot classification
 
-### 8.1 Starting-state matrix
-
-| Starting state | Action |
-|---|---|
-| Only `policy/` exists | Verify README, CI policy root, and no stale plural references. No move needed. |
-| Only `policies/` exists | Open ADR acceptance PR, create `policy/`, move policy content under `policy/`, leave `policies/` as mirror/legacy or remove after verification. |
-| Both exist and match | Declare `policy/` canonical, mark `policies/` as mirror, add parity check, then decide whether to keep or remove mirror. |
-| Both exist and differ | Freeze writes, inventory differences, migrate authoritative rules into `policy/`, open drift entry, and require policy-owner review before merge. |
-| Neither exists | Create `policy/README.md` first, then add policy folders under canonical root as needed. Do not create `policies/`. |
-
-### 8.2 Steps
-
-1. **Inspect repo state.** Identify whether `policy/`, `policies/`, both, or neither exist. Enumerate files, READMEs, package references, workflow references, and policy invocations. *Status: NEEDS VERIFICATION.*
-2. **Confirm ADR number and path.** Verify `docs/adr/` index and rename if ADR-0003 is already taken.
-3. **Choose compatibility class for `policies/`.** Default to `mirror` if regenerated for external or IDE convenience; default to `legacy` if frozen pending removal. Use `deprecated`, `external-export`, or `transitional` only with explicit README rationale.
-4. **Move content under git.** Use `git mv` for any authoritative content moving from `policies/` to `policy/` so history is preserved.
-5. **Update references.** Search and update code, docs, schemas, fixtures, tests, workflows, examples, and CI. Search targets should include `conftest`, `opa`, `.github/workflows`, `tools/`, `packages/`, `apps/`, `docs/`, `tests/`, and `pipeline_specs/`.
-6. **Create / update root READMEs.** `policy/README.md` declares canonical authority. `policies/README.md`, if present, declares compatibility class and canonical source.
-7. **Record migration mapping.** Add a migration manifest in the repo’s migration-manifest home *(PROPOSED: `migrations/policy/ADR-0003-policy-home.yaml`; verify convention)* listing old path, new path, old digest, new digest, and reviewer.
-8. **Record deprecation / compatibility state.** Add or update `control_plane/deprecation_register.yaml` if `policies/` remains, is sunset, or is removed.
-9. **Update Directory Rules references.** On ADR acceptance, mark the policy-home open question resolved by ADR-0003 and cite this ADR in relevant Directory Rules sections.
-10. **Add validation.** Add CI or validator checks that prevent direct `.rego` authorship under `policies/` unless the root is a generated mirror and parity is proven.
-11. **Run validation and rollback dry-run.** Run policy tests, path validators, README checks, and rollback-card dry-run before merge.
-12. **Close migration.** Remove `policies/` only after the verification window passes, or keep it as a declared mirror / export root with parity checks.
-
----
-
-## 9. Rollback plan
-
-Rollback is warranted if the migration breaks policy evaluation, release gates, CI, reproducible digests, or downstream consumers before the verification window closes.
-
-1. **Stop further policy edits.** Freeze both roots during rollback triage.
-2. **Preserve new work.** Identify any policy content authored after the migration and carry it forward; rollback must not delete new substantive rules.
-3. **Revert path migration commits.** Use `git revert` or an approved rollback branch, preserving history and review trail.
-4. **Restore references temporarily.** Point CI / Conftest / OPA invocations back to the last known working path only for the rollback window.
-5. **Emit rollback evidence.** Create a rollback card under the repo’s release rollback-card convention *(PROPOSED: `release/rollback_cards/ADR-0003-policy-home.md`)* and a rollback receipt under the repo’s receipt convention *(PROPOSED: `data/receipts/rollback/`)*.
-6. **Re-open drift state.** Restore the Directory Rules open-question wording or add a drift entry until a replacement ADR lands.
-7. **Supersede if necessary.** Mark this ADR `superseded` only if the decision itself is replaced; otherwise leave it proposed / blocked with a documented failure reason.
-
-> [!CAUTION]
-> Rollback may restore path topology, but it must not restore parallel authority as a normal state. Any temporary plural-root authority must be bounded by a rollback card, owner, and sunset date.
-
----
-
-## 10. Validation
-
-The decision is enforceable through evidence, not narrative.
-
-| Validation surface | What it checks | Status |
-|---|---|---|
-| `policy/README.md` exists | Canonical root declares purpose, authority, status, inputs, outputs, exclusions, owners, and links. | PROPOSED / NEEDS VERIFICATION |
-| `policies/README.md` exists if `policies/` exists | Compatibility class is explicit and canonical source is `policy/`. | PROPOSED / NEEDS VERIFICATION |
-| No direct `.rego` authorship under `policies/` | Prevents independent policy evolution. | PROPOSED validator |
-| Policy gate config points to `policy/` | CI / OPA / Conftest reads one bundle root. | NEEDS VERIFICATION |
-| Mirror parity check, if `policies/` is kept | Generated mirror matches canonical digest or manifest. | PROPOSED validator |
-| Migration manifest exists for moves | Old → new path mapping and digests are auditable. | PROPOSED / verify path |
-| Deprecation register updated | Compatibility / sunset state is visible. | PROPOSED |
-| Drift register or verification backlog updated | Repo conflicts and unresolved items are not hidden. | PROPOSED |
-| Rollback dry-run recorded | Maintainer can reverse the change without guessing. | PROPOSED |
-| Policy tests still pass | The move did not weaken allow / deny / abstain behavior. | NEEDS VERIFICATION |
-
-### 10.1 Suggested checks for implementation PRs
-
-These are examples, not a required command contract:
-
-```bash
-# PROPOSED: adapt to live repo tooling and shell conventions.
-git grep -n "policies/\|policy/" -- . ':!docs/adr/ADR-0003-policy-singular-canonical.md'
-find policy policies -maxdepth 3 -type f 2>/dev/null | sort
-```
+At the pinned snapshot:
 
 ```text
-Expected evidence after acceptance:
-- `policy/README.md` declares canonical authority.
-- `policies/README.md`, if present, declares compatibility class.
-- Policy-gate configuration resolves to `policy/`.
-- Any plural-root content is generated, frozen, deprecated, exported, or transitional — never independently authored.
+policy/     -> PRESENT; canonical responsibility root in repository guidance
+policies/   -> NOT TRACKED; no migration, mirror, deprecation, or sunset action required now
 ```
+
+The smallest sound current action is therefore **document and validate the boundary**, not create a compatibility root or migration merely to demonstrate the ADR.
+
+### 8.2 Starting-state matrix
+
+| Observed state | Governed action |
+|---|---|
+| Only `policy/` exists | Verify root README, workflows, consumers, and no stale plural references. Do not create `policies/`. |
+| Only `policies/` exists | Freeze new authorship; inventory consumers and history; create/review the canonical `policy/` migration; retain or remove the plural path only through a classified compatibility plan. |
+| Both exist and are identical | Declare singular source, establish mirror provenance/parity, then justify retention or retire the mirror. |
+| Both exist and differ | Freeze both, open drift, identify reviewed authoritative rules, migrate deliberately, preserve identities/digests, and require policy-owner review. |
+| Neither exists | Create only the singular root contract when policy work is admitted. Do not create a plural placeholder. |
+| `policies/` is required by an external consumer | Prefer a generated external export or mirror with explicit consumer, recipe, digest, and retention controls. |
+
+### 8.3 Future migration sequence
+
+A future singular/plural path migration should:
+
+1. Pin the repository commit, exact file inventory, consumers, generators, workflows, package references, and current digests.
+2. Freeze direct policy authorship during reconciliation.
+3. Confirm ADR acceptance and compatibility class.
+4. Identify which source is reviewed authority; do not infer authority from path age alone.
+5. Move authoritative content with history-preserving Git operations.
+6. Update contracts, schemas, fixtures, tests, validators, workflows, applications, packages, docs, and pipeline references in one governed plan.
+7. Record old/new paths, content identities, bundle effects, consumers, validation, and review.
+8. Add the paired migration rollback or forward-fix record required by [`migrations/rollback/`](../../migrations/rollback/README.md).
+9. Populate [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) when a compatibility path is retained, deprecated, or sunset.
+10. Add parity/freeze enforcement before allowing the compatibility path to remain.
+11. Run policy-shape, policy-boundary, evaluator-native, consumer, replay, correction, and rollback checks appropriate to the matured system.
+12. Close the migration only after consumers no longer write or read the plural path as authority.
+
+### 8.4 Migration-record placement
+
+The current [`migrations/README.md`](../../migrations/README.md) defines database, schema, data, graph, and rollback lanes; it does **not** establish `migrations/policy/`.
+
+Therefore:
+
+- this ADR does not invent a policy migration path;
+- the primary migration record home for a future root-level policy move is **NEEDS VERIFICATION**;
+- the future change must either use an existing reviewed migration lane whose responsibility genuinely fits, or update migration governance through an accepted decision;
+- a paired recovery record belongs under `migrations/rollback/` only after the primary migration lane is resolved;
+- release rollback cards remain in `release/`, distinct from migration recovery records.
+
+### 8.5 Compatibility retention contract
+
+A retained `policies/` root must record:
+
+- compatibility class;
+- canonical source path and immutable identity;
+- generator/export recipe or frozen-state proof;
+- consumer list and owners;
+- direct-edit prohibition;
+- parity or drift check;
+- license/rights and sensitivity implications, if any;
+- retention rationale;
+- review or sunset criteria;
+- migration and rollback/forward-fix references;
+- correction path if downstream consumers received divergent material.
+
+### 8.6 Acceptance gates
+
+ADR-0003 should not move to `accepted` until reviewers verify at least:
+
+- [ ] Exact ADR identity, filename, metadata, and index status agree.
+- [ ] `policy/` root contract and Directory Rules agree.
+- [ ] Current tracked tree has no independently evolving plural policy root.
+- [ ] All known policy-source consumers and workflows resolve to singular lineage or an immutable derived bundle.
+- [ ] The allowed compatibility classes and direct-edit prohibition are accepted.
+- [ ] Migration-record placement is resolved before any path move is approved.
+- [ ] Deprecation, drift, correction, and rollback obligations are reviewable.
+- [ ] Owners and required reviewers are verified beyond placeholder role names.
+- [ ] Acceptance does not imply evaluator activation, policy correctness, release approval, or publication.
+
+[Back to top](#top)
+
+---
+
+## 9. Rollback and reversal
+
+### 9.1 Decision reversal
+
+If the architectural choice is later replaced:
+
+1. A successor ADR must explicitly supersede ADR-0003.
+2. Both ADRs and [`INDEX.md`](./INDEX.md) must carry reciprocal status/link updates.
+3. The successor must state the new canonical root, consumer impact, migration, validation, correction, and rollback plan.
+4. Existing policy source and released decisions must remain replayable or visibly bounded where replay is impossible.
+5. Historical ADR text is retained; it is not deleted.
+
+### 9.2 Future path-migration rollback
+
+If a later policy-path migration fails:
+
+1. Freeze further policy changes and public/release-affecting promotion.
+2. Preserve post-migration substantive rules; do not discard them during topology rollback.
+3. Restore the last verified evaluator/bundle/consumer configuration through a reviewed rollback or forward fix.
+4. Re-run policy-native tests, shape checks, boundary checks, consumer checks, receipt/replay checks, and affected release/correction checks.
+5. Record the migration recovery under the reviewed `migrations/rollback/` contract.
+6. Use release rollback/correction records only when released or public state is affected.
+7. Keep any temporary dual-path state owner-bound, time-bounded, and non-authoritative.
+
+### 9.3 Documentation-change rollback
+
+This v1.2 update changes only this ADR at the same path. Rollback is the prior target blob:
+
+```text
+cef5528d81cf3d67ff77f43a1cfece441a87bfe2
+```
+
+Reverting the documentation change does not require changing policy source, schemas, fixtures, tests, workflows, runtime, release state, or published artifacts.
+
+[Back to top](#top)
+
+---
+
+## 10. Validation and enforcement
+
+### 10.1 Current enforcement snapshot
+
+| Surface | Current bounded evidence | Limitation |
+|---|---|---|
+| ADR index validator and docs control plane | Can verify numbered ADR identity, path/H1/index coherence, status normalization, and supersession links. | Does not accept the decision or prove policy behavior. |
+| [`policy-test.yml`](../../.github/workflows/policy-test.yml) | Requires singular paths, inventories policy readiness, and fails on unreviewed evaluator/bundle/test drift. | Intentionally evaluates no policy. |
+| [`policy-boundary-guards.yml`](../../.github/workflows/policy-boundary-guards.yml) | Executes 15 structural/static/API trust-boundary tests. | Not policy-root parity or evaluator proof. |
+| Schema/fixture harness | Exercises two valid and three invalid `PolicyDecision` shape fixtures. | Shape does not prove rules, inputs, reasons, obligations, or bundle identity. |
+| [`Makefile`](../../Makefile) | Names `policy/` in a readiness-marker command. | Command is TODO-only and exits successfully without evaluation. |
+| Root/path inspection | Confirms `policy/` tracked and `policies/` absent at the pinned tree. | No continuous guard prevents a plural root from being introduced later. |
+
+### 10.2 Proposed repository guards after acceptance
+
+| Guard | Expected behavior | Suggested owning surface |
+|---|---|---|
+| No parallel policy root | Fail when tracked policy source appears under `policies/` without an accepted compatibility declaration. | `tests/policy/` or governance validator |
+| Compatibility README contract | If `policies/` exists, require class, canonical source, provenance, direct-edit prohibition, consumers, and sunset/review criteria. | Documentation/control-plane validator |
+| Canonical consumer path | Detect workflows, packages, apps, and scripts that load plural source as authority. | `tests/policy/` plus repository search |
+| Mirror/export parity | Verify generated compatibility output against a manifest or digest. | `tools/validators/policy/` |
+| Direct-edit prevention | Reject non-generated edits to compatibility content. | CI path guard |
+| Migration closure | Require migration, rollback/forward-fix, deprecation, consumer, and validation records for path moves. | Migration/control-plane validation |
+| Bundle lineage | Bind active immutable bundle to singular reviewed source identity. | Policy-runtime/bundle tests |
+| Replay and correction | Reproduce representative decisions and invalidate/repair affected consumers after change. | Integration/release tests |
+
+These guards are **PROPOSED**. Their exact filenames and commands require implementation evidence and accepted ownership.
+
+### 10.3 Suggested scoped checks
+
+Use repository-native commands when available. The following are reviewer-oriented examples, not claims that a complete policy suite exists:
+
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+make boundary-guards-ci
+```
+
+```bash
+# Inspect tracked singular/plural references without treating matches as automatic defects.
+git ls-tree -r --name-only HEAD -- policy policies
+git grep -nE '(^|[^[:alnum:]_])policies/' -- .
+git grep -nE '(^|[^[:alnum:]_])policy/' -- .
+```
+
+Do not use the current `make policy` zero exit as proof; it is an explicit TODO readiness marker.
+
+### 10.4 Acceptance interpretation
+
+A passing documentation, schema, boundary, parity, or evaluator check proves only its declared scope. It does not establish:
+
+- factual truth;
+- evidence closure;
+- source authority;
+- rights or sensitivity clearance;
+- consent;
+- release approval;
+- publication;
+- production parity;
+- independent review;
+- complete rollback readiness.
+
+[Back to top](#top)
 
 ---
 
 ## 11. Open questions and NEEDS VERIFICATION
 
-- **ADR numbering.** ADR-0003 follows the supplied filename and title. Verify the live ADR index before merge.
-- **Target path.** `docs/adr/ADR-0003-policy-singular-canonical.md` is PROPOSED until the repo’s ADR naming convention is inspected.
-- **Current repo state.** Whether `policy/`, `policies/`, both, or neither exist in the live repo is NEEDS VERIFICATION.
-- **Current Directory Rules path.** `docs/doctrine/directory-rules.md` is the proposed canonical home in Directory Rules; verify actual repo path and adjust links.
-- **Compatibility class.** Decide whether any remaining `policies/` root is `mirror`, `legacy`, `deprecated`, `external-export`, or `transitional`.
-- **Subtree shape.** Appendix A is PROPOSED and aligns with Directory Rules, but actual modules and filenames must be checked against live policy work.
-- **Policy digest behavior.** Confirm whether `spec_hash`, bundle digest, or policy provenance includes file paths. Record old/new digests if paths affect hashes.
-- **CI enforcement.** Confirm whether repo CI can block direct `.rego` changes under `policies/`.
-- **CODEOWNERS.** Confirm listed owners and reviewers against the live `CODEOWNERS` file.
-- **Migration manifest home.** Confirm where policy path migrations belong under `migrations/`.
-- **Rollback artifact home.** Confirm whether rollback cards and rollback receipts use the proposed homes or a repo-specific convention.
+1. **Human acceptance.** Who has authority to accept ADR-0003, and what reviewed evidence must accompany the status transition?
+2. **Policy stewardship.** CODEOWNERS routes files to one verified account, but accepted policy, architecture, docs, security/privacy, and release role assignments remain unverified.
+3. **Evaluator and bundle.** Which evaluator, version, bundle format, selector, signature, distribution, and rollback contract will become accepted?
+4. **Input completeness.** The current `PolicyInputBundle` shape is permissive; the required governed context remains unresolved.
+5. **Outcome normalization.** How do engine-native `ALLOW`, `RESTRICT`, `HOLD`, `DENY`, `ABSTAIN`, and `ERROR` values map to the closed outward `ANSWER | ABSTAIN | DENY | ERROR` schema without collapsing semantics?
+6. **Migration-record home.** Which current migration lane owns a future policy-root move, or is a migration-governance amendment required?
+7. **Future compatibility consumer.** Is any real tool or downstream consumer expected to require `policies/`? Do not create the root until that requirement is verified.
+8. **Hash identity.** Do policy source paths contribute to `spec_hash`, bundle digest, attestation, cache key, or receipt identity?
+9. **Continuous root guard.** Which validator or workflow will prevent a plural root from silently becoming authority?
+10. **Deprecation register.** When should a compatibility row be created, and who owns sunset/review enforcement?
+11. **Replay and correction.** Which decision instances, releases, caches, exports, maps, and AI responses must be reevaluated after a policy-source change?
+12. **Branch protection.** Which policy and ADR checks are required by repository rules, and is independent approval enforced?
+13. **Complete inventory.** A full recursive policy source/package/consumer graph and current workflow result set remain to be pinned for acceptance review.
+14. **Policies-path history.** No tracked plural root exists now; historical branches, releases, or external consumers may still require bounded verification before declaring migration debt permanently closed.
+
+[Back to top](#top)
 
 ---
 
-## 12. Related docs and references
+## 12. Evidence basis and related documents
 
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — proposed canonical Directory Rules path; verify live link.
-- [`docs/adr/ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) — schema-home rule; exact filename NEEDS VERIFICATION.
-- `docs/adr/ADR-0002-*.md` — existence and subject NEEDS VERIFICATION.
-- [`policy/README.md`](../../policy/README.md) — canonical root README; PROPOSED / verify presence.
-- [`policies/README.md`](../../policies/README.md) — compatibility root README; PROPOSED if root exists.
-- [`control_plane/deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) — compatibility / deprecation tracking; PROPOSED / verify presence.
-- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — drift tracking; PROPOSED / verify presence.
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — open verification tracking; PROPOSED / verify presence.
+| Source | Status used here | Supports | Does not prove |
+|---|---|---|---|
+| [`docs/adr/INDEX.md`](./INDEX.md) | **CONFIRMED repository evidence** | Exact ADR identity, path, and effective proposed status | Acceptance or implementation |
+| [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | **CONFIRMED placement doctrine at pinned blob** | Singular canonical policy root, compatibility classes, no parallel authority, migration discipline | Active evaluator, policy correctness, or publication |
+| [`policy/README.md`](../../policy/README.md) | **CONFIRMED repository guidance** | Current root boundary, mixed maturity, unbound evaluator, separate responsibility surfaces | Production enforcement or accepted bundle |
+| [`policy-test.yml`](../../.github/workflows/policy-test.yml) | **CONFIRMED workflow definition** | Explicit readiness holds and singular path dependencies | Current/future run success or policy evaluation |
+| [`policy-boundary-guards.yml`](../../.github/workflows/policy-boundary-guards.yml) | **CONFIRMED workflow definition** | Fifteen bounded trust-boundary tests | Evaluator or release proof |
+| [`Makefile`](../../Makefile) | **CONFIRMED command surface** | TODO marker points to `policy/` | Executable policy suite |
+| [`ADR-0001`](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED decision** | Machine-schema home relationship | Policy-root acceptance |
+| [`ADR-0002`](./ADR-0002-contracts-vs-schemas-split.md) | **PROPOSED effective status** | Meaning/shape/admissibility/proof separation | Policy runtime activation |
+| [`migrations/README.md`](../../migrations/README.md) and [`migrations/rollback/README.md`](../../migrations/rollback/README.md) | **CONFIRMED repository guidance** | Existing migration lanes and required paired recovery records | A policy-specific migration home |
+| [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | **CONFIRMED empty register** | Current absence of recorded policy-path deprecation | No future need for a compatibility row |
+| [`CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED routing** | Current GitHub review route | Human approval, role authority, or separation of duties |
+| KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0 | **PROPOSED authoring contract selected for this revision** | Same-path update, evidence grading, no-loss, link/anchor/metadata validation, scoped draft-PR delivery | Repository authority or ADR acceptance |
 
-[⬆ Back to top](#adr-0003--policy-singular-is-canonical-policies-is-compatibility)
+### Related documents
+
+- [ADR operating contract](./README.md)
+- [Canonical ADR index](./INDEX.md)
+- [ADR-0001 — schema home](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
+- [ADR-0002 — contracts vs schemas split](./ADR-0002-contracts-vs-schemas-split.md)
+- [Directory Rules](../doctrine/directory-rules.md)
+- [Contract / schema / policy split](../architecture/contract-schema-policy-split.md)
+- [Policy root README](../../policy/README.md)
+- [Policy semantic contracts](../../contracts/policy/README.md)
+- [Policy machine schemas](../../schemas/contracts/v1/policy/README.md)
+- [Policy shape fixtures](../../fixtures/contracts/v1/policy/README.md)
+- [Policy test lane](../../tests/policy/README.md)
+- [Policy validator lane](../../tools/validators/policy/README.md)
+- [Policy runtime placeholder](../../packages/policy-runtime/README.md)
+- [Policy readiness workflow](../../.github/workflows/policy-test.yml)
+- [Policy boundary workflow](../../.github/workflows/policy-boundary-guards.yml)
+- [Migration root](../../migrations/README.md)
+- [Migration rollback lane](../../migrations/rollback/README.md)
+- [Deprecation register](../../control_plane/deprecation_register.yaml)
+- [Drift register](../registers/DRIFT_REGISTER.md)
+- [Verification backlog](../registers/VERIFICATION_BACKLOG.md)
+
+[Back to top](#top)
 
 ---
 
-## Appendix A — Proposed `policy/` subtree
+## Appendix A — Lineage topology from v1.1
 
 <details>
-<summary>Click to expand the proposed canonical subtree under <code>policy/</code></summary>
+<summary><strong>Show the v1.1 illustrative policy topology preserved as planning lineage</strong></summary>
+
+The prior ADR proposed the following topology. It remains **PROPOSED planning lineage**, not a current recursive-tree claim and not a reason to create missing directories:
 
 ```text
 policy/
-├── README.md                       # canonical root README; Directory Rules §15 contract
-├── bundles/                        # Rego / OPA bundles or equivalents
+├── README.md
+├── bundles/
 │   ├── consent/
-│   │   ├── basis.rego
-│   │   └── expiration.rego
 │   ├── revocation/
-│   │   └── revoke_delta.rego
 │   ├── obligations/
-│   │   └── propagation.rego
 │   └── shared/
-│       └── reason_object.rego      # structured DENY / ABSTAIN reasons
-├── fixtures/                       # policy-specific fixtures
-├── tests/                          # policy tests
-├── runtime/                        # runtime gate policy
-│   ├── evidence_resolution.rego
-│   ├── focus_mode.rego
-│   └── abstain.rego
-├── promotion/                      # promotion gate policy
-│   ├── gate_a_schema.rego
-│   ├── gate_b_identity.rego
-│   ├── gate_c_provenance.rego
-│   ├── gate_d_catalog_closure.rego
-│   ├── gate_e_signing.rego
-│   ├── gate_f_dedupe.rego
-│   └── gate_g_evidence_drawer.rego
-├── sensitivity/                    # sensitivity classes and redaction rules
-│   ├── classes.rego
-│   └── precise_points_default_deny.rego
-├── rights/                         # rights, source terms, license enforcement
-│   ├── recognition.rego
-│   └── intersection.rego
-├── domains/                        # domain-lane policy modules
-│   ├── fauna/
-│   ├── archaeology/
-│   └── people-dna-land/
-└── release/                        # release-gate policy
-    └── release_ready.rego
+├── fixtures/
+├── tests/
+├── runtime/
+├── promotion/
+├── sensitivity/
+├── rights/
+├── domains/
+└── release/
 ```
 
-> [!NOTE]
-> **Status:** PROPOSED. This tree aligns the ADR with Directory Rules’ policy-root shape. Exact folders, domain names, and module filenames must be resolved against the live `policy/` tree before implementation.
+Before implementing any missing lane, inspect current policy source, child READMEs, evaluator/bundle design, test convention, consumers, and Directory Rules. Create only the smallest responsibility-bearing path required by accepted work.
 
 </details>
 
-[⬆ Back to top](#adr-0003--policy-singular-is-canonical-policies-is-compatibility)
+[Back to top](#top)
 
 ---
 
 ## Appendix B — Reviewer checklist
 
 <details>
-<summary>Click to expand the reviewer checklist for any PR touching <code>policy/</code> or <code>policies/</code></summary>
+<summary><strong>Show the reviewer checklist for changes touching <code>policy/</code> or a proposed <code>policies/</code> compatibility surface</strong></summary>
 
-- [ ] **Responsibility identified.** The touched file’s primary responsibility is executable policy, policy fixture, policy test, or compatibility-root documentation.
-- [ ] **Right root.** New `.rego`, policy fixtures, and policy tests land under `policy/`, not `policies/`.
-- [ ] **No new policy authority root.** No `policy_rules/`, `rego/`, `governance_policy/`, root-level domain policy folder, or other parallel policy home is introduced without ADR.
-- [ ] **Compatibility root classified.** If `policies/` exists, its README declares `legacy`, `mirror`, `deprecated`, `external-export`, or `transitional`.
-- [ ] **No independent plural evolution.** Any `policies/` change is a generated mirror, frozen legacy maintenance, external export, or explicitly documented transitional step.
-- [ ] **Migration discipline followed.** Any move from `policies/` to `policy/` preserves history, updates references, records a migration manifest, and has rollback evidence.
-- [ ] **Gate wiring checked.** OPA / Conftest / promotion / runtime policy invocations point to `policy/` unless explicitly checking mirror parity.
-- [ ] **Receipts and decisions are not misplaced.** Receipts, proofs, release manifests, rollback cards, and correction notices do not live in `policy/`.
-- [ ] **Rule cited in PR description.** The PR cites ADR-0003 and the relevant Directory Rules sections.
-- [ ] **Open verification recorded.** Unverified owners, paths, digests, CI behavior, and links are tracked before merge.
+- [ ] **Primary responsibility:** Every changed file is policy source, policy-native proof explicitly allowed by convention, or compatibility documentation/output.
+- [ ] **Canonical root:** New reviewed policy source lands under `policy/`.
+- [ ] **No parallel authority:** No second rule source is created under `policies/`, `rego/`, `policy_rules/`, or a domain root.
+- [ ] **Compatibility class:** A plural path, if present, declares one allowed class.
+- [ ] **Canonical source and provenance:** Mirror/export inputs, command, digest, and generator identity are explicit.
+- [ ] **No direct plural authorship:** Changes are generated, frozen legacy maintenance, or an explicitly bounded transition.
+- [ ] **Consumers:** Evaluator, CI, apps, packages, scripts, and downstream tools point to singular lineage or an immutable derived bundle.
+- [ ] **Contracts and schemas:** Meaning and shape remain in their owning roots.
+- [ ] **Instances:** Decisions, receipts, proofs, reviews, and releases remain outside policy source.
+- [ ] **Sensitive cases:** Rights, consent, living-person, DNA/genomic, archaeology/cultural, rare-species, infrastructure, and harmful-precision paths fail closed and use synthetic fixtures.
+- [ ] **Migration:** Path moves preserve history, identity/digests, consumers, validation, and a paired recovery record.
+- [ ] **Deprecation and sunset:** Retained compatibility state is registered and owner-bound.
+- [ ] **Replay/correction:** Affected decisions, caches, releases, exports, maps, and AI outputs are identified.
+- [ ] **Evidence limits:** Passing checks are not described as policy truth, release approval, or publication.
+- [ ] **PR basis:** The PR cites ADR-0003 and Directory Rules §§2.4, 4, 5, 6.5, and 8.
 
 </details>
 
-[⬆ Back to top](#adr-0003--policy-singular-is-canonical-policies-is-compatibility)
+[Back to top](#top)
 
 ---
 
-## Appendix C — README skeletons
+## Appendix C — Compatibility README minimum contract
 
 <details>
-<summary>Click to expand a proposed <code>policy/README.md</code> skeleton</summary>
+<summary><strong>Show the minimum README contract for a future <code>policies/</code> compatibility root</strong></summary>
 
-```markdown
-# policy
-
-## Purpose
-Executable KFM policy substrate for admissibility, release, rights, sensitivity, runtime, and promotion gates.
-
-## Authority level
-Canonical.
-
-## Status
-PROPOSED / CONFIRMED after repo inspection.
-
-## What belongs here
-Rego / OPA policy bundles or equivalents, policy fixtures, policy tests, runtime policy, promotion policy, sensitivity policy, rights policy, domain policy, and release-gate policy.
-
-## What does NOT belong here
-Policy decision outputs, receipts, proofs, release manifests, rollback cards, schema files, semantic contract docs, source data, or narrative-only policy docs.
-
-## Inputs
-Reviewed policy changes, source-rights decisions, sensitivity rules, promotion-gate requirements, runtime safety requirements, and ADR-backed changes.
-
-## Outputs
-Policy decisions, gate checks, and validation support consumed by CI, runtime, release, and review workflows.
-
-## Related
-- ADR-0003 — `policy/` is canonical; `policies/` is compatibility.
-- Directory Rules.
-```
-
-</details>
-
-<details>
-<summary>Click to expand a proposed <code>policies/README.md</code> skeleton</summary>
+A future `policies/README.md` must be complete enough to prevent accidental authority:
 
 ```markdown
 # policies
 
-## Purpose
-Compatibility root for legacy, mirrored, deprecated, external-export, or transitional policy material whose canonical home is `policy/`.
+> Compatibility-only policy surface. Canonical reviewed policy source is `policy/`.
 
-## Authority level
-Compatibility: mirror | legacy | deprecated | external-export | transitional.
+## Compatibility class
+mirror | legacy | deprecated | external-export | transitional
 
-## Status
-PROPOSED / LEGACY / DEPRECATED after repo inspection.
+## Canonical source
+`policy/` plus immutable source identity or bundle lineage.
 
-## What belongs here
-Only generated mirror content, frozen legacy references, external-export material, or documented transitional files whose canonical source is `policy/`.
+## Purpose and consumers
+Why this path exists and which verified consumers require it.
 
-## What does NOT belong here
-New policy rules, direct `.rego` authorship, promotion-gate authority, runtime policy authority, or source-of-truth policy tests.
+## Generation or freeze contract
+Command/recipe and provenance for mirrors/exports, or explicit frozen-state rules for legacy material.
 
-## Inputs
-Generated output from `policy/` or explicitly documented legacy / export material.
+## Direct-edit policy
+Direct policy authorship is forbidden. Describe the CI or review guard.
 
-## Outputs
-Compatibility support for downstream consumers, IDEs, or migration windows. No canonical policy decisions originate here.
+## Parity and drift
+Manifest, digest, or inventory comparison and failure behavior.
 
-## Related
-- ADR-0003 — `policy/` is canonical; `policies/` is compatibility.
-- `policy/README.md`.
+## Retention and sunset
+Owner, review date/criterion, migration status, and removal or continued-retention rationale.
+
+## Migration and rollback
+Primary migration reference plus paired rollback/forward-fix record.
+
+## Authority boundary
+No policy decision, release approval, evidence truth, or publication authority originates here.
 ```
+
+Do not create this README or root until a tracked compatibility requirement exists and the path is admitted through review.
 
 </details>
 
-[⬆ Back to top](#adr-0003--policy-singular-is-canonical-policies-is-compatibility)
+[Back to top](#top)
 
 ---
 
-**Last updated:** 2026-05-15 · **Status:** proposed · **ADR ID:** ADR-0003
+## Change history
+
+| Version | Date | Change |
+|---|---|---|
+| v1.0 | 2026-05-10 | Initial proposed decision. |
+| v1.1 | 2026-05-15 | Tightened evidence boundary, validation, compatibility README, migration, and rollback guidance. |
+| v1.2 | 2026-07-23 | Repository-grounded same-path modernization; confirmed ADR identity and singular tracked root, recorded absent plural root, corrected migration-path assumptions, bounded policy maturity, and strengthened acceptance, enforcement, rollback, and evidence sections without accepting the decision. |
+
+**Last updated:** 2026-07-23 · **Status:** proposed · **ADR ID:** ADR-0003
