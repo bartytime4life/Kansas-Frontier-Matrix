@@ -1,335 +1,209 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/examples/focus-flows/readme
-title: Focus Flow Examples README
-type: standard
-version: v0.1.0
-status: draft
-owners: TODO(owner): examples steward; TODO(owner): Focus Mode steward; TODO(owner): governed API steward; TODO(owner): governed AI steward; TODO(owner): evidence steward; TODO(owner): policy steward; TODO(owner): UI steward; TODO(owner): docs steward
-created: NEEDS VERIFICATION - greenfield stub existed before 2026-06-30 expansion
-updated: 2026-06-30
-policy_label: public-review
-related: [../README.md, ../evidence_bundles/README.md, ../../docs/architecture/governed-ai/FOCUS_FLOW.md, ../../docs/architecture/governed-api.md, ../../docs/architecture/ui/EVIDENCE_DRAWER.md, ../../apps/explorer-web/src/features/focus_panel/README.md, ../../apps/governed-api/README.md, ../../policy/focus/README.md, ../../data/proofs/evidence_bundle/README.md, ../../docs/doctrine/directory-rules.md]
-tags: [kfm, examples, focus-mode, focus-flow, governed-ai, governed-api, evidence-drawer, finite-outcomes, evidence-bundle, evidenceref, citation-validation, ai-receipt, no-browser-model, non-authoritative, fixtures, cite-or-abstain]
-notes: ["This README replaces a greenfield stub at `examples/focus_flows/README.md`.", "Focus-flow examples are illustrative and review aids only; Focus Flow doctrine lives under `docs/architecture/governed-ai/FOCUS_FLOW.md`, UI feature boundaries live under `apps/explorer-web/src/features/focus_panel/`, and runtime/API implementation belongs under `apps/governed-api/` or ADR-resolved implementation roots.", "Examples must not become route implementations, runtime traces, model prompts, EvidenceBundles, proofs, receipts, release decisions, policy decisions, schemas, contracts, tests, or public payloads by placement.", "README presence does not prove example files, validators, schemas, fixtures, CI checks, governed API route behavior, Focus Panel wiring, AIReceipt emission, citation validation, or executable `policy/focus/` behavior."]
+title: `examples/focus_flows/` — Governed Focus Flow Examples
+type: readme; nested-example-lane; non-authoritative-demonstration-boundary
+version: v0.2.0
+status: repository-grounded draft; STATIC_WALKTHROUGH; non-authoritative; validation-bounded; do-not-publish
+owners: NEEDS VERIFICATION — examples steward and listed specialist reviewers
+updated: 2026-07-24
+supersedes: v0.1.x content at the same path; no operational object, runtime behavior, release, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: public-review; synthetic-first; fail-closed; cite-or-abstain; correction-aware
+current_path: examples/focus_flows/README.md
+review_packet_id: kfm-md-examples-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, current parent examples contract, complete prior file,
+  and referenced repository boundaries / PROPOSED normalized lane contract and future
+  example-validator profile / UNKNOWN executable child payloads, runtime parity, deployed
+  consumers, and production effects / NEEDS VERIFICATION owners, accepted schemas,
+  validators, fixtures, CI, host rendering, correction propagation, and retirement drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: fe9442ef01ed676e11ccea2796c6fe4090dd1e7e
+  prior_blob: 3f3ab032b323f2a850e5b131a847f9a32e10b2fb
+  parent_examples_blob: d3fbce80c82106935288d59a708bbb1a0118591e
+  inventory_method: complete target read plus bounded linked-file evidence; no example execution or runtime inspection
+notes:
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "This change is Markdown only and does not create a fixture, test, schema, policy, proof, receipt, route, release, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Focus Flow Examples
+# `examples/focus_flows/` — Governed Focus Flow Examples
 
-Illustrative Focus Mode flow examples for showing governed request behavior, finite outcomes, Evidence Drawer handoffs, cite-or-abstain behavior, policy denial, citation failure, and safe negative states without becoming runtime authority.
+> **One-line purpose.** Teach the request → policy → evidence → adapter → citation → policy → finite-envelope flow, including safe negative states and Evidence Drawer handoffs.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: examples" src="https://img.shields.io/badge/root-examples%2F-6f42c1">
-  <img alt="Family: Focus Flow examples" src="https://img.shields.io/badge/family-Focus%20Flow%20examples-purple">
-  <img alt="Authority: non authoritative" src="https://img.shields.io/badge/authority-non--authoritative-critical">
-  <img alt="Outcomes: finite" src="https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-2ea44f">
-</p>
-
-**Status:** draft / example-lane guidance  
-**Owners:** `TODO(owner): examples steward` · `TODO(owner): Focus Mode steward` · `TODO(owner): governed API steward` · `TODO(owner): governed AI steward` · `TODO(owner): evidence steward` · `TODO(owner): policy steward` · `TODO(owner): UI steward` · `TODO(owner): docs steward`  
-**Path:** `examples/focus_flows/README.md`  
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Example contract](#example-contract) · [Focus-flow guardrails](#focus-flow-guardrails) · [Lifecycle relationship](#lifecycle-relationship) · [Suggested layout](#suggested-layout) · [Validation checklist](#validation-checklist) · [Status notes](#status-notes) · [Evidence ledger](#evidence-ledger)
+[![Status: static walkthrough](https://img.shields.io/badge/status-STATIC__WALKTHROUGH-f59e0b?style=flat-square)](#status)
+[![Authority: example only](https://img.shields.io/badge/authority-example%20only-b42318?style=flat-square)](#authority-level)
+[![Publication: denied](https://img.shields.io/badge/publication-denied-b42318?style=flat-square)](#what-does-not-belong-here)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
 > [!IMPORTANT]
-> Files under `examples/focus_flows/` are examples. They are not Focus Mode route implementations, governed API responses, model traces, prompt logs, EvidenceBundles, ProofPacks, citation-validation reports, AIReceipts, policy decisions, release decisions, public payloads, schemas, contracts, validators, fixtures, or tests. If an example becomes operationally useful, promote the operational version through the correct responsibility root and keep this copy synthetic or clearly fixture-scoped.
+> `examples/` is canonical for demonstrations, not for the objects or behavior demonstrated. A polished file, merged pull request, parser pass, or screenshot does not prove source authority, runtime parity, evidence closure, policy permission, release approval, or KFM publication.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Contract](#example-contract) · [Guardrails](#guardrails) · [Inventory](#current-bounded-inventory) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
-## Scope
+## Purpose
 
-`examples/focus_flows/` is a documentation and review aid for showing how Focus Mode should behave at the trust membrane.
+Teach the request → policy → evidence → adapter → citation → policy → finite-envelope flow, including safe negative states and Evidence Drawer handoffs.
 
-Use this lane to demonstrate:
+This lane exists to make review and learning faster. It must not become a parallel contract, schema, policy, fixture, test, proof, receipt, source registry, runtime, release, or publication authority.
 
-- how a bounded `FocusModeRequest` should move through governed API, policy precheck, EvidenceRef-to-EvidenceBundle resolution, model adapter, citation validation, policy postcheck, and finite response-envelope assembly;
-- how `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` examples differ;
-- how Evidence Drawer handoffs should preserve evidence support and limitations;
-- how policy denial and sensitive-lane fail-closed behavior should look without leaking restricted detail;
-- how missing, stale, conflicting, or citation-failed evidence should produce `ABSTAIN`, not a weaker answer;
-- how schema, adapter, resolver, or infrastructure failure should produce `ERROR`, not invented content;
-- how examples should avoid direct public reads from RAW, WORK, QUARANTINE, PROCESSED, unpublished CATALOG/TRIPLET, proof stores, receipt stores, source registries, model runtimes, graph/vector stores, or canonical/internal stores;
-- how examples should use synthetic, generalized, redacted, or clearly non-real data.
+## Authority level
 
-This folder should make reviewers faster. It should not become a shortcut around governed API implementation, schemas, validators, policy review, EvidenceBundle support, release gates, or tests.
+**Non-authoritative example lane; runtime behavior belongs to the governed API, explorer UI, policy, evidence resolver, and AI adapter.**
 
----
+Operational meaning remains owned by the relevant `docs/`, `contracts/`, `schemas/`, `policy/`, implementation, `tests/`, `fixtures/`, `data/`, and `release/` surfaces.
 
-## Path posture
+## Status
 
-The target file existed as a greenfield stub:
+| Field | Bounded result |
+|---|---|
+| Path | `examples/focus_flows/README.md` |
+| Version | `v0.2.0` |
+| Maturity | `STATIC_WALKTHROUGH` |
+| Prior blob | `3f3ab032b323f2a850e5b131a847f9a32e10b2fb` |
+| Recursive payload inventory | `UNKNOWN` beyond the bounded inventory below |
+| Executable entrypoint / observed run | `NOT ESTABLISHED` |
+| Public/release readiness | `DENY BY PLACEMENT` |
 
-```text
-examples/focus_flows/README.md
-```
+## What belongs here
 
-Current placement evidence:
+- synthetic FocusModeRequest-like sketches
+- `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` walkthroughs
+- Evidence Drawer handoff examples
+- policy-denial, stale-evidence, citation-failure, and adapter-error demonstrations
+- accessibility and non-color trust-state notes
 
-- `examples/README.md` describes examples as walkthroughs and example assemblies, including focus mock flows.
-- `examples/evidence_bundles/README.md` establishes the local examples pattern: illustrative, non-authoritative, and not proof or release authority by placement.
-- `docs/architecture/governed-ai/FOCUS_FLOW.md` defines the Focus Mode request-to-envelope flow and says there is no browser-to-model shortcut and no answer without resolved EvidenceBundles and citation validation.
-- `apps/explorer-web/src/features/focus_panel/README.md` defines the Focus Panel as a UI feature boundary that submits bounded Focus requests through governed API and renders finite outcomes.
-- `docs/architecture/governed-api.md` defines the governed API as the public trust membrane and the finite-outcome path for public clients.
-- `docs/architecture/ui/EVIDENCE_DRAWER.md` defines Evidence Drawer as a governed UI trust panel that consumes EvidenceBundle-derived projections rather than becoming an evidence store.
-- `policy/focus/README.md` is currently a greenfield bundle stub, so executable Focus policy remains `NEEDS VERIFICATION`.
-- Directory Rules treat root placement as authority-bearing: examples can demonstrate behavior, but operational artifacts belong in their owning roots.
+Every new file must be visibly synthetic or safely transformed, name its learning objective, identify the operational home it does not replace, and declare its expected finite outcome.
 
-Therefore this README treats `examples/focus_flows/` as **CONFIRMED path presence / DRAFT example-lane guidance / NON-AUTHORITATIVE by placement**.
-
----
-
-## Repo fit
-
-| Responsibility | Correct home | Boundary |
-|---|---|---|
-| Example Focus Mode walkthroughs and synthetic flow payloads | `examples/focus_flows/` | This lane. Illustrative only. |
-| Example EvidenceBundle snippets used by Focus examples | [`../evidence_bundles/`](../evidence_bundles/README.md) | Example lane only; not proof authority. |
-| Focus Flow doctrine | [`../../docs/architecture/governed-ai/FOCUS_FLOW.md`](../../docs/architecture/governed-ai/FOCUS_FLOW.md) | Architecture and governance boundary. |
-| Focus Panel UI feature boundary | [`../../apps/explorer-web/src/features/focus_panel/`](../../apps/explorer-web/src/features/focus_panel/README.md) | UI feature source and finite-state rendering when implemented. |
-| Governed API runtime boundary | [`../../apps/governed-api/`](../../apps/governed-api/README.md) | Trust membrane and route behavior when implemented. |
-| Evidence Drawer architecture | [`../../docs/architecture/ui/EVIDENCE_DRAWER.md`](../../docs/architecture/ui/EVIDENCE_DRAWER.md) | UI evidence inspection architecture. |
-| Operational EvidenceBundle support | [`../../data/proofs/evidence_bundle/`](../../data/proofs/evidence_bundle/README.md) | Proof-family lane, not examples. |
-| Focus policy | [`../../policy/focus/`](../../policy/focus/README.md) | Current stub only; executable policy remains unverified. |
-| AI/runtime receipts | `data/receipts/ai/` or accepted receipt home | Process memory; examples may point to synthetic refs only. |
-| Schemas | `schemas/contracts/v1/focus/`, `schemas/contracts/v1/runtime/`, `schemas/contracts/v1/ui/` | Machine shape; examples must not create schema authority. |
-| Contracts | `contracts/...` | Semantic object meaning; examples must not define contracts. |
-| Tests and fixtures | `tests/`, `fixtures/` | Operational validation strategy; examples are not tests by placement. |
-| Release decisions | `release/` | ReleaseManifest, PromotionDecision, rollback, correction, withdrawal, signatures. |
-
----
-
-## Accepted material
-
-Accepted files should be small, reviewable, synthetic or safely redacted, and clearly marked as examples.
-
-| Accepted item | Use | Required markings |
-|---|---|---|
-| Outcome examples | Demonstrate `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` response behavior. | `example: true`, `authority: non_authoritative_example`, `do_not_publish: true`. |
-| Flow walkthroughs | Explain request-to-envelope behavior step by step. | Synthetic IDs and explicit implementation boundary. |
-| Negative-state examples | Show policy denial, citation failure, unresolved evidence, stale evidence, source conflict, adapter error, or schema error. | No substantive restricted claim and a visible reason code. |
-| Evidence Drawer handoff examples | Show how Focus answer spans could link to evidence inspection. | Must state that UI consumes governed projections, not this folder. |
-| Sensitive-boundary examples | Show safe `DENY` or generalized alternatives for sensitive lanes. | No exact restricted locations, exposure hints, or reconstructive detail. |
-| Accessibility/state examples | Show UI states, keyboard/screen-reader expectations, and non-color trust labels. | Non-runtime example status and no component implementation claim. |
-| README or notes | Explain example scope, limitations, and expected validator behavior. | Include evidence boundary and non-authority warning. |
-
-Examples may use JSON, YAML, Markdown, or small tabular snippets. Keep examples deterministic, synthetic, easy to diff, and visibly non-authoritative.
-
----
-
-## Exclusions
+## What does NOT belong here
 
 | Do not place here | Correct home or action |
 |---|---|
-| Real Focus API responses, production payloads, route fixtures, route handlers, DTOs, middleware, adapter code, or runtime traces | `apps/governed-api/`, `apps/explorer-web/`, `tests/`, `fixtures/`, or accepted implementation roots |
-| Model prompts, raw prompt logs, raw model outputs, hidden reasoning, chain-of-thought, provider transcripts, model runtime files, or adapter internals | Runtime/receipt roots only where policy permits; never example truth |
-| Operational EvidenceBundles, proof indexes, ProofPacks, citation-validation records, or proof manifests | `data/proofs/` under accepted proof-family or domain lanes |
-| AIReceipts, RunReceipts, TransformReceipts, PolicyDecision receipts, validation receipts, telemetry receipts, or rollback receipts | `data/receipts/` or accepted receipt lanes |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, REGISTRY, or ROLLBACK lifecycle payloads | `data/<phase>/...` under lifecycle rules |
-| SourceDescriptor, source registry, rights registry, sensitivity registry, layer registry, or release registry records | `data/registry/`, `control_plane/`, or ADR-resolved homes |
-| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, release signatures, or changelog entries | `release/` |
-| Contracts, schemas, policy bundles, validators, tests, fixtures, apps, packages, pipelines, or workflows | Their canonical responsibility roots |
-| Exact sensitive locations, living-person data, DNA/genomic records, archaeology site locations, rare species locations, critical infrastructure detail, private land/parcel joins, credentials, secrets, proprietary terms, or reconstructive redaction clues | Quarantine, restrict, redact, generalize, synthesize, or deny |
-| Generated summaries presented as evidence | Governed AI surfaces may cite evidence; generated text is not evidence |
+| route handlers, DTOs, middleware, model adapters, or production responses | `apps/governed-api/`, `apps/explorer-web/`, packages, tests, and fixtures |
+| model prompts, hidden reasoning, provider transcripts, or raw model output | governed runtime/receipt lanes where policy permits |
+| operational EvidenceBundles, AIReceipts, policy decisions, or release records | `data/proofs/`, `data/receipts/`, `policy/`, and `release/` |
+| direct reads from RAW, WORK, QUARANTINE, internal stores, or model runtimes | forbidden; use governed interfaces |
+| restricted detail or reconstructive redaction clues | synthetic/generalized example or `DENY` |
 
----
+## Inputs
+
+Synthetic map/time/layer context, example evidence references, finite policy states, and current architecture documents.
+
+Input provenance, real-versus-synthetic status, rights, sensitivity, and the operational object being illustrated must be explicit.
+
+## Outputs
+
+Static flow walkthroughs and synthetic finite response sketches; never runtime responses.
+
+Outputs may be reviewed, corrected, or proposed for separate fixture/test graduation. They do not become operational merely by being copied.
+
+## Validation
+
+- Confirm the browser path goes through the governed API and never directly to a model or internal store.
+- Confirm missing/stale/conflicting/citation-invalid evidence yields `ABSTAIN`.
+- Confirm rights/sensitivity/role prohibition yields `DENY` or a safe generalized alternative.
+- Confirm schema/adapter/resolver/runtime failure yields `ERROR` without claim leakage.
+- Validate links, Mermaid, example markers, and accessibility labels.
+
+No examples-specific runner or complete validator was verified. A Markdown/source check proves only the declared static scope.
+
+## Review burden
+
+Examples/docs plus governed API, governed AI, policy, evidence, UI, and affected domain reviewers.
+
+CODEOWNERS routing is not stewardship, approval evidence, policy permission, or release authorization.
+
+## Related folders
+
+- [Parent examples contract](../README.md)
+- [Hydrology walkthrough](hydrology_huc12_question.md)
+- [Focus Flow doctrine](../../docs/architecture/governed-ai/FOCUS_FLOW.md)
+- [Governed API doctrine](../../docs/architecture/governed-api.md)
+- [Evidence Drawer](../../docs/architecture/ui/EVIDENCE_DRAWER.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0004, ADR-0019, ADR-0020, ADR-0025, ADR-0027, and ADR-0028. None is promoted by this example lane.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@fe9442ef01ed676e11ccea2796c6fe4090dd1e7e`
+- **Method:** complete target read plus bounded linked-file verification
+- **Execution/runtime inspection:** not performed
+- **Human review:** pending
+
+Re-review when an example is added, made runnable, mirrored into fixtures/tests, invalidated by an operational contract, or affected by rights/sensitivity/release changes.
 
 ## Example contract
 
-Every example in this lane should answer eight questions without claiming operational maturity:
+Every consequential example must declare:
 
-| Question | Expected answer |
-|---|---|
-| What Focus scenario is being illustrated? | A bounded, synthetic scenario with map/time/layer/feature or non-map context. |
-| What request is being illustrated? | A synthetic `FocusModeRequest`-like sketch, not a runtime request. |
-| What evidence support is implied? | Synthetic or example `EvidenceRef` / EvidenceBundle-like refs, with cite-or-abstain posture. |
-| What policy posture applies? | `allow`, `deny`, `restrict`, `hold`, `abstain`, or `error` as illustrative policy state, not actual policy authority. |
-| What citation behavior applies? | Pass/fail/hold example only; no validator implementation claim. |
-| What outcome should render? | Exactly one of `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
-| What should the UI show? | Finite state, citations or reason code, Evidence Drawer handoff where allowed, and safe limitations. |
-| What must not happen? | No direct model call, no direct data-root read, no restricted-detail leak, no public publication by example. |
-
-Illustrative JSON should include a visible marker like this:
-
-```json
-{
-  "example": true,
-  "authority": "non_authoritative_example",
-  "do_not_publish": true,
-  "scenario_id": "kfm://example/focus-flow/NEEDS-VERIFICATION",
-  "surface": "focus_mode",
-  "expected_outcome": "ABSTAIN",
-  "reason": "illustrative example only; Focus route, schema, policy, validator, and receipt behavior NEEDS VERIFICATION",
-  "forbidden_use": [
-    "runtime_response",
-    "model_trace",
-    "proof_record",
-    "receipt_record",
-    "policy_decision",
-    "release_artifact"
-  ]
-}
+```yaml
+example: true
+authority: non_authoritative_example
+do_not_publish: true
+maturity: STATIC_WALKTHROUGH
+real_vs_synthetic: explicit
+expected_outcome: ANSWER | ABSTAIN | DENY | ERROR | HOLD | QUARANTINE | NOT_APPLICABLE
+operational_home: "<verified owning root or NEEDS VERIFICATION>"
+validation_boundary: "<exact checks performed>"
+correction_trigger: "<contract, policy, source, runtime, or release change>"
 ```
 
-> [!WARNING]
-> Do not copy example IDs, example coordinates, example request IDs, example evidence refs, example policy decisions, example release refs, or example answer text into operational data. Examples are allowed to teach flow shape and failure behavior; they are not allowed to certify facts.
+`ANSWER` requires support appropriate to the scenario. Missing, stale, conflicting, or citation-invalid evidence yields `ABSTAIN`; prohibited rights/sensitivity/role exposure yields `DENY` or `HOLD`; tool/schema/runtime failure yields `ERROR`.
 
----
-
-## Focus-flow guardrails
+## Guardrails
 
 | Risk | Guardrail |
 |---|---|
-| Example becomes runtime authority | Keep examples visibly synthetic and non-authoritative; operational Focus behavior belongs under apps, schemas, policy, tests, fixtures, receipts, proofs, and release roots. |
-| Browser-to-model shortcut | Every example must show the browser going through governed API or explicitly mark direct model calls as forbidden. |
-| Scope becomes proof | Map camera, visible layers, clicked features, user selection, and time locks may scope a request; they do not prove a claim. |
-| Claim without evidence | Claim-bearing `ANSWER` examples must show EvidenceRef/EvidenceBundle support and citation validation; otherwise the example should render `ABSTAIN`. |
-| Citation failure becomes weak answer | Citation-failed examples must end in `ABSTAIN` or safe negative state, not partial truth. |
-| Sensitive lane leaks | Archaeology, rare species, living-person, DNA/genomic, cultural, sovereignty, infrastructure, private land, and exact-location examples fail closed by default. |
-| Policy bypass | Policy precheck and postcheck must be represented in examples that touch sensitive or claim-bearing content. |
-| AIReceipt overclaim | AIReceipt-like refs are process memory, not proof, release, or truth authority. |
-| Telemetry leakage | Telemetry examples must not include prompt text, raw evidence, restricted geometry, secrets, or full bundle copies. |
-| Accessibility omission | Trust-bearing examples should include non-color labels and keyboard/screen-reader considerations where UI behavior is illustrated. |
-| Hidden reasoning leakage | Do not include chain-of-thought or model-private reasoning. Show answer support, cited evidence, limitations, and finite outcome reasons. |
+| Browser-to-model shortcut | Every flow uses the governed API. |
+| Example becomes runtime response | Use visible non-authority markers and synthetic IDs. |
+| Policy is skipped | Represent precheck and postcheck for claim-bearing or sensitive scenarios. |
+| Prompt or reasoning leaks | Exclude chain-of-thought, raw prompts, provider transcripts, and private evidence. |
 
----
+## Current bounded inventory
 
-## Lifecycle relationship
+`hydrology_huc12_question.md` is the only verified child walkthrough in this lane.
 
-```mermaid
-flowchart LR
-    EX[examples/focus_flows<br/>illustrative only] -. teaches .-> FOCUS[docs/architecture/governed-ai/FOCUS_FLOW.md<br/>Focus Flow doctrine]
-    EX -. teaches .-> PANEL[apps/explorer-web/src/features/focus_panel<br/>UI feature boundary]
-    EX -. teaches .-> API[apps/governed-api<br/>trust membrane]
-    EX -. teaches .-> DRAWER[docs/architecture/ui/EVIDENCE_DRAWER.md<br/>evidence inspection]
-    EX -. pairs with .-> EBEX[examples/evidence_bundles<br/>illustrative EvidenceBundle examples]
+Omission is not evidence of absence, retirement, or permission to create speculative children.
 
-    RAW[data/raw] --> WORK[data/work / data/quarantine]
-    WORK --> PROC[data/processed]
-    PROC --> CAT[data/catalog / data/triplets]
-    CAT --> PUB[data/published]
-    PUB --> REL[release]
-    PROOF[data/proofs/evidence_bundle] -. supports .-> API
-    POLICY[policy/focus<br/>stub in this pass] -. gates .-> API
-    API --> OUT[ANSWER / ABSTAIN / DENY / ERROR]
-    OUT --> PANEL
-    OUT --> DRAWER
+## Open verification register
 
-    EX -. "must not replace" .-> API
-    EX -. "must not publish" .-> PUB
-    EX -. "must not decide" .-> REL
-    EX -. "must not prove" .-> PROOF
-
-    classDef example fill:#f3e5f5,stroke:#6f42c1,color:#202124;
-    classDef doc fill:#e7f1ff,stroke:#2b6cb0,color:#202124;
-    classDef data fill:#fff3cd,stroke:#8a6d3b,color:#202124;
-    classDef gate fill:#d1e7dd,stroke:#0f5132,color:#202124;
-    class EX,EBEX example;
-    class FOCUS,DRAWER doc;
-    class RAW,WORK,PROC,CAT,PUB,PROOF data;
-    class API,PANEL,POLICY,REL,OUT gate;
-```
-
-The examples lane is outside the lifecycle spine. It can illustrate the spine, but it cannot become a phase of the spine.
-
----
-
-## Suggested layout
-
-This tree is **PROPOSED**. Confirm actual examples, schema paths, test strategy, and validator expectations before adding files.
-
-```text
-examples/focus_flows/
-├── README.md
-├── outcomes/
-│   ├── answer.example.json
-│   ├── abstain.example.json
-│   ├── deny.example.json
-│   └── error.example.json
-├── walkthroughs/
-│   ├── claim-question-to-answer.walkthrough.md
-│   ├── evidence-unresolved-to-abstain.walkthrough.md
-│   ├── sensitive-lane-to-deny.walkthrough.md
-│   └── adapter-failure-to-error.walkthrough.md
-├── drawer-handoffs/
-│   └── answer-span-to-evidence-drawer.example.json
-├── sensitive-boundaries/
-│   ├── archaeology-deny.example.json
-│   ├── rare-species-deny.example.json
-│   ├── living-person-deny.example.json
-│   └── infrastructure-deny.example.json
-└── ui-states/
-    ├── loading.example.json
-    ├── validating.example.json
-    ├── citation-failed.example.json
-    ├── stale-evidence.example.json
-    └── cancelled.example.json
-```
-
-Recommended file naming:
-
-| Pattern | Use |
-|---|---|
-| `*.example.json` | Non-authoritative JSON example. |
-| `*.example.yaml` | Non-authoritative YAML example. |
-| `*.walkthrough.md` | Narrative walkthrough, not operational proof. |
-| `README.md` | Local explanation and boundaries. |
-
----
-
-## Validation checklist
-
-Before adding or changing examples here, verify:
-
-- [ ] The file is marked as an example and non-authoritative.
-- [ ] The file contains no real sensitive coordinates, living-person data, DNA/genomic data, archaeology site locations, rare species locations, critical infrastructure detail, private parcel joins, secrets, credentials, proprietary terms, or reconstructive redaction clues.
-- [ ] The example does not create schema, contract, policy, proof, receipt, release, source-registry, route, model-runtime, fixture, or test authority.
-- [ ] Any IDs are synthetic or clearly marked `NEEDS VERIFICATION`.
-- [ ] Any claim-bearing `ANSWER` demonstrates EvidenceRef/EvidenceBundle support, citation validation, policy allow, release/review posture, limitations, and Evidence Drawer handoff.
-- [ ] Any evidence-missing, stale, conflicting, or citation-failed example renders `ABSTAIN`.
-- [ ] Any sensitive, rights-unclear, role-forbidden, unreleased, or restricted example renders `DENY` or a safely generalized non-sensitive alternative.
-- [ ] Any malformed request, schema issue, adapter failure, resolver outage, or infrastructure failure renders `ERROR` without claim leakage.
-- [ ] Any public-facing example uses exactly one governed finite outcome: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
-- [ ] Any telemetry example excludes prompt text, raw evidence, restricted geometry, full EvidenceBundle contents, secrets, credentials, and model-private reasoning.
-- [ ] Relative links from this README still resolve.
-- [ ] Operational fixtures, if needed, are placed under the accepted test/fixture strategy rather than silently becoming examples.
-
----
-
-## Status notes
-
-| Item | Status | Notes |
+| Item | Status | Required evidence |
 |---|---:|---|
-| Target path presence | CONFIRMED | `examples/focus_flows/README.md` existed as a greenfield stub before this update. |
-| Examples root | CONFIRMED README | `examples/README.md` describes walkthroughs and example assemblies, including focus mock flows. |
-| EvidenceBundle examples pattern | CONFIRMED README | `examples/evidence_bundles/README.md` defines the example-lane non-authority pattern. |
-| Focus Flow doctrine | CONFIRMED architecture doc | `docs/architecture/governed-ai/FOCUS_FLOW.md` defines the governed request-to-envelope path and finite outcomes. |
-| Focus Panel feature boundary | CONFIRMED README | `apps/explorer-web/src/features/focus_panel/README.md` defines Focus Panel as governed UI feature boundary and blocks direct model/internal-store access. |
-| Governed API architecture | CONFIRMED architecture doc | `docs/architecture/governed-api.md` defines governed API as the trust membrane and finite-outcome path. |
-| Governed API app README | CONFIRMED README | `apps/governed-api/README.md` defines the intended executable trust-membrane app boundary while marking runtime maturity gaps. |
-| Evidence Drawer architecture | CONFIRMED architecture doc | `docs/architecture/ui/EVIDENCE_DRAWER.md` defines governed evidence inspection and rejects direct browser access to canonical evidence stores. |
-| Focus policy bundle | CONFIRMED stub | `policy/focus/README.md` is a greenfield bundle stub; executable policy remains unverified. |
-| Example payload inventory | UNKNOWN | This edit did not verify child files beyond this README. |
-| Focus schemas, validators, fixtures, CI checks, route behavior, AIReceipt emission, citation validation, policy enforcement | NEEDS VERIFICATION | No runtime or validation enforcement was proven by this README. |
-| Public release readiness | DENY | Examples cannot publish, prove, release, or answer claims. |
+| Recursive subtree and non-Markdown inventory | `UNKNOWN` | Pinned tree and file classification |
+| Runnable entrypoints and dependency closure | `UNKNOWN` | Manifests, locks, commands, no-network inputs, observed runs |
+| Schema/contract conformance | `NEEDS VERIFICATION` | Accepted versions and validation results |
+| Examples-specific validation and CI | `NEEDS VERIFICATION` | Repository-owned validator, tests, fixtures, workflow |
+| Host rendering and accessibility | `NEEDS VERIFICATION` | Render/browser inspection and accepted checks |
+| Correction and retirement consumers | `NEEDS VERIFICATION` | Inbound references, owner, replacement, rollback |
 
----
+## No-loss ledger
 
-## Evidence ledger
+| Prior material | Disposition |
+|---|---|
+| Stable path and `doc_id` | Preserved |
+| Non-authority and trust-membrane warnings | Preserved and strengthened |
+| Accepted material and exclusions | Preserved and normalized |
+| Finite outcomes and fail-closed behavior | Preserved |
+| Domain/source-role/sensitivity guardrails | Preserved |
+| Lifecycle and operational-home separation | Preserved |
+| Prior evidence ledger and limitations | Consolidated into current evidence/verification sections |
+| Speculative child trees | Removed as proposals; no child is retired by omission |
+| Operational payload, code, fixture, test, or release change | None |
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous target file | CONFIRMED | Target existed as a greenfield stub. | Did not define boundaries, accepted material, or exclusions. |
-| [`../README.md`](../README.md) | CONFIRMED README | `examples/` is for walkthroughs and example assemblies, including focus mock flows. | It is short and status `PROPOSED`. |
-| [`../evidence_bundles/README.md`](../evidence_bundles/README.md) | CONFIRMED README | Establishes non-authoritative example-lane pattern, accepted material, exclusions, finite outcomes, and no-public-path behavior. | It covers EvidenceBundle examples, not Focus Flow examples directly. |
-| [`../../docs/architecture/governed-ai/FOCUS_FLOW.md`](../../docs/architecture/governed-ai/FOCUS_FLOW.md) | CONFIRMED architecture doc | Focus Mode request-to-envelope doctrine, no browser-to-model shortcut, EvidenceBundle resolution, citation validation, policy gates, finite outcomes. | Implementation specifics remain PROPOSED / NEEDS VERIFICATION in that doc. |
-| [`../../apps/explorer-web/src/features/focus_panel/README.md`](../../apps/explorer-web/src/features/focus_panel/README.md) | CONFIRMED README | Focus Panel UI boundary, finite states, governed API-only posture, no direct model/internal store access, Evidence Drawer handoffs. | Implementation files, route wiring, schemas, tests, fixtures, telemetry, and accessibility remain NEEDS VERIFICATION. |
-| [`../../docs/architecture/governed-api.md`](../../docs/architecture/governed-api.md) | CONFIRMED architecture doc | Governed API as trust membrane, finite outcomes, public clients do not read internal stores directly. | Endpoint catalogue and runtime implementation remain PROPOSED / NEEDS VERIFICATION. |
-| [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | CONFIRMED README | Intended governed API app boundary and finite `RuntimeResponseEnvelope` posture. | Route handlers, DTOs, middleware, authorization, deployment, logs, dashboards, and CI pass state remain UNKNOWN / NEEDS VERIFICATION. |
-| [`../../docs/architecture/ui/EVIDENCE_DRAWER.md`](../../docs/architecture/ui/EVIDENCE_DRAWER.md) | CONFIRMED architecture doc | Evidence Drawer consumes governed evidence projections and does not become source/proof/policy/release authority. | Implementation maturity remains UNKNOWN / PROPOSED in that doc. |
-| [`../../data/proofs/evidence_bundle/README.md`](../../data/proofs/evidence_bundle/README.md) | CONFIRMED README | EvidenceBundle proof-family lane supports EvidenceRef closure, cite-or-abstain, citation validation, governed answers, and no direct public access. | Schema, validators, route behavior, inventory, and CI enforcement remain NEEDS VERIFICATION. |
-| [`../../policy/focus/README.md`](../../policy/focus/README.md) | CONFIRMED stub | Focus policy path exists. | Only a greenfield stub; no executable policy was proven. |
-| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | Responsibility-root placement, examples root, data lifecycle, trust membrane, proof/release separation, no topic-as-authority shortcut. | Some path claims remain PROPOSED / NEEDS VERIFICATION per the doctrine's own notes. |
-| [`../../SKELETON_MAP.md`](../../SKELETON_MAP.md) | CONFIRMED scaffold map | Mentions examples as walkthroughs and Focus mock tests in the greenfield skeleton orientation. | Skeleton map is scaffold context, not implementation proof. |
+### Change history
 
-[Back to top](#top)
+#### v0.2.0 — 2026-07-24
+
+- normalized the first twelve H2 sections to the current folder contract;
+- classified the lane as `STATIC_WALKTHROUGH`;
+- preserved substantive boundaries, negative states, safety controls, and prior rollback identity;
+- removed speculative tree pressure without treating unlisted files as absent;
+- changed Markdown only.
+
+<p align="right"><a href="#top">Back to top</a></p>

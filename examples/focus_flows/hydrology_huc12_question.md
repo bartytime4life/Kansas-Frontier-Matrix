@@ -1,278 +1,166 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://example/focus-flow/hydrology-huc12-question
 title: Hydrology HUC12 Focus Question Example
-type: example
-version: v0.1.1
-status: draft
-owners: TODO(owner): examples steward; TODO(owner): Focus Mode steward; TODO(owner): governed API steward; TODO(owner): hydrology steward; TODO(owner): evidence steward; TODO(owner): policy steward; TODO(owner): UI steward; TODO(owner): docs steward
-created: NEEDS VERIFICATION - greenfield placeholder existed before 2026-06-30 expansion
-updated: 2026-06-30
-policy_label: public-review
-related: [README.md, ../evidence_bundles/README.md, ../../docs/architecture/governed-ai/FOCUS_FLOW.md, ../../docs/architecture/governed-api.md, ../../apps/explorer-web/src/features/focus_panel/README.md, ../../apps/governed-api/README.md, ../../docs/domains/hydrology/README.md, ../../data/proofs/evidence_bundle/README.md, ../../data/catalog/domain/hydrology/README.md, ../../data/proofs/hydrology/README.md, ../../data/published/layers/hydrology/README.md, ../../policy/focus/README.md]
-tags: [kfm, examples, focus-flow, focus-mode, hydrology, huc12, watershed, governed-api, governed-ai, evidence-ref, evidence-bundle, citation-validation, finite-outcomes, abstain, deny, no-public-path, non-authoritative, cite-or-abstain]
-notes: ["This file replaces a greenfield placeholder at `examples/focus_flows/hydrology_huc12_question.md`.", "This example is synthetic and non-authoritative. It does not assert real HUC12 facts, water conditions, flood status, regulatory determinations, emergency guidance, or source truth.", "The expected outcome is `ABSTAIN` because the example EvidenceRef and EvidenceBundle are illustrative and not operationally resolved in this file.", "Hydrology source roles must not collapse: HUC/WBD context, observed gauge readings, NFHL regulatory context, modeled hydrographs, and emergency warnings are different truth classes.", "v0.1.1 fixes the Mermaid sequence diagram for GitHub rich rendering by replacing unsupported crossed arrows with notes."]
+type: example; static-walkthrough; non-authoritative
+version: v0.2.0
+status: STATIC_WALKTHROUGH; synthetic; expected-ABSTAIN; do-not-publish
+owners: NEEDS VERIFICATION — examples, Focus Mode, governed API, Hydrology, evidence, policy, UI, and docs stewards
+updated: 2026-07-24
+supersedes: v0.1.1 at the same path; no runtime, evidence, policy, release, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+review_packet_id: kfm-md-examples-wave-20260724
+current_path: examples/focus_flows/hydrology_huc12_question.md
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: fe9442ef01ed676e11ccea2796c6fe4090dd1e7e
+  prior_blob: b9e2eb3f8ee58f24d310a47d26a3aef9a6f901ce
+notes:
+  - "Synthetic example only; no real HUC12, hydrologic condition, warning, or regulatory claim."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Hydrology HUC12 Focus Question Example
 
-Synthetic Focus Mode walkthrough for a user asking a bounded Hydrology question about a selected HUC12 feature.
+> **Scenario.** A public user selects a released public-safe HUC12 context feature and asks what KFM can safely summarize.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: examples" src="https://img.shields.io/badge/root-examples%2F-6f42c1">
-  <img alt="Domain: hydrology" src="https://img.shields.io/badge/domain-hydrology-1f6feb">
-  <img alt="Outcome: ABSTAIN" src="https://img.shields.io/badge/expected%20outcome-ABSTAIN-orange">
-  <img alt="Authority: non authoritative" src="https://img.shields.io/badge/authority-non--authoritative-critical">
-</p>
-
-**Path:** `examples/focus_flows/hydrology_huc12_question.md`  
-**Example status:** synthetic / illustrative / non-authoritative  
-**Expected finite outcome:** `ABSTAIN`  
-**Quick links:** [Scenario](#scenario) · [Example request](#example-request) · [Governed flow](#governed-flow) · [Expected response envelope](#expected-response-envelope) · [What an ANSWER would require](#what-an-answer-would-require) · [Hydrology guardrails](#hydrology-guardrails) · [Forbidden uses](#forbidden-uses) · [Status notes](#status-notes) · [Evidence ledger](#evidence-ledger)
-
-> [!IMPORTANT]
-> This is an **example**, not a runtime fixture or API response. It must not be copied into production as a Focus request, model prompt, route fixture, EvidenceBundle, ProofPack, CitationValidationReport, AIReceipt, policy decision, release decision, map payload, public Hydrology layer, or test oracle.
+[![Maturity: static walkthrough](https://img.shields.io/badge/maturity-STATIC__WALKTHROUGH-f59e0b?style=flat-square)](#validation)
+[![Expected outcome: ABSTAIN](https://img.shields.io/badge/outcome-ABSTAIN-f59e0b?style=flat-square)](#expected-result)
+[![Authority: example only](https://img.shields.io/badge/authority-example%20only-b42318?style=flat-square)](#authority-boundary)
 
 > [!CAUTION]
-> This example does not provide flood warnings, emergency alerts, evacuation guidance, observed inundation claims, water-rights conclusions, regulatory determinations, engineering advice, dam-safety direction, or live water-condition status.
-
----
+> This example is not a flood warning, emergency alert, observed-inundation claim, water-rights conclusion, regulatory determination, engineering analysis, or live water-condition report.
 
 ## Scenario
 
-A public user clicks a released public-safe Hydrology layer feature that represents a generalized HUC12 watershed context and asks:
+Question:
 
 > What hydrology context can KFM safely summarize for this HUC12?
 
-The selected feature and IDs below are synthetic. They do not identify a real HUC12 watershed.
+All identifiers, geometry, timestamps, release references, and evidence references are synthetic. The example does not identify a real watershed.
 
-| Field | Example value | Boundary |
-|---|---|---|
-| Selected feature | `kfm://example/feature/hydrology/huc12/EXAMPLE-000000000000` | Synthetic feature ref only. |
-| Domain object family | `HUCUnit` | HUC/WBD context, not water condition truth. |
-| User role | `public` | Public role receives only released, policy-allowed, cited context. |
-| Visible layer | `kfm://example/layer/hydrology/huc12-public-safe` | Synthetic released-context sketch; not a layer manifest. |
-| Requested transform | `summarize` | Candidate answer must cite evidence or abstain. |
-| Expected outcome | `ABSTAIN` | Example EvidenceRefs do not resolve to operational EvidenceBundles here. |
+## Authority boundary
 
----
+This file is not a Focus API fixture, runtime response, model prompt, EvidenceBundle, ProofPack, receipt, policy decision, release record, published layer, or Hydrology fact sheet.
 
-## Example request
+HUC/WBD context, gauge observations, NFHL regulatory context, modeled hydrographs, forecasts/warnings, and emergency guidance are distinct source roles and must not collapse.
 
-This request sketch is intentionally non-runtime. It demonstrates shape and gates only.
+## Synthetic request
 
 ```json
 {
   "example": true,
   "authority": "non_authoritative_example",
   "do_not_publish": true,
+  "maturity": "STATIC_WALKTHROUGH",
   "scenario_id": "kfm://example/focus-flow/hydrology-huc12-question",
-  "focus_mode_request": {
-    "question": "What hydrology context can KFM safely summarize for this HUC12?",
-    "surface": "focus_mode",
-    "user_role": "public",
-    "requested_transform": "summarize",
-    "map_context": {
-      "context_id": "kfm://example/map-context/hydrology-huc12",
-      "camera_state": {
-        "bbox": ["SYNTHETIC_MINX", "SYNTHETIC_MINY", "SYNTHETIC_MAXX", "SYNTHETIC_MAXY"],
-        "zoom": "SYNTHETIC_ZOOM"
-      },
-      "time_lock": "2026-06-30T00:00:00Z",
-      "visible_layers": [
-        "kfm://example/layer/hydrology/huc12-public-safe"
-      ],
-      "selected_feature": {
-        "feature_ref": "kfm://example/feature/hydrology/huc12/EXAMPLE-000000000000",
-        "feature_type": "HUCUnit",
-        "domain": "hydrology",
-        "public_release_state": "example_released_context_not_real"
-      }
-    },
-    "evidence_refs": [
-      {
-        "evidence_ref": "kfm://example/evidence-ref/hydrology/huc12-context/001",
-        "expected_bundle": "kfm://example/evidence-bundle/hydrology/huc12-context/001",
-        "status": "synthetic_unresolved",
-        "claim_scope": "HUC12 identity and public-safe watershed context"
-      }
-    ],
-    "forbidden_intents": [
-      "current flood warning",
-      "observed inundation claim",
-      "emergency or life-safety guidance",
-      "official regulatory determination",
-      "water-rights conclusion",
-      "engineering advice"
-    ]
-  }
+  "question": "What hydrology context can KFM safely summarize for this HUC12?",
+  "user_role": "public",
+  "selected_feature": {
+    "feature_ref": "kfm://example/feature/hydrology/huc12/SYNTHETIC",
+    "feature_type": "HUCUnit",
+    "release_state": "synthetic_example_only"
+  },
+  "evidence_refs": [
+    {
+      "evidence_ref": "kfm://example/evidence-ref/hydrology/huc12-context/SYNTHETIC",
+      "resolution_state": "synthetic_unresolved"
+    }
+  ],
+  "forbidden_intents": [
+    "current flood warning",
+    "emergency or evacuation guidance",
+    "official regulatory determination",
+    "water-rights conclusion",
+    "engineering advice"
+  ]
 }
 ```
 
----
+## Governed walkthrough
 
-## Governed flow
-
-| Stage | Example result | Why |
+| Stage | Static example result | Boundary |
 |---|---|---|
-| 1. Client scopes request | `PASS` as an illustrative request sketch | The example uses released-context language and synthetic IDs. This is not runtime schema validation. |
-| 2. Governed API schema check | `NEEDS VERIFICATION` | Focus request schema and route behavior are not proven by this example. |
-| 3. Policy precheck | `allow_to_resolve_evidence` as an example posture | A public-safe HUC12 context question may proceed to evidence resolution, but emergency, live-warning, restricted, or role-forbidden intents would return `DENY`. |
-| 4. EvidenceRef resolution | `FAIL` | The example EvidenceRef is synthetic and does not resolve to an operational EvidenceBundle here. |
-| 5. Adapter/model call | `SKIPPED` | No substantive answer should be generated when required evidence does not resolve. |
-| 6. Citation validation | `SKIPPED` | There are no operational cited spans to validate. |
-| 7. Policy postcheck | `SKIPPED` | No answer payload exists to postcheck. |
-| 8. Runtime envelope | `ABSTAIN` | Cite-or-abstain requires a non-substantive outcome. |
+| Request scope | `PASS_EXAMPLE` | Public-safe HUC12 context only. |
+| Schema check | `NEEDS VERIFICATION` | No runtime schema execution occurred. |
+| Policy precheck | `ALLOW_TO_RESOLVE_EXAMPLE` | Emergency/restricted intent would deny. |
+| Evidence resolution | `UNRESOLVED` | Synthetic EvidenceRef has no operational EvidenceBundle. |
+| Model adapter | `SKIPPED` | No evidence, no model call. |
+| Citation validation | `SKIPPED` | No substantive cited spans. |
+| Envelope assembly | `ABSTAIN` | Cite-or-abstain blocks a claim. |
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    participant User as User and Focus Panel
+    participant User
     participant API as Governed API
-    participant Policy as Policy
-    participant Evidence as Evidence Resolver
-    participant Adapter as Model Adapter
-    participant Citation as Citation Validator
-    participant Envelope as Runtime Envelope
-
-    User->>API: Synthetic FocusModeRequest for HUC12 context
-    API->>Policy: Precheck role and release context
+    participant Policy
+    participant Evidence
+    participant Envelope
+    User->>API: Synthetic HUC12 context question
+    API->>Policy: Public-role and intent precheck
     Policy-->>API: Allow evidence resolution
-    API->>Evidence: Resolve EvidenceRef to EvidenceBundle
-    Evidence-->>API: Synthetic EvidenceBundle unresolved
-    Note over API,Adapter: Adapter is not called because evidence is unresolved
-    Note over API,Citation: Citation validation is not run because no cited spans exist
-    API->>Envelope: Build ABSTAIN response with reason code
-    Envelope-->>User: Non-substantive response with no Hydrology claim
+    API->>Evidence: Resolve synthetic EvidenceRef
+    Evidence-->>API: Unresolved
+    Note over API: Model and citation stages are skipped
+    API->>Envelope: Build ABSTAIN
+    Envelope-->>User: No substantive Hydrology claim
 ```
 
----
-
-## Expected response envelope
-
-This is an illustrative envelope sketch, not a runtime response.
+## Expected result
 
 ```json
 {
   "example": true,
   "authority": "non_authoritative_example",
   "do_not_publish": true,
-  "scenario_id": "kfm://example/focus-flow/hydrology-huc12-question",
-  "runtime_response_envelope": {
-    "outcome": "ABSTAIN",
-    "reason_code": "EVIDENCE_BUNDLE_UNRESOLVED_EXAMPLE",
-    "message": "KFM cannot answer this HUC12 question from this example file because the cited EvidenceBundle and CitationValidationReport are illustrative only and do not resolve here.",
-    "evidence_refs": [
-      {
-        "evidence_ref": "kfm://example/evidence-ref/hydrology/huc12-context/001",
-        "resolution_state": "synthetic_unresolved"
-      }
-    ],
-    "policy_decision": {
-      "decision": "abstain",
-      "reason_code": "missing_resolvable_evidence",
-      "policy_ref": "kfm://example/policy/focus/hydrology/public-safe-context"
-    },
-    "citation_validation": {
-      "status": "not_run",
-      "reason": "no operational EvidenceBundle or cited spans were resolved"
-    },
-    "evidence_drawer": {
-      "enabled": false,
-      "reason": "example refs do not resolve to operational EvidenceBundles"
-    },
-    "safe_next_step": "Open a released Hydrology layer metadata panel or Evidence Drawer only after governed evidence refs resolve through the API.",
-    "forbidden_claims": [
-      "current flood warning",
-      "observed flooding",
-      "NFHL as observed inundation",
-      "evacuation or life-safety guidance",
-      "official regulatory determination",
-      "water-rights or engineering conclusion"
-    ]
+  "outcome": "ABSTAIN",
+  "reason_code": "EVIDENCE_BUNDLE_UNRESOLVED_EXAMPLE",
+  "message": "This static example cannot support a Hydrology answer because its evidence reference is synthetic and unresolved.",
+  "evidence_drawer": {
+    "enabled": false,
+    "reason": "no operational EvidenceBundle"
   }
 }
 ```
 
----
+A real `ANSWER` would require released HUC12 context, resolvable evidence, source-role separation, citation validation, policy allow, a non-emergency scope, and a governed Evidence Drawer handoff.
 
-## What an ANSWER would require
+## Negative states
 
-A substantive `ANSWER` example should not be added until each item below is represented by synthetic but internally consistent references or by real operational fixtures in the correct root.
-
-| Requirement | Required support | If missing |
-|---|---|---|
-| Released HUC12 context | ReleaseManifest and public-safe Hydrology layer artifact or governed API projection | `ABSTAIN` or `ERROR`, depending on failure class. |
-| Resolved evidence | EvidenceRef resolves to EvidenceBundle or equivalent proof support | `ABSTAIN`. |
-| Source-role separation | HUC/WBD unit, gauge observation, NFHL regulatory context, model output, and warning/advisory roles remain distinct | `DENY` or `ABSTAIN`. |
-| Citation validation | Every cited span validates against resolved evidence | `ABSTAIN`. |
-| Policy allow | Rights, sensitivity, release state, role, and public-safety boundary permit the answer | `DENY`. |
-| No emergency intent | The answer cannot read as warning, evacuation, rescue, engineering, regulatory, or life-safety advice | `DENY`. |
-| Evidence Drawer handoff | Drawer payload points to governed evidence projection, not this example file | `ABSTAIN` or no drawer handoff. |
-
----
+| Condition | Required outcome |
+|---|---|
+| Evidence missing, stale, conflicting, or citation-invalid | `ABSTAIN` |
+| Emergency, restricted, or role-forbidden intent | `DENY` |
+| Schema, resolver, adapter, or infrastructure failure | `ERROR` |
+| Unreleased or policy-held context | `HOLD` or `ABSTAIN` |
 
 ## Hydrology guardrails
 
-| Risk | Guardrail |
-|---|---|
-| HUC12 context becomes water-condition truth | A HUC12 boundary or watershed unit is context. It does not prove current flow, water level, flooding, drought, or water quality by itself. |
-| NFHL becomes observed flooding | NFHL/FEMA flood-hazard material is regulatory context only and must not be presented as observed inundation, forecast flooding, hydraulic-model output, or real-time flood status. |
-| Gauge reading becomes area truth | Gauge observations require site identity, units, datum, observation time, retrieval time, qualifiers, and evidence support; they do not automatically summarize an entire HUC12. |
-| Modeled hydrograph becomes observation | Modeled or reconstructed hydrographs must remain model outputs with method/run support, not observed conditions. |
-| Hydrology becomes emergency system | KFM Hydrology examples must not issue flood warnings, evacuation advice, rescue guidance, dam-safety instructions, or life-safety directions. |
-| Cross-domain absorption | Soil, Agriculture, Geology, Infrastructure, Hazards, Habitat, Flora, Fauna, People/Land, and Spatial Foundation claims remain owned by their lanes. Hydrology may cite approved context; it does not absorb ownership. |
-| Example becomes evidence | This file is not an EvidenceBundle, proof record, citation report, receipt, release manifest, or public API response. |
+- HUC12 context is not current flow, flood, drought, water-quality, or regulatory truth.
+- Gauge observations require site, unit, datum, observation time, retrieval time, qualifier, and evidence support.
+- NFHL is regulatory hazard context, not observed inundation.
+- Modeled hydrographs remain model outputs.
+- KFM does not issue warnings, evacuation, rescue, dam-operation, engineering, or life-safety guidance.
 
----
+## Validation
 
-## Forbidden uses
+- `PASS`: complete file read and source-level Markdown/JSON/Mermaid review.
+- `PASS`: all IDs and values are visibly synthetic.
+- `PASS`: expected finite outcome is internally consistent.
+- `NOT_RUN`: Focus schema, route, policy, evidence resolver, model adapter, citation validator, UI, and runtime tests.
+- `NOT_RUN`: host rendering and accessibility execution.
 
-Do not use this file as:
+## Correction and rollback
 
-- a Focus API request fixture;
-- a route handler example with runtime authority;
-- a model prompt or model output;
-- an EvidenceBundle, ProofPack, CitationValidationReport, AIReceipt, PolicyDecision, ReleaseManifest, RollbackCard, or CorrectionNotice;
-- a published Hydrology layer or map payload;
-- a real HUC12 fact sheet;
-- flood, drought, warning, advisory, regulatory, water-rights, engineering, or life-safety guidance;
-- a substitute for hydrology source registry, proof, catalog, published layer, or release records.
-
----
-
-## Status notes
-
-| Item | Status | Notes |
-|---|---:|---|
-| Target path presence | CONFIRMED | `examples/focus_flows/hydrology_huc12_question.md` existed as a greenfield placeholder before this update. |
-| Example-lane contract | CONFIRMED README | `examples/focus_flows/README.md` defines Focus Flow examples as illustrative and non-authoritative. |
-| Focus Flow doctrine | CONFIRMED architecture doc | Focus Mode uses governed API, policy gates, EvidenceBundle resolution, citation validation, and finite outcomes. |
-| Governed API doctrine | CONFIRMED architecture doc | Public clients use governed API envelopes and do not read RAW/WORK/QUARANTINE/internal stores directly. |
-| Hydrology domain doctrine | CONFIRMED README | Hydrology owns HUCs/watersheds and water-context object families but is not an emergency flood-warning system. |
-| Hydrology catalog lane | CONFIRMED README | Hydrology catalog records require source-role separation and do not make claims true or public by placement. |
-| Hydrology proof lane | CONFIRMED README | Hydrology proof support must preserve HUC12/WBD context, source roles, validation, policy, release, and rollback posture. |
-| Hydrology published layer lane | CONFIRMED README | HUC unit layers are proposed public-safe layer lanes; release/proof/policy gates remain required. |
-| Example EvidenceRef and EvidenceBundle | SYNTHETIC / UNRESOLVED | The IDs in this file are illustrative and not operational evidence. |
-| Focus schemas, route behavior, validators, AIReceipt emission, citation validation, executable policy | NEEDS VERIFICATION | This example proves none of those. |
-| Public release readiness | DENY | This example cannot publish, prove, answer, warn, or regulate. |
-
----
+Update or mark this walkthrough `STALE` when Focus, Hydrology, evidence, policy, release, or finite-envelope contracts change. Roll back to prior blob `b9e2eb3f8ee58f24d310a47d26a3aef9a6f901ce`.
 
 ## Evidence ledger
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous target file | CONFIRMED | Target existed as a greenfield placeholder. | Did not define example boundaries. |
-| [`README.md`](README.md) | CONFIRMED README | Focus Flow examples are illustrative, non-authoritative, finite-outcome examples with no direct lifecycle/internal-store reads. | Does not prove this child example is executable. |
-| [`../../docs/architecture/governed-ai/FOCUS_FLOW.md`](../../docs/architecture/governed-ai/FOCUS_FLOW.md) | CONFIRMED architecture doc | Request → policy → evidence → adapter → citation → policy → envelope; finite outcomes; no browser-to-model shortcut. | Implementation specifics remain PROPOSED/NEEDS VERIFICATION in that doc. |
-| [`../../docs/architecture/governed-api.md`](../../docs/architecture/governed-api.md) | CONFIRMED architecture doc | Governed API is the public trust membrane and returns finite `RuntimeResponseEnvelope` outcomes. | Route files, schemas, validators, and framework behavior remain PROPOSED/NEEDS VERIFICATION. |
-| [`../../docs/domains/hydrology/README.md`](../../docs/domains/hydrology/README.md) | CONFIRMED doctrine / PROPOSED implementation | Hydrology scope, HUC units, watersheds, gauge observations, NFHL regulatory context, source-role boundaries, and not-emergency-warning posture. | Does not prove this example's synthetic IDs resolve to real artifacts. |
-| [`../../data/proofs/evidence_bundle/README.md`](../../data/proofs/evidence_bundle/README.md) | CONFIRMED README | EvidenceBundle lane supports EvidenceRef closure, cite-or-abstain, citation validation, and governed answer support. | Concrete Hydrology EvidenceBundle inventory remains NEEDS VERIFICATION. |
-| [`../../data/catalog/domain/hydrology/README.md`](../../data/catalog/domain/hydrology/README.md) | CONFIRMED README | Hydrology catalog lane preserves HUC, source-role, evidence, temporal, policy, and release references. | Catalog records do not publish or answer by themselves. |
-| [`../../data/proofs/hydrology/README.md`](../../data/proofs/hydrology/README.md) | CONFIRMED README | Hydrology proof lane includes HUC12 context proof patterns and public-safety boundary posture. | Proof schemas, validators, emitted proof packs, and CI remain UNKNOWN/NEEDS VERIFICATION. |
-| [`../../data/published/layers/hydrology/README.md`](../../data/published/layers/hydrology/README.md) | CONFIRMED README | Published layer lane proposes `huc_units/` and requires release/proof/policy/public-safe gates. | Does not prove released layer payloads or route behavior exist. |
+| Evidence | Supports | Limit |
+|---|---|---|
+| [`README.md`](README.md) | Example-lane contract and finite-outcome boundary. | Not runtime proof. |
+| [Focus Flow doctrine](../../docs/architecture/governed-ai/FOCUS_FLOW.md) | Governed request path and no browser-to-model shortcut. | Implementation remains bounded. |
+| [Hydrology doctrine](../../docs/domains/hydrology/README.md) | HUC/source-role and not-emergency-system boundaries. | Synthetic refs do not resolve. |
+| [EvidenceBundle lane](../../data/proofs/evidence_bundle/README.md) | EvidenceRef resolution and cite-or-abstain posture. | No operational bundle verified. |
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top</a></p>
