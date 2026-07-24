@@ -1,170 +1,261 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-document-readme
-title: data/document/README.md — Document Data Compatibility README
-version: v0.1
-type: readme; data-lifecycle-note; compatibility-segment-note
-status: draft; PROPOSED; COMPATIBILITY-LANE; data-root; document; lifecycle-boundary; needs-verification
-owners: OWNER_TBD — Data steward · Docs steward · Source steward · Catalog steward · Evidence steward · Policy steward · Release steward
-created: NEEDS VERIFICATION — placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; document; compatibility; lifecycle; governed
-tags: [kfm, data, document, documents, lifecycle, compatibility, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, PUBLISHED, EvidenceBundle, SourceDescriptor, ReleaseManifest]
+title: data/document/README.md — Document-Data Compatibility Pointer Lane
+version: v0.2
+type: readme; data-compatibility-segment; lifecycle-routing-guide
+status: repository-grounded draft; compatibility-only; not-a-lifecycle-phase; payloads-unverified; consumers-unverified; decision-open; non-authoritative
+owners: NEEDS VERIFICATION — Data steward · Source steward · Rights reviewer · Sensitivity reviewer · Evidence steward · Release steward · Migration steward · Docs steward
+updated: 2026-07-24
+supersedes: v0.1 documentation at the same path; no payload, lifecycle, release, runtime, or publication state is superseded
+prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
+policy_label: repository-facing; data; document; compatibility; pointer-only; no-direct-public-path; correction-aware; rollback-aware
+current_path: data/document/README.md
+owning_root: data/
+truth_posture: >
+  CONFIRMED target identity, canonical data lifecycle map, Directory Rules, adjacent lane boundaries,
+  exact indexed search returning only this README, and default CODEOWNERS routing / PROPOSED retain,
+  migrate, or retire decision / CONFLICTED topic-named data/document/ versus the lifecycle-first tree /
+  UNKNOWN recursive subtree, deployed consumers, runtime, and public effects / NEEDS VERIFICATION
+  payload absence, stewardship, migration, deprecation, cutover, rights review, and rollback drill
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 8e32aa017c6321e9847ffade5ac32e5f69ab2562
+  prior_blob: 6bd610f466dbe4985cb3010faa4e3e0b55cc1e25
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  lifecycle_law_blob: 4eb1f0a38a31130bb9928867450709724bd4cacb
+  data_root_readme_blob: fb7b0acfaea25b630a3042f24cb97558a996d05a
+  migration_data_readme_blob: 42350e082436d84f8f2147d53044249eb7daf430
+  ocr_source_doc_blob: cca7f001f3b06fcdac38d3701b9aa08e96f77f34
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  exact_path_search_results: "1 README path"
+  open_overlapping_pull_requests_found: "0"
+  inventory_method: exact file reads, indexed code search, and open-PR search; no recursive Git tree, object store, database, runtime, deployment, or production system was inspected
 related:
   - ../README.md
-  - ../../README.md
+  - ../raw/README.md
+  - ../work/README.md
+  - ../quarantine/README.md
+  - ../processed/README.md
+  - ../catalog/README.md
+  - ../triplets/README.md
+  - ../receipts/README.md
+  - ../proofs/README.md
+  - ../registry/README.md
+  - ../published/README.md
+  - ../rollback/README.md
+  - ../../release/README.md
+  - ../../migrations/data/README.md
+  - ../../contracts/README.md
+  - ../../schemas/README.md
+  - ../../policy/README.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/doctrine/lifecycle-law.md
   - ../../docs/doctrine/trust-membrane.md
-  - ../../docs/sources/
-  - ../raw/
-  - ../work/
-  - ../quarantine/
-  - ../processed/
-  - ../catalog/
-  - ../proofs/
-  - ../receipts/
-  - ../published/
-  - ../registry/
-  - ../../release/
+  - ../../docs/sources/catalog/newspapers/ocr-full-text.md
+  - ../../.github/CODEOWNERS
 notes:
-  - "This file replaces a placeholder at `data/document/README.md`."
-  - "`data/document/` is not yet verified as a canonical lifecycle root; treat it as a PROPOSED compatibility lane until an ADR, path map, or migration note decides the boundary."
-  - "Human-facing documentation belongs under `docs/`; this lane must not become a docs authority root."
-  - "Document source captures, extracted text, OCR outputs, catalog records, proofs, receipts, and release decisions each belong in their proper lifecycle or authority root."
-  - "Rollback target for this replacement is previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "The canonical data tree does not enumerate data/document/ as a lifecycle phase or trust-artifact family."
+  - "No payload is moved, deleted, promoted, released, exposed, or published by this README change."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+# `data/document/` — Document-Data Compatibility Pointer Lane
 
-# data/document
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Canonical phase: no](https://img.shields.io/badge/canonical%20phase-no-b42318?style=flat-square)](#current-bounded-inventory)
+[![Decision: open](https://img.shields.io/badge/retain%20%7C%20migrate%20%7C%20retire-open-f59e0b?style=flat-square)](#retain-migrate-or-retire)
+[![Public path: denied](https://img.shields.io/badge/public%20path-denied-b42318?style=flat-square)](#outputs)
 
-> Compatibility README for document-related data under the `data/` lifecycle root. This path is PROPOSED and must not become a parallel documentation, source, catalog, proof, release, schema, policy, or implementation authority.
+> **One-line purpose.** Preserve a reversible compatibility pointer while routing every document-related artifact to the lifecycle or authority root that owns it.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/document" src="https://img.shields.io/badge/root-data%2Fdocument-blue">
-  <img alt="Posture: compatibility lane" src="https://img.shields.io/badge/posture-compatibility__lane-orange">
-  <img alt="Lifecycle: needs verification" src="https://img.shields.io/badge/lifecycle-needs__verification-lightgrey">
-  <img alt="Truth: evidence first" src="https://img.shields.io/badge/truth-evidence__first-green">
-</p>
+> [!IMPORTANT]
+> **`document` is a content kind, not a lifecycle phase.** PDFs, scans, OCR, transcripts, extracted records, embeddings, summaries, citations, and public reports do not share a canonical home merely because they came from documents.
 
-**Status:** draft / PROPOSED / COMPATIBILITY-LANE  
-**Path:** `data/document/README.md`  
-**Owning root:** `data/`  
-**Canonical posture:** NEEDS VERIFICATION — `data/document/` is not proven as a canonical lifecycle root in the inspected evidence  
-**Exposure posture:** not public by default; public exposure requires release linkage through governed catalog/published paths  
-**Truth posture:** CONFIRMED target was a placeholder · CONFIRMED `data/` is the lifecycle data root · CONFIRMED Directory Rules say root folders encode responsibility and lifecycle · NEEDS VERIFICATION for whether this path should remain, redirect, or be migrated.
+> [!WARNING]
+> Directory Rules and the current `data/` contract do not enumerate `data/document/` as a canonical phase or trust-artifact family. New payload writes are denied pending a reviewed decision.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Document-data handling](#document-data-handling) · [Guardrails](#guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Inventory](#current-bounded-inventory) · [Routing](#document-lifecycle-routing) · [OCR](#ocr-and-derived-text) · [Decision](#retain-migrate-or-retire) · [Verification](#open-verification-register)
 
 ---
-
+<a id="purpose"></a>
 ## Purpose
 
-`data/document/` is a proposed compatibility lane for document-related data references while the repository decides whether document data should live here or be distributed across the canonical lifecycle roots.
+`data/document/` is a compatibility pointer beneath [`data/`](../README.md). It may explain the legacy path, map old locations to canonical homes, record bounded inventory results, and link to reviewed migration, deprecation, correction, and rollback records.
 
-This README exists to prevent the folder from becoming an accidental authority root. It does not authorize storing all document material here, and it does not replace `docs/`, `data/raw/`, `data/processed/`, `data/catalog/`, `data/proofs/`, `data/receipts/`, or `release/`.
+It does not store payloads, define document objects, operate OCR, prove claims, approve release, serve search, or publish artifacts. Placement follows responsibility and lifecycle—not topic.
 
-## Lifecycle boundary
+---
+<a id="authority-level"></a>
+## Authority level
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+**Pointer-only and subordinate to canonical roots.** Meaning belongs in [`contracts/`](../../contracts/README.md), shape in [`schemas/`](../../schemas/README.md), admissibility in [`policy/`](../../policy/README.md), lifecycle state in [`data/`](../README.md), release decisions in [`release/`](../../release/README.md), and relocation mechanics in [`migrations/data/`](../../migrations/data/README.md).
 
-Document-related material must follow the same lifecycle as every other KFM data family:
+---
+<a id="status"></a>
+## Status
 
-```mermaid
-flowchart LR
-  SRC[Document source or upload] --> RAW[data/raw/...]
-  RAW --> WORK[data/work/...]
-  WORK --> QUAR[data/quarantine/...]
-  WORK --> PROC[data/processed/...]
-  QUAR --> PROC
-  PROC --> CAT[data/catalog/...]
-  CAT --> PUB[data/published/...]
-  DOC[data/document] -. compatibility / staging note .-> RAW
-  DOC -. compatibility / staging note .-> PROC
-  DOC -. compatibility / staging note .-> CAT
-```
+| Finding | Truth status | Current result |
+|---|---:|---|
+| README and stable ID | `CONFIRMED` | Existing same-path document |
+| Canonical lifecycle phase | `NOT ENUMERATED` | No `document` phase in governing tree |
+| Exact indexed search | `CONFIRMED BOUNDED` | Only this README resolved |
+| Child payloads | `UNKNOWN` | Recursive tree not inspected |
+| Runtime readers/writers | `UNKNOWN` | No operational consumer established |
+| Public use | `DENY` | Direct public reads forbidden |
+| Retain/migrate/retire | `OPEN` | No accepted decision or migration packet |
 
-## Repo fit
+**Safe action:** freeze payload writes, retain this README, inspect recursively, then choose a reviewed outcome.
 
-| Responsibility | Correct home | Rule |
+---
+<a id="what-belongs-here"></a>
+## What belongs here
+
+Only this README, old-to-new path pointers, bounded inventory notes, and links to migration, deprecation, correction, consumer-cutover, and recovery records. No payload or independent mutable authority belongs here.
+
+---
+<a id="what-does-not-belong-here"></a>
+## What does NOT belong here
+
+| Material | Correct home |
+|---|---|
+| Original PDFs, scans, rasters, source XML, exports | [`data/raw/`](../raw/README.md) or [`data/quarantine/`](../quarantine/README.md) |
+| OCR, extraction scratch, embeddings, candidate summaries | [`data/work/`](../work/README.md) |
+| Held rights/sensitivity/validation material | [`data/quarantine/`](../quarantine/README.md) |
+| Normalized transcripts, tables, annotations, records | [`data/processed/`](../processed/README.md) |
+| Discovery/provenance/citation records | [`data/catalog/`](../catalog/README.md) |
+| Relationships/triplets | [`data/triplets/`](../triplets/README.md) |
+| Run receipts and proof support | [`data/receipts/`](../receipts/README.md), [`data/proofs/`](../proofs/README.md) |
+| Registry records | [`data/registry/`](../registry/README.md) |
+| Release decisions and recovery cards | [`release/`](../../release/README.md) |
+| Public OCR, reports, stories, APIs, downloads | [`data/published/`](../published/README.md) |
+| Contracts, schemas, policy, code, secrets | Their owning roots |
+
+---
+<a id="inputs"></a>
+## Inputs
+
+Governance metadata only: exact subtree/history inventories, repository and operational consumer searches, lifecycle classifications, rights/sensitivity findings, path mappings, and migration/deprecation/recovery references. Search absence is bounded evidence—not proof that external or historical references do not exist.
+
+---
+<a id="outputs"></a>
+## Outputs
+
+A compatibility status, bounded inventory, path crosswalk, retain/migrate/retire recommendation, and links to reviewed change records. This lane cannot emit truth, proof closure, policy or release approval, publication, search authority, or model-answer authority. Direct public reads are denied.
+
+---
+<a id="validation"></a>
+## Validation
+
+README validation requires one H1, the required first twelve H2 sections, stable identity, working anchors/links, explicit truth limits, no new authority, and visible rollback.
+
+Retirement additionally requires recursive subtree inventory; repository and deployed consumer searches; per-file lifecycle classification; rights/sensitivity review; a migration and recovery packet; cutover/stale-reference evidence; and public-path denial. Missing evidence yields `HOLD`, `QUARANTINE`, `RESTRICT`, or `DENY`.
+
+---
+<a id="review-burden"></a>
+## Review burden
+
+README-only changes need data/docs review. Payload discovery adds source, rights, sensitivity, policy, evidence, and security review. Relocation adds migration, validation, consumer-cutover, correction, and recovery review. A durable canonical topic family requires an accepted ADR and Directory Rules update.
+
+CODEOWNERS provides GitHub routing only—not stewardship, independent review, or approval proof.
+
+---
+<a id="related-folders"></a>
+## Related folders
+
+- Lifecycle: [`data/`](../README.md), [`raw`](../raw/README.md), [`work`](../work/README.md), [`quarantine`](../quarantine/README.md), [`processed`](../processed/README.md), [`catalog`](../catalog/README.md), [`triplets`](../triplets/README.md), [`published`](../published/README.md).
+- Trust adjuncts: [`receipts`](../receipts/README.md), [`proofs`](../proofs/README.md), [`registry`](../registry/README.md), [`rollback`](../rollback/README.md), [`release/`](../../release/README.md).
+- Change control: [`migrations/data/`](../../migrations/data/README.md).
+- Doctrine: [`Directory Rules`](../../docs/doctrine/directory-rules.md), [`Lifecycle Law`](../../docs/doctrine/lifecycle-law.md), [`Trust Membrane`](../../docs/doctrine/trust-membrane.md).
+- OCR context: [`Newspaper OCR Full Text`](../../docs/sources/catalog/newspapers/ocr-full-text.md).
+
+---
+<a id="adrs"></a>
+## ADRs
+
+- ADR-0011 keeps receipts, proofs, catalogs, release decisions, and public carriers distinct.
+- ADR-0012 routes connector captures to RAW or QUARANTINE—not a topic bucket.
+- ADR-0025 denies direct public reads from internal stores.
+
+These inspected ADRs are proposed/draft; none admits `data/document/` as canonical or authorizes retirement.
+
+---
+<a id="last-reviewed"></a>
+## Last reviewed
+
+**2026-07-24**, against `main@8e32aa017c6321e9847ffade5ac32e5f69ab2562`. Re-review when a payload or consumer appears, Directory Rules change, a migration/deprecation is approved, a public route is discovered, or six months elapse.
+
+---
+<a id="current-bounded-inventory"></a>
+## Current bounded inventory
+
+| Surface | Evidence | Conclusion |
 |---|---|---|
-| Human-facing documentation | `docs/` | Not this lane. |
-| Source-native document captures | `data/raw/` | Store source captures by source/domain/lifecycle policy. |
-| Working extraction/OCR/intermediate output | `data/work/` | Not public; may need quarantine. |
-| Failed, unsafe, rights-unclear, or sensitive holds | `data/quarantine/` | Fail closed until reviewed. |
-| Normalized extracted document data | `data/processed/` | Upstream of catalog. |
-| Catalog records for documents or extracted datasets | `data/catalog/` | CATALOG-stage, release-gated. |
-| Evidence/proof records | `data/proofs/` | EvidenceBundle and proof records. |
-| Receipts | `data/receipts/` | RunReceipt, validation, transform, review, correction, and release receipts. |
-| Source registry records | `data/registry/` | SourceDescriptor/source-admission records. |
-| Release decisions | `release/` | Publication authority. |
-| Published public material | `data/published/` | Public-safe materialization after release. |
-| Schemas and policy | `schemas/`, `policy/` | Separate roots. |
-| Code/tests | implementation roots and test roots | Not this lane. |
+| README | Exact read | Documentation only |
+| Additional indexed exact paths | None found | Recursive inspection still required |
+| Canonical data-tree entry | Not enumerated | Not a canonical phase/family |
+| Migration/deprecation | Not established | Decision open |
+| Runtime/public consumer | Not established | No capability claim; public use denied |
 
-## Accepted contents
+---
+<a id="document-lifecycle-routing"></a>
+## Document lifecycle routing
 
-Until an ADR/path map confirms a stronger role, accepted contents are limited to:
+| Artifact | Home |
+|---|---|
+| Source identity, rights, sensitivity | `data/registry/` plus policy/review |
+| Original capture | `data/raw/` |
+| Unsafe/unresolved capture | `data/quarantine/` |
+| OCR/extraction/embedding candidate | `data/work/` |
+| Validated transcript/extracted record | `data/processed/` |
+| Catalog/citation record | `data/catalog/` |
+| Relationship projection | `data/triplets/` |
+| Run receipt | `data/receipts/` |
+| Evidence/proof support | `data/proofs/` |
+| Release decision/correction/rollback | `release/` |
+| Released public carrier | `data/published/` |
+| Old-to-new mapping | `migrations/data/` |
 
-- This README.
-- Migration notes, inventories, or crosswalks explaining where document-related data currently lives and where it should move.
-- Pointers to canonical lifecycle homes for raw captures, work products, quarantine, processed outputs, catalog records, proofs, receipts, source registry entries, published outputs, and releases.
-- Small placeholder indexes that do not contain source content, proof content, sensitive data, release decisions, or executable behavior.
+---
+<a id="ocr-and-derived-text"></a>
+## OCR and derived text
 
-## Exclusions
+OCR is a model reading of a page—not authority for facts asserted by the source. Preserve carrier ID, page/region locator, digest, tool/model version, receipt, uncertainty, rights, sensitivity, and derivation links. Separate OCR from extraction and summaries; cite the source carrier; quarantine or abstain when identity, text, rights, sensitivity, or evidence cannot be resolved.
 
-- Human-facing doctrine, architecture, manuals, runbooks, guides, and standards. Use `docs/`.
-- RAW document files or source-native uploads. Use `data/raw/`.
-- OCR/extraction scratch output. Use `data/work/` unless promoted by lifecycle rules.
-- Quarantined or rights-unclear material. Use `data/quarantine/`.
-- Processed extracted text, tables, embeddings, manifests, or derivatives. Use `data/processed/` or another accepted lifecycle root.
-- Catalog records. Use `data/catalog/`.
-- EvidenceBundle/proof records. Use `data/proofs/`.
-- Receipts. Use `data/receipts/`.
-- SourceDescriptor/source registry records. Use `data/registry/`.
-- Release decisions. Use `release/`.
-- Published outputs. Use `data/published/`.
-- Schemas, policies, validators, tests, packages, pipelines, app/UI/API code.
+---
+<a id="retain-migrate-or-retire"></a>
+## Retain, migrate, or retire
 
-## Document-data handling
+| Option | Required posture |
+|---|---|
+| Retain pointer | No payloads/writers; expiry, targets, stale-reference checks |
+| Migrate and tombstone | Inventory, routing, digests, cutover, deprecation, recovery |
+| Retire | Recursive and operational zero-use evidence, sign-off, restore plan |
+| Admit canonical family | Accepted ADR, Directory Rules update, contracts, schemas, policy, migration, tests, consumers |
 
-Document-related data can be high-risk because it may contain rights restrictions, private details, cultural or jurisdictional sensitivity, OCR errors, extractive summaries, or uncertain provenance. Treat fluent summaries, extracted tables, OCR text, embeddings, and generated descriptions as downstream carriers, not truth roots.
+**Proposed default:** retain temporarily, freeze writes, verify recursively, then migrate by lifecycle and retire or tombstone unless an accepted ADR justifies another outcome.
 
-Before any document-derived material becomes public, it should have source identity, rights posture, sensitivity review, extraction/transformation receipt, validation receipt, evidence reference where claims depend on evidence, catalog record, release state, correction path, and rollback target.
+---
+<a id="open-verification-register"></a>
+## Open verification register
 
-## Guardrails
-
-- Do not use `data/document/` as a convenience bucket.
-- Do not use this lane as a substitute for `docs/`.
-- Do not publish directly from this lane.
-- Do not store source-native files, proofs, receipts, source descriptors, release decisions, schemas, policy rules, or implementation code here.
-- If this path is retained, document the decision in an ADR/path map and add migration/rollback notes.
-- If this path is not retained, migrate any real contents into the correct lifecycle roots and restore this file to a redirect/alias note or remove the folder through governed migration.
-
-## Evidence ledger
-
-| Source | Status | Supports | Limits |
+| ID | Item | Status | Safe action |
 |---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a placeholder. | Did not define lane boundaries. |
-| `data/README.md` | CONFIRMED | `data/` is the lifecycle data root and excludes code, schemas, policy rules, and release decisions. | Does not confirm `data/document/` as canonical. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Root folders encode responsibility and data uses lifecycle phases. | Does not approve this specific folder as canonical. |
-| Repository search | CONFIRMED no exact hit in this session | No existing exact `data/document` guidance was found through repository search. | Search is not a complete filesystem inventory. |
+| DOC-V-001 | Recursive subtree | `NEEDS VERIFICATION` | No writes |
+| DOC-V-002 | Repository/deployed consumers | `UNKNOWN` | Do not retire |
+| DOC-V-003 | Rights/sensitivity of discovered payloads | `NEEDS VERIFICATION` | Quarantine/restrict |
+| DOC-V-004 | Retain/migrate/retire decision | `OPEN` | Pointer only |
+| DOC-V-005 | Migration, deprecation, cutover, recovery | `NOT STARTED` | No move/deletion |
+| DOC-V-006 | Public-route denial | `NEEDS VERIFICATION` | Deny by boundary |
+| DOC-V-007 | OCR/extraction implementation maturity | `UNKNOWN` | Describe doctrine, not capability |
 
-## Validation checklist
+### v0.1-to-v0.2 no-loss
 
-- [ ] Confirm whether `data/document/` should exist at all.
-- [ ] Confirm whether this path should remain as compatibility, redirect, or be removed.
-- [ ] Confirm no source files, proofs, receipts, release decisions, schemas, policy, or implementation code are stored here.
-- [ ] Confirm any document-derived data has a lifecycle home under RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, or PUBLISHED.
-- [ ] Confirm source, rights, sensitivity, validation, receipts, release, correction, and rollback linkage before any public exposure.
+v0.2 preserves v0.1's compatibility classification, lifecycle routing, pointer-only contents, no-parallel-authority rule, rights/sensitivity/OCR guardrails, open retain/migrate/remove decision, no-public-path rule, and rollback posture.
 
-## Rollback
+**Rollback target:** prior blob `6bd610f466dbe4985cb3010faa4e3e0b55cc1e25`.
 
-Rollback is required if this lane becomes a parallel docs root, source-data root, proof store, source-registry root, receipt store, catalog root, release-decision root, published-output root, schema root, policy root, validator root, implementation root, public API shortcut, or public exposure shortcut.
-
-Rollback target for this replacement: previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`.
+> **Operating rule:** do not ask “Is this a document?” to choose a path. Ask “What lifecycle state and responsibility does this artifact have?”
 
 <p align="right"><a href="#top">Back to top</a></p>
