@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-dependabot-cooldowns-0fda7f11",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/dependabot.yml"
+  ],
+  "artifact_hashes": {
+    ".github/dependabot.yml": "sha256:0fda7f11c8d6abcd5d4093186cbcf143102212a85ea2955e2049db23fe3858fb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-23"
+  },
+  "prompt_or_contract": "sha256:ec1f292cc7b7c433a0f4dc0654143421b0864308042b6715285f8ef435862e59",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "official GitHub Dependabot documentation",
+      "YAML structural validation",
+      "remote branch readback"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/651f2fac6e576c81f6480ea3613f97616280f65f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/.github/dependabot.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/.pre-commit-config.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/data/receipts/generated/genrec-dependabot-config-bb88ad97.json",
+      "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference",
+      "https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/optimizing-pr-creation-version-updates"
+    ]
+  },
+  "truth_labels": {
+    ".github/dependabot.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, immutable base commit, current Dependabot configuration, .github authority boundary, Directory Rules, CODEOWNERS route, prior receipt, and absence of overlapping open pull requests or branches."
+    },
+    {
+      "gate": "yaml-and-required-shape",
+      "outcome": "PASS",
+      "reason": "Parsed the final YAML and verified version 2, four unique update entries, valid directory/directories usage, weekly schedules, positive pull-request limits, and supported group and cooldown keys."
+    },
+    {
+      "gate": "cooldown-support-and-bounds",
+      "outcome": "PASS",
+      "reason": "Official GitHub documentation confirms cooldown support for pip, npm, GitHub Actions, and pre-commit; configured values are within the supported 1-to-90-day range."
+    },
+    {
+      "gate": "security-update-bypass",
+      "outcome": "PASS",
+      "reason": "Cooldown applies only to version updates. Security updates remain ungrouped by these rules, immediate, and default-branch based."
+    },
+    {
+      "gate": "monorepo-coverage-preservation",
+      "outcome": "PASS",
+      "reason": "Preserved the existing pip directory globs, root npm workspace entry, GitHub Actions root entry, and pre-commit root entry without adding an unverified ecosystem or manifest path."
+    },
+    {
+      "gate": "review-and-publication-boundary",
+      "outcome": "PASS",
+      "reason": "Dependabot remains proposal-only; no auto-merge, release, publication, unverified labels, teams, target branch, registry, or Docker activation was added."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "Read the updated branch file back from GitHub as blob 0599cd008ed1eed98e61399c992f6d5f9c682e57 and verified the authored SHA-256 recorded in this receipt."
+    },
+    {
+      "gate": "dependabot-default-branch-runtime-validation",
+      "outcome": "SKIPPED",
+      "reason": "Dependabot parses and executes configuration only after merge to the default branch; job logs and generated update behavior remain pending."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. This receipt is provenance only and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-dependabot-config",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/.github/dependabot.yml"
+    },
+    {
+      "id": "github-root-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/651f2fac6e576c81f6480ea3613f97616280f65f/.github/README.md"
+    },
+    {
+      "id": "dependabot-options-reference",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference"
+    },
+    {
+      "id": "dependabot-cooldown-guidance",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/optimizing-pr-creation-version-updates"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-24T02:59:58Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored Dependabot stabilization update. The cooldown settings delay version updates only: 30 days for major, 7 days for minor, 3 days for patch across pip/npm/GitHub Actions, and 7 default days for pre-commit. Security updates remain immediate and isolated. The change does not prove future Dependabot job success, dependency compatibility, security, review, merge, release, or publication."
+}
