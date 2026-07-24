@@ -17,7 +17,7 @@ evidence_snapshot:
   target_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
   policy_root_blob: fa9378a6a699d0985fd018dbdb9f27c15efcb1c3
-  parent_policy_joins_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  parent_policy_joins_blob: 2d2736cb33bf9ede95e00cffb2fd45914106aea2
   geoprivacy_policy_index_blob: a70e691881c0d6bc3e2ebd48290e9c4cb1b90f0e
   habitat_domain_policy_blob: 8456c65196354695b8eb5b8178ecb61cfc12b7dd
   fauna_domain_policy_blob: 39b7c7dd859614ab9ae9a72208f693056c97f2c6
@@ -57,7 +57,7 @@ related:
   - ../../../apps/governed-api/README.md
   - ../../../release/README.md
 tags: [kfm, policy, joins, habitat, fauna, geoprivacy, sensitive-species, evidence-bundle, source-role, public-safe-geometry, review, correction, rollback]
-truth_posture: CONFIRMED empty target, singular policy root, Habitat/Fauna doctrine and ownership split, geoprivacy routing index, domain-policy scaffolds, draft cross-lane architecture, semantic join-contract index, permissive Habitat–Fauna schema scaffold, broad and geoprivacy validator READMEs, documentation-first proof/release lanes, closed PolicyDecision family enum without joins, and unproved evaluator/bundle/runtime/release integration / PROPOSED pair-specific policy boundary, explicit input profile, Habitat–Fauna checks, posture matrix, reason codes, obligations, tests, review, correction, revocation, and rollback / CONFLICTED parent standing, ADR-S-14 acceptance, join-versus-relation schema authority, and policy placement among joins/geoprivacy/sensitivity/domain lanes / UNKNOWN accepted pair policy module, rule package, bundle selector, native tests, runtime composer, decision receipts, public-surface enforcement, required CI, and production operation
+truth_posture: CONFIRMED empty target, singular policy root, substantive repository-grounded parent joins-policy README, Habitat/Fauna doctrine and ownership split, geoprivacy routing index, domain-policy scaffolds, draft cross-lane architecture, semantic join-contract index, permissive Habitat–Fauna schema scaffold, broad and geoprivacy validator READMEs, documentation-first proof/release lanes, closed PolicyDecision family enum without joins, and unproved evaluator/bundle/runtime/release integration / PROPOSED pair-specific policy boundary, explicit input profile, Habitat–Fauna checks, posture matrix, reason codes, obligations, tests, review, correction, revocation, and rollback / CONFLICTED ADR-S-14 acceptance, join-versus-relation schema authority, and policy placement among joins/geoprivacy/sensitivity/domain lanes / UNKNOWN accepted pair policy module, rule package, bundle selector, native tests, runtime composer, decision receipts, public-surface enforcement, required CI, and production operation
 notes:
   - "This revision completes an existing empty README in place. It creates no Habitat or Fauna object, relation contract, schema field, policy rule, policy family, fixture, validator, EvidenceBundle, transform receipt, graph edge, runtime route, release object, or publication state."
   - "Habitat owns landscape, patch, ecological-system, suitability, corridor, restoration, and uncertainty products. Fauna owns taxon, occurrence, range, sensitive-site, telemetry, and animal-event truth. The join transfers no ownership."
@@ -156,7 +156,7 @@ The target path already exists under singular `policy/`, which Directory Rules a
 | Surface | Current evidence | Safe conclusion |
 |---|---:|---|
 | `policy/joins/habitat-fauna/README.md` | **CONFIRMED empty tracked file** | This revision completes it in place. |
-| Parent `policy/joins/README.md` on inspected `main` | **CONFIRMED empty tracked file** | Parent modernization is separate work; this child must remain independently bounded. |
+| Parent `policy/joins/README.md` on inspected `main` | **CONFIRMED substantive repository-grounded draft** | The parent defines cross-domain routing and composition boundaries; it remains proposed, evaluator-unbound, and non-release. |
 | Singular `policy/` root | **CONFIRMED** | Admissibility belongs under `policy/`; presence does not prove enforcement. |
 | Habitat and Fauna domain policy READMEs | **CONFIRMED short greenfield scaffolds** | Domain policy placement is documented; executable authority is unproved. |
 | Habitat geoprivacy doctrine | **CONFIRMED draft** | Join-induced and derivation-induced exposure, produced-output evaluation, and public-safe geometry posture are documented. |
