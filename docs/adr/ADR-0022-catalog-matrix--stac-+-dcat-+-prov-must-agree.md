@@ -1,677 +1,746 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0022-catalog-matrix-stac-dcat-prov-must-agree
 title: ADR-0022 — Catalog Matrix · STAC + DCAT + PROV Must Agree
-type: standard
-version: v1.1
+type: adr
+adr_id: ADR-0022
+version: v1.2
 status: proposed
-owners: TODO — Catalog steward, Release steward, Docs steward
+owners:
+  - "NEEDS VERIFICATION — catalog steward"
+  - "NEEDS VERIFICATION — release steward"
+  - "NEEDS VERIFICATION — evidence/proof steward"
+  - "NEEDS VERIFICATION — schema and contract stewards"
+  - "NEEDS VERIFICATION — policy and validation stewards"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Catalog steward
+  - Release and rollback steward
+  - Evidence/proof steward
+  - Contracts and schemas stewards
+  - Policy and validation stewards
+  - At least one affected domain steward
 created: 2026-05-09
-updated: 2026-05-15
+updated: 2026-07-24
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  target_prior_blob: b09c1d7aaa39f3030afdcec419c58236fd324f17
+  catalog_matrix_contract_blob: c67923beb505aa39e7c0c768c16e75a00826ff31
+  catalog_matrix_schema_blob: 75a927376066226d8a0f89a630d7bb3693143c41
+  catalog_closure_readme_blob: a6001d58d20c4f1c078281661f6cba17a488f293
+  adr_0011_blob: 40b0f47b87d584040803ed76aa6b31f5204b7fca
 related:
-  - docs/adr/ADR-0001-schema-home.md
   - docs/adr/README.md
-  - docs/architecture/contract-schema-policy-split.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0002-contracts-vs-schemas-split.md
+  - docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
   - docs/doctrine/directory-rules.md
-  - docs/standards/                            # STAC, DCAT, PROV-O conformance pages
-  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - schemas/contracts/v1/catalog/catalog_matrix.schema.json   # PROPOSED
-  - tools/validators/catalog/                                  # PROPOSED
-  - policy/promotion/catalog_matrix.rego                       # PROPOSED
-  - tools/resolvers/release/resolve_release_manifest.py        # PROPOSED
-  - data/catalog/matrix/                                       # PROPOSED
-tags: [kfm, adr, catalog, stac, dcat, prov, governance, promotion, closure]
+  - contracts/data/catalog_matrix.md
+  - schemas/contracts/v1/data/catalog_matrix.schema.json
+  - tools/validators/catalog_closure/README.md
+  - tools/validators/catalog/README.md
+  - tools/validators/validate_catalog_matrix.py
+  - data/catalog/README.md
+  - data/catalog/stac/README.md
+  - data/catalog/dcat/README.md
+  - data/catalog/prov/README.md
+  - data/proofs/README.md
+  - release/README.md
+  - docs/registers/DRIFT_REGISTER.md
+tags: [kfm, adr, catalog, catalog-matrix, stac, dcat, prov, provenance, evidence, promotion, closure, rollback]
 notes:
-  - Codifies the "must agree" rule as a release-level invariant.
-  - v1.1 clarifies evidence boundary, Directory Rules placement basis, minimum matrix shape, and verification checklist.
-  - Authority for paths is PROPOSED until verified against the mounted repo.
+  - "v1.2 is a same-path repository-grounded modernization. It preserves proposed status and does not accept the ADR or create enforcement."
+  - "Current repository evidence places the shared semantic contract under contracts/data/ and the paired placeholder schema under schemas/contracts/v1/data/."
+  - "The current shared schema is permissive and requires only id; it does not enforce this ADR's release-level agreement contract."
+  - "The catalog_closure validator lane is README-only; the observed top-level CatalogMatrix validator is a NotImplementedError stub; no release resolver or dedicated closure suite is established."
+  - "ADR-0011 and ADR-0022 must be coordinated so CatalogMatrix remains a catalog descriptor while its validation report/proof remains a distinct proof object."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0022 — Catalog Matrix · STAC + DCAT + PROV Must Agree
 
-> **One-line decision.** Every promoted KFM release MUST emit a `CatalogMatrix`
-> that crosswalks STAC, DCAT, and PROV-O records by **identifier, digest, and
-> release reference**, and the closure resolver MUST deny promotion when the
-> three vocabularies do not agree.
+> **Proposed decision.** Every KFM release candidate that claims catalog closure across STAC, DCAT, and PROV MUST provide one explicit, immutable agreement packet that binds those records to the same artifact identity, byte digest, and release reference. Any unresolved or contradictory closure result blocks promotion.
 
-| Field | Value |
-|---|---|
-| **ADR ID** | ADR-0022 |
-| **Title** | Catalog Matrix · STAC + DCAT + PROV Must Agree |
-| **Status** | `proposed` *(doctrinal rule supported by the corpus; implementation paths remain PROPOSED until verified against a mounted repo)* |
-| **Date** | 2026-05-09; revised 2026-05-15 |
-| **Authors** | TODO — Catalog steward, Release steward |
-| **Reviewers** | TODO — Docs steward + Promotion-gate owner + at least one domain steward |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Related** | ADR-0001 (schema home); Directory Rules §2.4 / §2.5 / §9.1; contract-schema-policy split; Habitat, Hydrology, Archaeology, Transport, Settlements, Fauna domain blueprints (catalog-closure rule) |
-| **Truth posture** | Doctrine **CONFIRMED** by supplied corpus; concrete repo paths, current implementation, CI behavior, and route names **PROPOSED / UNKNOWN / NEEDS VERIFICATION** until repo evidence is inspected |
-
----
-
-## Quick Jump
-
-[Evidence Boundary](#0-evidence-boundary-and-directory-rules-basis) ·
-[Context](#1-context) ·
-[Decision](#2-decision) ·
-[Agreement Matrix](#3-the-agreement-matrix-what-must-agree) ·
-[Closure Diagram](#4-closure-graph) ·
-[Schema · Validator · Policy](#5-schema-validator-policy-fixtures) ·
-[Promotion Gate](#6-promotion-gating) ·
-[Consequences](#7-consequences) ·
-[Alternatives](#8-alternatives-considered) ·
-[Migration](#9-migration-plan) ·
-[Verification Checklist](#94-verification-checklist) ·
-[Rollback](#10-rollback-plan) ·
-[Open Questions](#11-open-questions) ·
-[References](#12-references)
-
----
-
-
-## 0. Evidence boundary and Directory Rules basis
-
-> [!NOTE]
-> This ADR states KFM doctrine where supported by the supplied corpus and the
-> existing ADR text. It does **not** prove that any referenced repository path,
-> workflow, validator, resolver, CI job, route, dashboard, package, or emitted
-> proof object exists in the current repo. Current implementation depth remains
-> **UNKNOWN** until a mounted repo, tests, workflows, manifests, logs, or emitted
-> artifacts are inspected.
-
-Directory Rules are treated as placement doctrine for this update: root folders
-encode responsibility, not topic; schema field shape defaults to
-`schemas/contracts/v1/<...>`; and lifecycle data remains under the governed
-`data/` phases. If mounted repo evidence contradicts these homes, reviewers MUST
-raise a drift entry rather than silently treating the repo shape as new canon.
-
-| File family | Directory Rules basis | Status in this ADR |
-|---|---|---|
-| `schemas/contracts/v1/catalog/catalog_matrix.schema.json` | Field-level machine schema home under the ADR-0001 default | **PROPOSED** until verified |
-| `contracts/catalog/catalog_matrix.md` | Object-family meaning / semantic contract | **PROPOSED** until verified |
-| `policy/promotion/catalog_matrix.rego` | Admissibility and promotion decision logic | **PROPOSED** until verified |
-| `data/catalog/matrix/<domain>/<release_id>.json` | CATALOG-phase emitted closure artifact | **PROPOSED** until verified |
-| `tools/validators/catalog/catalog_matrix.py` | Validation utility under implementation tooling | **PROPOSED** until verified |
-| `tools/release/build_catalog_matrix.py` and release resolver paths | Release tooling; exact resolver home remains unsettled | **NEEDS VERIFICATION** |
-
-**No parallel authority.** If the mounted repo already uses `contracts/catalog/`
-as a machine-schema home, this ADR does not authorize silently maintaining both
-`contracts/catalog/...` and `schemas/contracts/v1/catalog/...` as competing
-schema authorities. Resolve the conflict through ADR-0001 / Directory Rules drift
-handling before landing machine files.
-
----
-
-## 1. Context
-
-KFM publishes spatiotemporal artifacts to the open web through three
-overlapping but non-redundant catalog vocabularies:
-
-- **STAC** — describes spatiotemporal assets so pipelines and clients can
-  *discover* them.
-- **DCAT (v3)** — describes datasets and distributions so external standards
-  bodies and aggregators can *interoperate* with them.
-- **PROV-O** — describes activities, agents, and entities so downstream
-  consumers can *trace* the lineage that produced them.
-
-The corpus is unambiguous that these three are **concentric layers of catalog
-closure, not alternatives**. Each vocabulary carries a share of the trust
-burden, and each is linked to the others by stable identifiers and KFM
-extension fields:
-
-> *"STAC item → DCAT distribution → PROV record → canonical artifact via
-> `spec_hash`; the EvidenceBundle covers the whole closure with attestations."*
-> — KFM Catalog Closure doctrine (Pass 11/12 corpus)
-
-The recurring failure mode named in the corpus is **catalog drift**: STAC says
-one digest, DCAT carries a different checksum, PROV references an upstream
-entity that no longer matches, and a release ships with three "truths" that
-disagree. Per-record validators catch shape problems but cannot catch
-*cross-record* disagreement; that requires an explicit closure proof.
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0022-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![Contract: draft](https://img.shields.io/badge/contract-draft-d4a72c?style=flat-square)](#current-repository-evidence)
+[![Schema: placeholder](https://img.shields.io/badge/schema-placeholder-b54708?style=flat-square)](#current-enforcement-maturity)
+[![Validator: stub](https://img.shields.io/badge/validator-stub-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Enforcement: hold](https://img.shields.io/badge/enforcement-WORKFLOW__HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Catalog drift is the stealthiest failure mode in a distributed publication
-> system.** Per-vocabulary validators prove each record is internally
-> well-formed; only a cross-vocabulary closure check proves the corpus is
-> *mutually* well-formed.
+> **Decision text is not enforcement.** This file remains `proposed`. The repository contains a semantic contract, a permissive placeholder schema, catalog documentation, validator documentation, and a non-functional validator stub. No current evidence establishes a complete closure resolver, dedicated fixtures/tests, required CI gate, promotion integration, release assembly, or operational rollback.
 
-Multiple domain blueprints (Habitat, Hydrology, Archaeology, Transport,
-Settlements, Fauna, Hazards) already specify a per-domain
-`<domain>CatalogMatrix` artifact and a `validate_catalog_matrix.py`-style
-validator. This ADR promotes that recurring pattern into a repo-wide rule and
-fixes its agreement contract.
+> [!CAUTION]
+> **A `CatalogMatrix` is not proof, policy, approval, or publication.** It is a catalog-facing descriptor and crosswalk. A separate validation report or proof object records that the matrix was checked; a separate `PolicyDecision` decides admissibility; a separate release decision authorizes promotion.
 
-### 1.1 Forces
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#decision) · [Agreement](#agreement-contract) · [Object boundary](#catalogmatrix-object-boundary) · [Repository evidence](#current-repository-evidence) · [Maturity](#current-enforcement-maturity) · [Implementation](#implementation-contract) · [Promotion](#promotion-gating) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Migration](#migration-and-compatibility) · [Acceptance](#acceptance-gates) · [Risks](#risk-ledger) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [References](#references)
+
+---
+
+<a id="status"></a>
+
+## Status
+
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0022` |
+| **Tracked path** | `docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md` |
+| **Source metadata** | `proposed` |
+| **Effective decision status** | `proposed` |
+| **Decision class** | Cross-vocabulary catalog-closure invariant and promotion prerequisite |
+| **Current repository posture** | Contract exists; schema is placeholder; validator path is conflicted/stubbed; closure enforcement is not established |
+| **Implementation effect of this revision** | Documentation only |
+| **Publication effect** | None |
+| **Supersedes / superseded by** | None / none |
+
+### Decision scope
+
+This ADR decides the proposed **release-level agreement rule** between:
+
+1. STAC catalog records;
+2. DCAT datasets/distributions;
+3. PROV activities/entities/agents;
+4. the canonical artifact and its digest;
+5. the release reference that governs exposure.
+
+It does not decide domain semantics, replace source descriptors or evidence bundles, authorize a release, define every field of the shared schema, choose a public API route, or make a validator pass equivalent to publication.
+
+### Acceptance and enforcement are separate
+
+1. **ADR acceptance** approves the agreement rule and authority boundaries.
+2. **Enforcement graduation** requires production-grade contracts/schemas, deterministic generation, meaningful fixtures, executable validation, policy wiring, CI admission, release assembly, accountable review, correction, rollback, and observed behavior.
+
+An accepted ADR without enforcement is doctrine, not runtime proof.
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-boundary"></a>
+
+## Evidence boundary
+
+This revision uses current repository bytes from `main` plus KFM doctrine. Repository evidence is authoritative for what exists now; Directory Rules and accepted ADRs govern responsibility and placement.
+
+| Evidence level | CONFIRMED | Not established |
+|---|---|---|
+| **ADR identity** | This exact tracked path and prior blob exist. | Acceptance, quorum, or enforcement. |
+| **Semantic contract** | `contracts/data/catalog_matrix.md` exists and defines `CatalogMatrix` as an inspectability aid, not sovereign truth or release authority. | Final field semantics or accepted ownership. |
+| **Machine schema** | `schemas/contracts/v1/data/catalog_matrix.schema.json` exists and points to the semantic contract. | Production-grade shape; it requires only `id` and permits arbitrary additional properties. |
+| **Validator lane** | `tools/validators/catalog_closure/README.md` exists; `tools/validators/validate_catalog_matrix.py` is documented as a stub. | Working closure executable, resolver, dedicated fixture/test family, or required CI gate. |
+| **Catalog lanes** | STAC, DCAT, PROV, domain, evidence/proof, and release documentation surfaces exist. | Mutually consistent emitted release records or end-to-end promotion closure. |
+| **Operational release** | No admissible evidence reviewed here establishes publication. | Production deployment, public route behavior, signing, approval, rollback execution, or current release state. |
+
+### Truth labels
+
+| Label | Use in this ADR |
+|---|---|
+| **CONFIRMED** | Verified from current repository bytes or governing doctrine. |
+| **PROPOSED** | Decision, field, path role, migration, validator, policy, or workflow not accepted and verified. |
+| **UNKNOWN** | No sufficient evidence establishes the state. |
+| **NEEDS VERIFICATION** | A concrete repository, workflow, review, or operational check remains. |
+| **CONFLICTED** | Current repository documents or proposed ADRs disagree and need coordinated resolution. |
+
+### Directory Rules basis
+
+- `docs/adr/` owns architecture decisions.
+- `contracts/` owns object meaning.
+- `schemas/` owns machine shape.
+- `tools/validators/` owns deterministic checking.
+- `policy/` owns admissibility decisions.
+- `data/catalog/` owns catalog-stage records.
+- `data/proofs/` owns proof/support records.
+- `release/` owns release decisions, manifests, correction, and rollback.
+
+The currently verified shared homes are `contracts/data/catalog_matrix.md` and `schemas/contracts/v1/data/catalog_matrix.schema.json`. Earlier proposed paths under `contracts/catalog/` or `schemas/contracts/v1/catalog/` are not treated as current repository facts.
+
+[Back to top](#top)
+
+---
+
+<a id="context"></a>
+
+## Context
+
+KFM uses three standards-facing catalog views because they answer different questions:
+
+| Surface | Primary question | Must not become |
+|---|---|---|
+| **STAC** | What spatiotemporal asset can be discovered and accessed? | Release authority or provenance proof. |
+| **DCAT** | What dataset/distribution can interoperate with external catalogs, and under what rights/access posture? | Canonical artifact store or lineage authority. |
+| **PROV** | Which activity, agent, and source entities produced this artifact? | Policy decision or public-access grant. |
+
+Each record can be individually valid while the set is mutually contradictory. A STAC asset can name one checksum, DCAT another, and PROV a different generated entity. Per-record schema validation cannot prove cross-record agreement.
+
+```text
+record validity != cross-record agreement != policy permission != release approval
+```
+
+The failure mode is **catalog drift**: three standards-compliant records describe different effective artifacts or releases while presenting one apparent catalog surface.
+
+> [!WARNING]
+> Catalog drift is hard to detect after publication because each individual record may still parse, validate, and render. KFM therefore needs a deterministic closure check before promotion.
+
+### Forces
 
 | Force | Pressure |
 |---|---|
-| **Trust** | Public consumers, external auditors, and downstream federators must be able to verify that STAC, DCAT, and PROV records describe the *same* artifact at the same digest under the same release. |
-| **Standards reuse** | KFM rides existing tooling (STAC Browser, pystac, stac-fastapi, pgstac, DCAT aggregators, PROV-O processors). Forking these standards is not on the table; closure must be additive. |
-| **Promotion determinism** | Promotion must fail closed when closure breaks. Manual review cannot scale to per-release cross-record checks. |
-| **Auditability** | Reviewers need a single inspectable surface that answers *"is this artifact fully governed?"* without traversing three separate catalog graphs. |
-| **Cost** | A matrix per release is small storage but adds an artifact, a schema, a validator, a policy module, and a CI step. |
+| **Trust** | Consumers must be able to establish that STAC, DCAT, and PROV refer to the same released artifact. |
+| **Standards reuse** | KFM should profile established standards rather than fork them. |
+| **Determinism** | Identity, digest, and release-reference disagreement must fail closed. |
+| **Auditability** | Reviewers need a compact, inspectable crosswalk plus the underlying records and validation evidence. |
+| **Separation** | The matrix descriptor, validation proof, policy decision, and release authorization must remain distinct. |
+| **Cost** | Closure adds schema, generator, validator, fixtures, tests, reports, and review burden. |
+
+[Back to top](#top)
 
 ---
 
-## 2. Decision
+<a id="decision"></a>
 
-KFM adopts the following rules for the **release-level** catalog plane.
+## Decision
 
-### 2.1 The "must agree" invariant
+KFM proposes the following release-level rules.
 
-> **MUST.** For every promoted release, the STAC item(s), DCAT
-> distribution(s), and PROV-O record(s) describing the released artifact(s)
-> MUST agree on:
->
-> 1. **Identifier** — `kfm:spec_hash` on the STAC item, `dct:identifier` on
->    the DCAT distribution, and the PROV-O `Entity` ID for the same artifact
->    MUST resolve to the same canonical artifact identity.
-> 2. **Digest / checksum** — STAC asset checksum, DCAT distribution checksum
->    (e.g., `spdx:checksum` or equivalent), and the digest recorded in the
->    `ReleaseManifest` MUST match byte-for-byte.
-> 3. **Release reference** — STAC, DCAT, and PROV records MUST carry the same
->    `release_ref` (or KFM-extension equivalent) pointing at the immutable
->    `ReleaseManifest`.
->
-> Disagreement on any of (1)–(3) is a **DENY** at the promotion gate.
+### 1. Agreement is mandatory for promotion
 
-### 2.2 The Catalog Matrix is the explicit closure object
+For each release artifact represented across STAC, DCAT, and PROV, the records MUST agree on:
 
-> **MUST.** Every promoted release MUST emit a `CatalogMatrix` artifact that
-> records the STAC ↔ DCAT ↔ PROV crosswalk, the agreed identifiers and
-> digests, the `ReleaseManifest` reference, the `EvidenceBundle` reference,
-> and the source-descriptor references used. The matrix is generated
-> **alongside** closure resolution, not instead of it.
+1. **Canonical artifact identity** — the same stable artifact identifier or `spec_hash` lineage.
+2. **Byte digest** — the same algorithm-qualified digest for the exact released bytes.
+3. **Release reference** — the same immutable release-governance reference.
 
-> **SHOULD.** At intermediate stages (PROCESSED, candidate-catalog), a
-> `CatalogMatrix` MAY be emitted for debugging and review surfaces but is
-> **not** a release proof.
+A verified disagreement is `DENY`. Missing support that prevents a reliable determination is `ABSTAIN` or `ERROR`, never an implicit pass.
 
-### 2.3 The closure resolver is the live enforcement
+### 2. One explicit agreement descriptor is required
 
-> **MUST.** A `ReleaseManifest` closure resolver MUST verify, at promotion
-> time, that every reference (`artifact_ref`, `provenance_ref`,
-> `evidence_ref`, `stac_ref`, `dcat_ref`, `run_receipt_ref`,
-> `attestation_ref`) actually resolves and that the `CatalogMatrix`
-> agreement holds. The resolver returns a finite outcome
-> `{ PUBLISHABLE | ABSTAIN | DENY | ERROR }` with `failures[]` and
-> `warnings[]`.
+A release candidate MUST provide a `CatalogMatrix` or accepted equivalent that:
 
-### 2.4 The cross-linkage convention
+- names the closure scope;
+- identifies the STAC, DCAT, and PROV records checked;
+- records the canonical identity, digest, and release reference expected;
+- records source, evidence, validation, policy, review, correction, and rollback references where applicable;
+- exposes finite agreement outcomes and reason codes;
+- remains content-addressed or otherwise immutably identifiable.
 
-> **MUST.** Cross-vocabulary links use the conventional fields:
->
-> - STAC → DCAT via `kfm:dcat_dataset`
-> - DCAT → PROV via `prov:wasGeneratedBy`
-> - PROV → upstream entities via `prov:wasDerivedFrom`
-> - Every leaf carries `kfm:spec_hash` so the graph is stable under
->   content-addressed identity.
+### 3. Validation proof is separate
 
-### 2.5 Scope
+The matrix descriptor MUST NOT claim that it validated itself. A separate `ValidationReport`, proof record, or accepted equivalent records:
 
-This ADR governs the **release-level** catalog plane. It does **not** decide:
+- validator identity and version;
+- exact input digests;
+- checks executed;
+- outcomes and reason codes;
+- generated time;
+- environment/tool failures;
+- report digest.
 
-- Per-domain object meaning. Domain-specific semantics belong under the
-  appropriate `contracts/` lane and remain subject to Directory Rules.
-- Per-domain field shape. Machine schemas use `schemas/contracts/v1/<domain>/`
-  by default per ADR-0001 unless an accepted ADR says otherwise.
-- Sensitivity, rights, or publication-class policy. Those decisions live under
-  the appropriate `policy/`, `data/registry/`, review, and release surfaces.
+### 4. Promotion remains a separate decision
 
-Per-domain blueprints MAY add additional fields to a domain-scoped matrix
-(e.g., `HabitatCatalogMatrix` at `data/catalog/matrix/habitat/*.json`) but
-MUST satisfy the agreement contract in §2.1.
+A passing closure report is necessary but not sufficient. Policy, rights, sensitivity, review, release assembly, correction, and rollback gates still decide promotion.
 
-### 2.6 Public-interface rule
+### 5. Public clients use governed projections
 
-> **MUST.** Public clients, reviewer UIs, Focus Mode, exports, and dashboards
-> consume the matrix only through governed APIs, released artifacts, proof packs,
-> or catalog records. The `CatalogMatrix` is a release artifact and inspection
-> surface; it is not permission for a public client to read canonical stores,
-> unpublished candidate records, RAW, WORK, or QUARANTINE directly.
+Public clients, review UIs, Focus Mode, dashboards, and exports consume released, policy-safe representations through governed interfaces. This ADR does not authorize direct reads from canonical/internal stores, RAW, WORK, QUARANTINE, or unreviewed catalog candidates.
+
+[Back to top](#top)
 
 ---
 
-## 3. The Agreement Matrix — what must agree
+<a id="agreement-contract"></a>
 
-The three vocabularies carry overlapping facts about the same artifact. This
-ADR pins the *exact* fields that MUST agree across all three.
+## Agreement contract
 
-| Fact | STAC field | DCAT field | PROV-O field | Source of truth |
+### Required agreement dimensions
+
+| Dimension | STAC projection | DCAT projection | PROV projection | Authority used for comparison |
 |---|---|---|---|---|
-| **Canonical artifact identity** | `properties.kfm:spec_hash` | `dct:identifier` *(MUST embed `kfm:spec_hash`)* | `Entity` ID *(MUST encode `kfm:spec_hash`)* | Canonical artifact identity / content hash recorded in the `ReleaseManifest` |
-| **Bytewise digest** | `assets.<role>.checksum:*` (multihash) | Distribution `spdx:checksum` *(or equivalent)* | `Entity` `prov:value` digest property | `ReleaseManifest.artifact_digests[*]` |
-| **Release reference** | `properties.kfm:release_ref` | `kfm:release_ref` (extension) | `Activity.scope` / `kfm:release_ref` | `ReleaseManifest.release_ref` |
-| **Producing activity** | `links[rel=prov]` | `prov:wasGeneratedBy` | `Activity` (this record) | PROV-O `Activity` ID |
-| **Upstream sources** | `links[rel=derived_from]` | `prov:hadPrimarySource` *(where applicable)* | `prov:wasDerivedFrom` (Entity → Entity) | Source-descriptor canonical IDs |
-| **License** | inherited from STAC Collection | `dct:license` *(controlled SPDX-aligned vocabulary)* | recorded as agent attribution where relevant | DCAT distribution (authoritative) |
-| **Access rights** | `properties.kfm:rights_status` | `dct:accessRights` *(controlled enum)* | recorded as policy label on `Activity` | DCAT distribution (authoritative) |
-| **Run receipt pointer** | `properties.kfm:run_receipt_url` | `kfm:run_receipt_url` (extension) | `Activity` ID linked to `RunReceipt` | `data/receipts/<domain>/<run_id>/run_receipt.json` |
-| **EvidenceBundle pointer** | `links[rel=evidence]` | `kfm:evidence_bundle_ref` (extension) | linked from generated `Entity` | `data/proofs/<domain>/releases/<release_id>/evidence_bundle.json` |
-
-**Authoritative sources** when fields disagree:
-
-- **License + access rights** — DCAT is authoritative; STAC and PROV inherit.
-- **Lineage** — PROV-O is authoritative; STAC and DCAT carry summary links.
-- **Identity and digest** — `ReleaseManifest` is authoritative; all three
-  catalogs MUST match it.
-- **Evidence support** — `EvidenceBundle` is authoritative for claim support; the
-  matrix points to it but does not replace it.
-
-### 3.1 Minimum `CatalogMatrix` record shape
-
-The schema MAY add fields, but the release-level object MUST expose at least
-these inspection fields so validators, reviewers, and auditors can reproduce the
-closure decision without guessing. Field names are PROPOSED until the schema is
-landed.
-
-| Field | Required | Meaning |
-|---|---:|---|
-| `schema_version` | yes | Matrix schema version, starting at `v1`. |
-| `matrix_id` | yes | Stable matrix identifier, preferably derived from `release_ref` + artifact hash. |
-| `release_ref` | yes | Immutable `ReleaseManifest` reference. |
-| `release_state` | yes | Candidate / released / rolled_back / withdrawn state used by policy. |
-| `artifact_ref` | yes | Canonical artifact pointer. |
-| `spec_hash` | yes | Canonical artifact identity that must agree across STAC, DCAT, and PROV-O. |
-| `artifact_digest` | yes | Bytewise digest from the `ReleaseManifest`. |
-| `stac_ref` | yes | STAC item or collection reference for this artifact. |
-| `dcat_ref` | yes | DCAT dataset / distribution reference for this artifact. |
-| `prov_ref` | yes | PROV-O activity/entity record reference. |
-| `evidence_bundle_ref` | yes | EvidenceBundle used for release-significant claims. |
-| `run_receipt_ref` | yes | RunReceipt for the generation or transform that produced the artifact. |
-| `source_descriptor_refs[]` | yes | Admitted sources that must close through lineage. |
-| `agreement_status` | yes | `PUBLISHABLE`, `ABSTAIN`, `DENY`, or `ERROR`. |
-| `failures[]` / `warnings[]` | yes | Machine-readable reason codes and reviewer-readable summaries. |
-
-> [!IMPORTANT]
-> The matrix contains refs plus agreed fields. It MAY cache a small pinned subset
-> of STAC/DCAT/PROV values for O(1) review, but it MUST NOT become a forked
-> replacement for the underlying catalog records.
-
----
-
-## 4. Closure graph
-
-The closure is a small directed graph rooted at the `ReleaseManifest`. The
-`CatalogMatrix` is the explicit projection of this graph into a single
-inspectable record; the closure resolver is the live verifier.
-
-```mermaid
-flowchart LR
-  RM["ReleaseManifest<br/>(release_ref, artifact_digests)"]
-  CM["CatalogMatrix<br/>(crosswalk + status)"]
-  EB["EvidenceBundle"]
-  ST["STAC item<br/>(kfm:spec_hash, kfm:release_ref)"]
-  DC["DCAT distribution<br/>(dct:identifier, dct:license, dct:accessRights)"]
-  PR["PROV-O record<br/>(Activity, Agent, Entity)"]
-  ART["Canonical artifact<br/>(content-addressed by spec_hash)"]
-  SRC["SourceDescriptor(s)"]
-  RR["RunReceipt"]
-
-  RM -- "release_ref"            --> CM
-  RM -- "artifact_digests[*]"    --> ART
-  CM -- "crosswalk"              --> ST
-  CM -- "crosswalk"              --> DC
-  CM -- "crosswalk"              --> PR
-  CM -- "status / failures"      --> RM
-  ST -- "kfm:dcat_dataset"       --> DC
-  DC -- "prov:wasGeneratedBy"    --> PR
-  PR -- "prov:wasDerivedFrom"    --> SRC
-  PR -- "Activity →"             --> RR
-  ST -- "kfm:spec_hash"          --> ART
-  DC -- "dct:identifier"         --> ART
-  PR -- "Entity ID"              --> ART
-  EB -- "attests"                --> CM
-  EB -- "attests"                --> RM
-```
-
-> **Read this diagram as a rule, not just a picture:** every arrow that ends
-> at `ART` MUST resolve to the same `spec_hash`; every arrow that ends at
-> `RM` MUST resolve to the same `release_ref`; every arrow that ends at `EB`
-> MUST resolve to a real, signed bundle. The closure resolver checks each
-> edge.
-
----
-
-## 5. Schema · validator · policy · fixtures
-
-The implementation lanes follow the **contract / schema / policy split** and
-the schema-home rule from ADR-0001.
-
-| Lane | Path family | Status | Notes |
-|---|---|---|---|
-| **Schema** | `schemas/contracts/v1/catalog/catalog_matrix.schema.json` | PROPOSED | Per ADR-0001 default home. If mounted repo evidence conflicts, raise drift and resolve before landing; do **not** maintain a parallel schema authority. |
-| **Object meaning** | `contracts/catalog/catalog_matrix.md` | PROPOSED | Markdown contract describing semantics, required fields, reason codes, and agreement rule. |
-| **Per-domain matrix** | `data/catalog/matrix/<domain>/<release_id>.json` | PROPOSED | Per Habitat / Hydrology / Archaeology / Settlements / Transport / Fauna / Hazards blueprints. |
-| **Generator** | `tools/release/build_catalog_matrix.py` | PROPOSED / NEEDS VERIFICATION | Runs alongside the closure resolver at promotion; deterministic output; exact release-tool home must be checked. |
-| **Validator** | `tools/validators/catalog/catalog_matrix.py` | PROPOSED | Schema + agreement + cross-link checks. Aggregated by `tools/validators/validate_all.py`. |
-| **Closure resolver** | `tools/resolvers/release/resolve_release_manifest.py` | PROPOSED / NEEDS VERIFICATION | Live reference resolution; emits `{ PUBLISHABLE \| ABSTAIN \| DENY \| ERROR }`; resolver-vs-validator home remains open. |
-| **Policy module** | `policy/promotion/catalog_matrix.rego` | PROPOSED | OPA/Conftest rules enforcing §2.1 and §2.4. |
-| **Positive fixtures** | `fixtures/catalog/valid/catalog_matrix/` | PROPOSED | At least one per domain. |
-| **Negative fixtures** | `fixtures/catalog/invalid/catalog_matrix/` | PROPOSED — required set below | Each fixture is valid-shape-but-policy-violating, named by failure mode. |
-| **Tests** | `tests/catalog/test_catalog_matrix.py` | PROPOSED | Asserts validator + policy DENY each negative fixture with the expected reason code. |
-| **CI workflow step** | `.github/workflows/promotion.yml` (Gate F / closure step) | PROPOSED | Closure resolver is a hard-fail step. |
-
-### 5.1 Required negative fixtures
-
-Per the negative-fixtures discipline, the following fixtures MUST exist and
-MUST be DENIED with the named reason code:
-
-| Fixture | Failure mode | Expected reason code |
-|---|---|---|
-| `digest_mismatch_stac_vs_dcat/` | STAC asset checksum ≠ DCAT distribution checksum | `digest_mismatch` |
-| `digest_mismatch_dcat_vs_release_manifest/` | DCAT checksum ≠ `ReleaseManifest.artifact_digests` | `digest_mismatch` |
-| `release_ref_mismatch/` | STAC, DCAT, and PROV carry different `release_ref` values | `release_ref_mismatch` |
-| `missing_prov_link_from_dcat/` | DCAT distribution has no `prov:wasGeneratedBy` | `missing_prov_link` |
-| `missing_dcat_link_from_stac/` | STAC item has no `kfm:dcat_dataset` | `missing_dcat_link` |
-| `unresolved_evidence_ref/` | `kfm:evidence_bundle_ref` does not resolve | `unresolved_evidence` |
-| `unresolved_run_receipt/` | `kfm:run_receipt_url` does not resolve | `unresolved_run_receipt` |
-| `prov_entity_id_mismatch/` | PROV `Entity` ID does not encode the artifact `spec_hash` | `identity_mismatch` |
-| `controlled_vocab_violation/` | DCAT `dct:license` or `dct:accessRights` not in the controlled vocabulary | `vocab_violation` |
-| `restricted_released/` | DCAT `dct:accessRights == "restricted-precise"` while `release_state == "released"` in the public matrix | `restricted_released` |
+| **Artifact identity** | KFM extension property or asset identifier | `dct:identifier` or profiled equivalent | Generated `prov:Entity` identifier | Canonical artifact identity contract / release object |
+| **Byte digest** | Asset checksum extension/profile | Distribution checksum such as SPDX checksum or accepted profile | Generated entity digest attribute/profile | Digest recorded by release assembly for the exact bytes |
+| **Release reference** | KFM release link/property | KFM release extension/link | Activity/entity release association | Immutable release-governance record |
+| **Producing activity** | Provenance link | `prov:wasGeneratedBy` or profile mapping | `prov:Activity` | PROV activity identity |
+| **Upstream sources** | Derived/source links | Primary-source/provenance mapping | `prov:wasDerivedFrom` | Admitted `SourceDescriptor` identities |
+| **Rights/access** | Summary/profile fields | DCAT rights/access fields | Activity/entity policy annotations | Applicable source and policy decisions |
+| **Evidence support** | Evidence link | KFM evidence extension/link | Entity/activity relation | Resolved `EvidenceBundle` or accepted support object |
 
 > [!NOTE]
-> Reason codes are stable strings. Adding, renaming, or removing a reason
-> code is itself a minor ADR-eligible change so downstream dashboards, proof
-> pack readers, and release review tools do not break.
+> Exact extension names remain profile-level implementation details. The invariant is semantic agreement, not attachment to one provisional field spelling.
 
----
-
-## 6. Promotion gating
-
-The agreement rule is wired into the existing Promotion Gate matrix. **All
-gates fire; this ADR adds enforcement at the closure step.**
-
-| Gate | Role w.r.t. this ADR |
-|---|---|
-| **A — Schema** | `CatalogMatrix` validates against `catalog_matrix.schema.json`. |
-| **B — Inputs pinned** | All catalog records reference pinned source descriptors. |
-| **C — Checks pass** | Per-vocabulary validators (STAC, DCAT, PROV) all PASS. |
-| **D — Signatures valid** | Where required (DSSE/cosign), catalog records' attestations verify. |
-| **E — Provenance complete** | PROV-O lineage closes back to admitted source descriptors. |
-| **F — No policy violations** | `policy/promotion/catalog_matrix.rego` evaluates DENY-free. |
-| **G — Release ready** | Closure resolver returns `PUBLISHABLE`; `CatalogMatrix` is sealed into the proof pack. |
-
-> **Default-deny.** A missing `CatalogMatrix`, an unresolved reference, or any
-> §2.1 disagreement DENIES promotion. There is no warn-only path for
-> identity, digest, or release-ref disagreement.
-
-### 6.1 Resolver outcome semantics
+### Finite outcomes
 
 | Outcome | Meaning | Promotion effect |
 |---|---|---|
-| `PUBLISHABLE` | All required refs resolve; identity, digest, release reference, policy, and proof-pack requirements pass. | Gate G may pass. |
-| `ABSTAIN` | The resolver cannot establish release readiness because supporting evidence is incomplete but not proven unsafe. | Promotion stops; reviewer gets missing-support details. |
-| `DENY` | A required agreement, policy, rights, sensitivity, or release invariant is violated. | Promotion fails closed. |
-| `ERROR` | Tooling, network, parser, registry, or environment failure prevents a reliable decision. | Promotion fails closed; rerun only after receipted repair. |
+| `PASS` | Required records resolve and all configured agreement checks pass. | Closure prerequisite may pass; other gates still run. |
+| `ABSTAIN` | Support is incomplete, stale, conflicted, or insufficient to establish agreement safely. | Hold promotion and return missing-support details. |
+| `DENY` | A verified identity, digest, release, policy, rights, sensitivity, or public-safety invariant is violated. | Fail closed. |
+| `ERROR` | Tool, parser, registry, dependency, or environment failure prevents a reliable decision. | Fail closed; repair and rerun with a new report. |
 
-Retry/backoff belongs in the path to `ERROR`, not as a way to soften a verified
-`DENY`. A true identity, digest, release-ref, or policy violation remains `DENY`
-regardless of retry count.
+### Stable reason-code families
 
----
-
-## 7. Consequences
-
-### 7.1 Positive
-
-- **Catalog drift becomes detectable at promotion time**, not after publication.
-- **Reviewer dashboards and external auditors** get one inspectable record
-  per release that answers *"is this artifact fully governed?"*.
-- **Federation safety:** STAC Browser, DCAT aggregators, and PROV-O
-  consumers see a consistent crosswalk; broken links surface before they
-  reach the public.
-- **Per-domain reuse:** Habitat, Hydrology, Archaeology, Transport,
-  Settlements, Fauna, and Hazards blueprints already named the artifact;
-  this ADR retroactively unifies them under one schema and validator.
-- **Promotion determinism:** the `{ PUBLISHABLE | ABSTAIN | DENY | ERROR }`
-  outcome is finite and auditable.
-- **Compatible with existing standards** — no fork of STAC, DCAT, or PROV-O.
-  KFM extensions are additive.
-
-### 7.2 Negative / costs
-
-- **Storage cost** — one additional artifact per release. The corpus assesses
-  this as small; it grows linearly with releases.
-- **Operational complexity** — generator, validator, policy module, and CI
-  step add maintenance surface. Negative fixtures must be kept current.
-- **Field duplication** — license, access rights, identifier, and digest
-  appear in more than one place. Section 3 names DCAT as authoritative for
-  license/access; PROV for lineage; `ReleaseManifest` for identity/digest.
-- **Resolver flakiness** — live reference resolution can fail on transient
-  network issues. Resolver SHOULD implement explicit retry/backoff before
-  emitting `ERROR`; verified agreement, rights, or policy violations still emit
-  `DENY`. *(Open question — see §11.)*
-- **Vocabulary churn** — DCAT v3 and STAC 1.0 evolve. Schema versioning
-  follows ADR-0001 conventions; breaking changes get v2.
-
-### 7.3 Risks
-
-| Risk | Mitigation |
+| Family | Examples |
 |---|---|
-| Per-domain matrices drift from the central schema | One canonical schema; per-domain matrices are profiles, not parallel definitions. CI runs schema validation against all of them. |
-| Validator runtime grows nonlinearly with catalog size | Author an incremental version that validates only the touched subgraph per PR. *(Future work.)* |
-| Reason codes drift across domains | Reason codes are repo-wide constants documented alongside the policy module. |
-| Standards bodies update STAC / DCAT / PROV | Track in `docs/standards/` and version the KFM extension; bump matrix schema when controlled vocabularies change. |
-| Public surfaces bypass the resolver | Governed APIs and released artifacts only; no direct public RAW/WORK/QUARANTINE/candidate/canonical-store reads. |
-| Schema-home drift between `contracts/` and `schemas/` | Raise `docs/registers/DRIFT_REGISTER.md` entry; resolve with ADR-0001 / Directory Rules before creating machine files. |
+| Identity | `identity_mismatch`, `unresolved_artifact`, `duplicate_artifact_identity` |
+| Digest | `digest_missing`, `digest_algorithm_mismatch`, `digest_mismatch` |
+| Release | `release_ref_missing`, `release_ref_mismatch`, `release_state_invalid` |
+| Linkage | `missing_stac_dcat_link`, `missing_dcat_prov_link`, `unresolved_prov_entity` |
+| Evidence/source | `unresolved_evidence`, `unresolved_source_descriptor`, `source_not_admitted` |
+| Rights/policy | `rights_unknown`, `access_class_conflict`, `restricted_public_projection` |
+| Tooling | `schema_error`, `parse_error`, `dependency_error`, `internal_error` |
+
+Renaming or removing stable reason codes requires compatibility review because dashboards, proof readers, CI summaries, and release tooling may depend on them.
+
+[Back to top](#top)
 
 ---
 
-## 8. Alternatives considered
+<a id="catalogmatrix-object-boundary"></a>
 
-### 8.1 Embedded cross-references only (no centralized matrix)
+## CatalogMatrix object boundary
 
-Each vocabulary embeds links to the others (`kfm:dcat_dataset`,
-`prov:wasGeneratedBy`, `prov:wasDerivedFrom`). No centralized record.
+ADR-0011 and the current semantic contract establish the anti-collapse rule:
 
-**Rejected, partially.** Embedded links remain (§2.4) for portability and
-federation. But audit-by-graph-traversal at every check is expensive and
-non-deterministic; reviewers and auditors cannot answer the closure question
-in O(1). The matrix complements — does not replace — embedded links.
+```text
+CatalogMatrix descriptor
+  != ValidationReport / proof
+  != PolicyDecision
+  != PromotionDecision
+  != ReleaseManifest
+  != published artifact
+```
 
-### 8.2 A single unified catalog vocabulary
+| Object | Owns | Does not own |
+|---|---|---|
+| `CatalogMatrix` | Crosswalk scope, referenced records, expected shared values, finite agreement status, reason summaries | Evidence truth, validator execution, policy permission, release approval |
+| `ValidationReport` | Exact validation inputs, checks, tool version, results, reason codes, report digest | Catalog meaning, policy permission, release approval |
+| `EvidenceBundle` | Claim support and citation closure | Catalog interchange shape or release decision |
+| `PolicyDecision` | Allow, deny, restrict, hold, abstain, obligations | Schema validity or catalog identity |
+| `PromotionDecision` / receipt | Governed transition decision and gate outcomes | Source truth or artifact bytes |
+| `ReleaseManifest` | Released artifact set, digests, public scope, rollback target | Underlying evidence or catalog record semantics |
 
-Merge STAC + DCAT + PROV into one KFM-native catalog format.
+### Minimum descriptor fields proposed for schema hardening
 
-**Rejected.** Forking external standards forfeits ecosystem tooling
-(STAC Browser, pgstac, DCAT aggregators, PROV-O processors). The corpus
-explicitly chooses to *ride* existing tooling and add a small KFM extension
-profile. Closure is achieved by agreement, not unification.
-
-### 8.3 Manual reviewer-driven closure
-
-Reviewers eyeball the three records before sign-off.
-
-**Rejected.** Cannot scale; non-deterministic; turns the trust membrane into
-human attention. Also conflicts with the watcher-as-non-publisher invariant
-and finite-decision-outcomes doctrine.
-
-### 8.4 Closure resolver only (no `CatalogMatrix` artifact)
-
-Run the live resolver at promotion; never persist the crosswalk.
-
-**Rejected.** The resolver proves linkage *at promotion time*. The matrix
-records *what* the linkage is, in a standard shape, so that:
-
-- Auditors can re-verify post-publication without re-running the resolver.
-- Reviewer UIs can render a compact, shareable closure summary.
-- Supersession and rollback can compare matrices across releases.
-
-The two are complements, not substitutes.
-
-### 8.5 Make `CatalogMatrix` optional at the release level
-
-The corpus left the question open. We adopt **mandatory at release,
-optional at intermediate stages** (§2.2). Optional-at-release was rejected
-because the cost is small relative to the audit value, and several domain
-blueprints already treat it as required.
-
----
-
-## 9. Migration plan
-
-This ADR is **additive**. It does not remove existing STAC/DCAT/PROV
-emitters; it requires they emit consistent fields and that a new artifact
-join them.
-
-### 9.1 Steps
-
-1. **Run the placement check.** Verify target homes against Directory Rules,
-   ADR-0001, adjacent READMEs, and the mounted repo. If a conflict appears,
-   open a drift entry before landing files.
-2. **Land the schema.** Create
-   `schemas/contracts/v1/catalog/catalog_matrix.schema.json` with `$id`,
-   version `v1`, required fields, examples, and the controlled-vocab links.
-3. **Land the semantic contract.** Create `contracts/catalog/catalog_matrix.md`
-   with object meaning, reason codes, resolver expectations, and compatibility
-   notes.
-4. **Land the validator.** Implement
-   `tools/validators/catalog/catalog_matrix.py` with both shape and
-   cross-record agreement checks. Register it in the repo-native validator
-   aggregate after verifying the aggregate path.
-5. **Land the policy module.** Implement
-   `policy/promotion/catalog_matrix.rego` with allow/deny rules
-   corresponding to §2.1 and §5.1 reason codes.
-6. **Author fixtures.** All positive fixtures under
-   `fixtures/catalog/valid/catalog_matrix/`; all required negative fixtures
-   under `fixtures/catalog/invalid/catalog_matrix/` with names matching the
-   reason codes.
-7. **Wire CI.** Add the validator to the catalog-closure CI job; add a
-   release-closure job that runs the resolver against the matrix; both
-   hard-fail on `DENY` and `ERROR`.
-8. **Land the generator.** Implement
-   `tools/release/build_catalog_matrix.py`; run it alongside the closure
-   resolver at promotion after confirming the release-tool home.
-9. **Per-domain rollout.** For each domain that already names a matrix
-   (Habitat, Hydrology, Archaeology, Transport, Settlements, Fauna,
-   Hazards), profile the central schema; do not maintain divergent
-   definitions.
-10. **Documentation.** Update `docs/standards/{stac,dcat,prov}.md` to point
-    at this ADR for the agreement contract; update each domain's
-    `CATALOG_AND_PROOF_OBJECTS.md` to reference the central matrix.
-
-### 9.2 Compatibility window
-
-For releases that predate this ADR, generate `CatalogMatrix` retroactively
-where practical. Where retroactive generation is impossible, mark the
-release as "pre-matrix" in `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md`
-and treat absence as expected. New releases MUST include the matrix.
-
-### 9.3 Drift handling
-
-If the mounted repo currently uses `contracts/catalog/...` rather than
-`schemas/contracts/v1/catalog/...` for catalog schemas, raise a drift entry
-under `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5 and
-resolve via ADR-0001 conventions before this ADR's schema lands.
-
-### 9.4 Verification checklist
-
-Before this ADR is treated as implementation-ready, reviewers should confirm:
-
-- [ ] Target ADR path and adjacent ADR index are verified in a mounted repo.
-- [ ] `schemas/contracts/v1/catalog/` exists or is created under ADR-0001 / Directory Rules.
-- [ ] No parallel machine-schema authority is created under `contracts/catalog/` without an accepted ADR.
-- [ ] `contracts/catalog/catalog_matrix.md` or equivalent semantic contract home is verified.
-- [ ] `data/catalog/matrix/` is compatible with the lifecycle layout and has a per-root README if newly created.
-- [ ] Resolver home is verified: `tools/resolvers/release/` versus `tools/validators/release/` or another repo-native home.
-- [ ] Policy home and OPA/Conftest execution path are verified.
-- [ ] Positive and negative fixtures cover every §5.1 reason code.
-- [ ] CI treats `DENY` and `ERROR` as hard failures.
-- [ ] Proof pack or release manifest includes the matrix digest and rollback target.
-- [ ] Public UI/API surfaces resolve through governed release artifacts, not canonical/internal stores.
-
----
-
-## 10. Rollback plan
-
-This ADR's enforcement is rollback-safe because the matrix is **additive**
-and the underlying STAC / DCAT / PROV records are unchanged.
-
-| Rollback level | Action |
+| Field | Purpose |
 |---|---|
-| **Disable enforcement for newly introduced non-critical checks** | Mark only the new non-critical check as `warn-only` with reviewer approval. Identity, digest, release-ref, unresolved evidence, and public-safety violations MUST remain blocking. |
-| **Disable generation** | Remove the `build_catalog_matrix` step from CI only as an emergency rollback; new releases lacking a matrix are not promotable while this ADR is active. Mark the ADR `superseded` or `suspended` with an explicit forward decision. |
-| **Revert a faulty release** | Issue a `RollbackReceipt` per the standard rollback discipline; the rolled-back release's matrix remains discoverable with `release_state = "rolled_back"`. Old releases are never deleted. |
-| **Schema breakage** | Bump matrix schema to v2 per ADR-0001; keep v1 fixtures as compatibility tests; add a compatibility map under `migrations/schema/` after verifying migration-home convention. |
+| `id` | Stable matrix descriptor identity. |
+| `version` | Contract/profile version. |
+| `scope` | Domain, release candidate, artifact family, or explicit record set. |
+| `release_ref` | Immutable release candidate or release-governance reference. |
+| `artifact_ref` | Canonical artifact reference. |
+| `artifact_identity` | Expected stable identity/spec hash. |
+| `artifact_digest` | Algorithm-qualified expected byte digest. |
+| `stac_refs[]` | Exact STAC records/assets checked. |
+| `dcat_refs[]` | Exact DCAT datasets/distributions checked. |
+| `prov_refs[]` | Exact PROV activities/entities checked. |
+| `source_refs[]` | Admitted source descriptors needed for lineage closure. |
+| `evidence_refs[]` | Evidence/support references needed for consequential claims. |
+| `validation_report_ref` | Separate report proving checks ran. |
+| `policy_decision_refs[]` | Applicable rights/sensitivity/admissibility decisions. |
+| `agreement_outcome` | `PASS`, `ABSTAIN`, `DENY`, or `ERROR`. |
+| `reason_codes[]` | Stable machine-readable findings. |
+| `correction_refs[]` | Correction/supersession/withdrawal lineage. |
+| `rollback_ref` | Rollback target when release-significant. |
+| `spec_hash` | Deterministic descriptor hash where adopted. |
 
-> **The matrix never overwrites canonical truth.** It is a projection. If
-> the matrix is wrong, the `ReleaseManifest`, the underlying catalog
-> records, and the `EvidenceBundle` remain authoritative. Rollback removes
-> or corrects the matrix; it never silently rewrites canon.
+The current shared schema does not enforce this shape. These fields remain PROPOSED until the schema, fixtures, validator, and compatibility policy are updated together.
 
----
-
-## 11. Open questions
-
-> Tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
-
-- **NEEDS VERIFICATION** — Whether the mounted repo currently has any
-  `data/catalog/matrix/` or `schemas/contracts/v1/catalog/` paths. The
-  corpus describes both as PROPOSED. *Action:* verify against the mounted
-  repo before the schema lands; otherwise create them in the same change
-  with a per-root README.
-- **NEEDS VERIFICATION** — Whether `tools/resolvers/release/` is the live
-  resolver home, or whether it lives under `tools/validators/release/`.
-  *Action:* check the mounted repo; the corpus uses both phrasings.
-- **OPEN** — Resolver retry/backoff semantics on transient network failures.
-  Default proposal: retry up to 3 times with exponential backoff before
-  emitting `ERROR`; emit `DENY` only for verified agreement, rights, sensitivity,
-  or policy violations. Confirm in a follow-up ADR if needed.
-- **OPEN** — Whether the matrix MUST embed full STAC/DCAT/PROV records or
-  MAY embed only refs + agreed-fields. Default proposal: refs + a small
-  pinned subset of fields needed to verify §2.1 without re-fetching the
-  underlying records. Larger embedding inflates storage; smaller embedding
-  risks drift between the matrix and the records.
-- **OPEN** — Whether placeholder DCAT distributions for restricted-precise
-  data appear in the public matrix at all. Default proposal: list with
-  metadata-only distribution and `dct:accessRights = "restricted-precise"`;
-  policy denies any matrix where `release_state = "released"` AND
-  `accessRights = "restricted-precise"`.
-- **OPEN** — Whether the matrix is signed (DSSE) independently of the
-  proof pack. Default proposal: no separate signature; the proof pack's
-  signature covers the matrix as a member artifact.
+[Back to top](#top)
 
 ---
 
-## 12. References
+<a id="current-repository-evidence"></a>
 
-### 12.1 Internal (corpus)
+## Current repository evidence
 
-- KFM Components Pass 11 / Pass 12 — Category D (Catalog Closure: STAC,
-  DCAT, PROV); §C.4.1 (closure resolver), §C.4.2 (CatalogMatrix as the
-  explicit linkage object); §D.1 (STAC + KFM extensions), §D.2 (DCAT +
-  controlled vocabularies), §D.3 (PROV-O lineage spine).
-- KFM Governed AI Extended Pro Source Ledger — `CatalogMatrix` schema
-  pointer (`schemas/contracts/v1/catalog/catalog_matrix.schema.json`);
-  upstream/downstream contract.
-- Domain blueprints — Habitat ("HabitatCatalogMatrix"), Hydrology
-  ("validate_catalog_matrix.py"), Archaeology, Transport (Roads/Rail/Trade
-  Routes), Settlements/Infrastructure, Fauna, Hazards. Each names a
-  per-domain matrix and a closure rule consistent with §2.1.
-- Habitat Architecture Blueprint — *"STAC/DCAT/PROV must agree on
-  identifiers/checksums/release refs."* The phrase that anchors this ADR.
-- Directory Rules — §0 (schema-home convention and lifecycle invariant), §2.4
-  (changes that require an ADR), §2.5 (drift handling), §9.1 (`data/`
-  lifecycle), §13 (anti-patterns and fixes).
-- ADR-0001 — Schema home (canonical schemas under
-  `schemas/contracts/v1/...`).
+| Surface | Status | Evidence-backed consequence |
+|---|---|---|
+| `contracts/data/catalog_matrix.md` | **CONFIRMED draft semantic contract** | Current object meaning lives under the `data` contract family. |
+| `schemas/contracts/v1/data/catalog_matrix.schema.json` | **CONFIRMED placeholder schema** | Requires only `id`; `additionalProperties: true`; cannot enforce this ADR. |
+| `tools/validators/catalog_closure/README.md` | **CONFIRMED README-only boundary** | Documents intended closure readiness but does not establish executable behavior. |
+| `tools/validators/validate_catalog_matrix.py` | **CONFIRMED stub per repository documentation** | Raises `NotImplementedError`; not a usable promotion gate. |
+| Schema-declared `tools/validators/data/validate_catalog_matrix.py` | **CONFIRMED absent in bounded repository evidence** | Schema metadata points to an unestablished path. |
+| `fixtures/data/catalog_matrix/` | **Not established by reviewed evidence** | No meaningful shared fixture suite is claimed. |
+| Release closure resolver | **Not established** | ADR v1.1's proposed resolver path is not current implementation evidence. |
+| Domain schemas | **CONFIRMED examples exist for multiple domains** | Domain specializations exist, but convergence on the shared contract and schema is not proven. |
+| Catalog/release operation | **UNKNOWN** | No emitted matrix, signed proof, promotion result, public route, or rollback drill was verified here. |
 
-### 12.2 External standards
+### Current conflicts
+
+1. **ADR-0011 versus ADR-0022 framing.** ADR-0011 separates catalog descriptors from proofs; the older ADR-0022 text could be read as making the matrix itself a closure proof. This revision resolves the prose in favor of separation, while both ADRs remain proposed.
+2. **Schema path drift.** Current verified schema is under `schemas/contracts/v1/data/`, not the earlier proposed `schemas/contracts/v1/catalog/` path.
+3. **Validator path drift.** Schema metadata names `tools/validators/data/validate_catalog_matrix.py`; repository documentation identifies that exact path as absent and a top-level stub elsewhere.
+4. **Shared versus domain-specific matrices.** Domain schemas exist, but their inheritance, compatibility, or profile relationship to the shared schema remains NEEDS VERIFICATION.
+5. **Closure readiness versus release authority.** Validator documentation correctly denies release authority, but the accepted handoff contract to promotion is not established.
+
+[Back to top](#top)
+
+---
+
+<a id="current-enforcement-maturity"></a>
+
+## Current enforcement maturity
+
+| Capability | Current status | Graduation requirement |
+|---|---|---|
+| Semantic meaning | **Draft contract exists** | Accepted contract, owners, stable terms, compatibility policy. |
+| Machine shape | **Placeholder** | Required fields, profiles, enums, formats, references, negative constraints. |
+| Deterministic generator | **UNKNOWN / not established** | Idempotent generation with pinned inputs and output digest. |
+| Shared validator | **Stub / not established** | Executable, deterministic, finite outcomes, stable reason codes. |
+| Domain validators | **README/schema examples; runtime NEEDS VERIFICATION** | Shared-core reuse plus explicit domain extensions. |
+| Fixtures | **Not established** | Positive, invalid-shape, mismatch, unresolved, denied, stale, correction, rollback cases. |
+| Tests | **Not established** | Unit, integration, mutation/negative, replay, and no-network tests. |
+| Policy | **NEEDS VERIFICATION** | Rights, sensitivity, restricted-public, stale, and release-state rules. |
+| CI admission | **Not established** | Required job tied to exact validator/report profile. |
+| Release resolver | **Not established** | Immutable packet resolution and promotion handoff. |
+| Review and separation of duties | **NEEDS VERIFICATION** | Named role requirements and independent release approval where material. |
+| Correction and rollback | **Documented doctrine; operation UNKNOWN** | Tested correction cascade and rollback drill. |
+
+> [!WARNING]
+> Until the schema and validator graduate, a `CatalogMatrix` instance can appear structurally valid while omitting every consequential agreement field. It must not be used as release proof.
+
+[Back to top](#top)
+
+---
+
+<a id="implementation-contract"></a>
+
+## Implementation contract
+
+Implementation should be split into reviewable, reversible increments.
+
+### Target responsibility lanes
+
+| Responsibility | Current or proposed lane | Posture |
+|---|---|---|
+| Semantic contract | `contracts/data/catalog_matrix.md` | **CONFIRMED current home; update in place** |
+| Shared machine schema | `schemas/contracts/v1/data/catalog_matrix.schema.json` | **CONFIRMED current home; harden in place** |
+| Shared closure boundary | `tools/validators/catalog_closure/` | **CONFIRMED documentation lane; executable placement NEEDS VERIFICATION** |
+| Existing validator stub | `tools/validators/validate_catalog_matrix.py` | **CONFIRMED stub; replace, delegate, or deprecate through reviewed migration** |
+| Record-local validation | `tools/validators/catalog/` | **CONFIRMED sibling responsibility** |
+| Fixtures | `fixtures/data/catalog_matrix/` or verified repo-native equivalent | **PROPOSED; placement/creation preflight required** |
+| Tests | `tests/validators/catalog_closure/` or verified repo-native equivalent | **PROPOSED; verify test conventions** |
+| Policy | `policy/data/` plus release/promotion policy as applicable | **NEEDS VERIFICATION; avoid parallel policy authority** |
+| Catalog instances | Under governed `data/catalog/` lanes | **CONFIRMED root; exact matrix instance home NEEDS VERIFICATION** |
+| Validation reports/proofs | Under governed proof/report lanes | **NEEDS VERIFICATION; must remain distinct from descriptor** |
+| Release decisions | `release/` | **CONFIRMED responsibility root; exact integration NEEDS VERIFICATION** |
+
+### Required negative fixtures
+
+At minimum, the shared suite should cover:
+
+- STAC versus DCAT digest mismatch;
+- DCAT versus release-assembly digest mismatch;
+- release-reference mismatch;
+- missing STAC-to-DCAT relation;
+- missing DCAT-to-PROV relation;
+- unresolved generated PROV entity;
+- canonical artifact identity mismatch;
+- unresolved evidence reference;
+- unresolved or unadmitted source descriptor;
+- unknown rights or conflicting access class;
+- restricted-precise distribution in a public projection;
+- stale/superseded record without correction lineage;
+- parser/tool failure producing `ERROR` rather than pass;
+- matrix descriptor claiming validation without a separate report;
+- validator report whose input digest does not match the matrix digest.
+
+### Determinism and replay
+
+A closure run should be reproducible from:
+
+1. immutable matrix descriptor bytes;
+2. immutable STAC/DCAT/PROV record bytes or digests;
+3. source/evidence/policy/release references;
+4. validator version/spec hash;
+5. profile/configuration version;
+6. no-network fixture mode for CI;
+7. an emitted report digest.
+
+Network resolution belongs in a separately controlled integration path. Default CI should use pinned fixtures and fail closed when required remote state cannot be represented safely.
+
+[Back to top](#top)
+
+---
+
+<a id="promotion-gating"></a>
+
+## Promotion gating
+
+Catalog closure participates in the promotion sequence; it does not replace it.
+
+```mermaid
+flowchart LR
+    A[Source identity] --> B[Rights and terms]
+    B --> C[Sensitivity]
+    C --> D[Schema and contract]
+    D --> E[Evidence and provenance]
+    E --> F[Catalog agreement]
+    F --> G[Review, release and rollback]
+    G --> P[PUBLISHED]
+
+    F -. descriptor .-> CM[CatalogMatrix]
+    F -. validation .-> VR[ValidationReport / proof]
+    G -. decision .-> PD[PromotionDecision]
+```
+
+| Gate concern | Required closure evidence | Failure posture |
+|---|---|---|
+| Shape/profile | Matrix and records match accepted schemas/profiles. | `DENY` or `ERROR`. |
+| Inputs pinned | Exact records and digests are fixed. | `ABSTAIN` / `DENY`. |
+| Record checks | STAC, DCAT, and PROV validate individually. | `DENY`. |
+| Cross-record agreement | Identity, digest, and release reference agree. | `DENY`. |
+| Evidence/source closure | Required evidence and admitted sources resolve. | `ABSTAIN` / `DENY`. |
+| Rights/sensitivity | Access and public projection are allowed. | `DENY` / `HOLD`. |
+| Review/release | Accountable review, release manifest, correction, rollback exist. | `HOLD` / `DENY`. |
+
+**No warn-only path** is permitted for identity, digest, release-reference, unresolved evidence/source, rights, sensitivity, or restricted-public disagreement when the candidate is intended for public release.
+
+[Back to top](#top)
+
+---
+
+<a id="consequences"></a>
+
+## Consequences
+
+### Positive
+
+- Catalog drift becomes a pre-promotion failure rather than a post-publication discovery.
+- Reviewers gain a compact crosswalk without collapsing underlying records or proof families.
+- Domain lanes can extend one shared agreement contract rather than inventing incompatible matrix meanings.
+- STAC, DCAT, and PROV retain their standards-native roles.
+- Correction and rollback can compare closure packets across releases.
+- Public clients remain downstream of governed release and evidence resolution.
+
+### Costs and tradeoffs
+
+- A production-grade schema and validator add maintenance surface.
+- Duplicate projection fields require clear source-of-authority rules.
+- Domain schemas may require migration or profile convergence.
+- Network-backed resolution can be flaky; deterministic fixture-mode validation and explicit `ERROR` handling are required.
+- Stable reason codes and profile versions create compatibility obligations.
+- Additional review burden is intentional because the matrix affects release trust.
+
+### What this decision does not prove
+
+- that any current matrix instance is valid;
+- that a release has passed closure;
+- that all domains use the shared schema;
+- that rights or sensitivity are resolved;
+- that CI blocks release;
+- that public endpoints expose correct records;
+- that rollback has been tested.
+
+[Back to top](#top)
+
+---
+
+<a id="alternatives-considered"></a>
+
+## Alternatives considered
+
+### Validate STAC, DCAT, and PROV independently
+
+**Rejected.** Independent validity cannot detect mutual disagreement.
+
+### Make one vocabulary authoritative for everything
+
+**Rejected.** STAC, DCAT, and PROV have different bounded responsibilities. Collapsing them would weaken interoperability and provenance clarity.
+
+### Put all records into one giant matrix document
+
+**Rejected.** It creates a second catalog authority, increases drift risk, and weakens standards-native tooling.
+
+### Treat the matrix itself as proof
+
+**Rejected.** A descriptor cannot prove that its own assertions were checked. Validation evidence remains a separate object family.
+
+### Make catalog agreement advisory
+
+**Rejected for promotion.** Identity, digest, release-reference, evidence, rights, sensitivity, and public-access contradictions must fail closed.
+
+### Require the matrix only after publication
+
+**Rejected.** Post-publication auditing is useful but too late to protect the release boundary.
+
+[Back to top](#top)
+
+---
+
+<a id="migration-and-compatibility"></a>
+
+## Migration and compatibility
+
+This decision is additive at the standards level but requires convergence of existing KFM surfaces.
+
+1. **Coordinate ADR-0011 and ADR-0022.** Preserve descriptor/proof/release separation and record any remaining conflict explicitly.
+2. **Harden the current shared contract and schema in place.** Do not create parallel `catalog/` schema or contract homes.
+3. **Inventory domain schemas.** Classify each as compatible profile, divergent extension, duplicate, or migration candidate.
+4. **Choose one executable entrypoint.** Replace, delegate, or deprecate the current top-level stub and repair stale schema metadata.
+5. **Create meaningful fixtures and tests.** Cover finite outcomes, reason codes, rights/sensitivity, stale state, correction, and rollback.
+6. **Emit a separate validation report.** Bind it to exact input and output digests.
+7. **Integrate policy and promotion.** A passing validator hands off; it never approves release.
+8. **Add deterministic CI admission.** No-network by default; separately controlled integration checks where needed.
+9. **Roll out domain profiles.** Domain matrices extend the shared core without redefining identity/digest/release agreement.
+10. **Backfill selectively.** Older releases may be marked `pre-matrix` where safe reconstruction is impossible; do not fabricate closure.
+
+### Compatibility rule
+
+A domain profile MAY add domain-specific fields and checks, but it MUST preserve the shared agreement dimensions and finite outcomes. A profile MUST NOT weaken a shared `DENY` condition for public release.
+
+[Back to top](#top)
+
+---
+
+<a id="acceptance-gates"></a>
+
+## Acceptance gates
+
+ADR acceptance should require:
+
+- [ ] ADR-0011 and ADR-0022 language is coordinated and no object-family collapse remains.
+- [ ] Directory Rules and ADR-0001 support the current shared contract/schema homes.
+- [ ] Decision owners and required review roles are recorded without placeholders presented as fact.
+- [ ] Shared identity, digest, release-reference, finite-outcome, and descriptor/proof separation rules are approved.
+- [ ] Domain-profile compatibility requirements are approved.
+- [ ] Migration and rollback posture is judged reversible.
+
+Enforcement graduation should additionally require:
+
+- [ ] `contracts/data/catalog_matrix.md` is accepted and versioned.
+- [ ] `schemas/contracts/v1/data/catalog_matrix.schema.json` is no longer a permissive placeholder.
+- [ ] One canonical validator entrypoint is executable and deterministic.
+- [ ] The stale validator path in schema metadata is repaired.
+- [ ] Positive and negative fixtures exercise every stable reason-code family.
+- [ ] Tests prove `PASS`, `ABSTAIN`, `DENY`, and `ERROR` behavior.
+- [ ] Validation reports bind exact inputs, tool/profile versions, outcomes, and report digests.
+- [ ] Policy tests cover rights, sensitivity, restricted-public, stale, correction, and rollback cases.
+- [ ] CI runs the closure suite in no-network mode and treats blocking outcomes correctly.
+- [ ] Promotion consumes the separate validation report and still runs independent policy/review/release gates.
+- [ ] Correction and rollback drills preserve prior matrices and reports as lineage.
+- [ ] At least one proof-bearing domain slice passes end to end.
+
+[Back to top](#top)
+
+---
+
+<a id="risk-ledger"></a>
+
+## Risk ledger
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| Matrix becomes a second catalog authority | Conflicting records and hidden drift | Store refs plus pinned agreement fields; underlying standards records remain authoritative for their own roles. |
+| Matrix is mistaken for proof | False confidence and release bypass | Require a separate validation report/proof and explicit UI labels. |
+| Placeholder schema appears production-ready | Invalid release packets pass shape checks | Keep enforcement on hold until schema hardening and negative tests land. |
+| Validator path drift persists | CI invokes wrong or missing executable | Select one entrypoint, update metadata, add path tests, deprecate aliases. |
+| Domain schemas diverge | Inconsistent agreement semantics | Shared core + profiled extensions + compatibility tests. |
+| Network resolution is flaky | Non-deterministic CI and false failures | Pinned fixtures by default; controlled integration checks; `ERROR` never pass. |
+| Rights/access fields disagree | Restricted data leaks | Policy-authoritative comparison and fail-closed public-projection tests. |
+| Release rollback removes history | Audit lineage is lost | Retain prior descriptor/report/release records with correction state. |
+| Badge/document polish overstates maturity | Reviewers infer implementation | Keep status text and badges tied to current repository evidence. |
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-and-supersession"></a>
+
+## Rollback and supersession
+
+### Documentation rollback
+
+Before merge, close or abandon the draft PR. After merge, revert the documentation commit. Neither action changes runtime state because this revision is documentation-only.
+
+### Enforcement rollback
+
+If future enforcement is faulty:
+
+1. preserve the failed matrix, report, inputs, and reason codes;
+2. stop new promotions rather than silently bypassing closure;
+3. revert or disable only the faulty implementation through a reviewed change;
+4. retain identity, digest, release-reference, evidence, rights, sensitivity, and restricted-public checks as blocking;
+5. issue correction/rollback records for any affected released artifact;
+6. keep previous matrix/report versions discoverable as lineage;
+7. supersede this ADR explicitly if the decision itself changes.
+
+A rollback MUST NOT rewrite STAC, DCAT, PROV, evidence, or release history to hide a failure.
+
+[Back to top](#top)
+
+---
+
+<a id="verification-checklist"></a>
+
+## Verification checklist
+
+- [x] Target exists at the same tracked path.
+- [x] Current semantic contract path was inspected.
+- [x] Current shared schema path and placeholder shape were inspected.
+- [x] Current catalog-closure validator documentation was inspected.
+- [x] ADR-0011 conflict/separation language was inspected.
+- [x] Open pull-request search found no matching open ADR-0022/catalog-matrix PR before mutation.
+- [ ] `docs/adr/INDEX.md` row and effective status are re-read on the feature branch.
+- [ ] Current branch diff contains only this file.
+- [ ] Markdown source structure, links, anchors, tables, alerts, fences, and Mermaid are validated.
+- [ ] Remote bytes match the prepared content.
+- [ ] Draft PR base/head and changed paths are verified.
+- [ ] CI/check status is observed without claiming completion while pending.
+
+[Back to top](#top)
+
+---
+
+<a id="references"></a>
+
+## References
+
+### Internal
+
+- [ADR-0001 — Schema home](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
+- [ADR-0002 — Contracts vs schemas split](./ADR-0002-contracts-vs-schemas-split.md)
+- [ADR-0011 — Receipts vs proofs vs manifests vs catalog separation](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md)
+- [ADR-0018 — Promotion gate sequence](./ADR-0018-promotion-gate-sequence.md)
+- [ADR-0023 — Geo manifest signs every PMTiles/COG release](./ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md)
+- [ADR-0024 — Steward separation of duties](./ADR-0024-steward-separation-of-duties-for-release.md)
+- [ADR-0025 — Public client never reads canonical/internal stores](./ADR-0025-public-client-never-reads-canonical-internal-stores.md)
+- [Directory Rules](../doctrine/directory-rules.md)
+- [CatalogMatrix semantic contract](../../contracts/data/catalog_matrix.md)
+- [CatalogMatrix shared schema](../../schemas/contracts/v1/data/catalog_matrix.schema.json)
+- [Catalog closure validator boundary](../../tools/validators/catalog_closure/README.md)
+- [Catalog record validator boundary](../../tools/validators/catalog/README.md)
+- [Catalog root](../../data/catalog/README.md)
+- [STAC catalog lane](../../data/catalog/stac/README.md)
+- [DCAT catalog lane](../../data/catalog/dcat/README.md)
+- [PROV catalog lane](../../data/catalog/prov/README.md)
+- [Proof root](../../data/proofs/README.md)
+- [Release root](../../release/README.md)
+
+### External standards
 
 > [!NOTE]
-> External links below identify standards families used by this ADR. Current
-> version-specific adoption, tool compatibility, and package behavior remain
-> **NEEDS VERIFICATION** before implementation.
+> Version-specific adoption, extensions, package behavior, and compatibility remain NEEDS VERIFICATION during implementation.
 
-
-- STAC 1.0 specification — <https://github.com/radiantearth/stac-spec>
-- OGC SpatioTemporal Asset Catalog — <https://www.ogc.org/standards/stac/>
-- W3C DCAT v3 — <https://www.w3.org/TR/vocab-dcat-3/>
-- W3C PROV-O — <https://www.w3.org/TR/prov-o/>
-- SPDX licenses — <https://spdx.org/licenses/>
+- [OGC STAC](https://www.ogc.org/standards/stac/)
+- [STAC specification](https://github.com/radiantearth/stac-spec)
+- [W3C DCAT 3](https://www.w3.org/TR/vocab-dcat-3/)
+- [W3C PROV-O](https://www.w3.org/TR/prov-o/)
+- [SPDX specifications](https://spdx.dev/specifications/)
 
 ---
 
-[Back to top](#adr-0022--catalog-matrix--stac--dcat--prov-must-agree)
+[Back to top](#top)
