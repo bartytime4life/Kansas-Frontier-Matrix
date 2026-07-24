@@ -91,7 +91,7 @@ notes:
 [![ADR ID: confirmed](https://img.shields.io/badge/ADR--0013-confirmed-0969da?style=flat-square)](#current-repository-evidence)
 [![Identity split: required](https://img.shields.io/badge/identity-content%20%E2%89%A0%20activity-8250df?style=flat-square)](#proposed-decision)
 [![Hash grammar: conflicted](https://img.shields.io/badge/spec__hash-CONFLICTED-f59e0b?style=flat-square)](#current-repository-conflicts)
-[![Run ID grammar: proposed](https://img.shields.io/badge/run__id-PROPOSED-d4a72c?style=flat-square)](#run_id-activity-identity)
+[![Run ID grammar: proposed](https://img.shields.io/badge/run__id-PROPOSED-d4a72c?style=flat-square)](#candidate-grammar)
 [![Implementation: scaffold](https://img.shields.io/badge/implementation-scaffold-6e7781?style=flat-square)](#current-enforcement-maturity)
 [![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
