@@ -1,59 +1,61 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/migrations-readme
-title: migrations/ — Governed Database, Schema, Data, Graph, and Recovery Change Root
+title: migrations/ — Governed State-Change, Compatibility, Adoption, Execution, and Recovery Root
 type: README; directory-readme; canonical-migrations-root; change-control-index
-version: v1.1
-status: draft; repository-grounded; canonical-root; documentation-heavy; executable-runner-unestablished; rollback-pairing-unverified; non-release; non-publication
-owner: NEEDS VERIFICATION — CODEOWNERS routes /migrations/ to @bartytime4life; accepted migration, database, schema, data, graph, and release stewardship plus required independent approval were not established
+version: v1.2
+status: draft; repository-grounded; canonical-root; five-lane-documentation-confirmed; schema-validation-bounded; rollback-readiness-hold-confirmed; concrete-payloads-unestablished; runner-unestablished; applied-ledger-unestablished; recovery-coverage-unverified; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes this path through the repository default owner @bartytime4life; accountable migration, database, schema, contract, data, graph, recovery, policy, security, application, domain, and release stewardship plus independent approval were not established
 created: 2026-07-03
-updated: 2026-07-23
-supersedes: v1 documentation at the same path; no migration payload, database state, schema, data, graph, runtime, release, or publication behavior is superseded
+updated: 2026-07-24
+supersedes: v1.1 documentation at the same path; no migration payload, database state, schema, contract, data, graph, recovery action, runtime behavior, release state, or publication state is superseded
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
-policy_label: repository-facing; migrations; change-control; rollback-aware; forward-fix-aware; evidence-first; fail-closed; non-publisher
+policy_label: repository-facing; migrations; change-control; compatibility-aware; adoption-aware; rollback-aware; forward-fix-aware; evidence-first; fail-closed; non-publisher
 current_path: migrations/README.md
 owning_root: migrations/
-responsibility: own governed migration plans, executable migration payloads, adoption sequencing, validation evidence, and paired recovery posture without becoming schema, contract, policy, lifecycle-data, release, or publication authority
+responsibility: govern deliberate transitions in persisted structure, machine compatibility, data state, graph topology, adoption, execution evidence, and recovery posture without becoming semantic-contract, canonical-schema, policy, evidence, lifecycle-data, runtime, release, or publication authority
 truth_posture: >
   CONFIRMED same-path target; Directory Rules assignment of migrations/ to database, schema, data, graph, and rollback change control;
-  five directly observed child README lanes; CODEOWNERS routing; current root README; current child-lane documentation; and absence of
-  migration payloads in bounded repository search / PROPOSED migration record contract, applicability-aware state model, execution packet,
-  compatibility matrix, deterministic identity rules, validation orchestration, and future machine register / UNKNOWN exhaustive recursive
-  migration inventory, live database or graph engines, migration runner, environment state, backups, applied versions, production history,
-  execution receipts, rollback drills, and consumer adoption / NEEDS VERIFICATION paired rollback coverage, same-PR enforcement, ordering
-  convention, branch/ruleset enforcement, dedicated migration CI, steward assignments, and release integration
+  five merged repository-grounded v1.1 lane READMEs; current CODEOWNERS routing; configured schema-validation workflow; rollback-drill
+  readiness workflow that explicitly holds rather than simulates rollback; and separation between migration recovery and release rollback /
+  PROPOSED root migration classification, packet, evidence ladder, state model, deterministic identity, concurrency, compatibility, adoption,
+  execution, recovery, and definition-of-done contracts / UNKNOWN exhaustive recursive migration inventory, concrete payloads, active
+  database or graph engines, runner selection, target environments, applied versions, backup and restore capabilities, producer and consumer
+  adoption, execution receipts, recovery outcomes, and production history / NEEDS VERIFICATION one-to-one migration-to-recovery pairing,
+  same-PR enforcement, canonical ordering, machine migration register, dedicated migration validation, steward assignments, independent
+  approval, branch or ruleset enforcement, rehearsal policy, and release integration
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 936eac6d5b30471dd5d663ba61d34933dc2cbe8b
-  target_prior_blob: 0485947aa72726bdde043a2570c2e28d2714f420
-  directory_rules_source: attached Directory Rules and current repository doctrine
-  codeowners_status: /migrations/ routes through repository default ownership to @bartytime4life
-  child_lanes:
-    - database
-    - schema
-    - data
-    - graph
-    - rollback
-  inspection_method: exact GitHub file reads, bounded repository search, PR overlap search, and current commit inspection; no live database, graph store, migration runner, backup system, deployment environment, or recursive Git tree was inspected
+  base_commit: c4d7a1d7527687f1f11c5f95f47f52c159338af9
+  target_prior_blob: 48da6b62000d145359bfbd7f8383961c9f285b2a
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  database_readme_blob: a5d479ce410ead7fb8eb61082f22d8bddc813746
+  schema_readme_blob: d4f28ff15ab5e26c101ff72fc96a1f500103dfae
+  data_readme_blob: 42350e082436d84f8f2147d53044249eb7daf430
+  graph_readme_blob: 92ca1b02a15557cdd970a03ee95a946ec78a0c3f
+  rollback_readme_blob: 9fb60b41f9bb901b69d45cb8c4d942b8272b467f
+  schema_validation_workflow_blob: e6b26337aa1eea142b96560e041419f855c44d59
+  rollback_drill_workflow_blob: dc42ec4931f95023d364f2559ddcffab94ecfab5
+  inspection_method: exact GitHub file reads, workflow inspection, bounded repository search, branch-name search, open-PR overlap search, and current-head verification; no recursive Git tree, live database, graph store, migration runner, backup system, deployment environment, release artifact, runtime trace, or production system was inspected
 related:
   - ../docs/doctrine/directory-rules.md
   - ../docs/runbooks/ROLLBACK_RUNBOOK.md
-  - ../docs/runbooks/
+  - ../docs/runbooks/README.md
   - ../docs/governance/SEPARATION_OF_DUTIES.md
   - ../docs/registers/DRIFT_REGISTER.md
   - ../contracts/README.md
   - ../schemas/README.md
-  - ../schemas/contracts/v1/
+  - ../schemas/contracts/v1/README.md
   - ../policy/README.md
+  - ../fixtures/README.md
   - ../tests/README.md
   - ../tools/validators/README.md
   - ../data/README.md
-  - ../data/receipts/
-  - ../data/proofs/
   - ../release/README.md
-  - ../apps/governed-api/
-  - ../apps/explorer-web/
-  - ../packages/
+  - ../release/rollback_cards/README.md
+  - ../.github/workflows/schema-validation.yml
+  - ../.github/workflows/rollback-drill.yml
   - ./database/README.md
   - ./schema/README.md
   - ./data/README.md
@@ -61,36 +63,38 @@ related:
   - ./rollback/README.md
   - ../.github/CODEOWNERS
 notes:
-  - "v1.1 is a same-path documentation-only modernization grounded in the current repository."
+  - "v1.2 is a same-path documentation-only modernization grounded in current repository evidence."
   - "The first twelve H2 sections follow the Directory Rules folder-README contract."
-  - "Five migration README lanes are confirmed, but an executable migration runner, dedicated migration workflow, applied-version ledger, and verified rollback pairing were not established."
-  - "Static badges summarize inspected repository state only; they are not migration execution, approval, rollback, release, or publication proof."
+  - "All five lane READMEs are confirmed at v1.1, but concrete migration payloads, a canonical runner, applied ledger, complete recovery pairing, and production outcomes were not established."
+  - "The schema-validation workflow proves bounded machine-shape checks; the rollback-drill workflow proves a deliberate readiness hold and explicitly does not simulate rollback."
+  - "Static badges summarize inspected repository state only; they are not migration approval, execution, adoption, recovery, release, or publication proof."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `migrations/` — Governed Database, Schema, Data, Graph, and Recovery Change Root
+# `migrations/` — Governed State-Change, Compatibility, Adoption, Execution, and Recovery Root
 
-> **One-line purpose.** `migrations/` governs deliberate changes to persisted structure, machine compatibility, data state, graph topology, and recovery posture so every consequential migration is reviewable, validated, auditable, and paired with rollback or a documented forward fix.
+> **One-line purpose.** Govern deliberate changes to persisted structure and state so every database, schema, data, graph, and recovery transition is classified, pinned, reviewable, previewable, validated, auditable, and recoverable without bypassing KFM authority, lifecycle, policy, evidence, or release boundaries.
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Authority: migration change control](https://img.shields.io/badge/authority-migration%20change%20control-1f6feb?style=flat-square)](#authority-level)
-[![Lanes: five documented](https://img.shields.io/badge/lanes-five%20documented-2da44e?style=flat-square)](#current-bounded-topology)
-[![Runner: not established](https://img.shields.io/badge/runner-not%20established-b42318?style=flat-square)](#validation)
-[![Rollback pairing: needs verification](https://img.shields.io/badge/rollback%20pairing-needs%20verification-d4a72c?style=flat-square)](#recovery-and-forward-fix-contract)
+[![Lanes: five v1.1](https://img.shields.io/badge/lanes-five%20v1.1-2da44e?style=flat-square)](#current-bounded-topology)
+[![Payloads: not established](https://img.shields.io/badge/payloads-not%20established-b42318?style=flat-square)](#status)
+[![Schema checks: bounded](https://img.shields.io/badge/schema%20checks-bounded-0969da?style=flat-square)](#current-workflow-boundary)
+[![Rollback drill: hold](https://img.shields.io/badge/rollback%20drill-readiness%20hold-d4a72c?style=flat-square)](#current-workflow-boundary)
+[![Recovery pairing: needs verification](https://img.shields.io/badge/recovery%20pairing-needs%20verification-d4a72c?style=flat-square)](#recovery-and-forward-fix-contract)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-[![Reviewed: 2026-07-23](https://img.shields.io/badge/reviewed-2026--07--23-0969da?style=flat-square)](#last-reviewed)
+[![Reviewed: 2026-07-24](https://img.shields.io/badge/reviewed-2026--07--24-0969da?style=flat-square)](#last-reviewed)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** `migrations/` and its five documented lanes exist. The repository currently provides detailed migration and rollback guidance, but bounded inspection did **not** establish concrete migration payloads, a selected migration runner, a dedicated migration CI gate, an applied-version ledger, verified one-to-one rollback coverage, or production execution history.
+> **Safe current conclusion:** `migrations/` and all five lane READMEs are present and repository-grounded. The repository also has bounded schema-validation and rollback-readiness workflows. Current evidence does **not** establish concrete migration payloads, a canonical migration runner, active database or graph engines, an applied-version ledger, complete migration-to-recovery pairing, backup and restore capability, producer/consumer adoption, recovery rehearsals, or production execution history.
 
 > [!CAUTION]
-> A migration README, SQL example, branch, pull request, successful parse, or green unrelated workflow does not prove that a migration is safe, approved, applied, reversible, release-compatible, or reflected in a live environment. Execution claims require the payload, target state, preflight, observed run evidence, post-checks, and recovery evidence.
+> A migration README, parsed script, schema check, workflow definition, green unrelated check, branch, pull request, or merged commit does not prove that a migration is safe, approved, applied, adopted, reversible, release-compatible, or reflected in a live environment. Those claims require pinned payloads and targets, observed execution evidence, post-checks, and recovery evidence.
 
 > [!WARNING]
-> `migrations/rollback/` is an engineering recovery lane. It does not replace `release/rollback_cards/`, correction notices, withdrawal records, database backups, snapshots, or incident-response records. These artifacts may refer to one another, but they remain distinct authorities.
+> `migrations/rollback/` is the engineering-recovery record lane for migrations. It is not a backup store, release rollback-card home, correction register, incident workspace, or publication authority. The current `rollback-drill` workflow is a readiness inspection that explicitly holds; it is not proof that migration rollback or release rollback was simulated.
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Topology](#current-bounded-topology) · [Classification](#migration-classification) · [Packet](#minimum-migration-packet) · [States](#migration-work-state-model) · [Compatibility](#compatibility-and-adoption) · [Recovery](#recovery-and-forward-fix-contract) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Topology](#current-bounded-topology) · [Routing](#migration-classification-and-lane-routing) · [Packet](#minimum-migration-packet) · [Evidence](#migration-evidence-ladder) · [States](#migration-work-state-model) · [Identity](#deterministic-identity-ordering-and-pairing) · [Coordination](#cross-lane-coordination) · [Compatibility](#compatibility-adoption-and-deprecation) · [Execution](#preflight-dry-run-canary-execution-and-post-checks) · [Recovery](#recovery-and-forward-fix-contract) · [Workflows](#current-workflow-boundary) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
 
 ---
 
@@ -105,25 +109,27 @@ notes:
 `migrations/` is KFM's canonical responsibility root for **governed state-change mechanics** affecting:
 
 - database structure and database-managed behavior;
-- schema and contract compatibility transitions;
-- data backfills, repairs, remaps, and rebuilds;
-- graph or triplet topology and identity changes;
-- rollback, reversal, disablement, and forward-fix planning.
+- machine schemas, contract-backed payload compatibility, and adoption;
+- data backfills, repairs, remaps, lifecycle-safe relocations, and deterministic rebuilds;
+- graph or triplet topology, identity, evidence links, and derived projections;
+- rollback, reversal, disablement, restore coordination, compensation, and forward-fix planning.
 
-The root exists because durable system change can alter identity, meaning, evidence links, lifecycle state, public behavior, or recovery options even when only a small script changes.
+The root exists because even a small migration can alter object identity, semantic interpretation, evidence closure, policy behavior, lifecycle placement, public API compatibility, map output, release safety, or recovery options.
 
-Every migration must answer:
+Every consequential migration must answer:
 
 1. What exact state changes?
 2. Why is the change necessary?
-3. Which authority defines the intended meaning or shape?
-4. Which systems, producers, consumers, and releases are affected?
-5. Which preconditions and invariants must hold?
-6. How can the change be previewed or dry-run?
-7. Which evidence proves the result?
-8. How can the system recover safely?
-9. Which residual risks remain?
-10. Who reviewed, executed, and verified it?
+3. Which authority defines the intended meaning, shape, policy, evidence, lifecycle state, or release posture?
+4. Which immutable base state and target state are involved?
+5. Which producers, consumers, validators, datasets, graph families, services, and releases are affected?
+6. Which preconditions and invariants must hold?
+7. How can the change be previewed, dry-run, rehearsed, or canaried?
+8. Which evidence proves the attempted and resulting state?
+9. How can the system recover safely?
+10. Which residual risks, deprecations, corrections, or follow-up actions remain?
+11. Who authored, reviewed, authorized, executed, and verified the transition?
+12. What must remain blocked if any required evidence is absent?
 
 The lifecycle remains:
 
@@ -131,247 +137,327 @@ The lifecycle remains:
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-A migration may support a governed transition. It is not itself lifecycle promotion, release approval, publication, correction approval, or evidence of external truth.
+A migration may support a governed transition. It is not itself lifecycle promotion, policy approval, evidence of external truth, release authorization, correction approval, or publication.
 
 ## Authority level
 
-**Canonical responsibility root for migration mechanics and recovery planning; subordinate to the authorities that define meaning, shape, admissibility, evidence, lifecycle state, and release.**
+**Canonical responsibility root for migration mechanics, coordinated adoption, execution evidence, and engineering recovery planning; subordinate to the authorities that define meaning, shape, admissibility, evidence, lifecycle state, runtime behavior, and release.**
 
-| Question | Controlling authority |
-|---|---|
-| Where migration materials belong | Directory Rules, accepted placement ADRs, then this README |
-| What an object means | `contracts/` |
-| What machine shape is valid | `schemas/` |
-| What policy permits | `policy/` |
-| What source or evidence supports a change | source registry, `EvidenceRef`, `EvidenceBundle`, receipts, proofs |
-| What data phase owns the payload | `data/<phase>/` |
-| Whether a release is approved | `release/` and applicable promotion/review records |
-| How a migration is executed | selected runner, migration payload, environment controls, and runbook |
-| How engineering recovery works | `migrations/rollback/` plus applicable backup/runbook evidence |
-| How public release rollback or correction works | `release/rollback_cards/`, correction and withdrawal records |
+| Question | Controlling authority | `migrations/` relationship |
+|---|---|---|
+| Where migration materials belong | Directory Rules and accepted placement ADRs | Owns migration mechanics under the five lanes |
+| What an object means | [`contracts/`](../contracts/README.md) | References semantic authority; does not redefine it |
+| What machine shape is valid | [`schemas/`](../schemas/README.md) | Coordinates shape transitions; canonical schemas remain under `schemas/` |
+| What policy permits | [`policy/`](../policy/README.md) | Carries policy-impact references; does not make policy decisions |
+| What source or evidence supports a remap | Source registry, `EvidenceRef`, `EvidenceBundle`, receipts, and proofs | Preserves support and records transforms; does not manufacture evidence |
+| Which lifecycle phase owns a payload | [`data/`](../data/README.md) | Migrates state without replacing lifecycle ownership |
+| How runtime behavior changes | Accepted application, package, runtime, and pipeline roots | Coordinates rollout; does not own runtime implementation |
+| How a migration is executed | Selected runner, pinned payload, target environment, runbook, and authorization | Records execution contract and receipts |
+| How engineering recovery works | [`migrations/rollback/`](./rollback/README.md) plus applicable backup/runbook evidence | Requires paired recovery posture |
+| How public release rollback or correction works | [`release/`](../release/README.md), release rollback cards, correction and withdrawal records | References release actions; cannot authorize them |
+| Whether a release is approved | Release authority and governed promotion records | Declares impact only |
+| Whether a claim is true | Admissible evidence | Never decided by migration success |
 
-`migrations/` may carry scripts, plans, compatibility matrices, validation summaries, and recovery instructions. It must not independently redefine any stronger authority above.
+### Anti-collapse rules
+
+`migrations/` must not collapse:
+
+- migration mechanics into semantic or schema authority;
+- a script parse into target compatibility;
+- a dry run into production execution;
+- a migration receipt into release approval;
+- a rollback document into a rehearsed recovery path;
+- a backup reference into proof that a restore is possible;
+- an identity remap into evidence that two entities are the same;
+- an AI-generated crosswalk into authoritative state;
+- a derived rebuild into canonical truth;
+- a workflow hold into an implemented migration system;
+- CODEOWNERS routing into stewardship or approval;
+- a merged PR into an applied migration.
+
+Public clients and normal UI surfaces continue to use governed APIs and released artifacts. They do not read migration packets, internal stores, or canonical state directly.
 
 ## Status
 
-| Surface | Current evidence | Status |
+### Repository-grounded status matrix
+
+| Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| Root README | Present and updated in place | **CONFIRMED** |
-| `database/` lane README | Present | **CONFIRMED — documentation** |
-| `schema/` lane README | Present | **CONFIRMED — documentation** |
-| `data/` lane README | Present | **CONFIRMED — documentation** |
-| `graph/` lane README | Present | **CONFIRMED — documentation** |
-| `rollback/` lane README | Present | **CONFIRMED — documentation** |
+| Root README | v1.1 exists at the same path | **CONFIRMED — documentation** |
+| `database/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; engine, runner, payloads, and execution unestablished** |
+| `schema/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; configured validation surface exists; migration adoption unestablished** |
+| `data/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; runner, payloads, and execution unestablished** |
+| `graph/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; graph store, query language, runner, and payloads unestablished** |
+| `rollback/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; pairing, rehearsal, backup capability, and execution unverified** |
+| Schema-validation workflow | Parses and meta-validates schemas, checks configured fixture families, and runs selected schema/contract tests | **CONFIRMED bounded machine-shape validation; not migration adoption or execution proof** |
+| Rollback-drill workflow | Inspects release rollback readiness and asserts known placeholders/holds | **CONFIRMED readiness hold; no rollback simulated** |
 | Concrete migration payloads | Not established in bounded search | **UNKNOWN / NEEDS VERIFICATION** |
-| Selected database migration runner | Not established | **UNKNOWN** |
-| Selected schema/data/graph migration executors | Not established | **UNKNOWN** |
-| Dedicated migration validation workflow | Not established | **NEEDS VERIFICATION** |
+| Canonical migration runner | Not established | **UNKNOWN** |
+| Active database or graph engines | Not inspected or established | **UNKNOWN** |
 | Applied migration/version ledger | Not established | **NEEDS VERIFICATION** |
-| One-to-one rollback or forward-fix pairing | Required by doctrine; coverage not recursively verified | **NEEDS VERIFICATION** |
-| Live database, graph store, or deployment environment | Not inspected | **UNKNOWN** |
-| Production execution and rollback history | Not inspected | **UNKNOWN** |
-| GitHub ownership routing | Repository defaults route to `@bartytime4life` | **CONFIRMED routing; stewardship unverified** |
+| Machine-readable migration register | Not established | **NEEDS VERIFICATION** |
+| One-to-one migration/recovery pairing | Required by doctrine; coverage not recursively verified | **NEEDS VERIFICATION** |
+| Same-PR pairing enforcement | Not established | **NEEDS VERIFICATION** |
+| Backups, snapshots, restore, or point-in-time recovery | Not inspected | **UNKNOWN** |
+| Producer and consumer adoption ledger | Not established | **NEEDS VERIFICATION** |
+| Dedicated migration CI | No cross-lane migration packet validator was established | **NEEDS VERIFICATION** |
+| Recovery rehearsal history | Not established | **UNKNOWN** |
+| Production execution and recovery history | Not inspected | **UNKNOWN** |
+| GitHub routing | Default CODEOWNERS route resolves to `@bartytime4life` | **CONFIRMED routing; stewardship and approval unverified** |
 | Release or publication authority | Not owned by this root | **DENIED by boundary** |
 
-The root is therefore **documentation-heavy and implementation-unverified**. Treat lane examples as contract guidance, not as evidence that a corresponding executor or payload exists.
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified from current repository content, workflows, tests, logs, or generated artifacts inspected for this update |
+| `PROPOSED` | Design, packet field, state, workflow, or future contract not established as current implementation |
+| `UNKNOWN` | Available evidence does not support a stronger conclusion |
+| `NEEDS VERIFICATION` | A concrete check exists but is not closed strongly enough to act as fact |
+| `CONFLICTED` | Two authority surfaces or implementation and doctrine disagree |
+
+The current root is **documentation-mature relative to implementation evidence**. The five lanes now describe strong governed contracts, but that documentation must not be presented as a functioning migration platform.
 
 ## What belongs here
 
-Use `migrations/` when the primary responsibility is a governed transformation of persisted structure or state.
+Use `migrations/` when the primary responsibility is a governed transformation of persisted structure, compatibility, or state.
 
 Accepted material includes:
 
-- migration README files and lane contracts;
-- SQL or engine-native migration files;
-- safe, reviewable migration scripts or query fragments;
-- schema/contract compatibility plans;
-- producer and consumer adoption matrices;
-- data backfill, repair, normalization, remap, or rebuild plans;
-- graph/triplet topology and identity migration plans;
-- preflight, dry-run, canary, validation, and post-check definitions;
-- sanitized execution summaries and migration receipts;
-- dependency and rollout sequencing;
-- rollback, disablement, restore, or forward-fix records;
-- migration manifests that bind payloads, checksums, target state, dependencies, and recovery references;
-- drift and correction follow-up notes.
+- root and lane README contracts;
+- database, schema, data, and graph migration plans;
+- SQL or engine-native migration files when an engine is selected;
+- safe, reviewable scripts or query fragments;
+- migration manifests that pin payload paths, digests, dependencies, base state, target state, and recovery references;
+- schema/contract compatibility and adoption matrices;
+- producer and consumer rollout plans;
+- data backfill, repair, normalization, remap, relocation, or rebuild plans;
+- graph/triplet topology, identity, relationship, evidence-link, and projection migration plans;
+- preflight, dry-run, rehearsal, canary, validation, and post-check definitions;
+- sanitized execution and adoption summaries;
+- migration-level recovery, disablement, restore-coordination, compensation, and forward-fix records;
+- cross-lane dependency and cutover coordination;
+- drift, deprecation, correction, and documentation follow-up notes;
+- references to release-impact review when public behavior may change.
 
-A file belongs here only when **migration mechanics are its primary responsibility**. A schema remains under `schemas/`; a release rollback card remains under `release/`; lifecycle data remains under `data/`.
+A file belongs here only when **migration mechanics are its primary responsibility**. The normative object, schema, policy, dataset, release record, receipt, proof, or runtime implementation remains in its owning root.
 
-## What does not belong here
+## What does NOT belong here
 
-Do not use `migrations/` as a parallel authority, data store, backup system, release root, or secrets store.
+Do not use `migrations/` as a parallel authority, lifecycle store, backup system, secrets store, incident workspace, release root, or publication surface.
 
 The following do not belong here:
 
-- canonical JSON Schemas or machine contracts;
+- canonical JSON Schemas, JSON-LD contexts, or other machine-shape authority;
 - human semantic contract authority;
 - policy bundles or admissibility decisions;
-- source descriptors, canonical evidence, or source payloads;
-- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED datasets;
-- database or graph dumps, bulk exports, backups, snapshots, WAL archives, or restore images;
-- release manifests, promotion decisions, release rollback cards, correction notices, or withdrawal notices;
-- production credentials, DSNs, connection strings, tokens, private keys, certificates, kubeconfigs, or `.env` files;
-- unredacted row samples, private topology, sensitive logs, or incident working material;
-- generated public artifacts such as PMTiles, COGs, GeoParquet, tiles, reports, or API payloads;
-- destructive scripts lacking scope, preconditions, validation, recovery, review, and audit fields;
+- source descriptors, source payloads, EvidenceBundles, or canonical evidence;
+- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, or rollback data payloads;
+- database or graph dumps, bulk exports, backups, snapshots, WAL archives, restore images, or point-in-time recovery media;
+- release manifests, promotion decisions, release rollback cards, correction notices, withdrawal notices, or publication approvals;
+- production credentials, DSNs, connection strings, tokens, private keys, certificates, kubeconfigs, service-account material, or `.env` files;
+- unredacted row samples, private topology, sensitive logs, incident working material, or restricted relationship payloads;
+- generated public artifacts such as PMTiles, COGs, GeoParquet, tiles, reports, exports, or API payloads;
+- generated clients or runtime code whose primary home is an application or package root;
+- destructive commands lacking named scope, preconditions, validation, recovery, review, target, and audit fields;
 - one-off manual commands represented as authoritative migration history;
-- AI-generated remaps, inferred graph edges, or transformations promoted without evidence and review.
+- mutable “latest” inputs without a pinned revision or digest;
+- AI-generated remaps, inferred graph edges, entity merges, crosswalks, or transformations promoted without evidence and review;
+- migration records that silently weaken evidence, source role, rights, sensitivity, policy, review, correction, or release requirements.
 
-When restricted data, a secret, dump, or backup lands here, stop normal work, isolate the material, rotate or revoke access where necessary, and follow the appropriate incident and correction process.
+If restricted data, credentials, dumps, backups, or incident material land here, stop normal work, isolate the material, rotate or revoke access where necessary, and follow the applicable security, incident, correction, and governance process.
 
 ## Inputs
 
-A migration packet may consume:
+A migration packet may consume the following only when their identity and authority are explicit.
 
-| Input | Why it is needed |
-|---|---|
-| Accepted ADR or explicit scoped decision | Establishes why the architecture or compatibility transition is allowed |
-| Semantic contract | Defines intended meaning |
-| Machine schema | Defines intended shape |
-| Policy decision or sensitivity review | Constrains handling and exposure |
-| Issue, defect, validation failure, or correction request | Establishes reason and scope |
-| Evidence or receipt references | Grounds consequential remaps or repairs |
-| Current state inventory | Defines what will change |
-| Producer/consumer inventory | Defines adoption order |
-| Release and rollback context | Defines public impact and recovery |
-| Backup/snapshot capability | Supports recovery where applicable |
-| Test fixtures and invariant checks | Defines expected success and failure states |
-| Environment and runner contract | Defines how execution is performed safely |
+| Input | Why it is needed | Minimum pinning |
+|---|---|---|
+| Accepted ADR or explicit scoped decision | Establishes why the architecture or compatibility transition is permitted | ADR ID and accepted revision, or issue/decision reference |
+| Semantic contract | Defines intended meaning and invariants | Path, version, commit, and digest where material |
+| Machine schema | Defines intended shape | `$id`, path, version, commit, and digest |
+| Policy decision or sensitivity review | Constrains handling, transformation, and exposure | Decision/reference ID and applicable scope |
+| Issue, defect, validation failure, or correction request | Establishes reason and bounded scope | Stable issue or record reference |
+| Source and evidence references | Grounds consequential repairs, remaps, merges, or splits | Resolvable `EvidenceRef`/`EvidenceBundle` or accepted source record |
+| Current-state inventory | Defines exact objects, rows, features, fields, nodes, edges, versions, or projections that may change | Immutable state/version identifier |
+| Producer and consumer inventory | Defines compatibility and adoption order | Named systems and deployed/configured revisions |
+| Fixtures and invariant checks | Defines expected success, failure, denial, abstention, and edge conditions | Versioned fixture and test paths |
+| Environment and runner contract | Defines where and how execution is allowed | Named environment, runner version, permissions, and configuration digest |
+| Backup, snapshot, or prior artifact reference | Supports recovery where applicable | Immutable external reference; never backup bytes in Git |
+| Release and public-surface context | Defines public impact and correction/rollback handoff | Candidate/release IDs and affected surfaces |
+| Prior migration and recovery records | Establishes lineage and ordering | Stable migration/recovery IDs and digests |
 
-Inputs must be commit-, version-, hash-, release-, or environment-identified where material. “Latest,” “current database,” or “all records” is not sufficiently precise for a consequential migration.
+Inputs must be commit-, version-, hash-, release-, ledger-, or environment-identified where material. “Latest,” “current database,” “all records,” “production,” or “the graph” is not sufficiently precise for a consequential migration.
 
 ## Outputs
 
 A migration packet may produce:
 
-- reviewed migration plans;
-- migration payloads and checksums;
-- compatibility and dependency matrices;
-- preflight and dry-run reports;
-- target-state and invariant reports;
-- execution or adoption receipts;
-- post-run verification reports;
-- rollback or forward-fix records;
-- drift, correction, and documentation updates;
-- references to release-impact review.
+- reviewed migration and coordination plans;
+- pinned migration payloads and checksums;
+- compatibility, dependency, and adoption matrices;
+- preflight, dry-run, rehearsal, and canary reports;
+- target-state, invariant, and affected-object reports;
+- execution, adoption, and verification receipts;
+- rollback, disablement, restore-coordination, compensation, or forward-fix records;
+- deprecation, drift, correction, and documentation updates;
+- references to release-impact, incident, or security review;
+- residual-risk and follow-up registers.
 
-These outputs remain bounded:
+### Output claim boundaries
 
-| Output | What it proves | What it does not prove |
+| Output | What it may prove | What it does not prove |
 |---|---|---|
-| Migration plan | Intended change and review surface exist | Execution occurred |
-| Parsed SQL/script | Syntax may be acceptable to a parser | Target compatibility or safety |
-| Dry run | Preview completed in a named context | Production outcome |
-| Execution receipt | A named action was attempted or completed | External truth or release approval |
-| Post-check report | Named invariants passed in a named context | Universal correctness |
-| Rollback record | Recovery instructions exist | Rollback was rehearsed or will work |
-| Git commit / PR | Repository bytes changed | Migration was applied, approved, released, or published |
+| Migration plan | Intended change, scope, dependencies, and review surface exist | Execution occurred |
+| Parsed SQL/script/query | Syntax passed a named parser or checker | Target compatibility, semantics, safety, or authorization |
+| Schema/fixture tests | Selected machine-shape behavior passed | Producer/consumer adoption, semantic truth, policy approval, or release |
+| Dry run | A preview completed against a named state | Production outcome |
+| Rehearsal | The recovery or cutover path was exercised in a named rehearsal context | Universal recovery or production parity |
+| Canary | A bounded target subset changed and passed thresholds | Full migration completion |
+| Execution receipt | A named runner attempted or completed a pinned action | External truth, policy approval, release, or publication |
+| Post-check report | Named invariants passed in a named environment | Universal correctness or absence of undiscovered defects |
+| Adoption record | Named producers and consumers were observed at declared revisions | Every downstream consumer migrated |
+| Recovery record | Recovery posture and instructions exist | Recovery was rehearsed, executed, or successful |
+| Recovery receipt | A named recovery action completed and passed named checks | Release rollback or public correction unless release records also exist |
+| Git commit / PR | Repository bytes changed | Migration applied, adopted, approved, released, or published |
 
 `migrations/` never publishes KFM data by itself.
 
 ## Validation
 
-Validation is **migration-class-specific**. A single generic green check is insufficient.
+Validation is **migration-class-, target-, and evidence-grade-specific**. A single generic green check is insufficient.
 
-### Required source checks
+### Required packet checks
 
-Every migration change should verify:
+Every consequential migration should verify:
 
-- target path and lane;
-- migration and recovery record pairing;
-- stable identifier and ordering;
-- affected object inventory;
-- evidence and authority basis;
-- dependency and rollout order;
-- compatibility class;
-- rights, sensitivity, and public-impact posture;
-- preflight and post-check definitions;
+- correct lane placement and Directory Rules basis;
+- stable migration and recovery identities;
+- immutable base and target state;
+- pinned payload paths and digests;
+- affected object and environment inventory;
+- controlling contract, schema, policy, evidence, lifecycle, and release references;
+- dependency, concurrency, and rollout order;
+- compatibility and adoption class;
+- rights, sensitivity, living-person, DNA, archaeology, rare-species, infrastructure, and restricted-geometry posture where applicable;
+- preconditions, failure conditions, abort thresholds, and post-checks;
 - secret and restricted-content absence;
-- rollback or forward-fix plan;
-- documentation and release impact.
+- paired rollback, disablement, restore, compensation, or forward-fix posture;
+- documentation, deprecation, correction, incident, and release impact;
+- review, authorization, execution, and verification records;
+- residual risk and follow-up closure.
 
-### Executable checks by class
+### Minimum executable evidence by lane
 
-| Migration class | Minimum executable evidence |
+| Lane | Minimum executable evidence when applicable |
 |---|---|
-| Database | Engine parse or validation, transaction/preflight where supported, lock/downtime assessment, before/after object checks |
-| Schema | Valid and invalid fixtures, producer/consumer compatibility tests, enum/field crosswalk checks |
-| Data | Deterministic input selection, row/feature counts, identity and provenance checks, dry-run diff, sensitivity checks |
-| Graph/triplet | Node/edge counts, referential closure, evidence-link preservation, duplicate/cycle/orphan checks, projection rebuild proof |
-| Recovery | Preconditions, reversal/disablement logic, restore or forward-fix validation, post-recovery invariant checks |
+| Database | Engine-aware parse or validation, transaction/preflight behavior, lock and downtime assessment, permission review, before/after object checks |
+| Schema | Valid and invalid fixtures, meta-schema checks, `$id`/reference checks, producer/consumer compatibility, crosswalk and deprecation tests |
+| Data | Deterministic input selection, counts, identity/provenance checks, dry-run diff, lifecycle and sensitivity checks, no-unexpected-loss assertions |
+| Graph/triplet | Node/edge/triplet counts, endpoint closure, evidence-link resolution, duplicate/orphan/cycle policy, identity lineage, projection rebuild proof |
+| Recovery | Applicability, prerequisites, reversal/disablement/restore/compensation behavior, rehearsal or explicit gap, post-recovery invariants |
+| Coordinated | All applicable lane checks plus dependency, cutover, compatibility-window, and failure-isolation evidence |
+
+### Validation outcomes
+
+Use finite outcomes rather than ambiguous prose:
+
+| Outcome | Meaning |
+|---|---|
+| `PASS` | Applicable checks passed for the named target and revision |
+| `FAIL` | One or more required checks failed |
+| `HOLD` | Evidence, review, target, tooling, or dependency is incomplete |
+| `NOT_APPLICABLE` | Check does not apply and the rationale is explicit and reviewed |
+| `NOT_RUN` | Check was not executed; the migration cannot inherit a passing claim from other checks |
+| `ERROR` | The validation mechanism could not determine a result |
+
+A check marked `NOT_RUN`, `HOLD`, or `ERROR` remains visible. It must not be silently converted into `PASS`.
 
 ### Current repository boundary
 
-No repository-native migration target such as `make migrations-validate`, dedicated migration workflow, selected runner, or applied-version register was established in the bounded inspection. Until such a surface exists and is verified:
+The repository has bounded validation and readiness workflows, but no verified cross-lane migration packet validator, canonical runner, or applied-state ledger.
+
+Until those surfaces exist and are verified:
 
 - do not advertise a canonical migration command;
-- do not use unrelated schema, contract, policy, or release checks as migration proof;
-- record lane-specific commands in the migration packet;
-- mark unexecuted checks `NOT RUN`;
-- keep shared or release-relevant execution blocked until the necessary evidence exists.
+- do not use the schema-validation workflow as proof that schema migration adoption completed;
+- do not use the rollback-drill readiness workflow as proof that any rollback was simulated;
+- record lane-specific commands and versions inside each migration packet;
+- mark unexecuted checks `NOT_RUN`;
+- keep shared or release-relevant execution blocked when required evidence is absent;
+- treat manual execution as non-authoritative unless it produces an inspectable receipt tied to the pinned packet.
 
 ## Review burden
 
-Review scales with consequence, not file extension.
+Review scales with consequence, authority impact, sensitivity, and recoverability—not file extension.
 
 | Change class | Minimum review burden |
 |---|---|
-| README-only wording with no behavior change | Docs steward or migration steward |
-| Database structure, index, constraint, view, function, role, or permission | Database owner + migration reviewer |
-| Schema or semantic compatibility transition | Schema owner + contract owner + affected producer/consumer owners |
-| Data backfill, repair, remap, or rebuild | Data owner + affected domain owner + migration reviewer |
-| Graph/triplet identity or topology change | Graph owner + evidence owner + affected domain owner |
-| Recovery record | Affected lane owner + independent recovery reviewer where practical |
-| Public API, map, tile, export, or release impact | Governed API/UI owner + release reviewer + affected domain owner |
-| Rights, living-person, DNA, archaeology, rare-species, infrastructure, or restricted geometry | Policy/sensitivity reviewer + domain steward |
-| Credentials, access, or incident recovery | Security reviewer + affected system owner |
-| Destructive, irreversible, or forward-fix-only change | Migration owner + affected owners + explicit risk acceptance |
-| Cross-lane or multi-environment change | Owners for every affected responsibility and environment |
+| README-only wording with no behavior change | Documentation reviewer or migration reviewer |
+| Database structure, index, constraint, view, function, role, permission, extension, or partition | Database owner + migration reviewer + security reviewer when access changes |
+| Schema or semantic compatibility transition | Schema owner + contract owner + affected producer and consumer owners |
+| Validator behavior or fixture polarity change | Schema/contract owner + validator/test owner + affected consumers |
+| Data backfill, repair, remap, merge, split, relocation, or rebuild | Data owner + affected domain owner + evidence/policy reviewer when material |
+| Graph/triplet identity, relationship, evidence-link, or topology change | Graph owner + evidence owner + affected domain owner |
+| Recovery record | Affected lane owner + recovery reviewer; independent reviewer where risk is material |
+| Public API, MapLibre layer, tile, export, story, search, AI, or released-artifact impact | Governed interface owner + release reviewer + affected domain owner |
+| Rights, living-person, DNA/genomic, archaeology, rare-species, infrastructure, sovereignty, or restricted geometry | Policy/sensitivity reviewer + affected domain or rights-holder review |
+| Credentials, grants, private endpoints, access, or incident recovery | Security reviewer + affected system owner |
+| Destructive, irreversible, or forward-fix-only transition | Migration owner + every affected authority + explicit risk acceptance |
+| Cross-lane or multi-environment cutover | Owners for every primary lane, environment, and public surface |
+| Change to migration identity, ordering, packet schema, or root authority | ADR-class architecture and governance review |
 
-CODEOWNERS routing is not proof that the required review occurred. Approval, execution, and verification should be separated for high-impact migrations when repository maturity supports it.
+CODEOWNERS routing is not proof that the required review occurred. For material migrations, authoring, authorization, execution, and verification should be separated when repository maturity supports it.
 
 ## Related folders
 
 | Location | Relationship |
 |---|---|
-| [`database/`](./database/README.md) | Database structure and database-managed behavior |
-| [`schema/`](./schema/README.md) | Machine-shape and semantic compatibility transitions |
-| [`data/`](./data/README.md) | Data-state backfills, repairs, remaps, and rebuilds |
-| [`graph/`](./graph/README.md) | Graph/triplet topology, identity, and evidence-link changes |
-| [`rollback/`](./rollback/README.md) | Engineering recovery, disablement, and forward-fix records |
-| [`../contracts/`](../contracts/README.md) | Semantic meaning |
-| [`../schemas/`](../schemas/README.md) | Machine shape |
-| [`../policy/`](../policy/README.md) | Admissibility, rights, sensitivity, and obligations |
-| [`../data/`](../data/README.md) | Lifecycle payloads and records |
-| [`../tests/`](../tests/README.md) | Representative enforceability and regression proof |
-| [`../tools/validators/`](../tools/validators/README.md) | Repository-wide validation tooling |
-| [`../release/`](../release/README.md) | Release decisions, correction, withdrawal, and public rollback |
-| [`../docs/runbooks/`](../docs/runbooks/README.md) | Operator procedures and recovery drills |
+| [`database/`](./database/README.md) | Database structure, access, and engine-managed behavior |
+| [`schema/`](./schema/README.md) | Machine-shape, semantic-compatibility, validation, adoption, and deprecation transitions |
+| [`data/`](./data/README.md) | Data-state backfills, repairs, remaps, relocations, and deterministic rebuilds |
+| [`graph/`](./graph/README.md) | Graph/triplet topology, identity, evidence links, relationship vocabulary, and projections |
+| [`rollback/`](./rollback/README.md) | Migration-level reversal, disablement, restore coordination, compensation, and forward-fix records |
+| [`../contracts/`](../contracts/README.md) | Semantic meaning and invariants |
+| [`../schemas/`](../schemas/README.md) | Machine-checkable shape |
+| [`../policy/`](../policy/README.md) | Admissibility, rights, sensitivity, access, and obligations |
+| [`../fixtures/`](../fixtures/README.md) | Representative valid, invalid, edge, and denial cases |
+| [`../tests/`](../tests/README.md) | Executable enforceability and regression evidence |
+| [`../tools/validators/`](../tools/validators/README.md) | Reusable validator implementation |
+| [`../data/`](../data/README.md) | Lifecycle payloads, receipts, proofs, catalogs, and published artifacts |
+| [`../release/`](../release/README.md) | Release, correction, withdrawal, and public rollback decisions |
+| [`../release/rollback_cards/`](../release/rollback_cards/README.md) | Release-facing rollback review aids; distinct from migration recovery |
+| [`../docs/runbooks/`](../docs/runbooks/README.md) | Operator procedures and drills |
 | [`../docs/governance/SEPARATION_OF_DUTIES.md`](../docs/governance/SEPARATION_OF_DUTIES.md) | Review and duty-separation guidance |
+| [`../.github/workflows/schema-validation.yml`](../.github/workflows/schema-validation.yml) | Bounded schema/fixture/test validation |
+| [`../.github/workflows/rollback-drill.yml`](../.github/workflows/rollback-drill.yml) | Readiness hold for release rollback surfaces; no rollback simulation |
+| [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | GitHub review routing only |
 
 ## ADRs
 
-A migration does not always require an ADR. An ADR is required when the migration:
+A migration does not always require an ADR. An ADR is required when the transition:
 
-- adds, removes, or renames a canonical root;
-- creates a parallel schema, contract, policy, source, registry, receipt, proof, release, or lifecycle authority;
-- changes the canonical schema-home or responsibility split;
-- changes a public contract or trust-membrane boundary materially;
+- adds, removes, or renames a canonical responsibility root;
+- creates, retires, or redirects a parallel schema, contract, policy, source, registry, receipt, proof, release, or lifecycle authority;
+- changes canonical schema-home, semantic/machine-shape split, or policy-home rules;
+- changes the trust membrane or normal public access path;
 - splits, merges, or redefines a lifecycle phase;
-- standardizes a cross-repository migration state or identity contract;
-- introduces a non-reversible architectural decision whose tradeoffs must persist;
-- intentionally bends a KFM invariant.
+- standardizes repo-wide migration identity, ordering, state, packet, receipt, or recovery contracts;
+- changes the authority of a register or applied-version ledger;
+- introduces a non-reversible architectural choice whose tradeoffs must persist;
+- intentionally bends a KFM invariant;
+- changes the sole-renderer, governed API, publication, or correction boundary.
 
-A migration record can implement an accepted decision. It cannot make its own proposed ADR accepted.
+A migration record may implement an accepted decision. It cannot make its own proposed ADR accepted.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-23 |
-| Review status | Repository-grounded v1.1 documentation update |
-| Current maturity | Five documented lanes; executable runner, CI gate, payload inventory, applied ledger, and recovery coverage unverified |
-| Next review trigger | First concrete migration payload, selected runner, dedicated migration workflow, applied-version ledger, rollback rehearsal, destructive change, or public-impacting migration |
+| Last reviewed | 2026-07-24 |
+| Review status | Repository-grounded v1.2 documentation update |
+| Current maturity | Five v1.1 documented lanes; bounded schema validation; rollback readiness hold; payloads, runner, applied ledger, pairing coverage, rehearsals, and production history unestablished |
+| Next review trigger | First concrete migration payload, runner selection, machine migration register, applied ledger, verified same-PR pairing, recovery rehearsal, destructive transition, or public-impacting migration |
 
 ---
 
@@ -383,43 +469,53 @@ The confirmed documentation topology is:
 migrations/
 ├── README.md
 ├── database/
-│   └── README.md
+│   └── README.md        # v1.1
 ├── schema/
-│   └── README.md
+│   └── README.md        # v1.1
 ├── data/
-│   └── README.md
+│   └── README.md        # v1.1
 ├── graph/
-│   └── README.md
+│   └── README.md        # v1.1
 └── rollback/
-    └── README.md
+    └── README.md        # v1.1
 ```
 
-This is a **bounded named-path inventory**, not a recursive tree attestation. Bounded repository search did not establish executable payloads beneath these lanes.
+This is a **bounded named-path inventory**, not a recursive tree attestation. The presence of the five lane contracts does not prove executable payloads exist beneath them.
 
-### Lane index
+### Lane maturity matrix
 
-| Lane | Primary responsibility | Must preserve |
+| Lane | Confirmed documentation | Confirmed implementation evidence | Unestablished or unverified |
+|---|---|---|---|
+| `database/` | v1.1 repository-grounded contract | None beyond documentation in bounded inspection | Engine, version, runner, objects, payloads, targets, backups, executions |
+| `schema/` | v1.1 repository-grounded contract | Configured schema-validation surface outside this lane | Concrete migration payloads, adoption ledger, generated clients, compatibility retirement, release adoption |
+| `data/` | v1.1 repository-grounded contract | None beyond documentation in bounded inspection | Runner, payloads, target datasets, executions, restores |
+| `graph/` | v1.1 repository-grounded contract | None beyond documentation in bounded inspection | Graph store, query language, runner, payloads, targets, executions |
+| `rollback/` | v1.1 repository-grounded recovery contract | Readiness workflow exists outside this lane but does not simulate recovery | Pairing coverage, runner, backup capability, rehearsals, executions, production outcomes |
+
+## Migration classification and lane routing
+
+Classify by the **primary state transition**, not by file language or storage technology.
+
+| Primary change | Primary lane | Common adjacent responsibilities |
 |---|---|---|
-| `database/` | DDL, indexes, constraints, views, functions, permissions, storage behavior | Lock analysis, least privilege, compatibility, recovery |
-| `schema/` | Schema/contract version transitions and producer/consumer adoption | Meaning/shape authority split, fixtures, compatibility |
-| `data/` | Backfill, repair, normalization, remap, rebuild | Stable identity, provenance, lifecycle phase, sensitivity |
-| `graph/` | Node/edge/triplet topology, identity, relationship and projection changes | Evidence links, referential closure, non-sovereign projection |
-| `rollback/` | Reversal, disablement, restore coordination, or forward-fix planning | Paired migration identity, preconditions, post-recovery checks |
+| Table, column, index, constraint, view, function, trigger, role, grant, extension, partition, storage behavior | `database/` | Schema, app/runtime, data, security, release |
+| Field, enum, requiredness, type, `$id`, `$ref`, version, validation behavior, producer/consumer compatibility | `schema/` | Contracts, validators, fixtures, generated clients, data, graph, API |
+| Record values, identifiers, crosswalks, lifecycle-safe location, repair, backfill, rebuild | `data/` | Database, schema, evidence, policy, release |
+| Node/edge/triplet identity, relationship vocabulary, topology, evidence link, projection, graph index | `graph/` | Data, contracts, schemas, evidence, policy, API |
+| Reversal, disablement, restore coordination, compensation, forward fix | `rollback/` | Paired primary migration and relevant runbooks |
+| Multiple equally primary changes | Coordinated records in each owning lane | One umbrella coordination section or issue may link the packet set |
 
-## Migration classification
+### Routing questions
 
-Classify before selecting a lane.
+Before choosing a lane, ask:
 
-| Primary change | Lane | Common adjacent changes |
-|---|---|---|
-| Table, index, constraint, function, role, extension, storage engine | `database/` | Schema, app, data, release |
-| JSON/DTO field, enum, requiredness, semantic compatibility | `schema/` | Contracts, validators, fixtures, producers/consumers |
-| Record values, IDs, crosswalks, lifecycle placement, derived rebuild | `data/` | Database, schema, evidence, release |
-| Node/edge/triplet identity, topology, projection, graph index | `graph/` | Data, evidence, catalog, API |
-| Reversal, disablement, restore, compensating change | `rollback/` | Paired primary migration and runbook |
-| Multiple equally primary responsibilities | Split into coordinated lane records | One umbrella coordination section may link them |
+1. Is the durable change primarily to storage structure, machine shape, data values, relationship topology, or recovery posture?
+2. Which authority owns the intended meaning and shape?
+3. Does the change require a second lane record rather than a larger mixed-responsibility file?
+4. Can each lane be reviewed, applied, validated, and recovered independently?
+5. Which sequence prevents partial adoption or authority drift?
 
-Do not choose a lane merely because a file uses SQL or Python. Choose it by the **primary state transition**.
+Do not place all coordinated work into one lane merely because one tool can execute it.
 
 ## Minimum migration packet
 
@@ -427,205 +523,540 @@ A shared-state or release-relevant migration should have a complete packet befor
 
 ```yaml
 migration_id: mig-<stable-id>
-title: <short purpose>
+title: <short-purpose>
 status: PROPOSED
-class: database | schema | data | graph | recovery | coordinated
-owner: NEEDS VERIFICATION
-authority_refs: []
-reason_refs: []
+primary_lane: database | schema | data | graph
+coordination_id: null
+owner: NEEDS_VERIFICATION
+
+authority:
+  decision_refs: []
+  contract_refs: []
+  schema_refs: []
+  policy_refs: []
+  evidence_refs: []
+  release_refs: []
+
 base_state:
-  revision: <commit-or-release>
+  repository_commit: <sha>
   environment: <named-environment>
-  state_id: <version-or-ledger-ref>
+  state_id: <immutable-version-or-ledger-ref>
+  observed_at: <timestamp>
+  inventory_ref: <path-or-external-ref>
+
 target_state:
-  description: <intended state>
-  state_id: <version-or-ledger-ref>
+  description: <bounded-intended-state>
+  state_id: <planned-version-or-ledger-ref>
+  invariants: []
+
 payloads:
-  - path: <migration payload>
+  - path: <migration-payload>
     sha256: <digest>
-dependencies: []
+    runner: <runner-and-version>
+
+dependencies:
+  before: []
+  after: []
+  conflicts_with: []
+
 affected:
-  producers: []
-  consumers: []
+  database_objects: []
   schemas: []
   contracts: []
   policies: []
   datasets: []
   graph_families: []
+  producers: []
+  consumers: []
+  validators: []
+  fixtures: []
+  APIs: []
+  UI_or_MapLibre_surfaces: []
+  releases: []
+
+compatibility:
+  class: backward-compatible | expand-contract | staged-breaking | rebuildable-derivative | destructive | forward-fix-only
+  coexistence_window: null
+  adoption_requirements: []
+  deprecation_requirements: []
+
 preconditions: []
+abort_conditions: []
 dry_run:
-  command_or_workflow: NEEDS VERIFICATION
+  command_or_workflow: NEEDS_VERIFICATION
+  target: <named-target>
   evidence_ref: null
+canary:
+  applicable: false
+  scope: null
+  thresholds: []
+
 validation:
   pre_checks: []
   post_checks: []
-compatibility:
-  class: backward-compatible | staged | breaking | forward-fix-only
-  window: null
-recovery_ref: migrations/rollback/<paired-id>.md
+  negative_checks: []
+  expected_outcomes: []
+
+sensitivity:
+  impact: none | reviewed | hold
+  reviewer_refs: []
 release_impact: none | internal | candidate | public
-sensitivity_impact: none | reviewed | hold
+
+recovery:
+  recovery_id: rec-<stable-id>
+  record_ref: migrations/rollback/<paired-id>.md
+  class: reversible | disableable | restorable | compensating | forward-fix-only
+  rehearsal_ref: null
+
 execution:
-  runner: NEEDS VERIFICATION
+  authorization_refs: []
+  runner: NEEDS_VERIFICATION
+  target: <named-environment>
+  started_at: null
+  completed_at: null
   receipt_ref: null
+
 review:
   required_roles: []
   records: []
+  independent_verifier: null
+
+follow_up:
+  documentation: []
+  deprecations: []
+  corrections: []
+  incidents: []
+  open_risks: []
 ```
 
-This is a **PROPOSED documentation contract**, not a verified repository schema. Standardizing it as machine shape requires placement under `schemas/` and appropriate tests.
+This is a **PROPOSED documentation contract**, not a verified repository schema. Standardizing it as machine shape requires an accepted authority decision, a home under `schemas/`, valid and invalid fixtures, tests, validators, compatibility planning, and rollback.
+
+## Migration evidence ladder
+
+Use the highest evidence grade actually supported. Do not inherit a higher grade from an unrelated workflow.
+
+| Evidence grade | Minimum support | Claim permitted |
+|---|---|---|
+| `DOCUMENTED` | Plan and packet exist | Intended migration is described |
+| `STATIC_VALIDATED` | Payload parses or passes static checks | Selected static properties passed |
+| `DRY_RUN` | Preview completed against a pinned target state | Expected diff was observed in that context |
+| `REHEARSED` | Full procedure or recovery path exercised in a rehearsal target | Procedure worked in the named rehearsal context |
+| `CANARIED` | Bounded subset executed and passed thresholds | Canary succeeded for the named subset |
+| `EXECUTED` | Pinned payload ran against the named target | Execution occurred |
+| `POSTCHECKED` | Required post-checks ran | Named invariants were evaluated |
+| `VERIFIED` | Execution and required post-checks passed with inspectable evidence | Migration reached its verified target state |
+| `ADOPTED` | Required producers and consumers were observed on compatible revisions | Named adoption scope closed |
+| `RECOVERED` | Recovery action executed and post-recovery checks passed | Named safe state was restored or compensated |
+| `COMPLETED` | Adoption, receipts, recovery posture, docs, deprecations, and follow-up closed | Migration packet is operationally closed |
+
+A `DOCUMENTED` or `STATIC_VALIDATED` migration must never be described as executed. A `VERIFIED` migration must not be described as released unless release authority separately approved the affected public state.
 
 ## Migration work-state model
 
-Keep work state separate from runtime, policy, release, and truth labels.
+Keep work state separate from evidence grade, validation outcome, policy outcome, release state, and truth labels.
 
 | Work state | Meaning |
 |---|---|
 | `PROPOSED` | Packet exists; execution is not authorized |
-| `REVIEW_READY` | Scope, dependencies, checks, and recovery packet are complete |
-| `APPROVED_FOR_TARGET` | Required review exists for a named target environment |
-| `PRECHECKED` | Preconditions and dry-run evidence passed |
-| `EXECUTING` | Runner is applying the migration |
-| `APPLIED` | Payload completed; post-checks still pending |
-| `VERIFIED` | Named post-checks passed |
-| `COMPLETED` | Adoption, docs, receipts, and follow-up are closed |
-| `BLOCKED` | Named prerequisite is unresolved |
-| `FAILED` | Execution or post-check failed |
-| `ROLLED_BACK` | Prior safe state was restored or migration disabled |
+| `DRAFTING` | Scope or packet fields remain incomplete |
+| `REVIEW_READY` | Applicable packet, dependencies, checks, and recovery record are complete |
+| `APPROVED_FOR_TARGET` | Required review and authorization exist for one named target |
+| `PRECHECKED` | Preconditions and required preflight evidence passed |
+| `EXECUTING` | Runner is applying the pinned payload |
+| `APPLIED` | Payload completed; post-checks and adoption may remain |
+| `VERIFYING` | Post-checks are in progress |
+| `VERIFIED` | Required post-checks passed for the named target |
+| `ADOPTING` | Producers, consumers, aliases, or derivatives are transitioning |
+| `COMPLETED` | Applicable adoption, receipts, docs, deprecations, and follow-up are closed |
+| `BLOCKED` | Named prerequisite, evidence, review, target, or tool is unresolved |
+| `FAILED` | Execution or verification failed |
+| `RECOVERY_REQUIRED` | The migration cannot safely continue without recovery |
+| `ROLLED_BACK` | Prior safe state was restored or the migration was disabled |
 | `FORWARD_FIXED` | A compensating migration restored safety because reversal was unsafe |
-| `SUPERSEDED` | A later governed migration replaces this packet |
+| `SUPERSEDED` | A later governed packet replaces this packet |
+| `CANCELLED` | Execution authorization was withdrawn before completion |
 
-These states are **PROPOSED** until standardized by an accepted contract. Do not confuse them with `ANSWER / ABSTAIN / DENY / ERROR`, policy outcomes, or release states.
+These states are **PROPOSED** until standardized by an accepted contract. They must not be confused with `PASS / FAIL / HOLD`, policy decisions, `ANSWER / ABSTAIN / DENY / ERROR`, release states, or `CONFIRMED / PROPOSED / UNKNOWN / NEEDS VERIFICATION`.
 
-## Compatibility and adoption
+## Deterministic identity, ordering, and pairing
 
-Migration safety often depends more on adoption order than on payload syntax.
+### Stable identity
+
+A migration ID should be deterministic from stable inputs where practical, such as:
+
+- primary lane;
+- object family or bounded target;
+- purpose slug;
+- authored sequence or timestamp;
+- immutable packet digest.
+
+The repository has not established a canonical ID grammar. Until it does:
+
+- use a unique, human-readable date or sequence prefix;
+- keep the same identity across plan, payload, receipt, and recovery record;
+- never reuse an ID for a different state transition;
+- retain supersession lineage;
+- record payload digests independently of filenames.
+
+### Ordering
+
+A migration must declare:
+
+- strict predecessors;
+- strict successors;
+- compatible parallel work;
+- conflicts and mutual exclusions;
+- schema/data/graph/database coordination;
+- application deploy or feature-flag boundaries;
+- release freeze or cutover requirements.
+
+Do not infer order solely from filenames when dependencies are materially important.
+
+### Recovery pairing
+
+Every consequential database, schema, data, or graph migration requires a paired recovery record under `migrations/rollback/`, even when the only acceptable posture is forward-fix-only.
+
+Pairing should be machine-checkable in the future. Current one-to-one coverage and same-PR enforcement remain **NEEDS VERIFICATION**.
+
+## Cross-lane coordination
+
+A coordinated transition uses multiple lane records when more than one responsibility changes materially.
+
+### Coordination matrix
+
+| Concern | Owning lane/root | Coordination requirement |
+|---|---|---|
+| Storage structure | `migrations/database/` | Pin DDL/object changes and lock/access behavior |
+| Machine shape and compatibility | `migrations/schema/` + `schemas/` | Pin old/new schemas, validators, fixtures, and adoption |
+| Data values and identity | `migrations/data/` + `data/` | Pin inputs, transforms, lineage, counts, and lifecycle state |
+| Graph/triplet topology | `migrations/graph/` + graph/evidence authorities | Pin relationships, evidence links, identity, and projections |
+| Recovery posture | `migrations/rollback/` | Pair each primary migration and define coordinated failure handling |
+| Runtime adoption | applications/packages/runtime | Pin deploy order, dual-read/write behavior, and rollback compatibility |
+| Policy and sensitivity | `policy/` and governed review | Re-evaluate if fields, exposure, identity, or location change |
+| Release/public state | `release/` | Hold, correct, withdraw, or release through governed records |
+
+### Coordinated transition example
+
+```mermaid
+flowchart LR
+    A[Accepted decision and pinned base state]
+    B[Database expand]
+    C[Schema-compatible version]
+    D[Dual-read/write runtime]
+    E[Data backfill or graph rebuild]
+    F[Verification and consumer adoption]
+    G[Contract old path]
+    H[Release or public correction]
+    R[Paired recovery records]
+
+    A --> B --> C --> D --> E --> F --> G --> H
+    B -. paired .-> R
+    C -. paired .-> R
+    E -. paired .-> R
+    G -. paired .-> R
+```
+
+If a coordinated sequence partially fails, each lane must declare whether it can stop, reverse, remain compatible, or requires a forward fix.
+
+## Compatibility, adoption, and deprecation
+
+Migration safety often depends more on coexistence and adoption than on payload syntax.
 
 ### Compatibility classes
 
 | Class | Requirement |
 |---|---|
-| Backward-compatible | Old and new producers/consumers can coexist |
-| Expand-and-contract | Add compatible shape, migrate usage, then remove old shape |
-| Staged breaking | Explicit compatibility window and coordinated cutover |
-| Rebuildable derivative | Canonical inputs remain; derived output can be deterministically rebuilt |
-| Destructive | Data or meaning may be lost; heightened review and recovery evidence required |
-| Forward-fix-only | Reversal would be less safe than a compensating migration; reason and guardrails required |
+| `BACKWARD_COMPATIBLE` | Existing consumers continue to function with the new state |
+| `FORWARD_COMPATIBLE` | New consumers can tolerate the old state during rollout |
+| `EXPAND_AND_CONTRACT` | Add compatible state, migrate adoption, then retire old state |
+| `STAGED_BREAKING` | Explicit compatibility window, coordinated cutover, and recovery plan |
+| `REBUILDABLE_DERIVATIVE` | Canonical inputs remain and derived state can be deterministically rebuilt |
+| `DESTRUCTIVE` | Data, identity, meaning, or recoverability may be lost; heightened governance required |
+| `FORWARD_FIX_ONLY` | Reversal would be less safe than compensation; reason and guardrails required |
+| `DOCUMENTATION_ONLY` | No payload, machine shape, data, graph, runtime, or release behavior changes |
+
+### Adoption states
+
+Track each material producer and consumer separately:
+
+| Adoption state | Meaning |
+|---|---|
+| `NOT_ASSESSED` | Impact has not been evaluated |
+| `UNAFFECTED` | Reviewed and not affected |
+| `PLANNED` | Change is assigned and sequenced |
+| `COMPATIBLE_OLD` | Still on old behavior but remains compatible |
+| `DUAL_MODE` | Supports old and new state |
+| `MIGRATED` | New behavior is deployed or configured |
+| `VERIFIED` | Observed against the target state |
+| `BLOCKED` | Cannot adopt due to a named dependency |
+| `RETIRED` | Old consumer or producer is removed |
+| `UNKNOWN` | Adoption state is not evidenced |
 
 ### Expand-and-contract sequence
 
-```mermaid
-flowchart LR
-    A[Add compatible structure] --> B[Deploy dual-read or dual-write support]
-    B --> C[Backfill or rebuild]
-    C --> D[Verify consumers and evidence links]
-    D --> E[Cut over reads and writes]
-    E --> F[Remove deprecated structure]
-    F --> G[Close recovery and release records]
+```text
+EXPAND -> DUAL COMPATIBILITY -> BACKFILL/REBUILD -> VERIFY -> CUT OVER -> RETIRE -> CLOSE
 ```
 
-Every step must name its target revision or environment and its failure behavior.
+The contract step must not occur until:
+
+- all required producers and consumers are verified;
+- deprecated fields, tables, relationships, aliases, or paths have no unresolved dependents;
+- recovery remains valid through the compatibility window;
+- release and public caches are handled where applicable;
+- deprecation and supersession records are updated.
+
+## Preflight, dry-run, canary, execution, and post-checks
+
+### Preflight
+
+Before mutation, verify:
+
+- the branch, commit, migration ID, packet digest, and payload digest;
+- target environment and immutable base-state identity;
+- runner and engine version;
+- required permissions and least privilege;
+- active locks, concurrent deployments, conflicting migrations, and maintenance windows;
+- backup/snapshot applicability and external reference validity;
+- producer/consumer compatibility window;
+- policy, rights, sensitivity, and release holds;
+- expected affected counts or object inventory;
+- recovery record and abort conditions;
+- logging, receipt, and redaction posture.
+
+### Dry run
+
+A dry run should produce:
+
+- exact target and base-state identifiers;
+- deterministic affected-object counts;
+- proposed changes by class;
+- identity merges, splits, remaps, or deletions;
+- evidence/provenance changes;
+- compatibility warnings;
+- sensitivity and public-impact warnings;
+- expected invariant changes;
+- predicted runtime and lock/downtime risk;
+- an explicit no-write assertion;
+- sanitized evidence suitable for review.
+
+### Canary
+
+Use a canary only when:
+
+- the subset is representative and policy-safe;
+- rollback or disablement is possible for the subset;
+- success and abort thresholds are explicit;
+- no partial public exposure bypasses release governance;
+- canary identity and results are recorded.
+
+### Execution
+
+Execution must use:
+
+- the reviewed packet and exact payload digests;
+- the authorized named target;
+- the declared runner and configuration;
+- concurrency and lock controls;
+- bounded privileges;
+- structured progress and failure recording;
+- no hidden manual edits;
+- an execution receipt.
+
+### Post-checks
+
+Post-checks must verify applicable:
+
+- state/version and object counts;
+- schema and contract compatibility;
+- data identity, provenance, lifecycle, temporal, and spatial invariants;
+- graph endpoint closure, relationship rules, evidence links, and projection rebuilds;
+- runtime producer/consumer compatibility;
+- policy, sensitivity, and rights posture;
+- public API, MapLibre, export, search, story, and AI surface behavior;
+- release, cache, alias, and correction implications;
+- no unexpected loss or orphaned state;
+- recovery applicability after the migration.
+
+A migration remains `APPLIED`, not `VERIFIED`, until required post-checks pass.
 
 ## Recovery and forward-fix contract
 
-Every consequential migration must identify one of these recovery classes:
+Every consequential migration must identify one recovery class.
 
 | Recovery class | Meaning |
 |---|---|
 | `REVERSIBLE` | A tested reversal can restore the prior approved state |
 | `DISABLEABLE` | New behavior can be turned off while state remains |
-| `RESTORABLE` | Backup or snapshot restoration is the recovery path |
+| `RESTORABLE` | Backup, snapshot, prior artifact, or point-in-time restore is the recovery path |
 | `COMPENSATING` | A governed corrective migration repairs state |
-| `FORWARD_FIX_ONLY` | Reversal is unsafe; an explicit compensating path is the only approved option |
+| `PARTIAL` | Only part of the transition can safely reverse; remaining state needs explicit handling |
+| `FORWARD_FIX_ONLY` | Reversal is unsafe; an explicit compensating path is the approved option |
+| `BLOCKED` | Recovery cannot proceed until a named dependency is satisfied |
 | `NON_RECOVERABLE` | Not acceptable for shared or release-relevant state absent exceptional documented governance |
 
-A recovery record should include:
+A paired recovery record should include:
 
-- paired migration ID and digest;
-- recovery class and reason;
-- target environment and base state;
-- activation conditions;
-- required backup or snapshot references;
-- reversal, disablement, restore, or compensation steps;
-- irreversible effects;
-- release and public-cache impact;
+- migration ID, payload digest, and coordination ID;
+- recovery ID and class;
+- target environment and base/safe state;
+- activation conditions and decision authority;
+- required backup, snapshot, prior artifact, or compensating input references;
+- reversal, disablement, restore, compensation, or forward-fix steps;
+- irreversible effects and expected residual state;
+- database, schema, data, graph, runtime, cache, alias, and release impacts;
 - pre- and post-recovery checks;
-- operator and reviewer requirements;
-- rehearsal evidence or `NOT RUN`;
-- correction, incident, or release references where applicable.
+- operator, reviewer, and independent verifier requirements;
+- rehearsal evidence or explicit `NOT RUN`;
+- execution and verification receipts;
+- correction, incident, security, or release handoffs.
 
-A rollback file existing in Git is not proof that recovery works.
+### Migration recovery versus release rollback
+
+| Concern | Migration recovery | Release rollback |
+|---|---|---|
+| Primary home | `migrations/rollback/` | `release/` and release rollback-card/runbook surfaces |
+| Purpose | Restore or compensate internal structure/state after a migration | Withdraw, supersede, or restore governed public release state |
+| Authority | Migration and affected-system governance | Release and correction governance |
+| Typical target | Database, schema, data, graph, or runtime compatibility state | Released artifacts, APIs, layers, aliases, exports, stories, or AI surfaces |
+| Evidence | Recovery packet, runner receipt, post-recovery checks | Release decision, rollback card, manifest, correction/withdrawal records |
+| Publication effect | None by itself | May change public state when approved and executed |
+
+A migration may require both processes. Completing one does not imply completion of the other.
+
+## Current workflow boundary
+
+### `schema-validation`
+
+The current schema workflow:
+
+- parses JSON under `schemas/`;
+- meta-validates `*.schema.json`;
+- requires configured v1 schemas to declare Draft 2020-12 and unique `$id` values;
+- checks six configured fixture-backed validator families;
+- runs the selected schema and contract tests;
+- emits process output and a job summary only.
+
+It does **not**:
+
+- create or apply a schema migration;
+- prove producer or consumer adoption;
+- emit a migration receipt or adoption ledger;
+- establish semantic truth, policy approval, release, or publication.
+
+### `rollback-drill`
+
+The current rollback workflow:
+
+- inspects rollback-card, placeholder engine/helper, test-inventory, and published-alias readiness surfaces;
+- asserts that known placeholders and holds remain explicit;
+- emits inspection output and job summaries only.
+
+It explicitly confirms that:
+
+- rollback engine/apply helpers remain placeholders;
+- the direct drill lane contains guidance rather than executable tests;
+- proposed RollbackCard schemas remain permissive scaffolds;
+- declared fixtures and validators are absent;
+- no rollback was simulated;
+- no rollback card, receipt, proof, signature, release transition, or publication authority was created.
+
+Therefore, a passing `rollback-drill` check currently means **the readiness hold remains accurately represented**, not that rollback capability exists.
 
 ## Definition of done
 
-A migration is complete only when all applicable items are closed:
+A migration is complete only when every applicable item is closed:
 
-- [ ] Stable migration identity and ordering are recorded.
+- [ ] Stable migration identity, ordering, and supersession lineage are recorded.
 - [ ] Primary lane and Directory Rules basis are correct.
-- [ ] Intended meaning and machine shape point to controlling authorities.
-- [ ] Base and target state are pinned.
-- [ ] Payloads and checksums are recorded.
-- [ ] Producers, consumers, data, graph, API, UI, and release impacts are inventoried.
-- [ ] Compatibility and rollout order are explicit.
-- [ ] Rights, sensitivity, and public impact are reviewed.
-- [ ] Recovery class and paired record exist.
-- [ ] Preflight or dry run completed, or `NOT RUN` is justified.
-- [ ] Required reviews are recorded.
-- [ ] Execution receipt identifies target, runner, revision, and outcome.
-- [ ] Post-migration invariants passed.
-- [ ] Recovery was rehearsed where risk requires it, or the gap remains visible.
-- [ ] Documentation, deprecation, correction, and release follow-up are complete.
-- [ ] Rollback target or forward-fix lineage is retained.
-- [ ] No migration output is misrepresented as publication authority.
+- [ ] Coordinated lane records exist where responsibilities are materially distinct.
+- [ ] Controlling contracts, schemas, policies, evidence, lifecycle, and release references are pinned.
+- [ ] Immutable base and target states are recorded.
+- [ ] Payloads, runners, versions, and digests are recorded.
+- [ ] Affected database objects, schemas, contracts, datasets, graph families, producers, consumers, validators, fixtures, APIs, UI/MapLibre surfaces, and releases are inventoried.
+- [ ] Compatibility, coexistence window, adoption order, and deprecation triggers are explicit.
+- [ ] Rights, sensitivity, sovereignty, living-person, DNA, archaeology, rare-species, infrastructure, and public impacts are reviewed where applicable.
+- [ ] Paired recovery identity, class, and record exist.
+- [ ] Preconditions, abort thresholds, dry-run, rehearsal, and canary requirements are resolved.
+- [ ] Required reviews and target-specific authorization are recorded.
+- [ ] Execution receipt identifies target, runner, revision, payload digests, timestamps, and outcome.
+- [ ] Required post-migration invariants passed.
+- [ ] Required producers and consumers reached verified adoption states.
+- [ ] Recovery was rehearsed where risk requires it, or the gap remains visible and blocks unsupported claims.
+- [ ] Documentation, deprecation, drift, correction, incident, and release follow-up are complete.
+- [ ] Rollback target or forward-fix lineage remains resolvable.
+- [ ] Residual risk and unresolved verification items remain visible.
+- [ ] No migration output is represented as external truth, policy approval, release approval, or publication authority.
 
 ## No-loss ledger
 
-| v1 material | v1.1 disposition |
+| Prior material | v1.2 disposition |
 |---|---|
-| Canonical migration-root purpose | Preserved and sharpened |
+| Canonical migration-root purpose | Preserved and expanded |
 | Lifecycle invariant | Preserved |
-| Five migration lanes | Preserved and directly indexed |
-| Rollback-entry requirement | Preserved; coverage now explicitly unverified |
-| Database/schema/data/graph lane distinctions | Preserved and expanded |
-| Sensitive-domain fail-closed posture | Preserved |
-| Inputs and outputs | Preserved with authority boundaries |
-| Validation checklist | Expanded by migration class |
-| Review burden | Expanded by consequence and separation of duties |
-| Open verification questions | Preserved and extended |
-| Original migration lifecycle states | Reframed as proposed work-state model to avoid false standardization |
-| Owner placeholders | Replaced with verified routing plus stewardship uncertainty |
-| Publication boundary | Preserved and clarified |
-| Rollback versus release rollback | Clarified as separate object families |
+| Five migration lanes | Preserved; all five v1.1 lane contracts now confirmed |
+| Rollback-entry requirement | Preserved; pairing coverage remains explicitly unverified |
+| Database/schema/data/graph distinctions | Preserved and aligned with merged lane READMEs |
+| Sensitive-domain fail-closed posture | Preserved and expanded |
+| Inputs and outputs | Preserved with pinning and claim boundaries |
+| Validation checklist | Expanded with finite outcomes and evidence grades |
+| Review burden | Expanded by authority, sensitivity, recoverability, and coordination |
+| Migration packet | Preserved and extended |
+| Work-state model | Preserved and separated from evidence grades and validation outcomes |
+| Compatibility and adoption | Preserved and expanded with adoption states |
+| Recovery classes | Preserved and aligned with migration versus release separation |
+| Definition of done | Preserved and expanded |
+| Open verification | Preserved and updated |
+| Workflow posture | Corrected: bounded schema checks and rollback readiness hold now confirmed |
+| Owner placeholders | Remain replaced by verified GitHub routing plus stewardship uncertainty |
+| Publication boundary | Preserved and sharpened |
 
 ## Open verification register
 
 - [ ] Obtain a recursive tracked inventory of `migrations/`.
-- [ ] Confirm whether any executable migration payloads exist beyond the five README lanes.
-- [ ] Select and document database migration runner or explicitly declare no database runner.
+- [ ] Confirm whether executable migration payloads exist beyond the documented lane contracts.
+- [ ] Select and document a database migration runner, or explicitly declare no database runner.
 - [ ] Confirm schema, data, and graph migration executor conventions.
-- [ ] Define canonical stable migration ID and filename ordering.
-- [ ] Verify one-to-one migration-to-recovery pairing.
+- [ ] Define canonical stable migration and recovery ID grammar.
+- [ ] Define dependency and filename ordering rules.
+- [ ] Verify one-to-one migration-to-recovery pairing across all lanes.
 - [ ] Decide whether paired recovery records must land in the same pull request.
 - [ ] Define a machine-readable migration packet schema if justified.
-- [ ] Define an applied-version or migration-state ledger and owning root.
-- [ ] Add dedicated migration validation orchestration only after runner and fixtures are selected.
-- [ ] Define no-network valid and invalid fixtures for each migration class.
+- [ ] Define the canonical migration register or applied-version ledger and its owning responsibility root.
+- [ ] Define target-environment identity and state-digest rules.
+- [ ] Add dedicated migration validation orchestration only after packet, runner, fixtures, and outcomes are defined.
+- [ ] Define valid, invalid, hold, not-applicable, and not-run fixtures for each migration class.
 - [ ] Verify backup, snapshot, restore, and retention capabilities by environment.
-- [ ] Define lock, downtime, and maintenance-window classes.
-- [ ] Define expand-and-contract compatibility policy.
+- [ ] Define lock, downtime, maintenance-window, and concurrency classes.
+- [ ] Define expand-and-contract and staged-breaking compatibility policy.
 - [ ] Define producer/consumer adoption evidence and deprecation windows.
-- [ ] Define graph/triplet invariant and evidence-link checks.
-- [ ] Define data-remap identity, provenance, and sensitivity checks.
-- [ ] Define migration execution receipt placement and schema.
-- [ ] Define recovery rehearsal expectations by risk class.
-- [ ] Confirm release-review triggers for public API, map, tile, export, and published-artifact impact.
-- [ ] Confirm security/incident handoff for failed or exposure-relevant migrations.
+- [ ] Populate or select authoritative object-family and deprecation registers where schema migrations depend on them.
+- [ ] Define graph/triplet endpoint, identity, evidence-link, duplicate, orphan, cycle, and projection checks.
+- [ ] Define data-remap identity, provenance, temporal, spatial, lifecycle, and sensitivity checks.
+- [ ] Define database permission and least-privilege migration checks.
+- [ ] Define structured migration execution, adoption, verification, and recovery receipt homes and schemas.
+- [ ] Define recovery rehearsal requirements by migration and risk class.
+- [ ] Determine whether the current rollback-drill workflow should remain release-readiness-only or gain a separate migration-recovery workflow.
+- [ ] Confirm release-review triggers for public API, MapLibre, tiles, exports, search, stories, AI surfaces, and published artifacts.
+- [ ] Confirm security and incident handoff for failed, destructive, or exposure-relevant migrations.
 - [ ] Confirm accountable stewards and independent approval requirements.
 - [ ] Verify branch protection or ruleset requirements for migration paths.
+- [ ] Add drift checks preventing canonical schemas, contracts, policy, lifecycle payloads, backups, or release records from moving into `migrations/`.
 - [ ] Formalize host-render validation for this README.
-- [ ] Revisit this README after the first concrete migration packet is implemented.
+- [ ] Revisit this README after the first concrete migration packet, rehearsal, or applied-ledger entry is implemented.
 
 ## Changelog
+
+### v1.2 — 2026-07-24
+
+- Reconciled the root with all five merged repository-grounded v1.1 lane READMEs.
+- Corrected workflow posture: bounded schema validation exists, while rollback-drill is an explicit readiness hold and does not simulate rollback.
+- Expanded authority, status, inputs, outputs, validation, review, and related-root boundaries.
+- Added finite validation outcomes and a migration evidence ladder.
+- Expanded migration packet, state, deterministic identity, ordering, pairing, coordination, compatibility, adoption, execution, and recovery contracts.
+- Clarified migration recovery versus release rollback.
+- Updated definition of done, no-loss ledger, open verification, and evidence snapshot.
+- Preserved the same path, legacy anchors, lifecycle law, five-lane model, and non-publication boundary.
 
 ### v1.1 — 2026-07-23
 
@@ -639,4 +1070,4 @@ A migration is complete only when all applicable items are closed:
 
 ### v1 — 2026-07-03
 
-- Established the database, schema, data, graph, and rollback migration root contract.
+- Established the database, schema, data, graph, and rollback migration-root contract.
