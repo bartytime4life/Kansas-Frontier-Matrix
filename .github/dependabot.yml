@@ -1,6 +1,6 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.0
-# Updated: 2026-07-17
+# Version: v1.1
+# Updated: 2026-07-23
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
@@ -9,6 +9,9 @@
 # - Security updates stay on the default branch because no target-branch is set.
 # - Group rules below apply only to version updates; security updates remain
 #   isolated for focused review.
+# - Cooldown rules delay version updates only. Security updates are not delayed.
+# - SemVer ecosystems use 30-day major, 7-day minor, and 3-day patch
+#   stabilization windows. Pre-commit hooks use a 7-day default window.
 # - Labels are intentionally omitted until the repository label inventory is
 #   verified. CODEOWNERS remains the review-routing surface.
 # - Docker base-image monitoring is not enabled here because the current files
@@ -35,6 +38,10 @@ updates:
       day: "monday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
     open-pull-requests-limit: 6
     assignees:
       - "bartytime4life"
@@ -69,6 +76,10 @@ updates:
       day: "tuesday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
     open-pull-requests-limit: 4
     assignees:
       - "bartytime4life"
@@ -101,6 +112,10 @@ updates:
       day: "wednesday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
     open-pull-requests-limit: 3
     assignees:
       - "bartytime4life"
@@ -132,6 +147,8 @@ updates:
       day: "friday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 2
     assignees:
       - "bartytime4life"
