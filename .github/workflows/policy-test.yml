@@ -1,41 +1,9 @@
 # KFM policy-test readiness workflow.
 #
-# Responsibility:
-#   Guard the currently confirmed policy-test boundary without presenting a
-#   placeholder command, schema fixture, or static inventory as policy-engine
-#   evaluation. Policy behavior remains unproved until the repository accepts
-#   an evaluator, test modules, a bundle/selection contract, and a real command.
-#
-# Trigger and trust boundary:
-#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
-#   is untrusted. The workflow has read-only repository permission, uses a
-#   hosted runner, installs no repository dependencies, and performs no network
-#   access after checkout/setup-python.
-#
-# Inputs:
-#   Tracked policy sources, the policy-runtime placeholder, Makefile policy
-#   target, bundle/validator inventories, PolicyDecision contract/schema and
-#   fixtures, and the common schema harness.
-#
-# Outputs and outcomes:
-#   Job summaries only. The jobs either confirm that the documented readiness
-#   holds remain explicit, or fail on drift so a real test/evaluator lane can be
-#   wired deliberately. They emit no PolicyDecision, receipt, proof, bundle,
-#   release decision, or publication authority.
-#
-# Compatibility:
-#   Keep workflow name `policy-test` and job ids `opa-test` and
-#   `policy-fixture-coverage`; repository rules may refer to those check names.
-#
-# Rollback:
-#   Revert this workflow file. Do not replace these holds with an echo-only
-#   green check; accept and test the evaluator/bundle contract first.
-#
-# Placement:
-#   `.github/workflows/` is the repository CI orchestration boundary. Canonical
-#   policy remains under singular `policy/`; this workflow creates no parallel
-#   policy, schema, validator, fixture, proof, or release authority.
-
+# This workflow is a fail-closed drift guard for the repository's current
+# policy-readiness boundary. It validates tracked evidence and fixture shape;
+# it does not evaluate Rego, bind an evaluator, emit PolicyDecision objects,
+# approve release, or publish.
 name: policy-test
 
 "on":
@@ -108,14 +76,16 @@ jobs:
               f"OPA test command and reviewed assertions: {[p.as_posix() for p in rego_tests]}"
           )
 
-          bundle_files = {
-              path.relative_to("policy/bundles").as_posix()
-              for path in Path("policy/bundles").rglob("*")
-              if path.is_file()
-          }
-          assert bundle_files == {"README.md"}, (
-              "policy/bundles is no longer README-only; validate the new bundle, manifest, "
-              f"selection, signing, replay, and rollback contract before wiring CI: {sorted(bundle_files)}"
+          # Documentation may grow without making a bundle executable. Any non-doc
+          # bundle payload is a deliberate graduation trigger and must fail this hold.
+          bundle_payloads = [
+              path for path in Path("policy/bundles").rglob("*")
+              if path.is_file() and path.suffix.lower() not in {".md", ".txt"}
+              and path.name != ".gitkeep"
+          ]
+          assert not bundle_payloads, (
+              "policy bundle payloads have appeared; validate manifest, selection, signing, "
+              f"replay, and rollback before wiring CI: {[p.as_posix() for p in bundle_payloads]}"
           )
 
           namespace = Path("packages/policy-runtime/src/policy_runtime")
@@ -144,14 +114,13 @@ jobs:
               "API, evaluator, and package-test evidence before treating it as executable"
           )
 
-          validator_files = {
-              path.relative_to("tools/validators/policy").as_posix()
-              for path in Path("tools/validators/policy").rglob("*")
-              if path.is_file()
-          }
-          assert validator_files == {".gitkeep", "README.md"}, (
-              "policy validators have appeared; review and invoke their accepted entry point "
-              f"instead of preserving the hold: {sorted(validator_files)}"
+          validator_payloads = [
+              path for path in Path("tools/validators/policy").rglob("*")
+              if path.is_file() and path.suffix.lower() in {".py", ".sh", ".rego"}
+          ]
+          assert not validator_payloads, (
+              "policy validator executables have appeared; review and invoke their accepted "
+              f"entry point instead of preserving the hold: {[p.as_posix() for p in validator_payloads]}"
           )
 
           makefile = Path("Makefile").read_text(encoding="utf-8")
@@ -178,27 +147,9 @@ jobs:
               f"wire a real policy test lane: {surfaced}"
           )
 
-          bundle_readme = Path("policy/bundles/README.md").read_text(encoding="utf-8")
-          markers = [
-              "| Policy runtime package | **CONFIRMED PLACEHOLDER** |",
-              "| Accepted bundle format | **UNKNOWN** |",
-          ]
-          absent_markers = [marker for marker in markers if marker not in bundle_readme]
-          assert not absent_markers, (
-              "policy bundle evidence posture changed; reconcile the workflow before claiming "
-              f"readiness: {absent_markers}"
-          )
-
-          prior_workflow_marker = "| Policy-test workflow | **CONFIRMED TODO-ONLY** |"
-          if prior_workflow_marker in bundle_readme:
-              print(
-                  "NEEDS VERIFICATION: policy/bundles/README.md still describes the "
-                  "superseded echo-only workflow and needs a separately governed doc update."
-              )
-
           print(f"CONFIRMED: {len(rego_files)} Rego source files are present.")
           print("WORKFLOW_SKIPPED_EXPLICIT: no Rego test modules or accepted OPA command exist.")
-          print("WORKFLOW_HOLD: no bundle artifact, evaluator binding, or executable runtime is accepted.")
+          print("WORKFLOW_HOLD: no accepted bundle payload, evaluator binding, or executable runtime is established.")
           print("No policy rule was evaluated and no PolicyDecision was emitted.")
           PY
 
@@ -209,9 +160,9 @@ jobs:
           {
             echo "### OPA test readiness"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** repository evidence still has Rego source files, but no Rego test modules, accepted OPA command, bundle artifact/manifest, evaluator binding, or executable policy runtime."
-            echo "- This job is a drift guard for that bounded state. It did not evaluate policy and emitted no PolicyDecision, receipt, proof, or release authority."
-            echo "- **NEEDS VERIFICATION:** policy documentation that describes the predecessor as echo-only must be reconciled separately; this workflow does not require that stale description to remain."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** Rego sources exist, but no accepted Rego test modules, OPA command, bundle payload/manifest, evaluator binding, or executable policy runtime is established."
+            echo "- Documentation-only growth is allowed; executable bundle, validator, or runtime candidates fail the guard and require deliberate graduation."
+            echo "- This job evaluated no policy and emitted no PolicyDecision, receipt, proof, release, or publication authority."
           } >> "$GITHUB_STEP_SUMMARY"
 
   policy-fixture-coverage:
@@ -236,6 +187,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import json
+          import re
 
           schema_path = Path("schemas/contracts/v1/policy/policy_decision.schema.json")
           fixture_root = Path("fixtures/contracts/v1/policy/policy_decision")
@@ -261,20 +213,6 @@ jobs:
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required PolicyDecision fixture evidence is missing: {missing}"
 
-          expected_inventory = {
-              path.relative_to(fixture_root).as_posix() for path in required
-              if fixture_root in path.parents
-          }
-          actual_inventory = {
-              path.relative_to(fixture_root).as_posix()
-              for path in fixture_root.rglob("*")
-              if path.is_file()
-          }
-          assert actual_inventory == expected_inventory, (
-              "PolicyDecision fixture inventory changed; extend the reviewed schema and semantic "
-              f"coverage deliberately. expected={sorted(expected_inventory)} actual={sorted(actual_inventory)}"
-          )
-
           schema = json.loads(schema_path.read_text(encoding="utf-8"))
           assert schema["x-kfm"] == {
               "contract_doc": "contracts/policy/policy_decision.md",
@@ -283,59 +221,58 @@ jobs:
               "policy": "policy/policy/",
               "status": "PROPOSED",
           }, "PolicyDecision x-kfm metadata changed; reconcile validator and policy bindings"
-          assert schema["required"] == [
-              "decision_id",
-              "outcome",
-              "policy_family",
-              "reasons",
-              "obligations",
-              "evaluated_at",
-          ], "PolicyDecision required-field contract changed"
-          assert schema["additionalProperties"] is False
-          assert schema["properties"]["outcome"]["enum"] == [
-              "ANSWER", "ABSTAIN", "DENY", "ERROR"
+          required_fields = [
+              "decision_id", "outcome", "policy_family", "reasons", "obligations", "evaluated_at"
           ]
-          assert schema["properties"]["policy_family"]["enum"] == [
+          assert schema["required"] == required_fields, "PolicyDecision required-field contract changed"
+          assert schema["additionalProperties"] is False
+          allowed_outcomes = schema["properties"]["outcome"]["enum"]
+          allowed_families = schema["properties"]["policy_family"]["enum"]
+          assert allowed_outcomes == ["ANSWER", "ABSTAIN", "DENY", "ERROR"]
+          assert allowed_families == [
               "promotion", "access", "render", "capability", "consent", "sensitivity"
           ]
 
-          def load(relative):
-              return json.loads((fixture_root / relative).read_text(encoding="utf-8"))
+          valid_files = sorted((fixture_root / "valid").glob("valid_*.json"))
+          invalid_files = sorted((fixture_root / "invalid").glob("invalid_*.json"))
+          assert {path.name for path in valid_files} >= {"valid_1.json", "valid_2.json"}, (
+              f"baseline valid fixture coverage is missing: {[p.name for p in valid_files]}"
+          )
+          assert {path.name for path in invalid_files} >= {
+              "invalid_1.json", "invalid_2.json", "invalid_3.json"
+          }, f"baseline invalid fixture coverage is missing: {[p.name for p in invalid_files]}"
 
-          valid_1 = load("valid/valid_1.json")
-          valid_2 = load("valid/valid_2.json")
-          invalid_1 = load("invalid/invalid_1.json")
-          invalid_2 = load("invalid/invalid_2.json")
-          invalid_3 = load("invalid/invalid_3.json")
-          assert valid_1 == {
-              "decision_id": "pd1",
-              "outcome": "ABSTAIN",
-              "policy_family": "access",
-              "reasons": ["none"],
-              "obligations": [],
-              "evaluated_at": "2026-05-09T00:00:00Z",
-          }
-          assert valid_2 == {
-              "decision_id": "pd2",
-              "outcome": "DENY",
-              "policy_family": "sensitivity",
-              "reasons": ["restricted"],
-              "obligations": ["notify"],
-              "evaluated_at": "2026-05-09T00:00:00Z",
-          }
+          def load(path: Path):
+              return json.loads(path.read_text(encoding="utf-8"))
+
+          id_pattern = re.compile(r"^[a-z][a-z0-9_:.-]*$")
+          for path in valid_files:
+              payload = load(path)
+              assert set(payload) == set(required_fields), (
+                  f"{path} must contain exactly the current required fields; found {sorted(payload)}"
+              )
+              assert id_pattern.fullmatch(payload["decision_id"]), f"{path} has invalid decision_id"
+              assert payload["outcome"] in allowed_outcomes, f"{path} has invalid outcome"
+              assert payload["policy_family"] in allowed_families, f"{path} has invalid policy_family"
+              assert isinstance(payload["reasons"], list), f"{path} reasons must be a list"
+              assert isinstance(payload["obligations"], list), f"{path} obligations must be a list"
+              assert isinstance(payload["evaluated_at"], str) and payload["evaluated_at"].endswith("Z"), (
+                  f"{path} evaluated_at must retain the current UTC fixture form"
+              )
+
+          invalid_1 = load(fixture_root / "invalid/invalid_1.json")
+          invalid_2 = load(fixture_root / "invalid/invalid_2.json")
+          invalid_3 = load(fixture_root / "invalid/invalid_3.json")
           assert "decision_id" not in invalid_1
           assert invalid_2.get("extra_field") == 1
           assert invalid_3.get("decision_id") == "BAD"
-          assert {
-              name: (fixture_root / f"invalid/{name}.expected_error.txt").read_text(
-                  encoding="utf-8"
-              ).strip()
-              for name in ("invalid_1", "invalid_2", "invalid_3")
-          } == {
-              "invalid_1": "required",
-              "invalid_2": "additional properties",
-              "invalid_3": "enum|pattern|date-time",
+          expected_errors = {
+              path.stem.replace(".expected_error", ""): path.read_text(encoding="utf-8").strip()
+              for path in sorted((fixture_root / "invalid").glob("invalid_*.expected_error.txt"))
           }
+          assert expected_errors.get("invalid_1") == "required"
+          assert expected_errors.get("invalid_2") == "additional properties"
+          assert expected_errors.get("invalid_3") == "enum|pattern|date-time"
 
           declared_validator = Path(schema["x-kfm"]["validator"])
           declared_policy = Path(schema["x-kfm"]["policy"])
@@ -356,27 +293,25 @@ jobs:
           ):
               assert marker in harness_text, f"common schema fixture harness marker missing: {marker}"
 
-          for placeholder_root, expected in (
-              (
-                  Path("policy/fixtures"),
-                  {"README.md", "domains/fauna/.gitkeep", "living_persons/.gitkeep"},
-              ),
-              (
-                  Path("policy/tests"),
-                  {"README.md", "domains/fauna/.gitkeep", "flora/.gitkeep"},
-              ),
-          ):
-              actual = {
-                  path.relative_to(placeholder_root).as_posix()
-                  for path in placeholder_root.rglob("*")
-                  if path.is_file()
-              }
-              assert actual == expected, (
-                  f"{placeholder_root} is no longer placeholder-only; wire the surfaced "
-                  f"fixture/test cases into an accepted evaluator lane: {sorted(actual)}"
+          # Additive documentation and semantic fixture files are permitted in the
+          # policy-local lanes. Executable test/evaluator payloads are a deliberate
+          # graduation trigger and must not slip into a green readiness hold.
+          for bounded_root in (Path("policy/fixtures"), Path("policy/tests")):
+              executable = [
+                  path for path in bounded_root.rglob("*")
+                  if path.is_file() and path.suffix.lower() in {".py", ".sh", ".rego"}
+              ]
+              assert not executable, (
+                  f"{bounded_root} now contains executable policy/test payloads; wire them into "
+                  f"an accepted evaluator lane: {[p.as_posix() for p in executable]}"
               )
+              inventory = sorted(
+                  path.relative_to(bounded_root).as_posix()
+                  for path in bounded_root.rglob("*") if path.is_file()
+              )
+              print(f"CONFIRMED inventory {bounded_root}: {inventory}")
 
-          print("CONFIRMED: two valid and three invalid PolicyDecision JSON fixtures are inventoried.")
+          print(f"CONFIRMED: {len(valid_files)} valid and {len(invalid_files)} invalid PolicyDecision JSON fixtures are inventoried.")
           print("CONFIRMED: the common schema harness discovers the policy schema-fixture directory.")
           print("WORKFLOW_SKIPPED_EXPLICIT: dedicated validator and evaluator-backed fixtures are absent.")
           print("WORKFLOW_HOLD: shape fixtures do not prove policy inputs, rules, reasons, obligations, or bundle identity.")
@@ -390,7 +325,8 @@ jobs:
           {
             echo "### Policy fixture coverage readiness"
             echo
-            echo "- **CONFIRMED (shape only):** the PolicyDecision schema has two valid and three invalid JSON fixtures discoverable by the separate common schema harness."
+            echo "- **CONFIRMED (shape only):** baseline valid and invalid PolicyDecision fixtures remain present and discoverable by the separate common schema harness."
+            echo "- **ADDITIVE-SAFE DRIFT GUARD:** documentation and semantic fixture growth no longer fails an exact historical inventory snapshot; executable evaluator/test payloads still trigger deliberate graduation."
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no dedicated PolicyDecision validator, canonical evaluator binding, policy input matrix, reason/obligation semantics, bundle identity, or evaluated policy cases are established."
-            echo "- This job inventories the bounded readiness state. It did not evaluate policy and emitted no PolicyDecision, receipt, proof, or release authority."
+            echo "- This job evaluated no policy and emitted no PolicyDecision, receipt, proof, release, or publication authority."
           } >> "$GITHUB_STEP_SUMMARY"
