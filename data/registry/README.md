@@ -1,347 +1,196 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/registry/readme
-name: Data Registry README
-path: data/registry/README.md
-type: data-registry-root-readme
-version: v0.2.0
-status: draft
-owners:
-  - <registry-steward>
-  - <source-steward>
-  - <dataset-steward>
-  - <domain-steward>
-  - <crosswalk-steward>
-  - <rights-steward>
-  - <sensitivity-steward>
-  - <layer-steward>
-  - <policy-steward>
-  - <proof-steward>
-  - <release-steward>
-  - <docs-steward>
-created: 2026-06-28
-updated: 2026-06-28
-policy_label: restricted-review
-truth_posture: cite-or-abstain
-responsibility_root: data/
-artifact_family: registry
-registry_scope: registry-root-and-family-routing
-path_posture: existing-root-stub-replaced; major-registry-family-readmes-confirmed-for-sources-datasets-domains-crosswalks-rights-sensitivity-layers; domain-first-compatibility-lanes-exist-for-selected-domains; final-registry-taxonomy-needs-verification
-sensitivity_posture: registry-internal; no-public-path; source-role-preserving; rights-and-sensitivity-fail-closed; evidence-aware; policy-aware; release-blocked-until-gates-close; public-clients-use-governed-interfaces-only
-related:
-  - sources/README.md
-  - datasets/README.md
-  - domains/README.md
-  - crosswalks/README.md
-  - rights/README.md
-  - sensitivity/README.md
-  - layers/README.md
-  - roads-rail-trade/README.md
-  - settlements-infrastructure/README.md
-  - soil/README.md
-  - flora/README.md
-  - fauna/README.md
-  - geology/README.md
-  - habitat/README.md
-  - hazards/README.md
-  - hydrology/README.md
-  - people-dna-land/README.md
-  - ../raw/
-  - ../work/
-  - ../quarantine/
-  - ../processed/
-  - ../catalog/
-  - ../triplets/
-  - ../published/
-  - ../receipts/
-  - ../proofs/
-  - ../../contracts/
-  - ../../schemas/contracts/v1/
-  - ../../policy/
-  - ../../release/
-  - ../../docs/architecture/directory-rules.md
-  - ../../docs/doctrine/directory-rules.md
-tags:
-  - kfm
-  - data
-  - registry
-  - registry-root
-  - sources
-  - datasets
-  - domains
-  - crosswalks
-  - rights
-  - sensitivity
-  - layers
-  - source-role
-  - evidence
-  - provenance
-  - policy-aware
-  - release-gated
-  - rollback
-  - no-public-path
+title: data/registry/ — Governed Identity and Routing Records
+type: README; data-parent-contract; canonical-lane; authority-boundary
+version: v0.3.0
+status: repository-grounded draft; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — registry, source, dataset, rights, sensitivity, layer, and domain stewards
+updated: 2026-07-24
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: "restricted-review; no-direct-public-path; release-gated"
+current_path: data/registry/README.md
+review_packet_id: kfm-data-parent-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
+  and prior substantive boundary material / PROPOSED normalized folder contract /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
+  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
+  retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+  review_branch: agent/modernize-data-readme-20260724-v3
+  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+  prior_blob: ebadb413a5ba1151f94b8c33eb61fe51786da0f3
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
 notes:
-  - "This README replaces the greenfield stub at `data/registry/README.md`."
-  - "Registry records are governance/control records. They do not store source payloads, define semantic meaning, enforce schemas, decide policy, emit receipts, close proofs, close catalogs, or publish artifacts."
-  - "Confirmed major registry-family READMEs during this edit: sources, datasets, domains, crosswalks, rights, sensitivity, and layers. This confirms README/path evidence only, not emitted registry payloads, schemas, validators, CI, runtime behavior, or public API behavior."
-  - "Some domain-first registry compatibility/routing lanes also exist. Their final relationship to subtype-first registry families remains NEEDS VERIFICATION until topology is reconciled by ADR, Directory Rules update, migration note, or inventory."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "Markdown-only parent-lane convergence; no payload or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Data Registry
+# `data/registry/` — Governed Identity and Routing Records
 
-Root governance lane for KFM registry records and registry-family routing.
+> **One-line purpose.** Own compact, auditable governance records that identify and route sources, datasets, domains, crosswalks, rights, sensitivity, and layers without becoming payload, contract, policy, proof, or release authority.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data" src="https://img.shields.io/badge/root-data%2F-0a7ea4">
-  <img alt="Family: registry" src="https://img.shields.io/badge/family-registry-blueviolet">
-  <img alt="Boundary: not source data" src="https://img.shields.io/badge/boundary-not%20source%20data-critical">
-  <img alt="Boundary: not release" src="https://img.shields.io/badge/boundary-not%20release-critical">
-  <img alt="Exposure: no public path" src="https://img.shields.io/badge/exposure-no%20public%20path-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: Canonical](https://img.shields.io/badge/authority-canonical-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Registry families](#registry-families) · [Domain-first compatibility lanes](#domain-first-compatibility-lanes) · [Registry boundary](#registry-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> [!IMPORTANT]
+> Path placement, a generated derivative, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, release approval, or KFM publication.
 
-> [!CAUTION]
-> `data/registry/` is a registry/control root for governed records that describe how KFM treats sources, datasets, domains, crosswalks, rights, sensitivity posture, layers, and selected compatibility lanes. It is not RAW source storage, WORK staging, QUARANTINE, PROCESSED data, catalog output, triplet output, published artifacts, proof storage, receipt storage, semantic contract authority, schema authority, policy, release authority, public API/UI material, or generated-answer authority.
+> [!WARNING]
+> Secrets and restricted or harmful-precision material require approved storage and access controls outside ordinary public-repository paths.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
-## Scope
+## Purpose
 
-`data/registry/` is the data-side root for registry records: compact, auditable governance handles that help KFM decide what can be admitted, processed, linked, interpreted, reviewed, cataloged, released, corrected, superseded, withdrawn, or rolled back.
+Own compact, auditable governance records that identify and route sources, datasets, domains, crosswalks, rights, sensitivity, and layers without becoming payload, contract, policy, proof, or release authority.
 
-A registry record may point to:
+Artifacts here may carry or support inspectable claims, but directory placement cannot make a claim true, rights-cleared, policy-admitted, reviewed, released, or public.
 
-- source descriptors and source-admission state;
-- dataset identity and dataset-state records;
-- domain-state records;
-- crosswalk mapping records;
-- rights-review state;
-- sensitivity-review state;
-- layer identity and layer-readiness records;
-- lifecycle payloads under RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, and PUBLISHED phases;
-- contracts, schemas, policies, receipts, proofs, catalog records, release candidates, release manifests, correction notices, withdrawal notices, supersession notes, and rollback cards.
+## Authority level
 
-Registry records are **not** the same as the payloads or authorities they reference. They make state inspectable; they do not make claims true, sources usable, datasets public, mappings definitive, rights cleared, sensitivity resolved, layers rendered, catalogs closed, or releases approved.
+**Canonical; REGISTRY responsibility.**
 
----
+This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
 
-## Path posture
+## Status
 
-The requested and existing root lane is:
-
-```text
-data/registry/
-```
-
-This README replaces a greenfield stub and documents the registry root only. It does not assert that every listed child lane has mature records, schemas, validators, fixtures, CI, runtime readers, governed API behavior, public UI behavior, or release wiring.
-
-Several registry-family parents now exist as README-governed lanes:
-
-```text
-data/registry/sources/
-data/registry/datasets/
-data/registry/domains/
-data/registry/crosswalks/
-data/registry/rights/
-data/registry/sensitivity/
-data/registry/layers/
-```
-
-Some domain-first compatibility/routing lanes also exist, such as:
-
-```text
-data/registry/roads-rail-trade/
-data/registry/settlements-infrastructure/
-data/registry/soil/
-```
-
-Those domain-first paths are useful as current repo facts, but they must not create duplicate authority beside subtype-first registry families. Where both a domain-first and subtype-first path could apply, final topology remains **NEEDS VERIFICATION** until resolved by ADR, Directory Rules update, migration note, or repository inventory.
-
----
-
-## Registry families
-
-This table records current README/path evidence only. It does not prove emitted registry payloads or runtime enforcement.
-
-| Registry family | Confirmed parent | Role | Boundary |
-|---|---:|---|---|
-| Source registry | `sources/README.md` | Pre-RAW admission and authority-control surface for sources and SourceDescriptor-style records. | Not raw data, schemas, policy decisions, receipts, proofs, releases, or bibliography. |
-| Dataset registry | `datasets/README.md` | Dataset identity and dataset-state records. | Not dataset payloads, proof, policy, catalog closure, or release. |
-| Domain registry | `domains/README.md` | Domain-state records, object-family coverage, source-family posture, blockers, and readiness. | Not domain payloads, source registry authority, contracts, schemas, policy, proof, or release. |
-| Crosswalk registry | `crosswalks/README.md` | Mapping-state records across identifiers, vocabularies, fields, authority systems, and domain lanes. | Not semantic contracts, schemas, policy, validation output, proof, catalog closure, release, or public claims. |
-| Rights registry | `rights/README.md` | Rights-review state, terms, attribution, redistribution posture, and release-readiness pointers. | Not legal advice, license authority, source payloads, policy, proof, catalog closure, or release. |
-| Sensitivity registry | `sensitivity/README.md` | Sensitivity-review state, geoprivacy/redaction posture, blockers, and exposure-control pointers. | Not exact sensitive detail storage, policy, receipts, proofs, catalog closure, release, or public output. |
-| Layer registry | `layers/README.md` | Layer identity, layer-family routing, domain-safe map-layer state, and release-readiness pointers. | Not layer bytes, tile storage, catalog output, proof, receipt storage, policy, release, public API/UI material, or generated answers. |
-
----
-
-## Domain-first compatibility lanes
-
-Domain-first lanes under `data/registry/<domain>/` should be treated as compatibility, routing, or transitional lanes unless an ADR or accepted registry contract says otherwise. They are useful when they make current repo state clearer, but they must not silently fork canonical records from subtype-first families.
-
-Confirmed examples from the current README sequence include:
-
-| Domain-first lane | Confirmed child/role | Topology posture |
-|---|---|---|
-| `data/registry/roads-rail-trade/` | Parent and `sources/` source-registry child. | CONFIRMED path presence / NEEDS VERIFICATION topology. |
-| `data/registry/settlements-infrastructure/` | Parent and `sources/` source-registry child. | CONFIRMED path presence / NEEDS VERIFICATION topology. |
-| `data/registry/soil/` | Parent and `sources/` source-registry child. | CONFIRMED path presence / NEEDS VERIFICATION topology. |
-
-Other domain-first registry lanes may exist or be added later. Each must state whether it is canonical, compatibility-only, migration-only, mirrored, or pending reconciliation.
-
----
-
-## Registry boundary
-
-| Rule | Handling |
+| Field | Bounded result |
 |---|---|
-| Registry records are control state | They describe admission, identity, mapping, rights, sensitivity, layer, readiness, correction, and rollback posture. They do not contain the underlying data payloads. |
-| Registry is pre-public | Registry state can block admission, processing, catalog closure, release, map display, or AI response. It does not by itself authorize publication. |
-| Source role is preserved | Registry state must not upgrade observed, regulatory, administrative, modeled, aggregate, candidate, context, synthetic, restricted, primary, corroborating, or review-needed source roles. |
-| Rights and sensitivity fail closed | Missing, stale, conflicted, restricted, or unresolved rights/sensitivity state blocks public exposure until reviewed and receipted. |
-| Registry is not lifecycle data | RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, and PUBLISHED payloads stay in their lifecycle lanes. |
-| Registry is not contracts | Object meaning belongs under `contracts/`. |
-| Registry is not schemas | Machine shape belongs under `schemas/contracts/v1/` or an ADR-selected schema home. |
-| Registry is not policy | Allow, deny, restrict, abstain, access, redaction, sensitivity, rights, and release rules belong under `policy/`. |
-| Registry is not receipts | Validation, transform, redaction, aggregation, model, policy, review, run, and pipeline receipts belong under `data/receipts/`. |
-| Registry is not proof | EvidenceBundle records, proof packs, signatures, and citation-validation closure belong under proof lanes. |
-| Registry is not catalog | STAC/DCAT/PROV/domain catalog records and graph/triplet projections live under catalog/triplet lanes. |
-| Registry is not release | ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal, and supersession authority lives under `release/` and accepted release lanes. |
-| Public clients do not read registry internals directly | Public UI/API surfaces consume governed APIs, released artifacts, catalog/triplet/proof-backed responses, and policy-safe envelopes. |
-| Unknown maturity stays unknown | README presence is not proof of emitted records, schemas, validators, tests, runtime readers, public APIs, or release maturity. |
+| Path | `data/registry/` |
+| Version | `v0.3.0` |
+| Prior blob | `ebadb413a5ba1151f94b8c33eb61fe51786da0f3` |
+| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers/consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
 
----
+## What belongs here
 
-## Accepted material
+- source/source-descriptor, dataset, domain, crosswalk, rights, sensitivity, layer, and other accepted registry families;
+- activation/status references, stable IDs, versioning, ownership/review pointers, and lifecycle routing metadata;
 
-Accepted content in `data/registry/` is limited to registry-control records and registry-local support files:
+Local README, inventory, digest, migration, and disposition sidecars may explain the boundary without creating parallel authority.
 
-- registry-family parent READMEs and domain/scope child READMEs;
-- SourceDescriptor-style source records, dataset registry records, domain-state records, crosswalk records, rights records, sensitivity records, and layer records when the specific lane accepts them;
-- registry-local indexes, manifests, checksums, signatures, and pointer maps;
-- compatibility, migration, redirect, topology, correction, stale-state, supersession, withdrawal, and rollback notes;
-- pointers to lifecycle payloads, contracts, schemas, policies, receipts, proofs, catalog records, release candidates, release manifests, correction notices, and rollback cards;
-- blocker records that identify missing source, rights, sensitivity, evidence, receipt, catalog, review, release, correction, or rollback support.
+## What does NOT belong here
 
-Keep registry records compact and pointer-based. Do not embed full payloads, proof packs, policy decisions, catalog objects, release manifests, public tiles, generated answers, secrets, or private/restricted details in this root.
-
----
-
-## Exclusions
-
-| Do not place here | Correct authority home |
+| Do not place here | Correct home or action |
 |---|---|
-| Raw source payloads or source-native exports | `data/raw/`, `data/work/`, or `data/quarantine/` depending on state |
-| Processed domain objects, normalized tables, derived features, rasters, vectors, GeoParquet, COG, PMTiles, or other data payloads | `data/processed/`, `data/catalog/`, `data/triplets/`, or `data/published/` depending on lifecycle/release state |
-| Source fetchers, endpoint clients, watchers, connector code, pipeline code, or automation | `connectors/`, `pipelines/`, `pipeline_specs/`, `packages/`, `tools/`, `configs/`, or accepted implementation roots |
-| Semantic object contracts | `contracts/` |
-| JSON Schema or machine shape | `schemas/contracts/v1/` or accepted schema root |
-| Policy rules, access-control logic, rights decisions, sensitivity rules, geoprivacy rules, release rules, or runtime allow/deny logic | `policy/` |
-| Validation receipts, transform receipts, redaction receipts, aggregation receipts, model receipts, policy receipts, review receipts, run receipts, or logs | `data/receipts/` |
-| EvidenceBundle records, proof packs, signatures, or citation-validation closure | `data/proofs/` or accepted proof lane |
-| STAC/DCAT/PROV/domain catalog records or graph/triplet projections | `data/catalog/` and `data/triplets/` |
-| Published layers, reports, dashboards, tiles, API payloads, UI payloads, or generated-answer carriers | `data/published/`, governed app/API roots, and release-approved public artifact lanes |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal notice, or supersession notice | `release/` |
-| Secrets, credentials, private keys, endpoint tokens, private/restricted details, or sensitive exact-location payloads | never in registry; use approved restricted storage and secret management |
+| source captures and domain datasets | `data/raw/` through `data/processed/` |
+| semantic contracts, machine schemas, or executable policy | `contracts/`, `schemas/`, and `policy/` |
+| receipts, proofs, catalog/triplet projections, release decisions, or public artifacts | their dedicated lanes |
+| duplicate active identities across subtype-first and domain-first compatibility lanes | resolve by governed taxonomy/migration |
+| Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
+| Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
 
----
+## Inputs
 
-## Suggested directory shape
+Steward-reviewed source/dataset/domain/layer identities, rights/sensitivity assessments, accepted crosswalks, and lifecycle/release references.
 
-This shape is **PROPOSED** as root-level guidance. Confirm child README/path evidence before adding payload records.
+As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
 
-```text
-data/registry/
-├── README.md
-├── sources/
-│   └── README.md
-├── datasets/
-│   └── README.md
-├── domains/
-│   └── README.md
-├── crosswalks/
-│   └── README.md
-├── rights/
-│   └── README.md
-├── sensitivity/
-│   └── README.md
-├── layers/
-│   └── README.md
-├── roads-rail-trade/              # domain-first compatibility/routing lane
-│   └── README.md
-├── settlements-infrastructure/    # domain-first compatibility/routing lane
-│   └── README.md
-├── soil/                          # domain-first compatibility/routing lane
-│   └── README.md
-└── index.local.json               # PROPOSED local index, not catalog/release/policy authority
-```
+## Outputs
 
-Domain-specific records should generally live under the responsibility family that owns them, for example:
+Routing and governance handles for connectors, pipelines, validators, APIs, catalog/release review, correction, and rollback. Registry state is not domain truth.
 
-```text
-data/registry/sources/<domain>/
-data/registry/datasets/<domain>/
-data/registry/domains/<domain>/
-data/registry/rights/<domain-or-scope>/
-data/registry/sensitivity/<domain-or-scope>/
-data/registry/layers/<domain>/
-```
+Public clients must not use an internal or compatibility lane as a direct data service.
 
-When a domain-first lane exists, do not duplicate authoritative records. Add a redirect, migration note, or topology decision before splitting records across both shapes.
+## Validation
 
----
+Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
 
-## Required checks before use
+No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
 
-- [ ] Confirm the record belongs under `data/registry/`, not lifecycle data, contracts, schemas, policy, receipts, proofs, catalog, published artifacts, release, code, tests, or docs.
-- [ ] Confirm the correct registry family: sources, datasets, domains, crosswalks, rights, sensitivity, layers, or a documented compatibility lane.
-- [ ] Confirm whether the lane is canonical, compatibility-only, migration-only, mirrored, or pending topology reconciliation.
-- [ ] Confirm source role, rights state, sensitivity state, support type, evidence state, review state, stale-state, correction state, and rollback state are preserved where material.
-- [ ] Confirm registry state does not upgrade evidence strength, source authority, domain truth, public-safe status, catalog closure, release state, or generated-answer eligibility.
-- [ ] Confirm public-safe transforms point to named/versioned profiles and required receipts where relevant.
-- [ ] Confirm EvidenceRef/EvidenceBundle and proof refs exist before consequential registry state is used in public-facing logic.
-- [ ] Confirm catalog refs point to STAC/DCAT/PROV/domain catalog records rather than embedding them.
-- [ ] Confirm release refs point to ReleaseManifest/PromotionDecision objects rather than implying publication from registry state.
-- [ ] Confirm correction, supersession, withdrawal, stale-state, rights-change, sensitivity-change, and rollback paths exist for mutable or externally governed material.
-- [ ] Confirm no public client, map layer, graph edge, vector index, generated answer, report, or dashboard reads this registry root as direct public truth.
+## Review burden
 
----
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include registry, source, dataset, rights, sensitivity, layer, and domain stewards as applicable. Payload, source activation, rights/sensitivity, migration, public-serving, correction, or rollback changes require corresponding specialist and independent review. CODEOWNERS routing is not approval evidence.
 
-## Status notes
+## Related folders
 
-| Claim | Status |
-|---|---:|
-| This README replaces the greenfield stub at `data/registry/README.md`. | CONFIRMED authored |
-| The target path existed in the live repository as a greenfield stub before this edit. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/sources/README.md` exists and says the source registry is admission and authority-control, not a bibliography. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/datasets/README.md` exists and says dataset registry records are governance handles, not dataset payloads or publication. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/domains/README.md` exists and says domain registry records are governance handles, not domain payloads or publication. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/crosswalks/README.md` exists and says crosswalk registry records are mapping-state records, not semantic contracts, schemas, policy, proof, catalog closure, or release. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/rights/README.md` exists and says rights registry records are review/control records, not legal advice, source license authority, policy, release, or permission to publish. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/sensitivity/README.md` exists and says sensitivity registry records are review/control records, not policy, release, public output, or exact sensitive-location storage. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/layers/README.md` exists and says layer registry records are control records, not layer bytes, tile storage, catalog output, policy, release, public API/UI material, or generated-answer authority. | CONFIRMED by GitHub contents API during this edit |
-| Concrete registry payloads exist across all listed families. | UNKNOWN |
-| Final registry topology across subtype-first and domain-first lanes is resolved. | NEEDS VERIFICATION |
-| Canonical registry schemas are enforced for every family. | NEEDS VERIFICATION |
-| CI validates registry records across every family. | UNKNOWN |
-| Runtime registry resolution or governed API behavior reads this root. | UNKNOWN |
-| This README grants public access to registry internals. | DENY |
+- Parent: [`data/`](../README.md)
+- Lifecycle: [`raw/`](../raw/README.md) · [`work/`](../work/README.md) · [`quarantine/`](../quarantine/README.md) · [`processed/`](../processed/README.md) · [`catalog/`](../catalog/README.md) · [`triplets/`](../triplets/README.md) · [`published/`](../published/README.md)
+- Trust support: [`receipts/`](../receipts/README.md) · [`proofs/`](../proofs/README.md) · [`registry/`](../registry/README.md) · [`rollback/`](../rollback/README.md)
+- Authority: [`contracts/`](../../contracts/README.md) · [`schemas/`](../../schemas/README.md) · [`policy/`](../../policy/README.md) · [`release/`](../../release/README.md)
+- Doctrine: [Directory Rules](../../docs/doctrine/directory-rules.md) · [Lifecycle Law](../../docs/doctrine/lifecycle-law.md) · [Trust Membrane](../../docs/doctrine/trust-membrane.md)
 
----
+## ADRs
 
-## Maintainer note
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
 
-The registry root is the trust membrane between proposed/admitted control state and downstream claims. Keep the safe chain explicit:
+## Last reviewed
 
-```text
-registry record -> lifecycle payload refs -> policy/review outcome -> validation/redaction/transform receipts -> EvidenceBundle/proof -> catalog/triplet -> release -> governed public surface
-```
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
+- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, independent review, retention, and operational rollback:** needs verification
 
-Never collapse it into:
+Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
 
-```text
-registry record -> public truth
-```
+## Operating contract
+
+Subtype-first registry families and domain-first compatibility lanes both exist. Their exact ownership, IDs, activation semantics, consumers, and migration path remain **NEEDS VERIFICATION**. Do not create duplicate active identities or let a README choose the taxonomy by implication.
+
+## Current bounded child-lane index
+
+| Child lane | Bounded posture |
+|---|---|
+| `sources/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `datasets/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `domains/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `crosswalks/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `rights/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `sensitivity/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `layers/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `roads-rail-trade/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `settlements-infrastructure/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `soil/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `flora/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `fauna/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `geology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `habitat/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `hazards/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `hydrology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `people-dna-land/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
+| Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
+| Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path/document identity | Preserved |
+| Core lifecycle or compatibility role | Preserved and clarified |
+| Child-lane index | Preserved where present; omission is not retirement |
+| Trust membrane and anti-collapse rules | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, or public-state change | None |
+
+### Change history
+
+#### v0.3.0 — 2026-07-24
+
+- normalized the parent README to Directory Rules §15;
+- preserved substantive boundaries and explicit uncertainty;
+- added validation, review, verification, and no-loss controls;
+- changed Markdown only.
+
+[Back to top](#top)

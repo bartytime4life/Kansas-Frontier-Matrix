@@ -1,335 +1,192 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/receipts/readme
-name: Receipts README
-path: data/receipts/README.md
-type: data-receipts-root-readme
-version: v0.3.0
-status: draft
-owners:
-  - <receipt-steward>
-  - <validation-steward>
-  - <policy-steward>
-  - <proof-steward>
-  - <release-steward>
-  - <docs-steward>
-created: 2026-06-28
-updated: 2026-07-17
-policy_label: internal-governance
-truth_posture: cite-or-abstain
-responsibility_root: data/
-artifact_family: receipts
-receipt_scope: process-memory
-path_posture: existing-root-stub-replaced; child-lanes-observed-in-repository; generated-lane-documented; exact-receipt-layout-needs-verification
-sensitivity_posture: receipt-internal; no-public-path; process-memory-not-proof; receipt-not-catalog; receipt-not-release; policy-aware; release-blocked-until-gates-close
-related:
-  - validation/README.md
-  - telemetry/README.md
-  - flora/README.md
-  - redaction/flora/README.md
-  - aggregation/README.md
-  - ai/README.md
-  - fauna/README.md
-  - soil/README.md
-  - generated/README.md
-  - ../proofs/README.md
-  - ../catalog/README.md
-  - ../registry/README.md
-  - ../../release/
-  - ../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
-  - ../../docs/standards/RUN_RECEIPT.md
-  - ../../docs/architecture/directory-rules.md
-tags:
-  - kfm
-  - data
-  - receipts
-  - run-receipts
-  - process-memory
-  - audit
-  - provenance
-  - validation
-  - telemetry
-  - redaction
-  - aggregation
-  - governed-ai
-  - proof-separation
-  - catalog-separation
-  - release-separation
-  - no-public-path
+title: data/receipts/ — Governed Process Memory
+type: README; data-parent-contract; canonical-lane; authority-boundary
+version: v0.4.0
+status: repository-grounded draft; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — receipt, validation, policy, proof, and release stewards
+updated: 2026-07-24
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: "restricted-review; no-direct-public-path; release-gated"
+current_path: data/receipts/README.md
+review_packet_id: kfm-data-parent-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
+  and prior substantive boundary material / PROPOSED normalized folder contract /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
+  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
+  retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+  review_branch: agent/modernize-data-readme-20260724-v3
+  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+  prior_blob: 15f2608cfe3c692da2fdb8082b6f9d90f2a8bb9d
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
 notes:
-  - "This README replaces the greenfield stub at `data/receipts/README.md`."
-  - "Directory Rules identify path placement as governance: a file location encodes responsibility root, lifecycle phase, and governance posture."
-  - "ADR-0011 is proposed and states the core boundary: receipt != proof != catalog != publication."
-  - "RunReceipt standard states receipts live under `data/receipts/` and that a receipt does not prove factual correctness, legal admissibility, historical truth, scientific certainty, or public-safety suitability."
-  - "Child-lane presence is README/path evidence only; emitted payloads, schemas, validators, CI checks, signing, release integration, correction hooks, and rollback hooks remain NEEDS VERIFICATION unless separately proven."
-  - "v0.3 documents the populated generated-receipt lane; it does not retroactively validate or approve existing receipt payloads."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "Markdown-only parent-lane convergence; no payload or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Receipts
+# `data/receipts/` — Governed Process Memory
 
-Root lane for KFM receipt process-memory records.
+> **One-line purpose.** Own process-memory records that make intake, validation, transformation, redaction, aggregation, AI, migration, correction, rollback, and release-support work inspectable and replayable.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Family: receipts" src="https://img.shields.io/badge/family-receipts-purple">
-  <img alt="Root: data" src="https://img.shields.io/badge/root-data-blue">
-  <img alt="Boundary: not proof" src="https://img.shields.io/badge/boundary-not%20proof-critical">
-  <img alt="Boundary: not catalog" src="https://img.shields.io/badge/boundary-not%20catalog-critical">
-  <img alt="Boundary: not release" src="https://img.shields.io/badge/boundary-not%20release-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: Canonical](https://img.shields.io/badge/authority-canonical-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Quick links:** [Purpose](#purpose) · [Path posture](#path-posture) · [Receipt boundary](#receipt-boundary) · [Repo fit](#repo-fit) · [Observed child lanes](#observed-child-lanes) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested receipt envelope](#suggested-receipt-envelope) · [Suggested directory shape](#suggested-directory-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> [!IMPORTANT]
+> Path placement, a generated derivative, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, release approval, or KFM publication.
 
-> [!CAUTION]
-> `data/receipts/` is for process-memory records. A receipt can show that a governed run, validation, transform, redaction, aggregation, AI call, telemetry collection, migration, correction, rollback, or release-support action happened. It does **not** prove the claim is true, does **not** approve publication, does **not** replace evidence, does **not** close the catalog, and does **not** become a public artifact by itself.
+> [!WARNING]
+> Secrets and restricted or harmful-precision material require approved storage and access controls outside ordinary public-repository paths.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-Receipts make KFM operations inspectable, replayable, reviewable, correctable, and reversible. They preserve the small audit record of **what a process did**, **what inputs and rules it used**, **what outcome it produced**, and **what downstream gates still have to happen**.
+Own process-memory records that make intake, validation, transformation, redaction, aggregation, AI, migration, correction, rollback, and release-support work inspectable and replayable.
 
-Receipts may support:
+Artifacts here may carry or support inspectable claims, but directory placement cannot make a claim true, rights-cleared, policy-admitted, reviewed, released, or public.
 
-- source intake and watcher runs;
-- schema, contract, fixture, policy, and validation checks;
-- transformation, normalization, redaction, generalization, aggregation, and model-materialization runs;
-- governed-AI invocations and abstentions;
-- telemetry and observability snapshots;
-- migration, correction, stale-state, supersession, rollback, and release-support actions;
-- promotion review and release dry runs.
+## Authority level
 
-Receipts are intentionally separate from the payloads, proofs, catalogs, release decisions, and public outputs they reference.
+**Canonical; RECEIPTS responsibility.**
 
----
+This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
 
-## Path posture
+## Status
 
-The receipt family root is:
-
-```text
-data/receipts/
-```
-
-This path belongs under the `data/` responsibility root because receipt instances are lifecycle artifacts emitted by governed work. Directory placement is part of governance: the path tells reviewers that these objects are process memory, not source payloads, proof packs, catalog records, release manifests, or published artifacts.
-
-Receipt subtype and domain lanes may exist below this root, for example:
-
-```text
-data/receipts/validation/
-data/receipts/telemetry/
-data/receipts/flora/
-data/receipts/redaction/flora/
-data/receipts/generated/
-```
-
-Exact subtype/domain ordering remains **NEEDS VERIFICATION** until accepted receipt-layout governance or ADR review confirms the pattern.
-
----
-
-## Receipt boundary
-
-KFM keeps these artifact families separate:
-
-```text
-receipt != proof != catalog != publication
-```
-
-| Family | Canonical role | Typical home | Boundary |
-|---|---|---|---|
-| Receipt | Process memory: what a run or governed action did. | `data/receipts/` | Not proof, not catalog closure, not release approval, not public truth. |
-| Proof | Release-grade support: EvidenceBundle, ProofPack, citation validation, integrity support, closure objects. | `data/proofs/` | Not a discovery catalog and not a release decision by itself. |
-| Catalog | Discovery and interchange records such as STAC, DCAT, and PROV. | `data/catalog/` | Catalog entries are carriers; they do not make claims true or publishable. |
-| Release / publication | Promotion decisions, release manifests, rollback cards, correction notices, withdrawal notices, signatures, and released public-safe artifacts. | `release/` and `data/published/` | Publication is a governed state transition, not a file move. |
-
-> [!IMPORTANT]
-> A valid signed receipt can prove that a specific governed execution occurred, but it does not prove factual correctness, legal admissibility, scientific certainty, cultural suitability, rights clearance, or public-safety suitability. Those remain evidence, policy, review, proof, catalog, and release concerns.
-
----
-
-## Repo fit
-
-| Field | Value |
+| Field | Bounded result |
 |---|---|
 | Path | `data/receipts/` |
-| Responsibility root | `data/` |
-| Artifact family | receipts |
-| Lifecycle role | process memory and audit trail for governed operations |
-| Upstream producers | watchers, pipelines, validators, redactors, aggregators, model runners, governed-AI adapters, telemetry collectors, migration tools, release dry runs, correction/rollback tools, CI jobs |
-| Downstream consumers | reviewers, proof assemblers, catalog-closure checks, release stewards, correction reviewers, rollback reviewers, audit tools, drift registers, governed API/UI readiness checks |
-| Public access posture | No direct public path. Public clients use governed APIs and released artifacts. |
-| Payload authority | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, and `data/published/`, not this lane |
-| Proof authority | `data/proofs/`, not this lane |
-| Catalog authority | `data/catalog/`, not this lane |
-| Source registry authority | `data/registry/`, not this lane |
-| Policy authority | `policy/`, not this lane |
-| Contract/schema authority | `contracts/` and `schemas/`, not this lane |
-| Release authority | `release/`, not this lane |
-| Default failure posture | `DENY`, `ABSTAIN`, `HOLD`, `NEEDS_REVIEW`, `QUARANTINE`, `FAIL`, or `ERROR` when evidence, source role, rights, sensitivity, policy, review, validation, correction, rollback, or release state is unresolved |
+| Version | `v0.4.0` |
+| Prior blob | `15f2608cfe3c692da2fdb8082b6f9d90f2a8bb9d` |
+| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers/consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
 
----
+## What belongs here
 
-## Observed child lanes
+- RunReceipt, TransformReceipt, validation, policy, redaction, aggregation, AI, telemetry, catalog, migration, correction, rollback, and generated-work receipts under accepted profiles;
+- receipt indexes, digests, producer references, and safe execution summaries;
 
-The lanes below were observed through current GitHub reads/searches while replacing this root stub. This confirms path or README evidence only. It does **not** prove emitted receipts, schemas, validators, fixtures, CI enforcement, signatures, policy enforcement, review workflows, release integration, correction hooks, rollback hooks, or public-safe summaries.
+Local README, inventory, digest, migration, and disposition sidecars may explain the boundary without creating parallel authority.
 
-| Child lane | Status | Purpose | Boundary |
-|---|---:|---|---|
-| [`validation/`](validation/README.md) | CONFIRMED README | Parent lane for validation receipt process-memory records. | Validation receipts are not proofs, catalog closure, policy approval, release authority, or source truth. |
-| [`validation/atmosphere/`](validation/atmosphere/README.md) | CONFIRMED README | Atmosphere/Air validation receipt lane. | Not public air-quality guidance, emergency alerting, proof, catalog, release, or source truth. |
-| [`validation/doctrine_artifact_check/`](validation/doctrine_artifact_check/README.md) | CONFIRMED README | Required doctrine-artifact prerequisite check receipts. | Not doctrine authority, artifact admission, proof, catalog closure, or promotion decision. |
-| [`validation/flora/`](validation/flora/README.md) | CONFIRMED README | Flora validation receipt lane. | Not Flora truth, exact-location authority, policy, proof, catalog, release, or public output. |
-| [`telemetry/`](telemetry/README.md) | CONFIRMED PATH | Telemetry receipt lane. | Not runtime authority, proof, catalog, release, or public truth by itself. |
-| [`flora/`](flora/README.md) | CONFIRMED README | Flora domain parent receipt lane. | Not rare-plant truth, exact-location authority, sensitivity policy, proof, release approval, or public artifact authority. |
-| [`redaction/flora/`](redaction/flora/README.md) | CONFIRMED README | Flora redaction/geoprivacy receipt lane. | Redaction receipt is not release approval or public geometry authority. |
-| [`aggregation/`](aggregation/README.md) | CONFIRMED PATH | Aggregation receipt lane. | Aggregation receipts do not prove source truth or release safety. |
-| [`ai/`](ai/README.md) | CONFIRMED PATH | Governed-AI receipt lane. | AI receipts are not sovereign truth and do not replace EvidenceBundle resolution. |
-| [`fauna/`](fauna/README.md) | CONFIRMED PATH | Fauna domain receipt lane. | Sensitive species and geoprivacy controls still govern downstream use. |
-| [`soil/`](soil/README.md) | CONFIRMED PATH | Soil domain receipt lane. | Soil process memory is not source payload, proof, catalog closure, or release approval. |
-| [`generated/`](generated/README.md) | CONFIRMED README + JSON PAYLOADS | AI-authored artifact provenance lane; 59 direct-child JSON receipts were observed at the recorded base snapshot. | Generated receipts are process memory, not human approval, factual proof, policy permission, catalog closure, release authority, or publication authority. |
+## What does NOT belong here
 
----
-
-## Accepted material
-
-Accepted content is limited to receipt instances and receipt-local sidecars:
-
-- `RunReceipt`, `TransformReceipt`, `ValidationReport`, `RedactionReceipt`, `AggregationReceipt`, `AIReceipt`, `ModelRunReceipt`, `ReviewRecord`, telemetry receipts, migration receipts, correction-support receipts, rollback-support receipts, release-support receipts, and other governed process-memory records;
-- run IDs, source refs, object refs, input/output hashes, evidence refs, policy refs, schema refs, contract refs, validator refs, transform refs, reviewer refs, finite outcomes, reason codes, correction refs, rollback refs, release-candidate refs, timestamps, actor/runner identity, status fields, and signatures;
-- receipt manifests, checksums, DSSE/cosign sidecars, and local reproducibility notes where applicable;
-- README files and local indexes that help stewards inspect receipt state without becoming proof, catalog, policy, release, public output, source truth, or generated-answer authority.
-
----
-
-## Exclusions
-
-| Do not place here | Correct authority home |
+| Do not place here | Correct home or action |
 |---|---|
-| Raw source payloads, exact sensitive coordinates, source-native files, private identifiers, restricted records, or acquired source packages | `data/raw/` or governed restricted storage as applicable |
-| Work/candidate outputs, scratch transforms, unresolved checks, or intermediate payloads | `data/work/` |
-| Quarantined material and unresolved sensitive records | `data/quarantine/` |
-| Processed objects or public-safe derivatives | `data/processed/` after gates; `data/published/` only after release |
-| EvidenceBundle, ProofPack, CatalogMatrix, citation-validation closure, signatures, or integrity proof | `data/proofs/` |
-| STAC, DCAT, PROV, discovery records, or catalog closure output | `data/catalog/` |
-| SourceDescriptor records or source activation decisions | `data/registry/` and source governance roots |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal notice, release signature, or release changelog | `release/` |
-| Rights, sensitivity, geoprivacy, source-role, publication, access-control, or release policy | `policy/` and governed policy roots |
-| Semantic contracts and machine schemas | `contracts/` and `schemas/` |
-| Validator code, pipeline code, packages, fixtures, tests, CI workflows, or runtime services | `tools/`, `pipelines/`, `packages/`, `fixtures/`, `tests/`, `.github/workflows/`, `runtime/`, or app roots as applicable |
-| Full logs, crash dumps, stack traces, CI transcripts, credentials, tokens, secrets, private review notes, or sensitive operational telemetry | appropriate private CI/runtime/log system or restricted review artifact path; reference bounded digest only |
-| Public map/API/UI payloads, graph edges, vector-index content, reports, dashboards, or generated answer text | governed public outputs only after evidence, policy, validation, review, release, correction, and rollback gates close |
+| source or domain payloads | their lifecycle lanes |
+| EvidenceBundles, ProofPacks, or validation proof authority | `data/proofs/` |
+| catalog records or release decisions | `data/catalog/` and `release/` |
+| secrets, private prompts, private chain-of-thought, or unsafe logs | approved secure systems; never commit |
+| Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
+| Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
 
----
+## Inputs
 
-## Suggested receipt envelope
+Governed tools, pipelines, validators, review systems, AI adapters, migration/correction processes, and release-support jobs.
 
-The exact machine schema remains **NEEDS VERIFICATION** until accepted schema and validator evidence exists. Receipt instances should remain small, deterministic, reviewable, and hashable.
+As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
 
-| Field | Purpose |
+## Outputs
+
+Audit and replay references for proofs, catalogs, reviews, corrections, and rollback. A receipt does not prove factual correctness or authorize publication.
+
+Public clients must not use an internal or compatibility lane as a direct data service.
+
+## Validation
+
+Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
+
+No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include receipt, validation, policy, proof, and release stewards as applicable. Payload, source activation, rights/sensitivity, migration, public-serving, correction, or rollback changes require corresponding specialist and independent review. CODEOWNERS routing is not approval evidence.
+
+## Related folders
+
+- Parent: [`data/`](../README.md)
+- Lifecycle: [`raw/`](../raw/README.md) · [`work/`](../work/README.md) · [`quarantine/`](../quarantine/README.md) · [`processed/`](../processed/README.md) · [`catalog/`](../catalog/README.md) · [`triplets/`](../triplets/README.md) · [`published/`](../published/README.md)
+- Trust support: [`receipts/`](../receipts/README.md) · [`proofs/`](../proofs/README.md) · [`registry/`](../registry/README.md) · [`rollback/`](../rollback/README.md)
+- Authority: [`contracts/`](../../contracts/README.md) · [`schemas/`](../../schemas/README.md) · [`policy/`](../../policy/README.md) · [`release/`](../../release/README.md)
+- Doctrine: [Directory Rules](../../docs/doctrine/directory-rules.md) · [Lifecycle Law](../../docs/doctrine/lifecycle-law.md) · [Trust Membrane](../../docs/doctrine/trust-membrane.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
+- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, independent review, retention, and operational rollback:** needs verification
+
+Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
+
+## Operating contract
+
+```text
+receipt != proof != catalog != release decision != publication
+```
+
+Receipt producers must record input/output identities, code/spec/tool identity, time, outcome, limitations, and safe failure context. Signing and retention are **NEEDS VERIFICATION** unless an emitted instance and verifier establish them.
+
+## Current bounded child-lane index
+
+| Child lane | Bounded posture |
 |---|---|
-| `id` | Stable receipt identity. |
-| `receipt_type` | Receipt family such as `run`, `validation`, `transform`, `redaction`, `aggregation`, `ai`, `telemetry`, `migration`, `correction`, `rollback`, or `release_support`. |
-| `domain` or `lane` | Domain lane, system lane, or check family. |
-| `run_ref` | Pipeline, CI, local smoke, dry-run, model, review, correction, or release-support run identifier. |
-| `actor` / `runner_id` | Tool, service, or human/steward identity responsible for the run. |
-| `started_at` / `completed_at` | Run timing. |
-| `source_refs` | Source descriptors, source versions, registry entries, URLs, commits, or source-state refs used. |
-| `subject_refs` | Records, files, artifacts, layers, releases, catalog entries, or fixtures affected. |
-| `input_hashes` / `output_hashes` | Integrity pins for material inputs and outputs. |
-| `schema_refs` / `contract_refs` | Schemas and semantic contracts used. |
-| `policy_refs` | Policies or policy decisions applied. |
-| `evidence_refs` | EvidenceRef/EvidenceBundle references evaluated or produced. |
-| `outcome` | Finite outcome such as `PASS`, `WARN`, `FAIL`, `DENY`, `ABSTAIN`, `HOLD`, `QUARANTINE`, or `ERROR`. |
-| `reason_codes` | Stable reason codes for the outcome. |
-| `promotion_blocking` | Whether the receipt blocks promotion or release review. |
-| `correction_refs` / `rollback_refs` | Correction and rollback references when applicable. |
-| `signature_refs` | DSSE/cosign/signing sidecars when applicable. |
-| `public_summary` | Optional redacted summary safe for review surfaces. |
+| `validation/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `telemetry/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `flora/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `redaction/flora/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `aggregation/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `ai/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `fauna/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `soil/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `generated/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
 
----
+## Open verification register
 
-## Suggested directory shape
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
+| Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
+| Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
 
-The following map is documentation guidance, not proof that these payloads exist.
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
 
-```text
-data/receipts/
-├── README.md
-├── validation/
-│   ├── README.md
-│   ├── atmosphere/
-│   ├── doctrine_artifact_check/
-│   └── flora/
-├── telemetry/
-│   └── README.md
-├── flora/
-│   └── README.md
-├── redaction/
-│   └── flora/
-├── aggregation/
-├── ai/
-├── fauna/
-├── soil/
-├── generated/
-│   ├── README.md
-│   └── genrec-<scope>-<digest>.json
-├── <domain-or-lane>/
-│   ├── <run_id>/
-│   │   ├── receipt.json
-│   │   ├── checksums.sha256
-│   │   └── README.md
-│   └── index.local.json
-└── index.local.json
-```
+## No-loss ledger
 
-`index.local.json` files are optional and receipt-local only. They are not proof indexes, catalog records, release manifests, public-layer pointers, search indexes, vector indexes, map sources, policy authorities, location authorities, or generated-answer sources.
+| Prior element | Disposition |
+|---|---|
+| Stable path/document identity | Preserved |
+| Core lifecycle or compatibility role | Preserved and clarified |
+| Child-lane index | Preserved where present; omission is not retirement |
+| Trust membrane and anti-collapse rules | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, or public-state change | None |
 
----
+### Change history
 
-## Required checks before use
+#### v0.4.0 — 2026-07-24
 
-- [ ] Confirm the record belongs under `data/receipts/` or an accepted receipt lane.
-- [ ] Confirm canonical receipt naming against accepted receipt-layout governance before relying on the path as final layout authority.
-- [ ] Confirm receipt ID, run ID, actor/runner identity, source refs, subject refs, input/output hashes, schema/contract refs, policy refs, evidence refs, timestamps, outcome, reason codes, blocker status, and signatures are present where applicable.
-- [ ] Confirm sensitive details are not exposed in README/index/public-summary text.
-- [ ] Confirm the receipt does not silently upgrade evidence strength, source role, rights state, review state, release state, or public-safe posture.
-- [ ] Confirm EvidenceRef/EvidenceBundle closure is separately proven when the receipt supports consequential claims.
-- [ ] Confirm policy, proof, catalog, correction, rollback, and release states remain separate object families.
-- [ ] Confirm a `PASS` receipt is not treated as proof, catalog closure, release approval, public artifact authority, or source truth.
-- [ ] Confirm a `FAIL`, `DENY`, `ABSTAIN`, `HOLD`, `QUARANTINE`, or `ERROR` receipt is retained long enough to support correction, audit, and rollback analysis.
-- [ ] Confirm no public artifact, graph edge, search index, vector index, API payload, map layer, generated answer, or released report reads this receipt lane as truth directly.
+- normalized the parent README to Directory Rules §15;
+- preserved substantive boundaries and explicit uncertainty;
+- added validation, review, verification, and no-loss controls;
+- changed Markdown only.
 
----
-
-## Status notes
-
-| Claim | Status |
-|---|---:|
-| This README replaces the greenfield stub at `data/receipts/README.md`. | CONFIRMED authored |
-| The target path existed in the live repository as a greenfield stub before this edit. | CONFIRMED by GitHub contents API during this edit |
-| Directory Rules state that file location encodes responsibility root, lifecycle phase, and governance posture. | CONFIRMED from repo documentation |
-| ADR-0011 states the intended boundary `receipt != proof != catalog != publication`. | CONFIRMED proposed ADR text; acceptance remains proposed unless separately verified |
-| RunReceipt standard states receipt storage belongs under `data/receipts/` and that receipts do not prove factual correctness or public-safety suitability. | CONFIRMED from repo documentation |
-| Child README/path evidence exists for validation, atmosphere validation, doctrine artifact check, flora validation, telemetry, flora, redaction/flora, aggregation, ai, fauna, soil, and generated lanes. | CONFIRMED by current repository inspection |
-| Fifty-nine direct-child JSON receipts existed under `generated/` at the recorded base commit. | CONFIRMED by bounded repository inventory; individual validity and approval remain unverified |
-| Emitted receipt payloads exist across all listed lanes. | UNKNOWN |
-| CI currently emits receipts into all relevant lanes. | UNKNOWN |
-| A canonical receipt schema is fully enforced across all child lanes. | NEEDS VERIFICATION |
-| This README grants public access to receipt internals. | DENY |
-
----
-
-## Maintainer note
-
-Receipts are valuable because they make governed work reconstructible. They become dangerous when treated as the same thing as proof, policy, catalog closure, release, or truth. Keep the chain explicit:
-
-```text
-source / candidate / run -> receipt -> review input -> proof/catalog/policy/release checks -> governed public surface
-```
-
-Never collapse it into:
-
-```text
-receipt -> public truth
-```
+[Back to top](#top)
