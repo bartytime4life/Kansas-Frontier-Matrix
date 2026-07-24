@@ -1,170 +1,184 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-catalog-readme
-title: data/catalog/README.md — Catalog-Stage Data README
-version: v0.1
-type: readme; data-lifecycle-stage; catalog-stage-guide
-status: draft; PROPOSED; data-root; catalog-stage; implementation-bounded; release-gated
-owners: OWNER_TBD — Data steward · Catalog steward · Evidence steward · Policy steward · Release steward · Schema steward · Docs steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-06-24
-policy_label: public-doc; data; catalog; lifecycle; release-gated; no-raw-public
-tags: [kfm, data, catalog, lifecycle, CATALOG, TRIPLET, STAC, DCAT, PROV, EvidenceBundle, ReleaseManifest, CatalogBuildReceipt]
-related:
-  - ../README.md
-  - ../../docs/doctrine/lifecycle-law.md
-  - ../../contracts/data/README.md
-  - ../../contracts/data/catalog_matrix.md
-  - ../../schemas/
-  - ../../policy/
-  - ../../tests/
-  - ../../tools/validators/
-  - ../../release/
-  - ../triplets/
-  - ../published/
-  - ../proofs/
-  - ../receipts/
+title: data/catalog/ — Governed Catalog Projections
+type: README; data-parent-contract; canonical-lane; authority-boundary
+version: v0.2.0
+status: repository-grounded draft; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — data, catalog, evidence, and release stewards
+updated: 2026-07-24
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: "restricted-review; no-direct-public-path; release-gated"
+current_path: data/catalog/README.md
+review_packet_id: kfm-data-parent-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
+  and prior substantive boundary material / PROPOSED normalized folder contract /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
+  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
+  retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+  review_branch: agent/modernize-data-readme-20260724-v3
+  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+  prior_blob: 9cf67c4ce5308b9088466b023a244107e3863a48
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
 notes:
-  - "Expanded from a greenfield stub at `data/catalog/README.md`."
-  - "The data root is the canonical lifecycle data root and includes catalog, triplets, receipts, proofs, published, registry, and related data lanes."
-  - "Lifecycle Law defines `data/catalog` as RELEASED ONLY exposure with required `CatalogBuildReceipt` and withdraw/supersede failure disposition."
-  - "Catalog records are not release decisions; release authority lives under `release/` and public-safe materialization belongs under `data/published/` after governance gates."
-  - "Rollback target for this expansion is previous stub blob SHA `617d8c10c5424f7c463491ef168ce8c6c608cd09`."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "Markdown-only parent-lane convergence; no payload or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/catalog
+# `data/catalog/` — Governed Catalog Projections
 
-> Catalog-stage data lane for governed catalog records and indexes. `data/catalog/` may hold catalog projections such as STAC, DCAT, PROV, and domain catalog records after processed candidates are promoted into catalog form. It is not RAW, WORK, QUARANTINE, PROCESSED, PUBLISHED, proof storage, release authority, schema authority, policy code, or implementation code.
+> **One-line purpose.** Own governed discovery and interoperability projections—such as STAC, DCAT, PROV, domain catalog records, and indexes—derived from processed records without replacing their evidence or release state.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/catalog" src="https://img.shields.io/badge/root-data%2Fcatalog-blue">
-  <img alt="Lifecycle: CATALOG" src="https://img.shields.io/badge/lifecycle-CATALOG-purple">
-  <img alt="Exposure: released only" src="https://img.shields.io/badge/exposure-RELEASED__ONLY-critical">
-  <img alt="Truth: evidence first" src="https://img.shields.io/badge/truth-evidence__first-green">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: Canonical](https://img.shields.io/badge/authority-canonical-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Path:** `data/catalog/README.md`  
-**Owning root:** `data/`  
-**Lifecycle stage:** `CATALOG / TRIPLET`  
-**Exposure posture:** RELEASED ONLY — only records tied to an approved release may be public  
-**Truth posture:** CONFIRMED target was a greenfield stub · CONFIRMED `data/README.md` defines `data/` as lifecycle data root including `catalog` · CONFIRMED Lifecycle Law defines `data/catalog` as RELEASED ONLY with `CatalogBuildReceipt` · NEEDS VERIFICATION for concrete catalog inventory, schemas, validators, receipts, policy gates, release manifests, and public route behavior.
+> [!IMPORTANT]
+> Path placement, a generated derivative, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, release approval, or KFM publication.
 
-## Quick jumps
+> [!WARNING]
+> Secrets and restricted or harmful-precision material require approved storage and access controls outside ordinary public-repository paths.
 
-[Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Recommended layout](#recommended-layout) · [Catalog guardrails](#catalog-guardrails) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
-
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/catalog/` materializes the `CATALOG` side of the `CATALOG / TRIPLET` lifecycle stage.
+Own governed discovery and interoperability projections—such as STAC, DCAT, PROV, domain catalog records, and indexes—derived from processed records without replacing their evidence or release state.
 
-It may hold governed catalog records and indexes that describe datasets, layers, sources, provenance, domains, rights, sensitivity, publication candidates, or released public records.
+Artifacts here may carry or support inspectable claims, but directory placement cannot make a claim true, rights-cleared, policy-admitted, reviewed, released, or public.
 
-A catalog record can help users and systems discover governed data. It does not make the underlying claim true, does not replace EvidenceBundle support, and does not approve publication.
+## Authority level
 
-## Lifecycle boundary
+**Canonical; CATALOG responsibility.**
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
 
-`data/catalog/` receives normalized candidates from `data/processed/` after validation and catalog-building steps. Public exposure is allowed only for the subset of catalog records that belongs to an approved release.
+## Status
 
-The paired graph projection lane is `data/triplets/`. The slash in `CATALOG / TRIPLET` is doctrinal: catalog records and graph triplets are paired projections of the same lifecycle stage.
-
-## Repo fit
-
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Catalog-stage data records | `data/catalog/` | This lane. |
-| Source-native captures | `data/raw/` | Do not store here. |
-| Transform workspace | `data/work/` | Do not store here. |
-| Failed/unsafe holds | `data/quarantine/` | Do not store here. |
-| Normalized candidates | `data/processed/` | Upstream of catalog. |
-| Graph/triplet projection | `data/triplets/` | Paired CATALOG/TRIPLET stage. |
-| Public-safe materialization | `data/published/` | Downstream after release. |
-| Evidence/proof | `data/proofs/` | EvidenceBundle and proof records. |
-| Receipts | `data/receipts/` | CatalogBuildReceipt and related receipts. |
-| Release decisions | `release/` | Publication authority. |
-| Schemas/policy/tests/code | `schemas/`, `policy/`, `tests/`, implementation roots | Separate responsibility roots. |
-
-## Accepted contents
-
-| Content | Purpose |
+| Field | Bounded result |
 |---|---|
-| STAC catalog records | Spatial/temporal asset catalog metadata. |
-| DCAT catalog records | Data catalog interoperability metadata. |
-| PROV catalog records | Provenance-oriented catalog projections. |
-| Domain catalog records | Domain-scoped catalog entries under `domain/<domain>/`. |
-| Catalog indexes | Public-safe or steward-only lookup indexes. |
-| Release-linked catalog manifests | Pointers to release-approved catalog subsets. |
-| Catalog quality summaries | Summaries that point to validation reports and receipts. |
+| Path | `data/catalog/` |
+| Version | `v0.2.0` |
+| Prior blob | `9cf67c4ce5308b9088466b023a244107e3863a48` |
+| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers/consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
 
-## Exclusions
+## What belongs here
 
-| Do not put here | Correct home |
+- STAC collections/items and KFM catalog profiles;
+- DCAT datasets/distributions and PROV catalog projections;
+- domain catalog records, catalog matrices, indexes, quality summaries, and release-linked catalog subsets;
+
+Local README, inventory, digest, migration, and disposition sidecars may explain the boundary without creating parallel authority.
+
+## What does NOT belong here
+
+| Do not place here | Correct home or action |
 |---|---|
-| RAW source files | `data/raw/` |
-| WORK/intermediate data | `data/work/` |
-| Quarantined data | `data/quarantine/` |
-| Processed normalized datasets | `data/processed/` |
-| Triplets/graph edges | `data/triplets/` |
-| Public materialized outputs | `data/published/` |
-| EvidenceBundle/proof records | `data/proofs/` |
-| Receipts | `data/receipts/` |
-| Release decisions | `release/` |
-| Source registry records | `data/registry/` or accepted source registry roots |
-| Schemas | `schemas/` |
-| Policy rules | `policy/` |
-| Tests, validators, or code | `tests/`, `tools/validators/`, implementation roots |
+| RAW, WORK, QUARANTINE, or processed payloads | their lifecycle lanes |
+| graph-compatible relationship projections | `data/triplets/` |
+| EvidenceBundles, proof packs, process receipts, or release decisions | `data/proofs/`, `data/receipts/`, and `release/` |
+| public artifacts not bound to a governed release | `data/published/` only after release |
+| Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
+| Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
 
-## Recommended layout
+## Inputs
 
-PROPOSED until verified against concrete files:
+Processed artifacts, source/registry identity, evidence/proof references, catalog-builder receipts, and policy/release context.
 
-```text
-data/catalog/
-├── README.md
-├── stac/
-├── dcat/
-├── prov/
-├── domain/
-│   └── <domain>/
-├── indexes/
-├── quality/
-└── release_refs/
-```
+As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
 
-This layout may be revised by ADR, schema, or data-lifecycle steward decision.
+## Outputs
 
-## Catalog guardrails
+Internal or release-approved catalog records for governed APIs and discovery surfaces. Catalog placement is not publication.
 
-- Catalog records are discoverability and provenance projections, not source truth.
-- Catalog records must point to source descriptors, EvidenceBundle/proof context, validation reports, policy posture, and release state when those are material.
-- Unreleased catalog records are not public, even if they live under `data/catalog/`.
-- Public routes must enforce release state; directory location alone is not publication.
-- Catalog entries that expose sensitive locations, rights-restricted data, archaeology, rare species, living-person data, or infrastructure risk must be redacted, generalized, quarantined, or denied through policy.
-- Failed or superseded catalog records must preserve correction and rollback paths rather than being silently overwritten.
+Public clients must not use an internal or compatibility lane as a direct data service.
 
-## Validation checklist
+## Validation
 
-- [ ] Confirm actual child directories under `data/catalog/`.
-- [ ] Confirm catalog record schemas for STAC/DCAT/PROV/domain entries.
-- [ ] Confirm `CatalogBuildReceipt` shape and storage home.
-- [ ] Confirm validation reports and evidence/proof links.
-- [ ] Confirm release linkage for any public catalog record.
-- [ ] Confirm policy checks for sensitivity, rights, and source-role posture.
-- [ ] Confirm route-level enforcement for RELEASED ONLY exposure.
-- [ ] Confirm withdrawal/supersession behavior for failed or stale catalog records.
+Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
 
-## Rollback
+No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
 
-Rollback is required if this lane becomes a raw data root, work area, quarantine store, processed-data store, proof store, source registry, release-decision root, public-published root, schema root, policy root, validator root, implementation root, or public route bypass.
+## Review burden
 
-Rollback target for this expansion: previous stub blob SHA `617d8c10c5424f7c463491ef168ce8c6c608cd09`.
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include data, catalog, evidence, and release stewards as applicable. Payload, source activation, rights/sensitivity, migration, public-serving, correction, or rollback changes require corresponding specialist and independent review. CODEOWNERS routing is not approval evidence.
 
-<p align="right"><a href="#top">Back to top</a></p>
+## Related folders
+
+- Parent: [`data/`](../README.md)
+- Lifecycle: [`raw/`](../raw/README.md) · [`work/`](../work/README.md) · [`quarantine/`](../quarantine/README.md) · [`processed/`](../processed/README.md) · [`catalog/`](../catalog/README.md) · [`triplets/`](../triplets/README.md) · [`published/`](../published/README.md)
+- Trust support: [`receipts/`](../receipts/README.md) · [`proofs/`](../proofs/README.md) · [`registry/`](../registry/README.md) · [`rollback/`](../rollback/README.md)
+- Authority: [`contracts/`](../../contracts/README.md) · [`schemas/`](../../schemas/README.md) · [`policy/`](../../policy/README.md) · [`release/`](../../release/README.md)
+- Doctrine: [Directory Rules](../../docs/doctrine/directory-rules.md) · [Lifecycle Law](../../docs/doctrine/lifecycle-law.md) · [Trust Membrane](../../docs/doctrine/trust-membrane.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
+- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, independent review, retention, and operational rollback:** needs verification
+
+Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
+
+## Operating contract
+
+Catalog closure should verify identifier agreement, source/evidence lineage, spatial and temporal scope, rights/sensitivity labels, derivation state, catalog-profile validity, and release visibility. STAC, DCAT, and PROV agreement remains **NEEDS VERIFICATION** until executable validators and emitted records prove it.
+
+## Current bounded child-lane index
+
+| Child lane | Bounded posture |
+|---|---|
+| `stac/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `dcat/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `prov/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `domain/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
+| Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
+| Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path/document identity | Preserved |
+| Core lifecycle or compatibility role | Preserved and clarified |
+| Child-lane index | Preserved where present; omission is not retirement |
+| Trust membrane and anti-collapse rules | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-24
+
+- normalized the parent README to Directory Rules §15;
+- preserved substantive boundaries and explicit uncertainty;
+- added validation, review, verification, and no-loss controls;
+- changed Markdown only.
+
+[Back to top](#top)

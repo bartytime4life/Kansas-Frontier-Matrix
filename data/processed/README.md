@@ -1,184 +1,183 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-readme
-title: data/processed/README.md — Processed Data Lifecycle README
-version: v0.1
-type: readme; data-lifecycle-root; processed-stage-guide
-status: draft; PROPOSED; data-root; processed-stage; release-gated; evidence-required
-owners: OWNER_TBD — Data steward · Pipeline steward · Source steward · Evidence steward · Catalog steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; lifecycle; governed; release-gated
-tags: [kfm, data, processed, lifecycle, RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, EvidenceBundle, SourceDescriptor, RunReceipt, ReleaseManifest]
-related:
-  - ../README.md
-  - ../../README.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../docs/doctrine/lifecycle-law.md
-  - ../../docs/doctrine/trust-membrane.md
-  - ../raw/
-  - ../work/
-  - ../quarantine/
-  - ../catalog/
-  - ../triplets/
-  - ../published/
-  - ../proofs/
-  - ../receipts/
-  - ../registry/
-  - ../../release/
-  - ../../schemas/
-  - ../../policy/
-  - ../../pipelines/
-  - ../../tools/validators/
+title: data/processed/ — Normalized Candidate Products
+type: README; data-parent-contract; canonical-lane; authority-boundary
+version: v0.2.0
+status: repository-grounded draft; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — data, validation, evidence, pipeline, and domain stewards
+updated: 2026-07-24
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: "restricted-review; no-direct-public-path; release-gated"
+current_path: data/processed/README.md
+review_packet_id: kfm-data-parent-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
+  and prior substantive boundary material / PROPOSED normalized folder contract /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
+  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
+  retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+  review_branch: agent/modernize-data-readme-20260724-v3
+  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+  prior_blob: 9cb4d4d35aa2878f02b4a6536ea5e674728c98e5
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
 notes:
-  - "This file replaces a greenfield stub at `data/processed/README.md`."
-  - "`data/processed/` is the lifecycle stage for normalized outputs that have moved past RAW/WORK/QUARANTINE but are not yet cataloged, triplet-projected, or published."
-  - "Processed data is not public, not authoritative truth, not proof, not release, and not a policy decision by itself."
-  - "Promotion from PROCESSED to CATALOG/TRIPLET/PUBLISHED requires validation, provenance, receipts, policy posture, catalog linkage, release state, correction path, and rollback target."
-  - "Rollback target for this expansion is previous stub blob SHA `8cc389e21fff1ff7dca545945083efe47e0c4999`."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "Markdown-only parent-lane convergence; no payload or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed
+# `data/processed/` — Normalized Candidate Products
 
-> Governed lifecycle lane for normalized, validated-enough processed data that is no longer RAW or WORK, but is not yet cataloged, triplet-projected, or published.
+> **One-line purpose.** Own normalized, versioned, validation-supported domain products that have passed their applicable WORK checks but have not thereby become cataloged, released, or public.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed" src="https://img.shields.io/badge/root-data%2Fprocessed-blue">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-  <img alt="Truth: evidence first" src="https://img.shields.io/badge/truth-evidence__first-green">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: Canonical](https://img.shields.io/badge/authority-canonical-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Path:** `data/processed/README.md`  
-**Owning root:** `data/`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; public exposure requires governed catalog, release, and published-output linkage  
-**Truth posture:** CONFIRMED target was a greenfield stub · CONFIRMED `data/` is the lifecycle data root · CONFIRMED Directory Rules say root folders encode responsibility and lifecycle · NEEDS VERIFICATION for actual child inventory, schemas, validators, receipts, release linkage, and CI enforcement.
+> [!IMPORTANT]
+> Path placement, a generated derivative, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, release approval, or KFM publication.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Processed-data requirements](#processed-data-requirements) · [Guardrails](#guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!WARNING]
+> Secrets and restricted or harmful-precision material require approved storage and access controls outside ordinary public-repository paths.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/processed/` holds normalized data products generated from admitted sources and intermediate work after extraction, transformation, cleanup, alignment, enrichment, redaction/generalization, or validation steps.
+Own normalized, versioned, validation-supported domain products that have passed their applicable WORK checks but have not thereby become cataloged, released, or public.
 
-Processed data is a staging outcome, not a publication decision. It may support downstream catalog records, triplet/graph projections, proof bundles, reports, tiles, APIs, or published artifacts, but it does not replace any of those governed outputs.
+Artifacts here may carry or support inspectable claims, but directory placement cannot make a claim true, rights-cleared, policy-admitted, reviewed, released, or public.
 
-## Lifecycle boundary
+## Authority level
+
+**Canonical; PROCESSED responsibility.**
+
+This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
+
+## Status
+
+| Field | Bounded result |
+|---|---|
+| Path | `data/processed/` |
+| Version | `v0.2.0` |
+| Prior blob | `9cb4d4d35aa2878f02b4a6536ea5e674728c98e5` |
+| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers/consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
+
+## What belongs here
+
+- normalized domain objects, tables, vectors, rasters, crosswalks, and versioned datasets;
+- processed-local manifests, digests, validation references, limitations, uncertainty, and derivation sidecars;
+- products ready for catalog/triplet, evidence/proof, and release-candidate assembly;
+
+Local README, inventory, digest, migration, and disposition sidecars may explain the boundary without creating parallel authority.
+
+## What does NOT belong here
+
+| Do not place here | Correct home or action |
+|---|---|
+| source-native captures and mutable candidates | `data/raw/` and `data/work/` |
+| held or unresolved material | `data/quarantine/` |
+| catalog records and graph projections | `data/catalog/` and `data/triplets/` |
+| release decisions and released public-safe bytes | `release/` and `data/published/` |
+| Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
+| Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
+
+## Inputs
+
+Governed WORK products or quarantine exits with contract/schema, source-role, spatial/temporal, rights/sensitivity, provenance, and validation support.
+
+As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
+
+## Outputs
+
+Inputs for catalog/triplet projection, proof assembly, and release-candidate review. PROCESSED remains non-public by default.
+
+Public clients must not use an internal or compatibility lane as a direct data service.
+
+## Validation
+
+Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
+
+No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include data, validation, evidence, pipeline, and domain stewards as applicable. Payload, source activation, rights/sensitivity, migration, public-serving, correction, or rollback changes require corresponding specialist and independent review. CODEOWNERS routing is not approval evidence.
+
+## Related folders
+
+- Parent: [`data/`](../README.md)
+- Lifecycle: [`raw/`](../raw/README.md) · [`work/`](../work/README.md) · [`quarantine/`](../quarantine/README.md) · [`processed/`](../processed/README.md) · [`catalog/`](../catalog/README.md) · [`triplets/`](../triplets/README.md) · [`published/`](../published/README.md)
+- Trust support: [`receipts/`](../receipts/README.md) · [`proofs/`](../proofs/README.md) · [`registry/`](../registry/README.md) · [`rollback/`](../rollback/README.md)
+- Authority: [`contracts/`](../../contracts/README.md) · [`schemas/`](../../schemas/README.md) · [`policy/`](../../policy/README.md) · [`release/`](../../release/README.md)
+- Doctrine: [Directory Rules](../../docs/doctrine/directory-rules.md) · [Lifecycle Law](../../docs/doctrine/lifecycle-law.md) · [Trust Membrane](../../docs/doctrine/trust-membrane.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
+- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, independent review, retention, and operational rollback:** needs verification
+
+Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
+
+## Operating contract
 
 ```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+WORK / resolved QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> release review -> PUBLISHED
 ```
 
-```mermaid
-flowchart LR
-  RAW[data/raw] --> WORK[data/work]
-  WORK --> QUAR[data/quarantine]
-  WORK --> PROC[data/processed]
-  QUAR --> PROC
-  PROC --> CAT[data/catalog]
-  PROC --> TRIP[data/triplets]
-  CAT --> PUB[data/published]
-  TRIP --> PUB
-  PUB --> REL[release]
-```
+Processed placement proves only lifecycle disposition. It does not prove EvidenceBundle closure, catalog agreement, policy admission, release approval, public safety, or production hosting.
 
-`data/processed/` is upstream of catalog, triplet, and publication. It must not be used as the normal public surface.
+## Current bounded child-lane index
 
-## Repo fit
+A complete recursive child inventory was not established. Existing children are not retired or reclassified by omission.
 
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Source-native captured data | `data/raw/` | Not this lane. |
-| Scratch/intermediate transforms | `data/work/` | Not this lane. |
-| Unsafe, unresolved, rights-unclear, or sensitive holds | `data/quarantine/` | Not this lane. |
-| Normalized processed outputs | `data/processed/` | This lane. |
-| Catalog records | `data/catalog/` | Downstream discovery/interchange. |
-| Triplet/graph projections | `data/triplets/` | Downstream graph projection. |
-| Published public-safe outputs | `data/published/` | Downstream after release. |
-| Evidence/proof records | `data/proofs/` | EvidenceBundle and proof support. |
-| Receipts | `data/receipts/` | RunReceipt, validation, policy, transform, correction, and release receipts. |
-| Source registry records | `data/registry/` | SourceDescriptor/source-admission records. |
-| Release decisions | `release/` | Publication authority. |
-| Schemas and policy | `schemas/`, `policy/` | Separate roots. |
-| Pipelines and validators | `pipelines/`, `tools/validators/`, `tests/` | Not this lane. |
+## Open verification register
 
-## Accepted contents
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
+| Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
+| Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
 
-Processed data may include:
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
 
-- Normalized tabular, spatial, temporal, textual, raster, vector, or graph-ready data artifacts.
-- Derived artifacts generated from governed pipelines after RAW/WORK/QUARANTINE handling.
-- Redacted or generalized derivatives that still require catalog/release review before public use.
-- Sidecar metadata needed to interpret processed artifacts when it is not a release manifest, proof bundle, policy decision, or catalog record.
-- Domain-scoped processed outputs, organized by accepted path convention.
-- README files explaining local processed-data boundaries.
+## No-loss ledger
 
-## Exclusions
-
-Do not store these under `data/processed/`:
-
-- RAW source files.
-- Scratch work files that have not passed minimal processing gates.
-- Quarantined or unresolved sensitive/rights material.
-- Catalog records such as STAC, DCAT, PROV, or domain catalog records.
-- Triplet/graph publication records.
-- EvidenceBundle or proof records.
-- Receipts.
-- SourceDescriptor/source registry records.
-- Release decisions, ReleaseManifest records, rollback cards, withdrawal notices, correction notices, signatures, or release changelogs.
-- Published public products.
-- Schemas, policy rules, validators, tests, packages, pipelines, app/UI/API code.
-
-## Processed-data requirements
-
-PROPOSED until concrete schemas and validators are verified:
-
-| Requirement | Meaning |
+| Prior element | Disposition |
 |---|---|
-| Source trace | Processed output should trace back to SourceDescriptor or source registry context when source authority matters. |
-| Run trace | Processing run, transform, validation, and tool/version context should have receipt linkage. |
-| Deterministic identity | Processed artifacts should have stable IDs or content digests where practical. |
-| Evidence linkage | Claims derived from processed outputs should be backed by EvidenceBundle/proof context downstream. |
-| Policy posture | Sensitive, restricted, rights-unclear, or public-risk material must not bypass policy review. |
-| Catalog readiness | Processed outputs intended for discovery should promote through `data/catalog/` and `data/triplets/`, not directly to public use. |
-| Release readiness | Public use requires release state, published output path, correction path, and rollback target. |
+| Stable path/document identity | Preserved |
+| Core lifecycle or compatibility role | Preserved and clarified |
+| Child-lane index | Preserved where present; omission is not retirement |
+| Trust membrane and anti-collapse rules | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, or public-state change | None |
 
-## Guardrails
+### Change history
 
-- Do not expose `data/processed/` directly as a public map, API, UI, download, or model-answer source.
-- Do not treat processed data as proof or truth by itself.
-- Do not move quarantined material into processed without review and receipt trail.
-- Do not publish by copying from processed to public surfaces; promotion is governed state transition.
-- Do not mix catalog records, proofs, receipts, release decisions, schemas, policies, or code into this lane.
-- Keep domain-specific processed structures responsibility-rooted and reversible.
+#### v0.2.0 — 2026-07-24
 
-## Evidence ledger
+- normalized the parent README to Directory Rules §15;
+- preserved substantive boundaries and explicit uncertainty;
+- added validation, review, verification, and no-loss controls;
+- changed Markdown only.
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a greenfield stub. | Did not define PROCESSED-stage boundaries. |
-| `data/README.md` | CONFIRMED | `data/` is the lifecycle data root and excludes code, schemas, policy rules, and release decisions. | Does not prove child inventory under `data/processed/`. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Root folders encode responsibility and data uses lifecycle phases. | Does not prove runtime enforcement. |
-
-## Validation checklist
-
-- [ ] Confirm actual child directories under `data/processed/`.
-- [ ] Confirm accepted domain/source path convention.
-- [ ] Confirm processed artifact schemas or contracts.
-- [ ] Confirm validators and CI checks.
-- [ ] Confirm source, run, transform, policy, validation, and correction receipts.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, release, schema, policy, or code artifacts are misplaced here.
-- [ ] Confirm promotion flow from processed to catalog/triplet/published is governed and reversible.
-
-## Rollback
-
-Rollback is required if this lane becomes a public output root, source-data root, quarantine bypass, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, public API shortcut, or public exposure shortcut.
-
-Rollback target for this expansion: previous stub blob SHA `8cc389e21fff1ff7dca545945083efe47e0c4999`.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
