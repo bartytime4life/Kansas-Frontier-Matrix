@@ -1,304 +1,201 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/readme
-name: Data Raw Root README
-path: data/raw/README.md
-type: data-raw-root-readme
-version: v0.1.0
-status: draft
-owners:
-  - <data-steward>
-  - <source-steward>
-  - <domain-stewards>
-  - <rights-reviewer>
-  - <sensitivity-reviewer>
-  - <release-steward>
-created: 2026-06-28
-updated: 2026-06-28
-policy_label: restricted-review
-truth_posture: cite-or-abstain
-lifecycle_phase: raw
-responsibility_root: data/
-artifact_family: immutable-source-capture-root-index
-sensitivity_posture: raw-internal; no-public-path; source-role-preserving; rights-needs-verification; release-blocked
-related:
-  - ../README.md
-  - agriculture/README.md
-  - archaeology/README.md
-  - atmosphere/README.md
-  - fauna/README.md
-  - flora/README.md
-  - geology/README.md
-  - habitat/README.md
-  - hazards/README.md
-  - hydrology/README.md
-  - people/README.md
-  - people-dna-land/README.md
-  - roads-rail-trade/README.md
-  - settlement/README.md
-  - settlements-infrastructure/README.md
-  - soil/README.md
-  - usda-nass/README.md
-  - ../quarantine/README.md
-  - ../processed/README.md
-  - ../catalog/README.md
-  - ../published/README.md
-  - ../registry/sources/README.md
-  - ../../docs/architecture/directory-rules.md
-  - ../../docs/architecture/source-roles.md
-  - ../../release/manifests/README.md
-tags:
-  - kfm
-  - data
-  - raw
-  - source-capture
-  - source-role
-  - lifecycle
-  - no-public-path
-  - evidence-first
+title: data/raw/ — Immutable Source Capture
+type: README; data-parent-contract; canonical-lane; authority-boundary
+version: v0.2.0
+status: repository-grounded draft; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — source and data stewards
+updated: 2026-07-24
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: "restricted-review; no-direct-public-path; release-gated"
+current_path: data/raw/README.md
+review_packet_id: kfm-data-parent-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
+  and prior substantive boundary material / PROPOSED normalized folder contract /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
+  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
+  retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+  review_branch: agent/modernize-data-readme-20260724-v3
+  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+  prior_blob: 771a4684341622aa684a3724f0c1a95b900f7335
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
 notes:
-  - "This README replaces the greenfield stub at `data/raw/README.md`."
-  - "Directory Rules state that placement encodes ownership, governance, and lifecycle; topic alone does not justify a root folder."
-  - "This root is a lifecycle root for RAW source capture only; it is not proof, catalog, registry, policy, release, public artifact, or generated-answer authority."
-  - "README/path presence confirms documentation or path evidence only; it does not prove payloads, SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, or release readiness."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "Markdown-only parent-lane convergence; no payload or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Data RAW
+# `data/raw/` — Immutable Source Capture
 
-Lifecycle root for immutable KFM source captures and source-admission sidecars.
+> **One-line purpose.** Own immutable source captures or immutable source references plus the admission and retrieval context required to preserve source identity, role, rights, sensitivity, time, and integrity before normalization.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Lifecycle: RAW" src="https://img.shields.io/badge/lifecycle-RAW-orange">
-  <img alt="Root: data" src="https://img.shields.io/badge/root-data-1f6feb">
-  <img alt="Posture: no public path" src="https://img.shields.io/badge/posture-no%20public%20path-critical">
-  <img alt="Truth: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-blueviolet">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: Canonical](https://img.shields.io/badge/authority-canonical-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Quick links:** [Scope](#scope) · [Root contract](#root-contract) · [Confirmed RAW lanes](#confirmed-raw-lanes) · [RAW handling rules](#raw-handling-rules) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Exit gates](#exit-gates) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> [!IMPORTANT]
+> Path placement, a generated derivative, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, release approval, or KFM publication.
 
-> [!CAUTION]
-> `data/raw/` is a no-public-path lifecycle root. It is not processed truth, catalog truth, proof, receipt authority, source registry authority, rights authority, policy authority, release authority, public API/UI material, public PMTiles material, graph/vector-index authority, or generated-answer authority.
+> [!WARNING]
+> Secrets and restricted or harmful-precision material require approved storage and access controls outside ordinary public-repository paths.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
-## Scope
+## Purpose
 
-`data/raw/` holds immutable source captures, source references, source-head snapshots, source-admission sidecars, checksums, and RAW-local indexes before any governed normalization or publication decision.
+Own immutable source captures or immutable source references plus the admission and retrieval context required to preserve source identity, role, rights, sensitivity, time, and integrity before normalization.
 
-RAW exists for preservation, replay, and audit. It records what was captured, where it came from, what source role it carried, which source family and domain lane own it, and what rights, sensitivity, version, time, citation, hash, and review caveats must travel downstream.
+Artifacts here may carry or support inspectable claims, but directory placement cannot make a claim true, rights-cleared, policy-admitted, reviewed, released, or public.
 
-RAW does **not** decide what a source means, whether a claim is true, whether rights permit reuse, whether sensitivity is resolved, whether a source can publish, whether a model or aggregate may answer a question, or whether a public artifact may be generated.
+## Authority level
 
----
+**Canonical; RAW responsibility.**
 
-## Root contract
+This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
 
-| Field | Value |
+## Status
+
+| Field | Bounded result |
 |---|---|
 | Path | `data/raw/` |
-| Responsibility root | `data/` |
-| Lifecycle phase | `raw` |
-| Root role | Parent lifecycle root for source captures and RAW-local sidecars |
-| Public access posture | No public path; no normal UI; no governed-public API exposure |
-| Upstream | Explicitly admitted connector/source-admission output only |
-| Downstream | `data/work/<domain>/` or `data/quarantine/<domain>/` after governed triage |
-| Release authority | `release/`, not this root |
-| Proof authority | `data/proofs/`, not this root |
-| Receipt authority | `data/receipts/`, not this root |
-| Registry authority | `data/registry/`, not this root |
-| Policy authority | `policy/`, not this root |
-| Default failure posture | `HOLD`, `QUARANTINE`, `DENY`, or `ABSTAIN` when source role, rights, sensitivity, path authority, source family, product identity, citation, validation, correction, rollback, or release support is insufficient |
+| Version | `v0.2.0` |
+| Prior blob | `771a4684341622aa684a3724f0c1a95b900f7335` |
+| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers/consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
 
----
+## What belongs here
 
-## Confirmed RAW lanes
+- source-native payloads or immutable references after governed admission;
+- retrieval metadata, source-head snapshots, checksums, digests, and capture indexes;
+- source-role, source-version, observation/source/retrieval-time, rights, sensitivity, and citation sidecars;
+- RAW-local README and inventory material that does not become registry, proof, receipt, catalog, or release authority;
 
-The lanes below are confirmed by current-session GitHub fetches, search results, or recent file edits. This table confirms README/path evidence only; it does **not** prove payloads, SourceDescriptors, connectors, validators, receipts, fixtures, review controls, CI checks, or release readiness.
+Local README, inventory, digest, migration, and disposition sidecars may explain the boundary without creating parallel authority.
 
-| Lane | Status | Boundary |
-|---|---|---|
-| [`agriculture/`](agriculture/README.md) | **CONFIRMED README** | Agriculture source capture; includes canonical `usda-nass/` child lane. |
-| [`archaeology/`](archaeology/README.md) | **CONFIRMED README** | Archaeology/cultural-heritage source capture; no public RAW path. |
-| [`atmosphere/`](atmosphere/README.md) | **CONFIRMED README** | Atmosphere source capture; observed, modeled, aggregate, and administrative roles stay distinct. |
-| [`fauna/`](fauna/README.md) | **CONFIRMED README** | Fauna source capture; exact occurrence and sensitivity posture require governed handling. |
-| [`flora/`](flora/README.md) | **CONFIRMED PATH / EMPTY OR PLACEHOLDER** | Flora RAW path exists but still needs a substantive README before it can serve as a documented parent lane. |
-| [`geology/`](geology/README.md) | **CONFIRMED README** | Geology/natural-resources source capture; exact subsurface and rights-sensitive details stay gated. |
-| [`habitat/`](habitat/README.md) | **CONFIRMED README** | Habitat source capture; class crosswalks, regulatory layers, and models are not interchangeable. |
-| [`hazards/`](hazards/README.md) | **CONFIRMED README** | Hazards source capture; not a live alert, emergency guidance, or public warning surface. |
-| [`hydrology/`](hydrology/README.md) | **CONFIRMED README** | Hydrology source capture with confirmed child lanes for FEMA NFHL, USGS 3DEP, NHDPlus HR, Water Data, and WBD. |
-| [`people/`](people/README.md) | **CONFIRMED README / COMPATIBILITY** | Compatibility RAW index; does not create a canonical People authority root. |
-| [`people-dna-land/`](people-dna-land/README.md) | **CONFIRMED README** | People/DNA/Land source capture; confirmed child lane `land-ownership/`; DNA is related compatibility context under `people/dna/`. |
-| [`roads-rail-trade/`](roads-rail-trade/README.md) | **CONFIRMED README** | Roads/Rail/Trade source capture; route status, graph, and legal-designation claims require downstream proof/release. |
-| [`settlement/`](settlement/README.md) | **CONFIRMED README / COMPATIBILITY** | Singular settlement compatibility path; canonical domain candidate is `settlements-infrastructure`. |
-| [`settlements-infrastructure/`](settlements-infrastructure/README.md) | **CONFIRMED README** | Canonical Settlements/Infrastructure RAW parent lane. |
-| [`soil/`](soil/README.md) | **CONFIRMED README** | Soil source capture; support-type separation is required. |
-| [`usda-nass/`](usda-nass/README.md) | **CONFIRMED README / COMPATIBILITY** | Root-level USDA NASS compatibility index; canonical lane is `agriculture/usda-nass/`. |
+## What does NOT belong here
 
----
-
-## RAW handling rules
-
-| Rule | Handling |
+| Do not place here | Correct home or action |
 |---|---|
-| RAW is source capture | RAW holds source material and admission context only. |
-| Source role is preserved | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must not be flattened. |
-| Paths encode authority | Domain material belongs under the responsibility-rooted lane, not a topic-root shortcut. |
-| Compatibility lanes are not canonical roots | Compatibility paths must not create parallel schema, policy, registry, proof, release, public-layer, graph, or answer authority. |
-| Time and version metadata travel | Source time, observation time, retrieval time, effective time, release time, correction time, version, vintage, and digest stay explicit where material. |
-| Rights and sensitivity fail closed | Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks promotion. |
-| Watchers and connectors do not publish | They may emit source captures, candidates, and receipts; they do not write public artifacts or final claims. |
-| Public clients never read RAW | Public layers, reports, PMTiles, stories, API payloads, graph edges, vector indexes, and generated answers cannot read RAW directly. |
+| mutable normalization, joins, repairs, redaction trials, or derived candidates | `data/work/` |
+| failed, unsafe, rights-unclear, sensitivity-unclear, or invalid material | `data/quarantine/` |
+| accepted source descriptors and activation decisions | `data/registry/sources/` or the accepted registry family |
+| receipts, proof support, catalog/triplet projections, release decisions, or public artifacts | their dedicated `data/` lanes or `release/` |
+| Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
+| Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
 
----
+## Inputs
 
-## Accepted material
+Governed connectors and source-admission processes. Connectors may write RAW or QUARANTINE candidates only; they do not publish.
 
-Accepted content is limited to RAW source-capture material and RAW-local sidecars:
+As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
 
-- source-reference manifests;
-- raw payloads or raw payload references;
-- SourceDescriptor references or admission-ticket references;
-- source identity, source family, source role, product identity, source time, observed time, retrieval time, version/vintage, endpoint identity, geometry/support metadata, citation, attribution, rights posture, sensitivity posture, review notes, and digest sidecars;
-- source-head records, retrieval metadata, status metadata, row counts, feature counts, raster metadata, series counts, station counts, topology counts, or package metadata where applicable, and checksums;
-- local README or index sidecars that help a steward understand capture state without becoming proof, catalog, receipt, registry, policy, release, public artifact, graph authority, vector-index authority, or answer authority.
+## Outputs
 
----
+Immutable inputs for governed WORK processing or QUARANTINE review. RAW has no direct public-client path.
 
-## Exclusions
+Public clients must not use an internal or compatibility lane as a direct data service.
 
-| Do not place here | Correct authority home |
-|---|---|
-| Domain doctrine and source-family doctrine | `docs/` |
-| Connector code or connector decisions | `connectors/` |
-| Pipeline code or pipeline decisions | `pipelines/` and `pipeline_specs/` |
-| Authoritative SourceDescriptor records or activation decisions | `data/registry/sources/` |
-| Rights, sensitivity, review, redaction, or release policy | `policy/` and governed review lanes |
-| Quarantine holds and remediation notes | `data/quarantine/` |
-| Normalized working material | `data/work/` |
-| Validated processed domain objects | `data/processed/` |
-| Catalog records, triplets, graph truth, or EvidenceBundle state | `data/catalog/`, `data/triplets/`, or proof lanes |
-| Receipts as authority | `data/receipts/` |
-| Release manifests, correction records, rollback records, signatures | `release/` |
-| Public layers, PMTiles, reports, stories, API payloads, downloads, graph edges, vector indexes, or generated answers | `data/published/` only after release gates close |
-| Contracts, schemas, validators, app/API/UI code | `contracts/`, `schemas/`, `tools/`, `apps/` |
+## Validation
 
----
+Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
 
-## Directory map
+No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include source and data stewards as applicable. Payload, source activation, rights/sensitivity, migration, public-serving, correction, or rollback changes require corresponding specialist and independent review. CODEOWNERS routing is not approval evidence.
+
+## Related folders
+
+- Parent: [`data/`](../README.md)
+- Lifecycle: [`raw/`](../raw/README.md) · [`work/`](../work/README.md) · [`quarantine/`](../quarantine/README.md) · [`processed/`](../processed/README.md) · [`catalog/`](../catalog/README.md) · [`triplets/`](../triplets/README.md) · [`published/`](../published/README.md)
+- Trust support: [`receipts/`](../receipts/README.md) · [`proofs/`](../proofs/README.md) · [`registry/`](../registry/README.md) · [`rollback/`](../rollback/README.md)
+- Authority: [`contracts/`](../../contracts/README.md) · [`schemas/`](../../schemas/README.md) · [`policy/`](../../policy/README.md) · [`release/`](../../release/README.md)
+- Doctrine: [Directory Rules](../../docs/doctrine/directory-rules.md) · [Lifecycle Law](../../docs/doctrine/lifecycle-law.md) · [Trust Membrane](../../docs/doctrine/trust-membrane.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
+- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, independent review, retention, and operational rollback:** needs verification
+
+Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
+
+## Operating contract
 
 ```text
-data/raw/
-├── README.md
-├── agriculture/
-├── archaeology/
-├── atmosphere/
-├── fauna/
-├── flora/
-├── geology/
-├── habitat/
-├── hazards/
-├── hydrology/
-├── people/                         # compatibility path
-├── people-dna-land/
-├── roads-rail-trade/
-├── settlement/                     # compatibility path
-├── settlements-infrastructure/
-├── soil/
-├── usda-nass/                      # compatibility path; canonical: agriculture/usda-nass/
-└── index.local.json
+admitted source edge -> data/raw/<domain>/<source_id>/<run_id>/ -> WORK or QUARANTINE
 ```
 
-`index.local.json` is optional and must remain RAW-local. It is not a public index, catalog record, registry record, release manifest, graph source, layer pointer, search index, vector index, map source, public-output authority, or retrieval source for generated answers.
+Every transition must preserve immutable input identity, source role, rights/sensitivity posture, temporal context, retrieval context, content digest, and receipt references. A filename, directory, successful fetch, or connector run does not establish source authority or admissibility.
 
----
+## Current bounded child-lane index
 
-## Exit gates
-
-| Exit route | Minimum requirement |
+| Child lane | Bounded posture |
 |---|---|
-| Stay RAW | Source was admitted and captured, but no downstream decision has been made. |
-| Quarantine | Source role, rights, source family, product identity, path authority, citation, schema, sensitivity, or activation is unresolved. |
-| Return / reject | Admission decision or steward review says the source should not be retained. |
-| Move to work | SourceDescriptor, rights posture, source role, source-family/product identity, citation, hash, source-head metadata, and minimal validation support are sufficient for normalization. |
-| Promote downstream | Only after later WORK, PROCESSED, CATALOG/TRIPLET, and RELEASE gates close with inspectable evidence, correction path, rollback target, and release manifest where applicable. |
+| `agriculture/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `archaeology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `atmosphere/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `fauna/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `flora/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `geology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `habitat/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `hazards/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `hydrology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `people/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `people-dna-land/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `roads-rail-trade/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `settlement/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `settlements-infrastructure/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `soil/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `usda-nass/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
 
----
+## Open verification register
 
-## Forbidden shortcut
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
+| Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
+| Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
 
-```text
-data/raw/
-→ data/processed/
-→ data/catalog/ or data/triplets/
-→ data/published/
-→ public API / MapLibre / PMTiles / report / story / graph / vector index / generated answer
-```
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
 
-This is forbidden unless each governed lifecycle transition has actually happened and left inspectable evidence.
+## No-loss ledger
 
----
-
-## Required checks before use
-
-- [ ] Confirm the source belongs under `data/raw/` and a documented domain/source-family lane.
-- [ ] Confirm SourceDescriptor or admission ticket records source ID, source role, rights, citation, product identity, retrieval time, and hash posture.
-- [ ] Confirm compatibility paths are not treated as canonical roots unless an accepted ADR or migration note authorizes them.
-- [ ] Confirm observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles are not collapsed.
-- [ ] Confirm sensitive joins, exact protected locations, living-person data, DNA/genomic data, infrastructure-sensitive details, archaeology/cultural sensitivity, and private land/person joins fail closed where applicable.
-- [ ] Confirm rights, terms, citation, and allowed reuse have been reviewed or explicitly marked `NEEDS VERIFICATION`.
-- [ ] Confirm raw payloads are immutable or hash-bound and do not overwrite prior captures in place.
-- [ ] Confirm required downstream receipts are present or explicitly marked missing before anything leaves RAW.
-- [ ] Confirm no public artifact, graph edge, search index, vector index, public API payload, or generated answer uses RAW material directly.
-
----
-
-## Status notes
-
-| Claim | Status |
+| Prior element | Disposition |
 |---|---|
-| This README replaces the greenfield stub at `data/raw/README.md`. | **CONFIRMED authored** |
-| The target path existed in the live repository as a greenfield stub before this edit. | **CONFIRMED by GitHub contents API during this edit** |
-| Directory Rules say placement encodes ownership, governance, and lifecycle; topic alone does not justify a root folder. | **CONFIRMED by GitHub contents API during this edit** |
-| RAW lifecycle lanes listed here are documentation/path evidence, not proof of payloads or release maturity. | **CONFIRMED posture** |
-| `flora/` currently has path evidence but still needs a substantive parent RAW README. | **NEEDS VERIFICATION / TODO** |
-| Actual RAW payloads exist under every listed lane. | **UNKNOWN** |
-| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired for every listed lane. | **NEEDS VERIFICATION** |
-| This README is proof, receipt authority, release authority, catalog authority, registry authority, policy authority, public artifact authority, graph authority, vector-index authority, or generated-answer authority. | **DENY** |
+| Stable path/document identity | Preserved |
+| Core lifecycle or compatibility role | Preserved and clarified |
+| Child-lane index | Preserved where present; omission is not retirement |
+| Trust membrane and anti-collapse rules | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, or public-state change | None |
 
----
+### Change history
 
-## Related files
+#### v0.2.0 — 2026-07-24
 
-- [`../README.md`](../README.md)
-- [`agriculture/README.md`](agriculture/README.md)
-- [`archaeology/README.md`](archaeology/README.md)
-- [`atmosphere/README.md`](atmosphere/README.md)
-- [`fauna/README.md`](fauna/README.md)
-- [`flora/README.md`](flora/README.md)
-- [`geology/README.md`](geology/README.md)
-- [`habitat/README.md`](habitat/README.md)
-- [`hazards/README.md`](hazards/README.md)
-- [`hydrology/README.md`](hydrology/README.md)
-- [`people/README.md`](people/README.md)
-- [`people-dna-land/README.md`](people-dna-land/README.md)
-- [`roads-rail-trade/README.md`](roads-rail-trade/README.md)
-- [`settlement/README.md`](settlement/README.md)
-- [`settlements-infrastructure/README.md`](settlements-infrastructure/README.md)
-- [`soil/README.md`](soil/README.md)
-- [`usda-nass/README.md`](usda-nass/README.md)
-- [`../quarantine/README.md`](../quarantine/README.md)
-- [`../processed/README.md`](../processed/README.md)
-- [`../catalog/README.md`](../catalog/README.md)
-- [`../published/README.md`](../published/README.md)
-- [`../registry/sources/README.md`](../registry/sources/README.md)
-- [`../../docs/architecture/directory-rules.md`](../../docs/architecture/directory-rules.md)
-- [`../../docs/architecture/source-roles.md`](../../docs/architecture/source-roles.md)
-- [`../../release/manifests/README.md`](../../release/manifests/README.md)
-
----
-
-KFM rule: `data/raw/` is the RAW lifecycle root for source capture only. It is not domain doctrine, source-family doctrine, registry authority, rights authority, policy authority, proof authority, receipt authority, release authority, catalog authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
+- normalized the parent README to Directory Rules §15;
+- preserved substantive boundaries and explicit uncertainty;
+- added validation, review, verification, and no-loss controls;
+- changed Markdown only.
 
 [Back to top](#top)

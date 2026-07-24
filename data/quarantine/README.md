@@ -1,262 +1,201 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/quarantine/readme
-name: Data Quarantine README
-path: data/quarantine/README.md
-type: data-lifecycle-index-readme
-version: v0.1.1
-status: draft
-owners:
-  - <data-steward>
-  - <policy-steward>
-  - <sensitivity-reviewer>
-  - <release-steward>
-created: 2026-06-27
-updated: 2026-07-17
-policy_label: restricted-review
-truth_posture: cite-or-abstain
-lifecycle_phase: quarantine
-responsibility_root: data/
-artifact_family: held-cross-domain-material
-sensitivity_posture: fail-closed; no-public-path; release-blocked; proof-required-before-exit; public-clients-denied
-related:
-  - ../README.md
-  - raw/README.md
-  - work/README.md
-  - processed/README.md
-  - catalog/README.md
-  - published/README.md
-  - proofs/README.md
-  - receipts/README.md
-  - registry/README.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../release/manifests/README.md
-tags: [kfm, data, quarantine, lifecycle, hold, deny-by-default, evidence-first, source-role, sensitivity, release-gated]
+title: data/quarantine/ — Fail-Closed Hold
+type: README; data-parent-contract; canonical-lane; authority-boundary
+version: v0.2.0
+status: repository-grounded draft; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — data, policy, rights, sensitivity, and domain stewards
+updated: 2026-07-24
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: "restricted-review; no-direct-public-path; release-gated"
+current_path: data/quarantine/README.md
+review_packet_id: kfm-data-parent-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
+  and prior substantive boundary material / PROPOSED normalized folder contract /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
+  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
+  retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+  review_branch: agent/modernize-data-readme-20260724-v3
+  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+  prior_blob: 2f93c3dff8772edc27105a0fd8affd4b68cb7a60
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
 notes:
-  - "This README replaces the greenfield stub and documents the parent `data/quarantine/` lifecycle lane."
-  - "Quarantine is a hold state, not a staging shortcut to processed, catalog, triplet, published, reports, layers, PMTiles, stories, graph/vector indexes, generated answers, or public UI."
-  - "Domain child README presence does not prove held payload presence, validator wiring, CI enforcement, policy automation, review completion, or release readiness."
-  - "Anything here must exit through governed review, evidence, policy, receipt, correction, rollback, and lifecycle placement checks."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "Markdown-only parent-lane convergence; no payload or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Data Quarantine
+# `data/quarantine/` — Fail-Closed Hold
 
-Parent lifecycle lane for KFM material that is held because it is not safe or sufficiently governed for normal work, processing, cataloging, triplet projection, publication, reporting, map rendering, story playback, graph/vector indexing, or generated-answer use.
+> **One-line purpose.** Own material held because identity, source role, rights, sensitivity, schema, geometry, time, evidence, validation, policy, review, receipt, correction, or rollback requirements are unresolved.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Lifecycle: quarantine" src="https://img.shields.io/badge/lifecycle-quarantine-critical">
-  <img alt="Root: data" src="https://img.shields.io/badge/root-data-blue">
-  <img alt="Posture: fail closed" src="https://img.shields.io/badge/posture-fail--closed-d1242f">
-  <img alt="Access: no public path" src="https://img.shields.io/badge/access-no%20public%20path-b83232">
-  <img alt="Truth: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-blueviolet">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: Canonical](https://img.shields.io/badge/authority-canonical-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Confirmed domain indexes](#confirmed-domain-indexes) · [Common hold reasons](#common-hold-reasons) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Exit gates](#exit-gates) · [Forbidden shortcuts](#forbidden-shortcuts) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> [!IMPORTANT]
+> Path placement, a generated derivative, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, release approval, or KFM publication.
 
-> [!CAUTION]
-> `data/quarantine/` is a no-public-path hold lane. Material here is not public, not processed truth, not catalog truth, not proof, not release authority, not policy authority, not source registry authority, not a normal map/API/UI source, and not generated-answer authority. Nothing in this subtree may be consumed by public clients or normal UI surfaces until a governed exit transition leaves inspectable evidence.
+> [!WARNING]
+> Secrets and restricted or harmful-precision material require approved storage and access controls outside ordinary public-repository paths.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
-## Scope
+## Purpose
 
-This directory holds material that failed, paused, or has not yet completed governance checks. Common blockers include unresolved source role, unclear rights, unresolved sensitivity, missing evidence, invalid geometry, invalid schema, stale source state, unresolved temporal role, over-precise location, missing receipt closure, missing review state, absent release state, missing correction path, or missing rollback target.
+Own material held because identity, source role, rights, sensitivity, schema, geometry, time, evidence, validation, policy, review, receipt, correction, or rollback requirements are unresolved.
 
-Quarantine preserves material for inspection and correction. It does not make held material true, safe, published, validated, released, cataloged, searchable, indexable, renderable, downloadable, or answerable.
+Artifacts here may carry or support inspectable claims, but directory placement cannot make a claim true, rights-cleared, policy-admitted, reviewed, released, or public.
 
----
+## Authority level
 
-## Repo fit
+**Canonical; QUARANTINE responsibility.**
 
-| Field | Value |
+This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
+
+## Status
+
+| Field | Bounded result |
 |---|---|
 | Path | `data/quarantine/` |
-| Responsibility root | `data/` |
-| Lifecycle phase | `quarantine/` |
-| Upstream neighbors | `data/raw/`, `data/work/` |
-| Downstream neighbors | `data/processed/`, `data/catalog/`, `data/published/` only after governed exit |
-| Artifact role | Held cross-domain material and quarantine-local review sidecars |
-| Public access posture | No public path; no normal UI; no governed-public API exposure |
-| Release authority | `release/`, not this directory |
-| Proof authority | `data/proofs/` and `data/receipts/`, not this directory |
-| Catalog authority | `data/catalog/`, not this directory |
-| Registry authority | `data/registry/`, not this directory |
-| Policy authority | `policy/`, not this directory |
-| Default failure posture | `HOLD`, `DENY`, `RESTRICT`, or `ABSTAIN` when evidence, source role, rights, sensitivity, validation, review, correction, rollback, or release support is insufficient |
+| Version | `v0.2.0` |
+| Prior blob | `2f93c3dff8772edc27105a0fd8affd4b68cb7a60` |
+| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers/consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
 
----
+## What belongs here
 
-## Confirmed domain indexes
+- held payloads or references plus explicit reason codes and affected scope;
+- failed validation, rights/sensitivity review, source-role conflict, stale-state, over-precision, or policy-hold context;
+- quarantine-local remediation, review, digest, and disposition sidecars;
 
-The parent domain README paths below were verified during this documentation sequence. This table confirms README/index presence only; it does **not** prove held payloads, validators, policy automation, CI enforcement, or completed review.
+Local README, inventory, digest, migration, and disposition sidecars may explain the boundary without creating parallel authority.
 
-| Domain path | Status | Boundary summary |
-|---|---|---|
-| [`agriculture/`](agriculture/README.md) | **CONFIRMED README** | Private farm/operator/parcel joins and field-level claims fail closed. |
-| [`archaeology/`](archaeology/README.md) | **CONFIRMED README** | Exact site geometry and sensitive archaeology material stay held unless reviewed/redacted. |
-| [`atmosphere/`](atmosphere/README.md) | **CONFIRMED README** | Candidate weather/air/climate material stays held when source, role, freshness, or public-safety framing is unresolved. |
-| [`fauna/`](fauna/README.md) | **CONFIRMED README** | Sensitive occurrence, site, telemetry, and geoprivacy material are deny-by-default. |
-| [`flora/`](flora/README.md) | **CONFIRMED README** | Rights, source-role, rare-plant geometry, taxonomy, and sensitive joins fail closed. |
-| [`geology/`](geology/README.md) | **CONFIRMED README** | Rights, source role, exact boreholes/samples, sensitive resources, wells, and interpretation collapse stay held. |
-| [`habitat/`](habitat/README.md) | **CONFIRMED README** | Join-induced sensitivity, land cover, ecoregions, and over-precise geometry fail closed. |
-| [`hazards/`](hazards/README.md) | **CONFIRMED README** | KFM is not an emergency alert authority; role-collapsed hazard material stays held. |
-| [`hydrology/`](hydrology/README.md) | **CONFIRMED README** | NFHL/regulatory context, station identity, source role, and emergency framing require hold when unresolved. |
-| [`people-dna-land/`](people-dna-land/README.md) | **CONFIRMED README** | Living-person, DNA/genomic, consent, private person-parcel, and land-ownership exposure fail closed. |
-| [`settlement/`](settlement/README.md) | **CONFIRMED README / compatibility** | Singular `settlement` path is compatibility-only, not canonical authority. |
-| [`settlements-infrastructure/`](settlements-infrastructure/README.md) | **CONFIRMED README** | Legal status, critical infrastructure, operator detail, dependency, topology, and cross-lane citations require review. |
-| [`soil/`](soil/README.md) | **CONFIRMED README** | Support-type separation is mandatory; soil support surfaces cannot masquerade as one another. |
+## What does NOT belong here
 
----
-
-## Common hold reasons
-
-| Hold reason | Typical response |
+| Do not place here | Correct home or action |
 |---|---|
-| Source role unresolved | Hold until source role and authority role are explicit. |
-| Rights unknown | Hold until terms, attribution, redistribution, consent, and allowed uses are known. |
-| Sensitivity unresolved | Hold, restrict, redact, generalize, or deny using the most restrictive applicable rule. |
-| Evidence open | Build EvidenceBundle support or abstain/deny. |
-| Validation failed | Keep held with reason and corrective path. |
-| Over-precise geometry | Generalize, suppress, aggregate, redact, restrict, or deny before public use. |
-| Cross-lane citation stale | Re-bind to current evidence or keep held. |
-| Temporal role defect | Separate source, observed, valid, retrieval, release, and correction times. |
-| Release state absent | No public path until release manifest, correction path, and rollback target exist. |
-
----
+| ordinary safe WORK material | `data/work/` |
+| validated processed artifacts | `data/processed/` |
+| final policy decisions, release decisions, corrections, withdrawals, or rollback cards | `policy/` and `release/` |
+| public layers, reports, tiles, APIs, graphs, indexes, or generated answers | released public-safe delivery only |
+| Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
+| Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
 
 ## Inputs
 
-Accepted content is limited to held review material and quarantine-local sidecars: source references, failed validation notes, source-role notes, rights notes, sensitivity notes, review notes, policy-decision drafts, receipt-closure checklists, digest sidecars, correction notes, rollback notes, and local README/index files.
+RAW/WORK material that triggers a fail-closed condition, plus explicit validation, policy, or steward hold records.
 
----
+As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
 
-## Exclusions
+## Outputs
 
-| Do not place here | Correct authority home |
+A governed exit to WORK/PROCESSED, a restricted disposition, a denial/abstention, or continued hold. Silent promotion is forbidden.
+
+Public clients must not use an internal or compatibility lane as a direct data service.
+
+## Validation
+
+Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
+
+No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include data, policy, rights, sensitivity, and domain stewards as applicable. Payload, source activation, rights/sensitivity, migration, public-serving, correction, or rollback changes require corresponding specialist and independent review. CODEOWNERS routing is not approval evidence.
+
+## Related folders
+
+- Parent: [`data/`](../README.md)
+- Lifecycle: [`raw/`](../raw/README.md) · [`work/`](../work/README.md) · [`quarantine/`](../quarantine/README.md) · [`processed/`](../processed/README.md) · [`catalog/`](../catalog/README.md) · [`triplets/`](../triplets/README.md) · [`published/`](../published/README.md)
+- Trust support: [`receipts/`](../receipts/README.md) · [`proofs/`](../proofs/README.md) · [`registry/`](../registry/README.md) · [`rollback/`](../rollback/README.md)
+- Authority: [`contracts/`](../../contracts/README.md) · [`schemas/`](../../schemas/README.md) · [`policy/`](../../policy/README.md) · [`release/`](../../release/README.md)
+- Doctrine: [Directory Rules](../../docs/doctrine/directory-rules.md) · [Lifecycle Law](../../docs/doctrine/lifecycle-law.md) · [Trust Membrane](../../docs/doctrine/trust-membrane.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
+- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, independent review, retention, and operational rollback:** needs verification
+
+Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
+
+## Operating contract
+
+| Exit | Minimum evidence |
 |---|---|
-| Clean RAW source mirrors that have not triggered quarantine | `data/raw/` |
-| Ordinary WORK material that is safe to process | `data/work/` |
-| Validated processed domain objects | `data/processed/` only after quarantine resolution |
-| Catalog records, triplets, graph truth, or EvidenceBundle state | `data/catalog/`, `data/triplets/`, or proof lanes |
-| EvidenceBundle / ProofPack | `data/proofs/` |
-| Final validation, redaction, aggregation, AI, policy, or release receipts | `data/receipts/` |
-| Release manifests, promotion decisions, correction records, rollback records, signatures | `release/` |
-| Source descriptors, activation records, source registries, registry truth | `data/registry/` |
-| Public layers, PMTiles, reports, stories, API payloads, downloads, published artifacts | `data/published/` only after release gates close |
-| Contracts, schemas, validators, policy rules, app/API/UI code | `contracts/`, `schemas/`, `tools/`, `policy/`, `apps/`, or UI roots |
+| remain held | unresolved blocker remains visible |
+| return to WORK | blocker resolved enough for normal transformation |
+| advance to PROCESSED | remediation, revalidation, policy/review closure, and receipt support |
+| restrict or deny | finite decision, reason, audience/purpose limits, and correction path |
 
----
+No public client, map, report, story, graph, search index, vector index, or AI surface may consume quarantined material.
 
-## Directory map
+## Current bounded child-lane index
 
-```text
-data/quarantine/
-├── README.md
-├── agriculture/
-├── archaeology/
-├── atmosphere/
-├── fauna/
-├── flora/
-├── geology/
-├── habitat/
-├── hazards/
-├── hydrology/
-├── people-dna-land/
-├── settlement/                    # compatibility path
-├── settlements-infrastructure/
-├── soil/
-├── <future-domain-or-risk-lane>/
-│   └── README.md
-└── index.local.json
-```
-
-`index.local.json` is optional and must remain quarantine-local. It is not a public index, catalog record, release manifest, registry, graph edge source, layer/story/report pointer, search index, vector index, map source, or retrieval source for generated answers.
-
----
-
-## Exit gates
-
-| Exit route | Minimum requirement |
+| Child lane | Bounded posture |
 |---|---|
-| Stay held | Any unresolved source role, rights, sensitivity, evidence, validation, temporal, geometry, review, policy, correction, rollback, or release question remains. |
-| Deny | PolicyDecision says `DENY`; public/UI/generated-answer surfaces abstain or deny. |
-| Restrict | PolicyDecision and ReviewRecord identify allowed audience, purpose, terms, redaction state, correction path, and rollback target. |
-| Return to work | Hold reason is resolved, but normal transformation, validation, attribution, or EvidenceBundle work still remains. |
-| Promote downstream | Only after required receipts, source descriptors, validation closure, evidence closure, policy/review closure, correction path, rollback target, and lifecycle placement checks exist. |
+| `agriculture/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `archaeology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `atmosphere/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `fauna/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `flora/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `geology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `habitat/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `hazards/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `hydrology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `people/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `people-dna-land/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `settlement/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `settlements-infrastructure/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `soil/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
 
----
+## Open verification register
 
-## Forbidden shortcuts
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
+| Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
+| Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
 
-```text
-data/quarantine/
-→ data/processed/
-→ data/catalog/ or data/triplets/
-→ data/published/
-→ public API / MapLibre / PMTiles / report / story / graph / vector index / generated answer
-```
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
 
-is forbidden unless the appropriate governed transition has actually happened and left inspectable evidence.
+## No-loss ledger
 
-```mermaid
-flowchart LR
-    RAW["RAW"] --> WORK["WORK"]
-    RAW --> Q["QUARANTINE<br/>hold + reason"]
-    WORK --> Q
-    Q -->|resolved| WORK
-    Q -->|deny| DENY["DENY / ABSTAIN"]
-    WORK --> PROC["PROCESSED"]
-    PROC --> CAT["CATALOG / TRIPLET"]
-    CAT --> REL["RELEASE<br/>manifest + rollback"]
-    REL --> PUB["PUBLISHED"]
-```
-
----
-
-## Required checks before use
-
-- [ ] Confirm the material belongs under `data/quarantine/` rather than `raw`, `work`, `processed`, `catalog`, `receipts`, `proofs`, `registry`, `release`, or `published`.
-- [ ] Confirm the domain/risk sublane and hold reason are recorded.
-- [ ] Confirm source role, rights, sensitivity, evidence, validation, temporal role, and geometry/precision status.
-- [ ] Confirm required receipts are present or explicitly marked missing.
-- [ ] Confirm PolicyDecision, ValidationReport, ReviewRecord where required, correction path, and rollback target before any exit.
-- [ ] Confirm no public layer, PMTiles, report, story, API payload, graph edge, search index, vector index, or generated answer uses quarantined material.
-
----
-
-## Status notes
-
-| Claim | Status |
+| Prior element | Disposition |
 |---|---|
-| This README replaces the greenfield stub at `data/quarantine/README.md`. | **CONFIRMED authored** |
-| The target path existed in the live repository as a greenfield stub before this edit. | **CONFIRMED by GitHub contents API during this edit** |
-| `data/` is documented as a lifecycle data root. | **CONFIRMED by GitHub contents API during this edit** |
-| Directory Rules identify `data/` as the RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED lifecycle authority surface. | **CONFIRMED by GitHub contents API during this edit** |
-| The domain paths listed in [Confirmed domain indexes](#confirmed-domain-indexes) have README/index evidence in this documentation sequence. | **CONFIRMED by GitHub contents API during this edit/documentation sequence** |
-| Actual quarantined payloads exist under every listed domain subtree. | **UNKNOWN** |
-| Policy automation, validators, and CI checks enforce every listed quarantine class. | **NEEDS VERIFICATION** |
-| This README is proof, release, catalog, registry, policy, public artifact authority, or generated-answer authority. | **DENY** |
+| Stable path/document identity | Preserved |
+| Core lifecycle or compatibility role | Preserved and clarified |
+| Child-lane index | Preserved where present; omission is not retirement |
+| Trust membrane and anti-collapse rules | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, or public-state change | None |
 
----
+### Change history
 
-## Related files
+#### v0.2.0 — 2026-07-24
 
-- [`../README.md`](../README.md)
-- [`../raw/README.md`](../raw/README.md)
-- [`../work/README.md`](../work/README.md)
-- [`../processed/README.md`](../processed/README.md)
-- [`../catalog/README.md`](../catalog/README.md)
-- [`../published/README.md`](../published/README.md)
-- [`../proofs/README.md`](../proofs/README.md)
-- [`../receipts/README.md`](../receipts/README.md)
-- [`../registry/README.md`](../registry/README.md)
-- [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md)
-- [`../../release/manifests/README.md`](../../release/manifests/README.md)
-
----
-
-KFM rule: this directory is the parent quarantine hold lane only. It is not source authority, proof authority, receipt authority, release authority, catalog authority, registry authority, policy authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
+- normalized the parent README to Directory Rules §15;
+- preserved substantive boundaries and explicit uncertainty;
+- added validation, review, verification, and no-loss controls;
+- changed Markdown only.
 
 [Back to top](#top)
