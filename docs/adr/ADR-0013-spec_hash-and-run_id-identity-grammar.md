@@ -1,651 +1,807 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0013-spec_hash-and-run_id-identity-grammar
-title: ADR-0013 — spec_hash and run_id Identity Grammar
-type: standard
-version: v1
+title: "ADR-0013 — spec_hash and run_id Identity Grammar"
+type: adr
+adr_id: ADR-0013
+version: v1.1
 status: proposed
-owners: TODO — Docs steward + Evidence/Identity subsystem owner (NEEDS VERIFICATION)
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — identity and canonicalization steward"
+  - "NEEDS VERIFICATION — contracts and schemas stewards"
+  - "NEEDS VERIFICATION — runtime receipt steward"
+  - "NEEDS VERIFICATION — validation and CI steward"
+  - "NEEDS VERIFICATION — evidence and release stewards"
+reviewers_required:
+  - Architecture steward
+  - Identity and canonicalization steward
+  - Contracts steward
+  - Schema steward
+  - Runtime receipt steward
+  - Validation and CI steward
+  - Evidence steward
+  - Release steward
+  - Security reviewer
+  - Docs steward
 created: 2026-05-11
-updated: 2026-05-15
+updated: 2026-07-23
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: d7e9a1f1073ec462937ed9e52db856f87407d736
+  target_prior_blob: 528ff0db1db14af43fd3c2867fd9af316c85910e
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  identity_architecture_blob: d8b3836bae160ac0f2027407989d383fa016a49b
+  canonicalization_standard_blob: 16cec7a8109ac1776159b346b898ab9c313c2f3e
+  common_spec_hash_contract_blob: 0c2c1161ddb565d4f9f17ef81080b27b8d951937
+  common_spec_hash_schema_blob: 80b496b01b8de8c0e8ba67bf020977e6b1f3c652
+  evidence_normalization_compat_blob: 5fa81f67cc76766cb73dd3811e06e9475a75189f
+  run_receipt_contract_blob: 5592aa5e22bbdd0c668189f79b50c18f7d1b2479
+  run_receipt_schema_blob: 80d13bcb750d56c769da2f8871242388f7f50a69
+  run_receipt_valid_fixture_blob: 0e8cfaa2f3a1f7ae4a7eb62d19f321a70aa38b0a
+  spec_hash_validator_blob: de69c6c7001082af29827a4b287a80b7c6a05af3
+  run_receipt_validator_blob: 9b59481e90c021f0f92b74511c43fcefbbe3a057
+  hashing_package_readme_blob: 3d3174974668623117c1f90bcbc6918262d1b6af
 related:
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0002-contracts-vs-schemas-split.md
+  - docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - schemas/contracts/v1/common/                  # PROPOSED home for identity primitives
-  - contracts/evidence/                            # EvidenceBundle / EvidenceRef meaning
-  - data/receipts/                                 # run-receipt storage lane
-tags: [kfm, adr, identity, hashing, provenance, evidence]
+  - docs/architecture/identity-and-spec-hash.md
+  - docs/standards/canonicalization.md
+  - contracts/common/spec_hash.md
+  - contracts/runtime/run_receipt.md
+  - schemas/contracts/v1/common/spec_hash.schema.json
+  - schemas/contracts/v1/runtime/run_receipt.schema.json
+  - schemas/contracts/v1/evidence/spec_normalization.md
+  - packages/hashing/README.md
+  - tools/validators/validate_spec_hash.py
+  - tools/validators/validate_run_receipt.py
+  - fixtures/contracts/v1/common/spec_hash/
+  - fixtures/contracts/v1/runtime/run_receipt/
+tags: [kfm, adr, identity, deterministic-identity, activity-identity, spec-hash, run-id, jcs, sha256, receipts, provenance, migration, fail-closed]
 notes:
-  - "ADR number 0013 reserved; intermediate ADRs (0002–0012) NEEDS VERIFICATION against mounted repo."
-  - "Owners and related-doc paths are PROPOSED until verified against current repo state."
+  - "v1.1 is a same-path repository-grounded modernization. It preserves source metadata and effective decision status `proposed`; it does not accept ADR-0013 or change executable identity behavior."
+  - "The canonical ADR index uniquely assigns ADR-0013 to this exact path."
+  - "Current repository machine shapes conflict with the proposed grammar: common and RunReceipt schemas accept bare `sha256:<hex>`, while this ADR and architecture documents propose `jcs:sha256:<hex>`."
+  - "Current RunReceipt schema accepts a broad identifier pattern and the valid fixture uses `run1`; the `run:<orchestrator>:<ULID>` form remains proposed, not implemented fact."
+  - "The dedicated spec_hash validator is a NotImplementedError stub. The RunReceipt validator performs JSON Schema fixture validation only."
+  - "packages/hashing is an implementation scaffold with placeholder metadata and an empty initializer; no verified canonicalizer, spec-hash, run-id, replay, or cross-runtime parity implementation was found in the inspected evidence."
+  - "Hash equality proves only equality under a declared byte/canonicalization profile. It does not prove truth, authority, admissibility, evidence closure, review, release, or public safety."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0013 — `spec_hash` and `run_id` Identity Grammar
 
-> Freezes the **deterministic-identity grammar** KFM uses across EvidenceBundles, run receipts, catalog records, release manifests, and revocation deltas: how `spec_hash` is computed, how `run_id` is formed, what is included, what is excluded, and how the two are wired into the lifecycle.
+> **Proposed decision.** KFM separates deterministic **content identity** (`spec_hash`) from unique **activity identity** (`run_id`). The candidate grammar is `jcs:sha256:<64-lower-hex>` for ordinary JSON content and `run:<orchestrator>:<ULID>` for one governed execution. This revision records that target without misrepresenting the repository's current bare-`sha256` schemas, permissive run-ID pattern, fixture examples, or unimplemented hashing package as conforming enforcement.
 
-<!-- Badges: Shields.io static placeholders. Replace targets when CI surfaces exist. -->
-
-![Status: PROPOSED](https://img.shields.io/badge/status-PROPOSED-orange?style=flat-square)
-![ADR: 0013](https://img.shields.io/badge/ADR-0013-blue?style=flat-square)
-![Doctrine: identity](https://img.shields.io/badge/doctrine-identity%20%26%20evidence-6f42c1?style=flat-square)
-![Policy: public](https://img.shields.io/badge/policy_label-public-2ea44f?style=flat-square)
-![Last reviewed: 2026-05-15](https://img.shields.io/badge/last_reviewed-2026--05--15-lightgrey?style=flat-square)
-
-| Field | Value |
-|---|---|
-| **Status** | `proposed` (per `<status>` field; see §2.4 of Directory Rules) |
-| **Decision class** | Identity grammar — *content-of-doctrine*, not a directory move |
-| **Owners** | TODO — Evidence/Identity subsystem owner + Docs steward (NEEDS VERIFICATION) |
-| **Date** | 2026-05-11 |
-| **Last updated** | 2026-05-15 |
-| **Supersedes** | None |
-| **Superseded by** | None |
-| **Replaces (informally)** | Scattered corpus conventions for `spec_hash` and `run_id` (see §3) |
-| **Related ADRs** | ADR-0001 (schema home) — CONFIRMED reference in `docs/doctrine/directory-rules.md` |
-| **Current repo evidence** | UNKNOWN — no mounted repo, tests, workflows, or runtime logs were inspected in this update pass |
-
-> [!NOTE]
-> **Update-pass evidence boundary.** This revision used the attached Markdown baseline, the attached KFM Markdown Updater prompt, Directory Rules doctrine, and targeted official checks for RFC 8785 and OpenLineage semantics. It does **not** claim that any proposed path, schema, workflow, validator, or runtime surface exists in the current KFM repo.
-
----
-
-## Quick jump
-
-- [1. Context](#1-context)
-- [2. Decision (Normative)](#2-decision-normative)
-- [3. Source-state today](#3-source-state-today)
-- [4. Identity-grammar diagram](#4-identity-grammar-diagram)
-- [5. Field-level reference](#5-field-level-reference)
-- [6. Worked example](#6-worked-example)
-- [7. Consequences](#7-consequences)
-- [8. Alternatives considered](#8-alternatives-considered)
-- [9. Migration plan](#9-migration-plan)
-- [10. Validation](#10-validation)
-- [11. Rollback](#11-rollback)
-- [12. Open questions](#12-open-questions)
-- [13. Anti-patterns](#13-anti-patterns)
-- [14. Glossary](#14-glossary)
-- [15. Related docs](#15-related-docs)
-
----
-
-## 1. Context
-
-KFM doctrine asserts that **identity must be deterministic** so that every other governed property — dedupe, lineage, transparency-log inclusion, rollback target, revocation linkage, attestation, and Evidence-Drawer attribution — can actually function. The Idea Index calls this out plainly:
-
-> *"the most heavily repeated idea is that identity must be deterministic: every artifact, bundle, and record carries a `spec_hash` computed over a canonicalized form (typically RFC 8785 / JCS), and that `spec_hash` is what allows deduplication, rebuilds, transparency-log inclusion, lineage, and rollback to function."*
-> — `docs/KFM_Components_Pass_11_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` (CONFIRMED)
-
-The doctrine is settled. The **grammar** is not. The corpus uses several **near-shapes** for the same idea — `sha256:<hex>`, `jcs:sha256:<hex>`, `kfm:spec_hash`, occasional uses of URDNA2015 for graph content, slightly different transient-field exclusion lists, and at least two competing receipt envelopes. The KFM Components Pass 10 dossier names this directly:
-
-> *"The corpus uses slightly different field names in different recipes. There is no single canonical KFM run-receipt JSON Schema referenced consistently; multiple sections show schemas that diverge in detail."* — Pass 10, C1-01 (CONFIRMED in attached docs)
-
-This ADR freezes one grammar so downstream contracts, schemas, gates, tiles, catalogs, run receipts, and clients can rely on the same identifiers.
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0013-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![Identity split: required](https://img.shields.io/badge/identity-content%20%E2%89%A0%20activity-8250df?style=flat-square)](#proposed-decision)
+[![Hash grammar: conflicted](https://img.shields.io/badge/spec__hash-CONFLICTED-f59e0b?style=flat-square)](#current-repository-conflicts)
+[![Run ID grammar: proposed](https://img.shields.io/badge/run__id-PROPOSED-d4a72c?style=flat-square)](#candidate-grammar)
+[![Implementation: scaffold](https://img.shields.io/badge/implementation-scaffold-6e7781?style=flat-square)](#current-enforcement-maturity)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Identity is doctrine. The grammar is governance.** If `spec_hash` is non-deterministic, every governance property that depends on it — dedupe, lineage, transparency-log inclusion, rollback target, `revoke_delta` linkage — silently breaks. This ADR is mandatory reading for anyone authoring connectors, pipelines, validators, catalog writers, or release tooling.
+> **Identity assignment is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0013` to this exact file and records both source metadata and effective status as `proposed`. Editing, merging, linking, or validating this Markdown does not accept the decision.
 
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+> [!CAUTION]
+> **The repository does not currently implement the grammar described here.** The common `spec_hash` schema and the RunReceipt schema require bare `sha256:<hex>`. The RunReceipt schema accepts a broad identifier pattern, and a valid fixture uses `run1`. No reviewed migration may describe those surfaces as `jcs:sha256` or ULID-conformant until schemas, contracts, fixtures, validators, producers, consumers, tests, and receipts are updated together.
+
+> [!WARNING]
+> **A matching hash is not a truth or release decision.** It establishes only that the same declared bytes or canonical representation produced the same digest under the same declared profile. Evidence sufficiency, provenance, rights, sensitivity, policy, review, promotion, release, correction, rollback, and public safety remain separate governed gates.
+
+**Quick navigation:** [Status](#status) · [Evidence boundary](#evidence-boundary) · [Context](#context) · [Decision](#proposed-decision) · [Grammar](#candidate-grammar) · [Exclusions](#hash-domain-and-exclusions) · [Wiring](#identity-wiring) · [Evidence](#current-repository-evidence) · [Conflicts](#current-repository-conflicts) · [Maturity](#current-enforcement-maturity) · [Validation](#validation-and-enforcement-target) · [Migration](#migration-and-acceptance-plan) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-ledger) · [Rollback](#rollback-and-supersession) · [Checklist](#verification-checklist) · [References](#references)
 
 ---
 
-## 2. Decision (Normative)
+<a id="status"></a>
 
-The conformance language below is RFC 2119-style and matches `docs/doctrine/directory-rules.md` §2.2.
+## Status
 
-### 2.1 `spec_hash` — the content-identity term
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0013` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md` |
+| **Source metadata** | `proposed` |
+| **Effective decision status** | `proposed` |
+| **Decision class** | Cross-cutting identity grammar, canonicalization profile, and runtime activity identifier |
+| **Implementation effect of this revision** | Documentation only |
+| **Schema effect** | None |
+| **Runtime effect** | None |
+| **Release/publication effect** | None |
+| **Supersedes / superseded by** | None / none |
 
-1. **Algorithm.** `spec_hash` MUST be computed by:
-   1. Removing the object-family `TRANSIENT_FIELDS` from the target object.
-   2. Serializing the remaining target object as JSON.
-   3. Canonicalizing that JSON per **RFC 8785 / JSON Canonicalization Scheme (JCS)**.
-   4. Taking **SHA-256** over the canonical UTF-8 bytes.
-2. **String form (frozen).** The recorded value MUST use the prefixed form:
+### Acceptance versus implementation
+
+Two independent states must remain visible:
+
+1. **ADR acceptance** would approve the identifier meanings and migration target.
+2. **Implementation graduation** would require one accepted machine shape, canonical byte rules, fixtures, a real hashing implementation, parser/formatter behavior, producer and consumer migrations, cross-runtime parity tests, CI, receipts, and rollback evidence.
+
+An accepted ADR without enforcement is doctrine. Passing schema validation without an accepted and implemented canonicalization profile is only shape evidence. Neither state alone proves evidence truth or release readiness.
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-boundary"></a>
+
+## Evidence boundary
+
+This revision uses current repository bytes at `main@d7e9a1f1073ec462937ed9e52db856f87407d736`. The repository establishes present files and behavior; KFM doctrine establishes responsibility boundaries. The prior version's statements that no repository was inspected and that ADR numbering or related paths were unverified are now obsolete.
+
+| Evidence level | What is established | What is not established |
+|---|---|---|
+| **ADR inventory** | Exact ADR ID, filename, source metadata, and effective proposed status | Acceptance |
+| **Architecture and standards docs** | Draft documents propose JCS + SHA-256 and content-addressed identity | Machine conformance |
+| **Common SpecHash contract/schema** | Draft contract and proposed object schema require `{ "value": "sha256:<hex>" }` | Canonicalization profile, `jcs:` prefix, or scalar representation |
+| **RunReceipt contract/schema** | Proposed receipt shape requires `run_id` and bare `sha256:<hex>` | ULID grammar, orchestrator vocabulary, or content hashing behavior |
+| **Fixtures and validators** | RunReceipt schema fixtures execute; dedicated `spec_hash` validator exists as a stub | Hash computation, canonical-byte verification, replay, cross-language parity |
+| **Hashing package** | Documentation, `0.0.0` placeholder metadata, and an empty initializer exist | Exported implementation, dependencies, tests, CI, consumers, or distribution |
+| **Runtime and operations** | No reviewed evidence here proves live production use | Deployment maturity, operational health, or public reliance |
+
+### Truth labels
+
+| Label | Use in this ADR |
+|---|---|
+| **CONFIRMED** | Directly verified from the inspected repository bytes or governing doctrine. |
+| **PROPOSED** | Candidate decision, grammar, path role, migration, or future enforcement. |
+| **CONFLICTED** | Current repository sources assign incompatible shapes, prefixes, names, or responsibilities. |
+| **UNKNOWN** | Available evidence is insufficient for a stronger claim. |
+| **NEEDS VERIFICATION** | A concrete check remains open before acceptance, migration, enforcement, or retirement. |
+| **HOLD** | A conflict or missing prerequisite intentionally blocks promotion of the claim. |
+
+[Back to top](#top)
+
+---
+
+<a id="context"></a>
+
+## Context
+
+KFM requires stable identity to support deduplication, replay, provenance, receipts, catalog closure, promotion, correction, rollback, revocation, and audit. Two different identity questions exist:
+
+| Question | Identity term | Required property |
+|---|---|---|
+| **What exact governed content is this?** | `spec_hash` | Deterministic for the same canonical content and profile |
+| **Which execution produced or evaluated it?** | `run_id` | Unique per governed activity and stable throughout that activity |
+
+Collapsing the terms creates two opposite failures:
+
+- including `run_id` in content identity makes identical content hash differently on each run;
+- using only `spec_hash` for activity identity hides repeated executions, retries, operators, stages, and side effects.
+
+The repository already reflects the distinction in prose, receipt fields, package plans, and downstream references. It does not yet implement one coherent grammar across all machine surfaces.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-decision"></a>
+
+## Proposed decision
+
+Upon acceptance and completion of the governed migration:
+
+1. **`spec_hash` is the KFM content-identity term.**
+   - It identifies a declared canonical representation.
+   - The same meaning-bearing content, normalization profile, canonicalization profile, and hash algorithm must produce the same value.
+   - A change to included content or profile must produce a different value.
+2. **`run_id` is the KFM activity-identity term.**
+   - It identifies one governed execution, attempt, or stage activity.
+   - It is generated once at activity start and propagated unchanged through that activity's outputs, receipts, logs, validation records, and downstream references.
+   - It is unique, not content-derived, and not a substitute for `spec_hash`.
+3. **The two terms are independent.**
+   - `run_id` must not participate in the `spec_hash` hash domain.
+   - One run may produce many content hashes.
+   - The same content hash may appear in many runs.
+4. **The canonicalization profile is part of the identity contract.**
+   - A verifier must know what canonical bytes were hashed.
+   - A parser must not silently equate identifiers created under different profiles.
+5. **Identifier conformance is not governance closure.**
+   - A valid `spec_hash` or `run_id` does not grant source admission, evidence sufficiency, policy allowance, promotion, release, publication, or public access.
+
+This is a proposed target. Until acceptance and migration, current schemas and fixtures remain the executable shape evidence.
+
+[Back to top](#top)
+
+---
+
+<a id="candidate-grammar"></a>
+
+## Candidate grammar
+
+### `spec_hash` — content identity
+
+The proposed default JSON form is:
 
 ```text
-jcs:sha256:<64-hex-lowercase>
+jcs:sha256:<64-lowercase-hex>
 ```
 
-   The bare `sha256:<hex>` form found in earlier corpus passages is **deprecated for new writes** and MUST be migrated under §9. Validators MUST accept the prefixed form as canonical and MAY accept bare `sha256:` only inside a clearly scoped backward-compatibility window.
-3. **Hash domain — `kfm:spec_hash` extension key.** Where `spec_hash` is embedded in a foreign envelope (STAC item properties, DCAT distribution, PROV record, PMTiles metadata block, etc.), it MUST appear under the **`kfm:spec_hash`** property name to preserve namespace discipline and survive validators that strip unknown bare fields.
-4. **Canonicalization rules.** The JCS canonicalization MUST enforce:
-   - Sorted object keys, using JCS property sorting.
-   - JCS string serialization without mutating string content during the canonicalization step.
-   - I-JSON-compatible JSON values, including no duplicate object property names; `NaN` / `±Inf` MUST cause emit-time failure.
-   - JCS number serialization. Exact identifiers, counters, or externally meaningful large integers SHOULD be string-encoded by schema before canonicalization unless the object-family contract explicitly proves safe numeric handling.
-   - No trailing whitespace; no insignificant whitespace anywhere.
-   - UTF-8 encoding of the final canonical bytes before hashing.
-5. **Unicode normalization is a preflight transform, not silent JCS behavior.** Object-family schemas MAY require NFC or another Unicode normalization policy, but that transform MUST be declared, receipted, and completed **before** JCS canonicalization. A writer MUST NOT silently normalize strings during hashing without a schema-declared policy and a validation fixture.
-6. **Transient-field exclusion (`TRANSIENT_FIELDS`).** The hash MUST be computed **after** removing volatile fields. The minimum exclusion set is:
-
-```text
-spec_hash, generated_at, updated_at, fetched_at, retrieved_at,
-timestamp, nonce, run_id, signer, signature, attestations
+```ebnf
+spec_hash      = "jcs:sha256:" hex64
+hex64          = 64 * HEXDIG-LOWER
+HEXDIG-LOWER   = %x30-39 / %x61-66
 ```
 
-   Connectors and pipelines MAY extend this list per object-family contract, but they MUST NOT shrink it. The retrieval timestamp **never** affects `spec_hash`.
-7. **Forbidden fields.** The `--forbid-field` set MUST reject any object that contains a field intended to be volatile but found leaking into the hashed payload (e.g., misplaced `generated_at` inside a `record.payload`). This is a hard validator gate, not a warning.
-8. **Graph-shaped content.** For JSON-LD graphs that may have been merged from multiple contexts, `spec_hash` MAY alternatively be computed via **URDNA2015 RDF dataset canonicalization** followed by SHA-256. When this path is used the recorded value MUST be prefixed `urdna2015:sha256:<hex>` so the canonicalization route is auditable from the string alone. This is the **only** other permitted route; mixing canonicalizers for the *same* object family within a release is forbidden.
+The proposed computation is:
 
-### 2.2 `run_id` — the KFM activity-identity term
+1. select the object-family's declared meaning-bearing hash domain;
+2. reject duplicate keys and values outside the accepted JSON profile;
+3. apply only declared, versioned pre-canonicalization transforms;
+4. canonicalize JSON under RFC 8785 JCS;
+5. hash the canonical UTF-8 bytes with SHA-256;
+6. encode the digest as 64 lowercase hexadecimal characters;
+7. record the canonicalization profile and version in the surrounding contract or receipt where needed.
 
-1. **Definition.** `run_id` identifies **one** execution of a governed KFM step (a watcher pull, a pipeline run, a tile build, a catalog emission, a release decision, an AI inference). It is KFM's activity identity term and is distinct from content identity (`spec_hash`).
-2. **String form (frozen).**
+> [!NOTE]
+> The current common schema instead requires an object wrapper whose `value` matches `^sha256:[a-f0-9]{64}$`, and the current RunReceipt schema uses a bare string with the same prefix. The proposed grammar above is not executable repository truth.
+
+### RDF-shaped content
+
+The repository contains competing proposed tokens for RDF dataset canonicalization:
+
+- the prior ADR used `urdna2015:sha256:<hex>`;
+- the current canonicalization standard uses `rdfc:sha256:<hex>` and describes RDFC-1.0 / URDNA2015 lineage.
+
+This revision does **not** silently choose between them. New RDF-profile writes remain **HOLD** until an accepted decision names the canonical token, object families, canonicalization version, fixtures, verifier path, and migration behavior. JCS remains the candidate default for JSON-governed objects.
+
+### `run_id` — activity identity
+
+The proposed KFM form is:
 
 ```text
 run:<orchestrator>:<ULID>
 ```
 
-   where:
-   - `<orchestrator>` is a short stable label drawn from a controlled vocabulary maintained in `control_plane/` (e.g., `gha`, `airflow`, `prefect`, `local`, `manual`). [PROPOSED vocabulary; NEEDS VERIFICATION against repo.]
-   - `<ULID>` is a 26-character Crockford-base32 ULID, time-ordered, monotonic within a millisecond when the generator supports monotonicity.
-3. **Stability.** `run_id` MUST be generated **once**, at the start of the KFM run, and propagated through every artifact, receipt, log, and downstream side-effect of that run. A run that emits multiple artifacts MUST share a single KFM `run_id` across all of them.
-4. **PROV binding.** The same KFM `run_id` MUST appear:
-   - In the run receipt's `run_id` field.
-   - In the PROV-O activity's `prov:id` or equivalent local activity identifier.
-   - In STAC item `properties.kfm:run_id` when the run is material to the item.
-5. **OpenLineage binding.** OpenLineage `run.runId` is a UUID in the OpenLineage object model, so KFM MUST NOT force `run:<orchestrator>:<ULID>` into `run.runId`. If OpenLineage events are emitted:
-   - Emit an OpenLineage-compatible UUID, preferably UUIDv7 where supported, in `run.runId`.
-   - Preserve the KFM `run_id` in a custom run facet or equivalent `kfm:run_id` extension field.
-   - Record the OpenLineage UUID in the KFM RunReceipt as `openlineage_run_uuid` when present.
-6. **Independence from `spec_hash`.** `run_id` MUST NOT participate in `spec_hash` computation. `spec_hash` is content-identity; `run_id` is activity-identity. Conflating them is the primary anti-pattern this ADR exists to prevent (see §13.1).
-
-### 2.3 Wiring rules
-
-| Concern | Rule |
-|---|---|
-| **Bundle identity** | `EvidenceBundle.spec_hash` MUST be the JCS-SHA-256 of the bundle minus `spec_hash`, `signature`, and `attestations`. |
-| **Record identity** | Each canonical dataset record carries its own `spec_hash`. Records MUST NOT inherit the bundle hash. |
-| **Run receipt identity** | The receipt is itself canonicalized and carries its own `spec_hash`; it ALSO carries the `spec_hash` values of every artifact it produced. |
-| **OpenLineage bridge** | When emitted, OpenLineage `run.runId` is stored as `openlineage_run_uuid`; KFM `run_id` remains the local governed activity identity. |
-| **Release manifest** | `ReleaseManifest.spec_hash` covers the manifest body. It references layer-level `spec_hash` per artifact. |
-| **Supersedes / rollback** | `supersedes` MUST cite the **prior `spec_hash`** of the same identity slot; `rollback_target` MUST cite the `spec_hash` of the previously published artifact. |
-| **Revocation** | `revoke_delta.id` MUST reference a `prior_spec_hash`; revocations chain by `spec_hash`, not by file path. |
-| **Catalog references** | STAC items carry `properties.kfm:spec_hash` and `properties.kfm:run_id`; DCAT distributions carry `dct:identifier` set to `jcs:sha256:<hex>`. |
-| **Run receipt references** | STAC items that are materially produced by a run SHOULD carry `properties.kfm:run_receipt_url` or an equivalent governed receipt reference. |
-| **Tiles** | PMTiles archives carry `kfm:spec_hash` and `run_receipt_url` in metadata when the PMTiles metadata profile allows it; exact key conventions remain §12 verification work. |
-| **AI receipts** | Each `AIReceipt` carries its own `run_id`, `inputs_spec_hash` (array), the AI envelope's own `spec_hash`, and `parent_run_id` when it is downstream of a pipeline run. |
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
-
----
-
-## 3. Source-state today
-
-> Status: **CONFIRMED from attached docs**. Repo-state portions are **NEEDS VERIFICATION** until a mounted repo is inspected.
-
-| Source | What it says (paraphrased) | Status |
-|---|---|---|
-| `docs/KFM_Components_Pass_11_Part_2…` §B.1.1 | `spec_hash` = SHA-256 over RFC 8785 / JCS canonical JSON; prefixed `sha256:`; transient fields excluded; `compute_spec_hash.py` is the utility. | CONFIRMED in doc |
-| `docs/KFM_Components_Pass_10…` §C1-02 | JCS+SHA-256 recorded as `jcs:sha256:<hex>`; also allows URDNA2015+SHA-256 for graph-shaped content. | CONFIRMED in doc |
-| `docs/KFM_Components_Pass_10…` §C1-01 | Run-receipt envelope fields include `dataset_id`, `dataset_version`, `fetch_time`, `source_url`, `http_validators`, `spec_hash`, `run_id`, `orchestrator`, `transform_git_sha`, `artifacts[]`, `rights_spdx`, `attestations[]`. | CONFIRMED in doc |
-| `docs/doctrine/directory-rules.md` | `docs/adr/` is the canonical ADR home; `schemas/contracts/v1/...` is the canonical machine-schema home (per ADR-0001). | CONFIRMED in doc |
-| `docs/doctrine/directory-rules.md` | Schema-home authority is contested in some legacy paths; `policies/` vs `policy/` and `contracts/` vs `schemas/` remain NEEDS VERIFICATION. | CONFIRMED note |
-| Pass 11 §B.2.1 / §B.3.x | EvidenceBundle, run receipt, ReleaseManifest, and spatial-feature identifiers all reference `spec_hash` as the identity spine. | CONFIRMED in doc |
-| Pass 10 §C1-01 (Tensions) | "There is no single canonical KFM run-receipt JSON Schema referenced consistently; multiple sections show schemas that diverge in detail." | CONFIRMED — motivates this ADR |
-
-**Drift surfaced (this ADR resolves):**
-
-- Mixed prefix usage — `sha256:` vs `jcs:sha256:` — across the corpus.
-- Inconsistent `TRANSIENT_FIELDS` lists across recipes.
-- Run-receipt schema near-shapes with different field names.
-- Implicit assumption that `run_id` is opaque, with no orchestrator label or ordering guarantee.
-
-> [!NOTE]
-> Repo-state checks deferred: presence of `tools/compute_spec_hash.py`, `tools/validate_all.py`, `schemas/contracts/v1/common/spec_hash.schema.json`, and `schemas/contracts/v1/runtime/run_receipt.schema.json` are **NEEDS VERIFICATION** against a mounted repo. Their *proposed* homes are listed in §9.
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
-
----
-
-## 4. Identity-grammar diagram
-
-The diagram below shows where each identifier is **minted** and where it **flows**. Boxes labeled with `NEEDS VERIFICATION` indicate planned locations not yet checked against a mounted repo. OpenLineage UUID bridging is intentionally left outside the core identity flow because KFM `run_id` and OpenLineage `run.runId` are different identifier grammars (§2.2).
-
-```mermaid
-flowchart LR
-    subgraph EDGE["Source edge<br/>(connectors / watchers)"]
-        SRC[Upstream source]
-        RAW[/"data/raw/&lt;domain&gt;/&lt;source&gt;/&lt;run_id&gt;/"/]
-    end
-
-    subgraph IDENTITY["Identity grammar (this ADR)"]
-        CANON["canonicalize<br/>(RFC 8785 JCS)"]
-        HASH["SHA-256"]
-        SH["spec_hash<br/>jcs:sha256:&lt;hex&gt;"]
-        RID["run_id<br/>run:&lt;orchestrator&gt;:&lt;ULID&gt;"]
-    end
-
-    subgraph EVIDENCE["Evidence + receipts"]
-        EB["EvidenceBundle<br/>(contracts/evidence/)"]
-        RR["RunReceipt<br/>(data/receipts/...)"]
-    end
-
-    subgraph CATALOG["Catalog closure"]
-        STAC["STAC item<br/>kfm:spec_hash<br/>kfm:run_id<br/>kfm:run_receipt_url"]
-        DCAT["DCAT distribution<br/>dct:identifier = jcs:sha256:..."]
-        PROV["PROV-O activity<br/>prov:id = run_id"]
-    end
-
-    subgraph RELEASE["Release plane"]
-        RM["ReleaseManifest<br/>spec_hash · supersedes · rollback_target"]
-        ROLLB["rollback_card"]
-        CORR["correction_notice"]
-    end
-
-    SRC --> RAW --> CANON
-    RID -. propagates .-> RR
-    RID -. propagates .-> STAC
-    RID -. propagates .-> PROV
-    CANON --> HASH --> SH
-    SH --> EB --> RR
-    SH --> STAC
-    SH --> DCAT
-    SH --> RM
-    RM --> ROLLB
-    RM --> CORR
-
-    classDef proposed stroke-dasharray: 4 3,stroke:#888;
-    class CATALOG,RELEASE proposed;
-```
-
-> [!TIP]
-> The dashed groups (`CATALOG`, `RELEASE`) reflect proposed terminal homes under Directory Rules responsibility roots. The **responsibility roots** are doctrine; their **presence and exact files** in the current mounted repo are NEEDS VERIFICATION.
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
-
----
-
-## 5. Field-level reference
-
-### 5.1 `spec_hash` — formal grammar
-
-```ebnf
-spec_hash      = scheme ":" algo ":" hex64
-scheme         = "jcs" | "urdna2015"            ; mixing within an object-family release is FORBIDDEN
-algo           = "sha256"
-hex64          = 64 * HEXDIG-LOWER              ; lowercase only
-HEXDIG-LOWER   = %x30-39 / %x61-66              ; 0-9, a-f
-```
-
-Examples (illustrative, not from a real artifact):
-
-```text
-jcs:sha256:7d5a3f0c9b2e4a18c2d7f1b9a3e6c8f102d4b7e1a9c0d3e5f2a1b4c7d8e9f0a1
-urdna2015:sha256:1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90112233445566778899aabbcc
-```
-
-### 5.2 `run_id` — formal grammar
-
 ```ebnf
 run_id          = "run:" orchestrator ":" ulid
-orchestrator    = 1*32 (ALPHA / DIGIT / "-" / "_")
-ulid            = 26 ULID-CHAR                  ; Crockford base32, 26 chars
-ULID-CHAR       = %x30-39 / %x41-48 / %x4A-4B   ; 0-9 A-H J K
-                / %x4D-4E / %x50-54 / %x56-5A   ; M N P-T V-Z
+orchestrator    = 1*32 (LOWER / DIGIT / "-" / "_")
+ulid            = 26 ULID-CHAR
+LOWER           = %x61-7A
+DIGIT           = %x30-39
+ULID-CHAR       = %x30-39 / %x41-48 / %x4A-4B / %x4D-4E / %x50-54 / %x56-5A
 ```
 
-Example:
+Illustrative form:
 
 ```text
 run:gha:01HXYZ7G2C5N9PJ4WVABCDEFGH
 ```
 
-### 5.3 `TRANSIENT_FIELDS` minimum set
+Proposed invariants:
 
-| Field | Why excluded |
-|---|---|
-| `spec_hash` | The output cannot include itself. |
-| `signature`, `attestations` | Computed *after* hashing; signing wraps the hash. |
-| `run_id` | Activity-identity, not content-identity. |
-| `generated_at`, `updated_at`, `fetched_at`, `retrieved_at`, `timestamp` | Volatile wall-clock fields would break determinism. |
-| `nonce` | Anti-replay artifact, not content. |
-| `signer` | Identity of the signer; not the content. |
+- mint once at governed activity start;
+- preserve exactly across retries that remain the same activity;
+- mint a new value for a distinct attempt when the runtime contract treats that attempt as a new activity;
+- use a controlled, versioned orchestrator vocabulary;
+- never embed secrets, credentials, private content, sensitive exact locations, or mutable display names;
+- do not call `run_id` deterministic content identity;
+- do not derive it from `spec_hash`.
 
-Connector- or contract-specific extensions to `TRANSIENT_FIELDS` MUST be declared in the relevant `schemas/contracts/v1/<family>/` schema and documented in the family contract under `contracts/<family>/`.
+The current RunReceipt schema accepts `^[a-z][a-z0-9_:.-]*$`, and the current valid fixture uses `run1`. The ULID grammar remains proposed.
 
-### 5.4 Compute-utility contract
-
-The contract for `tools/validators/spec_hash/` (PROPOSED path; NEEDS VERIFICATION):
-
-| Flag | Behavior |
-|---|---|
-| `--ignore-field` | Strip a field before canonicalization (extends `TRANSIENT_FIELDS`). |
-| `--forbid-field` | Fail if the named field is present anywhere in the document tree. |
-| `--print-canonical` | Print the canonical bytes to stdout (no hash). For inspection and golden fixtures. |
-| `--scheme jcs\|urdna2015` | Select canonicalization route; default `jcs`. |
-| `--check` | Recompute the hash and assert equality with the value already present in the document; non-zero exit on mismatch. |
-| `--normalization-policy` | Optional preflight transform policy name, such as `nfc`, only when declared by the object-family schema. The utility MUST record that preflight policy in the run receipt. |
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+[Back to top](#top)
 
 ---
 
-## 6. Worked example
+<a id="hash-domain-and-exclusions"></a>
 
-> [!WARNING]
-> The fixture below is **illustrative**. It is not extracted from a real artifact and the hash value shown is **not a true JCS-SHA-256** of the visible bytes — treat it as a shape example, not a golden fixture.
+## Hash domain and exclusions
 
-<details>
-<summary><b>Click to expand: minimal flora EvidenceBundle with identity wiring</b></summary>
+A single global field-deletion list is not sufficient for every KFM object family. The accepted implementation should use a versioned **hash-domain profile** per object family.
 
-```json
-{
-  "schema_version": "1",
-  "object_type": "EvidenceBundle",
-  "bundle_id": "kfm://evidence/flora/usda-plants/SYAL3",
-  "domain": "flora",
-  "policy_label": "public",
-  "rights_status": "public-domain",
-  "sensitivity": "open",
-  "source_refs": [
-    "https://plants.usda.gov/home/plantProfile?symbol=SYAL3"
-  ],
-  "provenance": {
-    "source_uri": "https://plants.usda.gov/api/plants/SYAL3",
-    "snapshot_date": "2026-04-29",
-    "raw_checksum": "sha256:ab12...e3",
-    "normalized_checksum": "sha256:cd34...f7"
-  },
-  "notes": "Western snowberry; KS native; FACU wetland status.",
-  "spec_hash": "jcs:sha256:7d5a3f0c9b2e4a18c2d7f1b9a3e6c8f102d4b7e1a9c0d3e5f2a1b4c7d8e9f0a1"
-}
+### Minimum cross-family exclusions
+
+The following fields are normally outside content identity unless an accepted object-family contract explicitly establishes otherwise:
+
+```text
+spec_hash
+run_id
+generated_at
+updated_at
+fetched_at
+retrieved_at
+timestamp
+nonce
+signature
+signatures
+attestation
+attestations
+transparency_log
+storage_path
+storage_url
 ```
 
-And the accompanying run receipt:
+Rules:
 
-```json
-{
-  "schema_version": "1",
-  "object_type": "RunReceipt",
-  "run_id": "run:gha:01HXYZ7G2C5N9PJ4WVABCDEFGH",
-  "openlineage_run_uuid": "018f18ef-2d9d-7b15-9f55-2dc6b0f3b4d1",
-  "orchestrator": "gha",
-  "transform_git_sha": "f1e2d3c4b5a6978869a0b1c2d3e4f5a6b7c8d9e0",
-  "dataset_id": "kfm://dataset/flora/usda-plants",
-  "dataset_version": "2026-04-29",
-  "fetch_time": "2026-04-29T13:42:11Z",
-  "source_url": "https://plants.usda.gov/api/plants/SYAL3",
-  "http_validators": {
-    "etag": "\"a1b2c3\"",
-    "last_modified": "Wed, 29 Apr 2026 13:00:00 GMT"
-  },
-  "artifacts": [
-    {
-      "path": "data/processed/flora/usda-plants/SYAL3.parquet",
-      "digest": "sha256:0123...ef"
-    }
-  ],
-  "inputs_spec_hash": [
-    "jcs:sha256:bd09...c2"
-  ],
-  "rights_spdx": "CC0-1.0",
-  "attestations": [
-    { "type": "cosign", "bundle_digest": "sha256:9988...77" }
-  ],
-  "spec_hash": "jcs:sha256:3c8a92e4d710b6f5a1c0d2e9f48b7a3c5d6e0f1a2b3c4d5e6f708192a3b4c5d6"
-}
+- self-reference fields such as `spec_hash` must be excluded;
+- activity and transport metadata must not rotate content identity;
+- signatures and attestations wrap or reference the digest and must not be recursively included;
+- meaning-bearing timestamps must not be removed merely because their names resemble runtime timestamps;
+- field inclusion and exclusion must be declared by contract/schema profile, not inferred only from field names;
+- pre-canonicalization normalization must be explicit, versioned, receipted, and fixture-tested;
+- hash-domain profile changes require migration and compatibility review because they change identity.
+
+### Unicode and numbers
+
+The implementation must not silently normalize Unicode during hashing unless a versioned object-family profile requires that transform before JCS. Exact identifiers and large numeric values must be represented in a schema-safe way that preserves intended identity across runtimes. Cross-language golden vectors are required before enforcement graduation.
+
+[Back to top](#top)
+
+---
+
+<a id="identity-wiring"></a>
+
+## Identity wiring
+
+```mermaid
+flowchart LR
+    ACT["Governed activity starts"] --> RID["Mint run_id<br/>activity identity"]
+    INPUT["Meaning-bearing object"] --> DOMAIN["Apply declared hash-domain profile"]
+    DOMAIN --> CANON["Canonicalize<br/>candidate: RFC 8785 JCS"]
+    CANON --> HASH["SHA-256"]
+    HASH --> SH["spec_hash<br/>content identity"]
+
+    RID --> RECEIPT["RunReceipt"]
+    SH --> RECEIPT
+    RID --> OUTPUTS["Produced refs / validation refs"]
+    SH --> OUTPUTS
+
+    RECEIPT --> REVIEW["Policy · evidence · promotion · release review"]
+    REVIEW -->|allowed| RELEASE["Governed release or runtime response"]
+    REVIEW -->|denied / held| HOLD["DENY · ABSTAIN · HOLD · ERROR"]
+
+    classDef proposed stroke-dasharray: 5 4;
+    class RID,DOMAIN,CANON,HASH,SH proposed;
 ```
 
-Notes:
+The diagram describes the proposed separation, not current implementation maturity.
 
-- `run_id` appears in both objects but is in `TRANSIENT_FIELDS` so neither object's `spec_hash` depends on it.
-- `openlineage_run_uuid` is optional bridge metadata for OpenLineage-compatible events; it is not the KFM `run_id`.
-- `attestations[].bundle_digest` is excluded from the receipt's `spec_hash` because the signature wraps the receipt's canonical bytes.
-- `inputs_spec_hash` is **content-bound**: it appears in the canonicalized payload and **does** participate in the receipt's `spec_hash`.
+### Relationship rules
 
-</details>
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
-
----
-
-## 7. Consequences
-
-### 7.1 Positive
-
-- **Dedupe works.** Re-runs over identical content produce identical `spec_hash`, so storage and catalog writes can short-circuit cleanly.
-- **Lineage is stable.** `supersedes`, `rollback_target`, and `revoke_delta` chain by content-identity, not by path.
-- **Transparency-log inclusion is meaningful.** Attestations bind a signed `spec_hash`, not a mutable filename.
-- **Catalog closure becomes auditable.** STAC ↔ DCAT ↔ PROV joins can be machine-checked because every cross-reference resolves to the same `jcs:sha256:...` term.
-- **Conflict surface narrows.** One canonicalization scheme per object-family release; one prefix grammar; one orchestrator vocabulary.
-- **External lineage compatibility improves.** KFM can emit OpenLineage events without collapsing KFM `run_id` into OpenLineage UUID semantics.
-
-### 7.2 Costs / risks
-
-- **Migration cost.** Bare `sha256:` prefixes already exist in the corpus and likely in some fixtures or examples. They must be normalized (see §9).
-- **Determinism is fragile.** Any pipeline step that touches volatile fields without honoring `TRANSIENT_FIELDS` silently breaks identity. The validator must be wired into CI; otherwise the doctrine collapses (cf. Pass 11 §B.1.1).
-- **Number precision corner cases.** RFC 8785 builds on I-JSON constraints. Object-family schemas still need a documented convention for exact identifiers or large integers that many parsers cannot safely represent. Left as Open Question §12.
-- **URDNA2015 path costs.** Graph canonicalization is materially more expensive than JCS; using it indiscriminately would inflate CI time. Restrict to true JSON-LD-graph content.
-
-### 7.3 Effects on existing doctrine
-
-| Doctrine touched | Effect |
+| Relationship | Proposed rule |
 |---|---|
-| Cite-or-abstain | Unchanged; this ADR strengthens citation resolution by stabilizing the identifier being cited. |
-| Lifecycle invariant (RAW → … → PUBLISHED) | Unchanged; identity is preserved across phases. |
-| Trust membrane | Unchanged; the governed API can now expose `kfm:spec_hash` in `RuntimeResponseEnvelope` without ambiguity. |
-| Watcher-as-non-publisher | Strengthened; watchers emit `spec_hash` and `run_id` only, no canonical mutation. |
-| Schema-home rule (ADR-0001) | This ADR places `spec_hash.schema.json` and `run_receipt.schema.json` under `schemas/contracts/v1/...` as PROPOSED homes (§9). |
+| `run_id` → `spec_hash` | No derivation and no inclusion in the content hash domain |
+| one `run_id` → many `spec_hash` values | Allowed; one activity may produce multiple governed objects |
+| one `spec_hash` → many `run_id` values | Allowed; identical content may be produced or verified by multiple runs |
+| receipt identity | A RunReceipt may have its own content identity while carrying the activity `run_id` and produced/input hashes |
+| supersession and rollback | Content replacement should reference the prior governed content identity, not rely only on a mutable path |
+| catalog and provenance joins | Must use explicit namespaced fields and accepted mapping profiles; this ADR alone does not authorize a catalog shape |
+| OpenLineage bridge | KFM `run_id` must not be forced into an external UUID-only field; any bridge requires an explicit facet/schema and reciprocal reference |
+| AI activity | AIReceipt activity identity remains separate from upstream activity identity; parent/child relationship fields require paired schema and contract review |
 
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
-
----
-
-## 8. Alternatives considered
-
-<details>
-<summary><b>Click to expand: alternatives and why they were not chosen</b></summary>
-
-### 8.1 Bare `sha256:<hex>` only, no JCS marker
-
-- **Pro:** Shortest; matches generic OCI / Sigstore conventions.
-- **Con:** Loses the canonicalization-route signal. A reader cannot tell from the string whether the hash was taken over JCS-canonical bytes or developer-formatted JSON. The corpus already drifted between bare and prefixed forms because of this ambiguity.
-- **Verdict:** Rejected as the canonical form. Accepted only as a *read-side compatibility* form during the migration window in §9.
-
-### 8.2 URDNA2015 as the default for all objects
-
-- **Pro:** Handles graph merges cleanly; aligns with W3C JSON-LD canonicalization.
-- **Con:** Materially slower; overkill for tree-shaped objects; not all KFM objects are JSON-LD graphs.
-- **Verdict:** Rejected as default. Permitted with explicit `urdna2015:sha256:` prefix for genuine graph payloads only.
-
-### 8.3 Multihash-style multi-algorithm prefix
-
-- **Pro:** Future-proof against SHA-256 deprecation.
-- **Con:** Adds complexity now without solving a today-problem. SHA-256 deprecation, when it happens, will require a coordinated migration regardless.
-- **Verdict:** Deferred. A future ADR may extend the grammar; this one freezes SHA-256 as the only `algo`.
-
-### 8.4 Use OpenLineage `run.runId` directly as KFM `run_id`
-
-- **Pro:** Avoids a second identifier.
-- **Con:** OpenLineage `run.runId` is UUID-shaped, while KFM `run_id` deliberately carries orchestrator context and a ULID. Forcing UUIDs into KFM would lose useful KFM-local ordering and operator context; forcing KFM `run:<orchestrator>:<ULID>` into OpenLineage `run.runId` would violate OpenLineage expectations.
-- **Verdict:** Rejected. KFM `run_id` is the canonical KFM term. OpenLineage `run.runId` is carried as `openlineage_run_uuid` when emitted, while the KFM `run_id` is carried in a custom OpenLineage facet or equivalent extension field.
-
-### 8.5 Make `run_id` part of `spec_hash`
-
-- **Pro:** A single identifier covers both content and activity.
-- **Con:** Breaks dedupe — two identical runs at different times would produce different hashes. Collapses the content/activity distinction the system depends on.
-- **Verdict:** Rejected (anti-pattern, §13.1).
-
-</details>
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+[Back to top](#top)
 
 ---
 
-## 9. Migration plan
+<a id="current-repository-evidence"></a>
 
-Per Directory Rules doctrine, structural identity changes require an ADR plus a migration manifest. Authority status of each PROPOSED path below is NEEDS VERIFICATION against a mounted repo.
+## Current repository evidence
 
-### 9.1 Affected files / artifacts (PROPOSED)
-
-| Artifact | Proposed path | Status |
+| Surface | Inspected state | Safe conclusion |
 |---|---|---|
-| `spec_hash` JSON Schema | `schemas/contracts/v1/common/spec_hash.schema.json` | PROPOSED |
-| `run_id` JSON Schema | `schemas/contracts/v1/common/run_id.schema.json` | PROPOSED |
-| `RunReceipt` v1 schema | `schemas/contracts/v1/runtime/run_receipt.schema.json` | PROPOSED |
-| Identity meaning contract | `contracts/evidence/identity-grammar.md` | PROPOSED |
-| Canonicalization rules doc | `docs/standards/canonicalization.md` | PROPOSED |
-| Compute utility | `tools/validators/spec_hash/` (compute + check) | PROPOSED |
-| Validator wiring | `tests/contracts/identity/`, `tests/runtime_proof/` | PROPOSED |
-| Migration manifest | `migrations/schema/identity-grammar-v1/` | PROPOSED |
+| [`docs/adr/INDEX.md`](./INDEX.md) | Unique ADR-0013 row; source and effective status `proposed` | ADR identity is confirmed; acceptance is not |
+| [`docs/architecture/identity-and-spec-hash.md`](../architecture/identity-and-spec-hash.md) | Draft architecture proposes JCS + SHA-256 and `jcs:sha256:<hex>` | Strong design evidence, not executable enforcement |
+| [`docs/standards/canonicalization.md`](../standards/canonicalization.md) | Draft standard proposes `jcs:` and `rdfc:` profiles | Standard is draft and conflicts with some other proposed names |
+| [`contracts/common/spec_hash.md`](../../contracts/common/spec_hash.md) | Draft semantic contract for object-wrapped bare `sha256:<hex>` | Current contract does not encode JCS in the value |
+| [`schemas/contracts/v1/common/spec_hash.schema.json`](../../schemas/contracts/v1/common/spec_hash.schema.json) | Proposed object schema requiring `value` and bare `sha256:<hex>` | Current machine shape conflicts with ADR candidate |
+| [`contracts/runtime/run_receipt.md`](../../contracts/runtime/run_receipt.md) | Draft receipt contract documents broad run ID and bare hash | Current semantics are not ULID/JCS-conformant |
+| [`schemas/contracts/v1/runtime/run_receipt.schema.json`](../../schemas/contracts/v1/runtime/run_receipt.schema.json) | Proposed closed object; broad run ID regex; bare hash string | Executable shape differs from this ADR candidate |
+| [`fixtures/contracts/v1/runtime/run_receipt/valid/valid_1.json`](../../fixtures/contracts/v1/runtime/run_receipt/valid/valid_1.json) | Valid fixture uses `run1` and bare `sha256:` | Fixture proves current schema behavior only |
+| [`tools/validators/validate_run_receipt.py`](../../tools/validators/validate_run_receipt.py) | Executes generic JSON Schema runner | Shape validation exists; identity computation does not |
+| [`tools/validators/validate_spec_hash.py`](../../tools/validators/validate_spec_hash.py) | Raises `NotImplementedError` | Dedicated hash validation is not implemented |
+| [`packages/hashing/README.md`](../../packages/hashing/README.md) | Documents package scaffold; implementation modules absent at inspected paths | No verified reusable hashing/run-ID library exists |
+| [`schemas/evidence/spec_normalization.md`](../../schemas/evidence/spec_normalization.md) | Compatibility pointer records the hash grammar conflict | Conflict is already recognized and must remain visible |
 
-### 9.2 Phased rollout
-
-1. **Phase 0 — Land doctrine.** This ADR + `docs/standards/canonicalization.md` + `contracts/evidence/identity-grammar.md`.
-2. **Phase 1 — Land schemas.** `spec_hash.schema.json`, `run_id.schema.json`, `run_receipt.schema.json` under `schemas/contracts/v1/...` per ADR-0001.
-3. **Phase 2 — Land validators.** `tools/validators/spec_hash/` enforcing `--check` in CI; conftest / fixture set for known-good and known-bad.
-4. **Phase 3 — Migrate writers.** Connectors, pipelines, tile builders, catalog writers begin emitting `jcs:sha256:...` form.
-5. **Phase 4 — Migrate readers.** Validators reject bare `sha256:` for new writes; readers continue to accept bare form for one minor version.
-6. **Phase 5 — Close the compatibility window.** Remove bare-prefix read support; emit drift entries for any straggler.
-
-### 9.3 Rollback target
-
-If determinism regressions are found in Phase 2 or later, revert the compute utility's default scheme to a permissive read-mode and re-mark the ADR `proposed` (not `accepted`) until the regression is closed. No data needs to be re-emitted; receipts and bundles remain valid because `spec_hash` is content-addressed.
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+[Back to top](#top)
 
 ---
 
-## 10. Validation
+<a id="current-repository-conflicts"></a>
 
-| Check | Where it lives (PROPOSED) | What it asserts |
+## Current repository conflicts
+
+| Conflict | Current evidence | Required resolution |
 |---|---|---|
-| **Hash-stability test** | `tests/contracts/identity/test_spec_hash_stability.py` | Same input → same `spec_hash` across two consecutive runs and across two machines. |
-| **Golden canonical-byte fixture** | `tests/contracts/identity/golden/` | `--print-canonical` bytes match fixtures exactly before hashing. |
-| **`TRANSIENT_FIELDS` exclusion test** | `tests/contracts/identity/test_transient_exclusion.py` | Mutating any field in `TRANSIENT_FIELDS` does not change `spec_hash`. |
-| **Forbid-field test** | `tests/contracts/identity/test_forbidden_fields.py` | A document containing a `--forbid-field` value fails validation. |
-| **Unicode preflight policy test** | `tests/contracts/identity/test_unicode_policy.py` | NFC or other normalization is applied only when declared by the object-family schema and receipt. |
-| **Large-number guard test** | `tests/contracts/identity/test_number_policy.py` | Exact identifiers/counters outside the declared safe numeric policy are rejected or string-encoded by schema. |
-| **Run-receipt schema validation** | `tests/contracts/runtime/test_run_receipt_schema.py` | Receipts validate against `schemas/contracts/v1/runtime/run_receipt.schema.json`. |
-| **OpenLineage bridge validation** | `tests/contracts/runtime/test_openlineage_bridge.py` | `openlineage_run_uuid` is UUID-shaped when present, and KFM `run_id` remains `run:<orchestrator>:<ULID>`. |
-| **Catalog cross-reference** | `tests/runtime_proof/test_catalog_closure.py` | STAC `kfm:spec_hash` matches DCAT `dct:identifier` and PROV entity hash for the same artifact. |
-| **CI workflow** | `.github/workflows/identity-validate.yml` | Runs all of the above on every PR that touches identity schemas, runtime receipts, or `tools/validators/spec_hash/`. |
+| **Hash prefix** | ADR/architecture/standard propose `jcs:sha256:`; schemas/contracts require `sha256:` | Accepted identifier/versioning decision plus coordinated migration |
+| **Envelope shape** | Common schema wraps `value`; RunReceipt schema uses a scalar string | Decide whether `SpecHash` is a value object, scalar, or both through explicit references/adapters |
+| **Run-ID grammar** | ADR proposes orchestrator + ULID; schema accepts a broad string; fixture uses `run1` | Versioned run-ID schema, vocabulary, fixtures, parser, and producer migration |
+| **RDF profile token** | `urdna2015:` and `rdfc:` both appear in proposed docs | Accept one canonical token and preserve compatibility lineage |
+| **Hash-domain rules** | Prose lists exclusions; no verified executable per-family profile was found | Machine-readable profile plus golden vectors and validators |
+| **Implementation ownership** | `packages/hashing/` and `tools/spec_hash/` are both discussed | Accepted package/tool delegation and one implementation authority |
+| **Validator maturity** | RunReceipt validator checks shape; spec-hash validator is a stub | Real computation/check mode, deterministic errors, tests, and CI |
+| **Meaning of `spec_hash`** | Some docs describe broad object content identity; common contract narrows it to a specification representation | Clarify object-family semantics and field names without overloading one term |
+| **Activity semantics** | Some prose calls `run_id` deterministic; proposed ULID is unique/time-ordered, not content-deterministic | Use precise terminology: unique activity identity, stable within one activity |
+| **External lineage mapping** | OpenLineage bridge is described but no accepted facet/schema is established | Companion contract/schema and round-trip tests |
 
-> [!NOTE]
-> Test homes follow the Directory Rules `tests/` responsibility root; CI workflow placement follows the `.github/` responsibility root. Presence of these files in the current repo is **NEEDS VERIFICATION**.
+These conflicts are acceptance blockers. Documentation must not normalize them into a false single current state.
 
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
-
----
-
-## 11. Rollback
-
-This ADR is **content-addressed by design**, so rollback is asymmetric:
-
-- **Doctrine rollback.** Mark the ADR `superseded` and forward-link to the replacement. Superseded ADRs MUST be retained with a forward link to the replacement ADR.
-- **Schema rollback.** Revert the migration manifest under `migrations/schema/identity-grammar-v1/`. Old `spec_hash` values remain valid since the JCS-SHA-256 procedure is unchanged; only the **string form** is affected.
-- **Data rollback.** None required. Receipts and bundles emitted under this ADR remain verifiable against the canonicalization procedure they declare in their prefix.
-- **Caveat.** A rollback that re-permits `sha256:` (bare) as canonical MUST add a drift entry to `docs/registers/DRIFT_REGISTER.md` under the Directory Rules drift-entry discipline.
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+[Back to top](#top)
 
 ---
 
-## 12. Open questions
+<a id="authority-and-publication-boundary"></a>
 
-These are explicitly **not resolved** by this ADR and SHOULD be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+## Authority and publication boundary
 
-- **Large-number / exact-identifier policy.** RFC 8785 builds on I-JSON constraints, but KFM still needs an explicit object-family rule for exact identifiers, counters, and large integers that are unsafe in common JSON parsers. **PROPOSED:** string-encode exact identifiers and reject unsafe raw numeric forms unless a schema declares a verified exception. NEEDS VERIFICATION.
-- **Unicode normalization policy.** This ADR clarifies that JCS does not silently normalize strings during hashing. KFM still needs a registry of object-family preflight normalization policies, if any. NEEDS VERIFICATION.
-- **Orchestrator vocabulary.** The controlled list (`gha`, `airflow`, `prefect`, `local`, `manual`, …) belongs in `control_plane/`. NEEDS AUTHOR.
-- **OpenLineage facet schema.** The exact custom facet name and JSON shape used to carry KFM `run_id` inside OpenLineage events needs a small companion schema. NEEDS VERIFICATION.
-- **AI receipts.** The relationship between `AIReceipt.run_id` and the upstream pipeline `run_id` that fed the AI step. PROPOSED: AI receipts get their own `run_id` and reference the upstream `run_id` via an explicit `parent_run_id` field. NEEDS VERIFICATION.
-- **Tile metadata block.** Whether PMTiles metadata uses `kfm:spec_hash` or `spec_hash` (bare) per PMTiles v3 metadata conventions. EXTERNAL check NEEDS VERIFICATION.
-- **ADR number 0013 itself.** ADRs 0002–0012 are not enumerated in the attached doctrine; the only ADR explicitly referenced is ADR-0001. NEEDS VERIFICATION against a mounted repo before this ADR is filed at 0013.
-- **Mixing canonicalizers per object-family.** This ADR forbids mixing `jcs:` and `urdna2015:` within a release. The cross-release case (one release JCS, next release URDNA2015) needs an explicit policy.
+This ADR may define identity meaning only after acceptance. It never becomes:
 
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+- a source-admission decision;
+- a schema-validity result;
+- a canonicalization implementation;
+- a receipt or proof;
+- an EvidenceBundle;
+- a PolicyDecision or PromotionDecision;
+- a signature, attestation, or transparency-log record;
+- a ReleaseManifest, RollbackCard, or correction notice;
+- permission for public clients to read internal stores;
+- proof that an object is true, current, safe, admissible, reviewed, released, or public.
 
----
+`contracts/` owns object meaning, `schemas/` owns machine shape, `packages/` and `tools/` own reviewed implementation surfaces, `fixtures/` and `tests/` own executable examples and checks, `policy/` owns admissibility, `data/receipts/` owns receipt records, and `release/` owns release decisions.
 
-## 13. Anti-patterns
-
-### 13.1 Treating `run_id` as content-identity
-
-**Symptom.** Re-running the same pipeline against the same inputs produces a different "identity" because someone folded `run_id` into the hash payload.
-
-**Fix.** `run_id` is in `TRANSIENT_FIELDS`. Hash the content, not the activity.
-
-### 13.2 Mixing prefix forms in writes
-
-**Symptom.** Some writers emit `sha256:...`, others emit `jcs:sha256:...`, validators silently treat them as the same identifier.
-
-**Fix.** Validator MUST normalize on read and reject bare `sha256:` on write after Phase 4. Open a drift entry if encountered.
-
-### 13.3 Path-based "rollback"
-
-**Symptom.** A rollback is performed by moving files between directories without producing a `rollback_card` or referencing prior `spec_hash`.
-
-**Fix.** Rollback is a **governed state transition**, not a file move. The `rollback_card` MUST cite the `spec_hash` it is rolling back to.
-
-### 13.4 Silent re-canonicalization
-
-**Symptom.** A pipeline step normalizes JSON "for readability" before another step computes `spec_hash`, producing different bytes than the canonicalization contract expects.
-
-**Fix.** Canonicalization is performed **once**, immediately before hashing. Intermediate "pretty-print" steps are forbidden between the canonicalization step and the hash step.
-
-### 13.5 Forcing KFM `run_id` into OpenLineage `run.runId`
-
-**Symptom.** An OpenLineage emitter writes `run:gha:<ULID>` into `run.runId`, or a KFM receipt replaces `run_id` with an OpenLineage UUID.
-
-**Fix.** Keep both identifiers. OpenLineage `run.runId` is stored as `openlineage_run_uuid`; KFM `run_id` is carried in the RunReceipt and, when OpenLineage is emitted, in a custom KFM run facet.
-
-### 13.6 Silent Unicode normalization
-
-**Symptom.** A writer normalizes strings during hashing without recording the transform, causing two visually similar but byte-different payloads to collapse silently.
-
-**Fix.** Unicode normalization is a schema-declared preflight transform, not a hidden JCS behavior. Record the policy and validate with golden fixtures.
-
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+[Back to top](#top)
 
 ---
 
-## 14. Glossary
+<a id="current-enforcement-maturity"></a>
 
-| Term | Short definition |
+## Current enforcement maturity
+
+| Capability | Current posture | Evidence |
+|---|---|---|
+| ADR identity and proposed status | **CONFIRMED** | Canonical ADR index |
+| Bare `sha256:` shape validation | **PARTIAL / CONFIRMED** | Proposed schemas and generic fixture runner |
+| JCS canonical-byte production | **NOT VERIFIED** | No reviewed implementation found in inspected package/tool evidence |
+| `jcs:sha256:` parser/formatter | **NOT VERIFIED** | Current schemas reject that form |
+| Hash-domain projection | **NOT VERIFIED** | Prose only in inspected evidence |
+| `run:<orchestrator>:<ULID>` generation | **NOT VERIFIED** | Schema and fixture do not require it |
+| Cross-runtime golden vectors | **NOT VERIFIED** | No inspected proof |
+| Replay verification | **NOT VERIFIED** | Planned documentation only |
+| Producer/consumer migration | **NOT STARTED / NEEDS VERIFICATION** | Conflicting shapes remain |
+| CI enforcement | **PARTIAL** | Generic schema validation exists; digest computation and parity are not established |
+| Operational/public reliance | **UNKNOWN** | No deployment or runtime evidence reviewed |
+
+[Back to top](#top)
+
+---
+
+<a id="validation-and-enforcement-target"></a>
+
+## Validation and enforcement target
+
+A conforming implementation should provide deterministic, machine-readable checks for:
+
+| Check | Required assertion |
 |---|---|
-| **`spec_hash`** | Deterministic content identity, `jcs:sha256:<hex>` (or `urdna2015:sha256:<hex>` for JSON-LD graphs). |
-| **`run_id`** | Deterministic KFM activity identity, `run:<orchestrator>:<ULID>`. |
-| **`openlineage_run_uuid`** | Optional UUID bridge for OpenLineage `run.runId`; not a replacement for KFM `run_id`. |
-| **JCS** | JSON Canonicalization Scheme — RFC 8785. |
-| **URDNA2015** | RDF Dataset Canonicalization Algorithm 2015 (W3C). |
-| **`TRANSIENT_FIELDS`** | The minimum exclusion set used by canonicalization prior to hashing (§5.3). |
-| **EvidenceBundle** | Resolved support package for claims; carries its own `spec_hash`. Meaning lives in `contracts/evidence/`. |
-| **RunReceipt** | Tamper-evident record of one governed activity; carries `run_id`, `spec_hash`, `inputs_spec_hash`. |
-| **ReleaseManifest** | Release-decision artifact; references layer-level `spec_hash` and `rollback_target`. |
-| **`kfm:spec_hash`** | Namespaced property name when `spec_hash` is embedded in foreign envelopes (STAC, PMTiles metadata, DCAT). |
-| **Normalization policy** | Optional object-family preflight transform, such as NFC, declared before JCS canonicalization and recorded in receipts. |
+| **Grammar parsing** | Accept only the versioned canonical forms for new writes; reject ambiguous or malformed values |
+| **Canonical-byte vector** | The same input/profile yields byte-identical canonical output across supported runtimes |
+| **Hash vector** | Canonical bytes produce the expected SHA-256 digest |
+| **Transient mutation** | Changing excluded activity/transport fields does not change content identity |
+| **Meaning-bearing mutation** | Changing an included field changes content identity |
+| **Duplicate-key rejection** | Ambiguous JSON objects fail closed before canonicalization |
+| **Unicode policy** | No silent normalization; declared preflight transforms are tested |
+| **Number policy** | Exact values round-trip identically across supported implementations |
+| **Run-ID grammar** | Canonical producer output matches the accepted orchestrator vocabulary and ULID policy |
+| **Run-ID uniqueness** | Distinct activities do not reuse identifiers under the accepted runtime contract |
+| **Separation** | `run_id` never enters the `spec_hash` hash domain |
+| **Receipt binding** | Receipt carries the activity identity and exact input/output content identities without conflation |
+| **Compatibility** | Legacy values are accepted only in the explicitly versioned read window and cannot be emitted as canonical new writes |
+| **Round-trip** | Parse → format preserves the exact canonical identifier |
+| **Negative fixtures** | Wrong prefix, length, case, alphabet, wrapper, profile, and field inclusion fail with stable reasons |
+| **CI path coverage** | Changes to identity contracts, schemas, canonicalizers, validators, fixtures, or consumers trigger the identity suite |
 
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+Passing these checks proves conformance to the accepted identity profile only. It does not prove evidence or release closure.
 
----
-
-<a id="13-related-docs"></a>
-
-## 15. Related docs
-
-> Links are repo-relative and reflect canonical homes per `docs/doctrine/directory-rules.md`. Presence in the current mounted repo is NEEDS VERIFICATION; mark broken links in `docs/registers/DRIFT_REGISTER.md`.
-
-- [`docs/adr/ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) — schema-home rule under which §9 paths are placed.
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement authority, §2.4 ADR-required changes, §6/§7 canonical roots.
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain; identity-bound citations.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — promotion as governed state transition.
-- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — where meaning, shape, and admissibility live.
-- `contracts/evidence/identity-grammar.md` *(PROPOSED, this ADR introduces)* — semantic meaning of `spec_hash` and `run_id`.
-- `docs/standards/canonicalization.md` *(PROPOSED, this ADR introduces)* — canonicalization rules.
-- `schemas/contracts/v1/common/spec_hash.schema.json` *(PROPOSED)*
-- `schemas/contracts/v1/common/run_id.schema.json` *(PROPOSED)*
-- `schemas/contracts/v1/runtime/run_receipt.schema.json` *(PROPOSED)*
-- `docs/registers/VERIFICATION_BACKLOG.md` *(PROPOSED / NEEDS VERIFICATION)* — tracks unresolved identity-grammar questions
+[Back to top](#top)
 
 ---
 
-**Last reviewed:** 2026-05-15  ·  **Doc version:** v1  ·  **Status:** `proposed`
+<a id="migration-and-acceptance-plan"></a>
 
-[Back to top](#adr-0013--spec_hash-and-run_id-identity-grammar)
+## Migration and acceptance plan
+
+### Phase 0 — decision closure
+
+- assign accountable owners and required reviewers;
+- decide the canonical JSON identifier, wrapper/scalar representation, and versioning model;
+- decide the RDF canonicalization token or explicitly keep RDF profile work out of v1;
+- decide the accepted RunReceipt `run_id` grammar and orchestrator vocabulary;
+- decide implementation ownership between `packages/hashing/`, `tools/spec_hash/`, and validators;
+- document compatibility and rollback rules.
+
+### Phase 1 — contract and schema alignment
+
+Update as one reviewed compatibility batch:
+
+- `contracts/common/spec_hash.md`;
+- `schemas/contracts/v1/common/spec_hash.schema.json`;
+- `contracts/runtime/run_receipt.md`;
+- `schemas/contracts/v1/runtime/run_receipt.schema.json`;
+- evidence/receipt/release schemas that reference either term;
+- object-family hash-domain profiles;
+- exact `$id`, `$ref`, and compatibility adapters.
+
+No producer should emit the new grammar before the paired schema and compatibility decision exist.
+
+### Phase 2 — implementation and fixtures
+
+- implement canonical byte generation and digest computation in the accepted package;
+- implement parse/format/check operations;
+- implement Run-ID generation under the accepted vocabulary;
+- replace the `NotImplementedError` validator;
+- add positive, negative, golden-byte, cross-runtime, and replay fixtures;
+- prove no network, secret, ambient filesystem, or nondeterministic dependency is required.
+
+### Phase 3 — consumers and receipts
+
+- inventory all producers and consumers of `spec_hash` and `run_id`;
+- migrate writers first behind explicit version/profile controls;
+- support legacy read forms only for a documented window;
+- preserve old identifiers and receipts as immutable lineage;
+- prevent silent translation between incompatible profiles;
+- record migration receipts and drift entries.
+
+### Phase 4 — CI and enforcement graduation
+
+- wire identity checks to all affected paths;
+- require cross-runtime parity and negative fixtures;
+- require exact changed-path and compatibility-budget review;
+- prove rollback against a frozen legacy fixture set;
+- remove legacy write support only after the read window and consumer inventory close.
+
+### Acceptance gates
+
+ADR acceptance should remain blocked until reviewers can answer yes to all applicable gates:
+
+- [ ] canonical JSON grammar selected;
+- [ ] wrapper/scalar representation selected;
+- [ ] RDF profile decision closed or explicitly deferred;
+- [ ] Run-ID grammar and retry semantics selected;
+- [ ] orchestrator vocabulary owner and location selected;
+- [ ] hash-domain profile model selected;
+- [ ] implementation authority selected;
+- [ ] security and dependency review complete;
+- [ ] contract/schema/fixture migration plan complete;
+- [ ] producer and consumer inventory complete;
+- [ ] compatibility window and rollback tested;
+- [ ] no current machine surface is falsely described as already conforming.
+
+[Back to top](#top)
+
+---
+
+<a id="consequences"></a>
+
+## Consequences
+
+### Positive
+
+- stable content equality independent of path, formatting, or activity;
+- auditable separation between what an object is and which run handled it;
+- reproducible receipt, catalog, correction, rollback, and replay joins;
+- explicit canonicalization profile prevents silent algorithm drift;
+- one migration target for schemas, contracts, tools, packages, and consumers;
+- clearer evidence boundaries: integrity does not masquerade as truth or release.
+
+### Costs and constraints
+
+- coordinated migration across many object families;
+- legacy identifiers and receipts require durable compatibility handling;
+- canonicalization libraries and numeric/Unicode behavior need supply-chain and parity review;
+- Run-ID retry semantics must be consistent across local, CI, workflow, and service runtimes;
+- prefix or hash-domain changes rotate identity and therefore require explicit lineage;
+- RDF canonicalization may remain deferred until a concrete governed consumer justifies its cost.
+
+[Back to top](#top)
+
+---
+
+<a id="alternatives-considered"></a>
+
+## Alternatives considered
+
+### Keep bare `sha256:<hex>` permanently
+
+**Benefit:** matches the current proposed schemas and minimizes immediate migration.
+
+**Cost:** the identifier does not reveal which canonicalization profile produced the bytes. Equality can be misread across JCS, developer-formatted JSON, raw files, or other profiles.
+
+**Disposition:** viable only if canonicalization profile is carried in a mandatory paired field/value object and enforced everywhere. The current repository does not yet prove that arrangement.
+
+### Include `run_id` in the content hash
+
+**Benefit:** one identifier appears to bind content and execution.
+
+**Cost:** identical content receives a different identity for every activity, breaking deduplication, idempotency, and replay comparisons.
+
+**Disposition:** rejected.
+
+### Use an opaque UUID for all KFM activities
+
+**Benefit:** broad interoperability and simple schema validation.
+
+**Cost:** loses the proposed KFM-local orchestrator hint and time-ordering property.
+
+**Disposition:** remains an alternative until the Run-ID grammar is accepted; current schema is broad enough to permit UUID-like forms.
+
+### Use content hash as the run identifier
+
+**Benefit:** deterministic and simple.
+
+**Cost:** repeated executions over the same content become indistinguishable; retries and side effects collapse.
+
+**Disposition:** rejected.
+
+### Permit JCS and RDF canonicalization under one untagged prefix
+
+**Benefit:** shorter identifiers and fewer schema variants.
+
+**Cost:** consumers cannot know which canonical bytes to recompute; silent verification failure becomes likely.
+
+**Disposition:** rejected.
+
+### Implement independently in every connector or pipeline
+
+**Benefit:** fast local progress.
+
+**Cost:** canonicalization, exclusions, Unicode, numbers, errors, and prefixes drift across runtimes.
+
+**Disposition:** rejected; use one reviewed implementation authority with thin adapters.
+
+[Back to top](#top)
+
+---
+
+<a id="risk-ledger"></a>
+
+## Risk ledger
+
+| Risk | Current posture | Required control |
+|---|---|---|
+| False claim that ADR grammar is implemented | Present in older prose | Keep proposed/current-state split explicit |
+| Prefix migration breaks consumers | OPEN | Inventory, versioned adapters, read window, fixtures |
+| Wrapper/scalar mismatch | OPEN | One accepted schema model and explicit compatibility layer |
+| `run_id` reuse or retry ambiguity | OPEN | Runtime contract and uniqueness tests |
+| Volatile field enters hash domain | OPEN | Per-family profiles and mutation tests |
+| Meaning-bearing field excluded | OPEN | Contract review and negative fixtures |
+| Unicode/number divergence | OPEN | Cross-runtime golden vectors |
+| Silent profile conversion | OPEN | Reject-by-default parser and explicit migration receipts |
+| Hash treated as proof of truth | CONTINUOUS | Contract/policy/release boundary callouts and tests |
+| Package/tool duplicate authority | OPEN | Accepted ownership and one implementation |
+| Unreviewed crypto dependency | OPEN | Security and supply-chain approval |
+| Public or sensitive data inferred from identifiers | OPEN | Identifier privacy review and no-sensitive-content rule |
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-and-supersession"></a>
+
+## Rollback and supersession
+
+### Documentation rollback
+
+Before merge, close the draft pull request. After merge, revert the documentation commit through a reviewable pull request. Do not rewrite shared history.
+
+The prior file is recoverable from blob:
+
+```text
+528ff0db1db14af43fd3c2867fd9af316c85910e
+```
+
+### Decision supersession
+
+If the identity grammar changes after acceptance:
+
+- retain this ADR;
+- mark it `superseded`;
+- forward-link to the replacement ADR;
+- update [`INDEX.md`](./INDEX.md) in the same reviewed change;
+- define dual-read/write behavior and migration receipts;
+- preserve old identifiers and canonicalization profiles for verification;
+- never rewrite historical receipts merely to match the new grammar.
+
+### Implementation rollback
+
+A migration rollback must restore the prior producer and consumer behavior together. It must not emit new identifiers under an old prefix while computing bytes under a new profile, or silently relabel existing digests. Any rollback that reopens a compatibility window must record the scope, reason, affected consumers, and closure conditions.
+
+[Back to top](#top)
+
+---
+
+<a id="verification-checklist"></a>
+
+## Verification checklist
+
+### Documentation
+
+- [x] exact ADR ID and path verified in the canonical index;
+- [x] source and effective status remain `proposed`;
+- [x] prior unmounted-repository disclaimers replaced with commit-pinned evidence;
+- [x] current schemas, contracts, fixtures, validators, and package maturity described without promotion;
+- [x] hash and Run-ID conflicts remain explicit;
+- [x] `run_id` described as unique activity identity, not deterministic content identity;
+- [x] no schema, contract, implementation, fixture, policy, receipt, release, or publication behavior changed.
+
+### Before acceptance
+
+- [ ] owners and reviewers assigned;
+- [ ] canonical grammar and representation approved;
+- [ ] RDF token conflict closed or deferred;
+- [ ] Run-ID retry semantics and vocabulary approved;
+- [ ] hash-domain profile model approved;
+- [ ] implementation authority approved;
+- [ ] migration, compatibility, security, and rollback plans reviewed;
+- [ ] paired machine changes prepared and validated.
+
+### Before enforcement graduation
+
+- [ ] implementation no longer scaffold-only;
+- [ ] dedicated spec-hash validator no longer raises `NotImplementedError`;
+- [ ] golden vectors pass across supported runtimes;
+- [ ] schemas and fixtures require the accepted grammar;
+- [ ] all known producers and consumers migrated;
+- [ ] CI covers affected identity paths;
+- [ ] rollback and legacy read compatibility tested;
+- [ ] operational receipts prove the accepted profile is used;
+- [ ] release/public surfaces remain governed by their own decisions.
+
+[Back to top](#top)
+
+---
+
+<a id="references"></a>
+
+## References
+
+### Governing and decision records
+
+- [`docs/adr/README.md`](./README.md)
+- [`docs/adr/INDEX.md`](./INDEX.md)
+- [`ADR-0001 — Schema Home`](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
+- [`ADR-0002 — Contracts vs Schemas Split`](./ADR-0002-contracts-vs-schemas-split.md)
+- [`ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md)
+- [`ADR-0018 — Promotion Gate Sequence`](./ADR-0018-promotion-gate-sequence.md)
+- [`ADR-0022 — Catalog Matrix`](./ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md)
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md)
+
+### Identity, contracts, and machine shapes
+
+- [`docs/architecture/identity-and-spec-hash.md`](../architecture/identity-and-spec-hash.md)
+- [`docs/standards/canonicalization.md`](../standards/canonicalization.md)
+- [`contracts/common/spec_hash.md`](../../contracts/common/spec_hash.md)
+- [`schemas/contracts/v1/common/spec_hash.schema.json`](../../schemas/contracts/v1/common/spec_hash.schema.json)
+- [`contracts/runtime/run_receipt.md`](../../contracts/runtime/run_receipt.md)
+- [`schemas/contracts/v1/runtime/run_receipt.schema.json`](../../schemas/contracts/v1/runtime/run_receipt.schema.json)
+- [`schemas/contracts/v1/evidence/spec_normalization.md`](../../schemas/contracts/v1/evidence/spec_normalization.md)
+- [`schemas/evidence/spec_normalization.md`](../../schemas/evidence/spec_normalization.md)
+
+### Implementation and validation evidence
+
+- [`packages/hashing/README.md`](../../packages/hashing/README.md)
+- [`tools/validators/validate_spec_hash.py`](../../tools/validators/validate_spec_hash.py)
+- [`tools/validators/validate_run_receipt.py`](../../tools/validators/validate_run_receipt.py)
+- [`fixtures/contracts/v1/common/spec_hash/`](../../fixtures/contracts/v1/common/spec_hash/)
+- [`fixtures/contracts/v1/runtime/run_receipt/`](../../fixtures/contracts/v1/runtime/run_receipt/)
+
+---
+
+**Last reviewed:** 2026-07-23 · **Doc version:** v1.1 · **Source metadata:** `proposed` · **Effective decision status:** `proposed`
+
+[Back to top](#top)
