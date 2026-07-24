@@ -1,781 +1,961 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr/0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation
-title: ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation
-type: standard
-version: v1.1
+title: "ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation"
+type: adr
+adr_id: ADR-0011
+version: v1.2
 status: proposed
-owners: TODO(owner): confirm architecture stewards, governance stewards, release stewards
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — receipt and proof steward"
+  - "NEEDS VERIFICATION — catalog steward"
+  - "NEEDS VERIFICATION — release and rollback steward"
+  - "NEEDS VERIFICATION — data lifecycle steward"
+  - "NEEDS VERIFICATION — governed API and public-surface maintainer"
+owner_status: "CODEOWNERS provides repository review routing, but accepted stewardship, required-review rules, decision quorum, and independent release approval were not verified"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Data lifecycle steward
+  - Receipt and proof steward
+  - Catalog steward
+  - Release and rollback steward
+  - Contracts and schemas stewards
+  - Policy and validation stewards
+  - Governed API and public-surface maintainers
 created: 2026-05-11
-updated: 2026-05-15
+updated: 2026-07-23
 policy_label: public
-related: [docs/adr/ADR-0001-spec-normalization.md, docs/adr/ADR-0002-finite-decision-outcomes.md, docs/adr/ADR-0003-watcher-non-publisher-invariant.md, docs/adr/ADR-0004-stac-profile.md, docs/adr/ADR-0005-release-manifest-envelope.md, directory-rules.md, schemas/contracts/v1/evidence/, schemas/contracts/v1/release/, data/receipts/README.md, data/proofs/README.md, data/catalog/README.md, release/README.md]
-tags: [kfm, adr, governance, trust-membrane, lifecycle, directory-rules]
-notes: [ADR number 0011 is PROPOSED; verify against the current docs/adr index before acceptance., This ADR resolves the Directory Rules open question about release-level data/manifests vs release/manifests once accepted., All validator/test paths remain PROPOSED until mounted-repo inspection confirms conventions.]
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 1e1379bf37c447b4fdf8a34f584d939f47bc1f65
+  target_prior_blob: 158ad6d31946d7d32537d5278ec6d2828ec880b3
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  receipts_readme_blob: 15f2608cfe3c692da2fdb8082b6f9d90f2a8bb9d
+  proofs_readme_blob: 603dd71c5e0a4bd82e0228848514fd62d39b23c0
+  catalog_readme_blob: 9cf67c4ce5308b9088466b023a244107e3863a48
+  published_readme_blob: 585abdf7953bc270a15bcf80b4dd8d6af93e70ac
+  release_readme_blob: 0752610b1df6d11143158f6f162f65ecd650e6a6
+  release_manifest_singular_readme_blob: 6014cfc0f8394a44167f4226975b74f94f3b2a03
+  release_manifests_plural_readme_blob: c699a527ff11bebad6a874ed1a37aa3a8213b86c
+  artifacts_readme_blob: 7b2acc0c296daadb430370cdc803b487933487ae
+  drift_register_blob: 5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0
+  catalog_matrix_contract_blob: c67923beb505aa39e7c0c768c16e75a00826ff31
+  catalog_matrix_schema_blob: 75a927376066226d8a0f89a630d7bb3693143c41
+  release_manifest_contract_blob: 9ca1c9d4a5b247196aa84a31a158fe734c8a6720
+  release_manifest_schema_blob: 727db0a781900aa3816dcdce723fe355fec2e786
+  adr_0022_blob: b09c1d7aaa39f3030afdcec419c58236fd324f17
+related:
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0002-contracts-vs-schemas-split.md
+  - docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
+  - docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/doctrine/directory-rules.md
+  - data/receipts/README.md
+  - data/proofs/README.md
+  - data/catalog/README.md
+  - data/published/README.md
+  - release/README.md
+  - release/manifest/README.md
+  - release/manifests/README.md
+  - artifacts/README.md
+  - docs/registers/DRIFT_REGISTER.md
+  - contracts/data/catalog_matrix.md
+  - schemas/contracts/v1/data/catalog_matrix.schema.json
+  - contracts/release/release_manifest.md
+  - schemas/contracts/v1/release/release_manifest.schema.json
+tags: [kfm, adr, governance, receipts, proofs, catalogs, manifests, publication, release, lifecycle, trust-membrane, rollback, correction, catalog-matrix]
+notes:
+  - "v1.2 is a same-path repository-grounded modernization. It preserves status `proposed`; it does not accept ADR-0011, migrate trust objects, resolve release-state records, or publish anything."
+  - "The canonical ADR index uniquely assigns ADR-0011 to this exact path."
+  - "Current repository evidence confirms the five responsibility surfaces but not end-to-end release closure."
+  - "The repository carries both `release/manifest/` and `release/manifests/`; this ADR proposes plural `release/manifests/` as the canonical ReleaseManifest collection and singular `release/manifest/` as compatibility after a reviewed migration."
+  - "The v1.1 claim that CatalogMatrix is inherently proof-side conflicts with the current CatalogMatrix contract and ADR-0022. v1.2 separates the catalog descriptor from the proof of its validation and defers coordinated acceptance/migration to ADR-0022."
+  - "The tracked `artifacts/release/` lane and generated `artifacts/perf/` trust-shaped staging remain open drift; this documentation change performs no migration."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation
 
-> Pin the four-way trust-membrane rule: **receipt ≠ proof ≠ catalog ≠ publication**.
+> **Proposed decision.** KFM preserves explicit authority boundaries between process receipts, evidence/proof support, catalog-stage records, release-governance manifests and decisions, and released public-safe artifacts. Each family may reference the others through stable identifiers and digests, but no family may silently substitute for another.
 
-![Status: Proposed](https://img.shields.io/badge/status-proposed-blue)
-![ADR Family: Governance](https://img.shields.io/badge/adr--family-governance-6f42c1)
-![Supersedes: none](https://img.shields.io/badge/supersedes-none-lightgrey)
-![Related: directory--rules.md](https://img.shields.io/badge/related-directory--rules.md-success)
-![Last Updated: 2026-05-15](https://img.shields.io/badge/last%20updated-2026--05--15-informational)
-
-| Field | Value |
-|---|---|
-| **Status** | `proposed` — pending ADR index verification and acceptance |
-| **Date** | 2026-05-11 |
-| **Last updated** | 2026-05-15 |
-| **Owners** | TODO(owner): confirm architecture stewards · governance stewards · release stewards |
-| **ADR number** | `0011` — PROPOSED; NEEDS VERIFICATION against current `docs/adr/` index |
-| **Supersedes** | none |
-| **Superseded by** | none |
-| **Decision class** | Authority boundary · directory rule · governance invariant |
-| **Truth posture** | CONFIRMED doctrine · PROPOSED placement contract · UNKNOWN current repo implementation depth |
-| **Directory Rules basis** | Responsibility root wins over topic; lifecycle and release authority are separate; no parallel proof, receipt, release, or manifest homes without ADR-backed placement. |
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0011-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![Receipts: process memory](https://img.shields.io/badge/receipts-process%20memory-8250df?style=flat-square)](#artifact-family-contract)
+[![Proofs: support only](https://img.shields.io/badge/proofs-release%20support-2da44e?style=flat-square)](#artifact-family-contract)
+[![Catalog: discovery](https://img.shields.io/badge/catalog-discovery-1f6feb?style=flat-square)](#artifact-family-contract)
+[![Manifest lanes: conflicted](https://img.shields.io/badge/manifest%20lanes-CONFLICTED-b42318?style=flat-square)](#release-manifest-boundary)
+[![Enforcement: hold](https://img.shields.io/badge/enforcement-WORKFLOW__HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> This ADR is **not yet accepted**. Until accepted, its MUST / MUST NOT language is a proposed rule for review. Once accepted, it becomes the placement contract for the four artifact families named here.
+> **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0011` to this exact file with source metadata and effective decision status `proposed`. Editing this file or its index row does not accept the decision.
 
----
-
-## Table of contents
-
-- [1. Context](#1-context)
-- [2. Forces](#2-forces)
-- [3. Decision](#3-decision)
-- [4. Canonical homes](#4-canonical-homes)
-- [5. Separation diagram](#5-separation-diagram)
-- [6. Object families per home](#6-object-families-per-home)
-- [7. Cross-family references and closure](#7-cross-family-references-and-closure)
-- [8. Validators and enforcement](#8-validators-and-enforcement)
-- [9. Migration and compatibility](#9-migration-and-compatibility)
-- [10. Consequences](#10-consequences)
-- [11. Alternatives considered](#11-alternatives-considered)
-- [12. Open questions](#12-open-questions)
-- [13. Test obligations](#13-test-obligations)
-- [14. Rollback](#14-rollback)
-- [15. References](#15-references)
-- [16. Verification checklist](#16-verification-checklist)
-- [Related docs](#related-docs)
-
----
-
-## 1. Context
-
-KFM is a governed, evidence-first, map-first, time-aware spatial knowledge and publication system. Its durable public unit is the **inspectable claim**: a statement whose evidence, source role, spatial and temporal scope, policy posture, review state, release state, and correction lineage can be inspected.
-
-That posture depends on keeping four distinct artifact families distinct in storage, references, policy, and publication semantics:
-
-| Family | Short meaning | What goes wrong when conflated |
-|---|---|---|
-| **Receipts** | Process memory of what a run, ingest, validation, AI invocation, migration, or release-time action did. | Reviewers mistake execution metadata for proof that a claim is true or publishable. |
-| **Proofs** | Release-grade support objects such as `EvidenceBundle`, `ProofPack`, catalog-closure proof, citation validation, and integrity bundles. | Public claims lose traceability to admissible evidence. |
-| **Catalog** | Discovery and interchange surfaces such as STAC, DCAT, and PROV records. | Search metadata starts acting like evidence or publication approval. |
-| **Manifests / publication** | Release decisions, release manifests, signatures, rollback cards, correction notices, and released artifacts. | Publication becomes a directory move instead of a governed state transition. |
-
-KFM doctrine repeatedly states the symmetry as:
-
-```text
-receipt ≠ proof ≠ catalog ≠ publication
-```
-
-A receipt is not a proof.  
-A proof is not a catalog record.  
-A catalog record is not a publication.  
-A publication is not made true merely because bytes appear under a public path.
-
-`directory-rules.md` leaves one placement question open:
-
-> Whether `data/manifests/` is a real sibling of `data/proofs/` and `data/receipts/`, or whether all manifests live under `release/manifests/`.
-
-This ADR resolves that question for **release-level manifests**:
-
-```text
-release/manifests/ is the sole canonical home for ReleaseManifest.
-data/manifests/ MUST NOT exist as a root.
-```
-
-Lane-internal layer manifests may still live under released artifact lanes, for example:
-
-```text
-data/published/<domain>/manifests/
-data/published/<domain>/layers/<layer_id>/manifest.json
-```
-
-Those are `LayerManifest`-style descriptors for already released artifacts. They are **not** `ReleaseManifest`.
-
-> [!NOTE]
-> This ADR governs **instance placement and family meaning**. Schema homes remain governed by ADR-0001 and Directory Rules. The expected schema-home default is `schemas/contracts/v1/...`, but current repo conventions must still be verified before implementation.
-
-### 1.1 Evidence and implementation boundary
-
-This ADR is written from KFM doctrine and supplied project sources. It does **not** prove that validators, tests, schemas, workflows, release manifests, catalogs, receipts, proofs, or emitted artifacts already exist in the current repository.
-
-Use these labels when reviewing or implementing this ADR:
-
-| Label | Meaning in this ADR |
-|---|---|
-| `CONFIRMED doctrine` | Supported by KFM doctrine or supplied project documents. |
-| `PROPOSED placement` | Recommended canonical home once this ADR is accepted. |
-| `UNKNOWN implementation` | Not verified from mounted repo files, tests, workflows, logs, dashboards, emitted receipts, or release artifacts. |
-| `NEEDS VERIFICATION` | Concrete repo or ADR index check required before merging. |
-| `CONFLICTED` | Existing lineage or draft docs imply multiple homes; resolve through ADR or migration. |
-
-[Back to top](#table-of-contents)
-
----
-
-## 2. Forces
-
-| # | Force | Pressure |
-|---|---|---|
-| F1 | **Audit reconstructability.** A reviewer must walk from any release backward to exact gate decisions, receipts, evidence, source heads, and rollback targets without re-running the pipeline. | Pushes toward content-addressed family separation. |
-| F2 | **Trust-membrane integrity.** Public clients consume governed APIs and released artifacts. RAW, WORK, QUARANTINE, process-internal receipts, and unresolved candidate data must not become public truth. | Pushes toward storage homes that match policy boundaries. |
-| F3 | **Drift detectability.** Two homes for the same authority create drift. | Pushes toward one canonical home per family. |
-| F4 | **Operational ergonomics.** Pipeline authors often prefer one run folder containing receipts, proofs, manifests, logs, and outputs. | Pushes toward convenient grouping by run. |
-| F5 | **Migration cost.** `artifacts/` and other catch-all homes may exist in earlier scaffolds or historical outputs. | Pushes toward a compatibility window rather than abrupt deletion. |
-| F6 | **Interoperability.** STAC, DCAT, and PROV are external-facing discovery and lineage standards. | Pushes toward predictable catalog homes. |
-| F7 | **Reversibility.** Promotion is a governed state transition, not a file move; rollback must preserve prior meanings and decision records. | Pushes toward release decisions in `release/`, separate from released bytes in `data/published/`. |
-| F8 | **Schema-home ambiguity.** KFM lineage contains both `contracts/` and `schemas/contracts/v1/` references. | Pushes this ADR to govern instance homes only and defer schema-home authority to ADR-0001 / Directory Rules. |
-| F9 | **Catalog closure ambiguity.** Some lineage treats `CatalogMatrix` as catalog-adjacent; other doctrine treats it as proof/release closure. | Pushes this ADR to make closure matrices proof-side objects, not discovery records. |
-
-F3 and F4 are in tension. This ADR resolves the tension by **separating storage homes by artifact family** while permitting **per-run grouping inside each family**.
-
-Example:
-
-```text
-data/receipts/hydrology/runs/<run_id>/
-data/proofs/proof_pack/hydrology/<run_id>/
-release/manifests/<release_id>/
-```
-
-Run-walking tools may join these by `run_id`, `decision_id`, `release_id`, and digest. The directories themselves remain family-scoped.
-
-[Back to top](#table-of-contents)
-
----
-
-## 3. Decision
-
-**Decision, once accepted:** adopt strict four-way separation between receipts, proofs, catalog records, and release/publication artifacts.
-
-### 3.1 Normative rules
-
-1. `data/receipts/` is the canonical home for **process memory**. Receipts MUST NOT be cited as release-grade proof on their own.
-2. `data/proofs/` is the canonical home for **release-grade proof support**: `EvidenceBundle`, `ProofPack`, `CatalogMatrix`, citation validation reports, integrity bundles, and proof-side closure records.
-3. `data/catalog/{stac,dcat,prov,domain}/` is the canonical home for **discovery and interchange records**. Catalog entries are carriers, not truth. Consumers MUST dereference evidence support before treating cataloged claims as authoritative.
-4. `release/manifests/` is the sole canonical home for **ReleaseManifest**. There is no `data/manifests/` root.
-5. `data/published/<domain>/...` is the canonical home for **released public-safe artifacts** consumers read. Lane-internal layer manifests MAY live under `data/published/<domain>/manifests/` or beside the released layer asset. They are not release-level manifests.
-6. `release/` owns **release-decision artifacts**: promotion decisions, rollback cards, correction notices, withdrawal notices, signatures, release-level changelog, and release candidates.
-7. `artifacts/` MUST NOT host trust-bearing KFM content: receipts, proofs, evidence bundles, release manifests, promotion decisions, rollback cards, correction notices, catalog records, source registries, or published layers.
-8. `CatalogMatrix` is a **proof-side closure object**. Its canonical instance home is `data/proofs/catalog_matrix/<domain>/` unless a `ProofPack` embeds or references it under `data/proofs/proof_pack/...`.
-9. Promotion across an artifact-family boundary MUST emit a release-decision artifact in `release/` and a process receipt in the proper receipt lane.
-10. Promotion is a governed state transition, not a file move.
+> [!CAUTION]
+> **File presence is not closure.** The repository contains receipt, proof, catalog, release, published, contract, schema, workflow, and validation surfaces. Those surfaces are mixed maturity. The accepted evaluator, complete object shapes, closure resolver, accountable review flow, release assembly, rollback execution, and public-operation evidence are not established end to end.
 
 > [!WARNING]
-> This separation is an **authority boundary**, not a styling preference. A release manifest in `data/proofs/`, a proof pack in `data/receipts/`, a receipt in `release/`, or an evidence bundle in `artifacts/` is a placement violation.
+> **A familiar filename does not grant authority.** A JSON file named `release_manifest.json` under `artifacts/`, a signed run receipt, a STAC Item, a proof-like workflow artifact, or bytes under `data/published/` do not become a KFM release merely because the names look trustworthy.
 
-### 3.2 Non-goals
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#decision) · [Families](#artifact-family-contract) · [Manifest boundary](#release-manifest-boundary) · [CatalogMatrix](#catalogmatrix-and-catalog-closure) · [Closure](#cross-family-references-and-closure) · [Current evidence](#current-repository-evidence) · [Maturity](#current-enforcement-maturity) · [Migration](#migration-and-compatibility) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Acceptance](#acceptance-gates) · [Risks](#risk-ledger) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [References](#references)
 
-This ADR does **not** decide:
+---
 
-- field-level schema shapes;
-- canonical schema-home authority between `schemas/` and `contracts/`;
-- API route names;
-- package manager or validator language;
-- exact CI workflow names;
-- live source activation;
-- whether existing repo files already comply;
-- whether `data/rollback/` should remain a data-plane sibling or be merged later into release-only rollback handling.
+<a id="status"></a>
 
-### 3.3 Decision summary
+## Status
 
-| Question | Decision |
+| Field | Current value |
 |---|---|
-| Is `data/manifests/` allowed as a root? | **No.** Release-level manifests live under `release/manifests/`. |
-| Where do receipts live? | `data/receipts/`. |
-| Where do evidence bundles and proof packs live? | `data/proofs/`. |
-| Where do STAC/DCAT/PROV records live? | `data/catalog/stac/`, `data/catalog/dcat/`, `data/catalog/prov/`. |
-| Where does `CatalogMatrix` live? | `data/proofs/catalog_matrix/<domain>/` or inside / referenced from `data/proofs/proof_pack/...`. |
-| Where do public-safe artifact bytes live? | `data/published/<domain>/...`. |
-| Where do release decisions live? | `release/`. |
-| Where do lane-internal layer manifests live? | Under the released artifact lane, e.g. `data/published/<domain>/manifests/`; never as `ReleaseManifest`. |
-| Can `artifacts/` hold trust-bearing objects? | No; transitional build/doc/QA/temporary outputs only. |
+| **ADR ID** | `ADR-0011` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` |
+| **Source metadata** | `proposed` |
+| **Effective decision status** | `proposed` |
+| **Decision class** | Cross-root authority boundary for receipts, proofs, catalogs, release manifests/decisions, and published artifacts |
+| **Current repository posture** | Responsibility roots present; semantics documented; machine shapes thin or mixed; enforcement and release closure held |
+| **Implementation effect of this revision** | Documentation only |
+| **Publication effect** | None |
+| **Supersedes / superseded by** | None / none |
 
-[Back to top](#table-of-contents)
+### Decision scope
+
+This ADR decides the **meaning and responsibility boundary** of five connected instance families:
+
+1. process receipts;
+2. evidence and proof support;
+3. catalog-stage discovery and interchange records;
+4. release-governance manifests and decisions;
+5. released public-safe artifacts.
+
+It also proposes a canonical collection lane for `ReleaseManifest` instances and defines how catalog closure should avoid collapsing a `CatalogMatrix` descriptor into its validation proof.
+
+This ADR does **not** decide field-level JSON shapes, accept a release, activate a workflow, move existing files, or grant public access.
+
+### Decision acceptance versus enforcement graduation
+
+Two states remain separate:
+
+1. **ADR acceptance** would approve the authority boundary and target migration posture.
+2. **Enforcement graduation** requires contracts, schemas, fixtures, validators, CI, closure resolution, accountable review, release assembly, correction, rollback, and observed behavior.
+
+An accepted ADR without enforcement is doctrine, not proof of runtime or release capability.
+
+[Back to top](#top)
 
 ---
 
-## 4. Canonical homes
+<a id="evidence-boundary"></a>
 
-The following placement contract is normative once this ADR is accepted. Per-file path presence remains **NEEDS VERIFICATION** until the mounted repo is inspected.
+## Evidence Boundary
 
-| Family | Canonical home | Authority class | Owns | MUST NOT contain |
-|---|---|---|---|---|
-| **Receipts** | `data/receipts/{ingest,validation,pipeline,ai,release,migration}/` | Canonical process memory | `RunReceipt`, `IntakeReceipt`, `TransformReceipt`, `ValidationReceipt`, `AIReceipt`, `ConsentReceipt`, `VerifyReceipt`, `WatcherRunReceipt`, migration receipts | Release proof by itself; public artifact bytes; release manifests |
-| **Proofs** | `data/proofs/{evidence_bundle,proof_pack,catalog_matrix,validation_report,citation_validation,integrity}/` | Canonical proof support | `EvidenceBundle`, `ProofPack`, `CatalogMatrix`, `CitationValidationReport`, integrity bundle, proof closure outputs | Process-only receipts without proof context; release decisions; STAC/DCAT/PROV discovery records |
-| **Catalog — STAC** | `data/catalog/stac/<domain>/` | Canonical discovery | STAC Collections and Items, KFM STAC profile records | Uncited claims; proof closure; release approval |
-| **Catalog — DCAT** | `data/catalog/dcat/<domain>/` | Canonical discovery | DCAT Dataset and Distribution records | Free-text license drift; proof closure; release approval |
-| **Catalog — PROV** | `data/catalog/prov/<domain>/` | Canonical provenance/discovery | PROV-O Activity, Agent, Entity, and lineage records | Replacement for `EvidenceBundle`; release approval |
-| **Catalog — domain index** | `data/catalog/domain/<domain>/` | Canonical domain discovery | Domain catalog indexes and crosswalkable discovery records | Proof packs; release manifests |
-| **Release manifests** | `release/manifests/<release_id>/` | Canonical release decision | `ReleaseManifest`, release-level manifest envelope, release-level Merkle manifest reference | Lane-internal `LayerManifest`; receipts; proof packs |
-| **Release decisions** | `release/{candidates,promotion_decisions,rollback_cards,correction_notices,withdrawal_notices,signatures,changelog}/` | Canonical release governance | Promotion decisions, rollback cards, correction notices, withdrawal notices, signatures, release-level changelog | Released artifact bytes; canonical receipts/proofs/catalog records |
-| **Published artifacts** | `data/published/<domain>/{api_payloads,layers,pmtiles,geoparquet,reports,stories,manifests}/` | Canonical released data plane | Public-safe outputs consumers read; per-layer manifests; tile and report outputs | RAW / WORK / QUARANTINE bytes; release decisions; proof packs |
-| **Rollback data plane** | `data/rollback/<domain>/<release_id>/` | PROPOSED canonical data-plane rollback support | Alias-revert receipts, prior-pointer captures, restored pointer metadata | Release decision artifacts |
-| **Compatibility outputs** | `artifacts/{build,docs,qa,temporary}/` | Compatibility / transitional | Build outputs, generated docs, QA reports, temporary files | Receipts, proofs, release manifests, catalog records, source registries, published layers |
+This revision uses current repository bytes at `main@1e1379bf37c447b4fdf8a34f584d939f47bc1f65` plus KFM doctrine. Current repository evidence outranks older path proposals for present implementation. Doctrine still governs responsibility boundaries.
 
-> [!NOTE]
-> The family root is the authority. The domain is the lane. Domain names do not become root-level folders.
-
-### 4.1 `ReleaseManifest` vs `LayerManifest`
-
-| Object | Placement | Why |
+| Evidence level | What is established | What is not established |
 |---|---|---|
-| `ReleaseManifest` | `release/manifests/<release_id>/` | Records release-level decision, proof closure, signatures, rollback target, and promoted artifact set. |
-| `LayerManifest` | `data/published/<domain>/manifests/` or `data/published/<domain>/layers/<layer_id>/manifest.json` | Describes a released layer or asset for runtime/UI consumption. |
-| `MapReleaseManifest` | `release/manifests/<release_id>/` when release-level; otherwise route through the release manifest as a map-specific section or reference | Avoids creating a parallel map release authority. |
-| `MerkleManifest` | `release/manifests/<release_id>/merkle_manifest.json` or referenced from `ReleaseManifest`; integrity sidecar may also be cited from `data/proofs/integrity/` | The release manifest names the canonical release file set; proof-side integrity objects support verification. |
+| **Doctrine and ADR inventory** | Lifecycle law, trust membrane, distinct authority roots, ADR identity | Acceptance or enforcement |
+| **Root and lane documentation** | Receipt, proof, catalog, published, release, and artifacts boundaries are described | Complete payload inventories or correct runtime behavior |
+| **Contracts and schemas** | `CatalogMatrix` and `ReleaseManifest` semantic contracts and paired schemas exist | Production-grade shapes or complete validators |
+| **Readiness workflows and tests** | Selected structural/shape/readiness checks exist | Operational release assembly, approval, publication, or rollback |
+| **Release/public operation** | No admissible evidence reviewed here establishes end-to-end publication | Production state, hosting, branch rules, independent approval, or runtime parity |
 
-### 4.2 `CatalogMatrix` placement
+### Truth labels
 
-`CatalogMatrix` proves closure across catalog records, proofs, release manifests, published artifacts, and digests. It is therefore **proof-side**, not a discovery record.
+| Label | Use in this ADR |
+|---|---|
+| **CONFIRMED** | Verified from current repository bytes or supplied governing doctrine. |
+| **PROPOSED** | Decision, migration, field, path role, or implementation step not yet accepted and verified. |
+| **UNKNOWN** | No sufficient evidence establishes the state. |
+| **NEEDS VERIFICATION** | A concrete repository, workflow, review, or operational check remains. |
+| **CONFLICTED** | Current repository documents or proposed ADRs disagree and require coordinated resolution. |
 
-Canonical options:
+### Directory Rules basis
 
-```text
-data/proofs/catalog_matrix/<domain>/<release_id>.json
-data/proofs/proof_pack/<domain>/<release_id>/catalog_matrix.json
-```
+`docs/adr/` owns human architecture decisions. `data/receipts/`, `data/proofs/`, `data/catalog/`, and `data/published/` are distinct data responsibility/lifecycle lanes. `release/` owns release-governance records. `artifacts/` is compatibility-only generated output and must not become a trust-object authority.
 
-Avoid:
+This revision creates no new root and performs no move. Any later move follows Directory Rules migration discipline, preserves history and digests, and records rollback.
 
-```text
-data/catalog/matrix/<domain>/
-data/catalog/<domain>/catalog_matrix/
-```
-
-Those catalog-matrix paths are retained only as **CONFLICTED / NEEDS VERIFICATION** lineage references if existing files are found during migration.
-
-[Back to top](#table-of-contents)
+[Back to top](#top)
 
 ---
 
-## 5. Separation diagram
+<a id="context"></a>
 
-The lifecycle invariant sits horizontally:
+## Context
+
+KFM's durable public unit is the **inspectable claim**. A public claim must remain reconstructable to source role, evidence, spatial and temporal scope, policy posture, review state, release state, correction lineage, and rollback support.
+
+That reconstruction fails when distinct artifacts collapse into one generic “manifest” or “audit” folder.
 
 ```text
-RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
+receipt != proof != catalog != release decision != published artifact
 ```
 
-Receipts, proofs, catalog records, and release decisions are parallel authority families that record and govern the journey. They are not interchangeable lifecycle phases.
+| Family | Core question |
+|---|---|
+| **Receipt** | What process ran, against which inputs and rules, with what result? |
+| **Proof support** | What admissible evidence, validation, review, and integrity support the claim or release candidate? |
+| **Catalog** | How can governed records and assets be discovered and interchanged? |
+| **Release governance** | Which candidate or artifact set was reviewed, decided, manifested, corrected, withdrawn, or made rollback-ready? |
+| **Published artifacts** | Which public-safe bytes or payloads may governed consumers use? |
+
+### Failure modes caused by collapse
+
+- A valid run is mistaken for a true claim.
+- A catalog entry is treated as publication approval.
+- A proof pack is treated as a release decision.
+- A release manifest is stored beside payload bytes and silently mutated.
+- Published carriers become evidence authority.
+- Generated CI output under `artifacts/` is mistaken for a receipt, proof, or release record.
+- A single `CatalogMatrix` object is expected to be both the catalog descriptor and the proof that it is correct.
+
+### Lifecycle relationship
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+Receipts and proofs support transitions and review; catalog is a lifecycle projection; release records govern publication; published artifacts are downstream carriers. The families interact, but they are not interchangeable lifecycle phases.
+
+[Back to top](#top)
+
+---
+
+<a id="decision"></a>
+
+## Decision
+
+**Once accepted, KFM adopts the following authority contract.**
+
+1. `data/receipts/` is the canonical instance root for process-memory receipts.
+2. `data/proofs/` is the canonical instance root for evidence, validation, review, citation, integrity, and proof-pack support.
+3. `data/catalog/` is the canonical lifecycle root for catalog-stage records and indexes, including STAC, DCAT, PROV, domain catalog projections, and catalog relationship descriptors.
+4. `release/` is the canonical root for release-governance records.
+5. `release/manifests/` is the target canonical **collection** lane for immutable `ReleaseManifest` records.
+6. `release/manifest/` becomes a read-only compatibility/documentation lane after an inventoried, reviewed migration; it must not remain a second writable manifest authority.
+7. `data/published/` is the canonical lifecycle root for release-approved, public-safe delivery artifacts and immediate runtime sidecars.
+8. `artifacts/` remains a non-authoritative generated-output compatibility root. Trust-shaped outputs there are staging only and must graduate to a canonical family through governed transition.
+9. Cross-family references use stable identifiers, immutable refs where practical, digests, and explicit release/correction/rollback lineage.
+10. Promotion is a governed state transition, never a file copy, path rename, workflow success, pull request, merge, or manifest filename.
+
+### What this decision does not authorize
+
+- accepting this or any related ADR;
+- deleting or moving `release/manifest/`;
+- moving `artifacts/release/`;
+- treating generated `artifacts/perf/` files as canonical;
+- changing `CatalogMatrix` schema or instance placement without coordinated ADR-0022 work;
+- activating a release evaluator or bundle;
+- publishing any artifact;
+- exposing receipt, proof, catalog, candidate, or release internals directly to public clients.
+
+### Outcome vocabularies remain separate
+
+| Axis | Examples | Rule |
+|---|---|---|
+| Runtime/public envelope | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Closed outward response vocabulary where the applicable contract requires it. |
+| Release record state | candidate, held, approved, released, corrected, withdrawn, superseded | Owned by release contracts and policy; not collapsed into runtime outcomes. |
+| Validator result | pass, fail, warning, error | Validation state, not release approval. |
+| Truth label | CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION | Evidence posture, not an operation result. |
+
+[Back to top](#top)
+
+---
+
+<a id="artifact-family-contract"></a>
+
+## Artifact Family Contract
+
+### Receipts — process memory
+
+**Canonical instance root:** `data/receipts/`
+
+Receipts record governed execution. Representative families include `RunReceipt`, intake, transform, validation, redaction, aggregation, AI, telemetry, migration, correction-support, rollback-support, and release-support receipts.
+
+Receipts may bind:
+
+- input and output refs/digests;
+- runner/tool identity and version;
+- contract, schema, policy, and validator refs;
+- finite outcomes, reasons, and obligations;
+- evidence and release-candidate refs;
+- timestamps and actor identity;
+- signatures or attestation sidecars.
+
+A receipt does **not** prove factual truth, rights clearance, sensitivity safety, policy permission, review approval, catalog closure, release approval, or publication.
+
+### Proofs — support, not release authority
+
+**Canonical instance root:** `data/proofs/`
+
+Proof support may include:
+
+- EvidenceBundle and EvidenceRef closure;
+- citation validation;
+- validation reports;
+- review support;
+- proof packs;
+- integrity support;
+- domain-specific proof lanes;
+- catalog-closure validation results.
+
+A proof may cite receipts, catalogs, policies, reviews, and release candidates. It does not approve release or become public truth by placement.
+
+### Catalog — discovery and interchange
+
+**Canonical lifecycle root:** `data/catalog/`
+
+Catalog-stage records may include:
+
+- STAC Collections and Items;
+- DCAT Datasets and Distributions;
+- PROV Activities, Agents, and Entities;
+- domain catalog records;
+- indexes and release-linked public catalog subsets;
+- `CatalogMatrix` relationship descriptors when ADR-0022 and the contract are reconciled.
+
+Catalogs discover and describe. They do not replace source authority, EvidenceBundle support, policy, review, release decisions, or published artifacts.
+
+### Release governance — decisions and manifests
+
+**Canonical root:** `release/`
+
+Release governance includes:
+
+- candidates;
+- accountable reviews;
+- promotion and release decisions;
+- `ReleaseManifest` records;
+- correction, withdrawal, and supersession records;
+- rollback cards and rollback review;
+- signatures and signoff packets;
+- release-facing changelog entries.
+
+Release governance points to receipts, proofs, catalog records, and published artifacts. It must not duplicate them.
+
+### Published artifacts — public-safe carriers
+
+**Canonical lifecycle root:** `data/published/`
+
+Published lanes may hold release-approved:
+
+- layers, PMTiles, COGs, GeoParquet, reports, stories, and API payloads;
+- immediate artifact manifests and public indexes;
+- field allowlists, caveat summaries, citations, evidence refs, and digests;
+- generated pointers such as `latest.json` only when derived from governed release state.
+
+A `LayerManifest`, report manifest, story manifest, or format sidecar under `data/published/` describes a released carrier. It is not a `ReleaseManifest`.
+
+### Compatibility output — never trust authority
+
+**Compatibility root:** `artifacts/`
+
+Only derived, regenerable build output, documentation previews, QA reports, and temporary output belong here. A trust-shaped file under `artifacts/` remains non-authoritative until a governed process emits the canonical object to its owning root.
+
+[Back to top](#top)
+
+---
+
+<a id="release-manifest-boundary"></a>
+
+## ReleaseManifest Boundary
+
+### Target canonical collection lane
+
+This ADR proposes:
+
+```text
+release/manifests/<release-id-or-scope>/
+```
+
+as the canonical collection lane for immutable `ReleaseManifest` records and release-manifest indexes.
+
+The repository currently carries both:
+
+```text
+release/manifest/
+release/manifests/
+```
+
+Both READMEs describe themselves as draft and explicitly leave canonicality unresolved. Two writable lanes for one object family create ambiguous release authority.
+
+### Proposed migration posture
+
+| Path | Post-acceptance role |
+|---|---|
+| `release/manifests/` | Canonical collection of immutable release-manifest records and indexes |
+| `release/manifest/` | Read-only compatibility/documentation pointer during one reviewed migration window, then retirement or narrow workflow-doc role |
+| `data/published/**/manifest*.json` | Artifact-local `LayerManifest`, report/story manifest, or public sidecar only; never `ReleaseManifest` |
+| `artifacts/release/**` | Noncanonical staging/drift; no release authority |
+| `data/manifests/**` | No new release-manifest authority; inventory and classify before any move |
+
+### ReleaseManifest versus neighboring objects
+
+| Object | Owns | Does not own |
+|---|---|---|
+| `ReleaseManifest` | Immutable released set, artifact refs/digests, evidence/policy/review/proof refs, prior release, correction and rollback refs | Payload bytes, proof contents, receipt contents, policy rules |
+| `LayerManifest` | Runtime/layer descriptor for one released carrier | Release approval |
+| `MapReleaseManifest` | Map-specific release information when embedded in or referenced by the canonical ReleaseManifest | Parallel map release authority |
+| `MerkleManifest` | Integrity structure over a file set | Release decision; its authoritative relation must be referenced by ReleaseManifest and proof support |
+| `PromotionDecision` | Whether a governed transition may proceed | Released content set |
+| `RollbackCard` | Which prior state to restore and how | Release approval for a new state |
+
+### Schema maturity
+
+The current paired `ReleaseManifest` schema is `PROPOSED`, requires only `id`, and permits additional properties. The semantic contract is much richer than the schema. A schema-valid instance may therefore remain release-incomplete.
+
+Until schema, fixtures, validator, policy, review, and release assembly are hardened, the repository must not equate “valid JSON” with “valid release.”
+
+[Back to top](#top)
+
+---
+
+<a id="catalogmatrix-and-catalog-closure"></a>
+
+## CatalogMatrix and Catalog Closure
+
+### Confirmed conflict
+
+The v1.1 ADR assigned `CatalogMatrix` to `data/proofs/` as a proof-side object.
+
+Current repository evidence now shows:
+
+- `contracts/data/catalog_matrix.md` defines `CatalogMatrix` as a catalog/evidence relationship descriptor and explicitly says it is **not proof closure by itself**;
+- its paired schema is a thin `PROPOSED` placeholder;
+- the declared validator path is not established;
+- proposed ADR-0022 places `CatalogMatrix` under `data/catalog/matrix/` and treats it as the explicit crosswalk for STAC, DCAT, and PROV agreement;
+- ADR-0022 itself still carries older unmounted-repository assumptions and is not accepted.
+
+The placement and semantics are therefore **CONFLICTED**.
+
+### Proposed reconciliation
+
+ADR-0011 proposes a clean split between the descriptor and the proof that the descriptor passed validation:
+
+| Object | Proposed role | Proposed instance home | Status |
+|---|---|---|---|
+| `CatalogMatrix` | Catalog-stage relationship/crosswalk descriptor joining STAC, DCAT, PROV, artifact, release, and evidence refs | `data/catalog/matrix/<scope>/` | PROPOSED; coordinate with ADR-0022 |
+| `CatalogMatrixValidationReport` or `CatalogClosureProof` | Proof that required identifiers, digests, release refs, evidence refs, and provenance links agree | `data/proofs/catalog_closure/<scope>/` | PROPOSED name/home; requires contract/schema/fixtures/validator |
+| `CatalogBuildReceipt` / emitter receipt | Process memory showing how catalog records or matrix were generated | `data/receipts/<catalog-family>/` | PROPOSED subtype/layout |
+| `ReleaseManifest` | Release binding that references catalog records and the closure proof | `release/manifests/` | PROPOSED canonical collection |
+
+This split preserves the operating law:
+
+```text
+catalog descriptor != proof of catalog agreement
+```
+
+### Coordination rule
+
+ADR-0011 must not be accepted with an unreviewed automatic move of `CatalogMatrix`. Acceptance requires one coordinated review packet covering:
+
+- ADR-0011;
+- ADR-0022;
+- `contracts/data/catalog_matrix.md`;
+- `schemas/contracts/v1/data/catalog_matrix.schema.json`;
+- proposed validator and fixture homes;
+- data/catalog and data/proofs README updates;
+- migration/rollback for any existing instances.
+
+If maintainers choose a different placement, the distinction between descriptor and proof result must still remain explicit.
+
+[Back to top](#top)
+
+---
+
+<a id="cross-family-references-and-closure"></a>
+
+## Cross-Family References and Closure
+
+### Reference graph
 
 ```mermaid
 flowchart LR
-  subgraph LIFECYCLE["data/ — lifecycle invariant"]
-    RAW["raw/"] --> WORK["work/"]
-    WORK --> QUAR["quarantine/"]
-    WORK --> PROC["processed/"]
-    PROC --> CAT["catalog/"]
-    CAT --> TRIP["triplets/"]
-    CAT --> PUB["published/"]
-  end
+    SRC["SourceDescriptor / source refs"] --> REC["Receipts<br/>data/receipts"]
+    SRC --> EVD["Evidence / proofs<br/>data/proofs"]
+    REC --> EVD
 
-  subgraph RECEIPTS["data/receipts/ — process memory"]
-    RR["RunReceipt"]
-    IR["IntakeReceipt"]
-    TRR["TransformReceipt"]
-    VR["ValidationReceipt"]
-    AR["AIReceipt"]
-    MR["MigrationReceipt"]
-  end
+    PROC["Processed candidates"] --> CAT["Catalog records<br/>data/catalog"]
+    CAT --> MATRIX["CatalogMatrix<br/>catalog descriptor"]
+    MATRIX --> CPROOF["Catalog closure proof<br/>data/proofs"]
 
-  subgraph PROOFS["data/proofs/ — release-grade support"]
-    EB["EvidenceBundle"]
-    PP["ProofPack"]
-    CM["CatalogMatrix"]
-    CV["CitationValidationReport"]
-    IB["IntegrityBundle"]
-  end
+    EVD --> PACK["ProofPack / release support"]
+    CPROOF --> PACK
+    REC --> PACK
 
-  subgraph CATALOG["data/catalog/ — discovery and lineage"]
-    STAC["STAC Item / Collection"]
-    DCAT["DCAT Dataset / Distribution"]
-    PROV["PROV-O Activity / Entity"]
-    DIX["Domain catalog index"]
-  end
+    PACK --> DEC["Promotion / release decision<br/>release/"]
+    CAT --> MAN["ReleaseManifest<br/>release/manifests"]
+    PACK --> MAN
+    DEC --> MAN
 
-  subgraph RELEASE["release/ — release decisions"]
-    RM["manifests/ — ReleaseManifest"]
-    PD["promotion_decisions/"]
-    RC["rollback_cards/"]
-    CN["correction_notices/"]
-    WN["withdrawal_notices/"]
-    SIG["signatures/"]
-  end
+    MAN --> PUB["Published artifacts<br/>data/published"]
+    PUB --> API["Governed API / approved static delivery"]
+    API --> UI["MapLibre / Evidence Drawer / Focus Mode / exports"]
 
-  RAW -. emits .-> IR
-  WORK -. emits .-> TRR
-  WORK -. can emit .-> VR
-  PROC -. emits .-> RR
-  PROC -. supports .-> EB
-  EB -. included in .-> PP
-  PP -. includes .-> CM
-  PP -. includes .-> CV
-  PP -. may include .-> IB
-
-  CAT -. emits .-> STAC
-  CAT -. emits .-> DCAT
-  CAT -. emits .-> PROV
-  CAT -. emits .-> DIX
-
-  CM -. verifies .-> STAC
-  CM -. verifies .-> DCAT
-  CM -. verifies .-> PROV
-  CM -. verifies .-> RM
-  EB -. cited by .-> RM
-  PP -. attached to .-> RM
-  PD -. approves or denies .-> RM
-  PD -. emits .-> SIG
-  RM -. names .-> PUB
-  PUB -. may trigger .-> RC
-  RC -. may trigger .-> CN
-
-  classDef receipt fill:#fff3cd,stroke:#856404,color:#000
-  classDef proof fill:#d4edda,stroke:#155724,color:#000
-  classDef cat fill:#cce5ff,stroke:#004085,color:#000
-  classDef rel fill:#f8d7da,stroke:#721c24,color:#000
-  classDef lc fill:#e2e3e5,stroke:#383d41,color:#000
-
-  class RR,IR,TRR,VR,AR,MR receipt
-  class EB,PP,CM,CV,IB proof
-  class STAC,DCAT,PROV,DIX cat
-  class RM,PD,RC,CN,WN,SIG rel
-  class RAW,WORK,QUAR,PROC,CAT,TRIP,PUB lc
+    MAN --> ROLL["Correction / withdrawal / rollback<br/>release/"]
 ```
 
-The diagram is doctrinal. Each colored cluster is an authority boundary. Edges crossing clusters require validator gates, content-addressed references, policy decisions, review state, and release records as appropriate.
+### Minimum closure rules
 
-A path that crosses a boundary without a recorded transition is a violation even if the bytes land in a plausible directory.
+Once implemented, validators and release tooling must enforce:
 
-[Back to top](#table-of-contents)
+1. Every released artifact is named by exactly one active release-manifest lineage.
+2. Every release-visible evidence ref resolves to admissible EvidenceBundle support.
+3. Every ReleaseManifest references the applicable promotion/release decision.
+4. Every proof pack references relevant receipts without treating receipt presence as proof sufficiency.
+5. Every public catalog record is release-linked and policy-safe.
+6. STAC, DCAT, PROV, artifact identity, digest, and release refs agree where ADR-0022 requires them.
+7. Catalog closure produces a proof result distinct from the matrix descriptor.
+8. Every correction, withdrawal, supersession, or rollback issues a new governed record rather than mutating history silently.
+9. Public clients do not read `data/receipts/`, `data/proofs/`, unreleased `data/catalog/`, release candidates, or internal stores directly.
+10. `artifacts/` outputs never satisfy canonical receipt, proof, catalog, release, or publication gates by filename alone.
 
----
+### Negative outcomes
 
-## 6. Object families per home
-
-The following inventory binds KFM object families to homes. It is intentionally instance-focused. Schema placement remains governed by ADR-0001 and Directory Rules.
-
-### 6.1 Receipts — `data/receipts/`
-
-<details>
-<summary><strong>Receipt family inventory</strong></summary>
-
-| Object | Purpose | Placement note |
-|---|---|---|
-| `RunReceipt` | Universal per-run record: inputs, transform git SHA, validators, artifacts, decision identifiers, target zone, result. | Process memory only. |
-| `IntakeReceipt` | Source-edge capture record: timestamp, checksum, source head, retrieval metadata, actor/tool. | Tied to RAW or pre-RAW admission. |
-| `TransformReceipt` | Records normalization, redaction, generalization, derivative build, or migration transform. | Required for lossy or policy-significant transforms. |
-| `ValidationReceipt` | Records what validation was run, status, and finite reasons. | May feed proof pack; does not become proof alone. |
-| `AIReceipt` | Records model/tool invocation metadata, prompt hash, model id/version, evidence refs, and runtime parameters. | Must not contain private chain-of-thought. |
-| `ConsentReceipt` | Consent issuance, withdrawal, revocation, or scope change record. | Subordinate to policy and rights. |
-| `VerifyReceipt` | Client-side verification result. | Independent of server emission. |
-| `VerificationReceipt` | Server-side verification of a verify receipt. | Optional verification graph support. |
-| `WatcherRunReceipt` | Watcher-specific receipt variant. | Watchers remain non-publishers unless a separate accepted ADR says otherwise. |
-| `CatalogEmitterReceipt` | Records emission of STAC/DCAT/PROV records. | Feeds catalog closure; not the catalog record itself. |
-| `MigrationReceipt` | Records path moves, digest preservation, alias changes, or compatibility migration. | Required for trust-family migration. |
-| `PromotionGateDecisionLog` | Gate-by-gate decision log joined by `decision_id`. | Companion to promotion decision; not the decision record itself. |
-
-</details>
-
-### 6.2 Proofs — `data/proofs/`
-
-<details>
-<summary><strong>Proof family inventory</strong></summary>
-
-| Object | Purpose | Placement note |
-|---|---|---|
-| `EvidenceBundle` | Resolved, policy-safe evidence context that supports inspectable claims. | Runtime-resolvable unit of admissible evidence. |
-| `EvidenceRef` | Pointer to an `EvidenceBundle` or evidence item. | Usually embedded in claims, runtime envelopes, drawer payloads, and manifests. |
-| `ProofPack` | Bundle of validation, evidence closure, policy, integrity, and release-support records. | Required for promotion. |
-| `CatalogMatrix` | Closure proof that STAC/DCAT/PROV/manifest/proof/published refs align by id and digest. | Proof-side object; not a discovery record. |
-| `CitationValidationReport` | Proof that cited `EvidenceRef` values resolve and are admissible in current scope. | Negative fixtures required. |
-| `IntegrityBundle` | Digest and integrity support for proof or release set. | May include or reference Merkle material. |
-| `MerkleManifest` support | Merkle root and file-set verification support. | Release-level file lives in or is referenced from `release/manifests/`; proof-side integrity support lives under `data/proofs/integrity/`. |
-
-</details>
-
-### 6.3 Catalog — `data/catalog/`
-
-<details>
-<summary><strong>Catalog family inventory</strong></summary>
-
-| Sub-home | Object | Notes |
-|---|---|---|
-| `stac/<domain>/` | STAC Collection / Item | Carries discoverability, asset metadata, and KFM extensions. |
-| `dcat/<domain>/` | DCAT Dataset / Distribution | Carries dataset/distribution metadata, controlled license/access-rights values. |
-| `prov/<domain>/` | PROV-O Activity / Agent / Entity | Carries lineage and derivation relationships. |
-| `domain/<domain>/` | Domain catalog index / crosswalkable discovery index | Domain-specific discovery records; not proof. |
-
-</details>
-
-> [!NOTE]
-> Catalogs discover. Bundles prove. A consumer who reads a STAC Item, DCAT Distribution, or PROV record must still resolve supporting evidence before treating a claim as authoritative.
-
-### 6.4 Release and publication — `release/` and `data/published/`
-
-<details>
-<summary><strong>Release / manifest / publication inventory</strong></summary>
-
-| Object | Canonical home | Notes |
-|---|---|---|
-| `ReleaseManifest` | `release/manifests/<release_id>/` | Sole release-level manifest home. Names artifacts, proof packs, evidence bundles, signatures, rollback target, and release metadata. |
-| `PromotionDecision` / `PromotionReceipt` | `release/promotion_decisions/` | Gate enumeration and finite decision state. |
-| `RollbackCard` | `release/rollback_cards/` | Release rollback decision and target. Alias-revert receipts remain data-plane records. |
-| `CorrectionNotice` | `release/correction_notices/` | Public or steward-visible correction note. |
-| `WithdrawalNotice` | `release/withdrawal_notices/` | Public withdrawal record. |
-| DSSE / Sigstore / release signature artifacts | `release/signatures/` | Release-level attestation artifacts. |
-| `LayerManifest` | `data/published/<domain>/manifests/` or per-layer asset folder | Runtime/layer descriptor; not a `ReleaseManifest`. |
-| Published artifact bytes | `data/published/<domain>/{api_payloads,layers,pmtiles,geoparquet,reports,stories}/` | Public-safe outputs consumers read. Generated layers remain carriers, not evidence. |
-
-</details>
-
-[Back to top](#table-of-contents)
-
----
-
-## 7. Cross-family references and closure
-
-The four families reference each other through stable identifiers, content digests, and governed join keys.
-
-```text
-RunReceipt.outputs[].sha256
-   └─► ProofPack.entries[].digest
-           └─► EvidenceBundle.evidence_refs[].uri
-                   └─► STAC Item.assets[].href + kfm:spec_hash
-                           └─► DCAT Distribution.downloadURL + dct:license
-                                   └─► PROV Activity.used / wasGeneratedBy
-           └─► CatalogMatrix entries prove closure across catalog/proof/release/publication
-   └─► PromotionGateDecisionLog.decision_id
-           └─► PromotionDecision / PromotionReceipt
-                   └─► ReleaseManifest.proof_pack_ref + evidence_bundle_refs[]
-                           └─► release/signatures/<release_id>/*.dsse
-                                   └─► data/published/<domain>/... artifacts
-```
-
-### 7.1 Closure rules
-
-Validators must enforce the following rules once implementation exists:
-
-1. Every `EvidenceRef` in a `ReleaseManifest` MUST resolve to an `EvidenceBundle` under `data/proofs/`.
-2. Every `ProofPack` MUST cite at least one relevant receipt under `data/receipts/` and at least one proof-supporting object under `data/proofs/`.
-3. Every STAC Item under `data/catalog/stac/` MUST carry required KFM governance fields and point to resolvable evidence/proof support.
-4. Every DCAT Distribution MUST carry controlled license and access-rights values and must connect to provenance and proof support.
-5. Every PROV Activity used in a release MUST resolve to source and receipt context.
-6. Every `ReleaseManifest` MUST be accompanied by a `CatalogMatrix` or proof-pack closure showing catalog/proof/release/published alignment.
-7. Every artifact in `data/published/<domain>/` MUST be named by a `ReleaseManifest`.
-8. Orphan published artifacts MUST fail promotion.
-9. A receipt-only path MUST NOT satisfy evidence closure.
-10. A catalog-only path MUST NOT satisfy evidence closure.
-11. Promotion across artifact-family boundaries MUST record both process memory and release decision:
-    - receipt in `data/receipts/...`;
-    - decision in `release/...`.
-
-### 7.2 Runtime consequence
-
-Public clients, Evidence Drawer, Focus Mode, exports, reports, story pages, and map popups must treat unresolved closure as a finite negative outcome:
-
-| Condition | Runtime / release outcome |
+| Condition | Required posture |
 |---|---|
-| Evidence missing or unresolved | `ABSTAIN` |
-| Rights, sensitivity, review, or policy blocks exposure | `DENY` |
-| Validator, resolver, or policy engine unavailable | `ERROR` |
-| Evidence resolved, policy allows, citations validate | `ANSWER` or release-approved rendering |
+| Evidence or citation support unresolved | `ABSTAIN` or held release candidate |
+| Rights, sensitivity, review, or policy prohibits exposure | `DENY` / restrict / hold according to the applicable contract |
+| Resolver, validator, schema, policy, or integrity machinery fails | `ERROR`; fail closed |
+| Artifact exists but no active release lineage names it | Deny publication / orphan hold |
+| Catalog records disagree | Deny promotion until corrected |
+| Obligation cannot be enforced downstream | Deny or hold; never silent answer/release |
 
-[Back to top](#table-of-contents)
-
----
-
-## 8. Validators and enforcement
-
-The following validators are **PROPOSED**. Paths remain placeholders until repo conventions are verified.
-
-| Validator (PROPOSED) | Checks | Failure mode |
-|---|---|---|
-| `tools/validators/placement/family_home_validator.*` | No receipt under proofs/release/artifacts; no proof under receipts/release/artifacts; no release manifest outside `release/manifests/`; no catalog record outside catalog homes. | DENY PR |
-| `tools/validators/placement/no_data_manifests_root.*` | `data/manifests/` MUST NOT exist as a root. | DENY PR |
-| `tools/validators/placement/artifacts_no_trust_content.*` | `artifacts/` contains no receipts, proofs, release manifests, catalog records, published layers, source registries, rollback cards, correction notices, or promotion decisions. | DENY PR |
-| `tools/validators/placement/catalog_matrix_home_validator.*` | `CatalogMatrix` instances live under `data/proofs/catalog_matrix/` or proof-pack paths, not `data/catalog/matrix/`. | DENY PR or migration warning during compatibility window |
-| `tools/validators/closure/catalog_matrix_validate.*` | STAC / DCAT / PROV / proof / manifest / published refs align by id and digest. | DENY promotion |
-| `tools/validators/closure/release_manifest_closure.*` | Every `ReleaseManifest` resolves evidence/proof refs and pairs with a promotion decision. | DENY promotion |
-| `tools/validators/closure/orphan_published.*` | No artifact in `data/published/` lacks a naming `ReleaseManifest`. | DENY release |
-| `tools/validators/closure/receipt_not_proof.*` | Receipts cannot satisfy proof requirements without evidence/proof support. | DENY promotion |
-| `.github/workflows/placement.yml` | Runs placement validators on PRs touching `data/`, `release/`, `artifacts/`, catalog/proof/receipt roots. | CI gate |
-| `.github/workflows/release-closure.yml` | Runs closure validators before release promotion. | CI gate |
-
-> [!CAUTION]
-> Until validators and workflows are implemented and passing in the mounted repo, this ADR is doctrinal only. Do not claim automated enforcement until repo evidence confirms validators, fixtures, workflows, and CI results.
-
-### 8.1 Enforcement maturity ladder
-
-| Maturity | Meaning | Allowed claim |
-|---|---|---|
-| M0 — ADR proposed | ADR drafted, not accepted. | “This is a proposed placement rule.” |
-| M1 — ADR accepted | ADR merged and linked from Directory Rules / ADR index. | “This is doctrine.” |
-| M2 — Validators exist | Placement validators and fixtures exist. | “Placement can be checked locally.” |
-| M3 — CI wired | Workflows run validators on relevant PR paths. | “Placement is CI-gated.” |
-| M4 — Release closure gated | Release promotion fails without closure proof. | “Release closure is enforced.” |
-| M5 — Drift monitored | Drift register and periodic scans catch legacy mirrors. | “Placement drift is monitored.” |
-
-[Back to top](#table-of-contents)
+[Back to top](#top)
 
 ---
 
-## 9. Migration and compatibility
+<a id="current-repository-evidence"></a>
 
-Existing repos or scaffolds that hold trust content under `artifacts/`, `data/manifests/`, `data/catalog/matrix/`, or any other non-canonical home migrate by family.
+## Current Repository Evidence
 
-| From (compatibility / drift) | To (canonical) | Migration action |
+| Surface | Confirmed current evidence | Safe conclusion |
 |---|---|---|
-| `artifacts/receipts/...` | `data/receipts/<family>/<domain>/...` | Move, preserve hashes, emit migration receipt, update references. |
-| `artifacts/proofs/...` or `artifacts/evidence/...` | `data/proofs/<family>/<domain>/...` | Move, preserve hashes, re-verify evidence bundle digests, update references. |
-| `artifacts/manifests/release*.json` | `release/manifests/<release_id>/` | Move, re-pin consumers, emit migration receipt, add correction notice if any published consumer pinned old path. |
-| `artifacts/catalog/stac/...` | `data/catalog/stac/<domain>/` | Move and re-validate STAC profile. |
-| `artifacts/catalog/dcat/...` | `data/catalog/dcat/<domain>/` | Move and validate license/access-rights vocabulary. |
-| `artifacts/catalog/prov/...` | `data/catalog/prov/<domain>/` | Move and validate lineage references. |
-| `data/manifests/<release_id>/...` | `release/manifests/<release_id>/` | Resolve as release-level manifest; move; emit migration receipt; update release refs. |
-| `data/manifests/<layer_id>/...` | `data/published/<domain>/manifests/` or per-layer manifest path | Resolve as lane-internal layer manifest; relabel as `LayerManifest`; ensure release manifest names it. |
-| `data/catalog/matrix/<domain>/...` | `data/proofs/catalog_matrix/<domain>/...` | Move as proof-side closure object; preserve lineage alias for one release window. |
-| `data/catalog/<domain>/catalog_matrix/...` | `data/proofs/catalog_matrix/<domain>/...` | Move as proof-side closure object; update proof-pack references. |
-| `release/<receipts|proofs|catalog>/...` | `data/receipts/`, `data/proofs/`, or `data/catalog/` | Release root keeps decisions only. Move by object family. |
-| `data/published/<domain>/release_manifest.json` | `release/manifests/<release_id>/` | Move release-level manifest; keep only layer/runtime descriptors in published lane. |
+| ADR identity | `INDEX.md` uniquely assigns ADR-0011 to this path with effective status `proposed` | Number/path conflict is resolved; acceptance is not |
+| Receipt root | `data/receipts/README.md` documents process-memory semantics and observed child lanes; generated lane reports 59 direct-child JSON receipts at its recorded snapshot | Receipt activity exists, but payload validity and release integration are not implied |
+| Proof root | `data/proofs/README.md` confirms evidence, citation, validation, proof-pack, review, and selected domain README lanes | Proof topology is present; emitted proof completeness and enforcement remain unproved |
+| Catalog root | `data/catalog/README.md` exists as draft catalog-stage guide; recommended layout and concrete inventories remain partly unverified | Catalog responsibility is clear; operational catalog closure is not |
+| Published root | `data/published/README.md` confirms child README lanes and public-safe carrier boundary | Child lane presence does not prove released payloads or manifest approval |
+| Release root | `release/README.md` is repository-grounded and records mixed lanes plus explicit workflow holds | Release governance surfaces exist; operational release capability is held |
+| Manifest lanes | Both `release/manifest/README.md` and `release/manifests/README.md` exist and declare canonicality unresolved | Manifest instance authority is conflicted |
+| ReleaseManifest contract/schema | Semantic contract exists; schema requires only `id` and allows extra properties | Shape is too permissive to prove release completeness |
+| CatalogMatrix contract/schema | Contract exists; schema requires only `id`; validator path is not established | Object meaning and machine enforcement are incomplete |
+| ADR-0022 | Proposed “must agree” decision exists and proposes `data/catalog/matrix/` | Dedicated catalog decision exists but is not repository-grounded or accepted |
+| Artifacts root | `artifacts/README.md` confirms 44 tracked files at its continuity snapshot, including nonconforming `artifacts/release/`; generated `artifacts/perf/` uses trust-shaped staging | Compatibility drift is real and open |
+| Drift register | Explicit July 22 entry records `artifacts/release/` and `artifacts/perf/` as open `BLOCKED_ADR` authority drift | Migration requires separate reviewed action |
+| Public trust path | Root doctrine and application boundaries prohibit direct canonical/internal-store reads | Structural boundary exists; complete runtime enforcement is separate |
 
-### 9.1 Migration discipline
+### Evidence limitations
 
-Every trust-family move MUST:
+This inspection did not establish:
 
-1. preserve original digest and compute new-path digest;
-2. emit a `MigrationReceipt` under `data/receipts/migration/<run_id>/`;
-3. update all resolvable references;
-4. record any legacy alias in a drift or migration register;
-5. leave a compatibility pointer for one release window if consumers pinned the old path;
-6. emit a `CorrectionNotice` if published consumers depended on the old path;
-7. preserve rollback target and prior release meaning.
+- complete recursive payload inventories in every lane;
+- validity of every generated receipt;
+- accepted receipt/proof/catalog/release contracts;
+- operational catalog matrix validator;
+- release-manifest validator;
+- accountable review records or independent release approval;
+- release assembly, publication, withdrawal, or rollback execution;
+- production hosting, runtime parity, or branch-rules enforcement.
 
-### 9.2 Compatibility window
-
-A compatibility window MAY retain read-only legacy aliases, but only with explicit metadata:
-
-```yaml
-status: compatibility_alias
-canonical_target: data/proofs/catalog_matrix/<domain>/<release_id>.json
-expires_after_release: <next_release_id>
-reason: "ADR-0011 family-home migration"
-```
-
-Compatibility aliases MUST NOT become a second canonical home.
-
-[Back to top](#table-of-contents)
+[Back to top](#top)
 
 ---
 
-## 10. Consequences
+<a id="current-enforcement-maturity"></a>
+
+## Current Enforcement Maturity
+
+| Level | Requirement | Current posture |
+|---|---|---|
+| **M0 — Names and roots** | Responsibility roots and object names exist | CONFIRMED |
+| **M1 — Boundary documentation** | Root/lane READMEs distinguish authority families | SUBSTANTIAL / mixed freshness |
+| **M2 — Semantic contracts and shapes** | Complete contracts and nonpermissive schemas | PARTIAL; key schemas are thin |
+| **M3 — Representative fixtures and validators** | Valid/invalid/negative cases and deterministic validators | PARTIAL / NEEDS VERIFICATION |
+| **M4 — Cross-family closure** | Resolvers bind receipts, proofs, catalogs, decisions, manifests, and artifacts | NOT ESTABLISHED |
+| **M5 — Governed review and release** | Accountable review, promotion, manifest assembly, signatures, correction, rollback | HELD / NOT ESTABLISHED |
+| **M6 — Public/runtime enforcement** | Governed consumers reject unreleased, orphaned, stale, or unclosed artifacts | UNKNOWN / not established end to end |
+| **M7 — Drift monitoring and replay** | Periodic placement scan, replay verification, migration/rollback drills | PARTIAL structural signals; operational maturity unproved |
+
+A repository with M0–M2 surfaces is not an M5 release system.
+
+### Enforcement graduation sequence
+
+1. Accept or explicitly hold ADR-0011 after manifest and CatalogMatrix coordination.
+2. Resolve `release/manifest/` versus `release/manifests/`.
+3. Harden `ReleaseManifest` and `CatalogMatrix` contracts/schemas.
+4. Define the catalog descriptor versus closure-proof object split.
+5. Add synthetic valid/invalid fixtures using no protected or private data.
+6. Implement placement and content-aware family validators.
+7. Implement catalog agreement and release-manifest closure resolvers.
+8. Wire deterministic CI checks with read-only/no-publication posture.
+9. Prove one no-network candidate through receipt → proof → catalog → decision → manifest → published carrier.
+10. Exercise correction, withdrawal, supersession, cache invalidation, and rollback.
+11. Add governed consumer tests.
+12. Record observed required-check and review behavior without treating workflow green as release approval.
+
+[Back to top](#top)
+
+---
+
+<a id="migration-and-compatibility"></a>
+
+## Migration and Compatibility
+
+This documentation revision performs no move.
+
+### Migration prerequisites
+
+Before migrating any trust object:
+
+- inventory exact files, object types, digests, references, consumers, releases, and sensitivity;
+- classify the current path as canonical, compatibility, staging, drift, or generated;
+- identify the accepted target contract and schema;
+- record affected release/correction/rollback lineage;
+- establish a reversible alias or resolver strategy where consumers depend on old paths;
+- test the move on synthetic or public-safe fixtures;
+- obtain the required ADR and steward reviews.
+
+### Proposed migration waves
+
+| Wave | Scope | Required result |
+|---|---|---|
+| **1 — Inventory** | `release/manifest/`, `release/manifests/`, `artifacts/release/`, `artifacts/perf/`, any `data/manifests/`, CatalogMatrix instances | Immutable inventory and classification; no moves |
+| **2 — Contract alignment** | ReleaseManifest, CatalogMatrix, catalog closure proof, receipt/proof references | Coordinated contracts/schemas and migration map |
+| **3 — Manifest convergence** | Singular/plural release manifest lanes | Canonical plural collection; compatibility pointer; inbound links updated |
+| **4 — Catalog closure split** | CatalogMatrix descriptor and closure proof | Distinct homes and validators; ADR-0022 reconciled |
+| **5 — Artifacts drift** | Tracked `artifacts/release/` and generated `artifacts/perf/` | Reviewed graduation or retirement; no trust-shaped ambiguity |
+| **6 — Enforcement** | Placement, closure, orphan, public-boundary checks | Deterministic CI and release dry-run |
+| **7 — Rollback drill** | Prior release and path aliases | Demonstrated restoration, correction, and cache invalidation |
+
+### Migration receipt minimum
+
+Every moved trust object should record:
+
+- old and new path;
+- object family and contract version;
+- old and new digest;
+- migration reason and governing ADR;
+- references changed;
+- affected release/correction/rollback IDs;
+- actor/tool and timestamp;
+- validation result;
+- compatibility expiry;
+- rollback instruction.
+
+A migration receipt does not approve the migration by itself.
+
+### Compatibility rule
+
+A compatibility alias is read-only, time-bounded, and points to one canonical target. It cannot accept new writes or evolve independently.
+
+[Back to top](#top)
+
+---
+
+<a id="consequences"></a>
+
+## Consequences
 
 ### Positive
 
-- **Auditability.** Reviewers can reconstruct any release by walking from `release/manifests/<release_id>/` backward through promotion decisions, proof packs, evidence bundles, receipts, source heads, catalog closure, signatures, and rollback targets.
-- **Drift detection.** One canonical instance home per family makes parallel homes detectable.
-- **Trust-membrane integrity.** Public clients consume governed APIs and released artifacts without encountering raw receipts or unresolved EvidenceRefs.
-- **Reversibility.** Rollback cards, correction notices, migration receipts, and alias-revert receipts preserve prior meanings instead of deleting them.
-- **Clear manifest authority.** `release/manifests/` is the sole home for `ReleaseManifest`.
-- **Cleaner catalog semantics.** STAC/DCAT/PROV discover and describe; proof-side objects close and verify.
+- **Authority is inspectable.** Path and object family tell reviewers what a record can and cannot prove.
+- **Catalog and evidence stay distinct.** Discovery does not masquerade as proof.
+- **Release is reversible.** Manifests, corrections, withdrawals, and rollback remain governance records rather than payload folders.
+- **Public carriers stay derived.** Maps, tiles, reports, stories, and API snapshots do not become sovereign truth.
+- **Drift becomes testable.** Duplicate manifest lanes and trust-shaped artifacts can be inventoried and denied.
+- **Run browsing remains possible.** Tools can join families by stable IDs and digests without co-locating authority.
+- **CatalogMatrix semantics become clearer.** The descriptor and its validation proof no longer need to be one overloaded object.
 
-### Negative
+### Costs and tradeoffs
 
-- **More directories to maintain.** Four parallel family roots plus release and published lanes are heavier than a single `artifacts/` umbrella.
-- **Migration cost.** Existing scaffolds or historical outputs using `artifacts/`, `data/manifests/`, or catalog-matrix paths need migration receipts and compatibility aliases.
-- **Validator burden.** Placement and closure validators must be authored, tested, and wired into CI.
-- **Run-centered ergonomics require tooling.** Operators who want “everything for run X” need a run/decision walker.
+- More roots and cross-references than a single run folder.
+- Migration burden for singular/plural manifest lanes and artifacts drift.
+- New contracts and validators for catalog closure proof.
+- Stronger schemas may break permissive placeholder fixtures.
+- Operators need a run/release walker to reconstruct one end-to-end chain.
+- Acceptance requires coordinated ADR and contract work, not an isolated documentation merge.
 
-### Neutral
+### Non-effects
 
-- **Redundancy is intentional.** Some source, lineage, digest, and release metadata appears in multiple places. This ADR treats redundancy as governed closure, not duplication, when references resolve and digests match.
-- **Catalog and proof remain adjacent.** Catalog records point to proof support; they do not become proof support.
+This ADR does not make existing generated receipts valid, release manifests complete, CatalogMatrix authoritative, artifacts conformant, workflows required, or public artifacts released.
 
-[Back to top](#table-of-contents)
+[Back to top](#top)
 
 ---
 
-## 11. Alternatives considered
+<a id="alternatives-considered"></a>
 
-| Alternative | Why rejected |
+## Alternatives Considered
+
+| Alternative | Disposition |
 |---|---|
-| **Single `data/audit/` umbrella** for receipts, proofs, manifests, and catalog closure | Collapses distinct authority roles and makes policy enforcement harder. |
-| **Allow `data/manifests/` as a real sibling of `data/receipts/` and `data/proofs/`** | Creates two release-manifest homes and invites drift between `data/manifests/` and `release/manifests/`. |
-| **Keep `artifacts/` as canonical trust-content home** | Mixes build output, QA output, and trust artifacts; blurs the trust membrane. |
-| **Per-domain trust roots at repo root** such as `hydrology/receipts/` | Violates responsibility-root placement. Domain belongs as a lane inside authority roots. |
-| **Co-locate all run artifacts under `data/runs/<run_id>/`** | Optimizes run browsing but weakens family-level policy gates and cross-release proof queries. |
-| **Put `CatalogMatrix` under `data/catalog/`** | Makes a closure proof look like a discovery record. This ADR makes `CatalogMatrix` proof-side. |
-| **Embed STAC/DCAT/PROV inside EvidenceBundle only** | Loses expected external discovery and interchange surfaces. |
-| **Treat published tiles/layers as evidence** | Downstream map artifacts are rebuildable carriers; they must link to evidence, not replace it. |
+| Put all run outputs under `data/runs/<run-id>/` | Rejected as authority collapse; may be implemented as a generated index or audit view |
+| Keep both `release/manifest/` and `release/manifests/` writable | Rejected; creates competing ReleaseManifest authority |
+| Put ReleaseManifest beside every published artifact | Rejected; artifact-local sidecars may reference the canonical release manifest but must not duplicate release authority |
+| Treat any signed receipt as proof | Rejected; signing proves integrity/provenance of the receipt, not truth or release admissibility |
+| Treat CatalogMatrix as proof by definition | Rejected in v1.2; descriptor and proof of agreement are distinct |
+| Put CatalogMatrix only in `data/proofs/` | Rejected as inconsistent with current semantic contract and ADR-0022 direction |
+| Put catalog closure proof only in `data/catalog/` | Rejected; validation proof is a different authority family |
+| Keep `artifacts/release/` as canonical | Rejected; compatibility output cannot own release decisions |
+| Use `data/manifests/` as a second release root | Rejected; classify existing contents, then route by object family |
+| Treat published bytes as evidence | Rejected; published artifacts are downstream carriers |
+| Embed all receipts/proofs/catalog records inside ReleaseManifest | Rejected; manifest references authority families rather than replacing them |
 
-[Back to top](#table-of-contents)
-
----
-
-## 12. Open questions
-
-- **NEEDS VERIFICATION** — ADR number `0011` is PROPOSED. Confirm against the current `docs/adr/` index before acceptance.
-- **NEEDS VERIFICATION** — Confirm the target path for this ADR. Expected path: `docs/adr/ADR-0011-receipts-proofs-manifests-catalog-separation.md`, but path must be checked against repo conventions.
-- **NEEDS VERIFICATION** — Confirm whether current repo already has `data/manifests/`, `data/catalog/matrix/`, `data/catalog/<domain>/catalog_matrix/`, or trust content under `artifacts/`.
-- **OPEN** — Whether `LayerManifest` should prefer `data/published/<domain>/manifests/` or per-layer colocated `manifest.json`. This ADR allows both and requires the `ReleaseManifest` to name either form.
-- **OPEN** — Whether all `MerkleManifest` bytes live under `release/manifests/<release_id>/`, or whether proof-side integrity sidecars live under `data/proofs/integrity/` with release references. This ADR allows release-level file plus proof-side support.
-- **OPEN** — Whether `data/rollback/` remains a sibling data-plane rollback home. This ADR preserves it as PROPOSED for alias-revert receipts and keeps `release/rollback_cards/` as the release-decision home.
-- **PROPOSED** — Add a run/decision walker tool, e.g. `tools/audit/walk_decision.*`, that traverses receipts, proofs, catalog records, manifests, signatures, published artifacts, and rollback cards by `run_id`, `decision_id`, `release_id`, and digest.
-
-[Back to top](#table-of-contents)
+[Back to top](#top)
 
 ---
 
-## 13. Test obligations
+<a id="acceptance-gates"></a>
 
-The following tests are **PROPOSED**. Test paths are placeholders until canonical test layout is verified.
+## Acceptance Gates
 
-| Test | Asserts | Fixtures |
+ADR-0011 may move from `proposed` only when reviewers close the decision package below.
+
+- [ ] Owner and reviewer roles are verified.
+- [ ] ADR index validation passes and the reviewed status transition is synchronized.
+- [ ] Directory Rules duplicate identity is acknowledged or resolved without changing this ADR's responsibility-root basis.
+- [ ] `release/manifest/` and `release/manifests/` are fully inventoried.
+- [ ] The plural canonical collection decision and singular compatibility/retirement plan are approved.
+- [ ] ADR-0022, CatalogMatrix contract, schema, and placement are reconciled.
+- [ ] The catalog descriptor versus catalog closure proof split is accepted or replaced by an equally explicit boundary.
+- [ ] `ReleaseManifest` semantic contract and schema have a reviewed production profile or an explicit hold profile.
+- [ ] Valid, invalid, stale, orphaned, conflicted, corrected, withdrawn, and rollback fixtures exist.
+- [ ] Placement validators distinguish object family by content/contract, not filename alone.
+- [ ] Closure validators prove evidence, policy, catalog, release, digest, correction, and rollback references.
+- [ ] Public-boundary tests deny direct receipt, proof, candidate catalog, release-internal, and canonical-store reads.
+- [ ] `artifacts/release/` and `artifacts/perf/` have a separately approved migration or bounded staging decision.
+- [ ] One no-network, public-safe synthetic release slice demonstrates full traceability.
+- [ ] Correction, withdrawal, supersession, and rollback are exercised.
+- [ ] Remaining unknowns are recorded in the appropriate verification/drift registers.
+
+Acceptance of the decision does not require production deployment, but it must not falsely claim that unimplemented enforcement already exists.
+
+[Back to top](#top)
+
+---
+
+<a id="risk-ledger"></a>
+
+## Risk Ledger
+
+| Risk | Current posture | Required mitigation |
 |---|---|---|
-| `tests/placement/test_no_receipt_in_proofs.py` | Receipt-shaped bodies are not under `data/proofs/`. | Positive: receipt under `data/receipts/`; negative: receipt under `data/proofs/`. |
-| `tests/placement/test_no_proof_in_receipts.py` | Proof-shaped bodies are not under `data/receipts/`. | Positive: proof under `data/proofs/`; negative: proof under `data/receipts/`. |
-| `tests/placement/test_no_release_manifest_outside_release.py` | `ReleaseManifest` only appears under `release/manifests/<release_id>/`. | Positive and negative manifest fixtures. |
-| `tests/placement/test_no_data_manifests_root.py` | `data/manifests/` MUST NOT exist as a root. | Fail-closed path fixture. |
-| `tests/placement/test_artifacts_no_trust_content.py` | `artifacts/` has no receipts, proofs, release manifests, catalog records, source registries, or published layers. | Positive: build output; negative: trust object under `artifacts/`. |
-| `tests/placement/test_catalog_matrix_home.py` | `CatalogMatrix` instances live under `data/proofs/catalog_matrix/` or proof-pack path. | Negative: `data/catalog/matrix/...`. |
-| `tests/closure/test_catalog_matrix_closure.py` | CatalogMatrix shows STAC ↔ DCAT ↔ PROV ↔ proof ↔ manifest ↔ published closure. | Synthetic public-safe fixture. |
-| `tests/closure/test_release_manifest_resolves_evidence.py` | Every `evidence_bundle_ref` in a `ReleaseManifest` resolves to `data/proofs/`. | Positive and negative refs. |
-| `tests/closure/test_orphan_published_artifact.py` | Every artifact in `data/published/` is named in a release manifest. | Negative orphan artifact fixture. |
-| `tests/governance/test_promotion_emits_decision_and_receipt.py` | Promotion emits both receipt and release decision artifact. | Synthetic dry-run promotion. |
-| `tests/migration/test_manifest_migration_preserves_digest.py` | Moving from `data/manifests/` or `artifacts/manifests/` preserves digest and emits migration receipt. | Legacy path fixture. |
-| `tests/migration/test_catalog_matrix_migration_alias_expires.py` | Legacy catalog-matrix aliases expire after compatibility window. | Legacy alias fixture. |
+| Receipt mistaken for proof | Material | Schema/contract labels, placement validator, UI wording |
+| Proof mistaken for release approval | Material | Release decision reference required |
+| Catalog item exposed before release | Material | Release-state gate in API/static resolver |
+| Duplicate manifest lanes diverge | Confirmed structural conflict | One canonical collection and migration |
+| CatalogMatrix remains overloaded | Confirmed documentation conflict | Descriptor/proof split and ADR-0022 coordination |
+| Thin ReleaseManifest schema validates incomplete records | Confirmed | Harden schema and semantic validator |
+| Trust-shaped output under `artifacts/` is mistaken for canon | Confirmed drift | Staging labels, content-aware validator, reviewed migration |
+| Orphan published artifacts | Unknown | Orphan detector and release-manifest closure |
+| Compatibility aliases become permanent | Likely without expiry | Time-bounded alias metadata and drift monitoring |
+| Public clients read proof/catalog internals | Structurally denied, runtime completeness unknown | Governed API and network tests |
+| Migration breaks immutable refs or digests | Material | Migration receipts, resolver aliases, rollback drill |
+| Review and author roles collapse | Needs verification | Separation-of-duties policy and accountable ReviewRecord |
+| Workflow green is interpreted as publication | Material | Explicit readiness semantics and release record requirement |
 
-[Back to top](#table-of-contents)
+[Back to top](#top)
 
 ---
 
-## 14. Rollback
+<a id="rollback-and-supersession"></a>
 
-If this ADR is later superseded or proves operationally infeasible:
+## Rollback and Supersession
 
-1. Author a successor ADR with `status: proposed`.
-2. Set this ADR to `status: superseded` and add `superseded_by: <successor ADR>`.
-3. Do **not** delete this ADR.
-4. Do **not** delete directory homes or compatibility aliases without a migration ADR that names affected releases.
-5. If the successor changes a family home, emit:
-   - `MigrationReceipt` per moved trust object;
-   - `CorrectionNotice` per affected published release;
-   - drift register entry for every discovered prior path;
-   - rollback card if any public or semi-public artifact was affected.
-6. Preserve old manifests and proof packs long enough to verify rollback.
+### Documentation rollback
 
-Rollback target for this proposed ADR:
+Before merge, abandon the branch and close the pull request. After merge, revert the documentation commit. Restore prior target blob:
 
 ```text
-ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION
+158ad6d31946d7d32537d5278ec6d2828ec880b3
 ```
 
-Rollback trigger examples:
+This documentation rollback does not move trust objects or change release state.
 
-| Trigger | Required action |
-|---|---|
-| Accepted ADR breaks existing released manifest resolution | Stop migration; emit correction notice; restore old resolver alias until successor ADR lands. |
-| Validator falsely rejects valid trust objects | Disable validator gate; preserve advisory mode; open bug and fixture. |
-| Migration loses digest equivalence | Quarantine migration output; restore previous path alias; emit migration failure receipt. |
-| Release clients rely on `data/manifests/` | Add compatibility alias for one release window; update clients through governed release plan. |
+### Decision supersession
 
-[Back to top](#table-of-contents)
+If a successor decision changes the boundary:
+
+1. create the successor ADR as `proposed`;
+2. review reciprocal supersession links;
+3. update this ADR to `superseded`;
+4. update the ADR index in the same reviewed change;
+5. preserve this file and its history;
+6. define migration and rollback for every affected family and release.
+
+### Implementation rollback
+
+A future migration rollback must restore:
+
+- prior canonical path or resolver alias;
+- original object bytes/digest;
+- prior release/correction/rollback references;
+- public cache and index state;
+- catalog and proof links;
+- compatibility pointer expiry;
+- migration failure receipt.
+
+No rollback may silently delete historical release, correction, or decision records.
+
+[Back to top](#top)
 
 ---
 
-## 15. References
+<a id="verification-checklist"></a>
 
-### KFM doctrine and project sources
+## Verification Checklist
 
-- `directory-rules.md` / `Directory Rules.pdf` — responsibility-root directory law, lifecycle invariant, schema-home posture, `release/` vs `data/published/`, and open question on `data/manifests/`.
-- `Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf` — trust spine, `RunReceipt`, `PromotionReceipt`, `MerkleManifest`, release gates, STAC profile, catalog closure, and no-network fixture expectations.
-- `KFM_Governed_AI_Extended_Pro_Source_Ledger_PDF_Only_Architecture_Report_2026-04-20.pdf` — evidence subordination, receipts vs proofs, `EvidenceBundle`, `ProofPack`, `ReleaseManifest`, `CatalogMatrix`, finite runtime outcomes, and source-ledger discipline.
-- `kfm_encyclopedia.pdf` — system-wide capability map, evidence drawer, release manifest, catalog closure, rollback card, and public/governed API boundaries.
-- `Master MapLibre Components-Functions-Features.pdf` — renderer boundary, release manifest verification backlog, and artifact provenance constraints.
-- `KFM_Whole_UI_Governed_AI_Expansion_Report.pdf` — UI and governed AI lineage for trust-visible public surfaces.
-- `KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf` — MapLibre as downstream renderer, Evidence Drawer, Focus Mode, and release-aware map shell.
+### Completed for v1.2 authoring
 
-### Retained lineage references from original draft
+- [x] Read the complete prior ADR.
+- [x] Confirm ADR ID, index row, exact path, and status.
+- [x] Inspect receipt, proof, catalog, published, release, and artifacts root READMEs.
+- [x] Inspect singular and plural manifest lane READMEs.
+- [x] Inspect ReleaseManifest contract and schema.
+- [x] Inspect CatalogMatrix contract and schema.
+- [x] Inspect ADR-0022 catalog-matrix decision.
+- [x] Inspect drift register entry for artifacts authority drift.
+- [x] Search open PRs and branches for overlapping ADR-0011 work.
+- [x] Preserve `proposed` status and one-file scope.
 
-The original ADR draft referenced the following prior reports. They are retained as lineage references unless current repo or current project source evidence confirms them:
+### Still open after this documentation update
 
-- `KFM_Pass_12_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf`
-- `KFM_Components_Pass_13_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf`
-- `KFM_Pass_16_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf`
-- `KFM_Pass_17_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf`
-- `kfm_build_companion.pdf`
-- domain architecture reports for geology, soil, habitat, flora, infrastructure, hazards, fauna, hydrology, and related lanes
+- [ ] Complete recursive inventory of all trust-object instances.
+- [ ] Verify actual validator and fixture inventories.
+- [ ] Inspect every release/correction/rollback lane conflict.
+- [ ] Verify workflow runs and branch/ruleset requirements for this revision.
+- [ ] Verify accountable review and independent approval.
+- [ ] Verify production/runtime/public delivery state.
+- [ ] Coordinate ADR-0022 and CatalogMatrix semantic changes.
+- [ ] Approve or reject the singular/plural manifest migration.
+- [ ] Resolve artifacts drift through a separate reviewed change.
+- [ ] Execute no-network end-to-end release and rollback proof.
+
+### Repository-native checks for this file
+
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+```
+
+Additional documentation, link, and repository aggregate checks should use the current repository-native commands discovered by CI; this ADR does not invent new commands.
+
+[Back to top](#top)
+
+---
+
+<a id="references"></a>
+
+## References
+
+### Repository evidence
+
+- [`docs/adr/INDEX.md`](./INDEX.md)
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md)
+- [`data/receipts/README.md`](../../data/receipts/README.md)
+- [`data/proofs/README.md`](../../data/proofs/README.md)
+- [`data/catalog/README.md`](../../data/catalog/README.md)
+- [`data/published/README.md`](../../data/published/README.md)
+- [`release/README.md`](../../release/README.md)
+- [`release/manifest/README.md`](../../release/manifest/README.md)
+- [`release/manifests/README.md`](../../release/manifests/README.md)
+- [`artifacts/README.md`](../../artifacts/README.md)
+- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md)
+- [`contracts/data/catalog_matrix.md`](../../contracts/data/catalog_matrix.md)
+- [`schemas/contracts/v1/data/catalog_matrix.schema.json`](../../schemas/contracts/v1/data/catalog_matrix.schema.json)
+- [`contracts/release/release_manifest.md`](../../contracts/release/release_manifest.md)
+- [`schemas/contracts/v1/release/release_manifest.schema.json`](../../schemas/contracts/v1/release/release_manifest.schema.json)
+- [`ADR-0022 — Catalog Matrix`](./ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md)
 
 ### Related ADRs
 
-> [!NOTE]
-> The links below are PROPOSED until verified in the current repo.
+- [`ADR-0001 — Schema Home`](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
+- [`ADR-0002 — Contracts vs Schemas Split`](./ADR-0002-contracts-vs-schemas-split.md)
+- [`ADR-0010 — Sensitive Default Denial`](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md)
+- [`ADR-0015 — Published Current Alias`](./ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md)
+- [`ADR-0018 — Promotion Gate Sequence`](./ADR-0018-promotion-gate-sequence.md)
+- [`ADR-0023 — Geo Manifest Signing`](./ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md)
+- [`ADR-0024 — Release Separation of Duties`](./ADR-0024-steward-separation-of-duties-for-release.md)
+- [`ADR-0025 — Public Client Store Boundary`](./ADR-0025-public-client-never-reads-canonical-internal-stores.md)
 
-- ADR-0001 — Spec normalization / hash and ID v1; schema-home authority.
-- ADR-0002 — Finite decision outcomes.
-- ADR-0003 — Watcher-as-non-publisher invariant.
-- ADR-0004 — KFM STAC profile v1.
-- ADR-0005 — `ReleaseManifest` envelope.
+### Supplied doctrine and planning lineage
 
-No external web research was used to revise this ADR.
+- `Directory Rules.pdf`
+- `Kansas Frontier Matrix Definitive Greenfield Building Plan v1.1`
+- `Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3`
+- `KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual`
+- `KFM Unified Doctrine Synthesis`
+- `Kansas Frontier Matrix — AI Build Operating Contract`
+- domain architecture reports that preserve receipt/proof/catalog/release separation
 
-[Back to top](#table-of-contents)
+These supplied materials support doctrine and lineage. Current repository bytes determine present implementation maturity.
 
----
-
-## 16. Verification checklist
-
-Before accepting this ADR:
-
-- [ ] Confirm ADR number `0011` is available in `docs/adr/`.
-- [ ] Confirm target path and filename against current repo convention.
-- [ ] Confirm whether Directory Rules are stored as `directory-rules.md`, `docs/doctrine/directory-rules.md`, or another path.
-- [ ] Confirm ADR-0001 schema-home decision and update references if schema-home authority differs.
-- [ ] Inspect current repo for `data/manifests/`.
-- [ ] Inspect current repo for `data/catalog/matrix/` and `data/catalog/<domain>/catalog_matrix/`.
-- [ ] Inspect current repo for trust-bearing files under `artifacts/`.
-- [ ] Inspect current repo for release manifests outside `release/manifests/`.
-- [ ] Add drift register entries for every conflicting current path.
-- [ ] Add or update per-root READMEs for `data/receipts/`, `data/proofs/`, `data/catalog/`, `data/published/`, `release/`, and `artifacts/`.
-- [ ] Add placement validators or mark them as deferred with owner and due condition.
-- [ ] Add closure validators or mark them as deferred with owner and due condition.
-- [ ] Add migration fixtures for `data/manifests/`, `artifacts/manifests/`, and catalog-matrix legacy paths.
-- [ ] Confirm rollback target for any migration touching published artifacts.
-- [ ] Confirm this ADR does not create parallel schema, contract, policy, source, release, proof, receipt, or registry authority.
-
-[Back to top](#table-of-contents)
+[Back to top](#top)
 
 ---
 
-## Related docs
+## Authority and Publication Boundary
 
-- [`directory-rules.md`](../../directory-rules.md) — NEEDS VERIFICATION: authority roots, lifecycle invariant, compatibility roots.
-- [`docs/adr/ADR-0001-spec-normalization.md`](./ADR-0001-spec-normalization.md) — NEEDS VERIFICATION: canonical schema-home and hashing rules.
-- [`docs/adr/ADR-0002-finite-decision-outcomes.md`](./ADR-0002-finite-decision-outcomes.md) — NEEDS VERIFICATION: finite outcomes.
-- [`docs/adr/ADR-0003-watcher-non-publisher-invariant.md`](./ADR-0003-watcher-non-publisher-invariant.md) — NEEDS VERIFICATION: watcher boundary.
-- [`docs/adr/ADR-0004-stac-profile.md`](./ADR-0004-stac-profile.md) — NEEDS VERIFICATION: KFM STAC profile.
-- [`docs/adr/ADR-0005-release-manifest-envelope.md`](./ADR-0005-release-manifest-envelope.md) — NEEDS VERIFICATION: release manifest envelope.
-- [`data/receipts/README.md`](../../data/receipts/README.md) — NEEDS VERIFICATION.
-- [`data/proofs/README.md`](../../data/proofs/README.md) — NEEDS VERIFICATION.
-- [`data/catalog/README.md`](../../data/catalog/README.md) — NEEDS VERIFICATION.
-- [`data/published/README.md`](../../data/published/README.md) — NEEDS VERIFICATION.
-- [`release/README.md`](../../release/README.md) — NEEDS VERIFICATION.
-- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — NEEDS VERIFICATION.
+This ADR is a proposed architecture decision. It is not:
+
+- a receipt;
+- a proof;
+- a catalog record;
+- a ReleaseManifest;
+- a PromotionDecision;
+- a ReviewRecord;
+- a migration approval;
+- a release;
+- a publication;
+- a rollback execution.
+
+No generated text, badge, diagram, branch, commit, pull request, merge, or workflow result may be used as a substitute for those governed objects.
 
 ---
 
-*Last updated: 2026-05-15 · Status: `proposed` · Decision class: authority boundary · [Back to top](#adr-0011--receipts-vs-proofs-vs-manifests-vs-catalog-separation)*
+## No-Loss and Change Ledger
+
+| Prior v1.1 element | v1.2 disposition |
+|---|---|
+| Four-way separation law | Preserved and expanded to make published artifacts explicit |
+| Receipt, proof, catalog, release meanings | Preserved and repository-grounded |
+| `release/manifests/` preference | Preserved as proposed canonical collection, now reconciled against the live singular/plural conflict |
+| `data/manifests/` prohibition | Narrowed: no new release-manifest authority; existing contents require classification before migration |
+| LayerManifest distinction | Preserved |
+| CatalogMatrix proof-side placement | Corrected: descriptor and validation proof are separate; coordinate with ADR-0022 |
+| Cross-family closure rules | Preserved and expanded |
+| Validator and CI proposals | Replaced with maturity/acceptance requirements; exact new paths remain proposed |
+| Migration table | Rebuilt around current conflicts and staged waves |
+| Consequences and alternatives | Preserved and modernized |
+| Rollback | Preserved with concrete prior blob |
+| “Repo unmounted” claims | Replaced with commit-pinned repository evidence |
+| Stale ADR links | Replaced with current indexed ADR paths |
+| Decision status | Unchanged: `proposed` |
+
+---
+
+## Change Log
+
+| Version | Date | Change |
+|---|---|---|
+| `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; replaced unmounted-repo assumptions; separated five authority families; proposed plural manifest collection and singular compatibility migration; documented thin ReleaseManifest schema and release holds; corrected CatalogMatrix overloading through descriptor/proof split coordinated with ADR-0022; recorded artifacts drift; added maturity, migration, acceptance, risk, rollback, and verification controls; preserved `proposed` status. |
+| `v1.1` | 2026-05-15 | Expanded the receipt/proof/catalog/release separation proposal, canonical-home table, diagram, object inventories, closure rules, validator proposals, migration plan, consequences, rollback, and then-unverified repository questions. |
+| `v1` | 2026-05-11 | Initial proposal for receipt, proof, catalog, manifest, and publication separation. |
+
+---
+
+**Last updated:** 2026-07-23 · **Decision status:** `proposed` · **Current enforcement:** partial roots and shapes / release closure held · **Path:** `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` · [Back to top](#top)
