@@ -168,7 +168,7 @@ def source_status(path: Path) -> SourceStatus:
         if status_match:
             raw = status_match.group(1).strip().strip('"\'').lower()
             raw = raw.split(";", 1)[0].strip()
-            if raw in {"draft", "proposed"}:
+            if raw in {"draft", "proposed", "legacy-proposed"}:
                 return SourceStatus(label=raw, effective="proposed")
             if raw in ALLOWED_EFFECTIVE_STATUSES:
                 return SourceStatus(label=raw, effective=raw)
