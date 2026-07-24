@@ -1,0 +1,136 @@
+{
+  "receipt_id": "genrec-editorconfig-file-families-7ba03fc4",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".editorconfig"
+  ],
+  "artifact_hashes": {
+    ".editorconfig": "sha256:7ba03fc478e091e38595db6ce571a9cd5814b5dd7cd1b85e567e9066b959b43d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-23"
+  },
+  "prompt_or_contract": "sha256:74f1b95722a6bec76e8d62bd87fc70485a70365a8da88738ab67bf99baeeda79",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "local syntax and whitespace checks",
+      "generated-receipt schema-shape checks"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/892255ad8179f8e7bc972776c3462ba6abe3be09",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.editorconfig",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1475",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.pre-commit-config.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/artifacts/qa/lint/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/aa4ef9c583ff08b25ea762e384d016ddac4297f2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1581"
+    ]
+  },
+  "truth_labels": {
+    ".editorconfig": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the repository, current root .editorconfig, prior merged editor-default PR, current tooling boundary, and absence of overlapping open editorconfig work."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "The existing repository-root .editorconfig remains in place; no root, lifecycle phase, schema, policy, release, or compatibility authority changed."
+    },
+    {
+      "gate": "editorconfig-structure",
+      "outcome": "PASS",
+      "reason": "Bounded structural checks confirmed one root marker, a global section, expected file-family sections, UTF-8/LF bytes, a final newline, and no trailing whitespace."
+    },
+    {
+      "gate": "repository-format-compatibility",
+      "outcome": "PASS",
+      "reason": "The update preserves two-space general indentation, four-space Python/TOML indentation, semantic Make tabs, LF, UTF-8, final newlines, and unwrapped Markdown while making existing data, policy, shell, web, and container families explicit."
+    },
+    {
+      "gate": "formatter-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The header continues to state that EditorConfig is basic editor guidance and does not establish Ruff, Prettier, ESLint, Markdownlint, Yamllint, formatter, pre-commit, or CI authority."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "The branch .editorconfig was read back after commit aa4ef9c583ff08b25ea762e384d016ddac4297f2 and matched the locally hashed content."
+    },
+    {
+      "gate": "pull-request-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Workflow conclusions are pending pull-request execution."
+    },
+    {
+      "gate": "branch-protection-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt records provenance and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-editorconfig",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.editorconfig"
+    },
+    {
+      "id": "prior-editorconfig-pr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/1475"
+    },
+    {
+      "id": "precommit-whitespace-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.pre-commit-config.yaml"
+    },
+    {
+      "id": "lint-authority-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/artifacts/qa/lint/README.md"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-24T01:11:09Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": 1581,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored second-pass update of the root .editorconfig. It preserves the prior effective baseline while making existing structured-data, policy, shell, web, and container file families explicit; extends the no-wrap hint to Markdown/MDX; and keeps Make recipe tabs explicit. It does not create or claim formatter, lint, CI, release, or publication authority. Human review is pending."
+}
