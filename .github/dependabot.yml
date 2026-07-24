@@ -1,19 +1,25 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.0
-# Updated: 2026-07-17
+# Version: v1.1
+# Updated: 2026-07-23
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
 # - It does not approve, merge, release, publish, change policy, or establish
 #   that an update is compatible, secure, rights-cleared, or production-ready.
 # - Security updates stay on the default branch because no target-branch is set.
-# - Group rules below apply only to version updates; security updates remain
-#   isolated for focused review.
+# - Group rules and cooldowns below apply only to version updates; security
+#   updates remain isolated and are not delayed by cooldown.
+# - Cross-directory Python groups use dependency-name grouping so the same
+#   dependency can be reviewed once across matching manifests.
+# - npm, GitHub Actions, and pre-commit major updates remain individual for
+#   focused compatibility and workflow-boundary review.
 # - Labels are intentionally omitted until the repository label inventory is
 #   verified. CODEOWNERS remains the review-routing surface.
 # - Docker base-image monitoring is not enabled here because the current files
 #   use custom Dockerfile.* placeholder names; supported discovery and intended
 #   activation remain NEEDS VERIFICATION.
+# - Private registries are not configured; adding one requires a separate
+#   credentials, least-privilege, and external-code-execution review.
 
 version: 2
 
@@ -35,6 +41,10 @@ updates:
       day: "monday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
     open-pull-requests-limit: 6
     assignees:
       - "bartytime4life"
@@ -62,6 +72,8 @@ updates:
         group-by: "dependency-name"
 
   # The root package.json declares the apps/* and packages/* workspaces.
+  # Production and development minor/patch updates stay in separate PRs;
+  # major updates are intentionally left ungrouped.
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -69,6 +81,10 @@ updates:
       day: "tuesday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
     open-pull-requests-limit: 4
     assignees:
       - "bartytime4life"
@@ -79,21 +95,25 @@ updates:
     pull-request-branch-name:
       separator: "-"
     groups:
-      node-minor-patch:
+      node-production-minor-patch:
         applies-to: "version-updates"
+        dependency-type: "production"
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
-      node-major:
+      node-development-minor-patch:
         applies-to: "version-updates"
+        dependency-type: "development"
         patterns:
           - "*"
         update-types:
-          - "major"
+          - "minor"
+          - "patch"
 
   # GitHub Actions references in .github/workflows and repository-local actions.
+  # Minor/patch updates are grouped; major action boundary changes stay isolated.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -101,6 +121,8 @@ updates:
       day: "wednesday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 3
     assignees:
       - "bartytime4life"
@@ -117,14 +139,9 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      actions-major:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-        update-types:
-          - "major"
 
   # Root .pre-commit-config.yaml hook revisions.
+  # Minor/patch updates are grouped; major hook changes stay isolated.
   - package-ecosystem: "pre-commit"
     directory: "/"
     schedule:
@@ -132,6 +149,8 @@ updates:
       day: "friday"
       time: "06:00"
       timezone: "America/Chicago"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 2
     assignees:
       - "bartytime4life"
@@ -141,7 +160,10 @@ updates:
     pull-request-branch-name:
       separator: "-"
     groups:
-      pre-commit-hooks:
+      pre-commit-minor-patch:
         applies-to: "version-updates"
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
