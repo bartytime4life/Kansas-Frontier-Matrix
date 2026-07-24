@@ -42,7 +42,7 @@ evidence_snapshot:
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 7d5b7e80a493fe817f2c5378bb77ab5f247e8d87
+  base_commit: e4d1539454d05fc7d61a9b0e8dcf97e870fcce03
   prior_blob: 74273775436287f35089c41e1e0c9f7c33f00645
   packages_root_blob: 154e1c9a8b841397bceb52e6b4933b241906ab9a
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
@@ -224,7 +224,7 @@ passing test                 != claim truth
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
 | Visibility | Public |
 | Base ref | `main` |
-| Base commit | `7d5b7e80a493fe817f2c5378bb77ab5f247e8d87` |
+| Base commit | `e4d1539454d05fc7d61a9b0e8dcf97e870fcce03` |
 | Prior README blob | `74273775436287f35089c41e1e0c9f7c33f00645` |
 | README maturity | Repository-grounded draft |
 | Package implementation | **README only at checked and indexed package paths** |
@@ -618,7 +618,7 @@ Drafting a decision in the same change does not make that decision accepted auth
 |---|---|
 | Document version | `v0.3` |
 | Last repository evidence review | `2026-07-23` |
-| Repository snapshot | `main@7d5b7e80a493fe817f2c5378bb77ab5f247e8d87` |
+| Repository snapshot | `main@e4d1539454d05fc7d61a9b0e8dcf97e870fcce03` |
 | Prior README blob | `74273775436287f35089c41e1e0c9f7c33f00645` |
 | Current implementation conclusion | README-only package boundary; purpose held pending decision |
 | Shape-validation conclusion | EvidenceRef and EvidenceBundle validators are executable and aggregate-wired |
