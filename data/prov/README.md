@@ -1,282 +1,180 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/prov/readme
-title: data/prov README
-type: directory-readme
-version: v0.1
-status: draft
-owners:
-  - TODO(owner): data steward
-  - TODO(owner): provenance steward
-  - TODO(owner): catalog steward
-  - TODO(owner): proof steward
-  - TODO(owner): release steward
-created: 2026-06-25
-updated: 2026-06-25
-policy_label: public-review
-path: data/prov/README.md
-related:
-  - ../README.md
-  - ../catalog/README.md
-  - ../catalog/prov/README.md
-  - ../proofs/README.md
-  - ../receipts/README.md
-  - ../processed/README.md
-  - ../published/README.md
-  - ../../release/README.md
-  - ../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../contracts/README.md
-  - ../../schemas/README.md
-  - ../../policy/README.md
+title: data/prov/ — Provenance Compatibility and Routing
+type: README; data-parent-contract; compatibility-lane; authority-boundary
+version: v0.2.0
+status: repository-grounded draft; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — data, catalog, provenance, migration, and release stewards
+updated: 2026-07-24
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: "restricted-review; no-direct-public-path; release-gated"
+current_path: data/prov/README.md
+review_packet_id: kfm-data-parent-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
+  and prior substantive boundary material / PROPOSED normalized folder contract /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
+  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
+  retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+  review_branch: agent/modernize-data-readme-20260724-v3
+  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+  prior_blob: 480ab7a559acb491d5984b2b33f0961578adc198
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
 notes:
-  - "Root README for data/prov provenance support. It replaces a greenfield stub."
-  - "The current repo also documents PROV catalog records under data/catalog/. Treat this lane as provenance support/compatibility until an ADR or migration note resolves the boundary with data/catalog/prov/."
-  - "This README describes directory responsibility and guardrails. It does not prove emitted PROV records, schemas, validators, fixtures, CI workflows, or release-gate enforcement exist."
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "Markdown-only parent-lane convergence; no payload or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `data/prov/`
+# `data/prov/` — Provenance Compatibility and Routing
 
-> Provenance-support lane for KFM data lineage records, provenance indexes, and PROV-style references that help maintainers inspect how a candidate, catalog record, proof, release, correction, or rollback artifact was derived.
+> **One-line purpose.** Preserve the existing provenance-support path as a fail-closed routing and migration surface while preventing it from becoming a second PROV catalog, receipt, proof, or release authority.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-2ea44f)
-![Lifecycle: provenance support](https://img.shields.io/badge/lifecycle-provenance--support-blue)
-![Authority: not release](https://img.shields.io/badge/authority-not--release-b91c1c)
-![Publication: not by placement](https://img.shields.io/badge/publication-not--by--placement-lightgrey)
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: Compatibility — transitional](https://img.shields.io/badge/authority-compatibility-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owners:** `TODO(owner): data steward` · `TODO(owner): provenance steward` · `TODO(owner): catalog steward` · `TODO(owner): proof steward` · `TODO(owner): release steward`  
-> **Path:** `data/prov/README.md`  
-> **Truth posture:** CONFIRMED path exists as a current repo stub / CONFIRMED `data/README.md` lists `prov` under `data/` / CONFLICTED with `data/catalog/README.md` recommending PROV catalog projections under `data/catalog/prov/` / NEEDS VERIFICATION for accepted instance shape, schemas, validators, CI, and migration posture.
+> Path placement, a generated derivative, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, release approval, or KFM publication.
 
 > [!WARNING]
-> Provenance support is not proof, not a catalog approval, not a release decision, and not publication. Use this lane to preserve derivation context and references; keep catalog records, proof objects, receipts, release decisions, and published carriers in their owning roots.
+> Secrets and restricted or harmful-precision material require approved storage and access controls outside ordinary public-repository paths.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
-## Quick jumps
+## Purpose
 
-| Section | Use it for |
+Preserve the existing provenance-support path as a fail-closed routing and migration surface while preventing it from becoming a second PROV catalog, receipt, proof, or release authority.
+
+Artifacts here may carry or support inspectable claims, but directory placement cannot make a claim true, rights-cleared, policy-admitted, reviewed, released, or public.
+
+## Authority level
+
+**Compatibility — transitional; PROVENANCE SUPPORT responsibility.**
+
+This path does not own object meaning, machine shape, policy, release decisions, public serving, or factual truth. Those remain under `contracts/`, `schemas/`, `policy/`, `release/`, and governed delivery interfaces.
+
+## Status
+
+| Field | Bounded result |
 |---|---|
-| [1. Scope](#1-scope) | What this lane is for. |
-| [2. Boundary note](#2-boundary-note) | How `data/prov/` relates to `data/catalog/prov/`. |
-| [3. Repo fit](#3-repo-fit) | Neighboring roots and authority boundaries. |
-| [4. Accepted inputs](#4-accepted-inputs) | What belongs here. |
-| [5. Exclusions](#5-exclusions) | What belongs somewhere else. |
-| [6. Directory pattern](#6-directory-pattern) | Proposed child layout. |
-| [7. Minimum provenance support shape](#7-minimum-provenance-support-shape) | Proposed fields for future instances. |
-| [8. Lifecycle relationship](#8-lifecycle-relationship) | Where provenance support fits RAW → PUBLISHED. |
-| [9. Maintenance checklist](#9-maintenance-checklist) | Review gates before adding files. |
-| [10. Definition of done](#10-definition-of-done) | What remains before maturity. |
+| Path | `data/prov/` |
+| Version | `v0.2.0` |
+| Prior blob | `480ab7a559acb491d5984b2b33f0961578adc198` |
+| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers/consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
 
----
+## What belongs here
 
-## 1. Scope
+- this README, bounded inventories, old-to-new mappings, migration/deprecation notes, and non-payload routing references;
+- temporary provenance-support pointers whose canonical family has not yet been resolved;
 
-`data/prov/` is a provenance-support lane under the `data/` lifecycle root. It should help answer:
+Local README, inventory, digest, migration, and disposition sidecars may explain the boundary without creating parallel authority.
 
-- what source, process, candidate, proof, catalog record, release candidate, published artifact, correction, or rollback item a record is about;
-- which upstream and downstream references are connected;
-- which process receipts, validation reports, evidence bundles, catalog records, review records, and release records are relevant;
-- which time fields and digests bind the lineage; and
-- whether the provenance support is complete enough to assist review, catalog closure, release review, correction, or rollback.
+## What does NOT belong here
 
-This lane should make lineage easier to inspect without turning lineage metadata into proof, catalog approval, or release authority.
-
-[Back to top](#top)
-
----
-
-## 2. Boundary note
-
-There is a current placement tension to preserve rather than hide:
-
-- `data/README.md` lists `prov` as a data-root lane.
-- `data/catalog/README.md` lists PROV catalog records as accepted catalog-stage contents and recommends `data/catalog/prov/` in its catalog layout.
-
-Until an ADR, migration note, or accepted directory rule resolves that boundary, use this safe interpretation:
-
-| Lane | Use | Status |
-|---|---|---|
-| `data/prov/` | Provenance-support indexes, lineage bundles, and cross-family provenance references that are not themselves catalog records. | CONFIRMED path exists; instance rules NEEDS VERIFICATION. |
-| `data/catalog/prov/` | PROV catalog projections that are part of the CATALOG stage. | PROPOSED by `data/catalog/README.md`; path presence NEEDS VERIFICATION. |
-
-> [!CAUTION]
-> Do not use `data/prov/` to create a parallel catalog authority. If a file is a catalog-stage PROV projection, prefer `data/catalog/prov/` unless a later ADR says otherwise.
-
-[Back to top](#top)
-
----
-
-## 3. Repo fit
-
-| Neighbor | Role | Boundary |
-|---|---|---|
-| [`../raw/`](../raw/) | Source captures. | Provenance records may reference RAW captures; they do not store them. |
-| [`../work/`](../work/) / [`../quarantine/`](../quarantine/) | Working candidates and held material. | Provenance may record lineage state; it does not normalize or quarantine. |
-| [`../processed/`](../processed/) | Validated normalized candidates. | Provenance may describe derivation; processed data remains upstream. |
-| [`../catalog/`](../catalog/) | Catalog-stage records, including PROV catalog projections. | Catalog records belong there, not here, unless boundary is resolved differently. |
-| [`../triplets/`](../triplets/) | Graph/triplet projection. | Provenance can reference graph artifacts; it is not the graph store. |
-| [`../proofs/`](../proofs/) | Evidence, validation, proof pack, review, and proof support. | Provenance can reference proof artifacts; it does not replace proof. |
-| [`../receipts/`](../receipts/) | Process memory. | Receipts record operations; provenance connects lineage. |
-| [`../published/`](../published/) | Released public-safe carriers. | Provenance support is not public publication by placement. |
-| [`../../release/`](../../release/) | Release decisions, rollback cards, correction notices, signatures. | Release authority stays in `release/`. |
-| [`../../contracts/`](../../contracts/) | Semantic meaning. | Provenance contract meaning belongs there once accepted. |
-| [`../../schemas/`](../../schemas/) | Machine shape. | Machine-readable shape belongs there once accepted. |
-| [`../../policy/`](../../policy/) | Admissibility. | Provenance records may reference policy outcomes; they do not define policy. |
-
-[Back to top](#top)
-
----
-
-## 4. Accepted inputs
-
-Use this lane for provenance support that is safe to store under repository policy and useful for inspection, review, correction, rollback, or migration.
-
-| Accepted item | Suggested placement | Status |
-|---|---|---|
-| Provenance support README | `data/prov/README.md` | CONFIRMED. |
-| Cross-family lineage bundle | `data/prov/bundles/<bundle_id>.prov.json` | PROPOSED. |
-| Provenance index | `data/prov/indexes/<scope>.prov-index.json` | PROPOSED. |
-| Release-linked provenance support | `data/prov/release_refs/<release_id>.prov-ref.json` | PROPOSED; release authority remains in `release/`. |
-| Correction / rollback lineage support | `data/prov/corrections/<correction_id>.prov.json` | PROPOSED; correction authority remains in `release/`. |
-| Migration or supersession lineage support | `data/prov/retired/<id>.superseded-prov.json` | PROPOSED. |
-
-[Back to top](#top)
-
----
-
-## 5. Exclusions
-
-| Excluded material | Correct home |
+| Do not place here | Correct home or action |
 |---|---|
-| RAW source captures or downloads | `data/raw/` |
-| WORK or QUARANTINE candidates | `data/work/` or `data/quarantine/` |
-| Processed normalized data | `data/processed/` |
-| PROV catalog records | `data/catalog/prov/` once verified; otherwise `data/catalog/` boundary review required |
-| EvidenceBundle, ValidationReport, ProofPack, citation validation, or review proof objects | `data/proofs/` child lanes |
-| Process receipts | `data/receipts/` |
-| Triplets or graph edges | `data/triplets/` |
-| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, signatures | `release/` |
-| Published layers, reports, API payloads, or story carriers | `data/published/` after release gates |
-| Policy rules | `policy/` |
-| Machine schemas | `schemas/` |
-| Semantic contracts | `contracts/` |
+| new PROV catalog records | `data/catalog/prov/` unless accepted governance decides otherwise |
+| process receipts | `data/receipts/` |
+| proof support | `data/proofs/` |
+| release decisions or public payloads | `release/` and `data/published/` |
+| Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
+| Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
 
-[Back to top](#top)
+## Inputs
 
----
+Recursive inventory, consumer search, object-family classification, and accepted migration/retirement evidence.
 
-## 6. Directory pattern
+As applicable, inputs must resolve stable identity, source role, space/time scope, rights, sensitivity, contract/schema, code/spec/run, validation/receipt, evidence/proof, policy/review, release, correction, and rollback references.
 
-```text
-data/prov/
-├── README.md
-├── bundles/
-│   └── <bundle_id>.prov.json
-├── indexes/
-│   └── <scope>.prov-index.json
-├── release_refs/
-│   └── <release_id>.prov-ref.json
-├── corrections/
-│   └── <correction_id>.prov.json
-└── retired/
-    └── <id>.superseded-prov.json
-```
+## Outputs
 
-> [!NOTE]
-> This child layout is PROPOSED until contracts, schemas, validators, fixtures, and a placement decision clarify how `data/prov/` should coexist with `data/catalog/prov/`.
+A bounded compatibility status and routing map. It emits no truth, proof, catalog closure, release, or publication authority.
 
-[Back to top](#top)
+Public clients must not use an internal or compatibility lane as a direct data service.
 
----
+## Validation
 
-## 7. Minimum provenance support shape
+Validate placement; identity/digest/version; source role and lineage; rights/sensitivity; spatial/temporal support; contract/schema; execution and receipts; evidence/citations/proofs; policy/review; catalog/triplet parity; release/correction/rollback dependencies; links/anchors/metadata; and sensitive-content exposure.
 
-A future machine-readable provenance support object should include at least these fields. This shape is PROPOSED until backed by contracts and schemas.
+No complete lane-wide validator was verified. A pass proves only the check’s declared scope.
 
-| Field | Purpose |
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include data, catalog, provenance, migration, and release stewards as applicable. Payload, source activation, rights/sensitivity, migration, public-serving, correction, or rollback changes require corresponding specialist and independent review. CODEOWNERS routing is not approval evidence.
+
+## Related folders
+
+- Parent: [`data/`](../README.md)
+- Lifecycle: [`raw/`](../raw/README.md) · [`work/`](../work/README.md) · [`quarantine/`](../quarantine/README.md) · [`processed/`](../processed/README.md) · [`catalog/`](../catalog/README.md) · [`triplets/`](../triplets/README.md) · [`published/`](../published/README.md)
+- Trust support: [`receipts/`](../receipts/README.md) · [`proofs/`](../proofs/README.md) · [`registry/`](../registry/README.md) · [`rollback/`](../rollback/README.md)
+- Authority: [`contracts/`](../../contracts/README.md) · [`schemas/`](../../schemas/README.md) · [`policy/`](../../policy/README.md) · [`release/`](../../release/README.md)
+- Doctrine: [Directory Rules](../../docs/doctrine/directory-rules.md) · [Lifecycle Law](../../docs/doctrine/lifecycle-law.md) · [Trust Membrane](../../docs/doctrine/trust-membrane.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
+- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, independent review, retention, and operational rollback:** needs verification
+
+Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
+
+## Operating contract
+
+**CONFLICTED:** `data/prov/` exists while catalog PROV projections are also documented under `data/catalog/prov/`.
+
+Safe sequence: freeze new trust-bearing writes; inventory payloads and consumers; classify each object; adopt the required ADR/migration record; preserve IDs and references; test cutover and stale-reference detection; retain rollback; then redirect, tombstone, or retire.
+
+## Current bounded child-lane index
+
+A complete recursive child inventory was not established. Existing children are not retired or reclassified by omission.
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
+| Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
+| Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
 |---|---|
-| `prov_id` | Stable provenance-support identifier. |
-| `scope` | Source, run, candidate, catalog, proof, release, correction, rollback, or cross-family scope. |
-| `subject_ref` | The object this provenance support describes. |
-| `upstream_refs` | Sources, receipts, processed candidates, EvidenceBundles, or catalog records used. |
-| `downstream_refs` | Catalog, proof, release, published, correction, or rollback objects that consume it. |
-| `activity_refs` | Transform, validation, review, catalog, release, correction, or rollback activities. |
-| `agent_refs` | Tool, pipeline, steward, reviewer, or service identity references. |
-| `time_refs` | Source, observed, run, retrieval, validation, release, correction, and supersession times where material. |
-| `digest_refs` | Input, output, canonical, or bundle digests. |
-| `policy_refs` | Policy decisions or access posture references where material. |
-| `review_refs` | ReviewRecord or review proof references where material. |
-| `release_refs` | Release candidate, manifest, correction, withdrawal, or rollback refs. |
-| `status` | `draft`, `candidate`, `accepted`, `superseded`, `retired`, or `needs_verification`. |
-| `reasons` | Machine-readable reason list. |
+| Stable path/document identity | Preserved |
+| Core lifecycle or compatibility role | Preserved and clarified |
+| Child-lane index | Preserved where present; omission is not retirement |
+| Trust membrane and anti-collapse rules | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-24
+
+- normalized the parent README to Directory Rules §15;
+- preserved substantive boundaries and explicit uncertainty;
+- added validation, review, verification, and no-loss controls;
+- changed Markdown only.
 
 [Back to top](#top)
-
----
-
-## 8. Lifecycle relationship
-
-```mermaid
-flowchart LR
-  RAW["RAW"] --> WORK["WORK / QUARANTINE"]
-  WORK --> PROC["PROCESSED"]
-  PROC --> CAT["CATALOG / TRIPLET"]
-  CAT --> REL["RELEASE"]
-  REL --> PUB["PUBLISHED"]
-
-  PROV["data/prov<br/>provenance support"] -. references .-> RAW
-  PROV -. references .-> WORK
-  PROV -. references .-> PROC
-  PROV -. references .-> CAT
-  PROV -. supports review of .-> REL
-  PROV -. "does not publish" .-> PUB
-
-  REC["data/receipts"] -. process memory .-> PROV
-  PROOF["data/proofs"] -. evidence/proof support .-> PROV
-  POLICY["policy/"] -. admissibility refs .-> PROV
-```
-
-Provenance support can connect lifecycle stages. It does not replace the lifecycle, and it does not make publication true.
-
-[Back to top](#top)
-
----
-
-## 9. Maintenance checklist
-
-Before adding provenance support under this root, verify:
-
-- [ ] The file is provenance support, not source data, proof, receipt, catalog record, release decision, schema, contract, or policy.
-- [ ] If the file is a PROV catalog projection, route it to `data/catalog/prov/` or open a placement review.
-- [ ] The subject, upstream references, downstream references, activities, agents, times, and digests are explicit.
-- [ ] Evidence, receipt, proof, catalog, review, release, correction, and rollback references remain in their owning roots.
-- [ ] The file does not duplicate raw source payloads.
-- [ ] The file does not claim publication, policy approval, release authority, or proof closure by placement.
-- [ ] Public clients do not read this path directly as a normal runtime path.
-
-[Back to top](#top)
-
----
-
-## 10. Definition of done
-
-This lane is operationally mature when:
-
-- [ ] The placement boundary between `data/prov/` and `data/catalog/prov/` is resolved by ADR, migration note, or accepted Directory Rules update.
-- [ ] A semantic provenance-support contract exists under `contracts/`.
-- [ ] A machine-checkable schema exists under `schemas/`.
-- [ ] Validators and fixtures exist for valid, invalid, superseded, and release-linked provenance support.
-- [ ] CI or equivalent checks prevent family collapse across receipts, proofs, catalog, release, and published artifacts.
-- [ ] Release docs describe when provenance support is required before publication, correction, or rollback.
-- [ ] A synthetic no-network release candidate demonstrates source → receipt → validation → evidence/proof → catalog → provenance support → release → published artifact → rollback traceability.
-
----
-
-## Maintainer note
-
-Provenance is connective tissue, not authority transfer. Keep lineage records compact, reference-rich, reversible, and honest about what they prove. When placement, rights, evidence, policy, release state, or rollback support is unclear, mark the file `NEEDS VERIFICATION` and keep the claim out of public authority paths.
