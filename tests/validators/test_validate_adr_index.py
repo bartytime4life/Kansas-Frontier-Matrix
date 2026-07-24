@@ -92,6 +92,18 @@ def test_valid_index_accepts_proposed_and_draft_source_metadata(tmp_path: Path) 
     assert validate_repository(root) == []
 
 
+def test_valid_index_accepts_legacy_proposed_meta_status(tmp_path: Path) -> None:
+    root = _base_repo(tmp_path)
+    filename = "ADR-0007-legacy-decision.md"
+    _write(root / "docs/adr" / filename, _adr("ADR-0007", "legacy-proposed", "Legacy"))
+    _write(
+        root / "docs/adr/INDEX.md",
+        _index([_row("ADR-0007", filename, "proposed", "legacy-proposed")]),
+    )
+
+    assert validate_repository(root) == []
+
+
 def test_number_collision_is_rejected(tmp_path: Path) -> None:
     root = _base_repo(tmp_path)
     _write(root / "docs/adr/ADR-0001-first.md", _adr("ADR-0001", "proposed"))
