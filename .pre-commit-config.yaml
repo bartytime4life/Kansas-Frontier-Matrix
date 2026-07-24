@@ -1,11 +1,47 @@
-# KFM pre-commit — greenfield placeholder.
-# Activate when tools land. Trust-bearing checks should still run in CI.
+# Kansas Frontier Matrix commit-time repository hygiene.
+#
+# Scope:
+# - deterministic, repository-wide file integrity and syntax checks;
+# - no domain truth, policy, evidence, release, or publication authority;
+# - no Ruff, Mypy, ESLint, or Markdownlint profile is introduced here.
+#
+# These hooks complement repository CI. A passing local run does not replace
+# schema, contract, policy, evidence, security, promotion, or release gates.
+
+minimum_pre_commit_version: "3.2.0"
+fail_fast: false
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      # Repository and cross-platform integrity
+      - id: check-case-conflict
+      - id: check-illegal-windows-names
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: destroyed-symlinks
+      - id: forbid-new-submodules
+
+      # Secret and accidental-debug safeguards
+      - id: detect-private-key
+      - id: debug-statements
+
+      # Parseable source and configuration
+      - id: check-ast
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+
+      # Script metadata
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+
+      # Text normalization aligned with .editorconfig
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+        args: [--fix=lf]
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-json
-      - id: check-merge-conflict
