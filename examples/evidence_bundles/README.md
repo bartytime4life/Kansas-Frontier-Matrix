@@ -1,273 +1,208 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/examples/evidence-bundles/readme
-title: EvidenceBundle Examples README
-type: standard
-version: v0.1.0
-status: draft
-owners: TODO(owner): examples steward; TODO(owner): evidence steward; TODO(owner): proof steward; TODO(owner): docs steward
-created: NEEDS VERIFICATION - greenfield stub existed before 2026-06-30 expansion
-updated: 2026-06-30
-policy_label: public-review
-related: [../README.md, ../../data/proofs/README.md, ../../data/proofs/evidence_bundle/README.md, ../../data/proofs/citation_validation/README.md, ../../data/proofs/proof_pack/README.md, ../../docs/architecture/governed-api.md, ../../docs/doctrine/directory-rules.md]
-tags: [kfm, examples, evidence-bundle, evidenceref, proof-support, cite-or-abstain, fixtures, non-authoritative]
-notes: ["This README replaces a greenfield stub at `examples/evidence_bundles/README.md`.", "Examples are illustrative and review aids only; canonical proof support belongs under `data/proofs/` and release decisions belong under `release/`.", "README presence does not prove example files, validators, schemas, fixtures, CI checks, or governed API route behavior exist."]
+title: `examples/evidence_bundles/` — Evidence Support Examples
+type: readme; nested-example-lane; non-authoritative-demonstration-boundary
+version: v0.2.0
+status: repository-grounded draft; STATIC_WALKTHROUGH; non-authoritative; validation-bounded; do-not-publish
+owners: NEEDS VERIFICATION — examples steward and listed specialist reviewers
+updated: 2026-07-24
+supersedes: v0.1.x content at the same path; no operational object, runtime behavior, release, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: public-review; synthetic-first; fail-closed; cite-or-abstain; correction-aware
+current_path: examples/evidence_bundles/README.md
+review_packet_id: kfm-md-examples-wave-20260724
+truth_posture: >
+  CONFIRMED exact path, prior blob, current parent examples contract, complete prior file,
+  and referenced repository boundaries / PROPOSED normalized lane contract and future
+  example-validator profile / UNKNOWN executable child payloads, runtime parity, deployed
+  consumers, and production effects / NEEDS VERIFICATION owners, accepted schemas,
+  validators, fixtures, CI, host rendering, correction propagation, and retirement drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: fe9442ef01ed676e11ccea2796c6fe4090dd1e7e
+  prior_blob: dd717f2d24c7be6606bf665deb8e5a5d7f3dc099
+  parent_examples_blob: d3fbce80c82106935288d59a708bbb1a0118591e
+  inventory_method: complete target read plus bounded linked-file evidence; no example execution or runtime inspection
+notes:
+  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
+  - "This change is Markdown only and does not create a fixture, test, schema, policy, proof, receipt, route, release, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# EvidenceBundle Examples
+# `examples/evidence_bundles/` — Evidence Support Examples
 
-Illustrative EvidenceBundle examples for showing claim support, EvidenceRef resolution, citation closure, finite outcomes, and trust-membrane behavior without becoming proof authority.
+> **One-line purpose.** Teach EvidenceRef resolution, EvidenceBundle composition, citation closure, finite outcomes, and safe sensitivity transforms without creating proof records.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: examples" src="https://img.shields.io/badge/root-examples%2F-6f42c1">
-  <img alt="Family: EvidenceBundle examples" src="https://img.shields.io/badge/family-EvidenceBundle%20examples-purple">
-  <img alt="Authority: non authoritative" src="https://img.shields.io/badge/authority-non--authoritative-critical">
-  <img alt="Truth: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-2ea44f">
-</p>
-
-**Status:** draft / example-lane guidance  
-**Owners:** `TODO(owner): examples steward` · `TODO(owner): evidence steward` · `TODO(owner): proof steward` · `TODO(owner): docs steward`  
-**Path:** `examples/evidence_bundles/README.md`  
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Example contract](#example-contract) · [Lifecycle relationship](#lifecycle-relationship) · [Suggested layout](#suggested-layout) · [Validation checklist](#validation-checklist) · [Evidence ledger](#evidence-ledger)
+[![Status: static walkthrough](https://img.shields.io/badge/status-STATIC__WALKTHROUGH-f59e0b?style=flat-square)](#status)
+[![Authority: example only](https://img.shields.io/badge/authority-example%20only-b42318?style=flat-square)](#authority-level)
+[![Publication: denied](https://img.shields.io/badge/publication-denied-b42318?style=flat-square)](#what-does-not-belong-here)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
 > [!IMPORTANT]
-> Files under `examples/evidence_bundles/` are examples. They are not canonical EvidenceBundles, proof packs, citation-validation records, source records, release decisions, policy decisions, public payloads, or governed API responses. If an example is useful enough to become operational, promote it through the proper responsibility root and keep the example copy synthetic or clearly fixture-scoped.
+> `examples/` is canonical for demonstrations, not for the objects or behavior demonstrated. A polished file, merged pull request, parser pass, or screenshot does not prove source authority, runtime parity, evidence closure, policy permission, release approval, or KFM publication.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Contract](#example-contract) · [Guardrails](#guardrails) · [Inventory](#current-bounded-inventory) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
-## Scope
+## Purpose
 
-`examples/evidence_bundles/` is a documentation and review aid for showing how EvidenceBundle-like material should behave in KFM.
+Teach EvidenceRef resolution, EvidenceBundle composition, citation closure, finite outcomes, and safe sensitivity transforms without creating proof records.
 
-Use this lane to demonstrate:
+This lane exists to make review and learning faster. It must not become a parallel contract, schema, policy, fixture, test, proof, receipt, source registry, runtime, release, or publication authority.
 
-- how an `EvidenceRef` should resolve to EvidenceBundle support;
-- how a claim keeps source role, spatial scope, temporal scope, rights posture, sensitivity posture, review state, release state, and limitation text visible;
-- how citation validation supports cite-or-abstain behavior;
-- how `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` outcomes differ;
-- how examples should avoid direct public reads from RAW, WORK, QUARANTINE, PROCESSED, internal catalog, proof, receipt, source-registry, or review stores;
-- how sensitive examples should use synthetic, redacted, generalized, or clearly non-real data.
+## Authority level
 
-This folder should make reviewers faster. It should not become a shortcut around schemas, validators, proof lanes, release gates, or policy review.
+**Non-authoritative example lane; proof authority remains under `data/proofs/`.**
 
----
+Operational meaning remains owned by the relevant `docs/`, `contracts/`, `schemas/`, `policy/`, implementation, `tests/`, `fixtures/`, `data/`, and `release/` surfaces.
 
-## Path posture
+## Status
 
-The target file existed as a greenfield stub:
+| Field | Bounded result |
+|---|---|
+| Path | `examples/evidence_bundles/README.md` |
+| Version | `v0.2.0` |
+| Maturity | `STATIC_WALKTHROUGH` |
+| Prior blob | `dd717f2d24c7be6606bf665deb8e5a5d7f3dc099` |
+| Recursive payload inventory | `UNKNOWN` beyond the bounded inventory below |
+| Executable entrypoint / observed run | `NOT ESTABLISHED` |
+| Public/release readiness | `DENY BY PLACEMENT` |
 
-```text
-examples/evidence_bundles/README.md
-```
+## What belongs here
 
-Current placement evidence:
+- small synthetic EvidenceRef and EvidenceBundle-like sketches
+- claim-to-evidence walkthroughs with explicit limitations
+- citation pass, abstain, deny, and error demonstrations
+- redaction/generalization examples with no reconstructive detail
+- review notes that point to the owning contracts, schemas, policy, proofs, and release records
 
-- `examples/README.md` describes examples as walkthroughs and example assemblies.
-- `data/proofs/README.md` identifies `data/proofs/` as proof-support responsibility root.
-- `data/proofs/evidence_bundle/README.md` identifies `data/proofs/evidence_bundle/` as the parent EvidenceBundle proof-family lane.
-- `data/proofs/citation_validation/README.md` identifies citation-validation proof support as a separate proof-family lane.
-- `data/proofs/proof_pack/README.md` identifies ProofPack support as release-grade proof support, not release authority.
-- `docs/architecture/governed-api.md` states that public clients must use governed API envelopes, not direct internal store reads.
-- Directory Rules list `examples/` as an examples root and `data/` as the lifecycle/proof/receipt/registry root.
+Every new file must be visibly synthetic or safely transformed, name its learning objective, identify the operational home it does not replace, and declare its expected finite outcome.
 
-Therefore this README treats `examples/evidence_bundles/` as **CONFIRMED path presence / DRAFT example-lane guidance / NON-AUTHORITATIVE by placement**.
-
----
-
-## Repo fit
-
-| Responsibility | Correct home | Boundary |
-|---|---|---|
-| Example EvidenceBundle snippets and walkthrough payloads | `examples/evidence_bundles/` | This lane. Illustrative only. |
-| Canonical or operational EvidenceBundle proof support | [`../../data/proofs/evidence_bundle/`](../../data/proofs/evidence_bundle/README.md) | Proof-family lane, not examples. |
-| Domain proof support | `data/proofs/<domain>/` | Domain-specific proof support, if present and accepted. |
-| Citation validation support | [`../../data/proofs/citation_validation/`](../../data/proofs/citation_validation/README.md) | Citation closure and cite-or-abstain support. |
-| ProofPack support | [`../../data/proofs/proof_pack/`](../../data/proofs/proof_pack/README.md) | Release-grade proof support; still not release authority. |
-| Raw, work, quarantine, processed, catalog, triplet, published lifecycle artifacts | `data/<phase>/...` | Examples may reference shapes, but must not store operational artifacts. |
-| Release decisions | `release/` | ReleaseManifest, PromotionDecision, rollback, correction, withdrawal, and signatures. |
-| Schemas | `schemas/contracts/v1/...` | Machine shape. Examples must not create parallel schema authority. |
-| Contracts | `contracts/...` | Semantic object meaning. Examples must not define object contracts. |
-| Policy | `policy/...` | Admissibility and sensitivity decisions. Examples must not define policy. |
-| Validators, tests, fixtures | `tools/validators/`, `tests/`, `fixtures/` | Operational validation and fixture strategy. Examples may point to these after verification. |
-| Governed API runtime | `apps/governed-api/` if confirmed | Runtime boundary; examples are not route implementations. |
-
----
-
-## Accepted material
-
-Accepted files should be small, reviewable, synthetic or safely redacted, and clearly marked as examples.
-
-| Accepted item | Use | Required markings |
-|---|---|---|
-| Minimal example bundle | Show the smallest evidence-supported claim shape. | `example: true`, synthetic IDs, no real sensitive coordinates. |
-| Negative outcome example | Show `ABSTAIN`, `DENY`, or `ERROR` behavior. | Explicit reason code and no substantive restricted claim. |
-| Claim-to-bundle walkthrough | Explain how a claim resolves to evidence support. | Links or IDs must be illustrative unless verified. |
-| Citation closure example | Show how citation validation might pass, warn, hold, deny, or error. | Must not imply validator implementation unless verified. |
-| Evidence Drawer example | Show governed UI payload shape at a high level. | Must state that public UI consumes governed projections, not this folder. |
-| Redaction/generalization example | Show sensitivity-safe public representation patterns. | Use synthetic data or obviously generalized geometries. |
-| README or notes | Explain example scope, limitations, and expected validator behavior. | Include evidence boundary and non-authority warning. |
-
-Examples may use JSON, YAML, Markdown, or small tabular snippets when useful. Keep examples deterministic and easy to diff.
-
----
-
-## Exclusions
+## What does NOT belong here
 
 | Do not place here | Correct home or action |
 |---|---|
-| Real RAW source payloads, source downloads, scans, extracts, or source-system mirrors | `data/raw/`, `data/work/`, or `data/quarantine/` depending on state |
-| Operational EvidenceBundles, proof indexes, citation-validation records, validation reports, or ProofPacks | `data/proofs/` under the accepted proof-family or domain lane |
-| Process receipts, AI receipts, transform receipts, policy-decision receipts, or validation receipts | `data/receipts/` or accepted receipt lanes |
-| Catalog records, triplets, graph exports, or release candidates | `data/catalog/`, `data/triplets/`, or `release/candidates/` as appropriate |
-| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, release signatures, or changelog entries | `release/` |
-| Published PMTiles, GeoParquet, reports, stories, API payloads, screenshots, or public downloads | `data/published/` after release gates |
-| Contracts, schemas, policy bundles, validators, tests, fixtures, apps, packages, or pipeline code | Their canonical responsibility roots |
-| Exact sensitive locations, living-person data, DNA/genomic records, archaeology site locations, rare species locations, critical infrastructure detail, private land/parcel joins, credentials, secrets, or proprietary terms | Quarantine, restrict, redact, generalize, synthesize, or deny |
-| Generated summaries presented as evidence | Governed AI surfaces may cite evidence; generated text is not evidence |
+| operational EvidenceBundles, ProofPacks, citation-validation records, or proof indexes | `data/proofs/` |
+| run, transform, validation, AI, or release receipts | `data/receipts/` |
+| catalog records, triplets, or release decisions | `data/catalog/`, `data/triplets/`, and `release/` |
+| production API/UI payloads or published artifacts | governed apps and `data/published/` after release |
+| real sensitive coordinates, living-person data, DNA, archaeology, rare species, infrastructure, or private parcel joins | synthetic/generalized examples or deny |
 
----
+## Inputs
+
+Accepted doctrine, current contracts/schemas/policy, verified implementation behavior when explicitly cited, and synthetic public-safe sample values.
+
+Input provenance, real-versus-synthetic status, rights, sensitivity, and the operational object being illustrated must be explicit.
+
+## Outputs
+
+Static walkthroughs and synthetic example payloads marked `example: true`, `authority: non_authoritative_example`, and `do_not_publish: true`.
+
+Outputs may be reviewed, corrected, or proposed for separate fixture/test graduation. They do not become operational merely by being copied.
+
+## Validation
+
+- Confirm every ID and value is synthetic or explicitly transformed.
+- Confirm claim-bearing examples use cite-or-abstain and exactly one finite outcome.
+- Confirm no example is presented as proof, receipt, release, policy, or runtime authority.
+- Validate Markdown, JSON/YAML snippets, local links, anchors, and sensitive-content posture.
+
+No examples-specific runner or complete validator was verified. A Markdown/source check proves only the declared static scope.
+
+## Review burden
+
+Examples/docs review; add evidence, policy/sensitivity, domain, and release reviewers when the example touches those surfaces.
+
+CODEOWNERS routing is not stewardship, approval evidence, policy permission, or release authorization.
+
+## Related folders
+
+- [Parent examples contract](../README.md)
+- [Proof root](../../data/proofs/README.md)
+- [EvidenceBundle proof lane](../../data/proofs/evidence_bundle/README.md)
+- [Citation validation](../../data/proofs/citation_validation/README.md)
+- [Governed API doctrine](../../docs/architecture/governed-api.md)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0011 (artifact-family separation), ADR-0020 (abstention), and ADR-0025 (public clients do not read internal stores). This README accepts none.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@fe9442ef01ed676e11ccea2796c6fe4090dd1e7e`
+- **Method:** complete target read plus bounded linked-file verification
+- **Execution/runtime inspection:** not performed
+- **Human review:** pending
+
+Re-review when an example is added, made runnable, mirrored into fixtures/tests, invalidated by an operational contract, or affected by rights/sensitivity/release changes.
 
 ## Example contract
 
-Every example in this lane should answer five questions without claiming operational maturity:
+Every consequential example must declare:
 
-| Question | Expected answer |
+```yaml
+example: true
+authority: non_authoritative_example
+do_not_publish: true
+maturity: STATIC_WALKTHROUGH
+real_vs_synthetic: explicit
+expected_outcome: ANSWER | ABSTAIN | DENY | ERROR | HOLD | QUARANTINE | NOT_APPLICABLE
+operational_home: "<verified owning root or NEEDS VERIFICATION>"
+validation_boundary: "<exact checks performed>"
+correction_trigger: "<contract, policy, source, runtime, or release change>"
+```
+
+`ANSWER` requires support appropriate to the scenario. Missing, stale, conflicting, or citation-invalid evidence yields `ABSTAIN`; prohibited rights/sensitivity/role exposure yields `DENY` or `HOLD`; tool/schema/runtime failure yields `ERROR`.
+
+## Guardrails
+
+| Risk | Guardrail |
 |---|---|
-| What claim is being illustrated? | A bounded example claim with spatial, temporal, source-role, and limitation context. |
-| What evidence supports it? | Synthetic or clearly marked sample `EvidenceRef` and EvidenceBundle-like members. |
-| What policy posture applies? | `allow`, `restrict`, `hold`, `deny`, or `abstain` as illustrative policy outcome, not actual policy authority. |
-| What release posture applies? | Example release reference or `not_released`; examples do not publish. |
-| What should a public client do? | Render only governed `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` envelopes from the governed API, not this folder. |
+| Example becomes proof | Keep operational proof objects and validators in their owning roots. |
+| Missing evidence becomes weaker prose | Render `ABSTAIN`; do not improvise support. |
+| Sensitive example leaks detail | Use synthetic, generalized, redacted, restricted, or denied representations. |
+| Generated text becomes evidence | Generated language stays downstream of resolvable evidence. |
 
-Illustrative JSON should include a visible marker like this:
+## Current bounded inventory
 
-```json
-{
-  "example": true,
-  "authority": "non_authoritative_example",
-  "do_not_publish": true,
-  "claim_id": "kfm://example/claim/NEEDS-VERIFICATION",
-  "outcome": "ABSTAIN",
-  "reason": "illustrative example only; EvidenceBundle schema and validator behavior NEEDS VERIFICATION"
-}
-```
+The bounded subtree contains this README only; no additional example payload was verified in the current packet.
 
-> [!WARNING]
-> Do not copy example IDs, example coordinates, example release refs, or example policy decisions into operational data. Examples are allowed to teach shape and failure behavior; they are not allowed to certify facts.
+Omission is not evidence of absence, retirement, or permission to create speculative children.
 
----
+## Open verification register
 
-## Lifecycle relationship
-
-```mermaid
-flowchart LR
-    EX[examples/evidence_bundles<br/>illustrative only] -. teaches .-> EB[data/proofs/evidence_bundle<br/>proof support]
-    EX -. teaches .-> CV[data/proofs/citation_validation<br/>citation closure]
-    EX -. teaches .-> API[governed API envelope<br/>ANSWER / ABSTAIN / DENY / ERROR]
-
-    RAW[data/raw] --> WORK[data/work / data/quarantine]
-    WORK --> PROC[data/processed]
-    PROC --> CAT[data/catalog / data/triplets]
-    CAT --> PUB[data/published]
-    PUB --> REL[release]
-    EB -. supports .-> API
-    CV -. supports .-> API
-    REL -. gates .-> API
-
-    EX -. "must not replace" .-> EB
-    EX -. "must not publish" .-> PUB
-    EX -. "must not decide" .-> REL
-
-    classDef example fill:#f3e5f5,stroke:#6f42c1,color:#202124;
-    classDef data fill:#fff3cd,stroke:#8a6d3b,color:#202124;
-    classDef gate fill:#d1e7dd,stroke:#0f5132,color:#202124;
-    class EX example;
-    class RAW,WORK,PROC,CAT,PUB,EB,CV data;
-    class API,REL gate;
-```
-
-The examples lane is outside the lifecycle spine. It can illustrate the spine, but it cannot become a phase of the spine.
-
----
-
-## Suggested layout
-
-This tree is **PROPOSED**. Confirm actual examples, schema paths, test strategy, and validator expectations before adding files.
-
-```text
-examples/evidence_bundles/
-├── README.md
-├── minimal/
-│   ├── README.md
-│   └── minimal.evidence-bundle.example.json
-├── outcomes/
-│   ├── answer.example.json
-│   ├── abstain.example.json
-│   ├── deny.example.json
-│   └── error.example.json
-├── sensitivity/
-│   ├── generalized-location.example.json
-│   └── redacted-sensitive-claim.example.json
-└── walkthroughs/
-    └── claim-to-evidence-bundle.md
-```
-
-Recommended file naming:
-
-| Pattern | Use |
-|---|---|
-| `*.example.json` | Non-authoritative JSON example. |
-| `*.example.yaml` | Non-authoritative YAML example. |
-| `README.md` | Local explanation and boundaries. |
-| `*.walkthrough.md` | Narrative walkthrough, not operational proof. |
-
----
-
-## Validation checklist
-
-Before adding or changing examples here, verify:
-
-- [ ] The file is marked as an example and non-authoritative.
-- [ ] The file contains no real sensitive coordinates, living-person data, DNA/genomic data, archaeology site locations, rare species locations, critical infrastructure detail, private parcel joins, secrets, credentials, or proprietary terms.
-- [ ] The example does not create schema, contract, policy, proof, receipt, release, or source-registry authority.
-- [ ] Any IDs are synthetic or clearly marked `NEEDS VERIFICATION`.
-- [ ] Any claim with evidence dependency demonstrates cite-or-abstain behavior.
-- [ ] Any public-facing example uses a governed finite outcome: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
-- [ ] Any sensitive example uses redacted, generalized, aggregated, synthetic, or denied output.
-- [ ] Relative links from this README still resolve.
-- [ ] Operational fixtures, if needed, are placed under the accepted test/fixture strategy rather than silently becoming examples.
-
----
-
-## Status notes
-
-| Item | Status | Notes |
+| Item | Status | Required evidence |
 |---|---:|---|
-| Target path presence | CONFIRMED | `examples/evidence_bundles/README.md` existed as a greenfield stub before this update. |
-| Examples root | CONFIRMED README | `examples/README.md` describes walkthroughs and example assemblies. |
-| EvidenceBundle proof-family lane | CONFIRMED README | `data/proofs/evidence_bundle/README.md` defines parent EvidenceBundle proof support. |
-| Citation-validation lane | CONFIRMED README | `data/proofs/citation_validation/README.md` defines citation closure and cite-or-abstain support. |
-| ProofPack lane | CONFIRMED README | `data/proofs/proof_pack/README.md` defines release-grade proof support, not release authority. |
-| Governed API doctrine | CONFIRMED architecture doc | Public clients use governed finite-outcome envelopes and do not read internal stores directly. |
-| Example payload inventory | UNKNOWN | This edit did not verify child files beyond this README. |
-| EvidenceBundle schema, validators, fixtures, CI checks, route behavior | NEEDS VERIFICATION | No runtime or validation enforcement was proven by this README. |
-| Public release readiness | DENY | Examples cannot publish, prove, or release claims. |
+| Recursive subtree and non-Markdown inventory | `UNKNOWN` | Pinned tree and file classification |
+| Runnable entrypoints and dependency closure | `UNKNOWN` | Manifests, locks, commands, no-network inputs, observed runs |
+| Schema/contract conformance | `NEEDS VERIFICATION` | Accepted versions and validation results |
+| Examples-specific validation and CI | `NEEDS VERIFICATION` | Repository-owned validator, tests, fixtures, workflow |
+| Host rendering and accessibility | `NEEDS VERIFICATION` | Render/browser inspection and accepted checks |
+| Correction and retirement consumers | `NEEDS VERIFICATION` | Inbound references, owner, replacement, rollback |
 
----
+## No-loss ledger
 
-## Evidence ledger
+| Prior material | Disposition |
+|---|---|
+| Stable path and `doc_id` | Preserved |
+| Non-authority and trust-membrane warnings | Preserved and strengthened |
+| Accepted material and exclusions | Preserved and normalized |
+| Finite outcomes and fail-closed behavior | Preserved |
+| Domain/source-role/sensitivity guardrails | Preserved |
+| Lifecycle and operational-home separation | Preserved |
+| Prior evidence ledger and limitations | Consolidated into current evidence/verification sections |
+| Speculative child trees | Removed as proposals; no child is retired by omission |
+| Operational payload, code, fixture, test, or release change | None |
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous target file | CONFIRMED | Target existed as a greenfield stub. | Did not define boundaries, accepted material, or exclusions. |
-| [`../README.md`](../README.md) | CONFIRMED README | `examples/` is for walkthroughs and example assemblies. | It is short and does not define EvidenceBundle example details. |
-| [`../../data/proofs/README.md`](../../data/proofs/README.md) | CONFIRMED README | Proof support belongs under `data/proofs/` and does not replace release, catalog, receipts, schemas, contracts, or policy. | Does not prove emitted proof inventories or validators. |
-| [`../../data/proofs/evidence_bundle/README.md`](../../data/proofs/evidence_bundle/README.md) | CONFIRMED README | EvidenceBundle proof-family boundary, EvidenceRef closure, cite-or-abstain posture, no public direct access. | Global schema, validators, route behavior, and inventory remain NEEDS VERIFICATION. |
-| [`../../data/proofs/citation_validation/README.md`](../../data/proofs/citation_validation/README.md) | CONFIRMED README | Citation-validation proof-family boundary and finite negative-state behavior. | Does not prove validator implementation. |
-| [`../../data/proofs/proof_pack/README.md`](../../data/proofs/proof_pack/README.md) | CONFIRMED README | ProofPack is release-grade support, not release authority. | Does not prove ProofPack instances or release linkage. |
-| [`../../docs/architecture/governed-api.md`](../../docs/architecture/governed-api.md) | CONFIRMED architecture doc | Governed API finite outcomes and no direct public reads from internal stores. | Endpoint catalogue and runtime implementation remain PROPOSED / NEEDS VERIFICATION. |
-| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | Responsibility-root placement, examples root, data lifecycle, proof/release separation. | Some path claims remain PROPOSED / NEEDS VERIFICATION per the doctrine's own notes. |
+### Change history
 
-[Back to top](#top)
+#### v0.2.0 — 2026-07-24
+
+- normalized the first twelve H2 sections to the current folder contract;
+- classified the lane as `STATIC_WALKTHROUGH`;
+- preserved substantive boundaries, negative states, safety controls, and prior rollback identity;
+- removed speculative tree pressure without treating unlisted files as absent;
+- changed Markdown only.
+
+<p align="right"><a href="#top">Back to top</a></p>
