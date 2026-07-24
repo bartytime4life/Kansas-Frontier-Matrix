@@ -27,16 +27,16 @@
   },
   "inputs": {
     "evidence_refs": [
-      "github://bartytime4life/Kansas-Frontier-Matrix/commit/936eac6d5b30471dd5d663ba61d34933dc2cbe8b",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/.editorconfig",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/892255ad8179f8e7bc972776c3462ba6abe3be09",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.editorconfig",
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/1475",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/.pre-commit-config.yaml",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/pyproject.toml",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/package.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/Makefile",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/artifacts/qa/lint/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/docs/doctrine/directory-rules.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.pre-commit-config.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/artifacts/qa/lint/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/schemas/contracts/v1/receipts/generated_receipt.schema.json",
       "github://bartytime4life/Kansas-Frontier-Matrix/commit/aa4ef9c583ff08b25ea762e384d016ddac4297f2"
     ]
   },
@@ -90,7 +90,7 @@
     {
       "id": "current-editorconfig",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/.editorconfig"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.editorconfig"
     },
     {
       "id": "prior-editorconfig-pr",
@@ -100,22 +100,22 @@
     {
       "id": "precommit-whitespace-baseline",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/.pre-commit-config.yaml"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/.pre-commit-config.yaml"
     },
     {
       "id": "lint-authority-boundary",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/artifacts/qa/lint/README.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/artifacts/qa/lint/README.md"
     },
     {
       "id": "directory-rules",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/docs/doctrine/directory-rules.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/docs/doctrine/directory-rules.md"
     },
     {
       "id": "generated-receipt-schema",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/936eac6d5b30471dd5d663ba61d34933dc2cbe8b/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/schemas/contracts/v1/receipts/generated_receipt.schema.json"
     }
   ],
   "human_review": {
