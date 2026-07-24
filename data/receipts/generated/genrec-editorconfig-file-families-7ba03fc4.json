@@ -37,7 +37,8 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/artifacts/qa/lint/README.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/docs/doctrine/directory-rules.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/892255ad8179f8e7bc972776c3462ba6abe3be09/schemas/contracts/v1/receipts/generated_receipt.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/commit/aa4ef9c583ff08b25ea762e384d016ddac4297f2"
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/aa4ef9c583ff08b25ea762e384d016ddac4297f2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1581"
     ]
   },
   "truth_labels": {
@@ -127,7 +128,7 @@
   "created_at": "2026-07-24T01:11:09Z",
   "emitter": "openai/gpt-5.6-thinking",
   "links": {
-    "pr_number": null,
+    "pr_number": 1581,
     "adr_link": null,
     "drift_register_entry": null
   },
