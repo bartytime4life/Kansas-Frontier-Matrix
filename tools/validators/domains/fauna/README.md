@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-validators-domains-fauna-readme
 title: tools/validators/domains/fauna README
 type: README
-version: v0.2
+version: v0.2.1
 status: draft
 owner: TODO-tooling-qa-owner-plus-fauna-steward-plus-sensitive-species-reviewer-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
@@ -37,6 +37,7 @@ related:
   - ../../../../.github/workflows/domain-fauna.yml
 notes:
   - "One executable is accepted: validate_public_safe_fixture.py, limited to synthetic fixture safety and explicitly not production occurrence validation."
+  - "The bounded executable is hardened against declared coordinate/location aliases, numeric values under location-like keys, malformed caveat containers, normalized URL-like strings, control characters, and coordinate-pair-shaped free text."
   - "The broad tools/validators/fauna/README.md and source_role/ child README exist; this path remains the per-domain home for the bounded executable."
   - "Fauna sensitive taxa, exact occurrences, nests, dens, roosts, hibernacula, spawning sites, breeding/aggregation sites, steward-controlled records, and reverse-engineerable derivatives are deny-by-default unless geoprivacy, review, policy, evidence, release, correction, and rollback support authorize a public-safe derivative."
   - "Validators enforce declared contracts, schemas, and policy. They do not define Fauna meaning, create EvidenceBundles, make stewardship decisions, approve release, or publish public outputs."
@@ -50,22 +51,22 @@ notes:
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
 ![scope](https://img.shields.io/badge/scope-fauna--validators-informational)
 ![sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default-red)
-![authority](https://img.shields.io/badge/authority-index--only-lightgrey)
+![authority](https://img.shields.io/badge/authority-checker--only-lightgrey)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/domains/fauna/` is the proposed per-domain Fauna validator index for occurrence, sensitive-site, geoprivacy, taxon/status, range, migration, mortality, disease, invasive-species, evidence, policy, release, correction, rollback, and public-surface denial checks.
+> **One-line purpose.** `tools/validators/domains/fauna/` is the per-domain Fauna validator lane for bounded fail-closed checks. Its accepted executable validates only a closed synthetic fixture profile; it is not production `OccurrencePublic` validation.
 
 ---
 
 ## Purpose
 
-`tools/validators/domains/fauna/` exists to organize Fauna validators under the durable `tools/validators/` surface.
+`tools/validators/domains/fauna/` organizes Fauna validators under the durable `tools/validators/` responsibility root.
 
-The durable KFM question for this index is:
+The durable KFM question for this lane is:
 
-> Do Fauna candidates preserve taxonomic identity, occurrence/source-role posture, sensitive-species geoprivacy, evidence closure, review state, policy decisions, release readiness, correction paths, rollback support, and public-surface denial boundaries before they reach any governed output?
+> Does a declared Fauna candidate preserve taxonomic identity, source-role posture, sensitive-species geoprivacy, evidence and review state, policy boundaries, release holds, correction paths, rollback support, and public-surface denial for the exact validation scope—or must it fail closed?
 
-The answer should be a navigable validator index and deterministic validation outputs from configured child lanes. This folder should not create Fauna truth, taxonomic authority, stewardship decisions, EvidenceBundles, geoprivacy transforms, PolicyDecisions, release decisions, public map layers, API payloads, or AI answers.
+The lane must not create Fauna truth, taxonomic authority, stewardship decisions, EvidenceBundles, geoprivacy transforms, PolicyDecisions, release decisions, public map layers, API payloads, or AI answers.
 
 [Back to top](#top)
 
@@ -75,15 +76,45 @@ The answer should be a navigable validator index and deterministic validation ou
 
 | Surface | Status | Notes |
 |---|---|---|
-| `tools/validators/domains/fauna/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
-| Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
-| Broad `tools/validators/fauna/README.md` | **CONFIRMED routing README** | Broad routing only; this path remains the per-domain validator home. |
-| Fauna domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/fauna/README.md` defines scope, deny-by-default sensitive occurrence posture, geoprivacy requirements, and responsibility-root split. |
-| Deny-by-default sensitivity ADR | **CONFIRMED in repo evidence / draft** | ADR-0010 draft states rare-species exact locations default to deny and public products require public-safe transform, review, receipt, policy, and rollback support. |
-| Fauna proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/fauna/README.md` defines Fauna proof support and says sensitive proof material is deny-by-default. |
-| Accepted executable | **CONFIRMED bounded slice** | `validate_public_safe_fixture.py` validates synthetic fixture safety only, uses the standard library, performs no network access, and emits deterministic findings. |
-| Accepted fixtures/tests/CI | **CONFIRMED bounded slice** | One valid and four invalid JSON fixtures feed five tests in `test_fauna_smoke.py`; only `validate-fauna` runs that module. |
-| Production schemas, source descriptors, policy runtime, receipts, proof, release, and public behavior | **NEEDS VERIFICATION / held** | The bounded executable does not promote the permissive occurrence schemas, unresolved source templates, or scaffold policy bundles. |
+| `tools/validators/domains/fauna/README.md` | **CONFIRMED** | This README records the bounded executable and its authority limits. |
+| Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` remains minimal; this file keeps the Fauna boundary explicit. |
+| Broad `tools/validators/fauna/README.md` | **CONFIRMED routing README** | Broad routing only; this path remains the per-domain executable home. |
+| Fauna doctrine and deny-by-default ADR | **CONFIRMED repository evidence / draft** | They require sensitive occurrence and reverse-engineering risk to fail closed. |
+| Accepted executable | **CONFIRMED bounded slice** | `validate_public_safe_fixture.py`; standard library, deterministic, no network, fixture-only. |
+| Accepted fixture/test inventory | **CONFIRMED bounded slice** | One valid and five invalid JSON fixtures feed seven tests in `test_fauna_smoke.py`. |
+| Current CI scope | **CONFIRMED bounded slice** | Only `validate-fauna` runs the accepted module; proof and release-dry-run remain held. |
+| Production schemas, source descriptors, policy runtime, receipts, proof, release, and public behavior | **NEEDS VERIFICATION / held** | The bounded executable creates no production authority. |
+
+[Back to top](#top)
+
+---
+
+## Accepted bounded executable
+
+`validate_public_safe_fixture.py` accepts only candidates that are explicitly:
+
+- synthetic and fixture-only;
+- referenced by bounded `fixture:` identifiers;
+- `source_role: synthetic`;
+- rights-scoped to fixture use;
+- location-withheld;
+- no-network;
+- not released;
+- not eligible for promotion; and
+- explicit about fixture-only evidence, review, correction, and rollback state.
+
+It additionally fails closed on:
+
+- undeclared top-level, spatial, or governance fields;
+- exact or aliased location-bearing keys;
+- finite numeric values beneath location-like keys;
+- malformed or nested `public_caveats`;
+- URL-like strings after whitespace normalization, including embedded HTTP(S), leading scheme-relative, and `www.` forms;
+- control characters in strings;
+- coordinate-pair-shaped free text; and
+- unsupported synthetic identifier shapes.
+
+These checks reduce accidental leakage in future fixtures. They do not determine whether a real occurrence is public-safe.
 
 [Back to top](#top)
 
@@ -91,18 +122,18 @@ The answer should be a navigable validator index and deterministic validation ou
 
 ## Child lanes
 
-No child README lanes were confirmed during this edit.
+No child README lane is accepted as an executable authority by this bounded slice.
 
-Future child lanes should be added only when they represent a distinct Fauna validator specialty, fixture family, edge, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics.
+Possible future children remain **PROPOSED** until separately verified:
 
-Possible future children remain **PROPOSED** until verified:
-
-- `occurrence/` for occurrence evidence, occurrence restriction, and public-safe occurrence derivatives;
-- `geoprivacy/` for redaction/generalization/buffering/gridding/aggregation checks;
-- `sensitive-site/` for nest, den, roost, hibernacula, spawning, breeding/aggregation, and steward-controlled records;
-- `taxon-status/` for taxon identity, crosswalk, conservation/legal status, and source-role posture;
-- `range-migration/` for range polygons, seasonal ranges, and migration-route claims;
+- `occurrence/` for occurrence evidence, restriction, and public-safe derivatives;
+- `geoprivacy/` for redaction, generalization, buffering, gridding, and aggregation checks;
+- `sensitive-site/` for nests, dens, roosts, hibernacula, spawning, breeding, and aggregation sites;
+- `taxon-status/` for taxon identity, crosswalk, conservation, and legal-status posture;
+- `range-migration/` for range polygons, seasonal ranges, and migration claims; and
 - `disease-mortality/` for mortality and disease observation boundaries.
+
+A child lane requires accepted contracts, schemas, policy posture, synthetic fixtures, report semantics, receipts where appropriate, and explicit non-authority language.
 
 [Back to top](#top)
 
@@ -112,24 +143,19 @@ Possible future children remain **PROPOSED** until verified:
 
 | Responsibility | Home |
 |---|---|
-| Per-domain Fauna validator index | `tools/validators/domains/fauna/` |
+| Per-domain Fauna validator implementation and index | `tools/validators/domains/fauna/` |
 | Shared validator plumbing | `tools/validators/_common/` |
-| Cross-domain ecology/biodiversity validator context | `tools/validators/biodiversity/`, `tools/validators/cross-domain-joins/` |
+| Cross-domain ecology/biodiversity checks | `tools/validators/biodiversity/`, `tools/validators/cross-domain-joins/` |
 | Fauna domain meaning | `docs/domains/fauna/`, `contracts/domains/fauna/` |
-| Fauna schemas | `schemas/contracts/v1/domains/fauna/` or ADR-selected homes |
-| Fauna policy rules | `policy/domains/fauna/`, `policy/sensitivity/fauna/`, or accepted policy homes |
-| Source descriptors | `data/registry/sources/fauna/` or accepted source registry home |
-| Evidence/proof support | `data/proofs/fauna/`, `data/proofs/` |
+| Fauna schemas | `schemas/contracts/v1/domains/fauna/` or an ADR-selected home |
+| Fauna policy rules | `policy/domains/fauna/`, `policy/sensitivity/fauna/` |
+| Source descriptors | `data/registry/sources/fauna/` or an accepted source-registry home |
+| Evidence and proof support | `data/proofs/fauna/`, `data/proofs/` |
 | Receipts | `data/receipts/` |
-| Release decisions, manifests, rollback, corrections | `release/` |
-| Tests and fixtures | `tests/validators/domains/fauna/`, `tests/domains/fauna/`, `fixtures/domains/fauna/`, or accepted conventions |
+| Release decisions, manifests, corrections, withdrawal, rollback | `release/` |
+| Tests and fixtures | `tests/domains/fauna/`, `fixtures/domains/fauna/` |
 
-Safe interpretation:
-
-- **CONFIRMED:** this README exists.
-- **CONFIRMED:** `validate_public_safe_fixture.py` checks only the accepted synthetic fixture profile and returns deterministic findings.
-- **NEEDS VERIFICATION:** production validators, schema maturity, policy bundle behavior, source admission, report destinations, receipts, runtime behavior, proof, release, and public behavior.
-- **DENY:** using this folder as taxonomic authority, stewardship authority, Fauna contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public occurrence surface, public map product surface, or domain-meaning authority.
+A validator pass means only that the declared checks passed for the declared object and scope. It is not source admission, evidence closure, policy approval, review approval, release approval, or publication authority.
 
 [Back to top](#top)
 
@@ -137,35 +163,29 @@ Safe interpretation:
 
 ## What belongs here
 
-Good fits for `tools/validators/domains/fauna/` include:
+Good fits include:
 
-- this parent/index README;
-- child README lanes for narrow Fauna validator families;
-- optional parent runner code that delegates to child validators without redefining their rules;
-- validators that check occurrence/source-role separation, taxon/status posture, geoprivacy transforms, public-safe derivatives, evidence closure, review state, policy decisions, release references, correction cascade, and rollback support;
-- synthetic fixture references and test-surface guidance;
-- docs or reports that explain validator scope without becoming authoritative Fauna doctrine.
-
-[Back to top](#top)
-
----
+- this validator-lane README;
+- deterministic validators that enforce declared, externally owned semantics;
+- optional parent runners that delegate without redefining rules;
+- stable finding codes and non-sensitive paths;
+- fixture references and test-surface guidance; and
+- documentation that explains checker scope without becoming Fauna doctrine.
 
 ## What does not belong here
 
-| Do not put in `tools/validators/domains/fauna/` | Correct home |
+| Do not put here | Correct home |
 |---|---|
-| Shared validator plumbing | `tools/validators/_common/` |
-| Fauna domain docs | `docs/domains/fauna/` |
-| Fauna contracts | `contracts/domains/fauna/` |
+| Shared plumbing | `tools/validators/_common/` |
+| Fauna domain docs and contracts | `docs/domains/fauna/`, `contracts/domains/fauna/` |
 | Schemas | `schemas/contracts/v1/...` |
 | Policy and sensitivity rules | `policy/...` |
 | Source descriptors | `data/registry/sources/...` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data | dedicated `data/` lifecycle roots |
-| EvidenceBundles, proofs, receipts, RedactionReceipts, AggregationReceipts | `data/proofs/`, `data/receipts/` |
-| Release manifests, decisions, rollback, corrections | `release/` |
-| Generated QA reports that are not source code | `artifacts/qa/` or accepted report lane |
-| Tests and fixtures | `tests/` and fixture conventions |
-| Public API, UI, map, tile, export, search, graph, Focus Mode, or AI runtime code | governed application/runtime roots |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data | governed `data/` lifecycle roots |
+| EvidenceBundles, proofs, or trust-bearing receipts | `data/proofs/`, `data/receipts/` |
+| Release manifests and decisions | `release/` |
+| Tests and reusable fixtures | `tests/`, `fixtures/` |
+| Public API, UI, map, tile, export, search, graph, Focus Mode, or AI runtime | governed application/runtime roots |
 
 [Back to top](#top)
 
@@ -173,17 +193,17 @@ Good fits for `tools/validators/domains/fauna/` include:
 
 ## Fauna validator posture
 
-Fauna validators must fail closed, deny, abstain, or route to steward review when a candidate:
+Fauna validators must fail closed, deny, abstain, or route to authorized review when a candidate:
 
-- lacks EvidenceRef, EvidenceBundle, source descriptor, source-role, or taxon/status support;
-- collapses occurrence evidence, restricted occurrence, public occurrence derivative, sensitive site, range polygon, seasonal range, migration route, mortality observation, disease observation, or invasive-species record;
-- exposes sensitive taxa, exact occurrence geometry, nests, dens, roosts, hibernacula, spawning sites, breeding/aggregation sites, steward-controlled records, or reverse-engineerable derivatives;
-- lacks a named geoprivacy transform, RedactionReceipt, AggregationReceipt, ReviewRecord, PolicyDecision, ReleaseManifest, correction path, or rollback target where required;
-- maps, tiles, exports, searches, embeds, graphs, summarizes, or answers with Fauna content beyond the approved public-safe derivative;
-- offers hunting, collection, disturbance, legal, health, emergency, or operational wildlife guidance outside an accepted governed authority path;
-- bypasses lifecycle gates or treats validator output as release approval.
+- lacks evidence, source, source-role, taxon, rights, or review support;
+- collapses restricted occurrences, public derivatives, sensitive sites, ranges, migration routes, mortality, disease, or invasive-species records;
+- exposes sensitive taxa, exact or aliased occurrence geometry, or reverse-engineerable derivatives;
+- lacks a required geoprivacy transform, receipt, PolicyDecision, ReviewRecord, ReleaseManifest, correction path, or rollback target;
+- permits map, tile, search, graph, export, Focus Mode, or AI exposure beyond an approved public-safe derivative;
+- offers operational wildlife guidance outside accepted authority; or
+- treats validator output as promotion, release, or publication approval.
 
-The validator lane must preserve the KFM lifecycle invariant:
+The lifecycle invariant remains:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -193,28 +213,24 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ---
 
-## Standard parent outcomes
+## Stable bounded findings
 
-| Outcome | Meaning |
+The accepted fixture-only validator may emit stable findings including:
+
+| Finding family | Meaning |
 |---|---|
-| `FAUNA_DOMAIN_VALIDATORS_PASS` | Configured Fauna validators passed. |
-| `FAUNA_DOMAIN_VALIDATORS_FAIL` | One or more configured validators failed. |
-| `CHILD_VALIDATOR_MISSING` | Expected Fauna child validator lane or runner is absent. |
-| `CHILD_VALIDATOR_FAILED` | Child validator reported one or more findings. |
-| `EVIDENCE_REF_MISSING` | Required EvidenceRef or EvidenceBundle pointer is absent. |
-| `SOURCE_ROLE_COLLAPSE` | Candidate collapses occurrence/source-role/object-family posture. |
-| `TAXON_STATUS_UNVERIFIED` | Taxon identity, crosswalk, or conservation/legal status lacks support. |
-| `SENSITIVE_OCCURRENCE_DENIED` | Exact or identifying sensitive occurrence is unsafe for public output. |
-| `GEOPRIVACY_TRANSFORM_MISSING` | Required public-safe transform or profile is absent. |
-| `REDACTION_OR_AGGREGATION_RECEIPT_MISSING` | Required transform receipt is absent. |
-| `REVIEW_OR_POLICY_GAP` | Required review state or PolicyDecision is absent. |
-| `RELEASE_REFERENCE_MISSING` | Required ReleaseManifest, correction path, or rollback target is absent. |
-| `PUBLIC_SURFACE_LEAK_RISK` | Candidate is unsafe for public/governed output as shaped. |
-| `REPORT_DESTINATION_INVALID` | QA report or receipt destination is outside an accepted root. |
-| `IGNORED_WITH_REASON` | Finding was ignored under an explicit, reviewable rule. |
-| `IGNORE_RULE_EXPIRED` | Ignore rule is stale and must be reviewed. |
-| `ABSTAIN` | Validator cannot decide safely with available context. |
-| `ERROR` | Validator could not safely complete. |
+| `*_MISSING`, `*_INVALID`, `*_UNRESOLVED` | Required synthetic fixture state is absent or invalid. |
+| `UNDECLARED_*_FIELD` | The closed fixture profile contains an undeclared field. |
+| `PRECISE_LOCATION_FIELD_FORBIDDEN` | A location-bearing key or declared alias appears. |
+| `LOCATION_NUMERIC_VALUE_FORBIDDEN` | A finite numeric value appears beneath a location-bearing key. |
+| `LIVE_URL_FORBIDDEN` | A URL-like string appears in the fixture. |
+| `COORDINATE_PATTERN_FORBIDDEN` | Free text resembles a coordinate pair. |
+| `CONTROL_CHARACTER_FORBIDDEN` | A string contains disallowed control characters. |
+| `PUBLIC_CAVEATS_INVALID` / `PUBLIC_CAVEAT_INVALID` | Caveat structure is not a bounded list of strings. |
+| `RELEASE_STATE_NOT_HELD` / `PROMOTION_STATE_NOT_HELD` | The fixture is not explicitly unreleased and promotion-ineligible. |
+| `ERROR`-class CLI failure | The fixture could not be safely loaded or checked. |
+
+Finding paths identify the field but never print its value.
 
 [Back to top](#top)
 
@@ -234,13 +250,13 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
 
 Accepted profile:
 
-- only synthetic `fixture:` references;
-- explicit `source_role: synthetic`;
-- explicit fixture-only rights and reality boundary;
-- withheld spatial support only;
-- no live URLs or location-bearing fields;
-- explicit not-released and not-eligible-for-promotion state;
-- stable fail-closed findings for missing source reference; unresolved taxonomy, evidence, rights, sensitivity, policy, geoprivacy, review, correction, and rollback; and precision hints.
+- one synthetic positive fixture;
+- five synthetic fail-closed fixtures;
+- seven deterministic standard-library tests;
+- explicit socket and URL-opening denial in the test boundary;
+- no real taxon, occurrence, place, live URL destination, private-land clue, or usable coordinate;
+- proof and release-dry-run jobs unchanged and held; and
+- no contract, schema, policy, source, lifecycle, proof, release, or public-surface mutation.
 
 This command is not an `OccurrencePublic` validator, schema promotion, source-admission check, policy-engine evaluation, geoprivacy transform verifier, evidence/proof closure check, release gate, promotion path, or publication path.
 
@@ -250,16 +266,16 @@ This command is not an `OccurrencePublic` validator, schema promotion, source-ad
 
 ## Review checklist
 
-- [ ] Parent runner delegates to child validators instead of redefining their rules.
-- [ ] Validator reads declared Fauna contracts, schemas, and policy rather than defining meaning locally.
-- [ ] Sensitive taxa and exact occurrence details fail closed unless approved public-safe transform support exists.
-- [ ] Occurrence evidence, restricted occurrence, public derivative, sensitive site, range, migration, mortality, disease, and invasive-species object families remain distinct.
-- [ ] EvidenceBundle, geoprivacy transform, review, policy, release, rollback, and correction support are checked where required.
-- [ ] Map, tile, search, graph, export, Focus Mode, and AI surfaces do not reveal restricted details or reverse-engineerable derivatives.
+- [ ] Validator rules remain limited to the declared synthetic fixture profile.
+- [ ] Sensitive taxa and exact or reverse-engineerable location details fail closed.
+- [ ] Location aliases and encoded free-form clues are covered by deterministic negative tests.
+- [ ] Finding output reports paths and codes without printing protected values.
+- [ ] Evidence, review, policy, release, rollback, and correction state remain explicit.
+- [ ] Map, tile, search, graph, export, Focus Mode, and AI surfaces gain no authority.
 - [ ] Reports and receipts are written only to accepted roots.
-- [ ] Validator output is not described as truth, policy, release, publication, or Directory Rules approval.
-- [ ] Tests use public-safe or synthetic fixtures.
-- [ ] Executable claims are backed by current repo evidence.
+- [ ] Validator output is not described as truth, policy, review, release, publication, or Directory Rules approval.
+- [ ] Tests use only public-safe synthetic fixtures and remain no-network.
+- [ ] Executable claims are backed by current repository evidence.
 
 [Back to top](#top)
 
@@ -270,5 +286,6 @@ This command is not an `OccurrencePublic` validator, schema promotion, source-ad
 | Field | Value |
 |---|---|
 | Last reviewed | 2026-07-25 |
-| Review state | One bounded synthetic fixture-safety validator accepted; broader Fauna validation remains draft and held. |
-| Next smallest safe change | Independently review schema and source-registry maturity before expanding beyond fixture safety; do not infer production admissibility from this slice. |
+| Review state | Bounded synthetic fixture-safety hardening validated locally; human review and repository-native CI pending. |
+| Current accepted scope | One valid and five invalid fixtures; seven deterministic tests; fixture-only validator. |
+| Next smallest safe change | Review the focused hardening diff and keep production schema, source, policy, evidence, proof, release, promotion, and publication work separate. |
