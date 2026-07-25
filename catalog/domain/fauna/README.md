@@ -1,518 +1,459 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/catalog-domain-fauna-readme
 title: catalog/domain/fauna/ — Fauna Domain Catalog Compatibility Redirect
-type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Fauna steward · Ecology sensitivity steward · Catalog steward · Data steward · Registry steward · Evidence steward · Receipt steward · Proof steward · Release steward · Policy steward · Schema steward · Docs steward
+type: readme; compatibility-redirect; drift-containment; non-authoritative
+version: v0.3.0
+status: repository-grounded draft; compatibility-only; deny-new-trust-writes; migration-unresolved
+owners: NEEDS VERIFICATION — default GitHub review route is @bartytime4life; Fauna, ecology sensitivity, catalog/data, registry, evidence, receipt, proof, policy, release, correction, rollback, and docs stewardship assignments remain unverified
 created: 2026-06-16
-updated: 2026-07-10
-policy_label: public
+updated: 2026-07-24
+prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
+policy_label: public-review; compatibility-only; fail-closed; no-direct-public-path; geoprivacy-aware; correction-aware
+current_path: catalog/domain/fauna/README.md
+canonical_counterpart: data/catalog/domain/fauna/README.md
+compatibility_class: transitional — PROPOSED pending an accepted disposition and migration plan
+review_packet_id: kfm-md-catalog-domain-fauna-20260724
+truth_posture: >
+  CONFIRMED exact path and baseline blob, parent compatibility posture, canonical
+  Fauna catalog README paths, current doctrine/register/workflow surfaces, and
+  bounded indexed inventory / PROPOSED normalized containment, migration, and
+  retirement contract / UNKNOWN recursive non-README contents, producers,
+  consumers, runtime, hosting, and access-control effects / NEEDS VERIFICATION
+  accepted disposition ADR, steward assignments, validator enforcement, public
+  and restricted record inventories, migration closure, and rollback drill
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: 8d4e407afb7747192740956f0c366504a6d21060
+  prior_blob: d8f82548c33821eaedd515e893c7689ad3dbb074
+  method: complete target read, exact related-file reads, bounded indexed search, register review, and workflow-definition preflight; no recursive clone, runtime, deployment, restricted store, or external host inspection
 related:
   - ../README.md
   - ../../README.md
-  - ../../../data/README.md
   - ../../../data/catalog/README.md
   - ../../../data/catalog/domain/README.md
   - ../../../data/catalog/domain/fauna/README.md
   - ../../../data/catalog/domain/fauna/public/README.md
   - ../../../data/catalog/domain/fauna/restricted/README.md
-  - ../../../data/registry/README.md
-  - ../../../data/receipts/README.md
-  - ../../../data/proofs/README.md
-  - ../../../data/published/README.md
+  - ../../../data/registry/fauna/README.md
+  - ../../../data/receipts/fauna/README.md
+  - ../../../data/proofs/fauna/README.md
+  - ../../../data/published/fauna/README.md
+  - ../../../data/rollback/fauna/README.md
   - ../../../release/README.md
   - ../../../docs/domains/fauna/ARCHITECTURE.md
-  - ../../../schemas/contracts/v1/
-  - ../../../contracts/
-  - ../../../policy/
+  - ../../../docs/domains/fauna/CANONICAL_PATHS.md
+  - ../../../docs/domains/fauna/VERIFICATION_BACKLOG.md
   - ../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
   - ../../../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, domain, fauna, ecology, biodiversity, geoprivacy, sensitivity, rare-species, occurrence-restricted, occurrence-public, compatibility-root, redirect, data-catalog-domain, receipt-proof-catalog-publication-separation, non-authoritative, drift-fence, no-public-use]
+  - ../../../.github/CODEOWNERS
+  - ../../../.github/workflows/domain-fauna.yml
 notes:
-  - "Refreshes the root-level catalog/domain/fauna compatibility-redirect fence."
-  - "Root-level catalog/domain/fauna/ is compatibility and drift-control documentation only, not canonical fauna domain catalog authority, occurrence authority, source authority, registry authority, receipt authority, proof authority, release authority, publication authority, schema authority, policy authority, producer authority, hosting authority, or UI authority."
-  - "Canonical fauna domain catalog records belong under data/catalog/domain/fauna/; public-safe catalog records belong under data/catalog/domain/fauna/public/; restricted catalog records belong under data/catalog/domain/fauna/restricted/; source/rights/sensitivity rows belong under data/registry/; receipts belong under data/receipts/; proof support belongs under data/proofs/; release-governance records belong under release/; published delivery artifacts belong under data/published/ after governed release."
-  - "Fauna architecture marks this as a sensitive lane with deny-by-default posture for sensitive occurrences and sites. Exact occurrence, nest, den, roost, hibernaculum, spawning, lek, telemetry, and steward-flagged site details must not be exposed through this compatibility path."
-  - "ADR-0011 is proposed and is used here only as separation evidence, not accepted-rule proof."
-  - "Do not add fauna catalog records, occurrence records, sensitive-site records, STAC/DCAT/PROV records, source descriptors, registry rows, EvidenceBundles, receipts, release records, published artifacts, schemas, policy rules, generated outputs, or producer targets here without an ADR/migration note."
-  - "Actual current contents beyond this README, historical producers, workflow writes, migration status, CI/review enforcement, public-client/producer exclusion, hosting readiness, fauna catalog schema maturity, STAC/DCAT/PROV closure, access-control maturity, sensitivity/redaction decisions, and ADR disposition remain NEEDS VERIFICATION."
-  - "v0.2 adds current evidence basis, Directory Rules placement basis, canonical data/catalog/domain/fauna alignment, public/restricted lane posture, fauna sensitivity guardrails, family-separation posture, minimum safe redirect slice, anti-bypass matrix, migration/rollback posture, and safe language rules without claiming migration or enforcement maturity."
+  - "The first twelve H2 sections follow the Directory Rules compatibility-README contract."
+  - "Legacy v0.2 heading fragments are retained as explicit anchors at their equivalent v0.3 sections."
+  - "This Markdown-only revision does not move, validate, release, publish, expose, or authorize any Fauna object."
+  - "No exact or reverse-engineerable wildlife location, restricted record, personal data, credential, or private endpoint is introduced."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
+# `catalog/domain/fauna/` — Fauna Domain Catalog Compatibility Redirect
 
-# Fauna Domain Catalog Compatibility Redirect
+> Contain legacy or accidental root-level Fauna catalog placement, deny new trust-bearing writes, and route governed work to `data/catalog/domain/fauna/` without exposing sensitive wildlife information.
 
-`catalog/domain/fauna/`
-
-**Root-level compatibility and drift-control fence for legacy or accidental Fauna-domain catalog placement. Canonical Fauna catalog records belong under `data/catalog/domain/fauna/`; public-safe and restricted catalog sublanes stay under that canonical data-catalog lane.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![catalog home](https://img.shields.io/badge/catalog__home-data%2Fcatalog%2Fdomain%2Ffauna-blue)
-![domain](https://img.shields.io/badge/domain-fauna-2e7d32)
-![sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default-critical)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Canonical homes](#2-canonical-homes) · [Boundary](#3-authority-boundary) · [Sensitivity guardrails](#8-fauna-sensitivity-and-geoprivacy-guardrails) · [Migration](#11-migration-posture) · [Definition of done](#18-definition-of-done)
-
-</div>
-
----
+[![Status: compatibility only](https://img.shields.io/badge/status-compatibility%20only-d4a72c?style=flat-square)](#status)
+[![Authority: none](https://img.shields.io/badge/authority-non--authoritative-b42318?style=flat-square)](#authority-level)
+[![Canonical home: data/catalog/domain/fauna](https://img.shields.io/badge/canonical-data%2Fcatalog%2Fdomain%2Ffauna-0969da?style=flat-square)](#related-folders)
+[![Sensitivity: deny by default](https://img.shields.io/badge/sensitivity-deny%20by%20default-b42318?style=flat-square)](#fauna-sensitivity-and-geoprivacy)
+[![Public use: denied by placement](https://img.shields.io/badge/public%20use-denied%20by%20placement-6e7781?style=flat-square)](#anti-bypass-contract)
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `catalog/domain/fauna/README.md`  
-> **Responsibility root:** compatibility redirect / drift fence only  
-> **Canonical Fauna catalog home:** `data/catalog/domain/fauna/`  
-> **Public-safe catalog sublane:** `data/catalog/domain/fauna/public/`  
-> **Restricted catalog sublane:** `data/catalog/domain/fauna/restricted/`  
-> **Parent domain catalog home:** `data/catalog/domain/`  
-> **Registry home:** `data/registry/`  
-> **Receipt home:** `data/receipts/`  
-> **Proof home:** `data/proofs/`  
-> **Release-governance home:** `release/`  
-> **Published artifact home:** `data/published/`  
-> **Directory Rules basis:** file location encodes ownership, governance, and lifecycle. Root-level `catalog/domain/fauna/` is a compatibility redirect only and must not become a parallel fauna catalog, occurrence, sensitive-site, source, registry, STAC, DCAT, PROV, receipt, proof, release, publication, schema, policy, pipeline, package, tool, search, hosting, or UI authority.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent root-level `catalog/domain/README.md` exists and treats `catalog/domain/` as compatibility redirect / CONFIRMED `data/catalog/domain/fauna/README.md` exists and treats `data/catalog/domain/fauna/` as the Fauna CATALOG-stage sublane / CONFIRMED `data/catalog/domain/fauna/public/README.md` and `data/catalog/domain/fauna/restricted/README.md` exist and preserve public/restricted separation / CONFIRMED `docs/domains/fauna/ARCHITECTURE.md` exists and marks Fauna as sensitive with deny-by-default posture for sensitive occurrences/sites / CONFIRMED `data/registry/README.md`, `data/receipts/README.md`, `data/proofs/README.md`, and `release/README.md` exist and preserve family separation / CONFIRMED Directory Rules document exists / PROPOSED root-level `catalog/domain/fauna/` redirect contract / UNKNOWN actual files beyond README, historical producers, workflow writes, migration status, fauna catalog schema maturity, STAC/DCAT/PROV closure, CI/review guard, public-client/producer exclusion, access-control maturity, hosting readiness, and ADR disposition
+> This path is a redirect and drift fence inside the non-canonical top-level `catalog/` root. It may explain routing, migration, correction, and rollback; it cannot own Fauna catalog records, occurrence truth, restricted wildlife locations, source or registry records, evidence, receipts, proofs, policy, release state, published artifacts, or public delivery.
+
+<a id="quick-jump"></a>
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence](#evidence-basis) · [Routing](#compatibility-contract-and-canonical-routing) · [Sensitivity](#fauna-sensitivity-and-geoprivacy) · [Migration](#migration-correction-and-rollback) · [Anti-bypass](#anti-bypass-contract) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
+
+<a id="1-purpose"></a>
+
+## Purpose
+
+`catalog/domain/fauna/` preserves a visible redirect for legacy, accidental, generated, copied, or externally imported Fauna catalog-family placement while the top-level `catalog/` drift remains unresolved.
+
+Its purpose is containment, not growth:
+
+- direct maintainers to the canonical Fauna catalog lane;
+- prevent a second catalog, occurrence, sensitivity, evidence, or release authority from hardening here;
+- surface misplaced material for fail-closed review;
+- preserve lineage long enough for reversible correction, migration, or retirement; and
+- keep public clients, indexes, maps, exports, caches, and AI surfaces away from this path.
+
+This README does not prove that drift payloads exist, that migration is complete, or that enforcement is operational.
+
+<a id="3-authority-boundary"></a>
+
+## Authority level
+
+**CONFIRMED path / CONFLICTED placement / PROPOSED transitional containment / non-authoritative.**
+
+| Boundary | Posture |
+|---|---|
+| Compatibility class | `transitional` — PROPOSED pending an accepted disposition and migration plan |
+| Canonical catalog authority | [`data/catalog/domain/fauna/`](../../../data/catalog/domain/fauna/README.md) |
+| Independent evolution | Prohibited; new fields, rules, and catalog records land in governed canonical roots first |
+| Fauna occurrence or taxonomic truth | None |
+| Rights, sensitivity, and geoprivacy authority | None |
+| Evidence, receipt, proof, policy, or release authority | None |
+| Public API, search, map, export, cache, hosting, or AI authority | None |
+| Retirement authority | None without dependency closure, accepted governance, and rollback support |
+
+Directory Rules ``8.3, 9.1, 12, and 15 support this boundary: compatibility roots are not parallel authority; catalog records belong under `data/catalog/`; Fauna is a domain segment; and compatibility READMEs must state their class and canonical counterpart.
+
+<a id="4-default-posture"></a>
+<a id="status-summary"></a>
+
+## Status
+
+| Field | Current repository-grounded result |
+|---|---|
+| Document lifecycle | `draft` |
+| Path | `catalog/domain/fauna/README.md` |
+| Baseline | `main@8d4e407afb7747192740956f0c366504a6d21060` |
+| Prior blob | `d8f82548c33821eaedd515e893c7689ad3dbb074` |
+| Bounded target inventory | This README only in indexed results |
+| Recursive payload inventory | `UNKNOWN` — no recursive clone or tree enumeration was available |
+| Parent posture | `catalog/` and `catalog/domain/` are documented as compatibility-only drift containment |
+| Canonical counterpart | README paths for `data/catalog/domain/fauna/`, `public/`, and `restricted/` are CONFIRMED |
+| Concrete canonical records | `UNKNOWN` — README presence does not prove payload inventory |
+| Producers, consumers, runtime, search, hosting | `UNKNOWN` |
+| Access-control and geoprivacy enforcement | `UNKNOWN` |
+| Migration or retirement | Not performed by this document |
+| Public or release readiness | Denied by placement |
+| Overlapping open PR found in bounded search | None |
+| Accountable ownership and required review | `NEEDS VERIFICATION` |
 
 > [!CAUTION]
-> Do not make `catalog/domain/fauna/` a parallel Fauna catalog authority. Fauna catalog records belong under `data/catalog/domain/fauna/`; restricted and public-safe catalog records must remain distinguishable and linked; source/rights/sensitivity rows belong under `data/registry/`; receipts, proofs, release decisions, published artifacts, schemas, contracts, policies, source code, generated previews, and unpublished lifecycle data stay in their own owning roots.
+> Fauna data can expose rare species, nests, dens, roosts, hibernacula, spawning sites, leks, telemetry, and steward-controlled locations. Treat any non-README object found here as untrusted and potentially sensitive; do not open, render, index, move, or publish it until an authorized review establishes safe handling.
 
----
+<a id="5-allowed-contents"></a>
 
-## Quick jump
+## What belongs here
 
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Canonical homes](#2-canonical-homes)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Allowed contents](#5-allowed-contents)
-- [6. Forbidden contents](#6-forbidden-contents)
-- [7. Directory shape](#7-directory-shape)
-- [8. Fauna sensitivity and geoprivacy guardrails](#8-fauna-sensitivity-and-geoprivacy-guardrails)
-- [9. Minimum safe redirect slice](#9-minimum-safe-redirect-slice)
-- [10. Public and restricted lane posture](#10-public-and-restricted-lane-posture)
-- [11. Migration posture](#11-migration-posture)
-- [12. Runtime and producer anti-bypass matrix](#12-runtime-and-producer-anti-bypass-matrix)
-- [13. Diagram](#13-diagram)
-- [14. Inspection path](#14-inspection-path)
-- [15. Validation expectations](#15-validation-expectations)
-- [16. Safe change pattern](#16-safe-change-pattern)
-- [17. Rollback and correction posture](#17-rollback-and-correction-posture)
-- [18. Definition of done](#18-definition-of-done)
-- [19. Open verification items](#19-open-verification-items)
-- [20. Safe language rules](#20-safe-language-rules)
+Only non-authoritative containment material:
 
----
+- this compatibility README;
+- reviewed redirect, drift, deprecation, migration, correction, or rollback notes;
+- temporary migration markers required by an accepted plan;
+- bounded inventory or digest sidecars that contain no sensitive payload and do not claim catalog authority; and
+- an explicit pointer to one canonical target.
 
-## 0. Evidence basis for this revision
+Any additional file requires classification, rights and sensitivity review, provenance, a named owner, an expiry or disposition, validation, and rollback support. Its presence cannot make it canonical.
 
-This README is a documentation boundary, not migration proof, catalog-schema proof, access-control proof, sensitivity-review proof, redaction proof, STAC/DCAT/PROV closure proof, release approval proof, publication-hosting proof, or CI enforcement proof. The 2026-07-10 revision updates an existing compatibility README and keeps maturity bounded while aligning root-level `catalog/domain/fauna/` with the canonical `data/catalog/domain/fauna/` Fauna catalog lane, the `public/` and `restricted/` child catalog lanes, the separate `data/registry/` registry root, the separate `data/receipts/` process-memory root, the separate `data/proofs/` proof-support root, the `release/` release-governance root, and Directory Rules placement posture.
+<a id="6-forbidden-contents"></a>
 
-| Evidence item | Status | What it supports | What it does not prove |
+## What does NOT belong here
+
+| Prohibited family | Governed home or disposition |
+|---|---|
+| Fauna domain catalog records and indexes | [`data/catalog/domain/fauna/`](../../../data/catalog/domain/fauna/README.md) |
+| Public-safe catalog derivatives | [`data/catalog/domain/fauna/public/`](../../../data/catalog/domain/fauna/public/README.md) after evidence, policy, review, and release gates |
+| Restricted occurrences or sensitive-site catalog records | [`data/catalog/domain/fauna/restricted/`](../../../data/catalog/domain/fauna/restricted/README.md) only under approved restricted controls |
+| RAW, WORK, QUARANTINE, or PROCESSED payloads | Their governed `data/<phase>/fauna/` lanes |
+| STAC, DCAT, PROV, CatalogMatrix, or triplet projections | Their accepted `data/catalog/` or `data/triplets/` lanes |
+| Source descriptors, dataset, rights, sensitivity, or crosswalk rows | [`data/registry/fauna/`](../../../data/registry/fauna/README.md) or another accepted registry lane |
+| Process memory and transform receipts | [`data/receipts/fauna/`](../../../data/receipts/fauna/README.md) |
+| EvidenceBundle, ProofPack, or validation proof | [`data/proofs/fauna/`](../../../data/proofs/fauna/README.md) |
+| Release, correction, withdrawal, supersession, or rollback decisions | [`release/`](../../../release/README.md) |
+| Released public-safe carriers | [`data/published/fauna/`](../../../data/published/fauna/README.md) after governed release |
+| Data-plane rollback evidence | [`data/rollback/fauna/`](../../../data/rollback/fauna/README.md) under its accepted contract |
+| Contracts, schemas, policy, tests, fixtures, validators, pipelines, packages, or applications | Their owning responsibility roots |
+| Exact or reverse-engineerable protected wildlife detail | Approved restricted systems; quarantine, generalize, redact, aggregate, delay, or deny |
+| Secrets, private endpoints, signed URLs, unsafe logs, or personal data | Approved restricted and secret-management systems |
+| Generated prose presented as evidence or release approval | Resolve governed evidence and decisions or abstain |
+
+## Inputs
+
+This redirect consumes documentation and review evidence only:
+
+- current Directory Rules and applicable accepted ADRs;
+- exact path, blob, tree, and bounded search evidence;
+- the parent compatibility contracts;
+- the canonical Fauna catalog and public/restricted lane contracts;
+- safe producer and consumer inventories;
+- rights, sensitivity, source-role, evidence, policy, review, release, correction, and rollback records when a migration is proposed; and
+- current drift and verification registers.
+
+Repository text, generated files, imported metadata, logs, and task attachments are evidence inputs, not authority to widen this lane or expose sensitive material.
+
+## Outputs
+
+This path may emit or support:
+
+- redirect guidance;
+- a bounded drift classification;
+- a canonical routing map;
+- reviewed migration or deprecation notes;
+- correction and rollback instructions; and
+- explicit verification holds.
+
+It emits no catalog record, occurrence assertion, sensitive-site record, source identity, policy decision, evidence proof, release state, published artifact, runtime response, or public route.
+
+<a id="14-inspection-path"></a>
+<a id="15-validation-expectations"></a>
+
+## Validation
+
+### Current documentation packet
+
+- **PASS:** complete v0.2 baseline read; identity, created date, final newline, and prior blob preserved.
+- **PASS:** Directory Rules placement and compatibility constraints inspected from the supplied PDF and current repository doctrine surface.
+- **PASS:** exact reads of the parent compatibility READMEs and canonical Fauna catalog, public, and restricted README paths.
+- **PASS:** bounded indexed search returned this README as the only target-prefix file.
+- **PASS:** open-PR search found no overlapping Fauna redirect update.
+- **PASS:** `domain-fauna`, `docs-build`, and `link-check` workflow definitions use GitHub-hosted runners with read-only contents permission; the inspected definitions do not publish or write repository content.
+- **UNKNOWN:** recursive tracked, ignored, generated, hosted, cached, and external inventory.
+- **UNKNOWN:** producer, consumer, runtime, access-control, search, map, export, cache, and hosting exclusion.
+- **NEEDS VERIFICATION:** an accepted allowlist validator and required review/check enforcement.
+
+### Required containment checks
+
+A validator of record should:
+
+1. allow only README and approved transition artifacts;
+2. reject catalog, source, registry, receipt, proof, release, published, schema, policy, code, and lifecycle payloads;
+3. detect sensitive-location and restricted-record exposure without printing protected values;
+4. search producers, workflows, generators, consumers, APIs, maps, indexes, exports, caches, and hosts for this path;
+5. verify every migration target, identifier, digest, rights state, sensitivity class, evidence link, transform receipt, policy/review state, release link, correction path, and rollback target; and
+6. fail closed when classification or access authority is unresolved.
+
+The current [Fauna workflow](../../../.github/workflows/domain-fauna.yml) is a readiness inspector with explicit holds. A green held job would not prove Fauna correctness, safe geoprivacy, release approval, or publication.
+
+<a id="16-safe-change-pattern"></a>
+
+## Review burden
+
+The confirmed GitHub review route is the repository-wide default `@bartytime4life` from [`CODEOWNERS`](../../../.github/CODEOWNERS). No explicit `/catalog/` or target-specific ownership rule was found. CODEOWNERS routing is not stewardship, accountable review, policy approval, release authorization, or separation of duties.
+
+| Change | Minimum review posture |
+|---|---|
+| README-only clarification | Docs plus catalog/data review |
+| Fauna sensitivity, source-role, rights, or geoprivacy wording | Fauna domain and authorized sensitivity review |
+| Any non-README object or payload discovery | Owning family, security/privacy, catalog/data, evidence, policy, and correction review |
+| Producer, consumer, runtime, search, map, export, cache, or hosting change | Owning implementation, security, policy, validation, and operations review |
+| Migration, mirror, deprecation, or retirement | Architecture, every affected family, correction, rollback, and independent review |
+| Release or public-use consequence | Accountable release decision with evidence, policy, review, correction, and rollback support |
+
+Safe changes confirm the redirect-only scope, preserve public/restricted separation, add no protected detail, modify no canonical or runtime behavior, and remain reversible.
+
+<a id="2-canonical-homes"></a>
+
+## Related folders
+
+| Responsibility | Governed or related surface |
+|---|---|
+| Parent compatibility root | [`catalog/`](../../README.md) |
+| Domain compatibility parent | [`catalog/domain/`](../README.md) |
+| Canonical catalog root | [`data/catalog/`](../../../data/catalog/README.md) |
+| Canonical domain parent | [`data/catalog/domain/`](../../../data/catalog/domain/README.md) |
+| Canonical Fauna catalog | [`data/catalog/domain/fauna/`](../../../data/catalog/domain/fauna/README.md) |
+| Public-safe Fauna catalog sublane | [`data/catalog/domain/fauna/public/`](../../../data/catalog/domain/fauna/public/README.md) |
+| Restricted Fauna catalog sublane | [`data/catalog/domain/fauna/restricted/`](../../../data/catalog/domain/fauna/restricted/README.md) |
+| Fauna registry, receipts, and proofs | [registry](../../../data/registry/fauna/README.md) · [receipts](../../../data/receipts/fauna/README.md) · [proofs](../../../data/proofs/fauna/README.md) |
+| Published and rollback carriers | [published](../../../data/published/fauna/README.md) · [rollback](../../../data/rollback/fauna/README.md) |
+| Release governance | [`release/`](../../../release/README.md) |
+| Fauna architecture and path map | [architecture](../../../docs/domains/fauna/ARCHITECTURE.md) · [canonical paths](../../../docs/domains/fauna/CANONICAL_PATHS.md) |
+| Fauna verification backlog | [`docs/domains/fauna/VERIFICATION_BACKLOG.md`](../../../docs/domains/fauna/VERIFICATION_BACKLOG.md) |
+| Placement doctrine | [`docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) |
+
+## ADRs
+
+[ADR-0011](../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) is **CONFIRMED as a repository document** and has `proposed` status. It supports keeping receipts, proofs, catalogs, manifests, and publication distinct as a proposal; it does not authorize a migration, release, or compatibility-lane retirement.
+
+No accepted ADR disposing of `catalog/domain/fauna/` was established in this packet. Do not treat the proposed `transitional` class, the public/restricted lane documentation, or a future validator as an accepted authority change.
+
+## Last reviewed
+
+- **Date:** 2026-07-24
+- **Evidence boundary:** `main@8d4e407afb7747192740956f0c366504a6d21060`
+- **Target baseline:** blob `d8f82548c33821eaedd515e893c7689ad3dbb074`; UTF-8; LF; final newline present
+- **Method:** complete target read, exact related-file reads, bounded indexed search, register inspection, and workflow-definition preflight
+- **Not inspected:** recursive clone/tree, ignored files, runtime, deployment, restricted stores, external hosts, caches, or production consumers
+- **Human review:** pending
+
+Re-review when any file appears here, a producer or consumer references the path, an access or sensitivity policy changes, an ADR changes status, a migration begins, enforcement lands, or six months pass.
+
+<a id="0-evidence-basis-for-this-revision"></a>
+
+## Evidence basis
+
+| Evidence | Pinned object | Supports | Limit |
 |---|---|---|---|
-| `catalog/domain/fauna/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove actual contents beyond the README, historical producers, migration status, CI enforcement, public-client exclusion, hosting readiness, sensitivity decisions, or ADR disposition. |
-| `catalog/domain/README.md` exists and treats root-level `catalog/domain/` as a compatibility redirect, not canonical domain catalog authority. | CONFIRMED parent redirect posture | The Fauna child path should inherit compatibility-fence behavior. | It does not prove all root-level domain catalog drift has been removed. |
-| `data/catalog/domain/fauna/README.md` exists and treats `data/catalog/domain/fauna/` as the Fauna-domain catalog lane. | CONFIRMED canonical Fauna catalog lane posture | Fauna catalog records belong under `data/catalog/domain/fauna/`. | It does not prove concrete catalog records, schemas, validators, policy gates, receipts, release manifests, access controls, or route behavior. |
-| `data/catalog/domain/fauna/public/README.md` exists and excludes restricted exact occurrence and SensitiveSite material. | CONFIRMED public-safe child lane posture | Public-safe Fauna catalog records belong under the canonical public child lane. | It does not prove concrete public catalog records, release state, schemas, validators, receipts, or route behavior. |
-| `data/catalog/domain/fauna/restricted/README.md` exists and treats restricted Fauna catalog records as steward-governed, not public. | CONFIRMED restricted child lane posture | Restricted Fauna catalog records belong under the canonical restricted child lane when accepted for that lane. | It does not prove concrete restricted inventory, access policy, validators, receipt paths, or release workflows. |
-| `docs/domains/fauna/ARCHITECTURE.md` exists and marks Fauna as a sensitive lane with deny-by-default posture for sensitive occurrences/sites. | CONFIRMED domain-doctrine posture | Fauna catalog drift must preserve geoprivacy, public/restricted separation, source role, review, redaction, and release gates. | It does not prove endpoint behavior, validator wiring, public route behavior, or real access-control enforcement. |
-| `data/registry/README.md` exists and treats registry rows as source/rights/sensitivity-aware governance records. | CONFIRMED registry-root posture | Source descriptors, rights rows, sensitivity rows, dataset rows, and related registry records belong under `data/registry/`. | It does not prove final taxonomy, row inventories, validators, or release integration. |
-| `data/receipts/README.md` exists and marks receipts as process memory. | CONFIRMED receipt-root posture | Catalog-build, validation, migration, AI, redaction, correction, and release-support receipts belong under `data/receipts/`. | It does not prove emitted receipt inventories, signing, validators, release integration, or CI enforcement. |
-| `data/proofs/README.md` exists and treats proof artifacts as support objects, not public truth by placement. | CONFIRMED proof-root posture | EvidenceBundle and ProofPack support belongs under `data/proofs/`, not this redirect path. | It does not prove emitted proof inventories, schemas, validators, fixtures, CI workflows, or release-gate enforcement. |
-| `release/README.md` exists and treats `release/` as release-governance root. | CONFIRMED release-root posture | Release decisions, correction, rollback, withdrawal, supersession, and signatures belong under `release/`. | It does not prove release workflow maturity or active release approval. |
-| `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` exists and states the proposed separation rule `receipt ≠ proof ≠ catalog ≠ publication`. | CONFIRMED ADR document presence; PROPOSED decision status | Supports family-separation language while keeping ADR acceptance bounded. | It does not prove ADR acceptance or validator enforcement. |
-| `docs/doctrine/directory-rules.md` exists and states that file location encodes ownership, governance, and lifecycle. | CONFIRMED placement doctrine | Root-level `catalog/domain/fauna/` must remain a compatibility fence; catalog, registry, receipt, proof, release, and published records belong under their owning roots. | It does not prove live repo drift has been fully audited. |
+| This README baseline | `d8f82548c33821eaedd515e893c7689ad3dbb074` | Existing v0.2 purpose, safeguards, migration posture, and stable identity | Does not prove implementation |
+| [Root catalog redirect](../../README.md) | `638686cd5473219227a17b80e976c7caf54da710` | Top-level `catalog/` is severe non-authoritative drift containment | Recursive payload state remains unknown |
+| [Domain redirect parent](../README.md) | `fd4826b2b5e54672796b840d2664b5947d4054ec` | Domain children inherit compatibility-only routing | Does not settle each child’s payload state |
+| [Canonical Fauna catalog](../../../data/catalog/domain/fauna/README.md) | `9cd327c240292cd16ba93c9740164cbc4ecfa5ec` | Canonical path and CATALOG-stage intent | Concrete record inventory and enforcement remain unknown |
+| [Public catalog README](../../../data/catalog/domain/fauna/public/README.md) | `3aac0889ea15f341ee51bea1016bdcf84466d0c3` | Proposed public-safe derivative lane | README presence is not release or public-safety proof |
+| [Restricted catalog README](../../../data/catalog/domain/fauna/restricted/README.md) | `a73d32f10403f0a9c6e4883c7f5ac55158b70c33` | Proposed restricted review/derivative lane | Access controls and inventory remain unknown |
+| [Fauna architecture](../../../docs/domains/fauna/ARCHITECTURE.md) | `c2067cd7b079d4ac93fa139434cfd698a1683ffa` | Sensitive-lane and deny-by-default doctrine | Runtime enforcement remains unknown |
+| [Fauna canonical paths](../../../docs/domains/fauna/CANONICAL_PATHS.md) | `abfc6ddb2e958ea636ebc2e9e3705b59ec42c2ca` | Responsibility-root path map | Document status is draft |
+| [Fauna verification backlog](../../../docs/domains/fauna/VERIFICATION_BACKLOG.md) | `8571db0c810f37be4fc57cb8b54d8e762bee8b9c` | Open source, sensitivity, validator, lifecycle, release, and public-boundary checks | Backlog items are not closure evidence |
+| [ADR-0011](../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | `40b0f47b87d584040803ed76aa6b31f5204b7fca` | Proposed object-family separation | Status is proposed |
+| [CODEOWNERS](../../../.github/CODEOWNERS) | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | Default review routing | Not stewardship or approval |
+| [Fauna workflow](../../../.github/workflows/domain-fauna.yml) | `199305953a3149124eb4070b9d86b1fe517be67b` | Read-only readiness holds and non-publication boundary | Not substantive validation |
 
-[Back to top](#top)
+<a id="7-directory-shape"></a>
+<a id="9-minimum-safe-redirect-slice"></a>
+<a id="10-public-and-restricted-lane-posture"></a>
+<a id="13-diagram"></a>
 
----
+## Compatibility contract and canonical routing
 
-## 1. Purpose
+### Minimum safe redirect slice
 
-`catalog/domain/fauna/` is a **root-level compatibility redirect** for Fauna-domain catalog path drift.
-
-It exists only to prevent accidental, legacy, generated, copied, or externally imported Fauna catalog-family material from becoming a parallel authority outside KFM's governed lifecycle, registry, proof, receipt, release, and publication roots.
-
-This folder should not be used for canonical:
-
-- Fauna domain catalog records, species indexes, occurrence indexes, monitoring-event catalogs, range/seasonal-range catalogs, sensitive-site indexes, invasive-species catalogs, mortality/disease catalogs, public-safe indicator catalogs, or catalog manifests;
-- restricted occurrences, public occurrence derivatives, SensitiveSite records, exact telemetry summaries, nest, den, roost, hibernaculum, spawning, lek, steward-flagged site detail, or other exposure-sensitive material;
-- STAC, DCAT, PROV, CatalogMatrix, layer catalog, source catalog, catalog index, catalog manifest, or discovery records;
-- raw observations, corrected observations, survey outputs, telemetry outputs, disease/mortality payloads, QA outputs, generated public previews, or published map/download/API payloads;
-- process receipts, catalog-build receipts, validation receipts, redaction receipts, geoprivacy receipts, migration receipts, rollback receipts, release dry-run receipts, AI receipts, or telemetry receipts;
-- EvidenceBundles, ProofPacks, citation-validation bundles, catalog-closure proof, release-readiness proof, rollback proof, correction proof, or claim-support records;
-- release manifests, promotion decisions, rollback cards, correction notices, withdrawal notices, supersession records, signatures, release-state records, public-safe artifacts, reports, stories, tiles, PMTiles, API payload snapshots, public indexes, allowlists, caveat summaries, or digest sidecars;
-- source descriptors, dataset rows, crosswalks, rights rows, sensitivity rows, schemas, contracts, policy rules, producer code, generated previews, build outputs, or unpublished lifecycle data.
-
-This README does not prove that Fauna catalog drift currently exists here, that migration has been completed, that producer tools avoid this path, that public clients exclude this path, that Fauna catalog schemas are implemented, that sensitivity decisions are final, that access controls are enforced, that CI blocks writes here, or that any ADR has finalized long-term retention of this compatibility path.
-
-[Back to top](#top)
-
----
-
-## 2. Canonical homes
-
-Fauna domain catalog records belong under:
-
-```text
-data/catalog/domain/fauna/
-```
-
-Public-safe Fauna catalog records belong under:
-
-```text
-data/catalog/domain/fauna/public/
-```
-
-Restricted Fauna catalog records belong under:
-
-```text
-data/catalog/domain/fauna/restricted/
-```
-
-Source, dataset, rights, sensitivity, and registry rows belong under:
-
-```text
-data/registry/
-```
-
-Process-memory receipts belong under:
-
-```text
-data/receipts/
-```
-
-Proof support belongs under:
-
-```text
-data/proofs/
-```
-
-Release-governance material belongs under:
-
-```text
-release/
-```
-
-Released public-safe delivery artifacts belong under:
-
-```text
-data/published/
-```
-
-The root-level `catalog/domain/fauna/` directory is a redirect/fence only.
-
-```text
-catalog/domain/fauna/              # compatibility redirect only; do not add catalog-family records here
-data/catalog/domain/fauna/         # Fauna CATALOG-stage records
-data/catalog/domain/fauna/public/  # public-safe Fauna catalog records
-data/catalog/domain/fauna/restricted/ # restricted steward-governed Fauna catalog records
-data/registry/                     # source / dataset / rights / sensitivity rows
-data/receipts/                     # process-memory records
-data/proofs/                       # proof-support records
-release/                           # release / correction / rollback governance
-data/published/                    # released public-safe delivery artifacts
-```
-
-If a future ADR or migration changes Fauna catalog placement, this README should be updated to cite the accepted target, producer-configuration evidence, validation evidence, sensitivity/release review evidence, and any migration, correction, or rollback records.
-
-## 3. Authority boundary
-
-`catalog/domain/fauna/` has **no canonical Fauna catalog authority**, **no occurrence authority**, **no sensitive-site authority**, **no source authority**, **no registry authority**, **no receipt authority**, **no proof authority**, **no release authority**, and **no publication authority**. It may hold only redirect guidance, migration notes, drift logs, or temporary markers while misplaced material is reviewed and moved into its proper owning root.
-
-```text
-WRONG / LEGACY ROOT             FAUNA CATALOG HOMES                  SUPPORT AND RELEASE HOMES
-catalog/domain/fauna/      -->  data/catalog/domain/fauna/      -->  data/registry/
-compatibility fence only        public/ · restricted/                data/receipts/
-not authoritative               catalog records / indexes            data/proofs/
-                                public-safe / restricted split       release/
-                                                                      data/published/
-```
-
-A Fauna catalog record outside `data/catalog/domain/fauna/` should be treated as Fauna catalog-family drift. A restricted or public-safe record outside the proper child lane, a source or rights row outside `data/registry/`, a receipt outside `data/receipts/`, a proof outside `data/proofs/`, a release record outside `release/`, or a public artifact outside `data/published/` should be treated as family drift until reviewed and migrated.
-
-## 4. Default posture
-
-Anything found under root-level `catalog/domain/fauna/` should be treated as **NEEDS VERIFICATION** and potentially misplaced.
-
-Do not expose, publish, index, cite, search, cache, export, tile, host, or depend on root-level Fauna catalog files as canonical Fauna, occurrence, sensitive-site, source, proof, release, registry, or published artifact records. First confirm object family, source, source role, provenance, rights, sensitivity, geoprivacy posture, evidence resolution, schema validity, policy decision, lifecycle state, receipt support, proof support, catalog closure, release state, digest/sidecar integrity, rollback path, correction path, and whether the object is actually a catalog record, restricted occurrence, public derivative, registry row, receipt, proof, release-governance record, published artifact, or unpublished candidate.
-
-## 5. Allowed contents
-
-| Allowed item | Example | Required posture |
-|---|---|---|
-| README / redirect docs | `README.md` | Compatibility fence only |
-| Migration note | `MIGRATION.md` | Temporary and ADR/review-linked |
-| Drift note | `DRIFT.md`, `OPEN-QUESTIONS.md` | Must point to canonical homes and review steps |
-| Placeholder marker | `.gitkeep` | Does not authorize catalog, occurrence, sensitive-site, source, proof, receipt, release, policy, schema, or public-output content |
-
-## 6. Forbidden contents
-
-| Forbidden here | Correct home |
+| Requirement | Minimum posture |
 |---|---|
-| Fauna domain catalog records, indexes, species catalogs, occurrence catalogs, monitoring-event catalogs, range/seasonal-range catalogs, sensitive-site catalogs | `data/catalog/domain/fauna/` |
-| Public-safe Fauna catalog records and release-linked public catalog subsets | `data/catalog/domain/fauna/public/` |
-| Restricted Fauna catalog records, `OccurrenceRestricted`, exact occurrence, telemetry, sensitive-site, nest, den, roost, hibernaculum, spawning, lek, and steward-flagged site records | `data/catalog/domain/fauna/restricted/`, governed processed/proof/restricted homes, or other accepted protected lanes |
-| Raw observation, survey, monitoring, telemetry, disease, mortality, or invasive-species source payloads | Correct lifecycle lane under `data/`, not this root-level compatibility path |
-| STAC, DCAT, PROV, CatalogMatrix, catalog manifests, discovery records | `data/catalog/` or accepted child lanes under it |
-| Source descriptors, source registry rows, dataset rows, rights rows, sensitivity rows, species/source crosswalk rows | `data/registry/` or governed registry homes |
-| Receipts, catalog-build receipts, validation receipts, redaction/generalization receipts, geoprivacy receipts, AI receipts, release dry-run receipts, rollback receipts, migration receipts | `data/receipts/` |
-| EvidenceBundles, ProofPacks, attestations, citation-validation bundles, release-readiness proof, rollback proof, correction proof, claim-support records | `data/proofs/` |
-| ReleaseManifest, PromotionDecision, release decision, RollbackCard, CorrectionNotice, withdrawal, supersession, signature, release-state record | `release/` |
-| Released artifacts, public-safe Fauna layers, reports, stories, downloads, API payload snapshots, public indexes, allowlists, caveat summaries, digest sidecars, tiles, PMTiles | `data/published/` after governed release |
-| Schemas and machine-shape contracts | `schemas/contracts/v1/` |
-| Human contracts and object-meaning docs | `contracts/` |
-| Policy rules and policy decisions | `policy/` and governed policy-decision homes |
-| Source code, scripts, packages, pipelines, build tools, producers, preview generators | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, unpublished candidate, or restricted lifecycle data | `data/` lifecycle subtrees |
+| Redirect | Point to `data/catalog/domain/fauna/` |
+| Public/restricted map | Keep the proposed `public/` and `restricted/` sublanes distinct |
+| Payloads | None |
+| Sensitive details | None |
+| Producers and consumers | Zero durable writers; zero canonical or public readers |
+| Drift handling | Inspect, classify, restrict as needed, migrate through accepted governance, and preserve rollback |
+| Verification | Keep unresolved inventory, enforcement, access, and migration claims visible |
 
-## 7. Directory shape
+### Routing map
 
-Current implementation inventory remains `NEEDS VERIFICATION`.
-
-```text
-catalog/domain/fauna/
-├── README.md                 # compatibility redirect / drift fence
-├── MIGRATION.md              # PROPOSED only if migration is active
-└── DRIFT.md                  # PROPOSED only if misplaced Fauna catalog material is found
-```
-
-> [!WARNING]
-> Do not treat this suggested shape as complete repo inventory. Verify actual contents before making inventory, producer, enforcement, catalog-schema, sensitivity-review, access-control, hosting, or migration claims.
-
-## 8. Fauna sensitivity and geoprivacy guardrails
-
-Fauna catalog drift is especially risky because exact occurrence, sensitive site, survey, telemetry, disease, mortality, and public derivative records can look similar in an index. Any material found here must preserve sensitivity class and public/restricted lineage before it is migrated or used.
-
-| Guardrail | Required posture |
-|---|---|
-| Fauna is sensitive by default for protected occurrences/sites | Fail closed when sensitivity, rights, steward review, or geoprivacy posture is unresolved. |
-| `OccurrenceRestricted` is not `OccurrencePublic` | Keep restricted and public-safe records distinguishable and linked by identifier, digest, receipt, or release reference. |
-| Exact sensitive geometry must not be exposed here | Do not place exact nest, den, roost, hibernaculum, spawning, lek, telemetry, steward-flagged site, or rare/vulnerable species location detail in this compatibility path. |
-| Public derivatives require transform evidence | Public-safe derivatives should be generalized, redacted, delayed, aggregated, or otherwise transformed with receipt chains preserved. |
-| Source role stays visible | Aggregator, survey, authority, observation, telemetry, model, and derived records must not collapse into a false authority claim. |
-| Rights and sovereignty review can block publication | When rights, sovereignty, stewardship, or access terms are unclear, route to review, quarantine, redaction, or denial rather than publication. |
-| Public exposure is release-gated | A catalog record is not public merely because it exists under a catalog lane. |
-
-## 9. Minimum safe redirect slice
-
-A smallest safe `catalog/domain/fauna/` state should prove only that the folder prevents drift; it should not contain trust-bearing catalog, source, occurrence, release, sensitive, or public-delivery material.
-
-| Slice item | Minimum requirement | Why it matters |
-|---|---|---|
-| Redirect README | Points to `data/catalog/domain/fauna/` for Fauna catalog records | Prevents parallel Fauna catalog authority |
-| Public/restricted map | Points to `data/catalog/domain/fauna/public/` and `data/catalog/domain/fauna/restricted/` | Preserves sensitive/public derivative separation |
-| No catalog records | No species catalog, occurrence catalog, public derivative catalog, restricted catalog, sensitive-site catalog, or catalog manifest | Preserves catalog lifecycle root |
-| No source/registry records | No SourceDescriptor, rights row, sensitivity row, dataset row, source registry row, or taxon crosswalk row | Preserves registry root |
-| No source payloads | No raw observation, survey output, telemetry, disease/mortality data, processed dataset, raster, or generated preview | Preserves lifecycle and pipeline boundaries |
-| No receipt records | No CatalogBuildReceipt, RunReceipt, ValidationReceipt, RedactionReceipt, AIReceipt, migration receipt, release dry-run receipt, rollback receipt, or geoprivacy receipt | Preserves receipt/process-memory root |
-| No proof records | No EvidenceBundle, ProofPack, release attestation, citation validation, rollback proof, correction proof, or claim-support files | Preserves proof-support root |
-| No release/public artifacts | No ReleaseManifest, release decision, RollbackCard, published Fauna layer, public index, PMTiles, report, story, API snapshot, or digest | Preserves release and published roots |
-| No sensitive exposure | No exact protected occurrence, SensitiveSite geometry, telemetry, nest/den/roost/hibernaculum/spawning/lek location, or steward-flagged site detail | Prevents location exposure and policy bypass |
-| Drift procedure | Explains how to inspect and migrate misplaced records | Keeps remediation reversible |
-| Producer guard | Producers, generators, scripts, and CI should not write durable Fauna catalog material here | Prevents reintroducing drift |
-| Public-use guard | Public clients, search services, map runtimes, exports, static hosting, and indexes must not read from this path as canonical | Preserves governed access path |
-| Verification backlog | Open items stay visible | Prevents documentation from pretending migration/enforcement is complete |
-
-## 10. Public and restricted lane posture
-
-| Lane | Status | Boundary |
-|---|---|---|
-| `catalog/domain/fauna/` | Compatibility redirect path | Root-level drift fence only; not canonical. |
-| `data/catalog/domain/fauna/` | CONFIRMED README path / draft catalog lane | Canonical Fauna catalog placement for domain catalog records; still implementation-bounded. |
-| `data/catalog/domain/fauna/public/` | CONFIRMED README path / public-safe child lane | Catalog lane for public-safe derivatives only; does not prove concrete public inventory or release state. |
-| `data/catalog/domain/fauna/restricted/` | CONFIRMED README path / restricted child lane | Catalog lane for restricted review and public-safe derivative creation; does not prove actual restricted inventory, access controls, or release workflow. |
-
-Do not claim payload inventory, source descriptors, rights clearance, sensitivity decisions, access-control enforcement, schema validity, release state, route behavior, map behavior, or hosting readiness from README presence alone.
-
-## 11. Migration posture
-
-If Fauna catalog-family files are found here:
-
-1. Do not publish, cite, index, search, cache, export, tile, host, or depend on them.
-2. Identify whether they are Fauna catalog records, public-safe catalog records, restricted catalog records, occurrence records, sensitive-site records, monitoring-event catalogs, STAC/DCAT/PROV records, CatalogMatrix records, source descriptors, registry rows, receipts, proof support, release records, published-output material, schemas, policy records, unpublished lifecycle material, generated previews, temporary build artifacts, or producer outputs.
-3. Determine whether the file is historical drift, generated drift, copied output, unreviewed local work, or an intentional migration marker.
-4. Check sensitivity, rights, source-role, stewardship, and geoprivacy posture before moving or exposing anything.
-5. Move Fauna catalog records into `data/catalog/domain/fauna/` or an accepted child lane under it.
-6. Move public-safe Fauna catalog records into `data/catalog/domain/fauna/public/` only when public-safe derivative, receipt, and release posture are appropriate.
-7. Move restricted Fauna catalog records into `data/catalog/domain/fauna/restricted/` or an accepted restricted/review lane, preserving access controls and parent-child linkage.
-8. Move source, dataset, rights, sensitivity, taxon crosswalk, and layer rows into `data/registry/` or accepted registry child lanes.
-9. Move receipts into `data/receipts/`.
-10. Move proof support into `data/proofs/`.
-11. Move release-governance records into `release/`.
-12. Move or regenerate released public-safe Fauna artifacts into `data/published/` only after governed release approval and required sidecar/digest/citation/caveat support.
-13. Move schemas, contracts, policy rules, code, and producer outputs into their owning roots.
-14. Preserve provenance, source refs, source role, taxon identity, occurrence identity, sensitivity class, derivative lineage, digests, redaction/generalization receipts, catalog-build receipts, proof refs, catalog refs, review notes, producer identity, release refs, correction refs, and rollback path.
-15. Add a drift register, migration note, or correction note if the misplaced material was previously consumed.
-16. Add or update validation checks so producers do not recreate root-level Fauna catalog drift.
-17. Leave `catalog/domain/fauna/` as a redirect/fence unless an accepted ADR explicitly changes the authority model.
-
-## 12. Runtime and producer anti-bypass matrix
-
-| Bypass risk | Required behavior | Review signal |
-|---|---|---|
-| Producer writes Fauna catalog records to `catalog/domain/fauna/` | Fail review/CI; write to `data/catalog/domain/fauna/` instead | Producer config and output paths checked |
-| Producer writes public-safe Fauna catalog records here | Fail review/CI; write to `data/catalog/domain/fauna/public/` only when derivative and release posture are appropriate | Public derivative and release checks pass |
-| Producer writes restricted Fauna catalog records here | Fail review/CI; write to `data/catalog/domain/fauna/restricted/` or accepted restricted lane | Restricted-lane and access-control checks pass |
-| Producer writes source descriptors or rights rows here | Fail review/CI; write to `data/registry/` instead | Registry path check passes |
-| Producer writes receipts here | Fail review/CI; write to `data/receipts/` instead | Receipt path check passes |
-| Producer writes proofs here | Fail review/CI; write to `data/proofs/` instead | Proof path check passes |
-| Producer writes release records here | Fail review/CI; write to `release/` instead | Release path check passes |
-| Producer writes public Fauna exports here | Fail review/CI; write to `data/published/` only after release | Published path and release-state checks pass |
-| Public client reads root-level Fauna catalog path | Deny; route through governed API/release/public-safe path | Client/search/index/hosting config excludes this path |
-| Root-level Fauna file is treated as canonical occurrence truth | Mark as drift; resolve evidence/proof/catalog/release support before use | Migration note references canonical target |
-| Restricted/public class is lost | Hold, restrict, or abstain until linkage and class are restored | Public/restricted validation passes |
-| Sensitive site or exact location appears here | Remove, quarantine, redact, generalize, aggregate, or deny publication | Sensitivity and geoprivacy review passes |
-| Claim-bearing catalog entry lacks EvidenceBundle support | Hold, restrict, or abstain; do not cite root-level material as evidence | EvidenceRef/proof validation passes |
-| AI-generated Fauna catalog summary appears here | Treat as candidate or generated carrier only; route to work/quarantine/review lanes | AI boundary and evidence-review checks pass |
-| Schema/profile file stored here | Move to `schemas/` or standards docs as appropriate | Schema-home review passes |
-| Policy rule stored here | Move to `policy/` | Policy-root review passes |
-| Search/cache/export/tile/static-hosting pipeline consumes this path | Deny as canonical; switch to governed catalog/release/published source | Producer and client config reviewed |
-| Drift file already consumed downstream | Add correction/migration note and rollback path | Correction path is auditable |
-| README claims CI enforcement without run/check evidence | Mark enforcement `NEEDS VERIFICATION` | Current CI evidence cited before pass claims |
-
-## 13. Diagram
-
-```mermaid
+~~~mermaid
 flowchart TD
-    wrong["catalog/domain/fauna/\nroot-level redirect"] --> review["review for Fauna catalog / occurrence / sensitive-site / receipt / proof / release drift"]
-    review --> classify["classify object family and sensitivity"]
-    classify --> canonical["data/catalog/domain/fauna/\nFauna catalog lane"]
-    canonical --> publicLane["data/catalog/domain/fauna/public/\npublic-safe derivatives"]
-    canonical --> restrictedLane["data/catalog/domain/fauna/restricted/\nsteward-governed records"]
-    classify --> registry["data/registry/\nsource / rights / sensitivity rows"]
-    classify --> receipts["data/receipts/\nredaction / validation / process memory"]
-    classify --> proofs["data/proofs/\nEvidenceBundle / ProofPack support"]
-    classify --> release["release/\nrelease / correction / rollback governance"]
-    classify --> published["data/published/\nreleased public-safe delivery artifacts"]
-    restrictedLane -. "receipt-linked transform" .-> publicLane
-    publicLane --> release
-    receipts --> release
-    proofs --> release
-    release --> published
-    wrong -. "must not be canonical" .-> canonical
-    wrong -. "must not expose sensitive sites" .-> restrictedLane
-```
+  COMP["catalog/domain/fauna/<br/>compatibility redirect"] --> INSPECT{"Inspect without exposing<br/>sensitive values"}
+  INSPECT -->|README or approved transition note| COMP
+  INSPECT -->|catalog carrier| CANON["data/catalog/domain/fauna/"]
+  INSPECT -->|source rights sensitivity row| REG["data/registry/fauna/"]
+  INSPECT -->|process or transform memory| REC["data/receipts/fauna/"]
+  INSPECT -->|claim support| PROOF["data/proofs/fauna/"]
+  INSPECT -->|release or correction decision| REL["release/"]
+  CANON --> RESTRICTED["restricted/<br/>steward-governed candidate"]
+  RESTRICTED -->|reviewed transform and receipt| PUBLIC["public/<br/>public-safe candidate"]
+  PUBLIC --> GATE{"Evidence policy review<br/>release decision"}
+  GATE -->|approved| PUBLISHED["data/published/fauna/"]
+  GATE -->|not closed| STOP["Do not publish"]
+~~~
 
-## 14. Inspection path
+The diagram is routing guidance, not proof that a record, transform, validator, access control, review, release, or publication exists.
 
-Actual root-level contents, producers, workflow writes, migration status, Fauna catalog schema maturity, STAC/DCAT/PROV closure, hosting readiness, access-control enforcement, CI/review enforcement, public-client/index exclusion, sensitivity/redaction decisions, and current ADR disposition remain `NEEDS VERIFICATION`.
+<a id="8-fauna-sensitivity-and-geoprivacy-guardrails"></a>
 
-```bash
-find catalog/domain/fauna -maxdepth 6 -type f | sort
-find data/catalog/domain/fauna data/registry data/receipts data/proofs data/published release schemas contracts policy docs tools scripts pipelines pipeline_specs .github/workflows -maxdepth 7 -type f 2>/dev/null | grep -Ei 'fauna|taxon|occurrence|restricted|public|sensitive|nest|den|roost|hibernaculum|spawning|lek|telemetry|redaction|geoprivacy|catalog|receipt|proof|EvidenceBundle|ProofPack|ReleaseManifest|PromotionDecision|RollbackCard|CorrectionNotice|rights|sensitivity|schema|policy|validator|workflow|migration|drift|published|api|search|host' | sort
-```
+## Fauna sensitivity and geoprivacy
 
-## 15. Validation expectations
+- Exact or reverse-engineerable sensitive occurrences, nests, dens, roosts, hibernacula, spawning sites, leks, telemetry, and steward-flagged locations fail closed by default.
+- `OccurrenceRestricted` and `OccurrencePublic` remain distinct object families or explicitly governed projections; a boolean flag or folder name cannot substitute for separation.
+- A public derivative from sensitive input requires resolvable parent identity, an authorized sensitivity decision, a reviewable generalization/redaction/aggregation transform, a receipt, evidence support, policy obligations, a release decision, a correction path, and a rollback target appropriate to significance.
+- Styling, hidden fields, disabled popups, robots rules, or undocumented access conventions are not geoprivacy controls.
+- Catalog metadata must not reveal a protected location through coordinates, geometry, attributes, taxon-time combinations, asset links, identifiers, thumbnails, statistics, or joins.
+- Source roles stay visible. Observation aggregators are not automatically taxonomic, legal-status, or stewardship authorities.
+- Public and restricted README paths are documentation surfaces. Their names do not prove access control, public safety, rights clearance, review, or release.
+- If safe handling cannot be established, quarantine, restrict, generalize, delay, abstain, or deny; do not use this redirect as a workaround.
 
-Useful validation for this folder should cover:
+<a id="11-migration-posture"></a>
+<a id="17-rollback-and-correction-posture"></a>
 
-- no Fauna catalog records, species indexes, occurrence indexes, monitoring-event catalogs, sensitive-site catalogs, STAC/DCAT/PROV records, CatalogMatrix records, or catalog manifests are stored here;
-- no restricted occurrence, public derivative, sensitive-site, exact-location, telemetry, nest, den, roost, hibernaculum, spawning, lek, steward-flagged site, or rare/vulnerable species location detail is stored here;
-- no source descriptors, registry rows, receipts, proofs, release records, policy rules, schemas, source code, published artifacts, or lifecycle data are stored here;
-- any non-README content is tied to an active migration or drift note;
-- producers, preview generators, indexes, exports, caches, tiles, static hosting, search services, and public clients exclude this root-level path;
-- the canonical lane `data/catalog/domain/fauna/` and child public/restricted lanes remain the intended targets;
-- public/restricted linkage, redaction/generalization receipts, EvidenceBundle support, sensitivity decisions, policy posture, release refs, correction path, and rollback path are present before public use;
-- CI or review checks flag root-level `catalog/domain/fauna/` writes;
-- links point users to `data/catalog/domain/fauna/`, `data/catalog/domain/fauna/public/`, `data/catalog/domain/fauna/restricted/`, `data/registry/`, `data/receipts/`, `data/proofs/`, `release/`, and `data/published/`.
+## Migration, correction, and rollback
 
-## 16. Safe change pattern
+If non-README material is found here:
 
-For changes under `catalog/domain/fauna/`:
+1. Stop new writes and public or downstream use without deleting evidence.
+2. Inventory the exact object, producer, consumer, identifier, digest, history, rights state, sensitivity class, access posture, and affected derivatives.
+3. Quarantine or restrict access when wildlife exposure or other harm is possible; avoid logging protected values.
+4. Classify the owning family: catalog, registry, receipt, proof, release, published carrier, schema, policy, code, or lifecycle data.
+5. Obtain the accepted ADR or migration note when authority or path semantics change.
+6. Move or regenerate through the governed canonical process; preserve identity, provenance, source role, temporal scope, public/restricted linkage, transforms, evidence, reviews, receipts, release refs, and prior meanings.
+7. Validate canonical parity and negative cases before changing any consumer.
+8. Correct, withdraw, supersede, invalidate caches, or roll back affected downstream artifacts when prior reliance occurred.
+9. Keep this redirect until writers are disabled, consumers are cut over, inbound links are updated, validation passes, and the rollback window closes.
+10. Retire only with zero verified dependencies and an auditable disposition.
 
-1. Confirm the change is redirect documentation, migration support, or drift documentation only.
-2. Confirm it does not create a parallel Fauna domain catalog authority.
-3. Confirm it does not store public-safe catalog records outside `data/catalog/domain/fauna/public/`.
-4. Confirm it does not store restricted catalog records outside `data/catalog/domain/fauna/restricted/` or another accepted restricted lane.
-5. Confirm no precise protected Fauna location, exposure-sensitive detail, restricted occurrence, SensitiveSite, telemetry, nest, den, roost, hibernaculum, spawning, lek, or steward-flagged site detail is added.
-6. Confirm durable Fauna catalog records are placed under the governed `data/catalog/` tree.
-7. Confirm registry, receipt, proof, release, published, schema, contract, policy, code, and lifecycle records are placed under their owning roots.
-8. Document migration and rollback if any misplaced material was moved.
-9. Update docs and validation rules when behavior materially changes.
+For this Markdown-only update, rollback before merge is to close the draft PR or abandon the branch; after merge, revert the documentation commit. A documentation revert is not a catalog-data, access-control, geoprivacy, release, or published-artifact rollback.
 
-## 17. Rollback and correction posture
+<a id="12-runtime-and-producer-anti-bypass-matrix"></a>
 
-Rollback is required if this compatibility path becomes a Fauna source-data root, work area, quarantine store, processed-data store, proof store, release-decision root, published-output root, schema root, policy root, validator root, implementation root, public exposure shortcut, restricted-store shortcut, public-client source, search index source, static-hosting path, or producer target.
+## Anti-bypass contract
 
-If misplaced material here has already been consumed:
-
-1. Record what consumed it and when.
-2. Identify the object family and correct owning root.
-3. Move or regenerate the material through governed migration.
-4. Add correction, withdrawal, supersession, or rollback records when public or downstream artifacts were affected.
-5. Preserve evidence, receipt, release, and rollback links.
-
-## 18. Definition of done
-
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual root-level `catalog/domain/fauna/` contents are verified.
-- [ ] Any misplaced Fauna catalog material is migrated or documented as drift.
-- [ ] Canonical Fauna catalog placement under `data/catalog/domain/fauna/` is verified on the target ref.
-- [ ] Public and restricted child lane usage is verified on the target ref.
-- [ ] No trust-bearing records live here.
-- [ ] No Fauna catalog records, restricted records, public derivative records, protected Fauna detail, exact sensitive locations, STAC/DCAT/PROV records, registry records, receipts, proofs, release records, published artifacts, schemas, contracts, policy rules, source code, or lifecycle data live here.
-- [ ] Sensitivity, rights, source-role, geoprivacy, and redaction/generalization handling are verified or marked `NEEDS VERIFICATION`.
-- [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
-- [ ] Public-client, producer, search, tile, export, cache, and hosting exclusion is verified or marked `NEEDS VERIFICATION`.
-
-## 19. Open verification items
-
-| Item | Why it matters |
+| Risk | Required behavior |
 |---|---|
-| Confirm actual files under root-level `catalog/domain/fauna/` | Prevents overclaiming or missing drift |
-| Confirm whether any workflow writes here | Required before producer claims |
-| Confirm accepted canonical Fauna catalog placement | Required before final migration claims |
-| Confirm public/restricted child-lane behavior | Required before release and access claims |
-| Confirm sensitivity/redaction/geoprivacy handling | Required before safe-publication claims |
-| Confirm access-control enforcement for restricted catalog records | Required before security claims |
-| Confirm migration status to `data/catalog/domain/fauna/` | Required before canonical-home claims beyond README evidence |
-| Confirm CI/review guard exists | Required before enforcement claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm ADR status for root-level `catalog/domain/fauna/` | Required before long-term retention claims |
+| Producer writes any durable Fauna object here | Reject or hold the write; use the owning canonical root |
+| Public client, API, search, map, export, cache, tile, host, or AI reads here | Deny canonical/public use; route through governed interfaces and released carriers |
+| Root-level record is treated as occurrence truth | Mark as drift; resolve source and evidence through canonical lanes |
+| Public/restricted class or lineage is lost | Restrict use until class, parent, transform, and receipt links are restored |
+| Protected location or sensitive attribute appears | Quarantine, restrict, redact/generalize/aggregate under review, or deny |
+| Receipt is treated as proof or approval | Reject the collapse; preserve object-family separation |
+| Catalog presence is treated as release | Reject the claim; require an immutable release decision and released carrier |
+| AI summary is treated as evidence | Resolve `EvidenceRef` to admissible support or abstain |
+| Schema, policy, or validator is added here | Move through its owning responsibility root |
+| CI readiness hold is called enforcement proof | Keep enforcement `UNKNOWN` until executable negative cases and observed runs prove it |
+| Drift has already propagated | Record consumers and issue governed correction, migration, cache invalidation, and rollback actions |
 
-## 20. Safe language rules
+<a id="18-definition-of-done"></a>
+<a id="19-open-verification-items"></a>
 
-Use these phrases:
+## Open verification register
 
-- "root-level compatibility redirect"
-- "drift-control fence"
-- "canonical Fauna catalog records belong under `data/catalog/domain/fauna/`"
-- "public-safe catalog records belong under `data/catalog/domain/fauna/public/`"
-- "restricted catalog records belong under `data/catalog/domain/fauna/restricted/`"
-- "README/path evidence only"
-- "NEEDS VERIFICATION for payloads, validators, access controls, release state, and public route behavior"
+| Item | Status | Evidence needed |
+|---|---|---|
+| Recursive target inventory | `UNKNOWN` | Commit-pinned recursive tree plus ignored/generated/hosted review |
+| Historical and current writers | `UNKNOWN` | Code, workflow, generator, and operational configuration inventory |
+| Current consumers | `UNKNOWN` | API, map, search, export, cache, tile, host, AI, and external dependency inventory |
+| Canonical Fauna record inventory | `UNKNOWN` | Commit-pinned record list, identities, digests, and lifecycle states |
+| Public/restricted access controls | `NEEDS VERIFICATION` | Policy, enforcement code, negative tests, audit evidence, and reviewed outcomes |
+| Geoprivacy transform and receipt closure | `NEEDS VERIFICATION` | Accepted contract/schema, fixtures, validator, receipts, and release integration |
+| Catalog/STAC/DCAT/PROV agreement | `NEEDS VERIFICATION` | Accepted profiles, emitted records, resolvers, and negative tests |
+| Producer and public-client exclusion | `NEEDS VERIFICATION` | Deterministic path guards plus observed tests/runs |
+| Steward assignments and separation of duties | `NEEDS VERIFICATION` | Approved responsibility and review records |
+| Compatibility disposition | `NEEDS VERIFICATION` | Accepted ADR, migration manifest, dependency closure, and rollback drill |
 
-Avoid these phrases unless separately proven:
+The redirect is done only when no trust-bearing content remains here, no producer writes here, no consumer treats it as canonical or public, sensitive handling is proven for affected material, the canonical destinations are validated, correction obligations are closed, and an accepted disposition permits retention or retirement.
 
-- "catalog/domain/fauna contains Fauna catalog records"
-- "catalog/domain/fauna is canonical"
-- "public clients can read this path"
-- "restricted records are access-controlled"
-- "all sensitive occurrences are redacted"
-- "release-approved"
-- "CI blocks drift"
-- "producer-safe"
-- "published"
+<a id="20-safe-language-rules"></a>
 
-<details>
-<summary>Appendix A — no-loss preservation note</summary>
+## Safe language
 
-The previous README established `catalog/domain/fauna/` as a compatibility redirect and included sensitivity posture, forbidden content, migration posture, validation expectations, and open verification items. This v0.2 revision preserves that posture while adding current evidence basis, Directory Rules placement basis, canonical `data/catalog/domain/fauna/` alignment, public/restricted child-lane posture, stronger geoprivacy and sensitivity guardrails, family-separation posture, anti-bypass matrix, rollback/correction posture, and safe language rules without claiming migration or enforcement maturity.
+Use:
 
-</details>
+- “root-level compatibility redirect”;
+- “transitional drift-control fence”;
+- “canonical Fauna catalog records belong under `data/catalog/domain/fauna/`”;
+- “README/path evidence only”;
+- “public and restricted lane documentation is confirmed; enforcement is not”; and
+- “NEEDS VERIFICATION for payloads, producers, consumers, validators, access controls, release state, and runtime behavior.”
 
-## Status summary
+Avoid unless separately proven:
 
-`catalog/domain/fauna/` is a root-level compatibility redirect and Fauna-domain drift fence. It is not the canonical Fauna domain catalog home, not a restricted catalog home, not a public-safe catalog home, not a proof or receipt store, not release authority, and not a public exposure path.
+- “`catalog/domain/fauna/` is canonical”;
+- “the directory is empty”;
+- “restricted records are access-controlled”;
+- “all sensitive locations are redacted”;
+- “CI blocks drift”;
+- “public-safe,” “release-approved,” or “published” based only on placement; and
+- “migration complete” without producer, consumer, validation, correction, and rollback closure.
 
-Fauna catalog authority belongs under `data/catalog/domain/fauna/`; public-safe catalog records belong under `data/catalog/domain/fauna/public/`; restricted catalog records belong under `data/catalog/domain/fauna/restricted/`; trust-bearing support belongs under `data/receipts/`, `data/proofs/`, `data/registry/`, and `release/`; released public-safe products belong under `data/published/` after governed release.
+## No-loss ledger
+
+| Baseline v0.2 element | v0.3 disposition |
+|---|---|
+| Document identity, path, created date, compatibility purpose | Kept |
+| Canonical, public, restricted, registry, receipt, proof, release, and published routing | Clarified and consolidated |
+| Fauna sensitive-location and geoprivacy safeguards | Preserved and strengthened |
+| Allowed/forbidden content and minimum safe redirect slice | Reorganized under the Directory Rules contract |
+| Migration, producer/client anti-bypass, correction, and rollback posture | Preserved and tightened |
+| Evidence limitations and open verification items | Preserved with pinned evidence |
+| Safe-language rules | Preserved |
+| Numbered v0.2 heading fragments | Preserved through explicit anchors |
+| Repeated long object-family lists | Consolidated without weakening prohibitions |
+| Unverified owner roster | Repaired to verified default review routing plus unverified stewardship |
+| Payload, schema, policy, code, release, access, or publication effect | None |
+
+### Change history
+
+| Version | Date | Change |
+|---|---|---|
+| `v0.2` | 2026-07-10 | Expanded the redirect with canonical routing, sensitivity, migration, validation, anti-bypass, and safe-language guidance. |
+| `v0.3.0` | 2026-07-24 | Reordered the first twelve sections to the Directory Rules contract, grounded the evidence snapshot, classified the redirect as proposed transitional containment, preserved legacy anchors, consolidated repetition, and strengthened geoprivacy, review, validation, correction, and rollback boundaries. |
 
 <p align="right"><a href="#top">Back to top</a></p>
