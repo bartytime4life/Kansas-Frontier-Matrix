@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -22,20 +24,46 @@ from typing import Mapping, Sequence
 FORBIDDEN_LOCATION_KEYS = frozenset(
     {
         "address",
+        "bbox",
+        "bounding_box",
+        "bounds",
+        "center",
+        "centre",
+        "centroid",
         "coordinates",
         "den",
-        "geometry",
+        "easting",
+        "geojson",
+        "geocode",
         "geohash",
+        "geometry",
         "hibernaculum",
+        "lat",
         "latitude",
+        "lng",
         "locality",
+        "location",
+        "location_hint",
+        "location_id",
+        "lon",
+        "long",
         "longitude",
         "nest",
+        "northing",
+        "place",
+        "place_name",
+        "point",
+        "polygon",
         "private_land_join",
         "roost",
         "site",
+        "site_id",
         "spawning_site",
         "telemetry",
+        "utm",
+        "wkt",
+        "x",
+        "y",
     }
 )
 
@@ -76,6 +104,14 @@ ALLOWED_GOVERNANCE_KEYS = frozenset(
     }
 )
 
+URL_TOKENS = ("http://", "https://", "www.")
+SAFE_IDENTIFIER_RE = re.compile(r"^[a-z0-9][a-z0-9:-]{0,159}$")
+COORDINATE_PAIR_RE = re.compile(
+    r"(?<![\w.])[-+]?\d{1,6}(?:\.\d+)?\s*[,;]\s*"
+    r"[-+]?\d{1,6}(?:\.\d+)?(?![\w.])"
+)
+MAX_CAVEAT_LENGTH = 512
+
 
 @dataclass(frozen=True, order=True)
 class Finding:
@@ -87,6 +123,39 @@ class Finding:
 
 def _is_nonempty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
+
+
+def _normalize_key(key: str) -> str:
+    return re.sub(r"[\s-]+", "_", key.strip().casefold())
+
+
+def _is_safe_identifier(value: object) -> bool:
+    if not _is_nonempty_string(value):
+        return False
+    normalized = value.strip()
+    return bool(SAFE_IDENTIFIER_RE.fullmatch(normalized))
+
+
+def _is_finite_number(value: object) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(float(value))
+    )
+
+
+def _contains_finite_number(value: object) -> bool:
+    if _is_finite_number(value):
+        return True
+    if isinstance(value, list):
+        return any(_contains_finite_number(item) for item in value)
+    if isinstance(value, Mapping):
+        return any(_contains_finite_number(item) for item in value.values())
+    return False
+
+
+def _has_control_character(value: str) -> bool:
+    return any(ord(character) < 32 or ord(character) == 127 for character in value)
 
 
 def _walk(value: object, path: tuple[str, ...] = ()):
@@ -108,6 +177,26 @@ def _add(findings: list[Finding], code: str, path: str) -> None:
         findings.append(finding)
 
 
+def _validate_identifier(
+    findings: list[Finding],
+    value: object,
+    *,
+    path: str,
+    required_prefix: str,
+    missing_code: str,
+    prefix_code: str,
+    format_code: str,
+) -> None:
+    if not _is_nonempty_string(value):
+        _add(findings, missing_code, path)
+        return
+    normalized = value.strip()
+    if not normalized.startswith(required_prefix):
+        _add(findings, prefix_code, path)
+    if not _is_safe_identifier(normalized):
+        _add(findings, format_code, path)
+
+
 def validate_candidate(candidate: object) -> tuple[Finding, ...]:
     """Return deterministic findings for one synthetic fixture candidate."""
 
@@ -118,11 +207,17 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
 
     if candidate.get("record_type") != "fauna_public_safe_validation_candidate":
         _add(findings, "RECORD_TYPE_INVALID", "$.record_type")
-    fixture_id = candidate.get("fixture_id")
-    if not _is_nonempty_string(fixture_id):
-        _add(findings, "FIXTURE_ID_MISSING", "$.fixture_id")
-    elif not fixture_id.startswith("fixture:fauna:"):
-        _add(findings, "FIXTURE_ID_NOT_SYNTHETIC", "$.fixture_id")
+
+    _validate_identifier(
+        findings,
+        candidate.get("fixture_id"),
+        path="$.fixture_id",
+        required_prefix="fixture:fauna:",
+        missing_code="FIXTURE_ID_MISSING",
+        prefix_code="FIXTURE_ID_NOT_SYNTHETIC",
+        format_code="FIXTURE_ID_FORMAT_INVALID",
+    )
+
     if candidate.get("fixture_only") is not True:
         _add(findings, "FIXTURE_ONLY_REQUIRED", "$.fixture_only")
     if candidate.get("reality_boundary") != "synthetic-test-fixture":
@@ -130,25 +225,31 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
     if candidate.get("network_access") != "forbidden":
         _add(findings, "NETWORK_ACCESS_NOT_FORBIDDEN", "$.network_access")
 
-    source_ref = candidate.get("source_descriptor_ref")
-    if not _is_nonempty_string(source_ref):
-        _add(findings, "SOURCE_DESCRIPTOR_REF_MISSING", "$.source_descriptor_ref")
-    elif not source_ref.startswith("fixture:source:fauna:"):
-        _add(
-            findings,
-            "SOURCE_DESCRIPTOR_REF_NOT_SYNTHETIC",
-            "$.source_descriptor_ref",
-        )
+    _validate_identifier(
+        findings,
+        candidate.get("source_descriptor_ref"),
+        path="$.source_descriptor_ref",
+        required_prefix="fixture:source:fauna:",
+        missing_code="SOURCE_DESCRIPTOR_REF_MISSING",
+        prefix_code="SOURCE_DESCRIPTOR_REF_NOT_SYNTHETIC",
+        format_code="SOURCE_DESCRIPTOR_REF_FORMAT_INVALID",
+    )
+
     if candidate.get("source_role") != "synthetic":
         _add(findings, "SOURCE_ROLE_NOT_SYNTHETIC", "$.source_role")
     if candidate.get("rights_state") != "fixture-only":
         _add(findings, "RIGHTS_STATE_UNRESOLVED", "$.rights_state")
 
-    taxon_ref = candidate.get("taxon_ref")
-    if not _is_nonempty_string(taxon_ref):
-        _add(findings, "TAXON_REF_MISSING", "$.taxon_ref")
-    elif not taxon_ref.startswith("fixture:taxon:fauna:"):
-        _add(findings, "TAXON_REF_NOT_SYNTHETIC", "$.taxon_ref")
+    _validate_identifier(
+        findings,
+        candidate.get("taxon_ref"),
+        path="$.taxon_ref",
+        required_prefix="fixture:taxon:fauna:",
+        missing_code="TAXON_REF_MISSING",
+        prefix_code="TAXON_REF_NOT_SYNTHETIC",
+        format_code="TAXON_REF_FORMAT_INVALID",
+    )
+
     if candidate.get("taxonomy_state") != "synthetic-resolved":
         _add(findings, "TAXONOMY_UNRESOLVED", "$.taxonomy_state")
 
@@ -174,7 +275,8 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
         label = spatial_support.get("label")
         if not (
             _is_nonempty_string(label)
-            and label.startswith("synthetic-area-")
+            and label.strip().startswith("synthetic-area-")
+            and _is_safe_identifier(label.strip())
         ):
             _add(
                 findings,
@@ -187,15 +289,26 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
         _add(findings, "EVIDENCE_REF_MISSING", "$.evidence_refs")
     else:
         for index, evidence_ref in enumerate(evidence_refs):
+            path = f"$.evidence_refs.{index}"
             if not (
                 _is_nonempty_string(evidence_ref)
-                and evidence_ref.startswith("fixture:evidence:fauna:")
+                and evidence_ref.strip().startswith("fixture:evidence:fauna:")
             ):
-                _add(
-                    findings,
-                    "EVIDENCE_REF_NOT_SYNTHETIC",
-                    f"$.evidence_refs.{index}",
-                )
+                _add(findings, "EVIDENCE_REF_NOT_SYNTHETIC", path)
+            if not _is_safe_identifier(evidence_ref):
+                _add(findings, "EVIDENCE_REF_FORMAT_INVALID", path)
+
+    public_caveats = candidate.get("public_caveats")
+    if public_caveats is not None:
+        if not isinstance(public_caveats, list) or not public_caveats:
+            _add(findings, "PUBLIC_CAVEATS_INVALID", "$.public_caveats")
+        else:
+            for index, caveat in enumerate(public_caveats):
+                path = f"$.public_caveats.{index}"
+                if not _is_nonempty_string(caveat):
+                    _add(findings, "PUBLIC_CAVEAT_INVALID", path)
+                elif len(caveat) > MAX_CAVEAT_LENGTH:
+                    _add(findings, "PUBLIC_CAVEAT_TOO_LONG", path)
 
     governance = candidate.get("governance")
     if not isinstance(governance, Mapping):
@@ -241,12 +354,29 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
 
     for path, key, value in _walk(candidate):
         dotted_path = "$." + ".".join(path)
-        if isinstance(key, str) and key.lower() in FORBIDDEN_LOCATION_KEYS:
-            _add(findings, "PRECISE_LOCATION_FIELD_FORBIDDEN", dotted_path)
-        if isinstance(value, str) and value.lower().startswith(
-            ("http://", "https://")
-        ):
-            _add(findings, "LIVE_URL_FORBIDDEN", dotted_path)
+        if isinstance(key, str):
+            normalized_key = _normalize_key(key)
+            if normalized_key in FORBIDDEN_LOCATION_KEYS:
+                _add(findings, "PRECISE_LOCATION_FIELD_FORBIDDEN", dotted_path)
+                if _contains_finite_number(value):
+                    _add(
+                        findings,
+                        "LOCATION_NUMERIC_VALUE_FORBIDDEN",
+                        dotted_path,
+                    )
+
+        if isinstance(value, str):
+            normalized_value = value.strip()
+            folded_value = normalized_value.casefold()
+            if (
+                any(token in folded_value for token in URL_TOKENS)
+                or folded_value.startswith("//")
+            ):
+                _add(findings, "LIVE_URL_FORBIDDEN", dotted_path)
+            if _has_control_character(value):
+                _add(findings, "CONTROL_CHARACTER_FORBIDDEN", dotted_path)
+            if COORDINATE_PAIR_RE.search(normalized_value):
+                _add(findings, "COORDINATE_PATTERN_FORBIDDEN", dotted_path)
 
     return tuple(sorted(findings))
 
