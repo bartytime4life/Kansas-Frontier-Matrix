@@ -130,6 +130,10 @@ flowchart LR
   CAT --> PROV[data/catalog/prov/atmosphere]
   CAT --> TRIP[data/triplets/.../atmosphere]
   CAT --> PUB[data/published/.../atmosphere]
+  STAC --> PUB
+  DCAT --> PUB
+  PROV --> PUB
+  TRIP --> PUB
   PUB --> REL[release]
 ```
 
