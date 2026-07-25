@@ -22,6 +22,18 @@ from tools.validators.domains.fauna.validate_public_safe_fixture import (
 REPO_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_ROOT = REPO_ROOT / "fixtures" / "domains" / "fauna"
 VALID_FIXTURE = FIXTURE_ROOT / "valid" / "non_sensitive_occurrence.json"
+ENCODED_FIXTURE = FIXTURE_ROOT / "invalid" / "encoded_location_clue.json"
+LOCATION_ALIASES = (
+    "lat",
+    "lon",
+    "lng",
+    "x",
+    "y",
+    "bbox",
+    "centroid",
+    "easting",
+    "northing",
+)
 INVALID_FIXTURES = {
     FIXTURE_ROOT / "invalid" / "missing_source_descriptor.json": {
         ("SOURCE_DESCRIPTOR_REF_MISSING", "$.source_descriptor_ref")
@@ -56,7 +68,7 @@ INVALID_FIXTURES = {
         ("RIGHTS_STATE_UNRESOLVED", "$.rights_state"),
         ("ROLLBACK_STATE_NOT_FIXTURE_ONLY", "$.governance.rollback_state"),
     },
-    FIXTURE_ROOT / "invalid" / "encoded_location_clue.json": {
+    ENCODED_FIXTURE: {
         ("COORDINATE_PATTERN_FORBIDDEN", "$.public_caveats.1"),
         ("LIVE_URL_FORBIDDEN", "$.public_caveats.0"),
         (
@@ -110,8 +122,36 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
                     f"{fixture_path.name}: {sorted(actual_findings)}",
                 )
 
-    def test_numeric_location_alias_fails_closed(self):
-        payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        output = io.StringIO()
+        with redirect_stdout(output):
+            return_code = main([str(ENCODED_FIXTURE)])
+
+        self.assertEqual(return_code, 1)
+        self.assertNotIn("Synthetic out-of-range pair", output.getvalue())
+        self.assertNotIn("999999", output.getvalue())
+
+    def test_location_aliases_and_numeric_values_fail_closed(self):
+        base_payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+
+        for alias in LOCATION_ALIASES:
+            with self.subTest(alias=alias):
+                payload = copy.deepcopy(base_payload)
+                payload["spatial_support"][alias] = "SYNTHETIC-ONLY"
+                actual = {
+                    (finding.code, finding.path)
+                    for finding in validate_candidate(payload)
+                }
+                path = f"$.spatial_support.{alias}"
+                self.assertIn(
+                    ("PRECISE_LOCATION_FIELD_FORBIDDEN", path),
+                    actual,
+                )
+                self.assertIn(
+                    ("UNDECLARED_SPATIAL_FIELD", path),
+                    actual,
+                )
+
+        payload = copy.deepcopy(base_payload)
         payload["spatial_support"]["x"] = 999.0
         actual = {
             (finding.code, finding.path)
@@ -131,20 +171,57 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
         )
 
     def test_public_caveats_reject_malformed_and_encoded_content(self):
-        payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
-        payload["public_caveats"] = {"note": "synthetic"}
-        malformed = {
-            (finding.code, finding.path)
-            for finding in validate_candidate(payload)
-        }
-        self.assertIn(
-            ("PUBLIC_CAVEATS_INVALID", "$.public_caveats"),
-            malformed,
+        base_payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        malformed_cases = (
+            (
+                "object",
+                {"note": "synthetic"},
+                ("PUBLIC_CAVEATS_INVALID", "$.public_caveats"),
+            ),
+            (
+                "number",
+                999,
+                ("PUBLIC_CAVEATS_INVALID", "$.public_caveats"),
+            ),
+            (
+                "string",
+                "synthetic",
+                ("PUBLIC_CAVEATS_INVALID", "$.public_caveats"),
+            ),
+            (
+                "empty",
+                [],
+                ("PUBLIC_CAVEATS_INVALID", "$.public_caveats"),
+            ),
+            (
+                "nested",
+                [["synthetic"]],
+                ("PUBLIC_CAVEAT_INVALID", "$.public_caveats.0"),
+            ),
+            (
+                "unbounded",
+                ["x" * 513],
+                ("PUBLIC_CAVEAT_TOO_LONG", "$.public_caveats.0"),
+            ),
         )
 
+        for case, caveats, expected in malformed_cases:
+            with self.subTest(case=case):
+                payload = copy.deepcopy(base_payload)
+                payload["public_caveats"] = caveats
+                malformed = {
+                    (finding.code, finding.path)
+                    for finding in validate_candidate(payload)
+                }
+                self.assertIn(expected, malformed)
+
+        payload = copy.deepcopy(base_payload)
         payload["public_caveats"] = [
-            "Synthetic note contains https://",
+            "  HTTPS://",
+            "  //",
+            "  WWW.",
             "Synthetic control\x00marker",
+            "Synthetic out-of-range pair 999999, -999999",
         ]
         encoded = {
             (finding.code, finding.path)
@@ -155,7 +232,19 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
             encoded,
         )
         self.assertIn(
-            ("CONTROL_CHARACTER_FORBIDDEN", "$.public_caveats.1"),
+            ("LIVE_URL_FORBIDDEN", "$.public_caveats.1"),
+            encoded,
+        )
+        self.assertIn(
+            ("LIVE_URL_FORBIDDEN", "$.public_caveats.2"),
+            encoded,
+        )
+        self.assertIn(
+            ("CONTROL_CHARACTER_FORBIDDEN", "$.public_caveats.3"),
+            encoded,
+        )
+        self.assertIn(
+            ("COORDINATE_PATTERN_FORBIDDEN", "$.public_caveats.4"),
             encoded,
         )
 
