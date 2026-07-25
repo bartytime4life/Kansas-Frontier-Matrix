@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import io
 import json
 import socket
@@ -13,6 +14,7 @@ from unittest.mock import patch
 
 from tools.validators.domains.fauna.validate_public_safe_fixture import (
     main,
+    validate_candidate,
     validate_file,
 )
 
@@ -53,6 +55,15 @@ INVALID_FIXTURES = {
         ("REVIEW_STATE_NOT_FIXTURE_ONLY", "$.governance.review_state"),
         ("RIGHTS_STATE_UNRESOLVED", "$.rights_state"),
         ("ROLLBACK_STATE_NOT_FIXTURE_ONLY", "$.governance.rollback_state"),
+    },
+    FIXTURE_ROOT / "invalid" / "encoded_location_clue.json": {
+        ("COORDINATE_PATTERN_FORBIDDEN", "$.public_caveats.1"),
+        ("LIVE_URL_FORBIDDEN", "$.public_caveats.0"),
+        (
+            "PRECISE_LOCATION_FIELD_FORBIDDEN",
+            "$.spatial_support.centroid",
+        ),
+        ("UNDECLARED_SPATIAL_FIELD", "$.spatial_support.centroid"),
     },
 }
 
@@ -99,21 +110,73 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
                     f"{fixture_path.name}: {sorted(actual_findings)}",
                 )
 
-    def test_fixture_corpus_contains_no_live_urls_or_numeric_coordinates(self):
+    def test_numeric_location_alias_fails_closed(self):
+        payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        payload["spatial_support"]["x"] = 999.0
+        actual = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertIn(
+            ("PRECISE_LOCATION_FIELD_FORBIDDEN", "$.spatial_support.x"),
+            actual,
+        )
+        self.assertIn(
+            ("LOCATION_NUMERIC_VALUE_FORBIDDEN", "$.spatial_support.x"),
+            actual,
+        )
+        self.assertIn(
+            ("UNDECLARED_SPATIAL_FIELD", "$.spatial_support.x"),
+            actual,
+        )
+
+    def test_public_caveats_reject_malformed_and_encoded_content(self):
+        payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        payload["public_caveats"] = {"note": "synthetic"}
+        malformed = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertIn(
+            ("PUBLIC_CAVEATS_INVALID", "$.public_caveats"),
+            malformed,
+        )
+
+        payload["public_caveats"] = [
+            "Synthetic note contains https://",
+            "Synthetic control\x00marker",
+        ]
+        encoded = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertIn(
+            ("LIVE_URL_FORBIDDEN", "$.public_caveats.0"),
+            encoded,
+        )
+        self.assertIn(
+            ("CONTROL_CHARACTER_FORBIDDEN", "$.public_caveats.1"),
+            encoded,
+        )
+
+    def test_fixture_corpus_contains_no_live_target_or_plausible_coordinate(self):
         for fixture_path in (VALID_FIXTURE, *INVALID_FIXTURES):
             with self.subTest(fixture=fixture_path.name):
                 payload = json.loads(fixture_path.read_text(encoding="utf-8"))
-                serialized = json.dumps(payload, sort_keys=True).lower()
+                serialized = json.dumps(payload, sort_keys=True).casefold()
                 self.assertNotIn("http://", serialized)
                 self.assertNotIn("https://", serialized)
+                self.assertNotIn("www.", serialized)
 
-                spatial_support = payload["spatial_support"]
-                for field in ("latitude", "longitude", "coordinates"):
-                    value = spatial_support.get(field)
-                    self.assertFalse(
-                        isinstance(value, (int, float, list)),
-                        f"{fixture_path.name} contains numeric {field}",
-                    )
+                for value in _walk_values(payload):
+                    if isinstance(value, (int, float)) and not isinstance(
+                        value, bool
+                    ):
+                        self.assertGreater(
+                            abs(float(value)),
+                            180.0,
+                            f"{fixture_path.name} contains plausible coordinate",
+                        )
 
     def test_cli_emits_stable_pass_envelope_for_accepted_fixture(self):
         output = io.StringIO()
@@ -127,6 +190,17 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
         self.assertEqual(
             envelope["scope"], "synthetic-public-safe-fixture-only"
         )
+
+
+def _walk_values(value):
+    if isinstance(value, dict):
+        for child in value.values():
+            yield child
+            yield from _walk_values(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield child
+            yield from _walk_values(child)
 
 
 if __name__ == "__main__":
