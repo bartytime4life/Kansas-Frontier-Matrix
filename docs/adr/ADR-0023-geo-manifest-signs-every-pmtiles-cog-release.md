@@ -1,584 +1,784 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0023-geo-manifest-signs-every-pmtiles-cog-release
-title: ADR-0023 — Geo Manifest Signs Every PMTiles & COG Release
+title: ADR-0023 — Geo Manifest Signs Every PMTiles and COG Release
 type: adr
-version: v1.1
+adr_id: ADR-0023
+version: v1.2
 status: proposed
-owners: <release-stewards>, <tile-stewards>, <trust-membrane-stewards>  # placeholder — confirm against CODEOWNERS
+effective_decision_status: proposed
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — geospatial artifact and tile steward"
+  - "NEEDS VERIFICATION — release and publication steward"
+  - "NEEDS VERIFICATION — evidence, contracts, schemas, policy, validation, security, correction, and rollback stewards"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Geospatial artifact and tile steward
+  - Release and publication steward
+  - Evidence and proof steward
+  - Contracts and schemas stewards
+  - Policy and sensitivity steward
+  - Security and signing reviewer
+  - Validation and CI steward
+  - Correction and rollback steward
 created: 2026-05-09
-updated: 2026-05-15
+updated: 2026-07-24
 policy_label: public
-target_path: docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md  # PROPOSED until repo inspection
-truth_posture: CONFIRMED input markdown and KFM doctrine; PROPOSED implementation paths and field shapes; UNKNOWN mounted-repo depth
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: b50daeb62a9331d314f33ded79b85ccbda5650c4
+  target_prior_blob: 99a984ddde3f5569ef54443bce7798e5ac2f89d4
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  adr_readme_blob: f1b5d34a53b6c717832d587de54989ce8192bcaa
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  geo_manifest_contract_blob: cf8e467cf32323718e38ad1510da3e5f60bef884
+  geo_manifest_schema_blob: 931a0de24e45af4bc237c596c69bcaf305fb811f
+  release_manifest_schema_blob: 727db0a781900aa3816dcdce723fe355fec2e786
+  published_pmtiles_readme_blob: 1b40b18badf10d57ec2cce363770784bae21649e
+  published_layers_readme_blob: dec9fe683d49be194c46a46cd50bee9a2675cb28
+  release_manifest_singular_readme_blob: 6014cfc0f8394a44167f4226975b74f94f3b2a03
+  release_manifests_plural_readme_blob: c699a527ff11bebad6a874ed1a37aa3a8213b86c
+  release_signatures_readme_blob: e25a62e73762af96d15fbb6c32c8d03fbac66e30
+  attest_tools_readme_blob: 877b881183558cc21627b16163b130a9123f85ee
+  promotion_workflow_blob: c22941d5e1fad3317f46591705091ef2b6e7d265
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+inspection_boundary: >
+  Current-session GitHub reads of the ADR inventory and operating contract, Directory Rules,
+  this ADR, the KFMGeoManifest contract and schema stub, published PMTiles and layer lane
+  documentation, release manifest and signature lanes, attestation-tool documentation,
+  promotion workflow source, identity and rollback ADRs, and bounded repository searches for
+  the declared validator, fixtures, policy, and tile runbook. No signer, key store, transparency
+  log, PMTiles or COG payload, CDN, public alias, deployment, runtime verifier, production
+  release, correction, withdrawal, or rollback was exercised.
 related:
-  - kfm://doc/directory-rules
-  - kfm://doc/adr-0001-schema-home
-  - schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json   # PROPOSED home
-  - docs/tiles/PIPELINE.md                                       # PROPOSED home
-  - schemas/contracts/v1/evidence/promotion_receipt.schema.json  # PROPOSED home
-  - schemas/contracts/v1/run_receipt.schema.json                 # PROPOSED home
-  - release/manifests/                                           # PROPOSED home for release decisions
-  - data/published/pmtiles/                                      # PROPOSED home for released PMTiles artifacts
-  - data/published/layers/                                       # PROPOSED home for released COG/raster artifacts
-tags: [kfm, adr, tiles, pmtiles, cog, manifest, dsse, cosign, rekor, blake3, trust-membrane, release]
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
+  - docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/doctrine/directory-rules.md
+  - contracts/evidence/kfm_geo_manifest.md
+  - schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json
+  - data/published/pmtiles/README.md
+  - data/published/layers/README.md
+  - release/manifest/README.md
+  - release/manifests/README.md
+  - release/signatures/README.md
+  - tools/attest/README.md
+  - .github/workflows/promotion-gate.yml
+tags: [kfm, adr, geospatial, pmtiles, cog, geo-manifest, dsse, signature, integrity, release, evidence, rollback, trust-membrane]
 notes:
-  - "ADR number 0023 is PROPOSED until verified against the live ADR index in docs/adr/."
-  - "All file paths inside this ADR are PROPOSED until verified against the mounted repository."
-  - "This revision clarifies that the DSSE envelope is the sidecar wrapper and is not embedded inside the canonical manifest payload it signs."
+  - "v1.2 is a same-path repository-grounded modernization. It preserves source metadata and effective decision status proposed; it does not accept ADR-0023 or implement signing."
+  - "The canonical ADR index uniquely assigns ADR-0023 to this exact path."
+  - "The KFMGeoManifest semantic contract and paired schema exist, but the schema remains a permissive greenfield stub requiring only id."
+  - "No repository file was found at the schema-declared geo-manifest validator path, fixture README path, proposed PMTiles release policy path, or historical docs/tiles/PIPELINE.md path."
+  - "The promotion workflow is read-only readiness/hold evidence and explicitly does not verify bundle digests or signatures or emit manifests, releases, or public artifacts."
+  - "release/signatures/ currently documents reviewer signoff packets; this ADR's cryptographic artifact sidecar is a different object and must not be conflated with human review."
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0023 — Geo Manifest Signs Every PMTiles & COG Release
+<a id="top"></a>
 
-| Field | Value |
-|---|---|
-| **ADR ID** | ADR-0023 *(NEEDS VERIFICATION against the ADR index)* |
-| **Status** | **PROPOSED** |
-| **Version** | v1.1 |
-| **Date proposed** | 2026-05-09 |
-| **Last updated** | 2026-05-15 |
-| **Decision class** | Trust membrane · Release governance · Schema authority |
-| **Target path** | `docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md` *(PROPOSED until repo inspection)* |
-| **Authority** | If accepted, this ADR amends release publication policy for PMTiles/COG artifacts and proposes the canonical schema home for `KFMGeoManifest`. It does **not** amend Directory Rules or the schema-home rule established in ADR-0001. |
-| **Truth posture** | **CONFIRMED** input document and KFM doctrine; **PROPOSED** implementation placement, field shapes, validators, and policy files; **UNKNOWN** mounted-repo implementation depth. |
-| **Supersedes** | None. |
-| **Superseded by** | None. |
-| **Owners** | Release stewards · Tile-stack stewards · Trust-membrane stewards *(placeholder — confirm against CODEOWNERS)* |
+# ADR-0023 — Geo Manifest Signs Every PMTiles and COG Release
+
+> **Proposed decision.** Before any PMTiles or Cloud-Optimized GeoTIFF artifact becomes a released public-safe carrier, KFM must bind the immutable artifact bytes to identity, evidence, provenance, policy, release, correction, and rollback state through a cryptographically signed `KFMGeoManifest` sidecar. Missing, mismatched, unverifiable, superseded, revoked, or policy-inadmissible bindings fail closed.
+
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0023-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![Schema: stub](https://img.shields.io/badge/geo%20manifest%20schema-stub-f59e0b?style=flat-square)](#current-implementation-maturity)
+[![Validator: absent](https://img.shields.io/badge/validator-not%20found-b42318?style=flat-square)](#current-implementation-maturity)
+[![Promotion: hold](https://img.shields.io/badge/promotion-WORKFLOW__HOLD-b42318?style=flat-square)](#current-implementation-maturity)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> KFM treats tile artifacts as **derived carriers, not canonical truth**. Public clients MUST consume released artifacts only; `RAW`, `WORK`, and `QUARANTINE` paths MUST remain non-public; generated visualization layers do **not** supersede `EvidenceBundle`. This ADR exists because the trust contract has to extend to the bytes a browser actually fetches — not stop at the catalog.
+> **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0023` to this exact file and records both source metadata and effective status as `proposed`. Editing, merging, linking, or validating this Markdown does not accept the decision.
 
-> [!NOTE]
-> This document is an ADR proposal. It states intended governance for PMTiles/COG release artifacts, but it does not prove that the target repository already contains the schema, validator, policy, workflow, release-serving behavior, or CDN-side checks described here.
+> [!CAUTION]
+> **The repository does not currently implement the decision.** The semantic contract exists, but its paired schema is a permissive stub. The declared validator and fixtures were not found at their referenced paths, the proposed PMTiles release policy was not found, attestation tooling is documentation-only, and the promotion workflow intentionally records readiness holds.
 
----
+> [!WARNING]
+> **Human signoff is not artifact cryptography.** [`release/signatures/`](../../release/signatures/README.md) currently documents reviewer signature packets and release handoffs. A DSSE or equivalent cryptographic sidecar over artifact-binding data is a separate machine-verifiable object. Neither object alone is a `ReleaseManifest`, `PromotionDecision`, EvidenceBundle, proof of public safety, or publication authority.
 
-## Table of contents
-
-0. [Status and evidence boundary](#0-status-and-evidence-boundary)
-1. [Context](#1-context)
-2. [Decision](#2-decision)
-3. [Scope](#3-scope)
-4. [The KFMGeoManifest object](#4-the-kfmgeomanifest-object)
-5. [Pipeline (signing path)](#5-pipeline-signing-path)
-6. [Verification (consumer path)](#6-verification-consumer-path)
-7. [Gates this ADR creates or strengthens](#7-gates-this-adr-creates-or-strengthens)
-8. [Consequences](#8-consequences)
-9. [Alternatives considered](#9-alternatives-considered)
-10. [Open questions and NEEDS VERIFICATION](#10-open-questions-and-needs-verification)
-11. [Related ADRs and documents](#11-related-adrs-and-documents)
-12. [Implementation handoff](#12-implementation-handoff)
-13. [Acceptance checklist](#13-acceptance-checklist)
-14. [Revision history](#14-revision-history)
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#proposed-decision) · [Binding](#proposed-binding-model) · [Scope](#scope) · [Authority](#authority-and-publication-boundary) · [Validation](#proposed-validation-and-finite-outcomes) · [Flow](#proposed-release-flow) · [Current evidence](#current-repository-evidence) · [Maturity](#current-implementation-maturity) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Rollback](#rollback-and-supersession) · [Checklist](#verification-checklist) · [References](#references) · [History](#revision-history)
 
 ---
 
-## 0. Status and evidence boundary
+<a id="status"></a>
 
-### 0.1 Truth posture
+## Status
 
-| Claim type | Label | Basis |
-|---|---|---|
-| Current ADR text exists as an attached Markdown baseline | **CONFIRMED** | Current attached Markdown file. |
-| KFM trust posture: released artifacts, EvidenceBundle resolution, cite-or-abstain, policy gates, correction, and rollback | **CONFIRMED doctrine** | KFM doctrine and attached governing materials. |
-| Target repo contains this ADR at the proposed path | **UNKNOWN** | No mounted repo inspection was available in this editing pass. |
-| `KFMGeoManifest` schema, validator, policy, workflow, and release-serving behavior already exist | **UNKNOWN** | No schemas, source tree, tests, workflows, dashboards, or runtime logs were inspected. |
-| Paths in this ADR are correct homes for future files | **PROPOSED / NEEDS VERIFICATION** | Directory Rules-compatible placement, pending mounted-repo evidence and ADR index check. |
-
-### 0.2 Directory Rules basis
-
-This ADR creates no new root folder and does not create parallel schema, contract, policy, release, proof, or receipt homes. The proposed homes stay inside existing responsibility roots:
-
-| Responsibility | Proposed root | Why |
-|---|---|---|
-| ADR and doctrine | `docs/` | ADRs are governance documentation. |
-| Machine-readable field shape | `schemas/contracts/v1/` | Default schema-home convention; field-level shape belongs under `schemas/`. |
-| Policy gate | `policy/` | Admissibility and publication decisions belong under policy roots. |
-| Validators and attest tools | `tools/` | Operational verification tooling belongs under tools. |
-| Released artifact bytes | `data/published/` | Public-safe released artifacts belong under the published lifecycle phase; exact PMTiles/COG subpaths remain NEEDS VERIFICATION. |
-| Release decisions and signatures | `release/` | Release manifests, promotion decisions, rollback cards, and signatures belong with release governance, not artifact storage. |
-
-If the mounted repository contradicts one of these homes, the conflict MUST be treated as a drift or ADR issue, not silently normalized as canon.
-
-### 0.3 Non-goals of this ADR
-
-This ADR does **not**:
-
-- define the full `ReleaseManifest` object;
-- define MapLibre style validation;
-- authorize public release of any artifact without rights, sensitivity, review, and provenance checks;
-- change the lifecycle invariant;
-- create a new schema-home rule;
-- make STAC, DCAT, PROV, tiles, maps, dashboards, or generated language sovereign truth.
-
----
-
-## 1. Context
-
-### 1.1 The problem this ADR addresses
-
-KFM's map-first publication model uses, or plans to use, **vector tile data as PMTiles v3** and **raster data as Cloud-Optimized GeoTIFF (COG)**. Both formats are designed for byte-range fetches over a CDN, which is what makes serverless map-first delivery viable.
-
-A consequence of byte-range delivery is that **the bytes the user actually consumes may never pass through a server that can vouch for them at request time**. Without an out-of-band integrity binding, every property KFM otherwise enforces — `spec_hash` identity, EvidenceBundle linkage, license posture, sensitivity transforms, release state — can terminate at the **catalog record**, while the **tile bytes** ride a CDN unsupervised.
-
-This ADR closes that gap by making signed geo manifests a release precondition for PMTiles and COG artifacts.
-
-### 1.2 What KFM doctrine already commits to
-
-The corpus already commits to the supporting machinery:
-
-- **Identity over canonical content.** Every artifact carries a `spec_hash` computed over canonical JSON (RFC 8785 / JCS, NFC, finite floats, sorted keys, transient fields excluded). **[CONFIRMED doctrine]**
-- **Crypto stack.** BLAKE3 + BAO + DSSE + cosign + Rekor are the named signing/verification primitives in the KFM corpus. **[CONFIRMED doctrine / NEEDS VERIFICATION for current tool versions]**
-- **Promotion is a governed state transition, not a file move.** Publication requires validation, policy, review, proof, release manifest, correction path, and rollback target. **[CONFIRMED doctrine]**
-- **Receipt ≠ proof ≠ catalog ≠ publication.** A signed manifest is release-grade trust evidence; a run receipt is process memory; a catalog object is for discoverability. They must not be conflated. **[CONFIRMED doctrine]**
-- **A `KFMGeoManifest` schema is already named** as the PMTiles/COG release-candidate manifest for asset digest and signature validation, with proposed home `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json`. **[PROPOSED implementation]**
-- **A PMTiles + signed-sidecar pipeline is already documented** end-to-end at the doctrine/design level, but has not been pinned in this ADR to a single signing envelope, file layout, gate list, or rollback discipline. **[PROPOSED implementation]**
-
-### 1.3 Why an ADR now
-
-The doctrine and the schema name already exist; what is missing is a **single, citable decision** that:
-
-1. names the manifest as the **only** acceptable proof posture for a PMTiles or COG release;
-2. **pins** the sidecar shape to **DSSE-only** and rejects legacy inline `signature_b64` as the release path;
-3. makes the **signed manifest a hard precondition** of the publish gate, with explicit fail-closed reasons;
-4. **distinguishes** descriptor identity (`spec_hash`) from package-as-written identity (`bundle_digest`) and requires both;
-5. clarifies that the **DSSE envelope wraps the manifest payload** and is not embedded in the canonical payload it signs;
-6. provides the **rollback discipline** for revoking or superseding an unsafe release.
-
----
-
-## 2. Decision
-
-If accepted, this ADR decides:
-
-> **Every PMTiles and every COG release artifact MUST be accompanied by a signed `KFMGeoManifest` sidecar before it may be promoted to `data/published/`. The sidecar binds the artifact's bytes to KFM identity and provenance, is represented as a DSSE envelope whose decoded payload validates as `KFMGeoManifest`, is signed with cosign, and — subject to sensitivity posture — is anchored in a transparency log. Publication of an unsigned, mismatched, or unverifiable PMTiles/COG artifact is denied: fail-closed, with no exception outside an explicit ADR-amending review.**
-
-Concretely:
-
-1. **Authority** — `KFMGeoManifest` is the **single authoritative release-trust binding** for PMTiles and COG bytes. STAC, DCAT, and PROV records reference the manifest; they do not replace it.
-2. **Schema home** — `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json`. **[PROPOSED]** This is consistent with the default schema-home rule and remains **NEEDS VERIFICATION** against the mounted repo and ADR-0001.
-3. **Envelope** — **DSSE only.** The sidecar file is a DSSE envelope whose payload is the canonical `KFMGeoManifest` JSON. Legacy inline-`signature_b64` forms are not accepted by the release validator after this ADR's migration window closes.
-4. **No circular payload** — the canonical `KFMGeoManifest` payload MUST NOT contain the DSSE envelope that signs it. `spec_hash` is computed over the canonical payload, not over the envelope wrapper.
-5. **Signing tool** — `cosign sign-blob` or the repo-approved cosign DSSE/attestation workflow. Keyless signing is preferred for public artifacts; keyed signing is acceptable for controlled or restricted artifacts where public Rekor metadata is unsuitable.
-6. **Hashing** — manifest payload identity uses **SHA-256** over canonical JSON (`spec_hash`). Artifact byte integrity uses **BLAKE3** (`bundle_digest`) and **BLAKE3/BAO** (`root_hash`) for verified streaming. All required hashes MUST be present and MUST validate.
-7. **Layout** — sidecar files sit next to the artifact: `<artifact>.kfm-geo-manifest.json`. The filename is kept stable for compatibility; the top-level JSON object is the DSSE envelope. Public CDN aliases may follow `tiles/{collection}/{version}/{layer}.pmtiles` plus `{layer}.pmtiles.kfm-geo-manifest.json`, but the canonical lifecycle storage home remains **PROPOSED** until repo inspection.
-8. **Gate wiring** — `KFMGeoManifest` is consumed by **Promotion Gate D (signatures valid)** and **Promotion Gate E/G (provenance complete / release ready)**, and is enumerated in the `PromotionReceipt` and run-level `RunReceipt`.
-9. **Rollback** — revocation or replacement of a published artifact requires a new manifest carrying `supersedes` and a matching rollback card. The prior manifest is **never deleted**; revocation works by supersession, withdrawal, or alias change, not by history removal.
-
-### 2.1 Conformance
-
-- **MUST** — Every PMTiles or COG entering `data/published/` carries a valid, signed `KFMGeoManifest` sidecar.
-- **MUST** — The sidecar's DSSE payload validates against `kfm_geo_manifest.schema.json`.
-- **MUST** — The validator runs in CI during the Promotion workflow and on any release-serving node or release-serving adapter.
-- **MUST NOT** — A PMTiles or COG appears at a public URL whose sidecar is missing, expired, revoked, superseded, mismatched, or unverified.
-- **MUST NOT** — A manifest payload embeds the DSSE envelope that signs it.
-- **SHOULD** — Public artifacts anchor a signing event in Rekor or the repo-approved public transparency surface.
-- **SHOULD** — Controlled or restricted artifacts use keyed signing or a private transparency surface until private log governance is operational.
-- **MAY** — Internal review-only artifacts under `data/processed/` carry an unsigned draft manifest clearly labeled `release_state: candidate`, but they MUST NOT be reachable from a public path.
-
----
-
-## 3. Scope
-
-### 3.1 In scope
-
-| Artifact class | Coverage |
+| Field | Current value |
 |---|---|
-| Vector PMTiles v3 (`*.pmtiles`) | **Required** signed sidecar before public release |
-| Cloud-Optimized GeoTIFF (`*.tif` / `*.tiff` published as COG) | **Required** signed sidecar before public release |
-| Time-sliced PMTiles deltas (`*.delta.pmtiles`) | **Required** signed sidecar with `delta_base_hash` |
-| PMTiles raster pyramids, if admitted by a later layer policy | **Required** signed sidecar; still treated as a tile artifact |
-| MapLibre style files referencing the artifact | Out of scope here; covered by style/source-layer validators |
+| **ADR ID** | `ADR-0023` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md` |
+| **Source metadata** | `proposed` |
+| **Effective decision status** | `proposed` |
+| **Decision class** | Geospatial artifact integrity, release binding, serving boundary, correction, and rollback |
+| **Current repository posture** | Contract and schema stub present; validator/fixtures/policy absent at checked paths; attestation lane documentation-only; promotion held |
+| **Implementation effect of this revision** | Documentation only |
+| **Release/publication effect** | None |
+| **Supersedes / superseded by** | None / none |
 
-### 3.2 Out of scope
+### Acceptance versus implementation graduation
 
-- **Per-tile DSSE signing** (signing every chunk individually). Verified streaming is achieved by anchoring chunk-level BLAKE3 leaves into a BAO root recorded in this manifest; per-tile DSSE is rejected as overkill (see §9).
-- **3D Tiles, glTF, terrain quantized-mesh.** These will be governed under a sibling ADR if and when KFM ships a 3D runtime path with attestation; this ADR does not bind them.
-- **Source-side raw artifacts** (`data/raw/`). Those are governed by source descriptors, event receipts, and source-edge signing, not by `KFMGeoManifest`.
-- **STAC / DCAT / PROV records.** Those reference the manifest; they are not sovereign over it.
-- **Map styling, layer order, symbology, and legend semantics.** Those belong to style and layer manifests, not this artifact-integrity ADR.
+Two states remain independent:
 
-### 3.3 Schema-home note (Directory Rules conformance)
+1. **ADR acceptance** would approve the required artifact-binding model and responsibility boundaries.
+2. **Implementation graduation** would require accepted contracts and schemas, deterministic canonicalization, cryptographic tooling, fixtures, validators, policy, accountable review, promotion integration, release assembly, serving enforcement, correction, rollback, and observed failure-closed behavior.
 
-| Path | Status | Basis |
-|---|---|---|
-| `docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md` | **PROPOSED** | ADR home under `docs/`; ADR number and live index require verification. |
-| `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json` | **PROPOSED** | Default schema-home convention. Field-level shape belongs under `schemas/`; confirm against ADR-0001 and mounted repo. |
-| `schemas/contracts/v1/evidence/promotion_receipt.schema.json` | **PROPOSED** | PromotionReceipt shape used to record Gate A–G results that reference this manifest. |
-| `schemas/contracts/v1/run_receipt.schema.json` | **PROPOSED** | RunReceipt shape used to pin build provenance for artifact production. |
-| `policy/publication/pmtiles_release.rego` | **PROPOSED / CONFLICT-POSSIBLE** | Publication policy home; may need `policy/opa/release/` if repo convention or accepted ADR says so. |
-| `tools/attest/sign_manifest.sh`, `tools/attest/verify_manifest.sh` | **PROPOSED** | Attestation helpers; exact language/script form depends on repo conventions. |
-| `tools/validators/validate_pmtiles_manifest.py`, `tools/validators/validate_bao_root.py` | **PROPOSED** | Validation helpers; exact language depends on repo stack. |
-| `fixtures/valid/manifest/*.json`, `fixtures/invalid/manifest/*.json` | **PROPOSED** | Positive and negative fixture parity for schema and policy tests. |
-| `data/published/pmtiles/`, `data/published/layers/` | **PROPOSED / NEEDS VERIFICATION** | Lifecycle storage for released PMTiles and COG/raster artifacts. Public CDN aliases may map here. Exact COG subpath requires mounted-repo verification. |
-| `release/manifests/`, `release/signatures/`, `release/rollback_cards/` | **PROPOSED** | Release decisions, signatures, and rollback cards remain separate from artifact bytes. |
+An accepted ADR without those controls would be doctrine, not proof that artifacts are signed. A sidecar-shaped JSON file, signature packet, green schema check, or merge cannot accept this ADR or authorize publication.
 
-> [!NOTE]
-> No new canonical or compatibility root is created by this ADR. All paths sit inside existing responsibility roots (`docs/`, `schemas/`, `policy/`, `tools/`, `fixtures/`, `data/`, `release/`). Per Directory Rules, if a mounted repo proves a conflicting convention, raise a drift entry or ADR rather than creating a divergent sibling home.
+[Back to top](#top)
 
 ---
 
-## 4. The `KFMGeoManifest` object
+<a id="evidence-boundary"></a>
 
-The manifest is the object KFM signs to bind tile bytes to KFM identity. The fields below are **PROPOSED** at field-shape level; the authoritative field shape is the eventual JSON Schema.
+## Evidence boundary
 
-### 4.1 Field map
+This revision is grounded in repository bytes at `main@b50daeb62a9331d314f33ded79b85ccbda5650c4`.
 
-#### 4.1.1 Sidecar layering
-
-The sidecar has two layers:
-
-| Layer | Role | Hash / validation rule |
+| Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
-| **DSSE envelope** | Top-level sidecar JSON object stored at `<artifact>.kfm-geo-manifest.json`. Carries payload, signature(s), and optional transparency-log bundle/reference. | Verifies signer identity and envelope integrity. Not included in `spec_hash`. |
-| **`KFMGeoManifest` payload** | Canonical JSON payload embedded in the DSSE envelope. Carries artifact identity, integrity, provenance, lifecycle, and signing-policy requirements. | Canonicalized with RFC 8785 / JCS; SHA-256 over the canonical payload becomes `spec_hash`. |
-| **Artifact bytes** | PMTiles/COG file being released. | BLAKE3 file digest becomes `bundle_digest`; BAO/BLAKE3 root becomes `root_hash`. |
+| ADR inventory | ADR-0023 uniquely maps to this file; source/effective status `proposed` | Acceptance or implementation |
+| Semantic contract | `contracts/evidence/kfm_geo_manifest.md` exists and defines meaning/boundaries | Accepted field profile or executable behavior |
+| Machine schema | Paired JSON Schema exists | Production-grade shape; it requires only `id` and allows extra properties |
+| Validator/fixtures | Schema metadata names paths | Validator and fixture README were not found at checked paths |
+| Published lanes | PMTiles and layer/COG-capable published lanes exist as documentation | Actual released bytes, sidecars, approvals, or hosting |
+| Release manifests | Singular and plural draft lanes exist | Canonical path and conforming records |
+| Release signatures | Reviewer signoff-packet lane exists | Cryptographic artifact-signature profile or artifact binding |
+| Attestation tooling | Documentation-only lane exists | Sign/verify implementation, trust roots, tests, CI |
+| Promotion workflow | Read-only readiness and hold checks exist | Digest/signature verification, promotion, release, or publication |
+| CODEOWNERS | Review routes point to `@bartytime4life` | Stewardship, quorum, separation of duties, or approval |
 
-This split prevents a circular signature field: the payload cannot contain the envelope that signs it.
+### Truth labels
 
-#### 4.1.2 Manifest payload fields
+- **CONFIRMED** — verified from repository bytes or governing doctrine.
+- **PROPOSED** — decision, profile, shape, path role, or enforcement target not accepted and proved.
+- **CONFLICTED** — repository surfaces assign incompatible shapes, names, or homes.
+- **NEEDS VERIFICATION** — a concrete check remains open.
+- **UNKNOWN** — available evidence cannot support a stronger claim.
+- **HOLD** — current readiness surfaces intentionally refuse graduation.
 
-| Group | Field | Required | Purpose |
-|---|---|---|---|
-| `identity` | `spec_hash` | yes | SHA-256 over canonical descriptor JSON (RFC 8785). Descriptor identity. |
-| `identity` | `manifest_version` | yes | Schema version of the manifest payload itself (e.g. `"1"`). **Distinct** from `pmtiles_version`. |
-| `identity` | `kfm_release_id` | yes | KFM release identifier this artifact belongs to. |
-| `identity` | `manifest_uri` | yes | Stable URI of this manifest sidecar after release. |
-| `artifact` | `kind` | yes | `"pmtiles"` \| `"cog"` \| `"pmtiles-delta"`. |
-| `artifact` | `artifact_uri` | yes | Stable URI of the artifact bytes after release. |
-| `artifact` | `pmtiles_version` | conditional | `"v3"` for PMTiles. Tracks the PMTiles spec, **not** the KFM schema. |
-| `artifact` | `tile_format` | conditional | `"mvt"`, `"png"`, `"webp"`, `"avif"`, etc. |
-| `artifact` | `tiling_scheme` | conditional | `"xyz"` for PMTiles unless another scheme is explicitly admitted. |
-| `artifact` | `minzoom` / `maxzoom` | conditional | Zoom range. |
-| `artifact` | `cog_internal_tiling` | conditional | `256`, `512`, or explicit COG tiling metadata. |
-| `integrity` | `bundle_digest` | yes | BLAKE3 hash of the artifact file as written. **Distinct from `spec_hash`.** |
-| `integrity` | `root_hash` | yes | BLAKE3/BAO root over the artifact bytes for verified streaming. |
-| `integrity` | `root_hash_algo` | yes | Algorithm pin; default `"blake3"`. |
-| `integrity` | `byte_ranges_manifest` | optional | Per-chunk leaf hashes or byte-range hash manifest for verified streaming. |
-| `delta` | `delta_base_hash` | conditional | Required when `kind == "pmtiles-delta"`; references the base archive's `bundle_digest`. |
-| `provenance` | `evidence_bundle_ref` | yes | URI of the EvidenceBundle this artifact derives from. |
-| `provenance` | `run_receipt_ref` | yes | URI of the RunReceipt that produced this artifact. |
-| `provenance` | `source_descriptors` | yes | Source descriptor references (`id`, `role`, `version`). |
-| `provenance` | `catalog_refs` | yes | STAC/DCAT/PROV records that reference this manifest. |
-| `provenance` | `policy_label` | yes | `public` \| `open` \| `controlled` \| `restricted`. |
-| `provenance` | `sensitivity` | yes | `public` \| `generalize` \| `restricted` \| `review_required`. |
-| `provenance` | `transforms` | conditional | Required if sensitivity-driven generalization, redaction, or aggregation was applied. |
-| `lifecycle` | `release_state` | yes | `candidate` \| `released` \| `superseded` \| `revoked`. |
-| `lifecycle` | `supersedes` | optional | Prior manifest URI when this release replaces another. |
-| `lifecycle` | `rollback_target` | optional | Manifest URI to revert to on revocation or withdrawal. |
-| `build` | `generation_tool` | yes | Tool name + version (e.g. `tippecanoe@x.y.z`, `gdal@x.y.z`). |
-| `build` | `generated_at` | yes | RFC 3339 UTC timestamp. |
-| `build` | `build_config_hash` | yes | Hash of the build config, style inputs, tile-generation flags, or COG build options where applicable. |
-| `signing_requirements` | `signature_algo` | yes | Expected signature algorithm; default `ed25519` unless repo policy changes. |
-| `signing_requirements` | `signature_kid` | yes | Key identifier or signer identity expected for verification. |
-| `signing_requirements` | `transparency_log_required` | yes | Boolean derived from `policy_label` and sensitivity posture. |
-| `signing_requirements` | `transparency_log` | conditional | Rekor/private-log bundle or reference when required. |
-
-#### 4.1.3 DSSE envelope fields
-
-| Envelope field | Required | Purpose |
-|---|---|---|
-| `payloadType` | yes | SHOULD be `application/vnd.kfm.geo-manifest.v1+json` or the repo-approved equivalent. |
-| `payload` | yes | Base64url-encoded canonical `KFMGeoManifest` payload. |
-| `signatures[]` | yes | DSSE signature entries. |
-| `signatures[].keyid` | yes | Signer key identifier or OIDC/keyless identity reference. |
-| `rekor_bundle` / `transparency_log` | conditional | Transparency-log proof for public artifacts when required by policy. |
-
-### 4.2 What this manifest **does not** carry
-
-- Public bounding boxes, layer ordering, legend labels, or style information. Those live in catalog records, layer manifests, and style files.
-- Raw access tokens, signing secrets, private device identities, or credential material.
-- Aggregate user telemetry, query history, or Focus Mode conversation state.
-- Source data from `RAW`, `WORK`, or `QUARANTINE`.
-
-### 4.3 Canonicalization
-
-The manifest payload is canonicalized using **RFC 8785 (JCS)**: sorted keys, NFC Unicode normalization, no insignificant whitespace, finite floats, and deterministic numeric representation. The T1–T8 round-trip determinism tests defined elsewhere in the corpus apply unmodified. **[PROPOSED; test fixtures required.]**
+[Back to top](#top)
 
 ---
 
-## 5. Pipeline (signing path)
+<a id="context"></a>
+
+## Context
+
+PMTiles and COG are byte-range-friendly derived carriers. Public or semi-public clients may fetch immutable byte ranges directly from static hosting or a CDN, without a trusted application server evaluating every request. A catalog record can describe an artifact, but it cannot prove that the bytes served later are the same bytes reviewed and released.
+
+KFM therefore needs a binding from the artifact bytes to:
+
+- deterministic artifact and manifest identity;
+- EvidenceRef/EvidenceBundle support and source roles;
+- build/run provenance and transforms;
+- rights, sensitivity, and policy decisions;
+- accountable release scope and review;
+- correction, withdrawal, supersession, and rollback targets.
+
+The lifecycle remains:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+A tile build, sidecar, signature, merge, upload, or public URL is not promotion. Published carriers remain downstream of evidence, policy, review, release, correction, and rollback.
+
+### Existing drift this ADR must not hide
+
+1. The `KFMGeoManifest` schema is a stub and does not encode the rich field map proposed here.
+2. ADR-0013 records a content-identity grammar conflict; this ADR must consume the accepted identity profile rather than create another grammar.
+3. `release/manifest/` and `release/manifests/` are both tracked draft lanes with unresolved distinction.
+4. `release/signatures/` describes human reviewer signoff, not machine artifact signatures.
+5. The current promotion workflow explicitly does not verify artifact digests or signatures.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-decision"></a>
+
+## Proposed decision
+
+Upon acceptance and implementation graduation:
+
+1. Every released PMTiles or COG artifact must have one immutable, version-bound `KFMGeoManifest` payload and one cryptographic envelope binding that payload.
+2. Public release must be denied when the binding is missing, invalid, mismatched, expired where policy defines expiry, superseded, revoked, withdrawn, or policy-inadmissible.
+3. Catalog records, layer manifests, release manifests, receipts, proofs, and reviewer signoffs must reference the binding; none replaces it.
+4. The canonical payload must not embed the envelope or signature that signs it.
+5. The content-identity hash must be computed over a schema-defined hash projection that excludes `spec_hash` itself, the envelope, signatures, transparency proofs, and transport-only fields. This prevents self-reference and preserves deterministic identity.
+6. Artifact-byte identity must be distinct from manifest identity. The released file digest binds the bytes as written; an optional accepted range-verification root may support chunk/range verification.
+7. Signing and verification must use an accepted, version-pinned DSSE/cosign or successor profile with declared signer policy, trust roots, rotation, revocation, and offline verification behavior.
+8. A release transition still requires independent evidence, policy, review, `PromotionDecision`, `ReleaseManifest`, correction, and rollback closure.
+9. Artifact and binding history must be append-only under retention and sensitivity policy. Unsafe releases are superseded, withdrawn, corrected, or revoked—not silently overwritten.
+
+### Normative language boundary
+
+`MUST`, `MUST NOT`, `SHOULD`, and `MAY` below describe the proposed accepted state. They do not describe current repository enforcement.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-binding-model"></a>
+
+## Proposed binding model
+
+### Object separation
+
+| Object | Responsibility | Must not be treated as |
+|---|---|---|
+| PMTiles/COG bytes | Released delivery carrier | Source truth, proof, release decision |
+| `KFMGeoManifest` payload | Artifact identity, integrity, provenance, policy/release references | EvidenceBundle, ReleaseManifest, signature envelope |
+| Cryptographic envelope | Machine-verifiable binding over the payload | Human review or release approval |
+| EvidenceBundle/proof | Claim support and evidence closure | Artifact bytes or release decision |
+| RunReceipt/build receipt | Process memory and execution provenance | Proof or publication |
+| `PromotionDecision` | Accountable promotion outcome | Signature or execution receipt |
+| `ReleaseManifest` | Release scope and included artifacts | Per-artifact byte binding |
+| Reviewer signature packet | Human review/signoff trail | Cryptographic artifact signature |
+| Rollback/correction records | Governed repair and transition intent | Proof that execution occurred |
+
+### Sidecar layering
+
+The preferred target is a DSSE envelope whose decoded payload is canonical `KFMGeoManifest` JSON.
+
+```text
+<artifact>.kfm-geo-manifest.dsse.json
+└── DSSE envelope
+    ├── payloadType
+    ├── payload      # encoded canonical KFMGeoManifest payload
+    └── signatures[]
+```
+
+The exact filename and media types remain profile decisions. Existing `.kfm-geo-manifest.json` names may require a migration window; the payload/envelope distinction is not optional.
+
+### Minimum payload profile
+
+The accepted schema should close unknown properties and define at least:
+
+| Group | Required information |
+|---|---|
+| Identity | manifest `id`, schema/profile version, deterministic `spec_hash`, release ID |
+| Artifact | stable artifact URI/ref, kind (`pmtiles`, `cog`, accepted delta profile), byte length, format/profile version |
+| Integrity | algorithm-tagged artifact digest; optional accepted byte-range/range-root profile |
+| Spatial | CRS, extent/bbox, geometry/raster/tiling profile, zoom or resolution where applicable |
+| Provenance | RunReceipt/build receipt, source descriptors and roles, EvidenceRef/EvidenceBundle refs, catalog refs, transforms, tool/config identities |
+| Governance | rights, sensitivity, policy decision, review record, release manifest, promotion decision |
+| Lifecycle | candidate/released/superseded/revoked/withdrawn state, supersedes, rollback target, correction/withdrawal refs |
+| Verification | signer policy/profile, expected trust root or identity class, transparency/offline bundle requirements |
+
+### Hash domains
+
+Three identities must remain separate:
+
+| Identity | Proposed purpose | Boundary |
+|---|---|---|
+| `spec_hash` | Deterministic identity of a declared hash projection of the manifest payload | Must follow the accepted ADR-0013 profile; must exclude itself and signature/envelope fields |
+| Artifact digest | Digest of the complete PMTiles/COG file as written | Does not prove evidence, rights, policy, or release |
+| Range-verification root | Optional accepted chunk/range integrity profile | Must be versioned and independently testable; does not replace full-file digest |
+
+The earlier ADR language naming SHA-256, BLAKE3, BAO, DSSE, cosign, and Rekor remains a proposed technology profile, not current implementation fact. Final algorithms, encodings, media types, and trust roots require security review and compatibility tests.
+
+[Back to top](#top)
+
+---
+
+<a id="scope"></a>
+
+## Scope
+
+### In scope
+
+- PMTiles v3 release artifacts;
+- released COG files under governed published layer lanes;
+- accepted PMTiles delta artifacts when a delta profile exists;
+- sidecar identity, integrity, provenance, policy, release, correction, and rollback binding;
+- build-time, promotion-time, serving-time, offline, and periodic verification requirements;
+- public and restricted release profiles, with sensitivity-appropriate transparency behavior.
+
+### Out of scope
+
+- per-tile DSSE signatures;
+- raw/source-side signing under `data/raw/`;
+- MapLibre style, legend, layer-order, or UI semantics;
+- 3D Tiles, glTF, terrain, and scene formats unless a successor/profile explicitly includes them;
+- accepting ADR-0013 identity grammar or the release-manifest singular/plural path conflict;
+- selecting production keys, signer identities, transparency service, HSM/KMS, or hosting provider;
+- authorizing any current artifact for release.
+
+### Directory Rules basis
+
+This ADR creates no new root. Responsibilities remain under:
+
+| Responsibility | Root/home |
+|---|---|
+| Decision record | `docs/adr/` |
+| Semantic meaning | `contracts/evidence/kfm_geo_manifest.md` |
+| Machine shape | `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json` |
+| Policy | accepted `policy/` lane; exact profile path requires verification |
+| Validation/attestation code | `tools/`, packages, tests, and fixtures under accepted homes |
+| Released bytes | `data/published/pmtiles/` and COG-capable published layer lanes |
+| Receipts/proofs | `data/receipts/` and `data/proofs/` |
+| Release decisions/manifests/signoff/rollback | `release/`, without resolving singular/plural manifest conflict here |
+
+[Back to top](#top)
+
+---
+
+<a id="authority-and-publication-boundary"></a>
+
+## Authority and publication boundary
+
+A valid cryptographic binding proves only that a verifier accepted the declared payload and signature under a particular profile and that the referenced bytes matched the declared integrity values at verification time. It does not independently prove:
+
+- that source claims are true;
+- that evidence is sufficient;
+- that rights permit publication;
+- that sensitive detail is safe;
+- that review was accountable;
+- that promotion/release was authorized;
+- that a public alias points to the right artifact;
+- that caches were invalidated after correction or rollback.
+
+Public clients must consume release-resolved artifacts through governed interfaces or approved static-delivery profiles. They must not read RAW, WORK, QUARANTINE, internal catalog/proof/receipt stores, or candidate artifacts directly.
+
+No change to this ADR, schema, sidecar, signature, workflow, or file placement creates `PUBLISHED` state.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-validation-and-finite-outcomes"></a>
+
+## Proposed validation and finite outcomes
+
+A future validator must be deterministic, machine-readable, local/offline-capable for the core checks, and fail closed.
+
+| Check family | Required checks |
+|---|---|
+| Envelope | media type/profile, payload decode, signature structure, signer policy |
+| Payload | closed schema, profile/version, conditional PMTiles/COG fields |
+| Identity | hash projection, canonicalization, algorithm tags, no circular fields |
+| Bytes | byte length, full artifact digest, optional range-root/sample checks |
+| Provenance | build/run receipts, source roles, evidence refs, transforms, tools/config |
+| Governance | rights, sensitivity, policy, review, promotion, release, correction, rollback |
+| Serving | immutable/versioned URI, public alias binding, no candidate/revoked exposure |
+| History | supersession/withdrawal/revocation and retained audit references |
+
+### Stable outcome classes
+
+| Outcome | Meaning |
+|---|---|
+| `PASS` | All checks required by the selected profile passed |
+| `DENY` | Known invalid, prohibited, revoked, mismatched, or unauthorized state |
+| `HOLD` | Review, ownership, signer policy, rights, sensitivity, or release prerequisite unresolved |
+| `ABSTAIN` | Evidence/provenance resolution insufficient for a substantive release claim |
+| `ERROR` | Tooling, schema, verifier, storage, or infrastructure failure prevented a valid determination |
+
+`ERROR` is never converted into `PASS`. A missing verifier, unavailable trust root, or unsupported profile must not silently permit release.
+
+### Minimum reason-code families
+
+- `geo_manifest_missing`
+- `geo_manifest_schema_invalid`
+- `geo_manifest_hash_projection_invalid`
+- `artifact_digest_mismatch`
+- `range_root_mismatch`
+- `signature_missing_or_invalid`
+- `signer_not_authorized`
+- `transparency_or_offline_proof_missing`
+- `evidence_or_receipt_unresolved`
+- `policy_or_sensitivity_denied`
+- `release_manifest_unresolved`
+- `promotion_decision_unresolved`
+- `release_state_not_public`
+- `superseded_revoked_or_withdrawn`
+- `public_alias_binding_mismatch`
+- `rollback_target_unverifiable`
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-release-flow"></a>
+
+## Proposed release flow
 
 ```mermaid
 flowchart LR
-    A["Resolve admissible evidence<br/>& source descriptors"] --> B["Build PMTiles v3<br/>or COG"]
-    B --> C["Compute bundle_digest<br/>(BLAKE3 file digest)"]
-    C --> D["Compute root_hash<br/>(BAO/BLAKE3)"]
-    D --> E["Emit canonical<br/>KFMGeoManifest payload"]
-    E --> F["Compute spec_hash<br/>(SHA-256 over JCS payload)"]
-    F --> G["Wrap payload in<br/>DSSE sidecar"]
-    G --> H["Sign via cosign<br/>(keyed or keyless)"]
-    H --> I{"Transparency<br/>proof required?"}
-    I -- public --> J["Anchor in Rekor<br/>or approved public log"]
-    I -- controlled/restricted --> K["Private log or keyed<br/>non-public proof"]
-    J --> L["Validate manifest<br/>(Gate D)"]
-    K --> L
-    L --> M["Range-verify smoke test"]
-    M --> N["Promotion Gates A-G"]
-    N --> O["Emit RunReceipt +<br/>PromotionReceipt"]
-    O --> P["Publish artifact + sidecar<br/>to immutable released storage"]
-    P --> Q["release_state = released"]
+    A[Admissible evidence and sources] --> B[Build PMTiles or COG candidate]
+    B --> C[Compute byte identity and spatial profile]
+    C --> D[Emit canonical KFMGeoManifest payload]
+    D --> E[Compute schema-defined spec_hash projection]
+    E --> F[Wrap payload in cryptographic envelope]
+    F --> G[Sign under approved signer policy]
+    G --> H[Validate schema, hashes, signature, evidence, policy, release]
+    H -->|deny hold abstain error| Q[QUARANTINE or no publication]
+    H -->|pass| R[Accountable promotion and release records]
+    R --> P[Publish immutable artifact plus binding]
+    P --> S[Verify serving alias and range requests]
+    S --> M[Monitor, correct, withdraw, or roll back]
 ```
 
-> [!NOTE]
-> The pipeline is the corpus's documented sequence with this ADR pinning the envelope (DSSE-only), the payload/envelope split, and the gate wiring (manifest verification is a Gate D precondition).
+### Gate placement
 
-### 5.1 Per-stage requirements (selected)
+The geo-manifest check is a prerequisite within—not a replacement for—the proposed promotion sequence:
 
-| Stage | Must produce | Failure mode |
-|---|---|---|
-| Evidence resolution | `evidence_bundle_ref`, `source_descriptors`, rights/sensitivity posture | **ABSTAIN** or **DENY** if admissible evidence or rights posture is unresolved |
-| Build | Artifact file + canonical build inputs | **DENY** if `spec_hash` is non-deterministic across two runs of the same input |
-| Bundle digest | `bundle_digest` (BLAKE3 of the file as written) | **DENY** if `bundle_digest != recomputed` at any later stage |
-| BAO root | `root_hash` + optional per-chunk leaves | **DENY** if BAO root does not verify a sample chunk fetch |
-| Payload | Canonical `KFMGeoManifest` payload | **DENY** if payload schema fails or embeds the DSSE envelope |
-| Envelope | DSSE envelope containing the payload | **DENY** if envelope payload does not decode to the canonical payload |
-| Sign | DSSE signature | **DENY** if signature does not verify under the declared `signature_kid` or signer policy |
-| Transparency log | Inclusion proof or approved private-log record when required | **DENY** public release when required transparency proof is absent |
-| Validate | Structured validation report | **DENY** on schema, hash, signature, provenance, or release-state mismatch |
-| Promote | `PromotionReceipt` with all gate statuses | **DENY** if any gate ≠ `pass` |
-
----
-
-## 6. Verification (consumer path)
-
-Three consumers verify the manifest, each with the **same** semantic outcome but at different layers.
-
-### 6.1 CI / publication validator
-
-- Decodes the DSSE payload and validates it against `kfm_geo_manifest.schema.json`.
-- Recomputes `spec_hash` from the canonical payload.
-- Recomputes `bundle_digest` from the artifact file.
-- Verifies `root_hash` and, where present, byte-range leaf hashes.
-- Verifies the DSSE signature under the repo-approved cosign public key, keyless identity, or signer policy.
-- Verifies Rekor/private-log inclusion when `transparency_log_required == true`.
-- Confirms `evidence_bundle_ref`, `run_receipt_ref`, source descriptors, catalog references, and rollback targets resolve.
-- Emits a structured validation report. Exit code `0` means all required checks pass; non-zero means fail-closed with reason codes.
-
-### 6.2 Validator report minimum shape
-
-| Field | Required | Purpose |
-|---|---|---|
-| `artifact_uri` | yes | Artifact being validated. |
-| `manifest_uri` | yes | Sidecar being validated. |
-| `release_id` | yes | Release scope. |
-| `result` | yes | `pass` \| `deny` \| `error`. |
-| `reason_codes[]` | yes | Machine-readable failures such as `invalid_spec_hash`, `bundle_digest_mismatch`, `dsse_envelope_required`. |
-| `checked_at` | yes | RFC 3339 UTC. |
-| `validator_version` | yes | Tool name + version. |
-| `receipt_ref` | conditional | Validation receipt emitted by CI or release-serving node. |
-
-### 6.3 Release-serving node (server-side)
-
-- Refuses to serve any PMTiles/COG whose sidecar fails verification, even if the bytes are present.
-- Rejects requests for paths where `release_state ∈ { candidate, superseded, revoked }` from public clients.
-- Emits a `VerifyReceipt` or equivalent audit event when a previously valid artifact begins failing verification.
-
-### 6.4 Service Worker / WASM verifier (client-side, optional)
-
-- Fetches the sidecar before the artifact or in parallel.
-- Verifies the signature and streams chunks through the WASM BAO/BLAKE3 verifier.
-- On chunk failure, drops the chunk, refuses to render the layer, and emits a structured `VerifyReceipt`.
-- Remains optional and implementation-independent; server-side validation is still mandatory for public release.
-
----
-
-## 7. Gates this ADR creates or strengthens
-
-| Gate | Source | Effect of this ADR |
-|---|---|---|
-| `invalid_spec_hash` | corpus | **Strengthened** — covers manifest payload `spec_hash` drift. |
-| `unsigned_release_manifest` | corpus | **Strengthened** — fail-closed; no exception path for PMTiles/COG. |
-| `unverified_tile_chunk` | corpus | Unchanged — BAO chunk failure stays a **DENY**. |
-| `public_unsigned_delta` | corpus | **Strengthened** — delta sidecar must declare `delta_base_hash` and verify. |
-| `rollback_root_mismatch` | corpus | **Strengthened** — rollback target manifest must be retrievable and verifiable. |
-| `missing_run_receipt` | corpus | Unchanged — still a **DENY**. |
-| `bundle_digest_mismatch` | **NEW** | **DENY** when artifact-file BLAKE3 ≠ manifest `bundle_digest`. |
-| `dsse_envelope_required` | **NEW** | **DENY** any non-DSSE legacy inline `signature_b64` release form. |
-| `payload_envelope_circularity` | **NEW** | **DENY** if the canonical manifest payload embeds the DSSE envelope that signs it. |
-| `payload_type_mismatch` | **NEW** | **DENY** if the DSSE `payloadType` is not the repo-approved KFM geo-manifest payload type. |
-| `transparency_log_required_public` | **NEW** | **DENY** public release where `policy_label == public` and required transparency proof is absent. |
-| `public_alias_bypasses_sidecar` | **NEW** | **DENY** if CDN or public route exposes artifact bytes without sidecar verification. |
-
-These map onto the **Promotion Gate** sequence:
-
-| Promotion Gate | Bound concern in this ADR |
+| Promotion concern | Geo-manifest contribution |
 |---|---|
-| A — schema_valid | Manifest payload validates against `kfm_geo_manifest.schema.json`; DSSE envelope shape validates. |
-| B — inputs_pinned | `evidence_bundle_ref`, `run_receipt_ref`, `source_descriptors`, build config, and catalog refs all resolve. |
-| C — checks_pass | `bundle_digest`, `root_hash`, and optional byte-range hashes recompute and equal. |
-| D — signatures_valid | DSSE signature verifies; Rekor/private-log inclusion verifies when required. |
-| E — provenance_complete | Receipts, proofs, catalog records, rollback targets, and lineage are reachable. |
-| F — no_policy_violations | `policy_label`, sensitivity, rights, transforms, and public path exposure align with policy. |
-| G — release_ready | `release_state` transitions `candidate → released` only after A–F pass. |
+| Schema valid | Payload/envelope/profile validate |
+| Inputs pinned | Evidence, source, run/build, config, and catalog refs resolve |
+| Checks pass | Artifact digest and optional range profile verify |
+| Signatures valid | Cryptographic binding and signer policy verify |
+| Provenance complete | Receipts, evidence, transforms, lineage, release refs resolve |
+| No policy violations | Rights, sensitivity, policy, review, and serving posture allow |
+| Release ready | Accountable release/promotion/rollback records close |
+
+The current `.github/workflows/promotion-gate.yml` does not perform these checks; it intentionally proves readiness holds.
+
+[Back to top](#top)
 
 ---
 
-## 8. Consequences
+<a id="current-repository-evidence"></a>
 
-### 8.1 Positive
+## Current repository evidence
 
-- The trust contract reaches **the bytes the user fetches**, not just the catalog record.
-- Tile artifacts are **independently verifiable** offline, on a CDN, on mobile, or behind a Service Worker.
-- Receipt vs proof vs catalog vs publication remain **distinct** and machine-checked, reducing the most common KFM doctrine drift.
-- Rollback is **deterministic** — supersede a manifest, never delete one — preserving audit history.
-- DSSE-only consolidation eliminates a real corpus drift between inline `signature_b64` and DSSE envelopes, which would otherwise create two parallel verification paths.
-- The payload/envelope split prevents circular signing semantics and makes `spec_hash` reproducible.
-
-### 8.2 Negative / costs
-
-- **Signing infrastructure complexity.** Cosign + transparency-log handling adds CI integration, key rotation, and identity plumbing. The cost is real but consistent with the KFM trust posture.
-- **Sidecar fetch overhead.** One extra HTTP request per artifact; small but non-zero on cold-start mobile. Verified streaming amortizes this across chunks.
-- **Schema discipline burden.** Producers must populate every required field; tooling must mirror it. Negative fixtures are mandatory for parity.
-- **Release-serving complexity.** Public aliases and CDN routes must be configured so artifact fetches cannot bypass sidecar verification.
-
-### 8.3 Risks and mitigations
-
-| Risk | Mitigation |
-|---|---|
-| Producer ships an artifact whose `bundle_digest` no longer matches the file (e.g. CDN-side mutation) | Range-verify smoke test in CI; periodic re-verification on serving nodes. |
-| Cosign key compromise | Key rotation plan; supersede all manifests signed under the compromised `signature_kid`; emit correction/withdrawal notices as needed. |
-| Rekor public-instance leakage of restricted artifact metadata | Controlled/restricted artifacts MUST NOT use public Rekor unless sensitivity review allows it; use keyed signing or private transparency surface. |
-| Schema drift between sidecar shapes deployed before and after this ADR | Migration window with mirror reads; deprecation register entry; negative fixture for legacy inline signatures. |
-| Validator absent or skipped | Validator is a Promotion Gate, not advisory; release is denied without it. |
-| Payload/envelope circularity reintroduced by implementation | Schema forbids `dsse_envelope` inside payload; validator emits `payload_envelope_circularity`. |
-| Public CDN alias bypasses sidecar verification | Release-serving and route validation emit `public_alias_bypasses_sidecar`; smoke tests fetch through the public alias. |
-
----
-
-## 9. Alternatives considered
-
-| Option | Rejected because |
-|---|---|
-| **Sign the artifact bytes directly** (no sidecar) | Signature would either need to live inside the file (breaking PMTiles/COG byte layout and CDN range fetches) or alongside it, which is the sidecar pattern. Direct byte signing alone also forecloses on the descriptor-vs-bytes split KFM relies on. |
-| **Per-chunk DSSE signing** | DSSE-per-chunk multiplies signing events by tile count. BAO over BLAKE3 leaves provides per-chunk verification with one signing event over the root. Operational cost dominates the security benefit. |
-| **Inline `signature_b64` in a generic JSON sidecar** (legacy form) | Diverges from the rest of KFM's receipt/proof infrastructure, which uses DSSE. Two parallel paths mean two parallel validators and two parallel failure modes. |
-| **Embed the DSSE envelope inside the manifest payload** | Creates circular signing semantics and makes `spec_hash` unstable or ambiguous. The envelope must wrap the payload, not appear inside it. |
-| **Sign only the `ReleaseManifest`, not the geo manifest** | The release manifest covers the *file set*; the geo manifest covers the *bytes*. The release manifest cannot answer "did this exact PMTiles/COG file change since publish?" without recomputing per-file digests — which is what the geo manifest already does. They are complementary, not redundant. |
-| **No signing for restricted artifacts** | Restricted ≠ unverified. Restricted artifacts still need integrity, provenance, and rollback discipline; they only need a **non-public** transparency surface. Keyed signing without public Rekor handles this. |
-| **Defer to STAC / DCAT extensions for trust binding** | STAC and DCAT carry references to digests but do not define the KFM signing envelope or promotion gates. They reference this manifest; they do not replace it. |
-
----
-
-## 10. Open questions and NEEDS VERIFICATION
-
-> [!WARNING]
-> This ADR is **PROPOSED** until the items below are addressed or explicitly deferred.
-
-- **NEEDS VERIFICATION** — That ADR-0023 is not already claimed in `docs/adr/`. If it is, renumber before merge.
-- **NEEDS VERIFICATION** — That `schemas/contracts/v1/evidence/` is the correct evidence-schema home in the mounted repo.
-- **NEEDS VERIFICATION** — That `policy/publication/pmtiles_release.rego` is the correct policy home, vs `policy/opa/release/` or another accepted policy convention.
-- **NEEDS VERIFICATION** — Current cosign, DSSE, Rekor, BLAKE3, BAO, PMTiles, and COG tooling versions and command syntax before implementation.
-- **NEEDS VERIFICATION** — Exact public artifact storage paths and CDN alias rules, including whether `tiles/{collection}/{version}/...` is a public alias over `data/published/pmtiles/...`.
-- **NEEDS VERIFICATION** — Whether the repo prefers sidecar extension `.kfm-geo-manifest.json`, `.kfm-geo-manifest.dsse.json`, or a media-type-specific convention. This ADR keeps the original filename while requiring DSSE top-level content.
-- **OPEN** — **Public Rekor vs private Rekor.** The corpus does not decide. This ADR proposes public transparency for `policy_label == public`; keyed signing or private log for `policy_label ∈ { controlled, restricted }` until private-log governance is operational.
-- **OPEN** — **PMTiles raster pyramids.** The corpus prefers COG for raster but allows PMTiles raster pyramids for specific use cases. This ADR treats both under the same manifest schema. A future ADR may split them.
-- **OPEN** — **Tile-ID renumbering across deltas.** Delta semantics under tile-ID renumbering are unspecified. This ADR requires `delta_base_hash` but does not enumerate renumbering rules.
-- **OPEN** — **Signing key rotation cadence.** Not pinned here; track in a sibling operations runbook.
-- **OPEN** — **Multi-collection PMTiles.** If a single `.pmtiles` ever bundles multiple KFM collections, the manifest field shape may need `collections[]`. The current ADR assumes one collection per archive.
-
----
-
-## 11. Related ADRs and documents
-
-| Reference | Relationship |
-|---|---|
-| ADR-0001 — Schema home (canonicalization / hash-and-id v1) | This ADR depends on ADR-0001's canonicalization and schema-home rules. |
-| `docs/doctrine/directory-rules.md` | Justifies responsibility-root placement; no new root is created. |
-| `docs/tiles/PIPELINE.md` *(PROPOSED)* | Operational runbook for the pipeline this ADR governs. |
-| `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json` *(PROPOSED)* | Authoritative shape of the `KFMGeoManifest` payload. |
-| `schemas/contracts/v1/evidence/promotion_receipt.schema.json` *(PROPOSED)* | Carries Gate A–G outcomes referencing this manifest. |
-| `schemas/contracts/v1/run_receipt.schema.json` *(PROPOSED)* | Pins the artifact's run-level provenance to this manifest. |
-| `policy/publication/pmtiles_release.rego` *(PROPOSED)* | Encodes the fail-closed rules in §7 if repo policy-home verification agrees. |
-| `release/manifests/` *(PROPOSED)* | Release decision objects that reference geo manifests. |
-| `release/signatures/` *(PROPOSED)* | Release-signature objects when not carried inline in DSSE sidecars. |
-| `release/rollback_cards/` *(PROPOSED)* | Rollback discipline for revoked or superseded artifacts. |
-| KFM-IDX-E-001 — End-to-end PMTiles + signed sidecar pipeline | Doctrinal/design source. |
-| KFM-IDX-F-001 — Crypto stack (BLAKE3 + BAO + DSSE + cosign + Rekor) | Doctrinal/design source. |
-| KFM-IDX-F-010 — Service Worker / WASM verifier | Downstream optional consumer. |
-| Whole-UI + Governed AI Expansion Report — `KFMGeoManifest` schema entry | Doctrinal/design source for the schema name and proposed home. |
-
----
-
-## 12. Implementation handoff
-
-### 12.1 Minimum future PR contents
-
-All files below are **PROPOSED** until the mounted repo is inspected:
-
-| File or family | Purpose | Notes |
+| Surface | Current verified state | Safe conclusion |
 |---|---|---|
-| `docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md` | ADR text | Confirm ADR number and neighboring ADR links first. |
-| `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json` | Payload schema | MUST forbid `dsse_envelope` inside payload. |
-| `schemas/contracts/v1/evidence/promotion_receipt.schema.json` | Gate result schema | Should reference manifest URI and validation report. |
-| `schemas/contracts/v1/run_receipt.schema.json` | Run provenance schema | Should reference artifact digest, build config hash, and source descriptors. |
-| `tools/validators/validate_pmtiles_manifest.py` or repo-native equivalent | Manifest validator | Exact language depends on repo stack. |
-| `tools/validators/validate_bao_root.py` or repo-native equivalent | Streaming-integrity validator | Must verify `root_hash` and optional leaf hashes. |
-| `tools/attest/sign_manifest.sh` / `verify_manifest.sh` or repo-native equivalent | Signing helpers | Must align with cosign/DSSE version actually adopted. |
-| `policy/publication/pmtiles_release.rego` or accepted policy-home equivalent | Fail-closed release gate | Path remains `NEEDS VERIFICATION`. |
-| `fixtures/valid/manifest/*.json` | Positive fixtures | Include PMTiles, COG, and delta cases. |
-| `fixtures/invalid/manifest/*.json` | Negative fixtures | Include legacy inline signature, circular envelope, digest mismatch, missing evidence, revoked state. |
-| `docs/tiles/PIPELINE.md` | Operator runbook | Should explain build, sign, verify, promote, revoke, and rollback. |
+| ADR identity | Unique ADR-0023 row points to this file | Identity confirmed; decision still proposed |
+| Geo-manifest contract | Draft semantic contract exists | Meaning/boundaries documented |
+| Geo-manifest schema | Draft 2020-12 stub; only `id` required; extra properties allowed | Not release-grade validation |
+| Validator path | Referenced by schema, file not found | No validator implementation established |
+| Fixture path | Referenced by schema, fixture README not found | Fixture/test closure not established |
+| Policy path | Contract names `policy/evidence/`; prior ADR proposed a publication file that was not found | Exact policy home/profile unresolved |
+| PMTiles published lane | README and child lanes exist | Payload and release inventory unknown |
+| Published layers/COG | Parent lane permits COG after release | COG payload/profile/validator maturity unknown |
+| Release manifest paths | Singular and plural draft lanes both exist | Path meaning/canonicality conflicted |
+| Release signatures | Human signoff packet lane exists | Not cryptographic artifact binding |
+| Attestation tools | README-only proposed lane | Sign/verify implementation unproved |
+| Promotion workflow | Read-only four-job readiness/hold workflow | No digest/signature/release/publication action |
+| CODEOWNERS | Target and affected roots route to one verified GitHub account | Routing only; no independent review proof |
 
-### 12.2 Required negative fixtures
+### Confirmed absent at checked paths
 
-At minimum, tests should cover:
+- `tools/validators/evidence/validate_kfm_geo_manifest.py`
+- `fixtures/evidence/kfm_geo_manifest/README.md`
+- `policy/publication/pmtiles_release.rego`
+- `docs/tiles/PIPELINE.md`
+
+Absence at these checked paths does not prove no equivalent implementation exists elsewhere; bounded search surfaced no accepted equivalent during this revision.
+
+[Back to top](#top)
+
+---
+
+<a id="current-implementation-maturity"></a>
+
+## Current implementation maturity
+
+| Capability | Current state |
+|---|---|
+| ADR identity/status | `CONFIRMED / proposed` |
+| Semantic contract | Draft, repository-grounded |
+| Machine schema | `HOLD` — permissive stub |
+| Canonicalization/hash projection | `CONFLICTED / PROPOSED` |
+| Artifact digest/range profile | `PROPOSED` |
+| DSSE/cosign profile | `PROPOSED` |
+| Signer/trust-root governance | `UNKNOWN` |
+| Validator | Not found at declared path |
+| Fixtures/tests | Not established |
+| Policy enforcement | Not established |
+| Promotion integration | `WORKFLOW_HOLD` |
+| Release manifest closure | Draft and path-conflicted |
+| Public serving verification | `UNKNOWN` |
+| Correction/withdrawal/rollback drill | Not established |
+| Production release or publication | None proved |
+
+**Overall maturity: `HOLD`.** The repository has architecture and scaffolds, not an operational signed-artifact release system.
+
+[Back to top](#top)
+
+---
+
+<a id="implementation-and-convergence-plan"></a>
+
+## Implementation and convergence plan
+
+Use small dependency-ordered changes; do not combine generation and approval in one unreviewed path.
+
+1. **Accept or revise ADR-0023** with accountable cross-root review.
+2. **Resolve dependencies/conflicts**: ADR-0013 identity profile and release-manifest singular/plural meaning.
+3. **Version semantic contract and closed schema** together; define hash projection and conditional PMTiles/COG profiles.
+4. **Add deterministic fixtures and vectors** for valid, invalid, superseded, revoked, restricted, and rollback cases.
+5. **Implement offline validator** with stable reason codes and no release side effects.
+6. **Implement signing/verification tooling** with no secrets in the repository; pin dependencies and signer policy.
+7. **Implement policy profile** for rights, sensitivity, public/private transparency, signer authorization, and serving restrictions.
+8. **Wire build and promotion checks** without granting CI publication credentials prematurely.
+9. **Assemble release packet** linking EvidenceBundle, receipts, review, PromotionDecision, ReleaseManifest, signed binding, correction, and rollback.
+10. **Enforce serving boundary** for CDN/static/API/MapLibre/service-worker consumers and test bypass denial.
+11. **Run correction and rollback drills** including cache invalidation and public alias verification.
+12. **Graduate implementation** only after observed failure-closed results and accountable review.
+
+### Required negative fixtures
+
+At minimum:
 
 - missing sidecar;
-- non-DSSE sidecar;
-- inline `signature_b64` legacy sidecar;
-- DSSE payload that does not validate against schema;
-- manifest payload that embeds its own DSSE envelope;
-- `spec_hash` mismatch;
-- `bundle_digest` mismatch;
-- `root_hash` mismatch;
-- missing `run_receipt_ref`;
-- missing `evidence_bundle_ref`;
-- public artifact without required transparency proof;
-- public URL exposing `release_state: candidate`;
-- superseded/revoked artifact still reachable from public alias;
-- rollback target not found or digest mismatch.
+- malformed/non-approved envelope;
+- payload embeds envelope or signature;
+- self-referential/incorrect hash projection;
+- artifact digest mismatch;
+- range-root mismatch;
+- wrong signer or revoked key;
+- missing required transparency/offline proof;
+- unresolved EvidenceBundle or RunReceipt;
+- rights/sensitivity/policy denial;
+- unresolved release manifest or promotion decision;
+- candidate/superseded/revoked/withdrawn artifact at public alias;
+- rollback target missing or mismatched;
+- public URL bypassing the selected binding.
 
-### 12.3 Rollback path
-
-Rollback is not deletion. A rollback must:
-
-1. emit a new manifest with `release_state: released` for the rollback target or restore a prior released manifest alias;
-2. mark the unsafe manifest `revoked` or `superseded`;
-3. publish a rollback card under the accepted release rollback home;
-4. preserve prior manifest, receipt, proof, and catalog records;
-5. update public aliases only after validation and policy gates pass;
-6. emit correction or withdrawal notices when public users may have consumed the unsafe artifact.
+[Back to top](#top)
 
 ---
 
-## 13. Acceptance checklist
+<a id="acceptance-gates"></a>
 
-This ADR is ready for acceptance only after:
+## Acceptance gates
 
-- [ ] ADR number is verified against `docs/adr/`.
-- [ ] Target ADR path is verified against the mounted repo and Directory Rules.
-- [ ] Owners are replaced with real CODEOWNERS or steward names.
-- [ ] Schema home is confirmed by ADR-0001 and mounted-repo convention.
-- [ ] Policy home is confirmed or a policy-home ADR/drift entry is opened.
-- [ ] DSSE payload/envelope split is represented in schema and validators.
-- [ ] Legacy inline `signature_b64` behavior has a migration/deprecation note.
-- [ ] PMTiles, COG, and PMTiles-delta positive fixtures exist.
-- [ ] Negative fixtures listed in §12.2 exist.
-- [ ] Validator emits stable reason codes for §7 gates.
-- [ ] PromotionReceipt records Gate A–G outcomes for this manifest.
-- [ ] RunReceipt records artifact build inputs, tool versions, and build config hash.
-- [ ] Release-serving path refuses missing, invalid, superseded, revoked, or candidate sidecars.
-- [ ] Public aliases cannot bypass sidecar verification.
-- [ ] Rollback card path and correction/withdrawal path are verified.
+ADR acceptance requires reviewed agreement on the decision and boundaries. It does not require implementation to already exist, but every implementation dependency must be explicit.
+
+- [ ] Architecture, release, geospatial, evidence, security, policy, validation, correction, rollback, and docs reviewers approve.
+- [ ] ADR-0013 identity/hash dependency is accepted or explicitly isolated through a versioned profile.
+- [ ] Release-manifest singular/plural conflict has an accepted resolution or bounded distinction.
+- [ ] Payload/envelope, reviewer-signoff, release-manifest, proof, receipt, and decision objects remain separate.
+- [ ] Hash projection excludes `spec_hash`, envelope, signatures, and transport-only fields.
+- [ ] Algorithms, encodings, media types, filename compatibility, and signer policy are versioned.
+- [ ] Public/restricted transparency posture and metadata-leak risks are resolved.
+- [ ] Correction, withdrawal, revocation, supersession, and rollback behavior is specified.
+- [ ] No claim states or implies current implementation, signing, release, or publication.
+
+Implementation graduation additionally requires:
+
+- [ ] closed schema and semantic contract alignment;
+- [ ] non-empty deterministic valid/invalid fixtures;
+- [ ] real validator and attestation tooling with tests;
+- [ ] policy and signer trust-root enforcement;
+- [ ] promotion and release integration;
+- [ ] public serving anti-bypass tests;
+- [ ] key rotation/revocation and offline verification profile;
+- [ ] correction/rollback/cache-invalidation drill;
+- [ ] observed no-public-write behavior on failure.
+
+[Back to top](#top)
 
 ---
 
-## 14. Revision history
+<a id="consequences"></a>
+
+## Consequences
+
+### Positive
+
+- Integrity reaches the exact bytes clients fetch rather than stopping at catalog metadata.
+- Artifact, manifest, proof, receipt, human review, release decision, and publication remain distinguishable.
+- Offline and CDN verification become possible under a declared profile.
+- Supersession and rollback can bind exact immutable artifacts.
+- A single envelope profile avoids parallel signature formats.
+- The hash-projection rule removes circular `spec_hash` semantics.
+
+### Costs
+
+- Signing identities, key custody, rotation, revocation, and transparency governance add operational burden.
+- Sidecars and verification add build, storage, network, and client complexity.
+- Producers and consumers must migrate together when schemas/profiles change.
+- Serving systems must prevent aliases from bypassing validation.
+- Historical unsigned artifacts require inventory and disposition.
+
+[Back to top](#top)
+
+---
+
+<a id="alternatives-considered"></a>
+
+## Alternatives considered
+
+| Alternative | Disposition |
+|---|---|
+| Sign only `ReleaseManifest` | Rejected: release scope does not replace a per-artifact byte binding |
+| Rely on STAC/DCAT/PROV digests | Rejected: catalog projections reference trust objects; they do not define signer/envelope/release policy |
+| Sign artifact bytes without a manifest | Rejected: loses structured evidence, policy, provenance, correction, and rollback linkage |
+| Embed signature/envelope in payload | Rejected: circular identity and unstable canonicalization |
+| Per-tile/per-range DSSE signatures | Rejected as default: excessive operational cost; use accepted range-root profile if needed |
+| Reuse human `release/signatures/` packets | Rejected: reviewer signoff and machine cryptographic binding have different semantics |
+| No signing for restricted artifacts | Rejected: restricted does not mean unverifiable; use sensitivity-appropriate trust and transparency |
+| Advisory validation only | Rejected: an invalid or unavailable verifier must block public release |
+
+[Back to top](#top)
+
+---
+
+<a id="risk-and-open-question-ledger"></a>
+
+## Risk and open-question ledger
+
+| Item | Status | Required resolution |
+|---|---|---|
+| `spec_hash` lexical/canonical profile | `CONFLICTED` | Accepted ADR-0013 profile and migration |
+| Self-referential `spec_hash` | `PROPOSED FIX` | Schema-defined hash projection and test vectors |
+| Artifact digest algorithm/encoding | `PROPOSED` | Accepted profile, implementation, fixtures, performance evidence |
+| Range-verification profile | `OPEN` | Versioned format, tooling, cross-platform tests |
+| Envelope and payload media types | `OPEN` | Accepted schema/profile |
+| Exact sidecar filename | `OPEN` | Compatibility and consumer migration decision |
+| Cosign/DSSE implementation and versions | `NEEDS VERIFICATION` | Security/tooling review and pinned dependencies |
+| Signer identities and trust roots | `UNKNOWN` | Policy, ownership, key custody, rotation, revocation |
+| Public vs private transparency | `OPEN` | Sensitivity/privacy policy and offline bundle profile |
+| Release manifest singular/plural path | `CONFLICTED` | Accepted responsibility distinction or migration |
+| Cryptographic sidecar archival | `OPEN` | Decide whether release lane stores envelope, immutable ref, or digest |
+| PMTiles delta semantics | `OPEN` | Base identity, tile-ID behavior, invalidation, rollback |
+| Multi-collection artifacts | `OPEN` | One-artifact/one-collection or accepted collection profile |
+| COG profile and sublane | `NEEDS VERIFICATION` | Published path, COG validation, overviews/tiling checks |
+| CDN/public alias bypass | `UNKNOWN` | Serving config, integration tests, monitoring, incident response |
+| Existing unsigned artifacts | `UNKNOWN` | Inventory, hold/quarantine, migration, withdrawal, or grandfathering decision |
+| Compromised signer | `OPEN` | Key revocation, withdrawal, alias rollback, correction notice, cache purge |
+| Implementation ownership | `NEEDS VERIFICATION` | Steward assignments and separation-of-duties controls |
+
+Fail-safe posture: unresolved signer, evidence, rights, sensitivity, release, or binding state blocks public release or narrows the response. It is never repaired by optimistic prose.
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-and-supersession"></a>
+
+## Rollback and supersession
+
+### ADR rollback
+
+Restore prior blob:
+
+```text
+99a984ddde3f5569ef54443bce7798e5ac2f89d4
+```
+
+Reverting documentation does not revert an implementation or release. Any later implementation must carry its own schema, policy, migration, release, correction, and rollback plan.
+
+### Artifact rollback target
+
+A future conforming rollback must:
+
+1. identify the unsafe artifact and signed binding;
+2. record accountable denial, withdrawal, revocation, correction, or rollback decision;
+3. preserve prior artifact, binding, receipts, proofs, catalog, and release records under policy;
+4. validate the rollback target’s binding and independent release gates;
+5. update public aliases atomically;
+6. invalidate or rebuild CDN, service-worker, search, catalog, tile, and API caches;
+7. verify public range requests resolve to the selected immutable artifact;
+8. issue correction/withdrawal notices when users may have consumed unsafe bytes;
+9. record append-only execution and post-rollback verification receipts.
+
+Rollback is not “delete the bad file.” Deletion can destroy the evidence needed to explain and correct a release.
+
+### Supersession of this ADR
+
+An accepted successor must retain this record, mark it `superseded`, link both ADRs reciprocally, and migrate contracts, schemas, fixtures, validators, policies, producers, consumers, releases, and verification support through a reviewed plan.
+
+[Back to top](#top)
+
+---
+
+<a id="verification-checklist"></a>
+
+## Verification checklist
+
+### Current revision
+
+- [x] ADR ID, filename, H1, and index row verified.
+- [x] Source/effective status preserved as `proposed`.
+- [x] Directory Rules and responsibility roots reviewed.
+- [x] Current contract, schema, published, release, signing, tooling, and workflow surfaces inspected.
+- [x] Validator, fixtures, policy, and runbook checked at declared/proposed paths.
+- [x] Human reviewer signoff separated from artifact cryptography.
+- [x] Self-referential hash semantics corrected through a proposed hash projection.
+- [x] No implementation, release, or publication claim introduced.
+- [ ] Human review completed.
+- [ ] ADR accepted.
+- [ ] Implementation graduated.
+- [ ] Public release observed.
+
+### Future implementation
+
+- [ ] Closed schema and semantic contract agree.
+- [ ] Payload and envelope are separate.
+- [ ] Hash projection and algorithm-tagged digests are defined.
+- [ ] Validator has stable finite outcomes and reason codes.
+- [ ] Attestation helper contains no secrets and supports offline verification.
+- [ ] Valid/invalid fixtures and cross-runtime vectors pass.
+- [ ] Policy, signer authorization, rotation, revocation, and transparency rules enforce.
+- [ ] Promotion and release records resolve with accountable review.
+- [ ] Public aliases and clients cannot bypass verification.
+- [ ] Candidate, superseded, revoked, withdrawn, or mismatched artifacts are not served.
+- [ ] Correction, withdrawal, cache invalidation, and rollback drills pass.
+
+[Back to top](#top)
+
+---
+
+<a id="references"></a>
+
+## References
+
+| Reference | Relationship and current boundary |
+|---|---|
+| [`docs/adr/README.md`](./README.md) | ADR operating contract; presence or merge does not accept a decision |
+| [`docs/adr/INDEX.md`](./INDEX.md) | Confirms unique ADR-0023 identity and proposed status |
+| [ADR-0001](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Schema-home boundary |
+| [ADR-0011](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | Artifact-family separation; remains proposed |
+| [ADR-0013](./ADR-0013-spec_hash-and-run_id-identity-grammar.md) | Owns content-identity grammar; current conflict must be resolved |
+| [ADR-0015](./ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md) | Logical published alias and rollback transition model |
+| [ADR-0018](./ADR-0018-promotion-gate-sequence.md) | Proposed promotion sequence; current workflow is a hold |
+| [ADR-0022](./ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | Catalog projections reference, but do not replace, artifact binding |
+| [ADR-0024](./ADR-0024-steward-separation-of-duties-for-release.md) | Accountable release review and separation of duties |
+| [ADR-0025](./ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Public clients use governed/released surfaces |
+| [Directory Rules](../doctrine/directory-rules.md) | Responsibility-root and migration discipline |
+| [`KFMGeoManifest` contract](../../contracts/evidence/kfm_geo_manifest.md) | Draft semantic meaning |
+| [`KFMGeoManifest` schema](../../schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json) | Confirmed permissive stub |
+| [Published PMTiles](../../data/published/pmtiles/README.md) | Released carrier lane; payload/release inventory unknown |
+| [Published layers](../../data/published/layers/README.md) | Released layer/COG-capable carrier lane |
+| [Singular release manifest lane](../../release/manifest/README.md) | Draft and path-conflicted |
+| [Plural release manifests lane](../../release/manifests/README.md) | Draft collection lane and path-conflicted |
+| [Release signatures](../../release/signatures/README.md) | Human review/signoff packets, not artifact cryptographic binding |
+| [Attestation tools](../../tools/attest/README.md) | Proposed tooling lane; executable inventory unverified |
+| [Promotion workflow](../../.github/workflows/promotion-gate.yml) | Read-only readiness/hold workflow |
+
+[Back to top](#top)
+
+---
+
+<a id="revision-history"></a>
+
+## Revision history
 
 | Version | Date | Summary |
 |---|---|---|
-| v1 | 2026-05-09 | Initial proposed ADR draft for PMTiles/COG signed geo manifest release gating. |
-| v1.1 | 2026-05-15 | Clarified proposed/unknown repo posture, added status/evidence boundary, corrected DSSE payload/envelope layering, expanded Directory Rules basis, added validator report shape, implementation handoff, negative fixtures, rollback discipline, and acceptance checklist. |
+| v1 | 2026-05-09 | Initial proposed ADR for signed PMTiles/COG geo-manifest release gating. |
+| v1.1 | 2026-05-15 | Added proposed/unknown posture, DSSE payload/envelope layering, field map, gate mapping, negative fixtures, rollback discipline, and acceptance checklist. |
+| v1.2 | 2026-07-24 | Re-grounded the ADR in current repository evidence; confirmed ADR identity, contract, schema stub, published and release lanes; separated reviewer signoff from artifact cryptography; surfaced identity and manifest-path conflicts; corrected self-referential hash projection; bounded implementation as `HOLD`; added convergence, acceptance, serving, correction, and rollback requirements. |
 
 ---
 
