@@ -1,6 +1,6 @@
-# KFM Fauna domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Fauna validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# KFM Fauna domain CI workflow.
+# Status: validate-fauna runs one accepted synthetic fixture-safety slice;
+# proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
 # - This workflow inspects repository maturity without opening restricted Fauna
@@ -44,8 +44,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate Fauna validation readiness
+      - name: Run accepted deterministic Fauna fixture suite
         shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
         run: |
           set -euo pipefail
 
@@ -70,82 +73,32 @@ jobs:
             fi
           done
 
-          python - <<'PY'
-          import ast
-          from pathlib import Path
+          python -m unittest discover \
+            --start-directory tests/domains/fauna \
+            --pattern 'test_fauna_smoke.py' \
+            --verbose
 
-          test_root = Path("tests/domains/fauna")
-          collected = []
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          collected.append(f"{path}:{node.name}")
-
-          if collected:
-              raise SystemExit(
-                  "Executable Fauna tests surfaced. Graduate validate-fauna "
-                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
-              )
-
-          print("No collected Fauna test functions or classes were found.")
-          PY
-
-          validator_roots=(
-            "tools/validators/fauna"
-            "tools/validators/domains/fauna"
-            "tools/validators/geoprivacy/habitat-fauna"
-            "tools/validators/habitat_fauna"
-            "tools/validators/habitat/fauna-geoprivacy"
-            "tools/validators/habitat-fauna"
-          )
-
-          for validator_root in "${validator_roots[@]}"; do
-            if [[ -d "$validator_root" ]]; then
-              validator_file="$(find "$validator_root" -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
-              if [[ -n "$validator_file" ]]; then
-                echo "::error::Fauna validator implementation surfaced at $validator_file. Resolve validator ownership and wire the accepted command."
-                exit 1
-              fi
-            fi
-          done
-
-          if grep -Eq '^(fauna-validate|validate-fauna):' Makefile; then
-            echo "::error::A Fauna validation target now exists. Wire and verify it deliberately instead of retaining this hold."
-            exit 1
-          fi
-
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-fauna"
-          echo "WORKFLOW_HOLD: executable Fauna validation is not established"
-
-      - name: Record Fauna validation hold
+      - name: Record Fauna validation scope
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Fauna validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          `VALIDATION_SCOPE: synthetic-public-safe-fixture-only`
 
-          `WORKFLOW_HOLD: executable Fauna validation is not established`
+          This job runs only the accepted deterministic standard-library suite in
+          `tests/domains/fauna/test_fauna_smoke.py`. It reads five small synthetic
+          fixtures, blocks network calls in the test boundary, accepts only a
+          fixture-only candidate that is explicitly not released and not eligible
+          for promotion, and proves fail-closed findings for missing source
+          reference; unresolved taxonomy, evidence, rights, sensitivity, policy,
+          geoprivacy, review, correction, and rollback; and precision hints.
 
-          Current repository evidence is documentation-heavy: sampled Fauna test
-          modules are placeholders, and the inspected per-domain, broad, and
-          cross-domain Fauna validator lanes are README-backed rather than
-          accepted executable validators.
-
-          This check does not establish taxonomic identity, occurrence validity,
-          source-role closure, rights, sensitivity, geoprivacy, public-safe
-          geometry, evidence closure, policy approval, stewardship approval,
-          release readiness, or safe public use.
+          A green result does not establish Fauna truth, taxonomic identity,
+          source admission, rights clearance, geoprivacy review, evidence closure,
+          policy approval, stewardship approval, release readiness, or safe
+          public use. The proof and release-dry-run jobs remain held.
           EOF
 
   build-proof-fauna:

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tests/domains/fauna/readme
 title: Fauna Domain Test Lane README
 type: test-lane-readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <PLACEHOLDER — Fauna steward>
@@ -11,10 +11,10 @@ owners:
   - <PLACEHOLDER — Release steward>
   - <PLACEHOLDER — UI steward>
 created: 2026-07-05
-updated: 2026-07-05
+updated: 2026-07-25
 policy_label: public
-implementation_status: scaffold
-verification_status: current-session path verified; executable tests, fixtures, validators, schemas, policies, releases, and CI not verified
+implementation_status: bounded-public-safe-fixture-validation-slice
+verification_status: five deterministic standard-library tests over five fixtures verified locally; production schemas, source admission, policy runtime, proof, release, promotion, and publication remain unverified and held
 related:
   - tests/README.md
   - docs/doctrine/directory-rules.md
@@ -57,14 +57,14 @@ tags:
 ![lane: tests%2Fdomains%2Ffauna-informational](https://img.shields.io/badge/lane-tests%2Fdomains%2Ffauna-informational)
 ![authority: tests--only](https://img.shields.io/badge/authority-tests--only-lightgrey)
 ![posture: fail--closed](https://img.shields.io/badge/posture-fail--closed-blue)
-![implementation: scaffold](https://img.shields.io/badge/implementation-scaffold-yellow)
+![implementation: bounded slice](https://img.shields.io/badge/implementation-bounded__slice-yellow)
 
 **Status:** `draft`  
 **Authority:** parent domain test README; not a source registry, schema, contract, policy bundle, fixture inventory, receipt, proof, release decision, UI implementation, or public artifact  
 **Owning root:** `tests/`  
 **Domain segment:** `domains/fauna/`  
 **Default posture:** public-safe fixtures; no-network by default; finite outcomes; fail closed for unresolved source, evidence, rights, sensitivity, review, release, or correction state  
-**Last reviewed:** 2026-07-05
+**Last reviewed:** 2026-07-25
 
 ---
 
@@ -125,11 +125,26 @@ tests/domains/fauna/
 | `tests/README.md` allows policy, evidence-resolution, lifecycle, receipt/proof, release-manifest, governed API, UI trust-state, e2e, runtime-proof, and domain-specific tests | CONFIRMED from current repo docs. |
 | `tests/README.md` excludes sensitive material, live network calls, duplicate authority homes, trust-bearing receipts/proofs, and release decisions from `tests/` | CONFIRMED from current repo docs. |
 | Fauna domain docs define Fauna as sensitivity-aware and deny-by-default for policy-withheld material | CONFIRMED from current repo docs. |
-| Actual executable tests under this directory | UNKNOWN in this README. |
-| Actual fixture inventory | NEEDS VERIFICATION. |
-| Actual validators, schemas, policy bundles, release manifests, receipts, proofs, UI routes, and CI jobs | NEEDS VERIFICATION. |
+| Accepted executable test slice | CONFIRMED: `test_fauna_smoke.py` contains five standard-library tests for the synthetic public-safe fixture profile. |
+| Accepted fixture inventory | CONFIRMED only for one positive and four fail-closed JSON fixtures named in §3.1; all other fixture maturity remains unchanged. |
+| Accepted validator | CONFIRMED: `tools/validators/domains/fauna/validate_public_safe_fixture.py`; standard-library, deterministic, and fixture-only. |
+| Current occurrence schemas | CONFIRMED as permissive `PROPOSED` scaffolds; this slice does not promote or treat them as production validation authority. |
+| Current source descriptors | CONFIRMED as `PROPOSED` templates with unresolved `TBD` role, authority, rights, sensitivity, cadence, and access fields; this slice accepts only `fixture:` refs and synthetic source role. |
+| Current policy runtime, release manifests, receipts, proofs, UI routes, and public artifacts | NEEDS VERIFICATION and outside this slice. |
 
-This README defines the parent test-lane contract. It does not claim that all child lanes, executable tests, fixtures, validators, schemas, policies, releases, or workflows already exist.
+This README defines the parent test-lane contract. Acceptance of the bounded slice below does not claim that other child lanes, tests, fixtures, validators, schemas, policies, releases, or workflows are implemented.
+
+### 3.1 Accepted bounded validation slice
+
+| Surface | Accepted scope |
+|---|---|
+| Validator | Synthetic fixture safety only; it does not validate `OccurrencePublic`, source admission, policy execution, evidence closure, geoprivacy transforms, release, or publication. |
+| Positive fixture | `fixtures/domains/fauna/valid/non_sensitive_occurrence.json` passes only because it is synthetic, fixture-only, location-withheld, no-network, and explicitly not released or promotion-eligible. |
+| Negative fixtures | Missing source reference; unresolved taxonomy; unresolved evidence, rights, policy, geoprivacy, review, correction, and rollback; and unresolved sensitivity plus precision-shaped keys return stable fail-closed findings. |
+| Network posture | The validator uses only the Python standard library; every accepted test blocks socket and URL-opening calls. |
+| CI | Only `validate-fauna` in `.github/workflows/domain-fauna.yml` runs this exact test module. Proof and release-dry-run jobs remain held. |
+
+No pass from this slice is a PolicyDecision, ReviewRecord, ValidationReport, EvidenceBundle, RedactionReceipt, ReleaseManifest, correction approval, rollback proof, promotion decision, publication approval, or claim about real fauna.
 
 ---
 
@@ -224,17 +239,17 @@ Expected fixture families include valid public-safe source, missing source role,
 ## 10. Suggested local commands
 
 > [!NOTE]
-> Command names, validators, test runners, markers, workflow names, and exact package commands are **NEEDS VERIFICATION** until checked against actual repository configuration.
+The accepted bounded command is:
 
 ```bash
-pytest tests/domains/fauna
-pytest tests/domains/fauna/policy
-pytest tests/domains/fauna/release
-pytest tests/domains/fauna/ui
-pytest tests/domains/fauna/tiles
-npx playwright test --grep fauna
-python tools/validate_all.py
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest discover \
+  --start-directory tests/domains/fauna \
+  --pattern 'test_fauna_smoke.py' \
+  --verbose
 ```
+
+Other Fauna test, policy, release, UI, tile, Playwright, or validator commands remain NEEDS VERIFICATION until separately accepted.
 
 ---
 
@@ -242,13 +257,13 @@ python tools/validate_all.py
 
 | Question | Status | Notes |
 |---|---|---|
-| Which Fauna child lanes already contain executable tests? | NEEDS VERIFICATION | Must inspect `tests/domains/fauna/`. |
-| Which fixture families already exist? | NEEDS VERIFICATION | Must inspect `fixtures/domains/fauna/`. |
-| Which validators are canonical for Fauna domain tests? | NEEDS VERIFICATION | Must inspect validator/tool roots. |
+| Which Fauna child lanes already contain executable tests? | PARTIALLY RESOLVED | Only the bounded root `test_fauna_smoke.py` slice is accepted; child-lane executable maturity remains NEEDS VERIFICATION. |
+| Which fixture families already exist? | PARTIALLY RESOLVED | One positive and four negative JSON fixtures are accepted for the bounded slice; other fixture families remain NEEDS VERIFICATION. |
+| Which validators are canonical for Fauna domain tests? | PARTIALLY RESOLVED | `validate_public_safe_fixture.py` is accepted only for synthetic fixture safety; broader validator ownership remains open. |
 | Which schema and contract files are canonical for Fauna tests? | NEEDS VERIFICATION | Must inspect `schemas/` and `contracts/`. |
 | Which policy bundles govern Fauna sensitivity and admissibility? | NEEDS VERIFICATION | Must inspect policy roots. |
 | Which release manifests, rollback cards, and public artifacts exist? | NEEDS VERIFICATION | Must inspect release/publication roots. |
-| Which CI job runs the Fauna domain test lane? | NEEDS VERIFICATION | Must inspect `.github/workflows/`. |
+| Which CI job runs the Fauna domain test lane? | PARTIALLY RESOLVED | `validate-fauna` runs only the accepted bounded module; proof and release-dry-run jobs remain explicit holds. |
 | Which cross-domain test cases belong outside this domain segment? | OPEN | Shared inference-risk tests may require a cross-domain test root. |
 
 ---
@@ -273,12 +288,13 @@ This parent lane is mature when:
 
 | Date | Version | Change |
 |---|---:|---|
+| 2026-07-25 | v0.2 | Accepted one deterministic, no-network, synthetic fixture-safety slice and kept all production policy, schema, source, proof, release, promotion, and publication claims held. |
 | 2026-07-05 | v0.1 | Replaced greenfield stub with governed parent README for the Fauna domain test lane. |
 
 ---
 
 ## 14. Last reviewed
 
-**2026-07-05** — Replaced greenfield stub. Current evidence confirms the tests root, Directory Rules domain-segment rule, root test allowance for policy/evidence/lifecycle/receipt/release/API/UI/e2e/runtime/domain tests, and Fauna sensitivity-aware domain doctrine; executable tests, fixtures, validators, schemas, policies, releases, and CI enforcement remain **NEEDS VERIFICATION**.
+**2026-07-25** — Verified the Directory Rules lane placement, current fail-closed Fauna policy scaffolds, permissive occurrence-schema scaffolds, placeholder fixture inventory, and unresolved source descriptors. Accepted only the five-test synthetic fixture-safety slice. All production validation, source admission, evidence, policy, review, geoprivacy, proof, release, correction, rollback, promotion, and publication behavior remains outside scope or NEEDS VERIFICATION.
 
 [↑ Back to top](#top)

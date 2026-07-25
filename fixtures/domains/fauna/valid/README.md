@@ -2,7 +2,7 @@
 
 `fixtures/domains/fauna/valid/`
 
-Status: draft / fixture lane.
+Status: draft fixture lane with one accepted bounded validation fixture.
 
 This directory is for small synthetic Fauna fixture examples that are expected to pass the applicable bounded contract, schema, renderer, or governed-API checks for public-safe Fauna material. Valid fixtures demonstrate acceptable shapes for non-sensitive occurrences, public-safe range or seasonal-range representations, released/evidence-shaped examples, and other positive-path cases without becoming source truth.
 
@@ -12,7 +12,7 @@ These files are examples only. They are not authoritative project records, sourc
 
 Directory rules and the root fixture README keep fixture material under the `fixtures/` responsibility root. This lane is therefore the Fauna-domain valid fixture lane, not a data lifecycle root, not a policy root, not a source registry, not a release root, and not a publication target.
 
-The root fixture README also states that `fixtures/` is for operational rendering inputs rather than validator-only test data, and that fixtures must not contain RAW, WORK, QUARANTINE data, sensitive exact geometry, or canonical truth. This README inherits those boundaries.
+The root fixture README identifies `fixtures/` as the reusable fixture home shared across validators, tests, workflows, runtime checks, and documentation. Fixtures must not contain RAW, WORK, QUARANTINE data, sensitive exact geometry, or canonical truth. This README inherits those boundaries.
 
 ## Related fixture lanes
 
@@ -41,7 +41,7 @@ The root fixture README also states that `fixtures/` is for operational renderin
 
 | File | Status | Notes |
 |---|---|---|
-| `non_sensitive_occurrence.json` | PROPOSED placeholder | Placeholder created from the Fauna missing/planned-files inventory. Treat as a proposed valid-fixture slot, not as evidence that a validator currently passes it. |
+| `non_sensitive_occurrence.json` | ACCEPTED for bounded fixture-safety validation | Synthetic, location-withheld, no-network, fixture-only input consumed by `validate_public_safe_fixture.py` and `test_fauna_smoke.py`. A pass is not `OccurrencePublic` validation or release approval. |
 | `range_polygon.geojson` | PROPOSED placeholder | Placeholder created from the Fauna missing/planned-files inventory. Treat as a proposed public-safe range fixture slot, not as a canonical range layer. |
 | `seasonal_range.geojson` | PROPOSED placeholder | Placeholder created from the Fauna missing/planned-files inventory. Treat as a proposed public-safe seasonal-range fixture slot, not as a canonical range layer. |
 
@@ -107,6 +107,6 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Payload inventory: PARTIALLY VERIFIED — `non_sensitive_occurrence.json`, `range_polygon.geojson`, and `seasonal_range.geojson` are present as PROPOSED placeholders.
-- Fixture-consumer alignment: NEEDS VERIFICATION against validators, renderer checks, governed-API tests, Focus Mode tests, and schema contracts.
-- Tests and validators: NOT RUN.
+- Payload inventory: PARTIALLY VERIFIED — `non_sensitive_occurrence.json` is accepted only for the bounded fixture-safety slice; both GeoJSON files remain PROPOSED placeholders.
+- Fixture-consumer alignment: CONFIRMED only for `tools/validators/domains/fauna/validate_public_safe_fixture.py`, `tests/domains/fauna/test_fauna_smoke.py`, and the `validate-fauna` job; all production consumers remain NEEDS VERIFICATION.
+- Tests and validator: the accepted five-test standard-library suite passed locally on 2026-07-25; CI execution remains subject to the focused pull request.

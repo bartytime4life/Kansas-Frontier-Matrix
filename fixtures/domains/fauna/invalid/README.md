@@ -2,7 +2,7 @@
 
 `fixtures/domains/fauna/invalid/`
 
-Status: draft / fixture lane.
+Status: draft fixture lane with four accepted bounded negative fixtures.
 
 This directory is for negative Fauna fixture examples used by bounded tests, validators, renderer checks, helpers, release dry-runs, or documentation examples. These files are examples only. They are not authoritative project records, source records, evidence, policy decisions, sensitivity decisions, release state, public API material, public map material, or published artifacts.
 
@@ -18,12 +18,26 @@ Directory rules place golden, valid, and invalid sample data under the `fixtures
 
 ## Related references
 
-- `../../../docs/domains/fauna/OBJECT_FAMILIES.md`
-- `../../../docs/domains/fauna/MISSING_OR_PLANNED_FILES.md`
-- `../../../contracts/domains/fauna/`
-- `../../../schemas/contracts/v1/domains/fauna/`
-- `../../../policy/domains/fauna/`
-- `../../../docs/doctrine/directory-rules.md`
+- `../../../../docs/domains/fauna/OBJECT_FAMILIES.md`
+- `../../../../docs/domains/fauna/MISSING_OR_PLANNED_FILES.md`
+- `../../../../contracts/domains/fauna/`
+- `../../../../schemas/contracts/v1/domains/fauna/`
+- `../../../../policy/domains/fauna/`
+- `../../../../docs/doctrine/directory-rules.md`
+- `../../../../tools/validators/domains/fauna/validate_public_safe_fixture.py`
+- `../../../../tests/domains/fauna/test_fauna_smoke.py`
+- `../../../../.github/workflows/domain-fauna.yml`
+
+## Accepted bounded payloads
+
+| File | Expected deterministic findings |
+|---|---|
+| `missing_source_descriptor.json` | Missing synthetic source descriptor reference. |
+| `unresolved_governance.json` | Unresolved evidence, rights, policy, geoprivacy, review, correction, and rollback states. Release remains not released and promotion remains ineligible. |
+| `unresolved_taxonomy.json` | Unresolved synthetic taxonomy state. |
+| `over_precise_sensitive.json` | Unresolved sensitivity, unsafe spatial kind, and non-numeric `SYNTHETIC-ONLY` location-shaped fields. No real location is present. |
+
+Acceptance applies only to the synthetic fixture-safety validator. These files do not execute policy, model an actual species occurrence, or establish a release, promotion, correction, rollback, or publication path.
 
 ## Accepted material
 
@@ -59,5 +73,6 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: updated from one-character placeholder content.
-- Payload inventory: NEEDS VERIFICATION.
-- Tests and validators: NOT RUN.
+- Payload inventory: PARTIALLY VERIFIED — the four JSON fixtures above are accepted only for the bounded fixture-safety slice; other lane maturity remains NEEDS VERIFICATION.
+- Consumer alignment: CONFIRMED only for `validate_public_safe_fixture.py`, `test_fauna_smoke.py`, and `validate-fauna`.
+- Tests and validator: the accepted five-test standard-library suite passed locally on 2026-07-25; CI execution remains subject to the focused pull request.
